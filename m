@@ -1,56 +1,31 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FE1185B55
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 21 Aug 2024 06:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D7A199FB8;
+	Wed, 21 Aug 2024 07:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724223501; cv=none; b=N+9vjt2u/Y+N6Py1+nQLHNtveIHTChFx1+P9qksSSg7H3pB4ciow++5VxWRJ8C0tfpPBVr/RFxgBH3CJYJWZJZqK8XBqzTi9Q6iZfiTTYOPoXiIjqG8xvHxY2FqbXCjbSZpfH/hv77YYLPTJ7v2Kt6jjroxLccS3g9f902XIHG4=
+	t=1724223785; cv=none; b=knzQEzBa/+NGUuowVF6DCQ8hflHo+EWRpuL/uJ3eoyTBJ+0nWG4UETXucW3oTq2VcJAo5RCXo6OIhlsyRk3P1axDejovnM9fw0TzRUoQvun5nl51fMz9D0qUlkhknwSKwd8MM8WTTbyXeWunRek6Ize4z/hfus4PO85BTwJcd18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724223501; c=relaxed/simple;
-	bh=nGwwZKR0gRYMSEgmiBVAnzD1Pp9OdshUmU94NyLhtDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hq4BpDjeTMynrzaWF8mKnO343PGBA1nJ6T/TDux37DBDWgqRQ8Ah9MxQD3OeSl3nUIHAejeMg9LV4JgWa8go0OskEEu2yRfUjMrdeXRpMf4pDlQP/DkThF4pR5kWuSOSoT9IpjbqyqOwQqcggeE0XRNQt/Dh5IVnYUPUNFeMsLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZfcvXzTF; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZfcvXzTF"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5d5e97b8adbso3688700eaf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Aug 2024 23:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1724223498; x=1724828298; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lcwV5E+ok4Ru342pseyjnU3pRtPhY0hqDhnMEPHRasQ=;
-        b=ZfcvXzTFGkfCFK3z9dez8lyTGhgj6gz23qAH/MPvW9twfEeLazeZR/rm0TzqV5X0Qw
-         RLLVI8jpT0R/bzVz8ozILE3h5ImiAnJqnJhX45SkU6t6/Mnmp4LIIbkU2ToY6/wD0E6h
-         vZAeLf37xClvrzr7RfF1GkofdnvaOl1eoU/zU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724223498; x=1724828298;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcwV5E+ok4Ru342pseyjnU3pRtPhY0hqDhnMEPHRasQ=;
-        b=bTeZJQVs+nsqrYYwL6qVjQud6/d1i349/KPfXHOKxgzJFxcozjAAAYr6Bg2is29oNc
-         GKb65OUs2wm9kJdo7Mhm2ApLQqgx6naEvhnZge1e41ZOGvsDgStlfo4YJ15qVtbv5j2u
-         JKGEwiAXACbNijl2JV++pdroStf0MDUtE5VwhR22Kw8fzGc5Df9jzOzx8dsmZDbsyqhL
-         ZqoPhwYIfuM86T3SefgArY/N08vOxP83fcGUYRBvujYjucq7BhnETIV/MwYvcDUoqaV2
-         PU1H2vFCqJjcU6Q3XDbI4+YMohYhzlkImDbJD9ehjSqzn/ZupJ1OIhE7AaPxC8T5FSGj
-         fBFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhlqXbesyMCcEEZg7SQqV+XMTSZeuYSWlWpJkkgpm5U0md9HKh+E3hQeEHwBfy71HxhkBkikBCCI4YBvpAN/PvjvM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLiZnvwTGzzf2IMulCX7/kvgy8UPpIrGpDZALIdhaOz331El3h
-	d8fK7VBTlc9Urdd1QmfsD/tbujjSzReRXsHbYyQ1wiW4nXlcT4E5ODHkT/LD56Y=
-X-Google-Smtp-Source: AGHT+IGW3lZ+wVRaP439HYZTg2+EKRY2iSpAqSNAreo/hH4Ej36HDf8GGY057zCw2mgnCuU1Pw4OyQ==
-X-Received: by 2002:a05:6358:531f:b0:1ad:95db:b6f2 with SMTP id e5c5f4694b2df-1b59f97b0e5mr218971355d.17.1724223497985;
-        Tue, 20 Aug 2024 23:58:17 -0700 (PDT)
-Received: from [172.20.0.208] ([218.188.70.188])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c6b6365afcsm10384733a12.87.2024.08.20.23.58.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Aug 2024 23:58:17 -0700 (PDT)
-Message-ID: <f377d9c2-9bad-418e-b02a-9ef4f45d7b06@linuxfoundation.org>
-Date: Wed, 21 Aug 2024 00:58:14 -0600
+	s=arc-20240116; t=1724223785; c=relaxed/simple;
+	bh=uMxsRtpauuHxCh+Ur9x77juooYH+JKjqpkw1YVJytGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ugOV1bSCWs65fHnDjG/h5XQ0vLEP0pYNtqyhL1pHk10TqW/Xg1BNxv1jFP2I9AQGI7MxohG0pjXqbAR0OSBJuiSYO8ChopcMNg9I7DVi+m/t8N7Tj0g8TbzYzpdFRmvOcK7qapkYfa6ZRqPN+R37eRV3K8y6o+LOzKRk78yjK5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4WpcgQ6CsSz1xvPD;
+	Wed, 21 Aug 2024 15:01:06 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 561EA1400CA;
+	Wed, 21 Aug 2024 15:03:01 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 21 Aug 2024 15:03:01 +0800
+Message-ID: <eac78afd-aae1-4527-8caf-a67f9381d589@huawei.com>
+Date: Wed, 21 Aug 2024 15:03:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,63 +33,51 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: Fix test to handle both old and new
- kernels
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@kernel.org>, Shuah Khan <shuahkhan@gmail.com>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240515013620.098cb37a@rorschach.local.home>
- <20240614124322.36ad7652@rorschach.local.home>
- <20240819152002.3ecc8100@gandalf.local.home>
+Subject: Re: [PATCH v3 0/2] Introduce tracepoint for hugetlbfs
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240819152002.3ecc8100@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: <muchun.song@linux.dev>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<david@fromorbit.com>
+CC: <mathieu.desnoyers@efficios.com>, <linux-mm@kvack.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+References: <20240723030834.213012-1-lihongbo22@huawei.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20240723030834.213012-1-lihongbo22@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-On 8/19/24 13:20, Steven Rostedt wrote:
-> On Fri, 14 Jun 2024 12:43:22 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+Give you a friendly ping.🙂
+
+Thanks,
+Hongbo
+
+On 2024/7/23 11:08, Hongbo Li wrote:
+> Here we add some basic tracepoints for debugging hugetlbfs: {alloc, free,
+> evict}_inode, setattr and fallocate.
 > 
->> Shuah,
->>
->> Can you take this through your tree?
+> v2 can be found at:
+> https://lore.kernel.org/all/ZoYY-sfj5jvs8UpQ@casper.infradead.org/T/
 > 
-> Ping.
+> Changes since v2:
+>    - Simplify the tracepoint output for setattr.
+>    - Make every token be space separated.
 > 
-> -- Steve
 > 
->>
->> Thanks,
->>
->> -- Steve
->>
->>
->> On Wed, 15 May 2024 01:36:20 -0400
->> Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->>> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->>>
->>> The function "scheduler_tick" was renamed to "sched_tick" and a selftest
->>> that used that function for testing function trace filtering used that
->>> function as part of the test.
->>>
->>> But the change causes it to fail when run on older kernels. As tests
->>> should not fail on older kernels, add a check to see which name is
->>> available before testing.
->>>
->>> Fixes: 86dd6c04ef9f2 ("sched/balancing: Rename scheduler_tick() => sched_tick()")
->>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-
-Sorry about the delay.
-
-It is now applied to liniux-kselftest next for Linux 6.12-rc1.
-
-thanks,
--- Shuah
+> v1 can be found at:
+> https://lore.kernel.org/linux-mm/20240701194906.3a9b6765@gandalf.local.home/T/
+> 
+> Changes since v1:
+>    - Decrease the parameters for setattr tracer suggested by Steve and Mathieu.
+>    - Replace current_user_ns() with init_user_ns when translate uid/gid.
+> 
+> Hongbo Li (2):
+>    hugetlbfs: support tracepoint
+>    hugetlbfs: use tracepoints in hugetlbfs functions.
+> 
+>   MAINTAINERS                      |   1 +
+>   fs/hugetlbfs/inode.c             |  17 +++-
+>   include/trace/events/hugetlbfs.h | 156 +++++++++++++++++++++++++++++++
+>   3 files changed, 172 insertions(+), 2 deletions(-)
+>   create mode 100644 include/trace/events/hugetlbfs.h
+> 
