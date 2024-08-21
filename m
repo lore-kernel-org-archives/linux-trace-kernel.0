@@ -1,251 +1,281 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BE1BA283;
-	Wed, 21 Aug 2024 08:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179301C9427;
+	Wed, 21 Aug 2024 09:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724230016; cv=none; b=CJ4wkb95MVhVaTEurqVtYjbDawzwoLNCIcOvuYzwN/k9OhCCiV5PzKYt5kwaAW/kTimBV+ldCyU1pBA1BA2HQdjhgNWaJVCviJcEXLKDcj0xKApZ+5HPg8zPWWfmmoxciTbCaUTT3D9bzhdHqNIz3CEzOvo6ikP2o4XBh+NEy/Y=
+	t=1724231707; cv=none; b=B3KJ5qNa92kSPLF7snYRBcac4tJM9HWW+7t8O/9Ubt7i/UD3cjSefuQ7axfd0LGAm7fIw3ChG782oBcHSlAOon4yGzBYIea/9Qy+mjh31kuG2BT5NO9JjMH3SGrgsWJbmDOzQIdLX9PIawGXs0WjGN0SFwLrHtxUYZaPI3VKIsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724230016; c=relaxed/simple;
-	bh=xJOGXw3Q/tZfv4AKomM1StwNLPbbup+1TCxoN5+4x0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Y7t8Ya9i3hkDdCnvM5Nyw41vYuQVpJ2CWO6NYmgxe64A/rq1R1X7OdGL61THdJRHNwc7Z/hR2Yg0Be4kf7XnJ8okf0CjIdVOhbS3kS28JLDJAO/ZJKNnCF1FzkBO+diFldmX9sMoKpJlORscQ9Jrm4ssuQCb/n65D8cL5scDIU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Wpfvz03Wxz69Gl;
-	Wed, 21 Aug 2024 16:42:07 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 024081401F2;
-	Wed, 21 Aug 2024 16:46:49 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 21 Aug 2024 16:46:48 +0800
-Message-ID: <b7f26d4b-1676-2fea-e390-b903271160da@huawei.com>
-Date: Wed, 21 Aug 2024 16:46:47 +0800
+	s=arc-20240116; t=1724231707; c=relaxed/simple;
+	bh=OUtYB2xd9RpqA6sX0X5lJPKnbZ+idsBu0nLIl8hmY9o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b1WB+Yp7vynVFpJ9uDIsEgznIFkkds6AWD0mq+HS5kA99irk3RtWXKN27PIZASOklQDILznFgOFLsweDjSiUFIUiiCJ0I/jdCkiQxGiipBe3RBe79Ejte5j8KE0B4Mw4UB4m1zFz2Y0E5pCOlvQa7kxs2KteRc59MG6MWudyOQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lcX4fXY2; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcX4fXY2"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f3eabcd293so22267341fa.2;
+        Wed, 21 Aug 2024 02:15:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724231703; x=1724836503; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g/AL1OeL8iYesAGF2KkaZ/rqFlEZKCDby71JmQLIyGU=;
+        b=lcX4fXY2dpb4CJMjztNS4v+DHkQeF80bKCENOg70xN5mnOZ9FeBrsHzAbdrI3bkiH6
+         cr+p4K5rZ0WKNAt4poVZZIx06DM4QWdaeu4JwmVnZo+BOEeQyef+yV5KL0uTZYufYOrx
+         68VUNxKwyizp1Yq2LNQUNRhvmMJI6Gn5ljSjj3rv2gNEBmeFpFezikHrwZK2gVWAxUgX
+         +6J6KImsq4O9DWOOn6NxZp4W+UPP7HBD9YTk5VfkdwZ5aY/tCseUS+acYwQb0mEc2weB
+         q6R8oGPzsulSmb3dVmOrxV3cKsMHxbeskqXcE/ucizQzAYySwKiWvRWgVPspYjBJZLiL
+         3+hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724231703; x=1724836503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g/AL1OeL8iYesAGF2KkaZ/rqFlEZKCDby71JmQLIyGU=;
+        b=kn3jR7mpCN7Uuh8jGoIR1x/xKvbeoxq2EM17NeyY+Pp9h55vm0QSBB4zwfU+O26FgS
+         mYnI9GBMNvCgwxZKxUg8VVgubBkqhGgH0KJZPemYZj6GTrdYaNKbqITMbzObHrtHfX1Z
+         D5xsH+BChs7JAbJy8gSygPQs214wFLBkyTJyzOOmYHTi0uUefeGYQsXG8ZDT1gXA4S0X
+         HNP4YX6LKVLBD5HpQbl8kH4MsiaLa/eyIq3EfpN1qJbqnaqG9lKC9uv/Mdx7iMnrkUNL
+         hD0lSHYcb1Dm3D/Hqw3OGwNhIapKmI9IgAI5UK7eNqnlsKtriQpT81txzkFYmlLU3TA9
+         pBug==
+X-Forwarded-Encrypted: i=1; AJvYcCUNdu0NS8GjuuOgc7yuulU9m+s3K2a2sSlU67C/UTli3I478FsGeo5wTPHacicI1uDr/Is5N7i6RMfid5w=@vger.kernel.org, AJvYcCUVg9e8mkl7G2Xzkr8ULMHpWUM+Cr/lCe/VdZIidl4ncnf16QyfC6E3agpobFdi0Xey7cPNL6RjnhLwvQU=@vger.kernel.org, AJvYcCUrwckdgYEPwrinxcKd0Ydq08fFkUfK06Gqib7HFRHIScLra6MVsk8d9dbnhLx7mAKMeLNSFgG6g7Zcbw==@vger.kernel.org, AJvYcCV+akLaGSXr5Ms64cPqjo3sWiqJMi+CvFR91nsmCM/XrvUUjynWXizaeJ82MY8oWIqusICISnvkf9wnSw==@vger.kernel.org, AJvYcCVTjL6EmzkzmA8NPGBu9dplSQvfK5isFjPUSf//4jgn0yvM58dEPF78rViZIc8bzdFeWliUkH20opVwL+0WPccW@vger.kernel.org, AJvYcCVV1XA0O+SDluYpL2kZChb2SUQd4/h17LBIrE8Lm6598uRM9awY+ywo6hQIACaP5lwrLZ40Ay4JZ3mm@vger.kernel.org, AJvYcCVW7tinhvb3G51XM4cuyUDlUnuWI+0Ly/CzZyVnnyzY7p62nHq0P67+xyiiexX2poD3rN8fflkq@vger.kernel.org, AJvYcCVkdwS/pLx5seY0ddYWyCxMdwKHi421qtL810+hy1moVBsXgme0w414RrrtEDgEo2wG334G7mW/cAT5SmZGPtTjuvtg@vger.kernel.org, AJvYcCWpoPejCrONPV4gYi0wujwxmtYsjQApe5fMQKX33TgOJgAzptTciVvOmaAHL/WF0/03vkM3nYxHduCgBA==@vger.kernel.org, AJvYcCXJCMCqmfcTBIU9ljsUHV1A4yn3JPcQpEzq0JsvJgS0qlgyYDJ6k120BPL1hefaKk2FWNjpdpeOb3hjzALL@vger.kernel.org, AJvYcCXNA8Z9LklYfZY6BhXACmP2+yqgjjB7p7Vnrjfp1HZhyaoXp6exQsNGmRqcSuZqfrROC7c=@vger.kernel.org, AJvYcCXx7Ng0houwH3QEYn33UK4dE4MQV5vxk7AHd/MrD7wJTrvrqbbAP9Yg5A67o0aa4+XiTEB71tPDzuisCjdU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7u4AjcR+5o0GpEJ2rr1gT6f+Xppeec+QSz1XlG3SzGdLp9p4E
+	TualB3jGdnPkG/YTUi32Zb+PYGSbTJbneLnCOJM5SdQvTQiLHKKs5PgJGX9I6QRuDGEjsUvBMo+
+	uZYHeRxKqBx5Xu1AN7s/Wi7xyL34=
+X-Google-Smtp-Source: AGHT+IGLGfjw+Fjk2rSsSnYZ7V+bLHHFrxyDZsACc2hqiPsKgWXLHNd/EC/FWx9bAUeST6qbartz/G3Ry9JaBMthtOI=
+X-Received: by 2002:a2e:988a:0:b0:2ef:2f17:9ede with SMTP id
+ 38308e7fff4ca-2f3f8b600a8mr8953001fa.49.1724231702724; Wed, 21 Aug 2024
+ 02:15:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
- <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
- <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
- <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
- <9044640f-727a-f4ec-cb70-35eeeb28111e@huawei.com>
- <CAEf4BzaQi8mUW+1DJZvO+D5SXHTj5q7J6WmnP8FvLWXuiFHPvQ@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzaQi8mUW+1DJZvO+D5SXHTj5q7J6WmnP8FvLWXuiFHPvQ@mail.gmail.com>
+References: <20240813211317.3381180-4-almasrymina@google.com>
+ <CAMArcTWWxjsg_zwS6waWkLpyHhwdXDm_NJeVGm_dr+eT5QDZiA@mail.gmail.com>
+ <20240819155257.1148e869@kernel.org> <CAHS8izPL4YdqFjkTpYavdxQn816=kkUv0xravQJF4Uno7Bn3ZQ@mail.gmail.com>
+In-Reply-To: <CAHS8izPL4YdqFjkTpYavdxQn816=kkUv0xravQJF4Uno7Bn3ZQ@mail.gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
+Date: Wed, 21 Aug 2024 18:14:50 +0900
+Message-ID: <CAMArcTXvccYBPZTEuW-z=uTK7W67utd9-xjPzfxEOvUWhPS7bg@mail.gmail.com>
+Subject: Re: [PATCH net-next v19 03/13] netdev: support binding dma-buf to netdevice
+To: Mina Almasry <almasrymina@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Aug 20, 2024 at 1:01=E2=80=AFPM Mina Almasry <almasrymina@google.co=
+m> wrote:
+>
+> On Mon, Aug 19, 2024 at 6:53=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> =
+wrote:
+> >
+> > On Mon, 19 Aug 2024 00:44:27 +0900 Taehee Yoo wrote:
+> > > > @@ -9537,6 +9540,10 @@ static int dev_xdp_attach(struct net_device =
+*dev, struct netlink_ext_ack *extack
+> > > >                         NL_SET_ERR_MSG(extack, "Native and generic =
+XDP can't be active at the same time");
+> > > >                         return -EEXIST;
+> > > >                 }
+> > > > +               if (dev_get_max_mp_channel(dev) !=3D -1) {
+> > > > +                       NL_SET_ERR_MSG(extack, "XDP can't be instal=
+led on a netdev using memory providers");
+> > > > +                       return -EINVAL;
+> > > > +               }
+> > >
+> > > Should we consider virtual interfaces like bonding, bridge, etc?
+> > > Virtual interfaces as an upper interface of physical interfaces can
+> > > still install XDP prog.
+> > >
+> > > # ip link add bond0 type bond
+> > > # ip link set eth0 master bond0
+> > > # ip link set bond0 xdp pin /sys/fs/bpf/x/y
+> > > and
+> > > # ip link set bond0 xdpgeneric pin /sys/fs/bpf/x/y
+> > >
+> > > All virtual interfaces can install generic XDP prog.
+> > > The bonding interface can install native XDP prog.
+> >
+> > Good point. We may need some common helpers to place the checks for XDP=
+.
+> > They are spread all over the place now.
+>
+> Took a bit of a look here. Forgive me, I'm not that familiar with XDP
+> and virtual interfaces, so I'm a bit unsure what to do here.
+>
+> For veth, it seems, the device behind the veth is stored in
+> veth_priv->peer, so it seems maybe a dev_get_max_mp_channel() check on
+> veth_priv->peer is the way to go to disable this for veth? I think we
+> need to do this check on creation of the veth and on the ndo_bpf of
+> veth.
+>
+> For bonding, it seems we need to add mp channel check in bond_xdp_set,
+> and bond_enslave?
+>
+> There are a few other drivers that define ndo_add_slave, seems a check
+> in br_add_slave is needed as well.
+>
+> This seems like a potentially deep rabbit hole with a few checks to
+> add all of the place. Is this blocking the series? AFAICT if XDP fails
+> with mp-bound queues with a benign error, that seems fine to me; I
+> don't have a use case for memory providers + xdp yet. This should only
+> be blocking if someone can repro a very serious error (kernel crash)
+> or something with this combination.
+>
+> I can try to add these checks locally and propose as a follow up
+> series. Let me know if I'm on the right track with figuring out how to
+> implement this, and, if you feel like it's blocking.
+>
+> --
+> Thanks,
+> Mina
 
+I agree with the current approach, which uses the
+dev_get_min_mp_channel_count() in the dev_xdp_attach().
+The only problem that I am concerned about is the
+dev_get_min_mp_channel_count() can't check lower interfaces.
+So, how about just making the current code to be able to check lower
+interfaces?
+Here is a rough modification and I tested it. it works well.
+Please look into this code.
 
-在 2024/8/16 0:53, Andrii Nakryiko 写道:
-> On Wed, Aug 14, 2024 at 7:58 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/8/15 2:42, Andrii Nakryiko 写道:
->>> On Tue, Aug 13, 2024 at 9:17 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>
->>>>
->>>>
->>>> 在 2024/8/13 1:49, Andrii Nakryiko 写道:
->>>>> On Mon, Aug 12, 2024 at 4:11 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> 在 2024/8/9 2:26, Andrii Nakryiko 写道:
->>>>>>> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>>>>
->>>>>>>> Hi Andrii and Oleg.
->>>>>>>>
->>>>>>>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->>>>>>>> on arm64. I notice recent discussions on the performance and scalability of uprobes
->>>>>>>> within the mailing list. Considering this interest, I've added you and other relevant
->>>>>>>> maintainers to the CC list for broader visibility and potential collaboration.
->>>>>>>>
->>>>>>>
->>>>>>> Hi Liao,
->>>>>>>
->>>>>>> As you can see there is an active work to improve uprobes, that
->>>>>>> changes lifetime management of uprobes, removes a bunch of locks taken
->>>>>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
->>>>>>> hold off a bit with your changes until all that lands. And then
->>>>>>> re-benchmark, as costs might shift.
->>>>>>>
->>>>>>> But also see some remarks below.
->>>>>>>
->>>>>>>> Thanks.
->>>>>>>>
->>>>>>>> 在 2024/7/27 17:44, Liao Chang 写道:
->>>>>>>>> The profiling result of single-thread model of selftests bench reveals
->>>>>>>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
->>>>>>>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
->>>>>>>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
->>>>>>>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
->>>>>>>>>
->>>>>>>>> This patch introduce struct uprobe_breakpoint to track previously
->>>>>>>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
->>>>>>>>> need for redundant insn_slot writes and subsequent expensive cache
->>>>>>>>> flush, especially on architecture like ARM64. This patch has been tested
->>>>>>>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
->>>>>>>>> bench and Redis GET/SET benchmark result below reveal obivious
->>>>>>>>> performance gain.
->>>>>>>>>
->>>>>>>>> before-opt
->>>>>>>>> ----------
->>>>>>>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
->>>>>>>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
->>>>>>>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
->>>>>>>
->>>>>>> I'm surprised that nop and push variants are much slower than ret
->>>>>>> variant. This is exactly opposite on x86-64. Do you have an
->>>>>>> explanation why this might be happening? I see you are trying to
->>>>>>> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
->>>>>>> variant of uprobe that normally shouldn't be used. Typically uprobe is
->>>>>>> installed on nop (for USDT) and on function entry (which would be push
->>>>>>> variant, `push %rbp` instruction).
->>>>>>>
->>>>>>> ret variant, for x86-64, causes one extra step to go back to user
->>>>>>> space to execute original instruction out-of-line, and then trapping
->>>>>>> back to kernel for running uprobe. Which is what you normally want to
->>>>>>> avoid.
->>>>>>>
->>>>>>> What I'm getting at here. It seems like maybe arm arch is missing fast
->>>>>>> emulated implementations for nops/push or whatever equivalents for
->>>>>>> ARM64 that is. Please take a look at that and see why those are slow
->>>>>>> and whether you can make those into fast uprobe cases?
->>>>>>
->>>>>> Hi Andrii,
->>>>>>
->>>>>> As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
->>>>>> compared to X86 behavior. My investigation revealed that the root cause lies in
->>>>>> the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
->>>>>> of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
->>>>>> to handle these instructions out-of-line in userspace upon breakpoint exception
->>>>>> is handled, leading to a significant performance overhead compared to 'ret' variant,
->>>>>> which is already emulated.
->>>>>>
->>>>>> To address this issue, I've developed a patch supports  the emulation of 'nop' and
->>>>>> 'push' variants. The benchmark results below indicates the performance gain of
->>>>>> emulation is obivious.
->>>>>>
->>>>>> xol (1 cpus)
->>>>>> ------------
->>>>>> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>>>>> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>>>>> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>>>>> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>>>>> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>>>>> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>>>>>
->>>>>> emulation (1 cpus)
->>>>>> -------------------
->>>>>> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
->>>>>> uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
->>>>>> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
->>>>>> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
->>>>>> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
->>>>>> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
->>>>>>
->>>>>> As you can see, the performance gap between nop/push and ret variants has been significantly
->>>>>> reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
->>>>>> more cycles than the other.
->>>>>
->>>>> Great, it's an obvious improvement. Are you going to send patches
->>>>> upstream? Please cc bpf@vger.kernel.org as well.
->>>>
->>>> I'll need more time to thoroughly test this patch. The emulation o push/nop
->>>> instructions also impacts the kprobe/kretprobe paths on Arm64, As as result,
->>>> I'm working on enhancements to trig-kprobe/kretprobe to prevent performance
->>>> regression.
->>>
->>> Why would the *benchmarks* have to be modified? The typical
->>> kprobe/kretprobe attachment should be fast, and those benchmarks
->>> simulate typical fast path kprobe/kretprobe. Is there some simulation
->>> logic that is shared between uprobes and kprobes or something?
->>
->> Yes, kprobe and uprobe share many things for Arm64, but there are curical
->> difference. Let me explain further. Simulating a 'push' instruction on
->> arm64 will modify the stack pointer at *probe breakpoint. However, kprobe
->> and uprobe use different way to restore the stack pointer upon returning
->> from the breakpoint exception. Consequently.sharing the same simulation
->> logic for both would result in kernel panic for kprobe.
->>
->> To avoid complicating the exception return logic, I've opted to simuate
->> 'push' only for uprobe and maintain the single-stepping for kprobe [0].
->> This trade-off avoid the impacts to kprobe/kretprobe, and no need to
->> change the kprobe/kretprobe related benchmark.
->>
-> 
-> I see, thanks for explaining. I noticed the "bool kernel" flag you
-> added, it makes sense.
-> 
-> I still don't understand why you'd need to modify kprobe/kretprobe
-> benchmarks, as they are testing attaching kprobe at the kernel
-> function entry, which for kernels should be an optimized case not
-> requiring any emulation.
+diff --git a/net/core/dev.c b/net/core/dev.c
+index f6f40c682b83..87c7985cb242 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6989,6 +6989,27 @@ static __latent_entropy void
+net_rx_action(struct softirq_action *h)
+        bpf_net_ctx_clear(bpf_net_ctx);
+ }
 
-Sorry about the confusion. I've revised the implementation of nop/push
-emulation to avoid the impacts the kprobe/kretprobe on Arm64, see the
-change to arm_probe_decode_insn() in the patch [0]. As a result, no
-changes to the kprobe/kretprobe benchmarks.
++static int __dev_get_min_mp_channel_count(struct net_device *dev,
++                                         struct netdev_nested_priv *priv)
++{
++       int i, max =3D 0;
++
++       ASSERT_RTNL();
++
++       for (i =3D 0; i < dev->real_num_rx_queues; i++)
++               if (dev->_rx[i].mp_params.mp_priv)
++                       /* The channel count is the idx plus 1. */
++                       max =3D i + 1;
++
++       return max;
++}
++
++u32 dev_get_min_mp_channel_count(const struct net_device *dev)
++{
++       return (u32)__dev_get_min_mp_channel_count((struct net_device *)dev=
+,
++                                                  NULL);
++}
++
+ struct netdev_adjacent {
+        struct net_device *dev;
+        netdevice_tracker dev_tracker;
+@@ -9538,7 +9559,10 @@ static int dev_xdp_attach(struct net_device
+*dev, struct netlink_ext_ack *extack
+                        NL_SET_ERR_MSG(extack, "Native and generic XDP
+can't be active at the same time");
+                        return -EEXIST;
+                }
+-               if (dev_get_min_mp_channel_count(dev)) {
++
++               if (netdev_walk_all_lower_dev(dev,
++                                             __dev_get_min_mp_channel_coun=
+t,
++                                             NULL)) {
+                        NL_SET_ERR_MSG(extack, "XDP can't be installed
+on a netdev using memory providers");
+                        return -EINVAL;
+                }
+@@ -9826,20 +9850,6 @@ int dev_change_xdp_fd(struct net_device *dev,
+struct netlink_ext_ack *extack,
+        return err;
+ }
 
-[0] https://lore.kernel.org/all/20240814080356.2639544-1-liaochang1@huawei.com/
+-u32 dev_get_min_mp_channel_count(const struct net_device *dev)
+-{
+-       u32 i, max =3D 0;
+-
+-       ASSERT_RTNL();
+-
+-       for (i =3D 0; i < dev->real_num_rx_queues; i++)
+-               if (dev->_rx[i].mp_params.mp_priv)
+-                       /* The channel count is the idx plus 1. */
+-                       max =3D i + 1;
+-
+-       return max;
+-}
+-
+ /**
+  * dev_index_reserve() - allocate an ifindex in a namespace
+  * @net: the applicable net namespace
 
-Thanks.
+How to test:
+ip link add bond2 type bond
+ip link add bond1 master bond2 type bond
+ip link add bond0 master bond1 type bond
+ip link set eth0 master bond0
+ip link set eth0 up
+ip link set bond0 up
+ip link set bond1 up
+ip link set bond2 up
 
-> 
->> [0] https://lore.kernel.org/all/20240814080356.2639544-1-liaochang1@huawei.com/
->>
->>>
->>>>
->>>>>
->>>>>
->>>>> I'm also thinking we should update uprobe/uretprobe benchmarks to be
->>>>> less x86-specific. Right now "-nop" is the happy fastest case, "-push"
->>>>> is still happy, slightly slower case (due to the need to emulate stack
->>>>> operation) and "-ret" is meant to be the slow single-step case. We
->>>>> should adjust the naming and make sure that on ARM64 we hit similar
->>>>> code paths. Given you seem to know arm64 pretty well, can you please
->>>>> take a look at updating bench tool for ARM64 (we can also rename
->>>>> benchmarks to something a bit more generic, rather than using
->>>>> instruction names)?
->>>>
->>>
->>> [...]
->>
->> --
->> BR
->> Liao, Chang
-> 
-> 
+ip link set bond2 xdp pin /sys/fs/bpf/x/y
 
--- 
-BR
-Liao, Chang
+./ncdevmem -s 192.168.1.4 -c 192.168.1.2 -f eth0 -l -p 5201 -v 7 -t 0 -q 1
+
+# bond2 <-- xdp should not be installed.
+#   |
+# bond1 <-- xdp should not be installed.
+#   |
+# bond0 <-- xdp should not be installed.
+#   |
+# eth0 <--memory provider is used.
+
+The netdev_walk_all_lower_dev() calls the callback function
+(__dev_get_min_mp_channel_count) while it walks its own all lower
+interfaces recursively.
+If we want to check more conditions, we can just add checks in
+__dev_get_min_mp_channel_count() or change the callback function.
+
+Note that currently dev_xdp_attach() checks upper interfaces with
+netdev_for_each_upper_dev_rcu() but it doesn't work recursively.
+I think It should be fixed to check upper interfaces recursively in a
+separate patch.
+
+Thanks a lot!
+Taehee Yoo
