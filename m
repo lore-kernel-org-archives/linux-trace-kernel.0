@@ -1,224 +1,120 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D2116D4EF;
-	Thu, 22 Aug 2024 14:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912D41C93BC;
+	Thu, 22 Aug 2024 14:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724336577; cv=none; b=bnCMBgpUkKHowpzCa3cyOpVWFQ1vihmaaX+ZnXvH09WpfQ9VVA76xzACSnotwKyVyP/cpJ4a8bjamFztfnsoduKLGLxWM/DFeAQhlfyd96bGoeqWYOXxGAQEZA6OM6ix1w4L4e6TBbq3clyg1xZl34p9N7TUEuWe0CD599VWcto=
+	t=1724337092; cv=none; b=MvURu6fYrS75znrQgp4EaiZNohCNw/REboYi0kobBP/nPB7BgIFql56uNxyewpYP+Wh8yPRtZc+xpHy2JpWKyP37VDhCXo/jRCWX2b6u5LEQBnx0mqcjH3gV56OyJU4VZKynb31nIRINSM9HXfVNcWLLkhOcU43y8EpaE34xIGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724336577; c=relaxed/simple;
-	bh=RlK/WiCI7cC2xBe2HeIm5qnzRjy7kA6HBtTcgIK5hiE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOzXxZqWCISFI50MXPqjVbiS7EwCeCRoSujXXB0oE5NYRd9HB2s4x3QA/dSriCLSIsjpj69lZSB7DNXssKAWbQFY4sY+1XEiv38HYHcjJJa1Zj7y8uOx78tP0LDx7gw43cVoTiqG0BvWhszFykbN/HjryLzSh3YLro1ips1bxOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LNx+qxRI; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNx+qxRI"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a83597ce5beso137804166b.1;
-        Thu, 22 Aug 2024 07:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724336574; x=1724941374; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hvFk4KiFQ4jknRyXdpWSIplvO8xMF83nYSG+PUhv9V4=;
-        b=LNx+qxRIpVQu+v/CbhCPwcm2X65l2HxnL1m3ndmNqiSYxKgYSWUYD6l8PFg2U9CyYP
-         Kq5jd9zILNBLt52Wd8vtadLLahsN7VuDnplcs/+J+ane1YdJ7fnmzngjhpWaDATnEjOb
-         +EQ+bZJ2A6uUFA/z6u4FeaWztWMay8/mUwyI2lYk3UJ9A17VhAhs4kDohMUbt8DkpMi5
-         I3L9Q9QMWMxneeN98ezIqO/si1vOOfxrlHS10kss2OMBnaMeEZmslwTASq1qvum29jUw
-         3LGmcc2m6WqUfqTgNhNLs0syWnY+g1oLqYNrP9IjysnNEZyre//1HoCG1C1MGCEM3KdJ
-         iRTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724336574; x=1724941374;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hvFk4KiFQ4jknRyXdpWSIplvO8xMF83nYSG+PUhv9V4=;
-        b=NjjT4paiB2euLEqNcHld1P8tHIcgrLIdY0ZIbgtFu5H+605CfIr8hdATjb5X1pLOpT
-         I7azPXf6mRZ086eOp3ETbKj915JJxgT63K+Ed+mOoU83n2/5hHhaJCe3uuiG7gP4N2FJ
-         1iyCqAxx4o1TNSfXiP4mr3SPwNyFrBuOiBcBEMdc5nAyve6CxqJRFGdu/PQplpktnxht
-         pZyExkcVoUW8vGICola9Ov78ej7Kc/VPbioToN1BGJG4EKUqxNJmE3//QNo0sGU3KbpA
-         Nz9vNP2JxGf3vKmBrT7wn9MJpw/lhw+pEpUBCfe8XyCAzxITHsElsMHYr02CRCa1Xqcf
-         2H2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVeoD8q+Hu9QblP0eUIHmx0+NRwfVlFMZ5ERClvF/OIa/95etBkgy14x/SX9N0k6c46U+U=@vger.kernel.org, AJvYcCWmPVM36uop2M1SZK6n+ZaJSmofLOtEfUQu4JSjmHNUlHf2UnzPQ/3l/c/9xb/xiMZrV6vTFnVOxutUdWjn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGQSf+1oUK2vOgt3yps0w7+HCYhwY/1gs5HtBCD7sQGZ5EEmeN
-	McHruC7FWJyTWgiAgrE1eGFXO6L9CDF5Rks2QcXeiT8mVgYCOhqg
-X-Google-Smtp-Source: AGHT+IF0hmAt6tkNqeAkfXeiDKDltNUNbNaOv2hcoNDEkEIxY1sF68Dk0oiuClfQ1GBKVbEcaxalUA==
-X-Received: by 2002:a17:906:6a0e:b0:a80:f646:c9c4 with SMTP id a640c23a62f3a-a868a5aaf28mr301279766b.1.1724336573366;
-        Thu, 22 Aug 2024 07:22:53 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f48621esm127706966b.176.2024.08.22.07.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 07:22:52 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 22 Aug 2024 16:22:51 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com,
-	akpm@linux-foundation.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
- locklessly under SRCU protection
-Message-ID: <ZsdJuwIuJ-KFA6Rz@krava>
-References: <20240813042917.506057-1-andrii@kernel.org>
- <20240813042917.506057-5-andrii@kernel.org>
+	s=arc-20240116; t=1724337092; c=relaxed/simple;
+	bh=c/Cj9RrvqJul5t8m3NiqMO38iRJFNFSyGlqIQpBEd94=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QnB2xzXTj3PK0V7fHO3Dn8H6Y4OMrb2vBjBB1phUfPyLujofqLZZoF8rzZPhQWzr7R37BnT7TjIvTCrpZRPjNs2o5CDcAtGVGdSYeXt9g+UlVQP5YuXWL14926upcgb+k4LuLtnrUqTfPQazQgC7l4LkICxEf3Zs9bZtitqeYBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC80C32782;
+	Thu, 22 Aug 2024 14:31:31 +0000 (UTC)
+Date: Thu, 22 Aug 2024 10:32:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in
+ timerlat_fd_release
+Message-ID: <20240822103202.130cf0df@gandalf.local.home>
+In-Reply-To: <CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com>
+References: <20240820130001.124768-1-tglozar@redhat.com>
+	<20240821160316.02c03c44@gandalf.local.home>
+	<CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240813042917.506057-5-andrii@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
+On Thu, 22 Aug 2024 11:32:07 +0200
+Tomas Glozar <tglozar@redhat.com> wrote:
 
-SNIP
+> st 21. 8. 2024 v 22:02 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.or=
+g> napsal:
+> >
+> > I'm able to reproduce this with the above. Unfortunately, I can still
+> > reproduce it after applying this patch :-(
+> > =20
+>=20
+> Thank you for looking at this. I was at first not too sure about
+> whether this is the proper fix, but after some discussion with Luis
+> (in CC), we have come to the conclusion that the double-close of the
+> timerlat_fd might be a possible explanation, and this patch worked for
+> both of us. Are you reproducing the same bug (NULL pointer dereference
+> in hrtimer_active) with the patch? IIUC that should not happen anymore
+> since the patch explicitly checks for zero in the hrtimer structure.
 
-> @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  	int err;
->  
->  	down_write(&uprobe->register_rwsem);
-> -	if (WARN_ON(!consumer_del(uprobe, uc))) {
-> -		err = -ENOENT;
-> -	} else {
-> -		err = register_for_each_vma(uprobe, NULL);
-> -		/* TODO : cant unregister? schedule a worker thread */
-> -		if (unlikely(err))
-> -			uprobe_warn(current, "unregister, leaking uprobe");
-> -	}
-> +
-> +	list_del_rcu(&uc->cons_node);
+There isn't a double close. But there are two bugs and you did sorta fix
+one of them.
 
-hi,
-I'm using this patchset as base for my changes and stumbled on this today,
-I'm probably missing something, but should we keep the 'uprobe->consumer_rwsem'
-lock around the list_del_rcu?
+>=20
+> I have caught however a different panic in addition to the one
+> reported above while testing "rtla: Support idle state disabling via
+> libcpupower in timerlat" on an EL9 RT kernel:
+>=20
+> BUG: kernel NULL pointer dereference, address: 0000000000000014
+> CPU: 6 PID: 1 Comm: systemd Kdump: loaded Tainted: G        W
+> -------  ---  5.14.0-452.el9.x86_64+rt #1
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
+> 04/01/2014
+> RIP: 0010:task_dump_owner+0x3d/0x100
+> RSP: 0018:ffffadd6c0013aa8 EFLAGS: 00010202
+> RAX: 0000000000000001 RBX: ffffa00c864f4580 RCX: ffffa00c87453e10
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa00c864f4580
+> RBP: ffffa00c87453e10 R08: ffffa00c87418e80 R09: ffffa00c87418e80
+> R10: ffffa00c88236600 R11: ffffffffb73f1868 R12: ffffa00c87453e0c
+> R13: 0000000000000000 R14: ffffa00cb5e430c0 R15: ffffa00cb5e430c8
+> FS:  00007f9336b41b40(0000) GS:ffffa00cffd80000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000014 CR3: 00000000025ee002 CR4: 0000000000770ef0
+> PKRU: 55555554
+> Call Trace:
+> <TASK>
+> ? show_trace_log_lvl+0x1c4/0x2df
+> ? show_trace_log_lvl+0x1c4/0x2df
+> ? proc_pid_make_inode+0xa0/0x110
+> ? __die_body.cold+0x8/0xd
+> ? page_fault_oops+0x140/0x180
+> ? do_user_addr_fault+0x61/0x690
+> ? kvm_read_and_reset_apf_flags+0x45/0x60
+> ? exc_page_fault+0x65/0x180
+> ? asm_exc_page_fault+0x22/0x30
+> ? task_dump_owner+0x3d/0x100
+> ? task_dump_owner+0x36/0x100
+> proc_pid_make_inode+0xa0/0x110
+> proc_pid_instantiate+0x21/0xb0
+> proc_pid_lookup+0x95/0x170
+> proc_root_lookup+0x1d/0x50
+> __lookup_slow+0x9c/0x150
+> walk_component+0x158/0x1d0
+> link_path_walk.part.0.constprop.0+0x24e/0x3c0
+> ? path_init+0x326/0x4d0
+> path_openat+0xb1/0x280
+> do_filp_open+0xb2/0x160
+> ? migrate_enable+0xd5/0x150
+> ? rt_spin_unlock+0x13/0x40
+> do_sys_openat2+0x96/0xd0
+> __x64_sys_openat+0x53/0xa0
+> ...
 
-jirka
 
+> Yeah, it seems there might be multiple bugs in the user workload
+> handling, the other NULL pointer dereference and refcount warning
+> above might be related (but I have yet to reproduce it on an upstream
+> kernel). I'm also going to look at the code and will post any findings
+> here.
 
-> +	err = register_for_each_vma(uprobe, NULL);
-> +
->  	up_write(&uprobe->register_rwsem);
->  
-> -	if (!err)
-> -		put_uprobe(uprobe);
-> +	/* TODO : cant unregister? schedule a worker thread */
-> +	if (unlikely(err)) {
-> +		uprobe_warn(current, "unregister, leaking uprobe");
-> +		goto out_sync;
-> +	}
-> +
-> +	put_uprobe(uprobe);
-> +
-> +out_sync:
-> +	/*
-> +	 * Now that handler_chain() and handle_uretprobe_chain() iterate over
-> +	 * uprobe->consumers list under RCU protection without holding
-> +	 * uprobe->register_rwsem, we need to wait for RCU grace period to
-> +	 * make sure that we can't call into just unregistered
-> +	 * uprobe_consumer's callbacks anymore. If we don't do that, fast and
-> +	 * unlucky enough caller can free consumer's memory and cause
-> +	 * handler_chain() or handle_uretprobe_chain() to do an use-after-free.
-> +	 */
-> +	synchronize_srcu(&uprobes_srcu);
->  }
->  EXPORT_SYMBOL_GPL(uprobe_unregister);
->  
-> @@ -1214,13 +1205,20 @@ EXPORT_SYMBOL_GPL(uprobe_register);
->  int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
->  {
->  	struct uprobe_consumer *con;
-> -	int ret = -ENOENT;
-> +	int ret = -ENOENT, srcu_idx;
->  
->  	down_write(&uprobe->register_rwsem);
-> -	for (con = uprobe->consumers; con && con != uc ; con = con->next)
-> -		;
-> -	if (con)
-> -		ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> +
-> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
-> +	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
-> +				 srcu_read_lock_held(&uprobes_srcu)) {
-> +		if (con == uc) {
-> +			ret = register_for_each_vma(uprobe, add ? uc : NULL);
-> +			break;
-> +		}
-> +	}
-> +	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-> +
->  	up_write(&uprobe->register_rwsem);
->  
->  	return ret;
-> @@ -2085,10 +2083,12 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  	struct uprobe_consumer *uc;
->  	int remove = UPROBE_HANDLER_REMOVE;
->  	bool need_prep = false; /* prepare return uprobe, when needed */
-> +	bool has_consumers = false;
->  
-> -	down_read(&uprobe->register_rwsem);
->  	current->utask->auprobe = &uprobe->arch;
-> -	for (uc = uprobe->consumers; uc; uc = uc->next) {
-> +
-> +	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
-> +				 srcu_read_lock_held(&uprobes_srcu)) {
->  		int rc = 0;
->  
->  		if (uc->handler) {
-> @@ -2101,17 +2101,24 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  			need_prep = true;
->  
->  		remove &= rc;
-> +		has_consumers = true;
->  	}
->  	current->utask->auprobe = NULL;
->  
->  	if (need_prep && !remove)
->  		prepare_uretprobe(uprobe, regs); /* put bp at return */
->  
-> -	if (remove && uprobe->consumers) {
-> -		WARN_ON(!uprobe_is_active(uprobe));
-> -		unapply_uprobe(uprobe, current->mm);
-> +	if (remove && has_consumers) {
-> +		down_read(&uprobe->register_rwsem);
-> +
-> +		/* re-check that removal is still required, this time under lock */
-> +		if (!filter_chain(uprobe, current->mm)) {
-> +			WARN_ON(!uprobe_is_active(uprobe));
-> +			unapply_uprobe(uprobe, current->mm);
-> +		}
-> +
-> +		up_read(&uprobe->register_rwsem);
->  	}
-> -	up_read(&uprobe->register_rwsem);
->  }
->  
->  static void
-> @@ -2119,13 +2126,15 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
->  {
->  	struct uprobe *uprobe = ri->uprobe;
->  	struct uprobe_consumer *uc;
-> +	int srcu_idx;
->  
-> -	down_read(&uprobe->register_rwsem);
-> -	for (uc = uprobe->consumers; uc; uc = uc->next) {
-> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
-> +	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
-> +				 srcu_read_lock_held(&uprobes_srcu)) {
->  		if (uc->ret_handler)
->  			uc->ret_handler(uc, ri->func, regs);
->  	}
-> -	up_read(&uprobe->register_rwsem);
-> +	srcu_read_unlock(&uprobes_srcu, srcu_idx);
->  }
->  
->  static struct return_instance *find_next_ret_chain(struct return_instance *ri)
-> -- 
-> 2.43.5
-> 
+Yes that is the second bug and it is related to the that this addresses.
+
+-- Steve
