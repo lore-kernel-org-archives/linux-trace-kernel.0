@@ -1,299 +1,346 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACCD1CEAB6;
-	Thu, 22 Aug 2024 17:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC93F1CCB36;
+	Thu, 22 Aug 2024 17:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724347205; cv=none; b=baB8sWBF0DpXvDgbFiFCoGE3w4XrcMo8GFhqoFgR8KIi4Ly6VbYcxwtOlIg1IV8COogPi3uDFvQ7fqODiVKqQNrlnNSVxHDKg0Zo8jnH7dq6VL0XGFM62Md16pHoxBXWp1J+qRNx+dLFtT3HijOnEatj3GVL3prm/kgvTVg09nY=
+	t=1724348082; cv=none; b=FDMpBzj+fBYbzdL08v2otEqYT3BUazKL9k0Q6YJyFkMT8VSnYxzoO0BF1kSjixSlzX8hFberp5H+3d0vAC6NyW5vcR27CTDSrngCJMujPx5csjhHrsh4oRUgkmZLbkLsLC8LFDK3/leKH5yEE9MkX1o8sArkA+aK2Vag4l1gxq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724347205; c=relaxed/simple;
-	bh=W7laqQR01J0+tCeAIN5VCv+rD6TbdvCUIGpT5IBSgr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ap1pVb0XtmAj6VNihoAUISgYlE3Aov7fNzq69UH12uSYPe8gNKdxDOaTQtGKmvl7WwDySPg1iMtBennvqWkoEDYS9MvjYkUphYqauu9eyR0uRST6GNJCB9JA8NNSRW1u73V1J9Djbv8YzcxXUCTZnDAgjvbz0CDctE+W6xj1/vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzRsAv4S; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724348082; c=relaxed/simple;
+	bh=rahWFJeMcvXEHyx7jNcZStpXPA3pa18p17UBFBk8xtA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=taMNqVrSugesyGvrCrmbZjvB7pjWUo0ATnzByLLH+9YlScbjvz5dQnAyw4vbop85CnFlA7hauUNh8f+4ki94/tkru0TNUywbiM7SofKXfGcMGQyfdsYqMq5iRadc+p56LOBr7hVUU+U5PHCz7yEBDmkvWZ+fmYPQ+wUqSR/HTww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzEyf6uQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzRsAv4S"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7a1d436c95fso66224085a.3;
-        Thu, 22 Aug 2024 10:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724347202; x=1724952002; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cWNnN5Rt2dG30RvqrIIBZJm8x7pgPszO2KiXLf2qQpQ=;
-        b=LzRsAv4SCaNjjmKSFbn7FgtXB5Q2vF9oVvSVzLsot2GENwzaphyM2opdYSDLt4UNph
-         /igdhcV+fyRs3gyuNzWeh/pciQrEhb3L+X8Mdt4WNzCaSW+dDUbzI2bIx+ywuOYt8MJt
-         oU4yJqJGCAqjf+88V/PMpU44RIRjNVjzcob1PTOEttYtjWSdIybzHoaRIxd2bkkyp6wM
-         /unMCSYb41KtsYuZL9EKidlPkltyYxOHVS2FwsOYZc76KQRpQKE1idDBlN1KAJAlyxLm
-         J0MY1P4jx8879dyKPIVpdgmk8/iUOh96pWaymzsRBl+Z5FYB2I6TUrRtkMKnyw3T5yvC
-         iIHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724347202; x=1724952002;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cWNnN5Rt2dG30RvqrIIBZJm8x7pgPszO2KiXLf2qQpQ=;
-        b=Coo7E3oAMyhRBzHwInxNDiaMkZrXhZ1Ce4CQYOxZmRTQUNwb2ofVl77KHnzNDNYto3
-         kZ2nPXA625tLcnU8x1TqI8faTDUughz772ULcxSJwC3U49lkxBtE+MPJSLicswHsAe1e
-         BqOiiuVAAN4FjwTbwgb+HL3Pprc499wzk0htuWzEsdtEzmaVg54I3L9gLBxx0XBKDR3N
-         INnwatOU9qZ1XbPN8Idq7Dp99AVHUIun3yXAFkl9XnLrUMQrW6F35o2MzPuj5P/DxXV1
-         8x/L1JmSNvaFGkTFMhy2sIV6Ey6sOzEoILZReqioM+389CXsra5lDfmWK0Ebhhxt4ZTE
-         Vlwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTDUorg7KrRE6cxduTM9np1r7g/t1d0HsvOcjxJE8c4a0IO1It6Mn4Ud/7FeACWoqTg4fdrsT66bTw490Z@vger.kernel.org, AJvYcCUeOLzPTXtnKXXlEoDaBSagiS+fSdwzLxIIoWC9HOWc7YzhrPVVoPhBVyj/SOJs/41X07VXpWSS9yHEpEwX1/ExHi9F@vger.kernel.org, AJvYcCWHufwHq7WzQTzNav1h/jxHoE/fPGTs73L5w/7Y60tUcoBMNoxAbessiJzobEU0oQZbPRk8PJIxAFIs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwnpR5OULHKdfWj4uR8KzzWMMNB4FhbOsc8Lo8dVOmTxQ02Ej4
-	9S6UFlQ570YbklW5RZKWVgHYdASBjTAvNGSOfBXyvokVcSgXiQ+W
-X-Google-Smtp-Source: AGHT+IG9h/7jpcanS4G8XArqKa6Zl87YJlLIIMDAoPD4/35CCz7tXpAyXVq1cMFdE9i97+v0hgP2wA==
-X-Received: by 2002:a05:620a:2950:b0:7a1:c426:d875 with SMTP id af79cd13be357-7a680a852cbmr324679185a.39.1724347202022;
-        Thu, 22 Aug 2024 10:20:02 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a67f343d3asm90720685a.48.2024.08.22.10.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 10:20:01 -0700 (PDT)
-Received: from phl-compute-04.internal (phl-compute-04.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id A5462120006D;
-	Thu, 22 Aug 2024 13:20:00 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Thu, 22 Aug 2024 13:20:00 -0400
-X-ME-Sender: <xms:QHPHZuvdcZkOuMuVQcWLJanx2eIOUancEWByPxv9_4dtKJOrkEUrdA>
-    <xme:QHPHZje7dknB2f5NA7EaRg-qfduRUBifRgbvU321a8_Vq3MmiZngInru7wY5x5D9K
-    XhAfsnqttUhyoBmwA>
-X-ME-Received: <xmr:QHPHZpx41TMUNPUdwHiuRIPj3DUd9_tvcLu2xwRGsl3Q-YXJPrdpMcp2TqSzyg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddvtddguddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdortddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhepueefleeufeefhfeljeejvdeuvdduhfdvhfdv
-    teeludehteeghfdtieefudegjeefnecuffhomhgrihhnpeiiuhhlihhptghhrghtrdgtoh
-    hmpdhruhhsthdqfhhorhdqlhhinhhugidrtghomhdpghhithhhuhgsrdgtohhmnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomh
-    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeeh
-    heehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmh
-    gvpdhnsggprhgtphhtthhopeehfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
-    rghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprhhoshhtvgguth
-    esghhoohgumhhishdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepmhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhitg
-    hiohhsrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtohepjhhpohhimhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hjsggrrhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtoheprghruggssehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:QHPHZpPu85gNx2cWy4ND3x_J-by9eb6cniWBdJ9fgQT4QgA74oZMaQ>
-    <xmx:QHPHZu9q_O0f6R9LIKNwIDhnLiWahJroKdp53DpW9ouVAMkfeMbGow>
-    <xmx:QHPHZhXexnOd5t-CBGQ--_usreFIoCaZXFxnR_gx9xWUqdDIGrWSlA>
-    <xmx:QHPHZnf-LFuNNC38Ac3SZlyHefUKGYnwzTUJlsQ_5sxQEOYyfVIIOA>
-    <xmx:QHPHZocPLA_DqYk7kMsOhYYoqNJfRDurSDuMaQcktN-TX_6nzKT3dyEJ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Aug 2024 13:19:59 -0400 (EDT)
-Date: Thu, 22 Aug 2024 10:19:50 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
- Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
- Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v8 3/5] rust: samples: add tracepoint to Rust sample
-Message-ID: <ZsdzNqUuXSXaGZqt@boqun-archlinux>
-References: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
- <20240822-tracepoint-v8-3-f0c5899e6fd3@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzEyf6uQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D122C4AF0C;
+	Thu, 22 Aug 2024 17:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724348082;
+	bh=rahWFJeMcvXEHyx7jNcZStpXPA3pa18p17UBFBk8xtA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VzEyf6uQ1Mr3OOQF+Jc5klfYyY7YGp2pKAIz522AEjbgffHyjHTHl9kzx0aWLGStv
+	 q3ajF0yh41us8dyT5XeAyA7Oznuy88fLxOMD55ghzW3Et8XMQ3N5ebRA58QPahR1Pb
+	 vkZRSUSsKnMbHvda1m0IBqYKXf973eOnUCXH/rdPn4eRW7GSKyfzSxGzqp8Qdm7azL
+	 31AQoNig9nl68RxGwkmKTMh4cwpocj/PFiUOCZXurtviC8kxRROE0je9/2QiaJXGrR
+	 ASFGO7Z2SgXQQRJZwwhyyh0Nt5jRk4RtLI4odOfVorMJXHpV1aTZGYOIvO1gWGqeQa
+	 u4DD+D4l/k+wQ==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f3f163e379so17505171fa.3;
+        Thu, 22 Aug 2024 10:34:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU18RlR3X7OH2wjOAH096o4R+AdulA0ZWzbsQ7ITdq8HzPaffI8COJfnEBEI2jpeoACxOYBuSeC+mn+Af0=@vger.kernel.org, AJvYcCW1Plg0aZMElq4Q7n9GkqPIQD0msGAijONYsOfCzAusbnrUK5qQEM0L8sEkSoxesApG0U0aqpqfrwfirDjegdjK+XC3@vger.kernel.org, AJvYcCXXdxUJHR2t+rsNB1pQfK/Lm7a2QF3105H86+ELtD5iNqNP+LPNJ1M46UPHpXMHZrJ6zjpnIwjR/iwakTddVQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmQwwBQqlMH7rmZgzrVGxE+TxYESr9BFN4/w6Hiq+xFAAQr/1B
+	w3X5TOKznFvP1nyfOurIW0hoCNh7QwGyyQnpJfFDsh4/i0CJRhzHkP06Xy0OEqcrUfuOae59sf/
+	3EzatVmtfjdVw33xkDTsoD+7zRi4=
+X-Google-Smtp-Source: AGHT+IG0yd7j8ZcYnzo/5J5k1u9eHExoy9aGS6E79ggApFILT1GWudOVvzvPeOA5qyV9BShxLqQIin21+j/yT70RQ7Q=
+X-Received: by 2002:a2e:b3d4:0:b0:2f3:c384:71ee with SMTP id
+ 38308e7fff4ca-2f405eef820mr22347761fa.33.1724348080675; Thu, 22 Aug 2024
+ 10:34:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240822-tracepoint-v8-3-f0c5899e6fd3@google.com>
+References: <20240821040700.1919317-1-kris.van.hees@oracle.com> <20240821040700.1919317-2-kris.van.hees@oracle.com>
+In-Reply-To: <20240821040700.1919317-2-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 23 Aug 2024 02:34:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARsq1aT5jJnKRYscAMsp3aO5euykSU_yPF6ZLMaDoeHJw@mail.gmail.com>
+Message-ID: <CAK7LNARsq1aT5jJnKRYscAMsp3aO5euykSU_yPF6ZLMaDoeHJw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] kbuild: generate offset range data for builtin modules
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 12:04:15PM +0000, Alice Ryhl wrote:
-> This updates the Rust printing sample to invoke a tracepoint. This
-> ensures that we have a user in-tree from the get-go even though the
-> patch is being merged before its real user.
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Wed, Aug 21, 2024 at 1:11=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
+.com> wrote:
+>
+> Create file module.builtin.ranges that can be used to find where
+> built-in modules are located by their addresses. This will be useful for
+> tracing tools to find what functions are for various built-in modules.
+>
+> The offset range data for builtin modules is generated using:
+>  - modules.builtin: associates object files with module names
+>  - vmlinux.map: provides load order of sections and offset of first membe=
+r
+>     per section
+>  - vmlinux.o.map: provides offset of object file content per section
+>  - .*.cmd: build cmd file with KBUILD_MODFILE
+>
+> The generated data will look like:
+>
+> .text 00000000-00000000 =3D _text
+> .text 0000baf0-0000cb10 amd_uncore
+> .text 0009bd10-0009c8e0 iosf_mbi
+> ...
+> .text 00b9f080-00ba011a intel_skl_int3472_discrete
+> .text 00ba0120-00ba03c0 intel_skl_int3472_discrete intel_skl_int3472_tps6=
+8470
+> .text 00ba03c0-00ba08d6 intel_skl_int3472_tps68470
+> ...
+> .data 00000000-00000000 =3D _sdata
+> .data 0000f020-0000f680 amd_uncore
+>
+> For each ELF section, it lists the offset of the first symbol.  This can
+> be used to determine the base address of the section at runtime.
+>
+> Next, it lists (in strict ascending order) offset ranges in that section
+> that cover the symbols of one or more builtin modules.  Multiple ranges
+> can apply to a single module, and ranges can be shared between modules.
+>
+> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
+a
+> is generated for kernel modules that are built into the kernel image.
+>
+> How it works:
+>
+>   1. The modules.builtin file is parsed to obtain a list of built-in
+>      module names and their associated object names (the .ko file that
+>      the module would be in if it were a loadable module, hereafter
+>      referred to as <kmodfile>).  This object name can be used to
+>      identify objects in the kernel compile because any C or assembler
+>      code that ends up into a built-in module will have the option
+>      -DKBUILD_MODFILE=3D<kmodfile> present in its build command, and thos=
+e
+>      can be found in the .<obj>.cmd file in the kernel build tree.
+>
+>      If an object is part of multiple modules, they will all be listed
+>      in the KBUILD_MODFILE option argument.
+>
+>      This allows us to conclusively determine whether an object in the
+>      kernel build belong to any modules, and which.
+>
+>  2. The vmlinux.map is parsed next to determine the base address of each
+>     top level section so that all addresses into the section can be
+>     turned into offsets.  This makes it possible to handle sections
+>     getting loaded at different addresses at system boot.
+>
+>     We also determine an 'anchor' symbol at the beginning of each
+>     section to make it possible to calculate the true base address of
+>     a section at runtime (i.e. symbol address - symbol offset).
+>
+>     We collect start addresses of sections that are included in the top
+>     level section.  This is used when vmlinux is linked using vmlinux.o,
+>     because in that case, we need to look at the vmlinux.o linker map to
+>     know what object a symbol is found in.
+>
+>     And finally, we process each symbol that is listed in vmlinux.map
+>     (or vmlinux.o.map) based on the following structure:
+>
+>     vmlinux linked from vmlinux.a:
+>
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+>
+>     vmlinux linked from vmlinux.o:
+>
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             vmlinux.o         -- need to use vmlinux.o.map
+>               <symbol>        -- ignored
+>               ...
+>
+>       vmlinux.o.map:
+>         <section>
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+>
+>  3. As sections, objects, and symbols are processed, offset ranges are
+>     constructed in a striaght-forward way:
+>
+>       - If the symbol belongs to one or more built-in modules:
+>           - If we were working on the same module(s), extend the range
+>             to include this object
+>           - If we were working on another module(s), close that range,
+>             and start the new one
+>       - If the symbol does not belong to any built-in modules:
+>           - If we were working on a module(s) range, close that range
+>
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  MAINTAINERS                        |  1 +
->  include/trace/events/rust_sample.h | 31 +++++++++++++++++++++++++++++++
->  rust/bindings/bindings_helper.h    |  1 +
->  samples/rust/Makefile              |  3 ++-
->  samples/rust/rust_print.rs         | 18 ++++++++++++++++++
->  samples/rust/rust_print_events.c   |  8 ++++++++
->  6 files changed, 61 insertions(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f328373463b0..1acf5bfddfc4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -19922,6 +19922,7 @@ C:	zulip://rust-for-linux.zulipchat.com
->  P:	https://rust-for-linux.com/contributing
->  T:	git https://github.com/Rust-for-Linux/linux.git rust-next
->  F:	Documentation/rust/
-> +F:	include/trace/events/rust_sample.h
->  F:	rust/
->  F:	samples/rust/
->  F:	scripts/*rust*
-> diff --git a/include/trace/events/rust_sample.h b/include/trace/events/rust_sample.h
-> new file mode 100644
-> index 000000000000..dbc80ca2e465
+>     Changes since v6:
+>      - Applied Masahiro Yamada's suggestions (Kconfig, makefile, script).
+>
+>     Changes since v5:
+>      - Removed unnecessary compatibility info from option description.
+>
+>     Changes since v4:
+>      - Improved commit description to explain the why and how.
+>      - Documented dependency on GNU AWK for CONFIG_BUILTIN_MODULE_RANGES.
+>      - Improved comments in generate_builtin_ranges.awk
+>      - Improved logic in generate_builtin_ranges.awk to handle incorrect
+>        object size information in linker maps
+>
+>     Changes since v3:
+>      - Consolidated patches 2 through 5 into a single patch
+>      - Move CONFIG_BUILTIN_MODULE_RANGES to Kconfig.debug
+>      - Make CONFIG_BUILTIN_MODULE_RANGES select CONFIG_VMLINUX_MAP
+>      - Disable CONFIG_BUILTIN_MODULE_RANGES if CONFIG_LTO_CLANG_(FULL|THI=
+N)=3Dy
+>      - Support LLVM (lld) compiles in generate_builtin_ranges.awk
+>      - Support CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=3Dy
+>
+>     Changes since v2:
+>      - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
+>      - 1st arg to generate_builtin_ranges.awk is now modules.builtin.modi=
+nfo
+>      - Switched from using modules.builtin.objs to parsing .*.cmd files
+>      - Parse data from .*.cmd in generate_builtin_ranges.awk
+>      - Use $(real-prereqs) rather than $(filter-out ...)
+> ---
+>  Documentation/process/changes.rst   |   7 +
+>  lib/Kconfig.debug                   |  16 +
+>  scripts/Makefile.vmlinux            |  18 +
+>  scripts/Makefile.vmlinux_o          |   3 +
+>  scripts/generate_builtin_ranges.awk | 506 ++++++++++++++++++++++++++++
+>  5 files changed, 550 insertions(+)
+>  create mode 100755 scripts/generate_builtin_ranges.awk
+>
+> diff --git a/Documentation/process/changes.rst b/Documentation/process/ch=
+anges.rst
+> index 3fc63f27c226..00f1ed7c59c3 100644
+> --- a/Documentation/process/changes.rst
+> +++ b/Documentation/process/changes.rst
+> @@ -64,6 +64,7 @@ GNU tar                1.28             tar --version
+>  gtags (optional)       6.6.5            gtags --version
+>  mkimage (optional)     2017.01          mkimage --version
+>  Python (optional)      3.5.x            python3 --version
+> +GNU AWK (optional)     5.1.0            gawk --version
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>
+>  .. [#f1] Sphinx is needed only to build the Kernel documentation
+> @@ -192,6 +193,12 @@ platforms. The tool is available via the ``u-boot-to=
+ols`` package or can be
+>  built from the U-Boot source code. See the instructions at
+>  https://docs.u-boot.org/en/latest/build/tools.html#building-tools-for-li=
+nux
+>
+> +GNU AWK
+> +-------
+> +
+> +GNU AWK is needed if you want kernel builds to generate address range da=
+ta for
+> +builtin modules (CONFIG_BUILTIN_MODULE_RANGES).
+> +
+>  System utilities
+>  ****************
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index a30c03a66172..f087dc3da321 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -571,6 +571,22 @@ config VMLINUX_MAP
+>           pieces of code get eliminated with
+>           CONFIG_LD_DEAD_CODE_DATA_ELIMINATION.
+>
+> +config BUILTIN_MODULE_RANGES
+> +       bool "Generate address range information for builtin modules"
+> +       depends on !LTO_CLANG_FULL
+> +       depends on !LTO_CLANG_THIN
+
+
+Forgot to mention this.
+
+These two lines can be replaced with
+
+         depends on !LTO
+
+
+
+
+
+
+> diff --git a/scripts/generate_builtin_ranges.awk b/scripts/generate_built=
+in_ranges.awk
+> new file mode 100755
+> index 000000000000..865cb7ac4970
 > --- /dev/null
-> +++ b/include/trace/events/rust_sample.h
+> +++ b/scripts/generate_builtin_ranges.awk
+> @@ -0,0 +1,506 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# generate_builtin_ranges.awk: Generate address range data for builtin m=
+odules
+> +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: generate_builtin_ranges.awk modules.builtin vmlinux.map \
+> +#              vmlinux.o.map > modules.builtin.ranges
+> +#
+> +
+> +# Return the module name(s) (if any) associated with the given object.
+> +#
+> +# If we have seen this object before, return information from the cache.
+> +# Otherwise, retrieve it from the corresponding .cmd file.
+> +#
+> +function get_module_info(fn, mod, obj, s) {
+> +       if (fn in omod)
+> +               return omod[fn];
+> +
+> +       if (match(fn, /\/[^/]+$/) =3D=3D 0)
+> +               return "";
+> +
+> +       obj =3D fn;
+> +       mod =3D "";
+> +       fn =3D substr(fn, 1, RSTART) "." substr(fn, RSTART + 1) ".cmd";
+> +       if (getline s <fn =3D=3D 1) {
+> +               if (match(s, /DKBUILD_MODFILE=3D['"]+[^'"]+/) > 0) {
+> +                       mod =3D substr(s, RSTART + 16, RLENGTH - 16);
+> +                       gsub(/['"]/, "", mod);
+> +               }
+> +       }
+> +       close(fn);
+> +
+> +       # A single module (common case) also reflects objects that are no=
+t part
+> +       # of a module.  Some of those objects have names that are also a =
+module
+> +       # name (e.g. core).  We check the associated module file name, an=
+d if
+> +       # they do not match, the object is not part of a module.
+> +       if (mod !~ / /) {
+> +               if (!(mod in mods))
+> +                       mod =3D "";
+> +       }
+> +
+> +       gsub(/([^/ ]*\/)+/, "", mod);
+> +       gsub(/-/, "_", mod);
+> +
+> +       # At this point, mod is a single (valid) module name, or a list o=
+f
+> +       # module names (that do not need validation).
+> +       omod[obj] =3D mod;
+> +       close(fn);
 
-Is it possible to make this a header file inside sample/rust/? Given
-this is just an example, I feel it's better if we could avoid making
-this "public", but maybe I'm missing some constraints of tracepoints.
 
-(Oh, I just remember the problem while I was writting this: we need the
-header file here because this is now how bindgen generates bindings, so
-moving it to sample/rust/ requires we have "per-module" or
-"per-subsystem" bindgen feature)
+I still see the second close(fn).
 
-Anyway this is not a big deal to me. We can move it later if possible.
-So:
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
-Regards,
-Boqun
 
-> @@ -0,0 +1,31 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Tracepoints for `samples/rust/rust_print.rs`.
-> + *
-> + * Copyright (C) 2024 Google, Inc.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM rust_sample
-> +
-> +#if !defined(_RUST_SAMPLE_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _RUST_SAMPLE_TRACE_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(rust_sample_loaded,
-> +	TP_PROTO(int magic_number),
-> +	TP_ARGS(magic_number),
-> +	TP_STRUCT__entry(
-> +		__field(int, magic_number)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->magic_number = magic_number;
-> +	),
-> +	TP_printk("magic=%d", __entry->magic_number)
-> +);
-> +
-> +#endif /* _RUST_SAMPLE_TRACE_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index fc6f94729789..fe97256afe65 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -23,6 +23,7 @@
->  #include <linux/tracepoint.h>
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
-> +#include <trace/events/rust_sample.h>
->  
->  /* `bindgen` gets confused at certain things. */
->  const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
-> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-> index 03086dabbea4..f29280ec4820 100644
-> --- a/samples/rust/Makefile
-> +++ b/samples/rust/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +ccflags-y += -I$(src)				# needed for trace events
->  
->  obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
-> -obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
-> +obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o rust_print_events.o
->  
->  subdir-$(CONFIG_SAMPLE_RUST_HOSTPROGS)		+= hostprogs
-> diff --git a/samples/rust/rust_print.rs b/samples/rust/rust_print.rs
-> index 6eabb0d79ea3..6d14b08cac1c 100644
-> --- a/samples/rust/rust_print.rs
-> +++ b/samples/rust/rust_print.rs
-> @@ -69,6 +69,8 @@ fn init(_module: &'static ThisModule) -> Result<Self> {
->  
->          arc_print()?;
->  
-> +        trace::trace_rust_sample_loaded(42);
-> +
->          Ok(RustPrint)
->      }
->  }
-> @@ -78,3 +80,19 @@ fn drop(&mut self) {
->          pr_info!("Rust printing macros sample (exit)\n");
->      }
->  }
-> +
-> +mod trace {
-> +    use core::ffi::c_int;
-> +
-> +    kernel::declare_trace! {
-> +        /// # Safety
-> +        ///
-> +        /// Always safe to call.
-> +        unsafe fn rust_sample_loaded(magic: c_int);
-> +    }
-> +
-> +    pub(crate) fn trace_rust_sample_loaded(magic: i32) {
-> +        // SAFETY: Always safe to call.
-> +        unsafe { rust_sample_loaded(magic as c_int) }
-> +    }
-> +}
-> diff --git a/samples/rust/rust_print_events.c b/samples/rust/rust_print_events.c
-> new file mode 100644
-> index 000000000000..a9169ff0edf1
-> --- /dev/null
-> +++ b/samples/rust/rust_print_events.c
-> @@ -0,0 +1,8 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2024 Google LLC
-> + */
-> +
-> +#define CREATE_TRACE_POINTS
-> +#define CREATE_RUST_TRACE_POINTS
-> +#include <trace/events/rust_sample.h>
-> 
-> -- 
-> 2.46.0.184.g6999bdac58-goog
-> 
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
