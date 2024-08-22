@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912D41C93BC;
-	Thu, 22 Aug 2024 14:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901541CB329;
+	Thu, 22 Aug 2024 14:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724337092; cv=none; b=MvURu6fYrS75znrQgp4EaiZNohCNw/REboYi0kobBP/nPB7BgIFql56uNxyewpYP+Wh8yPRtZc+xpHy2JpWKyP37VDhCXo/jRCWX2b6u5LEQBnx0mqcjH3gV56OyJU4VZKynb31nIRINSM9HXfVNcWLLkhOcU43y8EpaE34xIGg=
+	t=1724337253; cv=none; b=Xe+hKRUWoNM/iD73SusBcQE2/hkP877+59mtv4piF8OjnoFi8DcMMt8ko8RbmqJByVkkBh96qpixFluLsJcmc2zip9kfmwAJxIK3LR9e+0z1ybypyFEeVKFM+z48PZucKWW+qdfP7goRnx26sm8f+mm8OFYo/ZVrA3wv0XwRuZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724337092; c=relaxed/simple;
-	bh=c/Cj9RrvqJul5t8m3NiqMO38iRJFNFSyGlqIQpBEd94=;
+	s=arc-20240116; t=1724337253; c=relaxed/simple;
+	bh=ths4hBzRouIQ/Xtd87TPrQwfMeFkjec47CprI+qjXb0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QnB2xzXTj3PK0V7fHO3Dn8H6Y4OMrb2vBjBB1phUfPyLujofqLZZoF8rzZPhQWzr7R37BnT7TjIvTCrpZRPjNs2o5CDcAtGVGdSYeXt9g+UlVQP5YuXWL14926upcgb+k4LuLtnrUqTfPQazQgC7l4LkICxEf3Zs9bZtitqeYBk=
+	 MIME-Version:Content-Type; b=jCUaclURkh6xMTeIRKnSh9RVz0isN8nTaNyNB0+HX2DII8D1T+t+0R/8fTTpi/M4fr6oBV27uyXfLOWPxdKsFrIRbfvm4JVb4Lmj/MP2UaEi22FW6my1ZzuztIDlv2+f140chf27MfBeOOJBS+s5mG0HShBaLAQRTvsW/agQgqU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC80C32782;
-	Thu, 22 Aug 2024 14:31:31 +0000 (UTC)
-Date: Thu, 22 Aug 2024 10:32:02 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89EC0C4AF09;
+	Thu, 22 Aug 2024 14:34:12 +0000 (UTC)
+Date: Thu, 22 Aug 2024 10:34:43 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: tglozar@redhat.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jkacur@redhat.com
 Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in
  timerlat_fd_release
-Message-ID: <20240822103202.130cf0df@gandalf.local.home>
-In-Reply-To: <CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com>
+Message-ID: <20240822103443.6a6ae051@gandalf.local.home>
+In-Reply-To: <ZscfFFUM6pBuwpGZ@uudg.org>
 References: <20240820130001.124768-1-tglozar@redhat.com>
 	<20240821160316.02c03c44@gandalf.local.home>
-	<CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com>
+	<ZscfFFUM6pBuwpGZ@uudg.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,88 +33,42 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Aug 2024 11:32:07 +0200
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Thu, 22 Aug 2024 08:20:52 -0300
+"Luis Claudio R. Goncalves" <lgoncalv@redhat.com> wrote:
 
-> st 21. 8. 2024 v 22:02 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.or=
-g> napsal:
-> >
-> > I'm able to reproduce this with the above. Unfortunately, I can still
-> > reproduce it after applying this patch :-(
-> > =20
->=20
-> Thank you for looking at this. I was at first not too sure about
-> whether this is the proper fix, but after some discussion with Luis
-> (in CC), we have come to the conclusion that the double-close of the
-> timerlat_fd might be a possible explanation, and this patch worked for
-> both of us. Are you reproducing the same bug (NULL pointer dereference
-> in hrtimer_active) with the patch? IIUC that should not happen anymore
-> since the patch explicitly checks for zero in the hrtimer structure.
+> You mean the 
+> 
+> +	if (!tlat_var->kthread) {
+> +		/* the fd has been closed already */
+> 
+> bit or the kthread handling in rtla itself?
+> 
+> As Tomas already said, thank you for testing and reviewing the suggested fix!
 
-There isn't a double close. But there are two bugs and you did sorta fix
-one of them.
+The close only happens once, but the kthread does get freed elsewhere.
 
->=20
-> I have caught however a different panic in addition to the one
-> reported above while testing "rtla: Support idle state disabling via
-> libcpupower in timerlat" on an EL9 RT kernel:
->=20
-> BUG: kernel NULL pointer dereference, address: 0000000000000014
-> CPU: 6 PID: 1 Comm: systemd Kdump: loaded Tainted: G        W
-> -------  ---  5.14.0-452.el9.x86_64+rt #1
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
-> 04/01/2014
-> RIP: 0010:task_dump_owner+0x3d/0x100
-> RSP: 0018:ffffadd6c0013aa8 EFLAGS: 00010202
-> RAX: 0000000000000001 RBX: ffffa00c864f4580 RCX: ffffa00c87453e10
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa00c864f4580
-> RBP: ffffa00c87453e10 R08: ffffa00c87418e80 R09: ffffa00c87418e80
-> R10: ffffa00c88236600 R11: ffffffffb73f1868 R12: ffffa00c87453e0c
-> R13: 0000000000000000 R14: ffffa00cb5e430c0 R15: ffffa00cb5e430c8
-> FS:  00007f9336b41b40(0000) GS:ffffa00cffd80000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000014 CR3: 00000000025ee002 CR4: 0000000000770ef0
-> PKRU: 55555554
-> Call Trace:
-> <TASK>
-> ? show_trace_log_lvl+0x1c4/0x2df
-> ? show_trace_log_lvl+0x1c4/0x2df
-> ? proc_pid_make_inode+0xa0/0x110
-> ? __die_body.cold+0x8/0xd
-> ? page_fault_oops+0x140/0x180
-> ? do_user_addr_fault+0x61/0x690
-> ? kvm_read_and_reset_apf_flags+0x45/0x60
-> ? exc_page_fault+0x65/0x180
-> ? asm_exc_page_fault+0x22/0x30
-> ? task_dump_owner+0x3d/0x100
-> ? task_dump_owner+0x36/0x100
-> proc_pid_make_inode+0xa0/0x110
-> proc_pid_instantiate+0x21/0xb0
-> proc_pid_lookup+0x95/0x170
-> proc_root_lookup+0x1d/0x50
-> __lookup_slow+0x9c/0x150
-> walk_component+0x158/0x1d0
-> link_path_walk.part.0.constprop.0+0x24e/0x3c0
-> ? path_init+0x326/0x4d0
-> path_openat+0xb1/0x280
-> do_filp_open+0xb2/0x160
-> ? migrate_enable+0xd5/0x150
-> ? rt_spin_unlock+0x13/0x40
-> do_sys_openat2+0x96/0xd0
-> __x64_sys_openat+0x53/0xa0
-> ...
+I used my new persistent ring buffer to debug this! I'll be posting some
+more patches that allow trace_printk() and friends to use the persistent
+ring buffer (or any instance) soon.
 
+For this bug, I would recommend instead doing:
 
-> Yeah, it seems there might be multiple bugs in the user workload
-> handling, the other NULL pointer dereference and refcount warning
-> above might be related (but I have yet to reproduce it on an upstream
-> kernel). I'm also going to look at the code and will post any findings
-> here.
-
-Yes that is the second bug and it is related to the that this addresses.
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 66a871553d4a..53de719f35cb 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2579,7 +2587,8 @@ static int timerlat_fd_release(struct inode *inode, struct file *file)
+ 	osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
+ 	tlat_var = per_cpu_ptr(&per_cpu_timerlat_var, cpu);
+ 
+-	hrtimer_cancel(&tlat_var->timer);
++	if (tlat_var->kthread)
++		hrtimer_cancel(&tlat_var->timer);
+ 	memset(tlat_var, 0, sizeof(*tlat_var));
+ 
+ 	osn_var->sampling = 0;
 
 -- Steve
