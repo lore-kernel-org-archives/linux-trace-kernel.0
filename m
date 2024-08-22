@@ -1,145 +1,189 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB301CCB36;
-	Thu, 22 Aug 2024 17:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53ED487AE;
+	Thu, 22 Aug 2024 17:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348151; cv=none; b=QtbiVCg7QuXNzUi15o6BgP2SgECRxblRvfitJ57bg+uIyu1EuNhSR1WpSnkuCdEqC06p9Y6eHRqJj1GbXHpFC2rpEeG79M5xOtWmU4euzNS7phxzTfQt8vkfIcbF61OYph+H2bpyTCW9E1aWA1HEbY2Aic31h5G/TkTapQhuKX0=
+	t=1724348189; cv=none; b=Qgk1V4aO+sjQza8N6nkrBpD7mDQi4/jEjf2n/IGoyH+C3CNeWMQV2QPym6qaagARBYPDFRRh8F8Y6iOM04B/C+jjQBhHB4pVvmKNRwkXNVM1s+gw9gRV4l2VTtMsdHoRtthy5PAkhvkXYYnIrb9dL6aRAo2mut5THZQAdbWIjCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348151; c=relaxed/simple;
-	bh=0cjZRWio38h6TVJuWmOEQeTFBkW78OpMzIj8gruOkJ8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UhqLwbzVS2TaobNXVQjco5prMlRlERZ+sr0hi7Ul5DtXubtr6CmvIysM5prk5jOnKXqPtqvwe82H8IHlkDkwUojAnM8LGtVMRwb/5ZSxhHahIkKuRQBzujJZMdscUChnDkpUI1lwdnaWr3z7lf3UAUETUNJ1fK8Sym3Iy+fFWX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FbE7+FBS; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724348189; c=relaxed/simple;
+	bh=ALLrNEBz2lBvoCSYyf3SnpzNRa2dr0JSZGzm5i/Z76k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GyLsT2Q/k/JpcoVb6kH2O1b3flT89P25vGL7m26AQxHXPG/PqCd97TDS1rUWRkSm0gVksYhzylNboOt9SFOycPIUANgapdvqASbv/0Zlh8klo+bCSbmoFyemcqoS+m3X2rpehL2/b4z0cZKUecuZE6N+5TovJ/rtsNeDZJCM0RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZD8erRH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FbE7+FBS"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7a9185e1c0so106775166b.1;
-        Thu, 22 Aug 2024 10:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724348148; x=1724952948; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xkghB6aOOio8GGfQ7tQKfRPcfOy2NJ6+od2KQKax6X8=;
-        b=FbE7+FBS4J3LdKnu0h00CUgDBqixEYANqQdtzJui2Lfj75+Au4savbECNReWKikBPT
-         BsIUcKPeGTdR1OEdiWjoBToApgrjPV61dZf6BKF64wxGL70t+yrKMFfRlF/Gr60rhEKl
-         5/xxpyq8TpEuPSxyLAUY9Eo7KR6luxDxQN7UwMBUVmw7yy66xVoXRHc//EM39fEcPsnn
-         SpMjyM1TVW2VbbBgGerIxUc+W6z5jJmSxCsphtePZLLCmXiV52ewo+7WPZ8TZLEFr4DW
-         DFnZSJFADlV2aXuoDa3fY6PeORQ++J3VXT/KJJyVMjfI8ZSdPwM5jT0IIk61VFilY2jY
-         +Pkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724348148; x=1724952948;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xkghB6aOOio8GGfQ7tQKfRPcfOy2NJ6+od2KQKax6X8=;
-        b=PKWDNMHcgd8afUo0dUsMquF+/FulDDP3qKXSgGhTSIJToHQXQSe9NoycedPGZAbsIL
-         cOqqiXVjjPcN6lp7i/iLL6y4J4CQksdtuSnyPRRu0btMjPqCKhTbD01pSpu2eSqWuEI1
-         +eZXGzJf48BQg1qi6Vg/ocuoYRoxMkAYfs2jeox1CnrpE60fG7YjUbhCfn/pmBAyiwG4
-         25yAgn9t0fhPQbgVEGIqs4BQ1xcNUkp289SKgyrGAn2rnGfgpX7IhfwfZpKPFey2HQVA
-         WhJXgsQtv0KIilWXEin5fOQ7o3+9MY4ccIGgBqgCtATEie7CoI1V2cZt29WlubcWZmbt
-         AelA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVGmYUzkyoBfnLmXeyODJnxsTNfbKmBaEsRJ78PeUWXyAmD33iQQxZH+rZY3qXw+uG7Kuy7vAMWJq0WGGo@vger.kernel.org, AJvYcCWNWlCFbyFkIOTwUBAW+qSFBb32yBxPdczlnhjrAUqqAjYvFyAR5ngeMRkwk9Twch5bm4U=@vger.kernel.org, AJvYcCXZkrCnmTeM0Uwz3KvHkNkIunHoy7jNOFvXwln3Bu2hy/M7dODksQl5ctAo3vX+FN7XzSfqoN74q2ft6FAV+2O9CCGv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTvMUM02pv/YmNrx2PktWFpngrbVrXn5kzKfwmjjFnTnbhEPHT
-	Mjq+lhuZBOabZIGcVHqKfG8PC+PTIyDYLXXjlBYbk9FfaFrfiStZ3oOzUA==
-X-Google-Smtp-Source: AGHT+IG13gU20y3TlIQxwweTw3gebAPEJD5PFbgA33AGSYwPcKHrWQnQCve7QM97eDQ02yrRkx83NQ==
-X-Received: by 2002:a17:907:96a3:b0:a86:78ef:d4ad with SMTP id a640c23a62f3a-a8678efd649mr496048566b.20.1724348147459;
-        Thu, 22 Aug 2024 10:35:47 -0700 (PDT)
-Received: from krava (85-193-35-108.rib.o2.cz. [85.193.35.108])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f48a77asm144168466b.180.2024.08.22.10.35.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 10:35:47 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 22 Aug 2024 19:35:45 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com,
-	akpm@linux-foundation.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
- locklessly under SRCU protection
-Message-ID: <Zsd28aEHBLkRpUQs@krava>
-References: <20240813042917.506057-1-andrii@kernel.org>
- <20240813042917.506057-5-andrii@kernel.org>
- <ZsdJuwIuJ-KFA6Rz@krava>
- <CAEf4Bzb-1na=S9+XVpEpmtDE4mJLQRywZJ6wB8JyN++2Si6Pgw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZD8erRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733C7C4AF12;
+	Thu, 22 Aug 2024 17:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724348188;
+	bh=ALLrNEBz2lBvoCSYyf3SnpzNRa2dr0JSZGzm5i/Z76k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aZD8erRHGDh2nsjbCAbpiKFU4MOXC9oNfSIo6ZKseA4+ou0A+f0ZtcCH1INMc43ZT
+	 Wr1HW9ygEpnPX0pOoRH3XQVWzWxnJSrH5ibPiWBwBFs9j25kp9PdrNVOyFVyzcTYew
+	 Pzafe7Nq8MN8kacxxBd3bTf8uhgyxKqfoE3+pY661X2C2QhIqyEHsbIyHBv77TADip
+	 1BFyTIQudGsdtaJuIfQdc4+3Ugr8mAseZ9VKvKlLai6wNi7ZJ1ZYvK0QCJcSczIsrC
+	 f8xHPce9Xc+zn7IMXX0Fi3NlyrFNKLUbaCj4ndWDdvo4EH+hOS2fzl/+dygXG0K7ER
+	 Q6WsBD9aQXEDg==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5343617fdddso769391e87.0;
+        Thu, 22 Aug 2024 10:36:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQ7mAN2XA50aKSW4GTF6YnkvrcdwA1Ta5lqsq4BUlbVTs8OOFnFqMvmLi0Bg5XP9mQGPP5BB/ewDRHEi4FGyh/swsZ@vger.kernel.org, AJvYcCVqzYKI2tx1luqGb4n0Ab80Bnh3r6Gsx4pa45o9f7GIk+SH4V0ItaUuOkBUv7eENAyz/fjqkZlauiHBPxs=@vger.kernel.org, AJvYcCVwnkpBANgRRAVm79xNL6WWLLKVgHLW0MZmluWn6hd0hHut6/CKwonLrC5TMCINhsE5n+ITOWeGDObRIA9OEA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI2mZlipsXQCH/TQ+T40xfEbjQWYK7OoT8XQ0q4Tt+0KYAVHPL
+	kwUBj2boe1A/F17ukumVMoPf/MsRsZNaUtg4Yj3ESc5u1JRES0uMjebQKpEk7zd0qE8GF2QBUu3
+	3lX+SY+npwRBWj/oKXRN+iYjeS2w=
+X-Google-Smtp-Source: AGHT+IHjEo7S6pVlNBC7rLTzZt9ouBtvu4VbscK/zAkryHKCVDTjtRFouTb6icvjUG0NC9wW6KL1KWWdDDUarh5FSRg=
+X-Received: by 2002:a05:6512:1111:b0:52f:cd03:a84a with SMTP id
+ 2adb3069b0e04-5334fd4cdd0mr2460609e87.39.1724348187091; Thu, 22 Aug 2024
+ 10:36:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bzb-1na=S9+XVpEpmtDE4mJLQRywZJ6wB8JyN++2Si6Pgw@mail.gmail.com>
+References: <20240821040700.1919317-1-kris.van.hees@oracle.com> <20240821040700.1919317-3-kris.van.hees@oracle.com>
+In-Reply-To: <20240821040700.1919317-3-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Fri, 23 Aug 2024 02:35:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR3Vkubuv7Rb2eeRE45Yycs9DJLRUatBb=9--VPT80aQw@mail.gmail.com>
+Message-ID: <CAK7LNAR3Vkubuv7Rb2eeRE45Yycs9DJLRUatBb=9--VPT80aQw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] scripts: add verifier script for builtin module
+ range data
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 09:59:29AM -0700, Andrii Nakryiko wrote:
-> On Thu, Aug 22, 2024 at 7:22 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
-> >
-> > SNIP
-> >
-> > > @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
-> > >       int err;
-> > >
-> > >       down_write(&uprobe->register_rwsem);
-> > > -     if (WARN_ON(!consumer_del(uprobe, uc))) {
-> > > -             err = -ENOENT;
-> > > -     } else {
-> > > -             err = register_for_each_vma(uprobe, NULL);
-> > > -             /* TODO : cant unregister? schedule a worker thread */
-> > > -             if (unlikely(err))
-> > > -                     uprobe_warn(current, "unregister, leaking uprobe");
-> > > -     }
-> > > +
-> > > +     list_del_rcu(&uc->cons_node);
-> >
-> > hi,
-> > I'm using this patchset as base for my changes and stumbled on this today,
-> > I'm probably missing something, but should we keep the 'uprobe->consumer_rwsem'
-> > lock around the list_del_rcu?
-> >
-> 
-> Note that original code also didn't take consumer_rwsem, but rather
-> kept register_rwsem (which we still use).
+On Wed, Aug 21, 2024 at 1:11=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
+.com> wrote:
+>
+> The modules.builtin.ranges offset range data for builtin modules is
+> generated at compile time based on the list of built-in modules and
+> the vmlinux.map and vmlinux.o.map linker maps.  This data can be used
+> to determine whether a symbol at a particular address belongs to
+> module code that was configured to be compiled into the kernel proper
+> as a built-in module (rather than as a standalone module).
+>
+> This patch adds a script that uses the generated modules.builtin.ranges
+> data to annotate the symbols in the System.map with module names if
+> their address falls within a range that belongs to one or more built-in
+> modules.
+>
+> It then processes the vmlinux.map (and if needed, vmlinux.o.map) to
+> verify the annotation:
+>
+>   - For each top-level section:
+>      - For each object in the section:
+>         - Determine whether the object is part of a built-in module
+>           (using modules.builtin and the .*.cmd file used to compile
+>            the object as suggested in [0])
+>         - For each symbol in that object, verify that the built-in
+>           module association (or lack thereof) matches the annotation
+>           given to the symbol.
+>
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>     Changes since v6:
+>      - Applied Masahiro Yamada's suggestions to the AWK script.
+>
+>     Changes since v5:
+>      - Added optional 6th argument to specify kernel build directory.
+>      - Report error and exit if .*.o.cmd files cannot be read.
+>
+>     Changes since v4:
+>      - New patch in the series
+> ---
+>  scripts/verify_builtin_ranges.awk | 356 ++++++++++++++++++++++++++++++
+>  1 file changed, 356 insertions(+)
+>  create mode 100755 scripts/verify_builtin_ranges.awk
+>
+> diff --git a/scripts/verify_builtin_ranges.awk b/scripts/verify_builtin_r=
+anges.awk
+> new file mode 100755
+> index 000000000000..93f66e9a8802
+> --- /dev/null
+> +++ b/scripts/verify_builtin_ranges.awk
+> @@ -0,0 +1,356 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# verify_builtin_ranges.awk: Verify address range data for builtin modul=
+es
+> +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: verify_builtin_ranges.awk modules.builtin.ranges System.map \
+> +#                                 modules.builtin vmlinux.map vmlinux.o.=
+map \
+> +#                                 [ <build-dir> ]
+> +#
+> +
+> +# Return the module name(s) (if any) associated with the given object.
+> +#
+> +# If we have seen this object before, return information from the cache.
+> +# Otherwise, retrieve it from the corresponding .cmd file.
+> +#
+> +function get_module_info(fn, mod, obj, s) {
+> +       if (fn in omod)
+> +               return omod[fn];
+> +
+> +       if (match(fn, /\/[^/]+$/) =3D=3D 0)
+> +               return "";
+> +
+> +       obj =3D fn;
+> +       mod =3D "";
+> +       fn =3D kdir "/" substr(fn, 1, RSTART) "." substr(fn, RSTART + 1) =
+".cmd";
+> +       if (getline s <fn =3D=3D 1) {
+> +               if (match(s, /DKBUILD_MODFILE=3D['"]+[^'"]+/) > 0) {
+> +                       mod =3D substr(s, RSTART + 16, RLENGTH - 16);
+> +                       gsub(/['"]/, "", mod);
+> +               }
+> +       } else {
+> +               print "ERROR: Failed to read: " fn "\n\n" \
+> +                     "  Invalid kernel build directory (" kdir ")\n" \
+> +                     "  or its content does not match " ARGV[1] >"/dev/s=
+tderr";
+> +               close(fn);
+> +               total =3D 0;
+> +               exit(1);
+> +       }
+> +       close(fn);
+> +
+> +       # A single module (common case) also reflects objects that are no=
+t part
+> +       # of a module.  Some of those objects have names that are also a =
+module
+> +       # name (e.g. core).  We check the associated module file name, an=
+d if
+> +       # they do not match, the object is not part of a module.
+> +       if (mod !~ / /) {
+> +               if (!(mod in mods))
+> +                       mod =3D "";
+> +       }
+> +
+> +       gsub(/([^/ ]*\/)+/, "", mod);
+> +       gsub(/-/, "_", mod);
+> +
+> +       # At this point, mod is a single (valid) module name, or a list o=
+f
+> +       # module names (that do not need validation).
+> +       omod[obj] =3D mod;
+> +       close(fn);
 
-humm, consumer_del took consumer_rwsem, right?
 
-jirka
+Same as 2/4.
 
-> 
-> There is a bit of mix of using register_rwsem and consumer_rwsem for
-> working with consumer list. Code hints at this as being undesirable
-> and "temporary", but you know, it's not broken :)
-> 
-> Anyways, my point is that we didn't change the behavior, this should
-> be fine. That _rcu() in list_del_rcu() is not about lockless
-> modification of the list, but rather modification in such a way as to
-> keep lockless RCU-protected *readers* correct. It just does some more
-> memory barrier/release operations more carefully.
-> 
-> > jirka
-> >
-> >
-> > > +     err = register_for_each_vma(uprobe, NULL);
-> > > +
-> > >       up_write(&uprobe->register_rwsem);
-> > >
-> > > -     if (!err)
-> > > -             put_uprobe(uprobe);
-> > > +     /* TODO : cant unregister? schedule a worker thread */
-> > > +     if (unlikely(err)) {
-> > > +             uprobe_warn(current, "unregister, leaking uprobe");
-> > > +             goto out_sync;
-> > > +     }
-> > > +
-> > > +     put_uprobe(uprobe);
-> > > +
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
