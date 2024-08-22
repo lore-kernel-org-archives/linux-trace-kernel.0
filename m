@@ -1,133 +1,91 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA0A1C9DCA;
-	Thu, 22 Aug 2024 21:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B90518EB1
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 21:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724362219; cv=none; b=AqhhSbhSLX3kkxoHHume9u1agDIwGPBHgly49yAS5FtjcVPZiGnkuWbwAI+fSFQ5grmqNx/+qLiNMiww4SmWfmh5/eAQ4u50iHreaxu9/54cckl7aZJEp6Bqa4nkhpc0a3DryK5ie710hieh5+nOL+AzGfbakMjhaM/nWTGytW0=
+	t=1724362880; cv=none; b=PaNa5Leg5FBKCJTSSSINZVYmWUzJ13xQZIfexBBuLa6WMNe7jJKVkX4myEixpHiK1Ywna1bnjfAyxdYBg6AzWOXrEowAW5Lthnm21TD7FIPI8z1ejtxrMuQelJ0RmFAQ5+y21iWGSzZchhddgG4922NATeovHUIFhLeH4OSlkA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724362219; c=relaxed/simple;
-	bh=HxQ1ZKGfrzmZSG3KFUci/ypHgXDR1B2T1pTxSYdtIT0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XQRigaBK1T01XuBhgAImxaWUqZIa/6Tsev3sn26YePnPyPhfRhqvofLOBvj77xrwK/QP3LHgYPLihFcM8/urCJju3w8WSJ8BxowHNJFH06/015TfjLsNjNmXuosaer6TWrJQr//bePb/ueVWtJmzLZU/eprQPZJq8VUCPB01Jdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuL2Xl+a; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724362880; c=relaxed/simple;
+	bh=ys39fHXJ80d5zS9l6XXUcl0mUspJPf/fAq1lPld/hXU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QPU1ngBu7UtcdFRoz64g5+LAUBT/iDjZTbrg3N9yS7BF2Bbv/2MatRMb3KmUMfGqx8O1LEd0pimSWIoaXlv1x4pbT24gKQfZF9XsyzlPNCBlwApAKcxqQt6Zn0nOQeBUb/JM3NqWkyx1oI9uuglATfYDNDViPUwiBpSDqe9WVqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oKb1yZPT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=okKOQnxz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuL2Xl+a"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2d3bae081efso1038276a91.1;
-        Thu, 22 Aug 2024 14:30:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724362217; x=1724967017; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4+TJIlUwUJ9hgjBi9o/p5QhSSN2jZ8c5fYnfKIVc18I=;
-        b=MuL2Xl+a3hZps4hDHBIYw8YvCZdHej+0mUKhXdXrYIeR7OJKb7yCEZydq8irRayjV2
-         D4BEWE6dK1QGf4vlIbBaP/aYoxdtE3whySJoEcuLEYfmiW4IdgV9c2ZUTdfBhU0a2Bhb
-         OAkolMpr6Tc65BBrcMj0YQ/w7KdkUocVqkRxvEWTBd7ywtbL8kuFglefuDTzQ+Si4f14
-         tvH/8oIr0gWrFoNMVQJaXcPU0xUGKvc8Su7G75aW2j2gnF1cEHfFLkk3CarD/FuzHeq/
-         kc5AyrxgLRBcroSYcOtJlPTrm5X8g0D288LK7R2oFXl4IMe7KRCX4xrA6hmXl2VsxZq9
-         67KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724362217; x=1724967017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4+TJIlUwUJ9hgjBi9o/p5QhSSN2jZ8c5fYnfKIVc18I=;
-        b=XuyFFBVr6L9lrOa7onvrjuqNdTxDd60LVk20hjKuSy/BzIuGyr+Rz2OMkaXfS3uzQT
-         PjQUgvgi5160BGG8f445lmchSsF3wdxaXTOorFRoUzoXQUQYXjUlGKggNyzo74TvEe52
-         f3m8ZVfqd/DLEx2X+SgyObwJaPF1hyllhLQouR5AB8c+IqPHR0LIcPViSgf3GIoSZhUN
-         7IH5cAeb47aMyd5dq7nAmMsTSz9OinsCrYd1BtGnA/CBMpjbTW7WcKb2CTOH0BpxEg78
-         /nhCxh+QCqYQlm9oYlIZB4hD9eUYZRa0j755qxlSqaT0GBlswXk93UEB08/0op9l2OvJ
-         qIiA==
-X-Forwarded-Encrypted: i=1; AJvYcCV63nLBBMIbNukuZxDYZeStd8JVcE78o3C9eX/2gTG7EDTJ7uK9CJWnFSRgjwR6r5Z1JhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjKLpQHfBppxJJDYw8wes0tHv/EM9uXO0/SiJlZwi9QsgxVEQ6
-	92k279G/YT16w4j2ubTmqNzMgLy5lgu9hYlnTp7ZzOjL8tsL+m+qFu44pUsB3SGVL5dED8Fswas
-	KcTM02xAk6dKTgiMxnud0dPnd204=
-X-Google-Smtp-Source: AGHT+IFEqrRzHUuEyLe9zbo/4AfBd953mD/498jLomE8D/bY9UqszP8t4hDgcUaCfdwDOdoGol7jBMMCejysr+Ht3Fs=
-X-Received: by 2002:a17:90b:4a52:b0:2d4:6ef:cb14 with SMTP id
- 98e67ed59e1d1-2d5e9ec9bf8mr7506979a91.28.1724362217126; Thu, 22 Aug 2024
- 14:30:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oKb1yZPT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="okKOQnxz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1724362877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aYh+FUuld+A4T0yc05XEIVg6RdWwFfiXCbS7WX6Xoik=;
+	b=oKb1yZPT7/TTwf3uDRvxpg5RHj9gYXIMyYcdMOsclOEqzjK714926rTB8yC+p1Y+PXwFXI
+	nkJwScMhFcrAmdeVMaejFB/UlQ34JTPsuw/7ZlNB+LgGwtwH8rxiivb/flXipMscA5wkF3
+	OcHycoGf67ilsRiXbl5Z22zbZtTGZ/ErRvHADZp7WlU+ZdT8B4NV/hgGD9xzj9kaU30ei5
+	POQ9yn5P0+xuu14VJDCPnHlcTDMDQR5PWhK9mjExsjZEN3merHHH7fSCZXbOQBCAzdjKwm
+	/VJ/r3NV6j+tTzU34Ab9ycyLTttjvC8Plp3JNSCKpJgpO6lXaaXVVMTLOZE6pg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1724362877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aYh+FUuld+A4T0yc05XEIVg6RdWwFfiXCbS7WX6Xoik=;
+	b=okKOQnxzjUnhxl7+uHdO/zRLdFI3HKQ4LM0nAZTmaDEA5pq6lheHOsqghRFHmI4b6h5xZ6
+	k7kvvj9AWaZ1gWDg==
+To: John Stultz <jstultz@google.com>, Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+ linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+ oliver.upton@linux.dev, kvmarm@lists.linux.dev, will@kernel.org,
+ qperret@google.com, kernel-team@android.com
+Subject: Re: [RFC PATCH 04/11] timekeeping: Export the boot clock in snapshots
+In-Reply-To: <CANDhNCoWvBn=h3ENEM9bbJO8LBVh5m=3vw79Bawr3e4NE4UMSQ@mail.gmail.com>
+References: <20240805173234.3542917-1-vdonnefort@google.com>
+ <20240805173234.3542917-5-vdonnefort@google.com>
+ <CANDhNCoWvBn=h3ENEM9bbJO8LBVh5m=3vw79Bawr3e4NE4UMSQ@mail.gmail.com>
+Date: Thu, 22 Aug 2024 23:41:17 +0200
+Message-ID: <87le0ogrr6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240822082519.216070-1-vmalik@redhat.com>
-In-Reply-To: <20240822082519.216070-1-vmalik@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 22 Aug 2024 14:30:03 -0700
-Message-ID: <CAEf4BzbY4XWLFKgH1cB+86jsr0snRU2gG_UNZ7O1+3mg0hb9eQ@mail.gmail.com>
-Subject: Re: [PATCH] objpool: fix choosing allocation for percpu slots
-To: Viktor Malik <vmalik@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Matt Wu <wuqiang.matt@bytedance.com>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 1:27=E2=80=AFAM Viktor Malik <vmalik@redhat.com> wr=
-ote:
+On Thu, Aug 22 2024 at 11:13, John Stultz wrote:
+> On Mon, Aug 5, 2024 at 10:33=E2=80=AFAM 'Vincent Donnefort' via kernel-te=
+am
+> <kernel-team@android.com> wrote:
+>> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+>> index fc12a9ba2c88..0fc6a61d64bd 100644
+>> --- a/include/linux/timekeeping.h
+>> +++ b/include/linux/timekeeping.h
+>> @@ -275,18 +275,24 @@ struct ktime_timestamps {
+>>   *                              counter value
+>>   * @cycles:    Clocksource counter value to produce the system times
+>>   * @real:      Realtime system time
+>> + * @boot:      Boot time
 >
-> objpool intends to use vmalloc for default (non-atomic) allocations of
-> percpu slots and objects. However, the condition checking if GFP flags
-> are equal to GFP_ATOMIC is wrong and causes kmalloc to be used in most
+> So, adding the boottime to this kernel-internal snapshot seems reasonable=
+ to me.
 
-I was confused by this, because original code has no equality and it
-looks like correct code. But in reality GFP_ATOMIC is a collection of
-bits (__GFP_HIGH|__GFP_KSWAPD_RECLAIM), and so `pool->gfp &
-GFP_ATOMIC` will be true if either bit is set, hence your change.
-Also, GFP_ATOMIC and GFP_KERNEL share ___GFP_KSWAPD_RECLAIM bit
-specifically, which is what causes the use of kmalloc_node(), always.
+Maybe for you, but I have zero context to this as this submission
+obviously failed to CC the relevant mailing lists and maintainers...
 
-It would be nice to expand on that in the commit. Other than that LGTM
+Documentation/process is there for a reason...
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Thanks,
 
-> cases (even if GFP_KERNEL is requested). Since kmalloc cannot allocate
-> large amounts of memory, this may lead to unexpected OOM errors.
->
-> For instance, objpool is used by fprobe rethook which in turn is used by
-> BPF kretprobe.multi and kprobe.session probe types. Trying to attach
-> these to all kernel functions with libbpf using
->
->     SEC("kprobe.session/*")
->     int kprobe(struct pt_regs *ctx)
->     {
->         [...]
->     }
->
-> fails on objpool slot allocation with ENOMEM.
->
-> Fix the condition to truly use vmalloc by default.
->
-> Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC"=
-)
-> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> ---
->  lib/objpool.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/objpool.c b/lib/objpool.c
-> index 234f9d0bd081..fd108fe0d095 100644
-> --- a/lib/objpool.c
-> +++ b/lib/objpool.c
-> @@ -76,7 +76,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, in=
-t nr_objs,
->                  * mimimal size of vmalloc is one page since vmalloc woul=
-d
->                  * always align the requested size to page size
->                  */
-> -               if (pool->gfp & GFP_ATOMIC)
-> +               if ((pool->gfp & GFP_ATOMIC) =3D=3D GFP_ATOMIC)
->                         slot =3D kmalloc_node(size, pool->gfp, cpu_to_nod=
-e(i));
->                 else
->                         slot =3D __vmalloc_node(size, sizeof(void *), poo=
-l->gfp,
-> --
-> 2.46.0
->
->
+        tgkx
+
+
+
+
