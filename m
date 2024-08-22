@@ -1,332 +1,115 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B64181B87;
-	Thu, 22 Aug 2024 14:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6570D2C87A;
+	Thu, 22 Aug 2024 15:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724337504; cv=none; b=YcCQ3/O8OvtALwFFfE8ib3R+u7tDb/ie5mk/IQ0NhRORHiozmvUZ3QzYR306Gskr2LgBE1ngERxiHPF6xrmVPzDxnP6BvJ5JunR/u84IQQV6YZF7k9d2n2vXEG5NU7d3uaF5fRnSfhEW4HdW11ZFLRbBVzOxi2PVU+VcGSigWvc=
+	t=1724340077; cv=none; b=OKS6VDokbvBVkGPHL0j3/qg1VSJPhxwyPXXdoN5qUSeXdp4mNamARu2YhgqxTXQUmpwcUO2STYNTjeM86Bp8ugpiBxc+llos8LKsccW/BagKdAL8OVeWa0kduZalqlCE93yW9PDyeb3wJkEps/gu3RJuHg4mrWG8xX7iKCS1SK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724337504; c=relaxed/simple;
-	bh=9gore8kOVGgYcBY8Kxe0Jf4tMk0BkXzHpIkh18lmmLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcHqUsgO9YYCNRHNQeiqBMVeJDkongViduikfyq8WQiGgha8q1Eu/2nIyleiNL5rkdAjoUBQF46H2Pnx8GeI2acutM0ya96e7yGlTBTKUyaXAAP8tPdNqnuXGRIWAieGGxqN/VqzVZZ/bMLIsqUWC7n0TNPscHpAEdgGZoDyBok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGE8rk+z; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724340077; c=relaxed/simple;
+	bh=0ebK4nIoa5BOEpjmy0XRvJ7VKPjWzhDV62tWEIf3CvI=;
+	h=MIME-Version:Content-Type:Date:Message-ID:Subject:From:To:CC:
+	 References:In-Reply-To; b=f3cMRQPypWpP9xBgt2Yu3WsqFxPxlPIVUBlPzi4r5chT5co6HVQFM+lhN+IPx9Ez+ChreuQ7S6v1K/L3Pu2qKWi+WFkOQSz4DDjp4IPULbxANbZ5qD746M/RFiqvLD4ttxvY45XQ859TGj7h1KUI+TiXDKztwg96w3KGefUqf88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Nb3175Ni; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGE8rk+z"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6bf6beda038so4514596d6.2;
-        Thu, 22 Aug 2024 07:38:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Nb3175Ni"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724337501; x=1724942301; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=as3zLpP+ypLOVnuaFbYC0lf0eOdREEs1DY49MjXOZrs=;
-        b=bGE8rk+zbWzqqv1SMhkDPzmOPLH8BZR6ok93LVbMsFjYTFes/Aidd3AdJqF9jqmnqj
-         OI4HklpDAtj77YbyaC0m3IVxeT8Q0UaHp2ZwPbYvVXkx6+gdkIdz1zZTfLs6HQ9ymn3y
-         JJvrGpQmOFgiDviWT5GDpduDiKEHqwkcMPiEGfFEZS8u8mLiPJL0WOJk3LFUdhKWtvDh
-         u/zbz0B2tOqwBo+xvrPd4TDBQODxSRqLmtO0f3NOzK6e74QYtQeb9swjMQw/6vWMwZDh
-         alVbJjazKgFyyEdz8IbsCtuqxzhivvUILV4Fce4xCNMnYP9dZOESFi5XxPZxYQCB0EPt
-         B/fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724337501; x=1724942301;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=as3zLpP+ypLOVnuaFbYC0lf0eOdREEs1DY49MjXOZrs=;
-        b=L6jYVFEsQN7hfUBVRJGBiV/1SXUmxVHd78QPAJ3XkhxyscHwa31Wsp6cKwzxy7cQy9
-         shGKsFO47cjb0esR6vvte953AAOjK3JE0cAaNRc/B35PIkFL99IvUiE7Tkm1+EHiiWGn
-         1Bve8pcZO0hyPnUknaol3bLoJmVjj8bIYh6z/ox08YLkhmwk+HXF6sne8YLoufjF/ll3
-         cJhxCxiRLawwEYkaENoZDCJvHsoMyPjPrLM8Vw3marq3Nuttj5PJa72SXxDNGihl9Wwd
-         zzeGSGwKUn9GQR0v1ZrD//YHTf1HI01wrqQmDa02DdOACA5o9K4SKwCA68v9v2hrRBZm
-         +7xA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPFXA8F7xOGC0BFY9YXYFAkfUtbVuQFvLdRx7rfBwxSgOfnJhAxXoHiBCNu+J620NHZGeKQaYDFdp1V60lbRU=@vger.kernel.org, AJvYcCWDJzXPufFqUAFpml5lC2WxCGWRVg7B0Jh8cTLRJM7aFPotKuJQnxwX7V1zvimi+/5M+K2GwK8J4oLODivNA107af8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ6mwYFkeq2di/x3Jpx5AgIkVg7/UHfW1ZBTozbNBUsFf/obvl
-	zoSWCt5yltT5j47S5ZoZPLmf5xy39b6saWi8NOmr1Enj+X4j29dL7eEEg6IF
-X-Google-Smtp-Source: AGHT+IFSwXpJ3VlFl5RNnHed5IckCRHTJxxj6RwgN3Z+TgnveoyY1tTve+MXllk0WfAUzuStuXbHGw==
-X-Received: by 2002:a05:6214:4881:b0:6bf:a721:9945 with SMTP id 6a1803df08f44-6c1567fabf5mr84032496d6.24.1724337501144;
-        Thu, 22 Aug 2024 07:38:21 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162d4955fsm8114706d6.38.2024.08.22.07.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 07:38:20 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.nyi.internal [10.202.2.41])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 1E339120006A;
-	Thu, 22 Aug 2024 10:38:20 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 22 Aug 2024 10:38:20 -0400
-X-ME-Sender: <xms:W03HZgAVqETYrm2sklYPOy12UyZ3-XdbZ22P7ahQeBxX18CA8L7iAA>
-    <xme:W03HZigNZeIrlbZnJab5BlEscW6EfQGry1sN8Z09GvcSzRIQhKJpWH2eg6wr8i6Xo
-    CVniNOTQOr74whZ8Q>
-X-ME-Received: <xmr:W03HZjniGPf4oZLxzv1hUuuDXc25Ecp6zCNFGVt-7eUyaGV_aCY-88jICeHMzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddvtddgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleei
-    vedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
-    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
-    grihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepheegpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthht
-    ohepmhhhihhrrghmrghtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghthhhivg
-    hurdguvghsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopehpvght
-    vghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehjphhoihhmsghovgeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdp
-    rhgtphhtthhopegrrhgusgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurg
-    eskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:W03HZmz0RtCHvRdvvXhdHK6CiBfNaoKMqVWSyXRGzdy2hGudUXwXoA>
-    <xmx:XE3HZlTeoqW4ASRM93Fuf6EcaxoPJZDQw4l0yazWG2D0fH-CwPClkg>
-    <xmx:XE3HZha-bijkYnGhZ4anF7oaQnj_Yj5ncHajXmz-kW6koLOc61Bm0w>
-    <xmx:XE3HZuRE1Hh1EnpcXCfQ5Zdts5zpUvsDto-1ZyijvD61Fs_FwBwGWw>
-    <xmx:XE3HZvD5JmuiBQRsCOSO6nYxi0ejgFjW5kNdsVSKH6_WoBFSLWJDzeHx>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Aug 2024 10:38:19 -0400 (EDT)
-Date: Thu, 22 Aug 2024 07:38:10 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
- Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
- Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
- Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
-	Carlos Llamas <cmllamas@google.com>
-Subject: Re: [PATCH v8 2/5] rust: add tracepoint support
-Message-ID: <ZsdNUofUSSNv9jTR@boqun-archlinux>
-References: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
- <20240822-tracepoint-v8-2-f0c5899e6fd3@google.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1724340076; x=1755876076;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   subject:from:to:cc:references:in-reply-to;
+  bh=f2eZRkmfeS+Cis+NAGo9bRj42tCz3s9a2o3q7s6DBDI=;
+  b=Nb3175NisnR/bLRTZF5JH6RsxlhnLRl4jkdVvDYmOEDpb1BAzPLVGMhd
+   riJlEe8TVeazzg14jUnoxOq6nFTd/eNN7MtsOZr1T0Iw32dIZBRS+bclh
+   NcMXkPQJLulj8VcPAjbLFUiAokMerKtGAtuY912QW53BvmS0BQ+GL9U/5
+   A=;
+X-IronPort-AV: E=Sophos;i="6.10,167,1719878400"; 
+   d="scan'208";a="20619224"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2024 15:21:13 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.17.79:7014]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.33.212:2525] with esmtp (Farcaster)
+ id a3167566-1ec3-4ce8-b883-c56528e2878a; Thu, 22 Aug 2024 15:21:12 +0000 (UTC)
+X-Farcaster-Flow-ID: a3167566-1ec3-4ce8-b883-c56528e2878a
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Thu, 22 Aug 2024 15:21:11 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Thu, 22 Aug 2024
+ 15:21:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240822-tracepoint-v8-2-f0c5899e6fd3@google.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Thu, 22 Aug 2024 15:21:02 +0000
+Message-ID: <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com>
+Subject: Re: [PATCH 16/18] KVM: x86: Take mem attributes into account when
+ faulting memory
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC: <pbonzini@redhat.com>, <seanjc@google.com>, <vkuznets@redhat.com>,
+	<linux-doc@vger.kernel.org>, <linux-hyperv@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<graf@amazon.de>, <dwmw2@infradead.org>, <pdurrant@amazon.com>,
+	<mlevitsk@redhat.com>, <jgowans@amazon.com>, <corbet@lwn.net>,
+	<decui@microsoft.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+	<amoorthy@google.com>
+X-Mailer: aerc 0.18.2-22-gfff69046b02f-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <20240609154945.55332-17-nsaenz@amazon.com>
+In-Reply-To: <20240609154945.55332-17-nsaenz@amazon.com>
+X-ClientProxiedBy: EX19D043UWA003.ant.amazon.com (10.13.139.31) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Thu, Aug 22, 2024 at 12:04:14PM +0000, Alice Ryhl wrote:
-> Make it possible to have Rust code call into tracepoints defined by C
-> code. It is still required that the tracepoint is declared in a C
-> header, and that this header is included in the input to bindgen.
-> 
-> Instead of calling __DO_TRACE directly, the exported rust_do_trace_
-> function calls an inline helper function. This is because the `cond`
-> argument does not exist at the callsite of DEFINE_RUST_DO_TRACE.
-> 
-> __DECLARE_TRACE always emits an inline static and an extern declaration
-> that is only used when CREATE_RUST_TRACE_POINTS is set. These should not
-> end up in the final binary so it is not a problem that they sometimes
-> are emitted without a user.
-> 
-> Reviewed-by: Carlos Llamas <cmllamas@google.com>
-> Reviewed-by: Gary Guo <gary@garyguo.net>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
+> Take into account access restrictions memory attributes when faulting
+> guest memory. Prohibited memory accesses will cause an user-space fault
+> exit.
+>
+> Additionally, bypass a warning in the !tdp case. Access restrictions in
+> guest page tables might not necessarily match the host pte's when memory
+> attributes are in use.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+I now realize that only taking into account memory attributes during
+faults isn't good enough for VSM. We should check the attributes anytime
+KVM takes GPAs as input for any action initiated by the guest. If the
+memory attributes are incompatible with such action, it should be
+stopped. Failure to do so opens side channels that unprivileged VTLs can
+abuse to infer information about privileged VTL. Some examples I came up
+with:
+- Guest page walks: VTL0 could install malicious directory entries that
+  point to GPAs only visible to VTL1. KVM will happily continue the
+  walk. Among other things, this could be use to infer VTL1's GVA->GPA
+  mappings.
+- PV interfaces like the Hyper-V TSC page or VP assist page, could be
+  used to modify portions of VTL1 memory.
+- Hyper-V hypercalls that take GPAs as input/output can be abused in a
+  myriad of ways. Including ones that exit into user-space.
 
-Regards,
-Boqun
+We would be protected against all these if we implemented the memory
+access restrictions through the memory slots API. As is, it has the
+drawback of having to quiesce the whole VM for any non-trivial slot
+modification (i.e. VSM's memory protections). But if we found a way to
+speed up the slot updates we could rely on that, and avoid having to
+teach kvm_read/write_guest() and friends to deal with memattrs. Note
+that we would still need to use memory attributes to request for faults
+to exit onto user-space on those select GPAs. Any opinions or
+suggestions?
 
-> ---
->  include/linux/tracepoint.h      | 22 +++++++++++++++++-
->  include/trace/define_trace.h    | 12 ++++++++++
->  rust/bindings/bindings_helper.h |  1 +
->  rust/kernel/lib.rs              |  1 +
->  rust/kernel/tracepoint.rs       | 49 +++++++++++++++++++++++++++++++++++++++++
->  5 files changed, 84 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index 6be396bb4297..5042ca588e41 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -237,6 +237,18 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  #define __DECLARE_TRACE_RCU(name, proto, args, cond)
->  #endif
->  
-> +/*
-> + * Declare an exported function that Rust code can call to trigger this
-> + * tracepoint. This function does not include the static branch; that is done
-> + * in Rust to avoid a function call when the tracepoint is disabled.
-> + */
-> +#define DEFINE_RUST_DO_TRACE(name, proto, args)
-> +#define __DEFINE_RUST_DO_TRACE(name, proto, args)			\
-> +	notrace void rust_do_trace_##name(proto)			\
-> +	{								\
-> +		__rust_do_trace_##name(args);				\
-> +	}
-> +
->  /*
->   * Make sure the alignment of the structure in the __tracepoints section will
->   * not add unwanted padding between the beginning of the section and the
-> @@ -252,6 +264,13 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  	extern int __traceiter_##name(data_proto);			\
->  	DECLARE_STATIC_CALL(tp_func_##name, __traceiter_##name);	\
->  	extern struct tracepoint __tracepoint_##name;			\
-> +	extern void rust_do_trace_##name(proto);			\
-> +	static inline void __rust_do_trace_##name(proto)		\
-> +	{								\
-> +		__DO_TRACE(name,					\
-> +			TP_ARGS(args),					\
-> +			TP_CONDITION(cond), 0);				\
-> +	}								\
->  	static inline void trace_##name(proto)				\
->  	{								\
->  		if (static_key_false(&__tracepoint_##name.key))		\
-> @@ -336,7 +355,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  	void __probestub_##_name(void *__data, proto)			\
->  	{								\
->  	}								\
-> -	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);
-> +	DEFINE_STATIC_CALL(tp_func_##_name, __traceiter_##_name);	\
-> +	DEFINE_RUST_DO_TRACE(_name, TP_PROTO(proto), TP_ARGS(args))
->  
->  #define DEFINE_TRACE(name, proto, args)		\
->  	DEFINE_TRACE_FN(name, NULL, NULL, PARAMS(proto), PARAMS(args));
-> diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-> index 00723935dcc7..8159294c2041 100644
-> --- a/include/trace/define_trace.h
-> +++ b/include/trace/define_trace.h
-> @@ -72,6 +72,13 @@
->  #define DECLARE_TRACE(name, proto, args)	\
->  	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->  
-> +/* If requested, create helpers for calling these tracepoints from Rust. */
-> +#ifdef CREATE_RUST_TRACE_POINTS
-> +#undef DEFINE_RUST_DO_TRACE
-> +#define DEFINE_RUST_DO_TRACE(name, proto, args)	\
-> +	__DEFINE_RUST_DO_TRACE(name, PARAMS(proto), PARAMS(args))
-> +#endif
-> +
->  #undef TRACE_INCLUDE
->  #undef __TRACE_INCLUDE
->  
-> @@ -129,6 +136,11 @@
->  # undef UNDEF_TRACE_INCLUDE_PATH
->  #endif
->  
-> +#ifdef CREATE_RUST_TRACE_POINTS
-> +# undef DEFINE_RUST_DO_TRACE
-> +# define DEFINE_RUST_DO_TRACE(name, proto, args)
-> +#endif
-> +
->  /* We may be processing more files */
->  #define CREATE_TRACE_POINTS
->  
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index 8fd092e1b809..fc6f94729789 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -20,6 +20,7 @@
->  #include <linux/refcount.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
-> +#include <linux/tracepoint.h>
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 91af9f75d121..d00a44b000b6 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -51,6 +51,7 @@
->  pub mod sync;
->  pub mod task;
->  pub mod time;
-> +pub mod tracepoint;
->  pub mod types;
->  pub mod uaccess;
->  pub mod workqueue;
-> diff --git a/rust/kernel/tracepoint.rs b/rust/kernel/tracepoint.rs
-> new file mode 100644
-> index 000000000000..cf2d9ad15912
-> --- /dev/null
-> +++ b/rust/kernel/tracepoint.rs
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for tracepoints.
-> +
-> +/// Declare the Rust entry point for a tracepoint.
-> +///
-> +/// This macro generates an unsafe function that calls into C, and its safety requirements will be
-> +/// whatever the relevant C code requires. To document these safety requirements, you may add
-> +/// doc-comments when invoking the macro.
-> +#[macro_export]
-> +macro_rules! declare_trace {
-> +    ($($(#[$attr:meta])* $pub:vis unsafe fn $name:ident($($argname:ident : $argtyp:ty),* $(,)?);)*) => {$(
-> +        $( #[$attr] )*
-> +        #[inline(always)]
-> +        $pub unsafe fn $name($($argname : $argtyp),*) {
-> +            #[cfg(CONFIG_TRACEPOINTS)]
-> +            {
-> +                // SAFETY: It's always okay to query the static key for a tracepoint.
-> +                let should_trace = unsafe {
-> +                    $crate::macros::paste! {
-> +                        $crate::jump_label::static_key_false!(
-> +                            $crate::bindings::[< __tracepoint_ $name >],
-> +                            $crate::bindings::tracepoint,
-> +                            key
-> +                        )
-> +                    }
-> +                };
-> +
-> +                if should_trace {
-> +                    $crate::macros::paste! {
-> +                        // SAFETY: The caller guarantees that it is okay to call this tracepoint.
-> +                        unsafe { $crate::bindings::[< rust_do_trace_ $name >]($($argname),*) };
-> +                    }
-> +                }
-> +            }
-> +
-> +            #[cfg(not(CONFIG_TRACEPOINTS))]
-> +            {
-> +                // If tracepoints are disabled, insert a trivial use of each argument
-> +                // to avoid unused argument warnings.
-> +                $( let _unused = $argname; )*
-> +            }
-> +        }
-> +    )*}
-> +}
-> +
-> +pub use declare_trace;
-> 
-> -- 
-> 2.46.0.184.g6999bdac58-goog
-> 
+Note that, for now, I'll stick with the memory attributes approach to
+see what the full solution looks like.
+
+Nicolas
