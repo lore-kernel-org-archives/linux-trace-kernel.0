@@ -1,120 +1,137 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DB61CDFBD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 16:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AC71CEAA5;
+	Thu, 22 Aug 2024 16:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724345928; cv=none; b=anRRzm57pi7d76guZC72dgtkSdx6rLfpumlgKOlz1c8dMX6oDAaidmhwxZ/E+laXla7aJ9NQPA16j6CdTebBz8eKMAJ1zAABRRWxsvBXj8Dygk+qLZLgTEeDEexp0qvJQvxi4gvwG7eQwR/rbRCPuVNlOFbg7qsVhu13Oe8MTD8=
+	t=1724345983; cv=none; b=UESZxJy7SeEmp7RoWmg/JjcSW6c0nebNVIphs6nSzRm63hcGJ95wh9/7YhfjgXyCJkPt4Q9a/8HRSh1nloho6ltNo8vXfODYWXjU+AHH3hHPK8XqrYUhR5FQRVDECBSvWdcvpwzVmBSPInOsZ/fNHzJCcGb2kFr124XsJWTVNkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724345928; c=relaxed/simple;
-	bh=UeomF2//hAwCF+QkX7m0LD9i0ymmYaQhD/LHrqSfOr8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pUPJVHT+qeZ9XakD44fB322TlX0cNZLPQvzAirbw4uCyQSgJmf230K/HNe4LzYTwmrIAI7yYhQnb5Wpl6lJkdykmO0iHE0C1vzBe9i96x2plVNNgtgNKCwVyB08Jb3eg/w2tuYq3dX6Y8DgpNGGvQJCCjhnVnwHOgI2d+v4qLqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o5NM5+I8; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1724345983; c=relaxed/simple;
+	bh=YWGlspSU4TxFPxrvBNBjl8a3wkDXJajJpWcCzd/ehkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHazDk0uhB4n6g3Wgx4gHTGlPstmihca1Bx9gRw0sCC9SUtjQvGsgw1zT75AY8LlfryjllUumfH4pHsRxjTEEt7FClmMQdjpObhQaiKR/f6B/4DsfVbjA4LecdTlt2V4b98jfMRRNQTqN5eS6dGVfY0l3S4mWpH64YTDg/AIpPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brDJ/g9g; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o5NM5+I8"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-7cd9ac1fa89so897535a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 09:58:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brDJ/g9g"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20223b5c1c0so9638335ad.2;
+        Thu, 22 Aug 2024 09:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724345925; x=1724950725; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PnptKaBIwTlVutbudys0Nw5Cu09TSnmrnQQJzWGV6c8=;
-        b=o5NM5+I8Px1XHFS8zSMcYEKneea7C3sW4Anl+GALFbdc8W7jzIxocKi4/uKfkDzxkj
-         ueyR3JeYe3oeAmNJyEf5n3rPKWxA7MycA1dlmV6ebWAV8ct8p8k9XmLbLWh5M30tTMvR
-         /YJQfi7k0Xl6XA5ddm/XKjvPZFYnOO/uQ/gCAC1eSPgzzxFSxmvVtIF+aAYXzoPFwKl2
-         ggSVcE3e+2P5jW+0ENVvotAaT10ynT/VvWiP58thkA3R22ExGFKLax4HUwJrWkGp4ISs
-         r4OIkzomWGDRFOXnLZGXlsoXJUgZmWj5VC26mpkqoSOXmkLpi0KaIlLffmJMghJ44m4B
-         YUXQ==
+        d=gmail.com; s=20230601; t=1724345981; x=1724950781; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x1QyWs8fwaiHTqcav5Inx6vs/UZ87QiYkIE4fUFV/YQ=;
+        b=brDJ/g9gy2ldCPmLVA7yM17GKaBdiP/UmBv4hYfGF48/oQBeHLabyolfHNG7Ce8Em3
+         oCjRV5OVUSoYjACHvuChBs8jxsFBQTzdo2fcHc9jkJjcWO/ZKyIWJp0aT8Pl9Xfr7fNz
+         YzGUGKTmrJZOQEMwF8rD94dAn2iz5G7gxvNk7Bu5285KGjB3rCQSgWge7X0PupMiUzCe
+         WNMZjO6b6uwvJsr69GA5sIhjlO14y8g1W0rSJ+YkDURg+C8STSVYvtE3oY19QN+qF5B9
+         cOuCU0GUMHfuGYQNStsZtiMD/WJ6c2mKY1Z6E/XFlGVOp2AOIgUFBFUBZUXp7IgP8wJ8
+         qYlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724345925; x=1724950725;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PnptKaBIwTlVutbudys0Nw5Cu09TSnmrnQQJzWGV6c8=;
-        b=Lj8OlVBZ8R2oGb7KOv7VHGoNGAtkR1BqYyi9lk0RmJNA45QiKrHmOVWJYDX5bcAf/k
-         piKh2EGJqvUFRfQt5BCRoD3R1tNg7PU+Uy1DlI3gRu8+Jb1gItsad0tFS1BtCjDG4LFq
-         KzAgVshnwhPrENAoC0DKG8g6Yk+eEnIlb9fxTSL2ce9AM8310WH9bLhDD3qzYZqGZAk6
-         aPvrsMecm/T3a1UWgSm1+OVHeAsULtZmTjkUao1/eNMR2JfaDpEf8mSNTbb2jWh+Z5wQ
-         qAeWTbQjvb+aTDva0LtV1UjoO1ZASWnpLBzAsTA6MT/7oP/Kw6iXR8Ry45B941IzbVWx
-         5ZlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIlvFrfPfJo6CoYDSWJQ9BGB4VqDpSg+GSGU5qwMV+nL7HjRa+UFpMWcihV+sv99TeAll1eNSftYT5ySBHBg9RokA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyxsORPb+Bkf8/YUn9UiLryOxPudZunVuKSBhJSdmg0G1oasdL
-	31VcLdAfZ8/cwQB2NccHTJ+vH4PvNUl+r8oNmc5Q5UYiXeTnzWrqHwT40RYtOEATi5KaHrbq2MO
-	GJA==
-X-Google-Smtp-Source: AGHT+IHwvoth9fT1Z/DL4U24HgtU5PZ34fwWotGULJe3J4WG7tBh6KRt8uzZjRmfX56Dy8PjGUScXSTTOtc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a65:64ca:0:b0:6e3:e0bc:a332 with SMTP id
- 41be03b00d2f7-7cd88b70338mr16399a12.2.1724345924436; Thu, 22 Aug 2024
- 09:58:44 -0700 (PDT)
-Date: Thu, 22 Aug 2024 09:58:43 -0700
-In-Reply-To: <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com>
+        d=1e100.net; s=20230601; t=1724345981; x=1724950781;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x1QyWs8fwaiHTqcav5Inx6vs/UZ87QiYkIE4fUFV/YQ=;
+        b=kmEQFB/6exTEa690/htExTvecImSosg3PgwyjKRKmKkyNUKXqkMJ+6zfyBWumuRxNY
+         otNo8BPO8aNJ2AtssFUamjF4x9KiNt1JCSwfTBFJhFsRd09eC+2uFTugjTR2QQY7EjSG
+         XqUk9l11vZcLO2SY+E7n8dyolERO8i8ELICWpgzu4VpbNPyoyQAALFrZwnu+JosfZABi
+         IspgspGJ5r2ynHotTNR2FfuWX/ZWfvFcjCtquYkPnTQzonJhRGYtpgh6tPf9lOcVDVHf
+         C17g+s1sqFIZNW/pb4MIWsL1sbZdPTK7ZKBq1YKuAInz3XH1NOr4SHw+UMfQlQXcXprS
+         BQTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXlZ7sNd8p5qe1OkokLCrOEjTPWiNaBC3XCJXy7lcwDiXxI9Kslm5sYwOLAtCd1yzAvOejCUM5VzjRTUAJ@vger.kernel.org, AJvYcCVzv19+5BZnLDRg6KDltMZ2LeT19iLkskjkArf1Eb9t2ujSJqIyPEzISDzmgkFDJjifshY=@vger.kernel.org, AJvYcCWX4QoTBhNPr5SqQsA2/vXdOe8kSmNYMy6PysKnWtbc9OH00cQujZk2RwmrdkMT8KMBcoABy7192vpd3daDMLsvzIcJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1OBmXk+BLJsBHNNmxmnZ3fF9GSkklGr9D87DX+wxDW/hyaSwl
+	w445X4OHTh+y9cyYwrN87eE6Linivb5aoq0yl6BjPPQ1ITkc3ggwTg9perl+RLNjvJ80pYTAqBk
+	RFsDhtb0Rn6ymoaXwtENz4nnl34Q=
+X-Google-Smtp-Source: AGHT+IFVaeRmZ4B8Kf0yi9/jkvJQM5UIqKnx5lAPNwm9PjfCF+priLscW++esQqsFO5l8fCVLB+f35Ce6QU80a3GQq8=
+X-Received: by 2002:a17:90a:8a8e:b0:2c9:e24d:bbaa with SMTP id
+ 98e67ed59e1d1-2d5e9fc9af3mr7215837a91.27.1724345981232; Thu, 22 Aug 2024
+ 09:59:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-17-nsaenz@amazon.com>
- <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com>
-Message-ID: <ZsduQ7tg0oQFDY8h@google.com>
-Subject: Re: [PATCH 16/18] KVM: x86: Take mem attributes into account when
- faulting memory
-From: Sean Christopherson <seanjc@google.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	graf@amazon.de, dwmw2@infradead.org, pdurrant@amazon.com, mlevitsk@redhat.com, 
-	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	amoorthy@google.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-5-andrii@kernel.org>
+ <ZsdJuwIuJ-KFA6Rz@krava>
+In-Reply-To: <ZsdJuwIuJ-KFA6Rz@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 22 Aug 2024 09:59:29 -0700
+Message-ID: <CAEf4Bzb-1na=S9+XVpEpmtDE4mJLQRywZJ6wB8JyN++2Si6Pgw@mail.gmail.com>
+Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024, Nicolas Saenz Julienne wrote:
-> On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
-> > Take into account access restrictions memory attributes when faulting
-> > guest memory. Prohibited memory accesses will cause an user-space fault
-> > exit.
+On Thu, Aug 22, 2024 at 7:22=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
+>
+> SNIP
+>
+> > @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprobe, s=
+truct uprobe_consumer *uc)
+> >       int err;
 > >
-> > Additionally, bypass a warning in the !tdp case. Access restrictions in
-> > guest page tables might not necessarily match the host pte's when memory
-> > attributes are in use.
-> >
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> 
-> I now realize that only taking into account memory attributes during
-> faults isn't good enough for VSM. We should check the attributes anytime
-> KVM takes GPAs as input for any action initiated by the guest. If the
-> memory attributes are incompatible with such action, it should be
-> stopped. Failure to do so opens side channels that unprivileged VTLs can
-> abuse to infer information about privileged VTL. Some examples I came up
-> with:
-> - Guest page walks: VTL0 could install malicious directory entries that
->   point to GPAs only visible to VTL1. KVM will happily continue the
->   walk. Among other things, this could be use to infer VTL1's GVA->GPA
->   mappings.
-> - PV interfaces like the Hyper-V TSC page or VP assist page, could be
->   used to modify portions of VTL1 memory.
-> - Hyper-V hypercalls that take GPAs as input/output can be abused in a
->   myriad of ways. Including ones that exit into user-space.
-> 
-> We would be protected against all these if we implemented the memory
-> access restrictions through the memory slots API. As is, it has the
-> drawback of having to quiesce the whole VM for any non-trivial slot
-> modification (i.e. VSM's memory protections). But if we found a way to
-> speed up the slot updates we could rely on that, and avoid having to
-> teach kvm_read/write_guest() and friends to deal with memattrs. Note
-> that we would still need to use memory attributes to request for faults
-> to exit onto user-space on those select GPAs. Any opinions or
-> suggestions?
-> 
-> Note that, for now, I'll stick with the memory attributes approach to
-> see what the full solution looks like.
+> >       down_write(&uprobe->register_rwsem);
+> > -     if (WARN_ON(!consumer_del(uprobe, uc))) {
+> > -             err =3D -ENOENT;
+> > -     } else {
+> > -             err =3D register_for_each_vma(uprobe, NULL);
+> > -             /* TODO : cant unregister? schedule a worker thread */
+> > -             if (unlikely(err))
+> > -                     uprobe_warn(current, "unregister, leaking uprobe"=
+);
+> > -     }
+> > +
+> > +     list_del_rcu(&uc->cons_node);
+>
+> hi,
+> I'm using this patchset as base for my changes and stumbled on this today=
+,
+> I'm probably missing something, but should we keep the 'uprobe->consumer_=
+rwsem'
+> lock around the list_del_rcu?
+>
 
-FWIW, I suspect we'll be better off honoring memory attributes.  It's not just
-the KVM side that has issues with memslot updates, my understanding is userspace
-has also built up "slow" code with respect to memslot updates, in part because
-it's such a slow path in KVM.
+Note that original code also didn't take consumer_rwsem, but rather
+kept register_rwsem (which we still use).
+
+There is a bit of mix of using register_rwsem and consumer_rwsem for
+working with consumer list. Code hints at this as being undesirable
+and "temporary", but you know, it's not broken :)
+
+Anyways, my point is that we didn't change the behavior, this should
+be fine. That _rcu() in list_del_rcu() is not about lockless
+modification of the list, but rather modification in such a way as to
+keep lockless RCU-protected *readers* correct. It just does some more
+memory barrier/release operations more carefully.
+
+> jirka
+>
+>
+> > +     err =3D register_for_each_vma(uprobe, NULL);
+> > +
+> >       up_write(&uprobe->register_rwsem);
+> >
+> > -     if (!err)
+> > -             put_uprobe(uprobe);
+> > +     /* TODO : cant unregister? schedule a worker thread */
+> > +     if (unlikely(err)) {
+> > +             uprobe_warn(current, "unregister, leaking uprobe");
+> > +             goto out_sync;
+> > +     }
+> > +
+> > +     put_uprobe(uprobe);
+> > +
