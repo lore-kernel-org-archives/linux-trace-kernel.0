@@ -1,112 +1,224 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9281C93AC
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 11:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F71D1C93CA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 12:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724325662; cv=none; b=m7KrqKxAXH9C5J+7Vvkp1lRKmemViOdKvvdchFuP5FxuQ1DDT49blx3VXm4CW8Ro5WqqCi5Hj/2Iax1Oot7HpEA6UL6apwOy7HAkV/nRRWkWJPbGwH6wuPv4oHpwDec0DhX2OA7rLp+bDLDKRdVXsUdomiHVe7bdeQ4tvzawkhs=
+	t=1724328293; cv=none; b=oOsSJ5R9QlUVlcm48BJs7uDZkRKm1pQJwC36gdAbozhfA3KlcjK6S6OXW3cxSNqZkYxW2V9HBF8vZ/k3yvK+4038rADYLCqWayx4taFBAWirTEdAdQDaWXvxGMfqyJ7h54m58+MDeeVuLphYi3X1b0bJ3lhfFPSj1j61wmLTMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724325662; c=relaxed/simple;
-	bh=A5P24p2SL0yOnJjyVxIhUhB7QdMcqUPOS6cz8vm8YhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NesahsYIIcoGFoDIRwTs2dqkxZNxNWWVnQdQI91WUsfGKBBk5ytRVIMn1x/xz62MgUOJRfEm+TLevOxYIcCRRcYt4fWIpwmxa9YBee8aQtblGBZJZ7hpL7A513EYxtMLK4X159cvPwILR5wZC4iRimDICRgF+fecTlNylqVurws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TXEiC8BC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724328293; c=relaxed/simple;
+	bh=4wPruubT8llHHATxdqsGwe1CHDZt4aUPk/RJRbbIGjg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Plk01t1pnIvBuceQlPYrJzGAg1PIu8SOaQTswpmENVLxMGLVl+QdFCRubcq/lViHoa0fwf9WHK9GozAzhgnkbmPtRRYeLr4idMK8Mg6PkMd11uHlk73g7npYh7/sTTVS93wNkp7flh8avit5zSUcQFENwyVkX08YoQ6oEwYgzcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3Gq5eHgC; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TXEiC8BC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724325659;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bpCy6dO0uqqF5xDxQyyJx28AB3JYQF66yHgVSJxJxvM=;
-	b=TXEiC8BCrO9g3nhmuJLe5I1TdBQXuyFuOa9h3SbI89Za2Ria/hF0MKE1ANsM2MUERAwjGY
-	EVgdYIUcVqMJAhuPfP37g4400R6PY//yt6Zvm7N7qwMf/wp2kQaX8XP9xChney+3dkeX4d
-	Dnu9jvpHgUeXCj3upXMdkmiT2snUEnY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-187-aJBKaDvTMCmqgZqPHvDigA-1; Thu,
- 22 Aug 2024 07:20:55 -0400
-X-MC-Unique: aJBKaDvTMCmqgZqPHvDigA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A45BC1979062;
-	Thu, 22 Aug 2024 11:20:54 +0000 (UTC)
-Received: from localhost (unknown [10.22.32.39])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EECED19560AD;
-	Thu, 22 Aug 2024 11:20:53 +0000 (UTC)
-Date: Thu, 22 Aug 2024 08:20:52 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: tglozar@redhat.com, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jkacur@redhat.com
-Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in
- timerlat_fd_release
-Message-ID: <ZscfFFUM6pBuwpGZ@uudg.org>
-References: <20240820130001.124768-1-tglozar@redhat.com>
- <20240821160316.02c03c44@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3Gq5eHgC"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0bcd04741fso1286215276.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 05:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724328290; x=1724933090; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qaeHNeC4U+gSuIpF/blhfiveOXLPImv9FOraCwj5ang=;
+        b=3Gq5eHgCeOeF0ZaGlhHaiBYgDEsS0WoYrr/E1tkekktwlqkY70vstk0j8AzJB2t/jr
+         zJvneFSrdh+kcC8uDrW6OuwN261bt5vQ+jD1zzoTBIReO/00bpQd98eyXJaMdZKmhqJo
+         ermlNdTySig54dMbqKuUTab8J/XZKTDapoIjZfSXB/oRuhPJu3Yv7hz17bBXFCha9wZy
+         eNSvRKLc7ffza1GP91Ckez7Eg72643Kg/E8QJZyhQiULD/i7YTTA2hvmce+bfyzI7oO5
+         ZiO3pRnWnU+Zj67y5eJ8s3JTES029KnDUqLcXXu5lU3Ze3z7qCaUG8KwANoEnVDSAmKl
+         ptFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724328290; x=1724933090;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qaeHNeC4U+gSuIpF/blhfiveOXLPImv9FOraCwj5ang=;
+        b=cg0fDMBDW+c6Cg3NxUlzTguwMr4+UTKIg9PJYVuPE1TBu5qNjUrksIpDGHmxE7JBrE
+         a4F0g9HQpWMsbumXJ2chBWtnufUjaG0Fa/GOhvfbrCDj/qdXJlemKjzVTsPla/61QM7b
+         Zs+g4JsDPqZ4b0Bnr7Tz/85uWJ+5rVsGNak32IkfGsexR0zViJn+SzyREO+OWMFHY+3o
+         SenEpySHf3wtRJuL+n3Xr/sS05Xbo4FC0301Xma8vShsdEZMnWj96orokUfZX2XHT4mW
+         HhKcKYgqHVpKu7Rw8tmzNsXVpPp+T4VaD3WPJfP28mrXcMLq130228KjX1DdR6AB+d8j
+         9sCQ==
+X-Gm-Message-State: AOJu0YwcYakveNwRxnwx03Ko2YNph1iRp4ALRiCp57rS1YgLSO1B+HwD
+	zH54ku5OyvGduVXuBN8Qzb1VfdaXdT7RaFviG98x4AQyh95lPZMYMshRjrJessmFb6Lp7Habj0D
+	wOW4MTbkvgJ9uSQ==
+X-Google-Smtp-Source: AGHT+IEIHScnmgqTJmuCdOdZdFrXk6gyAD2n2QTBVJYojsFAgQWMDhll0TNe5nx6xpeyVM/+JOGxXJdwv2SpyHk=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
+ (user=aliceryhl job=sendgmr) by 2002:a25:aa84:0:b0:e0b:d729:ff8d with SMTP id
+ 3f1490d57ef6-e166543c856mr14145276.5.1724328289940; Thu, 22 Aug 2024 05:04:49
+ -0700 (PDT)
+Date: Thu, 22 Aug 2024 12:04:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240821160316.02c03c44@gandalf.local.home>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADwpx2YC/23Qy27DIBAF0F+JWNcVw8uQVf+j6oLH2EFqTYQtq
+ 1Xkfy/xpiC6vEjnMjMPsmKOuJLr5UEy7nGNaSlBv1yIv9llxiGGkgmjTFBF1bBl6/Ge4rINHBC
+ kMxTFCKSAe8Ypfp9l7x8l3+K6pfxzdu/wfP23ZoeBDkpKUGx0kwT3Nqc0f+KrT1/k2bOzygJtL
+ Ct2suhs0OC4lJ3llWXQWF6sQSEQ0TKneytqqxsriuWSB8m4NR56K/+spqyx8pzZghLCiOD7fVV t239VsZbxSVM6AWjT2bGy0N55LDYoapwB5TS09jiOX3jnaSYNAgAA
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5477; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=4wPruubT8llHHATxdqsGwe1CHDZt4aUPk/RJRbbIGjg=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmxylZCAp++W0g03p2207w/bZOFkFKkI+DjX+LP
+ TlaZhO497WJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZscpWQAKCRAEWL7uWMY5
+ Rhs+D/9wZyUjJN4r4koXI+//cd7ZcTKIuHeOxcDinqLwj7qF+USMJHsCAmLQ/cF08mTpuaios2X
+ 1rnPBggHshySYc+DfHxyw2p3+RCkwXEmx74TtThOZsAiNYQ5XQlIF/q0J7CWtLBBmi2uAT53OA7
+ 6yCfIuo1vqRBSMp66saDoRoQp7S8AL71UyvWD21+jZ/+hFy10wVML+Xu4ouG1/e/V9zK8vwTYk4
+ jKfhfjlG9EW8yVXGd+/quQopg5cSGOxvcyIpbN1amP01SLK1aMK1CKGQjuam/l3bwaaWTk5R8vo
+ xUgj4NR4iiSa0idNH82zVHgPrlNie9FYJqYnpImHcKcj4/Po5nMsJ6Xxmx6c0/t9rOCk9hJDwmh
+ IxHaI7jlU8sH90owV4Mv8AhFU+xbL9uyvsMSmK7svUMcqYCrHOjZw57RxMIV0Vsr35Tvu9CHJon
+ NO0S5ogSiOHwCFESn0RltVmLFC7gkLzgIHRReMaGOdcZ0qljSFuGXUCVPD0fsemcIiXLvF/f+Wi
+ uJTJ3zks7aA+LnhUAFsmDSe4Rws4EtUizV1kYwm6SfSORqZMqvNKVb9eksXvm3qkzAEu/lLUMA3
+ tWaCxOxms2Ns87v3MrKckIUkrNmH2BLHSjt7Ku3PctE/fIjy/d5FolEcgRM5q8PXLKASN9ceGS1 bPjj1UgxpInqEHA==
+X-Mailer: b4 0.13.0
+Message-ID: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
+Subject: [PATCH v8 0/5] Tracepoints and static branch in Rust
+From: Alice Ryhl <aliceryhl@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>
+Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
+	Alice Ryhl <aliceryhl@google.com>, Carlos Llamas <cmllamas@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Aug 21, 2024 at 04:03:16PM -0400, Steven Rostedt wrote:
-> On Tue, 20 Aug 2024 15:00:01 +0200
-> tglozar@redhat.com wrote:
-> 
-> > From: Tomas Glozar <tglozar@redhat.com>
-> > 
-> > When running timerlat with a userspace workload (NO_OSNOISE_WORKLOAD),
-> > NULL pointer dereference can be triggered by sending consequent SIGINT
-> > and SIGTERM signals to the workload process. That then causes
-> > timerlat_fd_release to be called twice in a row, and the second time,
-> > hrtimer_cancel is called on a zeroed hrtimer struct, causing the NULL
-> > dereference.
-> > 
-> > This can be reproduced using rtla:
-> > ```
-> > $ while true; do rtla timerlat top -u -q & PID=$!; sleep 5; \
-> >  kill -INT $PID; sleep 0.001; kill -TERM $PID; wait $PID; done
-> > [1] 1675
-> > [1]+  Aborted (SIGTERM)      rtla timerlat top -u -q
-> > [1] 1688
-> > client_loop: send disconnect: Broken pipe
-> > ```
-> > triggering the bug:
-> 
-> I'm able to reproduce this with the above. Unfortunately, I can still
-> reproduce it after applying this patch :-(
+An important part of a production ready Linux kernel driver is
+tracepoints. So to write production ready Linux kernel drivers in Rust,
+we must be able to call tracepoints from Rust code. This patch series
+adds support for calling tracepoints declared in C from Rust.
 
-We were able to mitigate the problem (triggered by that command line) simply
-by handling SIGTERM in the userspace tool the same way it handles SIGINT. That
-was one of the factors that helped the "closing the file descriptor twice"
-theory.
+This series includes a patch that adds a user of tracepoits to the
+rust_print sample. Please see that sample for details on what is needed
+to use this feature in Rust code.
 
-Would you mind sharing the backtrace you got? That would also help us
-investigating.
+This is intended for use in the Rust Binder driver, which was originally
+sent as an RFC [1]. The RFC did not include tracepoint support, but you
+can see how it will be used in Rust Binder at [2]. The author has
+verified that the tracepoint support works on Android devices.
 
-> Looking at the code, the logic for handling the kthread seems off. I'll
-> spend a little time to see if I can figure it out.
+This implementation implements support for static keys in Rust so that
+the actual static branch happens in the Rust object file. However, the
+__DO_TRACE body remains in C code. See v1 for an implementation where
+__DO_TRACE is also implemented in Rust.
 
-You mean the 
+When compiling for x86, this patchset has a dependency on [3] as we need
+objtool to convert jmp instructions to nop instructions. This patchset
+is based on top of the series containing [3].
 
-+	if (!tlat_var->kthread) {
-+		/* the fd has been closed already */
+There is also a conflict with splitting up the C helpers [4]. I've
+included an alternate version of the first patch that shows how to
+resolve the conflict. When using the alternate version of the first
+patch, this series applies cleanly on top of rust-next.
 
-bit or the kthread handling in rtla itself?
+Both [3] and [4] are already in rust-next.
 
-As Tomas already said, thank you for testing and reviewing the suggested fix!
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Link: https://r.android.com/3119993 [2]
+Link: https://lore.kernel.org/all/20240725183325.122827-7-ojeda@kernel.org/ [3]
+Link: https://lore.kernel.org/all/20240815103016.2771842-1-nmi@metaspace.dk/ [4]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v8:
+- Use OBJTREE instead of SRCTREE for temporary asm file.
+- Adjust comments on `asm!` wrapper to be less confusing.
+- Include resolution of conflict with helpers splitting.
+- Link to v7: https://lore.kernel.org/r/20240816-tracepoint-v7-0-d609b916b819@google.com
 
-Luis
+Changes in v7:
+- Fix spurious file included in first patch.
+- Fix issue with riscv asm.
+- Fix tags on fourth patch to match fifth patch.
+- Add Reviewed-by/Acked-by tags where appropriate.
+- Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
+
+Changes in v6:
+- Add support for !CONFIG_JUMP_LABEL.
+- Add tracepoint to rust_print sample.
+- Deduplicate inline asm.
+- Require unsafe inside `declare_trace!`.
+- Fix bug on x86 due to use of intel syntax.
+- Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
+
+Changes in v5:
+- Update first patch regarding inline asm duplication.
+- Add __rust_do_trace helper to support conditions.
+- Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
+- Get rid of glob-import in tracepoint macro.
+- Address safety requirements on tracepoints in docs.
+- Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
+
+Changes in v4:
+- Move arch-specific code into rust/kernel/arch.
+- Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
+- Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
+
+Changes in v3:
+- Support for Rust static_key on loongarch64 and riscv64.
+- Avoid failing compilation on architectures that are missing Rust
+  static_key support when the archtectures does not actually use it.
+- Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
+
+Changes in v2:
+- Call into C code for __DO_TRACE.
+- Drop static_call patch, as it is no longer needed.
+- Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
+
+---
+Alice Ryhl (5):
+      rust: add generic static_key_false
+      rust: add tracepoint support
+      rust: samples: add tracepoint to Rust sample
+      jump_label: adjust inline asm to be consistent
+      rust: add arch_static_branch
+
+ MAINTAINERS                             |  1 +
+ arch/arm/include/asm/jump_label.h       | 14 +++--
+ arch/arm64/include/asm/jump_label.h     | 20 +++++---
+ arch/loongarch/include/asm/jump_label.h | 16 +++---
+ arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
+ arch/x86/include/asm/jump_label.h       | 38 ++++++--------
+ include/linux/tracepoint.h              | 22 +++++++-
+ include/trace/define_trace.h            | 12 +++++
+ include/trace/events/rust_sample.h      | 31 +++++++++++
+ rust/Makefile                           |  5 +-
+ rust/bindings/bindings_helper.h         |  3 ++
+ rust/helpers.c                          |  9 ++++
+ rust/kernel/.gitignore                  |  3 ++
+ rust/kernel/arch_static_branch_asm.rs.S |  7 +++
+ rust/kernel/jump_label.rs               | 91 +++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs                      | 37 ++++++++++++++
+ rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
+ samples/rust/Makefile                   |  3 +-
+ samples/rust/rust_print.rs              | 18 +++++++
+ samples/rust/rust_print_events.c        |  8 +++
+ scripts/Makefile.build                  |  9 +++-
+ 21 files changed, 379 insertions(+), 67 deletions(-)
+---
+base-commit: 88359b25b950670432ef1da4352eb6cc62e0fa9f
+change-id: 20240606-tracepoint-31e15b90e471
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
 
