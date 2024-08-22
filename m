@@ -1,119 +1,70 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BCC1CB30A;
-	Thu, 22 Aug 2024 13:43:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D2116D4EF;
+	Thu, 22 Aug 2024 14:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724334200; cv=none; b=nVVcxF6h7uC+cXJfsNlD+2HFMxU3dD+S27EYJh8ggZfw5RcVkdFFeY0/2831W7/LkWOs/lpPSCF84aQZFCeCnNWcqy+aaBG9D69Wvcd+eNpy1YGBC8wh7lbeeaucFlBMfbfGxsytJA8t/Sh185UK3AMOp0z2cunOwbI2/p0AK1g=
+	t=1724336577; cv=none; b=bnCMBgpUkKHowpzCa3cyOpVWFQ1vihmaaX+ZnXvH09WpfQ9VVA76xzACSnotwKyVyP/cpJ4a8bjamFztfnsoduKLGLxWM/DFeAQhlfyd96bGoeqWYOXxGAQEZA6OM6ix1w4L4e6TBbq3clyg1xZl34p9N7TUEuWe0CD599VWcto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724334200; c=relaxed/simple;
-	bh=sQvd+bwcFWTX/oc4OS7Btb+0j0aSoPqVXbUm0Nn6uig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgCjAgd797Zg371aOwN+GkkFdzg/Jcb+CcdvAvuE1ToBkQJuHNE4lEp0UKqKnjeW8BPmvyi3ImQRKAPbpEnlVJYQScG/EE2xuHDPYgspKAyt/7f+qd9zTt3VxlUw63u+py4oqopEZFt1SU+3+HoGw64B9MrTmbKEYf7gfOb3AOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nN3G4Z1l; arc=none smtp.client-ip=209.85.219.41
+	s=arc-20240116; t=1724336577; c=relaxed/simple;
+	bh=RlK/WiCI7cC2xBe2HeIm5qnzRjy7kA6HBtTcgIK5hiE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YOzXxZqWCISFI50MXPqjVbiS7EwCeCRoSujXXB0oE5NYRd9HB2s4x3QA/dSriCLSIsjpj69lZSB7DNXssKAWbQFY4sY+1XEiv38HYHcjJJa1Zj7y8uOx78tP0LDx7gw43cVoTiqG0BvWhszFykbN/HjryLzSh3YLro1ips1bxOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LNx+qxRI; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nN3G4Z1l"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6bf7707dbb6so6016046d6.0;
-        Thu, 22 Aug 2024 06:43:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNx+qxRI"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a83597ce5beso137804166b.1;
+        Thu, 22 Aug 2024 07:22:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724334198; x=1724938998; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724336574; x=1724941374; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zdl67ic8HgEb8M4S4PfeCh58b8P52iTtl7Cnr2VuH+w=;
-        b=nN3G4Z1l2MI2LwwgHLuNKrlrTpdsrqv1x5+JKLN9zOLnDoKlcFOaQXkmNgP1TAvC9Y
-         P+IKn4mSsF4tdwL2xmNCm2fuc2Y/wlLlgLFzjpTa23uxWqL4qyW4/X3G0A0KvJLYoM0Y
-         cugnvkj2IHGK/CPx1F5aewJoJybauZTi+092YuXLJIXVFscy9MWCdG7YVhjzWl/OF/Vg
-         VTwuK+VpspkYNU1RAz9rrQRqLjzgd3WcCfWxe7mudaSRFHb4VCgwT7/EU6Td15miBMSe
-         HG+Junl4a0efOdBSyxceURi5JjK+uRqxGATrPL0jaHTsE7e5BDvxUP9BQ7q9neS0IVxz
-         /9pw==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hvFk4KiFQ4jknRyXdpWSIplvO8xMF83nYSG+PUhv9V4=;
+        b=LNx+qxRIpVQu+v/CbhCPwcm2X65l2HxnL1m3ndmNqiSYxKgYSWUYD6l8PFg2U9CyYP
+         Kq5jd9zILNBLt52Wd8vtadLLahsN7VuDnplcs/+J+ane1YdJ7fnmzngjhpWaDATnEjOb
+         +EQ+bZJ2A6uUFA/z6u4FeaWztWMay8/mUwyI2lYk3UJ9A17VhAhs4kDohMUbt8DkpMi5
+         I3L9Q9QMWMxneeN98ezIqO/si1vOOfxrlHS10kss2OMBnaMeEZmslwTASq1qvum29jUw
+         3LGmcc2m6WqUfqTgNhNLs0syWnY+g1oLqYNrP9IjysnNEZyre//1HoCG1C1MGCEM3KdJ
+         iRTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724334198; x=1724938998;
+        d=1e100.net; s=20230601; t=1724336574; x=1724941374;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Zdl67ic8HgEb8M4S4PfeCh58b8P52iTtl7Cnr2VuH+w=;
-        b=YHOKH/lwcaIbX7Eb+ZkTahGJS5FhNN/Bx1Lwa+xzLQcxTm5jRvs7Gt7uQjI14lYs12
-         oWIlz8bIYMgs6kVtTwthGSFXkjnMzQXatnCz4JnW8KmZDLnZwLj60+t5Yb3UkA37n7wd
-         0imLzObKUhdylxVVttP0hJMj9SkYViUBj1iiQQ9TfDGRhHZMCpoJqpocyxzHbI0uQOj+
-         YqSzxIeXWIoKGI15OotQwRfFFE+q0kS+iDte4wZ74uGgR3M2Jrgd2lzUYmJA9nGrVXEX
-         m1aekhr580wRjoJbIy4Re8s+KIZymjmH0GalXX4KYfMHki92HBWgHaM1jJKLAJfnHaWP
-         l9AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBSrGrvr/Dg+LSnm9HKoc87zW+DCxSRleEgFTzvn1RqtuK+88pEQkpGmG1c5aaDXUOfj2lE+mZHwcYZ6d9s3T3R3T8@vger.kernel.org, AJvYcCW0/oDfkY8CRAWwAZApHir4G8PTY2qyc/ruiLHiy51Bow6WzQkdffHAEAtlnYA+O8IavZd1Vkrz3QFi@vger.kernel.org, AJvYcCXwJXz67eQyKOO1sGKs+O4FBAlknGVZxtn5cH5yaQRke6AJ0KOL8ujF9z2GwNsnBBoXwdKRhwG9ddKV2vg/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrtwG2/44muVmEkNp0looG+j6WF/jsqTEs/x0A/G/BSGlElcgg
-	VulPxB8Mf5R/VLg+8GSIWgHbsxy/cx+GGOZXcyaPrjPgLMW8be6D
-X-Google-Smtp-Source: AGHT+IHPd/emMpe/HlyJz5A8zoG1MQ2R+I3aFfYWd3NjI3tG1Nm/rfs1sEJSU53wBMynWLouK7H2HQ==
-X-Received: by 2002:a05:6214:4613:b0:6bf:6b6e:95b3 with SMTP id 6a1803df08f44-6c160c44047mr68047206d6.1.1724334197887;
-        Thu, 22 Aug 2024 06:43:17 -0700 (PDT)
-Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162d1d242sm7731876d6.16.2024.08.22.06.43.16
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hvFk4KiFQ4jknRyXdpWSIplvO8xMF83nYSG+PUhv9V4=;
+        b=NjjT4paiB2euLEqNcHld1P8tHIcgrLIdY0ZIbgtFu5H+605CfIr8hdATjb5X1pLOpT
+         I7azPXf6mRZ086eOp3ETbKj915JJxgT63K+Ed+mOoU83n2/5hHhaJCe3uuiG7gP4N2FJ
+         1iyCqAxx4o1TNSfXiP4mr3SPwNyFrBuOiBcBEMdc5nAyve6CxqJRFGdu/PQplpktnxht
+         pZyExkcVoUW8vGICola9Ov78ej7Kc/VPbioToN1BGJG4EKUqxNJmE3//QNo0sGU3KbpA
+         Nz9vNP2JxGf3vKmBrT7wn9MJpw/lhw+pEpUBCfe8XyCAzxITHsElsMHYr02CRCa1Xqcf
+         2H2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeoD8q+Hu9QblP0eUIHmx0+NRwfVlFMZ5ERClvF/OIa/95etBkgy14x/SX9N0k6c46U+U=@vger.kernel.org, AJvYcCWmPVM36uop2M1SZK6n+ZaJSmofLOtEfUQu4JSjmHNUlHf2UnzPQ/3l/c/9xb/xiMZrV6vTFnVOxutUdWjn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGQSf+1oUK2vOgt3yps0w7+HCYhwY/1gs5HtBCD7sQGZ5EEmeN
+	McHruC7FWJyTWgiAgrE1eGFXO6L9CDF5Rks2QcXeiT8mVgYCOhqg
+X-Google-Smtp-Source: AGHT+IF0hmAt6tkNqeAkfXeiDKDltNUNbNaOv2hcoNDEkEIxY1sF68Dk0oiuClfQ1GBKVbEcaxalUA==
+X-Received: by 2002:a17:906:6a0e:b0:a80:f646:c9c4 with SMTP id a640c23a62f3a-a868a5aaf28mr301279766b.1.1724336573366;
+        Thu, 22 Aug 2024 07:22:53 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f48621esm127706966b.176.2024.08.22.07.22.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2024 06:43:17 -0700 (PDT)
-Received: from phl-compute-08.internal (phl-compute-08.nyi.internal [10.202.2.48])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 16C45120006B;
-	Thu, 22 Aug 2024 09:43:16 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Thu, 22 Aug 2024 09:43:16 -0400
-X-ME-Sender: <xms:dEDHZs-Uu1QrKkiY-oVdLHzWtxqROV2farUj6grkkH4X-fGNWEAUxA>
-    <xme:dEDHZktyWpS3ITVw6h89oq81ca9j_3hKKZ_Vq14gZuz-jFubxeBlEOVXSn6gAJ8q3
-    ao4D5FFAR4YzSj7jw>
-X-ME-Received: <xmr:dEDHZiBktsutJsHa1EDcwS_U3aKQBNlH10nc5Qeqfbb17_kgryGFLlZxeRIwsw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddruddvtddgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
-    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
-    gtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedvteeh
-    uddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
-    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
-    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
-    mhgvpdhnsggprhgtphhtthhopeehfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    eprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprgdrhhhinhgu
-    sghorhhgsehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheprghjohhnvghssehvvghnth
-    grnhgrmhhitghrohdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhn
-    uggrthhiohhnrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilh
-    drtghomhdprhgtphhtthhopegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomhdp
-    rhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoh
-    eprghprghtvghlsehvvghnthgrnhgrmhhitghrohdrtghomhdprhgtphhtthhopegrrhgu
-    sgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:dEDHZsfNAO2KfbEz1kaXZ_nbhnDePpyUV1gRLFjtHVlMaNflg6iZJg>
-    <xmx:dEDHZhMs8CPRen4V_NIyCqBFPKnZ4_sN9UCLAWbcQFrM1oVZaahJVg>
-    <xmx:dEDHZmlyRrHJ8PnL-3vgbYRcqbaNA4U5IsLMGLpi571JC6kYee4bJA>
-    <xmx:dEDHZjueMr_6ePqPIv3LdRePtsn5wEwdSWWYW5z6pFHU6oxEuMb_5g>
-    <xmx:dEDHZvsty_NFU9voKfT8TVM2to8A7PqU9JWozXcbc_HkfyMAjmPlXZ-3>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 22 Aug 2024 09:43:15 -0400 (EDT)
-Date: Thu, 22 Aug 2024 06:43:07 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: a.hindborg@samsung.com, ajones@ventanamicro.com,
-	akpm@linux-foundation.org, alex.gaynor@gmail.com,	alexghiti@rivosinc.com,
- aou@eecs.berkeley.edu,	apatel@ventanamicro.com, ardb@kernel.org,
- arnd@arndb.de,	benno.lossin@proton.me, bjorn3_gh@protonmail.com,
- bp@alien8.de,	catalin.marinas@arm.com, chenhuacai@kernel.org,
-	conor.dooley@microchip.com, dave.hansen@linux.intel.com,
-	gary@garyguo.net, hpa@zytor.com, jbaron@akamai.com,	jpoimboe@kernel.org,
- kernel@xen0n.name, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, maobibo@loongson.cn,	mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com,	maz@kernel.org, mhiramat@kernel.org,
- mingo@redhat.com,	ojeda@kernel.org, oliver.upton@linux.dev,
- palmer@dabbelt.com,	paul.walmsley@sifive.com, peterz@infradead.org,
- rostedt@goodmis.org,	rust-for-linux@vger.kernel.org,
- ryan.roberts@arm.com,	samuel.holland@sifive.com, seanjc@google.com,
- tabba@google.com,	tglx@linutronix.de, ubizjak@gmail.com,
- wedsonaf@gmail.com,	will@kernel.org, x86@kernel.org,
- yangtiezhu@loongson.cn,	zhaotianrui@loongson.cn
-Subject: Re: [PATCH v8 1/5 alt] rust: add generic static_key_false
-Message-ID: <ZsdAawBhPXojpDA1@boqun-archlinux>
-References: <20240822-tracepoint-v8-1-f0c5899e6fd3@google.com>
- <20240822-tracepoint-v8-1b-f0c5899e6fd3@google.com>
+        Thu, 22 Aug 2024 07:22:52 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 22 Aug 2024 16:22:51 +0200
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	paulmck@kernel.org, willy@infradead.org, surenb@google.com,
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+Message-ID: <ZsdJuwIuJ-KFA6Rz@krava>
+References: <20240813042917.506057-1-andrii@kernel.org>
+ <20240813042917.506057-5-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -122,139 +73,152 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240822-tracepoint-v8-1b-f0c5899e6fd3@google.com>
+In-Reply-To: <20240813042917.506057-5-andrii@kernel.org>
 
-On Thu, Aug 22, 2024 at 12:08:07PM +0000, Alice Ryhl wrote:
-> Add just enough support for static key so that we can use it from
-> tracepoints. Tracepoints rely on `static_key_false` even though it is
-> deprecated, so we add the same functionality to Rust.
-> 
-> This patch only provides a generic implementation without code patching
-> (matching the one used when CONFIG_JUMP_LABEL is disabled). Later
-> patches add support for inline asm implementations that use runtime
-> patching.
-> 
-> When CONFIG_JUMP_LABEL is unset, `static_key_count` is a static inline
-> function, so a Rust helper is defined for `static_key_count` in this
-> case. If Rust is compiled with LTO, this call should get inlined. The
-> helper can be eliminated once we have the necessary inline asm to make
-> atomic operations from Rust.
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+SNIP
 
-Regards,
-Boqun
+> @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprobe, struct uprobe_consumer *uc)
+>  	int err;
+>  
+>  	down_write(&uprobe->register_rwsem);
+> -	if (WARN_ON(!consumer_del(uprobe, uc))) {
+> -		err = -ENOENT;
+> -	} else {
+> -		err = register_for_each_vma(uprobe, NULL);
+> -		/* TODO : cant unregister? schedule a worker thread */
+> -		if (unlikely(err))
+> -			uprobe_warn(current, "unregister, leaking uprobe");
+> -	}
+> +
+> +	list_del_rcu(&uc->cons_node);
 
-> ---
-> This is an alternate version of patch 1 that resolves the conflict with
-> https://lore.kernel.org/all/20240725183325.122827-7-ojeda@kernel.org/
-> 
->  rust/bindings/bindings_helper.h |  1 +
->  rust/helpers/helpers.c          |  1 +
->  rust/helpers/tracepoint.c       | 18 ++++++++++++++++++
->  rust/kernel/jump_label.rs       | 29 +++++++++++++++++++++++++++++
->  rust/kernel/lib.rs              |  1 +
->  5 files changed, 50 insertions(+)
->  create mode 100644 rust/helpers/tracepoint.c
->  create mode 100644 rust/kernel/jump_label.rs
-> 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index ae82e9c941af..e0846e7e93e6 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -14,6 +14,7 @@
->  #include <linux/ethtool.h>
->  #include <linux/firmware.h>
->  #include <linux/jiffies.h>
-> +#include <linux/jump_label.h>
->  #include <linux/mdio.h>
->  #include <linux/phy.h>
->  #include <linux/refcount.h>
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 173533616c91..5b17839de43a 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -20,6 +20,7 @@
->  #include "slab.c"
->  #include "spinlock.c"
->  #include "task.c"
-> +#include "tracepoint.c"
->  #include "uaccess.c"
->  #include "wait.c"
->  #include "workqueue.c"
-> diff --git a/rust/helpers/tracepoint.c b/rust/helpers/tracepoint.c
-> new file mode 100644
-> index 000000000000..02aafb2b226f
-> --- /dev/null
-> +++ b/rust/helpers/tracepoint.c
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0
+hi,
+I'm using this patchset as base for my changes and stumbled on this today,
+I'm probably missing something, but should we keep the 'uprobe->consumer_rwsem'
+lock around the list_del_rcu?
+
+jirka
+
+
+> +	err = register_for_each_vma(uprobe, NULL);
 > +
-> +/*
-> + * Helpers for tracepoints. At the moment, helpers are only needed when
-> + * CONFIG_JUMP_LABEL is disabled, as `static_key_count` is only marked inline
-> + * in that case.
-> + *
-> + * Copyright (C) 2024 Google LLC.
-> + */
+>  	up_write(&uprobe->register_rwsem);
+>  
+> -	if (!err)
+> -		put_uprobe(uprobe);
+> +	/* TODO : cant unregister? schedule a worker thread */
+> +	if (unlikely(err)) {
+> +		uprobe_warn(current, "unregister, leaking uprobe");
+> +		goto out_sync;
+> +	}
 > +
-> +#include <linux/jump_label.h>
+> +	put_uprobe(uprobe);
 > +
-> +#ifndef CONFIG_JUMP_LABEL
-> +int rust_helper_static_key_count(struct static_key *key)
-> +{
-> +	return static_key_count(key);
-> +}
-> +#endif
-> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-> new file mode 100644
-> index 000000000000..011e1fc1d19a
-> --- /dev/null
-> +++ b/rust/kernel/jump_label.rs
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +out_sync:
+> +	/*
+> +	 * Now that handler_chain() and handle_uretprobe_chain() iterate over
+> +	 * uprobe->consumers list under RCU protection without holding
+> +	 * uprobe->register_rwsem, we need to wait for RCU grace period to
+> +	 * make sure that we can't call into just unregistered
+> +	 * uprobe_consumer's callbacks anymore. If we don't do that, fast and
+> +	 * unlucky enough caller can free consumer's memory and cause
+> +	 * handler_chain() or handle_uretprobe_chain() to do an use-after-free.
+> +	 */
+> +	synchronize_srcu(&uprobes_srcu);
+>  }
+>  EXPORT_SYMBOL_GPL(uprobe_unregister);
+>  
+> @@ -1214,13 +1205,20 @@ EXPORT_SYMBOL_GPL(uprobe_register);
+>  int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
+>  {
+>  	struct uprobe_consumer *con;
+> -	int ret = -ENOENT;
+> +	int ret = -ENOENT, srcu_idx;
+>  
+>  	down_write(&uprobe->register_rwsem);
+> -	for (con = uprobe->consumers; con && con != uc ; con = con->next)
+> -		;
+> -	if (con)
+> -		ret = register_for_each_vma(uprobe, add ? uc : NULL);
 > +
-> +// Copyright (C) 2024 Google LLC.
+> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
+> +	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
+> +				 srcu_read_lock_held(&uprobes_srcu)) {
+> +		if (con == uc) {
+> +			ret = register_for_each_vma(uprobe, add ? uc : NULL);
+> +			break;
+> +		}
+> +	}
+> +	srcu_read_unlock(&uprobes_srcu, srcu_idx);
 > +
-> +//! Logic for static keys.
-> +//!
-> +//! C header: [`include/linux/jump_label.h`](srctree/include/linux/jump_label.h).
+>  	up_write(&uprobe->register_rwsem);
+>  
+>  	return ret;
+> @@ -2085,10 +2083,12 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  	struct uprobe_consumer *uc;
+>  	int remove = UPROBE_HANDLER_REMOVE;
+>  	bool need_prep = false; /* prepare return uprobe, when needed */
+> +	bool has_consumers = false;
+>  
+> -	down_read(&uprobe->register_rwsem);
+>  	current->utask->auprobe = &uprobe->arch;
+> -	for (uc = uprobe->consumers; uc; uc = uc->next) {
 > +
-> +/// Branch based on a static key.
-> +///
-> +/// Takes three arguments:
-> +///
-> +/// * `key` - the path to the static variable containing the `static_key`.
-> +/// * `keytyp` - the type of `key`.
-> +/// * `field` - the name of the field of `key` that contains the `static_key`.
-> +///
-> +/// # Safety
-> +///
-> +/// The macro must be used with a real static key defined by C.
-> +#[macro_export]
-> +macro_rules! static_key_false {
-> +    ($key:path, $keytyp:ty, $field:ident) => {{
-> +        let _key: *const $keytyp = ::core::ptr::addr_of!($key);
-> +        let _key: *const $crate::bindings::static_key = ::core::ptr::addr_of!((*_key).$field);
+> +	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+> +				 srcu_read_lock_held(&uprobes_srcu)) {
+>  		int rc = 0;
+>  
+>  		if (uc->handler) {
+> @@ -2101,17 +2101,24 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  			need_prep = true;
+>  
+>  		remove &= rc;
+> +		has_consumers = true;
+>  	}
+>  	current->utask->auprobe = NULL;
+>  
+>  	if (need_prep && !remove)
+>  		prepare_uretprobe(uprobe, regs); /* put bp at return */
+>  
+> -	if (remove && uprobe->consumers) {
+> -		WARN_ON(!uprobe_is_active(uprobe));
+> -		unapply_uprobe(uprobe, current->mm);
+> +	if (remove && has_consumers) {
+> +		down_read(&uprobe->register_rwsem);
 > +
-> +        $crate::bindings::static_key_count(_key.cast_mut()) > 0
-> +    }};
-> +}
-> +pub use static_key_false;
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 274bdc1b0a82..91af9f75d121 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -36,6 +36,7 @@
->  pub mod firmware;
->  pub mod init;
->  pub mod ioctl;
-> +pub mod jump_label;
->  #[cfg(CONFIG_KUNIT)]
->  pub mod kunit;
->  #[cfg(CONFIG_NET)]
+> +		/* re-check that removal is still required, this time under lock */
+> +		if (!filter_chain(uprobe, current->mm)) {
+> +			WARN_ON(!uprobe_is_active(uprobe));
+> +			unapply_uprobe(uprobe, current->mm);
+> +		}
+> +
+> +		up_read(&uprobe->register_rwsem);
+>  	}
+> -	up_read(&uprobe->register_rwsem);
+>  }
+>  
+>  static void
+> @@ -2119,13 +2126,15 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
+>  {
+>  	struct uprobe *uprobe = ri->uprobe;
+>  	struct uprobe_consumer *uc;
+> +	int srcu_idx;
+>  
+> -	down_read(&uprobe->register_rwsem);
+> -	for (uc = uprobe->consumers; uc; uc = uc->next) {
+> +	srcu_idx = srcu_read_lock(&uprobes_srcu);
+> +	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+> +				 srcu_read_lock_held(&uprobes_srcu)) {
+>  		if (uc->ret_handler)
+>  			uc->ret_handler(uc, ri->func, regs);
+>  	}
+> -	up_read(&uprobe->register_rwsem);
+> +	srcu_read_unlock(&uprobes_srcu, srcu_idx);
+>  }
+>  
+>  static struct return_instance *find_next_ret_chain(struct return_instance *ri)
 > -- 
-> 2.46.0.184.g6999bdac58-goog
+> 2.43.5
 > 
