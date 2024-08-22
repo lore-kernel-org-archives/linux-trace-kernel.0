@@ -1,174 +1,208 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8DE15ACA;
-	Thu, 22 Aug 2024 17:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ED81CF286
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 18:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724349129; cv=none; b=uc/5x7EJtkluZWuAppTJetMUGmQDEZuPWp9DoyR3MPumT7L+68IBejldjcc2TvPS8TNipoRdGjfWy1kn3XS6yKCIgo1JVVHbBraM7i+pvT/0/zftYhS7GNHreUhAjYcgaZOnaa0dn0IoRmnNEx5VxvIBqD+Q7bt8BzQDIajrVJY=
+	t=1724350408; cv=none; b=ae0qBU2cew7h6klbVqvYWFvcnDqT9SdRay7XpK5ohrTpoeY8AVWDGBrmAZkmSeC7TWWxdmDUwL78RbZe6g7BfNeweahhadwIA3n97/fPSqD1FpX57A53eBC6SvzXy6dpa0kz0s2eed+FpTRiKYKKdTbObG7kYxkV10MPwa1W+g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724349129; c=relaxed/simple;
-	bh=Gj5Koluh95p+c/vgpBqDLm1Ruabq+Htz4HNcGWNDX/A=;
+	s=arc-20240116; t=1724350408; c=relaxed/simple;
+	bh=7W6AaAuvGbYK5j4uwqemfKmyhu4/qcf4rmyVPrUi8po=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=el/IEiaHAkrCq86kHYb6HffzYYyuUrMDpS0DFziHMqnLMkYlIDhILnFP1PWLiqLirrvj90jZh0ZkaQJYRoTJvkGY2T0e22T5gdDUKh89/Pn1sB6XS+ht5Z2yiTJILwAsPJcf5XfO+Zk/1MWfK9a7OYRBd8TU+hHZmxQmwEPgqhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ekeVrC3m; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=b4tn1iLZz1n2rUGzzOyB1QB8zif07QHzwN+QSHa3R1Ea6eekIzLf6oqmvDId/DzVIsICGWB6n+rVi8H4f0g2WeqLyP43064CzvEmuV5/jK9xYQQ76eSIWCR0x2JLQWwC277r0Yk83dHBkjd62SVluVkePkbh8leGJwqku7OtTEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BuWQrtwm; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekeVrC3m"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2d3bae081efso886212a91.1;
-        Thu, 22 Aug 2024 10:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuWQrtwm"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-371bb8322b2so560882f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 11:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724349127; x=1724953927; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1724350404; x=1724955204; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TSMdvcvti+RWCtYMd+FEZT5Ru/ACmw+rmYf/bGB23eI=;
-        b=ekeVrC3m5Be+Du1jzMwT6gVYPJzV0QKDDuG5BdrGk9kUElmlG8Xt/cANm3uUZmBw0Q
-         KqaD3CQpmh8axQ02G5pMeWeG79WKfE5I92vTSiM2bYHDoNoGHREZ0sxL+6TYK9fhi5ty
-         10l8ufk22OsQBhCKz4Kk8b8zaD489lkacdKabojChgMWsrzucT2ymV50Tjx1GmW+EFX/
-         rYhKA5ZGSTWYzx+Y8t0aGtdCWP+fLy9MTUujzpYRgjLEugcW1jiT4duKqKXlKTMtw19J
-         RQxE5l0f4LnBK66AJ/viq4jjC1n7GmAlsskW0vQiQsUF+Co8yT5hkble5RCF0br5dBWu
-         cBZg==
+        bh=V/anGTvjJVK/2MoIj/z7y54NxrhSiznN5JcZCeLu05A=;
+        b=BuWQrtwmY2lncBGHBcx5ql8yqmDu8W5FYGC6Kh+6rKV1YzYvtLo0mWrPwIVZKAjGB3
+         BGjPThFMj6HLJLmHcDaK9z4OSOpWxxT5FtjeOXnEGXU0+2DgyBYJvv9eQ5uLoabvNfS3
+         3qA7JvmnKAVGn0e1h0oz284Wl+rsh0m0C9VYG2lfOrq0jtAPHUR6LzYp7G5Lg+Jt2iz5
+         cDx/54FHW6pfAhg9/ssfHjPf8aOwrh7wckL3AJPlWh2qpQuaO6e1y34UBAjmLfpv9YTU
+         DxPwBsEFiTNNcpDAC8KQHlnjNC4valES2gWNJzkuzhkXbUQEPaaJOpixo5yBWFUNGRwQ
+         aKpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724349127; x=1724953927;
+        d=1e100.net; s=20230601; t=1724350404; x=1724955204;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TSMdvcvti+RWCtYMd+FEZT5Ru/ACmw+rmYf/bGB23eI=;
-        b=v4VoiERPiZHJPMAEbxHm6RjmshCkBLH0C++lYi2FhAJxDEKdbVtT3KYXebr7oKnilt
-         06Vo1suqCpAUXzU42ehRfWtskSpU9qu2wFn2koFYfNiAfZNO1p1NeR9GFZXgEuXdY3sx
-         Y2LyQCdDGWvWmqEfp919BxmN0e4JTPKmh33x8f06TcGMwETX02hMz2WfUpqGy8wzZ58N
-         4NAgn2Jm+91OJ9p5Ovv+jm2k+oc5QP0AR5AdUtkV7aeV4VYEIB4RcZnYtZcz5HSsYN8L
-         CXipBpoorXbYLCWi8JJ2i4D9qIh1hceTl0WFFnj82qgPUOKah+f+gjrwVULYtgGJCSBz
-         TtJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxjj5cog9KPU4O/huDshuk69PuAUdarQ+jB9O4HXZ4Y5a0O2kwqVBp5MCj3gI1nIivqBKt7J63NBXWqAJl@vger.kernel.org, AJvYcCVDSG8Q0yh+9IjoMcM9wC9flYrSk7QI61NJQb4kjmHxBeCCWIqXTbgEwEPmoDLozPsJf+s=@vger.kernel.org, AJvYcCW6jHb77fwnaFrFg+uWq7LwNxDLHPUTThcrRV1MCe7z4yUgvcHyiEEHc8UhRVrtR6IQzlNsC46al6DSwR0IgyNuFhbN@vger.kernel.org
-X-Gm-Message-State: AOJu0YySYrkE/zRyfZIYFECBGO/kv/g2JWIew9hWHuIewz4RGWmLY3iZ
-	ttJotWSaynXAvhjgteH8S1gilttLcWMrxWAqBBkVO4+xv1rOpFyxvt4rWSbpHUrBX5ANMAzfgvn
-	PlTwSWRP1ghP9k/WHpButtTABuIg=
-X-Google-Smtp-Source: AGHT+IFbNA+AYoJwPKkug+4J4dkzuWlv61LePE1OdqmnnD6GiBA+gHzMQMKHafS8xgKroO9gkSs966LHnR+mMgns4Bo=
-X-Received: by 2002:a17:90a:9a4:b0:2c4:ee14:94a2 with SMTP id
- 98e67ed59e1d1-2d5e9ec9953mr7556078a91.27.1724349127031; Thu, 22 Aug 2024
- 10:52:07 -0700 (PDT)
+        bh=V/anGTvjJVK/2MoIj/z7y54NxrhSiznN5JcZCeLu05A=;
+        b=suaA6TEWWpNPrFJalJtiDUBM1zXiu1P3I/TpGDKNW/XlNE3Qt+FUATfZPbG3JFIlE2
+         13GbuWb6s9sYsvq1fYQUOZ0TTOLXpThDxmmM/bbqeKCuHYZ7+yo70EGaNXMPEGXm5U74
+         rm7VZKyntFx5TgOfe+GTJV2UBRFjOUtyHrJubaDAmb6YOXqlDplCuTTepf+zNk1ykGyw
+         T8VYlj1jnPJxb9FLIfVAXBMYUMXSSWU4ifC7yEL0mEugBmL2aRyeaiu3pJxR6/tkyjrT
+         Twtqa352oge4Ph/8JHy3G0eEGVLB5YcQqrs8hIyqNtLeudidsbKyivghtCd2oqMeeiqL
+         FnQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmbRHQuJmBals7hMVyv3UkUi/c/wZVIzQp4Ve5VicbwtGgt2Lb7WABkWBO2ZQv+X9JxL28X92sf92DbfyWC6LY6nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9PYFWwen/VCYxkW7E3coRBKkZl183cHnpJq9bngkIf/giV5Pk
+	m768+DcUU3owcmrHryhhkqjDWsBKKMUlpmAd4wqG7TJQCz4D7Wkaw7D/CoeCz2PbCQbeMtXHqFU
+	KRTCgD5KnRVoJTv++Uk3PTzLXOQn3AMGzduc=
+X-Google-Smtp-Source: AGHT+IGrIgUIJwt0UKI7HXbF269KMJ2021VtmSioDifbs+8lZRKMvAZ7kztHIsKImKLVPEof7MrOkToAtKTzsxe9aI4=
+X-Received: by 2002:a5d:68c9:0:b0:371:846d:558d with SMTP id
+ ffacd0b85a97d-373052a6d02mr2299460f8f.34.1724350403725; Thu, 22 Aug 2024
+ 11:13:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-5-andrii@kernel.org>
- <ZsdJuwIuJ-KFA6Rz@krava> <CAEf4Bzb-1na=S9+XVpEpmtDE4mJLQRywZJ6wB8JyN++2Si6Pgw@mail.gmail.com>
- <Zsd28aEHBLkRpUQs@krava>
-In-Reply-To: <Zsd28aEHBLkRpUQs@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 22 Aug 2024 10:51:54 -0700
-Message-ID: <CAEf4Bza43g4O-OP2ZTvri2+rnUVzKcV6LCRugzt7AcFqmkSP4g@mail.gmail.com>
-Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
- locklessly under SRCU protection
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org
+References: <20240805173234.3542917-1-vdonnefort@google.com> <20240805173234.3542917-5-vdonnefort@google.com>
+In-Reply-To: <20240805173234.3542917-5-vdonnefort@google.com>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 22 Aug 2024 11:13:11 -0700
+Message-ID: <CANDhNCoWvBn=h3ENEM9bbJO8LBVh5m=3vw79Bawr3e4NE4UMSQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 04/11] timekeeping: Export the boot clock in snapshots
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	kvmarm@lists.linux.dev, will@kernel.org, qperret@google.com, 
+	kernel-team@android.com, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 10:35=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
+On Mon, Aug 5, 2024 at 10:33=E2=80=AFAM 'Vincent Donnefort' via kernel-team
+<kernel-team@android.com> wrote:
 >
-> On Thu, Aug 22, 2024 at 09:59:29AM -0700, Andrii Nakryiko wrote:
-> > On Thu, Aug 22, 2024 at 7:22=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
-> > >
-> > > SNIP
-> > >
-> > > > @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprob=
-e, struct uprobe_consumer *uc)
-> > > >       int err;
-> > > >
-> > > >       down_write(&uprobe->register_rwsem);
-> > > > -     if (WARN_ON(!consumer_del(uprobe, uc))) {
-> > > > -             err =3D -ENOENT;
-> > > > -     } else {
-> > > > -             err =3D register_for_each_vma(uprobe, NULL);
-> > > > -             /* TODO : cant unregister? schedule a worker thread *=
-/
-> > > > -             if (unlikely(err))
-> > > > -                     uprobe_warn(current, "unregister, leaking upr=
-obe");
-> > > > -     }
-> > > > +
-> > > > +     list_del_rcu(&uc->cons_node);
-> > >
-> > > hi,
-> > > I'm using this patchset as base for my changes and stumbled on this t=
-oday,
-> > > I'm probably missing something, but should we keep the 'uprobe->consu=
-mer_rwsem'
-> > > lock around the list_del_rcu?
-> > >
-> >
-> > Note that original code also didn't take consumer_rwsem, but rather
-> > kept register_rwsem (which we still use).
+> On arm64 systems, the arch timer can be accessible by both EL1 and EL2.
+> This means when running with nVHE or protected KVM, it is easy to
+> generate clock values from the hypervisor, synchronized with the kernel.
 >
-> humm, consumer_del took consumer_rwsem, right?
+> For tracing purpose, the boot clock is interesting as it doesn't stop on
+> suspend. Export it as part of the time snapshot. This will later allow
+> the hypervisor to add boot clock timestamps to its events.
 >
-
-Ah, it was inside consume_del(), sorry, my bad. I can add nested
-consumer_rwsem back, but what I mentioned earlier, regiser_rwsem is
-sort of interchangeable and sufficient enough for working with
-consumer list, it seems. There are a bunch of places where we iterated
-this list without holding consumer_rwsem lock and that doesn't break
-anything.
-
-Also, consumer_add() and consumer_del() are always called with
-register_rwsem, so that consumer_rwsem isn't necessary.
-
-We also have prepare_uprobe() holding consumer_rwsem and there is a
-comment about abuse of that rwsem and suggestion to move it to
-registration, I never completely understood that. But prepare_uprobe()
-doesn't seem to modify consumers list at all.
-
-And the one remaining use of consumer_rwsem is filter_chain(), which
-for handler_chain() will be also called under register_rwsem, if
-purely lockless traversal is not enough.
-
-There are two other calls to filter_chain() that are not protected by
-register_rwsem, so just because of those two maybe we should keep
-consumer_rwsem, but so far all the stress testing never caught any
-problem.
-
-
-> jirka
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 >
-> >
-> > There is a bit of mix of using register_rwsem and consumer_rwsem for
-> > working with consumer list. Code hints at this as being undesirable
-> > and "temporary", but you know, it's not broken :)
-> >
-> > Anyways, my point is that we didn't change the behavior, this should
-> > be fine. That _rcu() in list_del_rcu() is not about lockless
-> > modification of the list, but rather modification in such a way as to
-> > keep lockless RCU-protected *readers* correct. It just does some more
-> > memory barrier/release operations more carefully.
-> >
-> > > jirka
-> > >
-> > >
-> > > > +     err =3D register_for_each_vma(uprobe, NULL);
-> > > > +
-> > > >       up_write(&uprobe->register_rwsem);
-> > > >
-> > > > -     if (!err)
-> > > > -             put_uprobe(uprobe);
-> > > > +     /* TODO : cant unregister? schedule a worker thread */
-> > > > +     if (unlikely(err)) {
-> > > > +             uprobe_warn(current, "unregister, leaking uprobe");
-> > > > +             goto out_sync;
-> > > > +     }
-> > > > +
-> > > > +     put_uprobe(uprobe);
-> > > > +
+> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+> index fc12a9ba2c88..0fc6a61d64bd 100644
+> --- a/include/linux/timekeeping.h
+> +++ b/include/linux/timekeeping.h
+> @@ -275,18 +275,24 @@ struct ktime_timestamps {
+>   *                              counter value
+>   * @cycles:    Clocksource counter value to produce the system times
+>   * @real:      Realtime system time
+> + * @boot:      Boot time
+
+So, adding the boottime to this kernel-internal snapshot seems reasonable t=
+o me.
+
+>   * @raw:       Monotonic raw system time
+>   * @cs_id:     Clocksource ID
+>   * @clock_was_set_seq: The sequence number of clock-was-set events
+>   * @cs_was_changed_seq:        The sequence number of clocksource change=
+ events
+> + * @mono_shift:        The monotonic clock slope shift
+> + * @mono_mult: The monotonic clock slope mult
+
+
+This bit, including the mult/shift pair however, isn't well explained
+and is a little more worrying.
+
+
+> @@ -1074,14 +1076,21 @@ void ktime_get_snapshot(struct system_time_snapsh=
+ot *systime_snapshot)
+>                 systime_snapshot->clock_was_set_seq =3D tk->clock_was_set=
+_seq;
+>                 base_real =3D ktime_add(tk->tkr_mono.base,
+>                                       tk_core.timekeeper.offs_real);
+> +               base_boot =3D ktime_add(tk->tkr_mono.base,
+> +                                     tk_core.timekeeper.offs_boot);
+>                 base_raw =3D tk->tkr_raw.base;
+>                 nsec_real =3D timekeeping_cycles_to_ns(&tk->tkr_mono, now=
+);
+>                 nsec_raw  =3D timekeeping_cycles_to_ns(&tk->tkr_raw, now)=
+;
+> +               mono_mult =3D tk->tkr_mono.mult;
+> +               mono_shift =3D tk->tkr_mono.shift;
+>         } while (read_seqcount_retry(&tk_core.seq, seq));
+>
+>         systime_snapshot->cycles =3D now;
+>         systime_snapshot->real =3D ktime_add_ns(base_real, nsec_real);
+> +       systime_snapshot->boot =3D ktime_add_ns(base_boot, nsec_real);
+>         systime_snapshot->raw =3D ktime_add_ns(base_raw, nsec_raw);
+> +       systime_snapshot->mono_shift =3D mono_shift;
+> +       systime_snapshot->mono_mult =3D mono_mult;
+>  }
+>  EXPORT_SYMBOL_GPL(ktime_get_snapshot);
+
+So this looks like you're trying to stuff kernel timekeeping internal
+values into the snapshot so you can skirt around the timekeeping
+subsystem and generate your own timestamps.
+
+This ends up duplicating logic, but in an incomplete way.  For
+instance, you don't have things like ntp state, etc, so the timestamps
+you generate will not exactly match the kernel, and may have
+discontinuities. :(
+
+Now for many cases "close enough" is fine. But the difficulty is the
+expectation bar always raises, and eventually "close enough" isn't and
+we have a broken interface that has to be fixed.
+
+That said, I do get the need to have something like this is
+legitimate. There have been a number of cases where external hardware
+(PTP timestamps from NICs) or contexts (virt) are able to record
+hardware clocksource timestamps on their own, and want to be able to
+map that back to the kernel's (or maybe "a kernel's" if there are
+multiple VMs) sense of time.  Sometimes even wanting to do this quite
+a bit later after the timestamp was recorded. The ktime_get_snapshot()
+logic was added in the first place for this reason.
+
+Some more aggressive approaches try to dump a bunch of the internal
+kernel timekeeping state out to userland and call it an api.
+See https://lore.kernel.org/lkml/410bbef9771ef8aa51704994a70d5965e367e2ce.c=
+amel@infradead.org/
+for a recent (and thorough) effort there.
+
+I'm very much not a fan of this approach, as it mimics older efforts
+for userspace time calculations that were done before we settled on
+VDSOs, which were very fragile and required years of keeping backwards
+compatibility logic to map the current kernel state back to separate
+structures and expensive conversions to different units that userland
+expected.
+
+The benefit with VDSO interface is while the data is exposed to
+userland, the structure is not, and the logic is still kernel
+controlled, so changes to internal state can be done without breaking
+userland.
+
+Something I have been thinking about is maybe it would be beneficial
+to rework the timekeeping core so that given a clocksource timestamp,
+it could calculate the time for that timestamp. While existing apis
+would still do a new read of the clocksource, so the timestamps would
+always increase, an old timestamp could be used to retro-calculate a
+past time.  The thing that prevents this now is that the timekeeping
+core doesn't keep any history, so we can't correctly back-calculate
+times before the last state change. But potentially we could keep a
+buffer of timekeeper states associated with clocksource intervals, and
+so we could find the right state to use for a given clocksource
+timestamp. Now, this would still only work to a point, as we don't
+want to keep tons of historical state.  But then with this, maybe we
+could switch to something more VDSO-like where the PTP drivers or host
+systems could request a time given a timestamp (and probably some
+clocksource id so we can sanity check everyone is using the same
+clock), and we could still provide what they want without having to
+expose all of our state.
+
+Unfortunately though, this is all hand waving and pontificating on my
+part, as it would be a large rework. But it seems something closer
+where we share opaque kernel state along with logic with proper
+syscall like APIs to do the calculations, would be a much better
+approach over just exporting more kernel state as an API.
+
+For a more short term approach, since you can't be exact outside of
+the timekeeping logic, why not interpolate from the data
+ktime_get_snapshot already provides to calculate your own sense of the
+frequency?
+
+thanks
+-john
