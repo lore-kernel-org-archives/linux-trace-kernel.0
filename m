@@ -1,152 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABD038F9A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 17:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8DE15ACA;
+	Thu, 22 Aug 2024 17:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348899; cv=none; b=QZwQvzk6BFzXAT3l2QKh4LusmLtuQUvRJ8EVO+2Vo9eGqu/cZQTQKuvJldqR0aHqQEctLv7BUuehaz/rX62nAU1ZcO2grAlVtZdZo6aVJ/VrBLgshxTif63KhZtfJjb+3eYrSLixihYQOLPQBnG2zFbs3vmSg9x/RtUUat//xvU=
+	t=1724349129; cv=none; b=uc/5x7EJtkluZWuAppTJetMUGmQDEZuPWp9DoyR3MPumT7L+68IBejldjcc2TvPS8TNipoRdGjfWy1kn3XS6yKCIgo1JVVHbBraM7i+pvT/0/zftYhS7GNHreUhAjYcgaZOnaa0dn0IoRmnNEx5VxvIBqD+Q7bt8BzQDIajrVJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348899; c=relaxed/simple;
-	bh=KFsFmZL5edHZTOMJdwx9E4BAJSITxRdaDVp0inbfcXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Web8yYTNA0PnWeEcRGb9bW78TdKq9/d6YqRPK1BY8OoaXwIdhr2gMuELLAdtex4oGVAD9M73LU2jVE2hfiy3kczvAiwULZoSRVCRmfoOABLCkz6mC0cYO01LaOjgdvyS0Xuj3CzJ9sNoiLjA60AAY5uh7YjG/CrOxQkmzHBO/m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5B8C32782;
-	Thu, 22 Aug 2024 17:48:18 +0000 (UTC)
-Date: Thu, 22 Aug 2024 13:48:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- flaniel@linux.microsoft.com, albancrequy@linux.microsoft.com,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/1] tracing/uprobe: Add missing filter for
- uretprobe
-Message-ID: <20240822134849.185f868e@gandalf.local.home>
-In-Reply-To: <ME0P300MB04166144CDF92A72B9E1BAEA9D8F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-References: <ME0P300MB04166144CDF92A72B9E1BAEA9D8F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724349129; c=relaxed/simple;
+	bh=Gj5Koluh95p+c/vgpBqDLm1Ruabq+Htz4HNcGWNDX/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=el/IEiaHAkrCq86kHYb6HffzYYyuUrMDpS0DFziHMqnLMkYlIDhILnFP1PWLiqLirrvj90jZh0ZkaQJYRoTJvkGY2T0e22T5gdDUKh89/Pn1sB6XS+ht5Z2yiTJILwAsPJcf5XfO+Zk/1MWfK9a7OYRBd8TU+hHZmxQmwEPgqhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ekeVrC3m; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekeVrC3m"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2d3bae081efso886212a91.1;
+        Thu, 22 Aug 2024 10:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724349127; x=1724953927; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TSMdvcvti+RWCtYMd+FEZT5Ru/ACmw+rmYf/bGB23eI=;
+        b=ekeVrC3m5Be+Du1jzMwT6gVYPJzV0QKDDuG5BdrGk9kUElmlG8Xt/cANm3uUZmBw0Q
+         KqaD3CQpmh8axQ02G5pMeWeG79WKfE5I92vTSiM2bYHDoNoGHREZ0sxL+6TYK9fhi5ty
+         10l8ufk22OsQBhCKz4Kk8b8zaD489lkacdKabojChgMWsrzucT2ymV50Tjx1GmW+EFX/
+         rYhKA5ZGSTWYzx+Y8t0aGtdCWP+fLy9MTUujzpYRgjLEugcW1jiT4duKqKXlKTMtw19J
+         RQxE5l0f4LnBK66AJ/viq4jjC1n7GmAlsskW0vQiQsUF+Co8yT5hkble5RCF0br5dBWu
+         cBZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724349127; x=1724953927;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TSMdvcvti+RWCtYMd+FEZT5Ru/ACmw+rmYf/bGB23eI=;
+        b=v4VoiERPiZHJPMAEbxHm6RjmshCkBLH0C++lYi2FhAJxDEKdbVtT3KYXebr7oKnilt
+         06Vo1suqCpAUXzU42ehRfWtskSpU9qu2wFn2koFYfNiAfZNO1p1NeR9GFZXgEuXdY3sx
+         Y2LyQCdDGWvWmqEfp919BxmN0e4JTPKmh33x8f06TcGMwETX02hMz2WfUpqGy8wzZ58N
+         4NAgn2Jm+91OJ9p5Ovv+jm2k+oc5QP0AR5AdUtkV7aeV4VYEIB4RcZnYtZcz5HSsYN8L
+         CXipBpoorXbYLCWi8JJ2i4D9qIh1hceTl0WFFnj82qgPUOKah+f+gjrwVULYtgGJCSBz
+         TtJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxjj5cog9KPU4O/huDshuk69PuAUdarQ+jB9O4HXZ4Y5a0O2kwqVBp5MCj3gI1nIivqBKt7J63NBXWqAJl@vger.kernel.org, AJvYcCVDSG8Q0yh+9IjoMcM9wC9flYrSk7QI61NJQb4kjmHxBeCCWIqXTbgEwEPmoDLozPsJf+s=@vger.kernel.org, AJvYcCW6jHb77fwnaFrFg+uWq7LwNxDLHPUTThcrRV1MCe7z4yUgvcHyiEEHc8UhRVrtR6IQzlNsC46al6DSwR0IgyNuFhbN@vger.kernel.org
+X-Gm-Message-State: AOJu0YySYrkE/zRyfZIYFECBGO/kv/g2JWIew9hWHuIewz4RGWmLY3iZ
+	ttJotWSaynXAvhjgteH8S1gilttLcWMrxWAqBBkVO4+xv1rOpFyxvt4rWSbpHUrBX5ANMAzfgvn
+	PlTwSWRP1ghP9k/WHpButtTABuIg=
+X-Google-Smtp-Source: AGHT+IFbNA+AYoJwPKkug+4J4dkzuWlv61LePE1OdqmnnD6GiBA+gHzMQMKHafS8xgKroO9gkSs966LHnR+mMgns4Bo=
+X-Received: by 2002:a17:90a:9a4:b0:2c4:ee14:94a2 with SMTP id
+ 98e67ed59e1d1-2d5e9ec9953mr7556078a91.27.1724349127031; Thu, 22 Aug 2024
+ 10:52:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240813042917.506057-1-andrii@kernel.org> <20240813042917.506057-5-andrii@kernel.org>
+ <ZsdJuwIuJ-KFA6Rz@krava> <CAEf4Bzb-1na=S9+XVpEpmtDE4mJLQRywZJ6wB8JyN++2Si6Pgw@mail.gmail.com>
+ <Zsd28aEHBLkRpUQs@krava>
+In-Reply-To: <Zsd28aEHBLkRpUQs@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 22 Aug 2024 10:51:54 -0700
+Message-ID: <CAEf4Bza43g4O-OP2ZTvri2+rnUVzKcV6LCRugzt7AcFqmkSP4g@mail.gmail.com>
+Subject: Re: [PATCH v3 04/13] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Aug 2024 01:36:20 +0800
-Tianyi Liu <i.pear@outlook.com> wrote:
+On Thu, Aug 22, 2024 at 10:35=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
+te:
+>
+> On Thu, Aug 22, 2024 at 09:59:29AM -0700, Andrii Nakryiko wrote:
+> > On Thu, Aug 22, 2024 at 7:22=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> =
+wrote:
+> > >
+> > > On Mon, Aug 12, 2024 at 09:29:08PM -0700, Andrii Nakryiko wrote:
+> > >
+> > > SNIP
+> > >
+> > > > @@ -1125,18 +1103,31 @@ void uprobe_unregister(struct uprobe *uprob=
+e, struct uprobe_consumer *uc)
+> > > >       int err;
+> > > >
+> > > >       down_write(&uprobe->register_rwsem);
+> > > > -     if (WARN_ON(!consumer_del(uprobe, uc))) {
+> > > > -             err =3D -ENOENT;
+> > > > -     } else {
+> > > > -             err =3D register_for_each_vma(uprobe, NULL);
+> > > > -             /* TODO : cant unregister? schedule a worker thread *=
+/
+> > > > -             if (unlikely(err))
+> > > > -                     uprobe_warn(current, "unregister, leaking upr=
+obe");
+> > > > -     }
+> > > > +
+> > > > +     list_del_rcu(&uc->cons_node);
+> > >
+> > > hi,
+> > > I'm using this patchset as base for my changes and stumbled on this t=
+oday,
+> > > I'm probably missing something, but should we keep the 'uprobe->consu=
+mer_rwsem'
+> > > lock around the list_del_rcu?
+> > >
+> >
+> > Note that original code also didn't take consumer_rwsem, but rather
+> > kept register_rwsem (which we still use).
+>
+> humm, consumer_del took consumer_rwsem, right?
+>
 
-> U(ret)probes are designed to be filterable using the PID, which is the
-> second parameter in the perf_event_open syscall. Currently, uprobe works
-> well with the filtering, but uretprobe is not affected by it. This often
-> leads to users being disturbed by events from uninterested processes while
-> using uretprobe.
-> 
-> We found that the filter function was not invoked when uretprobe was
-> initially implemented, and this has been existing for ten years. We have
-> tested the patch under our workload, binding eBPF programs to uretprobe
-> tracepoints, and confirmed that it resolved our problem.
-> 
-> Following are the steps to reproduce the issue:
-> 
-> Step 1. Compile the following reproducer program:
-> ```
-> #include <stdlib.h>
-> #include <unistd.h>
-> #include <stdio.h>
-> 
-> int main() {
->     printf("pid: %d\n", getpid());
->     while (1) {
->         sleep(2);
->         void *ptr = malloc(1024);
->         free(ptr);
->     }
-> }
-> ```
-> We will then use uretprobe to trace the `malloc` function.
-> 
-> Step 2. Run two instances of the reproducer program and record their PIDs.
-> 
-> Step 3. Use uretprobe to trace each of the two running reproducers
-> separately. We use bpftrace to make it easier to reproduce. Please run two
-> instances of bpftrace simultaneously: the first instance filters events
-> from PID1, and the second instance filters events from PID2.
-> 
-> The expected behavior is that each bpftrace instance would only print
-> events matching its respective PID filter. However, in practice, both
-> bpftrace instances receive events from both processes, the PID filter is
-> ineffective at this moment:
-> ```
-> PID1=55256
-> bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
-> Attaching 1 probe...
-> time=0 pid=55256
-> time=2 pid=55273
-> time=2 pid=55256
-> time=4 pid=55273
-> time=4 pid=55256
-> time=6 pid=55273
-> time=6 pid=55256
-> 
-> PID2=55273
-> bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
-> Attaching 1 probe...
-> time=0 pid=55273
-> time=0 pid=55256
-> time=2 pid=55273
-> time=2 pid=55256
-> time=4 pid=55273
-> time=4 pid=55256
-> time=6 pid=55273
-> time=6 pid=55256
-> ```
-> 
-> After applying this patch, both bpftrace instances will show the expected
-> behavior, only printing events from the PID specified by their respective
-> filters:
-> ```
-> PID1=1621
-> bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
-> Attaching 1 probe...
-> time=0 pid=1621
-> time=2 pid=1621
-> time=4 pid=1621
-> time=6 pid=1621
-> 
-> PID2=1633
-> bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
-> Attaching 1 probe...
-> time=0 pid=1633
-> time=2 pid=1633
-> time=4 pid=1633
-> time=6 pid=1633
-> ```
+Ah, it was inside consume_del(), sorry, my bad. I can add nested
+consumer_rwsem back, but what I mentioned earlier, regiser_rwsem is
+sort of interchangeable and sufficient enough for working with
+consumer list, it seems. There are a bunch of places where we iterated
+this list without holding consumer_rwsem lock and that doesn't break
+anything.
 
-This did not need a cover letter. The above could be added to the patch
-itself.
+Also, consumer_add() and consumer_del() are always called with
+register_rwsem, so that consumer_rwsem isn't necessary.
 
-Just don't say "After applying this patch", it should be:
+We also have prepare_uprobe() holding consumer_rwsem and there is a
+comment about abuse of that rwsem and suggestion to move it to
+registration, I never completely understood that. But prepare_uprobe()
+doesn't seem to modify consumers list at all.
 
-    
-  The expected behavior is that each bpftrace instance would only print
-  events matching its respective PID filter. However, in practice, both
-  bpftrace instances receive events from both processes, the PID filter is
-  ineffective at this moment:
+And the one remaining use of consumer_rwsem is filter_chain(), which
+for handler_chain() will be also called under register_rwsem, if
+purely lockless traversal is not enough.
 
-  Before:
-  ```
-  PID1=55256
-  [..]
-  time=6 pid=55256
-  ```
- 
-  After: Both bpftrace instances will show the expected behavior, only
-  printing events from the PID specified by their respective filters:
-  ```
-  PID1=1621
+There are two other calls to filter_chain() that are not protected by
+register_rwsem, so just because of those two maybe we should keep
+consumer_rwsem, but so far all the stress testing never caught any
+problem.
 
 
--- Steve
+> jirka
+>
+> >
+> > There is a bit of mix of using register_rwsem and consumer_rwsem for
+> > working with consumer list. Code hints at this as being undesirable
+> > and "temporary", but you know, it's not broken :)
+> >
+> > Anyways, my point is that we didn't change the behavior, this should
+> > be fine. That _rcu() in list_del_rcu() is not about lockless
+> > modification of the list, but rather modification in such a way as to
+> > keep lockless RCU-protected *readers* correct. It just does some more
+> > memory barrier/release operations more carefully.
+> >
+> > > jirka
+> > >
+> > >
+> > > > +     err =3D register_for_each_vma(uprobe, NULL);
+> > > > +
+> > > >       up_write(&uprobe->register_rwsem);
+> > > >
+> > > > -     if (!err)
+> > > > -             put_uprobe(uprobe);
+> > > > +     /* TODO : cant unregister? schedule a worker thread */
+> > > > +     if (unlikely(err)) {
+> > > > +             uprobe_warn(current, "unregister, leaking uprobe");
+> > > > +             goto out_sync;
+> > > > +     }
+> > > > +
+> > > > +     put_uprobe(uprobe);
+> > > > +
