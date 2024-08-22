@@ -1,169 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91147175D3D;
-	Thu, 22 Aug 2024 09:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30B146D7D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 09:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724318017; cv=none; b=lk+D7tEjcou5ICsc3da1hTVg0Dn0vh7YSKCf3NMtOBpXbsVcOkYzXA6LX4+ZepPUc79V1b5KiAsxG8f+WRbLO/gdAohEhSvV8PXSG87Y6fAHcowvGNdB6+zwLvfrU8avR2AUCZJP26LmbS6i5rz8TMQlOuJ4AMUxZ8NczRd39Kw=
+	t=1724319145; cv=none; b=cwcpLJSMLqAx5K3586eEnpPdtEy1RFQl8mATtnoA1kAjmsqIvwCjFJfYOkO/l+2Z115nMvs5tCoE/wfETeOzGQIXbIkp4Q6G/D/oKmjoHMmreZaFMHsy1OCyF29b/sd9p24sakHpF4HO1NNz4EVIe8K0EoW4PJ9AF9zQHqFzrpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724318017; c=relaxed/simple;
-	bh=2xsU6ODJjuSH+LZhdB/2WdQNKFW4SDix/LJvvwqaLSg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nCaRBCL0LZNimqq6YPb77oew4gHKL5ANrafzaEGryTnzDNk8c8K7PZEklZ7Is3nfgp+MR+zeDHBX+90APQj7yzZGMqXN2fckW7dcXD+T+TmYoNFbToH+GdjPu8O7e2ZlXD03QCrORJxLzskHup+cSe8b7yA7fzxCpRfx6lUU1GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrNIPaLN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724319145; c=relaxed/simple;
+	bh=gUrHAKSaX6UcopS37quWU0A/UxZ/IMN9f951BD+QaQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IZ0+le/QjTe5RkR6soU1OZ4VR+VncXaBBGSd7u6ptU4T6yzgEwkK9HWtIQmlCRfdUL1lFAebMQ2isz4/iXckLiXzvnYOsItNrVzCmOzKxzXVP+PfpSnQ0dJsB6OXrjvAc3341sbfkLMiI62LYAK4hODikmgw8iAyCK/q0o4kgPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RwBu6Q2T; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrNIPaLN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 268EFC4AF09;
-	Thu, 22 Aug 2024 09:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724318017;
-	bh=2xsU6ODJjuSH+LZhdB/2WdQNKFW4SDix/LJvvwqaLSg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nrNIPaLNhZH2d+alqKztRpOOGAwiHT9G041TE5Oh4AiWaX0vcHS+/r3KRmeJ6XWZh
-	 tv0QC4E5g/+f1b9V5ioPQNWY/0TQvGQQTVXa1+dzRzCNjgWrb7zvOoDKiJONu7X5Y4
-	 hVGT3/qQ0nlO3gllORASOEive2CTqTmBi50G5x4tLwGdxVdyRGpNMhpRtN8kbL4Z0+
-	 xzy1aTyB/9ZeVMXaWpf4lNnD9bux3TiC6LvmE0tt0n7npTNq2TBrW2STcqAU6rY67i
-	 RszRkF3MPpLstfsz8jjj5BCu0NfHHh67leAGq1EGyww4bxkONxeOAvTCX/eWaEr1iQ
-	 SL7bmboNjcGBA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sh3ss-005scS-UT;
-	Thu, 22 Aug 2024 10:13:35 +0100
-Date: Thu, 22 Aug 2024 10:13:34 +0100
-Message-ID: <865xrsyl6p.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	oliver.upton@linux.dev,
-	kvmarm@lists.linux.dev,
-	will@kernel.org,
-	qperret@google.com,
-	kernel-team@android.com
-Subject: Re: [RFC PATCH 04/11] timekeeping: Export the boot clock in snapshots
-In-Reply-To: <20240805173234.3542917-5-vdonnefort@google.com>
-References: <20240805173234.3542917-1-vdonnefort@google.com>
-	<20240805173234.3542917-5-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RwBu6Q2T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724319142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VrRQKavLiiaQBn0XrFebgkKC6r5pSaJyduSfzpagwWQ=;
+	b=RwBu6Q2T8pSSk99TAyzaYz9LAjaFCPf+bRN5z8ZEb38fKFNVTcb01ysx8j32SMMv/J7WwP
+	PqvnI5l0RC3S+BCvFLoEGa3fS2ICUDEF/lX2Mo+kKDEqdJZmb8SiuF8HGCNKeqOj1pKJW0
+	CSxwmjly09qgmoMsY0y+8h5GzqaJ9tQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-taS48VksMPGhAqjnb6wYDA-1; Thu, 22 Aug 2024 05:32:21 -0400
+X-MC-Unique: taS48VksMPGhAqjnb6wYDA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a7a83f54fdeso76758966b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 22 Aug 2024 02:32:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724319140; x=1724923940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VrRQKavLiiaQBn0XrFebgkKC6r5pSaJyduSfzpagwWQ=;
+        b=ZUTH8j4KVeORJYn9Qkcfa0Wa1Wx/2ZTIPJF+FXDYxcGqLm3CawLeSFd4ccVidCXxqy
+         G3Tdqwwcnwz5ln8J9CGPPLPwHhCrhJuqOOrLAk4TSAKQXMDLo/+nSIE6h/zhcBEBuM/D
+         BjqFc8Yd07/AGfzNA10Og6X3VAw7P2txa0vtHcOGS96cTzBiUCRXkFnxZPz16J2F7TJC
+         wks9UUk64wNCKUk/RJ0f5L4Eox9pP+5UlzCiKrQorFSx1CcyivaiDbDOO6DrEgMrFGaZ
+         i6BoosZnfYrwyKsvM1zUJTGPcolZcskLRxUuRzpLlICR8mWnV8506EVEWa3Re7mSYA2x
+         zv7g==
+X-Gm-Message-State: AOJu0Yz5u7pl0NLz6ZKlT29nQvB75q4v9dVJEw2xoHNcYz7eoHEeglSc
+	j7dYeMEjkZKIPQV0SHLWhwWNQa20g4M0c9xZCZKWjX1yDmUD6HpQtAEyyOg4FmBl8bU35rSOS/q
+	y9Cg3CyYJnSV6oSKnZKr1pL0jBhNEuN6C4iLZcudkLw9GeLwhJjxA/9pRRVlxSLWR4gmbla2Rab
+	X1qIYjw7hBsCZLFpyRpsHB88SSK3e1x0vCxFZz+7yXe3t9
+X-Received: by 2002:a17:906:730c:b0:a7a:cc10:667c with SMTP id a640c23a62f3a-a8691aec96dmr125318666b.16.1724319139988;
+        Thu, 22 Aug 2024 02:32:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFk8SCJ3mWSlNwEFsNNBwd7rluMSnRXE/8EGRVCmnmvn66vZXHiZpkq+BeFKufzw7mKdK1vPTpyB8ACMrOZ9ac=
+X-Received: by 2002:a17:906:730c:b0:a7a:cc10:667c with SMTP id
+ a640c23a62f3a-a8691aec96dmr125311966b.16.1724319138642; Thu, 22 Aug 2024
+ 02:32:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, rostedt@goodmis.org, mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, oliver.upton@linux.dev, kvmarm@lists.linux.dev, will@kernel.org, qperret@google.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240820130001.124768-1-tglozar@redhat.com> <20240821160316.02c03c44@gandalf.local.home>
+In-Reply-To: <20240821160316.02c03c44@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 22 Aug 2024 11:32:07 +0200
+Message-ID: <CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com>
+Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in timerlat_fd_release
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 05 Aug 2024 18:32:27 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> On arm64 systems, the arch timer can be accessible by both EL1 and EL2.
-> This means when running with nVHE or protected KVM, it is easy to
-> generate clock values from the hypervisor, synchronized with the kernel.
-
-When you say "arch_timer" here, are you talking about the data
-structure describing the timer? Or about the actual *counter*, a
-system register provided by the HW?
-
-I'm not sure the architecture-specific details are massively relevant,
-given that this is an arch-agnostic change.
-
+st 21. 8. 2024 v 22:02 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.org>=
+ napsal:
 >
-> For tracing purpose, the boot clock is interesting as it doesn't stop on
-> suspend. Export it as part of the time snapshot. This will later allow
-> the hypervisor to add boot clock timestamps to its events.
+> I'm able to reproduce this with the above. Unfortunately, I can still
+> reproduce it after applying this patch :-(
+>
 
-Isn't that the actual description of the change? By getting the boot
-time as well as the parameters to compute an increment, you allow any
-subsystem able to perform a snapshot to compute a delta from boot time
-as long as they have access to the counter source.
+Thank you for looking at this. I was at first not too sure about
+whether this is the proper fix, but after some discussion with Luis
+(in CC), we have come to the conclusion that the double-close of the
+timerlat_fd might be a possible explanation, and this patch worked for
+both of us. Are you reproducing the same bug (NULL pointer dereference
+in hrtimer_active) with the patch? IIUC that should not happen anymore
+since the patch explicitly checks for zero in the hrtimer structure.
 
-> 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-> index fc12a9ba2c88..0fc6a61d64bd 100644
-> --- a/include/linux/timekeeping.h
-> +++ b/include/linux/timekeeping.h
-> @@ -275,18 +275,24 @@ struct ktime_timestamps {
->   *				 counter value
->   * @cycles:	Clocksource counter value to produce the system times
->   * @real:	Realtime system time
-> + * @boot:	Boot time
->   * @raw:	Monotonic raw system time
->   * @cs_id:	Clocksource ID
->   * @clock_was_set_seq:	The sequence number of clock-was-set events
->   * @cs_was_changed_seq:	The sequence number of clocksource change events
-> + * @mono_shift:	The monotonic clock slope shift
-> + * @mono_mult:	The monotonic clock slope mult
->   */
->  struct system_time_snapshot {
->  	u64			cycles;
->  	ktime_t			real;
-> +	ktime_t			boot;
->  	ktime_t			raw;
->  	enum clocksource_ids	cs_id;
->  	unsigned int		clock_was_set_seq;
->  	u8			cs_was_changed_seq;
-> +	u32			mono_shift;
-> +	u32			mono_mult;
->  };
->  
->  /**
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index 2fa87dcfeda9..6d0488a555a7 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1057,9 +1057,11 @@ noinstr time64_t __ktime_get_real_seconds(void)
->  void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
->  {
->  	struct timekeeper *tk = &tk_core.timekeeper;
-> +	u32 mono_mult, mono_shift;
->  	unsigned int seq;
->  	ktime_t base_raw;
->  	ktime_t base_real;
-> +	ktime_t base_boot;
->  	u64 nsec_raw;
->  	u64 nsec_real;
->  	u64 now;
-> @@ -1074,14 +1076,21 @@ void ktime_get_snapshot(struct system_time_snapshot *systime_snapshot)
->  		systime_snapshot->clock_was_set_seq = tk->clock_was_set_seq;
->  		base_real = ktime_add(tk->tkr_mono.base,
->  				      tk_core.timekeeper.offs_real);
-> +		base_boot = ktime_add(tk->tkr_mono.base,
-> +				      tk_core.timekeeper.offs_boot);
->  		base_raw = tk->tkr_raw.base;
->  		nsec_real = timekeeping_cycles_to_ns(&tk->tkr_mono, now);
->  		nsec_raw  = timekeeping_cycles_to_ns(&tk->tkr_raw, now);
-> +		mono_mult = tk->tkr_mono.mult;
-> +		mono_shift = tk->tkr_mono.shift;
->  	} while (read_seqcount_retry(&tk_core.seq, seq));
->  
->  	systime_snapshot->cycles = now;
->  	systime_snapshot->real = ktime_add_ns(base_real, nsec_real);
-> +	systime_snapshot->boot = ktime_add_ns(base_boot, nsec_real);
->  	systime_snapshot->raw = ktime_add_ns(base_raw, nsec_raw);
-> +	systime_snapshot->mono_shift = mono_shift;
-> +	systime_snapshot->mono_mult = mono_mult;
->  }
->  EXPORT_SYMBOL_GPL(ktime_get_snapshot);
->  
+I have caught however a different panic in addition to the one
+reported above while testing "rtla: Support idle state disabling via
+libcpupower in timerlat" on an EL9 RT kernel:
 
-This looks good to me, but you should probably Cc the timekeeping
-maintainers (tglx, John Stultz, and Stephen Boyd).
+BUG: kernel NULL pointer dereference, address: 0000000000000014
+CPU: 6 PID: 1 Comm: systemd Kdump: loaded Tainted: G        W
+-------  ---  5.14.0-452.el9.x86_64+rt #1
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-1.fc39
+04/01/2014
+RIP: 0010:task_dump_owner+0x3d/0x100
+RSP: 0018:ffffadd6c0013aa8 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: ffffa00c864f4580 RCX: ffffa00c87453e10
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffa00c864f4580
+RBP: ffffa00c87453e10 R08: ffffa00c87418e80 R09: ffffa00c87418e80
+R10: ffffa00c88236600 R11: ffffffffb73f1868 R12: ffffa00c87453e0c
+R13: 0000000000000000 R14: ffffa00cb5e430c0 R15: ffffa00cb5e430c8
+FS:  00007f9336b41b40(0000) GS:ffffa00cffd80000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000014 CR3: 00000000025ee002 CR4: 0000000000770ef0
+PKRU: 55555554
+Call Trace:
+<TASK>
+? show_trace_log_lvl+0x1c4/0x2df
+? show_trace_log_lvl+0x1c4/0x2df
+? proc_pid_make_inode+0xa0/0x110
+? __die_body.cold+0x8/0xd
+? page_fault_oops+0x140/0x180
+? do_user_addr_fault+0x61/0x690
+? kvm_read_and_reset_apf_flags+0x45/0x60
+? exc_page_fault+0x65/0x180
+? asm_exc_page_fault+0x22/0x30
+? task_dump_owner+0x3d/0x100
+? task_dump_owner+0x36/0x100
+proc_pid_make_inode+0xa0/0x110
+proc_pid_instantiate+0x21/0xb0
+proc_pid_lookup+0x95/0x170
+proc_root_lookup+0x1d/0x50
+__lookup_slow+0x9c/0x150
+walk_component+0x158/0x1d0
+link_path_walk.part.0.constprop.0+0x24e/0x3c0
+? path_init+0x326/0x4d0
+path_openat+0xb1/0x280
+do_filp_open+0xb2/0x160
+? migrate_enable+0xd5/0x150
+? rt_spin_unlock+0x13/0x40
+do_sys_openat2+0x96/0xd0
+__x64_sys_openat+0x53/0xa0
+...
+</TASK>
 
-Thanks,
+This was preceded by a WARN:
 
-	M.
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 6 PID: 1 at lib/refcount.c:25 refcount_warn_saturate+0x74/0x1=
+10
+CPU: 6 PID: 1 Comm: systemd Kdump: loaded Not tainted
+5.14.0-452.el9.x86_64+rt #1
+RIP: 0010:refcount_warn_saturate+0x74/0x110
+Call Trace:
+<TASK>
+[   78.184877]  proc_pid_lookup+0x161/0x170
+[   78.184883]  proc_root_lookup+0x1d/0x50
+[   78.184890]  __lookup_slow+0x9c/0x150
+[   78.184899]  walk_component+0x158/0x1d0
+[   78.184908]  link_path_walk.part.0.constprop.0+0x24e/0x3c0
+[   78.184915]  ? path_init+0x326/0x4d0
+[   78.184922]  path_openat+0xb1/0x280
+[   78.184926]  do_filp_open+0xb2/0x160
+[   78.184934]  ? migrate_enable+0xd5/0x150
+[   78.184942]  ? rt_spin_unlock+0x13/0x40
+[   78.184950]  do_sys_openat2+0x96/0xd0
+[   78.184958]  __x64_sys_openat+0x53/0xa0
+[   78.184964]  do_syscall_64+0x5c/0xf0
+[   78.185011]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+...
+</TASK>
 
--- 
-Without deviation from the norm, progress is not possible.
+> Looking at the code, the logic for handling the kthread seems off. I'll
+> spend a little time to see if I can figure it out.
+>
+
+Yeah, it seems there might be multiple bugs in the user workload
+handling, the other NULL pointer dereference and refcount warning
+above might be related (but I have yet to reproduce it on an upstream
+kernel). I'm also going to look at the code and will post any findings
+here.
+
+
+
+Tomas
+
