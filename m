@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FCD1C694;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F8E1C680;
 	Fri, 23 Aug 2024 01:39:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724377187; cv=none; b=spJmb2/JVycWGgluhqmyv7nJWEVZbj9YCFS4MdIEVDziZOBZdfhB5tYcS+KubTZ2CSt/iJQKvLlOw1sqHp1E5+kLCFCOYrYBsKuifmUBG5y0OK9YxdySrn/ESK1AcXWCP0TjC42CLdqMKGIuJQTISyWP24hNHFgpdlEoqNnWn2c=
+	t=1724377187; cv=none; b=fbcpGabH86Ms+yZtk0zcSLAWZ8DJ4GtVIa8V+mkD+29RnROPTmOgvcX3GteQ/E/xgRHIO2Ca0Qb5QUU+mYKLdrt8Yz1vgSe5BKpGgHn4Vij8uu6KQsWUFyR+Xpt45SEwO0L8E1xfgx4vsrFj82IAGkbONIPRwWSGhFiJz6CtDGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724377187; c=relaxed/simple;
-	bh=R883UB1lQPveP+GSFXVrQFNV+2afojxMSJTjv9FnDKc=;
+	bh=LTa5Q0p6734zkmNcZEFYat5XOLYbgOkYhY4a5oLezn0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=H2iy/4wrn45iBCySg4b1KWivwppt3KBxa53vEjSuLb83M2Ydd/DJv0ckGrtBBd6dO4MCJKgVDn5+mVZPqPvFgU0mXRF6zI5fOC8jUIn0ZQssLp3romAv3l0gi2bfSPKbIz1hOAh1/5qPq+2mbjNzOQzO7Hz1XAtjLfH7UsMm2Eo=
+	 Content-Type; b=NsAiY+aoKGkEoOX6N1I71LXczD9YAwjdcPUT6x+2cigakvMMeV+Tr0FFIFxm4XiEESniyuiBo6DmX4EbfOd1LV7cNNUwN4CGcrLKLcYFQR1zdSwgXEDG5tbDNXCyd60TdbwDwVW+FoKACN78jGtjrhi2i9+cN5V0+qs+aoi0NUI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C001EC4AF50;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A50BAC4AF13;
 	Fri, 23 Aug 2024 01:39:46 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1shJHn-00000003ZiZ-2rLe;
+	id 1shJHn-00000003Zi5-2CYW;
 	Thu, 22 Aug 2024 21:40:19 -0400
-Message-ID: <20240823014019.545459018@goodmis.org>
+Message-ID: <20240823014019.386925800@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 22 Aug 2024 21:39:06 -0400
+Date: Thu, 22 Aug 2024 21:39:05 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -55,8 +55,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Clark Williams <williams@redhat.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  "Jonathan Corbet" <corbet@lwn.net>
-Subject: [PATCH 4/5] tracing: Add option to set an instance to be the trace_printk
- destination
+Subject: [PATCH 3/5] tracing: Have trace_printk not use binary prints if boot buffer
 References: <20240823013902.135036960@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -68,155 +67,173 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Add a option "trace_printk_dest" that will make the tracing instance the
-location that trace_printk() will go to. This is useful if the
-trace_printk or one of the top level tracers is too noisy and there's a
-need to separate the two. Then an instance can be created, the
-trace_printk can be set to go there instead, where it will not be lost in
-the noise of the top level tracer.
+If the persistent boot mapped ring buffer is used for trace_printk(),
+force it to not use the binary versions. trace_printk() by default uses
+bin_printf() that only saves the pointer to the format and not the format
+itself inside the ring buffer. But for a persistent buffer that is read
+after reboot, the pointers to the format strings may not be the same, or
+worse, not even exist! Instead, just force the more robust, but slower,
+version that does the formatting before saving into the ring buffer.
 
-Note, only one instance can be the destination of trace_printk at a time.
-If an instance sets this flag, the instance that had it set will have it
-cleared. There is always one instance that has this set. By default, that
-is the top instance. This flag cannot be cleared from the top instance.
-Doing so will result in an -EINVAL. The only way this flag can be cleared
-from the top instance is by another instance setting it.
+The boot mapped buffer can now be used for trace_printk and friends!
+
+Using the trace_printk() and the persistent buffer was used to debug the
+issue with the osnoise tracer:
+
+Link: https://lore.kernel.org/all/20240822103443.6a6ae051@gandalf.local.home/
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/trace/ftrace.rst | 12 ++++++++++
- kernel/trace/trace.c           | 40 +++++++++++++++++++++++++++++-----
- kernel/trace/trace.h           |  1 +
- 3 files changed, 48 insertions(+), 5 deletions(-)
+ .../admin-guide/kernel-parameters.txt         |  4 +-
+ kernel/trace/trace.c                          | 44 ++++++++++++-------
+ kernel/trace/trace.h                          |  3 +-
+ kernel/trace/trace_output.c                   |  5 ++-
+ 4 files changed, 36 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 5aba74872ba7..4073ca48af4a 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1186,6 +1186,18 @@ Here are the available options:
-   trace_printk
- 	Can disable trace_printk() from writing into the buffer.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a8803c0c0a89..9e507e6cb4c8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6751,8 +6751,6 @@
+ 			    traceoff	- Have the tracing instance tracing disabled after it is created.
+ 			    traceprintk	- Have trace_printk() write into this trace instance
+ 					  (note, "printk" and "trace_printk" can also be used)
+-					  Currently, traceprintk flag cannot be used for memory
+-					  mapped ring buffers as described below.
  
-+  trace_printk_dest
-+	Set to have trace_printk() and similar internal tracing functions
-+	write into this instance. Note, only one trace instance can have
-+	this set. By setting this flag, it clears the trace_printk_dest flag
-+	of the instance that had it set previously. By default, the top
-+	level trace has this set, and will get it set again if another
-+	instance has it set then clears it.
-+
-+	This flag cannot be cleared by the top level instance, as it is the
-+	default instance. The only way the top level instance has this flag
-+	cleared, is by it being set in another instance.
-+
-   annotate
- 	It is sometimes confusing when the CPU buffers are full
- 	and one CPU buffer had a lot of events recently, thus
+ 				trace_instance=foo^traceoff^traceprintk,sched,irq
+ 
+@@ -6785,7 +6783,7 @@
+ 			mix with events of the current boot (unless you are debugging a random crash
+ 			at boot up).
+ 
+-				reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff@trace,sched,irq
++				reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff^traceprintk@trace,sched,irq
+ 
+ 
+ 	trace_options=[option-list]
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 35b37c9aa26c..658b40b483a3 100644
+index 8e28f19f5316..35b37c9aa26c 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -482,7 +482,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
- 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
- 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
--	 TRACE_ITER_HASH_PTR)
-+	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
+@@ -502,6 +502,17 @@ static struct trace_array global_trace = {
  
- /* trace_options that are only supported by global_trace */
- #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
-@@ -490,7 +490,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ static struct trace_array *printk_trace = &global_trace;
  
- /* trace_flags that are default zero for instances */
- #define ZEROED_TRACE_FLAGS \
--	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK)
-+	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
- 
- /*
-  * The global_trace is the descriptor that holds the top-level tracing
-@@ -513,6 +513,16 @@ static __always_inline bool printk_binsafe(struct trace_array *tr)
- 	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
- }
- 
-+static void update_printk_trace(struct trace_array *tr)
++static __always_inline bool printk_binsafe(struct trace_array *tr)
 +{
-+	if (printk_trace == tr)
-+		return;
-+
-+	printk_trace->trace_flags &= ~TRACE_ITER_TRACE_PRINTK;
-+	printk_trace = tr;
-+	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
++	/*
++	 * The binary format of traceprintk can cause a crash if used
++	 * by a buffer from another boot. Force the use of the
++	 * non binary version of trace_printk if the trace_printk
++	 * buffer is a boot mapped ring buffer.
++	 */
++	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
 +}
 +
  void trace_set_ring_buffer_expanded(struct trace_array *tr)
  {
  	if (!tr)
-@@ -5300,7 +5310,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
- int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+@@ -1130,7 +1141,7 @@ EXPORT_SYMBOL_GPL(__trace_puts);
+  */
+ int __trace_bputs(unsigned long ip, const char *str)
  {
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
--	    (mask == TRACE_ITER_RECORD_CMD))
-+	    (mask == TRACE_ITER_RECORD_CMD) ||
-+	    (mask == TRACE_ITER_TRACE_PRINTK))
- 		lockdep_assert_held(&event_mutex);
+-	struct trace_array *tr = printk_trace;
++	struct trace_array *tr = READ_ONCE(printk_trace);
+ 	struct ring_buffer_event *event;
+ 	struct trace_buffer *buffer;
+ 	struct bputs_entry *entry;
+@@ -1138,6 +1149,9 @@ int __trace_bputs(unsigned long ip, const char *str)
+ 	int size = sizeof(struct bputs_entry);
+ 	int ret = 0;
  
- 	/* do nothing if flag is already set */
-@@ -5312,6 +5323,25 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 		if (tr->current_trace->flag_changed(tr, mask, !!enabled))
- 			return -EINVAL;
- 
-+	if (mask == TRACE_ITER_TRACE_PRINTK) {
-+		if (enabled) {
-+			update_printk_trace(tr);
-+		} else {
-+			/*
-+			 * The global_trace cannot clear this.
-+			 * It's flag only gets cleared if another instance sets it.
-+			 */
-+			if (printk_trace == &global_trace)
-+				return -EINVAL;
-+			/*
-+			 * An instance must always have it set.
-+			 * by default, that's the global_trace instane.
-+			 */
-+			if (printk_trace == tr)
-+				update_printk_trace(&global_trace);
-+		}
-+	}
++	if (!printk_binsafe(tr))
++		return __trace_puts(ip, str, strlen(str));
 +
- 	if (enabled)
- 		tr->trace_flags |= mask;
- 	else
-@@ -9687,7 +9717,7 @@ static int __remove_instance(struct trace_array *tr)
- 	}
+ 	if (!(tr->trace_flags & TRACE_ITER_PRINTK))
+ 		return 0;
  
- 	if (printk_trace == tr)
--		printk_trace = &global_trace;
-+		update_printk_trace(&global_trace);
+@@ -3247,12 +3261,15 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
+ 	struct trace_event_call *call = &event_bprint;
+ 	struct ring_buffer_event *event;
+ 	struct trace_buffer *buffer;
+-	struct trace_array *tr = printk_trace;
++	struct trace_array *tr = READ_ONCE(printk_trace);
+ 	struct bprint_entry *entry;
+ 	unsigned int trace_ctx;
+ 	char *tbuffer;
+ 	int len = 0, size;
  
- 	tracing_set_nop(tr);
- 	clear_ftrace_function_probes(tr);
-@@ -10578,7 +10608,7 @@ __init static void enable_instances(void)
++	if (!printk_binsafe(tr))
++		return trace_vprintk(ip, fmt, args);
++
+ 	if (unlikely(tracing_selftest_running || tracing_disabled))
+ 		return 0;
+ 
+@@ -10560,20 +10577,17 @@ __init static void enable_instances(void)
+ 		if (traceoff)
  			tracer_tracing_off(tr);
  
- 		if (traceprintk)
--			printk_trace = tr;
-+			update_printk_trace(tr);
+-		if (traceprintk) {
+-			/*
+-			 * The binary format of traceprintk can cause a crash if used
+-			 * by a buffer from another boot. Do not allow it for the
+-			 * memory mapped ring buffers.
+-			 */
+-			if (start)
+-				pr_warn("Tracing: WARNING: memory mapped ring buffers cannot be used for trace_printk\n");
+-			else
+-				printk_trace = tr;
+-		}
++		if (traceprintk)
++			printk_trace = tr;
  
- 		/*
- 		 * If start is set, then this is a mapped buffer, and
+-		/* Only allow non mapped buffers to be deleted */
+-		if (!start)
++		/*
++		 * If start is set, then this is a mapped buffer, and
++		 * cannot be deleted by user space, so keep the reference
++		 * to it.
++		 */
++		if (start)
++			tr->flags |= TRACE_ARRAY_FL_BOOT;
++		else
+ 			trace_array_put(tr);
+ 
+ 		while ((tok = strsep(&curr_str, ","))) {
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 07b2d2af9b33..c866991b9c78 100644
+index 4f448ab2d1e7..07b2d2af9b33 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
-@@ -1321,6 +1321,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(IRQ_INFO,		"irq-info"),		\
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
-+		C(TRACE_PRINTK,		"trace_printk_dest"),	\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
- 		FUNCTION_FLAGS					\
+@@ -429,7 +429,8 @@ struct trace_array {
+ };
+ 
+ enum {
+-	TRACE_ARRAY_FL_GLOBAL	= (1 << 0)
++	TRACE_ARRAY_FL_GLOBAL	= BIT(0),
++	TRACE_ARRAY_FL_BOOT	= BIT(1),
+ };
+ 
+ extern struct list_head ftrace_trace_arrays;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 48de93598897..868f2f912f28 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1591,10 +1591,13 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+ {
+ 	struct print_entry *field;
+ 	struct trace_seq *s = &iter->seq;
++	unsigned long ip;
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	seq_print_ip_sym(s, field->ip, flags);
++	ip = field->ip + iter->tr->text_delta;
++
++	seq_print_ip_sym(s, ip, flags);
+ 	trace_seq_printf(s, ": %s", field->buf);
+ 
+ 	return trace_handle_return(s);
 -- 
 2.43.0
 
