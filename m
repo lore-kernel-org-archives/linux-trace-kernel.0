@@ -1,103 +1,296 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D235A2D7B8;
-	Fri, 23 Aug 2024 18:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CE6757F3;
+	Fri, 23 Aug 2024 19:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724439098; cv=none; b=XMlDuyDtRXzaiU/wpxtiGqqyTHsXAvPlxpMx7prwYIpKurdDIkyD6mLAXLF7wYebcG98gO/I8nZQGAgPMyxj+D7FG4pRqjeR0PzN2j6A3RZmj+b38Lsy/cDzBimKhGKDmY4h2iminzV/9wGqORuxAZ0lZZ0JYOmZx9Vsl2fxgPA=
+	t=1724440062; cv=none; b=LRfgp6ebZq/OSy9+pDFtQEq2nDoyzN27p/V07mUNVH2IxJPnD3rmPVdyZPL+mM1zau8qQiqCNkXoYttEU+1SiR3DW9GjTWHAeOPL+2J7AqZUx8QqWIwWjrvvfiCT9znakWlJ9IiOpSoCsja1flokzw4xqWJ1qQF2JL3t3FSeElg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724439098; c=relaxed/simple;
-	bh=tzwfU5CRs0mRc5d9uBF7Wp4I5zlF5Wa0yJyNBA3R83g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Nkh6prLYqDWjWpXZepKz/j6B5sYPycKDON3VzTKKz/0hiY4lrKM2qqcrsijn2rJJ8VGfjmaepeTQWYB7czfroOcqm9VanZ+Bx1AKHSNHSgUrBHVZlHIT62Z9JsW4I4iVmwTPYJyf64Zdhe7reUoYlSXJq4oGKTtupogqidRtHag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB6A3C32786;
-	Fri, 23 Aug 2024 18:51:37 +0000 (UTC)
-Date: Fri, 23 Aug 2024 14:52:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: tglozar@redhat.com
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in
- timerlat_fd_release
-Message-ID: <20240823145211.34ccda61@gandalf.local.home>
-In-Reply-To: <20240823125426.404f2705@gandalf.local.home>
-References: <20240820130001.124768-1-tglozar@redhat.com>
-	<20240823125426.404f2705@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724440062; c=relaxed/simple;
+	bh=gy1JqCdO9NsNhfA5CSwY0h/e3UihTKEI7euKjG5EYoQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TqR0pZvUZkEuExlVuJ7XIEgckZ6OACMWtdxVOXuX+aGJDMjv+0JcpSFToWVTpgKUz45Org6aD2xW0zhRRP1+7lCKmw6LzydKiQdf7TigMfC8KE8exFihk1edvDlFgpPAMxRDJjTenMQzuIccNpmIUT8BGj/RxUb/oFoqp03EVTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jemkqWt6; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jemkqWt6"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a8682bb5e79so326516766b.2;
+        Fri, 23 Aug 2024 12:07:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724440059; x=1725044859; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nhnphg55IC3kyMZ/36YrfXynFLN+Id40TwnrR1ftgjk=;
+        b=jemkqWt6qrfian8mmG+Vgo9bOBl5wPgnrC3Z7UmKTiHnc3gl2SCaGjPekVlY/PD2St
+         DtPp6shIUyKsCTJ1HjFTUHiUFw5aKMXE8vjKEUF0tVw5kahYoXc59plhu70iYVOvqrM2
+         dCFNrl+4IWdcJBAauPC3nI7w0Mf3tVzKvWTNuzCBWAet/sgZXTbw6Iby9kLAe8/4fQ4z
+         AFr8z1hPOpKFr+VNeobqbGVKpDUwoHsfUJ3Pa1d+Zdqkg2YXNjk0rqN0F0EnCQpSDByG
+         Vpv2Rw4QbJtR7zmHV4riyxl/L9oU1xrLqIWXJedsyz0JRId4eCr3KdM4ny/duVMeYc3Q
+         Bmfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724440059; x=1725044859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nhnphg55IC3kyMZ/36YrfXynFLN+Id40TwnrR1ftgjk=;
+        b=MUVlSZZIVbA0b3Xos3l4UeUJ6OENtIP6cHXTEftj21VEDn8QO2aDl5wox7xTirEOFM
+         IJQue3dnkJrSazU6HL22Ojb4SHIijnRm+gtu6zi/j5eFYkssOiC/ZMzH9Aib3RC/3Pkp
+         5ZABDFmfnPSH1F9XdtREqh34c7C3FcYmYTOChakmfecmLWKea2MOhwCR/Oa8tuo2mIQw
+         /Mh9AjCY2Em8N/6cmcXa7QVgOUJFXKPijtgrFnP72VBjEYLxVq6OHSE0qctcrL5W5+BT
+         47SoWbbDZuzVKML98B8i951LAkhjujMdbe2CQcgWqf476C83FVGVt9YwBoqV/ai3TjAd
+         9PyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZU7cyFbuL6zn1E9MyI1vFrOl+w1j24ITiKcUOuGXfacqflrR/dvLzBOfik6zRkcKeeLs=@vger.kernel.org, AJvYcCXbqTqhKeIYL+P480wBMbkaUzn+sRsj934c55C4oA6fORxF6awyisEjZ+yNBm2P2xqbyYLoqNc1sxeF/qoUoMMS/NHq@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm8feh5an0bxyy20lsQHHkGDEtVtFxAjcXpnyUb6apnqu+CvF6
+	2bU067iwCkQFipyXlzOWc0tLWmqktdYvOff1/MeZQp4EVUDv38Gv08KFEMrAmoHvU5LoL9z2Wvi
+	hDAGLtt/pJZfUFT2Uqt2qTNLWd5s=
+X-Google-Smtp-Source: AGHT+IEviS6CpJ6oGt7ot2JA73XxZUeBGeyPR+dHU287w5yRbGkn10Ndhlbu9Xk+tuhJFf8IFdinSTCZ8dKcSpnXIOs=
+X-Received: by 2002:a17:907:96ab:b0:a7a:af5d:f312 with SMTP id
+ a640c23a62f3a-a86a54b9e3amr210382266b.46.1724440058747; Fri, 23 Aug 2024
+ 12:07:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240824024439.a37c41bab87dbdf3d0486846@kernel.org>
+In-Reply-To: <20240824024439.a37c41bab87dbdf3d0486846@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 23 Aug 2024 12:07:24 -0700
+Message-ID: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+To: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Jordan Rome <linux@jordanrome.com>, ajor@meta.com
+Cc: Tianyi Liu <i.pear@outlook.com>, Oleg Nesterov <oleg@redhat.com>, rostedt@goodmis.org, 
+	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com, 
+	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 23 Aug 2024 12:54:26 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > $ while true; do rtla timerlat top -u -q & PID=$!; sleep 5; \
-> >  kill -INT $PID; sleep 0.001; kill -TERM $PID; wait $PID; done  
-> 
-> The "kill -INT $PID" caused the write to osnoise_workload_start(), and the
-> after 1ms you do the "kill -TERM $PID" that kill the process which closes
-> the file descriptor right after the reset.
-> 
-> The real fix here looks to be:
-> 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index 66a871553d4a..400a72cd6ab5 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -265,6 +265,8 @@ static inline void tlat_var_reset(void)
->  	 */
->  	for_each_cpu(cpu, cpu_online_mask) {
->  		tlat_var = per_cpu_ptr(&per_cpu_timerlat_var, cpu);
-> +		if (tlat_var->kthread)
-> +			hrtimer_cancel(&tlat_var->timer);
->  		memset(tlat_var, 0, sizeof(*tlat_var));
->  	}
->  }
-> @@ -2579,7 +2581,8 @@ static int timerlat_fd_release(struct inode *inode, struct file *file)
->  	osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
->  	tlat_var = per_cpu_ptr(&per_cpu_timerlat_var, cpu);
->  
-> -	hrtimer_cancel(&tlat_var->timer);
-> +	if (tlat_var->kthread)
-> +		hrtimer_cancel(&tlat_var->timer);
->  	memset(tlat_var, 0, sizeof(*tlat_var));
->  
->  	osn_var->sampling = 0;
-> 
-> I'll make this into a real patch and send it out.
-
-Egad, I don't think this is even good enough. I noticed this in the trace
-(adding kthread to the memset trace_printk):
-
-           <...>-916     [003] .....   134.227044: osnoise_workload_start: memset ffff88823c435b28 for 0000000000000000
-           <...>-916     [003] .....   134.227046: osnoise_workload_start: memset ffff88823c4b5b28 for 0000000000000000
-           <...>-916     [003] .....   134.227048: osnoise_workload_start: memset ffff88823c535b28 for 0000000000000000
-           <...>-916     [003] .....   134.227049: osnoise_workload_start: memset ffff88823c5b5b28 for 0000000000000000
-           <...>-916     [003] .....   134.227051: osnoise_workload_start: memset ffff88823c635b28 for 0000000000000000
-           <...>-916     [003] .....   134.227052: osnoise_workload_start: memset ffff88823c6b5b28 for 0000000000000000
-           <...>-916     [003] .....   134.227054: osnoise_workload_start: memset ffff88823c735b28 for ffff888108205640
-           <...>-916     [003] .....   134.227055: osnoise_workload_start: memset ffff88823c7b5b28 for 0000000000000000
-
-Before the reset, all but one of the tlat->kthread is NULL. Then it dawned
-on me that this is a global per CPU variable. It gets initialized when the
-tracer starts. If another program is has the timerlat fd open when the
-tracer ends, the tracer starts again, and you close the fd, it will cancel
-the hrtimer for the new task.
-
-I think there needs to be some ref counting here, that keeps the tracer
-from starting again if there's still files opened.
-
-This looks to be a bigger problem than I have time to work on it for now.
-I'll just apply the mutex patch for the kthreads, but this bug is going to
-take a bit more work in solving.
-
--- Steve
+adding Jiri and bpftrace folks
 
 
+On Fri, Aug 23, 2024 at 10:44=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.=
+org> wrote:
+>
+> On Fri, 23 Aug 2024 21:53:00 +0800
+> Tianyi Liu <i.pear@outlook.com> wrote:
+>
+> > U(ret)probes are designed to be filterable using the PID, which is the
+> > second parameter in the perf_event_open syscall. Currently, uprobe work=
+s
+> > well with the filtering, but uretprobe is not affected by it. This ofte=
+n
+> > leads to users being disturbed by events from uninterested processes wh=
+ile
+> > using uretprobe.
+> >
+> > We found that the filter function was not invoked when uretprobe was
+> > initially implemented, and this has been existing for ten years. We hav=
+e
+> > tested the patch under our workload, binding eBPF programs to uretprobe
+> > tracepoints, and confirmed that it resolved our problem.
+>
+> Is this eBPF related problem? It seems only perf record is also affected.
+> Let me try.
+>
+>
+> >
+> > Following are the steps to reproduce the issue:
+> >
+> > Step 1. Compile the following reproducer program:
+> > ```
+> >
+> > int main() {
+> >     printf("pid: %d\n", getpid());
+> >     while (1) {
+> >         sleep(2);
+> >         void *ptr =3D malloc(1024);
+> >         free(ptr);
+> >     }
+> > }
+> > ```
+> > We will then use uretprobe to trace the `malloc` function.
+>
+> OK, and run perf probe to add an event on malloc's return.
+>
+> $ sudo ~/bin/perf probe -x ./malloc-run --add malloc%return
+> Added new event:
+>   probe_malloc:malloc__return (on malloc%return in /home/mhiramat/ksrc/li=
+nux/malloc-run)
+>
+> You can now use it in all perf tools, such as:
+>
+>         perf record -e probe_malloc:malloc__return -aR sleep 1
+>
+> >
+> > Step 2. Run two instances of the reproducer program and record their PI=
+Ds.
+>
+> $ ./malloc-run &  ./malloc-run &
+> [1] 93927
+> [2] 93928
+> pid: 93927
+> pid: 93928
+>
+> And trace one of them;
+>
+> $ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
+> ^C[ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
+>
+> And dump the data;
+>
+> $ sudo ~/bin/perf script
+>       malloc-run   93928 [004] 351736.730649:       raw_syscalls:sys_exit=
+: NR 230 =3D 0
+>       malloc-run   93928 [004] 351736.730694: probe_malloc:malloc__return=
+: (561cfdeb30c0 <- 561cfdeb3204)
+>       malloc-run   93928 [004] 351736.730696:      raw_syscalls:sys_enter=
+: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+>       malloc-run   93928 [004] 351738.730857:       raw_syscalls:sys_exit=
+: NR 230 =3D 0
+>       malloc-run   93928 [004] 351738.730869: probe_malloc:malloc__return=
+: (561cfdeb30c0 <- 561cfdeb3204)
+>       malloc-run   93928 [004] 351738.730883:      raw_syscalls:sys_enter=
+: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+>       malloc-run   93928 [004] 351740.731110:       raw_syscalls:sys_exit=
+: NR 230 =3D 0
+>       malloc-run   93928 [004] 351740.731125: probe_malloc:malloc__return=
+: (561cfdeb30c0 <- 561cfdeb3204)
+>       malloc-run   93928 [004] 351740.731127:      raw_syscalls:sys_enter=
+: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+>
+> Hmm, it seems to trace one pid data. (without this change)
+> If this changes eBPF behavior, I would like to involve eBPF people to ask
+> this is OK. As far as from the viewpoint of perf tool, current code works=
+.
+>
+> But I agree that current code is a bit strange. Oleg, do you know anythin=
+g?
+>
+> Thank you,
+>
+> >
+> > Step 3. Use uretprobe to trace each of the two running reproducers
+> > separately. We use bpftrace to make it easier to reproduce. Please run =
+two
+> > instances of bpftrace simultaneously: the first instance filters events
+> > from PID1, and the second instance filters events from PID2.
+> >
+> > The expected behavior is that each bpftrace instance would only print
+> > events matching its respective PID filter. However, in practice, both
+> > bpftrace instances receive events from both processes, the PID filter i=
+s
+> > ineffective at this moment:
+> >
+> > Before:
+> > ```
+> > PID1=3D55256
+> > bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=3D%llu pid=
+=3D%d\n", elapsed / 1000000000, pid); }'
+> > Attaching 1 probe...
+> > time=3D0 pid=3D55256
+> > time=3D2 pid=3D55273
+> > time=3D2 pid=3D55256
+> > time=3D4 pid=3D55273
+> > time=3D4 pid=3D55256
+> > time=3D6 pid=3D55273
+> > time=3D6 pid=3D55256
+> >
+> > PID2=3D55273
+> > bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=3D%llu pid=
+=3D%d\n", elapsed / 1000000000, pid); }'
+> > Attaching 1 probe...
+> > time=3D0 pid=3D55273
+> > time=3D0 pid=3D55256
+> > time=3D2 pid=3D55273
+> > time=3D2 pid=3D55256
+> > time=3D4 pid=3D55273
+> > time=3D4 pid=3D55256
+> > time=3D6 pid=3D55273
+> > time=3D6 pid=3D55256
+> > ```
+
+This is a bit confusing, because even if the kernel-side uretprobe
+handler doesn't do the filtering by itself, uprobe subsystem shouldn't
+install breakpoints on processes which don't have uretprobe requested
+for (unless I'm missing something, of course).
+
+It still needs to be fixed like you do in your patch, though. Even
+more, we probably need a similar UPROBE_HANDLER_REMOVE handling in
+handle_uretprobe_chain() to clean up breakpoint for processes which
+don't have uretprobe attached anymore (but I think that's a separate
+follow up).
+
+Anyways, I think fixing this won't affect BPF in the sense that this
+is clearly a bug and shouldn't happen. Furthermore, in
+multi-uprobe/multi-uretprobe implementation we already filter this out
+correctly, so I don't think anyone does (neither should) rely on this
+buggy behavior.
+
+> >
+> > After: Both bpftrace instances will show the expected behavior, only
+> > printing events from the PID specified by their respective filters:
+> > ```
+> > PID1=3D1621
+> > bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=3D%llu pid=
+=3D%d\n", elapsed / 1000000000, pid); }'
+> > Attaching 1 probe...
+> > time=3D0 pid=3D1621
+> > time=3D2 pid=3D1621
+> > time=3D4 pid=3D1621
+> > time=3D6 pid=3D1621
+> >
+> > PID2=3D1633
+> > bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=3D%llu pid=
+=3D%d\n", elapsed / 1000000000, pid); }'
+> > Attaching 1 probe...
+> > time=3D0 pid=3D1633
+> > time=3D2 pid=3D1633
+> > time=3D4 pid=3D1633
+> > time=3D6 pid=3D1633
+> > ```
+> >
+> > Fixes: c1ae5c75e103 ("uprobes/tracing: Introduce is_ret_probe() and ure=
+tprobe_dispatcher()")
+> > Cc: Alban Crequy <albancrequy@linux.microsoft.com>
+> > Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> > Signed-off-by: Tianyi Liu <i.pear@outlook.com>
+> > ---
+> > Changes in v2:
+> > - Drop cover letter and update commit message.
+> > - Link to v1: https://lore.kernel.org/linux-trace-kernel/ME0P300MB04166=
+144CDF92A72B9E1BAEA9D8F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM/
+> > ---
+> >  kernel/trace/trace_uprobe.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index c98e3b3386ba..c7e2a0962928 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -1443,6 +1443,9 @@ static void uretprobe_perf_func(struct trace_upro=
+be *tu, unsigned long func,
+> >                               struct pt_regs *regs,
+> >                               struct uprobe_cpu_buffer **ucbp)
+> >  {
+> > +     if (!uprobe_perf_filter(&tu->consumer, 0, current->mm))
+> > +             return;
+> > +
+> >       __uprobe_perf_func(tu, func, regs, ucbp);
+> >  }
+> >
+> > --
+> > 2.34.1
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
