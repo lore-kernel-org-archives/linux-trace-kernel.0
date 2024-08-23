@@ -1,152 +1,219 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C15818CBE4;
-	Fri, 23 Aug 2024 17:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178DC18EFDC;
+	Fri, 23 Aug 2024 17:44:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724434677; cv=none; b=kr20gwt3ZtXLe/lqObq1BGb6Xalq2/DSC7jrySk8ZM5CZ6Sk7duB2QXlwRadzrftVdZRCobfQNv9qHqRqPxBY15ghIcb3CvarCbMkh+wsr5pVnl5Zd7puqll5ouadh2E9dE3RkA6S4Xa0euoZbC11jVtjK9JwBY/f9FooR92j+E=
+	t=1724435084; cv=none; b=H0KaRkvHAqt/T2eZuJ69RIdAVzrokLh/03Hiy9kryhx1P1SERVeiHnftKRJe2fv0Lc2IApJSwgChDkX99JbZBsaRqyigbOIR/mnzDez4Pu+FzA0K9yPiO5tPWBfx3uEy7Hb7qavPA1YMycJM1Wtz1xRWTrZKhk1n4lHr+YaVr+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724434677; c=relaxed/simple;
-	bh=6oD8VPCVcONbDxn5sPhpPyTmY2Raf9rNjY/H3VQKCvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RzPWD+Qvake3FGYrnhvnvMQQO04Z2s5CINxclsGYsMogNmnjNQy9IrRfQ2gQVpBdh6hlhawrlwY03XeFKcWqMo1zCFONApAkeZA6ranHzfwGPaamEOejQudnzHkJrA4e61HLqqWo2yfJ04u4beUAHOqB35prbgv8xRhO3Y2HOj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rbMA0N5D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724435084; c=relaxed/simple;
+	bh=hS8aDAS4ebFyCbHWUnKdeLoA0brh4WMji37bEyfVej8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gIn5xAoGd2WL1JallgaJwWbZYwcCgWoc8A8soU1mirBhl6VRR/koDdPGPFhp23zkwvSFamTXca6JHumYqdJ7p8AXZx0JydcG8wIzmFR4QKT4O8f/5nrHXTB/WVr31SxbCG5Z3S8DI8rTONCLwM2uhxAp7XsWqSFQGmlPbXimRUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zs6snLh1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rbMA0N5D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC79DC4AF09;
-	Fri, 23 Aug 2024 17:37:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zs6snLh1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07F7C4AF0C;
+	Fri, 23 Aug 2024 17:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724434676;
-	bh=6oD8VPCVcONbDxn5sPhpPyTmY2Raf9rNjY/H3VQKCvM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rbMA0N5DDdRy8IWLKihqCDCfE/c5AHPR513kcdUeFehwew+f18vxWNjqg9lC7qiR4
-	 Et8OEJbtShNyODYVxvYWS7Zuq1w19hb/ajRaxFiZuUKbtTLrNCDtul5oWQdIE3xQ8e
-	 c7smzdB0GGh8ewaCeTAp0ya/6ztd/v6ScKg0jyl1+Jl6A7NTII7UrgqR4oNd78gnac
-	 x53ee/sL1l0B3TdlX8FzvJRIPBMGmzFCH/DbuLvya2aC+8hLI6bpko6i5OyB9BoqXQ
-	 tcp1AA0/oKS4iSUYjGmp2j3d1xSCWQqtj5u9yRnDGLvanp6T3LK3NMVROH+oTdU8A6
-	 Hl9UiewGo1qcA==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5334a8a1b07so2947761e87.1;
-        Fri, 23 Aug 2024 10:37:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUMVnpiFydRVyPlZ56HDJ4rgO4VVCQ4ygpC7tAvdwAYUhHs7004ohf28gRzJKe4284FWTP3qf/l9Yjs2bjmYnsX7+KD@vger.kernel.org, AJvYcCVe4CmcX9TnheZmypV0Lv9arL9xwqQY+iI1CNDAvuoYUHKFA6YPVgbykI3AYYF6IrKfkOfhNmCQ/bWWxn5dJw==@vger.kernel.org, AJvYcCVrKac8n92jFkhV+s+a9h2HGxJz7PRZJZa3621L3hxSIP39eabYC/1ghLcG2rQ5eFKF6KFIb612cAHP2tg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfzZlowyQIRev2YUjdzCRV6y5qzjFC7I7vX6m/dgLO6FannaE4
-	cK6FyI9h4Xn80UW2aWI+q8Q6xCdEd8SVNorsFEh1kK7A8603xZFGLYk5kxNyqEljdZiivPT0wVz
-	hYDiXTIhDB0LumFJCsSqgzZJdl4Y=
-X-Google-Smtp-Source: AGHT+IHb678oo4FzQStwGuSq6xYtd7MNQHGi4fBI7dSe3/2MAw1YrY8lt09yV3eo9YZfJfTYS4wQcIAfnNCz/iqJ7EU=
-X-Received: by 2002:a05:6512:ad2:b0:52c:e3bd:c70b with SMTP id
- 2adb3069b0e04-5343882e2ecmr1569179e87.1.1724434675552; Fri, 23 Aug 2024
- 10:37:55 -0700 (PDT)
+	s=k20201202; t=1724435083;
+	bh=hS8aDAS4ebFyCbHWUnKdeLoA0brh4WMji37bEyfVej8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Zs6snLh1lyKVamMgVu3tcKCFwsfIugJ1LUxKp4tsMQcO/oaq5mWQomrdRn5mbqCLx
+	 m6FUGv3VvPDuRoMrP2OnAWPjWfDX3t0nSgew8gm2qDdBYMQisiww2GyVUmWLAePaLd
+	 WDyKh/gjPHwcr5eTpxDaljrTQY2bZYS6+6o1dj1ROziI5TVrMIV1THYjgZ5XMXXEjs
+	 0G4VBL009t80/5gdaX8Rr44y2OzDPgY3mz1fVo5qUGN8ZA0PS/4PFFQUeRolvl1Y4I
+	 9Lc/MwV7HsgCEO2nI2hmcRMkUXJqNq/3g+zy+1721ne3BsHhLGGZf4sUM6AtH+SIg5
+	 CU4P1LjXjd9aA==
+Date: Sat, 24 Aug 2024 02:44:39 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Tianyi Liu <i.pear@outlook.com>, Oleg Nesterov <oleg@redhat.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ flaniel@linux.microsoft.com, albancrequy@linux.microsoft.com,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-Id: <20240824024439.a37c41bab87dbdf3d0486846@kernel.org>
+In-Reply-To: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240821040700.1919317-1-kris.van.hees@oracle.com>
- <20240822181942.2626536-1-kris.van.hees@oracle.com> <20240822181942.2626536-2-kris.van.hees@oracle.com>
-In-Reply-To: <20240822181942.2626536-2-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 24 Aug 2024 02:37:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATrCQb23mnc4nHQ3OEWRf+6gB_32+3x84BtYmV6xTRHyQ@mail.gmail.com>
-Message-ID: <CAK7LNATrCQb23mnc4nHQ3OEWRf+6gB_32+3x84BtYmV6xTRHyQ@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] kbuild: add mod(name,file)_flags to assembler
- flags for module objects
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 23, 2024 at 3:21=E2=80=AFAM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> In order to create the file at build time, modules.builtin.ranges, that
-> contains the range of addresses for all built-in modules, there needs to
-> be a way to identify what code is compiled into modules.
->
-> To identify what code is compiled into modules during a kernel build,
-> one can look for the presence of the -DKBUILD_MODFILE and -DKBUILD_MODNAM=
-E
-> options in the compile command lines.  A simple grep in .*.cmd files for
-> those options is sufficient for this.
->
-> Unfortunately, these options are only passed when compiling C source file=
-s.
-> Various modules also include objects built from assembler source, and the=
-se
-> options are not passed in that case.
->
-> Adding $(modfile_flags) to modkern_aflags (similar to modkern_cflahs), an=
-d
+On Fri, 23 Aug 2024 21:53:00 +0800
+Tianyi Liu <i.pear@outlook.com> wrote:
+
+> U(ret)probes are designed to be filterable using the PID, which is the
+> second parameter in the perf_event_open syscall. Currently, uprobe works
+> well with the filtering, but uretprobe is not affected by it. This often
+> leads to users being disturbed by events from uninterested processes while
+> using uretprobe.
+> 
+> We found that the filter function was not invoked when uretprobe was
+> initially implemented, and this has been existing for ten years. We have
+> tested the patch under our workload, binding eBPF programs to uretprobe
+> tracepoints, and confirmed that it resolved our problem.
+
+Is this eBPF related problem? It seems only perf record is also affected.
+Let me try.
 
 
-modkern_cflahs  ->  modkern_cflags
+> 
+> Following are the steps to reproduce the issue:
+> 
+> Step 1. Compile the following reproducer program:
+> ```
+> 
+> int main() {
+>     printf("pid: %d\n", getpid());
+>     while (1) {
+>         sleep(2);
+>         void *ptr = malloc(1024);
+>         free(ptr);
+>     }
+> }
+> ```
+> We will then use uretprobe to trace the `malloc` function.
 
+OK, and run perf probe to add an event on malloc's return.
 
-> adding $(modname_flags) to a_flags (similar to c_flags) makes it possible
-> to identify which objects are compiled into modules for both C and
-> assembler soure files.
+$ sudo ~/bin/perf probe -x ./malloc-run --add malloc%return  
+Added new event:
+  probe_malloc:malloc__return (on malloc%return in /home/mhiramat/ksrc/linux/malloc-run)
 
-soure  -> source
+You can now use it in all perf tools, such as:
 
+	perf record -e probe_malloc:malloc__return -aR sleep 1
 
+> 
+> Step 2. Run two instances of the reproducer program and record their PIDs.
 
-Strictly speaking, only KBUILD_MODFILE was used in 2/4 or 3/4.
+$ ./malloc-run &  ./malloc-run &
+[1] 93927
+[2] 93928
+pid: 93927
+pid: 93928
 
-KBUILD_MODNAME was unneeded, but If you want to add KBUILD_MODNAME
-for consistency, it is fine too.
+And trace one of them;
 
+$ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
 
-RUST_MODFILE exists, but RUST_MODNAME does not.
+And dump the data;
 
+$ sudo ~/bin/perf script
+      malloc-run   93928 [004] 351736.730649:       raw_syscalls:sys_exit: NR 230 = 0
+      malloc-run   93928 [004] 351736.730694: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+      malloc-run   93928 [004] 351736.730696:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+      malloc-run   93928 [004] 351738.730857:       raw_syscalls:sys_exit: NR 230 = 0
+      malloc-run   93928 [004] 351738.730869: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+      malloc-run   93928 [004] 351738.730883:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+      malloc-run   93928 [004] 351740.731110:       raw_syscalls:sys_exit: NR 230 = 0
+      malloc-run   93928 [004] 351740.731125: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+      malloc-run   93928 [004] 351740.731127:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
 
+Hmm, it seems to trace one pid data. (without this change)
+If this changes eBPF behavior, I would like to involve eBPF people to ask
+this is OK. As far as from the viewpoint of perf tool, current code works.
 
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+But I agree that current code is a bit strange. Oleg, do you know anything?
+
+Thank you,
+
+> 
+> Step 3. Use uretprobe to trace each of the two running reproducers
+> separately. We use bpftrace to make it easier to reproduce. Please run two
+> instances of bpftrace simultaneously: the first instance filters events
+> from PID1, and the second instance filters events from PID2.
+> 
+> The expected behavior is that each bpftrace instance would only print
+> events matching its respective PID filter. However, in practice, both
+> bpftrace instances receive events from both processes, the PID filter is
+> ineffective at this moment:
+> 
+> Before:
+> ```
+> PID1=55256
+> bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
+> Attaching 1 probe...
+> time=0 pid=55256
+> time=2 pid=55273
+> time=2 pid=55256
+> time=4 pid=55273
+> time=4 pid=55256
+> time=6 pid=55273
+> time=6 pid=55256
+> 
+> PID2=55273
+> bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
+> Attaching 1 probe...
+> time=0 pid=55273
+> time=0 pid=55256
+> time=2 pid=55273
+> time=2 pid=55256
+> time=4 pid=55273
+> time=4 pid=55256
+> time=6 pid=55273
+> time=6 pid=55256
+> ```
+> 
+> After: Both bpftrace instances will show the expected behavior, only
+> printing events from the PID specified by their respective filters:
+> ```
+> PID1=1621
+> bpftrace -p $PID1 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
+> Attaching 1 probe...
+> time=0 pid=1621
+> time=2 pid=1621
+> time=4 pid=1621
+> time=6 pid=1621
+> 
+> PID2=1633
+> bpftrace -p $PID2 -e 'uretprobe:libc:malloc { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
+> Attaching 1 probe...
+> time=0 pid=1633
+> time=2 pid=1633
+> time=4 pid=1633
+> time=6 pid=1633
+> ```
+> 
+> Fixes: c1ae5c75e103 ("uprobes/tracing: Introduce is_ret_probe() and uretprobe_dispatcher()")
+> Cc: Alban Crequy <albancrequy@linux.microsoft.com>
+> Signed-off-by: Francis Laniel <flaniel@linux.microsoft.com>
+> Signed-off-by: Tianyi Liu <i.pear@outlook.com>
 > ---
->  scripts/Makefile.lib | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index fe3668dc4954..170f462537a8 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -238,7 +238,7 @@ modkern_rustflags =3D                                =
-              \
->
->  modkern_aflags =3D $(if $(part-of-module),                              =
- \
->                         $(KBUILD_AFLAGS_MODULE) $(AFLAGS_MODULE),       \
-> -                       $(KBUILD_AFLAGS_KERNEL) $(AFLAGS_KERNEL))
-> +                       $(KBUILD_AFLAGS_KERNEL) $(AFLAGS_KERNEL) $(modfil=
-e_flags))
->
->  c_flags        =3D -Wp,-MMD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)=
-     \
->                  -include $(srctree)/include/linux/compiler_types.h      =
- \
-> @@ -248,7 +248,7 @@ c_flags        =3D -Wp,-MMD,$(depfile) $(NOSTDINC_FLA=
-GS) $(LINUXINCLUDE)     \
->  rust_flags     =3D $(_rust_flags) $(modkern_rustflags) @$(objtree)/inclu=
-de/generated/rustc_cfg
->
->  a_flags        =3D -Wp,-MMD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)=
-     \
-> -                $(_a_flags) $(modkern_aflags)
-> +                $(_a_flags) $(modkern_aflags) $(modname_flags)
->
->  cpp_flags      =3D -Wp,-MMD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)=
-     \
->                  $(_cpp_flags)
-> --
-> 2.45.2
->
+> Changes in v2:
+> - Drop cover letter and update commit message.
+> - Link to v1: https://lore.kernel.org/linux-trace-kernel/ME0P300MB04166144CDF92A72B9E1BAEA9D8F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM/
+> ---
+>  kernel/trace/trace_uprobe.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index c98e3b3386ba..c7e2a0962928 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -1443,6 +1443,9 @@ static void uretprobe_perf_func(struct trace_uprobe *tu, unsigned long func,
+>  				struct pt_regs *regs,
+>  				struct uprobe_cpu_buffer **ucbp)
+>  {
+> +	if (!uprobe_perf_filter(&tu->consumer, 0, current->mm))
+> +		return;
+> +
+>  	__uprobe_perf_func(tu, func, regs, ucbp);
+>  }
+>  
+> -- 
+> 2.34.1
+> 
 
 
---=20
-Best Regards
-Masahiro Yamada
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
