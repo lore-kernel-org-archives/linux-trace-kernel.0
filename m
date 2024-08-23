@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D142F1755C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FCD1C694;
 	Fri, 23 Aug 2024 01:39:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724377186; cv=none; b=E/tIEKWRobg1MW7j/Umis5O2Ia7BOW/is3U6DVC83iMyb/zbJfPHbaO/OZF2j9kfpnUMMSdlnQmZyOSET25P65wVQG+qLylspusVnZS0l9QBb67T6a3fPqRoVfYBZNftANJDoubbekVzeoPmIJmmLLTpL/8amhMBU47Cg6yPl9M=
+	t=1724377187; cv=none; b=spJmb2/JVycWGgluhqmyv7nJWEVZbj9YCFS4MdIEVDziZOBZdfhB5tYcS+KubTZ2CSt/iJQKvLlOw1sqHp1E5+kLCFCOYrYBsKuifmUBG5y0OK9YxdySrn/ESK1AcXWCP0TjC42CLdqMKGIuJQTISyWP24hNHFgpdlEoqNnWn2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724377186; c=relaxed/simple;
-	bh=v/HA6AqybZOCybS77U+9o6ictMaHC1hErdyv37BrgTs=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=E6DGfzZ57qCR8/CqmS0JDIG+WieTeEzbbUPSyJMsCq+GJ/TXAWQFlEzMMymTL5hC7YZNynAplzcf8Ve4Ptg9WELq5ahUZxC7epRaukat3gUYXlBJ8GLs9eW9WR/Ave67XAY/6Hp1xmqBTCs6/w/u4Lm6sxEtYGmkJhDGQkj5BwY=
+	s=arc-20240116; t=1724377187; c=relaxed/simple;
+	bh=R883UB1lQPveP+GSFXVrQFNV+2afojxMSJTjv9FnDKc=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=H2iy/4wrn45iBCySg4b1KWivwppt3KBxa53vEjSuLb83M2Ydd/DJv0ckGrtBBd6dO4MCJKgVDn5+mVZPqPvFgU0mXRF6zI5fOC8jUIn0ZQssLp3romAv3l0gi2bfSPKbIz1hOAh1/5qPq+2mbjNzOQzO7Hz1XAtjLfH7UsMm2Eo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B4FC32782;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C001EC4AF50;
 	Fri, 23 Aug 2024 01:39:46 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1shJHn-00000003Zgb-06Bz;
+	id 1shJHn-00000003ZiZ-2rLe;
 	Thu, 22 Aug 2024 21:40:19 -0400
-Message-ID: <20240823013902.135036960@goodmis.org>
+Message-ID: <20240823014019.545459018@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 22 Aug 2024 21:39:02 -0400
+Date: Thu, 22 Aug 2024 21:39:06 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -54,147 +55,169 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Clark Williams <williams@redhat.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  "Jonathan Corbet" <corbet@lwn.net>
-Subject: [PATCH 0/5] tracing: Allow trace_printk() to use the persistent ring buffer
+Subject: [PATCH 4/5] tracing: Add option to set an instance to be the trace_printk
+ destination
+References: <20240823013902.135036960@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-[ Take-two because I had an extra comma at the end of my Cc list
-  for sending via quilt ]
+From: Steven Rostedt <rostedt@goodmis.org>
 
-While debugging the rtla and timerlat issue[1], I started using
-trace_printk() to see what was happening as the task_struct was randomly
-being corrupted. But the reproducer to this bug would cause a kernel crash.
-I wanted to try the new persistent ring buffer (which has not been merged
-yet), to debug this. As I was using trace_printk(), I needed the
-trace_printk() to write into this buffer.
+Add a option "trace_printk_dest" that will make the tracing instance the
+location that trace_printk() will go to. This is useful if the
+trace_printk or one of the top level tracers is too noisy and there's a
+need to separate the two. Then an instance can be created, the
+trace_printk can be set to go there instead, where it will not be lost in
+the noise of the top level tracer.
 
-trace_printk() currently only writes into the top trace buffer, and I didn't
-want to use the trace_array_printk() for this, as it seemed too clunky.
-Instead, I wrote up this patch series that allows an instance created on the
-kernel command line to be used as the trace_printk destination buffer.
+Note, only one instance can be the destination of trace_printk at a time.
+If an instance sets this flag, the instance that had it set will have it
+cleared. There is always one instance that has this set. By default, that
+is the top instance. This flag cannot be cleared from the top instance.
+Doing so will result in an -EINVAL. The only way this flag can be cleared
+from the top instance is by another instance setting it.
 
-To accomplish this, I needed a way to add an option to the trace_instance
-command line. I created "flags" to modify the trace instance after it is
-created. If the trace_instance has a "^<flag>" in its name, it is parsed as
-a flag.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/ftrace.rst | 12 ++++++++++
+ kernel/trace/trace.c           | 40 +++++++++++++++++++++++++++++-----
+ kernel/trace/trace.h           |  1 +
+ 3 files changed, 48 insertions(+), 5 deletions(-)
 
-  reserve_mem=12M:4096:trace  trace_instance=boot_map^traceprintk@trace
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 5aba74872ba7..4073ca48af4a 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1186,6 +1186,18 @@ Here are the available options:
+   trace_printk
+ 	Can disable trace_printk() from writing into the buffer.
+ 
++  trace_printk_dest
++	Set to have trace_printk() and similar internal tracing functions
++	write into this instance. Note, only one trace instance can have
++	this set. By setting this flag, it clears the trace_printk_dest flag
++	of the instance that had it set previously. By default, the top
++	level trace has this set, and will get it set again if another
++	instance has it set then clears it.
++
++	This flag cannot be cleared by the top level instance, as it is the
++	default instance. The only way the top level instance has this flag
++	cleared, is by it being set in another instance.
++
+   annotate
+ 	It is sometimes confusing when the CPU buffers are full
+ 	and one CPU buffer had a lot of events recently, thus
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 35b37c9aa26c..658b40b483a3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -482,7 +482,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
+ 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
+ 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
+-	 TRACE_ITER_HASH_PTR)
++	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
+ 
+ /* trace_options that are only supported by global_trace */
+ #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+@@ -490,7 +490,7 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ 
+ /* trace_flags that are default zero for instances */
+ #define ZEROED_TRACE_FLAGS \
+-	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK)
++	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
+ 
+ /*
+  * The global_trace is the descriptor that holds the top-level tracing
+@@ -513,6 +513,16 @@ static __always_inline bool printk_binsafe(struct trace_array *tr)
+ 	return !(tr->flags & TRACE_ARRAY_FL_BOOT);
+ }
+ 
++static void update_printk_trace(struct trace_array *tr)
++{
++	if (printk_trace == tr)
++		return;
++
++	printk_trace->trace_flags &= ~TRACE_ITER_TRACE_PRINTK;
++	printk_trace = tr;
++	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
++}
++
+ void trace_set_ring_buffer_expanded(struct trace_array *tr)
+ {
+ 	if (!tr)
+@@ -5300,7 +5310,8 @@ int trace_keep_overwrite(struct tracer *tracer, u32 mask, int set)
+ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
+ 	if ((mask == TRACE_ITER_RECORD_TGID) ||
+-	    (mask == TRACE_ITER_RECORD_CMD))
++	    (mask == TRACE_ITER_RECORD_CMD) ||
++	    (mask == TRACE_ITER_TRACE_PRINTK))
+ 		lockdep_assert_held(&event_mutex);
+ 
+ 	/* do nothing if flag is already set */
+@@ -5312,6 +5323,25 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ 		if (tr->current_trace->flag_changed(tr, mask, !!enabled))
+ 			return -EINVAL;
+ 
++	if (mask == TRACE_ITER_TRACE_PRINTK) {
++		if (enabled) {
++			update_printk_trace(tr);
++		} else {
++			/*
++			 * The global_trace cannot clear this.
++			 * It's flag only gets cleared if another instance sets it.
++			 */
++			if (printk_trace == &global_trace)
++				return -EINVAL;
++			/*
++			 * An instance must always have it set.
++			 * by default, that's the global_trace instane.
++			 */
++			if (printk_trace == tr)
++				update_printk_trace(&global_trace);
++		}
++	}
++
+ 	if (enabled)
+ 		tr->trace_flags |= mask;
+ 	else
+@@ -9687,7 +9717,7 @@ static int __remove_instance(struct trace_array *tr)
+ 	}
+ 
+ 	if (printk_trace == tr)
+-		printk_trace = &global_trace;
++		update_printk_trace(&global_trace);
+ 
+ 	tracing_set_nop(tr);
+ 	clear_ftrace_function_probes(tr);
+@@ -10578,7 +10608,7 @@ __init static void enable_instances(void)
+ 			tracer_tracing_off(tr);
+ 
+ 		if (traceprintk)
+-			printk_trace = tr;
++			update_printk_trace(tr);
+ 
+ 		/*
+ 		 * If start is set, then this is a mapped buffer, and
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 07b2d2af9b33..c866991b9c78 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1321,6 +1321,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(IRQ_INFO,		"irq-info"),		\
+ 		C(MARKERS,		"markers"),		\
+ 		C(EVENT_FORK,		"event-fork"),		\
++		C(TRACE_PRINTK,		"trace_printk_dest"),	\
+ 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
+ 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
+ 		FUNCTION_FLAGS					\
+-- 
+2.43.0
 
-The "^traceprintk" would tell the kernel to use the boot_map instance as the
-location of the trace_printk(). Now when the kernel crashed, the boot
-instance would have the trace_printk() output.
 
-Note, when I first did this, the kernel crashed when reading the boot
-buffer, as the trace_printk() would default into using the trace_bprintk()
-which saves the pointer to the format string and the raw arguments in the
-buffer. On reading it, it would try to read the pointer where the format
-string was located at in the previous kernel and crashed. To solve this, I
-added a flag to the trace_array to denote that it is a boot trace buffer,
-and if it is set, then the binary trace_printks will call the version that
-does the formatting before adding it to the buffer. This may be slightly
-slower, but it's safer.
-
-I also noticed that using trace_printk() in the boot buffer, it would write
-to the buffer on the boot after the crash. This caused events to be listed
-in the buffer to be mixed between two kernels, and it was really confusing
-to read. I added another boot time flag to have the tracing instance boot
-with tracing disabled.
-
-  trace_instance=boot_map^traceoff^traceprintk@trace
-
-With this, and enabling the printk console trace event in the boot buffer, I
-got nice traces like this:
-
- # trace-cmd start -B boot_map -e printk
- # <run test to crash kernel>
-[CRASH / REBOOT ]
- # trace-cmd show -B boot_map
-[..]
-          <idle>-0       [004] dNh1.    45.277163: timerlat_irq: exit timer no restart
-           <...>-910     [007] ....1    45.277201: wait_next_period.isra.0: hrtimer start ffff88823c7b5b28
-           <...>-907     [004] ....1    45.277206: wait_next_period.isra.0: hrtimer start ffff88823c635b28
-           <...>-905     [003] ....1    45.277240: timerlat_fd_release: OSN_VAR KTHREAD [3] timerlatu/3:905 ffff88810d5f4500
-           <...>-920     [003] .....    45.277316: stop_kthread: kill timerlatu/3:905 ffff88810d5f4500
-           <...>-920     [003] .....    45.277348: stop_kthread: OSN_VAR KTHREAD [4] timerlatu/4:907 ffff8881104ae780
-           <...>-920     [003] .....    45.277357: stop_kthread: kill timerlatu/4:907 ffff8881104ae780
-           <...>-920     [003] .....    45.277358: stop_kthread: OSN_VAR KTHREAD [5] timerlatu/5:908 ffff8881104aa280
-           <...>-920     [003] .....    45.277365: stop_kthread: kill timerlatu/5:908 ffff8881104aa280
-           <...>-920     [003] .....    45.277367: stop_kthread: OSN_VAR KTHREAD [6] timerlatu/6:909 ffff8881104ab3c0
-           <...>-920     [003] .....    45.277375: stop_kthread: kill timerlatu/6:909 ffff8881104ab3c0
-           <...>-920     [003] .....    45.277377: stop_kthread: OSN_VAR KTHREAD [7] timerlatu/7:910 ffff8881104a9140
-           <...>-920     [003] .....    45.277386: stop_kthread: kill timerlatu/7:910 ffff8881104a9140
-           <...>-909     [006] d.h1.    45.277556: timerlat_irq: enter timer
-           <...>-909     [006] d.h1.    45.277561: timerlat_irq: exit timer no restart
-           <...>-908     [005] d.h1.    45.277919: timerlat_irq: enter timer
-           <...>-908     [005] d.h1.    45.277923: timerlat_irq: exit timer no restart
-           <...>-907     [004] d.h1.    45.278080: timerlat_irq: enter timer
-           <...>-910     [007] d.h1.    45.278081: timerlat_irq: enter timer
-           <...>-907     [004] d.h1.    45.278083: timerlat_irq: exit timer no restart
-           <...>-910     [007] d.h1.    45.278084: timerlat_irq: exit timer no restart
-           <...>-1       [002] d..1.    45.278665: console: ==================================================================
-           <...>-1       [002] d..1.    45.280870: console: BUG: KASAN: slab-use-after-free in proc_pid_lookup+0xbf/0x210
-           <...>-1       [002] d..1.    45.282876: console: Write of size 4 at addr ffff88810d5f4528 by task systemd/1
-           <...>-1       [002] d..1.    45.284781: console: 
-           <...>-1       [002] d..1.    45.285295: console: CPU: 2 UID: 0 PID: 1 Comm: systemd Not tainted 6.11.0-rc3-test-00027-g014f473a3416-dirty #124 e44bf2780799707baf299f82ac321c3be7495d33
-           <...>-1       [002] d..1.    45.289265: console: Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-           <...>-1       [002] d..1.    45.292001: console: Call Trace:
-           <...>-1       [002] d..1.    45.292764: console:  <TASK>
-           <...>-1       [002] d..1.    45.293441: console:  dump_stack_lvl+0x53/0x70
-           <...>-1       [002] d..1.    45.294575: console:  print_report+0xc6/0x640
-           <...>-1       [002] d..1.    45.295672: console:  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
-           <...>-1       [002] d..1.    45.297182: console:  ? proc_pid_lookup+0xbf/0x210
-           <...>-1       [002] d..1.    45.298407: console:  kasan_report+0xc6/0x100
-           <...>-1       [002] d..1.    45.299496: console:  ? proc_pid_lookup+0xbf/0x210
-           <...>-1       [002] d..1.    45.300707: console:  kasan_check_range+0xf4/0x1a0
-           <...>-1       [002] d..1.    45.301931: console:  proc_pid_lookup+0xbf/0x210
-[..]
-
-And I was able to easily debug the situation.
-
-Now that I have an easy way to make the trace_printk() write to any
-instance, I decided to add a run time option to the instances to tell them
-to be the destination to the trace_printk(). That is, you don't need to add
-a kernel command line to make the trace_printk() write to an instance. All
-you need to do is set the trace_printk_dest option in the instance (note,
-the trace_printk option was already taken at the top level that can be used
-to disable trace_printk). Only one instance is allowed to be the
-trace_printk destination, so setting this flag in one instance will clear it
-in another. Also, an instance must always be the destination of the
-trace_printk() function, so clearing the flag in any instance will
-automatically cause the top level instance to be set. Trying to clear the
-flag of the top level instance will return -EINVAL.
-
-  echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
-
-With all these fun new ways to debug the kernel, I figured it's about time
-to start adding it to the Documentation directory. I created a debugging.rst
-file in Documentation/trace, that is the start of adding techniques in using
-tracing to debug your kernel.
-
-[1] https://lore.kernel.org/all/20240821160316.02c03c44@gandalf.local.home/
-
-These patches are based on top of:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-     for-next
-
-
-Steven Rostedt (5):
-      tracing: Add "traceoff" flag to boot time tracing instances
-      tracing: Allow trace_printk() to go to other instance buffers
-      tracing: Have trace_printk not use binary prints if boot buffer
-      tracing: Add option to set an instance to be the trace_printk destination
-      tracing/Documentation: Start a document on how to debug with tracing
-
-----
- Documentation/admin-guide/kernel-parameters.txt |  23 ++++
- Documentation/trace/debugging.rst               | 159 ++++++++++++++++++++++++
- Documentation/trace/ftrace.rst                  |  12 ++
- kernel/trace/trace.c                            | 127 ++++++++++++++++---
- kernel/trace/trace.h                            |   4 +-
- kernel/trace/trace_output.c                     |   5 +-
- 6 files changed, 313 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/trace/debugging.rst
