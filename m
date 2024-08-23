@@ -1,199 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CB81885B4;
-	Fri, 23 Aug 2024 14:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64830188A1A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Aug 2024 16:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724423264; cv=none; b=ra+srR0Kil/nXcI2EgsGGH5I3QYpISWVobCUwTElFqbBBK6hfHsvPF92fVHBHdL4UlNGa8NnD0oxT03ifXI5FNofG2l7PWCIyAB0Yi31YAjiuhysgynipcdZh8qiHmYVc9XbhWqYQ314FwdONnKLAxubqPJosA0WvuJRDDbod2Y=
+	t=1724432017; cv=none; b=NfehXZ1A+TcCxPXfwuq1YlcuxZ2rvC98Sf0SE7kXA3UuJyN2T2W+AMZF/iCFvP68xR+/GlPwc2n4HvMxSiT/Zwt/Qak4+M+eE8MVdapdezFDkkhwZ36ze6xzoNkCJNA/MSGe1q+MW0lJfED6Rm7ETtsVQKOXR0UCRnUjyqpphhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724423264; c=relaxed/simple;
-	bh=9k7CClA6sa61+VicUj+S+AsdLiPejttykMy8S3HoJ1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YEbUqOhrZkq8MS9rrSZ8cQ0BCAquOh2Ce0DKx4sgeu671P+gF+poTbC8pSBt7iM+a2vN6bqIYkTF/+O1Ft/Rt4OBMltoef5HDIrdbzMeuWOrcrAHBQAOm36nCpFK18v4ggcU5kUy0JlV0/BDi/Xb2bgKxIialm8ZYSzbWQTUaCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76455C32786;
-	Fri, 23 Aug 2024 14:27:43 +0000 (UTC)
-Date: Fri, 23 Aug 2024 10:28:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>, John
- Kacur <jkacur@redhat.com>, "Luis Claudio R. Goncalves"
- <lgoncalv@redhat.com>
-Subject: [PATCH] tracing/osnoise: Protect the per CPU kthread variable with
- mutex
-Message-ID: <20240823102816.5e55753b@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1724432017; c=relaxed/simple;
+	bh=aDkpA7sHahzJz4O9pRbiLPc1/ZZRyODcWl1oN47eeaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EofMOv9iMqR21IMUEBpQBfFdb1ufFdUAJO17ZGhXfGvlkbfXIrxU6++7zpJs/28wiDnRJwR0a6fzhSPW8ZeRg4wqQpZBwhuTcUbf/uD26gLW7S6IXtDOWfRQDVqMGK7GmUi1j2N/fHHKj8tOF5HWXIgoGLVJjF3JTD8BDIEUqAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GIQRBdnK; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GIQRBdnK"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20353e5de9cso5475ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Aug 2024 09:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724432015; x=1725036815; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P9vuB8hri5qT5waMZfq5Z57S5cjCFURsSroxNeC6uFQ=;
+        b=GIQRBdnKjWLO8NZRXd4rPBJAyQlTM03PH68eiSIHsTjzD+G5iGqRsC2n4p8wUzHrJk
+         6Kft7nS6zjObwTLPotD9xGN3Ui3WOT0wNAw+Lc0V/JIonTqF1DcR7qyuY8cqKVnXuQKx
+         T2bPuVdDkLUWKn2KSLGUrhgp1m3ZEauSNGx5n0cz2qVRhOIvuL7FxRL75jooefqYrITO
+         iusgdNojqs8tYVM4owqLhCaw4d4CJl2mCF51uEIiFRfXQtRbfTEeW0HecQvFPKqfrIsj
+         B5pwddchk8Ha/PoFLoMuvhzJ2c/HUZpo0PThI2E6NdVlk0pZ/ePP9RApvUqiXWd1cicZ
+         fJ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724432015; x=1725036815;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P9vuB8hri5qT5waMZfq5Z57S5cjCFURsSroxNeC6uFQ=;
+        b=GZZfSXRPZXPlIWCAJMe9w8ZjGAS750fUfmZsLtp55kMJFBkQV200uywgIRMf9rNxVG
+         l48bfS7UZaGFZx9mWUIri47uJCQtIG/yKwCXHFLaCUmzELWJbHVmi8VV7c+Rx3aeYc5Q
+         8JPJOmHOhkBpOyXIVJihjWRZnyxHdvrVeadJ44MDGsE1Fh0xPO0uWtmf+I0nIIUFoG95
+         W5HevbPup6iC7E21KrUftA3E6JXsBGu40JXsA5lnjlRXVMo6rP82LoSE8osh8s1ONFKT
+         KWDyYYGz3we1wMl7qe3e+TQ3EWNYHOYE5LJYwipS4hzUVOFJM6q4ZJVcL1ESwUgu1ltH
+         7ekQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMd6ju2/XGUWMCyeRLsad77ScCtvW8XCSZcSCPIZlctVZbljZz+52WtbpIyuILdkKZ6E26FSjWO0WuChOwRTd0E/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9NFB4YiQa13pXHIa/WjAYIG/2AsCxKFZfZNefTiYwTi76Wscf
+	Nd4M/cM+X+ww+uaJvdeyL5ffdvWA8Zw9Z5PInGJyFJrhZrXij4BJI8qfwU/p4g==
+X-Google-Smtp-Source: AGHT+IFANpB3IAM/PQyhB7gp4T27UHfGZDu+u0nU1K65J/w+iVbYyN/ffreaJCEYq84wnORw5ooKPQ==
+X-Received: by 2002:a17:902:e84f:b0:201:cdd1:b65d with SMTP id d9443c01a7336-2039a253467mr3509205ad.28.1724432015199;
+        Fri, 23 Aug 2024 09:53:35 -0700 (PDT)
+Received: from google.com (83.92.168.34.bc.googleusercontent.com. [34.168.92.83])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d613b2048fsm4349250a91.54.2024.08.23.09.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 09:53:34 -0700 (PDT)
+Date: Fri, 23 Aug 2024 16:53:29 +0000
+From: Sami Tolvanen <samitolvanen@google.com>
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Nick Alcock <nick.alcock@oracle.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Jiri Olsa <olsajiri@gmail.com>,
+	Elena Zannoni <elena.zannoni@oracle.com>
+Subject: Re: [PATCH v8 2/4] kbuild: generate offset range data for builtin
+ modules
+Message-ID: <20240823165329.GA3911831@google.com>
+References: <20240821040700.1919317-1-kris.van.hees@oracle.com>
+ <20240822181942.2626536-1-kris.van.hees@oracle.com>
+ <20240822181942.2626536-3-kris.van.hees@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240822181942.2626536-3-kris.van.hees@oracle.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi Kris,
 
-The start_kthread() and stop_thread() code was not always called with the
-interface_lock held. This means that the kthread variable could be
-unexpectedly changed causing the kthread_stop() to be called on it when it
-should not have been, leading to:
+On Thu, Aug 22, 2024 at 02:19:39PM -0400, Kris Van Hees wrote:
+> diff --git a/scripts/generate_builtin_ranges.awk b/scripts/generate_builtin_ranges.awk
+> new file mode 100755
+> index 000000000000..68df05fd3036
+> --- /dev/null
+> +++ b/scripts/generate_builtin_ranges.awk
+> @@ -0,0 +1,505 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# generate_builtin_ranges.awk: Generate address range data for builtin modules
+> +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: generate_builtin_ranges.awk modules.builtin vmlinux.map \
+> +#		vmlinux.o.map > modules.builtin.ranges
+> +#
+> +
+> +# Return the module name(s) (if any) associated with the given object.
+> +#
+> +# If we have seen this object before, return information from the cache.
+> +# Otherwise, retrieve it from the corresponding .cmd file.
+> +#
+> +function get_module_info(fn, mod, obj, s) {
+> +	if (fn in omod)
+> +		return omod[fn];
+> +
+> +	if (match(fn, /\/[^/]+$/) == 0)
+> +		return "";
+> +
+> +	obj = fn;
+> +	mod = "";
+> +	fn = substr(fn, 1, RSTART) "." substr(fn, RSTART + 1) ".cmd";
+> +	if (getline s <fn == 1) {
+> +		if (match(s, /DKBUILD_MODFILE=['"]+[^'"]+/) > 0) {
+> +			mod = substr(s, RSTART + 16, RLENGTH - 16);
+> +			gsub(/['"]/, "", mod);
+> +		}
+> +	}
 
- while true; do
-   rtla timerlat top -u -q & PID=$!;
-   sleep 5;
-   kill -INT $PID;
-   sleep 0.001;
-   kill -TERM $PID;
-   wait $PID;
-  done
+This doesn't work with built-in Rust modules because there's no
+-DKBUILD_MODFILE flag passed to the compiler. The .cmd files do have
+RUST_MODFILE set though, so presumably you could match that too?
 
-Causing the following OOPS:
-
- Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN PTI
- KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
- CPU: 5 UID: 0 PID: 885 Comm: timerlatu/5 Not tainted 6.11.0-rc4-test-00002-gbc754cc76d1b-dirty #125 a533010b71dab205ad2f507188ce8c82203b0254
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
- RIP: 0010:hrtimer_active+0x58/0x300
- Code: 48 c1 ee 03 41 54 48 01 d1 48 01 d6 55 53 48 83 ec 20 80 39 00 0f 85 30 02 00 00 49 8b 6f 30 4c 8d 75 10 4c 89 f0 48 c1 e8 03 <0f> b6 3c 10 4c 89 f0 83 e0 07 83 c0 03 40 38 f8 7c 09 40 84 ff 0f
- RSP: 0018:ffff88811d97f940 EFLAGS: 00010202
- RAX: 0000000000000002 RBX: ffff88823c6b5b28 RCX: ffffed10478d6b6b
- RDX: dffffc0000000000 RSI: ffffed10478d6b6c RDI: ffff88823c6b5b28
- RBP: 0000000000000000 R08: ffff88823c6b5b58 R09: ffff88823c6b5b60
- R10: ffff88811d97f957 R11: 0000000000000010 R12: 00000000000a801d
- R13: ffff88810d8b35d8 R14: 0000000000000010 R15: ffff88823c6b5b28
- FS:  0000000000000000(0000) GS:ffff88823c680000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000561858ad7258 CR3: 000000007729e001 CR4: 0000000000170ef0
- Call Trace:
-  <TASK>
-  ? die_addr+0x40/0xa0
-  ? exc_general_protection+0x154/0x230
-  ? asm_exc_general_protection+0x26/0x30
-  ? hrtimer_active+0x58/0x300
-  ? __pfx_mutex_lock+0x10/0x10
-  ? __pfx_locks_remove_file+0x10/0x10
-  hrtimer_cancel+0x15/0x40
-  timerlat_fd_release+0x8e/0x1f0
-  ? security_file_release+0x43/0x80
-  __fput+0x372/0xb10
-  task_work_run+0x11e/0x1f0
-  ? _raw_spin_lock+0x85/0xe0
-  ? __pfx_task_work_run+0x10/0x10
-  ? poison_slab_object+0x109/0x170
-  ? do_exit+0x7a0/0x24b0
-  do_exit+0x7bd/0x24b0
-  ? __pfx_migrate_enable+0x10/0x10
-  ? __pfx_do_exit+0x10/0x10
-  ? __pfx_read_tsc+0x10/0x10
-  ? ktime_get+0x64/0x140
-  ? _raw_spin_lock_irq+0x86/0xe0
-  do_group_exit+0xb0/0x220
-  get_signal+0x17ba/0x1b50
-  ? vfs_read+0x179/0xa40
-  ? timerlat_fd_read+0x30b/0x9d0
-  ? __pfx_get_signal+0x10/0x10
-  ? __pfx_timerlat_fd_read+0x10/0x10
-  arch_do_signal_or_restart+0x8c/0x570
-  ? __pfx_arch_do_signal_or_restart+0x10/0x10
-  ? vfs_read+0x179/0xa40
-  ? ksys_read+0xfe/0x1d0
-  ? __pfx_ksys_read+0x10/0x10
-  syscall_exit_to_user_mode+0xbc/0x130
-  do_syscall_64+0x74/0x110
-  ? __pfx___rseq_handle_notify_resume+0x10/0x10
-  ? __pfx_ksys_read+0x10/0x10
-  ? fpregs_restore_userregs+0xdb/0x1e0
-  ? fpregs_restore_userregs+0xdb/0x1e0
-  ? syscall_exit_to_user_mode+0x116/0x130
-  ? do_syscall_64+0x74/0x110
-  ? do_syscall_64+0x74/0x110
-  ? do_syscall_64+0x74/0x110
-  entry_SYSCALL_64_after_hwframe+0x71/0x79
- RIP: 0033:0x7ff0070eca9c
- Code: Unable to access opcode bytes at 0x7ff0070eca72.
- RSP: 002b:00007ff006dff8c0 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
- RAX: 0000000000000000 RBX: 0000000000000005 RCX: 00007ff0070eca9c
- RDX: 0000000000000400 RSI: 00007ff006dff9a0 RDI: 0000000000000003
- RBP: 00007ff006dffde0 R08: 0000000000000000 R09: 00007ff000000ba0
- R10: 00007ff007004b08 R11: 0000000000000246 R12: 0000000000000003
- R13: 00007ff006dff9a0 R14: 0000000000000007 R15: 0000000000000008
-  </TASK>
- Modules linked in: snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hwdep snd_hda_core
- ---[ end trace 0000000000000000 ]---
-
-This is because it would mistakenly call kthread_stop() on a user space
-thread making it "exit" before it actually exits.
-
-Add the proper locking around the calls to start_kthread() and
-stop_kthread().
-
-Link: https://lore.kernel.org/all/CAP4=nvRTH5VxSO3VSDCospWcZagawTMs0L9J_kcKdGSkn7xT_Q@mail.gmail.com/
-
-This was debugged by using the persistent ring buffer:
-
-Link: https://lore.kernel.org/all/20240823013902.135036960@goodmis.org/
-
-Cc: stable@vger.kernel.org
-Fixes: c8895e271f799 ("trace/osnoise: Support hotplug operations")
-Reported-by: Tomas Glozar <tglozar@redhat.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_osnoise.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 66a871553d4a..97864f1bb227 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2106,7 +2106,9 @@ static int osnoise_cpu_init(unsigned int cpu)
-  */
- static int osnoise_cpu_die(unsigned int cpu)
- {
-+	mutex_lock(&interface_lock);
- 	stop_kthread(cpu);
-+	mutex_unlock(&interface_lock);
- 	return 0;
- }
- 
-@@ -2239,8 +2241,11 @@ static ssize_t osnoise_options_write(struct file *filp, const char __user *ubuf,
- 	 */
- 	mutex_lock(&trace_types_lock);
- 	running = osnoise_has_registered_instances();
--	if (running)
-+	if (running) {
-+		mutex_lock(&interface_lock);
- 		stop_per_cpu_kthreads();
-+		mutex_unlock(&interface_lock);
-+	}
- 
- 	mutex_lock(&interface_lock);
- 	/*
-@@ -2355,8 +2360,11 @@ osnoise_cpus_write(struct file *filp, const char __user *ubuf, size_t count,
- 	 */
- 	mutex_lock(&trace_types_lock);
- 	running = osnoise_has_registered_instances();
--	if (running)
-+	if (running) {
-+		mutex_lock(&interface_lock);
- 		stop_per_cpu_kthreads();
-+		mutex_unlock(&interface_lock);
-+	}
- 
- 	mutex_lock(&interface_lock);
- 	/*
-@@ -2951,7 +2959,9 @@ static void osnoise_workload_stop(void)
- 	 */
- 	barrier();
- 
-+	mutex_lock(&interface_lock);
- 	stop_per_cpu_kthreads();
-+	mutex_unlock(&interface_lock);
- 
- 	osnoise_unhook_events();
- }
--- 
-2.43.0
-
+Sami
