@@ -1,208 +1,94 @@
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2089.outbound.protection.outlook.com [40.92.63.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570182C80;
-	Sat, 24 Aug 2024 05:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724478592; cv=fail; b=qDMLBpAzQrq3wQyQWOGPRsi5fnyewWH/A6Xl0hE//BMkqIQxYkiQcraYRjXyWPwV91i3BqlDGXQ3je2Ka9oJ7mogX4DyjY5zz4hYiSVvBGd6ArbNWwIE1aXs+PknDpQEgiAYLH7L9uJ2jziW8aDvN0Ot8JBCCRpKTWGbAbyd1js=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724478592; c=relaxed/simple;
-	bh=48m3fxnQ23xBPxX+h+xGNs0BMtapxFWVivKCVilIwnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j3x5V6m66t2kOhd8y+JxgbWJDstU4VFiP4BjRDlUqHXsAIPbIrbMLFyRmS40WYSj0MuZ6MOmMD4RE0mw6A6m9qJOqY1Pgey3T+0RNJSxqeOaaz/2YpcWu1A/GET0RObeXgPv+4Hfo3hc18HDzoXQnSkfhO2h9d+1WPYjXtoLpOw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=kHz/MUEc; arc=fail smtp.client-ip=40.92.63.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDA02BAE5;
+	Sat, 24 Aug 2024 16:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724517879; cv=none; b=i0Mm7WYPXvf/GUvSNiEW5keypEg70miRYw7eWuOl1S3NJ356IdLp5tFddU0niJESEOwhF+HHRrsD+ciHaUszzTudAlOUSo+XRQ0EpPOSy5Z0ASrJGXJbG4hp2ISOL3OyZ5D7NioY/SbAfJATcnjh09XkWBoWN3vlF8wBB0MMiNI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724517879; c=relaxed/simple;
+	bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BCouxsxcXFx4p4QR4vjz+JoTbHpL63JUUL8uZoaXpgq5BvDPIdQYypeXhYfbpFhSCB+vAYYjzMzHpCc/yYoM5WDFCUMs3Bn5YaEIoGjpvQK7JbOFrt2J1M/nrvv/maYvA3vu3Am5/tJ3SWqom2Alz8LJS2MCSxX5QJVi2zc7Nyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TL7Ic8nc; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="kHz/MUEc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KmusglfmwGEMREMElK/1TyN4Mk/k0ECKX0d1mSqmSG1+1cdz4GXmJ5EbcDsbmBq2q9uwkREAlEkVCyNiXJ5fq7DIavQO9a4p+wgO5SjGwQ8CEeXRl47cwsUtcMZ3+TKWdHNq18issc+z2bp6x+OSIFsHO/ForiOXUGcJWqW/WysHZl0whN6FlFK+Kjdtr5CRn4h9E+pNLn/fKufV0DZshVmTICI9i+/lllXn8tL3/o963sowHDwqz2IJ2X4AViLF84SDKDlnASbkdRVy7cPqDAaZW/HhoqdkCXwqX9IfcmAoUktMk82cP1KwuGkkhIKo+gYFOPznmI56dTF8ZBDE8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U68NKtVVolN0tivb3sBHm6UKL9ZEz5OG9UClsRI8aIo=;
- b=SCC+qkTYFmK36cErK/PowGfnFuO839MmIIdza/wHMU2BWIitsDnoSKu8TwbeJpUSj3JFghlmczOrmkoVYY2s3dmXwR8/s0oHXaB1jSzcf/1iLLgAjlufcz28XUjcWN47liczE5MJXbgRdfQ0pEIGnKcSP24DXtlVX6uRTpE9lN7+eZS0B0XZGjGCQkCS1oaM4P+/BcbfFaMD5/VfCTV/cWWwEnxJOWI4iivn8NH3IXgAijD5xQlAHCgtRjViRuMK0w/Z+lj9VV0bBQoEQDDwWP581MXr2u670SEixotvRl5W3znwK3JhJ3HmwoHU+1G1VtQTSPH+AmDvdQOk49l78g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U68NKtVVolN0tivb3sBHm6UKL9ZEz5OG9UClsRI8aIo=;
- b=kHz/MUEciHXXvu+C5t1xM2yxVrKuVDSN2h+ePbTgbJuM256+wwqyTyvkHhASSH+G7CQKqhxDywZQlfM09mG8DDmG0U3LChEN6Rpv3wnOCZWIkAnxisg4kumsYGa6SyuMEyFJFIu6Do7Ss46404+EqXaAflv02Tgq4FHKGiaE75YyPmsNOIKpP3zTWYHTFYJMX/LNB6eV2dPuJgGEUHOXqsn4fT1R70uMexcXZSj037sdo6vzid92RaWOPVoloLVyFgCzTbAd9wTK0a6Vkj0pZugko/ylvUtPMQiazeJ3kLAf+aBPrd0gmHCc0N6o1/v0VCNxji0Ca+kD/hhCh1uTJQ==
-Received: from ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM (2603:10c6:220:22a::20)
- by SY8P300MB0760.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:298::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.18; Sat, 24 Aug
- 2024 05:49:44 +0000
-Received: from ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- ([fe80::f5dd:ff41:ef28:710e]) by ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- ([fe80::f5dd:ff41:ef28:710e%5]) with mapi id 15.20.7897.021; Sat, 24 Aug 2024
- 05:49:44 +0000
-From: Tianyi Liu <i.pear@outlook.com>
-To: andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org
-Cc: ajor@meta.com,
-	albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com,
-	i.pear@outlook.com,
-	jolsa@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Date: Sat, 24 Aug 2024 13:49:26 +0800
-Message-ID:
- <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
-References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [D4TL4rciRF9/aeq4vvVEzufTMMQtPGDFb5pwChQ7dO2XN9RlovbQDQ==]
-X-ClientProxiedBy: SI1PR02CA0012.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::8) To ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:220:22a::20)
-X-Microsoft-Original-Message-ID: <20240824054926.24341-1-i.pear@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL7Ic8nc"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2d445c87788so542105a91.2;
+        Sat, 24 Aug 2024 09:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724517877; x=1725122677; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
+        b=TL7Ic8nc60QnJOIKki9uhMUBFaTdLR1rSqTFU5I3JZEM9z67BmAPAcNMDRFDAwPoHs
+         RhrVS/8mKXVCrQ+Z9IQ9wnUk7Xad/XIe/dIfKwIlp4R4dUXkSHpASjwLiD01LUmQXIOe
+         oDIF58oQpMl+riS48V3emQtaSY6A/Ky9vXe6XWKt6ww0P50m7UJ6JHHdG9NN0INvxEnG
+         Lz/XQ9mCi1xlpgy5Gn9tAWs2bjUeN/bRZr9V2UJMvFaSbiEiWInC/+Kk+DDeXSUlKhl5
+         bDhOm5SwmvmmUrJtXVn8OSzKV46MvZh/ne5SKo0zXxNFESvjEWnIBfkSlnMWbx4wXC6V
+         GgKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724517877; x=1725122677;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
+        b=w+A4BGwzo1mHuH06m5kKrQjNDTtEd8tNHfpAULu6EF5i2VfRrCw1sdM1Q4o/PD9XWD
+         +V+9t3b+41S2TH3KTF8OJpPzklhj/uOK34UIQtjxqoj6/5ifkvLnrfG74PgwksE72t9o
+         8GCF6W6D/1hibr3WVdx98xdkNMgX7bkHRBq/YNfd6kOAID4B77T+mIuRLGpzUPIsPkdi
+         gEvPMaHHSY4qdJF1EkNE+a1I9CnyNmG7NudOM14qhw6ktiKa/SZrMDyUO7woEcimFbIf
+         GWS6E5r8ewFmWBOfaHOdHz3JzBr6hY3hR3ktGtuKK+vfrtklcMF20CEDx75LASb1qgN6
+         5nPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbp/a11Lt6z6pBIkDeMFuKCmVexztDBXgB2iVH+ySwdWvRi9FjKYf+kGn3sUWJIiFmIF8bRlAYzS6T2IUQ@vger.kernel.org, AJvYcCWMPr7SL65ywSAKjlIQLKN5cLobQB5s9H8F7y0PgmCXiLIYzS1KRtafjy8FaTZDJVKuRD0oDUY2NcMeJd4NAA==@vger.kernel.org, AJvYcCXAd9FsuzHY7qEYY9+56Mm0P3aOlcQbuUmwyUep+NYTQyOp43SMhq4ufZH0LWtTbGzoVb0iAmngEJVmAN62i49lhxc3@vger.kernel.org, AJvYcCXoI2sKgvBLvDlY4AduQ5rlxLLh2bb/TGOGmH1ZH4GopU63Vum2yJ1SrB+AlL/6bKFZHDuVtHAWEGTRjp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9pS6jJ9++57gSX4IGKdwDpHb5TwtmcuU5V3LjeSkw9I+alKLY
+	C87s/lRcYzZH0ygli+aZ0f1AuzmK1i1u3c9hCilGeMfH6zak4lSqt5M2J7+DTD0y1J3UPD7OLSz
+	2QeS5I4byjVzdjyeP9Of70GOIYk0=
+X-Google-Smtp-Source: AGHT+IEl7BAFxfHi+EpkQ9x8ZnTnRaIB9YCOcUQ4mLNHiby9rEr662m+9/mPWrhYU+1Uom3efmCrMPDR6ERV54CtnQg=
+X-Received: by 2002:a17:90b:1b12:b0:2c4:cd15:3e4b with SMTP id
+ 98e67ed59e1d1-2d646d73d60mr3927811a91.4.1724517877442; Sat, 24 Aug 2024
+ 09:44:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ME0P300MB0416:EE_|SY8P300MB0760:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bcf30ab-d34a-46c1-6f29-08dcc4008e33
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|19110799003|8060799006|5072599009|15080799006|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	CvBkkQH2jIIYBbqik5C2NWHGBmhbpZUWv6DaOXptjxMv+fbtWmUUIlFw7IG+z5XRQ/UACOsQ2WuDZFCdqqc0SOkds+s0oXJCY0G5Ezcl2zsKrHHo9FmNd1Gh18/JIx+nmoTFmpo4/W4aSWKSjtoVTGFHgwJpqQQLIoHoe6YzFBLXurtbRQygp7XC3ZPg9b/nd4JF+rI7BgKLxExj527lAvbMeKwOedfwJWdwHbU+zUIGdG7tSFhP0xntjaaMCVxyO/0Av5OlmWsdl7tqmcZXR1pg8iQZRbKmGzN3ZHgavsuoWb0ttTviU1e8LgOeHcBfxhz8B5Enu/8BaHus9mbfwWV4ai0gX9i6Y43bmNQyyEYRxXJR+kmHNK50Qm2Tf5nUotNWOmM5XFIfYgpFNBzi4KOqnBhMxTTs+Umpul/uCVMr+JzmIBiTdc2MiJBtiwB4r9GG5mqVHcfLNNONFYA0gvOKlS1yEy55ElgAe4EOh8K/qrKfzE1bdaR6NawamfQ5RPxA3+cSKjqGGxcCv4JgFtYsmGGwIshBBNT1/FkFVL7AK2gh4/3Yahsez1N3GNsd4c8+OFt07SqLkJ5WWbMVxT8w6D8B0DSn9QCUxK0Q4mxnLDnGK4pbEtlV8vyPcv1zN39QT6FaBuwTefVtehuBWojGUFD2b1WDZ49ob6WX3lnCPVaV/6sQA+nOQiGf2YjIXklkSNnTDKjvC/fKt/yg4Es7TedmNIbPrDlTmW7Zh94=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ytw820brPEdTNExgqBoH4rcJY8GQouIJRoDDN3Wb6cEoLa66nwYFQ0IdkgRi?=
- =?us-ascii?Q?nXDVDQw9TOLV6Gw4mTFXZDGMezSReSc+vquwHV+EOrJZgWdKUvaVqvll/CD7?=
- =?us-ascii?Q?Ms8SCn/jNxcnfQEqT1niER7JyhmQsmo4KUF+hccpN1cRYsGD0FnuRiokpXy0?=
- =?us-ascii?Q?5Hxz5E5dKEJmRHbHx82psUBK+P9+LBt5Ia2+gwGf3WXn2ZHpsTiIv0Y1oo0t?=
- =?us-ascii?Q?NqStQnIzqP0vokhdeSjdKjjGNae4IRQufiLI5x+VsIOH1tNVMQq5FGtMQl4v?=
- =?us-ascii?Q?lDagwcDypAChYLSfwNBZdQjtXRBnik++DanVLDFJGL9p06kuYQHaE0RxJ+iv?=
- =?us-ascii?Q?wH8FAS1BCz5P/hhKSiEfDvgKWCrhA4FApASblua7ulNEuLT8g0TOVc13FdDk?=
- =?us-ascii?Q?Fn2iTLJVIUQFZpHPt7niME+mFkZgYznQ2l9KiBCirGXNx3Ypd7wtL2Px4ZMG?=
- =?us-ascii?Q?d0IhoXI2Daxap8Rzl4PmngJ0qrFGs10v/ZjAno/xGg/fI3JzHA5ZbHyJljei?=
- =?us-ascii?Q?tz2rSZrHF3yQZIyNMygW1gN9tN+4dOkThJLeLqmzljUl+bTw4IsBTjb4RwFe?=
- =?us-ascii?Q?XpIy9rosCYyl3jWsAtJ8jCosJoVTbnW0BIEU2RbUNsnHgMLLTpWwO1BDn6kt?=
- =?us-ascii?Q?+ovod12AgPj7zAr6GdDzH8uEw5gP813DW/kSRObPTBResSQWD4oCODEoerEM?=
- =?us-ascii?Q?k2pfQLspNhFbers1Hkp18be7MIGxrsXIdgKip5cR9EL5/9Y21xkbONIDU9H8?=
- =?us-ascii?Q?qLHc2ScMzLu8/jRBwkx5RYSka5zxvcc8nkQd2C/G1OWn7W6xGZ1/4bqPvbUP?=
- =?us-ascii?Q?Dtgswl2j4jhsOTfbh686VqTuksh4YV+CCiBVXmWL7e6AtcMcy+hUrY+nKbpd?=
- =?us-ascii?Q?n0pjzkehLwpVcN0fZvir2i3+2vELKeT2H8NE8bZh1gcZfM0rV5Zx9CnX0K6v?=
- =?us-ascii?Q?gtpduyiwX0wvk0u/NiaMNm0Vnm2N2/xqJGzTd/5vBI4vHHwqp3GXVhddp6lJ?=
- =?us-ascii?Q?eIGwTvfnSIjMSbtizXsaB+arwjf2JF41RBTkR/l3s/cUGcyHJ6is+DP5UJks?=
- =?us-ascii?Q?2al90Um4rouZSXI/cc9AqvX6y8tPmgIXNBhK9zCwHBVV6AwP3nHThvr06bVp?=
- =?us-ascii?Q?VRY5tF6SyXN/9KtAjlR/VNhC3JkFWrr4nkaCj5o422ENOOwvT+PYElLKi7i/?=
- =?us-ascii?Q?uM8QFYqT2nVCEjLQA23IKMoSxDY8T88XVLBSihSrD5PMZXloW2NkE78xtlJw?=
- =?us-ascii?Q?j+TS/dRTkczi+3pxZrGLvvYhw2TLIrDAF/PKDrOaQQ=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bcf30ab-d34a-46c1-6f29-08dcc4008e33
-X-MS-Exchange-CrossTenant-AuthSource: ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2024 05:49:44.7225
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY8P300MB0760
+References: <20240821040700.1919317-1-kris.van.hees@oracle.com>
+ <20240822181942.2626536-1-kris.van.hees@oracle.com> <20240822181942.2626536-3-kris.van.hees@oracle.com>
+ <20240823165329.GA3911831@google.com> <ZsjBfjAuC5t/2Cex@oracle.com> <CABCJKucamgTpEhU5E=dL3tNc84yzwzFh7uNW-arhN-qDm-3nMw@mail.gmail.com>
+In-Reply-To: <CABCJKucamgTpEhU5E=dL3tNc84yzwzFh7uNW-arhN-qDm-3nMw@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 24 Aug 2024 18:44:24 +0200
+Message-ID: <CANiq72=PNDOYo8kwscy0Sup6g3qfffFsSJMssJh_jGb3D4JzcA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/4] kbuild: generate offset range data for builtin modules
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: Kris Van Hees <kris.van.hees@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Masami and Andrii:
+On Fri, Aug 23, 2024 at 7:24=E2=80=AFPM Sami Tolvanen <samitolvanen@google.=
+com> wrote:
+>
+> I assume they wanted to avoid conflicts between Rust-specific
+> environment variables and existing Kbuild variables. Note that
+> KBUILD_MODFILE is also double quoted for the C preprocessor, which
+> isn't needed for Rust. Miguel, do you remember if there's another
+> reason for the different variable name?
 
-I would like to share more information and ideas, but I'm possibly wrong.
+No, I don't recall another reason -- I think you are right, they did
+not carry (exactly) the same contents, and thus the different name.
 
-> > U(ret)probes are designed to be filterable using the PID, which is the
-> > second parameter in the perf_event_open syscall. Currently, uprobe works
-> > well with the filtering, but uretprobe is not affected by it. This often
-> > leads to users being disturbed by events from uninterested processes while
-> > using uretprobe.
-> >
-> > We found that the filter function was not invoked when uretprobe was
-> > initially implemented, and this has been existing for ten years. We have
-> > tested the patch under our workload, binding eBPF programs to uretprobe
-> > tracepoints, and confirmed that it resolved our problem.
-> 
-> Is this eBPF related problem? It seems only perf record is also affected.
-> Let me try.
+So I think it can be merged/changed into something else if needed.
 
-I guess it should be a general issue and is not specific to BPF, because
-the BPF handler is only a event "consumer".
-
-> 
-> And trace one of them;
-> 
-> $ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
-> 
-
-A key trigger here is that the two tracer instances (either `bpftrace` or
-`perf record`) must be running *simultaneously*. One of them should use
-PID1 as filter, while the other uses PID2.
-
-I think the reason why only tracing PID1 fails to trigger the bug is that,
-uprobe uses some form of copy-on-write mechanism to create independent
-.text pages for the traced process. For example, if only PID1 is being
-traced, then only the libc.so used by PID1 is patched. Other processes
-will continue to use the unpatched original libc.so, so the event isn't
-triggered. In my reproduction example, the two bpftrace instances must be
-running at the same moment.
-
-> This is a bit confusing, because even if the kernel-side uretprobe
-> handler doesn't do the filtering by itself, uprobe subsystem shouldn't
-> install breakpoints on processes which don't have uretprobe requested
-> for (unless I'm missing something, of course).
-
-There're two tracers, one attached to PID1, and the other attached
-to PID2, as described above.
-
-> It still needs to be fixed like you do in your patch, though. Even
-> more, we probably need a similar UPROBE_HANDLER_REMOVE handling in
-> handle_uretprobe_chain() to clean up breakpoint for processes which
-> don't have uretprobe attached anymore (but I think that's a separate
-> follow up).
-
-Agreed, the implementation of uretprobe should be almost the same as
-uprobe, but it seems uretprobe was ignored in previous modifications.
-
-> $ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
-> 
-> And dump the data;
-> 
-> $ sudo ~/bin/perf script
->       malloc-run   93928 [004] 351736.730649:       raw_syscalls:sys_exit: NR 230 = 0
->       malloc-run   93928 [004] 351736.730694: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
->       malloc-run   93928 [004] 351736.730696:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
->       malloc-run   93928 [004] 351738.730857:       raw_syscalls:sys_exit: NR 230 = 0
->       malloc-run   93928 [004] 351738.730869: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
->       malloc-run   93928 [004] 351738.730883:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
->       malloc-run   93928 [004] 351740.731110:       raw_syscalls:sys_exit: NR 230 = 0
->       malloc-run   93928 [004] 351740.731125: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
->       malloc-run   93928 [004] 351740.731127:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
-> 
-> Hmm, it seems to trace one pid data. (without this change)
-> If this changes eBPF behavior, I would like to involve eBPF people to ask
-> this is OK. As far as from the viewpoint of perf tool, current code works.
-
-I tried this and also couldn't reproduce the bug. Even when running two
-perf instances simultaneously, `perf record` (or perhaps `perf trace` for
-convenience) only outputs events from the corresponding PID as expected.
-I initially suspected that perf might be applying another filter in user
-space, but that doesn't seem to be the case. I'll need to conduct further
-debugging, which might take some time.
-
-I also tried combining bpftrace with `perf trace`. Specifically, I used
-`perf trace` for PID1 and bpftrace for PID2. `perf trace` still only
-outputs events from PID1, but bpftrace prints events from both PIDs.
-I'm not yet sure why this is happening.
-
-Thanks so much,
+Cheers,
+Miguel
