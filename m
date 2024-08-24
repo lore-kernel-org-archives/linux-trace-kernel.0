@@ -1,94 +1,172 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDA02BAE5;
-	Sat, 24 Aug 2024 16:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A128481B7;
+	Sat, 24 Aug 2024 17:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724517879; cv=none; b=i0Mm7WYPXvf/GUvSNiEW5keypEg70miRYw7eWuOl1S3NJ356IdLp5tFddU0niJESEOwhF+HHRrsD+ciHaUszzTudAlOUSo+XRQ0EpPOSy5Z0ASrJGXJbG4hp2ISOL3OyZ5D7NioY/SbAfJATcnjh09XkWBoWN3vlF8wBB0MMiNI=
+	t=1724520480; cv=none; b=G+aoqGgUe6qYItThzjcTPw/hsgmXo+PuoD/bVj+VaZKUc8YPNVGCpNny6gAdWoQKafMB/ULc2ziRU4y4HsbLwcz2yMMm0BbSJxw0Ik8q8bdaj2THCWl4asszc01t5yuS+HZqhK4puvP10I+XiLs2AT1qjnSNmx4QOj3knI9AQs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724517879; c=relaxed/simple;
-	bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BCouxsxcXFx4p4QR4vjz+JoTbHpL63JUUL8uZoaXpgq5BvDPIdQYypeXhYfbpFhSCB+vAYYjzMzHpCc/yYoM5WDFCUMs3Bn5YaEIoGjpvQK7JbOFrt2J1M/nrvv/maYvA3vu3Am5/tJ3SWqom2Alz8LJS2MCSxX5QJVi2zc7Nyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TL7Ic8nc; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724520480; c=relaxed/simple;
+	bh=z1YdVSKrD34znpQqOu0Lzz19rkv0dORD6XWSixbGLHA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HUu1t+HesVqaYlrV553n7n00qFgp/NXGxE/xOFrTQ5pU/Egavazorq+QuQrmKq5d7n9oGQIuh2IYZJKiu3DO+cpDemE2nfop5wCFtUkb2st1D0RwDksLuWi9wmc2/7rFP8ObRT8JyHuGh8xqQ3W0yakBGkxGoUGp9oHjrH88Nrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV45Nob8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TL7Ic8nc"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2d445c87788so542105a91.2;
-        Sat, 24 Aug 2024 09:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724517877; x=1725122677; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
-        b=TL7Ic8nc60QnJOIKki9uhMUBFaTdLR1rSqTFU5I3JZEM9z67BmAPAcNMDRFDAwPoHs
-         RhrVS/8mKXVCrQ+Z9IQ9wnUk7Xad/XIe/dIfKwIlp4R4dUXkSHpASjwLiD01LUmQXIOe
-         oDIF58oQpMl+riS48V3emQtaSY6A/Ky9vXe6XWKt6ww0P50m7UJ6JHHdG9NN0INvxEnG
-         Lz/XQ9mCi1xlpgy5Gn9tAWs2bjUeN/bRZr9V2UJMvFaSbiEiWInC/+Kk+DDeXSUlKhl5
-         bDhOm5SwmvmmUrJtXVn8OSzKV46MvZh/ne5SKo0zXxNFESvjEWnIBfkSlnMWbx4wXC6V
-         GgKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724517877; x=1725122677;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5VckT6C4lSjjpO3URAl6WTLJOhszXgeGfBoagM2Mtus=;
-        b=w+A4BGwzo1mHuH06m5kKrQjNDTtEd8tNHfpAULu6EF5i2VfRrCw1sdM1Q4o/PD9XWD
-         +V+9t3b+41S2TH3KTF8OJpPzklhj/uOK34UIQtjxqoj6/5ifkvLnrfG74PgwksE72t9o
-         8GCF6W6D/1hibr3WVdx98xdkNMgX7bkHRBq/YNfd6kOAID4B77T+mIuRLGpzUPIsPkdi
-         gEvPMaHHSY4qdJF1EkNE+a1I9CnyNmG7NudOM14qhw6ktiKa/SZrMDyUO7woEcimFbIf
-         GWS6E5r8ewFmWBOfaHOdHz3JzBr6hY3hR3ktGtuKK+vfrtklcMF20CEDx75LASb1qgN6
-         5nPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbp/a11Lt6z6pBIkDeMFuKCmVexztDBXgB2iVH+ySwdWvRi9FjKYf+kGn3sUWJIiFmIF8bRlAYzS6T2IUQ@vger.kernel.org, AJvYcCWMPr7SL65ywSAKjlIQLKN5cLobQB5s9H8F7y0PgmCXiLIYzS1KRtafjy8FaTZDJVKuRD0oDUY2NcMeJd4NAA==@vger.kernel.org, AJvYcCXAd9FsuzHY7qEYY9+56Mm0P3aOlcQbuUmwyUep+NYTQyOp43SMhq4ufZH0LWtTbGzoVb0iAmngEJVmAN62i49lhxc3@vger.kernel.org, AJvYcCXoI2sKgvBLvDlY4AduQ5rlxLLh2bb/TGOGmH1ZH4GopU63Vum2yJ1SrB+AlL/6bKFZHDuVtHAWEGTRjp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9pS6jJ9++57gSX4IGKdwDpHb5TwtmcuU5V3LjeSkw9I+alKLY
-	C87s/lRcYzZH0ygli+aZ0f1AuzmK1i1u3c9hCilGeMfH6zak4lSqt5M2J7+DTD0y1J3UPD7OLSz
-	2QeS5I4byjVzdjyeP9Of70GOIYk0=
-X-Google-Smtp-Source: AGHT+IEl7BAFxfHi+EpkQ9x8ZnTnRaIB9YCOcUQ4mLNHiby9rEr662m+9/mPWrhYU+1Uom3efmCrMPDR6ERV54CtnQg=
-X-Received: by 2002:a17:90b:1b12:b0:2c4:cd15:3e4b with SMTP id
- 98e67ed59e1d1-2d646d73d60mr3927811a91.4.1724517877442; Sat, 24 Aug 2024
- 09:44:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV45Nob8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F7EC32781;
+	Sat, 24 Aug 2024 17:27:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724520480;
+	bh=z1YdVSKrD34znpQqOu0Lzz19rkv0dORD6XWSixbGLHA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WV45Nob8Nn3JEkB6AzyKgzsEivsoOvZEfsGsjAw4utWvzySIZnx/AAO3hxG5dYIwR
+	 6Y5JZnHxXxJ3OMTnuHDsg5rEpGukvZOpQbA+GRFP98YXJKXExqG891V76agH3CJCzc
+	 6JS2Dm8xTIygSyGdNzi0b8mKg1bVIvwYkW362SjzCYbPotircYWjERZwk+Gecbry4o
+	 +3eS4MnoxlTP/D3I4jkh5TFlTlWiY80Zd5bDuGgKcKQADcw9hoaTFvsa468m12PTgZ
+	 liKlFbqrA7AcFb/h0kKimZOO6QMFoevSOqJQsF0TD2h9veOZNp8qBAUNtqJB53roA+
+	 keIr80EiQkNtw==
+Date: Sun, 25 Aug 2024 02:27:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Tianyi Liu <i.pear@outlook.com>
+Cc: andrii.nakryiko@gmail.com, ajor@meta.com,
+ albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
+ flaniel@linux.microsoft.com, jolsa@kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-Id: <20240825022755.a430c0969a1e784adc444a4f@kernel.org>
+In-Reply-To: <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+	<ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240821040700.1919317-1-kris.van.hees@oracle.com>
- <20240822181942.2626536-1-kris.van.hees@oracle.com> <20240822181942.2626536-3-kris.van.hees@oracle.com>
- <20240823165329.GA3911831@google.com> <ZsjBfjAuC5t/2Cex@oracle.com> <CABCJKucamgTpEhU5E=dL3tNc84yzwzFh7uNW-arhN-qDm-3nMw@mail.gmail.com>
-In-Reply-To: <CABCJKucamgTpEhU5E=dL3tNc84yzwzFh7uNW-arhN-qDm-3nMw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 24 Aug 2024 18:44:24 +0200
-Message-ID: <CANiq72=PNDOYo8kwscy0Sup6g3qfffFsSJMssJh_jGb3D4JzcA@mail.gmail.com>
-Subject: Re: [PATCH v8 2/4] kbuild: generate offset range data for builtin modules
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: Kris Van Hees <kris.van.hees@oracle.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 23, 2024 at 7:24=E2=80=AFPM Sami Tolvanen <samitolvanen@google.=
-com> wrote:
->
-> I assume they wanted to avoid conflicts between Rust-specific
-> environment variables and existing Kbuild variables. Note that
-> KBUILD_MODFILE is also double quoted for the C preprocessor, which
-> isn't needed for Rust. Miguel, do you remember if there's another
-> reason for the different variable name?
+On Sat, 24 Aug 2024 13:49:26 +0800
+Tianyi Liu <i.pear@outlook.com> wrote:
 
-No, I don't recall another reason -- I think you are right, they did
-not carry (exactly) the same contents, and thus the different name.
+> Hi Masami and Andrii:
+> 
+> I would like to share more information and ideas, but I'm possibly wrong.
+> 
+> > > U(ret)probes are designed to be filterable using the PID, which is the
+> > > second parameter in the perf_event_open syscall. Currently, uprobe works
+> > > well with the filtering, but uretprobe is not affected by it. This often
+> > > leads to users being disturbed by events from uninterested processes while
+> > > using uretprobe.
+> > >
+> > > We found that the filter function was not invoked when uretprobe was
+> > > initially implemented, and this has been existing for ten years. We have
+> > > tested the patch under our workload, binding eBPF programs to uretprobe
+> > > tracepoints, and confirmed that it resolved our problem.
+> > 
+> > Is this eBPF related problem? It seems only perf record is also affected.
+> > Let me try.
+> 
+> I guess it should be a general issue and is not specific to BPF, because
+> the BPF handler is only a event "consumer".
+> 
+> > 
+> > And trace one of them;
+> > 
+> > $ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
+> > 
+> 
+> A key trigger here is that the two tracer instances (either `bpftrace` or
+> `perf record`) must be running *simultaneously*. One of them should use
+> PID1 as filter, while the other uses PID2.
 
-So I think it can be merged/changed into something else if needed.
+Even if I run `perf trace record` simultaneously, it filters the event
+correctly. I just ran;
 
-Cheers,
-Miguel
+sudo ~/bin/perf trace record -e probe_malloc:malloc__return -p 93927 -o trace1.data -- sleep 50 &
+sudo ~/bin/perf trace record -e probe_malloc:malloc__return -p 93928 -o trace2.data -- sleep 50 &
+
+And dump trace1.data and trace2.data by `perf script`.
+
+> 
+> I think the reason why only tracing PID1 fails to trigger the bug is that,
+> uprobe uses some form of copy-on-write mechanism to create independent
+> .text pages for the traced process. For example, if only PID1 is being
+> traced, then only the libc.so used by PID1 is patched. Other processes
+> will continue to use the unpatched original libc.so, so the event isn't
+> triggered. In my reproduction example, the two bpftrace instances must be
+> running at the same moment.
+> 
+> > This is a bit confusing, because even if the kernel-side uretprobe
+> > handler doesn't do the filtering by itself, uprobe subsystem shouldn't
+> > install breakpoints on processes which don't have uretprobe requested
+> > for (unless I'm missing something, of course).
+> 
+> There're two tracers, one attached to PID1, and the other attached
+> to PID2, as described above.
+
+Yeah, but perf works fine. Maybe perf only enables its ring buffer for
+the specific process and read from the specific ring buffer (Note, perf
+has per-process ring buffer IIRC.) How does the bpftracer implement it?
+
+> 
+> > It still needs to be fixed like you do in your patch, though. Even
+> > more, we probably need a similar UPROBE_HANDLER_REMOVE handling in
+> > handle_uretprobe_chain() to clean up breakpoint for processes which
+> > don't have uretprobe attached anymore (but I think that's a separate
+> > follow up).
+> 
+> Agreed, the implementation of uretprobe should be almost the same as
+> uprobe, but it seems uretprobe was ignored in previous modifications.
+
+OK, I just have a confirmation from BPF people, because I could not
+reproduce the issue with perf tool.
+
+> 
+> > $ sudo ~/bin/perf trace record -e probe_malloc:malloc__return  -p 93928
+> > ^C[ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
+> > 
+> > And dump the data;
+> > 
+> > $ sudo ~/bin/perf script
+> >       malloc-run   93928 [004] 351736.730649:       raw_syscalls:sys_exit: NR 230 = 0
+> >       malloc-run   93928 [004] 351736.730694: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+> >       malloc-run   93928 [004] 351736.730696:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+> >       malloc-run   93928 [004] 351738.730857:       raw_syscalls:sys_exit: NR 230 = 0
+> >       malloc-run   93928 [004] 351738.730869: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+> >       malloc-run   93928 [004] 351738.730883:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+> >       malloc-run   93928 [004] 351740.731110:       raw_syscalls:sys_exit: NR 230 = 0
+> >       malloc-run   93928 [004] 351740.731125: probe_malloc:malloc__return: (561cfdeb30c0 <- 561cfdeb3204)
+> >       malloc-run   93928 [004] 351740.731127:      raw_syscalls:sys_enter: NR 230 (0, 0, 7ffc7a5c5380, 7ffc7a5c5380, 561d2940f6b0,
+> > 
+> > Hmm, it seems to trace one pid data. (without this change)
+> > If this changes eBPF behavior, I would like to involve eBPF people to ask
+> > this is OK. As far as from the viewpoint of perf tool, current code works.
+> 
+> I tried this and also couldn't reproduce the bug. Even when running two
+> perf instances simultaneously, `perf record` (or perhaps `perf trace` for
+> convenience) only outputs events from the corresponding PID as expected.
+> I initially suspected that perf might be applying another filter in user
+> space, but that doesn't seem to be the case. I'll need to conduct further
+> debugging, which might take some time.
+> 
+> I also tried combining bpftrace with `perf trace`. Specifically, I used
+> `perf trace` for PID1 and bpftrace for PID2. `perf trace` still only
+> outputs events from PID1, but bpftrace prints events from both PIDs.
+> I'm not yet sure why this is happening.
+
+Yeah, if perf only reads the specific process's ring buffer, it should
+work without this filter.
+
+Thanks,
+
+> 
+> Thanks so much,
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
