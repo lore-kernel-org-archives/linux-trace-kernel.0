@@ -1,128 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F3129CEC
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 22:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015E74A05
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 23:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724625642; cv=none; b=FVVdHS2QPk8cL8EXpHsuXqu3O3r6GjEwz8/Mf8wsigMJHUL3W+FQxrYzzEm5xydX9OHGTFZJtZxxq5/K39+/HfIRWkMKjZVw5webeUuU+JAYk+fMAFckewoMJvrLF6vb1GFb8x6dPYspa5f1zAi37Vac3dMVIO1iNLvQjL00LFU=
+	t=1724630223; cv=none; b=f+xpWwqYj7kRyrNEIeQcuKkgJxPHkBv8jT4wjpMxG9A9W6mb8HdpmKnUHW+yIHMI6u8SCFcv0Y4d1VpBn3bZTV8f0GvrI1aqhPi4VYOGfQC+7ATKfg0l6sOOd+QoUZZN3Xo/4RYXe9suyKO7q2OF5SykT26OrgazW0h18s2oxTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724625642; c=relaxed/simple;
-	bh=E2b6S42am7FxdDCGzlzr8xGm8Shd9IcqwtlxU9KAQQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHKTz3PP9de4bvXQpJM+bzXXtIsN1SVddinztaO59XYW7P3UdFb9tEEMnsMRBp0X+bT+TFGZ8U41piQmZW8c0aySVeiokFWFbgnsDsrCwbm0G6wpnA/YdBtta9NaOeze4eK9MCO7Q34n3DeVWG1ZSScytWKpB8dPsJZNiuxhxrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CoNVrG59; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724630223; c=relaxed/simple;
+	bh=hvYokzFMe5UePsZ/nPOmknU2+X/+l6fJD+GOtsiVj/o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mo9Z3AkpN3yfwEwjfPApilBR49mBINxuClIHqF+SDMmOud0Ab7h0GHU3tnhb+qMNZO+QKbZs2KKUNKkH1z5i0hbyz3mbd1DnvtUfxZtFmDkznXkSwbJuis9/E27MdWak5YI31U8j/NF/gz5PmrPYr+cFixm02OySL8JgdcfvTF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crdHDiAy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CoNVrG59"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724625639;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XldHedHtO4bPQ+b6KANXtOgQ6JTZqedmNWOSSS/IrRY=;
-	b=CoNVrG59suszpOZzPMiWV7JEPO2pyO7AzsRD278NS6dJWcECuAfA1gvRNtly3kYbSDtfHY
-	7pm3G1ihDGPgFoJ2U6Arxs7PhEddZd5FbUcTI2mt4+jZDixz/rKPKw+A6w692V+i7eayCt
-	KsGVZwUynVltSweIDexwvPf9gThckTs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-271-aL8pZNnGOpSWp99MLDxDhw-1; Sun,
- 25 Aug 2024 18:40:34 -0400
-X-MC-Unique: aL8pZNnGOpSWp99MLDxDhw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78E9E1956080;
-	Sun, 25 Aug 2024 22:40:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 14FC91955DDD;
-	Sun, 25 Aug 2024 22:40:27 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 26 Aug 2024 00:40:25 +0200 (CEST)
-Date: Mon, 26 Aug 2024 00:40:18 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
-	albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com, jolsa@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240825224018.GD3906@redhat.com>
-References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
- <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240825171417.GB3906@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crdHDiAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D07C4AF09;
+	Sun, 25 Aug 2024 23:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724630222;
+	bh=hvYokzFMe5UePsZ/nPOmknU2+X/+l6fJD+GOtsiVj/o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=crdHDiAyhvle7PKuFj5mB/HhXqqjmw5KQw2p7CggMXfFroLuw/A1zTvv2c4MEkBcn
+	 B0Ckrn//CijqwLmZLeUUUE8VH/8FxtwZGjvs9RkRrlSAWtQy8as93gJm0YUqjg7pFX
+	 BmQ8E7TYQYiZZqxA5Q+/9Zhg5m48jE/h2dD0lNprWvild7Cnb+VA4b9+r7tOpujn7B
+	 DSQDyGuYpkzSlTRkG62pmI3mRy8/oAVV68MswQ4Nu/qkImlbVyPv2banIYTxTCH+qK
+	 370/gJYT2DO3oIa39SGnh4JwP+fuBdXB/LotfWaHnm2kDWDuqmWhbrk3WVSXMQYNC3
+	 ylcsk5cnJU1kA==
+Date: Mon, 26 Aug 2024 08:56:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Fernando F. Mancera" <ffmancera@riseup.net>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/probes: fix traceprobe out-of-bounds argument
+ allocation
+Message-Id: <20240826085659.939bde641e4bf13249dec6ec@kernel.org>
+In-Reply-To: <fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
+References: <20240813172546.3151-1-ffmancera@riseup.net>
+	<20240825164132.024faee7897e0ac126d8c58e@kernel.org>
+	<fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240825171417.GB3906@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 08/25, Oleg Nesterov wrote:
->
-> At least I certainly disagree with "Fixes: c1ae5c75e103" ;)
->
-> uretprobe_perf_func/etc was designed for perf, and afaics this code still
-> works fine even if you run 2 perf-record's with -p PID1/PID2 at the same
-> time.
->
-> BPF hacks/hooks were added later, so perhaps this should be fixed in the
-> bpf code, but I have no idea what bpftrace does...
+On Sun, 25 Aug 2024 19:06:22 +0200
+"Fernando F. Mancera" <ffmancera@riseup.net> wrote:
 
-And I can't install bpftrace on my old Fedora 23 working laptop ;) Yes, yes,
-I know, I should upgrade it.
+> Hi,
+> 
+> On 25/08/2024 09:41, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> > 
+> > On Tue, 13 Aug 2024 13:25:40 -0400
+> > Fernando Fernandez Mancera <ffmancera@riseup.net> wrote:
+> > 
+> >> When initializing trace_probes::nr_args, make sure the maximum number of
+> >> probe arguments is honored. Oherwise, we can hit a NULL pointer
+> >> dereferences in multiple situations like on traceprobe_set_print_fmt().
+> >>
+> >> Link: https://bugzilla.redhat.com/2303876
+> > 
+> > Sorry for replying later. I'm not sure why but I did not found this in my mbox...
+> > 
+> 
+> No worries!
+> 
+> > Anyway, trace_probe_init() should return -E2BIG in this case because
+> > it is actuall wrong value.
+> > 
+> > Can you update your patch?
+> > 
+> 
+> I agree this is the right solution but it would mean a change in 
+> behavior. Is that fine? Before merging 035ba76014c0, it was writing up 
+> to the maximum number of arguments and ignoring the rest. If you confirm 
+> it is fine to change the behavior, I will update the patch.
 
-For the moment, please forget about ret-probes. Could you compile this program
+Yes, I think this is the better behavior for users too, rather than
+silently droping some arguments.
+We also need to handle this error code in callsite and log an error,
+and add a testcase in the syntax error testcase. But that should be done
+in another series. We should fix this first.
 
-	#define _GNU_SOURCE
-	#include <unistd.h>
-	#include <sched.h>
-	#include <signal.h>
+Thank you,
 
-	int func(int i)
-	{
-		return i;
-	}
 
-	int test(void *arg)
-	{
-		int i;
-		for (i = 0;; ++i) {
-			sleep(1);
-			func(i);
-		}
-		return 0;
-	}
+> 
+> Thank you!
+> 
+> > Thank you,
+> > 
+> > 
+> >>
+> >> Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
+> >> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+> >> ---
+> >>   kernel/trace/trace_probe.c | 8 ++++++--
+> >>   1 file changed, 6 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> >> index 39877c80d6cb..f577b5e71026 100644
+> >> --- a/kernel/trace/trace_probe.c
+> >> +++ b/kernel/trace/trace_probe.c
+> >> @@ -2043,10 +2043,14 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+> >>   		goto error;
+> >>   	}
+> >>   
+> >> -	tp->nr_args = nargs;
+> >> +	if (nargs > MAX_TRACE_ARGS)
+> >> +		tp->nr_args = MAX_TRACE_ARGS;
+> >> +	else
+> >> +		tp->nr_args = nargs;
+> >> +
+> >>   	/* Make sure pointers in args[] are NULL */
+> >>   	if (nargs)
+> >> -		memset(tp->args, 0, sizeof(tp->args[0]) * nargs);
+> >> +		memset(tp->args, 0, sizeof(tp->args[0]) * tp->nr_args);
+> >>   
+> >>   	return 0;
+> >>   
+> > 
+> > 
 
-	int main(void)
-	{
-		static char stack[65536];
 
-		clone(test, stack + sizeof(stack)/2, CLONE_VM|SIGCHLD, NULL);
-		test(NULL);
-
-		return 0;
-	}
-
-and then do something like
-
-	$ ./test &
-	$ bpftrace -p $! -e 'uprobe:./test:func { printf("%d\n", pid); }'
-
-I hope that the syntax of the 2nd command is correct...
-
-I _think_ that it will print 2 pids too.
-
-But "perf-record -p" works as expected.
-
-Oleg.
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
