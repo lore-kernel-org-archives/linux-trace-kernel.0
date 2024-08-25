@@ -1,77 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD4D13C690;
-	Sun, 25 Aug 2024 10:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD7E143740;
+	Sun, 25 Aug 2024 11:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724580917; cv=none; b=R0TOSuM6F2C21CXu7gO9XFw32QLTR08HhrvBSnwlQyk7zyXYPb1QrgtmEtn2EJ5KAzOQLbvUc7njQpM8K3uznMKOvu4QhGSuVjCgulq3Dv/OSpLv3cpEqvkbnshtb56ywPS7fgremCG8hgA4Dy48iHZYBtjwLnr7wIMqf28IcgU=
+	t=1724586749; cv=none; b=sK+QEXXkzFBm5BFU0SBs9XL5Oc9J8FHB7/SLj80sDgvUIXIbtWcU2f/hnsg8evTnWRzspDHRI5Pau+e2LT0EtGyBXo7ikyUgMIN8Lq6O4wKgZJ5gxejzsc86aCK16Ok8sBT53VcLcNshqBkABzQZPX5Wr+ww+tFHeytTiiYaEFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724580917; c=relaxed/simple;
-	bh=OgVvYVX7Nh7kfTUBTqYQ9e/jiYo0TOw3Tg0uSrMDaOA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZIIs5+TfKWIM4abPCp6fQXhpWZZly+N+FRpDsPIY725/OOyKhzoPNx6/pRMQXpeUxJ2g3tgRh1ZVmYT6jtieOCys0luR8RWpC5+hGVHlp07bTvqw48WIQZxCOwTKeQo2gHPQJ+dtnRPRnXKxMvtJkSx5IJXYg3MvlG4ZXHz+T/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rBEjwUxk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724586749; c=relaxed/simple;
+	bh=wcfJEOEK/OVFU9E0skQRjHALsyzqGuvuGOQZ8DvQiQg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ku+NrH8H3jBGALClvUR7dLfFsxIEIlgFWzXMnlLfXcA6mGisXyhks+me0IdPkD/IZDBIbA6RZlURM1rdui+rq0f+xdjZCC8QZtRZ5h8DXS2ipG06Hto1CWjGy4mOtbXfnJmdWlJ8aaCzDSKzYKbl1vFiiQTxE6Dx1dxUY0w3zx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oQ2h2jQM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DL289A9E; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rBEjwUxk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68772C32782;
-	Sun, 25 Aug 2024 10:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724580916;
-	bh=OgVvYVX7Nh7kfTUBTqYQ9e/jiYo0TOw3Tg0uSrMDaOA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rBEjwUxkk0uM01iXhsp01DvKNqJo83GSiitgk3wgruNF6EZVj+3ERU+wbjbt+hg06
-	 iiiyIvzbkM8e7NYiUVknMskx3n4BaW3IoPPclCqYz73IP0XLHf/pehlMP1zy09QCht
-	 4qtiHIHczW96GjiGdFb3Ky35/2sEl2Scp+nPn295HwcUdbwaxFARzduM7CvC2dVAQS
-	 jk0MxGJHIrauGJaIx39URGMpoWlONQwjYqkgJosbnlOwUzd5N5ECbwSntHH3Q/fG0s
-	 Z92q7PqZUeVQD7/YLSbQWU5LDxNyx5r8W6nr63p7iCXB5bNouwMGoCbITIMwvTq6uy
-	 PYzYxGz6oPdsg==
-Date: Sun, 25 Aug 2024 19:15:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- rostedt@goodmis.org, peterz@infradead.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, jolsa@kernel.org
-Subject: Re: [PATCH v2] uprobes: make trace_uprobe->nhit counter a per-CPU
- one
-Message-Id: <20240825191512.98a6ea20b4783345f4d5ba1b@kernel.org>
-In-Reply-To: <20240813154055.GA7423@redhat.com>
-References: <20240809192357.4061484-1-andrii@kernel.org>
-	<20240813223014.1a5093ede1a5046aaedea34a@kernel.org>
-	<20240813154055.GA7423@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oQ2h2jQM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DL289A9E"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1724586746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l4ldBgTs8Tk2fbqUbBu8bF82g0r8dVN8CCueqSsUf5M=;
+	b=oQ2h2jQM93DzsxgJjVsgviGy1RNH/XdCWJdNvahneWZQju/i0dcSNeReXz1Tm93C6YNmIR
+	gvvL5eqL3Q7zLRJ0nOndWmVSTaoR/4sEZIs5PVI4I8/jq3FMuBZ+0ROiotbd6Kkt0bvSJg
+	vtYjtp7w52XXTGmEsKSw9iCON+MP7IqwnqmhX5JSHNWsEl0erRhJPnijoppWsVeiqvwBPQ
+	t8jPmgpRL9hIRn9KRLL3le3uOnQPARvfnvihwe03+iud1IBGSgf1dPwnjnO2c7t5e/spS7
+	IltNumUbVNOIz6WAzp/JWk0U0/u0MRe9JJztGPSFCtqb3OOv082o2/OfC3LFCw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1724586746;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l4ldBgTs8Tk2fbqUbBu8bF82g0r8dVN8CCueqSsUf5M=;
+	b=DL289A9EY5v+PCgODp7o87ZmPdhY4czZmZ+XJrpwdjxWFC8KGEUs8DdIRZCJVaroUQJYth
+	dH91vnXc9X4DQIDQ==
+To: Wentao Zhang <wentaoz5@illinois.edu>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+ linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev, x86@kernel.org
+Cc: wentaoz5@illinois.edu, marinov@illinois.edu, tyxu@illinois.edu,
+ jinghao7@illinois.edu, tingxur@illinois.edu,
+ steven.h.vanderleest@boeing.com, chuck.wolber@boeing.com,
+ matthew.l.weber3@boeing.com, Matt.Kelly2@boeing.com,
+ andrew.j.oppelt@boeing.com, samuel.sarkisian@boeing.com, morbo@google.com,
+ samitolvanen@google.com, masahiroy@kernel.org, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org,
+ ardb@kernel.org, richard@nod.at, anton.ivanov@cambridgegreys.com,
+ johannes@sipsolutions.net, arnd@arndb.de, rostedt@goodmis.org,
+ mhiramat@kernel.org, oberpar@linux.ibm.com, akpm@linux-foundation.org,
+ paulmck@kernel.org, bhelgaas@google.com, kees@kernel.org,
+ jpoimboe@kernel.org, peterz@infradead.org, kent.overstreet@linux.dev,
+ nathan@kernel.org, hpa@zytor.com, mathieu.desnoyers@efficios.com,
+ ndesaulniers@google.com, justinstitt@google.com, maskray@google.com,
+ dvyukov@google.com
+Subject: Re: [RFC PATCH 1/3] llvm-cov: add Clang's Source-based Code
+ Coverage support
+In-Reply-To: <20240824230641.385839-2-wentaoz5@illinois.edu>
+References: <20240824230641.385839-1-wentaoz5@illinois.edu>
+ <20240824230641.385839-2-wentaoz5@illinois.edu>
+Date: Sun, 25 Aug 2024 13:52:26 +0200
+Message-ID: <87bk1gg6px.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, 13 Aug 2024 17:41:04 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+On Sat, Aug 24 2024 at 18:06, Wentao Zhang wrote:
+>  Makefile                          |   3 +
+>  arch/Kconfig                      |   1 +
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/kernel/vmlinux.lds.S     |   2 +
+>  include/asm-generic/vmlinux.lds.h |  38 +++++
+>  kernel/Makefile                   |   1 +
+>  kernel/llvm-cov/Kconfig           |  29 ++++
+>  kernel/llvm-cov/Makefile          |   5 +
+>  kernel/llvm-cov/fs.c              | 253 ++++++++++++++++++++++++++++++
+>  kernel/llvm-cov/llvm-cov.h        | 156 ++++++++++++++++++
+>  scripts/Makefile.lib              |  10 ++
+>  scripts/mod/modpost.c             |   2 +
 
-> On 08/13, Masami Hiramatsu wrote:
-> >
-> > > @@ -62,7 +63,7 @@ struct trace_uprobe {
-> > >  	struct uprobe			*uprobe;
-> >
-> > BTW, what is this change? I couldn't cleanly apply this to the v6.11-rc3.
-> > Which tree would you working on? (I missed something?)
-> 
-> tip/perf/core
-> 
-> See https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/diff/kernel/trace/trace_uprobe.c?h=perf/core&id=3c83a9ad0295eb63bdeb81d821b8c3b9417fbcac
+Please split this into two parts:
 
-OK, let me consider to rebase on tip/perf/core.
+   1) Add the infrastructure
+   2) Enable it on x86
 
-Thank you,
+Also the ordering of this patch series is wrong.
 
-> 
-> Oleg.
-> 
+First you enable it on x86 and then you mark the places which cannot be
+instrumented. You really want to do this in this order:
 
+   1) Add the infrastructure
+   2) Prevent instrumentation in drivers/firmware
+   3) Prevent instrumentation in kernel/trace
+   4) Prevent instrumentation in modfinal
+   5) Prevent instrumentation in x86
+   6) Enable it on x86
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+
+        tglx
+
