@@ -1,124 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E928E61FFC;
-	Sun, 25 Aug 2024 15:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E10E2F5A
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 17:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724598856; cv=none; b=jphv4ttE5AOYxLFYyfRUf+biSvsEhHCzFRKFvO6suRVqu3UglwPOU/QOoDV1k/eNUJRovSxQ79AJZAdcZsbuxEBBggp2hr4GP/V/ZwYJq9b5K6z578jixmR3JgSHM5qcKKd9zz9vIUxhFiReLjIPE8zKEDx7TsjTx7BrXO0RvJw=
+	t=1724605281; cv=none; b=KW4uT0GAZ8BRMcyPYDV/XWzHMdi52exU/1RZFkhJOZdeRtWUhsHMctblCv4Sgf7uNKCHNUyEV6nPv1NUxjmXE1DdTo8vCNgIMS5+dAtzED0nVBJJLRGo8R5vlMMtU0LJ6K5y6j2RTwaK3A6CbXYZlUSkmLOcKKcZakfrCWdoQwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724598856; c=relaxed/simple;
-	bh=+Ejih42HNI9fRfwQo8o4of4mjbUFyPFvcmlliCErK2s=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=iAp1sXgwMU4p3DKwc1lWeiB3HXE5nMtpg5c803e7LMIflT8uYeApODL0LvvNJUVBQhUvHz9c+VUzgLGvxsUC2hetqjk//lorb8W1nZEsAN6P7lpos1mKR0Dxkm3Pd91MevcTSbYesIFOFIWSlCM1Qt/Xwt9yEqhRXFDrmWiegXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFezltXx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724605281; c=relaxed/simple;
+	bh=Xv3hW5NO4nk6bd87Lk/aAw04TD8pzP4OdNhf51nvEuE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZP/jjp/jNqbc0OZABAE1tWiT+RrtP0nk25l3mUemZWHbUaiFHl5CImiMp5iigWXDpYH4LcmtpH2DUfzfBKD/nwE0TWQn7KHYQRj5CELgqf+wydjJyMeztchd+68+Lkyzbe8jmLhDy2XlUzdM/dDxwSCsZ/LVy969VIoKegwp6V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RomeXe02; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFezltXx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1138EC32782;
-	Sun, 25 Aug 2024 15:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724598855;
-	bh=+Ejih42HNI9fRfwQo8o4of4mjbUFyPFvcmlliCErK2s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZFezltXxFeIUp1wg4DUNsV8YHR73bAH6SePViAfmXnvi5/Yrtbg0o+KsA5zDV5g4I
-	 hwfRNkZ+jmSMDjF+BiWddTeNkRwN2v5q5oaJp1lXS4my04DenrbRKhbbVdFgVGG4ZC
-	 imsdS0JuZnl548AEEDdWyIKinDyKmvax1AGrL04C5Ch7sgpoH9ElZfbZKk3SJwDsQi
-	 jfYftMG6iaBe/3xC744s7BYgBP6R6SClJyrwknFcmAXcCh4Fy4QdAgJQ6ngznqLx0Z
-	 Ypr6jciaZp8GZTt4BVhENnCwPFZahFQn8Rj+sxDhUhq9ckzJflOpMzkBO+eaasIdNo
-	 pHqupwcgLGgLw==
-Date: Mon, 26 Aug 2024 00:14:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, Shuah
- Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] ftrace/selftest: Test combination of function_graph
- tracer and function profiler
-Message-Id: <20240826001410.76bcc8304e7c3ee188420b5c@kernel.org>
-In-Reply-To: <20240821150903.05c6cf96@gandalf.local.home>
-References: <20240821150903.05c6cf96@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RomeXe02"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724605278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xv3hW5NO4nk6bd87Lk/aAw04TD8pzP4OdNhf51nvEuE=;
+	b=RomeXe02pSMOzM0OQuiDrf1+4plUDbg2vU5o7gfv/wZlJyhqp7NBvl5dgHabkpP1eZ/Mqu
+	af8MudjYrewoqaSqAb0P0M3AKj5Vt+kbAK2+MtIB0z4qRYeUAjJiLYtf20EMyVfO0O9tZw
+	RO3mOjYPOGNRqhHnNe2/zZej/INOG0U=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-RZttRMc6NfmQSYk1kgztGQ-1; Sun,
+ 25 Aug 2024 13:01:14 -0400
+X-MC-Unique: RZttRMc6NfmQSYk1kgztGQ-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CC7C71955BF7;
+	Sun, 25 Aug 2024 17:01:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D2DCF1955DC8;
+	Sun, 25 Aug 2024 17:01:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 25 Aug 2024 19:01:04 +0200 (CEST)
+Date: Sun, 25 Aug 2024 19:00:57 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Jordan Rome <linux@jordanrome.com>, ajor@meta.com,
+	Tianyi Liu <i.pear@outlook.com>, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com,
+	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240825170057.GA3906@redhat.com>
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240824024439.a37c41bab87dbdf3d0486846@kernel.org>
+ <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, 21 Aug 2024 15:09:03 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 08/23, Andrii Nakryiko wrote:
+>
+> This is a bit confusing, because even if the kernel-side uretprobe
+> handler doesn't do the filtering by itself, uprobe subsystem shouldn't
+> install breakpoints on processes which don't have uretprobe requested
+> for (unless I'm missing something, of course).
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Masami reported a bug when running function graph tracing then the
-> function profiler. The following commands would cause a kernel crash:
-> 
->   # cd /sys/kernel/tracing/
->   # echo function_graph > current_tracer
->   # echo 1 > function_profile_enabled
-> 
-> In that order. Create a test to test this two to make sure this does not
-> come back as a regression.
-> 
-> Link: https://lore.kernel.org/172398528350.293426.8347220120333730248.stgit@devnote2
+Yes, but in this case uprobe_register/apply will install breakpoints
+on both tasks, with PID1 and PID2.
 
-This looks good to me, but note that this depends on the above fix, unless
-that, this may crash the kernel. I think the above fix should be merged in
-v6.11-rcX so this may be safe for released kernel.
+> It still needs to be fixed
 
-Thanks,
+Agreed,
 
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  .../ftrace/test.d/ftrace/fgraph-profiler.tc   | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
-> new file mode 100644
-> index 000000000000..62d44a1395da
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
-> @@ -0,0 +1,30 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: ftrace - function profiler with function graph tracing
-> +# requires: function_profile_enabled set_ftrace_filter function_graph:tracer
-> +
-> +# The function graph tracer can now be run along side of the function
-> +# profiler. But there was a bug that caused the combination of the two
-> +# to crash. It also required the function graph tracer to be started
-> +# first.
-> +#
-> +# This test triggers that bug
-> +#
-> +# We need function_graph and profiling to to run this test
-> +
-> +fail() { # mesg
-> +    echo $1
-> +    exit_fail
-> +}
-> +
-> +echo "Enabling function graph tracer:"
-> +echo function_graph > current_tracer
-> +echo "enable profiler"
-> +
-> +# Older kernels do not allow function_profile to be enabled with
-> +# function graph tracer. If the below fails, mark it as unsupported
-> +echo 1 > function_profile_enabled || exit_unsupported
-> +
-> +sleep 1
-> +
-> +exit 0
-> -- 
-> 2.43.0
-> 
+> like you do in your patch,
 
+Not sure...
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> more, we probably need a similar UPROBE_HANDLER_REMOVE handling in
+> handle_uretprobe_chain() to clean up breakpoint for processes which
+> don't have uretprobe attached anymore (but I think that's a separate
+> follow up).
+
+Probably yes... but yes, this is another issue.
+
+Oleg.
+
