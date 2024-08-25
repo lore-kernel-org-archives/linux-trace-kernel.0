@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1909EBA27;
-	Sun, 25 Aug 2024 15:05:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E928E61FFC;
+	Sun, 25 Aug 2024 15:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724598335; cv=none; b=j3AQNtjcnyemWyUFyiPxQxpgf1VDrx0StrEgYxDXn4T/jytc1qxYHSZfqE4tWsB2x08rOyMMYz561QnnI3bL5WsNtfFrJCR2nBg1h8WlVWdPRrH0lUkj3no4rI7+iL41m6CybWMXykTHZW0SxvnsDXKYayQSHFkKooM3PsqSNr0=
+	t=1724598856; cv=none; b=jphv4ttE5AOYxLFYyfRUf+biSvsEhHCzFRKFvO6suRVqu3UglwPOU/QOoDV1k/eNUJRovSxQ79AJZAdcZsbuxEBBggp2hr4GP/V/ZwYJq9b5K6z578jixmR3JgSHM5qcKKd9zz9vIUxhFiReLjIPE8zKEDx7TsjTx7BrXO0RvJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724598335; c=relaxed/simple;
-	bh=f+6J2JxYoziwhkgwPilvolO5/I6DFA4JlIaY7rXHuHk=;
+	s=arc-20240116; t=1724598856; c=relaxed/simple;
+	bh=+Ejih42HNI9fRfwQo8o4of4mjbUFyPFvcmlliCErK2s=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cLN5MdFMOC1leERNedkAySYiLWE1n+C6y4iV6dP4Fa7bosytZCE+d2oW+Hdpv0yZU44pZZFeK88ULOELAqK7/Yn+Cj0rjUuMlVbt49iwCy21r2Pcgb8pKDWBktkKituvb4qjh/EFTFb+uvT6djyo+gj4vGfwdU5tkSPK2Fp6Fhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIZQNadc; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=iAp1sXgwMU4p3DKwc1lWeiB3HXE5nMtpg5c803e7LMIflT8uYeApODL0LvvNJUVBQhUvHz9c+VUzgLGvxsUC2hetqjk//lorb8W1nZEsAN6P7lpos1mKR0Dxkm3Pd91MevcTSbYesIFOFIWSlCM1Qt/Xwt9yEqhRXFDrmWiegXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFezltXx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIZQNadc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C00AC32782;
-	Sun, 25 Aug 2024 15:05:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFezltXx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1138EC32782;
+	Sun, 25 Aug 2024 15:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724598334;
-	bh=f+6J2JxYoziwhkgwPilvolO5/I6DFA4JlIaY7rXHuHk=;
+	s=k20201202; t=1724598855;
+	bh=+Ejih42HNI9fRfwQo8o4of4mjbUFyPFvcmlliCErK2s=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NIZQNadcFGwdREDDQhZpx6ZPT2Dtd29lRfUCscuFJ/X3bXyDvV4einSoSM70P70R9
-	 g8OvIoNBPE0NbshBJO9FEbji76CsKt6bMKXwzzLaLZW/iqk2/FHW1I+utsnAMSpmjY
-	 BFwljbGLSmXdxvN4i1oZ541mtSEqHIRjubSYmSbV4iK91qXHdqoc9IMpPWCkX9nMFZ
-	 oFRokYEK9te6GdW0eH2sIeeNRG+nvnI8q/tEv5cKtvTSlSv5LEYcNrtQMt1CAg2jxC
-	 WPHcgTzu5ixrS7syYgy7Z12k9aLFRqiaueJqCStWmis5tcQrHehDIZcjNEV9Rm/quo
-	 iyqgS+475VqZA==
-Date: Mon, 26 Aug 2024 00:05:31 +0900
+	b=ZFezltXxFeIUp1wg4DUNsV8YHR73bAH6SePViAfmXnvi5/Yrtbg0o+KsA5zDV5g4I
+	 hwfRNkZ+jmSMDjF+BiWddTeNkRwN2v5q5oaJp1lXS4my04DenrbRKhbbVdFgVGG4ZC
+	 imsdS0JuZnl548AEEDdWyIKinDyKmvax1AGrL04C5Ch7sgpoH9ElZfbZKk3SJwDsQi
+	 jfYftMG6iaBe/3xC744s7BYgBP6R6SClJyrwknFcmAXcCh4Fy4QdAgJQ6ngznqLx0Z
+	 Ypr6jciaZp8GZTt4BVhENnCwPFZahFQn8Rj+sxDhUhq9ckzJflOpMzkBO+eaasIdNo
+	 pHqupwcgLGgLw==
+Date: Mon, 26 Aug 2024 00:14:10 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Zheng Yejian <zhengyejian@huaweicloud.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Mitigate possible softlockup in
- __tracing_open()
-Message-Id: <20240826000531.5ff4cc3c3d6a48ecc26069dd@kernel.org>
-In-Reply-To: <20240824030343.3218618-1-zhengyejian@huaweicloud.com>
-References: <20240824030343.3218618-1-zhengyejian@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] ftrace/selftest: Test combination of function_graph
+ tracer and function profiler
+Message-Id: <20240826001410.76bcc8304e7c3ee188420b5c@kernel.org>
+In-Reply-To: <20240821150903.05c6cf96@gandalf.local.home>
+References: <20240821150903.05c6cf96@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,53 +49,74 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 24 Aug 2024 11:03:43 +0800
-Zheng Yejian <zhengyejian@huaweicloud.com> wrote:
+On Wed, 21 Aug 2024 15:09:03 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> In __tracing_open(), when max latency tracers took place on the cpu,
-> the time start of its buffer would be updated, then event entries with
-> timestamps being earlier than start of the buffer would be skipped
-> (see tracing_iter_reset()).
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Softlockup will occur if the kernel is non-preemptible and too many
-> entries were skipped in the loop that reset every cpu buffer, so add
-> cond_resched() to avoid it.
+> Masami reported a bug when running function graph tracing then the
+> function profiler. The following commands would cause a kernel crash:
 > 
-> Signed-off-by: Zheng Yejian <zhengyejian@huaweicloud.com>
+>   # cd /sys/kernel/tracing/
+>   # echo function_graph > current_tracer
+>   # echo 1 > function_profile_enabled
+> 
+> In that order. Create a test to test this two to make sure this does not
+> come back as a regression.
+> 
+> Link: https://lore.kernel.org/172398528350.293426.8347220120333730248.stgit@devnote2
+
+This looks good to me, but note that this depends on the above fix, unless
+that, this may crash the kernel. I think the above fix should be merged in
+v6.11-rcX so this may be safe for released kernel.
+
+Thanks,
+
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../ftrace/test.d/ftrace/fgraph-profiler.tc   | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index ebe7ce2f5f4a..88faa95b457b 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -4706,6 +4706,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
->  		for_each_tracing_cpu(cpu) {
->  			ring_buffer_read_start(iter->buffer_iter[cpu]);
->  			tracing_iter_reset(iter, cpu);
-> +			/*
-> +			 * When max latency tracers took place on the cpu, the time start
-> +			 * of its buffer would be updated, then event entries with timestamps
-> +			 * being earlier than start of the buffer would be skipped
-> +			 * (see tracing_iter_reset()). Softlockup will occur if the kernel
-> +			 * is non-preemptible and too many entries were skipped in the loop,
-> +			 * so add cond_resched() to mitigate it.
-> +			 */
-> +			cond_resched();
-
-OK, but why we cond_resched() only here? Another tracing_iter_reset() in
-s_start() does not cause the soft lockups in the same situation?
-
-Thank you,
-
-
->  		}
->  	} else {
->  		cpu = iter->cpu_file;
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
+> new file mode 100644
+> index 000000000000..62d44a1395da
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
+> @@ -0,0 +1,30 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: ftrace - function profiler with function graph tracing
+> +# requires: function_profile_enabled set_ftrace_filter function_graph:tracer
+> +
+> +# The function graph tracer can now be run along side of the function
+> +# profiler. But there was a bug that caused the combination of the two
+> +# to crash. It also required the function graph tracer to be started
+> +# first.
+> +#
+> +# This test triggers that bug
+> +#
+> +# We need function_graph and profiling to to run this test
+> +
+> +fail() { # mesg
+> +    echo $1
+> +    exit_fail
+> +}
+> +
+> +echo "Enabling function graph tracer:"
+> +echo function_graph > current_tracer
+> +echo "enable profiler"
+> +
+> +# Older kernels do not allow function_profile to be enabled with
+> +# function graph tracer. If the below fails, mark it as unsupported
+> +echo 1 > function_profile_enabled || exit_unsupported
+> +
+> +sleep 1
+> +
+> +exit 0
 > -- 
-> 2.25.1
-> 
+> 2.43.0
 > 
 
 
