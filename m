@@ -1,107 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA192B9D4;
-	Sun, 25 Aug 2024 12:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1909EBA27;
+	Sun, 25 Aug 2024 15:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724587953; cv=none; b=J1N8wXTStPYWX7FHOqnLffhLxZQ5rUXJXWm4FK3QPIA7slumtRpN/CSLet5ZrP6Ic3RAo4U6h5ErYHLNt5DrwrdTRKlMeQtMGu2o4Vo+9jS+J8jkCwqoncVAp7/jHRoRKWzxfVQKFf98rvho7B36qyKrOZJti3BVy/mr5ODFbHg=
+	t=1724598335; cv=none; b=j3AQNtjcnyemWyUFyiPxQxpgf1VDrx0StrEgYxDXn4T/jytc1qxYHSZfqE4tWsB2x08rOyMMYz561QnnI3bL5WsNtfFrJCR2nBg1h8WlVWdPRrH0lUkj3no4rI7+iL41m6CybWMXykTHZW0SxvnsDXKYayQSHFkKooM3PsqSNr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724587953; c=relaxed/simple;
-	bh=D7uIUkqdvy06evqcOOap+ibcf1+dWnSSdC1uvDXmmBE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c081i8iTgKKzimp5D7OZVE1EAbeNKW2SocylYSRETqGUS406KqicRIoeAb/5dpWHkgrA9cngqJcW25tiqM6g8jaOlxU6RyNGjC9Lnex1EWRupgdSIeISiISv2DmUur+4EGAjVzkGQKuUEJJIOrPOKlLwJYEQAohO/WoGNb5JSUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RriSFBj2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CMp1ks+T; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1724598335; c=relaxed/simple;
+	bh=f+6J2JxYoziwhkgwPilvolO5/I6DFA4JlIaY7rXHuHk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cLN5MdFMOC1leERNedkAySYiLWE1n+C6y4iV6dP4Fa7bosytZCE+d2oW+Hdpv0yZU44pZZFeK88ULOELAqK7/Yn+Cj0rjUuMlVbt49iwCy21r2Pcgb8pKDWBktkKituvb4qjh/EFTFb+uvT6djyo+gj4vGfwdU5tkSPK2Fp6Fhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIZQNadc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RriSFBj2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CMp1ks+T"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724587948;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=asbg7BYlj4ZFgiVrwgb1Wswlv6diZDiLLgBcqea48xc=;
-	b=RriSFBj2vDDUs2J9MepRaX1WU4HV5T31ItjTQdAPICrFKbnSbJKqI6ghRbD9nepkX0MQTp
-	B8MVoOiYVT9zlJS9xBNMdvBUimnGoQkuPqkCtfWVVzOchRNU9SMDupjEjOexXpol0/tbnH
-	G06poRLAw9E5XsaxTg34bKYKBPSCh4Q5AE/85Hg2vxlVUCvhHcwtE4t0Uhopt1k1CIFkRf
-	ceQibitytHaEPhbMJxnrIvpeQC07fgsyLoOYvRwcyKZdvsE2WTuNcWbe17QvxXCG4E3ZCk
-	UQsoIqX+Hl350cnsNW4Gsu4MpoA61jdwQWsILSel4Ttv7wEY9j24TWETTpcDLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724587948;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=asbg7BYlj4ZFgiVrwgb1Wswlv6diZDiLLgBcqea48xc=;
-	b=CMp1ks+TWlx6LMjmObNiYxsYpvfW1kxsSLXGKg6bqsPEM0EA/xzXuJ7hDSi56zSOsJgCmE
-	JubKYVxuspFiVbAA==
-To: Wentao Zhang <wentaoz5@illinois.edu>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-um@lists.infradead.org, linux-arch@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev, x86@kernel.org
-Cc: wentaoz5@illinois.edu, marinov@illinois.edu, tyxu@illinois.edu,
- jinghao7@illinois.edu, tingxur@illinois.edu,
- steven.h.vanderleest@boeing.com, chuck.wolber@boeing.com,
- matthew.l.weber3@boeing.com, Matt.Kelly2@boeing.com,
- andrew.j.oppelt@boeing.com, samuel.sarkisian@boeing.com, morbo@google.com,
- samitolvanen@google.com, masahiroy@kernel.org, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org,
- ardb@kernel.org, richard@nod.at, anton.ivanov@cambridgegreys.com,
- johannes@sipsolutions.net, arnd@arndb.de, rostedt@goodmis.org,
- mhiramat@kernel.org, oberpar@linux.ibm.com, akpm@linux-foundation.org,
- paulmck@kernel.org, bhelgaas@google.com, kees@kernel.org,
- jpoimboe@kernel.org, peterz@infradead.org, kent.overstreet@linux.dev,
- nathan@kernel.org, hpa@zytor.com, mathieu.desnoyers@efficios.com,
- ndesaulniers@google.com, justinstitt@google.com, maskray@google.com,
- dvyukov@google.com
-Subject: Re: [RFC PATCH 2/3] kbuild, llvm-cov: disable instrumentation in
- odd or sensitive code
-In-Reply-To: <20240824230641.385839-3-wentaoz5@illinois.edu>
-References: <20240824230641.385839-1-wentaoz5@illinois.edu>
- <20240824230641.385839-3-wentaoz5@illinois.edu>
-Date: Sun, 25 Aug 2024 14:12:27 +0200
-Message-ID: <878qwkg5sk.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIZQNadc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C00AC32782;
+	Sun, 25 Aug 2024 15:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724598334;
+	bh=f+6J2JxYoziwhkgwPilvolO5/I6DFA4JlIaY7rXHuHk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NIZQNadcFGwdREDDQhZpx6ZPT2Dtd29lRfUCscuFJ/X3bXyDvV4einSoSM70P70R9
+	 g8OvIoNBPE0NbshBJO9FEbji76CsKt6bMKXwzzLaLZW/iqk2/FHW1I+utsnAMSpmjY
+	 BFwljbGLSmXdxvN4i1oZ541mtSEqHIRjubSYmSbV4iK91qXHdqoc9IMpPWCkX9nMFZ
+	 oFRokYEK9te6GdW0eH2sIeeNRG+nvnI8q/tEv5cKtvTSlSv5LEYcNrtQMt1CAg2jxC
+	 WPHcgTzu5ixrS7syYgy7Z12k9aLFRqiaueJqCStWmis5tcQrHehDIZcjNEV9Rm/quo
+	 iyqgS+475VqZA==
+Date: Mon, 26 Aug 2024 00:05:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Zheng Yejian <zhengyejian@huaweicloud.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Mitigate possible softlockup in
+ __tracing_open()
+Message-Id: <20240826000531.5ff4cc3c3d6a48ecc26069dd@kernel.org>
+In-Reply-To: <20240824030343.3218618-1-zhengyejian@huaweicloud.com>
+References: <20240824030343.3218618-1-zhengyejian@huaweicloud.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 24 2024 at 18:06, Wentao Zhang wrote:
+On Sat, 24 Aug 2024 11:03:43 +0800
+Zheng Yejian <zhengyejian@huaweicloud.com> wrote:
 
-The subject line is really not useful. What's 'odd' code?
+> In __tracing_open(), when max latency tracers took place on the cpu,
+> the time start of its buffer would be updated, then event entries with
+> timestamps being earlier than start of the buffer would be skipped
+> (see tracing_iter_reset()).
+> 
+> Softlockup will occur if the kernel is non-preemptible and too many
+> entries were skipped in the loop that reset every cpu buffer, so add
+> cond_resched() to avoid it.
+> 
+> Signed-off-by: Zheng Yejian <zhengyejian@huaweicloud.com>
+> ---
+>  kernel/trace/trace.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index ebe7ce2f5f4a..88faa95b457b 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4706,6 +4706,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+>  		for_each_tracing_cpu(cpu) {
+>  			ring_buffer_read_start(iter->buffer_iter[cpu]);
+>  			tracing_iter_reset(iter, cpu);
+> +			/*
+> +			 * When max latency tracers took place on the cpu, the time start
+> +			 * of its buffer would be updated, then event entries with timestamps
+> +			 * being earlier than start of the buffer would be skipped
+> +			 * (see tracing_iter_reset()). Softlockup will occur if the kernel
+> +			 * is non-preemptible and too many entries were skipped in the loop,
+> +			 * so add cond_resched() to mitigate it.
+> +			 */
+> +			cond_resched();
 
-> Disable instrumentation in the same areas that were disabled for
-> kernel/gcov/
+OK, but why we cond_resched() only here? Another tracing_iter_reset() in
+s_start() does not cause the soft lockups in the same situation?
 
-> Signed-off-by: Wentao Zhang <wentaoz5@illinois.edu>
-> Signed-off-by: Chuck Wolber <chuck.wolber@boeing.com>
+Thank you,
 
-This Signed-off-by chain is broken. See Documentation/process/
 
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index 9cc0ff6e9067..2cc2c55af305 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -57,6 +57,7 @@ KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
->  KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
-> +LLVM_COV_PROFILE := n
+>  		}
+>  	} else {
+>  		cpu = iter->cpu_file;
+> -- 
+> 2.25.1
+> 
+> 
 
-See 7f7f6f7ad654 ("Makefile: remove redundant tool coverage variables")
 
-Also a 'git grep GCOV_PROFILE' shows way more places. Can't LLVM_COV
-just use the already existing GCOV_PROFILE annotations or is LLVM_COV
-suitable for all the files which have been excluded for GCOV?
-
-GCOV has GCOV_PROFILE_obj.o, GCOV_PROFILE and CONFIG_GCOV_PROFILE_ALL
-for a reason, no?
-
-Thanks,
-
-        tglx
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
