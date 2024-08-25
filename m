@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83D115442A
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 17:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9A21448C5
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 18:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724606080; cv=none; b=r+t7+ATjMYZP5j3M8NVN8LDGnxB1SHPlCGquRKyREFl677TPne8FqcnvY2Y2pKJzia3xLgboTKNJvrkATI5SCv96/9b8LpLWbBSbsnfslA7GP4a2hYs2FT5RVBaKYyp4WmvmXbVUOFZlyBI4zKOQO/Od1YWQh+l4MB0yXPY4C6o=
+	t=1724611423; cv=none; b=CWshhaM6qsSrmpRWWGuk5xSeycHsCeMYy7B7QuEtvUF5rHhisCkSht57fCFR38FApupNwXFY+FGpPpQxHK+e8dQaLwH0USUJpZTXvulhhacBMuu4cQHhk/SMIigiljPsv716bgtKoDtDjz6qrWyMsIDRGk+WOA1OCrIghnGfgRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724606080; c=relaxed/simple;
-	bh=AMSOCCJyqzA8QFEQQ/0JphwdxnqDaSyz7otrZX0MojA=;
+	s=arc-20240116; t=1724611423; c=relaxed/simple;
+	bh=tzjqxqSFdTG56HTSU+0Y5M+c2RbvZre9mhaXvz0CsmA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUMcw0UngB6Z0qIcHrDz9lSvgQsi6J6hyuG1y8OANhPKf7aDiX1rXcdpHOP1rli8IlqPr9siW67AikTDm7HWWCyiSwZbwJbeS6W6IbGV+wUkhy482P1wPgwxqgYoycRbeWRvJ6CxEkHIrLVgFRmI+ch9ejM2riYNGlJCo8byCW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C29kwEap; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+qxXz7KpbOkkRkEYu36ceT0ImQovcbfKknNflMC08DTcYFiZDVpS2qnvWhUz1/dT/z6UjksI48sBl74Cm00razQwYLQgIzkikT1/dgESp068YIS+CXQrqe6J27+INa8y4LUqt20ofLDAo4bTQqUbhraii9Pckqr3jP1o4ZImnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CfYgZpXv; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C29kwEap"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CfYgZpXv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724606077;
+	s=mimecast20190719; t=1724611420;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AMSOCCJyqzA8QFEQQ/0JphwdxnqDaSyz7otrZX0MojA=;
-	b=C29kwEapDgrTcUlofzbbYcNfL3Bwclz0MYBKm3o2fi3QyE9HPpeSMR4aHkbpsmz3Gig31M
-	4rXGQa5vlPOMxIeFYNZsfh8gbsJqitlJ13Al5ZawB1K6TQGr4b7YvgbwUuHJK6iYi6Rxzr
-	Q0rLyfZFMrU1NQnF2fgv9jOzpoZUYfM=
+	bh=tzjqxqSFdTG56HTSU+0Y5M+c2RbvZre9mhaXvz0CsmA=;
+	b=CfYgZpXvb1OK0+5HYC2DlLekmmiMnxXah/S/0NLfQD7jw92gGhMvBSfX+rv4ga3iHyZGMg
+	qb4FfPuks3WctCv3u+e3/wzgMVtdL5eDMUMciidlgKXPWrO/rGBMLfr+ict+ckkXsy2FyM
+	4J0OoC/uJ3NwXPrkvhq41gXA3cKfkRw=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-474-L-Z8QlHHOziXoRR8Rs-LLw-1; Sun,
- 25 Aug 2024 13:14:32 -0400
-X-MC-Unique: L-Z8QlHHOziXoRR8Rs-LLw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-177-kjFvbE3nOtm8IdSijvAT-w-1; Sun,
+ 25 Aug 2024 14:43:36 -0400
+X-MC-Unique: kjFvbE3nOtm8IdSijvAT-w-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E55C3195608A;
-	Sun, 25 Aug 2024 17:14:29 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 284001956080;
+	Sun, 25 Aug 2024 18:43:34 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EDFBB1955DD6;
-	Sun, 25 Aug 2024 17:14:25 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C018619560AE;
+	Sun, 25 Aug 2024 18:43:29 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 25 Aug 2024 19:14:23 +0200 (CEST)
-Date: Sun, 25 Aug 2024 19:14:17 +0200
+	oleg@redhat.com; Sun, 25 Aug 2024 20:43:27 +0200 (CEST)
+Date: Sun, 25 Aug 2024 20:43:21 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Tianyi Liu <i.pear@outlook.com>
 Cc: andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
@@ -51,9 +51,10 @@ Cc: andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
 	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
 	mathieu.desnoyers@efficios.com
 Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240825171417.GB3906@redhat.com>
+Message-ID: <20240825184321.GC3906@redhat.com>
 References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
  <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240825171417.GB3906@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,32 +63,22 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+In-Reply-To: <20240825171417.GB3906@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 08/24, Tianyi Liu wrote:
+On 08/25, Oleg Nesterov wrote:
 >
-> A key trigger here is that the two tracer instances (either `bpftrace` or
-> `perf record`) must be running *simultaneously*. One of them should use
-> PID1 as filter, while the other uses PID2.
+> At least I certainly disagree with "Fixes: c1ae5c75e103" ;)
+>
+> uretprobe_perf_func/etc was designed for perf, and afaics this code still
+> works fine even if you run 2 perf-record's with -p PID1/PID2 at the same
+> time.
 
-Yes.
+Forgot to mention...
 
-> Agreed, the implementation of uretprobe should be almost the same as
-> uprobe, but it seems uretprobe was ignored in previous modifications.
-
-I forgot EVERYTHING about the code in kernel/trace/trace_uprobe.c, but
-at first glance I am not sure that your patch is what we need...
-
-At least I certainly disagree with "Fixes: c1ae5c75e103" ;)
-
-uretprobe_perf_func/etc was designed for perf, and afaics this code still
-works fine even if you run 2 perf-record's with -p PID1/PID2 at the same
-time.
-
-BPF hacks/hooks were added later, so perhaps this should be fixed in the
-bpf code, but I have no idea what bpftrace does...
+And note that in this case uprobe_perf_func()->uprobe_perf_filter() will
+never return false, and this is correct.
 
 Oleg.
 
