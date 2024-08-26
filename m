@@ -1,131 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015E74A05
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 25 Aug 2024 23:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB6418E1A;
+	Mon, 26 Aug 2024 02:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724630223; cv=none; b=f+xpWwqYj7kRyrNEIeQcuKkgJxPHkBv8jT4wjpMxG9A9W6mb8HdpmKnUHW+yIHMI6u8SCFcv0Y4d1VpBn3bZTV8f0GvrI1aqhPi4VYOGfQC+7ATKfg0l6sOOd+QoUZZN3Xo/4RYXe9suyKO7q2OF5SykT26OrgazW0h18s2oxTg=
+	t=1724639493; cv=none; b=ASXRj0F4TSHTpH1pE7pSrMBprV8wohUbQGbB0PvadvoHfgylawM+x4GfIldnNfmwURmifvG7tmyWNnJMd6FC2hc75vyd1ofjNzMzU6E6qAiOSK1qiUIrMOdFwXG7QN4uyyM8+5Vleuuq3MZzy+rslJvV8Zoha1GTxOE0Hn5XVMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724630223; c=relaxed/simple;
-	bh=hvYokzFMe5UePsZ/nPOmknU2+X/+l6fJD+GOtsiVj/o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mo9Z3AkpN3yfwEwjfPApilBR49mBINxuClIHqF+SDMmOud0Ab7h0GHU3tnhb+qMNZO+QKbZs2KKUNKkH1z5i0hbyz3mbd1DnvtUfxZtFmDkznXkSwbJuis9/E27MdWak5YI31U8j/NF/gz5PmrPYr+cFixm02OySL8JgdcfvTF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=crdHDiAy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724639493; c=relaxed/simple;
+	bh=auvGWweHPionxG3Y2RIot08h1IaHqLUTT7XYr7Bux+w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HkeGYKGCx+dCczcVMOOGo9ZWrNrzAf4lejUBYG1qD9BDQ1HtR6ESdgX4cp+LEGrJCGg3Rg45EGWz1AD3gMyXRr9s9t5c43HNJ3sIMZEyCGvvW7H/bYgsD4vnyXimllRwta5FHlXUOAlt5wf+5Bl3p6pDXMHJgHbjQxEjjPLu978=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J33EkjvU; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="crdHDiAy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D07C4AF09;
-	Sun, 25 Aug 2024 23:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724630222;
-	bh=hvYokzFMe5UePsZ/nPOmknU2+X/+l6fJD+GOtsiVj/o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=crdHDiAyhvle7PKuFj5mB/HhXqqjmw5KQw2p7CggMXfFroLuw/A1zTvv2c4MEkBcn
-	 B0Ckrn//CijqwLmZLeUUUE8VH/8FxtwZGjvs9RkRrlSAWtQy8as93gJm0YUqjg7pFX
-	 BmQ8E7TYQYiZZqxA5Q+/9Zhg5m48jE/h2dD0lNprWvild7Cnb+VA4b9+r7tOpujn7B
-	 DSQDyGuYpkzSlTRkG62pmI3mRy8/oAVV68MswQ4Nu/qkImlbVyPv2banIYTxTCH+qK
-	 370/gJYT2DO3oIa39SGnh4JwP+fuBdXB/LotfWaHnm2kDWDuqmWhbrk3WVSXMQYNC3
-	 ylcsk5cnJU1kA==
-Date: Mon, 26 Aug 2024 08:56:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Fernando F. Mancera" <ffmancera@riseup.net>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/probes: fix traceprobe out-of-bounds argument
- allocation
-Message-Id: <20240826085659.939bde641e4bf13249dec6ec@kernel.org>
-In-Reply-To: <fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
-References: <20240813172546.3151-1-ffmancera@riseup.net>
-	<20240825164132.024faee7897e0ac126d8c58e@kernel.org>
-	<fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J33EkjvU"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6bf784346b9so18220586d6.2;
+        Sun, 25 Aug 2024 19:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724639490; x=1725244290; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0XScue1slDHBjUXVjmPax26pz/WL1rKHeatxMpCgrfI=;
+        b=J33EkjvUneEAQ7IrY04ueDnx8p5tDlmKPlIa+IxlvcpTc214iqMgSCbNDrmrZgBNSG
+         kKBTk7P6USq53BZHqkiu+KskQV4Jqv4MaUp17DkydRStK2+/rF7Mq7EihpRJc3768RUr
+         cBCioSfjcZdqGiyb2rakf1LvaHUR2yIeWeAMpvZ/elEwBTtboSDip6PPWHyoj6QtEyBI
+         LY4VoNXkoRrHwT/Da1/ojp7nFS6GfX3jrhKUKOnMIE6tdw96/679XDwHId07EBD0SbvO
+         P9OyjS+dBdw9sYk6XP3NisNBeRL8JgNkJAGPFuNPq7Vma8caACa6VlBJFGhvH0tm/JVA
+         FSdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724639490; x=1725244290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0XScue1slDHBjUXVjmPax26pz/WL1rKHeatxMpCgrfI=;
+        b=RBOQNrVHQubUIRt/FxaVdir15QuETP9+0S5K7df+kpK+VUbXaBtG+nDzcqoeRwadif
+         NMkn55Fe2zZOa6mXlCxQtaBn5ZM3n1YFyOC8D7xtu6fEfOJB9R1xrRuhRWZILxQCV+uy
+         XZ/vBS5Uiwfk0bR4S6tAGSKEWIHOC2mKpJlQYjy+spuv9mTLzqMFbrW6w+L4gRDP2KwQ
+         Ef6T/x/8++1hzpgAVv71zW9gL5zTYZcFuG2VH+EG7ToWLOfR4g/q/fDzI6oQo0ZfKyNo
+         KIaDEcx5JHwg47TP0AJK+BQgUfBbjcZ1Pir3QgQGIxpRTQalnDhs2st7lAcGLQgxgzQh
+         RmPg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+LLwmWF7SwxB4dhtHT73RfdD8s0GmnOkZ93FZNn7CYTInwiCupLKtiFwut6NsrmmX9kt+fSHT/A==@vger.kernel.org, AJvYcCU+Q2/qpK+CC3onhcQ7BwDX8R7kJCWIvu+enJ5zaRKoNJMWXX8lssgglf4CdzynpVesq+3okUkf0sbYibIO5r7fH9jo@vger.kernel.org, AJvYcCUfTuanryljPhtyo7jpioBGWFTefyUWB13kAqnHyFmFkHLpFPMmdabVjly+879hzf2+uSS9BvltB7w9EUd59A==@vger.kernel.org, AJvYcCVGs+GZ97iiVWrJbXD0ixBPqz30a5cBEefL8rgWKg/nlWF6+rRLy8Pd4ZoF7J7/wGSKNnBrcD8+s7SFlTPP1zHVbV8fxHdu@vger.kernel.org, AJvYcCVVgQWRNuPmfbgquVfn7PfcPR/1YFtC3SoPpM+4LTxn+fAvQR7b4Zu/LlsWj+HoWsHo48DheA==@vger.kernel.org, AJvYcCVwKBQ8X/SKwIzbn4/0wrGIsDmu20yZjWMKsKb09eyMQQt9IL5+o82XYenMVg1LFub5T3iw@vger.kernel.org, AJvYcCX72G27jpTwaedK8xNmFKpTSImxtiOn82cpZOjNhqzLfYYFSdqncKzFjl3vowXhoGJTdaRK529N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNkPg/QJ2Usa76CXkYTozsNnc2VoxrIDmBk1Qj0N6H+C2u674W
+	TYyfzLSd0rJ+xxQdJ9iSt5jA/wrt/cFTnqMj7OwXUnVQk14etHnJgd4W8HPOE1yC5XFuUTPDSfo
+	bxqSC79ZxycwGNhaisyufaQMgYNU=
+X-Google-Smtp-Source: AGHT+IGarR35eqB+ZCiektfid3NknQ5udphouR14HCsBw/jqFbYUFfZCBajx/1hzRrP8EuX3DNE+IOmZVcAYGIL4Z2k=
+X-Received: by 2002:a05:6214:318d:b0:6bb:84d9:8f91 with SMTP id
+ 6a1803df08f44-6c16dc2615cmr95291406d6.6.1724639490512; Sun, 25 Aug 2024
+ 19:31:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20240817025624.13157-1-laoar.shao@gmail.com>
+In-Reply-To: <20240817025624.13157-1-laoar.shao@gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Mon, 26 Aug 2024 10:30:54 +0800
+Message-ID: <CALOAHbA7VW3_gYzqzb+Pp2T3BqWb5x2sWPmUj2N+SzbYchEBBA@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Improve the copy of task comm
+To: akpm@linux-foundation.org
+Cc: torvalds@linux-foundation.org, alx@kernel.org, justinstitt@google.com, 
+	ebiederm@xmission.com, alexei.starovoitov@gmail.com, rostedt@goodmis.org, 
+	catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 25 Aug 2024 19:06:22 +0200
-"Fernando F. Mancera" <ffmancera@riseup.net> wrote:
+On Sat, Aug 17, 2024 at 10:56=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com>=
+ wrote:
+>
+> Using {memcpy,strncpy,strcpy,kstrdup} to copy the task comm relies on the
+> length of task comm. Changes in the task comm could result in a destinati=
+on
+> string that is overflow. Therefore, we should explicitly ensure the
+> destination string is always NUL-terminated, regardless of the task comm.
+> This approach will facilitate future extensions to the task comm.
+>
+> As suggested by Linus [0], we can identify all relevant code with the
+> following git grep command:
+>
+>   git grep 'memcpy.*->comm\>'
+>   git grep 'kstrdup.*->comm\>'
+>   git grep 'strncpy.*->comm\>'
+>   git grep 'strcpy.*->comm\>'
+>
+> PATCH #2~#4:   memcpy
+> PATCH #5~#6:   kstrdup
+> PATCH #7~#8:   strcpy
+>
+> Please note that strncpy() is not included in this series as it is being
+> tracked by another effort. [1]
+>
+> In this series, we have removed __get_task_comm() because the task_lock()
+> and BUILD_BUG_ON() within it are unnecessary.
+>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Link: https://lore.kernel.org/all/CAHk-=3DwjAmmHUg6vho1KjzQi2=3DpsR30+Cog=
+Fd4aXrThr2gsiS4g@mail.gmail.com/ [0]
+>
+> Changes:
+> v6->v7:
+> - Improve the comment (Alejandro)
+> - Drop strncpy as it is being tracked by another effort (Justin)
+>   https://github.com/KSPP/linux/issues/90 [1]
+>
+> v5->v6: https://lore.kernel.org/linux-mm/20240812022933.69850-1-laoar.sha=
+o@gmail.com/
+> - Get rid of __get_task_comm() (Linus)
+> - Use ARRAY_SIZE() in get_task_comm() (Alejandro)
+>
+> v4->v5: https://lore.kernel.org/all/20240804075619.20804-1-laoar.shao@gma=
+il.com/
+> - Drop changes in the mm/kmemleak.c as it was fixed by
+>   commit 0b84780134fb ("mm/kmemleak: replace strncpy() with strscpy()")
+> - Drop changes in kernel/tsacct.c as it was fixed by
+>   commmit 0fe2356434e ("tsacct: replace strncpy() with strscpy()")
+>
+> v3->v4: https://lore.kernel.org/linux-mm/20240729023719.1933-1-laoar.shao=
+@gmail.com/
+> - Rename __kstrndup() to __kmemdup_nul() and define it inside mm/util.c
+>   (Matthew)
+> - Remove unused local varaible (Simon)
+>
+> v2->v3: https://lore.kernel.org/all/20240621022959.9124-1-laoar.shao@gmai=
+l.com/
+> - Deduplicate code around kstrdup (Andrew)
+> - Add commit log for dropping task_lock (Catalin)
+>
+> v1->v2: https://lore.kernel.org/bpf/20240613023044.45873-1-laoar.shao@gma=
+il.com/
+> - Add comment for dropping task_lock() in __get_task_comm() (Alexei)
+> - Drop changes in trace event (Steven)
+> - Fix comment on task comm (Matus)
+>
+> v1: https://lore.kernel.org/all/20240602023754.25443-1-laoar.shao@gmail.c=
+om/
+>
+> Yafang Shao (8):
+>   Get rid of __get_task_comm()
+>   auditsc: Replace memcpy() with strscpy()
+>   security: Replace memcpy() with get_task_comm()
+>   bpftool: Ensure task comm is always NUL-terminated
+>   mm/util: Fix possible race condition in kstrdup()
+>   mm/util: Deduplicate code in {kstrdup,kstrndup,kmemdup_nul}
+>   net: Replace strcpy() with strscpy()
+>   drm: Replace strcpy() with strscpy()
+>
+>  drivers/gpu/drm/drm_framebuffer.c     |  2 +-
+>  drivers/gpu/drm/i915/i915_gpu_error.c |  2 +-
+>  fs/exec.c                             | 10 -----
+>  fs/proc/array.c                       |  2 +-
+>  include/linux/sched.h                 | 32 +++++++++++---
+>  kernel/auditsc.c                      |  6 +--
+>  kernel/kthread.c                      |  2 +-
+>  mm/util.c                             | 61 ++++++++++++---------------
+>  net/ipv6/ndisc.c                      |  2 +-
+>  security/lsm_audit.c                  |  4 +-
+>  security/selinux/selinuxfs.c          |  2 +-
+>  tools/bpf/bpftool/pids.c              |  2 +
+>  12 files changed, 65 insertions(+), 62 deletions(-)
+>
+> --
+> 2.43.5
+>
 
-> Hi,
-> 
-> On 25/08/2024 09:41, Masami Hiramatsu (Google) wrote:
-> > Hi,
-> > 
-> > On Tue, 13 Aug 2024 13:25:40 -0400
-> > Fernando Fernandez Mancera <ffmancera@riseup.net> wrote:
-> > 
-> >> When initializing trace_probes::nr_args, make sure the maximum number of
-> >> probe arguments is honored. Oherwise, we can hit a NULL pointer
-> >> dereferences in multiple situations like on traceprobe_set_print_fmt().
-> >>
-> >> Link: https://bugzilla.redhat.com/2303876
-> > 
-> > Sorry for replying later. I'm not sure why but I did not found this in my mbox...
-> > 
-> 
-> No worries!
-> 
-> > Anyway, trace_probe_init() should return -E2BIG in this case because
-> > it is actuall wrong value.
-> > 
-> > Can you update your patch?
-> > 
-> 
-> I agree this is the right solution but it would mean a change in 
-> behavior. Is that fine? Before merging 035ba76014c0, it was writing up 
-> to the maximum number of arguments and ignoring the rest. If you confirm 
-> it is fine to change the behavior, I will update the patch.
+Hello Andrew,
 
-Yes, I think this is the better behavior for users too, rather than
-silently droping some arguments.
-We also need to handle this error code in callsite and log an error,
-and add a testcase in the syntax error testcase. But that should be done
-in another series. We should fix this first.
+Could you please apply this series to the mm tree ?
 
-Thank you,
-
-
-> 
-> Thank you!
-> 
-> > Thank you,
-> > 
-> > 
-> >>
-> >> Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
-> >> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
-> >> ---
-> >>   kernel/trace/trace_probe.c | 8 ++++++--
-> >>   1 file changed, 6 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> >> index 39877c80d6cb..f577b5e71026 100644
-> >> --- a/kernel/trace/trace_probe.c
-> >> +++ b/kernel/trace/trace_probe.c
-> >> @@ -2043,10 +2043,14 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
-> >>   		goto error;
-> >>   	}
-> >>   
-> >> -	tp->nr_args = nargs;
-> >> +	if (nargs > MAX_TRACE_ARGS)
-> >> +		tp->nr_args = MAX_TRACE_ARGS;
-> >> +	else
-> >> +		tp->nr_args = nargs;
-> >> +
-> >>   	/* Make sure pointers in args[] are NULL */
-> >>   	if (nargs)
-> >> -		memset(tp->args, 0, sizeof(tp->args[0]) * nargs);
-> >> +		memset(tp->args, 0, sizeof(tp->args[0]) * tp->nr_args);
-> >>   
-> >>   	return 0;
-> >>   
-> > 
-> > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Regards
+Yafang
