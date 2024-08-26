@@ -1,114 +1,85 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E5119412A;
-	Mon, 26 Aug 2024 16:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9C91991CB;
+	Mon, 26 Aug 2024 17:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724689094; cv=none; b=jAQ4BqbkjiZa0guVZRSJ2rcOV360q8YTB0YUb0YWfJInNGjUpH5f6VNp6n/qslAQQ1wvarxWQlyKQvX8LTpPIfqJNGQT5i2rvvUwzlr1aDdv09wS/MS52pzzcIBBEJtzEGVkTxaChmKXbEkoOrD8iiHUC297Z7gjeLviYRAq9Vk=
+	t=1724693142; cv=none; b=G916XjrtO5PFdatmhgNI4nYOGPtW/2J3wuZVGs2UvGeugx7yYl4F88tLt7m8Ay+fN+1xzwK+0oxNi3GA7i91Csg9NCKaxkPGge5RCJWYJzI6SaXD4OCvHf5FdJWxquzlEz2AJT7fvAL1YP3k2lxvfNz2y/QNZZYtpHgysCpsExA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724689094; c=relaxed/simple;
-	bh=rHfc3tUO0PlXoEJaAEGPazJsuKQe7Tx6BQoOTkHo4QY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZt0Q8t9GkHfZLCBsQvmBxy4qwOOJ2s099/L0zuZBed5H5v7SjbNovsjIwMWmGzTefKY7qLLz244WJgWriM/OOLP10+FKkLrF8DeU2+CTLZ2kRzCIqcMcRL/1Fp0wRCIB4dcv82RmEtwgZSMcpj8bD+Dg4MezgDdb+MCXLCILBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evCIvVgt; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evCIvVgt"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d1daa2577bso3470563a91.2;
-        Mon, 26 Aug 2024 09:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724689092; x=1725293892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxRlPyW1oHXAOOQ1Sj4I0wIP7vxw0OFPP0mCZsrFZrU=;
-        b=evCIvVgt1k3/t/wB0Gj+BjlcdMqDb5M8vJb6RZoZN0njai4PPikNOpMh6io0pPmtyX
-         4Clr3buIeUNoMZ+by+vUcKW3AZxuTHPN8HAUoqj4WPKiej4OF9rMwCVEYl611ISl7yAM
-         0k1LIfsrvbZ0BZArCG86bdEMMd42Q6RW53L20lLHF+/21iVOak9+i52eqok06OEMuv5D
-         ro3LPDpwKUwouiRo0+3RC09RhtZYc3ziyhG8agB/gkP/d+6Q6OpD4BcWSyvI82oY2IJy
-         gvJHWJ2aNef8I/SmfMLo4QE9tmMBfzAmb1yNL3yBaYUIsV3Rq5xAkQrqpW8s+3ITr6Ah
-         tHUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724689092; x=1725293892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lxRlPyW1oHXAOOQ1Sj4I0wIP7vxw0OFPP0mCZsrFZrU=;
-        b=vtH8HN52q0nBBRJqwBaQKsKueuq/2wEYPC6N7kcX6u2JGA6w86f76agFX1bnyPPDt8
-         at164vSxeQxTwifBzfFC3lpuWN5NAnAS7ylbF1NoJ+lCJxKRI4A2U7fZ8mwfsFm/MObM
-         kWkIOFwHCMK+i902JImXPKQRBfaq/ji9u98nW420xcXTQhxLYaKyDaLdX6/zLrkJbfl9
-         mqxzfnxBP0dTnjpgTPUwp63r2u+6wAcyyTnWEcjOpCXibmvjfNoqj/CzUs8WoZrkTNY0
-         rJY3JegXcpVeDFMnvdNcknyLRQHO3kKkAsmVgdbmx/EsxNkYvgUnMlJeZHt9BrriKI92
-         9IKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtMPqCgl1OWnUbN7OxNFlpvCx6rcy0fwr1/iXD9qDEKEi8jJw8S38koPu/EhwGjActsmc=@vger.kernel.org, AJvYcCVz3O3ZkKl6xhI1lIy9g4G/2iDVuBrq1m9pZ4U+O5XdYMNWvsbECJ1NKEZI148jKhZo8N6qgIzX/oqFNnB7@vger.kernel.org, AJvYcCW89FTY2khSHwctRvNb/v6cJKpJczsF7D/FMStpYUS7HLT1aacxR5sn7cTD2tEShCabM32sa8p3mwFCfKeOb+kjctg7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLGjyn5K02jAeTaJxTbI/AD8AqenFcVQ4Cj0qQ9ht5rWXTxSLF
-	N1PYyG/UvcLRind3ksBnSxdTwPEPs2Qw6Q3VuR/odoeXINKnapPfhlanvlNh+UvLGyQMf7w5QlL
-	ZOZC9Xd79PFhMOOe8amRYIr4J6rE=
-X-Google-Smtp-Source: AGHT+IGRORuD5KXx1BI1X9UTnYM6Ctxz/wPpGOqICBOnAnMjMwqqox1Omxa/T6kOEq975iQJ2a7W/qEE2j/UGSD5nw4=
-X-Received: by 2002:a17:90b:1b0a:b0:2c9:80cd:86b4 with SMTP id
- 98e67ed59e1d1-2d646bf64c2mr9713580a91.11.1724689091970; Mon, 26 Aug 2024
- 09:18:11 -0700 (PDT)
+	s=arc-20240116; t=1724693142; c=relaxed/simple;
+	bh=bFCDh6HQGIio1OqCsuLrcWyXqRIk/lGjSx9LbGP/dQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LcaRANxQlu/pQB7NXVr6LjThH77XLc/LVAvV39+99iadaGULqlZZFna91weRH3nrs4VMO5Ot/LhqAqkMnfgrCZA2I/bfAoul1I8Zdp+Ex2rbaZJJNgMGH1gk2kKsNmQQMKNox5vwHuZ6pC3smBfyVDABQigkRbEYlfJSRh3zFYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0EABC8B7A2;
+	Mon, 26 Aug 2024 17:25:40 +0000 (UTC)
+Date: Mon, 26 Aug 2024 13:26:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in
+ timerlat_fd_release
+Message-ID: <20240826132620.1618d201@gandalf.local.home>
+In-Reply-To: <CAP4=nvQnW5vS5CQBZtKp-BdjYxNFbq26P36uRy3RhCenHEG_YA@mail.gmail.com>
+References: <20240820130001.124768-1-tglozar@redhat.com>
+	<20240823125426.404f2705@gandalf.local.home>
+	<20240823145211.34ccda61@gandalf.local.home>
+	<CAP4=nvQnW5vS5CQBZtKp-BdjYxNFbq26P36uRy3RhCenHEG_YA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240809192357.4061484-1-andrii@kernel.org> <20240813223014.1a5093ede1a5046aaedea34a@kernel.org>
- <20240813154055.GA7423@redhat.com> <20240825191512.98a6ea20b4783345f4d5ba1b@kernel.org>
-In-Reply-To: <20240825191512.98a6ea20b4783345f4d5ba1b@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 26 Aug 2024 09:17:59 -0700
-Message-ID: <CAEf4BzZgu4-aosJqjVZQCX27v1Y67GUT0UOvDUOn2EB2fJDvSQ@mail.gmail.com>
-Subject: Re: [PATCH v2] uprobes: make trace_uprobe->nhit counter a per-CPU one
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, peterz@infradead.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Aug 25, 2024 at 3:15=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Tue, 13 Aug 2024 17:41:04 +0200
-> Oleg Nesterov <oleg@redhat.com> wrote:
->
-> > On 08/13, Masami Hiramatsu wrote:
-> > >
-> > > > @@ -62,7 +63,7 @@ struct trace_uprobe {
-> > > >   struct uprobe                   *uprobe;
-> > >
-> > > BTW, what is this change? I couldn't cleanly apply this to the v6.11-=
-rc3.
-> > > Which tree would you working on? (I missed something?)
+On Mon, 26 Aug 2024 15:01:24 +0200
+Tomas Glozar <tglozar@redhat.com> wrote:
+
+> > Before the reset, all but one of the tlat->kthread is NULL. Then it dawned
+> > on me that this is a global per CPU variable. It gets initialized when the
+> > tracer starts. If another program is has the timerlat fd open when the
+> > tracer ends, the tracer starts again, and you close the fd, it will cancel
+> > the hrtimer for the new task.
 > >
-> > tip/perf/core
-> >
-> > See https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/diff/ke=
-rnel/trace/trace_uprobe.c?h=3Dperf/core&id=3D3c83a9ad0295eb63bdeb81d821b8c3=
-b9417fbcac
->
-> OK, let me consider to rebase on tip/perf/core.
->
+> > I think there needs to be some ref counting here, that keeps the tracer
+> > from starting again if there's still files opened.
+> >  
+> 
+> The timerlat fd is not supposed to be open when the tracer ends/starts
+> again, since osnoise_workload_stop() calls stop_kthread(), which in
+> turn calls kill_pid() to SIGKILL the user workload, which will also
+> close the file descriptor. Only one PID per CPU should have the
+> timerlat fd open at one moment, since timerlat_fd_open() will refuse
+> to open if tlat->pid is set. It appears that this is somehow bypassed
+> and osnoise_workload_start() happens before closing the fd, not sure
+> why.
+> 
+> > This looks to be a bigger problem than I have time to work on it for now.
+> > I'll just apply the mutex patch for the kthreads, but this bug is going to
+> > take a bit more work in solving.
+> >  
+> 
+> Yeah, unfortunately the issue looks more complicated now after looking
+> at the traces you posted, I will probably have to do more tracing to
+> see what is actually happening here. Thank you again for helping us
+> with this and also for the patch for the mutex.
 
-Hey Masami,
+Yeah, I think I finally found the real issue. I don't think we need the ref
+counting. The problem is the creating and killing of the threads via the
+start and stop callbacks. That's not their purpose. The purpose of stop
+and start callbacks is when tracing_on is set to off and back on again. I
+think this is what is racing with the close.
 
-I've posted v3 rebased onto linux-trace/probes/for-next, so you
-shouldn't need to rebase anything just for this. See [0] for the
-latest revision.
+Anyway, the start and stop should probably just pause the threads and not
+kill them an start them again. That is, the osnoise_workload_start() should
+be called by the init callbacks and the osnoise_workload_stop should be
+called by reset callback.
 
-  [0] https://lore.kernel.org/linux-trace-kernel/20240813203409.3985398-1-a=
-ndrii@kernel.org/
+The start and stop callbacks should just pause and restart the the threads.
 
-> Thank you,
->
-> >
-> > Oleg.
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
