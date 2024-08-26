@@ -1,125 +1,135 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CD4198830
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 17:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF99824BB;
+	Mon, 26 Aug 2024 18:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724694054; cv=none; b=urucqhAzHBjQ5DkdUmFjbEzYf+FlUGc+kZ1gGzNTfrQCEzWA1Gw585mSVrIox6Zxe6Yu4ZltdXuXFIuLSMAF7ChTWM/UHs2ZajS6kTRRa2LFbuCuYdIh+UkN13fpTeiIwiPCg5HeZQXulSNeuqhwnsu9LkYtlI6x8UvFPlOErk8=
+	t=1724696660; cv=none; b=YMAcUoBCL2uvte+AZ0a+T7EDozvMoAKo50D/YJ4BMLdBTnT2+IvfsH4xCDaKZ9WZRZqILdewstHnTn3rNKiF59j+n5aBiZvR98oLgaaluQLsYWQFAfJ1ZIJgpXFGNrJsdoEGKEwuPW4vk4Hjci1zYFAMNGAokXXTJC0NpeXkegk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724694054; c=relaxed/simple;
-	bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=uNpf+L28GhLsgWoZ9mI1orxmuGpw7rsymf5jN5Leogzwy5V3zqqpzq/+lT6Y0qA52Pd15GX1anHIaGMLmiKar2vTu3pb5kuR2WHIUf0VmeBwaja8LwUtLMqNNFFKfIoBo1sA7SkyZOOkb0C3eSQ6sHSniq091yr4uQvHtJXqxaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=euz5BZ4s; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1724696660; c=relaxed/simple;
+	bh=byxJHCkx5Iq4r6CRiwRwkfcMCKInE2GC/ymxSu+bhks=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WPLMnL5rxuYsfXjZmhXImM2AvGQd+eV56pjciOaGUnBTey3JbbbYeIFGUbVuVQqsTca1zLChKRQbGpQP3RbGL05lY4Bxn3EGJrMOc/cMklDzG9t3+zR6PWggvmwqQsjlSQ09+jMoAQM2tLqwe2DH0+Zjap1fcWV12S9VZmOWAgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ncznHNBb; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="euz5BZ4s"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1653c8a32eso8174547276.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 10:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724694052; x=1725298852; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
-        b=euz5BZ4scNKSHoGCtSlVDrqDx8VVtRJwj96AUO7t96IIB/iWnUwzmG/RKfqCiNfygT
-         zsGR3LXLx9R4ut+BNjZrHa70OgFxfrlN1ly0+fuJo90n9KI/1sR9rjhEBEdFYnfXImtA
-         Y1d0PaDoz7nmB/s6q4V3T48CMNGAds2T62QRePZptmwG5eAB/Cc7abxwkt40GXSSBTnh
-         ptYCCLvn0Darm0QohULf08XquWfSp2UT9mnHjm/C3kbQXmAfo1jk22VSiF2O9PA5AeZk
-         OBmtvEldei1GoqMiebfOR4W2Jg7nrRBlCJFQoCb24OGAz70h3vkJpJCnJzQXqlqYl9n6
-         7KZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724694052; x=1725298852;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IRpbKT8eDTs2jbkcv3eRtpU9kxct2vnPfTcDOFQv4ew=;
-        b=h6chDdrk0pjrp368PXH8XYvdpklHPRuxvS+Ji1P3AcoOcrOzntwGIaG4ULwhfGEt+w
-         NephMeFs7BV5K0Y42CafV4+6++Z2qkS3MFJgG7MBX9IEEWeKkA/IuBQa03j2aR+hmR9Q
-         9QdLFadxspMukw7at0Ju9qymmxyGGU4hZorOZtZwpAzjAfLK837YyEiAw28iwAiSBYhr
-         5QZOU1R3cd8iZtDuGS05YIj6zhn9L87Gn3IYOALRrBxZtl0Nne3O5DTAw1as3bgxG8De
-         3HFd/i1CRA7KXtWRvpAvPi+tQnCeaMjYkbfip5XeEkqiibZbKh/x0G7WwKcWSxS5TC4U
-         DaVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbc3EoLecBE6oyNw4zNwHvum/W/U6kanPYsEUgjSyK+XgS2Qz39QSNHb/r1AgE73TzA7ROu1nMPHo7eVWgxnBDAVc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeairEO8hKjPjCgC6ITzgNIfcKRfnEfjBkazLJSMmb1SA9/TX9
-	Keoz39q2gzDXshwAJaGXlXdz1DD85iAYDvn+caxlwYqN9HQQgJ7u3RR9Yui6x3U+BAuL7adrk+l
-	RBAMNR0NWKeorBQz1UHNFMQ==
-X-Google-Smtp-Source: AGHT+IFLZCvHUGimXlZ9eOrIm8DbE3Ww2SBM+aysI+wCSClXo8gNSrTZOIhqS+2PU6aHWHPOxJN8b0j1y3mqiL6SmQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:32a1:b0:e0b:bd79:3077 with
- SMTP id 3f1490d57ef6-e17a8630eb5mr18971276.9.1724694051919; Mon, 26 Aug 2024
- 10:40:51 -0700 (PDT)
-Date: Mon, 26 Aug 2024 10:40:49 -0700
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ncznHNBb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Cb7Yezg7cVEgPihDB4fJdUYT14KzFQDF5zArc6GNXOc=;
+	t=1724696658; x=1725906258; b=ncznHNBbok0ZiEBpzu14cPJrNXbLVeJ79hlGWQHhvuJpG1q
+	l2citja3YBF29Cuj95qYIUe/nh7iZ9bOl1o0DsH7E1YspONrayCioEh5xKHuLmzVEFhFsgTgU022G
+	Fu0y7m8+F5xuhEari+nu1P5hz9ONDiKaNuXLkss/KadArdRtIkAmSIZhcZUcg5myLXyeMA+mhmOBo
+	clF4yEmt41F5rT6aZsuaTGoWVrqYtTalCxq1DUBp7TXSlqhBRgUMDTYDXgsAURmVvyGmcAbBupHQ0
+	xvtsKUepaawkyIVRUlcg2J43WIbkLiPBKxk6GXv0gp4yN/pzn4Ortl3Pxq/OC3PQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sieNt-00000003Mw0-3RFH;
+	Mon, 26 Aug 2024 20:24:10 +0200
+Message-ID: <2804ef964f4ce1c4689c1e741ef45e6b6d3f6422.camel@sipsolutions.net>
+Subject: Re: [PATCH v5 0/4] tracing: improve symbolic printing
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Date: Mon, 26 Aug 2024 20:24:08 +0200
+In-Reply-To: <20240819182340.3bd23d67@gandalf.local.home>
+References: <20240614081956.19832-6-johannes@sipsolutions.net>
+	 <20240819182340.3bd23d67@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACC+zGYC/yWN0QqCQBBFf0XmuYF1K9B+JSLW8aqDMcmsRCH+e
- 0u9HDgv52yU4YpMl2ojx0uzPq1IfahIpmQjWPviFEM8hSYGzqubLB+e4YYHr54Ef947TyYTC4f Uno/opB9QUyktjkHfv8v1tu9ffCLlGXUAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1724694050; l=1750;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=38RYpX0itHRcFlvcfwO20AY1tm82Tl6U3bOwLFm4DaM=; b=32tkeynr+w56sMQwNB1tcARgQrlhZTXteUye/hSpgeKtvOHvrqN6XgA5kAqwRGXZOfaLNFjlS
- 51LpAtw4U4DAT7JN8z2LQFtfXpDQBxQQDYAfrpEifJOGQgHXif6GjEO
-X-Mailer: b4 0.12.3
-Message-ID: <20240826-strncpy-kernel-trace-trace_branch-c-v1-1-b2c14f2e9e84@google.com>
-Subject: [PATCH] tracing: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Hi Steven,
 
-Both of these fields want to be NUL-terminated as per their use in
-printk:
+> I finally got around to testing your patches.
+>=20
+> I did the following:
+>=20
+>  # cat /sys/kernel/tracing/events/*/*/format
+>=20
+> and hit this:
+>=20
+> BUG: unable to handle page fault for address: ffffffff8e6333d0
 
-    F_printk("%u:%s:%s (%u)%s",
-      __entry->line,
-      __entry->func, __entry->file, __entry->correct,
-      __entry->constant ? " CONSTANT" : "")
+Ugh. That's ... unfortunate.
 
-Use strscpy() as it NUL-terminates the destination buffer, so it doesn't
-have to be done manually.
+I couldn't reproduce this so far, do you happen to have the .config and
+qemu command line perhaps?
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- kernel/trace/trace_branch.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index e47fdb4c92fb..aa63548873c3 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -74,10 +74,8 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- 		p--;
- 	p++;
- 
--	strncpy(entry->func, f->data.func, TRACE_FUNC_SIZE);
--	strncpy(entry->file, p, TRACE_FILE_SIZE);
--	entry->func[TRACE_FUNC_SIZE] = 0;
--	entry->file[TRACE_FILE_SIZE] = 0;
-+	strscpy(entry->func, f->data.func);
-+	strscpy(entry->file, p);
- 	entry->constant = f->constant;
- 	entry->line = f->data.line;
- 	entry->correct = val == expect;
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 183c40067 P4D 183c40067 PUD 183c41063 PMD 1003ef063 PTE 800ffffe7b9cc=
+062
+> Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> CPU: 7 UID: 0 PID: 893 Comm: cat Not tainted 6.11.0-rc4-test-00004-g4ce28=
+36f008b #56 68afcee1248519f8b3b088836c40746e4a6b69d3
 
----
-base-commit: 521b1e7f4cf0b05a47995b103596978224b380a8
-change-id: 20240820-strncpy-kernel-trace-trace_branch-c-0a953ebcdfe1
+I guess that's just my four patches; reproducing that (rc4 + the
+patches, seems there was a small conflict in skb tracing) ...
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
+16.3-2 04/01/2014
+> RIP: 0010:f_show (kernel/trace/trace_events.c:1601 kernel/trace/trace_eve=
+nts.c:1651 kernel/trace/trace_events.c:1689)
 
+means this was
+
+
+        for (i =3D 0; i < n_sym_defs; i++) {
+                unsigned int sym_len;
+
+                if (!sym_defs[i])            // <--- HERE
+                        continue;
+
+which seems really strange to me.
+
+Sadly the
+
+> Code: [...]
+
+was compiled so we don't see 'i' here, and the stop value is on the
+stack...
+
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   33 63 8e                xor    -0x72(%rbx),%esp
+>    3:   48 2d d0 33 63 8e       sub    $0xffffffff8e6333d0,%rax
+
+the big constant here must be __start_ftrace_sym_defs, being subtracted
+from an already loaded __stop_ftrace_sym_defs in %rax ...
+
+>    9:   48 c1 f8 03             sar    $0x3,%rax
+
+also part of the size calculation (n_sym_defs) - we have 8 byte pointers
+in each entry, so >>=3D 3 makes sense.
+
+Given RBX is 0xffffffff8e6333d0 as well, that means
+__start_ftrace_sym_defs isn't a valid pointer? But then what was
+__stop_ftrace_sym_defs? And why would the section be non-empty but
+invalid to dereference?
+
+>    d:   85 c0                   test   %eax,%eax
+>    f:   74 67                   je     0x78
+
+Anyway this aborts if there are 0 entries so we get non-zero in
+%eax/%rax ...
+
+I've actually tried now with an empty section, and that also works OK.
+
+Is there something special about your build here?
+
+johannes
