@@ -1,136 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED4114901B
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 13:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBA7183CDA;
+	Mon, 26 Aug 2024 13:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724677304; cv=none; b=WfdvjGwQyCKDEKgOxAPXSoVEJh4Xm9j438hY4gzt0vplwLYL4D7737IvLN+LYsUwHxQd1revPxd7LFgpCW71TOCwizVDasvTuLfHQ2e9t9eVdJJ3OI32oIzveN/gi7buPab+ynPwxpJ3loPg81YQRXFZWY5O6BYZ3SI+1KsUktA=
+	t=1724678035; cv=none; b=MaE+grUPrJEEJMVMHdk3eOZ9e3pg0cx2Qd8eRUwajSOH+a5KCm0ADGSzJc/I6xLHFXXuQi92163T1AtDskj16pHx7pVNut4ij08+TX+KpL86m4ToCVo90r1sRPIJ8RCX0cgOX8m2AK8XarWPK3WjccDoMeVn9GN6fhd6I0Fa4uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724677304; c=relaxed/simple;
-	bh=2Opw6vNFqtAowmYwHyECODo2kqem1ugNhw4ntDm8Jjw=;
+	s=arc-20240116; t=1724678035; c=relaxed/simple;
+	bh=uXndQDCUvnx0Z+cralt3H9P3W4x5FKSzMQBt52DRN90=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Opa+t2gLH4v9Shoc/yFZ0izAWeXvENFhaNDUElSbB7aAaCk825fDDoUNB8WMgv6xKJ5NfSsf13sclHiZ78GoRUEn9gU3EK7BghPeFANEmZ59+oxkYCeooHB/tEIOnTUcQ7+G2zG/Ap3EV669+RJ7vaZ2OWPljMaZudjnMZwwzfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZZsWqr5l; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=AbdsifLh+Bssk78WABghf0ZWcZlft1NCMo5ruWx+BdIOSp0jjY8SSJa1dGiGVwfjQNe6ylAQodlwTXOtw5aYRqwy/tRgDKjEcuMOxv6dXQUrO75ZzfF0qve0NAmOU1nJr4DtmAMBmjRMUlBg5jedcBn9S1RQjVD3DVyZMvpkYoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G2aFi+kO; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZsWqr5l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724677301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PtUuKStDI/TrqAejzoVfdWdlirHG5pbXKKxkB5GlHAY=;
-	b=ZZsWqr5lXds1xQ9B6IToTaPPmctCTtGWrVWxAWS0i+P5cHaQQQOWex4lKLdp8VH5GT7e2b
-	c3hw4bf+wnvX7Hm4YJ4LiCDQzDCBJuIynQblhnKqwUrUmKZbl2bXGeAQqkIM3SB6JD9aLl
-	k4DIHCeXrN9rwS+ApaG9eYJH95jpXZA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-436-0mz49oPhOTOcBoj1IKzk5g-1; Mon, 26 Aug 2024 09:01:38 -0400
-X-MC-Unique: 0mz49oPhOTOcBoj1IKzk5g-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7a8281dba5so397012966b.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 06:01:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2aFi+kO"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6bf7f4a133aso23042536d6.2;
+        Mon, 26 Aug 2024 06:13:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724678033; x=1725282833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vSwJhEnVRbE/lc1fBQhKHoYSdjJMMB9ydQkFXZg7Wl0=;
+        b=G2aFi+kOco8F7A7ev4siqM77VYWHD1SS+N9xARzk9mXa5Z7M7vt+omxkuFb8DdcgF9
+         zXPRGYJqqrzBLfS1Cas03+0K4qYSKwBBSFD6Bq8nRK5EbZZGNqT1lbQ/l6U/SvIXMV9j
+         zAUTSlgkhhszD4hIHfQENG1EIfyG8eEdi7xPlkqHtO8XHwk4RVSJ1YKHnKCVfbqr2oh0
+         94NBVtwYwm2YjN16k5guBkdrWHDmxpSOXoczIq3F3cCVhfkpkcuLHzyd3pFmkT7n5/8d
+         nKZJUf38vCZMggus3JMlzpoKge0iV5vKealnTfCY5EFgt2EQ4Cr7H76zd3KoY9/DLw/N
+         +WAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724677297; x=1725282097;
+        d=1e100.net; s=20230601; t=1724678033; x=1725282833;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PtUuKStDI/TrqAejzoVfdWdlirHG5pbXKKxkB5GlHAY=;
-        b=ma9LtHgizuJXmyCCb7TOk5cOYLsEtzkYLl39bfcewzs1y10ig44uOnakVUf35me9Rv
-         Ea1OccmcWYg/dgF9o5XT5E1M6+NdAIKLeLCorWpfWJuM4LYyGaKRjs4AVGwnaToVbmHu
-         59oM8czVYebw0MXRtIAg1gcnDS7Zk6rSP44Lbvbica9eToSFyI7ZFtgjT7fKR3Z8wJp9
-         dClHef5toUclU4yqZNi58+rtCzuNBqruKpi8Qcx+zR7EEuLNOGNe+LJCse/mktActVNS
-         k5ht9TCGu5OU8tIjAnPK+BXL9dITkFlR9brj6bRm0e2XL48dtx74MwnloVeYjLHtEn5O
-         mNEg==
-X-Gm-Message-State: AOJu0YxX1RfHpPuITysC+q3A6d6MoEgtCh3KfCwD6GqTAJ+C7P3aaNv9
-	riSIbZr5a38z+P268nVS0Evgbjtr2GU/Ti2DXG9M1m6MhiHzsGr9YwelIVzCa5MMWCKehFM1KiM
-	V+v+1KKeBDJtfWKDmDzlKwkM4TeAtIbAEYE90TpPOZARSMuz+vgcTdaPcVS04vXMxbzOcXyBte2
-	UNQyDSW40Fg8+TMl/GbU4HsXG3nef//vqMwjEq4BqVoXRp
-X-Received: by 2002:a17:907:dac:b0:a86:b727:3f27 with SMTP id a640c23a62f3a-a86b727424dmr392975966b.52.1724677296760;
-        Mon, 26 Aug 2024 06:01:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG53fvNxGfjMtYsvqkzmA0t0VlDbb1UXlcCb0hnV4Mk6ey39DNiK7UN5zFZsZLnqKxLsPGZy+PWs1LiyX/NUfc=
-X-Received: by 2002:a17:907:dac:b0:a86:b727:3f27 with SMTP id
- a640c23a62f3a-a86b727424dmr392969866b.52.1724677295454; Mon, 26 Aug 2024
- 06:01:35 -0700 (PDT)
+        bh=vSwJhEnVRbE/lc1fBQhKHoYSdjJMMB9ydQkFXZg7Wl0=;
+        b=gs+3hEUa9f7CI0POgR9qS3NcEjGNtCssdrN7CQtTayV1nVcalh9QryoctEctsPGZ7k
+         TMnab61DgsArompmA7uydEewDQEVdPkhyEpACrVSA3cvM0VnmPbYy40RFSvY2dOjZix0
+         EdNPod7kn1rKtxhD7lQbxdKtF58khDCTdW+g/43qcvg6OXDvoML/AyiuNFITehpqZSAT
+         UN4ly2vaWvFM67ugLDggFVAFAsnj3XuMXyJpYUCBxSOfZkGZFpj7OSGmWjPFV4kOKFQb
+         iYzV9BxXE4c2hXNxHU2OUvNHu/YZu/dTQUcGegzQQkp8GiisvUSsI0NTVD5txLNpIkV0
+         6e7w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ClygvLS3mjyt7se83bpFk5tbJjFXdDmm1opJ3v9PS74Ejhon0MuuTu2wAiMKGu+FIFeOQdbbiNK6yco6/saFzwWf@vger.kernel.org, AJvYcCU3p4xPq/zisqMnlMG5IMvdjAz49G7QtULEcD3tBDNl2cYIdDvsqvVN5mRDS4Q/D+T9BQ0+nTIX4e4JT/x7i8eS//EycQeV@vger.kernel.org, AJvYcCULhyl27VLZnSINwLuse687eE1Z/m7G6b14F1vuZoX3UfjlRC1VGsj4tKnVU5lwAM8UpJgpvX4GpMBrHPS8EA==@vger.kernel.org, AJvYcCUsKzmbvn/BTyybb5sUYnPxC7bFDTMi9woll1o+j9UMd+lscRYrkUkRc/R9eogDBA2XpB7rlnFj@vger.kernel.org, AJvYcCVzfSzxNbPxr0OBavXpBvqeNWuUQ2ESoDPgqDH6V7OwMSYs6YPgo18hAXk6YbSQSJwKoNgd@vger.kernel.org, AJvYcCWLflpr/Iba5wwF+1l+jBHBfSCEaqjX5whECpSSKCxyMJdlHDkCoECIltQBoJuSixUsIFAzSQ==@vger.kernel.org, AJvYcCWQK4kkZj9NqeYD7EQUF7bmfLR2E5exJYll96FnCkTFB/FdyajKDqYcLCN5vpsT52zSDxm46O1O3g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw65lRZS6hAqREgZ7Haf0AsuxNGiOYB3+S7CQT4ie0ifahAt/LB
+	mF9Mwmduu48rJe9NQh4rLK+cxc9GOcB8FXMX+nO8xnSYy3QJgk8XAd07fYBNa407ZxvtyZoojN5
+	tzehKJK7BU1WH6jxTTMmeYk0CUw4=
+X-Google-Smtp-Source: AGHT+IEMzX23pNCTwUB3oEFnjtXMwQslYwQseElwS5dsww3heTV7mBPQDdBjGem5UqseBxKdUwlhHXFriIKrdvm/EEk=
+X-Received: by 2002:a05:6214:2b82:b0:6bf:78e1:74e7 with SMTP id
+ 6a1803df08f44-6c16deb3b70mr122308516d6.50.1724678032741; Mon, 26 Aug 2024
+ 06:13:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820130001.124768-1-tglozar@redhat.com> <20240823125426.404f2705@gandalf.local.home>
- <20240823145211.34ccda61@gandalf.local.home>
-In-Reply-To: <20240823145211.34ccda61@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 26 Aug 2024 15:01:24 +0200
-Message-ID: <CAP4=nvQnW5vS5CQBZtKp-BdjYxNFbq26P36uRy3RhCenHEG_YA@mail.gmail.com>
-Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in timerlat_fd_release
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <20240817025624.13157-1-laoar.shao@gmail.com> <20240817025624.13157-7-laoar.shao@gmail.com>
+ <nmhexn3mkwhgu5e6o3i7gvipboisbuwdoloshf64ulgzdxr5nv@3gwujx2y5jre> <ep44ahlsa2krmpjcqrsvoi5vfoesvnvly44icavup7dsfolewm@flnm5rl23diz>
+In-Reply-To: <ep44ahlsa2krmpjcqrsvoi5vfoesvnvly44icavup7dsfolewm@flnm5rl23diz>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Mon, 26 Aug 2024 21:13:16 +0800
+Message-ID: <CALOAHbA5VDjRYcoMOMKcLMVR0=ZwTz5FBTvQZExi6w8We9JPHg@mail.gmail.com>
+Subject: Re: [PATCH v7 6/8] mm/util: Deduplicate code in {kstrdup,kstrndup,kmemdup_nul}
+To: Alejandro Colomar <alx@kernel.org>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
+	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
+	rostedt@goodmis.org, catalin.marinas@arm.com, 
+	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Simon Horman <horms@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-p=C3=A1 23. 8. 2024 v 20:51 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
+On Mon, Aug 26, 2024 at 5:25=E2=80=AFPM Alejandro Colomar <alx@kernel.org> =
+wrote:
 >
-> Egad, I don't think this is even good enough. I noticed this in the trace
-> (adding kthread to the memset trace_printk):
+> Hi Yafang,
 >
->            <...>-916     [003] .....   134.227044: osnoise_workload_start=
-: memset ffff88823c435b28 for 0000000000000000
->            <...>-916     [003] .....   134.227046: osnoise_workload_start=
-: memset ffff88823c4b5b28 for 0000000000000000
->            <...>-916     [003] .....   134.227048: osnoise_workload_start=
-: memset ffff88823c535b28 for 0000000000000000
->            <...>-916     [003] .....   134.227049: osnoise_workload_start=
-: memset ffff88823c5b5b28 for 0000000000000000
->            <...>-916     [003] .....   134.227051: osnoise_workload_start=
-: memset ffff88823c635b28 for 0000000000000000
->            <...>-916     [003] .....   134.227052: osnoise_workload_start=
-: memset ffff88823c6b5b28 for 0000000000000000
->            <...>-916     [003] .....   134.227054: osnoise_workload_start=
-: memset ffff88823c735b28 for ffff888108205640
->            <...>-916     [003] .....   134.227055: osnoise_workload_start=
-: memset ffff88823c7b5b28 for 0000000000000000
+> On Sat, Aug 17, 2024 at 10:58:02AM GMT, Alejandro Colomar wrote:
+> > Hi Yafang,
+> >
+> > On Sat, Aug 17, 2024 at 10:56:22AM GMT, Yafang Shao wrote:
+> > > These three functions follow the same pattern. To deduplicate the cod=
+e,
+> > > let's introduce a common helper __kmemdup_nul().
+> > >
+> > > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > > Cc: Simon Horman <horms@kernel.org>
+> > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > ---
+> > >  mm/util.c | 67 +++++++++++++++++++++--------------------------------=
+--
+> > >  1 file changed, 26 insertions(+), 41 deletions(-)
+> > >
+> > > diff --git a/mm/util.c b/mm/util.c
+> > > index 4542d8a800d9..310c7735c617 100644
+> > > --- a/mm/util.c
+> > > +++ b/mm/util.c
+> > > @@ -45,33 +45,40 @@ void kfree_const(const void *x)
+> > >  EXPORT_SYMBOL(kfree_const);
+> > >
+> > >  /**
+> > > - * kstrdup - allocate space for and copy an existing string
+> > > - * @s: the string to duplicate
+> > > + * __kmemdup_nul - Create a NUL-terminated string from @s, which mig=
+ht be unterminated.
+> > > + * @s: The data to copy
+> > > + * @len: The size of the data, including the null terminator
+> > >   * @gfp: the GFP mask used in the kmalloc() call when allocating mem=
+ory
+> > >   *
+> > > - * Return: newly allocated copy of @s or %NULL in case of error
+> > > + * Return: newly allocated copy of @s with NUL-termination or %NULL =
+in
+> > > + * case of error
+> > >   */
+> > > -noinline
+> > > -char *kstrdup(const char *s, gfp_t gfp)
+> > > +static __always_inline char *__kmemdup_nul(const char *s, size_t len=
+, gfp_t gfp)
+> > >  {
+> > > -   size_t len;
+> > >     char *buf;
+> > >
+> > > -   if (!s)
+> > > +   buf =3D kmalloc_track_caller(len, gfp);
+> > > +   if (!buf)
+> > >             return NULL;
+> > >
+> > > -   len =3D strlen(s) + 1;
+> > > -   buf =3D kmalloc_track_caller(len, gfp);
+> > > -   if (buf) {
+> > > -           memcpy(buf, s, len);
+> > > -           /* During memcpy(), the string might be updated to a new =
+value,
+> > > -            * which could be longer than the string when strlen() is
+> > > -            * called. Therefore, we need to add a null termimator.
+> > > -            */
+> > > -           buf[len - 1] =3D '\0';
+> > > -   }
+> > > +   memcpy(buf, s, len);
+> > > +   /* Ensure the buf is always NUL-terminated, regardless of @s. */
+> > > +   buf[len - 1] =3D '\0';
+> > >     return buf;
+> > >  }
+> > > +
+> > > +/**
+> > > + * kstrdup - allocate space for and copy an existing string
+> > > + * @s: the string to duplicate
+> > > + * @gfp: the GFP mask used in the kmalloc() call when allocating mem=
+ory
+> > > + *
+> > > + * Return: newly allocated copy of @s or %NULL in case of error
+> > > + */
+> > > +noinline
+> > > +char *kstrdup(const char *s, gfp_t gfp)
+> > > +{
+> > > +   return s ? __kmemdup_nul(s, strlen(s) + 1, gfp) : NULL;
+> > > +}
+> > >  EXPORT_SYMBOL(kstrdup);
+> > >
+> > >  /**
+> > > @@ -106,19 +113,7 @@ EXPORT_SYMBOL(kstrdup_const);
+> > >   */
+> > >  char *kstrndup(const char *s, size_t max, gfp_t gfp)
+> > >  {
+> > > -   size_t len;
+> > > -   char *buf;
+> > > -
+> > > -   if (!s)
+> > > -           return NULL;
+> > > -
+> > > -   len =3D strnlen(s, max);
+> > > -   buf =3D kmalloc_track_caller(len+1, gfp);
+> > > -   if (buf) {
+> > > -           memcpy(buf, s, len);
+> > > -           buf[len] =3D '\0';
+> > > -   }
+> > > -   return buf;
+> > > +   return s ? __kmemdup_nul(s, strnlen(s, max) + 1, gfp) : NULL;
+> > >  }
+> > >  EXPORT_SYMBOL(kstrndup);
+> > >
+> > > @@ -192,17 +187,7 @@ EXPORT_SYMBOL(kvmemdup);
+> > >   */
+> > >  char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+> > >  {
+> > > -   char *buf;
+> > > -
+> > > -   if (!s)
+> > > -           return NULL;
+> > > -
+> > > -   buf =3D kmalloc_track_caller(len + 1, gfp);
+> > > -   if (buf) {
+> > > -           memcpy(buf, s, len);
+> > > -           buf[len] =3D '\0';
+> > > -   }
+> > > -   return buf;
+> > > +   return s ? __kmemdup_nul(s, len + 1, gfp) : NULL;
+> > >  }
+> > >  EXPORT_SYMBOL(kmemdup_nul);
+> >
+> > I like the idea of the patch, but it's plagued with all those +1 and -1=
+.
+> > I think that's due to a bad choice of value being passed by.  If you
+> > pass the actual length of the string (as suggested in my reply to the
+> > previous patch) you should end up with a cleaner set of APIs.
+> >
+> > The only remaining +1 is for kmalloc_track_caller(), which I ignore wha=
+t
+> > it does.
+> >
+> >       char *
+> >       __kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+> >       {
+> >               char *buf;
+> >
+> >               buf =3D kmalloc_track_caller(len + 1, gfp);
+> >               if (!buf)
+> >                       return NULL;
+> >
+> >               strcpy(mempcpy(buf, s, len), "");
 >
-> Before the reset, all but one of the tlat->kthread is NULL. Then it dawne=
-d
-> on me that this is a global per CPU variable. It gets initialized when th=
-e
-> tracer starts. If another program is has the timerlat fd open when the
-> tracer ends, the tracer starts again, and you close the fd, it will cance=
-l
-> the hrtimer for the new task.
+> Changing these strcpy(, "") to the usual; =3D'\0' or =3D0, but I'd still
+> recommend the rest of the changes, that is, changing the value passed in
+> len, to remove several +1 and -1s.
 >
-> I think there needs to be some ref counting here, that keeps the tracer
-> from starting again if there's still files opened.
->
+> What do you think?
 
-The timerlat fd is not supposed to be open when the tracer ends/starts
-again, since osnoise_workload_stop() calls stop_kthread(), which in
-turn calls kill_pid() to SIGKILL the user workload, which will also
-close the file descriptor. Only one PID per CPU should have the
-timerlat fd open at one moment, since timerlat_fd_open() will refuse
-to open if tlat->pid is set. It appears that this is somehow bypassed
-and osnoise_workload_start() happens before closing the fd, not sure
-why.
+I will update it. Thanks for your suggestion.
 
-> This looks to be a bigger problem than I have time to work on it for now.
-> I'll just apply the mutex patch for the kthreads, but this bug is going t=
-o
-> take a bit more work in solving.
->
-
-Yeah, unfortunately the issue looks more complicated now after looking
-at the traces you posted, I will probably have to do more tracing to
-see what is actually happening here. Thank you again for helping us
-with this and also for the patch for the mutex.
-
-Tomas
-
+--=20
+Regards
+Yafang
