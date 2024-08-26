@@ -1,77 +1,114 @@
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB751CD25
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 15:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E5119412A;
+	Mon, 26 Aug 2024 16:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724685907; cv=none; b=QIldqCAokXVGouOoV6devvCc0GJRY6slAnjqTXJ8IcMSIpmybxpQCq7tdgKl39X+l3v8Pb8L3IxPf/rUKESPYnXWVzrxBVc2J88g2S7AFpWKo6vrJliFjXBVEKVs7rGYHEQkpWBH7hM2SUujyEEj7yFFN3IC80TsbAX4zSS52KA=
+	t=1724689094; cv=none; b=jAQ4BqbkjiZa0guVZRSJ2rcOV360q8YTB0YUb0YWfJInNGjUpH5f6VNp6n/qslAQQ1wvarxWQlyKQvX8LTpPIfqJNGQT5i2rvvUwzlr1aDdv09wS/MS52pzzcIBBEJtzEGVkTxaChmKXbEkoOrD8iiHUC297Z7gjeLviYRAq9Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724685907; c=relaxed/simple;
-	bh=+zty0WUx+YuA6hbs5HYPFJH5m/j/zqcgKrZJW256Dto=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O8m3EWJ4/IFl9UF8Gk23PDXpviPpxmaS6Iu3wdo24ke7EsLljwDhl+VbRneIS9435PifXUNwvD039mT4Il/TAc7LPnSJFqd7fy6Gy90kk5TPQh9XKnNuCUJ6saelD3Y1WHCHAwwi85jc6D7sZJms0DZCmuiW7d2rBDp3j5fjhmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=X/ES7vaC; arc=none smtp.client-ip=198.252.153.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+	s=arc-20240116; t=1724689094; c=relaxed/simple;
+	bh=rHfc3tUO0PlXoEJaAEGPazJsuKQe7Tx6BQoOTkHo4QY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UZt0Q8t9GkHfZLCBsQvmBxy4qwOOJ2s099/L0zuZBed5H5v7SjbNovsjIwMWmGzTefKY7qLLz244WJgWriM/OOLP10+FKkLrF8DeU2+CTLZ2kRzCIqcMcRL/1Fp0wRCIB4dcv82RmEtwgZSMcpj8bD+Dg4MezgDdb+MCXLCILBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evCIvVgt; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="X/ES7vaC"
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4Wsvcd0ydDz9vnM
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 15:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1724685905; bh=+zty0WUx+YuA6hbs5HYPFJH5m/j/zqcgKrZJW256Dto=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X/ES7vaC9OHFMYSkUlVg3nMkI5R7qsjSBPHw1Gowtzs/r2O0oPp5KAx7IJ4ObFf2W
-	 qoBJnuyi7u3xgZEcYh21xI+z78Wr3wjAq1TjLd0Vzbh8vfTl0cBI/fOrWqQN7nsT03
-	 hLELD7Tore08gnzvkg3w1yCO08osDpbor76D7Obw=
-X-Riseup-User-ID: 588FCB460FECE076FC6AEBDE18189834C2791BA045698E9E58899A3047397D27
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Wsvcb5tydzJsSD;
-	Mon, 26 Aug 2024 15:25:03 +0000 (UTC)
-From: Fernando Fernandez Mancera <ffmancera@riseup.net>
-To: linux-trace-kernel@vger.kernel.org
-Cc: Fernando Fernandez Mancera <ffmancera@riseup.net>
-Subject: [PATCH v2] tracing/probes: fix traceprobe out-of-bounds argument allocation
-Date: Mon, 26 Aug 2024 11:24:42 -0400
-Message-ID: <20240826152454.1990-1-ffmancera@riseup.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evCIvVgt"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d1daa2577bso3470563a91.2;
+        Mon, 26 Aug 2024 09:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724689092; x=1725293892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lxRlPyW1oHXAOOQ1Sj4I0wIP7vxw0OFPP0mCZsrFZrU=;
+        b=evCIvVgt1k3/t/wB0Gj+BjlcdMqDb5M8vJb6RZoZN0njai4PPikNOpMh6io0pPmtyX
+         4Clr3buIeUNoMZ+by+vUcKW3AZxuTHPN8HAUoqj4WPKiej4OF9rMwCVEYl611ISl7yAM
+         0k1LIfsrvbZ0BZArCG86bdEMMd42Q6RW53L20lLHF+/21iVOak9+i52eqok06OEMuv5D
+         ro3LPDpwKUwouiRo0+3RC09RhtZYc3ziyhG8agB/gkP/d+6Q6OpD4BcWSyvI82oY2IJy
+         gvJHWJ2aNef8I/SmfMLo4QE9tmMBfzAmb1yNL3yBaYUIsV3Rq5xAkQrqpW8s+3ITr6Ah
+         tHUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724689092; x=1725293892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lxRlPyW1oHXAOOQ1Sj4I0wIP7vxw0OFPP0mCZsrFZrU=;
+        b=vtH8HN52q0nBBRJqwBaQKsKueuq/2wEYPC6N7kcX6u2JGA6w86f76agFX1bnyPPDt8
+         at164vSxeQxTwifBzfFC3lpuWN5NAnAS7ylbF1NoJ+lCJxKRI4A2U7fZ8mwfsFm/MObM
+         kWkIOFwHCMK+i902JImXPKQRBfaq/ji9u98nW420xcXTQhxLYaKyDaLdX6/zLrkJbfl9
+         mqxzfnxBP0dTnjpgTPUwp63r2u+6wAcyyTnWEcjOpCXibmvjfNoqj/CzUs8WoZrkTNY0
+         rJY3JegXcpVeDFMnvdNcknyLRQHO3kKkAsmVgdbmx/EsxNkYvgUnMlJeZHt9BrriKI92
+         9IKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtMPqCgl1OWnUbN7OxNFlpvCx6rcy0fwr1/iXD9qDEKEi8jJw8S38koPu/EhwGjActsmc=@vger.kernel.org, AJvYcCVz3O3ZkKl6xhI1lIy9g4G/2iDVuBrq1m9pZ4U+O5XdYMNWvsbECJ1NKEZI148jKhZo8N6qgIzX/oqFNnB7@vger.kernel.org, AJvYcCW89FTY2khSHwctRvNb/v6cJKpJczsF7D/FMStpYUS7HLT1aacxR5sn7cTD2tEShCabM32sa8p3mwFCfKeOb+kjctg7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLGjyn5K02jAeTaJxTbI/AD8AqenFcVQ4Cj0qQ9ht5rWXTxSLF
+	N1PYyG/UvcLRind3ksBnSxdTwPEPs2Qw6Q3VuR/odoeXINKnapPfhlanvlNh+UvLGyQMf7w5QlL
+	ZOZC9Xd79PFhMOOe8amRYIr4J6rE=
+X-Google-Smtp-Source: AGHT+IGRORuD5KXx1BI1X9UTnYM6Ctxz/wPpGOqICBOnAnMjMwqqox1Omxa/T6kOEq975iQJ2a7W/qEE2j/UGSD5nw4=
+X-Received: by 2002:a17:90b:1b0a:b0:2c9:80cd:86b4 with SMTP id
+ 98e67ed59e1d1-2d646bf64c2mr9713580a91.11.1724689091970; Mon, 26 Aug 2024
+ 09:18:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240809192357.4061484-1-andrii@kernel.org> <20240813223014.1a5093ede1a5046aaedea34a@kernel.org>
+ <20240813154055.GA7423@redhat.com> <20240825191512.98a6ea20b4783345f4d5ba1b@kernel.org>
+In-Reply-To: <20240825191512.98a6ea20b4783345f4d5ba1b@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 26 Aug 2024 09:17:59 -0700
+Message-ID: <CAEf4BzZgu4-aosJqjVZQCX27v1Y67GUT0UOvDUOn2EB2fJDvSQ@mail.gmail.com>
+Subject: Re: [PATCH v2] uprobes: make trace_uprobe->nhit counter a per-CPU one
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, peterz@infradead.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When initializing trace_probes::nr_args, make sure the maximum number of
-probe arguments is honored. Oherwise, we can hit a NULL pointer
-dereferences in multiple situations like on traceprobe_set_print_fmt().
+On Sun, Aug 25, 2024 at 3:15=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Tue, 13 Aug 2024 17:41:04 +0200
+> Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> > On 08/13, Masami Hiramatsu wrote:
+> > >
+> > > > @@ -62,7 +63,7 @@ struct trace_uprobe {
+> > > >   struct uprobe                   *uprobe;
+> > >
+> > > BTW, what is this change? I couldn't cleanly apply this to the v6.11-=
+rc3.
+> > > Which tree would you working on? (I missed something?)
+> >
+> > tip/perf/core
+> >
+> > See https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/diff/ke=
+rnel/trace/trace_uprobe.c?h=3Dperf/core&id=3D3c83a9ad0295eb63bdeb81d821b8c3=
+b9417fbcac
+>
+> OK, let me consider to rebase on tip/perf/core.
+>
 
-Link: https://bugzilla.redhat.com/2303876
+Hey Masami,
 
-Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
-Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
----
- kernel/trace/trace_probe.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I've posted v3 rebased onto linux-trace/probes/for-next, so you
+shouldn't need to rebase anything just for this. See [0] for the
+latest revision.
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 39877c80d6cb..8d3eb1bcdb9c 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -2043,6 +2043,10 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
- 		goto error;
- 	}
- 
-+	if (nargs > MAX_TRACE_ARGS) {
-+		ret = -E2BIG;
-+		goto error;
-+	}
- 	tp->nr_args = nargs;
- 	/* Make sure pointers in args[] are NULL */
- 	if (nargs)
--- 
-2.46.0
+  [0] https://lore.kernel.org/linux-trace-kernel/20240813203409.3985398-1-a=
+ndrii@kernel.org/
 
+> Thank you,
+>
+> >
+> > Oleg.
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
