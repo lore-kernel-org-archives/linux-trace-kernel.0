@@ -1,183 +1,165 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878A317C989;
-	Mon, 26 Aug 2024 13:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29C077F0B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 13:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724680257; cv=none; b=hHTAMn9yD8bwoaQ1Yuv24Z7CSHHZXz4P1oZi2UONyhmP5CIrWdiCTM396Pfdx0rV5s1D+q8v1Idbfn9+Y690ED6FEA0iEpPCKfhvxTw1XTQSvrfLx56kXIx3YnYfk+GwDFgbywl9tHcFCZRhhfNfT8dsOJUAp/5Mrx7W+ZO0Xwg=
+	t=1724680411; cv=none; b=D29ZpLaNlGWdN/9aqsekQ/mixoMKj1MmOwUuFBiLVa5wJpze5RzT+MV4qzMqMgYUmVgCN+lJVtGvXD10iG8XlyMas+jULMCt1za6xCbQ61ffXTB6Au1d3da047LQi036yMc3i0D5yIWm45pgLHy6YtkZ4geishH04dDuKhQRQnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724680257; c=relaxed/simple;
-	bh=Ql3lLhWWb12Nad4uzA4DwuvPl7xpz9d122mTN13lt3M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UrcPSyRP7MlaNneb54Aj/zKnggEP71MmSi462qacT+Ptvv7450ArDt/kXLaV9iHuekBlNuxiMwTQkFx3C1zImyYG3HMkZfuphlrEwah16VzWuJGjdTqaR3fnCQmYgNSCJIbFO1jEXRelGJsdaZjhryt2k4a7t5DSPuQfZpe/eZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J5hf/Iz/; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724680411; c=relaxed/simple;
+	bh=Unqx8jmeFdF1VI5QOpi4woYBB3HElD7uCXnAKWY7p3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NqwP4DlB6ry+UOJUS/8L/fxOO/Hk/NJmmEeoAci48d1KZ4UqfDt7KUdoI4X9Ov1ZN173N1V3mWFqovmagMqRcGE+cw+KblgUxrL7uZXJmxXnN6by++joc/p96SuwTrGettFhRKCEsIn6G7A8GtCp/G5murmuYU2G/VWVa3ZQ79o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HUReV4MW; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5hf/Iz/"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3730749ee7aso2604930f8f.2;
-        Mon, 26 Aug 2024 06:50:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HUReV4MW"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-201d5af11a4so37657845ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 06:53:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724680254; x=1725285054; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jDBC/eNBjytuJW+d+vzOhbTsHCHu3dAH80hQ3xzktl4=;
-        b=J5hf/Iz/Emd7eIZxMIVc/Bn+lt/uptOOKdGMH7ZAZ9xP6VtS9iMURWbFRvxxDEDRyc
-         VndsPlv22SLqRemqSsFFu12zvYBHYoLx9wXGpkpGZg4XTOEi83E7lODUvQ5l1VuZVk23
-         9q8pgDZTkMH3kxTwWEL6pTzE6irG1Dm/Q9KM/5ZwMOCk+7XzQiGTp4p+cY7zdOwOMg2U
-         ddvdBKinYMaiKdLclv+ZiMYOqvic59ux0FBveQmzLg8lYQWXUVA1s04/Ra7abmO2IiQF
-         GjzabGix87DwVqhqv0m6lok1GT1TtO+6/TQ/GB5PPWeEYNJaAn/amlWdj9lue7a3vUXD
-         o15w==
+        d=linuxfoundation.org; s=google; t=1724680409; x=1725285209; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Q9PuXmg221v4n3ZTHASMPKovmaAn+KWVQTnJOgnGGc=;
+        b=HUReV4MWCmsCMNZbMEcp9XXMs8oxkpkgHLci9RZGSOUbBd5DCsV3uroinBPRJ1W8Qw
+         X7+4pBxnHmPsn49Nl9ho1YxA+F/N3IDHZrw2coQNdAmYzLeH3Y89n4ZFFqaaDoz1a6bL
+         m7cC5hxnz8+nYIQKGy4Z9WHjNpEioiULU2r0w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724680254; x=1725285054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jDBC/eNBjytuJW+d+vzOhbTsHCHu3dAH80hQ3xzktl4=;
-        b=iGn0RDFNYdGIIra+yDDoT8oqN6dqWmc6R0pFwNZzYuQDpjn2LDJeNSzvkauTEWkJRp
-         D6nuoJnHjAOAeHnlSNOqV/RQpNmyRwbBf+Chux5Sy+9Kfv2xOun7MNZ25Tx8feAhL/GB
-         qZhtkIZxxbRpnSQS1TlRF4tNFGFPMzDEWr2WTLMfSMCVHuywBsgmZcvSBJoBSS0Nm7n0
-         KZliE+rSdqiFBScfsi+fULm1QhYf6i59kjAVcAKTiKuZTrwBB/XarpdYwl+hEjI7GcOB
-         HO0t9hup3oV74u0hBF3U/2FRT2QnHlK///PaotZm2UFciJ4/avFk7WIEdvR347cSeoCL
-         aMmA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4KPhi0buxjzcUTZ550tYDdL6wkejwUYQu5pEXdXQ8SrjqdAFlZfg/AisR0jcubQ2aC8EE2k5emqLsKVSn@vger.kernel.org, AJvYcCWiEEO0Qq3e/slfSgnteaCy16yaQ5iTVhFXd2zCO0JCIcjZWib406HsaVWGgFLTI5PuJPw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVtg2WBvnC/TwtSUg4CxSaUk0dEMBlVz59qvOvo1TYJiX74qD0
-	5GL7/epSFyh2rz7znIHzsBRgs4cTbcr/P5wMLuClBLOYRaE8c4OAv5bqUS6M
-X-Google-Smtp-Source: AGHT+IFBBsN2W741UbmJpJpXL3MWGUWlu4fnpmjgYMtASN07/tcdSO/uip4kihga7eNBGrmHl6u5Fw==
-X-Received: by 2002:a5d:4f8f:0:b0:371:846d:12b3 with SMTP id ffacd0b85a97d-3731186386amr6967035f8f.28.1724680253535;
-        Mon, 26 Aug 2024 06:50:53 -0700 (PDT)
-Received: from krava ([213.235.133.41])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730813c3d2sm10811517f8f.26.2024.08.26.06.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 06:50:53 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 26 Aug 2024 15:50:39 +0200
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mhiramat@kernel.org, peterz@infradead.org, oleg@redhat.com,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] uprobes: turn trace_uprobe's nhit counter to be
- per-CPU one
-Message-ID: <ZsyIL7NAN3AWbgzS@krava>
-References: <20240813203409.3985398-1-andrii@kernel.org>
+        d=1e100.net; s=20230601; t=1724680409; x=1725285209;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Q9PuXmg221v4n3ZTHASMPKovmaAn+KWVQTnJOgnGGc=;
+        b=uG0RTRW2siRRsmT8IiknfXnBx9MUq0lMFXju1NrCKakhKEvseJ12rPhBr5FSsN2l52
+         2HdAcz3QbBCpey88SQZZJrlzodg5lHXF3uBst8Sufpi81YrYKQBXclow4sUXg7WKhn5i
+         QUYLy+O7e/S7LpjPYCqtYerZM6m4IVzTIRqySzIBI0wM54Lik8UDoapJHIVmZCuzWSKU
+         pLkVDB+PEhe93YSfeDpuYuzkJu7y2piDLCXEpweuY4SsAqC364Qv9QE6uqt2erSiETRb
+         kWLIbEQ2bAFbtYfOBFm0CmU4tWwb/Ac5G2K7PcJAp5TKbfhWQgTNlEVbUgN/So6hwtR3
+         olBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWU9rdtnpD1i4EPCNzXyXHAgA7CcrbnQw7ZAGA8V3/F4pxtL3FLYp8aLKgow3CIwhU8G5YBP4njiRQJWN+qhLFEr8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT06ZsehD42MK1JHPO8J80YSBa0fS1oE8scfVF+zqfzUz8iNOE
+	nzYGf6Ro1f1wJrW3jyUrKWmyQaZyB5q9zwi/aK9R3FKppLtI1c/25McSQrLHdfE=
+X-Google-Smtp-Source: AGHT+IHPm3yVwNwle/7bH3vLcBP8lhcS/vg7K/OhSlZ4Tf+Gfj75dqkDPda3S/tSNa+iUkm9JiM9Hg==
+X-Received: by 2002:a17:902:e5cd:b0:1fd:876b:2a5c with SMTP id d9443c01a7336-2039e56ad74mr124917195ad.65.1724680408762;
+        Mon, 26 Aug 2024 06:53:28 -0700 (PDT)
+Received: from [192.168.121.153] ([218.49.71.194])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2038560faddsm67820495ad.231.2024.08.26.06.53.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Aug 2024 06:53:28 -0700 (PDT)
+Message-ID: <32d722e4-7c0d-414e-b94b-8c40e0be0302@linuxfoundation.org>
+Date: Mon, 26 Aug 2024 07:53:22 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240813203409.3985398-1-andrii@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ftrace/selftest: Test combination of function_graph
+ tracer and function profiler
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240821150903.05c6cf96@gandalf.local.home>
+ <3901c521-be69-4824-a571-9182b9af02b6@linuxfoundation.org>
+ <20240822091929.0db8837f@gandalf.local.home>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240822091929.0db8837f@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 13, 2024 at 01:34:09PM -0700, Andrii Nakryiko wrote:
-> trace_uprobe->nhit counter is not incremented atomically, so its value
-> is questionable in when uprobe is hit on multiple CPUs simultaneously.
+On 8/22/24 07:19, Steven Rostedt wrote:
+> On Wed, 21 Aug 2024 21:54:42 -0600
+> Shuah Khan <skhan@linuxfoundation.org> wrote:
 > 
-> Also, doing this shared counter increment across many CPUs causes heavy
-> cache line bouncing, limiting uprobe/uretprobe performance scaling with
-> number of CPUs.
+>> On 8/21/24 13:09, Steven Rostedt wrote:
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> Masami reported a bug when running function graph tracing then the
+>>> function profiler. The following commands would cause a kernel crash:
+>>>
+>>>     # cd /sys/kernel/tracing/
+>>>     # echo function_graph > current_tracer
+>>>     # echo 1 > function_profile_enabled
+>>>
+>>> In that order. Create a test to test this two to make sure this does not
+>>> come back as a regression.
+>>>
+>>> Link: https://lore.kernel.org/172398528350.293426.8347220120333730248.stgit@devnote2
+>>>
+>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>> ---
+>>>    .../ftrace/test.d/ftrace/fgraph-profiler.tc   | 30 +++++++++++++++++++
+>>>    1 file changed, 30 insertions(+)
+>>>    create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
+>>>
+>>> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
+>>> new file mode 100644
+>>> index 000000000000..62d44a1395da
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-profiler.tc
+>>> @@ -0,0 +1,30 @@
+>>> +#!/bin/sh
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +# description: ftrace - function profiler with function graph tracing
+>>> +# requires: function_profile_enabled set_ftrace_filter function_graph:tracer
+>>> +
+>>> +# The function graph tracer can now be run along side of the function
+>>> +# profiler. But there was a bug that caused the combination of the two
+>>> +# to crash. It also required the function graph tracer to be started
+>>> +# first.
+>>> +#
+>>> +# This test triggers that bug
+>>> +#
+>>> +# We need function_graph and profiling to to run this test
+>>> +
+>>> +fail() { # mesg
+>>> +    echo $1
+>>> +    exit_fail
+>>> +}
+>>> +
+>>> +echo "Enabling function graph tracer:"
+>>> +echo function_graph > current_tracer
+>>> +echo "enable profiler"
+>>> +
+>>> +# Older kernels do not allow function_profile to be enabled with
+>>> +# function graph tracer. If the below fails, mark it as unsupported
+>>> +echo 1 > function_profile_enabled || exit_unsupported
+>>> +
+>>> +sleep 1
+>>
+>> Any specific reason for this sleep 1 - can you add a comment on top?
 > 
-> Solve both problems by making this a per-CPU counter.
+> We add sleep 1 in several locations of the ftrace selftests to let the
+> tracing run for a bit just to see if it triggers anything. Otherwise the
+> clean up can happen before anything gets traced. Although, it's highly
+> unlikely in this case, but still.
 > 
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> I could add a comment if you want of just:
+> 
+> # let it run for a bit
+> sleep 1
+> 
+> 
+>>> +
+>>> +exit 0
+>>
+>> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+>>
+>> Let me know if you would like v2 for this to be taken through my tree.
+> 
+> I'll make a v2 if you want me to.
 
-lgtm, fwiw
+No need for a v2
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+thanks,
+-- Shuah
 
-jirka
-
-> ---
->  kernel/trace/trace_uprobe.c | 24 +++++++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index c98e3b3386ba..c3df411a2684 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -17,6 +17,7 @@
->  #include <linux/string.h>
->  #include <linux/rculist.h>
->  #include <linux/filter.h>
-> +#include <linux/percpu.h>
->  
->  #include "trace_dynevent.h"
->  #include "trace_probe.h"
-> @@ -62,7 +63,7 @@ struct trace_uprobe {
->  	char				*filename;
->  	unsigned long			offset;
->  	unsigned long			ref_ctr_offset;
-> -	unsigned long			nhit;
-> +	unsigned long __percpu		*nhits;
->  	struct trace_probe		tp;
->  };
->  
-> @@ -337,6 +338,12 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
->  	if (!tu)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	tu->nhits = alloc_percpu(unsigned long);
-> +	if (!tu->nhits) {
-> +		ret = -ENOMEM;
-> +		goto error;
-> +	}
-> +
->  	ret = trace_probe_init(&tu->tp, event, group, true, nargs);
->  	if (ret < 0)
->  		goto error;
-> @@ -349,6 +356,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
->  	return tu;
->  
->  error:
-> +	free_percpu(tu->nhits);
->  	kfree(tu);
->  
->  	return ERR_PTR(ret);
-> @@ -362,6 +370,7 @@ static void free_trace_uprobe(struct trace_uprobe *tu)
->  	path_put(&tu->path);
->  	trace_probe_cleanup(&tu->tp);
->  	kfree(tu->filename);
-> +	free_percpu(tu->nhits);
->  	kfree(tu);
->  }
->  
-> @@ -815,13 +824,21 @@ static int probes_profile_seq_show(struct seq_file *m, void *v)
->  {
->  	struct dyn_event *ev = v;
->  	struct trace_uprobe *tu;
-> +	unsigned long nhits;
-> +	int cpu;
->  
->  	if (!is_trace_uprobe(ev))
->  		return 0;
->  
->  	tu = to_trace_uprobe(ev);
-> +
-> +	nhits = 0;
-> +	for_each_possible_cpu(cpu) {
-> +		nhits += per_cpu(*tu->nhits, cpu);
-> +	}
-> +
->  	seq_printf(m, "  %s %-44s %15lu\n", tu->filename,
-> -			trace_probe_name(&tu->tp), tu->nhit);
-> +		   trace_probe_name(&tu->tp), nhits);
->  	return 0;
->  }
->  
-> @@ -1512,7 +1529,8 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
->  	int ret = 0;
->  
->  	tu = container_of(con, struct trace_uprobe, consumer);
-> -	tu->nhit++;
-> +
-> +	this_cpu_inc(*tu->nhits);
->  
->  	udd.tu = tu;
->  	udd.bp_addr = instruction_pointer(regs);
-> -- 
-> 2.43.5
-> 
