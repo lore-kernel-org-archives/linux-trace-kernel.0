@@ -1,87 +1,281 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B8E13D8B8;
-	Mon, 26 Aug 2024 08:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8FC14375D;
+	Mon, 26 Aug 2024 09:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724662719; cv=none; b=lJstM1D57wypSuB1aiPmCYeF6Ot93eg+XY0Loa0L7rrC9UOHIcjyEBdMmrqTtWJXp0ZEq0u0FXLszSwfiJ9bvpqlfPl78XPlFhPb6/uZ/BRKORK9zXzdeVeTXvUrJOuUVDi+GJvHx3tB0hRprDpE9uf2JsNAKQuDDmW7HYJhs+s=
+	t=1724664033; cv=none; b=PWzF0hE9TwBQq6//IHE84onOZcarVS8iMhQ6s7yTOfokW9DZa4wHHO0vY/F5orsNW5vtJFUATpg5SRaThFHZRf2NZBpFrSwhKcJ64y3kcqgt1i5pnWXKQrmUVlzd/qs5i8Mobzcgi7iD8nWb9XQF24URuY1H+ggR/QPmlorhDNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724662719; c=relaxed/simple;
-	bh=RHTdlRJLvh7TUVw6KkABioi08Cm9CNB4/CBIFd9tV9c=;
+	s=arc-20240116; t=1724664033; c=relaxed/simple;
+	bh=rwXP+5eSF7J7wNGs6IQQcMn0Z+ZA7RlktZ3B5d40Kzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3gCmIkD9vwuzxhnqy1WGflteh2qh2CGN7ufqXn7fSuOZdZcPRwRkqd2JpxvdU73jaSIbxHCehuI2lWhig0Gkm9Ai2IcCbdYlPoRjPXNTExe7C8erc+hcCunHbW8rXkEIdJhHu4c3AHJ56RsJ1wQgKmdUzDeEKuhUuelwp8n9CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=QcZNv2yU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnof7Wrt6UtCq/2+bmv6CSc7GfsKyi0hrzegnUxuRR9SJzhXnu19jST+ViS/87DCuhbgMp98e8CLQY0GNYId7gJeNuADGOAJFXNWZcsdTD5xJAapUHm76+ZKS/hFHxZwRIT0fm2oHFYZPjjcWKzn5uEwP2DDvTYKGW+JjiCMVrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iBKObYzu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QcZNv2yU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB46C567C1;
-	Mon, 26 Aug 2024 08:58:36 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QcZNv2yU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1724662715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ocYxyao+YeYVwZkJVZlNCDBZUEKM/vUAfandsZETTJ0=;
-	b=QcZNv2yUAl78MTanT1uEILVIG0Rwr7Gq5dxZIeMULB8F3+zNHLp+iJBBgbdma6WoOLSZZm
-	dyEAM4d4sn63r+0vrzUEc2Y/7Gvw6Sd+SX+9xw+3TQl5UNUPtgirmdTEW4ELU96hQQ2Ups
-	B1IIgm4VbXKEFP704+R3/GvFPvQLfh0=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b99b8b23 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 26 Aug 2024 08:58:35 +0000 (UTC)
-Date: Mon, 26 Aug 2024 10:58:26 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 02/17] vdso: Clean header inclusion in getrandom
-Message-ID: <ZsxDssNPbLkcPetJ@zx2c4.com>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
- <2a081f1fff5e40f496153f8e0162fc7ec5adab2e.1724309198.git.christophe.leroy@csgroup.eu>
- <Zsw3xMoX2EI5UUs1@zx2c4.com>
- <7e519ba2-0293-4320-84bf-44f930fc286d@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iBKObYzu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D866AC567F3;
+	Mon, 26 Aug 2024 09:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724664032;
+	bh=rwXP+5eSF7J7wNGs6IQQcMn0Z+ZA7RlktZ3B5d40Kzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iBKObYzuSp3BAhGOIaeeqPeyFwX6izp/CzVO7M8RvdNK3JPks06o2TiJ+t8CcU1m3
+	 XC2jxvvLE+LrcQsgITEHaeINvLSs3UupG1w1zm7DJVCemGYK8PyENOjRP+4VWyK4rW
+	 6+96F9UQ66WtJDHBUhXDroLekZ1v9QlaDlSf7WyqIV33fYeV/H/LAj2gZ4XB5nQq9g
+	 0csBKvjOUBdCLOE8XGNGPoYI2Q5lXCvZd0ZkB+xpUwXtoitcg0Cap60IRO4xzF+pY2
+	 zKBYqCf+TuOJOF9hFXPAXseDtApOVbZA4ykbdbiPOrERygoEXm94IYMk4f1Ml1OAvd
+	 ou7qaxJH4vXgg==
+Date: Mon, 26 Aug 2024 11:20:26 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
+	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
+	rostedt@goodmis.org, catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Simon Horman <horms@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v7 6/8] mm/util: Deduplicate code in
+ {kstrdup,kstrndup,kmemdup_nul}
+Message-ID: <ep44ahlsa2krmpjcqrsvoi5vfoesvnvly44icavup7dsfolewm@flnm5rl23diz>
+References: <20240817025624.13157-1-laoar.shao@gmail.com>
+ <20240817025624.13157-7-laoar.shao@gmail.com>
+ <nmhexn3mkwhgu5e6o3i7gvipboisbuwdoloshf64ulgzdxr5nv@3gwujx2y5jre>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fr6yymnvpqcqqdt5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7e519ba2-0293-4320-84bf-44f930fc286d@csgroup.eu>
+In-Reply-To: <nmhexn3mkwhgu5e6o3i7gvipboisbuwdoloshf64ulgzdxr5nv@3gwujx2y5jre>
 
-On Mon, Aug 26, 2024 at 10:37:49AM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 26/08/2024 à 10:07, Jason A. Donenfeld a écrit :
-> > On Thu, Aug 22, 2024 at 09:13:10AM +0200, Christophe Leroy wrote:
-> >>   
-> >> +#define _PAGE_SIZE (1UL << CONFIG_PAGE_SHIFT)
-> >> +#define _PAGE_MASK (~(_PAGE_SIZE - 1))
-> > 
-> > If PAGE_SIZE isn't defined at this point, why not just call it PAGE_SIZE
-> > instead of _PAGE_SIZE? But if that's the case, why not put the vdso
-> > definition of PAGE_SIZE into some vdso header included by this file?
-> 
-> It was working ok on powerpc but on x86 I got:
 
-Seems like there might be some more fiddling to do, then? Or did you
-conclude it's impossible?
+--fr6yymnvpqcqqdt5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
+	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
+	rostedt@goodmis.org, catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Simon Horman <horms@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v7 6/8] mm/util: Deduplicate code in
+ {kstrdup,kstrndup,kmemdup_nul}
+References: <20240817025624.13157-1-laoar.shao@gmail.com>
+ <20240817025624.13157-7-laoar.shao@gmail.com>
+ <nmhexn3mkwhgu5e6o3i7gvipboisbuwdoloshf64ulgzdxr5nv@3gwujx2y5jre>
+MIME-Version: 1.0
+In-Reply-To: <nmhexn3mkwhgu5e6o3i7gvipboisbuwdoloshf64ulgzdxr5nv@3gwujx2y5jre>
+
+Hi Yafang,
+
+On Sat, Aug 17, 2024 at 10:58:02AM GMT, Alejandro Colomar wrote:
+> Hi Yafang,
+>=20
+> On Sat, Aug 17, 2024 at 10:56:22AM GMT, Yafang Shao wrote:
+> > These three functions follow the same pattern. To deduplicate the code,
+> > let's introduce a common helper __kmemdup_nul().
+> >=20
+> > Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Cc: Simon Horman <horms@kernel.org>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > ---
+> >  mm/util.c | 67 +++++++++++++++++++++----------------------------------
+> >  1 file changed, 26 insertions(+), 41 deletions(-)
+> >=20
+> > diff --git a/mm/util.c b/mm/util.c
+> > index 4542d8a800d9..310c7735c617 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -45,33 +45,40 @@ void kfree_const(const void *x)
+> >  EXPORT_SYMBOL(kfree_const);
+> > =20
+> >  /**
+> > - * kstrdup - allocate space for and copy an existing string
+> > - * @s: the string to duplicate
+> > + * __kmemdup_nul - Create a NUL-terminated string from @s, which might=
+ be unterminated.
+> > + * @s: The data to copy
+> > + * @len: The size of the data, including the null terminator
+> >   * @gfp: the GFP mask used in the kmalloc() call when allocating memory
+> >   *
+> > - * Return: newly allocated copy of @s or %NULL in case of error
+> > + * Return: newly allocated copy of @s with NUL-termination or %NULL in
+> > + * case of error
+> >   */
+> > -noinline
+> > -char *kstrdup(const char *s, gfp_t gfp)
+> > +static __always_inline char *__kmemdup_nul(const char *s, size_t len, =
+gfp_t gfp)
+> >  {
+> > -	size_t len;
+> >  	char *buf;
+> > =20
+> > -	if (!s)
+> > +	buf =3D kmalloc_track_caller(len, gfp);
+> > +	if (!buf)
+> >  		return NULL;
+> > =20
+> > -	len =3D strlen(s) + 1;
+> > -	buf =3D kmalloc_track_caller(len, gfp);
+> > -	if (buf) {
+> > -		memcpy(buf, s, len);
+> > -		/* During memcpy(), the string might be updated to a new value,
+> > -		 * which could be longer than the string when strlen() is
+> > -		 * called. Therefore, we need to add a null termimator.
+> > -		 */
+> > -		buf[len - 1] =3D '\0';
+> > -	}
+> > +	memcpy(buf, s, len);
+> > +	/* Ensure the buf is always NUL-terminated, regardless of @s. */
+> > +	buf[len - 1] =3D '\0';
+> >  	return buf;
+> >  }
+> > +
+> > +/**
+> > + * kstrdup - allocate space for and copy an existing string
+> > + * @s: the string to duplicate
+> > + * @gfp: the GFP mask used in the kmalloc() call when allocating memory
+> > + *
+> > + * Return: newly allocated copy of @s or %NULL in case of error
+> > + */
+> > +noinline
+> > +char *kstrdup(const char *s, gfp_t gfp)
+> > +{
+> > +	return s ? __kmemdup_nul(s, strlen(s) + 1, gfp) : NULL;
+> > +}
+> >  EXPORT_SYMBOL(kstrdup);
+> > =20
+> >  /**
+> > @@ -106,19 +113,7 @@ EXPORT_SYMBOL(kstrdup_const);
+> >   */
+> >  char *kstrndup(const char *s, size_t max, gfp_t gfp)
+> >  {
+> > -	size_t len;
+> > -	char *buf;
+> > -
+> > -	if (!s)
+> > -		return NULL;
+> > -
+> > -	len =3D strnlen(s, max);
+> > -	buf =3D kmalloc_track_caller(len+1, gfp);
+> > -	if (buf) {
+> > -		memcpy(buf, s, len);
+> > -		buf[len] =3D '\0';
+> > -	}
+> > -	return buf;
+> > +	return s ? __kmemdup_nul(s, strnlen(s, max) + 1, gfp) : NULL;
+> >  }
+> >  EXPORT_SYMBOL(kstrndup);
+> > =20
+> > @@ -192,17 +187,7 @@ EXPORT_SYMBOL(kvmemdup);
+> >   */
+> >  char *kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+> >  {
+> > -	char *buf;
+> > -
+> > -	if (!s)
+> > -		return NULL;
+> > -
+> > -	buf =3D kmalloc_track_caller(len + 1, gfp);
+> > -	if (buf) {
+> > -		memcpy(buf, s, len);
+> > -		buf[len] =3D '\0';
+> > -	}
+> > -	return buf;
+> > +	return s ? __kmemdup_nul(s, len + 1, gfp) : NULL;
+> >  }
+> >  EXPORT_SYMBOL(kmemdup_nul);
+>=20
+> I like the idea of the patch, but it's plagued with all those +1 and -1.
+> I think that's due to a bad choice of value being passed by.  If you
+> pass the actual length of the string (as suggested in my reply to the
+> previous patch) you should end up with a cleaner set of APIs.
+>=20
+> The only remaining +1 is for kmalloc_track_caller(), which I ignore what
+> it does.
+>=20
+> 	char *
+> 	__kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+> 	{
+> 		char *buf;
+>=20
+> 		buf =3D kmalloc_track_caller(len + 1, gfp);
+> 		if (!buf)
+> 			return NULL;
+>=20
+> 		strcpy(mempcpy(buf, s, len), "");
+
+Changing these strcpy(, "") to the usual; =3D'\0' or =3D0, but I'd still
+recommend the rest of the changes, that is, changing the value passed in
+len, to remove several +1 and -1s.
+
+What do you think?
+
+Have a lovely day!
+Alex
+
+> 		return buf;
+> 	}
+>=20
+> 	char *
+> 	kstrdup(const char *s, gfp_t gfp)
+> 	{
+> 		return s ? __kmemdup_nul(s, strlen(s), gfp) : NULL;
+> 	}
+>=20
+> 	char *
+> 	kstrndup(const char *s, size_t n, gfp_t gfp)
+> 	{
+> 		return s ? __kmemdup_nul(s, strnlen(s, n), gfp) : NULL;
+> 	}
+>=20
+> 	char *
+> 	kmemdup_nul(const char *s, size_t len, gfp_t gfp)
+> 	{
+> 		return s ? __kmemdup_nul(s, len, gfp) : NULL;
+> 	}
+>=20
+> Have a lovely day!
+> Alex
+>=20
+> --=20
+> <https://www.alejandro-colomar.es/>
+
+
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--fr6yymnvpqcqqdt5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmbMSNoACgkQnowa+77/
+2zLIExAAowwDvn4fGttE88cvxlhQwOy8jHj4erHbWDOLMcKFNLpWhwWRqOaVZyMN
+dseuMqjKxp0vlIjA+QRvwtCSfMPrfGFrF+hSal8nEVG5YPp02IJFeKPVs2UIMirG
+WQfz7OkEGY6BN61CHuNhXQL+WLCzEuP/jqqh6bZ5/l9elU7H+CAEGJgWMq5QeyRo
+eVljlfkFRxJkdzcKPJJFc/wK95vSKXFPe5mE7UGfJx1oO3m6q3j5i2aaBFQcIjm3
+QiBGQ8aXepDV7L3XLJaRPa/Tkm7Cc5fdL6B9KEN4SvxOXn7V5VDRVOlrT8Du9YQ1
+G77o8rFyZ9MNFsPcZh5g6DgqQyK7RWTZLm/Xq8GjfB5/iQ8FeZ7gaLye6d52vDub
+vsvIk9D/L3iWDeGTahM9+5bHe8AHr3sI9eCnKbLayJrZ0TA03KgCEKhj8Sp1kkdu
+hai6+ym4Wc9aAYAGEHdJFI/8Gu93uqXT35bT270ov2E77VMyhVltprOCW6qbziTr
+ebt5iKyJ6f2e/rXOCOlqP4CTLSTtRfo2padaLlAJCSEJLs4Q1YsqZMIyLbn7PYuD
+MpkrWxeysR2d3KsKcb1MYCZoKqsQ+hWtkEHZWqHgygI3fbBPE5tkmCS/ustkAk1s
+15ry+Az65a6wiEv5w38JrVCJnzZ/x0aPwOCDNdgYwS/amQEQP10=
+=I3ve
+-----END PGP SIGNATURE-----
+
+--fr6yymnvpqcqqdt5--
