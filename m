@@ -1,198 +1,143 @@
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn2048.outbound.protection.outlook.com [40.92.63.48])
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6166E13B286;
-	Mon, 26 Aug 2024 14:53:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.63.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724683985; cv=fail; b=U+5UgREojf6q/WgX0UsPuaYu15SFZ/iTSNxK0D6DWkGdnKq9bZJDRedRz7pFgBxnmmi+LMAHzBTXBlcQyIbLfgFphBJKW93+3rmXdAHK1LdMRXLC4H7F1mNuUkKBgsold2gpPqcRMAdLdP5KPe3Qtr/+txzcHQuRpYqciE4nUIU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724683985; c=relaxed/simple;
-	bh=zELJUXIzBU/2S1TrFuoNhHEac4ZSYPeNSumhIVL4r/8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NObEDDJs+JphcyDISlA1mrYiyQOFBFAkC02AMXtkYR9bdpf8UA146OK7pFBcIwkJM16kMaGwFeFNIgEkHeRGflDeY2G8Y8EwHOC6l14gXfAkuowZFeA4v21XXc32lzXTGDCixRLRUj1eFPoFj6fPhRaqWWm4LMMC3fngfntoS38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=NWs/PX9p; arc=fail smtp.client-ip=40.92.63.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521BD189511
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 14:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724684333; cv=none; b=IVXtbel/uabIxh3kmkf0Fd+N6lzL4s3hRg7itGujDdwfmhyA3Pzh1M5+obTaq6U7Eg7V/brlt4FwfSeD8nZZaNhZbTRodZq1nB0rqF0zKjqtgoKdh8b+OlMrsABiyUBHEsYYJMa9EuA0igXx2JzobULzFjWzKltzjaWnccrdd7A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724684333; c=relaxed/simple;
+	bh=Ld3Ih08LGC2rVSuAWlW1kVHyGOXK+qk+QGCIJ/EaP20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G1DhudsJU0L/VV4qmdKohdIXAxwcf9RuS9XqOUO0lNpYOms0jbAPE75tZPKBVEQuCiv0AybX53tEf8OOu6Q/rz1St/VPmwqerG+PZnlBnQIX6RSNEZIlH5J8xyzuvM8+Mbm1MtJPxUdhXDUMc6WTbX9EuLxKxsnEl6JGwC3+Oes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=J4lFzuFx; arc=none smtp.client-ip=198.252.153.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="NWs/PX9p"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xCWc1tWYGNp0cuBbTOqRrm+0kb1ISqCd3TylulGoqICLI/Hk/Df9UMffUMkhKFhj7gATDIHNtMB37gTTGz5y42Y8FZSgHn7hLygCMdwlCOFmyc5odBJZcR7WNTC+j6/O9PVuhVa6Wmdh6/TCgfNgBZKvrKGeyK9T2zwnWgjbEQpnce+5EjLEDwwh5Gl2MZ8rI8+HCbiyjsH6CNFUgSwzGN2LxpNJabgf/eHqrsifgrWKIh6z3SGK7PXcQG8hcq6CY16oFajGJovtDZF73QZ7rd7g+ROgyM66CWw44/9KbwJwxR0aJO24KqdOoJjAh7qWN5MLqtej0Y4EmZ7rN43NkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IqLzxDpc+WDlkjg036HrcLBy+y0d/7MOc/5fykpuZ7Q=;
- b=YGLNO8pToYbqqxT+GAO6lPHoP2UykO02HB+vATEHi8P9olpkDrh7J3Bx49l+A69qVFVXk1TEGsjCNJN4/GcBYKR0fOOFHN/D0y174jjAitYUi9DCawXuK1FGDyXYrAA7g1xlyVk7R0UxInsiqvj+DkNxt8EjPNTjm0Pe25vGBDt/iNETW6TVycmRInx449kEiilmPdIJvh1wx+sXZphPBBLysXdI0EDGNbQNEZ+Q6fLNiEi0IqQKzavCAZeVwhbNyAwKS0W296BtQc9pIjAhcKS0LYjPzA5zgBqi7Y6ZS30ZsDAMQ0a3EvFYx2buO+aQQ+3m1dzLbSxrhmZtSHbLdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqLzxDpc+WDlkjg036HrcLBy+y0d/7MOc/5fykpuZ7Q=;
- b=NWs/PX9pStXDJPYia7qdyjAZ/MOmojFXOny6c/S2xZoJn5kl9uZ9wmD9OPZEhVIjCULJTS7baXc+JwSFgRp9pXQkin2ESw1LVLlvVgkc4+VnXQXD/flWlpIyKQ/oWBWlfKcgzGgUrISnEZSl5E9RkFu99grocu6dEoBYKXplQIuDMBu0As6WSu8GqEFbVW83u8QvkIUfQimRCdtyZi4/zK3dNussi61Fi9iC0YAxqbSw/aRYh73Q2/HPv8E9isGhiHLhMN1UXyrPvHh6dArB8Pwk/90NkEE1Mc4OpnXhhLjCa0sdiOjzC5gdqgcjTe2di8N2es6XbB5nNTy47x9Gfw==
-Received: from ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM (2603:10c6:220:22a::20)
- by SY7P300MB0258.AUSP300.PROD.OUTLOOK.COM (2603:10c6:10:238::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7897.23; Mon, 26 Aug
- 2024 14:52:58 +0000
-Received: from ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- ([fe80::f5dd:ff41:ef28:710e]) by ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- ([fe80::f5dd:ff41:ef28:710e%5]) with mapi id 15.20.7897.021; Mon, 26 Aug 2024
- 14:52:58 +0000
-From: Tianyi Liu <i.pear@outlook.com>
-To: oleg@redhat.com
-Cc: ajor@meta.com,
-	albancrequy@linux.microsoft.com,
-	andrii.nakryiko@gmail.com,
-	bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com,
-	i.pear@outlook.com,
-	jolsa@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Date: Mon, 26 Aug 2024 22:52:03 +0800
-Message-ID:
- <ME0P300MB0416F9EF9AC702904601CAA19D8B2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240825224018.GD3906@redhat.com>
-References: <20240825224018.GD3906@redhat.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [w/YF1fAAmIX6yvHtqdd9TiK4sAMPYWbQFZX42E3RweBdRlnuQTjF0A==]
-X-ClientProxiedBy: SI2PR01CA0003.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::16) To ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
- (2603:10c6:220:22a::20)
-X-Microsoft-Original-Message-ID: <20240826145203.162222-1-i.pear@outlook.com>
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="J4lFzuFx"
+Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4Wsv2D1P10z9vd5;
+	Mon, 26 Aug 2024 14:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1724684326; bh=Ld3Ih08LGC2rVSuAWlW1kVHyGOXK+qk+QGCIJ/EaP20=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J4lFzuFxqJmkNJZUggRTf3fgCHZwrNCMmKLR+5jK6eXzeed3CytiJ9W7NZ+epFPtH
+	 LnjA3Zn5fgYRSwN0W2QLXJfwHAc2kYQozKqD/hcwbsWN0zeltllRPIh1f3SGJXktAe
+	 XuKUGshW29DUSMGhkmxQdZf8hW97Kdp1qBJngc70=
+X-Riseup-User-ID: ED0CFDE72EFCF4BA5E9AF872D075836F16E0B31E27EF099AD809ADCAAE53D244
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4Wsv2C1BLNzFwfL;
+	Mon, 26 Aug 2024 14:58:42 +0000 (UTC)
+Message-ID: <6b5dd26e-99c8-452c-9619-9dbfd17316a1@riseup.net>
+Date: Mon, 26 Aug 2024 16:58:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ME0P300MB0416:EE_|SY7P300MB0258:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70c8cc55-5311-475d-2d5b-08dcc5dec643
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|461199028|5072599009|15080799006|3412199025|440099028|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	T3myEWf81FxFcmcoARw4sIhptDclOHwEZrt1W4UXGXwxgxBo2jV38SiEQy5PmHVYI4o9gb+0KJSRc8EaufiWdBPCiVS0BURGT4uScMJHF5nGfn6iohyu+TCE9chzn1k+jSZkyLmQ63wyv6tL5ZKmbLRcmYw7RAWqeloVNy3VqnmykrAygNi3OWtCQT/5x8PUTMvobHZ1D3lrt7t7iJVJz2H29Kq4B7JQxkxggJq+HCsd3HWJDr4872ylWx7tq482Ko0HlzbVV/8dbOdQLOO9l4NDQ8r61isOZa38Oqzb/A+aD9WrEi30osQNcla0SjK3VduYdsJ/Wgg52d15rFnXbNu+ZjumyINA98L0MBb+KDFtttfMhZ3CJZu2wI9LE0rnuX0H0zn/O0yitm+336PXGbGU00SGMyRjmOLzFVENRf4BcPEWv81cyVhRFkhMxkfTB7n8sreWPx20T9JwomEQCDleoIAsKqRADzLSFqV3omL/AkCR2CiIYwW4uT+m0I7gKq0AhdjVCIuFq2mB+m8WRui1z7r8GH4P3mTFCy1oNaI9Sbe0lZELoGBS2+jk7Q/0myqPg5HEf/3fnCTidn/Ni6KqEq+wiG3GgAjQ4cI9hHnKnZZsnzV+YIgLXRalCSAV/W4jKEKSj8baZPDf+kwE9OvijZ9UZeaEzXU2tMbBqUtRjlosUquNyoHrvXyyIEmb05nGhr4W4tgSqUAZzKjuGeFYsUumLwE25F7or5Nrg3Q=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nu9fBFLc8QAv8o9fxh5944zTgFRsgL6mir+7R7jW3yTU5Aymu1Ulh8n/FHjF?=
- =?us-ascii?Q?DoHjCe0PvD2Cj5nzY2xU2TQsRqWHHPcN/IuhdGElmR28/A/V4uimuhtm6xnm?=
- =?us-ascii?Q?QKY/i5ECr+BbLnjyTGARDemayedQpX1XrSPBUcFzjhzed3h0cAvt5eAowijv?=
- =?us-ascii?Q?zv+6KcAlEDP5si4YKxkpLci6Bjp6zBtzoP3C9vvED+8kH0jH/rNwHHv/SdEU?=
- =?us-ascii?Q?965dkzGEte3bSql9f78l40Ee1HvgIhtIa6eEYCv0SsGR6CByiIstw/RlR7vT?=
- =?us-ascii?Q?XOK9nL6cxfArK3YjwWZhGN4ibvIxrK6sQVFdaK1r+/egtGVKUnZPqmoBG4Be?=
- =?us-ascii?Q?3XkrOZgmehmlsziZSOItGJd/cKlEaNl94RJ9SdW6p0+0dkgCmeGyOq/kxIjJ?=
- =?us-ascii?Q?0XN8oO3mc7uSiYTgN0p3QolqYObKA9ug18IWqeix2Nsz8jPpShGkWh6DPy4X?=
- =?us-ascii?Q?yjMyo+B+6tfjabZr5fh0K65YN/NmAdAgZrIH7nVLEtYBVZOscU8et/hNkoYT?=
- =?us-ascii?Q?Oqq41//r2oMRZ9d8/aLZl/wTPOZWsZdBR/Nw55P1xxhnbwVGzJFBw1GwNav7?=
- =?us-ascii?Q?eyd4DSYbgEh9jT0+30BwvV7Rn1WtrOSBwzZTmb9vakx1XmnQhRiFlvip3vjW?=
- =?us-ascii?Q?08IPDXi2nrzguEWv1MpoyftVjstLgKe+uPjD0/sH3nABnMm0VpMqPdhi738C?=
- =?us-ascii?Q?xq+wjeHoVDILhXAVj4u2gLyjIGnx87+ci69HMguBRl4mJzkdTlAkZpAxfgWx?=
- =?us-ascii?Q?k1DOzsUnQQrnXxNSKFzQrqR3iVOLPgQQL9hjZSRHRh8cj42EfOh6yTpC5Oc+?=
- =?us-ascii?Q?QD+rcMjVyuzE9kGLTvVfGj5l4CMeRc5bZrT7kJg1bIkZpuUxdYgQunvWViTy?=
- =?us-ascii?Q?yHkaJCDeZLl5qlBQQ1ITTCTT/CimSh8Ut87P0rS77pTYRbPRChdmX8xtntcy?=
- =?us-ascii?Q?tuf83dX6/5se7Tgnc6xMMVabgua3bCW/xuJ5kDR4KJJWiQNmowfHgffD/nv3?=
- =?us-ascii?Q?SPmQd13iSDknffdiZAPfk1/7gF3XybreU6qYtvzS70Ri/dghIy/4cutHVpqk?=
- =?us-ascii?Q?jIrsMkRVpzX1EXly2SG5Qf/aCSOSHPP32JiM1s7E9s/DtiMqsztObtk2d7II?=
- =?us-ascii?Q?VgRfb/xVU/wyioMPp+JGgf0fWlWPPwfRJ2LEqU/J7A9npN7jFIjWieL4fJIF?=
- =?us-ascii?Q?I9tiBc9vdQF5XVNaX4ovtlT7UZoI+xgn+M7lXrMZxhxM1+L9k76CLQqR+y+U?=
- =?us-ascii?Q?VhGrvZ+g69gtE0+XhDBfGUn0rdAdcxpQOdlXwQoUhg=3D=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70c8cc55-5311-475d-2d5b-08dcc5dec643
-X-MS-Exchange-CrossTenant-AuthSource: ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2024 14:52:58.1965
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY7P300MB0258
+Subject: Re: [PATCH] tracing/probes: fix traceprobe out-of-bounds argument
+ allocation
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+References: <20240813172546.3151-1-ffmancera@riseup.net>
+ <20240825164132.024faee7897e0ac126d8c58e@kernel.org>
+ <fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
+ <20240826085659.939bde641e4bf13249dec6ec@kernel.org>
+Content-Language: en-US
+From: "Fernando F. Mancera" <ffmancera@riseup.net>
+In-Reply-To: <20240826085659.939bde641e4bf13249dec6ec@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Oleg,
 
-> For the moment, please forget about ret-probes. Could you compile this program
-> 
-> #define _GNU_SOURCE
-> #include <unistd.h>
-> #include <sched.h>
-> #include <signal.h>
-> 
-> int func(int i)
-> {
->         return i;
-> }
-> 
-> int test(void *arg)
-> {
->         int i;
->         for (i = 0;; ++i) {
->                 sleep(1);
->                 func(i);
->         }
->         return 0;
-> }
-> 
-> int main(void)
-> {
->         static char stack[65536];
-> 
->         clone(test, stack + sizeof(stack)/2, CLONE_VM|SIGCHLD, NULL);
->         test(NULL);
-> 
->         return 0;
-> }
-> 
-> and then do something like
-> 
->         $ ./test &
->         $ bpftrace -p $! -e 'uprobe:./test:func { printf("%d\n", pid); }'
-> 
-> I hope that the syntax of the 2nd command is correct...
-> 
-> I _think_ that it will print 2 pids too.
-> 
-> But "perf-record -p" works as expected.
 
-Yes, the output from bpftrace and perf matches what you described:
+On 26/08/2024 01:56, Masami Hiramatsu (Google) wrote:
+> On Sun, 25 Aug 2024 19:06:22 +0200
+> "Fernando F. Mancera" <ffmancera@riseup.net> wrote:
+> 
+>> Hi,
+>>
+>> On 25/08/2024 09:41, Masami Hiramatsu (Google) wrote:
+>>> Hi,
+>>>
+>>> On Tue, 13 Aug 2024 13:25:40 -0400
+>>> Fernando Fernandez Mancera <ffmancera@riseup.net> wrote:
+>>>
+>>>> When initializing trace_probes::nr_args, make sure the maximum number of
+>>>> probe arguments is honored. Oherwise, we can hit a NULL pointer
+>>>> dereferences in multiple situations like on traceprobe_set_print_fmt().
+>>>>
+>>>> Link: https://bugzilla.redhat.com/2303876
+>>>
+>>> Sorry for replying later. I'm not sure why but I did not found this in my mbox...
+>>>
+>>
+>> No worries!
+>>
+>>> Anyway, trace_probe_init() should return -E2BIG in this case because
+>>> it is actuall wrong value.
+>>>
+>>> Can you update your patch?
+>>>
+>>
+>> I agree this is the right solution but it would mean a change in
+>> behavior. Is that fine? Before merging 035ba76014c0, it was writing up
+>> to the maximum number of arguments and ignoring the rest. If you confirm
+>> it is fine to change the behavior, I will update the patch.
+> 
+> Yes, I think this is the better behavior for users too, rather than
+> silently droping some arguments.
+> We also need to handle this error code in callsite and log an error,
+> and add a testcase in the syntax error testcase. But that should be done
+> in another series. We should fix this first.
+> 
 
-$ ./tester &
-[1] 158592
+Thanks I will update the patch. If you don't mind I would also like to 
+do the follow up patch series.
 
-$ perf probe -x tester --add func
-Added new event:
-  probe_tester:func    (on func in /root/test/tester)
-
-$ bpftrace -p 158592 -e 'uprobe:./tester:func { printf("time=%llu pid=%d\n", elapsed / 1000000000, pid); }'
-Attaching 1 probe...
-time=0 pid=158592
-time=0 pid=158594
-time=1 pid=158592
-time=1 pid=158594
-time=2 pid=158592
-time=2 pid=158594
-time=3 pid=158592
-time=3 pid=158594
-
-$ perf record -e probe_tester:func -p 158592 -o 158592
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.022 MB 158592 (19 samples) ]
-
-$ perf script -i 158592
-tester  158592 [006] 246475.295762: probe_tester:func: (55a6def14149)
-tester  158592 [006] 246476.295828: probe_tester:func: (55a6def14149)
-tester  158592 [006] 246477.295892: probe_tester:func: (55a6def14149)
-tester  158592 [006] 246478.295958: probe_tester:func: (55a6def14149)
-tester  158592 [006] 246479.296024: probe_tester:func: (55a6def14149)
-tester  158592 [010] 246480.296202: probe_tester:func: (55a6def14149)
-tester  158592 [010] 246481.296360: probe_tester:func: (55a6def14149)
-[...]
-
-Thanks,
+> Thank you,
+> 
+> 
+>>
+>> Thank you!
+>>
+>>> Thank you,
+>>>
+>>>
+>>>>
+>>>> Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
+>>>> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+>>>> ---
+>>>>    kernel/trace/trace_probe.c | 8 ++++++--
+>>>>    1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+>>>> index 39877c80d6cb..f577b5e71026 100644
+>>>> --- a/kernel/trace/trace_probe.c
+>>>> +++ b/kernel/trace/trace_probe.c
+>>>> @@ -2043,10 +2043,14 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+>>>>    		goto error;
+>>>>    	}
+>>>>    
+>>>> -	tp->nr_args = nargs;
+>>>> +	if (nargs > MAX_TRACE_ARGS)
+>>>> +		tp->nr_args = MAX_TRACE_ARGS;
+>>>> +	else
+>>>> +		tp->nr_args = nargs;
+>>>> +
+>>>>    	/* Make sure pointers in args[] are NULL */
+>>>>    	if (nargs)
+>>>> -		memset(tp->args, 0, sizeof(tp->args[0]) * nargs);
+>>>> +		memset(tp->args, 0, sizeof(tp->args[0]) * tp->nr_args);
+>>>>    
+>>>>    	return 0;
+>>>>    
+>>>
+>>>
+> 
+> 
