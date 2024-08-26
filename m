@@ -1,120 +1,197 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6CF53373;
-	Mon, 26 Aug 2024 13:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA92153828;
+	Mon, 26 Aug 2024 13:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724678697; cv=none; b=XCCOISY7lvPyIk1KomhMq4rpTAzOktnYHzYLVQ44DEZ51U+0HwGtKuqeIY0/JdVsWxubYkJLbs57bM6pkddyANGfTY+F5jpbjw54HPB1bXEzpPWMsMnMUL1Nc3y4mNrPZV1xuTl9PIuFxxTJjmeK8bccLydlWSEjDV8hiDqkF8A=
+	t=1724680139; cv=none; b=mppM4Hw0su2mxitmiKqF31odggW1IYq7ixg616nUNVovcDP0cjhouF71t1VCWzY4jMcX8rihPNI31fzndFJ4Khj0Eiy9ckLOm4Fl0KsSBGm0R1hB1wAm8MNuqMtHDVoXQbuXk/j4Vpjgv7LNWbKIzspsAskDRXWUc1SwEGy5XeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724678697; c=relaxed/simple;
-	bh=Ubjr3hAkVUCRKgP1YwCituDtTL+Aqxbg8Af289I9Ieo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=crHbEJsOJEcsMmPN7P1mgpJZ7tIZjsgcpLwgd6bjQizwC3KhAdNg5vdmbmNuSRfJCwHSDjnL8yZf3SEXiEUo67xRe8eYK54mA7NI1bi/C4hnGym+XiijGYERe88HirZycxP0jSzdW5LXs5pLRMdhRrmY8vaOMMpZus7xlQjOvjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zp1vNc4D; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MVBUGdIS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1724680139; c=relaxed/simple;
+	bh=Z/HJJt/Fg7rwSJ/ePst/lRoG73U9XPBjCjvDkDKqIb0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XVwJjeJIQkXno5jyXjHT1LzpuxycNWOerKJg+IpmovTh5caS6pa3r/43bEprrGfFfbSJYA2ezY6Klnpo7NotgKRVF7gWHg1eKnIffaGXXT3QBokQXtugtVy5VEyPCXGgdQr8mvxYlilWyXqHdHCEg6Sz8LNZ1l2fhv49HFcrguw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eTO3Hu1M; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zp1vNc4D";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MVBUGdIS"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1724678693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JtERtJKi/CA36m/GEM8qvROm+v91KuIncw1OX4BkHbo=;
-	b=zp1vNc4DuEN5YGFJn0TnAQLg0tqSuVcJT1LF7fJXWGjIq9boLoE67t0jweEecdUb7sF4GH
-	GCQYB9HU/g83IdP8iePIB0ST+nfgjNktYKMIjUz3LlV/WiJcdqrTixPcGf8q5uk9fA4AJk
-	w6fD2O1Yn3O5X0dRndrBmcvUrBU9IQbcMRg2frAPJ2wSc4l2YQ1FFd73rJq1/y6Vj/xxgH
-	0esO02GAS3JjVqcgZix9NqNsLH/qRLm4AhSWJl3hwYmpMbN4YgqIT9Dr7UFLXgC7zxx7qp
-	lBn8E0DLeyhkRVJ4UXNT+sBw3oZUwmdUgkhGWPGAQ6TSpslNcaibuIH3xKyBgw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1724678693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JtERtJKi/CA36m/GEM8qvROm+v91KuIncw1OX4BkHbo=;
-	b=MVBUGdIS3uO0WmN8EGfXIZc+hb2K87xkQVti0VUBQTGVjM7a9DhmIGZGaQAw3NK+w8pyab
-	59i8js1pWL3G7UAg==
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, "Jason A. Donenfeld"
- <Jason@zx2c4.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Andy Lutomirski
- <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>, Arnd
- Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
- <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 02/17] vdso: Clean header inclusion in getrandom
-In-Reply-To: <51adbe91-3c3a-4baa-bb39-29df98a6eea5@csgroup.eu>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
- <2a081f1fff5e40f496153f8e0162fc7ec5adab2e.1724309198.git.christophe.leroy@csgroup.eu>
- <Zsw3xMoX2EI5UUs1@zx2c4.com>
- <7e519ba2-0293-4320-84bf-44f930fc286d@csgroup.eu>
- <ZsxDssNPbLkcPetJ@zx2c4.com>
- <51adbe91-3c3a-4baa-bb39-29df98a6eea5@csgroup.eu>
-Date: Mon, 26 Aug 2024 15:24:52 +0200
-Message-ID: <87plpvct7f.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTO3Hu1M"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3718706cf8aso2498254f8f.3;
+        Mon, 26 Aug 2024 06:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724680136; x=1725284936; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L/1dDxymQY2q0jHJd/Qc6Etj6Jk8R4gGJoG1cFJtygU=;
+        b=eTO3Hu1MDrcN18tW9tXMGsBHfKwYURDsvHDEMk3IUvF3Yql93adwa3LitdByOJ6yqd
+         fhMAiUnksbVZp4wBJTW05E8Vcu3dp9bJk86BcqfLYTnVN+TaxDUgeaS+OT5hxtB4Wg/4
+         Qo4rkH4P0Xi0A2ayiaxYjEFCA0nFab5WT6EhSBd0Lr5GYml5F8iPk9Z/EbHP6BVf2Hk3
+         WjajtWQMJrPXob5FMbaO7IH2iQjntEMpHPwLgGEe9IRopk7CFZv6sl1RUk/3NHTzVsyw
+         XE79SQZezj9aAxDYSLYk9Gp6vX1OZDo+yedA0CUdNMa6ApxVHn+CDNYDB1exYGM5OikA
+         /9gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724680136; x=1725284936;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L/1dDxymQY2q0jHJd/Qc6Etj6Jk8R4gGJoG1cFJtygU=;
+        b=dKN7CZkQOYkB2sEmNGZ2HDwrBsEubQKvCw2Z1J+KaxK5huQgfGZWx3f1Qr+FhhdFDN
+         nmrcF02yzHadKU3se3OaCCtnvvEy19Fwvw6Na9nuiZfjq1I+epuPrQBr5eOCeBfHj2ft
+         KGligSKayw3PPnWCGfaT9WXhjAzdasde/Ln8JOIVbYUVEvBLbnVPAJdqIQTGTIx32Xuo
+         Jpq0p/aH82u8odo2uvGMnaq/OLt90qpzZuek8cIj87tYf+TZ+jHx8XTQNhqCfoNdTgZd
+         cCLsXgHEwTCc2TSa/TwfdHvcH9Yr7ijq+74fbWpp14x4zcO58sntw8CgmDIqmUMi/LJy
+         vdbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXLGToWrjEFG68dCs8F5SoJrkHcp7p1OUPJZzeNNpDNF3KVGXRjhQooa5rhiCKyKm0xpw=@vger.kernel.org, AJvYcCWbOm9pMV94iNnVax+mOrKD5Y+UkbBn0O8VzOXJFDWxd3F0FBVOXwEMeCR+1BFG4J0rGVRVUCpSGV9g2J+hYqIHz8Tn@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywkq9M5nSbY94OXXr1tkCND9U7xm9QdZho+FSb5wBvGDFDfDf29
+	gFKWoonvQvbD1YrSSkgtqAqK99N0sulNFaAH3qARtLs9lLO3xsar
+X-Google-Smtp-Source: AGHT+IHrhcgoOgjvYxzTNQoCZlmxoFMUdfceFMq9xd7w4/93UD525ZHfm2gCPPn35tCtP2ruPcmEcA==
+X-Received: by 2002:a05:6000:2c2:b0:36b:357a:bfee with SMTP id ffacd0b85a97d-37311841b2dmr8125601f8f.1.1724680135817;
+        Mon, 26 Aug 2024 06:48:55 -0700 (PDT)
+Received: from krava ([213.235.133.41])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42abeffe43esm189721925e9.44.2024.08.26.06.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2024 06:48:55 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 26 Aug 2024 15:48:30 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Tianyi Liu <i.pear@outlook.com>,
+	andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
+	albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
+	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	linux@jordanrome.com, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <ZsyHrhG9Q5BpZ1ae@krava>
+References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+ <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240825171417.GB3906@redhat.com>
+ <20240825224018.GD3906@redhat.com>
+ <ZsxTckUnlU_HWDMJ@krava>
+ <20240826115752.GA21268@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240826115752.GA21268@redhat.com>
 
-On Mon, Aug 26 2024 at 12:45, Christophe Leroy wrote:
-> Le 26/08/2024 =C3=A0 10:58, Jason A. Donenfeld a =C3=A9crit=C2=A0:
->> On Mon, Aug 26, 2024 at 10:37:49AM +0200, Christophe Leroy wrote:
->>>
->>>
->>> Le 26/08/2024 =C3=A0 10:07, Jason A. Donenfeld a =C3=A9crit=C2=A0:
->>>> On Thu, Aug 22, 2024 at 09:13:10AM +0200, Christophe Leroy wrote:
->>>>>=20=20=20=20
->>>>> +#define _PAGE_SIZE (1UL << CONFIG_PAGE_SHIFT)
->>>>> +#define _PAGE_MASK (~(_PAGE_SIZE - 1))
->>>>
->>>> If PAGE_SIZE isn't defined at this point, why not just call it PAGE_SI=
-ZE
->>>> instead of _PAGE_SIZE? But if that's the case, why not put the vdso
->>>> definition of PAGE_SIZE into some vdso header included by this file?
->>>
->>> It was working ok on powerpc but on x86 I got:
->>=20
->> Seems like there might be some more fiddling to do, then? Or did you
->> conclude it's impossible?
->
-> Maybe someone who knows x86 in details could helps but after a first=20
-> look I gave up because it looks very x86 specific, indeed that's=20
-> x86/asm/vdso/gettimeofday.h that pulls several x86/asm/ headers , and=20
-> the same type of issue might arise for any new architecture coming in.
+On Mon, Aug 26, 2024 at 01:57:52PM +0200, Oleg Nesterov wrote:
+> On 08/26, Jiri Olsa wrote:
+> >
+> > On Mon, Aug 26, 2024 at 12:40:18AM +0200, Oleg Nesterov wrote:
+> > > 	$ ./test &
+> > > 	$ bpftrace -p $! -e 'uprobe:./test:func { printf("%d\n", pid); }'
+> > >
+> > > I hope that the syntax of the 2nd command is correct...
+> > >
+> > > I _think_ that it will print 2 pids too.
+> >
+> > yes.. but with CLONE_VM both processes share 'mm'
+> 
+> Yes sure,
+> 
+> > so they are threads,
+> 
+> Well this depends on definition ;) but the CLONE_VM child is not a sub-thread,
+> it has another TGID. See below.
+> 
+> > and at least uprobe_multi filters by process [1] now.. ;-)
+> 
+> OK, if you say that this behaviour is fine I won't argue, I simply do not know.
+> But see below.
+> 
+> > > But "perf-record -p" works as expected.
+> >
+> > I wonder it's because there's the perf layer that schedules each
+> > uprobe event only when its process (PID1/2) is scheduled in and will
+> > receive events only from that cpu while the process is running on it
+> 
+> Not sure I understand... The task which hits the breakpoint is always
+> current, it is always scheduled in.
 
-Of course :)
+hum, I might be missing something, but ;-)
 
-> For me it looked cleaner to just do as commit cffaefd15a8f ("vdso: Use=20
-> CONFIG_PAGE_SHIFT in vdso/datapage.h") and not use PAGE_SIZE at all. But=
-=20
-> I didn't want to directly use (1UL << CONFIG_PAGE_SHIFT) and (~(1UL <<=20
-> (CONFIG_PAGE_SHIFT - 1))) in the code directly hence the new macros with=
-=20
-> a leading underscore to avoid any conflict with existing macros.
+assuming we have 2 tasks, each with perf uprobe event assigned
 
-#ifndef PAGE_SIZE
-# define
-#endif
+in perf path there's uprobe_perf_func which calls the uprobe_perf_filter
+and if it returns true it then goes:
 
-Perhaps?
+  uprobe_perf_func
+    __uprobe_perf_func
+      perf_trace_buf_submit
+        perf_tp_event
+        {
 
-Thanks,
+           hlist_for_each_entry_rcu(event, head, hlist_entry) {
+             if (perf_tp_event_match(event, &data, regs)) {
+                perf_swevent_event(event, count, &data, regs);
 
-        tglx
+        }
+
+so it will store the event only to perf event which is added for
+the task that is currently scheduled in, so it's not stored to the
+other task event
+
+in comparison with uprobe_multi path, where uprobe_multi_link_filter
+will pass and then it goes:
+
+  handler_chain
+    uprobe_multi_link_handler
+      bpf_prog_run
+       - executes bpf program
+
+the bpf program will get executed for uprobe from both tasks
+
+> 
+> The main purpose of uprobe_perf_func()->uprobe_perf_filter() is NOT that
+> we want to avoid __uprobe_perf_func() although this makes sense.
+> 
+> The main purpose is that we want to remove the breakpoints in current->mm
+> when uprobe_perf_filter() returns false, that is why UPROBE_HANDLER_REMOVE.
+> IOW, the main purpose is not penalise user-space unnecessarily.
+> 
+> IIUC (but I am not sure), perf-record -p will work "correctly" even if we
+> remove uprobe_perf_filter() altogether. IIRC the perf layer does its own
+> filtering but I forgot everything.
+
+I think that's what I tried to describe above
+
+> 
+> And this makes me think that perhaps BPF can't rely on uprobe_perf_filter()
+> either, even we forget about ret-probes.
+> 
+> > [1] 46ba0e49b642 bpf: fix multi-uprobe PID filtering logic
+> 
+> Looks obviously wrong... get_pid_task(PIDTYPE_TGID) can return a zombie
+> leader with ->mm == NULL while other threads and thus the whole process
+> is still alive.
+> 
+> And again, the changelog says "the intent for PID filtering it to filter by
+> *process*", but clone(CLONE_VM) creates another process, not a thread.
+> 
+> So perhaps we need
+> 
+> 	-	if (link->task && current->mm != link->task->mm)
+> 	+	if (link->task && !same_thread_group(current, link->task))
+
+that seems correct, need to check
+
+> 
+> in uprobe_prog_run() to make "filter by *process*" true, but this won't
+> fix the problem with link->task->mm == NULL in uprobe_multi_link_filter().
+> 
+> 
+> Does bpftrace use bpf_uprobe_multi_link_attach/etc ? I guess not...
+> Then which userspace tool uses this code? ;)
+
+yes, it will trigger if you attach to multiple uprobes, like with your
+test example with:
+
+  # bpftrace -p xxx -e 'uprobe:./ex:func* { printf("%d\n", pid); }'
+
+thanks,
+jirka
+
