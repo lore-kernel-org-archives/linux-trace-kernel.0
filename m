@@ -1,78 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B5019992B;
-	Mon, 26 Aug 2024 21:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CA719ADAA;
+	Mon, 26 Aug 2024 22:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724708079; cv=none; b=fSqxKXsu7cKZmeLXjqz7W+FWu9tCQaNcz3XSq+RsWQluXgdWKR/rFEvd2oPd1kAfBuooEi6Orhtjb0xYuE3lfH+sgo8H6J0nl8OjjF/SxaOvSHslRoCVq+BjdPaJTNCE34YjUoZ/f67qLm0grPoemT4tovOAKWTJZBR5TE7bfoQ=
+	t=1724709711; cv=none; b=NgakVDGtEVSc4Qr51qYn4yzNuZfLqrWQNLv5ot3MzbFl8YP5FW99tRusnKYtPiyeXrIO85s/woLwY/qRQS2tBGflQ6ZTyBMjZuIsbMDmGUwiRYoiwO68mvuMeRKZOB7SlHz/JydkWt3gEI8S+a22pGBcUAzFzQTgbmPDWhAPkb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724708079; c=relaxed/simple;
-	bh=f6QVJ7gqPlOJSdYw6NwfRnwjtN71dpr2Yeva23qqdXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/a6nafIQwPPn/AQ6kGN+n3jyuZBcIlbkAT5S5Ue7wSk8KrLhDIpqMRtYOEyVxAv/HkCH6tLhT4vbTJqPaJm4z0vv2NJwfkJ+jptXBY18sTMiRKlzodxU8Fg8nrHTiKYJHQk9teKdmcRXcgjGKKySB5if2cFkpdW5BSEY6kLKlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BupbacOo; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1724709711; c=relaxed/simple;
+	bh=MAl8QMEg+vUOjw7aHlZYMvDL1CxDVI1xYwxmISPUo+s=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pVa3YKaTBTYdxbHIQZJWGSwb5mS3Dr3wacNtPNWpK1Otoq4L7xilLCryAKY7YHQEmBsqldJomwKkwklDIgU/XyyrbfXxRg3w0ahXs+dPDDgM3WcVzsu92Hytt1aFl+C/Kr82oUw4Byw7GRgBuUEFbB8HJC5iBycQ6+SBcHiTneA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YITfNBGQ; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BupbacOo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724708077; x=1756244077;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f6QVJ7gqPlOJSdYw6NwfRnwjtN71dpr2Yeva23qqdXQ=;
-  b=BupbacOoMmqT3KnKPl/JPcq4K8Brb5EleBhUTGjrfkGTsbNNqj4GHreD
-   hj3iV1Ynrqa2eesLEt49BjRHuKGiAYNIegbw5HjHR+E9cAqL0ihI8ombR
-   Z2UG576G176oSWVlyY+1Tdd9ad16Rvd29JkDhd7lEdobgcc8sCGRod+tj
-   LBPdro3r/y1b7Re+VDvMW8abOZDhLOeoiRI8HIE3++Otr/YzkxDsWvLME
-   gXpcwXjWh72mcydxGvG3C+bz1Dz0o8C/qhRV81lnmnnXLfUxsC3YjHZ6g
-   bzD+5KPv2FDwIDTtdU2PxHS6+JaE6nFI5qum9rbDG8KHG8VLz9Z5uZpHx
-   Q==;
-X-CSE-ConnectionGUID: FqqkaVnbQvqq0cJAkJwvbg==
-X-CSE-MsgGUID: DDdZtAKsRmGoI1w2JYxCxA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11176"; a="23025216"
-X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="23025216"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 14:34:36 -0700
-X-CSE-ConnectionGUID: eZLAVeVBSbC/mqEo8Mbbug==
-X-CSE-MsgGUID: QnvKqTknQ4GeCeBOqGKUpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,178,1719903600"; 
-   d="scan'208";a="66801034"
-Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Aug 2024 14:34:30 -0700
-Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sihM4-000Hcg-1d;
-	Mon, 26 Aug 2024 21:34:28 +0000
-Date: Tue, 27 Aug 2024 05:34:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 07/17] mm: Define VM_DROPPABLE for powerpc/32
-Message-ID: <202408270553.2S5d14Ar-lkp@intel.com>
-References: <315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YITfNBGQ"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42809d6e719so41832945e9.3;
+        Mon, 26 Aug 2024 15:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724709707; x=1725314507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=niKhWmEQf+Psg71lFmVBz1Uz8IkSk33YElBT/2u1MMg=;
+        b=YITfNBGQFBQ47QRjPieRN6SGX7eKxOR7F1+/QikKJKIq6dsqkqJajcKV/ChM4sfIqR
+         1zK8+GkqWU50xTsnEhu93t1rfW3N6bv2y2qb+0FBZb2fKD1UTKX8lgujDwlTzXLotro6
+         wyd2ujbItQxAbzdWyaLjDiKcrY3wp/FVSMC/Qbw5TEY5Ol0GCjF9l4ogzrU7towWA8WY
+         dhoyXm1Qj2QdHmHVTKYoq6/lilN+tE6FFczpAEHarakjd6F8bF24DGv3Ox4ifapcvAHW
+         vTxPYF2ktH+C3AAi/fVEa2bVas6XHGnbXtzQvHWOscHGlpoor2TAKICbPhYV9GrF1q3l
+         KyMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724709707; x=1725314507;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=niKhWmEQf+Psg71lFmVBz1Uz8IkSk33YElBT/2u1MMg=;
+        b=GwLTCW+COl8xI8LguowfGYRo+XA7gZKTmDcOQdNXdWZPTWcerSeA3/WCEvblqWz4Ef
+         PfIfHeGmWXA+G2SoTbKrAzvxoPy3oY2ZK3bqahSzzkjVwXZnHmR3BPw1lMHOyZEEdWIO
+         aVtsxMEv76fLcJPiNfcMtYeR78H37QDuuIb9IcAhmXmjDon9L6MOtY4iKgGABaJ4Z4YU
+         Ozi/c5xL4rgdBS4mYTGw1s+YIv96C8Lxz1kCvCNHtq8Eiesa302fo3s2ftK1nv2zoa8c
+         /Ptsu2dvlvdaxc9uy7uTHcmp6n5Kg4ZFmyG/rDUrO6k0y9KSGDDWIURws1JNgdptHbd6
+         HcXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpSCLa7y67YHApwp5D74sjWifcEWZzLN6BaBlUk51TXDqriYzOftuLRy3jodzhOvVhA5U=@vger.kernel.org, AJvYcCX5FJYFDbWFcLw7IwGkWz91Jj3VYb0k86nssy48ZN6FPshmOzrfEOeIWjcUrYP24bacHv9GDYUrwhgSZnHgmhw6vU8T@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV4ArVGVCLRAqieUqTR6Suu+1ayzdj85Ql9aWM+D4St8J7CmOu
+	bnGo2OBdhGPvlmduXoQhgM/FDaVSNH2DN/FE8R0MVuU3O7foLiXx
+X-Google-Smtp-Source: AGHT+IH6uQJwX/9TDYPKTrazkkgRvjVLnnInMuZp4PL9jQiO9hx/uNZvRY+Qr3dWvu1BvauGDCwkmQ==
+X-Received: by 2002:a05:600c:4453:b0:426:4978:65f0 with SMTP id 5b1f17b1804b1-42acc8dd846mr86482815e9.18.1724709707327;
+        Mon, 26 Aug 2024 15:01:47 -0700 (PDT)
+Received: from krava (i68970762.versanet.de. [104.151.7.98])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-373082096bbsm11577786f8f.89.2024.08.26.15.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Aug 2024 15:01:47 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 27 Aug 2024 00:01:44 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Tianyi Liu <i.pear@outlook.com>,
+	andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
+	albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
+	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	linux@jordanrome.com, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <Zsz7SPp71jPlH4MS@krava>
+References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+ <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240825171417.GB3906@redhat.com>
+ <20240825224018.GD3906@redhat.com>
+ <ZsxTckUnlU_HWDMJ@krava>
+ <20240826115752.GA21268@redhat.com>
+ <ZsyHrhG9Q5BpZ1ae@krava>
+ <20240826212552.GB30765@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,54 +78,97 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <20240826212552.GB30765@redhat.com>
 
-Hi Christophe,
+On Mon, Aug 26, 2024 at 11:25:53PM +0200, Oleg Nesterov wrote:
+> This is offtopic, sorry for the spam, but...
+> 
+> On 08/26, Jiri Olsa wrote:
+> >
+> > On Mon, Aug 26, 2024 at 01:57:52PM +0200, Oleg Nesterov wrote:
+> > >
+> > > Does bpftrace use bpf_uprobe_multi_link_attach/etc ? I guess not...
+> > > Then which userspace tool uses this code? ;)
+> >
+> > yes, it will trigger if you attach to multiple uprobes, like with your
+> > test example with:
+> >
+> >   # bpftrace -p xxx -e 'uprobe:./ex:func* { printf("%d\n", pid); }'
+> 
+> Hmm. I reserved the testing machine with fedora 40 to play with bpftrace.
+> 
+> dummy.c:
+> 
+> 	#include <unistd.h>
+> 
+> 	void func1(void) {}
+> 	void func2(void) {}
+> 
+> 	int main(void) { for (;;) pause(); }
+> 
+> If I do
+> 
+> 	# ./dummy &
+> 	# bpftrace -p $! -e 'uprobe:./dummy:func* { printf("%d\n", pid); }'
+> 
+> and run
+> 
+> 	# bpftrace -e 'kprobe:__uprobe_register { printf("%s\n", kstack); }'
 
-kernel test robot noticed the following build warnings:
+did you just bpftrace-ed bpftrace? ;-) on my setup I'm getting:
 
-[auto build test WARNING on powerpc/next]
-[also build test WARNING on powerpc/fixes shuah-kselftest/next shuah-kselftest/fixes linus/master v6.11-rc5 next-20240826]
-[cannot apply to crng-random/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[root@qemu ex]# ../bpftrace/build/src/bpftrace -e 'kprobe:uprobe_register { printf("%s\n", kstack); }'
+Attaching 1 probe...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christophe-Leroy/asm-generic-unaligned-h-Extract-common-header-for-vDSO/20240826-103525
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
-patch link:    https://lore.kernel.org/r/315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy%40csgroup.eu
-patch subject: [PATCH v2 07/17] mm: Define VM_DROPPABLE for powerpc/32
-config: um-randconfig-r122-20240826 (https://download.01.org/0day-ci/archive/20240827/202408270553.2S5d14Ar-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240827/202408270553.2S5d14Ar-lkp@intel.com/reproduce)
+        uprobe_register+1
+        bpf_uprobe_multi_link_attach+685
+        __sys_bpf+9395
+        __x64_sys_bpf+26
+        do_syscall_64+128
+        entry_SYSCALL_64_after_hwframe+118
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202408270553.2S5d14Ar-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
-   mm/debug_page_ref.c: note: in included file (through include/trace/events/page_ref.h):
->> include/trace/events/mmflags.h:168:5: sparse: sparse: undefined preprocessor identifier 'VM_DROPPABLE'
->> include/trace/events/mmflags.h:168:21: sparse: sparse: undefined preprocessor identifier 'VM_NONE'
-   mm/debug_page_ref.c: note: in included file (through include/trace/events/page_ref.h, include/trace/define_trace.h, include/trace/events/page_ref.h):
->> include/trace/events/mmflags.h:168:5: sparse: sparse: undefined preprocessor identifier 'VM_DROPPABLE'
->> include/trace/events/mmflags.h:168:21: sparse: sparse: undefined preprocessor identifier 'VM_NONE'
-   mm/debug_page_ref.c: note: in included file (through include/trace/events/page_ref.h, include/trace/trace_events.h, include/trace/define_trace.h, ...):
-   include/trace/events/mmflags.h:169:10: sparse: sparse: preprocessor token IF_HAVE_VM_DROPPABLE redefined
-   mm/debug_page_ref.c: note: in included file (through include/trace/events/page_ref.h):
-   include/trace/events/mmflags.h:171:10: sparse: this was the original definition
+I'm not sure what's bpftrace version in fedora 40, I'm using upstream build:
 
-vim +/VM_DROPPABLE +168 include/trace/events/mmflags.h
+[root@qemu ex]# ../bpftrace/build/src/bpftrace --info 2>&1 | grep uprobe_multi
+  uprobe_multi: yes
+[root@qemu ex]# ../bpftrace/build/src/bpftrace --version
+bpftrace v0.20.0
 
-   167	
- > 168	#if VM_DROPPABLE != VM_NONE
-   169	# define IF_HAVE_VM_DROPPABLE(flag, name) {flag, name},
-   170	#else
-   171	# define IF_HAVE_VM_DROPPABLE(flag, name)
-   172	#endif
-   173	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+jirka
+
+> 
+> on another console I get
+> 
+> 	Attaching 1 probe...
+> 
+>         __uprobe_register+1
+>         probe_event_enable+399
+>         perf_trace_event_init+440
+>         perf_uprobe_init+152
+>         perf_uprobe_event_init+74
+>         perf_try_init_event+71
+>         perf_event_alloc+1681
+>         __do_sys_perf_event_open+447
+>         do_syscall_64+130
+>         entry_SYSCALL_64_after_hwframe+118
+> 
+>         __uprobe_register+1
+>         probe_event_enable+399
+>         perf_trace_event_init+440
+>         perf_uprobe_init+152
+>         perf_uprobe_event_init+74
+>         perf_try_init_event+71
+>         perf_event_alloc+1681
+>         __do_sys_perf_event_open+447
+>         do_syscall_64+130
+>         entry_SYSCALL_64_after_hwframe+118
+> 
+> so it seems that bpftrace doesn't use bpf_uprobe_multi_link_attach()
+> (called by sys_bpf(BPF_LINK_CREATE) ?) in this case.
+> 
+> But again, this is offtopic, please forget.
+> 
+> Oleg.
+> 
