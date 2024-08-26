@@ -1,86 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD8C43152
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 12:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147F117C9B5
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 12:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724675109; cv=none; b=fUFYN5qXLDbsgdHT5M8OZCioDluRL+Zx+2DzOs0kqpamv0ML2fJZEkzKc2IVxiI/FU/KNQHYfa1N5gczo3jaYakoclHfxZ4m1bg2S49lqfHitOnvXNCZ7UUoNZsql+Fcv2S0CTa1gEdNjoBSxii9wo8AEtrJkoFEyL2lfbvBCV0=
+	t=1724676741; cv=none; b=Q9RSu7UZyKlO7AAOoQ8PfVZ8UXeL5ig8h2rhwqpButO6O2viFTCAPAc6l9aOw654E5BAGwPBYNKvPGi1nHaNPY/ic/6lC8itY3keAftklxtSeUwH2kS2/qLS7Yf/7ZOQh5AEBIQMXcvUpWGW39fNirPj5pPIpL5EctasjQRJ+HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724675109; c=relaxed/simple;
-	bh=jpDRH9dbAziLy0GYQaJhc+koCjZez7lfB5Y1aHhxtgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QXuGiXIXdyillC2DBA/ZdioKQX1fUkONj7SQsGH2eeE1VpdCd5a7sccvCxB3U4CylG2Q7YSc4wkZjMZq0BXQGN15QYX/nTTaKulQPYpi7H7r1njyTFwegPKjJMc1peKw5nQXtgydMZrQdRz5LGwy++FWfuPM/YZVsiJLSIO2oI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MwujKWBT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MwujKWBT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724675106;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jpDRH9dbAziLy0GYQaJhc+koCjZez7lfB5Y1aHhxtgg=;
-	b=MwujKWBTL4to/AC+7hoK0oIU+GZlQCoUWpAH7G3ctT6buNyz27Gcs0JiDO8FuK69d8IR7F
-	FptRcuh1aLvja9d0BBr1IzIWMJsMDTVv8GsdaCL5xpXw6hvAvxjANojFUycoKo7H9iSZL5
-	wcGJVrUXH06DQ+jSgAktwZ6yRT4nIyg=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-151-Q_-YKPSaM72EZkA1yHd_-w-1; Mon,
- 26 Aug 2024 08:25:03 -0400
-X-MC-Unique: Q_-YKPSaM72EZkA1yHd_-w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 570081955D4B;
-	Mon, 26 Aug 2024 12:25:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D8A951955F45;
-	Mon, 26 Aug 2024 12:24:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 26 Aug 2024 14:24:54 +0200 (CEST)
-Date: Mon, 26 Aug 2024 14:24:49 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240826122448.GB21268@redhat.com>
-References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
- <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240825171417.GB3906@redhat.com>
- <20240825224018.GD3906@redhat.com>
- <ZsxTckUnlU_HWDMJ@krava>
- <20240826115752.GA21268@redhat.com>
+	s=arc-20240116; t=1724676741; c=relaxed/simple;
+	bh=iewPIKWwxjnmmShXWzD5eMbFV7rnrhci/Hk0xB9wvw8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ks4WNbAb5PscsqFyfkTKZI3kJRIIOt20BFhUpBZhiMqk1u5+Oc+CZFGaE680HLd7TAKkbe9UvsO7TFBr8QRnYscW7FSxHT/j5TdVlQa1mSqKt0PZis4bpI+y/pw3C7Ph96W47m/xxkthyIFYhL1NCmTP4elkVUFhtK3KGsFV+kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-39d2dee9722so52514065ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 05:52:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724676739; x=1725281539;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yhLXBV41EvVRxq0pyiOc1zrWFwcXv7kRA5fXB2u90mg=;
+        b=wm0LKHTQys4H5yvkhHE+n7QAO+pnhVw57kXMnxswu0yW+7z68dwZLxi0nc98p4l713
+         CAUWqOT8phVPPGzb6tEe6I9/dmCnVdMSAFMthECJwbz0KXrrxko9PnQea+/mTF8va+Bu
+         5BeevCaN8IhfXtCUCOXQjDEDnrGAsnGA4EqDrquGOVASkCvM1biX24vrE6yaTDNUJcTl
+         5t53Ks3mVJPY057j2ScY5XCma1qf0nlQs/i0UbsqMOzboWYFaK2p580COxKSAJd/E5Cf
+         YmJReOQ9mWLa9he4IMIg1IZJJjFB2UV++8fvpIHbVuP1a9w47DfFiOrQlioiDgwJ14Da
+         M5uA==
+X-Forwarded-Encrypted: i=1; AJvYcCXK4rSUdpNC+Jh2JKzGEcykrgKR6WUljf0udE9AxjiQXNM1wQnveQgnlvBhTBuKpLlnPUrdpZ8f/Jr3D9UePD4KJmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys/vSSyFrcbtomqs3k6LmaWo8pfMkYAy/vxQuabeQfYICixwya
+	CRXR++ctzu3ruDeW+62kvWhSFJ0fsvnMXTPzVY2vkKeCSr/jNd75uFQfmoe8zcQaFBkjsOK4pJk
+	D0lnCzVHIUxb+idONUVJtn1ymq+qDV4ZIlIkUUSGWVyry/sxYRLxHa5s=
+X-Google-Smtp-Source: AGHT+IHJ39gp+EnjPi6uHTN0u9WeqDEqRBpSQB3idE7i4A9GHa4RS6R179Kowo9wzYygVvoiKtBfMht1Xh+SpdxWXecCN+aJE2p9
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240826115752.GA21268@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Received: by 2002:a05:6e02:1d9c:b0:39d:300f:e911 with SMTP id
+ e9e14a558f8ab-39e3c98359cmr9506465ab.2.1724676739248; Mon, 26 Aug 2024
+ 05:52:19 -0700 (PDT)
+Date: Mon, 26 Aug 2024 05:52:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000654086062095987d@google.com>
+Subject: [syzbot] [bpf?] [trace?] WARNING in bpf_get_stack_raw_tp
+From: syzbot <syzbot+ce35de20ed6652f60652@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
+	mattbobrowski@google.com, mhiramat@kernel.org, netdev@vger.kernel.org, 
+	rostedt@goodmis.org, sdf@fomichev.me, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 08/26, Oleg Nesterov wrote:
->
-> Does bpftrace use bpf_uprobe_multi_link_attach/etc ? I guess not...
+Hello,
 
-Given that the patch from Tianyi makes the difference, bpftrace should
-trigger the "#ifdef CONFIG_BPF_EVENTS" code in __uprobe_perf_func(), and
-bpf_prog_run_array_uprobe() should return zero, correct?
+syzbot found the following issue on:
 
-> Then which userspace tool uses this code? ;)
+HEAD commit:    872cf28b8df9 Merge tag 'platform-drivers-x86-v6.11-4' of g..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1628ae09980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=df2f0ed7e30a639d
+dashboard link: https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1439fbf5980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b5382b980000
 
-Yes ;)
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/72b6e311a539/disk-872cf28b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0c44549e5bb0/vmlinux-872cf28b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fb02c268f118/bzImage-872cf28b.xz
 
-Oleg.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ce35de20ed6652f60652@syzkaller.appspotmail.com
 
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 get_bpf_raw_tp_regs kernel/trace/bpf_trace.c:1917 [inline]
+WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1990 [inline]
+WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 bpf_get_stack_raw_tp+0x1c9/0x240 kernel/trace/bpf_trace.c:1987
+Modules linked in:
+CPU: 0 UID: 0 PID: 5229 Comm: syz-executor357 Not tainted 6.11.0-rc4-syzkaller-g872cf28b8df9 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
+RIP: 0010:get_bpf_raw_tp_regs kernel/trace/bpf_trace.c:1917 [inline]
+RIP: 0010:____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1990 [inline]
+RIP: 0010:bpf_get_stack_raw_tp+0x1c9/0x240 kernel/trace/bpf_trace.c:1987
+Code: 6d ee 1e 00 65 ff 0d 96 86 64 7e 4c 63 f0 4c 89 f0 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 88 ad f4 ff 90 <0f> 0b 90 65 ff 0d 6d 86 64 7e 49 c7 c6 f0 ff ff ff eb d1 44 89 e9
+RSP: 0018:ffffc900020de6f0 EFLAGS: 00010293
+RAX: ffffffff819eddb8 RBX: 0000000000000003 RCX: ffff88807dae0000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000fffffffc
+RBP: ffffc900020de730 R08: ffffffff819edc87 R09: 1ffffffff26e6708
+R10: dffffc0000000000 R11: ffffffffa0001c68 R12: ffff8880b9236238
+R13: 0000000000000902 R14: 0000000000000000 R15: ffffc900020de748
+FS:  0000555580bbc380(0000) GS:ffff8880b9200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f7721d2f110 CR3: 000000002f1be000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bpf_prog_e6cf5f9c69743609+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
+ bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
+ __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
+ stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
+ __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
+ bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
+ bpf_prog_e6cf5f9c69743609+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
+ bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
+ __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
+ stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
+ __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
+ bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
+ bpf_prog_e6cf5f9c69743609+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
+ bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
+ __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
+ stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
+ __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
+ ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
+ bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
+ bpf_prog_e6cf5f9c69743609+0x42/0x46
+ bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
+ __bpf_prog_run include/linux/filter.h:691 [inline]
+ bpf_prog_run include/linux/filter.h:698 [inline]
+ __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
+ bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
+ __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
+ trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
+ __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
+ __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
+ mmap_read_lock include/linux/mmap_lock.h:145 [inline]
+ acct_collect+0x804/0x830 kernel/acct.c:563
+ do_exit+0x93e/0x27f0 kernel/exit.c:861
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1031
+ __do_sys_exit_group kernel/exit.c:1042 [inline]
+ __se_sys_exit_group kernel/exit.c:1040 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1040
+ x64_sys_call+0x2634/0x2640 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f7721cb3389
+Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
+RSP: 002b:00007fff639ca6c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7721cb3389
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+RBP: 00007f7721d2e2b0 R08: ffffffffffffffb8 R09: 0000000080bbd610
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7721d2e2b0
+R13: 0000000000000000 R14: 00007f7721d2ed00 R15: 00007f7721c845c0
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
