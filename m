@@ -1,204 +1,136 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147F117C9B5
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 12:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED4114901B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 13:01:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724676741; cv=none; b=Q9RSu7UZyKlO7AAOoQ8PfVZ8UXeL5ig8h2rhwqpButO6O2viFTCAPAc6l9aOw654E5BAGwPBYNKvPGi1nHaNPY/ic/6lC8itY3keAftklxtSeUwH2kS2/qLS7Yf/7ZOQh5AEBIQMXcvUpWGW39fNirPj5pPIpL5EctasjQRJ+HM=
+	t=1724677304; cv=none; b=WfdvjGwQyCKDEKgOxAPXSoVEJh4Xm9j438hY4gzt0vplwLYL4D7737IvLN+LYsUwHxQd1revPxd7LFgpCW71TOCwizVDasvTuLfHQ2e9t9eVdJJ3OI32oIzveN/gi7buPab+ynPwxpJ3loPg81YQRXFZWY5O6BYZ3SI+1KsUktA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724676741; c=relaxed/simple;
-	bh=iewPIKWwxjnmmShXWzD5eMbFV7rnrhci/Hk0xB9wvw8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ks4WNbAb5PscsqFyfkTKZI3kJRIIOt20BFhUpBZhiMqk1u5+Oc+CZFGaE680HLd7TAKkbe9UvsO7TFBr8QRnYscW7FSxHT/j5TdVlQa1mSqKt0PZis4bpI+y/pw3C7Ph96W47m/xxkthyIFYhL1NCmTP4elkVUFhtK3KGsFV+kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-39d2dee9722so52514065ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 05:52:19 -0700 (PDT)
+	s=arc-20240116; t=1724677304; c=relaxed/simple;
+	bh=2Opw6vNFqtAowmYwHyECODo2kqem1ugNhw4ntDm8Jjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Opa+t2gLH4v9Shoc/yFZ0izAWeXvENFhaNDUElSbB7aAaCk825fDDoUNB8WMgv6xKJ5NfSsf13sclHiZ78GoRUEn9gU3EK7BghPeFANEmZ59+oxkYCeooHB/tEIOnTUcQ7+G2zG/Ap3EV669+RJ7vaZ2OWPljMaZudjnMZwwzfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZZsWqr5l; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZZsWqr5l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724677301;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PtUuKStDI/TrqAejzoVfdWdlirHG5pbXKKxkB5GlHAY=;
+	b=ZZsWqr5lXds1xQ9B6IToTaPPmctCTtGWrVWxAWS0i+P5cHaQQQOWex4lKLdp8VH5GT7e2b
+	c3hw4bf+wnvX7Hm4YJ4LiCDQzDCBJuIynQblhnKqwUrUmKZbl2bXGeAQqkIM3SB6JD9aLl
+	k4DIHCeXrN9rwS+ApaG9eYJH95jpXZA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-436-0mz49oPhOTOcBoj1IKzk5g-1; Mon, 26 Aug 2024 09:01:38 -0400
+X-MC-Unique: 0mz49oPhOTOcBoj1IKzk5g-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a7a8281dba5so397012966b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 06:01:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724676739; x=1725281539;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yhLXBV41EvVRxq0pyiOc1zrWFwcXv7kRA5fXB2u90mg=;
-        b=wm0LKHTQys4H5yvkhHE+n7QAO+pnhVw57kXMnxswu0yW+7z68dwZLxi0nc98p4l713
-         CAUWqOT8phVPPGzb6tEe6I9/dmCnVdMSAFMthECJwbz0KXrrxko9PnQea+/mTF8va+Bu
-         5BeevCaN8IhfXtCUCOXQjDEDnrGAsnGA4EqDrquGOVASkCvM1biX24vrE6yaTDNUJcTl
-         5t53Ks3mVJPY057j2ScY5XCma1qf0nlQs/i0UbsqMOzboWYFaK2p580COxKSAJd/E5Cf
-         YmJReOQ9mWLa9he4IMIg1IZJJjFB2UV++8fvpIHbVuP1a9w47DfFiOrQlioiDgwJ14Da
-         M5uA==
-X-Forwarded-Encrypted: i=1; AJvYcCXK4rSUdpNC+Jh2JKzGEcykrgKR6WUljf0udE9AxjiQXNM1wQnveQgnlvBhTBuKpLlnPUrdpZ8f/Jr3D9UePD4KJmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys/vSSyFrcbtomqs3k6LmaWo8pfMkYAy/vxQuabeQfYICixwya
-	CRXR++ctzu3ruDeW+62kvWhSFJ0fsvnMXTPzVY2vkKeCSr/jNd75uFQfmoe8zcQaFBkjsOK4pJk
-	D0lnCzVHIUxb+idONUVJtn1ymq+qDV4ZIlIkUUSGWVyry/sxYRLxHa5s=
-X-Google-Smtp-Source: AGHT+IHJ39gp+EnjPi6uHTN0u9WeqDEqRBpSQB3idE7i4A9GHa4RS6R179Kowo9wzYygVvoiKtBfMht1Xh+SpdxWXecCN+aJE2p9
+        d=1e100.net; s=20230601; t=1724677297; x=1725282097;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PtUuKStDI/TrqAejzoVfdWdlirHG5pbXKKxkB5GlHAY=;
+        b=ma9LtHgizuJXmyCCb7TOk5cOYLsEtzkYLl39bfcewzs1y10ig44uOnakVUf35me9Rv
+         Ea1OccmcWYg/dgF9o5XT5E1M6+NdAIKLeLCorWpfWJuM4LYyGaKRjs4AVGwnaToVbmHu
+         59oM8czVYebw0MXRtIAg1gcnDS7Zk6rSP44Lbvbica9eToSFyI7ZFtgjT7fKR3Z8wJp9
+         dClHef5toUclU4yqZNi58+rtCzuNBqruKpi8Qcx+zR7EEuLNOGNe+LJCse/mktActVNS
+         k5ht9TCGu5OU8tIjAnPK+BXL9dITkFlR9brj6bRm0e2XL48dtx74MwnloVeYjLHtEn5O
+         mNEg==
+X-Gm-Message-State: AOJu0YxX1RfHpPuITysC+q3A6d6MoEgtCh3KfCwD6GqTAJ+C7P3aaNv9
+	riSIbZr5a38z+P268nVS0Evgbjtr2GU/Ti2DXG9M1m6MhiHzsGr9YwelIVzCa5MMWCKehFM1KiM
+	V+v+1KKeBDJtfWKDmDzlKwkM4TeAtIbAEYE90TpPOZARSMuz+vgcTdaPcVS04vXMxbzOcXyBte2
+	UNQyDSW40Fg8+TMl/GbU4HsXG3nef//vqMwjEq4BqVoXRp
+X-Received: by 2002:a17:907:dac:b0:a86:b727:3f27 with SMTP id a640c23a62f3a-a86b727424dmr392975966b.52.1724677296760;
+        Mon, 26 Aug 2024 06:01:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG53fvNxGfjMtYsvqkzmA0t0VlDbb1UXlcCb0hnV4Mk6ey39DNiK7UN5zFZsZLnqKxLsPGZy+PWs1LiyX/NUfc=
+X-Received: by 2002:a17:907:dac:b0:a86:b727:3f27 with SMTP id
+ a640c23a62f3a-a86b727424dmr392969866b.52.1724677295454; Mon, 26 Aug 2024
+ 06:01:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d9c:b0:39d:300f:e911 with SMTP id
- e9e14a558f8ab-39e3c98359cmr9506465ab.2.1724676739248; Mon, 26 Aug 2024
- 05:52:19 -0700 (PDT)
-Date: Mon, 26 Aug 2024 05:52:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000654086062095987d@google.com>
-Subject: [syzbot] [bpf?] [trace?] WARNING in bpf_get_stack_raw_tp
-From: syzbot <syzbot+ce35de20ed6652f60652@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, netdev@vger.kernel.org, 
-	rostedt@goodmis.org, sdf@fomichev.me, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+References: <20240820130001.124768-1-tglozar@redhat.com> <20240823125426.404f2705@gandalf.local.home>
+ <20240823145211.34ccda61@gandalf.local.home>
+In-Reply-To: <20240823145211.34ccda61@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 26 Aug 2024 15:01:24 +0200
+Message-ID: <CAP4=nvQnW5vS5CQBZtKp-BdjYxNFbq26P36uRy3RhCenHEG_YA@mail.gmail.com>
+Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in timerlat_fd_release
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+p=C3=A1 23. 8. 2024 v 20:51 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
+.org> napsal:
+>
+> Egad, I don't think this is even good enough. I noticed this in the trace
+> (adding kthread to the memset trace_printk):
+>
+>            <...>-916     [003] .....   134.227044: osnoise_workload_start=
+: memset ffff88823c435b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227046: osnoise_workload_start=
+: memset ffff88823c4b5b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227048: osnoise_workload_start=
+: memset ffff88823c535b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227049: osnoise_workload_start=
+: memset ffff88823c5b5b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227051: osnoise_workload_start=
+: memset ffff88823c635b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227052: osnoise_workload_start=
+: memset ffff88823c6b5b28 for 0000000000000000
+>            <...>-916     [003] .....   134.227054: osnoise_workload_start=
+: memset ffff88823c735b28 for ffff888108205640
+>            <...>-916     [003] .....   134.227055: osnoise_workload_start=
+: memset ffff88823c7b5b28 for 0000000000000000
+>
+> Before the reset, all but one of the tlat->kthread is NULL. Then it dawne=
+d
+> on me that this is a global per CPU variable. It gets initialized when th=
+e
+> tracer starts. If another program is has the timerlat fd open when the
+> tracer ends, the tracer starts again, and you close the fd, it will cance=
+l
+> the hrtimer for the new task.
+>
+> I think there needs to be some ref counting here, that keeps the tracer
+> from starting again if there's still files opened.
+>
 
-syzbot found the following issue on:
+The timerlat fd is not supposed to be open when the tracer ends/starts
+again, since osnoise_workload_stop() calls stop_kthread(), which in
+turn calls kill_pid() to SIGKILL the user workload, which will also
+close the file descriptor. Only one PID per CPU should have the
+timerlat fd open at one moment, since timerlat_fd_open() will refuse
+to open if tlat->pid is set. It appears that this is somehow bypassed
+and osnoise_workload_start() happens before closing the fd, not sure
+why.
 
-HEAD commit:    872cf28b8df9 Merge tag 'platform-drivers-x86-v6.11-4' of g..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1628ae09980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=df2f0ed7e30a639d
-dashboard link: https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1439fbf5980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b5382b980000
+> This looks to be a bigger problem than I have time to work on it for now.
+> I'll just apply the mutex patch for the kthreads, but this bug is going t=
+o
+> take a bit more work in solving.
+>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/72b6e311a539/disk-872cf28b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/0c44549e5bb0/vmlinux-872cf28b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/fb02c268f118/bzImage-872cf28b.xz
+Yeah, unfortunately the issue looks more complicated now after looking
+at the traces you posted, I will probably have to do more tracing to
+see what is actually happening here. Thank you again for helping us
+with this and also for the patch for the mutex.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ce35de20ed6652f60652@syzkaller.appspotmail.com
+Tomas
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 get_bpf_raw_tp_regs kernel/trace/bpf_trace.c:1917 [inline]
-WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1990 [inline]
-WARNING: CPU: 0 PID: 5229 at kernel/trace/bpf_trace.c:1917 bpf_get_stack_raw_tp+0x1c9/0x240 kernel/trace/bpf_trace.c:1987
-Modules linked in:
-CPU: 0 UID: 0 PID: 5229 Comm: syz-executor357 Not tainted 6.11.0-rc4-syzkaller-g872cf28b8df9 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
-RIP: 0010:get_bpf_raw_tp_regs kernel/trace/bpf_trace.c:1917 [inline]
-RIP: 0010:____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1990 [inline]
-RIP: 0010:bpf_get_stack_raw_tp+0x1c9/0x240 kernel/trace/bpf_trace.c:1987
-Code: 6d ee 1e 00 65 ff 0d 96 86 64 7e 4c 63 f0 4c 89 f0 48 83 c4 18 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 88 ad f4 ff 90 <0f> 0b 90 65 ff 0d 6d 86 64 7e 49 c7 c6 f0 ff ff ff eb d1 44 89 e9
-RSP: 0018:ffffc900020de6f0 EFLAGS: 00010293
-RAX: ffffffff819eddb8 RBX: 0000000000000003 RCX: ffff88807dae0000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000fffffffc
-RBP: ffffc900020de730 R08: ffffffff819edc87 R09: 1ffffffff26e6708
-R10: dffffc0000000000 R11: ffffffffa0001c68 R12: ffff8880b9236238
-R13: 0000000000000902 R14: 0000000000000000 R15: ffffc900020de748
-FS:  0000555580bbc380(0000) GS:ffff8880b9200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7721d2f110 CR3: 000000002f1be000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bpf_prog_e6cf5f9c69743609+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
- __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
- stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
- __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
- bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
- bpf_prog_e6cf5f9c69743609+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
- __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
- stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
- __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
- bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
- bpf_prog_e6cf5f9c69743609+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
- __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:164 [inline]
- stack_map_get_build_id_offset+0x9af/0x9d0 kernel/bpf/stackmap.c:141
- __bpf_get_stack+0x4ad/0x5a0 kernel/bpf/stackmap.c:449
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1997 [inline]
- bpf_get_stack_raw_tp+0x1a3/0x240 kernel/trace/bpf_trace.c:1987
- bpf_prog_e6cf5f9c69743609+0x42/0x46
- bpf_dispatcher_nop_func include/linux/bpf.h:1243 [inline]
- __bpf_prog_run include/linux/filter.h:691 [inline]
- bpf_prog_run include/linux/filter.h:698 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2406 [inline]
- bpf_trace_run4+0x334/0x590 kernel/trace/bpf_trace.c:2449
- __traceiter_mmap_lock_acquire_returned+0x93/0xf0 include/trace/events/mmap_lock.h:52
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:52 [inline]
- __mmap_lock_do_trace_acquire_returned+0x286/0x2f0 mm/mmap_lock.c:102
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_lock include/linux/mmap_lock.h:145 [inline]
- acct_collect+0x804/0x830 kernel/acct.c:563
- do_exit+0x93e/0x27f0 kernel/exit.c:861
- do_group_exit+0x207/0x2c0 kernel/exit.c:1031
- __do_sys_exit_group kernel/exit.c:1042 [inline]
- __se_sys_exit_group kernel/exit.c:1040 [inline]
- __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1040
- x64_sys_call+0x2634/0x2640 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7721cb3389
-Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
-RSP: 002b:00007fff639ca6c8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7721cb3389
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
-RBP: 00007f7721d2e2b0 R08: ffffffffffffffb8 R09: 0000000080bbd610
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7721d2e2b0
-R13: 0000000000000000 R14: 00007f7721d2ed00 R15: 00007f7721c845c0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
