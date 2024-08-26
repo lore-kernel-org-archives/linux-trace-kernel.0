@@ -1,135 +1,126 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF99824BB;
-	Mon, 26 Aug 2024 18:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BA58248C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 26 Aug 2024 18:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724696660; cv=none; b=YMAcUoBCL2uvte+AZ0a+T7EDozvMoAKo50D/YJ4BMLdBTnT2+IvfsH4xCDaKZ9WZRZqILdewstHnTn3rNKiF59j+n5aBiZvR98oLgaaluQLsYWQFAfJ1ZIJgpXFGNrJsdoEGKEwuPW4vk4Hjci1zYFAMNGAokXXTJC0NpeXkegk=
+	t=1724698583; cv=none; b=qb8mEgSq+cLkbUUtykiuI528E5ChyDYEG38Eqa2+Anj8xGG7Po/djqrexhkfg7NFupzersKJb8LkBJJAzHxAkJMLLAYC+TuWMXqjgXj+UGYfnkoLEdDiLv1FG2olE1wVcF9T6/u4bvCst8mYeVxh7HprTqmEntHEqbPru3zlSFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724696660; c=relaxed/simple;
-	bh=byxJHCkx5Iq4r6CRiwRwkfcMCKInE2GC/ymxSu+bhks=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WPLMnL5rxuYsfXjZmhXImM2AvGQd+eV56pjciOaGUnBTey3JbbbYeIFGUbVuVQqsTca1zLChKRQbGpQP3RbGL05lY4Bxn3EGJrMOc/cMklDzG9t3+zR6PWggvmwqQsjlSQ09+jMoAQM2tLqwe2DH0+Zjap1fcWV12S9VZmOWAgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ncznHNBb; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1724698583; c=relaxed/simple;
+	bh=uTx3FtJp3TN7FEQU2MiCr3rrG5nAir3/iTkGRBvvzMs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwwNtZSVC9pe++oCT6U4fW/uU9cjmE6l+9Zj+oFdBHmO/jSm1RzSa6Fug3zM10/ONDbpn79xkK1J2SyYwjaw+zMG2AiaqiXE9qOX2Wc99uq/U0w0O3QxIFOLb4h3YxjH7s2EJoyW5KnqTl4ZlUEwOq8HFqB/tdxRTieKJcjTTJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+RJj2dl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ncznHNBb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Cb7Yezg7cVEgPihDB4fJdUYT14KzFQDF5zArc6GNXOc=;
-	t=1724696658; x=1725906258; b=ncznHNBbok0ZiEBpzu14cPJrNXbLVeJ79hlGWQHhvuJpG1q
-	l2citja3YBF29Cuj95qYIUe/nh7iZ9bOl1o0DsH7E1YspONrayCioEh5xKHuLmzVEFhFsgTgU022G
-	Fu0y7m8+F5xuhEari+nu1P5hz9ONDiKaNuXLkss/KadArdRtIkAmSIZhcZUcg5myLXyeMA+mhmOBo
-	clF4yEmt41F5rT6aZsuaTGoWVrqYtTalCxq1DUBp7TXSlqhBRgUMDTYDXgsAURmVvyGmcAbBupHQ0
-	xvtsKUepaawkyIVRUlcg2J43WIbkLiPBKxk6GXv0gp4yN/pzn4Ortl3Pxq/OC3PQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sieNt-00000003Mw0-3RFH;
-	Mon, 26 Aug 2024 20:24:10 +0200
-Message-ID: <2804ef964f4ce1c4689c1e741ef45e6b6d3f6422.camel@sipsolutions.net>
-Subject: Re: [PATCH v5 0/4] tracing: improve symbolic printing
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Date: Mon, 26 Aug 2024 20:24:08 +0200
-In-Reply-To: <20240819182340.3bd23d67@gandalf.local.home>
-References: <20240614081956.19832-6-johannes@sipsolutions.net>
-	 <20240819182340.3bd23d67@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+RJj2dl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724698580;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ElsBu4kEMzW/PcKFqW1p4cszS0HL64jlWRpoVtBDhPs=;
+	b=J+RJj2dlmJltulHSQYe0DhBI3z2Z1/ye0FOkg/3fh59/rCUtNIZd+2kB1Q4mSLVyvMpSpA
+	BQvoNBzqEilaL+mVjL5PpMX/cZYip3QcIhBxHnuOeRkCZEjk6PVGM98cultNt4uxZAMd1S
+	aoQSEG5WHbZzWXjVI0TZxxWeLw3TgBY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-VAvVz0ZuPT-YFf2F-75zdw-1; Mon,
+ 26 Aug 2024 14:56:19 -0400
+X-MC-Unique: VAvVz0ZuPT-YFf2F-75zdw-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6EC641955D55;
+	Mon, 26 Aug 2024 18:56:17 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4AB2F19560A3;
+	Mon, 26 Aug 2024 18:56:12 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 26 Aug 2024 20:56:10 +0200 (CEST)
+Date: Mon, 26 Aug 2024 20:56:05 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
+	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
+	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
+	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
+	mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240826185604.GA30765@redhat.com>
+References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
+ <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240825171417.GB3906@redhat.com>
+ <20240825224018.GD3906@redhat.com>
+ <ZsxTckUnlU_HWDMJ@krava>
+ <20240826115752.GA21268@redhat.com>
+ <ZsyHrhG9Q5BpZ1ae@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZsyHrhG9Q5BpZ1ae@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hi Steven,
+On 08/26, Jiri Olsa wrote:
+>
+> On Mon, Aug 26, 2024 at 01:57:52PM +0200, Oleg Nesterov wrote:
+> > On 08/26, Jiri Olsa wrote:
+> > >
+> > > > But "perf-record -p" works as expected.
+> > >
+> > > I wonder it's because there's the perf layer that schedules each
+> > > uprobe event only when its process (PID1/2) is scheduled in and will
+> > > receive events only from that cpu while the process is running on it
+> >
+> > Not sure I understand... The task which hits the breakpoint is always
+> > current, it is always scheduled in.
+>
+> hum, I might be missing something, but ;-)
 
-> I finally got around to testing your patches.
->=20
-> I did the following:
->=20
->  # cat /sys/kernel/tracing/events/*/*/format
->=20
-> and hit this:
->=20
-> BUG: unable to handle page fault for address: ffffffff8e6333d0
+No it is me ;) at least I certainly misunderstood your "scheduled in".
 
-Ugh. That's ... unfortunate.
+> assuming we have 2 tasks, each with perf uprobe event assigned
+>
+> in perf path there's uprobe_perf_func which calls the uprobe_perf_filter
+> and if it returns true it then goes:
+>
+>   uprobe_perf_func
+>     __uprobe_perf_func
+>       perf_trace_buf_submit
+>         perf_tp_event
+>         {
+>
+>            hlist_for_each_entry_rcu(event, head, hlist_entry) {
+>              if (perf_tp_event_match(event, &data, regs)) {
+>                 perf_swevent_event(event, count, &data, regs);
 
-I couldn't reproduce this so far, do you happen to have the .config and
-qemu command line perhaps?
+Aha. So, in this particular case, when the CLONE_VM child hits the bp
+and calls uprobe_perf_func(), even perf_tp_event_match() won't be called,
+head is hlist_empty(), right?
 
+Thanks!
 
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 183c40067 P4D 183c40067 PUD 183c41063 PMD 1003ef063 PTE 800ffffe7b9cc=
-062
-> Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-> CPU: 7 UID: 0 PID: 893 Comm: cat Not tainted 6.11.0-rc4-test-00004-g4ce28=
-36f008b #56 68afcee1248519f8b3b088836c40746e4a6b69d3
+> in comparison with uprobe_multi path, where uprobe_multi_link_filter
 
-I guess that's just my four patches; reproducing that (rc4 + the
-patches, seems there was a small conflict in skb tracing) ...
+Yeah, this is clear.
 
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
-16.3-2 04/01/2014
-> RIP: 0010:f_show (kernel/trace/trace_events.c:1601 kernel/trace/trace_eve=
-nts.c:1651 kernel/trace/trace_events.c:1689)
+> > IIUC (but I am not sure), perf-record -p will work "correctly" even if we
+> > remove uprobe_perf_filter() altogether. IIRC the perf layer does its own
+> > filtering but I forgot everything.
+>
+> I think that's what I tried to describe above
 
-means this was
+Yes, thanks.
 
+Oleg.
 
-        for (i =3D 0; i < n_sym_defs; i++) {
-                unsigned int sym_len;
-
-                if (!sym_defs[i])            // <--- HERE
-                        continue;
-
-which seems really strange to me.
-
-Sadly the
-
-> Code: [...]
-
-was compiled so we don't see 'i' here, and the stop value is on the
-stack...
-
-> All code
-> =3D=3D=3D=3D=3D=3D=3D=3D
->    0:   33 63 8e                xor    -0x72(%rbx),%esp
->    3:   48 2d d0 33 63 8e       sub    $0xffffffff8e6333d0,%rax
-
-the big constant here must be __start_ftrace_sym_defs, being subtracted
-from an already loaded __stop_ftrace_sym_defs in %rax ...
-
->    9:   48 c1 f8 03             sar    $0x3,%rax
-
-also part of the size calculation (n_sym_defs) - we have 8 byte pointers
-in each entry, so >>=3D 3 makes sense.
-
-Given RBX is 0xffffffff8e6333d0 as well, that means
-__start_ftrace_sym_defs isn't a valid pointer? But then what was
-__stop_ftrace_sym_defs? And why would the section be non-empty but
-invalid to dereference?
-
->    d:   85 c0                   test   %eax,%eax
->    f:   74 67                   je     0x78
-
-Anyway this aborts if there are 0 entries so we get non-zero in
-%eax/%rax ...
-
-I've actually tried now with an empty section, and that also works OK.
-
-Is there something special about your build here?
-
-johannes
