@@ -1,71 +1,78 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973B2804;
-	Mon, 26 Aug 2024 10:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BD6146D5A;
+	Mon, 26 Aug 2024 10:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724666744; cv=none; b=eKwVbCjbdsk31oZ3l9Cii9mHG2XoL/+XSNU7kaWIrEuck5sIdA8UQGOB2DzXX17tODLWUNPnwyRp5TY5AAN27g2xbxCUi0t0JOAXz2MtGb0OfAX9EKV9kSIxKq4R/SaskYPNTPm3ktCtayBHc+iMs94swALewGcAGRuMKfD8E+I=
+	t=1724667241; cv=none; b=q3KAzgYk7/ssC/OkYKfOz3RrxWtRsVP5gVmW56zvuivpNo9uyAT0rbBGGHQVaKo7zR2xWku4h2cf/ts3urwsza+5fv938Pejx14qq6bm+nEtexN8ItqGqlpbHShTcSGfVMg+gqw4EbTWEn9aq98DD+cGlEe95mArUF+mdw9Ah9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724666744; c=relaxed/simple;
-	bh=HQq8sSpk1x7MtsQvPJS/bUIYn23FdTgDfcF20qzFjGw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MZRdrNRzKEq9okDwfdslwPkDL+iJ9Dy9xzN0HO2fnyMn6YyFyxrMVOfEG9bRpvAkkDkO8sTXhv/1jBUL/tL//WkEHa+5TsnL4V8qjVXtw2jaoAKNaaqjmkk824ahLig35zPNSJ97y3TzCLuHD6gua6xd+fLmaGl7hMLJEceMuYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hHieg1lk; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724667241; c=relaxed/simple;
+	bh=3OMh0I6YDGa+H54lyN0aZeKV/jasJN3FKzzG5FqwCZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKAR5Ih128LkGsnk5Sha8UaPgdC6ulFc4l6Qn8JxgFbXOvoz1KBMNNZczBSE/uq59Yx1wXOplIURVfz8g8TM43YQJdchM3kNeYhPS/ejBi69uh9BXPReA8BEM6ojlgpB2HyZNuNVgGGyqcIsOAi/dDK6kxaf6+uafmYH33bQzHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZXu2l/y; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHieg1lk"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-428e3129851so36785895e9.3;
-        Mon, 26 Aug 2024 03:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724666741; x=1725271541; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t40XBDzLJ1B45MoGQZbb3DP7+s/9CmE4kzhKzHKXa/U=;
-        b=hHieg1lkfZhyakCQqJeV/rJ8gt8qNX/jcmoZks9tpkwW6e9urp82H3SnhCp+Kj3uK5
-         5bo/aMEhg8zRp0cr34VVMwzLxx2zrhDe6Kod0QpM57NCsMzwKYiG7ygW6QBnJ8s3jRdS
-         z77lixdA6XaaoUK3N1ff12UwOI2XTpMf92fJ457WOC/t2oxF4bpKnOJuzXmp739vIZLW
-         Q0+DzmnZNVN0+Pf9eQCqBJ2c7yo6HcSBg6yNp+DAIEvPZ77kcWSZcney22jrGGaaL5cP
-         JdTQ5kHdifnO0g0wYFywLqdHzn9SmD/zX6lYNHLop/tbvteQBuiwb0LiDVQtzauBYkNy
-         Toqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724666741; x=1725271541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t40XBDzLJ1B45MoGQZbb3DP7+s/9CmE4kzhKzHKXa/U=;
-        b=vtSyPSP4HfdDUlCgjPgnqwm3BaCihmyHdJG7xtAG2rsGGJ2Jb1aJcgY3KBRKL5IMBr
-         DS+MIchzmfbylag+7ctkb/XOMqj+XiFJVfDOH+YkfWsK/ufAWtVsDuHXmwM048H3Q/Pb
-         EMtQZH6qM+ZkN51PFGxHpT4hYt08MRzEUhycC83CvnU1yA/33QHQeLotTgpcp1hUIhVZ
-         2MVIUbk+NG6EycObEUViRCagJkpAnIFOMIdU57xCeVD5XbdV9KFJqG4/S+gTz6A7x85I
-         GVDDP+X2Su1rjlrU6pnB47QFZxaKPdbal04uga6LYQtHnP+hpGRa2OKh6uGMqEOYTQxx
-         5y9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVufSluKS7M7TJD3oK3PqnuVWlJRqHPmjZe7PMDhH3iaDTRYoN5Xqq2+FruAd+uqauQBHAH2wVPiyn9WANwCWx3OTJ4@vger.kernel.org, AJvYcCW+2CgRV9R1tAk8gi15d48xJT779E/fFpQejEWCXzf+yOCv5/xcGTgugtmPO4y1U9C8mTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ3dJpTEWAWKPCRYumU6+LgwEyQocGAQC5EhqSWJ0pPDzTy3XQ
-	gypheu8aB5gac+JeHK7OUF5NdQ7DkdT0Wuk+Qy1ebn9tJsDImrO4
-X-Google-Smtp-Source: AGHT+IGaEo7nGIRa+g3XsADZ11D5f1+mzHp1pMSQEh75+HZZTuGkXxTo1w/THsBeR+l2GwGMDfMcyw==
-X-Received: by 2002:a05:600c:3c94:b0:427:fa39:b0db with SMTP id 5b1f17b1804b1-42acc8ff577mr59698185e9.27.1724666740601;
-        Mon, 26 Aug 2024 03:05:40 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3730826b4b5sm10252202f8f.115.2024.08.26.03.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Aug 2024 03:05:40 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 26 Aug 2024 12:05:38 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <ZsxTckUnlU_HWDMJ@krava>
-References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
- <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240825171417.GB3906@redhat.com>
- <20240825224018.GD3906@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZXu2l/y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724667239; x=1756203239;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3OMh0I6YDGa+H54lyN0aZeKV/jasJN3FKzzG5FqwCZc=;
+  b=fZXu2l/y3+EUsVjdUXllCwg319KvR9Jn3KbszwHRinQTIhzAHJyIlEgI
+   YgIbvlxiqitTpovCoWt918fXmuuaSQHy1e76PABagoztuMWfGodr+2G1m
+   n7ZhiNnHGISIuz26zWvIXx1r2CGqHpIUtjt2Pdy6UYVIZDjkqeMjS3XvK
+   juvRMroOIZ46FPEzMqzx32I45f+YDtb/W3U9qCr+6RCjinXKgnfdemxFb
+   b+6tmFrAmEIPdsoyb5W6vGGGne89BE8WOiQh9spMzU1dJN0P7bCqfGBmg
+   T0gqTT61uCAj1kt5garcXXD5Vb78o3RHVUHA2rnID/22rwHILPaM8GUSh
+   Q==;
+X-CSE-ConnectionGUID: hikeqfFQQAy4Xzi7HpN7hg==
+X-CSE-MsgGUID: LMuIbSs4SimboBXhJfMtOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11175"; a="23257018"
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="23257018"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2024 03:13:58 -0700
+X-CSE-ConnectionGUID: j2hGswy3Tqa//Z8Y2y8Osg==
+X-CSE-MsgGUID: FKbHAQ2HT1Woa5mT7v3qTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,177,1719903600"; 
+   d="scan'208";a="62437513"
+Received: from lkp-server01.sh.intel.com (HELO 9a732dc145d3) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Aug 2024 03:13:53 -0700
+Received: from kbuild by 9a732dc145d3 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1siWjO-000GsF-2m;
+	Mon, 26 Aug 2024 10:13:50 +0000
+Date: Mon, 26 Aug 2024 18:13:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 07/17] mm: Define VM_DROPPABLE for powerpc/32
+Message-ID: <202408261734.UAvnH7Mv-lkp@intel.com>
+References: <315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,78 +81,76 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240825224018.GD3906@redhat.com>
+In-Reply-To: <315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy@csgroup.eu>
 
-On Mon, Aug 26, 2024 at 12:40:18AM +0200, Oleg Nesterov wrote:
-> On 08/25, Oleg Nesterov wrote:
-> >
-> > At least I certainly disagree with "Fixes: c1ae5c75e103" ;)
-> >
-> > uretprobe_perf_func/etc was designed for perf, and afaics this code still
-> > works fine even if you run 2 perf-record's with -p PID1/PID2 at the same
-> > time.
-> >
-> > BPF hacks/hooks were added later, so perhaps this should be fixed in the
-> > bpf code, but I have no idea what bpftrace does...
-> 
-> And I can't install bpftrace on my old Fedora 23 working laptop ;) Yes, yes,
-> I know, I should upgrade it.
-> 
-> For the moment, please forget about ret-probes. Could you compile this program
-> 
-> 	#define _GNU_SOURCE
-> 	#include <unistd.h>
-> 	#include <sched.h>
-> 	#include <signal.h>
-> 
-> 	int func(int i)
-> 	{
-> 		return i;
-> 	}
-> 
-> 	int test(void *arg)
-> 	{
-> 		int i;
-> 		for (i = 0;; ++i) {
-> 			sleep(1);
-> 			func(i);
-> 		}
-> 		return 0;
-> 	}
-> 
-> 	int main(void)
-> 	{
-> 		static char stack[65536];
-> 
-> 		clone(test, stack + sizeof(stack)/2, CLONE_VM|SIGCHLD, NULL);
-> 		test(NULL);
-> 
-> 		return 0;
-> 	}
-> 
-> and then do something like
-> 
-> 	$ ./test &
-> 	$ bpftrace -p $! -e 'uprobe:./test:func { printf("%d\n", pid); }'
-> 
-> I hope that the syntax of the 2nd command is correct...
-> 
-> I _think_ that it will print 2 pids too.
+Hi Christophe,
 
-yes.. but with CLONE_VM both processes share 'mm' so they are threads,
-and at least uprobe_multi filters by process [1] now.. ;-)
+kernel test robot noticed the following build warnings:
 
-> 
-> But "perf-record -p" works as expected.
+[auto build test WARNING on powerpc/next]
+[also build test WARNING on powerpc/fixes shuah-kselftest/next shuah-kselftest/fixes linus/master v6.11-rc5 next-20240823]
+[cannot apply to crng-random/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I wonder it's because there's the perf layer that schedules each
-uprobe event only when its process (PID1/2) is scheduled in and will
-receive events only from that cpu while the process is running on it
+url:    https://github.com/intel-lab-lkp/linux/commits/Christophe-Leroy/asm-generic-unaligned-h-Extract-common-header-for-vDSO/20240826-103525
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/315e3a268b165b6edad7dcb723b0d8a506a56c4e.1724309198.git.christophe.leroy%40csgroup.eu
+patch subject: [PATCH v2 07/17] mm: Define VM_DROPPABLE for powerpc/32
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240826/202408261734.UAvnH7Mv-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240826/202408261734.UAvnH7Mv-lkp@intel.com/reproduce)
 
-jirka
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408261734.UAvnH7Mv-lkp@intel.com/
 
-[1] 46ba0e49b642 bpf: fix multi-uprobe PID filtering logic
+All warnings (new ones prefixed by >>):
 
-> 
-> Oleg.
-> 
+   In file included from mm/debug_page_ref.c:6:
+   In file included from include/trace/events/page_ref.h:11:
+   include/trace/events/mmflags.h:168:5: warning: 'VM_DROPPABLE' is not defined, evaluates to 0 [-Wundef]
+     168 | #if VM_DROPPABLE != VM_NONE
+         |     ^
+   include/trace/events/mmflags.h:168:21: warning: 'VM_NONE' is not defined, evaluates to 0 [-Wundef]
+     168 | #if VM_DROPPABLE != VM_NONE
+         |                     ^
+   In file included from mm/debug_page_ref.c:6:
+   In file included from include/trace/events/page_ref.h:135:
+   In file included from include/trace/define_trace.h:95:
+   In file included from include/trace/events/page_ref.h:11:
+   include/trace/events/mmflags.h:168:5: warning: 'VM_DROPPABLE' is not defined, evaluates to 0 [-Wundef]
+     168 | #if VM_DROPPABLE != VM_NONE
+         |     ^
+   include/trace/events/mmflags.h:168:21: warning: 'VM_NONE' is not defined, evaluates to 0 [-Wundef]
+     168 | #if VM_DROPPABLE != VM_NONE
+         |                     ^
+   In file included from mm/debug_page_ref.c:6:
+   In file included from include/trace/events/page_ref.h:135:
+   In file included from include/trace/define_trace.h:102:
+   In file included from include/trace/trace_events.h:94:
+   In file included from include/trace/events/page_ref.h:11:
+>> include/trace/events/mmflags.h:169:10: warning: 'IF_HAVE_VM_DROPPABLE' macro redefined [-Wmacro-redefined]
+     169 | # define IF_HAVE_VM_DROPPABLE(flag, name) {flag, name},
+         |          ^
+   include/trace/events/mmflags.h:171:10: note: previous definition is here
+     171 | # define IF_HAVE_VM_DROPPABLE(flag, name)
+         |          ^
+   5 warnings generated.
+
+
+vim +/IF_HAVE_VM_DROPPABLE +169 include/trace/events/mmflags.h
+
+7677f7fd8be766 Axel Rasmussen     2021-05-04  167  
+41e2c674b334ed Christophe Leroy   2024-08-22 @168  #if VM_DROPPABLE != VM_NONE
+9651fcedf7b92d Jason A. Donenfeld 2022-12-08 @169  # define IF_HAVE_VM_DROPPABLE(flag, name) {flag, name},
+9651fcedf7b92d Jason A. Donenfeld 2022-12-08  170  #else
+9651fcedf7b92d Jason A. Donenfeld 2022-12-08  171  # define IF_HAVE_VM_DROPPABLE(flag, name)
+9651fcedf7b92d Jason A. Donenfeld 2022-12-08  172  #endif
+9651fcedf7b92d Jason A. Donenfeld 2022-12-08  173  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
