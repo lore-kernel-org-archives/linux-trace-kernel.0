@@ -1,67 +1,56 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5308E1D172D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Aug 2024 16:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F4C41CE71E;
+	Tue, 27 Aug 2024 18:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724777167; cv=none; b=YDmCNd0zAHrb3ISe4WjAms6AOprNN0BjhZuqG+63RHwXJRILqg7nqZc0CruqgjFH/6RORPLE/Ue0NhGnEwrCxBOjizEFoxmnPIamCucLEwzUDcY6Sl1YLFnZyQ9ddk2Z856GY85JxOv1pG9QQ/MoFITwXzn9EymH9zNQ/xYz9XU=
+	t=1724782102; cv=none; b=qR1G/sJIS/U9is9DNB1dVlCLF/lBpYCF08NmPkag/hsF3SP1wEOR/4v7AhzmMuaDmmu6jg85LtnarO18pmgaQrX5wU1wQR9I/kMD/5gjnUDUADCNNGhf+nXbaFpHO3H6VKKN70MPySyv1F3vtincQ7u1CBKyvnVZG1Y4dImenXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724777167; c=relaxed/simple;
-	bh=d9Fr3NcwL3t4o7X3APqAvaGwag60bZC6xiNydmzZlo4=;
+	s=arc-20240116; t=1724782102; c=relaxed/simple;
+	bh=6hBH/a+6Kb1AQJN1JkfkjXJwDxg0hGfZVyT/Iju2lR4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzaS7eXn+K4JdiWM3acPj2cLM15C8Pr5Y8nY/+Qbp+Lv5DQlxDulyFf5R00L71oCEOx5o2JtlqTG3r5DiPraIQcWepv9ZP7SHZnuAdXXSRxh6dS9i7mv/oPYe9iAWOGzxl362XHr8tJoBAhX/ZvgDWEEpKoTsYhJUBgnoPKyh1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqDrDdN6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kc1+Ymrt9JNvaW+srw3HImSbxvh3agS+Ucu2cy1NVAtc4H7Krhw8napBECn5RNLwGdTbnu8Q/2fydt11IjG4yk0lqsJ2aBN0nb4lErvKKEWRm9GBmwYCA50P0WtYTkz7KbI2ijdy9Gn3W+wo0dPG+i7M0BZXBfY8c7RLVr8EiUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bgh7QaJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqDrDdN6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724777164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HHmgL5Ri1428SeB/3V7FF9Ht7PO33EShpSKr8jku7Xs=;
-	b=FqDrDdN6l8VU09oO2DSxLKe3ZhlwbqInxAkdh6d/0E2bMVLMPP3W0Zdrzkm1C0ubD492E/
-	evWwIWsWb0TNiVsUbDHQ5ERuG3/zusAXihoSvBoEnehQhpyyiAdeDPeBfsutFnf47JdOyO
-	yF1qH5A/xNi/L//KNKC2ACNBZWQJvHM=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-660-RHXOpT3_N_mW-7cjBc_1GA-1; Tue,
- 27 Aug 2024 12:46:00 -0400
-X-MC-Unique: RHXOpT3_N_mW-7cjBc_1GA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B7A061955BF4;
-	Tue, 27 Aug 2024 16:45:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B18C91956052;
-	Tue, 27 Aug 2024 16:45:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 27 Aug 2024 18:45:51 +0200 (CEST)
-Date: Tue, 27 Aug 2024 18:45:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240827164545.GG30765@redhat.com>
-References: <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240825171417.GB3906@redhat.com>
- <20240825224018.GD3906@redhat.com>
- <ZsxTckUnlU_HWDMJ@krava>
- <20240826115752.GA21268@redhat.com>
- <ZsyHrhG9Q5BpZ1ae@krava>
- <20240826212552.GB30765@redhat.com>
- <Zsz7SPp71jPlH4MS@krava>
- <20240826222938.GC30765@redhat.com>
- <Zs3PdV6nqed1jWC2@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bgh7QaJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370C8C4AF10;
+	Tue, 27 Aug 2024 18:08:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724782102;
+	bh=6hBH/a+6Kb1AQJN1JkfkjXJwDxg0hGfZVyT/Iju2lR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bgh7QaJ9At5jwNoKRhsGjGTLpqH2NoHSb2onT69lZKBrg6CFCpd9gW90r+2SgwoH1
+	 0GNU4qRapNNxdtmhiz3gWa+ujq1IlqUkuBPyYN3ra/qXrZ51OrQfDbuWTOriF3MI3u
+	 D/yRZfDOKHd3jb7eCXPIUIavEbn8irtpxQkNslY60M5/ftSYmc8YqwalTCS07pFCI3
+	 hj06bAOcQeuQyIFdQ/UkeCFRVRQdnqRPRyQII4nQgYX/4hCQ0YgW5DKAY2h7ICJxTi
+	 hD0WPmdZfDXifp12pn1RQcW0W7HncOytAz6KIA0c9HrIIszfZzaAXECJrebhNctsMW
+	 /jqTscusJynDA==
+Date: Tue, 27 Aug 2024 11:08:19 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
+Message-ID: <20240827180819.GB2049@sol.localdomain>
+References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
+ <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,66 +59,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zs3PdV6nqed1jWC2@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu>
 
-On 08/27, Jiri Olsa wrote:
->
-> On Tue, Aug 27, 2024 at 12:29:38AM +0200, Oleg Nesterov wrote:
-> >
-> > So, can you reproduce the problem reported by Tianyi on your setup?
->
-> yes, I can repduce the issue with uretprobe on top of perf event uprobe
+On Thu, Aug 22, 2024 at 09:13:13AM +0200, Christophe Leroy wrote:
+> With the current implementation, __cvdso_getrandom_data() calls
+> memset(), which is unexpected in the VDSO.
+> 
+> Rewrite opaque data initialisation to avoid memset().
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> ---
+>  lib/vdso/getrandom.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/lib/vdso/getrandom.c b/lib/vdso/getrandom.c
+> index cab153c5f9be..4a56f45141b4 100644
+> --- a/lib/vdso/getrandom.c
+> +++ b/lib/vdso/getrandom.c
+> @@ -4,6 +4,7 @@
+>   */
+>  
+>  #include <linux/minmax.h>
+> +#include <linux/array_size.h>
+>  #include <vdso/datapage.h>
+>  #include <vdso/getrandom.h>
+>  #include <vdso/unaligned.h>
+> @@ -74,11 +75,15 @@ __cvdso_getrandom_data(const struct vdso_rng_data *rng_info, void *buffer, size_
+>  	u32 counter[2] = { 0 };
+>  
+>  	if (unlikely(opaque_len == ~0UL && !buffer && !len && !flags)) {
+> -		*(struct vgetrandom_opaque_params *)opaque_state = (struct vgetrandom_opaque_params) {
+> -			.size_of_opaque_state = sizeof(*state),
+> -			.mmap_prot = PROT_READ | PROT_WRITE,
+> -			.mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS
+> -		};
+> +		struct vgetrandom_opaque_params *params = opaque_state;
+> +		int i;
+> +
+> +		params->size_of_opaque_state = sizeof(*state);
+> +		params->mmap_prot = PROT_READ | PROT_WRITE;
+> +		params->mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS;
+> +		for (i = 0; i < ARRAY_SIZE(params->reserved); i++)
+> +			params->reserved[i] = 0;
+> +
+>  		return 0;
+>  	}
 
-...
+Is there a compiler flag that could be used to disable the generation of calls
+to memset?
 
->    ->     uretprobe-hit
->             handle_swbp
->               uprobe_handle_trampoline
->                 handle_uretprobe_chain
->                 {
->
->                   for_each_uprobe_consumer {
->
->                     // consumer for task 1019
->                     uretprobe_dispatcher
->                       uretprobe_perf_func
->                         -> runs bpf program
->
->                     // consumer for task 1018
->                     uretprobe_dispatcher
->                       uretprobe_perf_func
->                         -> runs bpf program
-
-Confused...
-
-I naively thought that if bpftrace uses bpf_uprobe_multi_link_attach() then
-it won't use perf/trace_uprobe, and uretprobe-hit will result in
-
-	// current->pid == 1018
-
-	for_each_uprobe_consumer {
-		// consumer for task 1019
-		uprobe_multi_link_ret_handler
-		    uprobe_prog_run
-		       -> current->mm != link->task->mm, return
-
-		// consumer for task 1018
-		uprobe_multi_link_ret_handler
-		    uprobe_prog_run
-		       -> current->mm == link->task->mm, run bpf
-	}
-
-> I think the uretprobe_dispatcher could call filter as suggested in the original
-> patch..
-
-OK, agreed.
-
-> but I'm not sure we need to remove the uprobe from handle_uretprobe_chain
-> like we do in handler_chain..
-
-Me too. In any case this is another issue.
-
-Oleg.
-
+- Eric
