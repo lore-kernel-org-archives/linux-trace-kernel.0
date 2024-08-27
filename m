@@ -1,123 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A514D1C6F64
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Aug 2024 20:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8981618D62D;
+	Tue, 27 Aug 2024 23:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724790057; cv=none; b=pA4eg/qy0/P3zK2b7DrjXYuG5zk8/DmN4hBoKtGhj0JEwZ21Pa0GbNSodtxMxjB4GuDSQCNb+JsjKQZrviKkZWewp5QASaxuBB6ctsfRvPF58mRWcxJmea0kt/q93Rz/RRk/8ZZLef20MtwKdsCllM+oH44Pkd1N5w/J/ljxN+8=
+	t=1724799651; cv=none; b=NFVpYFAX7he7VvHBDFtkxT9T4a4pn4/WWHDjjMQx88YPfuAXx7Dgj8UpWIxwk48ok/yf98/jeg1xtnnJ+hq5Ng7r5f6iwIfvi130X5fnrB2f8KoTbQE4YhjsHDV/ylE/FTnl/bjQsYxvPUlHBK51OdN9kdTXowO9uEyrMDYCZfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724790057; c=relaxed/simple;
-	bh=IX5si5EYKXFedDXsoUyvGe/yeYYqJdUrLOvLVmyvDNA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u7nKU/4nbPQQeg7jhxOBPWPWbTNrahLJOBZq1S4YdR6ynNnc0ytqg85SW3a6fVIUIi3Wcf9m5M0K4yugQa+ToHzYjjqnViysZMJsKoBDsKpKQtyed3AuRSnQrvUpXk91DfrQKP49E+qseIUNI/lXRYpqvF6mVTLZ8KX/BXmVV1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g0MPL8kM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g0MPL8kM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724790054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJ4ec0yBpDF4MxHv3vBJcdH9alZpBI0OyqbZ01quyh4=;
-	b=g0MPL8kMmPPxmSEFiTcJ7b/6kxzRBmLHfyyEEZ1LgpkhO5JfMvldD2vmWJ+c+fdAg2IXSb
-	M35iIDQ5Rn3iGiKjSuZWeMFgDtE3D6r5UtojpGDl2BZVgmFQHfglxTsBpmnA1hqISqeNJO
-	HFVFzLBWaVEY5gyW+Zvc+G0cp7blHf8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-84-78QKakd-PduViEfCbPaipw-1; Tue,
- 27 Aug 2024 16:20:51 -0400
-X-MC-Unique: 78QKakd-PduViEfCbPaipw-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E610218DB7DB;
-	Tue, 27 Aug 2024 20:19:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8AA03300019C;
-	Tue, 27 Aug 2024 20:19:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 27 Aug 2024 22:19:32 +0200 (CEST)
-Date: Tue, 27 Aug 2024 22:19:26 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240827201926.GA15197@redhat.com>
-References: <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240825171417.GB3906@redhat.com>
- <20240825224018.GD3906@redhat.com>
- <ZsxTckUnlU_HWDMJ@krava>
- <20240826115752.GA21268@redhat.com>
- <ZsyHrhG9Q5BpZ1ae@krava>
- <20240826212552.GB30765@redhat.com>
- <Zsz7SPp71jPlH4MS@krava>
- <20240826222938.GC30765@redhat.com>
- <Zs3PdV6nqed1jWC2@krava>
+	s=arc-20240116; t=1724799651; c=relaxed/simple;
+	bh=zVR+j9/Y69HgPcEEApJAHkp51d4U9AleXPztiiA++P8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qMfYUGrkEh5D+cYXn60iktOmbQFaII36/YhbucpyAbpuhG+0VoXxMr74S88I2cX34A195t1FKUompzeC478534Z5Mc1/MWvCaq45s1vYv77xl/R/XF7k+hL2hVh42MFJG0VqBmDWvTt/NJZ4S29Vv9ojfiB2/XmHLDkeNg0vxHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 47RMrWeM032045;
+	Tue, 27 Aug 2024 17:53:32 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 47RMrUKh032044;
+	Tue, 27 Aug 2024 17:53:30 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 27 Aug 2024 17:53:30 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
+Message-ID: <20240827225330.GC29862@gate.crashing.org>
+References: <cover.1724309198.git.christophe.leroy@csgroup.eu> <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu> <20240827180819.GB2049@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zs3PdV6nqed1jWC2@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <20240827180819.GB2049@sol.localdomain>
+User-Agent: Mutt/1.4.2.3i
 
-Sorry for another reply, I just noticed I missed one part of your email...
+On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
+> On Thu, Aug 22, 2024 at 09:13:13AM +0200, Christophe Leroy wrote:
+> > With the current implementation, __cvdso_getrandom_data() calls
+> > memset(), which is unexpected in the VDSO.
+> > 
+> > Rewrite opaque data initialisation to avoid memset().
+> > 
+> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> > ---
+> >  lib/vdso/getrandom.c | 15 ++++++++++-----
+> >  1 file changed, 10 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/lib/vdso/getrandom.c b/lib/vdso/getrandom.c
+> > index cab153c5f9be..4a56f45141b4 100644
+> > --- a/lib/vdso/getrandom.c
+> > +++ b/lib/vdso/getrandom.c
+> > @@ -4,6 +4,7 @@
+> >   */
+> >  
+> >  #include <linux/minmax.h>
+> > +#include <linux/array_size.h>
+> >  #include <vdso/datapage.h>
+> >  #include <vdso/getrandom.h>
+> >  #include <vdso/unaligned.h>
+> > @@ -74,11 +75,15 @@ __cvdso_getrandom_data(const struct vdso_rng_data *rng_info, void *buffer, size_
+> >  	u32 counter[2] = { 0 };
+> >  
+> >  	if (unlikely(opaque_len == ~0UL && !buffer && !len && !flags)) {
+> > -		*(struct vgetrandom_opaque_params *)opaque_state = (struct vgetrandom_opaque_params) {
+> > -			.size_of_opaque_state = sizeof(*state),
+> > -			.mmap_prot = PROT_READ | PROT_WRITE,
+> > -			.mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS
+> > -		};
+> > +		struct vgetrandom_opaque_params *params = opaque_state;
+> > +		int i;
+> > +
+> > +		params->size_of_opaque_state = sizeof(*state);
+> > +		params->mmap_prot = PROT_READ | PROT_WRITE;
+> > +		params->mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS;
+> > +		for (i = 0; i < ARRAY_SIZE(params->reserved); i++)
+> > +			params->reserved[i] = 0;
+> > +
+> >  		return 0;
+> >  	}
+> 
+> Is there a compiler flag that could be used to disable the generation of calls
+> to memset?
 
-On 08/27, Jiri Olsa wrote:
->
->    ->     uretprobe-hit
->             handle_swbp
->               uprobe_handle_trampoline
->                 handle_uretprobe_chain
->                 {
->
->                   for_each_uprobe_consumer {
->
->                     // consumer for task 1019
->                     uretprobe_dispatcher
->                       uretprobe_perf_func
->                         -> runs bpf program
->
->                     // consumer for task 1018
->                     uretprobe_dispatcher
->                       uretprobe_perf_func
->                         -> runs bpf program
->
->                   }
->                 }
->
-> and I think the same will happen for perf record in this case where instead of
-> running the program we will execute perf_tp_event
+-fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
+what it actually does (and how it avoids your problem, and mostly: learn
+what the actual problem *was*!)
 
-Hmm. Really? In this case these 2 different consumers will have the different
-trace_event_call's, so
+Have fun,
 
-	// consumer for task 1019
-	uretprobe_dispatcher
-	  uretprobe_perf_func
-	    __uprobe_perf_func
-	      perf_tp_event
 
-won't store the event because this_cpu_ptr(call->perf_events) should be
-hlist_empty() on this CPU, the perf_event for task 1019 wasn't scheduled in
-on this CPU...
-
-No?
-
-Ok, looks like I'm totally confused ;)
-
-Oleg.
-
+Segher
