@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD5F182B2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Aug 2024 10:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E141DB674
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Aug 2024 10:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724755272; cv=none; b=eAS6YriRzi9Q7gTHQkvMnSCUXaNOIsNK2pV5Dlh9f8qZYCS/ON0YqYBcHjLmQQSeRwgMMb2dE0rxyuiJL2JslKtRkjZhoeDzQq3Rj/0TjRpop3kAL8wbeOG97in/c338JxbMZ9FffWYSL7BI1Y0nu5Es336iqJExAGByCEnZOiM=
+	t=1724756117; cv=none; b=Mbbqjr4jEbTEalsLN+mY8auByXONUNq4SzHM3I/FdKqJZK9Bik+cX/aPQlqsIiByKA1DE7uNyN/YBOzWHIENnR4nm0BGHyaZZYrQhS6PFZM8xV3rb07/NJfUPvs70Fne857ng3mV2ya5MkXDyKv6jBbr9RlrMoyz0tt5sBY0d90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724755272; c=relaxed/simple;
-	bh=Qz1a8CSDv1yDuZmmN9x8YOW7RMcmZ1PT9u2pTyYf5wk=;
+	s=arc-20240116; t=1724756117; c=relaxed/simple;
+	bh=xVl53fOfv/QhiqPGZVR+l9iWoS1+yj8Odrcph0zmNAw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=seGhyQ6AQ9zumuoPi5ZJxtcA74qcDzIM/dCIYTDW5C2VtPyLG/9gmP0ypbs2knOIjx5f70uH+bo0auf1u46euauRCbM53V40/scu6xRE1DyHJ7DDWAIw6LfFuDKe05kCyooLHYgiL20Mv45bz8KLm2MndQoEmiYAtRO7+eRq4mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R0JvXc/m; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=EDKZCyZ3cO88QvaPMJKFJfa34+XpnLnQo2+pb35sIU00fYzqAyvoV9DC8nyo8KjxdcS9aSiD8bpBTWohYm9HFyUa6JpAfajOwChoyCmRXzwfANijFNYoDCXFeas2+4nKhZb8m+MREY2V4MPcLUN4dr+ntVPfm9e91mU4u7y4Xmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hVm+v2fN; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R0JvXc/m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVm+v2fN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724755270;
+	s=mimecast20190719; t=1724756114;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G+W/iRPFMkEKzQkZrGaweHud29e2ZZ1m/nHKhDZapCE=;
-	b=R0JvXc/mgVmxfTz1UGr0KNeFR2UxofVZATK2rRoUBOnCgeKnEvO/b8v16M9yBAFyK/OfnM
-	N2igkC5yZjahzf0fdnDoM5Ln1w8SLX2vOiHO2fg+KAweKBMpFQVoGYv0RqCMsp9zxJjE+3
-	VRYbHpF7fCOFBtj6FoVugBset24/6Tg=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=h++flRTV6zEZsuM3dMWhkpW8l+7toYFd2wAsYZAVxWU=;
+	b=hVm+v2fN50yXNKagDeyhK5zyb4kpazZ5moFFPw9ClR9B0/eEpmNTpmCLj0dp9ZE1I2bHlJ
+	QL037eW7foEA3m5x2X8eTswhnajBgMD9Ow2cj9091SprlzwWDHvzCT4MhVM93cfUziKjQf
+	KF1YLhDGYUzEwt82fjkVVkGd/O2E9bA=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-32-7sNbfee2NBmmq7o-qJ9JNQ-1; Tue,
- 27 Aug 2024 06:41:06 -0400
-X-MC-Unique: 7sNbfee2NBmmq7o-qJ9JNQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-61-68zrnNmmOieF4R4IrWting-1; Tue,
+ 27 Aug 2024 06:55:11 -0400
+X-MC-Unique: 68zrnNmmOieF4R4IrWting-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71A0C1955D53;
-	Tue, 27 Aug 2024 10:41:04 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 370581955D55;
+	Tue, 27 Aug 2024 10:55:09 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5B7AE1955DC8;
-	Tue, 27 Aug 2024 10:41:00 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1756A1955F40;
+	Tue, 27 Aug 2024 10:55:03 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 27 Aug 2024 12:40:57 +0200 (CEST)
-Date: Tue, 27 Aug 2024 12:40:52 +0200
+	oleg@redhat.com; Tue, 27 Aug 2024 12:55:02 +0200 (CEST)
+Date: Tue, 27 Aug 2024 12:54:56 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Jiri Olsa <olsajiri@gmail.com>
 Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
@@ -51,7 +51,7 @@ Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
 	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
 	mathieu.desnoyers@efficios.com
 Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240827104052.GD30765@redhat.com>
+Message-ID: <20240827105455.GE30765@redhat.com>
 References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
  <ME0P300MB04163A2993D1B545C3533DDC9D892@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
  <20240825171417.GB3906@redhat.com>
@@ -59,6 +59,7 @@ References: <CAEf4Bzb29=LUO3fra40XVYN1Lm=PebBFubj-Vb038ojD6To2AA@mail.gmail.com>
  <ZsxTckUnlU_HWDMJ@krava>
  <20240826115752.GA21268@redhat.com>
  <Zs2lpd0Ni0aJoHwI@krava>
+ <Zs2oV5R2blKw5c9w@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,64 +68,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zs2lpd0Ni0aJoHwI@krava>
+In-Reply-To: <Zs2oV5R2blKw5c9w@krava>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
 On 08/27, Jiri Olsa wrote:
 >
-> On Mon, Aug 26, 2024 at 01:57:52PM +0200, Oleg Nesterov wrote:
+> On Tue, Aug 27, 2024 at 12:08:39PM +0200, Jiri Olsa wrote:
+> > >
+> > > 	-	if (link->task && current->mm != link->task->mm)
+> > > 	+	if (link->task && !same_thread_group(current, link->task))
+> > >
+> > > in uprobe_prog_run() to make "filter by *process*" true, but this won't
+> > > fix the problem with link->task->mm == NULL in uprobe_multi_link_filter().
 > >
-> > So perhaps we need
-> >
-> > 	-	if (link->task && current->mm != link->task->mm)
-> > 	+	if (link->task && !same_thread_group(current, link->task))
-> >
-> > in uprobe_prog_run() to make "filter by *process*" true, but this won't
-> > fix the problem with link->task->mm == NULL in uprobe_multi_link_filter().
+> > would the same_thread_group(current, link->task) work in such case?
+> > (zombie leader with other alive threads)
 >
-> would the same_thread_group(current, link->task) work in such case?
-> (zombie leader with other alive threads)
+> should uprobe_perf_filter use same_thread_group as well instead
+> of mm pointers check?
 
-Why not? task_struct->signal is stable, it can't be changed.
+uprobe_perf_filter or uprobe_multi_link_filter ?
 
-But again, uprobe_multi_link_filter() won't work if the leader,
-uprobe->link->task, exits or it has already exited.
+In any case I don't think same_thread_group(current, whatever) can work.
 
-Perhaps something like the additional change below...
+For example, uc->filter() can be called from uprobe_register() paths. In
+this case "current" is the unrelated task which does, say, perf-record, etc.
+Even if uc->filter() was only called from handler_chain(), it couldn't work,
+think of UPROBE_HANDLER_REMOVE.
+
+See also another email I sent a minute ago.
 
 Oleg.
-
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3322,13 +3322,28 @@ static int uprobe_prog_run(struct bpf_uprobe *uprobe,
- 	return err;
- }
- 
-+
- static bool
- uprobe_multi_link_filter(struct uprobe_consumer *con, struct mm_struct *mm)
- {
- 	struct bpf_uprobe *uprobe;
-+	struct task_struct *task, *t;
-+	bool ret = false;
- 
- 	uprobe = container_of(con, struct bpf_uprobe, consumer);
--	return uprobe->link->task->mm == mm;
-+	task = uprobe->link->task;
-+
-+	rcu_read_lock();
-+	for_each_thread(task, t) {
-+		struct mm_struct *mm = READ_ONCE(t->mm);
-+		if (mm) {
-+			ret = t->mm == mm;
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return ret;
- }
- 
- static int
 
