@@ -1,104 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AF74481B3;
-	Wed, 28 Aug 2024 02:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2BF288B1;
+	Wed, 28 Aug 2024 03:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724811875; cv=none; b=U8N+6m44nYBDymuCksiX2gGrS/veRxwo+sIsFI+w34CAr7NoOm6HGtwJQMLnx85/n4lEMykJy4081/jTgez4R5FQuyYfij+YlSNg3bWMszRzMFN3m9Ovqbwr7Eje9LK6ndEzkn9GbW4dkRItM7tqcfMfCUqR79Amn1C15KJeEo8=
+	t=1724814218; cv=none; b=ON+DhmTlKY1VqeFOadBglUYScV9AdPjVDvYOQAzznspEMSmi6GSzVVyDxKskMo4xQQCxvuSVz0E5dmRKqOv/Ke+Ui3DM5kDbr9P3RUEmT5ua1ccDdgBiikkIeVWKdc0pgM0Smh3J5WMilhvdXehaA9FhVeNNQu4zZMJV+L/BILI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724811875; c=relaxed/simple;
-	bh=tbhzQ1da3mBVV060Og29QANn1s4vz5Vd4ovZ/NNJcUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u5aEUoWvDmUqMs0c9BmJSCKrEw+/wJAr7ybcv8sT+gvqIQKl9lsaDWM9uv5QiqmW0ZIm/DuwNNPw3IBHY+5s4uggJx4wNcUdkHrCVgIa2ITWA7PiQ6E5lg+bpWScRzmL2nWCUogKSgh2eZKnjnnKRlXxYc+CcIfyphh1JrstlV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b9Bmt1JR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724814218; c=relaxed/simple;
+	bh=cCVG2dvpcm6txKhFsmgtEBhA5qVSSR/kkcVf0/zvARg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ljcHqxv1rzpcMlkwZMbZU6EpRUjhKmRraEGjGsxWBdOA0WucDSYbKvwU3UyH4lqx1BtjNSi4nzNDjWHwa9lxyoxwwoUvb5qFe4Dk3zYN2rcpRulSslwuivb+9mqkpdJDs6A0AVgDQELoLWU0CL9hysDqMKFoVIK5R/ihQtLDYuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msMs74kQ; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b9Bmt1JR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E784C4FEE9;
-	Wed, 28 Aug 2024 02:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724811874;
-	bh=tbhzQ1da3mBVV060Og29QANn1s4vz5Vd4ovZ/NNJcUg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=b9Bmt1JRKFBCrnIFqkRTsrtV2UxALLlwq9vjsa8mb6ADifsmdWpQkF6hV/RYp8vQA
-	 KnlrsUZWHHrZTtadELynyygYzNgxIL5XjiYXqvsDF4WjDbVNdoVWcjeJP/CMV5jE+5
-	 zHY1WzE7dhEgfg1nYdKdE+Kss/9anIAQAvEtqTsmXn5d1UFI9SFv6kPJc99SCMRNQM
-	 e5zmbEEJvj2B7cIjhKHtljG3nSZ00UtlbSdrVtBkmpzbQotM4l2h2mL+SWEBBmpQt7
-	 JSmguwlN4ydS894ghDp569iFgNhfAjPbkNp3FHOMAwrnt4gmuwMvVn9FUd04rX88Ko
-	 f0IMC8yARB4lw==
-Date: Tue, 27 Aug 2024 19:24:31 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, "=?UTF-8?B?QmrDtnJuIFTDtnBl?=
- =?UTF-8?B?bA==?=" <bjorn@kernel.org>, Magnus Karlsson
- <magnus.karlsson@intel.com>, Maciej Fijalkowski
- <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
- Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, linux-mm@kvack.org, Matthew Wilcox
- <willy@infradead.org>
-Subject: Re: [PATCH net-next v22 05/13] page_pool: devmem support
-Message-ID: <20240827192431.7145b06e@kernel.org>
-In-Reply-To: <20240825041511.324452-6-almasrymina@google.com>
-References: <20240825041511.324452-1-almasrymina@google.com>
-	<20240825041511.324452-6-almasrymina@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msMs74kQ"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7106cf5771bso5226649b3a.2;
+        Tue, 27 Aug 2024 20:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724814216; x=1725419016; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u96++TBbJ71oR+HkQgBso+tiWoljyvGONtmx4MFc6sw=;
+        b=msMs74kQBTx1wCiIvu14y5BmYEt0bSDbsnXqEN4luyvMvOmsyGaWXszGoGo3MQ/hAj
+         3qClNqnOjw+qpqfcNQJRBof4u2ceuH3BylnUXtFdLLWg9mXSLR5WoihuysH04vVOCggQ
+         lI/bStEInPpNhhS2w6iYe5Xzuvzz96p8bX/qzPAg9jHxfSgKeNjBygD1zyibEwuzRhQE
+         rEBnYqUL4054KaRHVxFeBOiCd8DpwF/Cuqj1Qt9VG7R5QjvNap7ccUPqjEa1nvPP9qR+
+         j62CA6JQzJCQOZ1A9LMgPAnkc2iDKTgB2s7R4iklP7mZn6dIiPhyLMrn6HemzwKCvv43
+         qb4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724814216; x=1725419016;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u96++TBbJ71oR+HkQgBso+tiWoljyvGONtmx4MFc6sw=;
+        b=ioIkI6INxYuZdp4q1ZTSEoWD/nyT2tRmfjEJkDuMV9tmFhnD/xvIjpbSWCGvKGyfqw
+         iTX7UFA5KhJ/sA2aHdkWMrjsIViuKFd1jehQ2WkPhLcRjXD/P0AjxGGcH/dPR9XahkW3
+         lyYw6W/D9Zfp7kVC7wJFpL6LMCcxCM69HugJjjosTH7waGCSo72MPhiLmOyMCkX3Xm++
+         WRxiEZUZNBgK0D96WT5FW255a6yXN5V+fU7JmHsMZynv7qm8TNPsztYqhNjXfzMW/YwB
+         YVLI1wZgTVlv8vx69Lc2u2JCbOcsKjHmK3p6xRwvucwj2ZVpuT3qTxFQIgYtyPmZuQoH
+         tSAw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3skHLyJ0gxGjFKC7GoamCrdYoX4sX/dA4X7Hb0WVNFkJ44s9Nb2U9wtOTQTgBnbfby1D+1GHb8dCoZFIcJGKPWsn13L2H@vger.kernel.org, AJvYcCVpq2br3cokzFyWsrZrJb30fuT6KXNaqUPeLE4gPYS++Rgh3NxKM5Ux8lx8xdgt3qx1lcfdxu92G8yr2u6wIA==@vger.kernel.org, AJvYcCWFI3eyZuPuq9BU/Aa6WLr+rqkUlNoYL3ygfBukBz6pd1i3yzTh8ryIGx/opz6GQrASc6cmVQ==@vger.kernel.org, AJvYcCWf7GCXQbIe6I5CYIlz5eQUib+/8XepXlpN6bX0L6efJ0DJA7MqNOnk55otw66WIJvMex69L8an@vger.kernel.org, AJvYcCWg+KpImpdHpLN7JuIQ9yerK6FRDxajrdW5iXGihOUkrEVLJCXb2xTuiHH4a4dUHq7w950aEb9HcD68o2/9D3+GxNJF@vger.kernel.org, AJvYcCWv2+Vb575Hd2t6C4MwSur+qKxMqEZSIDY+GzO7/LA5YbywGIV8K5HLdlYD8dXUuhLVRMAR@vger.kernel.org, AJvYcCXvJAet0O8obK0I8vB+ZsrIeGsUFlxnw1fL50FZRsEWRodLSVXMrJ4Zp+9N7bUCpET6O5yw3UiwJA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQelLdsTlDXdqQe6T/9H51Rj9MAmtpYGykVdhpncSnpE6dbMdh
+	/SxJm3hhig7XhYZFp5G4hT6N47MtxC8ziLVVIqxz8g/e9hOWqJbP
+X-Google-Smtp-Source: AGHT+IHibExtxV8dBZTZD5JORthJOms4iDv1rvcr+QvHWcHAfAXxuXG3hLg0KOZ+K8PqosjKn4N4Iw==
+X-Received: by 2002:a05:6a20:9c89:b0:1c3:a63a:cef2 with SMTP id adf61e73a8af0-1cc89dc90ecmr15627538637.28.1724814215888;
+        Tue, 27 Aug 2024 20:03:35 -0700 (PDT)
+Received: from localhost.localdomain ([39.144.104.43])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d8445db8f6sm317977a91.1.2024.08.27.20.03.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 27 Aug 2024 20:03:35 -0700 (PDT)
+From: Yafang Shao <laoar.shao@gmail.com>
+To: akpm@linux-foundation.org
+Cc: torvalds@linux-foundation.org,
+	alx@kernel.org,
+	justinstitt@google.com,
+	ebiederm@xmission.com,
+	alexei.starovoitov@gmail.com,
+	rostedt@goodmis.org,
+	catalin.marinas@arm.com,
+	penguin-kernel@i-love.sakura.ne.jp,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	selinux@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v8 0/8] Improve the copy of task comm
+Date: Wed, 28 Aug 2024 11:03:13 +0800
+Message-Id: <20240828030321.20688-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sun, 25 Aug 2024 04:15:03 +0000 Mina Almasry wrote:
-> +	/* Assume net_iov are on the preferred node without actually
-> +	 * checking...
-> +	 *
-> +	 * This check is only used to check for recycling memory in the page
-> +	 * pool's fast paths. Currently the only implementation of net_iov
-> +	 * is dmabuf device memory. It's a deliberate decision by the user to
-> +	 * bind a certain dmabuf to a certain netdev, and the netdev rx queue
-> +	 * would not be able to reallocate memory from another dmabuf that
-> +	 * exists on the preferred node, so, this check doesn't make much sense
-> +	 * in this case. Assume all net_iovs can be recycled for now.
-> +	 */
+Using {memcpy,strncpy,strcpy,kstrdup} to copy the task comm relies on the
+length of task comm. Changes in the task comm could result in a destination
+string that is overflow. Therefore, we should explicitly ensure the
+destination string is always NUL-terminated, regardless of the task comm.
+This approach will facilitate future extensions to the task comm.
 
-This is probably a bit too verbose, and we shouldn't talk about dmabuf
-specifically:
+As suggested by Linus [0], we can identify all relevant code with the
+following git grep command:
 
-	/* NUMA node preference only makes sense if we're allocating
-	 * system memory. Memory providers (which give us net_iovs)
-	 * choose for us.
-	 */
+  git grep 'memcpy.*->comm\>'
+  git grep 'kstrdup.*->comm\>'
+  git grep 'strncpy.*->comm\>'
+  git grep 'strcpy.*->comm\>'
 
-Some of the code moves could be a separate patch, but either way:
+PATCH #2~#4:   memcpy
+PATCH #5~#6:   kstrdup
+PATCH #7~#8:   strcpy
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+Please note that strncpy() is not included in this series as it is being
+tracked by another effort. [1]
+
+In this series, we have removed __get_task_comm() because the task_lock()
+and BUILD_BUG_ON() within it are unnecessary.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/ [0]
+
+Changes:
+v7->v8:
+- Avoid '+1' and '-1' in string copy. (Alejandro)
+
+v6->v7: https://lore.kernel.org/all/20240817025624.13157-1-laoar.shao@gmail.com/
+- Improve the comment (Alejandro)
+- Drop strncpy as it is being tracked by another effort (Justin)
+  https://github.com/KSPP/linux/issues/90 [1]
+
+v5->v6: https://lore.kernel.org/linux-mm/20240812022933.69850-1-laoar.shao@gmail.com/
+- Get rid of __get_task_comm() (Linus)
+- Use ARRAY_SIZE() in get_task_comm() (Alejandro)
+
+v4->v5: https://lore.kernel.org/all/20240804075619.20804-1-laoar.shao@gmail.com/
+- Drop changes in the mm/kmemleak.c as it was fixed by
+  commit 0b84780134fb ("mm/kmemleak: replace strncpy() with strscpy()")
+- Drop changes in kernel/tsacct.c as it was fixed by
+  commmit 0fe2356434e ("tsacct: replace strncpy() with strscpy()")
+
+v3->v4: https://lore.kernel.org/linux-mm/20240729023719.1933-1-laoar.shao@gmail.com/
+- Rename __kstrndup() to __kmemdup_nul() and define it inside mm/util.c
+  (Matthew)
+- Remove unused local varaible (Simon)
+
+v2->v3: https://lore.kernel.org/all/20240621022959.9124-1-laoar.shao@gmail.com/
+- Deduplicate code around kstrdup (Andrew)
+- Add commit log for dropping task_lock (Catalin)
+
+v1->v2: https://lore.kernel.org/bpf/20240613023044.45873-1-laoar.shao@gmail.com/
+- Add comment for dropping task_lock() in __get_task_comm() (Alexei)
+- Drop changes in trace event (Steven)
+- Fix comment on task comm (Matus)
+
+v1: https://lore.kernel.org/all/20240602023754.25443-1-laoar.shao@gmail.com/
+
+Yafang Shao (8):
+  Get rid of __get_task_comm()
+  auditsc: Replace memcpy() with strscpy()
+  security: Replace memcpy() with get_task_comm()
+  bpftool: Ensure task comm is always NUL-terminated
+  mm/util: Fix possible race condition in kstrdup()
+  mm/util: Deduplicate code in {kstrdup,kstrndup,kmemdup_nul}
+  net: Replace strcpy() with strscpy()
+  drm: Replace strcpy() with strscpy()
+
+ drivers/gpu/drm/drm_framebuffer.c     |  2 +-
+ drivers/gpu/drm/i915/i915_gpu_error.c |  2 +-
+ fs/exec.c                             | 10 -----
+ fs/proc/array.c                       |  2 +-
+ include/linux/sched.h                 | 32 +++++++++++---
+ kernel/auditsc.c                      |  6 +--
+ kernel/kthread.c                      |  2 +-
+ mm/util.c                             | 62 ++++++++++++---------------
+ net/ipv6/ndisc.c                      |  2 +-
+ security/lsm_audit.c                  |  4 +-
+ security/selinux/selinuxfs.c          |  2 +-
+ tools/bpf/bpftool/pids.c              |  2 +
+ 12 files changed, 66 insertions(+), 62 deletions(-)
+
+-- 
+2.43.5
+
