@@ -1,129 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0430114831D;
-	Wed, 28 Aug 2024 15:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2828F186619
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Aug 2024 15:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724859638; cv=none; b=rdTunW4YN6UjEgrj0fswHayCuUacgWq9q/7Bplk9WwrcJdnofyzf5whkBP+PWpq5hDqBZVvLmMflJ/qkanLxaU7Ybxy7p2wtRtrjQ/YWgaHbdLBBQ7mxKeVyU6KrUowgUl1eD6eVxY3BUPmIP6rI1H9vJ5KBg8pRMAjOT5B4Ae4=
+	t=1724859650; cv=none; b=bKWS9s5Eo5praTWstOWfH8YrOuIoMjGpcUPQOlsANGCjSMk5MlMqfLqlHC/dZaS6lRy9HqzrnqT+Tv29bkZV3XIdhfYrlU3UO/3evxstQ5YZfw7X6wrPUq6fXIIF6GRnEQ1jtDmXpywP5Ti7Gpp2zgYGnFZyIsjhGnEtV/qeGk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724859638; c=relaxed/simple;
-	bh=+z7/VLAc5zAKqxwt9kQI0vxm8x7sulgvUDeMTRfB+wo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PRedaW+VPkSXEZiXQm/b7MiqpdY6PJQpleAa0t0DXb44Xms0VE2kBJv/v4oDujlSejYTT0oShgIalDrWiTSryjKxtsxt90pz97jPaMiAwT3lvkaOAWSWqhGOI/Dp+IUta4NdauZr6VsIqC0tazew2hsdaLctPgO+a6G1JBtb4OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDdad5/I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724859650; c=relaxed/simple;
+	bh=5dLxinIqv5BUUD0nIFjgfg+nWPXfGhVa0Ds4mcHJctE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oq5dQ5UYF/JuJbZMAoYkFt1FWAtHorz+XVCo6WD3aSucVeCsI6C5ZpnceHFRxZQLi4F2VAuVbX9qMg4JB1N6UtSVL8Yd1HRKfknCq/wNLdsJu47GDvB5A4Q+n8sY/nBZ+CQ0zBKkDAf4QYclQ1v42pwrXAeecMhRjZhX4VG75Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qX7K1SWq; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDdad5/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781E7C4CEC9;
-	Wed, 28 Aug 2024 15:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724859637;
-	bh=+z7/VLAc5zAKqxwt9kQI0vxm8x7sulgvUDeMTRfB+wo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hDdad5/IY68zkrft/92YWfFtjDz6TFndSmnpp5pqAtaDdhgaQHXnMYujF2CwZtAvo
-	 s1dVBctohqByWUo15KsHC1yXOsb3CsxrVYgXiTlMrxSNBqKSRHb2u/dgFnWDlyP45P
-	 kmzBzCQlLYmgzPMvmTlIEcYXhkLufuTJDpchreYUAd0yoHp8hJGCENnAbHqZR1NUMB
-	 63ZyNil+E22vWl4w+ZhugE7V8Y5RiBnHkIJ248WfFc80AZtPJMZpvtsLhvJEQmQQ7b
-	 rjS4mie2g2VPxttgup163SLxFXlpDbWSy4ple6kkn/VZnDNkSEFpYi5cJmSqRwT5Qa
-	 F/BVlj/jrU5iw==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f3e071eb64so94243731fa.1;
-        Wed, 28 Aug 2024 08:40:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV05xct5gfUJ2WZGILTjXAdPU1k8W3sJVDHX0yp56hujCJuB0om51JlDpME3pndc1JSGNNhTppmsXal/h0gRg==@vger.kernel.org, AJvYcCWCZcSHufCGoUAdCMPQp0fRVxzYrmJVjlDzwf0cxRS/AVusgr5YsPCWVlftT7yGyfOU/wqCrlcjbhFN6Cmn@vger.kernel.org, AJvYcCWJc0C107/wSVlSw7lu1Aj6ndpsarTY6yOGjRRO4HE/t98Ijb6jv9LZCMI7jFCd7FcjbgtKAFMoWKnBMAHGhHxd@vger.kernel.org, AJvYcCWjqeQIr7Tp60H/3mg3ypNTH87qpaqx7Qo/ZbC9RsxV1WEmgE6ye0ccCcN7C8UoAVsL5VQxbixOBVqhyYtSNozUr6l3@vger.kernel.org, AJvYcCXXwvItc36YPp8dou+RaeRRAFMMDrdJ/AutmCKqlkH8WFKpoWipIYNKclPx/lM6JATUIbrBztf3eUOk@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdD0WqGot810jQ21YEOxntFmOYzJGRAgRGKnttnKWwoA4o9Ruq
-	remfgM00GECRUV8PLUP2W7qAfs+qOrF6p2t/1b537Jptf0jXTwVFEddbyUz0ByKKmqRPPkNMiJR
-	cm0v6Z7nuSvrjE8S7emkgFHCZQ7k=
-X-Google-Smtp-Source: AGHT+IHIXIHDcxvkoioWarqDfEAwvoOHHvvDveL69dLtIdivksLO7ybL0XqtoFeExKbS+796rHsbT/SXItR1tBLUGxI=
-X-Received: by 2002:a2e:461a:0:b0:2f3:f182:49f3 with SMTP id
- 38308e7fff4ca-2f6106e36e6mr594741fa.22.1724859635743; Wed, 28 Aug 2024
- 08:40:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qX7K1SWq"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-42bafca2438so1616825e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Aug 2024 08:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724859647; x=1725464447; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/BYbMmcZdZDiXZyPGIkiuYHwNwB5E9AVMUbG4e5BXAE=;
+        b=qX7K1SWqSO74m6waiiSUkU+lvmepW1d0sqJhwIAI4ObiV/Ocw7UtBMscz1sbXGYk4Q
+         pyVP0fw1vEZ5lvd46anodyQgVBWbX2TpRLRmecVllZnl4N/j9TuZJdk+oTHSK+3TpkSU
+         00/aUVoG2L4FZL8wTEXR/4HE8M93mH312AzElBSviwa003fTn46ya2GcbQcxseCBPtHq
+         WwGQ8JyBSg90pKt1hIp5n6Tl6z6f9wDVbypHVBFEuq7NGfPqL59HeSeUWcn22ogcUXUU
+         E3RC5m0zaUolPQJBdyGrcqkfLQ1Bqx0zwjJqQQPvZDTB2auuoqXkeIDcxV6dKtkxDfv0
+         DkKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724859647; x=1725464447;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/BYbMmcZdZDiXZyPGIkiuYHwNwB5E9AVMUbG4e5BXAE=;
+        b=sqGcC9vbK/HQDw6NZryiso3RKcLrVB2D2gCj9IU440HKmViYO8WDQv1AgQmzS3efdD
+         tuRi2k3u3kGolTqgIvJx1U0hoDKsGJkYrRHNhNAzo417OWisqlPhsGgR07+H3mkpkVuJ
+         13+GMJ3Rg7qY6rVmfIIvPbF6QYLVG5WJkZM69Tszr+s9x8FlIzpVJi79vzwEZweODlgV
+         Wiz39fw0KnPB22mFb9YWcMnOdDKb9SKL920JZMKyLxf4gEU1VNk9E4HKI9+50Pvgth2D
+         q8OZgX1D249YlhvdTrXwHkQomFmeZpF/jMPAFLHMkM0h7KIT8G4fbIaP5qJH+suE2cT3
+         6RvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh0v5LSW01+CKCQbkPg+n73lVeoL6Hy9MnZmw9hqWIoC5OZtRx6LE05ny9ChZrQHD8DYJz5mrDoeSAtIQ59YsWBdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDazpMwdPT2Z/RGZjv9zIcBvxRkrBOPV+k2B1AvjiMNZC1+nDG
+	1xW3MMzwxdkzk2kMVdZtl+g/lQ+CRHvk18lx7cGPncB+vwp2Hkduwg9o8QB2wTgq4PggWAftKFh
+	OJMon6fdwdvhGaJNROQ==
+X-Google-Smtp-Source: AGHT+IFRPYDoFbKtx4Ad99iy5AACRvJYyMcFI2npnGMUjtKSOCiNatbNXQVj21rZkTauqFcAdqQq4aGPJOu9pg+q
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a7b:cd17:0:b0:426:5ff0:1b4d with SMTP
+ id 5b1f17b1804b1-42bb02bf44dmr1435e9.3.1724859647112; Wed, 28 Aug 2024
+ 08:40:47 -0700 (PDT)
+Date: Wed, 28 Aug 2024 16:40:39 +0100
+In-Reply-To: <20240821115636.3546f684@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
- <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu>
- <20240827180819.GB2049@sol.localdomain> <20240827225330.GC29862@gate.crashing.org>
- <Zs8HirKLk-SrwTIu@zx2c4.com> <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com>
- <20240828124519.GE29862@gate.crashing.org>
-In-Reply-To: <20240828124519.GE29862@gate.crashing.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 28 Aug 2024 17:40:23 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
-Message-ID: <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
-Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Jason A . Donenfeld" <Jason@zx2c4.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>, Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, shuah <shuah@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+Mime-Version: 1.0
+References: <20240821115636.3546f684@gandalf.local.home>
+X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
+Message-ID: <20240828154040.2803428-1-vdonnefort@google.com>
+Subject: [PATCH 1/2] ring-buffer/selftest: Verify the entire meta-page padding
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	kernel-team@android.com, david@redhat.com, 
+	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 28 Aug 2024 at 14:57, Segher Boessenkool
-<segher@kernel.crashing.org> wrote:
->
-> On Wed, Aug 28, 2024 at 12:24:12PM +0000, Arnd Bergmann wrote:
-> > On Wed, Aug 28, 2024, at 11:18, Jason A. Donenfeld wrote:
-> > > On Tue, Aug 27, 2024 at 05:53:30PM -0500, Segher Boessenkool wrote:
-> > >> On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
-> > >> >
-> > >> > Is there a compiler flag that could be used to disable the generation of calls
-> > >> > to memset?
-> > >>
-> > >> -fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
-> > >> what it actually does (and how it avoids your problem, and mostly: learn
-> > >> what the actual problem *was*!)
-> > >
-> > > This might help with various loops, but it doesn't help with the matter
-> > > that this patch fixes, which is struct initialization. I just tried it
-> > > with the arm64 patch to no avail.
-> >
-> > Maybe -ffreestanding can help here? That should cause the vdso to be built
-> > with the assumption that there is no libc, so it would neither add nor
-> > remove standard library calls. Not sure if that causes other problems,
-> > e.g. if the calling conventions are different.
->
-> "GCC requires the freestanding
-> environment provide 'memcpy', 'memmove', 'memset' and 'memcmp'."
->
-> This is precisely to implement things like struct initialisation.  Maybe
-> we should have a "-ffreeerstanding" or "-ffreefloating" or think of
-> something funnier still environment as well, this problem has been there
-> since the -ffreestanding flag has existed, but the problem is as old as
-> the night.
->
-> -fno-builtin might help a bit more, but just attack the problem at
-> its root, like I suggested?
->
+Improve the ring-buffer meta-page test coverage by checking for the
+entire padding region to be 0 instead of just looking at the first 4
+bytes.
 
-In my experience, this is likely to do the opposite: it causes the
-compiler to 'forget' the semantics of memcpy() and memset(), so that
-explicit trivial calls will no longer be elided and replaced with
-plain loads and stores (as it can no longer guarantee the equivalence)
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-> (This isn't a new problem, originally it showed up as "GCC replaces
-> (part of) my memcpy() implementation by a (recursive) call to memcpy()"
-> and, well, that doesn't quite work!)
->
+--
 
-This needs to be fixed for Clang as well, so throwing GCC specific
-flags at it will at best be a partial solution.
+Hi,
 
-Omitting the struct assignment is a reasonable way to reduce the
-likelihood that a memset() will be emitted, so for this patch
+I saw you have sent "Align meta-page to sub-buffers for improved TLB usage" to
+linux-next, so here's a follow-up patch addressing your comments, not sure if
+you want to squash it or to put it on top.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
+index 4bb0192e43f3..ba12fd31de87 100644
+--- a/tools/testing/selftests/ring-buffer/map_test.c
++++ b/tools/testing/selftests/ring-buffer/map_test.c
+@@ -231,15 +231,15 @@ TEST_F(map, data_mmap)
+ 
+ 	/* Verify meta-page padding */
+ 	if (desc->meta->meta_page_size > getpagesize()) {
+-		void *addr;
+-
+ 		data_len = desc->meta->meta_page_size;
+ 		data = mmap(NULL, data_len,
+ 			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
+ 		ASSERT_NE(data, MAP_FAILED);
+ 
+-		addr = (void *)((unsigned long)data + getpagesize());
+-		ASSERT_EQ(*((int *)addr), 0);
++		for (int i = desc->meta->meta_struct_len;
++		     i < desc->meta->meta_page_size; i += sizeof(int))
++			ASSERT_EQ(*(int *)(data + i), 0);
++
+ 		munmap(data, data_len);
+ 	}
+ }
 
-It is not a complete solution, unfortunately, and I guess there may be
-other situations (compiler/arch combinations) where this might pop up
-again.
+base-commit: 2a07e30c19f391af26517c409fd66e401c6f4ee7
+prerequisite-patch-id: 16b79d676c5faf3b57443b576976c7522fcd5a4b
+-- 
+2.46.0.295.g3b9ea8a38a-goog
+
