@@ -1,112 +1,60 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8981618D62D;
-	Tue, 27 Aug 2024 23:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA5317C7C;
+	Wed, 28 Aug 2024 01:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724799651; cv=none; b=NFVpYFAX7he7VvHBDFtkxT9T4a4pn4/WWHDjjMQx88YPfuAXx7Dgj8UpWIxwk48ok/yf98/jeg1xtnnJ+hq5Ng7r5f6iwIfvi130X5fnrB2f8KoTbQE4YhjsHDV/ylE/FTnl/bjQsYxvPUlHBK51OdN9kdTXowO9uEyrMDYCZfU=
+	t=1724807998; cv=none; b=hZl+3eZ2DQUFB5uUUEsO2n75caNn7GdyDdk1H6PXd0/pysaeNCAd2v/WT3jQsYo2o5m9N00OlYD5azwVa8aRXlroN0W+tZloIhpo7Cx6p6WI7q7OTmkSHyMYVReaYl7CfTrwAbXR0zt20+/w0h1d6T8NHMRmkKH0J/e44An4euQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724799651; c=relaxed/simple;
-	bh=zVR+j9/Y69HgPcEEApJAHkp51d4U9AleXPztiiA++P8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qMfYUGrkEh5D+cYXn60iktOmbQFaII36/YhbucpyAbpuhG+0VoXxMr74S88I2cX34A195t1FKUompzeC478534Z5Mc1/MWvCaq45s1vYv77xl/R/XF7k+hL2hVh42MFJG0VqBmDWvTt/NJZ4S29Vv9ojfiB2/XmHLDkeNg0vxHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 47RMrWeM032045;
-	Tue, 27 Aug 2024 17:53:32 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 47RMrUKh032044;
-	Tue, 27 Aug 2024 17:53:30 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Tue, 27 Aug 2024 17:53:30 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
-Message-ID: <20240827225330.GC29862@gate.crashing.org>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu> <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu> <20240827180819.GB2049@sol.localdomain>
+	s=arc-20240116; t=1724807998; c=relaxed/simple;
+	bh=HkTJ4Z02ayqIUPhojcsjUl5UoyOWUAcRVHBJ6olPfuQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Xa32QbmEbpWKU1OzvfhmajQORHJzhHkgHaF3dExiWd+lFvyETtyRNd3LI4o+hi09z5pMKAxVcP2J2GalodBRtEcbcNR5FFRO5bdppz/1mf6X/nWhT3Mmbk38tO11x9pQOZ3S12Uk+cQ9IHLO8TGYI5EMJbxtLtnjwF223iky1kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WJNzdFvV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WJNzdFvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB8BC4AF09;
+	Wed, 28 Aug 2024 01:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1724807997;
+	bh=HkTJ4Z02ayqIUPhojcsjUl5UoyOWUAcRVHBJ6olPfuQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WJNzdFvVwu6bdkbAexFJCp4o3xRs3N2XVgbg7dWfYc8oKkS1bGy3wp08pzoD04Ddi
+	 KD9aCsG9Qn2KIcc/d508cy8wgLYsrMSorJeUt6j5clVoffTPvg5CptfFEW1q8IOr1w
+	 Cko2CkjE/Elw/vYXQL6TuLRVPMXDuoP+ETZqaeeU=
+Date: Tue, 27 Aug 2024 18:19:56 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: torvalds@linux-foundation.org, alx@kernel.org, justinstitt@google.com,
+ ebiederm@xmission.com, alexei.starovoitov@gmail.com, rostedt@goodmis.org,
+ catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org,
+ linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+ bpf@vger.kernel.org, netdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v7 0/8] Improve the copy of task comm
+Message-Id: <20240827181956.73484860efe34e550f35db7a@linux-foundation.org>
+In-Reply-To: <CALOAHbA7VW3_gYzqzb+Pp2T3BqWb5x2sWPmUj2N+SzbYchEBBA@mail.gmail.com>
+References: <20240817025624.13157-1-laoar.shao@gmail.com>
+	<CALOAHbA7VW3_gYzqzb+Pp2T3BqWb5x2sWPmUj2N+SzbYchEBBA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240827180819.GB2049@sol.localdomain>
-User-Agent: Mutt/1.4.2.3i
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
-> On Thu, Aug 22, 2024 at 09:13:13AM +0200, Christophe Leroy wrote:
-> > With the current implementation, __cvdso_getrandom_data() calls
-> > memset(), which is unexpected in the VDSO.
-> > 
-> > Rewrite opaque data initialisation to avoid memset().
-> > 
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > ---
-> >  lib/vdso/getrandom.c | 15 ++++++++++-----
-> >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/lib/vdso/getrandom.c b/lib/vdso/getrandom.c
-> > index cab153c5f9be..4a56f45141b4 100644
-> > --- a/lib/vdso/getrandom.c
-> > +++ b/lib/vdso/getrandom.c
-> > @@ -4,6 +4,7 @@
-> >   */
-> >  
-> >  #include <linux/minmax.h>
-> > +#include <linux/array_size.h>
-> >  #include <vdso/datapage.h>
-> >  #include <vdso/getrandom.h>
-> >  #include <vdso/unaligned.h>
-> > @@ -74,11 +75,15 @@ __cvdso_getrandom_data(const struct vdso_rng_data *rng_info, void *buffer, size_
-> >  	u32 counter[2] = { 0 };
-> >  
-> >  	if (unlikely(opaque_len == ~0UL && !buffer && !len && !flags)) {
-> > -		*(struct vgetrandom_opaque_params *)opaque_state = (struct vgetrandom_opaque_params) {
-> > -			.size_of_opaque_state = sizeof(*state),
-> > -			.mmap_prot = PROT_READ | PROT_WRITE,
-> > -			.mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS
-> > -		};
-> > +		struct vgetrandom_opaque_params *params = opaque_state;
-> > +		int i;
-> > +
-> > +		params->size_of_opaque_state = sizeof(*state);
-> > +		params->mmap_prot = PROT_READ | PROT_WRITE;
-> > +		params->mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS;
-> > +		for (i = 0; i < ARRAY_SIZE(params->reserved); i++)
-> > +			params->reserved[i] = 0;
-> > +
-> >  		return 0;
-> >  	}
+On Mon, 26 Aug 2024 10:30:54 +0800 Yafang Shao <laoar.shao@gmail.com> wrote:
+
+> Hello Andrew,
 > 
-> Is there a compiler flag that could be used to disable the generation of calls
-> to memset?
+> Could you please apply this series to the mm tree ?
 
--fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
-what it actually does (and how it avoids your problem, and mostly: learn
-what the actual problem *was*!)
-
-Have fun,
-
-
-Segher
+Your comment in
+https://lkml.kernel.org/r/CALOAHbA5VDjRYcoMOMKcLMVR0=ZwTz5FBTvQZExi6w8We9JPHg@mail.gmail.com
+led me to believe that a v8 is to be sent?
