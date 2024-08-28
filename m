@@ -1,126 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C024D108;
-	Wed, 28 Aug 2024 11:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E91C1741D4;
+	Wed, 28 Aug 2024 11:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724843921; cv=none; b=Oqgj5/ACQ7Fvv6r7pu3kkW66XXUBu1rjYJJpougXBsixisMN9Tee01pdzgJHwqDV0llaqr4TcBjh+X1nugzuAHbZQddLHJqBSgZciYjW3WAzCrUkMHIJtjRosLTDEqhgf5fr0WTPnCkK29ufnkFSkMnsHLaUQff1hMOTC6zjtP4=
+	t=1724845220; cv=none; b=VUnkpvD08JW8CYNuzZUjEN8cMVZ+vgcNJDS2ZlETbl3seMUmg2YpWICtia6a0Q9SPAqkv+H6j0fEZeDtC9xPifKXK65V8YTP1S0Vz1Zh/6KIXgV8db4k11bpI1m83y3bwWy5fkNVbLCNgBx3Zn3Ra2AAmliKc4U4rKlrLRdEYw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724843921; c=relaxed/simple;
-	bh=K4ffkU1d24Lo6Vpr60xC27K+SzTzNldohctsI0B5LAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NvqefsuWo035y194PtUONVMgnmYQJAH3ApfPJuBS5KIXz14Q5YZsoz6upH3K6vGG76QAvoit8P4dmU+R/O/3qu94ODB+6KMJUrG0uO6FVhkVadeIN3IGEknS6btoUUPNZkM2Wo3v2vMX63WD6hR0g+K5AqyYvv9BsFvT5CUSL+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=ie1ZgaJb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724845220; c=relaxed/simple;
+	bh=FePAsMvHLmE22op2flEQFmGYfkih/ncSqzEQLiob984=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KnJ4/zY9B70BV+lNQZfSHlC2u0fB7FcZJOY9Omm3OGm8IMlufU7WGlkuXUt699cMoocX95LJouYUZaG7JpDuFVX83XeWGgrt4dTEB2cRrPQrtenBHdyrdJ7IzFEWpcZ5GjFZc4clS9VJd586wT5vWX8xZYerH4fOFhxMlytMMx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PQWtY+fJ; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ie1ZgaJb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0F77C98EC1;
-	Wed, 28 Aug 2024 11:18:37 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ie1ZgaJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1724843916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TaIlxacxM0cvax8nGT0Wo3sn3OzyvoPLEHrLd84XeNU=;
-	b=ie1ZgaJbmdO0NFZiWnbQxMHvES+WVoJwzMG9ptpU3Emt2rn3BokeH+49oxcj4dV6dn2A7R
-	OZIoYXalY4Ws4iv74BUjZGRKqr/jYLeyEjR6fhELEgh04xz8/D5eJuiLFmdCA7UTqCRd8K
-	hMYFoVGZZlHMLnB3FsT4kBzzeg3/4HU=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 8e8b7172 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Wed, 28 Aug 2024 11:18:35 +0000 (UTC)
-Date: Wed, 28 Aug 2024 13:18:34 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Eric Biggers <ebiggers@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Shuah Khan <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
-Message-ID: <Zs8HirKLk-SrwTIu@zx2c4.com>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
- <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu>
- <20240827180819.GB2049@sol.localdomain>
- <20240827225330.GC29862@gate.crashing.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQWtY+fJ"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5bef295a429so7708247a12.2;
+        Wed, 28 Aug 2024 04:40:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724845217; x=1725450017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5doiDsQOeWB8JxD1pa6SuHZTechKzHGIPcY9ZB/Tn0k=;
+        b=PQWtY+fJKPUE2cr6k2SYIQLEIVh0atYTOIhpMVui7dIIMaFDOYTxOQYKxNMccyKYT8
+         izWb7emN9B9RBqKLY07PCiNOF2YmOxr2cPS/Y/SvZwOAced2dfDa7JHo4huiXjUcS+oz
+         +sQF0dLJrbNl/g3fSAL+MXfcflq1oRZyJo9Dqkc/MQeW2oDkLh8TRk0JNS5KcHrWysOT
+         3GkWSpWwz2rdIVAV/PudeoDfV8mgCpJW1VeJcWo2pzXmXyTxJdCIABhH9jJPrTQiFv1O
+         P3jG5CrpW3tE9xTAOXm1U0q3BhPOWcgoOTew0wxGRd2xnDEq/qGhY9h59TMbdeZ38ZbJ
+         rXaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724845217; x=1725450017;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5doiDsQOeWB8JxD1pa6SuHZTechKzHGIPcY9ZB/Tn0k=;
+        b=IhHd4SAYptcNkvHzPiPZsWLRIRacUGZJhoy/nOfJBjlw5VTj5nDQsAtvvIiALI1q4B
+         tIO+UZQdQeD2q9dgpvdYE55MSrqszo6NwYBIoKDSeF+pRl17rnfOWNScbZY4YTFz8mD0
+         ugL3svqv5sYBSjDlVRqnWSR/ImqAV0h62T36cvlYnHSy3qkaBCBFfEEQfKBKi+++fy6p
+         7vCASUwmfMe7w09EHxUgGKxt4Yl7qaF8WAq+txfM1m3RT62YeV2s2UoJNaEUM67PVERE
+         IvhKHHO56uq9cxeYxBfhiRU1tnYTGFKCM9tBMedap6NYzAhw29Y7WLxVX/ESPJ23pfXr
+         y7SA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqIgOx0zOoAGAsCf5f94hA0COEGmLzpEF1x1TnsYPG5MLiDBi9FfFTgrHrAKs2xuxb8bp2WNNG5oEZ9adc4t3T+kEh@vger.kernel.org, AJvYcCXv59YEoioLewcgxzw5pJZdDpyIEa+kUh1OWBQTNIT3JIVyMfMrkdN0k2hfBXQl8zqmBso=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+za/FH7FXtwJG5zz3Rx/ksWgUUtKbMeZTclC3iWea5SXDlUTD
+	rAZXKxUxuaIbGFgMyOFdWyCtgjpNYyDJT8YYtfKeRExPUNagNWio09yfr4fdgaLdcA==
+X-Google-Smtp-Source: AGHT+IFJRBhL32fcNwMsF1ysq2poybkCQQs3c9osXyU1UUhvo3TmtZue1y4ttg3vqgF3b0HDB/bYEQ==
+X-Received: by 2002:a05:6402:40c6:b0:5a2:5bd2:ca50 with SMTP id 4fb4d7f45d1cf-5c0891a032bmr11591310a12.25.1724845216161;
+        Wed, 28 Aug 2024 04:40:16 -0700 (PDT)
+Received: from krava ([173.38.220.61])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c0bb1e3446sm2267223a12.30.2024.08.28.04.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 04:40:15 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 28 Aug 2024 13:40:13 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Tianyi Liu <i.pear@outlook.com>,
+	andrii.nakryiko@gmail.com, mhiramat@kernel.org, ajor@meta.com,
+	albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
+	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	linux@jordanrome.com, mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <Zs8MnbfvyxInIMTj@krava>
+References: <20240825171417.GB3906@redhat.com>
+ <20240825224018.GD3906@redhat.com>
+ <ZsxTckUnlU_HWDMJ@krava>
+ <20240826115752.GA21268@redhat.com>
+ <ZsyHrhG9Q5BpZ1ae@krava>
+ <20240826212552.GB30765@redhat.com>
+ <Zsz7SPp71jPlH4MS@krava>
+ <20240826222938.GC30765@redhat.com>
+ <Zs3PdV6nqed1jWC2@krava>
+ <20240827164545.GG30765@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240827225330.GC29862@gate.crashing.org>
+In-Reply-To: <20240827164545.GG30765@redhat.com>
 
-On Tue, Aug 27, 2024 at 05:53:30PM -0500, Segher Boessenkool wrote:
-> On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
-> > On Thu, Aug 22, 2024 at 09:13:13AM +0200, Christophe Leroy wrote:
-> > > With the current implementation, __cvdso_getrandom_data() calls
-> > > memset(), which is unexpected in the VDSO.
-> > > 
-> > > Rewrite opaque data initialisation to avoid memset().
-> > > 
-> > > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > > ---
-> > >  lib/vdso/getrandom.c | 15 ++++++++++-----
-> > >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/lib/vdso/getrandom.c b/lib/vdso/getrandom.c
-> > > index cab153c5f9be..4a56f45141b4 100644
-> > > --- a/lib/vdso/getrandom.c
-> > > +++ b/lib/vdso/getrandom.c
-> > > @@ -4,6 +4,7 @@
-> > >   */
-> > >  
-> > >  #include <linux/minmax.h>
-> > > +#include <linux/array_size.h>
-> > >  #include <vdso/datapage.h>
-> > >  #include <vdso/getrandom.h>
-> > >  #include <vdso/unaligned.h>
-> > > @@ -74,11 +75,15 @@ __cvdso_getrandom_data(const struct vdso_rng_data *rng_info, void *buffer, size_
-> > >  	u32 counter[2] = { 0 };
-> > >  
-> > >  	if (unlikely(opaque_len == ~0UL && !buffer && !len && !flags)) {
-> > > -		*(struct vgetrandom_opaque_params *)opaque_state = (struct vgetrandom_opaque_params) {
-> > > -			.size_of_opaque_state = sizeof(*state),
-> > > -			.mmap_prot = PROT_READ | PROT_WRITE,
-> > > -			.mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS
-> > > -		};
-> > > +		struct vgetrandom_opaque_params *params = opaque_state;
-> > > +		int i;
-> > > +
-> > > +		params->size_of_opaque_state = sizeof(*state);
-> > > +		params->mmap_prot = PROT_READ | PROT_WRITE;
-> > > +		params->mmap_flags = MAP_DROPPABLE | MAP_ANONYMOUS;
-> > > +		for (i = 0; i < ARRAY_SIZE(params->reserved); i++)
-> > > +			params->reserved[i] = 0;
-> > > +
-> > >  		return 0;
-> > >  	}
-> > 
-> > Is there a compiler flag that could be used to disable the generation of calls
-> > to memset?
+On Tue, Aug 27, 2024 at 06:45:45PM +0200, Oleg Nesterov wrote:
+> On 08/27, Jiri Olsa wrote:
+> >
+> > On Tue, Aug 27, 2024 at 12:29:38AM +0200, Oleg Nesterov wrote:
+> > >
+> > > So, can you reproduce the problem reported by Tianyi on your setup?
+> >
+> > yes, I can repduce the issue with uretprobe on top of perf event uprobe
 > 
-> -fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
-> what it actually does (and how it avoids your problem, and mostly: learn
-> what the actual problem *was*!)
+> ...
+> 
+> >    ->     uretprobe-hit
+> >             handle_swbp
+> >               uprobe_handle_trampoline
+> >                 handle_uretprobe_chain
+> >                 {
+> >
+> >                   for_each_uprobe_consumer {
+> >
+> >                     // consumer for task 1019
+> >                     uretprobe_dispatcher
+> >                       uretprobe_perf_func
+> >                         -> runs bpf program
+> >
+> >                     // consumer for task 1018
+> >                     uretprobe_dispatcher
+> >                       uretprobe_perf_func
+> >                         -> runs bpf program
+> 
+> Confused...
+> 
+> I naively thought that if bpftrace uses bpf_uprobe_multi_link_attach() then
+> it won't use perf/trace_uprobe, and uretprobe-hit will result in
 
-This might help with various loops, but it doesn't help with the matter
-that this patch fixes, which is struct initialization. I just tried it
-with the arm64 patch to no avail.
+right, this path is for the case when bpftrace attach to single uprobe,
+but there are 2 instances of bpftrace 
+
+jirka
+
+> 
+> 	// current->pid == 1018
+> 
+> 	for_each_uprobe_consumer {
+> 		// consumer for task 1019
+> 		uprobe_multi_link_ret_handler
+> 		    uprobe_prog_run
+> 		       -> current->mm != link->task->mm, return
+> 
+> 		// consumer for task 1018
+> 		uprobe_multi_link_ret_handler
+> 		    uprobe_prog_run
+> 		       -> current->mm == link->task->mm, run bpf
+> 	}
+> 
+> > I think the uretprobe_dispatcher could call filter as suggested in the original
+> > patch..
+> 
+> OK, agreed.
+> 
+> > but I'm not sure we need to remove the uprobe from handle_uretprobe_chain
+> > like we do in handler_chain..
+> 
+> Me too. In any case this is another issue.
+> 
+> Oleg.
+> 
