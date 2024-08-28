@@ -1,171 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993741891AC;
-	Wed, 28 Aug 2024 15:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0430114831D;
+	Wed, 28 Aug 2024 15:40:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724857755; cv=none; b=ecjiVYLEV6kDp841C4eq/OSj5O50VqD+XWXqdpcCl6i5yiZjDRkq0myLNS6jILxlao7dGCpdrL2sDm3RY1EAt75MA6JkbkmjTcr/dn70JxY9IPNZpzz5bQ0fG7J2hBpeOnhLEJLRUAZaeFS2J/MTTJ5QRydrods96FYfKf4grGw=
+	t=1724859638; cv=none; b=rdTunW4YN6UjEgrj0fswHayCuUacgWq9q/7Bplk9WwrcJdnofyzf5whkBP+PWpq5hDqBZVvLmMflJ/qkanLxaU7Ybxy7p2wtRtrjQ/YWgaHbdLBBQ7mxKeVyU6KrUowgUl1eD6eVxY3BUPmIP6rI1H9vJ5KBg8pRMAjOT5B4Ae4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724857755; c=relaxed/simple;
-	bh=2dSGJx9DwCGU9inaMNC9w/ZuZvcpZXpFhNbyIbDXFXg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HM9vWhQm8Db/vZumyL9kYmuyu7y9Lmz7/y2dETXiVKeGhMr1fdAFE+O8SNWXAiozocsdm8OeOyum3MSCitz7S4Ob/s7q4hiw6rc0k3SSE91XPALYkyYLYPZIRWscz1ytP+nMUvuCkj8b6L3AeMo5Og/21qQJEy7Zvj6gh98HuDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MzX2mLfI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724859638; c=relaxed/simple;
+	bh=+z7/VLAc5zAKqxwt9kQI0vxm8x7sulgvUDeMTRfB+wo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PRedaW+VPkSXEZiXQm/b7MiqpdY6PJQpleAa0t0DXb44Xms0VE2kBJv/v4oDujlSejYTT0oShgIalDrWiTSryjKxtsxt90pz97jPaMiAwT3lvkaOAWSWqhGOI/Dp+IUta4NdauZr6VsIqC0tazew2hsdaLctPgO+a6G1JBtb4OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDdad5/I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MzX2mLfI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B325CC4CEC1;
-	Wed, 28 Aug 2024 15:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDdad5/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781E7C4CEC9;
+	Wed, 28 Aug 2024 15:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724857755;
-	bh=2dSGJx9DwCGU9inaMNC9w/ZuZvcpZXpFhNbyIbDXFXg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MzX2mLfIg6MsGjolLr+V4iGnkKTQUdjm/EaJhLDbZvuJ66i2qkoGxZkO0ahAeXSdZ
-	 w0oCrFV6JtXAsleAblrSSNSVD9dFHJ0vrg3QkfqAS1/8U20Rzb14APD9K3tmZDJ6GK
-	 CR4Dl1yuEAannx47U0uCzgYJILYF9LdXJXWNUfl7nNIE49/dESf9Abd7xAUmTxni17
-	 nc95Xa/TzQiWQ+tq/H0ZbZrk7Htb3mVLOLBSQS2h3kJfVSREuRRDhSrxAxG8RtEwvG
-	 8Yo853oQ5RDwkuAxKSPdqth8jdfeROhvvFlts3CkhJ2C/SW9eezgX8my3EQlKOcR+8
-	 iHTOc/MxGSYRg==
-Date: Wed, 28 Aug 2024 17:09:08 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, 
-	torvalds@linux-foundation.org, justinstitt@google.com, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	Matus Jokay <matus.jokay@stuba.sk>, "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-Message-ID: <ynrircglkinhherehtjz7woq55te55y4ol4rtxhfh75pvle3d5@uxp5esxt4slq>
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
- <n2fxqs3tekvljezaqpfnwhsmjymch4vb47y744zwmy7urf3flv@zvjtepkem4l7>
- <CALOAHbBAYHjDnKBVw63B8JBFc6U-2RNUX9L=ryA2Gbz7nnJfsQ@mail.gmail.com>
- <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
+	s=k20201202; t=1724859637;
+	bh=+z7/VLAc5zAKqxwt9kQI0vxm8x7sulgvUDeMTRfB+wo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hDdad5/IY68zkrft/92YWfFtjDz6TFndSmnpp5pqAtaDdhgaQHXnMYujF2CwZtAvo
+	 s1dVBctohqByWUo15KsHC1yXOsb3CsxrVYgXiTlMrxSNBqKSRHb2u/dgFnWDlyP45P
+	 kmzBzCQlLYmgzPMvmTlIEcYXhkLufuTJDpchreYUAd0yoHp8hJGCENnAbHqZR1NUMB
+	 63ZyNil+E22vWl4w+ZhugE7V8Y5RiBnHkIJ248WfFc80AZtPJMZpvtsLhvJEQmQQ7b
+	 rjS4mie2g2VPxttgup163SLxFXlpDbWSy4ple6kkn/VZnDNkSEFpYi5cJmSqRwT5Qa
+	 F/BVlj/jrU5iw==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2f3e071eb64so94243731fa.1;
+        Wed, 28 Aug 2024 08:40:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV05xct5gfUJ2WZGILTjXAdPU1k8W3sJVDHX0yp56hujCJuB0om51JlDpME3pndc1JSGNNhTppmsXal/h0gRg==@vger.kernel.org, AJvYcCWCZcSHufCGoUAdCMPQp0fRVxzYrmJVjlDzwf0cxRS/AVusgr5YsPCWVlftT7yGyfOU/wqCrlcjbhFN6Cmn@vger.kernel.org, AJvYcCWJc0C107/wSVlSw7lu1Aj6ndpsarTY6yOGjRRO4HE/t98Ijb6jv9LZCMI7jFCd7FcjbgtKAFMoWKnBMAHGhHxd@vger.kernel.org, AJvYcCWjqeQIr7Tp60H/3mg3ypNTH87qpaqx7Qo/ZbC9RsxV1WEmgE6ye0ccCcN7C8UoAVsL5VQxbixOBVqhyYtSNozUr6l3@vger.kernel.org, AJvYcCXXwvItc36YPp8dou+RaeRRAFMMDrdJ/AutmCKqlkH8WFKpoWipIYNKclPx/lM6JATUIbrBztf3eUOk@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdD0WqGot810jQ21YEOxntFmOYzJGRAgRGKnttnKWwoA4o9Ruq
+	remfgM00GECRUV8PLUP2W7qAfs+qOrF6p2t/1b537Jptf0jXTwVFEddbyUz0ByKKmqRPPkNMiJR
+	cm0v6Z7nuSvrjE8S7emkgFHCZQ7k=
+X-Google-Smtp-Source: AGHT+IHIXIHDcxvkoioWarqDfEAwvoOHHvvDveL69dLtIdivksLO7ybL0XqtoFeExKbS+796rHsbT/SXItR1tBLUGxI=
+X-Received: by 2002:a2e:461a:0:b0:2f3:f182:49f3 with SMTP id
+ 38308e7fff4ca-2f6106e36e6mr594741fa.22.1724859635743; Wed, 28 Aug 2024
+ 08:40:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="utmrbzzw4vz6dwo3"
-Content-Disposition: inline
-In-Reply-To: <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
+References: <cover.1724309198.git.christophe.leroy@csgroup.eu>
+ <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu>
+ <20240827180819.GB2049@sol.localdomain> <20240827225330.GC29862@gate.crashing.org>
+ <Zs8HirKLk-SrwTIu@zx2c4.com> <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com>
+ <20240828124519.GE29862@gate.crashing.org>
+In-Reply-To: <20240828124519.GE29862@gate.crashing.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 28 Aug 2024 17:40:23 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
+Message-ID: <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
+Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Jason A . Donenfeld" <Jason@zx2c4.com>, Eric Biggers <ebiggers@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, shuah <shuah@kernel.org>, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
---utmrbzzw4vz6dwo3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, 
-	torvalds@linux-foundation.org, justinstitt@google.com, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	Matus Jokay <matus.jokay@stuba.sk>, "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
- <n2fxqs3tekvljezaqpfnwhsmjymch4vb47y744zwmy7urf3flv@zvjtepkem4l7>
- <CALOAHbBAYHjDnKBVw63B8JBFc6U-2RNUX9L=ryA2Gbz7nnJfsQ@mail.gmail.com>
- <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
-
-Hi Kees,
-
-On Wed, Aug 28, 2024 at 06:48:39AM GMT, Kees Cook wrote:
-
-[...]
-
-> >Thank you for your suggestion. How does the following commit log look
-> >to you? Does it meet your expectations?
+On Wed, 28 Aug 2024 at 14:57, Segher Boessenkool
+<segher@kernel.crashing.org> wrote:
+>
+> On Wed, Aug 28, 2024 at 12:24:12PM +0000, Arnd Bergmann wrote:
+> > On Wed, Aug 28, 2024, at 11:18, Jason A. Donenfeld wrote:
+> > > On Tue, Aug 27, 2024 at 05:53:30PM -0500, Segher Boessenkool wrote:
+> > >> On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
+> > >> >
+> > >> > Is there a compiler flag that could be used to disable the generation of calls
+> > >> > to memset?
+> > >>
+> > >> -fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
+> > >> what it actually does (and how it avoids your problem, and mostly: learn
+> > >> what the actual problem *was*!)
+> > >
+> > > This might help with various loops, but it doesn't help with the matter
+> > > that this patch fixes, which is struct initialization. I just tried it
+> > > with the arm64 patch to no avail.
 > >
-> >    string: Use ARRAY_SIZE() in strscpy()
-> >
-> >    We can use ARRAY_SIZE() instead to clarify that they are regular cha=
-racters.
-> >
-> >    Co-developed-by: Alejandro Colomar <alx@kernel.org>
-> >    Signed-off-by: Alejandro Colomar <alx@kernel.org>
-> >    Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> >
-> >diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user=
-=2Eh
-> >index bbab79c0c074..07216996e3a9 100644
-> >--- a/arch/um/include/shared/user.h
-> >+++ b/arch/um/include/shared/user.h
-> >@@ -14,7 +14,7 @@
-> >  * copying too much infrastructure for my taste, so userspace files
-> >  * get less checking than kernel files.
-> >  */
-> >-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-> >+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]) + __must_be_array(x))
-> >
-> > /* This is to get size_t and NULL */
-> > #ifndef __UM_HOST__
-> >@@ -60,7 +60,7 @@ static inline void print_hex_dump(const char *level,
-> >const char *prefix_str,
-> > extern int in_aton(char *str);
-> > extern size_t strlcat(char *, const char *, size_t);
-> > extern size_t sized_strscpy(char *, const char *, size_t);
-> >-#define strscpy(dst, src)      sized_strscpy(dst, src, sizeof(dst))
-> >+#define strscpy(dst, src)      sized_strscpy(dst, src, ARRAY_SIZE(dst))
->=20
-> Uh, but why? strscpy() copies bytes, not array elements. Using sizeof() i=
-s already correct and using ARRAY_SIZE() could lead to unexpectedly small c=
-ounts (in admittedly odd situations).
->=20
-> What is the problem you're trying to solve here?
+> > Maybe -ffreestanding can help here? That should cause the vdso to be built
+> > with the assumption that there is no libc, so it would neither add nor
+> > remove standard library calls. Not sure if that causes other problems,
+> > e.g. if the calling conventions are different.
+>
+> "GCC requires the freestanding
+> environment provide 'memcpy', 'memmove', 'memset' and 'memcmp'."
+>
+> This is precisely to implement things like struct initialisation.  Maybe
+> we should have a "-ffreeerstanding" or "-ffreefloating" or think of
+> something funnier still environment as well, this problem has been there
+> since the -ffreestanding flag has existed, but the problem is as old as
+> the night.
+>
+> -fno-builtin might help a bit more, but just attack the problem at
+> its root, like I suggested?
+>
 
-I suggested that here:
-<https://lore.kernel.org/all/2jxak5v6dfxlpbxhpm3ey7oup4g2lnr3ueurfbosf5wdo6=
-5dk4@srb3hsk72zwq/>
+In my experience, this is likely to do the opposite: it causes the
+compiler to 'forget' the semantics of memcpy() and memset(), so that
+explicit trivial calls will no longer be elided and replaced with
+plain loads and stores (as it can no longer guarantee the equivalence)
 
-There, you'll find the rationale (and also for avoiding the _pad calls
-where not necessary --I ignore if it's necessary here--).
+> (This isn't a new problem, originally it showed up as "GCC replaces
+> (part of) my memcpy() implementation by a (recursive) call to memcpy()"
+> and, well, that doesn't quite work!)
+>
 
-Have a lovely day!
-Alex
+This needs to be fixed for Clang as well, so throwing GCC specific
+flags at it will at best be a partial solution.
 
->=20
-> -Kees
->=20
-> --=20
-> Kees Cook
+Omitting the struct assignment is a reasonable way to reduce the
+likelihood that a memset() will be emitted, so for this patch
 
---=20
-<https://www.alejandro-colomar.es/>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
---utmrbzzw4vz6dwo3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmbPPZQACgkQnowa+77/
-2zLbhBAAlmo97hSALOMFZhNvjtiifi8OS3Fmi4WyEj8YDnX4pfh+3drVAhe2b44u
-nrvjsBMEM1AHDiXa+gp3sUheR3N1kFuX1oyxlPsb9crUH3IfubT4kG0tQ6qLqE8M
-Tv0OfPWGdqeGMgvvTEiQVb4xcs/OMT5T4hVdwAtws8Lw0f1ofW5uE5Vlhu5GUXUB
-Mbz0DBwkRwBtEmnOCDeZE8zBL8ifIc7k5lQ7Kp1hr4gg/89oLXSABSSxtkyx2U20
-8Q1u2OXUiGq4J1BPkNs/5REFb+DJ5bpor7fMecfxoIKms1HXU4w3BjLO6x0ijCTc
-cKtZD6eMdpBVNhzXDsJpwMEePaKmJ8k9M4XEVFzBGvdKZ7nAx2meA0rmRssG8tVN
-PkNk/kswZIw0qi+m7Lo5uoWOoyKt/s3/UxyUehrIs2k836Zxc9gNdXzX3V9l/R7l
-KStxOPruRK2CjPtIE+OBeCpkVxVpFnNhyOVRADi9sWf4ztjwoo8acuXuDNjBDRoP
-ggNzOacqXIv8N0Ly6pn+01O6jUg5VNLndq9hOMveyamHwRAZVTDiJMh2xmJqBW41
-jIckyXwpnHly1Ag/DEWDiLlgjL0KTcqLGn3Y3oG4jd6PKxqUpxZHGw5UvLPq4QOk
-Oy6ZjqF9XGRi8kCgo0hGVLIKxJX7RfAZydaWmAjQVouEODj3TvU=
-=wcL8
------END PGP SIGNATURE-----
-
---utmrbzzw4vz6dwo3--
+It is not a complete solution, unfortunately, and I guess there may be
+other situations (compiler/arch combinations) where this might pop up
+again.
