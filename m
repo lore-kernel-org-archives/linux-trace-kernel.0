@@ -1,107 +1,112 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1809F142633;
-	Wed, 28 Aug 2024 17:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D54D1D696;
+	Wed, 28 Aug 2024 18:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724866353; cv=none; b=nLXAjrUDuJoFTbpBk7ZI6QV8oiBf8G8w6RJoCBe4zEFj1gxDR7jrmDE0eBadB4qAUvRTgMX08FBcJowxNE61uLiLf5gLLaJva7fRK3M/oeejIsUDOm9lIL2hh3WSLCauQk0AF3Um/qnMAnzyxDdCIl9K7LE39J6sHvBMiCuTS88=
+	t=1724870616; cv=none; b=uJZwamkrjh5oRjpH6SBD4rh3eC2qJJ6li8bOxd5aUabP5asyfwAiyQQA7r8VU6YltEMBEq+S6n9QP8Dlx4h+rbIj5vevFLwfXMyBxp6V75zSS4V8oRmmBnAY/TOGSN9fiuLocENf5HO10aJBI6GJisdLzQ84IBuSHLgi6aEDWZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724866353; c=relaxed/simple;
-	bh=oxW2+MTjMrJ+ZeeK8Liz6ctDws6qsgf5Ch9PI4RjS2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tip5iUbohSgFAXsqTbsZHvRNF9f2zcI7uexSQ5rRqywz82a9XM5ZuBBVjeJjmcPuLH4EM0JNbLQLO/GDGK5tvffo+8WPznJ4seh65/TbvDGXVrIF5DprV8YwBLbXuFSH1yciMp9DRWiYn4+1nrH54s8A+71GF41QOtQrTtfQdqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 47SHPeo9010804;
-	Wed, 28 Aug 2024 12:25:40 -0500
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 47SHPc5F010803;
-	Wed, 28 Aug 2024 12:25:38 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Wed, 28 Aug 2024 12:25:38 -0500
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        shuah <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
-Message-ID: <20240828172538.GI29862@gate.crashing.org>
-References: <cover.1724309198.git.christophe.leroy@csgroup.eu> <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu> <20240827180819.GB2049@sol.localdomain> <20240827225330.GC29862@gate.crashing.org> <Zs8HirKLk-SrwTIu@zx2c4.com> <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com> <20240828124519.GE29862@gate.crashing.org> <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com> <20240828162025.GG29862@gate.crashing.org> <CAMj1kXHZPfr2Sz78UrgsdX-2uBp0D1sCnznQnz5ZyMdiJq6rAA@mail.gmail.com>
+	s=arc-20240116; t=1724870616; c=relaxed/simple;
+	bh=bWjjtD9ux0QAGG3fGYObh74lsPxgFpjHa3YWm0m0vIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tg8NLAiN1pUYg/CZyuIe3v/9AOKfJ3kdjm5n9ZUcJWOqRE17Iih5BlNWvRTbUydOrtYLKo/GvtwNdO9eC4UuAeS2ybdlpWXDVR7yAc0xB1IA6dKqW3Bccz1evVcTEc5V2SZTYQ6YzZwJWwYLE+78WGN6UYT7cyU0DtjrZPKn/ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROtLpkCE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROtLpkCE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72659C4CEC0;
+	Wed, 28 Aug 2024 18:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724870616;
+	bh=bWjjtD9ux0QAGG3fGYObh74lsPxgFpjHa3YWm0m0vIU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ROtLpkCEGD8Ucdbs7a1iRfvuc32G3qJBY6quO3vEkfgfTtRxHiuhmUPG4800e2RsG
+	 /Lm2aGh9ZM5echC/qr/x2EXrVQ45i6g+DGFDj3b4IL1+1nBBMKPOO7F2EVPH21SXWt
+	 D3wyLlY3wzUG+pAwc9PiOyoANcpRLYBPjrk80WBsoM0sK/mk/Y/+Np3wR59Dnj9tMd
+	 zCiuTrI/cV8v34a6M0pTb4HTETCCVIQdFJzGlV39b2ciDrjitNDYPxuwRZojB40abg
+	 4ctkvmZU35i1iPs5RMsbgdrXOvldO8psyPOoy6iI6yqUNNrEivtWT76jv46HwMkF1o
+	 46/gB0lOrWDFQ==
+Date: Wed, 28 Aug 2024 11:43:33 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
+ Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBl?=
+ =?UTF-8?B?bA==?= <bjorn@kernel.org>, Magnus Karlsson
+ <magnus.karlsson@intel.com>, Maciej Fijalkowski
+ <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
+ Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Willem de Bruijn <willemb@google.com>,
+ Kaiyuan Zhang <kaiyuanz@google.com>
+Subject: Re: [PATCH net-next v22 04/13] netdev: netdevice devmem allocator
+Message-ID: <20240828114333.560895f0@kernel.org>
+In-Reply-To: <CAHS8izP8T5Xj97M7efecBmCrG9z8E0PYTxWCYZ0ym0hv13-DKg@mail.gmail.com>
+References: <20240825041511.324452-1-almasrymina@google.com>
+	<20240825041511.324452-5-almasrymina@google.com>
+	<20240827191519.5464a0b2@kernel.org>
+	<CAHS8izP8T5Xj97M7efecBmCrG9z8E0PYTxWCYZ0ym0hv13-DKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHZPfr2Sz78UrgsdX-2uBp0D1sCnznQnz5ZyMdiJq6rAA@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 28, 2024 at 07:12:55PM +0200, Ard Biesheuvel wrote:
-> On Wed, 28 Aug 2024 at 18:24, Segher Boessenkool
-> <segher@kernel.crashing.org> wrote:
-> > > In my experience, this is likely to do the opposite: it causes the
-> > > compiler to 'forget' the semantics of memcpy() and memset(), so that
-> > > explicit trivial calls will no longer be elided and replaced with
-> > > plain loads and stores (as it can no longer guarantee the equivalence)
+On Wed, 28 Aug 2024 00:20:23 -0700 Mina Almasry wrote:
+> > On Sun, 25 Aug 2024 04:15:02 +0000 Mina Almasry wrote:  
+> > > +void net_devmem_free_dmabuf(struct net_iov *niov)
+> > > +{
+> > > +     struct net_devmem_dmabuf_binding *binding = net_iov_binding(niov);
+> > > +     unsigned long dma_addr = net_devmem_get_dma_addr(niov);
+> > > +
+> > > +     if (gen_pool_has_addr(binding->chunk_pool, dma_addr, PAGE_SIZE))
+> > > +             gen_pool_free(binding->chunk_pool, dma_addr, PAGE_SIZE);  
 > >
-> > No, the compiler will never forget those semantics.  But if you tell it
-> > your function named memset() is not the actual standard memset -- via
-> > -fno-builtin-memset for example -- the compiler won't optimise things
-> > involving it quite as much.  You told it so eh?
+> > Is the check necessary for correctness? Should it perhaps be a WARN
+> > under DEBUG_NET instead? The rest LGTM:
+> >  
 > 
-> That is exactly the point I am making. So how would this help in this case?
-
-I think we agree?  :-)
-
-> > > This needs to be fixed for Clang as well, so throwing GCC specific
-> > > flags at it will at best be a partial solution.
-> >
-> > clang says it is a 100% plug-in replacement for GCC, so they will have
-> > to accept all GCC flags.  And in many cases they do.  Cases where they
-> > don't are bugs.
+> Not really necessary for correctness per se, but if we try to free a
+> dma_addr that is not in a gen_pool (due to some other bug in the
+> code), then gen_pool_free ends up BUG_ON, crashing the kernel.
 > 
-> Even if this were true, we support Clang versions today that do not
-> support -fno-tree-loop-distribute-patterns so my point stands.
-
-It is true.  Yes, this cause problems for their users.
-
-> > > It is not a complete solution, unfortunately, and I guess there may be
-> > > other situations (compiler/arch combinations) where this might pop up
-> > > again.
-> >
-> > Why do mem* not work in VDSOs?  Fix that, and all these problems
-> > disappear, and you do not need workrarounds :-)
+> Arguably gen_pool_free should not BUG_ON, but I think that's an old
+> API, and existing call sites have worked around the BUG_ON by doing a
+> gen_pool_has_addr check like I do here, for example kernel/dma/pool.c.
+> So I did not seek to change this established behavior.
 > 
-> Good point. We should just import memcpy and memset in the VDSO ELF metadata.
+> I think WARN seems fine to me, but maybe not under DEBUG_NET. I don't
+> want production code crashing due to this error, if it's OK with you.
+> 
+> Unless I hear otherwise I'll add a WARN without debug here.
 
-Yeah.  In many cases GCC will replace such calls by (faster and/or
-smaller) inline code anyway, but when it does leave a call, there needs
-to be an external function implementing it :-)
-
-> Not sure about static binaries, though: do those even use the VDSO?
-
-With "static binary" people usually mean "a binary not using any DSOs",
-I think the VDSO is a DSO, also in this respect?  As always, -static
-builds are *way* less problematic (and faster and smaller :-) )
-
-
-Segher
+WARN makes sense, I didn't know about the BUG_ON() hiding inside
+gen_pool :(
