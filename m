@@ -1,264 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07C1174ED0;
-	Wed, 28 Aug 2024 12:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE42537F5;
+	Wed, 28 Aug 2024 12:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724849902; cv=none; b=RPOjkD9qWqonf0of869fX/P2BMNJkXiht/Pebu2gdIkZaYkHi1Z3Nkcep41blykOzn8nXhgpb6ap4Na0QmH8Fv6USgy6q01iegNZ2wen++NbxXEautW9h6YRT00UY6L67l/fj2hpEkCg5B60n1r5xVBnltsawr0m9LkKVN8X5yc=
+	t=1724849915; cv=none; b=WuXiHufp/p1NjI8gFvfN/2SeqxtCHJ8QPjBry9fMVH4U5HEB09CjyiEnt0oId0RHirVhnOh8OXcx2ms3ov1fJBoI0dbtpMpWxLjDi8ejJi2p3SfmUSMHEDExAdaMvaswMYYZFDh9K1CJc/lNEjn4RZrwegKYUiRczFGC7SbA9HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724849902; c=relaxed/simple;
-	bh=n86jAMr/f3BgwZu+naWFNgdxfrENfR6IstOBFoINw5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mT1uqUBV8l1xq2FaAgTCSMTdcgifFBkGP18MaZoVOjCdpqG+M88KkX+7ZX4x7F9M68iqd0uXdJ9dVTHF7jX5XHKZol3IQwi68Q5ES2QU7AhGIxE3kPjNU8ldo0FpDxV4OZPN9iOMhM6EIjdMkPGzGs/XR+4m5H6iuUzsWEjseCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INcijHKd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INcijHKd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECCEAC98EDF;
-	Wed, 28 Aug 2024 12:58:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724849902;
-	bh=n86jAMr/f3BgwZu+naWFNgdxfrENfR6IstOBFoINw5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=INcijHKdxjgi3vpAx+1+S/ILXebjKI5bADpOfOi4NopNEYIvGCKxL8t1TBOkImOEH
-	 +Z2c2/YU+d5Gaoot+ZNRqHXS9O/KOZkFTKJX0+SJkNYeOXPYY8yVOdVIETooYyKduL
-	 qQNBPAQwE0t87a5YZwOjIJx/7vJ4J1gcsO0D+sZGdVeq43YiSf0uH+90AR1t/ZJ0IJ
-	 2w3HaXZLAUqTqiUVE1c6mYTcy/exa0OpW9vw83OcftKX9A1k1GJ2kcLiTXPcjC99E6
-	 kapylEkZBO2AAQAjTgt43Gq2Bpxs/TVo6lj5R2sQjIU49yDy+vkjHQHShrLDcw3EuU
-	 QmfxYS2161jHQ==
-Date: Wed, 28 Aug 2024 14:58:15 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
-	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
-	rostedt@goodmis.org, catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	Matus Jokay <matus.jokay@stuba.sk>, "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-Message-ID: <n2fxqs3tekvljezaqpfnwhsmjymch4vb47y744zwmy7urf3flv@zvjtepkem4l7>
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
+	s=arc-20240116; t=1724849915; c=relaxed/simple;
+	bh=Vsy8ov7YycJAvMDRkUjOS6q4lvRBacsBGTW0GdcGV0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MyO+kwK+A+UIiuoUTF3ug6/w+GbdhYLxG5bc0XJjzI23wlPvDhXuHV2LkBMQ+SjhI1N+fzD3XGCt+2KGFmuh31OeOQAuaYrp+H6u/1Si4a9FNaH+yPENLqL6qahJedUtGmF5uqrL1T+5GG80/HzDAO8ewO9a9H8mx8L8Iw0nUa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 47SCptJf031924;
+	Wed, 28 Aug 2024 07:51:55 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 47SCpru5031923;
+	Wed, 28 Aug 2024 07:51:53 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Wed, 28 Aug 2024 07:51:53 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        shuah <shuah@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
+Message-ID: <20240828125153.GF29862@gate.crashing.org>
+References: <cover.1724309198.git.christophe.leroy@csgroup.eu> <5deb67090b214f0e6eae96b7c406546d1a16f89b.1724309198.git.christophe.leroy@csgroup.eu> <20240827180819.GB2049@sol.localdomain> <20240827225330.GC29862@gate.crashing.org> <Zs8HirKLk-SrwTIu@zx2c4.com> <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com> <CAHmME9rjH4Ek3e8jmBvRp3wy+mrzJAeYxk5=o+OHjoT5sTOQPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jlsfvt4o727tdvtw"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHmME9rjH4Ek3e8jmBvRp3wy+mrzJAeYxk5=o+OHjoT5sTOQPg@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
+
+On Wed, Aug 28, 2024 at 02:26:08PM +0200, Jason A. Donenfeld wrote:
+> On Wed, Aug 28, 2024 at 2:24 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Aug 28, 2024, at 11:18, Jason A. Donenfeld wrote:
+> > > On Tue, Aug 27, 2024 at 05:53:30PM -0500, Segher Boessenkool wrote:
+> > >> On Tue, Aug 27, 2024 at 11:08:19AM -0700, Eric Biggers wrote:
+> > >> >
+> > >> > Is there a compiler flag that could be used to disable the generation of calls
+> > >> > to memset?
+> > >>
+> > >> -fno-tree-loop-distribute-patterns .  But, as always, read up on it, see
+> > >> what it actually does (and how it avoids your problem, and mostly: learn
+> > >> what the actual problem *was*!)
+> > >
+> > > This might help with various loops, but it doesn't help with the matter
+> > > that this patch fixes, which is struct initialization. I just tried it
+> > > with the arm64 patch to no avail.
+> >
+> > Maybe -ffreestanding can help here? That should cause the vdso to be built
+> > with the assumption that there is no libc, so it would neither add nor
+> > remove standard library calls. Not sure if that causes other problems,
+> > e.g. if the calling conventions are different.
+> 
+> >From https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90701:
+> 
+> | You need -ffreestanding but that is documented to emit memset and
+> memcpy still.
+
+Yeah.
+
+'-nostdlib'
+     Do not use the standard system startup files or libraries when
+     linking.
+
+This won't help a bit, the compiler will still optimise your
+initialisation loop to a memset() call, it just won't link to libgcc.a
+and crt*.o and its ilk (which is not where mem* are implemented in the
+first place!)
 
 
---jlsfvt4o727tdvtw
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
-	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
-	rostedt@goodmis.org, catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
-	Matus Jokay <matus.jokay@stuba.sk>, "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
-MIME-Version: 1.0
-In-Reply-To: <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
-
-On Wed, Aug 28, 2024 at 12:15:40PM GMT, Alejandro Colomar wrote:
-> Hi Yafang,
->=20
-> On Wed, Aug 28, 2024 at 11:03:14AM GMT, Yafang Shao wrote:
-> > We want to eliminate the use of __get_task_comm() for the following
-> > reasons:
-> >=20
-> > - The task_lock() is unnecessary
-> >   Quoted from Linus [0]:
-> >   : Since user space can randomly change their names anyway, using lock=
-ing
-> >   : was always wrong for readers (for writers it probably does make sen=
-se
-> >   : to have some lock - although practically speaking nobody cares there
-> >   : either, but at least for a writer some kind of race could have
-> >   : long-term mixed results
-> >=20
-> > - The BUILD_BUG_ON() doesn't add any value
-> >   The only requirement is to ensure that the destination buffer is a va=
-lid
-> >   array.
-> >=20
-> > - Zeroing is not necessary in current use cases
-> >   To avoid confusion, we should remove it. Moreover, not zeroing could
-> >   potentially make it easier to uncover bugs. If the caller needs a
-> >   zero-padded task name, it should be explicitly handled at the call si=
-te.
-> >=20
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Link: https://lore.kernel.org/all/CAHk-=3DwivfrF0_zvf+oj6=3D=3DSh=3D-np=
-JooP8chLPEfaFV0oNYTTBA@mail.gmail.com [0]
-> > Link: https://lore.kernel.org/all/CAHk-=3DwhWtUC-AjmGJveAETKOMeMFSTwKwu=
-99v7+b6AyHMmaDFA@mail.gmail.com/
-> > Suggested-by: Alejandro Colomar <alx@kernel.org>
-> > Link: https://lore.kernel.org/all/2jxak5v6dfxlpbxhpm3ey7oup4g2lnr3ueurf=
-bosf5wdo65dk4@srb3hsk72zwq
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> > Cc: Matus Jokay <matus.jokay@stuba.sk>
-> > Cc: Alejandro Colomar <alx@kernel.org>
-> > Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> > ---
-> >  fs/exec.c             | 10 ----------
-> >  fs/proc/array.c       |  2 +-
-> >  include/linux/sched.h | 32 ++++++++++++++++++++++++++------
-> >  kernel/kthread.c      |  2 +-
-> >  4 files changed, 28 insertions(+), 18 deletions(-)
-> >=20
->=20
-> [...]
->=20
-> > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > index f8d150343d42..c40b95a79d80 100644
-> > --- a/include/linux/sched.h
-> > +++ b/include/linux/sched.h
->=20
-> [...]
->=20
-> > @@ -1914,10 +1917,27 @@ static inline void set_task_comm(struct task_st=
-ruct *tsk, const char *from)
-> >  	__set_task_comm(tsk, from, false);
-> >  }
-> > =20
-> > -extern char *__get_task_comm(char *to, size_t len, struct task_struct =
-*tsk);
-> > +/*
->=20
-> [...]
->=20
-> > + * - ARRAY_SIZE() can help ensure that @buf is indeed an array.
-> > + */
-> >  #define get_task_comm(buf, tsk) ({			\
-> > -	BUILD_BUG_ON(sizeof(buf) !=3D TASK_COMM_LEN);	\
-> > -	__get_task_comm(buf, sizeof(buf), tsk);		\
-> > +	strscpy(buf, (tsk)->comm, ARRAY_SIZE(buf));	\
->=20
-> I see that there's a two-argument macro
->=20
-> 	#define strscpy(dst, src)	sized_strscpy(dst, src, sizeof(dst))
->=20
-> which is used in patch 2/8
->=20
-> 	diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> 	index 6f0d6fb6523f..e4ef5e57dde9 100644
-> 	--- a/kernel/auditsc.c
-> 	+++ b/kernel/auditsc.c
-> 	@@ -2730,7 +2730,7 @@ void __audit_ptrace(struct task_struct *t)
-> 		context->target_uid =3D task_uid(t);
-> 		context->target_sessionid =3D audit_get_sessionid(t);
-> 		security_task_getsecid_obj(t, &context->target_sid);
-> 	-       memcpy(context->target_comm, t->comm, TASK_COMM_LEN);
-> 	+       strscpy(context->target_comm, t->comm);
-> 	 }
->=20
-> 	 /**
-
-Ahh, the actual generic definition is in <include/linux/string.h>.
-You could do
-
-	diff --git i/include/linux/string.h w/include/linux/string.h
-	index 9edace076ddb..060504719904 100644
-	--- i/include/linux/string.h
-	+++ w/include/linux/string.h
-	@@ -76,11 +76,11 @@ ssize_t sized_strscpy(char *, const char *, size_t);
-	  * known size.
-	  */
-	 #define __strscpy0(dst, src, ...)      \
-	-       sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst))
-	+       sized_strscpy(dst, src, ARRAY_SIZE(dst))
-	 #define __strscpy1(dst, src, size)     sized_strscpy(dst, src, size)
-	=20
-	 #define __strscpy_pad0(dst, src, ...)  \
-	-       sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst))
-	+       sized_strscpy_pad(dst, src, ARRAY_SIZE(dst))
-	 #define __strscpy_pad1(dst, src, size) sized_strscpy_pad(dst, src, size)
-	=20
-	 /**
-
->=20
-> I propose modifying that macro to use ARRAY_SIZE() instead of sizeof(),
-> and then calling that macro here too.  That would not only make sure
-> that this is an array, but make sure that every call to that macro is an
-> array.  An if there are macros for similar string functions that reduce
-> the argument with a usual sizeof(), the same thing could be done to
-> those too.
->=20
-> Have a lovley day!
-> Alex
->=20
-> > +	buf;						\
-> >  })
-> > =20
-> >  #ifdef CONFIG_SMP
-> > diff --git a/kernel/kthread.c b/kernel/kthread.c
-> > index f7be976ff88a..7d001d033cf9 100644
-> > --- a/kernel/kthread.c
-> > +++ b/kernel/kthread.c
-> > @@ -101,7 +101,7 @@ void get_kthread_comm(char *buf, size_t buf_size, s=
-truct task_struct *tsk)
-> >  	struct kthread *kthread =3D to_kthread(tsk);
-> > =20
-> >  	if (!kthread || !kthread->full_name) {
-> > -		__get_task_comm(buf, buf_size, tsk);
-> > +		strscpy(buf, tsk->comm, buf_size);
-> >  		return;
-> >  	}
-> > =20
-> > --=20
-> > 2.43.5
-> >=20
->=20
-> --=20
-> <https://www.alejandro-colomar.es/>
-
-
-
---=20
-<https://www.alejandro-colomar.es/>
-
---jlsfvt4o727tdvtw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmbPHuEACgkQnowa+77/
-2zKgBA//eGa/SyzAmBdUjYfc4f7liEeEv+OWUTlM7ld3iAWQPIRtR+Qi4A8etapm
-5a92Z1667JrB0rfpZiBDHdROGwzukfPY/V/Ppj5wF1janRjy7jy98Tc1k8QYSSux
-bzTNagcGoRRrMcOQoXRsHZmb9VlripTPQj36lApImB0GtnipmfEbSiQns1I03A8/
-vnnXEGHRT+EIKyE2Q6LNyanJwqsTI7aZyXOS1Xe3bekkRjmL3cM9cploLxALaiIK
-OFhjtk10ALjug21HhBO6Fufg3b1m8reK+tl5+3WKi+h4Z+OupJhKvf5i0XLVLXto
-1Vu+j/lc/VrR7SIQdFcyKYjWM3Igp/BPSjWpGmYNH/fUE1S3RQoYFAyS3Iy5GbkI
-jy5s29zvCm1fjfN1/u0/35uxmdzFqRAI72FfoZUKG7DRrLdyEXDwgLRJncCCh9fT
-3qxl7Px3MAoXUbtps7p0btpRVO7Xhn9D5OUtYo3RUY4Dcpn9ed2ANI/bdZeyg7hs
-NbTayf3XNnzN1Tbq7+XBv7E66gV89G36kS65kmE5c6HQ7kwf5yDxwoQfrqgjaFYN
-bwRxokSRWphrNpHN0pGmaBvJTgBFAizWjhtWl8siOQJPixaW/ga1Ql57UbVE7Qkk
-SdeJkHw1w492JAct0QQsWOqdyYksI9k6qLG/n4zMwwnVemIWtRg=
-=aSp9
------END PGP SIGNATURE-----
-
---jlsfvt4o727tdvtw--
+Segher
