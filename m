@@ -1,774 +1,268 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA51016C437
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Aug 2024 06:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDDD647;
+	Thu, 29 Aug 2024 06:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724911330; cv=none; b=s20vnsiOe5m98rDn9oPC2Rh9azT6xHy7OkQQnbvzv99kWwHqaYLJCB0B7yIAxc2Ti/RzJcKOsYsY29fUG56rkcY1MCWYijB1QIph71nhAYAeK9AMmIeNUtuG0bvHs05ZudLPBRaIWhSw7/a4JybsAthes6siA+JRbwUf5iN55cI=
+	t=1724913056; cv=none; b=W615srnP7XCCmvElREWxVcFRWkLDLFHUnaEJlWwLpJY0svfX2VZwR5/PHpOfGw/SXKYb5CS5IdcGJAEP5ESZvoEQDRP5sMAyRWsB8wP9ibGgMzVuKtvJZqDZwvxEwWnYqWOzSwUYV5kuViO+6zaXeAyAWCTWTmE4akfVOwvbsFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724911330; c=relaxed/simple;
-	bh=g+OPWwAJmin0uiJn6LStVERozs3gIakiXbD3ph2W+EY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jiEQb6Vvun2AjGgNxXrQi3eEz8+JiOA02baEWSvoJWFVUpRwO1f2Tb/sy6FBld7zp6s8drDF+u3RQXU1ZXtzbIoOrIK6/m375J14YSIbLFJyyHQgUEsbK7aXfnbhEOad11nO8BK8pSwIsnWZyUV9EFg9Zgk1qmC4KLOE2CKs4Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fcOv7uEa; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+	s=arc-20240116; t=1724913056; c=relaxed/simple;
+	bh=VU81vUW30AdKSehoqmKNMJjqyl1FXmEDl82UsAHavbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q0SrFH3Cv14xKqPksSSqH0yBkDniHHZZnM6frt2dSRUCxy6BJOW/jKXtYqUBSoG699ON439aTPeNTR42SwO5S9g6VJgXvjtY0HIZu93evYAuIG7vJpBtUUMHn8VYWeuITmMf9m997gcGFa1huJ7EVgd1pPNXJC0p7FOmRlSyF6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQv4ALTN; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fcOv7uEa"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2039405b567so2820445ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 Aug 2024 23:02:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQv4ALTN"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6bf6721aae5so1799416d6.2;
+        Wed, 28 Aug 2024 23:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724911318; x=1725516118; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y7uTAuvszm8H+NPIK9HRfeIJ7xE159prF0YkQuGvvwc=;
-        b=fcOv7uEaF2j/cHTKWmG+yua4CVCmVbu7CjqGrF/0mP3OwBShMuIbI8wOGuDwkum8ay
-         TBkYP5x/o4fs+fMvHaqYB6uVjmYd1qab+svwv/x87Eh7OEQjNfEGyfCZCOdVgi8yiA3B
-         vI1LLu5Eev5xYjCBrxviiEC75bCtRzzMs94eF8nkZxmf5qCwjTHkWMWkVAPkeLGZsDCl
-         Av6fI5vpWlHQcyS/cNsl8zQJDELc1kbmtSfrMGd1VO1jegqFRhuIH/AJLgGwVQwP7sCG
-         T7wwBCR9zgN0xH1W0+W9XCB/GQcWLOnA1mq/ITlQxkMGB9QVre6112ZUOPSKRUVfmRF3
-         xHLQ==
+        d=gmail.com; s=20230601; t=1724913053; x=1725517853; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DVHRuwAUcEYymH+J/b0R0e+3iNvUH3y6v7Jow7lKvQY=;
+        b=IQv4ALTNbagKhB9j7itvHwIIkGqofLGBzd79YMXXMEwC1Yw7WwdTRVSXeMkP4DeSkc
+         /IuiHm67ZsrFHtIr4UypKhSPEb9POhGqWdGgkeeyG7HW1hj0ga3l5ukaxBTXp/LtLL64
+         k5a1PPRmBK/rNk9u0o3J90AdjTsZ8UkB7k2YNjnVhU7C1BI/H+EzN/z/oKbH2UBl6p9o
+         yZ20YoKSaZlbAu94E5HOMpa4qlTQJjmBnDyq+Hli7otP9rwnlUTr+PRouxB23RZZFCw2
+         fvmtGt/IPxF6RDWtWlTqxLzV5nb0HXazT8EeW/kKUeWz0sZEhvmIS/x96TJVTNMwF6Av
+         LkUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724911318; x=1725516118;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y7uTAuvszm8H+NPIK9HRfeIJ7xE159prF0YkQuGvvwc=;
-        b=MZQyuQAatdche2vN4WMqHN//AGFdjhyiG6XXPxe/Kq1TtENg9rrlb+2RjtuaKJ8P9K
-         1YMy0oNfk8XX6BK98uQBu0hEjCUVz3a9fAOxjpUKijlP4f0i+j3Vm5+rXThR51wqv+aA
-         A+OLnXpd912Zb3xppdmoaB3lal7DUUanTyE6pyJcTP1NMTIaCJzxj0YmyxCI+qwZENj1
-         2fOc7CdGYW4ypYt6Jlg1N0VvtkBAHDU8GTkMPIfmgBsfonMpSzcv8Z1/qHZfLl0d1NbD
-         dtg9bX4BiU/WwQPwhClJsFK/oFleX1vLTLBRRRohrVJO6Sx87BNo220ey9o/nTsR7e0g
-         EUow==
-X-Forwarded-Encrypted: i=1; AJvYcCVi9kOM+K/8wbdyu95z66al1BxGUTQLtPYyiPE7L7jN8tJZ/nmYetg4DfXQVC/lTTExYYpHkU909V9x4LBeBqfbiv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUrv+M0ef8WjGrx5MoPZsVNsc36VmKj7XLYNiRA2LIfT47NMQo
-	zLPJEcW1pzgcM/EnWFJha8Au02eWF851Wg1KqWIxXLLlWExcMd5J4QRNwW2E43HELF/CAFO8uKd
-	06Ty6x0GPxrUmkJm7pt3mUA==
-X-Google-Smtp-Source: AGHT+IFptqznoYpimobQJc2hbuAlqJGAxctBeds1NpyAEfQ+xGYkzwynW0PWwZCvZXau3y1JYdmKzcvcIM5pK4d+eA==
-X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
- (user=almasrymina job=sendgmr) by 2002:a17:902:e749:b0:201:e640:81e0 with
- SMTP id d9443c01a7336-2050c222a45mr1582025ad.4.1724911318091; Wed, 28 Aug
- 2024 23:01:58 -0700 (PDT)
-Date: Thu, 29 Aug 2024 06:01:25 +0000
-In-Reply-To: <20240829060126.2792671-1-almasrymina@google.com>
+        d=1e100.net; s=20230601; t=1724913053; x=1725517853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DVHRuwAUcEYymH+J/b0R0e+3iNvUH3y6v7Jow7lKvQY=;
+        b=LOY0j4oE/SFjSGK9ZEl9BMT4iyugdu4FxYLyW4RssjZdYzI+lxKQxa3QGOj9PRRqHw
+         /i1xzr9KH9zzaUT6xBNMHyUYItl0DUuDmE0gfNtVdZ+yerzHS7RpHX+FaoYlJzHuGGTj
+         VigLZ8Z4hWepzX/8odQdnK27nZeZul98WPlk5FFo6yfNkdY6mY2/ESrF1iU27NAYGOZJ
+         f0d++ie0TzoHedRF5ivRuxqOf/Bw8CaR5Tx1SotcJrAR5+JSMnKkgnpUoW4Hcq62jKaF
+         tADYxX0hZzltl3VCQJYxd/rJX6tJR3ugJwZIZz8dey0u+ZB8wEmQbm//N42UdZstNplN
+         6xeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+oKcHJ5hLkGYF8vGNk+Bkpv8kp6ykGtBDGki5ywYznpPJ9JnbpT7uNqNST6PFlNLpSe3Q@vger.kernel.org, AJvYcCUxEmRud/VXlQh2jBQmgid4q1y4BV8dldleKMhi9LGjDMglWHG2OsokkahXat5VEwljukfzoqvn@vger.kernel.org, AJvYcCVJ2u3AjBDE+2B8dttndSQUoN5m6IyALKtiD7QiRnC/N18ovWfJG+Lw7fnd3dgCc4fdIj5b4+gAC/e1JkgZxf5MfyuV@vger.kernel.org, AJvYcCVdLb5DCwfa+X0mHSN36xRVWdvNka9UTlVCrtW8Ya2WHXlBiXUvlSgHAM2by8imG5KO262fe20GmA==@vger.kernel.org, AJvYcCWr0sAomN/TTFcQwYaMLZ2oRORiCTsqa5zX3H5i46OL5jqHh8g89qPkD0C/qU7hJSQQ5fSlUg==@vger.kernel.org, AJvYcCXZFSSEmlwEEIHdfBhJKHRtydO3OXab6KK6MHgi9iejM0e0tCCgib3vVZdFsXL+llrao78hSag5Gjlz/HkkF5fUUFPWr4V/@vger.kernel.org, AJvYcCXcWQzTS2sD4TRytLiQp9/k4wtKu19lPiXpl58+KZBvaTtrEW6awb9ZgAti6DI/sx00fW2Y9jeyljH2o6Kjdw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxayWA/FlzvSvQYLc/4m4rkF0HMPrWLsIwRK0tH3i/sL6c9LRm6
+	Zsejs6QN8A1ORtzPw9wsdqL8TM8fSBjC29Ysixrc0a2x9j80wZdjpPtxmk8uASh0FvzORoZ/fYR
+	E4iUSdZ8dS7fwvEcp0+Lp9cOv2HA=
+X-Google-Smtp-Source: AGHT+IHAaYj3VKJPFC+rsCIttyDdBV4rNcUvYcw6ZzQZduvgmQVvDq94rvCCqajdqQxNsCbTeYDYWfFYA4N5Ml43Gtc=
+X-Received: by 2002:a05:6214:2d4a:b0:6bb:ab4a:dbdb with SMTP id
+ 6a1803df08f44-6c33e5e7de8mr21034396d6.1.1724913053063; Wed, 28 Aug 2024
+ 23:30:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240829060126.2792671-1-almasrymina@google.com>
-X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Message-ID: <20240829060126.2792671-13-almasrymina@google.com>
-Subject: [PATCH net-next v23 12/13] selftests: add ncdevmem, netcat for devmem TCP
-From: Mina Almasry <almasrymina@google.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?=" <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
-	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
-	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
-	Praveen Kaligineedi <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Stanislav Fomichev <sdf@fomichev.me>
+MIME-Version: 1.0
+References: <20240828030321.20688-1-laoar.shao@gmail.com> <20240828030321.20688-2-laoar.shao@gmail.com>
+ <8A36564D-56E3-469B-B201-0BD7C11D6EFC@kernel.org>
+In-Reply-To: <8A36564D-56E3-469B-B201-0BD7C11D6EFC@kernel.org>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 29 Aug 2024 14:30:14 +0800
+Message-ID: <CALOAHbBHkS=J8Bv+XsoWvwdfG7fGFg0eVw9PhOVWVbJ1ebrr1w@mail.gmail.com>
+Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
+To: Kees Cook <kees@kernel.org>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, alx@kernel.org, 
+	justinstitt@google.com, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
+	rostedt@goodmis.org, catalin.marinas@arm.com, 
+	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>, 
+	Matus Jokay <matus.jokay@stuba.sk>, "Serge E. Hallyn" <serge@hallyn.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-ncdevmem is a devmem TCP netcat. It works similarly to netcat, but it
-sends and receives data using the devmem TCP APIs. It uses udmabuf as
-the dmabuf provider. It is compatible with a regular netcat running on
-a peer, or a ncdevmem running on a peer.
+On Wed, Aug 28, 2024 at 10:04=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+>
+>
+> On August 27, 2024 8:03:14 PM PDT, Yafang Shao <laoar.shao@gmail.com> wro=
+te:
+> >We want to eliminate the use of __get_task_comm() for the following
+> >reasons:
+> >
+> >- The task_lock() is unnecessary
+> >  Quoted from Linus [0]:
+> >  : Since user space can randomly change their names anyway, using locki=
+ng
+> >  : was always wrong for readers (for writers it probably does make sens=
+e
+> >  : to have some lock - although practically speaking nobody cares there
+> >  : either, but at least for a writer some kind of race could have
+> >  : long-term mixed results
+> >
+> >- The BUILD_BUG_ON() doesn't add any value
+> >  The only requirement is to ensure that the destination buffer is a val=
+id
+> >  array.
+>
+> Sorry, that's not a correct evaluation. See below.
+>
+> >
+> >- Zeroing is not necessary in current use cases
+> >  To avoid confusion, we should remove it. Moreover, not zeroing could
+> >  potentially make it easier to uncover bugs. If the caller needs a
+> >  zero-padded task name, it should be explicitly handled at the call sit=
+e.
+>
+> This is also not an appropriate rationale. We don't make the kernel "more=
+ buggy" not purpose. ;) See below.
+>
+> >
+> >Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> >Link: https://lore.kernel.org/all/CAHk-=3DwivfrF0_zvf+oj6=3D=3DSh=3D-npJ=
+ooP8chLPEfaFV0oNYTTBA@mail.gmail.com [0]
+> >Link: https://lore.kernel.org/all/CAHk-=3DwhWtUC-AjmGJveAETKOMeMFSTwKwu9=
+9v7+b6AyHMmaDFA@mail.gmail.com/
+> >Suggested-by: Alejandro Colomar <alx@kernel.org>
+> >Link: https://lore.kernel.org/all/2jxak5v6dfxlpbxhpm3ey7oup4g2lnr3ueurfb=
+osf5wdo65dk4@srb3hsk72zwq
+> >Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> >Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> >Cc: Christian Brauner <brauner@kernel.org>
+> >Cc: Jan Kara <jack@suse.cz>
+> >Cc: Eric Biederman <ebiederm@xmission.com>
+> >Cc: Kees Cook <keescook@chromium.org>
+> >Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> >Cc: Matus Jokay <matus.jokay@stuba.sk>
+> >Cc: Alejandro Colomar <alx@kernel.org>
+> >Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> >---
+> > fs/exec.c             | 10 ----------
+> > fs/proc/array.c       |  2 +-
+> > include/linux/sched.h | 32 ++++++++++++++++++++++++++------
+> > kernel/kthread.c      |  2 +-
+> > 4 files changed, 28 insertions(+), 18 deletions(-)
+> >
+> >diff --git a/fs/exec.c b/fs/exec.c
+> >index 50e76cc633c4..8a23171bc3c3 100644
+> >--- a/fs/exec.c
+> >+++ b/fs/exec.c
+> >@@ -1264,16 +1264,6 @@ static int unshare_sighand(struct task_struct *me=
+)
+> >       return 0;
+> > }
+> >
+> >-char *__get_task_comm(char *buf, size_t buf_size, struct task_struct *t=
+sk)
+> >-{
+> >-      task_lock(tsk);
+> >-      /* Always NUL terminated and zero-padded */
+> >-      strscpy_pad(buf, tsk->comm, buf_size);
+> >-      task_unlock(tsk);
+> >-      return buf;
+> >-}
+> >-EXPORT_SYMBOL_GPL(__get_task_comm);
+> >-
+> > /*
+> >  * These functions flushes out all traces of the currently running exec=
+utable
+> >  * so that a new one can be started
+> >diff --git a/fs/proc/array.c b/fs/proc/array.c
+> >index 34a47fb0c57f..55ed3510d2bb 100644
+> >--- a/fs/proc/array.c
+> >+++ b/fs/proc/array.c
+> >@@ -109,7 +109,7 @@ void proc_task_name(struct seq_file *m, struct task_=
+struct *p, bool escape)
+> >       else if (p->flags & PF_KTHREAD)
+> >               get_kthread_comm(tcomm, sizeof(tcomm), p);
+> >       else
+> >-              __get_task_comm(tcomm, sizeof(tcomm), p);
+> >+              get_task_comm(tcomm, p);
+> >
+> >       if (escape)
+> >               seq_escape_str(m, tcomm, ESCAPE_SPACE | ESCAPE_SPECIAL, "=
+\n\\");
+> >diff --git a/include/linux/sched.h b/include/linux/sched.h
+> >index f8d150343d42..c40b95a79d80 100644
+> >--- a/include/linux/sched.h
+> >+++ b/include/linux/sched.h
+> >@@ -1096,9 +1096,12 @@ struct task_struct {
+> >       /*
+> >        * executable name, excluding path.
+> >        *
+> >-       * - normally initialized setup_new_exec()
+> >-       * - access it with [gs]et_task_comm()
+> >-       * - lock it with task_lock()
+> >+       * - normally initialized begin_new_exec()
+> >+       * - set it with set_task_comm()
+> >+       *   - strscpy_pad() to ensure it is always NUL-terminated and
+> >+       *     zero-padded
+> >+       *   - task_lock() to ensure the operation is atomic and the name=
+ is
+> >+       *     fully updated.
+> >        */
+> >       char                            comm[TASK_COMM_LEN];
+> >
+> >@@ -1914,10 +1917,27 @@ static inline void set_task_comm(struct task_str=
+uct *tsk, const char *from)
+> >       __set_task_comm(tsk, from, false);
+> > }
+> >
+> >-extern char *__get_task_comm(char *to, size_t len, struct task_struct *=
+tsk);
+> >+/*
+> >+ * - Why not use task_lock()?
+> >+ *   User space can randomly change their names anyway, so locking for =
+readers
+> >+ *   doesn't make sense. For writers, locking is probably necessary, as=
+ a race
+> >+ *   condition could lead to long-term mixed results.
+> >+ *   The strscpy_pad() in __set_task_comm() can ensure that the task co=
+mm is
+> >+ *   always NUL-terminated and zero-padded. Therefore the race conditio=
+n between
+> >+ *   reader and writer is not an issue.
+> >+ *
+> >+ * - Why not use strscpy_pad()?
+> >+ *   While strscpy_pad() prevents writing garbage past the NUL terminat=
+or, which
+> >+ *   is useful when using the task name as a key in a hash map, most us=
+e cases
+> >+ *   don't require this. Zero-padding might confuse users if it=E2=80=
+=99s unnecessary,
+> >+ *   and not zeroing might even make it easier to expose bugs. If you n=
+eed a
+> >+ *   zero-padded task name, please handle that explicitly at the call s=
+ite.
+>
+> I really don't like this part of the change. You don't know that existing=
+ callers don't depend on the padding. Please invert this logic: get_task_co=
+mm() must use strscpy_pad(). Calls NOT wanting padding can call strscpy() t=
+hemselves.
+>
+> >+ *
+> >+ * - ARRAY_SIZE() can help ensure that @buf is indeed an array.
+>
+> This doesn't need checking here; strscpy() will already do that.
+>
+> >+ */
+> > #define get_task_comm(buf, tsk) ({                    \
+> >-      BUILD_BUG_ON(sizeof(buf) !=3D TASK_COMM_LEN);     \
+>
+> Also, please leave the TASK_COMM_LEN test so that destination buffers con=
+tinue to be the correct size: current callers do not perform any return val=
+ue analysis, so they cannot accidentally start having situations where the =
+destination string might be truncated. Again, anyone wanting to avoid that =
+restriction can use strscpy() directly and check the return value.
 
-In addition to normal netcat support, ncdevmem has a validation mode,
-where it sends a specific pattern and validates this pattern on the
-receiver side to ensure data integrity.
+Hello Kees,
 
-Suggested-by: Stanislav Fomichev <sdf@fomichev.me>
-Signed-off-by: Mina Almasry <almasrymina@google.com>
+Thanks for your input.
 
----
+Alejandro has addressed all the other changes except for the removal
+of BUILD_BUG_ON(). I have a question regarding this: if we're using it
+to avoid truncation, why not write it like this?
 
-v22:
-- Add run_command helper. It reduces boiler plate and prints the
-  commands it is running.
+    BUILD_BUG_ON(sizeof(buf) < TASK_COMM_LEN);
 
-v20:
-- Remove unnecessary sleep(1)
-- Add test to ensure dmabuf binding fails if header split is disabled.
+This way, it ensures that the size is at least as large as TASK_COMM_LEN.
 
-v19:
-- Check return code of ethtool commands.
-- Add test for deactivating mp bound rx queues
-- Add test for attempting to bind with missing netlink attributes.
-
-v16:
-- Remove outdated -n option (Taehee).
-- Use 'ifname' instead of accidentally hardcoded 'eth1'. (Taehee)
-- Remove dead code 'iterations' (Taehee).
-- Use if_nametoindex() instead of passing device index (Taehee).
-
-v15:
-- Fix linking against libynl. (Jakub)
-
-v9: https://lore.kernel.org/netdev/20240403002053.2376017-15-almasrymina@google.com/
-- Remove unused nic_pci_addr entry (Cong).
-
-v6:
-- Updated to bind 8 queues.
-- Added RSS configuration.
-- Added some more tests for the netlink API.
-
-Changes in v1:
-- Many more general cleanups (Willem).
-- Removed driver reset (Jakub).
-- Removed hardcoded if index (Paolo).
-
-RFC v2:
-- General cleanups (Willem).
-
----
- tools/testing/selftests/net/.gitignore |   1 +
- tools/testing/selftests/net/Makefile   |   9 +
- tools/testing/selftests/net/ncdevmem.c | 570 +++++++++++++++++++++++++
- 3 files changed, 580 insertions(+)
- create mode 100644 tools/testing/selftests/net/ncdevmem.c
-
-diff --git a/tools/testing/selftests/net/.gitignore b/tools/testing/selftests/net/.gitignore
-index 666ab7d9390b..fe770903118c 100644
---- a/tools/testing/selftests/net/.gitignore
-+++ b/tools/testing/selftests/net/.gitignore
-@@ -17,6 +17,7 @@ ipv6_flowlabel
- ipv6_flowlabel_mgr
- log.txt
- msg_zerocopy
-+ncdevmem
- nettest
- psock_fanout
- psock_snd
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index 8eaffd7a641c..e4708975ef42 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -95,6 +95,11 @@ TEST_PROGS += fq_band_pktlimit.sh
- TEST_PROGS += vlan_hw_filter.sh
- TEST_PROGS += bpf_offload.py
- 
-+# YNL files, must be before "include ..lib.mk"
-+EXTRA_CLEAN += $(OUTPUT)/libynl.a
-+YNL_GEN_FILES := ncdevmem
-+TEST_GEN_FILES += $(YNL_GEN_FILES)
-+
- TEST_FILES := settings
- TEST_FILES += in_netns.sh lib.sh net_helper.sh setup_loopback.sh setup_veth.sh
- 
-@@ -104,6 +109,10 @@ TEST_INCLUDES := forwarding/lib.sh
- 
- include ../lib.mk
- 
-+# YNL build
-+YNL_GENS := netdev
-+include ynl.mk
-+
- $(OUTPUT)/epoll_busy_poll: LDLIBS += -lcap
- $(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
- $(OUTPUT)/tcp_mmap: LDLIBS += -lpthread -lcrypto
-diff --git a/tools/testing/selftests/net/ncdevmem.c b/tools/testing/selftests/net/ncdevmem.c
-new file mode 100644
-index 000000000000..64d6805381c5
---- /dev/null
-+++ b/tools/testing/selftests/net/ncdevmem.c
-@@ -0,0 +1,570 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#define __EXPORTED_HEADERS__
-+
-+#include <linux/uio.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <stdbool.h>
-+#include <string.h>
-+#include <errno.h>
-+#define __iovec_defined
-+#include <fcntl.h>
-+#include <malloc.h>
-+#include <error.h>
-+
-+#include <arpa/inet.h>
-+#include <sys/socket.h>
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+#include <sys/syscall.h>
-+
-+#include <linux/memfd.h>
-+#include <linux/dma-buf.h>
-+#include <linux/udmabuf.h>
-+#include <libmnl/libmnl.h>
-+#include <linux/types.h>
-+#include <linux/netlink.h>
-+#include <linux/genetlink.h>
-+#include <linux/netdev.h>
-+#include <time.h>
-+#include <net/if.h>
-+
-+#include "netdev-user.h"
-+#include <ynl.h>
-+
-+#define PAGE_SHIFT 12
-+#define TEST_PREFIX "ncdevmem"
-+#define NUM_PAGES 16000
-+
-+#ifndef MSG_SOCK_DEVMEM
-+#define MSG_SOCK_DEVMEM 0x2000000
-+#endif
-+
-+/*
-+ * tcpdevmem netcat. Works similarly to netcat but does device memory TCP
-+ * instead of regular TCP. Uses udmabuf to mock a dmabuf provider.
-+ *
-+ * Usage:
-+ *
-+ *	On server:
-+ *	ncdevmem -s <server IP> -c <client IP> -f eth1 -l -p 5201 -v 7
-+ *
-+ *	On client:
-+ *	yes $(echo -e \\x01\\x02\\x03\\x04\\x05\\x06) | \
-+ *		tr \\n \\0 | \
-+ *		head -c 5G | \
-+ *		nc <server IP> 5201 -p 5201
-+ *
-+ * Note this is compatible with regular netcat. i.e. the sender or receiver can
-+ * be replaced with regular netcat to test the RX or TX path in isolation.
-+ */
-+
-+static char *server_ip = "192.168.1.4";
-+static char *client_ip = "192.168.1.2";
-+static char *port = "5201";
-+static size_t do_validation;
-+static int start_queue = 8;
-+static int num_queues = 8;
-+static char *ifname = "eth1";
-+static unsigned int ifindex;
-+static unsigned int dmabuf_id;
-+
-+void print_bytes(void *ptr, size_t size)
-+{
-+	unsigned char *p = ptr;
-+	int i;
-+
-+	for (i = 0; i < size; i++)
-+		printf("%02hhX ", p[i]);
-+	printf("\n");
-+}
-+
-+void print_nonzero_bytes(void *ptr, size_t size)
-+{
-+	unsigned char *p = ptr;
-+	unsigned int i;
-+
-+	for (i = 0; i < size; i++)
-+		putchar(p[i]);
-+	printf("\n");
-+}
-+
-+void validate_buffer(void *line, size_t size)
-+{
-+	static unsigned char seed = 1;
-+	unsigned char *ptr = line;
-+	int errors = 0;
-+	size_t i;
-+
-+	for (i = 0; i < size; i++) {
-+		if (ptr[i] != seed) {
-+			fprintf(stderr,
-+				"Failed validation: expected=%u, actual=%u, index=%lu\n",
-+				seed, ptr[i], i);
-+			errors++;
-+			if (errors > 20)
-+				error(1, 0, "validation failed.");
-+		}
-+		seed++;
-+		if (seed == do_validation)
-+			seed = 0;
-+	}
-+
-+	fprintf(stdout, "Validated buffer\n");
-+}
-+
-+#define run_command(cmd, ...)                                           \
-+	({                                                              \
-+		char command[256];                                      \
-+		memset(command, 0, sizeof(command));                    \
-+		snprintf(command, sizeof(command), cmd, ##__VA_ARGS__); \
-+		printf("Running: %s\n", command);                       \
-+		system(command);                                        \
-+	})
-+
-+static int reset_flow_steering(void)
-+{
-+	int ret = 0;
-+
-+	ret = run_command("sudo ethtool -K %s ntuple off", ifname);
-+	if (ret)
-+		return ret;
-+
-+	return run_command("sudo ethtool -K %s ntuple on", ifname);
-+}
-+
-+static int configure_headersplit(bool on)
-+{
-+	return run_command("sudo ethtool -G %s tcp-data-split %s", ifname,
-+			   on ? "on" : "off");
-+}
-+
-+static int configure_rss(void)
-+{
-+	return run_command("sudo ethtool -X %s equal %d", ifname, start_queue);
-+}
-+
-+static int configure_channels(unsigned int rx, unsigned int tx)
-+{
-+	return run_command("sudo ethtool -L %s rx %u tx %u", ifname, rx, tx);
-+}
-+
-+static int configure_flow_steering(void)
-+{
-+	return run_command("sudo ethtool -N %s flow-type tcp4 src-ip %s dst-ip %s src-port %s dst-port %s queue %d",
-+			   ifname, client_ip, server_ip, port, port, start_queue);
-+}
-+
-+static int bind_rx_queue(unsigned int ifindex, unsigned int dmabuf_fd,
-+			 struct netdev_queue_id *queues,
-+			 unsigned int n_queue_index, struct ynl_sock **ys)
-+{
-+	struct netdev_bind_rx_req *req = NULL;
-+	struct netdev_bind_rx_rsp *rsp = NULL;
-+	struct ynl_error yerr;
-+
-+	*ys = ynl_sock_create(&ynl_netdev_family, &yerr);
-+	if (!*ys) {
-+		fprintf(stderr, "YNL: %s\n", yerr.msg);
-+		return -1;
-+	}
-+
-+	req = netdev_bind_rx_req_alloc();
-+	netdev_bind_rx_req_set_ifindex(req, ifindex);
-+	netdev_bind_rx_req_set_fd(req, dmabuf_fd);
-+	__netdev_bind_rx_req_set_queues(req, queues, n_queue_index);
-+
-+	rsp = netdev_bind_rx(*ys, req);
-+	if (!rsp) {
-+		perror("netdev_bind_rx");
-+		goto err_close;
-+	}
-+
-+	if (!rsp->_present.id) {
-+		perror("id not present");
-+		goto err_close;
-+	}
-+
-+	printf("got dmabuf id=%d\n", rsp->id);
-+	dmabuf_id = rsp->id;
-+
-+	netdev_bind_rx_req_free(req);
-+	netdev_bind_rx_rsp_free(rsp);
-+
-+	return 0;
-+
-+err_close:
-+	fprintf(stderr, "YNL failed: %s\n", (*ys)->err.msg);
-+	netdev_bind_rx_req_free(req);
-+	ynl_sock_destroy(*ys);
-+	return -1;
-+}
-+
-+static void create_udmabuf(int *devfd, int *memfd, int *buf, size_t dmabuf_size)
-+{
-+	struct udmabuf_create create;
-+	int ret;
-+
-+	*devfd = open("/dev/udmabuf", O_RDWR);
-+	if (*devfd < 0) {
-+		error(70, 0,
-+		      "%s: [skip,no-udmabuf: Unable to access DMA buffer device file]\n",
-+		      TEST_PREFIX);
-+	}
-+
-+	*memfd = memfd_create("udmabuf-test", MFD_ALLOW_SEALING);
-+	if (*memfd < 0)
-+		error(70, 0, "%s: [skip,no-memfd]\n", TEST_PREFIX);
-+
-+	/* Required for udmabuf */
-+	ret = fcntl(*memfd, F_ADD_SEALS, F_SEAL_SHRINK);
-+	if (ret < 0)
-+		error(73, 0, "%s: [skip,fcntl-add-seals]\n", TEST_PREFIX);
-+
-+	ret = ftruncate(*memfd, dmabuf_size);
-+	if (ret == -1)
-+		error(74, 0, "%s: [FAIL,memfd-truncate]\n", TEST_PREFIX);
-+
-+	memset(&create, 0, sizeof(create));
-+
-+	create.memfd = *memfd;
-+	create.offset = 0;
-+	create.size = dmabuf_size;
-+	*buf = ioctl(*devfd, UDMABUF_CREATE, &create);
-+	if (*buf < 0)
-+		error(75, 0, "%s: [FAIL, create udmabuf]\n", TEST_PREFIX);
-+}
-+
-+int do_server(void)
-+{
-+	char ctrl_data[sizeof(int) * 20000];
-+	struct netdev_queue_id *queues;
-+	size_t non_page_aligned_frags = 0;
-+	struct sockaddr_in client_addr;
-+	struct sockaddr_in server_sin;
-+	size_t page_aligned_frags = 0;
-+	int devfd, memfd, buf, ret;
-+	size_t total_received = 0;
-+	socklen_t client_addr_len;
-+	bool is_devmem = false;
-+	char *buf_mem = NULL;
-+	struct ynl_sock *ys;
-+	size_t dmabuf_size;
-+	char iobuf[819200];
-+	char buffer[256];
-+	int socket_fd;
-+	int client_fd;
-+	size_t i = 0;
-+	int opt = 1;
-+
-+	dmabuf_size = getpagesize() * NUM_PAGES;
-+
-+	create_udmabuf(&devfd, &memfd, &buf, dmabuf_size);
-+
-+	if (reset_flow_steering())
-+		error(1, 0, "Failed to reset flow steering\n");
-+
-+	/* Configure RSS to divert all traffic from our devmem queues */
-+	if (configure_rss())
-+		error(1, 0, "Failed to configure rss\n");
-+
-+	/* Flow steer our devmem flows to start_queue */
-+	if (configure_flow_steering())
-+		error(1, 0, "Failed to configure flow steering\n");
-+
-+	sleep(1);
-+
-+	queues = malloc(sizeof(*queues) * num_queues);
-+
-+	for (i = 0; i < num_queues; i++) {
-+		queues[i]._present.type = 1;
-+		queues[i]._present.id = 1;
-+		queues[i].type = NETDEV_QUEUE_TYPE_RX;
-+		queues[i].id = start_queue + i;
-+	}
-+
-+	if (bind_rx_queue(ifindex, buf, queues, num_queues, &ys))
-+		error(1, 0, "Failed to bind\n");
-+
-+	buf_mem = mmap(NULL, dmabuf_size, PROT_READ | PROT_WRITE, MAP_SHARED,
-+		       buf, 0);
-+	if (buf_mem == MAP_FAILED)
-+		error(1, 0, "mmap()");
-+
-+	server_sin.sin_family = AF_INET;
-+	server_sin.sin_port = htons(atoi(port));
-+
-+	ret = inet_pton(server_sin.sin_family, server_ip, &server_sin.sin_addr);
-+	if (socket < 0)
-+		error(79, 0, "%s: [FAIL, create socket]\n", TEST_PREFIX);
-+
-+	socket_fd = socket(server_sin.sin_family, SOCK_STREAM, 0);
-+	if (socket < 0)
-+		error(errno, errno, "%s: [FAIL, create socket]\n", TEST_PREFIX);
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_REUSEPORT, &opt,
-+			 sizeof(opt));
-+	if (ret)
-+		error(errno, errno, "%s: [FAIL, set sock opt]\n", TEST_PREFIX);
-+
-+	ret = setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt,
-+			 sizeof(opt));
-+	if (ret)
-+		error(errno, errno, "%s: [FAIL, set sock opt]\n", TEST_PREFIX);
-+
-+	printf("binding to address %s:%d\n", server_ip,
-+	       ntohs(server_sin.sin_port));
-+
-+	ret = bind(socket_fd, &server_sin, sizeof(server_sin));
-+	if (ret)
-+		error(errno, errno, "%s: [FAIL, bind]\n", TEST_PREFIX);
-+
-+	ret = listen(socket_fd, 1);
-+	if (ret)
-+		error(errno, errno, "%s: [FAIL, listen]\n", TEST_PREFIX);
-+
-+	client_addr_len = sizeof(client_addr);
-+
-+	inet_ntop(server_sin.sin_family, &server_sin.sin_addr, buffer,
-+		  sizeof(buffer));
-+	printf("Waiting or connection on %s:%d\n", buffer,
-+	       ntohs(server_sin.sin_port));
-+	client_fd = accept(socket_fd, &client_addr, &client_addr_len);
-+
-+	inet_ntop(client_addr.sin_family, &client_addr.sin_addr, buffer,
-+		  sizeof(buffer));
-+	printf("Got connection from %s:%d\n", buffer,
-+	       ntohs(client_addr.sin_port));
-+
-+	while (1) {
-+		struct iovec iov = { .iov_base = iobuf,
-+				     .iov_len = sizeof(iobuf) };
-+		struct dmabuf_cmsg *dmabuf_cmsg = NULL;
-+		struct dma_buf_sync sync = { 0 };
-+		struct cmsghdr *cm = NULL;
-+		struct msghdr msg = { 0 };
-+		struct dmabuf_token token;
-+		ssize_t ret;
-+
-+		is_devmem = false;
-+		printf("\n\n");
-+
-+		msg.msg_iov = &iov;
-+		msg.msg_iovlen = 1;
-+		msg.msg_control = ctrl_data;
-+		msg.msg_controllen = sizeof(ctrl_data);
-+		ret = recvmsg(client_fd, &msg, MSG_SOCK_DEVMEM);
-+		printf("recvmsg ret=%ld\n", ret);
-+		if (ret < 0 && (errno == EAGAIN || errno == EWOULDBLOCK))
-+			continue;
-+		if (ret < 0) {
-+			perror("recvmsg");
-+			continue;
-+		}
-+		if (ret == 0) {
-+			printf("client exited\n");
-+			goto cleanup;
-+		}
-+
-+		i++;
-+		for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
-+			if (cm->cmsg_level != SOL_SOCKET ||
-+			    (cm->cmsg_type != SCM_DEVMEM_DMABUF &&
-+			     cm->cmsg_type != SCM_DEVMEM_LINEAR)) {
-+				fprintf(stdout, "skipping non-devmem cmsg\n");
-+				continue;
-+			}
-+
-+			dmabuf_cmsg = (struct dmabuf_cmsg *)CMSG_DATA(cm);
-+			is_devmem = true;
-+
-+			if (cm->cmsg_type == SCM_DEVMEM_LINEAR) {
-+				/* TODO: process data copied from skb's linear
-+				 * buffer.
-+				 */
-+				fprintf(stdout,
-+					"SCM_DEVMEM_LINEAR. dmabuf_cmsg->frag_size=%u\n",
-+					dmabuf_cmsg->frag_size);
-+
-+				continue;
-+			}
-+
-+			token.token_start = dmabuf_cmsg->frag_token;
-+			token.token_count = 1;
-+
-+			total_received += dmabuf_cmsg->frag_size;
-+			printf("received frag_page=%llu, in_page_offset=%llu, frag_offset=%llu, frag_size=%u, token=%u, total_received=%lu, dmabuf_id=%u\n",
-+			       dmabuf_cmsg->frag_offset >> PAGE_SHIFT,
-+			       dmabuf_cmsg->frag_offset % getpagesize(),
-+			       dmabuf_cmsg->frag_offset, dmabuf_cmsg->frag_size,
-+			       dmabuf_cmsg->frag_token, total_received,
-+			       dmabuf_cmsg->dmabuf_id);
-+
-+			if (dmabuf_cmsg->dmabuf_id != dmabuf_id)
-+				error(1, 0,
-+				      "received on wrong dmabuf_id: flow steering error\n");
-+
-+			if (dmabuf_cmsg->frag_size % getpagesize())
-+				non_page_aligned_frags++;
-+			else
-+				page_aligned_frags++;
-+
-+			sync.flags = DMA_BUF_SYNC_READ | DMA_BUF_SYNC_START;
-+			ioctl(buf, DMA_BUF_IOCTL_SYNC, &sync);
-+
-+			if (do_validation)
-+				validate_buffer(
-+					((unsigned char *)buf_mem) +
-+						dmabuf_cmsg->frag_offset,
-+					dmabuf_cmsg->frag_size);
-+			else
-+				print_nonzero_bytes(
-+					((unsigned char *)buf_mem) +
-+						dmabuf_cmsg->frag_offset,
-+					dmabuf_cmsg->frag_size);
-+
-+			sync.flags = DMA_BUF_SYNC_READ | DMA_BUF_SYNC_END;
-+			ioctl(buf, DMA_BUF_IOCTL_SYNC, &sync);
-+
-+			ret = setsockopt(client_fd, SOL_SOCKET,
-+					 SO_DEVMEM_DONTNEED, &token,
-+					 sizeof(token));
-+			if (ret != 1)
-+				error(1, 0,
-+				      "SO_DEVMEM_DONTNEED not enough tokens");
-+		}
-+		if (!is_devmem)
-+			error(1, 0, "flow steering error\n");
-+
-+		printf("total_received=%lu\n", total_received);
-+	}
-+
-+	fprintf(stdout, "%s: ok\n", TEST_PREFIX);
-+
-+	fprintf(stdout, "page_aligned_frags=%lu, non_page_aligned_frags=%lu\n",
-+		page_aligned_frags, non_page_aligned_frags);
-+
-+	fprintf(stdout, "page_aligned_frags=%lu, non_page_aligned_frags=%lu\n",
-+		page_aligned_frags, non_page_aligned_frags);
-+
-+cleanup:
-+
-+	munmap(buf_mem, dmabuf_size);
-+	close(client_fd);
-+	close(socket_fd);
-+	close(buf);
-+	close(memfd);
-+	close(devfd);
-+	ynl_sock_destroy(ys);
-+
-+	return 0;
-+}
-+
-+void run_devmem_tests(void)
-+{
-+	struct netdev_queue_id *queues;
-+	int devfd, memfd, buf;
-+	struct ynl_sock *ys;
-+	size_t dmabuf_size;
-+	size_t i = 0;
-+
-+	dmabuf_size = getpagesize() * NUM_PAGES;
-+
-+	create_udmabuf(&devfd, &memfd, &buf, dmabuf_size);
-+
-+	/* Configure RSS to divert all traffic from our devmem queues */
-+	if (configure_rss())
-+		error(1, 0, "rss error\n");
-+
-+	queues = calloc(num_queues, sizeof(*queues));
-+
-+	if (configure_headersplit(1))
-+		error(1, 0, "Failed to configure header split\n");
-+
-+	if (!bind_rx_queue(ifindex, buf, queues, num_queues, &ys))
-+		error(1, 0, "Binding empty queues array should have failed\n");
-+
-+	for (i = 0; i < num_queues; i++) {
-+		queues[i]._present.type = 1;
-+		queues[i]._present.id = 1;
-+		queues[i].type = NETDEV_QUEUE_TYPE_RX;
-+		queues[i].id = start_queue + i;
-+	}
-+
-+	if (configure_headersplit(0))
-+		error(1, 0, "Failed to configure header split\n");
-+
-+	if (!bind_rx_queue(ifindex, buf, queues, num_queues, &ys))
-+		error(1, 0, "Configure dmabuf with header split off should have failed\n");
-+
-+	if (configure_headersplit(1))
-+		error(1, 0, "Failed to configure header split\n");
-+
-+	for (i = 0; i < num_queues; i++) {
-+		queues[i]._present.type = 1;
-+		queues[i]._present.id = 1;
-+		queues[i].type = NETDEV_QUEUE_TYPE_RX;
-+		queues[i].id = start_queue + i;
-+	}
-+
-+	if (bind_rx_queue(ifindex, buf, queues, num_queues, &ys))
-+		error(1, 0, "Failed to bind\n");
-+
-+	/* Deactivating a bound queue should not be legal */
-+	if (!configure_channels(num_queues, num_queues - 1))
-+		error(1, 0, "Deactivating a bound queue should be illegal.\n");
-+
-+	/* Closing the netlink socket does an implicit unbind */
-+	ynl_sock_destroy(ys);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int is_server = 0, opt;
-+
-+	while ((opt = getopt(argc, argv, "ls:c:p:v:q:t:f:")) != -1) {
-+		switch (opt) {
-+		case 'l':
-+			is_server = 1;
-+			break;
-+		case 's':
-+			server_ip = optarg;
-+			break;
-+		case 'c':
-+			client_ip = optarg;
-+			break;
-+		case 'p':
-+			port = optarg;
-+			break;
-+		case 'v':
-+			do_validation = atoll(optarg);
-+			break;
-+		case 'q':
-+			num_queues = atoi(optarg);
-+			break;
-+		case 't':
-+			start_queue = atoi(optarg);
-+			break;
-+		case 'f':
-+			ifname = optarg;
-+			break;
-+		case '?':
-+			printf("unknown option: %c\n", optopt);
-+			break;
-+		}
-+	}
-+
-+	ifindex = if_nametoindex(ifname);
-+
-+	for (; optind < argc; optind++)
-+		printf("extra arguments: %s\n", argv[optind]);
-+
-+	run_devmem_tests();
-+
-+	if (is_server)
-+		return do_server();
-+
-+	return 0;
-+}
--- 
-2.46.0.469.g59c65b2a67-goog
-
+--
+Regards
+Yafang
