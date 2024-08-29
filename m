@@ -1,246 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2FB1BB6A3;
-	Thu, 29 Aug 2024 18:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCB814C59C;
+	Thu, 29 Aug 2024 18:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724956693; cv=none; b=bhnFXdXpk/059jwWFwn2vWnktnxJakwp5J4ZX0B5pdudR0NhtcYUwURiQv9NmInFuaD/dQhxjNXa31T4+bwE78vx4Qs2lg0jZueU5O0KBaoaMsWl3Uxu16hCm5ReXlB1b+kt4EeXvnQE61fyRjUHriTX+f+BZQ95EOKxWu7MGXs=
+	t=1724957435; cv=none; b=Ga2oJcVkgizxrba5s7l4cjJNagvRNi0hPyw0xcF19iswrGCQDHgAQ+iRImSGkP5z/xm4WuyE8XzOUFNPZj91/yOINphJ3vX43SYBVgZATpdYMJgF+OatoGllimWjRpCb5uOqWRa9WrQUxP6x1QUT2kEfL9E1uYX8jTtI32s/oyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724956693; c=relaxed/simple;
-	bh=Jv6KT2UGgAmwIKABURNXs74b2nTjkVTPbA6PDUOU5nQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HLaI38mFbHsUnl2H0VzwfDs3gO3XLyloSOj2N0fG1GCnFaQp0SQW9gaCIaRNCzPtdyDB01fbYUtsBjBcJ8PDU9BSjsK27iqBsiblKxpPLuKMCDAniBDJDyaXYiV7xRpW9ZbeMfUhmjQrMnjHESUPUHOfqMcUrSkMxK0btdoafyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QnKvJP4g; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QnKvJP4g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D088C4CEC1;
-	Thu, 29 Aug 2024 18:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724956692;
-	bh=Jv6KT2UGgAmwIKABURNXs74b2nTjkVTPbA6PDUOU5nQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QnKvJP4gt4bTiecXgx46lcFCCvdZn8AOYqSJkL7xF8R8HkS8GsKEcPk0Eva0855YG
-	 z6Jd28llajhOMKffsONc8T9IUvkosxd4J69TVk0JuQ1I+7As0u/pRnq5gJbTBzi+U0
-	 R+vHEuvTrFugTc+jD/Wry/pQGr/N3hzYPuduFcXn5moFYNmeuU6hIWbdktcP1O9/VZ
-	 F7cx3tZAKHOgEdAT3g0OrXtoqJQQh9HzqlFioNyVCh8AIFehHlJPvDtStRjhBgXE7c
-	 lDHpr11rkId9QOD5/3IAKTCWeB5V45KQ9Rohmooo4r2vZvd+1Qs2xuwpArgVVsnxUQ
-	 a6zswlYT80YaQ==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	oleg@redhat.com
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	paulmck@kernel.org,
-	willy@infradead.org,
-	surenb@google.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v4 8/8] uprobes: switch to RCU Tasks Trace flavor for better performance
-Date: Thu, 29 Aug 2024 11:37:41 -0700
-Message-ID: <20240829183741.3331213-9-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240829183741.3331213-1-andrii@kernel.org>
-References: <20240829183741.3331213-1-andrii@kernel.org>
+	s=arc-20240116; t=1724957435; c=relaxed/simple;
+	bh=Qvvdt8As0tj94WcYrAFQF5qmE5TlgptVt/D8ZJGXxjc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kWHURlPvjDKS+y4vgGOoO1b5rOvQcbgzwjc52ReH1Atn+MQloGRSQVmaj9tBzUC58zqZ57IYl/oHSg+sqzbyZvy83ft1UD9n8/wWrtrc9AHrI6ifFWE/KvgNHLhFP5VAJp5MaGezZialTjdnWUdyFw3AVWSbJ8+ZPRlTEKKxTSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Wvr2G19nBz9sS8;
+	Thu, 29 Aug 2024 20:50:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Xnbi20xoF7or; Thu, 29 Aug 2024 20:50:30 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Wvr2G0DSsz9sRs;
+	Thu, 29 Aug 2024 20:50:30 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E7E898B794;
+	Thu, 29 Aug 2024 20:50:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 3gsZv-SyUxEW; Thu, 29 Aug 2024 20:50:29 +0200 (CEST)
+Received: from [192.168.234.66] (unknown [192.168.234.66])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id A97138B764;
+	Thu, 29 Aug 2024 20:50:28 +0200 (CEST)
+Message-ID: <eb7fdc6b-889f-4934-814f-f0572f4b089a@csgroup.eu>
+Date: Thu, 29 Aug 2024 20:50:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>, Eric Biggers <ebiggers@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Theodore Ts'o <tytso@mit.edu>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, shuah <shuah@kernel.org>,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20240827180819.GB2049@sol.localdomain>
+ <20240827225330.GC29862@gate.crashing.org> <Zs8HirKLk-SrwTIu@zx2c4.com>
+ <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com>
+ <20240828124519.GE29862@gate.crashing.org>
+ <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
+ <20240828162025.GG29862@gate.crashing.org>
+ <CAMj1kXHZPfr2Sz78UrgsdX-2uBp0D1sCnznQnz5ZyMdiJq6rAA@mail.gmail.com>
+ <20240828172538.GI29862@gate.crashing.org>
+ <e5a36d98-c880-4d33-954a-2a05240ef02f@csgroup.eu>
+ <20240829180241.GJ29862@gate.crashing.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20240829180241.GJ29862@gate.crashing.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
-is optimized for more lightweight and quick readers (at the expense of
-slower writers, which for uprobes is a fine tradeof) and has better
-performance and scalability with number of CPUs.
 
-Similarly to baseline vs SRCU, we've benchmarked SRCU-based
-implementation vs RCU Tasks Trace implementation.
 
-SRCU
-====
-uprobe-nop      ( 1 cpus):    3.276 ± 0.005M/s  (  3.276M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.125 ± 0.002M/s  (  2.063M/s/cpu)
-uprobe-nop      ( 4 cpus):    7.713 ± 0.002M/s  (  1.928M/s/cpu)
-uprobe-nop      ( 8 cpus):    8.097 ± 0.006M/s  (  1.012M/s/cpu)
-uprobe-nop      (16 cpus):    6.501 ± 0.056M/s  (  0.406M/s/cpu)
-uprobe-nop      (32 cpus):    4.398 ± 0.084M/s  (  0.137M/s/cpu)
-uprobe-nop      (64 cpus):    6.452 ± 0.000M/s  (  0.101M/s/cpu)
+Le 29/08/2024 à 20:02, Segher Boessenkool a écrit :
+> On Thu, Aug 29, 2024 at 07:36:38PM +0200, Christophe Leroy wrote:
+>>
+>>
+>> Le 28/08/2024 à 19:25, Segher Boessenkool a écrit :
+>>>
+>>>> Not sure about static binaries, though: do those even use the VDSO?
+>>>
+>>> With "static binary" people usually mean "a binary not using any DSOs",
+>>> I think the VDSO is a DSO, also in this respect?  As always, -static
+>>> builds are *way* less problematic (and faster and smaller :-) )
+>>>
+>>
+>> AFAIK on powerpc even static binaries use the vDSO, otherwise signals
+>> don't work.
+> 
+> How can that work?  Non-dynamic binaries do not use ld.so (that is the
+> definition of a dynamic binary, even).  So they cannot link (at runtime)
+> to any DSO (unless that is done manually?!)
+> 
+> Maybe there is something at a fixed offset in the vDSO, or something
+> like that?  Is this documented somewhere?
+> 
 
-uretprobe-nop   ( 1 cpus):    2.055 ± 0.001M/s  (  2.055M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.677 ± 0.000M/s  (  1.339M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.561 ± 0.003M/s  (  1.140M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.291 ± 0.002M/s  (  0.661M/s/cpu)
-uretprobe-nop   (16 cpus):    5.065 ± 0.019M/s  (  0.317M/s/cpu)
-uretprobe-nop   (32 cpus):    3.622 ± 0.003M/s  (  0.113M/s/cpu)
-uretprobe-nop   (64 cpus):    3.723 ± 0.002M/s  (  0.058M/s/cpu)
-
-RCU Tasks Trace
-===============
-uprobe-nop      ( 1 cpus):    3.396 ± 0.002M/s  (  3.396M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.271 ± 0.006M/s  (  2.135M/s/cpu)
-uprobe-nop      ( 4 cpus):    8.499 ± 0.015M/s  (  2.125M/s/cpu)
-uprobe-nop      ( 8 cpus):   10.355 ± 0.028M/s  (  1.294M/s/cpu)
-uprobe-nop      (16 cpus):    7.615 ± 0.099M/s  (  0.476M/s/cpu)
-uprobe-nop      (32 cpus):    4.430 ± 0.007M/s  (  0.138M/s/cpu)
-uprobe-nop      (64 cpus):    6.887 ± 0.020M/s  (  0.108M/s/cpu)
-
-uretprobe-nop   ( 1 cpus):    2.174 ± 0.001M/s  (  2.174M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.853 ± 0.001M/s  (  1.426M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.913 ± 0.002M/s  (  1.228M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.883 ± 0.002M/s  (  0.735M/s/cpu)
-uretprobe-nop   (16 cpus):    5.147 ± 0.001M/s  (  0.322M/s/cpu)
-uretprobe-nop   (32 cpus):    3.738 ± 0.008M/s  (  0.117M/s/cpu)
-uretprobe-nop   (64 cpus):    4.397 ± 0.002M/s  (  0.069M/s/cpu)
-
-Peak throughput for uprobes increases from 8 mln/s to 10.3 mln/s
-(+28%!), and for uretprobes from 5.3 mln/s to 5.8 mln/s (+11%), as we
-have more work to do on uretprobes side.
-
-Even single-thread (no contention) performance is slightly better: 3.276
-mln/s to 3.396 mln/s (+3.5%) for uprobes, and 2.055 mln/s to 2.174 mln/s
-(+5.8%) for uretprobes.
-
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- kernel/events/uprobes.c | 37 +++++++++++++++----------------------
- 1 file changed, 15 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 8a464cf38127..a5d39cec53d5 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -42,8 +42,6 @@ static struct rb_root uprobes_tree = RB_ROOT;
- static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
- 
--DEFINE_STATIC_SRCU(uprobes_srcu);
--
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
- static struct mutex uprobes_mmap_mutex[UPROBES_HASH_SZ];
-@@ -652,7 +650,7 @@ static void put_uprobe(struct uprobe *uprobe)
- 	delayed_uprobe_remove(uprobe, NULL);
- 	mutex_unlock(&delayed_uprobe_lock);
- 
--	call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
-+	call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
- }
- 
- static __always_inline
-@@ -707,7 +705,7 @@ static struct uprobe *find_uprobe_rcu(struct inode *inode, loff_t offset)
- 	struct rb_node *node;
- 	unsigned int seq;
- 
--	lockdep_assert(srcu_read_lock_held(&uprobes_srcu));
-+	lockdep_assert(rcu_read_lock_trace_held());
- 
- 	do {
- 		seq = read_seqcount_begin(&uprobes_seqcount);
-@@ -935,8 +933,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-@@ -1157,7 +1154,7 @@ void uprobe_unregister_sync(void)
- 	 * unlucky enough caller can free consumer's memory and cause
- 	 * handler_chain() or handle_uretprobe_chain() to do an use-after-free.
- 	 */
--	synchronize_srcu(&uprobes_srcu);
-+	synchronize_rcu_tasks_trace();
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
- 
-@@ -1241,19 +1238,18 @@ EXPORT_SYMBOL_GPL(uprobe_register);
- int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
- {
- 	struct uprobe_consumer *con;
--	int ret = -ENOENT, srcu_idx;
-+	int ret = -ENOENT;
- 
- 	down_write(&uprobe->register_rwsem);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(con, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (con == uc) {
- 			ret = register_for_each_vma(uprobe, add ? uc : NULL);
- 			break;
- 		}
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- 
- 	up_write(&uprobe->register_rwsem);
- 
-@@ -2123,8 +2119,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 
- 	current->utask->auprobe = &uprobe->arch;
- 
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
-@@ -2162,15 +2157,13 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- {
- 	struct uprobe *uprobe = ri->uprobe;
- 	struct uprobe_consumer *uc;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (uc->ret_handler)
- 			uc->ret_handler(uc, ri->func, regs);
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- static struct return_instance *find_next_ret_chain(struct return_instance *ri)
-@@ -2255,13 +2248,13 @@ static void handle_swbp(struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	unsigned long bp_vaddr;
--	int is_swbp, srcu_idx;
-+	int is_swbp;
- 
- 	bp_vaddr = uprobe_get_swbp_addr(regs);
- 	if (bp_vaddr == uprobe_get_trampoline_vaddr())
- 		return uprobe_handle_trampoline(regs);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
-+	rcu_read_lock_trace();
- 
- 	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
- 	if (!uprobe) {
-@@ -2319,7 +2312,7 @@ static void handle_swbp(struct pt_regs *regs)
- 
- out:
- 	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- /*
--- 
-2.43.5
-
+You've got some explanation here : 
+https://github.com/torvalds/linux/blob/master/Documentation/ABI/stable/vdso
