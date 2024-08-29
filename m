@@ -1,40 +1,38 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA0E47A76;
-	Thu, 29 Aug 2024 06:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 472B31370;
+	Thu, 29 Aug 2024 08:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724913197; cv=none; b=p8llBe+Xr1WHyJIiRwA+dcy6e5b2s3RTuT0k9S3DBbvLyl0vcdD/J+lvw5PX0RVNLvpGdCUsd7E7+NlR3NImfqF2qL/ZD3MIvDTQVozRUgbHjtfLlM+I3xAvxBuFmmihedUK9o6FwNXip1gcPRtQ09HH3cvvBmeAya4dtTA+vD4=
+	t=1724921477; cv=none; b=fxBxGKMJY5MJdvoo6fZpjj9cGxVroDN15NtZTa8hnp0mTdkucGUO9roZ6Bg2ZJytD55X6JtnsAwRMXGOtVF0sKtl0OIRafW9K3C/rpbDtasr8YymgzWXJB+uRvT2Yz2vLr3XU4vVSB2mZ4r79zT2qBpiPGbhy79uC9dKKKqS0Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724913197; c=relaxed/simple;
-	bh=mICJpqw5WpEh2dbM6f4jT6a7wPgGFvdiNOGFYgBsOso=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eQHTEfKPj9+D5WIwWtPffxNJV8o2SUsiecEnVMTVqU7bRoa5F6kDQzVZ/Kq4+jJXNce7yJLu1Vq3o4+wizhqioN8iV/YbPhIJVuz7WLtTPdcIcdhikLcyi3VYfhX0enUcQWG4XJPLopuAwyBTxG2wpSgsVlWV3XoAELu7zjPI80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WvWYz21wXz20n5b;
-	Thu, 29 Aug 2024 14:28:23 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8BA5C1A0188;
-	Thu, 29 Aug 2024 14:33:13 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 Aug
- 2024 14:33:13 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <muchun.song@linux.dev>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-mm@kvack.org>, <david@fromorbit.com>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<lihongbo22@huawei.com>
-Subject: [PATCH RESEND v3 1/2] hugetlbfs: support tracepoint
-Date: Thu, 29 Aug 2024 14:41:09 +0800
-Message-ID: <20240829064110.67884-2-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240829064110.67884-1-lihongbo22@huawei.com>
-References: <20240829064110.67884-1-lihongbo22@huawei.com>
+	s=arc-20240116; t=1724921477; c=relaxed/simple;
+	bh=jhkOW35dlGl7U7jDzTXEVJDMWhEEG7w9ttZd2uRTMc8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KxdowfnoF4xBFiJIvsN1DhRtT7+D0uYdfSe+mkeDKigrMWkiQjq4Vspw8quzkXc4xFOKE3k/wsQ9zrChGtx3ViemrryzVccbj+0asHVkKo4G3hTLKMLSmGbZSTH7NzwAl9CQ1meUJod4bx6kVYs8xLizys393k4IPuNpq7jibXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VXi/WQgG; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VXi/WQgG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Fi1Hg
+	pc5bDqBUP91NhQHZLcWi/cOFy8RR+B2mPwpJKY=; b=VXi/WQgGt2kyU0TrAcBmc
+	TTCkpimL7AuT3mj1r4TSJaK7apZhTFc7CITwqhC/h4s7NKRiXU72549WfpTR+Fze
+	WlWLG2iKF20GGsMdO1k8RbNPtwl2lwwhD69VW9VwP8Fdw1HINhWuf4eeHhgVZicw
+	R7w+CElRlHACKQzVNguxIA=
+Received: from localhost.localdomain (unknown [111.48.69.246])
+	by gzga-smtp-mta-g2-3 (Coremail) with SMTP id _____wD3f+dVNtBm+P8vAA--.5552S2;
+	Thu, 29 Aug 2024 16:50:29 +0800 (CST)
+From: Chi Zhiling <chizhiling@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chi Zhiling <chizhiling@kylinos.cn>
+Subject: [PATCH v2] eventfs: fix a null pointer access in eventfs_iterate
+Date: Thu, 29 Aug 2024 16:50:25 +0800
+Message-Id: <20240829085025.3600021-1-chizhiling@163.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,194 +40,123 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+X-CM-TRANSID:_____wD3f+dVNtBm+P8vAA--.5552S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKF4rAryxAw43Xw15GF1ftFb_yoW7CFWUpr
+	WUJr9xKw4xJw42qF12yr1qgr15Xr4kAa17Gr17AFy2k3WkZry3tFy7JFWjyrW3t3y5JryS
+	gF1jkw1rtr1jqaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeoGQUUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/1tbiTx5KnWXAno-TSAABso
 
-Add basic tracepoints for {alloc, evict, free}_inode, setattr and
-fallocate. These can help users to debug hugetlbfs more conveniently.
+From: Chi Zhiling <chizhiling@kylinos.cn>
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+We found a null pointer accessing in tracefs[1], the reason is that
+the variable 'ei_child' is set to LIST_POISON1, that means the list
+was removed in eventfs_remove_rec. so when access the ei_child->is_freed,
+the panic triggered.
+
+the linked list is protected by eventfs_mutex in eventfs_remove_rec,
+so when we access the list of ei_child in eventfs_iterate, we also need
+a mutex_lock in there to avoid eventfs_remove_rec modify the list.
+
+by the way, the following script can reproduce this panic
+
+loop1 (){
+    while true
+    do
+        echo "p:kp submit_bio" > /sys/kernel/debug/tracing/kprobe_events
+        echo "" > /sys/kernel/debug/tracing/kprobe_events
+    done
+}
+loop2 (){
+    while true
+    do
+        tree /sys/kernel/debug/tracing/events/kprobes/
+    done
+}
+loop1 &
+loop2
+
+[1]:
+[ 1147.959632][T17331] Unable to handle kernel paging request at virtual address dead000000000150
+[ 1147.968239][T17331] Mem abort info:
+[ 1147.971739][T17331]   ESR = 0x0000000096000004
+[ 1147.976172][T17331]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 1147.982171][T17331]   SET = 0, FnV = 0
+[ 1147.985906][T17331]   EA = 0, S1PTW = 0
+[ 1147.989734][T17331]   FSC = 0x04: level 0 translation fault
+[ 1147.995292][T17331] Data abort info:
+[ 1147.998858][T17331]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[ 1148.005023][T17331]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 1148.010759][T17331]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 1148.016752][T17331] [dead000000000150] address between user and kernel address ranges
+[ 1148.024571][T17331] Internal error: Oops: 0000000096000004 [#1] SMP
+[ 1148.030825][T17331] Modules linked in: team_mode_loadbalance team nlmon act_gact cls_flower sch_ingress bonding tls macvlan dummy ib_core bridge stp llc veth amdgpu amdxcp mfd_core gpu_sched drm_exec drm_buddy radeon crct10dif_ce video drm_suballoc_helper ghash_ce drm_ttm_helper sha2_ce ttm sha256_arm64 i2c_algo_bit sha1_ce sbsa_gwdt cp210x drm_display_helper cec sr_mod cdrom drm_kms_helper binfmt_misc sg loop fuse drm dm_mod nfnetlink ip_tables autofs4 [last unloaded: tls]
+[ 1148.072808][T17331] CPU: 3 PID: 17331 Comm: ls Tainted: G        W         ------- ----  6.6.43 #2
+[ 1148.081751][T17331] Source Version: 21b3b386e948bedd29369af66f3e98ab01b1c650
+[ 1148.088783][T17331] Hardware name: Greatwall GW-001M1A-FTF/GW-001M1A-FTF, BIOS KunLun BIOS V4.0 07/16/2020
+[ 1148.098419][T17331] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 1148.106060][T17331] pc : eventfs_iterate+0x2c0/0x398
+[ 1148.111017][T17331] lr : eventfs_iterate+0x2fc/0x398
+[ 1148.115969][T17331] sp : ffff80008d56bbd0
+[ 1148.119964][T17331] x29: ffff80008d56bbf0 x28: ffff001ff5be2600 x27: 0000000000000000
+[ 1148.127781][T17331] x26: ffff001ff52ca4e0 x25: 0000000000009977 x24: dead000000000100
+[ 1148.135598][T17331] x23: 0000000000000000 x22: 000000000000000b x21: ffff800082645f10
+[ 1148.143415][T17331] x20: ffff001fddf87c70 x19: ffff80008d56bc90 x18: 0000000000000000
+[ 1148.151231][T17331] x17: 0000000000000000 x16: 0000000000000000 x15: ffff001ff52ca4e0
+[ 1148.159048][T17331] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[ 1148.166864][T17331] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff8000804391d0
+[ 1148.174680][T17331] x8 : 0000000180000000 x7 : 0000000000000018 x6 : 0000aaab04b92862
+[ 1148.182498][T17331] x5 : 0000aaab04b92862 x4 : 0000000080000000 x3 : 0000000000000068
+[ 1148.190314][T17331] x2 : 000000000000000f x1 : 0000000000007ea8 x0 : 0000000000000001
+[ 1148.198131][T17331] Call trace:
+[ 1148.201259][T17331]  eventfs_iterate+0x2c0/0x398
+[ 1148.205864][T17331]  iterate_dir+0x98/0x188
+[ 1148.210036][T17331]  __arm64_sys_getdents64+0x78/0x160
+[ 1148.215161][T17331]  invoke_syscall+0x78/0x108
+[ 1148.219593][T17331]  el0_svc_common.constprop.0+0x48/0xf0
+[ 1148.224977][T17331]  do_el0_svc+0x24/0x38
+[ 1148.228974][T17331]  el0_svc+0x40/0x168
+[ 1148.232798][T17331]  el0t_64_sync_handler+0x120/0x130
+[ 1148.237836][T17331]  el0t_64_sync+0x1a4/0x1a8
+[ 1148.242182][T17331] Code: 54ffff6c f9400676 910006d6 f9000676 (b9405300)
+[ 1148.248955][T17331] ---[ end trace 0000000000000000 ]---
+
+Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
 ---
- MAINTAINERS                      |   1 +
- include/trace/events/hugetlbfs.h | 156 +++++++++++++++++++++++++++++++
- 2 files changed, 157 insertions(+)
- create mode 100644 include/trace/events/hugetlbfs.h
+ fs/tracefs/event_inode.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a70b7c9c3533..f7d90c090961 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10367,6 +10367,7 @@ F:	Documentation/mm/hugetlbfs_reserv.rst
- F:	Documentation/mm/vmemmap_dedup.rst
- F:	fs/hugetlbfs/
- F:	include/linux/hugetlb.h
-+F:	include/trace/events/hugetlbfs.h
- F:	mm/hugetlb.c
- F:	mm/hugetlb_vmemmap.c
- F:	mm/hugetlb_vmemmap.h
-diff --git a/include/trace/events/hugetlbfs.h b/include/trace/events/hugetlbfs.h
-new file mode 100644
-index 000000000000..8331c904a9ba
---- /dev/null
-+++ b/include/trace/events/hugetlbfs.h
-@@ -0,0 +1,156 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM hugetlbfs
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 01e99e98457d..18aae67704dc 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -642,6 +642,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	/* Subtract the skipped entries above */
+ 	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
+ 
++	mutex_lock(&eventfs_mutex);
++	if (ei->is_freed) {
++		mutex_unlock(&eventfs_mutex);
++		goto out;
++	}
 +
-+#if !defined(_TRACE_HUGETLBFS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HUGETLBFS_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(hugetlbfs_alloc_inode,
-+
-+	TP_PROTO(struct inode *inode, struct inode *dir, int mode),
-+
-+	TP_ARGS(inode, dir, mode),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev)
-+		__field(ino_t,		ino)
-+		__field(ino_t,		dir)
-+		__field(__u16,		mode)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->ino		= inode->i_ino;
-+		__entry->dir		= dir->i_ino;
-+		__entry->mode		= mode;
-+	),
-+
-+	TP_printk("dev %d,%d ino %lu dir %lu mode 0%o",
-+		MAJOR(__entry->dev), MINOR(__entry->dev),
-+		(unsigned long) __entry->ino,
-+		(unsigned long) __entry->dir, __entry->mode)
-+);
-+
-+DECLARE_EVENT_CLASS(hugetlbfs__inode,
-+
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev)
-+		__field(ino_t,		ino)
-+		__field(__u16,		mode)
-+		__field(loff_t,		size)
-+		__field(unsigned int,	nlink)
-+		__field(unsigned int,	seals)
-+		__field(blkcnt_t,	blocks)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->ino		= inode->i_ino;
-+		__entry->mode		= inode->i_mode;
-+		__entry->size		= inode->i_size;
-+		__entry->nlink		= inode->i_nlink;
-+		__entry->seals		= HUGETLBFS_I(inode)->seals;
-+		__entry->blocks		= inode->i_blocks;
-+	),
-+
-+	TP_printk("dev %d,%d ino %lu mode 0%o size %lld nlink %u seals %u blocks %llu",
-+		MAJOR(__entry->dev), MINOR(__entry->dev), (unsigned long) __entry->ino,
-+		__entry->mode, __entry->size, __entry->nlink, __entry->seals,
-+		(unsigned long long)__entry->blocks)
-+);
-+
-+DEFINE_EVENT(hugetlbfs__inode, hugetlbfs_evict_inode,
-+
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode)
-+);
-+
-+DEFINE_EVENT(hugetlbfs__inode, hugetlbfs_free_inode,
-+
-+	TP_PROTO(struct inode *inode),
-+
-+	TP_ARGS(inode)
-+);
-+
-+TRACE_EVENT(hugetlbfs_setattr,
-+
-+	TP_PROTO(struct inode *inode, struct dentry *dentry,
-+		struct iattr *attr),
-+
-+	TP_ARGS(inode, dentry, attr),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev)
-+		__field(ino_t,		ino)
-+		__field(unsigned int,	d_len)
-+		__string(d_name,	dentry->d_name.name)
-+		__field(unsigned int,	ia_valid)
-+		__field(unsigned int,	ia_mode)
-+		__field(loff_t,		old_size)
-+		__field(loff_t,		ia_size)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->ino		= inode->i_ino;
-+		__entry->d_len		= dentry->d_name.len;
-+		__assign_str(d_name);
-+		__entry->ia_valid	= attr->ia_valid;
-+		__entry->ia_mode	= attr->ia_mode;
-+		__entry->old_size	= inode->i_size;
-+		__entry->ia_size	= attr->ia_size;
-+	),
-+
-+	TP_printk("dev %d,%d ino %lu name %.*s valid %#x mode 0%o old_size %lld size %lld",
-+		MAJOR(__entry->dev), MINOR(__entry->dev), (unsigned long)__entry->ino,
-+		__entry->d_len, __get_str(d_name), __entry->ia_valid, __entry->ia_mode,
-+		__entry->old_size, __entry->ia_size)
-+);
-+
-+TRACE_EVENT(hugetlbfs_fallocate,
-+
-+	TP_PROTO(struct inode *inode, int mode,
-+		loff_t offset, loff_t len, int ret),
-+
-+	TP_ARGS(inode, mode, offset, len, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(dev_t,		dev)
-+		__field(ino_t,		ino)
-+		__field(int,		mode)
-+		__field(loff_t,		offset)
-+		__field(loff_t,		len)
-+		__field(loff_t,		size)
-+		__field(int,		ret)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->dev		= inode->i_sb->s_dev;
-+		__entry->ino		= inode->i_ino;
-+		__entry->mode		= mode;
-+		__entry->offset		= offset;
-+		__entry->len		= len;
-+		__entry->size		= inode->i_size;
-+		__entry->ret		= ret;
-+	),
-+
-+	TP_printk("dev %d,%d ino %lu mode 0%o offset %lld len %lld size %lld ret %d",
-+		MAJOR(__entry->dev), MINOR(__entry->dev),
-+		(unsigned long)__entry->ino, __entry->mode,
-+		(unsigned long long)__entry->offset,
-+		(unsigned long long)__entry->len,
-+		(unsigned long long)__entry->size,
-+		__entry->ret)
-+);
-+
-+#endif /* _TRACE_HUGETLBFS_H */
-+
-+ /* This part must be outside protection */
-+#include <trace/define_trace.h>
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+ 
+@@ -659,9 +665,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ino = eventfs_dir_ino(ei_child);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
++			mutex_unlock(&eventfs_mutex);
+ 			goto out_dec;
++		}
+ 	}
++	mutex_unlock(&eventfs_mutex);
+ 	ret = 1;
+  out:
+ 	srcu_read_unlock(&eventfs_srcu, idx);
 -- 
-2.34.1
+2.27.0
 
