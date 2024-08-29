@@ -1,204 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0099474;
-	Thu, 29 Aug 2024 00:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F850134B1;
+	Thu, 29 Aug 2024 03:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724891107; cv=none; b=uKy12cj72ZObc5AXxE2CknTLbrALmshn/1xpOh8XvDZ+1x2RqNn8mAtslBUJq6BWkX+AuyuHDmzgvgMBXFE8WnkuifbIbRWPkzLD7c7lArm90iB5ZEIQ+ookc7HYwjU6t68UaatoXdr24QsFt89Rwcd9CCOltEAz7rtq43h8bA4=
+	t=1724901959; cv=none; b=NzAwnsylISlOmENrcDmP9OvgjhXhdpf22hb68/VvKII0riGBC/uaU4uKN28Q1mzf97u2yy58yc4C4/DscEGUbEIRW8VEwp300FVpITT/L3ccBlVF+VqANQj1CxvUll9xbT/zUXP9drlhpOzY1MjL4qQFDUDJdThXLUmo29ONRxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724891107; c=relaxed/simple;
-	bh=nCM8XvqCff53EEr64RnHMSHTUq4K5/SJ/d7fShpXRWA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aeya4sFpWSYXo65Huz9yXThz9K943E000DOU76vXAxhMojMRKC7EQGWm8EY6IgOxM908Achf6eY41dFlivI7chHFlOvOVU0A830s5wiutWxYi7DhV/JMxcwRtNyajp96HUFuQyAh7goBmQbufcILa/8CT6jxlGuntFvWE3JPRqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4lHRAJg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724901959; c=relaxed/simple;
+	bh=MS9rE1wOQliDyBmuA68Nf8zJCx0BNQXFFtXsyLFBKHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IiHNIAB2q6mvEL8iP0y8gveutSwNbFyhs0BQv0LqcfHr6lM0yL1LEkjS7eJWbjupOfiFRS2ErLpCuHyxuiv4hN0xeo0+zYftPhGxeutgZKnFP8wwnkDbZQKdpyBDRyhkQzPosMYoYlJAhwmUNNDnbIjGIV8mfNkTEoCyn48EQjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gej34C0g; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4lHRAJg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C767C4CEC0;
-	Thu, 29 Aug 2024 00:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724891107;
-	bh=nCM8XvqCff53EEr64RnHMSHTUq4K5/SJ/d7fShpXRWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B4lHRAJg6X7XqkRKlrJ+YCiTKqMVqdBCKwXygNvBCntYpT5Vq6fZbbC+Nl0QovgDE
-	 BFcwORztl1ocSysdnEElSTbXDVJQ9CxTFxF+BSpUYXYJtMKiShrT5IEZ1V38H8RA6N
-	 Hf/pEQMJVXY5VRKwDto8lQoZMKdmlkI5keOQcIeRZZGqi8FY16e8TvC2FYJQmAJuYW
-	 yf/9525rDiO7baZJw4ny+zdrGylPp6H1khY2PrsBSc200YRIlkH5k14t2QGtrQI5BA
-	 HkIXGqgoBXNSYKoma2iEL73nWmWUkWMtVdW2JxHb5ffcxRp0a7mDeklktF8oiSQ0S3
-	 MQmp6Wq+CgrJQ==
-Date: Thu, 29 Aug 2024 02:25:00 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, 
-	torvalds@linux-foundation.org, justinstitt@google.com, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matus Jokay <matus.jokay@stuba.sk>, 
-	"Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-Message-ID: <q6xvpwqj7dkgu2cay5mgahscfgdwu2ohzxs7xd3nw3xa622sh4@u35topnxx36b>
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
- <n2fxqs3tekvljezaqpfnwhsmjymch4vb47y744zwmy7urf3flv@zvjtepkem4l7>
- <CALOAHbBAYHjDnKBVw63B8JBFc6U-2RNUX9L=ryA2Gbz7nnJfsQ@mail.gmail.com>
- <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
- <ynrircglkinhherehtjz7woq55te55y4ol4rtxhfh75pvle3d5@uxp5esxt4slq>
- <202408281712.F78440FF@keescook>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gej34C0g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ZXjVE
+	a9Iv9obh5tsUbM1l28kugmzKZBRC0KXkBc+DUo=; b=gej34C0gjTMScD+I4SJyd
+	FYE8jmc9xGBTywAg5Tf8EOX9cAHp0qdorSByW6liVzmpQDUEMzN4PG2wnXU/FAOk
+	Bef5rD5aGxPlYRXjusmQMx1EuLgGVqAOAl54VcpTDC7h8yyOa9TAOHDaujIGKMuF
+	FOqvpO0CB2XmPXk1dD73p0=
+Received: from localhost.localdomain (unknown [111.48.69.246])
+	by gzsmtp5 (Coremail) with SMTP id tCgvCgDnLz0j6s9mte3QAA--.46184S2;
+	Thu, 29 Aug 2024 11:25:24 +0800 (CST)
+From: Chi Zhiling <chizhiling@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chi Zhiling <chizhiling@kylinos.cn>
+Subject: [PATCH] eventfs: fix a null pointer access in eventfs_iterate
+Date: Thu, 29 Aug 2024 11:24:36 +0800
+Message-Id: <20240829032436.2997321-1-chizhiling@163.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o6w5uwkuyqtfps7p"
-Content-Disposition: inline
-In-Reply-To: <202408281712.F78440FF@keescook>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:tCgvCgDnLz0j6s9mte3QAA--.46184S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Ar1kXF47Gr1xWw1kCFWUCFg_yoW7XF13pr
+	WUJr9xKr48Jw42qF1jyr1qgr15Xr4kAa17Jr17AFy2k3Z5Zry7tryUJFWjyrW3t3y5JryS
+	qF1jkw1rtr1UtaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeoGQUUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/xtbBawRKnWV4IBgVhgAAsO
 
+From: Chi Zhiling <chizhiling@kylinos.cn>
 
---o6w5uwkuyqtfps7p
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Yafang Shao <laoar.shao@gmail.com>, akpm@linux-foundation.org, 
-	torvalds@linux-foundation.org, justinstitt@google.com, ebiederm@xmission.com, 
-	alexei.starovoitov@gmail.com, rostedt@goodmis.org, catalin.marinas@arm.com, 
-	penguin-kernel@i-love.sakura.ne.jp, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Matus Jokay <matus.jokay@stuba.sk>, 
-	"Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v8 1/8] Get rid of __get_task_comm()
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-2-laoar.shao@gmail.com>
- <lql4y2nvs3ewadszhmv4m6fnqja4ff4ymuurpidlwvgf4twvru@esnh37a2jxbd>
- <n2fxqs3tekvljezaqpfnwhsmjymch4vb47y744zwmy7urf3flv@zvjtepkem4l7>
- <CALOAHbBAYHjDnKBVw63B8JBFc6U-2RNUX9L=ryA2Gbz7nnJfsQ@mail.gmail.com>
- <7839453E-CA06-430A-A198-92EB906F94D9@kernel.org>
- <ynrircglkinhherehtjz7woq55te55y4ol4rtxhfh75pvle3d5@uxp5esxt4slq>
- <202408281712.F78440FF@keescook>
-MIME-Version: 1.0
-In-Reply-To: <202408281712.F78440FF@keescook>
+We found a null pointer accessing in tracefs[1], the reason is that
+the variable 'ei_child' is set to LIST_POISON1, that means the list
+was removed in eventfs_remove_rec. so when access the ei_child->is_freed,
+the panic triggered.
 
-Hi Kees,
+the linked list is protected by eventfs_mutex in eventfs_remove_rec,
+so when we access the list of ei_child in eventfs_iterate, we also need
+a mutex_lock in there to avoid eventfs_remove_rec modify the list.
 
-On Wed, Aug 28, 2024 at 05:17:55PM GMT, Kees Cook wrote:
-> On Wed, Aug 28, 2024 at 05:09:08PM +0200, Alejandro Colomar wrote:
-> > Hi Kees,
-> >=20
-> > On Wed, Aug 28, 2024 at 06:48:39AM GMT, Kees Cook wrote:
-> >=20
-> > [...]
-> >=20
-> > > >Thank you for your suggestion. How does the following commit log look
-> > > >to you? Does it meet your expectations?
-> > > >
-> > > >    string: Use ARRAY_SIZE() in strscpy()
-> > > >
-> > > >    We can use ARRAY_SIZE() instead to clarify that they are regular=
- characters.
-> > > >
-> > > >    Co-developed-by: Alejandro Colomar <alx@kernel.org>
-> > > >    Signed-off-by: Alejandro Colomar <alx@kernel.org>
-> > > >    Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > > >
-> > > >diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/=
-user.h
-> > > >index bbab79c0c074..07216996e3a9 100644
-> > > >--- a/arch/um/include/shared/user.h
-> > > >+++ b/arch/um/include/shared/user.h
-> > > >@@ -14,7 +14,7 @@
-> > > >  * copying too much infrastructure for my taste, so userspace files
-> > > >  * get less checking than kernel files.
-> > > >  */
-> > > >-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-> > > >+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]) + __must_be_array=
-(x))
-> > > >
-> > > > /* This is to get size_t and NULL */
-> > > > #ifndef __UM_HOST__
-> > > >@@ -60,7 +60,7 @@ static inline void print_hex_dump(const char *leve=
-l,
-> > > >const char *prefix_str,
-> > > > extern int in_aton(char *str);
-> > > > extern size_t strlcat(char *, const char *, size_t);
-> > > > extern size_t sized_strscpy(char *, const char *, size_t);
-> > > >-#define strscpy(dst, src)      sized_strscpy(dst, src, sizeof(dst))
-> > > >+#define strscpy(dst, src)      sized_strscpy(dst, src, ARRAY_SIZE(d=
-st))
-> > >=20
-> > > Uh, but why? strscpy() copies bytes, not array elements. Using sizeof=
-() is already correct and using ARRAY_SIZE() could lead to unexpectedly sma=
-ll counts (in admittedly odd situations).
-> > >=20
-> > > What is the problem you're trying to solve here?
-> >=20
-> > I suggested that here:
-> > <https://lore.kernel.org/all/2jxak5v6dfxlpbxhpm3ey7oup4g2lnr3ueurfbosf5=
-wdo65dk4@srb3hsk72zwq/>
-> >=20
-> > There, you'll find the rationale (and also for avoiding the _pad calls
-> > where not necessary --I ignore if it's necessary here--).
->=20
-> Right, so we only use byte strings for strscpy(), so sizeof() is
-> sufficient. There's no technical need to switch to ARRAY_SIZE(), and I'd
-> like to minimize any changes to such core APIs without a good reason.
+[1]:
+[ 1147.959632][T17331] Unable to handle kernel paging request at virtual address dead000000000150
+[ 1147.968239][T17331] Mem abort info:
+[ 1147.971739][T17331]   ESR = 0x0000000096000004
+[ 1147.976172][T17331]   EC = 0x25: DABT (current EL), IL = 32 bits
+[ 1147.982171][T17331]   SET = 0, FnV = 0
+[ 1147.985906][T17331]   EA = 0, S1PTW = 0
+[ 1147.989734][T17331]   FSC = 0x04: level 0 translation fault
+[ 1147.995292][T17331] Data abort info:
+[ 1147.998858][T17331]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[ 1148.005023][T17331]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[ 1148.010759][T17331]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[ 1148.016752][T17331] [dead000000000150] address between user and kernel address ranges
+[ 1148.024571][T17331] Internal error: Oops: 0000000096000004 [#1] SMP
+[ 1148.030825][T17331] Modules linked in: team_mode_loadbalance team nlmon act_gact cls_flower sch_ingress bonding tls macvlan dummy ib_core bridge stp llc veth amdgpu amdxcp mfd_core gpu_sched drm_exec drm_buddy radeon crct10dif_ce video drm_suballoc_helper ghash_ce drm_ttm_helper sha2_ce ttm sha256_arm64 i2c_algo_bit sha1_ce sbsa_gwdt cp210x drm_display_helper cec sr_mod cdrom drm_kms_helper binfmt_misc sg loop fuse drm dm_mod nfnetlink ip_tables autofs4 [last unloaded: tls]
+[ 1148.072808][T17331] CPU: 3 PID: 17331 Comm: ls Tainted: G        W         ------- ----  6.6.43 #2
+[ 1148.081751][T17331] Source Version: 21b3b386e948bedd29369af66f3e98ab01b1c650
+[ 1148.088783][T17331] Hardware name: Greatwall GW-001M1A-FTF/GW-001M1A-FTF, BIOS KunLun BIOS V4.0 07/16/2020
+[ 1148.098419][T17331] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[ 1148.106060][T17331] pc : eventfs_iterate+0x2c0/0x398
+[ 1148.111017][T17331] lr : eventfs_iterate+0x2fc/0x398
+[ 1148.115969][T17331] sp : ffff80008d56bbd0
+[ 1148.119964][T17331] x29: ffff80008d56bbf0 x28: ffff001ff5be2600 x27: 0000000000000000
+[ 1148.127781][T17331] x26: ffff001ff52ca4e0 x25: 0000000000009977 x24: dead000000000100
+[ 1148.135598][T17331] x23: 0000000000000000 x22: 000000000000000b x21: ffff800082645f10
+[ 1148.143415][T17331] x20: ffff001fddf87c70 x19: ffff80008d56bc90 x18: 0000000000000000
+[ 1148.151231][T17331] x17: 0000000000000000 x16: 0000000000000000 x15: ffff001ff52ca4e0
+[ 1148.159048][T17331] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+[ 1148.166864][T17331] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff8000804391d0
+[ 1148.174680][T17331] x8 : 0000000180000000 x7 : 0000000000000018 x6 : 0000aaab04b92862
+[ 1148.182498][T17331] x5 : 0000aaab04b92862 x4 : 0000000080000000 x3 : 0000000000000068
+[ 1148.190314][T17331] x2 : 000000000000000f x1 : 0000000000007ea8 x0 : 0000000000000001
+[ 1148.198131][T17331] Call trace:
+[ 1148.201259][T17331]  eventfs_iterate+0x2c0/0x398
+[ 1148.205864][T17331]  iterate_dir+0x98/0x188
+[ 1148.210036][T17331]  __arm64_sys_getdents64+0x78/0x160
+[ 1148.215161][T17331]  invoke_syscall+0x78/0x108
+[ 1148.219593][T17331]  el0_svc_common.constprop.0+0x48/0xf0
+[ 1148.224977][T17331]  do_el0_svc+0x24/0x38
+[ 1148.228974][T17331]  el0_svc+0x40/0x168
+[ 1148.232798][T17331]  el0t_64_sync_handler+0x120/0x130
+[ 1148.237836][T17331]  el0t_64_sync+0x1a4/0x1a8
+[ 1148.242182][T17331] Code: 54ffff6c f9400676 910006d6 f9000676 (b9405300)
+[ 1148.248955][T17331] ---[ end trace 0000000000000000 ]---
 
-Makes sense.  My original proposal was ignoring that the wrapper was
-already using __must_be_array().  Having already sizeof() +
-__must_be_array(), I'd leave it like that, since both do effectively the
-same.
+Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+---
+ fs/tracefs/event_inode.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> And for the _pad change, we are also doing strncpy() replacement via
-> case-by-case analysis, but with a common function like get_task_comm(),
-> I don't want to change the behavior without a complete audit of the
-> padding needs of every caller.
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 01e99e98457d..4895ed07376b 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -642,6 +642,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	/* Subtract the skipped entries above */
+ 	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
+ 
++	mutex_unlock(&eventfs_mutex);
+ 	list_for_each_entry_srcu(ei_child, &ei->children, list,
+ 				 srcu_read_lock_held(&eventfs_srcu)) {
+ 
+@@ -659,9 +660,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ino = eventfs_dir_ino(ei_child);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
++			mutex_unlock(&eventfs_mutex);
+ 			goto out_dec;
++		}
+ 	}
++	mutex_unlock(&eventfs_mutex);
+ 	ret = 1;
+  out:
+ 	srcu_read_unlock(&eventfs_srcu, idx);
+-- 
+2.27.0
 
-Agree.  I had the same problem with shadow.  Removing padding was the
-worst part, because it was hard to justify that nothing was relying on
-the padding.
-
-> Since that's rather a lot for this series,
-> I'd rather we just leave the existing behavior as-is, and if padding
-> removal is wanted after that, we can do it on a case-by-case basis then.
->=20
-> -Kees
-
-Have a lovely night!
-Alex
-
->=20
-> --=20
-> Kees Cook
-
---=20
-<https://www.alejandro-colomar.es/>
-
---o6w5uwkuyqtfps7p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmbPv9wACgkQnowa+77/
-2zLmfhAAqsMngDf8es0F6qRd7cwzD5RwLYJ8tk1KfFfVJjLJN6kb3mV29YiA0pl7
-LsZlkqQ/rmDcqE2Ex9UoiAlIrJw154+Dg63MqkrOYnXf3vDpMopi4jtGlBSG3cJn
-Jm9toPA7lNWwiDe6q19RzLraVFl4+t2ik2wUWtC+SYxBN/vFkU0CRQqwbSg78DMJ
-S3ZIJfLKdkkSeSV9wbddJTwtolje98WEKLtGxbnc7urnmtlvIFqcYACYe9MGVeqf
-kuq//H0SGfCjVEpzizecG93wlp5B2q1Q1sulb1l7mj5rfgaaNE/NilFGv7y/+GwY
-zEyhm6rEjbWZjsh1PxuofuN4ftlJyqlpioondQryrcE370W1Ugfcac6oP5t8ornD
-pdjU1JgIVwY+3Nug3vBKggFwOuy3aQOYP2s6E06KnDEP7GYY1xpzVE6WRbPPzO/T
-FNisBNfvY1FE9M09QiaSkbbePpvTbvYK3RSR7goiKWRMj7gB5NyTuimpZX4Z3Hxa
-y190DotOM8xuALV0EQnx/2quq2+GgT0+N2Et4UdB0U9ENq0X8hAcYYtF1MGnOsCj
-cn3A+JU5VJjLEkFyLF9g9j2dimru4mnxyT7IKtO0NqPjEb7R7TLQPWA1yqwt0Sfm
-pf5ipWUVNTfZ/CEKirXNhGKFwGyva449J3Pu8od1GEbyS8yEj7Q=
-=UqVz
------END PGP SIGNATURE-----
-
---o6w5uwkuyqtfps7p--
