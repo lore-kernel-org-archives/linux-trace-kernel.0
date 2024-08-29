@@ -1,292 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2561B1505
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Aug 2024 15:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97EC146A96;
+	Thu, 29 Aug 2024 17:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724944857; cv=none; b=e5uxBJlEt7eHhJz00EkPgxcIaDiHFxe+Pt/7DQuzLZ6ODzbbPxp1+50fHXyPcCKSk8qVtXWqepBJTr8vYWZTh892drOUFuNsz2mHINbxXI/djZj1MLjWEOdIFQElmQIyn5JW7U8DnBtKllOKu416f5xelAvtMjnMCNHSSW4dvC4=
+	t=1724952518; cv=none; b=qJmDaxWorMdwsvZaOTE+kEj8jsLDSRkTw7XfwFyOZnRcZJEgeLxLk+NEpgl763Fg6dcWPofdpFhhd6lwXwgsjksayaa8zMqrdlzuRD6ZcAzSRXi7FYHGImkKuk1xHpMfyD6pf0QtzUNZASA+Ub4thAvnNglZMmPjZUwOVXpnvVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724944857; c=relaxed/simple;
-	bh=VzvFm5X4E+ZuLcyLJfznBhONfOhsAxOWG2f9QQsKMfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b7wKL0dUz8/ZBz83EsMQ1fexE6xmjr+vcdpvlhh9nmLNUS/dstw0q0uk7Y0iXla7R/3Azrn9dzyK5xfOOG+bRx8OQKNxDOU3G9dNxb1f6ziDKdpi94hpQz+QU3ciXpDNWJgRaia4Y1Qp4fEghiOyvvfRY8m+7ZIn3q/iJ+dDbVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FyuU9gUZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724952518; c=relaxed/simple;
+	bh=KJKoUfWUoMAHUQHg5Fy0b3Mzd2sRhvl7cmJ2Y9HGAoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sw5OrMEd4qiUzHwsAckaTAoLFsk75iou5ETZiq9G890dDbGHf2Ug1MJwpkNqzsLrMulUewcQzNulYSAkHGg9l2ZD7Z/OtJJHpiRN5G/GNt/BzyNemKox6F8nLBq3NpyUmhW/QtkTob/fsUWY7XKsFrVmg/4OG0nUbMWIq0c6jok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gaZ4j7Jd; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyuU9gUZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724944854;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1/3P26cuv3TUVRRp+TSC+oGfXdDo0J9OUwaTJoFEzis=;
-	b=FyuU9gUZzlowaTmjLDp3prP2/sX/TYh/SyhC7PEgC2WqFqzwSyP6bAAfPYlbzyc42ezuBy
-	+4Gp6kdFR5pYSCd0300Bgfo9YSIqnRN865FTIibu1kCrRxdX5nVcG3dTzaDSVKbTrX4iFy
-	GhiA2k42SnByv4rHm7+UBiA3we7I6Fo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-dkgkyYAmOXmJ_Lh1aUFgDQ-1; Thu,
- 29 Aug 2024 11:20:49 -0400
-X-MC-Unique: dkgkyYAmOXmJ_Lh1aUFgDQ-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 060B31955EB3;
-	Thu, 29 Aug 2024 15:20:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.139])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D71973001FC3;
-	Thu, 29 Aug 2024 15:20:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 29 Aug 2024 17:20:38 +0200 (CEST)
-Date: Thu, 29 Aug 2024 17:20:33 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240829152032.GA23996@redhat.com>
-References: <20240825224018.GD3906@redhat.com>
- <ZsxTckUnlU_HWDMJ@krava>
- <20240826115752.GA21268@redhat.com>
- <ZsyHrhG9Q5BpZ1ae@krava>
- <20240826212552.GB30765@redhat.com>
- <Zsz7SPp71jPlH4MS@krava>
- <20240826222938.GC30765@redhat.com>
- <Zs3PdV6nqed1jWC2@krava>
- <20240827201926.GA15197@redhat.com>
- <Zs8N-xP4jlPK2yjE@krava>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaZ4j7Jd"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7c6b4222fe3so575448a12.3;
+        Thu, 29 Aug 2024 10:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724952516; x=1725557316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sHtTBbzeYQ0PhvAJXeu6V6EJfe+INUGk7sZpaNX20bs=;
+        b=gaZ4j7JdqeP+aTOB9mDQtq39X2oloBwWLt+kLzILOiIeQbPUHwRXvBMxj15gnG0FX5
+         m464HLDoMtTAfbcu/F0UUUAS39H9INmvEzC2JKLAvl+6fFtI4ButbfAAEwZ5HfQyDbMj
+         r/pUp+INcUxdFeQNS1EPKBaY7wWKjzqLImuoqXxxPTxLWU5sWF1nk+Jzss5DUy5W1AxW
+         Osn9cx8+kKWw/m8yIszPeC8DzTNF6gnmIvFCvUfLNc2x33J565oFRF/fo1PdgrMBCMIk
+         t7nJpeRl4N5+9HVD1A/Vghjlb2oot1wQXfRBqK8uwsU80ZXZ5qXS+dXB4jToV+xHdfCl
+         QbIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724952516; x=1725557316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sHtTBbzeYQ0PhvAJXeu6V6EJfe+INUGk7sZpaNX20bs=;
+        b=lEgjVuweoZEoEjmsx0hSFFbrH/YreakorPex8zmzxWN2Z0cQYx1aHkWZFrxVw9JCtx
+         zDcM0AtMc5rV4TaI8AMEMcZQHONuSwdCfInpGnfTcCFKx+ReL+VmbfZKiqAZpEwGaJx7
+         VjeeEby+M0uNwHQieKJ5VtnlluXq5H/cRQgymvS2KsDI4I+3M8UfKRSkn0P6GcSvwHlb
+         oau3IB98X3YgQjqqYVRxJ5LU9fr1S3JHFzhZ1ZhW26lrkdj1UB25nATLc+X+uitbTwKs
+         HHgJcLeYMvmV2yGy8+JnN48gRHcCAyq/znIKhFgpZQ+giT3IBI2taFdUzbG/vJ6H3Te1
+         aB3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVPZUnImHgpR74XKEQ8S4Nn5rpBG52gyo3trKUqVBMT1OlALzd1dYmaFFxwAByNl9Y/deUAQRvWQs+is207SROk9Skd@vger.kernel.org, AJvYcCWOpX7dmDRwg3+Bw0hxmONeZtD6mSDLWA8cdzCtSwsctL4r2jRWnySFt70BNuiKIqz/LIc=@vger.kernel.org, AJvYcCX0wO1Itl5KJnOHdpu7WfJHyr0l2tVtU/RD2Z+G06yBlKmvtkzJ16PVfvkSLxVsh8GWgBdX/cLOd0qTZkpP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh/m1RYN3Ox7QNTdmUCtmn34OMi3UFrHEEKI/FTmcvnJ7Zr2RJ
+	SD4w9HBUaV2UyuxWiosopK4OgkaLRsjDuq+WHQZPr0seqUFzFa9/lQfPxh8k49Fd6VbTfFXqQuY
+	pX3KXVyWGkwS12XchF7Tdx+9BKXw=
+X-Google-Smtp-Source: AGHT+IHFSsyIXZBp/wN1WeIfBQIX6SXXWbfTEQ+vV3dVVPuTZikp/jdnt41Q1uEUqofGNYCJ3J6pvEG0iPugoozqPs8=
+X-Received: by 2002:a17:90b:4b45:b0:2d3:ba42:775c with SMTP id
+ 98e67ed59e1d1-2d85618168dmr4248026a91.1.1724952515912; Thu, 29 Aug 2024
+ 10:28:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zs8N-xP4jlPK2yjE@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20240813203409.3985398-1-andrii@kernel.org> <20240828125418.07c3c63e08dc688e62fef4d2@kernel.org>
+In-Reply-To: <20240828125418.07c3c63e08dc688e62fef4d2@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 29 Aug 2024 10:28:24 -0700
+Message-ID: <CAEf4BzbHuHPuLHT5E619crJ1Gdvr8LnQpR7w=vrx8Gb6NHAeZA@mail.gmail.com>
+Subject: Re: [PATCH v3] uprobes: turn trace_uprobe's nhit counter to be
+ per-CPU one
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, peterz@infradead.org, oleg@redhat.com, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/28, Jiri Olsa wrote:
+On Tue, Aug 27, 2024 at 8:55=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
 >
-> On Tue, Aug 27, 2024 at 10:19:26PM +0200, Oleg Nesterov wrote:
-> > Hmm. Really? In this case these 2 different consumers will have the different
-> > trace_event_call's, so
-> >
-> > 	// consumer for task 1019
-> > 	uretprobe_dispatcher
-> > 	  uretprobe_perf_func
-> > 	    __uprobe_perf_func
-> > 	      perf_tp_event
-> >
-> > won't store the event because this_cpu_ptr(call->perf_events) should be
-> > hlist_empty() on this CPU, the perf_event for task 1019 wasn't scheduled in
-> > on this CPU...
+> On Tue, 13 Aug 2024 13:34:09 -0700
+> Andrii Nakryiko <andrii@kernel.org> wrote:
 >
-> I'll double check on that,
+> > trace_uprobe->nhit counter is not incremented atomically, so its value
+> > is questionable in when uprobe is hit on multiple CPUs simultaneously.
+> >
+> > Also, doing this shared counter increment across many CPUs causes heavy
+> > cache line bouncing, limiting uprobe/uretprobe performance scaling with
+> > number of CPUs.
+> >
+> > Solve both problems by making this a per-CPU counter.
+> >
+>
+> Looks good to me. Let me pick it to linux-trace probes/for-next.
+>
 
-Yes, please.
+Thanks! I just checked linux-trace repo, doesn't seem like this was
+applied yet, is that right? Or am I checking in the wrong place?
 
-> but because there's no filter for uretprobe
-> I think it will be stored under 1018 event
-...
-> I'm working on bpf selftests for above (uprobe and uprobe_multi paths)
-
-Meanwhile, I decided to try to test this case too ;)
-
-test.c:
-
-	#include <unistd.h>
-
-	int func(int i)
-	{
-		return i;
-	}
-
-	int main(void)
-	{
-		int i;
-		for (i = 0;; ++i) {
-			sleep(1);
-			func(i);
-		}
-		return 0;
-	}
-
-run_probe.c:
-
-	#include "./include/uapi/linux/perf_event.h"
-	#define _GNU_SOURCE
-	#include <sys/syscall.h>
-	#include <sys/ioctl.h>
-	#include <assert.h>
-	#include <unistd.h>
-	#include <stdlib.h>
-	#include <stdio.h>
-
-	// cat /sys/bus/event_source/devices/uprobe/type
-	#define UPROBE_TYPE	9
-
-	void run_probe(const char *file, unsigned offset, int pid)
-	{
-		struct perf_event_attr attr = {
-			.type		= UPROBE_TYPE,
-			.config		= 1, // ret-probe
-			.uprobe_path	= (unsigned long)file,
-			.probe_offset	= offset,
-			.size		= sizeof(struct perf_event_attr),
-		};
-
-		int fd = syscall(__NR_perf_event_open, &attr, pid, 0, -1, 0);
-		assert(fd >= 0);
-
-		assert(ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) == 0);
-
-		for (;;)
-			pause();
-	}
-
-	int main(int argc, const char *argv[])
-	{
-		int pid = atoi(argv[1]);
-		run_probe("./test", 0x536, pid);
-		return 0;
-	}
-
-Now, with the kernel patch below applied, I do
-
-	$ ./test &
-	$ PID1=$!
-	$ ./test &
-	$ PID2=$!
-
-	$ ./run_probe $PID1 &
-	$ ./run_probe $PID2 &
-
-and the kernel prints:
-
-	CHAIN
-	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
-	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
-	CHAIN
-	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
-	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
-	CHAIN
-	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
-	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
-	CHAIN
-	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
-	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
-	CHAIN
-	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
-	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
-	CHAIN
-	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
-	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
-	CHAIN
-	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
-	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
-	CHAIN
-	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
-	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
-
-and so on.
-
-As you can see, perf_trace_buf_submit/etc is never called for the "unfiltered"
-consumer, so I still think that perf is fine wrt filtering. But I can be easily
-wrong, please check.
-
-Oleg.
-
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index acc73c1bc54c..14aa92a78d6d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2150,6 +2150,8 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- 	struct uprobe *uprobe = ri->uprobe;
- 	struct uprobe_consumer *uc;
- 
-+	pr_crit("CHAIN\n");
-+
- 	rcu_read_lock_trace();
- 	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (uc->ret_handler)
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index f7443e996b1b..e4eaa0363742 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -1364,7 +1364,7 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc, struct mm_struct *mm)
- 	return ret;
- }
- 
--static void __uprobe_perf_func(struct trace_uprobe *tu,
-+static int __uprobe_perf_func(struct trace_uprobe *tu,
- 			       unsigned long func, struct pt_regs *regs,
- 			       struct uprobe_cpu_buffer **ucbp)
- {
-@@ -1375,6 +1375,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 	void *data;
- 	int size, esize;
- 	int rctx;
-+	int ret = 0;
- 
- #ifdef CONFIG_BPF_EVENTS
- 	if (bpf_prog_array_valid(call)) {
-@@ -1382,7 +1383,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 
- 		ret = bpf_prog_run_array_uprobe(call->prog_array, regs, bpf_prog_run);
- 		if (!ret)
--			return;
-+			return -1;
- 	}
- #endif /* CONFIG_BPF_EVENTS */
- 
-@@ -1392,12 +1393,13 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 	size = esize + ucb->dsize;
- 	size = ALIGN(size + sizeof(u32), sizeof(u64)) - sizeof(u32);
- 	if (WARN_ONCE(size > PERF_MAX_TRACE_SIZE, "profile buffer not large enough"))
--		return;
-+		return -1;
- 
- 	preempt_disable();
- 	head = this_cpu_ptr(call->perf_events);
- 	if (hlist_empty(head))
- 		goto out;
-+	ret = 1;
- 
- 	entry = perf_trace_buf_alloc(size, NULL, &rctx);
- 	if (!entry)
-@@ -1421,6 +1423,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
- 			      head, NULL);
-  out:
- 	preempt_enable();
-+	return ret;
- }
- 
- /* uprobe profile handler */
-@@ -1439,7 +1442,15 @@ static void uretprobe_perf_func(struct trace_uprobe *tu, unsigned long func,
- 				struct pt_regs *regs,
- 				struct uprobe_cpu_buffer **ucbp)
- {
--	__uprobe_perf_func(tu, func, regs, ucbp);
-+	struct trace_uprobe_filter *filter = tu->tp.event->filter;
-+	struct perf_event *event = list_first_entry(&filter->perf_events,
-+					struct perf_event, hw.tp_list);
-+
-+	int r = __uprobe_perf_func(tu, func, regs, ucbp);
-+
-+	pr_crit("HANDLER pid=%d consumers_target=%d stored=%d\n",
-+		current->pid, event->hw.target ? event->hw.target->pid : -1, r);
-+
- }
- 
- int bpf_get_uprobe_info(const struct perf_event *event, u32 *fd_type,
-
+> Thank you,
+>
+>
+> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  kernel/trace/trace_uprobe.c | 24 +++++++++++++++++++++---
+> >  1 file changed, 21 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> > index c98e3b3386ba..c3df411a2684 100644
+> > --- a/kernel/trace/trace_uprobe.c
+> > +++ b/kernel/trace/trace_uprobe.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/string.h>
+> >  #include <linux/rculist.h>
+> >  #include <linux/filter.h>
+> > +#include <linux/percpu.h>
+> >
+> >  #include "trace_dynevent.h"
+> >  #include "trace_probe.h"
+> > @@ -62,7 +63,7 @@ struct trace_uprobe {
+> >       char                            *filename;
+> >       unsigned long                   offset;
+> >       unsigned long                   ref_ctr_offset;
+> > -     unsigned long                   nhit;
+> > +     unsigned long __percpu          *nhits;
+> >       struct trace_probe              tp;
+> >  };
+> >
+> > @@ -337,6 +338,12 @@ alloc_trace_uprobe(const char *group, const char *=
+event, int nargs, bool is_ret)
+> >       if (!tu)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > +     tu->nhits =3D alloc_percpu(unsigned long);
+> > +     if (!tu->nhits) {
+> > +             ret =3D -ENOMEM;
+> > +             goto error;
+> > +     }
+> > +
+> >       ret =3D trace_probe_init(&tu->tp, event, group, true, nargs);
+> >       if (ret < 0)
+> >               goto error;
+> > @@ -349,6 +356,7 @@ alloc_trace_uprobe(const char *group, const char *e=
+vent, int nargs, bool is_ret)
+> >       return tu;
+> >
+> >  error:
+> > +     free_percpu(tu->nhits);
+> >       kfree(tu);
+> >
+> >       return ERR_PTR(ret);
+> > @@ -362,6 +370,7 @@ static void free_trace_uprobe(struct trace_uprobe *=
+tu)
+> >       path_put(&tu->path);
+> >       trace_probe_cleanup(&tu->tp);
+> >       kfree(tu->filename);
+> > +     free_percpu(tu->nhits);
+> >       kfree(tu);
+> >  }
+> >
+> > @@ -815,13 +824,21 @@ static int probes_profile_seq_show(struct seq_fil=
+e *m, void *v)
+> >  {
+> >       struct dyn_event *ev =3D v;
+> >       struct trace_uprobe *tu;
+> > +     unsigned long nhits;
+> > +     int cpu;
+> >
+> >       if (!is_trace_uprobe(ev))
+> >               return 0;
+> >
+> >       tu =3D to_trace_uprobe(ev);
+> > +
+> > +     nhits =3D 0;
+> > +     for_each_possible_cpu(cpu) {
+> > +             nhits +=3D per_cpu(*tu->nhits, cpu);
+> > +     }
+> > +
+> >       seq_printf(m, "  %s %-44s %15lu\n", tu->filename,
+> > -                     trace_probe_name(&tu->tp), tu->nhit);
+> > +                trace_probe_name(&tu->tp), nhits);
+> >       return 0;
+> >  }
+> >
+> > @@ -1512,7 +1529,8 @@ static int uprobe_dispatcher(struct uprobe_consum=
+er *con, struct pt_regs *regs)
+> >       int ret =3D 0;
+> >
+> >       tu =3D container_of(con, struct trace_uprobe, consumer);
+> > -     tu->nhit++;
+> > +
+> > +     this_cpu_inc(*tu->nhits);
+> >
+> >       udd.tu =3D tu;
+> >       udd.bp_addr =3D instruction_pointer(regs);
+> > --
+> > 2.43.5
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
