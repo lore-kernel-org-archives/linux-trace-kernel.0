@@ -1,79 +1,292 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBD818A6D1;
-	Thu, 29 Aug 2024 12:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2561B1505
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Aug 2024 15:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724933080; cv=none; b=uBfKNZagPMslkXulr00XlNhXrftWDa/box/9AdD36x86jHot4ZID3OJl2f1GzsD+9W3gTbGXndPnUzeEKhwPKTIjHrcDUBMNejrTx062q1YPM8mXqi8CuL9ZsVCAuonqyxDlLBkenGiZa6dt9aAyZ1fWq6mt9O8WL55ktMEV32A=
+	t=1724944857; cv=none; b=e5uxBJlEt7eHhJz00EkPgxcIaDiHFxe+Pt/7DQuzLZ6ODzbbPxp1+50fHXyPcCKSk8qVtXWqepBJTr8vYWZTh892drOUFuNsz2mHINbxXI/djZj1MLjWEOdIFQElmQIyn5JW7U8DnBtKllOKu416f5xelAvtMjnMCNHSSW4dvC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724933080; c=relaxed/simple;
-	bh=O62hW6YoTMMZ4TwahubM0k5YhwbbI6tnUMxnsFn/VgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gzgItK69942DwpRQ+IejnfqwF0JOqMkXXN74+IwZfh0gQDbR6OtEhvcbPMrmxQd8B4IWw4HqstBXR/txrUNMIuIiBdm8+7N4Z+e20P9UEgIRAxTlqcxKK1YyqgUuwcJOIo2+ayoU+VCnk0NyNK4BM64mxNah20DYEpyxuqbgGn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=chyrJykN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724944857; c=relaxed/simple;
+	bh=VzvFm5X4E+ZuLcyLJfznBhONfOhsAxOWG2f9QQsKMfo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b7wKL0dUz8/ZBz83EsMQ1fexE6xmjr+vcdpvlhh9nmLNUS/dstw0q0uk7Y0iXla7R/3Azrn9dzyK5xfOOG+bRx8OQKNxDOU3G9dNxb1f6ziDKdpi94hpQz+QU3ciXpDNWJgRaia4Y1Qp4fEghiOyvvfRY8m+7ZIn3q/iJ+dDbVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FyuU9gUZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="chyrJykN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C40EC4CEC1;
-	Thu, 29 Aug 2024 12:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724933079;
-	bh=O62hW6YoTMMZ4TwahubM0k5YhwbbI6tnUMxnsFn/VgE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=chyrJykN+WTpedfOg/Gn5SGnxheu/37y8wMTmMwW0HZiUBabP5A49lL7GsrCVY3MK
-	 ZihnbWnr1c24TyVXf4xzUy63ht2PajzZRz38eJCbgA+NrL8TYDfGeFVU2KLbANwAbk
-	 bnxcVSWu9M5X5/O4qvi94L+vmjTmg/7JiNDjBuc2Z/7gKlTf69S9OojTSHbmwqDysq
-	 d8AvHrwXUC4V2e/O4wHuJOdhfcpz+QQGTWDHE+HdX0QZ/6kj8tFhVlydFfO0YsuYbr
-	 +Gw17GCnJ67EO8X3Y4kFItjuACTzTAou4CjFO8G5t+G6CiUD3XKmIkWV/c2Ed/qOiS
-	 D3zrWMZP2l+Yw==
-From: Christian Brauner <brauner@kernel.org>
-To: Julian Sun <sunjunchao2870@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	jack@suse.cz,
-	viro@zeniv.linux.org.uk,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] writeback: Refine the show_inode_state() macro definition
-Date: Thu, 29 Aug 2024 14:04:25 +0200
-Message-ID: <20240829-wegfahren-weiten-540367488713@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240828081359.62429-1-sunjunchao2870@gmail.com>
-References: <20240828081359.62429-1-sunjunchao2870@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FyuU9gUZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724944854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1/3P26cuv3TUVRRp+TSC+oGfXdDo0J9OUwaTJoFEzis=;
+	b=FyuU9gUZzlowaTmjLDp3prP2/sX/TYh/SyhC7PEgC2WqFqzwSyP6bAAfPYlbzyc42ezuBy
+	+4Gp6kdFR5pYSCd0300Bgfo9YSIqnRN865FTIibu1kCrRxdX5nVcG3dTzaDSVKbTrX4iFy
+	GhiA2k42SnByv4rHm7+UBiA3we7I6Fo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-dkgkyYAmOXmJ_Lh1aUFgDQ-1; Thu,
+ 29 Aug 2024 11:20:49 -0400
+X-MC-Unique: dkgkyYAmOXmJ_Lh1aUFgDQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 060B31955EB3;
+	Thu, 29 Aug 2024 15:20:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.139])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D71973001FC3;
+	Thu, 29 Aug 2024 15:20:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 29 Aug 2024 17:20:38 +0200 (CEST)
+Date: Thu, 29 Aug 2024 17:20:33 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
+	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
+	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
+	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
+	mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240829152032.GA23996@redhat.com>
+References: <20240825224018.GD3906@redhat.com>
+ <ZsxTckUnlU_HWDMJ@krava>
+ <20240826115752.GA21268@redhat.com>
+ <ZsyHrhG9Q5BpZ1ae@krava>
+ <20240826212552.GB30765@redhat.com>
+ <Zsz7SPp71jPlH4MS@krava>
+ <20240826222938.GC30765@redhat.com>
+ <Zs3PdV6nqed1jWC2@krava>
+ <20240827201926.GA15197@redhat.com>
+ <Zs8N-xP4jlPK2yjE@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=979; i=brauner@kernel.org; h=from:subject:message-id; bh=O62hW6YoTMMZ4TwahubM0k5YhwbbI6tnUMxnsFn/VgE=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRdSD6f6VD37JqNc/9UnWypj8GVhu9j0ivXHEg5f/7TP 9/eD3pTO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZiz8fwv/IX393L7BO4rtxZ eEApW0Fz8rZPM5Y/WORw3eFXQUuInRAjw1sXwzCP4MenC4Ndj178x76oyIZDiTX219qM6mfTfG9 qMwEA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zs8N-xP4jlPK2yjE@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Wed, 28 Aug 2024 16:13:59 +0800, Julian Sun wrote:
-> Currently, the show_inode_state() macro only prints
-> part of the state of inode->i_state. Let’s improve it
-> to display more of its state.
-> 
-> 
+On 08/28, Jiri Olsa wrote:
+>
+> On Tue, Aug 27, 2024 at 10:19:26PM +0200, Oleg Nesterov wrote:
+> > Hmm. Really? In this case these 2 different consumers will have the different
+> > trace_event_call's, so
+> >
+> > 	// consumer for task 1019
+> > 	uretprobe_dispatcher
+> > 	  uretprobe_perf_func
+> > 	    __uprobe_perf_func
+> > 	      perf_tp_event
+> >
+> > won't store the event because this_cpu_ptr(call->perf_events) should be
+> > hlist_empty() on this CPU, the perf_event for task 1019 wasn't scheduled in
+> > on this CPU...
+>
+> I'll double check on that,
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Yes, please.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+> but because there's no filter for uretprobe
+> I think it will be stored under 1018 event
+...
+> I'm working on bpf selftests for above (uprobe and uprobe_multi paths)
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Meanwhile, I decided to try to test this case too ;)
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+test.c:
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+	#include <unistd.h>
 
-[1/1] writeback: Refine the show_inode_state() macro definition
-      https://git.kernel.org/vfs/vfs/c/5b07b8fbb89a
+	int func(int i)
+	{
+		return i;
+	}
+
+	int main(void)
+	{
+		int i;
+		for (i = 0;; ++i) {
+			sleep(1);
+			func(i);
+		}
+		return 0;
+	}
+
+run_probe.c:
+
+	#include "./include/uapi/linux/perf_event.h"
+	#define _GNU_SOURCE
+	#include <sys/syscall.h>
+	#include <sys/ioctl.h>
+	#include <assert.h>
+	#include <unistd.h>
+	#include <stdlib.h>
+	#include <stdio.h>
+
+	// cat /sys/bus/event_source/devices/uprobe/type
+	#define UPROBE_TYPE	9
+
+	void run_probe(const char *file, unsigned offset, int pid)
+	{
+		struct perf_event_attr attr = {
+			.type		= UPROBE_TYPE,
+			.config		= 1, // ret-probe
+			.uprobe_path	= (unsigned long)file,
+			.probe_offset	= offset,
+			.size		= sizeof(struct perf_event_attr),
+		};
+
+		int fd = syscall(__NR_perf_event_open, &attr, pid, 0, -1, 0);
+		assert(fd >= 0);
+
+		assert(ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) == 0);
+
+		for (;;)
+			pause();
+	}
+
+	int main(int argc, const char *argv[])
+	{
+		int pid = atoi(argv[1]);
+		run_probe("./test", 0x536, pid);
+		return 0;
+	}
+
+Now, with the kernel patch below applied, I do
+
+	$ ./test &
+	$ PID1=$!
+	$ ./test &
+	$ PID2=$!
+
+	$ ./run_probe $PID1 &
+	$ ./run_probe $PID2 &
+
+and the kernel prints:
+
+	CHAIN
+	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
+	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
+	CHAIN
+	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
+	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
+	CHAIN
+	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
+	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
+	CHAIN
+	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
+	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
+	CHAIN
+	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
+	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
+	CHAIN
+	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
+	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
+	CHAIN
+	trace_uprobe: HANDLER pid=46 consumers_target=46 stored=1
+	trace_uprobe: HANDLER pid=46 consumers_target=45 stored=0
+	CHAIN
+	trace_uprobe: HANDLER pid=45 consumers_target=46 stored=0
+	trace_uprobe: HANDLER pid=45 consumers_target=45 stored=1
+
+and so on.
+
+As you can see, perf_trace_buf_submit/etc is never called for the "unfiltered"
+consumer, so I still think that perf is fine wrt filtering. But I can be easily
+wrong, please check.
+
+Oleg.
+
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index acc73c1bc54c..14aa92a78d6d 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2150,6 +2150,8 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
+ 	struct uprobe *uprobe = ri->uprobe;
+ 	struct uprobe_consumer *uc;
+ 
++	pr_crit("CHAIN\n");
++
+ 	rcu_read_lock_trace();
+ 	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
+ 		if (uc->ret_handler)
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index f7443e996b1b..e4eaa0363742 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1364,7 +1364,7 @@ static bool uprobe_perf_filter(struct uprobe_consumer *uc, struct mm_struct *mm)
+ 	return ret;
+ }
+ 
+-static void __uprobe_perf_func(struct trace_uprobe *tu,
++static int __uprobe_perf_func(struct trace_uprobe *tu,
+ 			       unsigned long func, struct pt_regs *regs,
+ 			       struct uprobe_cpu_buffer **ucbp)
+ {
+@@ -1375,6 +1375,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 	void *data;
+ 	int size, esize;
+ 	int rctx;
++	int ret = 0;
+ 
+ #ifdef CONFIG_BPF_EVENTS
+ 	if (bpf_prog_array_valid(call)) {
+@@ -1382,7 +1383,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 
+ 		ret = bpf_prog_run_array_uprobe(call->prog_array, regs, bpf_prog_run);
+ 		if (!ret)
+-			return;
++			return -1;
+ 	}
+ #endif /* CONFIG_BPF_EVENTS */
+ 
+@@ -1392,12 +1393,13 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 	size = esize + ucb->dsize;
+ 	size = ALIGN(size + sizeof(u32), sizeof(u64)) - sizeof(u32);
+ 	if (WARN_ONCE(size > PERF_MAX_TRACE_SIZE, "profile buffer not large enough"))
+-		return;
++		return -1;
+ 
+ 	preempt_disable();
+ 	head = this_cpu_ptr(call->perf_events);
+ 	if (hlist_empty(head))
+ 		goto out;
++	ret = 1;
+ 
+ 	entry = perf_trace_buf_alloc(size, NULL, &rctx);
+ 	if (!entry)
+@@ -1421,6 +1423,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 			      head, NULL);
+  out:
+ 	preempt_enable();
++	return ret;
+ }
+ 
+ /* uprobe profile handler */
+@@ -1439,7 +1442,15 @@ static void uretprobe_perf_func(struct trace_uprobe *tu, unsigned long func,
+ 				struct pt_regs *regs,
+ 				struct uprobe_cpu_buffer **ucbp)
+ {
+-	__uprobe_perf_func(tu, func, regs, ucbp);
++	struct trace_uprobe_filter *filter = tu->tp.event->filter;
++	struct perf_event *event = list_first_entry(&filter->perf_events,
++					struct perf_event, hw.tp_list);
++
++	int r = __uprobe_perf_func(tu, func, regs, ucbp);
++
++	pr_crit("HANDLER pid=%d consumers_target=%d stored=%d\n",
++		current->pid, event->hw.target ? event->hw.target->pid : -1, r);
++
+ }
+ 
+ int bpf_get_uprobe_info(const struct perf_event *event, u32 *fd_type,
+
