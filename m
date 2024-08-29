@@ -1,113 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090EA18A95A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 Aug 2024 21:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20835156F5E;
+	Thu, 29 Aug 2024 21:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724965985; cv=none; b=DQG2UAs9FBLBmRdYCnIQ5AmfJBM9rGIxTv4PFDBEGiSU8aCDdMab1EcFMkexLdiiDy/SKZeTyCNefDTEgq+1fp1GqjoF/1tTQUjDWkxDlv4CN7qrN2lNV42aCCITExhMIlZ+2koXOkDkEw6cmltoT6YSvva7tpnLWGd25Q26wIQ=
+	t=1724966219; cv=none; b=Rue0tFrrturZiInxvBxkw93w7wz6MwwU79z5KSf8fNychcpCLq6Lv0k80vi+powHhE3hnV1S77Uf3aKJ25I1uZtPqs4DPL+dk/4FlT01e7qzn01nckp1E175RosaDKjLMJk0jjTL+Ynn+2vutBuqtXoV1W/8u9jc1QV2PXEl0z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724965985; c=relaxed/simple;
-	bh=MqUh56zN7NJNdjmghT/euStrp6pZZ7zbmVkxBqupF34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ajxaAOMRYjPjvBaX54zinqdE+dETSRPQDzcwjme+I4XP0oodATgBWt8uRgmBs+jPMzF7DB+J82jjd5KkOYLLxvCZ3MtiyddruIGVuch4E+e+vy7u11YJ3Af9anCEq96nUH932cGR3LU5PI5gvkVW4yDCpDxUF38q1ugd+ezFpEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HiXg6cwU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724966219; c=relaxed/simple;
+	bh=/F3zR/S6c2DjNLfD9s0Ftb1Yd+kEWjbMAqmAIctfcYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZeUBgWpMxDrOTZadASkpri0Vxud8embq55bOqU7Lx0vKLFZv3sQZIp7hiV90PLgl3Xs+wHQ/qT+8bJ2OCGb9G0KNiCdapkivzzrWIF4PjE3f7b0edbyzI7mkitkCukBCDWfC7tgDJrzuW04IjSqDxX4oTRwpyT/imMBaFHBxmk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVTpviaR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HiXg6cwU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724965982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uV8YErksJWOCHNNkf7up1j+SAnFhOu+hNSyWOYIg8QY=;
-	b=HiXg6cwU+T2GjbFw2WbI74qV2kmoK32y6AyHHUKec6Lt2gXkrI7zwbJKvKfZJzkhs+wrcF
-	6ibYfGUB2R/tbZfi1/620U4V2vFG/V7yVhGy8aewqc7PC/KrIt7UDAsf0VlglSJia6j5yL
-	rY1G+k6to5Bs2+kiHW8Lg1TuDe8ekXE=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-507-SLQD5WZoNPqQH_1vwF2sEA-1; Thu,
- 29 Aug 2024 17:12:57 -0400
-X-MC-Unique: SLQD5WZoNPqQH_1vwF2sEA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E81C19560B0;
-	Thu, 29 Aug 2024 21:12:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.20])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5F71F19560A3;
-	Thu, 29 Aug 2024 21:12:51 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 29 Aug 2024 23:12:46 +0200 (CEST)
-Date: Thu, 29 Aug 2024 23:12:41 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	mhiramat@kernel.org, ajor@meta.com, albancrequy@linux.microsoft.com,
-	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240829211241.GA19243@redhat.com>
-References: <20240826115752.GA21268@redhat.com>
- <ZsyHrhG9Q5BpZ1ae@krava>
- <20240826212552.GB30765@redhat.com>
- <Zsz7SPp71jPlH4MS@krava>
- <20240826222938.GC30765@redhat.com>
- <Zs3PdV6nqed1jWC2@krava>
- <20240827201926.GA15197@redhat.com>
- <Zs8N-xP4jlPK2yjE@krava>
- <20240829152032.GA23996@redhat.com>
- <ZtDQEVN1-BAfWuMU@krava>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVTpviaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C0BC4CEC1;
+	Thu, 29 Aug 2024 21:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724966218;
+	bh=/F3zR/S6c2DjNLfD9s0Ftb1Yd+kEWjbMAqmAIctfcYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KVTpviaRX5b5sG1JuaNzLtRm9KnkJJdrzPGGW+O8uspkX2SDPDuGdYT1AV2rdE3zf
+	 TBiCMdFXECB8lFwEoWH+TL0/Vh0oW9q9OWoG2JfpRk2KUJ9zRBN/6Znu1baefyLLEZ
+	 4/lqlAPd8aU+RT47EW5Y6XXxqeNyH+fVbwxRR9B1nP/7MehHybjrPfBZEDDfJ4yTyo
+	 dpY+hvOTE3RxEdaAEbsTFkOU0XEZiogIieCZljccz2vDaGLvy0BiCENSj1CiPQwtFV
+	 Z5kzLlVX2izGN4neWa8IlzLoD8tA8/n2gGHuk1lqNsXs4pplHaXGXSIi4QfqWsac+e
+	 lwPxvPgy0WZvw==
+Date: Thu, 29 Aug 2024 14:16:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Donald
+ Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
+ Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, "=?UTF-8?B?QmrDtnJuIFTDtnBl?=
+ =?UTF-8?B?bA==?=" <bjorn@kernel.org>, Magnus Karlsson
+ <magnus.karlsson@intel.com>, Maciej Fijalkowski
+ <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
+ <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
+ Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
+ <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
+ Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
+ <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
+ Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
+ Taehee Yoo <ap420073@gmail.com>, Willem de Bruijn <willemb@google.com>,
+ Kaiyuan Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [PATCH net-next v23 03/13] netdev: support binding dma-buf to
+ netdevice
+Message-ID: <20240829141654.1e1b74f8@kernel.org>
+In-Reply-To: <20240829060126.2792671-4-almasrymina@google.com>
+References: <20240829060126.2792671-1-almasrymina@google.com>
+	<20240829060126.2792671-4-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZtDQEVN1-BAfWuMU@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Ah. we certainly misunderstand each other.
+On Thu, 29 Aug 2024 06:01:16 +0000 Mina Almasry wrote:
+> @@ -9376,6 +9376,9 @@ int dev_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf)
+>  	if (!dev->netdev_ops->ndo_bpf)
+>  		return -EOPNOTSUPP;
+>  
+> +	if (dev_get_min_mp_channel_count(dev))
 
-On 08/29, Jiri Olsa wrote:
->
-> On Thu, Aug 29, 2024 at 05:20:33PM +0200, Oleg Nesterov wrote:
->
-> SNIP
+there's an extack inside *bpf, would be good to add a message
 
-SNIP
+> +		return -EBUSY;
+> +
+>  	return dev->netdev_ops->ndo_bpf(dev, bpf);
+>  }
+>  EXPORT_SYMBOL_GPL(dev_xdp_propagate);
+> @@ -9408,6 +9411,9 @@ static int dev_xdp_install(struct net_device *dev, enum bpf_xdp_mode mode,
+>  	struct netdev_bpf xdp;
+>  	int err;
+>  
+> +	if (dev_get_min_mp_channel_count(dev))
 
-> right.. if the event is not added by perf_trace_add on this cpu
-> it won't go pass this point, so no problem for perf
-
-Yes, and this is what I tried to verify. In your previous email you said
-
-	and I think the same will happen for perf record in this case where instead of
-	running the program we will execute perf_tp_event
-
-and I tried verify this can't happen. So no problem for perf ;)
-
-> but the issue is with bpf program triggered earlier by return uprobe
-
-Well, the issue with bpf program (with the bpf_prog_array_valid(call) code
-in __uprobe_perf_func) was clear from the very beginning, no questions.
-
-> and [1] patch seems to fix that
-
-I'd say this patch fixes the symptoms, and it doesn't fix all the problems.
-But I can't suggest anything better for bpf code, so I won't really argue.
-However the changelog and even the subject is wrong.
-
-> I sent out the bpf selftest that triggers the issue [2]
-
-Thanks, I'll try take a look tomorrow.
-
-Oleg.
-
+ditto
