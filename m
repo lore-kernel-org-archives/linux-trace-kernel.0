@@ -1,155 +1,127 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B94C1BF7FD;
-	Fri, 30 Aug 2024 20:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F4D1BF7FD;
+	Fri, 30 Aug 2024 20:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725050629; cv=none; b=bEuI17oWDh6eQyV+X+UPUL//pUnUDxi7mA1DqUiLBOqdoIgE++agu2runURTOW/aUmibqkfsCv+AyTJtVVH2GKaSXPnwuyhBuoQxxiHUgBmVjsLg2v5uXhAZ5vDs8nj3pQfYhuRWKdigSDOtMx2yr1zlDTgGNcCiF3xFiwtS1uE=
+	t=1725051079; cv=none; b=fFt8vnkZdVRP/YkdmsEdLdmYkSNaTcYez+hBiKXQR+637Nwy9ctpsk8zElGHPw2hEFgWGpUVwUKiRV3CiRbedNI8gx20CyW8yUtwgtPyBJwXoBa6d1lEtK8pEL9CttW+SL0gTW8C7x9y7bMkM/ivqZJjm2U1VCWww2Wccm2xEPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725050629; c=relaxed/simple;
-	bh=/J3chlRHgWeDFjFRxlbl2Q7F2+KANwyc4B88VCV1lWA=;
+	s=arc-20240116; t=1725051079; c=relaxed/simple;
+	bh=EGmaHQIyFUQXRzkAm6S7M6ACd+k5XeZNvtGEUAyJy0w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TsuLqjI+a5BX0zGvnmE2AEyhhAr3Go3kLWOzySoi/9ZTZer/ACgJlyROoQsV0/luouoSivfxbpf9XaVi/6hZr9Vp1IGFBsROdhGihFmV+KqKtmDDA6BLajI7fW6hxzCmdPyuCQB4uV/zI+c6H4E/W049tD+4U8HzcCSnd6RZ7zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lj0t09dH; arc=none smtp.client-ip=209.85.210.182
+	 To:Cc:Content-Type; b=hrPyGKTXmFIIkt0HsdrjWnNVZyAO/1FvVtSKcVLWQaTkwmkeHn9O84N/jKgpZYkD7osGNjxGiBn7g0TuQV5fvFM2dCxJtbn6YLedN18sgT2eFyhUqj3CNMY1VL0aTEYxJU5tPc+Aggvia3VOxXuH6ZsfdhigNAhC78ivT5XzXbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJF9E6Yn; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lj0t09dH"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-714226888dfso1873021b3a.1;
-        Fri, 30 Aug 2024 13:43:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJF9E6Yn"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7bcf8077742so1562120a12.0;
+        Fri, 30 Aug 2024 13:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725050627; x=1725655427; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725051077; x=1725655877; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/J3chlRHgWeDFjFRxlbl2Q7F2+KANwyc4B88VCV1lWA=;
-        b=lj0t09dHmOY1drWCDwH7GmBPHnFLVxET5uVk73XttInjdZxH4Z8Zr5XO0s5MqeHsHp
-         t0NkSo/e9nrcnCZPvsPyy+UJODgTz7njRXlkyBfE3g8eXvKU9H1xgoITF7OEV4pg/suF
-         sLTj4gBliOnNaNWf+VgqzqBVf7BABTtk1hX3C9P8r2MuRQtQTkwBIMWDdsNMfiE2Efj7
-         OPHmxTg2vfXdxI3MqDkEoY7tU3WImxuIYA+o1H9xsJgk5tcEOG7wFQqH+S+0RyUS0oB7
-         90KDlreSy5HwlS0YeSdDel3Z9ei/1E25VzmVa7XFs7MuAns/F/xemZltIOD2tUVpRhXt
-         W2Yw==
+        bh=gKCWX5eBlnYoIPNYnC/Yrj2h0Y/qTbwBQ/bhYQL0ahI=;
+        b=RJF9E6YnGRQz8YjtxUy4PrOwffcqeN3TRTJ/PAPJibjhWIV+HvckGQx47Zrh10BajW
+         xiSjC5rAnXpAhFey2xvQ0O8cj/5Gu+fpISFWjm3LjhXXzh7HSaCpwLPovbdt2LeNPOAm
+         yHOWbRqLYka5h7fUNnrwR8xvCTaSt7qbLq7f9NFE0fu/H2WkqnkA17ShzyFJwzlMHpar
+         jwKbqeyq+BP0nfVH7JE37EhGm+ORG7JJz968nERfFA42MooKcGpV6OzWrEQNEnQusawZ
+         bQhfw1yEBVM5qVleUvM5nw8lB+hnI6/9PsufzuxqL3GZcui6PdBvEP3NnmIfPS3eMV+4
+         mEUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725050627; x=1725655427;
+        d=1e100.net; s=20230601; t=1725051077; x=1725655877;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/J3chlRHgWeDFjFRxlbl2Q7F2+KANwyc4B88VCV1lWA=;
-        b=pPuH/JbA7FWBmcRjWbSPRRdWAmIAX2K4k3Kd8XNt6bkEkZ6+6XPoG0pWosz1P8P5TB
-         ZcD9QpOqD/6YHvveIE1d7Y/tg0iTdTtGLi5VsiwdbMGNON1tNvVsID/uKnH/F1EbAV4D
-         gGKQ5dPrCGoO6nPAWrmK9vV84bzsKoUYEl06sEDMhQr9qCn5eR0uA7eZSrQiLbgyQat2
-         JnRrSzaxps1arihqS1kRCrJBGRoi2gcd+aay+jzSvVtQpzG+9vgLUH4+ezhFaP6Ki1s9
-         UX/NpGxp93CyWDEvq8TY5KYtFvYvXpJ+GpVggxm1Qq4VlKr+1eBq8I+5/ZKRpImB3gMZ
-         AJRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3SoJeI9DpQOoQdPts1Q70Qn//SkRAIz2604Xh3FzmUxBRphU2n8NXB6yEOu4ZFxq1+Ok=@vger.kernel.org, AJvYcCWLUQPTexHaJKWyhULsmmlQ8yDShcChT3M0FwO4xM/S0Q9GP4FoFEU9hR1XZZGHOWmNmaTiEpqaXTs7pOX/5axKu9D7@vger.kernel.org, AJvYcCWWJSE0TVM5W3ly5MYk8hPOjIrXj8OFIPv4oNlUT2CesBfp4ccTZ02LnzKKOh0TC8xcBUNgUTpz9dGgLCn/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjrHMgb7AeOyLg9tnCdO3fn9uubq/9d1sOgDgciAqIKWJp00Rp
-	UzUmCQ+AkHfidtZ9LY/cEw3JsNQz6oXhW9eUh+/RSVHq36XBKokxi4Sy3x0xNc23EUK0XmOt4fS
-	NO63xfn+UAzg8zyfi+GqpKtRH2SI=
-X-Google-Smtp-Source: AGHT+IE4nYRaD6VNgiFBs2JY8ume+v97ADAducXuYilVQJHUShm0gRe+pkzkUhVf//0F8ALTesi7AxhylpkqGj1uvIU=
-X-Received: by 2002:a17:90a:ce90:b0:2d8:6f73:55a with SMTP id
- 98e67ed59e1d1-2d86f7305edmr3303400a91.25.1725050627471; Fri, 30 Aug 2024
- 13:43:47 -0700 (PDT)
+        bh=gKCWX5eBlnYoIPNYnC/Yrj2h0Y/qTbwBQ/bhYQL0ahI=;
+        b=haUegjPKmp9ONhiZhiMs7NlcATbrQ9Yg1F3PhP36hYZU8e3DC0z8JPQ3oEQQYbm+k0
+         yB3Z1Rqrt9lIWuKn4A2MN4UmAkzg3GtejNuN+hjbHNIMff3y8Rw2tcwaWZdp6PEuX5Hn
+         M8ym9KNSS6KQj9BAC7RH+xWsdxVIKmLFUvHdVda0eGo2kHHRHzVnfNDSZJSzYhdY/ejm
+         DbWTi9/vaDCifC+877IIOoxGTLG9FL9lnXZomWFGGQr94yTXFSNXs4cLfHkLq6SyAX6C
+         zkbZDw3/kpc4YVysknQimfrTkoO2JrMjgV2hZNymlevEQMUIWPULkLBlzXiBtKV1j6jT
+         wjJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUYC+Mg9ik++MAOfHqGU7odRf3xf7jB9t3imLQ+X3tVb4+qv6Vhlu6JNID4hBoLrr9+nbWKXeVsQ+gGAM5@vger.kernel.org, AJvYcCUV9edyw3Eo3Htu4N5OjcZuTzcAZjx84ixdM0fFjRU0gmAwzSx6BNC4R/Y+1ukE6h/NV3WWEVOB1Ucc6yp8pFfBUk60@vger.kernel.org, AJvYcCVsIx5A4CZkYZqxdPnMjdVU8+f6k4wH01Et8s5LMIoKbnnu9sRxHA+55LfCQ3P8isJfnCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv+OxP5xUD9+gOtGT4Ew1UtTQNXsmUeuBj+XZbtaeHBStfYJDc
+	gR3h64xNBDGkwg21Mu+fhtcFVIIbU+2JLovjs+EZg1u/PTpT9KJAFAi1qSvypqimjWjs4UIZMIq
+	EmsGePETGQ/zivFx/CJiTTopsCq8=
+X-Google-Smtp-Source: AGHT+IFJkXzMiCz4hLWiGHcIVHu9KNDUbV2A/WAg3aG8mUvFdbjfQlgpeqAXSl8XE4hL1lGIco6WROtxFKXpTg8dotw=
+X-Received: by 2002:a17:90a:4b85:b0:2cf:7388:ad9e with SMTP id
+ 98e67ed59e1d1-2d85616eccamr7546969a91.2.1725051077220; Fri, 30 Aug 2024
+ 13:51:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240829183741.3331213-1-andrii@kernel.org> <20240829183741.3331213-5-andrii@kernel.org>
- <ZtD_x9zxLjyhS37Z@krava> <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
- <ZtHM_C1NmDSKL0pi@krava> <20240830143151.GC20163@redhat.com>
- <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com> <20240830202050.GA7440@redhat.com>
-In-Reply-To: <20240830202050.GA7440@redhat.com>
+References: <20240829194505.402807-1-jolsa@kernel.org> <20240829194505.402807-3-jolsa@kernel.org>
+In-Reply-To: <20240829194505.402807-3-jolsa@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 30 Aug 2024 13:43:35 -0700
-Message-ID: <CAEf4BzZCrchQCOPv9ToUy8coS4q6LjoLUB_c6E6cvPPquR035Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list locklessly
- under SRCU protection
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org
+Date: Fri, 30 Aug 2024 13:51:04 -0700
+Message-ID: <CAEf4Bza4JztS8YBaEFUi81OwH2aSNbv3c29hoVc31vTnfgiCLA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: Add uprobe pid filter test
+ for multiple processes
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Tianyi Liu <i.pear@outlook.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 30, 2024 at 1:21=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Thu, Aug 29, 2024 at 12:45=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote=
+:
 >
-> On 08/30, Andrii Nakryiko wrote:
-> >
+> The idea is to create and monitor 3 uprobes, each trigered in separate
+
+typo: triggered
+
+> process and make sure the bpf program gets executed just for the proper
+> PID specified via pid filter.
 >
-> Andrii, let me reply to your email "out of order". First of all:
->
-> > Can we please let me land these patches first? It's been a while. I
-> > don't think anything is really broken with the logic.
->
-> OK, agreed.
->
-> I'll probably write another email (too late for me today), but I agree
-> that "avoid register_rwsem in handler_chain" is obviously a good goal,
-> lets discuss the possible cleanups or even fixlets later, when this
-> series is already applied.
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../bpf/prog_tests/uprobe_multi_test.c        | 103 ++++++++++++++++++
+>  .../bpf/progs/uprobe_multi_pid_filter.c       |  61 +++++++++++
+>  2 files changed, 164 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_pid_fi=
+lter.c
 >
 
-Sounds good. It seems like I'll need another revision due to missing
-include, so if there is any reasonably straightforward clean up we
-should do, I can just incorporate that into my series.
+It's good to have a test, thanks for adding it! But we should couple
+it with the fix in multi-uprobe and land together, right? I'm not
+exactly sure why we can't just use task->signal-based check, but let's
+try to converge on something and fix it.
 
->
->
-> > On Fri, Aug 30, 2024 at 7:33=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > No, I think you found a problem. UPROBE_HANDLER_REMOVE can be lost if
-> > > uc->filter =3D=3D NULL of if it returns true. See another reply I sen=
-t a
-> > > minute ago.
-> > >
-> >
-> > For better or worse, but I think there is (or has to be) and implicit
-> > contract that if uprobe (or uretprobe for that matter as well, but
-> > that's a separate issue) handler can return UPROBE_HANDLER_REMOVE,
-> > then it *has to* also provide filter.
->
-> IOW, uc->handler and uc->filter must be consistent. But the current API
-> doesn't require this contract, so this patch adds a difference which I
-> didn't notice when I reviewed this change.
->
-> (In fact I noticed the difference, but I thought that it should be fine).
->
-> > If it doesn't provide filter
-> > callback, it doesn't care about PID filtering and thus can't and
-> > shouldn't cause unregistration.
->
-> At first glance I disagree, but see above.
+pw-bot: cr
 
-I still think it's fine, tbh. Which uprobe user violates this contract
-in the kernel? Maybe we should just fix that while at it? Because
-otherwise we are allowing some frankly too-dynamic and unnecessarily
-complicated behavior where we can dynamically unsubscribe without
-actually having corresponding filter logic.
+[...]
 
-As I mentioned earlier, I actually considered calling filter
-explicitly to enforce this contract, but then got concerned about
-indirect callback overhead and dropped that idea.
+> +#define TASKS 3
+> +
+> +static void run_pid_filter(struct uprobe_multi_pid_filter *skel,
+> +                          create_link_t create_link, bool retprobe)
+> +{
+> +       struct bpf_link *link[TASKS] =3D {};
+> +       struct child child[TASKS] =3D {};
+> +       int i;
+> +
+> +       printf("%s retprobe %d\n", create_link =3D=3D create_link_uprobe =
+? "uprobe" : "uprobe_multi",
+> +               retprobe);
 
->
-> > > I think the fix is simple, plus we need to cleanup this logic anyway,
-> > > I'll try to send some code on Monday.
->
-> Damn I am stupid. Nothing new ;) The "simple" fix I had in mind can't wor=
-k.
-> But we can do other things which we can discuss later.
->
+leftovers
 
-I actually don't see how anything reasonably simple and
-straightforward (short of just taking register_rwsem) can work if we
-want this weird out-of-sync filter and dynamic UPROBE_HANDLER_REMOVE
-behavior to remain. But again, does anyone actually rely on that and
-should it be even allowed?
+> +
+> +       memset(skel->bss->test, 0, sizeof(skel->bss->test));
+> +
+> +       for (i =3D 0; i < TASKS; i++) {
+> +               if (!ASSERT_OK(spawn_child(&child[i]), "spawn_child"))
+> +                       goto cleanup;
+> +               skel->bss->pids[i] =3D child[i].pid;
+> +       }
 
-> Oleg.
->
+[...]
