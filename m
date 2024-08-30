@@ -1,74 +1,102 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AA51B7901;
-	Fri, 30 Aug 2024 17:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FB114C585;
+	Fri, 30 Aug 2024 17:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725037686; cv=none; b=jmon0ieDUbNWdahBsCnXqlJF5Hzm9JKSYGTtKOC6zKAXg6+uz//ooE5Laav+Y1ASNjUCskCiOU3T7xDBALh5QQ808i3OxryJVxGdaGEGvdskYSYnROoFLbh03xFutEZRYO/ax8RpkwuIySn/nq0PUMbQt2xk7eKXqrSR/dRNBvk=
+	t=1725038603; cv=none; b=ULIlUoQZllm1Lp47RDgwQEDYOkne/R2yhdD1NqqQdrUIUIYh1yY888nQ8JXSf0/jlLDNu/wLVLiL+PHF4uqeb88tblguC4eftHpAY/ZQ833GBvDrEv8pdCSOVPdPqA2y5wr5KHoxAz7tLUJCgVtvqRkxE7eywpBQ/dSxyy40Up8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725037686; c=relaxed/simple;
-	bh=IJwVWoR9vmDTt73hyzZ3CPkIqCQjz9cth03BUJPMtfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKR7bBLQz8xLIl/15o15q0o2RZK+9WYFkl8Og22dlR0qVC0gZ0H4EvSu5/DhWQukNb88Q4rrOCCE0hGybmk8gip263bzX2+JcllvnmosJVI4MNwEt4JfJD5sPxibtqC+kQju8f6Qy7x/zQ0tZYjVAI0CQ2dHDEfYl+F9PbCpNVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7140ff4b1e9so1796495b3a.3;
-        Fri, 30 Aug 2024 10:08:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725037684; x=1725642484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Kpqff1ZRNEMmL2lakzbO2QH+zWg9/hj7zWPahmr+F4=;
-        b=SHe4Ugdwy/DjLLF0lOyfibXGUmmyqHX0r7MLgQtkZrCNSiuFMtZ3oiCNlctD3a5gb4
-         g+L0JqZw5n4o6H3xuRSG2zbxxtO3vq8/dtc2/EmxPbGvY0SfGBjslSLB48LXIQTNB9cx
-         MDIv5Dg72+g8q6KOy7h5hl/cYr/bXd3co5ILCy3pFlR4dtgpkF4n5YIatQY+OVDwKZNq
-         VpI8+tPOQDGQ1pXgI3v5IBOT5W8cuBJTyC6WD1YPzJu5GMJtmlwRsiOeYVdrG7ggoIkc
-         GdF/0uRISdqDcFmlARGwpq8C/OzXGo/Xdm/0ZwH4OZwLY4/upPJdhsy6uWPqkzSlVuch
-         9ZPw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0+7alHsKW84zVEi2b9Z5lBobFtwDwFxBeQ2RqkWbmy5UCRDeBF7OW7sU389sdDuIFOEA/cwHeesnmF94Unm+sHMam@vger.kernel.org, AJvYcCWAQ8Yq8o5/+0kn0pUI1txSmAWgSWtl4tD3DDmePady8TGG0FuojQ7AVoomrgdON9lOzeY=@vger.kernel.org, AJvYcCXcdZNN3yNu6FMgMcaKhu5FCXnOcTmhG7mJdpXzrj5XNaSoxescCf18gEzit3Wf9HFBQ8/8tM3rCBBrGZAS@vger.kernel.org
-X-Gm-Message-State: AOJu0YywpnFKiXXTKH6QH/ztFTALToQfFRmf4kLynprs3AEpkYpIHj/F
-	Dem/w5RDZkI5+mP4BncLOjvxvej6bkIIzu9VqtLI5WAt2jf5OlE=
-X-Google-Smtp-Source: AGHT+IFfkR/mjMqvMYaLtp7RlkJCVTndcSbys5q4XADfYm0UxuG1NuoNqkTIttVF0pdumPS8US+0pg==
-X-Received: by 2002:a05:6a20:6f87:b0:1ca:ccd1:281e with SMTP id adf61e73a8af0-1cce0ff268cmr6682387637.7.1725037684432;
-        Fri, 30 Aug 2024 10:08:04 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:73b6:7410:eb24:cba4])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e77554fsm3253456a12.33.2024.08.30.10.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 10:08:03 -0700 (PDT)
-Date: Fri, 30 Aug 2024 10:08:03 -0700
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Tianyi Liu <i.pear@outlook.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 0/2] selftests/bpf: Add uprobe pid filter test
-Message-ID: <ZtH8c5EP9S7BByEc@mini-arch>
-References: <20240829194505.402807-1-jolsa@kernel.org>
+	s=arc-20240116; t=1725038603; c=relaxed/simple;
+	bh=OQprKL7AItHOSloDct5hB2de1jg2c4V4YkjD5qduxVc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jn8TdRtd64oaZTNpWLBZwEsUWEidfxJ0hhhbrFOOUeWIqggvGjseSJ4xowUG5vaWhBWUXN0TRZ47jZpHcXlihDddiXEA7ziPm9DaH9GZLhpfDKJ9zLJUIqPUmWl/W/6MIxlsOyPVBIz9dfNYlAu1wAOKV9v3M4F9i652vJPpVB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WwQ3D1gMBz9sS8;
+	Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id g-0ANya1nR0i; Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwQ3D0Xpmz9sS7;
+	Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id F13B68B794;
+	Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 7ABmumGq8hAw; Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
+Received: from [192.168.234.133] (unknown [192.168.234.133])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 125AE8B764;
+	Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
+Message-ID: <b33384e2-088d-4116-81d5-ae895a761c19@csgroup.eu>
+Date: Fri, 30 Aug 2024 19:23:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240829194505.402807-1-jolsa@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/5] powerpc/vdso: Wire up getrandom() vDSO
+ implementation on PPC32
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+ llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org,
+ Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+ Xi Ruoyao <xry111@xry111.site>
+References: <cover.1725031952.git.christophe.leroy@csgroup.eu>
+ <e7e4c6d36cf98229850c333f113bcea909564501.1725031952.git.christophe.leroy@csgroup.eu>
+ <ZtHv9R8b7qwWKR2b@zx2c4.com>
+ <84682299-8cbe-4b66-9c26-17786e73af55@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <84682299-8cbe-4b66-9c26-17786e73af55@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 08/29, Jiri Olsa wrote:
-> hi,
-> in response to [1] patch, I'm adding bpf selftest that confirms the
-> change fixes problem for bpf programs trigered by return uprobe created
-> over perf event.
+
+
+Le 30/08/2024 à 18:42, Christophe Leroy a écrit :
 > 
-> Oleg pointed out other issues with uprobe_multi pid filter,
-> I plan to send another patchset for that.
+> 
+> Le 30/08/2024 à 18:14, Jason A. Donenfeld a écrit :
+>> On Fri, Aug 30, 2024 at 05:57:08PM +0200, Christophe Leroy wrote:
+>>> + *    r5: 8-byte counter input/output (saved on stack)
+>>> + *
+>>> + *    r14-r15: counter
+>>> + */
+>>> +SYM_FUNC_START(__arch_chacha20_blocks_nostack)
+>>> +    stwu    r1, -96(r1)
+>>> +    stw    r5, 20(r1)
+>>> +    stmw    r14, 24(r1)
+>>> +    li    r31, 4
+>>> +    LWZX_LE    r14, 0, r5
+>>> +    LWZX_LE    r15, r31, r5
+>>
+>> Why swap endian on the counter?
+> 
+> Unlike the keys, the counter is passed to the function as an u8*, not as 
+> a u64*, so I thought it was raw data in little endian order, same as 
+> when using Sodium. Is it wrong ?
 
-Not sure whether Oleg or Andrii plan to take a look, but LGTM:
+Hum ..... I looked again and it seems it is already a u32 *. Looks like 
+I mis-read the 8-byte comment. Or I did it right in the begining then I 
+swapped it at the same time as I swapped the keys after my first test 
+when the selftest was using Sodium. I can't remember. I'll fix it.
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+Christophe
