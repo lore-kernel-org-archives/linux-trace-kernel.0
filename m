@@ -1,101 +1,126 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BE51BB69B;
-	Fri, 30 Aug 2024 18:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4CF1BFDE7
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 20:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725043964; cv=none; b=ZrMHWGfYpn2RSJFrgqQdynyOEwhoZ4QT0uAtAaehZTPrDKFVQzNY/DptSeDDXL/WxGSJnqqG876KLDpMF/vcOHHnSn9FZUn+qLynEUXC3tG2ZiDPcNroCQYQWJX2ZZsXH+3baItJy36nK+KQ/RFQuN904+HflRrRdy9tr8gg5n4=
+	t=1725049279; cv=none; b=IcipNeQYvoEPbP1rqAd9FoQ2Dtu6Aq2av865D+8gccPd89HfbvxKs4t8mprG2/rLOR2OsYRdJmfWMu8U+x9ivPLJ6zy5BmHJticbjHvjwqZZUMq0oxXmQkzO/8kX/L1meklo3zZoO4bGbU/zAvAtkOvwSct0+tcXYOe5hth7WTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725043964; c=relaxed/simple;
-	bh=kPiLDQ8HQsZ7OY2s7jtUVwKAWbrRXvStaSUX+5VHXqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MSw2zZm4rOFiwni7YV532TOmNrd5CZGVXYRrFRBgPg9q4Cx+DBBIK1TYIfHGP/zGlZ7ejGY/04tkMkZPgUOe/HkVElRd1HfbsVXq0mqmXv4K6SSYifPGCk7YaeQHWAJOQzGpYffZp549G0cXZ9YuJknUe3ZdqOxKon1cGtwBIEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WwS2H2zdLz9sSN;
-	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 3f9-XC2A1YeT; Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwS2H1wnjz9sSK;
-	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 28C2A8B794;
-	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id h0_TT9jQfciA; Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
-Received: from [192.168.234.133] (unknown [192.168.234.133])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 428938B764;
-	Fri, 30 Aug 2024 20:52:38 +0200 (CEST)
-Message-ID: <ef38cd36-3e15-4608-8b72-87cf7621cce6@csgroup.eu>
-Date: Fri, 30 Aug 2024 20:52:37 +0200
+	s=arc-20240116; t=1725049279; c=relaxed/simple;
+	bh=tlG9Z3SWZS45Au6orXQjCifgDXL/6bzfSjTyzN+bf2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ju2I9nFk0IhwZQKD8g2fQ35h3QLV84DEf9IBWbpGAKj6ejbmyldwjl7p9BLh0RSVuns4hKiPooGRvmGOROv/pL6nHiGyWCjiurm4HUvyZNK04OL8jVgc8ZQ0hXAWEMhY7asdx0GLzFTgTcW3kGnSkt9jI8fJCHucu77m0XpP2p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hzLxFntC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hzLxFntC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725049276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tlG9Z3SWZS45Au6orXQjCifgDXL/6bzfSjTyzN+bf2c=;
+	b=hzLxFntCDVGrHAZ6s+tZassPKMXDCsrgRpqbT/Li0PptNwcUqAZ4R3b4rlwjTB8oy097dA
+	jVVLBzpVPcAt7/SnnTIR3C+IzRS6472Wb/COWOQlEWmQisrrDsPnCmlEwmLTa70xvNq15w
+	zvSmB9xpRRDw1OuXkFidFbIh0ohmPsM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-H6sJ7imwP5qkwnjaTwy5Iw-1; Fri,
+ 30 Aug 2024 16:21:08 -0400
+X-MC-Unique: H6sJ7imwP5qkwnjaTwy5Iw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA2AB19560A6;
+	Fri, 30 Aug 2024 20:21:05 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.148])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 02C8119560A3;
+	Fri, 30 Aug 2024 20:20:59 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 30 Aug 2024 22:20:57 +0200 (CEST)
+Date: Fri, 30 Aug 2024 22:20:50 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+Message-ID: <20240830202050.GA7440@redhat.com>
+References: <20240829183741.3331213-1-andrii@kernel.org>
+ <20240829183741.3331213-5-andrii@kernel.org>
+ <ZtD_x9zxLjyhS37Z@krava>
+ <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
+ <ZtHM_C1NmDSKL0pi@krava>
+ <20240830143151.GC20163@redhat.com>
+ <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] powerpc/vdso: Wire up getrandom() vDSO
- implementation on PPC32
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
- llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org,
- Adhemerval Zanella <adhemerval.zanella@linaro.org>,
- Xi Ruoyao <xry111@xry111.site>
-References: <cover.1725031952.git.christophe.leroy@csgroup.eu>
- <e7e4c6d36cf98229850c333f113bcea909564501.1725031952.git.christophe.leroy@csgroup.eu>
- <ZtHwnc4AZuRULkom@zx2c4.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <ZtHwnc4AZuRULkom@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+
+On 08/30, Andrii Nakryiko wrote:
+>
+
+Andrii, let me reply to your email "out of order". First of all:
+
+> Can we please let me land these patches first? It's been a while. I
+> don't think anything is really broken with the logic.
+
+OK, agreed.
+
+I'll probably write another email (too late for me today), but I agree
+that "avoid register_rwsem in handler_chain" is obviously a good goal,
+lets discuss the possible cleanups or even fixlets later, when this
+series is already applied.
 
 
 
-Le 30/08/2024 à 18:17, Jason A. Donenfeld a écrit :
-> On Fri, Aug 30, 2024 at 05:57:08PM +0200, Christophe Leroy wrote:
->> @@ -14,6 +14,10 @@ ifeq ($(uname_M),x86_64)
->>   TEST_GEN_PROGS += vdso_test_getrandom
->>   TEST_GEN_PROGS += vdso_test_chacha
->>   endif
->> +ifeq ($(ARCH),powerpc)
->> +TEST_GEN_PROGS += vdso_test_getrandom
->> +TEST_GEN_PROGS += vdso_test_chacha
->> +endif
-> 
-> FYI, as of [1], you should now be able to add powerpc to the filter list
-> instead of having to duplicate a new stanza:
-> 
-> [1] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fcrng%2Frandom.git%2Fcommit%2F%3Fid%3Dbbaae98172ed284fc0d5d39cc0d68f5d06164f06&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4f51736c027a44cc7df908dcc90f46d6%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638606314665557021%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=UtLdKTuEaZVhsguKa7kX1TBJ%2BvvQtl7DmU9hSBeThWo%3D&reserved=0
+> On Fri, Aug 30, 2024 at 7:33 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > No, I think you found a problem. UPROBE_HANDLER_REMOVE can be lost if
+> > uc->filter == NULL of if it returns true. See another reply I sent a
+> > minute ago.
+> >
+>
+> For better or worse, but I think there is (or has to be) and implicit
+> contract that if uprobe (or uretprobe for that matter as well, but
+> that's a separate issue) handler can return UPROBE_HANDLER_REMOVE,
+> then it *has to* also provide filter.
 
-I'm a bit sceptic with that commit. IIUC you are changing the meaning of 
-$ARCH. How does that fit with the $ARCH we give when we cross-build or 
-with the ARCH which is set by the top-level Makefile in 
-tools/testing/selftests ?
+IOW, uc->handler and uc->filter must be consistent. But the current API
+doesn't require this contract, so this patch adds a difference which I
+didn't notice when I reviewed this change.
 
-Also, wouldn't there be a way to use scripts/subarch.include instead of 
-opencoding ?
+(In fact I noticed the difference, but I thought that it should be fine).
 
-Afterall, would it be a problem to build it even for i386 ? It should 
-now be ignored anyway with your new commit f78280b1a3ce ("selftests: 
-vDSO: skip getrandom test if architecture is unsupported")
+> If it doesn't provide filter
+> callback, it doesn't care about PID filtering and thus can't and
+> shouldn't cause unregistration.
 
-Christophe
+At first glance I disagree, but see above.
+
+> > I think the fix is simple, plus we need to cleanup this logic anyway,
+> > I'll try to send some code on Monday.
+
+Damn I am stupid. Nothing new ;) The "simple" fix I had in mind can't work.
+But we can do other things which we can discuss later.
+
+Oleg.
+
