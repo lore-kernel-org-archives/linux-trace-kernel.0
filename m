@@ -1,58 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E676B16CD1D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 10:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1A218EFDD
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 12:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725013464; cv=none; b=CNAOdyVmKpM6hENaaynoSF7n3VnBW2AAxGi6lfNeBcIYWk0zYUI0f62W3gaqcKDCLIUZuEifTMoqj9MOlGn3AJjXEfPL2pOdKf8vVzK8JT1SGtOIf1FPtYE4/N2dRG+SNXu3yOHvbQRbolbZvp4zgwsdQsTQ4L/1Bax7J6sigMM=
+	t=1725020646; cv=none; b=i57ZwZPqE+njEg+IzQu6NQXW7KM6GS7/p4GPyP1bpmNZI5KPYiL63TpQGD5F6d71Ku29btQC0KYyUu3KTPWJ3SUp1Lf1n48G8H29uIgnqtu2XWnz8cAPet4vH4+tKSbdDZdm5y41egoxFAEOhwBSG3u63csECSuEx43Xuch0kFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725013464; c=relaxed/simple;
-	bh=RQsHHI7kpVwOdK1joEOHTJ/7pkW/4sUkVR399XuvvWw=;
+	s=arc-20240116; t=1725020646; c=relaxed/simple;
+	bh=cTGvbv08K/sWtnBpqDdI7n4W/OX+sZYzLx3z4jVh5go=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZhd/JmigjuzGrXNidx4KtQ+gxhZ1m09yESE4WlTGusFGPODRUsBimvfWTBQSJex5esXelDVjP24S5Lfd+QzDT+FdtHMn5GOFg/niIRCjnwZQk5YTSzX6TNtDlX558703FG6synvieP2XLM9svGQRCu4rtwXA47KpgAhFVG3J38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FAGptrby; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gmy6i+E5AgXH520gvv5E/dhyWwcgCYHNGwQwsuPoQ9O5oNT7znKhwlnSaauFMbt5dxsEc2vEcs/6wmLn2+OnBhypLqMQl0oOrGW2lgJRugIaHshaUcB8IL3WT/S5vQNyAMVlMMKJ+MLA7doIqDe3VibqgZrrVv8PaZa9VZiHV0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HcqUwAv2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FAGptrby"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HcqUwAv2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725013461;
+	s=mimecast20190719; t=1725020644;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XYesMj5ueiMNqutffq7npoYQS7CjMMgXBJZZO+/Hjyo=;
-	b=FAGptrbynQMs5LmkuuNdcgUPcJLcdMzjOISeTMEHibwSY2D6O+JLOe0nhtlNRMkfKKOA5O
-	lMt3ON82rGvSMvT57D+nLOuwAcQnLMorfH3ci54iRP5LPOJHO49KRD9D2NeI0rZoJQYOz+
-	Xxp3iSpochM309uRoaQX2tk7Tl4iNts=
+	bh=d608LoyObFpK/i0hzP74kClO+W039KnkxuFIsRVX6OI=;
+	b=HcqUwAv2fyKunwL9f98oTiLrTX2sXrx0i+De0ZC3hjTRQi3z7Cm03EMJ1PIx+L0s2CHT9X
+	MvngNTYisEeFMu6xPqD8pKimqphy1n05CZ3WUnz7Dr3P6SvfjckFMn8gQhVCAY1iabxvEi
+	7ILzjvjuNK9rfSXcbDZucHz4exT45u4=
 Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-292-nL0bmLKMNpqdezNL84YlXg-1; Fri,
- 30 Aug 2024 06:24:18 -0400
-X-MC-Unique: nL0bmLKMNpqdezNL84YlXg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-393-sgxod5vcNbuVZEl3GZkecw-1; Fri,
+ 30 Aug 2024 08:24:00 -0400
+X-MC-Unique: sgxod5vcNbuVZEl3GZkecw-1
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 967581955D48;
-	Fri, 30 Aug 2024 10:24:15 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 874981955BED;
+	Fri, 30 Aug 2024 12:23:58 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.148])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8F0F61955F45;
-	Fri, 30 Aug 2024 10:24:10 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EBAB71955F6B;
+	Fri, 30 Aug 2024 12:23:53 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 30 Aug 2024 12:24:07 +0200 (CEST)
-Date: Fri, 30 Aug 2024 12:24:01 +0200
+	oleg@redhat.com; Fri, 30 Aug 2024 14:23:50 +0200 (CEST)
+Date: Fri, 30 Aug 2024 14:23:44 +0200
 From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v4 0/8] uprobes: RCU-protected hot path optimizations
-Message-ID: <20240830102400.GA20163@redhat.com>
-References: <20240829183741.3331213-1-andrii@kernel.org>
+To: Tianyi Liu <i.pear@outlook.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Jordan Rome <linux@jordanrome.com>,
+	ajor@meta.com
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com,
+	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240830122344.GA28086@redhat.com>
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240830101209.GA24733@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,17 +64,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240829183741.3331213-1-andrii@kernel.org>
+In-Reply-To: <20240830101209.GA24733@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 08/29, Andrii Nakryiko wrote:
+On 08/30, Oleg Nesterov wrote:
 >
-> v3->v4:
->   - added back consumer_rwsem into consumer_del(), which was accidentally
->     omitted earlier (Jiri);
+> 	- This patch won't fix all problems because uprobe_perf_filter()
+> 	  filters by mm, not by pid. The changelog/patch assumes that it
+> 	  is a "PID filter", but it is not.
+>
+>	  See https://lore.kernel.org/linux-trace-kernel/20240825224018.GD3906@redhat.com/
 
-still,
+Let me provide another example.
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+spawn.c:
+
+	#include <spawn.h>
+	#include <unistd.h>
+
+	int main(int argc, char *argv[])
+	{
+		int pid;
+		sleep(3); // wait for bpftrace to start
+		posix_spawn(&pid, argv[1], NULL, NULL, argv+1, NULL);
+		for (;;)
+			pause();
+	}
+
+Now,
+
+	$ ./spawn /usr/bin/true &
+	bpftrace -p $! -e 'uprobe:/usr/lib64/libc.so.6:sigprocmask { printf("%d\n", pid); }'
+	[2] 212851
+	Attaching 1 probe...
+	212855
+	^C
+	$ ./spawn /xxxxxxxxxxxx &
+	bpftrace -p $! -e 'uprobe:/usr/lib64/libc.so.6:_exit { printf("%d\n", pid); }'
+	[3] 212860
+	Attaching 1 probe...
+	212865
+	^C
+
+This patch can't help in this case.
+
+Oleg.
 
