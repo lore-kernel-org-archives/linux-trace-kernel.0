@@ -1,102 +1,130 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FB114C585;
-	Fri, 30 Aug 2024 17:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC691C6A5;
+	Fri, 30 Aug 2024 17:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725038603; cv=none; b=ULIlUoQZllm1Lp47RDgwQEDYOkne/R2yhdD1NqqQdrUIUIYh1yY888nQ8JXSf0/jlLDNu/wLVLiL+PHF4uqeb88tblguC4eftHpAY/ZQ833GBvDrEv8pdCSOVPdPqA2y5wr5KHoxAz7tLUJCgVtvqRkxE7eywpBQ/dSxyy40Up8=
+	t=1725039749; cv=none; b=HBQBqJBISFKo9CYVM9Nl1MRWFK3OHm9VkpdPAe6kGvZsNJe+6lwNFMV5tjBcYSd7MZv8vlwQO98XI2br6/ocYw6kd9MlLQs+e6GsdbJF0D/tFmTKhIc3DIk0ZbadcN1DYrH5jjRGLAOTLvyO7tqibTBI2gvz5hMUIyCXZV/Z2SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725038603; c=relaxed/simple;
-	bh=OQprKL7AItHOSloDct5hB2de1jg2c4V4YkjD5qduxVc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jn8TdRtd64oaZTNpWLBZwEsUWEidfxJ0hhhbrFOOUeWIqggvGjseSJ4xowUG5vaWhBWUXN0TRZ47jZpHcXlihDddiXEA7ziPm9DaH9GZLhpfDKJ9zLJUIqPUmWl/W/6MIxlsOyPVBIz9dfNYlAu1wAOKV9v3M4F9i652vJPpVB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WwQ3D1gMBz9sS8;
-	Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id g-0ANya1nR0i; Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwQ3D0Xpmz9sS7;
-	Fri, 30 Aug 2024 19:23:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id F13B68B794;
-	Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 7ABmumGq8hAw; Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
-Received: from [192.168.234.133] (unknown [192.168.234.133])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 125AE8B764;
-	Fri, 30 Aug 2024 19:23:19 +0200 (CEST)
-Message-ID: <b33384e2-088d-4116-81d5-ae895a761c19@csgroup.eu>
-Date: Fri, 30 Aug 2024 19:23:18 +0200
+	s=arc-20240116; t=1725039749; c=relaxed/simple;
+	bh=3MNP2MVv4HH9Xr02GOYFXzqt2aY5RaJ54paa0p/6Q1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nox78iV+aammd1nvZ4MsZjVv6nKkmoSLfifkEcNGza3oExwaxO60t5RojAQoqAC2IS/a2ESY+0H4xy9QKwUhy1NGRj+RSJRN5capuUOGLKRbrvN55RwzLbVqcjToclftfJTNi1wjfZugdAFNHlrJIzeR0mxeS8GogqaeH2TuQxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pvb4Bpnq; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pvb4Bpnq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725039748; x=1756575748;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3MNP2MVv4HH9Xr02GOYFXzqt2aY5RaJ54paa0p/6Q1Y=;
+  b=Pvb4BpnqSsVRrkhSYubL21dNSOhUY+fekyMfkcd63mgh+GhJvSrcp442
+   iDvfd9fzNhK0xXN3gO+0fL9dog+OZFqdnoWlgJKhLu+aGyn+iLLcfJ9cI
+   qZSM4jYXjGs8nsmyCE/zb9gFUMGDNymMOidSV5jaITgg4sAQ9upIzZa2R
+   5qHOKbKZgXXvRsUkVsIoYsBAP4Oh+lphdBqEPIrvdLi1gOzso1PftWvLp
+   +bH6b04p1DofJLPREtQafpcDhNxd3Gyn4JzNa0yFunGkJRv764ly12sgj
+   oveGCirlDuoW3T8hNroR1vMEq9yoeRXtd80KSPs/NSLxpPqUp9fOoKQo2
+   w==;
+X-CSE-ConnectionGUID: O2QWvHxJTx+I8sJ7HlGjDg==
+X-CSE-MsgGUID: TNeu7S6pRieSnvubk+eUwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="26588824"
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="26588824"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2024 10:42:27 -0700
+X-CSE-ConnectionGUID: Qrn7kCy4TTmPY7lfTIiV5Q==
+X-CSE-MsgGUID: hveFh9znS2aLYY//6xr4tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,189,1719903600"; 
+   d="scan'208";a="64713167"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 30 Aug 2024 10:42:23 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sk5dc-0001la-2H;
+	Fri, 30 Aug 2024 17:42:20 +0000
+Date: Sat, 31 Aug 2024 01:41:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, oleg@redhat.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v4 8/8] uprobes: switch to RCU Tasks Trace flavor for
+ better performance
+Message-ID: <202408310130.t9EBKteQ-lkp@intel.com>
+References: <20240829183741.3331213-9-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] powerpc/vdso: Wire up getrandom() vDSO
- implementation on PPC32
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
- llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org,
- Adhemerval Zanella <adhemerval.zanella@linaro.org>,
- Xi Ruoyao <xry111@xry111.site>
-References: <cover.1725031952.git.christophe.leroy@csgroup.eu>
- <e7e4c6d36cf98229850c333f113bcea909564501.1725031952.git.christophe.leroy@csgroup.eu>
- <ZtHv9R8b7qwWKR2b@zx2c4.com>
- <84682299-8cbe-4b66-9c26-17786e73af55@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <84682299-8cbe-4b66-9c26-17786e73af55@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240829183741.3331213-9-andrii@kernel.org>
+
+Hi Andrii,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on tip/perf/core]
+[also build test ERROR on next-20240830]
+[cannot apply to perf-tools-next/perf-tools-next perf-tools/perf-tools linus/master acme/perf/core v6.11-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrii-Nakryiko/uprobes-revamp-uprobe-refcounting-and-lifetime-management/20240830-024135
+base:   tip/perf/core
+patch link:    https://lore.kernel.org/r/20240829183741.3331213-9-andrii%40kernel.org
+patch subject: [PATCH v4 8/8] uprobes: switch to RCU Tasks Trace flavor for better performance
+config: i386-buildonly-randconfig-004-20240830 (https://download.01.org/0day-ci/archive/20240831/202408310130.t9EBKteQ-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240831/202408310130.t9EBKteQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202408310130.t9EBKteQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> kernel/events/uprobes.c:1157:2: error: call to undeclared function 'synchronize_rcu_tasks_trace'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1157 |         synchronize_rcu_tasks_trace();
+         |         ^
+   kernel/events/uprobes.c:1157:2: note: did you mean 'synchronize_rcu_tasks_rude'?
+   include/linux/rcupdate.h:206:6: note: 'synchronize_rcu_tasks_rude' declared here
+     206 | void synchronize_rcu_tasks_rude(void);
+         |      ^
+   1 error generated.
 
 
+vim +/synchronize_rcu_tasks_trace +1157 kernel/events/uprobes.c
 
-Le 30/08/2024 à 18:42, Christophe Leroy a écrit :
-> 
-> 
-> Le 30/08/2024 à 18:14, Jason A. Donenfeld a écrit :
->> On Fri, Aug 30, 2024 at 05:57:08PM +0200, Christophe Leroy wrote:
->>> + *    r5: 8-byte counter input/output (saved on stack)
->>> + *
->>> + *    r14-r15: counter
->>> + */
->>> +SYM_FUNC_START(__arch_chacha20_blocks_nostack)
->>> +    stwu    r1, -96(r1)
->>> +    stw    r5, 20(r1)
->>> +    stmw    r14, 24(r1)
->>> +    li    r31, 4
->>> +    LWZX_LE    r14, 0, r5
->>> +    LWZX_LE    r15, r31, r5
->>
->> Why swap endian on the counter?
-> 
-> Unlike the keys, the counter is passed to the function as an u8*, not as 
-> a u64*, so I thought it was raw data in little endian order, same as 
-> when using Sodium. Is it wrong ?
+  1145	
+  1146	void uprobe_unregister_sync(void)
+  1147	{
+  1148		/*
+  1149		 * Now that handler_chain() and handle_uretprobe_chain() iterate over
+  1150		 * uprobe->consumers list under RCU protection without holding
+  1151		 * uprobe->register_rwsem, we need to wait for RCU grace period to
+  1152		 * make sure that we can't call into just unregistered
+  1153		 * uprobe_consumer's callbacks anymore. If we don't do that, fast and
+  1154		 * unlucky enough caller can free consumer's memory and cause
+  1155		 * handler_chain() or handle_uretprobe_chain() to do an use-after-free.
+  1156		 */
+> 1157		synchronize_rcu_tasks_trace();
+  1158	}
+  1159	EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
+  1160	
 
-Hum ..... I looked again and it seems it is already a u32 *. Looks like 
-I mis-read the 8-byte comment. Or I did it right in the begining then I 
-swapped it at the same time as I swapped the keys after my first test 
-when the selftest was using Sodium. I can't remember. I'll fix it.
-
-Christophe
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
