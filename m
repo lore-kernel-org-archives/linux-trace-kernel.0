@@ -1,109 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB9D14F135;
-	Fri, 30 Aug 2024 17:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BE51BB69B;
+	Fri, 30 Aug 2024 18:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725040744; cv=none; b=FXl8AOWC2tBVQuGJFzCqiHPjKK+v6R9lFwSQYu8vanMuoWJmGuB1rEc2V6slSeNgf0JgLrg9XieGO7gjmmlvN/5BQMv/t2Cx87JgOLUilAif38kLu+RCpEu42kSCGEFqQ2tPNru1nzZIizbMgYcsrdsQ+A14CiMBEvxNEtV/AJo=
+	t=1725043964; cv=none; b=ZrMHWGfYpn2RSJFrgqQdynyOEwhoZ4QT0uAtAaehZTPrDKFVQzNY/DptSeDDXL/WxGSJnqqG876KLDpMF/vcOHHnSn9FZUn+qLynEUXC3tG2ZiDPcNroCQYQWJX2ZZsXH+3baItJy36nK+KQ/RFQuN904+HflRrRdy9tr8gg5n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725040744; c=relaxed/simple;
-	bh=2Jkgq5he2WxrmzFT3bK4fOcS2dH6LFp69dhviYcUaOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oc85VY8Gaj6GN+5QSv1jRLB9gu70C2GjLwN0tR4DSzBcz3fpHSnu5Oa8rP1kP6tKR7FwZFpVzZHrm3QBrhN3/BEXEPSixPVZTNH3Ezpkc41oG3M7N+SS3RGiRpS51PhiyDvlOWohlcuHbgxDLmU/TIupsbcdbwohIilKk/OKqqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjZbkURy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjZbkURy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC5CC4CEC2;
-	Fri, 30 Aug 2024 17:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725040743;
-	bh=2Jkgq5he2WxrmzFT3bK4fOcS2dH6LFp69dhviYcUaOg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LjZbkURyQNKOAXItRoOtb5ppDFUPv+/i17eT3Ov4/nCswre0krz2mianWNuHI1r8v
-	 yExKTIdr9UX67PvPwuSPK4U3Wf+NlFoWyTljiZhgcBStuHt1V2pUJopoJyailtq18K
-	 yLPiChNodDGr4fr4tlLmC/K3qIiUjplzLeLAa7oR7VDZMYP+vUGFTZkOKxxb2cDhYD
-	 TBO3c0v91ccwTLdQahN5cxNE1w/rE6kPrNVD6eh0vVP3WbCWknqpNHcP5Tqc1ImrEE
-	 TBJtJvmIu954K/MBIzWorcfi12TV8HA6GQP5d7NasrFNQTufqL94j3/PGxTK3U3gxf
-	 cGCV90knr8wOg==
-Date: Fri, 30 Aug 2024 10:59:01 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Richard Henderson
- <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
- Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer
- <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBl?=
- =?UTF-8?B?bA==?= <bjorn@kernel.org>, Magnus Karlsson
- <magnus.karlsson@intel.com>, Maciej Fijalkowski
- <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
- Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>, Willem de Bruijn <willemb@google.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH net-next v23 03/13] netdev: support binding dma-buf to
- netdevice
-Message-ID: <20240830105901.27e2e139@kernel.org>
-In-Reply-To: <CAHS8izOy26r0uoWdASgmBCENNS6cDjHpkp+AHhOaKVkZR1LZqQ@mail.gmail.com>
-References: <20240829060126.2792671-1-almasrymina@google.com>
-	<20240829060126.2792671-4-almasrymina@google.com>
-	<20240829140824.555d016c@kernel.org>
-	<e6df00ec-2c52-489e-a510-b69db7e9dbf9@linux.dev>
-	<CAHS8izOy26r0uoWdASgmBCENNS6cDjHpkp+AHhOaKVkZR1LZqQ@mail.gmail.com>
+	s=arc-20240116; t=1725043964; c=relaxed/simple;
+	bh=kPiLDQ8HQsZ7OY2s7jtUVwKAWbrRXvStaSUX+5VHXqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MSw2zZm4rOFiwni7YV532TOmNrd5CZGVXYRrFRBgPg9q4Cx+DBBIK1TYIfHGP/zGlZ7ejGY/04tkMkZPgUOe/HkVElRd1HfbsVXq0mqmXv4K6SSYifPGCk7YaeQHWAJOQzGpYffZp549G0cXZ9YuJknUe3ZdqOxKon1cGtwBIEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WwS2H2zdLz9sSN;
+	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 3f9-XC2A1YeT; Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WwS2H1wnjz9sSK;
+	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 28C2A8B794;
+	Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id h0_TT9jQfciA; Fri, 30 Aug 2024 20:52:39 +0200 (CEST)
+Received: from [192.168.234.133] (unknown [192.168.234.133])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 428938B764;
+	Fri, 30 Aug 2024 20:52:38 +0200 (CEST)
+Message-ID: <ef38cd36-3e15-4608-8b72-87cf7621cce6@csgroup.eu>
+Date: Fri, 30 Aug 2024 20:52:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/5] powerpc/vdso: Wire up getrandom() vDSO
+ implementation on PPC32
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+ llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org,
+ Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+ Xi Ruoyao <xry111@xry111.site>
+References: <cover.1725031952.git.christophe.leroy@csgroup.eu>
+ <e7e4c6d36cf98229850c333f113bcea909564501.1725031952.git.christophe.leroy@csgroup.eu>
+ <ZtHwnc4AZuRULkom@zx2c4.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <ZtHwnc4AZuRULkom@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 Aug 2024 22:41:17 -0700 Mina Almasry wrote:
-> Thank you, I think the right fix here is to reacquire rtnl_lock before
-> the `goto err_unbind;`, since err_unbind expects rtnl to be locked at
-> this point.
 
-FWIW it's best to keep the error path a mirror image of the success
-path, so I'd add a new label "err_relock" or something. But..
 
-> This could introduce a weird edge case where we drop rtnl_lock, then
-> find out genlmsg_reply failed, then reacquire rtnl_lock to do the
-> cleanup. I can't think of anything that would horribly break if we do
-> that, but I may be missing something. In theory we could race with a
-> dmabuf unbind call happening in parallel.
+Le 30/08/2024 à 18:17, Jason A. Donenfeld a écrit :
+> On Fri, Aug 30, 2024 at 05:57:08PM +0200, Christophe Leroy wrote:
+>> @@ -14,6 +14,10 @@ ifeq ($(uname_M),x86_64)
+>>   TEST_GEN_PROGS += vdso_test_getrandom
+>>   TEST_GEN_PROGS += vdso_test_chacha
+>>   endif
+>> +ifeq ($(ARCH),powerpc)
+>> +TEST_GEN_PROGS += vdso_test_getrandom
+>> +TEST_GEN_PROGS += vdso_test_chacha
+>> +endif
 > 
-> If we can't reacquire rtnl_lock to do the cleanup, I think I need to
-> revert back to doing genlmsg_reply inside of rtnl_lock, and dropping
-> the lock before we return from the function.
+> FYI, as of [1], you should now be able to add powerpc to the filter list
+> instead of having to duplicate a new stanza:
+> 
+> [1] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fcrng%2Frandom.git%2Fcommit%2F%3Fid%3Dbbaae98172ed284fc0d5d39cc0d68f5d06164f06&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4f51736c027a44cc7df908dcc90f46d6%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638606314665557021%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=UtLdKTuEaZVhsguKa7kX1TBJ%2BvvQtl7DmU9hSBeThWo%3D&reserved=0
 
-..indeed, best to keep it atomic. So let's hold rtnl_lock longer.
-genlmsg_reply() shouldn't block, AFAIU.
+I'm a bit sceptic with that commit. IIUC you are changing the meaning of 
+$ARCH. How does that fit with the $ARCH we give when we cross-build or 
+with the ARCH which is set by the top-level Makefile in 
+tools/testing/selftests ?
 
-BTW CI is quite behind but Yunsheng ignored it and reposted his
-"refactor" which is going to take us another 10 hours back, 
-so whatever, just post v24 when you're ready...
+Also, wouldn't there be a way to use scripts/subarch.include instead of 
+opencoding ?
+
+Afterall, would it be a problem to build it even for i386 ? It should 
+now be ignored anyway with your new commit f78280b1a3ce ("selftests: 
+vDSO: skip getrandom test if architecture is unsupported")
+
+Christophe
