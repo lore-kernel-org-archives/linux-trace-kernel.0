@@ -1,150 +1,129 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95B81AF4FE;
-	Fri, 30 Aug 2024 13:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C472D15C12D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 14:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725026283; cv=none; b=ZfKuH0vLo+VaAukzAwNfahCtlv8omG1Gpgx8GmiItOapdLkxVxNyUInl87701PQ6P0Jg8Q4vhI5wvlCMdKmWlFbwJcrEhFXiY2xyc8+9jVtPuuhcOM1FRM1Yb4JcUZni0IRZqz69I0EW/AdhU+KY5a4zQNfPkQfVPHNRYvOWre4=
+	t=1725027507; cv=none; b=bin/H2OEPRSxeMVHP64lacDd5fwSlMVZ6hq1i1jaXtM7V7q+6wN7U6bL6dUU5aV57Yav4yi+Ifa6rYG3jDdUe0aBvMX/Wy6r7CqVfWqu0zBt6QkYBQrOXz5yDUZAqKRqodGspwwbJHPEXNQ9DhZYgNWItsBJeforsT5WHzFeAds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725026283; c=relaxed/simple;
-	bh=fNP/V7dYneE4KrBy5FIhrpMOmupW0xBkMLpX0tjt7ZY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jhMF5m1RATdmEDeE6P8HPZZBvPEKmN53t05ME01Y4ZSpR5blXzowI6a2TvNxxERAXm4kQAFn8ETS9HKenc/kTr9N2CCevAykRLtKr8JEvHtkQeTCS5TwRy/fPB/n0LC56o70KK89Vi7BxahdRn3I/ZbE7Z/2VNVMxVwPixflYs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=14esvp6w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PA1KOILx; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=14esvp6w; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PA1KOILx; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1725027507; c=relaxed/simple;
+	bh=kzjMZaDQ+xG4BfJifsf8U6rkq0g8UeDkJLn7iHApJVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pjg+qP25cxfFwPaVq1g5Lj3kxGpRHkUY2bv1SvNxyobSgUf6ULyqUHMR8OTS9P6u7ntpr60CFyUD0vyN719oept3lQft9Z++oa53pVKbGyvxuZvHdaqY0ADLc2nkAiV/pvN+6BXW9ugePgIR8Ob1ojXdWY+JZBMNmis2P4sl/uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ci3ojLNr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="14esvp6w";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PA1KOILx";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="14esvp6w";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PA1KOILx"
-Received: from pobox.suse.cz (unknown [10.100.2.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ci3ojLNr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725027504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7ycVg1x9tXPFTKLRTderi7SLBgh7zP/ApOSYr7txowM=;
+	b=ci3ojLNri+3v+KegGaGKZzyiCYARSEOYze9kQuWFluvVb/NbyBn6AsETpGr4sLCZ9T1Jal
+	D/MkV80l12EQQvHNTjpTSzMVznwi0QT4A+iBustUOzsMzzXThIjbPKL2wjQoZ34TcSTX5E
+	A2XMmoXwM3Eb0ZJOPMAnJOWvxYUGvKM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-Kab89R1lP665Yn8Uhprd4Q-1; Fri,
+ 30 Aug 2024 10:18:21 -0400
+X-MC-Unique: Kab89R1lP665Yn8Uhprd4Q-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C267621A3F;
-	Fri, 30 Aug 2024 13:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725026279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MfJEI21qPCGoeKZ7JbTIdFZ4xvDmSN0m0l1JyKtgXfE=;
-	b=14esvp6wihncIn7uwdmhrx6M6d2XLBUcbyUsIM+LdyitLTSGkc6JzQWNHAc6su8SoJHDtW
-	ELMQm2K1yPfaoPG9ABFKqQNPx9OURjftxbMmXcmzI9hVAMdIYDXdtswnHSxEZwcdhSwZ/A
-	I42lawYqIpZC8tbSsxqbUEHQZXV/h8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725026279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MfJEI21qPCGoeKZ7JbTIdFZ4xvDmSN0m0l1JyKtgXfE=;
-	b=PA1KOILxne5tbPJSbiRs+J+3pRo6shJ6h5Y27oGU91XA296ZOhbbuJqgATjihaRsAeJYM8
-	n8WvzRWvx2ZUiBCQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1725026279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MfJEI21qPCGoeKZ7JbTIdFZ4xvDmSN0m0l1JyKtgXfE=;
-	b=14esvp6wihncIn7uwdmhrx6M6d2XLBUcbyUsIM+LdyitLTSGkc6JzQWNHAc6su8SoJHDtW
-	ELMQm2K1yPfaoPG9ABFKqQNPx9OURjftxbMmXcmzI9hVAMdIYDXdtswnHSxEZwcdhSwZ/A
-	I42lawYqIpZC8tbSsxqbUEHQZXV/h8I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1725026279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MfJEI21qPCGoeKZ7JbTIdFZ4xvDmSN0m0l1JyKtgXfE=;
-	b=PA1KOILxne5tbPJSbiRs+J+3pRo6shJ6h5Y27oGU91XA296ZOhbbuJqgATjihaRsAeJYM8
-	n8WvzRWvx2ZUiBCQ==
-Date: Fri, 30 Aug 2024 15:57:59 +0200 (CEST)
-From: Miroslav Benes <mbenes@suse.cz>
-To: Song Liu <song@kernel.org>
-cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org, jpoimboe@kernel.org, jikos@kernel.org, 
-    pmladek@suse.com, joe.lawrence@redhat.com, nathan@kernel.org, 
-    morbo@google.com, justinstitt@google.com, mcgrof@kernel.org, 
-    thunder.leizhen@huawei.com, kees@kernel.org, kernel-team@meta.com, 
-    mmaurer@google.com, samitolvanen@google.com, mhiramat@kernel.org, 
-    rostedt@goodmis.org
-Subject: Re: [PATCH v3 0/2] Fix kallsyms with CONFIG_LTO_CLANG
-In-Reply-To: <20240807220513.3100483-1-song@kernel.org>
-Message-ID: <alpine.LSU.2.21.2408301556120.1124@pobox.suse.cz>
-References: <20240807220513.3100483-1-song@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87DE61954B2E;
+	Fri, 30 Aug 2024 14:18:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.148])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 260813001FC3;
+	Fri, 30 Aug 2024 14:18:12 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 30 Aug 2024 16:18:10 +0200 (CEST)
+Date: Fri, 30 Aug 2024 16:18:03 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+Message-ID: <20240830141803.GB20163@redhat.com>
+References: <20240829183741.3331213-1-andrii@kernel.org>
+ <20240829183741.3331213-5-andrii@kernel.org>
+ <ZtD_x9zxLjyhS37Z@krava>
+ <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Hi,
+On 08/29, Andrii Nakryiko wrote:
+>
+> On Thu, Aug 29, 2024 at 4:10 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > > @@ -2101,17 +2110,24 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+> > >                       need_prep = true;
+> > >
+> > >               remove &= rc;
+> > > +             has_consumers = true;
+> > >       }
+> > >       current->utask->auprobe = NULL;
+> > >
+> > >       if (need_prep && !remove)
+> > >               prepare_uretprobe(uprobe, regs); /* put bp at return */
+> > >
+> > > -     if (remove && uprobe->consumers) {
+> > > -             WARN_ON(!uprobe_is_active(uprobe));
+> > > -             unapply_uprobe(uprobe, current->mm);
+> > > +     if (remove && has_consumers) {
+> > > +             down_read(&uprobe->register_rwsem);
+> > > +
+> > > +             /* re-check that removal is still required, this time under lock */
+> > > +             if (!filter_chain(uprobe, current->mm)) {
+> >
+> > sorry for late question, but I do not follow this change..
+> >
+> > at this point we got 1 as handler's return value from all the uprobe's consumers,
+> > why do we need to call filter_chain in here.. IIUC this will likely skip over
+> > the removal?
+> >
+>
+> Because we don't hold register_rwsem we are now racing with
+> registration. So while we can get all consumers at the time we were
+> iterating over the consumer list to request deletion, a parallel CPU
+> can add another consumer that needs this uprobe+PID combination. So if
+> we don't double-check, we are risking having a consumer that will not
+> be triggered for the desired process.
 
-On Wed, 7 Aug 2024, Song Liu wrote:
+Oh, yes, but this logic is wrong in that it assumes that uc->filter != NULL.
+At least it adds the noticeable change in behaviour.
 
-> With CONFIG_LTO_CLANG, the compiler/linker adds .llvm.<hash> suffix to
-> local symbols to avoid duplications. Existing scripts/kallsyms sorts
-> symbols without .llvm.<hash> suffix. However, this causes quite some
-> issues later on. Some users of kallsyms, such as livepatch, have to match
-> symbols exactly.
-> 
-> Address this by sorting full symbols at build time, and let kallsyms
-> lookup APIs to match the symbols exactly.
-> 
-> Changes v2 => v3:
-> 1. Remove the _without_suffix APIs, as kprobe will not use them.
->    (Masami Hiramatsu)
-> 
-> v2: https://lore.kernel.org/live-patching/20240802210836.2210140-1-song@kernel.org/T/#u
-> 
-> Changes v1 => v2:
-> 1. Update the APIs to remove all .XXX suffixes (v1 only removes .llvm.*).
-> 2. Rename the APIs as *_without_suffix. (Masami Hiramatsu)
-> 3. Fix another user from kprobe. (Masami Hiramatsu)
-> 4. Add tests for the new APIs in kallsyms_selftests.
-> 
-> v1: https://lore.kernel.org/live-patching/20240730005433.3559731-1-song@kernel.org/T/#u
-> 
-> Song Liu (2):
->   kallsyms: Do not cleanup .llvm.<hash> suffix before sorting symbols
->   kallsyms: Match symbols exactly with CONFIG_LTO_CLANG
-> 
->  kernel/kallsyms.c          | 55 +++++---------------------------------
->  kernel/kallsyms_selftest.c | 22 +--------------
->  scripts/kallsyms.c         | 31 ++-------------------
->  scripts/link-vmlinux.sh    |  4 ---
->  4 files changed, 9 insertions(+), 103 deletions(-)
+Suppose we have a singler consumer UC with ->filter == NULL. Now suppose
+that UC->handler() returns UPROBE_HANDLER_REMOVE.
 
-I was on holiday most of August and the patch set has been merged but let 
-me at least add
+Before this patch handler_chain() calls unapply_uprobe(), and I think
+we should keep this behaviour.
 
-Acked-by: Miroslav Benes <mbenes@suse.cz>
+After this patch unapply_uprobe() won't be called: consumer_filter(UC)
+returns true, UC->filter == NULL means "probe everything". But I think
+that UPROBE_HANDLER_REMOVE must be respected in this case anyway.
 
-here since I participated in the discussion at the beginning.
+Thanks Jiri, I missed that too :/
 
-Thank you for cleaning it up!
+Oleg.
 
-Miroslav
