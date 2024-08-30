@@ -1,127 +1,112 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F4D1BF7FD;
-	Fri, 30 Aug 2024 20:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5443C17C7B1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 23:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725051079; cv=none; b=fFt8vnkZdVRP/YkdmsEdLdmYkSNaTcYez+hBiKXQR+637Nwy9ctpsk8zElGHPw2hEFgWGpUVwUKiRV3CiRbedNI8gx20CyW8yUtwgtPyBJwXoBa6d1lEtK8pEL9CttW+SL0gTW8C7x9y7bMkM/ivqZJjm2U1VCWww2Wccm2xEPg=
+	t=1725061758; cv=none; b=LMWvbIA0sqyjXgphLs2Eahj7CTskuH4pv+Chi6iBZOHqoQ/ZfgI6FSBqB38tSK7O1IvM6YRrC/rpQaIiSb4yQRuJrkBFeCqhj4PzzzWlXzZH92/ZdeoY5LiJQe5KOxZXjnL83KOJHnVn7SWXSqqx0Isp+DhphJEn/wULrsVvuEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725051079; c=relaxed/simple;
-	bh=EGmaHQIyFUQXRzkAm6S7M6ACd+k5XeZNvtGEUAyJy0w=;
+	s=arc-20240116; t=1725061758; c=relaxed/simple;
+	bh=E4bwRTmMN3gpdrrJ+34PGDohq3gLhiEt90gFRaqXxyU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hrPyGKTXmFIIkt0HsdrjWnNVZyAO/1FvVtSKcVLWQaTkwmkeHn9O84N/jKgpZYkD7osGNjxGiBn7g0TuQV5fvFM2dCxJtbn6YLedN18sgT2eFyhUqj3CNMY1VL0aTEYxJU5tPc+Aggvia3VOxXuH6ZsfdhigNAhC78ivT5XzXbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJF9E6Yn; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=cz3+0lcBqVf1MWhqjYfuo1Sinj82T/Nq5yYX2LiizfUyB2mpbhPSXS3qNVqdMfPBSNip9kw8rbPE66SYvFnjlrr9TMisUr/hAmRdJvTiaJXm94lDr2VWxb1HadzfZ7IaryQm9RM+ErtqkeLNs4ELHnT3+HdNtBDTy2OkFp8nxDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BlkmYLfs; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJF9E6Yn"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7bcf8077742so1562120a12.0;
-        Fri, 30 Aug 2024 13:51:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlkmYLfs"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4567fe32141so76811cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 16:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725051077; x=1725655877; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725061756; x=1725666556; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gKCWX5eBlnYoIPNYnC/Yrj2h0Y/qTbwBQ/bhYQL0ahI=;
-        b=RJF9E6YnGRQz8YjtxUy4PrOwffcqeN3TRTJ/PAPJibjhWIV+HvckGQx47Zrh10BajW
-         xiSjC5rAnXpAhFey2xvQ0O8cj/5Gu+fpISFWjm3LjhXXzh7HSaCpwLPovbdt2LeNPOAm
-         yHOWbRqLYka5h7fUNnrwR8xvCTaSt7qbLq7f9NFE0fu/H2WkqnkA17ShzyFJwzlMHpar
-         jwKbqeyq+BP0nfVH7JE37EhGm+ORG7JJz968nERfFA42MooKcGpV6OzWrEQNEnQusawZ
-         bQhfw1yEBVM5qVleUvM5nw8lB+hnI6/9PsufzuxqL3GZcui6PdBvEP3NnmIfPS3eMV+4
-         mEUQ==
+        bh=TP0VIEgrFYpHgeMfKEUNg/ROM1J2CbpA619iyejeYoc=;
+        b=BlkmYLfsljY44QTG3HKlIOsBE0II3bP8yl2bq8tdX7jDuFTOPblVZkJacKb1DutT+a
+         dPyGgDQ/SQeMlx7lO1iSM70e4oUYQqPvQ3b3Xnv0GUaB9pKSTdQT3cn0CsDH8i//svdR
+         WQAE9ElP7ImYIYUvnjnIX4/83M7tOLss9V9D+dLFIwoapeIle2EsMgupJ8KlggR5V9A6
+         t8S8orXlEinj36l9/5jCnhQBTdcNeCybByrqLc9+2iLNfiE85Opz5akLm0/xR+K/XWgF
+         8/E7QqgBcBGFBjxYCt2l5TVJdgF1eHW2EeRanxNN3wZmtxYDIxfA3S0mvRl6c9AUOgW/
+         D6OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725051077; x=1725655877;
+        d=1e100.net; s=20230601; t=1725061756; x=1725666556;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gKCWX5eBlnYoIPNYnC/Yrj2h0Y/qTbwBQ/bhYQL0ahI=;
-        b=haUegjPKmp9ONhiZhiMs7NlcATbrQ9Yg1F3PhP36hYZU8e3DC0z8JPQ3oEQQYbm+k0
-         yB3Z1Rqrt9lIWuKn4A2MN4UmAkzg3GtejNuN+hjbHNIMff3y8Rw2tcwaWZdp6PEuX5Hn
-         M8ym9KNSS6KQj9BAC7RH+xWsdxVIKmLFUvHdVda0eGo2kHHRHzVnfNDSZJSzYhdY/ejm
-         DbWTi9/vaDCifC+877IIOoxGTLG9FL9lnXZomWFGGQr94yTXFSNXs4cLfHkLq6SyAX6C
-         zkbZDw3/kpc4YVysknQimfrTkoO2JrMjgV2hZNymlevEQMUIWPULkLBlzXiBtKV1j6jT
-         wjJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUYC+Mg9ik++MAOfHqGU7odRf3xf7jB9t3imLQ+X3tVb4+qv6Vhlu6JNID4hBoLrr9+nbWKXeVsQ+gGAM5@vger.kernel.org, AJvYcCUV9edyw3Eo3Htu4N5OjcZuTzcAZjx84ixdM0fFjRU0gmAwzSx6BNC4R/Y+1ukE6h/NV3WWEVOB1Ucc6yp8pFfBUk60@vger.kernel.org, AJvYcCVsIx5A4CZkYZqxdPnMjdVU8+f6k4wH01Et8s5LMIoKbnnu9sRxHA+55LfCQ3P8isJfnCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv+OxP5xUD9+gOtGT4Ew1UtTQNXsmUeuBj+XZbtaeHBStfYJDc
-	gR3h64xNBDGkwg21Mu+fhtcFVIIbU+2JLovjs+EZg1u/PTpT9KJAFAi1qSvypqimjWjs4UIZMIq
-	EmsGePETGQ/zivFx/CJiTTopsCq8=
-X-Google-Smtp-Source: AGHT+IFJkXzMiCz4hLWiGHcIVHu9KNDUbV2A/WAg3aG8mUvFdbjfQlgpeqAXSl8XE4hL1lGIco6WROtxFKXpTg8dotw=
-X-Received: by 2002:a17:90a:4b85:b0:2cf:7388:ad9e with SMTP id
- 98e67ed59e1d1-2d85616eccamr7546969a91.2.1725051077220; Fri, 30 Aug 2024
- 13:51:17 -0700 (PDT)
+        bh=TP0VIEgrFYpHgeMfKEUNg/ROM1J2CbpA619iyejeYoc=;
+        b=gyMcWh3uuwWg5lqnURY2wVARg+qJV+vViCVFinYG90M5ERkDiajA7lD2WpEOuapYGg
+         bgVsb480JwDgU5abK3prNW7xNWv4uYhBhpIZOfpGaNVTiaxGFuKYy4pHgFcnxZdLBO+Y
+         AJE+Ghg29729NE/seqCzjg0gCTBKocsVsnr5xpBKZKclQdlxOWl2D1dQo1WJqJ+7RnyB
+         TpK/zL7RX6Fy8WiUANPxc9Fh/1+TRJpHTujSFgrWGVQp34WmIMTbQEh3+bKBWVVqPEEK
+         u/g8cnEeBF0ccS/B35svlGk5epq2Yw6MjMKwWg+6JAWZfQeOfPTBNc944mE9sXoJOCD1
+         3SvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwyuM/7m2P5rZ78gs3TGuhD+xNimn9RkcbgLvDvEs3s1Iuuaww5V0p6sSNkN7nWoFbI+jDnkNj95QkMc8O8VtUQXU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRpmAB4isJ9JpRc4Kjv47XkFFy811j2IQKap2YW23UbEFaRBcz
+	lwJuib8GRJ91HRcI1p+ri+Gm1DzfYJARz1omiEq2DGtlPyoaj2Zi2GaIWagH7g5mZs3IG3TFAil
+	ppsUZE9jz47M1Dr+Lttiwh+AcTXCwbbL2INI1
+X-Google-Smtp-Source: AGHT+IGhb6pwgPVlootJoP49CP94+EsPf6u+/j/OQWLkWAwJ0wQhWQED7bZMZLKe3dOxdh7MSSDMORHBJlY90a7t6Ho=
+X-Received: by 2002:a05:622a:1a20:b0:453:581f:f29e with SMTP id
+ d75a77b69052e-4574543029cmr1072671cf.24.1725061756115; Fri, 30 Aug 2024
+ 16:49:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240829194505.402807-1-jolsa@kernel.org> <20240829194505.402807-3-jolsa@kernel.org>
-In-Reply-To: <20240829194505.402807-3-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 30 Aug 2024 13:51:04 -0700
-Message-ID: <CAEf4Bza4JztS8YBaEFUi81OwH2aSNbv3c29hoVc31vTnfgiCLA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: Add uprobe pid filter test
- for multiple processes
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Tianyi Liu <i.pear@outlook.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, bpf@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <20240824033757.52005-1-kris.van.hees@oracle.com> <20240824033757.52005-4-kris.van.hees@oracle.com>
+In-Reply-To: <20240824033757.52005-4-kris.van.hees@oracle.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Fri, 30 Aug 2024 16:48:37 -0700
+Message-ID: <CABCJKufBPaVu-C4bKY=jWxOQJX1OR+7=+DE-wtcy7=d=9ZFFcQ@mail.gmail.com>
+Subject: Re: [PATCH v9 3/4] scripts: add verifier script for builtin module
+ range data
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Elena Zannoni <elena.zannoni@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 29, 2024 at 12:45=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote=
-:
+Hi Kris,
+
+On Fri, Aug 23, 2024 at 8:38=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
+.com> wrote:
 >
-> The idea is to create and monitor 3 uprobes, each trigered in separate
+> diff --git a/scripts/verify_builtin_ranges.awk b/scripts/verify_builtin_r=
+anges.awk
+> new file mode 100755
+> index 000000000000..f513841da83e
+> --- /dev/null
+> +++ b/scripts/verify_builtin_ranges.awk
+> @@ -0,0 +1,356 @@
+> +#!/usr/bin/gawk -f
+> +# SPDX-License-Identifier: GPL-2.0
+> +# verify_builtin_ranges.awk: Verify address range data for builtin modul=
+es
+> +# Written by Kris Van Hees <kris.van.hees@oracle.com>
+> +#
+> +# Usage: verify_builtin_ranges.awk modules.builtin.ranges System.map \
+> +#                                 modules.builtin vmlinux.map vmlinux.o.=
+map \
+> +#                                 [ <build-dir> ]
 
-typo: triggered
+While I was testing this, I did an arm64 build and I'm getting a long
+list of errors that ends with this:
 
-> process and make sure the bpf program gets executed just for the proper
-> PID specified via pid filter.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../bpf/prog_tests/uprobe_multi_test.c        | 103 ++++++++++++++++++
->  .../bpf/progs/uprobe_multi_pid_filter.c       |  61 +++++++++++
->  2 files changed, 164 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_pid_fi=
-lter.c
->
+ERROR: Failed to read:
+././drivers/firmware/efi/libstub/.lib.a(efi-stub-entry.stub.o.cmd
 
-It's good to have a test, thanks for adding it! But we should couple
-it with the fix in multi-uprobe and land together, right? I'm not
-exactly sure why we can't just use task->signal-based check, but let's
-try to converge on something and fix it.
+  Invalid kernel build directory (.)
+  or its content does not match modules.builtin.ranges
 
-pw-bot: cr
+That path looks a bit funky. Have you tested this with other
+architectures? I was able to get this to work on x86 builds just fine.
 
-[...]
-
-> +#define TASKS 3
-> +
-> +static void run_pid_filter(struct uprobe_multi_pid_filter *skel,
-> +                          create_link_t create_link, bool retprobe)
-> +{
-> +       struct bpf_link *link[TASKS] =3D {};
-> +       struct child child[TASKS] =3D {};
-> +       int i;
-> +
-> +       printf("%s retprobe %d\n", create_link =3D=3D create_link_uprobe =
-? "uprobe" : "uprobe_multi",
-> +               retprobe);
-
-leftovers
-
-> +
-> +       memset(skel->bss->test, 0, sizeof(skel->bss->test));
-> +
-> +       for (i =3D 0; i < TASKS; i++) {
-> +               if (!ASSERT_OK(spawn_child(&child[i]), "spawn_child"))
-> +                       goto cleanup;
-> +               skel->bss->pids[i] =3D child[i].pid;
-> +       }
-
-[...]
+Sami
