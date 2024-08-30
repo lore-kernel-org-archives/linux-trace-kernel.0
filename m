@@ -1,101 +1,138 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB4D17B4E1;
-	Fri, 30 Aug 2024 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AFA18FDB3
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Aug 2024 10:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725012129; cv=none; b=c8MuiDqGg6GxWubMNBmR0p3sBOXVY54V2YVCGEFWO9VHBfKykWmj6aFXs0uEgMldEUCiIeXYCwaGCs8towqltrLx6o7u+Wwl6sHbLvlokAxckX57MB5A1mZu3uZgQ0TjvauPe51ltdzn8G1eCxTiCX49neQm/PgwU3SZrD9oIyE=
+	t=1725012751; cv=none; b=UqMr5i062fGdfI10N/dq7PMDMz5ZIfYMaZp1ETsd6KA4XdsGiW38rh3pAb6B/KUiiRRVF81e7QFFwPGAzrITDASJJfCU8mwtbboLI3P0ir6gVQLWEH2qwzbMKO068PNRGIS8ydmwIhBpaFhwCyOVGtG2mTQ3H9St4vVgiJvUPbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725012129; c=relaxed/simple;
-	bh=trhe5zk8M/PcJeerPxnKm741ZNbwuM7VZERvyU7MXrQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TnDYAFS32d1tbk0OmGjxWhALLWOuqb7kDKwTUgPmno1p5XY6hLRyedJmojaSsu9x1wjXNQs+1QNjd85x4j5uGxxdRSprnvRI65r+Mvur+zXoPhYWcardoBwIQkPI5VY9qGm/O6B/fzIvY9qjHsbv2uhCNz4jYWvuv79fXO235Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=NNcmrTyt; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1725012751; c=relaxed/simple;
+	bh=dnlDuPMu/3R9NUf2DOiGAPAk43O4O+wFrNwiEjWCL00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tD2UhW4mII1e3l+Y3s8QOeLONgHhM4XU/14uj0urGvqNgZy35KIZCvHLpw3Tb0cxRAGwZpDVDKyMf6zgCVp0tTypzLlDz6o0uurET7kjpDGYcsbIVxe4OkEaLANepWDxNZ0xjYxVptTLfYL0EC1xA0ky/9FNW8+l+yu+K/QE1jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q9Tspd8N; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NNcmrTyt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1725012123;
-	bh=lPcPtY81gFF3u7n0A2RVPpHqZKSc08Lj9bnrJizsMEQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=NNcmrTytNe5K01YNEaaZ19cRsK3cVkZsPx09KELB11fMi0p0LaIX5DEwSFpG6peNy
-	 ISAellXAO+xLaSRbUK+pojAHnpn4mXhQ6Xi7aXgPNSvfk1Fhhy97z3qo3PUX1Q1jRr
-	 2dNrvbGjMGW1FqKKrMfKdMnOYumxQuAOYNTy0i1fviy9HjXmvUY4p8bDjh83ht9EjH
-	 yYNATupCNzqj23A6fjAnQZotlcbf/AcIWq7SPsN2wMldKWCJpNeeAVJfDGraO9mfkL
-	 nu1POz8pU9cnmrPtuY8NQqHP6jmqW67hqV/EN6svLc1HdzcViESWbiCV6jJzitD/1o
-	 cUcK4jBAfhGPw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9Tspd8N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725012749;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QFMP8JcwnKATVGaY7wHY5aCEq2u8HtpG8d/mb9gZgoY=;
+	b=Q9Tspd8NQZbXAxLfKbl1rmxnnfWRmr64tpe7Cgz2wTsID4+PKWIeI71ZBvgJ0ut2t3DBRB
+	7OPuZaprSKn0NEFBTLJcPp3OqPdqwUckKovVBtC66ucpz71BSvBO7+RfIp+AKxQ+PmRzgM
+	qpisXi/I6FrpMq+Z0RTiC4ZH8dsNi94=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-VtHD0L82PpaZyhQEU9iAjw-1; Fri,
+ 30 Aug 2024 06:12:25 -0400
+X-MC-Unique: VtHD0L82PpaZyhQEU9iAjw-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4WwDG04LmLz4wnw;
-	Fri, 30 Aug 2024 20:01:59 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Segher Boessenkool <segher@kernel.crashing.org>, Christophe Leroy
- <christophe.leroy@csgroup.eu>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Jason
- A . Donenfeld" <Jason@zx2c4.com>, Eric Biggers <ebiggers@kernel.org>,
- Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Theodore Ts'o <tytso@mit.edu>, Andrew Morton
- <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, shuah <shuah@kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 05/17] vdso: Avoid call to memset() by getrandom
-In-Reply-To: <20240829180241.GJ29862@gate.crashing.org>
-References: <20240827180819.GB2049@sol.localdomain>
- <20240827225330.GC29862@gate.crashing.org> <Zs8HirKLk-SrwTIu@zx2c4.com>
- <fc19bf63-d519-46e2-be70-80202c85ff92@app.fastmail.com>
- <20240828124519.GE29862@gate.crashing.org>
- <CAMj1kXGmDmxy75eP=rf_fzKmg0g_FeKV43jk2G_gibnKZBtVww@mail.gmail.com>
- <20240828162025.GG29862@gate.crashing.org>
- <CAMj1kXHZPfr2Sz78UrgsdX-2uBp0D1sCnznQnz5ZyMdiJq6rAA@mail.gmail.com>
- <20240828172538.GI29862@gate.crashing.org>
- <e5a36d98-c880-4d33-954a-2a05240ef02f@csgroup.eu>
- <20240829180241.GJ29862@gate.crashing.org>
-Date: Fri, 30 Aug 2024 20:01:58 +1000
-Message-ID: <87jzfye3c9.fsf@mail.lhotse>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 595C01955BFC;
+	Fri, 30 Aug 2024 10:12:23 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.148])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DDC76300019C;
+	Fri, 30 Aug 2024 10:12:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 30 Aug 2024 12:12:14 +0200 (CEST)
+Date: Fri, 30 Aug 2024 12:12:09 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tianyi Liu <i.pear@outlook.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Jordan Rome <linux@jordanrome.com>,
+	ajor@meta.com
+Cc: rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com,
+	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240830101209.GA24733@redhat.com>
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Segher Boessenkool <segher@kernel.crashing.org> writes:
-> On Thu, Aug 29, 2024 at 07:36:38PM +0200, Christophe Leroy wrote:
->>=20
->>=20
->> Le 28/08/2024 =C3=A0 19:25, Segher Boessenkool a =C3=A9crit=C2=A0:
->> >
->> >>Not sure about static binaries, though: do those even use the VDSO?
->> >
->> >With "static binary" people usually mean "a binary not using any DSOs",
->> >I think the VDSO is a DSO, also in this respect?  As always, -static
->> >builds are *way* less problematic (and faster and smaller :-) )
->> >
->>=20
->> AFAIK on powerpc even static binaries use the vDSO, otherwise signals=20
->> don't work.
->
-> How can that work?  Non-dynamic binaries do not use ld.so (that is the
-> definition of a dynamic binary, even).  So they cannot link (at runtime)
-> to any DSO (unless that is done manually?!)
+The whole discussion was very confusing (yes, I too contributed to the
+confusion ;), let me try to summarise.
 
-At least for signals I don't think the application needs to know
-anything about the VDSO. The kernel sets up the return to the signal
-trampoline (in the VDSO), and as long as userspace returns from its
-signal handler with blr it will land back on the trampoline.
+> U(ret)probes are designed to be filterable using the PID, which is the
+> second parameter in the perf_event_open syscall. Currently, uprobe works
+> well with the filtering, but uretprobe is not affected by it.
 
-cheers
+And this is correct. But the CONFIG_BPF_EVENTS code in __uprobe_perf_func()
+misunderstands the purpose of uprobe_perf_filter().
+
+Lets forget about BPF for the moment. It is not that uprobe_perf_filter()
+does the filtering by the PID, it doesn't. We can simply kill this function
+and perf will work correctly. The perf layer in __uprobe_perf_func() does
+the filtering when perf_event->hw.target != NULL.
+
+So why does uprobe_perf_filter() call uprobe_perf_filter()? Not to avoid
+the __uprobe_perf_func() call (as the BPF code assumes), but to trigger
+unapply_uprobe() in handler_chain().
+
+Suppose you do, say,
+
+	$ perf probe -x /path/to/libc some_hot_function
+or
+	$ perf probe -x /path/to/libc some_hot_function%return
+then
+	$perf record -e ... -p 1
+
+to trace the usage of some_hot_function() in the init process. Everything
+will work just fine if we kill uprobe_perf_filter()->uprobe_perf_filter().
+
+But. If INIT forks a child C, dup_mm() will copy int3 installed by perf.
+So the child C will hit this breakpoint and cal handle_swbp/etc for no
+reason every time it calls some_hot_function(), not good.
+
+That is why uprobe_perf_func() calls uprobe_perf_filter() which returns
+UPROBE_HANDLER_REMOVE when C hits the breakpoint. handler_chain() will
+call unapply_uprobe() which will remove this breakpoint from C->mm.
+
+> We found that the filter function was not invoked when uretprobe was
+> initially implemented, and this has been existing for ten years.
+
+See above, this is correct.
+
+Note also that if you only use perf-probe + perf-record, no matter how
+many instances, you can even add BUG_ON(!uprobe_perf_filter(...)) into
+uretprobe_perf_func(). IIRC, perf doesn't use create_local_trace_uprobe().
+
+---------------------------------------------------------------------------
+Now lets return to BPF and this particular problem. I won't really argue
+with this patch, but
+
+	- Please change the subject and update the changelog,
+	  "Fixes: c1ae5c75e103" and the whole reasoning is misleading
+	  and wrong, IMO.
+
+	- This patch won't fix all problems because uprobe_perf_filter()
+	  filters by mm, not by pid. The changelog/patch assumes that it
+	  is a "PID filter", but it is not.
+
+	  See https://lore.kernel.org/linux-trace-kernel/20240825224018.GD3906@redhat.com/
+	  If the traced process does clone(CLONE_VM), bpftrace will hit the
+	  similar problem, with uprobe or uretprobe.
+
+	- So I still think that the "right" fix should change the
+	  bpf_prog_run_array_uprobe() paths somehow, but I know nothing
+	  about bpf.
+
+Oleg.
+
