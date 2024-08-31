@@ -1,40 +1,39 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF351BC39;
-	Sat, 31 Aug 2024 06:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7302261FEB;
+	Sat, 31 Aug 2024 06:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725085212; cv=none; b=IiJqZ08kP3Wj9H+rJ4Gn1byPmqUkAjmTLScpWKjpeFjYmqNY9WKeumIfZKHTo7n/uwrLJOFF3akthVoB5tEOvc+x7pixrMBFJkjutjDx1u4Ixq4Jzyo+RaRSiabYqwx2g8vZ8LIHq1zLEb1DfRwDtdqIrVV+A9pxovjLG2tcI4Y=
+	t=1725087090; cv=none; b=ChmW5EamocF2Emo9wUPFN0hY5GXQPM+79QDpYFYN41Lnre2/SLLHv7i3IcjK7uF1TSJhKna6Iu0xLjv30M9cPD/lOaRu0KUpKWnxuFaFEWG0h9mn8p41HtxHi+EBVtE0RZRRTA+UzzThDSkSZ4H5cZOn56JDQXM1jLVYgBeBjxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725085212; c=relaxed/simple;
-	bh=/rRjILaguDIA+wWymXOh6Rpr4Mk8OqfXQsFy/oao40I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UKJXqT0S2EqmtyJEaa+uGoeEp2Eg44eij1e5Dz7qjl4aXU7uKdUzx7cYNRtW76R0Z679iObe3WwRW+7+iNYojOjcpfOVyd5poEdxp4J8YXJSUwWB9ANgAepQYWAFj11pTbTcIU2q+iVFWAbOcu/3NPlm64288DM/EGl2cdjWdYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1725087090; c=relaxed/simple;
+	bh=e61GetF0EBr0ChP6lhLVH8SUPuk06XEvqYlRATeNL1Y=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hQ8Ej9YsHWTFJqbrzzeCT1vGrhQP51MRoZ5s1hswsVpnxMoCZdHKgyZnUK2HG/48D5ZxeppcOLm+RFAnS7y9Eda5BpjOm3RCuTB3ACUN8pWjhOVfYl5lKlzxb6a4zQkd8z6+RNgtRyf/k99GLIjRHybVNl3l9YfMJ5+2O+rgBQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WwlFP5lzwzpVBq;
-	Sat, 31 Aug 2024 14:18:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Wwlsz2Jc7z20nFW;
+	Sat, 31 Aug 2024 14:46:31 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 15B491400DC;
-	Sat, 31 Aug 2024 14:20:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C5B21180043;
+	Sat, 31 Aug 2024 14:51:23 +0800 (CST)
 Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
  (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Sat, 31 Aug
- 2024 14:20:03 +0800
+ 2024 14:51:23 +0800
 From: Liao Chang <liaochang1@huawei.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
 	<oleg@redhat.com>, <peterz@infradead.org>, <mark.rutland@arm.com>,
 	<liaochang1@huawei.com>, <maz@kernel.org>, <oliver.upton@linux.dev>,
-	<ardb@kernel.org>, <christoffer.dall@linaro.org>, <ptosi@google.com>,
-	<anshuman.khandual@arm.com>, <mcgrof@kernel.org>, <rppt@kernel.org>,
-	<kristina.martsenko@arm.com>
+	<ardb@kernel.org>, <anshuman.khandual@arm.com>, <ptosi@google.com>,
+	<mcgrof@kernel.org>, <rppt@kernel.org>, <kristina.martsenko@arm.com>
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH] arm64: Replace linked list with switch statement for breakpoint handlers
-Date: Sat, 31 Aug 2024 06:10:21 +0000
-Message-ID: <20240831061021.3916256-1-liaochang1@huawei.com>
+Subject: [PATCH v2] arm64: Replace linked list with switch statement for breakpoint handlers
+Date: Sat, 31 Aug 2024 06:41:41 +0000
+Message-ID: <20240831064141.3933745-1-liaochang1@huawei.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,8 +43,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemd200013.china.huawei.com (7.221.188.133)
+
+v2->v1:
+Fix a bug of releasing spinlock in kgdb_arch_exit().
 
 As suggested by Mark Rutland [0], this patch remove the linked list used
 for breakpoint handlers and instroduces a switch statement based on the
@@ -289,7 +291,7 @@ index 024a7b245056..0b92a58682e2 100644
  NOKPROBE_SYMBOL(call_break_hook);
  
 diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 4e1f983df3d1..851fc4c24d80 100644
+index 4e1f983df3d1..e491a5704e61 100644
 --- a/arch/arm64/kernel/kgdb.c
 +++ b/arch/arm64/kernel/kgdb.c
 @@ -304,6 +304,8 @@ static struct notifier_block kgdb_notifier = {
@@ -321,7 +323,7 @@ index 4e1f983df3d1..851fc4c24d80 100644
  	unregister_kernel_break_hook(&kgdb_brkpt_hook);
  	unregister_kernel_break_hook(&kgdb_compiled_brkpt_hook);
  	unregister_kernel_step_hook(&kgdb_step_hook);
-+	spin_lock(&kgdb_hook_lock);
++	spin_unlock(&kgdb_hook_lock);
  	unregister_die_notifier(&kgdb_notifier);
  }
  
