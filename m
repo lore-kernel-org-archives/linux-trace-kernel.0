@@ -1,381 +1,123 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7302261FEB;
-	Sat, 31 Aug 2024 06:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE9C2374C
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 31 Aug 2024 16:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725087090; cv=none; b=ChmW5EamocF2Emo9wUPFN0hY5GXQPM+79QDpYFYN41Lnre2/SLLHv7i3IcjK7uF1TSJhKna6Iu0xLjv30M9cPD/lOaRu0KUpKWnxuFaFEWG0h9mn8p41HtxHi+EBVtE0RZRRTA+UzzThDSkSZ4H5cZOn56JDQXM1jLVYgBeBjxs=
+	t=1725121180; cv=none; b=XlXYMDIZZAdiWk4RKNC5xxbqwLxHlmrnsDuY2PEVvg49O4Eiw95MwhJ4YLC+4EnexOuW/UCw2Hz0QtxQXnriGnxDzvWGq5a5xKoV61D/922yj9gFH0dfL0YvrrphBkZEEINBWKC3Oyf2GDq9mmkhutmhtNTTferesFZ9YIchHaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725087090; c=relaxed/simple;
-	bh=e61GetF0EBr0ChP6lhLVH8SUPuk06XEvqYlRATeNL1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hQ8Ej9YsHWTFJqbrzzeCT1vGrhQP51MRoZ5s1hswsVpnxMoCZdHKgyZnUK2HG/48D5ZxeppcOLm+RFAnS7y9Eda5BpjOm3RCuTB3ACUN8pWjhOVfYl5lKlzxb6a4zQkd8z6+RNgtRyf/k99GLIjRHybVNl3l9YfMJ5+2O+rgBQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Wwlsz2Jc7z20nFW;
-	Sat, 31 Aug 2024 14:46:31 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id C5B21180043;
-	Sat, 31 Aug 2024 14:51:23 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Sat, 31 Aug
- 2024 14:51:23 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <peterz@infradead.org>, <mark.rutland@arm.com>,
-	<liaochang1@huawei.com>, <maz@kernel.org>, <oliver.upton@linux.dev>,
-	<ardb@kernel.org>, <anshuman.khandual@arm.com>, <ptosi@google.com>,
-	<mcgrof@kernel.org>, <rppt@kernel.org>, <kristina.martsenko@arm.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH v2] arm64: Replace linked list with switch statement for breakpoint handlers
-Date: Sat, 31 Aug 2024 06:41:41 +0000
-Message-ID: <20240831064141.3933745-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725121180; c=relaxed/simple;
+	bh=o32RInfbuL+zWyn8Ou1U9Z6HZtom/bVCsA3/odOFf80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y9atwpVem2e7zeDd5q4LT0DpzNxTR46bIL29BTw5RxZiOs2RkfrcWTMN5uM5/3AItEggEb8eO6DZT3us6syI2BNIRsJe4u6j8Iulb8g/jPEJ3rPvd355E1O/i3Jvqh8Le0g1y57uUswCsEXgfSvaXt0WaSoO0FhwZy6bWamgRrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iFbA9J0q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFbA9J0q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725121177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o32RInfbuL+zWyn8Ou1U9Z6HZtom/bVCsA3/odOFf80=;
+	b=iFbA9J0qZGK/aj5cihdgGPMNCOXiAwSo8etsEzKLgqKGYS2Vdrg79rTNVlWU2pdLX/T3Ef
+	SujNarTdsjiuTcq405mLgdG+dMknpYt5wbq8UBSJvnD/FK1zRKCbowvrdFPbsseYOc5nWc
+	Urqdr2vpLznp4NC4hON4kT16zXELnI0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-595-I1N5zLFcPyWYmqvwB4IBXQ-1; Sat,
+ 31 Aug 2024 12:19:33 -0400
+X-MC-Unique: I1N5zLFcPyWYmqvwB4IBXQ-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 89F791956080;
+	Sat, 31 Aug 2024 16:19:30 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 59E8F30001A4;
+	Sat, 31 Aug 2024 16:19:25 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat, 31 Aug 2024 18:19:21 +0200 (CEST)
+Date: Sat, 31 Aug 2024 18:19:15 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list
+ locklessly under SRCU protection
+Message-ID: <20240831161914.GA9683@redhat.com>
+References: <20240829183741.3331213-1-andrii@kernel.org>
+ <20240829183741.3331213-5-andrii@kernel.org>
+ <ZtD_x9zxLjyhS37Z@krava>
+ <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
+ <ZtHM_C1NmDSKL0pi@krava>
+ <20240830143151.GC20163@redhat.com>
+ <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com>
+ <20240830202050.GA7440@redhat.com>
+ <CAEf4BzZCrchQCOPv9ToUy8coS4q6LjoLUB_c6E6cvPPquR035Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+In-Reply-To: <CAEf4BzZCrchQCOPv9ToUy8coS4q6LjoLUB_c6E6cvPPquR035Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-v2->v1:
-Fix a bug of releasing spinlock in kgdb_arch_exit().
+On 08/30, Andrii Nakryiko wrote:
+>
+> On Fri, Aug 30, 2024 at 1:21 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > I'll probably write another email (too late for me today), but I agree
+> > that "avoid register_rwsem in handler_chain" is obviously a good goal,
+> > lets discuss the possible cleanups or even fixlets later, when this
+> > series is already applied.
+> >
+>
+> Sounds good. It seems like I'll need another revision due to missing
+> include, so if there is any reasonably straightforward clean up we
+> should do, I can just incorporate that into my series.
 
-As suggested by Mark Rutland [0], this patch remove the linked list used
-for breakpoint handlers and instroduces a switch statement based on the
-immediate value.
+I was thinking about another seq counter incremented in register(), so
+that handler_chain() can detect the race with uprobe_register() and skip
+unapply_uprobe() in this case. This is what Peter did in one of his series.
+Still changes the current behaviour, but not too much.
 
-To minimize the code duplication, a new enum break_hook_type is defined
-to encapsulate all supported breakpoint types, used as indices in switch
-statement. Macros iterate_break_hook() and __HOOK() generate a series of
-switch statements for getting/setting handlers based on the immediate
-value from ESR or the imm field of struct break_hook.
+But see below,
 
-After that, All breakpint related immediate macros must now end with
-_BRK_IMM, and breakpoint related mask macros must end with _BRK_MASK.
+> I still think it's fine, tbh.
 
-A new user field is added to struct break_hook to separate user and
-kernel breakpint exceptions. This force the callers to be explicit about
-the exception level that they come from [1]. Currently, only the uprobe
-uses this field.
+and perhaps you are right,
 
-To prevent race condition during break_hook unregistration (primarily by
-KGDB), a spinlock is defined in kgdb code. While there's still a
-potential race where a CPU might be executing KGDB break_hook while
-another CPU unregister it. this issue existed even before this
-refactoring.
+> Which uprobe user violates this contract
+> in the kernel?
 
-[0] https://lore.kernel.org/all/Zs3LnYkXL5sg2yBH@J2N7QTR9R3.cambridge.arm.com/
-[1] https://lore.kernel.org/all/20190301132809.24653-7-will.deacon@arm.com/
+The only in-kernel user of UPROBE_HANDLER_REMOVE is perf, and it is fine.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/brk-imm.h        |   6 +-
- arch/arm64/include/asm/debug-monitors.h |   7 +-
- arch/arm64/include/asm/esr.h            |   2 +-
- arch/arm64/kernel/debug-monitors.c      | 110 ++++++++++++++++++------
- arch/arm64/kernel/kgdb.c                |   6 ++
- arch/arm64/kernel/probes/kprobes.c      |   2 +-
- arch/arm64/kernel/probes/uprobes.c      |   3 +-
- arch/arm64/kernel/traps.c               |   4 +-
- 8 files changed, 100 insertions(+), 40 deletions(-)
+But there are out-of-tree users, say systemtap, I have no idea if this
+change can affect them.
 
-diff --git a/arch/arm64/include/asm/brk-imm.h b/arch/arm64/include/asm/brk-imm.h
-index beb42c62b6ac..a0c2ae4386ab 100644
---- a/arch/arm64/include/asm/brk-imm.h
-+++ b/arch/arm64/include/asm/brk-imm.h
-@@ -23,7 +23,7 @@
-  */
- #define KPROBES_BRK_IMM			0x004
- #define UPROBES_BRK_IMM			0x005
--#define KPROBES_BRK_SS_IMM		0x006
-+#define KPROBES_SS_BRK_IMM		0x006
- #define KRETPROBES_BRK_IMM		0x007
- #define FAULT_BRK_IMM			0x100
- #define KGDB_DYN_DBG_BRK_IMM		0x400
-@@ -36,7 +36,7 @@
- 
- #define CFI_BRK_IMM_TARGET		GENMASK(4, 0)
- #define CFI_BRK_IMM_TYPE		GENMASK(9, 5)
--#define CFI_BRK_IMM_BASE		0x8000
--#define CFI_BRK_IMM_MASK		(CFI_BRK_IMM_TARGET | CFI_BRK_IMM_TYPE)
-+#define CFI_BRK_IMM			0x8000
-+#define CFI_BRK_MASK			(CFI_BRK_IMM_TARGET | CFI_BRK_IMM_TYPE)
- 
- #endif
-diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-index 13d437bcbf58..8aedb7c01f69 100644
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -41,7 +41,7 @@
- 
- /* kprobes BRK opcodes with ESR encoding  */
- #define BRK64_OPCODE_KPROBES	(AARCH64_BREAK_MON | (KPROBES_BRK_IMM << 5))
--#define BRK64_OPCODE_KPROBES_SS	(AARCH64_BREAK_MON | (KPROBES_BRK_SS_IMM << 5))
-+#define BRK64_OPCODE_KPROBES_SS	(AARCH64_BREAK_MON | (KPROBES_SS_BRK_IMM << 5))
- /* uprobes BRK opcodes with ESR encoding  */
- #define BRK64_OPCODE_UPROBES	(AARCH64_BREAK_MON | (UPROBES_BRK_IMM << 5))
- 
-@@ -74,15 +74,12 @@ void register_kernel_step_hook(struct step_hook *hook);
- void unregister_kernel_step_hook(struct step_hook *hook);
- 
- struct break_hook {
--	struct list_head node;
- 	int (*fn)(struct pt_regs *regs, unsigned long esr);
- 	u16 imm;
- 	u16 mask; /* These bits are ignored when comparing with imm */
-+	int user; /* Breakpoint exception from userspace */
- };
- 
--void register_user_break_hook(struct break_hook *hook);
--void unregister_user_break_hook(struct break_hook *hook);
--
- void register_kernel_break_hook(struct break_hook *hook);
- void unregister_kernel_break_hook(struct break_hook *hook);
- 
-diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-index 56c148890daf..0fc2710a7154 100644
---- a/arch/arm64/include/asm/esr.h
-+++ b/arch/arm64/include/asm/esr.h
-@@ -403,7 +403,7 @@ static inline bool esr_is_data_abort(unsigned long esr)
- static inline bool esr_is_cfi_brk(unsigned long esr)
- {
- 	return ESR_ELx_EC(esr) == ESR_ELx_EC_BRK64 &&
--	       (esr_brk_comment(esr) & ~CFI_BRK_IMM_MASK) == CFI_BRK_IMM_BASE;
-+	       (esr_brk_comment(esr) & ~CFI_BRK_MASK) == CFI_BRK_IMM;
- }
- 
- static inline bool esr_fsc_is_translation_fault(unsigned long esr)
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index 024a7b245056..0b92a58682e2 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -276,47 +276,103 @@ static int single_step_handler(unsigned long unused, unsigned long esr,
- }
- NOKPROBE_SYMBOL(single_step_handler);
- 
--static LIST_HEAD(user_break_hook);
--static LIST_HEAD(kernel_break_hook);
--
--void register_user_break_hook(struct break_hook *hook)
--{
--	register_debug_hook(&hook->node, &user_break_hook);
--}
--
--void unregister_user_break_hook(struct break_hook *hook)
--{
--	unregister_debug_hook(&hook->node);
--}
-+enum break_hook_type {
-+	KPROBES = 0,
-+	UPROBES,
-+	KPROBES_SS,
-+	KRETPROBES,
-+	FAULT,
-+	KGDB_DYN_DBG,
-+	KGDB_COMPILED_DBG,
-+	BUG,
-+	KASAN,
-+	UBSAN,
-+	CFI,
-+	NR_BRK,
-+};
-+
-+static struct break_hook *break_hooks[NR_BRK];
-+
-+#define iterate_break_hook(imm) ({	\
-+	switch (imm) {			\
-+	__HOOK(KPROBES)			\
-+	__HOOK(UPROBES)			\
-+	__HOOK(KPROBES_SS)		\
-+	__HOOK(KRETPROBES)		\
-+	__HOOK(FAULT)			\
-+	__HOOK(KGDB_DYN_DBG)		\
-+	__HOOK(KGDB_COMPILED_DBG)	\
-+	__HOOK(BUG)			\
-+	__HOOK(KASAN)			\
-+	__HOOK(UBSAN)			\
-+	__HOOK(CFI)			\
-+	default :			\
-+		break;			\
-+	}				\
-+})
-+
-+#undef __HOOK
-+#define __HOOK(nr)		\
-+	case nr ## _BRK_IMM:	\
-+	{ return break_hooks[nr]; }
-+
-+static struct break_hook *find_break_hook(unsigned long imm)
-+{
-+	iterate_break_hook(imm);
-+	return NULL;
-+}
-+
-+#undef __HOOK
-+#define __HOOK(nr)		\
-+	case nr ## _BRK_IMM:	\
-+	{ break_hooks[nr] = hook; break; }
- 
- void register_kernel_break_hook(struct break_hook *hook)
- {
--	register_debug_hook(&hook->node, &kernel_break_hook);
-+	iterate_break_hook(hook->imm);
- }
- 
-+#undef __HOOK
-+#define __HOOK(nr)		\
-+	case nr ## _BRK_IMM:	\
-+	{ break_hooks[nr] = NULL; break; }
-+
- void unregister_kernel_break_hook(struct break_hook *hook)
- {
--	unregister_debug_hook(&hook->node);
-+	iterate_break_hook(hook->imm);
- }
- 
-+#undef __HOOK
-+#define __HOOK(nr)		\
-+	do {			\
-+		if (!hook) 	\
-+			hook = find_break_hook(imm & ~(nr ## _BRK_MASK)); \
-+	} while (0)
-+
- static int call_break_hook(struct pt_regs *regs, unsigned long esr)
- {
--	struct break_hook *hook;
--	struct list_head *list;
--	int (*fn)(struct pt_regs *regs, unsigned long esr) = NULL;
-+	unsigned long imm = esr_brk_comment(esr);
-+	struct break_hook *hook = NULL;
- 
--	list = user_mode(regs) ? &user_break_hook : &kernel_break_hook;
-+	hook = find_break_hook(imm);
-+	if (likely(hook))
-+		goto call_hook;
- 
--	/*
--	 * Since brk exception disables interrupt, this function is
--	 * entirely not preemptible, and we can use rcu list safely here.
--	 */
--	list_for_each_entry_rcu(hook, list, node) {
--		if ((esr_brk_comment(esr) & ~hook->mask) == hook->imm)
--			fn = hook->fn;
--	}
-+#ifdef CONFIG_KASAN_SW_TAGS
-+	__HOOK(KASAN);
-+#endif
-+#ifdef CONFIG_UBSAN_TRAP
-+	__HOOK(UBSAN);
-+#endif
-+#ifdef CONFIG_CFI_CLANG
-+	__HOOK(CFI);
-+#endif
-+
-+call_hook:
-+	if (hook && (user_mode(regs) == hook->user))
-+		return hook->fn(regs, esr);
- 
--	return fn ? fn(regs, esr) : DBG_HOOK_ERROR;
-+	return DBG_HOOK_ERROR;
- }
- NOKPROBE_SYMBOL(call_break_hook);
- 
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 4e1f983df3d1..e491a5704e61 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -304,6 +304,8 @@ static struct notifier_block kgdb_notifier = {
- 	.priority	= -INT_MAX,
- };
- 
-+static DEFINE_SPINLOCK(kgdb_hook_lock);
-+
- /*
-  * kgdb_arch_init - Perform any architecture specific initialization.
-  * This function will handle the initialization of any architecture
-@@ -316,9 +318,11 @@ int kgdb_arch_init(void)
- 	if (ret != 0)
- 		return ret;
- 
-+	spin_lock(&kgdb_hook_lock);
- 	register_kernel_break_hook(&kgdb_brkpt_hook);
- 	register_kernel_break_hook(&kgdb_compiled_brkpt_hook);
- 	register_kernel_step_hook(&kgdb_step_hook);
-+	spin_unlock(&kgdb_hook_lock);
- 	return 0;
- }
- 
-@@ -329,9 +333,11 @@ int kgdb_arch_init(void)
-  */
- void kgdb_arch_exit(void)
- {
-+	spin_lock(&kgdb_hook_lock);
- 	unregister_kernel_break_hook(&kgdb_brkpt_hook);
- 	unregister_kernel_break_hook(&kgdb_compiled_brkpt_hook);
- 	unregister_kernel_step_hook(&kgdb_step_hook);
-+	spin_unlock(&kgdb_hook_lock);
- 	unregister_die_notifier(&kgdb_notifier);
- }
- 
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index 4268678d0e86..b0e28d48bb19 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -360,7 +360,7 @@ kprobe_breakpoint_ss_handler(struct pt_regs *regs, unsigned long esr)
- }
- 
- static struct break_hook kprobes_break_ss_hook = {
--	.imm = KPROBES_BRK_SS_IMM,
-+	.imm = KPROBES_SS_BRK_IMM,
- 	.fn = kprobe_breakpoint_ss_handler,
- };
- 
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..24130161c62d 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -190,6 +190,7 @@ static int uprobe_single_step_handler(struct pt_regs *regs,
- static struct break_hook uprobes_break_hook = {
- 	.imm = UPROBES_BRK_IMM,
- 	.fn = uprobe_breakpoint_handler,
-+	.user = 1,
- };
- 
- /* uprobe single step handler hook */
-@@ -199,7 +200,7 @@ static struct step_hook uprobes_step_hook = {
- 
- static int __init arch_init_uprobes(void)
- {
--	register_user_break_hook(&uprobes_break_hook);
-+	register_kernel_break_hook(&uprobes_break_hook);
- 	register_user_step_hook(&uprobes_step_hook);
- 
- 	return 0;
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 9e22683aa921..6aefb0ba41ec 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -1025,8 +1025,8 @@ static int cfi_handler(struct pt_regs *regs, unsigned long esr)
- 
- static struct break_hook cfi_break_hook = {
- 	.fn = cfi_handler,
--	.imm = CFI_BRK_IMM_BASE,
--	.mask = CFI_BRK_IMM_MASK,
-+	.imm = CFI_BRK_IMM,
-+	.mask = CFI_BRK_MASK,
- };
- #endif /* CONFIG_CFI_CLANG */
- 
--- 
-2.34.1
+And in general, this change makes the API less "flexible".
+
+But once again, I agree that it would be better to apply your series first,
+then add the fixes in (unlikely) case it breaks something.
+
+But. Since you are going to send another version, may I ask you to add a
+note into the changelog to explain that this patch assumes (and enforces)
+the rule about handler/filter consistency?
+
+Oleg.
 
