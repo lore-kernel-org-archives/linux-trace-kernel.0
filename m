@@ -1,99 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8431A263A;
-	Mon,  2 Sep 2024 14:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9144D1CB51D;
+	Mon,  2 Sep 2024 15:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725287850; cv=none; b=uunlUWgJ0DIhGmOo92TEhfgoYCzyI2PDbiyHLymwvUi5IcPf3/aI4UQ0BlaUr3j3TsZWOHLplN83SSeD2+GsUrJVuRAttmO0A7O7KS6liEPndSMKOz59q4EWxIwGfZQ96cnEcOXcM8otAuDZcc5vIrvA9l8im0AsgkAVbSWbkM8=
+	t=1725291830; cv=none; b=PobFxcay5gGzD9rE8TQiYVN3E3HbwUzfCRQ8unyv9J2SPSfjrMN+8jPjDTTL8i7stX05ftnDwnP/d8mH6qbTuLksLBWAX8jykDoU2LzliQEFAelVNxjLEOU2BE4CYiXTbysFotRrhpGT9XCz07xCLOssGfRA99YNPRBIIClQjqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725287850; c=relaxed/simple;
-	bh=gpTjIBth8xskV4yK843F5+CB269IaZCQg800LCCrZlw=;
+	s=arc-20240116; t=1725291830; c=relaxed/simple;
+	bh=p/ziduP6idDY0qvJIEhR3b3LMF5uGVgDgcAHfDP96MA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=egBV7/OQu6yy6uq4YYUBr5hS8xrJNRlxYkPQOFyz1PwVUqau0LWrUh81KaJhbmlgQOTGCsu0WkMZUUESu8/4Apt5jbGuxBVtzCG1oA1A9bw0lPvNaW6tBchHmXBhCbAeI6EM7mZwBYpUoRerY0UN1L0FiJQx0I9FudvfoanQ+a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=i1U/TFM/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GdiyG6ALilCzBENGkYthBh4fpS+Hr4c2vvHGX5ZMZ3ceGDEv9a6CDm2eRXQ1IZXhF4C8sYFqZcQE+Ly/PWlXc5wEg7P6hd12llmr99L5PsknHcNOsbTsw4185S+Y8N03lZwL0LaOaHAXza1ueLY1ICl85dAeP7Vsw+CXzmEQ/aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qIEvWUu2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="i1U/TFM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB3CC4CEC2;
-	Mon,  2 Sep 2024 14:37:27 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="i1U/TFM/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1725287845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fkpr2xyIOoNVSN6u9wpBQgcyAP1uccLTt9mgRczfpKU=;
-	b=i1U/TFM/BVYMk5TlS2vnBMnfGpj32tpFcSRnNwTo99N5lrPyNwJjZr8pkxe6jXhDmkDbjn
-	GWCnZdMN+yY/+ANdCkUyfXNpGinu8fcfRlZAsDMhrKZE6VFWFmnpGRjRv73QnO4bRbnrxQ
-	dbBjZkpe5RvVnXQOmj1jYisPJP5j5YU=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b222261e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 2 Sep 2024 14:37:25 +0000 (UTC)
-Date: Mon, 2 Sep 2024 16:37:24 +0200
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qIEvWUu2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fo3JtNSgEnDqg8YlNSSixwkDr/LZX4dg7x2z5VanSmk=; b=qIEvWUu2BZMBtdRph8WC4tyfMa
+	YCNGDlpl5XY64jaVfkbOC69FDIJckB6Whp5frRITtczct3+rkyu/F/1RWe1mx+K1fVI6CPM6M8mjx
+	jBUxSpDdujZ8GKKnWf+mk4AnKagwTAqjs1C+ZF+xy2lpVHehOA940KELRQYCuw5OeC9kqxnMjE73b
+	FCC6esRJ21DcGfdNHdnsxxOgsEecd9WwPf9Hgr+X/bA1myFpvIRoSD+ofnLqtJD6BG/ZMjC+JL7gG
+	W9eYUzQfHXsxodMgvZTCP5IiTUJtWVrYuhjm0OIAd1sfxD88pkvPyPT38sQV6DS5ZQklQAhNYxoBL
+	I+/BeI0w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1sl9DL-00000006pZ0-1DPA;
+	Mon, 02 Sep 2024 15:43:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4B6EF30058E; Mon,  2 Sep 2024 17:43:34 +0200 (CEST)
+Date: Mon, 2 Sep 2024 17:43:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH v4 5/5] powerpc/vdso: Wire up getrandom() vDSO
- implementation on PPC64
-Message-ID: <ZtXNpLbk2jj4Hr4c@zx2c4.com>
-References: <cover.1725278148.git.christophe.leroy@csgroup.eu>
- <27de70dcc356e56754a03a2887a97597f5e840a4.1725278148.git.christophe.leroy@csgroup.eu>
- <ZtWyeuCfzZ66fVsg@zx2c4.com>
- <bdf1a515-b3d0-471d-89ee-989ae0d63202@csgroup.eu>
- <ZtXE-AISB4w9U9Yc@zx2c4.com>
- <c411b0c6-1806-4e4d-8bcf-51f0747fcd19@csgroup.eu>
- <ZtXJfiA1lU55JLMM@zx2c4.com>
- <dac37bce-9616-450c-8c1e-aa24dcbfb882@csgroup.eu>
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and
+ activate_guard
+Message-ID: <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+References: <20240828143719.828968-1-mathieu.desnoyers@efficios.com>
+ <20240828143719.828968-3-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dac37bce-9616-450c-8c1e-aa24dcbfb882@csgroup.eu>
+In-Reply-To: <20240828143719.828968-3-mathieu.desnoyers@efficios.com>
 
-On Mon, Sep 02, 2024 at 04:27:12PM +0200, Christophe Leroy wrote:
-> Hi Jason, hi Michael,
+On Wed, Aug 28, 2024 at 10:37:19AM -0400, Mathieu Desnoyers wrote:
+> To cover scenarios where the scope of the guard differs from the scope
+> of its activation, introduce DEFINE_INACTIVE_GUARD() and activate_guard().
 > 
-> Le 02/09/2024 à 16:19, Jason A. Donenfeld a écrit :
-> > On Mon, Sep 02, 2024 at 04:16:48PM +0200, Christophe Leroy wrote:
-> >> Can do that, but there will still be a problem with chacha selftests if
-> >> I don't opt-out the entire function content when it is ppc64. It will
-> >> build properly but if someone runs it on a ppc64 it will likely crash
-> >> because only the low 32 bits of registers will be saved.
-> > 
-> > What if you don't wire up the selftests _at all_ until the ppc64 commit?
-> > Then there'll be no risk.
-> > 
-> > (And I think I would prefer to see the 32-bit code all in the 32-bit
-> > commit; that'd make it more straight forward to review too.)
+> Here is an example use for a conditionally activated guard variable:
 > 
-> I'd be fine with that but I'd like feedback from Michael on it: Is there 
-> a risk to only get PPC32 part merged as a first step or will both PPC32 
-> and PPC64 go together anyway ?
+> void func(bool a)
+> {
+> 	DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
 > 
-> I would prefer not to delay PPC32 because someone doesn't feel confident 
-> with PPC64.
+> 	[...]
+> 	if (a) {
+> 		might_sleep();
+> 		activate_guard(preempt_notrace, myguard)();
+> 	}
+> 	[ protected code ]
+> }
 
-I have no objection to applying these at the same time.
+So... I more or less proposed this much earlier:
+
+  https://lore.kernel.org/all/20230919131038.GC39346@noisy.programming.kicks-ass.net/T/#mb7b84212619ac743dfe4d2cc81decce451586b27
+
+and Linus took objection to similar patterns. But perhaps my naming
+wasn't right.
