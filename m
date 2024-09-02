@@ -1,106 +1,195 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6F12A1B8
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  1 Sep 2024 23:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA1A1552F6;
+	Mon,  2 Sep 2024 07:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725233237; cv=none; b=tJr/x51WYIJr+zgOxtEQf42FDVX6CbVe1n3MnVdQ32IFgaHbxUpwMxnM7Msm2sBe2d+n+5HfKtRszxr4clxQTHCxkfg9Biw1HdFM89S7U0oqcuRiiNswQjQ+IhsSVXVFGQR+nte682egA6dmWAsqRU1I+YOAi8MqOl9nKrZWytw=
+	t=1725262047; cv=none; b=jGLrvKb3tq+XmrZrjWXyegtk36+x27TjeYIzaUAegjyva5ZnNVD32OhS9zLJ2/lwjSfVeTRMzTc9/ApMQYfNYdC7SJkXW+FWe5YLgpuByfjwDL83+kdhdcynxrAju9mimUL7BE+fRDNbGs5FGeOyjPP0JTy9ugJcVhgIiWntjbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725233237; c=relaxed/simple;
-	bh=UHO7qZg3vgGuY6p2K02J+y9Yh7BXj5vPsRbVackxNHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZbIUUNi9wyLAPSJzFKuWIXOH7SRUwwRvFas9RTFEFEumDLpKdcPwZ9Lx568VC7N90jmAH/KllwWNbYeg/HOEh9du8YIAJ4WRxyRJx8gFXvVEs42lCISnLF7sK+v+ylR18yymGpvpDRi0/XADoznjKjIwVLT/92QWGPnjToI2IUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bUq0oxJT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1725262047; c=relaxed/simple;
+	bh=95BxmoKAuPtRRbgouqskzb9K+3h5LChj6mmHxeistvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uMjWisOLPkfdMUOaYK9EnTxz1SvlWhAEeGYrnR9IUDau9p1udf8IvCGhY0auZVqT5X7OeA6dzkrHg5cPFcyQWn1Vtw8RwqEI8ieQUg8GAEjlABjywKsbLzJgjJTzdiLJOVt5BHGC5JzKKuBTI9pH4pOckwJGlCKnoD1Vvk3RQpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN7dXh0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bUq0oxJT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725233234;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yPAaiWWm2xRTp2nibl8MXxRQuZzIA88EjdR0rbeKAOA=;
-	b=bUq0oxJTbI4duurAlaQ4nG2gzB6XJ9uAPzlcZ109syKrfanBzhBiP0MEnXE6EsNNuSLnTy
-	YI3BTC/KYraHS0/lmq5dYoZ+RqJc8BB0YJtfpKdklDJnk2GThvs8rhLt0i9QmJRRv5wGmy
-	8KNnjvh6DJAYCa+CiTckxB/v23h8Tto=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-o4vfVhcWPSyiCBd-CehN6g-1; Sun,
- 01 Sep 2024 19:27:11 -0400
-X-MC-Unique: o4vfVhcWPSyiCBd-CehN6g-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F1AE1955D48;
-	Sun,  1 Sep 2024 23:27:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.35])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A79DC300019A;
-	Sun,  1 Sep 2024 23:27:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  2 Sep 2024 01:26:58 +0200 (CEST)
-Date: Mon, 2 Sep 2024 01:26:53 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: ajor@meta.com, albancrequy@linux.microsoft.com,
-	andrii.nakryiko@gmail.com, bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com, jolsa@kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	rostedt@goodmis.org
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240901232652.GA12854@redhat.com>
-References: <20240830101209.GA24733@redhat.com>
- <ME0P300MB0416522C59231B4127E23C6F9D912@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN7dXh0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E526C4CEC9;
+	Mon,  2 Sep 2024 07:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725262046;
+	bh=95BxmoKAuPtRRbgouqskzb9K+3h5LChj6mmHxeistvI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BN7dXh0Rig0sXvgwqH4krE4pG0fWiDc8NIOrZiO9TCFGnq3XRVTn525+O+t50MJG3
+	 HF9ICXWtw3Vna/7Q0jxaJ9kO/z2o5Nrzlr+e8w3ZhpmQBL830O+64Nmt2F9JjKppqI
+	 HEQQa9yu+TSwV07VL6lWCWckC2NCsfMcYDHO/v4rtp1kTOoWAPG/addjsXkaNiwUnZ
+	 pdOEEa4AUzmckB1xNn+hIPbzuhSDhbAmAUbN07bTsV9SlKLQnNskIwEO0lQLKoR2H+
+	 zxL8qv+y2RDp0fnwtdBkzhpKS44Gu0VY9VRKiKB1tIARQrCcioE5doEWbbPRWQpVKu
+	 dah6aj/b7CgPw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-533488ffaebso4651721e87.0;
+        Mon, 02 Sep 2024 00:27:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3BwNSPNusMag7cWIsc6hGaDdW/quAaBRg6mA5h/gQVE01BiMaLDS+iCcfCaobkzxttDAvT7etQ63EBEumeA==@vger.kernel.org, AJvYcCWFASPCmh0X6O7yTySO9bIPjFxiPtiG5NDjbv4F9D06Dw0UldsRweoJvcqG8JA2kr/MnyJmAJcEzJi/c60=@vger.kernel.org, AJvYcCXnRqQycHBvndsPYfelmzPaYbpgYgICk+r8Ju7bOz/c47gcGRo1q1j/CNpJA+/zeHt9Oytqy12zFsbodU5ERmNYujwO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWJ845sY+Ig+M1LPyF53Sp1mvSVFgL+epex/ksERQcjjM4atGZ
+	NkTzheP4SyoQvM938qPxE6Rvf4BBqZbrvbLoImZ9Obk0zZhKvz0hGMQRh04m/2z6pPeUF1xEcwA
+	4FPQtxcFE+7cADcYWftkZWtz376Q=
+X-Google-Smtp-Source: AGHT+IHwMvBDqfZG6gQ3WvghIG+/UUM+PVdp8YndKvoN3+J/IrhBRZtJRUo0Y6KBkff/nuryKHJTaMDIkCYWkQoY0bI=
+X-Received: by 2002:a05:6512:3da9:b0:530:ae4a:58d0 with SMTP id
+ 2adb3069b0e04-53546af3605mr6524701e87.8.1725262045215; Mon, 02 Sep 2024
+ 00:27:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ME0P300MB0416522C59231B4127E23C6F9D912@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+References: <20240824033757.52005-1-kris.van.hees@oracle.com> <20240824033757.52005-3-kris.van.hees@oracle.com>
+In-Reply-To: <20240824033757.52005-3-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 2 Sep 2024 16:26:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASKaCcmyTJPV+PhNyNu2ogFMU4OzgM0UncLRSoZa64ejA@mail.gmail.com>
+Message-ID: <CAK7LNASKaCcmyTJPV+PhNyNu2ogFMU4OzgM0UncLRSoZa64ejA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/4] kbuild: generate offset range data for builtin modules
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/02, Tianyi Liu wrote:
+On Sat, Aug 24, 2024 at 12:38=E2=80=AFPM Kris Van Hees <kris.van.hees@oracl=
+e.com> wrote:
 >
-> On Fri, Aug 30, 2024 at 18:12:41PM +0800, Oleg Nesterov wrote:
-> >
-> > 	- So I still think that the "right" fix should change the
-> > 	  bpf_prog_run_array_uprobe() paths somehow, but I know nothing
-> > 	  about bpf.
+> Create file module.builtin.ranges that can be used to find where
+> built-in modules are located by their addresses. This will be useful for
+> tracing tools to find what functions are for various built-in modules.
 >
-> I agree that this patch does not address the issue correctly.
-> The PID filter should be implemented within bpf_prog_run_array_uprobe,
+> The offset range data for builtin modules is generated using:
+>  - modules.builtin: associates object files with module names
+>  - vmlinux.map: provides load order of sections and offset of first membe=
+r
+>     per section
+>  - vmlinux.o.map: provides offset of object file content per section
+>  - .*.cmd: build cmd file with KBUILD_MODFILE
+>
+> The generated data will look like:
+>
+> .text 00000000-00000000 =3D _text
+> .text 0000baf0-0000cb10 amd_uncore
+> .text 0009bd10-0009c8e0 iosf_mbi
+> ...
+> .text 00b9f080-00ba011a intel_skl_int3472_discrete
+> .text 00ba0120-00ba03c0 intel_skl_int3472_discrete intel_skl_int3472_tps6=
+8470
+> .text 00ba03c0-00ba08d6 intel_skl_int3472_tps68470
+> ...
+> .data 00000000-00000000 =3D _sdata
+> .data 0000f020-0000f680 amd_uncore
+>
+> For each ELF section, it lists the offset of the first symbol.  This can
+> be used to determine the base address of the section at runtime.
+>
+> Next, it lists (in strict ascending order) offset ranges in that section
+> that cover the symbols of one or more builtin modules.  Multiple ranges
+> can apply to a single module, and ranges can be shared between modules.
+>
+> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
+a
+> is generated for kernel modules that are built into the kernel image.
+>
+> How it works:
+>
+>  1. The modules.builtin file is parsed to obtain a list of built-in
+>     module names and their associated object names (the .ko file that
+>     the module would be in if it were a loadable module, hereafter
+>     referred to as <kmodfile>).  This object name can be used to
+>     identify objects in the kernel compile because any C or assembler
+>     code that ends up into a built-in module will have the option
+>     -DKBUILD_MODFILE=3D<kmodfile> present in its build command, and those
+>     can be found in the .<obj>.cmd file in the kernel build tree.
+>
+>     If an object is part of multiple modules, they will all be listed
+>     in the KBUILD_MODFILE option argument.
+>
+>     This allows us to conclusively determine whether an object in the
+>     kernel build belong to any modules, and which.
+>
+>  2. The vmlinux.map is parsed next to determine the base address of each
+>     top level section so that all addresses into the section can be
+>     turned into offsets.  This makes it possible to handle sections
+>     getting loaded at different addresses at system boot.
+>
+>     We also determine an 'anchor' symbol at the beginning of each
+>     section to make it possible to calculate the true base address of
+>     a section at runtime (i.e. symbol address - symbol offset).
+>
+>     We collect start addresses of sections that are included in the top
+>     level section.  This is used when vmlinux is linked using vmlinux.o,
+>     because in that case, we need to look at the vmlinux.o linker map to
+>     know what object a symbol is found in.
+>
+>     And finally, we process each symbol that is listed in vmlinux.map
+>     (or vmlinux.o.map) based on the following structure:
+>
+>     vmlinux linked from vmlinux.a:
+>
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+>
+>     vmlinux linked from vmlinux.o:
+>
+>       vmlinux.map:
+>         <top level section>
+>           <included section>  -- might be same as top level section)
+>             vmlinux.o         -- need to use vmlinux.o.map
+>               <symbol>        -- ignored
+>               ...
+>
+>       vmlinux.o.map:
+>         <section>
+>             <object>          -- built-in association known
+>               <symbol>        -- belongs to module(s) object belongs to
+>               ...
+>
+>  3. As sections, objects, and symbols are processed, offset ranges are
+>     constructed in a straight-forward way:
+>
+>       - If the symbol belongs to one or more built-in modules:
+>           - If we were working on the same module(s), extend the range
+>             to include this object
+>           - If we were working on another module(s), close that range,
+>             and start the new one
+>       - If the symbol does not belong to any built-in modules:
+>           - If we were working on a module(s) range, close that range
+>
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>     Changes since v8:
+>      - Added support for built-in Rust modules.
+>      - Added optional 4th argument to specify kernel build directory.
 
-OK,
 
-> or alternatively, bpf_prog_run_array_uprobe should be called after
-> perf_tp_event_match to reuse the filtering mechanism provided by perf.
+When is the 4th parameter useful?
 
-No, no, perf_tp_event_match() has nothing to do with pid/mm filtering in
-this case, afaics.
+The map file knows all object paths.
 
-See https://lore.kernel.org/all/20240829152032.GA23996@redhat.com/
-and perf_trace_add() which adds the event to this_cpu_ptr(call->perf_events),
-see also the hlist_empty(head) check in __uprobe_perf_func().
+The object file and its .*.cmd file exist in the same directory.
 
-Again, again, I can be easily wrong, I forgot everything I knew (not too much)
-about perf, but at least in the case above perf_tp_event_match() is not even
-called.
+I did not find a use-case where the kdir prefix plays a role.
 
-> Also, uretprobe may need UPROBE_HANDLER_REMOVE, similar to uprobe.
-
-May be... Not sure. But why do you think we want it?
+Did I miss something?
 
 
-And... I think that BPF has even more problems with filtering. Not sure,
-I'll try to write another test-case tomorrow.
 
-Oleg.
-
+--
+Best Regards
+Masahiro Yamada
