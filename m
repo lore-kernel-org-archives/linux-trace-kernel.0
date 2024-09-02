@@ -1,36 +1,36 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5080514287;
-	Mon,  2 Sep 2024 18:08:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBE219F127;
+	Mon,  2 Sep 2024 18:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725300506; cv=none; b=iGalV3Dj4YfFhahYV92a8D8ZrkqUv4x1WCyBVahrJXtIGCEAUmso3GpSBNcqZzh17aecn9FXwCmeYopk1Svk6x4bdAOGSYlpqgfKD3rClJlLqLfAyLGBWYPCxFdnRY15DX6fZ+mtxPjz4Zy70Wo39Woa6+9kYSE827+MdHnhZxs=
+	t=1725300889; cv=none; b=ZkiiI5lq37rtem5jJHvtRNzTWXmc2Uj0kW9qwTzHaG/6TFp5t3KSwNsErndHPDNrMhqzPltL5gSTyPx9JIFctiNHLq3eSMDer0BTF7OL9ATUndrX0D8UASASCHpZmU9oLXW5OfL4l+98dwpM6BOu3Firx38XfKjD2RVIbTGMFXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725300506; c=relaxed/simple;
-	bh=0W12QeDYJ7tLn/TygJCk1LuRNBEti1l/SOkQQI1YJSM=;
+	s=arc-20240116; t=1725300889; c=relaxed/simple;
+	bh=8uyHUZeOmd4UOmgEXNT5ZG8aChZN4UjqzNfyOYiOS6M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FtWJcXUO2bW1QsJxFFNtYsYtW1jyfAXUaxv9YH3CdmwSOrHW1p+IObR4/0JOPp/J39C26g8JnyuTdY6gjHxp5QUCWyet+g6YD7f8RpFA/1w77k1LdZ4WI/ekkN8e009lwlFLxFEKOuR78am0WDeousATs4TFTuOzi4l17EwFq7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=GTBDNHj7; arc=none smtp.client-ip=167.114.26.122
+	 In-Reply-To:Content-Type; b=G7PGqrkFltraTTzHoY/6k2eRrxTuXeZ91TDjdXkMBciejmR2Wtxr1eimRnsjB/rFse0dVLPJcBSl42hnI8NpzAJBWrF+KMRpH1jB1G12+RZAIb1NHrfvEBX5Naz42HcfsuOfcSG7SPgdYDEmw/SjX6PCSW3VTRcWaYIEIwZX5ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=UfPtcApD; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="GTBDNHj7"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="UfPtcApD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1725300501;
-	bh=0W12QeDYJ7tLn/TygJCk1LuRNBEti1l/SOkQQI1YJSM=;
+	s=smtpout1; t=1725300886;
+	bh=8uyHUZeOmd4UOmgEXNT5ZG8aChZN4UjqzNfyOYiOS6M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GTBDNHj7ZuFQ96r3dvGy4U+GSTV7lSg3/ToCYYvxelNqBuzMCu8v+i+D4lza96DWc
-	 ikHwdpexy4525OjvIJYOR2Oo/TLPp4UwasFueDmAY7SqNRK2APHBy+d2NdLr0Kn/bD
-	 7k1BCfydKVtYX3l/95RUV58oBaOX+6LJbLwOpWaAaaREPOMUINvv2A7mhc2ICeMiWs
-	 vYkqc8V7cLWLpEMGCkZs/2nbMBCY11oMUJDT01FWPNqDQxOruCGI2n0v9jHwjNHiKH
-	 B52oi+GUy5XE1BWEtRLfzeLsiBAZSu12VNFMdycXKlrJE4P4Z6M7GN+zA8j8zyC31V
-	 TQCK6+e8WAwOA==
+	b=UfPtcApDDzyzOFJavT2qsGtbCmG42ir2h5al77oQtSfLAM+QGtzr/aFRAuLAxeVWY
+	 quIB/5Y/9dEsEvkbeSVRV1VyD604mN30ljleddyJ6s8Dma7x9He+kp/uVl0jrDvfKV
+	 4vawSjoNwYVGVxt5F4Xe6RTSfZ2/MMFf+p7s9B3b58L7KQGWmzzPm0rO/3SEkwyzN0
+	 WMoNpcPnN8JbWDaHffEW1AReHiMYpHMqbzG4G8ix0BQRGKpuSAdhZDYE6Ifytzwwz+
+	 yWEdozJ92cIyVBF6BsEXJEtNpuN0wnLGx7OhLN5W2Ohga/ahOFoma8BJqi8HSq57ON
+	 MeEqxLUtPkyOw==
 Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WyGvn5Jq1z1K5h;
-	Mon,  2 Sep 2024 14:08:21 -0400 (EDT)
-Message-ID: <9de6ca8f-b3f1-4ebc-a5eb-185532e164e7@efficios.com>
-Date: Mon, 2 Sep 2024 14:08:00 -0400
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WyH3B16xRz1JpH;
+	Mon,  2 Sep 2024 14:14:46 -0400 (EDT)
+Message-ID: <025ea126-f6db-4988-b500-5fbee0a65a3e@efficios.com>
+Date: Mon, 2 Sep 2024 14:14:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,8 +40,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and
  activate_guard
-To: Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
  Kees Cook <keescook@chromium.org>, Greg KH <gregkh@linuxfoundation.org>,
  Sean Christopherson <seanjc@google.com>, Steven Rostedt
@@ -57,57 +57,63 @@ Cc: Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
 References: <20240828143719.828968-1-mathieu.desnoyers@efficios.com>
  <20240828143719.828968-3-mathieu.desnoyers@efficios.com>
  <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+ <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Content-Language: en-US
-In-Reply-To: <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+In-Reply-To: <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024-09-02 11:43, Peter Zijlstra wrote:
-> On Wed, Aug 28, 2024 at 10:37:19AM -0400, Mathieu Desnoyers wrote:
->> To cover scenarios where the scope of the guard differs from the scope
->> of its activation, introduce DEFINE_INACTIVE_GUARD() and activate_guard().
+On 2024-09-02 14:10, Linus Torvalds wrote:
+> On Mon, 2 Sept 2024 at 08:43, Peter Zijlstra <peterz@infradead.org> wrote:
 >>
->> Here is an example use for a conditionally activated guard variable:
->>
->> void func(bool a)
->> {
->> 	DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
->>
->> 	[...]
->> 	if (a) {
->> 		might_sleep();
->> 		activate_guard(preempt_notrace, myguard)();
->> 	}
->> 	[ protected code ]
->> }
+>> and Linus took objection to similar patterns. But perhaps my naming
+>> wasn't right.
 > 
-> So... I more or less proposed this much earlier:
+> Well, more of a "this stuff is new, let's start very limited and very clear".
 > 
->    https://lore.kernel.org/all/20230919131038.GC39346@noisy.programming.kicks-ass.net/T/#mb7b84212619ac743dfe4d2cc81decce451586b27
+> I'm not loving the inactive guard, but I did try to think of a better
+> model for it, and I can't.  I absolutely hate the *example*, though:
 > 
-> and Linus took objection to similar patterns. But perhaps my naming
-> wasn't right.
+>    void func(bool a)
+>    {
+>          DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
+> 
+>          [...]
+>          if (a) {
+>                  might_sleep();
+>                  activate_guard(preempt_notrace, myguard)();
+>          }
+>          [ protected code ]
 
-Then you suggested something like a "guard_if()":
+Fair. I should have written something more like
 
-https://lore.kernel.org/lkml/20231120221524.GD8262@noisy.programming.kicks-ass.net/
+   [ conditionally protected code ]
 
-which I find really odd because it requires to evaluate the same
-condition twice within the function if it is used as guard_if
-expression and needed as expression within the rest of the function
-flow. I find the original patch with labels and gotos less ugly
-than the guard_if().
+>    }
+> 
+> because that "protected code" obviously is *NOT* protected code. It's
+> conditionally protected only in one situation.
+> 
+> Honestly, I still think the guard macros are new enough that we should
+> strive to avoid them in complicated cases like this. And this *is*
+> complicated. It *looks* simple, but when even the example that was
+> given was pure and utter garbage, it's clearly not *actually* simple.
+> 
+> Once some code is sometimes protected, and sometimes isn't, and you
+> have magic compiler stuff that *hides* it, I'm not sure we should use
+> the magic compiler stuff.
 
-Hence my proposal to optionally separate the definition from the activation,
-which nicely integrates with the existing code flow.
+I've tried my best to come up with a scheme which would be cleaner
+than the "guard_if()" proposed by Peter, because I really hate it.
 
-If Linus' objections were mainly about naming, perhaps what I am
-suggestion here may be more to his liking ?
+I'm perfectly fine going back to goto/labels for that function if we
+cannot agree on a clean way to express what is needed there.
 
 Thanks,
 
 Mathieu
+
 
 -- 
 Mathieu Desnoyers
