@@ -1,122 +1,119 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBE219F127;
-	Mon,  2 Sep 2024 18:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB77D19CC02
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Sep 2024 18:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725300889; cv=none; b=ZkiiI5lq37rtem5jJHvtRNzTWXmc2Uj0kW9qwTzHaG/6TFp5t3KSwNsErndHPDNrMhqzPltL5gSTyPx9JIFctiNHLq3eSMDer0BTF7OL9ATUndrX0D8UASASCHpZmU9oLXW5OfL4l+98dwpM6BOu3Firx38XfKjD2RVIbTGMFXE=
+	t=1725301126; cv=none; b=ZiXI/wVl7klAwxl4RQq/m0gQe5ZjOwQr/7aWykko7XT5QERLkm/MY5+QbCjD+j7duLxIzoCbge84BapqaLJqZGyrANQBRzZz3D7UsjDIetj4GAme3udOmNy9q3FbuTzrLZP24MnT6C8lNfHk9eBPkxOCmrIUSHza0dqc7kqMhXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725300889; c=relaxed/simple;
-	bh=8uyHUZeOmd4UOmgEXNT5ZG8aChZN4UjqzNfyOYiOS6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G7PGqrkFltraTTzHoY/6k2eRrxTuXeZ91TDjdXkMBciejmR2Wtxr1eimRnsjB/rFse0dVLPJcBSl42hnI8NpzAJBWrF+KMRpH1jB1G12+RZAIb1NHrfvEBX5Naz42HcfsuOfcSG7SPgdYDEmw/SjX6PCSW3VTRcWaYIEIwZX5ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=UfPtcApD; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1725301126; c=relaxed/simple;
+	bh=HgOn/3IiUVhbrjJvM1lNiNzrymo/kFrhHrJKVu/yhaE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByFYWhJ/6WOhON76CtIJZYbRVjrXciIE1kQFOFZotf9Xe4iLrqv/XFqogDqfIp8tQdy2eHjGC6rh8oQHWipCvNP+2fjqrOFxL+n5YrDVd1zO4yKpwbJ80hYaEl11iPE3JhUWxE1Naxjzos6abfHCoisEFrjRdl719MKVuC6+V5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aaUqXuwn; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="UfPtcApD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1725300886;
-	bh=8uyHUZeOmd4UOmgEXNT5ZG8aChZN4UjqzNfyOYiOS6M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UfPtcApDDzyzOFJavT2qsGtbCmG42ir2h5al77oQtSfLAM+QGtzr/aFRAuLAxeVWY
-	 quIB/5Y/9dEsEvkbeSVRV1VyD604mN30ljleddyJ6s8Dma7x9He+kp/uVl0jrDvfKV
-	 4vawSjoNwYVGVxt5F4Xe6RTSfZ2/MMFf+p7s9B3b58L7KQGWmzzPm0rO/3SEkwyzN0
-	 WMoNpcPnN8JbWDaHffEW1AReHiMYpHMqbzG4G8ix0BQRGKpuSAdhZDYE6Ifytzwwz+
-	 yWEdozJ92cIyVBF6BsEXJEtNpuN0wnLGx7OhLN5W2Ohga/ahOFoma8BJqi8HSq57ON
-	 MeEqxLUtPkyOw==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4WyH3B16xRz1JpH;
-	Mon,  2 Sep 2024 14:14:46 -0400 (EDT)
-Message-ID: <025ea126-f6db-4988-b500-5fbee0a65a3e@efficios.com>
-Date: Mon, 2 Sep 2024 14:14:26 -0400
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aaUqXuwn"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2f3f0a31ab2so51521851fa.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Sep 2024 11:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1725301122; x=1725905922; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7tKnOa4A90IoF/EoF6/zH6Ks3lMs+xeYBCb2/giypxQ=;
+        b=aaUqXuwnjd9Fci6F9eBXpyNA1BbS7hhPEV75PL8lHLCbaRVbWuXDUfpxSpcJCLQQmU
+         yBDsIAOSXUEdlXhmaaH21g2oO+0fk6I7F0yWwbMCIfKgSpucfoiYnIrgMbuoMTmazhwx
+         XMqHe8VerUGif8URyvTPqYJfNv3uY72J4tzzA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725301122; x=1725905922;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7tKnOa4A90IoF/EoF6/zH6Ks3lMs+xeYBCb2/giypxQ=;
+        b=mb6hx9+aU4wN2JqnOVa58C71nHsamW0hdIoFDqyAg63deRD/cm30f5Nczm097kpxo5
+         OopEyhF2tK2gykxzcJzZGB5wj2FhKvOQ+BCfw0FeB7LZzjxxCyxX1CCrr/TbraprWTkN
+         CoLRD6fPWd8yLu7qGj5NYutHoff3NYNMH+Xkeccvormd0Ya2310Mpice2enJJ2QRbaLM
+         vuTK7SJ03zZTWPI0i6TQv+F7/HPCcDtnDEhwhiTNgY6O+h5jFsbyQyIeQn9mKNxVvPhQ
+         0OvqjOiolDZHAMzr1eOurMOEFzoc/KqsLi872ieoWrYdG5pNtx0OwKaKIV6LQaPNcSEH
+         AcoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcJr5SBzksDSEUGIew5FPwwqA3l2L9vThCdnTYnfOm7ytKKISG2zhmu/cIfYgAJraj3h8edHfGKrB/P/N2o1cLHR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdUlsmGCxmeuVhSb02HA5CnYhl1h8NNtnEEEx/Gr0lOwHF3NiZ
+	8AOWJ28g4mFRPOXs6pE+/LovBPuSqwlRHZG5183TuN/7bXr2S7NKKFNQTzjEIDTg5DqU9PW8XTY
+	zIrA=
+X-Google-Smtp-Source: AGHT+IFstJ+bqsxwMSdOmI2ohBy155uYUCZ2vX3hJvP7wB0eAc8esZ00CrPaG2o+9B1wkgFwIGzjUA==
+X-Received: by 2002:a05:651c:198d:b0:2f3:e2f0:fa8 with SMTP id 38308e7fff4ca-2f61038c68amr120235351fa.9.1725301121813;
+        Mon, 02 Sep 2024 11:18:41 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f614f38ce5sm18077901fa.68.2024.09.02.11.18.41
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Sep 2024 11:18:41 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2f3f07ac2dcso50006831fa.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Sep 2024 11:18:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXC/jXFsxWVw/KJnYoxv7QQivokOfkZmibvnbMKpRNDaIFotyibofJP0waRJglhUVY4uyxTvZvBUQ7tj8jdJHowOjA=@vger.kernel.org
+X-Received: by 2002:a05:6402:3595:b0:5c2:50a2:98a2 with SMTP id
+ 4fb4d7f45d1cf-5c250a38f97mr4049161a12.6.1725300629265; Mon, 02 Sep 2024
+ 11:10:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and
- activate_guard
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
- Kees Cook <keescook@chromium.org>, Greg KH <gregkh@linuxfoundation.org>,
- Sean Christopherson <seanjc@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
- "Paul E . McKenney" <paulmck@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
- Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>
 References: <20240828143719.828968-1-mathieu.desnoyers@efficios.com>
- <20240828143719.828968-3-mathieu.desnoyers@efficios.com>
- <20240902154334.GH4723@noisy.programming.kicks-ass.net>
- <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20240828143719.828968-3-mathieu.desnoyers@efficios.com> <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 2 Sep 2024 11:10:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
+Message-ID: <CAHk-=whef03dn8OWJ01L08hShVHCieVz7Rrzr1HJQOriVBvaDg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and activate_guard
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Ingo Molnar <mingo@redhat.com>, 
+	linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Greg KH <gregkh@linuxfoundation.org>, Sean Christopherson <seanjc@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-09-02 14:10, Linus Torvalds wrote:
-> On Mon, 2 Sept 2024 at 08:43, Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> and Linus took objection to similar patterns. But perhaps my naming
->> wasn't right.
-> 
-> Well, more of a "this stuff is new, let's start very limited and very clear".
-> 
-> I'm not loving the inactive guard, but I did try to think of a better
-> model for it, and I can't.  I absolutely hate the *example*, though:
-> 
->    void func(bool a)
->    {
->          DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
-> 
->          [...]
->          if (a) {
->                  might_sleep();
->                  activate_guard(preempt_notrace, myguard)();
->          }
->          [ protected code ]
+On Mon, 2 Sept 2024 at 08:43, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> and Linus took objection to similar patterns. But perhaps my naming
+> wasn't right.
 
-Fair. I should have written something more like
+Well, more of a "this stuff is new, let's start very limited and very clear".
 
-   [ conditionally protected code ]
+I'm not loving the inactive guard, but I did try to think of a better
+model for it, and I can't.  I absolutely hate the *example*, though:
 
->    }
-> 
-> because that "protected code" obviously is *NOT* protected code. It's
-> conditionally protected only in one situation.
-> 
-> Honestly, I still think the guard macros are new enough that we should
-> strive to avoid them in complicated cases like this. And this *is*
-> complicated. It *looks* simple, but when even the example that was
-> given was pure and utter garbage, it's clearly not *actually* simple.
-> 
-> Once some code is sometimes protected, and sometimes isn't, and you
-> have magic compiler stuff that *hides* it, I'm not sure we should use
-> the magic compiler stuff.
+  void func(bool a)
+  {
+        DEFINE_INACTIVE_GUARD(preempt_notrace, myguard);
 
-I've tried my best to come up with a scheme which would be cleaner
-than the "guard_if()" proposed by Peter, because I really hate it.
+        [...]
+        if (a) {
+                might_sleep();
+                activate_guard(preempt_notrace, myguard)();
+        }
+        [ protected code ]
+  }
 
-I'm perfectly fine going back to goto/labels for that function if we
-cannot agree on a clean way to express what is needed there.
+because that "protected code" obviously is *NOT* protected code. It's
+conditionally protected only in one situation.
 
-Thanks,
+Honestly, I still think the guard macros are new enough that we should
+strive to avoid them in complicated cases like this. And this *is*
+complicated. It *looks* simple, but when even the example that was
+given was pure and utter garbage, it's clearly not *actually* simple.
 
-Mathieu
+Once some code is sometimes protected, and sometimes isn't, and you
+have magic compiler stuff that *hides* it, I'm not sure we should use
+the magic compiler stuff.
 
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+                Linus
