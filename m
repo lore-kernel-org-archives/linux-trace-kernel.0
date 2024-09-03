@@ -1,110 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11150B647;
-	Tue,  3 Sep 2024 21:51:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4982420E3
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 22:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725400314; cv=none; b=pGZQdNjxDtGE6dYWjNbpSE9ARcFQh/KwZGLDqZpK/l7o4EZ64MZjaMsFFyLGxqCkQKlT4wD3qkyWIZkQgGkslIFNinSv/CkCCfOtc4oY5I0Wq+yGiv1ZSJICS9UuoqlA0sbnjIEiEzG4UTZUv111oBqchwasFkQ7vEJz9wl2g5g=
+	t=1725401520; cv=none; b=jv7n4Iv+HA2r4vqY7i3Lt9j9z/CEupYGinpsGwVA7itqbzlSxfXfrsKCkOUFZWUIlUc5bXr0htxcIkHp+MD8+AYSv8Blehq802pxMOrVZPm1Cr6OEgpBN/PTuPJPVkrhw+lZo0zv4nmZLxnLvhWhK8mcX5uqjauToI0ocfo96Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725400314; c=relaxed/simple;
-	bh=tN5vqlCKPar7XP4sqfMn5SllXz0g+GvMXAGcorIVqYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t6cxjg39/RKDfQYxxe+OFBE7/Xs5sUqg/aXRZIPveKrsdrsAVsX92+Yhs7ew5OmAQ8duHQp+NLZOzIanhAUL/BzkYDm5DwfEI0DPgF8qq6j7WorltBlA2F6FeTPhZg49v4FCqaDqnFshKlDLuG57VC/7wAbOxWbiSmVclEl5pD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLZNXCj0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725401520; c=relaxed/simple;
+	bh=Kazl5ijkrMlxfa3K1vrcKe9KDtcFNQuvy1kvlI9BKbM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cCyrmCHHYeSOR22xxKVZOQo0dBC8nZ9uPhv6JC65nCeN3p4f4M/Ve+DLsEOfadAZMgm1eCVLPHQVRGMp8ZPQIyURWU5D5JmvZTZRG9yUQaloOZp/wTRBd709ejJZ2mbQUc3cGqikgFZRgH8TjhgXxwuTH2uhYOxa/K+4Usxf/b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMg+Z8Qt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLZNXCj0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42686C4CEC4;
-	Tue,  3 Sep 2024 21:51:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMg+Z8Qt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE43C4CEC4;
+	Tue,  3 Sep 2024 22:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725400313;
-	bh=tN5vqlCKPar7XP4sqfMn5SllXz0g+GvMXAGcorIVqYM=;
+	s=k20201202; t=1725401519;
+	bh=Kazl5ijkrMlxfa3K1vrcKe9KDtcFNQuvy1kvlI9BKbM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pLZNXCj0UEyKhvBJH5OnAGowSygKD8coz1erfWLAmf25HQz7h56PVHW0XMx2E/+w7
-	 xIjmR/ODgmkQ6EkT6qbdOkd5+85QO1VKRGcUIdp6j2mkLuyJOvw/tsogx2g6M2wzva
-	 plaXBbA4zNqKIrFF1xpYvfxDeNxXAy01Gmo8YJ+WZVfKF+cf6OJiYtW+gQBUW93FAy
-	 xIbMwFjMhxNIKZyJ57an/ZH5OFRWVdtyWrTv6ylNleOf2fa0XbMtEJRZe8/7ngefo1
-	 qikCcPNCOUF1XR5udOGdG6WVHyWR9fGyOzvTd3fowwLf6pKYqM5v5MJzgqDs6Hj2YM
-	 mtSUblomNCqHQ==
-Date: Tue, 3 Sep 2024 14:51:50 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, Ivan
- Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
- <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
- Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
- <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
- <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert
- Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem
- de Bruijn <willemdebruijn.kernel@gmail.com>, "=?UTF-8?B?QmrDtnJuIFTDtnBl?=
- =?UTF-8?B?bA==?=" <bjorn@kernel.org>, Magnus Karlsson
- <magnus.karlsson@intel.com>, Maciej Fijalkowski
- <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>,
- Sumit Semwal <sumit.semwal@linaro.org>, "Christian =?UTF-8?B?S8O2bmln?="
- <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, David
- Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin
- <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, Harshitha
- Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Christoph
- Hellwig <hch@infradead.org>, Nikolay Aleksandrov <razor@blackwall.org>,
- Taehee Yoo <ap420073@gmail.com>
-Subject: Re: [PATCH net-next v24 11/13] net: add devmem TCP documentation
-Message-ID: <20240903145150.4ffee51b@kernel.org>
-In-Reply-To: <20240831004313.3713467-12-almasrymina@google.com>
-References: <20240831004313.3713467-1-almasrymina@google.com>
-	<20240831004313.3713467-12-almasrymina@google.com>
+	b=cMg+Z8QtILmKxyaD7KjCCQrrcovkibvKr7Sa/68bZlIfT5yTZ+ZCmHad9bpT5U8OE
+	 eJO1Xut8VP31O3ztNH4uW0+7u9XIJ+JPSp145+uc4Zmnsoh+NpAy4YCWJZUiZp2VVw
+	 VopvzmEjcSsrWHq4cxwXJ9DZXz8pnqdlLSM0sDVYI/Frw71KmrmSb4CsfkkgQO8+rk
+	 HWbN/ZZkvooqzirpCklEBYfLMeeBq0/V9WO0/9x7kvPEK0QS/lV2MpJYejsEg+3RzD
+	 LilZARp/4KvR6xOwmqUBaBr3hPMKeOPf0TBcjwki60VKn4jcoMKi1P1a9mXkP3sr4f
+	 ceKU560fqdlWg==
+Date: Wed, 4 Sep 2024 07:11:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Gaosheng Cui <cuigaosheng1@huawei.com>
+Cc: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
+ <davem@davemloft.net>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] kprobes: Remove obsoleted declaration for
+ init_test_probes
+Message-Id: <20240904071156.d5525a818d9098102801e29d@kernel.org>
+In-Reply-To: <20240826032552.4016314-1-cuigaosheng1@huawei.com>
+References: <20240826032552.4016314-1-cuigaosheng1@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 31 Aug 2024 00:43:11 +0000 Mina Almasry wrote:
-> +The socket must be flow steered to the dmabuf bound RX queue::
-> +
-> +	ethtool -N eth1 flow-type tcp4 ... queue 15,
+On Mon, 26 Aug 2024 11:25:52 +0800
+Gaosheng Cui <cuigaosheng1@huawei.com> wrote:
 
-nit: tailing comma here
+> The init_test_probes() have been removed since
+> commit e44e81c5b90f ("kprobes: convert tests to kunit"), and now
+> it is useless, so remove it.
 
-> +Devmem payloads are inaccessible to the kernel processing the packets. This
-> +results in a few quirks for payloads of devmem skbs:
-> +
-> +- Loopback is not functional. Loopback relies on copying the payload, which is
-> +  not possible with devmem skbs.
-> +
-> +- Software checksum calculation fails.
+Looks good to me. Let me pick it.
 
-Speaking of which, I think we need to add readability check to 
-skb_checksum_help(). Shouldn't the check in __skb_checksum() 
-have a WARN_ON_ONCE() around it? It's impossible to return 
-an error from there.
+Thank you
 
-> +- TCP Dump and bpf can't access devmem packet payloads.
-> +
-> +
-> +Testing
-> +=======
-> +
-> +More realistic example code can be found in the kernel source under
-> +tools/testing/selftests/net/ncdevmem.c
+> 
+> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+> ---
+>  include/linux/kprobes.h | 9 ---------
+>  1 file changed, 9 deletions(-)
+> 
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 5fcbc254d186..8c4f3bb24429 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -269,15 +269,6 @@ extern unsigned long __stop_kprobe_blacklist[];
+>  
+>  extern struct kretprobe_blackpoint kretprobe_blacklist[];
+>  
+> -#ifdef CONFIG_KPROBES_SANITY_TEST
+> -extern int init_test_probes(void);
+> -#else /* !CONFIG_KPROBES_SANITY_TEST */
+> -static inline int init_test_probes(void)
+> -{
+> -	return 0;
+> -}
+> -#endif /* CONFIG_KPROBES_SANITY_TEST */
+> -
+>  extern int arch_prepare_kprobe(struct kprobe *p);
+>  extern void arch_arm_kprobe(struct kprobe *p);
+>  extern void arch_disarm_kprobe(struct kprobe *p);
+> -- 
+> 2.25.1
+> 
 
-looks like HTML output wraps the file path, maybe quote it as
-``tools/testing/selftests/net/ncdevmem.c`` ?
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
