@@ -1,153 +1,130 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48A1D5CC8;
-	Tue,  3 Sep 2024 19:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74A01D7E2B;
+	Tue,  3 Sep 2024 19:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725390965; cv=none; b=OioUZwYenJNvnKVOhVWepQ2rtSOTAjQNC+QzIB5HBZuGRaeHqt3WwJXkmBCSEOiDEHx/TLaFyCYPY6wrKs4ehcrVISopYFv0t94TdM8EaI2JwckJo2KqPyztiNeTSmMXY3hRNdfOeZfSuT52NO8rTotpbnQGQ8cGyk85KEphChE=
+	t=1725391906; cv=none; b=Pg7cnrKpmb2P+FY/jpJjFQb8hhvkBWipoxeQEt1hhrFpUXFlxTxuHTkPCqIcmGUFgx6zYqUBI6jaZ5f5LCfXjIpOvGzggdzb9334JlHQpOgIA0+hBXPuJWwd1PWtSwASwODzYRNiks0BDRUke0uuoCh2xqkxCDBL66nVR1m/UWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725390965; c=relaxed/simple;
-	bh=pc4D2rTYe3uDu4gL5RzbeVO+XN6Y90tHrqkY1CQHZ8M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VCOgi3bbJqJsCF36vorgBF0i6ZjvlXM5a7QJC+AQr0VpcDkBk0HRgBBrn8cclEV43cDKNEmU90XHeoMsgnRoIbGlw8UBbYcepkTYC57tFgUEJ7o7Qwp6HhfxWQkrDamZJlH+5bnQaRyQjoo3sWDIHfDuIDcwRsef7CQtLN18kGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3J4PAwf; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725391906; c=relaxed/simple;
+	bh=8NVlSAhPbLS9tVw+K1ap2578F27xZpLzZhH4qSnlQE8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=tRha/xIznGX+WSHC48Bb05TN9WwZOtY/fPoDXCa06qSbsSoizoqX7FpyEx+LzhH62CwtZemliHLBSJRi4VRdl4PO8kbiGSplZKHhdZg28Lt2fX+dprpZEgA4jhkcYO2viUeR3WdxnDBYIm1Ut9S7dxQi8LK+gDcMWl9vIMAkX5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NQyi+wO+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3J4PAwf"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c4d4f219so1917036f8f.1;
-        Tue, 03 Sep 2024 12:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725390962; x=1725995762; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oIKMnKHHdmH0tgNR7Q0mOb34yahsFaU+l95FDBvyAEo=;
-        b=E3J4PAwf9iQNvuarBVXBF/5etkiUbOvE5AEmZwMKkcQz/CVKXX2fw956xZO1iWxJUh
-         61R4eQfdcQyHing1jTO3MyO9t2GCQYlvBI6E+Qa/C+TxmAW5gV6t4C75wjccOguB8twU
-         YOKSS+ZFpLF/z0UC1OiNFNB9Z9FPalWSNI69Sgr1nu9mSob62i53mZO5PHYrZQXAHOf5
-         5+fOjhoy5cxzW4Ndi6S4WhRuqRkdrniZ0BGYL4TLTUYg17kVFT2FJp5nhmn2CRp8yBbl
-         Cco10aM0McYvlT5Q7KBAgxeWwK3YtWr+SuuH7BgeWjV5e/iqZw+Qfcg3hekf95Oubu7J
-         ghJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725390962; x=1725995762;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oIKMnKHHdmH0tgNR7Q0mOb34yahsFaU+l95FDBvyAEo=;
-        b=UINGdxbAC5phovkfUtU/IVtWOAJLgG+nvTsg1yyhQYSf/RG0p2tFw4P9aMnk1f47du
-         hEit63+WZU0U0wREkEPvhoYYTYq/rd7ozoKeETNaNIDCMBAStEW8E+yHqgoHFWaXRrzD
-         4FOgFt3xXdOEcsELlMMT2LtVH2Rju+t0SqNUv7t6o5N7UZhu4noOreTesLjL1ndFJXvS
-         fzpPuSvxS/lzGVyD0w07sonh8GNiiQjnyWoEpC7tI4zfK6dY61G+/JvpIGDbEqWQQgvh
-         xy09ePVMauJkh5Q7MWBwSxcJOhmhrzfk0r8gBMGOMefw8ubfqMsohhcFzRReBB5Kuh1p
-         V++A==
-X-Forwarded-Encrypted: i=1; AJvYcCVSzYME2hpebMIxpyBWhrtFxvukSHpdhOW5wQlEiRsBtbI1F+0Wm+knphTRD/EtO8VF7wBXfYCiBGtjYJ6z7FbheBjz@vger.kernel.org, AJvYcCVpmdexVz4TnM+w0NPvwQFIyf0qvr8ljiUCVF579PUpTWrsD9DvQv0gxWcPu0yUcHzONVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGUCUpoBbUgRdOa40sAD6ALtKUKqwbUSi7KNZmmn9lxnEpinAJ
-	bK43KhHFrdXdu35Q+A/0KQTEG6xJuPl+8lF9EZWN9yPaZjafOBc9
-X-Google-Smtp-Source: AGHT+IHlQkyOpufz7x/AQMvhA8sEw5Cq/FXXlpSLlS21HqKGXn7emmi/2SotzMe1MGIisdd46ltNcw==
-X-Received: by 2002:a5d:59a4:0:b0:368:75:2702 with SMTP id ffacd0b85a97d-374ecc6774bmr4076569f8f.13.1725390962143;
-        Tue, 03 Sep 2024 12:16:02 -0700 (PDT)
-Received: from krava ([87.202.122.118])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c96a88ebsm7029092f8f.108.2024.09.03.12.15.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 12:16:01 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 3 Sep 2024 22:15:55 +0300
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Tianyi Liu <i.pear@outlook.com>, Jordan Rome <linux@jordanrome.com>,
-	ajor@meta.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com,
-	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <Ztdga4chR8imIPZb@krava>
-References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240830101209.GA24733@redhat.com>
- <ZtHKTtn7sqaLeVxV@krava>
- <CAEf4BzZPGxuV38Kz3R387tANP3tLF7j9GLRd6tOYtaEWT9uqCw@mail.gmail.com>
- <ZtWBRgM3TyhdiwKw@krava>
- <CAEf4BzZJdmppN2=pt-0D+LDsfc6rW=Jg_7Q6kEJXpsuv52ATNQ@mail.gmail.com>
- <CAEf4BzazK83Lw24j-MLNZ6PYwhC6CYN11Hw00+FBRgJ9PuxW=Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NQyi+wO+"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 483JN5wP030261;
+	Tue, 3 Sep 2024 19:31:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:in-reply-to:references:date:message-id
+	:content-type:mime-version; s=pp1; bh=hjwvO+rPhIvu2QQRDyOzFD6wT+
+	0RGvlT2tXAAMKBb2I=; b=NQyi+wO+UJdpi9+i+wdL5qcZ3bj3KaoAUuDgPjAt4+
+	m1qm63S0spLBmOhqLXWmpkEmlXG/WKSlXqJ74/ELNKoCpNitZL099Eo/q01k0aCy
+	1qSKLJWqgW+6AxBAnD1fhDGDKiTgM15WXC0PsTEWiMlRXNxh0ieB/6PoUXLEY7l+
+	Ub1V4Nkp7gFchmB640KOaXIAfI1oOHCYdMXxF+KwJGqMNoP0A3YCrw+wXSaYpDcH
+	dYBabQ2czIgWhR2wpmhCk3KRCmfoDqMEhUH2/nv/ZVVPOszAjqjPQYGExytjZJCY
+	1tlwLDPplrTB9kAAVuxSbTIQUsfLJ2QJ4y70ZuTAi+aQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btuwygkt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 19:31:19 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 483JVJ3n015116;
+	Tue, 3 Sep 2024 19:31:19 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btuwygkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 19:31:19 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 483H4nbC009151;
+	Tue, 3 Sep 2024 19:31:18 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cg73kyk9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 19:31:17 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 483JVGWK59441558
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Sep 2024 19:31:16 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4FDCA20043;
+	Tue,  3 Sep 2024 19:31:16 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 198C020040;
+	Tue,  3 Sep 2024 19:31:16 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  3 Sep 2024 19:31:16 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho
+ de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
+In-Reply-To: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
+	(Linus Torvalds's message of "Tue, 3 Sep 2024 12:12:34 -0700")
+References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
+	<20240903073629.2442754-1-svens@linux.ibm.com>
+	<20240903090843.GA17936@redhat.com>
+	<CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
+Date: Tue, 03 Sep 2024 21:31:15 +0200
+Message-ID: <yt9d7cbso7p8.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oHyLFMB79jshGnAwcS6io3lm6FwAGjP5
+X-Proofpoint-ORIG-GUID: uEDhFTZ9rOsVYy_LgtFzxa7rv1kNgqfA
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzazK83Lw24j-MLNZ6PYwhC6CYN11Hw00+FBRgJ9PuxW=Q@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-03_06,2024-09-03_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=651 mlxscore=0 priorityscore=1501 adultscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2409030149
 
-On Tue, Sep 03, 2024 at 11:11:06AM -0700, Andrii Nakryiko wrote:
+Hi Linus,
 
-SNIP
+Linus Torvalds <torvalds@linux-foundation.org> writes:
 
-> > Aren't we conflating two things here? Yes, from what Oleg explained,
-> > it's clear that using task->mm is wrong. So that is what I feel is the
-> > main issue. We shouldn't use task->mm at all, only task->signal should
-> > be used instead. We should fix that (in bpf tree, please).
-> >
-> > But I don't get the concern about linux->mm or linux->signal becoming
-> 
-> correction, we shouldn't worry about *linux->signal* becoming NULL.
-> linux->mm can become NULL, but we don't care about that (once we fix
-> filtering logic in multi-uprobe).
-> 
-> > NULL because of a task existing. Look at put_task_struct(), it WILL
-> > NOT call __put_task_struct() (which then calls put_signal_struct()),
-> > so task->signal at least will be there and valid until multi-uprobe is
-> > detached and we call put_task().
-> >
-> > So. Can you please send fixes against the bpf tree, switching to
-> > task->signal? And maybe also include the fix to prevent
-> > UPROBE_HANDLER_REMOVE to be returned from the BPF program?
+> On Tue, 3 Sept 2024 at 02:09, Oleg Nesterov <oleg@redhat.com> wrote:
+>>
+>> but with or without this fix __create_xol_area() also needs
+>>
+>>         area->xol_mapping.mremap = NULL;
+>
+> I think the whole thing needs to be zeroed out.
+>
+> It was always horribly buggy. The close thing just made it more
+> *obviously* buggy, because closing a vma is a lot more common than
+> mremap'ing it.
+>
+> Either use kzalloc(), or do a proper initializer something like this:
 
-ok, it's uprobe-multi specific, let's discuss that over the change
-itself, I'll try to send it soon
+I sent a patch which does this today:
 
-jirka
-
-
-> >
-> > This thread is almost 50 emails deep now, we should break out of it.
-> > We can argue on your actual fixes. :)
-> >
-> > >
-> > > Oleg suggested change below (in addition to same_thread_group change)
-> > > to take that in account
-> > >
-> > > jirka
-> > >
-> > >
-> > > ---
-> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > > index 98e395f1baae..9e6b390aa6da 100644
-> > > --- a/kernel/trace/bpf_trace.c
-> > > +++ b/kernel/trace/bpf_trace.c
-> > > @@ -3235,9 +3235,23 @@ uprobe_multi_link_filter(struct uprobe_consumer *con, enum uprobe_filter_ctx ctx
-> > >                          struct mm_struct *mm)
-> > >  {
-> > >         struct bpf_uprobe *uprobe;
-> > > +       struct task_struct *task, *t;
-> > > +       bool ret = false;
-> > >
-> > >         uprobe = container_of(con, struct bpf_uprobe, consumer);
-> > > -       return uprobe->link->task->mm == mm;
-> > > +       task = uprobe->link->task;
-> > > +
-> > > +       rcu_read_lock();
-> > > +       for_each_thread(task, t) {
-> > > +               struct mm_struct *mm = READ_ONCE(t->mm);
-> > > +               if (mm) {
-> > > +                       ret = t->mm == mm;
-> > > +                       break;
-> > > +               }
-> > > +       }
-> > > +       rcu_read_unlock();
-> > > +
-> > > +       return ret;
-> > >  }
-> > >
-> > >  static int
+https://lore.kernel.org/all/20240903102313.3402529-1-svens@linux.ibm.com/
