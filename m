@@ -1,109 +1,153 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8D81D5CCA
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 19:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48A1D5CC8;
+	Tue,  3 Sep 2024 19:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725390779; cv=none; b=iHn0FPz674GWr88T6j8ViO1NT9c+1eIgAbLv5CgDnXZpYYySCBx7YDbBlyTATnuvbV4YcAGkBW5AoCZNxi9JZuesUlxQox9mrFNTgvmy8uYIRNLzNW1oJkiZpHOJRkVKegj4zp8zcTxRhVmCITzsephcDz/wzDN45ZCbCp8985Q=
+	t=1725390965; cv=none; b=OioUZwYenJNvnKVOhVWepQ2rtSOTAjQNC+QzIB5HBZuGRaeHqt3WwJXkmBCSEOiDEHx/TLaFyCYPY6wrKs4ehcrVISopYFv0t94TdM8EaI2JwckJo2KqPyztiNeTSmMXY3hRNdfOeZfSuT52NO8rTotpbnQGQ8cGyk85KEphChE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725390779; c=relaxed/simple;
-	bh=CvaDCnV+QaG24AvL/P+QY+StDOYTi5CE3AZLUYyMlzs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fStUybghiXps1jHTaPSPa5tDaHfcd5UoSJp2qWqtJ7G+B4H68wLJOQNXrwJbvInEcbwXm0cNQSWz0yzDaqTNvaviE4Z9KdVbqrP4VZwPj6suiRhiNNZVTm1pc91LwhC/XDBoA3oYpvUzpOvSbOGksvW1JZSZvGzZ5RWN9aUQaOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=I+NEIhu+; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1725390965; c=relaxed/simple;
+	bh=pc4D2rTYe3uDu4gL5RzbeVO+XN6Y90tHrqkY1CQHZ8M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VCOgi3bbJqJsCF36vorgBF0i6ZjvlXM5a7QJC+AQr0VpcDkBk0HRgBBrn8cclEV43cDKNEmU90XHeoMsgnRoIbGlw8UBbYcepkTYC57tFgUEJ7o7Qwp6HhfxWQkrDamZJlH+5bnQaRyQjoo3sWDIHfDuIDcwRsef7CQtLN18kGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3J4PAwf; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="I+NEIhu+"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-53343bf5eddso7511876e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:12:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3J4PAwf"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-374c4d4f219so1917036f8f.1;
+        Tue, 03 Sep 2024 12:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1725390775; x=1725995575; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kRYQuA2IuhmwnyrQ8YBT5Ts6fvjQ9S9+/c3CTINRklQ=;
-        b=I+NEIhu+JgoSM2/QwcWu3DmJ0DCdiOKPHph3GsW7bkDJ7H2wUNiG1rWofPcDT35+kc
-         CIa03IVXSpqrW12wkPSm7sXIjc8mBa+cL1y4FSSYTmqIqo8izwqr+jAKiTYb7Ncqo+GF
-         wZQ23qEZdjmTSK7G4whw1qw1AbBKF7bZPEmFE=
+        d=gmail.com; s=20230601; t=1725390962; x=1725995762; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIKMnKHHdmH0tgNR7Q0mOb34yahsFaU+l95FDBvyAEo=;
+        b=E3J4PAwf9iQNvuarBVXBF/5etkiUbOvE5AEmZwMKkcQz/CVKXX2fw956xZO1iWxJUh
+         61R4eQfdcQyHing1jTO3MyO9t2GCQYlvBI6E+Qa/C+TxmAW5gV6t4C75wjccOguB8twU
+         YOKSS+ZFpLF/z0UC1OiNFNB9Z9FPalWSNI69Sgr1nu9mSob62i53mZO5PHYrZQXAHOf5
+         5+fOjhoy5cxzW4Ndi6S4WhRuqRkdrniZ0BGYL4TLTUYg17kVFT2FJp5nhmn2CRp8yBbl
+         Cco10aM0McYvlT5Q7KBAgxeWwK3YtWr+SuuH7BgeWjV5e/iqZw+Qfcg3hekf95Oubu7J
+         ghJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725390775; x=1725995575;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kRYQuA2IuhmwnyrQ8YBT5Ts6fvjQ9S9+/c3CTINRklQ=;
-        b=YiQpuNXqaClIt8W7ca6NgKTJhY/x5IJgbFHFsBcgvp1qCtOrvSPhXl7oPx0N9ctF2y
-         YtJVWnZD+LLq06Vtxy8GEqIaBEVIIe9GFsTls8n7wnNh6mTsKpu8UpRha1vRdhkKmKb9
-         buvKyeDWKj1c2Mt/Fj5xBaJ+NialAW4Zkcwehx4g2mVsUSg6Mda8cDOhoI0/ADdUxwUh
-         KNmSlYjBgvXOTZj9RZSMs5LF3T6OLgO3FLEcMnxW3laig9tOlFvH1csg6oS8duTcdX7k
-         frKUp9Dl5Ju17JOBNNn75/rwVyANnw7vTK9GfcHPP00l00/rc2srq+zO+WHyifLMUR43
-         PE0A==
-X-Forwarded-Encrypted: i=1; AJvYcCXX2IIXbZKD4+aS92h1UYWCdvOaWrZvuy7uvtBK/pzckux0RWyOI+W3mnoA+sge571AQR2QTbRYydIb7ifTtbHesps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZIduAQg5E+P8hxlP1MIgeBCLHD52w79gee3pvQN2dLAIs0V6Y
-	yALkbsBdsXxSRrZQ4Zy7wRZg2bLZKAt/C7cXg9H+YXknHhd0SZD8AeGxZdeEU2WTSsdSdhtPUT1
-	PDgqWkA==
-X-Google-Smtp-Source: AGHT+IGbrptncIOSnU5MAZsQygQ9s/DzBA6+WVJLaVeSg7WcpkfpxOJ2xDXyGGGgFV73X11jUsfYFA==
-X-Received: by 2002:a05:6512:3e26:b0:533:43bf:565d with SMTP id 2adb3069b0e04-53546b45292mr10375522e87.27.1725390774245;
-        Tue, 03 Sep 2024 12:12:54 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5354085963bsm2113867e87.304.2024.09.03.12.12.52
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2024 12:12:52 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5334c4d6829so7232003e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:12:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX3RB2g3QHymSD2TiKfEv3ltaVdiWat4HAsLKcuZdMAva1QicVnOYbQWE5TgU09Z6Ck4vckCigFn7eJVuc7zkzfyxU=@vger.kernel.org
-X-Received: by 2002:a05:6512:3a8a:b0:530:c1fb:5192 with SMTP id
- 2adb3069b0e04-53546b335b3mr10741607e87.16.1725390772215; Tue, 03 Sep 2024
- 12:12:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725390962; x=1725995762;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oIKMnKHHdmH0tgNR7Q0mOb34yahsFaU+l95FDBvyAEo=;
+        b=UINGdxbAC5phovkfUtU/IVtWOAJLgG+nvTsg1yyhQYSf/RG0p2tFw4P9aMnk1f47du
+         hEit63+WZU0U0wREkEPvhoYYTYq/rd7ozoKeETNaNIDCMBAStEW8E+yHqgoHFWaXRrzD
+         4FOgFt3xXdOEcsELlMMT2LtVH2Rju+t0SqNUv7t6o5N7UZhu4noOreTesLjL1ndFJXvS
+         fzpPuSvxS/lzGVyD0w07sonh8GNiiQjnyWoEpC7tI4zfK6dY61G+/JvpIGDbEqWQQgvh
+         xy09ePVMauJkh5Q7MWBwSxcJOhmhrzfk0r8gBMGOMefw8ubfqMsohhcFzRReBB5Kuh1p
+         V++A==
+X-Forwarded-Encrypted: i=1; AJvYcCVSzYME2hpebMIxpyBWhrtFxvukSHpdhOW5wQlEiRsBtbI1F+0Wm+knphTRD/EtO8VF7wBXfYCiBGtjYJ6z7FbheBjz@vger.kernel.org, AJvYcCVpmdexVz4TnM+w0NPvwQFIyf0qvr8ljiUCVF579PUpTWrsD9DvQv0gxWcPu0yUcHzONVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGUCUpoBbUgRdOa40sAD6ALtKUKqwbUSi7KNZmmn9lxnEpinAJ
+	bK43KhHFrdXdu35Q+A/0KQTEG6xJuPl+8lF9EZWN9yPaZjafOBc9
+X-Google-Smtp-Source: AGHT+IHlQkyOpufz7x/AQMvhA8sEw5Cq/FXXlpSLlS21HqKGXn7emmi/2SotzMe1MGIisdd46ltNcw==
+X-Received: by 2002:a5d:59a4:0:b0:368:75:2702 with SMTP id ffacd0b85a97d-374ecc6774bmr4076569f8f.13.1725390962143;
+        Tue, 03 Sep 2024 12:16:02 -0700 (PDT)
+Received: from krava ([87.202.122.118])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c96a88ebsm7029092f8f.108.2024.09.03.12.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 12:16:01 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 3 Sep 2024 22:15:55 +0300
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Tianyi Liu <i.pear@outlook.com>, Jordan Rome <linux@jordanrome.com>,
+	ajor@meta.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, flaniel@linux.microsoft.com,
+	albancrequy@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <Ztdga4chR8imIPZb@krava>
+References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240830101209.GA24733@redhat.com>
+ <ZtHKTtn7sqaLeVxV@krava>
+ <CAEf4BzZPGxuV38Kz3R387tANP3tLF7j9GLRd6tOYtaEWT9uqCw@mail.gmail.com>
+ <ZtWBRgM3TyhdiwKw@krava>
+ <CAEf4BzZJdmppN2=pt-0D+LDsfc6rW=Jg_7Q6kEJXpsuv52ATNQ@mail.gmail.com>
+ <CAEf4BzazK83Lw24j-MLNZ6PYwhC6CYN11Hw00+FBRgJ9PuxW=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com> <20240903090843.GA17936@redhat.com>
-In-Reply-To: <20240903090843.GA17936@redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 3 Sep 2024 12:12:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
-Message-ID: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzazK83Lw24j-MLNZ6PYwhC6CYN11Hw00+FBRgJ9PuxW=Q@mail.gmail.com>
 
-On Tue, 3 Sept 2024 at 02:09, Oleg Nesterov <oleg@redhat.com> wrote:
->
-> but with or without this fix __create_xol_area() also needs
->
->         area->xol_mapping.mremap = NULL;
+On Tue, Sep 03, 2024 at 11:11:06AM -0700, Andrii Nakryiko wrote:
 
-I think the whole thing needs to be zeroed out.
+SNIP
 
-It was always horribly buggy. The close thing just made it more
-*obviously* buggy, because closing a vma is a lot more common than
-mremap'ing it.
+> > Aren't we conflating two things here? Yes, from what Oleg explained,
+> > it's clear that using task->mm is wrong. So that is what I feel is the
+> > main issue. We shouldn't use task->mm at all, only task->signal should
+> > be used instead. We should fix that (in bpf tree, please).
+> >
+> > But I don't get the concern about linux->mm or linux->signal becoming
+> 
+> correction, we shouldn't worry about *linux->signal* becoming NULL.
+> linux->mm can become NULL, but we don't care about that (once we fix
+> filtering logic in multi-uprobe).
+> 
+> > NULL because of a task existing. Look at put_task_struct(), it WILL
+> > NOT call __put_task_struct() (which then calls put_signal_struct()),
+> > so task->signal at least will be there and valid until multi-uprobe is
+> > detached and we call put_task().
+> >
+> > So. Can you please send fixes against the bpf tree, switching to
+> > task->signal? And maybe also include the fix to prevent
+> > UPROBE_HANDLER_REMOVE to be returned from the BPF program?
 
-Either use kzalloc(), or do a proper initializer something like this:
+ok, it's uprobe-multi specific, let's discuss that over the change
+itself, I'll try to send it soon
 
--       area->xol_mapping.name = "[uprobes]";
--       area->xol_mapping.fault = NULL;
--       area->xol_mapping.pages = area->pages;
-+       area->xol_mapping = (struct vm_special_mapping) {
-+               .name = "[uprobes]",
-+               .pages = area->pages,
-+               .close = uprobe_clear_state,
-+       };
+jirka
 
-which should initialize the struct vm_special_mapping fully.
 
-                     Linus
+> >
+> > This thread is almost 50 emails deep now, we should break out of it.
+> > We can argue on your actual fixes. :)
+> >
+> > >
+> > > Oleg suggested change below (in addition to same_thread_group change)
+> > > to take that in account
+> > >
+> > > jirka
+> > >
+> > >
+> > > ---
+> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > index 98e395f1baae..9e6b390aa6da 100644
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -3235,9 +3235,23 @@ uprobe_multi_link_filter(struct uprobe_consumer *con, enum uprobe_filter_ctx ctx
+> > >                          struct mm_struct *mm)
+> > >  {
+> > >         struct bpf_uprobe *uprobe;
+> > > +       struct task_struct *task, *t;
+> > > +       bool ret = false;
+> > >
+> > >         uprobe = container_of(con, struct bpf_uprobe, consumer);
+> > > -       return uprobe->link->task->mm == mm;
+> > > +       task = uprobe->link->task;
+> > > +
+> > > +       rcu_read_lock();
+> > > +       for_each_thread(task, t) {
+> > > +               struct mm_struct *mm = READ_ONCE(t->mm);
+> > > +               if (mm) {
+> > > +                       ret = t->mm == mm;
+> > > +                       break;
+> > > +               }
+> > > +       }
+> > > +       rcu_read_unlock();
+> > > +
+> > > +       return ret;
+> > >  }
+> > >
+> > >  static int
