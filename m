@@ -1,269 +1,160 @@
-Received: from pfout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7254D18DF91;
-	Tue,  3 Sep 2024 17:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A95F18BC05;
+	Tue,  3 Sep 2024 17:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725383709; cv=none; b=RfxWFZi5AohX5UQvs4lWdJeBp/eCX113QUCSN+22lQZ4QskC0ewRY4nMmCtkG92B5A64q50avMzMYWeQ/jE9eLODMSQ+oVXKRplreTzsLPY2sxhgp93ktSyc0u8YnxHIJqJXkvduqfEfjKPgF/ptkPrwTqCViLU4bYnRGssQSEs=
+	t=1725384483; cv=none; b=ZYIdRqrI3gh4BMO+y3Y0we5op6z2VEG1vHpK6Lm78TTlHsXfewp9BnnehSLoxTqVdofJlDKL1NR9IfLbOQQaifjTVbFaCyGv7x0YIhI5XoPRQo3hUq0Oyh5AxvsA/H8LLuwupHviXdIzaurVprmGiQhCpaTCqCsR9Tx82nDWwrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725383709; c=relaxed/simple;
-	bh=dTzaFLygGDWP88YqbuvgFJnSRc3/FfsgZOCccEPIFZI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FUhR/NLQ/CU6NXhQVREQGivfxXbSQrRopDv52AmTEhCQISHaPzPBzJF+hv0ZSrI4+qvLlHoYc2gkgp9gCMIjSRS4a+ieZmKG/LxtV8Lz+tozds951PObbJjej36/8j4lUOymu6Bd1r6g5lGNK04BAuJQNggpuq+W7zbouTNiu8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=PGuwc2O7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BY+gPJ6x; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1725384483; c=relaxed/simple;
+	bh=WZhURiUNTol60UwJCmuV5E8L9XzOE2w/tYB59LnQ8yk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y+fRDyWgSTNdHfm+hOb8wcCQ5shUXfg+5DhUwsP7tqJlgugfd7C9rkabI0OUzx4hJNap2Rfr7CCIB192XNxMnxRuQ/DvDTrsd/+vlgJznO10bUfc7XWvBmFQQKaCuq/X6J/Wr/EEts+ikt5nO9m+TmP9Jjh2pZfEYj2Xfmj8gTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mbjv4wZS; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="PGuwc2O7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BY+gPJ6x"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id 79CAF13804B3;
-	Tue,  3 Sep 2024 13:15:06 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 03 Sep 2024 13:15:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1725383706;
-	 x=1725470106; bh=HuOQA+LeEAdoUFaZ37LQtKXkaxwkMq+TFIrVUVu3PCI=; b=
-	PGuwc2O7DwWjBrPB/HKNhxJICtLiALHZ1BvRvWhStXJ8gnqzOKoSj6tt+R5nVX6t
-	p1dIbQsCr7zQf8DsXXR2Oek+J1+vqhuJGF14O5PpfQ3garbuuuQsNwvQOUQ9MBwP
-	RVlx3czKkoMfBGWyhpFJ96WqloomWnOyjPJpFlCcflJ/OK436iABaL8nhj2//JjS
-	kz34DAHoDTKfm6cVaVWlm60akXnBTuMneRKZRYI5G7xBGLtGDRL/gHnRxCIA+AmH
-	6Zuo52n3sA0k3y3cWIZVJ6gTZ2Tl2azNohLUV3Lj0rF/bAPMZUIwgjfp3x2Di48X
-	px2go0KzFiAvMF7Z46iNRg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725383706; x=
-	1725470106; bh=HuOQA+LeEAdoUFaZ37LQtKXkaxwkMq+TFIrVUVu3PCI=; b=B
-	Y+gPJ6xKRVodzijUaby+sjD5jFg9SiXGR3XGY0bQRk7ETcC3+NDuiQ3zjkau9P+v
-	KCWNkVHKJGqyqOgV9+HE7lFl6BZ7oh6H274Jsjxai939dpWUMOS/0cAE/LghvvKv
-	qT4Vqwgvx7GZY4xwZVdoafNHeMd0PFS/JbePDE6NOoHTMxSDAKsMped2ViA3i3U3
-	3BPGLFqY8pf43twKczdhuu+xqIMBYqa5zomCDIVaGFVvwVYuTK25DFVlpVdAP8zx
-	NCXRnGZfkXHLtRDk6xmpwh6DoindffxQZA2EQYTn1Q8qWpgqQWJ7DCiFrwPfm634
-	j51/RoFZfHvXNJDVzryYw==
-X-ME-Sender: <xms:GkTXZmeoOPdvZ1b_ZQmciHfvsJ-BxhmHcvZG3WsWaIc0BDQHx8nMYQ>
-    <xme:GkTXZgNaVgNECtXozOoHtnUHuV2o-4HGOm-NimSqiZ6tv2_cAA_uR55IYvT5lcl3b
-    KIsOAq3WHiPs3l8mxA>
-X-ME-Received: <xmr:GkTXZnhdx4yoRzNWnoLc6YZNwpZoZjPbts1RH9RlHcB2a_fzlQ5may4_JrylB79miQI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehhedgudduudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredt
-    jeenucfhrhhomheplfhirgiguhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflh
-    ihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpeeluddtieeghedvgeekvdduveff
-    tdehtddttdejvedutdfgkedtkefgtdegtdeiveenucffohhmrghinhepghhithhhuhgsrd
-    gtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    jhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdpnhgspghrtghpthhtohepge
-    dtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsvghnnhhordhlohhsshhinhes
-    phhrohhtohhnrdhmvgdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrg
-    hnkhgvnhdruggvpdhrtghpthhtohepjhhohhgrnhhnvghssehsihhpshholhhuthhiohhn
-    shdrnhgvthdprhgtphhtthhopehllhhvmheslhhishhtshdrlhhinhhugidruggvvhdprh
-    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopehrihgthhgr
-    rhgusehnohgurdgrthdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvg
-    dprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgt
-    phhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:GkTXZj8IYI7dI92I0_MYtdb_HIlXnibQ7wxyeLQtMhuVx4RCvdcXtw>
-    <xmx:GkTXZivho173yDKeYcCw9hujA3wz7ElCXRh3d5Mx6Fgbhw4GuIbV1Q>
-    <xmx:GkTXZqEdnuYO6OjiOMTzmTmPmtd7ooTorLpmsUySibmwjOplhNMoLg>
-    <xmx:GkTXZhPV-qCB7MMJ_qMZvx4-IbQqPgm1_riv-TWVkl9sN3ZSSlpN8A>
-    <xmx:GkTXZoh5Ub0a4dAtz66ne4zEgREEXStWNJ82FUgMHemip19CHmOibpS2>
-Feedback-ID: ifd894703:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 3 Sep 2024 13:15:02 -0400 (EDT)
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Tue, 03 Sep 2024 18:14:36 +0100
-Subject: [PATCH 3/3] rust: Enable for MIPS
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbjv4wZS"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2d892997913so2273639a91.3;
+        Tue, 03 Sep 2024 10:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725384482; x=1725989282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WZhURiUNTol60UwJCmuV5E8L9XzOE2w/tYB59LnQ8yk=;
+        b=mbjv4wZSTcK8sXCD5I2DDobmhjLpsgDVy5zE+tABvwVUvTOSpd10/nznNAHrrbTNi8
+         gXegvDSxD7oeKWOKCALAJ8M3pOLjaAAeEKiJTzO0bHQv0eC6RlQN0a2LYGKXsUVV+cAm
+         ZriOPar0+rWSa4yE1cWlaohgfbISiJsBlTEb01pDZYev592yz29UdVXxylje4BeAz0Ng
+         oOGxLblXi7ZrZ/CoOHhcz1OTP7g/RDYnaJhIV56uEO//eyf+4nSkhXI/eY3reG9/H6+I
+         EzZ0lPrisHh6IJP7T955DN7PJtaz1QKpUY+qui49YHy1jJzrkJC+KpnOKPxTzPboMOOX
+         CsDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725384482; x=1725989282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WZhURiUNTol60UwJCmuV5E8L9XzOE2w/tYB59LnQ8yk=;
+        b=VQMJDeWhUZIUSW5fnF8NCtLfjjl29y/u98SWYtgFRDCua+jZ6F5If8tnFfNHYOqGPU
+         l0KNmS53QkZlfI7BNR3EtaI9ZRuej123tfMoJMLXYJBGwVPSC4Nh4TuvPdqz3GAmd5DP
+         sald5FSDEQqEWls0+StOtmah0b8dtP4QZqhqcZH9x0/XuV9u6gNdNbc8TIu24lp+Ogor
+         2OLH8nWzmq7EkedSHh4jFEGZ9Ua9hOztq2okGheeWyJvoxhM+Juy5HFeUMoDvyNTu5af
+         vdOue2xNCYlIYvEmrR74fIIZYJgIlViO7FE8khJR1VhifDDLR7PtQudqYaEtcIZIfMJq
+         N5NQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSEGCe4IIfwihO6tL0EewHJwKL8lxdlibmPm9dUCJxaoaF6uORSFmExUk8cn8uhtN1pG1nLdnKj16sCUdIibQpbyl9@vger.kernel.org, AJvYcCUrZr/TglkqGADwD0lXEhpliJxExx9idAGHafDdKJowmq3mEoq083PNhnAH57pEx1sdQrQ=@vger.kernel.org, AJvYcCVbrnRiWYH9gd0B0fkBeaJeVGVwSu0TjoCw7owbZ27wLo774RVr9Sj3YmynvKvI7J2B1iCdqPgTgzTuSXYM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgPih6Chz2Dn3cIKor3DnzzSXKpMOaahA/eya4HJSB4qApk2M6
+	U0spCbiRE/Nk08QYJ8EaZpjH9HJSRyv0a1TbskCD6cNlGzRLba4PNd3yDLne70Lv4to8rnDfisX
+	4ab+aZzx1/9cGdlI67kToKoy7U+4=
+X-Google-Smtp-Source: AGHT+IGameP0HKRUfKRVgGXKvRTBH/w/+aYW01SyIu6o8tpRyb8OJwxrNgvkFe6WM0FBszSSEtDoJZL9LIM33M4rsg0=
+X-Received: by 2002:a17:90b:88f:b0:2d8:898c:3e9b with SMTP id
+ 98e67ed59e1d1-2d890564db2mr10964977a91.25.1725384481802; Tue, 03 Sep 2024
+ 10:28:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com>
-References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
-In-Reply-To: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-  Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>,  Richard Weinberger <richard@nod.at>,
-  Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-  Johannes Berg <johannes@sipsolutions.net>,
-  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-  Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,  x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,  Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
-  Wedson Almeida Filho <wedsonaf@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-  =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-  Benno Lossin <benno.lossin@proton.me>,
-  Andreas Hindborg <a.hindborg@samsung.com>,
-  Alice Ryhl <aliceryhl@google.com>,
-  Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-  Steven Rostedt <rostedt@goodmis.org>,
-  Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,  Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>,  Yanteng Si <siyanteng@loongson.cn>,
-  Nick Desaulniers <ndesaulniers@google.com>,
-  Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-um@lists.infradead.org, rust-for-linux@vger.kernel.org, 
- linux-mips@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, llvm@lists.linux.dev, 
- Jiaxun Yang <jiaxun.yang@flygoat.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5640;
- i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=dTzaFLygGDWP88YqbuvgFJnSRc3/FfsgZOCccEPIFZI=;
- b=owGbwMvMwCXmXMhTe71c8zDjabUkhrTrLmy/VbhlTd99/7KW13KPufKGBw0FkU1B7Dszj5oUa
- Qn6Pl/ZUcrCIMbFICumyBIioNS3ofHigusPsv7AzGFlAhnCwMUpABPZNZeR4eFshrNzVwhttrhd
- 0yf5Z2d9yQ2X7gU8oWbsP76u15z0Q42RoefwMqE02eP7ns+pn328K6qhZqVvJm/ItXsCWye+OCD
- HzwwA
-X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
- fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
+References: <20240829183741.3331213-1-andrii@kernel.org> <20240829183741.3331213-5-andrii@kernel.org>
+ <ZtD_x9zxLjyhS37Z@krava> <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
+ <ZtHM_C1NmDSKL0pi@krava> <20240830143151.GC20163@redhat.com>
+ <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com>
+ <20240830202050.GA7440@redhat.com> <CAEf4BzZCrchQCOPv9ToUy8coS4q6LjoLUB_c6E6cvPPquR035Q@mail.gmail.com>
+ <20240831161914.GA9683@redhat.com>
+In-Reply-To: <20240831161914.GA9683@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 3 Sep 2024 10:27:49 -0700
+Message-ID: <CAEf4BzYE7+YgM7HMb-JceoC33f=irjHkj=5x46WaXdCcgTk4xg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list locklessly
+ under SRCU protection
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable rust for linux by implement generate_rust_target.rs
-and select relevant Kconfig options.
+On Sat, Aug 31, 2024 at 9:19=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/30, Andrii Nakryiko wrote:
+> >
+> > On Fri, Aug 30, 2024 at 1:21=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > I'll probably write another email (too late for me today), but I agre=
+e
+> > > that "avoid register_rwsem in handler_chain" is obviously a good goal=
+,
+> > > lets discuss the possible cleanups or even fixlets later, when this
+> > > series is already applied.
+> > >
+> >
+> > Sounds good. It seems like I'll need another revision due to missing
+> > include, so if there is any reasonably straightforward clean up we
+> > should do, I can just incorporate that into my series.
+>
+> I was thinking about another seq counter incremented in register(), so
+> that handler_chain() can detect the race with uprobe_register() and skip
+> unapply_uprobe() in this case. This is what Peter did in one of his serie=
+s.
+> Still changes the current behaviour, but not too much.
 
-We don't use builtin target as there is no sutiable baremetal
-target for us that can cover all ISA variants supported by kernel.
+We could do that, but then worst case, when we do detect registration
+race, what do we do? We still have to do the same. So instead of
+polluting the logic with seq counter it's best to just codify the
+protocol and take advantage of that.
 
-Link: https://github.com/Rust-for-Linux/linux/issues/107
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- Documentation/rust/arch-support.rst                |  1 +
- .../translations/zh_CN/rust/arch-support.rst       |  1 +
- arch/mips/Kconfig                                  |  2 +
- scripts/generate_rust_target.rs                    | 64 ++++++++++++++++++++++
- 4 files changed, 68 insertions(+)
+But as you said, this all can/should be addressed as a follow up
+discussion. You mentioned some clean ups you wanted to do, let's
+discuss all that as part of that?
 
-diff --git a/Documentation/rust/arch-support.rst b/Documentation/rust/arch-support.rst
-index 750ff371570a..ab6c0ae5a407 100644
---- a/Documentation/rust/arch-support.rst
-+++ b/Documentation/rust/arch-support.rst
-@@ -17,6 +17,7 @@ Architecture   Level of support  Constraints
- =============  ================  ==============================================
- ``arm64``      Maintained        Little Endian only.
- ``loongarch``  Maintained        \-
-+``mips``       Maintained        \-
- ``riscv``      Maintained        ``riscv64`` only.
- ``um``         Maintained        \-
- ``x86``        Maintained        ``x86_64`` only.
-diff --git a/Documentation/translations/zh_CN/rust/arch-support.rst b/Documentation/translations/zh_CN/rust/arch-support.rst
-index abd708d48f82..1eaa6c3297ac 100644
---- a/Documentation/translations/zh_CN/rust/arch-support.rst
-+++ b/Documentation/translations/zh_CN/rust/arch-support.rst
-@@ -21,6 +21,7 @@
- =============  ================  ==============================================
- ``arm64``      Maintained        只有小端序
- ``loongarch``  Maintained        \-
-+``mips``       Maintained        \-
- ``riscv``      Maintained        只有 ``riscv64``
- ``um``         Maintained        只有 ``x86_64``
- ``x86``        Maintained        只有 ``x86_64``
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 43da6d596e2b..a91f0a4fd8e9 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -90,6 +90,8 @@ config MIPS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RSEQ
-+	select HAVE_RUST
-+	select HAVE_GENERATE_RUST_TARGET
- 	select HAVE_SPARSE_SYSCALL_NR
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
-diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
-index 863720777313..2b8054f17c47 100644
---- a/scripts/generate_rust_target.rs
-+++ b/scripts/generate_rust_target.rs
-@@ -141,6 +141,13 @@ fn has(&self, option: &str) -> bool {
-         let option = "CONFIG_".to_owned() + option;
-         self.0.contains_key(&option)
-     }
-+
-+    /// Returns the value of the option in the configuration.
-+    /// The argument must be passed without the `CONFIG_` prefix.
-+    fn get(&self, option: &str) -> Option<&String> {
-+        let option = "CONFIG_".to_owned() + option;
-+        self.0.get(&option)
-+    }
- }
- 
- fn main() {
-@@ -203,6 +210,63 @@ fn main() {
-         ts.push("target-pointer-width", "32");
-     } else if cfg.has("LOONGARCH") {
-         panic!("loongarch uses the builtin rustc loongarch64-unknown-none-softfloat target");
-+    } else if cfg.has("MIPS") {
-+        let mut features = "+soft-float,+noabicalls".to_string();
-+
-+        if cfg.has("64BIT") {
-+            ts.push("arch", "mips64");
-+            ts.push("abi", "abi64");
-+            cfg.get("TARGET_ISA_REV").map(|isa_rev| {
-+                let feature = match isa_rev.as_str() {
-+                    "1" => ",+mips64",
-+                    "2" => ",+mips64r2",
-+                    "5" => ",+mips64r5",
-+                    "6" => ",+mips64r6",
-+                    _ => ",+mips3",
-+                };
-+                features += feature;
-+            });
-+
-+            ts.push("features", features);
-+            if cfg.has("CPU_BIG_ENDIAN") {
-+                ts.push(
-+                    "data-layout",
-+                    "E-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128",
-+                );
-+                ts.push("llvm-target", "mips64-unknown-linux-gnuabi64");
-+            } else {
-+                ts.push(
-+                    "data-layout",
-+                    "e-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128",
-+                );
-+                ts.push("llvm-target", "mips64el-unknown-linux-gnuabi64");
-+            }
-+            ts.push("target-pointer-width", "64");
-+        } else {
-+            ts.push("arch", "mips");
-+            cfg.get("TARGET_ISA_REV").map(|isa_rev| {
-+                let feature = match isa_rev.as_str() {
-+                    "1" => ",+mips32",
-+                    "2" => ",+mips32r2",
-+                    "5" => ",+mips32r5",
-+                    "6" => ",+mips32r6",
-+                    _ => ",+mips2",
-+                };
-+                features += feature;
-+            });
-+
-+            ts.push("features", features);
-+            if cfg.has("CPU_BIG_ENDIAN") {
-+                ts.push("data-layout",
-+                        "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64");
-+                ts.push("llvm-target", "mips-unknown-linux-gnu");
-+            } else {
-+                ts.push("data-layout",
-+                        "e-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64");
-+                ts.push("llvm-target", "mipsel-unknown-linux-gnu");
-+            }
-+            ts.push("target-pointer-width", "32");
-+        }
-     } else {
-         panic!("Unsupported architecture");
-     }
+>
+> But see below,
+>
+> > I still think it's fine, tbh.
+>
+> and perhaps you are right,
+>
+> > Which uprobe user violates this contract
+> > in the kernel?
+>
+> The only in-kernel user of UPROBE_HANDLER_REMOVE is perf, and it is fine.
+>
 
--- 
-2.46.0
+Well, BPF program can accidentally trigger this as well, but that's a
+bug, we should fix it ASAP in the bpf tree.
 
+
+> But there are out-of-tree users, say systemtap, I have no idea if this
+> change can affect them.
+>
+> And in general, this change makes the API less "flexible".
+
+it maybe makes a weird and too-flexible case a bit more work to
+implement. Because if consumer want to be that flexible, they can
+still define filter that will be coordinated between filter() and
+handler() implementation.
+
+>
+> But once again, I agree that it would be better to apply your series firs=
+t,
+> then add the fixes in (unlikely) case it breaks something.
+
+Yep, agreed, thanks! Will send a new version ASAP, so we have a common
+base to work on top of.
+
+>
+> But. Since you are going to send another version, may I ask you to add a
+> note into the changelog to explain that this patch assumes (and enforces)
+> the rule about handler/filter consistency?
+
+Yep, will do. I will also leave a comment next to the filter callback
+definition in uprobe_consumer about this.
+
+>
+> Oleg.
+>
