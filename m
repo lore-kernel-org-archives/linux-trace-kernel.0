@@ -1,115 +1,81 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E321865F0;
-	Tue,  3 Sep 2024 07:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6808A131E2D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 09:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725349778; cv=none; b=lZgOEr7m/wbUkF74pl+c6L1/hBV8JRFmSVv/vYwKyWDbLuQ/6IaHNUCGbLC6S7p1oymtkK+AnlYz6gqQWdiYGIwbmJqmBr/b0vHIe9sSnWrCuaMepixFL1fVdHIt7fgC28p0vMpuiQyjJS4ife79Jljp5MhVoC5ksMOeE5hTFXU=
+	t=1725354552; cv=none; b=He9ChYcoq5l9ybGXjeHklw/rHH58H9y06FDbRayL5p4aYbLkJMCoMH39kYpaj/4gYB90BGS+nlL1Dy5wwYQbLDVy9U7VUANPBEI0kvn31SA0xj7urRLkejRWUmi3NUcNh+qyINuyKtI8lGd1LvS8536jP1BZFke8OU4X12L7BEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725349778; c=relaxed/simple;
-	bh=NynGeVGRLiIIptchbtYIlVyw/4sUgyNxoVN4UKMaNVI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MCWCikrTeD6rPw5b3Ey6uj6fEfSdiPsK0hh9+ILf1AUlBn19CTgJTh8hnuJ1Ep8F4lkiG2QS22pFdb9NBkoGhRu6nj6tyUhLoWDbRUMxW+n9QTv9uiiV5rQO1DCP706Cfvdj1DHRlmwpnI+m2C7mH0zcSbHD5nhpbicrLRUOYhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mK250mKA; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1725354552; c=relaxed/simple;
+	bh=1e4R+IYDECEe9tAhq3UujNE6N7X5OljGX3s7WihMi+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FHa1tZ1ZgOkdosWH53l+Bv5KPTPZZ9X2jYEoghp+ksLlUz/0n2r6ePlP81T973xgH8pUOHaOaUqrWfuytdkvnke4HZ+yc6Ava91BxLHhUJHTInIuKbZVECL92LArVt28444lZU1xOAmjrAzGYaA6VHNvx/RkICqJ1u7bjCWBa7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M7T5y6sR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mK250mKA"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4833qGl9016074;
-	Tue, 3 Sep 2024 07:49:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:in-reply-to:references:date:message-id
-	:mime-version:content-type; s=pp1; bh=jpIUPMBsgKLBoLrI4lPNHTavWE
-	swYHQ7aB2xqB6Qjdc=; b=mK250mKAGP+OCzwTWduTeGYYOAOELEY7rlk7WptA82
-	yDlt3bkuOzUfarPk4sH+OvdvMoMgJI64/l89yTw6Ts0KBhvyoS1RGnEJYgMe9iPB
-	NTmAhyDzH5dOIQQ7LuM0eQta3zaygGKKUJMpnK8dweL7hFxH6hvTxphCGfP1K0CR
-	9sogMkAVkbQieo3WNlNvEJWuAp6XaFTmgTcIlADDo86gJsLd8Gp84UJRD0DPVKI9
-	QUuYDR+WTZmFmbhpCCDJ/pzFieW9nxaTmJY0+pXqSkqfD0O5ib874MFkS0+ovDua
-	2iTR6rBxfgsJn7HkEDy/xN/vgAXfCmdePn63fxElpHKg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9cg71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 07:49:18 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4837nH9U006286;
-	Tue, 3 Sep 2024 07:49:17 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9cg6r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 07:49:17 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48370Z4H018437;
-	Tue, 3 Sep 2024 07:49:16 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41cdw11uu2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 07:49:15 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4837nEmU31261150
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Sep 2024 07:49:14 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E80F82004D;
-	Tue,  3 Sep 2024 07:49:13 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E2BC20043;
-	Tue,  3 Sep 2024 07:49:13 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  3 Sep 2024 07:49:13 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov
- <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung
- Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter
- <adrian.hunter@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M7T5y6sR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725354549;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3wZSFTVAkBBwZOhZbgXmk5W4midhZVoWG1SBfmC4Uh4=;
+	b=M7T5y6sRaROWEC6JColggtwlTKpW8sp/zjzQiOm5m85C93rnvYz995UR5dRj47NbmHsRno
+	UC06M2IVgtlVskgnr/s156JpuPam+oI7Q7hw2yb54WYguSEF4k3OexGOIWMa4YR8sqaTXa
+	GMDOJmzuXtCmZ81NPSylKkEQpny3Fk0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-UeqO92NEOPeS0Oogj4V-_g-1; Tue,
+ 03 Sep 2024 05:09:06 -0400
+X-MC-Unique: UeqO92NEOPeS0Oogj4V-_g-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81DBA18BC2DE;
+	Tue,  3 Sep 2024 09:09:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 94EDD19560AA;
+	Tue,  3 Sep 2024 09:08:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  3 Sep 2024 11:08:51 +0200 (CEST)
+Date: Tue, 3 Sep 2024 11:08:43 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-In-Reply-To: <20240903073629.2442754-1-svens@linux.ibm.com> (Sven Schnelle's
-	message of "Tue, 3 Sep 2024 09:36:28 +0200")
+Message-ID: <20240903090843.GA17936@redhat.com>
 References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
-	<20240903073629.2442754-1-svens@linux.ibm.com>
-Date: Tue, 03 Sep 2024 09:49:13 +0200
-Message-ID: <yt9dikvd9nye.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+ <20240903073629.2442754-1-svens@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5qDwM7DHPNcnrUrXpyBSHkESBqBIL7xR
-X-Proofpoint-ORIG-GUID: PTWKogaR7ggYWo3l4oCSAgeI_kElt-UG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-02_06,2024-09-02_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
- malwarescore=0 mlxlogscore=295 adultscore=0 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409030059
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903073629.2442754-1-svens@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Hi Michael,
-
-Sven Schnelle <svens@linux.ibm.com> writes:
-
-> The following KASAN splat was shown:
+On 09/03, Sven Schnelle wrote:
 >
 > [   44.505448] ==================================================================                                                                      20:37:27 [3421/145075]
 > [   44.505455] BUG: KASAN: slab-use-after-free in special_mapping_close+0x9c/0xc8
@@ -123,42 +89,50 @@ Sven Schnelle <svens@linux.ibm.com> writes:
 > [   44.505529]  [<000b0324d2f5464c>] print_report+0x44/0x138
 > [   44.505536]  [<000b0324d1383192>] kasan_report+0xc2/0x140
 > [   44.505543]  [<000b0324d2f52904>] special_mapping_close+0x9c/0xc8
-> [   44.505550]  [<000b0324d12c7978>] remove_vma+0x78/0x120
-> [   44.505557]  [<000b0324d128a2c6>] exit_mmap+0x326/0x750
-> [   44.505563]  [<000b0324d0ba655a>] __mmput+0x9a/0x370
-> [   44.505570]  [<000b0324d0bbfbe0>] exit_mm+0x240/0x340
-> [   44.505575]  [<000b0324d0bc0228>] do_exit+0x548/0xd70
-> [   44.505580]  [<000b0324d0bc1102>] do_group_exit+0x132/0x390
-> [   44.505586]  [<000b0324d0bc13b6>] __s390x_sys_exit_group+0x56/0x60
-> [   44.505592]  [<000b0324d0adcbd6>] do_syscall+0x2f6/0x430
-> [   44.505599]  [<000b0324d2f78434>] __do_syscall+0xa4/0x170
-> [   44.505606]  [<000b0324d2f9454c>] system_call+0x74/0x98
-> [   44.505614]
-> [   44.505616] Allocated by task 1384:
-> [   44.505621]  kasan_save_stack+0x40/0x70
-> [   44.505630]  kasan_save_track+0x28/0x40
-> [   44.505636]  __kasan_kmalloc+0xa0/0xc0
-> [   44.505642]  __create_xol_area+0xfa/0x410
-> [   44.505648]  get_xol_area+0xb0/0xf0
-> [   44.505652]  uprobe_notify_resume+0x27a/0x470
-> [   44.505657]  irqentry_exit_to_user_mode+0x15e/0x1d0
-> [   44.505664]  pgm_check_handler+0x122/0x170
-> [   44.505670]
-> [   44.505672] Freed by task 1384:
-> [   44.505676]  kasan_save_stack+0x40/0x70
-> [   44.505682]  kasan_save_track+0x28/0x40
-> [   44.505687]  kasan_save_free_info+0x4a/0x70
-> [   44.505693]  __kasan_slab_free+0x5a/0x70
-> [   44.505698]  kfree+0xe8/0x3f0
-> [   44.505704]  __mmput+0x20/0x370
-> [   44.505709]  exit_mm+0x240/0x340
-> [   44.505713]  do_exit+0x548/0xd70
-> [   44.505718]  do_group_exit+0x132/0x390
-> [   44.505722]  __s390x_sys_exit_group+0x56/0x60
-> [   44.505727]  do_syscall+0x2f6/0x430
-> [   44.505732]  __do_syscall+0xa4/0x170
-> [   44.505738]  system_call+0x74/0x98
-> [..]
+                                       ^^^^^^^^^^^^^^^^^^^^^
+Caused by
 
-As this has a dependency on your special mapping close series, do you
-want to carry that with your patches?
+	[PATCH v2 1/4] mm: Add optional close() to struct vm_special_mapping
+	https://lore.kernel.org/all/20240812082605.743814-1-mpe@ellerman.id.au/
+
+?
+
+> +static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
+> +{
+> +	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
+> +
+> +	mutex_lock(&delayed_uprobe_lock);
+> +	delayed_uprobe_remove(NULL, vma->vm_mm);
+> +	mutex_unlock(&delayed_uprobe_lock);
+> +
+> +	if (!area)
+> +		return;
+> +
+> +	put_page(area->pages[0]);
+> +	kfree(area->bitmap);
+> +	kfree(area);
+> +}
+> +
+>  static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  {
+>  	struct mm_struct *mm = current->mm;
+> @@ -1481,6 +1500,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>
+>  	area->xol_mapping.name = "[uprobes]";
+>  	area->xol_mapping.fault = NULL;
+> +	area->xol_mapping.close = uprobe_clear_state;
+
+LGTM.
+
+but with or without this fix __create_xol_area() also needs
+
+	area->xol_mapping.mremap = NULL;
+
+?
+
+And in the longer term I think we should probably add a single instance
+of "struct vm_special_mapping uprobe_special_mapping with ->fault != NULL
+but this is another issue.
+
+Oleg.
+
