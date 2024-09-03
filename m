@@ -1,130 +1,116 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7B51A0BD1;
-	Tue,  3 Sep 2024 10:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511E91A7246
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 12:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725359025; cv=none; b=cNxTw+KhMwkHbO2r+585TcLxZEgDhPRibmXW8Eh1e+E3fBiBvQvr0J1ZoPvLq1QXd0R37Hax0iCgDB8IOie/guThx/fGMTih3t6AKbSblNI3TsTaFm6gaQtrf0v+ISS1p4IhMYTg3uwIuW87XYZNBrRFJ/qKKoR55MK7Bq4C4+A=
+	t=1725367598; cv=none; b=g+zl2Knmc+CyLp+n1bZaQrDo/jIbvmbvV3lNeFREpfDrBBuQZIHewGOoty7JB8hghemFAqVqGNvJHC8bhM9GNid5b8tv/G13C4IiQN8OtfnvFX9+gd3y9GxOMClb/x6mJrjaWBf4tDLP6/jVEatCDbMI9xtHjN/Z4d+eJKFFnI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725359025; c=relaxed/simple;
-	bh=HtTXvyXL0t075SkW+2R69WyTTPZ77K7LQtBonB5584Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S6lb7MpGQ06v0qvwJXSAvmk4DCsMeiMAROQ37ALopBhCZAHKSdQf8dec6LxSwYzQMaWz9ZIwvcHwoCxtAvLgMednQH4GPqV/nKCpdlEHW/cKepoXCYPa36WN6ILKsTi8xj+WMmLkfgxe6ae6HIEvOZ332g13cAyEvAEZV89dWUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OTFPGjoT; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1725367598; c=relaxed/simple;
+	bh=Rlyxtlo5hzI9N3YYU1nTTHUB+oS3mO6LVjK+srmICQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8MDXURlUygPdxxua7TxkLSV6aFPMmk2Ewk1Yk4n6ZwG6q2qYcY106BynZrnaGqBbiXuI0JJ5qM5oqFtJs4IJXbg6PsyGaNPnUNN9pbu2ScRiXxJGjsggixDSJaHOgiQ+QVb8dYUqvtuZ3wVwfkAcYLfX11AqzZykNyv7qxqUKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O1g4jYzF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OTFPGjoT"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 482JqK2x007153;
-	Tue, 3 Sep 2024 10:23:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding; s=pp1; bh=n5yPhY3ol5jVsAopBeJrPEohXc
-	V0OSCpXG1Ad0tDnko=; b=OTFPGjoTSXx884/a2+cujVCozUVO1E6gyns2/j3FTN
-	/GPT6phlg+Y5JGaC4T33+hH+P856zCIe6Cek54i7fJVQFlBvFOCKsX2LTzanfcwH
-	6bDjrG9qztaC60vCgch5ZOjbbRIx+LnT+rr15LePU8001qfKWlf7hHquoE1V1kmy
-	1TJSwAoDgOWH/RSvtsRO95xhLiK/nmZCwv/492l7D4Hkbo3oVSnLaStuNY1RAhUS
-	xRkYcpzX6vJQEGZLKlHr1tluENjifT+2chfeMatMPgQqVA1dtzdOOTTH07Tywglm
-	JLDa34ctXcsqzfaSJ4/3VXsHkm8mg8toAQDki2Dz8RLw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btwaw3rv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 10:23:32 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 483ANVtx003338;
-	Tue, 3 Sep 2024 10:23:31 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btwaw3rq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 10:23:31 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4836aJMA018602;
-	Tue, 3 Sep 2024 10:23:29 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41cdw12dcs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 03 Sep 2024 10:23:29 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 483ANRrx22348294
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 3 Sep 2024 10:23:28 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C71DE20043;
-	Tue,  3 Sep 2024 10:23:27 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B277120040;
-	Tue,  3 Sep 2024 10:23:27 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  3 Sep 2024 10:23:27 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
-	id 3CF32E0195; Tue,  3 Sep 2024 12:23:27 +0200 (CEST)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] uprobes: use kzalloc to allocate xol area
-Date: Tue,  3 Sep 2024 12:23:12 +0200
-Message-ID: <20240903102313.3402529-1-svens@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1g4jYzF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725367594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ixgiDmvar1tWfYl+K7VyNawCctRA3Ge+tCMoawRgM90=;
+	b=O1g4jYzFJUaoVcvdvUfNzcMZGlZd7wU2eOr5zqdiMHoAj1/OsRtoC9qWsUyCAfeqS68olh
+	KBpNHGvX2981Ln1xRT6Q+2pK25deTMmSvlXCPS/zfCuVI4xOa7h9uCiiUVQARg8e4ISRNF
+	suCbUDd/Ij8QOFcqTi6O5fyb88vyh5M=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-36-Ows8vTQyP96DVRLqnAUn_A-1; Tue,
+ 03 Sep 2024 08:46:29 -0400
+X-MC-Unique: Ows8vTQyP96DVRLqnAUn_A-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F9F519560B4;
+	Tue,  3 Sep 2024 12:46:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE32D1955DD8;
+	Tue,  3 Sep 2024 12:46:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  3 Sep 2024 14:46:14 +0200 (CEST)
+Date: Tue, 3 Sep 2024 14:46:07 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: use kzalloc to allocate xol area
+Message-ID: <20240903124607.GB17936@redhat.com>
+References: <20240903102313.3402529-1-svens@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: OM5PsIsq-wzPM9q1uSVnhVQbUAtNH0gV
-X-Proofpoint-GUID: 5AJS08hp4KWAEXMiJEWqvQ8jAsLqTkfw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-02_06,2024-09-03_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=805
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2409030081
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903102313.3402529-1-svens@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-To prevent unitialized members, use kzalloc to allocate
-the xol area.
+On 09/03, Sven Schnelle wrote:
+>
+> To prevent unitialized members, use kzalloc to allocate
+> the xol area.
+>
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
----
- kernel/events/uprobes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 73cc47708679..50d7949be2b1 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1489,7 +1489,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 	struct xol_area *area;
- 	void *insns;
- 
--	area = kmalloc(sizeof(*area), GFP_KERNEL);
-+	area = kzalloc(sizeof(*area), GFP_KERNEL);
- 	if (unlikely(!area))
- 		goto out;
- 
-@@ -1499,7 +1499,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
- 		goto free_area;
- 
- 	area->xol_mapping.name = "[uprobes]";
--	area->xol_mapping.fault = NULL;
- 	area->xol_mapping.pages = area->pages;
- 	area->pages[0] = alloc_page(GFP_HIGHUSER);
- 	if (!area->pages[0])
--- 
-2.43.0
+and since this looks easily exploitable, I'd sugest
+
+Cc: stable@vger.kernel.org
+Fixes: b059a453b1cf1 ("x86/vdso: Add mremap hook to vm_special_mapping")
+
+> ---
+>  kernel/events/uprobes.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 73cc47708679..50d7949be2b1 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1489,7 +1489,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  	struct xol_area *area;
+>  	void *insns;
+>  
+> -	area = kmalloc(sizeof(*area), GFP_KERNEL);
+> +	area = kzalloc(sizeof(*area), GFP_KERNEL);
+>  	if (unlikely(!area))
+>  		goto out;
+>  
+> @@ -1499,7 +1499,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>  		goto free_area;
+>  
+>  	area->xol_mapping.name = "[uprobes]";
+> -	area->xol_mapping.fault = NULL;
+>  	area->xol_mapping.pages = area->pages;
+>  	area->pages[0] = alloc_page(GFP_HIGHUSER);
+>  	if (!area->pages[0])
+> -- 
+> 2.43.0
+> 
 
