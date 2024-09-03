@@ -1,188 +1,175 @@
-Received: from pfout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927C318F2F6;
-	Tue,  3 Sep 2024 18:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5911CB306
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 19:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725388325; cv=none; b=CTPt/q2oSWDTSczQoODfjBuz4w9zKYxRk0m4PVqYP0PuHK1RolsK7lxWhP6XjJQMAt5DnT4u1XQACg1PnWDW/tDT/8GOUnvkdvWCJEcacEqzkDrPJAZSSmSJpL2B9znjpb1VLvU41qlCBzSJ8NmochTCY6lb7Rh2y/0JfH4YGNA=
+	t=1725390026; cv=none; b=K0sTlFftqlUWM/ylTd222b25jQOj73HAWlLmT/zkBJz5YzyHWBOsnfER1N1LwgAd8s6S5scowppIPxBoNswBceQaZjQElJ3rfYmpM9BUQ1gaioRmmDBoHzYrMYmA9YPIEKb6YrSWz/LWGWW87/93No+4V7T8OTikqoSd1n8OapI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725388325; c=relaxed/simple;
-	bh=Pe4iUvpF1TfQms2sNV/3jMEmAPATMKQmGz1XeHPsR1o=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=KU3NJmpiAnKBVY7TscizHMK4qLUiyYkSY9VKLiFpvdrmryFTj0mcs52FSx07NDVOdP7MwxiOLNVDQtrueyHxpm9PUYYP9r8m4g4wT473B7xTxqJcWEM9mfnCOgWTdLLGbTMAlmmYLOsaUK4opQ/5QSJrWp7bQNfKcuJtU+NdOj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=g2r3JUtq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OaUDd5Ae; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1725390026; c=relaxed/simple;
+	bh=2uozw+fJ5WSOhhVTdjzSoLngH5Q1O9Z/Og7kh1h8O9g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nR0M1InAFjH6tRe1OQdg6DQbLRqwdr+Gk0UMpZA5RnNj6MxNB03REGrslZ3n3sb3HZcyVgTUQicS6fzrZN2o0B5jb4KriosSkJeWf21aTcRAYyqsh6Asf5D0ROPcKJ8md72L0yD2ug/f9l97i9+YpFZzzQhRRk+Thc8ZpwYi20g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bkVsaYTZ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="g2r3JUtq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OaUDd5Ae"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.phl.internal (Postfix) with ESMTP id 881F9138050C;
-	Tue,  3 Sep 2024 14:32:02 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Tue, 03 Sep 2024 14:32:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1725388322;
-	 x=1725474722; bh=QTHNtCQXEbyRoEVNXRHOicO5bA9YYIgsZ2P/O0iUxhs=; b=
-	g2r3JUtqSmrK0x0Yr/wvIsUmAYdPctkhGizPtq8K6kaAHLfwoXstTKAot1nGbrbP
-	AgcpjcCYyXncT3na7LIANrlzdH1RzY9YdrRNJyEPL94YVVsUAY8QiEzqYRiCzNJp
-	FskISg185NuOXXVtTkeqz8xJUQUaD0flMrRA1CvMAIqHdKQv8PP1S+pbGNpamvyV
-	nTsQuG6tVSCkHFzeyC6b5jwoGQdozlrAdAu0L2Ml+sxN88gv7WLSeTePJDnD1686
-	2lbaN8JrVjuExzZALZJGYWDVyGJbFYtkAPixHPTINl+4raStqJGRPj7f16/O9yyn
-	kNy7srHtHEM1SxtE7jMXKg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725388322; x=
-	1725474722; bh=QTHNtCQXEbyRoEVNXRHOicO5bA9YYIgsZ2P/O0iUxhs=; b=O
-	aUDd5AeVJ58TDfwcQH4W6wkvzPV2HnKXzAo5SrwzRzU9mNY0p/+iwK8u6k6Osm7e
-	jLnBe/goCUZoS9RdDxU6YLOaPHGKMknGKdUu2S+BjXV4T7VaAe7lbbpzf7BuAALC
-	+8MFhj9C85edOuZh5dCPQhmdALEm7+pMtBo9TvFGMuy4XoDNy77Y2x6eNoN7sZ3e
-	lFRe5La0dInfmcopH6tz3A0bWz0/HTW+QmjI9T4JoLu1pJKo0PG0c8vfd3GKfIy3
-	7h3mg4vsnWlokWi4b9P3cJHD/GUbE0TiMaZ4IGE5LTxl66iqJXIa4lfIb6AQ8kj4
-	Ug52yDVLs9RJmnOpsqwjg==
-X-ME-Sender: <xms:IFbXZmuzbetct1Potwb4I0CDHGtloUMmUWrdj5ITG0gEi6el2w26Hw>
-    <xme:IFbXZreigUVEPuW0HjVGmy0VV4Ii7jyBTlLc3NtN9tvBsIqwJX2gvrgJazyoqoc69
-    QpD7d2QQIsbWRmm70A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehhedguddvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdflihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgse
-    hflhihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpeeiiefhveegkefhledvheet
-    vddugefglefhgefhheffgedvvefhveefhfefjeehgeenucffohhmrghinhepghhithhhuh
-    gsrdgtohhmpdhtrghrghgvthgpfhgvrghtuhhrvghsrdhrshenucevlhhushhtvghrufhi
-    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflh
-    ihghhorghtrdgtohhmpdhnsggprhgtphhtthhopeegtddpmhhouggvpehsmhhtphhouhht
-    pdhrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepthhssghoghgvnh
-    gusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehmrghrkhdrrhhuthhl
-    rghnugesrghrmhdrtghomhdprhgtphhtthhopegrnhhtohhnrdhivhgrnhhovhestggrmh
-    gsrhhiughgvghgrhgvhihsrdgtohhmpdhrtghpthhtohepnhhitgholhgrshesfhhjrghs
-    lhgvrdgvuhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtth
-    hopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhu
-    nhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvug
-    grrdhsrghnughonhhishesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:IFbXZhwKd7rhNIrd_E3zxNavuN5QE1DDs9hYg1KQ618je_gf8MSmpw>
-    <xmx:IFbXZhPidzb5GQEpud934zocMdlWmKV4aEMN2kuQbAsBcdh1b2IVYg>
-    <xmx:IFbXZm8Y8AWeoZPpZIpEgiyeSCxJntt87dffXYm1IUfviK2F7klIpg>
-    <xmx:IFbXZpW9aIYTEU5R1yu1hiTqFhEeHIF6F3xtsV5bFqCLArLCXWsI6g>
-    <xmx:IlbXZn_mpE9ZkasXSwfonUIt6sg7L_yac9gMiwmFf56gNXqFn8jQQudl>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 05D991C207BB; Tue,  3 Sep 2024 14:32:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bkVsaYTZ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a86984e035aso695485066b.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:00:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1725390022; x=1725994822; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1O1ShPrP32GZ6zNKibhG+Lc7a+zlJjipIRDsNar31FQ=;
+        b=bkVsaYTZSHpalpoQ+jrRJfkahrhV2EaIlNnfBtYJlzcWKn8m8UXaFf1LhzJbjg67Vg
+         x+X5dgvm5lYELnNr9js2BrxRTus/ly+cSgoR/HQshRHdiCwwVB+QKHQzPHrnYLOrAVIg
+         7KadA4xhbL9ZSf60n7rAg9hpX3Cc5pWTNy4N4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725390022; x=1725994822;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1O1ShPrP32GZ6zNKibhG+Lc7a+zlJjipIRDsNar31FQ=;
+        b=JHTTenYYhEWE+sQ9N/IRfFWz1TF29JcTaiDo9VpCnOuyieXG4zpnddAWkGQdBWacKX
+         ETMbvnKZBDD4DhT4NvDibILOx4mZWly9HGAStUMyIeffEXqW3h3xzwDUxUujKiY9WQI+
+         c7ZiC7TpnFwLLolsAggY4MBYQUKnDmx2sBwBHDjI9rD08A5hTsfBLYtFjD4df++j93Lu
+         CztZwwX9muAtdo25vCrGUbshx2f4TcABXiXAK+tGOVtc2UiPXA+wjPM2pVPPmHtQKbzp
+         XGD447BlydDATeukEBD/9VHRHhNaZv090ufcyC9Zp1Q8ptBZPunQlzmiaY1AewtB0ASK
+         Yyxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXgqVRXK1E+EQSxa2otT7VViXOCvyDIu3aNw/VbfiEvHwdcUbMonrTGDDYBihbSg4cGfO86q7jZ35exZ9JBw6h/yjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxDdsjuJM7k9YUp8NaAXiXRRz75M/suwFfKwpdPRrzyqUqmuuC
+	/31Gn0p6s5I+brA0VBCJHkcJ76IGfvoKnY0brEjRGpfnrUyMi8A27jhKzY3BwfAsQLBfINXZC2f
+	dbBSbtA==
+X-Google-Smtp-Source: AGHT+IFZCf9sspigncv6WjVqJaXJI0QJSE58TGSmfDEPtWHNaWPaYA/2sYd3AnxOVQQB3dEIbpqMuQ==
+X-Received: by 2002:a17:907:2d10:b0:a86:817e:d27a with SMTP id a640c23a62f3a-a89a38247demr851135766b.61.1725390021941;
+        Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989222588sm708016766b.200.2024.09.03.12.00.21
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5c210e23651so6088031a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrJwJ/GOw49oBGWsy1wmc0COh9LJ7Ul8Fyelu1y84JieDPGGfZI9MGMiIRUg9u5awgW4sbS3utA0Z/91sNAXBJo9E=@vger.kernel.org
+X-Received: by 2002:a05:6402:430a:b0:5c2:632e:a4e7 with SMTP id
+ 4fb4d7f45d1cf-5c2632ea4famr4616131a12.6.1725390021271; Tue, 03 Sep 2024
+ 12:00:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 03 Sep 2024 19:31:39 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
- "Nathan Chancellor" <nathan@kernel.org>,
- "Nicolas Schier" <nicolas@fjasle.eu>,
- "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@samsung.com>,
- "Alice Ryhl" <aliceryhl@google.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mark Rutland" <mark.rutland@arm.com>,
- "Jonathan Corbet" <corbet@lwn.net>, "Alex Shi" <alexs@kernel.org>,
- "Yanteng Si" <siyanteng@loongson.cn>,
- "Nick Desaulniers" <ndesaulniers@google.com>,
- "Bill Wendling" <morbo@google.com>,
- "Justin Stitt" <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- rust-for-linux@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- llvm@lists.linux.dev
-Message-Id: <6f6f04d7-55b3-4714-9bcd-cb4e1ae6c86a@app.fastmail.com>
-In-Reply-To: 
- <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
-References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
- <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com>
- <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
- <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com>
- <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rust: Enable for MIPS
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20240828143719.828968-1-mathieu.desnoyers@efficios.com>
+ <20240828143719.828968-3-mathieu.desnoyers@efficios.com> <20240902154334.GH4723@noisy.programming.kicks-ass.net>
+ <9de6ca8f-b3f1-4ebc-a5eb-185532e164e7@efficios.com> <CAHk-=wgRefOSUy88-rcackyb4Ss3yYjuqS_TJRJwY_p7E3r0SA@mail.gmail.com>
+ <60d293cb-3863-41c8-868d-59c7468e270e@efficios.com>
+In-Reply-To: <60d293cb-3863-41c8-868d-59c7468e270e@efficios.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 3 Sep 2024 12:00:05 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wggDLDeTKbhb5hh--x=-DQd69v41137M72m6NOTmbD-cw@mail.gmail.com>
+Message-ID: <CAHk-=wggDLDeTKbhb5hh--x=-DQd69v41137M72m6NOTmbD-cw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and activate_guard
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Sean Christopherson <seanjc@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-
-
-=E5=9C=A82024=E5=B9=B49=E6=9C=883=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=E5=
-=8D=887:17=EF=BC=8CMiguel Ojeda=E5=86=99=E9=81=93=EF=BC=9A
-[...]
+On Tue, 3 Sept 2024 at 06:42, Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
 >
-> I guess you mean you are getting the warning about the
-> unknown/unstable feature passed to the backend? i.e. `rustc` knows
-> about those LLVM ones and forwards them when enabled via
-> `-Ctarget-feature` (with a warning):
->
->     rustc --target mips64-unknown-linux-gnuabi64 --print target-featur=
-es
->
-> So they would need to be added to the list at [1] (or targeted flags c=
-reated).
->
-> Until those do not emit a warning, it is fine using the `target.json`,
-> but I wanted to understand if there is something else you may need,
-> since we will need to eventually avoid the `target.json`, so it is
-> best asking upstream as soon as possible.
+> If we look at perf_trace_##call(), with the conditional guard, it looks
+> like the following. It is not clear to me that code duplication would
+> be acceptable here.
 
-Ahh thanks for the elaboration.
+Sure it is.
 
-So there are some targets vs feature stuff which is still not clear for
-rust upstream.
+Admittedly, I think it would look a *lot* better off with that macro
+creating a helper function for the common part, and then just call
+that helper function in two places.
 
-For example, on ISA level (things like +mips64r2, +mips3), currently for
-rust upstream, it is handled by target name. (i.e. regular mips64-unknow=
-n-linux-gnuabi64
-triple would pass +mips64r2 to backend, mips64isar6-unknown-linux-gnuabi=
-64
-would pass +mips64r6).
+In fact, I think the existing "perf_trace_##call()" function *is* that
+helper function already, and all it needs is
 
-However, kernel supports many ISA variants that are not defined by any r=
-ust target
-triple, I'm not really sure if it's appropriate to define them all in up=
-stream.
+ (a) add the traditional double underscore (or "do_") to that function
 
-The same applies to +soft-float and +noabicalls options as well. It seem=
-s like
-+soft-float and +noabicalls are only enabled by bare-metal toolchains as=
- rust
-recognise them as a target defined features.
+ (b) create the wrapper function.
 
-Thanks
->
-> Thanks!
->
-> [1]=20
-> https://github.com/rust-lang/rust/blob/d6c8169c186ab16a3404cd0d0866674=
-018e8a19e/compiler/rustc_target/src/target_features.rs#L368
->
-> Cheers,
-> Miguel
+IOW, I think the diff would look something like this:
 
---=20
-- Jiaxun
+--- a/include/trace/perf.h
++++ b/include/trace/perf.h
+@@ -15,7 +15,7 @@
+ #undef DECLARE_EVENT_CLASS
+ #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print) \
+ static notrace void                                                    \
+-perf_trace_##call(void *__data, proto)                                 \
++__perf_trace_##call(void *__data, proto)                               \
+ {                                                                      \
+        struct trace_event_call *event_call = __data;                   \
+        struct trace_event_data_offsets_##call __maybe_unused __data_offsets;\
+@@ -53,6 +53,17 @@ perf_trace_##call(void *__data, proto)
+                         \
+        perf_trace_run_bpf_submit(entry, __entry_size, rctx,            \
+                                  event_call, __count, __regs,          \
+                                  head, __task);                        \
++}                                                                      \
++static notrace void                                                    \
++perf_trace_##call(void *__data, proto)                                 \
++{                                                                      \
++        if ((tp_flags) & TRACEPOINT_MAY_FAULT) {                        \
++                might_fault();                                          \
++                guard(preempt_notrace)();                              \
++                __perf_trace_##call(__data, proto);                    \
++                return;
+         \
++        }                                                              \
++        __perf_trace_##call(__data, proto);                            \
+ }
+
+ /*
+
+and notice how there is no actual duplicated code on a source level
+now (although the compiler may obviously do the inlining and
+duplication - although I think that the tp_flags are always constant,
+so what actually hopefully happens is that the compiler doesn't
+duplicate anything at all, and all the conditionals just go away.).
+
+NOTE! The above patch is garbage. I did it as a "like this" patch on
+my current tree, and it doesn't even have the "tp_class" thing at all,
+so the patch is obviously not functional. It's just meant as a "look,
+wrapper function".
+
+In fact, I think the wrapping might even be done at a higher level (ie
+maybe the whole "may_fault" shouldn't be an argument at all, but a
+static part of the define, in case some event classes can take faults
+and others cannot?)
+
+I dunno. I actually think the whole "TRACEPOINT_MAY_FAULT" thing is an
+incredibly ugly hack, and SHOULD NOT EXIST.
+
+In other words - why make these incredibly ugly macros EVEN MORE UGLY
+- when there is a single use-case and we sure as hell don't want to
+add any more?
+
+IOW - why not get rid of the stupid TRACE_EVENT_FN_MAY_FAULT thing
+entirely, and do this trivial wrapping in the *one* place that wants
+it, instead of making it look like some generic thing with an
+allegedly generic test, when it is anything but generic, and is in
+fact just a single special case for system call.
+
+Yes, I know. Computer Science classes say that "generic programming is
+good". Those CS classes are garbage. You want to make your code as
+specialized as humanly possible, and *not* make some complicated "this
+handles all cases" code that is complicated and fragile.
+
+                            Linus
