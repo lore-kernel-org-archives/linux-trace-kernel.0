@@ -1,255 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pfhigh4-smtp.messagingengine.com (fhigh4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E664199941;
-	Tue,  3 Sep 2024 17:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5557A18DF7F;
+	Tue,  3 Sep 2024 17:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725385594; cv=none; b=RlqdqY9YnLJurUi+JBELnoK/cyNPoSC8KShfp30s1KVB16E6QzldrhjVAlMLjy3LW6EeQ4rnONdNvaIno8P2x2pJ/itAkuX7tgZffSI1keCBwnxUwMzSWvq57x8GUOXJFVDUYFW1+CThf5DJdeJkvUo2yzGosIsm/luSmeTOFoc=
+	t=1725386030; cv=none; b=U0xHc7ged7dmsgp4oTaU8/LFe7EDiAgxkeWr5TSrjSO91n8+bczeHnFQOl26fWV/ET+Dmjiywv9+MZxp5Buskad4S/PNrN+Eo3ksbz7SozzS2ywmnEJvb5YV0xfN0UaowVhfdrF+d79quRBrcMcBrI7QcSbogTuag8SBD0IyPK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725385594; c=relaxed/simple;
-	bh=R43LEMwmNgnFNuxwf3tZak7H2OM5C5eCgaYGHiHVLKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UI9nob1NLQqvp0hBUvvBd2ta3YwUrSZDiJKJYHrglFDAZ4isosyoo8IQct8j60Gnc5cdg96ggCYpE05PKpFU4AyfPBPIS0UOGJR8O4adp860DvgHTktQuixquboN0o9Ik3rMc4u90wXduc/N95GeB0j87U5MFDarAsZy6n6cJNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HI8wfMpG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725386030; c=relaxed/simple;
+	bh=y+arkmin7IrtnrxC716PfKvGm9iZOGIbnIg+bOi+aIo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=kxJAPXL1c4wk1qPUk4TlLXS5AmrQU5wwvc4ecJdWa1Ha0Fenyjnq/Cms9NQDn1/d8RaNciqLWc/nXttKDst00z0LquyLWHStuk0nTBvkcXvHZ6YSQwGRN1BIPQi0Sgk7iQf81DVXTg7Y4Y4vcQGEbtEzS8JbzSJjoLnJvGXHepU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=U+bGjh8m; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S+xtKE2O; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HI8wfMpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E481FC4CEC6;
-	Tue,  3 Sep 2024 17:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725385594;
-	bh=R43LEMwmNgnFNuxwf3tZak7H2OM5C5eCgaYGHiHVLKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HI8wfMpGnWd5IDk1+SWR2si4h7TTVdySI6NjRRNceULM9jxc1mTi8TSxrcv7qt2/H
-	 K2J8ytHFtwPEPduB0Thbxm+VtWE/ANW5HFXHbn8mAUuq0N08HRQGso0NR63YVe2Rtf
-	 wMytWtQfWut96YvdyPDW0Lknyiw6MN+OGUacfX3o4ZAc9fXxk+ttv+UQGl8MLnfmGf
-	 1vi5w2koWFj9R87QOtca1gfaUU90bmfRwwTs8Kg/0szmEUvkSEB2PDMvjnkgDrd0hu
-	 a+xADk99DZUWTxFD4lQbcBxqcVRD7TQ3qYrqNDFxAhkvQsYUwBlVVsC9qvymVEfd8a
-	 RIcY0M0oKgmCg==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	oleg@redhat.com
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	paulmck@kernel.org,
-	willy@infradead.org,
-	surenb@google.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v5 8/8] uprobes: switch to RCU Tasks Trace flavor for better performance
-Date: Tue,  3 Sep 2024 10:46:03 -0700
-Message-ID: <20240903174603.3554182-9-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240903174603.3554182-1-andrii@kernel.org>
-References: <20240903174603.3554182-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="U+bGjh8m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S+xtKE2O"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 68C06114042B;
+	Tue,  3 Sep 2024 13:53:47 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Tue, 03 Sep 2024 13:53:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1725386027;
+	 x=1725472427; bh=y+arkmin7IrtnrxC716PfKvGm9iZOGIbnIg+bOi+aIo=; b=
+	U+bGjh8mdTAX1nzhGvj+0KSvst8EoKfRs6jE51nKSJ8fkXSgx2kHZ3QK1Ji+Ac8/
+	ArbK1e9Vfs8kGh46HonmvHicVv0kEP4lKf8z2wVt01W/5TCkLLRt8l2Mmc6lMjm9
+	DnB/OdIA3kif5lUsipJuR9vqueuoC00VsOQO3+i+hADNrRzxMbyxd3DGpKLQzLCF
+	SisJDuebPSoUIjmAc6IAH562bAmn23yKHYAzwYhTsyJlgG/jlrTkxLcAwCJU/a2i
+	yJKz+dwOyr2qnqixnHOokSgSbXqJDenulQTE7nSYV9Ru4usRF/kQIwFyBPYwGsXo
+	eud5c2qjisMXQ5UHCnJ8WA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725386027; x=
+	1725472427; bh=y+arkmin7IrtnrxC716PfKvGm9iZOGIbnIg+bOi+aIo=; b=S
+	+xtKE2Ou84B1JGoS6guNadUxWhMtdy9byp9zUGNukT0bBdhu07nlbFl6CmOVfJVb
+	XLMCprHFkIJtSA+nXcy8+6OIBdZsIPZ0Rqw5bKXfouXGPool0WXZYU/y1VA7mvMr
+	K9rL0vR8jHn2cYOzRnLvDAo4FJEVzb3Rq5eScHDnrUVzO/fHEELIwPp/3WeDQ2hl
+	0HHrkkvNM6awC4098fJeKQdhKvdbsASH+e6AZ60i+Q3ZKm14ltpW4h7fTvCLcZpH
+	n7YKxr881Z0amsmyOrk31GNF5WlsYUhL23pH54hLYkokGG1G4qLV4C1/72EMEizg
+	QS1181wTlQ+Vs4xkdefPQ==
+X-ME-Sender: <xms:KU3XZjw3f-PUZ0bP3mhPNMXw-gBRMSSIGMI7Tr1-4XfgdIVSRzX_ZQ>
+    <xme:KU3XZrSIEGQfYSJb7elFqAkxFuHNzFHfudWXvdf8MkzZG8rcuRTzS6uVJSUSinQEP
+    9M3pom12jE7N6RoX7s>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehhedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdflihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgse
+    hflhihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpeejheefuddvtdfggfdvffek
+    teehhfelgfdvvedvkeeuffefkeehheegvefhveetjeenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghho
+    rghtrdgtohhmpdhnsggprhgtphhtthhopeegtddpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepthhssghoghgvnhgusegr
+    lhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehmrghrkhdrrhhuthhlrghnug
+    esrghrmhdrtghomhdprhgtphhtthhopegrnhhtohhnrdhivhgrnhhovhestggrmhgsrhhi
+    ughgvghgrhgvhihsrdgtohhmpdhrtghpthhtohepnhhitgholhgrshesfhhjrghslhgvrd
+    gvuhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegr
+    lhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhunhdrfh
+    gvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrdhs
+    rghnughonhhishesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:KU3XZtVELIuUWCjB_H51B0bfjCfgu0bPZJNxAqTK5EhbY3OFeiqxjw>
+    <xmx:KU3XZtgY8HYJZDlDu4TDqyiRptkB-pOCwWZqRgwlAtOvEes_JE0qZw>
+    <xmx:KU3XZlBo8M38s5af9pRPjW4nmajpsAzHjwYsdoxHt222G_HSj4EoKg>
+    <xmx:KU3XZmLmureBvPCrTZgXFqiC3sV5NVBZM_zU_QQfewZk2c6CmcovtA>
+    <xmx:K03XZjyodlcgDb3CrMYIhVRYNxMGQUVulZi4axGDqisfa6lJe-qC8_s1>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id ACD5B1C207BB; Tue,  3 Sep 2024 13:53:45 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Tue, 03 Sep 2024 18:53:25 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Wedson Almeida Filho" <wedsonaf@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@samsung.com>,
+ "Alice Ryhl" <aliceryhl@google.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <siyanteng@loongson.cn>,
+ "Nick Desaulniers" <ndesaulniers@google.com>,
+ "Bill Wendling" <morbo@google.com>,
+ "Justin Stitt" <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ rust-for-linux@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ llvm@lists.linux.dev
+Message-Id: <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com>
+In-Reply-To: 
+ <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
+References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
+ <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com>
+ <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: Enable for MIPS
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
-is optimized for more lightweight and quick readers (at the expense of
-slower writers, which for uprobes is a fine tradeof) and has better
-performance and scalability with number of CPUs.
 
-Similarly to baseline vs SRCU, we've benchmarked SRCU-based
-implementation vs RCU Tasks Trace implementation.
 
-SRCU
-====
-uprobe-nop      ( 1 cpus):    3.276 ± 0.005M/s  (  3.276M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.125 ± 0.002M/s  (  2.063M/s/cpu)
-uprobe-nop      ( 4 cpus):    7.713 ± 0.002M/s  (  1.928M/s/cpu)
-uprobe-nop      ( 8 cpus):    8.097 ± 0.006M/s  (  1.012M/s/cpu)
-uprobe-nop      (16 cpus):    6.501 ± 0.056M/s  (  0.406M/s/cpu)
-uprobe-nop      (32 cpus):    4.398 ± 0.084M/s  (  0.137M/s/cpu)
-uprobe-nop      (64 cpus):    6.452 ± 0.000M/s  (  0.101M/s/cpu)
+=E5=9C=A82024=E5=B9=B49=E6=9C=883=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=E5=
+=8D=886:44=EF=BC=8CMiguel Ojeda=E5=86=99=E9=81=93=EF=BC=9A
+> On Tue, Sep 3, 2024 at 7:15=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoa=
+t.com> wrote:
+>>
+>> We don't use builtin target as there is no sutiable baremetal
+>> target for us that can cover all ISA variants supported by kernel.
+>
+> Since we should try to go away from using `target.json`: what was not
+> possible to enable via e.g. `-Ctarget-features` or other flags? i.e. I
+> see the `+mips*` features there in the supported list, and from a
+> quick test the data layout also seems to match, but I assume I missed
+> something.
+>
+> If it is not possible, then we should definitely ping upstream Rust ab=
+out it. :)
+Hi Miguel,
 
-uretprobe-nop   ( 1 cpus):    2.055 ± 0.001M/s  (  2.055M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.677 ± 0.000M/s  (  1.339M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.561 ± 0.003M/s  (  1.140M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.291 ± 0.002M/s  (  0.661M/s/cpu)
-uretprobe-nop   (16 cpus):    5.065 ± 0.019M/s  (  0.317M/s/cpu)
-uretprobe-nop   (32 cpus):    3.622 ± 0.003M/s  (  0.113M/s/cpu)
-uretprobe-nop   (64 cpus):    3.723 ± 0.002M/s  (  0.058M/s/cpu)
+Thanks for your review!
 
-RCU Tasks Trace
-===============
-uprobe-nop      ( 1 cpus):    3.396 ± 0.002M/s  (  3.396M/s/cpu)
-uprobe-nop      ( 2 cpus):    4.271 ± 0.006M/s  (  2.135M/s/cpu)
-uprobe-nop      ( 4 cpus):    8.499 ± 0.015M/s  (  2.125M/s/cpu)
-uprobe-nop      ( 8 cpus):   10.355 ± 0.028M/s  (  1.294M/s/cpu)
-uprobe-nop      (16 cpus):    7.615 ± 0.099M/s  (  0.476M/s/cpu)
-uprobe-nop      (32 cpus):    4.430 ± 0.007M/s  (  0.138M/s/cpu)
-uprobe-nop      (64 cpus):    6.887 ± 0.020M/s  (  0.108M/s/cpu)
+Triples defined for MIPS bare-metal target is surprisingly lacking, we d=
+o have
+little-endian 32-bit bare-metal target mipsel-unknown-none but big-endia=
+n and
+64 bit variants are missing.
 
-uretprobe-nop   ( 1 cpus):    2.174 ± 0.001M/s  (  2.174M/s/cpu)
-uretprobe-nop   ( 2 cpus):    2.853 ± 0.001M/s  (  1.426M/s/cpu)
-uretprobe-nop   ( 4 cpus):    4.913 ± 0.002M/s  (  1.228M/s/cpu)
-uretprobe-nop   ( 8 cpus):    5.883 ± 0.002M/s  (  0.735M/s/cpu)
-uretprobe-nop   (16 cpus):    5.147 ± 0.001M/s  (  0.322M/s/cpu)
-uretprobe-nop   (32 cpus):    3.738 ± 0.008M/s  (  0.117M/s/cpu)
-uretprobe-nop   (64 cpus):    4.397 ± 0.002M/s  (  0.069M/s/cpu)
+Also, those triples all assumed +mips32r2 as baseline ISA, but kernel ac=
+tually needs
+some other ISA variant features.
 
-Peak throughput for uprobes increases from 8 mln/s to 10.3 mln/s
-(+28%!), and for uretprobes from 5.3 mln/s to 5.8 mln/s (+11%), as we
-have more work to do on uretprobes side.
+Thanks
+>
+> Cheers,
+> Miguel
 
-Even single-thread (no contention) performance is slightly better: 3.276
-mln/s to 3.396 mln/s (+3.5%) for uprobes, and 2.055 mln/s to 2.174 mln/s
-(+5.8%) for uretprobes.
-
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- kernel/events/uprobes.c | 38 ++++++++++++++++----------------------
- 1 file changed, 16 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 8a464cf38127..1b3990dd9c93 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -26,6 +26,7 @@
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
- #include <linux/khugepaged.h>
-+#include <linux/rcupdate_trace.h>
- 
- #include <linux/uprobes.h>
- 
-@@ -42,8 +43,6 @@ static struct rb_root uprobes_tree = RB_ROOT;
- static DEFINE_RWLOCK(uprobes_treelock);	/* serialize rbtree access */
- static seqcount_rwlock_t uprobes_seqcount = SEQCNT_RWLOCK_ZERO(uprobes_seqcount, &uprobes_treelock);
- 
--DEFINE_STATIC_SRCU(uprobes_srcu);
--
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
- static struct mutex uprobes_mmap_mutex[UPROBES_HASH_SZ];
-@@ -652,7 +651,7 @@ static void put_uprobe(struct uprobe *uprobe)
- 	delayed_uprobe_remove(uprobe, NULL);
- 	mutex_unlock(&delayed_uprobe_lock);
- 
--	call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
-+	call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
- }
- 
- static __always_inline
-@@ -707,7 +706,7 @@ static struct uprobe *find_uprobe_rcu(struct inode *inode, loff_t offset)
- 	struct rb_node *node;
- 	unsigned int seq;
- 
--	lockdep_assert(srcu_read_lock_held(&uprobes_srcu));
-+	lockdep_assert(rcu_read_lock_trace_held());
- 
- 	do {
- 		seq = read_seqcount_begin(&uprobes_seqcount);
-@@ -935,8 +934,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-@@ -1157,7 +1155,7 @@ void uprobe_unregister_sync(void)
- 	 * unlucky enough caller can free consumer's memory and cause
- 	 * handler_chain() or handle_uretprobe_chain() to do an use-after-free.
- 	 */
--	synchronize_srcu(&uprobes_srcu);
-+	synchronize_rcu_tasks_trace();
- }
- EXPORT_SYMBOL_GPL(uprobe_unregister_sync);
- 
-@@ -1241,19 +1239,18 @@ EXPORT_SYMBOL_GPL(uprobe_register);
- int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool add)
- {
- 	struct uprobe_consumer *con;
--	int ret = -ENOENT, srcu_idx;
-+	int ret = -ENOENT;
- 
- 	down_write(&uprobe->register_rwsem);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(con, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(con, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (con == uc) {
- 			ret = register_for_each_vma(uprobe, add ? uc : NULL);
- 			break;
- 		}
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- 
- 	up_write(&uprobe->register_rwsem);
- 
-@@ -2123,8 +2120,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 
- 	current->utask->auprobe = &uprobe->arch;
- 
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		int rc = 0;
- 
- 		if (uc->handler) {
-@@ -2162,15 +2158,13 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
- {
- 	struct uprobe *uprobe = ri->uprobe;
- 	struct uprobe_consumer *uc;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	rcu_read_lock_trace();
-+	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		if (uc->ret_handler)
- 			uc->ret_handler(uc, ri->func, regs);
- 	}
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- static struct return_instance *find_next_ret_chain(struct return_instance *ri)
-@@ -2255,13 +2249,13 @@ static void handle_swbp(struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	unsigned long bp_vaddr;
--	int is_swbp, srcu_idx;
-+	int is_swbp;
- 
- 	bp_vaddr = uprobe_get_swbp_addr(regs);
- 	if (bp_vaddr == uprobe_get_trampoline_vaddr())
- 		return uprobe_handle_trampoline(regs);
- 
--	srcu_idx = srcu_read_lock(&uprobes_srcu);
-+	rcu_read_lock_trace();
- 
- 	uprobe = find_active_uprobe_rcu(bp_vaddr, &is_swbp);
- 	if (!uprobe) {
-@@ -2319,7 +2313,7 @@ static void handle_swbp(struct pt_regs *regs)
- 
- out:
- 	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
--	srcu_read_unlock(&uprobes_srcu, srcu_idx);
-+	rcu_read_unlock_trace();
- }
- 
- /*
--- 
-2.43.5
-
+--=20
+- Jiaxun
