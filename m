@@ -1,96 +1,111 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C0C1D7E26
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 19:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1561DC726;
+	Tue,  3 Sep 2024 19:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725392091; cv=none; b=nM0+9XPN2Ztf+4FRfdXU6Av9TXS2MrG57oQ7/4+3Og4oGiCIGIN1y6fTqQvCH9UbGrhAYKv/cxUJbkGPPw3mqgc+ka+ueXbO2haXrlwuPavZ+FRaHoeYqp6gj+miZ7hlagTW6Tyg+hJP4vDqzUtpT21o5muF974oN1Nn/wua//k=
+	t=1725393031; cv=none; b=BnPSvuBcvsE1JHo9D1ecgxsanFufJuY8m4UBxGMGyJbR9h6AwTu/yC2vrAp/dF3G0LW6X23ySE8aMkwPHn/aDkzw3ALZ01gaIQ5rPWi2ogz4jdzneDAZE1LVIQy+aSMFmO+elVUYYn0Q4X0WMkBTfUOSee6EWgzH3EsSv+nbw2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725392091; c=relaxed/simple;
-	bh=UShskrRI1DRsJKg6TMK+JzmQnbWj40zzdhGhaCwR9Kg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRq8eD9WME3Anng9wccxpbNkucJpxQPnLUVtyQxjO2mcle+3MWkz7/FQTK6zcXXwAoTQb1ACMel/SNpR+cTJ9RGwD1tZlqHjj1bF1VNTLVz20lGPkw1tiom9sOKDIzb0/L8oUsydD1x8IOP0M59h05jeET5GZyTkFrCiFSJbltg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OOwAxc7x; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OOwAxc7x"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a8684c31c60so654412866b.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1725392088; x=1725996888; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J2FmMLBB3NwjKynA6ICAmca4TgXkk89mwzwmgF2OaFs=;
-        b=OOwAxc7x8/e3Kf1/vtZEgeakKh3T6M9driKDVhFImzL4e0rTqdZyKOqh7gPqmxXela
-         KgFr6kSwsBd01tWf3vDvWyWxupUH95NUcjYbYxUAiapZshxJUDUeHieS+ns4McLnOpF7
-         3Cjh+9Hmzj8dz09JsdyOmw5WUHYxmuAHvXRaM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725392088; x=1725996888;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J2FmMLBB3NwjKynA6ICAmca4TgXkk89mwzwmgF2OaFs=;
-        b=PTyoRH633Pl1SdjgWCDV1w/kNMr3M62l+SvL0VFIyTTClHGOETjcjVdwDuu1lXyWpd
-         z5zhJFFaEZbv3Bpt2fpoOn6jnjHrTea9MaalpAvqjKEL37a9ElfiE+ZdIWCJctfDPjLo
-         8p0sKQURykWauYvkdT6sdREtBC4YmuxS5q1qhZC6rVJFubKGM9tqeMCK10WWjgzEGgWr
-         MpzjIqM50shkgnSOEmgCUDPwJPLIhujljmAR/cnZv1dviWtsrywVSYdSURhpa0ClLbql
-         JOY0L8bIomxOgYjPOuz+VZSNrUYp+XEUjZDjVlEBCaPfymGpQMGuYiVRz+jJ2DIHKTsY
-         aBZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmYdDgxAKV1PiDTzRLJhIWdUoFfvQy9+7MC2QO4y6OD5lCtdJe9vKsbvcsBweZTdcPDIkgigdqV8O696w0xWnYNB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7jBDGoKARA/hGMxw4sGZNgG+FHLhFvFmtPxDge/k1ASdK7NH8
-	BghZDeCKY8LYbQk5J1f9h++XbVCy69VerlCNAKB6qq/+L3WWdGYop3sA/GxIXH4YonNnhwDF6v+
-	Ltuz98w==
-X-Google-Smtp-Source: AGHT+IFdwF+cBsJMkxMRGsytBJ4VjCs6CzvlE5dSvfF2WFt/XPZ1yDc8aLblm0mtegzgIBSCciLGpg==
-X-Received: by 2002:a17:907:7f10:b0:a7a:9f0f:ab18 with SMTP id a640c23a62f3a-a897f83ad82mr1170168866b.20.1725392087931;
-        Tue, 03 Sep 2024 12:34:47 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989221c55sm719619966b.194.2024.09.03.12.34.47
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2024 12:34:47 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5c27067b81aso1062723a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:34:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDMhB0FyrWWtQYNtHtb+zCRat10dpo/eoVPoAhPMwFFim7y0P4uEe4a0hbDebljiU1Mk0qqPPwotBxMT4UOGVSHEI=@vger.kernel.org
-X-Received: by 2002:a05:6402:848:b0:5c0:b33d:5fcc with SMTP id
- 4fb4d7f45d1cf-5c21ed52b2amr15503716a12.20.1725392087234; Tue, 03 Sep 2024
- 12:34:47 -0700 (PDT)
+	s=arc-20240116; t=1725393031; c=relaxed/simple;
+	bh=nxfDSL7XFajERSWNAjfIDt2oU1oJqzI1XAPp/P2YUxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XnCexR6wPZcRTlm8bW4hDykKtSLCiW3ZDRHvKGEV5Ch7SZSf7DmZYDdLzehoH2FSGDAbxG2TGGzQ75dyd0C3pQxmXOF1sEiUUR3BX6De3SkOPmBB0/xv/63XIEkzowyPX9wSFYDf7M36RXMpCyIWfpGMmoXaUcnXn+ZPPfEPOEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8311BC4CEC4;
+	Tue,  3 Sep 2024 19:50:30 +0000 (UTC)
+Date: Tue, 3 Sep 2024 15:51:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Chi Zhiling <chizhiling@163.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Chi
+ Zhiling <chizhiling@kylinos.cn>
+Subject: Re: [PATCH] eventfs: fix a null pointer access in eventfs_iterate
+Message-ID: <20240903155128.5e02e40a@gandalf.local.home>
+In-Reply-To: <20240829032436.2997321-1-chizhiling@163.com>
+References: <20240829032436.2997321-1-chizhiling@163.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com> <20240903090843.GA17936@redhat.com>
- <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com> <yt9d7cbso7p8.fsf@linux.ibm.com>
-In-Reply-To: <yt9d7cbso7p8.fsf@linux.ibm.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 3 Sep 2024 12:34:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg0Y+1r+0K3uD9viMU3-7oxAQubGsGQLx_ruk81b-ZdAw@mail.gmail.com>
-Message-ID: <CAHk-=wg0Y+1r+0K3uD9viMU3-7oxAQubGsGQLx_ruk81b-ZdAw@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 3 Sept 2024 at 12:31, Sven Schnelle <svens@linux.ibm.com> wrote:
->
-> > Either use kzalloc(), or do a proper initializer something like this:
->
-> I sent a patch which does this today:
+On Thu, 29 Aug 2024 11:24:36 +0800
+Chi Zhiling <chizhiling@163.com> wrote:
 
-Ack, looks good.
+> From: Chi Zhiling <chizhiling@kylinos.cn>
+> 
+> We found a null pointer accessing in tracefs[1], the reason is that
+> the variable 'ei_child' is set to LIST_POISON1, that means the list
+> was removed in eventfs_remove_rec. so when access the ei_child->is_freed,
+> the panic triggered.
+> 
+> the linked list is protected by eventfs_mutex in eventfs_remove_rec,
 
-This should probably be backported independently of the new close()
-series, since the mremap issue seems to be a longstanding issue.
+Only writes of the link list is protected by the mutex. Reads are not.
 
-                     Linus
+> so when we access the list of ei_child in eventfs_iterate, we also need
+> a mutex_lock in there to avoid eventfs_remove_rec modify the list.
+
+Yes you hit a bug, but no this is *not* the solution!
+
+
+> Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+> ---
+>  fs/tracefs/event_inode.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 01e99e98457d..4895ed07376b 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -642,6 +642,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  	/* Subtract the skipped entries above */
+>  	c -= min((unsigned int)c, (unsigned int)ei->nr_entries);
+>  
+> +	mutex_unlock(&eventfs_mutex);
+
+This list is protected by SRCU (hence the name of the iterator), if you
+need to add a mutex around it, something else is broken.
+
+>  	list_for_each_entry_srcu(ei_child, &ei->children, list,
+>  				 srcu_read_lock_held(&eventfs_srcu)) {
+>  
+> @@ -659,9 +660,12 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  
+>  		ino = eventfs_dir_ino(ei_child);
+>  
+> -		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+> +		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
+> +			mutex_unlock(&eventfs_mutex);
+>  			goto out_dec;
+> +		}
+>  	}
+> +	mutex_unlock(&eventfs_mutex);
+>  	ret = 1;
+>   out:
+>  	srcu_read_unlock(&eventfs_srcu, idx);
+
+The real fix is:
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 01e99e98457d..8705c77a9e75 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -862,7 +862,7 @@ static void eventfs_remove_rec(struct eventfs_inode *ei, int level)
+ 	list_for_each_entry(ei_child, &ei->children, list)
+ 		eventfs_remove_rec(ei_child, level + 1);
+ 
+-	list_del(&ei->list);
++	list_del_rcu(&ei->list);
+ 	free_ei(ei);
+ }
+ 
+Can you test that and let me know if it fixes your issue. I'll just go
+ahead and apply it as it is an obvious bug.
+
+-- Steve
