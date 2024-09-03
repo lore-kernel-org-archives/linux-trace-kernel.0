@@ -1,303 +1,449 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229F32101BD;
-	Mon,  2 Sep 2024 19:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F9E1D6783;
+	Tue,  3 Sep 2024 06:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725304685; cv=none; b=rCOtoQIRWPp0EibyOYpdWKspS1xUZf4CZRbgMTWTJlJz7xUCMU5yT9BxT9vefQpHW1IAkUT1PS2Q5/LAY9UhXMdpxTh9QCVr4DJ2mgCZw2eEeSjRxaP0OvWvVzcGMhoj+2E//c5J+WEyT5tzZCgcMjQUPkRm0quoTvKNKfp+otw=
+	t=1725346282; cv=none; b=f1H+rpr9fy2aS9Q69p+Pfwcgw4ej7dSvGHhzfiJvCvriH/wekokciVT8gq4fsIilwWY9H2XU6zcpNdt3K0tN53vnZVNqF4QouYHvlHPxKfJnskN2DF9IF9g57N37m9rLEl9g9Yr7NaD1sfb307xgnjnH8uyYdHOh/roXxdu1T2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725304685; c=relaxed/simple;
-	bh=1u98q0W43xTrsnG50liffh4ZTxumv6Ho4dq/SBaH6jA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fg6QOtV78mRcx8hapNfRWN8qYAqCaWgeMu4R8N8r2yoUZIXfJdUcZg70e4Oj4Z2GLujAgXz8tpK85fhA06z9bq5w1VnApWQ0eWh9L2ZHfzNAywWLy3DnaNdOy0xJ3qb9cJdvXSdKQVuvKN8tLFYqDzi7Ip5wwvC1Au5vA582y2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4WyJRg4Yrzz9sSS;
-	Mon,  2 Sep 2024 21:17:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id UHuwOflyJahA; Mon,  2 Sep 2024 21:17:35 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4WyJRg3FM1z9sS7;
-	Mon,  2 Sep 2024 21:17:35 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 621068B76E;
-	Mon,  2 Sep 2024 21:17:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id nRvxAuIibIDy; Mon,  2 Sep 2024 21:17:35 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.234.167])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 657548B773;
-	Mon,  2 Sep 2024 21:17:34 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH v5 5/5] powerpc/vdso: Wire up getrandom() vDSO implementation on VDSO64
-Date: Mon,  2 Sep 2024 21:17:22 +0200
-Message-ID: <de334b1de27260f217d6bc65e02c841e8eff75be.1725304404.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1725304404.git.christophe.leroy@csgroup.eu>
-References: <cover.1725304404.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1725346282; c=relaxed/simple;
+	bh=Zw/olw+5A4qKND0HOQ6BUNHuooSQtsexXnehvyWi9fs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=M89w/gITxqZEP5OLUcRI5ls3TKq9V4nOhxMCyHZOfIoaxz4d29AIXzof5bmkSLIMe+Gcg7nRqZ3uyAEaya+2L622LucnvNbote8q6CGNl/OYF+m8hLsG4Vx+9ZppaKMgPob/mIevF9mCvzZ8cT1D8M+K4g0IoY4pZZub2PzDXVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wybqj2VTXz1j83T;
+	Tue,  3 Sep 2024 14:50:57 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 00581140337;
+	Tue,  3 Sep 2024 14:51:16 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 3 Sep 2024 14:51:14 +0800
+Message-ID: <9aeac1c3-639a-cffc-0c98-07ab531a5a6d@huawei.com>
+Date: Tue, 3 Sep 2024 14:51:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1725304638; l=7245; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=1u98q0W43xTrsnG50liffh4ZTxumv6Ho4dq/SBaH6jA=; b=lM1uhuWNjxthaHQDf7uVaaSIKJ42G+9/6cAo7nbd76NGIaBABIDpKtUqexJkcPnaewmAS32q3 h+Nv5kPU5p2DUadEnB+UvL81zdHxza+GA275Mngu9p5wM9cdC8ZywAr
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v2] arm64: Replace linked list with switch statement for
+ breakpoint handlers
+To: Mark Rutland <mark.rutland@arm.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
+	<oleg@redhat.com>, <peterz@infradead.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <ardb@kernel.org>, <anshuman.khandual@arm.com>,
+	<ptosi@google.com>, <mcgrof@kernel.org>, <rppt@kernel.org>,
+	<kristina.martsenko@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+References: <20240831064141.3933745-1-liaochang1@huawei.com>
+ <ZtV-Lkfrea56egPc@J2N7QTR9R3>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <ZtV-Lkfrea56egPc@J2N7QTR9R3>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Extend getrandom() vDSO implementation to VDSO64
 
-Tested on QEMU on both ppc64_defconfig and ppc64le_defconfig.
 
-The results are not precise as it is QEMU on an x86 laptop, but
-no need to be precise to see the benefit.
+在 2024/9/2 16:58, Mark Rutland 写道:
+> On Sat, Aug 31, 2024 at 06:41:41AM +0000, Liao Chang wrote:
+>> v2->v1:
+>> Fix a bug of releasing spinlock in kgdb_arch_exit().
+>>
+>> As suggested by Mark Rutland [0], this patch remove the linked list used
+>> for breakpoint handlers and instroduces a switch statement based on the
+>> immediate value.
+>>
+>> To minimize the code duplication, a new enum break_hook_type is defined
+>> to encapsulate all supported breakpoint types, used as indices in switch
+>> statement. Macros iterate_break_hook() and __HOOK() generate a series of
+>> switch statements for getting/setting handlers based on the immediate
+>> value from ESR or the imm field of struct break_hook.
+>>
+>> After that, All breakpint related immediate macros must now end with
+>> _BRK_IMM, and breakpoint related mask macros must end with _BRK_MASK.
+>>
+>> A new user field is added to struct break_hook to separate user and
+>> kernel breakpint exceptions. This force the callers to be explicit about
+>> the exception level that they come from [1]. Currently, only the uprobe
+>> uses this field.
+>>
+>> To prevent race condition during break_hook unregistration (primarily by
+>> KGDB), a spinlock is defined in kgdb code. While there's still a
+>> potential race where a CPU might be executing KGDB break_hook while
+>> another CPU unregister it. this issue existed even before this
+>> refactoring.
+>>
+>> [0] https://lore.kernel.org/all/Zs3LnYkXL5sg2yBH@J2N7QTR9R3.cambridge.arm.com/
+>> [1] https://lore.kernel.org/all/20190301132809.24653-7-will.deacon@arm.com/
+>>
+>> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+> 
+> This isn't what I meant; I want to get rid of the break_hook entirely,
+> and have something like early_brk64() be used consistently, e.g.
+> 
+> | bool __handle_el1_brk(struct pt_regs *regs, unsigned long esr)
+> | {
+> | 	u16 imm = esr_brk_comment(esr);
+> | 
+> | 	switch (imm) {
+> | 	case BRK_IMM_CFI_BASE ... (BRK_IMM_CFI_BASE | BRK_IMM_CFI_MASK):
+> | 		return brk_cfi_handler(regs, esr);
+> | 	case BRK_IMM_KASAN_BASE ... (BRK_IMM_KASAN_BASE | BRK_IMM_KASAN_MASK):
+> | 		return brk_kasan_handler(regs, esr);
+> | 
+> | 	[ ... other BRK IMMs handled here ... ]
+> | 
+> | 	default:
+> | 		return false;
+> | 	}
+> | }
+> | 
+> | void handle_el1_brk(struct pt_regs *regs, unsigned long esr)
+> | {
+> | 	if (__handle_el1_brk(regs, esr))
+> | 		return;
+> | 	
+> | 	[ ... handler failure here ... ]
+> | }
+> 
+> ... with a separate path for EL0 which only needs to handle uprobes.
 
-~ # ./vdso_test_getrandom bench-single
-   vdso: 25000000 times in 4.977777162 seconds
-   libc: 25000000 times in 75.516749981 seconds
-syscall: 25000000 times in 86.842242014 seconds
+OK, I will put the switch statement on somewhere right after the BRK
+exceptoin class(EC) is determined from ESR.
 
-~ # ./vdso_test_getrandom bench-single
-   vdso: 25000000 times in 6.473814156 seconds
-   libc: 25000000 times in 73.875109463 seconds
-syscall: 25000000 times in 71.805066229 seconds
+> 
+> As I mentioned, last I looked at that it required some rework of kgdb
+> and some larger structural rework. I had meant that KGDB would have to
+> handle the hooks always being in place.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v5:
-- VDSO32 for both PPC32 and PPC64 is in previous patch. This patch have the logic for VDSO64.
+So the hard part seems to be ensuring that the caller of unregistered
+KGDB hook waits for the completion of any running KGDB BRK hook. Currently
+the linked list, proteced by RCU, uses synchronize_rcu() to achieve this.
+If we entirely remove register_*_hook(), the hard-coded kgdb_brk_fn() in
+__handle_el_brk() would need to hold some appropriate "lock" to prevent
+kgdb_arch_exit() from completion early. Do you agree, Mark?
 
-v4:
-- Use __BIG_ENDIAN__ which is defined by GCC instead of CONFIG_CPU_BIG_ENDIAN which is unknown by selftests
-- Implement a cleaner/smaller output copy for little endian instead of keeping compat macro.
+> 
+> Overall that should remove code since all the register_*_hook()
+> functions and related bits could be deleted.>
+> As-is, I don't think this patch is the way to go.
+> 
+> Mark.
+> 
+>> ---
+>>  arch/arm64/include/asm/brk-imm.h        |   6 +-
+>>  arch/arm64/include/asm/debug-monitors.h |   7 +-
+>>  arch/arm64/include/asm/esr.h            |   2 +-
+>>  arch/arm64/kernel/debug-monitors.c      | 110 ++++++++++++++++++------
+>>  arch/arm64/kernel/kgdb.c                |   6 ++
+>>  arch/arm64/kernel/probes/kprobes.c      |   2 +-
+>>  arch/arm64/kernel/probes/uprobes.c      |   3 +-
+>>  arch/arm64/kernel/traps.c               |   4 +-
+>>  8 files changed, 100 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/brk-imm.h b/arch/arm64/include/asm/brk-imm.h
+>> index beb42c62b6ac..a0c2ae4386ab 100644
+>> --- a/arch/arm64/include/asm/brk-imm.h
+>> +++ b/arch/arm64/include/asm/brk-imm.h
+>> @@ -23,7 +23,7 @@
+>>   */
+>>  #define KPROBES_BRK_IMM			0x004
+>>  #define UPROBES_BRK_IMM			0x005
+>> -#define KPROBES_BRK_SS_IMM		0x006
+>> +#define KPROBES_SS_BRK_IMM		0x006
+>>  #define KRETPROBES_BRK_IMM		0x007
+>>  #define FAULT_BRK_IMM			0x100
+>>  #define KGDB_DYN_DBG_BRK_IMM		0x400
+>> @@ -36,7 +36,7 @@
+>>  
+>>  #define CFI_BRK_IMM_TARGET		GENMASK(4, 0)
+>>  #define CFI_BRK_IMM_TYPE		GENMASK(9, 5)
+>> -#define CFI_BRK_IMM_BASE		0x8000
+>> -#define CFI_BRK_IMM_MASK		(CFI_BRK_IMM_TARGET | CFI_BRK_IMM_TYPE)
+>> +#define CFI_BRK_IMM			0x8000
+>> +#define CFI_BRK_MASK			(CFI_BRK_IMM_TARGET | CFI_BRK_IMM_TYPE)
+>>  
+>>  #endif
+>> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+>> index 13d437bcbf58..8aedb7c01f69 100644
+>> --- a/arch/arm64/include/asm/debug-monitors.h
+>> +++ b/arch/arm64/include/asm/debug-monitors.h
+>> @@ -41,7 +41,7 @@
+>>  
+>>  /* kprobes BRK opcodes with ESR encoding  */
+>>  #define BRK64_OPCODE_KPROBES	(AARCH64_BREAK_MON | (KPROBES_BRK_IMM << 5))
+>> -#define BRK64_OPCODE_KPROBES_SS	(AARCH64_BREAK_MON | (KPROBES_BRK_SS_IMM << 5))
+>> +#define BRK64_OPCODE_KPROBES_SS	(AARCH64_BREAK_MON | (KPROBES_SS_BRK_IMM << 5))
+>>  /* uprobes BRK opcodes with ESR encoding  */
+>>  #define BRK64_OPCODE_UPROBES	(AARCH64_BREAK_MON | (UPROBES_BRK_IMM << 5))
+>>  
+>> @@ -74,15 +74,12 @@ void register_kernel_step_hook(struct step_hook *hook);
+>>  void unregister_kernel_step_hook(struct step_hook *hook);
+>>  
+>>  struct break_hook {
+>> -	struct list_head node;
+>>  	int (*fn)(struct pt_regs *regs, unsigned long esr);
+>>  	u16 imm;
+>>  	u16 mask; /* These bits are ignored when comparing with imm */
+>> +	int user; /* Breakpoint exception from userspace */
+>>  };
+>>  
+>> -void register_user_break_hook(struct break_hook *hook);
+>> -void unregister_user_break_hook(struct break_hook *hook);
+>> -
+>>  void register_kernel_break_hook(struct break_hook *hook);
+>>  void unregister_kernel_break_hook(struct break_hook *hook);
+>>  
+>> diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
+>> index 56c148890daf..0fc2710a7154 100644
+>> --- a/arch/arm64/include/asm/esr.h
+>> +++ b/arch/arm64/include/asm/esr.h
+>> @@ -403,7 +403,7 @@ static inline bool esr_is_data_abort(unsigned long esr)
+>>  static inline bool esr_is_cfi_brk(unsigned long esr)
+>>  {
+>>  	return ESR_ELx_EC(esr) == ESR_ELx_EC_BRK64 &&
+>> -	       (esr_brk_comment(esr) & ~CFI_BRK_IMM_MASK) == CFI_BRK_IMM_BASE;
+>> +	       (esr_brk_comment(esr) & ~CFI_BRK_MASK) == CFI_BRK_IMM;
+>>  }
+>>  
+>>  static inline bool esr_fsc_is_translation_fault(unsigned long esr)
+>> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+>> index 024a7b245056..0b92a58682e2 100644
+>> --- a/arch/arm64/kernel/debug-monitors.c
+>> +++ b/arch/arm64/kernel/debug-monitors.c
+>> @@ -276,47 +276,103 @@ static int single_step_handler(unsigned long unused, unsigned long esr,
+>>  }
+>>  NOKPROBE_SYMBOL(single_step_handler);
+>>  
+>> -static LIST_HEAD(user_break_hook);
+>> -static LIST_HEAD(kernel_break_hook);
+>> -
+>> -void register_user_break_hook(struct break_hook *hook)
+>> -{
+>> -	register_debug_hook(&hook->node, &user_break_hook);
+>> -}
+>> -
+>> -void unregister_user_break_hook(struct break_hook *hook)
+>> -{
+>> -	unregister_debug_hook(&hook->node);
+>> -}
+>> +enum break_hook_type {
+>> +	KPROBES = 0,
+>> +	UPROBES,
+>> +	KPROBES_SS,
+>> +	KRETPROBES,
+>> +	FAULT,
+>> +	KGDB_DYN_DBG,
+>> +	KGDB_COMPILED_DBG,
+>> +	BUG,
+>> +	KASAN,
+>> +	UBSAN,
+>> +	CFI,
+>> +	NR_BRK,
+>> +};
+>> +
+>> +static struct break_hook *break_hooks[NR_BRK];
+>> +
+>> +#define iterate_break_hook(imm) ({	\
+>> +	switch (imm) {			\
+>> +	__HOOK(KPROBES)			\
+>> +	__HOOK(UPROBES)			\
+>> +	__HOOK(KPROBES_SS)		\
+>> +	__HOOK(KRETPROBES)		\
+>> +	__HOOK(FAULT)			\
+>> +	__HOOK(KGDB_DYN_DBG)		\
+>> +	__HOOK(KGDB_COMPILED_DBG)	\
+>> +	__HOOK(BUG)			\
+>> +	__HOOK(KASAN)			\
+>> +	__HOOK(UBSAN)			\
+>> +	__HOOK(CFI)			\
+>> +	default :			\
+>> +		break;			\
+>> +	}				\
+>> +})
+>> +
+>> +#undef __HOOK
+>> +#define __HOOK(nr)		\
+>> +	case nr ## _BRK_IMM:	\
+>> +	{ return break_hooks[nr]; }
+>> +
+>> +static struct break_hook *find_break_hook(unsigned long imm)
+>> +{
+>> +	iterate_break_hook(imm);
+>> +	return NULL;
+>> +}
+>> +
+>> +#undef __HOOK
+>> +#define __HOOK(nr)		\
+>> +	case nr ## _BRK_IMM:	\
+>> +	{ break_hooks[nr] = hook; break; }
+>>  
+>>  void register_kernel_break_hook(struct break_hook *hook)
+>>  {
+>> -	register_debug_hook(&hook->node, &kernel_break_hook);
+>> +	iterate_break_hook(hook->imm);
+>>  }
+>>  
+>> +#undef __HOOK
+>> +#define __HOOK(nr)		\
+>> +	case nr ## _BRK_IMM:	\
+>> +	{ break_hooks[nr] = NULL; break; }
+>> +
+>>  void unregister_kernel_break_hook(struct break_hook *hook)
+>>  {
+>> -	unregister_debug_hook(&hook->node);
+>> +	iterate_break_hook(hook->imm);
+>>  }
+>>  
+>> +#undef __HOOK
+>> +#define __HOOK(nr)		\
+>> +	do {			\
+>> +		if (!hook) 	\
+>> +			hook = find_break_hook(imm & ~(nr ## _BRK_MASK)); \
+>> +	} while (0)
+>> +
+>>  static int call_break_hook(struct pt_regs *regs, unsigned long esr)
+>>  {
+>> -	struct break_hook *hook;
+>> -	struct list_head *list;
+>> -	int (*fn)(struct pt_regs *regs, unsigned long esr) = NULL;
+>> +	unsigned long imm = esr_brk_comment(esr);
+>> +	struct break_hook *hook = NULL;
+>>  
+>> -	list = user_mode(regs) ? &user_break_hook : &kernel_break_hook;
+>> +	hook = find_break_hook(imm);
+>> +	if (likely(hook))
+>> +		goto call_hook;
+>>  
+>> -	/*
+>> -	 * Since brk exception disables interrupt, this function is
+>> -	 * entirely not preemptible, and we can use rcu list safely here.
+>> -	 */
+>> -	list_for_each_entry_rcu(hook, list, node) {
+>> -		if ((esr_brk_comment(esr) & ~hook->mask) == hook->imm)
+>> -			fn = hook->fn;
+>> -	}
+>> +#ifdef CONFIG_KASAN_SW_TAGS
+>> +	__HOOK(KASAN);
+>> +#endif
+>> +#ifdef CONFIG_UBSAN_TRAP
+>> +	__HOOK(UBSAN);
+>> +#endif
+>> +#ifdef CONFIG_CFI_CLANG
+>> +	__HOOK(CFI);
+>> +#endif
+>> +
+>> +call_hook:
+>> +	if (hook && (user_mode(regs) == hook->user))
+>> +		return hook->fn(regs, esr);
+>>  
+>> -	return fn ? fn(regs, esr) : DBG_HOOK_ERROR;
+>> +	return DBG_HOOK_ERROR;
+>>  }
+>>  NOKPROBE_SYMBOL(call_break_hook);
+>>  
+>> diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+>> index 4e1f983df3d1..e491a5704e61 100644
+>> --- a/arch/arm64/kernel/kgdb.c
+>> +++ b/arch/arm64/kernel/kgdb.c
+>> @@ -304,6 +304,8 @@ static struct notifier_block kgdb_notifier = {
+>>  	.priority	= -INT_MAX,
+>>  };
+>>  
+>> +static DEFINE_SPINLOCK(kgdb_hook_lock);
+>> +
+>>  /*
+>>   * kgdb_arch_init - Perform any architecture specific initialization.
+>>   * This function will handle the initialization of any architecture
+>> @@ -316,9 +318,11 @@ int kgdb_arch_init(void)
+>>  	if (ret != 0)
+>>  		return ret;
+>>  
+>> +	spin_lock(&kgdb_hook_lock);
+>>  	register_kernel_break_hook(&kgdb_brkpt_hook);
+>>  	register_kernel_break_hook(&kgdb_compiled_brkpt_hook);
+>>  	register_kernel_step_hook(&kgdb_step_hook);
+>> +	spin_unlock(&kgdb_hook_lock);
+>>  	return 0;
+>>  }
+>>  
+>> @@ -329,9 +333,11 @@ int kgdb_arch_init(void)
+>>   */
+>>  void kgdb_arch_exit(void)
+>>  {
+>> +	spin_lock(&kgdb_hook_lock);
+>>  	unregister_kernel_break_hook(&kgdb_brkpt_hook);
+>>  	unregister_kernel_break_hook(&kgdb_compiled_brkpt_hook);
+>>  	unregister_kernel_step_hook(&kgdb_step_hook);
+>> +	spin_unlock(&kgdb_hook_lock);
+>>  	unregister_die_notifier(&kgdb_notifier);
+>>  }
+>>  
+>> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+>> index 4268678d0e86..b0e28d48bb19 100644
+>> --- a/arch/arm64/kernel/probes/kprobes.c
+>> +++ b/arch/arm64/kernel/probes/kprobes.c
+>> @@ -360,7 +360,7 @@ kprobe_breakpoint_ss_handler(struct pt_regs *regs, unsigned long esr)
+>>  }
+>>  
+>>  static struct break_hook kprobes_break_ss_hook = {
+>> -	.imm = KPROBES_BRK_SS_IMM,
+>> +	.imm = KPROBES_SS_BRK_IMM,
+>>  	.fn = kprobe_breakpoint_ss_handler,
+>>  };
+>>  
+>> diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
+>> index d49aef2657cd..24130161c62d 100644
+>> --- a/arch/arm64/kernel/probes/uprobes.c
+>> +++ b/arch/arm64/kernel/probes/uprobes.c
+>> @@ -190,6 +190,7 @@ static int uprobe_single_step_handler(struct pt_regs *regs,
+>>  static struct break_hook uprobes_break_hook = {
+>>  	.imm = UPROBES_BRK_IMM,
+>>  	.fn = uprobe_breakpoint_handler,
+>> +	.user = 1,
+>>  };
+>>  
+>>  /* uprobe single step handler hook */
+>> @@ -199,7 +200,7 @@ static struct step_hook uprobes_step_hook = {
+>>  
+>>  static int __init arch_init_uprobes(void)
+>>  {
+>> -	register_user_break_hook(&uprobes_break_hook);
+>> +	register_kernel_break_hook(&uprobes_break_hook);
+>>  	register_user_step_hook(&uprobes_step_hook);
+>>  
+>>  	return 0;
+>> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+>> index 9e22683aa921..6aefb0ba41ec 100644
+>> --- a/arch/arm64/kernel/traps.c
+>> +++ b/arch/arm64/kernel/traps.c
+>> @@ -1025,8 +1025,8 @@ static int cfi_handler(struct pt_regs *regs, unsigned long esr)
+>>  
+>>  static struct break_hook cfi_break_hook = {
+>>  	.fn = cfi_handler,
+>> -	.imm = CFI_BRK_IMM_BASE,
+>> -	.mask = CFI_BRK_IMM_MASK,
+>> +	.imm = CFI_BRK_IMM,
+>> +	.mask = CFI_BRK_MASK,
+>>  };
+>>  #endif /* CONFIG_CFI_CLANG */
+>>  
+>> -- 
+>> 2.34.1
+>>
+> 
 
-v3: New (split out of previous patch)
----
- arch/powerpc/Kconfig                         |  2 +-
- arch/powerpc/kernel/vdso/Makefile            |  8 ++-
- arch/powerpc/kernel/vdso/getrandom.S         |  8 +++
- arch/powerpc/kernel/vdso/vdso64.lds.S        |  1 +
- arch/powerpc/kernel/vdso/vgetrandom-chacha.S | 53 ++++++++++++++++++++
- 5 files changed, 69 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index e500a59ddecc..b45452ac4a73 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -311,7 +311,7 @@ config PPC
- 	select SYSCTL_EXCEPTION_TRACE
- 	select THREAD_INFO_IN_TASK
- 	select TRACE_IRQFLAGS_SUPPORT
--	select VDSO_GETRANDOM			if VDSO32
-+	select VDSO_GETRANDOM
- 	#
- 	# Please keep this list sorted alphabetically.
- 	#
-diff --git a/arch/powerpc/kernel/vdso/Makefile b/arch/powerpc/kernel/vdso/Makefile
-index 7a4a935406d8..56fb1633529a 100644
---- a/arch/powerpc/kernel/vdso/Makefile
-+++ b/arch/powerpc/kernel/vdso/Makefile
-@@ -9,6 +9,7 @@ obj-vdso32 = sigtramp32-32.o gettimeofday-32.o datapage-32.o cacheflush-32.o not
- obj-vdso64 = sigtramp64-64.o gettimeofday-64.o datapage-64.o cacheflush-64.o note-64.o getcpu-64.o
- 
- obj-vdso32 += getrandom-32.o vgetrandom-chacha-32.o
-+obj-vdso64 += getrandom-64.o vgetrandom-chacha-64.o
- 
- ifneq ($(c-gettimeofday-y),)
-   CFLAGS_vgettimeofday-32.o += -include $(c-gettimeofday-y)
-@@ -21,6 +22,7 @@ endif
- 
- ifneq ($(c-getrandom-y),)
-   CFLAGS_vgetrandom-32.o += -include $(c-getrandom-y)
-+  CFLAGS_vgetrandom-64.o += -include $(c-getrandom-y) $(call cc-option, -ffixed-r30)
- endif
- 
- # Build rules
-@@ -34,7 +36,7 @@ endif
- targets := $(obj-vdso32) vdso32.so.dbg vgettimeofday-32.o vgetrandom-32.o
- targets += crtsavres-32.o
- obj-vdso32 := $(addprefix $(obj)/, $(obj-vdso32))
--targets += $(obj-vdso64) vdso64.so.dbg vgettimeofday-64.o
-+targets += $(obj-vdso64) vdso64.so.dbg vgettimeofday-64.o vgetrandom-64.o
- obj-vdso64 := $(addprefix $(obj)/, $(obj-vdso64))
- 
- ccflags-y := -fno-common -fno-builtin -DBUILD_VDSO
-@@ -71,7 +73,7 @@ CPPFLAGS_vdso64.lds += -P -C
- # link rule for the .so file, .lds has to be first
- $(obj)/vdso32.so.dbg: $(obj)/vdso32.lds $(obj-vdso32) $(obj)/vgettimeofday-32.o $(obj)/vgetrandom-32.o $(obj)/crtsavres-32.o FORCE
- 	$(call if_changed,vdso32ld_and_check)
--$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o FORCE
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) $(obj)/vgettimeofday-64.o $(obj)/vgetrandom-64.o FORCE
- 	$(call if_changed,vdso64ld_and_check)
- 
- # assembly rules for the .S files
-@@ -87,6 +89,8 @@ $(obj-vdso64): %-64.o: %.S FORCE
- 	$(call if_changed_dep,vdso64as)
- $(obj)/vgettimeofday-64.o: %-64.o: %.c FORCE
- 	$(call if_changed_dep,cc_o_c)
-+$(obj)/vgetrandom-64.o: %-64.o: %.c FORCE
-+	$(call if_changed_dep,cc_o_c)
- 
- # Generate VDSO offsets using helper script
- gen-vdso32sym := $(src)/gen_vdso32_offsets.sh
-diff --git a/arch/powerpc/kernel/vdso/getrandom.S b/arch/powerpc/kernel/vdso/getrandom.S
-index 21773ef3fc1d..a957cd2b2b03 100644
---- a/arch/powerpc/kernel/vdso/getrandom.S
-+++ b/arch/powerpc/kernel/vdso/getrandom.S
-@@ -27,10 +27,18 @@
-   .cfi_adjust_cfa_offset PPC_MIN_STKFRM
- 	PPC_STL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
-   .cfi_rel_offset lr, PPC_MIN_STKFRM + PPC_LR_STKOFF
-+#ifdef __powerpc64__
-+	PPC_STL		r2, PPC_MIN_STKFRM + STK_GOT(r1)
-+  .cfi_rel_offset r2, PPC_MIN_STKFRM + STK_GOT
-+#endif
- 	get_datapage	r8
- 	addi		r8, r8, VDSO_RNG_DATA_OFFSET
- 	bl		CFUNC(DOTSYM(\funct))
- 	PPC_LL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
-+#ifdef __powerpc64__
-+	PPC_LL		r2, PPC_MIN_STKFRM + STK_GOT(r1)
-+  .cfi_restore r2
-+#endif
- 	cmpwi		r3, 0
- 	mtlr		r0
- 	addi		r1, r1, 2 * PPC_MIN_STKFRM
-diff --git a/arch/powerpc/kernel/vdso/vdso64.lds.S b/arch/powerpc/kernel/vdso/vdso64.lds.S
-index 400819258c06..9481e4b892ed 100644
---- a/arch/powerpc/kernel/vdso/vdso64.lds.S
-+++ b/arch/powerpc/kernel/vdso/vdso64.lds.S
-@@ -123,6 +123,7 @@ VERSION
- 		__kernel_sigtramp_rt64;
- 		__kernel_getcpu;
- 		__kernel_time;
-+		__kernel_getrandom;
- 
- 	local: *;
- 	};
-diff --git a/arch/powerpc/kernel/vdso/vgetrandom-chacha.S b/arch/powerpc/kernel/vdso/vgetrandom-chacha.S
-index ac85788205cb..7f9061a9e8b4 100644
---- a/arch/powerpc/kernel/vdso/vgetrandom-chacha.S
-+++ b/arch/powerpc/kernel/vdso/vgetrandom-chacha.S
-@@ -124,6 +124,26 @@
-  */
- SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- #ifdef __powerpc64__
-+	std	counter, -216(r1)
-+
-+	std	r14, -144(r1)
-+	std	r15, -136(r1)
-+	std	r16, -128(r1)
-+	std	r17, -120(r1)
-+	std	r18, -112(r1)
-+	std	r19, -104(r1)
-+	std	r20, -96(r1)
-+	std	r21, -88(r1)
-+	std	r22, -80(r1)
-+	std	r23, -72(r1)
-+	std	r24, -64(r1)
-+	std	r25, -56(r1)
-+	std	r26, -48(r1)
-+	std	r27, -40(r1)
-+	std	r28, -32(r1)
-+	std	r29, -24(r1)
-+	std	r30, -16(r1)
-+	std	r31, -8(r1)
- #else
- 	stwu	r1, -96(r1)
- 	stw	counter, 20(r1)
-@@ -149,9 +169,13 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	stw	r30, 88(r1)
- 	stw	r31, 92(r1)
- #endif
-+#endif	/* __powerpc64__ */
- 
- 	lwz	counter0, 0(counter)
- 	lwz	counter1, 4(counter)
-+#ifdef __powerpc64__
-+	rldimi	counter0, counter1, 32, 0
-+#endif
- 	mr	idx_r0, nblocks
- 	subi	dst_bytes, dst_bytes, 4
- 
-@@ -267,12 +291,21 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 
- 	subic.	idx_r0, idx_r0, 1	/* subi. can't use r0 as source */
- 
-+#ifdef __powerpc64__
-+	addi	counter0, counter0, 1
-+	srdi	counter1, counter0, 32
-+#else
- 	addic	counter0, counter0, 1
- 	addze	counter1, counter1
-+#endif
- 
- 	bne	.Lblock
- 
-+#ifdef __powerpc64__
-+	ld	counter, -216(r1)
-+#else
- 	lwz	counter, 20(r1)
-+#endif
- 	stw	counter0, 0(counter)
- 	stw	counter1, 4(counter)
- 
-@@ -284,6 +317,26 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	li	r11, 0
- 	li	r12, 0
- 
-+#ifdef __powerpc64__
-+	ld	r14, -144(r1)
-+	ld	r15, -136(r1)
-+	ld	r16, -128(r1)
-+	ld	r17, -120(r1)
-+	ld	r18, -112(r1)
-+	ld	r19, -104(r1)
-+	ld	r20, -96(r1)
-+	ld	r21, -88(r1)
-+	ld	r22, -80(r1)
-+	ld	r23, -72(r1)
-+	ld	r24, -64(r1)
-+	ld	r25, -56(r1)
-+	ld	r26, -48(r1)
-+	ld	r27, -40(r1)
-+	ld	r28, -32(r1)
-+	ld	r29, -24(r1)
-+	ld	r30, -16(r1)
-+	ld	r31, -8(r1)
-+#else
- #ifdef __BIG_ENDIAN__
- 	lmw	r14, 24(r1)
- #else
 -- 
-2.44.0
-
+BR
+Liao, Chang
