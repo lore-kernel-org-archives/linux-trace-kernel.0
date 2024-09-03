@@ -1,81 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6998A1A7241;
-	Tue,  3 Sep 2024 13:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102561CA690;
+	Tue,  3 Sep 2024 13:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725369659; cv=none; b=g0HrKS9kfKBTxrh+OPaTDzJJKZBb/Eh33OIQmVMWaEj74TLGY9FF0AzEau/PZg0BM/E5/lM8VrPmouJ7gD2Um5DK+vFi/OSnAvW/jIOMFeZ/yOyxgRs3O1FCWbYuSZ7oDQkqSKyzWsUdNN1lTB2ecdAV87GlR80/Jkz0bWRFzL0=
+	t=1725369672; cv=none; b=NJxPkJQHSYzlIhjI9O3A+WR3Bvv7GSTwolZwZunEXVPibUZKVo7H5tbBq2c5oIY+LxmEGxaEI3RrOz1JzgIQai6cDjlA/pJSeBPVYf43tVUREcF/HcGs+jGQ2O5CranDuYsXxH2Iq3roaXHFlaaBUDIVVgRtjxODnCkgtjl6KiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725369659; c=relaxed/simple;
-	bh=E9esfCmEIzf9ByeRji9mirDZcedtac57Ki466691NyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UQDyuHyYtsJXyM73N6sHIApBkapTGXXignva0B5HxxeF1L2sbiG8pje2avrdNilAUFRSIJrZOzG9d0WDU9AeaakY4kFBnooVQKRAqj3iMxC3IDkaCk0/63WiGSnSnjErDdIG08cZ/Aa9iRook78URIdTQtxAWtOfGZP+Eqdcgsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC969C4CEC4;
-	Tue,  3 Sep 2024 13:20:56 +0000 (UTC)
-Date: Tue, 3 Sep 2024 09:21:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Sean Anderson <sean.anderson@linux.dev>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] dma: Trace API
-Message-ID: <20240903092154.5f0bfafe@gandalf.local.home>
-In-Reply-To: <20240903072512.GA1521@lst.de>
-References: <20240826203240.2234615-1-sean.anderson@linux.dev>
-	<20240829041912.GB4408@lst.de>
-	<4c2c6b24-aee1-495f-ab47-662e1e818f4b@linux.dev>
-	<20240903072512.GA1521@lst.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1725369672; c=relaxed/simple;
+	bh=dHhlrEFwbRxkjtHs3ZKFTkvOPcWuAhJ0IOGksPzPY5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jae7Mlf7kjB8ZzOoz7aRW53nNmEVWQx1o7Vtw0jyNiLNuCGZcfL32CAKgH/ukoZIIsQ2EseYdb0xEh4Rcv8fx/popQaK5Jp3pjlj4eVFS5OxqWDiooHImXoRcfAqoBjYFKAtNUxcDgIbfD9B8oh2WqwYa4jUaitfpunm7TQISJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IEEeFUM3; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IEEeFUM3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=shDKnG0dPktgg3ItOIAvP1fgIyBWxt5km4UrHeqmXgM=; b=IEEeFUM3MBmpCgF1/SnRthmzDo
+	u+Yl0VLDhvD3iNKzkgFq6CqoLxQvVVwo2mfpi5tsjU7tAEpzssgcGdV2FxlOv0cLgA/wHE8TtO8Jz
+	aRxwzRb4cy6pKAw66MIiTkqdhbYf5/aJuFHPcmxWs1W2tKI8C0dZPT/0bfgH6bxIzo2zrcITJODd/
+	KTJJXEeLuABX6zuVvNZjhgJpZSE4JQ/FeA+TdjkwR/41vdu28Am38jzxhu8py7bU10KhhYqCkSxRR
+	KY1H1pdDqEDNR7p/2osa6lcU9BQKwNifY0UJBJoF2+DuhRwRSK6J1QH1G1fR+jAXjWqNFXJ5B4hSY
+	9Ux3pwcg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1slTSx-0000000CKje-419l;
+	Tue, 03 Sep 2024 13:21:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3A26530050D; Tue,  3 Sep 2024 15:21:03 +0200 (CEST)
+Date: Tue, 3 Sep 2024 15:21:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v4 0/8] uprobes: RCU-protected hot path optimizations
+Message-ID: <20240903132103.GV4723@noisy.programming.kicks-ass.net>
+References: <20240829183741.3331213-1-andrii@kernel.org>
+ <20240830102400.GA20163@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240830102400.GA20163@redhat.com>
 
-On Tue, 3 Sep 2024 09:25:12 +0200
-Christoph Hellwig <hch@lst.de> wrote:
-
-> On Thu, Aug 29, 2024 at 10:24:52AM -0400, Sean Anderson wrote:
-> > >> When debugging drivers, it can often be useful to trace when memory gets
-> > >> (un)mapped for DMA (and can be accessed by the device). Add some
-> > >> tracepoints for this purpose.
-> > >> 
-> > >> We use unsigned long long instead of phys_addr_t and dma_addr_t (and
-> > >> similarly %llx instead of %pa) because libtraceevent can't handle
-
-I think the issue is that libtraceevent doesn't handle "%pa", which I can
-fix.
-
-> > >> typedefs.  
-> > > 
-> > > and a __u64 would seem like the better type here.  
-> > 
-> > libtraceevent can't handle typedefs, including u64.  
+On Fri, Aug 30, 2024 at 12:24:01PM +0200, Oleg Nesterov wrote:
+> On 08/29, Andrii Nakryiko wrote:
+> >
+> > v3->v4:
+> >   - added back consumer_rwsem into consumer_del(), which was accidentally
+> >     omitted earlier (Jiri);
 > 
-> Weird.  The xfs trace events which were some of the first ever are full
-> of typedefs and no one ever complained.  And looking at other
-> trace event definitions they are full of it.
+> still,
 > 
-> I've added the tracing maintainers to see if we can shed some light
-> on this issue.
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> 
 
-libtraceevent doesn't even really bother with the types. It gets its
-information from the other fields.
-
-For example:
-
- events/x86_fpu/x86_fpu_after_restore/format:	field:u64 xfeatures;	offset:24;	size:8;	signed:0;
-
-
-The "field:u64" is more for humans than the tools. And it can be used for
-hints when the printfmt fails to parse. But the libtraceevent really looks
-at the "offset", "size" and "signed" to know how to use that number.
-
--- Steve
+Let me go queue this in perf/core then. Thanks!
