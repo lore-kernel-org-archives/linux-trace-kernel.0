@@ -1,116 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511E91A7246
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 12:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F731A725A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 12:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725367598; cv=none; b=g+zl2Knmc+CyLp+n1bZaQrDo/jIbvmbvV3lNeFREpfDrBBuQZIHewGOoty7JB8hghemFAqVqGNvJHC8bhM9GNid5b8tv/G13C4IiQN8OtfnvFX9+gd3y9GxOMClb/x6mJrjaWBf4tDLP6/jVEatCDbMI9xtHjN/Z4d+eJKFFnI4=
+	t=1725367679; cv=none; b=cSUsYJrhqSc/Rpu/0f2fKaACHOkTue8n+fB9h/pImojtV0QUndmTN58VUbdQn4cp8emTblTHCyXrHV1tjuqURdXhxo7VzUtiKv2E5qqkhhLPcVfzOk7aWzRa0CUNP1zE/wyEujj3M0knARchlnRtKMtEH/WPvEgpUlVAvk69Xrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725367598; c=relaxed/simple;
-	bh=Rlyxtlo5hzI9N3YYU1nTTHUB+oS3mO6LVjK+srmICQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e8MDXURlUygPdxxua7TxkLSV6aFPMmk2Ewk1Yk4n6ZwG6q2qYcY106BynZrnaGqBbiXuI0JJ5qM5oqFtJs4IJXbg6PsyGaNPnUNN9pbu2ScRiXxJGjsggixDSJaHOgiQ+QVb8dYUqvtuZ3wVwfkAcYLfX11AqzZykNyv7qxqUKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O1g4jYzF; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1725367679; c=relaxed/simple;
+	bh=38nBdhN362xzFrHx9c/SvDQTiddRNmNAVsbB48MBuY4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RmnaBfvPWKeKEi229bUpXH6HMWIRbVe/qsKmARjBMthrjdS5SR9+y/xwMsF4MaCUdcOZh5JN62Ju0J6HJR9olNjvRdibqXycTg0sXvfOkgNgCMPdfGrxbKgbysClhHm7cI202tkEHbMttpJSfZLo+7F0J2G80iW7GsRpDZ6zvKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ToigPrgc; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1g4jYzF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ToigPrgc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725367594;
+	s=mimecast20190719; t=1725367677;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ixgiDmvar1tWfYl+K7VyNawCctRA3Ge+tCMoawRgM90=;
-	b=O1g4jYzFJUaoVcvdvUfNzcMZGlZd7wU2eOr5zqdiMHoAj1/OsRtoC9qWsUyCAfeqS68olh
-	KBpNHGvX2981Ln1xRT6Q+2pK25deTMmSvlXCPS/zfCuVI4xOa7h9uCiiUVQARg8e4ISRNF
-	suCbUDd/Ij8QOFcqTi6O5fyb88vyh5M=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-36-Ows8vTQyP96DVRLqnAUn_A-1; Tue,
- 03 Sep 2024 08:46:29 -0400
-X-MC-Unique: Ows8vTQyP96DVRLqnAUn_A-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F9F519560B4;
-	Tue,  3 Sep 2024 12:46:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE32D1955DD8;
-	Tue,  3 Sep 2024 12:46:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  3 Sep 2024 14:46:14 +0200 (CEST)
-Date: Tue, 3 Sep 2024 14:46:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use kzalloc to allocate xol area
-Message-ID: <20240903124607.GB17936@redhat.com>
-References: <20240903102313.3402529-1-svens@linux.ibm.com>
+	bh=A4iuXyfKhiI8SVaO+kKMaEMJwXrp+yyDs1DdjgoBNm8=;
+	b=ToigPrgc/vkrY5nJTrH+YHTMC7x20lQB46cpFmi61x3cj1+vNboX2hDXw7ygwwbC5mmsh8
+	4a+pWUhB390e334LRmbKA0O7q4c+TdR37/yc/60sDTRCX6bTocQGLb70qOQxgxzkKQ6+FC
+	3VtdUNcbeS/xXKsiSu+KjyO7EqlVglo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639-cvB4EK01OT-4cQszhN0sXQ-1; Tue, 03 Sep 2024 08:47:56 -0400
+X-MC-Unique: cvB4EK01OT-4cQszhN0sXQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a7a83fad218so457684966b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 05:47:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725367675; x=1725972475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A4iuXyfKhiI8SVaO+kKMaEMJwXrp+yyDs1DdjgoBNm8=;
+        b=Oq0ahXnET0fCrhAqSdROu/iuXnikFtSVLG7zU/4lILE6neGeolCmpIXQDki2XHcqDo
+         VmqGGyXn2e501MU8/omz9W/3Rk6QWSKzMATT/uWBMyvIkmwsa0lpetpjd0idJj/1VzQ+
+         vngTCIf4+yZkJlsxhnNaEYLyn3xW+YMI9q5NWZbnA3gqpeP+ZRqKwwEGe5PBMqbAYtmL
+         gdpKHFE8VSdo9W1rVaKS9MdGL2OppKIJlacRf+Mh0mVVstaAh1ciT/8X1BJcU5Cg7+Yi
+         kt/+0NO/CmYDKf8MDP+KVVgIK6sbTutbiaVVe/Lxc5rGRiSEplk2ZKVTLml9Kj0sV0EE
+         5bMA==
+X-Gm-Message-State: AOJu0YzrhoTuXtFbEsHUVQf25fKQU3Q8n9xt4O8nta2E608qNF2GfMf0
+	lPiytjFtG5hFJvHGXjuIaXSecp8KJlJDmi5RQXLIer/wP/2iM86UkyaC1azUxvd989YVV49tuzg
+	zh4AHqtCsPXmoj5P/8FH+oLMgc4zYFJDdBx/rp5GDT9MFfSvUqw1WDUPOR6YY/EBaWXlYlgjfJz
+	/cd9BddDsb5NeN8mh9MaQQlccBGoLGy9o92PZhAuNO5soc
+X-Received: by 2002:a17:907:94d4:b0:a86:9258:aeed with SMTP id a640c23a62f3a-a89b9729521mr686424366b.61.1725367675002;
+        Tue, 03 Sep 2024 05:47:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEub8oka8LPUWP6yKVSkigULGv+zrIVCG2rIIRYWLoPTZzPEC/tfBPWRqRO2UuQ4cI0EJ02w3kgBfcBOEs8gxs=
+X-Received: by 2002:a17:907:94d4:b0:a86:9258:aeed with SMTP id
+ a640c23a62f3a-a89b9729521mr686420566b.61.1725367674086; Tue, 03 Sep 2024
+ 05:47:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240903102313.3402529-1-svens@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20240820130001.124768-1-tglozar@redhat.com> <20240823125426.404f2705@gandalf.local.home>
+ <20240823145211.34ccda61@gandalf.local.home> <CAP4=nvQnW5vS5CQBZtKp-BdjYxNFbq26P36uRy3RhCenHEG_YA@mail.gmail.com>
+ <20240826132620.1618d201@gandalf.local.home> <CAP4=nvTR9EuA5WhGweSaoeptEw0n0w5exr8gq6zfqGhGNt3zpg@mail.gmail.com>
+In-Reply-To: <CAP4=nvTR9EuA5WhGweSaoeptEw0n0w5exr8gq6zfqGhGNt3zpg@mail.gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 3 Sep 2024 14:47:42 +0200
+Message-ID: <CAP4=nvRfkZ2CEbFv+MFBXikZ_p2K-1uucgkdgp27JeTxe58qhw@mail.gmail.com>
+Subject: Re: [PATCH] tracing/timerlat: Check tlat_var for NULL in timerlat_fd_release
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/03, Sven Schnelle wrote:
+=C3=BAt 27. 8. 2024 v 16:34 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
+m> napsal:
 >
-> To prevent unitialized members, use kzalloc to allocate
-> the xol area.
+> I think waiting on the threads to actually exit in stop_kthread() is
+> the proper solution:
 >
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> /*
+>  * stop_kthread - stop a workload thread
+>  */
+> static void stop_kthread(unsigned int cpu){
+>     struct task_struct *kthread;
+>
+>     kthread =3D per_cpu(per_cpu_osnoise_var, cpu).kthread;
+>     if (kthread) {
+>         if (test_bit(OSN_WORKLOAD, &osnoise_options)) {
+>             kthread_stop(kthread);
+>         } else {
+>             /*
+>              * This is a user thread waiting on the timerlat_fd. We need
+>              * to close all users, and the best way to guarantee this is
+>              * by killing the thread. NOTE: this is a purpose specific fi=
+le.
+>              */
+>             kill_pid(kthread->thread_pid, SIGKILL, 1);
+>             /* ^^ here wait until kthread (actually the user workload) ex=
+its */
+>             put_task_struct(kthread);
+>         }
+>         per_cpu(per_cpu_osnoise_var, cpu).kthread =3D NULL;
+>     }
+>
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+I tried a patch that waits on the user workload to exit when doing
+osnoise_workload_stop, similarly to what we already do for the kernel
+workload. I added a wait_on_completion in osnoise_workload_stop that
+is completed in timerlat_fd_release, mimicking what kthread_stop()
+does. But that deadlocks if the user workload process attempts to free
+a file descriptor taking trace_types_lock before the timerlat one,
+since the caller of osnoise_workload_stop() is also holding
+trace_types_lock. There seems to be no way to prevent this deadlock,
+since the user workload, unlike the kthread which has a fixed program,
+is free to open anything it wants.
 
-and since this looks easily exploitable, I'd sugest
+I suggest using the workaround suggested in
+https://lore.kernel.org/linux-trace-kernel/20240823125426.404f2705@gandalf.=
+local.home
+for the time being. Together with the patch that adds locks around
+stopping the threads
+(https://patchwork.kernel.org/project/linux-trace-kernel/patch/202408231028=
+16.5e55753b@gandalf.local.home/),
+this should prevent the kernel panic at least until we have a solution
+for the race itself.
 
-Cc: stable@vger.kernel.org
-Fixes: b059a453b1cf1 ("x86/vdso: Add mremap hook to vm_special_mapping")
+Tomas
 
-> ---
->  kernel/events/uprobes.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 73cc47708679..50d7949be2b1 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1489,7 +1489,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  	struct xol_area *area;
->  	void *insns;
->  
-> -	area = kmalloc(sizeof(*area), GFP_KERNEL);
-> +	area = kzalloc(sizeof(*area), GFP_KERNEL);
->  	if (unlikely(!area))
->  		goto out;
->  
-> @@ -1499,7 +1499,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  		goto free_area;
->  
->  	area->xol_mapping.name = "[uprobes]";
-> -	area->xol_mapping.fault = NULL;
->  	area->xol_mapping.pages = area->pages;
->  	area->pages[0] = alloc_page(GFP_HIGHUSER);
->  	if (!area->pages[0])
-> -- 
-> 2.43.0
-> 
+
+
+
+Tomas
 
