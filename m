@@ -1,235 +1,107 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7EB1F937;
-	Tue,  3 Sep 2024 14:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570621CA69B
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 14:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725374038; cv=none; b=CBNW9uxCu/PISSKslRUJ8KF6HQtAz0NxmGluR/BKfPBkS8GroOykMw//fnmXUqFnzHgN9XRVUK9FcCQGCrdy8lIB3wCWzs2VA1OXrugUz3eh+GstigbOprnJO7VokdSmzMmvkI92LlpBHLJslFDg8631jJAga69mQOpGttIO5og=
+	t=1725374198; cv=none; b=OK5YywIPRLD4lgu0+p8uoMLkCsi3DOqcZAGu9Pmq/xxGY2En7KcanTDHhbEEEecRMDDqVuiem6kGr5ORak+x9Nj8SibNEs8+hb6cyncd4Nxm1QR6G7R4oGMByDr2BGtffRUrqymPstq2deQYEWaQ8OcEzt/Bnl0OKDplzKWS75A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725374038; c=relaxed/simple;
-	bh=51yKYnAUW7oklod6dtzZQ26I19gDaZakx/DoxivsNUQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C3VNEUMir+pO0L/YjPCwVlEM1nJRrJfmapc8LVCcA85mqSa2IspeY340Yl9BlU/ZQsE7d9Nb1kVZ/KPPQCX4k4huXpH06+lqkK0cNorAYP2kBuNFSXMhW//JVHm8ISzmIORWc2X1QnIsvf9zhQpm8Pc1Jb+aQZZ09YHAghh2bMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AErLq2qr; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725374198; c=relaxed/simple;
+	bh=Z4oBj/a2P4O2prd6rN6vg2rQlS8JspJ/SLpRsegS+iE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W9Fl+SZuXXtOifMxeSjnb0k+NfoGz2cEGNKqj63ccN0RgqmogX75ORw6uribZDAI7iwWSqDKxIuN1gtK1OMWHQ9KEF7LbT089cehnKXbEPt7AIqjVCU1OPjOoAaEy/dx4ThZtP8RvDu0+mDgkrkkeFAtbU5nLIb/u7xLc7pfu8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QKID1F/Y; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AErLq2qr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42c2e50ec6aso18914975e9.0;
-        Tue, 03 Sep 2024 07:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725374035; x=1725978835; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnzRvcPxcU9HJutxpjUBFOS12M76EnYdbYmii/N2uto=;
-        b=AErLq2qrDv1yhtftYDcKeE4Tmhq/8PrOS+upjWnkbqTBnymj6f3tsXlkAD4vWnYtHN
-         CyChajty4GPI3Eg96L84G2Z7sbm+EHvswusPmkZN30SKQlQP6iuKMxjNcClghXvUpgRx
-         Q6v16D5SVxPhr6X6bDRudVk6DoVFh5XrXE24C8nIF8xGebVmcB9EBtLxJUade1y2iDoE
-         I9dsEmenPSTH3KkiafHCT+lVeePdegn1ElbzAj34Lsq19tFmtdQ4H7cMu4+N2gGux98M
-         dbodZ4bEBxoBCeROMM64tXdDZ01+bgl0vvBmOKzX6IXKYY9Mt/0KbJsUUbRQyh459D+x
-         4lBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725374035; x=1725978835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnzRvcPxcU9HJutxpjUBFOS12M76EnYdbYmii/N2uto=;
-        b=X5vofpojgdlcuLx4xUwobxyvCnS3GxuTyxZCSPFsoqS1WZs64lew8I+QyFXHpu3YzY
-         r9rvrzd1zw6ibdJRyeoNFo7gUFGGBtRZtdXDHMVKZWLBi6VOeguCMSVs+zXa0rA1f3ne
-         J1l/ODRsizalsiVdAl2onuAQ/Gfdk1AZBPOefelGTYnuzEe+aB4EZWH129V9Pfyhhqv2
-         rdGjJDnoV+RacyZgMhjT61HgLS2R2Nh+eUsThcPUIWYziR1PD77ekxovXhMtu1zVm4L9
-         BSNp+opno0t1j6hTv6g3y50807JcYnOkz82Ci3GZ9TeU+Q21bEROIz/MdwysP0Ay0J9V
-         zJfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZD5Wo1y6Krsgsk3kNCe72PvYhM6LIdmgCNfo41CauIkvqjFBKG2o9FkGNBj3w792A0pY=@vger.kernel.org, AJvYcCVEtloOeRdRv/hZTWm93m97cIUGHEpAJlwTTsMFBxYd/EgKyZTYGyddI0xxdAcsyGvSqb4TyK1j/BTedfqfK8FZv8cQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDVX3GGZgkZ4u6GixwoMu3Gw6GzK/ueH6CYAqAXfHlDNoK7qcF
-	zxxNCQaCKkKt/4N3WywAj7XpqWfbYlIqVYCPVgJkMrIrXqTSHdy+
-X-Google-Smtp-Source: AGHT+IFJ4UEX7VZbZMjHnIz5fla2uLp0LDOKqYaUgkCv/sVxN37oK9l1TNTIjInZdzY+b+G10Na2MA==
-X-Received: by 2002:a05:600c:4450:b0:426:5fa7:b495 with SMTP id 5b1f17b1804b1-42bbb69bc2fmr92127195e9.15.1725374034251;
-        Tue, 03 Sep 2024 07:33:54 -0700 (PDT)
-Received: from krava ([87.202.122.118])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df0dbcsm174546095e9.17.2024.09.03.07.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 07:33:53 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 3 Sep 2024 17:33:50 +0300
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Tianyi Liu <i.pear@outlook.com>, andrii.nakryiko@gmail.com,
-	ajor@meta.com, albancrequy@linux.microsoft.com, bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
-	linux@jordanrome.com, mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <ZtceTuu8E4hHZr2P@krava>
-References: <20240830101209.GA24733@redhat.com>
- <ME0P300MB0416522C59231B4127E23C6F9D912@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240901232652.GA12854@redhat.com>
- <20240902171745.GC26532@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QKID1F/Y"
+Message-ID: <d8936bfc-1ea3-4142-8035-0dfb8e491c31@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1725374194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wpg8hKa7dcfdLPr9XSsJARMtftfJyrs3LidO7ytj5vo=;
+	b=QKID1F/Y51wgJTLcD2jci2gl6hWpH8cwvUG2i5tXM1ETmlP1B68O+TmUWWwcwOWRFWlvRM
+	G7rRHIcEb4RuEHJIiETVZkQ6+1XTdu+yLELTwqZAKMZZWmGU2l7Nuhf2BXwVZ4FTYzpyNr
+	m7IynLNb2XqWq+dkK23WLv4tkpzGE0M=
+Date: Tue, 3 Sep 2024 10:36:29 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240902171745.GC26532@redhat.com>
+Subject: Re: [PATCH v3] dma: Trace API
+To: Steven Rostedt <rostedt@goodmis.org>, Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20240826203240.2234615-1-sean.anderson@linux.dev>
+ <20240829041912.GB4408@lst.de>
+ <4c2c6b24-aee1-495f-ab47-662e1e818f4b@linux.dev>
+ <20240903072512.GA1521@lst.de> <20240903092154.5f0bfafe@gandalf.local.home>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240903092154.5f0bfafe@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Sep 02, 2024 at 07:17:45PM +0200, Oleg Nesterov wrote:
-> On 09/02, Oleg Nesterov wrote:
-> >
-> > And... I think that BPF has even more problems with filtering. Not sure,
-> > I'll try to write another test-case tomorrow.
+On 9/3/24 09:21, Steven Rostedt wrote:
+> On Tue, 3 Sep 2024 09:25:12 +0200
+> Christoph Hellwig <hch@lst.de> wrote:
 > 
-> See below. This test-case needs a one-liner patch at the end, but this is only
-> because I have no idea how to add BPF_EMIT_CALL(BPF_FUNC_trace_printk) into
-> "struct bpf_insn insns[]" correctly. Is there a simple-to-use user-space tool
-> which can translate 'bpf_trace_printk("Hello world\n", 13)' into bpf_insn[] ???
+>> On Thu, Aug 29, 2024 at 10:24:52AM -0400, Sean Anderson wrote:
+>> > >> When debugging drivers, it can often be useful to trace when memory gets
+>> > >> (un)mapped for DMA (and can be accessed by the device). Add some
+>> > >> tracepoints for this purpose.
+>> > >> 
+>> > >> We use unsigned long long instead of phys_addr_t and dma_addr_t (and
+>> > >> similarly %llx instead of %pa) because libtraceevent can't handle
 > 
-> So. The CONFIG_BPF_EVENTS code in __uprobe_perf_func() assumes that it "owns"
-> tu->consumer and uprobe_perf_filter(), but this is not true in general.
-> 
-> test.c:
-> 	#include <unistd.h>
-> 
-> 	int func(int i)
-> 	{
-> 		return i;
-> 	}
-> 
-> 	int main(void)
-> 	{
-> 		int i;
-> 		for (i = 0;; ++i) {
-> 			sleep(1);
-> 			func(i);
-> 		}
-> 		return 0;
-> 	}
-> 
-> run_prog.c
-> 	// cc -I./tools/include -I./tools/include/uapi -Wall
-> 	#include "./include/generated/uapi/linux/version.h"
-> 	#include <linux/perf_event.h>
-> 	#include <linux/filter.h>
-> 	#define _GNU_SOURCE
-> 	#include <sys/syscall.h>
-> 	#include <sys/ioctl.h>
-> 	#include <assert.h>
-> 	#include <unistd.h>
-> 	#include <stdlib.h>
-> 
-> 	int prog_load(void)
-> 	{
-> 		struct bpf_insn insns[] = {
-> 			BPF_MOV64_IMM(BPF_REG_0, 0),
-> 			BPF_EXIT_INSN(),
-> 		};
-> 
-> 		union bpf_attr attr = {
-> 			.prog_type	= BPF_PROG_TYPE_KPROBE,
-> 			.insns		= (unsigned long)insns,
-> 			.insn_cnt	= sizeof(insns) / sizeof(insns[0]),
-> 			.license	= (unsigned long)"GPL",
-> 			.kern_version	= LINUX_VERSION_CODE, // unneeded
-> 		};
-> 
-> 		return syscall(__NR_bpf, BPF_PROG_LOAD, &attr, sizeof(attr));
-> 	}
-> 
-> 	void run_probe(int eid, int pid)
-> 	{
-> 		struct perf_event_attr attr = {
-> 			.type	= PERF_TYPE_TRACEPOINT,
-> 			.config	= eid,
-> 			.size	= sizeof(struct perf_event_attr),
-> 		};
-> 
-> 		int fd = syscall(__NR_perf_event_open, &attr, pid, 0, -1, 0);
-> 		assert(fd >= 0);
-> 
-> 		int pfd = prog_load();
-> 		assert(pfd >= 0);
-> 
-> 		assert(ioctl(fd, PERF_EVENT_IOC_SET_BPF, pfd) == 0);
-> 		assert(ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) == 0);
-> 
-> 		for (;;)
-> 			pause();
-> 	}
-> 
-> 	int main(int argc, const char *argv[])
-> 	{
-> 		int eid = atoi(argv[1]);
-> 		int pid = atoi(argv[2]);
-> 		run_probe(eid, pid);
-> 		return 0;
-> 	}
-> 
-> Now,
-> 
-> 	$ ./test &
-> 	$ PID1=$!
-> 	$ ./test &
-> 	$ PID2=$!
-> 	$ perf probe -x ./test -a func
-> 	$ ./run_prog `cat /sys/kernel/debug/tracing/events/probe_test/func/id` $PID1 &
-> 
-> dmesg -c:
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	...
-> 
-> So far so good. Now,
-> 
-> 	$ perf record -e probe_test:func -p $PID2 -- sleep 10 &
-> 
-> This creates another PERF_TYPE_TRACEPOINT perf_event which shares
-> trace_uprobe/consumer/filter with the perf_event created by run_prog.
-> 
-> dmesg -c:
-> 	trace_uprobe: BPF_FUNC: pid=51 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=51 ret=0
-> 	trace_uprobe: BPF_FUNC: pid=50 ret=0
-> 	...
-> 
-> until perf-record exits. and after that
-> 
-> 	$ perf script
-> 
-> reports nothing.
-> 
-> So, in this case:
-> 
-> 	- run_prog's bpf program is called when current->pid == $PID2, this patch
-> 	  (or any other change in trace_uprobe.c) can't help.
-> 
-> 	- run_prog's bpf program "steals" __uprobe_perf_func() from /usr/bin/perf
+> I think the issue is that libtraceevent doesn't handle "%pa", which I can
+> fix.
 
-ok, there's just one call instance (struct trace_event_call) shared
-with all the uprobe tracepoints, so if there's bpf program attached
-to any uprobe tracepoint, it will not continue and send the perf event
-for any other uprobe tracepoint (without the bpf program attached)
+With s/unsigned long long/u64/g I get
 
-I think there might be similar issue with tracepoints and kprobes
+kworker/2:1H-mm     183 [002]    32.472411:                 dma:dma_unmap_sg: [FAILED TO PARSE] device=ff160000.mmc addrs=ARRAY[00, 50, e2, 06, 08, 00, 00, 00] dir=2 attrs=0x0
 
+>> > >> typedefs.  
+>> > > 
+>> > > and a __u64 would seem like the better type here.  
+>> > 
+>> > libtraceevent can't handle typedefs, including u64.  
+>> 
+>> Weird.  The xfs trace events which were some of the first ever are full
+>> of typedefs and no one ever complained.  And looking at other
+>> trace event definitions they are full of it.
+>> 
+>> I've added the tracing maintainers to see if we can shed some light
+>> on this issue.
 > 
-> and to me this is yet another indication that we need some changes in the
-> bpf_prog_run_array_uprobe() paths, or even in the user-space bpftrace/whatever's
-> code.
+> libtraceevent doesn't even really bother with the types. It gets its
+> information from the other fields.
 > 
-> And. Why the "if (bpf_prog_array_valid(call))" block in __uprobe_perf_func() returns?
-> Why this depends on "ret == 0" ??? I fail to understand this logic.
+> For example:
+> 
+>  events/x86_fpu/x86_fpu_after_restore/format:	field:u64 xfeatures;	offset:24;	size:8;	signed:0;
+> 
+> 
+> The "field:u64" is more for humans than the tools. And it can be used for
+> hints when the printfmt fails to parse. But the libtraceevent really looks
+> at the "offset", "size" and "signed" to know how to use that number.
 
-I'd think the intention was that if there's bpf program we don't emit
-the perf event.. and we never thought about having them (event with bpf
-program and standard perf event) co-existing together
+This doesn't apply for arrays:
 
-problem is that the perf event pid filtering is implemented through the
-call->perf_events list 
+	field:__data_loc u64[] addrs;	offset:12;	size:4;	signed:0;
 
-jirka
+Here the size is not for the data type but for the array. And so the
+type is parsed by process_sizeof in src/event-parse.c.
+
+--Sean
