@@ -1,221 +1,133 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F737F9DF;
-	Tue,  3 Sep 2024 18:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A259618BB89;
+	Tue,  3 Sep 2024 18:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725387081; cv=none; b=gUNn1hczjlfDxBtEGKBzuKgligHRIYobi/o7j8CzoBeawEANuDUTXqchEIlTyNdAQFyY8JOzQ+5Hb8T9I0mFFIjb4GeUzXQwr5Tsn6iy8PtAkG12L12BH0K3Yheclu7wuzO6CiLJwMLORxD1kaVBc79V1ZcCEyTCWb/KiDWcOhs=
+	t=1725387439; cv=none; b=TgvS+tsq0GaUN3PvbzLwZzxs4Gr2vqnjFNC34xlCnZAeo6b471rs4HSpZMXV/z5i0wAmKDtEu+GIv99FTQdpxUhMDY/WpKILgguekjFw5RQ1VqSd4ShxZw1dBjWVnPvOUwBjZgbGYcUFfIHO3Sd2A8LLfJRCuOYVrMZdTMbSVpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725387081; c=relaxed/simple;
-	bh=dNIWIqqCiaNITfAyTH3u02L4TYfuhMMyDlxxwVMJWJg=;
+	s=arc-20240116; t=1725387439; c=relaxed/simple;
+	bh=72SwK870brWuO+1H7M3ZgRnMKAN3mk5VB6H1CyKczVk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hbwrIGVxaSbStd+oNTOxFCUZmOvsPjgjySoHTrdzMXCwFZR1Yeo08/tjaAHb8KlaK4TCn/7GM49D82eio0fBl/USnhQcOVsZ2yDrwHuX5NJzI1v+zGpn4/eqWdThCEUW9tasea5eXb4PNiU6Kfar0r9bxJ9bIX6ueMByy7p7HJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kYyM+RlP; arc=none smtp.client-ip=209.85.216.54
+	 To:Cc:Content-Type; b=glfAPuT0mStrDuJdUktejeWm46u/JYnYuhFBU57Jw96pabtztcncZQfXCAVOzj8nPuPoM5nhevEPHmkVZ5aS1hFMHh3JnjwHTF2pEzQM5MaRnU+fOM/bWaKwMkZYwcwtwnnVMo/AWBeyctQTFD9nErAbvx4wnBXYJXbSTu4LGD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ka7gwTor; arc=none smtp.client-ip=209.85.216.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYyM+RlP"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d8abac30ddso2114545a91.0;
-        Tue, 03 Sep 2024 11:11:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ka7gwTor"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d88ec20283so200492a91.0;
+        Tue, 03 Sep 2024 11:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725387079; x=1725991879; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725387437; x=1725992237; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YMNGBJ16BmT9ddmWcXivFCq9/4Ppyyp/mx5s0aFYEec=;
-        b=kYyM+RlPcw5uVC6kG53p9tWypk/MZg6SlcDc8XzMd+Kv6a2pvLQCSULE6vsqwA2636
-         ahKF3R/4p6DN43RRc9YcEXgB2gPw4KvstG68noLbNPv6ke5u4mc1PPe/rs7kDRUIvUdl
-         rAtiClaAGF+zocS1kTROj7XwGLGBt9yywdUBeE2zG2G4L4UXj5ByaySkZERDlAT9Pug+
-         xVjgIDWUFUIwme+P5TCId8auYbfRr74tM13Io2wydSelIxvA11di8DY/s6jxZn175mbJ
-         wFWkZZWv6+Kz0IS7TgStQ0eBDFoUuxoXMRiVfXBtQyrEFR5fBqhnZqJCvkjooFsnI7Es
-         5Wxw==
+        bh=iCRq6ERVuiYfqPwMIYcT8lbPZnFxke33M5BuFbK5HIg=;
+        b=Ka7gwTorlj2Fywai5mXwRlCuNaBaQpElz5O7QEltvWMQST6AbpJiLilfaSNDNHM1aN
+         D0HSUWrtH87B1HypBmwIqfYvFN0yCQPunRXAIGhzqiSy7/1Nyb+tdgrX+8YtTUfGr27G
+         IuK6KsBCJUXYScM1PIdxXqfSrJQ2dKeJbdqFXirIEC7fXCozaqAQaWzmo0skQS2i0dzv
+         v7vASJJtJDYbZ8TMxlQ9EjJ6XqM7qMJNJ0VqIFEKYLqfxHIOIFD8cpKvw59JDNbuCzO6
+         S8E9jjwhkt2YPW8/S20kxjLqZ9ZjJEvbiq6FqF66x9JU2EW6rkK+QwEmGbw5hKn6CHmN
+         phQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725387079; x=1725991879;
+        d=1e100.net; s=20230601; t=1725387437; x=1725992237;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YMNGBJ16BmT9ddmWcXivFCq9/4Ppyyp/mx5s0aFYEec=;
-        b=esH/t8JMDfVbmZRG80ivSxyAWm6MyI4LWPhxa9TjSYjIDqZdFqzT9LgaApHTspHtUB
-         oXHqs7lfzYllkBkpsfCtssLF9VYWJSBRorH+95vxahJMQhQtzR0nZqmDn2kA25up/cvU
-         qqQPmT7PBA1G/kFzWrjClBhrScq/soRjOSjNj0M7VXa+l8FLbbt8yHPuq4hSE02vl8u8
-         6OxCmRLVtjjAbnZOuCFU89sZAkvXTKA2VsFN9gvgxXL/UlIEDSxpIXZVNQySjBo3hOgZ
-         vwLQVn6FXm6Y7P11XbiOAldzsZ4/jALwL8zT5XRcz6y1ZpQfQATHMZ/ayQZrdHavT+GM
-         f6bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUo+oZmRb8uccU/UkuJCrYG1SIy38iPwNG6rrvPrIveoX1j881yyH1+ZgNBWIKuWjItCOsvVQGSdIjPM1//t1g4pGuX@vger.kernel.org, AJvYcCX9hSWfjvj8p5Lemy90ZQneE/8zby+wvMkYHZz3xlOvEev7dM7nibpTL1xJHt1eVbl8TLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY6CfnaJZmHLGi/3CIdw9SeDhpXsU0ay26ZK5rXy3unx172oeY
-	VqKNe6KQ6/lFOp8/6RukF8VEdTEQMb8P5Vdb7pLQC8wEsOv/U8k0cs2OH3NfM22HdlXEazqMztH
-	OlR5pxVXYNbazYlS1Vyw96LMD1VA=
-X-Google-Smtp-Source: AGHT+IGtCiSi24fOth0IU8THOgozOYSW8ttPWPA1fdO3PXT/17IzfN9vmjt0gAhoGAx8+r6/E6r2x5scSEfNjHStihc=
-X-Received: by 2002:a17:90b:1e08:b0:2d8:c302:a78f with SMTP id
- 98e67ed59e1d1-2da630ecbbdmr3426922a91.23.1725387079401; Tue, 03 Sep 2024
- 11:11:19 -0700 (PDT)
+        bh=iCRq6ERVuiYfqPwMIYcT8lbPZnFxke33M5BuFbK5HIg=;
+        b=LJB7t2Rp3xKiwmPI3s6JPjbqbIPNYK+7UHuyVymVwkhjK13VTf3YkGYUrTO5ofVQ5L
+         fKu7FQlAsqLQ96JlVVOX9XKe8DOQRyhNFiM4o+VYpXR5wy+YyJ2V6AStfGg2rdQCSy8W
+         zKBAZwPejK61s07wS/Y3MuCBuUrjV8jpwTSJK2EYiSiytiCjtBOGoEC7himHVf9enfDG
+         zdQIJajAZCCFGlPaZ6Zp1g2+gGppz6ltmubN3q8O8IRF4CeIT4ZHVeIda5pL7kj4SW7D
+         ThZdd0//1cA1M8qwAhjWDg9GtP0/QHE+YbH9jjXOLERXDxFTEgRM5padN74K3yzcrexG
+         +Cng==
+X-Forwarded-Encrypted: i=1; AJvYcCU3GgEYeeoNbYT7NZ0bx8Mf9O+x6ZyDwyGNVlWUt8yU2X0AAiVBW0qo6SIDa4DDGaS5t0C3nqigg5M=@vger.kernel.org, AJvYcCVR3IXzzdrMYSQeKu5DPzdPUDyJfzL35Il2WZYZ0B/WrOu2oMe/CiDtiO4K9S4SYmvrqcKsa/VojcPL3oNt@vger.kernel.org, AJvYcCVcA+hq1dGgbUvB+C2/TQmzYEtp1uO3OaXmaMBlrdVPc//bnDuO7Apr+diDgMMWEZLgqAZf9IldRMawDu8m79o=@vger.kernel.org, AJvYcCWtohUHE1ZGkpYoG2DN2sazcIV7GFtJ1Lms1RtLZeCqkDXUu+KTQMa8JncO/BfoapCK4c8m5baW7+92MQ==@vger.kernel.org, AJvYcCXB8xVeRc0bc+Mb8EUL2ik19xbn8xAQBuuWzHGNaeGitqQygODXrw/CcjDDQDcJhWAiGAmswmU3/OhBv5YtCxnAPnrz@vger.kernel.org, AJvYcCXmzAXEFNDrmVjnvS8mKPMb6G2KM+iB3669EymwovNkqva1d4nT4EKwCp7JzflBvQISKBh/AYmK6mgdJZys@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjVfFmsCMPXZwPsRtCIHkc4vXeitMKzfm2JwDgj+7hRIWiaZTf
+	nAxRgA2dMQeu2IdhBpbjmcmX0CGDRHckWQpyeEFobyqv6wfc7RQ/eTbMdgdS8HqDTlb0GwN5cIA
+	5AhrEAo0UVsN+ntEZYK0abdwNE2k=
+X-Google-Smtp-Source: AGHT+IG32aDLtHKi6AhxBeXK5jquJ2AWi/0PseceBjRwkozuKShq4rru0SzsbIiSg4LmaHN2BLYJYbySTLJ6lDehrcs=
+X-Received: by 2002:a17:90a:ee8f:b0:2da:5aa5:5d5b with SMTP id
+ 98e67ed59e1d1-2da5aa560f4mr2043322a91.3.1725387436834; Tue, 03 Sep 2024
+ 11:17:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ME0P300MB0416034322B9915ECD3888649D882@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
- <20240830101209.GA24733@redhat.com> <ZtHKTtn7sqaLeVxV@krava>
- <CAEf4BzZPGxuV38Kz3R387tANP3tLF7j9GLRd6tOYtaEWT9uqCw@mail.gmail.com>
- <ZtWBRgM3TyhdiwKw@krava> <CAEf4BzZJdmppN2=pt-0D+LDsfc6rW=Jg_7Q6kEJXpsuv52ATNQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzZJdmppN2=pt-0D+LDsfc6rW=Jg_7Q6kEJXpsuv52ATNQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 3 Sep 2024 11:11:06 -0700
-Message-ID: <CAEf4BzazK83Lw24j-MLNZ6PYwhC6CYN11Hw00+FBRgJ9PuxW=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Tianyi Liu <i.pear@outlook.com>, 
-	Jordan Rome <linux@jordanrome.com>, ajor@meta.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	flaniel@linux.microsoft.com, albancrequy@linux.microsoft.com, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
+ <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com> <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
+ <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com>
+In-Reply-To: <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 3 Sep 2024 20:17:04 +0200
+Message-ID: <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: Enable for MIPS
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
+	rust-for-linux@vger.kernel.org, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 3, 2024 at 11:09=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Sep 2, 2024 at 2:11=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
-> >
-> > On Fri, Aug 30, 2024 at 08:51:12AM -0700, Andrii Nakryiko wrote:
-> > > On Fri, Aug 30, 2024 at 6:34=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com=
+On Tue, Sep 3, 2024 at 7:53=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
 > wrote:
-> > > >
-> > > > On Fri, Aug 30, 2024 at 12:12:09PM +0200, Oleg Nesterov wrote:
-> > > > > The whole discussion was very confusing (yes, I too contributed t=
-o the
-> > > > > confusion ;), let me try to summarise.
-> > > > >
-> > > > > > U(ret)probes are designed to be filterable using the PID, which=
- is the
-> > > > > > second parameter in the perf_event_open syscall. Currently, upr=
-obe works
-> > > > > > well with the filtering, but uretprobe is not affected by it.
-> > > > >
-> > > > > And this is correct. But the CONFIG_BPF_EVENTS code in __uprobe_p=
-erf_func()
-> > > > > misunderstands the purpose of uprobe_perf_filter().
-> > > > >
-> > > > > Lets forget about BPF for the moment. It is not that uprobe_perf_=
-filter()
-> > > > > does the filtering by the PID, it doesn't. We can simply kill thi=
-s function
-> > > > > and perf will work correctly. The perf layer in __uprobe_perf_fun=
-c() does
-> > > > > the filtering when perf_event->hw.target !=3D NULL.
-> > > > >
-> > > > > So why does uprobe_perf_filter() call uprobe_perf_filter()? Not t=
-o avoid
-> > > > > the __uprobe_perf_func() call (as the BPF code assumes), but to t=
-rigger
-> > > > > unapply_uprobe() in handler_chain().
-> > > > >
-> > > > > Suppose you do, say,
-> > > > >
-> > > > >       $ perf probe -x /path/to/libc some_hot_function
-> > > > > or
-> > > > >       $ perf probe -x /path/to/libc some_hot_function%return
-> > > > > then
-> > > > >       $perf record -e ... -p 1
-> > > > >
-> > > > > to trace the usage of some_hot_function() in the init process. Ev=
-erything
-> > > > > will work just fine if we kill uprobe_perf_filter()->uprobe_perf_=
-filter().
-> > > > >
-> > > > > But. If INIT forks a child C, dup_mm() will copy int3 installed b=
-y perf.
-> > > > > So the child C will hit this breakpoint and cal handle_swbp/etc f=
-or no
-> > > > > reason every time it calls some_hot_function(), not good.
-> > > > >
-> > > > > That is why uprobe_perf_func() calls uprobe_perf_filter() which r=
-eturns
-> > > > > UPROBE_HANDLER_REMOVE when C hits the breakpoint. handler_chain()=
- will
-> > > > > call unapply_uprobe() which will remove this breakpoint from C->m=
-m.
-> > > >
-> > > > thanks for the info, I wasn't aware this was the intention
-> > > >
-> > > > uprobe_multi does not have perf event mechanism/check, so it's usin=
-g
-> > > > the filter function to do the process filtering.. which is not work=
-ing
-> > > > properly as you pointed out earlier
-> > >
-> > > So this part I don't completely get. I get that using task->mm
-> > > comparison is wrong due to CLONE_VM, but why same_thread_group() chec=
-k
-> > > is wrong? I.e., why task->signal comparison is wrong?
-> >
-> > the way I understand it is that we take the group leader task and
-> > store it in bpf_uprobe_multi_link::task
-> >
-> > but it can exit while the rest of the threads is still running so
-> > the uprobe_multi_link_filter won't match them (leader->mm is NULL)
 >
-> Aren't we conflating two things here? Yes, from what Oleg explained,
-> it's clear that using task->mm is wrong. So that is what I feel is the
-> main issue. We shouldn't use task->mm at all, only task->signal should
-> be used instead. We should fix that (in bpf tree, please).
->
-> But I don't get the concern about linux->mm or linux->signal becoming
+> Thanks for your review!
 
-correction, we shouldn't worry about *linux->signal* becoming NULL.
-linux->mm can become NULL, but we don't care about that (once we fix
-filtering logic in multi-uprobe).
+You're welcome!
 
-> NULL because of a task existing. Look at put_task_struct(), it WILL
-> NOT call __put_task_struct() (which then calls put_signal_struct()),
-> so task->signal at least will be there and valid until multi-uprobe is
-> detached and we call put_task().
->
-> So. Can you please send fixes against the bpf tree, switching to
-> task->signal? And maybe also include the fix to prevent
-> UPROBE_HANDLER_REMOVE to be returned from the BPF program?
->
-> This thread is almost 50 emails deep now, we should break out of it.
-> We can argue on your actual fixes. :)
->
-> >
-> > Oleg suggested change below (in addition to same_thread_group change)
-> > to take that in account
-> >
-> > jirka
-> >
-> >
-> > ---
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 98e395f1baae..9e6b390aa6da 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -3235,9 +3235,23 @@ uprobe_multi_link_filter(struct uprobe_consumer =
-*con, enum uprobe_filter_ctx ctx
-> >                          struct mm_struct *mm)
-> >  {
-> >         struct bpf_uprobe *uprobe;
-> > +       struct task_struct *task, *t;
-> > +       bool ret =3D false;
-> >
-> >         uprobe =3D container_of(con, struct bpf_uprobe, consumer);
-> > -       return uprobe->link->task->mm =3D=3D mm;
-> > +       task =3D uprobe->link->task;
-> > +
-> > +       rcu_read_lock();
-> > +       for_each_thread(task, t) {
-> > +               struct mm_struct *mm =3D READ_ONCE(t->mm);
-> > +               if (mm) {
-> > +                       ret =3D t->mm =3D=3D mm;
-> > +                       break;
-> > +               }
-> > +       }
-> > +       rcu_read_unlock();
-> > +
-> > +       return ret;
-> >  }
-> >
-> >  static int
+> Triples defined for MIPS bare-metal target is surprisingly lacking, we do=
+ have
+> little-endian 32-bit bare-metal target mipsel-unknown-none but big-endian=
+ and
+> 64 bit variants are missing.
+
+Hmm... Sorry if this may be too naive, since I have no expertise on
+MIPS, but I see some triples that match the LLVM ones you specify in
+the patch:
+
+    rustc --print target-list | grep mips
+
+> Also, those triples all assumed +mips32r2 as baseline ISA, but kernel act=
+ually needs
+> some other ISA variant features.
+
+I guess you mean you are getting the warning about the
+unknown/unstable feature passed to the backend? i.e. `rustc` knows
+about those LLVM ones and forwards them when enabled via
+`-Ctarget-feature` (with a warning):
+
+    rustc --target mips64-unknown-linux-gnuabi64 --print target-features
+
+So they would need to be added to the list at [1] (or targeted flags create=
+d).
+
+Until those do not emit a warning, it is fine using the `target.json`,
+but I wanted to understand if there is something else you may need,
+since we will need to eventually avoid the `target.json`, so it is
+best asking upstream as soon as possible.
+
+Thanks!
+
+[1] https://github.com/rust-lang/rust/blob/d6c8169c186ab16a3404cd0d08666740=
+18e8a19e/compiler/rustc_target/src/target_features.rs#L368
+
+Cheers,
+Miguel
