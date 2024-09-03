@@ -1,118 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pfout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEEA1917DA
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 18:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927C318F2F6;
+	Tue,  3 Sep 2024 18:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725388071; cv=none; b=YT1bE93xDdyiXafFpdzgfeL27KucRTmARTjRoYwWNugyktAG2uYAFWkEcZe3l1bWEWRnP0/cdQ3tbrI9W0nafj0ZkKN+nbqEM5w7KNPAO9HY3DG2hEDGu+AC8Mc1z/AAfSVmVvaeIop772jFeE4g+H3FnanmWV28O6pyTk8YSfg=
+	t=1725388325; cv=none; b=CTPt/q2oSWDTSczQoODfjBuz4w9zKYxRk0m4PVqYP0PuHK1RolsK7lxWhP6XjJQMAt5DnT4u1XQACg1PnWDW/tDT/8GOUnvkdvWCJEcacEqzkDrPJAZSSmSJpL2B9znjpb1VLvU41qlCBzSJ8NmochTCY6lb7Rh2y/0JfH4YGNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725388071; c=relaxed/simple;
-	bh=bYoFUSBYagYM9vX6vLnvOKFtHmjQk8YSVP8bS/GZm3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NM38OnPiaSXUBoSog6918eG8lL5aPjRZxEqly3fvPG63hOi5Et7fDx7fVPJNuNpt0FsMh/VrjHjipK9VczZfgXIDsnLis0d3G7rwkWdbkxmRo+xR0BHtvfSGfrP8q6qeEVSlPRLSwVAO8q2fvWxLhjjkqQZ0ZGhncje7GC9CpB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FqZ+Joom; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1725388325; c=relaxed/simple;
+	bh=Pe4iUvpF1TfQms2sNV/3jMEmAPATMKQmGz1XeHPsR1o=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=KU3NJmpiAnKBVY7TscizHMK4qLUiyYkSY9VKLiFpvdrmryFTj0mcs52FSx07NDVOdP7MwxiOLNVDQtrueyHxpm9PUYYP9r8m4g4wT473B7xTxqJcWEM9mfnCOgWTdLLGbTMAlmmYLOsaUK4opQ/5QSJrWp7bQNfKcuJtU+NdOj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=g2r3JUtq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OaUDd5Ae; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqZ+Joom"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725388069;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d24OUKgm5JQW5fQKGEQedXZHagzGyggF2Py5ZgqPqAo=;
-	b=FqZ+JoomETfhkUEQUUcoX/QuGz7QZvVVaPScQQV3yC2BtgQItTdXVIcWUvm96LBK/Ih3id
-	Zz6p5yacXaiVHiIKZ6bD0Gqa7p7teL834x5aG8y4Z0G0v4IarbTTfxtlEUeYB8WTt2TOdt
-	bHG/UpkcA5PVQiTzTlribaiIrvPvBTE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-LGAj98RNPu67JNz6csa9dA-1; Tue,
- 03 Sep 2024 14:27:43 -0400
-X-MC-Unique: LGAj98RNPu67JNz6csa9dA-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 017141955BEF;
-	Tue,  3 Sep 2024 18:27:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id BB47C30001A4;
-	Tue,  3 Sep 2024 18:27:35 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  3 Sep 2024 20:27:31 +0200 (CEST)
-Date: Tue, 3 Sep 2024 20:27:24 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v4 4/8] uprobes: travers uprobe's consumer list
- locklessly under SRCU protection
-Message-ID: <20240903182724.GI17936@redhat.com>
-References: <ZtD_x9zxLjyhS37Z@krava>
- <CAEf4Bzb3mCWK5St51bRDnQ1b-aTj=2w6bi6MkZydW48s=R+CCA@mail.gmail.com>
- <ZtHM_C1NmDSKL0pi@krava>
- <20240830143151.GC20163@redhat.com>
- <CAEf4BzbOjB9Str9-ea6pa46sRDdHJF5mb0rj1dyJquvBT-9vnw@mail.gmail.com>
- <20240830202050.GA7440@redhat.com>
- <CAEf4BzZCrchQCOPv9ToUy8coS4q6LjoLUB_c6E6cvPPquR035Q@mail.gmail.com>
- <20240831161914.GA9683@redhat.com>
- <CAEf4BzYE7+YgM7HMb-JceoC33f=irjHkj=5x46WaXdCcgTk4xg@mail.gmail.com>
- <CAEf4Bza6SRP0ZTuOa=W8W3uM86DJKkGoTQ9itHxcdGWt1Su=-Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="g2r3JUtq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OaUDd5Ae"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 881F9138050C;
+	Tue,  3 Sep 2024 14:32:02 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Tue, 03 Sep 2024 14:32:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1725388322;
+	 x=1725474722; bh=QTHNtCQXEbyRoEVNXRHOicO5bA9YYIgsZ2P/O0iUxhs=; b=
+	g2r3JUtqSmrK0x0Yr/wvIsUmAYdPctkhGizPtq8K6kaAHLfwoXstTKAot1nGbrbP
+	AgcpjcCYyXncT3na7LIANrlzdH1RzY9YdrRNJyEPL94YVVsUAY8QiEzqYRiCzNJp
+	FskISg185NuOXXVtTkeqz8xJUQUaD0flMrRA1CvMAIqHdKQv8PP1S+pbGNpamvyV
+	nTsQuG6tVSCkHFzeyC6b5jwoGQdozlrAdAu0L2Ml+sxN88gv7WLSeTePJDnD1686
+	2lbaN8JrVjuExzZALZJGYWDVyGJbFYtkAPixHPTINl+4raStqJGRPj7f16/O9yyn
+	kNy7srHtHEM1SxtE7jMXKg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1725388322; x=
+	1725474722; bh=QTHNtCQXEbyRoEVNXRHOicO5bA9YYIgsZ2P/O0iUxhs=; b=O
+	aUDd5AeVJ58TDfwcQH4W6wkvzPV2HnKXzAo5SrwzRzU9mNY0p/+iwK8u6k6Osm7e
+	jLnBe/goCUZoS9RdDxU6YLOaPHGKMknGKdUu2S+BjXV4T7VaAe7lbbpzf7BuAALC
+	+8MFhj9C85edOuZh5dCPQhmdALEm7+pMtBo9TvFGMuy4XoDNy77Y2x6eNoN7sZ3e
+	lFRe5La0dInfmcopH6tz3A0bWz0/HTW+QmjI9T4JoLu1pJKo0PG0c8vfd3GKfIy3
+	7h3mg4vsnWlokWi4b9P3cJHD/GUbE0TiMaZ4IGE5LTxl66iqJXIa4lfIb6AQ8kj4
+	Ug52yDVLs9RJmnOpsqwjg==
+X-ME-Sender: <xms:IFbXZmuzbetct1Potwb4I0CDHGtloUMmUWrdj5ITG0gEi6el2w26Hw>
+    <xme:IFbXZreigUVEPuW0HjVGmy0VV4Ii7jyBTlLc3NtN9tvBsIqwJX2gvrgJazyoqoc69
+    QpD7d2QQIsbWRmm70A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudehhedguddvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdflihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgse
+    hflhihghhorghtrdgtohhmqeenucggtffrrghtthgvrhhnpeeiiefhveegkefhledvheet
+    vddugefglefhgefhheffgedvvefhveefhfefjeehgeenucffohhmrghinhepghhithhhuh
+    gsrdgtohhmpdhtrghrghgvthgpfhgvrghtuhhrvghsrdhrshenucevlhhushhtvghrufhi
+    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflh
+    ihghhorghtrdgtohhmpdhnsggprhgtphhtthhopeegtddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepthhssghoghgvnh
+    gusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehmrghrkhdrrhhuthhl
+    rghnugesrghrmhdrtghomhdprhgtphhtthhopegrnhhtohhnrdhivhgrnhhovhestggrmh
+    gsrhhiughgvghgrhgvhihsrdgtohhmpdhrtghpthhtohepnhhitgholhgrshesfhhjrghs
+    lhgvrdgvuhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtth
+    hopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhu
+    nhdrfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvug
+    grrdhsrghnughonhhishesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:IFbXZhwKd7rhNIrd_E3zxNavuN5QE1DDs9hYg1KQ618je_gf8MSmpw>
+    <xmx:IFbXZhPidzb5GQEpud934zocMdlWmKV4aEMN2kuQbAsBcdh1b2IVYg>
+    <xmx:IFbXZm8Y8AWeoZPpZIpEgiyeSCxJntt87dffXYm1IUfviK2F7klIpg>
+    <xmx:IFbXZpW9aIYTEU5R1yu1hiTqFhEeHIF6F3xtsV5bFqCLArLCXWsI6g>
+    <xmx:IlbXZn_mpE9ZkasXSwfonUIt6sg7L_yac9gMiwmFf56gNXqFn8jQQudl>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 05D991C207BB; Tue,  3 Sep 2024 14:32:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Tue, 03 Sep 2024 19:31:39 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
+ "Johannes Berg" <johannes@sipsolutions.net>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Wedson Almeida Filho" <wedsonaf@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@samsung.com>,
+ "Alice Ryhl" <aliceryhl@google.com>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Alex Shi" <alexs@kernel.org>,
+ "Yanteng Si" <siyanteng@loongson.cn>,
+ "Nick Desaulniers" <ndesaulniers@google.com>,
+ "Bill Wendling" <morbo@google.com>,
+ "Justin Stitt" <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ rust-for-linux@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ llvm@lists.linux.dev
+Message-Id: <6f6f04d7-55b3-4714-9bcd-cb4e1ae6c86a@app.fastmail.com>
+In-Reply-To: 
+ <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
+References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
+ <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com>
+ <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
+ <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com>
+ <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: Enable for MIPS
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza6SRP0ZTuOa=W8W3uM86DJKkGoTQ9itHxcdGWt1Su=-Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: quoted-printable
 
-On 09/03, Andrii Nakryiko wrote:
+
+
+=E5=9C=A82024=E5=B9=B49=E6=9C=883=E6=97=A5=E4=B9=9D=E6=9C=88 =E4=B8=8B=E5=
+=8D=887:17=EF=BC=8CMiguel Ojeda=E5=86=99=E9=81=93=EF=BC=9A
+[...]
 >
-> On Tue, Sep 3, 2024 at 10:27 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, Aug 31, 2024 at 9:19 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> > >
-> > > But. Since you are going to send another version, may I ask you to add a
-> > > note into the changelog to explain that this patch assumes (and enforces)
-> > > the rule about handler/filter consistency?
-> >
-> > Yep, will do. I will also leave a comment next to the filter callback
-> > definition in uprobe_consumer about this.
-> >
+> I guess you mean you are getting the warning about the
+> unknown/unstable feature passed to the backend? i.e. `rustc` knows
+> about those LLVM ones and forwards them when enabled via
+> `-Ctarget-feature` (with a warning):
 >
-> Ok, I'm adding this:
+>     rustc --target mips64-unknown-linux-gnuabi64 --print target-featur=
+es
 >
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 29c935b0d504..33236d689d60 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -29,6 +29,14 @@ struct page;
->  #define MAX_URETPROBE_DEPTH            64
-> 
->  struct uprobe_consumer {
-> +       /*
-> +        * handler() can return UPROBE_HANDLER_REMOVE to signal the need to
-> +        * unregister uprobe for current process. If UPROBE_HANDLER_REMOVE is
-> +        * returned, filter() callback has to be implemented as well and it
-> +        * should return false to "confirm" the decision to uninstall uprobe
-> +        * for the current process. If filter() is omitted or returns true,
-> +        * UPROBE_HANDLER_REMOVE is effectively ignored.
-> +        */
+> So they would need to be added to the list at [1] (or targeted flags c=
+reated).
+>
+> Until those do not emit a warning, it is fine using the `target.json`,
+> but I wanted to understand if there is something else you may need,
+> since we will need to eventually avoid the `target.json`, so it is
+> best asking upstream as soon as possible.
 
-Thanks, LGTM.
+Ahh thanks for the elaboration.
 
-Oleg.
+So there are some targets vs feature stuff which is still not clear for
+rust upstream.
 
+For example, on ISA level (things like +mips64r2, +mips3), currently for
+rust upstream, it is handled by target name. (i.e. regular mips64-unknow=
+n-linux-gnuabi64
+triple would pass +mips64r2 to backend, mips64isar6-unknown-linux-gnuabi=
+64
+would pass +mips64r6).
+
+However, kernel supports many ISA variants that are not defined by any r=
+ust target
+triple, I'm not really sure if it's appropriate to define them all in up=
+stream.
+
+The same applies to +soft-float and +noabicalls options as well. It seem=
+s like
++soft-float and +noabicalls are only enabled by bare-metal toolchains as=
+ rust
+recognise them as a target defined features.
+
+Thanks
+>
+> Thanks!
+>
+> [1]=20
+> https://github.com/rust-lang/rust/blob/d6c8169c186ab16a3404cd0d0866674=
+018e8a19e/compiler/rustc_target/src/target_features.rs#L368
+>
+> Cheers,
+> Miguel
+
+--=20
+- Jiaxun
