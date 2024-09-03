@@ -1,175 +1,118 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5911CB306
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 19:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8AB201254;
+	Tue,  3 Sep 2024 19:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725390026; cv=none; b=K0sTlFftqlUWM/ylTd222b25jQOj73HAWlLmT/zkBJz5YzyHWBOsnfER1N1LwgAd8s6S5scowppIPxBoNswBceQaZjQElJ3rfYmpM9BUQ1gaioRmmDBoHzYrMYmA9YPIEKb6YrSWz/LWGWW87/93No+4V7T8OTikqoSd1n8OapI=
+	t=1725390100; cv=none; b=uw0aX74dzSraUDwze1mVmJJOSq2xgynMrT3ZYw+r3WM/VQIjVVBj+4t1ZA+EKrnNeMyzO36L1/jFqCk9NtMdqxbLiuS8D+PtZiaQz8GsL8mc258EnhwX+bzMqUYH1Hzw2EmVH+464YV7/xNZ7sO8NaLJOZNNTiRE8zX8P3vBkIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725390026; c=relaxed/simple;
-	bh=2uozw+fJ5WSOhhVTdjzSoLngH5Q1O9Z/Og7kh1h8O9g=;
+	s=arc-20240116; t=1725390100; c=relaxed/simple;
+	bh=KE5xWwHnPm+WIDf2FbxryrsTqOGezFO5SQcRnazmxKM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nR0M1InAFjH6tRe1OQdg6DQbLRqwdr+Gk0UMpZA5RnNj6MxNB03REGrslZ3n3sb3HZcyVgTUQicS6fzrZN2o0B5jb4KriosSkJeWf21aTcRAYyqsh6Asf5D0ROPcKJ8md72L0yD2ug/f9l97i9+YpFZzzQhRRk+Thc8ZpwYi20g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bkVsaYTZ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=Kjzu+cUWdpZgL24f0AeRZ+MaaIy3B5nZhE+/CRQEDhpCKDIGoXZDF61f1klKiT7Sm+bltNWzcZRX9aSv/fmgojehIOBQ5Hk7sLA0NBlJPT6vm3HUBue/9JYUtNIn77jmFcK2Uq7X69aRSol5EyoAJCcJDpdT9SjsElDzWjEjUso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iw+//3ej; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bkVsaYTZ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a86984e035aso695485066b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:00:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iw+//3ej"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2da516e6940so121730a91.3;
+        Tue, 03 Sep 2024 12:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1725390022; x=1725994822; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1O1ShPrP32GZ6zNKibhG+Lc7a+zlJjipIRDsNar31FQ=;
-        b=bkVsaYTZSHpalpoQ+jrRJfkahrhV2EaIlNnfBtYJlzcWKn8m8UXaFf1LhzJbjg67Vg
-         x+X5dgvm5lYELnNr9js2BrxRTus/ly+cSgoR/HQshRHdiCwwVB+QKHQzPHrnYLOrAVIg
-         7KadA4xhbL9ZSf60n7rAg9hpX3Cc5pWTNy4N4=
+        d=gmail.com; s=20230601; t=1725390098; x=1725994898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KE5xWwHnPm+WIDf2FbxryrsTqOGezFO5SQcRnazmxKM=;
+        b=iw+//3ej9ZMZ1yKToRbCt5XbxgMQO7/fZoH3xmzGIoom2eZvoJJr5CNfjzfaWjB1IX
+         ot94pRMPoIs0tXR+Tmrdn1HzvETCGCEtTNhZPdleCyFohmZXPb3zUlSqXED6jLkEO5A4
+         Az5l9GkwCdjT3Wx1j+Uh+K53Xd1o+h0wg65NerJxPkZVQkk8naGX0aKoDPlt31KDS7On
+         3w2Q/JMNXicH4Vu0ZW6FhBOSxa0sWAR0noq+FToOC3Ms4WMiGP+utnbyyx+Iz2PBvLXI
+         7ZAixbn1ha32G6KTDpoZCPEDvlohrDGhQvAzaE1oc2Zo5qh3ZtFyjy1xhgjEBH3OCHgz
+         F9Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725390022; x=1725994822;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1O1ShPrP32GZ6zNKibhG+Lc7a+zlJjipIRDsNar31FQ=;
-        b=JHTTenYYhEWE+sQ9N/IRfFWz1TF29JcTaiDo9VpCnOuyieXG4zpnddAWkGQdBWacKX
-         ETMbvnKZBDD4DhT4NvDibILOx4mZWly9HGAStUMyIeffEXqW3h3xzwDUxUujKiY9WQI+
-         c7ZiC7TpnFwLLolsAggY4MBYQUKnDmx2sBwBHDjI9rD08A5hTsfBLYtFjD4df++j93Lu
-         CztZwwX9muAtdo25vCrGUbshx2f4TcABXiXAK+tGOVtc2UiPXA+wjPM2pVPPmHtQKbzp
-         XGD447BlydDATeukEBD/9VHRHhNaZv090ufcyC9Zp1Q8ptBZPunQlzmiaY1AewtB0ASK
-         Yyxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgqVRXK1E+EQSxa2otT7VViXOCvyDIu3aNw/VbfiEvHwdcUbMonrTGDDYBihbSg4cGfO86q7jZ35exZ9JBw6h/yjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxDdsjuJM7k9YUp8NaAXiXRRz75M/suwFfKwpdPRrzyqUqmuuC
-	/31Gn0p6s5I+brA0VBCJHkcJ76IGfvoKnY0brEjRGpfnrUyMi8A27jhKzY3BwfAsQLBfINXZC2f
-	dbBSbtA==
-X-Google-Smtp-Source: AGHT+IFZCf9sspigncv6WjVqJaXJI0QJSE58TGSmfDEPtWHNaWPaYA/2sYd3AnxOVQQB3dEIbpqMuQ==
-X-Received: by 2002:a17:907:2d10:b0:a86:817e:d27a with SMTP id a640c23a62f3a-a89a38247demr851135766b.61.1725390021941;
-        Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989222588sm708016766b.200.2024.09.03.12.00.21
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5c210e23651so6088031a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Sep 2024 12:00:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrJwJ/GOw49oBGWsy1wmc0COh9LJ7Ul8Fyelu1y84JieDPGGfZI9MGMiIRUg9u5awgW4sbS3utA0Z/91sNAXBJo9E=@vger.kernel.org
-X-Received: by 2002:a05:6402:430a:b0:5c2:632e:a4e7 with SMTP id
- 4fb4d7f45d1cf-5c2632ea4famr4616131a12.6.1725390021271; Tue, 03 Sep 2024
- 12:00:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725390098; x=1725994898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KE5xWwHnPm+WIDf2FbxryrsTqOGezFO5SQcRnazmxKM=;
+        b=So55j8NoFXN33qos7R+WAEoCdRiySPKDp9Niae6YRwCtrGjuFI75sYYBDs5CPJjfLx
+         Hucl5WMCl2Wak2Xcc6oS3K6C0srGqgB2g+e9GE4I+7ZqQOGk/7GtgOhXyYyTJf6HeQW9
+         +YxjaZpqUJ/0ffjhncg8DHH1pEo/GEKrq52bAQPYXE6Ed4OnqIpdB4f3kBRBZyh6oTu2
+         oEjQrlbkOkcuD88YZYndILMfravVIlTlwzRm8S023RlB0pqXvwf3a7wiyvoWBsj9Q++G
+         mDKKYzgSYKvlq3AgXXal2jfBupioJEAq43IFuetSP5YgEky5PsBRI7Ryg2XIp6WkQwLb
+         53IA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDBHcL6djoksYe7376qO8oxC2U1u7CMoFLcjhqy256FXGgudazWLM+LaK0iCs5xfyQggj0YqpmylsKzZk+@vger.kernel.org, AJvYcCUMnhgwIYMU/eBR3CetYv3nQXrR/0KPWH3YZiD3xoorVgcdBbVyIv3jEY6GFQp2NKD6Ch2m7xrL+1dU3DiSYuuxymO3@vger.kernel.org, AJvYcCV8AtvzHvkjtdbMScLMnK2OUCzefPM+atbrYGQxsFcoRwTTv33qUTzCWW69vQO7NbMNgoSodq+eBY3koC5j@vger.kernel.org, AJvYcCVIf6K7eEHewcCCXkxFAOYyYampiR7kt29kCR20HTUZKilOR9D7NJLeab7MaRtk3YYtt3812ijQH13CBXIZsSs=@vger.kernel.org, AJvYcCW+ru6IsmFFX1pBBQvJ7pt0wpKuibSrZ3SeB142eCRGrUH5bcpKrBh0v14Y2wQGXjujc1b9vPWnn33dxw==@vger.kernel.org, AJvYcCWxPi4SdtQYOcZdoLXXrNKICMD0WSlC5YmFBAUT7Ukc1OEqI0fgK0fP3pVq41x0o+wKNJIyYswscuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDI9YMK1nM37hoY3ZyQfUw99TIzWn2wV4SL4poAlNynRpcLlEm
+	RSNvMrlhDrG8kyAiKquZOcCRBUSvthh8WxuKMeR6ld1D4HrH2XKIcG95wqB3+2pLIzdza+KMHfw
+	t3UxB7WiFybm7+9QeOJGvf5M1kkI=
+X-Google-Smtp-Source: AGHT+IGRHnvtSIMPglv/36A6hpMPDiFKSZKiUYGzC4lWBAVbp+fP4jGwB7yTCWBdu31Z0QsqEhbQ0JnFGvwe1zJu2gc=
+X-Received: by 2002:a17:90a:dd88:b0:2c9:863c:604 with SMTP id
+ 98e67ed59e1d1-2d86b82a57amr8603316a91.3.1725390098481; Tue, 03 Sep 2024
+ 12:01:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828143719.828968-1-mathieu.desnoyers@efficios.com>
- <20240828143719.828968-3-mathieu.desnoyers@efficios.com> <20240902154334.GH4723@noisy.programming.kicks-ass.net>
- <9de6ca8f-b3f1-4ebc-a5eb-185532e164e7@efficios.com> <CAHk-=wgRefOSUy88-rcackyb4Ss3yYjuqS_TJRJwY_p7E3r0SA@mail.gmail.com>
- <60d293cb-3863-41c8-868d-59c7468e270e@efficios.com>
-In-Reply-To: <60d293cb-3863-41c8-868d-59c7468e270e@efficios.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 3 Sep 2024 12:00:05 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wggDLDeTKbhb5hh--x=-DQd69v41137M72m6NOTmbD-cw@mail.gmail.com>
-Message-ID: <CAHk-=wggDLDeTKbhb5hh--x=-DQd69v41137M72m6NOTmbD-cw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] cleanup.h: Introduce DEFINE_INACTIVE_GUARD and activate_guard
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	Sean Christopherson <seanjc@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
+References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
+ <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com> <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
+ <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com> <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
+ <6f6f04d7-55b3-4714-9bcd-cb4e1ae6c86a@app.fastmail.com>
+In-Reply-To: <6f6f04d7-55b3-4714-9bcd-cb4e1ae6c86a@app.fastmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 3 Sep 2024 21:01:23 +0200
+Message-ID: <CANiq72mvTTgyTjDCWBz_kOdY1f4gopAtWxyC4P4c+Lr0YVkzLA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] rust: Enable for MIPS
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
+	rust-for-linux@vger.kernel.org, 
+	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 3 Sept 2024 at 06:42, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On Tue, Sep 3, 2024 at 8:32=E2=80=AFPM Jiaxun Yang <jiaxun.yang@flygoat.com=
+> wrote:
 >
-> If we look at perf_trace_##call(), with the conditional guard, it looks
-> like the following. It is not clear to me that code duplication would
-> be acceptable here.
+> Ahh thanks for the elaboration.
 
-Sure it is.
+You're welcome!
 
-Admittedly, I think it would look a *lot* better off with that macro
-creating a helper function for the common part, and then just call
-that helper function in two places.
+> However, kernel supports many ISA variants that are not defined by any ru=
+st target
+> triple, I'm not really sure if it's appropriate to define them all in ups=
+tream.
 
-In fact, I think the existing "perf_trace_##call()" function *is* that
-helper function already, and all it needs is
+They need to be in upstream Rust somehow, because upstream Rust does
+not want to stabilize `target.json` since it is too tied to LLVM (as
+far as we have been told). Whether that is via `-Ctarget-feature`, or a
+new `-Cglobal-target-feature`, or specific flags like `-Zfixed-x18`
+(originally `-Ctarget-feature=3D+reserve-x18`), or (many) new target
+triples for different combinations, or something else, it depends on
+the case and what upstream Rust wants to do.
 
- (a) add the traditional double underscore (or "do_") to that function
+That is why we should tell them what is needed, ideally in a new issue
+in upstream Rust, and link it in
+https://github.com/Rust-for-Linux/linux/issues/355 (please see that
+list for similar examples).
 
- (b) create the wrapper function.
+I hope that explains a bit more the context.
 
-IOW, I think the diff would look something like this:
-
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -15,7 +15,7 @@
- #undef DECLARE_EVENT_CLASS
- #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print) \
- static notrace void                                                    \
--perf_trace_##call(void *__data, proto)                                 \
-+__perf_trace_##call(void *__data, proto)                               \
- {                                                                      \
-        struct trace_event_call *event_call = __data;                   \
-        struct trace_event_data_offsets_##call __maybe_unused __data_offsets;\
-@@ -53,6 +53,17 @@ perf_trace_##call(void *__data, proto)
-                         \
-        perf_trace_run_bpf_submit(entry, __entry_size, rctx,            \
-                                  event_call, __count, __regs,          \
-                                  head, __task);                        \
-+}                                                                      \
-+static notrace void                                                    \
-+perf_trace_##call(void *__data, proto)                                 \
-+{                                                                      \
-+        if ((tp_flags) & TRACEPOINT_MAY_FAULT) {                        \
-+                might_fault();                                          \
-+                guard(preempt_notrace)();                              \
-+                __perf_trace_##call(__data, proto);                    \
-+                return;
-         \
-+        }                                                              \
-+        __perf_trace_##call(__data, proto);                            \
- }
-
- /*
-
-and notice how there is no actual duplicated code on a source level
-now (although the compiler may obviously do the inlining and
-duplication - although I think that the tp_flags are always constant,
-so what actually hopefully happens is that the compiler doesn't
-duplicate anything at all, and all the conditionals just go away.).
-
-NOTE! The above patch is garbage. I did it as a "like this" patch on
-my current tree, and it doesn't even have the "tp_class" thing at all,
-so the patch is obviously not functional. It's just meant as a "look,
-wrapper function".
-
-In fact, I think the wrapping might even be done at a higher level (ie
-maybe the whole "may_fault" shouldn't be an argument at all, but a
-static part of the define, in case some event classes can take faults
-and others cannot?)
-
-I dunno. I actually think the whole "TRACEPOINT_MAY_FAULT" thing is an
-incredibly ugly hack, and SHOULD NOT EXIST.
-
-In other words - why make these incredibly ugly macros EVEN MORE UGLY
-- when there is a single use-case and we sure as hell don't want to
-add any more?
-
-IOW - why not get rid of the stupid TRACE_EVENT_FN_MAY_FAULT thing
-entirely, and do this trivial wrapping in the *one* place that wants
-it, instead of making it look like some generic thing with an
-allegedly generic test, when it is anything but generic, and is in
-fact just a single special case for system call.
-
-Yes, I know. Computer Science classes say that "generic programming is
-good". Those CS classes are garbage. You want to make your code as
-specialized as humanly possible, and *not* make some complicated "this
-handles all cases" code that is complicated and fragile.
-
-                            Linus
+Cheers,
+Miguel
