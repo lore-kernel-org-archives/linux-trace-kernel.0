@@ -1,101 +1,178 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C022C181;
-	Wed,  4 Sep 2024 08:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041BF1CCEDB
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Sep 2024 09:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725438537; cv=none; b=bxZPz02/kifdFlCAEDIaQeWqRFGKKJ1WH0AlLgS7opirJZDzuOaMu3u1KL52QD7gUKDs/o+2n/BAJDS3dKcjoL5FNbXsLq7Axw/rBtXh8HqThjXsXv3ABFzSAujHLXNLIG70Dt5Ecz2t9lY7wDvANuEMkp1Dm0mnxdTgBEklmlk=
+	t=1725443805; cv=none; b=nef8M4EzzJY8lDCPRnqEIjZz8XzRl4hDciDvV5dblXEOTqd2ufKanxHefW+/6bcxZxImircx6sNNbYkySN4j+pxbjZW1yDN45smSPnKggqQuy8/zAZeo9lhgDlSo6cBQFHkrwMrUn6if+c1nutMK74AXY1gpBmMWmmPIKo0IgwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725438537; c=relaxed/simple;
-	bh=jdt4L7B/HVtgHJTf5Ay/37Kjc9tEjPIOz23j2vKvezg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vEBbS9IiGA9DA5KfbTrCe5kJ9hnCM3Kn5Zm7H3Nhy13kKpO9YrUjdA+dEreIqjc3ISMDQj8mi4vq33yWrYf3m6DQv69B0mqwfeK0RfzgVaD/AlNmu/RvLzNwfzwzoD3GN1+KPNCPe29j+QCSZvo114z/sq4IRuWmwmrCwhGJDeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4Ct3qLx; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725443805; c=relaxed/simple;
+	bh=j7d7+SJDD2TGyNhvLnv/7wUKLARgA6jThTpmxjWen4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLh1bwgq83Y0KaLFbMVkAppUoo/8rOcYORN8u3igZEl4MLg3Edfg5LvsI5JsH4exFyabNVPOsu4XxYrl9Q3wlWWhYqANLsOmwUh3BlN+wvdr7Bnqf7CLEuVF5+LvEocdottU0qc8K8hffs2AH8yhogzkciSyNzGS+Y1a+qz9WLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JXKtWart; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4Ct3qLx"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-70f6320ae4fso317010a34.2;
-        Wed, 04 Sep 2024 01:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725438535; x=1726043335; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jdt4L7B/HVtgHJTf5Ay/37Kjc9tEjPIOz23j2vKvezg=;
-        b=S4Ct3qLxmBYMjktvvXlK2fop5lZ5GvBIvw2BUuMZMTHrufPSBjE085ZrsJw3XYN+g+
-         kJMm9bJd3xQo3MrJybuRqf1CUHwmOy3vHRHJ4MBRWigVeIMR5z4i1M3uWnDD68lBVDJz
-         Bc6nSl6z2dQdvG4cwZdphh4sQpNp2xJvSpPaSA0JEj0/Zbw1RviB9hrH7c55Uu2MSoex
-         ZIW8KcjM+HM35mWE8lM2+nhq9Uhwdr5/c5Z6d/j+yk+E+YY7Q8l0jJJf9RZlBuj/JOiZ
-         p/rB8NaAP4+DwM1SJBFNbKFwkKv81OFAg5vCp6rqGG23pfTc+dGhW+N25ReHjbZC/sOQ
-         my0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725438535; x=1726043335;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jdt4L7B/HVtgHJTf5Ay/37Kjc9tEjPIOz23j2vKvezg=;
-        b=CY9e251gzfAcCqg0QL50FNj0fBM7w15S/KLdPcQ8Yl2OR2hoM8pfRvu4g+XUG0ntQG
-         vJqtkTC0Jqd6uAYoQBhRKfc890UKEOW4YtaLaG1gWLzb3jzrjL8Xs/OwBoGUw5DI/lfy
-         Uq+Q6S2G2AXv4DaXDPutzfYHMdIrxNEfSWVQFSldWCkOojzG8AytdvvwGjrLTYnZ1yNI
-         VEGNMTM0Mq8q36Zf3MhXyDMBHnXcYRDwjH+k3lYqTPlrbEQXJGa8yjg+IlUno9U22A4h
-         97Cv4F1hT/r4OZxaStLoZBm5xjPeJSfq0WedEzrtdG3DHqM6jKstOzJefQXIAeP+knju
-         RjyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUocaWFBAQp79c2iaIOkdi+0RvQuuyjOHSvzMIWIkP1MkN2uAycUHAxkYuYkk+WCaCASJAXc6ruqaydEMOYpXXd06Gz@vger.kernel.org, AJvYcCVPtukyDR+u+LZWY/ICHCNh1G6RROT4PO1CpJq+a72IrTOOGGV3sWab9haerM+3apW5oC46WwjCO2LXBcPV@vger.kernel.org, AJvYcCVVTxeywoxjVyTqJeDkcBteBMeeHxuV56MlWEo2eI4jvImo0oNhGmolUGLuobNZ4aeWQf55CBh9fDLzE9QIHFA=@vger.kernel.org, AJvYcCW6v3y4OdYBoz0whfyOlgqZiW3zg/EZRy8FSe4VoxEttMKGAZW8hg6OeSVi/vNDYF6kQtjPrQJknJwkkg==@vger.kernel.org, AJvYcCWu5Z+9JF2kJ3d6S9rCKBuettvnp+xImIrk7VPqHDrWgiPsM6QGfo4m0l9mPo8iKwIdMKnLljSHBOI=@vger.kernel.org, AJvYcCX2iM8bnAghQN9pubEAE3zif19rr8hduP1/g+PkxaOAk/YofpOXFfBUe1/WFgXUHuBVvz2tJs+wu5uMZkj0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR93aIs3/R5qmLywVxOFAbeN0CKZAkQ4hjoLMt0KvHredmsmmD
-	CuJihldYnZd5ay2gpCQGSKrdiR37v8kLWSyK9gN/GSR33Hfgeh0vB1R6+THBRWhBt4n0vO5zw8m
-	6xfSbfpHBGN4CABOj/k5MjnK0xVY=
-X-Google-Smtp-Source: AGHT+IG7ayScQVV2ACfQehNhc8C8kUzsvNWbtTACdA8kQELKf2OV6f3hSmmCq0rgCq8R7f/fWdFT+b2PvKUGt44U9CM=
-X-Received: by 2002:a05:6359:4c93:b0:1ac:a26c:9e91 with SMTP id
- e5c5f4694b2df-1b7e39c063dmr1048812355d.4.1725438534828; Wed, 04 Sep 2024
- 01:28:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JXKtWart"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725443802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nBE9muUVCuFZMT5coYFm3HHWrhocogLIqDyjWLoRgw8=;
+	b=JXKtWartMvQEgosrWAOItBN+/MxyMX6Ij2akEmHP/rP/IHJQV8c9H48orOT/LB6OT/QkSn
+	Kw44J+msConu+c5oSgqXzGnA+pWcpsxwS5PAXnUAm/vJos3AAblD52600Fk3nNRMFMCXDR
+	sOxYgQNJg+Ei6dTDR11O+indu2Z2FUs=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-kBEUWc58OOeCqLAoIbDK7g-1; Wed,
+ 04 Sep 2024 05:56:37 -0400
+X-MC-Unique: kBEUWc58OOeCqLAoIbDK7g-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D81701955F45;
+	Wed,  4 Sep 2024 09:56:34 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.25])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ACD4C1956086;
+	Wed,  4 Sep 2024 09:56:28 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  4 Sep 2024 11:56:24 +0200 (CEST)
+Date: Wed, 4 Sep 2024 11:56:17 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sven Schnelle <svens@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
+Message-ID: <20240904095449.GA28781@redhat.com>
+References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
+ <20240903073629.2442754-1-svens@linux.ibm.com>
+ <20240903090843.GA17936@redhat.com>
+ <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240903-mips-rust-v1-0-0fdf0b2fd58f@flygoat.com>
- <20240903-mips-rust-v1-3-0fdf0b2fd58f@flygoat.com> <CANiq72=z1yJm-B_ie=GfueOF1qksaSD9txgFU1YQo2tZx0qQPg@mail.gmail.com>
- <d9591a84-9a0f-4046-9b2a-437061f6882b@app.fastmail.com> <CANiq72m5iFcqRU_qdUCZkoV8ayPhtQQq3TTEDRUYfMEsnNqTDg@mail.gmail.com>
- <6f6f04d7-55b3-4714-9bcd-cb4e1ae6c86a@app.fastmail.com> <CANiq72mvTTgyTjDCWBz_kOdY1f4gopAtWxyC4P4c+Lr0YVkzLA@mail.gmail.com>
- <a6959bc0-f0bb-425b-b3b1-3123d3b809b5@app.fastmail.com>
-In-Reply-To: <a6959bc0-f0bb-425b-b3b1-3123d3b809b5@app.fastmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 4 Sep 2024 10:28:42 +0200
-Message-ID: <CANiq72mjKEpaBqKccZPiNzpsJL65jb2zp9Ve4FHK0fRd014ACw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] rust: Enable for MIPS
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, 
-	Yanteng Si <siyanteng@loongson.cn>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org, 
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, Sep 4, 2024 at 9:38=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.com=
-> wrote:
+I didn't have time to write a full reply yesterday.
+
+On 09/03, Linus Torvalds wrote:
 >
-> Reported at:
-> https://github.com/rust-embedded/wg/issues/792#issuecomment-2328133517
+> On Tue, 3 Sept 2024 at 02:09, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > but with or without this fix __create_xol_area() also needs
+> >
+> >         area->xol_mapping.mremap = NULL;
+>
+> I think the whole thing needs to be zeroed out.
 
-Thanks for the link! Added to our bullet point about the target spec
-file in https://github.com/Rust-for-Linux/linux/issues/2.
+Again, this is what Sven did and I agree with this fix for now.
 
-Cheers,
-Miguel
+> It was always horribly buggy. The close thing just made it more
+> *obviously* buggy, because closing a vma is a lot more common than
+> mremap'ing it.
+
+Well, this code is very old, I don't think it was "always" buggy.
+But at least today it is horribly ugly, and
+
+> Either use kzalloc(), or do a proper initializer something like this:
+>
+> -       area->xol_mapping.name = "[uprobes]";
+> -       area->xol_mapping.fault = NULL;
+> -       area->xol_mapping.pages = area->pages;
+> +       area->xol_mapping = (struct vm_special_mapping) {
+> +               .name = "[uprobes]",
+> +               .pages = area->pages,
+> +               .close = uprobe_clear_state,
+> +       };
+
+either way the code is still ugly, imo.
+
+How about the (untested) patch below?
+
+I am not going to send this patch right now, it conflicts with the ongoing
+close/mremap changes, but what do you think?
+
+We do not need to add the instance of vm_special_mapping into mm_struct,
+a single instance (xol_mapping below) with .fault = xol_fault() is enough.
+And, with this change xol_area no longer needs "struct page *pages[2]", it
+can be turned into "struct page *page".
+
+Oleg.
+---
+
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -101,7 +101,6 @@ struct xol_area {
+ 	atomic_t 			slot_count;	/* number of in-use slots */
+ 	unsigned long 			*bitmap;	/* 0 = free slot */
+ 
+-	struct vm_special_mapping	xol_mapping;
+ 	struct page 			*pages[2];
+ 	/*
+ 	 * We keep the vma's vm_start rather than a pointer to the vma
+@@ -1453,6 +1452,21 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
+ 		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
+ }
+ 
++static vm_fault_t xol_fault(const struct vm_special_mapping *sm,
++			    struct vm_area_struct *vma, struct vm_fault *vmf)
++{
++	struct xol_area *area = vma->vm_mm->uprobes_state.xol_area;
++
++	vmf->page = area->pages[0];
++	get_page(vmf->page);
++	return 0;
++}
++
++static const struct vm_special_mapping xol_mapping = {
++	.name = "[uprobes]",
++	.fault = xol_fault,
++};
++
+ /* Slot allocation for XOL */
+ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ {
+@@ -1479,7 +1493,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 
+ 	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
+ 				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
+-				&area->xol_mapping);
++				&xol_mapping);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
+ 		goto fail;
+@@ -1518,9 +1532,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 	if (!area->bitmap)
+ 		goto free_area;
+ 
+-	area->xol_mapping.name = "[uprobes]";
+-	area->xol_mapping.fault = NULL;
+-	area->xol_mapping.pages = area->pages;
+ 	area->pages[0] = alloc_page(GFP_HIGHUSER);
+ 	if (!area->pages[0])
+ 		goto free_bitmap;
+
