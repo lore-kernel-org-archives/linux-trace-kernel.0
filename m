@@ -1,213 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A62A1E871;
-	Wed,  4 Sep 2024 14:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B116463D;
+	Wed,  4 Sep 2024 14:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460409; cv=none; b=Vth7Z5+gNF1VPz+93aMDtzCgZGEFHJxU0j+SkRf/IsFou3/45vBCYJCenx5KtCYKkNb1ziUVb+ZI8LoT40CWJ6wUhT+YnLMw+/O5oK7FGPe2iFfPklNqKWRRjwvtmJ/QLi6URHV6KfwFvm2fticc9KbKNwrG31AXkFTjIofjXCM=
+	t=1725460580; cv=none; b=muypwSm+brZ9JrwQMIq4YXmcro1U0MQ+ujmTmy9ergt/b2+vdZOCRnyDsfDqwzvQdMGK3sKs4lRcC7ZwQ+NZzvJHQnj+/28lGx7nYEPG0vo066wtQrJKhY40qwf2ZAer7i2OJ6tODlwLNe2HwRoq9GmnotkCeveATH0GvHOg0iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460409; c=relaxed/simple;
-	bh=T13ROavGfHnV4ZYpMUP8vJBidScxb3PEdITx6lwyWv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GXixj/WSrVAdRllBoqn2ffoe511/bboc416/j7vT1L5a1aYn+0oYsIbUVzGhEmAHlVXN/HnbG3cLxkayT/qwuaS/lG99vCd5Ci748mEwHcjmOL9IRshjtLlprVMeelgvYmIaSLB3TB2okSZs0aDiWPwlt3KOcuhOF+IidEvAX9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC54C4CEC2;
-	Wed,  4 Sep 2024 14:33:28 +0000 (UTC)
-Date: Wed, 4 Sep 2024 10:34:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>,
- jkacur@redhat.com, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Subject: [PATCH] tracing/osnoise: Use a cpumask to know what threads are
- kthreads
-Message-ID: <20240904103428.08efdf4c@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1725460580; c=relaxed/simple;
+	bh=mrcpBZCNCDHUN8s1jct5aPcG3/C9zlzErsh6HAxxzVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BU8tYwZgM1wUklcuv3/A8c4VzhyITPhDrbfGyCFB6rjXSk2/5T0+SqM91zUFZzrJEIR5yik7+v2B0WuSlygJFNmEsPMmo5iXXvLsIAJpyYaQV14Xv4/k+lyhZye3Rh079MiM3yFr4flWFvtPl5K9qVNv7viXyVY+aBq6JHOkMqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4WzQ685Z1lz9sS7;
+	Wed,  4 Sep 2024 16:36:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id j3Oi0qoOC3QN; Wed,  4 Sep 2024 16:36:16 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4WzQ684j7Sz9sRy;
+	Wed,  4 Sep 2024 16:36:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8DE208B77A;
+	Wed,  4 Sep 2024 16:36:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id MDg64KpQGgK2; Wed,  4 Sep 2024 16:36:16 +0200 (CEST)
+Received: from [192.168.234.246] (unknown [192.168.234.246])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D5618B778;
+	Wed,  4 Sep 2024 16:36:15 +0200 (CEST)
+Message-ID: <070a2aa1-a804-4124-ad89-c43e09dc3ded@csgroup.eu>
+Date: Wed, 4 Sep 2024 16:36:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/5] Wire up getrandom() vDSO implementation on powerpc
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+ llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org,
+ Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+ Xi Ruoyao <xry111@xry111.site>
+References: <cover.1725304404.git.christophe.leroy@csgroup.eu>
+ <Zthr1nB_RJ56YD3O@zx2c4.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <Zthr1nB_RJ56YD3O@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-The start_kthread() and stop_thread() code was not always called with the
-interface_lock held. This means that the kthread variable could be
-unexpectedly changed causing the kthread_stop() to be called on it when it
-should not have been, leading to:
 
- while true; do
-   rtla timerlat top -u -q & PID=$!;
-   sleep 5;
-   kill -INT $PID;
-   sleep 0.001;
-   kill -TERM $PID;
-   wait $PID;
-  done
+Le 04/09/2024 à 16:16, Jason A. Donenfeld a écrit :
+> Hi Christophe, Michael,
+> 
+> On Mon, Sep 02, 2024 at 09:17:17PM +0200, Christophe Leroy wrote:
+>> This series wires up getrandom() vDSO implementation on powerpc.
+>>
+>> Tested on PPC32 on real hardware.
+>> Tested on PPC64 (both BE and LE) on QEMU:
+>>
+>> Performance on powerpc 885:
+>> 	~# ./vdso_test_getrandom bench-single
+>> 	   vdso: 25000000 times in 62.938002291 seconds
+>> 	   libc: 25000000 times in 535.581916866 seconds
+>> 	syscall: 25000000 times in 531.525042806 seconds
+>>
+>> Performance on powerpc 8321:
+>> 	~# ./vdso_test_getrandom bench-single
+>> 	   vdso: 25000000 times in 16.899318858 seconds
+>> 	   libc: 25000000 times in 131.050596522 seconds
+>> 	syscall: 25000000 times in 129.794790389 seconds
+>>
+>> Performance on QEMU pseries:
+>> 	~ # ./vdso_test_getrandom bench-single
+>> 	   vdso: 25000000 times in 4.977777162 seconds
+>> 	   libc: 25000000 times in 75.516749981 seconds
+>> 	syscall: 25000000 times in 86.842242014 seconds
+> 
+> Looking good. I have no remaining nits on this patchset; it looks good
+> to me.
+> 
+> A review from Michael would be nice though (in addition to the necessary
+> "Ack" I need to commit this to my tree), because there are a lot of PPC
+> particulars that I don't know enough about to review properly. For
+> example, you use -ffixed-r30 on PPC64. I'm sure there's a good reason
+> for this, but I don't know enough to assess it. And cvdso_call I have no
+> idea what's going on. Etc.
 
-Causing the following OOPS:
+You can learn a bit more about cvdso_call in commit ce7d8056e38b 
+("powerpc/vdso: Prepare for switching VDSO to generic C implementation.")
 
- Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN PTI
- KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
- CPU: 5 UID: 0 PID: 885 Comm: timerlatu/5 Not tainted 6.11.0-rc4-test-00002-gbc754cc76d1b-dirty #125 a533010b71dab205ad2f507188ce8c82203b0254
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
- RIP: 0010:hrtimer_active+0x58/0x300
- Code: 48 c1 ee 03 41 54 48 01 d1 48 01 d6 55 53 48 83 ec 20 80 39 00 0f 85 30 02 00 00 49 8b 6f 30 4c 8d 75 10 4c 89 f0 48 c1 e8 03 <0f> b6 3c 10 4c 89 f0 83 e0 07 83 c0 03 40 38 f8 7c 09 40 84 ff 0f
- RSP: 0018:ffff88811d97f940 EFLAGS: 00010202
- RAX: 0000000000000002 RBX: ffff88823c6b5b28 RCX: ffffed10478d6b6b
- RDX: dffffc0000000000 RSI: ffffed10478d6b6c RDI: ffff88823c6b5b28
- RBP: 0000000000000000 R08: ffff88823c6b5b58 R09: ffff88823c6b5b60
- R10: ffff88811d97f957 R11: 0000000000000010 R12: 00000000000a801d
- R13: ffff88810d8b35d8 R14: 0000000000000010 R15: ffff88823c6b5b28
- FS:  0000000000000000(0000) GS:ffff88823c680000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000561858ad7258 CR3: 000000007729e001 CR4: 0000000000170ef0
- Call Trace:
-  <TASK>
-  ? die_addr+0x40/0xa0
-  ? exc_general_protection+0x154/0x230
-  ? asm_exc_general_protection+0x26/0x30
-  ? hrtimer_active+0x58/0x300
-  ? __pfx_mutex_lock+0x10/0x10
-  ? __pfx_locks_remove_file+0x10/0x10
-  hrtimer_cancel+0x15/0x40
-  timerlat_fd_release+0x8e/0x1f0
-  ? security_file_release+0x43/0x80
-  __fput+0x372/0xb10
-  task_work_run+0x11e/0x1f0
-  ? _raw_spin_lock+0x85/0xe0
-  ? __pfx_task_work_run+0x10/0x10
-  ? poison_slab_object+0x109/0x170
-  ? do_exit+0x7a0/0x24b0
-  do_exit+0x7bd/0x24b0
-  ? __pfx_migrate_enable+0x10/0x10
-  ? __pfx_do_exit+0x10/0x10
-  ? __pfx_read_tsc+0x10/0x10
-  ? ktime_get+0x64/0x140
-  ? _raw_spin_lock_irq+0x86/0xe0
-  do_group_exit+0xb0/0x220
-  get_signal+0x17ba/0x1b50
-  ? vfs_read+0x179/0xa40
-  ? timerlat_fd_read+0x30b/0x9d0
-  ? __pfx_get_signal+0x10/0x10
-  ? __pfx_timerlat_fd_read+0x10/0x10
-  arch_do_signal_or_restart+0x8c/0x570
-  ? __pfx_arch_do_signal_or_restart+0x10/0x10
-  ? vfs_read+0x179/0xa40
-  ? ksys_read+0xfe/0x1d0
-  ? __pfx_ksys_read+0x10/0x10
-  syscall_exit_to_user_mode+0xbc/0x130
-  do_syscall_64+0x74/0x110
-  ? __pfx___rseq_handle_notify_resume+0x10/0x10
-  ? __pfx_ksys_read+0x10/0x10
-  ? fpregs_restore_userregs+0xdb/0x1e0
-  ? fpregs_restore_userregs+0xdb/0x1e0
-  ? syscall_exit_to_user_mode+0x116/0x130
-  ? do_syscall_64+0x74/0x110
-  ? do_syscall_64+0x74/0x110
-  ? do_syscall_64+0x74/0x110
-  entry_SYSCALL_64_after_hwframe+0x71/0x79
- RIP: 0033:0x7ff0070eca9c
- Code: Unable to access opcode bytes at 0x7ff0070eca72.
- RSP: 002b:00007ff006dff8c0 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
- RAX: 0000000000000000 RBX: 0000000000000005 RCX: 00007ff0070eca9c
- RDX: 0000000000000400 RSI: 00007ff006dff9a0 RDI: 0000000000000003
- RBP: 00007ff006dffde0 R08: 0000000000000000 R09: 00007ff000000ba0
- R10: 00007ff007004b08 R11: 0000000000000246 R12: 0000000000000003
- R13: 00007ff006dff9a0 R14: 0000000000000007 R15: 0000000000000008
-  </TASK>
- Modules linked in: snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hwdep snd_hda_core
- ---[ end trace 0000000000000000 ]---
+About the fixed-r30, you can learn more in commit a88603f4b92e 
+("powerpc/vdso: Don't use r30 to avoid breaking Go lang")
 
-This is because it would mistakenly call kthread_stop() on a user space
-thread making it "exit" before it actually exits.
 
-Since kthreads are created based on global behavior, use a cpumask to know
-when kthreads are running and that they need to be shutdown before
-proceeding to do new work.
+> 
+> But anyway, awesome work, and I look forward to the final stretches.
 
-Link: https://lore.kernel.org/all/20240820130001.124768-1-tglozar@redhat.com/
+Thanks, looking forward to getting this series applied.
 
-This was debugged by using the persistent ring buffer:
-
-Link: https://lore.kernel.org/all/20240823013902.135036960@goodmis.org/
-
-Note, locking was originally used to fix this, but that proved to cause too
-many deadlocks to work around:
-
-  https://lore.kernel.org/linux-trace-kernel/20240823102816.5e55753b@gandalf.local.home/
-
-Cc: stable@vger.kernel.org
-Fixes: e88ed227f639e ("tracing/timerlat: Add user-space interface")
-Reported-by: Tomas Glozar <tglozar@redhat.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_osnoise.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 400a72cd6ab5..8543d941b870 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -1614,6 +1614,7 @@ static int run_osnoise(void)
- 
- static struct cpumask osnoise_cpumask;
- static struct cpumask save_cpumask;
-+static struct cpumask kthread_cpumask;
- 
- /*
-  * osnoise_sleep - sleep until the next period
-@@ -1677,6 +1678,7 @@ static inline int osnoise_migration_pending(void)
- 	 */
- 	mutex_lock(&interface_lock);
- 	this_cpu_osn_var()->kthread = NULL;
-+	cpumask_clear_cpu(smp_processor_id(), &kthread_cpumask);
- 	mutex_unlock(&interface_lock);
- 
- 	return 1;
-@@ -1949,9 +1951,10 @@ static void stop_kthread(unsigned int cpu)
- 
- 	kthread = per_cpu(per_cpu_osnoise_var, cpu).kthread;
- 	if (kthread) {
--		if (test_bit(OSN_WORKLOAD, &osnoise_options)) {
-+		if (cpumask_test_and_clear_cpu(cpu, &kthread_cpumask) &&
-+		    !WARN_ON(!test_bit(OSN_WORKLOAD, &osnoise_options))) {
- 			kthread_stop(kthread);
--		} else {
-+		} else if (!WARN_ON(test_bit(OSN_WORKLOAD, &osnoise_options))) {
- 			/*
- 			 * This is a user thread waiting on the timerlat_fd. We need
- 			 * to close all users, and the best way to guarantee this is
-@@ -2023,6 +2026,7 @@ static int start_kthread(unsigned int cpu)
- 	}
- 
- 	per_cpu(per_cpu_osnoise_var, cpu).kthread = kthread;
-+	cpumask_set_cpu(cpu, &kthread_cpumask);
- 
- 	return 0;
- }
-@@ -2050,8 +2054,16 @@ static int start_per_cpu_kthreads(void)
- 	 */
- 	cpumask_and(current_mask, cpu_online_mask, &osnoise_cpumask);
- 
--	for_each_possible_cpu(cpu)
-+	for_each_possible_cpu(cpu) {
-+		if (cpumask_test_and_clear_cpu(cpu, &kthread_cpumask)) {
-+			struct task_struct *kthread;
-+
-+			kthread = per_cpu(per_cpu_osnoise_var, cpu).kthread;
-+			if (!WARN_ON(!kthread))
-+				kthread_stop(kthread);
-+		}
- 		per_cpu(per_cpu_osnoise_var, cpu).kthread = NULL;
-+	}
- 
- 	for_each_cpu(cpu, current_mask) {
- 		retval = start_kthread(cpu);
--- 
-2.43.0
-
+Christophe
