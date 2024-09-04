@@ -1,145 +1,87 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65C61DEFF6
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Sep 2024 15:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299021DCB09;
+	Wed,  4 Sep 2024 15:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725463803; cv=none; b=ltUQ2riGizy6VreFCPTy55H3vtBUd8tvycJUZqnbB4xtfotfOpRicNWp1SHbZg3dFowPPLSVqsagga+0x4N+aDgQ9o18hgU3BxLhIU6JG3V9lQjqluU5CSXhYVsxOE5tQFHnYPz76H+rrmf1KJSY2is6dpL38BgJyeu2elZlebs=
+	t=1725463826; cv=none; b=Z/lvIAJo2Hy0jK/fq20qP/ChZp+dbjWdcbDtRJzN+5oEvzedxaWcNiPN0ruSnbcRGPM6JZt0tYKujSAvlT7RDnFfM22sITC4BcpBP2okQbbOrg2yRR0mlieqWBQ2dU6QQJcSIymGXVFEmReyy+A6fd8QGFyzjAt84pHTTvRC8z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725463803; c=relaxed/simple;
-	bh=gYYY8FNVkypzbtVX8GFJXnTswLqhKBDH6rOvo639VDY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oUls4PKa5i3HWdH7QAj4WxyqpG0srdmriiYWCN54x6pIiIeAafuHspAVDNLWVZubsc4gv+xjV2Wg4D3+CkYoEgO6+He0b1AYmzn5/N8euh0QZOCBejcVKbOQ2g/KhfljdwMO99OFCe6AU/GJPeke6oSRN4mtEAF0O/0aY9HK5TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nsn6UIaJ; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725463826; c=relaxed/simple;
+	bh=hxOmlbtgXKR/p3D2sjwDnE4b4AheFtwuaWlkiEGCQdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=f9yzIMK54X8G9H+Jey2ejhbzyNbAa7iRrvr3Lpv2ykluhauZOirRYf4f5jrdGtb8CcRTY8MHxqWZH4onAg5lTG+snDFYfvdtmjw/z2RAiAPBEoEAncNsfzLclz8GHRyoFaN4ytJ+t+KXfTAJZxaMbNMXa4390mqv/AwBS0dEc5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7MQB1HV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nsn6UIaJ"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a8696e9bd24so802454066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Sep 2024 08:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725463800; x=1726068600; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PLhhMPuctYpfIPSQyulh9sZF48oPEhyg3gJ/+naRY0c=;
-        b=Nsn6UIaJ8cBOere7dXrX7QJzr3PUi5gC8awflmfdEufX9Y4AUoY8PtXSAv2R8wLCOB
-         iSkFtxYqPfwj8WsRPkL3z7su36Pe72k6LXRjv9N/uHE2F9V/ltOs5BanUASmZ1ysBFaT
-         nkwJOYFsUhK6KT1/20UTVJFpAiuc0i2APmhHN39DeGes4vdGWusRrvpZNx04KI746RFI
-         3/rFGxrJA/3S6Y02/GQKxMQCQ6hjVyak8XzQf2ru9bvZbeCkSB7jwU5aMvHsio8XfyDi
-         wiRQ4Dxu7eGf1WD599L2lER/SPQh0Vbr6Ah8LRLMpM6yIuIzQkORktpyoJeDfjnQEUEf
-         ccTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725463800; x=1726068600;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PLhhMPuctYpfIPSQyulh9sZF48oPEhyg3gJ/+naRY0c=;
-        b=ugLgi2RQDVaV0ENWLv7TXrd0OrCe9LdTXJcypifNq48gTAzFX40HzzM5GZ7+QCu4hI
-         B+vJqR/dHlR+2sP7A3GokvZUdgnYCy+JT+XMDPKLs5F+ErCmlOFKnEv8qjPhVcrW2oE1
-         ZRcj2ck+UI7/d0Sy3DFYHaWge8euUDNIDUMDsYbwEEBDJNZ8XQaoocwrhqPGUT2RNT64
-         LgsEhVKedUBij2uofw866/3q6WbZVt1V8BD7CPIa4pFMRwU9DO/QWZ/IOGImzPgEnF95
-         AESLfTfmGtFmQXMtqzguDc6+RDCCK7JRvQssg2UKzG/+Lyu7edNpuoLkVUrswfPJOhZq
-         MhEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXekAETs3vWrBuokpVo0clijNuJ2TBnVdkyIPzjyBi2rwq0lrc3KlIAJTC7f/pXbV748tN/ZSxWuQh1y/aeFQzslZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTsKLFccZNbT7MG9sn2KdsXTr1Q/6V0ZqpW/0otjmyYb2BmFWW
-	tsFJL3u6ARpu1i74e2w2axWFRjTE/C9ys1tnT1NSp+p2jdUGk78rK9ZH8nVAeC9SC7rhp7bwJy6
-	D58SJDASopAvMNkbFIEiCG2eMRNT2ezAqLKRn
-X-Google-Smtp-Source: AGHT+IFg6rOi18H1toa3LkpzEJnnBMcFXZAacqahmY1gZmTK9rv5lw/xaEow9UneXHrr7DZX8isa3vZhOIIu0S2ULN0=
-X-Received: by 2002:a17:906:8903:b0:a8a:43bd:a9e8 with SMTP id
- a640c23a62f3a-a8a43bdabe5mr117170866b.65.1725463799009; Wed, 04 Sep 2024
- 08:29:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7MQB1HV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0C04C4CEC2;
+	Wed,  4 Sep 2024 15:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725463825;
+	bh=hxOmlbtgXKR/p3D2sjwDnE4b4AheFtwuaWlkiEGCQdg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P7MQB1HVD6P8Wbff5uJj5185RVRInxHOtA1PJ83DkBsaac26Z8xmWybj9qTVCHoVA
+	 Pu0iNdULbzqZeYcNNT0KEowTSiui7uCwN/MXplgJWHlXbNHIyz+plSN9VsfqqaddCR
+	 GiycK0I6SUl2MlqiGINsnH8oZoh5CJLLTs4d7FXPpP3yPW6BOloYvJi0G+GfIP6AJR
+	 Ws+GSp0XC1b4zn9Y4ZMh7FglZuRs6dQhzF86U7RhZP1af9pofhmMBUoXlUriwSqCQx
+	 KrKPAigVBfkQEgqioDVuYIDE+QnfSEFe8npSHJ5A2GH1dWIZ+wTwBrOgBo7EUaCY8N
+	 +o36A2rG9Z+LQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Shuah Khan <shuah@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Fix eventfs ownership testcase to find mount point
+Date: Thu,  5 Sep 2024 00:30:21 +0900
+Message-Id: <172546382097.224182.6471842111781551515.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240831004313.3713467-1-almasrymina@google.com>
- <20240831004313.3713467-9-almasrymina@google.com> <20240903144011.3e7135f9@kernel.org>
- <CAHS8izPN8cDVhAzdedr7zb9zmDaiOMqkaDqB07QwVKKEJ62HzQ@mail.gmail.com>
-In-Reply-To: <CAHS8izPN8cDVhAzdedr7zb9zmDaiOMqkaDqB07QwVKKEJ62HzQ@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 4 Sep 2024 17:29:44 +0200
-Message-ID: <CANn89i+iXXUjOJCOF1nodjVH4eX8P-B26Kg+Uu-iM2_Hc=5D5g@mail.gmail.com>
-Subject: Re: [PATCH net-next v24 08/13] net: add support for skbs with
- unreadable frags
-To: Mina Almasry <almasrymina@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 4, 2024 at 5:18=E2=80=AFPM Mina Almasry <almasrymina@google.com=
-> wrote:
->
-> On Tue, Sep 3, 2024 at 2:40=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> w=
-rote:
-> >
-> > On Sat, 31 Aug 2024 00:43:08 +0000 Mina Almasry wrote:
-> > >  static inline bool tcp_skb_can_collapse_to(const struct sk_buff *skb=
-)
-> > >  {
-> > > -     return likely(!TCP_SKB_CB(skb)->eor);
-> > > +     return likely(!TCP_SKB_CB(skb)->eor && skb_frags_readable(skb))=
-;
-> >
-> > Do you remember why this is here?
->
-> Yeah, to be honest, when I first implemented some of these checks I
-> erred on the side of caution, and added checks around anything that
-> looked concerning, some of these unnecessary checks got removed, but
-> looks like this one didn't.
->
-> > Both for Rx and Tx what should matter
-> > is whether the "readability" matches, right? We can merge two unreadabl=
-e
-> > messages.
->
-> Yes, you're right, only 'readability matches' should be the criteria
-> here. `tcp_skb_can_collapse` already checks readability is matching
-> correctly, so no issue there. The `tcp_skb_can_collapse_to` check
-> you're commenting on here looks unnecessary. I will remove it and run
-> that through some testing.
->
-> As an aside, it looks to me like that tcp_skb_can_collapse_to
-> callsites don't seem to be doing any collapsing. Unless I misread the
-> code. It looks like tcp_skb_can_collapse_to is used as an eor check. I
-> can rename the function to tcp_skb_is_eor() or something if that makes
-> sense (in a separate patch). I think the name of the function confused
-> me slightly and made me think I need to do a readability check.
->
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Please do not use tcp_skb_is_eor()
+Fix eventfs ownership testcase to find mount point if stat -c "%m" failed.
+This can happen on the system based on busybox. In this case, this will
+try to use the current working directory, which should be a tracefs top
+directory (and eventfs is mounted as a part of tracefs.)
+If it does not work, the test is skipped as UNRESOLVED because of
+the environmental problem.
 
-tcp_skb_can_collapse_to() could be renamed to tcp_skb_can_aggregate_to()
-or tcp_skb_can_append_to(), but EOR would not help at all.
+Fixes: ee9793be08b1 ("tracing/selftests: Add ownership modification tests for eventfs")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ .../ftrace/test.d/00basic/test_ownership.tc        |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+index c45094d1e1d2..803efd7b56c7 100644
+--- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
++++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
+@@ -6,6 +6,18 @@ original_group=`stat -c "%g" .`
+ original_owner=`stat -c "%u" .`
+ 
+ mount_point=`stat -c '%m' .`
++
++# If stat -c '%m' does not work (e.g. busybox) or failed, try to use the
++# current working directory (which should be a tracefs) as the mount point.
++if [ ! -d "$mount_point" ]; then
++	if mount | grep -qw $PWD ; then
++		mount_point=$PWD
++	else
++		# If PWD doesn't work, that is an environmental problem.
++		exit_unresolved
++	fi
++fi
++
+ mount_options=`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/\1/'`
+ 
+ # find another owner and group that is not the original
+
