@@ -1,83 +1,48 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5821255C0A;
-	Wed,  4 Sep 2024 03:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BEF17C64;
+	Wed,  4 Sep 2024 04:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725422241; cv=none; b=BBzEJxhake1zpfMf+jehRzt/HrdpPSN0lYDgi3dCvOnRoySGKgabLAeaPMYNsf33IXBluWrx3nGshSVjArOA7bxeeE3a58SGMXpeRsXMmZ8+7JuRKjsFLknV4BTvhl5r6nEnsoF693WuNgQgNWgJJdS2Q5uNnb4wWpWHBFthaNk=
+	t=1725423328; cv=none; b=sDxO5Eb7IyEFwH6SLIqMBVmHvrLCehIuMOefJZ/F/vzUnhqNiDSuURgSSlpl+4rKfFa7TBdnFMfn5vrofVg2q/zKPx9sX08VjA+sHlootAnGAx2yr0BCjzVTzKtDFmoXSVZX5I+TS39jLU0FKrK2CxOipzv3HShw6/YlJFnLLFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725422241; c=relaxed/simple;
-	bh=ivqHfD7++rU9GRfQMe9anuXwU61tfPP8YPdfV7dcgxQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Kln/bl+BsS5WHEUyu2Ckl4Y/xbVODcJnt2GOS45D/tymI5hoXf/Y67N2qbEeiYFWOjoMiI3GRqcg6y8EXpZAOSGrOAKArI29bhFRt+MptvHGnePF6xk7nt2xtJTKJ/8hJcXKB3zUGK1qGNWg8rdfgLu/pdO8vAw3do/rfsgvkeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=U9J8vsG8; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="U9J8vsG8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1725422236;
-	bh=bgCwdbOVFpaURv00hqL/lwUSISFJ/jzYxJlaNGAU2OU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=U9J8vsG8Uwv1/84l2ookX17o1153/WflTXx/rbatcB7lhtIPmuCRHMrYQduxy8sct
-	 pVfA7mdd1ZdSsNlV9S+RwvrFTe1ZwE8Yon0RjMsD+vnj7wI36uMucOCgR6BBEC/zgi
-	 iZK0fUTnkmSuZ9Ccc8QVwLnPaoeDvMO9IDONDK0zcckZZRDi5uw6O2wHSQUKmdfr5I
-	 dWdLKVexdDb5e0RhatBid4K2SaIn7WsfhusEW3ggxFSRdNk+UNioX+yKzoLnyldVe/
-	 pT1Pfg6L4UctDia37ve7aVklQue5bWVDtiZxTaywsBpq6I+0m8550pLqCeuVpgK7WU
-	 QaOkMGqL0YMAg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Wz7wp3135z4x3J;
-	Wed,  4 Sep 2024 13:57:14 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Sven Schnelle <svens@linux.ibm.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Linus
- Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-In-Reply-To: <yt9dikvd9nye.fsf@linux.ibm.com>
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com>
- <yt9dikvd9nye.fsf@linux.ibm.com>
-Date: Wed, 04 Sep 2024 13:57:13 +1000
-Message-ID: <87v7zc5aw6.fsf@mail.lhotse>
+	s=arc-20240116; t=1725423328; c=relaxed/simple;
+	bh=J2aRFA2pMhcoLz++9eY15O2uQJaPDBQeqT83I3XGURc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YeLi4w4XdXG6H9rGnHC/Ii6W/h20HIIEZWbra3lDmLRfRSg08e/+GE6a3QCge8Zr1gjy1qFAE4259+QQg/7EmZK69k9ZCMZRSH1IBCCkKhYOk+BE8B5bpGVZzHIvxAa/F+TbAZNaDpkRYxmvbe17MrEdgo8kUSQk/tKUIu2cJto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id C25DA68AA6; Wed,  4 Sep 2024 06:15:22 +0200 (CEST)
+Date: Wed, 4 Sep 2024 06:15:22 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Sean Anderson <sean.anderson@linux.dev>, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dma: Trace API
+Message-ID: <20240904041522.GA13349@lst.de>
+References: <20240826203240.2234615-1-sean.anderson@linux.dev> <20240829041912.GB4408@lst.de> <4c2c6b24-aee1-495f-ab47-662e1e818f4b@linux.dev> <20240903072512.GA1521@lst.de> <20240903092154.5f0bfafe@gandalf.local.home> <d8936bfc-1ea3-4142-8035-0dfb8e491c31@linux.dev> <20240903205322.69d7638c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240903205322.69d7638c@gandalf.local.home>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Sven Schnelle <svens@linux.ibm.com> writes:
-> Hi Michael,
+On Tue, Sep 03, 2024 at 08:53:22PM -0400, Steven Rostedt wrote:
+> This should do. I could get it into the next minor version.
 
-Hi Sven,
-
-> Sven Schnelle <svens@linux.ibm.com> writes:
->
->> The following KASAN splat was shown:
->>
->> [   44.505448] ==================================================================                                                                      20:37:27 [3421/145075]
->> [   44.505455] BUG: KASAN: slab-use-after-free in special_mapping_close+0x9c/0xc8
->> [   44.505471] Read of size 8 at addr 00000000868dac48 by task sh/1384
-...
->> [..]
->
-> As this has a dependency on your special mapping close series, do you
-> want to carry that with your patches?
-
-Andrew has my series in mm-stable, so I think this should go into mm as
-well. I assume he will pick it up.
-
-cheers
+Sean, is that enough for your use case?  Otherwise I'd keep the
+unsigned long long for the _sg array, and use the proper types
+elsewhere.
