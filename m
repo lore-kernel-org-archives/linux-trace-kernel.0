@@ -1,92 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4982420E3
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Sep 2024 22:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F93B65C;
+	Wed,  4 Sep 2024 00:52:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725401520; cv=none; b=jv7n4Iv+HA2r4vqY7i3Lt9j9z/CEupYGinpsGwVA7itqbzlSxfXfrsKCkOUFZWUIlUc5bXr0htxcIkHp+MD8+AYSv8Blehq802pxMOrVZPm1Cr6OEgpBN/PTuPJPVkrhw+lZo0zv4nmZLxnLvhWhK8mcX5uqjauToI0ocfo96Vg=
+	t=1725411145; cv=none; b=NNg4BL/FuuKYN5S+aUVN0HronVRLBnCt5ZPfr1WMvVQMjp4ocPBmIBoF+9NTeVxzBIYIiAXe/42pLcAte8bwZRvpZOUTf9Yft45EYrlUb50cBjeLD+zrcXDgzFdSIiEaeCi8rNSQf6zyW37hCCKq6AkHVoL0dB0qyOb602JBG2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725401520; c=relaxed/simple;
-	bh=Kazl5ijkrMlxfa3K1vrcKe9KDtcFNQuvy1kvlI9BKbM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cCyrmCHHYeSOR22xxKVZOQo0dBC8nZ9uPhv6JC65nCeN3p4f4M/Ve+DLsEOfadAZMgm1eCVLPHQVRGMp8ZPQIyURWU5D5JmvZTZRG9yUQaloOZp/wTRBd709ejJZ2mbQUc3cGqikgFZRgH8TjhgXxwuTH2uhYOxa/K+4Usxf/b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cMg+Z8Qt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cMg+Z8Qt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE43C4CEC4;
-	Tue,  3 Sep 2024 22:11:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725401519;
-	bh=Kazl5ijkrMlxfa3K1vrcKe9KDtcFNQuvy1kvlI9BKbM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cMg+Z8QtILmKxyaD7KjCCQrrcovkibvKr7Sa/68bZlIfT5yTZ+ZCmHad9bpT5U8OE
-	 eJO1Xut8VP31O3ztNH4uW0+7u9XIJ+JPSp145+uc4Zmnsoh+NpAy4YCWJZUiZp2VVw
-	 VopvzmEjcSsrWHq4cxwXJ9DZXz8pnqdlLSM0sDVYI/Frw71KmrmSb4CsfkkgQO8+rk
-	 HWbN/ZZkvooqzirpCklEBYfLMeeBq0/V9WO0/9x7kvPEK0QS/lV2MpJYejsEg+3RzD
-	 LilZARp/4KvR6xOwmqUBaBr3hPMKeOPf0TBcjwki60VKn4jcoMKi1P1a9mXkP3sr4f
-	 ceKU560fqdlWg==
-Date: Wed, 4 Sep 2024 07:11:56 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gaosheng Cui <cuigaosheng1@huawei.com>
-Cc: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] kprobes: Remove obsoleted declaration for
- init_test_probes
-Message-Id: <20240904071156.d5525a818d9098102801e29d@kernel.org>
-In-Reply-To: <20240826032552.4016314-1-cuigaosheng1@huawei.com>
-References: <20240826032552.4016314-1-cuigaosheng1@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1725411145; c=relaxed/simple;
+	bh=G21Eq5cw+VZfTA9iPHaQQM23pVQaJEAh22KOsqmNfu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q8d63sbmclTj2tJHBZvCqd4fimTY1nJMl2peScb8nG0+0XJzmqchht6q8G4ba8BcsZCl8ScRYhtQhoJzFbvYeoMwOrqSsNQ1Ct3GLWiMz/NJSt7CDJefiZCSR1zZ9lg+6gF06/6TTONKbU+cNwBduArh+mNgaYiPPQzGvcidz+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA16AC4CEC4;
+	Wed,  4 Sep 2024 00:52:23 +0000 (UTC)
+Date: Tue, 3 Sep 2024 20:53:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Christoph Hellwig <hch@lst.de>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dma: Trace API
+Message-ID: <20240903205322.69d7638c@gandalf.local.home>
+In-Reply-To: <d8936bfc-1ea3-4142-8035-0dfb8e491c31@linux.dev>
+References: <20240826203240.2234615-1-sean.anderson@linux.dev>
+	<20240829041912.GB4408@lst.de>
+	<4c2c6b24-aee1-495f-ab47-662e1e818f4b@linux.dev>
+	<20240903072512.GA1521@lst.de>
+	<20240903092154.5f0bfafe@gandalf.local.home>
+	<d8936bfc-1ea3-4142-8035-0dfb8e491c31@linux.dev>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 26 Aug 2024 11:25:52 +0800
-Gaosheng Cui <cuigaosheng1@huawei.com> wrote:
+On Tue, 3 Sep 2024 10:36:29 -0400
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-> The init_test_probes() have been removed since
-> commit e44e81c5b90f ("kprobes: convert tests to kunit"), and now
-> it is useless, so remove it.
-
-Looks good to me. Let me pick it.
-
-Thank you
-
+> This doesn't apply for arrays:
 > 
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
-> ---
->  include/linux/kprobes.h | 9 ---------
->  1 file changed, 9 deletions(-)
+> 	field:__data_loc u64[] addrs;	offset:12;	size:4;	signed:0;
 > 
-> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-> index 5fcbc254d186..8c4f3bb24429 100644
-> --- a/include/linux/kprobes.h
-> +++ b/include/linux/kprobes.h
-> @@ -269,15 +269,6 @@ extern unsigned long __stop_kprobe_blacklist[];
->  
->  extern struct kretprobe_blackpoint kretprobe_blacklist[];
->  
-> -#ifdef CONFIG_KPROBES_SANITY_TEST
-> -extern int init_test_probes(void);
-> -#else /* !CONFIG_KPROBES_SANITY_TEST */
-> -static inline int init_test_probes(void)
-> -{
-> -	return 0;
-> -}
-> -#endif /* CONFIG_KPROBES_SANITY_TEST */
-> -
->  extern int arch_prepare_kprobe(struct kprobe *p);
->  extern void arch_arm_kprobe(struct kprobe *p);
->  extern void arch_disarm_kprobe(struct kprobe *p);
-> -- 
-> 2.25.1
-> 
+> Here the size is not for the data type but for the array. And so the
+> type is parsed by process_sizeof in src/event-parse.c.
+
+Ah, I see what you are talking about:
+
++	TP_printk("%s dir=%s phys_addrs=%s attrs=%s",
++		__get_str(device),
++		decode_dma_data_direction(__entry->dir),
++		__print_array(__get_dynamic_array(addrs),
++			      __get_dynamic_array_len(addrs) /
++				sizeof(unsigned long long), sizeof(unsigned long long)),
++		decode_dma_attrs(__entry->attrs))
+
+That part.
+
+Yeah, the "sizeof()" parsing is somewhat of a hack. It would be trivial to
+add u64 and all the variants to that.
+
+This should do. I could get it into the next minor version.
+
+diff --git a/src/event-parse.c b/src/event-parse.c
+index ddeb3b9909c0..73563c8e9dea 100644
+--- a/src/event-parse.c
++++ b/src/event-parse.c
+@@ -3571,6 +3571,23 @@ process_sizeof(struct tep_event *event, struct tep_print_arg *arg, char **tok)
+ 			/* The token is the next token */
+ 			token_has_paren = true;
+ 		}
++
++	} else if (strcmp(token, "__u64") == 0 || strcmp(token, "u64") == 0 ||
++		   strcmp(token, "__s64") == 0 || strcmp(token, "s64") == 0) {
++		arg->atom.atom = strdup("8");
++
++	} else if (strcmp(token, "__u32") == 0 || strcmp(token, "u32") == 0 ||
++		   strcmp(token, "__s32") == 0 || strcmp(token, "s32") == 0) {
++		arg->atom.atom = strdup("4");
++
++	} else if (strcmp(token, "__u16") == 0 || strcmp(token, "u16") == 0 ||
++		   strcmp(token, "__s16") == 0 || strcmp(token, "s16") == 0) {
++		arg->atom.atom = strdup("2");
++
++	} else if (strcmp(token, "__u8") == 0 || strcmp(token, "u8") == 0 ||
++		   strcmp(token, "__s8") == 0 || strcmp(token, "s8") == 0) {
++		arg->atom.atom = strdup("1");
++
+ 	} else if (strcmp(token, "REC") == 0) {
+ 
+ 		free_token(token);
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
