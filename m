@@ -1,64 +1,85 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EFE158DC0;
-	Thu,  5 Sep 2024 19:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5831A3AAB;
+	Thu,  5 Sep 2024 20:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725563910; cv=none; b=sA5ZYN1HwRWNtlfsOrV4F67eObT6THANybJYQT1h0xp8ApEkWtt+25JXXuvzaDGWUY4rzQCEumKL8MDsTSBRW3RqwdhJ7y5Dn/ZBMGdvJIqEtfb0lHI5GIjz1NkbgMHVgBhcgzKL+Vk6LLMEQepeQPRFUjEoVnw6k/SM3cCm4X8=
+	t=1725567035; cv=none; b=Am5KYjLXKFQG0RH8t/WbPHuXx7mt4zbUvYad3VmXdgc3V1o2kNSffCF42XLIUNIAohgy9DqVnHsECwh5a8PPScvZnWAGm0zkVPmdTnEaujJNpQz41be4xv0MouP9cSqDcW4nK38SaAAzxtdG/ZxIFw81ziPNvE3ujpF4QsIFGkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725563910; c=relaxed/simple;
-	bh=nBonMH5MSyjDBzh0luecBwuGHg1CRbhWnpfAvFU5SCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lYc59EFXQ+xolndQxeowFEp6Q1AUrE248oVtLAIVJk7XeK44Jti3FCtBrLSNjt5otFxBzkgAFdotAOeYVHoe4dkI7yozPlGfnPcby+nqrCZzI2gatysZu8Ed8IB54s3BiUW2L/KIMO+hc/T6rQ7ei9yQ65m1WEDFHLE64ZIEYpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SwteEs9r; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1725567035; c=relaxed/simple;
+	bh=g0zSgLf6QLnK/WBkJ4tVQPV6L2/i/L2pNDvdQAEkZFQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hPDB7hY3EwurNq803LF0FEbMW3xtYtoI/F5x4Z2XjRJMDabj1Blrvx9cU9nl+xfVuXUyHD6d1YcjNFdPlcMfXRYNshzoAcHJDWlJECh5FzDj4GoRlzPpOGWmVqTVHIB0HSPXCdQNqukKZl8bJmj4B8Lpfmz9IxB/iOHTOAL2ECA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4fzAj6i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SwteEs9r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=c5rxElpuWcu2fC87pycRobCVmahvYpj+jmA375ccp0M=; b=SwteEs9rB8WhPW1DYHne1fm0NL
-	9A+2982zcLNwcTQJb95/eDNSRUPynokSqwoFo4OwD6CE/NIuqaUNm4GMbmNiw4pk1C+/qQJXbARZ3
-	1mRf+eTnP4kIFpMzA3s9yMLvMrpbIdFkmcmRccddBDiLfXJIRk7tFED7rG0B3jVmkW0LMwZLQ4cyo
-	xnFcEWMCMlvjCEhRSKPoU9VdnXAhRnhqG3fxwz5mOJxE3XRDjujLjjGzQbbStrPbc7n1WNM3fKGfy
-	yz/+U7C4NDMWryMvFZgnTPYy7t6zcnKxClpI60G+ETeAPFS4Hw1gnc/V+2q4ySew+1v8Deg6B/7aC
-	IBBBIAOA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1smHzi-00000002rXa-3JNT;
-	Thu, 05 Sep 2024 19:18:14 +0000
-Date: Thu, 5 Sep 2024 20:18:14 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Nanyong Sun <sunnanyong@huawei.com>
-Cc: akpm@linux-foundation.org, mhiramat@kernel.org, oleg@redhat.com,
-	peterz@infradead.org, wangkefeng.wang@huawei.com,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] mm: move mm flags to mm_types.h
-Message-ID: <ZtoD9tXJjWaS4liX@casper.infradead.org>
-References: <20240905152622.1205046-1-sunnanyong@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4fzAj6i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB267C4CEC9;
+	Thu,  5 Sep 2024 20:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725567034;
+	bh=g0zSgLf6QLnK/WBkJ4tVQPV6L2/i/L2pNDvdQAEkZFQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=k4fzAj6iJ8Ypd3SZjxLqZ5OaLoFz0lImkqGJK1qxSyU1MpXXehqO3RoglzWtXfQgZ
+	 K4l+IYd6lTI61m6leUGtVXsFeRrdop6KFaE6NFMykREESwzVhUft2mEqre9lRCiNnM
+	 ukvxmjgdvwlTVIyuzconFm6KIdDsTgYfpSCW7qa1GLVZtLyGZby0SBhSuQAFaVMqF8
+	 eoHLsNfofbS09tFVSnoO8vWH3P6ShCGXm+p3QhJExE98awvdEyaADFeKZCEjuscNcM
+	 qFXfWJQG+ao425Epj9r6/BavtpjeV1NHZ6TvT+GUOshdzbwEOWH9Jbs20gc8ut2cMk
+	 G7rMmlsjzoqzQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB4033806651;
+	Thu,  5 Sep 2024 20:10:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905152622.1205046-1-sunnanyong@huawei.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv2 bpf-next 0/4] selftests/bpf: Add uprobe multi pid filter
+ test
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172556703579.1814248.14807551869731691476.git-patchwork-notify@kernel.org>
+Date: Thu, 05 Sep 2024 20:10:35 +0000
+References: <20240905115124.1503998-1-jolsa@kernel.org>
+In-Reply-To: <20240905115124.1503998-1-jolsa@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: oleg@redhat.com, peterz@infradead.org, andrii@kernel.org,
+ i.pear@outlook.com, mhiramat@kernel.org, bpf@vger.kernel.org,
+ rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2024 at 11:26:22PM +0800, Nanyong Sun wrote:
-> +++ b/include/linux/mm_types.h
-> @@ -1485,4 +1485,85 @@ enum {
->  	/* See also internal only FOLL flags in mm/internal.h */
->  };
->  
-> +/* mm flags */
-> +
-> +/* for SUID_DUMP_* above */
+Hello:
 
-But SUID_DUMP aren't above.  They're in a different file.
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Thu,  5 Sep 2024 14:51:20 +0300 you wrote:
+> hi,
+> sending fix for uprobe multi pid filtering together with tests. The first
+> version included tests for standard uprobes, but as we still do not have
+> fix for that, sending just uprobe multi changes.
+> 
+> thanks,
+> jirka
+> 
+> [...]
+
+Here is the summary with links:
+  - [PATCHv2,bpf-next,1/4] bpf: Fix uprobe multi pid filter check
+    https://git.kernel.org/bpf/bpf-next/c/900f362e2062
+  - [PATCHv2,bpf-next,2/4] selftests/bpf: Add child argument to spawn_child function
+    https://git.kernel.org/bpf/bpf-next/c/0b0bb453716f
+  - [PATCHv2,bpf-next,3/4] selftests/bpf: Add uprobe multi pid filter test for fork-ed processes
+    https://git.kernel.org/bpf/bpf-next/c/8df43e859454
+  - [PATCHv2,bpf-next,4/4] selftests/bpf: Add uprobe multi pid filter test for clone-ed processes
+    https://git.kernel.org/bpf/bpf-next/c/d2520bdb1932
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
