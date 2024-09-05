@@ -1,270 +1,151 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006C219340D;
-	Thu,  5 Sep 2024 07:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38257192590;
+	Thu,  5 Sep 2024 08:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725523001; cv=none; b=bLjtGaLqiTx0Es9menznPfVvT5Ux6Il/W80yH331szXH47lbxlfu/12whxuB3lKWKJUrm4j3NeP9Vcg/hiorAWZQ0icaZN5hqFuT8ZgNu/1+lJvEABkeDGh5mBhFhVrosTEjqkmnvD2Ug3OWsXHqdZyZSVonQqbbEtcyzZLu69k=
+	t=1725523587; cv=none; b=FK+rXAUse9KA6WsYQ4GzMLl+xLoZ49127iM6SfrflGviYY4JWZ5fETt4E1DJl+wP48GMnAuPEVyw5u/dQmerO9YftnQEcH7w+LOid9ES0IigPxjA0wchAWfRh9rXgF7iTqHFice1Fi+Dd60gAUYNW1K3530O1Km+wu+XOkM6uMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725523001; c=relaxed/simple;
-	bh=fQA4ZmvJjUsqFOFX7s+On/lT0lNIldNAFmE9GyYmXH4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PrHW+xpG5tq+WOh8ZD3G/r56TTum+cPOEvaPNUcs89klvX9+dm5thRu4uB4IPGGUabp7kfznbDzVI5lAijFSVUKPZNMGf4FXjs55kDq/n9ZGuPHWQ/owjXis7BR7YBnQ3KSZVo/8+BfoMsEC1ToHBu0oIO7PvHtCutY+p+paBxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fRtXpEmo; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1725523587; c=relaxed/simple;
+	bh=WKO2UxcqMLRTRaAeeOcyehq8cryN89yN45A4vVIyDGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pOEtGTHyvuIr9OvQfs8q/4QaHf/Pb/5joVke+hpE19EVt74tDevHQ6rmrHHKRldVT3CS6/GNLZXGIHy22STlcx7syq6vvobmI/j3GrT00TDceAjKPZqa2ayKLiW/6t5SrwW7lUoujrH6b0FpqGlaBTnO3C/O1/8yG87Ta/60o1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VFmwyCbe; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fRtXpEmo"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1725522991; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=kt0hxrOo2gJqVz1HQLnyjblcCFmCzmyTJPG3om2eI2M=;
-	b=fRtXpEmoGjVhmbYQKmzy6Af/gJJrQzZbC87YVy4aZkhlcQQcm1oLEiK99B/K+Fp07jzLs0uG/ZIR1TgYOjL1MTyVK1aq/hMXHVrDOSWIUcaS1dQLPlf9vk5WpJ48XvmZhMhPteOW9PyF/0j5tfTGdjqHLQTHdCk3+OE80w2zxGo=
-Received: from localhost(mailfrom:lulie@linux.alibaba.com fp:SMTPD_---0WEKkPgj_1725522989)
-          by smtp.aliyun-inc.com;
-          Thu, 05 Sep 2024 15:56:29 +0800
-From: Philo Lu <lulie@linux.alibaba.com>
-To: bpf@vger.kernel.org
-Cc: edumazet@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	thinker.li@gmail.com,
-	juntong.deng@outlook.com,
-	jrife@google.com,
-	alan.maguire@oracle.com,
-	davemarchevsky@fb.com,
-	dxu@dxuuu.xyz,
-	vmalik@redhat.com,
-	cupertino.miranda@oracle.com,
-	mattbobrowski@google.com,
-	xuanzhuo@linux.alibaba.com,
-	netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 5/5] selftests/bpf: Expand skb dynptr selftests for tp_btf
-Date: Thu,  5 Sep 2024 15:56:22 +0800
-Message-Id: <20240905075622.66819-6-lulie@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
-In-Reply-To: <20240905075622.66819-1-lulie@linux.alibaba.com>
-References: <20240905075622.66819-1-lulie@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VFmwyCbe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725523586; x=1757059586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WKO2UxcqMLRTRaAeeOcyehq8cryN89yN45A4vVIyDGo=;
+  b=VFmwyCbevgxhEihgYTv1Qzy2Ze8kpE5NeZn+3lBihy4orMQ+bkntsYkl
+   4so/2X0Z9Wy+LqMU3PvNBh2epvhRlyJJQTeteKgQ3n3LAjFLfCLfODaUC
+   +3Wv9dKTIJHDKjTd3j44cFH54NXRW3BmbEg5+umRF//E15WpmgBpIqMFE
+   +ZYG+PoNP1MfKrpphai2e0U4pgABxdDMS3WzbqjDlQ7Q/wfqfKOfR7qDM
+   JjUEGduVdJihJomFVjOCLyXKKROESrhaWFHwkPKJUzrmI4XmJY15QPEmh
+   zcsf42ZEa6/Ob8DrIgrrEe7y0Bev7Fr6ijjd7Amy7SmaBN3eFw/2CIhWv
+   Q==;
+X-CSE-ConnectionGUID: CuhTN51TQvSC3y3+oZYZ9g==
+X-CSE-MsgGUID: dqnHl1ReTAC1gBUs2yy3aw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="34794252"
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="34794252"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 01:06:08 -0700
+X-CSE-ConnectionGUID: zjeypNDgQoqznjqWnM5HkA==
+X-CSE-MsgGUID: OZnSaGoFTMKmGzXZwFuFgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="65527709"
+Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 05 Sep 2024 01:06:06 -0700
+Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sm7VD-00095l-1J;
+	Thu, 05 Sep 2024 08:06:03 +0000
+Date: Thu, 5 Sep 2024 16:05:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sven Schnelle <svens@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 6/7] tracing: add support for function argument to graph
+ tracer
+Message-ID: <202409051539.ZmGpuZIP-lkp@intel.com>
+References: <20240904065908.1009086-7-svens@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240904065908.1009086-7-svens@linux.ibm.com>
 
-Add 3 test cases for skb dynptr used in tp_btf:
-- test_dynptr_skb_tp_btf: use skb dynptr in tp_btf and make sure it is
-  read-only.
-- skb_invalid_ctx_fentry/skb_invalid_ctx_fexit: bpf_dynptr_from_skb
-  should fail in fentry/fexit.
+Hi Sven,
 
-In test_dynptr_skb_tp_btf, to trigger the tracepoint in kfree_skb,
-test_pkt_access is used for its test_run, as in kfree_skb.c. Because the
-test process is different from others, a new setup type is defined,
-i.e., SETUP_SKB_PROG_TP.
+kernel test robot noticed the following build errors:
 
-The result is like:
-$ ./test_progs -t 'dynptr/test_dynptr_skb_tp_btf'
-  #84/14   dynptr/test_dynptr_skb_tp_btf:OK
-  #84      dynptr:OK
-  #127     kfunc_dynptr_param:OK
-  Summary: 2/1 PASSED, 0 SKIPPED, 0 FAILED
+[auto build test ERROR on s390/features]
+[also build test ERROR on tip/x86/core linus/master v6.11-rc6]
+[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent next-20240904]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-$ ./test_progs -t 'dynptr/skb_invalid_ctx_f'
-  #84/85   dynptr/skb_invalid_ctx_fentry:OK
-  #84/86   dynptr/skb_invalid_ctx_fexit:OK
-  #84      dynptr:OK
-  #127     kfunc_dynptr_param:OK
-  Summary: 2/2 PASSED, 0 SKIPPED, 0 FAILED
+url:    https://github.com/intel-lab-lkp/linux/commits/Sven-Schnelle/tracing-add-ftrace_regs-to-function_graph_enter/20240904-150232
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+patch link:    https://lore.kernel.org/r/20240904065908.1009086-7-svens%40linux.ibm.com
+patch subject: [PATCH 6/7] tracing: add support for function argument to graph tracer
+config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240905/202409051539.ZmGpuZIP-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240905/202409051539.ZmGpuZIP-lkp@intel.com/reproduce)
 
-Also fix two coding style nits (change spaces to tabs).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409051539.ZmGpuZIP-lkp@intel.com/
 
-Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
----
- .../testing/selftests/bpf/prog_tests/dynptr.c | 36 +++++++++++++++++--
- .../testing/selftests/bpf/progs/dynptr_fail.c | 25 +++++++++++++
- .../selftests/bpf/progs/dynptr_success.c      | 23 ++++++++++++
- 3 files changed, 82 insertions(+), 2 deletions(-)
+All errors (new ones prefixed by >>):
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/dynptr.c b/tools/testing/selftests/bpf/prog_tests/dynptr.c
-index 7cfac53c0d58d..ba40be8b1c4ef 100644
---- a/tools/testing/selftests/bpf/prog_tests/dynptr.c
-+++ b/tools/testing/selftests/bpf/prog_tests/dynptr.c
-@@ -9,6 +9,7 @@
- enum test_setup_type {
- 	SETUP_SYSCALL_SLEEP,
- 	SETUP_SKB_PROG,
-+	SETUP_SKB_PROG_TP,
- };
- 
- static struct {
-@@ -28,6 +29,7 @@ static struct {
- 	{"test_dynptr_clone", SETUP_SKB_PROG},
- 	{"test_dynptr_skb_no_buff", SETUP_SKB_PROG},
- 	{"test_dynptr_skb_strcmp", SETUP_SKB_PROG},
-+	{"test_dynptr_skb_tp_btf", SETUP_SKB_PROG_TP},
- };
- 
- static void verify_success(const char *prog_name, enum test_setup_type setup_type)
-@@ -35,7 +37,7 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
- 	struct dynptr_success *skel;
- 	struct bpf_program *prog;
- 	struct bpf_link *link;
--       int err;
-+	int err;
- 
- 	skel = dynptr_success__open();
- 	if (!ASSERT_OK_PTR(skel, "dynptr_success__open"))
-@@ -47,7 +49,7 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
- 	if (!ASSERT_OK_PTR(prog, "bpf_object__find_program_by_name"))
- 		goto cleanup;
- 
--       bpf_program__set_autoload(prog, true);
-+	bpf_program__set_autoload(prog, true);
- 
- 	err = dynptr_success__load(skel);
- 	if (!ASSERT_OK(err, "dynptr_success__load"))
-@@ -87,6 +89,36 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
- 
- 		break;
- 	}
-+	case SETUP_SKB_PROG_TP:
-+	{
-+		struct __sk_buff skb = {};
-+		struct bpf_object *obj;
-+		int aux_prog_fd;
-+
-+		/* Just use its test_run to trigger kfree_skb tracepoint */
-+		err = bpf_prog_test_load("./test_pkt_access.bpf.o", BPF_PROG_TYPE_SCHED_CLS,
-+					 &obj, &aux_prog_fd);
-+		if (!ASSERT_OK(err, "prog_load sched cls"))
-+			goto cleanup;
-+
-+		LIBBPF_OPTS(bpf_test_run_opts, topts,
-+			    .data_in = &pkt_v4,
-+			    .data_size_in = sizeof(pkt_v4),
-+			    .ctx_in = &skb,
-+			    .ctx_size_in = sizeof(skb),
-+		);
-+
-+		link = bpf_program__attach(prog);
-+		if (!ASSERT_OK_PTR(link, "bpf_program__attach"))
-+			goto cleanup;
-+
-+		err = bpf_prog_test_run_opts(aux_prog_fd, &topts);
-+
-+		if (!ASSERT_OK(err, "test_run"))
-+			goto cleanup;
-+
-+		break;
-+	}
- 	}
- 
- 	ASSERT_EQ(skel->bss->err, 0, "err");
-diff --git a/tools/testing/selftests/bpf/progs/dynptr_fail.c b/tools/testing/selftests/bpf/progs/dynptr_fail.c
-index 68b8c6eca5083..8f36c9de75915 100644
---- a/tools/testing/selftests/bpf/progs/dynptr_fail.c
-+++ b/tools/testing/selftests/bpf/progs/dynptr_fail.c
-@@ -6,6 +6,7 @@
- #include <stdbool.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
- #include <linux/if_ether.h>
- #include "bpf_misc.h"
- #include "bpf_kfuncs.h"
-@@ -1254,6 +1255,30 @@ int skb_invalid_ctx(void *ctx)
- 	return 0;
- }
- 
-+SEC("fentry/skb_tx_error")
-+__failure __msg("must be referenced or trusted")
-+int BPF_PROG(skb_invalid_ctx_fentry, void *skb)
-+{
-+	struct bpf_dynptr ptr;
-+
-+	/* this should fail */
-+	bpf_dynptr_from_skb(skb, 0, &ptr);
-+
-+	return 0;
-+}
-+
-+SEC("fexit/skb_tx_error")
-+__failure __msg("must be referenced or trusted")
-+int BPF_PROG(skb_invalid_ctx_fexit, void *skb)
-+{
-+	struct bpf_dynptr ptr;
-+
-+	/* this should fail */
-+	bpf_dynptr_from_skb(skb, 0, &ptr);
-+
-+	return 0;
-+}
-+
- /* Reject writes to dynptr slot for uninit arg */
- SEC("?raw_tp")
- __failure __msg("potential write to dynptr at off=-16")
-diff --git a/tools/testing/selftests/bpf/progs/dynptr_success.c b/tools/testing/selftests/bpf/progs/dynptr_success.c
-index 5985920d162e7..bfcc85686cf04 100644
---- a/tools/testing/selftests/bpf/progs/dynptr_success.c
-+++ b/tools/testing/selftests/bpf/progs/dynptr_success.c
-@@ -5,6 +5,7 @@
- #include <stdbool.h>
- #include <linux/bpf.h>
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
- #include "bpf_misc.h"
- #include "bpf_kfuncs.h"
- #include "errno.h"
-@@ -544,3 +545,25 @@ int test_dynptr_skb_strcmp(struct __sk_buff *skb)
- 
- 	return 1;
- }
-+
-+SEC("tp_btf/kfree_skb")
-+int BPF_PROG(test_dynptr_skb_tp_btf, void *skb, void *location)
-+{
-+	__u8 write_data[2] = {1, 2};
-+	struct bpf_dynptr ptr;
-+	int ret;
-+
-+	if (bpf_dynptr_from_skb(skb, 0, &ptr)) {
-+		err = 1;
-+		return 1;
-+	}
-+
-+	/* since tp_btf skbs are read only, writes should fail */
-+	ret = bpf_dynptr_write(&ptr, 0, write_data, sizeof(write_data), 0);
-+	if (ret != -EINVAL) {
-+		err = 2;
-+		return 1;
-+	}
-+
-+	return 1;
-+}
+   In file included from include/linux/perf_event.h:52,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:93,
+                    from kernel/time/time.c:33:
+>> include/linux/ftrace.h:1013:28: error: field 'regs' has incomplete type
+    1013 |         struct ftrace_regs regs;
+         |                            ^~~~
+--
+   In file included from include/linux/perf_event.h:52,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:93,
+                    from kernel/time/hrtimer.c:30:
+>> include/linux/ftrace.h:1013:28: error: field 'regs' has incomplete type
+    1013 |         struct ftrace_regs regs;
+         |                            ^~~~
+   kernel/time/hrtimer.c:121:35: warning: initialized field overwritten [-Woverride-init]
+     121 |         [CLOCK_REALTIME]        = HRTIMER_BASE_REALTIME,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:121:35: note: (near initialization for 'hrtimer_clock_to_base_table[0]')
+   kernel/time/hrtimer.c:122:35: warning: initialized field overwritten [-Woverride-init]
+     122 |         [CLOCK_MONOTONIC]       = HRTIMER_BASE_MONOTONIC,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:122:35: note: (near initialization for 'hrtimer_clock_to_base_table[1]')
+   kernel/time/hrtimer.c:123:35: warning: initialized field overwritten [-Woverride-init]
+     123 |         [CLOCK_BOOTTIME]        = HRTIMER_BASE_BOOTTIME,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:123:35: note: (near initialization for 'hrtimer_clock_to_base_table[7]')
+   kernel/time/hrtimer.c:124:35: warning: initialized field overwritten [-Woverride-init]
+     124 |         [CLOCK_TAI]             = HRTIMER_BASE_TAI,
+         |                                   ^~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:124:35: note: (near initialization for 'hrtimer_clock_to_base_table[11]')
+
+
+vim +/regs +1013 include/linux/ftrace.h
+
+  1006	
+  1007	/*
+  1008	 * Structure that defines an entry function trace.
+  1009	 * It's already packed but the attribute "packed" is needed
+  1010	 * to remove extra padding at the end.
+  1011	 */
+  1012	struct ftrace_graph_ent {
+> 1013		struct ftrace_regs regs;
+  1014		unsigned long func; /* Current function */
+  1015		int depth;
+  1016	} __packed;
+  1017	
+
 -- 
-2.32.0.3.g01195cf9f
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
