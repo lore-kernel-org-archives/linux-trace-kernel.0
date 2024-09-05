@@ -1,137 +1,122 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC0019DFB8;
-	Thu,  5 Sep 2024 16:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DB21A0AF4;
+	Thu,  5 Sep 2024 17:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725555340; cv=none; b=Tat4vEcETpWr4u1D8EVwAYOjDwl0JwUBFsv2j38ERvipfOx334QAb/HB6wCMHcx4Ec3qdct9vLASf0p6MQODAbQMLc64FnCNG0TvDVQzErIl4vMqyf6ZgYCkQZAEsD2UiX3VTAY/gLfKsgjfhWpqwjGpkNsRIvKcO8kWKgxyUwI=
+	t=1725555608; cv=none; b=n5KIoBrSq8N1uICnFKtFKfgdXCEtap8xTvr4aCOZh/uTZ5YLz0J1HyVDYvfUX0nRzIl6iVSBwH7RjpxDWLgh+yBdx9XL/5hQn0AiAsgiuoFU0aFtY8VZQ86660MN3Atrx3O87AUEJ0GiNPEXwSAupJfVwQCUGeGA+R2x2YblTzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725555340; c=relaxed/simple;
-	bh=kdVzNKSWW1JFEdIP3+NQic9f8mGqxCua6ECgEvOVeJM=;
+	s=arc-20240116; t=1725555608; c=relaxed/simple;
+	bh=kUKvlt9oQSc6GPz4Rg0Q1sVBZUSpr7XakOpAwQN1cdI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DKlSFSPslpFWz9KNH9EoeeJ7wpOv1krSsmANEj2UQAA6k+WvQRzaMncsUxbrutmskVgkg0r8+MgybquhyAhMmDvhR1Z4b3dDTIAGra21AJbz4ITkdRhFzzUXK8jz/ef+9ZSaTuGCzQ9QYUEIHhU/O6KJe5QydpF+78ZfnZrOLnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4X058M1gffz9sRs;
-	Thu,  5 Sep 2024 18:55:31 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id utC0CxKuXD61; Thu,  5 Sep 2024 18:55:31 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4X058M0gPbz9sRr;
-	Thu,  5 Sep 2024 18:55:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 046AF8B77C;
-	Thu,  5 Sep 2024 18:55:31 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ScrEPCzszJ3z; Thu,  5 Sep 2024 18:55:30 +0200 (CEST)
-Received: from [192.168.235.60] (unknown [192.168.235.60])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id EB2C58B778;
-	Thu,  5 Sep 2024 18:55:29 +0200 (CEST)
-Message-ID: <85c02620-e8b2-4c97-9905-685a9a4e556d@csgroup.eu>
-Date: Thu, 5 Sep 2024 18:55:27 +0200
+	 In-Reply-To:Content-Type; b=uPAcsCt4gQwCeQvBkWsDHgoPJdkgDOdS2vRRjaQO4Dog0FU4ZWzeuUVL9hMVq24DemVj5Qwsalj5P2O9cetvvyQJlfhNaaI06zPfpFFOXcmqTjUQBDy1/AXfLJYdQ/w2NI5afLuKimH8R5hLCsRXzTZ6eCFItkeVCQXr1FYEqEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EGoN38GO; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EGoN38GO"
+Message-ID: <3559cb54-b19a-4650-afc0-fcfb261dd876@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1725555602;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gWNOpx6m4x/ajgnWUaYsJDrWvzMaA+fdW54bnTwX/Yw=;
+	b=EGoN38GO6M9zHBXiuq121lA5BBZ+Sr3PpplTj3KGRFBSgvNKzxXEJ5ANgHTpO1mYeu2qSG
+	TITC4D+AgCNp8uFDhGUZFZ6TJXPjoGZfdOdfWf9L9xiOVhZSSg+LepRsby7/GHYBP+dysM
+	Urq63M6XIWrUsxlHqhx6HeD88Usc2dM=
+Date: Thu, 5 Sep 2024 12:59:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] powerpc/vdso: Wire up getrandom() vDSO
- implementation on VDSO32
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
- llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org,
- Adhemerval Zanella <adhemerval.zanella@linaro.org>,
- Xi Ruoyao <xry111@xry111.site>
-References: <cover.1725304404.git.christophe.leroy@csgroup.eu>
- <1f49c2ce009f8b007ab0676fb41187b2d54f28b2.1725304404.git.christophe.leroy@csgroup.eu>
- <ZtnYqZI-nrsNslwy@zx2c4.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <ZtnYqZI-nrsNslwy@zx2c4.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] dma: Trace API
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Christoph Hellwig <hch@lst.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20240826203240.2234615-1-sean.anderson@linux.dev>
+ <20240829041912.GB4408@lst.de>
+ <4c2c6b24-aee1-495f-ab47-662e1e818f4b@linux.dev>
+ <20240903072512.GA1521@lst.de> <20240903092154.5f0bfafe@gandalf.local.home>
+ <d8936bfc-1ea3-4142-8035-0dfb8e491c31@linux.dev>
+ <20240903205322.69d7638c@gandalf.local.home>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240903205322.69d7638c@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-
-
-Le 05/09/2024 à 18:13, Jason A. Donenfeld a écrit :
->> +/*
->> + * The macro sets two stack frames, one for the caller and one for the callee
->> + * because there are no requirement for the caller to set a stack frame when
->> + * calling VDSO so it may have omitted to set one, especially on PPC64
->> + */
->> +
->> +.macro cvdso_call funct
->> +  .cfi_startproc
->> +	PPC_STLU	r1, -PPC_MIN_STKFRM(r1)
->> +  .cfi_adjust_cfa_offset PPC_MIN_STKFRM
->> +	mflr		r0
->> +	PPC_STLU	r1, -PPC_MIN_STKFRM(r1)
->> +  .cfi_adjust_cfa_offset PPC_MIN_STKFRM
->> +	PPC_STL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
->> +  .cfi_rel_offset lr, PPC_MIN_STKFRM + PPC_LR_STKOFF
->> +	get_datapage	r8
->> +	addi		r8, r8, VDSO_RNG_DATA_OFFSET
->> +	bl		CFUNC(DOTSYM(\funct))
->> +	PPC_LL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
->> +	cmpwi		r3, 0
->> +	mtlr		r0
->> +	addi		r1, r1, 2 * PPC_MIN_STKFRM
->> +  .cfi_restore lr
->> +  .cfi_def_cfa_offset 0
->> +	crclr		so
->> +	bgelr+
->> +	crset		so
->> +	neg		r3, r3
->> +	blr
->> +  .cfi_endproc
->> +.endm
+On 9/3/24 20:53, Steven Rostedt wrote:
+> On Tue, 3 Sep 2024 10:36:29 -0400
+> Sean Anderson <sean.anderson@linux.dev> wrote:
 > 
-> You wrote in an earlier email that this worked with time namespaces, but
-> in my testing that doesn't seem to be the case.
-
-Did I write that ? I can't remember and neither can I remember testing 
-it with time namespaces.
-
+>> This doesn't apply for arrays:
+>> 
+>> 	field:__data_loc u64[] addrs;	offset:12;	size:4;	signed:0;
+>> 
+>> Here the size is not for the data type but for the array. And so the
+>> type is parsed by process_sizeof in src/event-parse.c.
 > 
->  From my test harness [1]:
+> Ah, I see what you are talking about:
 > 
-> Normal single thread
->     vdso: 25000000 times in 12.494133131 seconds
->     libc: 25000000 times in 69.594625188 seconds
-> syscall: 25000000 times in 67.349243972 seconds
-> Time namespace single thread
->     vdso: 25000000 times in 71.673057436 seconds
->     libc: 25000000 times in 71.712774121 seconds
-> syscall: 25000000 times in 66.902318080 seconds
+> +	TP_printk("%s dir=%s phys_addrs=%s attrs=%s",
+> +		__get_str(device),
+> +		decode_dma_data_direction(__entry->dir),
+> +		__print_array(__get_dynamic_array(addrs),
+> +			      __get_dynamic_array_len(addrs) /
+> +				sizeof(unsigned long long), sizeof(unsigned long long)),
+> +		decode_dma_attrs(__entry->attrs))
 > 
-> I'm seeing this on ppc, ppc64, and ppc64le.
+> That part.
+> 
+> Yeah, the "sizeof()" parsing is somewhat of a hack. It would be trivial to
+> add u64 and all the variants to that.
+> 
+> This should do. I could get it into the next minor version.
+> 
+> diff --git a/src/event-parse.c b/src/event-parse.c
+> index ddeb3b9909c0..73563c8e9dea 100644
+> --- a/src/event-parse.c
+> +++ b/src/event-parse.c
+> @@ -3571,6 +3571,23 @@ process_sizeof(struct tep_event *event, struct tep_print_arg *arg, char **tok)
+>  			/* The token is the next token */
+>  			token_has_paren = true;
+>  		}
+> +
+> +	} else if (strcmp(token, "__u64") == 0 || strcmp(token, "u64") == 0 ||
+> +		   strcmp(token, "__s64") == 0 || strcmp(token, "s64") == 0) {
+> +		arg->atom.atom = strdup("8");
+> +
+> +	} else if (strcmp(token, "__u32") == 0 || strcmp(token, "u32") == 0 ||
+> +		   strcmp(token, "__s32") == 0 || strcmp(token, "s32") == 0) {
+> +		arg->atom.atom = strdup("4");
+> +
+> +	} else if (strcmp(token, "__u16") == 0 || strcmp(token, "u16") == 0 ||
+> +		   strcmp(token, "__s16") == 0 || strcmp(token, "s16") == 0) {
+> +		arg->atom.atom = strdup("2");
+> +
+> +	} else if (strcmp(token, "__u8") == 0 || strcmp(token, "u8") == 0 ||
+> +		   strcmp(token, "__s8") == 0 || strcmp(token, "s8") == 0) {
+> +		arg->atom.atom = strdup("1");
+> +
+>  	} else if (strcmp(token, "REC") == 0) {
+>  
+>  		free_token(token);
 
-What is the command to use to test with time namespace ?
+The above patch fixes the issue for me. Feel free to add
 
-> 
-> Can you figure out what's going on and send a fix, which I'll squash
-> into this commit?
+Tested-by: Sean Anderson <sean.anderson@linux.dev>
 
-Sure
+when you send it.
 
-> 
-> Jason
-> 
-> [1] https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.zx2c4.com%2Flinux-rng%2Fcommit%2F%3Fh%3Djd%2Fvdso-test-harness&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C59fa9061064945c73a1608dccdc5b51c%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638611496253413014%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=ZUJqhcnZL7SYkuXUIt9Nlo46sZj26VYW%2F8I%2BrBLRpBE%3D&reserved=0
+--Sean
