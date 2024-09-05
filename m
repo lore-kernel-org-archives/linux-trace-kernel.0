@@ -1,114 +1,72 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1085A149E16
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Sep 2024 04:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4EE19340B;
+	Thu,  5 Sep 2024 07:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725510903; cv=none; b=Uehvng1+P427agTg/NqwB/8bxUwxHBYO4nQC4tKThvgYu+FZaPjriwZAqWEOIBWxw7T/+pvR5TkzVNKsnsasjwgq7gqcsXALMBlZAiOEDZhOtsNAmwAn8pyRBsJHC7I2fwgkhUm0Y3VWlL1dcdxnanBFDg5hnYp30RF0C+Hjx+Y=
+	t=1725522994; cv=none; b=tPk8uwroS0SEKk6cbknquvBy6s2xm+WmuRAUqOqfsYFRJXDkgjlk/Chv963EIO2cWszDt1GZXRMrLIGQbLAKo7WQ49Ww2EXXzA++7RzvA+tzzgxbTBuKEcwvH3ZcIrJBILAoP/XQ+pSJlViW4N9WuFAVhD3ZMzBsWGd7H6wxvz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725510903; c=relaxed/simple;
-	bh=ZpcEvvudV3zwcYeNP62knioScPXoayjlokROh8sA/AQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C/dB7v4hONH45Gl6zmWwpad+JsMCWC/max46BlbATTw5xAoOsE59k9DtdCcknhjSOxeo21IhucQfFo1O3OV7vIc+BN/FFG0m/Bgs7aZJTdTXX28zVLhiVAB9JJwdua7enXmZ8LVe0gSSqmwF1wMtdT0ZRHzVDMfCRu8QXvHQvfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois-edu.20230601.gappssmtp.com header.i=@illinois-edu.20230601.gappssmtp.com header.b=ggJtWKRe; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+	s=arc-20240116; t=1725522994; c=relaxed/simple;
+	bh=oJ5g20RlH+r1YZadkqhgMik60Qt05kzPuIVi50Voc/c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=I9qJUKjULd7w/avGWQ7nDVs8O9vzmLp694nIQUrtw4nYN4O6iqbPcLWpm4ZRlLShIDIaSfmBIISNlogbdS5G86svE8mG7Cn2UBPJ264VJ8YGqUCI/+CNvc4sMODK0jonf9sdMk9KMLjH006z5vIKD90KGT7oz/QzLWBHJuJmkt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=InjgB6b3; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois-edu.20230601.gappssmtp.com header.i=@illinois-edu.20230601.gappssmtp.com header.b="ggJtWKRe"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7a966f0ac8aso21829285a.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Sep 2024 21:35:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=illinois-edu.20230601.gappssmtp.com; s=20230601; t=1725510901; x=1726115701; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mA8QNkfTPcJhmIVKfWV2EgXocZ+TYN3IbgT82p4dkrQ=;
-        b=ggJtWKReyeYUJwzk9EutrB3PRzJYAwLSUUoX6hxshD15mKMMFRkOO85+t+FaW6pBF3
-         fbV6dxEMfnZqja3GCEnuU6vlY+7gPcXH4vluOUmW7thQGUmAhmSoSe6KVcDIdCtuwv+e
-         3suRz2eT/QodGjuv37Jt2TH4lbR1ZAuds66a5vARgTktZSojCuogk+W+AD04wt+Co3Ak
-         um+XCcrbn5ZRoW6JaXd+DPjj++Nbsthm2QBYSgQ/Sc+wcqIQ+/ZvDXFSDXW977DuQJZa
-         Lnhd7V93metJ3zlamcGHwubiLvf9GtMOUA0bTO81gMz5d+Wl8Pcian8AjBCxagpKbTsM
-         WJhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725510901; x=1726115701;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mA8QNkfTPcJhmIVKfWV2EgXocZ+TYN3IbgT82p4dkrQ=;
-        b=IzlOPdj0JlUvc6ZQiOds/BeyJEVPu+uKrCBBAWRIr+X5S5JDavoSbifiCCNTDtebJ4
-         yhied7jCypTLdsc0baUBLvdH1PcXKXrritzBCIKKwm5uviIYjyl/L7ThUt13m6v+Y2iE
-         e9tOCoeQ79cIUzqNwytxt4851Sgo9QL38MoMXBjNqsTo5jTQnZSA1PmkxpnT153lJlLB
-         8Dpuo4o6icejVjRANQbNwRi7Q2B48i9umxFrC+BZ912k1CqLdO973kqVbJ+n2XDj45qe
-         hZLIRdP598m31FppIMXCWkeJIuPyaYoIcQ9gAhlYbru0jDA1qFjwESQpZI8IoNdmy53O
-         /f1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWw8ZzVFXHSvt/08M23MRu5F4ak7ZF2VPM2Lg7ZWMd0If9LMgOVke5qC7EJ39/zaHGUXBnzvD961NT1zQvfnb3yemg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP7pwlU9v0xthOOMaLkAuADPFen9BX9F+AuaRYYs7envbPM+Tn
-	SSMkx/rtALjRHul7p75WQPt8TTCzx8mHDhlVwfuZvGu7Rv15YNPSuSv9kZfUfQ==
-X-Google-Smtp-Source: AGHT+IFRf1D5vt1QAYst2+47RlHDBe/oTQ0pdJOm5kim3EC+oveF5BzPVYhrOWbWoMHiQ4QFDP6QZA==
-X-Received: by 2002:a05:620a:2a08:b0:79d:55ab:3867 with SMTP id af79cd13be357-7a902f29ac7mr2154420785a.46.1725510900949;
-        Wed, 04 Sep 2024 21:35:00 -0700 (PDT)
-Received: from node0.kernel3.linux-mcdc-pg0.utah.cloudlab.us ([128.110.218.246])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45801b4cf4csm4182341cf.48.2024.09.04.21.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 21:35:00 -0700 (PDT)
-From: Wentao Zhang <wentaoz5@illinois.edu>
-To: wentaoz5@illinois.edu
-Cc: Matt.Kelly2@boeing.com,
-	akpm@linux-foundation.org,
-	andrew.j.oppelt@boeing.com,
-	anton.ivanov@cambridgegreys.com,
-	ardb@kernel.org,
-	arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	chuck.wolber@boeing.com,
-	dave.hansen@linux.intel.com,
-	dvyukov@google.com,
-	hpa@zytor.com,
-	jinghao7@illinois.edu,
-	johannes@sipsolutions.net,
-	jpoimboe@kernel.org,
-	justinstitt@google.com,
-	kees@kernel.org,
-	kent.overstreet@linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	llvm@lists.linux.dev,
-	luto@kernel.org,
-	marinov@illinois.edu,
-	masahiroy@kernel.org,
-	maskray@google.com,
-	mathieu.desnoyers@efficios.com,
-	matthew.l.weber3@boeing.com,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	morbo@google.com,
-	nathan@kernel.org,
-	ndesaulniers@google.com,
-	oberpar@linux.ibm.com,
-	paulmck@kernel.org,
-	peterz@infradead.org,
-	richard@nod.at,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="InjgB6b3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1725522989; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=JKqdxuX4Wa1ORQ7kxclAATsobclvetQtCCCwpC0uu+E=;
+	b=InjgB6b3i6+KIKo+2wfWdXQiCn67ICIXq2MiYWR77x8ZKMKVEthyPLhtXQwMF9MNQEBg/NdzOKiII67GMLkzuRuXJDdP+obTZNtJbCl/bt15w45MrOnocCTnpIHDhwtWwNXRvYuzXOT4Q+g3U9AgDlTwBGqdCwRi0qOYi0Jqqos=
+Received: from localhost(mailfrom:lulie@linux.alibaba.com fp:SMTPD_---0WEKuTCT_1725522985)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Sep 2024 15:56:26 +0800
+From: Philo Lu <lulie@linux.alibaba.com>
+To: bpf@vger.kernel.org
+Cc: edumazet@google.com,
 	rostedt@goodmis.org,
-	samitolvanen@google.com,
-	samuel.sarkisian@boeing.com,
-	steven.h.vanderleest@boeing.com,
-	tglx@linutronix.de,
-	tingxur@illinois.edu,
-	tyxu@illinois.edu,
-	x86@kernel.org
-Subject: [PATCH v2 4/4] x86: enable llvm-cov support
-Date: Wed,  4 Sep 2024 23:32:45 -0500
-Message-ID: <20240905043245.1389509-5-wentaoz5@illinois.edu>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240905043245.1389509-1-wentaoz5@illinois.edu>
-References: <20240824230641.385839-1-wentaoz5@illinois.edu>
- <20240905043245.1389509-1-wentaoz5@illinois.edu>
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	thinker.li@gmail.com,
+	juntong.deng@outlook.com,
+	jrife@google.com,
+	alan.maguire@oracle.com,
+	davemarchevsky@fb.com,
+	dxu@dxuuu.xyz,
+	vmalik@redhat.com,
+	cupertino.miranda@oracle.com,
+	mattbobrowski@google.com,
+	xuanzhuo@linux.alibaba.com,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v2 2/5] selftests/bpf: Add test for __nullable suffix in tp_btf
+Date: Thu,  5 Sep 2024 15:56:19 +0800
+Message-Id: <20240905075622.66819-3-lulie@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+In-Reply-To: <20240905075622.66819-1-lulie@linux.alibaba.com>
+References: <20240905075622.66819-1-lulie@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -117,43 +75,111 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Set ARCH_HAS_* options to "y" in kconfig and include section description in
-linker script.
+Add a tracepoint with __nullable suffix in bpf_testmod, and add a
+failure load case:
 
-Signed-off-by: Wentao Zhang <wentaoz5@illinois.edu>
-Reviewed-by: Chuck Wolber <chuck.wolber@boeing.com>
-Tested-by: Chuck Wolber <chuck.wolber@boeing.com>
+$./test_progs -t "module_attach"
+ #173/1   module_attach/handle_tp_btf_nullable_bare:OK
+ #173     module_attach:OK
+ Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+
+Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
 ---
- arch/x86/Kconfig              | 2 ++
- arch/x86/kernel/vmlinux.lds.S | 2 ++
- 2 files changed, 4 insertions(+)
+ .../bpf/bpf_testmod/bpf_testmod-events.h         |  6 ++++++
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c      |  2 ++
+ .../selftests/bpf/prog_tests/module_attach.c     | 14 +++++++++++++-
+ .../bpf/progs/test_module_attach_fail.c          | 16 ++++++++++++++++
+ 4 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/test_module_attach_fail.c
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 007bab9f2..e0a8f7b42 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -85,6 +85,8 @@ config X86
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_KCOV			if X86_64
-+	select ARCH_HAS_LLVM_COV		if X86_64
-+	select ARCH_HAS_LLVM_COV_PROFILE_ALL	if X86_64
- 	select ARCH_HAS_KERNEL_FPU_SUPPORT
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 6e73403e8..904337722 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -191,6 +191,8 @@ SECTIONS
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod-events.h b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod-events.h
+index 11ee801e75e7e..6c3b4d4f173ac 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod-events.h
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod-events.h
+@@ -34,6 +34,12 @@ DECLARE_TRACE(bpf_testmod_test_write_bare,
+ 	TP_ARGS(task, ctx)
+ );
  
- 	BUG_TABLE
- 
-+	LLVM_COV_DATA
++/* Used in bpf_testmod_test_read() to test __nullable suffix */
++DECLARE_TRACE(bpf_testmod_test_nullable_bare,
++	TP_PROTO(struct bpf_testmod_test_read_ctx *ctx__nullable),
++	TP_ARGS(ctx__nullable)
++);
 +
- 	ORC_UNWIND_TABLE
+ #undef BPF_TESTMOD_DECLARE_TRACE
+ #ifdef DECLARE_TRACE_WRITABLE
+ #define BPF_TESTMOD_DECLARE_TRACE(call, proto, args, size) \
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+index c73d04bc9e9de..9649e7f09fc90 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -394,6 +394,8 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+ 	if (bpf_testmod_loop_test(101) > 100)
+ 		trace_bpf_testmod_test_read(current, &ctx);
  
- 	. = ALIGN(PAGE_SIZE);
++	trace_bpf_testmod_test_nullable_bare(NULL);
++
+ 	/* Magic number to enable writable tp */
+ 	if (len == 64) {
+ 		struct bpf_testmod_test_writable_ctx writable = {
+diff --git a/tools/testing/selftests/bpf/prog_tests/module_attach.c b/tools/testing/selftests/bpf/prog_tests/module_attach.c
+index 6d391d95f96e0..961d8577d6fab 100644
+--- a/tools/testing/selftests/bpf/prog_tests/module_attach.c
++++ b/tools/testing/selftests/bpf/prog_tests/module_attach.c
+@@ -4,6 +4,7 @@
+ #include <test_progs.h>
+ #include <stdbool.h>
+ #include "test_module_attach.skel.h"
++#include "test_module_attach_fail.skel.h"
+ #include "testing_helpers.h"
+ 
+ static int duration;
+@@ -33,7 +34,7 @@ static int trigger_module_test_writable(int *val)
+ 	return 0;
+ }
+ 
+-void test_module_attach(void)
++static void module_attach_succ(void)
+ {
+ 	const int READ_SZ = 456;
+ 	const int WRITE_SZ = 457;
+@@ -115,3 +116,14 @@ void test_module_attach(void)
+ cleanup:
+ 	test_module_attach__destroy(skel);
+ }
++
++static void module_attach_fail(void)
++{
++	RUN_TESTS(test_module_attach_fail);
++}
++
++void test_module_attach(void)
++{
++	module_attach_succ();
++	module_attach_fail();
++}
+diff --git a/tools/testing/selftests/bpf/progs/test_module_attach_fail.c b/tools/testing/selftests/bpf/progs/test_module_attach_fail.c
+new file mode 100644
+index 0000000000000..0f848d8f2f5e8
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_module_attach_fail.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_tracing.h>
++#include "../bpf_testmod/bpf_testmod.h"
++#include "bpf_misc.h"
++
++SEC("tp_btf/bpf_testmod_test_nullable_bare")
++__failure __msg("invalid mem access")
++int BPF_PROG(handle_tp_btf_nullable_bare, struct bpf_testmod_test_read_ctx *nullable_ctx)
++{
++	return nullable_ctx->len;
++}
++
++char _license[] SEC("license") = "GPL";
 -- 
-2.45.2
+2.32.0.3.g01195cf9f
 
