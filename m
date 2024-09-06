@@ -1,166 +1,127 @@
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB8F1CBE9F
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 19:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E304C1B85F8
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 19:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725649583; cv=none; b=MNB6r9AGu2neVypZg52rPCXLbciF/m4OFensVJVZeeYTTpaj4AVEYFpNyIfaWICC82l4BkYXliYbaupVW4w+1o+7JJVX0nZzRah+KwTSYOtYMtZJNCVULmTXJ8oW1Zma5RDKKTqI5M4tgaS3Ku0cnAFvrevLxTI3ahPn48dvhhI=
+	t=1725650321; cv=none; b=tys9pmIzuZnjy4MJ7tlY+TpTrD7my/WWhNF2ZiK1vPw9EGBH9vNY6ta++doH1W+pKtlwDxIa8A5yjZKK5slBYFauo3A8pbfN61czVzTGrmGTvWX+Kz6lh9iNFO6yUwQfyHzlGHh4UTQTBZIHa3FEa26zSgrU5XRnRGUGpnMAGzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725649583; c=relaxed/simple;
-	bh=X+OX1A8Q6OgV4SR6WwyW3nVha2u746YGuE81l2DdMdg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T+2qEDeVuc9t+6pWaaM6U4iPrN9zhSqU+FMUPEKNI6bRzIVLXbyPO/FILozFnaC0c/wnBuzcjHJE2Ok9VzUjS0cTXS3MqQNedHtwnlylVHyXcf7Xe/WY9HkEuCAyWOssg9lmA4k2S+H8qOIoEkOvtwldhyVZ/ToPD66Fl/U96jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=08A28jil; arc=none smtp.client-ip=209.85.210.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1725650321; c=relaxed/simple;
+	bh=kso3KE7BAZgGTVzjhjR9Ru5FXk6aNB3R22lYAIoJ/0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJsyAx7sMLhJ9S8asvTdsaNuzZePtDOr95LL856N2xPr5mOb6vNm9z5Du7sEB5Li/fSgz4Sm3pJnF3bTtrujD4hsDlMv3afKniqQqFTujm2CPDtTtpHM7gYBJZTSPSt0D/AuCsbGZjHf/SHLSO6laFdLnqqJ7hDqiKuyRiarkeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y1lEVxkA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="08A28jil"
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7092dd03223so1075163a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Sep 2024 12:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725649580; x=1726254380; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sRL0IOkPquaSmH/TxMcTrkn2lAb7RgDZ+KVgL/uKDo8=;
-        b=08A28jilPARB13PmpusJH/FP0Z4EgYX7Hmb3KwkI20mJogR3zxl6G0e5MElVddW0pL
-         vvoClMo24PfcCJqeOBu+ZEpGUUTB9XsrTF+Tm4qezsq1YpJaf0aFoNl4Bq+93u3e68AY
-         Z6osRkEN4aNfyzhO7Q432032CGlNRS8jh52K8hjLVWZOYwwuTDpHfR8h1vG4/rbKAzro
-         jfCSeipANRJULlRs0jVSSDDUvaHe99qRnKN5LlTtYoWayy/MJJM5CUweiT4FX7w/KajY
-         Q3ozI2KDFdkAxmqYZiO/Y/qZ5ORs0mNa51e4fFnMh4BJrBfshJ7dDMwQMfzAYmUhQWz1
-         P0wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725649580; x=1726254380;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sRL0IOkPquaSmH/TxMcTrkn2lAb7RgDZ+KVgL/uKDo8=;
-        b=F7ig3JgXqJzmBJgR24kS+W0eAW3NZpCf/Lt06mHIqYmTpQm7TO/iREBqC8+P2hoWZk
-         /1O8bO7xrBErf1MrMQISG+taW5eE7BR+4dygJs6fcWkOWWMKmvSRtvuKJUc4EPdegka4
-         KZGHSOlTD/WaU+PY5icvkjdpmYt9JkgomGBEZYdiP5lLzgm+/0aFzzsgHDf9x4QKSCGX
-         edToeFXNGEVWYSOcnACIfP5AZqlnMq2rVa4Qj8HUtX+Wu5uJRRcP/7G7mzO6qf1INkCD
-         8CTZcCg/qNBdTDY1vzv/b/vATMRbyfIBm+ybrB5kXdtP4YSSUqAMpxZKnJE1yntO5258
-         IJuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVze1Xk77KaIbhm4a23eYxv7kMsEbUeIbvoF9iwCkbMs5+gsaZc0PSN8hlBGqJ/RBGvKoC/+SN7MYA576HPhb+tnoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVXOKOGE4teRWMPzpA4s9qlCu6TTI41rWp4kF1iHbJ2DQZNf8a
-	XjEn3n1hJnolHAEnJoIhtW86Lfpo2vHXkvGv8a0xqD6OX3ejRinZXzArY0xjxGg=
-X-Google-Smtp-Source: AGHT+IFMNu7CkzsCPaFKzf0VUQEiZwLzm4UrG2v/Np24ZK9LDshdqsK0810LAPAwttIC/hC3aaCcKQ==
-X-Received: by 2002:a05:6830:6404:b0:709:3b06:d578 with SMTP id 46e09a7af769-710cc25c94amr4383633a34.26.1725649580418;
-        Fri, 06 Sep 2024 12:06:20 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70f671ca4a0sm3783279a34.79.2024.09.06.12.06.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2024 12:06:20 -0700 (PDT)
-Message-ID: <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
-Date: Fri, 6 Sep 2024 14:06:18 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y1lEVxkA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725650318;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5d7QmBZWv1tq28MouZGS3appaR9B3dDPjBODFjCk0jU=;
+	b=Y1lEVxkAgtWlar5wWXV4IRnBavv9IfEvJ65ufpmB7dZ2eg+e6Te2chJlmfasFsa1Bv7F2V
+	4bxRw1J7mdrk/UyYuWD6c9TiWNfdf4PJ1nTNp1Wd1cQ9qYMgwg3/+n6SHJXYHa88pxG3qq
+	R5r5UCkqxbfEo0e9QCFG9/RVVahQfzE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-449-j62DGxljP9emUYDuWbWDoA-1; Fri,
+ 06 Sep 2024 15:18:35 -0400
+X-MC-Unique: j62DGxljP9emUYDuWbWDoA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A57119560B2;
+	Fri,  6 Sep 2024 19:18:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.54])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CC55E1955F45;
+	Fri,  6 Sep 2024 19:18:26 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  6 Sep 2024 21:18:20 +0200 (CEST)
+Date: Fri, 6 Sep 2024 21:18:15 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Tianyi Liu <i.pear@outlook.com>, ajor@meta.com,
+	albancrequy@linux.microsoft.com, andrii.nakryiko@gmail.com,
+	bpf@vger.kernel.org, flaniel@linux.microsoft.com,
+	linux-trace-kernel@vger.kernel.org, linux@jordanrome.com,
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+	rostedt@goodmis.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240906191814.GB17874@redhat.com>
+References: <20240830101209.GA24733@redhat.com>
+ <ME0P300MB0416522C59231B4127E23C6F9D912@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <Ztrc6eJ14M26xmvr@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] pwm: New abstraction and userspace API
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org,
- Michael Hennerich <michael.hennerich@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- linux-stm32@st-md-mailman.stormreply.com, Kent Gibson <warthog618@gmail.com>
-References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Ztrc6eJ14M26xmvr@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 9/6/24 10:42 AM, Uwe Kleine-König wrote:
-> Hello,
-> 
-> here comes v4 of the series to add support for duty offset in PWM
-> waveforms. For a single PWM output there is no gain, but if you have a
-> chip with two (or more) outputs and both operate with the same period,
-> you can generate an output like:
-> 
->                ______         ______         ______         ______
->    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
->                  __             __             __             __
->    PWM #1  _____/  \___________/  \___________/  \___________/  \_________
->               ^              ^              ^              ^
-> 
+On 09/06, Jiri Olsa wrote:
+>
+> On Mon, Sep 02, 2024 at 03:22:25AM +0800, Tianyi Liu wrote:
+> >
+> > For now, please forget the original patch as we need a new solution ;)
+>
+> hi,
+> any chance we could go with your fix until we find better solution?
 
-While working on an ADC driver that uses these new waveform APIs, we came
-across a case where we wanted wf->duty_offset_ns >= wf->period_length_ns,
-which is currently not allowed. [1]
+Well, as I said from the very beginning I won't really argue even if
+I obviously don't like this change very much. As long as the changelog /
+comments clearly explain this change. I understand that sometimes an
+ugly/incomplete/whatever workaround is better than nothing.
 
-                ______         ______         ______         ______
-    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
-                               __             __             __
-    PWM #1  __________________/  \___________/  \___________/  \___________
-                            ^              ^              ^              
+> it's simple and it fixes most of the cases for return uprobe pid filter
+> for events with bpf programs..
 
-We worked around it by setting:
+But to remind it doesn't even fixes all the filtering problems with uprobes,
+not uretprobes,
 
-	wf->duty_offset_ns = DESIRED_NS % wf->period_length_ns
+> I know during the discussion we found
+> that standard perf record path won't work if there's bpf program
+> attached on the same event,
 
-Having PWM #1 trigger too early just causes the first sample data
-read to be invalid data.
+Ah. Yes, this is another problem I tried to point out. But if we discuss
+the filtering we can forget about /usr/bin/perf.
 
-But even if we allowed wf->duty_offset_ns >= wf->period_length_ns,
-this offset wouldn't matter because there currently isn't a way to
-enable two PWM outputs at exactly the same time.
+Again, again, again, I know nothing about bpf. But it seems to me that
+perf_event_attach_bpf_prog() allows to attach up to BPF_TRACE_MAX_PROGS
+progs to event->tp_event->prog_array, and then bpf_prog_run_array_uprobe()
+should run them all. Right?
 
-In the ADC application we work around both of these shortcomings by not
-enabling the DMA that is triggered by PWM #1 until after both PWMs are
-enabled. However, there may be similar applications in the future that
-also need such an offset and synchronized enable that might not be so
-easy to work around, so something to keep in mind.
+So I think that if you run 2 instances of run_prog from my last test-case
+with $PID1 and $PID2, the filtering will be broken again. Both instances
+will share the same trace_event_call and the same trace_uprobe_filter.
 
-[1]: https://lore.kernel.org/linux-iio/20240904-ad7625_r1-v4-2-78bc7dfb2b35@baylibre.com/
+> and also it's not a common use case
 
+OK.
 
-> 
->  - The functions pwm_set_waveform_might_sleep() and
->    pwm_round_waveform_might_sleep() have an unusual return value
->    convention: They return 0 on success, 1 if the requested waveform
->    cannot be implemented without breaking the rounding rules, or a
->    negative errno if an error occurs.
->    Fabrice rightfully pointed out this to be surprised by this and
->    suggested to use at least a define for it.
-> 
->    I couldn't find a decision that I'm entirely happy with here. My
->    conflicts are:
-> 
->     - I want a constant that now and in the future only means "cannot be
->       done due to the rounding rules in the pwm framework". So the
->       options are:
->         * Introduce a new ESOMETHING and return -ESOMETHING
->           I think that's hard to motivate and also myself doubt this
->           would be sensible. As below, the question for a good name is
->           unresolved.
->         * return 1
->           This is what was done in the earlier revisions and also here.
-> 
->     - When keeping the return 1 semantics (and also for a new
->       ESOMETHING):
->       I agree that a name instead of a plain 1 would be nice, but I
->       couldn't come up with a name I liked. Given that this can be
->       introduced later without breaking anything, I don't consider that
->       very urgent.
->       My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
->       PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
->       These are too long or/and imprecise.
->       If you have a good idea, please tell.
+And btw... Can bpftrace attach to the uprobe tp?
 
-To avoid using the return value for status flags, we could introduce
-an optional output parameter. Consumers where best effort is good
-enough can just pass NULL and consumers that care can pass an unsigned
-int to receive the status flag. This could even be a bitmap of multiple
-flags if it would be useful to know which rule(s) could not be met.
+	# perf probe -x ./test -a func
+	Added new event:
+	  probe_test:func      (on func in /root/TTT/test)
+
+	You can now use it in all perf tools, such as:
+
+		perf record -e probe_test:func -aR sleep 1
+
+	# bpftrace -e 'tracepoint:probe_test:func { printf("%d\n", pid); }'
+	Attaching 1 probe...
+	ioctl(PERF_EVENT_IOC_SET_BPF): Invalid argument
+	ERROR: Error attaching probe: tracepoint:probe_test:func
+
+Oleg.
 
