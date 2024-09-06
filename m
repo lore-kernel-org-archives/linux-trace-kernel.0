@@ -1,313 +1,530 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C1D1D2F61
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 15:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A981D54FC;
+	Fri,  6 Sep 2024 17:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725637421; cv=none; b=VyigLRfXDkjHjTrMQbOJRaPz2GGDVwkHsUDeJT0CMs2m6otE/KEjK7pCOCAj+jadfFgvOvOH1k+vTddMiOr14EDXi0o9SWG3W7GNlghB/4dp+xfi1oaRS7JxF/FbOhG6vow5SrOlKLqrBpANesdt8wGKlisRZceNjUhu3gI7QPI=
+	t=1725644775; cv=none; b=jY5cHihwGvcw2ytbSfjj4Hlf52+niB/FGuU0LAa6dAwTzDsU4pq9iyFIt+Gfjb2r3Ji5AL0fEEQYRVW65tqJHYDBxFVd2/t/kDKoZDZp5aFoWH3g5LONdy4EMRhNVyXFG5Hh+0RbkPR/L+7CntQLSMJ9yrCKBDTxnI46pqNa6s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725637421; c=relaxed/simple;
-	bh=0lhKsC6PAK0yWbkqMl0Cs8Xin5eJnmMcxurW1r1zin4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qk0iDtLWQwz6PCMl2JPybESKGZmEneBmwhtEqvnoPZFqNwlXu5F4vTxWrXotoJxIt8q3b5KpbLVCQ00y90/8Lx4+ltdow7n4Z+5FbadZ9llSOEnN820qzTCJDV6D7g5YR3tCyngKuA43xaS8DlFDKTnl/5qT8jjgJkbQcxCdIjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qc2lHf4n; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1725644775; c=relaxed/simple;
+	bh=1EdSolMbqrhtSQvTFdMIftWK3dAFOYLqvQOIJvZh48I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tS0NZ5UpoJIyCaT0plMcablgLHM3VGmpObr7LTrMSt5hs8JaMFc3OzXB0idAsaOuVqC1mm44wkGluHO5GJ8TNwXDKKvaeHLOrUzXMEDPdzFi5EfkqWKSufBhokxuGN3RL9JKqY4IB3jfq3jUtKtkSId1glEKhZU1J5ylnxQPBMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QpFED3at; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qc2lHf4n"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c3c30e663fso2563462a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Sep 2024 08:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpFED3at"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2d8a744aa9bso1673000a91.3;
+        Fri, 06 Sep 2024 10:46:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725637418; x=1726242218; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1725644773; x=1726249573; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jb9iQRGEXaHrFOsWlt0MrM/KOYCkZ0LIeqvtu3kK9IM=;
-        b=qc2lHf4n5eJn9qwOnwoqjy3CeXMRFuo12W/RiHh99uEBZugrJJ7a18M8BZkxy9d7RC
-         3B2O3DTy2q1cFTlJErztQWCE5cMaVlPiEn+1+Gd4e1tHZ8WgKqiHPysn513lfJmlxX5p
-         YrtEc0DosJ4Yt+IOhtzC6gvtMAtCieHg88hdN07xLUiCspOHELw08ztB/jtyqG9kmud2
-         xYyi8JzLinEJkdimdPVnLormgsf5Vir6N+Cyz8KNMw9Xq9zmcxGY6cGaQssLvBLNednS
-         SMJbv4YbiJ206JjnbmQg+yrIRryf4C3RCNRm+QunTpr/svBYcNZvxfwUtAIrU6izO2ed
-         vO8A==
+        bh=7MunaMAGA4p4/sv+E147autv8egKDEreFDyZPwIOZz4=;
+        b=QpFED3atkDNkEw0IePJ1X4TJQygEuFfJmkT3mpt5AwRlgpgM1AsiZf9YyhicOpQe5V
+         7gMvhAcHvkZp3w3qvUM29JoAd0U63HKBrz0/s9KkfxO9+6+IlOhaq9AnC3Xw2Igj1CCJ
+         eLOV1tWXOwtYBu7TJr6kxb9+/rrMHdpSvU+VnJmOVBn8Ca/Yu8jyU9lAnjZRYHX/hvcL
+         rtEtlV6zKNMpDDEeit3r+oFDEkWNve9AaE2l2Q9fYkYzN39C/8RJD1N9yMJd14so7RMS
+         ROJ0WyhLg2my13w/aibHFkoDdlugRPVFNo3gPcoEwxzdSNwCci+IB8zQipeSrUEdOl0o
+         d5ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725637418; x=1726242218;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1725644773; x=1726249573;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jb9iQRGEXaHrFOsWlt0MrM/KOYCkZ0LIeqvtu3kK9IM=;
-        b=skvCl0ZjcTk5oEsVj2I1LFsm9uiV3jvtPEmnpA0TlqIpqnh48Qw6BHPtmKUrOJKez6
-         uebaxR29laWdUsx4b7qRn5gLi++hYW4Ydx/a3QvHESwLuZHzgy2e0v8aZyTUIvkLKu2P
-         DqecHVdsNjdz487RH8e+WQ63/SHvJ2orZK2tDiB/2xuUJ1VcogdYFx6EgOZmOl0SJjOX
-         jm+V4acubORiKb01RhaCIyFWvBEAsuA/AdYHjimVmkJVyq54JtAiWaDV9dhejC2DHLgV
-         OSVMfzBpxJ7FT3Aw7qETkFQjDgBNQ334qaRSuLufMDY2wBZOt2viWCIoxMPR13LkwhzG
-         Xjhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqzXlxHejT8Mi60sbTAzg+MLQRonG+qf9Ha3HgGVVFHKaFtmPsnxln5Zoeve0RFMPV5WVLHEjRh8zAAEetxFMG410=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHgEtF0H5TtzSG01FwMnYet5eu0sqEqOXJ7K9HdYEAqcxf2LRk
-	R3WweatSZzHU7nAJNdyu4yvt0xwjvevGibWbQwazHdaOj3gdmRkS12BVcOHM+sS80cACwvNQ6p6
-	2
-X-Google-Smtp-Source: AGHT+IGfL0g9FoUtO6uuMIwM+SQAXJZQcNX84rXNTtyuRxtatS92d/wbU9aoeb+/NTK0jR14bKx9VQ==
-X-Received: by 2002:a17:907:3687:b0:a8a:78b3:a291 with SMTP id a640c23a62f3a-a8a885bfdd5mr260820566b.7.1725637418100;
-        Fri, 06 Sep 2024 08:43:38 -0700 (PDT)
-Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a61fbb088sm290608466b.7.2024.09.06.08.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2024 08:43:37 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Kent Gibson <warthog618@gmail.com>,
-	David Lechner <dlechner@baylibre.com>
-Subject: [PATCH v4 5/7] pwm: Add tracing for waveform callbacks
-Date: Fri,  6 Sep 2024 17:43:01 +0200
-Message-ID:  <25699fb377f5eeeb4ffbc08fa590655c427d075a.1725635013.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
-References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
+        bh=7MunaMAGA4p4/sv+E147autv8egKDEreFDyZPwIOZz4=;
+        b=fAJdpu00EFFT7HiOFeO+Q30l8JBSfhLTyg8Qw6JzwpI0R546f76drhIISEq3d1QM72
+         0HwEtsEwqWeZI70VyrlIZAvTcWC5lXOqDNJxM/rpN4kD97llBOoXVcSPCUY1macdpXc5
+         jsUkQYhmVx0ttazRZoMWeDQ0oALeFWghRXhzRHXVZH51WIRvccA0OuL2SzeAbfdd3fPR
+         9AEoZVH+1otOYEehRjdZG+raMFT11nhmpZEpfK3Ok9F6GlLmjfSSFa7PWBAvvRkaY/Ay
+         GLk1TwCvAr3gTkpZTqOpixT85hERO3GNblfcOQncUBj5OwsT0M9/n5pxQXTbI9slGOMq
+         vkQA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5tdhqzWys/p90ROSvih9Fji9dgs+5clIF5c1gVjD9cqYEGWyKZepRcjbTzZaHNI6nZLI=@vger.kernel.org, AJvYcCXAu3q3dwCd1Nb9xe4RJ0v1CsZQsndv0Ki9QQUKXpmyXo6SwjJWOQxhkG+pJJTYajTsNyBKy0rObZWPXuIwah4k6xoH@vger.kernel.org, AJvYcCXD1aLYskNxQu0i1EbKxnT/b356sl3mfRVbN5hT6et2jesl0XGKN4RDplWBPFU8j22LwREDJ+HpUTFA+fm3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXR+vYFhYDMqulI1aclGnzNZs8KMrwffDIFN0YbL7mSIPVhLUH
+	MuOS+v/6Nkg2R9xVHiSCjEvcXL7D3wy7rYS9ozaiUnsBPAPkH/XnL8uVzQr3W6z5ZVeAf97O8o/
+	GOXLpjGJOnNmFXRku4dmCuNaKd0148ulB
+X-Google-Smtp-Source: AGHT+IFgEvxGdQlU8vOZo1Z9nlqoxWMcs+RADXWsawBCc0fNlj4EXvm1GsmhBM+Mf+0dBJH8Lkf/a8tmeFjnAApmh/E=
+X-Received: by 2002:a17:90b:3810:b0:2d3:d68e:e8d8 with SMTP id
+ 98e67ed59e1d1-2dad513cd89mr3291651a91.40.1725644772879; Fri, 06 Sep 2024
+ 10:46:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6305; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=0lhKsC6PAK0yWbkqMl0Cs8Xin5eJnmMcxurW1r1zin4=; b=owGbwMvMwMXY3/A7olbonx/jabUkhrTbynwz/tfVcqQFsibO3cGsKbJOPeSfpqxiwOQDM7vN3 l/1luXsZDRmYWDkYpAVU2Sxb1yTaVUlF9m59t9lmEGsTCBTGLg4BWAiDP/Y/7tz9ody5j7XSNS8 8Dv67Ypf6ozKP63Kfpt4HWFa+MMuKedUA7uP49w2xg9eL15ZRvV3sjwSPXmEibfpRhxn3dJM+Yu JRex1Acd7joQ8nSqn0/eed6n1kduZYfGTvia7f5kc5KbAl/1y2b1QLWvevzm7Pt9f7hbVqJDfFn MhMM/Fj9sz4NjPuS39Qn25lYWsfPE65VcX86++e6Ft6jrHHJ6fypmvblmJ/RbMrPi+4eu/nkOij kENhlUHuIqTn67nvDZ94gbxTtvTmtuWeqqxfqvJ+5zjsvEV05aaF9YLJzxa+OBkVsCioIc/Hvwv 9NaWYP96XMfLRUpm+Z2IyWJRT1uY57r1KhTYefbbrpoDAA==
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+References: <20240814080356.2639544-1-liaochang1@huawei.com>
+ <Zr3RN4zxF5XPgjEB@J2N7QTR9R3> <f95fc55b-2f17-7333-2eae-52caae46f8b2@huawei.com>
+ <8cc13794-30a7-a30b-2ac9-4d151499d184@huawei.com> <ZtrN4eWwrSWTMGmD@J2N7QTR9R3>
+In-Reply-To: <ZtrN4eWwrSWTMGmD@J2N7QTR9R3>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 6 Sep 2024 10:46:00 -0700
+Message-ID: <CAEf4BzYn3EkVVk4dnWMBMKa16y_ZFvQp3ZcdM44a2LeS08S6FQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: insn: Simulate nop and push instruction for better
+ uprobe performance
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Liao, Chang" <liaochang1@huawei.com>, catalin.marinas@arm.com, will@kernel.org, 
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, 
+	puranjay@kernel.org, ast@kernel.org, andrii@kernel.org, xukuohai@huawei.com, 
+	revest@chromium.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This adds trace events for the recently introduced waveform callbacks.
-With the introduction of some helper macros consistency among the
-different events is ensured.
+On Fri, Sep 6, 2024 at 2:39=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
+wrote:
+>
+> On Tue, Aug 27, 2024 at 07:33:55PM +0800, Liao, Chang wrote:
+> > Hi, Mark
+> >
+> > Would you like to discuss this patch further, or do you still believe e=
+mulating
+> > STP to push FP/LR into the stack in kernel is not a good idea?
+>
+> I'm happy with the NOP emulation in principle, so please send a new
+> version with *just* the NOP emulation, and I can review that.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/core.c         |  24 +++++--
- include/trace/events/pwm.h | 134 ++++++++++++++++++++++++++++++++++---
- 2 files changed, 146 insertions(+), 12 deletions(-)
+Let's definitely start with that, this is important for faster USDT tracing=
+.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 16615a4673ef..7bc536b98d18 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -166,30 +166,46 @@ static int __pwm_round_waveform_tohw(struct pwm_chip *chip, struct pwm_device *p
- 				     const struct pwm_waveform *wf, void *wfhw)
- {
- 	const struct pwm_ops *ops = chip->ops;
-+	int ret;
- 
--	return ops->round_waveform_tohw(chip, pwm, wf, wfhw);
-+	ret = ops->round_waveform_tohw(chip, pwm, wf, wfhw);
-+	trace_pwm_round_waveform_tohw(pwm, wf, wfhw, ret);
-+
-+	return ret;
- }
- 
- static int __pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
- 				       const void *wfhw, struct pwm_waveform *wf)
- {
- 	const struct pwm_ops *ops = chip->ops;
-+	int ret;
- 
--	return ops->round_waveform_fromhw(chip, pwm, wfhw, wf);
-+	ret = ops->round_waveform_fromhw(chip, pwm, wfhw, wf);
-+	trace_pwm_round_waveform_fromhw(pwm, wfhw, wf, ret);
-+
-+	return ret;
- }
- 
- static int __pwm_read_waveform(struct pwm_chip *chip, struct pwm_device *pwm, void *wfhw)
- {
- 	const struct pwm_ops *ops = chip->ops;
-+	int ret;
- 
--	return ops->read_waveform(chip, pwm, wfhw);
-+	ret = ops->read_waveform(chip, pwm, wfhw);
-+	trace_pwm_read_waveform(pwm, wfhw, ret);
-+
-+	return ret;
- }
- 
- static int __pwm_write_waveform(struct pwm_chip *chip, struct pwm_device *pwm, const void *wfhw)
- {
- 	const struct pwm_ops *ops = chip->ops;
-+	int ret;
- 
--	return ops->write_waveform(chip, pwm, wfhw);
-+	ret = ops->write_waveform(chip, pwm, wfhw);
-+	trace_pwm_write_waveform(pwm, wfhw, ret);
-+
-+	return ret;
- }
- 
- #define WFHWSIZE 20
-diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
-index 8022701c446d..8ba898fd335c 100644
---- a/include/trace/events/pwm.h
-+++ b/include/trace/events/pwm.h
-@@ -8,15 +8,135 @@
- #include <linux/pwm.h>
- #include <linux/tracepoint.h>
- 
-+#define TP_PROTO_pwm(args...)							\
-+	TP_PROTO(struct pwm_device *pwm, args)
-+
-+#define TP_ARGS_pwm(args...)							\
-+	TP_ARGS(pwm, args)
-+
-+#define TP_STRUCT__entry_pwm(args...)						\
-+	TP_STRUCT__entry(							\
-+		__field(unsigned int, chipid)					\
-+		__field(unsigned int, hwpwm)					\
-+		args)
-+
-+#define TP_fast_assign_pwm(args...)						\
-+	TP_fast_assign(								\
-+		__entry->chipid = pwm->chip->id;				\
-+		__entry->hwpwm = pwm->hwpwm;					\
-+		args)
-+
-+#define TP_printk_pwm(fmt, args...)						\
-+	TP_printk("pwmchip%u.%u: " fmt, __entry->chipid, __entry->hwpwm, args)
-+
-+#define __field_pwmwf(wf)							\
-+	__field(u64, wf ## _period_length_ns)					\
-+	__field(u64, wf ## _duty_length_ns)					\
-+	__field(u64, wf ## _duty_offset_ns)					\
-+
-+#define fast_assign_pwmwf(wf)							\
-+	__entry->wf ## _period_length_ns = wf->period_length_ns;		\
-+	__entry->wf ## _duty_length_ns = wf->duty_length_ns;			\
-+	__entry->wf ## _duty_offset_ns = wf->duty_offset_ns
-+
-+#define printk_pwmwf_format(wf)							\
-+	"%lld/%lld [+%lld]"
-+
-+#define printk_pwmwf_formatargs(wf)						\
-+	__entry->wf ## _duty_length_ns, __entry->wf ## _period_length_ns, __entry->wf ## _duty_offset_ns
-+
-+TRACE_EVENT(pwm_round_waveform_tohw,
-+
-+	TP_PROTO_pwm(const struct pwm_waveform *wf, void *wfhw, int err),
-+
-+	TP_ARGS_pwm(wf, wfhw, err),
-+
-+	TP_STRUCT__entry_pwm(
-+		__field_pwmwf(wf)
-+		__field(void *, wfhw)
-+		__field(int, err)
-+	),
-+
-+	TP_fast_assign_pwm(
-+		fast_assign_pwmwf(wf);
-+		__entry->wfhw = wfhw;
-+		__entry->err = err;
-+	),
-+
-+	TP_printk_pwm(printk_pwmwf_format(wf) " > %p err=%d",
-+		printk_pwmwf_formatargs(wf), __entry->wfhw, __entry->err)
-+);
-+
-+TRACE_EVENT(pwm_round_waveform_fromhw,
-+
-+	TP_PROTO_pwm(const void *wfhw, struct pwm_waveform *wf, int err),
-+
-+	TP_ARGS_pwm(wfhw, wf, err),
-+
-+	TP_STRUCT__entry_pwm(
-+		__field(const void *, wfhw)
-+		__field_pwmwf(wf)
-+		__field(int, err)
-+	),
-+
-+	TP_fast_assign_pwm(
-+		__entry->wfhw = wfhw;
-+		fast_assign_pwmwf(wf);
-+		__entry->err = err;
-+	),
-+
-+	TP_printk_pwm("%p > " printk_pwmwf_format(wf) " err=%d",
-+		__entry->wfhw, printk_pwmwf_formatargs(wf), __entry->err)
-+);
-+
-+TRACE_EVENT(pwm_read_waveform,
-+
-+	TP_PROTO_pwm(void *wfhw, int err),
-+
-+	TP_ARGS_pwm(wfhw, err),
-+
-+	TP_STRUCT__entry_pwm(
-+		__field(void *, wfhw)
-+		__field(int, err)
-+	),
-+
-+	TP_fast_assign_pwm(
-+		__entry->wfhw = wfhw;
-+		__entry->err = err;
-+	),
-+
-+	TP_printk_pwm("%p err=%d",
-+		__entry->wfhw, __entry->err)
-+);
-+
-+TRACE_EVENT(pwm_write_waveform,
-+
-+	TP_PROTO_pwm(const void *wfhw, int err),
-+
-+	TP_ARGS_pwm(wfhw, err),
-+
-+	TP_STRUCT__entry_pwm(
-+		__field(const void *, wfhw)
-+		__field(int, err)
-+	),
-+
-+	TP_fast_assign_pwm(
-+		__entry->wfhw = wfhw;
-+		__entry->err = err;
-+	),
-+
-+	TP_printk_pwm("%p err=%d",
-+		__entry->wfhw, __entry->err)
-+);
-+
-+
- DECLARE_EVENT_CLASS(pwm,
- 
- 	TP_PROTO(struct pwm_device *pwm, const struct pwm_state *state, int err),
- 
- 	TP_ARGS(pwm, state, err),
- 
--	TP_STRUCT__entry(
--		__field(unsigned int, chipid)
--		__field(unsigned int, hwpwm)
-+	TP_STRUCT__entry_pwm(
- 		__field(u64, period)
- 		__field(u64, duty_cycle)
- 		__field(enum pwm_polarity, polarity)
-@@ -24,9 +144,7 @@ DECLARE_EVENT_CLASS(pwm,
- 		__field(int, err)
- 	),
- 
--	TP_fast_assign(
--		__entry->chipid = pwm->chip->id;
--		__entry->hwpwm = pwm->hwpwm;
-+	TP_fast_assign_pwm(
- 		__entry->period = state->period;
- 		__entry->duty_cycle = state->duty_cycle;
- 		__entry->polarity = state->polarity;
-@@ -34,8 +152,8 @@ DECLARE_EVENT_CLASS(pwm,
- 		__entry->err = err;
- 	),
- 
--	TP_printk("pwmchip%u.%u: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
--		  __entry->chipid, __entry->hwpwm, __entry->period, __entry->duty_cycle,
-+	TP_printk_pwm("period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
-+		  __entry->period, __entry->duty_cycle,
- 		  __entry->polarity, __entry->enabled, __entry->err)
- 
- );
--- 
-2.45.2
+>
+> Regarding STP emulation, I stand by my earlier comments, and in addition
+> to those comments, AFAICT it's currently unsafe to use any uaccess
+> routine in the uprobe BRK handler anyway, so that's moot. The uprobe BRK
+> handler runs with preemption disabled and IRQs (and all other maskable
+> exceptions) masked, and faults cannot be handled. IIUC
+> CONFIG_DEBUG_ATOMIC_SLEEP should scream about that.
 
+This part I don't really get, and this might be some very
+ARM64-specific issue, so I'm sorry ahead of time.
+
+But in general, at the lowest level uprobes work in two logical steps.
+First, there is a breakpoint that user space hits, kernel gets
+control, and if VMA which hit breakpoint might contain uprobe, kernel
+sets TIF_UPROBE thread flag and exits. This is the only part that's in
+hard IRQ context. See uprobe_notify_resume() and comments around it.
+
+Then uprobe infrastructure gets called in user context on the way back
+to user space. This is where we confirm that this is uprobe/uretprobe
+hit, and, if supported, perform instruction emulation.
+
+So I'm wondering if your above comment refers to instruction emulation
+within the first part of uprobe handling? If yes, then, no, that's not
+where emulation will happen.
+
+>
+> Longer-term I'm happy to look into making it possible to do uaccesses in
+> the uprobe handlers, but that requires a much wider rework of the way we
+> handle BRK instructions, single-step, and hardware breakpoints and
+> watchpoints.
+
+See above and please let me know whether we are talking about the same
+issue. In general, we run BPF programs in the same context where this
+instruction emulation will happen, and BPF uprobe programs can be even
+sleepable, so not just non-faultable user memory accesses, but even
+faultable user accesses are supported.
+
+>
+> Mark.
+>
+> > Thanks.
+> >
+> >
+> > =E5=9C=A8 2024/8/21 15:55, Liao, Chang =E5=86=99=E9=81=93:
+> > > Hi, Mark
+> > >
+> > > My bad for taking so long to rely, I generally agree with your sugges=
+tions to
+> > > STP emulation.
+> > >
+> > > =E5=9C=A8 2024/8/15 17:58, Mark Rutland =E5=86=99=E9=81=93:
+> > >> On Wed, Aug 14, 2024 at 08:03:56AM +0000, Liao Chang wrote:
+> > >>> As Andrii pointed out, the uprobe/uretprobe selftest bench run into=
+ a
+> > >>> counterintuitive result that nop and push variants are much slower =
+than
+> > >>> ret variant [0]. The root cause lies in the arch_probe_analyse_insn=
+(),
+> > >>> which excludes 'nop' and 'stp' from the emulatable instructions lis=
+t.
+> > >>> This force the kernel returns to userspace and execute them out-of-=
+line,
+> > >>> then trapping back to kernel for running uprobe callback functions.=
+ This
+> > >>> leads to a significant performance overhead compared to 'ret' varia=
+nt,
+> > >>> which is already emulated.
+> > >>
+> > >> I appreciate this might be surprising, but does it actually matter
+> > >> outside of a microbenchmark?
+> > >
+> > > I just do a simple comparsion the performance impact of single-steppe=
+d and
+> > > emulated STP on my local machine. Three user cases were measured: Red=
+is GET and
+> > > SET throughput (Request Per Second, RPS), and the time taken to execu=
+te a grep
+> > > command on the "arch_uprobe_copy_xol" string within the kernel source=
+.
+> > >
+> > > Redis GET (higher is better)
+> > > ----------------------------
+> > > No uprobe: 49149.71 RPS
+> > > Single-stepped STP: 46750.82 RPS
+> > > Emulated STP: 48981.19 RPS
+> > >
+> > > Redis SET (larger is better)
+> > > ----------------------------
+> > > No uprobe: 49761.14 RPS
+> > > Single-stepped STP: 45255.01 RPS
+> > > Emulated stp: 48619.21 RPS
+> > >
+> > > Grep (lower is better)
+> > > ----------------------
+> > > No uprobe: 2.165s
+> > > Single-stepped STP: 15.314s
+> > > Emualted STP: 2.216s
+> > >
+> > > The result reveals single-stepped STP instruction that used to push f=
+p/lr into
+> > > stack significantly impacts the Redis and grep performance, leading t=
+o a notable
+> > > notable decrease RPS and increase time individually. So emulating STP=
+ on the
+> > > function entry might be a more viable option for uprobe.
+> > >
+> > >>
+> > >>> Typicall uprobe is installed on 'nop' for USDT and on function entr=
+y
+> > >>> which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to pus=
+h lr
+> > >>> and fp into stack regardless kernel or userspace binary.
+> > >>
+> > >> Function entry doesn't always start with a STP; these days it's ofte=
+n a
+> > >> BTI or PACIASP, and for non-leaf functions (or with shrink-wrapping =
+in
+> > >> the compiler), it could be any arbitrary instruction. This might hap=
+pen
+> > >> to be the common case today, but there are certain;y codebases where=
+ it
+> > >> is not.
+> > >
+> > > Sure, if kernel, CPU and compiler support BTI and PAC, the entry inst=
+ruction
+> > > is definitly not STP. But for CPU and kernel lack of these supports, =
+STP as
+> > > the entry instruction is still the common case. And I profiled the en=
+try
+> > > instruction for all leaf and non-leaf function, the ratio of STP is 6=
+4.5%
+> > > for redis, 76.1% for the BPF selftest bench. So I am thinking it is s=
+till
+> > > useful to emulate the STP on the function entry. Perhaps, for CPU and=
+ kernel
+> > > with BTI and PAC enabled, uprobe chooses the slower single-stepping t=
+o execute
+> > > STP for pushing stack.
+> > >
+> > >>
+> > >> STP (or any instruction that accesses memory) is fairly painful to
+> > >> emulate because you need to ensure that the correct atomicity and
+> > >> ordering properties are provided (e.g. an aligned STP should be
+> > >> single-copy-atomic, but copy_to_user() doesn't guarantee that except=
+ by
+> > >> chance), and that the correct VMSA behaviour is provided (e.g. when
+> > >> interacting with MTE, POE, etc, while the uaccess primitives don't t=
+ry
+> > >> to be 100% equivalent to instructions in userspace).
+> > > Agreed, but I don't think it has to emulate strictly the single-copy-=
+atomic
+> > > feature of STP that is used to push fp/lr into stack. In most cases, =
+only one
+> > > CPU will push registers to the same position on stack. And I barely u=
+nderstand
+> > > why other CPUs would depends on the ordering of pushing data into sta=
+ck. So it
+> > > means the atomicity and ordering is not so important for this scenari=
+o. Regarding
+> > > MTE and POE, a similar stragety to BTI and PAC can be applied: for CP=
+Us and kernel
+> > > with MTE and POE enabled, uprobe chooses the slower single-stepping t=
+o execute
+> > > STP for pushing stack.
+> > >
+> > >>
+> > >> For those reasons, in general I don't think we should be emulating a=
+ny
+> > >> instruction which accesses memory, and we should not try to emulate =
+the
+> > >> STP, but I think it's entirely reasonable to emulate NOP.
+> > >>
+> > >>> In order to
+> > >>> improve the performance of handling uprobe for common usecases. Thi=
+s
+> > >>> patch supports the emulation of Arm64 equvialents instructions of '=
+nop'
+> > >>> and 'push'. The benchmark results below indicates the performance g=
+ain
+> > >>> of emulation is obvious.
+> > >>>
+> > >>> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
+> > >>>
+> > >>> xol (1 cpus)
+> > >>> ------------
+> > >>> uprobe-nop:  0.916 =C2=B1 0.001M/s (0.916M/prod)
+> > >>> uprobe-push: 0.908 =C2=B1 0.001M/s (0.908M/prod)
+> > >>> uprobe-ret:  1.855 =C2=B1 0.000M/s (1.855M/prod)
+> > >>> uretprobe-nop:  0.640 =C2=B1 0.000M/s (0.640M/prod)
+> > >>> uretprobe-push: 0.633 =C2=B1 0.001M/s (0.633M/prod)
+> > >>> uretprobe-ret:  0.978 =C2=B1 0.003M/s (0.978M/prod)
+> > >>>
+> > >>> emulation (1 cpus)
+> > >>> -------------------
+> > >>> uprobe-nop:  1.862 =C2=B1 0.002M/s  (1.862M/prod)
+> > >>> uprobe-push: 1.743 =C2=B1 0.006M/s  (1.743M/prod)
+> > >>> uprobe-ret:  1.840 =C2=B1 0.001M/s  (1.840M/prod)
+> > >>> uretprobe-nop:  0.964 =C2=B1 0.004M/s  (0.964M/prod)
+> > >>> uretprobe-push: 0.936 =C2=B1 0.004M/s  (0.936M/prod)
+> > >>> uretprobe-ret:  0.940 =C2=B1 0.001M/s  (0.940M/prod)
+> > >>>
+> > >>> As shown above, the performance gap between 'nop/push' and 'ret'
+> > >>> variants has been significantly reduced. Due to the emulation of 'p=
+ush'
+> > >>> instruction needs to access userspace memory, it spent more cycles =
+than
+> > >>> the other.
+> > >>>
+> > >>> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99=
+zLn02ezZ5YruVuQw@mail.gmail.com/
+> > >>>
+> > >>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+> > >>> ---
+> > >>>  arch/arm64/include/asm/insn.h            | 21 ++++++++++++++++++
+> > >>>  arch/arm64/kernel/probes/decode-insn.c   | 18 +++++++++++++--
+> > >>>  arch/arm64/kernel/probes/decode-insn.h   |  3 ++-
+> > >>>  arch/arm64/kernel/probes/simulate-insn.c | 28 ++++++++++++++++++++=
+++++
+> > >>>  arch/arm64/kernel/probes/simulate-insn.h |  2 ++
+> > >>>  arch/arm64/kernel/probes/uprobes.c       |  2 +-
+> > >>>  6 files changed, 70 insertions(+), 4 deletions(-)
+> > >>>
+> > >>> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm=
+/insn.h
+> > >>> index 8c0a36f72d6f..a246e6e550ba 100644
+> > >>> --- a/arch/arm64/include/asm/insn.h
+> > >>> +++ b/arch/arm64/include/asm/insn.h
+> > >>> @@ -549,6 +549,27 @@ static __always_inline bool aarch64_insn_uses_=
+literal(u32 insn)
+> > >>>          aarch64_insn_is_prfm_lit(insn);
+> > >>>  }
+> > >>>
+> > >>> +static __always_inline bool aarch64_insn_is_nop(u32 insn)
+> > >>> +{
+> > >>> + /* nop */
+> > >>> + return aarch64_insn_is_hint(insn) &&
+> > >>> +        ((insn & 0xFE0) =3D=3D AARCH64_INSN_HINT_NOP);
+> > >>> +}
+> > >>
+> > >> This looks fine, but the comment can go.
+> > >
+> > > Removed.
+> > >
+> > >>
+> > >>> +static __always_inline bool aarch64_insn_is_stp_fp_lr_sp_64b(u32 i=
+nsn)
+> > >>> +{
+> > >>> + /*
+> > >>> +  * The 1st instruction on function entry often follows the
+> > >>> +  * patten 'stp x29, x30, [sp, #imm]!' that pushing fp and lr
+> > >>> +  * into stack.
+> > >>> +  */
+> > >>> + return aarch64_insn_is_stp_pre(insn) &&
+> > >>> +        (((insn >> 30) & 0x03) =3D=3D  2) && /* opc =3D=3D 10 */
+> > >>> +        (((insn >>  5) & 0x1F) =3D=3D 31) && /* Rn  is sp */
+> > >>> +        (((insn >> 10) & 0x1F) =3D=3D 30) && /* Rt2 is x29 */
+> > >>> +        (((insn >>  0) & 0x1F) =3D=3D 29);   /* Rt  is x30 */
+> > >>> +}
+> > >>
+> > >> We have accessors for these fields. Please use them.
+> > >
+> > > Do you mean aarch64_insn_decode_register()?
+> > >
+> > >>
+> > >> Regardless, as above I do not think we should have a helper this
+> > >> specific (with Rn, Rt, and Rt2 values hard-coded) inside <asm/insn.h=
+>.
+> > >
+> > > If we left necessary of emulation of STP aside, where would the best =
+file to
+> > > place these hard-coded decoder helper?
+> > >
+> > >>
+> > >>>  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
+> > >>>  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type,=
+ u32 insn);
+> > >>>  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
+> > >>> diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/ke=
+rnel/probes/decode-insn.c
+> > >>> index 968d5fffe233..df7ca16fc763 100644
+> > >>> --- a/arch/arm64/kernel/probes/decode-insn.c
+> > >>> +++ b/arch/arm64/kernel/probes/decode-insn.c
+> > >>> @@ -73,8 +73,22 @@ static bool __kprobes aarch64_insn_is_steppable(=
+u32 insn)
+> > >>>   *   INSN_GOOD_NO_SLOT If instruction is supported but doesn't use=
+ its slot.
+> > >>>   */
+> > >>>  enum probe_insn __kprobes
+> > >>> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn =
+*api)
+> > >>> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn =
+*api,
+> > >>> +               bool kernel)
+> > >>>  {
+> > >>> + /*
+> > >>> +  * While 'nop' and 'stp x29, x30, [sp, #imm]! instructions can
+> > >>> +  * execute in the out-of-line slot, simulating them in breakpoint
+> > >>> +  * handling offers better performance.
+> > >>> +  */
+> > >>> + if (aarch64_insn_is_nop(insn)) {
+> > >>> +         api->handler =3D simulate_nop;
+> > >>> +         return INSN_GOOD_NO_SLOT;
+> > >>> + } else if (!kernel && aarch64_insn_is_stp_fp_lr_sp_64b(insn)) {
+> > >>> +         api->handler =3D simulate_stp_fp_lr_sp_64b;
+> > >>> +         return INSN_GOOD_NO_SLOT;
+> > >>> + }
+> > >>
+> > >> With the STP emulation gone, you won't need the kernel parameter her=
+e.>
+> > >>> +
+> > >>>   /*
+> > >>>    * Instructions reading or modifying the PC won't work from the X=
+OL
+> > >>>    * slot.
+> > >>> @@ -157,7 +171,7 @@ arm_kprobe_decode_insn(kprobe_opcode_t *addr, s=
+truct arch_specific_insn *asi)
+> > >>>           else
+> > >>>                   scan_end =3D addr - MAX_ATOMIC_CONTEXT_SIZE;
+> > >>>   }
+> > >>> - decoded =3D arm_probe_decode_insn(insn, &asi->api);
+> > >>> + decoded =3D arm_probe_decode_insn(insn, &asi->api, true);
+> > >>>
+> > >>>   if (decoded !=3D INSN_REJECTED && scan_end)
+> > >>>           if (is_probed_address_atomic(addr - 1, scan_end))
+> > >>> diff --git a/arch/arm64/kernel/probes/decode-insn.h b/arch/arm64/ke=
+rnel/probes/decode-insn.h
+> > >>> index 8b758c5a2062..ec4607189933 100644
+> > >>> --- a/arch/arm64/kernel/probes/decode-insn.h
+> > >>> +++ b/arch/arm64/kernel/probes/decode-insn.h
+> > >>> @@ -28,6 +28,7 @@ enum probe_insn __kprobes
+> > >>>  arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific=
+_insn *asi);
+> > >>>  #endif
+> > >>>  enum probe_insn __kprobes
+> > >>> -arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn =
+*asi);
+> > >>> +arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn =
+*asi,
+> > >>> +               bool kernel);
+> > >>>
+> > >>>  #endif /* _ARM_KERNEL_KPROBES_ARM64_H */
+> > >>> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/=
+kernel/probes/simulate-insn.c
+> > >>> index 22d0b3252476..0b1623fa7003 100644
+> > >>> --- a/arch/arm64/kernel/probes/simulate-insn.c
+> > >>> +++ b/arch/arm64/kernel/probes/simulate-insn.c
+> > >>> @@ -200,3 +200,31 @@ simulate_ldrsw_literal(u32 opcode, long addr, =
+struct pt_regs *regs)
+> > >>>
+> > >>>   instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+> > >>>  }
+> > >>> +
+> > >>> +void __kprobes
+> > >>> +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
+> > >>> +{
+> > >>> + instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+> > >>> +}
+> > >>
+> > >> Hmm, this forgets to update the single-step state machine and PSTATE=
+.BT,
+> > >> and that's an extant bug in arch_uprobe_post_xol(). This can be:
+> > >
+> > > For emulated instruction, uprobe won't enable single-step mode of CPU=
+,
+> > > please check the handle_swbp() in kernel/events/uprobes.c:
+> > >
+> > >   if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+> > >           goto out;
+> > >
+> > >   if (!pre_ssout(uprobe, regs, bp_vaddr))
+> > >           return;
+> > >
+> > > For emualted instruction, It will skip entire single-stepping and ass=
+ociated
+> > > exception, which typically begins with pre_ssout() and ends with
+> > > arch_uprobe_post_xol(). Therefore, using instruction_pointer_set() to=
+ emulate
+> > > NOP is generally not a bad idea.
+> > >
+> > >>
+> > >> | void __kprobes
+> > >> | simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
+> > >> | {
+> > >> |  arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+> > >> | }
+> > >>
+> > >>> +
+> > >>> +void __kprobes
+> > >>> +simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *r=
+egs)
+> > >>> +{
+> > >>> + long imm7;
+> > >>> + u64 buf[2];
+> > >>> + long new_sp;
+> > >>> +
+> > >>> + imm7 =3D sign_extend64((opcode >> 15) & 0x7f, 6);
+> > >>> + new_sp =3D regs->sp + (imm7 << 3);
+> > >>
+> > >> We have accessors for these fields, please use them.
+> > >
+> > > Do you mean aarch64_insn_decode_immediate()?
+> > >
+> > >>
+> > >>> +
+> > >>> + buf[0] =3D regs->regs[29];
+> > >>> + buf[1] =3D regs->regs[30];
+> > >>> +
+> > >>> + if (copy_to_user((void __user *)new_sp, buf, sizeof(buf))) {
+> > >>> +         force_sig(SIGSEGV);
+> > >>> +         return;
+> > >>> + }
+> > >>
+> > >> As above, this won't interact with VMSA features (e.g. MTE, POE) in =
+the
+> > >> same way as an STP in userspace, and this will not have the same
+> > >> atomicity properties as an STP>
+> > >>> +
+> > >>> + regs->sp =3D new_sp;
+> > >>> + instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+> > >>
+> > >> Likewise, this sould need ot use arm64_skip_faulting_instruction(),
+> > >> though as above I think we should drop STP emulation entirely.
+> > >
+> > > I explain the reason why using instruction_pointer_set() under your c=
+omments
+> > > for simulate_nop().
+> > >
+> > > Thanks.
+> > >
+> > >>
+> > >> Mark.
+> > >>
+> > >
+> >
+> > --
+> > BR
+> > Liao, Chang
