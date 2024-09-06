@@ -1,75 +1,72 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5B417C7C
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 01:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CF22EAE6;
+	Fri,  6 Sep 2024 02:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725585239; cv=none; b=ssP3NXyiWVv/UpaMnv9bJx4KJXBwQy76kZ/Q3sJUzwNOPZzhpmCPmWikrPCnZ5ej9uqTqUc3Rj4lxIngZljJEtDUkEA0H0YzSRdTn/dR9Wbi2yD2wGFX8d67pHGsiJEjv5H7M5Y+/4fuVCQmyuG5kolqmYrmxw5nDf5C/GeYPxY=
+	t=1725589937; cv=none; b=spbUlBlb+htq/FnJcRFH74h+Np4EiG97Wew4xP3sLzny3tluP6gZDS2aNsGTRiQAAoOmL+5xuy2VPWNkkx+YbBeTNUY/eQFL8AD8wEDMNqMjhMECb4eSoZo+oMpoVBJ7YpaheLniiYTY+6xLuPMa4GPQVBRPUnCv5rK5GK3XQFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725585239; c=relaxed/simple;
-	bh=+40/PKcAluOFhthFyit1izNfoYiHHdYw1abpmwwERqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ErNoWlQNjcHHE6B+yzJqWbef5Q41nO0Gl3Z6LzrI9qsci50mr/iSpVlRG8Vba3ml9800kJIlk0xNggYOnWt1o9iFZcyFNrXFredTcxfzad0OO54KANVGeqsTXgo/q0mrkFDtooaW1sL/EExtUiqrH/4t3YKEqJxCOo0FTU0CZ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v9pEJT8m; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v9pEJT8m"
-Message-ID: <8ee6b7d3-71b7-4b66-aa49-26421d9c5b78@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1725585235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LzUdF+fiRFn6RgwFUtIzdarKamkAFDCW16qaVIlXx38=;
-	b=v9pEJT8msZi7N912djrtrxNn4xWjlap344gkT8Wy055Hw6Pmv1X9rRH20/faNByHSOHyZT
-	s2YxQ00sm6vAKLY6OGuZ6zdpUysrVHKm72pllzrRu/IO128qNXTh+h9lOWK9n3LIlsBBgA
-	vM+/DVdzTsJ51xWR+JVSoKqn8xrWvFU=
-Date: Thu, 5 Sep 2024 18:13:43 -0700
+	s=arc-20240116; t=1725589937; c=relaxed/simple;
+	bh=fSWYi7Mu27hncJezLTGKPTGSTSS6RuU0aSynLmzcZtk=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bwH+H0/0iIALMgtjKiDlJwPBBdb7io/RRXarC26ybRz0dDqsdlw0D57950F7p9Hb3HX4WWr9IeJp5yj8W/L7lBJBcSLTipuBDwoVfxucegKq3mlJMFnw8ORUJl62oNDLJPe+/68z1fH2RtIAa/yJy1VGDfIHj6/HBGP6+61T3+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X0KvJ3dRBzfbnb;
+	Fri,  6 Sep 2024 10:30:04 +0800 (CST)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+	by mail.maildlp.com (Postfix) with ESMTPS id 83880140452;
+	Fri,  6 Sep 2024 10:32:12 +0800 (CST)
+Received: from [10.174.179.79] (10.174.179.79) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 6 Sep 2024 10:32:11 +0800
+Subject: Re: [PATCH] mm: move mm flags to mm_types.h
+To: Matthew Wilcox <willy@infradead.org>
+CC: <akpm@linux-foundation.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
+	<peterz@infradead.org>, <wangkefeng.wang@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+References: <20240905152622.1205046-1-sunnanyong@huawei.com>
+ <ZtoD9tXJjWaS4liX@casper.infradead.org>
+From: Nanyong Sun <sunnanyong@huawei.com>
+Message-ID: <c207e483-c9f0-1277-8731-7a1d5463061a@huawei.com>
+Date: Fri, 6 Sep 2024 10:32:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v2 4/5] bpf: Allow bpf_dynptr_from_skb() for
- tp_btf
-To: Philo Lu <lulie@linux.alibaba.com>
-Cc: bpf@vger.kernel.org, edumazet@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, mykolal@fb.com, shuah@kernel.org,
- mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- thinker.li@gmail.com, juntong.deng@outlook.com, jrife@google.com,
- alan.maguire@oracle.com, davemarchevsky@fb.com, dxu@dxuuu.xyz,
- vmalik@redhat.com, cupertino.miranda@oracle.com, mattbobrowski@google.com,
- xuanzhuo@linux.alibaba.com, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20240905075622.66819-1-lulie@linux.alibaba.com>
- <20240905075622.66819-5-lulie@linux.alibaba.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20240905075622.66819-5-lulie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <ZtoD9tXJjWaS4liX@casper.infradead.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 
-On 9/5/24 12:56 AM, Philo Lu wrote:
-> Making tp_btf able to use bpf_dynptr_from_skb(), which is useful for skb
-> parsing, especially for non-linear paged skb data. This is achieved by
-> adding KF_TRUSTED_ARGS flag to bpf_dynptr_from_skb and registering it
-> for TRACING progs. With KF_TRUSTED_ARGS, args from fentry/fexit are
-> excluded, so that unsafe progs like fexit/__kfree_skb are not allowed.
-> 
-> We also need the skb dynptr to be read-only in tp_btf. Because
-> may_access_direct_pkt_data() returns false by default when checking
-> bpf_dynptr_from_skb, there is no need to add BPF_PROG_TYPE_TRACING to it
-> explicitly.
+On 2024/9/6 3:18, Matthew Wilcox wrote:
+> On Thu, Sep 05, 2024 at 11:26:22PM +0800, Nanyong Sun wrote:
+>> +++ b/include/linux/mm_types.h
+>> @@ -1485,4 +1485,85 @@ enum {
+>>   	/* See also internal only FOLL flags in mm/internal.h */
+>>   };
+>>   
+>> +/* mm flags */
+>> +
+>> +/* for SUID_DUMP_* above */
+> But SUID_DUMP aren't above.  They're in a different file.
+>
+>
+> .
+Sorry, I forgot to modify this comment.
+Plan to change it to:
 
-Acked-by: Martin KaFai Lau <martin.lau@kernel.org>
+/* core dumpable occupy bit0 and bit1 */
 
+Do you think this is OK?
+Thanks.
