@@ -1,72 +1,162 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CF22EAE6;
-	Fri,  6 Sep 2024 02:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C34171CD;
+	Fri,  6 Sep 2024 02:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725589937; cv=none; b=spbUlBlb+htq/FnJcRFH74h+Np4EiG97Wew4xP3sLzny3tluP6gZDS2aNsGTRiQAAoOmL+5xuy2VPWNkkx+YbBeTNUY/eQFL8AD8wEDMNqMjhMECb4eSoZo+oMpoVBJ7YpaheLniiYTY+6xLuPMa4GPQVBRPUnCv5rK5GK3XQFw=
+	t=1725590918; cv=none; b=NCOdaXODvfA1824Yj6X5k9F6tmbR6xWCn7bSyo1NUuxsvyUJaoUx906X88+pPSz7sL0QPxixglYH8K8Js1haItWb8kDHehpo/BfSeJza8yGEl6VuaJE+y+NjunDNe930I4MRbifUA3FDvNNMS4ZOcz3a+Zh0Y2V6IDSlWggNUAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725589937; c=relaxed/simple;
-	bh=fSWYi7Mu27hncJezLTGKPTGSTSS6RuU0aSynLmzcZtk=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=bwH+H0/0iIALMgtjKiDlJwPBBdb7io/RRXarC26ybRz0dDqsdlw0D57950F7p9Hb3HX4WWr9IeJp5yj8W/L7lBJBcSLTipuBDwoVfxucegKq3mlJMFnw8ORUJl62oNDLJPe+/68z1fH2RtIAa/yJy1VGDfIHj6/HBGP6+61T3+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X0KvJ3dRBzfbnb;
-	Fri,  6 Sep 2024 10:30:04 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 83880140452;
-	Fri,  6 Sep 2024 10:32:12 +0800 (CST)
-Received: from [10.174.179.79] (10.174.179.79) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 6 Sep 2024 10:32:11 +0800
-Subject: Re: [PATCH] mm: move mm flags to mm_types.h
-To: Matthew Wilcox <willy@infradead.org>
-CC: <akpm@linux-foundation.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<peterz@infradead.org>, <wangkefeng.wang@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-References: <20240905152622.1205046-1-sunnanyong@huawei.com>
- <ZtoD9tXJjWaS4liX@casper.infradead.org>
-From: Nanyong Sun <sunnanyong@huawei.com>
-Message-ID: <c207e483-c9f0-1277-8731-7a1d5463061a@huawei.com>
-Date: Fri, 6 Sep 2024 10:32:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+	s=arc-20240116; t=1725590918; c=relaxed/simple;
+	bh=pzJlw2IoPHrFAAWumd0ORTINL6ZPVNgxfaErncZQH8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CtEOQwxFpf3Q4EKMehjIX4m7xd5B1Y03opwrHavNiS5cRRTyh6mykaiPfgnbCLfX9gnHI0M8oi8cx/Bx5IN101IcB9nXl5Grm32V6Cl+vKDV8+2vj3WFzOyc2bdaAC8mZRG8ZJKatAJg9aOWHXhWA2PUHHRxFBqVjHeZs9ZQba4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=bRX4+VzE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bRX4+VzE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 754BFC4CEC3;
+	Fri,  6 Sep 2024 02:48:35 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="bRX4+VzE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1725590913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDin/TTzmHCatsL5YEP7qml5EKwCyw3+unP9HsNBBks=;
+	b=bRX4+VzElx6AhF7yIERy0JoxrcqZ8w2XnNUX4cySvATmmNIgFgKdGdfDY+DT1KfFqexJRX
+	9BvfkivoCdg2WCBNWf5LjK2iwqnwDbLFu2UJPBepJhXrsh39RcDJ68oyyRJJCk1qgWS81f
+	K191Ft9MxUKb0Efd83zvLBnDi2pl2n4=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 5ee168b6 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 6 Sep 2024 02:48:32 +0000 (UTC)
+Date: Fri, 6 Sep 2024 04:48:28 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+	llvm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: Re: [PATCH v5 4/5] powerpc/vdso: Wire up getrandom() vDSO
+ implementation on VDSO32
+Message-ID: <ZtptfOicjZU3k3ZV@zx2c4.com>
+References: <cover.1725304404.git.christophe.leroy@csgroup.eu>
+ <1f49c2ce009f8b007ab0676fb41187b2d54f28b2.1725304404.git.christophe.leroy@csgroup.eu>
+ <ZtnYqZI-nrsNslwy@zx2c4.com>
+ <ZtoXhGYflBNR74g0@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZtoD9tXJjWaS4liX@casper.infradead.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZtoXhGYflBNR74g0@zx2c4.com>
 
-On 2024/9/6 3:18, Matthew Wilcox wrote:
-> On Thu, Sep 05, 2024 at 11:26:22PM +0800, Nanyong Sun wrote:
->> +++ b/include/linux/mm_types.h
->> @@ -1485,4 +1485,85 @@ enum {
->>   	/* See also internal only FOLL flags in mm/internal.h */
->>   };
->>   
->> +/* mm flags */
->> +
->> +/* for SUID_DUMP_* above */
-> But SUID_DUMP aren't above.  They're in a different file.
->
->
-> .
-Sorry, I forgot to modify this comment.
-Plan to change it to:
+On Thu, Sep 05, 2024 at 10:41:40PM +0200, Jason A. Donenfeld wrote:
+> On Thu, Sep 05, 2024 at 06:13:29PM +0200, Jason A. Donenfeld wrote:
+> > > +/*
+> > > + * The macro sets two stack frames, one for the caller and one for the callee
+> > > + * because there are no requirement for the caller to set a stack frame when
+> > > + * calling VDSO so it may have omitted to set one, especially on PPC64
+> > > + */
+> > > +
+> > > +.macro cvdso_call funct
+> > > +  .cfi_startproc
+> > > +	PPC_STLU	r1, -PPC_MIN_STKFRM(r1)
+> > > +  .cfi_adjust_cfa_offset PPC_MIN_STKFRM
+> > > +	mflr		r0
+> > > +	PPC_STLU	r1, -PPC_MIN_STKFRM(r1)
+> > > +  .cfi_adjust_cfa_offset PPC_MIN_STKFRM
+> > > +	PPC_STL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
+> > > +  .cfi_rel_offset lr, PPC_MIN_STKFRM + PPC_LR_STKOFF
+> > > +	get_datapage	r8
+> > > +	addi		r8, r8, VDSO_RNG_DATA_OFFSET
+> > > +	bl		CFUNC(DOTSYM(\funct))
+> > > +	PPC_LL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
+> > > +	cmpwi		r3, 0
+> > > +	mtlr		r0
+> > > +	addi		r1, r1, 2 * PPC_MIN_STKFRM
+> > > +  .cfi_restore lr
+> > > +  .cfi_def_cfa_offset 0
+> > > +	crclr		so
+> > > +	bgelr+
+> > > +	crset		so
+> > > +	neg		r3, r3
+> > > +	blr
+> > > +  .cfi_endproc
+> > > +.endm
+> > 
+> > Can you figure out what's going on and send a fix, which I'll squash
+> > into this commit?
+> 
+> This doesn't work, but I wonder if something like it is what we want. I
+> need to head out for the day, but here's what I've got. It's all wrong
+> but might be of interest.
 
-/* core dumpable occupy bit0 and bit1 */
+Oh, I just got one small detail wrong before. The below actually works,
+and uses the same strategy as on arm64.
 
-Do you think this is OK?
-Thanks.
+Let me know if you'd like me to fix up this commit with the below patch,
+or if you have another way you'd like to go about it.
+
+diff --git a/arch/powerpc/include/asm/vdso/getrandom.h b/arch/powerpc/include/asm/vdso/getrandom.h
+index 501d6bb14e8a..acb271709d30 100644
+--- a/arch/powerpc/include/asm/vdso/getrandom.h
++++ b/arch/powerpc/include/asm/vdso/getrandom.h
+@@ -47,7 +47,8 @@ static __always_inline struct vdso_rng_data *__arch_get_vdso_rng_data(void)
+ }
+
+ ssize_t __c_kernel_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state,
+-			     size_t opaque_len, const struct vdso_rng_data *vd);
++			     size_t opaque_len, const struct vdso_data *vd,
++			     const struct vdso_rng_data *vrd);
+
+ #endif /* !__ASSEMBLY__ */
+
+diff --git a/arch/powerpc/kernel/vdso/getrandom.S b/arch/powerpc/kernel/vdso/getrandom.S
+index a957cd2b2b03..64cc1fad3ccc 100644
+--- a/arch/powerpc/kernel/vdso/getrandom.S
++++ b/arch/powerpc/kernel/vdso/getrandom.S
+@@ -32,7 +32,8 @@
+   .cfi_rel_offset r2, PPC_MIN_STKFRM + STK_GOT
+ #endif
+ 	get_datapage	r8
+-	addi		r8, r8, VDSO_RNG_DATA_OFFSET
++	addi		r9, r8, VDSO_RNG_DATA_OFFSET
++	addi		r8, r8, VDSO_DATA_OFFSET
+ 	bl		CFUNC(DOTSYM(\funct))
+ 	PPC_LL		r0, PPC_MIN_STKFRM + PPC_LR_STKOFF(r1)
+ #ifdef __powerpc64__
+diff --git a/arch/powerpc/kernel/vdso/vgetrandom.c b/arch/powerpc/kernel/vdso/vgetrandom.c
+index 5f855d45fb7b..408c76036868 100644
+--- a/arch/powerpc/kernel/vdso/vgetrandom.c
++++ b/arch/powerpc/kernel/vdso/vgetrandom.c
+@@ -8,7 +8,10 @@
+ #include <linux/types.h>
+
+ ssize_t __c_kernel_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque_state,
+-			     size_t opaque_len, const struct vdso_rng_data *vd)
++			     size_t opaque_len, const struct vdso_data *vd,
++			     const struct vdso_rng_data *vrd)
+ {
+-	return __cvdso_getrandom_data(vd, buffer, len, flags, opaque_state, opaque_len);
++	if (IS_ENABLED(CONFIG_TIME_NS) && vd->clock_mode == VDSO_CLOCKMODE_TIMENS)
++		vrd = (void *)vrd + (1UL << CONFIG_PAGE_SHIFT);
++	return __cvdso_getrandom_data(vrd, buffer, len, flags, opaque_state, opaque_len);
+ }
+
