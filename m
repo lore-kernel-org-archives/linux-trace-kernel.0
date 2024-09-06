@@ -1,336 +1,200 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843E91D1F7F;
-	Fri,  6 Sep 2024 14:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725634154; cv=fail; b=Md9nUgSbfgw058X42mjknvU9nSQFIuUz8o4n+qAqd9vPPuM7OcmwukPx2cqQNKg7dqnKd59YsYQ1+86uJ916Fv8CH2bmyo2UlcDsqi3l/B2QxwtQc84cSL6SfxSuO1DNK4Jrjmwpcz2ySqsVRP3s+p1W2Gvzr3rXyQCcpt1alQs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725634154; c=relaxed/simple;
-	bh=HfaJmVidPjFbichwXQtFR6AYdyX1vdupcWbosj1cvOs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=aVh10vF6CutoV8HoZpmw1XQju1sRqvSwKx28mNOnikFFh/wMwb9JFh0OW2eRkm4g/6dLdQcCoGU32PqZ4KHH7k3X05s3oF9O0eN1czgNj56g7kL9NJ1muBjG2iwCCOXA18zfTDosV04O6pgQYkIJ1siRTONGe5SLnsgKdRTlMEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=K1NBOMmD; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iB6KL9FY; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDA61D1F60
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 15:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725637414; cv=none; b=CHRv29SdBAKEsrOedg+azHxTwFRe9tIFkmD6MPv7h0y1fTCx7z3Ch82p6AUp3QVrMDpfXt9WHS+xNkJb+ycDqP9r4lprEGniJ2kqz1vMmeTi8AsxT8HnLIsyApeZYGr6yXL9sOL0lB5DtB2WdMXBFnvMMYpSy9FWFEWc4kOwlCw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725637414; c=relaxed/simple;
+	bh=SdA/884OUoNUTYfuujZhiUv6gnTpSFyrP/yZXl0aWnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FL82W0brpvxK6n+uDHy4PTDDFsRqJmfjwTtE4w5O7K0mWfl42sPs1bTcjfZl5uCLSgSnTmza2pWw3PRxs5b6RECJ1MlmOmS2WfSq6Ia34r8H8dW3xMEN2c+Usf5VM6lFSaYZb8ThBtnle+Si+oqvSllPYCeXIhS2b/LU0YL4Tbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JJWaAhY0; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K1NBOMmD";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iB6KL9FY"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 486D8lkn013009;
-	Fri, 6 Sep 2024 14:49:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	from:to:cc:subject:date:message-id:references:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	corp-2023-11-20; bh=CtJW+WGBSP3iXalZW4CWLxi2x2AUPQ5gAHhyPjrT9vE=; b=
-	K1NBOMmDF0kNoe+yKhRUwBwQ1ChEt4IzYbKra2uH1nBlSONbP2oxLBUmSZIQONml
-	MntaFXN4QbYebI0af/Fdsgj8VWmLCDn3siXLMiaBTvIulY3cwUupyelOeot8Gwk8
-	dARHdQ4VOxaAThustvZiHmJ4C6+BCuA/1HZZTPOGvJdL0xGYUT/04X5dEMl4C5oP
-	ofpN2YnDwm9WZ4Gn967tzwtDz/nUUju1LnAsKadOPlYy+7IsHqi6n8K2aiTGUEA4
-	xUyVeJYrLbkyqBmfe8LFX9JkEUnralYFLy99hvDJLCgdoTlpu7KwuoTMV/X/4EF0
-	Edv45w/zQhl875Gr/6uigQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41fhwhhtjs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Sep 2024 14:49:06 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 486E66uU016244;
-	Fri, 6 Sep 2024 14:49:05 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2047.outbound.protection.outlook.com [104.47.74.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41fhyj1wv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 06 Sep 2024 14:49:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gHbFpnRMH9bTZtoYz2p7vlHNetG4J2TqyroEKz+lIg0doAk9fPLGFaM20WPTeqNNcZfuyh83k3qbJx8pVpm+EySjuwfI//4PUTd++Ye7tjaFXFq0m1CeMVmQo7DCOin5UBBkLrSCDbl3wtRrK42puEc0XwP3F88E402/vUYAF6HCqEwxjR+pEX2TpmyUZ8xqjPY+RMBPqtYNJoJ+1qk4n9v04u+4Ep+vbPJIvH/u+JmPMGM00mnxUbXVxX2j+OKcC8q34uuIh5eHPXeyceWs1NGhahbQdoQ+hWuFQnhQnm+9W7P+WKFr7Dq9wr6Z0aTjqMapPjxfUes1iqovvORrZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CtJW+WGBSP3iXalZW4CWLxi2x2AUPQ5gAHhyPjrT9vE=;
- b=w+he26zQJSWEYAuEfAvQL2JFqGcR9E1sABz24ytEKVRhV3YyXhHvSaZK0KDBHIFWbc+5u5kHa69Yf+ziEihJaX0Fnd5KD06sIlBnHFSokbbU0oyIxVOqI/pkz1QchCH2FWvN1ZwRTDZ/8n4n99Tswi9i+Cy8xRmTW6Y8RN+RMjJ+6JJXP6Uze9Xs5fgM9JUBWtM05uP7bLeqQbZ1Apuewj1AyctNEf4f4GYKrK16QyD64HW+oZIFS1BT7TeQ4bhUtc6g+l28moics346Ow9c6azgg6cHuDdk1fqvJfIGEkSepGSrv6d30iOp/Rko0YlIfX+XcKwJRj+hAWLPUuvO6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JJWaAhY0"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5c3c30e663fso2563178a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Sep 2024 08:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CtJW+WGBSP3iXalZW4CWLxi2x2AUPQ5gAHhyPjrT9vE=;
- b=iB6KL9FYiBdNT2ufZ9g8hKggfFb+4LKH+KFIR/CSnkxaqqsdZCtlejsPqiIHjAoFg8iMtN3dSexmM6xAy6S2yQHGj6YrKZhghsedzbRuGsmHItvri0YKMDwKJzeigoIt/XtlYTVtYve9MPcxiTGsp/MPkUEh+NfHl75k6fgojZE=
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com (2603:10b6:806:26d::14)
- by DS0PR10MB6752.namprd10.prod.outlook.com (2603:10b6:8:13a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7939.12; Fri, 6 Sep
- 2024 14:49:03 +0000
-Received: from SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29]) by SN7PR10MB6287.namprd10.prod.outlook.com
- ([fe80::5a47:2d75:eef9:1d29%6]) with mapi id 15.20.7939.010; Fri, 6 Sep 2024
- 14:49:02 +0000
-From: Kris Van Hees <kris.van.hees@oracle.com>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-CC: Masahiro Yamada <masahiroy@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masami Hiramatsu
-	<mhiramat@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Olsa
-	<olsajiri@gmail.com>,
-        Elena Zannoni <elena.zannoni@oracle.com>
-Subject: Re: [PATCH v9 0/4] Generate address range data for built-in modules
-Thread-Topic: [PATCH v9 0/4] Generate address range data for built-in modules
-Thread-Index: AQHbAGtj0mATKhjpMEu/MzxVwWakH7JK1uFO
-Date: Fri, 6 Sep 2024 14:49:02 +0000
-Message-ID:
- <SN7PR10MB62875C07F605FF00B9C01F79C29E2@SN7PR10MB6287.namprd10.prod.outlook.com>
-References: <20240906144506.1151789-1-kris.van.hees@oracle.com>
-In-Reply-To: <20240906144506.1151789-1-kris.van.hees@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR10MB6287:EE_|DS0PR10MB6752:EE_
-x-ms-office365-filtering-correlation-id: 7fcb09c2-5c31-48cc-0b61-08dcce830c7f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|366016|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?OWHTMx1CReKIos6X6dKBEwOHkNc5+qAWQqByxcNhjro6HdCKJ0QSjCmSQxCU?=
- =?us-ascii?Q?Wmi3aKKUGo4gZ1PEqzLaiGW4AlR8GcQoH7H/Kf3jos3wkOLF/X3CeWBPYcJm?=
- =?us-ascii?Q?HCk3yGxNp0GKPKnqUiGI7hESarBaCt38wUoCLXTRJcglxuUC7nKIxAOlPO1a?=
- =?us-ascii?Q?qvGk2fOZZ0yqm1qtrl6C38H5BHzHsZF1ySmfEi39AAzk7GC9jHmafdjsBz/V?=
- =?us-ascii?Q?I8KDsTUrJlu9T7hJsr4AmCLU9uDArCdhSga1H6WrApugoKNZdAAqztZy+IqB?=
- =?us-ascii?Q?XF5G8R1KvQ62F2qeKKsJ1uYD8ubzr8RuKQFxOSCRUSWH6sAHV9V0L53J8/An?=
- =?us-ascii?Q?F6smhhqB0DxgLZ6x5mHCcyu5glR1fpioGXrHOn5IEhk9bdLSY34tm7ZEbxDw?=
- =?us-ascii?Q?9pK5D7DzgO6Gk8fGggckbTwdhxgWtyaQPL+8gObk3nBi6vJ812Dp9txGMGB9?=
- =?us-ascii?Q?7E1N6O4fK3XILiLI+dC/JllrvXhimhZe0c7X9iDI4YPz4OAKYhCP8zHkgbTJ?=
- =?us-ascii?Q?olZeeZTriCN3nOoVXHKO9AtmV62Q5ib49Q1dDYz4CAXAE+DW0DcJr9i5upTl?=
- =?us-ascii?Q?ur12ZGOzMij4rLV878R9ExJaW0QXEzbQTK9nXlVKsnLi8XQLEEpuiII2cTtP?=
- =?us-ascii?Q?lRUtA81qZO+/pXQUaUjH37ebdDyhkNJake6/Q1DMB9SML61n6bMqvJtiN/QR?=
- =?us-ascii?Q?Gys7Oj+J7tivUqbuka5pnqFxeohGS/aw+lfwp/msOOaT9hSNyYGALiJzQ64b?=
- =?us-ascii?Q?o1G/eqxIL3Pc0hFerAbeAgAMEBxp8LyyCKUU9H55CHdYdyBFFnOI9PaDGYG1?=
- =?us-ascii?Q?GrPHs6enFJni8H8oCs3IKqohF9cEVIlF83zfgTJD4ncIsy0i/yteXixhWfaE?=
- =?us-ascii?Q?VTvLtXHwxuHis0CTzacevHajEfGnCa0CA0OyRQsXT/nJr+a5lTQpS1ISbaGY?=
- =?us-ascii?Q?qWiCFn1kZAT/xCGEjlThWo/gCVyiUj7RSgfGpzlq3mdxt3l2sUWbm2viOBUX?=
- =?us-ascii?Q?fdP4zUPGXMJ0VYKKsLN2Sd8/fMrrktHF+mMjkdxlmoQvneqMhTm2hGanJXoZ?=
- =?us-ascii?Q?dRs3lNnS5JmbTPelovmghPAu/x38VYdkMu5QZf8+ta8mmZpQlDMYz9DoZfVC?=
- =?us-ascii?Q?0+x1m1jqjkiKSJ2yGe+AyfVhGN4ZvJ7xYttEFjkJBsvUb2CGQ2UtjiTgG00g?=
- =?us-ascii?Q?lmz5ijavxejU9sS+PMqxLiBkSoXYi2GPkV6Ry2Pjqk2z6s0+z+qSAAo6oXUA?=
- =?us-ascii?Q?pCVJd6J3IzmSDeB2rw70pCU1wW9LlXvx8leyAK2ga6FLFgyi2vOf2ZEFQGpP?=
- =?us-ascii?Q?QX9/r4XLgEiHTZ6/L2oIYDLyKuaLnTZ7MbMDu0Ge2ZV0K0F6QTS2xR+hI1SA?=
- =?us-ascii?Q?rg/VjaBB+Sd8c4w7bZhSztMr+9MgDFllkVMcNX9zK7ItXzD3hg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR10MB6287.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?g0XmHKHyDSdYILjs80dVZvFdZiJ8jgxpE3RwtKJEW//W73LzUwB8FwEg1Ecr?=
- =?us-ascii?Q?i7YFumLK/Gm7R5zbbWM3KiTmebjrKNntFSDoV7Z/Iy5yxPVJSNXBDCK8RY9t?=
- =?us-ascii?Q?kbfNauFXTHJ6HldMjx69tPp1MwUUYNotC7y6w5D693FgjtFTeZ2YiIcxQ+EX?=
- =?us-ascii?Q?odV5L+7ONgQBB16xfmlhupP+gjXyog2IOKh8byLBBgxrVJHGXm8ibZjviNT/?=
- =?us-ascii?Q?nBGH4oF9++SH3IQerJqrnvpMgRsdIaax2Zg2J5eZ6oVjAtPlUrJuNVmZlK1u?=
- =?us-ascii?Q?vlgXENEywyUbOc4hczQxnYVMDgzKhiH8D0kT5AD/WHL3MLxk5tN/0sv5hwyJ?=
- =?us-ascii?Q?dpx8wuN4I72w6v901+a2BD1HBJZgVhFT2bNlo/lIfQuE3qXLoBtjQhGZOddg?=
- =?us-ascii?Q?adjICpA/Pg63AEd63ZTkxbHjv8lhx1X8JFU6NPvzzxU4wuHbSz9fplBuqcSW?=
- =?us-ascii?Q?btbW/It4MofVgyOoVOQt+iGI87nJa2jIT7Vo9tuMZXbDepDKxBt87584OnHs?=
- =?us-ascii?Q?vqowiqW0dO/DFMWnzhj9ndkNHCSf6IQ7L+l4BNekO9Q8aM8lvhcCxkE+npu1?=
- =?us-ascii?Q?udOjXgHhYYor++8qs7EFGR6j9IHBKyTPrECOzNw2TxkKLOj6/U9BWk96b/bv?=
- =?us-ascii?Q?ZCMxyqsMGUCtCNoOO7vIHuQLi9KGD5r0VQGasQ9MiQNyEAbKbFg1ruSIrEPb?=
- =?us-ascii?Q?++BVtB6DtNuuBLWKvBpcDcPd61Itc8AQCjtM+BeR2+gmSLwnWWmymMJGHpYp?=
- =?us-ascii?Q?FPsJK5YeaLJUiRRUhgy1Cv8Qh8jVhLRuuQeIObqK92VlqW8laGCLCmCA0874?=
- =?us-ascii?Q?8PX+TJhYQCaDqiPn8DVTc90sSP8G9Civb0XHKRsHCObr+RCahtJzJUQ8hsrj?=
- =?us-ascii?Q?p5UHcnOkFLoL+OrJkW/Dw0eJHbHjt5g87i60RfDlws/dFT8lB3wCnJrkPO7c?=
- =?us-ascii?Q?zInAG4IpZMMvKZm1he48f/VkMH3aPEA4o/1558sRWQZ2gFaoZuOiRiITjD98?=
- =?us-ascii?Q?BmkdaaJaRurA3FY5C3gdUu7JMBjkbFXsN7PPNvcmY+QEoqmrvDNrbct85TyL?=
- =?us-ascii?Q?2PKT8Hln7J4mP6mqMj/4EtBekijJISi5wYRESGKyBgHqU6pS8MuKDFZc1L9q?=
- =?us-ascii?Q?R3yiyWME4xy2ou60TUjRIIfpdKRCHCS+SrCPIECwHPAnTLmoH7Wowj8V2ZOH?=
- =?us-ascii?Q?WhswjN/HsEnDVGH83Zw2pYaESpItHUTGUYpVn2i/rFxhkMSnuUPzGHjC0lvH?=
- =?us-ascii?Q?FY7DR8bNcv8MKzhXobkuzR6I4D5G/WSHd9a7ol+esOhB8nm0kYisr30rqz8z?=
- =?us-ascii?Q?Vz9F72pBdhXkQ5cMBEZqc3OufTT1X4vbWcaQ69U3FWPSBneJfAfBf1REcmjq?=
- =?us-ascii?Q?bpsUoHrvoF0CojHRZitlAzm3HS172logpvOIhiBRrZZHXoigV26F/5EcwsuD?=
- =?us-ascii?Q?9CfalIP2+pv0e4FT5p1z9oynZh64yE8ADnVI1kOf6cVgRblouSAzA782q1az?=
- =?us-ascii?Q?+/4xnzWml6gQdJ0vXZJHWmt9lRzfeceYPRVDUroaeQwaokO+rcEqCgxX0L6M?=
- =?us-ascii?Q?LGxENrxrrPVxoiIC61cc3ep3XgkJ6rwhBWdTQhzXByTTzWbjt+AZNMl8+qCn?=
- =?us-ascii?Q?DQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725637409; x=1726242209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MjmPcGq5VFRg/trcWFAfLiT2RKaNRMYo+KytcVSszMU=;
+        b=JJWaAhY0QmaTMLT96CI2f29sT2rNEnQQ6zEffvV5QkXqD214MkH2/XVc5Y5Cq3Kbjz
+         IS0/jEu4vEQy+Khl9xpkGtDecYYyQNBZq6+k96MDaxR2F8xR4u4vLMGX6HEKNzKiJUNJ
+         4DuMEu7rfctIGTAD9D8KKYvoPfR2xQNuTLuvIt5p8qvyRgC67GBDX+X3lkHNIsjKapHQ
+         MYFpmst0CxU0L3JemfnTH8tcOEVX15hXysOdvvNWNJ662VGNYWunx1/iTIFTPWXgDaor
+         UXPUrFTwsTslHQEbyTLUvQn1TXeQG/9HqOMDAAeI20T8SaqTNDfQzfieZYaXX9OExkIA
+         WGxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725637409; x=1726242209;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MjmPcGq5VFRg/trcWFAfLiT2RKaNRMYo+KytcVSszMU=;
+        b=hcbiyHSGUeUu1+eo/sFWmi/Rlk2e0cFGg52yguGDQ8lwY9vmBZuupJFVIKVSlou05Y
+         +Fbzy2L8k/l9A9sbL57XfI5cVZtgsYqYTd+su2CJ/RTWUW8sdDUG1w6e6IsetozpVhks
+         OQDddj7acgL94pnGHepICNgZW1M4600u2BV/i5z5WgnPrbOYfGKchiWT34lNM1P3SJVE
+         G/WC2F1lzLiTPsQpOVCPH5A3LT/W3ZcITw9CsfKpON+Y5WpAmlmVgPSE4AYms/Oaykbq
+         8Acw97HWEMuLjrw0gdvWbT4JGiGcC0RnTUKXhEXvveviUMEpsmJLQYqavFxwxfLs2HOo
+         ID+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXmywSbiDeoZ5UOBKt7sWMZdzuu2y4vWgc+kOzoQApOWrXZAvWCBGmWgsdoj7NXXavlAu6c7NDWQUDnPWITa+ckiLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhlcQilnoSZTCvLtdffcZPMBfMML4oDADbNU3YMx2shXSx/x4m
+	/JmX3t8GWyEbFnnBWOt2pD2L95xuoXKQf/i39LQ/feZhr0kh0lpbst16S2FhLqmB32BkOXBkTC2
+	8
+X-Google-Smtp-Source: AGHT+IH8H7wUCUtT2JdrUvSGz7620gDLCP1Ri6GgPWlKZPRqpIXr9jqxs/IkSkJ8Y41lHToBIGDC2w==
+X-Received: by 2002:a05:6402:26d5:b0:5c2:4eb3:e806 with SMTP id 4fb4d7f45d1cf-5c3dc7b800bmr1963773a12.24.1725637408823;
+        Fri, 06 Sep 2024 08:43:28 -0700 (PDT)
+Received: from localhost (p5dc68d3d.dip0.t-ipconnect.de. [93.198.141.61])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3cc52d989sm2649933a12.3.2024.09.06.08.43.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2024 08:43:28 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Kent Gibson <warthog618@gmail.com>,
+	David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v4 0/7] pwm: New abstraction and userspace API
+Date: Fri,  6 Sep 2024 17:42:56 +0200
+Message-ID: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	vC/58err91cwSI0fiQvPKFtiZq1tdZcB/nhrqaIvm9ptndvnvV8AYLrxhhHN8ixZjfiFs2lGmCIRlQ3kUGIxYTMZqYqkeGkx0Y6iMHg77PrSS52C1Ej5SyQRc7m/IDMlnxIRjOLc1J0gbngYlF28RfwR6y3hHHJ+55d5Yw9h6tbnWooG1Z18gihfSCsbLAJY2clGRhPHsFVRes3V9RUelLc5SuyiKGWxhzz79j1v2Jl5JNTAO0vDGRki6xPt6xmbK31pUKNFoGuCZkBMjEy5/MLGssZ1Ht3rMtUTMUgpqFm5/ktDaMyaY5ZHiPSjdz55rY+VGe1rfUfwgep8Q24R0zZuthuCB+mhNylLdY2VUQ5PcSseeY9eEDYrWIlZW7DD1HhQD6o9lhkmuLrZ+1cd9+qwF+X3q1BV/h40dFW1wr0mElBlzperukVei7KO5+A8IyjfeVmuN8vwY8849j1E1EfqSqu+O6ltMy+vWTZhf/HxgX/6YtokV9ig9TPerK5oKdDxRm6qR5kPmWG5KA7cBvz4YHOvXQaqj1wKfjArYbVvKt/ZuF2Xgrf/6cJl+lLYJDXJjS3sIZTZ4riNDhKERBOP4HkmhelK31LW7Gs9nDg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR10MB6287.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fcb09c2-5c31-48cc-0b61-08dcce830c7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2024 14:49:02.5321
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OdBWr1+hPse1HZhkTrrXkXDmbMzTO4KSJb9/rm/1sOLy5KvoZQuYe4HvSNlo04vST0eCssi8Jzl/HYGicVHZ3SqHDdQUkI55WB1pC+9LLYo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6752
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_03,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2408220000 definitions=main-2409060109
-X-Proofpoint-ORIG-GUID: kSIxLhSgTyutnhMqbgnHByF3zQzNwLRQ
-X-Proofpoint-GUID: kSIxLhSgTyutnhMqbgnHByF3zQzNwLRQ
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4753; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=SdA/884OUoNUTYfuujZhiUv6gnTpSFyrP/yZXl0aWnQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBm2yMBIjjylPYTGgYkClNl3CRKRJzeGv/xfaGKZ M3/knRNgdKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZtsjAQAKCRCPgPtYfRL+ TkuHB/4oOdPXE/Nvd7VgU9doI8Iqc2fEhA8GrLjwN2ob+zZ/S/Q5Ie7RC8D6yN8IBSsYzZznPOi /g9AKLEAmsuisG4ynZ4y5bIA3vuguPHyvGTGbcSF/Q/+biJUSMsF6Um4kcIk4lfmIcrmfZa4yqv WeBA95Lg63Zgld7o7gpFMx2J8VXUUKqk0eCiuGYTxb8GqdvUhQxYUFb1UWcq0mV2ZupcTOCnHgR ibMxH/VWqLoqpny0m2mxWwFD8LCn3eklOEt+UbDR6kmxYxNpGplghFNubOlaSCxDg0Dq2hDw+L3 5/rlTqh6RO+nZO4DvuWWQ+4ufL+GvuWLZb35RP8BVfAFQxdF
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Woops, forgot to update the subject line of the 0/4... it *is* v10.
+Hello,
 
-Sorry about that.
+here comes v4 of the series to add support for duty offset in PWM
+waveforms. For a single PWM output there is no gain, but if you have a
+chip with two (or more) outputs and both operate with the same period,
+you can generate an output like:
 
-________________________________________
-From: Kris Van Hees <kris.van.hees@oracle.com>
-Sent: Friday, September 6, 2024 10:45 AM
-To: Kris Van Hees; linux-kernel@vger.kernel.org; linux-kbuild@vger.kernel.o=
-rg; linux-modules@vger.kernel.org; linux-trace-kernel@vger.kernel.org
-Cc: Masahiro Yamada; Steven Rostedt; Luis Chamberlain; Masami Hiramatsu; Ni=
-ck Desaulniers; Jiri Olsa; Elena Zannoni
-Subject: [PATCH v9 0/4] Generate address range data for built-in modules
+               ______         ______         ______         ______
+   PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+                 __             __             __             __
+   PWM #1  _____/  \___________/  \___________/  \___________/  \_________
+              ^              ^              ^              ^
 
-At build time, create the file modules.builtin.ranges that will hold
-address range data of the built-in modules that can be used by tracers.
+The opportunity for a new abstraction is/should be used to also improve
+precision of the API functions, which implies that the rules for
+lowlevel drivers are more strict for the new callbacks.
 
-Especially for tracing applications, it is convenient to be able to
-refer to a symbol using a <module name, symbol name> pair and to be able
-to translate an address into a <nodule mname, symbol name> pair.  But
-that does not work if the module is built into the kernel because the
-object files that comprise the built-in module implementation are simply
-linked into the kernel image along with all other kernel object files.
+Changes since v3, which is available from
+https://lore.kernel.org/linux-pwm/cover.1722261050.git.u.kleine-koenig@baylibre.com/
+include:
 
-This is especially visible when providing tracing scripts for support
-purposes, where the developer of the script targets a particular kernel
-version, but does not have control over whether the target system has
-a particular module as loadable module or built-in module.  When tracing
-symbols within a module, referring them by <module name, symbol name>
-pairs is both convenient and aids symbol lookup.  But that naming will
-not work if the module name information is lost if the module is built
-into the kernel on the target system.
+ - Drop PWM_IOCTL_GET_NUM_PWMS ioctl (patch #4), suggestion by David
+   Lechner
 
-Earlier work addressing this loss of information for built-in modules
-involved adding module name information to the kallsyms data, but that
-required more invasive code in the kernel proper.  This work never did
-get merged into the kernel tree.
+ - Define members of userspace API struct using __u32 instead of
+   unsigned int; thanks to Kent Gibson for the suggestion (patch #4)
 
-All that is really needed is knowing whether a given address belongs to
-a particular module (or multiple modules if they share an object file).
-Or in other words, whether that address falls within an address range
-that is associated with one or more modules.
+ - Ensure that pwm_apply_state_{atomic,might_sleep}() don't return 1
+   Noticed by Fabrice Gasnier
 
-Objects can be identified as belonging to a particular module (or
-modules) based on defines that are passed as flags to their respective
-compilation commands.  The data found in modules.builtin is used to
-determine what modules are built into the kernel proper.  Then,
-vmlinux.o.map and vmlinux.map can be parsed in a single pass to generate
-a modules.buitin.ranges file with offset range information (relative to
-the base address of the associated section) for built-in modules.  This
-file gets installed along with the other modules.builtin.* files.
+ - Rebased to current pwm/for-next.
+   (fixing a missing +1 noticed by Fabrice)
 
-The impact on the kernel build is minimal because everything is done
-using a single-pass AWK script.  The generated data size is minimal as
-well, (depending on the exact kernel configuration) usually in the range
-of 500-700 lines, with a file size of 20-40KB (if all modules are built
-in, the file contains about 8000 lines, with a file size of about 285KB).
+ - Dropped Tested-by: from Trevor
+   While the axi-pwmgen driver didn't change, there were considerable
+   changes in the core. So I dropped it.
 
-Changes since v9:
- - Reverted support for optional 4th arg to generator script.
- - Reverted support for optional 6th arg to verifier script.
- - Added modules.builtin.ranges ad vmlinux.o.map to CLEAN_FILES.
- - Fixed support for sparc64.
- - Fixed support for LLVM's lld linker map format.
- - Updated error message when .*.cmd.o cannot be read by verifier script.
- - Added syntax output for verifier script when not enough args are given.
- - Return 1 from verifier if verification fails.
+ - add some missing EXPORT_SYMBOL_GPL for the new API functions
 
-Changes since v8:
- - Fixed some typos.
- - Added support for built-in Rust modules.
- - Added optional 4th arg to generator to specify kernel build directory.
+ - Add kernel doc comments for the new API functions
 
-Changes since v7:
- - Remove extra close(fn) in scripts.
- - Make CONFIG_BUILTIN_MODULE_RANGES depend on !LTO.
+ - debug message in stm32_pwm_round_waveform_fromhw (another suggestion
+   by Fabrice)
 
-Changes since v6:
- - Applied Masahiro Yamada's patches for kconfig, makefile, and scripts.
+I also updated the branch pwm/chardev in
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git to
+match this v4.
 
-Changes since v5:
- - More improved commit descriptions to explain the why and how.
- - Removed unnecessary compatibility info from option description.
- - Added optional 6th arg to verifier to specify kernel build directory.
- - Report error and exit from verifier if .*.o.cmd files cannot be read.
+I'm aware of two issues in this series:
 
-Changes since v4:
- - Improved commit descriptions to explain the why and how.
- - Documented dependency on GNU AWK for CONFIG_BUILTIN_MODULE_RANGES.
- - Improved comments in generate_builtin_ranges.awk
- - Improved logic in generate_builtin_ranges.awk to handle incorrect
-   object size information in linker maps
- - Added verify_builtin_ranges.awk
+ - Triggers a lockdep warning in the pwm-meson driver. This affects the
+   new pwm locking vs the clk framework's prepare lock. I think this is
+   a false positive and to fix it, only changes in the clk framework are
+   necessary.
 
-Changes since v3:
- - Consolidated patches 2 through 5 into a single patch
- - Move CONFIG_BUILTIN_MODULE_RANGES to Kconfig.debug
- - Make CONFIG_BUILTIN_MODULE_RANGES select CONFIG_VMLINUX_MAP
- - Disable CONFIG_BUILTIN_MODULE_RANGES if CONFIG_LTO_CLANG_(FULL|THIN)=3Dy
- - Support LLVM (lld) compiles in generate_builtin_ranges.awk
- - Support CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=3Dy
- - Only install modules.builtin.ranges if CONFIG_BUILTIN_MODULE_RANGES=3Dy
+ - The functions pwm_set_waveform_might_sleep() and
+   pwm_round_waveform_might_sleep() have an unusual return value
+   convention: They return 0 on success, 1 if the requested waveform
+   cannot be implemented without breaking the rounding rules, or a
+   negative errno if an error occurs.
+   Fabrice rightfully pointed out this to be surprised by this and
+   suggested to use at least a define for it.
 
-Changes since v2:
- - Switched from using modules.builtin.objs to parsing .*.cmd files
- - Add explicit dependency on FTRACE for CONFIG_BUILTIN_MODULE_RANGES
- - 1st arg to generate_builtin_ranges.awk is now modules.builtin.modinfo
- - Parse data from .*.cmd in generate_builtin_ranges.awk
- - Use $(real-prereqs) rather than $(filter-out ...)
- - Include modules.builtin.ranges in modules install target
+   I couldn't find a decision that I'm entirely happy with here. My
+   conflicts are:
 
-Changes since v1:
- - Renamed CONFIG_BUILTIN_RANGES to CONFIG_BUILTIN_MODULE_RANGES
- - Moved the config option to the tracers section
- - 2nd arg to generate_builtin_ranges.awk should be vmlinux.map
+    - I want a constant that now and in the future only means "cannot be
+      done due to the rounding rules in the pwm framework". So the
+      options are:
+        * Introduce a new ESOMETHING and return -ESOMETHING
+          I think that's hard to motivate and also myself doubt this
+          would be sensible. As below, the question for a good name is
+          unresolved.
+        * return 1
+          This is what was done in the earlier revisions and also here.
 
-Kris Van Hees (5):
-  trace: add CONFIG_BUILTIN_MODULE_RANGES option
-  kbuild: generate a linker map for vmlinux.o
-  module: script to generate offset ranges for builtin modules
-  kbuild: generate modules.builtin.ranges when linking the kernel
-  module: add install target for modules.builtin.ranges
+    - When keeping the return 1 semantics (and also for a new
+      ESOMETHING):
+      I agree that a name instead of a plain 1 would be nice, but I
+      couldn't come up with a name I liked. Given that this can be
+      introduced later without breaking anything, I don't consider that
+      very urgent.
+      My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
+      PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
+      These are too long or/and imprecise.
+      If you have a good idea, please tell.
 
-Luis Chamberlain (1):
-  kbuild: add modules.builtin.objs
+Still I'd like to get that forward and (unless a new and relevant issue
+pops up until then) intend to put it into next after the next merge
+window. Nevertheless I'm open for suggestions to further improve this
+series.
 
- .gitignore                          |   2 +-
- Documentation/dontdiff              |   2 +-
- Documentation/kbuild/kbuild.rst     |   5 ++
- Makefile                            |   8 +-
- include/linux/module.h              |   4 +-
- kernel/trace/Kconfig                |  17 ++++
- scripts/Makefile.lib                |   5 +-
- scripts/Makefile.modinst            |  11 ++-
- scripts/Makefile.vmlinux            |  17 ++++
- scripts/Makefile.vmlinux_o          |  18 ++++-
- scripts/generate_builtin_ranges.awk | 149 ++++++++++++++++++++++++++++++++=
-++++
- 11 files changed, 228 insertions(+), 10 deletions(-)
- create mode 100755 scripts/generate_builtin_ranges.awk
+Best regards
+Uwe
 
+Uwe Kleine-König (7):
+  pwm: Add more locking
+  pwm: New abstraction for PWM waveforms
+  pwm: Provide new consumer API functions for waveforms
+  pwm: Add support for pwmchip devices for faster and easier userspace
+    access
+  pwm: Add tracing for waveform callbacks
+  pwm: axi-pwmgen: Implementation of the waveform callbacks
+  pwm: stm32: Implementation of the waveform callbacks
 
-base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
---
-2.42.0
+ drivers/pwm/core.c           | 867 +++++++++++++++++++++++++++++++++--
+ drivers/pwm/pwm-axi-pwmgen.c | 154 +++++--
+ drivers/pwm/pwm-stm32.c      | 612 ++++++++++++++++---------
+ include/linux/pwm.h          |  58 ++-
+ include/trace/events/pwm.h   | 134 +++++-
+ include/uapi/linux/pwm.h     |  24 +
+ 6 files changed, 1545 insertions(+), 304 deletions(-)
+ create mode 100644 include/uapi/linux/pwm.h
 
+base-commit: cf6631b07b907d4c644ca42f7cc234e7149290a2
+-- 
+2.45.2
