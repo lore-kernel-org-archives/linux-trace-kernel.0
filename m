@@ -1,59 +1,59 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABA81D86F4
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 18:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB8F1CBE9F
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Sep 2024 19:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725646099; cv=none; b=Hi2RSRJ/kObei70p27uHXSfl5L00EiTGtMghcJQC09+U0DptaCk6OOOPENuH8fZk5pX98sWIjhIUDQAZx8Hc3zzvDbxrY0X0+xHOxd8aZbwLeMrfAQ6HnstHDaVn3o+mup8X/ZBa03y/+rJmoWZylPU7nFmkpIpBWQNaEFjisuE=
+	t=1725649583; cv=none; b=MNB6r9AGu2neVypZg52rPCXLbciF/m4OFensVJVZeeYTTpaj4AVEYFpNyIfaWICC82l4BkYXliYbaupVW4w+1o+7JJVX0nZzRah+KwTSYOtYMtZJNCVULmTXJ8oW1Zma5RDKKTqI5M4tgaS3Ku0cnAFvrevLxTI3ahPn48dvhhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725646099; c=relaxed/simple;
-	bh=N5s3RNIQuunVeyKUC1/eTJBNh3LQ4OWVmL8QX5Y3Juo=;
+	s=arc-20240116; t=1725649583; c=relaxed/simple;
+	bh=X+OX1A8Q6OgV4SR6WwyW3nVha2u746YGuE81l2DdMdg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n3+rdZ1P98JK6ZvPwZAK3IFl0nJfKJ1HkQxKMsscrOTgeM8RjsQzA37jqFGPijAqwRcduN72S192Beox9CB5dMSrgEiOEzvcd9UYe12MSXIMXnJD/hk6FxTCvIY4FzoVlaLE4RdhalB1ZMH8gYuOibFe/kxwg546vsMHHR57aKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ibdltl8C; arc=none smtp.client-ip=209.85.219.47
+	 In-Reply-To:Content-Type; b=T+2qEDeVuc9t+6pWaaM6U4iPrN9zhSqU+FMUPEKNI6bRzIVLXbyPO/FILozFnaC0c/wnBuzcjHJE2Ok9VzUjS0cTXS3MqQNedHtwnlylVHyXcf7Xe/WY9HkEuCAyWOssg9lmA4k2S+H8qOIoEkOvtwldhyVZ/ToPD66Fl/U96jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=08A28jil; arc=none smtp.client-ip=209.85.210.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ibdltl8C"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6c51d1df755so11731886d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Sep 2024 11:08:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="08A28jil"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7092dd03223so1075163a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Sep 2024 12:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725646094; x=1726250894; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725649580; x=1726254380; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UZBmlozXg2XqplOo0lXdwMOSJwMm67uW2etrNqOWyDI=;
-        b=Ibdltl8CiOTgZDbFQbtnn72XUL0hGf7dstcIf2CSU0iGjy/hueImrVzFE1u8WGiLTN
-         7aDc5zBCsDnIrop5+bkTsRajLJURxTkdIVxyBSZXbf4bRPL6J5shHoJh7WWjl+tKZ12u
-         mMwIyEuMbp618b2cgc0dxPmPhsBMukuSMarRXI69o581pVP1iFZpXYPAGm+hPQGG37eL
-         8Mc3ZfeNbxpc5JWA2zX5F5IVH34Y/I6CHSi51qdNiJzk6Z/uC3mTZ4Buae3UVOUrNiIU
-         uACON0Sa3qRz/PvWhDw3+/oa7IfuiqcKF8T0+DFhAjQPtBIfF+YaDZXUVNfYzOfW6IUv
-         7fhw==
+        bh=sRL0IOkPquaSmH/TxMcTrkn2lAb7RgDZ+KVgL/uKDo8=;
+        b=08A28jilPARB13PmpusJH/FP0Z4EgYX7Hmb3KwkI20mJogR3zxl6G0e5MElVddW0pL
+         vvoClMo24PfcCJqeOBu+ZEpGUUTB9XsrTF+Tm4qezsq1YpJaf0aFoNl4Bq+93u3e68AY
+         Z6osRkEN4aNfyzhO7Q432032CGlNRS8jh52K8hjLVWZOYwwuTDpHfR8h1vG4/rbKAzro
+         jfCSeipANRJULlRs0jVSSDDUvaHe99qRnKN5LlTtYoWayy/MJJM5CUweiT4FX7w/KajY
+         Q3ozI2KDFdkAxmqYZiO/Y/qZ5ORs0mNa51e4fFnMh4BJrBfshJ7dDMwQMfzAYmUhQWz1
+         P0wA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725646094; x=1726250894;
+        d=1e100.net; s=20230601; t=1725649580; x=1726254380;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UZBmlozXg2XqplOo0lXdwMOSJwMm67uW2etrNqOWyDI=;
-        b=Gibd/ylt8CVDQgZitT6Wpwm41e/EyoCeqVDoV4vo0YrcoUuty5qbZFWSMHZDyHWi2K
-         gRVn5cDyy2sEeWtDdia7gCrmUIEHOZtEx08FgV2UYL+FGRam8XPb6lfBdBYcln7jeP1S
-         R4rv8yrwtyYKsc7AaXZehdrX2FL1xHnIpzlF99J5cJaOuTAlVGpH2E8ISbpR6Pg2yVj8
-         xr75lCMLWi4P4na9gjlDPri5uw5iAOLHpovSl6QsKwhBndfvwj0eA63Dij9q/0GAqDA0
-         3y4rKJdp17Dj2HX8vREBb/KVuCH/Ll6/PQMWm9DGpVSnJk6kFZqtEAVoglC0BA0CUR51
-         zk7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHIhGr/VqEygBjKfLEm/V0cf8PbjipHQNDt1sanHSpgEcATEvT2ZBtGq2qlp0mI++AoNnKS/QK4Rv+URFKip4OCIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUWu+dGMIXAXB+bLOjCFNGHj+zUPkS5CUSyw6IIptp3GyO6/FQ
-	NAXhvqtzIgspS00Dm81rfiQ2f/AGQwQil3F/p3MqgDUudo/4XF9/Tj0a50UzmZ8=
-X-Google-Smtp-Source: AGHT+IEWKDq1ah705WzWjjDO4xpUmOR5NO+BvCFUHxQollwC1IilPu1r9vgqKZ9KZFfQuYw7cjyJ6A==
-X-Received: by 2002:a05:6214:5a09:b0:6c3:67b3:4c1d with SMTP id 6a1803df08f44-6c5283f86efmr47965766d6.13.1725646094398;
-        Fri, 06 Sep 2024 11:08:14 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c5201dee10sm18712426d6.13.2024.09.06.11.08.13
+        bh=sRL0IOkPquaSmH/TxMcTrkn2lAb7RgDZ+KVgL/uKDo8=;
+        b=F7ig3JgXqJzmBJgR24kS+W0eAW3NZpCf/Lt06mHIqYmTpQm7TO/iREBqC8+P2hoWZk
+         /1O8bO7xrBErf1MrMQISG+taW5eE7BR+4dygJs6fcWkOWWMKmvSRtvuKJUc4EPdegka4
+         KZGHSOlTD/WaU+PY5icvkjdpmYt9JkgomGBEZYdiP5lLzgm+/0aFzzsgHDf9x4QKSCGX
+         edToeFXNGEVWYSOcnACIfP5AZqlnMq2rVa4Qj8HUtX+Wu5uJRRcP/7G7mzO6qf1INkCD
+         8CTZcCg/qNBdTDY1vzv/b/vATMRbyfIBm+ybrB5kXdtP4YSSUqAMpxZKnJE1yntO5258
+         IJuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVze1Xk77KaIbhm4a23eYxv7kMsEbUeIbvoF9iwCkbMs5+gsaZc0PSN8hlBGqJ/RBGvKoC/+SN7MYA576HPhb+tnoo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVXOKOGE4teRWMPzpA4s9qlCu6TTI41rWp4kF1iHbJ2DQZNf8a
+	XjEn3n1hJnolHAEnJoIhtW86Lfpo2vHXkvGv8a0xqD6OX3ejRinZXzArY0xjxGg=
+X-Google-Smtp-Source: AGHT+IFMNu7CkzsCPaFKzf0VUQEiZwLzm4UrG2v/Np24ZK9LDshdqsK0810LAPAwttIC/hC3aaCcKQ==
+X-Received: by 2002:a05:6830:6404:b0:709:3b06:d578 with SMTP id 46e09a7af769-710cc25c94amr4383633a34.26.1725649580418;
+        Fri, 06 Sep 2024 12:06:20 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-70f671ca4a0sm3783279a34.79.2024.09.06.12.06.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Sep 2024 11:08:14 -0700 (PDT)
-Message-ID: <6d838ec8-9b1e-441d-b7f8-6e31860e944d@baylibre.com>
-Date: Fri, 6 Sep 2024 14:08:11 -0400
+        Fri, 06 Sep 2024 12:06:20 -0700 (PDT)
+Message-ID: <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
+Date: Fri, 6 Sep 2024 14:06:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,138 +69,98 @@ Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-trace-kernel@vger.kernel.org,
  Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
  Alexandre Torgue <alexandre.torgue@foss.st.com>,
- linux-stm32@st-md-mailman.stormreply.com, Kent Gibson
- <warthog618@gmail.com>, David Lechner <dlechner@baylibre.com>
+ linux-stm32@st-md-mailman.stormreply.com, Kent Gibson <warthog618@gmail.com>
 References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
 Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
 In-Reply-To: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-
-On 2024-09-06 11:42, Uwe Kleine-König wrote:
+On 9/6/24 10:42 AM, Uwe Kleine-König wrote:
 > Hello,
->
+> 
 > here comes v4 of the series to add support for duty offset in PWM
 > waveforms. For a single PWM output there is no gain, but if you have a
 > chip with two (or more) outputs and both operate with the same period,
 > you can generate an output like:
->
->                 ______         ______         ______         ______
->     PWM #0  ___/      \_______/      \_______/      \_______/      \_______
->                   __             __             __             __
->     PWM #1  _____/  \___________/  \___________/  \___________/  \_________
->                ^              ^              ^              ^
->
-> The opportunity for a new abstraction is/should be used to also improve
-> precision of the API functions, which implies that the rules for
-> lowlevel drivers are more strict for the new callbacks.
->
-> Changes since v3, which is available from
-> https://lore.kernel.org/linux-pwm/cover.1722261050.git.u.kleine-koenig@baylibre.com/
-> include:
->
->   - Drop PWM_IOCTL_GET_NUM_PWMS ioctl (patch #4), suggestion by David
->     Lechner
->
->   - Define members of userspace API struct using __u32 instead of
->     unsigned int; thanks to Kent Gibson for the suggestion (patch #4)
->
->   - Ensure that pwm_apply_state_{atomic,might_sleep}() don't return 1
->     Noticed by Fabrice Gasnier
->
->   - Rebased to current pwm/for-next.
->     (fixing a missing +1 noticed by Fabrice)
->
->   - Dropped Tested-by: from Trevor
->     While the axi-pwmgen driver didn't change, there were considerable
->     changes in the core. So I dropped it.
->
->   - add some missing EXPORT_SYMBOL_GPL for the new API functions
->
->   - Add kernel doc comments for the new API functions
->
->   - debug message in stm32_pwm_round_waveform_fromhw (another suggestion
->     by Fabrice)
->
-> I also updated the branch pwm/chardev in
-> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git to
-> match this v4.
->
-> I'm aware of two issues in this series:
->
->   - Triggers a lockdep warning in the pwm-meson driver. This affects the
->     new pwm locking vs the clk framework's prepare lock. I think this is
->     a false positive and to fix it, only changes in the clk framework are
->     necessary.
->
->   - The functions pwm_set_waveform_might_sleep() and
->     pwm_round_waveform_might_sleep() have an unusual return value
->     convention: They return 0 on success, 1 if the requested waveform
->     cannot be implemented without breaking the rounding rules, or a
->     negative errno if an error occurs.
->     Fabrice rightfully pointed out this to be surprised by this and
->     suggested to use at least a define for it.
->
->     I couldn't find a decision that I'm entirely happy with here. My
->     conflicts are:
->
->      - I want a constant that now and in the future only means "cannot be
->        done due to the rounding rules in the pwm framework". So the
->        options are:
->          * Introduce a new ESOMETHING and return -ESOMETHING
->            I think that's hard to motivate and also myself doubt this
->            would be sensible. As below, the question for a good name is
->            unresolved.
->          * return 1
->            This is what was done in the earlier revisions and also here.
->
->      - When keeping the return 1 semantics (and also for a new
->        ESOMETHING):
->        I agree that a name instead of a plain 1 would be nice, but I
->        couldn't come up with a name I liked. Given that this can be
->        introduced later without breaking anything, I don't consider that
->        very urgent.
->        My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
->        PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
->        These are too long or/and imprecise.
->        If you have a good idea, please tell.
+> 
+>                ______         ______         ______         ______
+>    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+>                  __             __             __             __
+>    PWM #1  _____/  \___________/  \___________/  \___________/  \_________
+>               ^              ^              ^              ^
+> 
 
-PWM_ERR_ROUNDING doesn't seem too bad.
+While working on an ADC driver that uses these new waveform APIs, we came
+across a case where we wanted wf->duty_offset_ns >= wf->period_length_ns,
+which is currently not allowed. [1]
 
-What about something like PWM_REQ_INVALID, PWM_WF_INVALID, or 
-PWM_WF_REQ_INVALID?
+                ______         ______         ______         ______
+    PWM #0  ___/      \_______/      \_______/      \_______/      \_______
+                               __             __             __
+    PWM #1  __________________/  \___________/  \___________/  \___________
+                            ^              ^              ^              
 
->
-> Still I'd like to get that forward and (unless a new and relevant issue
-> pops up until then) intend to put it into next after the next merge
-> window. Nevertheless I'm open for suggestions to further improve this
-> series.
->
-> Best regards
-> Uwe
->
-> Uwe Kleine-König (7):
->    pwm: Add more locking
->    pwm: New abstraction for PWM waveforms
->    pwm: Provide new consumer API functions for waveforms
->    pwm: Add support for pwmchip devices for faster and easier userspace
->      access
->    pwm: Add tracing for waveform callbacks
->    pwm: axi-pwmgen: Implementation of the waveform callbacks
->    pwm: stm32: Implementation of the waveform callbacks
->
->   drivers/pwm/core.c           | 867 +++++++++++++++++++++++++++++++++--
->   drivers/pwm/pwm-axi-pwmgen.c | 154 +++++--
->   drivers/pwm/pwm-stm32.c      | 612 ++++++++++++++++---------
->   include/linux/pwm.h          |  58 ++-
->   include/trace/events/pwm.h   | 134 +++++-
->   include/uapi/linux/pwm.h     |  24 +
->   6 files changed, 1545 insertions(+), 304 deletions(-)
->   create mode 100644 include/uapi/linux/pwm.h
->
-> base-commit: cf6631b07b907d4c644ca42f7cc234e7149290a2
+We worked around it by setting:
+
+	wf->duty_offset_ns = DESIRED_NS % wf->period_length_ns
+
+Having PWM #1 trigger too early just causes the first sample data
+read to be invalid data.
+
+But even if we allowed wf->duty_offset_ns >= wf->period_length_ns,
+this offset wouldn't matter because there currently isn't a way to
+enable two PWM outputs at exactly the same time.
+
+In the ADC application we work around both of these shortcomings by not
+enabling the DMA that is triggered by PWM #1 until after both PWMs are
+enabled. However, there may be similar applications in the future that
+also need such an offset and synchronized enable that might not be so
+easy to work around, so something to keep in mind.
+
+[1]: https://lore.kernel.org/linux-iio/20240904-ad7625_r1-v4-2-78bc7dfb2b35@baylibre.com/
+
+
+> 
+>  - The functions pwm_set_waveform_might_sleep() and
+>    pwm_round_waveform_might_sleep() have an unusual return value
+>    convention: They return 0 on success, 1 if the requested waveform
+>    cannot be implemented without breaking the rounding rules, or a
+>    negative errno if an error occurs.
+>    Fabrice rightfully pointed out this to be surprised by this and
+>    suggested to use at least a define for it.
+> 
+>    I couldn't find a decision that I'm entirely happy with here. My
+>    conflicts are:
+> 
+>     - I want a constant that now and in the future only means "cannot be
+>       done due to the rounding rules in the pwm framework". So the
+>       options are:
+>         * Introduce a new ESOMETHING and return -ESOMETHING
+>           I think that's hard to motivate and also myself doubt this
+>           would be sensible. As below, the question for a good name is
+>           unresolved.
+>         * return 1
+>           This is what was done in the earlier revisions and also here.
+> 
+>     - When keeping the return 1 semantics (and also for a new
+>       ESOMETHING):
+>       I agree that a name instead of a plain 1 would be nice, but I
+>       couldn't come up with a name I liked. Given that this can be
+>       introduced later without breaking anything, I don't consider that
+>       very urgent.
+>       My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
+>       PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
+>       These are too long or/and imprecise.
+>       If you have a good idea, please tell.
+
+To avoid using the return value for status flags, we could introduce
+an optional output parameter. Consumers where best effort is good
+enough can just pass NULL and consumers that care can pass an unsigned
+int to receive the status flag. This could even be a bitmap of multiple
+flags if it would be useful to know which rule(s) could not be met.
+
