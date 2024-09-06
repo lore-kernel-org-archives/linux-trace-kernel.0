@@ -1,108 +1,124 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFAA14F125;
-	Thu,  5 Sep 2024 20:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD189C8CE;
+	Fri,  6 Sep 2024 00:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725569651; cv=none; b=kLMnAPuxgcZ/RUPfLdTJfvyIyXOItQ8WbEqV8xrPUuuwePyB5Wu2BY1Q90U+wKRWQAdPDSAvWlXQ1hamMz92XM92d2mVO2/suQxGP5fi7vkBFVLg+UPbQ+MxksUBTyD1HJ1Z9543d0VblLbq7Kc1/SI9k9HyuXbmODi+HUnduOU=
+	t=1725582417; cv=none; b=ngNfXirPMzfF2vT9WsB4lYVzw4WkySGeFBlI1HQQa8Xzh5x0g/hATRA3grSnIT5idmxPvQbiRzXB17JWgb5TNriC+TUCvvpJWgSNHotPaMkHO2+b2nW9++tO3APLd4uSNc8jkvTVM3A5TcA61DII4VguP+tRV8IWsv8QmMBN+cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725569651; c=relaxed/simple;
-	bh=VtVcaTA8kr3xNL3ypmIYlIJ3WomRggFUtrSaomEP5wM=;
+	s=arc-20240116; t=1725582417; c=relaxed/simple;
+	bh=hxAybSz8cFIO8WKDNuGWqotgBbMG3yxSs2FhGNA9jEg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OdKRmpiMEWkcGQDDJI9RH22Cq7VmvLCi4SaZZlsR328nx5iiPYsLTtmy+NzlDEOgeobnIHh3K5ROnPtYtK+p4Xqy+Y3fanelByOFrY0HxpjJ4HBNCy7O1oklpwvnLJEBY+QUaEEhBx9PwpCUhUmNSit+fl7r0mT8iCZFtf+4Rns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9c3j/qX; arc=none smtp.client-ip=209.85.216.42
+	 To:Cc:Content-Type; b=h0yy/Ec3NQ3orGJGM0O21Y+m4bEBpKL8x0OUZ8fqxQY9Bytxjv272IourtQB9M6/b6heHDQDx/sgytL7oHV8dsUltcf9x/Y4l2ZTwxFl7hcREuW+H7ksv350Apc4wdw2ajDhkuut85QlN3+B/R0X7hQbuDGvXIfpoIDJQbA+UmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZifFCMIo; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9c3j/qX"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2d8a54f1250so924615a91.0;
-        Thu, 05 Sep 2024 13:54:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZifFCMIo"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a86883231b4so212949766b.3;
+        Thu, 05 Sep 2024 17:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725569649; x=1726174449; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725582414; x=1726187214; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D/vVqpOqdrwI/OeALxCbnulyGAi+e45HkWSWpudnHpg=;
-        b=F9c3j/qXdvv0mT1jhhJ+4xNM5vSppNfos/sLXjKoxXox8ir5GAAE178CyzLiD4drCI
-         sy+PzqZrvtg+mlPkHfedW4w9EnuD7RYC8Y6WcOb+cnPmYGD5hHqOqwZ8XNDUu7miu+zZ
-         6BktRpp6SL40+xaguZoBSti8pdcWF5k4vFy4dW/g46tmU/jPYi8CtmRJYK/RFLpWTjNB
-         SRYH1IbR44+HqejU+qwM4OZKb935uAlPWpvLFx3/RcSriRLqfGxBRB87QZsOcG0EET9E
-         Coa9gtFguQ9cmpXe43HQ9QmH1i83EInqNo6SGXnr49c3Wz7C26Albs76dWpKChWRunuL
-         ff6w==
+        bh=YnyJnxydptKR36Rpv71A18YSqVYOWvLP/U58TklRseA=;
+        b=ZifFCMIoFmtQCkctXicfqCdsQuTyLW8ZIPNI63Hn5aq1mYIRGz5O949MAmcAeFvKye
+         xPs3CWesDvrYirMb++IP8YeeS6CuJbE5FVJrGZWMU1K++kW+u+Juw13L2nDzY7nQcexC
+         QhF1nnXXCC3ikN+Jmh+Rnh867ewqzqP4HbM5u3N+5BbfVF6apibvyXpFbBv6tInulIfq
+         f2g5qbAcr95lLayRYcEZUdAsQHT5gD6QruIGZ5JACttg/wBt/hpJ2DF1YrgB87vcoaij
+         M1ee00a9U3qmJcEcs0IjlPKOw9O3LPtVkFckD4M/ObVKXeloIKvwC8NJBWE4Mg+ZPE3+
+         N/FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725569649; x=1726174449;
+        d=1e100.net; s=20230601; t=1725582414; x=1726187214;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D/vVqpOqdrwI/OeALxCbnulyGAi+e45HkWSWpudnHpg=;
-        b=i8sDACoNsbsahyzSXDJy6ii8pfNshHJFb6A5DjFVjjRrBZJe8zPiVQ2E7GVUXgPVGy
-         83l9bmVKOppePD81gS10NVlNd5pgKndEbBqOieYVbocFIU21RuoJ6oTZHrJ6MFhATJRS
-         4fBN+Ky2lWugnurSt9eRZ9wPQZDb4sd3ExJ1fgffSDqYsbtmfW4iWZhjLV6KrPIp0Rcz
-         vKH17ikc/v02azlAZ8IfDcYJmEL/l8JU8Qc9Q0TdzHPN6MQogfkNkDUfpzl4TUL3Zhzw
-         l9eENh/NIx0rs+kXVKTOT9QXr41ULEcrbhZTQa9B3q6uEGAshs5t0lD292sYXLxq9+Od
-         3YdA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtmnAkwDATrRbeRFEXoXIIy88t+in8uk5w9Bn5dDse1Kg9ishybJC+noZEkJQ0ua7ZShdGMBC76JfUrhJlBsOAms46@vger.kernel.org, AJvYcCW+WKM1cfucTD6DfhPqKEuh5LKf8lYo2aDv6Gbqd8ZzO1i1yBDyau59wU3qm84CCVzpHS7OAzsAFMmkfKsf@vger.kernel.org, AJvYcCX1PXSRqyytKZSaj+QC5LLdIicT0LjQLkEtH7QLQs98tj8tuEctCAyhlYCjM6vDgpfvsT5KwM05GII5QHJaMIJ2Aw==@vger.kernel.org, AJvYcCXGINPb/dAeHuI4+0+eBcO/9ackQtX5WPsaCTbv0CTj5ifUByZrjJ9fnBV6+qhrr2cS9Rs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkI1+xZh2flR9rz3f22iOkBUw0mSMrdOFmzFO5/280O1M97Gsm
-	c8FTMEpgbvRtUbGI0Dpl6KIXuqTiOPtaNoa+0Q9I5xyqnAcC0ylSeCjCrW18RChJ6XEbWoso0Mw
-	wD9EjyHEDdmFCuuqyG4lIDzHnam0=
-X-Google-Smtp-Source: AGHT+IHOuBGq+ApkrAU0UbGfZKbR2eyqTNiruaFgO7adc5dpEztHv7s7Y4n/YPRGObOuuW2gmX2Yz+GWvEg1scR93j0=
-X-Received: by 2002:a17:90b:4b06:b0:2c9:9658:d704 with SMTP id
- 98e67ed59e1d1-2dad511280fmr554489a91.40.1725569649131; Thu, 05 Sep 2024
- 13:54:09 -0700 (PDT)
+        bh=YnyJnxydptKR36Rpv71A18YSqVYOWvLP/U58TklRseA=;
+        b=jpG7EXpA3fMfVRl9Ny75iOuwpBAtUDYusX8vILMUCvCTdWMZfaj1pQhk+ft6lm5NXR
+         tiSsOooXxJ1UiOgp+CZaJ874F3QOtIhKrRYlGoZFLd6adVV8XMTy1Nai5Ljb+y0SA/KK
+         JI1MkmRgIa+ZB76Dz6xvNvcdYScuqEreX6CDINrqgfBaQT5LhLKQK6s9PQ+yEpze+2tR
+         95oEFuE8g6h5tr/EDpFgu5BED6ey32Jr38ctYmcHMDFOSgwUyo4rJ4S3OomG8e9kcWJC
+         O4BhQd4J4qXQL5syCGQa1A2WPIWXl7IlJ1n3BvbMktkz65crldU60AS/cpLLCP9GPp/q
+         WCQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXLOCjN1GU7tOwFWFNoXMhMKGZlGebE7zsDC1+qBHELNNDv57KF8tq30aP2R9AO6/X7QIPLHYh@vger.kernel.org, AJvYcCV/j/Rm/GCscIxME6K7weqDAjIbj4HP2cshmRk7xrq0fYa2Jqo0Z9XRBpGuZnjoouXuf0TCUVxkBtPr4yFw789aIfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrUWcb5GzTDOA/R2lg5Rr2zuEDBsyetX04ASn5ISdR/zUvRbWb
+	l52tQmXtzFGpEXibYaiYf9dhMzdpUSnsfxGfmuyvZQ4zGb3yx8PwIvUA7DzsrFBBfpH41S1pJmv
+	eSZmfkhEwvOzJ6/742WBwqpz+QmU=
+X-Google-Smtp-Source: AGHT+IGzBOo7I+xvkS52Uc3NrrytQpaostPexMBl4O4nQaZDGoLdJpOv/5vE7ZID2d/5RTXyMGG+QIIHlc/fX2aQy/A=
+X-Received: by 2002:a17:907:7d8c:b0:a8a:6f79:d69d with SMTP id
+ a640c23a62f3a-a8a885f5f48mr48989066b.22.1725582413870; Thu, 05 Sep 2024
+ 17:26:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240809061004.2112369-1-liaochang1@huawei.com>
- <20240809061004.2112369-2-liaochang1@huawei.com> <20240812120738.GC11656@redhat.com>
- <2971107e-75e7-8438-c858-b95202d7b5ea@huawei.com> <20240813124737.GA31977@redhat.com>
-In-Reply-To: <20240813124737.GA31977@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 5 Sep 2024 13:53:56 -0700
-Message-ID: <CAEf4Bza9UYWv1uM38wBbvmGCEtcvOK3DeybQ9+QGwVf3QyTTyA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] uprobes: Remove redundant spinlock in uprobe_deny_signal()
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: "Liao, Chang" <liaochang1@huawei.com>, mhiramat@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, andrii@kernel.org, 
-	rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org
+References: <20240905075622.66819-1-lulie@linux.alibaba.com> <20240905075622.66819-4-lulie@linux.alibaba.com>
+In-Reply-To: <20240905075622.66819-4-lulie@linux.alibaba.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 5 Sep 2024 17:26:42 -0700
+Message-ID: <CAADnVQL1Z3LGc+7W1+NrffaGp7idefpbnKPQTeHS8xbQme5Paw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 3/5] tcp: Use skb__nullable in trace_tcp_send_reset
+To: Philo Lu <lulie@linux.alibaba.com>
+Cc: bpf <bpf@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Kui-Feng Lee <thinker.li@gmail.com>, Juntong Deng <juntong.deng@outlook.com>, jrife@google.com, 
+	Alan Maguire <alan.maguire@oracle.com>, Dave Marchevsky <davemarchevsky@fb.com>, 
+	Daniel Xu <dxu@dxuuu.xyz>, Viktor Malik <vmalik@redhat.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Network Development <netdev@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 13, 2024 at 5:47=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
+On Thu, Sep 5, 2024 at 12:56=E2=80=AFAM Philo Lu <lulie@linux.alibaba.com> =
+wrote:
 >
-> On 08/13, Liao, Chang wrote:
-> >
-> >
-> > Oleg, your explaination is more accurate. So I will reword the commit l=
-og and
-> > quote some of your note like this:
+> Replace skb with skb__nullable as the argument name. The suffix tells
+> bpf verifier through btf that the arg could be NULL and should be
+> checked in tp_btf prog.
 >
-> Oh, please don't. I just tried to explain the history of this spin_lock(s=
-iglock).
+> For now, this is the only nullable argument in tcp tracepoints.
 >
-> >   Since we already have the lockless user of clear_thread_flag(TIF_SIGP=
-ENDING).
-> >   And for uprobe singlestep case, it doesn't break the rule of "the sta=
-te of
-> >   TIF_SIGPENDING of every thread is stable with sighand->siglock held".
+> Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
+> ---
+>  include/trace/events/tcp.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 >
-> It obviously does break the rule above. Please keep your changelog as is.
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 1c8bd8e186b89..a27c4b619dffd 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -91,10 +91,10 @@ DEFINE_RST_REASON(FN, FN)
+>  TRACE_EVENT(tcp_send_reset,
 >
-> Oleg.
+>         TP_PROTO(const struct sock *sk,
+> -                const struct sk_buff *skb,
+> +                const struct sk_buff *skb__nullable,
+>                  const enum sk_rst_reason reason),
 >
+> -       TP_ARGS(sk, skb, reason),
+> +       TP_ARGS(sk, skb__nullable, reason),
 
-Liao,
+netdev folks pls ack this patch.
 
-Can you please rebase and resend your patches now that the first part
-of my uprobe patches landed in perf/core? Seems like there is some
-tiny merge conflict or something.
+Yes, it's a bit of a whack a mole and eventually we can get rid of it
+with a smarter verifier (likely) or smarter objtool (unlikely).
+Long term we should be able to analyze body of TP_fast_assign
+automatically and conclude whether it's handling NULL for pointer
+arguments or not. bpf verifier can easily do it for bpf code.
+We just need to compile TP_fast_assign() as a tiny bpf snippet.
+This is work in progress.
 
-Thanks!
+For now we have to use a suffix like __nullable.
