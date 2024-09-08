@@ -1,221 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEA126281;
-	Sun,  8 Sep 2024 02:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA621537DD
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Sep 2024 11:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725763892; cv=none; b=CLkhuiTm6Q3BINVagHg1wpv8F96CLuJW2svrs2xSYgUfyTDPCZtH1p7bbP/bLghL+Ah5aRAB+GCC/FFIZ2zVTOzurroQGEcAv/nB/Q09xqBKjtzfLmohspK+6oHd5/xxCpuhaI6WV8ho2yB/tV0AX8JG1aOXUi0YovjuMQ6zSfU=
+	t=1725795176; cv=none; b=EXxPJA/JXCl6vBIWd4sMmhkkNhAoCvYnoekztjcraXxcCMDY81QGli4Z4NxR+NMfMGWF3UDALVnZ6cygICBBRiiyy8VjVcas71yFNMB9p5d2O4rZDZXDSzqr043v53vYbC8kuzl5i5kfZ2cDVxz5013zJA387HI3e30792iHmdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725763892; c=relaxed/simple;
-	bh=Tv/ED6S/FMzadGVYnT66mt0s95rzSx2VxOMLAXOFnp0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rxmYKsUsiYIe5cOiDJNB9PM3sAFJLN9hJUkz4PAVry7U/4NekKnIkABFYveVyeIA90GlACZmDNmYcn/Ajaj1pV0ODkjrw8AKWXcsRpFZIM8E/uXuuMKXALcJ2x9EHWB1n9/xTCmTkW9cdE1xOISeO7sWUtDYniR7fM5OCob97is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrZbUba2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725795176; c=relaxed/simple;
+	bh=KvqLjXTwKzMKqFeCGpgcy44fOKDu0uQ3e0/7LUuPFak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Td3C1+PG5NYUHMGHlXKJ9NAMiqorVuWkxLayhMSExGilQe3tnw9VxPTZfsOFIasWyALN5H+hVHE8QEG4nswBcU0JOTm/CKBxu1lMqVxyO6ePRrWLotokWUY45wVp/gB+s0Ofh/uIUo4kuqjj2QmQzEHWrX7hSXU4kxBwc9wE6P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EFwy3C4i; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrZbUba2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8EAC4CEC8;
-	Sun,  8 Sep 2024 02:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725763890;
-	bh=Tv/ED6S/FMzadGVYnT66mt0s95rzSx2VxOMLAXOFnp0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CrZbUba23LJmEMM+vUMPWzetPwwiJMiLTirJxpvCOCPuMWlv7CHykUEf1y8UXuI0q
-	 1ve+vbX5U3MyOUiXd1FWx4iWPHGjIS6lNKoN+yCgnpxUzLejN9xAYMHpciM5Bs601U
-	 nXaqsm2iiv3YwsPtpbLVvyhU5GK9Q0rbudBORKXYnCBS/MDQ6OdLsGV1iFBkONdBW5
-	 YUngSys6W3e27hqTChWHJANrW/9dSLDUbUV+VhUo+yoEDBzOHfaSISzFLeGi/zAzAc
-	 qRgr+s1kuK5tQfHFDLofgbJxWZ/KII18N6dThz9MMRYfMP5i53C6CvvL0MmIfoV6k5
-	 VgzX4yNk9SLXw==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f75d044201so6319881fa.0;
-        Sat, 07 Sep 2024 19:51:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUy0gOsyTANoi7kK3V//22/FpdkCjQF0Cfmrzdk4e5k4eUIWAbJ3knHmp9YRJd6eMbinujcz7odfKkZc1ErjOGcdgBS@vger.kernel.org, AJvYcCVAYt9TCJ1Sh7jzOeuwuTxX9iGiPY8GP1CVNxEkccJGHQIKYyOkisng9x47w9F0qxOMD6AZXXop96lry5Q=@vger.kernel.org, AJvYcCVXWncFcUNekQV0jRFFxZQiLwdl8sKk7Bnkrmjh54tM4cmBo5fcZuXIl1hE8f4EMsLoQCJ3U/TgoYPUypa4nA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd2qZnANIyuanrmRMWAHP4ESCDWyVzyGSjebjy8WSJLSzM5tNd
-	8dU4Rj9ENHOK03eW0V3hNd2BIwJSF2+rgcjVPArPinjlnL2OX5eUypYS3hI13SE9y87e998lBHx
-	i5aAXT8Ap9+8rSnoPgzJbGGeDOo8=
-X-Google-Smtp-Source: AGHT+IFCbPWbO63m3YcDbzyehY+q/eYvTtdimM3GvdqnmXWvtDQHDthbrVShmyXYH3cVZDYbKbJWyBpveDxmOqrHW6E=
-X-Received: by 2002:a2e:a545:0:b0:2f7:6062:a0a9 with SMTP id
- 38308e7fff4ca-2f76062a29bmr5747841fa.7.1725763889062; Sat, 07 Sep 2024
- 19:51:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EFwy3C4i"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53567b4c3f4so3387561e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Sep 2024 04:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725795172; x=1726399972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vr39MxCa3Ig2XJlwouThex9PYkaXy3rMiTg4IK35S54=;
+        b=EFwy3C4iqgpu+BJHdoDdBRcJvvWuFCP70rVQ8WWaQgiczi9b0pwMdXR220Yu0jAYHO
+         N21U4Yr61DgziyzPaQZvIejdVyHQDkUAYfzHgvdIVznrDgF9jrrHJG50kxXNpx8E4dpM
+         6JLXKgyPlQjO4NBTElKww875l5UOKnjpKevNZnYecH9gWtjCD8PJQm3ORwdyiqOon5BO
+         XSv2YKBL5uRBqR8Wg/XoNVTT9kTyv8b/9IvqSllsgpErMMOPD8h2qiOBlefrU5bRg/PG
+         rhMuhTBu5Oqj1qK+c6TULuWudNb9i9l73tgBwBBUlzkTIcS5A00MquvQJAQrW0WQMhvZ
+         f8Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725795172; x=1726399972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vr39MxCa3Ig2XJlwouThex9PYkaXy3rMiTg4IK35S54=;
+        b=RJzbyVBsmGXuu24RitpzBqFyeDVqT3mtGytBAF4c1GfQoy4gVEzstBrT5c2uGXKFOS
+         ADafODyAKzr3WssCrbL07c+BBT/NNVT9EqwzwbRcrLit0mkbTCzE+IYnp8OJjRz+tJbe
+         5Xo26gt9Mt4v2w8LY4aQVXBjXXr3E54Duxm3EG6xBuT8biLkcwiP1h1rduvttluN4Fhl
+         Gy5OLuJy3OPMB/kOxahC5j6fr2orzXoz760X/Mcm3Igsxw0zxYfP1Cfv9UV0asnWLCJs
+         uK/2N2jjfDQjxpUTHVhgYD6z+V3JNMIFbOorZoQbbrGfAiN/apPOP84PRAuTsf4hVkw5
+         VchA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzsSwAMuR7z7qmzMIppUVfkchf4uR1Y150LS7lIJQV8PXdnUXU0nsmwJNuNaEI9PjswdvsHLwbBFHQhTGvn9z3VCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDSLPb1QFWMk1rcjL0e4DNPAJb0Exsvmp0U7EiLYX19VY1HRn2
+	bqRXbWRvjXhLdOCVgbqHQEJrAbQr1WdLZgKnRdli7iA+/EHOwnTC2DgPsCdJ78Y=
+X-Google-Smtp-Source: AGHT+IHgvbkne/FsPILazfWzkr9nHWvXt2VUPiGpwfZdijLsiNZyLWjCKQoepTDmG6n4QB1XaDqcvA==
+X-Received: by 2002:a05:6512:33cb:b0:536:55a3:70ad with SMTP id 2adb3069b0e04-536587aaa07mr5784554e87.22.1725795171426;
+        Sun, 08 Sep 2024 04:32:51 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:a029:f6b8:fc85:4519])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d2597ac96sm191678366b.73.2024.09.08.04.32.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Sep 2024 04:32:50 -0700 (PDT)
+Date: Sun, 8 Sep 2024 13:32:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-trace-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, Kent Gibson <warthog618@gmail.com>
+Subject: Re: [PATCH v4 0/7] pwm: New abstraction and userspace API
+Message-ID: <wzk5h5knkitt6ocp5dtnyx2vhazei7lgkhpdbft56mbmzbqcxr@jyhwdm65p5dl>
+References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
+ <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906144506.1151789-1-kris.van.hees@oracle.com> <20240906144506.1151789-3-kris.van.hees@oracle.com>
-In-Reply-To: <20240906144506.1151789-3-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 8 Sep 2024 11:50:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQtuqBwheX6SLWMyKE0h2wLzApii1xyMBqNs3ge_JSUvg@mail.gmail.com>
-Message-ID: <CAK7LNAQtuqBwheX6SLWMyKE0h2wLzApii1xyMBqNs3ge_JSUvg@mail.gmail.com>
-Subject: Re: [PATCH v10 2/4] kbuild: generate offset range data for builtin modules
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Sam James <sam@gentoo.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Elena Zannoni <elena.zannoni@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2bzw6j5f7wjbafhs"
+Content-Disposition: inline
+In-Reply-To: <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
+
+
+--2bzw6j5f7wjbafhs
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 6, 2024 at 11:45=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> Create file module.builtin.ranges that can be used to find where
-> built-in modules are located by their addresses. This will be useful for
-> tracing tools to find what functions are for various built-in modules.
->
-> The offset range data for builtin modules is generated using:
->  - modules.builtin: associates object files with module names
->  - vmlinux.map: provides load order of sections and offset of first membe=
-r
->     per section
->  - vmlinux.o.map: provides offset of object file content per section
->  - .*.cmd: build cmd file with KBUILD_MODFILE
->
-> The generated data will look like:
->
-> .text 00000000-00000000 =3D _text
-> .text 0000baf0-0000cb10 amd_uncore
-> .text 0009bd10-0009c8e0 iosf_mbi
-> ...
-> .text 00b9f080-00ba011a intel_skl_int3472_discrete
-> .text 00ba0120-00ba03c0 intel_skl_int3472_discrete intel_skl_int3472_tps6=
-8470
-> .text 00ba03c0-00ba08d6 intel_skl_int3472_tps68470
-> ...
-> .data 00000000-00000000 =3D _sdata
-> .data 0000f020-0000f680 amd_uncore
->
-> For each ELF section, it lists the offset of the first symbol.  This can
-> be used to determine the base address of the section at runtime.
->
-> Next, it lists (in strict ascending order) offset ranges in that section
-> that cover the symbols of one or more builtin modules.  Multiple ranges
-> can apply to a single module, and ranges can be shared between modules.
->
-> The CONFIG_BUILTIN_MODULE_RANGES option controls whether offset range dat=
-a
-> is generated for kernel modules that are built into the kernel image.
->
-> How it works:
->
->  1. The modules.builtin file is parsed to obtain a list of built-in
->     module names and their associated object names (the .ko file that
->     the module would be in if it were a loadable module, hereafter
->     referred to as <kmodfile>).  This object name can be used to
->     identify objects in the kernel compile because any C or assembler
->     code that ends up into a built-in module will have the option
->     -DKBUILD_MODFILE=3D<kmodfile> present in its build command, and those
->     can be found in the .<obj>.cmd file in the kernel build tree.
->
->     If an object is part of multiple modules, they will all be listed
->     in the KBUILD_MODFILE option argument.
->
->     This allows us to conclusively determine whether an object in the
->     kernel build belong to any modules, and which.
->
->  2. The vmlinux.map is parsed next to determine the base address of each
->     top level section so that all addresses into the section can be
->     turned into offsets.  This makes it possible to handle sections
->     getting loaded at different addresses at system boot.
->
->     We also determine an 'anchor' symbol at the beginning of each
->     section to make it possible to calculate the true base address of
->     a section at runtime (i.e. symbol address - symbol offset).
->
->     We collect start addresses of sections that are included in the top
->     level section.  This is used when vmlinux is linked using vmlinux.o,
->     because in that case, we need to look at the vmlinux.o linker map to
->     know what object a symbol is found in.
->
->     And finally, we process each symbol that is listed in vmlinux.map
->     (or vmlinux.o.map) based on the following structure:
->
->     vmlinux linked from vmlinux.a:
->
->       vmlinux.map:
->         <top level section>
->           <included section>  -- might be same as top level section)
->             <object>          -- built-in association known
->               <symbol>        -- belongs to module(s) object belongs to
->               ...
->
->     vmlinux linked from vmlinux.o:
->
->       vmlinux.map:
->         <top level section>
->           <included section>  -- might be same as top level section)
->             vmlinux.o         -- need to use vmlinux.o.map
->               <symbol>        -- ignored
->               ...
->
->       vmlinux.o.map:
->         <section>
->             <object>          -- built-in association known
->               <symbol>        -- belongs to module(s) object belongs to
->               ...
->
->  3. As sections, objects, and symbols are processed, offset ranges are
->     constructed in a straight-forward way:
->
->       - If the symbol belongs to one or more built-in modules:
->           - If we were working on the same module(s), extend the range
->             to include this object
->           - If we were working on another module(s), close that range,
->             and start the new one
->       - If the symbol does not belong to any built-in modules:
->           - If we were working on a module(s) range, close that range
->
-> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
-> Reviewed-by: Nick Alcock <nick.alcock@oracle.com>
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Tested-by: Sam James <sam@gentoo.org>
-> ---
+Hello David,
+
+On Fri, Sep 06, 2024 at 02:06:18PM -0500, David Lechner wrote:
+> On 9/6/24 10:42 AM, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > here comes v4 of the series to add support for duty offset in PWM
+> > waveforms. For a single PWM output there is no gain, but if you have a
+> > chip with two (or more) outputs and both operate with the same period,
+> > you can generate an output like:
+> >=20
+> >                ______         ______         ______         ______
+> >    PWM #0  ___/      \_______/      \_______/      \_______/      \____=
+___
+> >                  __             __             __             __
+> >    PWM #1  _____/  \___________/  \___________/  \___________/  \______=
+___
+> >               ^              ^              ^              ^
+> >=20
+>=20
+> While working on an ADC driver that uses these new waveform APIs, we came
+> across a case where we wanted wf->duty_offset_ns >=3D wf->period_length_n=
+s,
+> which is currently not allowed. [1]
+>=20
+>                 ______         ______         ______         ______
+>     PWM #0  ___/      \_______/      \_______/      \_______/      \_____=
+__
+>                                __             __             __
+>     PWM #1  __________________/  \___________/  \___________/  \_________=
+__
+>                             ^              ^              ^             =
+=20
+
+I restricted to waveforms with .duty_offset_ns < .period_length_ns
+because the signal you want is only periodic once PWM #1 begins to
+toggle. Given that the pwm subsystem is about periodic signals and has a
+wide range of behaviours at the moments the configuration is changed, I
+think it's little sensible today to consider reliably implementing
+offsets bigger than the period length.
+
+Does your hardware really behave like that?
+
+> We worked around it by setting:
+>=20
+> 	wf->duty_offset_ns =3D DESIRED_NS % wf->period_length_ns
+>=20
+> Having PWM #1 trigger too early just causes the first sample data
+> read to be invalid data.
+>=20
+> But even if we allowed wf->duty_offset_ns >=3D wf->period_length_ns,
+> this offset wouldn't matter because there currently isn't a way to
+> enable two PWM outputs at exactly the same time.
+
+Yup, that's another challenge. Up to now it's even special knowledge
+about the used pwm chip that with configuring two pwms with the same
+period, the period starts are synced and you don't get:
 
 
-If v10 is the final version, I offer to locally squash the following:
+                   ______         ______         ______         ______
+     PWM #0  _____/      \_______/      \_______/      \_______/      \____=
+___
+                  ^              ^              ^              ^
+                 __             __             __             __
+     PWM #1  ___/  \___________/  \___________/  \___________/  \___________
+              ^              ^              ^              ^             =
+=20
 
+> >  - The functions pwm_set_waveform_might_sleep() and
+> >    pwm_round_waveform_might_sleep() have an unusual return value
+> >    convention: They return 0 on success, 1 if the requested waveform
+> >    cannot be implemented without breaking the rounding rules, or a
+> >    negative errno if an error occurs.
+> >    Fabrice rightfully pointed out this to be surprised by this and
+> >    suggested to use at least a define for it.
+> >=20
+> >    I couldn't find a decision that I'm entirely happy with here. My
+> >    conflicts are:
+> >=20
+> >     - I want a constant that now and in the future only means "cannot be
+> >       done due to the rounding rules in the pwm framework". So the
+> >       options are:
+> >         * Introduce a new ESOMETHING and return -ESOMETHING
+> >           I think that's hard to motivate and also myself doubt this
+> >           would be sensible. As below, the question for a good name is
+> >           unresolved.
+> >         * return 1
+> >           This is what was done in the earlier revisions and also here.
+> >=20
+> >     - When keeping the return 1 semantics (and also for a new
+> >       ESOMETHING):
+> >       I agree that a name instead of a plain 1 would be nice, but I
+> >       couldn't come up with a name I liked. Given that this can be
+> >       introduced later without breaking anything, I don't consider that
+> >       very urgent.
+> >       My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
+> >       PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
+> >       These are too long or/and imprecise.
+> >       If you have a good idea, please tell.
+>=20
+> To avoid using the return value for status flags, we could introduce
+> an optional output parameter. Consumers where best effort is good
+> enough can just pass NULL and consumers that care can pass an unsigned
+> int to receive the status flag. This could even be a bitmap of multiple
+> flags if it would be useful to know which rule(s) could not be met.
 
+Which rule couldn't be met is obvious when you look at the resulting
+waveform because the lowlevel driver is supposed to give you the
+smallest possible value for the relevant parameter if rounding down
+doesn't work.
 
-diff --git a/.gitignore b/.gitignore
-index c06a3ef6d6c6..625bf59ad845 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -69,6 +69,7 @@ modules.order
- /Module.markers
- /modules.builtin
- /modules.builtin.modinfo
-+/modules.builtin.ranges
- /modules.nsdeps
+So if you request
 
- #
-diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-index 3c399f132e2d..a867aea95c40 100644
---- a/Documentation/dontdiff
-+++ b/Documentation/dontdiff
-@@ -180,6 +180,7 @@ modpost
- modules-only.symvers
- modules.builtin
- modules.builtin.modinfo
-+modules.builtin.ranges
- modules.nsdeps
- modules.order
- modversions.h*
+	.period_length_ns =3D 3000
+	.duty_length_ns =3D 2
+	.duty_offset_ns =3D 10
 
+and your hardware can do 3000 ns period but the smallest duty_length is
+10, it is supposed to write
 
+	.period_length_ns =3D 3000
+	.duty_length_ns =3D 10
+	.duty_offset_ns =3D 10
 
+in the waveform parameter and return 1.
 
-If Sami reports more errors and you end up with v11,
-please remember to fold it.
+My intuitive reaction is that (another) output parameter is worse than
+the return value semantics I came up with. After some more thought I
+wonder if the wish to have something PWM specific is the problem, and
+just picking one of the available error constants (ERANGE?) is the nice
+way out. Alternatively return 0 in this case and let the caller work out
+themselves that not all values were rounded down?!
 
+Best regards
+Uwe
 
+--2bzw6j5f7wjbafhs
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbdi14ACgkQj4D7WH0S
+/k7qpAf/Y5ssufaf6K1aaX1b8DvdvTR9ZtYP4d2qMkbRPEmh0ttEd77LiJKYAPYv
+8+cMq81ISOARc2fARWJUyFOKnLI1mn4AR5L8pPPCx/9MPT/hcTLTDQ4yYian5/6M
+3AtSIVl/FK4+dXzYsQP8QIWaFlWA7sH4HVwvh5o2HGAtFFl1vkzu3iYk5adKUYWR
+OX0fUsg8YX94x8CqRxdc0xezbg1yBqXJ/oxOrYbv8SArDVuJf9nWEiQiI5DRa3aO
+vLCCW0EGjgRiDP3uUF0CxTcrQJPBorId6FQPnqeGyb+NEMXcWz0Elnp9tz5XRuXN
+NI2fsiSzpOi4pzYa5f89EbLfFAgIEQ==
+=Z0Bq
+-----END PGP SIGNATURE-----
 
---=20
-Best Regards
-Masahiro Yamada
+--2bzw6j5f7wjbafhs--
