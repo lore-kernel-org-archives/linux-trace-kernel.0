@@ -1,176 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FEB14A0A0
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Sep 2024 13:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650FC86AFA;
+	Sun,  8 Sep 2024 13:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725801346; cv=none; b=AzTscQ3XMHWt7E/gEcExzziQlR2+cq59DcL0IunYoKBC8P3Jb95cNQtc6XIkeC6Z2ODmly+0Ltz6Kw+0nvYakx9ECdVO1Rc3JcYlH8Me1oy5ijPdyqjkosaxvyLf27DVz5ptjLZAHNy7K6Qhd+r53VFb4DY+pSO1KRoTQcsxaTI=
+	t=1725802116; cv=none; b=GdzghuAabYpu7AGZ5UydKoIPeoIJXACfbPJ9oYaec3Ddr1jqZs33pY6ONJU3cmpRBEaPG2iK5p7keIx9kxfcN1Hp+Uufr987unsrK6q/nvh4pArCccB74ExNUkZQgvMErqNl1LJslZ6kzkX3WRAoSvisult71TFQu7+5m4/CA8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725801346; c=relaxed/simple;
-	bh=flp398FQwtD1DXl5k5Df/Di+UWpPWTlqrKlw6S2PvK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UAoPZOpQpXyT+A4q4KgJSZPrQKZ5fcF1LYtkZwhZFTWdQf+p/VfHkUOLgv43fzZ0GKN8jQG2DAUC5I9WVHMmgKQcUrUWGEbaynyzGhlC/51wFRu9t+tYhXllMYdWE64vMs7JSoUzCD1/kzSvhIoFHazDjTN24bpo5QyPKnhR7vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EBNAZskn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1725802116; c=relaxed/simple;
+	bh=Ri56JanrxzJT4UAsenigTt4NMozWGcCirDACmDKy/58=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uHfhHQrypSALubptFjb5KZC5KKIeIKxx0QFJp5CGcX7V9xsgOEPY8DOT66yv/BNZD0Pw5UxAhRJTTMxxBqykOvJpHbzklo4cPdlHP5I0+dJKylLggU6gr/tYNAtmr9OWD8+9b+Bpyvy7zmHK6YqndaTn4yPAqR+qaZJ8CeHcTwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7ebJUoT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBNAZskn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725801343;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rlhyC8f8RgkRd2STTLE66pLfIsnslSspQq1pJPbLQzA=;
-	b=EBNAZskn2P7dq+/Nh08K5AtwXbJeAffelDSgVqCfMoD6F2CoUJBfBrPcWs+JDVAYXWERSw
-	mX8YyyUxtoPHVrEV1xgbFaL9+qkyh0YmhK7F50vCCcWQVbuEczm1S2tFTL/jjN3fYL6+yQ
-	VWsthXgxsidA5JnWvra/7S3pv/bNM8w=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-c-cTmO5cOI6TE0h7hkQw5A-1; Sun,
- 08 Sep 2024 09:15:39 -0400
-X-MC-Unique: c-cTmO5cOI6TE0h7hkQw5A-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC01B19560BF;
-	Sun,  8 Sep 2024 13:15:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.19])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 688C03000239;
-	Sun,  8 Sep 2024 13:15:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  8 Sep 2024 15:15:25 +0200 (CEST)
-Date: Sun, 8 Sep 2024 15:15:20 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tianyi Liu <i.pear@outlook.com>
-Cc: olsajiri@gmail.com, ajor@meta.com, albancrequy@linux.microsoft.com,
-	andrii.nakryiko@gmail.com, bpf@vger.kernel.org,
-	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
-	linux@jordanrome.com, mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
-Message-ID: <20240908131519.GA21236@redhat.com>
-References: <Ztrc6eJ14M26xmvr@krava>
- <ME0P300MB0416A96545165A39507DF6429D9F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7ebJUoT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146EDC4CEC3;
+	Sun,  8 Sep 2024 13:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725802116;
+	bh=Ri56JanrxzJT4UAsenigTt4NMozWGcCirDACmDKy/58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=o7ebJUoTay3mWVdOCJ4YnYJZjSzmSnevlKrosJn8e6uCur1cUoVbw9AKKa6GDZXt1
+	 qxExlBWFTKM5q7/LVzILs04dk1Pq0KKrLMfdXcFBLK8l5WMlySIzzvHOBnNy5W8lNJ
+	 OPGhpYs0TrwJg+DYNRQHUBzF8/UvDPGLsiXswSS5Ko7wyXHPxVJSrcHt9v4OyO+BVE
+	 nNLHP+i0KOG/K0u7PtjWKIwfZLaKZpWhUDJmBAeGhOGRrsRkh6Yc/IRSqYU7myASWp
+	 aW/1VD16L2dLdm86/Vx+cuDhYrWRmEemikoIP+g4/KIs0YEJw+DmdL/j9CcjiEX9vL
+	 zImcMKORyq8mQ==
+Date: Sun, 8 Sep 2024 22:28:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Sven Schnelle <svens@linux.ibm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org
+Subject: Re: [PATCH 0/7] add function arguments to ftrace
+Message-Id: <20240908222830.01a01b10d62d59ed73dcb676@kernel.org>
+In-Reply-To: <20240906100738.2526cffd@gandalf.local.home>
+References: <20240904065908.1009086-1-svens@linux.ibm.com>
+	<20240905111620.5211d9f8@gandalf.local.home>
+	<yt9dv7z9l2zp.fsf@linux.ibm.com>
+	<20240906100738.2526cffd@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ME0P300MB0416A96545165A39507DF6429D9F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 09/08, Tianyi Liu wrote:
->
-> On Mon, Sep 06, 2024 at 18:43:00AM +0800, Jiri Olsa wrote:
->
-> > would you consider sending another version addressing Oleg's points
-> > for changelog above?
->
-> My pleasure, I'll resend the updated patch in a new thread.
->
-> Based on previous discussions, `uprobe_perf_filter` acts as a preliminary
-> filter that removes breakpoints when they are no longer needed.
+On Fri, 6 Sep 2024 10:07:38 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Well. Not only. See the usage of consumer_filter() and filter_chain() in
-register_for_each_vma().
+> On Fri, 06 Sep 2024 08:18:02 +0200
+> Sven Schnelle <svens@linux.ibm.com> wrote:
+> 
+> 
+> > One thing i learned after submitting the series is that struct
+> > ftrace_regs depends on CONFIG_FUNCTION_TRACER, so it cannot be used
+> > with the graph tracer.
 
-> More complex filtering mechanisms related to perf are implemented in
-> perf-specific paths.
+Yeah, this is solved by my series [1].
 
-The perf paths in __uprobe_perf_func() do the filtering based on
-perf_event->hw.target, that is all.
+[1] https://patchwork.kernel.org/project/linux-trace-kernel/patch/172398532480.293426.13232399076477198126.stgit@devnote2/
 
-But uprobe_perf_filter() or any other consumer->filter() simply can't rely
-on pid/task, it has to check ->mm.
+So I think this series is easier to apply after my series, which
+passes fgraph_regs in return handler.
 
-> From my understanding, the original patch attempted to partially implement
-> UPROBE_HANDLER_REMOVE (since it didn't actually remove the breakpoint but
-> only prevented it from entering the BPF-related code).
+Thanks,
 
-Confused...
+> > So either we make it available unconditionally,
+> > or use some other data structure. Would like to hear your opinion on
+> > that, but i'll wait for the review after your travel because there
+> > are likely other issues that needs to be fixed as well.
+> 
+> Hmm, I thought the graph tracer depends on function tracer? Anyway, the
+> configs should be cleaned up. I would like to make CONFIG_FTRACE just mean
+> the function hook mechanism (mcount,fentry,etc) and not be used for the
+> tracing system.
+> 
+> Anyway, we can just make ftrace_regs defined outside any config for now.
+> 
+> -- Steve
 
-Your patch can help bpftrace although it (or any other change in
-trace_uprobe.c) can't not actually fix all the problems with bpf/filtering
-even if we forget about ret-probes.
 
-And I don't understand how this relates to UPROBE_HANDLER_REMOVE...
-
-> I'm trying to provide a complete implementation, i.e., removing the
-> breakpoint when `uprobe_perf_filter` returns false, similar to how uprobe
-> functions. However, this would require merging the following functions,
-> because they will almost be the same:
->
-> uprobe_perf_func / uretprobe_perf_func
-> uprobe_dispatcher / uretprobe_dispatcher
-> handler_chain / handle_uretprobe_chain
-
-Sorry, I don't understand... Yes, uprobe_dispatcher and uretprobe_dispatcher
-can share more code or even unified, but
-
-> I suspect that uretprobe might have been implemented later than uprobe
-
-Yes,
-
-> and was only partially implemented.
-
-what do you mean?
-
-But whatever you meant, I agree that this code doesn't look pretty and can
-be cleanuped.
-
-> In your opinion, does uretprobe need UPROBE_HANDLER_REMOVE?
-
-Probably. But this has absolutely nothing to do with the filtering problem?
-Can we discuss this separately?
-
-> I'm aware that using `uprobe_perf_filter` in `uretprobe_perf_func` is not
-> the solution for BPF filtering. I'm just trying to alleviate the issue
-> in some simple cases.
-
-Agreed.
-
--------------------------------------------------------------------------------
-To summarise.
-
-This code is very old, and it was written for /usr/bin/perf which attaches
-to the tracepoint. So multiple instances of perf-record will share the same
-consumer/trace_event_call/filter. uretprobe_perf_func() doesn't call
-uprobe_perf_filter() because (if /usr/bin/perf is the only user) in the likely
-case it would burn CPU and return true. Quite possibly this design was not
-optimal from the very beginning, I simply can't recall why the is_ret_probe()
-consumer has ->handler != NULL, but it was not buggy.
-
-Now we have bpf, create_local_trace_uprobe(), etc. So lets add another
-uprobe_perf_filter() into uretprobe_perf_func() as your patch did.
-
-Then we can probably change uprobe_handle_trampoline() to do
-unapply_uprobe() if all the ret-handlers return UPROBE_HANDLER_REMOVE, like
-handler_chain() does.
-
-Then we can probably cleanup/simplify trace_uprobe.c, in partucular we can
-change alloc_trace_uprobe()
-
--	tu->consumer.handler = uprobe_dispatcher;
--	if (is_ret)
--		tu->consumer.ret_handler = uretprobe_dispatcher;
-+	if (is_ret)
-+		tu->consumer.ret_handler = uretprobe_dispatcher;
-+	else
-+		tu->consumer.handler = uprobe_dispatcher;
-
-and do more (including unrelated) cleanups.
-
-But lets do this step-by-step.
-
-And lets not mix the filtering issues with the UPROBE_HANDLER_REMOVE logic,
-to me this adds the unnecessary confusion.
-
-Oleg.
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
