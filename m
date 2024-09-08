@@ -1,236 +1,176 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA621537DD
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Sep 2024 11:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FEB14A0A0
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  8 Sep 2024 13:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725795176; cv=none; b=EXxPJA/JXCl6vBIWd4sMmhkkNhAoCvYnoekztjcraXxcCMDY81QGli4Z4NxR+NMfMGWF3UDALVnZ6cygICBBRiiyy8VjVcas71yFNMB9p5d2O4rZDZXDSzqr043v53vYbC8kuzl5i5kfZ2cDVxz5013zJA387HI3e30792iHmdI=
+	t=1725801346; cv=none; b=AzTscQ3XMHWt7E/gEcExzziQlR2+cq59DcL0IunYoKBC8P3Jb95cNQtc6XIkeC6Z2ODmly+0Ltz6Kw+0nvYakx9ECdVO1Rc3JcYlH8Me1oy5ijPdyqjkosaxvyLf27DVz5ptjLZAHNy7K6Qhd+r53VFb4DY+pSO1KRoTQcsxaTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725795176; c=relaxed/simple;
-	bh=KvqLjXTwKzMKqFeCGpgcy44fOKDu0uQ3e0/7LUuPFak=;
+	s=arc-20240116; t=1725801346; c=relaxed/simple;
+	bh=flp398FQwtD1DXl5k5Df/Di+UWpPWTlqrKlw6S2PvK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Td3C1+PG5NYUHMGHlXKJ9NAMiqorVuWkxLayhMSExGilQe3tnw9VxPTZfsOFIasWyALN5H+hVHE8QEG4nswBcU0JOTm/CKBxu1lMqVxyO6ePRrWLotokWUY45wVp/gB+s0Ofh/uIUo4kuqjj2QmQzEHWrX7hSXU4kxBwc9wE6P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EFwy3C4i; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UAoPZOpQpXyT+A4q4KgJSZPrQKZ5fcF1LYtkZwhZFTWdQf+p/VfHkUOLgv43fzZ0GKN8jQG2DAUC5I9WVHMmgKQcUrUWGEbaynyzGhlC/51wFRu9t+tYhXllMYdWE64vMs7JSoUzCD1/kzSvhIoFHazDjTN24bpo5QyPKnhR7vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EBNAZskn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EFwy3C4i"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-53567b4c3f4so3387561e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 08 Sep 2024 04:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1725795172; x=1726399972; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vr39MxCa3Ig2XJlwouThex9PYkaXy3rMiTg4IK35S54=;
-        b=EFwy3C4iqgpu+BJHdoDdBRcJvvWuFCP70rVQ8WWaQgiczi9b0pwMdXR220Yu0jAYHO
-         N21U4Yr61DgziyzPaQZvIejdVyHQDkUAYfzHgvdIVznrDgF9jrrHJG50kxXNpx8E4dpM
-         6JLXKgyPlQjO4NBTElKww875l5UOKnjpKevNZnYecH9gWtjCD8PJQm3ORwdyiqOon5BO
-         XSv2YKBL5uRBqR8Wg/XoNVTT9kTyv8b/9IvqSllsgpErMMOPD8h2qiOBlefrU5bRg/PG
-         rhMuhTBu5Oqj1qK+c6TULuWudNb9i9l73tgBwBBUlzkTIcS5A00MquvQJAQrW0WQMhvZ
-         f8Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725795172; x=1726399972;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vr39MxCa3Ig2XJlwouThex9PYkaXy3rMiTg4IK35S54=;
-        b=RJzbyVBsmGXuu24RitpzBqFyeDVqT3mtGytBAF4c1GfQoy4gVEzstBrT5c2uGXKFOS
-         ADafODyAKzr3WssCrbL07c+BBT/NNVT9EqwzwbRcrLit0mkbTCzE+IYnp8OJjRz+tJbe
-         5Xo26gt9Mt4v2w8LY4aQVXBjXXr3E54Duxm3EG6xBuT8biLkcwiP1h1rduvttluN4Fhl
-         Gy5OLuJy3OPMB/kOxahC5j6fr2orzXoz760X/Mcm3Igsxw0zxYfP1Cfv9UV0asnWLCJs
-         uK/2N2jjfDQjxpUTHVhgYD6z+V3JNMIFbOorZoQbbrGfAiN/apPOP84PRAuTsf4hVkw5
-         VchA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzsSwAMuR7z7qmzMIppUVfkchf4uR1Y150LS7lIJQV8PXdnUXU0nsmwJNuNaEI9PjswdvsHLwbBFHQhTGvn9z3VCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDSLPb1QFWMk1rcjL0e4DNPAJb0Exsvmp0U7EiLYX19VY1HRn2
-	bqRXbWRvjXhLdOCVgbqHQEJrAbQr1WdLZgKnRdli7iA+/EHOwnTC2DgPsCdJ78Y=
-X-Google-Smtp-Source: AGHT+IHgvbkne/FsPILazfWzkr9nHWvXt2VUPiGpwfZdijLsiNZyLWjCKQoepTDmG6n4QB1XaDqcvA==
-X-Received: by 2002:a05:6512:33cb:b0:536:55a3:70ad with SMTP id 2adb3069b0e04-536587aaa07mr5784554e87.22.1725795171426;
-        Sun, 08 Sep 2024 04:32:51 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:a029:f6b8:fc85:4519])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8d2597ac96sm191678366b.73.2024.09.08.04.32.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2024 04:32:50 -0700 (PDT)
-Date: Sun, 8 Sep 2024 13:32:48 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: linux-pwm@vger.kernel.org, 
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	linux-trace-kernel@vger.kernel.org, Michael Hennerich <michael.hennerich@analog.com>, 
-	Trevor Gamblin <tgamblin@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, Kent Gibson <warthog618@gmail.com>
-Subject: Re: [PATCH v4 0/7] pwm: New abstraction and userspace API
-Message-ID: <wzk5h5knkitt6ocp5dtnyx2vhazei7lgkhpdbft56mbmzbqcxr@jyhwdm65p5dl>
-References: <cover.1725635013.git.u.kleine-koenig@baylibre.com>
- <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBNAZskn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725801343;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rlhyC8f8RgkRd2STTLE66pLfIsnslSspQq1pJPbLQzA=;
+	b=EBNAZskn2P7dq+/Nh08K5AtwXbJeAffelDSgVqCfMoD6F2CoUJBfBrPcWs+JDVAYXWERSw
+	mX8YyyUxtoPHVrEV1xgbFaL9+qkyh0YmhK7F50vCCcWQVbuEczm1S2tFTL/jjN3fYL6+yQ
+	VWsthXgxsidA5JnWvra/7S3pv/bNM8w=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-c-cTmO5cOI6TE0h7hkQw5A-1; Sun,
+ 08 Sep 2024 09:15:39 -0400
+X-MC-Unique: c-cTmO5cOI6TE0h7hkQw5A-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AC01B19560BF;
+	Sun,  8 Sep 2024 13:15:36 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.19])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 688C03000239;
+	Sun,  8 Sep 2024 13:15:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  8 Sep 2024 15:15:25 +0200 (CEST)
+Date: Sun, 8 Sep 2024 15:15:20 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tianyi Liu <i.pear@outlook.com>
+Cc: olsajiri@gmail.com, ajor@meta.com, albancrequy@linux.microsoft.com,
+	andrii.nakryiko@gmail.com, bpf@vger.kernel.org,
+	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org,
+	linux@jordanrome.com, mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+Message-ID: <20240908131519.GA21236@redhat.com>
+References: <Ztrc6eJ14M26xmvr@krava>
+ <ME0P300MB0416A96545165A39507DF6429D9F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2bzw6j5f7wjbafhs"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6e4b7ef4-19c7-477c-b753-d4d59ed38e3a@baylibre.com>
+In-Reply-To: <ME0P300MB0416A96545165A39507DF6429D9F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
+On 09/08, Tianyi Liu wrote:
+>
+> On Mon, Sep 06, 2024 at 18:43:00AM +0800, Jiri Olsa wrote:
+>
+> > would you consider sending another version addressing Oleg's points
+> > for changelog above?
+>
+> My pleasure, I'll resend the updated patch in a new thread.
+>
+> Based on previous discussions, `uprobe_perf_filter` acts as a preliminary
+> filter that removes breakpoints when they are no longer needed.
 
---2bzw6j5f7wjbafhs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well. Not only. See the usage of consumer_filter() and filter_chain() in
+register_for_each_vma().
 
-Hello David,
+> More complex filtering mechanisms related to perf are implemented in
+> perf-specific paths.
 
-On Fri, Sep 06, 2024 at 02:06:18PM -0500, David Lechner wrote:
-> On 9/6/24 10:42 AM, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > here comes v4 of the series to add support for duty offset in PWM
-> > waveforms. For a single PWM output there is no gain, but if you have a
-> > chip with two (or more) outputs and both operate with the same period,
-> > you can generate an output like:
-> >=20
-> >                ______         ______         ______         ______
-> >    PWM #0  ___/      \_______/      \_______/      \_______/      \____=
-___
-> >                  __             __             __             __
-> >    PWM #1  _____/  \___________/  \___________/  \___________/  \______=
-___
-> >               ^              ^              ^              ^
-> >=20
->=20
-> While working on an ADC driver that uses these new waveform APIs, we came
-> across a case where we wanted wf->duty_offset_ns >=3D wf->period_length_n=
-s,
-> which is currently not allowed. [1]
->=20
->                 ______         ______         ______         ______
->     PWM #0  ___/      \_______/      \_______/      \_______/      \_____=
-__
->                                __             __             __
->     PWM #1  __________________/  \___________/  \___________/  \_________=
-__
->                             ^              ^              ^             =
-=20
+The perf paths in __uprobe_perf_func() do the filtering based on
+perf_event->hw.target, that is all.
 
-I restricted to waveforms with .duty_offset_ns < .period_length_ns
-because the signal you want is only periodic once PWM #1 begins to
-toggle. Given that the pwm subsystem is about periodic signals and has a
-wide range of behaviours at the moments the configuration is changed, I
-think it's little sensible today to consider reliably implementing
-offsets bigger than the period length.
+But uprobe_perf_filter() or any other consumer->filter() simply can't rely
+on pid/task, it has to check ->mm.
 
-Does your hardware really behave like that?
+> From my understanding, the original patch attempted to partially implement
+> UPROBE_HANDLER_REMOVE (since it didn't actually remove the breakpoint but
+> only prevented it from entering the BPF-related code).
 
-> We worked around it by setting:
->=20
-> 	wf->duty_offset_ns =3D DESIRED_NS % wf->period_length_ns
->=20
-> Having PWM #1 trigger too early just causes the first sample data
-> read to be invalid data.
->=20
-> But even if we allowed wf->duty_offset_ns >=3D wf->period_length_ns,
-> this offset wouldn't matter because there currently isn't a way to
-> enable two PWM outputs at exactly the same time.
+Confused...
 
-Yup, that's another challenge. Up to now it's even special knowledge
-about the used pwm chip that with configuring two pwms with the same
-period, the period starts are synced and you don't get:
+Your patch can help bpftrace although it (or any other change in
+trace_uprobe.c) can't not actually fix all the problems with bpf/filtering
+even if we forget about ret-probes.
 
+And I don't understand how this relates to UPROBE_HANDLER_REMOVE...
 
-                   ______         ______         ______         ______
-     PWM #0  _____/      \_______/      \_______/      \_______/      \____=
-___
-                  ^              ^              ^              ^
-                 __             __             __             __
-     PWM #1  ___/  \___________/  \___________/  \___________/  \___________
-              ^              ^              ^              ^             =
-=20
+> I'm trying to provide a complete implementation, i.e., removing the
+> breakpoint when `uprobe_perf_filter` returns false, similar to how uprobe
+> functions. However, this would require merging the following functions,
+> because they will almost be the same:
+>
+> uprobe_perf_func / uretprobe_perf_func
+> uprobe_dispatcher / uretprobe_dispatcher
+> handler_chain / handle_uretprobe_chain
 
-> >  - The functions pwm_set_waveform_might_sleep() and
-> >    pwm_round_waveform_might_sleep() have an unusual return value
-> >    convention: They return 0 on success, 1 if the requested waveform
-> >    cannot be implemented without breaking the rounding rules, or a
-> >    negative errno if an error occurs.
-> >    Fabrice rightfully pointed out this to be surprised by this and
-> >    suggested to use at least a define for it.
-> >=20
-> >    I couldn't find a decision that I'm entirely happy with here. My
-> >    conflicts are:
-> >=20
-> >     - I want a constant that now and in the future only means "cannot be
-> >       done due to the rounding rules in the pwm framework". So the
-> >       options are:
-> >         * Introduce a new ESOMETHING and return -ESOMETHING
-> >           I think that's hard to motivate and also myself doubt this
-> >           would be sensible. As below, the question for a good name is
-> >           unresolved.
-> >         * return 1
-> >           This is what was done in the earlier revisions and also here.
-> >=20
-> >     - When keeping the return 1 semantics (and also for a new
-> >       ESOMETHING):
-> >       I agree that a name instead of a plain 1 would be nice, but I
-> >       couldn't come up with a name I liked. Given that this can be
-> >       introduced later without breaking anything, I don't consider that
-> >       very urgent.
-> >       My candidates were PWM_REQUIRES_BROKEN_ROUNDING,
-> >       PWM_REQUIRES_FORBIDDEN_ROUNDING and PWM_ERR_ROUNDING.
-> >       These are too long or/and imprecise.
-> >       If you have a good idea, please tell.
->=20
-> To avoid using the return value for status flags, we could introduce
-> an optional output parameter. Consumers where best effort is good
-> enough can just pass NULL and consumers that care can pass an unsigned
-> int to receive the status flag. This could even be a bitmap of multiple
-> flags if it would be useful to know which rule(s) could not be met.
+Sorry, I don't understand... Yes, uprobe_dispatcher and uretprobe_dispatcher
+can share more code or even unified, but
 
-Which rule couldn't be met is obvious when you look at the resulting
-waveform because the lowlevel driver is supposed to give you the
-smallest possible value for the relevant parameter if rounding down
-doesn't work.
+> I suspect that uretprobe might have been implemented later than uprobe
 
-So if you request
+Yes,
 
-	.period_length_ns =3D 3000
-	.duty_length_ns =3D 2
-	.duty_offset_ns =3D 10
+> and was only partially implemented.
 
-and your hardware can do 3000 ns period but the smallest duty_length is
-10, it is supposed to write
+what do you mean?
 
-	.period_length_ns =3D 3000
-	.duty_length_ns =3D 10
-	.duty_offset_ns =3D 10
+But whatever you meant, I agree that this code doesn't look pretty and can
+be cleanuped.
 
-in the waveform parameter and return 1.
+> In your opinion, does uretprobe need UPROBE_HANDLER_REMOVE?
 
-My intuitive reaction is that (another) output parameter is worse than
-the return value semantics I came up with. After some more thought I
-wonder if the wish to have something PWM specific is the problem, and
-just picking one of the available error constants (ERANGE?) is the nice
-way out. Alternatively return 0 in this case and let the caller work out
-themselves that not all values were rounded down?!
+Probably. But this has absolutely nothing to do with the filtering problem?
+Can we discuss this separately?
 
-Best regards
-Uwe
+> I'm aware that using `uprobe_perf_filter` in `uretprobe_perf_func` is not
+> the solution for BPF filtering. I'm just trying to alleviate the issue
+> in some simple cases.
 
---2bzw6j5f7wjbafhs
-Content-Type: application/pgp-signature; name="signature.asc"
+Agreed.
 
------BEGIN PGP SIGNATURE-----
+-------------------------------------------------------------------------------
+To summarise.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmbdi14ACgkQj4D7WH0S
-/k7qpAf/Y5ssufaf6K1aaX1b8DvdvTR9ZtYP4d2qMkbRPEmh0ttEd77LiJKYAPYv
-8+cMq81ISOARc2fARWJUyFOKnLI1mn4AR5L8pPPCx/9MPT/hcTLTDQ4yYian5/6M
-3AtSIVl/FK4+dXzYsQP8QIWaFlWA7sH4HVwvh5o2HGAtFFl1vkzu3iYk5adKUYWR
-OX0fUsg8YX94x8CqRxdc0xezbg1yBqXJ/oxOrYbv8SArDVuJf9nWEiQiI5DRa3aO
-vLCCW0EGjgRiDP3uUF0CxTcrQJPBorId6FQPnqeGyb+NEMXcWz0Elnp9tz5XRuXN
-NI2fsiSzpOi4pzYa5f89EbLfFAgIEQ==
-=Z0Bq
------END PGP SIGNATURE-----
+This code is very old, and it was written for /usr/bin/perf which attaches
+to the tracepoint. So multiple instances of perf-record will share the same
+consumer/trace_event_call/filter. uretprobe_perf_func() doesn't call
+uprobe_perf_filter() because (if /usr/bin/perf is the only user) in the likely
+case it would burn CPU and return true. Quite possibly this design was not
+optimal from the very beginning, I simply can't recall why the is_ret_probe()
+consumer has ->handler != NULL, but it was not buggy.
 
---2bzw6j5f7wjbafhs--
+Now we have bpf, create_local_trace_uprobe(), etc. So lets add another
+uprobe_perf_filter() into uretprobe_perf_func() as your patch did.
+
+Then we can probably change uprobe_handle_trampoline() to do
+unapply_uprobe() if all the ret-handlers return UPROBE_HANDLER_REMOVE, like
+handler_chain() does.
+
+Then we can probably cleanup/simplify trace_uprobe.c, in partucular we can
+change alloc_trace_uprobe()
+
+-	tu->consumer.handler = uprobe_dispatcher;
+-	if (is_ret)
+-		tu->consumer.ret_handler = uretprobe_dispatcher;
++	if (is_ret)
++		tu->consumer.ret_handler = uretprobe_dispatcher;
++	else
++		tu->consumer.handler = uprobe_dispatcher;
+
+and do more (including unrelated) cleanups.
+
+But lets do this step-by-step.
+
+And lets not mix the filtering issues with the UPROBE_HANDLER_REMOVE logic,
+to me this adds the unnecessary confusion.
+
+Oleg.
+
