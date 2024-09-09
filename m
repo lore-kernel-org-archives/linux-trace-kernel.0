@@ -1,115 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5391CD23;
-	Mon,  9 Sep 2024 15:15:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F5319BB7;
+	Mon,  9 Sep 2024 15:21:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725894917; cv=none; b=Uul2Kw4saNpSbllB2diOTQvadtjteCRBlLzcHMdjfPTiQQTG/4ugNrvIKG2vXBB3Z05LEmeZjgA39agI3lx6wsZtkCEaqWR3ZUIlpK4Ak1z/y7MYf5EQvLNtLTCjVxBKn7L6ZOZRqi93+kYWJ2rtVZlDEK5N8f/HOVMIih4O97s=
+	t=1725895291; cv=none; b=RjuibYUX0UZJgHkLcjtB8doAuiBtyx/Gb10jAZjw8W55gDM9JHYD7I63I6zyOJfvl2JewcthyvrbonjCW1unmuTapj0nn1xGgPsU1P9655g7HBDiRVqU5+FWCgqlS6ZZJtj8FVywQz/A4x/cTqbaVbMRzqFRURuLkvbiBryj/wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725894917; c=relaxed/simple;
-	bh=2c4IFcMrbT8s2LSV2B0iAdU87SghNG8m8i2iTklh678=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZYW+aHSS1Hfwjp/59OzLRN+hWfYrGi1g1ayLLEHM3JcoA7bmwSC3SV4u6oSSuuynewWGvtcqdmlBtMafQmV+MPwnKTT9exWO1fiEsA7C4SwTupe3yHSe2GqCIFU5UsJuJivyfmLaEUY2m1Cjdalx6NBtV71uA9a9FSSwqam1lEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqTZ92NI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqTZ92NI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD02C4CEC5;
-	Mon,  9 Sep 2024 15:15:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725894917;
-	bh=2c4IFcMrbT8s2LSV2B0iAdU87SghNG8m8i2iTklh678=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AqTZ92NIu1O8pIQbQdKGj9VYgoE4k0n/0wJECDKpe5q++992zlyQ5ulDt2sjWvr3F
-	 Qq18nOaCu4fW/cxYKgABI4xSCNYuh7YXeq3ZH4fK11X0ZQZB7Bl6tCqp2H0tdvCBR7
-	 0Z0mKGzn+/z3YPQ/dCGRhUes1MYkNo/PxB1im8CC/6ZoZBpUGw4F4QjMn1uyyYls0y
-	 9nDwqBv0FMl1RPfUO/L28Cb3J3ZWGWAKsN9i10sGDFUBHH4GqUCrBoUjtu44llNVTA
-	 ylCHZh7UYXbnAoORXZ5IzuQPkL90BymUhI8QpJwRU5jx55MFFb3QWdD/P6uKeRs2xe
-	 jpZCmM2rt/f5w==
-Date: Tue, 10 Sep 2024 00:15:12 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: syzbot <syzbot+list692d096cfc0c03673c30@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] Monthly trace report (Sep 2024)
-Message-Id: <20240910001512.f604fd970f2be1ef6e7f9189@kernel.org>
-In-Reply-To: <000000000000e69f460621ab50f4@google.com>
-References: <000000000000e69f460621ab50f4@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1725895291; c=relaxed/simple;
+	bh=COzQ/oS7+1JjRZqIPqwY8OXRbgsgvP0vVffowZODf/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aR+jtTorBJp4hz46JTPr3nVxmnhla8NBGQNy/0a7aUnrVHWnkJshdKVPaO+XUhRjauc8iGJwmzyPZMOknpkc0Vp2bniFgXDUbtXz1rb+l6TMrvc1aYRuXN0Yk1etqVKxWonzPxNgMiNDjR0ewF3Zx2iCngdNr4idJm2SVpCKeqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCCDC4CEC7;
+	Mon,  9 Sep 2024 15:21:29 +0000 (UTC)
+Date: Mon, 9 Sep 2024 11:21:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
+ <bristot@kernel.org>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Valentin Schneider
+ <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/timerlat: move interface_lock definition up
+Message-ID: <20240909112127.6f2ea6e9@gandalf.local.home>
+In-Reply-To: <20240909135344.76327-1-arnd@kernel.org>
+References: <20240909135344.76327-1-arnd@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 09 Sep 2024 01:12:20 -0700
-syzbot <syzbot+list692d096cfc0c03673c30@syzkaller.appspotmail.com> wrote:
+On Mon,  9 Sep 2024 13:53:20 +0000
+Arnd Bergmann <arnd@kernel.org> wrote:
 
-> Hello trace maintainers/developers,
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> This is a 31-day syzbot report for the trace subsystem.
-> All related reports/information can be found at:
-> https://syzkaller.appspot.com/upstream/s/trace
+> The definition was previously moved into an #ifdef block by
+> accident and now causes a build failure when CONFIG_TIMERLAT_TRACER
+> is disabled:
 > 
-> During the period, 1 new issues were detected and 0 were fixed.
-> In total, 8 issues are still open and 37 have been fixed so far.
+> In file included from include/linux/seqlock.h:19,
+>                  from kernel/trace/trace_osnoise.c:20:
+> kernel/trace/trace_osnoise.c: In function 'osnoise_sleep':
+> kernel/trace/trace_osnoise.c:1631:21: error: 'interface_lock' undeclared (first use in this function); did you mean 'trace_clock'?
+>  1631 |         mutex_lock(&interface_lock);
+>       |                     ^~~~~~~~~~~~~~
 > 
-> Some of the still happening issues:
-> 
-> Ref Crashes Repro Title
-> <1> 2278    Yes   possible deadlock in console_flush_all (3)
->                   https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
+> Move it up some more to be outside of that #ifdef again.
 
-This is artifically injected circuler lock dependency about the combination
-of eBPF + fault injection.
+Thanks, but for some reason I never got your email. I only noticed this
+from Patchwork, and I'm replying via lore.
 
- - BPF test program traces sched_switch event. (under rq->lock)
- - fault inject injects a fault in BPF's strncpy_from_user.
- - this fault printk dump to the console.(to lock console_owner)
+I also fixed it due to someone else reporting the bug. I'm currently
+running mine through my tests, although it is the exact same change as yours.
 
-To avoid this issue, use another event to test fault injection.
+  https://lore.kernel.org/linux-trace-kernel/20240909103231.23a289e2@gandalf.local.home/
 
-> <2> 1023    Yes   WARNING in format_decode (3)
->                   https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+-- Steve
 
-This seems also be caused by bpf test program.
-
-> <3> 31      Yes   INFO: task hung in blk_trace_ioctl (4)
->                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-
-This is a bug in blk_trace.
-
-> <4> 15      Yes   WARNING in bpf_get_stack_raw_tp
->                   https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
-
-This may be a bpf issue.
-
-> <5> 11      Yes   WARNING in get_probe_ref
->                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-
-This is a bug in blk_trace.
-
-It seems blk_trace does not check input parameters of ioctl correctly.
-
-Thank you,
 
 > 
+> Fixes: e6a53481da29 ("tracing/timerlat: Only clear timer if a kthread exists")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> It looks like the regression already made it into 6.11-rc7 as
+> part of
+> https://lore.kernel.org/lkml/20240905172827.6a64cf97@gandalf.local.home/
+> so this fixup (if correct) is needed for 6.11 as well
+> ---
+>  kernel/trace/trace_osnoise.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> To disable reminders for individual bugs, reply with the following command:
-> #syz set <Ref> no-reminders
-> 
-> To change bug's subsystems, reply with:
-> #syz set <Ref> subsystems: new-subsystem
-> 
-> You may send multiple commands in a single email message.
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index 20c6660762a3..acfd57689af6 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -228,6 +228,11 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
+>  	return this_cpu_ptr(&per_cpu_osnoise_var);
+>  }
+>  
+> +/*
+> + * Protect the interface.
+> + */
+> +static struct mutex interface_lock;
+> +
+>  #ifdef CONFIG_TIMERLAT_TRACER
+>  /*
+>   * Runtime information for the timer mode.
+> @@ -252,11 +257,6 @@ static inline struct timerlat_variables *this_cpu_tmr_var(void)
+>  	return this_cpu_ptr(&per_cpu_timerlat_var);
+>  }
+>  
+> -/*
+> - * Protect the interface.
+> - */
+> -static struct mutex interface_lock;
+> -
+>  /*
+>   * tlat_var_reset - Reset the values of the given timerlat_variables
+>   */
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
