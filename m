@@ -1,105 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C50012B17C;
-	Mon,  9 Sep 2024 10:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA81B6521;
+	Mon,  9 Sep 2024 11:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725879215; cv=none; b=SygaLMc9LRHhyLmrEiSIw07PVGuK0dtAJSYQnIAFUyyPWXU7NKxyYaVw/UqgokAxdkSqY9jPpIoNqKC0+By/k7wv2M4SmBnI9CDKPiDJ4Su8yi/r8DTxzU+BCcb2cYq22J1Jb/8zeGxyVcIE9cPc/KW3EMPnd8c2bwjvvvSK5CU=
+	t=1725880879; cv=none; b=WIlk2qmlacjvxjsTBasZjLd38TEjj0MH8WEWoDkInhQ61/L38l/oc/qqM8XbuK4u7ll97VATLNlGb+O7/A+tN8Lrvgj5X+BHRS/HlKFjQuzp41RmetOJCcGkbHJ4Q2cPn62Dwr8i4obv418EASIckD08nAc4qaSKPIRpMjjLR1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725879215; c=relaxed/simple;
-	bh=L8zTApnftuKIPWF/1of8D45op0E0msf9CkZIUtmNpFs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mnvx6/O0ncf16z0hFb7JT7PAO8Zq8Ye+DMVQ+bjituz2qLaNVdLspZ6ar5AIeHjZ8oqPsvdl+wHAcUp1WO5sDVQuNnYSnCYSOk+eP7l6hRCEDQA3dtNprmaWOlIFECoFV7bmn49Uv96ZkHd4sPyM0A19NDI7JmU/0IxnXAZ6K0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knyb+Huo; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knyb+Huo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725879215; x=1757415215;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=L8zTApnftuKIPWF/1of8D45op0E0msf9CkZIUtmNpFs=;
-  b=knyb+Huodiw21UGMwt3KwL+fuBNNJNTNSYWLKyRRRXDAPWW3l6WsdY0z
-   hrGjpt23pLwx42kcombxSKD41SppKFIIGAF6PV2sBYm/itoy7QpPQDNgX
-   eqKd2GT1usZXNoRiNX/rcfQIw5PEHgNVw/T3KBIHyfkXll5aKVHeHdOgH
-   +E/rqD3Ga9iFxjouZHMpg1QjgDheTLhQcXkQZa/bdvEZaNEGkcS/Mmn0P
-   O4/Oz8pZQpsWDCvQ24FxVDJhNJjCJEAB+dSNSSPThL1lv3/PqWW5s1ZZ2
-   hXLQzvnWTjPLHE2AdYgt6W7YEHKU4gUQsOoxEVuVdF/QzbRSdj13iqmOz
-   A==;
-X-CSE-ConnectionGUID: XmwGIDJuSLW+AmVngX+Htw==
-X-CSE-MsgGUID: lEARyM13RL6X7uEOcJKrcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="24433125"
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="24433125"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2024 03:53:34 -0700
-X-CSE-ConnectionGUID: Cz/m6/G4QZ2LE+eZo4SCbg==
-X-CSE-MsgGUID: +xWHHtMaR3iJ6nkWb8mwxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,214,1719903600"; 
-   d="scan'208";a="70744672"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Sep 2024 03:53:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3A6AB321; Mon, 09 Sep 2024 13:53:28 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] tracing: Drop unused helper function to fix the build
-Date: Mon,  9 Sep 2024 13:53:14 +0300
-Message-ID: <20240909105314.928302-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1725880879; c=relaxed/simple;
+	bh=5iq6aZDboxm6ZGBWINtqBy3Uim6XKZaYNeKYLJYVdrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=T+QWNY54DCqy2zPPoRVSSJkjj/8uwEAgnKXVw2dSQREBsXaWSt9Hw0Ja/hQCu7pfykQLvUYrMxnddHws8bYTwatmDsPArnoyA0m4xW2lxXO4i7QM+l8X8Nxa3GtVk9YDMHLdviWi5ihRH19TvZFqUOCeOIF3Xmyqm2WTVi/ZerU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4X2PXm2Sy2z1xv0C;
+	Mon,  9 Sep 2024 19:21:12 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id EE4911400DC;
+	Mon,  9 Sep 2024 19:21:13 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 9 Sep 2024 19:21:13 +0800
+Message-ID: <42c202e6-8c4c-494f-8c28-17d66ed75880@huawei.com>
+Date: Mon, 9 Sep 2024 19:21:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v25 00/13] Device Memory TCP
+To: Mina Almasry <almasrymina@google.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-alpha@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+	<linux-parisc@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
+CC: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+	<ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+	<arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem de
+ Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+	<bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
+	<jonathan.lemon@gmail.com>, Shuah Khan <shuah@kernel.org>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Pavel Begunkov
+	<asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, Harshitha Ramamurthy
+	<hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de
+ Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>
+References: <20240909054318.1809580-1-almasrymina@google.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20240909054318.1809580-1-almasrymina@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-A helper function defined but not used. This, in particular,
-prevents kernel builds with clang, `make W=1` and CONFIG_WERROR=y:
+On 2024/9/9 13:43, Mina Almasry wrote:
 
-kernel/trace/trace.c:2229:19: error: unused function 'run_tracer_selftest' [-Werror,-Wunused-function]
- 2229 | static inline int run_tracer_selftest(struct tracer *type)
-      |                   ^~~~~~~~~~~~~~~~~~~
+> 
+> Perf - page-pool benchmark:
+> ---------------------------
+> 
+> bench_page_pool_simple.ko tests with and without these changes:
+> https://pastebin.com/raw/ncHDwAbn
+> 
+> AFAIK the number that really matters in the perf tests is the
+> 'tasklet_page_pool01_fast_path Per elem'. This one measures at about 8
+> cycles without the changes but there is some 1 cycle noise in some
+> results.
+> 
+> With the patches this regresses to 9 cycles with the changes but there
+> is 1 cycle noise occasionally running this test repeatedly.
+> 
+> Lastly I tried disable the static_branch_unlikely() in
+> netmem_is_net_iov() check. To my surprise disabling the
+> static_branch_unlikely() check reduces the fast path back to 8 cycles,
+> but the 1 cycle noise remains.
 
-Fix this by dropping unused functions.
+Sorry for the late report, as I was adding a testing page_pool ko basing
+on [1] to avoid introducing performance regression when fixing the bug in
+[2].
+I used it to test the performance impact of devmem patchset for page_pool
+too, it seems there might be some noticable performance impact quite stably
+for the below testcases, about 5%~16% performance degradation as below in
+the arm64 system:
 
-See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-inline functions for W=1 build").
+Before the devmem patchset:
+ Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1' (100 runs):
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/trace/trace.c | 4 ----
- 1 file changed, 4 deletions(-)
+         17.167561      task-clock (msec)         #    0.003 CPUs utilized            ( +-  0.40% )
+                 8      context-switches          #    0.474 K/sec                    ( +-  0.65% )
+                 0      cpu-migrations            #    0.001 K/sec                    ( +-100.00% )
+                84      page-faults               #    0.005 M/sec                    ( +-  0.13% )
+          44576552      cycles                    #    2.597 GHz                      ( +-  0.40% )
+          59627412      instructions              #    1.34  insn per cycle           ( +-  0.03% )
+          14370325      branches                  #  837.063 M/sec                    ( +-  0.02% )
+             21902      branch-misses             #    0.15% of all branches          ( +-  0.27% )
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index edf6bc817aa1..c3b2c7dfadef 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2226,10 +2226,6 @@ static __init int init_trace_selftests(void)
- }
- core_initcall(init_trace_selftests);
- #else
--static inline int run_tracer_selftest(struct tracer *type)
--{
--	return 0;
--}
- static inline int do_run_tracer_selftest(struct tracer *type)
- {
- 	return 0;
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+       6.818873600 seconds time elapsed                                          ( +-  0.02% )
+
+ Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1 test_direct=1' (100 runs):
+
+         17.595423      task-clock (msec)         #    0.004 CPUs utilized            ( +-  0.01% )
+                 8      context-switches          #    0.460 K/sec                    ( +-  0.50% )
+                 0      cpu-migrations            #    0.000 K/sec
+                84      page-faults               #    0.005 M/sec                    ( +-  0.15% )
+          45693020      cycles                    #    2.597 GHz                      ( +-  0.01% )
+          59676212      instructions              #    1.31  insn per cycle           ( +-  0.00% )
+          14385384      branches                  #  817.564 M/sec                    ( +-  0.00% )
+             21786      branch-misses             #    0.15% of all branches          ( +-  0.14% )
+
+       4.098627802 seconds time elapsed                                          ( +-  0.11% )
+
+After the devmem patchset:
+Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1' (100 runs):
+
+         17.047973      task-clock (msec)         #    0.002 CPUs utilized            ( +-  0.39% )
+                 8      context-switches          #    0.488 K/sec                    ( +-  0.82% )
+                 0      cpu-migrations            #    0.001 K/sec                    ( +- 70.35% )
+                84      page-faults               #    0.005 M/sec                    ( +-  0.12% )
+          44269558      cycles                    #    2.597 GHz                      ( +-  0.39% )
+          59594383      instructions              #    1.35  insn per cycle           ( +-  0.02% )
+          14362599      branches                  #  842.481 M/sec                    ( +-  0.02% )
+             21949      branch-misses             #    0.15% of all branches          ( +-  0.25% )
+
+       7.964890303 seconds time elapsed                                          ( +-  0.16% )
+
+ Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1 test_direct=1' (100 runs):
+
+         17.660975      task-clock (msec)         #    0.004 CPUs utilized            ( +-  0.02% )
+                 8      context-switches          #    0.458 K/sec                    ( +-  0.57% )
+                 0      cpu-migrations            #    0.003 K/sec                    ( +- 43.81% )
+                84      page-faults               #    0.005 M/sec                    ( +-  0.17% )
+          45862652      cycles                    #    2.597 GHz                      ( +-  0.02% )
+          59764866      instructions              #    1.30  insn per cycle           ( +-  0.01% )
+          14404323      branches                  #  815.602 M/sec                    ( +-  0.01% )
+             21826      branch-misses             #    0.15% of all branches          ( +-  0.19% )
+
+       4.304644609 seconds time elapsed                                          ( +-  0.75% )
+
+1. https://lore.kernel.org/all/20240906073646.2930809-2-linyunsheng@huawei.com/
+2. https://lore.kernel.org/lkml/8067f204-1380-4d37-8ffd-007fc6f26738@kernel.org/T/
+
+> 
 
