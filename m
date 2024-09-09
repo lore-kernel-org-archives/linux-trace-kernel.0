@@ -1,145 +1,119 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9F91CAA6;
-	Mon,  9 Sep 2024 20:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA28518C31;
+	Mon,  9 Sep 2024 20:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725912796; cv=none; b=O1410+IFRHE0HlWCUTUNBfqMd4ioe1RPG4ORye6p6wyFw3LZEU7HOHVM7fcYpqNCPAXm+WkgM+CiehZB20SSJBVQBF1G5Eof3+lbIVbAqyyhnHFoTQqw92zxBJFfz+0R/kL44U7uDHrjRpdIux92HdF6xL1SP41ibNxFKQxpL+A=
+	t=1725913039; cv=none; b=ruXUN84pBmtPmkzgeopTN5RHkRfvjCH5pEKjQy7cHV9kf02Olp0ZtMCXZ/dqfJDiP2wPjY3+GOUm0psT3/yyDJEXOOEVAP+SfjJxwcxwnylwwnyEcKRRTGoiJDr3HJsO75ebztkg+gcoMLTsWh0zLJC9ABHuQrqLUrhHA5h8tUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725912796; c=relaxed/simple;
-	bh=Pcz0ezSsaPLev3yVQApSD16X1qAyI7PtNkYE9DYYR9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TQUp1TT4EOIc/gNY3do+2POtgBTyBH7LweR/EKNprIy+l91GQguc8SUnjEMB/DDIz3KWKQtIwfHdNbyvqaxXE2J9qAMljBOAhZ+HsjMcI1FLk0TtmH4sKJqo2HPPcA6XHE/jCzzKrNerS7E4B6jLPRFO9xTnIrCGii++poZukSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h8aecEDx; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725913039; c=relaxed/simple;
+	bh=vMrOjt1iewbvL76IRGWP5yIysyYY7jVPJd/WeU5mMbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tk2TsKKH33wJZcx1/bT+HeQGuiZAeL4+t1IOpg9jZW2DmmkZ4fx9VjeIJuEGke8X9tyHJyOP+Ys4+yMYllwAiDM1tj3P+saMeQRrl0JbilUsW7tOJs43fafB1ifgRua9cHweneh3U71W7PkSBy+auAugSqHTYa2q397HgnLRnz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=T2iMVpNL; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8aecEDx"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-206b9455460so39241355ad.0;
-        Mon, 09 Sep 2024 13:13:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725912794; x=1726517594; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WD0uAwzCMkMApgZD0UfsxApJcJH6AM3KNicBeGxPEHM=;
-        b=h8aecEDxEv+2Fs5xm6PoYbxSAYllPIc4nO0MRt+ZkqX7xB2LFVW+Sa/Ndg0OGFCWC3
-         X4Ebd+qDK73Mp4Fx74OYvKgDOWCoNm/iwwBDzjyFJhygcYy29Po/Ecs11AHd8srILGD/
-         OWQ4GoOrHDzHacHPI6O5H0ZvA2hrfWT9xu0aQFD+pCCYwfmgX/PBOYGVy2HhsfoA274N
-         BXL9Gbc/JFQCsJlrdpIFdsRu6DIeUp2hNcDMqHEHGyHOe/L9CL5ml3/QlB2yysLN+NTH
-         RzXMhKpZL+wqJoUQHMbPSr5eK3EHUqhLwMNPnNeN5s4N2pnP2su1P4FuvZsL6SiFpbN1
-         zZYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725912794; x=1726517594;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WD0uAwzCMkMApgZD0UfsxApJcJH6AM3KNicBeGxPEHM=;
-        b=dExmtGaNA6N8vDs09ofYpvFhQ0cvazx+S3/ez68P9b1Pva2ZJ5AbYD81H6zZ+dzd02
-         f1V76g3nN5BsVFiPZ48SwiwSkMTg5YBQt6LO4WHbwh5ZjBcfxMp5ytBFmBsYSlzC9UTT
-         w6anoEr68QU7yxqUcGZZenQvvn5v6kDbeBSdDcaXskVK/AJHnmqrgz1E+EVG8o1mmneK
-         PVUMBnKn5izKxH0pvlN21qz+hjGEz2wlx8ZrNBPKwohHoE9tYzV3v+qjYu8vXqj4rbj5
-         5A5OTv3Qa6Jjj+pnsCx0Kf4zoqNWSaLMNHA9BmXq9zAME8WVRuM3cVrtVsND/bPJlNeH
-         /ULQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWsjiZbhYSmq+yzEY3PZ9szeuRd97W8x2xiQUPhoTa0gDk7kNAwqaKhbVzgH1/oDBTWhQI=@vger.kernel.org, AJvYcCWzJNo01qCw6G0mmyBtK28K1hrj76N5XiPFKjbUSVlmlUfy60nL8kifBhuO/oVP7EPatILxHGUjYEtWDUv9VO00tT2j@vger.kernel.org, AJvYcCWzTe6RK/+t0YUSHrxggkoWArt0APY+b3hNY0xosviIz9kuzxAiZYwCNedgM4k7u3CCgDiktRw2e1gGzV9C@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOeAgTmTCxrfgR7LmSUYv8ZlSZn6JJv/L87N/ml2SKEH1ridFv
-	w5Bx4sGd2tVj0LbSxyYohcpzrY+rzD9hs4wDXlH/KqFHzLpBCze8b1WiKC6dxKMyGJnhaMvebzN
-	Gxh4QELv4O+KuN+vKZEzMcNVgnqE=
-X-Google-Smtp-Source: AGHT+IFO24pjNyWopUmhGojEFIa6eeUsteaegxFSno5uz5ILepDPjgWgmtNMnrSe/fcClaYqr7NgZ3uQYSdCfHSg1pM=
-X-Received: by 2002:a17:902:8a81:b0:206:8d6e:d003 with SMTP id
- d9443c01a7336-2074381fdd4mr10868065ad.4.1725912793722; Mon, 09 Sep 2024
- 13:13:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="T2iMVpNL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1725913035;
+	bh=vMrOjt1iewbvL76IRGWP5yIysyYY7jVPJd/WeU5mMbQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=T2iMVpNL1VmV6Qzksfb/JERgWciyGlitRX5NRf42IEmPY3ojdVZyMvDUoOC0jwx69
+	 fG+kjtWDz1fFDJHuqPXkFl3298vTeswenoyRjiporHVvKTvvR3rY74CFoCWNOpm+Q9
+	 Wza111hZb82sF5OpI5JrnbTBHZKY4C76q8BRh3AvkwbbJVrL9JgKQhqtM7P7xQ8RV5
+	 7wmRgtbHbe5eDkgegtfityPcjLYayf4U3fmNBB0628N+9pyMpH86emxNdiUEI0QyVm
+	 YsyZY/46sNaE9cV9hPqpVYC1LPkcLmHx+g3YRgPhTHSQaf7NZAkLDsyje9fA7/q0PQ
+	 dlCukwQTsXU6w==
+Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4X2dRH17Jdz1Ksv;
+	Mon,  9 Sep 2024 16:17:15 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/8] tracing: Allow system call tracepoints to handle page faults
+Date: Mon,  9 Sep 2024 16:16:44 -0400
+Message-Id: <20240909201652.319406-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828144153.829582-1-mathieu.desnoyers@efficios.com>
- <20240828144153.829582-4-mathieu.desnoyers@efficios.com> <CAEf4BzZERq7qwf0TWYFaXzE6d+L+Y6UY+ahteikro_eugJGxWw@mail.gmail.com>
- <1f442f99-92cd-41d6-8dd2-1f4780f2e556@efficios.com> <CAEf4BzbS0TRN1vPzPtSZj+XN7oVUUwyoxHr5p7igH8X-nhZhGw@mail.gmail.com>
- <279860b4-2f42-463f-bee2-c6c60ec72f29@efficios.com>
-In-Reply-To: <279860b4-2f42-463f-bee2-c6c60ec72f29@efficios.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 9 Sep 2024 13:13:01 -0700
-Message-ID: <CAEf4BzZ-sWqComLC=VOQugjWBkdX=iApFnCnUxisWgwd6fHFjQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] tracing/bpf-trace: Add support for faultable tracepoints
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
-	linux-trace-kernel@vger.kernel.org, Michael Jeanson <mjeanson@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 9, 2024 at 10:22=E2=80=AFAM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> On 2024-09-09 12:53, Andrii Nakryiko wrote:
-> > On Mon, Sep 9, 2024 at 8:11=E2=80=AFAM Mathieu Desnoyers
-> [...]
-> >>>
-> >>> I wonder if it would be better to just do this, instead of that
-> >>> preempt guard. I think we don't strictly need preemption to be
-> >>> disabled, we just need to stay on the same CPU, just like we do that
-> >>> for many other program types.
-> >>
-> >> I'm worried about introducing any kind of subtle synchronization
-> >> change in this series, and moving from preempt-off to migrate-disable
-> >> definitely falls under that umbrella.
-> >>
-> >> I would recommend auditing all uses of this_cpu_*() APIs to make sure
-> >> accesses to per-cpu data structures are using atomics and not just usi=
-ng
-> >> operations that expect use of preempt-off to prevent concurrent thread=
-s
-> >> from updating to the per-cpu data concurrently.
-> >>
-> >> So what you are suggesting may be a good idea, but I prefer to leave
-> >> this kind of change to a separate bpf-specific series, and I would
-> >> leave this work to someone who knows more about ebpf than me.
-> >>
-> >
-> > Yeah, that's ok. migrate_disable() switch is probably going a bit too
-> > far too fast, but I think we should just add
-> > preempt_disable/preempt_enable inside __bpf_trace_run() instead of
-> > leaving it inside those hard to find and follow tracepoint macros. So
-> > maybe you can just pass a bool into __bpf_trace_run() and do preempt
-> > guard (or explicit disable/enable) there?
-> >
->
-> Passing an extra boolean to __bpf_trace_run would impact all tracepoints
-> calling into ebpf, adding an extra function argument and extra tests for
-> all of those. The impact may be small, but it is non-zero in both code si=
-ze
-> and overhead, so it would not be my preferred approach.
->
+Wire up the system call tracepoints with Tasks Trace RCU to allow
+the ftrace, perf, and eBPF tracers to handle page faults.
 
-Ok, sounds good to me, we can always change that after your patch set
-makes it into upstream.
+This series does the initial wire-up allowing tracers to handle page
+faults, but leaves out the actual handling of said page faults as future
+work.
 
-> I have modified the macros to add the guard within __bpf_trace_##call
-> following suggestions from Linus:
->
->    https://lore.kernel.org/lkml/CAHk-=3DwggDLDeTKbhb5hh--x=3D-DQd69v41137=
-M72m6NOTmbD-cw@mail.gmail.com/
->
-> I'll Cc you on that version of the series.
+This series was compile and runtime tested with ftrace and perf syscall
+tracing and raw syscall tracing, adding a WARN_ON_ONCE() in the
+generated code to validate that the intended probes are used for raw
+syscall tracing. The might_fault() added within those probes validate
+that they are called from a context where handling a page fault is OK.
 
-Thanks!
+For ebpf, this series is compile-tested only.
 
->
-> Thanks,
->
-> Mathieu
->
->
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
->
+This series replaces the "Faultable Tracepoints v6" series found at [1].
+
+Thanks,
+
+Mathieu
+
+Link: https://lore.kernel.org/lkml/20240828144153.829582-1-mathieu.desnoyers@efficios.com/ # [1]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: bpf@vger.kernel.org
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Mathieu Desnoyers (8):
+  tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL
+  tracing/ftrace: guard syscall probe with preempt_notrace
+  tracing/perf: guard syscall probe with preempt_notrace
+  tracing/bpf: guard syscall probe with preempt_notrace
+  tracing: Allow system call tracepoints to handle page faults
+  tracing/ftrace: Add might_fault check to syscall probes
+  tracing/perf: Add might_fault check to syscall probes
+  tracing/bpf: Add might_fault check to syscall probes
+
+ include/linux/tracepoint.h      | 87 +++++++++++++++++++++++++--------
+ include/trace/bpf_probe.h       | 13 +++++
+ include/trace/define_trace.h    |  5 ++
+ include/trace/events/syscalls.h |  4 +-
+ include/trace/perf.h            | 43 ++++++++++++++--
+ include/trace/trace_events.h    | 61 +++++++++++++++++++++--
+ init/Kconfig                    |  1 +
+ kernel/entry/common.c           |  4 +-
+ kernel/trace/trace_syscalls.c   | 36 ++++++++++++--
+ 9 files changed, 218 insertions(+), 36 deletions(-)
+
+-- 
+2.39.2
