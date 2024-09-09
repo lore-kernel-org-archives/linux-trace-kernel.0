@@ -1,126 +1,181 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80581B5804
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Sep 2024 12:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ECA1B6555
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Sep 2024 13:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725885359; cv=none; b=S4SUW4LO+2Ou56FbUURUIuOI17J5mRFyQbVizPOJG9f/s8nI3pOjvF/EcyqT8HNoESRnv3XYRAFlWwu12I91ire5PK+Rt883YBNOEs6YtzPncwrloq7eghrIRE1zULzBSGQCYRx8A0EXdVTV1d3qVLmWhsdBMC92ctMxdpl8cMM=
+	t=1725887619; cv=none; b=MLxB7UAgJWdWSbSC36/dGKYd+wkKH0zioLx4L/zWwOQ0hYmVVumMk7z6nNsyAHg2EWTicPYx6wm0Q2oivZBB2F8PPksoR4N+uMAQxlJQHjXTUytDqQYYy5JEae0FRTdBgR3O96PJVSV20iG3E2CWIYxI+DMiiN3I4JT21AlPqZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725885359; c=relaxed/simple;
-	bh=MA+HcgDvLW83Ymxu9IsChq33lTehtLFFHUfEU4mQ44Q=;
+	s=arc-20240116; t=1725887619; c=relaxed/simple;
+	bh=sfvrALdN5FFNHEGRIBlpYy+rvir+GbG4FzfOtxBw2Sc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJCbKPW1tlv+LNPhdABuaISF4roIKZdAz+kNeftnsL95RzAReeDyXkYot7gffa9Civ6aKXgcxC0rvcNTi5y9VlNjMD4jxvLDnzHVrLBk4k+GRAMZATwHEcXYy2umM4UMtiyDy/VIBDWbKTZxov3PDpZ1/VfpArLJEvHa5nfJCvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lCWnd3za; arc=none smtp.client-ip=209.85.167.51
+	 To:Cc:Content-Type; b=HGQNSH2x5mpkFu7LroSWrZLVx2ZIpaondRPGjOyiS2x/ctCaxxzN48R17GOK0Df/lfLUj9qsZBXOvn/sCGX75yGLyPJpr4noUiQHVqYYlsJmOJiVUMlyeBIbCh8lsbD4UCmcNgZzHZo8eDzPY75UdtHmqpPleBUbWxomWwo7Bzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NEvvt16K; arc=none smtp.client-ip=209.85.167.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lCWnd3za"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53661d95508so6141e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Sep 2024 05:35:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NEvvt16K"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53661d95508so7208e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Sep 2024 06:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725885356; x=1726490156; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725887615; x=1726492415; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ItkNpbg3b1iQLTwUvcYvCzK1VuBRAi6YVDO131ItVjs=;
-        b=lCWnd3zarZv4fjZ72QoKr9Lni7taADtD/ZhigDT/oKQ1fmf99uYTKFtN4nQaXpDi3z
-         p+kLijj73kNPgQ16M3HNc1XqgD7m4z+lQqoUeHVQ1bJ+WG0eTl4TDNEjzdPDAwdgc7Hy
-         0BN1XnZ9FbsUC8DmQP8xrWLk1dM8pAo1TZT0NoQwX//Zp6YLmkcsjbeP10oOAqzwFSn+
-         OJjHQiRTXjpPYftezBK3LSFqGj/KfCeQXN4PxaoqBGqCK08Ten/mqs3a05VoRa8pnvip
-         wg7+8DiIuD0hxTleV5fAYziZMQY4EsLeiWC5u1m39W5xTmZTicLnBkYOKQ6IKg0e4jw9
-         g1bQ==
+        bh=e0Qpk+x67S20AfnP0HkE2Lz8EGrKLhCwgTYyWP4OIYE=;
+        b=NEvvt16KONuQcrPZwT2k3VvvH2cEiHi0GedsrZstMWZaCnhovdz6r8ThG9z1hGWE4K
+         Gs06DKjfQis5DlYSgTl+rD5xoAroAJKjaQKaNUAw2KsL72+tGypwgRNgEWe7g8mD6lzP
+         vbFAFE52ZoXE8kNYgzAgP4caI1+4Mjp0B3EHtnfA7f3/XsBFb/oNt2b4X8DF+oeQaZuL
+         bwWYN44hGxopRkBpQ96bkZBTzYNjoDQMed5RqOZ0DTnRxo4ImysVg2ykqBnTAm7zI0Q+
+         m4H0OS90rpzjqGYYKL1CiTu5bZ4YbL9ZWfzr2AW6gy/g7ByeQXPeezGQcMSiTKdJbRrR
+         NT3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725885356; x=1726490156;
+        d=1e100.net; s=20230601; t=1725887615; x=1726492415;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ItkNpbg3b1iQLTwUvcYvCzK1VuBRAi6YVDO131ItVjs=;
-        b=A++sBDn3vIuw9+SJBXIvjSeWG8b3F7shJJ+ls7RLNoH517TBTW1eMKNzpgpJlriYYR
-         bZxTCVKy+8irHQVNCtWkcPhzenZEp09adic+Jgec/FEHTmyPiAvY4EOwztwaLsOuNFhd
-         NikL8nHLkLyqjO2ZycPw9ebnDoziFcXHDygFiHLikrsK2Mz4NnEGj1o9LpiX2Z7bDJis
-         /lzuoRhZ53dUV7mpdbAaaHn+1yR2lUPrjW/x/CYuELXmaQe2pSA+3PfNgfa8RYcgWTEM
-         LkoSdzTNSfIUIzlv3011/O7hg1FL08/y4Qbkwo/S1SqyshqPFvYsQc0gMqKvUKDI83Ry
-         ZT1w==
-X-Gm-Message-State: AOJu0Ywu/Qs1CIPdP/nmKo3wcdLKZcO8mVF50Rk60QpCMzHyBLtxMECF
-	FsGvG1mU/D81y7gSWs40ymj5UnezCG77bd3+ftjt/+YMSsxo0cHxIuiJ7+tKw00OPNN4CjvzS1f
-	ZVhX9nuNQy7FSnAm8okXfx148SJWH+sOsSYCW
-X-Google-Smtp-Source: AGHT+IGGsTOsKMOzuVujWW/9F9gatm28KzGs7KuJZ0r/H8oFsyXYru+A8pCPf172NNXYDzQoEw6rG6CU7Y501Yf4VYs=
-X-Received: by 2002:a05:6512:23aa:b0:536:52dc:291f with SMTP id
- 2adb3069b0e04-5365eb6a2f4mr188381e87.1.1725885354776; Mon, 09 Sep 2024
- 05:35:54 -0700 (PDT)
+        bh=e0Qpk+x67S20AfnP0HkE2Lz8EGrKLhCwgTYyWP4OIYE=;
+        b=iYtPj8K2673tuXumwNGa++djeVFkYaKoSE9DRk0kXBFdBRWg2J3xFFjq7923LJUo3M
+         8TrssGJhO91HXczGORfdYo3/XrJ9QDAVwwiWlMex/2TOfQQuLmPAVdEiKlrAyUGwA2z2
+         jkOf511kqYTFlYPipWS+POujcxcDklWTAFXDGOAhrJHgF0GfJ0u0C7R3SkdXfRGM5GUn
+         rPNEgS6G3D3M9PbIZ+gu4Oc6NiQLsCV9tEi7NNB4LOSy4Rj/OtRnFMeG3qNT0WwX6Kp+
+         4X9GmEGllF0xpWIGnW6sQJMIp8nzEQ2gAK65ftqwhEvOzRVSc/7jAL0uch9A4ukZvYLI
+         C9fg==
+X-Gm-Message-State: AOJu0Yxo2r9O8BtGQZ6fqoWfMctzVjKbiSRlVmFKPE7KmiXM48YTCyvC
+	Sy5s0i3C5JfvEyyfNgp2Ug5P+PqU1GLp2XWvSUJ6QpVGRAOrBTXu/yKArZFSjEtgmUpfiQijQOb
+	ox3w/fJYG0dk7/Atcwkxq5BNKTJ+IRMJco/BQ
+X-Google-Smtp-Source: AGHT+IGbHTgjUP9n9e0Je4tUVw4yQi27pYfPz7pOzFc9OB1SgZi153AKL0qkRB1p9AOL0pdG0v4kJX60dSJe2NNaGII=
+X-Received: by 2002:a05:6512:b05:b0:52e:8a42:f152 with SMTP id
+ 2adb3069b0e04-5365eb6fa31mr222153e87.5.1725887614987; Mon, 09 Sep 2024
+ 06:13:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-2-andrii@kernel.org>
-In-Reply-To: <20240906051205.530219-2-andrii@kernel.org>
+References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-3-andrii@kernel.org>
+In-Reply-To: <20240906051205.530219-3-andrii@kernel.org>
 From: Jann Horn <jannh@google.com>
-Date: Mon, 9 Sep 2024 14:35:17 +0200
-Message-ID: <CAG48ez2hAQBj-VnimJBd3M-ioANVTk+ZQXYWD+j9G+ip2K_nfw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: introduce mmap_lock_speculation_{start|end}
-To: Andrii Nakryiko <andrii@kernel.org>
+Date: Mon, 9 Sep 2024 15:12:57 +0200
+Message-ID: <CAG48ez2G1Pf_RRRT0av=6r_4HcLZu6QMgveepk-ENo=PkaZC1w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] uprobes: add speculative lockless VMA-to-inode-to-uprobe
+ resolution
+To: Andrii Nakryiko <andrii@kernel.org>, brauner@kernel.org
 Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
 	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
 	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org
+	linux-mm@kvack.org, mjguzik@gmail.com, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.org> =
 wrote:
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
-eq)
+> Given filp_cachep is already marked SLAB_TYPESAFE_BY_RCU, we can safely
+> access vma->vm_file->f_inode field locklessly under just rcu_read_lock()
+
+No, not every file is SLAB_TYPESAFE_BY_RCU - see for example
+ovl_mmap(), which uses backing_file_mmap(), which does
+vma_set_file(vma, file) where "file" comes from ovl_mmap()'s
+"realfile", which comes from file->private_data, which is set in
+ovl_open() to the return value of ovl_open_realfile(), which comes
+from backing_file_open(), which allocates a file with
+alloc_empty_backing_file(), which uses a normal kzalloc() without any
+RCU stuff, with this comment:
+
+ * This is only for kernel internal use, and the allocate file must not be
+ * installed into file tables or such.
+
+And when a backing_file is freed, you can see on the path
+__fput() -> file_free()
+that files with FMODE_BACKING are directly freed with kfree(), no RCU delay=
+.
+
+So the RCU-ness of "struct file" is an implementation detail of the
+VFS, and you can't rely on it for ->vm_file unless you get the VFS to
+change how backing file lifetimes work, which might slow down some
+other workload, or you find a way to figure out whether you're dealing
+with a backing file without actually accessing the file.
+
+> +static struct uprobe *find_active_uprobe_speculative(unsigned long bp_va=
+ddr)
 > +{
-> +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
-> +       return seq =3D=3D smp_load_acquire(&mm->mm_lock_seq);
+> +       const vm_flags_t flags =3D VM_HUGETLB | VM_MAYEXEC | VM_MAYSHARE;
+> +       struct mm_struct *mm =3D current->mm;
+> +       struct uprobe *uprobe;
+> +       struct vm_area_struct *vma;
+> +       struct file *vm_file;
+> +       struct inode *vm_inode;
+> +       unsigned long vm_pgoff, vm_start;
+> +       int seq;
+> +       loff_t offset;
+> +
+> +       if (!mmap_lock_speculation_start(mm, &seq))
+> +               return NULL;
+> +
+> +       rcu_read_lock();
+> +
+> +       vma =3D vma_lookup(mm, bp_vaddr);
+> +       if (!vma)
+> +               goto bail;
+> +
+> +       vm_file =3D data_race(vma->vm_file);
+
+A plain "data_race()" says "I'm fine with this load tearing", but
+you're relying on this load not tearing (since you access the vm_file
+pointer below).
+You're also relying on the "struct file" that vma->vm_file points to
+being populated at this point, which means you need CONSUME semantics
+here, which READ_ONCE() will give you, and something like RELEASE
+semantics on any pairing store that populates vma->vm_file, which
+means they'd all have to become something like smp_store_release()).
+
+You might want to instead add another recheck of the sequence count
+(which would involve at least a read memory barrier after the
+preceding patch is fixed) after loading the ->vm_file pointer to
+ensure that no one was concurrently changing the ->vm_file pointer
+before you do memory accesses through it.
+
+> +       if (!vm_file || (vma->vm_flags & flags) !=3D VM_MAYEXEC)
+> +               goto bail;
+
+missing data_race() annotation on the vma->vm_flags access
+
+> +       vm_inode =3D data_race(vm_file->f_inode);
+
+As noted above, this doesn't work because you can't rely on having RCU
+lifetime for the file. One *very* ugly hack you could do, if you think
+this code is so performance-sensitive that you're willing to do fairly
+atrocious things here, would be to do a "yes I am intentionally doing
+a UAF read and I know the address might not even be mapped at this
+point, it's fine, trust me" pattern, where you use
+copy_from_kernel_nofault(), kind of like in prepend_copy() in
+fs/d_path.c, and then immediately recheck the sequence count before
+doing *anything* with this vm_inode pointer you just loaded.
+
+
+
+> +       vm_pgoff =3D data_race(vma->vm_pgoff);
+> +       vm_start =3D data_race(vma->vm_start);
+> +
+> +       offset =3D (loff_t)(vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vm_star=
+t);
+> +       uprobe =3D find_uprobe_rcu(vm_inode, offset);
+> +       if (!uprobe)
+> +               goto bail;
+> +
+> +       /* now double check that nothing about MM changed */
+> +       if (!mmap_lock_speculation_end(mm, seq))
+> +               goto bail;
+> +
+> +       rcu_read_unlock();
+> +
+> +       /* happy case, we speculated successfully */
+> +       return uprobe;
+> +bail:
+> +       rcu_read_unlock();
+> +       return NULL;
 > +}
-
-A load-acquire can't provide "end of locked section" semantics - a
-load-acquire is a one-way barrier, you can basically use it for
-"acquire lock" semantics but not for "release lock" semantics, because
-the CPU will prevent reordering the load with *later* loads but not
-with *earlier* loads. So if you do:
-
-mmap_lock_speculation_start()
-[locked reads go here]
-mmap_lock_speculation_end()
-
-then the CPU is allowed to reorder your instructions like this:
-
-mmap_lock_speculation_start()
-mmap_lock_speculation_end()
-[locked reads go here]
-
-so the lock is broken.
-
->  static inline void mmap_write_lock(struct mm_struct *mm)
->  {
->         __mmap_lock_trace_start_locking(mm, true);
->         down_write(&mm->mmap_lock);
-> +       inc_mm_lock_seq(mm);
->         __mmap_lock_trace_acquire_returned(mm, true, true);
->  }
-
-Similarly, inc_mm_lock_seq(), which does a store-release, can only
-provide "release lock" semantics, not "take lock" semantics, because
-the CPU can reorder it with later stores; for example, this code:
-
-inc_mm_lock_seq()
-[locked stuff goes here]
-inc_mm_lock_seq()
-
-can be reordered into this:
-
-[locked stuff goes here]
-inc_mm_lock_seq()
-inc_mm_lock_seq()
-
-so the lock is broken.
-
-For "taking a lock" with a memory store, or "dropping a lock" with a
-memory load, you need heavier memory barriers, see
-Documentation/memory-barriers.txt.
