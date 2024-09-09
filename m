@@ -1,167 +1,126 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FA81B6521;
-	Mon,  9 Sep 2024 11:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80581B5804
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Sep 2024 12:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725880879; cv=none; b=WIlk2qmlacjvxjsTBasZjLd38TEjj0MH8WEWoDkInhQ61/L38l/oc/qqM8XbuK4u7ll97VATLNlGb+O7/A+tN8Lrvgj5X+BHRS/HlKFjQuzp41RmetOJCcGkbHJ4Q2cPn62Dwr8i4obv418EASIckD08nAc4qaSKPIRpMjjLR1U=
+	t=1725885359; cv=none; b=S4SUW4LO+2Ou56FbUURUIuOI17J5mRFyQbVizPOJG9f/s8nI3pOjvF/EcyqT8HNoESRnv3XYRAFlWwu12I91ire5PK+Rt883YBNOEs6YtzPncwrloq7eghrIRE1zULzBSGQCYRx8A0EXdVTV1d3qVLmWhsdBMC92ctMxdpl8cMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725880879; c=relaxed/simple;
-	bh=5iq6aZDboxm6ZGBWINtqBy3Uim6XKZaYNeKYLJYVdrw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=T+QWNY54DCqy2zPPoRVSSJkjj/8uwEAgnKXVw2dSQREBsXaWSt9Hw0Ja/hQCu7pfykQLvUYrMxnddHws8bYTwatmDsPArnoyA0m4xW2lxXO4i7QM+l8X8Nxa3GtVk9YDMHLdviWi5ihRH19TvZFqUOCeOIF3Xmyqm2WTVi/ZerU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4X2PXm2Sy2z1xv0C;
-	Mon,  9 Sep 2024 19:21:12 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE4911400DC;
-	Mon,  9 Sep 2024 19:21:13 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 9 Sep 2024 19:21:13 +0800
-Message-ID: <42c202e6-8c4c-494f-8c28-17d66ed75880@huawei.com>
-Date: Mon, 9 Sep 2024 19:21:05 +0800
+	s=arc-20240116; t=1725885359; c=relaxed/simple;
+	bh=MA+HcgDvLW83Ymxu9IsChq33lTehtLFFHUfEU4mQ44Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJCbKPW1tlv+LNPhdABuaISF4roIKZdAz+kNeftnsL95RzAReeDyXkYot7gffa9Civ6aKXgcxC0rvcNTi5y9VlNjMD4jxvLDnzHVrLBk4k+GRAMZATwHEcXYy2umM4UMtiyDy/VIBDWbKTZxov3PDpZ1/VfpArLJEvHa5nfJCvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lCWnd3za; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lCWnd3za"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53661d95508so6141e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Sep 2024 05:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1725885356; x=1726490156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ItkNpbg3b1iQLTwUvcYvCzK1VuBRAi6YVDO131ItVjs=;
+        b=lCWnd3zarZv4fjZ72QoKr9Lni7taADtD/ZhigDT/oKQ1fmf99uYTKFtN4nQaXpDi3z
+         p+kLijj73kNPgQ16M3HNc1XqgD7m4z+lQqoUeHVQ1bJ+WG0eTl4TDNEjzdPDAwdgc7Hy
+         0BN1XnZ9FbsUC8DmQP8xrWLk1dM8pAo1TZT0NoQwX//Zp6YLmkcsjbeP10oOAqzwFSn+
+         OJjHQiRTXjpPYftezBK3LSFqGj/KfCeQXN4PxaoqBGqCK08Ten/mqs3a05VoRa8pnvip
+         wg7+8DiIuD0hxTleV5fAYziZMQY4EsLeiWC5u1m39W5xTmZTicLnBkYOKQ6IKg0e4jw9
+         g1bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725885356; x=1726490156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ItkNpbg3b1iQLTwUvcYvCzK1VuBRAi6YVDO131ItVjs=;
+        b=A++sBDn3vIuw9+SJBXIvjSeWG8b3F7shJJ+ls7RLNoH517TBTW1eMKNzpgpJlriYYR
+         bZxTCVKy+8irHQVNCtWkcPhzenZEp09adic+Jgec/FEHTmyPiAvY4EOwztwaLsOuNFhd
+         NikL8nHLkLyqjO2ZycPw9ebnDoziFcXHDygFiHLikrsK2Mz4NnEGj1o9LpiX2Z7bDJis
+         /lzuoRhZ53dUV7mpdbAaaHn+1yR2lUPrjW/x/CYuELXmaQe2pSA+3PfNgfa8RYcgWTEM
+         LkoSdzTNSfIUIzlv3011/O7hg1FL08/y4Qbkwo/S1SqyshqPFvYsQc0gMqKvUKDI83Ry
+         ZT1w==
+X-Gm-Message-State: AOJu0Ywu/Qs1CIPdP/nmKo3wcdLKZcO8mVF50Rk60QpCMzHyBLtxMECF
+	FsGvG1mU/D81y7gSWs40ymj5UnezCG77bd3+ftjt/+YMSsxo0cHxIuiJ7+tKw00OPNN4CjvzS1f
+	ZVhX9nuNQy7FSnAm8okXfx148SJWH+sOsSYCW
+X-Google-Smtp-Source: AGHT+IGGsTOsKMOzuVujWW/9F9gatm28KzGs7KuJZ0r/H8oFsyXYru+A8pCPf172NNXYDzQoEw6rG6CU7Y501Yf4VYs=
+X-Received: by 2002:a05:6512:23aa:b0:536:52dc:291f with SMTP id
+ 2adb3069b0e04-5365eb6a2f4mr188381e87.1.1725885354776; Mon, 09 Sep 2024
+ 05:35:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v25 00/13] Device Memory TCP
-To: Mina Almasry <almasrymina@google.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-alpha@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
-CC: Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Richard
- Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
-	<ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
- Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>,
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
-	<arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem de
- Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
-	<bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
- Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
-	<jonathan.lemon@gmail.com>, Shuah Khan <shuah@kernel.org>, Alexei Starovoitov
-	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Pavel Begunkov
-	<asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe
-	<jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, Harshitha Ramamurthy
-	<hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de
- Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>
-References: <20240909054318.1809580-1-almasrymina@google.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <20240909054318.1809580-1-almasrymina@google.com>
+References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-2-andrii@kernel.org>
+In-Reply-To: <20240906051205.530219-2-andrii@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 9 Sep 2024 14:35:17 +0200
+Message-ID: <CAG48ez2hAQBj-VnimJBd3M-ioANVTk+ZQXYWD+j9G+ip2K_nfw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: introduce mmap_lock_speculation_{start|end}
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/9/9 13:43, Mina Almasry wrote:
+On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.org> =
+wrote:
+> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
+eq)
+> +{
+> +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
+> +       return seq =3D=3D smp_load_acquire(&mm->mm_lock_seq);
+> +}
 
-> 
-> Perf - page-pool benchmark:
-> ---------------------------
-> 
-> bench_page_pool_simple.ko tests with and without these changes:
-> https://pastebin.com/raw/ncHDwAbn
-> 
-> AFAIK the number that really matters in the perf tests is the
-> 'tasklet_page_pool01_fast_path Per elem'. This one measures at about 8
-> cycles without the changes but there is some 1 cycle noise in some
-> results.
-> 
-> With the patches this regresses to 9 cycles with the changes but there
-> is 1 cycle noise occasionally running this test repeatedly.
-> 
-> Lastly I tried disable the static_branch_unlikely() in
-> netmem_is_net_iov() check. To my surprise disabling the
-> static_branch_unlikely() check reduces the fast path back to 8 cycles,
-> but the 1 cycle noise remains.
+A load-acquire can't provide "end of locked section" semantics - a
+load-acquire is a one-way barrier, you can basically use it for
+"acquire lock" semantics but not for "release lock" semantics, because
+the CPU will prevent reordering the load with *later* loads but not
+with *earlier* loads. So if you do:
 
-Sorry for the late report, as I was adding a testing page_pool ko basing
-on [1] to avoid introducing performance regression when fixing the bug in
-[2].
-I used it to test the performance impact of devmem patchset for page_pool
-too, it seems there might be some noticable performance impact quite stably
-for the below testcases, about 5%~16% performance degradation as below in
-the arm64 system:
+mmap_lock_speculation_start()
+[locked reads go here]
+mmap_lock_speculation_end()
 
-Before the devmem patchset:
- Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1' (100 runs):
+then the CPU is allowed to reorder your instructions like this:
 
-         17.167561      task-clock (msec)         #    0.003 CPUs utilized            ( +-  0.40% )
-                 8      context-switches          #    0.474 K/sec                    ( +-  0.65% )
-                 0      cpu-migrations            #    0.001 K/sec                    ( +-100.00% )
-                84      page-faults               #    0.005 M/sec                    ( +-  0.13% )
-          44576552      cycles                    #    2.597 GHz                      ( +-  0.40% )
-          59627412      instructions              #    1.34  insn per cycle           ( +-  0.03% )
-          14370325      branches                  #  837.063 M/sec                    ( +-  0.02% )
-             21902      branch-misses             #    0.15% of all branches          ( +-  0.27% )
+mmap_lock_speculation_start()
+mmap_lock_speculation_end()
+[locked reads go here]
 
-       6.818873600 seconds time elapsed                                          ( +-  0.02% )
+so the lock is broken.
 
- Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1 test_direct=1' (100 runs):
+>  static inline void mmap_write_lock(struct mm_struct *mm)
+>  {
+>         __mmap_lock_trace_start_locking(mm, true);
+>         down_write(&mm->mmap_lock);
+> +       inc_mm_lock_seq(mm);
+>         __mmap_lock_trace_acquire_returned(mm, true, true);
+>  }
 
-         17.595423      task-clock (msec)         #    0.004 CPUs utilized            ( +-  0.01% )
-                 8      context-switches          #    0.460 K/sec                    ( +-  0.50% )
-                 0      cpu-migrations            #    0.000 K/sec
-                84      page-faults               #    0.005 M/sec                    ( +-  0.15% )
-          45693020      cycles                    #    2.597 GHz                      ( +-  0.01% )
-          59676212      instructions              #    1.31  insn per cycle           ( +-  0.00% )
-          14385384      branches                  #  817.564 M/sec                    ( +-  0.00% )
-             21786      branch-misses             #    0.15% of all branches          ( +-  0.14% )
+Similarly, inc_mm_lock_seq(), which does a store-release, can only
+provide "release lock" semantics, not "take lock" semantics, because
+the CPU can reorder it with later stores; for example, this code:
 
-       4.098627802 seconds time elapsed                                          ( +-  0.11% )
+inc_mm_lock_seq()
+[locked stuff goes here]
+inc_mm_lock_seq()
 
-After the devmem patchset:
-Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1' (100 runs):
+can be reordered into this:
 
-         17.047973      task-clock (msec)         #    0.002 CPUs utilized            ( +-  0.39% )
-                 8      context-switches          #    0.488 K/sec                    ( +-  0.82% )
-                 0      cpu-migrations            #    0.001 K/sec                    ( +- 70.35% )
-                84      page-faults               #    0.005 M/sec                    ( +-  0.12% )
-          44269558      cycles                    #    2.597 GHz                      ( +-  0.39% )
-          59594383      instructions              #    1.35  insn per cycle           ( +-  0.02% )
-          14362599      branches                  #  842.481 M/sec                    ( +-  0.02% )
-             21949      branch-misses             #    0.15% of all branches          ( +-  0.25% )
+[locked stuff goes here]
+inc_mm_lock_seq()
+inc_mm_lock_seq()
 
-       7.964890303 seconds time elapsed                                          ( +-  0.16% )
+so the lock is broken.
 
- Performance counter stats for 'insmod ./page_pool_test.ko test_push_cpu=16 test_pop_cpu=16 nr_test=100000000 test_napi=1 test_direct=1' (100 runs):
-
-         17.660975      task-clock (msec)         #    0.004 CPUs utilized            ( +-  0.02% )
-                 8      context-switches          #    0.458 K/sec                    ( +-  0.57% )
-                 0      cpu-migrations            #    0.003 K/sec                    ( +- 43.81% )
-                84      page-faults               #    0.005 M/sec                    ( +-  0.17% )
-          45862652      cycles                    #    2.597 GHz                      ( +-  0.02% )
-          59764866      instructions              #    1.30  insn per cycle           ( +-  0.01% )
-          14404323      branches                  #  815.602 M/sec                    ( +-  0.01% )
-             21826      branch-misses             #    0.15% of all branches          ( +-  0.19% )
-
-       4.304644609 seconds time elapsed                                          ( +-  0.75% )
-
-1. https://lore.kernel.org/all/20240906073646.2930809-2-linyunsheng@huawei.com/
-2. https://lore.kernel.org/lkml/8067f204-1380-4d37-8ffd-007fc6f26738@kernel.org/T/
-
-> 
-
+For "taking a lock" with a memory store, or "dropping a lock" with a
+memory load, you need heavier memory barriers, see
+Documentation/memory-barriers.txt.
