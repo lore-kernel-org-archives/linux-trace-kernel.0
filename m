@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0BD23775;
-	Mon,  9 Sep 2024 15:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5391CD23;
+	Mon,  9 Sep 2024 15:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725894810; cv=none; b=fTg+w8OYjBRVgHn7gqxQAB5pmy26kA6PugZX/0p2Wxkz7gQEXOGLngwT4kqaIH+4hP587aVFbK8gE5d8ICxCKWzn41nYYsL98h1/CU+4ZMUpK3wNBKfRpztMLXovlNF6RnD7fte46mHtjL7mSArs6cWs+HiaumJoHXgUQYWWMp8=
+	t=1725894917; cv=none; b=Uul2Kw4saNpSbllB2diOTQvadtjteCRBlLzcHMdjfPTiQQTG/4ugNrvIKG2vXBB3Z05LEmeZjgA39agI3lx6wsZtkCEaqWR3ZUIlpK4Ak1z/y7MYf5EQvLNtLTCjVxBKn7L6ZOZRqi93+kYWJ2rtVZlDEK5N8f/HOVMIih4O97s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725894810; c=relaxed/simple;
-	bh=LXNT4Z6GvggPgU1hWsYIMeaZPLiQWY/+X+IdN6qNy6o=;
+	s=arc-20240116; t=1725894917; c=relaxed/simple;
+	bh=2c4IFcMrbT8s2LSV2B0iAdU87SghNG8m8i2iTklh678=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZSvn+oCcSspjYHwXoPba4kdbY0CtyLbONIvNPY47U+aL/8q4Yde4vRxSAkMl05FSGnszEyjXRwN7vEehsl2VYN0CzgBJd5BRFEBOxZMy4pqG+H6IF5NtrsPKONQC8GxNAeN6LnV1BN64Xq968fOU54NvL+hPZGfmc4iETBkWPqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoUGTfvk; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=ZYW+aHSS1Hfwjp/59OzLRN+hWfYrGi1g1ayLLEHM3JcoA7bmwSC3SV4u6oSSuuynewWGvtcqdmlBtMafQmV+MPwnKTT9exWO1fiEsA7C4SwTupe3yHSe2GqCIFU5UsJuJivyfmLaEUY2m1Cjdalx6NBtV71uA9a9FSSwqam1lEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqTZ92NI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoUGTfvk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86405C4CEC5;
-	Mon,  9 Sep 2024 15:13:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqTZ92NI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD02C4CEC5;
+	Mon,  9 Sep 2024 15:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725894809;
-	bh=LXNT4Z6GvggPgU1hWsYIMeaZPLiQWY/+X+IdN6qNy6o=;
+	s=k20201202; t=1725894917;
+	bh=2c4IFcMrbT8s2LSV2B0iAdU87SghNG8m8i2iTklh678=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QoUGTfvkgAR7XOTmR7zBo+YdCIo5OouyYpCHAnj5x9gpbRIllicl07wJS+g987u8N
-	 +RaXyOpy7x2iueOfS7Gh7URq+41oyEcBoRZmVZA0brdbrahcv+Uqn6jVhZPdo6ZEdw
-	 Nqpcc9+6CY/sGhtQYTR9SF1XNyQXFgUvnh0FPlOxxfOimsA/MUwNzzun6Pt+ZAAp8G
-	 j3BtrtH46Z1TCfuvqHNXxrPvAyu8Hw7RgNA0Kpz3DgutL6P9Jmx73zfSTXpWa0z/HL
-	 eeCN/LWsvksLjfy2FHHRm8tS3FolZHpzv6n/XRtQqicQxaekGYrbWX7THJhddwaM2H
-	 6FNmWIGxFkF8A==
-Date: Tue, 10 Sep 2024 00:13:26 +0900
+	b=AqTZ92NIu1O8pIQbQdKGj9VYgoE4k0n/0wJECDKpe5q++992zlyQ5ulDt2sjWvr3F
+	 Qq18nOaCu4fW/cxYKgABI4xSCNYuh7YXeq3ZH4fK11X0ZQZB7Bl6tCqp2H0tdvCBR7
+	 0Z0mKGzn+/z3YPQ/dCGRhUes1MYkNo/PxB1im8CC/6ZoZBpUGw4F4QjMn1uyyYls0y
+	 9nDwqBv0FMl1RPfUO/L28Cb3J3ZWGWAKsN9i10sGDFUBHH4GqUCrBoUjtu44llNVTA
+	 ylCHZh7UYXbnAoORXZ5IzuQPkL90BymUhI8QpJwRU5jx55MFFb3QWdD/P6uKeRs2xe
+	 jpZCmM2rt/f5w==
+Date: Tue, 10 Sep 2024 00:15:12 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jeff Xie <jeff.xie@linux.dev>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehuan09@gmail.com
-Subject: Re: [PATCH v2] ftrace: Get the true parent ip for function tracer
-Message-Id: <20240910001326.87f27e6b312f1d956cf352a2@kernel.org>
-In-Reply-To: <20240821233021.2785584-1-jeff.xie@linux.dev>
-References: <20240821233021.2785584-1-jeff.xie@linux.dev>
+To: syzbot <syzbot+list692d096cfc0c03673c30@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] Monthly trace report (Sep 2024)
+Message-Id: <20240910001512.f604fd970f2be1ef6e7f9189@kernel.org>
+In-Reply-To: <000000000000e69f460621ab50f4@google.com>
+References: <000000000000e69f460621ab50f4@google.com>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,144 +45,70 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 22 Aug 2024 07:30:21 +0800
-Jeff Xie <jeff.xie@linux.dev> wrote:
+On Mon, 09 Sep 2024 01:12:20 -0700
+syzbot <syzbot+list692d096cfc0c03673c30@syzkaller.appspotmail.com> wrote:
 
-> Currently, when using both function tracer and function graph simultaneously,
-> it is found that function tracer sometimes captures a fake parent ip(return_to_handler)
-> instead of the true parent ip.
+> Hello trace maintainers/developers,
 > 
-> This issue is easy to reproduce. Below are my reproduction steps:
+> This is a 31-day syzbot report for the trace subsystem.
+> All related reports/information can be found at:
+> https://syzkaller.appspot.com/upstream/s/trace
 > 
-> jeff-labs:~/bin # ./trace-net.sh
+> During the period, 1 new issues were detected and 0 were fixed.
+> In total, 8 issues are still open and 37 have been fixed so far.
 > 
-> jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace | grep return_to_handler
->     trace-net.sh-405     [001] ...2.    31.859501: avc_has_perm+0x4/0x190 <-return_to_handler+0x0/0x40
->     trace-net.sh-405     [001] ...2.    31.859503: simple_setattr+0x4/0x70 <-return_to_handler+0x0/0x40
->     trace-net.sh-405     [001] ...2.    31.859503: truncate_pagecache+0x4/0x60 <-return_to_handler+0x0/0x40
->     trace-net.sh-405     [001] ...2.    31.859505: unmap_mapping_range+0x4/0x140 <-return_to_handler+0x0/0x40
->     trace-net.sh-405     [001] ...3.    31.859508: _raw_spin_unlock+0x4/0x30 <-return_to_handler+0x0/0x40
->     [...]
+> Some of the still happening issues:
 > 
+> Ref Crashes Repro Title
+> <1> 2278    Yes   possible deadlock in console_flush_all (3)
+>                   https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
 
-Can you also add 
+This is artifically injected circuler lock dependency about the combination
+of eBPF + fault injection.
 
-> The following is my simple trace script:
-> 
-> <snip>
-> jeff-labs:~/bin # cat ./trace-net.sh
-> TRACE_PATH="/sys/kernel/debug/tracing"
-> 
-> set_events() {
->         echo 1 > $1/events/net/enable
->         echo 1 > $1/events/tcp/enable
->         echo 1 > $1/events/sock/enable
->         echo 1 > $1/events/napi/enable
->         echo 1 > $1/events/fib/enable
->         echo 1 > $1/events/neigh/enable
-> }
-> 
-> set_events ${TRACE_PATH}
-> echo 1 > ${TRACE_PATH}/options/sym-offset
-> echo 1 > ${TRACE_PATH}/options/funcgraph-tail
-> echo 1 > ${TRACE_PATH}/options/funcgraph-proc
-> echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
-> 
-> echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
-> echo function_graph > ${TRACE_PATH}/current_tracer
-> 
-> INSTANCE_FOO=${TRACE_PATH}/instances/foo
-> if [ ! -e $INSTANCE_FOO ]; then
->         mkdir ${INSTANCE_FOO}
-> fi
-> set_events ${INSTANCE_FOO}
-> echo 1 > ${INSTANCE_FOO}/options/sym-offset
-> echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
-> echo function > ${INSTANCE_FOO}/current_tracer
-> 
-> echo 1 > ${TRACE_PATH}/tracing_on
-> echo 1 > ${INSTANCE_FOO}/tracing_on
-> 
-> echo > ${TRACE_PATH}/trace
-> echo > ${INSTANCE_FOO}/trace
-> </snip>
-> 
-> Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
-> ---
-> v2:
-> - Adding __always_inline to function_get_true_parent_ip suggested by Steve
-> 
->  kernel/trace/trace_functions.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-> index 3b0cea37e029..d989e927c898 100644
-> --- a/kernel/trace/trace_functions.c
-> +++ b/kernel/trace/trace_functions.c
-> @@ -176,6 +176,19 @@ static void function_trace_start(struct trace_array *tr)
->  	tracing_reset_online_cpus(&tr->array_buffer);
->  }
->  
-> +static __always_inline unsigned long
-> +function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-> +{
-> +	unsigned long true_parent_ip;
-> +	int idx = 0;
-> +
-> +	true_parent_ip = parent_ip;
-> +	if (unlikely(parent_ip == (unsigned long)&return_to_handler))
-> +		true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,
-> +				(unsigned long *)fregs->regs.sp);
-> +	return true_parent_ip;
-> +}
+ - BPF test program traces sched_switch event. (under rq->lock)
+ - fault inject injects a fault in BPF's strncpy_from_user.
+ - this fault printk dump to the console.(to lock console_owner)
 
-Can this work without CONFIG_FUNCTION_GRAPH_TRACER? Maybe it cause a build error
-because return_to_handler is not defined.
+To avoid this issue, use another event to test fault injection.
 
-Could you check it?
+> <2> 1023    Yes   WARNING in format_decode (3)
+>                   https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+
+This seems also be caused by bpf test program.
+
+> <3> 31      Yes   INFO: task hung in blk_trace_ioctl (4)
+>                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+
+This is a bug in blk_trace.
+
+> <4> 15      Yes   WARNING in bpf_get_stack_raw_tp
+>                   https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+
+This may be a bpf issue.
+
+> <5> 11      Yes   WARNING in get_probe_ref
+>                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+
+This is a bug in blk_trace.
+
+It seems blk_trace does not check input parameters of ioctl correctly.
 
 Thank you,
 
-> +
->  static void
->  function_trace_call(unsigned long ip, unsigned long parent_ip,
->  		    struct ftrace_ops *op, struct ftrace_regs *fregs)
-> @@ -193,6 +206,8 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
->  	if (bit < 0)
->  		return;
->  
-> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
-> +
->  	trace_ctx = tracing_gen_ctx();
->  
->  	cpu = smp_processor_id();
-> @@ -241,6 +256,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
->  	 * recursive protection is performed.
->  	 */
->  	local_irq_save(flags);
-> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
->  	cpu = raw_smp_processor_id();
->  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
->  	disabled = atomic_inc_return(&data->disabled);
-> @@ -309,6 +325,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
->  	if (bit < 0)
->  		return;
->  
-> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
->  	cpu = smp_processor_id();
->  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
->  	if (atomic_read(&data->disabled))
-> @@ -356,6 +373,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
->  	 * recursive protection is performed.
->  	 */
->  	local_irq_save(flags);
-> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
->  	cpu = raw_smp_processor_id();
->  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
->  	disabled = atomic_inc_return(&data->disabled);
-> -- 
-> 2.34.1
 > 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> To disable reminders for individual bugs, reply with the following command:
+> #syz set <Ref> no-reminders
+> 
+> To change bug's subsystems, reply with:
+> #syz set <Ref> subsystems: new-subsystem
+> 
+> You may send multiple commands in a single email message.
 
 
 -- 
