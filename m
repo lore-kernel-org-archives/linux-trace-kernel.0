@@ -1,164 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4FB1AC8B0;
-	Mon,  9 Sep 2024 06:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0141AE859;
+	Mon,  9 Sep 2024 07:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725864597; cv=none; b=B1dnDYq/bCtw6hqM9WsEt9lCY0+ugmTFSHODPJbgny8WHCpS2+2M7pfbYI/dMprJZqCpiofiH/p44T4Nkz2FnbZIt5TcjGlQ5ROpEzUw+FgEPMROq2hbzAbFA1rc/gLNYVOgFXfMR/qXwHK4/c/g3204OndfJK796ZKdp2nqBPI=
+	t=1725866475; cv=none; b=sJ/MCTZ8a4MNjqCZYMrseXv8kVkT+89+wF9UyebCgOwjBwrDiSRj+SwsTxlph2ChrX2YimVW4z3VQE3zlUqVVW4Nf9XdWNIbV06tYRcvlS5xaQRprEj3RqYjdibG7EkpEug9c7RYQ/uVSrlj6Iryo0658euAF1F+pA1iSccFw5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725864597; c=relaxed/simple;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=liw9dugMCqYMNm8zUZX6JVuQRsz3Qj3Q91EwEnMF6RG8zNO2pl9LYRUKGcmBSJw6PuShvAUPSrdhiA4JhEY7G4+nqyIIlo+AfhKqXhvf6hPEaxH/1QVbmV722cGFoJ9HzH4d4clM9VYrL6YfQwdaAmdbSwtoey/6x+31Vxxu+WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkZCp3fS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkZCp3fS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62106C4CECB;
-	Mon,  9 Sep 2024 06:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725864597;
-	bh=l7egSUNcilONf7gTBq0Hjl37ut+S55vwboWjXSdFWe0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BkZCp3fShQXfTG1Nn+VMmuW0LYueTyrn7acbRvvboJKcY6YjPoDDx968iFpKR1CWC
-	 aF/p0o4PzZ/eloW/K8mvH2s9aJhYiRq+CLA/Z6C5cf0zaOL7QYXEhZf0/TByS50AhI
-	 bJWZ0vLimK/FFtaJwXD9Yjc4jTIfHrr3Tv5YRIoRd3fkkJvNyNI486dzezhXOWgnQJ
-	 HbPC0BW8QqdHVqqtZvDGdZd2DLKkW13q6h3MOVdLTl2ijRdrSJoovSlNGk+YE1vLSL
-	 MY6Kf9lXc+klIMZqkADFnytoN8MKNCrTtrBVamTW4DGupk55fMoWoan0CIHDPihKAp
-	 1QrOM6cpJNDWA==
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v3 8/8] x86/module: enable ROX caches for module text
-Date: Mon,  9 Sep 2024 09:47:30 +0300
-Message-ID: <20240909064730.3290724-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240909064730.3290724-1-rppt@kernel.org>
-References: <20240909064730.3290724-1-rppt@kernel.org>
+	s=arc-20240116; t=1725866475; c=relaxed/simple;
+	bh=SyW8FxLsJBNl5HQ6QsV4oXouJe7wMWuil6vbtzaKY68=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=I6IbA9Lsxkf7S3vEc061QGzIbzpiqLqtdm9xCZ8h2lLF4NszU5LerUCV5GANrVDK5QglG+eFA2SGFkHgp6MuNY++9DNfUatWuzpcRwhjcYkFJKEIO6/SdXrgqW31Gy4WsRjLAhxPdzjtJr7ZNhJq3lq/h8YyFJs6kvZmlVA8lcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4X2JBy3Hm1zyRgh;
+	Mon,  9 Sep 2024 15:20:26 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id CE93B1401E9;
+	Mon,  9 Sep 2024 15:21:09 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Mon, 9 Sep
+ 2024 15:21:09 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <ast@kernel.org>,
+	<puranjay@kernel.org>, <liaochang1@huawei.com>, <andrii@kernel.org>,
+	<mark.rutland@arm.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: [PATCH v2] arm64: insn: Simulate nop instruction for better uprobe performance
+Date: Mon, 9 Sep 2024 07:11:14 +0000
+Message-ID: <20240909071114.1150053-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+v2->v1:
+1. Remove the simuation of STP and the related bits.
+2. Use arm64_skip_faulting_instruction for single-stepping or FEAT_BTI
+   scenario.
 
-Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-text allocations.
+As Andrii pointed out, the uprobe/uretprobe selftest bench run into a
+counterintuitive result that nop and push variants are much slower than
+ret variant [0]. The root cause lies in the arch_probe_analyse_insn(),
+which excludes 'nop' and 'stp' from the emulatable instructions list.
+This force the kernel returns to userspace and execute them out-of-line,
+then trapping back to kernel for running uprobe callback functions. This
+leads to a significant performance overhead compared to 'ret' variant,
+which is already emulated.
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Typicall uprobe is installed on 'nop' for USDT and on function entry
+which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
+and fp into stack regardless kernel or userspace binary. In order to
+improve the performance of handling uprobe for common usecases. This
+patch supports the emulation of Arm64 equvialents instructions of 'nop'
+and 'push'. The benchmark results below indicates the performance gain
+of emulation is obvious.
+
+On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
+
+xol (1 cpus)
+------------
+uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+
+emulation (1 cpus)
+-------------------
+uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
+uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
+uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
+uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
+uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
+uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
+
+As shown above, the performance gap between 'nop/push' and 'ret'
+variants has been significantly reduced. Due to the emulation of 'push'
+instruction needs to access userspace memory, it spent more cycles than
+the other.
+
+As Mark suggested [1], it is painful to emulate the correct atomicity
+and ordering properties of STP, especially when it interacts with MTE,
+POE, etc. So this patch just focus on the simuation of 'nop'. The
+simluation of STP and related changes will be addressed in a separate
+patch.
+
+[0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
+[1] https://lore.kernel.org/all/Zr3RN4zxF5XPgjEB@J2N7QTR9R3/
+
+CC: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
 ---
- arch/x86/mm/init.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/insn.h            |  6 ++++++
+ arch/arm64/kernel/probes/decode-insn.c   |  9 +++++++++
+ arch/arm64/kernel/probes/simulate-insn.c | 11 +++++++++++
+ arch/arm64/kernel/probes/simulate-insn.h |  1 +
+ 4 files changed, 27 insertions(+)
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index eb503f53c319..a0ec99fb9385 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -1053,6 +1053,15 @@ unsigned long arch_max_swapfile_size(void)
- #ifdef CONFIG_EXECMEM
- static struct execmem_info execmem_info __ro_after_init;
+diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
+index 8c0a36f72d6f..dd530d5c3d67 100644
+--- a/arch/arm64/include/asm/insn.h
++++ b/arch/arm64/include/asm/insn.h
+@@ -549,6 +549,12 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
+ 	       aarch64_insn_is_prfm_lit(insn);
+ }
  
-+static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
++static __always_inline bool aarch64_insn_is_nop(u32 insn)
 +{
-+	/* fill memory with INT3 instructions */
-+	if (writeable)
-+		memset(ptr, INT3_INSN_OPCODE, size);
-+	else
-+		text_poke_set(ptr, INT3_INSN_OPCODE, size);
++	return aarch64_insn_is_hint(insn) &&
++	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
 +}
 +
- struct execmem_info __init *execmem_arch_setup(void)
+ enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
+ u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
+ u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
+diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
+index 968d5fffe233..be54539e309e 100644
+--- a/arch/arm64/kernel/probes/decode-insn.c
++++ b/arch/arm64/kernel/probes/decode-insn.c
+@@ -75,6 +75,15 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
+ enum probe_insn __kprobes
+ arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
  {
- 	unsigned long start, offset = 0;
-@@ -1063,8 +1072,23 @@ struct execmem_info __init *execmem_arch_setup(void)
- 	start = MODULES_VADDR + offset;
++	/*
++	 * While 'nop' instruction can execute in the out-of-line slot,
++	 * simulating them in breakpoint handling offers better performance.
++	 */
++	if (aarch64_insn_is_nop(insn)) {
++		api->handler = simulate_nop;
++		return INSN_GOOD_NO_SLOT;
++	}
++
+ 	/*
+ 	 * Instructions reading or modifying the PC won't work from the XOL
+ 	 * slot.
+diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
+index 22d0b3252476..5e4f887a074c 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.c
++++ b/arch/arm64/kernel/probes/simulate-insn.c
+@@ -200,3 +200,14 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
  
- 	execmem_info = (struct execmem_info){
-+		.fill_trapping_insns = execmem_fill_trapping_insns,
- 		.ranges = {
--			[EXECMEM_DEFAULT] = {
-+			[EXECMEM_MODULE_TEXT] = {
-+				.flags	= EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL_ROX,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_KPROBES ... EXECMEM_BPF] = {
-+				.flags	= EXECMEM_KASAN_SHADOW,
-+				.start	= start,
-+				.end	= MODULES_END,
-+				.pgprot	= PAGE_KERNEL,
-+				.alignment = MODULE_ALIGN,
-+			},
-+			[EXECMEM_MODULE_DATA] = {
- 				.flags	= EXECMEM_KASAN_SHADOW,
- 				.start	= start,
- 				.end	= MODULES_END,
+ 	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
+ }
++
++void __kprobes
++simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
++{
++	/*
++	 * Compared to instruction_pointer_set(), it offers better
++	 * compatibility with single-stepping and execution in target
++	 * guarded memory.
++	 */
++	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
++}
+diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
+index e065dc92218e..efb2803ec943 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.h
++++ b/arch/arm64/kernel/probes/simulate-insn.h
+@@ -16,5 +16,6 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
++void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
+ 
+ #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
 -- 
-2.43.0
+2.34.1
 
