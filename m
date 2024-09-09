@@ -1,366 +1,220 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88366178CC8;
-	Mon,  9 Sep 2024 21:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240DF188CD9;
+	Mon,  9 Sep 2024 21:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725916035; cv=none; b=GP46+VEkOIEi9z/BdPj/ff4ekMRLz7bt0ou5tBjDD3ab1SN431w8XBiPiMuCtjM2o+8RhZ0zETCwrzm2CjThorpeTnHCkCdgVBmjVr2XHKwl2BIjNSt+BL7XXdRDqalst4InS81SvbZQEsvKyehIun0GFCoUjGHeFvJcbg6SzZ4=
+	t=1725917358; cv=none; b=QuRNibIVeFOGftI5yWL9ysBHayDqdgT1cCRBiPdBIxk69yFESJi8UI2L/ofYJS3M3/5Rw4RW1jAv4UvISju5jvg9hC1sJ6nVuuwAoiilzdPIwSmqlKrv57M2hZCeKJI3mjWK+LNeuscHxCw8T0Pqw6hX8kyhzJN+pG1dJ/S/RVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725916035; c=relaxed/simple;
-	bh=l8RFvQvy45dX+U0oegyvg58M7Rrq3sg++EAnk6lwz18=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Py6LVygj+fnJKo6dD6UW3AZKcdclCVrPOSfwUbFRStR4V4DSLdVolYkH/0i0iQ+HmrhXiZ2JyDz7+W1AjkkNjTrE/VcPK/cYhBfx9xwcOURTgRlxC/PoKTbAsWQa+pn2oymP0n9KJCxXN8tb6Tybl2Mn8AYNkNKZK/ebrPF+YPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3vUo1Q6E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/LDxeoDB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1725917358; c=relaxed/simple;
+	bh=Fn/JhS/yoJtO1B9GjAvaamfyN3vOQPkUSPrqnzOC+9k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HPA73FjBF5A/SgFTCzAf/aGvdk+C24g2Pq3cqMEOp/GQNxrAfgWwaz44+k1V5c9E7D5LY60/ZrPL5Im5HhbXWlZzJDZi1pJuVWcLQeGpUCA9A02mqyDRJz5vVsfnOHqJdncDppk+pr3vRvadpfyHYEXB87x2q9qSF2a5OFE6mkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N6aOlpHM; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3vUo1Q6E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/LDxeoDB"
-From: Florian Kauer <florian.kauer@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1725916031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1kuFpZpWeJWLvsFXiLDVH/pZ9m0VjY5XQDuskkb2mAM=;
-	b=3vUo1Q6EXItFr13CRNwbWKKJtU6Hww57YiIn+2xN4REBYC5yd7xH9rjruLxgF/v+0ZiPrl
-	P9+eHskEH5lX74Pmwh4ZFeSmnCV7rsKBsS8QVv3wqrOCWah0Hb0GE9Ltt7djJg7o+dgBmi
-	86y70v/niGghHnd5HkSEimy3V8Nt/w8hb8GH4XsM5ZTojaNu/7US6gFtu52wrfOw0WjzbC
-	f07y6gROwFfFLJFTEWbDysEgCKfDP1268p7hwjFRvxUNdnhgHSQFlCvUCRp3Qr9N+8j705
-	BVMSrRZjhoHJ2CwGtG4/FUpWixhoQo6LKal1rqNXuMdV7MpFko0pEpC26bfYWA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1725916031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1kuFpZpWeJWLvsFXiLDVH/pZ9m0VjY5XQDuskkb2mAM=;
-	b=/LDxeoDBmDjAhCiKgTGYiZZcEB7fhduAM/H8aUl6UDxr0xSSoMxeSgRmOpaL32OxeVFQ8l
-	S5Pu+nKunF8/eNCg==
-Date: Mon, 09 Sep 2024 23:06:56 +0200
-Subject: [PATCH] bpf: devmap: allow for repeated redirect
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6aOlpHM"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2054feabfc3so42770425ad.1;
+        Mon, 09 Sep 2024 14:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725917356; x=1726522156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PWEX4r7jK/WQUNLo3UpE/qaecNNCCFHIzAO2V+o4c/g=;
+        b=N6aOlpHMO8gHPKzs1up90tVwaysJUuedl+NEC2VIvl/j8MU2z9YuRk66sN2f55jA0q
+         2+K9tfpnqZVj+RwtjgTIOo4ZxFRE/3HHs6cMBFMtbD7/Pap2/P3RCiHeBvbDsghizbMJ
+         wqjDDiykfIS8HBc6Mw6+GkBej0M3Nk3ivV0nJSUbueqq/iieYIVXjDLqetFztibt6jDW
+         290JfN4Nh/KJZU36bg+mV0bQCaFPBIjdesQkE+b3Wi0uTb1gDLg2xzIXMIAXRxU3u5ZX
+         1bZMgpT37XoWSgDGHOw1luWOuLP/kS7VPy98ZzIMUxgbm7utJX5AkT2yDOQCaFhn0C+H
+         PPxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725917356; x=1726522156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PWEX4r7jK/WQUNLo3UpE/qaecNNCCFHIzAO2V+o4c/g=;
+        b=jsFA4P0Af8Axj4DTxtWTB71a0xGrzGfHrVXQ7X17NDLizINBfBlnLeMiNQaYt0T8VA
+         7A7HiF5RtH0/C3g3Z5Em9V/m4Av1wUsK7fKqJ48kb363GHI4RlVpwSCgj87s8GZVG+Bx
+         X/vMP35gbYKBc/LkwSfvMhrj8gU2QDtGOjG37hzMLZOYtPxIJVMprpAF/wPLmz/0nTCC
+         WNELGVxUb72emA47ds58+MMGIViqVgDuAnM7ieRbCybN6/Iw1VADF+vRagSeByPSTTHw
+         Uv8G+tdqYNx+6tVf4Xccf5zWsQ38f/5A3Q9e4ZaEgyn9yDc+jxl4x+lfCzhf5i7aKqta
+         SY/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWFzcjgghzmxC/lH2yD2AOWOuIhu75IxIdkZFGv+wNZ4uDDLYzc2HeHRUbyjRSFIbKCnaE=@vger.kernel.org, AJvYcCWi2oMfXlJ4pUGQs13qasz4qDhpREcOeQ26k9hNXaa3lRVU0OKtXU+7zcWDzAVFbafrmnhrJeMaDrY0awhA@vger.kernel.org, AJvYcCWkgrr0qJa+ydyy2aHJvVQMzxAgjemGRMwEx3aNRZSDBmuao3D6aequpUJnFuL+HGOJ/ojrAk6DkBB8FPcwOA==@vger.kernel.org, AJvYcCWoHk01sLZlP363tAwAvtPtR95zlOkufR+OvmuqWaqAI9jjUV/+gfjWkYKYsjwbbYjLUOJsrWn/7IjfBX+M9l7oDdDl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9q26WqF/0qi3gFBOaick8MS+3Dx70yJbJzGX33Dg3oPtQHkKo
+	88pBdCYsnyJuZHze2XJNUya9Vtp5JBf+MJBOtHz2xEEISDV6IrcgD3Wd/C0hdOkzvziNk9ZEROn
+	//JklDQM0VMzHUFZuDdL2RP1Wzu4=
+X-Google-Smtp-Source: AGHT+IHfUYAO11AnWDKGYgcX7wXzZr4/bp0e2f3bLddaNkIUpBnk0YADB/36ETv0KpYGTGDAp3Yj81Vw4zn5LqPQIhU=
+X-Received: by 2002:a17:902:dad1:b0:202:54b8:72e5 with SMTP id
+ d9443c01a7336-206f0534658mr139583215ad.22.1725917356118; Mon, 09 Sep 2024
+ 14:29:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240909-devel-koalo-fix-redirect-v1-1-2dd90771146c@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAHBj32YC/yWNS47CMBBErxJ5jaW202m7cxXEom03g8Un4GTQS
- Ii7jwXLV6V69TKrtqqrmYeXafqsa11uHdxuMPkktx+1tXQ2HjwCA9uiT73Y8yKXxR7rn21aatO
- 8WYpIIxMjT870+b1p7z/q/eHLTR+//WH7huYuWz51/zwQ+ygaArrgg47JS0KJGf1ECUgiOUAQ+
- HiTrGrzcr3WbR6iEmemcgzB9U0HzT5ELQkDAI+TK4pFyBze73+dDLyY7AAAAA==
-To: =?utf-8?q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- xdp-newbies@vger.kernel.org, Florian Kauer <florian.kauer@linutronix.de>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9305;
- i=florian.kauer@linutronix.de; h=from:subject:message-id;
- bh=l8RFvQvy45dX+U0oegyvg58M7Rrq3sg++EAnk6lwz18=;
- b=owEBbQKS/ZANAwAKATKF5IolV+EkAcsmYgBm32N6bYwzjxIcqtwZW1gMChPXvtpHV838n/Cyr
- kZTFXonTlWJAjMEAAEKAB0WIQSG5cmCLvpm5t9g7UUyheSKJVfhJAUCZt9jegAKCRAyheSKJVfh
- JA1eD/0dsqc5m+40sYaRFDVVF0isNkFzOaiZELOETddXJlgJaFRlZf/0+cFJ4d0/T0NeZvFbShs
- 7OvTqG6vIB4t+DNw/U7Xrcii8BOw4mDT0l9XCtL2HbNsFmvE7YiwdAcD2XZKO7+f5oO5lgASvqF
- TjKsPwGNXWhdOwe+CaxBLVUdp05I384VokgWpvTTOcFpQjqouBS+pEEdsaY+gH8GmCfKK7QHCgn
- o5GFnGFClsl0BcjkesZVx+csc4tUVPWxNTmo8wJso+sr7FvMqPiBsSKKKrXWs7qVrY9QX+egvS4
- M+8fT+gJJLuQifJaLx2mQCAKnupFirQuO381ITgGV6ygAx9RPQhLJuTxW4evPOEXXHtW6ow6CDy
- hp0tjXSYO2VUMNf88kus7ZBaI/ZOr3lReNVdLChfD1NquVPC5MONiU/S6wL+Mj7ubFeIv4HKdfh
- YDkQBW2mWaG4Bx6Y4rn2N6It11pNhNn9Sw6QjKtVuu2g3j31t/8hvPvSE6X48ZK5k7dkVdeeYAc
- zpgdLDG9AGSIuJyZf/wU9D0cJrOlFMhPs6Yois7Nw7/safH9YJVobtPtXxMlwhGLCfmcmY0wFWz
- P1Fq0oFsNMnWVKBIccptupym5VtsnLjmHvFULB87BX4UV+6+FIVe0XeQkU1M1gmvipsYqfvXhLt
- lLrrTNPqFq6uMmw==
-X-Developer-Key: i=florian.kauer@linutronix.de; a=openpgp;
- fpr=F17D8B54133C2229493E64A0B5976DD65251944E
+References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-3-andrii@kernel.org>
+ <CAG48ez2G1Pf_RRRT0av=6r_4HcLZu6QMgveepk-ENo=PkaZC1w@mail.gmail.com>
+In-Reply-To: <CAG48ez2G1Pf_RRRT0av=6r_4HcLZu6QMgveepk-ENo=PkaZC1w@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 9 Sep 2024 14:29:03 -0700
+Message-ID: <CAEf4Bzb+ShZqcj9EKQB8U9tyaJ1LoOpRxd24v76FuPJP-=dkNg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] uprobes: add speculative lockless VMA-to-inode-to-uprobe
+ resolution
+To: Jann Horn <jannh@google.com>, surenb@google.com, 
+	Liam Howlett <liam.howlett@oracle.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, brauner@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	mjguzik@gmail.com, Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, returning XDP_REDIRECT from a xdp/devmap program
-is considered as invalid action and an exception is traced.
+On Mon, Sep 9, 2024 at 6:13=E2=80=AFAM Jann Horn <jannh@google.com> wrote:
+>
+> On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.org=
+> wrote:
+> > Given filp_cachep is already marked SLAB_TYPESAFE_BY_RCU, we can safely
+> > access vma->vm_file->f_inode field locklessly under just rcu_read_lock(=
+)
+>
+> No, not every file is SLAB_TYPESAFE_BY_RCU - see for example
+> ovl_mmap(), which uses backing_file_mmap(), which does
+> vma_set_file(vma, file) where "file" comes from ovl_mmap()'s
+> "realfile", which comes from file->private_data, which is set in
+> ovl_open() to the return value of ovl_open_realfile(), which comes
+> from backing_file_open(), which allocates a file with
+> alloc_empty_backing_file(), which uses a normal kzalloc() without any
+> RCU stuff, with this comment:
+>
+>  * This is only for kernel internal use, and the allocate file must not b=
+e
+>  * installed into file tables or such.
+>
+> And when a backing_file is freed, you can see on the path
+> __fput() -> file_free()
+> that files with FMODE_BACKING are directly freed with kfree(), no RCU del=
+ay.
 
-While it might seem counterintuitive to redirect in a xdp/devmap
-program (why not just redirect to the correct interface in the
-first program?), we faced several use cases where supporting
-this would be very useful.
+Good catch on FMODE_BACKING, I didn't realize there is this exception, than=
+ks!
 
-Most importantly, they occur when the first redirect is used
-with the BPF_F_BROADCAST flag. Using this together with xdp/devmap
-programs, enables to perform different actions on clones of
-the same incoming frame. In that case, it is often useful
-to redirect either to a different CPU or device AFTER the cloning.
+I think the way forward would be to detect that the backing file is in
+FMODE_BACKING and fall back to mmap_lock-protected code path.
 
-For example:
-- Replicate the frame (for redundancy according to IEEE 802.1CB FRER)
-  and then use the second redirect with a cpumap to select
-  the path-specific egress queue.
+I guess I have the question to Liam and Suren, do you think it would
+be ok to add another bool after `bool detached` in struct
+vm_area_struct (guarded by CONFIG_PER_VMA_LOCK), or should we try to
+add an extra bit into vm_flags_t? The latter would work without
+CONFIG_PER_VMA_LOCK, but I don't know what's acceptable with mm folks.
 
-- Also, one of the paths might need an encapsulation that
-  exceeds the MTU. So a second redirect can be used back
-  to the ingress interface to send an ICMP FRAG_NEEDED packet.
+This flag can be set in vma_set_file() when swapping backing file and
+wherever else vma->vm_file might be set/updated (I need to audit the
+code).
 
-- For OAM purposes, you might want to send one frame with
-  OAM information back, while the original frame in passed forward.
+>
+> So the RCU-ness of "struct file" is an implementation detail of the
+> VFS, and you can't rely on it for ->vm_file unless you get the VFS to
+> change how backing file lifetimes work, which might slow down some
+> other workload, or you find a way to figure out whether you're dealing
+> with a backing file without actually accessing the file.
+>
+> > +static struct uprobe *find_active_uprobe_speculative(unsigned long bp_=
+vaddr)
+> > +{
+> > +       const vm_flags_t flags =3D VM_HUGETLB | VM_MAYEXEC | VM_MAYSHAR=
+E;
+> > +       struct mm_struct *mm =3D current->mm;
+> > +       struct uprobe *uprobe;
+> > +       struct vm_area_struct *vma;
+> > +       struct file *vm_file;
+> > +       struct inode *vm_inode;
+> > +       unsigned long vm_pgoff, vm_start;
+> > +       int seq;
+> > +       loff_t offset;
+> > +
+> > +       if (!mmap_lock_speculation_start(mm, &seq))
+> > +               return NULL;
+> > +
+> > +       rcu_read_lock();
+> > +
+> > +       vma =3D vma_lookup(mm, bp_vaddr);
+> > +       if (!vma)
+> > +               goto bail;
+> > +
+> > +       vm_file =3D data_race(vma->vm_file);
+>
+> A plain "data_race()" says "I'm fine with this load tearing", but
+> you're relying on this load not tearing (since you access the vm_file
+> pointer below).
+> You're also relying on the "struct file" that vma->vm_file points to
+> being populated at this point, which means you need CONSUME semantics
+> here, which READ_ONCE() will give you, and something like RELEASE
+> semantics on any pairing store that populates vma->vm_file, which
+> means they'd all have to become something like smp_store_release()).
 
-To enable these use cases, add the XDP_REDIRECT case to
-dev_map_bpf_prog_run. Also, when this is called from inside
-xdp_do_flush, the redirect might add further entries to the
-flush lists that are currently processed. Therefore, loop inside
-xdp_do_flush until no more additional redirects were added.
+vma->vm_file should be set in VMA before it is installed and is never
+modified afterwards, isn't that the case? So maybe no extra barrier
+are needed and READ_ONCE() would be enough.
 
-Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
----
- include/linux/bpf.h        |  4 ++--
- include/trace/events/xdp.h | 10 ++++++----
- kernel/bpf/devmap.c        | 37 +++++++++++++++++++++++++++--------
- net/core/filter.c          | 48 +++++++++++++++++++++++++++-------------------
- 4 files changed, 65 insertions(+), 34 deletions(-)
+>
+> You might want to instead add another recheck of the sequence count
+> (which would involve at least a read memory barrier after the
+> preceding patch is fixed) after loading the ->vm_file pointer to
+> ensure that no one was concurrently changing the ->vm_file pointer
+> before you do memory accesses through it.
+>
+> > +       if (!vm_file || (vma->vm_flags & flags) !=3D VM_MAYEXEC)
+> > +               goto bail;
+>
+> missing data_race() annotation on the vma->vm_flags access
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 3b94ec161e8c..1b57cbabf199 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2498,7 +2498,7 @@ struct sk_buff;
- struct bpf_dtab_netdev;
- struct bpf_cpu_map_entry;
- 
--void __dev_flush(struct list_head *flush_list);
-+void __dev_flush(struct list_head *flush_list, int *redirects);
- int dev_xdp_enqueue(struct net_device *dev, struct xdp_frame *xdpf,
- 		    struct net_device *dev_rx);
- int dev_map_enqueue(struct bpf_dtab_netdev *dst, struct xdp_frame *xdpf,
-@@ -2740,7 +2740,7 @@ static inline struct bpf_token *bpf_token_get_from_fd(u32 ufd)
- 	return ERR_PTR(-EOPNOTSUPP);
- }
- 
--static inline void __dev_flush(struct list_head *flush_list)
-+static inline void __dev_flush(struct list_head *flush_list, int *redirects)
- {
- }
- 
-diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
-index a7e5452b5d21..fba2c457e727 100644
---- a/include/trace/events/xdp.h
-+++ b/include/trace/events/xdp.h
-@@ -269,9 +269,9 @@ TRACE_EVENT(xdp_devmap_xmit,
- 
- 	TP_PROTO(const struct net_device *from_dev,
- 		 const struct net_device *to_dev,
--		 int sent, int drops, int err),
-+		 int sent, int drops, int redirects, int err),
- 
--	TP_ARGS(from_dev, to_dev, sent, drops, err),
-+	TP_ARGS(from_dev, to_dev, sent, drops, redirects, err),
- 
- 	TP_STRUCT__entry(
- 		__field(int, from_ifindex)
-@@ -279,6 +279,7 @@ TRACE_EVENT(xdp_devmap_xmit,
- 		__field(int, to_ifindex)
- 		__field(int, drops)
- 		__field(int, sent)
-+		__field(int, redirects)
- 		__field(int, err)
- 	),
- 
-@@ -288,16 +289,17 @@ TRACE_EVENT(xdp_devmap_xmit,
- 		__entry->to_ifindex	= to_dev->ifindex;
- 		__entry->drops		= drops;
- 		__entry->sent		= sent;
-+		__entry->redirects	= redirects;
- 		__entry->err		= err;
- 	),
- 
- 	TP_printk("ndo_xdp_xmit"
- 		  " from_ifindex=%d to_ifindex=%d action=%s"
--		  " sent=%d drops=%d"
-+		  " sent=%d drops=%d redirects=%d"
- 		  " err=%d",
- 		  __entry->from_ifindex, __entry->to_ifindex,
- 		  __print_symbolic(__entry->act, __XDP_ACT_SYM_TAB),
--		  __entry->sent, __entry->drops,
-+		  __entry->sent, __entry->drops, __entry->redirects,
- 		  __entry->err)
- );
- 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 7878be18e9d2..89bdec49ea40 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -334,7 +334,8 @@ static int dev_map_hash_get_next_key(struct bpf_map *map, void *key,
- static int dev_map_bpf_prog_run(struct bpf_prog *xdp_prog,
- 				struct xdp_frame **frames, int n,
- 				struct net_device *tx_dev,
--				struct net_device *rx_dev)
-+				struct net_device *rx_dev,
-+				int *redirects)
- {
- 	struct xdp_txq_info txq = { .dev = tx_dev };
- 	struct xdp_rxq_info rxq = { .dev = rx_dev };
-@@ -359,6 +360,13 @@ static int dev_map_bpf_prog_run(struct bpf_prog *xdp_prog,
- 			else
- 				frames[nframes++] = xdpf;
- 			break;
-+		case XDP_REDIRECT:
-+			err = xdp_do_redirect(rx_dev, &xdp, xdp_prog);
-+			if (unlikely(err))
-+				xdp_return_frame_rx_napi(xdpf);
-+			else
-+				*redirects += 1;
-+			break;
- 		default:
- 			bpf_warn_invalid_xdp_action(NULL, xdp_prog, act);
- 			fallthrough;
-@@ -373,7 +381,7 @@ static int dev_map_bpf_prog_run(struct bpf_prog *xdp_prog,
- 	return nframes; /* sent frames count */
- }
- 
--static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags)
-+static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags, int *redirects)
- {
- 	struct net_device *dev = bq->dev;
- 	unsigned int cnt = bq->count;
-@@ -390,8 +398,10 @@ static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags)
- 		prefetch(xdpf);
- 	}
- 
-+	int new_redirects = 0;
- 	if (bq->xdp_prog) {
--		to_send = dev_map_bpf_prog_run(bq->xdp_prog, bq->q, cnt, dev, bq->dev_rx);
-+		to_send = dev_map_bpf_prog_run(bq->xdp_prog, bq->q, cnt, dev, bq->dev_rx,
-+				&new_redirects);
- 		if (!to_send)
- 			goto out;
- 	}
-@@ -413,19 +423,21 @@ static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags)
- 
- out:
- 	bq->count = 0;
--	trace_xdp_devmap_xmit(bq->dev_rx, dev, sent, cnt - sent, err);
-+	*redirects += new_redirects;
-+	trace_xdp_devmap_xmit(bq->dev_rx, dev, sent, cnt - sent - new_redirects,
-+			new_redirects, err);
- }
- 
- /* __dev_flush is called from xdp_do_flush() which _must_ be signalled from the
-  * driver before returning from its napi->poll() routine. See the comment above
-  * xdp_do_flush() in filter.c.
-  */
--void __dev_flush(struct list_head *flush_list)
-+void __dev_flush(struct list_head *flush_list, int *redirects)
- {
- 	struct xdp_dev_bulk_queue *bq, *tmp;
- 
- 	list_for_each_entry_safe(bq, tmp, flush_list, flush_node) {
--		bq_xmit_all(bq, XDP_XMIT_FLUSH);
-+		bq_xmit_all(bq, XDP_XMIT_FLUSH, redirects);
- 		bq->dev_rx = NULL;
- 		bq->xdp_prog = NULL;
- 		__list_del_clearprev(&bq->flush_node);
-@@ -458,8 +470,17 @@ static void bq_enqueue(struct net_device *dev, struct xdp_frame *xdpf,
- {
- 	struct xdp_dev_bulk_queue *bq = this_cpu_ptr(dev->xdp_bulkq);
- 
--	if (unlikely(bq->count == DEV_MAP_BULK_SIZE))
--		bq_xmit_all(bq, 0);
-+	if (unlikely(bq->count == DEV_MAP_BULK_SIZE)) {
-+		int redirects = 0;
-+
-+		bq_xmit_all(bq, 0, &redirects);
-+
-+		/* according to comment above xdp_do_flush() in
-+		 * filter.c, xdp_do_flush is always called at
-+		 * the end of the NAPI anyway, so no need to act
-+		 * on the redirects here
-+		 */
-+	}
- 
- 	/* Ingress dev_rx will be the same for all xdp_frame's in
- 	 * bulk_queue, because bq stored per-CPU and must be flushed
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 8569cd2482ee..b33fc0b1444a 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -4287,14 +4287,18 @@ static const struct bpf_func_proto bpf_xdp_adjust_meta_proto = {
- void xdp_do_flush(void)
- {
- 	struct list_head *lh_map, *lh_dev, *lh_xsk;
-+	int redirect;
- 
--	bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
--	if (lh_dev)
--		__dev_flush(lh_dev);
--	if (lh_map)
--		__cpu_map_flush(lh_map);
--	if (lh_xsk)
--		__xsk_map_flush(lh_xsk);
-+	do {
-+		redirect = 0;
-+		bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
-+		if (lh_dev)
-+			__dev_flush(lh_dev, &redirect);
-+		if (lh_map)
-+			__cpu_map_flush(lh_map);
-+		if (lh_xsk)
-+			__xsk_map_flush(lh_xsk);
-+	} while (redirect > 0);
- }
- EXPORT_SYMBOL_GPL(xdp_do_flush);
- 
-@@ -4303,20 +4307,24 @@ void xdp_do_check_flushed(struct napi_struct *napi)
- {
- 	struct list_head *lh_map, *lh_dev, *lh_xsk;
- 	bool missed = false;
-+	int redirect;
- 
--	bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
--	if (lh_dev) {
--		__dev_flush(lh_dev);
--		missed = true;
--	}
--	if (lh_map) {
--		__cpu_map_flush(lh_map);
--		missed = true;
--	}
--	if (lh_xsk) {
--		__xsk_map_flush(lh_xsk);
--		missed = true;
--	}
-+	do {
-+		redirect = 0;
-+		bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
-+		if (lh_dev) {
-+			__dev_flush(lh_dev, &redirect);
-+			missed = true;
-+		}
-+		if (lh_map) {
-+			__cpu_map_flush(lh_map);
-+			missed = true;
-+		}
-+		if (lh_xsk) {
-+			__xsk_map_flush(lh_xsk);
-+			missed = true;
-+		}
-+	} while (redirect > 0);
- 
- 	WARN_ONCE(missed, "Missing xdp_do_flush() invocation after NAPI by %ps\n",
- 		  napi->poll);
+ack
 
----
-base-commit: 8e69c96df771ab469cec278edb47009351de4da6
-change-id: 20240909-devel-koalo-fix-redirect-684639694951
-prerequisite-patch-id: 6928ae7741727e3b2ab4a8c4256b06a861040a01
+>
+> > +       vm_inode =3D data_race(vm_file->f_inode);
+>
+> As noted above, this doesn't work because you can't rely on having RCU
+> lifetime for the file. One *very* ugly hack you could do, if you think
+> this code is so performance-sensitive that you're willing to do fairly
+> atrocious things here, would be to do a "yes I am intentionally doing
+> a UAF read and I know the address might not even be mapped at this
+> point, it's fine, trust me" pattern, where you use
+> copy_from_kernel_nofault(), kind of like in prepend_copy() in
+> fs/d_path.c, and then immediately recheck the sequence count before
+> doing *anything* with this vm_inode pointer you just loaded.
+>
+>
 
-Best regards,
--- 
-Florian Kauer <florian.kauer@linutronix.de>
+yeah, let's leave it as a very unfortunate plan B and try to solve it
+a bit cleaner.
 
+
+>
+> > +       vm_pgoff =3D data_race(vma->vm_pgoff);
+> > +       vm_start =3D data_race(vma->vm_start);
+> > +
+> > +       offset =3D (loff_t)(vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vm_st=
+art);
+> > +       uprobe =3D find_uprobe_rcu(vm_inode, offset);
+> > +       if (!uprobe)
+> > +               goto bail;
+> > +
+> > +       /* now double check that nothing about MM changed */
+> > +       if (!mmap_lock_speculation_end(mm, seq))
+> > +               goto bail;
+> > +
+> > +       rcu_read_unlock();
+> > +
+> > +       /* happy case, we speculated successfully */
+> > +       return uprobe;
+> > +bail:
+> > +       rcu_read_unlock();
+> > +       return NULL;
+> > +}
