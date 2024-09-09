@@ -1,122 +1,87 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE061B012A;
-	Mon,  9 Sep 2024 07:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B703D1B3B3D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Sep 2024 08:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725868362; cv=none; b=aKtBIW6s95QBns5RyvcPkXhlENzzRL55IXmYvmg7yD8KpfbERI0DmjyRIDC3glJZXvry9NlURhVOO8cV+JW9OwpEj0BIs/JLz4FNoO7qe/23Fe12Br2J2PlKJbLUcM/zQfqu3WPpduKijnQP1F8BrP6jbZPOsvL2TXUsbORVCkg=
+	t=1725869543; cv=none; b=WE3kQQtzcoB+bEuIdk+qeDrJwKxRMvfvyXmpvJyVtxCuRdehkGIFJAkppuTFiLHu0NxwN4cm8+BfPUrOBeXDtt8pjjIyrEKAbukVasAW31cmHOt5nlBvbmIaZdHfS2G0AdA9yuEFRmrIfoh4Hxqks80Whsi2qpmhfe5JRkZGbu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725868362; c=relaxed/simple;
-	bh=BcuSQx643SHfhyrLiS2tq0Rnh9mIkchyToPZe+TkftI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=Bf2XG3STwhfanAe4CT33f/aMtL76gqftq5HgnWQ3qEvHV0X+w5gxnYNsbqLSIbUqrlfT6Zp+d7t9voR827dSnWrph/0Z42oEIz6ETrw0MvtPv7JItoKPIPvBAAUBKkMEsu/fCdlQyHNtos97AFYCi0CcXz6oAdpVyBpDiSDsRy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sdc1ZcbQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sdc1ZcbQ"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 488EGkuL028493;
-	Mon, 9 Sep 2024 07:52:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:in-reply-to:references:date:message-id
-	:content-type:mime-version; s=pp1; bh=moBXgB70de3lqjGc3xvwz3nwGd
-	M+kLX4K4e1CtqCfZ4=; b=sdc1ZcbQ/8Uu30BI3hll/ZZKmpbCvKSUaQBgtC4Oft
-	h0CbuIuk2EVJzTcp492wfWrPk+jbTSvpPq768JHxnPo5xBp4UsSRsmPXtNAPxLDU
-	4vRfRwV3AqB4MypjtDPSc9HjovscGDk95GuElNQxzX7ihpdQcNqbROwxKp4tV/Fo
-	YFDpniTP5gt7xwrD3pqXvXFo8oxDE903tv5OY1exvkteLz7QBzO3jAb6U3dnm/yB
-	WJ1BJDhtg7msCVnZNCfL+Ptm0r2LpLnWrhwk4BtUygvaVU7f7wHii6mBOUk/ponX
-	X/Z/XydQbXbkckwbVTi3IcBAUb3387hkOODAsvH1iKuw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gefy8dw6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Sep 2024 07:52:24 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4894XkfN027333;
-	Mon, 9 Sep 2024 07:52:23 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41h3v2w2dr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Sep 2024 07:52:23 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4897qLQu22217104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 9 Sep 2024 07:52:21 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CBBDB2005A;
-	Mon,  9 Sep 2024 07:52:21 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A018320040;
-	Mon,  9 Sep 2024 07:52:21 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  9 Sep 2024 07:52:21 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
- <mark.rutland@arm.com>,
-        Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert
- Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org
-Subject: Re: [PATCH 0/7] add function arguments to ftrace
-In-Reply-To: <20240908222830.01a01b10d62d59ed73dcb676@kernel.org> (Masami
-	Hiramatsu's message of "Sun, 8 Sep 2024 22:28:30 +0900")
-References: <20240904065908.1009086-1-svens@linux.ibm.com>
-	<20240905111620.5211d9f8@gandalf.local.home>
-	<yt9dv7z9l2zp.fsf@linux.ibm.com>
-	<20240906100738.2526cffd@gandalf.local.home>
-	<20240908222830.01a01b10d62d59ed73dcb676@kernel.org>
-Date: Mon, 09 Sep 2024 09:52:21 +0200
-Message-ID: <yt9dh6ape022.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jS8qGd1Kag-0cgWKKAQwQPih_Lh8MSWc
-X-Proofpoint-ORIG-GUID: jS8qGd1Kag-0cgWKKAQwQPih_Lh8MSWc
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1725869543; c=relaxed/simple;
+	bh=hjeUtwsYFEvjuUdrzk+UuFsYL71dFyBuWRrsIgDZvhc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lvaCNM6EZAG0KEv+n2Y9WwkPq4TGSlwU5V7zJP57X19JJgqIghfpJ6qvSuccpXKMgBySFZf0DPvAUboWekQbfsKPhmpc1RybDxS4F5WWzxm2xFlKYLvyOAV+CYlUCh6HneY95YjuW15c1QieUvJFtK87exyGObmIaboiBISvtBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-82ad9fca5fcso228694739f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Sep 2024 01:12:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725869541; x=1726474341;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XkAroIDoNJ0WenPL25dlGLCcH+w/aZaw1HL8G6mp5Vo=;
+        b=VDiABoeonFHGpDgOQrUI4fiWaFiG3Gp/KR/OScKXJ854Ymr5MO9dEpEnoV/b0FkGAN
+         q9Hu4BMsvdo+azBLhYkSym4atQBvuJh4pG2S5TvHzIDgGGNNXGVdTjMEPjR8h1uV8u+A
+         CVaIc4j7/dhCNRSXBUHTwsls3OA5cNYMhtoQ3TNBEDZsV/NFem7Mw3aMNJSHy1pi6ro6
+         8DVq9ICCwJ6FEJ40X6anGcgFcQeMGaylVX3w1KgFcZjZ56qAlsQgPhXLjKNDJpSJDdG+
+         xOUCSOh86hwspUd/QFQvNGsmGjmNrQ5Tvr2hnFytNEBnHSvLx4oxOB05PiusLVmgnEs6
+         zwoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY7wgG95H9Qj3UIYbOXT0FDps7qGZVy2dMMlKxaZT+Ch11YAP1chqX6WycMtZzbxIH8jMP1h0hBAnmLKCHs41Cmfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBDM0T4uetygEJiBa70D8tTe4IlQ/KxKReQ/jObF7xRk5x/iPk
+	1qV2+d+6iMlmlJoNa1ue63iJErd3QVnV2AM7aedYHXFNxuG/p8jd6ATggM1lUUzt3JwAcTyGGQ+
+	8jUEsV5kPdmpq5nrDFBguPCfw5H1QH5+YfjHw0nW0awXYrd9A7rx8FuE=
+X-Google-Smtp-Source: AGHT+IEEE7IO5eOfZo+sN3JF4WWVHKjRAp4zdPgHI0mxq2qIOzEXSIcN6aL3faP2JN5FMlrx9qmfCsZwqez/vIcyghDWYyE1kkhC
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-09_01,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=765 priorityscore=1501
- adultscore=0 clxscore=1015 spamscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2408220000 definitions=main-2409090059
+X-Received: by 2002:a6b:f602:0:b0:82a:4419:6156 with SMTP id
+ ca18e2360f4ac-82aa4609c5emr737751039f.14.1725869540675; Mon, 09 Sep 2024
+ 01:12:20 -0700 (PDT)
+Date: Mon, 09 Sep 2024 01:12:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e69f460621ab50f4@google.com>
+Subject: [syzbot] Monthly trace report (Sep 2024)
+From: syzbot <syzbot+list692d096cfc0c03673c30@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+Hello trace maintainers/developers,
 
-> On Fri, 6 Sep 2024 10:07:38 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
->> On Fri, 06 Sep 2024 08:18:02 +0200
->> Sven Schnelle <svens@linux.ibm.com> wrote:
->> 
->> 
->> > One thing i learned after submitting the series is that struct
->> > ftrace_regs depends on CONFIG_FUNCTION_TRACER, so it cannot be used
->> > with the graph tracer.
->
-> Yeah, this is solved by my series [1].
->
-> [1] https://patchwork.kernel.org/project/linux-trace-kernel/patch/172398532480.293426.13232399076477198126.stgit@devnote2/
->
-> So I think this series is easier to apply after my series, which
-> passes fgraph_regs in return handler.
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
 
-Thanks, i'll rebase my changes on top of your patches then.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 8 issues are still open and 37 have been fixed so far.
 
-Regards
-Sven
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 2278    Yes   possible deadlock in console_flush_all (3)
+                  https://syzkaller.appspot.com/bug?extid=18cfb7f63482af8641df
+<2> 1023    Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<3> 31      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<4> 15      Yes   WARNING in bpf_get_stack_raw_tp
+                  https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+<5> 11      Yes   WARNING in get_probe_ref
+                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
