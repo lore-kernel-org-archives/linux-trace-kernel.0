@@ -1,119 +1,210 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B3828EF;
-	Mon,  9 Sep 2024 01:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C90CA932;
+	Mon,  9 Sep 2024 01:16:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725844133; cv=none; b=Nu7o8GQT/lOvZOhc9Zko5+gUqI7KN9g32plPzIE6GyTta/OfDQdqd+4kKg02yWctUEWHdfjJp5wjK5S6IU3nht2SAewuGLrCObvx7rZkgWWL2bqzVmNoSCGlHrZRYiPVzDt71UhTDah65PYZLRJUgT8WdKj/OXCL2hxiEJr20qc=
+	t=1725844580; cv=none; b=jbbI43oIg4rI12F7/jx0MO7oLQs4hWnQoEzQHfsvCLcmzlfm74VeM5toHyFPsIs2VdGK13dvmCTzi5VYzchvLghyR+MpWdDsyJgd8vYyYQA9bmsEpk1xOEszowOFajmwC0OtCJWhVv4cHClfui0uLljCyUsJTgvMd4qM7OIoEyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725844133; c=relaxed/simple;
-	bh=IxC6Z/GdaomlvqgADd6jb6fWI0AkCA513Vec7jMJuKk=;
+	s=arc-20240116; t=1725844580; c=relaxed/simple;
+	bh=pxT3oOxWGgVpJPRjBnfXZxKXiKLlvTBU7omzCE7Fe2M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=I2KmP9MNSW07RORxPh+x5JZGY3f3eWzuc8bRPqNiRvseaM/qpRh3/BuYFEqTsQP/jpgSDEGczqSXogVMZQ9XFmelNLo57YZ0yW4UTybcLkt8oMksVbApprkOihxNpyxwk6V6+UbZuOWrOcnyXnNWdpKW4pbSgV0uWfhoriojSk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSc4HkXp; arc=none smtp.client-ip=209.85.215.180
+	 To:Cc:Content-Type; b=O6qCnSMGDqgrV3f/o4PdBUDne01N83vvmafmlYWWpBG0Y0xCgWICqmiv6V8tA0EcTvTePQvq0ksaT9aGfFTk3yp0HIqBQqfXUpt06l1TPgxyoXw569/mn2rioNPizlLWlH5QKZ+bx/oGDcJWDKUEV+N48DScMeupuLG+99EwkeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ga2ywylX; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSc4HkXp"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7d4f9e39c55so2550499a12.2;
-        Sun, 08 Sep 2024 18:08:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ga2ywylX"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2d8b96c18f0so2974337a91.2;
+        Sun, 08 Sep 2024 18:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725844131; x=1726448931; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1725844579; x=1726449379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aKNbVeIN4E1J7b6asuuyRn99aGJZxDfyfdXFbSw1yAU=;
-        b=nSc4HkXpSBIXHwKMDbNCtZxVjkv2/DiVrsJCM+fG7DZxyoII43lQX9gIVsSmPxF3rW
-         C/nPSUgZaHm42+Np496UM2GMFs4R5Bd8vh1SK77gcFSiL436WatmSNN+RAHhkTMM021p
-         SpsZpqedvjzf/V70u3DxNCulFGThr0j6S4/Nx9mWOzHEjNjIDjPKSBlvjPKQEH3la1lW
-         7pj5pPaSozq2ESMnJXxWn0UUsblZo/SO1r1VBKNWjSPkiDBAFTBmJXUltTqpSE/p5g4i
-         HfottV0FyLhCnylhx8PydGlFhhhI8SGQhPkM5jQ7il6KlUxz3VvCzsNDk3rQ143RBlGL
-         ls7A==
+        bh=X3/Gr9/co9U0VWal9bzGMLcvU/lVNFTzOwyJM/bVLy4=;
+        b=Ga2ywylXooJvigGBz1nxgmhoSyOwYcFfuCZxPQJs7Qj0zSGNkttu6i1d0mLhMUelO/
+         10FlZr+rp1yzQtonKROnv6Vg9uaFsTJFGUhjS8xKSiJWcHzv9dvbnRMHiBBcQg5Ktjeq
+         PDgQ2E9eA+sqjnlPB6SdR1VZ+6EMa7VaR15KDMkyfs90E6pGUxeQlOIfRZQiboy/z/9p
+         iVIXsQvLkN0v0cyjlD1hyMxZ6uSW7Uug82G6rlyAiQ1f/mi/acvvzCH69EyJY58Jji+q
+         AmaIK6+VsiQ+xGkBOAFu925z5gAKCEyekZRHLqA6u07/CNlpSlGJFdZu2nKg1Vwtkv3B
+         DLSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725844131; x=1726448931;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1725844579; x=1726449379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aKNbVeIN4E1J7b6asuuyRn99aGJZxDfyfdXFbSw1yAU=;
-        b=qbycVILplyluqu4xqtET1dMR0FW5rg1ZIxLHWBbrj+sVy/+sud4MIghcFkunw7pzJs
-         aYDFZsvPIlnc9FtCuwj5XGbac/Wzi2g4OGc/DWyMZGDuAQu8KMqbBXYtEmOI04ETN3pA
-         Ys6iANXQMfsv7DVXyi+8XUebQzK94iq4h3SeMAriYfS1yTC34GFb7rW6n10yAT+UHWCW
-         JHnhQIhhpytViPdB33sSsWAVHJ0S0moq3Yldmjeg+uENBV79T2/q7nVVgB6WmlBTpD1l
-         RVwATkP+FG8ziGx4KI9Jq4ht/zjKAuNA0qdiEgdY/ZKvVanj5On5KMn/wPvHw3Un34Iq
-         HwlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEJVRT02D0SdfwyruotogYAGKXBnGdHiH1XjGzGy9oNzzxMWdjUYv5OkCEHwEqAgBZ3XM5RzK63fGwziLJaUc8YEDl@vger.kernel.org, AJvYcCX2CYuOsGpxzpfXHC3Rjat+nqcFsCg6KFctWd+bs+Mg8Lp8IARQ6nyrIu0l4mnkRrxtSHl+x7pCQtbTJjh2@vger.kernel.org, AJvYcCXU8/SGGlRgc+uP5mnfqXYxtSFivABTZeii+ZtA38FbDxSmsQGbhoy50wCi+kda/sfNBqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ3VJd86uttL+gb3Z3aHO23HbMCLjk2zPzFBQmjDKrVEmBAXyG
-	QR0i/B7u1l+tf/cpmJKJua5mfse7oQlg/fqB1PL86XeDSAw4RjUjCSdXJuwK5gcCLW0ESYuTHBN
-	GoRFBXnkzf8lKxI7DBIDfRGojeOA=
-X-Google-Smtp-Source: AGHT+IHviyd+MztZHLZ1PONgr8WHid8/FvS/G7KWLzX3Evvawum9LD2znLZsH3oJJGDbwpitRHcujJMf5zch9B8SpsI=
-X-Received: by 2002:a17:90b:3504:b0:2d8:d254:6cdd with SMTP id
- 98e67ed59e1d1-2daffe28fadmr7420121a91.38.1725844131190; Sun, 08 Sep 2024
- 18:08:51 -0700 (PDT)
+        bh=X3/Gr9/co9U0VWal9bzGMLcvU/lVNFTzOwyJM/bVLy4=;
+        b=GkTEnmRQeXhpbcsf3WTLENw3zrzfwT0RvKVyVyF7e2xvaKHQ9mdLgCP/3YkbKB1hJ2
+         Wm70hQhfaCo1evnmV3C75DkseVDq7OJ5u5yaqOgDd0EB0Qe8gJ57eY6IfyB7KzrKlYMm
+         Wf+3xYpEQuWMK3EwHSgGdZncf7zlSnXaBsiGspkHrm0TZhdnZfVLrZL5jAwKEP5exCOG
+         LFNDw7AWveTvCHFhejnPvCWHjNwsZMP3dNUG9tCf9WBIvILXtwRU+erP3xUF9UtDGgKo
+         ynoQ0j5WSsxZ++hhHlhcTJkruYblwdB9MEtLM5lgTHuCp0iFl22XZtkxsmDCSa5xFEVx
+         FOYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxWVsoq5TZpl+jzfHv1Oc2H7AMa1KFUdLSZ5IFbrwENI9TaxaN6FOnmJYl1nqN6St33AeR0qiKOVegw7K9Dbx/JOfY@vger.kernel.org, AJvYcCWZ/DyTZXl4n3/5WlyAVjvbLraOcb8zgd+rzf5XswH0j7BKjNovK3tSAZfTQkVlu60h5x8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgN7MVuqnpJQwjC9kzFQS+rOaG4tVPujNSv+SS5HMM+PxYQFvx
+	kcDpok/ZNx7H6sy/Z5qi/gI8UOq6E+ep19caytumYYrC6ZuflRofw1i5hx8+1SWl3SpiU1aI4+H
+	SFMPSYDXHjntC+XRDMCm5K1gmKS0=
+X-Google-Smtp-Source: AGHT+IGNf30WersMVO1Rnxjak8g9Q+GFqEOZYWWoyIJp32NMnU5KS80gtJ3zwrTmeSyJtmVZGNAYjzDyRMcxjxlv4LU=
+X-Received: by 2002:a17:90a:c70a:b0:2d8:7a29:838f with SMTP id
+ 98e67ed59e1d1-2dad4ef210cmr13704953a91.10.1725844578574; Sun, 08 Sep 2024
+ 18:16:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-3-andrii@kernel.org>
- <u2artc4iwuoo5y5rutseqlvnq4i44mcxne2ufwg3ya2hyonv45@v2ob54ci6ky7>
-In-Reply-To: <u2artc4iwuoo5y5rutseqlvnq4i44mcxne2ufwg3ya2hyonv45@v2ob54ci6ky7>
+References: <Ztrc6eJ14M26xmvr@krava> <ME0P300MB0416A96545165A39507DF6429D9F2@ME0P300MB0416.AUSP300.PROD.OUTLOOK.COM>
+ <20240908131519.GA21236@redhat.com>
+In-Reply-To: <20240908131519.GA21236@redhat.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Sun, 8 Sep 2024 18:08:39 -0700
-Message-ID: <CAEf4BzbjiHjW7PTd2ONNkpU9CR68o8Wizuo0Y2MwmTSv6zw4JA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] uprobes: add speculative lockless VMA-to-inode-to-uprobe
- resolution
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org, jannh@google.com
+Date: Sun, 8 Sep 2024 18:16:06 -0700
+Message-ID: <CAEf4BzbaikV5YMTRLaz8PntJkDH3+=+pGemmFWcebEA8Jqsb-Q@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing/uprobe: Add missing PID filter for uretprobe
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Tianyi Liu <i.pear@outlook.com>, olsajiri@gmail.com, ajor@meta.com, 
+	albancrequy@linux.microsoft.com, bpf@vger.kernel.org, 
+	flaniel@linux.microsoft.com, linux-trace-kernel@vger.kernel.org, 
+	linux@jordanrome.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
+	rostedt@goodmis.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 7, 2024 at 6:22=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
+On Sun, Sep 8, 2024 at 6:15=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
 >
-> * Andrii Nakryiko <andrii@kernel.org> [240906 01:12]:
->
-> ...
->
-> > ---
-> >  kernel/events/uprobes.c | 51 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
+> On 09/08, Tianyi Liu wrote:
 > >
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index a2e6a57f79f2..b7e0baa83de1 100644
-> ...
->
-> > @@ -2088,6 +2135,10 @@ static struct uprobe *find_active_uprobe_rcu(uns=
-igned long bp_vaddr, int *is_swb
->
-> I'm having issues locating this function in akpm/mm-unstable.  What
-> tree/commits am I missing to do a full review of this code?
-
-Hey Liam,
-
-These patches are based on tip/perf/core, find_active_uprobe_rcu()
-just landed a few days ago. See [0].
-
-  [0] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3D=
-perf/core
-
->
-> >       struct uprobe *uprobe =3D NULL;
-> >       struct vm_area_struct *vma;
+> > On Mon, Sep 06, 2024 at 18:43:00AM +0800, Jiri Olsa wrote:
 > >
-> > +     uprobe =3D find_active_uprobe_speculative(bp_vaddr);
-> > +     if (uprobe)
-> > +             return uprobe;
-> > +
-> >       mmap_read_lock(mm);
-> >       vma =3D vma_lookup(mm, bp_vaddr);
-> >       if (vma) {
-> > --
-> > 2.43.5
+> > > would you consider sending another version addressing Oleg's points
+> > > for changelog above?
 > >
+> > My pleasure, I'll resend the updated patch in a new thread.
 > >
+> > Based on previous discussions, `uprobe_perf_filter` acts as a prelimina=
+ry
+> > filter that removes breakpoints when they are no longer needed.
+>
+> Well. Not only. See the usage of consumer_filter() and filter_chain() in
+> register_for_each_vma().
+>
+> > More complex filtering mechanisms related to perf are implemented in
+> > perf-specific paths.
+>
+> The perf paths in __uprobe_perf_func() do the filtering based on
+> perf_event->hw.target, that is all.
+>
+> But uprobe_perf_filter() or any other consumer->filter() simply can't rel=
+y
+> on pid/task, it has to check ->mm.
+>
+> > From my understanding, the original patch attempted to partially implem=
+ent
+> > UPROBE_HANDLER_REMOVE (since it didn't actually remove the breakpoint b=
+ut
+> > only prevented it from entering the BPF-related code).
+>
+> Confused...
+>
+> Your patch can help bpftrace although it (or any other change in
+> trace_uprobe.c) can't not actually fix all the problems with bpf/filterin=
+g
+> even if we forget about ret-probes.
+>
+> And I don't understand how this relates to UPROBE_HANDLER_REMOVE...
+>
+> > I'm trying to provide a complete implementation, i.e., removing the
+> > breakpoint when `uprobe_perf_filter` returns false, similar to how upro=
+be
+> > functions. However, this would require merging the following functions,
+> > because they will almost be the same:
+> >
+> > uprobe_perf_func / uretprobe_perf_func
+> > uprobe_dispatcher / uretprobe_dispatcher
+> > handler_chain / handle_uretprobe_chain
+>
+> Sorry, I don't understand... Yes, uprobe_dispatcher and uretprobe_dispatc=
+her
+> can share more code or even unified, but
+>
+> > I suspect that uretprobe might have been implemented later than uprobe
+>
+> Yes,
+>
+> > and was only partially implemented.
+>
+> what do you mean?
+>
+> But whatever you meant, I agree that this code doesn't look pretty and ca=
+n
+> be cleanuped.
+>
+> > In your opinion, does uretprobe need UPROBE_HANDLER_REMOVE?
+>
+> Probably. But this has absolutely nothing to do with the filtering proble=
+m?
+> Can we discuss this separately?
+>
+> > I'm aware that using `uprobe_perf_filter` in `uretprobe_perf_func` is n=
+ot
+> > the solution for BPF filtering. I'm just trying to alleviate the issue
+> > in some simple cases.
+>
+> Agreed.
+>
+> -------------------------------------------------------------------------=
+------
+> To summarise.
+>
+> This code is very old, and it was written for /usr/bin/perf which attache=
+s
+> to the tracepoint. So multiple instances of perf-record will share the sa=
+me
+> consumer/trace_event_call/filter. uretprobe_perf_func() doesn't call
+> uprobe_perf_filter() because (if /usr/bin/perf is the only user) in the l=
+ikely
+> case it would burn CPU and return true. Quite possibly this design was no=
+t
+> optimal from the very beginning, I simply can't recall why the is_ret_pro=
+be()
+> consumer has ->handler !=3D NULL, but it was not buggy.
+>
+> Now we have bpf, create_local_trace_uprobe(), etc. So lets add another
+> uprobe_perf_filter() into uretprobe_perf_func() as your patch did.
+>
+> Then we can probably change uprobe_handle_trampoline() to do
+> unapply_uprobe() if all the ret-handlers return UPROBE_HANDLER_REMOVE, li=
+ke
+> handler_chain() does.
+>
+> Then we can probably cleanup/simplify trace_uprobe.c, in partucular we ca=
+n
+> change alloc_trace_uprobe()
+>
+> -       tu->consumer.handler =3D uprobe_dispatcher;
+> -       if (is_ret)
+> -               tu->consumer.ret_handler =3D uretprobe_dispatcher;
+> +       if (is_ret)
+> +               tu->consumer.ret_handler =3D uretprobe_dispatcher;
+> +       else
+> +               tu->consumer.handler =3D uprobe_dispatcher;
+>
+> and do more (including unrelated) cleanups.
+>
+> But lets do this step-by-step.
+>
+> And lets not mix the filtering issues with the UPROBE_HANDLER_REMOVE logi=
+c,
+> to me this adds the unnecessary confusion.
+
++100 to all of the above. This has been a very long and winding
+thread, but uretprobes are still being triggered unnecessarily :)
+Let's fix the bleeding and talk and work on improving all of the other
+issues in separate efforts.
+
+>
+> Oleg.
+>
