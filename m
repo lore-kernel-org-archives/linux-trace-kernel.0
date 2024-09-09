@@ -1,290 +1,87 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AD51B29A7
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Sep 2024 14:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70F04C6D;
+	Mon,  9 Sep 2024 14:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725890939; cv=none; b=afmP1yaPgzceqdQSGJ5EmjXEPMb46kdpXEwfbtsE0zl/vD2NrsntbmI96q3+O942mt6chpIEmOzT3XFs+pWnt2eeZxv6RLIzlVIUxoZHU4+Ipd9ss7YIrLdYzz+dMHYKDyYM8g1k4XCxjIWRmZb+a0TuyT4iPpKnTjah8hwcc5E=
+	t=1725892354; cv=none; b=Md/b/L9zO2rpCLZXqLKG/1kCwd4EOkt8TdAi/1cKiy07tda7y1ojrZuR3NOyB3cqBXTGH+yyVrJ65Mo8CfYrlHeHbqE+LGsyOaano+hdW6PsIjaQSEEEtRasTX8MYjk8F979aCJ/7UH3Rhl0OXUpovKcU3n0Zu1f5I2F1hlVUL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725890939; c=relaxed/simple;
-	bh=kNKLzLej1M52xasYwRCbta6kTESdQ3T1zXZ3FCfCyQ8=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=nGOlMOEfhvmi3DjOksEDf15rAb2A+tsrc7J3A0KRdfeRznwwUomabtb8a1PG2ZUFsNdHEwryRDpkzHuwZZ+21bLKy/6piNc1oGe6cXOe08ITICtSjLxgZhbdsifhsWBkgo/pkF/mAW10wTGAp54/ZQ7Ad496oedBTEOt1dOBB10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vrRFD3KR; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vrRFD3KR"
+	s=arc-20240116; t=1725892354; c=relaxed/simple;
+	bh=gP0cJNdRSrHsCAa7SNcTD0I1GYBvw01uZ2k6szFGuJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NUP9qqmAjyudf/2/lCuul+4JB5+xdsb/yVsKLoR70UpdWyK1fuOVpGbl4lAw5Sr83QxD7pPdmAHWursLRO8YmBGuDvQqNnqieLW3HX6SU6iuasdJpqwKVPf8a1uvKAiN5GfMPIB9Gab5zT95H5CGlmBZG+FiW16BDz6wmMwai4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764C0C4CEC5;
+	Mon,  9 Sep 2024 14:32:33 +0000 (UTC)
+Date: Mon, 9 Sep 2024 10:32:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "Bityutskiy, Artem"
+ <artem.bityutskiy@intel.com>, "Dubel, Helena Anna"
+ <helena.anna.dubel@intel.com>, "Luis Claudio R. Goncalves"
+ <lgoncalv@redhat.com>, Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] tracing/osnoise: Fix build when timerlat is not enabled
+Message-ID: <20240909103231.23a289e2@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1725890934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bYkNBLTca3KsAkKQJXGOqbSrftPUBMvrE3h7ViDLv6A=;
-	b=vrRFD3KRtPJtB7X1PyhHMq3TjoNr1e5UuEtJklKk4AucNb1IGuCjimVQpuz/7FaHFy2LiU
-	9NwJ9ICh0Za3GQU5xYNgXceELcGMZSBdE4RmaEfPgDhV91VsF7UKTRFNTBwzjppR186RdV
-	HtyLAMHQBLV9+Dndv401rX3gpbo8iEA=
-Date: Mon, 09 Sep 2024 14:08:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: jeff.xie@linux.dev
-Message-ID: <e97c610987667ae158f877ca2a4b9c0cbbc972e2@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v2] ftrace: Get the true parent ip for function tracer
-To: rostedt@goodmis.org, mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, xiehuan09@gmail.com
-In-Reply-To: <20240821233021.2785584-1-jeff.xie@linux.dev>
-References: <20240821233021.2785584-1-jeff.xie@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-August 22, 2024 at 7:30 AM, "Jeff Xie" <jeff.xie@linux.dev> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
+To fix some critical section races, the interface_lock was added to a few
+locations. One of those locations was above where the interface_lock was
+declared, so the declaration was moved up before that usage.
+Unfortunately, where it was placed was inside a CONFIG_TIMERLAT_TRACER
+ifdef block. As the interface_lock is used outside that config, this broke
+the build when CONFIG_OSNOISE_TRACER was enabled but
+CONFIG_TIMERLAT_TRACER was not.
 
-Kindly ping, any comments here? Thanks.
+Fixes: e6a53481da29 ("tracing/timerlat: Only clear timer if a kthread exists")
+Reported-by: "Bityutskiy, Artem" <artem.bityutskiy@intel.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Note to self: Add test to build the kernel with osnoise but not timer lat
+              to my test-suite.
 
+ kernel/trace/trace_osnoise.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->=20
->=20Currently, when using both function tracer and function graph simulta=
-neously,
->=20
->=20it is found that function tracer sometimes captures a fake parent ip(=
-return_to_handler)
->=20
->=20instead of the true parent ip.
->=20
->=20This issue is easy to reproduce. Below are my reproduction steps:
->=20
->=20jeff-labs:~/bin # ./trace-net.sh
->=20
->=20jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace |=
- grep return_to_handler
->=20
->=20 trace-net.sh-405 [001] ...2. 31.859501: avc_has_perm+0x4/0x190 <-ret=
-urn_to_handler+0x0/0x40
->=20
->=20 trace-net.sh-405 [001] ...2. 31.859503: simple_setattr+0x4/0x70 <-re=
-turn_to_handler+0x0/0x40
->=20
->=20 trace-net.sh-405 [001] ...2. 31.859503: truncate_pagecache+0x4/0x60 =
-<-return_to_handler+0x0/0x40
->=20
->=20 trace-net.sh-405 [001] ...2. 31.859505: unmap_mapping_range+0x4/0x14=
-0 <-return_to_handler+0x0/0x40
->=20
->=20 trace-net.sh-405 [001] ...3. 31.859508: _raw_spin_unlock+0x4/0x30 <-=
-return_to_handler+0x0/0x40
->=20
->=20 [...]
->=20
->=20The following is my simple trace script:
->=20
->=20<snip>
->=20
->=20jeff-labs:~/bin # cat ./trace-net.sh
->=20
->=20TRACE_PATH=3D"/sys/kernel/debug/tracing"
->=20
->=20set_events() {
->=20
->=20 echo 1 > $1/events/net/enable
->=20
->=20 echo 1 > $1/events/tcp/enable
->=20
->=20 echo 1 > $1/events/sock/enable
->=20
->=20 echo 1 > $1/events/napi/enable
->=20
->=20 echo 1 > $1/events/fib/enable
->=20
->=20 echo 1 > $1/events/neigh/enable
->=20
->=20}
->=20
->=20set_events ${TRACE_PATH}
->=20
->=20echo 1 > ${TRACE_PATH}/options/sym-offset
->=20
->=20echo 1 > ${TRACE_PATH}/options/funcgraph-tail
->=20
->=20echo 1 > ${TRACE_PATH}/options/funcgraph-proc
->=20
->=20echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
->=20
->=20echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
->=20
->=20echo function_graph > ${TRACE_PATH}/current_tracer
->=20
->=20INSTANCE_FOO=3D${TRACE_PATH}/instances/foo
->=20
->=20if [ ! -e $INSTANCE_FOO ]; then
->=20
->=20 mkdir ${INSTANCE_FOO}
->=20
->=20fi
->=20
->=20set_events ${INSTANCE_FOO}
->=20
->=20echo 1 > ${INSTANCE_FOO}/options/sym-offset
->=20
->=20echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
->=20
->=20echo function > ${INSTANCE_FOO}/current_tracer
->=20
->=20echo 1 > ${TRACE_PATH}/tracing_on
->=20
->=20echo 1 > ${INSTANCE_FOO}/tracing_on
->=20
->=20echo > ${TRACE_PATH}/trace
->=20
->=20echo > ${INSTANCE_FOO}/trace
->=20
->=20</snip>
->=20
->=20Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
->=20
->=20---
->=20
->=20v2:
->=20
->=20- Adding __always_inline to function_get_true_parent_ip suggested by =
-Steve
->=20
->=20 kernel/trace/trace_functions.c | 18 ++++++++++++++++++
->=20
->=20 1 file changed, 18 insertions(+)
->=20
->=20diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_func=
-tions.c
->=20
->=20index 3b0cea37e029..d989e927c898 100644
->=20
->=20--- a/kernel/trace/trace_functions.c
->=20
->=20+++ b/kernel/trace/trace_functions.c
->=20
->=20@@ -176,6 +176,19 @@ static void function_trace_start(struct trace_ar=
-ray *tr)
->=20
->=20 tracing_reset_online_cpus(&tr->array_buffer);
->=20
->=20 }
->=20
->=20=20
->=20
-> +static __always_inline unsigned long
->=20
->=20+function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_r=
-egs *fregs)
->=20
->=20+{
->=20
->=20+ unsigned long true_parent_ip;
->=20
->=20+ int idx =3D 0;
->=20
->=20+
->=20
->=20+ true_parent_ip =3D parent_ip;
->=20
->=20+ if (unlikely(parent_ip =3D=3D (unsigned long)&return_to_handler))
->=20
->=20+ true_parent_ip =3D ftrace_graph_ret_addr(current, &idx, parent_ip,
->=20
->=20+ (unsigned long *)fregs->regs.sp);
->=20
->=20+ return true_parent_ip;
->=20
->=20+}
->=20
->=20+
->=20
->=20 static void
->=20
->=20 function_trace_call(unsigned long ip, unsigned long parent_ip,
->=20
->=20 struct ftrace_ops *op, struct ftrace_regs *fregs)
->=20
->=20@@ -193,6 +206,8 @@ function_trace_call(unsigned long ip, unsigned lo=
-ng parent_ip,
->=20
->=20 if (bit < 0)
->=20
->=20 return;
->=20
->=20=20
->=20
-> + parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
->=20
->=20+
->=20
->=20 trace_ctx =3D tracing_gen_ctx();
->=20
->=20=20
->=20
->  cpu =3D smp_processor_id();
->=20
->=20@@ -241,6 +256,7 @@ function_stack_trace_call(unsigned long ip, unsig=
-ned long parent_ip,
->=20
->=20 * recursive protection is performed.
->=20
->=20 */
->=20
->=20 local_irq_save(flags);
->=20
->=20+ parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
->=20
->=20 cpu =3D raw_smp_processor_id();
->=20
->=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
->=20
->=20 disabled =3D atomic_inc_return(&data->disabled);
->=20
->=20@@ -309,6 +325,7 @@ function_no_repeats_trace_call(unsigned long ip, =
-unsigned long parent_ip,
->=20
->=20 if (bit < 0)
->=20
->=20 return;
->=20
->=20=20
->=20
-> + parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
->=20
->=20 cpu =3D smp_processor_id();
->=20
->=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
->=20
->  if (atomic_read(&data->disabled))
->=20
->=20@@ -356,6 +373,7 @@ function_stack_no_repeats_trace_call(unsigned lon=
-g ip, unsigned long parent_ip,
->=20
->=20 * recursive protection is performed.
->=20
->=20 */
->=20
->=20 local_irq_save(flags);
->=20
->=20+ parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
->=20
->=20 cpu =3D raw_smp_processor_id();
->=20
->=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
->=20
->=20 disabled =3D atomic_inc_return(&data->disabled);
->=20
->=20--=20
->=20
-> 2.34.1
->
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index bbe47781617e..7e75c1214b36 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -228,6 +228,11 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
+ 	return this_cpu_ptr(&per_cpu_osnoise_var);
+ }
+ 
++/*
++ * Protect the interface.
++ */
++static struct mutex interface_lock;
++
+ #ifdef CONFIG_TIMERLAT_TRACER
+ /*
+  * Runtime information for the timer mode.
+@@ -252,11 +257,6 @@ static inline struct timerlat_variables *this_cpu_tmr_var(void)
+ 	return this_cpu_ptr(&per_cpu_timerlat_var);
+ }
+ 
+-/*
+- * Protect the interface.
+- */
+-static struct mutex interface_lock;
+-
+ /*
+  * tlat_var_reset - Reset the values of the given timerlat_variables
+  */
+-- 
+2.45.2
+
