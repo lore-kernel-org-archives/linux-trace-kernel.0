@@ -1,232 +1,190 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAC81C683;
-	Mon,  9 Sep 2024 15:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0BD23775;
+	Mon,  9 Sep 2024 15:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725894725; cv=none; b=EOswOc9siYnk1tNLiCagJGH2HNtrJ6nVzVBeecZAycuPn2p7WgHql5eA1JAgOlzr6J/ZPWC/czLZXQ+8X7RgGoAAtSH6qy02ctfoxK0UjX1kK2Sx5/3py1rKngQ8HQtCYerEUpJ23LxF8J+Ad9leWeauEm+nno6qiTMFHPloTko=
+	t=1725894810; cv=none; b=fTg+w8OYjBRVgHn7gqxQAB5pmy26kA6PugZX/0p2Wxkz7gQEXOGLngwT4kqaIH+4hP587aVFbK8gE5d8ICxCKWzn41nYYsL98h1/CU+4ZMUpK3wNBKfRpztMLXovlNF6RnD7fte46mHtjL7mSArs6cWs+HiaumJoHXgUQYWWMp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725894725; c=relaxed/simple;
-	bh=c7YvUH84AlumiDtIrio1hThdvteHMEAg8VTnwNP3vHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xuk+KOp8PeZYwDMxJiSodXy/EBZmP+jpCxwYEdQlalNj+G+X+lHRh75DwzPa9yWHo/IuNx8hu+4dPdNyeUZYHLU3h/vOxElHweNk4yrrXwvOZj+37IzO2JL2jd/U+hi3eEb3fuX7pw9B0R2/ivR1DxRcEOtSnCA4YWic4IGOB/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=Sc/IMzhX; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1725894810; c=relaxed/simple;
+	bh=LXNT4Z6GvggPgU1hWsYIMeaZPLiQWY/+X+IdN6qNy6o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZSvn+oCcSspjYHwXoPba4kdbY0CtyLbONIvNPY47U+aL/8q4Yde4vRxSAkMl05FSGnszEyjXRwN7vEehsl2VYN0CzgBJd5BRFEBOxZMy4pqG+H6IF5NtrsPKONQC8GxNAeN6LnV1BN64Xq968fOU54NvL+hPZGfmc4iETBkWPqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoUGTfvk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Sc/IMzhX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1725894714;
-	bh=c7YvUH84AlumiDtIrio1hThdvteHMEAg8VTnwNP3vHc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Sc/IMzhXLu36YaYhkAE3zpwxZxsmgRydJSMBgXazLABBcFdivkUQcX/Nky1m9Okst
-	 2cPsii6n9FN5ymmfrlOZ6FmTdZvBmD9+eReLdo396pjv8WMvPAmkStNH/pNWehd9Gl
-	 K7ibQ1yB2kUfmhK1E3d7uphByCYfVooQWr7qmIM9soWZnkOaE/oD6e3CErp6CZFjb2
-	 xGffIACes2q1NoEm0Yn9iZCFh70omRIpJpWB1ShoZ4ToC0FkUPnlqRUjamtiqt24c+
-	 aC7vWHqojzbsw5uudYx9+/iz/GuvSakBt5tRX5IvUm3fus3SUx38BGoyxuZMo6oQ6g
-	 TNRzodG4zDgeg==
-Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4X2Vfx67y3z1KWR;
-	Mon,  9 Sep 2024 11:11:53 -0400 (EDT)
-Message-ID: <1f442f99-92cd-41d6-8dd2-1f4780f2e556@efficios.com>
-Date: Mon, 9 Sep 2024 11:11:39 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoUGTfvk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86405C4CEC5;
+	Mon,  9 Sep 2024 15:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725894809;
+	bh=LXNT4Z6GvggPgU1hWsYIMeaZPLiQWY/+X+IdN6qNy6o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QoUGTfvkgAR7XOTmR7zBo+YdCIo5OouyYpCHAnj5x9gpbRIllicl07wJS+g987u8N
+	 +RaXyOpy7x2iueOfS7Gh7URq+41oyEcBoRZmVZA0brdbrahcv+Uqn6jVhZPdo6ZEdw
+	 Nqpcc9+6CY/sGhtQYTR9SF1XNyQXFgUvnh0FPlOxxfOimsA/MUwNzzun6Pt+ZAAp8G
+	 j3BtrtH46Z1TCfuvqHNXxrPvAyu8Hw7RgNA0Kpz3DgutL6P9Jmx73zfSTXpWa0z/HL
+	 eeCN/LWsvksLjfy2FHHRm8tS3FolZHpzv6n/XRtQqicQxaekGYrbWX7THJhddwaM2H
+	 6FNmWIGxFkF8A==
+Date: Tue, 10 Sep 2024 00:13:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jeff Xie <jeff.xie@linux.dev>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ xiehuan09@gmail.com
+Subject: Re: [PATCH v2] ftrace: Get the true parent ip for function tracer
+Message-Id: <20240910001326.87f27e6b312f1d956cf352a2@kernel.org>
+In-Reply-To: <20240821233021.2785584-1-jeff.xie@linux.dev>
+References: <20240821233021.2785584-1-jeff.xie@linux.dev>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/5] tracing/bpf-trace: Add support for faultable
- tracepoints
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
- Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
- Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
- Michael Jeanson <mjeanson@efficios.com>
-References: <20240828144153.829582-1-mathieu.desnoyers@efficios.com>
- <20240828144153.829582-4-mathieu.desnoyers@efficios.com>
- <CAEf4BzZERq7qwf0TWYFaXzE6d+L+Y6UY+ahteikro_eugJGxWw@mail.gmail.com>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <CAEf4BzZERq7qwf0TWYFaXzE6d+L+Y6UY+ahteikro_eugJGxWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2024-09-04 21:21, Andrii Nakryiko wrote:
-> On Wed, Aug 28, 2024 at 7:42 AM Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> In preparation for converting system call enter/exit instrumentation
->> into faultable tracepoints, make sure that bpf can handle registering to
->> such tracepoints by explicitly disabling preemption within the bpf
->> tracepoint probes to respect the current expectations within bpf tracing
->> code.
->>
->> This change does not yet allow bpf to take page faults per se within its
->> probe, but allows its existing probes to connect to faultable
->> tracepoints.
->>
->> Link: https://lore.kernel.org/lkml/20231002202531.3160-1-mathieu.desnoyers@efficios.com/
->> Co-developed-by: Michael Jeanson <mjeanson@efficios.com>
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
->> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->> Cc: Steven Rostedt <rostedt@goodmis.org>
->> Cc: Masami Hiramatsu <mhiramat@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Alexei Starovoitov <ast@kernel.org>
->> Cc: Yonghong Song <yhs@fb.com>
->> Cc: Paul E. McKenney <paulmck@kernel.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: bpf@vger.kernel.org
->> Cc: Joel Fernandes <joel@joelfernandes.org>
->> ---
->> Changes since v4:
->> - Use DEFINE_INACTIVE_GUARD.
->> - Add brackets to multiline 'if' statements.
->> Changes since v5:
->> - Rebased on v6.11-rc5.
->> - Pass the TRACEPOINT_MAY_FAULT flag directly to tracepoint_probe_register_prio_flags.
->> ---
->>   include/trace/bpf_probe.h | 21 ++++++++++++++++-----
->>   kernel/trace/bpf_trace.c  |  2 +-
->>   2 files changed, 17 insertions(+), 6 deletions(-)
->>
->> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
->> index a2ea11cc912e..cc96dd1e7c3d 100644
->> --- a/include/trace/bpf_probe.h
->> +++ b/include/trace/bpf_probe.h
->> @@ -42,16 +42,27 @@
->>   /* tracepoints with more than 12 arguments will hit build error */
->>   #define CAST_TO_U64(...) CONCATENATE(__CAST, COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__)
->>
->> -#define __BPF_DECLARE_TRACE(call, proto, args)                         \
->> +#define __BPF_DECLARE_TRACE(call, proto, args, tp_flags)               \
->>   static notrace void                                                    \
->>   __bpf_trace_##call(void *__data, proto)                                        \
->>   {                                                                      \
->> -       CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args));        \
->> +       DEFINE_INACTIVE_GUARD(preempt_notrace, bpf_trace_guard);        \
->> +                                                                       \
->> +       if ((tp_flags) & TRACEPOINT_MAY_FAULT) {                        \
->> +               might_fault();                                          \
->> +               activate_guard(preempt_notrace, bpf_trace_guard)();     \
->> +       }                                                               \
->> +                                                                       \
->> +       CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args)); \
->>   }
->>
->>   #undef DECLARE_EVENT_CLASS
->>   #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print) \
->> -       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))
->> +       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0)
->> +
->> +#undef DECLARE_EVENT_CLASS_MAY_FAULT
->> +#define DECLARE_EVENT_CLASS_MAY_FAULT(call, proto, args, tstruct, assign, print) \
->> +       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), TRACEPOINT_MAY_FAULT)
->>
->>   /*
->>    * This part is compiled out, it is only here as a build time check
->> @@ -105,13 +116,13 @@ static inline void bpf_test_buffer_##call(void)                           \
->>
->>   #undef DECLARE_TRACE
->>   #define DECLARE_TRACE(call, proto, args)                               \
->> -       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))          \
->> +       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0)       \
->>          __DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
->>
->>   #undef DECLARE_TRACE_WRITABLE
->>   #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
->>          __CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
->> -       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
->> +       __BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args), 0) \
->>          __DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
->>
->>   #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index c77eb80cbd7f..ed07283d505b 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -2473,7 +2473,7 @@ int bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_raw_tp_link *li
->>
->>          return tracepoint_probe_register_prio_flags(tp, (void *)btp->bpf_func,
->>                                                      link, TRACEPOINT_DEFAULT_PRIO,
->> -                                                   TRACEPOINT_MAY_EXIST);
->> +                                                   TRACEPOINT_MAY_EXIST | (tp->flags & TRACEPOINT_MAY_FAULT));
->>   }
->>
->>   int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct bpf_raw_tp_link *link)
->> --
->> 2.39.2
->>
->>
+On Thu, 22 Aug 2024 07:30:21 +0800
+Jeff Xie <jeff.xie@linux.dev> wrote:
+
+> Currently, when using both function tracer and function graph simultaneously,
+> it is found that function tracer sometimes captures a fake parent ip(return_to_handler)
+> instead of the true parent ip.
 > 
-> I wonder if it would be better to just do this, instead of that
-> preempt guard. I think we don't strictly need preemption to be
-> disabled, we just need to stay on the same CPU, just like we do that
-> for many other program types.
-
-I'm worried about introducing any kind of subtle synchronization
-change in this series, and moving from preempt-off to migrate-disable
-definitely falls under that umbrella.
-
-I would recommend auditing all uses of this_cpu_*() APIs to make sure
-accesses to per-cpu data structures are using atomics and not just using
-operations that expect use of preempt-off to prevent concurrent threads
-from updating to the per-cpu data concurrently.
-
-So what you are suggesting may be a good idea, but I prefer to leave
-this kind of change to a separate bpf-specific series, and I would
-leave this work to someone who knows more about ebpf than me.
-
-Thanks,
-
-Mathieu
-
+> This issue is easy to reproduce. Below are my reproduction steps:
 > 
-> We'll need some more BPF-specific plumbing to fully support faultable
-> (sleepable) tracepoints, but this should unblock your work, unless I'm
-> missing something. And we can take it from there, once your patches
-> land, to take advantage of faultable tracepoints in the BPF ecosystem.
+> jeff-labs:~/bin # ./trace-net.sh
 > 
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index b69a39316c0c..415639b7c7a4 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2302,7 +2302,8 @@ void __bpf_trace_run(struct bpf_raw_tp_link
-> *link, u64 *args)
->          struct bpf_run_ctx *old_run_ctx;
->          struct bpf_trace_run_ctx run_ctx;
+> jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace | grep return_to_handler
+>     trace-net.sh-405     [001] ...2.    31.859501: avc_has_perm+0x4/0x190 <-return_to_handler+0x0/0x40
+>     trace-net.sh-405     [001] ...2.    31.859503: simple_setattr+0x4/0x70 <-return_to_handler+0x0/0x40
+>     trace-net.sh-405     [001] ...2.    31.859503: truncate_pagecache+0x4/0x60 <-return_to_handler+0x0/0x40
+>     trace-net.sh-405     [001] ...2.    31.859505: unmap_mapping_range+0x4/0x140 <-return_to_handler+0x0/0x40
+>     trace-net.sh-405     [001] ...3.    31.859508: _raw_spin_unlock+0x4/0x30 <-return_to_handler+0x0/0x40
+>     [...]
 > 
-> -       cant_sleep();
-> +       migrate_disable();
+
+Can you also add 
+
+> The following is my simple trace script:
+> 
+> <snip>
+> jeff-labs:~/bin # cat ./trace-net.sh
+> TRACE_PATH="/sys/kernel/debug/tracing"
+> 
+> set_events() {
+>         echo 1 > $1/events/net/enable
+>         echo 1 > $1/events/tcp/enable
+>         echo 1 > $1/events/sock/enable
+>         echo 1 > $1/events/napi/enable
+>         echo 1 > $1/events/fib/enable
+>         echo 1 > $1/events/neigh/enable
+> }
+> 
+> set_events ${TRACE_PATH}
+> echo 1 > ${TRACE_PATH}/options/sym-offset
+> echo 1 > ${TRACE_PATH}/options/funcgraph-tail
+> echo 1 > ${TRACE_PATH}/options/funcgraph-proc
+> echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
+> 
+> echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
+> echo function_graph > ${TRACE_PATH}/current_tracer
+> 
+> INSTANCE_FOO=${TRACE_PATH}/instances/foo
+> if [ ! -e $INSTANCE_FOO ]; then
+>         mkdir ${INSTANCE_FOO}
+> fi
+> set_events ${INSTANCE_FOO}
+> echo 1 > ${INSTANCE_FOO}/options/sym-offset
+> echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
+> echo function > ${INSTANCE_FOO}/current_tracer
+> 
+> echo 1 > ${TRACE_PATH}/tracing_on
+> echo 1 > ${INSTANCE_FOO}/tracing_on
+> 
+> echo > ${TRACE_PATH}/trace
+> echo > ${INSTANCE_FOO}/trace
+> </snip>
+> 
+> Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
+> ---
+> v2:
+> - Adding __always_inline to function_get_true_parent_ip suggested by Steve
+> 
+>  kernel/trace/trace_functions.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+> index 3b0cea37e029..d989e927c898 100644
+> --- a/kernel/trace/trace_functions.c
+> +++ b/kernel/trace/trace_functions.c
+> @@ -176,6 +176,19 @@ static void function_trace_start(struct trace_array *tr)
+>  	tracing_reset_online_cpus(&tr->array_buffer);
+>  }
+>  
+> +static __always_inline unsigned long
+> +function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
+> +{
+> +	unsigned long true_parent_ip;
+> +	int idx = 0;
 > +
->          if (unlikely(this_cpu_inc_return(*(prog->active)) != 1)) {
->                  bpf_prog_inc_misses_counter(prog);
->                  goto out;
-> @@ -2318,6 +2319,8 @@ void __bpf_trace_run(struct bpf_raw_tp_link
-> *link, u64 *args)
->          bpf_reset_run_ctx(old_run_ctx);
->   out:
->          this_cpu_dec(*(prog->active));
+> +	true_parent_ip = parent_ip;
+> +	if (unlikely(parent_ip == (unsigned long)&return_to_handler))
+> +		true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,
+> +				(unsigned long *)fregs->regs.sp);
+> +	return true_parent_ip;
+> +}
+
+Can this work without CONFIG_FUNCTION_GRAPH_TRACER? Maybe it cause a build error
+because return_to_handler is not defined.
+
+Could you check it?
+
+Thank you,
+
 > +
-> +       migrate_enable();
->   }
+>  static void
+>  function_trace_call(unsigned long ip, unsigned long parent_ip,
+>  		    struct ftrace_ops *op, struct ftrace_regs *fregs)
+> @@ -193,6 +206,8 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		return;
+>  
+> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+> +
+>  	trace_ctx = tracing_gen_ctx();
+>  
+>  	cpu = smp_processor_id();
+> @@ -241,6 +256,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	 * recursive protection is performed.
+>  	 */
+>  	local_irq_save(flags);
+> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+>  	cpu = raw_smp_processor_id();
+>  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+>  	disabled = atomic_inc_return(&data->disabled);
+> @@ -309,6 +325,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	if (bit < 0)
+>  		return;
+>  
+> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+>  	cpu = smp_processor_id();
+>  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+>  	if (atomic_read(&data->disabled))
+> @@ -356,6 +373,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	 * recursive protection is performed.
+>  	 */
+>  	local_irq_save(flags);
+> +	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+>  	cpu = raw_smp_processor_id();
+>  	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+>  	disabled = atomic_inc_return(&data->disabled);
+> -- 
+> 2.34.1
+> 
+
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
