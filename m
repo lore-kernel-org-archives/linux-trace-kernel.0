@@ -1,116 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFF81B3746;
-	Mon,  9 Sep 2024 09:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B11A176FDF;
+	Mon,  9 Sep 2024 10:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725874169; cv=none; b=WcOLWEuwg0a6QAf3zz0UlvHiZ+qdW5I6lCO4hz8GaBkw0mJ9N3+3HlcBxPA5Ii+WnIbLXpQglI05WD3OyaCDq7bu7MuJcZWJU4AAu5phKSbtnnlZw7Dho6TZUg8S+hstQsfKMzW4FmeJbYribKkHhT2vwGoHTkAosLSQ3mGqLSc=
+	t=1725877092; cv=none; b=V49j2ZYf/dfIiXrz1zrBO8rDs4AEkCraDY1KrWkbw3EK8Zzu5K/36H2xoky3A1dMRlL/rjJ0iEsKP+TfDQvTGRLENjM3WBFIbkLaummA0WOUmQAPSvwgsePfzRYBdJ1TorhQ2x1juOeQVDsTauEE/0A/NJDpxZXp8y100xIbwxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725874169; c=relaxed/simple;
-	bh=o/hjh/Sq8hcMxZEgqMKb/vs7eiHDdZcNb8ZaB2phBzU=;
+	s=arc-20240116; t=1725877092; c=relaxed/simple;
+	bh=2rZWOLEKKBjccInvTK0Y4YWoPsH6kyP74H/6EZNYrBU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lrc7wTJwsmYRsW13+ElWV9jlZH3sFd9lxBcRGC0FC4JcAVd0YLqPV3qCsQB79DdbvSAvxrPdSSVUZNA4RQQ2czdCEs65Iy5GXV39jKjnkBD3MFMFJk/AcTMEGiRue340lp/JnO74Lo9SWKMEZUhB9eoyu2FvwdDKu/ypA/GwcIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PHcK1SUW; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PHcK1SUW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=f16Hum48X2/PRv+OYRnrqWvXhbLKUUXP4MBg4DPZdlQ=; b=PHcK1SUWaNK+mGL/l3LU81VEdD
-	D9nBb1lF9fC+k5KduxINliKCuQNtwOV9r3VV7JhDFojWrMZqtjtzwsWQR7ymjqHMdZK4/Tzo1krQG
-	l72L0TWbRaFKsNxIJEvL02K4akN/vihdxELVqTsQPMZh102jhI0PE6Yrqkpm+R5bTxUWvCjPykmtq
-	WlbddJH0odsLTU/9pMOdxn+PkTNa49n7N5ZvM4UD0maObK3Zd9qj9kNJXbjqHQeNmT1JTuolvrtNi
-	Vpta2pPXprvf8lrp/xLulCdRHeE9tzU/AQ/jRdr1yi09xwhjfkgynp4ly+k7LQoKGQqGefX9PFflQ
-	rxIuTYAw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1snai3-0000000AlXM-0txX;
-	Mon, 09 Sep 2024 09:29:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 80F5330047C; Mon,  9 Sep 2024 11:29:23 +0200 (CEST)
-Date: Mon, 9 Sep 2024 11:29:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 6/8] x86/module: perpare module loading for ROX
- allocations of text
-Message-ID: <20240909092923.GB4723@noisy.programming.kicks-ass.net>
-References: <20240909064730.3290724-1-rppt@kernel.org>
- <20240909064730.3290724-7-rppt@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fIfase93oLn1fb19woUUdYS6OirksGbOehnBTGavW5kZnEOcDkIWPcRBm5qEL0c1kipV6ikojMpOQ52+GQZz9migCa9kat/cAmXPEke7rBSyq5jh1MSuZvZqdjgr39SFcaLZo8FzrY6dFuC8Iotr/zDpiAAW52ogSQS4MM6+lTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2748FEC;
+	Mon,  9 Sep 2024 03:18:37 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCFE03F66E;
+	Mon,  9 Sep 2024 03:18:06 -0700 (PDT)
+Date: Mon, 9 Sep 2024 11:18:01 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: "Liao, Chang" <liaochang1@huawei.com>, catalin.marinas@arm.com,
+	will@kernel.org, mhiramat@kernel.org, oleg@redhat.com,
+	peterz@infradead.org, puranjay@kernel.org, ast@kernel.org,
+	andrii@kernel.org, xukuohai@huawei.com, revest@chromium.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] arm64: insn: Simulate nop and push instruction for
+ better uprobe performance
+Message-ID: <Zt7LWaoZ0PTFqVLF@J2N7QTR9R3>
+References: <20240814080356.2639544-1-liaochang1@huawei.com>
+ <Zr3RN4zxF5XPgjEB@J2N7QTR9R3>
+ <f95fc55b-2f17-7333-2eae-52caae46f8b2@huawei.com>
+ <8cc13794-30a7-a30b-2ac9-4d151499d184@huawei.com>
+ <ZtrN4eWwrSWTMGmD@J2N7QTR9R3>
+ <CAEf4BzYn3EkVVk4dnWMBMKa16y_ZFvQp3ZcdM44a2LeS08S6FQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240909064730.3290724-7-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYn3EkVVk4dnWMBMKa16y_ZFvQp3ZcdM44a2LeS08S6FQ@mail.gmail.com>
 
-On Mon, Sep 09, 2024 at 09:47:28AM +0300, Mike Rapoport wrote:
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 8da0e66ca22d..563d9a890ce2 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
+On Fri, Sep 06, 2024 at 10:46:00AM -0700, Andrii Nakryiko wrote:
+> On Fri, Sep 6, 2024 at 2:39 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> >
+> > On Tue, Aug 27, 2024 at 07:33:55PM +0800, Liao, Chang wrote:
+> > > Hi, Mark
+> > >
+> > > Would you like to discuss this patch further, or do you still believe emulating
+> > > STP to push FP/LR into the stack in kernel is not a good idea?
+> >
+> > I'm happy with the NOP emulation in principle, so please send a new
+> > version with *just* the NOP emulation, and I can review that.
+> 
+> Let's definitely start with that, this is important for faster USDT tracing.
+> 
+> > Regarding STP emulation, I stand by my earlier comments, and in addition
+> > to those comments, AFAICT it's currently unsafe to use any uaccess
+> > routine in the uprobe BRK handler anyway, so that's moot. The uprobe BRK
+> > handler runs with preemption disabled and IRQs (and all other maskable
+> > exceptions) masked, and faults cannot be handled. IIUC
+> > CONFIG_DEBUG_ATOMIC_SLEEP should scream about that.
+> 
+> This part I don't really get, and this might be some very
+> ARM64-specific issue, so I'm sorry ahead of time.
+> 
+> But in general, at the lowest level uprobes work in two logical steps.
+> First, there is a breakpoint that user space hits, kernel gets
+> control, and if VMA which hit breakpoint might contain uprobe, kernel
+> sets TIF_UPROBE thread flag and exits. This is the only part that's in
+> hard IRQ context. See uprobe_notify_resume() and comments around it.
+> 
+> Then uprobe infrastructure gets called in user context on the way back
+> to user space. This is where we confirm that this is uprobe/uretprobe
+> hit, and, if supported, perform instruction emulation.
+> 
+> So I'm wondering if your above comment refers to instruction emulation
+> within the first part of uprobe handling? If yes, then, no, that's not
+> where emulation will happen.
 
-> @@ -654,4 +656,15 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->  }
->  #endif
->  
-> +void ftrace_swap_func(void *a, void *b, int n)
-> +{
-> +	unsigned long t;
-> +
-> +	WARN_ON_ONCE(n != sizeof(t));
-> +
-> +	t = *((unsigned long *)a);
-> +	text_poke_copy(a, b, sizeof(t));
-> +	text_poke_copy(b, &t, sizeof(t));
-> +}
+You're right -- I had misunderstood that the emulation happened during
+handling of the breakpoint, rather than on the return-to-userspace path.
+Looking at the arm64 entry code, the way uprobe_notify_resume() is
+plumbed in is safe as it happens after we've re-enabled preemption and
+unmasked other exceptions.
 
-This is insane, just force BUILDTIME_MCOUNT_SORT
+Sorry about that.
+
+For the moment I'd still prefer to get the NOP case out of the way
+first, so I'll review the NOP-only patch shortly.
+
+Mark.
