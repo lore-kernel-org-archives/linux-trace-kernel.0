@@ -1,141 +1,117 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93277494;
-	Mon,  9 Sep 2024 16:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3DE170A1B;
+	Mon,  9 Sep 2024 17:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725901063; cv=none; b=V5qp05bfeEcW/IYaoZwlKzBm5assmXtqlj5Y0aF8h7ejG6h9FuEl+GfjDEmsjsLdrBRHzF55d5GKs6YNDO3u/1MM4kCA4FnHG3wOBYSiyiJ3M9N92RGfobZ6wktc1oIUe2/IsdZHhsMcY3moWwv8UvS3yO1T4mqqVtUKJy2vvg4=
+	t=1725902539; cv=none; b=aRyFcZPLB+DYj656TC2s73u/MpAce19Qc14JohO7QBDg71cX5JJqC55Ho7W5J0iBhqLa0AAK10AwQDUYph7PynuEIdQEH8/VJdbqPtXzp8rMU2cp0iDvPmun9weqnQCXhOiOGKpiYydWBMyKGPDYWognx+eOqHTdcPSLDBe5rcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725901063; c=relaxed/simple;
-	bh=QCNK9zP8bGz5ckOaJiJWjF8Cds6zTixKftz7aBjGHbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W/ieZzXrLma1zfxDttBHakl2M/XUnv513UuFvg8I0CHZAEwaYUfQ+nRTEP2ws1Q4XdaCGA+t1enoIAqQifXxEazfHJvi1CyzbBZiOn/pzbwkGxDrDclcTLiDGSq7GwMkfEXEEPrpbkiiaX8eu+uvSZuklIbczc9yrXzGeoWbCQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GEzNWPKn; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725902539; c=relaxed/simple;
+	bh=10DxOvSkp46qzAR/VG9MNEapEr6I90jKHri7LSTULfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=anQolSozwzZ5muK/NVwVqPDeSSrOrE+1+99QdJUTxs95lUS83PS/ua30vPgdZuynfQcf1Lf+to9V1oJeOOo+LgaQlwpsyjHarUf71imPKRK9NVvA8ghJ0JwTGQYo2F55KhaJzlc0bC/i85NMVC2PDrsELqU5Au75A1vdECDok/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=o6X76bNb; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GEzNWPKn"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-718d8d6af8fso2695442b3a.3;
-        Mon, 09 Sep 2024 09:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725901061; x=1726505861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QCNK9zP8bGz5ckOaJiJWjF8Cds6zTixKftz7aBjGHbk=;
-        b=GEzNWPKnhda+7UYcbHt14VTzefK0iV0QT72GIHwiU5no/aD/17joBclnOunHrttXJ/
-         Hj4ZRQo8GlESM9c7dC84EIdaCqx66gfai2YWADQsQlBhTkq8dBPKRZpc31OpLsYcq/R3
-         m7bKZCr1elrW9OWDa4/kV4hWxq/imzbFLFz939GRO+otihrWztibt3+gPNZMQEqMk6GZ
-         qCMSpZ+sysiA69catX9RYCbdIc0pTOB4qrbEsPWGN/uJy0QU9uS9t/TqmvSXI68CzPjR
-         ODZJpsPClDDN9yIo0X5qj3M5HnSH0rD5PQGLcrUF/3ApIDWwUAc2lSo8IDDS3pz0foVZ
-         xh3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725901061; x=1726505861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QCNK9zP8bGz5ckOaJiJWjF8Cds6zTixKftz7aBjGHbk=;
-        b=XybfCGkGhW0d00DU2vpVPPoJCNY24tI7a8HFaBSgxiSGZezrPwx7YwNVtHARaxelN4
-         mF0QwEJgYBX+EHHdlkKlAPvdJuOgKBsg3cEXYvIfG9zUYOP56yhkJumhkTZUYLaMSthG
-         dGx7pHmW/abou/0iVqyXUEeNDzeFtOELkVC7OsiDcePzM5MWWfyf4FSQ0r5iBl4YuG3p
-         JEj29+svfPh+OhO15FwOvMqPmhmwX6/4D3Zh3JGNZ6KGW56p5a/DxdRUh5gflmYERPgF
-         PaWT3HXQLv8xsgW/5oP8b1TdH/KBacPh9fBavvyTcBrrQ/LXEuGsnp8vu/onL5Nnwy/C
-         /4tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVwj+n5HZdOCDEjMSMnzrHWnjm37vUswY3j6XpQTum4L8QrBplhmJmoTEVXs+42Ips6nuzRSpb6cotcoHZT@vger.kernel.org, AJvYcCWC7kaBdrrt/hO4OQK+cqCbhUeNyi69f679axjrEiCVLbMRyA/gRlJUGXqw+QUmB5YV2TA=@vger.kernel.org, AJvYcCWXFQJBUAumX+rAOOKqqswHk8aH4Xs94y4ZUwJ1gzrSx4eG6B+4tYb7KdmyIRM8byraNIAqczsPL1PekTA1+kCbK7nN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHGZRSouHhDlWmTKDeUrbnwrLog3gRHPb60xlztwgHnT09j2pn
-	DxevqwQOxilTR+BciODhC7l/2tATmi37Y7eqpx/hHmG9xo1RJqMnnmyFIzUMuHqW/7xkZiK3vPs
-	1F2xuyI9FRa4mfLfKbACsYeUPDl2SCg==
-X-Google-Smtp-Source: AGHT+IFApPizW7xqNkTHSmiNEWQUS+OJNd1Gro6foYoJ+rcZwtGDgWdsEDvQSdwD9lVR0uoBUsshIirR3/BtJEzYuFs=
-X-Received: by 2002:a05:6a21:3a94:b0:1cf:4ea4:17c with SMTP id
- adf61e73a8af0-1cf4ea40234mr815722637.15.1725901060848; Mon, 09 Sep 2024
- 09:57:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="o6X76bNb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1725902535;
+	bh=10DxOvSkp46qzAR/VG9MNEapEr6I90jKHri7LSTULfw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o6X76bNbCxjpRXMqnzFoJ7fUCQeHkUkBi4bjIRGtiWwjELMpDOa4CZoFUdcYdr3ww
+	 LenLZ1yPrteE9+pm2YzdQiaQrljA3GN44y7J9a2SAPnUdHyjodo7y9UXO7NGzvun1B
+	 7moWRc2z2OxBC475VfU5+oQNWjRD8CT9M+YcSt9JrR2hyfg4GPt66iQa15Q4roQyVr
+	 sjyqBpnHnZOK6nVGUPuml64hSZIxPmn5WnOUL+KJtRh+TDCI0BztDKeAf73kMiB1m0
+	 29SPaDURyZvS/zCMty3ALdyfKpk9cJHTujfuv35ehn6ICJ1ON30GJjfmlslDoK0N3C
+	 /dc+cPJ6B1GBg==
+Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4X2YYM1fx4z1KhF;
+	Mon,  9 Sep 2024 13:22:15 -0400 (EDT)
+Message-ID: <279860b4-2f42-463f-bee2-c6c60ec72f29@efficios.com>
+Date: Mon, 9 Sep 2024 13:22:00 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240814080356.2639544-1-liaochang1@huawei.com>
- <Zr3RN4zxF5XPgjEB@J2N7QTR9R3> <f95fc55b-2f17-7333-2eae-52caae46f8b2@huawei.com>
- <8cc13794-30a7-a30b-2ac9-4d151499d184@huawei.com> <ZtrN4eWwrSWTMGmD@J2N7QTR9R3>
- <CAEf4BzYn3EkVVk4dnWMBMKa16y_ZFvQp3ZcdM44a2LeS08S6FQ@mail.gmail.com> <Zt7LWaoZ0PTFqVLF@J2N7QTR9R3>
-In-Reply-To: <Zt7LWaoZ0PTFqVLF@J2N7QTR9R3>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 9 Sep 2024 09:57:28 -0700
-Message-ID: <CAEf4BzbWnGiRQm+eZAYSsHzy5+9jbZ87=m0sg5zxAjVDSkPFiA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: insn: Simulate nop and push instruction for better
- uprobe performance
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Liao, Chang" <liaochang1@huawei.com>, catalin.marinas@arm.com, will@kernel.org, 
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, 
-	puranjay@kernel.org, ast@kernel.org, andrii@kernel.org, xukuohai@huawei.com, 
-	revest@chromium.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/5] tracing/bpf-trace: Add support for faultable
+ tracepoints
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
+ Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>, bpf@vger.kernel.org,
+ Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
+ Michael Jeanson <mjeanson@efficios.com>
+References: <20240828144153.829582-1-mathieu.desnoyers@efficios.com>
+ <20240828144153.829582-4-mathieu.desnoyers@efficios.com>
+ <CAEf4BzZERq7qwf0TWYFaXzE6d+L+Y6UY+ahteikro_eugJGxWw@mail.gmail.com>
+ <1f442f99-92cd-41d6-8dd2-1f4780f2e556@efficios.com>
+ <CAEf4BzbS0TRN1vPzPtSZj+XN7oVUUwyoxHr5p7igH8X-nhZhGw@mail.gmail.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <CAEf4BzbS0TRN1vPzPtSZj+XN7oVUUwyoxHr5p7igH8X-nhZhGw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 9, 2024 at 3:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
-wrote:
->
-> On Fri, Sep 06, 2024 at 10:46:00AM -0700, Andrii Nakryiko wrote:
-> > On Fri, Sep 6, 2024 at 2:39=E2=80=AFAM Mark Rutland <mark.rutland@arm.c=
-om> wrote:
-> > >
-> > > On Tue, Aug 27, 2024 at 07:33:55PM +0800, Liao, Chang wrote:
-> > > > Hi, Mark
-> > > >
-> > > > Would you like to discuss this patch further, or do you still belie=
-ve emulating
-> > > > STP to push FP/LR into the stack in kernel is not a good idea?
-> > >
-> > > I'm happy with the NOP emulation in principle, so please send a new
-> > > version with *just* the NOP emulation, and I can review that.
-> >
-> > Let's definitely start with that, this is important for faster USDT tra=
-cing.
-> >
-> > > Regarding STP emulation, I stand by my earlier comments, and in addit=
-ion
-> > > to those comments, AFAICT it's currently unsafe to use any uaccess
-> > > routine in the uprobe BRK handler anyway, so that's moot. The uprobe =
-BRK
-> > > handler runs with preemption disabled and IRQs (and all other maskabl=
-e
-> > > exceptions) masked, and faults cannot be handled. IIUC
-> > > CONFIG_DEBUG_ATOMIC_SLEEP should scream about that.
-> >
-> > This part I don't really get, and this might be some very
-> > ARM64-specific issue, so I'm sorry ahead of time.
-> >
-> > But in general, at the lowest level uprobes work in two logical steps.
-> > First, there is a breakpoint that user space hits, kernel gets
-> > control, and if VMA which hit breakpoint might contain uprobe, kernel
-> > sets TIF_UPROBE thread flag and exits. This is the only part that's in
-> > hard IRQ context. See uprobe_notify_resume() and comments around it.
-> >
-> > Then uprobe infrastructure gets called in user context on the way back
-> > to user space. This is where we confirm that this is uprobe/uretprobe
-> > hit, and, if supported, perform instruction emulation.
-> >
-> > So I'm wondering if your above comment refers to instruction emulation
-> > within the first part of uprobe handling? If yes, then, no, that's not
-> > where emulation will happen.
->
-> You're right -- I had misunderstood that the emulation happened during
-> handling of the breakpoint, rather than on the return-to-userspace path.
-> Looking at the arm64 entry code, the way uprobe_notify_resume() is
-> plumbed in is safe as it happens after we've re-enabled preemption and
-> unmasked other exceptions.
->
-> Sorry about that.
->
-> For the moment I'd still prefer to get the NOP case out of the way
-> first, so I'll review the NOP-only patch shortly.
->
+On 2024-09-09 12:53, Andrii Nakryiko wrote:
+> On Mon, Sep 9, 2024 at 8:11 AM Mathieu Desnoyers
+[...]
+>>>
+>>> I wonder if it would be better to just do this, instead of that
+>>> preempt guard. I think we don't strictly need preemption to be
+>>> disabled, we just need to stay on the same CPU, just like we do that
+>>> for many other program types.
+>>
+>> I'm worried about introducing any kind of subtle synchronization
+>> change in this series, and moving from preempt-off to migrate-disable
+>> definitely falls under that umbrella.
+>>
+>> I would recommend auditing all uses of this_cpu_*() APIs to make sure
+>> accesses to per-cpu data structures are using atomics and not just using
+>> operations that expect use of preempt-off to prevent concurrent threads
+>> from updating to the per-cpu data concurrently.
+>>
+>> So what you are suggesting may be a good idea, but I prefer to leave
+>> this kind of change to a separate bpf-specific series, and I would
+>> leave this work to someone who knows more about ebpf than me.
+>>
+> 
+> Yeah, that's ok. migrate_disable() switch is probably going a bit too
+> far too fast, but I think we should just add
+> preempt_disable/preempt_enable inside __bpf_trace_run() instead of
+> leaving it inside those hard to find and follow tracepoint macros. So
+> maybe you can just pass a bool into __bpf_trace_run() and do preempt
+> guard (or explicit disable/enable) there?
+> 
 
-Yep, one step at a time makes sense, thanks! Regardless, I'm glad we
-clarified the confusion.
+Passing an extra boolean to __bpf_trace_run would impact all tracepoints
+calling into ebpf, adding an extra function argument and extra tests for
+all of those. The impact may be small, but it is non-zero in both code size
+and overhead, so it would not be my preferred approach.
 
-> Mark.
+I have modified the macros to add the guard within __bpf_trace_##call
+following suggestions from Linus:
+
+   https://lore.kernel.org/lkml/CAHk-=wggDLDeTKbhb5hh--x=-DQd69v41137M72m6NOTmbD-cw@mail.gmail.com/
+
+I'll Cc you on that version of the series.
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
