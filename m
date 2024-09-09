@@ -1,247 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545BE18DF63;
-	Mon,  9 Sep 2024 22:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF8518E040;
+	Mon,  9 Sep 2024 23:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725922158; cv=none; b=DAGBiIrrrisCwutSRlK8o34C9V3xUBV7FcMTUUxWe4+/uzY+CiRCVOA4fPmrsmhdbXbBb0Q/oibnVqJi86h7+m1Wh+HzDMRYil3cwmVHU25lP9cioUiFSbZuE8+Mlai2UoGOzBeRjQdyJsTF73N5xvtdt6b8eGQQcgcq89ZLAaU=
+	t=1725925464; cv=none; b=LtyjB6C+bHrQaZ0Fs5JISK6SizRpCPp1YQne0eEqY4Ng72HG0KdHJlwWsSwvzNM19Qp/BfH7a8H3Db9bqt583O/gfWtG3Xz3BFYTDDis1C8NlSfaMeTexMSEDoRfJixdvKfePaOk0BDeOjap8auis6ZoNapJk8OuPNG7z/u3Rfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725922158; c=relaxed/simple;
-	bh=THYLFg3kjLTPYm13kyoEYDqmRzKJALbi+j9hfhgBwow=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h8cvKax465bSvIkKZNIC/tDGt3TBfyiGv3z4A5F8MtOcgzG54jD5m6eWalT7FPMYKwv5dNKNScDxRsgawb1+9WyltMmIHsMRCGxTvJbr9eaHARd1mD2qHMpVxHC1VLydA8QKYji2x/lU9ZwPs5JV+72kUnG2yh6CT2Bsfb3x/W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/EqOHNC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725925464; c=relaxed/simple;
+	bh=67TG3+DJiwCDkEFHQd6no3SeVRqGsft9f91ULj7ZDGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LSxjByOrf6/eBsdZ4yvwyAD+EGga1PuAhft6rynS4/TCN7Z9ubVCqOaVOsTdskR24K9BiG7acKDYuwL9qEmbdFGuC17Ix0L7UsaNJwh82frqZexlfzoluaZXIDXmKF+9DocfEaegncm/5+Eo2S8K5flGscauSCbax6b8csNUlpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiatQ6aA; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/EqOHNC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDDA0C4CEC5;
-	Mon,  9 Sep 2024 22:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725922158;
-	bh=THYLFg3kjLTPYm13kyoEYDqmRzKJALbi+j9hfhgBwow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h/EqOHNCKrRaRTdRlMHnqzqyaGgPC6wjPR4DvcOmMAxm22c+tHHsIqUE55OrrAgAY
-	 ntnv5Y+/MniUUoxq9TEPUJkagRmWsyhjXdXro0ZMwS7dfIdYHRp/cYr5snDRffACCq
-	 mBbVTCwIBwhUTrYJp6x+dyv5sFCtjmlvbpnkjkZSCCkPGFU/oi9BQK0GuYJ8RYKgL6
-	 7UXkaqadY00xgHrBfu2ta5gTGAJDDk1CA2NUc3vku4Z2yYgrRdg3hW7usv/2RfxMw0
-	 JnsZLeWQJDnq1PYkwPluG6fMgklN1LeE0g6bWgaPUbwKf55FB55zafeM6P5PXM6xbF
-	 n3vh66nYsrmug==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	oleg@redhat.com
-Cc: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	paulmck@kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH 3/3] uprobes: implement SRCU-protected lifetime for single-stepped uprobe
-Date: Mon,  9 Sep 2024 15:49:03 -0700
-Message-ID: <20240909224903.3498207-4-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240909224903.3498207-1-andrii@kernel.org>
-References: <20240909224903.3498207-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiatQ6aA"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2d88c5d76eeso3147676a91.2;
+        Mon, 09 Sep 2024 16:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725925462; x=1726530262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQePtXix4NPP2DnvfCAb71/91R9FwUGIGWH2bP7w8cM=;
+        b=IiatQ6aAebn3QXYhY6N2IoF1ZbJif/r43lvPxClYtX1E2BRFyZoPFNo+7umzhL9vvv
+         CLTdHaWO6SKGes09hMY3PDBFosbh5kJtfcPfo9gLCUSwtzBeD/WGP9sHT2oZEJs8Hq79
+         yRUreGlu9ehLoLQq0ZQNEh0UMTG06ztYW6qui7+mreeVnEsg6I9K14rkKxT+/aRUEdxT
+         IYRf45dP2eV/6ZmB9N33TuPRb2qGU24MPKOE6gSa8ywyBZK9G9j/ZGMJEjTrm72O27DV
+         JY7HDNW5+slsYNGjhPVpbXFw8iDQuv0u7jvS8o54tZKOH0dBPN/drqJzuiTU1YeVjkOu
+         CkbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725925462; x=1726530262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VQePtXix4NPP2DnvfCAb71/91R9FwUGIGWH2bP7w8cM=;
+        b=jQKo30JzNY6oMKIXM9RDd4sPX2IHT8kJzfzUslxvDYKb4NgNwKBVG/afkkafki/qUp
+         c/DbGpg2G3NxhS4tZ/5apIgBRMr7belJvhXhKGRMAxm+mhGw6gf+yivnCLdT8BovVZ43
+         fsPKT6W9ADBomF9jaVJ+xg5tElrKFUH7ct6ZNT7nD2Ph1bUhpuKGr+rj8Ncbk4lBedC2
+         2qpx6EmpjxN7epgAoMsMni/3+9+kByyURhgmHm3Clg2I0UCPNE21xgR14TMNtappUIxd
+         qhAc7BevzGiWFuZyD3qWNUwPNTtUmxefTmEfmQtkg0bUKy50R2ydkdTwGSGkHVGtrSw6
+         z7SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWaoP/wgo5xBN2AkNvTM/sFJKAvKnrnCWIDl/5xZMKxrD3Z9mPViPnTZUGkeAsxmoKEnE=@vger.kernel.org, AJvYcCWbvBsfGBV+BWCRY1qEn71LrU0wkslnEZDTIBmoC7gfIVovRXbcR/twGEfCVMPOcKYfzcfCgvgdJRGws874@vger.kernel.org, AJvYcCXKI5knfD/QdHzyfLGhSht9Qbcjo0hFwS3BK8SfkJVt8sdxKSFyQGCQdGVcv4oLacf5X15HyeZErtSnPDq1QhAjC/Dm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJdHIIn0jby1Yii3HBnGrWq6YUx+5jDrVnWTgmdgFlrVO2TNSV
+	QU5vg/XkW+QZvB8g7j99gyubGrNZ768yfhEkv2WS+uNUhhmtWhLyUXk+It6gkWIVr2vZQayMUFU
+	gs3CbfMJbuPlW/SPB5H/3yIQvk78=
+X-Google-Smtp-Source: AGHT+IEHlh/76dHGFPfmL8zUUPtfDZ4rZIgWU7jKQK3X1aN0QgBsrlpIu95Qt/j6R2wnhn4j/XXWoqKmSxCo+39OfqA=
+X-Received: by 2002:a17:90b:ec6:b0:2d8:d58b:52c8 with SMTP id
+ 98e67ed59e1d1-2dad505d5a0mr11742274a91.19.1725925461869; Mon, 09 Sep 2024
+ 16:44:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240909074554.2339984-1-jolsa@kernel.org> <20240909074554.2339984-2-jolsa@kernel.org>
+In-Reply-To: <20240909074554.2339984-2-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 9 Sep 2024 16:44:09 -0700
+Message-ID: <CAEf4Bza-aJQ_qzJxnzkE07xn66TppVLO6t5ps_AOjO3eFaiQqA@mail.gmail.com>
+Subject: Re: [PATCHv3 1/7] uprobe: Add support for session consumer
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Similarly to how we SRCU-protect uprobe instance (and avoid refcounting
-it unnecessarily) when waiting for return probe hit, use hprobe approach
-to do the same with single-stepped uprobe. Same hprobe_* primitives are
-used. We also reuse ri_timer() callback to expire both pending
-single-step uprobe and return instances.
+On Mon, Sep 9, 2024 at 12:46=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support for uprobe consumer to be defined as session and have
+> new behaviour for consumer's 'handler' and 'ret_handler' callbacks.
+>
+> The session means that 'handler' and 'ret_handler' callbacks are
+> connected in a way that allows to:
+>
+>   - control execution of 'ret_handler' from 'handler' callback
+>   - share data between 'handler' and 'ret_handler' callbacks
+>
+> The session is enabled by setting new 'session' bool field to true
+> in uprobe_consumer object.
+>
+> We use return_consumer object to keep track of consumers with
+> 'ret_handler'. This object also carries the shared data between
+> 'handler' and and 'ret_handler' callbacks.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- include/linux/uprobes.h |  4 +--
- kernel/events/uprobes.c | 55 ++++++++++++++++++++++++-----------------
- 2 files changed, 34 insertions(+), 25 deletions(-)
+and and
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 1b194c51d4d3..31cf7306cdf6 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -114,7 +114,7 @@ struct uprobe_task {
- 		};
- 	};
- 
--	struct uprobe			*active_uprobe;
-+	struct hprobe			active_hprobe;
- 	struct timer_list		ri_timer;
- 	unsigned long			xol_vaddr;
- 
-@@ -122,7 +122,7 @@ struct uprobe_task {
- 
- 	struct return_instance		*return_instances;
- 	unsigned int			depth;
--};
-+} ____cacheline_aligned;
- 
- struct return_instance {
- 	unsigned long		func;
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index b047e68499d5..d9ab5e0dd9dd 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1894,11 +1894,16 @@ unsigned long __weak uprobe_get_swbp_addr(struct pt_regs *regs)
- 	return instruction_pointer(regs) - UPROBE_SWBP_INSN_SIZE;
- }
- 
-+static bool utask_has_pending_sstep_uprobe(struct uprobe_task *utask)
-+{
-+	return utask->active_hprobe.stable != NULL;
-+}
-+
- unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
- {
- 	struct uprobe_task *utask = current->utask;
- 
--	if (unlikely(utask && utask->active_uprobe))
-+	if (unlikely(utask && utask_has_pending_sstep_uprobe(utask)))
- 		return utask->vaddr;
- 
- 	return instruction_pointer(regs);
-@@ -1927,14 +1932,17 @@ void uprobe_free_utask(struct task_struct *t)
- {
- 	struct uprobe_task *utask = t->utask;
- 	struct return_instance *ri;
-+	struct uprobe *uprobe;
-+	bool under_rcu;
- 
- 	if (!utask)
- 		return;
- 
- 	timer_delete_sync(&utask->ri_timer);
- 
--	if (utask->active_uprobe)
--		put_uprobe(utask->active_uprobe);
-+	/* clean up pending single-stepped uprobe */
-+	uprobe = hprobe_consume(&utask->active_hprobe, &under_rcu);
-+	hprobe_finalize(&utask->active_hprobe, uprobe, under_rcu);
- 
- 	ri = utask->return_instances;
- 	while (ri)
-@@ -1958,6 +1966,8 @@ static void ri_timer(struct timer_list *timer)
- 	/* RCU protects return_instance from freeing. */
- 	guard(rcu)();
- 
-+	hprobe_expire(&utask->active_hprobe);
-+
- 	for_each_ret_instance_rcu(ri, utask->return_instances) {
- 		hprobe_expire(&ri->hprobe);
- 	}
-@@ -2190,20 +2200,15 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
- {
- 	struct uprobe_task *utask;
- 	unsigned long xol_vaddr;
--	int err;
-+	int err, srcu_idx;
- 
- 	utask = get_utask();
- 	if (!utask)
- 		return -ENOMEM;
- 
--	if (!try_get_uprobe(uprobe))
--		return -EINVAL;
--
- 	xol_vaddr = xol_get_insn_slot(uprobe);
--	if (!xol_vaddr) {
--		err = -ENOMEM;
--		goto err_out;
--	}
-+	if (!xol_vaddr)
-+		return -ENOMEM;
- 
- 	utask->xol_vaddr = xol_vaddr;
- 	utask->vaddr = bp_vaddr;
-@@ -2211,15 +2216,17 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
- 	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
- 	if (unlikely(err)) {
- 		xol_free_insn_slot(current);
--		goto err_out;
-+		return err;
- 	}
- 
--	utask->active_uprobe = uprobe;
-+	srcu_idx = __srcu_read_lock(&uretprobes_srcu);
-+
-+	hprobe_init_leased(&utask->active_hprobe, uprobe, srcu_idx);
- 	utask->state = UTASK_SSTEP;
-+
-+	mod_timer(&utask->ri_timer, jiffies + RI_TIMER_PERIOD);
-+
- 	return 0;
--err_out:
--	put_uprobe(uprobe);
--	return err;
- }
- 
- /*
-@@ -2236,7 +2243,7 @@ bool uprobe_deny_signal(void)
- 	struct task_struct *t = current;
- 	struct uprobe_task *utask = t->utask;
- 
--	if (likely(!utask || !utask->active_uprobe))
-+	if (likely(!utask || !utask_has_pending_sstep_uprobe(utask)))
- 		return false;
- 
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
-@@ -2553,8 +2560,10 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- {
- 	struct uprobe *uprobe;
- 	int err = 0;
-+	bool under_rcu;
-+
-+	uprobe = hprobe_consume(&utask->active_hprobe, &under_rcu);
- 
--	uprobe = utask->active_uprobe;
- 	if (utask->state == UTASK_SSTEP_ACK)
- 		err = arch_uprobe_post_xol(&uprobe->arch, regs);
- 	else if (utask->state == UTASK_SSTEP_TRAPPED)
-@@ -2562,8 +2571,8 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 	else
- 		WARN_ON_ONCE(1);
- 
--	put_uprobe(uprobe);
--	utask->active_uprobe = NULL;
-+	hprobe_finalize(&utask->active_hprobe, uprobe, under_rcu);
-+
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(current);
- 
-@@ -2580,7 +2589,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- /*
-  * On breakpoint hit, breakpoint notifier sets the TIF_UPROBE flag and
-  * allows the thread to return from interrupt. After that handle_swbp()
-- * sets utask->active_uprobe.
-+ * sets utask->active_hprobe.
-  *
-  * On singlestep exception, singlestep notifier sets the TIF_UPROBE flag
-  * and allows the thread to return from interrupt.
-@@ -2595,7 +2604,7 @@ void uprobe_notify_resume(struct pt_regs *regs)
- 	clear_thread_flag(TIF_UPROBE);
- 
- 	utask = current->utask;
--	if (utask && utask->active_uprobe)
-+	if (utask && utask_has_pending_sstep_uprobe(utask))
- 		handle_singlestep(utask, regs);
- 	else
- 		handle_swbp(regs);
-@@ -2626,7 +2635,7 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
- {
- 	struct uprobe_task *utask = current->utask;
- 
--	if (!current->mm || !utask || !utask->active_uprobe)
-+	if (!current->mm || !utask || !utask_has_pending_sstep_uprobe(utask))
- 		/* task is currently not uprobed */
- 		return 0;
- 
--- 
-2.43.5
+>
+> The control of 'ret_handler' callback execution is done via return
+> value of the 'handler' callback. This patch adds new 'ret_handler'
+> return value (2) which means to ignore ret_handler callback.
+>
+> Actions on 'handler' callback return values are now:
+>
+>   0 - execute ret_handler (if it's defined)
+>   1 - remove uprobe
+>   2 - do nothing (ignore ret_handler)
+>
+> The session concept fits to our common use case where we do filtering
+> on entry uprobe and based on the result we decide to run the return
+> uprobe (or not).
+>
+> It's also convenient to share the data between session callbacks.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
 
+Just minor things:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>  include/linux/uprobes.h                       |  17 ++-
+>  kernel/events/uprobes.c                       | 132 ++++++++++++++----
+>  kernel/trace/bpf_trace.c                      |   6 +-
+>  kernel/trace/trace_uprobe.c                   |  12 +-
+>  .../selftests/bpf/bpf_testmod/bpf_testmod.c   |   2 +-
+>  5 files changed, 133 insertions(+), 36 deletions(-)
+>
+
+[...]
+
+>  enum rp_check {
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4b7e590dc428..9e971f86afdf 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -67,6 +67,8 @@ struct uprobe {
+>         loff_t                  ref_ctr_offset;
+>         unsigned long           flags;
+
+we should shorten flags to unsigned int, we use one bit out of it
+
+>
+> +       unsigned int            consumers_cnt;
+> +
+
+and then this won't increase the size of the struct unnecessarily
+
+>         /*
+>          * The generic code assumes that it has two members of unknown ty=
+pe
+>          * owned by the arch-specific code:
+> @@ -826,8 +828,12 @@ static struct uprobe *alloc_uprobe(struct inode *ino=
+de, loff_t offset,
+>
+
+[...]
+
+>         current->utask->auprobe =3D NULL;
+>
+> -       if (need_prep && !remove)
+> -               prepare_uretprobe(uprobe, regs); /* put bp at return */
+> +       if (ri && !remove)
+> +               prepare_uretprobe(uprobe, regs, ri); /* put bp at return =
+*/
+> +       else
+> +               kfree(ri);
+
+maybe `else if (ri) kfree(ri)` to avoid unnecessary calls to kfree
+when we only have uprobes?
+
+>
+>         if (remove && has_consumers) {
+>                 down_read(&uprobe->register_rwsem);
+> @@ -2160,15 +2230,25 @@ static void handler_chain(struct uprobe *uprobe, =
+struct pt_regs *regs)
+>  static void
+>  handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
+>  {
+> +       struct return_consumer *ric =3D NULL;
+>         struct uprobe *uprobe =3D ri->uprobe;
+>         struct uprobe_consumer *uc;
+> -       int srcu_idx;
+> +       int srcu_idx, iter =3D 0;
+
+iter -> next_ric_idx  or just ric_idx?
+
+>
+>         srcu_idx =3D srcu_read_lock(&uprobes_srcu);
+>         list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+>                                  srcu_read_lock_held(&uprobes_srcu)) {
+> +               /*
+> +                * If we don't find return consumer, it means uprobe cons=
+umer
+> +                * was added after we hit uprobe and return consumer did =
+not
+> +                * get registered in which case we call the ret_handler o=
+nly
+> +                * if it's not session consumer.
+> +                */
+> +               ric =3D return_consumer_find(ri, &iter, uc->id);
+> +               if (!ric && uc->session)
+> +                       continue;
+>                 if (uc->ret_handler)
+> -                       uc->ret_handler(uc, ri->func, regs);
+> +                       uc->ret_handler(uc, ri->func, regs, ric ? &ric->c=
+ookie : NULL);
+>         }
+>         srcu_read_unlock(&uprobes_srcu, srcu_idx);
+>  }
+
+[...]
