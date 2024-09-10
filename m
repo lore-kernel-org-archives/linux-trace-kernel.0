@@ -1,202 +1,113 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B8C14F12C;
-	Tue, 10 Sep 2024 15:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FD4F198824;
+	Tue, 10 Sep 2024 16:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725983787; cv=none; b=HUkNd1UCXnfoxfSyuKF3r/taUAx+hXwwvuQKUb4NLHWkCr24d5dRuDwiYpBI46Ig+HHNejsjanZKrUh3fppWqjidkQ0J4yWV9M3fxA8D16N/m57GMo9aD3vrUgtA88Ni1mqwstXyJqlM44VuomCB2/evMr5KDyzkJKn5SPjUTWM=
+	t=1725984224; cv=none; b=WuyvIIh4JAYF7y/O4h6lDYZ6OB8u/B9uhzEiAWhVekkRajAa1LnHgZsTUM8dmur72dTjts5ZwJj8usUh/kZEw71xVBr5oGg1xNbVDAHFCRhtHzjrenvlbbs8NE9wPwJFyz3Xv+3221Zg/QiNjMUgcnoHLJkaEUj0QzbRv/KVwmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725983787; c=relaxed/simple;
-	bh=RmjvCuPJxR1h7+htFpSDFvemsvqOLZ0jJXC9aMgghLE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WoCI3wYn79dkt6Z4tNQskBLzNgEp1Mx4IZB68/zkY6NCmew1wmzsPBPGTIIuvqSrNsDc54WX25IaEnsN35QwqMM8/g9yuHve3QbXKPsGpPqDp1nTgjMwhO9mbymKrZ+BP3FfuFesnPJXekAEQiP4WHK0SNJbtkpxzzXg4l15lmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F4/GvzsM; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4/GvzsM"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-374c5bab490so4260647f8f.1;
-        Tue, 10 Sep 2024 08:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725983784; x=1726588584; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gJaBuk9O8XTeUn+tXdjD8n8fSiu133fBeIfYRY7Bi8E=;
-        b=F4/GvzsMqv16UblS13ZoDMyx3aPb7HogfAe4TXUDnDKRZ51j/vr5Qb+kFAiQkxDlGB
-         R7H5/UmeFvW06k1N9qM2GYtcSXvs3N+wRtduwZufSB7vSrXSULdbHfzgqnjNdJgQnRfp
-         MSUQpXMPvVMtyNcmlb9OqkmN/GMiRlr5Z+ykXGqcc/ysgbraukIZOgjwswfExnrCglhj
-         iaBStooQivzDv8Ga+jf9uV6r2ABx31jswApmvom2gf9kjdeAylFcvZIRXwsGJP7No/e4
-         cPYOvnR66pM8SqZrkIM66pnR4h2UoTfpLVmm6DGCpOwdxd/IFo8mSSarjHxsLQHir2Mh
-         Bfuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725983784; x=1726588584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gJaBuk9O8XTeUn+tXdjD8n8fSiu133fBeIfYRY7Bi8E=;
-        b=d4IlM4JlnIbCkJ3qsu5rR4Tn9FMt0Iim8RrZukJscW03u2WnLI+iQlw9RSTmyePX2I
-         nmhtiSAYN3h5HfgByH7sMURL/z35cnyS6au50bUiqC4vTtrJIoTA/D9bekwdoWL0ER82
-         yAw0VbjeEOe06+luazENecAnFQHRvRKhaD7W4KT4TvWqJFvrVwVMb8xSb1geWWWQ3LCt
-         9CewY5w3Wwjy8Or958MBgjwIgvVYJFsWPZFctMsbGatBIDNojDgQcb+w7zz+rZIBYc39
-         R9ACA6PRneAAGba0hyzZRzMUxtB29LNKQHCSxGVwXPa5dVyA8Z8WDaXNBFv2XMUrD1uB
-         e5ew==
-X-Forwarded-Encrypted: i=1; AJvYcCUoOUdrnIOeeqe3acGZjxEsphep6osDikV8tCnOAIkUJl1SFb78MJen4+6CA42tCw+EkHcPMX3wFfFekZq/SLPieak5@vger.kernel.org, AJvYcCV3v0/p8xSVyBR6/G6LwlBDUHF+R96qOaKFPdn8Cp8re3uYjwYoqH2ZirWYNtK2/qW3QwU=@vger.kernel.org, AJvYcCWyh/KlYYYCAc3Ux+e12izPnUH1Di+ftI2CJd8fVKJwE3HoCCjxnRrEA9yT3ucGWZYF9srckEPQW1zityFW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR9XGtta1l8LI9GtnaKnK2JcWYfmQANvPKyWNsxEc01wr0wUXl
-	DVq1ePp2iivNZrTtpeSOCslE2pgnftzCGnofid+GGWwD2br2i7Ab2Flg+iQDPljkULhOdAhZZN/
-	+tSM58LDezNXcxBOyN7X+M0zET8w=
-X-Google-Smtp-Source: AGHT+IE4X4eyk/q1xl+//vS/ZQL+Hjg0B9t+SUyldVyNCcpm+SBgpHzZIZChEdvXKzArZSo8NFhjma/7C1UTyUKoLoQ=
-X-Received: by 2002:a05:6000:1ac7:b0:374:c6b6:c656 with SMTP id
- ffacd0b85a97d-378a8a3de4cmr2838167f8f.21.1725983784086; Tue, 10 Sep 2024
- 08:56:24 -0700 (PDT)
+	s=arc-20240116; t=1725984224; c=relaxed/simple;
+	bh=Cdiv22D2XE0zZV2f8MCtiT3Ss4BAr6XjTBSKLUi7loE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=eQedEVEujSoS7PLqjhDOz+yJE010wvxOqwVwyFqtnSV++kgqmbjyJ1XRuYaCUP25AU5Cpr5FydBpLuR1Wq9fiViDNGBJjwyIk0jey4PmmwkK4whucCYRC6rmE0qzfl3MP7PqXwd+cow1wU8onZaEWvQYCzZ1Ega2MHkrQriyAEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id A5A2792009C; Tue, 10 Sep 2024 18:03:39 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id A14D492009B;
+	Tue, 10 Sep 2024 17:03:39 +0100 (BST)
+Date: Tue, 10 Sep 2024 17:03:39 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+cc: Masahiro Yamada <masahiroy@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+    Richard Weinberger <richard@nod.at>, 
+    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+    Johannes Berg <johannes@sipsolutions.net>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+    Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+    Wedson Almeida Filho <wedsonaf@gmail.com>, 
+    Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+    =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+    Benno Lossin <benno.lossin@proton.me>, 
+    Andreas Hindborg <a.hindborg@samsung.com>, 
+    Alice Ryhl <aliceryhl@google.com>, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+    Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+    Nick Desaulniers <ndesaulniers@google.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-um@lists.infradead.org, rust-for-linux@vger.kernel.org, 
+    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
+    linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+    llvm@lists.linux.dev
+Subject: Re: [PATCH v2 3/3] rust: Enable for MIPS
+In-Reply-To: <035ccfe5-c368-4cd9-8e0d-34e0e355cb05@app.fastmail.com>
+Message-ID: <alpine.DEB.2.21.2409101643210.60835@angie.orcam.me.uk>
+References: <20240905-mips-rust-v2-0-409d66819418@flygoat.com> <20240905-mips-rust-v2-3-409d66819418@flygoat.com> <alpine.DEB.2.21.2409082138160.60835@angie.orcam.me.uk> <035ccfe5-c368-4cd9-8e0d-34e0e355cb05@app.fastmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909224903.3498207-1-andrii@kernel.org> <20240909224903.3498207-2-andrii@kernel.org>
- <CAADnVQLB2b5Uh-qthnCOfJk+v+ty1nQh6LjMDkzjt1BPtGOVZA@mail.gmail.com> <CAEf4Bzap+_fpXjfcnnqz7EH9=bGokpFbnoK==_YDWH855qx7=g@mail.gmail.com>
-In-Reply-To: <CAEf4Bzap+_fpXjfcnnqz7EH9=bGokpFbnoK==_YDWH855qx7=g@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 10 Sep 2024 08:56:13 -0700
-Message-ID: <CAADnVQ+v2PXWurcpt7xGiKf32HqaBWmFiZgjb2TGJg-rJGWjSg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] uprobes: allow put_uprobe() from non-sleepable
- softirq context
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Sep 9, 2024 at 10:13=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Sep 9, 2024 at 7:52=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
+On Mon, 9 Sep 2024, Jiaxun Yang wrote:
+
+> >> diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
+> >> index 863720777313..bbdf8a4dd169 100644
+> >> --- a/scripts/generate_rust_target.rs
+> >> +++ b/scripts/generate_rust_target.rs
+> > [...]
+> >> +        } else {
+> >> +            ts.push("arch", "mips");
+> >> +            cfg.get("TARGET_ISA_REV").map(|isa_rev| {
+> >> +                let feature = match isa_rev.as_str() {
+> >> +                    "1" => ",+mips32",
+> >> +                    "2" => ",+mips32r2",
+> >> +                    "5" => ",+mips32r5",
+> >> +                    "6" => ",+mips32r6",
+> >> +                    _ => ",+mips2",
 > >
-> > On Mon, Sep 9, 2024 at 3:49=E2=80=AFPM Andrii Nakryiko <andrii@kernel.o=
-rg> wrote:
-> > >
-> > > Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), whi=
-ch
-> > > makes it unsuitable to be called from more restricted context like so=
-ftirq.
-> > >
-> > > Let's make put_uprobe() agnostic to the context in which it is called=
-,
-> > > and use work queue to defer the mutex-protected clean up steps.
-> > >
-> > > To avoid unnecessarily increasing the size of struct uprobe, we coloc=
-ate
-> > > work_struct in parallel with rb_node and rcu, both of which are unuse=
-d
-> > > by the time we get to schedule clean up work.
-> > >
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  kernel/events/uprobes.c | 30 +++++++++++++++++++++++++++---
-> > >  1 file changed, 27 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > index a2e6a57f79f2..377bd524bc8b 100644
-> > > --- a/kernel/events/uprobes.c
-> > > +++ b/kernel/events/uprobes.c
-> > > @@ -27,6 +27,7 @@
-> > >  #include <linux/shmem_fs.h>
-> > >  #include <linux/khugepaged.h>
-> > >  #include <linux/rcupdate_trace.h>
-> > > +#include <linux/workqueue.h>
-> > >
-> > >  #include <linux/uprobes.h>
-> > >
-> > > @@ -54,14 +55,20 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
-> > >  #define UPROBE_COPY_INSN       0
-> > >
-> > >  struct uprobe {
-> > > -       struct rb_node          rb_node;        /* node in the rb tre=
-e */
-> > > +       union {
-> > > +               struct {
-> > > +                       struct rb_node          rb_node;        /* no=
-de in the rb tree */
-> > > +                       struct rcu_head         rcu;
-> > > +               };
-> > > +               /* work is used only during freeing, rcu and rb_node =
-are unused at that point */
-> > > +               struct work_struct work;
-> > > +       };
-> > >         refcount_t              ref;
-> > >         struct rw_semaphore     register_rwsem;
-> > >         struct rw_semaphore     consumer_rwsem;
-> > >         struct list_head        pending_list;
-> > >         struct list_head        consumers;
-> > >         struct inode            *inode;         /* Also hold a ref to=
- inode */
-> > > -       struct rcu_head         rcu;
-> > >         loff_t                  offset;
-> > >         loff_t                  ref_ctr_offset;
-> > >         unsigned long           flags;
-> > > @@ -620,11 +627,28 @@ static inline bool uprobe_is_active(struct upro=
-be *uprobe)
-> > >         return !RB_EMPTY_NODE(&uprobe->rb_node);
-> > >  }
-> > >
-> > > +static void uprobe_free_deferred(struct work_struct *work)
-> > > +{
-> > > +       struct uprobe *uprobe =3D container_of(work, struct uprobe, w=
-ork);
-> > > +
-> > > +       /*
-> > > +        * If application munmap(exec_vma) before uprobe_unregister()
-> > > +        * gets called, we don't get a chance to remove uprobe from
-> > > +        * delayed_uprobe_list from remove_breakpoint(). Do it here.
-> > > +        */
-> > > +       mutex_lock(&delayed_uprobe_lock);
-> > > +       delayed_uprobe_remove(uprobe, NULL);
-> > > +       mutex_unlock(&delayed_uprobe_lock);
-> > > +
-> > > +       kfree(uprobe);
-> > > +}
-> > > +
-> > >  static void uprobe_free_rcu(struct rcu_head *rcu)
-> > >  {
-> > >         struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rc=
-u);
-> > >
-> > > -       kfree(uprobe);
-> > > +       INIT_WORK(&uprobe->work, uprobe_free_deferred);
-> > > +       schedule_work(&uprobe->work);
-> > >  }
-> > >
-> > >  static void put_uprobe(struct uprobe *uprobe)
-> >
-> > It seems put_uprobe hunk was lost, since the patch is not doing
-> > what commit log describes.
->
->
-> Hmm, put_uprobe() has:
->
-> call_srcu(&uprobes_srcu, &uprobe->rcu, uprobe_free_rcu);
->
-> at the end (see [0], which added that), so we do schedule_work() in
-> RCU callback, similarly to what we do with bpf_map freeing in the BPF
-> subsystem.
->
-> This patch set is based on the latest tip/perf/core (and also assuming
-> the RCU Tasks Trace patch that mysteriously disappeared is actually
-> there, hopefully it will just as magically be restored).
->
->   [0] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/=
-?h=3Dperf/core&id=3D8617408f7a01e94ce1f73e40a7704530e5dfb25c
+> >  What's the consequence of using `mips2' rather than `mips1' here?  How 
+> > about other ISA revisions, e.g. `mips4' (that also applies to the 64BIT 
+> > leg)?
+> 
+> LLVM's mips1 backend is a little bit broken beyond repair, so I tried to use mips2
+> as a baseline. I should probably let HAVE_RUST depend on !CPU_R3000 to get it covered.
 
-I'm still not following.
-put_uprobe() did delayed_uprobe_remove() and this patch is doing it again.
+ GCC works just fine I suppose, just as with the other language frontends, 
+doesn't it?
 
-The commit log implies that mutex+delayed_uprobe_remove should be removed
-from put_uprobe(), but that's not what the patch is doing.
+> We have no good way to tell ISA reversion prior to R1 just from Kconfig TARGET_ISA_REV,
+> valid numbers for TARGET_ISA_REV are only 1, 2, 5, 6 from Kconfig.
+
+ This approach doesn't work for some MIPS architecture processor configs 
+anyway, e.g. what ISA revision will CPU_P5600 imply here?
+
+ However if there's a need (and previously there wasn't), then I think it 
+can be sorted in a straightforward way.  We have just a bunch of CPU_* 
+settings and we can define corresponding ISA_* settings to select, e.g. 
+ISA_MIPS1, ISA_MIPS3, ISA_MIPS32_R1, ISA_MIPS64_R6, and so on, based on 
+information extracted from per-CPU_* `-march=' compilation flags from 
+arch/mips/Makefile (possibly combined with ISA data obtained from 
+GCC/binutils for said flags).
+
+ It could be a bit tedious to write, but not a big challenge really, just 
+mechanical work.
+
+> Given that mips 2 and 3 binaries (Rust object files) can link run flawlessly on all pre-R6
+> (despite R3000) hardware with matching bitness, they were chosen as fallback here.
+
+ I'm fine with having a MIPS1/R3000 exception for broken LLVM, but I see 
+no reason to disable it for GCC.
+
+  Maciej
