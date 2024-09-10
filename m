@@ -1,292 +1,237 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E0B1A7AE3;
-	Tue, 10 Sep 2024 16:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB40F1A2C3F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 16:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725985922; cv=none; b=UmgobuhFXI7ez/IHSbd/JVrzh6++tKQ8uvkCbuZZKFtdhp6ug2AGQ5Kn+TU+kC763rGkEM7B3tp8lLjlWdvhl+LgEC7SwhZvFOQ73lBKRUAZDu03quRhF2lmI8LPPBK2hDADYE4ZQqZk8Xm8RCKmYaq0jrXwHjVoTGQ1iLJ3I3k=
+	t=1725985944; cv=none; b=Tb6MP0sSPN0K8IJo00CFKR9M9dDI+W5x9LosAdcC1YOnE4XUbz640/Dv/lJF4u+PReUx3tREUL+kBUgpggl//775l+EKYt3gnAnTbC2cuG/6XtyIPigjNmVLqWaaGhpH2VC5vdIQSf6XCQjbK56fWhp7YBd0XaLoNqh4VL9KJ8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725985922; c=relaxed/simple;
-	bh=JFZvXTOsIoUxDPHdW5ElkrBePGcuWanipE892MdDx4w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e8KBEL/nZL8R5vbUvwIScExXQYyRQiLmkG27o6/RzlFR5+UOTGh0IkP2lsvOQsDIS+TBWpEu7QEUcnt7XqUb1zRzE4uLGEDL7fciQ0siKyElAair6+zClE+4+4bgopq4EiGK/wnHMdegMaaPJW8O9k9B8x9Mv/XwTdBHtGtZ4aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=uhQ4LE41; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1725985944; c=relaxed/simple;
+	bh=EWuKgeWWA5soGhYyTDYq01t+mi3z5zhIMP8gGZF/Wtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GpZQXjw7+s5Ndu1kfxIZp1UUmqic3kAFGueKzjVriJr/o8ZkE9p0rSZ0DztThJwcEgiYAkyElicWD2VkF8RkLI+XZSm7HMpneFaqX5vCGi+jMjUp7nTtn9QKX074qbZo5O2a1elD1upCClqpx3/U5+Cs18FBuQynRyAgFbM38Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W8dAvcEs; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="uhQ4LE41"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8dAvcEs"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4582b71df40so305611cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 09:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1725985921; x=1757521921;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nC+ZthG3ZVV5r6y+2ESHYBsZJWfc4T6QNh+zi4jDtGU=;
-  b=uhQ4LE41B338EBg4lQTQUABmCr1kFHP4Y2mhZbMKSFnAIIC+VyqhtP72
-   GwbJcy4GKnLk4mN/DbY+pcSYcSIaJqbPLgEcJ4Smr09psf9hYQm454YXz
-   N13/GrZXIlVrv6JApPN7WShQlQXkERuDFTz+yDJXNGf+dVnSEXX0OgyFa
-   M=;
-X-IronPort-AV: E=Sophos;i="6.10,217,1719878400"; 
-   d="scan'208";a="452556269"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 16:31:53 +0000
-Received: from EX19MTAUEB001.ant.amazon.com [10.0.44.209:34555]
- by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.48.28:2525] with esmtp (Farcaster)
- id 87701a07-5d1b-4a8e-b143-b5fc4e93bed5; Tue, 10 Sep 2024 16:31:52 +0000 (UTC)
-X-Farcaster-Flow-ID: 87701a07-5d1b-4a8e-b143-b5fc4e93bed5
-Received: from EX19D008UEC004.ant.amazon.com (10.252.135.170) by
- EX19MTAUEB001.ant.amazon.com (10.252.135.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 10 Sep 2024 16:31:42 +0000
-Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
- EX19D008UEC004.ant.amazon.com (10.252.135.170) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Tue, 10 Sep 2024 16:31:42 +0000
-Received: from ua2d7e1a6107c5b.home (172.19.88.180) by mail-relay.amazon.com
- (10.250.64.254) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34 via Frontend
- Transport; Tue, 10 Sep 2024 16:31:38 +0000
-From: Patrick Roy <roypat@amazon.co.uk>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <rostedt@goodmis.org>,
-	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <quic_eberman@quicinc.com>,
-	<dwmw@amazon.com>, <david@redhat.com>, <tabba@google.com>, <rppt@kernel.org>,
-	<linux-mm@kvack.org>, <dmatlack@google.com>
-CC: Patrick Roy <roypat@amazon.co.uk>, <graf@amazon.com>,
-	<jgowans@amazon.com>, <derekmn@amazon.com>, <kalyazin@amazon.com>,
-	<xmarcalx@amazon.com>
-Subject: [RFC PATCH v2 10/10] kvm: x86: support walking guest page tables in gmem
-Date: Tue, 10 Sep 2024 17:30:36 +0100
-Message-ID: <20240910163038.1298452-11-roypat@amazon.co.uk>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240910163038.1298452-1-roypat@amazon.co.uk>
-References: <20240910163038.1298452-1-roypat@amazon.co.uk>
+        d=google.com; s=20230601; t=1725985941; x=1726590741; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f9ncZWKOVJEsq4iDNvlY1nT7hu4+4z6i+c0WR3K9aTs=;
+        b=W8dAvcEsr7Ieae5tsEHO0pK0X2LyYTHWTQOIiMCrCjRiiARRWqQF1zE8AZ/glE6RRw
+         BzleGHWCbtGOR5NQGuWXphdBNZBNU90S54Dts6tC9Aa4QZHbTYjoyoUhp0nHir6f55UA
+         upnMp0QobcOWd63d0/Mt9sVFYbJFhmasxl2Pm5bqsGKPbgwta5eBUEy+3vmxqUn/QmB6
+         dC4PjWdFbYCENO3FjKjm4xTIyEpQlN27Lk6vJ6289IZpwfy2joiyvMlKi4jVAcuF87yR
+         4KDcVjzjLpMu5dxHpvbJ13EdpL+Dp0XK/602/OpWBL/N36qwA1TlE5eVIMF/ZJJg95w1
+         7giw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725985941; x=1726590741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f9ncZWKOVJEsq4iDNvlY1nT7hu4+4z6i+c0WR3K9aTs=;
+        b=wpiLiQrC8OI7/3jIZPSso2a+hWWnpaV4qp/e7L821SbFe9rVPo5rxnvZklPwZ2vorn
+         Poc1iiIzCJehQX/SAliJIg1kMduf4OQ8Y114tDu4ugjy6S8WUuz1gRq+sBwUY6qQ4OFy
+         YukTvA/llpBL7vqculLYf3Gy/7Z8EinQjpNb3jnpvwdV6Ipax++pUp8cxV6tTZFj3a/G
+         QVGjiYK8HdKr43ISfCjGd/WtZ0pOZdDEp4ckJt+NEccmd5Tqqm9GMd4Aj610SxF1DH4C
+         LrBdt3/tHuwbm6rzmvTIoFNKvDl236nXOH/Vd5s+wHXfoSKj3qHeGoZRP0piQKq7dQJp
+         M9TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGkAiyoODhegMhpIvAqwOQeNgnLW02y7rYTUqAd13zyl8YBLLINsNppJCPrByrpKZf73TIZI2CW8OJCIn7nuaFohU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8LPuGpuIqz92N4wJuV54rptSByS6whTh/TptakUgjdtWayD5z
+	epZUi8AHgaO97Z1rd2CvNo7qInzZCfRIGtJQylLmzcNchWmLDGT0DAGlQhzobeWZ9iVkRGwG+70
+	WnQyvaeWmC6C+8xwz83yMmS8KmJcP3sWKK6UuV22/r2pKMJXA0dEe
+X-Google-Smtp-Source: AGHT+IGzGAumkHrr2bDnkqRNDINvDYeTyLaFVCvxRDWY8NaodXVwMYUWwwjnEltyVzzl/ubtMR1u/3thAFVQbJZiYv0=
+X-Received: by 2002:a05:622a:11c8:b0:456:7228:c0a2 with SMTP id
+ d75a77b69052e-4583efc8c1fmr3705951cf.13.1725985941140; Tue, 10 Sep 2024
+ 09:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-3-andrii@kernel.org>
+ <CAG48ez2G1Pf_RRRT0av=6r_4HcLZu6QMgveepk-ENo=PkaZC1w@mail.gmail.com> <CAEf4Bzb+ShZqcj9EKQB8U9tyaJ1LoOpRxd24v76FuPJP-=dkNg@mail.gmail.com>
+In-Reply-To: <CAEf4Bzb+ShZqcj9EKQB8U9tyaJ1LoOpRxd24v76FuPJP-=dkNg@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 10 Sep 2024 09:32:08 -0700
+Message-ID: <CAJuCfpEhCm3QoZqemO=bX0snO16fxOssMWzLsiewkioiRV_aOA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] uprobes: add speculative lockless VMA-to-inode-to-uprobe
+ resolution
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Christian Brauner <brauner@kernel.org>
+Cc: Jann Horn <jannh@google.com>, Liam Howlett <liam.howlett@oracle.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the logic in paging_tmpl.h to work with guest_private memory. If
-KVM cannot access gmem and the guest's page tables are in gfns marked as
-private, then error out.
+On Mon, Sep 9, 2024 at 2:29=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Mon, Sep 9, 2024 at 6:13=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
+:
+> >
+> > On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.o=
+rg> wrote:
+> > > Given filp_cachep is already marked SLAB_TYPESAFE_BY_RCU, we can safe=
+ly
+> > > access vma->vm_file->f_inode field locklessly under just rcu_read_loc=
+k()
+> >
+> > No, not every file is SLAB_TYPESAFE_BY_RCU - see for example
+> > ovl_mmap(), which uses backing_file_mmap(), which does
+> > vma_set_file(vma, file) where "file" comes from ovl_mmap()'s
+> > "realfile", which comes from file->private_data, which is set in
+> > ovl_open() to the return value of ovl_open_realfile(), which comes
+> > from backing_file_open(), which allocates a file with
+> > alloc_empty_backing_file(), which uses a normal kzalloc() without any
+> > RCU stuff, with this comment:
+> >
+> >  * This is only for kernel internal use, and the allocate file must not=
+ be
+> >  * installed into file tables or such.
+> >
+> > And when a backing_file is freed, you can see on the path
+> > __fput() -> file_free()
+> > that files with FMODE_BACKING are directly freed with kfree(), no RCU d=
+elay.
+>
+> Good catch on FMODE_BACKING, I didn't realize there is this exception, th=
+anks!
+>
+> I think the way forward would be to detect that the backing file is in
+> FMODE_BACKING and fall back to mmap_lock-protected code path.
+>
+> I guess I have the question to Liam and Suren, do you think it would
+> be ok to add another bool after `bool detached` in struct
+> vm_area_struct (guarded by CONFIG_PER_VMA_LOCK), or should we try to
+> add an extra bit into vm_flags_t? The latter would work without
+> CONFIG_PER_VMA_LOCK, but I don't know what's acceptable with mm folks.
+>
+> This flag can be set in vma_set_file() when swapping backing file and
+> wherever else vma->vm_file might be set/updated (I need to audit the
+> code).
 
-Let the guest page table walker access gmem by making it use
-gfn_to_pfn_caches, which are already gmem aware, and also handle
-on-demand mapping of gmem if KVM_GMEM_NO_DIRECT_MAP is set.  We re-use
-the gfn_to_pfn_cache here to avoid implementing yet another remapping
-solution to support the cmpxchg used to set the "accessed" bit on guest
-PTEs. The only case that now needs some special handling is page tables
-in read-only memslots, as gfn_to_pfn_caches cannot be used for readonly
-memory. In this case, use kvm_vcpu_read_guest (which is also gmem
-aware), as there is no need to cache the gfn->pfn translation in this
-case (there is no need to do a cmpxchg on the PTE as the walker does not
-set the accessed bit for read-only ptes).
+I understand that this would work but I'm not very eager to leak
+vm_file attributes like FMODE_BACKING into vm_area_struct.
+Instead maybe that exception can be avoided? Treating all vm_files
+equally as RCU-safe would be a much simpler solution. I see that this
+exception was introduced in [1] and I don't know if this was done for
+performance reasons or something else. Christian, CCing you here to
+please clarify.
 
-gfn_to_pfn_caches are hooked up to the MMU notifiers, meaning if
-something about guest memory changes between the page table talk and
-setting the dirty bits (for example a concurrent fallocate on gmem), the
-gfn_to_pfn_caches will have been invalidated and the entire page table
-walk is retried.
+[1] https://lore.kernel.org/all/20231005-sakralbau-wappnen-f5c31755ed70@bra=
+uner/
 
-Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
----
- arch/x86/kvm/mmu/paging_tmpl.h | 95 ++++++++++++++++++++++++++++------
- 1 file changed, 78 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-index 69941cebb3a87..d96fa423bed05 100644
---- a/arch/x86/kvm/mmu/paging_tmpl.h
-+++ b/arch/x86/kvm/mmu/paging_tmpl.h
-@@ -84,7 +84,7 @@ struct guest_walker {
- 	pt_element_t ptes[PT_MAX_FULL_LEVELS];
- 	pt_element_t prefetch_ptes[PTE_PREFETCH_NUM];
- 	gpa_t pte_gpa[PT_MAX_FULL_LEVELS];
--	pt_element_t __user *ptep_user[PT_MAX_FULL_LEVELS];
-+	struct gfn_to_pfn_cache ptep_caches[PT_MAX_FULL_LEVELS];
- 	bool pte_writable[PT_MAX_FULL_LEVELS];
- 	unsigned int pt_access[PT_MAX_FULL_LEVELS];
- 	unsigned int pte_access;
-@@ -201,7 +201,7 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
- {
- 	unsigned level, index;
- 	pt_element_t pte, orig_pte;
--	pt_element_t __user *ptep_user;
-+	struct gfn_to_pfn_cache *pte_cache;
- 	gfn_t table_gfn;
- 	int ret;
- 
-@@ -210,10 +210,12 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
- 		return 0;
- 
- 	for (level = walker->max_level; level >= walker->level; --level) {
-+		unsigned long flags;
-+
- 		pte = orig_pte = walker->ptes[level - 1];
- 		table_gfn = walker->table_gfn[level - 1];
--		ptep_user = walker->ptep_user[level - 1];
--		index = offset_in_page(ptep_user) / sizeof(pt_element_t);
-+		pte_cache = &walker->ptep_caches[level - 1];
-+		index = offset_in_page(pte_cache->khva) / sizeof(pt_element_t);
- 		if (!(pte & PT_GUEST_ACCESSED_MASK)) {
- 			trace_kvm_mmu_set_accessed_bit(table_gfn, index, sizeof(pte));
- 			pte |= PT_GUEST_ACCESSED_MASK;
-@@ -246,11 +248,26 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
- 		if (unlikely(!walker->pte_writable[level - 1]))
- 			continue;
- 
--		ret = __try_cmpxchg_user(ptep_user, &orig_pte, pte, fault);
-+		read_lock_irqsave(&pte_cache->lock, flags);
-+		if (!kvm_gpc_check(pte_cache, sizeof(pte))) {
-+			read_unlock_irqrestore(&pte_cache->lock, flags);
-+			/*
-+			 * If the gpc got invalidated, then the page table
-+			 * it contained probably changed, so we probably need
-+			 * to redo the entire walk.
-+			 */
-+			return 1;
-+		}
-+		ret = __try_cmpxchg((pt_element_t *)pte_cache->khva, &orig_pte, pte, sizeof(pte));
-+
-+		if (!ret)
-+			kvm_gpc_mark_dirty_in_slot(pte_cache);
-+
-+		read_unlock_irqrestore(&pte_cache->lock, flags);
-+
- 		if (ret)
- 			return ret;
- 
--		kvm_vcpu_mark_page_dirty(vcpu, table_gfn);
- 		walker->ptes[level - 1] = pte;
- 	}
- 	return 0;
-@@ -296,6 +313,13 @@ static inline bool FNAME(is_last_gpte)(struct kvm_mmu *mmu,
- 
- 	return gpte & PT_PAGE_SIZE_MASK;
- }
-+
-+static void FNAME(walk_deactivate_gpcs)(struct guest_walker *walker) {
-+	for (unsigned int level = 0; level < PT_MAX_FULL_LEVELS; ++level)
-+		if (walker->ptep_caches[level].active)
-+			kvm_gpc_deactivate(&walker->ptep_caches[level]);
-+}
-+
- /*
-  * Fetch a guest pte for a guest virtual address, or for an L2's GPA.
-  */
-@@ -305,7 +329,6 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- {
- 	int ret;
- 	pt_element_t pte;
--	pt_element_t __user *ptep_user;
- 	gfn_t table_gfn;
- 	u64 pt_access, pte_access;
- 	unsigned index, accessed_dirty, pte_pkey;
-@@ -320,8 +343,17 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 	u16 errcode = 0;
- 	gpa_t real_gpa;
- 	gfn_t gfn;
-+	struct gfn_to_pfn_cache *pte_cache;
- 
- 	trace_kvm_mmu_pagetable_walk(addr, access);
-+
-+	for (unsigned int level = 0; level < PT_MAX_FULL_LEVELS; ++level) {
-+		pte_cache = &walker->ptep_caches[level];
-+
-+		memset(pte_cache, 0, sizeof(*pte_cache));
-+		kvm_gpc_init(pte_cache, vcpu->kvm);
-+	}
-+
- retry_walk:
- 	walker->level = mmu->cpu_role.base.level;
- 	pte           = kvm_mmu_get_guest_pgd(vcpu, mmu);
-@@ -362,11 +394,13 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 
- 	do {
- 		struct kvm_memory_slot *slot;
--		unsigned long host_addr;
-+		unsigned long flags;
- 
- 		pt_access = pte_access;
- 		--walker->level;
- 
-+		pte_cache = &walker->ptep_caches[walker->level - 1];
-+
- 		index = PT_INDEX(addr, walker->level);
- 		table_gfn = gpte_to_gfn(pte);
- 		offset    = index * sizeof(pt_element_t);
-@@ -396,15 +430,36 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 		if (!kvm_is_visible_memslot(slot))
- 			goto error;
- 
--		host_addr = gfn_to_hva_memslot_prot(slot, gpa_to_gfn(real_gpa),
--					    &walker->pte_writable[walker->level - 1]);
--		if (unlikely(kvm_is_error_hva(host_addr)))
--			goto error;
-+		/*
-+		 * gfn_to_pfn_cache expects the memory to be writable. However,
-+		 * if the memory is not writable, we do not need caching in the
-+		 * first place, as we only need it to later potentially write
-+		 * the access bit (which we cannot do anyway if the memory is
-+		 * readonly).
-+		 */
-+		if (slot->flags & KVM_MEM_READONLY) {
-+			if (kvm_vcpu_read_guest(vcpu, real_gpa + offset, &pte, sizeof(pte)))
-+				goto error;
-+		} else {
-+			if (kvm_gpc_activate(pte_cache, real_gpa + offset,
-+					     sizeof(pte)))
-+				goto error;
- 
--		ptep_user = (pt_element_t __user *)((void *)host_addr + offset);
--		if (unlikely(__get_user(pte, ptep_user)))
--			goto error;
--		walker->ptep_user[walker->level - 1] = ptep_user;
-+			read_lock_irqsave(&pte_cache->lock, flags);
-+			while (!kvm_gpc_check(pte_cache, sizeof(pte))) {
-+				read_unlock_irqrestore(&pte_cache->lock, flags);
-+
-+				if (kvm_gpc_refresh(pte_cache, sizeof(pte)))
-+					goto error;
-+
-+				read_lock_irqsave(&pte_cache->lock, flags);
-+			}
-+
-+			pte = *(pt_element_t *)pte_cache->khva;
-+			read_unlock_irqrestore(&pte_cache->lock, flags);
-+
-+			walker->pte_writable[walker->level - 1] = true;
-+		}
- 
- 		trace_kvm_mmu_paging_element(pte, walker->level);
- 
-@@ -467,13 +522,19 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
- 							addr, write_fault);
- 		if (unlikely(ret < 0))
- 			goto error;
--		else if (ret)
-+		else if (ret) {
-+			FNAME(walk_deactivate_gpcs)(walker);
- 			goto retry_walk;
-+		}
- 	}
- 
-+	FNAME(walk_deactivate_gpcs)(walker);
-+
- 	return 1;
- 
- error:
-+	FNAME(walk_deactivate_gpcs)(walker);
-+
- 	errcode |= write_fault | user_fault;
- 	if (fetch_fault && (is_efer_nx(mmu) || is_cr4_smep(mmu)))
- 		errcode |= PFERR_FETCH_MASK;
--- 
-2.46.0
-
+>
+> >
+> > So the RCU-ness of "struct file" is an implementation detail of the
+> > VFS, and you can't rely on it for ->vm_file unless you get the VFS to
+> > change how backing file lifetimes work, which might slow down some
+> > other workload, or you find a way to figure out whether you're dealing
+> > with a backing file without actually accessing the file.
+> >
+> > > +static struct uprobe *find_active_uprobe_speculative(unsigned long b=
+p_vaddr)
+> > > +{
+> > > +       const vm_flags_t flags =3D VM_HUGETLB | VM_MAYEXEC | VM_MAYSH=
+ARE;
+> > > +       struct mm_struct *mm =3D current->mm;
+> > > +       struct uprobe *uprobe;
+> > > +       struct vm_area_struct *vma;
+> > > +       struct file *vm_file;
+> > > +       struct inode *vm_inode;
+> > > +       unsigned long vm_pgoff, vm_start;
+> > > +       int seq;
+> > > +       loff_t offset;
+> > > +
+> > > +       if (!mmap_lock_speculation_start(mm, &seq))
+> > > +               return NULL;
+> > > +
+> > > +       rcu_read_lock();
+> > > +
+> > > +       vma =3D vma_lookup(mm, bp_vaddr);
+> > > +       if (!vma)
+> > > +               goto bail;
+> > > +
+> > > +       vm_file =3D data_race(vma->vm_file);
+> >
+> > A plain "data_race()" says "I'm fine with this load tearing", but
+> > you're relying on this load not tearing (since you access the vm_file
+> > pointer below).
+> > You're also relying on the "struct file" that vma->vm_file points to
+> > being populated at this point, which means you need CONSUME semantics
+> > here, which READ_ONCE() will give you, and something like RELEASE
+> > semantics on any pairing store that populates vma->vm_file, which
+> > means they'd all have to become something like smp_store_release()).
+>
+> vma->vm_file should be set in VMA before it is installed and is never
+> modified afterwards, isn't that the case? So maybe no extra barrier
+> are needed and READ_ONCE() would be enough.
+>
+> >
+> > You might want to instead add another recheck of the sequence count
+> > (which would involve at least a read memory barrier after the
+> > preceding patch is fixed) after loading the ->vm_file pointer to
+> > ensure that no one was concurrently changing the ->vm_file pointer
+> > before you do memory accesses through it.
+> >
+> > > +       if (!vm_file || (vma->vm_flags & flags) !=3D VM_MAYEXEC)
+> > > +               goto bail;
+> >
+> > missing data_race() annotation on the vma->vm_flags access
+>
+> ack
+>
+> >
+> > > +       vm_inode =3D data_race(vm_file->f_inode);
+> >
+> > As noted above, this doesn't work because you can't rely on having RCU
+> > lifetime for the file. One *very* ugly hack you could do, if you think
+> > this code is so performance-sensitive that you're willing to do fairly
+> > atrocious things here, would be to do a "yes I am intentionally doing
+> > a UAF read and I know the address might not even be mapped at this
+> > point, it's fine, trust me" pattern, where you use
+> > copy_from_kernel_nofault(), kind of like in prepend_copy() in
+> > fs/d_path.c, and then immediately recheck the sequence count before
+> > doing *anything* with this vm_inode pointer you just loaded.
+> >
+> >
+>
+> yeah, let's leave it as a very unfortunate plan B and try to solve it
+> a bit cleaner.
+>
+>
+> >
+> > > +       vm_pgoff =3D data_race(vma->vm_pgoff);
+> > > +       vm_start =3D data_race(vma->vm_start);
+> > > +
+> > > +       offset =3D (loff_t)(vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vm_=
+start);
+> > > +       uprobe =3D find_uprobe_rcu(vm_inode, offset);
+> > > +       if (!uprobe)
+> > > +               goto bail;
+> > > +
+> > > +       /* now double check that nothing about MM changed */
+> > > +       if (!mmap_lock_speculation_end(mm, seq))
+> > > +               goto bail;
+> > > +
+> > > +       rcu_read_unlock();
+> > > +
+> > > +       /* happy case, we speculated successfully */
+> > > +       return uprobe;
+> > > +bail:
+> > > +       rcu_read_unlock();
+> > > +       return NULL;
+> > > +}
