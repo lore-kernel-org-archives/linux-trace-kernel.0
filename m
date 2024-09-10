@@ -1,356 +1,306 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72728175D4F;
-	Tue, 10 Sep 2024 06:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7429112E48;
+	Tue, 10 Sep 2024 06:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725948851; cv=none; b=hZN61Ea3pxcfUIUsCwIAr/PpYq1wLeG+nY2lGsR7O65YI4LeA7AihxM8a4OuiEkU7RG9QrVLrURA0oQzCPxN1bEgyhtiw6TDxWTSAarR8R5q4rI9IK+Oy7IoO5Eu0MzLsyjgKV3q2kIID1Hrw/K0F7Ix9WjAlFpSB88nguLgzNI=
+	t=1725948956; cv=none; b=QPrbfoyHPkRBp3GpBGtURHhLC2bMFkDUUmrMI5bGQj6wWyhvTAgtezfSeoJNv2+vI3cv4a+J56mHM8/Y6fjZwQzI3+zsfwLQZpQ82J1gdq5+huK2hI/CbszfIdgzJtpnFWjhSTi0WtOXkuzEP8mG+QKwRA8ESx1JZhjac/tosBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725948851; c=relaxed/simple;
-	bh=kXpO2upk/7WHPX5Mr2KsdooYOPiEhp+y3e2QCnIJIl8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o2jKgOlFPcCEOlF5Eb3ZfjZP+0hpZOtBH3xoxGD+CAhi4bCA1fw61fLS/MT4wHWhyDBDRzWNitGZ4uCdfH2eX8ujaW0BoFSXtPZHPhSPBDAx/mgHfE+mZYgEi8rloxo0+L+VMK2cKokuXeE+QURxcichoHqkrTg2JBgHd+KP5+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4X2tfg4v43z1P9HV;
-	Tue, 10 Sep 2024 14:12:59 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id AE438180AE7;
-	Tue, 10 Sep 2024 14:14:04 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 10 Sep
- 2024 14:14:03 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <peterz@infradead.org>, <ast@kernel.org>,
-	<puranjay@kernel.org>, <liaochang1@huawei.com>, <andrii@kernel.org>,
-	<andrii.nakryiko@gmail.com>, <mark.rutland@arm.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: [PATCH] arm64: uprobes: Simulate STP for pushing fp/lr into user stack
-Date: Tue, 10 Sep 2024 06:04:07 +0000
-Message-ID: <20240910060407.1427716-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1725948956; c=relaxed/simple;
+	bh=O9Fjr/NdnkZ6L2A92vilkJZ2RrVg4nmEu7IwS8hKB2Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PxC14QdBEcmCRsSkf25WTrVFDP0doIm84xe3ZuUYpPrBG6hffnO4MWETsPYoloz4ZlRMMtGJxl+P1m7aU55BEsPcuJ+KdqkDDiD1Ezype53HZLjakw4axPr81jLvqUJoWXYmUcskuyNTgvrtIGXKUafd9W+Mh/drNXn9Qds1ijA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zx05BgOM; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zx05BgOM"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5c26a52cf82so2363497a12.2;
+        Mon, 09 Sep 2024 23:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725948953; x=1726553753; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BdT7dMC/o3p9lUJ163/gFFKSEgLc+DjHXP9xt/udZig=;
+        b=Zx05BgOMVbrxJQpf8QmkOj0NL3wHdxY/Jy3zSbUjF5dfTSAQq4zgzCaHSxZabNr52D
+         5eahOgrPJag2XVdk7B+jpc/IdKGn8pzDN2kFCZUKz3L8GARbsaQRBkjL8o/MfMYbGloe
+         /cLIxQ/tdcY67eDNmgaKuOHNcxcMPn20nFei1P+Em1PBOvg8Zy7Ak/ntFWkwSPawPF8q
+         ZoTkRXK5xtLVuIsO/ipEnECfor9WlAn6ndJgFlGmiz57cxt2oP6iJl5osj6DG14ydBwB
+         wdZywGAeuyLBJCiewPYYuuvJAuQ+f/u/Fnbp7mGyCRQGnBd4jBbGFAWoipqfjhMkbb0A
+         5IcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725948953; x=1726553753;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BdT7dMC/o3p9lUJ163/gFFKSEgLc+DjHXP9xt/udZig=;
+        b=IwO+CF0Txqo5YEFUWKP4pGYd3chbwyqd+qY5ys2Wuy3ONMbx4c8vElLxVgDvM0MfLQ
+         mo0JatHRWy0nN7ZEDsvr7H5VhJCZexNvP4ZtQ5ndezY3U4pE++6JRt5CgRPEWcM6W3lC
+         oQ2oAyr+vJHV+VrH0Xl1fyIy5Ng2vXzHSGH6Up3RU8tX+UxAxm4/e/tO1qRfxjjzW74B
+         EC8mve8Y3DvJn8zgVYCW0dWdrK3wYiviAenpNJTchkzd3tcXoygWc6myn7J9zjxR3E5g
+         fYVsJ+++SVOL8ZMY1NSR/lQfj2H1BJDRvtfQE/ArClyxV4YkuezMVvGMkU0HyN1myI/P
+         x+4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU8mxAyAXYfqxT3laARg58VXxy9WlOio/lRE6LN2G4RjVr+80FlLuqVnA4ukcTYHppT2BfrdStTISg7Kxw=@vger.kernel.org, AJvYcCWVTZLwBhwi3nOnmoYciu1gtOEVKal6gDUD4+I2RXzuzhiatKF/n4qQeaNjeDX0l0XjjCg9VbB7bY1WTces/nx9XnsB@vger.kernel.org
+X-Gm-Message-State: AOJu0YydfJXdy41xaCQL4MTIgvGWdasRsQjbgUyb1MzpkNzwFNsx/HWr
+	hGdCn4r0zzAbcjviN74RA6bb9EJNl8QkJ2vlMNTb97KhedJ1Gl9g8mzclprQpKAx6CxFT/PV+5L
+	vI+Qr/87KjqNUudLgh+EV7b+X/60=
+X-Google-Smtp-Source: AGHT+IExFH6YmvnjVUKe2/8vjiXm9aRhAyU/uSIIy5dkpGXJag/GUGhZ929URqHV5/LXlmTmtetgmL5xisEU04a5VzA=
+X-Received: by 2002:a05:6402:4402:b0:5c2:6e61:fa87 with SMTP id
+ 4fb4d7f45d1cf-5c3dc7b7ed2mr13103043a12.23.1725948951693; Mon, 09 Sep 2024
+ 23:15:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240908142544.1409032-1-dolinux.peng@gmail.com> <20240909110415.33cb5f22@gandalf.local.home>
+In-Reply-To: <20240909110415.33cb5f22@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Tue, 10 Sep 2024 14:15:39 +0800
+Message-ID: <CAErzpmtJHhZpFg0sHtffexM0Lu6y2xzbVZ1SXGxKob_Dz0+Bfw@mail.gmail.com>
+Subject: Re: [RFC PATCH] function_graph: Support recording and printing the
+ function return address
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Transfer-Encoding: quoted-printable
 
-This patch is the second part of a series to improve the selftest bench
-of uprobe/uretprobe [0]. The lack of simulating 'stp fp, lr, [sp, #imm]'
-significantly impact uprobe/uretprobe performance at function entry in
-most user cases. Profiling results below reveals the STP that executes
-in the xol slot and trap back to kernel, reduce redis RPS and increase
-the time of string grep obviously.
+On Mon, Sep 9, 2024 at 11:04=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Sun,  8 Sep 2024 07:25:44 -0700
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
+>
+> Hi Donglin!
+>
+> > When using function_graph tracer to analyze the flow of kernel function
+> > execution, it is often necessary to quickly locate the exact line of co=
+de
+> > where the call occurs. While this may be easy at times, it can be more
+> > time-consuming when some functions are inlined or the flow is too long.
+> >
+> > This feature aims to simplify the process by recording the return addre=
+ss
+> > of traced funcions and printing it when outputing trace logs.
+> >
+> > To distinguish the return value, 'V=3D' is used as the prefix for the k=
+ernel
+> > return value, and 'A=3D' is used as the prefix for the return address i=
+n trace
+> > logs. A new trace option named 'funcgraph-retaddr' has been added, and =
+the
+> > option 'sym-addr' can control the format of the return address.
+> >
+> > See below logs with both funcgraph-retval and funcgraph-retaddr enabled=
+.
+> >
+> > 4)               |  load_elf_binary() { /* A=3Dbprm_execve+0x249/0x600 =
+*/
+>
+> I wonder if we should make this look more like the function tracer when i=
+t
+> shows the parent. That is:
+>
+>   4)               |  load_elf_binary() { /* <-bprm_execve+0x249/0x600 */
 
-On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
+Nice, Is it necessary to add a prefix letter for the return value? For
+example, when
+ both funcgraph-retval and funcgraph-retaddr are enabled, like this:
 
-Redis GET (higher is better)
-----------------------------
-No uprobe: 49149.71 RPS
-Single-stepped STP: 46750.82 RPS
-Emulated STP: 48981.19 RPS
+         avc_policy_seqno(); /* <-selinux_file_permission+0x107/0x140 V=3D0=
+x0 */
 
-Redis SET (larger is better)
-----------------------------
-No uprobe: 49761.14 RPS
-Single-stepped STP: 45255.01 RPS
-Emulated stp: 48619.21 RPS
+>
+> > 4)               |    load_elf_phdrs() { /* A=3Dload_elf_binary+0x84/0x=
+1730 */
+> > 4)               |      __kmalloc_noprof() { /* A=3Dload_elf_phdrs+0x4a=
+/0xb0 */
+> > 4) + 47.910 us   |        __cond_resched(); /* V=3D0x0 A=3D__kmalloc_no=
+prof+0x28c/0x390 */
+> > 4) ! 204.142 us  |      } /* __kmalloc_noprof V=3D0xffff888201e32c00 */
+> > 4)               |      kernel_read() { /* A=3Dload_elf_phdrs+0x6c/0xb0=
+ */
+> > 4)               |        rw_verify_area() { /* A=3Dkernel_read+0x2b/0x=
+50 */
+> > 4)               |          security_file_permission() {
+> > 4)               |            selinux_file_permission() { /* A=3Dsecuri=
+ty_file_permission+0x26/0x40 */
+> > 4)               |              __inode_security_revalidate() { /* A=3D=
+selinux_file_permission+0x6d/0x140 */
+> > 4)   1.182 us    |                __cond_resched(); /* V=3D0x0 A=3D__in=
+ode_security_revalidate+0x5f/0x80 */
+> > 4)   4.138 us    |              } /* __inode_security_revalidate V=3D0x=
+0 */
+> > 4)   1.513 us    |              avc_policy_seqno(); /* V=3D0x0 A=3Dseli=
+nux_file_permission+0x107/0x140 */
+> > 4) + 12.133 us   |            } /* selinux_file_permission V=3D0x0 */
+> > 4) + 39.834 us   |          } /* security_file_permission V=3D0x0 */
+> > 4) + 42.710 us   |        } /* rw_verify_area V=3D0x0 */
+> >
+> > Then, we can use the faddr2line to locate the source code, for example:
+> >
+> > $ ./scripts/faddr2line ./vmlinux load_elf_phdrs+0x6c/0xb0
+> > load_elf_phdrs+0x6c/0xb0:
+> > elf_read at fs/binfmt_elf.c:471
+> > (inlined by) load_elf_phdrs at fs/binfmt_elf.c:531
+> >
+> > Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+> > ---
+> >  include/linux/ftrace.h               |   1 +
+> >  kernel/trace/fgraph.c                |   1 +
+> >  kernel/trace/trace.h                 |   1 +
+> >  kernel/trace/trace_entries.h         |  19 ++++-
+> >  kernel/trace/trace_functions_graph.c | 105 ++++++++++++++++++---------
+> >  5 files changed, 92 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> > index fd5e84d0ec47..bdf51163b3b8 100644
+> > --- a/include/linux/ftrace.h
+> > +++ b/include/linux/ftrace.h
+> > @@ -1011,6 +1011,7 @@ static inline void ftrace_init(void) { }
+> >   */
+> >  struct ftrace_graph_ent {
+> >       unsigned long func; /* Current function */
+> > +     unsigned long retaddr;  /* Return address */
+> >       int depth;
+> >  } __packed;
+> >
+> > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> > index d7d4fb403f6f..fcc4162c10f6 100644
+> > --- a/kernel/trace/fgraph.c
+> > +++ b/kernel/trace/fgraph.c
+> > @@ -622,6 +622,7 @@ int function_graph_enter(unsigned long ret, unsigne=
+d long func,
+> >
+> >       trace.func =3D func;
+> >       trace.depth =3D ++current->curr_ret_depth;
+> > +     trace.retaddr =3D ret;
+> >
+> >       offset =3D ftrace_push_return_trace(ret, func, frame_pointer, ret=
+p, 0);
+> >       if (offset < 0)
+> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> > index bd3e3069300e..87e02815b030 100644
+> > --- a/kernel/trace/trace.h
+> > +++ b/kernel/trace/trace.h
+> > @@ -870,6 +870,7 @@ static __always_inline bool ftrace_hash_empty(struc=
+t ftrace_hash *hash)
+> >  #define TRACE_GRAPH_GRAPH_TIME          0x400
+> >  #define TRACE_GRAPH_PRINT_RETVAL        0x800
+> >  #define TRACE_GRAPH_PRINT_RETVAL_HEX    0x1000
+> > +#define TRACE_GRAPH_PRINT_RETADDR       0x2000
+> >  #define TRACE_GRAPH_PRINT_FILL_SHIFT 28
+> >  #define TRACE_GRAPH_PRINT_FILL_MASK  (0x3 << TRACE_GRAPH_PRINT_FILL_SH=
+IFT)
+> >
+> > diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.=
+h
+> > index c47422b20908..8b8753319dd3 100644
+> > --- a/kernel/trace/trace_entries.h
+> > +++ b/kernel/trace/trace_entries.h
+> > @@ -71,6 +71,7 @@ FTRACE_ENTRY_REG(function, ftrace_entry,
+> >       perf_ftrace_event_register
+> >  );
+> >
+> > +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> >  /* Function call entry */
+> >  FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent_entry,
+> >
+> > @@ -79,6 +80,7 @@ FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent=
+_entry,
+> >       F_STRUCT(
+> >               __field_struct( struct ftrace_graph_ent,        graph_ent=
+       )
+> >               __field_packed( unsigned long,  graph_ent,      func     =
+       )
+> > +             __field_packed( unsigned long,  graph_ent,      retaddr  =
+       )
+> >               __field_packed( int,            graph_ent,      depth    =
+       )
+> >       ),
+> >
+>
+> Let's make this a new event, so that when this option is not enabled, we
+> don't waste the ring buffer. For function tracing, every element added to
+> the event will add megabytes extra to the ring buffer.
+>
+> It should be possible to switch what event gets created at the time of th=
+e
+> trace. Even calling different functions to do it.
 
-Grep (lower is better)
-----------------------
-No uprobe: 2.165s
-Single-stepped STP: 15.314s
-Emualted STP: 2.216s
+Sounds good, we may create a new event as follows:
 
-Additionally, a profiling of the entry instruction for all leaf and
-non-leaf function, the ratio of 'stp fp, lr, [sp, #imm]' is larger than
-50%. So simulting the STP on the function entry is a more viable option
-for uprobe.
+struct ftrace_graph_ent {
+unsigned long func; /* Current function */
+unsigned long retaddr;
+int depth;
+} __packed;
 
-In the first version [1], it used a uaccess routine to simulate the STP
-that push fp/lr into stack, which use double STTR instructions for
-memory store. But as Mark pointed out, this approach can't simulate the
-correct single-atomicity and ordering properties of STP, especiallly
-when it interacts with MTE, POE, etc. So this patch uses a more complex
-and inefficient approach that acquires user stack pages, maps them to
-kernel address space, and allows kernel to use STP directly push fp/lr
-into the stack pages.
+FTRACE_ENTRY_PACKED(funcgraph_retaddr_entry, ftrace_graph_ent_readdr_entry,
 
-xol-stp
--------
-uprobe-nop      ( 1 cpus):    1.566 ± 0.006M/s  (  1.566M/s/cpu)
-uprobe-push     ( 1 cpus):    0.868 ± 0.001M/s  (  0.868M/s/cpu)
-uprobe-ret      ( 1 cpus):    1.629 ± 0.001M/s  (  1.629M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.871 ± 0.001M/s  (  0.871M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.616 ± 0.001M/s  (  0.616M/s/cpu)
-uretprobe-ret   ( 1 cpus):    0.878 ± 0.002M/s  (  0.878M/s/cpu)
+TRACE_GRAPH_RETADDR_ENT,
 
-simulated-stp
--------------
-uprobe-nop      ( 1 cpus):    1.544 ± 0.001M/s  (  1.544M/s/cpu)
-uprobe-push     ( 1 cpus):    1.128 ± 0.002M/s  (  1.128M/s/cpu)
-uprobe-ret      ( 1 cpus):    1.550 ± 0.005M/s  (  1.550M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.872 ± 0.004M/s  (  0.872M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.714 ± 0.001M/s  (  0.714M/s/cpu)
-uretprobe-ret   ( 1 cpus):    0.896 ± 0.001M/s  (  0.896M/s/cpu)
+F_STRUCT(
+__field_struct( struct ftrace_graph_retaddr_ent, graph_retaddr_ent )
+__field_packed( unsigned long, graph_retaddr_ent, func )
+__field_packed( unsigned long, graph_retaddr_ent, retaddr )
+__field_packed( int, graph_retaddr_ent, depth )
+),
 
-The profiling results based on the upstream kernel with spinlock
-optimization patches [2] reveals the simulation of STP increase the
-uprobe-push throughput by 29.3% (from 0.868M/s/cpu to 1.1238M/s/cpu) and
-uretprobe-push by 15.9% (from 0.616M/s/cpu to 0.714M/s/cpu).
+F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth)
+);
 
-[0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
-[1] https://lore.kernel.org/all/Zr3RN4zxF5XPgjEB@J2N7QTR9R3/
-[2] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@huawei.com/
+If we were to introduce another new feature such as funcgraph-args which
+adds a `ftrace_regs` to the `ftrace_graph_ent`, would it be necessary to
+create yet another new event?
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/insn.h            |  1 +
- arch/arm64/kernel/probes/decode-insn.c   | 16 +++++
- arch/arm64/kernel/probes/decode-insn.h   |  1 +
- arch/arm64/kernel/probes/simulate-insn.c | 89 ++++++++++++++++++++++++
- arch/arm64/kernel/probes/simulate-insn.h |  1 +
- arch/arm64/kernel/probes/uprobes.c       | 21 ++++++
- arch/arm64/lib/insn.c                    |  5 ++
- 7 files changed, 134 insertions(+)
+ In the scenario where both funcgrah-retaddr and funcgraph-args are enabled=
+,
+it is possible that an additional new event may also be required.
 
-diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
-index dd530d5c3d67..74e25debfa75 100644
---- a/arch/arm64/include/asm/insn.h
-+++ b/arch/arm64/include/asm/insn.h
-@@ -561,6 +561,7 @@ u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
- 				  u32 insn, u64 imm);
- u32 aarch64_insn_decode_register(enum aarch64_insn_register_type type,
- 					 u32 insn);
-+u32 aarch64_insn_decode_ldst_size(u32 insn);
- u32 aarch64_insn_gen_branch_imm(unsigned long pc, unsigned long addr,
- 				enum aarch64_insn_branch_type type);
- u32 aarch64_insn_gen_comp_branch_imm(unsigned long pc, unsigned long addr,
-diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-index be54539e309e..847a7a61ff6d 100644
---- a/arch/arm64/kernel/probes/decode-insn.c
-+++ b/arch/arm64/kernel/probes/decode-insn.c
-@@ -67,6 +67,22 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
- 	return true;
- }
- 
-+bool aarch64_insn_is_stp_fp_lr_sp_64b(probe_opcode_t insn)
-+{
-+	/*
-+	 * The 1st instruction on function entry often follows the
-+	 * patten 'stp x29, x30, [sp, #imm]!' that pushing fp and lr
-+	 * into stack.
-+	 */
-+	u32 opc = aarch64_insn_decode_ldst_size(insn);
-+	u32 rt2 = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT2, insn);
-+	u32 rn = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RN, insn);
-+	u32 rt = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
-+
-+	return aarch64_insn_is_stp_pre(insn) &&
-+	       (opc == 2) && (rt2 == 30) && (rn == 31) && (rt == 29);
-+}
-+
- /* Return:
-  *   INSN_REJECTED     If instruction is one not allowed to kprobe,
-  *   INSN_GOOD         If instruction is supported and uses instruction slot,
-diff --git a/arch/arm64/kernel/probes/decode-insn.h b/arch/arm64/kernel/probes/decode-insn.h
-index 8b758c5a2062..033ccab73da6 100644
---- a/arch/arm64/kernel/probes/decode-insn.h
-+++ b/arch/arm64/kernel/probes/decode-insn.h
-@@ -29,5 +29,6 @@ arm_kprobe_decode_insn(kprobe_opcode_t *addr, struct arch_specific_insn *asi);
- #endif
- enum probe_insn __kprobes
- arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *asi);
-+bool aarch64_insn_is_stp_fp_lr_sp_64b(probe_opcode_t insn);
- 
- #endif /* _ARM_KERNEL_KPROBES_ARM64_H */
-diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-index 5e4f887a074c..3906851c07b2 100644
---- a/arch/arm64/kernel/probes/simulate-insn.c
-+++ b/arch/arm64/kernel/probes/simulate-insn.c
-@@ -8,6 +8,9 @@
- #include <linux/bitops.h>
- #include <linux/kernel.h>
- #include <linux/kprobes.h>
-+#include <linux/highmem.h>
-+#include <linux/vmalloc.h>
-+#include <linux/mm.h>
- 
- #include <asm/ptrace.h>
- #include <asm/traps.h>
-@@ -211,3 +214,89 @@ simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
- 	 */
- 	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
- }
-+
-+static inline
-+bool stack_align_check(unsigned long sp)
-+{
-+	return (IS_ALIGNED(sp, 16) ||
-+		!(read_sysreg(sctlr_el1) & SCTLR_EL1_SA0_MASK));
-+}
-+
-+static inline
-+void put_user_stack_pages(struct page **pages, int nr_pages)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_pages; i++)
-+		put_page(pages[i]);
-+}
-+
-+static inline
-+int get_user_stack_pages(long start, long end, struct page **pages)
-+{
-+	int ret;
-+	int nr_pages = (end >> PAGE_SHIFT) - (start >> PAGE_SHIFT) + 1;
-+
-+	ret = get_user_pages_fast(start, nr_pages,
-+				  FOLL_WRITE | FOLL_FORCE, pages);
-+	if (unlikely(ret != nr_pages)) {
-+		if (ret > 0)
-+			put_user_stack_pages(pages, ret);
-+		return 0;
-+	}
-+
-+	return nr_pages;
-+}
-+
-+static inline
-+void *map_user_stack_pages(struct page **pages, int nr_pages)
-+{
-+	if (likely(nr_pages == 1))
-+		return kmap_local_page(pages[0]);
-+	else
-+		return vmap(pages, nr_pages, VM_MAP, PAGE_KERNEL);
-+}
-+
-+static inline
-+void unmap_user_stack_pages(void *kaddr, int nr_pages)
-+{
-+	if (likely(nr_pages == 1))
-+		kunmap_local(kaddr);
-+	else
-+		vunmap(kaddr);
-+}
-+
-+void __kprobes
-+simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs)
-+{
-+	long imm7;
-+	long new_sp;
-+	int nr_pages;
-+	void *kaddr, *dst;
-+	struct page *pages[2] = { NULL };
-+
-+	imm7 = aarch64_insn_decode_immediate(AARCH64_INSN_IMM_7, opcode);
-+	new_sp = regs->sp + (sign_extend64(imm7, 6) << 3);
-+	if (!stack_align_check(new_sp)) {
-+		force_sig(SIGSEGV);
-+		goto done;
-+	}
-+
-+	nr_pages = get_user_stack_pages(new_sp, regs->sp, pages);
-+	if (!nr_pages) {
-+		force_sig(SIGSEGV);
-+		goto done;
-+	}
-+
-+	kaddr = map_user_stack_pages(pages, nr_pages);
-+	dst = kaddr + (new_sp & ~PAGE_MASK);
-+	asm volatile("stp %0, %1, [%2]"
-+		     : : "r"(regs->regs[29]), "r"(regs->regs[30]), "r"(dst));
-+
-+	unmap_user_stack_pages(kaddr, nr_pages);
-+	put_user_stack_pages(pages, nr_pages);
-+
-+done:
-+	regs->sp = new_sp;
-+	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-+}
-diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-index efb2803ec943..733a47ffa2e5 100644
---- a/arch/arm64/kernel/probes/simulate-insn.h
-+++ b/arch/arm64/kernel/probes/simulate-insn.h
-@@ -17,5 +17,6 @@ void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_stp_fp_lr_sp_64b(u32 opcode, long addr, struct pt_regs *regs);
- 
- #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..c70862314fde 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -8,6 +8,7 @@
- #include <asm/cacheflush.h>
- 
- #include "decode-insn.h"
-+#include "simulate-insn.h"
- 
- #define UPROBE_INV_FAULT_CODE	UINT_MAX
- 
-@@ -31,6 +32,21 @@ unsigned long uprobe_get_swbp_addr(struct pt_regs *regs)
- 	return instruction_pointer(regs);
- }
- 
-+static enum probe_insn
-+arm_uprobe_decode_special_insn(probe_opcode_t insn, struct arch_probe_insn *api)
-+{
-+	/*
-+	 * When uprobe interact with VMSA features, such as MTE, POE, etc, it
-+	 * give up the simulation of memory access related instructions.
-+	 */
-+	if (!system_supports_mte() && aarch64_insn_is_stp_fp_lr_sp_64b(insn)) {
-+		api->handler = simulate_stp_fp_lr_sp_64b;
-+		return INSN_GOOD_NO_SLOT;
-+	}
-+
-+	return INSN_REJECTED;
-+}
-+
- int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 		unsigned long addr)
- {
-@@ -44,6 +60,11 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 
- 	insn = *(probe_opcode_t *)(&auprobe->insn[0]);
- 
-+	if (arm_uprobe_decode_special_insn(insn, &auprobe->api)) {
-+		auprobe->simulate = true;
-+		return 0;
-+	}
-+
- 	switch (arm_probe_decode_insn(insn, &auprobe->api)) {
- 	case INSN_REJECTED:
- 		return -EINVAL;
-diff --git a/arch/arm64/lib/insn.c b/arch/arm64/lib/insn.c
-index b008a9b46a7f..0635219d2196 100644
---- a/arch/arm64/lib/insn.c
-+++ b/arch/arm64/lib/insn.c
-@@ -238,6 +238,11 @@ static u32 aarch64_insn_encode_ldst_size(enum aarch64_insn_size_type type,
- 	return insn;
- }
- 
-+u32 aarch64_insn_decode_ldst_size(u32 insn)
-+{
-+	return (insn & GENMASK(31, 30)) >> 30;
-+}
-+
- static inline long label_imm_common(unsigned long pc, unsigned long addr,
- 				     long range)
- {
--- 
-2.34.1
-
+>
+> Thanks,
+>
+> -- Steve
+>
+>
+> > @@ -86,8 +88,6 @@ FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent=
+_entry,
+> >  );
+> >
+> >  /* Function return entry */
+> > -#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> > -
+> >  FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+> >
+> >       TRACE_GRAPH_RET,
+> > @@ -110,6 +110,21 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_r=
+et_entry,
+> >
+> >  #else
+> >
+> > +/* Function call entry */
+> > +FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent_entry,
+> > +
+> > +     TRACE_GRAPH_ENT,
+> > +
+> > +     F_STRUCT(
+> > +             __field_struct( struct ftrace_graph_ent,        graph_ent=
+       )
+> > +             __field_packed( unsigned long,  graph_ent,      func     =
+       )
+> > +             __field_packed( int,            graph_ent,      depth    =
+       )
+> > +     ),
+> > +
+> > +     F_printk("--> %ps (%d)", (void *)__entry->func, __entry->depth)
+> > +);
+> > +
+> > +/* Function return entry */
+> >  FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
+> >
+> >       TRACE_GRAPH_RET,
