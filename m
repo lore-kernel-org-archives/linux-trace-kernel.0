@@ -1,128 +1,131 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184001990D7
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 18:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6EE23774;
+	Tue, 10 Sep 2024 18:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725992054; cv=none; b=TxjdjtjT0zn9Q5w9MqK3kFyrT2fGTyt026nQpN/2gpKBEyI08+xp1KFgj4EMjhjfBydBn/XEs+qaslIY+A2YXazOcFj+v+Lzh6d0RiNjI75c9edXnFd9L1zCzIg5vhA6wDwGQe1H/0KyF+znCjJsstDT7i1xujCa6302QEA0PSs=
+	t=1725992625; cv=none; b=gCBgON1MHqvLYPWw0N7v17ZPxStT33oeXMpMJh/2TPGYj9Zc0DFr+k6FYAEBIbAyldB7SPeRvz8YP/xo8IuBgm1i4C1xA1WZhdgIWKAvavBDJa4oH3V/T9J3oH1U6AkL/+cU9mp2zqWTeFUhqhGysH6529k5Gyiw4jNRSrOliIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725992054; c=relaxed/simple;
-	bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
+	s=arc-20240116; t=1725992625; c=relaxed/simple;
+	bh=HNcY4LkAQB1SIIkhaGS01KbLj4JR6W36dZtkz2doUhk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D6QwxODRJ+vyWrf9FNlfSCXaSu6nUy8PDxRUJjHfKTKhr/yZJjpKhLmjXgU+QfKvkDPUeBZeH5ER1B8bmtQV//IqZjITk6gPKwtA2pL3NpDBMrASEBsVZMtuQhhVt/ZxL85kSMPmkQixKzZDcxJTLErnRsWl0z1k52IqT4ZwTGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=abLtyT08; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=jahyjcpR0NPEYE0KdwlWnZ8ubSV0EvoS6Jxb9gMH9MsoepGMznQjOMpQattlN/9cv0E6VmOeU3QHs4Q9+ttQoHuPH/bvaYyRiJm17xA7dZdhzTnF94ljORkFuawZQ0AFnwG8POGvVOqnulMAteMFhMp2ud2cxnEdP0YRq7o5LR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iI7rK6gE; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abLtyT08"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5356a2460ceso31611e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 11:14:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iI7rK6gE"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7d4ed6158bcso4154208a12.1;
+        Tue, 10 Sep 2024 11:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725992051; x=1726596851; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725992623; x=1726597423; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
-        b=abLtyT0856J3HiEMvWqwwBa1k6zmHgTCdGHw5zBu+zunSbmN2sOPwnmyinZH+nj7Cg
-         kFm/iWQ9/CxrPl15wLJNFAZ2yxRlZIXoB4XXaS91DTIMr6PTRyGBhmcCIbHgPiyksVaw
-         p3TRE9KPKKDaQqpuN0jNnZWc2BesLo46xQLO7Z/LteItYbhQMTv0WUcVh/VmP8rUSF94
-         gkewLIDoGe9X5du//E3Y+ijhhEZgShqpd391R9IMGgLQO/FRi8r2+gwAGXPHFunErljw
-         bAwBBDRBkev0NhqgZ+Nnzxcr1LPk5Ov7/dITj6b/8k+k3i0b3ZA9fe0yerNkZdPwpMHG
-         LK2A==
+        bh=+qnGEy5MFT5i6y8/5hlGjFtTij7fO7GilxXGuDUHVCQ=;
+        b=iI7rK6gE5LwPwc9mwhzvHM59AzaNK2c9f6otBMmsD3VB4V87C1oLDfr+S0+IZVbXMj
+         DPBKR20b4PjkQo5killJ93Sk/CP1fIFhIx3RehhUDB1ob+u2vIzLZouFLnCTu0wwmwFI
+         NugBeR6DqRxzX1qF49zXzkoCKj1NuU2Klkeqwtyfn4crc2DAp3N9MpVbhv2M8FAkgYo4
+         CJTNnAUG/4lLVj2vGIjv9ifBDpI4IGiQLL2SSMraeAHDfPruf50YDhzH3HEV+QldpNPr
+         wsPuLLnDhILAk/Mb6iDfYWaCVzMhtZ1t5OlN6VyJtx7SZm+9hFANugzBs3UQ7onxy8Mq
+         wVCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725992051; x=1726596851;
+        d=1e100.net; s=20230601; t=1725992623; x=1726597423;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
-        b=VQfEYrpreT83LgbL+2h0dNZo1IRqpjSy2mDqz4TKBK3jHohlc81WIXMlGaRA4DylWF
-         mDDWqqf+WPaOZcSOj1kzbolaMbcQ/O4bji+Evf1pu5giqESIg8qbs6Js0W5qxXsrxshK
-         GWGOLgxGbkfYrB0D/JtUjUsRri1jdDO6ugxeWbMAHw44CIR5l6iECHCOGPBswz2g8ppT
-         E/KlPWxzWRqlhQgV9+//G/ctnGds9u84Mc+EdiTYs74M4b0gIcjmAInQ2+37qIcw4E9y
-         HvJ5Lu25iB4xXXtWhsWK/53EPp6WzX/PBTxGWNQEfa2I5zMOG6Nk7IQzOLa7U6AtuNFn
-         iwNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDd7LnGd/MVZmUMaSq51UfQCi4OI4iTnN0+y4wQbKIPJwtzF9ovmfTMwyjnXcT58zYfBdaYcgzQdT1Sg7gD1xtbDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEiele9lOvGLTLPqlrgr5Dzy0NbgqG/UwRVgx83V2Xe9ieLj33
-	y2jThVlav7cydG+fjHfvkwxSLF7b0eCKfR+3YfG1nLY/LppebFKS7ZPxzYX/Pqg7C3AvlnxI0wE
-	DdK3yEHSEUvYucQ+Bai6FtyscCW+6f9Dm6o1T
-X-Google-Smtp-Source: AGHT+IHJzZW54ZelEpqtjg5sNSpim2OEz6bcZdRlXJladf0hM3rQAiAdQOYywo77wa6LK0FC2fDMu1023QrWMkIipaU=
-X-Received: by 2002:a05:6512:318e:b0:536:52dc:291f with SMTP id
- 2adb3069b0e04-536743b4463mr19813e87.1.1725992050488; Tue, 10 Sep 2024
- 11:14:10 -0700 (PDT)
+        bh=+qnGEy5MFT5i6y8/5hlGjFtTij7fO7GilxXGuDUHVCQ=;
+        b=JRo1lh9nHv9LCSfhJaB6+1XpxBuD8l54/VUbRIZtAxfrp2lAaMyV4YeSNV+4RgPxgu
+         nYGbA8pjcaydWzn5sVTVWP7w/PDKeIESFIaVzkpHx1d7l++BCXa17fElrBJrjDdB+QjY
+         8+znhxreLaKWDUQ0OWycu/FY9AZMJnRfaH/1/gqi9/txw+7qV1S1HnEPc8q7lA+Zn/F6
+         wIvM109Pmz2R1NdwMlUuQAGcLRxLlDo6dvSX8kEudCGN+v+xz3WdcbjHPnqbBfHMZu46
+         Z4LOmJmuWGQlWAsLhc0gNLKT74eQE20DiriszGRJVIiaM5Bm69CYc2E0+tX/VdQxI75i
+         JWxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwIvh1Lj62c6F4EfXKu+xBdsobkudSRf+tQy9+SSOSqJ7PnyyqzDpDEGbKuk7ZOV3tX9nBzNHy/Pzk/nQ6HCPotn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHyxTaMFSQUMg9Mf1A3xq7mH+za2xc8BGrHQkuv52VIUDMrTM7
+	v+zHTjz68adnC0fagG0k0SN0pn5KgwaAOETHwstONx3H0ytlBQWQy1o1tel+pQtb65AvvgE5MbH
+	lFn6CTNObHfKldMIPbS3CyhHyUhQ=
+X-Google-Smtp-Source: AGHT+IGPWHSsND0wuMVJa3pl4JEbgC3N6l3OGs8DL96P+aaHAJ4NTXkAsbjIwdGTNd2O9iNe4kltmvpmPrJpNXWhU/o=
+X-Received: by 2002:a17:90a:7802:b0:2d3:d8ae:67e1 with SMTP id
+ 98e67ed59e1d1-2dad50ed085mr14765229a91.26.1725992623272; Tue, 10 Sep 2024
+ 11:23:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906051205.530219-1-andrii@kernel.org> <CAG48ez1+Y+ifc3HfG=E5j+g=RwtzH2TiE4mAC2TZxS52idkRZg@mail.gmail.com>
- <CAEf4BzazZSUtJ9vPd6Xj4539MCebctOZJmO7xmdUhoQiv5mBFg@mail.gmail.com>
-In-Reply-To: <CAEf4BzazZSUtJ9vPd6Xj4539MCebctOZJmO7xmdUhoQiv5mBFg@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 10 Sep 2024 20:13:32 +0200
-Message-ID: <CAG48ez2+v4pADNgUjdq8aOvyJAUHOudSre=Q5RpN1sfj2aByaw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] uprobes,mm: speculative lockless VMA-to-uprobe lookup
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
-	brauner@kernel.org
+References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+In-Reply-To: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 10 Sep 2024 11:23:29 -0700
+Message-ID: <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
+To: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: bpf <bpf@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh <kpsingh@chromium.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Florent Revest <revest@chromium.org>, 
+	Puranjay Mohan <puranjay@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2024 at 7:58=E2=80=AFPM Andrii Nakryiko
++ arm ML and maintainers
+
+On Wed, Sep 4, 2024 at 6:02=E2=80=AFPM Andrii Nakryiko
 <andrii.nakryiko@gmail.com> wrote:
-> On Tue, Sep 10, 2024 at 9:06=E2=80=AFAM Jann Horn <jannh@google.com> wrot=
-e:
-> > On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.o=
-rg> wrote:
-> > > Implement speculative (lockless) resolution of VMA to inode to uprobe=
-,
-> > > bypassing the need to take mmap_lock for reads, if possible. Patch #1=
- by Suren
-> > > adds mm_struct helpers that help detect whether mm_struct were change=
-d, which
-> > > is used by uprobe logic to validate that speculative results can be t=
-rusted
-> > > after all the lookup logic results in a valid uprobe instance.
-> >
-> > Random thought: It would be nice if you could skip the MM stuff
-> > entirely and instead go through the GUP-fast path, but I guess going
-> > from a uprobe-created anon page to the corresponding uprobe is hard...
-> > but maybe if you used the anon_vma pointer as a lookup key to find the
-> > uprobe, it could work? Though then you'd need hooks in the anon_vma
-> > code... maybe not such a great idea.
 >
-> So I'm not crystal clear on all the details here, so maybe you can
-> elaborate a bit. But keep in mind that a) there could be multiple
-> uprobes within a single user page, so lookup has to take at least
-> offset within the page into account somehow. But also b) single uprobe
-
-I think anonymous pages have the same pgoff numbering as file pages;
-so the page's mapping and pgoff pointers together should almost give
-you the same amount of information as what you are currently looking
-for (the file and the offset inside it), except that you'd get an
-anon_vma pointer corresponding to the file instead of directly getting
-the file.
-
-> can be installed in many independent anon VMAs across many processes.
-> So anon vma itself can't be part of the key.
-
-Yeah, I guess to make that work you'd have to somehow track which
-anon_vmas exist for which mappings.
-
-(An anon_vma is tied to one specific file, see anon_vma_compatible().)
-
-> Though maybe we could have left some sort of "cookie" stashed
-> somewhere to help with lookup. But then again, multiple uprobes per
-> page.
+> Hey,
 >
-> It does feel like lockless VMA to inode resolution would be a cleaner
-> solution, let's see if we can get there somehow.
+> I just recently realized that we are still missing multi-kprobe
+> support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
+> seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
+> implemented for ARM64.
+>
+> It took me a while to realize what's going on, as I roughly remembered
+> (and confirmed through lore search) that Masami's original rethook
+> patches had arm64-specific bits. Long story short:
+>
+> 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation"
+> 83acdce68949 arm64: rethook: Add arm64 rethook implementation
+>
+> The patch was landed and then reverted. I found some discussion online
+> and it seems like the plan was to land arch-specific bits shortly
+> after bpf-next PR.
+>
+> But it seems like that never happened. Why?
+>
+> I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
+> have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
+> seems. How come ARM64 is the one left out?
+>
+> Can anyone please provide some context? And if that's just an
+> oversight, can we prioritize landing this for ARM64 ASAP?
+>
+>   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.ibm.=
+com/
+>
 
-Mh, yes, I was just thinking it would be nice if we could keep this
-lockless complexity out of the mmap locking code... but I guess it's
-not much more straightforward than what you're doing.
+Masami, Steven,
+
+Does Linus have to be in CC to get any reply here? Come on, it's been
+almost a full week.
+
+Maybe ARM64 folks have some context?... And hopefully desire to see
+this through so that ARM64 doesn't stick out as a lesser-supported
+platform as far as tracing goes compared to loongarch, s390x, and
+powerpc (which just landed rethook support, see [2]).
+
+Note that there was already an implementation (see [1]), but for some
+reason it never made it.
+
+  [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820=
+.stgit@devnote2/
+  [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b=
+4-ty@ellerman.id.au/
+
+>
+> -- Andrii
