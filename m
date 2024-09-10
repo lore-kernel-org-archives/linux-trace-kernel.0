@@ -1,155 +1,128 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554B61990D7;
-	Tue, 10 Sep 2024 18:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184001990D7
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 18:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725991762; cv=none; b=tFZcFNjOIsr0KrAul+uLJnRsH6WErMB9IQpyg888QQWu20OxnCZHjgDxTi8zI4nqBVXvh/gGq6Tte5tFiyoUK8Re2h2pSELFF7yRRJl/ekXdm8qElT5NfSRwvq1eK0LZJPTkCWSwCwkZ114buEHjSVL6wbXmJRz4DcGGVfCeXUE=
+	t=1725992054; cv=none; b=TxjdjtjT0zn9Q5w9MqK3kFyrT2fGTyt026nQpN/2gpKBEyI08+xp1KFgj4EMjhjfBydBn/XEs+qaslIY+A2YXazOcFj+v+Lzh6d0RiNjI75c9edXnFd9L1zCzIg5vhA6wDwGQe1H/0KyF+znCjJsstDT7i1xujCa6302QEA0PSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725991762; c=relaxed/simple;
-	bh=2N8/D1ihjU6aMGhqrHGl3VqZHWCEUcRQ7LCRsQXs7YE=;
+	s=arc-20240116; t=1725992054; c=relaxed/simple;
+	bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bw4SZm5tv5vXjPmBYuNus7JCu0DuSCX6YURSgF08QG8tkUInc45BPqsM9B4yuqZWpNuIyqYqc+Tqm3I6DnZyWOYIP5uVoXDMFhl1+mhs1041ShpDsR7+lWBi2Gjueq4MfHD2hBWRzEHQCxrePQUvIZm4BTBAeLQepInnNsiNDCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bixBHskS; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=D6QwxODRJ+vyWrf9FNlfSCXaSu6nUy8PDxRUJjHfKTKhr/yZJjpKhLmjXgU+QfKvkDPUeBZeH5ER1B8bmtQV//IqZjITk6gPKwtA2pL3NpDBMrASEBsVZMtuQhhVt/ZxL85kSMPmkQixKzZDcxJTLErnRsWl0z1k52IqT4ZwTGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=abLtyT08; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bixBHskS"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d889207d1aso4044072a91.3;
-        Tue, 10 Sep 2024 11:09:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abLtyT08"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5356a2460ceso31611e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 11:14:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725991760; x=1726596560; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725992051; x=1726596851; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=keS3UcLB/RNrCfylnLbsmtnQNe6Qyfi2aduCceDFWdk=;
-        b=bixBHskSKFM3iyIdxq/WFT5BMhySTUmeyubyAaURAC3zfcU29/ZmJn1kUEwnqFzchD
-         sL5hvtXmvoykASk3ILAxBKL5yZKayKmecViRhj9+igg5PRseY8zeHKMk5W4gvZssJeq6
-         zlEhk1JwsQnRDAWi7Yn2kT16JbSM6YEqoVKQ7Qj8LHUfVb6NM6i93to41x53dWxPp8Gi
-         U1mBNzKzZMZVLJGeTzvwVA/DbFC11KN4c9uEuhYS4FLoGkHIyd0i4nPmgUwGO6rQdPmj
-         AfA+HpOVT5cThIl86uCaEhitep9zbpU74DPEqO3E9kGVSg9b1aolmWVBMtFgtnNKRfqL
-         uBBw==
+        bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
+        b=abLtyT0856J3HiEMvWqwwBa1k6zmHgTCdGHw5zBu+zunSbmN2sOPwnmyinZH+nj7Cg
+         kFm/iWQ9/CxrPl15wLJNFAZ2yxRlZIXoB4XXaS91DTIMr6PTRyGBhmcCIbHgPiyksVaw
+         p3TRE9KPKKDaQqpuN0jNnZWc2BesLo46xQLO7Z/LteItYbhQMTv0WUcVh/VmP8rUSF94
+         gkewLIDoGe9X5du//E3Y+ijhhEZgShqpd391R9IMGgLQO/FRi8r2+gwAGXPHFunErljw
+         bAwBBDRBkev0NhqgZ+Nnzxcr1LPk5Ov7/dITj6b/8k+k3i0b3ZA9fe0yerNkZdPwpMHG
+         LK2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725991760; x=1726596560;
+        d=1e100.net; s=20230601; t=1725992051; x=1726596851;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=keS3UcLB/RNrCfylnLbsmtnQNe6Qyfi2aduCceDFWdk=;
-        b=gSYZgZDM9pFQM2vhT6+2S81QHp8whpW7TYOgJvtN5Mk/GE/xpWOsfR93YOxsZcgb/s
-         HM3y+kxPsJC7SMRZQ83GtDB/8bXG/7TGNvE/6LUn0xs343glcyPQv7N50Y0OMTH4lrql
-         JJsvKvljbFmJSdJVRBe53+KRi4TjluOGf4PIWnLiHZfNp+1FDdp5Vg5OY5Evw5RkHx36
-         jFK10LDMX/F0iS8HF6Hc32nf47Fj/LOEiYQn+3nf77sACgWEQrStFnlWROfGXMqQ185F
-         d3fJt9+uFb0pH0dghmAyrzV1rBxyymlO2vE+15HByPOLMmZ4f7BFscQ0CfNI8gqZXNvB
-         NSiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH0hFt+MZiqbuSHQyNm7KFqH864leFQ9P7rTo1y2HNirs37KF781OfJIjFxdv5SgWkOhhXrzOhnaaOovO6CB6nKxRs@vger.kernel.org, AJvYcCXgA9r7DuXfFHDfvViJeI1XD2G8qwviJIOuF5Si8eMGlpXDqjPG31FYa9n1Tt4M9s+0A3g=@vger.kernel.org, AJvYcCXyPmlKW6oYa/7vmIBV/ohZX79nRtfAAAky2bM6uh6BANd9//azwlUYJxD1LzahsEOYSFwRdcejyZ7Ohbpa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yymuc2od1w5qmX7zS2BenCQZr0K/hX2SHjLnacptR28mdg7zb0H
-	Dgx26V2H3EtobpV94TvSMndnoehnkPxWBBM325TMtGtvWGHQV9bSptp2dEG9nuzHaS7o/slwiHu
-	t4JOpaTCvqo8ZS/bA2KdB2vKEAdo=
-X-Google-Smtp-Source: AGHT+IFfxI5/uWeMY+TBei8CnO15BojmFlKAAp1PNFk4TgZBhiS9LTFwdr5mC0MfHuwNgWKu60Xieb6B1yaiMQBR1fc=
-X-Received: by 2002:a17:90b:438d:b0:2cd:1e60:9c31 with SMTP id
- 98e67ed59e1d1-2dad5181c35mr15620037a91.30.1725991760259; Tue, 10 Sep 2024
- 11:09:20 -0700 (PDT)
+        bh=PN/bOVC7EhD+DKOp8i3e+Nf4juy6xA9SZtiS34NdjWg=;
+        b=VQfEYrpreT83LgbL+2h0dNZo1IRqpjSy2mDqz4TKBK3jHohlc81WIXMlGaRA4DylWF
+         mDDWqqf+WPaOZcSOj1kzbolaMbcQ/O4bji+Evf1pu5giqESIg8qbs6Js0W5qxXsrxshK
+         GWGOLgxGbkfYrB0D/JtUjUsRri1jdDO6ugxeWbMAHw44CIR5l6iECHCOGPBswz2g8ppT
+         E/KlPWxzWRqlhQgV9+//G/ctnGds9u84Mc+EdiTYs74M4b0gIcjmAInQ2+37qIcw4E9y
+         HvJ5Lu25iB4xXXtWhsWK/53EPp6WzX/PBTxGWNQEfa2I5zMOG6Nk7IQzOLa7U6AtuNFn
+         iwNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDd7LnGd/MVZmUMaSq51UfQCi4OI4iTnN0+y4wQbKIPJwtzF9ovmfTMwyjnXcT58zYfBdaYcgzQdT1Sg7gD1xtbDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEiele9lOvGLTLPqlrgr5Dzy0NbgqG/UwRVgx83V2Xe9ieLj33
+	y2jThVlav7cydG+fjHfvkwxSLF7b0eCKfR+3YfG1nLY/LppebFKS7ZPxzYX/Pqg7C3AvlnxI0wE
+	DdK3yEHSEUvYucQ+Bai6FtyscCW+6f9Dm6o1T
+X-Google-Smtp-Source: AGHT+IHJzZW54ZelEpqtjg5sNSpim2OEz6bcZdRlXJladf0hM3rQAiAdQOYywo77wa6LK0FC2fDMu1023QrWMkIipaU=
+X-Received: by 2002:a05:6512:318e:b0:536:52dc:291f with SMTP id
+ 2adb3069b0e04-536743b4463mr19813e87.1.1725992050488; Tue, 10 Sep 2024
+ 11:14:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909074554.2339984-1-jolsa@kernel.org> <20240909074554.2339984-3-jolsa@kernel.org>
- <CAEf4BzZ0+4Hd1xESWgE2WhSsNEuNuxtTju+OQeGiY0_iZsZbXQ@mail.gmail.com> <Zt_ygFPEdX53rqaW@krava>
-In-Reply-To: <Zt_ygFPEdX53rqaW@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 10 Sep 2024 11:09:07 -0700
-Message-ID: <CAEf4BzZbLWKJkykHDu_Az5h8HYT-h31ELY2KPE5=VOymRBbCCg@mail.gmail.com>
-Subject: Re: [PATCHv3 2/7] bpf: Add support for uprobe multi session attach
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <20240906051205.530219-1-andrii@kernel.org> <CAG48ez1+Y+ifc3HfG=E5j+g=RwtzH2TiE4mAC2TZxS52idkRZg@mail.gmail.com>
+ <CAEf4BzazZSUtJ9vPd6Xj4539MCebctOZJmO7xmdUhoQiv5mBFg@mail.gmail.com>
+In-Reply-To: <CAEf4BzazZSUtJ9vPd6Xj4539MCebctOZJmO7xmdUhoQiv5mBFg@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 10 Sep 2024 20:13:32 +0200
+Message-ID: <CAG48ez2+v4pADNgUjdq8aOvyJAUHOudSre=Q5RpN1sfj2aByaw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] uprobes,mm: speculative lockless VMA-to-uprobe lookup
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
+	brauner@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2024 at 12:17=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wro=
-te:
+On Tue, Sep 10, 2024 at 7:58=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> On Tue, Sep 10, 2024 at 9:06=E2=80=AFAM Jann Horn <jannh@google.com> wrot=
+e:
+> > On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.o=
+rg> wrote:
+> > > Implement speculative (lockless) resolution of VMA to inode to uprobe=
+,
+> > > bypassing the need to take mmap_lock for reads, if possible. Patch #1=
+ by Suren
+> > > adds mm_struct helpers that help detect whether mm_struct were change=
+d, which
+> > > is used by uprobe logic to validate that speculative results can be t=
+rusted
+> > > after all the lookup logic results in a valid uprobe instance.
+> >
+> > Random thought: It would be nice if you could skip the MM stuff
+> > entirely and instead go through the GUP-fast path, but I guess going
+> > from a uprobe-created anon page to the corresponding uprobe is hard...
+> > but maybe if you used the anon_vma pointer as a lookup key to find the
+> > uprobe, it could work? Though then you'd need hooks in the anon_vma
+> > code... maybe not such a great idea.
 >
-> On Mon, Sep 09, 2024 at 04:44:29PM -0700, Andrii Nakryiko wrote:
-> > On Mon, Sep 9, 2024 at 12:46=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wr=
-ote:
-> > >
-> > > Adding support to attach bpf program for entry and return probe
-> > > of the same function. This is common use case which at the moment
-> > > requires to create two uprobe multi links.
-> > >
-> > > Adding new BPF_TRACE_UPROBE_SESSION attach type that instructs
-> > > kernel to attach single link program to both entry and exit probe.
-> > >
-> > > It's possible to control execution of the bpf program on return
-> > > probe simply by returning zero or non zero from the entry bpf
-> > > program execution to execute or not the bpf program on return
-> > > probe respectively.
-> > >
-> >
-> > pedantic nit: bpf -> BPF
->
-> ok
->
-> >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  include/uapi/linux/bpf.h       |  1 +
-> > >  kernel/bpf/syscall.c           |  9 +++++++--
-> > >  kernel/trace/bpf_trace.c       | 32 ++++++++++++++++++++++++--------
-> > >  tools/include/uapi/linux/bpf.h |  1 +
-> > >  tools/lib/bpf/libbpf.c         |  1 +
-> > >  5 files changed, 34 insertions(+), 10 deletions(-)
-> > >
-> >
-> > LGTM
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > [...]
-> >
-> > > @@ -3336,9 +3347,13 @@ uprobe_multi_link_handler(struct uprobe_consum=
-er *con, struct pt_regs *regs,
-> > >                           __u64 *data)
-> > >  {
-> > >         struct bpf_uprobe *uprobe;
-> > > +       int ret;
-> > >
-> > >         uprobe =3D container_of(con, struct bpf_uprobe, consumer);
-> > > -       return uprobe_prog_run(uprobe, instruction_pointer(regs), reg=
-s);
-> > > +       ret =3D uprobe_prog_run(uprobe, instruction_pointer(regs), re=
-gs);
-> > > +       if (uprobe->consumer.session)
-> > > +               return ret ? UPROBE_HANDLER_IGNORE : 0;
-> >
-> > Should we restrict the return range to [0, 1] for UPROBE_SESSION
-> > programs on the verifier side (given it's a new program type and we
-> > can do that)?
->
-> yes, I think we can do that.. we have BPF_TRACE_UPROBE_SESSION as
-> expected_attach_type so we can do that during the load
->
-> hum, is it too late to do that for kprobe session as well?
+> So I'm not crystal clear on all the details here, so maybe you can
+> elaborate a bit. But keep in mind that a) there could be multiple
+> uprobes within a single user page, so lookup has to take at least
+> offset within the page into account somehow. But also b) single uprobe
 
-I'd say let's do it, unlikely we'll break anyone. I'd expect everyone
-doing explicit return 0 or return 1 anyways.
+I think anonymous pages have the same pgoff numbering as file pages;
+so the page's mapping and pgoff pointers together should almost give
+you the same amount of information as what you are currently looking
+for (the file and the offset inside it), except that you'd get an
+anon_vma pointer corresponding to the file instead of directly getting
+the file.
 
+> can be installed in many independent anon VMAs across many processes.
+> So anon vma itself can't be part of the key.
+
+Yeah, I guess to make that work you'd have to somehow track which
+anon_vmas exist for which mappings.
+
+(An anon_vma is tied to one specific file, see anon_vma_compatible().)
+
+> Though maybe we could have left some sort of "cookie" stashed
+> somewhere to help with lookup. But then again, multiple uprobes per
+> page.
 >
-> thanks,
-> jirka
->
-> >
-> > > +       return ret;
-> > >  }
-> > >
-> >
-> > [...]
+> It does feel like lockless VMA to inode resolution would be a cleaner
+> solution, let's see if we can get there somehow.
+
+Mh, yes, I was just thinking it would be nice if we could keep this
+lockless complexity out of the mmap locking code... but I guess it's
+not much more straightforward than what you're doing.
