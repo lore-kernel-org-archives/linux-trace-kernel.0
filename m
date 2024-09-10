@@ -1,131 +1,73 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6EE23774;
-	Tue, 10 Sep 2024 18:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F5214A088;
+	Tue, 10 Sep 2024 18:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725992625; cv=none; b=gCBgON1MHqvLYPWw0N7v17ZPxStT33oeXMpMJh/2TPGYj9Zc0DFr+k6FYAEBIbAyldB7SPeRvz8YP/xo8IuBgm1i4C1xA1WZhdgIWKAvavBDJa4oH3V/T9J3oH1U6AkL/+cU9mp2zqWTeFUhqhGysH6529k5Gyiw4jNRSrOliIQ=
+	t=1725993616; cv=none; b=I0tZTPoRen4B6uFVkrP2BCbffOID/pumHw2eqKY0hb0ehZBhrTXvWZw7YK3F6qvcRzkz/Ed2vgMIM5hR0sY12MaGv/VZKfFOg0Q8ByJTkLE6AGizKvV8ggIIKkQBTzSglFK212Z6OE+ADSyOhzTs6LCKDIPHKu6gMAe0+ByxvtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725992625; c=relaxed/simple;
-	bh=HNcY4LkAQB1SIIkhaGS01KbLj4JR6W36dZtkz2doUhk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jahyjcpR0NPEYE0KdwlWnZ8ubSV0EvoS6Jxb9gMH9MsoepGMznQjOMpQattlN/9cv0E6VmOeU3QHs4Q9+ttQoHuPH/bvaYyRiJm17xA7dZdhzTnF94ljORkFuawZQ0AFnwG8POGvVOqnulMAteMFhMp2ud2cxnEdP0YRq7o5LR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iI7rK6gE; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iI7rK6gE"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7d4ed6158bcso4154208a12.1;
-        Tue, 10 Sep 2024 11:23:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725992623; x=1726597423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qnGEy5MFT5i6y8/5hlGjFtTij7fO7GilxXGuDUHVCQ=;
-        b=iI7rK6gE5LwPwc9mwhzvHM59AzaNK2c9f6otBMmsD3VB4V87C1oLDfr+S0+IZVbXMj
-         DPBKR20b4PjkQo5killJ93Sk/CP1fIFhIx3RehhUDB1ob+u2vIzLZouFLnCTu0wwmwFI
-         NugBeR6DqRxzX1qF49zXzkoCKj1NuU2Klkeqwtyfn4crc2DAp3N9MpVbhv2M8FAkgYo4
-         CJTNnAUG/4lLVj2vGIjv9ifBDpI4IGiQLL2SSMraeAHDfPruf50YDhzH3HEV+QldpNPr
-         wsPuLLnDhILAk/Mb6iDfYWaCVzMhtZ1t5OlN6VyJtx7SZm+9hFANugzBs3UQ7onxy8Mq
-         wVCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725992623; x=1726597423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+qnGEy5MFT5i6y8/5hlGjFtTij7fO7GilxXGuDUHVCQ=;
-        b=JRo1lh9nHv9LCSfhJaB6+1XpxBuD8l54/VUbRIZtAxfrp2lAaMyV4YeSNV+4RgPxgu
-         nYGbA8pjcaydWzn5sVTVWP7w/PDKeIESFIaVzkpHx1d7l++BCXa17fElrBJrjDdB+QjY
-         8+znhxreLaKWDUQ0OWycu/FY9AZMJnRfaH/1/gqi9/txw+7qV1S1HnEPc8q7lA+Zn/F6
-         wIvM109Pmz2R1NdwMlUuQAGcLRxLlDo6dvSX8kEudCGN+v+xz3WdcbjHPnqbBfHMZu46
-         Z4LOmJmuWGQlWAsLhc0gNLKT74eQE20DiriszGRJVIiaM5Bm69CYc2E0+tX/VdQxI75i
-         JWxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWwIvh1Lj62c6F4EfXKu+xBdsobkudSRf+tQy9+SSOSqJ7PnyyqzDpDEGbKuk7ZOV3tX9nBzNHy/Pzk/nQ6HCPotn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHyxTaMFSQUMg9Mf1A3xq7mH+za2xc8BGrHQkuv52VIUDMrTM7
-	v+zHTjz68adnC0fagG0k0SN0pn5KgwaAOETHwstONx3H0ytlBQWQy1o1tel+pQtb65AvvgE5MbH
-	lFn6CTNObHfKldMIPbS3CyhHyUhQ=
-X-Google-Smtp-Source: AGHT+IGPWHSsND0wuMVJa3pl4JEbgC3N6l3OGs8DL96P+aaHAJ4NTXkAsbjIwdGTNd2O9iNe4kltmvpmPrJpNXWhU/o=
-X-Received: by 2002:a17:90a:7802:b0:2d3:d8ae:67e1 with SMTP id
- 98e67ed59e1d1-2dad50ed085mr14765229a91.26.1725992623272; Tue, 10 Sep 2024
- 11:23:43 -0700 (PDT)
+	s=arc-20240116; t=1725993616; c=relaxed/simple;
+	bh=fzhPJFooZn6ziiB8dUyp4xNuOymY0Ow5XTpP8LzxOr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gvL3KE38lQ5vi7bQvOxM/OTKYeONk07yTKZermtzYqHo96uqeiT6+bbtKTKbHKQyZHOaYU7+HRbMj+hr3rhwYjIWnHjvkOrEWrOt1woMIkiBxuk8Q5Md18+N2LG38SlwadWLJkciy3h8ACOhJiNPN95WFaIl6K5B5mLa2S5A7Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD08C4CEC3;
+	Tue, 10 Sep 2024 18:40:13 +0000 (UTC)
+Date: Tue, 10 Sep 2024 14:40:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, Linux
+ trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
+ <kpsingh@chromium.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, Mark Rutland
+ <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
+ <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
+Message-ID: <20240910144015.643dc6da@gandalf.local.home>
+In-Reply-To: <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
-In-Reply-To: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 10 Sep 2024 11:23:29 -0700
-Message-ID: <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
-Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
-To: Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf <bpf@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh <kpsingh@chromium.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Florent Revest <revest@chromium.org>, 
-	Puranjay Mohan <puranjay@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-+ arm ML and maintainers
+On Tue, 10 Sep 2024 11:23:29 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-On Wed, Sep 4, 2024 at 6:02=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> Hey,
->
-> I just recently realized that we are still missing multi-kprobe
-> support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
-> seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
-> implemented for ARM64.
->
-> It took me a while to realize what's going on, as I roughly remembered
-> (and confirmed through lore search) that Masami's original rethook
-> patches had arm64-specific bits. Long story short:
->
-> 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation"
-> 83acdce68949 arm64: rethook: Add arm64 rethook implementation
->
-> The patch was landed and then reverted. I found some discussion online
-> and it seems like the plan was to land arch-specific bits shortly
-> after bpf-next PR.
->
-> But it seems like that never happened. Why?
->
-> I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
-> have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
-> seems. How come ARM64 is the one left out?
->
-> Can anyone please provide some context? And if that's just an
-> oversight, can we prioritize landing this for ARM64 ASAP?
->
->   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.ibm.=
-com/
->
+> Masami, Steven,
+> 
+> Does Linus have to be in CC to get any reply here? Come on, it's been
+> almost a full week.
 
-Masami, Steven,
+And we are busy getting ready for Plumbers. Go ahead Cc Linus, I'm sure he
+doesn't care, and you will likely just annoy him unless this is a
+regression. 
 
-Does Linus have to be in CC to get any reply here? Come on, it's been
-almost a full week.
+> 
+> Maybe ARM64 folks have some context?... And hopefully desire to see
+> this through so that ARM64 doesn't stick out as a lesser-supported
+> platform as far as tracing goes compared to loongarch, s390x, and
+> powerpc (which just landed rethook support, see [2]).
+> 
+> Note that there was already an implementation (see [1]), but for some
+> reason it never made it.
+> 
+>   [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+>   [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b4-ty@ellerman.id.au/
 
-Maybe ARM64 folks have some context?... And hopefully desire to see
-this through so that ARM64 doesn't stick out as a lesser-supported
-platform as far as tracing goes compared to loongarch, s390x, and
-powerpc (which just landed rethook support, see [2]).
+Masami's fprobe work is near the top of my priority list, but there's been
+bugs reported that always take precedence over features. There's been fires
+to put out that has caused this to be delayed.
 
-Note that there was already an implementation (see [1]), but for some
-reason it never made it.
+There! I replied.
 
-  [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820=
-.stgit@devnote2/
-  [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b=
-4-ty@ellerman.id.au/
-
->
-> -- Andrii
+-- Steve
