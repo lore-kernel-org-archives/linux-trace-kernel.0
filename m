@@ -1,89 +1,84 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC8819EEDF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 16:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B319924D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 16:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725984414; cv=none; b=K4CCnyjH0nRco1BNrVAbxnrEsGQdC8bFCu5tMe3kBuRgwgluySSmZckgaxi0igOBQxilZfk7iQ/ND+WqixNulcGc6OQmw0kHfEJEH33GnoUlxog3LPYmbqLuHfnDfoiubKKD/33EHaNjljF6rUUQcnmSiFk31fcvrQd1ZiPAXtU=
+	t=1725985422; cv=none; b=sV5VfaX/nAHRDwIxTL8WZGwYIpify/wujgaTTInfIrbFysJV09tPbtjR+sGyB7d01u3GcFgilZqn5IyJWCDodwJRSp7Z1jgaB8h2K+0xFQJUSPhFyytIhU76Is4sHuLmouqZzotMJAwG5g1YYYfFvr91esEnDZ1o9Coh3sbNun0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725984414; c=relaxed/simple;
-	bh=9Rp+ZaWePBqTv+7CDLYdQhLyxwC0Y6Goq+cudkph1u8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VYk069Rz67DiXCElnEKMqJzeLOPcyzq2geffUGB4UX13GzYsR/et1TE+haU/qox+ne2ok7yFVBiqzkpaRvCt3Jc+4RMMHa+JCKCiQVG6KYsWU1yVhQIuxnpcpqW9HsvMOdkz4J7VZPQ1ccmv7Bmq0DJgO+b01ftFOmVZCqsbYqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VX7WEQ0R; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1725985422; c=relaxed/simple;
+	bh=gXjTEcttA5QttM+LvxBqEoFRUycgUByM82qJ/zmUKxU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FKCyu+1qz11rVVcEvW9h4mYaRRqPPOM5OtjIeSJks1v7PKRmHrMbwyq6pfbamNr6QP7gddvCIYYNL/Mv8aIPcNT4uH9rhg2z9C3m2M5CjfLYgiLH1T/JLUfWwwO2sc8l51XjtGt+TZFWIHOnRKrkuUflYdlqp7+O71PsgYW8ZuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eVesFppu; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VX7WEQ0R"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5c247dd0899so13120a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 09:06:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eVesFppu"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-42cb236ad4aso20260025e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 09:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725984411; x=1726589211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Rp+ZaWePBqTv+7CDLYdQhLyxwC0Y6Goq+cudkph1u8=;
-        b=VX7WEQ0RI41VuuPT5x70ZhL7BMzCNvZkBQ9CpvFjGoN2I1ydOfZyX8Y3ZiWuA371N2
-         9xOUVll4yNIhDshgq7rSCi08wQ/4ZviKJ1ge5iRPi/rV3lPuc0S/NKXxI4vUfhczZ0eb
-         lo8gCBT1Ar3Rwrv4nrvNrRk+XO2sfVzp+51QZbMhH4Jln/PLnLfAI9YcobvJvNvzQ4t9
-         8BecuTyygYglPZW504+I5ZSYGkVFIaYseATK4CKm3aXE3SdeHXfmdtjIqLzzSvmTsTjs
-         V8Oa8UNpEWKymwGe0YoWiGbb8e/Xz6wjzkQY+g04gNpEIJKfW6L9GiJeIrZeshhcBldJ
-         hEeQ==
+        d=google.com; s=20230601; t=1725985419; x=1726590219; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AYa30QP8uHW8yVnRTztEeL2KarXkSUIIYXYg/0AlhYM=;
+        b=eVesFppumX7x4b+aKXyVMBmS/OuryIx8vcGxVyEnBi9UHE/KcmJ+/ss7mSUtUQ0dEo
+         0posC4HaPvcYtHawgw35gCROTqF941CpXe3XK6mfxB7TJvDJp6fXUxeInfyXFnESuuZH
+         w8bU5IQwCgROAyiOkDd4GpXPAL2JpwxcFnTXdJzvJoyJ1UWdC3h8MEi/qWBj3UELhDwN
+         q2X59/vX/JkozMFU1LzzBzMwJJxEhJQYgANduhCgVitiHh+uuQ4gAzQTFIEr3WxYS3HN
+         twEaBZImhP0cEUz87ejR4el9R3Wvfr+MZwXB/NfXtsYH7aelJ+p7P2bjz9vzohtIJmZJ
+         1LAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725984411; x=1726589211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Rp+ZaWePBqTv+7CDLYdQhLyxwC0Y6Goq+cudkph1u8=;
-        b=YzTBNHWHAKPIE1Fjh5UTUgxCv79TAIp4eW4ndqmpQ6sqE6UO+0SeMKb/mdcFyzWoh/
-         GARRzIge31Bib2/XQ5aT2x4xFoDczVlO1rBNQTZhc0sj3T1fXqic+419dIqAxTeSEao3
-         0oOz8kxZku7V+QQCVYQLMj49nwS2wttpxoM+GJ6lKZXmlF+4hO8gqQ2JBZ2lriYqr2Bd
-         xS4TQW39yGmD/wzcz55JdtcrdJfSDlLcjHavWeur+9ns8+0xZKuMn5W9gaSEYgV5YAKt
-         R4mnZzKiVqX6xJoDvbKZSkNyOMV1hfl564/YtzxBjVYbfmAuDCz4gDWdNKCDf1LqLt3p
-         yuqA==
-X-Gm-Message-State: AOJu0Yyo96vhzKLLmXZMcjZ1kRau/WlpYbp6mhrlIqOeMp2zz3bEEtD2
-	BdCYXkVL1heu7kVa2ImrLXJVA4Xe3KiR/Hz257cGi1Xn6fiUD4Uumwd4bse3WX2dO6L00iAKEPM
-	HKTJ+ktmPUZF43Zu0ha5P2FhZnxozmlgiUPfo
-X-Google-Smtp-Source: AGHT+IHx0FXXNOSwDc/a2GkEEO0nN6J5e6WRL/WX5poMnRTVWbyacane/wtmnLr+FEV9BbUT65Gm5/vLnAoiz2/SvOA=
-X-Received: by 2002:a05:6402:1ec4:b0:59f:9f59:9b07 with SMTP id
- 4fb4d7f45d1cf-5c4029ef54amr299933a12.4.1725984410772; Tue, 10 Sep 2024
- 09:06:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725985419; x=1726590219;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AYa30QP8uHW8yVnRTztEeL2KarXkSUIIYXYg/0AlhYM=;
+        b=Xqs6H0rXO+NW7k0DsPiUKSQH9/X/pb/CHeoP93wACvMXRrHv8K4Wnm7d0AxZTv/t7X
+         mlEQ4uoWqEnUy2h0rFyeQrIx716TEMLWQ53s3llCE4MlD6HD+BmCf3ejB7N1nKfhtmNu
+         T5x6JGBw9DMFyntaU7L7AMkQnxhvUCYTAaoA7ShXWAzrfHiTvCkMGnHAAdTRgEvYwpzY
+         LdpE+qe8YtCcKCtH85sXl8h8h/y/g0nWnEE44/r4UQppQzkqS39e6uyTetpeYl7edcBb
+         2DO8qdz3zFVUzKXXcaXeKTcVAqFnGFxmhYRY8M3yg4oCjSV9aR8Q4TvVhKQBTJSOaDkb
+         WkRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWv+bzQQgruicyx4uxxDcGVcP5e0S6icA2ZcFVBB8besEVn+51OH9eqIs1zRG/NZBc8aMTQTJv9a/Nmer3ge7Gte6g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyN/ZEoErTebYBWoCWa9YIffqN98xHhNrNJIV8Zjan7rQteskU
+	5V8T6jONn+VO2GuUMdlvMYx631Oew83ZpQSFiKnjWggNH53erPOAAbk0kzqw4reaUwkFtbi2OEO
+	gESKaD/w9ybW47EOVPA==
+X-Google-Smtp-Source: AGHT+IHF+DLdSIrtOimcbKrwLaVS9XMpj84vdlov7q3dILQ6UN/1Xtu53T2ADmbOySXbsfAXdgrBIxnxL+rzsM6t
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:520e:b0:42c:b63e:feb5 with
+ SMTP id 5b1f17b1804b1-42cb63f0132mr167875e9.3.1725985418935; Tue, 10 Sep 2024
+ 09:23:38 -0700 (PDT)
+Date: Tue, 10 Sep 2024 17:23:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240906051205.530219-1-andrii@kernel.org>
-In-Reply-To: <20240906051205.530219-1-andrii@kernel.org>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 10 Sep 2024 18:06:12 +0200
-Message-ID: <CAG48ez1+Y+ifc3HfG=E5j+g=RwtzH2TiE4mAC2TZxS52idkRZg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] uprobes,mm: speculative lockless VMA-to-uprobe lookup
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
+Message-ID: <20240910162335.2993310-1-vdonnefort@google.com>
+Subject: [PATCH RESEND 0/2] ring-buffer/selftest: Meta-page testing improvements
+From: Vincent Donnefort <vdonnefort@google.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.org> =
-wrote:
-> Implement speculative (lockless) resolution of VMA to inode to uprobe,
-> bypassing the need to take mmap_lock for reads, if possible. Patch #1 by =
-Suren
-> adds mm_struct helpers that help detect whether mm_struct were changed, w=
-hich
-> is used by uprobe logic to validate that speculative results can be trust=
-ed
-> after all the lookup logic results in a valid uprobe instance.
+Following the comments on the original patch [1] here's a set of 2 patches to
+improve the selftest.
 
-Random thought: It would be nice if you could skip the MM stuff
-entirely and instead go through the GUP-fast path, but I guess going
-from a uprobe-created anon page to the corresponding uprobe is hard...
-but maybe if you used the anon_vma pointer as a lookup key to find the
-uprobe, it could work? Though then you'd need hooks in the anon_vma
-code... maybe not such a great idea.
+[1] https://lore.kernel.org/all/20240628104611.1443542-1-vdonnefort@google.com/
+
+Vincent Donnefort (2):
+  ring-buffer/selftest: Verify the entire meta-page padding
+  ring-buffer/selftest: Handle meta-page bigger than the system
+
+ tools/testing/selftests/ring-buffer/map_test.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+
+base-commit: 2fcd5aff92aab479a9a89cfce2dbc9c6a9455b4f
+-- 
+2.46.0.598.g6f2099f65c-goog
+
