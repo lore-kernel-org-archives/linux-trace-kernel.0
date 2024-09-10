@@ -1,84 +1,106 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7B319924D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 16:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C41A945
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 16:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725985422; cv=none; b=sV5VfaX/nAHRDwIxTL8WZGwYIpify/wujgaTTInfIrbFysJV09tPbtjR+sGyB7d01u3GcFgilZqn5IyJWCDodwJRSp7Z1jgaB8h2K+0xFQJUSPhFyytIhU76Is4sHuLmouqZzotMJAwG5g1YYYfFvr91esEnDZ1o9Coh3sbNun0=
+	t=1725985424; cv=none; b=lbouslKZPJ7L7eLSELVqv94yawfIGn4wlH7K2dRzMF9+Z6JFA6VlgejOFuRr4FRBW9vlLgw9LfhziCV4Go2D3+vkHypI/H+7YXmsM7upAM6hCFaFA9PSfSGi4VE0Lnfs/j9kU9zvjPLa7/+2avn0QfvtJxsu3CifWGa9Krtd4zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725985422; c=relaxed/simple;
-	bh=gXjTEcttA5QttM+LvxBqEoFRUycgUByM82qJ/zmUKxU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FKCyu+1qz11rVVcEvW9h4mYaRRqPPOM5OtjIeSJks1v7PKRmHrMbwyq6pfbamNr6QP7gddvCIYYNL/Mv8aIPcNT4uH9rhg2z9C3m2M5CjfLYgiLH1T/JLUfWwwO2sc8l51XjtGt+TZFWIHOnRKrkuUflYdlqp7+O71PsgYW8ZuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eVesFppu; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1725985424; c=relaxed/simple;
+	bh=GlHp+sDP2l3iuMBGJMRzuH4oTR65BYOzxJ6K7GQv29A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Va8RXuVDbBix+udYbznpmJFgn4c7hTMuAFGCUW4svvuOcObG8kTOew8wZdGLJfHyco/JqQm5h98XvBSCiDAniuZFhmjUhgwxb/yejy5QTi3YB5UCqD38ALkb2/blamRarVMO47YiONoma9cCtTBfspfAlqYC3Aj/UcyAkq2yMe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pmHDTV1L; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eVesFppu"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-42cb236ad4aso20260025e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 09:23:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pmHDTV1L"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-42cb080ab53so22384815e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 09:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725985419; x=1726590219; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AYa30QP8uHW8yVnRTztEeL2KarXkSUIIYXYg/0AlhYM=;
-        b=eVesFppumX7x4b+aKXyVMBmS/OuryIx8vcGxVyEnBi9UHE/KcmJ+/ss7mSUtUQ0dEo
-         0posC4HaPvcYtHawgw35gCROTqF941CpXe3XK6mfxB7TJvDJp6fXUxeInfyXFnESuuZH
-         w8bU5IQwCgROAyiOkDd4GpXPAL2JpwxcFnTXdJzvJoyJ1UWdC3h8MEi/qWBj3UELhDwN
-         q2X59/vX/JkozMFU1LzzBzMwJJxEhJQYgANduhCgVitiHh+uuQ4gAzQTFIEr3WxYS3HN
-         twEaBZImhP0cEUz87ejR4el9R3Wvfr+MZwXB/NfXtsYH7aelJ+p7P2bjz9vzohtIJmZJ
-         1LAQ==
+        d=google.com; s=20230601; t=1725985421; x=1726590221; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ebNtXOw1zw+Y/P3jFG4DVeMhgHXmSDzSdOEI97BWEhQ=;
+        b=pmHDTV1LBzxEn57OPtZ959cM9yCo6FtV14bdmSYOr0i8OOMznK96DIlafADdJD6h1w
+         EvJ+sYMKEw+A2pXMXPwJ09hYcsNOv5YRYXEWFUHFuY/DLt1aw2465I52yWkklKzrCpq/
+         OVYh23XTnKW3gfyX2aIjagpvWG4GWghMjqp9oYPJ7xragDC1p5z8zmgnzjlKZ5+C+4f6
+         yq2bByUNbO9N/WbNpWrq1hoR752A8DS4WVPfJUqrijsrsq2VrHuesDze5GMRcX3GBPP4
+         Validza4xhvrA8IrwCJV1sUJZIgoGNH7XN2wG2F3s2V2ynDecMPZ0tmN4lCvxTM4lb6M
+         3u4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725985419; x=1726590219;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AYa30QP8uHW8yVnRTztEeL2KarXkSUIIYXYg/0AlhYM=;
-        b=Xqs6H0rXO+NW7k0DsPiUKSQH9/X/pb/CHeoP93wACvMXRrHv8K4Wnm7d0AxZTv/t7X
-         mlEQ4uoWqEnUy2h0rFyeQrIx716TEMLWQ53s3llCE4MlD6HD+BmCf3ejB7N1nKfhtmNu
-         T5x6JGBw9DMFyntaU7L7AMkQnxhvUCYTAaoA7ShXWAzrfHiTvCkMGnHAAdTRgEvYwpzY
-         LdpE+qe8YtCcKCtH85sXl8h8h/y/g0nWnEE44/r4UQppQzkqS39e6uyTetpeYl7edcBb
-         2DO8qdz3zFVUzKXXcaXeKTcVAqFnGFxmhYRY8M3yg4oCjSV9aR8Q4TvVhKQBTJSOaDkb
-         WkRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWv+bzQQgruicyx4uxxDcGVcP5e0S6icA2ZcFVBB8besEVn+51OH9eqIs1zRG/NZBc8aMTQTJv9a/Nmer3ge7Gte6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyN/ZEoErTebYBWoCWa9YIffqN98xHhNrNJIV8Zjan7rQteskU
-	5V8T6jONn+VO2GuUMdlvMYx631Oew83ZpQSFiKnjWggNH53erPOAAbk0kzqw4reaUwkFtbi2OEO
-	gESKaD/w9ybW47EOVPA==
-X-Google-Smtp-Source: AGHT+IHF+DLdSIrtOimcbKrwLaVS9XMpj84vdlov7q3dILQ6UN/1Xtu53T2ADmbOySXbsfAXdgrBIxnxL+rzsM6t
+        d=1e100.net; s=20230601; t=1725985421; x=1726590221;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ebNtXOw1zw+Y/P3jFG4DVeMhgHXmSDzSdOEI97BWEhQ=;
+        b=r8NxSUc2pvNHHAXuqHh+Z67NIb/YS5dRzJ5Z+roCb6yWojIoNS7/CKrdXaUBr/BiC8
+         o9Aq4gnNevhd+y4HCYSQpE2R3KjuzKYgWpQ/VvuJYaJghJVO/YNScETe4WSj2UI3Gjf0
+         MMfyFPoLXqK25g1LZW4U2chLO3Egpdmu2FvMudZ9KRkhvuZUq0WZuv84y78m16k9MfHE
+         6MDgFFKOI582tFQMQYNxjlxvZamTw5QpE4rFYXNZJATfHDgxFgT2YYYJqV0CvKHQeoTi
+         uqAG0VMF3Jkqx327ll0lunY+vH+Jt3YnD2PeuoJvi+RfptyOGzI5UtaSMy2r0PNpw0Xg
+         uiKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiFUZa8zneebDI+YjQ3xpe6l+qbRejSZiEjijrBAinqPga7HFcFuK063OtLSeHm5NtZT/8vg9cbqk3vqUZID4Ztw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzziHgwZWlSKZQ/3K28JHmIaeFxn5xF/1koH+V7L5Vy/oYs90lO
+	k2i29ZbiiAXdyOXy4d8kn5XslMPt8RK1d1VCgpFXn/eTIMQKEVVisoRywVRSfwAPOYlB6Xao8od
+	WxAs6G7cHdP7HHg3cZg==
+X-Google-Smtp-Source: AGHT+IH1o/yd45zaUsI2O3gDVbqqWAfhLEcKZtzUdUtDk58M1Kz36FWtvb8nlXBaGxXyqHyWojvmUOgrKh/T56M4
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:520e:b0:42c:b63e:feb5 with
- SMTP id 5b1f17b1804b1-42cb63f0132mr167875e9.3.1725985418935; Tue, 10 Sep 2024
- 09:23:38 -0700 (PDT)
-Date: Tue, 10 Sep 2024 17:23:33 +0100
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:880e:b0:42c:b0ef:c70d with
+ SMTP id 5b1f17b1804b1-42cb0efc875mr383485e9.1.1725985421494; Tue, 10 Sep 2024
+ 09:23:41 -0700 (PDT)
+Date: Tue, 10 Sep 2024 17:23:34 +0100
+In-Reply-To: <20240910162335.2993310-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240910162335.2993310-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Message-ID: <20240910162335.2993310-1-vdonnefort@google.com>
-Subject: [PATCH RESEND 0/2] ring-buffer/selftest: Meta-page testing improvements
+Message-ID: <20240910162335.2993310-2-vdonnefort@google.com>
+Subject: [PATCH RESEND 1/2] ring-buffer/selftest: Verify the entire meta-page padding
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
+	Vincent Donnefort <vdonnefort@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Following the comments on the original patch [1] here's a set of 2 patches to
-improve the selftest.
+Improve the ring-buffer meta-page test coverage by checking for the
+entire padding region to be 0 instead of just looking at the first 4
+bytes.
 
-[1] https://lore.kernel.org/all/20240628104611.1443542-1-vdonnefort@google.com/
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-Vincent Donnefort (2):
-  ring-buffer/selftest: Verify the entire meta-page padding
-  ring-buffer/selftest: Handle meta-page bigger than the system
-
- tools/testing/selftests/ring-buffer/map_test.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
-
-
-base-commit: 2fcd5aff92aab479a9a89cfce2dbc9c6a9455b4f
+diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
+index 4bb0192e43f3..ba12fd31de87 100644
+--- a/tools/testing/selftests/ring-buffer/map_test.c
++++ b/tools/testing/selftests/ring-buffer/map_test.c
+@@ -231,15 +231,15 @@ TEST_F(map, data_mmap)
+ 
+ 	/* Verify meta-page padding */
+ 	if (desc->meta->meta_page_size > getpagesize()) {
+-		void *addr;
+-
+ 		data_len = desc->meta->meta_page_size;
+ 		data = mmap(NULL, data_len,
+ 			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
+ 		ASSERT_NE(data, MAP_FAILED);
+ 
+-		addr = (void *)((unsigned long)data + getpagesize());
+-		ASSERT_EQ(*((int *)addr), 0);
++		for (int i = desc->meta->meta_struct_len;
++		     i < desc->meta->meta_page_size; i += sizeof(int))
++			ASSERT_EQ(*(int *)(data + i), 0);
++
+ 		munmap(data, data_len);
+ 	}
+ }
 -- 
 2.46.0.598.g6f2099f65c-goog
 
