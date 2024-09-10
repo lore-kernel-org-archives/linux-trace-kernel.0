@@ -1,115 +1,131 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8242D19ABCE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 15:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1208619D09F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 15:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725982739; cv=none; b=pzXZbtThL/ysxxg1FUyGjZGih901pWkWLt9tus+IC7SwMYOpigkHSfYXxIHVrkS2qe6OCpWfdjK8VNQSxm5Q4kkpkU0ucUlZyCurNKLaScBanr0qod2HLCPgRChzqc95ZsNLEWxIRZRbE4tXSSdvNEbNgPoge10sNSc/WOXgeBQ=
+	t=1725982799; cv=none; b=ArOXZVdLElxav6LB031BJK4HxanNDyMKcRfsxuUgSGMIV727DvoVvQap46LTy4YbHMXFWleVUtyEWeQX6SrTfrxHFdfTq6J0PMZlUGDskn+gwpmqptw/uWPI9VZVzCJAi8v6bdzU0cNefWOKx5OQaMOBcxA5QObLf8Wx2vTtLX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725982739; c=relaxed/simple;
-	bh=oCjdkvGBXYk951UuNZ8GUxFDU3TLEafF/eKU6VJhJjI=;
+	s=arc-20240116; t=1725982799; c=relaxed/simple;
+	bh=Ns74kTojtvJ3PU+5k7XOrtvLmnYWyxeZra3a7dDi8iE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOcZMJpFC+HCbxCbEVCLLd2XFuBHaIXRh862abWTZhYix06Phg4KQ/MiCN/BDw+lVNBgP9/zAU+ub5gKNaKWaB/gK75krbn3I3RnYlLwqbJbgBowO1mIBV+1LLx1ZhXx7BTPRHEpNV4QmcXLoEbdruCcC08rzoonV5YxtT1gSKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrXvSgil; arc=none smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=D32p+ka9KdAMR0EeTYF1X8EFCk0fbxtNZ20SWvSz5StmQ3ytV4wL7/HsrbV+PI5NW+sgNLbpa792WI1QCIe3WRTit8b+5yA/hdaI7kmo/P9Kq9Ol+62rZp0iFG+DemwtH0aD0LSegjq/E2B6+vgjLxnT7wNu4lIzQqf/FDynEGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KkxX579T; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrXvSgil"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4582b71df40so284331cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 08:38:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkxX579T"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5c2460e885dso22188a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Sep 2024 08:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725982736; x=1726587536; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725982796; x=1726587596; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3gszVQrHTml2s4rQX/N3KISfWtIKCjIZkEmtrFN+rLM=;
-        b=GrXvSgilpWPDTzYZ9WABiQnJcvcxeBR4bm9wsuD4lVoyCFmn4tA8tyIqlbn3NDhtnn
-         Fb+3yNQxZ9V5xDPLtYREJm0lw4h7K0Rb6SyRAXHhMNvDEZP2U1aSz2X28F6hzxZbfqHv
-         icxm2c7yOJTBZ72I32Oc7hKkV6kVfNgUmgjNa94lEo1R0sGHmyrsGpCQdgbWdcirjeAB
-         Psog1zEKxDmlyl1nf/Qmx7p5/lT15i6QKlnbX6Yk0Y4u1y0vmH5c60tEwsY3GV/f5e16
-         AV+0L13zNQiReNL+oSFisUKmIYwvYFa4DTs73zRv2+f3St49KEhoPnaEMo1FVb0vovyC
-         nAMQ==
+        bh=9XmuAJaJABZEw22g1YelxW3d7dMoKbStEXHVKcdE10Q=;
+        b=KkxX579TxaUCdpv3p/X3uPjIhH+CxHKAgcQIGs9HnpX0OOrMynUY8OtofIpDB5eUf0
+         azEtEdzkTPYOxdFxS7om6lDUN2d5fa8UnQE62D8Qzwmyo7XeeLEWNL7OsDNMpov/si5P
+         GcLFlkaBy143E0ZadbhJ4PNwx9TBRLldISeOvgYzeFozDNhctNN5X0HEPA7VzqRgNYft
+         x3OBlWBbC4rP1JqdYu7wfcEXGI+G0lWPhDIUnClihkR2dDHKx9Ut8a+DHw493XzcnZly
+         FlEPJbn5X66cJSevugWXVwdxr4s6g4bdcYd9iXP6PpzIq57wsGgyv8rv8YvlTtWkW9xa
+         ekpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725982736; x=1726587536;
+        d=1e100.net; s=20230601; t=1725982796; x=1726587596;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3gszVQrHTml2s4rQX/N3KISfWtIKCjIZkEmtrFN+rLM=;
-        b=dYFihLpx8DNypg0in5pXZlATy7fJbOrJRxBqo1QNw4uOV6u8vR5TrkUJPQ6zP6hTjP
-         3USc0n5cC2ZlC3iZjF7Pfv5gjw6QgJKfB8JmfqL7cEc1ec3OM3BLZqQmMGE2/p4yRTUn
-         NERDxa25c7PBABCrq3DBBa9XDtmcNrLyYI+wrYfoKgXQjj93pKeGUyrQnEaUYCE9FVgM
-         xhR27xWkbbY7vRQMMV82bzEM4AdCdqTg2tP53h9+GNU2E/OpLoSUVImfko8HSuZW/gQv
-         /dF+z/VV0dmQT9P789Tz3tMdST6tpPQ6Ej5hiHuWeT+Y/IXLnuoaozx1F+EA3SOYYrbo
-         z6wg==
-X-Forwarded-Encrypted: i=1; AJvYcCURt/D/QMvqfvMJwz1pwsLZotzNLJlHhrGn/D8wF7sn7NPwsIogp5Gd0wqXmQakqNgBGWwK62kaRWtc/Kv8zNMMbUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyorAUjhsBlBotCq2ywgHNDW36MAeTKtYitpfmxfs4Cbnf7OoAG
-	QwuXQ3NITTRv+HuSrFbl5U2Zzu5gmOikjDhRhe6nNHUsE+0kxFTb6aPE5+zgYsI5kDI6ReyzJYY
-	Fndg31ppA0u75fs2uz6PMnnCGYk5JzxVPSXYL
-X-Google-Smtp-Source: AGHT+IEK6weRhBb+6I+yqObyHVaZqmcs2wOCh/JwTg5EmvszzOI8s/itZSBxrrNFolb48wNjfmGjViIMiDzaN91ZR8I=
-X-Received: by 2002:a05:622a:13ca:b0:447:e0e1:2a7b with SMTP id
- d75a77b69052e-4583f0063b0mr2792721cf.23.1725982736186; Tue, 10 Sep 2024
- 08:38:56 -0700 (PDT)
+        bh=9XmuAJaJABZEw22g1YelxW3d7dMoKbStEXHVKcdE10Q=;
+        b=C/2LAwAUwwIJ84A4tJFGmGLLQsP7VgL0IUX+uyWolTQYPWqtrRi5KjwuxzGFac03ff
+         bqqsgbE50YKm5uWz6DNoLOHefgXivp3w8Ci/F6svkYapglvWcHAkpSACMuQe7RuqaUDZ
+         XUgugsIPp/GpJK2OKknY1VRok2LgeHH555CWd2lmeC6w6TQ++1wbsb2u53L3TUnRicGq
+         2/6wxx+kCQSCd/DHwsVB5qauSj3EDVkxUGmZafy1/mnTrJaLpaLWakKhUvZcPDHc//13
+         iMfXXhu4xZcFrPvF8FcUqvTb/3S+3QSt0urA10IRLX93NjZ8gbJHBUliVTcevcbIbn9u
+         lnYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYOBsTCyznbQpFTisNORf0fR8qRogZX0TbY6WWmnzGhXhiXdQkSSbREEF2U3HSULFB6+y6Vcg+XhI+AnYCzx6qsRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvtMUoG1UZwijYDJsOrwALUGWa/h0tyap932J+b7XsgyGG1SU/
+	tb1SfNfDyn/O0MchiZDwcKlD4vU6/2nyE7Wf1Q6emggXpbT+zsPP5r4F1GXHGMvpFSOffRiIoDy
+	dxowfIIzRjGKmmc8S3QHJ3ODGUYdRfDF01cR2
+X-Google-Smtp-Source: AGHT+IHa5P3FNcyxK3dfRD8l0hNbFtul+gz/5r6bBqUtFkIT1a2ttnvtee4Q932fZkZ5xf7hLJPLJm4n3vKcBRhcD4g=
+X-Received: by 2002:a05:6402:35d4:b0:5c3:c2fc:8de6 with SMTP id
+ 4fb4d7f45d1cf-5c4040d4f38mr311527a12.3.1725982795248; Tue, 10 Sep 2024
+ 08:39:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909054318.1809580-1-almasrymina@google.com> <20240910080237.2372cfa6@kernel.org>
-In-Reply-To: <20240910080237.2372cfa6@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 10 Sep 2024 08:38:42 -0700
-Message-ID: <CAHS8izP4EO3t=7-n2Ok5pgKe+JjJV+T3EH1PaTW=YU234kEpGw@mail.gmail.com>
-Subject: Re: [PATCH net-next v25 00/13] Device Memory TCP
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Donald Hunter <donald.hunter@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>
+References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-3-andrii@kernel.org>
+ <CAG48ez2G1Pf_RRRT0av=6r_4HcLZu6QMgveepk-ENo=PkaZC1w@mail.gmail.com> <CAEf4Bzb+ShZqcj9EKQB8U9tyaJ1LoOpRxd24v76FuPJP-=dkNg@mail.gmail.com>
+In-Reply-To: <CAEf4Bzb+ShZqcj9EKQB8U9tyaJ1LoOpRxd24v76FuPJP-=dkNg@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Tue, 10 Sep 2024 17:39:19 +0200
+Message-ID: <CAG48ez1d9tU7-QeRSjRuxovG-jjNAwJ8B_G2jd43_etYMUPV6g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] uprobes: add speculative lockless VMA-to-inode-to-uprobe
+ resolution
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: surenb@google.com, Liam Howlett <liam.howlett@oracle.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, brauner@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2024 at 8:02=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
+On Mon, Sep 9, 2024 at 11:29=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> On Mon, Sep 9, 2024 at 6:13=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
+:
+> > On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel.o=
+rg> wrote:
+> > > +static struct uprobe *find_active_uprobe_speculative(unsigned long b=
+p_vaddr)
+> > > +{
+> > > +       const vm_flags_t flags =3D VM_HUGETLB | VM_MAYEXEC | VM_MAYSH=
+ARE;
+> > > +       struct mm_struct *mm =3D current->mm;
+> > > +       struct uprobe *uprobe;
+> > > +       struct vm_area_struct *vma;
+> > > +       struct file *vm_file;
+> > > +       struct inode *vm_inode;
+> > > +       unsigned long vm_pgoff, vm_start;
+> > > +       int seq;
+> > > +       loff_t offset;
+> > > +
+> > > +       if (!mmap_lock_speculation_start(mm, &seq))
+> > > +               return NULL;
+> > > +
+> > > +       rcu_read_lock();
+> > > +
+> > > +       vma =3D vma_lookup(mm, bp_vaddr);
+> > > +       if (!vma)
+> > > +               goto bail;
+> > > +
+> > > +       vm_file =3D data_race(vma->vm_file);
+> >
+> > A plain "data_race()" says "I'm fine with this load tearing", but
+> > you're relying on this load not tearing (since you access the vm_file
+> > pointer below).
+> > You're also relying on the "struct file" that vma->vm_file points to
+> > being populated at this point, which means you need CONSUME semantics
+> > here, which READ_ONCE() will give you, and something like RELEASE
+> > semantics on any pairing store that populates vma->vm_file, which
+> > means they'd all have to become something like smp_store_release()).
 >
-> On Mon,  9 Sep 2024 05:43:05 +0000 Mina Almasry wrote:
-> > Device memory TCP (devmem TCP) is a proposal for transferring data to a=
-nd/or
-> > from device memory efficiently, without bouncing the data to a host mem=
-ory
-> > buffer.
->
-> Mina, if you'd like to see this in v6.12 -- please fix the nits and
-> repost ASAP.
+> vma->vm_file should be set in VMA before it is installed and is never
+> modified afterwards, isn't that the case? So maybe no extra barrier
+> are needed and READ_ONCE() would be enough.
 
-Running my presubmits now and will repost in the next 2 hours or so.
+Ah, right, I'm not sure what I was thinking there.
 
---
-Thanks,
-Mina
+I... guess you only _really_ need the READ_ONCE() if something can
+actually ever change the ->vm_file pointer, otherwise just a plain
+load with no annotation whatsoever would be good enough? I'm fairly
+sure nothing can ever change the ->vm_file pointer of a live VMA, and
+I think _currently_ it looks like nothing will NULL out the ->vm_file
+pointer on free either... though that last part is probably not
+something you should rely on...
