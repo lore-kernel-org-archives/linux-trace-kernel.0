@@ -1,165 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B351917E3;
-	Tue, 10 Sep 2024 22:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0EBD1A3BAF;
+	Tue, 10 Sep 2024 22:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726006930; cv=none; b=TKmKhoKl/WYlS4BNvQ/LqDsR4inJJbJwj1U9KzngXa7onO3vg7MO3uRWfPtvAZcx/zNQRw6aBqJTb63nmm38SbYJijwHbRmftJ/v/Ge1tMyD/JLuOS4+L55Ebg/wg4yFl+KOsnWt6ymMCJ717Q3rBHSbmid5NcC1innjWIDfxPI=
+	t=1726007308; cv=none; b=Uch7/nWFycpWVMVMqaJ8ip+W/pImMRHmbV1nO/90GV1fpt0gopDfRKR8FTfLREkl77B46XQ+yudgpRMVMLXKAl4MN3P2qxtlHGdSj5H0Z8hO3smJmmr3XOzOBcYkP77iZ9tBWzGlNOHBIb8643EfUfmfTrze2Oi/BhT0Hg67gZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726006930; c=relaxed/simple;
-	bh=UtL5BjmdXLGd0AEVqxERJo5BFzbUysyLUH/ujTqsGWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QxVDnDs4onXjBacSuwkAFfgjjoD4gFzLOV98UE+gS/bthxo7IsawWG6Omu/DLHa+Gi+RATiJWaOtT5PvNZQWkNpIuh07AMZjgt4U8BmlIv3YB1mplxPusJHARldq9g9IymSFAxCt+XkrGF4Di/qbTFsxlqjMxSUkBJuRLSeiJuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438E3C4CEC3;
-	Tue, 10 Sep 2024 22:22:08 +0000 (UTC)
-Date: Tue, 10 Sep 2024 18:22:09 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, Linux
- trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
- <kpsingh@chromium.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, Mark Rutland
- <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
- <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
- <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
-Message-ID: <20240910182209.65ab3452@gandalf.local.home>
-In-Reply-To: <CAEf4BzZRV6h5nitTyQ_zah6wWMBZD6QQBbTCWyPVzkPpS42sgg@mail.gmail.com>
-References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
-	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
-	<20240910145431.20e9d2e5@gandalf.local.home>
-	<CAEf4BzZRV6h5nitTyQ_zah6wWMBZD6QQBbTCWyPVzkPpS42sgg@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1726007308; c=relaxed/simple;
+	bh=m6bZTfRafhQeKF0FHn4HDoue1BzzxhJP3n0bqBSUuiY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hUnQvMMADoHdedtl5lvRg8jWRdfmgUPTPNljPCPaQEypZO2U5sZJjjUPhoRSIBzHzB5bOt0EkBk0t0+KJQb0cVn14cCiu3UxquraNB8oeawsTRnkLszK+/Z0ZaH9EAwJgYOT1wmjLY5gZHZT354UNhjYeMBlEiRBV36TETzJzGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 24E6892009C; Wed, 11 Sep 2024 00:28:18 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 1E05C92009B;
+	Tue, 10 Sep 2024 23:28:18 +0100 (BST)
+Date: Tue, 10 Sep 2024 23:28:18 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+cc: Masahiro Yamada <masahiroy@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+    Richard Weinberger <richard@nod.at>, 
+    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+    Johannes Berg <johannes@sipsolutions.net>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+    Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+    Wedson Almeida Filho <wedsonaf@gmail.com>, 
+    Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+    =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+    Benno Lossin <benno.lossin@proton.me>, 
+    Andreas Hindborg <a.hindborg@samsung.com>, 
+    Alice Ryhl <aliceryhl@google.com>, 
+    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+    Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+    Nick Desaulniers <ndesaulniers@google.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-um@lists.infradead.org, rust-for-linux@vger.kernel.org, 
+    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
+    linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+    llvm@lists.linux.dev
+Subject: Re: [PATCH v2 3/3] rust: Enable for MIPS
+In-Reply-To: <54ce7574-43fd-40ee-9ae9-dd72283d1040@app.fastmail.com>
+Message-ID: <alpine.DEB.2.21.2409102318270.60835@angie.orcam.me.uk>
+References: <20240905-mips-rust-v2-0-409d66819418@flygoat.com> <20240905-mips-rust-v2-3-409d66819418@flygoat.com> <alpine.DEB.2.21.2409082138160.60835@angie.orcam.me.uk> <035ccfe5-c368-4cd9-8e0d-34e0e355cb05@app.fastmail.com> <alpine.DEB.2.21.2409101643210.60835@angie.orcam.me.uk>
+ <54ce7574-43fd-40ee-9ae9-dd72283d1040@app.fastmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 10 Sep 2024 13:29:57 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+On Tue, 10 Sep 2024, Jiaxun Yang wrote:
 
-> On Tue, Sep 10, 2024 at 11:54=E2=80=AFAM Steven Rostedt <rostedt@goodmis.=
-org> wrote:
+> >> We have no good way to tell ISA reversion prior to R1 just from Kconfig TARGET_ISA_REV,
+> >> valid numbers for TARGET_ISA_REV are only 1, 2, 5, 6 from Kconfig.
 > >
-> > On Tue, 10 Sep 2024 11:23:29 -0700
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> > =20
-> > > Does Linus have to be in CC to get any reply here? Come on, it's been
-> > > almost a full week. =20
+> >  This approach doesn't work for some MIPS architecture processor configs 
+> > anyway, e.g. what ISA revision will CPU_P5600 imply here?
+> 
+> TARGET_ISA_REV will be set to 5 for CPU_P5600 (CPU_MIPSR5 will default to y
+> on CPU_P5600, and CPU_MIPSR5 sets TARGET_ISA_REV to 5). 
 > >
-> > Just FYI, an email like this does piss people off. You are getting upset
-> > for waiting "almost a full week"? A full week is what we tell people to=
- =20
->=20
-> A full week to get a response to a question? Yes, I find it way too
-> long. I didn't ask for some complicated code review, did I? I don't
-> know who "we" are and where "we" tell people, but I disagree that one
-> week is acceptable latency to coordinate stuff like this across
-> multiple subsystems.
-
-Why do I have to answer to you? Once I saw the "ARM64" in the subject, it
-immediately went down in priority and honesty, I didn't even read it as I'm
-not the ARM64 maintainer. I did skim it to see if my name was mentioned as
-I usually try to do with emails, but when it wasn't I ignored it.
-
->=20
-> "pointing out"? You and Masami are maintainers of linux-trace tree,
-> and rethook is part of that. Masami's original code was the one in
-
-Yes, but I don't touch arm code. Masami sometimes does (as is the case
-here), but it is when we work with the arm maintainers.
-
-> question and I did expect a rather quick reply from him. If not
-> Masami, then you would have a context as well. Who else should I be
-> asking?
-
-The arm64 maintainers as they are the ones that maintain that code.
-
->=20
-> If ARM64 folks somehow have more context, it wouldn't be that hard to
-> mention and redirect, instead of ghosting my email.
-
-You should know they have more context because they are the actual
-maintainers. I shouldn't have to point that out to you.
-
- $ wget -O /tmp/t.patch https://lore.kernel.org/bpf/164338038439.2429999.17=
-564843625400931820.stgit@devnote2/raw
- $ ./scripts/get_maintainer.pl t.patch
-Catalin Marinas <catalin.marinas@arm.com> (maintainer:ARM64 PORT (AARCH64 A=
-RCHITECTURE),commit_signer:2/6=3D33%)
-Will Deacon <will@kernel.org> (maintainer:ARM64 PORT (AARCH64 ARCHITECTURE)=
-,commit_signer:5/6=3D83%)
-Puranjay Mohan <puranjay@kernel.org> (commit_signer:5/6=3D83%,authored:3/6=
-=3D50%,added_lines:30/255=3D12%)
-Mark Rutland <mark.rutland@arm.com> (commit_signer:4/6=3D67%,authored:2/6=
-=3D33%,added_lines:105/255=3D41%,removed_lines:47/49=3D96%)
-"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com> (commit_signer:2/=
-6=3D33%)
-chenqiwu <qiwuchen55@gmail.com> (authored:1/6=3D17%,added_lines:120/255=3D4=
-7%)
-linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 AR=
-CHITECTURE))
-linux-kernel@vger.kernel.org (open list)
-bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
-
-Neither my name nor Masami's shows up.
-
->=20
+> >  However if there's a need (and previously there wasn't), then I think it 
+> > can be sorted in a straightforward way.  We have just a bunch of CPU_* 
+> > settings and we can define corresponding ISA_* settings to select, e.g. 
+> > ISA_MIPS1, ISA_MIPS3, ISA_MIPS32_R1, ISA_MIPS64_R6, and so on, based on 
+> > information extracted from per-CPU_* `-march=' compilation flags from 
+> > arch/mips/Makefile (possibly combined with ISA data obtained from 
+> > GCC/binutils for said flags).
 > >
-> > Funny part is, I was just about to start reviewing Masami's fprobe patc=
-hes
-> > when I read this. Now I feel reluctant to. I'll do it anyway because th=
-ey
-> > are Masami's patches, but if they were yours, I would have pushed it of=
-f a
-> > week or two with that attitude. =20
->=20
-> (I'll ignore all the personal stuff)
+> >  It could be a bit tedious to write, but not a big challenge really, just 
+> > mechanical work.
+> 
+> TARGET_ISA_REV is guaranteed to be aligned with CPU's supported ISA for now,
+> so I see no reason to invent another set of symbols....
 
-Maybe you shouldn't ignore it. If you think you can get answers by jumping
-immediately to "I'm going to tell on you to Linus", you may want to rethink
-your approach. A simple "Hey Steve and Masami, what's going on?" would be
-the "human" thing to do. Especially since you appear to be mad at us for
-not replying to an email about code we do not maintain.
+ Ah, OK then, I missed these bits, thanks for pointing them out.
 
-Sorry, but you're not my boss, I don't have to reply to any of your emails.
+ So we only need to define CPU_MIPS1, CPU_MIPS3, and CPU_MIPS4 settings
+(we have no support for any MIPS II CPU; there was the R6000 only at that 
+ISA level, exeedingly rare and unreliable) analogously to and along with 
+the existing CPU_MIPSR1, CPU_MIPSR2, etc., which is even simpler.  They 
+can then be used accordingly for TARGET_ISA_REV == 0, either directly or 
+perhaps via an additional TARGET_LEGACY_ISA_REV setting.
 
->=20
-> You are probably talking about [0]. But I was asking about [1], i.e.,
-> adding HAVE_RETHOOK support to ARM64. Despite all your emotions above,
-> can I still get a meaningful answer as for why that wasn't landed and
-> what prevents it from landing right now before Masami's 20-patch
-> series lands?
->=20
->   [0] https://lore.kernel.org/linux-trace-kernel/172398527264.293426.2050=
-093948411376857.stgit@devnote2/
->   [1] https://lore.kernel.org/bpf/164338038439.2429999.175648436254009318=
-20.stgit@devnote2/
->=20
-> >
-> > Again, just letting you know.
-
-Because [1] isn't something I maintain. So I ignored it.
-
- arch/arm64/Kconfig                            |    1=20
- arch/arm64/include/asm/stacktrace.h           |    2 -
- arch/arm64/kernel/probes/Makefile             |    1=20
- arch/arm64/kernel/probes/rethook.c            |   25 +++++++
- arch/arm64/kernel/probes/rethook_trampoline.S |   87 +++++++++++++++++++++=
-++++
- arch/arm64/kernel/stacktrace.c                |    7 ++
-
-None of that would go through my tree unless an arm64 maintainer asked.
-
-In fact, I need a bunch of acks from all maintainers of the architectures
-that are touched by [0] before I can pull it in. Which means it will likely
-not make this merge window.
-
--- Steve
+  Maciej
