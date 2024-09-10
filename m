@@ -1,112 +1,107 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB15D17B506;
-	Tue, 10 Sep 2024 07:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1359BA45;
+	Tue, 10 Sep 2024 07:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725951662; cv=none; b=TD9oaIL9aMt6ogIqDeP/a3KY7Q8jMM07eni0xNyq5I9T0GfA6fsH2fcuGRFxSL95kzG7nAdaOK25FkNs/L6uqyrfZbQ/8YdXiGMt3yYs+BMh3+8QP42KoVib+qwtm6Rnix20OiWPI4ZwdULHtZ3+4/HlhH8OhNJaoMIbmeed/mg=
+	t=1725952634; cv=none; b=ca/fPGX/PtcTkbL228abkU90HXhFPoE562Z74gnvQZy7KWEKpjJ83rOaRPVjR/UYr45RcjqTx6bUXgpIwrV+VxJ2w+ksVX8+g+rCf1Zq+0jvogbZ1DNBdCJrWh808yRoO6ACo5LSyBrA73sbVmjp1IhKZ9AqhxuiL1xnt0HSsvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725951662; c=relaxed/simple;
-	bh=OQrZI+jQ0wIZJiunn9L2ldEBbCDnEmcZEOeTVCcPijI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=tOKDZfKVhWBoA8LjlapIm2XNmfec+NhJBKvQDeRg3ZktLlyG7pi/TGyVBJK462DU6ejDZz9sOHiNuOUdAZO2pwAx7vWS+Rlp/KJzAVsiQm3Y2WHvm/C/2gONv6Oeng9y1QtYzRJ4F3woAb8dLV1f9D4HybPDJlNk+6mpOEelRVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5f4b7e706f4211efa216b1d71e6e1362-20240910
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_TXT, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
-X-CID-CACHE: Type:Local,Time:202409101457+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:7c4f4666-ef47-4aba-916b-d81418a0b8c2,IP:5,U
-	RL:0,TC:0,Content:-5,EDM:-30,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-35
-X-CID-INFO: VERSION:1.1.38,REQID:7c4f4666-ef47-4aba-916b-d81418a0b8c2,IP:5,URL
-	:0,TC:0,Content:-5,EDM:-30,RT:0,SF:-5,FILE:0,BULK:0,RULE:EDM_GN8D19FE,ACTI
-	ON:release,TS:-35
-X-CID-META: VersionHash:82c5f88,CLOUDID:d55b189e65b8e9df4f94f80e2aab265b,BulkI
-	D:240910145742MXI17UF7,BulkQuantity:0,Recheck:0,SF:66|25|17|19|45|102,TC:n
-	il,Content:0,EDM:2,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 5f4b7e706f4211efa216b1d71e6e1362-20240910
-X-User: yaolu@kylinos.cn
-Received: from localhost.localdomain [(111.48.58.10)] by mailgw.kylinos.cn
-	(envelope-from <yaolu@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1416523776; Tue, 10 Sep 2024 15:00:32 +0800
-From: Lu Yao <yaolu@kylinos.cn>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Lu Yao <yaolu@kylinos.cn>
-Subject: [PATCH] tracing/timerlat: Move mutex interface_lock declaration outside CONFIG_TIMERLAT_TRACER
-Date: Tue, 10 Sep 2024 15:00:25 +0800
-Message-Id: <20240910070025.132633-1-yaolu@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1725952634; c=relaxed/simple;
+	bh=p59Ss6VtrKpvbydD51f2XLHA6rxcKBxjCY60kv3T+D8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlE+vKomu3RGhQiW6zuUvzJ1urUaLQn1ayYCpMo7rXM3NL4I/OjBpdIWo0wODAyZdOMdHDMs4wyNUZ7Z29f7eX+Wr/QWkMfe8MxuV0fz4ndUok4j6Ve0s62SFfKLlOzLBoDDc2vfZibK+Wj8TTmWpBa1WvIxpKl9FGV9ca9I16A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WU+uwxiU; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU+uwxiU"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3787f30d892so3113522f8f.0;
+        Tue, 10 Sep 2024 00:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725952631; x=1726557431; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wk5p0AaosOp3QnIYyh9WhfdmB+ZMEKWe8kuMctYctKg=;
+        b=WU+uwxiU0AhE6vJ+Ty8/vH8X4matMvi/SiDH94LdOQPyGos/MrZv1Ci2hthGNtBQ+b
+         vcOOuDhNLKN/c5zMqpb30qnP+6s5ZXSc+LNCZJnbn56qqK6GYlkCM39j3u0omBSL7kRh
+         8BK+C5DifCQ/AvWk2VgO1PpZQtG9Gyfvla2iyzhs5B28vhfSNQ5ie0G9BtF/FSl+Ymbp
+         kf8AAl9IcnrMUKDPUCQ+0KT4ez8K8dgMio5vaqO2jHfbCNmkE2Uetef813P+9VsCaFt2
+         dUrgR67pDQdu9uEZtQSAUOaScH5fr70Hd7Qa9bQwnVVSmfY6ALgp4GuxEYJvA/lShmKh
+         WNYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725952631; x=1726557431;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wk5p0AaosOp3QnIYyh9WhfdmB+ZMEKWe8kuMctYctKg=;
+        b=JhbkCtWRsxblbIlhCcdgc44tZn5DS1KlUvcbMvjvdnsM3dzVNZVvJqssueit/b7jTw
+         0uyUlXLebPdILhdG1hg1L3yoa2SCDKpmEjKrOZYyzIZ6+SiTpnPOQDG5H7QDAw9/WIEw
+         9wY38FwZIraBVO8+09pu4H2tHERqGbNXRtPDuU6mmB6DdUycZ2ucnJ+eR3jPPQUk7DRF
+         tFNxB0zM+/33myOgpzuIPxp5COPFrUZaAIGIRb9axZSGraTYpfKg5EWy1WzChrUEWWbx
+         /PGR6qMc+2qmMiF7CUsJ9HS1L71QfF9GMpotzKnzH199r8oFNylvT5XNBbFXkQ7zNkLk
+         tCtg==
+X-Forwarded-Encrypted: i=1; AJvYcCUCcAFTJ0CyAdHUxXNJAjTKrurdP5MxGJWHQNA3VSXlVnJOjBl8DTIU/HJHMe/ktzPKOA+bekEoKEXj2+jo@vger.kernel.org, AJvYcCWhkGTO3+efejyGiIZ5g7NwPmoWM7GKiYeiOCQgMfTNgJKzwI7P4VP4EnTFAA/opbXHOEY=@vger.kernel.org, AJvYcCWwjvYImY5IBf1R2EpCefwRbjZNOcbisncJa+mBq0vKIBX3S/HK2Cpflu6kl/4tfrnvZk26rGTE8FbikMuWKy+y0p7r@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdjX5j9aOrsezLRZ/MDWfeSRinERhia3b4pKdHvq0IH5UO22xF
+	dhexYc8F7CsvRnNHgIHXl+UmlowK+FPJds5LQxqHWJjxs0ncO2a9
+X-Google-Smtp-Source: AGHT+IGwAKlJ0tPbumQP9ijb2hqxRTKEIzjuK5U9pKYKx7TpB3hM83iW8io9mcahSYP/cieSCof6jQ==
+X-Received: by 2002:a5d:6a0e:0:b0:371:8dbf:8c1b with SMTP id ffacd0b85a97d-378895e9015mr8775342f8f.34.1725952630550;
+        Tue, 10 Sep 2024 00:17:10 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb8182dsm101648745e9.36.2024.09.10.00.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 00:17:10 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 10 Sep 2024 09:17:08 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 5/7] selftests/bpf: Add uprobe session test
+Message-ID: <Zt_ydMfrfNipE7py@krava>
+References: <20240909074554.2339984-1-jolsa@kernel.org>
+ <20240909074554.2339984-6-jolsa@kernel.org>
+ <CAEf4BzZQA4Sy+7mWzCM1zeWCZh8PM3OQqoLAMPWd+4dA4D=KoA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZQA4Sy+7mWzCM1zeWCZh8PM3OQqoLAMPWd+4dA4D=KoA@mail.gmail.com>
 
-Fix compile error without CONFIG_TIMERLAT_TRACER:
+On Mon, Sep 09, 2024 at 04:45:35PM -0700, Andrii Nakryiko wrote:
+> On Mon, Sep 9, 2024 at 12:47 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Adding uprobe session test and testing that the entry program
+> > return value controls execution of the return probe program.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  .../bpf/prog_tests/uprobe_multi_test.c        | 47 ++++++++++++
+> >  .../bpf/progs/uprobe_multi_session.c          | 71 +++++++++++++++++++
+> >  2 files changed, 118 insertions(+)
+> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+> >
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> (also note Stanislav's change of email, please don't cc his old email)
 
-../kernel/trace/trace_osnoise.c: In function ‘osnoise_sleep’:
-../kernel/trace/trace_osnoise.c:1631:14: error: ‘interface_lock’ undeclared (first use in this function); did you mean ‘trace_clock’?
- 1631 |  mutex_lock(&interface_lock);
-      |              ^~~~~~~~~~~~~~
-      |              trace_clock
+yea sorry about that, will change
 
-Fixes: e6a53481da29 ("tracing/timerlat: Only clear timer if a kthread exists")
-Signed-off-by: Lu Yao <yaolu@kylinos.cn>
----
- kernel/trace/trace_osnoise.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index bbe47781617e..7e75c1214b36 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -228,6 +228,11 @@ static inline struct osnoise_variables *this_cpu_osn_var(void)
- 	return this_cpu_ptr(&per_cpu_osnoise_var);
- }
- 
-+/*
-+ * Protect the interface.
-+ */
-+static struct mutex interface_lock;
-+
- #ifdef CONFIG_TIMERLAT_TRACER
- /*
-  * Runtime information for the timer mode.
-@@ -252,11 +257,6 @@ static inline struct timerlat_variables *this_cpu_tmr_var(void)
- 	return this_cpu_ptr(&per_cpu_timerlat_var);
- }
- 
--/*
-- * Protect the interface.
-- */
--static struct mutex interface_lock;
--
- /*
-  * tlat_var_reset - Reset the values of the given timerlat_variables
-  */
--- 
-2.25.1
-
+thanks,
+jirka
