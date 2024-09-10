@@ -1,125 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FEA188CDC;
-	Tue, 10 Sep 2024 09:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07BA46444;
+	Tue, 10 Sep 2024 10:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725961092; cv=none; b=djkoIoJh9RVOR3gQTwvUViUvAOIz3OTM0DD1E2uhXc1Ev15oZW7TLHAGx/MkyYwD3VtBgP+r2bZauoDUt87uq+nr+vlE8VkKR/rfp1lOYBCBTZeAe4ucftmzvV8Qf+h1Jo+NnWObx/QUD2p4RhfdXVD5c8thhH1Y+rPi6BMU1DY=
+	t=1725965098; cv=none; b=f6eTPSoq/hD6tfkwTr1X7WCnDipoHQWfdmtV7+ue9txRJ+QnQf3uo93r7tUpxrI4PYsH1hndNlHs+GI47cKtRuychri0Mi4xDzhMTF301PZghgPEOegMqdia3WsFAk/wzMcIIf95OsOw5cTrLe23TmRepmvVrOPaaKUrXc7qRRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725961092; c=relaxed/simple;
-	bh=pQXXDMRKxnsBDSo1gqJg8KYyJqDJVN2Nygl8s9ku040=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xu3pqTN/isnT/R1MhDr7gW5pIK4T+Y2FBp++xhGBwxM9h+loOaCztjyOSl0fysvFy6NOvyPaTl9ae4cJ89ZWcrNOEDXspADGCpGPzM+lMWraYMAZEi/YSKTEYqgTF7JnaP8R5Fy/YK+vgWSddH5w+rUau6NPCi/fWod8+YCTxWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lN681ZaB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lN681ZaB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D908C4CECF;
-	Tue, 10 Sep 2024 09:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725961092;
-	bh=pQXXDMRKxnsBDSo1gqJg8KYyJqDJVN2Nygl8s9ku040=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lN681ZaBw6958lzQ2AsJbCM+JwMMUUB8JxoVGL1KLnd2lC9J9/dj3uBhzwaxMWUEg
-	 7wtHa4mNa6bIOL5oglNvvGMIV5rwwcM02vu6EbcFt4NEMQZBpeq9e3YGPNraRrX4hr
-	 I394TZTwul7MABM44p+pT5lPSQW20gGrJv3k9N88TtgaqeNn9hTjrtJLoA5Rm0t/ra
-	 kKPS1vWqqsDkOuD4eUrHEmEzLIRnVqhiCAPdpUC8U+ri8Gp41LPkyOO67gsBK2bEfy
-	 46C1ntsHYfStvEQGAdPVEQCGjybad37rCKKL9PGBgmcGxmRJusMajnHQUdDrtxXMze
-	 pwzYZ4AZpSoZw==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f7529203ddso37609861fa.0;
-        Tue, 10 Sep 2024 02:38:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVTIzawbxxtFJTdqgZZQyS8CMwthr6inJDMn1uOGc5a43wURzFBS1LtK2Bp2nuVeYc3VlAzKfaWc0WfcZ0=@vger.kernel.org, AJvYcCVd+TPH9wlRUklBEQW48F3ksMWl/VSuGRFAndCRcZHE3XtuT+cTYDmwoHDMKrPGD2oxYYn79ERrnG1YTxrLBK1+vBQE@vger.kernel.org, AJvYcCVjKwVJSngtgsfkqqpFw4niadKPerlZp19e/DFda0bBe1SUDMyHcVb7tDpkOBNoiL2+jRoVb9IvkZtKxjIjtg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyeq4vp4uW6/4GOmoinCa1u1jlK1yt6A3WDhGQVKC32tyRf6THp
-	hOY8iSDGeo0MhzYlG5WsOyvo+UBLQOqhnrsHNJHPBmYsS5l1RcuauMbsq01NeLgMgR4nurTuAIu
-	jBUD1E+0E1SDui+GDQPoTJnDdEwI=
-X-Google-Smtp-Source: AGHT+IE1GfQO22vq58NMlD81uHWYcsg0j7WpA9waYrdJSm6XZhf3An7rootcx2E7Qk8EDCQK8ZS9GXc9tPVSIcfYLLs=
-X-Received: by 2002:a05:6512:3051:b0:52f:441:bdd6 with SMTP id
- 2adb3069b0e04-5366b7d4cdcmr792239e87.0.1725961090734; Tue, 10 Sep 2024
- 02:38:10 -0700 (PDT)
+	s=arc-20240116; t=1725965098; c=relaxed/simple;
+	bh=F8sISKqp3IEU8uMytKNoaGuZbOEzp2sNMpq+JwuhFk0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bXaAl3vj0bYxyro30eMtw23Q5OWsK/b1uKsFlOFf+WftW4NJvViiEWPyAybVOrJU3g6MyjGOm086QRoGxKKThnYzjQ98U+JiCKwNuhxgZ91PhspCZHdp4g1WqdM8iOvv8oDwKe66DTNAbvU+uHqR9pG66wKYbB36O8MhK7G52Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4X30gr3F0jz2Dc4S;
+	Tue, 10 Sep 2024 18:44:24 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7AD5E1402E0;
+	Tue, 10 Sep 2024 18:44:52 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 10 Sep 2024 18:44:51 +0800
+Message-ID: <95e6c282-1e4f-458b-9e40-9b626d64b3bd@huawei.com>
+Date: Tue, 10 Sep 2024 18:44:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906144506.1151789-1-kris.van.hees@oracle.com>
-In-Reply-To: <20240906144506.1151789-1-kris.van.hees@oracle.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Tue, 10 Sep 2024 18:37:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT0R7YxhtPbK-W1+Witxn2xNYFY4RJpCj7u=WhyafyMuw@mail.gmail.com>
-Message-ID: <CAK7LNAT0R7YxhtPbK-W1+Witxn2xNYFY4RJpCj7u=WhyafyMuw@mail.gmail.com>
-Subject: Re: [PATCH v9 0/4] Generate address range data for built-in modules
-To: Kris Van Hees <kris.van.hees@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Jiri Olsa <olsajiri@gmail.com>, Elena Zannoni <elena.zannoni@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v25 00/13] Device Memory TCP
+To: Mina Almasry <almasrymina@google.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-alpha@vger.kernel.org>,
+	<linux-mips@vger.kernel.org>, <linux-parisc@vger.kernel.org>,
+	<sparclinux@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-media@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, Donald Hunter <donald.hunter@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan
+ Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+	<James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+	<arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Willem de
+ Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+	<bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>, Maciej
+ Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon
+	<jonathan.lemon@gmail.com>, Shuah Khan <shuah@kernel.org>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	<john.fastabend@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Pavel Begunkov
+	<asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe
+	<jgg@ziepe.ca>, Shailend Chand <shailend@google.com>, Harshitha Ramamurthy
+	<hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de
+ Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>
+References: <20240909054318.1809580-1-almasrymina@google.com>
+ <42c202e6-8c4c-494f-8c28-17d66ed75880@huawei.com>
+ <CAHS8izMX+9F1NngbPx6w7ikKR9TgPvm+jMwZ8168NJYhFC7sVQ@mail.gmail.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <CAHS8izMX+9F1NngbPx6w7ikKR9TgPvm+jMwZ8168NJYhFC7sVQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Fri, Sep 6, 2024 at 11:45=E2=80=AFPM Kris Van Hees <kris.van.hees@oracle=
-.com> wrote:
->
-> At build time, create the file modules.builtin.ranges that will hold
-> address range data of the built-in modules that can be used by tracers.
->
-> Especially for tracing applications, it is convenient to be able to
-> refer to a symbol using a <module name, symbol name> pair and to be able
-> to translate an address into a <nodule mname, symbol name> pair.  But
-> that does not work if the module is built into the kernel because the
-> object files that comprise the built-in module implementation are simply
-> linked into the kernel image along with all other kernel object files.
->
-> This is especially visible when providing tracing scripts for support
-> purposes, where the developer of the script targets a particular kernel
-> version, but does not have control over whether the target system has
-> a particular module as loadable module or built-in module.  When tracing
-> symbols within a module, referring them by <module name, symbol name>
-> pairs is both convenient and aids symbol lookup.  But that naming will
-> not work if the module name information is lost if the module is built
-> into the kernel on the target system.
->
-> Earlier work addressing this loss of information for built-in modules
-> involved adding module name information to the kallsyms data, but that
-> required more invasive code in the kernel proper.  This work never did
-> get merged into the kernel tree.
->
-> All that is really needed is knowing whether a given address belongs to
-> a particular module (or multiple modules if they share an object file).
-> Or in other words, whether that address falls within an address range
-> that is associated with one or more modules.
->
-> Objects can be identified as belonging to a particular module (or
-> modules) based on defines that are passed as flags to their respective
-> compilation commands.  The data found in modules.builtin is used to
-> determine what modules are built into the kernel proper.  Then,
-> vmlinux.o.map and vmlinux.map can be parsed in a single pass to generate
-> a modules.buitin.ranges file with offset range information (relative to
-> the base address of the associated section) for built-in modules.  This
-> file gets installed along with the other modules.builtin.* files.
->
-> The impact on the kernel build is minimal because everything is done
-> using a single-pass AWK script.  The generated data size is minimal as
-> well, (depending on the exact kernel configuration) usually in the range
-> of 500-700 lines, with a file size of 20-40KB (if all modules are built
-> in, the file contains about 8000 lines, with a file size of about 285KB).
->
-> Changes since v9:
->  - Reverted support for optional 4th arg to generator script.
->  - Reverted support for optional 6th arg to verifier script.
->  - Added modules.builtin.ranges ad vmlinux.o.map to CLEAN_FILES.
->  - Fixed support for sparc64.
->  - Fixed support for LLVM's lld linker map format.
->  - Updated error message when .*.cmd.o cannot be read by verifier script.
->  - Added syntax output for verifier script when not enough args are given=
-.
->  - Return 1 from verifier if verification fails.
+On 2024/9/10 0:54, Mina Almasry wrote:
+> On Mon, Sep 9, 2024 at 4:21 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2024/9/9 13:43, Mina Almasry wrote:
+>>
+>>>
+>>> Perf - page-pool benchmark:
+>>> ---------------------------
+>>>
+>>> bench_page_pool_simple.ko tests with and without these changes:
+>>> https://pastebin.com/raw/ncHDwAbn
+>>>
+>>> AFAIK the number that really matters in the perf tests is the
+>>> 'tasklet_page_pool01_fast_path Per elem'. This one measures at about 8
+>>> cycles without the changes but there is some 1 cycle noise in some
+>>> results.
+>>>
+>>> With the patches this regresses to 9 cycles with the changes but there
+>>> is 1 cycle noise occasionally running this test repeatedly.
+>>>
+>>> Lastly I tried disable the static_branch_unlikely() in
+>>> netmem_is_net_iov() check. To my surprise disabling the
+>>> static_branch_unlikely() check reduces the fast path back to 8 cycles,
+>>> but the 1 cycle noise remains.
+>>
+>> Sorry for the late report, as I was adding a testing page_pool ko basing
+>> on [1] to avoid introducing performance regression when fixing the bug in
+>> [2].
+>> I used it to test the performance impact of devmem patchset for page_pool
+>> too, it seems there might be some noticable performance impact quite stably
+>> for the below testcases, about 5%~16% performance degradation as below in
+>> the arm64 system:
+>>
+> 
+> Correct me if I'm wrong here, but on the surface here it seems that
+> you're re-reporting a known issue. Consensus seems to be that it's a
+> non-issue.
+> 
+> In v6 I reported that the bench_page_pool_simple.ko test reports a 1
+> cycle regression with these patches, from 8->9 cycles. That is roughly
+> consistent with the 5-15% you're reporting.
 
+From the description above in the cover letter, I thought the performance
+data using the out of tree testing ko is not stable enough to justify the
+performance impact.
 
-Applied to linux-kbuild.
-Thanks!
+> 
+> I root caused the reason for the regression to be the
+> netmem_is_net_iov() check in the fast path. I removed this regression
+> in v7 (see the change log) by conditionally compiling the check in
+> that function.
+> 
+> In v8, Pavel/Jens/David pushed back on the ifdef check. See this
+> entire thread, but in particular this response from Jens:
 
---=20
-Best Regards
-Masahiro Yamada
+It seemed the main objection is about how to enable this feature
+for the io_uring?
+
+And it seemed that you had added the CONFIG_NET_DEVMEM for this
+devmem thing, why not use it for that?
+
+> 
+> https://lore.kernel.org/lkml/11f52113-7b67-4b45-ba1d-29b070050cec@kernel.dk/
+> 
+> Seems consensus that it's 'not really worth it in this scenario'.
+
+I was only reading through the above thread, it didn't seemed to
+reach to consensus as Jesper pointed out the performance impact
+for the XDP DROP case in the same thread.
+
+https://lore.kernel.org/lkml/779b9542-4170-483a-af54-ca0dd471f774@kernel.org/
+
+> 
