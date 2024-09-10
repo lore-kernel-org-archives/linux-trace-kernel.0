@@ -1,29 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316B619E7E0;
-	Tue, 10 Sep 2024 16:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B6E41746;
+	Tue, 10 Sep 2024 16:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725986698; cv=none; b=sCiDTr/KyWRdgbL9MTf4lqhWkHiBWIh1hEUkeWH+0oSZxA9yKTkpqLJCmGGo1o5U7AdrSfzKuR7CQkT1ytyZ2Wq6FPQXLupDvp0V8aIMfzp3NzknPeXIa4QZ4ik6HTDlfyUgRHh083XbP1t+GJzrZVTACq5ACyy6fTGqVowJKGU=
+	t=1725986741; cv=none; b=qrE5tkC4UG05ot/W6LXVQ30RZhQRvGILRmWxsQ/6QWZhAttQTIC9XdNuXTcYcEgagM8aG5y/2IciMyQRCp+5FZQzqeolbg7fSGQfcU9+i9vIbPEvvUvOZLvMh8baPvijFBQCGD01wSr4PxKRo22r2rCHc4Xy7Ce/ETtSGT9GILU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725986698; c=relaxed/simple;
-	bh=Hu/xfal5jORgsX+d60ZC4my7Jofu095bzy3b4vdL56M=;
+	s=arc-20240116; t=1725986741; c=relaxed/simple;
+	bh=9nuz7KBsRmTZjf7Of9Sr97RXKva1r0kaa96eGnUzNqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UAFYiTIwnJftzokHT7tjjSmIlIb41rlovHlMgV87ozvnG87ubcHXa5U+qoFXNyCrJtLrJeG5/so4aHNB/RC42Dgw7qbK4FTJtFjPvpQhG6ejG7w5pigjxWhWBxaEbRWmUfYYItu1GoEhhSvwclrsmf1IEz3yNwXAyUn8Ie2G4X8=
+	 MIME-Version:Content-Type; b=gTWBP6aEKY+pnrKr4mcVcrapTlzU3oSPfpgwQtopCDgEKRVR3EDjZ6xkCaEguPtW2u7yJEVtWyLghDiyooaUDtHpbYtju84TKLT+w3FSoYdxsFhkRY4zUs7mbvcgWrHsqXYSH3dxdm378QlJBHLe2oEtMMxB20AHY/4d7Pu+aBE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08957C4CEC3;
-	Tue, 10 Sep 2024 16:44:56 +0000 (UTC)
-Date: Tue, 10 Sep 2024 12:44:58 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95872C4CEC3;
+	Tue, 10 Sep 2024 16:45:40 +0000 (UTC)
+Date: Tue, 10 Sep 2024 12:45:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Vincent Donnefort <vdonnefort@google.com>
 Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH RESEND 0/2] ring-buffer/selftest: Meta-page testing
- improvements
-Message-ID: <20240910124458.207c6924@gandalf.local.home>
-In-Reply-To: <20240910162335.2993310-1-vdonnefort@google.com>
+ linux-trace-kernel@vger.kernel.org, kernel-team@android.com, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RESEND 1/2] ring-buffer/selftest: Verify the entire
+ meta-page padding
+Message-ID: <20240910124541.23426cee@gandalf.local.home>
+In-Reply-To: <20240910162335.2993310-2-vdonnefort@google.com>
 References: <20240910162335.2993310-1-vdonnefort@google.com>
+	<20240910162335.2993310-2-vdonnefort@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,24 +36,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Sep 2024 17:23:33 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
 
-> Following the comments on the original patch [1] here's a set of 2 patches to
-> improve the selftest.
-> 
-> [1] https://lore.kernel.org/all/20240628104611.1443542-1-vdonnefort@google.com/
-> 
-> Vincent Donnefort (2):
->   ring-buffer/selftest: Verify the entire meta-page padding
->   ring-buffer/selftest: Handle meta-page bigger than the system
-> 
->  tools/testing/selftests/ring-buffer/map_test.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
-> 
-> 
-> base-commit: 2fcd5aff92aab479a9a89cfce2dbc9c6a9455b4f
+Shuah,
 
-Ah, you just Cc'd the patches. OK, I can work with that.
+Can you take this through your tree?
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
+
+
+On Tue, 10 Sep 2024 17:23:34 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> Improve the ring-buffer meta-page test coverage by checking for the
+> entire padding region to be 0 instead of just looking at the first 4
+> bytes.
+> 
+> Cc: Shuah Khan <skhan@linuxfoundation.org>
+> Cc: linux-kselftest@vger.kernel.org
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/tools/testing/selftests/ring-buffer/map_test.c b/tools/testing/selftests/ring-buffer/map_test.c
+> index 4bb0192e43f3..ba12fd31de87 100644
+> --- a/tools/testing/selftests/ring-buffer/map_test.c
+> +++ b/tools/testing/selftests/ring-buffer/map_test.c
+> @@ -231,15 +231,15 @@ TEST_F(map, data_mmap)
+>  
+>  	/* Verify meta-page padding */
+>  	if (desc->meta->meta_page_size > getpagesize()) {
+> -		void *addr;
+> -
+>  		data_len = desc->meta->meta_page_size;
+>  		data = mmap(NULL, data_len,
+>  			    PROT_READ, MAP_SHARED, desc->cpu_fd, 0);
+>  		ASSERT_NE(data, MAP_FAILED);
+>  
+> -		addr = (void *)((unsigned long)data + getpagesize());
+> -		ASSERT_EQ(*((int *)addr), 0);
+> +		for (int i = desc->meta->meta_struct_len;
+> +		     i < desc->meta->meta_page_size; i += sizeof(int))
+> +			ASSERT_EQ(*(int *)(data + i), 0);
+> +
+>  		munmap(data, data_len);
+>  	}
+>  }
+
