@@ -1,304 +1,197 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A16038DE1;
-	Wed, 11 Sep 2024 15:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF6B1AB6F0;
+	Wed, 11 Sep 2024 15:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726067042; cv=none; b=NMOaNT8+QWyYjebjVPs+SGIjgQf2I1rLZebfkOuMaxHU9DBSpqE+PZxiutSw+Qwx84wgBCimuCPns2zYuDztpvZw1rwCLFRliYTK+cyHfqjJ1IaYp8vX8NJKidZn4FE7jt0ID85bY/Vg/cqNrFSKLPTwzdubF85QM1cO1Nf/a14=
+	t=1726067933; cv=none; b=sydyEL2rY4IWPa24uq34RkSKhvSe+PvNLlLf5Q0FlKeJB1eyw+/BdL2CiyJD+izrAvZabDuN7lMJUFGRbXlKaZjpREHefCH+F/MCFI99O1e9bxeQ6vxJGwLIJowsTL74jNDlNHQV7fIGCa7BZg5tXREZUWcEXgddKCsAFDq+sQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726067042; c=relaxed/simple;
-	bh=ypMnOp61n8Gx9VHy/03XF4NXk3UFkB12wmroUy5FVPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q0fG58Ikrg6PjbbPASc3vO+0dXqxHkb1cH5X1oa2ET0Rpk0ntKzUknHwumCGF7hMJLopI6UVrJwXB7qA9sys9jLoOdNyvcQM8QUTLp1N10v7zUusAX4n23DNKE0fhXzEvByenaQ3P/j9C1iwO6wE7h7VepHITFIMw4q5F+GazvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhnC7tz7; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726067933; c=relaxed/simple;
+	bh=dIMTjUUU6Z+9RVyokzndesj6W8X7N4m9fc53dLvlP88=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=gR93kHGqkcwXkkKZ7BYuD/FqkOuinSEaO218GI2Vfgsi18/95cuWXzJVg6fJUi1jE8EialzciWs+qhDpD7dTx2F8B9Ybk3k75tMhzlOBY7Ym5wBsPYuvZDpZVquR/8Lk78Dx7Fli2bLdYmaDBc8uQkv3NKHl5egGkTGwQ3Vreyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+2YFp+J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhnC7tz7"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6db9f7969fdso10027587b3.0;
-        Wed, 11 Sep 2024 08:04:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726067040; x=1726671840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=moeq6ger2QwGp9K4wxCsV0yx2pNLlzVd93ofj9YZDVs=;
-        b=BhnC7tz7+AXpg/T/s76XX4L1IptDOmKvDg8U3S59ICO9jDbecTBEdpogQpgp/oe2nO
-         fdndm8vko6PIFoxAuuG0BelILRu/9nsOnYDw5KH1ud60c4qxZNfLPcFvcw5Nsjv9tx1I
-         c61Au9Nl0LMTuRqXoX73mOKzLAexSAmjcks4SnnJ5w8ePHyfggdJmao6Qc2FRM1Dd0am
-         Wj64oL6ASiWFI/AGwVhaTwo07V40QQCBaiVS7S251RpSSNg0KCtsEyklcjBgCq0SgVB+
-         DTXykLEqggg2WzSb7TidRO0UqrGxjGDFQ2+Lu/nPRcklXubDxcei6M2BXwUBaL9R15qb
-         rUDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726067040; x=1726671840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=moeq6ger2QwGp9K4wxCsV0yx2pNLlzVd93ofj9YZDVs=;
-        b=jIEUrLRrS96toVh/r93STm4pkIGlSR/ivmoR2rths0jh0LW5B37OhdDZElpJFedYIG
-         7UBIvh5v4NC2Pq6unjF+E9pRukxRXfCsMa7p/DWtwr5KaOphvfcBAbyYwQYGqLMna/h9
-         +EOH0ZQ1gnnBALLwiFp8RJyzcDIncnu2PFgU5FdZjF3TtAxgtZ4e9/HK3Tvfx5wuYECe
-         Q6DN15Ljjl5noj4xLhi6U9KMtujVL6K/444UaHO62UGGQe8A4gaG6wnOWLMvTha3ClhM
-         zy7jBMryFh4sqBvW4wwo849MjSur/wWnynPXNkFDe1eGktGrEiWrlGQCu0LdFYX/b2lM
-         0Z6g==
-X-Forwarded-Encrypted: i=1; AJvYcCV6a67treKtZEWKKnjsxGkbK3e9DoQSYyvv0C5lZ3ehh6F3O3jEYMkCSN6oFBurG13mZ1jhczl6iU4snZk=@vger.kernel.org, AJvYcCXLqxARNF7ScDhe1+kZw94xYCBqHUUTV5KkkkLZlM4Jt6dgDK8G91mCf9aKwWOUbmirWWSiuv3cTW4KepOZjI/Ti80f@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz67t8l8qekIHpp/z5GiLaGhpVEW50D+nZZ5Oibe7HnLVKb2nVU
-	qGQFtPqbwkhX7tbyruUin4U5n6l+W173+48gimg8DcoierJ9HFicq3VsEht3GrvYI1opPpBJ8At
-	nWoWCHpAc7Z6d+I+CQJO5vbS6YBk=
-X-Google-Smtp-Source: AGHT+IGw8eA4GFtgyE1g5jRpuRKwNZBgjoAHs4DBVwEvLjX64XRsY3nA8+nR4YbzJWguT2BgXKBEY8IJTXyZH4aameQ=
-X-Received: by 2002:a05:690c:498c:b0:6d6:afe9:d818 with SMTP id
- 00721157ae682-6db9535bab1mr55661257b3.6.1726067039593; Wed, 11 Sep 2024
- 08:03:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+2YFp+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B85C4CEC0;
+	Wed, 11 Sep 2024 15:18:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726067933;
+	bh=dIMTjUUU6Z+9RVyokzndesj6W8X7N4m9fc53dLvlP88=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M+2YFp+Jfs373JDhFk6aFPyisWNPDkvgBdhWdiHTa8+1cxhN6kvtNXDIC8JZzUEs9
+	 jotL9FYDXo05Hg5u+Hcrt4x2ilKB5TDwzeOg2pNdfz67HlRM75frRCYmPa6Pbj2J5q
+	 amh44oTixkfp6AZplnP4U9FBNe9VCZKt70j+7aCsoW9+gkBjbRgBRmBaaXIDPSfl0S
+	 1++1jhpqYsaDoDrPhA6Tem3zCgumFqpbsDimb77BXuH0VmxCnMmHWq64o6KyGbs56T
+	 X+0Ly9Uli8JxGCXAsBzqwTtxmXoA5emY/Tc/EqDzVARleqVW4H0rDjhtDygr9+IA1G
+	 DZKhrv7M3kQ5g==
+Date: Thu, 12 Sep 2024 00:18:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, Linux
+ trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
+ <kpsingh@chromium.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, Mark Rutland
+ <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
+ <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
+Message-Id: <20240912001848.d9629a1579ea3ef6531a9a0b@kernel.org>
+In-Reply-To: <CAEf4BzbdxSbaK1V10j8t_rjG4ZnYsFQLqPrBSswR8KhjmC=5cg@mail.gmail.com>
+References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+	<20240911091343.77c60bc2e5d96cbfd8787c19@kernel.org>
+	<CAEf4BzbdxSbaK1V10j8t_rjG4ZnYsFQLqPrBSswR8KhjmC=5cg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <87sev78dnz.fsf@all.your.base.are.belong.to.us>
- <ZuFteQ3t8K4h2-kJ@Andys-MacBook-Air.local> <87v7z2dzo6.fsf@all.your.base.are.belong.to.us>
-In-Reply-To: <87v7z2dzo6.fsf@all.your.base.are.belong.to.us>
-From: Tao Chiu <andybnac@gmail.com>
-Date: Wed, 11 Sep 2024 23:03:48 +0800
-Message-ID: <CAFTtA3PYsdSio0EqkUKQpyLiMuY9iynOdWQAkebAPjL6THEaMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] riscv: ftrace: prepare ftrace for atomic code patching
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-Cc: alexghiti@rivosinc.com, andy.chiu@sifive.com, aou@eecs.berkeley.edu, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, mark.rutland@arm.com, mhiramat@kernel.org, 
-	morbo@google.com, nathan@kernel.org, ndesaulniers@google.com, 
-	palmer@dabbelt.com, palmer@rivosinc.com, paul.walmsley@sifive.com, 
-	puranjay@kernel.org, rostedt@goodmis.org, zong.li@sifive.com, 
-	yongxuan.wang@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> =E6=96=BC 2024=E5=B9=B49=E6=9C=881=
-1=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8810:37=E5=AF=AB=E9=81=93=EF=
-=BC=9A
+On Tue, 10 Sep 2024 17:37:48 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
->
-> Andy Chiu <andybnac@gmail.com> writes:
->
-> > On Wed, Aug 14, 2024 at 02:57:52PM +0200, Bj=C3=B6rn T=C3=B6pel wrote:
-> >> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
-> >>
-> >> > Andy Chiu <andy.chiu@sifive.com> writes:
-> >> >
-> >> >> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
-> >> >> instruction fetch can break down to 4 byte at a time, it is impossi=
-ble
-> >> >> to update two instructions without a race. In order to mitigate it,=
- we
-> >> >> initialize the patchable entry to AUIPC + NOP4. Then, the run-time =
-code
-> >> >> patching can change NOP4 to JALR to eable/disable ftrcae from a
-> >> >                                       enable        ftrace
-> >> >
-> >> >> function. This limits the reach of each ftrace entry to +-2KB displ=
-acing
-> >> >> from ftrace_caller.
-> >> >>
-> >> >> Starting from the trampoline, we add a level of indirection for it =
-to
-> >> >> reach ftrace caller target. Now, it loads the target address from a
-> >> >> memory location, then perform the jump. This enable the kernel to u=
-pdate
-> >> >> the target atomically.
-> >> >
-> >> > The +-2K limit is for direct calls, right?
-> >> >
-> >> > ...and this I would say breaks DIRECT_CALLS (which should be impleme=
-nted
-> >> > using call_ops later)?
-> >>
-> >> Thinking a bit more, and re-reading the series.
-> >>
-> >> This series is good work, and it's a big improvement for DYNAMIC_FTRAC=
-E,
-> >> but
-> >>
-> >> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> >> +{
-> >> +    unsigned long distance, orig_addr;
-> >> +
-> >> +    orig_addr =3D (unsigned long)&ftrace_caller;
-> >> +    distance =3D addr > orig_addr ? addr - orig_addr : orig_addr - ad=
-dr;
-> >> +    if (distance > JALR_RANGE)
-> >> +            return -EINVAL;
-> >> +
-> >> +    return __ftrace_modify_call(rec->ip, addr, false);
-> >> +}
-> >> +
-> >>
-> >> breaks WITH_DIRECT_CALLS. The direct trampoline will *never* be within
-> >> the JALR_RANGE.
+> On Tue, Sep 10, 2024 at 5:13 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
 > >
+> > On Tue, 10 Sep 2024 11:23:29 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 > >
-> > Yes, it is hardly possible that a direct trampoline will be within the
-> > range.
+> > > + arm ML and maintainers
+> > >
+> > > On Wed, Sep 4, 2024 at 6:02 PM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > >
+> > > > Hey,
+> > > >
+> > > > I just recently realized that we are still missing multi-kprobe
+> > > > support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
+> > > > seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
+> > > > implemented for ARM64.
+> > > >
+> > > > It took me a while to realize what's going on, as I roughly remembered
+> > > > (and confirmed through lore search) that Masami's original rethook
+> > > > patches had arm64-specific bits. Long story short:
+> > > >
+> > > > 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation"
+> > > > 83acdce68949 arm64: rethook: Add arm64 rethook implementation
+> > > >
+> > > > The patch was landed and then reverted. I found some discussion online
+> > > > and it seems like the plan was to land arch-specific bits shortly
+> > > > after bpf-next PR.
+> > > >
+> > > > But it seems like that never happened. Why?
+> > > >
+> > > > I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
+> > > > have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
+> > > > seems. How come ARM64 is the one left out?
+> > > >
+> > > > Can anyone please provide some context? And if that's just an
+> > > > oversight, can we prioritize landing this for ARM64 ASAP?
+> > > >
+> > > >   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.ibm.com/
+> > > >
+> > >
+> > > Masami, Steven,
+> > >
+> > > Does Linus have to be in CC to get any reply here? Come on, it's been
+> > > almost a full week.
 > >
-> > Recently I have been thinking some solutions to address the issue. One
-> > solution is replaying AUIPC at function entries. The idea has two sides=
-.
-> > First, if we are returning back to the second instruction at trap retur=
-n,
-> > then do sepc -=3D 4 so it executes the up-to-date AUIPC. The other side=
- is
-> > to fire synchronous IPI that does remote fence.i at right timings to
-> > prevent concurrent executing on a mix of old and new instructions.
+> > Sorry about bothering you, let me check that. But I think we eventually
+> 
+> You don't bother me, but I'd appreciate a bit more timely replies in
+> the future, if that's OK.
+> 
+> > need my fprobe-on-fgraph patch which allows all architecture uses ftrace_regs
+> > instead of pt_regs for ftrace/fgraph users. That allows arm64 to implement
+> > fprobe.
+> 
+> Ok, thanks for a bit more context. I understand the end goal with
+> fprobe-on-fgraph, but see below.
+> 
 > >
-> > Consider replacing instructions at a function's patchable entry with th=
-e
-> > following sequence:
+> > >
+> > > Maybe ARM64 folks have some context?... And hopefully desire to see
+> > > this through so that ARM64 doesn't stick out as a lesser-supported
+> > > platform as far as tracing goes compared to loongarch, s390x, and
+> > > powerpc (which just landed rethook support, see [2]).
 > >
-> > Initial state:
-> > --------------
-> > 0: AUIPC
-> > 4: JALR
-> >
-> > Step1:
-> > write(0, "J +8")
-> > fence w,w
-> > send sync local+remote fence.i
-> > ------------------------
-> > 0: J +8
-> > 4: JALR
-> >
-> > Step2:
-> > write(4, "JALR'")
-> > fence w,w
-> > send sync local+remote fence.i
-> > ------------------------
-> > 0: J +8
-> > 4: JALR'
-> >
-> > Step3:
-> > write(0, "AUIPC'")
-> > fence w,w
-> > send sync local+remote fence.i (to activate the call)
-> > -----------------------
-> > 0: AUIPC'
-> > 4: JALR'
-> >
-> > The following execution sequences are acceptable:
-> > - AUIPC, JALR
-> > - J +8, (skipping {JALR | JALR'})
-> > - AUIPC', JALR'
-> >
-> > And here are sequences that we want to prevent:
-> > - AUIPC', JALR
-> > - AUIPC, JALR'
-> >
-> > The local core should never execute the forbidden sequence.
-> >
-> > By listing all possible combinations of executing sequence on a remote
-> > core, we can find that the dangerous seqence is impossible to happen:
-> >
-> > let f be the fence.i at step 1, 2, 3. And let numbers be the location o=
-f
-> > code being executed. Mathematically, here are all combinations at a sit=
-e
-> > happening on a remote core:
-> >
-> > fff04 -- updated seq
-> > ff0f4 -- impossible, would be ff0f04, updated seq
-> > ff04f -- impossible, would be ff08f, safe seq
-> > f0ff4 -- impossible, would be f0ff04, updated seq
-> > f0f4f -- impossible, would be f0f08f (safe), or f0f0f04 (updated)
-> > f04ff -- impossible, would be f08ff, safe seq
-> > 0fff4 -- impossible, would be 0fff04, updated seq
-> > 0ff4f -- impossible, would be 0ff08f (safe), or 0ff0f04 (updated)
-> > 0f4ff -- impossible, would be 0f08ff (safe), 0f0f08f (safe), 0f0f0f04 (=
-updated)
-> > 04fff -- old seq
-> >
-> > After the 1st 'fence.i', remote cores should observe (J +8, JALR) or (J=
- +8, JALR')
-> > After the 2nd 'fence.i', remote cores should observe (J +8, JALR') or (=
-AUIPC', JALR')
-> > After the 3rd 'fence.i', remote cores should observe (AUIPC', JALR')
-> >
-> > Remote cores should never execute (AUIPC',JALR) or (AUIPC,JALR')
-> >
-> > To correctly implement the solution, the trap return code must match JA=
-LR
-> > and adjust sepc only for patchable function entries. This is undocument=
-ly
-> > possible because we use t0 as source and destination registers for JALR
-> > at function entries. Compiler never generates JALR that uses the same
-> > register pattern.
-> >
-> > Another solution is inspired by zcmt, and perhaps we can optimize it if
-> > the hardware does support zcmt. First, we allocate a page and divide it
-> > into two halves. The first half of the page are 255 x 8B destination
-> > addresses. Then, starting from offset 2056, the second half of the page
-> > is composed by a series of 2 x 4 Byte instructions:
-> >
-> > 0:    ftrace_tramp_1
-> > 8:    ftrace_tramp_2
-> > ...
-> > 2040: ftrace_tramp_255
-> > 2048: ftrace_tramp_256 (not used when configured with 255 tramps)
-> > 2056:
-> > ld    t1, -2048(t1)
-> > jr    t1
-> > ld    t1, -2048(t1)
-> > jr    t1
-> > ...
-> > 4088:
-> > ld    t1, -2048(t1)
-> > jr    t1
-> > 4096:
-> >
-> > It is possible to expand to 511 trampolines by adding a page
-> > below, and making a load+jr sequence from +2040 offset.
-> >
-> > When the kernel boots, we direct AUIPCs at patchable entries to the pag=
-e,
-> > and disable the call by setting the second instruction to NOP4. Then, w=
-e
-> > can effectively enable/disable/modify a call by setting only the
-> > instruction at JALR. It is possible to utilize most of the current patc=
-h
-> > set to achieve atomic patching. A missing part is to allocate and manag=
-e
-> > trampolines for ftrace users.
->
-> (I will need to digest above in detail!)
->
-> I don't think it's a good idea to try to handle direct calls w/o
-> call_ops. What I was trying to say is "add the call_ops patch to your
-> series, so that direct calls aren't broken". If direct calls depend on
-> call_ops -- sure, no worries. But don't try to get direct calls W/O
-> call_ops. That's a whole new bag of worms.
->
-> Some more high-level thoughts: ...all this to workaround where we don't
-> want the call_ops overhead? Is there really a use-case with a platform
-> that doesn't handle the text overhead of call_ops?
+> > I think lesser-supported or not is not a matter, but they need to keep
+> > their architecutre healthy. Mark said that the current rethook
+> > implementation is not acceptable because arm64 can not manually generate
+> 
+> I don't see Mark's reply in the link you sent. But did he refer to the
+> code in kprobes_trampoline.S or is it something different?
 
-Sorry for making any confusions. I have no strong personal preference
-on what we should do. Just want to have a technical discussion on what
-is possible if we want to optimize code size.
+Sorry, here it is: https://lkml.org/lkml/2022/4/12/2233
 
->
-> Maybe I'm missing context here... but I'd say, let's follow what arm64
-> did (but obviously w/o the BL direct call optimization, and always jump
-> to a trampoline -- since that's not possible with RISC-V branch length),
-> and just do the call_ops way.
->
-> Then, as a second step, and if there are platforms that care, think
-> about a variant w/o call_ops.
->
-> Or what I wrote in the first section:
->
-> 1. Keep this patch set
-> 2. ...but add call_ops to it, and require call_ops for direct calls.
->
-> Just my $.02.
->
->
-> Bj=C3=B6rn
+> 
+> By lesser-supported I mean that a very important functionality (BPF
+> multi-kprobe, which relies on CONFIG_FPROBE and thus
+> {HAVE|CONFIG}_RETHOOK) is currently still missing. And whether x86-64
+> support landed more than 2 years ago (end of March 2022), the second
+> practically most popular (and thus important for tools and such) ARM64
+> platform still doesn't have this functionality.
+> 
+> And that's limiting, BPF multi-kprobes are a huge improvement in
+> tooling usability.
+
+Sorry for inconvenient. But I think this transformation is really
+important.
+
+> So while I get the desire to have a clean and nice
+> end goal, and that it might take a bit longer to get everything right.
+> But, maybe, landing a stop-gap solution meanwhile (especially as
+> isolated and thus easily backportable as the patch [0] you referenced)
+> is an OK path forward?
+
+I had not realized that the PSTATE register was not saved correctly
+at that point. This is one reason why I decided to move in the
+current fprobe-on-fgraph direction.
+
+> 
+> I'm just lacking full understanding on what exactly the issue is/was,
+> and that's why I'm asking all these questions. I'm not sure if [0] is
+> just broken for some subtle reason, or it is just suboptimal in some
+> sense (performance, code duplication, whatnot)?
+
+If [0] was not broken, I pushed it and the current pt_regs to ftrace_regs
+series is separated series. But it was broken. So I tried to find the
+correct way to fix it, and finally introduced the current fprobe on 
+fgraph series. performance improvement is just a side effect.
+
+Thank you,
+
+> 
+> 
+>   [0] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+> 
+> > pt_regs. So we need to use ftrace_regs for that.
+> > So eventually, we need my fprobe series.
+> >
+> > https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+> >
+> > Thank you,
+> >
+> > >
+> > > Note that there was already an implementation (see [1]), but for some
+> > > reason it never made it.
+> > >
+> > >   [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+> > >   [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b4-ty@ellerman.id.au/
+> > >
+> > > >
+> > > > -- Andrii
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
