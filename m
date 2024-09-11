@@ -1,651 +1,254 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C608318FDC5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 14:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D801A3054;
+	Wed, 11 Sep 2024 14:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726064073; cv=none; b=cBix/UDd6zk1VWsWQvyxB/rkDtAKi6z7ZIMQ+bOP98VIyGPyUzzCqoAw73SPswYOMICMUdGX+SnuRvYUEUsevXdlBY/6cstW3i7Z8lma+Tb5IJitGsUiSoViiN95z7YZaLaeFanX7AIFFGmFNbB2dykuWQ+EVlbq0PZG2zhr+oI=
+	t=1726065454; cv=none; b=fCnBH1f+6BIF7lOfGgn/4fAU9SNSIvNdI72ykL6dXu1EfIgZrrHWoC4czrNA0dlEFD8bBcBB5KQuibnGT227Maw8h4LwauEWCME+AqNTDcBOVZxlGQXHu7RJEh9MYexK0LW8QMdLfmJrlviTJpZMpaw4gkYVn8hTcvte1RYS9Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726064073; c=relaxed/simple;
-	bh=zdPGPZ6alM1HDnWn30YbdgUqL9fk4yBZT+vorNJJm7o=;
+	s=arc-20240116; t=1726065454; c=relaxed/simple;
+	bh=Yl+JX76hpRrzj5ZfxqmhMQe96P1O6Eq+el3AmOLT584=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WbjA45SOB1vkJU/hjhEzZ2Q/FDN/Rd0ED1w7fxDykTfIMsGYaxNXU2oY2i+xRtome2aXHf+UvpRFWY+NXBSFe71GTKtw70aXbGFOlCA01DdPzpN077V0KoafY6cDfFf5zjTqbomgRkxo3+8aPj83a8hQ6p+kfh3X8cZWVaYVzH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FKJwzokk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Type; b=hFstMMHlN/9aKDC0QKmFgbg4QKKiExMpxT3e0e7FJ1AyL9w3a0a4kdYXGVImrTQEDheEgVUEX2Wd0FF5J5HXzYRN0DKueJFMNMNhQLu6wkP5hS9DdsII55PPvLc/HdpLQnrvj8+JY2JHiidVx0Guo/HD0p/5lMz50BmSYkzsGPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zd4GAiyU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKJwzokk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726064070;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GOFMUC2lj7gcPS4Ik0PnCgrJVvpBAOoGq+Yhgib0XIk=;
-	b=FKJwzokkHT7J8KqUK6Ctm5/J+Fy+Vz63aWdL9T0nF2WnMA5Klk+IzoWlsNmTeOQZGbFjFo
-	eLzuWAD+6xquWN+h+81vUEie29BQb1SW06Pma6OFmN5V0dJYNuP39TNMUw0SbvwM0un9on
-	eHvi2Uob/yuLZ0xkCKak+Gj2WqxXjdk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-615-royDkO-LMv61NO2a-8J8Cw-1; Wed, 11 Sep 2024 10:14:28 -0400
-X-MC-Unique: royDkO-LMv61NO2a-8J8Cw-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5c25c45afb2so4845107a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 07:14:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726064067; x=1726668867;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=niG1SRTvrtaYVmXDD+x0Lv431jhZ7HP+deUzZrsxCVM=;
-        b=W7KzvcW3l6JJ7dWjwUYTzicLXI0gQkYB1/wO4k4cgVrINcmXIknIKbWiZyb7ldhb+W
-         1zCkRvquCA7ds1hacjyL4ijYkLX9RegvtBmaTK7CDZ+O1iXFkQIroltLxWWsQlv0a39B
-         Vl2uPSqPEYLSiSlewK48xcmN3IFX8eeibQwMoG9SS2EB+QMjY5vg69o9UYKGzTXR6ktL
-         4EgpBrI08lBa4c1kebogTEs+Cr8KVUdLSwJ1TGRLAm2Yiop6ZOCy/yhkbXNF2fSGmgy4
-         l4xfRRCIp9INfiSoTZcxlecKT+RyAoaO3lGCtJkQrsHEmwV83LLdGsYAT9SDTHF6/Hin
-         fVYg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8qFX2bMWI1JYaSJAqziM+t4+HoldlRr4eO4PRg242+BVSNy1qxmku17DTyt/dliXQ9iLFHUIR1AXmMBIGu38F+rU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIgqeI8BRBWJD9MQIUCTvVwBYQ38KPLOmki3HiCHpFKmaJg48a
-	Iqt7CUSHoBdMKXqvGpZQ2iiVyukAYlquH0BDy2vNPaFwwD7nbu86sXxmdsy5Pg6F2wZU24/mpwE
-	zjbn1GxUVcaDIKJ/xNo6G6717IPBc8cssT8sCVkHTCBPQYEPWd4c5kFaZbQzONBwtFm3Cyw==
-X-Received: by 2002:a05:6402:3596:b0:5c2:112f:aa77 with SMTP id 4fb4d7f45d1cf-5c3dc7c6f49mr16198935a12.31.1726064067131;
-        Wed, 11 Sep 2024 07:14:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcxfrSTFiuJc4PQYb7wZ+3L9gcS01qdsW5TOGaLxsUChyXjaeKiLlD/bwsQqajw/Uv5XqzNw==
-X-Received: by 2002:a05:6402:3596:b0:5c2:112f:aa77 with SMTP id 4fb4d7f45d1cf-5c3dc7c6f49mr16198881a12.31.1726064066145;
-        Wed, 11 Sep 2024 07:14:26 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd5215asm5491230a12.56.2024.09.11.07.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Sep 2024 07:14:25 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 95E09152C52E; Wed, 11 Sep 2024 16:14:24 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Florian Kauer <florian.kauer@linutronix.de>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard
- Brouer <hawk@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- xdp-newbies@vger.kernel.org
-Subject: Re: [PATCH] bpf: devmap: allow for repeated redirect
-In-Reply-To: <93a97de4-a93d-4d5b-841d-c2f95dcedb0f@linutronix.de>
-References: <20240909-devel-koalo-fix-redirect-v1-1-2dd90771146c@linutronix.de>
- <87o74vewko.fsf@toke.dk>
- <098b5603-0feb-4013-a9ee-8d1c8edaf4f8@linutronix.de>
- <877cbiee3y.fsf@toke.dk>
- <93a97de4-a93d-4d5b-841d-c2f95dcedb0f@linutronix.de>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 11 Sep 2024 16:14:24 +0200
-Message-ID: <87ttemcm67.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zd4GAiyU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA3A2C4CEC0;
+	Wed, 11 Sep 2024 14:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726065453;
+	bh=Yl+JX76hpRrzj5ZfxqmhMQe96P1O6Eq+el3AmOLT584=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Zd4GAiyUDj5TFQBVWNHQHHHDyP/DTdGN/yrSfsB52qfSWgXUAhOtQfgEqMmklPaP+
+	 moz2hv3cDfuzshyMSsy0spS1KrfBjP1q0gWs0UuH4hVbmOjxrfsmw41yZvoLweHLho
+	 IpKt4gd69JmjIp0rfvJLVhNdJTqkWudgjkI8bCOVfdtpikR7nZuapNIkBqL9Pw7nDK
+	 E92Fu6AKvYnR0awR2Kq0i6oYy8EKbsjQLQ96d4qvtYzAxIvG1aDbeie7puO1JLyly1
+	 dvYl6Q0T/X6ehPzdALoq9rMMCxe4cjDu5lE05aU38uyVgtwqPaRKe8mFwK/djgCimb
+	 FYIn1+VvFA8zg==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Andy Chiu <andybnac@gmail.com>
+Cc: alexghiti@rivosinc.com, andy.chiu@sifive.com, aou@eecs.berkeley.edu,
+ justinstitt@google.com, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, mark.rutland@arm.com, mhiramat@kernel.org,
+ morbo@google.com, nathan@kernel.org, ndesaulniers@google.com,
+ palmer@dabbelt.com, palmer@rivosinc.com, paul.walmsley@sifive.com,
+ puranjay@kernel.org, rostedt@goodmis.org, zong.li@sifive.com, Andy Chiu
+ <andybnac@gmail.com>, yongxuan.wang@sifive.com
+Subject: Re: [PATCH v2 3/6] riscv: ftrace: prepare ftrace for atomic code
+ patching
+In-Reply-To: <ZuFteQ3t8K4h2-kJ@Andys-MacBook-Air.local>
+References: <87sev78dnz.fsf@all.your.base.are.belong.to.us>
+ <ZuFteQ3t8K4h2-kJ@Andys-MacBook-Air.local>
+Date: Wed, 11 Sep 2024 16:37:29 +0200
+Message-ID: <87v7z2dzo6.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Florian Kauer <florian.kauer@linutronix.de> writes:
+Andy Chiu <andybnac@gmail.com> writes:
 
-> On 9/11/24 11:25, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
->> Florian Kauer <florian.kauer@linutronix.de> writes:
+> On Wed, Aug 14, 2024 at 02:57:52PM +0200, Bj=C3=B6rn T=C3=B6pel wrote:
+>> Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> writes:
 >>=20
->>> Hi Toke,
->>>
->>> On 9/10/24 10:34, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
->>>> Florian Kauer <florian.kauer@linutronix.de> writes:
->>>>
->>>>> Currently, returning XDP_REDIRECT from a xdp/devmap program
->>>>> is considered as invalid action and an exception is traced.
->>>>>
->>>>> While it might seem counterintuitive to redirect in a xdp/devmap
->>>>> program (why not just redirect to the correct interface in the
->>>>> first program?), we faced several use cases where supporting
->>>>> this would be very useful.
->>>>>
->>>>> Most importantly, they occur when the first redirect is used
->>>>> with the BPF_F_BROADCAST flag. Using this together with xdp/devmap
->>>>> programs, enables to perform different actions on clones of
->>>>> the same incoming frame. In that case, it is often useful
->>>>> to redirect either to a different CPU or device AFTER the cloning.
->>>>>
->>>>> For example:
->>>>> - Replicate the frame (for redundancy according to IEEE 802.1CB FRER)
->>>>>   and then use the second redirect with a cpumap to select
->>>>>   the path-specific egress queue.
->>>>>
->>>>> - Also, one of the paths might need an encapsulation that
->>>>>   exceeds the MTU. So a second redirect can be used back
->>>>>   to the ingress interface to send an ICMP FRAG_NEEDED packet.
->>>>>
->>>>> - For OAM purposes, you might want to send one frame with
->>>>>   OAM information back, while the original frame in passed forward.
->>>>>
->>>>> To enable these use cases, add the XDP_REDIRECT case to
->>>>> dev_map_bpf_prog_run. Also, when this is called from inside
->>>>> xdp_do_flush, the redirect might add further entries to the
->>>>> flush lists that are currently processed. Therefore, loop inside
->>>>> xdp_do_flush until no more additional redirects were added.
->>>>>
->>>>> Signed-off-by: Florian Kauer <florian.kauer@linutronix.de>
->>>>
->>>> This is an interesting use case! However, your implementation makes it
->>>> way to easy to end up in a situation that loops forever, so I think we
->>>> should add some protection against that. Some details below:
->>>>
->>>>> ---
->>>>>  include/linux/bpf.h        |  4 ++--
->>>>>  include/trace/events/xdp.h | 10 ++++++----
->>>>>  kernel/bpf/devmap.c        | 37 +++++++++++++++++++++++++++--------
->>>>>  net/core/filter.c          | 48 +++++++++++++++++++++++++++---------=
-----------
->>>>>  4 files changed, 65 insertions(+), 34 deletions(-)
->>>>>
->>>>> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
->>>>> index 3b94ec161e8c..1b57cbabf199 100644
->>>>> --- a/include/linux/bpf.h
->>>>> +++ b/include/linux/bpf.h
->>>>> @@ -2498,7 +2498,7 @@ struct sk_buff;
->>>>>  struct bpf_dtab_netdev;
->>>>>  struct bpf_cpu_map_entry;
->>>>> =20
->>>>> -void __dev_flush(struct list_head *flush_list);
->>>>> +void __dev_flush(struct list_head *flush_list, int *redirects);
->>>>>  int dev_xdp_enqueue(struct net_device *dev, struct xdp_frame *xdpf,
->>>>>  =09=09    struct net_device *dev_rx);
->>>>>  int dev_map_enqueue(struct bpf_dtab_netdev *dst, struct xdp_frame *x=
-dpf,
->>>>> @@ -2740,7 +2740,7 @@ static inline struct bpf_token *bpf_token_get_f=
-rom_fd(u32 ufd)
->>>>>  =09return ERR_PTR(-EOPNOTSUPP);
->>>>>  }
->>>>> =20
->>>>> -static inline void __dev_flush(struct list_head *flush_list)
->>>>> +static inline void __dev_flush(struct list_head *flush_list, int *re=
-directs)
->>>>>  {
->>>>>  }
->>>>> =20
->>>>> diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
->>>>> index a7e5452b5d21..fba2c457e727 100644
->>>>> --- a/include/trace/events/xdp.h
->>>>> +++ b/include/trace/events/xdp.h
->>>>> @@ -269,9 +269,9 @@ TRACE_EVENT(xdp_devmap_xmit,
->>>>> =20
->>>>>  =09TP_PROTO(const struct net_device *from_dev,
->>>>>  =09=09 const struct net_device *to_dev,
->>>>> -=09=09 int sent, int drops, int err),
->>>>> +=09=09 int sent, int drops, int redirects, int err),
->>>>> =20
->>>>> -=09TP_ARGS(from_dev, to_dev, sent, drops, err),
->>>>> +=09TP_ARGS(from_dev, to_dev, sent, drops, redirects, err),
->>>>> =20
->>>>>  =09TP_STRUCT__entry(
->>>>>  =09=09__field(int, from_ifindex)
->>>>> @@ -279,6 +279,7 @@ TRACE_EVENT(xdp_devmap_xmit,
->>>>>  =09=09__field(int, to_ifindex)
->>>>>  =09=09__field(int, drops)
->>>>>  =09=09__field(int, sent)
->>>>> +=09=09__field(int, redirects)
->>>>>  =09=09__field(int, err)
->>>>>  =09),
->>>>> =20
->>>>> @@ -288,16 +289,17 @@ TRACE_EVENT(xdp_devmap_xmit,
->>>>>  =09=09__entry->to_ifindex=09=3D to_dev->ifindex;
->>>>>  =09=09__entry->drops=09=09=3D drops;
->>>>>  =09=09__entry->sent=09=09=3D sent;
->>>>> +=09=09__entry->redirects=09=3D redirects;
->>>>>  =09=09__entry->err=09=09=3D err;
->>>>>  =09),
->>>>> =20
->>>>>  =09TP_printk("ndo_xdp_xmit"
->>>>>  =09=09  " from_ifindex=3D%d to_ifindex=3D%d action=3D%s"
->>>>> -=09=09  " sent=3D%d drops=3D%d"
->>>>> +=09=09  " sent=3D%d drops=3D%d redirects=3D%d"
->>>>>  =09=09  " err=3D%d",
->>>>>  =09=09  __entry->from_ifindex, __entry->to_ifindex,
->>>>>  =09=09  __print_symbolic(__entry->act, __XDP_ACT_SYM_TAB),
->>>>> -=09=09  __entry->sent, __entry->drops,
->>>>> +=09=09  __entry->sent, __entry->drops, __entry->redirects,
->>>>>  =09=09  __entry->err)
->>>>>  );
->>>>> =20
->>>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
->>>>> index 7878be18e9d2..89bdec49ea40 100644
->>>>> --- a/kernel/bpf/devmap.c
->>>>> +++ b/kernel/bpf/devmap.c
->>>>> @@ -334,7 +334,8 @@ static int dev_map_hash_get_next_key(struct bpf_m=
-ap *map, void *key,
->>>>>  static int dev_map_bpf_prog_run(struct bpf_prog *xdp_prog,
->>>>>  =09=09=09=09struct xdp_frame **frames, int n,
->>>>>  =09=09=09=09struct net_device *tx_dev,
->>>>> -=09=09=09=09struct net_device *rx_dev)
->>>>> +=09=09=09=09struct net_device *rx_dev,
->>>>> +=09=09=09=09int *redirects)
->>>>>  {
->>>>>  =09struct xdp_txq_info txq =3D { .dev =3D tx_dev };
->>>>>  =09struct xdp_rxq_info rxq =3D { .dev =3D rx_dev };
->>>>> @@ -359,6 +360,13 @@ static int dev_map_bpf_prog_run(struct bpf_prog =
-*xdp_prog,
->>>>>  =09=09=09else
->>>>>  =09=09=09=09frames[nframes++] =3D xdpf;
->>>>>  =09=09=09break;
->>>>> +=09=09case XDP_REDIRECT:
->>>>> +=09=09=09err =3D xdp_do_redirect(rx_dev, &xdp, xdp_prog);
->>>>> +=09=09=09if (unlikely(err))
->>>>> +=09=09=09=09xdp_return_frame_rx_napi(xdpf);
->>>>> +=09=09=09else
->>>>> +=09=09=09=09*redirects +=3D 1;
->>>>> +=09=09=09break;
->>>>
->>>> It's a bit subtle, but dev_map_bpf_prog_run() also filters the list of
->>>> frames in the queue in-place (the frames[nframes++] =3D xdpf; line abo=
-ve),
->>>> which only works under the assumption that the array in bq->q is not
->>>> modified while this loop is being run. But now you're adding a call in
->>>> the middle that may result in the packet being put back on the same
->>>> queue in the middle, which means that this assumption no longer holds.
->>>>
->>>> So you need to clear the bq->q queue first for this to work.
->>>> Specifically, at the start of bq_xmit_all(), you'll need to first copy
->>>> all the packet pointer onto an on-stack array, then run the rest of th=
-e
->>>> function on that array. There's already an initial loop that goes
->>>> through all the frames, so you can just do it there.
->>>>
->>>> So the loop at the start of bq_xmit_all() goes from the current:
->>>>
->>>> =09for (i =3D 0; i < cnt; i++) {
->>>> =09=09struct xdp_frame *xdpf =3D bq->q[i];
->>>>
->>>> =09=09prefetch(xdpf);
->>>> =09}
->>>>
->>>>
->>>> to something like:
->>>>
->>>>         struct xdp_frame *frames[DEV_MAP_BULK_SIZE];
->>>>
->>>> =09for (i =3D 0; i < cnt; i++) {
->>>> =09=09struct xdp_frame *xdpf =3D bq->q[i];
->>>>
->>>> =09=09prefetch(xdpf);
->>>>                 frames[i] =3D xdpf;
->>>> =09}
->>>>
->>>>         bq->count =3D 0; /* bq is now empty, use the 'frames' and 'cnt=
-'
->>>>                           stack variables for the rest of the function=
- */
->>>>
->>>>
->>>>
->>>>>  =09=09default:
->>>>>  =09=09=09bpf_warn_invalid_xdp_action(NULL, xdp_prog, act);
->>>>>  =09=09=09fallthrough;
->>>>> @@ -373,7 +381,7 @@ static int dev_map_bpf_prog_run(struct bpf_prog *=
-xdp_prog,
->>>>>  =09return nframes; /* sent frames count */
->>>>>  }
->>>>> =20
->>>>> -static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags)
->>>>> +static void bq_xmit_all(struct xdp_dev_bulk_queue *bq, u32 flags, in=
-t *redirects)
->>>>>  {
->>>>>  =09struct net_device *dev =3D bq->dev;
->>>>>  =09unsigned int cnt =3D bq->count;
->>>>> @@ -390,8 +398,10 @@ static void bq_xmit_all(struct xdp_dev_bulk_queu=
-e *bq, u32 flags)
->>>>>  =09=09prefetch(xdpf);
->>>>>  =09}
->>>>> =20
->>>>> +=09int new_redirects =3D 0;
->>>>>  =09if (bq->xdp_prog) {
->>>>> -=09=09to_send =3D dev_map_bpf_prog_run(bq->xdp_prog, bq->q, cnt, dev=
-, bq->dev_rx);
->>>>> +=09=09to_send =3D dev_map_bpf_prog_run(bq->xdp_prog, bq->q, cnt, dev=
-, bq->dev_rx,
->>>>> +=09=09=09=09&new_redirects);
->>>>>  =09=09if (!to_send)
->>>>>  =09=09=09goto out;
->>>>>  =09}
->>>>> @@ -413,19 +423,21 @@ static void bq_xmit_all(struct xdp_dev_bulk_que=
-ue *bq, u32 flags)
->>>>> =20
->>>>>  out:
->>>>>  =09bq->count =3D 0;
->>>>> -=09trace_xdp_devmap_xmit(bq->dev_rx, dev, sent, cnt - sent, err);
->>>>> +=09*redirects +=3D new_redirects;
->>>>> +=09trace_xdp_devmap_xmit(bq->dev_rx, dev, sent, cnt - sent - new_red=
-irects,
->>>>> +=09=09=09new_redirects, err);
->>>>>  }
->>>>> =20
->>>>>  /* __dev_flush is called from xdp_do_flush() which _must_ be signall=
-ed from the
->>>>>   * driver before returning from its napi->poll() routine. See the co=
-mment above
->>>>>   * xdp_do_flush() in filter.c.
->>>>>   */
->>>>> -void __dev_flush(struct list_head *flush_list)
->>>>> +void __dev_flush(struct list_head *flush_list, int *redirects)
->>>>>  {
->>>>>  =09struct xdp_dev_bulk_queue *bq, *tmp;
->>>>> =20
->>>>>  =09list_for_each_entry_safe(bq, tmp, flush_list, flush_node) {
->>>>> -=09=09bq_xmit_all(bq, XDP_XMIT_FLUSH);
->>>>> +=09=09bq_xmit_all(bq, XDP_XMIT_FLUSH, redirects);
->>>>>  =09=09bq->dev_rx =3D NULL;
->>>>>  =09=09bq->xdp_prog =3D NULL;
->>>>>  =09=09__list_del_clearprev(&bq->flush_node);
->>>>> @@ -458,8 +470,17 @@ static void bq_enqueue(struct net_device *dev, s=
-truct xdp_frame *xdpf,
->>>>>  {
->>>>>  =09struct xdp_dev_bulk_queue *bq =3D this_cpu_ptr(dev->xdp_bulkq);
->>>>> =20
->>>>> -=09if (unlikely(bq->count =3D=3D DEV_MAP_BULK_SIZE))
->>>>> -=09=09bq_xmit_all(bq, 0);
->>>>> +=09if (unlikely(bq->count =3D=3D DEV_MAP_BULK_SIZE)) {
->>>>> +=09=09int redirects =3D 0;
->>>>> +
->>>>> +=09=09bq_xmit_all(bq, 0, &redirects);
->>>>> +
->>>>> +=09=09/* according to comment above xdp_do_flush() in
->>>>> +=09=09 * filter.c, xdp_do_flush is always called at
->>>>> +=09=09 * the end of the NAPI anyway, so no need to act
->>>>> +=09=09 * on the redirects here
->>>>> +=09=09 */
->>>>
->>>> While it's true that it will be called again in NAPI, the purpose of
->>>> calling bq_xmit_all() here is to make room space for the packet on the
->>>> bulk queue that we're about to enqueue, and if bq_xmit_all() can just
->>>> put the packet back on the queue, there is no guarantee that this will
->>>> succeed. So you will have to handle that case here.
->>>>
->>>> Since there's also a potential infinite recursion issue in the
->>>> do_flush() functions below, I think it may be better to handle this
->>>> looping issue inside bq_xmit_all().
->>>>
->>>> I.e., structure the code so that bq_xmit_all() guarantees that when it
->>>> returns it has actually done its job; that is, that bq->q is empty.
->>>>
->>>> Given the above "move all frames out of bq->q at the start" change, th=
-is
->>>> is not all that hard. Simply add a check after the out: label (in
->>>> bq_xmit_all()) to check if bq->count is actually 0, and if it isn't,
->>>> start over from the beginning of that function. This also makes it
->>>> straight forward to add a recursion limit; after looping a set number =
-of
->>>> times (say, XMIT_RECURSION_LIMIT), simply turn XDP_REDIRECT into drops=
-.
->>>>
->>>> There will need to be some additional protection against looping forev=
-er
->>>> in __dev_flush(), to handle the case where a packet is looped between
->>>> two interfaces. This one is a bit trickier, but a similar recursion
->>>> counter could be used, I think.
->>>
->>>
->>> Thanks a lot for the extensive support!
->>> Regarding __dev_flush(), could the following already be sufficient?
->>>
->>> void __dev_flush(struct list_head *flush_list)
->>> {
->>>         struct xdp_dev_bulk_queue *bq, *tmp;
->>>         int i,j;
->>>
->>>         for (i =3D 0; !list_empty(flush_list) && i < XMIT_RECURSION_LIM=
-IT; i++) {
->>>                 /* go through list in reverse so that new items
->>>                  * added to the flush_list will only be handled
->>>                  * in the next iteration of the outer loop
->>>                  */
->>>                 list_for_each_entry_safe_reverse(bq, tmp, flush_list, f=
-lush_node) {
->>>                         bq_xmit_all(bq, XDP_XMIT_FLUSH);
->>>                         bq->dev_rx =3D NULL;
->>>                         bq->xdp_prog =3D NULL;
->>>                         __list_del_clearprev(&bq->flush_node);
->>>                 }
->>>         }
->>>
->>>         if (i =3D=3D XMIT_RECURSION_LIMIT) {
->>>                 pr_warn("XDP recursion limit hit, expect packet loss!\n=
-");
->>>
->>>                 list_for_each_entry_safe(bq, tmp, flush_list, flush_nod=
-e) {
->>>                         for (j =3D 0; j < bq->count; j++)
->>>                                 xdp_return_frame_rx_napi(bq->q[i]);
->>>
->>>                         bq->count =3D 0;
->>>                         bq->dev_rx =3D NULL;
->>>                         bq->xdp_prog =3D NULL;
->>>                         __list_del_clearprev(&bq->flush_node);
->>>                 }
->>>         }
->>> }
+>> > Andy Chiu <andy.chiu@sifive.com> writes:
+>> >
+>> >> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
+>> >> instruction fetch can break down to 4 byte at a time, it is impossible
+>> >> to update two instructions without a race. In order to mitigate it, we
+>> >> initialize the patchable entry to AUIPC + NOP4. Then, the run-time co=
+de
+>> >> patching can change NOP4 to JALR to eable/disable ftrcae from a
+>> >                                       enable        ftrace
+>> >
+>> >> function. This limits the reach of each ftrace entry to +-2KB displac=
+ing
+>> >> from ftrace_caller.
+>> >>
+>> >> Starting from the trampoline, we add a level of indirection for it to
+>> >> reach ftrace caller target. Now, it loads the target address from a
+>> >> memory location, then perform the jump. This enable the kernel to upd=
+ate
+>> >> the target atomically.
+>> >
+>> > The +-2K limit is for direct calls, right?
+>> >
+>> > ...and this I would say breaks DIRECT_CALLS (which should be implement=
+ed
+>> > using call_ops later)?
 >>=20
->> Yeah, this would work, I think (neat trick with iterating the list in
->> reverse!), but instead of the extra loop in the end, I would suggest
->> passing in an extra 'allow_redirect' parameter to bq_xmit_all(). Since
->> you'll already have to handle the recursion limit inside that function,
->> you can just reuse the same functionality by passing in the parameter in
->> the last iteration of the first loop.
+>> Thinking a bit more, and re-reading the series.
 >>=20
->> Also, definitely don't put an unconditional warn_on() in the fast path -
->> that brings down the system really quickly if it's misconfigured :)
+>> This series is good work, and it's a big improvement for DYNAMIC_FTRACE,
+>> but
 >>=20
->> A warn_on_once() could work, but really I would suggest just reusing the
->> _trace_xdp_redirect_map_err() tracepoint with a new error code (just has
->> to be one we're not currently using and that vaguely resembles what this
->> is about; ELOOP, EOVERFLOW or EDEADLOCK, maybe?).
+>> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+>> +{
+>> +	unsigned long distance, orig_addr;
+>> +
+>> +	orig_addr =3D (unsigned long)&ftrace_caller;
+>> +	distance =3D addr > orig_addr ? addr - orig_addr : orig_addr - addr;
+>> +	if (distance > JALR_RANGE)
+>> +		return -EINVAL;
+>> +
+>> +	return __ftrace_modify_call(rec->ip, addr, false);
+>> +}
+>> +
+>>=20
+>> breaks WITH_DIRECT_CALLS. The direct trampoline will *never* be within
+>> the JALR_RANGE.
 >
 >
-> The 'allow_redirect' parameter is a very good idea! If I also forward tha=
-t
-> to dev_map_bpf_prog_run and do something like the following, I can just
-> reuse the existing error handling. Or is that too implict/too ugly?
+> Yes, it is hardly possible that a direct trampoline will be within the
+> range.
 >
-> switch (act) {
-> case XDP_PASS:
->         err =3D xdp_update_frame_from_buff(&xdp, xdpf);
->         if (unlikely(err < 0))
->                 xdp_return_frame_rx_napi(xdpf);
->         else
->                 frames[nframes++] =3D xdpf;
->         break;
-> case XDP_REDIRECT:
->         if (allow_redirect) {
->                 err =3D xdp_do_redirect(rx_dev, &xdp, xdp_prog);
->                 if (unlikely(err))
->                         xdp_return_frame_rx_napi(xdpf);
->                 else
->                         *redirects +=3D 1;
->                 break;
->         } else
->                 fallthrough;
-> default:
->         bpf_warn_invalid_xdp_action(NULL, xdp_prog, act);
->         fallthrough;
+> Recently I have been thinking some solutions to address the issue. One
+> solution is replaying AUIPC at function entries. The idea has two sides.
+> First, if we are returning back to the second instruction at trap return,
+> then do sepc -=3D 4 so it executes the up-to-date AUIPC. The other side is
+> to fire synchronous IPI that does remote fence.i at right timings to
+> prevent concurrent executing on a mix of old and new instructions.
+>=20=20
+> Consider replacing instructions at a function's patchable entry with the
+> following sequence:
+>
+> Initial state:
+> --------------
+> 0: AUIPC
+> 4: JALR
+>
+> Step1:
+> write(0, "J +8")
+> fence w,w
+> send sync local+remote fence.i
+> ------------------------
+> 0: J +8
+> 4: JALR
+>
+> Step2:
+> write(4, "JALR'")
+> fence w,w
+> send sync local+remote fence.i
+> ------------------------
+> 0: J +8
+> 4: JALR'
+>
+> Step3:
+> write(0, "AUIPC'")
+> fence w,w
+> send sync local+remote fence.i (to activate the call)
+> -----------------------
+> 0: AUIPC'
+> 4: JALR'
+>
+> The following execution sequences are acceptable:
+> - AUIPC, JALR
+> - J +8, (skipping {JALR | JALR'})
+> - AUIPC', JALR'
+>
+> And here are sequences that we want to prevent:
+> - AUIPC', JALR
+> - AUIPC, JALR'
+>
+> The local core should never execute the forbidden sequence.
+>
+> By listing all possible combinations of executing sequence on a remote
+> core, we can find that the dangerous seqence is impossible to happen:
+>
+> let f be the fence.i at step 1, 2, 3. And let numbers be the location of
+> code being executed. Mathematically, here are all combinations at a site
+> happening on a remote core:
+>
+> fff04 -- updated seq
+> ff0f4 -- impossible, would be ff0f04, updated seq
+> ff04f -- impossible, would be ff08f, safe seq
+> f0ff4 -- impossible, would be f0ff04, updated seq
+> f0f4f -- impossible, would be f0f08f (safe), or f0f0f04 (updated)
+> f04ff -- impossible, would be f08ff, safe seq
+> 0fff4 -- impossible, would be 0fff04, updated seq
+> 0ff4f -- impossible, would be 0ff08f (safe), or 0ff0f04 (updated)
+> 0f4ff -- impossible, would be 0f08ff (safe), 0f0f08f (safe), 0f0f0f04 (up=
+dated)
+> 04fff -- old seq
+>
+> After the 1st 'fence.i', remote cores should observe (J +8, JALR) or (J +=
+8, JALR')
+> After the 2nd 'fence.i', remote cores should observe (J +8, JALR') or (AU=
+IPC', JALR')
+> After the 3rd 'fence.i', remote cores should observe (AUIPC', JALR')
+>
+> Remote cores should never execute (AUIPC',JALR) or (AUIPC,JALR')
+>
+> To correctly implement the solution, the trap return code must match JALR
+> and adjust sepc only for patchable function entries. This is undocumently
+> possible because we use t0 as source and destination registers for JALR
+> at function entries. Compiler never generates JALR that uses the same
+> register pattern.
+>
+> Another solution is inspired by zcmt, and perhaps we can optimize it if
+> the hardware does support zcmt. First, we allocate a page and divide it
+> into two halves. The first half of the page are 255 x 8B destination
+> addresses. Then, starting from offset 2056, the second half of the page
+> is composed by a series of 2 x 4 Byte instructions:
+>
+> 0:	ftrace_tramp_1
+> 8:	ftrace_tramp_2
+> ...
+> 2040:	ftrace_tramp_255
+> 2048:	ftrace_tramp_256 (not used when configured with 255 tramps)
+> 2056:
+> ld	t1, -2048(t1)
+> jr	t1
+> ld	t1, -2048(t1)
+> jr	t1
+> ...
+> 4088:
+> ld	t1, -2048(t1)
+> jr	t1
+> 4096:
+>
+> It is possible to expand to 511 trampolines by adding a page
+> below, and making a load+jr sequence from +2040 offset.
+>
+> When the kernel boots, we direct AUIPCs at patchable entries to the page,
+> and disable the call by setting the second instruction to NOP4. Then, we
+> can effectively enable/disable/modify a call by setting only the
+> instruction at JALR. It is possible to utilize most of the current patch
+> set to achieve atomic patching. A missing part is to allocate and manage
+> trampolines for ftrace users.
 
-Yes, I was imagining something like this. Not sure if we want to turn it
-into an "invalid action" this way (it should probably be a separate
-tracepoint as I mentioned in the previous email). But otherwise, yeah!
+(I will need to digest above in detail!)
 
-> case XDP_ABORTED:
->         trace_xdp_exception(tx_dev, xdp_prog, act);
->         fallthrough;
-> case XDP_DROP:
->         xdp_return_frame_rx_napi(xdpf);
->         break;
-> }
->
->
->>=20
->>>> In any case, this needs extensive selftests, including ones with devma=
-p
->>>> programs that loop packets (both redirect from a->a, and from
->>>> a->b->a->b) to make sure the limits work correctly.
->>>
->>>
->>> Good point! I am going to prepare some.
->>>
->>>
->>>>
->>>>> +=09}
->>>>> =20
->>>>>  =09/* Ingress dev_rx will be the same for all xdp_frame's in
->>>>>  =09 * bulk_queue, because bq stored per-CPU and must be flushed
->>>>> diff --git a/net/core/filter.c b/net/core/filter.c
->>>>> index 8569cd2482ee..b33fc0b1444a 100644
->>>>> --- a/net/core/filter.c
->>>>> +++ b/net/core/filter.c
->>>>> @@ -4287,14 +4287,18 @@ static const struct bpf_func_proto bpf_xdp_ad=
-just_meta_proto =3D {
->>>>>  void xdp_do_flush(void)
->>>>>  {
->>>>>  =09struct list_head *lh_map, *lh_dev, *lh_xsk;
->>>>> +=09int redirect;
->>>>> =20
->>>>> -=09bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
->>>>> -=09if (lh_dev)
->>>>> -=09=09__dev_flush(lh_dev);
->>>>> -=09if (lh_map)
->>>>> -=09=09__cpu_map_flush(lh_map);
->>>>> -=09if (lh_xsk)
->>>>> -=09=09__xsk_map_flush(lh_xsk);
->>>>> +=09do {
->>>>> +=09=09redirect =3D 0;
->>>>> +=09=09bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk=
-);
->>>>> +=09=09if (lh_dev)
->>>>> +=09=09=09__dev_flush(lh_dev, &redirect);
->>>>> +=09=09if (lh_map)
->>>>> +=09=09=09__cpu_map_flush(lh_map);
->>>>> +=09=09if (lh_xsk)
->>>>> +=09=09=09__xsk_map_flush(lh_xsk);
->>>>> +=09} while (redirect > 0);
->>>>>  }
->>>>>  EXPORT_SYMBOL_GPL(xdp_do_flush);
->>>>> =20
->>>>> @@ -4303,20 +4307,24 @@ void xdp_do_check_flushed(struct napi_struct =
-*napi)
->>>>>  {
->>>>>  =09struct list_head *lh_map, *lh_dev, *lh_xsk;
->>>>>  =09bool missed =3D false;
->>>>> +=09int redirect;
->>>>> =20
->>>>> -=09bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk);
->>>>> -=09if (lh_dev) {
->>>>> -=09=09__dev_flush(lh_dev);
->>>>> -=09=09missed =3D true;
->>>>> -=09}
->>>>> -=09if (lh_map) {
->>>>> -=09=09__cpu_map_flush(lh_map);
->>>>> -=09=09missed =3D true;
->>>>> -=09}
->>>>> -=09if (lh_xsk) {
->>>>> -=09=09__xsk_map_flush(lh_xsk);
->>>>> -=09=09missed =3D true;
->>>>> -=09}
->>>>> +=09do {
->>>>> +=09=09redirect =3D 0;
->>>>> +=09=09bpf_net_ctx_get_all_used_flush_lists(&lh_map, &lh_dev, &lh_xsk=
-);
->>>>> +=09=09if (lh_dev) {
->>>>> +=09=09=09__dev_flush(lh_dev, &redirect);
->>>>> +=09=09=09missed =3D true;
->>>>> +=09=09}
->>>>> +=09=09if (lh_map) {
->>>>> +=09=09=09__cpu_map_flush(lh_map);
->>>>> +=09=09=09missed =3D true;
->>>>> +=09=09}
->>>>> +=09=09if (lh_xsk) {
->>>>> +=09=09=09__xsk_map_flush(lh_xsk);
->>>>> +=09=09=09missed =3D true;
->>>>> +=09=09}
->>>>> +=09} while (redirect > 0);
->>>>
->>>> With the change suggested above (so that bq_xmit_all() guarantees the
->>>> flush is completely done), this looping is not needed anymore. However=
-,
->>>> it becomes important in which *order* the flushing is done
->>>> (__dev_flush() should always happen first), so adding a comment to not=
-e
->>>> this would be good.
->>>
->>>
->>> I guess, if we remove the loop here and we still want to cover the case=
- of
->>> redirecting from devmap program via cpumap, we need to fetch the lh_map=
- again
->>> after calling __dev_flush, right?
->>> So I think we should no longer use bpf_net_ctx_get_all_used_flush_lists=
- then:
->>>
->>>         lh_dev =3D bpf_net_ctx_get_dev_flush_list();
->>>         if (lh_dev)
->>>                 __dev_flush(lh_dev);
->>>         lh_map =3D bpf_net_ctx_get_cpu_map_flush_list();
->>>         if (lh_map)
->>>                 __cpu_map_flush(lh_map);
->>>         lh_xsk =3D bpf_net_ctx_get_xskmap_flush_list();
->>>         if (lh_xsk)
->>>                 __xsk_map_flush(lh_xsk);
->>>
->>> But bpf_net_ctx_get_all_used_flush_lists also includes additional check=
-s
->>> for IS_ENABLED(CONFIG_BPF_SYSCALL) and IS_ENABLED(CONFIG_XDP_SOCKETS),
->>> so I guess they should be directly included in the xdp_do_flush and
->>> xdp_do_check_flushed?
->>> Then we could remove the bpf_net_ctx_get_all_used_flush_lists.
->>> Or do you have an idea for a more elegant solution?
->>=20
->> I think cpumap is fine because that doesn't immediately redirect back to
->> the bulk queue; instead __cpu_map_flush() will put the frames on a
->> per-CPU ring buffer and wake the kworker on that CPU. Which will in turn
->> do another xdp_do_flush() if the cpumap program does a redirect. So in
->> other words, we only need to handle recursion of devmap redirects :)
->
-> I likely miss something here, but the scenario I am thinking about is the=
- following:
->
-> 1. cpu_map and xsk_map flush list are empty, while the dev flush map has
->    a single frame pending, i.e. in the current implementation after
->    executing bpf_net_ctx_get_all_used_flush_lists:
->    lh_dev =3D something
->    lh_map =3D lh_xsk =3D NULL
->
-> 2. __dev_flush gets called and executes a bpf program on the frame
->    that returns with "return bpf_redirect_map(&cpu_map, 0, 0);"
->    and that adds an item to the cpumap flush list.
->
-> 3. Since __dev_flush is only able to handle devmap redirects itself,
->    the item is still on the cpumap flush list after __dev_flush
->    has returned.
->
-> 4. lh_map, however, is still NULL, so __cpu_map_flush does not
->    get called and thus the kworker is never woken up.
->
-> That is at least what I see on the running system that the kworker
-> is never woken up, but I might have done something else wrong...
+I don't think it's a good idea to try to handle direct calls w/o
+call_ops. What I was trying to say is "add the call_ops patch to your
+series, so that direct calls aren't broken". If direct calls depend on
+call_ops -- sure, no worries. But don't try to get direct calls W/O
+call_ops. That's a whole new bag of worms.
 
-Ah, yes, I see what you mean. Yup, you're right,
-bpf_net_ctx_get_all_used_flush_lists() will no longer work, we'll have
-to get the others after __dev_flush()
+Some more high-level thoughts: ...all this to workaround where we don't
+want the call_ops overhead? Is there really a use-case with a platform
+that doesn't handle the text overhead of call_ops?
 
--Toke
+Maybe I'm missing context here... but I'd say, let's follow what arm64
+did (but obviously w/o the BL direct call optimization, and always jump
+to a trampoline -- since that's not possible with RISC-V branch length),
+and just do the call_ops way.
 
+Then, as a second step, and if there are platforms that care, think
+about a variant w/o call_ops.
+
+Or what I wrote in the first section:
+
+1. Keep this patch set
+2. ...but add call_ops to it, and require call_ops for direct calls.
+
+Just my $.02.
+
+
+Bj=C3=B6rn
