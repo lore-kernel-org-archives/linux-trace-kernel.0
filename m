@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E037E161;
-	Wed, 11 Sep 2024 00:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB8423D2;
+	Wed, 11 Sep 2024 00:21:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726013629; cv=none; b=HcnhjmMNZo2lDZcMA2KFj7AFoxSBkbXcYdW5eUnPhbkRjvQuP1dQnBZcejT40cKLcou0NjlDXFTacmBXJxuxkaU1sGJNtptG8qa9v6dhN0sXRS13MpyPZfhLMAbPtUAxgqM5ZbgmvBAzY8cmTX+VtA+prXaVcBWntni9ISCjP6A=
+	t=1726014094; cv=none; b=XNhZgLiHJKl7/sxXbrjBVdlt7TV9qb4lAWtXpo9Akfnw1VU5SGIklCshz71xWQPcdNkvbxIgKyiqVokuHWKC+8K7Z2RlmyCcza7ZbF+BBeW6up0ZGOh3zspJsdXDoc0042g2sT4jAOTz6apCUaE1D3NjQ7lmwl4KBLZtc8dc7k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726013629; c=relaxed/simple;
-	bh=kLX/MNy8LQx6pmAYAL9htFO1I0OjK3ouK59utdKuxMk=;
+	s=arc-20240116; t=1726014094; c=relaxed/simple;
+	bh=2c33F73JjETshDpHhpn22hC7tKCXgwXZeTVaME0U3Hs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AdsR5yxW6FvXAQ9GGt2S6Jlz3H9OjE6zBW23o8GwP+nuteL7qkbSj7/d3VVGrCjLJ4m7UNVE7MLLSrmaCXz/Ft3quQRl30bvzlwHiFUnmPZi4/nDl3l9to4TbBF+IEI4lf9ve60GyW9OUb8uQ31uwy/uM4ItfUgR/IpAE9TbWbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHNNcMuv; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=PK0ki0pDNxTHoZyZycG3TFbrjoolLTq1HXPUQGOWBcBV00z4yWzS0U88Mp4KOneuKpw5lPmfZtL+G8xXi/zwmVRlEfUfdMiyRQRSLqYVC9ZOkgm2cSA93sCnnJ1YGOmm2oRpBG08XfhOVZ3sQ9r/wZpLelC8/6M1f/e+WE+uAos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fdGa9app; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHNNcMuv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A65C4CECC;
-	Wed, 11 Sep 2024 00:13:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fdGa9app"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82A1EC4CEC3;
+	Wed, 11 Sep 2024 00:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726013628;
-	bh=kLX/MNy8LQx6pmAYAL9htFO1I0OjK3ouK59utdKuxMk=;
+	s=k20201202; t=1726014094;
+	bh=2c33F73JjETshDpHhpn22hC7tKCXgwXZeTVaME0U3Hs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pHNNcMuvkBf22Ht5hikTfK5DrtdlvONrgq+Q+6nKmjhExO6WVUe/kBGnuo3JGq9bS
-	 S8gt5ghMPw+mci8KHjIQ1rxS5h0OcuirDrr7GalNd+3ErN2lqn8DDvJzIUFLzjITS8
-	 eeZ6xLKzupTg9uAoMxUEg6edxvm4ufEse6W5d47LS+P6nMHwAxxESW+lZMcme4Z5Um
-	 VGxFo81QheOp/odPOD+jEm3Tlgek/0Dau48+7mokshFPbfpxZIUuy4cdnVBmQUsM7C
-	 2fBGcD+h9rguDIms/xW+FoPWXhK7iCAH09Z9cUgg/x31zP6Z86RyB7MUWGLCiE+BUF
-	 MippYztjimdtw==
-Date: Wed, 11 Sep 2024 09:13:43 +0900
+	b=fdGa9appx7ggX4pzdq6PX8DOWmUua26A0lCeemQIamqL9k7PcIerO2c9ij7tNe8na
+	 YI9Ox1cGP0rQ5HlzFpTnW5FCi/7PQcpRtd689BzsEy+AqJ1HDuhYF0YB/Cd5GVwTiY
+	 0jrxM1zDS6LQDb1S1ZqqrZDIeHPRH7Op4/NMKyqkwJxDDtHtCVE7b5TZTxHZwCBUKE
+	 7zyUOBBkAOm6Lut9gpgEDY6RburVO4SjMXJpb8CkycdbyH4oSHHGTcTjyCeqrK1m9H
+	 /WbuTv0jUc8pg6lM2vz/DbgmLZQshVtoC306ST0b801EWC2WG0BV35PZOWm6U5Ecg6
+	 IFKrnPtCOaE6Q==
+Date: Wed, 11 Sep 2024 09:21:30 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, Linux
- trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
- <kpsingh@chromium.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, Mark Rutland
- <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
- <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
- <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
-Message-Id: <20240911091343.77c60bc2e5d96cbfd8787c19@kernel.org>
-In-Reply-To: <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
-References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
-	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, don <zds100@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] tracepoint: Support tterating tracepoints in a
+ loading module
+Message-Id: <20240911092130.747cd0e5aa540770b4588559@kernel.org>
+In-Reply-To: <172397778740.286558.15781131277732977643.stgit@devnote2>
+References: <172397776900.286558.8986646398199362026.stgit@devnote2>
+	<172397778740.286558.15781131277732977643.stgit@devnote2>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,82 +45,133 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Sep 2024 11:23:29 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+The subject has a typo, "tterating" -> "iterating".
 
-> + arm ML and maintainers
-> 
-> On Wed, Sep 4, 2024 at 6:02 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > Hey,
-> >
-> > I just recently realized that we are still missing multi-kprobe
-> > support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
-> > seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
-> > implemented for ARM64.
-> >
-> > It took me a while to realize what's going on, as I roughly remembered
-> > (and confirmed through lore search) that Masami's original rethook
-> > patches had arm64-specific bits. Long story short:
-> >
-> > 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation"
-> > 83acdce68949 arm64: rethook: Add arm64 rethook implementation
-> >
-> > The patch was landed and then reverted. I found some discussion online
-> > and it seems like the plan was to land arch-specific bits shortly
-> > after bpf-next PR.
-> >
-> > But it seems like that never happened. Why?
-> >
-> > I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
-> > have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
-> > seems. How come ARM64 is the one left out?
-> >
-> > Can anyone please provide some context? And if that's just an
-> > oversight, can we prioritize landing this for ARM64 ASAP?
-> >
-> >   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.ibm.com/
-> >
-> 
-> Masami, Steven,
-> 
-> Does Linus have to be in CC to get any reply here? Come on, it's been
-> almost a full week.
-
-Sorry about bothering you, let me check that. But I think we eventually
-need my fprobe-on-fgraph patch which allows all architecture uses ftrace_regs
-instead of pt_regs for ftrace/fgraph users. That allows arm64 to implement
-fprobe.
-
-> 
-> Maybe ARM64 folks have some context?... And hopefully desire to see
-> this through so that ARM64 doesn't stick out as a lesser-supported
-> platform as far as tracing goes compared to loongarch, s390x, and
-> powerpc (which just landed rethook support, see [2]).
-
-I think lesser-supported or not is not a matter, but they need to keep 
-their architecutre healthy. Mark said that the current rethook
-implementation is not acceptable because arm64 can not manually generate
-pt_regs. So we need to use ftrace_regs for that.
-So eventually, we need my fprobe series.
-
-https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+I'll fix it and import this to probes/for-next.
 
 Thank you,
 
+On Sun, 18 Aug 2024 19:43:07 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Note that there was already an implementation (see [1]), but for some
-> reason it never made it.
+> Add for_each_tracepoint_in_module() function to iterate tracepoints in
+> a module. This API is needed for handling tracepoints in a loading
+> module from tracepoint_module_notifier callback function.
+> This also update for_each_module_tracepoint() to pass the module to
+> callback function so that it can find module easily.
 > 
->   [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
->   [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b4-ty@ellerman.id.au/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Newly added.
+> ---
+>  include/linux/tracepoint.h |   17 +++++++++++++++--
+>  kernel/tracepoint.c        |   37 +++++++++++++++++++++++++++++--------
+>  2 files changed, 44 insertions(+), 10 deletions(-)
 > 
-> >
-> > -- Andrii
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index 837fcf8ec0d5..93a9f3070b48 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -64,8 +64,13 @@ struct tp_module {
+>  bool trace_module_has_bad_taint(struct module *mod);
+>  extern int register_tracepoint_module_notifier(struct notifier_block *nb);
+>  extern int unregister_tracepoint_module_notifier(struct notifier_block *nb);
+> -void for_each_module_tracepoint(void (*fct)(struct tracepoint *, void *),
+> +void for_each_module_tracepoint(void (*fct)(struct tracepoint *,
+> +					struct module *, void *),
+>  				void *priv);
+> +void for_each_tracepoint_in_module(struct module *,
+> +				   void (*fct)(struct tracepoint *,
+> +					struct module *, void *),
+> +				   void *priv);
+>  #else
+>  static inline bool trace_module_has_bad_taint(struct module *mod)
+>  {
+> @@ -82,10 +87,18 @@ int unregister_tracepoint_module_notifier(struct notifier_block *nb)
+>  	return 0;
+>  }
+>  static inline
+> -void for_each_module_tracepoint(void (*fct)(struct tracepoint *, void *),
+> +void for_each_module_tracepoint(void (*fct)(struct tracepoint *,
+> +					struct module *, void *),
+>  				void *priv)
+>  {
+>  }
+> +static inline
+> +void for_each_tracepoint_in_module(struct module *mod,
+> +				   void (*fct)(struct tracepoint *,
+> +					struct module *, void *),
+> +				   void *priv)
+> +{
+> +}
+>  #endif /* CONFIG_MODULES */
+>  
+>  /*
+> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+> index bed4aad36d92..8879da16ef4d 100644
+> --- a/kernel/tracepoint.c
+> +++ b/kernel/tracepoint.c
+> @@ -736,24 +736,45 @@ static __init int init_tracepoints(void)
+>  }
+>  __initcall(init_tracepoints);
+>  
+> +/**
+> + * for_each_tracepoint_in_module - iteration on all tracepoints in a module
+> + * @mod: module
+> + * @fct: callback
+> + * @priv: private data
+> + */
+> +void for_each_tracepoint_in_module(struct module *mod,
+> +				   void (*fct)(struct tracepoint *tp,
+> +				    struct module *mod, void *priv),
+> +				   void *priv)
+> +{
+> +	tracepoint_ptr_t *begin, *end, *iter;
+> +
+> +	lockdep_assert_held(&tracepoint_module_list_mutex);
+> +
+> +	if (!mod)
+> +		return;
+> +
+> +	begin = mod->tracepoints_ptrs;
+> +	end = mod->tracepoints_ptrs + mod->num_tracepoints;
+> +
+> +	for (iter = begin; iter < end; iter++)
+> +		fct(tracepoint_ptr_deref(iter), mod, priv);
+> +}
+> +
+>  /**
+>   * for_each_module_tracepoint - iteration on all tracepoints in all modules
+>   * @fct: callback
+>   * @priv: private data
+>   */
+> -void for_each_module_tracepoint(void (*fct)(struct tracepoint *tp, void *priv),
+> +void for_each_module_tracepoint(void (*fct)(struct tracepoint *tp,
+> +				 struct module *mod, void *priv),
+>  				void *priv)
+>  {
+>  	struct tp_module *tp_mod;
+> -	struct module *mod;
+>  
+>  	mutex_lock(&tracepoint_module_list_mutex);
+> -	list_for_each_entry(tp_mod, &tracepoint_module_list, list) {
+> -		mod = tp_mod->mod;
+> -		for_each_tracepoint_range(mod->tracepoints_ptrs,
+> -			mod->tracepoints_ptrs + mod->num_tracepoints,
+> -			fct, priv);
+> -	}
+> +	list_for_each_entry(tp_mod, &tracepoint_module_list, list)
+> +		for_each_tracepoint_in_module(tp_mod->mod, fct, priv);
+>  	mutex_unlock(&tracepoint_module_list_mutex);
+>  }
+>  #endif /* CONFIG_MODULES */
+> 
 
 
 -- 
