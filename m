@@ -1,55 +1,55 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53731AD5B;
-	Wed, 11 Sep 2024 00:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB358BA20;
+	Wed, 11 Sep 2024 00:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726014443; cv=none; b=iJGkr2F7EDT/Zl9F6PfrlnVv3qSOpzByS/kcr3N6qxPvz8ryNgnY8LWVgeLWAXG4Euycg9eH4HqInvNlI/+4GcPjPrmpDZ6Wyb/v0aURypPzw5pSz+x7+OXLmZmsc68E+GqqwDATwmeRbSd4Im8GPlpur1D0k8hGM0CeaEnc5Js=
+	t=1726015085; cv=none; b=VEGGFQD3V/8VVpqMXrdOP1pVuxsgOBQ9NSLVlXstAVFwD0/7SAsjUxPRvRcbS8w9zNCgaQnRLXlrLrW6sIlBlNjXnDNSEX3dppjl6NKyhhk9wXqUna3yh7O+ZoUpfgfpoYmsc6L8R+fSQPEkpm7WBnSNkX7C+ZaZpHlIvk5olxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726014443; c=relaxed/simple;
-	bh=O2yLQewcaZ8vIU7ujdubIxdY+3q6dsNeU3j7kfVCkOA=;
+	s=arc-20240116; t=1726015085; c=relaxed/simple;
+	bh=ntNZy9gVp+g/S3Rw9fj9t5cY/QvmijBzVHjXxrMusB8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E1Iy1cq09hCo+CnYt13q/d1qlNDw8FS9Z4ho5Ivu4mSMszCykx7b8d2Fp8L8CUve6Q8Nv/1wFMbgDq/bunPlo9hCZau999IrFIM+3HhchuDHVRSBq7s7fc07ipGBqLMdYf8Z/LRoUhGEfT3pZtElVxFE97su5WBaViq7xx8dSDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrJ62WVZ; arc=none smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=uM0ZgEku6uCdsnW+Zo5zgpKH3ihYJTlcyhPZz2DseSstP8+myLbHWq2aU0GB5fbNcscGf+tQToVITfWQ0/xUsLpodv9DUs75KIEV7gaQfES0ofSae3I0Y3qPGay3V15IFUmxs06abaB3CT0U7eLTSFVmZRj1XNWrDYPtFSw0OXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U+3sbUgC; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrJ62WVZ"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2d87f34a650so260236a91.1;
-        Tue, 10 Sep 2024 17:27:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U+3sbUgC"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2d87f34a650so264371a91.1;
+        Tue, 10 Sep 2024 17:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726014440; x=1726619240; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1726015083; x=1726619883; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B3G46MS/GN1BRk1GDqS+0a3Dqj+XZN03OuynBKhipNo=;
-        b=SrJ62WVZnAvaqGwXesPz92utRT7UCcciJTyMk+bjCg2jjXl+25Pu1ReBRrYe9h4Umv
-         fL0O/AvGeX3fyCYySm6zsZzX/EmpHFevj90/iOhlweMeQycVCPZlGkdrptRQRcMCFvQV
-         w7IO4Q9FRYle1sUA8V8XDIrNKZJ6XmlNH92dYvQMwO46y8XP23OGS4u8Wn41VzoUiYI+
-         BgwaHxmXPhcH8vE5DbUQVeBZVAqtmDxSDB33x6vGP3ImXCekNp0xaYH6ObftbK8jX+W7
-         W3Mu22fxA6bE7XoOuulc0PbFShddzx0kAKuO2CU1vaWaw0wPYjpdA33BJsLJn/TOqPe+
-         jPfw==
+        bh=8uEZF446y8UFXekIc+a8WzDSWW2PtnQSzLmBNm4ligQ=;
+        b=U+3sbUgCx4uaXyEdmsWaqy2u5SsJGlgqPABlKryNMEojJKY6s9SrLZFoApzam2cA6Q
+         jlCVLvAfTFoT/An2GY21u8fLAXNgVUNVT4JKxS+SyQDTdEbXgLbDvH+7gkRD0dWqeeFA
+         Mg9yyIDsFsx2i7lrJvN6mum+jQWaO9qMXfVBqxBm6ferPxaE6dBBb0mAGOCNGIacTswG
+         JAKzGKq2i9cmhua3309aXxuDdHJohJdkHYUd04Km19Xsa054zN4L6zXDcP0KbN1ef5D+
+         zwr3zW+5e7jM04FsQa4XitIcG+2yEJxlainO1kY4wdV2ttuh6gCMfEmDKyi3RPEKG4PJ
+         oc2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726014440; x=1726619240;
+        d=1e100.net; s=20230601; t=1726015083; x=1726619883;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B3G46MS/GN1BRk1GDqS+0a3Dqj+XZN03OuynBKhipNo=;
-        b=E2j1/1/65iurzjHD7PH2uW6JzZnSCfQ+pu1ZNXtPFYprHCoYEL39DEl/UP3LCRNL1l
-         Up4jXT0SE+PQES+T+QHbPPstsEFZWLKb56qOX65WlJQWABsxd9Wx1IHGZF1470McDaKq
-         DPO99UGlAeZc4C5aVTa9jT++iRChcDeaJmbCGZuZZdGW492KlVmtHeqqIkpUp9ylvs1s
-         BPN1m7mcv9y7PmPRib4UTca7UP57Sa42A3n6NZ+KQTlvKeU8UoaaRrvMWnLUamIXap1H
-         8yJB6VvzHWY4K94DxVbFbncHSbqEburGLz4n7EB7XNH3sVURtvYq2QWAoLUqqAbxZ5jc
-         YaCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV32JGoOnKpRCGTsw6cO+NLhUTUou25cWzvwWWEx/Llknf7dDwgQhxRqki+XaYJGIR83wg=@vger.kernel.org, AJvYcCWWI+rC6Q3CLdnUuWRow1gFZee5/J//jJ5apAf/30ihmxBteedNsZecvb6YFM8pRRqnWlo7wef+inYG6yOujo9HO+80@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjpLyeZCwvvMUuLZYA5WJGI82C0Nh+UjfVx8nRpBLV0i3FGTTt
-	dPXJvCF30yAUKXqgfWkHtc8aZJsD8HAEEe8NgZdO+H3d4ImIhKI+CbCRWroVhShHvdyHfOSc8SL
-	HZkhkbUITB/PDVJVaTcAVuqjAl9A=
-X-Google-Smtp-Source: AGHT+IGh1U+VrPkE+xUyC1wGNgrtRAwe6Jw7TUurE36BNPnKB7qGowjg+hLoplVIH7fmY3hj+wATDFppB4Z9CqlWgps=
-X-Received: by 2002:a17:90a:ba96:b0:2c9:36bf:ba6f with SMTP id
- 98e67ed59e1d1-2db67181b2cmr6966104a91.3.1726014440425; Tue, 10 Sep 2024
- 17:27:20 -0700 (PDT)
+        bh=8uEZF446y8UFXekIc+a8WzDSWW2PtnQSzLmBNm4ligQ=;
+        b=t1Ru26E/V1FDtQXwtI/VE0bKwsNBLd/6rQ4TTFVeF6058e3y0Wg7hTqZZJz+YEP+2X
+         bQICC6kPf8jvCaa5Xbel5CXNFrc3EylDhw4hURAxIvCPJb7xkOmzBjFV1RfsjFFnk4KL
+         yo8v9q/Qsbtf0t4B/ylCYjRVkRhPGM/wqShDsTFkNwF/Zb9yOIlmZpK/zK3/P3spB3F5
+         JuSUsAF/fTL1Xhy0v12UQR85gWJ/3YlhvMPMIEpm6+P7oiX5Op2o0HxGLrgf90smT59I
+         zf0MnxqQUMAPnQSrTU1q0hPE+bXb6J6tALVksutytChqz6EIxxmucP3PQ00EVrM2ygEC
+         0fow==
+X-Forwarded-Encrypted: i=1; AJvYcCVkwTa8vph99b8QseOjmWAzBOls5zsdzRNWKc167lQ+BYhD43XdwGGJe3LUsC+OtSVsORaHg8O6AEcRi+ZWjxCe9nkm@vger.kernel.org, AJvYcCXVKnYknE3qCpMgpGjzPs1USdtY6mIdoyg0kS2S9hhUKWKBEcZToMbWfsa9qOKGPAZNodI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd4mBeOg7LF9sbbvwCyn8ofmRu22C3vO/FX5ohlWbc39tKeKp5
+	5DX1lYz67QY70Y9UTDCBGqVxMibiMsscYNe/9fEbrKzdXoSdyQP9NCBhChJeUp3F/Cp4VuHStQg
+	ZPK8grT4QieVM8hF3cn43hBl62H0=
+X-Google-Smtp-Source: AGHT+IFnbUMH/jPJGv8/7u9/NdR5/gZOu8WSCGPmPN2WhoZ8cAttEWKZ6YQCtrpiSiUXBTNFm2K8o01919ma3jNBt2o=
+X-Received: by 2002:a17:90a:c705:b0:2d8:b043:9414 with SMTP id
+ 98e67ed59e1d1-2db671fc520mr7565215a91.18.1726015083010; Tue, 10 Sep 2024
+ 17:38:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,16 +57,14 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
- <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
- <20240910145431.20e9d2e5@gandalf.local.home> <CAEf4BzZRV6h5nitTyQ_zah6wWMBZD6QQBbTCWyPVzkPpS42sgg@mail.gmail.com>
- <20240910182209.65ab3452@gandalf.local.home>
-In-Reply-To: <20240910182209.65ab3452@gandalf.local.home>
+ <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com> <20240911091343.77c60bc2e5d96cbfd8787c19@kernel.org>
+In-Reply-To: <20240911091343.77c60bc2e5d96cbfd8787c19@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 10 Sep 2024 17:27:06 -0700
-Message-ID: <CAEf4Bzb12RE6QvLLb1ptSedO2Q2zEZCvxM73BcKXUodJpi5tiw@mail.gmail.com>
+Date: Tue, 10 Sep 2024 17:37:48 -0700
+Message-ID: <CAEf4BzbdxSbaK1V10j8t_rjG4ZnYsFQLqPrBSswR8KhjmC=5cg@mail.gmail.com>
 Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, 
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
 	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com, 
 	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh <kpsingh@chromium.org>, 
 	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -76,222 +74,127 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 10, 2024 at 3:22=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
+On Tue, Sep 10, 2024 at 5:13=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
 >
-> On Tue, 10 Sep 2024 13:29:57 -0700
+> On Tue, 10 Sep 2024 11:23:29 -0700
 > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 >
-> > On Tue, Sep 10, 2024 at 11:54=E2=80=AFAM Steven Rostedt <rostedt@goodmi=
-s.org> wrote:
+> > + arm ML and maintainers
+> >
+> > On Wed, Sep 4, 2024 at 6:02=E2=80=AFPM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
 > > >
-> > > On Tue, 10 Sep 2024 11:23:29 -0700
-> > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > Hey,
 > > >
-> > > > Does Linus have to be in CC to get any reply here? Come on, it's be=
-en
-> > > > almost a full week.
+> > > I just recently realized that we are still missing multi-kprobe
+> > > support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
+> > > seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
+> > > implemented for ARM64.
 > > >
-> > > Just FYI, an email like this does piss people off. You are getting up=
-set
-> > > for waiting "almost a full week"? A full week is what we tell people =
-to
-> >
-> > A full week to get a response to a question? Yes, I find it way too
-> > long. I didn't ask for some complicated code review, did I? I don't
-> > know who "we" are and where "we" tell people, but I disagree that one
-> > week is acceptable latency to coordinate stuff like this across
-> > multiple subsystems.
->
-> Why do I have to answer to you? Once I saw the "ARM64" in the subject, it
-> immediately went down in priority and honesty, I didn't even read it as I=
-'m
-> not the ARM64 maintainer. I did skim it to see if my name was mentioned a=
-s
-> I usually try to do with emails, but when it wasn't I ignored it.
-
-So, in the end, it wasn't "And we are busy getting ready for
-Plumbers.", but rather you didn't find the right keywords in my email,
-right? "Masami" and "Steven" would be the right keywords, but
-"CONFIG_FPROBE" and "CONFIG_RETHOOK" aren't. Good to know.
-
->
-> >
-> > "pointing out"? You and Masami are maintainers of linux-trace tree,
-> > and rethook is part of that. Masami's original code was the one in
->
-> Yes, but I don't touch arm code. Masami sometimes does (as is the case
-> here), but it is when we work with the arm maintainers.
-
-And? Did I ask you to write that code? Or review that code? Or did I
-ask the context on why a portion of the patch set didn't end up
-upstream, while the rest did. The patch set submitted by Masami and
-signed off by and tested by you. Was it too much to expect that either
-you or Masami will have a quick answer? I'm sorry, I didn't know you
-don't really read emails addressed *directly* to you in email's To:,
-my bad assuming as much.
-
->
-> > question and I did expect a rather quick reply from him. If not
-> > Masami, then you would have a context as well. Who else should I be
-> > asking?
->
-> The arm64 maintainers as they are the ones that maintain that code.
-
-Even if I misrouted the question (which I still don't believe I did),
-is it above you to point it out and CC the right people?
-
->
-> >
-> > If ARM64 folks somehow have more context, it wouldn't be that hard to
-> > mention and redirect, instead of ghosting my email.
->
-> You should know they have more context because they are the actual
-> maintainers. I shouldn't have to point that out to you.
-
-Maybe they do, maybe they don't. I'm relying and using
-kprobes/kretprobes, and I still don't have a clear understanding of
-all the nuances and differences of k[ret]probes, rethook, fprobe, and
-ftrace, and what works with what. Call me dumb. I don't expect ARM64
-maintainers to know these nuances. They are experts in
-ARM64-specifics, not in a tracing layer, I presume.
-
->
->  $ wget -O /tmp/t.patch https://lore.kernel.org/bpf/164338038439.2429999.=
-17564843625400931820.stgit@devnote2/raw
->  $ ./scripts/get_maintainer.pl t.patch
-> Catalin Marinas <catalin.marinas@arm.com> (maintainer:ARM64 PORT (AARCH64=
- ARCHITECTURE),commit_signer:2/6=3D33%)
-> Will Deacon <will@kernel.org> (maintainer:ARM64 PORT (AARCH64 ARCHITECTUR=
-E),commit_signer:5/6=3D83%)
-> Puranjay Mohan <puranjay@kernel.org> (commit_signer:5/6=3D83%,authored:3/=
-6=3D50%,added_lines:30/255=3D12%)
-> Mark Rutland <mark.rutland@arm.com> (commit_signer:4/6=3D67%,authored:2/6=
-=3D33%,added_lines:105/255=3D41%,removed_lines:47/49=3D96%)
-> "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com> (commit_signer:=
-2/6=3D33%)
-> chenqiwu <qiwuchen55@gmail.com> (authored:1/6=3D17%,added_lines:120/255=
-=3D47%)
-> linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 =
-ARCHITECTURE))
-> linux-kernel@vger.kernel.org (open list)
-> bpf@vger.kernel.org (open list:BPF [MISC]:Keyword:(?:\b|_)bpf(?:\b|_))
->
-> Neither my name nor Masami's shows up.
-
-$ vim wget -O /tmp/t.patch
-https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit=
-@devnote2/raw
-$ grep -E 'Masami|Steven' /tmp/t.patch
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-        Masami Hiramatsu <mhiramat@kernel.org>, netdev@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Furthermore,
-
-$ git grep 'config RETHOOK'
-kernel/trace/Kconfig:config RETHOOK
-
-$ scripts/get_maintainer.pl kernel/trace/Kconfig
-Steven Rostedt <rostedt@goodmis.org> (maintainer:TRACING)
-Masami Hiramatsu <mhiramat@kernel.org> (maintainer:TRACING)
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> (reviewer:TRACING)
-linux-kernel@vger.kernel.org (open list:TRACING)
-linux-trace-kernel@vger.kernel.org (open list:TRACING)
-
-You can define your responsibilities as narrow as you'd like. I was
-asking a question about the RETHOOK patchset/feature overall and why a
-portion of the original patch set is missing, in particular.
-
->
-> >
+> > > It took me a while to realize what's going on, as I roughly remembere=
+d
+> > > (and confirmed through lore search) that Masami's original rethook
+> > > patches had arm64-specific bits. Long story short:
 > > >
-> > > Funny part is, I was just about to start reviewing Masami's fprobe pa=
-tches
-> > > when I read this. Now I feel reluctant to. I'll do it anyway because =
-they
-> > > are Masami's patches, but if they were yours, I would have pushed it =
-off a
-> > > week or two with that attitude.
+> > > 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation=
+"
+> > > 83acdce68949 arm64: rethook: Add arm64 rethook implementation
+> > >
+> > > The patch was landed and then reverted. I found some discussion onlin=
+e
+> > > and it seems like the plan was to land arch-specific bits shortly
+> > > after bpf-next PR.
+> > >
+> > > But it seems like that never happened. Why?
+> > >
+> > > I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
+> > > have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
+> > > seems. How come ARM64 is the one left out?
+> > >
+> > > Can anyone please provide some context? And if that's just an
+> > > oversight, can we prioritize landing this for ARM64 ASAP?
+> > >
+> > >   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.=
+ibm.com/
+> > >
 > >
-> > (I'll ignore all the personal stuff)
+> > Masami, Steven,
+> >
+> > Does Linus have to be in CC to get any reply here? Come on, it's been
+> > almost a full week.
 >
-> Maybe you shouldn't ignore it. If you think you can get answers by jumpin=
-g
-> immediately to "I'm going to tell on you to Linus", you may want to rethi=
-nk
+> Sorry about bothering you, let me check that. But I think we eventually
 
-No I don't, and I'd hate to have to do that. Which is why I didn't CC
-Linus. And I get that stuff slips through sometimes, as I said. But I
-don't get your absolutely overblown reaction to a question born out of
-frustration of being ignored.
+You don't bother me, but I'd appreciate a bit more timely replies in
+the future, if that's OK.
 
-> your approach. A simple "Hey Steve and Masami, what's going on?" would be
-> the "human" thing to do. Especially since you appear to be mad at us for
+> need my fprobe-on-fgraph patch which allows all architecture uses ftrace_=
+regs
+> instead of pt_regs for ftrace/fgraph users. That allows arm64 to implemen=
+t
+> fprobe.
 
-Don't project, Steven. I'm not mad, though definitely frustrated by a
-very unresponsive ML and its maintainers.
-
-I tried a "hey Masami" approach in [0], and it didn't help much, unfortunat=
-ely.
-
-And it's not the first time I'm ghosted on this mailing list. Would
-you say 4.5 months not getting any reply to [1] is long enough?
-Though, let me guess, it's x86-specific and you don't have anything to
-do with this, right? Going forward I'll consult get_maintainer.pl
-every time to check if you are *NOT* responsible for something, my
-bad. I didn't live by get_maintainer.pl up until now.
-
-  [0] https://lore.kernel.org/bpf/CAEf4BzbbVRGROtRn8PM4h1493avHMggz1kSDDJca=
-NZ1USO_eVw@mail.gmail.com
-  [1] https://lore.kernel.org/linux-trace-kernel/20240425000211.708557-1-an=
-drii@kernel.org/
-
-> not replying to an email about code we do not maintain.
->
-> Sorry, but you're not my boss, I don't have to reply to any of your email=
-s.
-
-I didn't say I am, not sure where you got that from. But I did expect
-a bit more ownership from you as a linux-trace tree maintainer. I'm
-sorry.
+Ok, thanks for a bit more context. I understand the end goal with
+fprobe-on-fgraph, but see below.
 
 >
 > >
-> > You are probably talking about [0]. But I was asking about [1], i.e.,
-> > adding HAVE_RETHOOK support to ARM64. Despite all your emotions above,
-> > can I still get a meaningful answer as for why that wasn't landed and
-> > what prevents it from landing right now before Masami's 20-patch
-> > series lands?
+> > Maybe ARM64 folks have some context?... And hopefully desire to see
+> > this through so that ARM64 doesn't stick out as a lesser-supported
+> > platform as far as tracing goes compared to loongarch, s390x, and
+> > powerpc (which just landed rethook support, see [2]).
+>
+> I think lesser-supported or not is not a matter, but they need to keep
+> their architecutre healthy. Mark said that the current rethook
+> implementation is not acceptable because arm64 can not manually generate
+
+I don't see Mark's reply in the link you sent. But did he refer to the
+code in kprobes_trampoline.S or is it something different?
+
+By lesser-supported I mean that a very important functionality (BPF
+multi-kprobe, which relies on CONFIG_FPROBE and thus
+{HAVE|CONFIG}_RETHOOK) is currently still missing. And whether x86-64
+support landed more than 2 years ago (end of March 2022), the second
+practically most popular (and thus important for tools and such) ARM64
+platform still doesn't have this functionality.
+
+And that's limiting, BPF multi-kprobes are a huge improvement in
+tooling usability. So while I get the desire to have a clean and nice
+end goal, and that it might take a bit longer to get everything right.
+But, maybe, landing a stop-gap solution meanwhile (especially as
+isolated and thus easily backportable as the patch [0] you referenced)
+is an OK path forward?
+
+I'm just lacking full understanding on what exactly the issue is/was,
+and that's why I'm asking all these questions. I'm not sure if [0] is
+just broken for some subtle reason, or it is just suboptimal in some
+sense (performance, code duplication, whatnot)?
+
+
+  [0] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820=
+.stgit@devnote2/
+
+> pt_regs. So we need to use ftrace_regs for that.
+> So eventually, we need my fprobe series.
+>
+> https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stg=
+it@devnote2/
+>
+> Thank you,
+>
 > >
-> >   [0] https://lore.kernel.org/linux-trace-kernel/172398527264.293426.20=
-50093948411376857.stgit@devnote2/
+> > Note that there was already an implementation (see [1]), but for some
+> > reason it never made it.
+> >
 > >   [1] https://lore.kernel.org/bpf/164338038439.2429999.1756484362540093=
 1820.stgit@devnote2/
+> >   [2] https://lore.kernel.org/bpf/172562357215.467568.21728589074191051=
+55.b4-ty@ellerman.id.au/
 > >
 > > >
-> > > Again, just letting you know.
+> > > -- Andrii
 >
-> Because [1] isn't something I maintain. So I ignored it.
-
-Yes, you are doing a great job at ignoring stuff. That I understood
-very well, thank you.
-
 >
->  arch/arm64/Kconfig                            |    1
->  arch/arm64/include/asm/stacktrace.h           |    2 -
->  arch/arm64/kernel/probes/Makefile             |    1
->  arch/arm64/kernel/probes/rethook.c            |   25 +++++++
->  arch/arm64/kernel/probes/rethook_trampoline.S |   87 +++++++++++++++++++=
-++++++
->  arch/arm64/kernel/stacktrace.c                |    7 ++
->
-> None of that would go through my tree unless an arm64 maintainer asked.
->
-> In fact, I need a bunch of acks from all maintainers of the architectures
-> that are touched by [0] before I can pull it in. Which means it will like=
-ly
-> not make this merge window.
->
-> -- Steve
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
