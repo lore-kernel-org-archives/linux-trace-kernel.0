@@ -1,98 +1,131 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0EBD1A3BAF;
-	Tue, 10 Sep 2024 22:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E037E161;
+	Wed, 11 Sep 2024 00:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726007308; cv=none; b=Uch7/nWFycpWVMVMqaJ8ip+W/pImMRHmbV1nO/90GV1fpt0gopDfRKR8FTfLREkl77B46XQ+yudgpRMVMLXKAl4MN3P2qxtlHGdSj5H0Z8hO3smJmmr3XOzOBcYkP77iZ9tBWzGlNOHBIb8643EfUfmfTrze2Oi/BhT0Hg67gZ8=
+	t=1726013629; cv=none; b=HcnhjmMNZo2lDZcMA2KFj7AFoxSBkbXcYdW5eUnPhbkRjvQuP1dQnBZcejT40cKLcou0NjlDXFTacmBXJxuxkaU1sGJNtptG8qa9v6dhN0sXRS13MpyPZfhLMAbPtUAxgqM5ZbgmvBAzY8cmTX+VtA+prXaVcBWntni9ISCjP6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726007308; c=relaxed/simple;
-	bh=m6bZTfRafhQeKF0FHn4HDoue1BzzxhJP3n0bqBSUuiY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hUnQvMMADoHdedtl5lvRg8jWRdfmgUPTPNljPCPaQEypZO2U5sZJjjUPhoRSIBzHzB5bOt0EkBk0t0+KJQb0cVn14cCiu3UxquraNB8oeawsTRnkLszK+/Z0ZaH9EAwJgYOT1wmjLY5gZHZT354UNhjYeMBlEiRBV36TETzJzGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 24E6892009C; Wed, 11 Sep 2024 00:28:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 1E05C92009B;
-	Tue, 10 Sep 2024 23:28:18 +0100 (BST)
-Date: Tue, 10 Sep 2024 23:28:18 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-cc: Masahiro Yamada <masahiroy@kernel.org>, 
-    Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-    Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-    Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-    Wedson Almeida Filho <wedsonaf@gmail.com>, 
-    Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-    =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-    Benno Lossin <benno.lossin@proton.me>, 
-    Andreas Hindborg <a.hindborg@samsung.com>, 
-    Alice Ryhl <aliceryhl@google.com>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Steven Rostedt <rostedt@goodmis.org>, 
-    Masami Hiramatsu <mhiramat@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
-    Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-    Nick Desaulniers <ndesaulniers@google.com>, 
-    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-    linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-um@lists.infradead.org, rust-for-linux@vger.kernel.org, 
-    "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, 
-    linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-    llvm@lists.linux.dev
-Subject: Re: [PATCH v2 3/3] rust: Enable for MIPS
-In-Reply-To: <54ce7574-43fd-40ee-9ae9-dd72283d1040@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2409102318270.60835@angie.orcam.me.uk>
-References: <20240905-mips-rust-v2-0-409d66819418@flygoat.com> <20240905-mips-rust-v2-3-409d66819418@flygoat.com> <alpine.DEB.2.21.2409082138160.60835@angie.orcam.me.uk> <035ccfe5-c368-4cd9-8e0d-34e0e355cb05@app.fastmail.com> <alpine.DEB.2.21.2409101643210.60835@angie.orcam.me.uk>
- <54ce7574-43fd-40ee-9ae9-dd72283d1040@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1726013629; c=relaxed/simple;
+	bh=kLX/MNy8LQx6pmAYAL9htFO1I0OjK3ouK59utdKuxMk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AdsR5yxW6FvXAQ9GGt2S6Jlz3H9OjE6zBW23o8GwP+nuteL7qkbSj7/d3VVGrCjLJ4m7UNVE7MLLSrmaCXz/Ft3quQRl30bvzlwHiFUnmPZi4/nDl3l9to4TbBF+IEI4lf9ve60GyW9OUb8uQ31uwy/uM4ItfUgR/IpAE9TbWbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHNNcMuv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHNNcMuv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A65C4CECC;
+	Wed, 11 Sep 2024 00:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726013628;
+	bh=kLX/MNy8LQx6pmAYAL9htFO1I0OjK3ouK59utdKuxMk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pHNNcMuvkBf22Ht5hikTfK5DrtdlvONrgq+Q+6nKmjhExO6WVUe/kBGnuo3JGq9bS
+	 S8gt5ghMPw+mci8KHjIQ1rxS5h0OcuirDrr7GalNd+3ErN2lqn8DDvJzIUFLzjITS8
+	 eeZ6xLKzupTg9uAoMxUEg6edxvm4ufEse6W5d47LS+P6nMHwAxxESW+lZMcme4Z5Um
+	 VGxFo81QheOp/odPOD+jEm3Tlgek/0Dau48+7mokshFPbfpxZIUuy4cdnVBmQUsM7C
+	 2fBGcD+h9rguDIms/xW+FoPWXhK7iCAH09Z9cUgg/x31zP6Z86RyB7MUWGLCiE+BUF
+	 MippYztjimdtw==
+Date: Wed, 11 Sep 2024 09:13:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, Linux
+ trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
+ <kpsingh@chromium.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, Mark Rutland
+ <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
+ <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
+Message-Id: <20240911091343.77c60bc2e5d96cbfd8787c19@kernel.org>
+In-Reply-To: <CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Sep 2024, Jiaxun Yang wrote:
+On Tue, 10 Sep 2024 11:23:29 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> >> We have no good way to tell ISA reversion prior to R1 just from Kconfig TARGET_ISA_REV,
-> >> valid numbers for TARGET_ISA_REV are only 1, 2, 5, 6 from Kconfig.
-> >
-> >  This approach doesn't work for some MIPS architecture processor configs 
-> > anyway, e.g. what ISA revision will CPU_P5600 imply here?
+> + arm ML and maintainers
 > 
-> TARGET_ISA_REV will be set to 5 for CPU_P5600 (CPU_MIPSR5 will default to y
-> on CPU_P5600, and CPU_MIPSR5 sets TARGET_ISA_REV to 5). 
+> On Wed, Sep 4, 2024 at 6:02 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
 > >
-> >  However if there's a need (and previously there wasn't), then I think it 
-> > can be sorted in a straightforward way.  We have just a bunch of CPU_* 
-> > settings and we can define corresponding ISA_* settings to select, e.g. 
-> > ISA_MIPS1, ISA_MIPS3, ISA_MIPS32_R1, ISA_MIPS64_R6, and so on, based on 
-> > information extracted from per-CPU_* `-march=' compilation flags from 
-> > arch/mips/Makefile (possibly combined with ISA data obtained from 
-> > GCC/binutils for said flags).
+> > Hey,
 > >
-> >  It could be a bit tedious to write, but not a big challenge really, just 
-> > mechanical work.
+> > I just recently realized that we are still missing multi-kprobe
+> > support for ARM64, which depends on CONFIG_FPROBE. And CONFIG_FPROBE
+> > seems to require CONFIG_HAVE_RETHOOK, which, it turns out, is not
+> > implemented for ARM64.
+> >
+> > It took me a while to realize what's going on, as I roughly remembered
+> > (and confirmed through lore search) that Masami's original rethook
+> > patches had arm64-specific bits. Long story short:
+> >
+> > 0f8f8030038a Revert "arm64: rethook: Add arm64 rethook implementation"
+> > 83acdce68949 arm64: rethook: Add arm64 rethook implementation
+> >
+> > The patch was landed and then reverted. I found some discussion online
+> > and it seems like the plan was to land arch-specific bits shortly
+> > after bpf-next PR.
+> >
+> > But it seems like that never happened. Why?
+> >
+> > I see s390x, RISC-V, loongarch (I'm not even mentioning x86-64) all
+> > have CONFIG_HAVE_RETHOOK, even powerpc is getting one (see [0]), it
+> > seems. How come ARM64 is the one left out?
+> >
+> > Can anyone please provide some context? And if that's just an
+> > oversight, can we prioritize landing this for ARM64 ASAP?
+> >
+> >   [0] https://lore.kernel.org/bpf/20240830113131.7597-1-adubey@linux.ibm.com/
+> >
 > 
-> TARGET_ISA_REV is guaranteed to be aligned with CPU's supported ISA for now,
-> so I see no reason to invent another set of symbols....
+> Masami, Steven,
+> 
+> Does Linus have to be in CC to get any reply here? Come on, it's been
+> almost a full week.
 
- Ah, OK then, I missed these bits, thanks for pointing them out.
+Sorry about bothering you, let me check that. But I think we eventually
+need my fprobe-on-fgraph patch which allows all architecture uses ftrace_regs
+instead of pt_regs for ftrace/fgraph users. That allows arm64 to implement
+fprobe.
 
- So we only need to define CPU_MIPS1, CPU_MIPS3, and CPU_MIPS4 settings
-(we have no support for any MIPS II CPU; there was the R6000 only at that 
-ISA level, exeedingly rare and unreliable) analogously to and along with 
-the existing CPU_MIPSR1, CPU_MIPSR2, etc., which is even simpler.  They 
-can then be used accordingly for TARGET_ISA_REV == 0, either directly or 
-perhaps via an additional TARGET_LEGACY_ISA_REV setting.
+> 
+> Maybe ARM64 folks have some context?... And hopefully desire to see
+> this through so that ARM64 doesn't stick out as a lesser-supported
+> platform as far as tracing goes compared to loongarch, s390x, and
+> powerpc (which just landed rethook support, see [2]).
 
-  Maciej
+I think lesser-supported or not is not a matter, but they need to keep 
+their architecutre healthy. Mark said that the current rethook
+implementation is not acceptable because arm64 can not manually generate
+pt_regs. So we need to use ftrace_regs for that.
+So eventually, we need my fprobe series.
+
+https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+
+Thank you,
+
+> 
+> Note that there was already an implementation (see [1]), but for some
+> reason it never made it.
+> 
+>   [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+>   [2] https://lore.kernel.org/bpf/172562357215.467568.2172858907419105155.b4-ty@ellerman.id.au/
+> 
+> >
+> > -- Andrii
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
