@@ -1,55 +1,55 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE89218593F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 09:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E609185B4A
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 09:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726047059; cv=none; b=p3+TZUF+XKRl5BOm5yA0hVpzB/OWzBxJ9STJBCQ+UaeM6i1VWC1bHfRF4SIbn3ieLJF3QFwL8zKavYQXBYfi6OdpVlM4CPklGFpCrSBhTEr0rff5jAcbrELqLae2bmS7TLMFInYI44fqqR6HNQyhzBzlPjl4qplIEiuurPYyHcc=
+	t=1726047061; cv=none; b=c+QNIeOgCaWtsjAJil3NtznuGxHNEY5omLHmxSAyohmGYzQopY5s1xU11MJ7Z76Mr/98umuZI76JrVg0HFrdAepsm7NF2DIxqeNEcV7YfwikJj0maryX96FtKmFguqrJlMmAaV9U24QISr76j1WGrv7gVl0GHbohAYNCD/PsipQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726047059; c=relaxed/simple;
-	bh=WyNAlQoRSlaQbJNtJku/DZE31pU2tETQT6EsDmgk7cU=;
+	s=arc-20240116; t=1726047061; c=relaxed/simple;
+	bh=ercdJaF3u/T3mJulQVQrQ+CziDme01YfrcmkWJ0mHnY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=P9TFeJgYUZDDZX0skV/ZstfmhqidZgGZTiYiuaxAzwv54PIx7hNWaYSkgOF6QBY+LyQliqNyW6G8DztBBWhNMm9FHWmI1i5hz6Mt8FwwCgDxMz+51WucXn/DBfZ5MpAhVZkTA+80yC/YGl8/qCQZTDwwsnYHuH4KdyZqHCvTUMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1yr2aUjo; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=JC2zhs4T6IyNqU+1p0IUxtS8zJgWfE6VYfm1j719Vm76eqaR1UOTGspelovrPn6Tk26k6nL2/dMVXdV9j26oNNVml6L2SRluVap94iiyEEuDfDJuja581xgSocxbet+4muBtPh6hPz3PMgqbjQJcFCc7V1d/NKd4XYkQUXCDWqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f997Knzr; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1yr2aUjo"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-374c25d886aso3082414f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 02:30:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f997Knzr"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d9353e1360so43212397b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 02:30:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726047056; x=1726651856; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726047058; x=1726651858; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yejuAYdn5/QbIt85/V9/g+97PUpnS0RfPemDihHOcTE=;
-        b=1yr2aUjoJT20kF+eahXdW+v0qb2zWTxzO5405VPXsGrQpHQ1Eo3Cr3Ql6a9u9sAeG2
-         XxBRhI4Mha3DuLIfTz0p5wKTFhrna7Iv2tX7PYjIaAaRoq2N0ZxaZO8STKOqd3/1zCMw
-         u4sO6OKXSqd7lCDATPwgV9/qvDjUJkWE05H7Cs1KPnfpVB8XYdNmYjFOgdhCRGex9KAA
-         r796uwqbe7WYOAqDI6UKahOsTEdLGo/EAMNiychGrGf06l+b5FCJxGwBmbiXfHxLrtAc
-         eIK+tNfoiGOpZ5bLFCNH5OkujyN2ljrkKYrRpKr0UWsSAU3WYTVDX7lDyyrwO9WRwhDh
-         ub5A==
+        bh=cRuTUcBMWLC1zDDkXV5OT7FrBuwwjdnt5cv0szV7Wso=;
+        b=f997KnzrTcXBczfqXScCq717lQ/XSuGG3CIKXra6+Uj2Ggz1I03Swkn8hPWzS9yAgE
+         0/e2qMaO/OGFQKB1lGGKYzeJKKd1Iej5aeZRChiCwMohcdl+U+IW/Omvj8D0K227r2ic
+         HFHS+K5J5KjzHZBdKT1SD1UBw8opESt9MMOf35hAe4weDf57QdY1/k5it0RpuCVPbHw1
+         +h11u/cXMp9m85fBI3TnBtdXzBBfjx1qXmZv8PhM29NluWBhLaKwBf+PceHydQfRsGd6
+         fxHEAAq3EaG1o0v+8iBU6G/tv7/b1lNbduI3YOYAt3szM9dGGHF1h/DYbcwdnaGEbKTX
+         V1xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726047056; x=1726651856;
+        d=1e100.net; s=20230601; t=1726047058; x=1726651858;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yejuAYdn5/QbIt85/V9/g+97PUpnS0RfPemDihHOcTE=;
-        b=d6se+Oh4fUKF8lmKNctk5PHMeLAnvaKCRuk1hzKEz7v2fVOQkKnXa72pE3oG9SBm3J
-         ODj4ouIolS7NvTfxOpdNViKdO2RNW6zRdkmQLDTPI7vIRY9ngZm9JCQQxyL17fWODS12
-         Z03m6W0KGntEOgTbQqqLUkCbqjDkQPWcO0QrvlzduUndiJIP3ZUxbGQK/svh+rzDHw9R
-         Xy0N4xPEx0HXW/QWolTTlT53uFgDyrKuJg+3cGNKj3ftle4NL2FXjb5tArlQTEqTdZk8
-         i/6SD9ZTsG/Qrff0BNC0sh6/J3ci7tpr4r0qaZsBYS0+NY0a5qL8ctf4rfPTxjiInAvF
-         IraA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaltKSJ1fVRKEkpBvFi3gN+oy2x4iMUICeFk3mnqzaEMvgbACHJoqqBxMoHN26zKBMHt/exaCVHS/4Y0U2NHMYXh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHFKCQQROxSNicyOOxd/I3Ek0ZJct5Gbrg5XgEmiO2kION0nNk
-	RH+7Pol9v3spPnzMqvTpM7R1mYGwxDMkZROFKk01dlOw1S2aEiorDQJVE5zTbfqFhjVvNVYnToR
-	lYqDdQBPJR32AixcRrQ==
-X-Google-Smtp-Source: AGHT+IH3JK62CsMjZY6SFuOrVbxoHTbhIFQKDf2kfn8b46cEmKNMGKp9tKKeHqg7ZrDPIMVbTdlp++65L0GaDZBF
+        bh=cRuTUcBMWLC1zDDkXV5OT7FrBuwwjdnt5cv0szV7Wso=;
+        b=EYTC8TV/pi8mCL61JwPO0s20UTA0fXlkKJWhcEsznKnWgbFX4tUnwoRo9hRd+mOwu5
+         IRGhFSRWN4J0VFkVKPYmLnV18Rmaw032r9w1KYrWEIoq6R/N0Xw/oUSx65iJxk83MZkR
+         6mFIQ2xN8OAbwS3atOihwahJQqGFlEZ7aF0B76s3RnAkx54ONoWtFZd53A2baqQec70v
+         rOJCklZGM98q8hiyxcw/BMj0WJYLjADzFX3xlZNmrzCQChx8YMMOOrvXs0w5Jeb2+S3b
+         DfsVCQ0oiwPvdULikMGc8o18FsdXHMa+hcjtFcC+JKFsXebkqsuaRMWO4JTNq1Npl9dD
+         A9jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSypONXG9tcMxQ4ryoOzAN7Xhz0vuzPzgWEebp9JGS4ExUR+pLy9ki1qK/Xd+SwKRhWkSCaN22k8mYSwXsM93BTLU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9jh1zVD/hp+9sFNVBFWLkOOKFYrZE/h3LeYy8j80dzMVeSVPs
+	4n5Hh7BfjwxRHNnSodq0s2At9XTorvZsh3DUBQkk+CereNe9zvac6mbjWh+NZrOHkUsBYM/4bws
+	5uCkYUrMXRGuXe8pETQ==
+X-Google-Smtp-Source: AGHT+IHHGSLQ/I9Luq2ns4pz84GK3ZlHzaoiQmxweyshiJGssvJJAZ8RAzx7lLonh1t0WfuSRuHaXXVsKioBQ4E1
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:adf:edc2:0:b0:374:b238:79e5 with SMTP
- id ffacd0b85a97d-378895c63e4mr21238f8f.2.1726047056142; Wed, 11 Sep 2024
- 02:30:56 -0700 (PDT)
-Date: Wed, 11 Sep 2024 10:30:21 +0100
+ (user=vdonnefort job=sendgmr) by 2002:a05:690c:2c12:b0:66a:764f:e57f with
+ SMTP id 00721157ae682-6dba6e28b59mr343267b3.7.1726047058573; Wed, 11 Sep 2024
+ 02:30:58 -0700 (PDT)
+Date: Wed, 11 Sep 2024 10:30:22 +0100
 In-Reply-To: <20240911093029.3279154-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240911093029.3279154-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Message-ID: <20240911093029.3279154-6-vdonnefort@google.com>
-Subject: [PATCH 05/13] KVM: arm64: Support unaligned fixmap in the nVHE hyp
+Message-ID: <20240911093029.3279154-7-vdonnefort@google.com>
+Subject: [PATCH 06/13] KVM: arm64: Add clock support in the nVHE hyp
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev
@@ -69,24 +69,115 @@ Cc: kvmarm@lists.linux.dev, will@kernel.org, qperret@google.com,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Return the fixmap VA with the page offset, instead of the page base
-address.
+By default, the arm64 host kernel is using the arch timer as a source
+for sched_clock. Conveniently, EL2 has access to that same counter,
+allowing to generate clock values that are synchronized.
+
+The clock needs nonetheless to be setup with the same slope values as
+the kernel. Introducing at the same time trace_clock() which is expected
+to be later configured by the hypervisor tracing.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
-index 8850b591d775..c5a9d8874eb2 100644
---- a/arch/arm64/kvm/hyp/nvhe/mm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mm.c
-@@ -240,7 +240,7 @@ void *hyp_fixmap_map(phys_addr_t phys)
- 	WRITE_ONCE(*ptep, pte);
- 	dsb(ishst);
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index c838309e4ec4..355bae0056f0 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -144,5 +144,4 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
+ extern unsigned long kvm_nvhe_sym(__icache_flags);
+ extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
+ extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
+-
+ #endif /* __ARM64_KVM_HYP_H__ */
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/clock.h b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+new file mode 100644
+index 000000000000..2bd05b3b89f9
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/include/nvhe/clock.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ARM64_KVM_HYP_NVHE_CLOCK_H
++#define __ARM64_KVM_HYP_NVHE_CLOCK_H
++#include <linux/types.h>
++
++#include <asm/kvm_hyp.h>
++
++#ifdef CONFIG_TRACING
++void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc);
++u64 trace_clock(void);
++#else
++static inline void
++trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc) { }
++static inline u64 trace_clock(void) { return 0; }
++#endif
++#endif
+diff --git a/arch/arm64/kvm/hyp/nvhe/Makefile b/arch/arm64/kvm/hyp/nvhe/Makefile
+index b43426a493df..323e992089bd 100644
+--- a/arch/arm64/kvm/hyp/nvhe/Makefile
++++ b/arch/arm64/kvm/hyp/nvhe/Makefile
+@@ -28,6 +28,7 @@ hyp-obj-y := timer-sr.o sysreg-sr.o debug-sr.o switch.o tlb.o hyp-init.o host.o
+ hyp-obj-y += ../vgic-v3-sr.o ../aarch32.o ../vgic-v2-cpuif-proxy.o ../entry.o \
+ 	 ../fpsimd.o ../hyp-entry.o ../exception.o ../pgtable.o
+ hyp-obj-$(CONFIG_LIST_HARDENED) += list_debug.o
++hyp-obj-$(CONFIG_TRACING) += clock.o
+ hyp-obj-y += $(lib-objs)
  
--	return (void *)slot->addr;
-+	return (void *)slot->addr + offset_in_page(phys);
- }
- 
- static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
+ ##
+diff --git a/arch/arm64/kvm/hyp/nvhe/clock.c b/arch/arm64/kvm/hyp/nvhe/clock.c
+new file mode 100644
+index 000000000000..0d1f74bc2e11
+--- /dev/null
++++ b/arch/arm64/kvm/hyp/nvhe/clock.c
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Google LLC
++ * Author: Vincent Donnefort <vdonnefort@google.com>
++ */
++
++#include <nvhe/clock.h>
++
++#include <asm/arch_timer.h>
++#include <asm/div64.h>
++
++static struct clock_data {
++	struct {
++		u32 mult;
++		u32 shift;
++		u64 epoch_ns;
++		u64 epoch_cyc;
++	} data[2];
++	u64 cur;
++} trace_clock_data;
++
++/* Does not guarantee no reader on the modified bank. */
++void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
++{
++	struct clock_data *clock = &trace_clock_data;
++	u64 bank = clock->cur ^ 1;
++
++	clock->data[bank].mult		= mult;
++	clock->data[bank].shift		= shift;
++	clock->data[bank].epoch_ns	= epoch_ns;
++	clock->data[bank].epoch_cyc	= epoch_cyc;
++
++	smp_store_release(&clock->cur, bank);
++}
++
++/* Using host provided data. Do not use for anything else than debugging. */
++u64 trace_clock(void)
++{
++	struct clock_data *clock = &trace_clock_data;
++	u64 bank = smp_load_acquire(&clock->cur);
++	u64 cyc, ns;
++
++	cyc = __arch_counter_get_cntpct() - clock->data[bank].epoch_cyc;
++
++	ns = cyc * clock->data[bank].mult;
++	ns >>= clock->data[bank].shift;
++
++	return (u64)ns + clock->data[bank].epoch_ns;
++}
 -- 
 2.46.0.598.g6f2099f65c-goog
 
