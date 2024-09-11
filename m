@@ -1,194 +1,172 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873CA14D6E9
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 21:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5232F30;
+	Wed, 11 Sep 2024 23:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726091321; cv=none; b=EH25ulppdEDZznei9iYxg1Ns99lnaC282HlSXHtCE1hLbc99hU8kO93q4tA8rrk3sAIygPCWcak4GIsZYWSZyo457GamwTQtdn8aMji5hJSPw7P2ViltSvZ5ucpGN/LDCXhpa4YAliQQs9bSi6SlJhTtm0oi3db57jJGQwnI/cg=
+	t=1726096147; cv=none; b=ZndmM5Rf5BSMBf1HEHorso2H48IxUi4mBP2MsjhaBTsec1+RwDmYApbruQEehHWJ/Is4vlehWDxFEoodp9zAF4s4Ki2k/6KacWMlcRB2XaEAmdIRumc+nJuGDT5U2X3rZFATtwK9ek0HBw9V8atrpssvav8iTJPzYWToaufN7gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726091321; c=relaxed/simple;
-	bh=pc+DaIT8Z2TuZhceXNepea8cZHlBoTaFWH+DRQwBbbQ=;
+	s=arc-20240116; t=1726096147; c=relaxed/simple;
+	bh=p24kuALb+FG8YQuEcIZoujnRVAslQjvHFviywETxW1c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cPyMvMms5ROZzwc5XbPrluEi8WYFClg3gPAy2N/WMAfiZDRpGUb7Q0goal0Ee96TDR7RI2VUNWnDRX7l7mM5f9acrBzwjadQIIPbPAQmn4fXXFVGEiHOKPeH2y24k5lMBo3Xyz9AFgUc3NUEa6xnDGaHND/GUo6/itvFDX35PW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xAK1w13j; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=An4lYzambqO+xi8lgNK3zvaLbU0l2AOja/D9cfJtKHABMZaArDaNdTCK5ah5vQXQTghemGddw3N/McI66M0WfuIOTVP/vEymGkXgfUeI0PHfr02U6cBWmaks9m+N25M55a9Yw73LMFbWYKD/nGX8uwqvWw7gIhvF+5MI0DOZ9b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmzsuzHv; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xAK1w13j"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a045f08fd6so62445ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 14:48:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmzsuzHv"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2d877e9054eso242031a91.3;
+        Wed, 11 Sep 2024 16:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726091318; x=1726696118; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1726096145; x=1726700945; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=J6Z8HdUc1+IRM76erXzE6hZcoAD0AgTlijcNod5P+zA=;
-        b=xAK1w13j5Q/zzXYU02JpZNv8jmpuCeOJSgGWOpIPBF+4hJN4yKgZEgaZlFBdfojJJe
-         nZujD9IAhYZ63u83V11kv0fUA5gdnqxCzKEz57oTgnWtbib91zHKJE8gIkwYcZ4P5uDf
-         Pxqxcfnun32Oi5kHp+o/gDsHo0IsQ2SE2B/BPXJXfbkd/8GBZXcGZYO3b63HSiBOIkbD
-         qugSQk7R6uHDx0baKpS0agzkBhzLV1LJvwnqclwrG/7VKCEt5Nl72eEjAy8jPqEPDoMf
-         z1h+laXyVUy3Bh9M8xYoLsGzXysPC4dgLY1smx/H7MGwwGDYJcueU/miD7MZGUZArLLi
-         nMgg==
+        bh=+MlP7oJ5M6c/yucbQWoK+I4lVCxaQaoagzwBt4NfHEY=;
+        b=EmzsuzHvFNEKxEgH01Ww49RVwsdA7g4FYnFGStgE4uLOoe9mtEQw9DrpIvRQ97fLdz
+         2EhFguaUMXIj2W5w/UPk1w/mUx+WP4HsSGaAX8pRqrKKfd5Wna5Y9BO26CThFIRoHRuJ
+         37NzQHK5kD5C9g/aqOQBtb6PxGOe6NW54KViqsnT1KSaKPxdq4aJJv3H5WrVHdop41JZ
+         xIrDgxs9gaA4WKderSScrEawERrS0q4/BfAO3t+h1ztoLHtp24tn3AXSjmNig+t4gl3P
+         cEmglk08hxRnCOc0iEli8JFYiMaPjIQx1LdlA7OPw/TB41BbtYThcmCj4dT57Q823yrE
+         AEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726091318; x=1726696118;
+        d=1e100.net; s=20230601; t=1726096145; x=1726700945;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=J6Z8HdUc1+IRM76erXzE6hZcoAD0AgTlijcNod5P+zA=;
-        b=C0kuubzB7tQBv1xnhcjYwYqvIOQFBJyVJw2hFrR4XB0qb5hkbA71KGPScrTXRx0g/H
-         xzYC4awiss4D/sj8BTROVYB4ofa08B8BXnLKgjdoOitAtd+c8qgxdzxMem5LrDIIK240
-         Qo4YM7sUTfxpje0hMLrjxXAYQygFZvfLwLcfR1W3xJBFpJlsCYIgqwdkvYQB0LJ1iX2H
-         cwlKXOZOmkMLoazZ+yS6cwOrtCbabgwc4GMPRgzAnUcIIKd3ckvJL3Si4kcud4/6LfPP
-         s7BRYA73noQSZIEHUFdaWXJViXc9DN35oxZyS0I0tMm1bA6TCY5kIbcvAHj2zihBKf1k
-         khMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWod07hyfDbSOiV/y7zgug+2GKnrfywBFTeb4YzaTSXqgSvxQmwKCbhgTmMWkDfW/zx10qfi0lE4Fyo7iwzilTZ0MM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXXjD6Zsxmn42DZPDehHAMEVbT10405gECXEt5iWQvWvItuPm8
-	DZR2h87ZFOsvQdSSfrAZxA8ImA0CD1Ldqkokj0KJY/URN4A01LcF8ScFJq88KqHpB/ne4Qot0GJ
-	UV5jQ+vrVhG+OWituZvJtZ+8gOvKPIVE7WEr4
-X-Google-Smtp-Source: AGHT+IFmg4D1lfVet1nvJD1JAF6kEa9fIBsQooXq/7H7e2YTkj6xbHkrW2QYeQkv9L0W5OsOaKT7H6dmK3UPQKAEs3o=
-X-Received: by 2002:a05:6e02:1809:b0:398:fc12:d70f with SMTP id
- e9e14a558f8ab-3a08464d5f7mr1398105ab.0.1726091318258; Wed, 11 Sep 2024
- 14:48:38 -0700 (PDT)
+        bh=+MlP7oJ5M6c/yucbQWoK+I4lVCxaQaoagzwBt4NfHEY=;
+        b=dyzERZtg4EWUV5WZpQATWzgEaFBN5Z7o0g/Jj0gUPFG8wnPhXR9nbcAvzEhkD5+VT6
+         j3xrWW2Bvb7WQJO5zSUWvVTyouimQD1biq926DP66b+I1qpgC8GRUaqCBOGADBksYrIS
+         yKtzWRu6f0Iifi8XP+/POZu0SzfXk9/h3RVLnkYNRrznHcNo5QJ2l9y2P4ojEw08N8O2
+         THdW++qyhlAktBsooAOO99tcEPy2L5474Gy/+I/hLGupWNUJSjh/uRCjOogHmF+SuKvS
+         uzK+6ucWfcqrSv25T4ekOfTiMjwuQn3yH1dRH2g8NicPoCcELEbODNsBdo+RjjNgT9Kt
+         57kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAhjd/VVQ2FkenMZA2Vli5njCu1EvKhdBucxFr7zQqwkEWrAaFZGyCvReepidOArNImuPFZnxV4jcAR8N0JSnF6BBb@vger.kernel.org, AJvYcCVZb+Mw2tgOfxkwf8wDM15ergkgNFAmcsHZofMSuGzQ7vqXwNI7W8sT5V4dZFulu3BUm6SMpdnVH3bpjw/X@vger.kernel.org, AJvYcCWdtcBP0/NLT8IeXdO8LmpVAGk+ZutbFPDhnDuO28tMYcQOFSjbhkdM4sQ8BTaTLgjfhDs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywNvn+QaK/xRf5kRSDEz40emW5Revd120lxPrXovvhn2afzAyb
+	DGaX8VdQrquMpwQ+guG5+ouagiSFkC5KJLoFagS2J3QlCM1YqGe3olWYs4MRFzlXeWGzPtSSG4J
+	eWM8Iyj0QN1gZv5XSAQmAK5Z+G7Q=
+X-Google-Smtp-Source: AGHT+IErDGlO3QfmC/bCljTP5Yl+jxppb6u5ajt/5AHexXT74blBUjsTtAiIp3upUCN4ne53tTyObwraG52RmAp5L/s=
+X-Received: by 2002:a17:90a:a78e:b0:2d8:a350:683a with SMTP id
+ 98e67ed59e1d1-2db9ffb49e9mr882459a91.19.1726096145515; Wed, 11 Sep 2024
+ 16:09:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240906051205.530219-1-andrii@kernel.org> <20240906051205.530219-2-andrii@kernel.org>
- <CAG48ez2hAQBj-VnimJBd3M-ioANVTk+ZQXYWD+j9G+ip2K_nfw@mail.gmail.com>
- <CAJuCfpFAvsMsBTBMaK5sHFkLQPrfE0nb401gEb2hmN2rbjza6g@mail.gmail.com> <CAEf4BzbzDjKbSZz4U+L_F3V-abXY3stgen2UhpQ1Tvba5owFcw@mail.gmail.com>
-In-Reply-To: <CAEf4BzbzDjKbSZz4U+L_F3V-abXY3stgen2UhpQ1Tvba5owFcw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 11 Sep 2024 14:48:24 -0700
-Message-ID: <CAJuCfpFFqqUWYOob_WYG_aY=PurnKvZjxznnx7V0=ESbNzHr_w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: introduce mmap_lock_speculation_{start|end}
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jann Horn <jannh@google.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	mjguzik@gmail.com, brauner@kernel.org
+References: <20240909201652.319406-1-mathieu.desnoyers@efficios.com>
+ <CAEf4BzaOh6+G3qkPjW7HYkMBhys+=WU=d3cErnm8ykTt2W3y5g@mail.gmail.com> <d294fc4c-45c1-49ec-98e3-5b42b7ab3b4b@efficios.com>
+In-Reply-To: <d294fc4c-45c1-49ec-98e3-5b42b7ab3b4b@efficios.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 11 Sep 2024 16:08:53 -0700
+Message-ID: <CAEf4BzZrN3moj2_JCGcc5z+LQeWUvGtx1e3J4c7tQtJyQE=3PA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] tracing: Allow system call tracepoints to handle page faults
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 11, 2024 at 2:35=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Mon, Sep 9, 2024 at 5:36=E2=80=AFPM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
 >
-> On Mon, Sep 9, 2024 at 7:09=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
-com> wrote:
+> On 2024-09-09 19:53, Andrii Nakryiko wrote:
+> > On Mon, Sep 9, 2024 at 1:17=E2=80=AFPM Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> Wire up the system call tracepoints with Tasks Trace RCU to allow
+> >> the ftrace, perf, and eBPF tracers to handle page faults.
+> >>
+> >> This series does the initial wire-up allowing tracers to handle page
+> >> faults, but leaves out the actual handling of said page faults as futu=
+re
+> >> work.
+> >>
+> >> This series was compile and runtime tested with ftrace and perf syscal=
+l
+> >> tracing and raw syscall tracing, adding a WARN_ON_ONCE() in the
+> >> generated code to validate that the intended probes are used for raw
+> >> syscall tracing. The might_fault() added within those probes validate
+> >> that they are called from a context where handling a page fault is OK.
+> >>
+> >> For ebpf, this series is compile-tested only.
 > >
-> > On Mon, Sep 9, 2024 at 5:35=E2=80=AFAM Jann Horn <jannh@google.com> wro=
-te:
-> > >
-> > > On Fri, Sep 6, 2024 at 7:12=E2=80=AFAM Andrii Nakryiko <andrii@kernel=
-.org> wrote:
-> > > > +static inline bool mmap_lock_speculation_end(struct mm_struct *mm,=
- int seq)
-> > > > +{
-> > > > +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
-> > > > +       return seq =3D=3D smp_load_acquire(&mm->mm_lock_seq);
-> > > > +}
-> > >
-> > > A load-acquire can't provide "end of locked section" semantics - a
-> > > load-acquire is a one-way barrier, you can basically use it for
-> > > "acquire lock" semantics but not for "release lock" semantics, becaus=
-e
-> > > the CPU will prevent reordering the load with *later* loads but not
-> > > with *earlier* loads. So if you do:
-> > >
-> > > mmap_lock_speculation_start()
-> > > [locked reads go here]
-> > > mmap_lock_speculation_end()
-> > >
-> > > then the CPU is allowed to reorder your instructions like this:
-> > >
-> > > mmap_lock_speculation_start()
-> > > mmap_lock_speculation_end()
-> > > [locked reads go here]
-> > >
-> > > so the lock is broken.
-> >
-> > Hi Jann,
-> > Thanks for the review!
-> > Yeah, you are right, we do need an smp_rmb() before we compare
-> > mm->mm_lock_seq with the stored seq.
-> >
-> > Otherwise reads might get reordered this way:
-> >
-> > CPU1                        CPU2
-> > mmap_lock_speculation_start() // seq =3D mm->mm_lock_seq
-> > reloaded_seq =3D mm->mm_lock_seq; // reordered read
-> >                                  mmap_write_lock() // inc_mm_lock_seq(m=
-m)
-> >                                  vma->vm_file =3D ...;
-> >                                  mmap_write_unlock() // inc_mm_lock_seq=
-(mm)
-> > <speculate>
-> > mmap_lock_speculation_end() // return (reloaded_seq =3D=3D seq)
-> >
-> > >
-> > > >  static inline void mmap_write_lock(struct mm_struct *mm)
-> > > >  {
-> > > >         __mmap_lock_trace_start_locking(mm, true);
-> > > >         down_write(&mm->mmap_lock);
-> > > > +       inc_mm_lock_seq(mm);
-> > > >         __mmap_lock_trace_acquire_returned(mm, true, true);
-> > > >  }
-> > >
-> > > Similarly, inc_mm_lock_seq(), which does a store-release, can only
-> > > provide "release lock" semantics, not "take lock" semantics, because
-> > > the CPU can reorder it with later stores; for example, this code:
-> > >
-> > > inc_mm_lock_seq()
-> > > [locked stuff goes here]
-> > > inc_mm_lock_seq()
-> > >
-> > > can be reordered into this:
-> > >
-> > > [locked stuff goes here]
-> > > inc_mm_lock_seq()
-> > > inc_mm_lock_seq()
-> > >
-> > > so the lock is broken.
-> >
-> > Ugh, yes. We do need smp_wmb() AFTER the inc_mm_lock_seq(). Whenever
+> > What tree/branch was this based on? I can't apply it cleanly anywhere I=
+ tried...
 >
-> Suren, can you share with me an updated patch for mm_lock_seq with the
-> right memory barriers? Do you think this might have a noticeable
-> impact on performance? What sort of benchmark do mm folks use to
-> quantify changes like that?
+> This series was based on tag v6.10.6
+>
 
-Yes, I think I can get it to you before leaving for LPC.
-It might end up affecting paths where we take mmap_lock for write
-(mmap/munmap/mprotect/etc) but these are not considered fast paths.
-I'll think about possible tests we can run to evaluate it.
+Didn't find 6.10.6, but it applied cleanly to 6.10.3. I tested that
+BPF parts work:
 
+Tested-by: Andrii Nakryiko <andrii@kernel.org> # BPF parts
+
+> Sorry I should have included this information in patch 0.
 >
-> > we use inc_mm_lock_seq() for "take lock" semantics, it's preceded by a
-> > down_write(&mm->mmap_lock) with implied ACQUIRE ordering. So I thought
-> > we can use it but I realize now that this reordering is still
-> > possible:
-> > CPU1                        CPU2
-> >                                  mmap_write_lock()
-> >                                        down_write(&mm->mmap_lock);
-> >                                        vma->vm_file =3D ...;
+> Thanks,
+>
+> Mathieu
+>
 > >
-> > mmap_lock_speculation_start() // seq =3D mm->mm_lock_seq
-> > <speculate>
-> > mmap_lock_speculation_end() // return (mm->mm_lock_seq =3D=3D seq)
-> >
-> >                                        inc_mm_lock_seq(mm);
-> >                                  mmap_write_unlock() // inc_mm_lock_seq=
-(mm)
-> >
-> > Is that what you were describing?
-> > Thanks,
-> > Suren.
-> >
-> > >
-> > > For "taking a lock" with a memory store, or "dropping a lock" with a
-> > > memory load, you need heavier memory barriers, see
-> > > Documentation/memory-barriers.txt.
+> >>
+> >> This series replaces the "Faultable Tracepoints v6" series found at [1=
+].
+> >>
+> >> Thanks,
+> >>
+> >> Mathieu
+> >>
+> >> Link: https://lore.kernel.org/lkml/20240828144153.829582-1-mathieu.des=
+noyers@efficios.com/ # [1]
+> >> Cc: Peter Zijlstra <peterz@infradead.org>
+> >> Cc: Alexei Starovoitov <ast@kernel.org>
+> >> Cc: Yonghong Song <yhs@fb.com>
+> >> Cc: Paul E. McKenney <paulmck@kernel.org>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> >> Cc: bpf@vger.kernel.org
+> >> Cc: Joel Fernandes <joel@joelfernandes.org>
+> >> Cc: linux-trace-kernel@vger.kernel.org
+> >>
+> >> Mathieu Desnoyers (8):
+> >>    tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL
+> >>    tracing/ftrace: guard syscall probe with preempt_notrace
+> >>    tracing/perf: guard syscall probe with preempt_notrace
+> >>    tracing/bpf: guard syscall probe with preempt_notrace
+> >>    tracing: Allow system call tracepoints to handle page faults
+> >>    tracing/ftrace: Add might_fault check to syscall probes
+> >>    tracing/perf: Add might_fault check to syscall probes
+> >>    tracing/bpf: Add might_fault check to syscall probes
+> >>
+> >>   include/linux/tracepoint.h      | 87 +++++++++++++++++++++++++------=
+--
+> >>   include/trace/bpf_probe.h       | 13 +++++
+> >>   include/trace/define_trace.h    |  5 ++
+> >>   include/trace/events/syscalls.h |  4 +-
+> >>   include/trace/perf.h            | 43 ++++++++++++++--
+> >>   include/trace/trace_events.h    | 61 +++++++++++++++++++++--
+> >>   init/Kconfig                    |  1 +
+> >>   kernel/entry/common.c           |  4 +-
+> >>   kernel/trace/trace_syscalls.c   | 36 ++++++++++++--
+> >>   9 files changed, 218 insertions(+), 36 deletions(-)
+> >>
+> >> --
+> >> 2.39.2
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
+>
