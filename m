@@ -1,495 +1,161 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005EFAD5A;
-	Wed, 11 Sep 2024 00:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F9529CE5;
+	Wed, 11 Sep 2024 01:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726016319; cv=none; b=QqdU3cmPVs3YDYwZtuirE8TiCIpeHqus8rfgQusqh5nDMbqJ5oqFYfwEgsihvm4u72QBeLSqIoHU0JsLmY2MBXRgmJ7l9iCMyrmC49khzyilZHFdv/dx7T8iW+2VkeSaxJLNEThHWSmk3MkRjRL5OQDbX0/KFoaAS6poIiZ34uA=
+	t=1726018022; cv=none; b=IV+NqC6E1zobc0IpbbAwBpbmj3ocHTO2n48qphkxMeHT94cSJtWWe3k7jhK5vNYJJ62phK+p8b8Jov1iUF4NCGsS1FbzS4UzMGyJsDJyNxTvZSx6HCZydTpHoN7SbntXuiNtLwbRPjkJNTr1hSGmUR6/kkSpHmLvXqCAlvf0e+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726016319; c=relaxed/simple;
-	bh=X1xPYpwPGVnbaJqxlaUYwM3+HCxK81mt3G8FSlPGaZ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rtVUDWHn61i1MfhJC33meIzqLF1eVEflIXiITM7ieQFhTZNSv2+u8u1Q46zOeosp3mMZ9+u81SzNYBwYXJqAxEfAV4mIjW6EMhwPty/jYrd6HNM4wojxipLDaWrJdIEV6uXID55NZoGbdUPuuWFrwoN2f9p54DUhCXn0d5IKQeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4X3Md36RGsz4f3jjk;
-	Wed, 11 Sep 2024 08:58:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7D5991A07B6;
-	Wed, 11 Sep 2024 08:58:26 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.67.175.61])
-	by APP4 (Coremail) with SMTP id gCh0CgDXDMkt6+BmskTrAw--.65200S2;
-	Wed, 11 Sep 2024 08:58:26 +0800 (CST)
-From: Zheng Yejian <zhengyejian@huaweicloud.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	karolherbst@gmail.com,
-	ppaalanen@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org,
-	zhengyejian1@huawei.com
-Subject: [PATCH -next] tracing: Remove TRACE_EVENT_FL_FILTERED logic
-Date: Wed, 11 Sep 2024 09:00:26 +0800
-Message-Id: <20240911010026.2302849-1-zhengyejian@huaweicloud.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1726018022; c=relaxed/simple;
+	bh=xLdCjw7FOqQYI5zYv1X09+FdDa064DOtOHyioer0Id8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hEX3Q2oXG9OeSu1ilzPa2VNH6/QbIgkQT8/dX6x3M0nZzLIiFUJjCCxaTlpjMuoJaXVsamzcxg/If0HBWoMZrtk32o6o9J+VdlSgyZZC1UJOPOX0lEJk+mzDSN3azvgyYkdjQfn+xZz410GscvN4csYmoGBnZxPC1Ge6FIircdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C93DC4CEC3;
+	Wed, 11 Sep 2024 01:27:00 +0000 (UTC)
+Date: Tue, 10 Sep 2024 21:27:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, Linux
+ trace kernel <linux-trace-kernel@vger.kernel.org>, adubey@linux.ibm.com,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, KP Singh
+ <kpsingh@chromium.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, Mark Rutland
+ <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Florent Revest
+ <revest@chromium.org>, Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: Unsupported CONFIG_FPROBE and CONFIG_RETHOOK on ARM64
+Message-ID: <20240910212702.6679f507@gandalf.local.home>
+In-Reply-To: <CAEf4Bzb12RE6QvLLb1ptSedO2Q2zEZCvxM73BcKXUodJpi5tiw@mail.gmail.com>
+References: <CAEf4BzaYyEftmRmt6FswrTOsb9FuQMtzuDXD4OJMO7Ein2ZRGg@mail.gmail.com>
+	<CAEf4BzasRqeAY3ZpBDbjyWSKUriZgUf4U_YoQNSSutKhX5g2kw@mail.gmail.com>
+	<20240910145431.20e9d2e5@gandalf.local.home>
+	<CAEf4BzZRV6h5nitTyQ_zah6wWMBZD6QQBbTCWyPVzkPpS42sgg@mail.gmail.com>
+	<20240910182209.65ab3452@gandalf.local.home>
+	<CAEf4Bzb12RE6QvLLb1ptSedO2Q2zEZCvxM73BcKXUodJpi5tiw@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXDMkt6+BmskTrAw--.65200S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3uw1ktFWfZr43Cry5Kw4UJwb_yoW8Ar1fJo
-	W3X39Yvwn7try8A3y3KayvqFs8Zrn0gr90yr4xtr4DuF1jkw1UZrWxAws0yFn8Xwn0kan8
-	Z3WDJa1DJrs5Ja95n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUU5E7kC6x804xWl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK
-	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
-X-CM-SenderInfo: x2kh0w51hmxt3q6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-After commit dcb0b5575d24 ("tracing: Remove TRACE_EVENT_FL_USE_CALL_FILTER
- logic"), no one's going to set the TRACE_EVENT_FL_FILTERED or change the
-call->filter, so remove related logic.
+On Tue, 10 Sep 2024 17:27:06 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+\> >
+> > Why do I have to answer to you? Once I saw the "ARM64" in the subject, it
+> > immediately went down in priority and honesty, I didn't even read it as I'm
+> > not the ARM64 maintainer. I did skim it to see if my name was mentioned as
+> > I usually try to do with emails, but when it wasn't I ignored it.  
+> 
+> So, in the end, it wasn't "And we are busy getting ready for
+> Plumbers.", but rather you didn't find the right keywords in my email,
+> right? "Masami" and "Steven" would be the right keywords, but
+> "CONFIG_FPROBE" and "CONFIG_RETHOOK" aren't. Good to know.
 
-Signed-off-by: Zheng Yejian <zhengyejian@huaweicloud.com>
----
- include/linux/trace_events.h         |  4 ---
- kernel/trace/trace.c                 | 44 ++++++----------------------
- kernel/trace/trace.h                 |  4 ---
- kernel/trace/trace_branch.c          |  4 +--
- kernel/trace/trace_events.c          |  2 --
- kernel/trace/trace_functions_graph.c |  8 ++---
- kernel/trace/trace_hwlat.c           |  4 +--
- kernel/trace/trace_mmiotrace.c       |  8 ++---
- kernel/trace/trace_osnoise.c         | 12 ++------
- kernel/trace/trace_sched_wakeup.c    |  8 ++---
- 10 files changed, 20 insertions(+), 78 deletions(-)
+Yep. I'm Cc'd on approximately 300 emails a day. I don't have time to read
+them all.
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 42bedcddd511..f8f2e52653df 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -326,7 +326,6 @@ void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
- void trace_event_buffer_commit(struct trace_event_buffer *fbuffer);
- 
- enum {
--	TRACE_EVENT_FL_FILTERED_BIT,
- 	TRACE_EVENT_FL_CAP_ANY_BIT,
- 	TRACE_EVENT_FL_NO_SET_FILTER_BIT,
- 	TRACE_EVENT_FL_IGNORE_ENABLE_BIT,
-@@ -341,7 +340,6 @@ enum {
- 
- /*
-  * Event flags:
-- *  FILTERED	  - The event has a filter attached
-  *  CAP_ANY	  - Any user can enable for perf
-  *  NO_SET_FILTER - Set when filter has error and is to be ignored
-  *  IGNORE_ENABLE - For trace internal events, do not enable with debugfs file
-@@ -356,7 +354,6 @@ enum {
-  *                   to a tracepoint yet, then it is cleared when it is.
-  */
- enum {
--	TRACE_EVENT_FL_FILTERED		= (1 << TRACE_EVENT_FL_FILTERED_BIT),
- 	TRACE_EVENT_FL_CAP_ANY		= (1 << TRACE_EVENT_FL_CAP_ANY_BIT),
- 	TRACE_EVENT_FL_NO_SET_FILTER	= (1 << TRACE_EVENT_FL_NO_SET_FILTER_BIT),
- 	TRACE_EVENT_FL_IGNORE_ENABLE	= (1 << TRACE_EVENT_FL_IGNORE_ENABLE_BIT),
-@@ -381,7 +378,6 @@ struct trace_event_call {
- 	};
- 	struct trace_event	event;
- 	char			*print_fmt;
--	struct event_filter	*filter;
- 	/*
- 	 * Static events can disappear with modules,
- 	 * where as dynamic ones need their own ref count.
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c390de3a4515..b06f381f1989 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -570,19 +570,6 @@ int tracing_check_open_get_tr(struct trace_array *tr)
- 	return 0;
- }
- 
--int call_filter_check_discard(struct trace_event_call *call, void *rec,
--			      struct trace_buffer *buffer,
--			      struct ring_buffer_event *event)
--{
--	if (unlikely(call->flags & TRACE_EVENT_FL_FILTERED) &&
--	    !filter_match_preds(call->filter, rec)) {
--		__trace_event_discard_commit(buffer, event);
--		return 1;
--	}
--
--	return 0;
--}
--
- /**
-  * trace_find_filtered_pid - check if a pid exists in a filtered_pid list
-  * @filtered_pids: The list of pids to check
-@@ -2866,7 +2853,6 @@ void
- trace_function(struct trace_array *tr, unsigned long ip, unsigned long
- 	       parent_ip, unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_function;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct ftrace_entry *entry;
-@@ -2879,11 +2865,9 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
- 	entry->ip			= ip;
- 	entry->parent_ip		= parent_ip;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event)) {
--		if (static_branch_unlikely(&trace_function_exports_enabled))
--			ftrace_exports(event, TRACE_EXPORT_FUNCTION);
--		__buffer_unlock_commit(buffer, event);
--	}
-+	if (static_branch_unlikely(&trace_function_exports_enabled))
-+		ftrace_exports(event, TRACE_EXPORT_FUNCTION);
-+	__buffer_unlock_commit(buffer, event);
- }
- 
- #ifdef CONFIG_STACKTRACE
-@@ -2909,7 +2893,6 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 				 unsigned int trace_ctx,
- 				 int skip, struct pt_regs *regs)
- {
--	struct trace_event_call *call = &event_kernel_stack;
- 	struct ring_buffer_event *event;
- 	unsigned int size, nr_entries;
- 	struct ftrace_stack *fstack;
-@@ -2963,8 +2946,7 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 	memcpy(&entry->caller, fstack->calls,
- 	       flex_array_size(entry, caller, nr_entries));
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		__buffer_unlock_commit(buffer, event);
-+	__buffer_unlock_commit(buffer, event);
- 
-  out:
- 	/* Again, don't let gcc optimize things here */
-@@ -3037,7 +3019,6 @@ static void
- ftrace_trace_userstack(struct trace_array *tr,
- 		       struct trace_buffer *buffer, unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_user_stack;
- 	struct ring_buffer_event *event;
- 	struct userstack_entry *entry;
- 
-@@ -3071,8 +3052,7 @@ ftrace_trace_userstack(struct trace_array *tr,
- 	memset(&entry->caller, 0, sizeof(entry->caller));
- 
- 	stack_trace_save_user(entry->caller, FTRACE_STACK_ENTRIES);
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		__buffer_unlock_commit(buffer, event);
-+	__buffer_unlock_commit(buffer, event);
- 
-  out_drop_count:
- 	__this_cpu_dec(user_stack_count);
-@@ -3241,7 +3221,6 @@ static void trace_printk_start_stop_comm(int enabled)
-  */
- int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
- {
--	struct trace_event_call *call = &event_bprint;
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer;
- 	struct trace_array *tr = &global_trace;
-@@ -3282,10 +3261,8 @@ int trace_vbprintk(unsigned long ip, const char *fmt, va_list args)
- 	entry->fmt			= fmt;
- 
- 	memcpy(entry->buf, tbuffer, sizeof(u32) * len);
--	if (!call_filter_check_discard(call, entry, buffer, event)) {
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
--	}
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(tr, buffer, trace_ctx, 6, NULL);
- 
- out:
- 	ring_buffer_nest_end(buffer);
-@@ -3305,7 +3282,6 @@ static int
- __trace_array_vprintk(struct trace_buffer *buffer,
- 		      unsigned long ip, const char *fmt, va_list args)
- {
--	struct trace_event_call *call = &event_print;
- 	struct ring_buffer_event *event;
- 	int len = 0, size;
- 	struct print_entry *entry;
-@@ -3340,10 +3316,8 @@ __trace_array_vprintk(struct trace_buffer *buffer,
- 	entry->ip = ip;
- 
- 	memcpy(&entry->buf, tbuffer, len + 1);
--	if (!call_filter_check_discard(call, entry, buffer, event)) {
--		__buffer_unlock_commit(buffer, event);
--		ftrace_trace_stack(&global_trace, buffer, trace_ctx, 6, NULL);
--	}
-+	__buffer_unlock_commit(buffer, event);
-+	ftrace_trace_stack(&global_trace, buffer, trace_ctx, 6, NULL);
- 
- out:
- 	ring_buffer_nest_end(buffer);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 4f448ab2d1e7..f5883bb85864 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1427,10 +1427,6 @@ struct trace_subsystem_dir {
- 	int				nr_events;
- };
- 
--extern int call_filter_check_discard(struct trace_event_call *call, void *rec,
--				     struct trace_buffer *buffer,
--				     struct ring_buffer_event *event);
--
- void trace_buffer_unlock_commit_regs(struct trace_array *tr,
- 				     struct trace_buffer *buffer,
- 				     struct ring_buffer_event *event,
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index e47fdb4c92fb..0f24eca449bf 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -30,7 +30,6 @@ static struct trace_array *branch_tracer;
- static void
- probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- {
--	struct trace_event_call *call = &event_branch;
- 	struct trace_array *tr = branch_tracer;
- 	struct trace_buffer *buffer;
- 	struct trace_array_cpu *data;
-@@ -82,8 +81,7 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- 	entry->line = f->data.line;
- 	entry->correct = val == expect;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- 
-  out:
- 	current->trace_recursion &= ~TRACE_BRANCH_BIT;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7266ec2a4eea..77e68efbd43e 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3149,8 +3149,6 @@ static void __trace_remove_event_call(struct trace_event_call *call)
- {
- 	event_remove(call);
- 	trace_destroy_fields(call);
--	free_event_filter(call->filter);
--	call->filter = NULL;
- }
- 
- static int probe_remove_event_call(struct trace_event_call *call)
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index a569daaac4c4..ab57ec78ca04 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -102,7 +102,6 @@ int __trace_graph_entry(struct trace_array *tr,
- 				struct ftrace_graph_ent *trace,
- 				unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_funcgraph_entry;
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ftrace_graph_ent_entry *entry;
-@@ -113,8 +112,7 @@ int __trace_graph_entry(struct trace_array *tr,
- 		return 0;
- 	entry	= ring_buffer_event_data(event);
- 	entry->graph_ent			= *trace;
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- 
- 	return 1;
- }
-@@ -223,7 +221,6 @@ void __trace_graph_return(struct trace_array *tr,
- 				struct ftrace_graph_ret *trace,
- 				unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_funcgraph_exit;
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ftrace_graph_ret_entry *entry;
-@@ -234,8 +231,7 @@ void __trace_graph_return(struct trace_array *tr,
- 		return;
- 	entry	= ring_buffer_event_data(event);
- 	entry->ret				= *trace;
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
- void trace_graph_return(struct ftrace_graph_ret *trace,
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index b791524a6536..fcd5e8c91669 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -130,7 +130,6 @@ static bool hwlat_busy;
- static void trace_hwlat_sample(struct hwlat_sample *sample)
- {
- 	struct trace_array *tr = hwlat_trace;
--	struct trace_event_call *call = &event_hwlat;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct hwlat_entry *entry;
-@@ -148,8 +147,7 @@ static void trace_hwlat_sample(struct hwlat_sample *sample)
- 	entry->nmi_count		= sample->nmi_count;
- 	entry->count			= sample->count;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
- /* Macros to encapsulate the time capturing infrastructure */
-diff --git a/kernel/trace/trace_mmiotrace.c b/kernel/trace/trace_mmiotrace.c
-index 64e77b513697..ba5858866b2f 100644
---- a/kernel/trace/trace_mmiotrace.c
-+++ b/kernel/trace/trace_mmiotrace.c
-@@ -294,7 +294,6 @@ static void __trace_mmiotrace_rw(struct trace_array *tr,
- 				struct trace_array_cpu *data,
- 				struct mmiotrace_rw *rw)
- {
--	struct trace_event_call *call = &event_mmiotrace_rw;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct trace_mmiotrace_rw *entry;
-@@ -310,8 +309,7 @@ static void __trace_mmiotrace_rw(struct trace_array *tr,
- 	entry	= ring_buffer_event_data(event);
- 	entry->rw			= *rw;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
-+	trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
- }
- 
- void mmio_trace_rw(struct mmiotrace_rw *rw)
-@@ -325,7 +323,6 @@ static void __trace_mmiotrace_map(struct trace_array *tr,
- 				struct trace_array_cpu *data,
- 				struct mmiotrace_map *map)
- {
--	struct trace_event_call *call = &event_mmiotrace_map;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct trace_mmiotrace_map *entry;
-@@ -341,8 +338,7 @@ static void __trace_mmiotrace_map(struct trace_array *tr,
- 	entry	= ring_buffer_event_data(event);
- 	entry->map			= *map;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
-+	trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
- }
- 
- void mmio_trace_mapping(struct mmiotrace_map *map)
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 1c11cb7d01ae..029019d2613c 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -499,7 +499,6 @@ static void print_osnoise_headers(struct seq_file *s)
- static void
- __trace_osnoise_sample(struct osnoise_sample *sample, struct trace_buffer *buffer)
- {
--	struct trace_event_call *call = &event_osnoise;
- 	struct ring_buffer_event *event;
- 	struct osnoise_entry *entry;
- 
-@@ -517,8 +516,7 @@ __trace_osnoise_sample(struct osnoise_sample *sample, struct trace_buffer *buffe
- 	entry->softirq_count	= sample->softirq_count;
- 	entry->thread_count	= sample->thread_count;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
- /*
-@@ -578,7 +576,6 @@ static void print_timerlat_headers(struct seq_file *s)
- static void
- __trace_timerlat_sample(struct timerlat_sample *sample, struct trace_buffer *buffer)
- {
--	struct trace_event_call *call = &event_osnoise;
- 	struct ring_buffer_event *event;
- 	struct timerlat_entry *entry;
- 
-@@ -591,8 +588,7 @@ __trace_timerlat_sample(struct timerlat_sample *sample, struct trace_buffer *buf
- 	entry->context			= sample->context;
- 	entry->timer_latency		= sample->timer_latency;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
- /*
-@@ -654,7 +650,6 @@ static void timerlat_save_stack(int skip)
- static void
- __timerlat_dump_stack(struct trace_buffer *buffer, struct trace_stack *fstack, unsigned int size)
- {
--	struct trace_event_call *call = &event_osnoise;
- 	struct ring_buffer_event *event;
- 	struct stack_entry *entry;
- 
-@@ -668,8 +663,7 @@ __timerlat_dump_stack(struct trace_buffer *buffer, struct trace_stack *fstack, u
- 	memcpy(&entry->caller, fstack->calls, size);
- 	entry->size = fstack->nr_entries;
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
- /*
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index ae2ace5e515a..d6c7f18daa15 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -378,7 +378,6 @@ tracing_sched_switch_trace(struct trace_array *tr,
- 			   struct task_struct *next,
- 			   unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_context_switch;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct ctx_switch_entry *entry;
-@@ -396,8 +395,7 @@ tracing_sched_switch_trace(struct trace_array *tr,
- 	entry->next_state		= task_state_index(next);
- 	entry->next_cpu	= task_cpu(next);
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
-+	trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
- }
- 
- static void
-@@ -406,7 +404,6 @@ tracing_sched_wakeup_trace(struct trace_array *tr,
- 			   struct task_struct *curr,
- 			   unsigned int trace_ctx)
- {
--	struct trace_event_call *call = &event_wakeup;
- 	struct ring_buffer_event *event;
- 	struct ctx_switch_entry *entry;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
-@@ -424,8 +421,7 @@ tracing_sched_wakeup_trace(struct trace_array *tr,
- 	entry->next_state		= task_state_index(wakee);
- 	entry->next_cpu			= task_cpu(wakee);
- 
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
-+	trace_buffer_unlock_commit(tr, buffer, event, trace_ctx);
- }
- 
- static void notrace
--- 
-2.25.1
+
+> > >  
+> > > >
+> > > > Funny part is, I was just about to start reviewing Masami's fprobe patches
+> > > > when I read this. Now I feel reluctant to. I'll do it anyway because they
+> > > > are Masami's patches, but if they were yours, I would have pushed it off a
+> > > > week or two with that attitude.  
+> > >
+> > > (I'll ignore all the personal stuff)  
+> >
+> > Maybe you shouldn't ignore it. If you think you can get answers by jumping
+> > immediately to "I'm going to tell on you to Linus", you may want to rethink  
+> 
+> No I don't, and I'd hate to have to do that. Which is why I didn't CC
+> Linus. And I get that stuff slips through sometimes, as I said. But I
+> don't get your absolutely overblown reaction to a question born out of
+> frustration of being ignored.
+
+My reaction was due to the:
+
+> Does Linus have to be in CC to get any reply here? Come on, it's been
+> almost a full week.
+
+Which sounds more of a threat. There's a lot of email I miss. Especially
+after I come back from vacation, which BTW I did in this case. I came back
+on September 3rd, your email was dated September 4th, I had several
+thousand unread emails. I don't have time to read them all, so yeah, I do a
+lot of skimming, looking for the meat.
+
+You went from sending an email to threatening Cc'ing Linus because I didn't
+jump to reply to you. It took me three full days just to get through my
+backlog from vacation, and then I have to deal with the emails coming in
+while I'm digging through my backlog.
+
+What pissed me off is that comment makes you sound like you think your
+email is more important than all my other email. I could have simply not
+told you this, and left out sending that reply, but I figured I'd let you
+know what perception you gave to me.
+
+> 
+> > your approach. A simple "Hey Steve and Masami, what's going on?" would be
+> > the "human" thing to do. Especially since you appear to be mad at us for  
+> 
+> Don't project, Steven. I'm not mad, though definitely frustrated by a
+> very unresponsive ML and its maintainers.
+> 
+> I tried a "hey Masami" approach in [0], and it didn't help much, unfortunately.
+> 
+> And it's not the first time I'm ghosted on this mailing list. Would
+> you say 4.5 months not getting any reply to [1] is long enough?
+
+I'm "ghosted" all the time with other maintainers. When I ask a question or
+something, I will wait a while and send a friendly "ping". It's common
+practice.
+
+> Though, let me guess, it's x86-specific and you don't have anything to
+> do with this, right? Going forward I'll consult get_maintainer.pl
+> every time to check if you are *NOT* responsible for something, my
+> bad. I didn't live by get_maintainer.pl up until now.
+
+I'm not saying you had to do that. But you should have done that before
+threatening to go over my head.
+
+> 
+>   [0] https://lore.kernel.org/bpf/CAEf4BzbbVRGROtRn8PM4h1493avHMggz1kSDDJcaNZ1USO_eVw@mail.gmail.com
+>   [1] https://lore.kernel.org/linux-trace-kernel/20240425000211.708557-1-andrii@kernel.org/
+> 
+> > not replying to an email about code we do not maintain.
+> >
+> > Sorry, but you're not my boss, I don't have to reply to any of your emails.  
+> 
+> I didn't say I am, not sure where you got that from. But I did expect
+> a bit more ownership from you as a linux-trace tree maintainer. I'm
+> sorry.
+> 
+> >  
+> > >
+> > > You are probably talking about [0]. But I was asking about [1], i.e.,
+> > > adding HAVE_RETHOOK support to ARM64. Despite all your emotions above,
+> > > can I still get a meaningful answer as for why that wasn't landed and
+> > > what prevents it from landing right now before Masami's 20-patch
+> > > series lands?
+> > >
+> > >   [0] https://lore.kernel.org/linux-trace-kernel/172398527264.293426.2050093948411376857.stgit@devnote2/
+> > >   [1] https://lore.kernel.org/bpf/164338038439.2429999.17564843625400931820.stgit@devnote2/
+> > >  
+> > > >
+> > > > Again, just letting you know.  
+> >
+> > Because [1] isn't something I maintain. So I ignored it.  
+> 
+> Yes, you are doing a great job at ignoring stuff. That I understood
+> very well, thank you.
+
+Yes, it's a balancing act of trying to get stuff done. Every time I focus
+on one thing I tend to have to ignore something else.
+
+-- Steve
 
