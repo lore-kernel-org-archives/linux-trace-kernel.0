@@ -1,45 +1,45 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3660F1AC8AA;
-	Wed, 11 Sep 2024 17:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB651A304E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Sep 2024 17:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726075848; cv=none; b=oiZxMXLlMrKrrlLLkgkNQkiwQKPD1ASZSDPmBENXM84l/qSCb5hYGXUej8DWCdxeucuePrAGQNqiYgGf77eK/c6P6nzB87++yfECap1TBc0lXrqgwvM4nd7X5fTGYOVpJHK0KLnerMAa7d0cdsYpvcBQq9EwR0KVsWFLdGTHtxI=
+	t=1726076044; cv=none; b=IPf0uXFE+de2JiEoLNbKqjn8qfxuqGMSEJFWRzaRmk0xQB29apMCMBuIrarYPWzI2hKlYuPbrnMoEyByThBdOWt2EzwiAobiu666vbjRuPN6wPs+VGS9faURE2Z0ADhDEh+/Pfem6rifxSePBfZVR0Ahqs45gCiUcp8fFN7ScdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726075848; c=relaxed/simple;
-	bh=l1Upy7XrmB9UBM+BJiQVMme9YiNZuLukgnwErS690GY=;
+	s=arc-20240116; t=1726076044; c=relaxed/simple;
+	bh=ADWMV/I7PLbTMRzO2ohvog05sKANIhJw045KoKiwBzM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r8waeATBfTf+MOGZ7jEvL8uYoIcsPwpjQFs5SogY/uOtMKFO0mSgb7p/Q98XVOjII8NT1ulKSF6QcJCkP4JHfcehZj/MBa6yIpT/BWCTzps/kxrOafvzUklYRtbiJLvuCTd4yF9nc+Yln4pXI4iLKq/uqkOviOY5PU4oU+1RDYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xmf8yDVz; arc=none smtp.client-ip=91.218.175.176
+	 In-Reply-To:Content-Type; b=dkSvW1yQDPcrIo+zxyFrYtUPL0LcyOcWmvMxGQIFvLI92SF5TQeIz2gFdg2r4SbUh9Ag3FKtOZ6HhFPuz4BKwvbMPmWx/jzvoWPilHpgZMRJnhS8KwGgV5CUgEg8kphyDyPkfIM/ZT9uA0KMFzfjlxlQY2JsIyy0CqivFKviYoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JswkxbU2; arc=none smtp.client-ip=95.215.58.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xmf8yDVz"
-Message-ID: <c5974d0f-0636-470e-87ef-b2936d54cd87@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JswkxbU2"
+Message-ID: <8047db0c-39eb-4b98-89e4-f0822805c309@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1726075842;
+	t=1726076040;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2doHaDLybrvva11Biu2GeRSbEa9P9PAas2ldszHt6Vg=;
-	b=Xmf8yDVzIy+6eJnTOsfrb4yvMC8zHjpJm7xQibwzW4YlxIT6jpLPh95qt3N/sg2hLCV7B1
-	bQnOkv8mWf+6vk4MdO75VClmSE6wRKCGpj7qq6XHY30M6vzwoKReb5+rMalNHizCiYzuEf
-	l+oS0vIhCrHLxh2exrOBs/NllTjeJiY=
-Date: Wed, 11 Sep 2024 10:30:27 -0700
+	bh=XHalqKbvZbOtWyamwKtGLymNQ5l/tzEX6wRT+G1VD8U=;
+	b=JswkxbU25MFkIWcSkH0RXhnzmZRmEClO+nWuNt8VfY5NR99TnGeP3iicd8FRhyNEyGEx03
+	CPn7+Kn4y/YXMT5luiRCeneDVNlBLz4+Bqb53w1PWjAyDCbsXwOeB3AujiiFCWhbPxHkMu
+	qJDl64Ay8Dw/iAF+FsISwgp+ynH25NY=
+Date: Wed, 11 Sep 2024 10:33:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 1/5] bpf: Support __nullable argument suffix
- for tp_btf
+Subject: Re: [PATCH bpf-next v3 5/5] selftests/bpf: Expand skb dynptr
+ selftests for tp_btf
 To: Philo Lu <lulie@linux.alibaba.com>
-Cc: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
+Cc: bpf@vger.kernel.org, edumazet@google.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, song@kernel.org,
  yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
  sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
  kuba@kernel.org, pabeni@redhat.com, mykolal@fb.com, shuah@kernel.org,
@@ -48,70 +48,125 @@ Cc: edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
  alan.maguire@oracle.com, davemarchevsky@fb.com, dxu@dxuuu.xyz,
  vmalik@redhat.com, cupertino.miranda@oracle.com, mattbobrowski@google.com,
  xuanzhuo@linux.alibaba.com, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+ linux-trace-kernel@vger.kernel.org
 References: <20240911033719.91468-1-lulie@linux.alibaba.com>
- <20240911033719.91468-2-lulie@linux.alibaba.com>
+ <20240911033719.91468-6-lulie@linux.alibaba.com>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <20240911033719.91468-2-lulie@linux.alibaba.com>
+In-Reply-To: <20240911033719.91468-6-lulie@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 On 9/10/24 8:37 PM, Philo Lu wrote:
-> Pointers passed to tp_btf were trusted to be valid, but some tracepoints
-> do take NULL pointer as input, such as trace_tcp_send_reset(). Then the
-> invalid memory access cannot be detected by verifier.
+> Add 3 test cases for skb dynptr used in tp_btf:
+> - test_dynptr_skb_tp_btf: use skb dynptr in tp_btf and make sure it is
+>    read-only.
+> - skb_invalid_ctx_fentry/skb_invalid_ctx_fexit: bpf_dynptr_from_skb
+>    should fail in fentry/fexit.
 > 
-> This patch fix it by add a suffix "__nullable" to the unreliable
-> argument. The suffix is shown in btf, and PTR_MAYBE_NULL will be added
-> to nullable arguments. Then users must check the pointer before use it.
+> In test_dynptr_skb_tp_btf, to trigger the tracepoint in kfree_skb,
+> test_pkt_access is used for its test_run, as in kfree_skb.c. Because the
+> test process is different from others, a new setup type is defined,
+> i.e., SETUP_SKB_PROG_TP.
 > 
-> A problem here is that we use "btf_trace_##call" to search func_proto.
-> As it is a typedef, argument names as well as the suffix are not
-> recorded. To solve this, I use bpf_raw_event_map to find
-> "__bpf_trace##template" from "btf_trace_##call", and then we can see the
-> suffix.
+> The result is like:
+> $ ./test_progs -t 'dynptr/test_dynptr_skb_tp_btf'
+>    #84/14   dynptr/test_dynptr_skb_tp_btf:OK
+>    #84      dynptr:OK
+>    #127     kfunc_dynptr_param:OK
+>    Summary: 2/1 PASSED, 0 SKIPPED, 0 FAILED
 > 
-> Suggested-by: Alexei Starovoitov <ast@kernel.org>
+> $ ./test_progs -t 'dynptr/skb_invalid_ctx_f'
+>    #84/85   dynptr/skb_invalid_ctx_fentry:OK
+>    #84/86   dynptr/skb_invalid_ctx_fexit:OK
+>    #84      dynptr:OK
+>    #127     kfunc_dynptr_param:OK
+>    Summary: 2/2 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> Also fix two coding style nits (change spaces to tabs).
+> 
 > Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
 > ---
->   kernel/bpf/btf.c      |  9 +++++++++
->   kernel/bpf/verifier.c | 36 ++++++++++++++++++++++++++++++++----
->   2 files changed, 41 insertions(+), 4 deletions(-)
+>   .../testing/selftests/bpf/prog_tests/dynptr.c | 36 +++++++++++++++++--
+>   .../testing/selftests/bpf/progs/dynptr_fail.c | 25 +++++++++++++
+>   .../selftests/bpf/progs/dynptr_success.c      | 23 ++++++++++++
+>   3 files changed, 82 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 1e29281653c62..d1ea38d08f301 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -6385,6 +6385,12 @@ static bool prog_args_trusted(const struct bpf_prog *prog)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/dynptr.c b/tools/testing/selftests/bpf/prog_tests/dynptr.c
+> index 7cfac53c0d58d..ba40be8b1c4ef 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/dynptr.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/dynptr.c
+> @@ -9,6 +9,7 @@
+>   enum test_setup_type {
+>   	SETUP_SYSCALL_SLEEP,
+>   	SETUP_SKB_PROG,
+> +	SETUP_SKB_PROG_TP,
+>   };
+>   
+>   static struct {
+> @@ -28,6 +29,7 @@ static struct {
+>   	{"test_dynptr_clone", SETUP_SKB_PROG},
+>   	{"test_dynptr_skb_no_buff", SETUP_SKB_PROG},
+>   	{"test_dynptr_skb_strcmp", SETUP_SKB_PROG},
+> +	{"test_dynptr_skb_tp_btf", SETUP_SKB_PROG_TP},
+>   };
+>   
+>   static void verify_success(const char *prog_name, enum test_setup_type setup_type)
+> @@ -35,7 +37,7 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
+>   	struct dynptr_success *skel;
+>   	struct bpf_program *prog;
+>   	struct bpf_link *link;
+> -       int err;
+> +	int err;
+>   
+>   	skel = dynptr_success__open();
+>   	if (!ASSERT_OK_PTR(skel, "dynptr_success__open"))
+> @@ -47,7 +49,7 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
+>   	if (!ASSERT_OK_PTR(prog, "bpf_object__find_program_by_name"))
+>   		goto cleanup;
+>   
+> -       bpf_program__set_autoload(prog, true);
+> +	bpf_program__set_autoload(prog, true);
+>   
+>   	err = dynptr_success__load(skel);
+>   	if (!ASSERT_OK(err, "dynptr_success__load"))
+> @@ -87,6 +89,36 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
+>   
+>   		break;
 >   	}
->   }
->   
-> +static bool prog_arg_maybe_null(const struct bpf_prog *prog, const struct btf *btf,
-
-The "prog" arg is not used, so the following nit...
-
-
-> +				const struct btf_param *arg)
-> +{
-> +	return btf_param_match_suffix(btf, arg, "__nullable");
-> +}
+> +	case SETUP_SKB_PROG_TP:
+> +	{
+> +		struct __sk_buff skb = {};
+> +		struct bpf_object *obj;
+> +		int aux_prog_fd;
 > +
->   int btf_ctx_arg_offset(const struct btf *btf, const struct btf_type *func_proto,
->   		       u32 arg_no)
->   {
-> @@ -6554,6 +6560,9 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
->   	if (prog_args_trusted(prog))
->   		info->reg_type |= PTR_TRUSTED;
->   
-> +	if (prog_arg_maybe_null(prog, btf, &args[arg]))
+> +		/* Just use its test_run to trigger kfree_skb tracepoint */
+> +		err = bpf_prog_test_load("./test_pkt_access.bpf.o", BPF_PROG_TYPE_SCHED_CLS,
+> +					 &obj, &aux_prog_fd);
+> +		if (!ASSERT_OK(err, "prog_load sched cls"))
+> +			goto cleanup;
+> +
+> +		LIBBPF_OPTS(bpf_test_run_opts, topts,
+> +			    .data_in = &pkt_v4,
+> +			    .data_size_in = sizeof(pkt_v4),
+> +			    .ctx_in = &skb,
+> +			    .ctx_size_in = sizeof(skb),
+> +		);
+> +
+> +		link = bpf_program__attach(prog);
+> +		if (!ASSERT_OK_PTR(link, "bpf_program__attach"))
+> +			goto cleanup;
+> +
+> +		err = bpf_prog_test_run_opts(aux_prog_fd, &topts);
 
-... I changed it to directly use
-btf_param_match_suffix(btf, &args[arg], "__nullable"),
+bpf_link__destroy(link) is needed. I fixed it and applied. Thanks.
 
-and removed the new prog_arg_maybe_null(). There are already a few 
-is_kfunc_arg_{nullable, ...} helpers in verifier.c. Maybe we can consider 
-refactoring them (if) there are more use cases like this in the future.
-
+> +
+> +		if (!ASSERT_OK(err, "test_run"))
+> +			goto cleanup;
+> +
+> +		break;
+> +	}
+>   	}
