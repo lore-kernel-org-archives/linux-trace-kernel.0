@@ -1,142 +1,293 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEE41C32E4
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 21:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4F9191F8F;
+	Thu, 12 Sep 2024 22:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726176496; cv=none; b=j4Yawq/AjRvwIUn/7eu0zF4aWjl7oTSvl68Q2HUEwoMv0bkyI852/PejUtFr2JetLbo2kmY5vvvr1T2j0pvGf/4bdkA7IFOqsRCa/JwjD7LTwvwFYJpgbau2GWQJoeN2j/UC31TuBhE/SglH8F9cUSoQqvdScI/y5lfRRzK7a0M=
+	t=1726179608; cv=none; b=rYvbKUygE+9uj0xzlG7wRNPb0NG2p8X3jaF+l++Wmxirb787t+CCekS5mN2Bf1EMIzdSqq+kOUtf+/HZKkxs1vLpUpUKSAY4DMvCdqJgkjQ6j1+UArqjB5tB7SFTyJwRkDE3vy5KX+kYQVuA71EKGm2+7uZ0t+SIFdTJ5p1H74I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726176496; c=relaxed/simple;
-	bh=5JkxikacpkxMhEfI8RHLq4pR2MZVCxlyp/YT3slkSRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q1o4NX2bhTAOeIQXIQ6tlhVNsPNrSrye+Ld3mBu8EOE/ogOs/BmDIgp3ERxQf8ghhMGlJrVOwgoLluwdNTUvmSGL9xKDYAi+d8/T8CdVIet+nqlbZ7zCmNo1AtYG2jSgEuMOmulHx5r7E0DX+yHW+f9wBkKILHeKBdcKHW7bQos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hBuSp432; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1726179608; c=relaxed/simple;
+	bh=4KvjL9alLChNH5qfYu8L6u407dvTlrkvisLjpNv431s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tk16ldnB1n8AazLQAl8I2PIC93ubnDIA8GN9uxANrlZ0AdZEJS5h1IWPnx3SABjstfd311w7AE+2yUfij/AEZYEWDPZZTWIAL8dH77hBNuCriRV1/4hK6uVkS17vaytEY+Zstw/AO9d3RkhqcfGx2YMgC6RlxMFuLPy7pu4Qiv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hhwt5M9y; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hBuSp432"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3e03974b6a5so698813b6e.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 14:28:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hhwt5M9y"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2d89229ac81so1250443a91.0;
+        Thu, 12 Sep 2024 15:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726176493; x=1726781293; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVBoJCNLRR8X5TrQ/I9maABRhanYWycmzMG9wsr9TFk=;
-        b=hBuSp432GHht2giE25DmEt4Cf4MyyXdMBywe3F91wAfmdryRhF9JH9NgXeB+Jb8/Hn
-         9DsHN3jfCJstrCsyAqCDCQD1h8qXEl62enET1NHGmaByruOye1ktTAjCdxSUIYXs+ud4
-         6g7VRGrd1kwY70V8jYR7TvuKzKUh5rf67Z+NNvo9eU9+85QbSvQ9mXpBNmBNc3p3rW3c
-         SFO0lfubi4hqca9oBKQ13fQxopWMeO+pZN1BrKVodc/537N+w6BdrdBH9hSPp7Vef5x1
-         5bDOy9iFf09EB55g2Xn2RGkr7x5yWDBmj+TmTk1V3S/Cmc26w1ao1KyACatjWEKRDEoY
-         EV9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726176493; x=1726781293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1726179606; x=1726784406; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EVBoJCNLRR8X5TrQ/I9maABRhanYWycmzMG9wsr9TFk=;
-        b=dUygaSNZIbAoA3OaWf92XJGD0tixSH2vv6k7Sy/cT6W64u9wn/hZ1L2KILvecjsOb7
-         6DjaIKaZN1xJWagbAfX+yFMNVTgLQChKTT5TpnDzUOGdjsluuY42CVqYHSqFiMjq1YOc
-         pafEgROd5+nD+p/VdZxMzxC9shy6EhHiqtsa7gHz0HOxWylN5CYdG1JToj1MNjU/ZwrS
-         50jxLZqB5Y7YmgOu7szQ/wbCby/V9KbDuM/1BzD19LvFZV94ynyH1K8Yhljjo6tt4dbk
-         XDRvThtdVOJ81Fo2OFgPKS47cUqXkdoGRu4/UK8YPh7kBnxn4x09BhID5qnfkcocUp5x
-         Mitw==
-X-Forwarded-Encrypted: i=1; AJvYcCWj8soPWCICqF7InlY/v4lW8qyE9Nm4Z6d2Wmu150FzZ8n4Y8JBmvx1Q5hxaemVbtexoPF3XyaSnvm3m04FBoEEIrg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeYZUYoC0QutuRR1a5zN2OxKz0JNTwexS1WRFdZdC4Yn5lH3uT
-	2TSHIK5+ZRzr1oJoLBdyS7GIxrC9O3FTSFYak3wDwnNEU6Tgo+tZgMJ5TrG9+w==
-X-Google-Smtp-Source: AGHT+IE+PplQfr1wmi1rPq6cfJUOVee5axfQ/fpUSWcQDWuQhtkqeGRwdyj65KxYO5B4v8hXLcmStg==
-X-Received: by 2002:a05:6808:10c1:b0:3e0:6809:ab18 with SMTP id 5614622812f47-3e071a8f33emr2960910b6e.13.1726176493194;
-        Thu, 12 Sep 2024 14:28:13 -0700 (PDT)
-Received: from google.com (30.64.135.34.bc.googleusercontent.com. [34.135.64.30])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3e039c05857sm2544147b6e.45.2024.09.12.14.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Sep 2024 14:28:12 -0700 (PDT)
-Date: Thu, 12 Sep 2024 14:28:10 -0700
-From: Justin Stitt <justinstitt@google.com>
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, 
-	alx@kernel.org, ebiederm@xmission.com, alexei.starovoitov@gmail.com, 
-	rostedt@goodmis.org, catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	selinux@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>
-Subject: Re: [PATCH v8 8/8] drm: Replace strcpy() with strscpy()
-Message-ID: <qqpiar6nlyuill6eng7safauo2xzzpx46cv6wku4xe42qsw47m@rirhsxrdzm2z>
-References: <20240828030321.20688-1-laoar.shao@gmail.com>
- <20240828030321.20688-9-laoar.shao@gmail.com>
+        bh=SagmcUfMRj7CswGgvyMGzL+KR4HzY8oA3rfSHnW0rGw=;
+        b=Hhwt5M9yNOANdo7nn9RurtRbl2OpD6VluoGIyzHk3yATg5QaiaBCUPTugqyhF39Cay
+         1dbRlNLSFwz1Fo6NlTQ8w9x7WQkqLKrcn2+ZxarBsy31Q5zGU0NcDOMlKT+gBcVh5OF+
+         N8wR9uCeZp9NPBVIBYqq1hLqOJe5lfwfyRl9J07hk7m+LcJqo/CoGEVeHjVVnETklH2e
+         q6cnkIAPDrhqz/ZFYUHjSLEy3BmWmQPxKYUeq9BH5gVnKrue9XdtxX20TqOKVIcH+WTP
+         j0WFJXnEm2DTejT1LE/azMFax7vAqf+StEbzHQDZnSi6MWOuSES75qc/X0mywL3gZmYE
+         SIZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726179606; x=1726784406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SagmcUfMRj7CswGgvyMGzL+KR4HzY8oA3rfSHnW0rGw=;
+        b=itWZJyXYZvLCU/ArA6jBp6g58dPLlU6K4UY3FLhWfc3zsOxwEDNDmh81ciHimn7fCN
+         n9Wki7U9HD1qPG98fLoCCxxYeCX4q57c0zAvKdYQ1AI86GLdD5kImNdiWK0tvF0+VQBH
+         oohafbQysy0iHp82rd/U2FPFMxdVrMQO9PDdXwUB4vAZvk8xRx1QorBIR7hh30ld6QSw
+         UeV9/cpuKIndV8pshtdxm2mH15EV+sBRt1BenYKUWSIYLYYMnsNAHYt97UXhACic6U1i
+         8Ir9v/RKcD8IDFO8SJhuZMB/FOLqoV91HX/uXU3Q7QcgAHxmkcDvu7Bm8qjBsF07zv4A
+         MEiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXw/K3R6nAnbx+YomupDcCLfZif6iYAkHIAzPEQZR0tUo5HhdWDtN5X+t/NuOEi9PDfmkM=@vger.kernel.org, AJvYcCXyqZsA/r3gpUUy0PpNDSbhfmJfaYobkij07Vd8AbCKU7F591PTWmbkyxmwdVOsePCVWHKnLJ9O1JLKOd/r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9PbJPCFZ1iqG8Hulyr7xj3AFLg4R2Lqx2Txg1c4fF4HNPk/Hj
+	3edKnyMD8EXxDrFv6B5Mnm6MXrCVK59kdY5ojSjvsIg6pRwT7RGvXeSxmR6nHqQwdEC/8RAmDa3
+	0WWVMB581qsEeLaeBlhVGEGE6QBs=
+X-Google-Smtp-Source: AGHT+IGfqDytp8ykySDhYO5cmlto0zg26xLHQ2nm/xbuMBqLsy5H3krZS+pfz6TUXijAno29TpeKY7wnK6r3A8gBe+4=
+X-Received: by 2002:a17:90a:ab0b:b0:2d8:97b7:449f with SMTP id
+ 98e67ed59e1d1-2dba0065e20mr5259536a91.38.1726179606298; Thu, 12 Sep 2024
+ 15:20:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240828030321.20688-9-laoar.shao@gmail.com>
+References: <CAJuCfpFFqqUWYOob_WYG_aY=PurnKvZjxznnx7V0=ESbNzHr_w@mail.gmail.com>
+ <20240912210222.186542-1-surenb@google.com> <CAJuCfpGgoSYmGSdcf+fZF1mUeNo-M=fzfk7G6ATs5-0TT+zkfQ@mail.gmail.com>
+In-Reply-To: <CAJuCfpGgoSYmGSdcf+fZF1mUeNo-M=fzfk7G6ATs5-0TT+zkfQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Sep 2024 15:19:54 -0700
+Message-ID: <CAEf4BzZTaS3jeUvBiAdH8x6N71fkxJYT7ohPYPKqfSyJZ=NGog@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm: introduce mmap_lock_speculation_{start|end}
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, andrii@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Aug 28, 2024 at 11:03:21AM GMT, Yafang Shao wrote:
-> To prevent erros from occurring when the src string is longer than the
-> dst string in strcpy(), we should use strscpy() instead. This
-> approach also facilitates future extensions to the task comm.
-> 
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: David Airlie <airlied@gmail.com>
-> ---
->  drivers/gpu/drm/drm_framebuffer.c     | 2 +-
->  drivers/gpu/drm/i915/i915_gpu_error.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-> index 888aadb6a4ac..2d6993539474 100644
-> --- a/drivers/gpu/drm/drm_framebuffer.c
-> +++ b/drivers/gpu/drm/drm_framebuffer.c
-> @@ -868,7 +868,7 @@ int drm_framebuffer_init(struct drm_device *dev, struct drm_framebuffer *fb,
->  	INIT_LIST_HEAD(&fb->filp_head);
->  
->  	fb->funcs = funcs;
-> -	strcpy(fb->comm, current->comm);
-> +	strscpy(fb->comm, current->comm);
->  
->  	ret = __drm_mode_object_add(dev, &fb->base, DRM_MODE_OBJECT_FB,
->  				    false, drm_framebuffer_free);
-> diff --git a/drivers/gpu/drm/i915/i915_gpu_error.c b/drivers/gpu/drm/i915/i915_gpu_error.c
-
-There are other strcpy() in this file but it seems all control paths to
-the copies themselves stem from string literals, so it is probably fine
-not to also change those ones. But, if a v9 is required and you're
-feeling up to it, we should probably replace them too, as per [1].
-
-
-> index 96c6cafd5b9e..afa9dae39378 100644
-> --- a/drivers/gpu/drm/i915/i915_gpu_error.c
-> +++ b/drivers/gpu/drm/i915/i915_gpu_error.c
-> @@ -1412,7 +1412,7 @@ static bool record_context(struct i915_gem_context_coredump *e,
->  	rcu_read_lock();
->  	task = pid_task(ctx->pid, PIDTYPE_PID);
->  	if (task) {
-> -		strcpy(e->comm, task->comm);
-> +		strscpy(e->comm, task->comm);
->  		e->pid = task->pid;
->  	}
->  	rcu_read_unlock();
-> -- 
-> 2.43.5
-> 
+On Thu, Sep 12, 2024 at 2:04=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
 >
+> On Thu, Sep 12, 2024 at 2:02=E2=80=AFPM Suren Baghdasaryan <surenb@google=
+.com> wrote:
+> >
+> > Add helper functions to speculatively perform operations without
+> > read-locking mmap_lock, expecting that mmap_lock will not be
+> > write-locked and mm is not modified from under us.
+>
+> Here you go. I hope I got the ordering right this time around, but I
+> would feel much better if Jann reviewed it before it's included in
+> your next patchset :)
+
+Thanks a lot! And yes, I'll give it a bit of time for reviews before
+sending a new revision.
+
+Did you by any chance get any new ideas for possible benchmarks
+(beyond what I did with will-it-scale)?
 
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
-[1]: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-
-Thanks
-Justin
+> Thanks,
+> Suren.
+>
+> >
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> > Changes since v1 [1]:
+> > - Made memory barriers in inc_mm_lock_seq and mmap_lock_speculation_end
+> > more strict, per Jann Horn
+> >
+> > [1] https://lore.kernel.org/all/20240906051205.530219-2-andrii@kernel.o=
+rg/
+> >
+> >  include/linux/mm_types.h  |  3 ++
+> >  include/linux/mmap_lock.h | 74 ++++++++++++++++++++++++++++++++-------
+> >  kernel/fork.c             |  3 --
+> >  3 files changed, 65 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 6e3bdf8e38bc..5d8cdebd42bc 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -887,6 +887,9 @@ struct mm_struct {
+> >                  * Roughly speaking, incrementing the sequence number i=
+s
+> >                  * equivalent to releasing locks on VMAs; reading the s=
+equence
+> >                  * number can be part of taking a read lock on a VMA.
+> > +                * Incremented every time mmap_lock is write-locked/unl=
+ocked.
+> > +                * Initialized to 0, therefore odd values indicate mmap=
+_lock
+> > +                * is write-locked and even values that it's released.
+> >                  *
+> >                  * Can be modified under write mmap_lock using RELEASE
+> >                  * semantics.
+> > diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> > index de9dc20b01ba..a281519d0c12 100644
+> > --- a/include/linux/mmap_lock.h
+> > +++ b/include/linux/mmap_lock.h
+> > @@ -71,39 +71,86 @@ static inline void mmap_assert_write_locked(const s=
+truct mm_struct *mm)
+> >  }
+> >
+> >  #ifdef CONFIG_PER_VMA_LOCK
+> > +static inline void init_mm_lock_seq(struct mm_struct *mm)
+> > +{
+> > +       mm->mm_lock_seq =3D 0;
+> > +}
+> > +
+> >  /*
+> > - * Drop all currently-held per-VMA locks.
+> > - * This is called from the mmap_lock implementation directly before re=
+leasing
+> > - * a write-locked mmap_lock (or downgrading it to read-locked).
+> > - * This should normally NOT be called manually from other places.
+> > - * If you want to call this manually anyway, keep in mind that this wi=
+ll release
+> > - * *all* VMA write locks, including ones from further up the stack.
+> > + * Increment mm->mm_lock_seq when mmap_lock is write-locked (ACQUIRE s=
+emantics)
+> > + * or write-unlocked (RELEASE semantics).
+> >   */
+> > -static inline void vma_end_write_all(struct mm_struct *mm)
+> > +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire)
+> >  {
+> >         mmap_assert_write_locked(mm);
+> >         /*
+> >          * Nobody can concurrently modify mm->mm_lock_seq due to exclus=
+ive
+> >          * mmap_lock being held.
+> > -        * We need RELEASE semantics here to ensure that preceding stor=
+es into
+> > -        * the VMA take effect before we unlock it with this store.
+> > -        * Pairs with ACQUIRE semantics in vma_start_read().
+> >          */
+> > -       smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
+> > +
+> > +       if (acquire) {
+> > +               WRITE_ONCE(mm->mm_lock_seq, mm->mm_lock_seq + 1);
+> > +               /*
+> > +                * For ACQUIRE semantics we should ensure no following =
+stores are
+> > +                * reordered to appear before the mm->mm_lock_seq modif=
+ication.
+> > +                */
+> > +               smp_wmb();
+> > +       } else {
+> > +               /*
+> > +                * We need RELEASE semantics here to ensure that preced=
+ing stores
+> > +                * into the VMA take effect before we unlock it with th=
+is store.
+> > +                * Pairs with ACQUIRE semantics in vma_start_read().
+> > +                */
+> > +               smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1=
+);
+> > +       }
+> > +}
+> > +
+> > +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, i=
+nt *seq)
+> > +{
+> > +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
+> > +       *seq =3D smp_load_acquire(&mm->mm_lock_seq);
+> > +       /* Allow speculation if mmap_lock is not write-locked */
+> > +       return (*seq & 1) =3D=3D 0;
+> > +}
+> > +
+> > +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int=
+ seq)
+> > +{
+> > +       /* Pairs with ACQUIRE semantics in inc_mm_lock_seq(). */
+> > +       smp_rmb();
+> > +       return seq =3D=3D READ_ONCE(mm->mm_lock_seq);
+> >  }
+> > +
+> >  #else
+> > -static inline void vma_end_write_all(struct mm_struct *mm) {}
+> > +static inline void init_mm_lock_seq(struct mm_struct *mm) {}
+> > +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire)=
+ {}
+> > +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, i=
+nt *seq) { return false; }
+> > +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int=
+ seq) { return false; }
+> >  #endif
+> >
+> > +/*
+> > + * Drop all currently-held per-VMA locks.
+> > + * This is called from the mmap_lock implementation directly before re=
+leasing
+> > + * a write-locked mmap_lock (or downgrading it to read-locked).
+> > + * This should normally NOT be called manually from other places.
+> > + * If you want to call this manually anyway, keep in mind that this wi=
+ll release
+> > + * *all* VMA write locks, including ones from further up the stack.
+> > + */
+> > +static inline void vma_end_write_all(struct mm_struct *mm)
+> > +{
+> > +       inc_mm_lock_seq(mm, false);
+> > +}
+> > +
+> >  static inline void mmap_init_lock(struct mm_struct *mm)
+> >  {
+> >         init_rwsem(&mm->mmap_lock);
+> > +       init_mm_lock_seq(mm);
+> >  }
+> >
+> >  static inline void mmap_write_lock(struct mm_struct *mm)
+> >  {
+> >         __mmap_lock_trace_start_locking(mm, true);
+> >         down_write(&mm->mmap_lock);
+> > +       inc_mm_lock_seq(mm, true);
+> >         __mmap_lock_trace_acquire_returned(mm, true, true);
+> >  }
+> >
+> > @@ -111,6 +158,7 @@ static inline void mmap_write_lock_nested(struct mm=
+_struct *mm, int subclass)
+> >  {
+> >         __mmap_lock_trace_start_locking(mm, true);
+> >         down_write_nested(&mm->mmap_lock, subclass);
+> > +       inc_mm_lock_seq(mm, true);
+> >         __mmap_lock_trace_acquire_returned(mm, true, true);
+> >  }
+> >
+> > @@ -120,6 +168,8 @@ static inline int mmap_write_lock_killable(struct m=
+m_struct *mm)
+> >
+> >         __mmap_lock_trace_start_locking(mm, true);
+> >         ret =3D down_write_killable(&mm->mmap_lock);
+> > +       if (!ret)
+> > +               inc_mm_lock_seq(mm, true);
+> >         __mmap_lock_trace_acquire_returned(mm, true, ret =3D=3D 0);
+> >         return ret;
+> >  }
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 61070248a7d3..c86e87ed172b 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1259,9 +1259,6 @@ static struct mm_struct *mm_init(struct mm_struct=
+ *mm, struct task_struct *p,
+> >         seqcount_init(&mm->write_protect_seq);
+> >         mmap_init_lock(mm);
+> >         INIT_LIST_HEAD(&mm->mmlist);
+> > -#ifdef CONFIG_PER_VMA_LOCK
+> > -       mm->mm_lock_seq =3D 0;
+> > -#endif
+> >         mm_pgtables_bytes_init(mm);
+> >         mm->map_count =3D 0;
+> >         mm->locked_vm =3D 0;
+> >
+> > base-commit: 015bdfcb183759674ba1bd732c3393014e35708b
+> > --
+> > 2.46.0.662.g92d0881bb0-goog
+> >
