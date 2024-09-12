@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C4413D531
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 16:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747C2186E53
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 16:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726158058; cv=none; b=q+4pg9xQYvgctFALkUBF8dNrkR08Nx6UQ1cdzrjDPiEUlXktXC4m24YTQD/3X2wJg+0OhwQkSl5+RU4xnuL6c3ucZeMumEo8ZrU2/EfNmxjtfWzj8fOA+SgxyBsP6mqKgQTPj0+AhuMg0Yc5ucKiVtyvS8so5KxdZPllbKenw1A=
+	t=1726158968; cv=none; b=JuErhiLJ5vY7j004slW6PoVQtqvO94jjZz+I7sP3w1BPJ227xrju8L8E77Yr4wsL2ecr+6iAdJrNssbVd1vDAOsHKVa8uXzJr5fZDkQ0PZ5DzGgTUCs5LnsnhP2W2koTByQ1YCsE/k2ptHcfxZGgdcJg+xplIgEckZrP+PUvkqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726158058; c=relaxed/simple;
-	bh=61FjxYnFqoZjOQnqRNBNaBrHVxuHKhvfYWTDzANo+5E=;
+	s=arc-20240116; t=1726158968; c=relaxed/simple;
+	bh=9WdMvPxLilxgseC3h6yRSRdb7LgZMdi1AkzFbJykkA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TsaCgZ/Dt9TCypomsLoassIjx6Yodej1hYe5FVOOYn4JXtge0HrJ4RO/4oa1cuteSKwl7+/0gjRhR/3ND9yHxIQgB06xt880wV8aZzEqr5d5Hrp4On277HLFjXR8HOKvpDb+VOtLCDvUmpjZ1KdQDZS/y1r4Cytn0k/hOEn5s2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrpT/EZt; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=i0SviURB+tS7ykUz1DhjQpr2tBP/Q535yJM0RcqLIoWIZITgn5lJFIj+1tsAVg/z9BZi0ZKNHN0ebfw2NYw6VimRKvjv7zxflu77AzuQ7V2Yendgo3A7sf2Du2jEpaiGsHnIVF9ED6SfY7Ps5lTVE1tZAtfea04TZYZsjy1uE50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FI99GLmg; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrpT/EZt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FI99GLmg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726158055;
+	s=mimecast20190719; t=1726158965;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ig6fjTDvlYtMVYhCJ7RrIH/6U1AxI1tHu5V3SG2FN9M=;
-	b=KrpT/EZtsjf3gV+z3aXt+IVlZoRtvbTeI0q7lO0njDTh2xRkZOKKsyWN1wqZiyBvkcudTB
-	LnJKfyux4AP5aixAb1pes0kAjGEKc6LpRyvTf1DbDXqXV0vRJfUX/1jQIH5VSGIROCLrZR
-	D2XMlwx9C+OCa6LmrGFJ8J3zKRf5kxA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=R8zmoeGBzSdTcK3eaUZ34iznt1NVZM3/FHPWNlfxcos=;
+	b=FI99GLmgjU4cIDlN5sEUIPnPKSVydrCAfVA9A7JM/iiU1WxLaZX/D9I/Lxtf1DNxXPXGb6
+	+9MF6/flAkt9RUtEetRPldxaOh1LF00Xyk/ptu73jLFpcDPtkUadiDbeSxZhAFnqHSKsVK
+	3lClh0FxCRjq2OWOXgwyeYt4bz9Jqp8=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-V78Nc_s2NjqbgP2OY2heiA-1; Thu,
- 12 Sep 2024 12:20:52 -0400
-X-MC-Unique: V78Nc_s2NjqbgP2OY2heiA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-Of5IrvF_PMqt5PDeoSS-7w-1; Thu,
+ 12 Sep 2024 12:36:02 -0400
+X-MC-Unique: Of5IrvF_PMqt5PDeoSS-7w-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 107A61955F3C;
-	Thu, 12 Sep 2024 16:20:49 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A23131955D4C;
+	Thu, 12 Sep 2024 16:35:58 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.62])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 959B61956052;
-	Thu, 12 Sep 2024 16:20:42 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7A76F19560AB;
+	Thu, 12 Sep 2024 16:35:52 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 12 Sep 2024 18:20:37 +0200 (CEST)
-Date: Thu, 12 Sep 2024 18:20:29 +0200
+	oleg@redhat.com; Thu, 12 Sep 2024 18:35:47 +0200 (CEST)
+Date: Thu, 12 Sep 2024 18:35:39 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -58,7 +58,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCHv3 1/7] uprobe: Add support for session consumer
-Message-ID: <20240912162028.GD27648@redhat.com>
+Message-ID: <20240912163539.GE27648@redhat.com>
 References: <20240909074554.2339984-1-jolsa@kernel.org>
  <20240909074554.2339984-2-jolsa@kernel.org>
 Precedence: bulk
@@ -71,92 +71,38 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240909074554.2339984-2-jolsa@kernel.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
 On 09/09, Jiri Olsa wrote:
 >
->  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
 >  {
->  	struct uprobe_consumer *uc;
->  	int remove = UPROBE_HANDLER_REMOVE;
-> -	bool need_prep = false; /* prepare return uprobe, when needed */
 > +	struct return_consumer *ric = NULL;
-> +	struct return_instance *ri = NULL;
->  	bool has_consumers = false;
+>  	struct uprobe *uprobe = ri->uprobe;
+>  	struct uprobe_consumer *uc;
+> -	int srcu_idx;
+> +	int srcu_idx, iter = 0;
 >
->  	current->utask->auprobe = &uprobe->arch;
->
+>  	srcu_idx = srcu_read_lock(&uprobes_srcu);
 >  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
 >  				 srcu_read_lock_held(&uprobes_srcu)) {
-> +		__u64 cookie = 0;
->  		int rc = 0;
->
->  		if (uc->handler) {
-> -			rc = uc->handler(uc, regs);
-> -			WARN(rc & ~UPROBE_HANDLER_MASK,
-> +			rc = uc->handler(uc, regs, &cookie);
-> +			WARN(rc < 0 || rc > 2,
->  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
->  		}
->
-> -		if (uc->ret_handler)
-> -			need_prep = true;
-> -
 > +		/*
-> +		 * The handler can return following values:
-> +		 * 0 - execute ret_handler (if it's defined)
-> +		 * 1 - remove uprobe
-> +		 * 2 - do nothing (ignore ret_handler)
+> +		 * If we don't find return consumer, it means uprobe consumer
+> +		 * was added after we hit uprobe and return consumer did not
+> +		 * get registered in which case we call the ret_handler only
+> +		 * if it's not session consumer.
 > +		 */
->  		remove &= rc;
->  		has_consumers = true;
-> +
-> +		if (rc == 0 && uc->ret_handler) {
+> +		ric = return_consumer_find(ri, &iter, uc->id);
+> +		if (!ric && uc->session)
+> +			continue;
+>  		if (uc->ret_handler)
+> -			uc->ret_handler(uc, ri->func, regs);
+> +			uc->ret_handler(uc, ri->func, regs, ric ? &ric->cookie : NULL);
 
-should we enter this block if uc->handler == NULL?
+So why do we need the new uc->session member and the uc->session above ?
 
-> +			/*
-> +			 * Preallocate return_instance object optimistically with
-> +			 * all possible consumers, so we allocate just once.
-> +			 */
-> +			if (!ri) {
-> +				ri = alloc_return_instance(uprobe->consumers_cnt);
-
-This doesn't look right...
-
-Suppose we have a single consumer C1, so uprobe->consumers_cnt == 1 and
-alloc_return_instance() allocates return_instance with for a single consumer,
-so that only ri->consumers[0] is valid.
-
-Right after that uprobe_register()->consumer_add() adds another consumer
-C2 with ->ret_handler != NULL.
-
-On the next iteration return_consumer_next() will return the invalid addr
-== &ri->consumers[1].
-
-perhaps this needs krealloc() ?
-
-> +				if (!ri)
-> +					return;
-
-Not sure we should simply return if kzalloc fails... at least it would be better
-to clear current->utask->auprobe.
-
-> +	if (ri && !remove)
-> +		prepare_uretprobe(uprobe, regs, ri); /* put bp at return */
-> +	else
-> +		kfree(ri);
-
-Well, if ri != NULL then remove is not possible, afaics... ri != NULL means
-that at least one ->handler() returned rc = 0, thus "remove" must be zero.
-
-So it seems you can just do
-
-	if (ri)
-		prepare_uretprobe(...);
-
-
-Didn't read other parts of your patch yet ;)
+If return_consumer_find() returns NULL, uc->ret_handler(..., NULL) can handle
+this case itself?
 
 Oleg.
 
