@@ -1,54 +1,54 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D10A1C1AB5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 22:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08531A3020
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 22:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726179906; cv=none; b=q5lR8211OqnHSnCIYfUBY0j4VlNOXM7dFAEzmMVKYj2OeYDXOQrcbQpxS3R+2L4sjaMvr8EeNd4hV5qrhlPmvmBsyPvn1IFw9NW/5D47LmyBLO4g2rdS9QGSHep0US2akwPQjESHrZptK+NNRvjSF511VYV3LrkPsoF/Q2RvMoc=
+	t=1726181601; cv=none; b=f2AeLfSjEJS2acx6LuUvzbbL4sX62tY80kdFtGs8L6oGVg+HduypYHkd6tnf+dYzSO9DQSENwc/jbTm5gj1bxovODBrT+xJqqtIGZ8yEs2ZidZspXHZlTHFuiWaOZS+buO7d85bDsdLxK3fs/Lp/JWF7Sn+F6r9hkRX00nx6J78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726179906; c=relaxed/simple;
-	bh=k4RUb5K2Gl6RWzD0JV2UJUW93MljZZq1yD8YMdk19tQ=;
+	s=arc-20240116; t=1726181601; c=relaxed/simple;
+	bh=Rbbh6gPcXkQa0/EdPAvuvlCLT6ueJOwJIlQlPvjSpy8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hsxXHyBBtsCWt2kNaeXw7WwE8YzW3jJ3SEKV55NvzaObmNwKmpCaKJw6CgbmteUPesL2WBNrh1k+K6EddfQezyjUkrIgQvGYBkCmNePQekRPCuQCTrsbHmG06vZSm4ufxkIqgI2e2vkd4xmLLqea7q65BDDEDZd7F0ssdIIw3Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3FDrgOR4; arc=none smtp.client-ip=209.85.208.48
+	 To:Cc:Content-Type; b=E0ybI5kkqc1IRnxJJYXe1DQkTRFQB0/iHiIXkKU7o/crkK0aH5dFQpjXf0Pj3Cxd/BVv5PRr5FAWJWJ4rHjm5449q2SK2DkkSuP5LUaq8S4Y7yqUQQh+0g9Z1gShkh+3Z2U3DaRy6naMD5keZt1YyWpx0c2rjjrsXOk3KpGJv40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3vZ0J/JH; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3FDrgOR4"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5c24374d8b6so5360a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 15:25:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3vZ0J/JH"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c2443b2581so8148a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 15:53:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726179903; x=1726784703; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1726181598; x=1726786398; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r08X9SW48hwdcFyWCetupv6po9aUVBR2VI/xglM7xt0=;
-        b=3FDrgOR4sbK0dPP2q+GFL9DH422ABM/Xi14FjKP4IjG2Mw2Gzl2yVx0/UhCMVNMvrv
-         oFg38BFnqEy0bkAb9Q0BCAPL6MwGFwMETLIOpBuiKdiBucO9clgLFAsgOQ8qWPaP7X6C
-         GrT+XYsitd8hGa/kXiJkOJiY1ZMARgTZs6oGXMQ/AX/SMJNFuWo8kJr4prpKw3ay2oBi
-         WgfLEWvmxPp+a75JOZps8/5Qm8Zr7t2N25RsUJQD1dPsnqdze4HIXWtqzHwDcWZE+Ydp
-         LYgjALWOUkwtzmMc2yTcMcNWXwgbJPbevTkr6YfaYvobch7Tae0UFJhL0cWS9WV9t7M0
-         rZCA==
+        bh=kCNOG1CDmyqExdlHYX65JYGn2614r9IBeuPVpY+h7D0=;
+        b=3vZ0J/JHwoxMyk2YsXl0AMVlc2Ypj15CiuKBPCs3TNK4llPO5ZGy7k6T+l2B+lSpEQ
+         ki5zbFSuxtvZuc5s86HsazVSHtFIkKwTPcSqZBgaSobR2wjVXL4KpagzcpyfnY5aN/it
+         VBYzSEzc1CCrZJe1G5pFBQ8gDI1fAnPARcdKYdgaJ8/C7LQVQVbHxKPXBjV7HgjC8R9t
+         RG2/IynG+yNLVI3RQgpP1TyBKfsyKecYVIQ0BT+/1vgo+4GR72RiY+6aRia21JLvFCc/
+         A+OjHBDT1hudxM+1mXtGcRts1W98Kf3atCy4vrPQdyLbgTDmNy+bFIBBiIRv4dWMvFb4
+         0e/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726179903; x=1726784703;
+        d=1e100.net; s=20230601; t=1726181598; x=1726786398;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r08X9SW48hwdcFyWCetupv6po9aUVBR2VI/xglM7xt0=;
-        b=c7D4enISNIzpWyjDOfVxk6vpy8aPGKFTVivt78gcb6iultj7fN1PMhQmfdzTr838Mh
-         8PW0zMGVTW9GT9up18pS/FLteC1YCl2iPtS/m7quc3Ot5VlfpQVL1Dm+x6GB8UVGSDsk
-         fTIxBFekR1hq9eaC6PYS/Pr2maexT7keyEQkwzyE06Pnmd55xcYAf1cdYlf1w45psiMH
-         M4+0RgmHUmivOLMTKQCGwoc6ilGYzC/szMD68TTQlqF40V63/+cPF6KJX6Z+ZoIeDDGC
-         JnMIf1TU8RVz+HHZeiArZD9Dc+nADm20lxAl3v7IKDE/HFyJrbC4OfiKilgU4KY77MjS
-         heOw==
-X-Gm-Message-State: AOJu0Yz2UK9fRdseUdVQE7KL6jqkgXf36JvkTzOCJZlyJiVzAmyy8BEZ
-	JbvSyZNJTkPPanWDUCpMNiNkW5bNfBUbt4ss995oS3+OTlnnV2nps/qK3nznecFeUY+kIRiADVp
-	NvLWLNOtQIGW7FWWXQNV2w9rktS0fNiX8KsjB
-X-Google-Smtp-Source: AGHT+IGbXWMb8f+8TB0Fh3tbR8FGyTaM8DKVaS1fc+Rx1XvEkBhuc+66BgyT2RB36WIwNd5YLWgX7TxErR5Lw/uLj4E=
-X-Received: by 2002:a05:6402:2688:b0:5c2:5629:5fbb with SMTP id
- 4fb4d7f45d1cf-5c415db646fmr471514a12.1.1726179902448; Thu, 12 Sep 2024
- 15:25:02 -0700 (PDT)
+        bh=kCNOG1CDmyqExdlHYX65JYGn2614r9IBeuPVpY+h7D0=;
+        b=eJ7nu05GbDlJkSVpzmtAyjeGTVXODnIXsfvCIFaps4sE8OsdJKxcClguu+DqQT7rzl
+         SvS7Ail1uNyhG5a3t2w7rqXp9sKVWt4lURREr7VFC/rJwqQ0ezcIJrl43gh+p9QBvTgW
+         SeGp7glyEp7EUtbjJZFVAVC5PXeJcPj1HjTkQSNebqxXT3BlcMHDXQBitHpYWsc2rRij
+         2FS5MCAmQHHqddVtcBKuuGWFIZRNnsTtnNEPHCJXqxrt58TeH4UN64HdSeZ5B4rJEdhv
+         0z1TuSBIUGEV2253EsORIgythdgNXpnjfbnPpN+zVbyfcvbZHGewHJRsDxUxKp5otEmz
+         lTZQ==
+X-Gm-Message-State: AOJu0Yx2U50KUa3Vc2G0vEvOtX/1Mb2MNe4GavOcYobEAj37pYX2tkfE
+	eA+WHbYxGLe8So5K6e2f2n3L1OKJcLa974ZmeZ2gltG6EIctAdBSVlNT0h/GdiISo9ZW9+q46pG
+	TfTweBmsZ9pGQ6ZH4lrqEGN9zW7OPPuPnU/4/
+X-Google-Smtp-Source: AGHT+IHkhZDhmWWPB1cRiDxB9O+hnujHgxHATcCOa7iU1U0cCGKQa4vDx7adryVU89//eg9XTwPdcw004ewXy/PqEHA=
+X-Received: by 2002:a05:6402:27c7:b0:5c2:5641:af79 with SMTP id
+ 4fb4d7f45d1cf-5c414384e17mr546049a12.0.1726181597390; Thu, 12 Sep 2024
+ 15:53:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,249 +56,186 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CAJuCfpFFqqUWYOob_WYG_aY=PurnKvZjxznnx7V0=ESbNzHr_w@mail.gmail.com>
- <20240912210222.186542-1-surenb@google.com> <CAJuCfpGgoSYmGSdcf+fZF1mUeNo-M=fzfk7G6ATs5-0TT+zkfQ@mail.gmail.com>
- <CAEf4BzZTaS3jeUvBiAdH8x6N71fkxJYT7ohPYPKqfSyJZ=NGog@mail.gmail.com>
-In-Reply-To: <CAEf4BzZTaS3jeUvBiAdH8x6N71fkxJYT7ohPYPKqfSyJZ=NGog@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 12 Sep 2024 15:24:50 -0700
-Message-ID: <CAJuCfpE52UO=XCbMh_mE1oMUsnUzf3-uxHHjoWu=tTFzWQ=J4Q@mail.gmail.com>
+ <20240912210222.186542-1-surenb@google.com>
+In-Reply-To: <20240912210222.186542-1-surenb@google.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 13 Sep 2024 00:52:39 +0200
+Message-ID: <CAG48ez131NJWvo_RrxL7Ss0p4jd_aKOu71z1vm9wfaH7Qjn+qw@mail.gmail.com>
 Subject: Re: [PATCH v2 1/1] mm: introduce mmap_lock_speculation_{start|end}
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+To: Suren Baghdasaryan <surenb@google.com>
 Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
 	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
 	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, andrii@kernel.org
+	mjguzik@gmail.com, brauner@kernel.org, andrii@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 12, 2024 at 3:20=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Sep 12, 2024 at 2:04=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> >
-> > On Thu, Sep 12, 2024 at 2:02=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > Add helper functions to speculatively perform operations without
-> > > read-locking mmap_lock, expecting that mmap_lock will not be
-> > > write-locked and mm is not modified from under us.
-> >
-> > Here you go. I hope I got the ordering right this time around, but I
-> > would feel much better if Jann reviewed it before it's included in
-> > your next patchset :)
->
-> Thanks a lot! And yes, I'll give it a bit of time for reviews before
-> sending a new revision.
->
-> Did you by any chance get any new ideas for possible benchmarks
-> (beyond what I did with will-it-scale)?
+On Thu, Sep 12, 2024 at 11:02=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+> Add helper functions to speculatively perform operations without
+> read-locking mmap_lock, expecting that mmap_lock will not be
+> write-locked and mm is not modified from under us.
 
-Hmm. You could use Mel Gorman's mmtests suite I guess.
+I think this is okay now, except for some comments that should be
+fixed up. (Plus my gripe about the sequence count being 32-bit.)
 
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 6e3bdf8e38bc..5d8cdebd42bc 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -887,6 +887,9 @@ struct mm_struct {
+>                  * Roughly speaking, incrementing the sequence number is
+>                  * equivalent to releasing locks on VMAs; reading the seq=
+uence
+>                  * number can be part of taking a read lock on a VMA.
+> +                * Incremented every time mmap_lock is write-locked/unloc=
+ked.
+> +                * Initialized to 0, therefore odd values indicate mmap_l=
+ock
+> +                * is write-locked and even values that it's released.
+
+FWIW, I would still feel happier if this was a 64-bit number, though I
+guess at least with uprobes the attack surface is not that large even
+if you can wrap that counter... 2^31 counter increments are not all
+that much, especially if someone introduces a kernel path in the
+future that lets you repeatedly take the mmap_lock for writing within
+a single syscall without doing much work, or maybe on some machine
+where syscalls are really fast. I really don't like hinging memory
+safety on how fast or slow some piece of code can run, unless we can
+make strong arguments about it based on how many memory writes a CPU
+core is capable of doing per second or stuff like that.
+
+> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> index de9dc20b01ba..a281519d0c12 100644
+> --- a/include/linux/mmap_lock.h
+> +++ b/include/linux/mmap_lock.h
+> @@ -71,39 +71,86 @@ static inline void mmap_assert_write_locked(const str=
+uct mm_struct *mm)
+>  }
 >
+>  #ifdef CONFIG_PER_VMA_LOCK
+> +static inline void init_mm_lock_seq(struct mm_struct *mm)
+> +{
+> +       mm->mm_lock_seq =3D 0;
+> +}
+> +
+>  /*
+> - * Drop all currently-held per-VMA locks.
+> - * This is called from the mmap_lock implementation directly before rele=
+asing
+> - * a write-locked mmap_lock (or downgrading it to read-locked).
+> - * This should normally NOT be called manually from other places.
+> - * If you want to call this manually anyway, keep in mind that this will=
+ release
+> - * *all* VMA write locks, including ones from further up the stack.
+> + * Increment mm->mm_lock_seq when mmap_lock is write-locked (ACQUIRE sem=
+antics)
+> + * or write-unlocked (RELEASE semantics).
+>   */
+> -static inline void vma_end_write_all(struct mm_struct *mm)
+> +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire)
+>  {
+>         mmap_assert_write_locked(mm);
+
+Not a memory barriers thing, but maybe you could throw in some kind of
+VM_WARN_ON() in the branches below that checks that the sequence
+number is odd/even as expected, just to make extra sure...
+
+>         /*
+>          * Nobody can concurrently modify mm->mm_lock_seq due to exclusiv=
+e
+>          * mmap_lock being held.
+> -        * We need RELEASE semantics here to ensure that preceding stores=
+ into
+> -        * the VMA take effect before we unlock it with this store.
+> -        * Pairs with ACQUIRE semantics in vma_start_read().
+>          */
+> -       smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
+> +
+> +       if (acquire) {
+> +               WRITE_ONCE(mm->mm_lock_seq, mm->mm_lock_seq + 1);
+> +               /*
+> +                * For ACQUIRE semantics we should ensure no following st=
+ores are
+> +                * reordered to appear before the mm->mm_lock_seq modific=
+ation.
+> +                */
+> +               smp_wmb();
+
+This is not really a full ACQUIRE; smp_wmb() only orders *stores*, not
+loads, while a real ACQUIRE also prevents reads from being reordered
+up above the atomic access. Please reword the comment to make it clear
+that we don't have a full ACQUIRE here.
+
+We can still have subsequent loads reordered up before the
+mm->mm_lock_seq increment. But I guess that's probably fine as long as
+nobody does anything exceedingly weird that involves lockless users
+*writing* data that we have to read consistently, which wouldn't
+really make sense...
+
+So yeah, I guess this is probably fine, and it matches what
+do_raw_write_seqcount_begin() is doing.
+
+> +       } else {
+> +               /*
+> +                * We need RELEASE semantics here to ensure that precedin=
+g stores
+> +                * into the VMA take effect before we unlock it with this=
+ store.
+> +                * Pairs with ACQUIRE semantics in vma_start_read().
+> +                */
+> +               smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
+> +       }
+> +}
+> +
+> +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, int=
+ *seq)
+> +{
+> +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
+> +       *seq =3D smp_load_acquire(&mm->mm_lock_seq);
+> +       /* Allow speculation if mmap_lock is not write-locked */
+> +       return (*seq & 1) =3D=3D 0;
+> +}
+> +
+> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
+eq)
+> +{
+> +       /* Pairs with ACQUIRE semantics in inc_mm_lock_seq(). */
+
+(see above, it's not actually a full ACQUIRE)
+
+> +       smp_rmb();
+> +       return seq =3D=3D READ_ONCE(mm->mm_lock_seq);
+>  }
+> +
+>  #else
+> -static inline void vma_end_write_all(struct mm_struct *mm) {}
+> +static inline void init_mm_lock_seq(struct mm_struct *mm) {}
+> +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire) {=
+}
+> +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, int=
+ *seq) { return false; }
+> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
+eq) { return false; }
+>  #endif
 >
-> > Thanks,
-> > Suren.
-> >
-> > >
-> > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > > Changes since v1 [1]:
-> > > - Made memory barriers in inc_mm_lock_seq and mmap_lock_speculation_e=
-nd
-> > > more strict, per Jann Horn
-> > >
-> > > [1] https://lore.kernel.org/all/20240906051205.530219-2-andrii@kernel=
-.org/
-> > >
-> > >  include/linux/mm_types.h  |  3 ++
-> > >  include/linux/mmap_lock.h | 74 ++++++++++++++++++++++++++++++++-----=
---
-> > >  kernel/fork.c             |  3 --
-> > >  3 files changed, 65 insertions(+), 15 deletions(-)
-> > >
-> > > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > > index 6e3bdf8e38bc..5d8cdebd42bc 100644
-> > > --- a/include/linux/mm_types.h
-> > > +++ b/include/linux/mm_types.h
-> > > @@ -887,6 +887,9 @@ struct mm_struct {
-> > >                  * Roughly speaking, incrementing the sequence number=
- is
-> > >                  * equivalent to releasing locks on VMAs; reading the=
- sequence
-> > >                  * number can be part of taking a read lock on a VMA.
-> > > +                * Incremented every time mmap_lock is write-locked/u=
-nlocked.
-> > > +                * Initialized to 0, therefore odd values indicate mm=
-ap_lock
-> > > +                * is write-locked and even values that it's released=
-.
-> > >                  *
-> > >                  * Can be modified under write mmap_lock using RELEAS=
-E
-> > >                  * semantics.
-> > > diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> > > index de9dc20b01ba..a281519d0c12 100644
-> > > --- a/include/linux/mmap_lock.h
-> > > +++ b/include/linux/mmap_lock.h
-> > > @@ -71,39 +71,86 @@ static inline void mmap_assert_write_locked(const=
- struct mm_struct *mm)
-> > >  }
-> > >
-> > >  #ifdef CONFIG_PER_VMA_LOCK
-> > > +static inline void init_mm_lock_seq(struct mm_struct *mm)
-> > > +{
-> > > +       mm->mm_lock_seq =3D 0;
-> > > +}
-> > > +
-> > >  /*
-> > > - * Drop all currently-held per-VMA locks.
-> > > - * This is called from the mmap_lock implementation directly before =
-releasing
-> > > - * a write-locked mmap_lock (or downgrading it to read-locked).
-> > > - * This should normally NOT be called manually from other places.
-> > > - * If you want to call this manually anyway, keep in mind that this =
-will release
-> > > - * *all* VMA write locks, including ones from further up the stack.
-> > > + * Increment mm->mm_lock_seq when mmap_lock is write-locked (ACQUIRE=
- semantics)
-> > > + * or write-unlocked (RELEASE semantics).
-> > >   */
-> > > -static inline void vma_end_write_all(struct mm_struct *mm)
-> > > +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquir=
-e)
-> > >  {
-> > >         mmap_assert_write_locked(mm);
-> > >         /*
-> > >          * Nobody can concurrently modify mm->mm_lock_seq due to excl=
-usive
-> > >          * mmap_lock being held.
-> > > -        * We need RELEASE semantics here to ensure that preceding st=
-ores into
-> > > -        * the VMA take effect before we unlock it with this store.
-> > > -        * Pairs with ACQUIRE semantics in vma_start_read().
-> > >          */
-> > > -       smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
-> > > +
-> > > +       if (acquire) {
-> > > +               WRITE_ONCE(mm->mm_lock_seq, mm->mm_lock_seq + 1);
-> > > +               /*
-> > > +                * For ACQUIRE semantics we should ensure no followin=
-g stores are
-> > > +                * reordered to appear before the mm->mm_lock_seq mod=
-ification.
-> > > +                */
-> > > +               smp_wmb();
-> > > +       } else {
-> > > +               /*
-> > > +                * We need RELEASE semantics here to ensure that prec=
-eding stores
-> > > +                * into the VMA take effect before we unlock it with =
-this store.
-> > > +                * Pairs with ACQUIRE semantics in vma_start_read().
-> > > +                */
-> > > +               smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq +=
- 1);
-> > > +       }
-> > > +}
-> > > +
-> > > +static inline bool mmap_lock_speculation_start(struct mm_struct *mm,=
- int *seq)
-> > > +{
-> > > +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
-> > > +       *seq =3D smp_load_acquire(&mm->mm_lock_seq);
-> > > +       /* Allow speculation if mmap_lock is not write-locked */
-> > > +       return (*seq & 1) =3D=3D 0;
-> > > +}
-> > > +
-> > > +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, i=
-nt seq)
-> > > +{
-> > > +       /* Pairs with ACQUIRE semantics in inc_mm_lock_seq(). */
-> > > +       smp_rmb();
-> > > +       return seq =3D=3D READ_ONCE(mm->mm_lock_seq);
-> > >  }
-> > > +
-> > >  #else
-> > > -static inline void vma_end_write_all(struct mm_struct *mm) {}
-> > > +static inline void init_mm_lock_seq(struct mm_struct *mm) {}
-> > > +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquir=
-e) {}
-> > > +static inline bool mmap_lock_speculation_start(struct mm_struct *mm,=
- int *seq) { return false; }
-> > > +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, i=
-nt seq) { return false; }
-> > >  #endif
-> > >
-> > > +/*
-> > > + * Drop all currently-held per-VMA locks.
-> > > + * This is called from the mmap_lock implementation directly before =
-releasing
-> > > + * a write-locked mmap_lock (or downgrading it to read-locked).
-> > > + * This should normally NOT be called manually from other places.
-> > > + * If you want to call this manually anyway, keep in mind that this =
-will release
-> > > + * *all* VMA write locks, including ones from further up the stack.
-> > > + */
-> > > +static inline void vma_end_write_all(struct mm_struct *mm)
-> > > +{
-> > > +       inc_mm_lock_seq(mm, false);
-> > > +}
-> > > +
-> > >  static inline void mmap_init_lock(struct mm_struct *mm)
-> > >  {
-> > >         init_rwsem(&mm->mmap_lock);
-> > > +       init_mm_lock_seq(mm);
-> > >  }
-> > >
-> > >  static inline void mmap_write_lock(struct mm_struct *mm)
-> > >  {
-> > >         __mmap_lock_trace_start_locking(mm, true);
-> > >         down_write(&mm->mmap_lock);
-> > > +       inc_mm_lock_seq(mm, true);
-> > >         __mmap_lock_trace_acquire_returned(mm, true, true);
-> > >  }
-> > >
-> > > @@ -111,6 +158,7 @@ static inline void mmap_write_lock_nested(struct =
-mm_struct *mm, int subclass)
-> > >  {
-> > >         __mmap_lock_trace_start_locking(mm, true);
-> > >         down_write_nested(&mm->mmap_lock, subclass);
-> > > +       inc_mm_lock_seq(mm, true);
-> > >         __mmap_lock_trace_acquire_returned(mm, true, true);
-> > >  }
-> > >
-> > > @@ -120,6 +168,8 @@ static inline int mmap_write_lock_killable(struct=
- mm_struct *mm)
-> > >
-> > >         __mmap_lock_trace_start_locking(mm, true);
-> > >         ret =3D down_write_killable(&mm->mmap_lock);
-> > > +       if (!ret)
-> > > +               inc_mm_lock_seq(mm, true);
-> > >         __mmap_lock_trace_acquire_returned(mm, true, ret =3D=3D 0);
-> > >         return ret;
-> > >  }
-> > > diff --git a/kernel/fork.c b/kernel/fork.c
-> > > index 61070248a7d3..c86e87ed172b 100644
-> > > --- a/kernel/fork.c
-> > > +++ b/kernel/fork.c
-> > > @@ -1259,9 +1259,6 @@ static struct mm_struct *mm_init(struct mm_stru=
-ct *mm, struct task_struct *p,
-> > >         seqcount_init(&mm->write_protect_seq);
-> > >         mmap_init_lock(mm);
-> > >         INIT_LIST_HEAD(&mm->mmlist);
-> > > -#ifdef CONFIG_PER_VMA_LOCK
-> > > -       mm->mm_lock_seq =3D 0;
-> > > -#endif
-> > >         mm_pgtables_bytes_init(mm);
-> > >         mm->map_count =3D 0;
-> > >         mm->locked_vm =3D 0;
-> > >
-> > > base-commit: 015bdfcb183759674ba1bd732c3393014e35708b
-> > > --
-> > > 2.46.0.662.g92d0881bb0-goog
-> > >
+> +/*
+> + * Drop all currently-held per-VMA locks.
+> + * This is called from the mmap_lock implementation directly before rele=
+asing
+> + * a write-locked mmap_lock (or downgrading it to read-locked).
+> + * This should normally NOT be called manually from other places.
+> + * If you want to call this manually anyway, keep in mind that this will=
+ release
+> + * *all* VMA write locks, including ones from further up the stack.
+
+Outdated comment - now you are absolutely not allowed to call
+vma_end_write_all() manually anymore, it would mess up the odd/even
+state of the counter.
+
+> + */
+> +static inline void vma_end_write_all(struct mm_struct *mm)
+> +{
+> +       inc_mm_lock_seq(mm, false);
+> +}
