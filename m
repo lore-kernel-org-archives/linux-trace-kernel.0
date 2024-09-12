@@ -1,221 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4D13D556;
-	Thu, 12 Sep 2024 15:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C4413D531
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 16:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726153905; cv=none; b=Bgxk6LXqrnKDrgtvjN39ILpjrI+078jaY+6ewcqCDXOTCrNIbqFpQkrn0Prq7MKW2aw/zXb8u8l0veHx22eIntXTFsm1TgsE587XlKH9UhkYtqnDO8fIq1aOHKj0bjddFkGLkFUUJvIaGP+Dsn2asILwBcirs+96JYBVLIO07qw=
+	t=1726158058; cv=none; b=q+4pg9xQYvgctFALkUBF8dNrkR08Nx6UQ1cdzrjDPiEUlXktXC4m24YTQD/3X2wJg+0OhwQkSl5+RU4xnuL6c3ucZeMumEo8ZrU2/EfNmxjtfWzj8fOA+SgxyBsP6mqKgQTPj0+AhuMg0Yc5ucKiVtyvS8so5KxdZPllbKenw1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726153905; c=relaxed/simple;
-	bh=amoRD0d8bJ/7dPaqGBhYcBhuedEEvM42PqERJ3MQPSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W/AOwAQNAzpZHp7mCiysQj5sUsPZdK0K4hfhObR4tUJuB1lIqYgiT3ZRxpUHReMKpx1PR19VlRMkoL93vaym43wNLqX79uI3cJ02tyoRtzoB/6qb46uxzqtI9QFldO/a5cXsnzPKt+aZkE5nozjLWXudnSmIsNAxBBqFw6H7VOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZK9CCC9M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726158058; c=relaxed/simple;
+	bh=61FjxYnFqoZjOQnqRNBNaBrHVxuHKhvfYWTDzANo+5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TsaCgZ/Dt9TCypomsLoassIjx6Yodej1hYe5FVOOYn4JXtge0HrJ4RO/4oa1cuteSKwl7+/0gjRhR/3ND9yHxIQgB06xt880wV8aZzEqr5d5Hrp4On277HLFjXR8HOKvpDb+VOtLCDvUmpjZ1KdQDZS/y1r4Cytn0k/hOEn5s2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrpT/EZt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZK9CCC9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BEA7C4CEC3;
-	Thu, 12 Sep 2024 15:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726153904;
-	bh=amoRD0d8bJ/7dPaqGBhYcBhuedEEvM42PqERJ3MQPSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZK9CCC9Mt3C2f0oXIJhhtFzWAfokK+GK2NlgFQW41ye9g1X8QC+/UECeN7RWCYuAS
-	 gKZ3kB48r4791FUCDaAgtCW5Dba4KrXKUPuzUmHHV7qLtmoy9ndpY9QgGsE8qL7VpI
-	 uHmWWHigBAZQSCyffbAGIrxhkwNqCDb3U33CQgOFWfn8Si8N/izXvgBn8+T8ErtY6w
-	 lWukascOsXO5OdG9mXztT1t+oll7k8Fn1w+ErPjz60vcTUbooygkyBILFUeuCPH7+f
-	 xrIkFXzj94VFXHvQRmX2NaiapAh61O3zuemBHL5kjyMD1lkZdeEKDqHM0sT0t2YZzM
-	 qbu3JfTZFAENw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrpT/EZt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726158055;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ig6fjTDvlYtMVYhCJ7RrIH/6U1AxI1tHu5V3SG2FN9M=;
+	b=KrpT/EZtsjf3gV+z3aXt+IVlZoRtvbTeI0q7lO0njDTh2xRkZOKKsyWN1wqZiyBvkcudTB
+	LnJKfyux4AP5aixAb1pes0kAjGEKc6LpRyvTf1DbDXqXV0vRJfUX/1jQIH5VSGIROCLrZR
+	D2XMlwx9C+OCa6LmrGFJ8J3zKRf5kxA=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-V78Nc_s2NjqbgP2OY2heiA-1; Thu,
+ 12 Sep 2024 12:20:52 -0400
+X-MC-Unique: V78Nc_s2NjqbgP2OY2heiA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 107A61955F3C;
+	Thu, 12 Sep 2024 16:20:49 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.62])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 959B61956052;
+	Thu, 12 Sep 2024 16:20:42 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 12 Sep 2024 18:20:37 +0200 (CEST)
+Date: Thu, 12 Sep 2024 18:20:29 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
 	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Guo Ren <guoren@kernel.org>,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v14 19/19] fgraph: Skip recording calltime/rettime if it is not nneeded
-Date: Fri, 13 Sep 2024 00:11:38 +0900
-Message-Id: <172615389864.133222.14452329708227900626.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <172615368656.133222.2336770908714920670.stgit@devnote2>
-References: <172615368656.133222.2336770908714920670.stgit@devnote2>
-User-Agent: StGit/0.19
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 1/7] uprobe: Add support for session consumer
+Message-ID: <20240912162028.GD27648@redhat.com>
+References: <20240909074554.2339984-1-jolsa@kernel.org>
+ <20240909074554.2339984-2-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240909074554.2339984-2-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 09/09, Jiri Olsa wrote:
+>
+>  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  {
+>  	struct uprobe_consumer *uc;
+>  	int remove = UPROBE_HANDLER_REMOVE;
+> -	bool need_prep = false; /* prepare return uprobe, when needed */
+> +	struct return_consumer *ric = NULL;
+> +	struct return_instance *ri = NULL;
+>  	bool has_consumers = false;
+>
+>  	current->utask->auprobe = &uprobe->arch;
+>
+>  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+>  				 srcu_read_lock_held(&uprobes_srcu)) {
+> +		__u64 cookie = 0;
+>  		int rc = 0;
+>
+>  		if (uc->handler) {
+> -			rc = uc->handler(uc, regs);
+> -			WARN(rc & ~UPROBE_HANDLER_MASK,
+> +			rc = uc->handler(uc, regs, &cookie);
+> +			WARN(rc < 0 || rc > 2,
+>  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
+>  		}
+>
+> -		if (uc->ret_handler)
+> -			need_prep = true;
+> -
+> +		/*
+> +		 * The handler can return following values:
+> +		 * 0 - execute ret_handler (if it's defined)
+> +		 * 1 - remove uprobe
+> +		 * 2 - do nothing (ignore ret_handler)
+> +		 */
+>  		remove &= rc;
+>  		has_consumers = true;
+> +
+> +		if (rc == 0 && uc->ret_handler) {
 
-Skip recording calltime and rettime if the fgraph_ops does not need it.
-This is a kind of performance optimization for fprobe. Since the fprobe
-user does not use these entries, recording timestamp in fgraph is just
-a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
-and all fgraph_ops sets this flag, skip recording calltime and rettime.
+should we enter this block if uc->handler == NULL?
 
-Here is the performance results measured by
- tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
+> +			/*
+> +			 * Preallocate return_instance object optimistically with
+> +			 * all possible consumers, so we allocate just once.
+> +			 */
+> +			if (!ri) {
+> +				ri = alloc_return_instance(uprobe->consumers_cnt);
 
-Without this:
-kprobe-multi   :    5.700 ± 0.065M/s
-kretprobe-multi:    4.239 ± 0.006M/s
+This doesn't look right...
 
-With skip-timestamp:
-kprobe-multi   :    6.265 ± 0.033M/s	+9.91%
-kretprobe-multi:    4.758 ± 0.009M/s	+12.24%
+Suppose we have a single consumer C1, so uprobe->consumers_cnt == 1 and
+alloc_return_instance() allocates return_instance with for a single consumer,
+so that only ri->consumers[0] is valid.
 
-Suggested-by: Jiri Olsa <olsajiri@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v11:
-  - Simplify it to be symmetric on push and pop. (Thus the timestamp
-    getting place is a bit shifted.)
- Changes in v10:
-  - Add likely() to skipping timestamp.
- Changes in v9:
-  - Newly added.
----
- include/linux/ftrace.h |    2 ++
- kernel/trace/fgraph.c  |   36 +++++++++++++++++++++++++++++++++---
- kernel/trace/fprobe.c  |    1 +
- 3 files changed, 36 insertions(+), 3 deletions(-)
+Right after that uprobe_register()->consumer_add() adds another consumer
+C2 with ->ret_handler != NULL.
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 63fb91088a23..bab6fabb3fa1 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1160,6 +1160,8 @@ struct fgraph_ops {
- 	void				*private;
- 	trace_func_graph_ent_t		saved_func;
- 	int				idx;
-+	/* If skip_timestamp is true, this does not record timestamps. */
-+	bool				skip_timestamp;
- };
- 
- void *fgraph_reserve_data(int idx, int size_bytes);
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 6a3e2db16aa4..c116a92839ae 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -174,6 +174,7 @@ int ftrace_graph_active;
- 
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
- static unsigned long fgraph_array_bitmask;
-+static bool fgraph_skip_timestamp;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -557,7 +558,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 		return -EBUSY;
- 	}
- 
--	calltime = trace_clock_local();
-+	/* This is not really 'likely' but for keeping the least path to be faster. */
-+	if (likely(fgraph_skip_timestamp))
-+		calltime = 0LL;
-+	else
-+		calltime = trace_clock_local();
- 
- 	offset = READ_ONCE(current->curr_ret_stack);
- 	ret_stack = RET_STACK(current, offset);
-@@ -728,6 +733,12 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	*ret = ret_stack->ret;
- 	trace->func = ret_stack->func;
- 	trace->calltime = ret_stack->calltime;
-+	/* This is not really 'likely' but for keeping the least path to be faster. */
-+	if (likely(!trace->calltime))
-+		trace->rettime = 0LL;
-+	else
-+		trace->rettime = trace_clock_local();
-+
- 	trace->overrun = atomic_read(&current->trace_overrun);
- 	trace->depth = current->curr_ret_depth;
- 	/*
-@@ -788,7 +799,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-@@ -1248,6 +1258,24 @@ static void ftrace_graph_disable_direct(bool disable_branch)
- 	fgraph_direct_gops = &fgraph_stub;
- }
- 
-+static void update_fgraph_skip_timestamp(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+		struct fgraph_ops *gops = fgraph_array[i];
-+
-+		if (gops == &fgraph_stub)
-+			continue;
-+
-+		if (!gops->skip_timestamp) {
-+			fgraph_skip_timestamp = false;
-+			return;
-+		}
-+	}
-+	fgraph_skip_timestamp = true;
-+}
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
-@@ -1271,6 +1299,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	gops->idx = i;
- 
- 	ftrace_graph_active++;
-+	update_fgraph_skip_timestamp();
- 
- 	if (ftrace_graph_active == 2)
- 		ftrace_graph_disable_direct(true);
-@@ -1303,6 +1332,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		ftrace_graph_active--;
- 		gops->saved_func = NULL;
- 		fgraph_lru_release_index(i);
-+		update_fgraph_skip_timestamp();
- 	}
- out:
- 	mutex_unlock(&ftrace_lock);
-@@ -1326,8 +1356,8 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		goto out;
- 
- 	fgraph_array[gops->idx] = &fgraph_stub;
--
- 	ftrace_graph_active--;
-+	update_fgraph_skip_timestamp();
- 
- 	if (!ftrace_graph_active)
- 		command = FTRACE_STOP_FUNC_RET;
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 5a0b4ef52fa7..b108d26d7ee5 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -345,6 +345,7 @@ NOKPROBE_SYMBOL(fprobe_return);
- static struct fgraph_ops fprobe_graph_ops = {
- 	.entryfunc	= fprobe_entry,
- 	.retfunc	= fprobe_return,
-+	.skip_timestamp = true,
- };
- static int fprobe_graph_active;
- 
+On the next iteration return_consumer_next() will return the invalid addr
+== &ri->consumers[1].
+
+perhaps this needs krealloc() ?
+
+> +				if (!ri)
+> +					return;
+
+Not sure we should simply return if kzalloc fails... at least it would be better
+to clear current->utask->auprobe.
+
+> +	if (ri && !remove)
+> +		prepare_uretprobe(uprobe, regs, ri); /* put bp at return */
+> +	else
+> +		kfree(ri);
+
+Well, if ri != NULL then remove is not possible, afaics... ri != NULL means
+that at least one ->handler() returned rc = 0, thus "remove" must be zero.
+
+So it seems you can just do
+
+	if (ri)
+		prepare_uretprobe(...);
+
+
+Didn't read other parts of your patch yet ;)
+
+Oleg.
 
