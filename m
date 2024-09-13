@@ -1,101 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2441527B1;
-	Fri, 13 Sep 2024 20:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940CC1E884;
+	Fri, 13 Sep 2024 21:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726258285; cv=none; b=ruM07gbvt4hBR9P3Do1R5WAsQkDrj4mXKc8Oh23a+fjMSU2mdNrwKF2R68N8Xi3LSqDcuBB6kdpJz1q4+NN56wKzwJG7BHT5gSsTEzB7bcgeReEwTw1vDDyqXuUMz5JkHXguEUpJng/QlGtfNzUvrveRnYLVk6jBeRyPAWNInag=
+	t=1726263427; cv=none; b=DOH0vIY3kJrXGVq2e2KTCIAhmm9WsJisWeZYvEbmuy62IgbJiH/wte6niVuaCd+bntu33cFeXNWW9Aah7abvMgSlr02U2fIjNm+XfCROrFWYvXEkxVK31TgBmJh4ajgppMGe0GoEzF61Qm99eKJrdMl+J7y+b9ZEba3wtzcUpKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726258285; c=relaxed/simple;
-	bh=KrbMlRrWnddy/v2g9DYSFXsxpZtGqQACNSxfRkmK8MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a1+qLogqIGeyK9XdPodgpPhJYsep5XfruaTE3kKj8bBoNIEXfDVS+mesByzCrGPbXBVidywbLKK1oG/3mFRh0dj2WDgM23eGKqBAch9/2vd6tz62P84Y+UXOUQNaQX2wq+3qGxhyK62nikmHhb026xJnWhkHEEDLc1Ll4gtepTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikorU5mW; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726263427; c=relaxed/simple;
+	bh=vb+rHDerVoW5b0X5DQj9tZH6EoL//ykjxLDpApsZaWI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=se7E4C1zWgNY+FVnEWqxVN5muNVHpxBlXk+f2iiOxkCPMIe2ZAPa4EWUgsGucQSXy9nQGwASfp0gdMkjjs3FgD2X4dRF6k69HPabIxRWuQX8MoBy+agvSye2uk6eGLNtU3nBJJQiyweo3AGP3lMLWoJP2nQUOmEM+xZmZDWNL8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTspgCEE; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikorU5mW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726258284; x=1757794284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KrbMlRrWnddy/v2g9DYSFXsxpZtGqQACNSxfRkmK8MA=;
-  b=ikorU5mWE80zrfEthi4LdbLQdFO52Zwthv9YiUCfk8thofBmobK95Xkt
-   xPxPvPGBW1yTiajQ8xQNBtu8oEuGRz6SWDqbqxDHh5wJOFj9hmeXC5OB5
-   eL0Fl2yRWBYatEQZXZH7RaXAQTUCF/0OYIZvoYWYtil1xjfs8thXqaTcC
-   Sy9eo1zNMFdxdljjJ6otdEEc6dKNhSFcoGWDxNDZnrMIQfZfZ8/fzzBvw
-   qFLiXCmgwxP7TejMG2CIJf0jn4JBrKW/kFhw8Zaaechkeotv7UyFUP9eR
-   9BHl4tcfLN6C7Dj3HM4SFGhSWv3xgmK/qh1ml1an58p0lupRarG7kK/+p
-   g==;
-X-CSE-ConnectionGUID: +9OXtRWKS0WXn0CEQF1+Iw==
-X-CSE-MsgGUID: ETEGM7fcTWulquKgPdTzeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="24712405"
-X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
-   d="scan'208";a="24712405"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 13:11:22 -0700
-X-CSE-ConnectionGUID: p0m3HkP0T625lIOSnYXlsw==
-X-CSE-MsgGUID: lCn4N0rjRkqcbFadFfXsKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
-   d="scan'208";a="72774956"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 13 Sep 2024 13:11:20 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spCdR-0006wT-2I;
-	Fri, 13 Sep 2024 20:11:17 +0000
-Date: Sat, 14 Sep 2024 04:10:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Liao Chang <liaochang1@huawei.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] function_graph: Simplify the initialization of fgraph
- LRU data
-Message-ID: <202409140325.G1zsZ0jL-lkp@intel.com>
-References: <20240912111550.1752115-1-liaochang1@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTspgCEE"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2d86f71353dso1930511a91.2;
+        Fri, 13 Sep 2024 14:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726263425; x=1726868225; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ufuODkYRAPVANRv1dPBGY6G0b9qqTcEIHXtDX+U2lRw=;
+        b=KTspgCEEdKH80GiOAYw+4j2CEy5Rfjt90hy5Hd+pjjVouG51ha2hZXLlp23defAs/a
+         1OzQDAAzSel38AB0AhBxt2X9pWg5Swvp+/+nLb9JVdfNdTbcnLtWN1JNBj9biUM0tJXb
+         l6IzxWKo9VJbcpIFs1/7XtxAOaBI6PR67itDk6cknAChDUB2YeA4+GqWMbyNIgsvXCbC
+         XRMwBLPRcoVTZoEXTMPGVLKfY9+fnX1FnCMoa9A+HlbmePUHngIObD11yT2GA+pwFr5J
+         OKEUeQ+xT4cKQu7VbmjAYSuiPmaJJMsm1i2CtNvY3VxO5ihORfGZI/mKKIp4SHjGpoL0
+         WrTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726263425; x=1726868225;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ufuODkYRAPVANRv1dPBGY6G0b9qqTcEIHXtDX+U2lRw=;
+        b=HWKifG54XysD3d52PmLd/dY7shoL0Ah3qDNgKw2ft3l5uHOCWHgsylDfaZEngs7qYu
+         lzFRFMIQr8xpa8FZkSWaDJjtN+MIH07iclJGTJ8iF+fxw2ld5M2VigD7Mn6JBZo0nqLx
+         mpEIzer1y00nJPx9MuwD7TF0sZbvA/tEOaD/aKgY7l4ELBjC09MOwRGMNJ0CV++AsDRC
+         0hvAmbQ0T6UXwEYtLIw97W4qbnJlfVK9pdGV/xs4tGIVTaSkeZ+SK6CoY6AUgFfCxzqQ
+         5OUjIPTdlo1GlCyFuHOf21OaMvKiD6SR9gJ+G7f3C07otgTxPIGoXfN5hehsxVgprlPN
+         /S8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV66e+3Z8DhUiZxjXP5U0ndvJdhoCxGLYqlCEGaQB3SuV9VIow+sv1VUMw3SRK01LHz2AE=@vger.kernel.org, AJvYcCWme7GTiFCg/ocpwTRpApdsgpNTsez5G8Q70k5vW+idYJNf95sOMp9JPWDH+GoZ13TQHqYLcN+uiKM7ahod@vger.kernel.org
+X-Gm-Message-State: AOJu0YwskOAk7AYBMXxZ0wA6tpsbQVGn34YNz86oFKN83MFINxALAHH2
+	9QmuTqj5QB5XGLjlwxJQDPiGec7SIBOjXZ7JbbqmL3z378iePa0/sVC8K0HWwFTDRRM+1i7FYC/
+	pvuMBG+nPvCFifKGnUK5QY2TVNo8=
+X-Google-Smtp-Source: AGHT+IEFKApS///oMb0n1UxSVQ36wqC+1R1mMCqxzCL4yxI+RigDDVRsD36joNxkerIubYatgYfo906sEC/GVrJjcSQ=
+X-Received: by 2002:a17:90a:a598:b0:2d8:f515:3169 with SMTP id
+ 98e67ed59e1d1-2db9ff79c90mr7418409a91.6.1726263424810; Fri, 13 Sep 2024
+ 14:37:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240912111550.1752115-1-liaochang1@huawei.com>
+References: <20240910174312.3646590-1-andrii@kernel.org>
+In-Reply-To: <20240910174312.3646590-1-andrii@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 13 Sep 2024 14:36:52 -0700
+Message-ID: <CAEf4BzaVW_HXTCJDx=iHs9AJOSaUQq3Bwg+hFc3FCdqxb5Ah6Q@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: switch to RCU Tasks Trace flavor for better performance
+To: Andrii Nakryiko <andrii@kernel.org>, peterz@infradead.org, mingo@kernel.org
+Cc: linux-trace-kernel@vger.kernel.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Liao,
+On Tue, Sep 10, 2024 at 10:43=E2=80=AFAM Andrii Nakryiko <andrii@kernel.org=
+> wrote:
+>
+> This patch switches uprobes SRCU usage to RCU Tasks Trace flavor, which
+> is optimized for more lightweight and quick readers (at the expense of
+> slower writers, which for uprobes is a fine tradeof) and has better
+> performance and scalability with number of CPUs.
+>
+> Similarly to baseline vs SRCU, we've benchmarked SRCU-based
+> implementation vs RCU Tasks Trace implementation.
+>
+> SRCU
+> =3D=3D=3D=3D
+> uprobe-nop      ( 1 cpus):    3.276 =C2=B1 0.005M/s  (  3.276M/s/cpu)
+> uprobe-nop      ( 2 cpus):    4.125 =C2=B1 0.002M/s  (  2.063M/s/cpu)
+> uprobe-nop      ( 4 cpus):    7.713 =C2=B1 0.002M/s  (  1.928M/s/cpu)
+> uprobe-nop      ( 8 cpus):    8.097 =C2=B1 0.006M/s  (  1.012M/s/cpu)
+> uprobe-nop      (16 cpus):    6.501 =C2=B1 0.056M/s  (  0.406M/s/cpu)
+> uprobe-nop      (32 cpus):    4.398 =C2=B1 0.084M/s  (  0.137M/s/cpu)
+> uprobe-nop      (64 cpus):    6.452 =C2=B1 0.000M/s  (  0.101M/s/cpu)
+>
+> uretprobe-nop   ( 1 cpus):    2.055 =C2=B1 0.001M/s  (  2.055M/s/cpu)
+> uretprobe-nop   ( 2 cpus):    2.677 =C2=B1 0.000M/s  (  1.339M/s/cpu)
+> uretprobe-nop   ( 4 cpus):    4.561 =C2=B1 0.003M/s  (  1.140M/s/cpu)
+> uretprobe-nop   ( 8 cpus):    5.291 =C2=B1 0.002M/s  (  0.661M/s/cpu)
+> uretprobe-nop   (16 cpus):    5.065 =C2=B1 0.019M/s  (  0.317M/s/cpu)
+> uretprobe-nop   (32 cpus):    3.622 =C2=B1 0.003M/s  (  0.113M/s/cpu)
+> uretprobe-nop   (64 cpus):    3.723 =C2=B1 0.002M/s  (  0.058M/s/cpu)
+>
+> RCU Tasks Trace
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> uprobe-nop      ( 1 cpus):    3.396 =C2=B1 0.002M/s  (  3.396M/s/cpu)
+> uprobe-nop      ( 2 cpus):    4.271 =C2=B1 0.006M/s  (  2.135M/s/cpu)
+> uprobe-nop      ( 4 cpus):    8.499 =C2=B1 0.015M/s  (  2.125M/s/cpu)
+> uprobe-nop      ( 8 cpus):   10.355 =C2=B1 0.028M/s  (  1.294M/s/cpu)
+> uprobe-nop      (16 cpus):    7.615 =C2=B1 0.099M/s  (  0.476M/s/cpu)
+> uprobe-nop      (32 cpus):    4.430 =C2=B1 0.007M/s  (  0.138M/s/cpu)
+> uprobe-nop      (64 cpus):    6.887 =C2=B1 0.020M/s  (  0.108M/s/cpu)
+>
+> uretprobe-nop   ( 1 cpus):    2.174 =C2=B1 0.001M/s  (  2.174M/s/cpu)
+> uretprobe-nop   ( 2 cpus):    2.853 =C2=B1 0.001M/s  (  1.426M/s/cpu)
+> uretprobe-nop   ( 4 cpus):    4.913 =C2=B1 0.002M/s  (  1.228M/s/cpu)
+> uretprobe-nop   ( 8 cpus):    5.883 =C2=B1 0.002M/s  (  0.735M/s/cpu)
+> uretprobe-nop   (16 cpus):    5.147 =C2=B1 0.001M/s  (  0.322M/s/cpu)
+> uretprobe-nop   (32 cpus):    3.738 =C2=B1 0.008M/s  (  0.117M/s/cpu)
+> uretprobe-nop   (64 cpus):    4.397 =C2=B1 0.002M/s  (  0.069M/s/cpu)
+>
+> Peak throughput for uprobes increases from 8 mln/s to 10.3 mln/s
+> (+28%!), and for uretprobes from 5.3 mln/s to 5.8 mln/s (+11%), as we
+> have more work to do on uretprobes side.
+>
+> Even single-thread (no contention) performance is slightly better: 3.276
+> mln/s to 3.396 mln/s (+3.5%) for uprobes, and 2.055 mln/s to 2.174 mln/s
+> (+5.8%) for uretprobes.
+>
+> We also select TASKS_TRACE_RCU for UPROBES in Kconfig due to the new
+> dependency.
+>
+> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  arch/Kconfig            |  1 +
+>  kernel/events/uprobes.c | 38 ++++++++++++++++----------------------
+>  2 files changed, 17 insertions(+), 22 deletions(-)
+>
 
-kernel test robot noticed the following build errors:
+Just in case this slipped through the cracks (and is not just waiting
+its turn to be applied), ping. It would be nice to have this patch
+with the rest of uprobe patches from the original patch set to go in
+together. Thanks!
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.11-rc7 next-20240913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 975dd22a2dbd..a0df3f3dc484 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -126,6 +126,7 @@ config KPROBES_ON_FTRACE
+>  config UPROBES
+>         def_bool n
+>         depends on ARCH_SUPPORTS_UPROBES
+> +       select TASKS_TRACE_RCU
+>         help
+>           Uprobes is the user-space counterpart to kprobes: they
+>           enable instrumentation applications (such as 'perf probe')
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Liao-Chang/function_graph-Simplify-the-initialization-of-fgraph-LRU-data/20240912-193159
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240912111550.1752115-1-liaochang1%40huawei.com
-patch subject: [PATCH] function_graph: Simplify the initialization of fgraph LRU data
-config: arm-randconfig-004-20240913 (https://download.01.org/0day-ci/archive/20240914/202409140325.G1zsZ0jL-lkp@intel.com/config)
-compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project bf684034844c660b778f0eba103582f582b710c9)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409140325.G1zsZ0jL-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409140325.G1zsZ0jL-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: ftrace_graph_entry_stub
-   >>> referenced by arch/arm/kernel/entry-ftrace.o:(.text+0xB8) in archive vmlinux.a
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[...]
