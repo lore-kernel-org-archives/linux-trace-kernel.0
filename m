@@ -1,191 +1,233 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D4A12C54D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 19:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEAF1448DF
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 19:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726254081; cv=none; b=FdmoxYDVZCLMNPy2GGCFSLmrJkSeED0rmu4/tHe0zJMa8z7CtKcjlCP6Z14shE8VNaBMnDgPw/KPWMWpO8Sqf142lvzsgCCXovM5Ag5i3j+Dngu/npt/NbPPy3bYUAEfBaPa2r2SpF4j33ph3mzxC3H9ssfQ24+17p6OO1ob2OU=
+	t=1726254316; cv=none; b=LhIjj173c7imGWF4g73fYfrnXga0VwhSiY5otlFuHA9YL+4TUCBt1vajBk7h0PQdXtK3NHFX+bnGA/RpRHKHXl3eL60LUSitpO6Ie/A9Vmb1v4qgs/ng9wdy8mGz6meqemoqTJS6T0jfHKA04PsmZhWV7N4tMouuVSWFwS2p288=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726254081; c=relaxed/simple;
-	bh=E1eRAu8n5ez/oUS4tq7qANEINJSQOuFuP0bxVY+xPPA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tQXOiAsrk9bZeAxwR4HbkTWh8bUUXq/8DGw+3YmbfjZc7eqPQ9pCXmB4dvBU3vOL/Aim3XwZVp6dAgW55JumcbjZeqMC3n47aoRHlnwBPTZ5yHugqKHycbiEcbe+Qmve7Gtqt4KuJa3zjnwzgvqB9xB1raGxCgX12+3aRNXn86w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eIDoxL9z; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1726254316; c=relaxed/simple;
+	bh=+6S0/RgELVdUJel/cUWVNUFvKDxxASFqNiNWuuAIlOE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e7irdZfr+/qDnkOesGUXlKgiqLda1OHhy/pto2Zh9OW0w0POSuRGFuQTdop6TFNAbMMC0RaxQt5NmLtPzva4rE25kEvncH9RmyYKd5NKwRs0vX7ZrALsk2u+5ceaNgdxhPWxldmuhjLHkNFt/GBpmxTJrfSN7pHwVe+MX6+96wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SGe2R29G; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eIDoxL9z"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e1aa529e30eso2139275276.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 12:01:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SGe2R29G"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a8d60e23b33so305432866b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 12:05:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726254078; x=1726858878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cd5FUrdjat42hoHRpGz2FP5m+uOzjPunqQr7W48J0MY=;
-        b=eIDoxL9zHnUz69jyVE52OewjTZUPlpOGlEbXO/XHDr3vzI8y8nkAHmhNACy6uvIsGI
-         1/267aTw5lDVYLSC4DA+OgwNZQh1itBZHgk7jLo9mOqxn/UYhw5vZQIyJj2qLk1hBQcS
-         vL5NHYJgv9561PSgD8X9d3N66MPmn++APD2clecdcfdYXlags0bZ07pp83hUPVdv2I4E
-         n3leFiZOg9qKZBzJ3Sw/PXeXvb8Fc7DQArXpJbgjIXKgVZ3ITn5zNpt/uhrAtPO2O1r3
-         gSe+Uep030wlQYm/fq8D8sCfAOiyhYPLACyY5qAZETII4+aWbS3+oMr9UA8LTSTR9oAT
-         2t9A==
+        d=google.com; s=20230601; t=1726254313; x=1726859113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4WoHxTe60RAKB/6oAK3V+qyyYMmqcduoEZhn+8jgBzQ=;
+        b=SGe2R29GaMaMC/NjyrOjbkh+zI3QoUlIuRXmbN+ZJgRWsW8f9ewqK1+j8VoSv/UAfq
+         nX2Z+efSSXrA9gCNIxRZkmtDHM6L+wchOy9XNQD0PiTiT/fhC7dM1zJddHz/hoPHeluN
+         YCzIWuAKjDzS2n2l+LbPO7VmbyZzg7lz2jEghBF/6bKd6JQVBgpnksxFkxFU81N7j8hs
+         RTzYEt/9F5o9dNpsR4H5Y7KCjwktaPr3BKaKjMX5jIJjP5US87oKNzWpEVYk52zhtICb
+         gjnYAzOjq6e0frPy1u/1V7TkFSA6vTbFNfrQ+2pwhCJcSR+LSyIG3JkQ9r24QcQ6u4OS
+         RqFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726254078; x=1726858878;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Cd5FUrdjat42hoHRpGz2FP5m+uOzjPunqQr7W48J0MY=;
-        b=Pro3BXwZITSkChvPcSXemiUOKU6durFRdnzHR9bbPVZ7AptkGYupGawLl/iqvQyevv
-         vgq3hbCS11F4gj54Gj+rcj9Mh5+S3dbUPkofsXjPUOdT/q9bHy2uSTfUAQMvA+Zg+Ge8
-         QGCKY2djCXXJGJycR5o8b4/G6+qa4YYCyS4r/EV/Yp2fhdsfroDly3u493UIbGFsDF+/
-         gYdsWUkNXdcDglyS/s2XinfoT1oreevKtHOrFsPrr1RpAxx2rEpXbnMPqz1xnlxtalDM
-         2PBi/Ab7BpTB4pI8wbJtyqAnyCyNobDc3sdfOOAzMDdsOyr4n7WzhwjkH/VTH41LlQW8
-         gNLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWE+lGD86C7NUa12Xc34Y+nTZNGIcHung1nJqE/pTFuZnO2KbzyCVV9Jp9pl2ZrqrzwAQdKWARjQgsQUO4qLUJXa6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxekw0k84vsfykgqM1EMKnfox5PwFzhxNAE08/WlSDnnSFoGJ1r
-	MZzi7rBefBJJ51nHiQA1NirHmhPY79A3lw5z1cYEGK9ITcUxYRNIPYE6wpdz06LeWvbiVrjGf5m
-	aAg==
-X-Google-Smtp-Source: AGHT+IEDv8fggeewTOqZNOqNHA4N99QDZMuot5y4ilmd4s6i5ZFifjrvMHV2hbXtsE3V6EXZKIaTHsh+QCM=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:74cb:0:b0:e1d:20cf:aec5 with SMTP id
- 3f1490d57ef6-e1db010002emr7547276.9.1726254077940; Fri, 13 Sep 2024 12:01:17
- -0700 (PDT)
-Date: Fri, 13 Sep 2024 12:01:16 -0700
-In-Reply-To: <20240609154945.55332-6-nsaenz@amazon.com>
+        d=1e100.net; s=20230601; t=1726254313; x=1726859113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4WoHxTe60RAKB/6oAK3V+qyyYMmqcduoEZhn+8jgBzQ=;
+        b=QYIkwMKHbXASbUcJo/+zAzXaTyY47Z3XWxZFeYsKM4UwT0X9uz66bRtZbSGFDqJH5U
+         rNuWZ4TRFudQ3uVj5jgHf5WJpyQ0YCdQTu8zs3OgRlimU8wAMFdeVJnq25kvX7ASMphe
+         4uLwCbF/FuARjGb23WaL6zuUjOQFAA12MqYaSZDq8G0YHuh9PIxQH1BV4RLMLcJZIlAJ
+         gs5A5h81WwXg7bv22IIba4+FHOSqlPY53BN6hPMIvxRjv87wOxqAXFvV5zhEi4IQ+hmT
+         W35cjFZds3lSN+Epx14LrjGlVVEorl15jwMYhc++s1NlUxh8JKXvCp+aCT/8WfttcQhr
+         cjhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUswhrHLxlpM7PVrqVoVGdETXUX1WGJ8zEM/Xlj6zhSvvGLwo6Gc+UyrJxXubE3GIZsgnQgTU9ltvpe0hRvlydvD1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyByT640yJhawGrwnbqNVUVbcsbbzvu99usG8xeY4xsKAmsH1DW
+	1fwLX8kxPxqkAnxm8sUDGyQI7sETl9xdGHI5QM2alz1JjvkOErjXROdOEW2YkDlrnFqGcAI3Kwq
+	gxUomygVHAvF3KnLnXj9zQX08kNRLO7RdjLE=
+X-Google-Smtp-Source: AGHT+IG59IuCCkmHhT+Rulyrhsmm8XAw4Ppz/CVDh2Em59N1I4OU70I4N7kTlFoJUR58V4SEALGhnWnRyRvV9d3fR0Y=
+X-Received: by 2002:a17:906:c14c:b0:a8a:9054:83b8 with SMTP id
+ a640c23a62f3a-a9029619a16mr727817566b.46.1726254312497; Fri, 13 Sep 2024
+ 12:05:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-6-nsaenz@amazon.com>
-Message-ID: <ZuSL_FCfvVywCPxm@google.com>
-Subject: Re: [PATCH 05/18] KVM: x86: hyper-v: Introduce MP_STATE_HV_INACTIVE_VTL
-From: Sean Christopherson <seanjc@google.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	graf@amazon.de, dwmw2@infradead.org, paul@amazon.com, mlevitsk@redhat.com, 
-	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	amoorthy@google.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org> <20240913-mgtime-v7-1-92d4020e3b00@kernel.org>
+ <CANDhNCof7+q+-XzQoP=w0pcrS_-ifH9pmAmtq8H++tbognBv1A@mail.gmail.com>
+In-Reply-To: <CANDhNCof7+q+-XzQoP=w0pcrS_-ifH9pmAmtq8H++tbognBv1A@mail.gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 13 Sep 2024 12:05:01 -0700
+Message-ID: <CANDhNCogb5014XM0UDd6FJNth=Oot+thb4m4M6Oq1zMndMz_dQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/11] timekeeping: move multigrain timestamp floor
+ handling into timekeeper
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	"Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
-> Model inactive VTL vCPUs' behaviour with a new MP state.
->=20
-> Inactive VTLs are in an artificial halt state. They enter into this
-> state in response to invoking HvCallVtlCall, HvCallVtlReturn.
-> User-space, which is VTL aware, can processes the hypercall, and set the
-> vCPU in MP_STATE_HV_INACTIVE_VTL. When a vCPU is run in this state it'll
-> block until a wakeup event is received. The rules of what constitutes an
-> event are analogous to halt's except that VTL's ignore RFLAGS.IF.
+On Fri, Sep 13, 2024 at 11:59=E2=80=AFAM John Stultz <jstultz@google.com> w=
+rote:
 >
-> When a wakeup event is registered, KVM will exit to user-space with a
-> KVM_SYSTEM_EVENT exit, and KVM_SYSTEM_EVENT_WAKEUP event type.
-> User-space is responsible of deciding whether the event has precedence
-> over the active VTL and will switch the vCPU to KVM_MP_STATE_RUNNABLE
-> before resuming execution on it.
->=20
-> Running a KVM_MP_STATE_HV_INACTIVE_VTL vCPU with pending events will
-> return immediately to user-space.
->=20
-> Note that by re-using the readily available halt infrastructure in
-> KVM_RUN, MP_STATE_HV_INACTIVE_VTL correctly handles (or disables)
-> virtualisation features like the VMX preemption timer or APICv before
-> blocking.
-
-IIUC, this is a convoluted and roundabout way to let userspace check if a v=
-CPU
-has a wake event, correct?  Even by the end of the series, KVM never sets
-MP_STATE_HV_INACTIVE_VTL, i.e. the only use for this is to combine it as:
-
-  KVM_SET_MP_STATE =3D> KVM_RUN =3D> KVM_SET_MP_STATE =3D> KVM_RUN
-
-The upside to this approach is that it requires minimal uAPI and very few K=
-VM
-changes, but that's about it AFAICT.  On the other hand, making this so pai=
-nfully
-specific feels like a missed opportunity, and unnecessarily bleeds VTL deta=
-ils
-into KVM.
-
-Bringing halt-polling into the picture (by going down kvm_vcpu_halt()) is a=
-lso
-rather bizarre since quite a bit of time has already elapsed since the vCPU=
- first
-did HvCallVtlCall/HvCallVtlReturn.  But that doesn't really have anything t=
-o do
-with MP_STATE_HV_INACTIVE_VTL, e.g. it'd be just as easy to go to kvm_vcpu_=
-block().
-
-Why not add an ioctl() to very explicitly block until a wake event is ready=
-?
-Or probably better, a generic "wait" ioctl() that takes the wait type as an
-argument.
-
-Kinda like your idea of supporting .poll() on the vCPU FD[*], except it's v=
-ery
-specifically restricted to a single caller (takes vcpu->mutex).  We could p=
-robably
-actually implement it via .poll(), but I suspect that would be more confusi=
-ng than
-helpful.
-
-E.g. extract the guts of vcpu_block() to a separate helper, and then wire t=
-hat
-up to an ioctl().
-
-As for the RFLAGS.IF quirk, maybe handle that via a kvm_run flag?  That way=
-,
-userspace doesn't need to do a round-trip just to set a single bit.  E.g. I=
- think
-we should be able to squeeze it into "struct kvm_hyperv_exit".
-
-Actually, speaking of kvm_hyperv_exit, is there a reason we can't simply wi=
-re up
-HVCALL_VTL_CALL and/or HVCALL_VTL_RETURN to a dedicated complete_userspace_=
-io()
-callback that blocks if some flag is set?  That would make it _much_ cleane=
-r to
-scope the RFLAGS.IF check to kvm_hyperv_exit, and would require little to n=
-o new
-uAPI.
-
-> @@ -3797,6 +3798,10 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!gif_set(svm))
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return true;
+> On Fri, Sep 13, 2024 at 6:54=E2=80=AFAM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >
+> > For multigrain timestamps, we must keep track of the latest timestamp
+> > that has ever been handed out, and never hand out a coarse time below
+> > that value.
+> >
+> > Add a static singleton atomic64_t into timekeeper.c that we can use to
+> > keep track of the latest fine-grained time ever handed out. This is
 >
-> + =C2=A0 =C2=A0 =C2=A0 /*
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* The Hyper-V TLFS states that RFLAGS.IF is =
-ignored when deciding
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0* whether to block interrupts targeted at in=
-active VTLs.
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (is_guest_mode(vcpu)) {
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* As long as int=
-errupts are being delivered... =C2=A0*/
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if ((svm->nested.=
-ctl.int_ctl & V_INTR_MASKING_MASK)
-> @@ -3808,7 +3813,7 @@ bool svm_interrupt_blocked(struct kvm_vcpu *vcpu)
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (nested_exit_o=
-n_intr(svm))
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 return false;
-> =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {
-> - =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!svm_get_if_flag(v=
-cpu))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!svm_get_if_flag(v=
-cpu) && !kvm_hv_vcpu_is_idle_vtl(vcpu))
+> Maybe drop "ever" and  add "handed out through a specific interface",
+> as timestamps can be accessed in a lot of ways that don't keep track
+> of what was returned.
+>
+>
+> > tracked as a monotonic ktime_t value to ensure that it isn't affected b=
+y
+> > clock jumps.
+> >
+> > Add two new public interfaces:
+> >
+> > - ktime_get_coarse_real_ts64_mg() fills a timespec64 with the later of =
+the
+> >   coarse-grained clock and the floor time
+> >
+> > - ktime_get_real_ts64_mg() gets the fine-grained clock value, and tries
+> >   to swap it into the floor. A timespec64 is filled with the result.
+> >
+> > Since the floor is global, we take great pains to avoid updating it
+> > unless it's absolutely necessary. If we do the cmpxchg and find that th=
+e
+> > value has been updated since we fetched it, then we discard the
+> > fine-grained time that was fetched in favor of the recent update.
+> >
+> > To maximize the window of this occurring when multiple tasks are racing
+> > to update the floor, ktime_get_coarse_real_ts64_mg returns a cookie
+> > value that represents the state of the floor tracking word, and
+> > ktime_get_real_ts64_mg accepts a cookie value that it uses as the "old"
+> > value when calling cmpxchg().
+> >
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  include/linux/timekeeping.h |  4 +++
+> >  kernel/time/timekeeping.c   | 81 +++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  2 files changed, 85 insertions(+)
+> >
+> > diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+> > index fc12a9ba2c88..cf2293158c65 100644
+> > --- a/include/linux/timekeeping.h
+> > +++ b/include/linux/timekeeping.h
+> > @@ -45,6 +45,10 @@ extern void ktime_get_real_ts64(struct timespec64 *t=
+v);
+> >  extern void ktime_get_coarse_ts64(struct timespec64 *ts);
+> >  extern void ktime_get_coarse_real_ts64(struct timespec64 *ts);
+> >
+> > +/* Multigrain timestamp interfaces */
+> > +extern u64 ktime_get_coarse_real_ts64_mg(struct timespec64 *ts);
+> > +extern void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie);
+> > +
+> >  void getboottime64(struct timespec64 *ts);
+> >
+> >  /*
+> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> > index 5391e4167d60..ee11006a224f 100644
+> > --- a/kernel/time/timekeeping.c
+> > +++ b/kernel/time/timekeeping.c
+> > @@ -114,6 +114,13 @@ static struct tk_fast tk_fast_raw  ____cacheline_a=
+ligned =3D {
+> >         .base[1] =3D FAST_TK_INIT,
+> >  };
+> >
+> > +/*
+> > + * This represents the latest fine-grained time that we have handed ou=
+t as a
+> > + * timestamp on the system. Tracked as a monotonic ktime_t, and conver=
+ted to the
+> > + * realtime clock on an as-needed basis.
+> > + */
+> > +static __cacheline_aligned_in_smp atomic64_t mg_floor;
+> > +
+> >  static inline void tk_normalize_xtime(struct timekeeper *tk)
+> >  {
+> >         while (tk->tkr_mono.xtime_nsec >=3D ((u64)NSEC_PER_SEC << tk->t=
+kr_mono.shift)) {
+> > @@ -2394,6 +2401,80 @@ void ktime_get_coarse_real_ts64(struct timespec6=
+4 *ts)
+> >  }
+> >  EXPORT_SYMBOL(ktime_get_coarse_real_ts64);
+> >
+> > +/**
+> > + * ktime_get_coarse_real_ts64_mg - get later of coarse grained time or=
+ floor
+> > + * @ts: timespec64 to be filled
+> > + *
+> > + * Adjust floor to realtime and compare it to the coarse time. Fill
+> > + * @ts with the latest one. Returns opaque cookie suitable for passing
+> > + * to ktime_get_real_ts64_mg().
+> > + */
+> > +u64 ktime_get_coarse_real_ts64_mg(struct timespec64 *ts)
+> > +{
+> > +       struct timekeeper *tk =3D &tk_core.timekeeper;
+> > +       u64 floor =3D atomic64_read(&mg_floor);
+> > +       ktime_t f_real, offset, coarse;
+> > +       unsigned int seq;
+> > +
+> > +       WARN_ON(timekeeping_suspended);
+> > +
+> > +       do {
+> > +               seq =3D read_seqcount_begin(&tk_core.seq);
+> > +               *ts =3D tk_xtime(tk);
+> > +               offset =3D *offsets[TK_OFFS_REAL];
+> > +       } while (read_seqcount_retry(&tk_core.seq, seq));
+> > +
+> > +       coarse =3D timespec64_to_ktime(*ts);
+> > +       f_real =3D ktime_add(floor, offset);
+> > +       if (ktime_after(f_real, coarse))
+> > +               *ts =3D ktime_to_timespec64(f_real);
+> > +       return floor;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ktime_get_coarse_real_ts64_mg);
+> > +
+> > +/**
+> > + * ktime_get_real_ts64_mg - attempt to update floor value and return r=
+esult
+> > + * @ts:                pointer to the timespec to be set
+> > + * @cookie:    opaque cookie from earlier call to ktime_get_coarse_rea=
+l_ts64_mg()
+> > + *
+> > + * Get a current monotonic fine-grained time value and attempt to swap
+> > + * it into the floor using @cookie as the "old" value. @ts will be
+> > + * filled with the resulting floor value, regardless of the outcome of
+> > + * the swap.
+>
+> I'd add more detail here to clarify that this can return a coarse
+> floor value if the cookie is stale.
 
-Speaking of RFLAGS.IF, I think it makes sense to add a common x86 helper to=
- handle
-the RFLAGS.IF vs. idle VTL logic.  Naming will be annoying, but that's abou=
-t it.
+Additionally, for these two new interfaces, since they are so
+specifically tuned to this particular need in the vfs, it might be
+good to add a comments in the kerneldoc here that they are special
+case interfaces for the vfs and should be avoided outside that space.
 
-E.g. kvm_is_irq_blocked_by_rflags_if() or so.
+That probably would alleviate my main worries, and we can polish the
+details around cookie or no cookie later if needed.
 
-[*] https://lore.kernel.org/lkml/20231001111313.77586-1-nsaenz@amazon.com
+thanks
+-john
