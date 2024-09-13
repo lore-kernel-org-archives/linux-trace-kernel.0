@@ -1,214 +1,210 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181AB1D9326;
-	Fri, 13 Sep 2024 14:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726236554; cv=fail; b=Ip8TPNjUutfNpuoNPzpKzFpCuiruMhKypy8zDYA3bdWbx4jxhJ9lvHN4g0ac7FdSqYwK2nlKgU23pDl4WKwhNM1EKu18n0/EWdg0YicqtskWTzf8q0Bkg2UcgnhTlMKY9HLRSsNJ/ArmSB5HwUhgVitLntOiCYzf+4mCv8tDJ+8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726236554; c=relaxed/simple;
-	bh=5PhwV/VlmlHboEXR/vJh7tQO0/7LH7DyG63P00x5kPQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fL4mm4DWgIZrnB/6JLt91QahZkSgo+I+otrzqXY4U1vZlkqZWoYk35fKaFqtcu3CcAXFTjYXC4p+mndZw1hOrbvOZn6YY8cgO4olG7Xjp8G1zHB/MsGxDoQ+YsHiAr9G43OVjgSWu8C6INX1OZGOjrf2o8z5hqCGYh/gZrFvW3I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=PJN0x+lo; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZLd67JZI; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C42728366;
+	Fri, 13 Sep 2024 15:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726239656; cv=none; b=sUKX2K7Dpzqa/W3KGt2R/KXYqSn3fCI6UMijHIen9hj7Vhkq6oHD9chYicPGpna+A1GcuGxBaaWJM/DO+VH77ziFKalEYfHGlBxoWz1NxflOnV9HUCksCBHblHnXIHQDGmpf6mbu+NzvT7jRdv+c83zcY+kyZzil8mrq4JgwFGQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726239656; c=relaxed/simple;
+	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=co7cmp9Uu7WupKwSJaX6VxtjpoYw4H0P0ZNW5kprOfFR6Eo/5yoCYsQtsiB0hOm+5ff8UvkTig6mE+lPtTZRwfpA9JyVBHZUiC2u7h/UUFPYpFb1k9xCj+S6TaXnUIRiCUiktbwdvTjxXGWIEJHhsqKVCC4yKI5MopNfb50WT1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAJMkQFc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PJN0x+lo";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZLd67JZI"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48D9YMkg012331;
-	Fri, 13 Sep 2024 14:08:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=
-	corp-2023-11-20; bh=FW/byet1qgSEOgRNnYUF6Alb7Y2qk0Wb1mhEvnMUmxU=; b=
-	PJN0x+lop0gANn7ybJB9E6DXuxyeiV2Jjbq+YeweFz7zmqK+J8VB3t3epLSkcGxx
-	X03Qqh3tAatBmKzfi8QHPDoELDyB9kn6ybjwpJEYcSPfHhHKG0OTQcWZLZ1MmbGg
-	t+cmql1dwW2iyj1eAWj3R7wYfEoQI6M3Yr9vHHszMAy4yZVNo4xqMjKPWTiZGXyk
-	f6w/DS6Jk/A1eHrdIhsyngjSIXj3ds7NUyBxXNlvmExeuyxLwhTEQQSqGEw5HktK
-	zo6YFrZLMA9S8jRgFzYzIpafgc7kIxliziM2m6GH4H2hyc0IenfP2r+NiNcq7M7i
-	JB4nbJqCWGe8uoTBwsZF6Q==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 41gfctnqdr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Sep 2024 14:08:56 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 48DDEDHG019800;
-	Fri, 13 Sep 2024 14:08:52 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 41gd9k82cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Sep 2024 14:08:52 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TBLKFLxQQ6yQQuYUYbbOTxh3j6uyWLZTBdKkzQc6psnjd80eQOYjS2epVfrP3HvgihG+7W53drFdn5c8/h8Pbl2El2Qfc1yVh8D6fQ4mQj+MN4IB8NLxNxDbQmtDLNjJBgM68GlBaFUAKYBBmtTx4DiSbUE+CTQbEKQPix54LgxuYQbC80zUWZfJqdieoKGmd0YQ52xMyvXxbweVd7Vn0Xa4pa1pyAzUeWDShafOvjlbH634FT06izhjCLRgxrsu6cQCMDrAqEwPtuelWDWALi5XuAydS4JqeyMx3wH1h/FpqG/2xpPpWhrgGBPfQjpgHdHmSEGsK4hLSg18Bb1MJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FW/byet1qgSEOgRNnYUF6Alb7Y2qk0Wb1mhEvnMUmxU=;
- b=a31Ez+T7xU8dxxAzrcPVKxvo8VIvqJMFk+5QwQ4kViaklyS9/ioFeibLVULHbqg7z01ZdDVq+kok5ieB4/5XM1BtXVrWFtNwQA6bzHV4XyGgjemQOx4ZHzpDOrgKVtaMIln5GOTUdcseCuIisQuLerjwvxjD65KghtWtJ1i/PDay6uqsGndCBd3BpU/RZKeCg7nowaGXV3O9PCjds3nryW/1k0/6Yur3mg1Wma9tDaplvCFCWBhgHUv4NFZjE6tYvnZoGpQKYSlZTdJ9So7IglZ4WSuvphSywu83TLN6weVOoAVJxOU5kY/70ef6B8MiqRAZeIxdj57fVdZ0NP9X7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FW/byet1qgSEOgRNnYUF6Alb7Y2qk0Wb1mhEvnMUmxU=;
- b=ZLd67JZIK2Llmc5yMhGmnv4yo7NKumIkYnsE+GGglFm3IVSwHzwhHCYJU+uyBgdM59LXezb2MtYRP7uqLK2zPn6jhQEIwpMuwhxzaJf0HuTp+YD1q9R58akyvyOAKH0sMw6isZbZReAITFxea0DCd3dLDzOL7NaAYcfcWVLsx4s=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DS7PR10MB5951.namprd10.prod.outlook.com (2603:10b6:8:84::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7962.16; Fri, 13 Sep
- 2024 14:08:45 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%3]) with mapi id 15.20.7982.008; Fri, 13 Sep 2024
- 14:08:45 +0000
-Message-ID: <6c8f80f9-bf7e-4d74-865a-86c9dd7025aa@oracle.com>
-Date: Fri, 13 Sep 2024 15:08:41 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] block: trace: add block alignment information
-To: Daniel Gomez <da.gomez@samsung.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, gost.dev@samsung.com,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Dave Chinner <dchinner@redhat.com>, Daniel Gomez <d@kruces.com>
-References: <20240912-add-blkalgn-block-trace-v1-1-335dd6eea557@samsung.com>
- <CGME20240913085931eucas1p25bf5b7cb054cd5d9cc85b8b82097e997@eucas1p2.samsung.com>
- <a7f9079f-6f47-4a47-a327-98497bd33dfe@oracle.com>
- <20240913112626.mmr27xzxicyf37kh@AALNPWDAGOMEZ1.aal.scsc.local>
- <77f6fd38-e216-47cf-8ceb-930395614aca@oracle.com>
- <20240913135713.vzevruukayd3o7cj@AALNPWDAGOMEZ1.aal.scsc.local>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20240913135713.vzevruukayd3o7cj@AALNPWDAGOMEZ1.aal.scsc.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR08CA0024.eurprd08.prod.outlook.com
- (2603:10a6:208:d2::37) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAJMkQFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81CBC4CEDB;
+	Fri, 13 Sep 2024 15:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726239656;
+	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YAJMkQFcS9yQrD3CD9uf2YDAnPedZRu2sdG3Uq7zy8+8g4fHsdnaV9YMu/zLJ/1tj
+	 EDiCdYnV0pGG/cGSGCoqzc1yz3NAQwdRBBLRfL0AaT5mhRSd5SqOtQjToavlsk96bb
+	 oKdYkALvWRv8THfAoHVYOAKmMboDnCW5qhSOfsTXSAkiRSZcMGaGh7XxCBtwPbd5yo
+	 iYcY5nqsZThg8+lFTkl4wHHIxP84VsBur9fkHWLMiLx+uY355fMP3Bd0gFRq3KpUT4
+	 TIJSScKe0wBqYY1i+xFQfTmvYKL4lkyD4Paj6wDyvXKCliGwP8nsVtdZV47PWrdook
+	 qWRlseRXwzJPA==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f759688444so20775241fa.1;
+        Fri, 13 Sep 2024 08:00:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCULir8RU8+P9W/UUHicJGDrkLQQQZokBhHGLCgoRNfZP5TViqAqbSAXmiHiCpE3I4KmoIht3k9rS+Siils=@vger.kernel.org, AJvYcCUw1AyxawrWxc/j7v03nO2ad+l8y8OsrCz5pbPc/VzKwI9EJJmUUtSCFw0eA/l6pJGyb5/cDl5DKnQ=@vger.kernel.org, AJvYcCUxvSkjTNBJJDMNVxAvXbjdUHZ/3Nt+B2q46ZDB04fOYwaKARUBkey1NT4qRYE9nxdmslUPtXBA1/HAyspyqQ==@vger.kernel.org, AJvYcCVdAG1QR7P19Qz6OOO+svTOKlqL+qfFD5IncHKX6ncPJbq3+KSig5TlZG63fEGm4XAcPKOk0F/jiJxTrA==@vger.kernel.org, AJvYcCVtsDg+0MZeHZXjkKJB5t4vEgnbgBgcaPpdxY0ymQIWPxqZZrQFJbmrMc3znAsWgGxYQLbhegaDEB2DqCfD@vger.kernel.org, AJvYcCWDfqc+xc5hMcP3JG9ctERZe79q8aNyXVE+E5pCvWB6KlMThkVtFs6UlosHUd/t1hU19VNmxptRYCVDkFsxW/X0eFcr@vger.kernel.org, AJvYcCWGtaY1eP2j7izTOEJFsnrMSzpYhaPwr0exKMiB5O+/mq76CXmOgUZrjpuOASxh6x3VE9HbMkNCD04D+lUd@vger.kernel.org, AJvYcCXcxpURX017fZYRq9h+F8GTJvPfaCx7MZElPErCIf64gAItKFh63Cs2rLul+y7fgZ/ocONgNGudDyNUv3S5G8Q=@vger.kernel.org, AJvYcCXfiy1yV18uLg4r+FuZM20TQHKTVUAaAE0RKHt/zmpwyWmOGY0zCJSxp68VCO3nyNEoMSEpB4mG0K+msQ==@vger.kernel.org, AJvYcCXk2/tlXIAd3IMCDQYvMLnknHPNku9g3pNxzJ9w0sAAw/5/winZpdHmdwqfzRJ2WZiakDZYLL+WjFLOVs2zAw==@vger.kernel.org, AJvYcCXlfdVgjN27YkAH2elz+3KHzyWh9zIYQyR1021lTaYvwcmrngYb4QAxxoL68i57hLLldJARGZIYJ+OUhA==@vger.kernel.org, AJvYcCXtJH5o/uZ+9iGulxzcMyKL/DTTv+fLQUgrVZrR4ONsJetKnUkp/9U3yVe/rIK7yPgKy/gbycUfKwTMZQ==@vger.kernel.org, AJvYcCXutrGseycTn/cGyeHK5TPzQZ/a3JPOl811M6oAlencO81EUw8g2O1/Z6+kdY+Jd+mE5kQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmKtUy3CnOCc7qGHJ4H+Fk8HiVo4sszEh3tjAp6mLuMyCeG757
+	p10UIAD88ar0TpjeZDZmqeFbJMqDiIYc+Mc/p65ZtHPq05vDROGYbZDZFwUdm23eNAfLJ10hUuL
+	Ge96rXQf6wDtaqAEFP4xJCU8WZmY=
+X-Google-Smtp-Source: AGHT+IEIp2MygUsW5Tc1gnqrEXhSi4Y5LfaJ7pDs2t1FcVSY61BEs2pVKMYAU/+O+nJIsawLe6NqpBRTPpsi7cWLSzQ=
+X-Received: by 2002:a05:651c:1a0c:b0:2f0:1e0a:4696 with SMTP id
+ 38308e7fff4ca-2f787dabe7emr39035411fa.7.1726239653924; Fri, 13 Sep 2024
+ 08:00:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DS7PR10MB5951:EE_
-X-MS-Office365-Filtering-Correlation-Id: 37ab6c85-1981-49a7-7e70-08dcd3fd9483
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MGJvUEV5dlIydzVkNWhCclJGL1JCQlFWbHAvMFdIcVFkTjRJbEQvQytRV1lu?=
- =?utf-8?B?Q093RDAxVXhOWUtUTUJYNG1teHJkU3hxTkFVa2Zwa01TaldDcTRNcTg1Nlpa?=
- =?utf-8?B?eU41OURsLzVxZkNocnl3UUgvVjRYbDNyNU9IV0p2cEhyYXk4UzNkTjJERXdO?=
- =?utf-8?B?RXBSRnRMR0lHbXZWS2FOWERiMUFHNElWMEM5MjUxMnFEZVNYRTJ3QW8rck03?=
- =?utf-8?B?TXFPb2cxZVQrb3dKWThGbUFQa3FaTDZRdndITzZhb000M0hTMEZIODY0YkZI?=
- =?utf-8?B?czNzZjRnWWdYTHo5OWVEa2E0S2RWL3NBNEJMSUNnRmprUjM4azhTQUdUeVZW?=
- =?utf-8?B?bjlYNlEydUVGY1hRc0lYM2xCQi9JZ3JuR1h4elBMbCtOOXppYXBRNzFRSFNt?=
- =?utf-8?B?WDhJQktOVlcxTDlvZE5KSXlldzFSTDVJZmpELzJZaVNBZGJUZjRsUERZcllt?=
- =?utf-8?B?WHYyUVkySyszTXFlelF3OGVBMzRHQWkzb29ScEl1eUhIaWdweWgrbnNKUkQw?=
- =?utf-8?B?WERibys5d09RbE1CY2Z6aTZPbkZsQlViUHRqcHFkTGVQeENqa2tjellKQTVi?=
- =?utf-8?B?eUtCNlA1eWpMTTZ0WTBtWlRrV0d2R2Q5YzNUZ1cyTXZIdUs3OWtDWHBjblhX?=
- =?utf-8?B?YkZmbThxcFJZeWZKRS9ONHpWRExHYVJrZXFpMGNweE1NaVIycE1uNURUeHJG?=
- =?utf-8?B?QVVoVWd4WGpsUHlnRVBCSThqNVJnem9FKzVtV2kzRjNNZnBsVFhYWldPVm1K?=
- =?utf-8?B?TDgyTGY2OXZCV3pnaTdHRnBub3FxVVNMbUpoN2dsU1Y1Nlg5ZUpjUVJra3or?=
- =?utf-8?B?aTdlNFR4RlIrK1hHcjh6WEJ2TUo0UUdMK29TYVBBdlQwaU5ja2dlc2FmZFF6?=
- =?utf-8?B?VWxJTlVrMDFQT0owRnNpNFJ3czhKWEFNSnBPbjdzSjh2OVN2bWc1UEliRWl0?=
- =?utf-8?B?T2xhU1FlZ1RFL1VRM2ZHb3p3MDNrSE5LV0VHcEJvV0RaakJkeDE1elRQT1Fq?=
- =?utf-8?B?TGsrU2tZVEFMSzE0aTA0cjFGOENPRnJPMGZVMEkyKytRNjhLTFZvajBCYXJP?=
- =?utf-8?B?b0hHMEZnbXQvWnRZaHdkb1pUWm1NL21aTkFVM1FNcjNGQTJaZ05Jd3QwT0kv?=
- =?utf-8?B?eTJUaCt3aGZxcHlic3NiRE9LSWVLa3FnajZPKzd4ZFBXdFlsVlNVOHRRemtV?=
- =?utf-8?B?QURScjdNbGd3cUZTTHRYcTVkdVdFWWkwZytscXhQRUdIdVBFS0VFK0drQjZB?=
- =?utf-8?B?TTRRUXNvNVZyMFRPTjgwSEY0dG00ZnpEWXlwM1NPMDh2UTRCazEvVWpVUTlj?=
- =?utf-8?B?ZkE5NzhGUUVJeEFjQWp5S0dVTzJFOUhvVmR2RHlCLzFyd0MrYURNNXhMU0k2?=
- =?utf-8?B?NzE5ZkdtdjR0OFNnTGdhdGpuTUlnTmZodHZPME1SNW12aEVFaEt4MFhyNnln?=
- =?utf-8?B?K2F1VkhoeDBrZ0pIenZFSUFrR3BFRUEweHpmWE04N0crMGJ4bFJiVWRObDhj?=
- =?utf-8?B?ZW5PUWYrVkJJc2lnOEdYcmFzMlM1N3Z1Rkw3NndtQW5WSkxVTitnb2xad1d1?=
- =?utf-8?B?Y2l3VDlvZzlvT0I0RnlsS1BrYmhDeDFiVVV5TFRacmROS05XYTFDY3lGQlZv?=
- =?utf-8?B?WHk4VTd0R1dpUmNiMUxPUnVaUE8xTkdUUFVUWURsN0UzTUZSYUpGblRhckRE?=
- =?utf-8?B?RzRsUnV3MTNYRTROSG5uSFplWkJsdlgweXplTnVQMmNxb095SWZvWXN6Zzg5?=
- =?utf-8?B?WFp2eGlhSGphdkt3YVdzY2ZuK2N4R3hpM2cxOStyRnl0NmtZY24renRJa1B5?=
- =?utf-8?B?VnphaXRaaEp3YTFFVjZpZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aTM0aG42SG8zTXRGbnV2bUNjNUdsdXBsckIwVi9kZ3Rtb3FBMXZLWGk1ajMw?=
- =?utf-8?B?aDMzZnh6WDVIOGpRQ0U4cnVEWTg4MXFlSlF1YXRWSnhNUWtMZmszVE16Wjhj?=
- =?utf-8?B?Wnc0S1YweW0zWmkvQy9pZGVzc0YvYUdUUnJVeDQ5eGhQSmFteC9neURjRHIx?=
- =?utf-8?B?U1Q1akdhTnRDeWNRcjBpZ3pWWUVmYUdVUFFXcHdkS2gxTjJabWRKTkIyMjRD?=
- =?utf-8?B?eFFUZXBEb3MwMndXNlNNOFo3Y3JvYzdnRGRWeTZGV0hIdmYwZEMvRzBab0RL?=
- =?utf-8?B?YW1wUU1LRXVrZlNMZWp1K2R1SzhleGJkUE1zbnY1cjYyVjdIdzBRalZlVGJ4?=
- =?utf-8?B?azZRb3ZONDdLdGZnYTh4ZXhrNG9Ec1VEYVAyRTE3WHBCNVZIUDJmRmVRNWQ0?=
- =?utf-8?B?YytsUVNkSWFNeFRoUmVnSXRIcmpRS1BJTnV5TlpKTVlLbVZFUVU0OWJDbHUz?=
- =?utf-8?B?Umo1RjBnQUtZTUMvY0E0b1ZNZ2Mwdlg4dTlaQ1hjc1RRejJvWUlIZmUvMHBn?=
- =?utf-8?B?d2hvSHpqK2E1WWFmWDd0Q01zeE13ZTE1b1Z0dUd1S2R2T2hJY2VMejV1OHUr?=
- =?utf-8?B?RCtWZVUyUDdSdzJwM1Bsc2RJd3lWY0o4c0VYbkRuVXZEZ3NFOTIyMUV1SGQz?=
- =?utf-8?B?SDJvcEo4RHJaQkwvUlRBQThLMklhUEZVVmd6MHM5WXBoQ1F5bTN1U2JYSTBu?=
- =?utf-8?B?NjU4UUNXcGtxRkF3UUtuWVZITUJETDIwUzgxREw3S3lzR0tMSmtHb044M0JE?=
- =?utf-8?B?MWFuSFF3M2tWU0RuajVLY2d3NUNuSHB1bEZoTTRrTGZTczJKblNuYjRnV3Zw?=
- =?utf-8?B?T0M0eUtzOE5aR0ROUkJnczV5MzhyQnpKSmpKRXR1NUVmSytQMElqT2N4TnEy?=
- =?utf-8?B?d3JkZk1YeU8rU1JhYVhXcC9zZkV1UGM5Ym84cEwyRXFIUlY4cE9tTW1GUDVU?=
- =?utf-8?B?dDMrNFlkSkVuRWRkeWliSjBRVFhKWklZNDRObGVHd3J1WnNyTXlFVTRxVG9S?=
- =?utf-8?B?bURjTVZZam5vOEtxTm52VEpXRVdSQWdNaDB4ZnBjbzE3b1B4TzVIUWRWaXRX?=
- =?utf-8?B?TWIreUtZNWF5VGNiKzF4M0hBQ2pWN3A5d0tLNHkzOFZ2aXlteTg1a2JYN1hm?=
- =?utf-8?B?UVhoTGpIbWh6bGJrWS9mLzM3WURsWWtyckNERklJQjFEN3dNVGNONVRVNlE2?=
- =?utf-8?B?UUV0QXpub1hUWlFjc0w1OURiSUM5YUxKYlh4NFM0M01LWmF3eWtYWDViVTY2?=
- =?utf-8?B?UUZWbUlKUHhLemlzNkpkd2Q3ekpxREFrRGh1MDhncnRZMEpGTytUc0FUdFRD?=
- =?utf-8?B?a1lJcEtKaERLWFhqNXpjZTZWRjQ1MW0wS3JINWxTck4wRElneWNocE9KN0Z6?=
- =?utf-8?B?dmVIdDBsdmdSZTVucXZDMHROT09mYUZPQXlTdytKd2kzT1FjdnNwUk5GczJm?=
- =?utf-8?B?bEliVHAwbkdCeS9sK1dQQU0vNERPeFpoendNTTJlY2dyMC80Yy9IdUIrdHc3?=
- =?utf-8?B?NDluZFZqK1ArSzlVZFJudDFJL3hZdkt6bDhQZ0xadjlvclc1ZmlWbmUxYVhl?=
- =?utf-8?B?WXV2b2o1ZkVWSzNmcTNkNW9VWFY5VGtBb3Y0dDJzNnliNWd2dzd0eHNid3BG?=
- =?utf-8?B?Nm5NKzJCU1VLVFN0N1JiOXNNWE84VXovRXdsRERBbU8rSGwzOEtZV1BtWUNs?=
- =?utf-8?B?V3g5UlBMK0pCY3d1WWJZTE8zeDAzYnNiUXBUSlRYZXNTYUhqRFRTczN4eVVI?=
- =?utf-8?B?OWg5anVIMkhFU2U0SUZ4QmcvTW0yYnBCUStzQ3R1ZlZURnlCL292MytrZTlx?=
- =?utf-8?B?cm9EejRNUFhNS0FBcHRvcUs3amR1V3F0N0UzbGF6RlVYczlYT1ozYnk2MmRS?=
- =?utf-8?B?VTl5OEZQRGQwc3BvUWhqQW5sU1c3WmhNc1BjdEp3a2QwZ29XWnRwT0Z3alVW?=
- =?utf-8?B?WlU1NTQwcGNYMlQ1L3JJc0dDeHRpZ1FoMjRYL0JQbytFbEVRVUsvUmI2bDlB?=
- =?utf-8?B?UGY3RCtMVmRXdDZqRFlzQzdVRk9oek80QUNHZnh0YVBJYVZMNVFELzAvSk5X?=
- =?utf-8?B?cjA5OVV4YW54YWQyV1pDa3R2NVFYa1Jlb1dZSHB1MERqVllpZDN0d2xPMHls?=
- =?utf-8?Q?iizqjOHeSgkVfD4aOvwkyBnAi?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	DCO+9oy0OBSJQg8M3DWdsBrDEqdwUoFIz66YBrteqMcyBO+Tt8dh5CbJmpZzIEozrOcbF8iDhzxcSu//mVo3FwXD4fX2J5B4QrXi4Tk9szRLfqBPBmPD+Akoa0YH0of0WcEM/lfQ43mzs1vHNIq5bcRJRtFQszwUATf4/HJQv3wuBGc2uc4U69lHu46MKBL8wy7/Wmcngi6of0fUkSpXmXO/1q7pMFQQAWGuUEMxxqgNc+60bbdhHqa1iuJiNK2NFhhGsCT053/H4bcx168FWonl4bIkT7RNFYFxKuQSN41yPxS7SJJ0o//teSABntrnfK7E/JDGPyWbe/nab0mh8b32oTZ+4vof0SlSyndXqNkp5YWmGI/ysyIf5wDeft4jqBf0t9RQFJkWsTeaTYyozGQUgKULG4TDfazoA5OUITsBGk6DxrKkd4qWRsRfbgJUg9K/DbdkU2wEq5mW0m0oeqD/NKbK4VjwuePeIiV4tT9UgJLgZP5ybPY1fRA2mY2FE+bO+8L3b+oz3umZypNDZ1XWQEZrBzrpfNMiCu57ObO2pu7+ffuiVTAnEoZjH/w3MdyxBYCN6ldFZZlP8XgX8O3JjrwYN6nfOzlHmkX2drM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37ab6c85-1981-49a7-7e70-08dcd3fd9483
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2024 14:08:45.4077
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eeGMs93xvzBk59AB3LVq+NCw4QYdue5vNo0P9fZfzu7BasNJzSSwHmCZvmcHjphWAOIZaTB55zl8YBO3LRxOdQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5951
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-13_11,2024-09-13_02,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=919 suspectscore=0
- bulkscore=0 mlxscore=0 phishscore=0 malwarescore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2408220000 definitions=main-2409130099
-X-Proofpoint-GUID: lRlL4gT8sum57ZNBwckjCTg8I4cz9B8C
-X-Proofpoint-ORIG-GUID: lRlL4gT8sum57ZNBwckjCTg8I4cz9B8C
+References: <20240909064730.3290724-1-rppt@kernel.org> <20240909064730.3290724-8-rppt@kernel.org>
+In-Reply-To: <20240909064730.3290724-8-rppt@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 13 Sep 2024 17:00:42 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
+Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] execmem: add support for cache of large ROX pages
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
+	Brian Cain <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Christoph Hellwig <hch@infradead.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>, 
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, 
+	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 13/09/2024 14:57, Daniel Gomez wrote:
->> I am just saying that the information already present in the block trace
->> point can be used to get this "alignment" info, right? And userspace can do
->> the work of reading those trace events to find this "alignment" info.
-> So, maybe this is better to have integrated in blktrace tool?
+Hi Mike,
 
-Sure, or whatever tool which can process this information. I just don't 
-see why the kernel should be burdened with this.
+On Mon, 9 Sept 2024 at 08:51, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Using large pages to map text areas reduces iTLB pressure and improves
+> performance.
+>
+> Extend execmem_alloc() with an ability to use huge pages with ROX
+> permissions as a cache for smaller allocations.
+>
+> To populate the cache, a writable large page is allocated from vmalloc with
+> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
+> ROX.
+>
+> Portions of that large page are handed out to execmem_alloc() callers
+> without any changes to the permissions.
+>
+> When the memory is freed with execmem_free() it is invalidated again so
+> that it won't contain stale instructions.
+>
+> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
+> definition of an execmem_range.
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  include/linux/execmem.h |   2 +
+>  mm/execmem.c            | 289 +++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 286 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+> index dfdf19f8a5e8..7436aa547818 100644
+> --- a/include/linux/execmem.h
+> +++ b/include/linux/execmem.h
+> @@ -77,12 +77,14 @@ struct execmem_range {
+>
+>  /**
+>   * struct execmem_info - architecture parameters for code allocations
+> + * @fill_trapping_insns: set memory to contain instructions that will trap
+>   * @ranges: array of parameter sets defining architecture specific
+>   * parameters for executable memory allocations. The ranges that are not
+>   * explicitly initialized by an architecture use parameters defined for
+>   * @EXECMEM_DEFAULT.
+>   */
+>  struct execmem_info {
+> +       void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
+>         struct execmem_range    ranges[EXECMEM_TYPE_MAX];
+>  };
+>
+> diff --git a/mm/execmem.c b/mm/execmem.c
+> index 0f6691e9ffe6..f547c1f3c93d 100644
+> --- a/mm/execmem.c
+> +++ b/mm/execmem.c
+> @@ -7,28 +7,88 @@
+>   */
+>
+>  #include <linux/mm.h>
+> +#include <linux/mutex.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/execmem.h>
+> +#include <linux/maple_tree.h>
+>  #include <linux/moduleloader.h>
+>  #include <linux/text-patching.h>
+>
+> +#include <asm/tlbflush.h>
+> +
+> +#include "internal.h"
+> +
+>  static struct execmem_info *execmem_info __ro_after_init;
+>  static struct execmem_info default_execmem_info __ro_after_init;
+>
+> -static void *__execmem_alloc(struct execmem_range *range, size_t size)
+> +#ifdef CONFIG_MMU
+> +struct execmem_cache {
+> +       struct mutex mutex;
+> +       struct maple_tree busy_areas;
+> +       struct maple_tree free_areas;
+> +};
+> +
+> +static struct execmem_cache execmem_cache = {
+> +       .mutex = __MUTEX_INITIALIZER(execmem_cache.mutex),
+> +       .busy_areas = MTREE_INIT_EXT(busy_areas, MT_FLAGS_LOCK_EXTERN,
+> +                                    execmem_cache.mutex),
+> +       .free_areas = MTREE_INIT_EXT(free_areas, MT_FLAGS_LOCK_EXTERN,
+> +                                    execmem_cache.mutex),
+> +};
+> +
+> +static void execmem_cache_clean(struct work_struct *work)
+> +{
+> +       struct maple_tree *free_areas = &execmem_cache.free_areas;
+> +       struct mutex *mutex = &execmem_cache.mutex;
+> +       MA_STATE(mas, free_areas, 0, ULONG_MAX);
+> +       void *area;
+> +
+> +       mutex_lock(mutex);
+> +       mas_for_each(&mas, area, ULONG_MAX) {
+> +               size_t size;
+> +
+> +               if (!xa_is_value(area))
+> +                       continue;
+> +
+> +               size = xa_to_value(area);
+> +
+> +               if (IS_ALIGNED(size, PMD_SIZE) &&
+> +                   IS_ALIGNED(mas.index, PMD_SIZE)) {
+> +                       void *ptr = (void *)mas.index;
+> +
+> +                       mas_erase(&mas);
+> +                       vfree(ptr);
+> +               }
+> +       }
+> +       mutex_unlock(mutex);
+> +}
+> +
+> +static DECLARE_WORK(execmem_cache_clean_work, execmem_cache_clean);
+> +
+> +static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable)
+> +{
+> +       if (execmem_info->fill_trapping_insns)
+> +               execmem_info->fill_trapping_insns(ptr, size, writable);
+> +       else
+> +               memset(ptr, 0, size);
 
-Thanks,
-John
+Does this really have to be a function pointer with a runtime check?
+
+This could just be a __weak definition, with the arch providing an
+override if the memset() is not appropriate.
