@@ -1,141 +1,259 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD64C8C11;
-	Fri, 13 Sep 2024 18:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9CF14658F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 19:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726252050; cv=none; b=PyAM7ygDyNmH6xBe1Qot3OMIWPllZud37udy0nA+Om1LjMrKAPbQfxFmXRlyBrXbLDEgVC3B/W28ydUJbaWBPkZvdwHIsQDraJD1uKzN9GDiEG2w9VkVWZqORZ/BtzhQrOnqvDRS5rf1FPFPItENf8WPpTBf15U7AQicG2sKQxQ=
+	t=1726254014; cv=none; b=agQbMAVtH+HKiyfcOTBtE1NnPKv9C8iULZ0rwW9cMpz5YPV9PYgr9AOS5MqBUEgF5usFjyoaX7yAV3VUFH3cpI+KvKYf6+hgi0zwelTzwW6SHsjugTgG6bu7Iaq7dSSTPTUbw01It9ABCGjBscP4CGvNybX6IlPrh5atYEJDH18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726252050; c=relaxed/simple;
-	bh=T/FAGmskof49WPg60zyMYqxdzTPYLl+utpDpDsGWIgI=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:From:To:CC:
-	 References:In-Reply-To; b=XnvrYJAMPc/AtQYr4QPSpbH9BRlK3L+r0lz9VebhDqayDF473vMCT23gnwqglARKgIvf9uxeEvhHm1b0kaX1Bfzs/jRG7LKfe7KnHc7IWgcDKWvyySjWpW1DOd/Emu+ZWlR0mbSM4CJ+09xBAqBTAgv45dJ04u/Z9aezkQyXBRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=uK0xHbEn; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+	s=arc-20240116; t=1726254014; c=relaxed/simple;
+	bh=f0/qHNroIZs6VOcePLiioAm+uTAbOHcEwWrIFuPphM8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PJrNZfPsYat5b8fZN43exGVuQTbatCc4oyyiqdPdhetHhFvFxvJQe856rTeWsNRWy67MRGm5ijtFKBgKZIkLnUGnOnqRD/V0DtZKf7R0PfogJ9SQus/VkCBKItH8djAQU7c1mH2LmIaFi1B89EoHGcz/4JTQxyDx+CfloPLR9K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MNIqm060; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uK0xHbEn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MNIqm060"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a8a789c4fc5so581064866b.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 12:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1726252049; x=1757788049;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   from:to:cc:references:in-reply-to:subject;
-  bh=wLLXE9tAXmUWkp0mNTmCfQvKPHj+bdubDsMn8oPnwBc=;
-  b=uK0xHbEnzY8FgxjONqDUcW47zA2JDsb/aUMi+un9nh5LtYk91J/tVm1W
-   RyWuBl/P7WuQOS0lF13r7QK1L8tSMM/SRanwgtbcctoSVH4leW8WOMyD5
-   aXYpwY/+ZXiV3fBFuiDrHys3ilhdn/89hxe1CK1TAgDianeSGIjElTjbE
-   o=;
-X-IronPort-AV: E=Sophos;i="6.10,226,1719878400"; 
-   d="scan'208";a="453843029"
-Subject: Re: [PATCH 16/18] KVM: x86: Take mem attributes into account when faulting
- memory
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 18:27:18 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:19490]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.41.21:2525] with esmtp (Farcaster)
- id 4d96842b-9f62-44f5-97a0-d8ad265e11a9; Fri, 13 Sep 2024 18:27:04 +0000 (UTC)
-X-Farcaster-Flow-ID: 4d96842b-9f62-44f5-97a0-d8ad265e11a9
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 13 Sep 2024 18:27:04 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Fri, 13 Sep 2024
- 18:26:58 +0000
+        d=google.com; s=20230601; t=1726254009; x=1726858809; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cZf2aYMb8Zlk0CPpJeIXHbW7WWQiG41ie4dpVzhJSlI=;
+        b=MNIqm060n/GP04KJLUWbp3Q+iu4zZRWCmq0y54/MKekUsC+Ii42LeNtOdBzkp5rnm7
+         KiBnmcwGyPxRCE7XnG2ACKeZmT75ghd6wIbLgAS372GyAMmVxtIm7+PkOHmZQJQm2mCa
+         shGmIInv5HS92o08HTLWXqfcQ9g/Ltu5PB8mu9DfwADtFWWizHF+rvcfQtdqykT60byO
+         6yINcotfPoo1X8JROsCZa5KTn+Ls0bsyyEifR/rpwJb1MuKd2EJ4NBBaD0EtZRhG5q0B
+         s9INIq1cMfT8n46zIFnsxJ4rY5bQ3Q0oTFN8PSAa87kDuM9nYhg7aILWvdDEDKDynC9C
+         0jbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726254009; x=1726858809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cZf2aYMb8Zlk0CPpJeIXHbW7WWQiG41ie4dpVzhJSlI=;
+        b=lSAOWDwlqNi91bOSqmfiQlFWCoQ+x2/RJsoGG47fckLne5QA/r0WvNvz5fgMcwajiI
+         ZreVl5+nlcP82BRso+DSQ4hEHKn436YmMn/QdjPeIVxMoEDhUBv23KAvLOXGzAjV8nek
+         D2wz9UkjYCiy+2aWHt2EcilMDufFfVWlylPR68p+RcLHyzvrcW9g0Q23muOk63p4qUhr
+         49/Kym0RlQEsMmYhmDjkAthDdjTY+G6IBhebEdLrI8/OerB27FGlzFvperDGh7gHdAlc
+         dOY17CJ2K2tupg/H0VP7+CE3jkCPxNMFwOizqBPqqBQZ99JxvcCWsO5tOklID7Tbn8Ux
+         utkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpO+K6LBF3ktg0B+4NRO8YHGilqZVTbgP9m8MkmQnqTrTqbbdbVc39i3pVu16iLk3K6J+TeEudwv46Sg0s7r6syDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx71Nr3mUS5/3kkqxusLO92mBnGruPxMAOn7peBd87Bew8RGAu2
+	cTXeEHBKv8ydWoVnhfGTGWf4TY926ZBEB8i88WeWnFLEl6R2czPzbOfV55ZsNMnHjzPdFDkESFZ
+	TcClqJDVcxxVG0tjJaObZ/xbKMR8rLzPfwug=
+X-Google-Smtp-Source: AGHT+IHcpW0D1DrK3lVMKL+Vimy/qbLz1ntvEPc5JnGQtAjSuYw2dvEcnvfRgLvohNaDJWzygVp9zoxdzZKfoDHquNE=
+X-Received: by 2002:a17:906:c10b:b0:a86:8f9b:ef6e with SMTP id
+ a640c23a62f3a-a902a438f77mr781205166b.13.1726254007768; Fri, 13 Sep 2024
+ 12:00:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org> <20240913-mgtime-v7-1-92d4020e3b00@kernel.org>
+In-Reply-To: <20240913-mgtime-v7-1-92d4020e3b00@kernel.org>
+From: John Stultz <jstultz@google.com>
+Date: Fri, 13 Sep 2024 11:59:56 -0700
+Message-ID: <CANDhNCof7+q+-XzQoP=w0pcrS_-ifH9pmAmtq8H++tbognBv1A@mail.gmail.com>
+Subject: Re: [PATCH v7 01/11] timekeeping: move multigrain timestamp floor
+ handling into timekeeper
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	"Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
-Date: Fri, 13 Sep 2024 18:26:54 +0000
-Message-ID: <D45D9NN03CSH.3B25KJ1XKV6XE@amazon.com>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <linux-doc@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
-	<dwmw2@infradead.org>, <pdurrant@amazon.com>, <mlevitsk@redhat.com>,
-	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049-dirty
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <20240609154945.55332-17-nsaenz@amazon.com>
- <D3MJJCTNY7OM.WOB5W8AVBH9G@amazon.com> <ZsduQ7tg0oQFDY8h@google.com>
-In-Reply-To: <ZsduQ7tg0oQFDY8h@google.com>
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+Content-Transfer-Encoding: quoted-printable
 
-On Thu Aug 22, 2024 at 4:58 PM UTC, Sean Christopherson wrote:
-> On Thu, Aug 22, 2024, Nicolas Saenz Julienne wrote:
-> > On Sun Jun 9, 2024 at 3:49 PM UTC, Nicolas Saenz Julienne wrote:
-> > > Take into account access restrictions memory attributes when faulting
-> > > guest memory. Prohibited memory accesses will cause an user-space fau=
-lt
-> > > exit.
-> > >
-> > > Additionally, bypass a warning in the !tdp case. Access restrictions =
-in
-> > > guest page tables might not necessarily match the host pte's when mem=
-ory
-> > > attributes are in use.
-> > >
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
-> >
-> > I now realize that only taking into account memory attributes during
-> > faults isn't good enough for VSM. We should check the attributes anytim=
-e
-> > KVM takes GPAs as input for any action initiated by the guest. If the
-> > memory attributes are incompatible with such action, it should be
-> > stopped. Failure to do so opens side channels that unprivileged VTLs ca=
-n
-> > abuse to infer information about privileged VTL. Some examples I came u=
-p
-> > with:
-> > - Guest page walks: VTL0 could install malicious directory entries that
-> >   point to GPAs only visible to VTL1. KVM will happily continue the
-> >   walk. Among other things, this could be use to infer VTL1's GVA->GPA
-> >   mappings.
-> > - PV interfaces like the Hyper-V TSC page or VP assist page, could be
-> >   used to modify portions of VTL1 memory.
-> > - Hyper-V hypercalls that take GPAs as input/output can be abused in a
-> >   myriad of ways. Including ones that exit into user-space.
-> >
-> > We would be protected against all these if we implemented the memory
-> > access restrictions through the memory slots API. As is, it has the
-> > drawback of having to quiesce the whole VM for any non-trivial slot
-> > modification (i.e. VSM's memory protections). But if we found a way to
-> > speed up the slot updates we could rely on that, and avoid having to
-> > teach kvm_read/write_guest() and friends to deal with memattrs. Note
-> > that we would still need to use memory attributes to request for faults
-> > to exit onto user-space on those select GPAs. Any opinions or
-> > suggestions?
-> >
-> > Note that, for now, I'll stick with the memory attributes approach to
-> > see what the full solution looks like.
+On Fri, Sep 13, 2024 at 6:54=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
 >
-> FWIW, I suspect we'll be better off honoring memory attributes.  It's not=
- just
-> the KVM side that has issues with memslot updates, my understanding is us=
-erspace
-> has also built up "slow" code with respect to memslot updates, in part be=
-cause
-> it's such a slow path in KVM.
+> For multigrain timestamps, we must keep track of the latest timestamp
+> that has ever been handed out, and never hand out a coarse time below
+> that value.
+>
+> Add a static singleton atomic64_t into timekeeper.c that we can use to
+> keep track of the latest fine-grained time ever handed out. This is
 
-Sean, since I see you're looking at the series. I don't think it's worth
-spending too much time with the memory attributes patches. Since
-figuring out the sidechannels mentioned above, I found even more
-shortcomings in this implementation. I'm reworking the whole thing in a
-separate series [1], taking into account sidechannels, MMIO, non-TDP
-MMUs, etc. and introducing selftests and an in-depth design document.
+Maybe drop "ever" and  add "handed out through a specific interface",
+as timestamps can be accessed in a lot of ways that don't keep track
+of what was returned.
 
-[1] https://github.com/vianpl/linux branch 'vsm/memory-protections' (wip)
 
-Thanks,
-Nicolas
+> tracked as a monotonic ktime_t value to ensure that it isn't affected by
+> clock jumps.
+>
+> Add two new public interfaces:
+>
+> - ktime_get_coarse_real_ts64_mg() fills a timespec64 with the later of th=
+e
+>   coarse-grained clock and the floor time
+>
+> - ktime_get_real_ts64_mg() gets the fine-grained clock value, and tries
+>   to swap it into the floor. A timespec64 is filled with the result.
+>
+> Since the floor is global, we take great pains to avoid updating it
+> unless it's absolutely necessary. If we do the cmpxchg and find that the
+> value has been updated since we fetched it, then we discard the
+> fine-grained time that was fetched in favor of the recent update.
+>
+> To maximize the window of this occurring when multiple tasks are racing
+> to update the floor, ktime_get_coarse_real_ts64_mg returns a cookie
+> value that represents the state of the floor tracking word, and
+> ktime_get_real_ts64_mg accepts a cookie value that it uses as the "old"
+> value when calling cmpxchg().
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  include/linux/timekeeping.h |  4 +++
+>  kernel/time/timekeeping.c   | 81 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 85 insertions(+)
+>
+> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+> index fc12a9ba2c88..cf2293158c65 100644
+> --- a/include/linux/timekeeping.h
+> +++ b/include/linux/timekeeping.h
+> @@ -45,6 +45,10 @@ extern void ktime_get_real_ts64(struct timespec64 *tv)=
+;
+>  extern void ktime_get_coarse_ts64(struct timespec64 *ts);
+>  extern void ktime_get_coarse_real_ts64(struct timespec64 *ts);
+>
+> +/* Multigrain timestamp interfaces */
+> +extern u64 ktime_get_coarse_real_ts64_mg(struct timespec64 *ts);
+> +extern void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie);
+> +
+>  void getboottime64(struct timespec64 *ts);
+>
+>  /*
+> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> index 5391e4167d60..ee11006a224f 100644
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -114,6 +114,13 @@ static struct tk_fast tk_fast_raw  ____cacheline_ali=
+gned =3D {
+>         .base[1] =3D FAST_TK_INIT,
+>  };
+>
+> +/*
+> + * This represents the latest fine-grained time that we have handed out =
+as a
+> + * timestamp on the system. Tracked as a monotonic ktime_t, and converte=
+d to the
+> + * realtime clock on an as-needed basis.
+> + */
+> +static __cacheline_aligned_in_smp atomic64_t mg_floor;
+> +
+>  static inline void tk_normalize_xtime(struct timekeeper *tk)
+>  {
+>         while (tk->tkr_mono.xtime_nsec >=3D ((u64)NSEC_PER_SEC << tk->tkr=
+_mono.shift)) {
+> @@ -2394,6 +2401,80 @@ void ktime_get_coarse_real_ts64(struct timespec64 =
+*ts)
+>  }
+>  EXPORT_SYMBOL(ktime_get_coarse_real_ts64);
+>
+> +/**
+> + * ktime_get_coarse_real_ts64_mg - get later of coarse grained time or f=
+loor
+> + * @ts: timespec64 to be filled
+> + *
+> + * Adjust floor to realtime and compare it to the coarse time. Fill
+> + * @ts with the latest one. Returns opaque cookie suitable for passing
+> + * to ktime_get_real_ts64_mg().
+> + */
+> +u64 ktime_get_coarse_real_ts64_mg(struct timespec64 *ts)
+> +{
+> +       struct timekeeper *tk =3D &tk_core.timekeeper;
+> +       u64 floor =3D atomic64_read(&mg_floor);
+> +       ktime_t f_real, offset, coarse;
+> +       unsigned int seq;
+> +
+> +       WARN_ON(timekeeping_suspended);
+> +
+> +       do {
+> +               seq =3D read_seqcount_begin(&tk_core.seq);
+> +               *ts =3D tk_xtime(tk);
+> +               offset =3D *offsets[TK_OFFS_REAL];
+> +       } while (read_seqcount_retry(&tk_core.seq, seq));
+> +
+> +       coarse =3D timespec64_to_ktime(*ts);
+> +       f_real =3D ktime_add(floor, offset);
+> +       if (ktime_after(f_real, coarse))
+> +               *ts =3D ktime_to_timespec64(f_real);
+> +       return floor;
+> +}
+> +EXPORT_SYMBOL_GPL(ktime_get_coarse_real_ts64_mg);
+> +
+> +/**
+> + * ktime_get_real_ts64_mg - attempt to update floor value and return res=
+ult
+> + * @ts:                pointer to the timespec to be set
+> + * @cookie:    opaque cookie from earlier call to ktime_get_coarse_real_=
+ts64_mg()
+> + *
+> + * Get a current monotonic fine-grained time value and attempt to swap
+> + * it into the floor using @cookie as the "old" value. @ts will be
+> + * filled with the resulting floor value, regardless of the outcome of
+> + * the swap.
+
+I'd add more detail here to clarify that this can return a coarse
+floor value if the cookie is stale.
+
+> +void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie)
+> +{
+> +       struct timekeeper *tk =3D &tk_core.timekeeper;
+> +       ktime_t offset, mono, old =3D (ktime_t)cookie;
+> +       unsigned int seq;
+> +       u64 nsecs;
+> +
+> +       WARN_ON(timekeeping_suspended);
+> +
+> +       do {
+> +               seq =3D read_seqcount_begin(&tk_core.seq);
+> +
+> +               ts->tv_sec =3D tk->xtime_sec;
+> +               mono =3D tk->tkr_mono.base;
+> +               nsecs =3D timekeeping_get_ns(&tk->tkr_mono);
+> +               offset =3D *offsets[TK_OFFS_REAL];
+> +       } while (read_seqcount_retry(&tk_core.seq, seq));
+> +
+> +       mono =3D ktime_add_ns(mono, nsecs);
+> +
+> +       if (atomic64_try_cmpxchg(&mg_floor, &old, mono)) {
+> +               ts->tv_nsec =3D 0;
+> +               timespec64_add_ns(ts, nsecs);
+> +       } else {
+> +               /*
+> +                * Something has changed mg_floor since "old" was
+> +                * fetched. That value is just as valid, so accept it.
+> +                */
+
+Mostly because I embarrassingly tripped over this in front of
+everyone, I might suggest:
+/*
+ * mg_floor was updated since the cookie was fetched, so the
+ * the try_cmpxchg failed. However try_cmpxchg updated old
+ * with the current mg_floor, so use that to return the current
+ * coarse floor value
+ */
+
+:)
+
+thanks
+-john
