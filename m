@@ -1,132 +1,188 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71404224CF;
-	Fri, 13 Sep 2024 06:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078A51BC088;
+	Fri, 13 Sep 2024 08:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726207453; cv=none; b=lh0CGjQFu3hxvTadC09ZM6GFBgbcItkgYPMI0DgU3CI/Ib5xszbLsj4s2J6IcVfM+aM0eVr0xSuVv35UTCaPijrRuIgrSPajCyS18wIyWX17mDGTsqsqMwjiTjtCRc/LT8EhHhdAT468wIljJqDCUTvWD3BnihfMGCWvezJzrts=
+	t=1726215794; cv=none; b=DAuFv18X4DE3NLwSfC8ty/GDl0qrb+UI14KK/FpP4zi8WCRBl9p6hIHbUkIE1Kl37gahS0TqbcRglT3VIWuELGNLgzaSA8ljYrabXOE8uv6OcEu1JfiMLf2xSrbpWI/gB7XTaP+kHhoGph7+9HeFoMYowFaXuBI0b518G/WKSdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726207453; c=relaxed/simple;
-	bh=nstVZHkUy5pKTdbUjOMs70lhCwSaOSVyh/g/ucQQHw0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=WSeP6AITyl19d3WSxPso4fPCxqOm4vf4Zi06Q2AN2MW8octjIOTQTpymbsh1gwGfmRLQP0wHTFlZjDsZcHVSlNi6G4Oy63qzqGrGr4r6PnXbdo6LrpXmYYGIezFkrDE0WK38vyqoPngR7rC1SGl6WkNZZTH7GHQDTFRk6iST4kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B7TwvFZ6; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1726215794; c=relaxed/simple;
+	bh=F9WMN1ar99DkIYhBr9lSSfqYhs+Ra4MDhT7JouB7i88=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpFKFluv7Loy+NbACwfS0AMtZapt8lF8tA1KgRnKYjAGQAPWAszisnbXu4rW1h7zBFcvPDiqWwNXY4lv42TTDLps7CNQQgjyp4HCPugcD5Wer/IjO05zqIH3U6sPZaq9FxxaM9MEVIEtSD4Aivqcrvlw8qnMLvV737UNfdkBznA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f0NrrPy7; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B7TwvFZ6"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48CNo6ej022644;
-	Fri, 13 Sep 2024 06:03:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:in-reply-to:references:date:message-id
-	:content-type:mime-version; s=pp1; bh=w8Yaj17rePOkc2oA8hmd/PPLMU
-	G7M8Thql5tfawg9RU=; b=B7TwvFZ6cvkbhvnMBeO26n0h86Qnr6mIB4wCl18lm0
-	EDaynUwRx2yqEcTSkUnj7vX74bkzHD3IMnTMobTf5JdYtniKUo+uMsIld0szlLM7
-	j65sy82ZM58HKeVZbDERZZ0RNiUWY3uVAwLFE9/Hq6NPsq89hFc0hb3Qh36sptaO
-	mPIv6Hq2pVeWW89ZrB2ONk8Q+0YXrb7ldbCFBznlshCnsaS2b3sstgGqUXGfKEKy
-	JiUhLGk/W3V9Ve7hWCxkoQAy/WTzB0Sqhz5NCbw3qLvhZd1VTpRIyqUgEc7sLfqX
-	P0N+c6XYNbAW6HSYnhjxrOeQ8A6MORxHZIS2wSqigMaQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41gebaqxgj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Sep 2024 06:03:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48D2035B010729;
-	Fri, 13 Sep 2024 06:03:54 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41kmb6yv6y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Sep 2024 06:03:54 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48D63qmC46203320
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 13 Sep 2024 06:03:52 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 563AF20043;
-	Fri, 13 Sep 2024 06:03:52 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2AA1020040;
-	Fri, 13 Sep 2024 06:03:52 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 13 Sep 2024 06:03:52 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
- <mark.rutland@arm.com>,
-        Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert
- Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org
-Subject: Re: [PATCH 0/7] add function arguments to ftrace
-In-Reply-To: <yt9dh6ape022.fsf@linux.ibm.com> (Sven Schnelle's message of
-	"Mon, 09 Sep 2024 09:52:21 +0200")
-References: <20240904065908.1009086-1-svens@linux.ibm.com>
-	<20240905111620.5211d9f8@gandalf.local.home>
-	<yt9dv7z9l2zp.fsf@linux.ibm.com>
-	<20240906100738.2526cffd@gandalf.local.home>
-	<20240908222830.01a01b10d62d59ed73dcb676@kernel.org>
-	<yt9dh6ape022.fsf@linux.ibm.com>
-Date: Fri, 13 Sep 2024 08:03:51 +0200
-Message-ID: <yt9djzfgccoo.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7nToZDWGKNT9QZOOlyB71xBhYhClmsHN
-X-Proofpoint-GUID: 7nToZDWGKNT9QZOOlyB71xBhYhClmsHN
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0NrrPy7"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-42cbe624c59so5320285e9.3;
+        Fri, 13 Sep 2024 01:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726215791; x=1726820591; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U+GhRQ3oG4bnaBAL9utcWm2F6HSh4ooNGToRsTRm4Zs=;
+        b=f0NrrPy7Kd5Yfrx2F9q5HwV6+yA14i7gQBZPCHrp5EffxhUYIGUuhXfFWDKETyXDyf
+         5ia7sWP1vuI3hLXmEJnl1rKM0dOHFCWVzILtJbTxUm8H3es2HfYpPcupSUoKSQQGIg0s
+         0YrfYwb76ztu54TdxEJSpqcKioOWOnUEEgHDsv+ciPmkViGB4I7Kf9hBPnYa3b6X7weZ
+         +G1oRzg1A+7hhW7DWKdzBuKKTIbqcsBCSHZuhaFo4yutQU6iQxni3Zp6+EHSvz9/DD8e
+         Ihg0JhXvaxJsp2Wjdz0CHARRPHlCaDFnrLISkQq6b5vRx1kGlaYM05BmnYcTVA5misM5
+         r1Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726215791; x=1726820591;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U+GhRQ3oG4bnaBAL9utcWm2F6HSh4ooNGToRsTRm4Zs=;
+        b=WEpyaJFWA0UvoHE6HfnbrXGGovbmGzCa6VGnc8j9tYB1HC4KIk/QUS51N3BQXYa1rW
+         xFEjZ6suR6IdZD2t2nbtufZz6CbdNc7bBP6RsdQpL0qUoo0JG61dig7F261BCpYN8DdK
+         qS+8iSLntdFSF4sAtKAbXU1dvH1O0n2IpWiYoAsF8QDgFaZ+ipa/J7a83CZuqa7LASSO
+         5XQRE8KrsbNXhp2K4pfN5/4Xg/3CshqPu676l4NI/Y0rMefNNmG43Z9rmmryYNoXX14h
+         R4fWZUiqBCspNkNMUxY5U5bYv0lDPVmt2OkFTbVqfVGV2yCvgiViulQ/xZhQB3rEP7OF
+         RzMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUU9hJW+f2e/zgVjhN1pFoEKItDBxL5iWyvyvnhkXHqC57mLqo/n2+U2LeVRzN/32iACxbTOt+j2r9F0Frw@vger.kernel.org, AJvYcCVPO+JAeblaBE3YmPgC1X62DJJBthOcLQM3ujtzLjts1xSkRCWe3c9xGMtpa0C4akU0o7rS3kV12ysd56xp6up9yMDz@vger.kernel.org, AJvYcCX/DlcuOJkMOTxD9Ro0CuHeSvxBb92bhgq4sCgx7ZNevpiI5mtsFe6FAnaAtFV6wpkWTNo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMPGhnrXdWBCsv2v8hdrqRbDXl1+p9sdhCEQGS8RfVpuNCtynO
+	VsEfkoijgyDqrd2GVq/Zl3yqJubw4KXfwH4nuiENZH3ug9f3u1MT
+X-Google-Smtp-Source: AGHT+IFqprEtHj/Ro4u+NSmvptLWA2EfkQYvDkdx7Rg+9np0yb2C4ytgTh1UjsimnK8NSXoqMHjiPQ==
+X-Received: by 2002:a05:600c:350a:b0:42c:dce1:8915 with SMTP id 5b1f17b1804b1-42d964f84cbmr11969125e9.33.1726215790769;
+        Fri, 13 Sep 2024 01:23:10 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42d9b189a6asm15595165e9.38.2024.09.13.01.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Sep 2024 01:23:10 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 13 Sep 2024 10:22:56 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 1/7] uprobe: Add support for session consumer
+Message-ID: <ZuP2YFruQDXTRi25@krava>
+References: <20240909074554.2339984-1-jolsa@kernel.org>
+ <20240909074554.2339984-2-jolsa@kernel.org>
+ <20240912162028.GD27648@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-13_03,2024-09-12_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- mlxscore=0 mlxlogscore=858 impostorscore=0 clxscore=1015 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2408220000
- definitions=main-2409130042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240912162028.GD27648@redhat.com>
 
-Sven Schnelle <svens@linux.ibm.com> writes:
+On Thu, Sep 12, 2024 at 06:20:29PM +0200, Oleg Nesterov wrote:
+> On 09/09, Jiri Olsa wrote:
+> >
+> >  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+> >  {
+> >  	struct uprobe_consumer *uc;
+> >  	int remove = UPROBE_HANDLER_REMOVE;
+> > -	bool need_prep = false; /* prepare return uprobe, when needed */
+> > +	struct return_consumer *ric = NULL;
+> > +	struct return_instance *ri = NULL;
+> >  	bool has_consumers = false;
+> >
+> >  	current->utask->auprobe = &uprobe->arch;
+> >
+> >  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+> >  				 srcu_read_lock_held(&uprobes_srcu)) {
+> > +		__u64 cookie = 0;
+> >  		int rc = 0;
+> >
+> >  		if (uc->handler) {
+> > -			rc = uc->handler(uc, regs);
+> > -			WARN(rc & ~UPROBE_HANDLER_MASK,
+> > +			rc = uc->handler(uc, regs, &cookie);
+> > +			WARN(rc < 0 || rc > 2,
+> >  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
+> >  		}
+> >
+> > -		if (uc->ret_handler)
+> > -			need_prep = true;
+> > -
+> > +		/*
+> > +		 * The handler can return following values:
+> > +		 * 0 - execute ret_handler (if it's defined)
+> > +		 * 1 - remove uprobe
+> > +		 * 2 - do nothing (ignore ret_handler)
+> > +		 */
+> >  		remove &= rc;
+> >  		has_consumers = true;
+> > +
+> > +		if (rc == 0 && uc->ret_handler) {
+> 
+> should we enter this block if uc->handler == NULL?
 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
->
->> On Fri, 6 Sep 2024 10:07:38 -0400
->> Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->>> On Fri, 06 Sep 2024 08:18:02 +0200
->>> Sven Schnelle <svens@linux.ibm.com> wrote:
->>> 
->>> 
->>> > One thing i learned after submitting the series is that struct
->>> > ftrace_regs depends on CONFIG_FUNCTION_TRACER, so it cannot be used
->>> > with the graph tracer.
->>
->> Yeah, this is solved by my series [1].
->>
->> [1] https://patchwork.kernel.org/project/linux-trace-kernel/patch/172398532480.293426.13232399076477198126.stgit@devnote2/
->>
->> So I think this series is easier to apply after my series, which
->> passes fgraph_regs in return handler.
->
-> Thanks, i'll rebase my changes on top of your patches then.
+yes, consumer can have just ret_handler defined
 
-While doing so i noticed that i completely forgot about arguments
-located on the stack. The current patchset tries to read from the
-current kernel stack, which is obviously wrong. So either the tracer
-needs to save the stack frame in the ringbuffer (which would be quite
-a lot of data), or ftrace only prints arguments located in registers.
-Also not nice. Opinions?
+> 
+> > +			/*
+> > +			 * Preallocate return_instance object optimistically with
+> > +			 * all possible consumers, so we allocate just once.
+> > +			 */
+> > +			if (!ri) {
+> > +				ri = alloc_return_instance(uprobe->consumers_cnt);
+> 
+> This doesn't look right...
+> 
+> Suppose we have a single consumer C1, so uprobe->consumers_cnt == 1 and
+> alloc_return_instance() allocates return_instance with for a single consumer,
+> so that only ri->consumers[0] is valid.
+> 
+> Right after that uprobe_register()->consumer_add() adds another consumer
+> C2 with ->ret_handler != NULL.
+> 
+> On the next iteration return_consumer_next() will return the invalid addr
+> == &ri->consumers[1].
+> 
+> perhaps this needs krealloc() ?
 
-Thanks
-Sven
+damn.. there used to be a lock ;-) ok, for some reason I thought we are safe
+in that list iteration and we are not.. I just made selftest that triggers that
+
+I'm not sure the realloc will help, I feel like we need to allocate return
+consumer for each called handler separately to be safe
+
+> 
+> > +				if (!ri)
+> > +					return;
+> 
+> Not sure we should simply return if kzalloc fails... at least it would be better
+> to clear current->utask->auprobe.
+> 
+> > +	if (ri && !remove)
+> > +		prepare_uretprobe(uprobe, regs, ri); /* put bp at return */
+> > +	else
+> > +		kfree(ri);
+> 
+> Well, if ri != NULL then remove is not possible, afaics... ri != NULL means
+> that at least one ->handler() returned rc = 0, thus "remove" must be zero.
+> 
+> So it seems you can just do
+> 
+> 	if (ri)
+> 		prepare_uretprobe(...);
+
+true, I think that should be enough
+
+thanks,
+jirka
+
+> 
+> 
+> Didn't read other parts of your patch yet ;)
+> 
+> Oleg.
+> 
