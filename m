@@ -1,330 +1,354 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B9A1DC74D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 13:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3F01DB95A;
+	Fri, 13 Sep 2024 14:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726235840; cv=none; b=W2lFfiD9qzi44wW6DjvhhyiwmKLY5uOPqZSkTJ0b6vPy9dWi12Dkbq+X8ZUC3IaLXxzJWAK8fb9JBkazIuqCyOLK18Pa2u9UB7D64YbRIbOhrzXe37mtNJwIFdXfqXFp99KDrO1NwBh28DzeN9c2Bq60ofCZ+dXDrtDmBkEiADk=
+	t=1726236157; cv=none; b=Y6JfOYpwScAfAH/8YOjMwxcS8MTH3v5PXt17px21ZNYUTE2WuZOnjHpRr4rgxi5wPPIs0KhlZHU2WV5l/YlJtkQbowhOXpbBOr5LPFRAaWkzqhZjliIiqaZymspj0jh52mewWWWdPQokXDq6prKKwdD0+TuRKEXGMofQfNrago4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726235840; c=relaxed/simple;
-	bh=D4tmFItH8l1hU7Qov4/TevlotYWStp7atjrXqpfIEMU=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=fDbqqV9opuEgL1T+6hqf3i0Av5Gz11NnmJ+cwrh9D/Jv3KEEXMaGypIvcXNXMFIX4+B96HR5UlfzjPxmzdNLJlSKoQ5Qh/8YDuH8ffMCo2AyaIh8k0rDXu5ypbUSUjTZXTb2GXrOONbf8zw6osZ90nSdvMf88jF4RXlExO7RI6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YHjfVM2n; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1726236157; c=relaxed/simple;
+	bh=t2Ui/SX4AxPA+ilhCL7nQu41U9EfcHzmNFaUUk1q8Is=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qdApsv+OKDuOuHYlu46rao/5Wkq2pCp2LVAp9KDYbnCNrPkhX0dNpuSpyicSkUYzSZNvHVCviqKDWkA2RfxgYP/HbxUTX1wGKpq5DVf/QfC2lhdFpyhY4KqddYzF6yZ+y9yRjwE5T/5BMBx3svlVl2sQ0Ap+KIfnWHZAIRexLFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYkIZXRT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YHjfVM2n"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240913135716euoutp019092af03ce627e8bc466c36d7d9e6b0f~00ljRkepS0536005360euoutp012
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 13:57:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240913135716euoutp019092af03ce627e8bc466c36d7d9e6b0f~00ljRkepS0536005360euoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1726235836;
-	bh=aFVWYd8GwQqNSGLrOsMwuDZmyAAfxj/WbpVwIhoXioY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=YHjfVM2nSqyeooguLskEAoZPN9Nj7Xslh64Ly8IZ5AUMBAi1hwau5+FlrWISIUEuZ
-	 gIoVijKD/cOaMtK2wthWGlLgnL8HkydzIktGeVw/SPVUhQufgxvBnuZody68jH9oy8
-	 k4v2HSRhOh20z+3aj5WFulcN/DfD4C5UKI8BvyLA=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240913135715eucas1p1bbeb6787d0ae166cdb84154865ef20d3~00lirW-Vq0259302593eucas1p1R;
-	Fri, 13 Sep 2024 13:57:15 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 8B.4F.09624.BB444E66; Fri, 13
-	Sep 2024 14:57:15 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240913135715eucas1p28a9b7ad948650bcb40d3f8a887e73e56~00liP4QB40907809078eucas1p2o;
-	Fri, 13 Sep 2024 13:57:15 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240913135714eusmtrp288310d96eb4484c1d64b80a3b1d178dd~00liO_dP11075910759eusmtrp2s;
-	Fri, 13 Sep 2024 13:57:14 +0000 (GMT)
-X-AuditID: cbfec7f2-c11ff70000002598-bd-66e444bb3c12
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id C1.E8.14621.AB444E66; Fri, 13
-	Sep 2024 14:57:14 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240913135714eusmtip18a948ed1c48d056683f5beaf2ab109e8~00lh76IwK3215332153eusmtip13;
-	Fri, 13 Sep 2024 13:57:14 +0000 (GMT)
-Received: from localhost (106.110.32.87) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 13 Sep 2024 14:57:13 +0100
-Date: Fri, 13 Sep 2024 15:57:13 +0200
-From: Daniel Gomez <da.gomez@samsung.com>
-To: John Garry <john.g.garry@oracle.com>
-CC: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-	"Masami Hiramatsu" <mhiramat@kernel.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<gost.dev@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, Pankaj Raghav
-	<p.raghav@samsung.com>, Dave Chinner <dchinner@redhat.com>, Daniel Gomez
-	<d@kruces.com>
-Subject: Re: [PATCH RFC] block: trace: add block alignment information
-Message-ID: <20240913135713.vzevruukayd3o7cj@AALNPWDAGOMEZ1.aal.scsc.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYkIZXRT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167E9C4CEC0;
+	Fri, 13 Sep 2024 14:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726236156;
+	bh=t2Ui/SX4AxPA+ilhCL7nQu41U9EfcHzmNFaUUk1q8Is=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=OYkIZXRTi49O5Zq64sitpXZgQwX0h94kLimMQ8lorTxH+cTU0HEeN5ghRmpBLz8hM
+	 ukRc7I+HdO+g0dPxSxCnkqO1kHJoPgQ66Brl4Djx8cZuj0bC1PmFW+pl//7g6iDAB+
+	 KxnIlS+wEfr745xM44VQRFH2YsExJezUgMiMwuqYALSNjuOoqfjKuX1+7V/kcT6JU0
+	 AjGJ91nkgLsnmzOcNJVYpQg59SkOHukaylhRRhDdDpTJY/0U4bIkPvSs8uF5jQDSEy
+	 4LPMCJ8oI0wal4EUN2fpwMlwL4TdJJIGPE7DlHKqtejXGy1WSeqrD21LX1WxJLLZUA
+	 D/irB37RwbSQg==
+Message-ID: <de5a3a21ceb5fa59de64443807e3bafa1a003a13.camel@kernel.org>
+Subject: Re: [PATCH v7 05/11] fs: tracepoints around multigrain timestamp
+ events
+From: Jeff Layton <jlayton@kernel.org>
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+ <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
+ Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
+ <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Date: Fri, 13 Sep 2024 10:02:32 -0400
+In-Reply-To: <20240913-mgtime-v7-5-92d4020e3b00@kernel.org>
+References: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org>
+	 <20240913-mgtime-v7-5-92d4020e3b00@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <77f6fd38-e216-47cf-8ceb-930395614aca@oracle.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRmVeSWpSXmKPExsWy7djPc7q7XZ6kGXy7IWSx+m4/m8W3FctY
-	Lc6+mstuceHXDkaLvbe0LS7vmsNmcWT9WRaLzWfPMFvcmPCU0WLxcjWLfR0PmBy4PZaefsPm
-	0bLvFrvH5bOlHptWdbJ5/O99wOrx8ektFo/3+66yeXzeJBfAEcVlk5Kak1mWWqRvl8CV8f11
-	J3PBYreKi7OuszYw/jPtYuTkkBAwkTi6qp+xi5GLQ0hgBaPE2o93WCGcL4wST+ZtYYFwPjNK
-	tG06xQTT8uPhUnaIxHJGiVndZxjhqj5M3coM4WxmlPh94jgjSAuLgKrE7gVHWUFsNgFNiX0n
-	NwG1c3CICGhIHDkkDVLPLLCLWWJv+xewemEBN4mfy14xgdTwCnhLXH2qDhLmFRCUODnzCQuI
-	zSygJ3Fj6hQ2kBJmAWmJ5f84IMLyEs1bZzOD2JwCdhK3WxvYII5WlJgxcSULhF0rcWrLLSaQ
-	tRICqzklGuc2skIkXCRaHvRB2cISr45vYYewZST+75wP9X26xJJ1s6AGFUjsuT2LFeQGCQFr
-	ib4zORBhR4n7C2+wQIT5JG68FYQ4jU9i0rbpzBBhXomONqEJjCqzkPw1C8lfsxD+moXkrwWM
-	LKsYxVNLi3PTU4sN81LL9YoTc4tL89L1kvNzNzECE9jpf8c/7WCc++qj3iFGJg7GQ4wSHMxK
-	IryT2B6lCfGmJFZWpRblxxeV5qQWH2KU5mBREudVTZFPFRJITyxJzU5NLUgtgskycXBKNTBV
-	fzS9veqRcEio/G+GXQnM1kcylJgL66v0ZXsy8w7YfygUVd78asN0n7mTpa+Zn2/huBd4aV6u
-	/yTzQ/uv2Hb6bz38IZvN9H1+8xnr3cE/g5LXczqytrPoz9Ji4Vj/XvPANYe83z2/Ljy5WTtz
-	15+5MpXPMmL3TOq8pfjM5UR8CJNmVMJZ0fSgtxz2k1KNt9h29s3Lc7tzfXqI22yBlNgr8sW/
-	Hf9b2jH9ZOM8tGFH1uwTc59O2uPpW192dhbbjheTH19fWiUzw6E4M0L8773AEy7fvBrfvX+p
-	WJR3YVF++u9dC7VdBKWX5HBvMpbz/72kyemY67ogMUWZw6bb3vPLLv1QOZ876XjRnoKtSyYp
-	sRRnJBpqMRcVJwIAPzOZ6s8DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGIsWRmVeSWpSXmKPExsVy+t/xu7q7XJ6kGfQdNLBYfbefzeLbimWs
-	FmdfzWW3uPBrB6PF3lvaFpd3zWGzOLL+LIvF5rNnmC1uTHjKaLF4uZrFvo4HTA7cHktPv2Hz
-	aNl3i93j8tlSj02rOtk8/vc+YPX4+PQWi8f7fVfZPD5vkgvgiNKzKcovLUlVyMgvLrFVija0
-	MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL+P66k7lgsVvFxVnXWRsY/5l2MXJy
-	SAiYSPx4uJS9i5GLQ0hgKaPE23P72SESMhIbv1xlhbCFJf5c62KDKPrIKPH+8yKwIiGBzYwS
-	v44Lg9gsAqoSuxccBWtgE9CU2HdyE1ANB4eIgIbEkUPSIL3MAruYJfa2f2EEqREWcJP4uewV
-	E0gNr4C3xNWn6hDzTzFJTH70jwmkhldAUOLkzCcsIDazgJ7EjalT2EDqmQWkJZb/44AIy0s0
-	b53NDGJzCthJ3G5tYIO4WVFixsSVLBB2rcTnv88YJzCKzEIydRaSqbMQps5CMnUBI8sqRpHU
-	0uLc9NxiQ73ixNzi0rx0veT83E2MwAjfduzn5h2M81591DvEyMTBeIhRgoNZSYR3EtujNCHe
-	lMTKqtSi/Pii0pzU4kOMpsAQmsgsJZqcD0wxeSXxhmYGpoYmZpYGppZmxkrivG6Xz6cJCaQn
-	lqRmp6YWpBbB9DFxcEo1MPX8eDabt/2tzK4SIxOPr69sbOUU0zUZHi9MmxjnbqwiJ2fJeLMo
-	RWnvLm5f+ZPyUXMsJ9m5Bk/5pjkne/V0b3GPSqmDh57kly8tSbRT25x+SzNrQsObQJl4s1P/
-	738tF017kDHJWFgy6HtMuqvx8YSPv+1C7gvHsHLufnTvBo9Ay1Z/pmeFx24or3mZ6fg47bdv
-	7o3pmRe0TPJUeR/vtK9dec9+qsDfq1saZpnz+cy0XrcsoHufzve8A82vZG9fupR+YumpHinu
-	jJ5VYkae3IrampdXpMzZ9IfhqEBfoXrAMj/3SscJL6Z3ri//+j/KvtPs0GS9W+aFhXV5ndPa
-	w4+9eBy1LthHxLDo1r/NSizFGYmGWsxFxYkA5sbflHkDAAA=
-X-CMS-MailID: 20240913135715eucas1p28a9b7ad948650bcb40d3f8a887e73e56
-X-Msg-Generator: CA
-X-RootMTR: 20240913085931eucas1p25bf5b7cb054cd5d9cc85b8b82097e997
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240913085931eucas1p25bf5b7cb054cd5d9cc85b8b82097e997
-References: <20240912-add-blkalgn-block-trace-v1-1-335dd6eea557@samsung.com>
-	<CGME20240913085931eucas1p25bf5b7cb054cd5d9cc85b8b82097e997@eucas1p2.samsung.com>
-	<a7f9079f-6f47-4a47-a327-98497bd33dfe@oracle.com>
-	<20240913112626.mmr27xzxicyf37kh@AALNPWDAGOMEZ1.aal.scsc.local>
-	<77f6fd38-e216-47cf-8ceb-930395614aca@oracle.com>
 
-On Fri, Sep 13, 2024 at 01:08:34PM +0100, John Garry wrote:
-> On 13/09/2024 12:26, Daniel Gomez wrote:
-> > On Fri, Sep 13, 2024 at 09:59:08AM +0100, John Garry wrote:
-> > > On 12/09/2024 21:48, Daniel Gomez via B4 Relay wrote:
-> > > > From: Daniel Gomez <da.gomez@samsung.com>
-> > > > 
-> > > > Report block alignment in terms of LBA and size during block tracing for
-> > > > block_rq. Calculate alignment only for read/writes where the length is
-> > > > greater than 0. Otherwise, report 0 to indicate no alignment calculated.
-> > > > 
-> > > > Suggested-by: Dave Chinner <dchinner@redhat.com>
-> > > > Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
-> > > > ---
-> > > > This patch introduces LBA and size alignment information for
-> > > > the block_rq tracepoints (block_rq{insert, issue, merge} and
-> > > > block_{io_start, io_done}).
-> > > 
-> > > eh, shouldn't this belong in the description of the patch?
-> > 
-> > Yes. I'll move this to the commit message.
-> > 
-> > > 
-> > > And I still don't know what we mean by alignment in this context.
-> > > 
-> > >  From looking at the code, it seems to be the max detected block size
-> > > granularity. For example, for a 64KB write at a 32KB offset, that would give
-> > > a 32KB "alignment". But a 64KB write at a 64KB offset would be "64KB"
-> > > alignment. While a 8KB write at 64KB offset would be 8KB "alignment". And a
-> > > 24KB write at offset 0 is a 8KB "alignment", as 8KB is the lowest power-of-2
-> 
-> note: I meant "8KB is the largest power-of-2"
+On Fri, 2024-09-13 at 09:54 -0400, Jeff Layton wrote:
+> Add some tracepoints around various multigrain timestamp events.
+>=20
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/inode.c                       |   6 ++
+>  fs/stat.c                        |   3 +
+>  include/trace/events/timestamp.h | 124 +++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 133 insertions(+)
+>=20
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 260a8a1c1096..d19f70422a5d 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -22,6 +22,9 @@
+>  #include <linux/iversion.h>
+>  #include <linux/rw_hint.h>
+>  #include <trace/events/writeback.h>
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/timestamp.h>
+> +
+>  #include "internal.h"
+> =20
+>  /*
+> @@ -2598,6 +2601,7 @@ EXPORT_SYMBOL(inode_nohighmem);
+> =20
+>  struct timespec64 inode_set_ctime_to_ts(struct inode *inode, struct time=
+spec64 ts)
+>  {
+> +	trace_inode_set_ctime_to_ts(inode, &ts);
+>  	set_normalized_timespec64(&ts, ts.tv_sec, ts.tv_nsec);
+>  	inode->i_ctime_sec =3D ts.tv_sec;
+>  	inode->i_ctime_nsec =3D ts.tv_nsec;
+> @@ -2683,6 +2687,7 @@ struct timespec64 inode_set_ctime_current(struct in=
+ode *inode)
+> =20
+>  	/* No need to cmpxchg if it's exactly the same */
+>  	if (cns =3D=3D now.tv_nsec && inode->i_ctime_sec =3D=3D now.tv_sec)
+> +		trace_ctime_xchg_skip(inode, &now);
+>  		goto out;
 
-8KB will be the largest unit at what a device can operate at, for that
-particular I/O.
+I just realized I sent out an earlier version that has the above bug in
+it (missing curly braces). The version I tested, and the version in my
+public tree have this bug fixed.
 
-> 
-> > > which is divisible into 24KB. Is this a correct understanding?
-> > 
-> > That is correct.
-> 
-> So maybe it's me, but I just find it odd to call this information
-> "alignment". To me, what you are looking for is largest block size
-> granularity.
+>  	cur =3D cns;
+>  retry:
+> @@ -2690,6 +2695,7 @@ struct timespec64 inode_set_ctime_current(struct in=
+ode *inode)
+>  	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, now.tv_nsec)) {
+>  		/* If swap occurred, then we're (mostly) done */
+>  		inode->i_ctime_sec =3D now.tv_sec;
+> +		trace_ctime_ns_xchg(inode, cns, now.tv_nsec, cur);
+>  	} else {
+>  		/*
+>  		 * Was the change due to someone marking the old ctime QUERIED?
+> diff --git a/fs/stat.c b/fs/stat.c
+> index a449626fd460..9eb6d9b2d010 100644
+> --- a/fs/stat.c
+> +++ b/fs/stat.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/uaccess.h>
+>  #include <asm/unistd.h>
+> =20
+> +#include <trace/events/timestamp.h>
+> +
+>  #include "internal.h"
+>  #include "mount.h"
+> =20
+> @@ -52,6 +54,7 @@ void fill_mg_cmtime(struct kstat *stat, u32 request_mas=
+k, struct inode *inode)
+>  	if (!(stat->ctime.tv_nsec & I_CTIME_QUERIED))
+>  		stat->ctime.tv_nsec =3D ((u32)atomic_fetch_or(I_CTIME_QUERIED, pcn));
+>  	stat->ctime.tv_nsec &=3D ~I_CTIME_QUERIED;
+> +	trace_fill_mg_cmtime(inode, &stat->ctime, &stat->mtime);
+>  }
+>  EXPORT_SYMBOL(fill_mg_cmtime);
+> =20
+> diff --git a/include/trace/events/timestamp.h b/include/trace/events/time=
+stamp.h
+> new file mode 100644
+> index 000000000000..c9e5ec930054
+> --- /dev/null
+> +++ b/include/trace/events/timestamp.h
+> @@ -0,0 +1,124 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM timestamp
+> +
+> +#if !defined(_TRACE_TIMESTAMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_TIMESTAMP_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/fs.h>
+> +
+> +#define CTIME_QUERIED_FLAGS \
+> +	{ I_CTIME_QUERIED, "Q" }
+> +
+> +DECLARE_EVENT_CLASS(ctime,
+> +	TP_PROTO(struct inode *inode,
+> +		 struct timespec64 *ctime),
+> +
+> +	TP_ARGS(inode, ctime),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(time64_t,	ctime_s)
+> +		__field(u32,		ctime_ns)
+> +		__field(u32,		gen)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		=3D inode->i_sb->s_dev;
+> +		__entry->ino		=3D inode->i_ino;
+> +		__entry->gen		=3D inode->i_generation;
+> +		__entry->ctime_s	=3D ctime->tv_sec;
+> +		__entry->ctime_ns	=3D ctime->tv_nsec;
+> +	),
+> +
+> +	TP_printk("ino=3D%d:%d:%ld:%u ctime=3D%lld.%u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->ctime_s, __entry->ctime_ns
+> +	)
+> +);
+> +
+> +DEFINE_EVENT(ctime, inode_set_ctime_to_ts,
+> +		TP_PROTO(struct inode *inode,
+> +			 struct timespec64 *ctime),
+> +		TP_ARGS(inode, ctime));
+> +
+> +DEFINE_EVENT(ctime, ctime_xchg_skip,
+> +		TP_PROTO(struct inode *inode,
+> +			 struct timespec64 *ctime),
+> +		TP_ARGS(inode, ctime));
+> +
+> +TRACE_EVENT(ctime_ns_xchg,
+> +	TP_PROTO(struct inode *inode,
+> +		 u32 old,
+> +		 u32 new,
+> +		 u32 cur),
+> +
+> +	TP_ARGS(inode, old, new, cur),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(u32,		gen)
+> +		__field(u32,		old)
+> +		__field(u32,		new)
+> +		__field(u32,		cur)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		=3D inode->i_sb->s_dev;
+> +		__entry->ino		=3D inode->i_ino;
+> +		__entry->gen		=3D inode->i_generation;
+> +		__entry->old		=3D old;
+> +		__entry->new		=3D new;
+> +		__entry->cur		=3D cur;
+> +	),
+> +
+> +	TP_printk("ino=3D%d:%d:%ld:%u old=3D%u:%s new=3D%u cur=3D%u:%s",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->old & ~I_CTIME_QUERIED,
+> +		__print_flags(__entry->old & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS=
+),
+> +		__entry->new,
+> +		__entry->cur & ~I_CTIME_QUERIED,
+> +		__print_flags(__entry->cur & I_CTIME_QUERIED, "|", CTIME_QUERIED_FLAGS=
+)
+> +	)
+> +);
+> +
+> +TRACE_EVENT(fill_mg_cmtime,
+> +	TP_PROTO(struct inode *inode,
+> +		 struct timespec64 *ctime,
+> +		 struct timespec64 *mtime),
+> +
+> +	TP_ARGS(inode, ctime, mtime),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,		dev)
+> +		__field(ino_t,		ino)
+> +		__field(time64_t,	ctime_s)
+> +		__field(time64_t,	mtime_s)
+> +		__field(u32,		ctime_ns)
+> +		__field(u32,		mtime_ns)
+> +		__field(u32,		gen)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		=3D inode->i_sb->s_dev;
+> +		__entry->ino		=3D inode->i_ino;
+> +		__entry->gen		=3D inode->i_generation;
+> +		__entry->ctime_s	=3D ctime->tv_sec;
+> +		__entry->mtime_s	=3D mtime->tv_sec;
+> +		__entry->ctime_ns	=3D ctime->tv_nsec;
+> +		__entry->mtime_ns	=3D mtime->tv_nsec;
+> +	),
+> +
+> +	TP_printk("ino=3D%d:%d:%ld:%u ctime=3D%lld.%u mtime=3D%lld.%u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev), __entry->ino, __entry->gen,
+> +		__entry->ctime_s, __entry->ctime_ns,
+> +		__entry->mtime_s, __entry->mtime_ns
+> +	)
+> +);
+> +#endif /* _TRACE_TIMESTAMP_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+>=20
 
-More suggestions are welcome. What about just I/O granularity? Does the term
-imply LBA and size?
-
-> 
-> > Do you think adding examples like yours can help to explain
-> > this better?
-> > Below the same examples using fio with the trace output:
-> > 
-> > 
-> > 	sudo fio -bs=64k -size=64k -offset=32k -rw=write \
-> > 	-direct=1 -filename=/dev/nvme0n1 -iodepth=1 -ioengine=sync -name=sync
-> > 	
-> > 	sudo fio -bs=64k -size=64k -offset=64k -rw=write \
-> > 	-direct=1 -filename=/dev/nvme0n1 -iodepth=1 -ioengine=sync -name=sync
-> > 	
-> > 	sudo fio -bs=8k -size=8k -offset=64k -rw=write \
-> > 	-direct=1 -filename=/dev/nvme0n1 -iodepth=1 -ioengine=sync -name=sync
-> > 	
-> > 	sudo fio -bs=24k -size=24k -offset=0k -rw=write \
-> > 	-direct=1 -filename=/dev/nvme0n1 -iodepth=1 -ioengine=sync -name=sync
-> > 
-> > 	fio-789     [000] .....  4455.092003: block_rq_issue: 259,0 WS 65536 () 64 + 128 none,0,0 |32768| [fio]
-> > 	fio-801     [000] .....  4455.474826: block_rq_issue: 259,0 WS 65536 () 128 + 128 none,0,0 |65536| [fio]
-> > 	fio-813     [000] .....  4455.855143: block_rq_issue: 259,0 WS 8192 () 128 + 16 none,0,0 |8192| [fio]
-> > 	fio-825     [000] .....  4456.235595: block_rq_issue: 259,0 WS 24576 () 0 + 48 none,0,0 |8192| [fio]
-> > 
-> > 
-> > Also, the motivation behind this is explained in the LBS RFC [1] and I should
-> > have included it here for context. I hope [1] and my description below helps to
-> > explain what alignment means and why is needed:
-> > 
-> > [1] Subject: [RFC 00/23] Enable block size > page size in XFS
-> > https://urldefense.com/v3/__https://lore.kernel.org/lkml/20230915183848.1018717-1-kernel@pankajraghav.com/__;!!ACWV5N9M2RV99hQ!NoMpDxzuA5uKlv0RAWE5UtOQKOrNB2zv8PHmOLWxfGCEzw5WpyyvonfhcMi0REPjCgF8pgBvEO9kyhTPO8z1$
-> > 
-> > Tracing alignment information is important for high-capacity and QLC SSDs with
-> > Indirection Units greater than 4 KiB. These devices are still 4 KiB in Logical
-> > Block Size (LBS) but because they work at higher IUs, unaligned writes to the IU
-> > boundaries can imply in a read-modify-write (RMW).
-> 
-> Yes, I get that this might be important to know.
-> 
-> > 
-> > The graph below is a representation of the device IU vs an I/O block aligned/
-> > unaligned.
-> > 
-> >      |--- IU Boundaries ----|      |-PS-|
-> > a)  [====][====][====][====][····][····][····]--
-> >      |                      |
-> > b)  [····][====][====][====][====][····][····]--
-> >      |                      |
-> > c)  [====][====][====][====][····][====][====]--
-> 
-> is there meant to be a gap at page index #4?
-
-Sorry, that's a copy+paste error. c) can be ignored. 
-
-> 
-> >      |                      |
-> > d)  [····][····][====][====][····][····][····]--
-
-d) is c)
-
-
-> >      |                      |
-> > LBA 0                      4
-> >      Key:
-> >      [====] = I/O Block
-> >      [····] = Memory in Page Size (PS) chunks
-> > 
-> > a) I/O matches IU boundaries (LBA and block size). I/O is aligned.
-> > b) The size of the I/O matches the IU size but the I/O is not aligned to the
-> > IU boundaries. I/O is unaligned.
-> > c) I/O does not match in either size or LBA. I/O is unaligned.
-> 
-> what about d)? Not aligned to IU, I assume.
-
-Yes, c) description is meant for d).
-
-So for clarity, the correct graph is:
-
-    |--- IU Boundaries ----|      |-PS-|
-a)  [====][====][====][====][····][····][····]--
-    |                      |
-b)  [····][====][====][====][====][····][····]--
-    |                      |
-c)  [····][····][====][====][····][····][····]--
-    |                      |
-LBA 0                      4
-
-a) I/O matches IU boundaries (LBA and block size). I/O is aligned to IU boundaries.
-b) The size of the I/O matches the IU size but the I/O is not aligned to the
-IU boundaries. I/O is unaligned.
-c) I/O does not match in either size or LBA. I/O is unaligned.
-
-Using I/O granularity term:
-a) 16k I/O granularity
-b) 4k I/O granularity
-c) 8k I/O granularity
-
-> 
-> > 
-> > > 
-> > > > 
-> > > > The idea of reporting alignment in a tracepoint was first suggested in
-> > > > this thread [1] by Dave Chinner. Additionally, an eBPF-based equivalent
-> > > > tracing tool [2] was developed and used during LBS development, as
-> > > > mentioned in the patch series [3] and in [1].
-> > > > 
-> > > > With this addition, users can check block alignment directly through the
-> > > > block layer tracepoints without needing any additional tools.
-> > > > 
-> > > > In case we have a use case, this can be extended to other tracepoints,
-> > > > such as complete and error.
-> > > > 
-> > > > Another potential enhancement could be the integration of this
-> > > > information into blktrace. Would that be a feasible option to consider?
-> > > > 
-> > > > [1] https://urldefense.com/v3/__https://lore.kernel.org/all/ZdvXAn1Q*2F*QX5sPQ@dread.disaster.area/__;JSs!!ACWV5N9M2RV99hQ!P1ZM_E9uBSDLzz6M0dLc_vgEGWEY2HPBXJvEJLWp7w0l_G_r9Gvkm2kQiN586NSIH-JMx_YiCFy_6qdklHFY3pXtYsRb3aY$
-> > > > [2] blkalgn tool written in eBPF/bcc:
-> > > > https://urldefense.com/v3/__https://github.com/dkruces/bcc/tree/lbs__;!!ACWV5N9M2RV99hQ!P1ZM_E9uBSDLzz6M0dLc_vgEGWEY2HPBXJvEJLWp7w0l_G_r9Gvkm2kQiN586NSIH-JMx_YiCFy_6qdklHFY3pXthE7cfng$
-> > > > [3] https://urldefense.com/v3/__https://lore.kernel.org/all/20240822135018.1931258-1-kernel@pankajraghav.com/__;!!ACWV5N9M2RV99hQ!P1ZM_E9uBSDLzz6M0dLc_vgEGWEY2HPBXJvEJLWp7w0l_G_r9Gvkm2kQiN586NSIH-JMx_YiCFy_6qdklHFY3pXtqQ5uwAE$
-> > > > ---
-> > > >    block/blk-mq.c               | 29 +++++++++++++++++++++++++++++
-> > > >    include/linux/blk-mq.h       | 11 +++++++++++
-> > > >    include/linux/blkdev.h       |  6 ++++++
-> > > >    include/trace/events/block.h |  7 +++++--
-> > > >    4 files changed, 51 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > > > index 831c5cf5d874..714452bc236b 100644
-> > > > --- a/block/blk-mq.c
-> > > > +++ b/block/blk-mq.c
-> > > > @@ -4920,6 +4920,35 @@ int blk_rq_poll(struct request *rq, struct io_comp_batch *iob,
-> > > >    }
-> > > >    EXPORT_SYMBOL_GPL(blk_rq_poll);
-> > > > +u32 __blk_rq_lba_algn(struct request *req)
-> > > 
-> > > why use "algn", and not "align"?
-> > > 
-> > > "algn" is not a natural abbreviation of "alignment".
-> > 
-> > That's okay with me, changing the var name to a more natural abbreviation.
-> > 
-> > > 
-> > > And why can't userspace figure this out? All the info is available already,
-> > > right?
-> > 
-> > We are interested in the block alignment (LBA and size) at block device driver
-> > level, not userspace level. That is, everything that is going out from the block
-> > layer. Using the block tracing points currently available makes it block-driver
-> > generic.
-> 
-> I am just saying that the information already present in the block trace
-> point can be used to get this "alignment" info, right? And userspace can do
-> the work of reading those trace events to find this "alignment" info.
-
-So, maybe this is better to have integrated in blktrace tool?
-
-> 
-> Thanks,
-> John
-> 
+--=20
+Jeff Layton <jlayton@kernel.org>
