@@ -1,105 +1,101 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B07C1494DC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 19:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2441527B1;
+	Fri, 13 Sep 2024 20:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726255161; cv=none; b=sCyxeaDj+TqNQh3fBpaeYC7NrxKWJ2tkt8Xg8XR9MRGjLz0efWUQ3f4MxxZbc8U12751Kd+l7zfLsAiOzP2GWBB8LJG54i9T/YLrdpUGUji8YNMstZ0pykS5HyNtK4065vPRnt4CZMzOii+vEAqGERlOdIbPXUh69Y3MtMW1mVQ=
+	t=1726258285; cv=none; b=ruM07gbvt4hBR9P3Do1R5WAsQkDrj4mXKc8Oh23a+fjMSU2mdNrwKF2R68N8Xi3LSqDcuBB6kdpJz1q4+NN56wKzwJG7BHT5gSsTEzB7bcgeReEwTw1vDDyqXuUMz5JkHXguEUpJng/QlGtfNzUvrveRnYLVk6jBeRyPAWNInag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726255161; c=relaxed/simple;
-	bh=KdqA4DCfyuTo+ba0MlGe2lwMx112ipnTw4TXPWoYZCc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BHQpvDJulNMayqHc2okAweso0obU1moHdhl8816Nwb7DPEazpLJYi2r/5gKnApj54IPH8gfcOe73Cd/N/F8F5oFocX6J7m2lWsK+hopPrM4XM+V4EImjjqI1DN911AmM8t4mTVTYOZGU4Ne2CKUPtEtvKmYNeWTIiUJW1B/5cmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VQBOSUpy; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1726258285; c=relaxed/simple;
+	bh=KrbMlRrWnddy/v2g9DYSFXsxpZtGqQACNSxfRkmK8MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a1+qLogqIGeyK9XdPodgpPhJYsep5XfruaTE3kKj8bBoNIEXfDVS+mesByzCrGPbXBVidywbLKK1oG/3mFRh0dj2WDgM23eGKqBAch9/2vd6tz62P84Y+UXOUQNaQX2wq+3qGxhyK62nikmHhb026xJnWhkHEEDLc1Ll4gtepTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ikorU5mW; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQBOSUpy"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-718e2757e5dso2594443b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 12:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726255159; x=1726859959; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KygmwJLmIe2nR4CdVNrvjxv0ydC1BigODAK7NzKvrLY=;
-        b=VQBOSUpyUubzw5jwe/CA4vXt/SmNAXCNaX16x6R2956xPlZggvWCyckHoEqc8ekv77
-         7wrZB3H9xyDB1/8jRYkz8G+iRYlUDX23X5tkoHnd+cqxAfOsi4ClpUPHvNvud3259E8A
-         18+qDq8ppxpqTb1qDeQoJgD0Ua1/HfXf2BgcO/3q159pG4AcBvbyNMksw/4sGHZYaqu+
-         43QP0Chqaln0KspYCOdL/7hMFkcNmw7K3zK5a1+5BF2iM1iLUk18viVRmO+lFOO2V7B0
-         i04kwwJu41eXT6NeEsg61ny3u/6hpdmW5p64D5iqFx47vQnco9BzzE/R5+U88KtnY0Qt
-         At5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726255159; x=1726859959;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KygmwJLmIe2nR4CdVNrvjxv0ydC1BigODAK7NzKvrLY=;
-        b=oK9lt//oJaI8Si4rkIfOhkrNB0d3S2CB/7Drx+qdc3GGQt0d2VL7xoEjP3LC1DeMhK
-         srp2PWt0Y1+u/JjCO7MkxjO298mk84WwG+abKbVY/eMCoKvVCyKmPDVWPb70EH9sSy3p
-         Arq7DGsf8eO9b6A8hS+mJpL5wHbdUDsSsE82hyLy/p1GpbhYVil1kLXqeQffpXtDWEdC
-         qwXQxyYbXX9uJjBQ9byKAaLSU0hBoH1UjXBAq0/aAyoEe+xl0GtWwmwmaFuKUbAi3nRV
-         5XQBrmTbkAitUn5MEpKuA0nQQMUyfHQkcgdJrncovm/XOrxn14eBldlm5rYoAtAW/cNE
-         fLbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWJFp0ycbJ8oNrvQKS/ixx68T77Mu+G3CwO/mhT8CW1r0jplVBu/0u85XMIAEPXKcEoUsNHznd6X41ESPbEKxzdY7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLSTiDnspF3dKA1jkCd1Yhxs9aU5ZnuPgYecJLb2PaVr7OyAd4
-	n0Zs8+nx1dDEUpdTH8HiP0d8noBSaWTChj/Wxw1Mt/6HK4Wn7W7zdOhEw5s46gi0h5RUgBNBTbK
-	4rw==
-X-Google-Smtp-Source: AGHT+IH/IGVZ8XQwZZNAwLj6rrOnsFpPB4v5CQ6jVNhQ4gVq1+yWAmZL7Sj8qjscTbab1nLQs6mmPd32wXk=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:aa7:8d83:0:b0:718:d9ff:a392 with SMTP id
- d2e1a72fcca58-71907f308b6mr87141b3a.2.1726255159186; Fri, 13 Sep 2024
- 12:19:19 -0700 (PDT)
-Date: Fri, 13 Sep 2024 12:19:17 -0700
-In-Reply-To: <20240609154945.55332-1-nsaenz@amazon.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ikorU5mW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726258284; x=1757794284;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KrbMlRrWnddy/v2g9DYSFXsxpZtGqQACNSxfRkmK8MA=;
+  b=ikorU5mWE80zrfEthi4LdbLQdFO52Zwthv9YiUCfk8thofBmobK95Xkt
+   xPxPvPGBW1yTiajQ8xQNBtu8oEuGRz6SWDqbqxDHh5wJOFj9hmeXC5OB5
+   eL0Fl2yRWBYatEQZXZH7RaXAQTUCF/0OYIZvoYWYtil1xjfs8thXqaTcC
+   Sy9eo1zNMFdxdljjJ6otdEEc6dKNhSFcoGWDxNDZnrMIQfZfZ8/fzzBvw
+   qFLiXCmgwxP7TejMG2CIJf0jn4JBrKW/kFhw8Zaaechkeotv7UyFUP9eR
+   9BHl4tcfLN6C7Dj3HM4SFGhSWv3xgmK/qh1ml1an58p0lupRarG7kK/+p
+   g==;
+X-CSE-ConnectionGUID: +9OXtRWKS0WXn0CEQF1+Iw==
+X-CSE-MsgGUID: ETEGM7fcTWulquKgPdTzeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11194"; a="24712405"
+X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
+   d="scan'208";a="24712405"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 13:11:22 -0700
+X-CSE-ConnectionGUID: p0m3HkP0T625lIOSnYXlsw==
+X-CSE-MsgGUID: lCn4N0rjRkqcbFadFfXsKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,227,1719903600"; 
+   d="scan'208";a="72774956"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 13 Sep 2024 13:11:20 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1spCdR-0006wT-2I;
+	Fri, 13 Sep 2024 20:11:17 +0000
+Date: Sat, 14 Sep 2024 04:10:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Liao Chang <liaochang1@huawei.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] function_graph: Simplify the initialization of fgraph
+ LRU data
+Message-ID: <202409140325.G1zsZ0jL-lkp@intel.com>
+References: <20240912111550.1752115-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240609154945.55332-1-nsaenz@amazon.com>
-Message-ID: <ZuSQNZYWfeHTpAKN@google.com>
-Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
-From: Sean Christopherson <seanjc@google.com>
-To: Nicolas Saenz Julienne <nsaenz@amazon.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
-	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	graf@amazon.de, dwmw2@infradead.org, paul@amazon.com, mlevitsk@redhat.com, 
-	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	amoorthy@google.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240912111550.1752115-1-liaochang1@huawei.com>
 
-On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
-> This series introduces core KVM functionality necessary to emulate Hyper-V's
-> Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+Hi Liao,
 
-...
+kernel test robot noticed the following build errors:
 
-> As discussed at LPC2023 and in our previous RFC [2], we decided to model each
-> VTL as a distinct KVM VM. With this approach, and the RWX memory attributes
-> introduced in this series, we have been able to implement VTL memory
-> protections in a non-intrusive way, using generic KVM APIs. Additionally, each
-> CPU's VTL is modeled as a distinct KVM vCPU, owned by the KVM VM tracking that
-> VTL's state. VTL awareness is fully removed from KVM, and the responsibility
-> for VTL-aware hypercalls, VTL scheduling, and state transfer is delegated to
-> userspace.
-> 
-> Series overview:
-> - 1-8: Introduce a number of Hyper-V hyper-calls, all of which are VTL-aware and
->        expected to be handled in userspace. Additionally an new VTL-specifc MP
->        state is introduced.
-> - 9-10: Pass the instruction length as part of the userspace fault exit data
->         in order to simplify VSM's secure intercept generation.
-> - 11-17: Introduce RWX memory attributes as well as extend userspace faults.
-> - 18: Introduces the main VSM CPUID bit which gates all VTL configuration and
->       runtime hypercalls.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.11-rc7 next-20240913]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Aside from the RWX attributes, which to no one's surprise will need a lot of work
-to get them performant and functional, are there any "big" TODO items that you see
-in KVM?
+url:    https://github.com/intel-lab-lkp/linux/commits/Liao-Chang/function_graph-Simplify-the-initialization-of-fgraph-LRU-data/20240912-193159
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240912111550.1752115-1-liaochang1%40huawei.com
+patch subject: [PATCH] function_graph: Simplify the initialization of fgraph LRU data
+config: arm-randconfig-004-20240913 (https://download.01.org/0day-ci/archive/20240914/202409140325.G1zsZ0jL-lkp@intel.com/config)
+compiler: clang version 20.0.0git (https://github.com/llvm/llvm-project bf684034844c660b778f0eba103582f582b710c9)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240914/202409140325.G1zsZ0jL-lkp@intel.com/reproduce)
 
-If this series is more or less code complete, IMO modeling VTLs as distinct VM
-structures is a clear win.  Except for the "idle VTL" stuff, which I think we can
-simplify, this series is quite boring, and I mean that in the best possible way :-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202409140325.G1zsZ0jL-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: ftrace_graph_entry_stub
+   >>> referenced by arch/arm/kernel/entry-ftrace.o:(.text+0xB8) in archive vmlinux.a
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
