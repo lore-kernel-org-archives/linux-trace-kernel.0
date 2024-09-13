@@ -1,241 +1,115 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08531A3020
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 22:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A1033C8;
+	Fri, 13 Sep 2024 02:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726181601; cv=none; b=f2AeLfSjEJS2acx6LuUvzbbL4sX62tY80kdFtGs8L6oGVg+HduypYHkd6tnf+dYzSO9DQSENwc/jbTm5gj1bxovODBrT+xJqqtIGZ8yEs2ZidZspXHZlTHFuiWaOZS+buO7d85bDsdLxK3fs/Lp/JWF7Sn+F6r9hkRX00nx6J78=
+	t=1726193634; cv=none; b=ZHhCPjCbE5+hoK/DaRvGo5SVcqq+RuZzoGCu/03/OfuY7yKx/VwX7O3j1PWaLv4Z0Wj6rK7FC0YDGZsVxqcDpPG/4ehELB5DnZtfCXdqiooBXmxce4PiryCU6d3iVca/XukQrEisV2TmFXeTYnKueBfteDGgJDiAZHK25GYLhmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726181601; c=relaxed/simple;
-	bh=Rbbh6gPcXkQa0/EdPAvuvlCLT6ueJOwJIlQlPvjSpy8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E0ybI5kkqc1IRnxJJYXe1DQkTRFQB0/iHiIXkKU7o/crkK0aH5dFQpjXf0Pj3Cxd/BVv5PRr5FAWJWJ4rHjm5449q2SK2DkkSuP5LUaq8S4Y7yqUQQh+0g9Z1gShkh+3Z2U3DaRy6naMD5keZt1YyWpx0c2rjjrsXOk3KpGJv40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3vZ0J/JH; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3vZ0J/JH"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5c2443b2581so8148a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Sep 2024 15:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726181598; x=1726786398; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kCNOG1CDmyqExdlHYX65JYGn2614r9IBeuPVpY+h7D0=;
-        b=3vZ0J/JHwoxMyk2YsXl0AMVlc2Ypj15CiuKBPCs3TNK4llPO5ZGy7k6T+l2B+lSpEQ
-         ki5zbFSuxtvZuc5s86HsazVSHtFIkKwTPcSqZBgaSobR2wjVXL4KpagzcpyfnY5aN/it
-         VBYzSEzc1CCrZJe1G5pFBQ8gDI1fAnPARcdKYdgaJ8/C7LQVQVbHxKPXBjV7HgjC8R9t
-         RG2/IynG+yNLVI3RQgpP1TyBKfsyKecYVIQ0BT+/1vgo+4GR72RiY+6aRia21JLvFCc/
-         A+OjHBDT1hudxM+1mXtGcRts1W98Kf3atCy4vrPQdyLbgTDmNy+bFIBBiIRv4dWMvFb4
-         0e/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726181598; x=1726786398;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kCNOG1CDmyqExdlHYX65JYGn2614r9IBeuPVpY+h7D0=;
-        b=eJ7nu05GbDlJkSVpzmtAyjeGTVXODnIXsfvCIFaps4sE8OsdJKxcClguu+DqQT7rzl
-         SvS7Ail1uNyhG5a3t2w7rqXp9sKVWt4lURREr7VFC/rJwqQ0ezcIJrl43gh+p9QBvTgW
-         SeGp7glyEp7EUtbjJZFVAVC5PXeJcPj1HjTkQSNebqxXT3BlcMHDXQBitHpYWsc2rRij
-         2FS5MCAmQHHqddVtcBKuuGWFIZRNnsTtnNEPHCJXqxrt58TeH4UN64HdSeZ5B4rJEdhv
-         0z1TuSBIUGEV2253EsORIgythdgNXpnjfbnPpN+zVbyfcvbZHGewHJRsDxUxKp5otEmz
-         lTZQ==
-X-Gm-Message-State: AOJu0Yx2U50KUa3Vc2G0vEvOtX/1Mb2MNe4GavOcYobEAj37pYX2tkfE
-	eA+WHbYxGLe8So5K6e2f2n3L1OKJcLa974ZmeZ2gltG6EIctAdBSVlNT0h/GdiISo9ZW9+q46pG
-	TfTweBmsZ9pGQ6ZH4lrqEGN9zW7OPPuPnU/4/
-X-Google-Smtp-Source: AGHT+IHkhZDhmWWPB1cRiDxB9O+hnujHgxHATcCOa7iU1U0cCGKQa4vDx7adryVU89//eg9XTwPdcw004ewXy/PqEHA=
-X-Received: by 2002:a05:6402:27c7:b0:5c2:5641:af79 with SMTP id
- 4fb4d7f45d1cf-5c414384e17mr546049a12.0.1726181597390; Thu, 12 Sep 2024
- 15:53:17 -0700 (PDT)
+	s=arc-20240116; t=1726193634; c=relaxed/simple;
+	bh=jiLfsDjFmYbTok4lywR7Fe7cmBiUjCh3GrWHROoFkM4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rOR4BRslnFJqC7EPXG7fYJcdMdBGZ9t8Y8hBhvACDgLF3Kur5hlYeVh4Ta4KnlsObwlS0hmxoJjMvJ8TzhuUiCn0okYlUoIgEOTOYhqxuvloAJNlSNVT0szQBi0ijUIwIE6UKeQURgigIdthmo9bdi7IvspxPIUhsBI7xqNTI4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCDFFDA7;
+	Thu, 12 Sep 2024 19:14:21 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B781E3F66E;
+	Thu, 12 Sep 2024 19:13:50 -0700 (PDT)
+From: Levi Yun <yeoreum.yun@arm.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	a.p.zijlstra@chello.nl,
+	mingo@elte.hu,
+	mark.rutland@arm.com,
+	james.clark@linaro.org
+Cc: nd@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Levi Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v2] trace/trace_event_perf: remove duplicate samples on the first tracepoint event
+Date: Fri, 13 Sep 2024 03:13:47 +0100
+Message-Id: <20240913021347.595330-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJuCfpFFqqUWYOob_WYG_aY=PurnKvZjxznnx7V0=ESbNzHr_w@mail.gmail.com>
- <20240912210222.186542-1-surenb@google.com>
-In-Reply-To: <20240912210222.186542-1-surenb@google.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 13 Sep 2024 00:52:39 +0200
-Message-ID: <CAG48ez131NJWvo_RrxL7Ss0p4jd_aKOu71z1vm9wfaH7Qjn+qw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm: introduce mmap_lock_speculation_{start|end}
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	mjguzik@gmail.com, brauner@kernel.org, andrii@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 12, 2024 at 11:02=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
-com> wrote:
-> Add helper functions to speculatively perform operations without
-> read-locking mmap_lock, expecting that mmap_lock will not be
-> write-locked and mm is not modified from under us.
+When a tracepoint event is created with attr.freq = 1,
+'hwc->period_left' is not initialized correctly. As a result,
+in the perf_swevent_overflow() function, when the first time the event occurs,
+it calculates the event overflow and the perf_swevent_set_period() returns 3,
+this leads to the event are recorded for three duplicate times.
 
-I think this is okay now, except for some comments that should be
-fixed up. (Plus my gripe about the sequence count being 32-bit.)
+Step to reproduce:
+    1. Enable the tracepoint event & starting tracing
+         $ echo 1 > /sys/kernel/tracing/events/module/module_free
+         $ echo 1 > /sys/kernel/tracing/tracing_on
 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 6e3bdf8e38bc..5d8cdebd42bc 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -887,6 +887,9 @@ struct mm_struct {
->                  * Roughly speaking, incrementing the sequence number is
->                  * equivalent to releasing locks on VMAs; reading the seq=
-uence
->                  * number can be part of taking a read lock on a VMA.
-> +                * Incremented every time mmap_lock is write-locked/unloc=
-ked.
-> +                * Initialized to 0, therefore odd values indicate mmap_l=
-ock
-> +                * is write-locked and even values that it's released.
+    2. Record with perf
+         $ perf record -a --strict-freq -F 1 -e "module:module_free"
 
-FWIW, I would still feel happier if this was a 64-bit number, though I
-guess at least with uprobes the attack surface is not that large even
-if you can wrap that counter... 2^31 counter increments are not all
-that much, especially if someone introduces a kernel path in the
-future that lets you repeatedly take the mmap_lock for writing within
-a single syscall without doing much work, or maybe on some machine
-where syscalls are really fast. I really don't like hinging memory
-safety on how fast or slow some piece of code can run, unless we can
-make strong arguments about it based on how many memory writes a CPU
-core is capable of doing per second or stuff like that.
+    3. Trigger module_free event.
+         $ modprobe -i sunrpc
+         $ modprobe -r sunrpc
 
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index de9dc20b01ba..a281519d0c12 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -71,39 +71,86 @@ static inline void mmap_assert_write_locked(const str=
-uct mm_struct *mm)
->  }
->
->  #ifdef CONFIG_PER_VMA_LOCK
-> +static inline void init_mm_lock_seq(struct mm_struct *mm)
-> +{
-> +       mm->mm_lock_seq =3D 0;
-> +}
-> +
->  /*
-> - * Drop all currently-held per-VMA locks.
-> - * This is called from the mmap_lock implementation directly before rele=
-asing
-> - * a write-locked mmap_lock (or downgrading it to read-locked).
-> - * This should normally NOT be called manually from other places.
-> - * If you want to call this manually anyway, keep in mind that this will=
- release
-> - * *all* VMA write locks, including ones from further up the stack.
-> + * Increment mm->mm_lock_seq when mmap_lock is write-locked (ACQUIRE sem=
-antics)
-> + * or write-unlocked (RELEASE semantics).
->   */
-> -static inline void vma_end_write_all(struct mm_struct *mm)
-> +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire)
->  {
->         mmap_assert_write_locked(mm);
+Result:
+     - Trace pipe result:
+         $ cat trace_pipe
+         modprobe-174509  [003] .....  6504.868896: module_free: sunrpc
 
-Not a memory barriers thing, but maybe you could throw in some kind of
-VM_WARN_ON() in the branches below that checks that the sequence
-number is odd/even as expected, just to make extra sure...
+     - perf sample:
+         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
+         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
+         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
 
->         /*
->          * Nobody can concurrently modify mm->mm_lock_seq due to exclusiv=
-e
->          * mmap_lock being held.
-> -        * We need RELEASE semantics here to ensure that preceding stores=
- into
-> -        * the VMA take effect before we unlock it with this store.
-> -        * Pairs with ACQUIRE semantics in vma_start_read().
->          */
-> -       smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
-> +
-> +       if (acquire) {
-> +               WRITE_ONCE(mm->mm_lock_seq, mm->mm_lock_seq + 1);
-> +               /*
-> +                * For ACQUIRE semantics we should ensure no following st=
-ores are
-> +                * reordered to appear before the mm->mm_lock_seq modific=
-ation.
-> +                */
-> +               smp_wmb();
+By setting period_left via perf_swevent_set_period() as other sw_event did,
+This problem could be solved.
 
-This is not really a full ACQUIRE; smp_wmb() only orders *stores*, not
-loads, while a real ACQUIRE also prevents reads from being reordered
-up above the atomic access. Please reword the comment to make it clear
-that we don't have a full ACQUIRE here.
+After patch:
+     - Trace pipe result:
+         $ cat trace_pipe
+         modprobe 1153096 [068] 613468.867774: module:module_free: xfs
 
-We can still have subsequent loads reordered up before the
-mm->mm_lock_seq increment. But I guess that's probably fine as long as
-nobody does anything exceedingly weird that involves lockless users
-*writing* data that we have to read consistently, which wouldn't
-really make sense...
+     - perf sample
+         modprobe 1153096 [068] 613468.867794: module:module_free: xfs
 
-So yeah, I guess this is probably fine, and it matches what
-do_raw_write_seqcount_begin() is doing.
+Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
+Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
+---
+Changes in v2:
+  - Fix build error.
+---
+ kernel/trace/trace_event_perf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> +       } else {
-> +               /*
-> +                * We need RELEASE semantics here to ensure that precedin=
-g stores
-> +                * into the VMA take effect before we unlock it with this=
- store.
-> +                * Pairs with ACQUIRE semantics in vma_start_read().
-> +                */
-> +               smp_store_release(&mm->mm_lock_seq, mm->mm_lock_seq + 1);
-> +       }
-> +}
-> +
-> +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, int=
- *seq)
-> +{
-> +       /* Pairs with RELEASE semantics in inc_mm_lock_seq(). */
-> +       *seq =3D smp_load_acquire(&mm->mm_lock_seq);
-> +       /* Allow speculation if mmap_lock is not write-locked */
-> +       return (*seq & 1) =3D=3D 0;
-> +}
-> +
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
-eq)
-> +{
-> +       /* Pairs with ACQUIRE semantics in inc_mm_lock_seq(). */
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index 05e791241812..3ff9caa4a71b 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -352,10 +352,16 @@ void perf_uprobe_destroy(struct perf_event *p_event)
+ int perf_trace_add(struct perf_event *p_event, int flags)
+ {
+ 	struct trace_event_call *tp_event = p_event->tp_event;
++	struct hw_perf_event *hwc = &p_event->hw;
 
-(see above, it's not actually a full ACQUIRE)
+ 	if (!(flags & PERF_EF_START))
+ 		p_event->hw.state = PERF_HES_STOPPED;
 
-> +       smp_rmb();
-> +       return seq =3D=3D READ_ONCE(mm->mm_lock_seq);
->  }
-> +
->  #else
-> -static inline void vma_end_write_all(struct mm_struct *mm) {}
-> +static inline void init_mm_lock_seq(struct mm_struct *mm) {}
-> +static inline void inc_mm_lock_seq(struct mm_struct *mm, bool acquire) {=
-}
-> +static inline bool mmap_lock_speculation_start(struct mm_struct *mm, int=
- *seq) { return false; }
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, int s=
-eq) { return false; }
->  #endif
->
-> +/*
-> + * Drop all currently-held per-VMA locks.
-> + * This is called from the mmap_lock implementation directly before rele=
-asing
-> + * a write-locked mmap_lock (or downgrading it to read-locked).
-> + * This should normally NOT be called manually from other places.
-> + * If you want to call this manually anyway, keep in mind that this will=
- release
-> + * *all* VMA write locks, including ones from further up the stack.
++	if (is_sampling_event(p_event)) {
++		hwc->last_period = hwc->sample_period;
++		perf_swevent_set_period(p_event);
++	}
++
+ 	/*
+ 	 * If TRACE_REG_PERF_ADD returns false; no custom action was performed
+ 	 * and we need to take the default action of enqueueing our event on
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
-Outdated comment - now you are absolutely not allowed to call
-vma_end_write_all() manually anymore, it would mess up the odd/even
-state of the counter.
-
-> + */
-> +static inline void vma_end_write_all(struct mm_struct *mm)
-> +{
-> +       inc_mm_lock_seq(mm, false);
-> +}
