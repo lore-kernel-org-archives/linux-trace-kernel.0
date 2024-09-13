@@ -1,210 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C42728366;
-	Fri, 13 Sep 2024 15:00:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429FD6F31E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 18:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726239656; cv=none; b=sUKX2K7Dpzqa/W3KGt2R/KXYqSn3fCI6UMijHIen9hj7Vhkq6oHD9chYicPGpna+A1GcuGxBaaWJM/DO+VH77ziFKalEYfHGlBxoWz1NxflOnV9HUCksCBHblHnXIHQDGmpf6mbu+NzvT7jRdv+c83zcY+kyZzil8mrq4JgwFGQ=
+	t=1726250573; cv=none; b=tF9MHkFVNMdMekoZxOQ6UQg6TrTofhRj8ejgmJplRpwxGAFMn0CCttCTebu8bgzbpDnPKQ2Z6ty7KdEpjFasXy/mywF9ouomxYA+8maFgxP9F+fIex7ImdkYVfg3VwYMSzCXMWu6yNcuvuGlOnF0ItZ3sbtBw6Lqc30rdtK0bFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726239656; c=relaxed/simple;
-	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=co7cmp9Uu7WupKwSJaX6VxtjpoYw4H0P0ZNW5kprOfFR6Eo/5yoCYsQtsiB0hOm+5ff8UvkTig6mE+lPtTZRwfpA9JyVBHZUiC2u7h/UUFPYpFb1k9xCj+S6TaXnUIRiCUiktbwdvTjxXGWIEJHhsqKVCC4yKI5MopNfb50WT1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAJMkQFc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726250573; c=relaxed/simple;
+	bh=aGCUDXfV/u877/fkGI51wat4K8lT5ShFVAK8Wj6tNt4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vra7RfR187Q67TT0/5tKF0s7rwwRjnAJdxqm4iasLyybRp032QZqZVCdPVPlsarn5pcvEE+I9kwBF0mrIIxpdHTktZYg6bAiWBmrPFSF26t8ldOsIBiqQATonaWoA/egyXgBIvV22RGyE/eJMrBsII3B2ReTdaoU6VCuqTLMojc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eyd6t+6J; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAJMkQFc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81CBC4CEDB;
-	Fri, 13 Sep 2024 15:00:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726239656;
-	bh=BA0ANnltDBBfuoBltj9aaFdaXEL//Iks38XJnB02U/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YAJMkQFcS9yQrD3CD9uf2YDAnPedZRu2sdG3Uq7zy8+8g4fHsdnaV9YMu/zLJ/1tj
-	 EDiCdYnV0pGG/cGSGCoqzc1yz3NAQwdRBBLRfL0AaT5mhRSd5SqOtQjToavlsk96bb
-	 oKdYkALvWRv8THfAoHVYOAKmMboDnCW5qhSOfsTXSAkiRSZcMGaGh7XxCBtwPbd5yo
-	 iYcY5nqsZThg8+lFTkl4wHHIxP84VsBur9fkHWLMiLx+uY355fMP3Bd0gFRq3KpUT4
-	 TIJSScKe0wBqYY1i+xFQfTmvYKL4lkyD4Paj6wDyvXKCliGwP8nsVtdZV47PWrdook
-	 qWRlseRXwzJPA==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2f759688444so20775241fa.1;
-        Fri, 13 Sep 2024 08:00:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCULir8RU8+P9W/UUHicJGDrkLQQQZokBhHGLCgoRNfZP5TViqAqbSAXmiHiCpE3I4KmoIht3k9rS+Siils=@vger.kernel.org, AJvYcCUw1AyxawrWxc/j7v03nO2ad+l8y8OsrCz5pbPc/VzKwI9EJJmUUtSCFw0eA/l6pJGyb5/cDl5DKnQ=@vger.kernel.org, AJvYcCUxvSkjTNBJJDMNVxAvXbjdUHZ/3Nt+B2q46ZDB04fOYwaKARUBkey1NT4qRYE9nxdmslUPtXBA1/HAyspyqQ==@vger.kernel.org, AJvYcCVdAG1QR7P19Qz6OOO+svTOKlqL+qfFD5IncHKX6ncPJbq3+KSig5TlZG63fEGm4XAcPKOk0F/jiJxTrA==@vger.kernel.org, AJvYcCVtsDg+0MZeHZXjkKJB5t4vEgnbgBgcaPpdxY0ymQIWPxqZZrQFJbmrMc3znAsWgGxYQLbhegaDEB2DqCfD@vger.kernel.org, AJvYcCWDfqc+xc5hMcP3JG9ctERZe79q8aNyXVE+E5pCvWB6KlMThkVtFs6UlosHUd/t1hU19VNmxptRYCVDkFsxW/X0eFcr@vger.kernel.org, AJvYcCWGtaY1eP2j7izTOEJFsnrMSzpYhaPwr0exKMiB5O+/mq76CXmOgUZrjpuOASxh6x3VE9HbMkNCD04D+lUd@vger.kernel.org, AJvYcCXcxpURX017fZYRq9h+F8GTJvPfaCx7MZElPErCIf64gAItKFh63Cs2rLul+y7fgZ/ocONgNGudDyNUv3S5G8Q=@vger.kernel.org, AJvYcCXfiy1yV18uLg4r+FuZM20TQHKTVUAaAE0RKHt/zmpwyWmOGY0zCJSxp68VCO3nyNEoMSEpB4mG0K+msQ==@vger.kernel.org, AJvYcCXk2/tlXIAd3IMCDQYvMLnknHPNku9g3pNxzJ9w0sAAw/5/winZpdHmdwqfzRJ2WZiakDZYLL+WjFLOVs2zAw==@vger.kernel.org, AJvYcCXlfdVgjN27YkAH2elz+3KHzyWh9zIYQyR1021lTaYvwcmrngYb4QAxxoL68i57hLLldJARGZIYJ+OUhA==@vger.kernel.org, AJvYcCXtJH5o/uZ+9iGulxzcMyKL/DTTv+fLQUgrVZrR4ONsJetKnUkp/9U3yVe/rIK7yPgKy/gbycUfKwTMZQ==@vger.kernel.org, AJvYcCXutrGseycTn/cGyeHK5TPzQZ/a3JPOl811M6oAlencO81EUw8g2O1/Z6+kdY+Jd+mE5kQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmKtUy3CnOCc7qGHJ4H+Fk8HiVo4sszEh3tjAp6mLuMyCeG757
-	p10UIAD88ar0TpjeZDZmqeFbJMqDiIYc+Mc/p65ZtHPq05vDROGYbZDZFwUdm23eNAfLJ10hUuL
-	Ge96rXQf6wDtaqAEFP4xJCU8WZmY=
-X-Google-Smtp-Source: AGHT+IEIp2MygUsW5Tc1gnqrEXhSi4Y5LfaJ7pDs2t1FcVSY61BEs2pVKMYAU/+O+nJIsawLe6NqpBRTPpsi7cWLSzQ=
-X-Received: by 2002:a05:651c:1a0c:b0:2f0:1e0a:4696 with SMTP id
- 38308e7fff4ca-2f787dabe7emr39035411fa.7.1726239653924; Fri, 13 Sep 2024
- 08:00:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eyd6t+6J"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6cf78470a56so58023087b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Sep 2024 11:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1726250570; x=1726855370; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdKtMk3zFpIjWQQtYnxSCkrmfWA0I64F86jP4xgplJo=;
+        b=eyd6t+6J3YIemQOT4ft7gvNG0mImDRIyXa09JbpLgTu27NSWSJAVgBmhWv1qZtCjkX
+         xZprwB6PrcnusHDuVUbdr89Mo2i56cDpkfKWvb3SPEecYp2YLOJGJ4UL8yw/icFD56Pt
+         +S7ysWPwnnnTU3/fSTbe54r49ldVv3cRs2YV3cYOW+EbLDmGXKmQlfAitG2gkacCp7K8
+         yRKQ0unGkXReFP5wsrWe29ZQ+w7O3W1TOmPsN2kQ9AqbxxqDdFpZXbxiTmMwlchvsQJp
+         gaeLcW44zKdaCmzw1DbzEwtocX8NlebuTQrG8VM4NxeFVeapieboDeTZlqcPmqz41eiw
+         RBPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726250570; x=1726855370;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdKtMk3zFpIjWQQtYnxSCkrmfWA0I64F86jP4xgplJo=;
+        b=BGHk7zRlf2ddpk37QdDjVgCniuzCtM3cDdgpIXiD18Ahqnaf5iQuK92JqqJDD3F06D
+         Tdki+UMpIhw/Etxg69+kN8zF+Om1W9QK7B94vL4OEhlX4ag69NT8SHwkbwh2zWaZ+Msl
+         AGJ7y3KuUz9DNa1zcSMe0PivQhgEzPDAVZQRIeOkmv5kfvVFP22TnSWqqA0larBM66dn
+         J9C3TVKw1xOqCXwwHgwn+/DuGZQCRSs+3gZAnBw449o4eUOjN7w81205nThtcedrCR3v
+         IaHGr9eAXfhOnRF/K/6BbOLubUhI2p9USMH7375vItsfisQrqLelqhbSbiEEeEoJ/G71
+         OvQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZwSxTk2IsJ2sKPCm4EZILWmC4PFc6QKneWWueTK69HBORpn2sfOVxFSSPAg3qImebsmy6QpydVC528I7YR8A9dtc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV5nLDYuytzsWxb1dYYXtemzuSFfrXNRrXoGKPSXKMI3Q80EKK
+	z2OZ9mn48OG5a8DSzJd6c7IgH70siVzgsOBVXr+9W4DPk531p0nLzgKt+7RHdOeoPWCBy+SIGy5
+	7JQ==
+X-Google-Smtp-Source: AGHT+IGT5Cq9F/Hq6fJKYSOkySIR4cK8FdX4I3mm6MNrBQ/Kg+JyiB86l9pHtdUOjWBXR4MFXaP3rIm2mPU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:4d43:b0:6db:cd39:4dad with SMTP id
+ 00721157ae682-6dbcd395214mr2114647b3.5.1726250570352; Fri, 13 Sep 2024
+ 11:02:50 -0700 (PDT)
+Date: Fri, 13 Sep 2024 11:02:48 -0700
+In-Reply-To: <20240609154945.55332-5-nsaenz@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240909064730.3290724-1-rppt@kernel.org> <20240909064730.3290724-8-rppt@kernel.org>
-In-Reply-To: <20240909064730.3290724-8-rppt@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 13 Sep 2024 17:00:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
-Message-ID: <CAMj1kXG_Z=7B_eDAk3vhtDjfcnka3AoSKNzvFQDzpvYY2EyVfg@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] execmem: add support for cache of large ROX pages
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, 
-	Brian Cain <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Christoph Hellwig <hch@infradead.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, 
-	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240609154945.55332-1-nsaenz@amazon.com> <20240609154945.55332-5-nsaenz@amazon.com>
+Message-ID: <ZuR-SPaaTBwLTxW3@google.com>
+Subject: Re: [PATCH 04/18] KVM: x86: hyper-v: Introduce VTL awareness to
+ Hyper-V's PV-IPIs
+From: Sean Christopherson <seanjc@google.com>
+To: Nicolas Saenz Julienne <nsaenz@amazon.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, pbonzini@redhat.com, 
+	vkuznets@redhat.com, linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	graf@amazon.de, dwmw2@infradead.org, paul@amazon.com, mlevitsk@redhat.com, 
+	jgowans@amazon.com, corbet@lwn.net, decui@microsoft.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	amoorthy@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Mike,
-
-On Mon, 9 Sept 2024 at 08:51, Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->
-> Using large pages to map text areas reduces iTLB pressure and improves
-> performance.
->
-> Extend execmem_alloc() with an ability to use huge pages with ROX
-> permissions as a cache for smaller allocations.
->
-> To populate the cache, a writable large page is allocated from vmalloc with
-> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
-> ROX.
->
-> Portions of that large page are handed out to execmem_alloc() callers
-> without any changes to the permissions.
->
-> When the memory is freed with execmem_free() it is invalidated again so
-> that it won't contain stale instructions.
->
-> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
-> definition of an execmem_range.
->
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
+> HvCallSendSyntheticClusterIpi and HvCallSendSyntheticClusterIpiEx allow
+> sending VTL-aware IPIs. Honour the hcall by exiting to user-space upon
+> receiving a request with a valid VTL target. This behaviour is only
+> available if the VSM CPUID flag is available and exposed to the guest.
+> It doesn't introduce a behaviour change otherwise.
+> 
+> User-space is accountable for the correct processing of the PV-IPI
+> before resuming execution.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenz@amazon.com>
 > ---
->  include/linux/execmem.h |   2 +
->  mm/execmem.c            | 289 +++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 286 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-> index dfdf19f8a5e8..7436aa547818 100644
-> --- a/include/linux/execmem.h
-> +++ b/include/linux/execmem.h
-> @@ -77,12 +77,14 @@ struct execmem_range {
->
->  /**
->   * struct execmem_info - architecture parameters for code allocations
-> + * @fill_trapping_insns: set memory to contain instructions that will trap
->   * @ranges: array of parameter sets defining architecture specific
->   * parameters for executable memory allocations. The ranges that are not
->   * explicitly initialized by an architecture use parameters defined for
->   * @EXECMEM_DEFAULT.
->   */
->  struct execmem_info {
-> +       void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
->         struct execmem_range    ranges[EXECMEM_TYPE_MAX];
->  };
->
-> diff --git a/mm/execmem.c b/mm/execmem.c
-> index 0f6691e9ffe6..f547c1f3c93d 100644
-> --- a/mm/execmem.c
-> +++ b/mm/execmem.c
-> @@ -7,28 +7,88 @@
->   */
->
->  #include <linux/mm.h>
-> +#include <linux/mutex.h>
->  #include <linux/vmalloc.h>
->  #include <linux/execmem.h>
-> +#include <linux/maple_tree.h>
->  #include <linux/moduleloader.h>
->  #include <linux/text-patching.h>
->
-> +#include <asm/tlbflush.h>
-> +
-> +#include "internal.h"
-> +
->  static struct execmem_info *execmem_info __ro_after_init;
->  static struct execmem_info default_execmem_info __ro_after_init;
->
-> -static void *__execmem_alloc(struct execmem_range *range, size_t size)
-> +#ifdef CONFIG_MMU
-> +struct execmem_cache {
-> +       struct mutex mutex;
-> +       struct maple_tree busy_areas;
-> +       struct maple_tree free_areas;
-> +};
-> +
-> +static struct execmem_cache execmem_cache = {
-> +       .mutex = __MUTEX_INITIALIZER(execmem_cache.mutex),
-> +       .busy_areas = MTREE_INIT_EXT(busy_areas, MT_FLAGS_LOCK_EXTERN,
-> +                                    execmem_cache.mutex),
-> +       .free_areas = MTREE_INIT_EXT(free_areas, MT_FLAGS_LOCK_EXTERN,
-> +                                    execmem_cache.mutex),
-> +};
-> +
-> +static void execmem_cache_clean(struct work_struct *work)
-> +{
-> +       struct maple_tree *free_areas = &execmem_cache.free_areas;
-> +       struct mutex *mutex = &execmem_cache.mutex;
-> +       MA_STATE(mas, free_areas, 0, ULONG_MAX);
-> +       void *area;
-> +
-> +       mutex_lock(mutex);
-> +       mas_for_each(&mas, area, ULONG_MAX) {
-> +               size_t size;
-> +
-> +               if (!xa_is_value(area))
-> +                       continue;
-> +
-> +               size = xa_to_value(area);
-> +
-> +               if (IS_ALIGNED(size, PMD_SIZE) &&
-> +                   IS_ALIGNED(mas.index, PMD_SIZE)) {
-> +                       void *ptr = (void *)mas.index;
-> +
-> +                       mas_erase(&mas);
-> +                       vfree(ptr);
-> +               }
-> +       }
-> +       mutex_unlock(mutex);
-> +}
-> +
-> +static DECLARE_WORK(execmem_cache_clean_work, execmem_cache_clean);
-> +
-> +static void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable)
-> +{
-> +       if (execmem_info->fill_trapping_insns)
-> +               execmem_info->fill_trapping_insns(ptr, size, writable);
-> +       else
-> +               memset(ptr, 0, size);
+>  arch/x86/kvm/hyperv.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 42f44546fe79c..d00baf3ffb165 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -2217,16 +2217,20 @@ static void kvm_hv_send_ipi_to_many(struct kvm *kvm, u32 vector,
+>  
+>  static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  {
+> +	bool vsm_enabled = kvm_hv_cpuid_vsm_enabled(vcpu);
+>  	struct kvm_vcpu_hv *hv_vcpu = to_hv_vcpu(vcpu);
+>  	u64 *sparse_banks = hv_vcpu->sparse_banks;
+>  	struct kvm *kvm = vcpu->kvm;
+>  	struct hv_send_ipi_ex send_ipi_ex;
+>  	struct hv_send_ipi send_ipi;
+> +	union hv_input_vtl *in_vtl;
+>  	u64 valid_bank_mask;
+> +	int rsvd_shift;
+>  	u32 vector;
+>  	bool all_cpus;
+>  
+>  	if (hc->code == HVCALL_SEND_IPI) {
+> +		in_vtl = &send_ipi.in_vtl;
 
-Does this really have to be a function pointer with a runtime check?
+I don't see any value in having a local pointer to a union.  Just use send_ipi.in_vtl.
 
-This could just be a __weak definition, with the arch providing an
-override if the memset() is not appropriate.
+>  		if (!hc->fast) {
+>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi,
+>  						    sizeof(send_ipi))))
+> @@ -2235,16 +2239,22 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  			vector = send_ipi.vector;
+>  		} else {
+>  			/* 'reserved' part of hv_send_ipi should be 0 */
+> -			if (unlikely(hc->ingpa >> 32 != 0))
+> +			rsvd_shift = vsm_enabled ? 40 : 32;
+> +			if (unlikely(hc->ingpa >> rsvd_shift != 0))
+>  				return HV_STATUS_INVALID_HYPERCALL_INPUT;
+
+The existing error handling doesn't make any sense to me.  Why is this the _only_
+path that enforces reserved bits?
+
+Regarding the shift, I think it makes more sense to do:
+
+			/* Bits 63:40 are always reserved. */
+			if (unlikely(hc->ingpa >> 40 != 0))
+				return HV_STATUS_INVALID_HYPERCALL_INPUT;
+
+			send_ipi.in_vtl.as_uint8 = (u8)(hc->ingpa >> 32);
+			if (unlikely(!vsm_enabled && send_ipi.in_vtl.as_uint8))
+				return HV_STATUS_INVALID_HYPERCALL_INPUT;
+
+so that it's more obvious exactly what is/isn't reserved when VSM isn't/is enabled.
+
+> +			in_vtl->as_uint8 = (u8)(hc->ingpa >> 32);
+>  			sparse_banks[0] = hc->outgpa;
+>  			vector = (u32)hc->ingpa;
+>  		}
+>  		all_cpus = false;
+>  		valid_bank_mask = BIT_ULL(0);
+>  
+> +		if (in_vtl->use_target_vtl)
+
+Due to the lack of error checking for the !hc->fast case, this will do the wrong
+thing if vsm_enabled=false.
+
+> +			return -ENODEV;
+> +
+>  		trace_kvm_hv_send_ipi(vector, sparse_banks[0]);
+>  	} else {
+> +		in_vtl = &send_ipi_ex.in_vtl;
+>  		if (!hc->fast) {
+>  			if (unlikely(kvm_read_guest(kvm, hc->ingpa, &send_ipi_ex,
+>  						    sizeof(send_ipi_ex))))
+> @@ -2253,8 +2263,12 @@ static u64 kvm_hv_send_ipi(struct kvm_vcpu *vcpu, struct kvm_hv_hcall *hc)
+>  			send_ipi_ex.vector = (u32)hc->ingpa;
+>  			send_ipi_ex.vp_set.format = hc->outgpa;
+>  			send_ipi_ex.vp_set.valid_bank_mask = sse128_lo(hc->xmm[0]);
+> +			in_vtl->as_uint8 = (u8)(hc->ingpa >> 32);
+>  		}
+>  
+> +		if (vsm_enabled && in_vtl->use_target_vtl)
+> +			return -ENODEV;
+> +
+>  		trace_kvm_hv_send_ipi_ex(send_ipi_ex.vector,
+>  					 send_ipi_ex.vp_set.format,
+>  					 send_ipi_ex.vp_set.valid_bank_mask);
+> @@ -2682,6 +2696,9 @@ int kvm_hv_hypercall(struct kvm_vcpu *vcpu)
+>  			break;
+>  		}
+>  		ret = kvm_hv_send_ipi(vcpu, &hc);
+> +		/* VTL-enabled ipi, let user-space handle it */
+> +		if (ret == -ENODEV)
+
+I generally don't love "magic" error codes, but I don't see an obvious better
+solution either.  The other weird thing is that "ret" is a u64, versus the more
+common int or even long.  I doubt it's problematic in practice, just a bit odd.
+
+> +			goto hypercall_userspace_exit;
+>  		break;
+>  	case HVCALL_POST_DEBUG_DATA:
+>  	case HVCALL_RETRIEVE_DEBUG_DATA:
+> -- 
+> 2.40.1
+> 
