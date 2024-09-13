@@ -1,115 +1,125 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A1033C8;
-	Fri, 13 Sep 2024 02:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4432A84D2C;
+	Fri, 13 Sep 2024 02:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726193634; cv=none; b=ZHhCPjCbE5+hoK/DaRvGo5SVcqq+RuZzoGCu/03/OfuY7yKx/VwX7O3j1PWaLv4Z0Wj6rK7FC0YDGZsVxqcDpPG/4ehELB5DnZtfCXdqiooBXmxce4PiryCU6d3iVca/XukQrEisV2TmFXeTYnKueBfteDGgJDiAZHK25GYLhmM=
+	t=1726194055; cv=none; b=qssX6wwaS4VUX3EWXaiZcLGWhSC4MvqKSe/G7n3BK+ugmgFPEtBFcoCSu2cg8l7zQWfiQxKk3nlNkFNfWmt3FMhYUpOK7G8WeOQDhJxCG3bI3/gif7CNGJ1SlWq0B/p9r/W87PzC11rr4J06pAtiyNOdPpcT1p+SP6yoLj1j20I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726193634; c=relaxed/simple;
-	bh=jiLfsDjFmYbTok4lywR7Fe7cmBiUjCh3GrWHROoFkM4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rOR4BRslnFJqC7EPXG7fYJcdMdBGZ9t8Y8hBhvACDgLF3Kur5hlYeVh4Ta4KnlsObwlS0hmxoJjMvJ8TzhuUiCn0okYlUoIgEOTOYhqxuvloAJNlSNVT0szQBi0ijUIwIE6UKeQURgigIdthmo9bdi7IvspxPIUhsBI7xqNTI4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCDFFDA7;
-	Thu, 12 Sep 2024 19:14:21 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B781E3F66E;
-	Thu, 12 Sep 2024 19:13:50 -0700 (PDT)
-From: Levi Yun <yeoreum.yun@arm.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	a.p.zijlstra@chello.nl,
-	mingo@elte.hu,
-	mark.rutland@arm.com,
-	james.clark@linaro.org
-Cc: nd@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Levi Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v2] trace/trace_event_perf: remove duplicate samples on the first tracepoint event
-Date: Fri, 13 Sep 2024 03:13:47 +0100
-Message-Id: <20240913021347.595330-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1726194055; c=relaxed/simple;
+	bh=ty3xYTxWvBQ0iNr/gp4gzxWMHqmses0ZJVOBK3pt0qY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GAFCWoWjtTy9ahzAAKCMnG/tWBriziWT8LTdTBfqPkcb39dEL34dslYPuep1YzcNfxO7SwsJ0psbqk1Skyj5463O8COhvo6ULcUJ9TMcwsuYesAmC53SBjahcRfbafgzMs4MMATmLvcPpMCUdtqctPOBb3oztEPeYIqm6ACpKGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d38hknNr; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d38hknNr"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6c35427935eso9488536d6.3;
+        Thu, 12 Sep 2024 19:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726194053; x=1726798853; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/YuGlKzxhtY5rBL2eIZIp8+LMnunU1KOYKGMKR0vy8Y=;
+        b=d38hknNr/z4owc9IOMCwIhnhymdWN9dCFImGKnORv27pu5pUc5Z9wv8hfWONf7AjHu
+         xOGba8M595eXv5ElYOK5f5GDox41jQP31xr3myHVk6I2gh+My4rqvXBHQnGlZt5FhnI1
+         BXLiu7Ox+EjZ2Dwl8PE40hGo9eY3kldvtg4NjtXucNGmYpwqMiS7tNjwPokZaRdwgNOS
+         m+XHjqcE1KmBXqayM7FZiAYK1Mv6XDlBkP5E62IXASpEOgQQjKya62yfsvs8Nyzwg73p
+         fk8fNIP14gzB4k4hopVKBzMeGEReIgBIGU2mXfdgayc2YzbJe9BZYBV73Nr4CV3vh5yo
+         k26A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726194053; x=1726798853;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/YuGlKzxhtY5rBL2eIZIp8+LMnunU1KOYKGMKR0vy8Y=;
+        b=AVQtXE63rVZ6QCYJq0Fidm6JURHQiXYYRMSVK0DNYGLyhXUQi6hqY3B+VnUu9xxQ+F
+         +O00UP8MpT4RKCKzet9r3Kb/HlmCLfw3GYJzkb6sb1BC+wpk7GD0sKMCCJfr8xK7g02w
+         vCOW6mUOSN/a9Yi9z/7i3IAV9q4Pn/gzMQi89NBsrotwH7TpbNzHYrc+/Vjc27iGgVsH
+         fWwvJZD+zxgeU13ncABNojTVDDvLa6HKG4daDeWmpN8zxahJKS2kiwOkh+RNxMfeAyg3
+         bLMLqK6hBO8oSNF4foTNK0Ctxn/Ap2EnJLyw2Gwtg+ScyUHJOapiaPSemODG3/8OhGG2
+         eJ7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVPMZu5+ooJqWgjDLnGJKR4SRXhcekX9/gdMaHJlq+/5FjNw5C0YWoxe05glNoT2noq+GAsnKO3MPDFIx2aog==@vger.kernel.org, AJvYcCVTRrzVZ8fqcYR0P9W/Ag/vvrwD3D1X9MLkGjUqbVrZvEhefLPtIQJo740ccBU/QKa8g1WOhENyUo39E9gqJIN9GmpN@vger.kernel.org, AJvYcCVbv07GQmG4x1koNK3wVSw6tLQKsH8Kq52kpg65eIfmkLuRCXPtmIF3n1VWJpdI8109YzcR/tsK@vger.kernel.org, AJvYcCVhNIGo3TIqI45B5+TSQhB7LE63+0r1/zTKP03NN+LSPVwTOCTnX4ehkAqTurgcYhp53/9oWg==@vger.kernel.org, AJvYcCWL4+P6Bx2lYYTuPQhZAloWAU0gTDT6j9ev+Ct2wONQTwtf4ueFBPH9xTm4XqQtiVeLuoDFxYm5vLoxnCsti9LhOjo3zNnJ@vger.kernel.org, AJvYcCXSdnSvKL4NOczUzVMxoi0xvMzJktiJZfeTXmYBp1W/dPEbKYPRNLb6TuwIoR4wkpukfsAp@vger.kernel.org, AJvYcCXcA2SYDDH1fIE8JaOUX6fmIHRuBbgEc8gfGao/U+Nwp+nlWtJgGIjz/YqBc2Va1+Bz+NH+Be81Uw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YycGRE4PSjJ7J9hQjXttPR/HFr9bl9LAGt3nMg0GeStSbxpedme
+	sURj9Lt0yhx1JLdGbKZNYAUYYlYz4UOR83ufR7u0I9cYIf+duZAzNfTDuGt1ppdv4s53WSuTNko
+	m6FKpaaPbuwcsfT4x4oqACTtGsYw=
+X-Google-Smtp-Source: AGHT+IEALOyw7njQRSkttfTBxiECARy2DIo72UCyaA7S1zsv/zTsiW7a3znz7/TXgkua05e1Jrm3oxglJjkOnal6MfM=
+X-Received: by 2002:a05:6214:4886:b0:6c5:30c9:c055 with SMTP id
+ 6a1803df08f44-6c57355ac2dmr79834256d6.14.1726194053000; Thu, 12 Sep 2024
+ 19:20:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240828030321.20688-1-laoar.shao@gmail.com> <20240828030321.20688-5-laoar.shao@gmail.com>
+ <ozoyqz5a7zssggowambojv4x6fbhdl6iqjopgnycca223jm6sz@pdzdmshhdgwn>
+In-Reply-To: <ozoyqz5a7zssggowambojv4x6fbhdl6iqjopgnycca223jm6sz@pdzdmshhdgwn>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Fri, 13 Sep 2024 10:20:16 +0800
+Message-ID: <CALOAHbD0eEOPft2E_RwxrdB0aHC_qV9JGjA2NJvhYeNy1joDRA@mail.gmail.com>
+Subject: Re: [PATCH v8 4/8] bpftool: Ensure task comm is always NUL-terminated
+To: Justin Stitt <justinstitt@google.com>
+Cc: akpm@linux-foundation.org, torvalds@linux-foundation.org, alx@kernel.org, 
+	ebiederm@xmission.com, alexei.starovoitov@gmail.com, rostedt@goodmis.org, 
+	catalin.marinas@arm.com, penguin-kernel@i-love.sakura.ne.jp, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, audit@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Quentin Monnet <qmo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a tracepoint event is created with attr.freq = 1,
-'hwc->period_left' is not initialized correctly. As a result,
-in the perf_swevent_overflow() function, when the first time the event occurs,
-it calculates the event overflow and the perf_swevent_set_period() returns 3,
-this leads to the event are recorded for three duplicate times.
+On Fri, Sep 13, 2024 at 5:14=E2=80=AFAM Justin Stitt <justinstitt@google.co=
+m> wrote:
+>
+> Hi,
+>
+> On Wed, Aug 28, 2024 at 11:03:17AM GMT, Yafang Shao wrote:
+> > Let's explicitly ensure the destination string is NUL-terminated. This =
+way,
+> > it won't be affected by changes to the source string.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Reviewed-by: Quentin Monnet <qmo@kernel.org>
+> > ---
+> >  tools/bpf/bpftool/pids.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/bpf/bpftool/pids.c b/tools/bpf/bpftool/pids.c
+> > index 9b898571b49e..23f488cf1740 100644
+> > --- a/tools/bpf/bpftool/pids.c
+> > +++ b/tools/bpf/bpftool/pids.c
+> > @@ -54,6 +54,7 @@ static void add_ref(struct hashmap *map, struct pid_i=
+ter_entry *e)
+> >               ref =3D &refs->refs[refs->ref_cnt];
+> >               ref->pid =3D e->pid;
+> >               memcpy(ref->comm, e->comm, sizeof(ref->comm));
+> > +             ref->comm[sizeof(ref->comm) - 1] =3D '\0';
+>
+> ...
+>
+> >               refs->ref_cnt++;
+> >
+> >               return;
+> > @@ -77,6 +78,7 @@ static void add_ref(struct hashmap *map, struct pid_i=
+ter_entry *e)
+> >       ref =3D &refs->refs[0];
+> >       ref->pid =3D e->pid;
+> >       memcpy(ref->comm, e->comm, sizeof(ref->comm));
+> > +     ref->comm[sizeof(ref->comm) - 1] =3D '\0';
+>
+> Excuse my ignorance, do we not have a strscpy() equivalent usable in bpf
+> code?
 
-Step to reproduce:
-    1. Enable the tracepoint event & starting tracing
-         $ echo 1 > /sys/kernel/tracing/events/module/module_free
-         $ echo 1 > /sys/kernel/tracing/tracing_on
+To my knowledge, there is no direct equivalent of the standard
+strcpy() function available in bpftool or libbpf code.
 
-    2. Record with perf
-         $ perf record -a --strict-freq -F 1 -e "module:module_free"
-
-    3. Trigger module_free event.
-         $ modprobe -i sunrpc
-         $ modprobe -r sunrpc
-
-Result:
-     - Trace pipe result:
-         $ cat trace_pipe
-         modprobe-174509  [003] .....  6504.868896: module_free: sunrpc
-
-     - perf sample:
-         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
-         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
-         modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
-
-By setting period_left via perf_swevent_set_period() as other sw_event did,
-This problem could be solved.
-
-After patch:
-     - Trace pipe result:
-         $ cat trace_pipe
-         modprobe 1153096 [068] 613468.867774: module:module_free: xfs
-
-     - perf sample
-         modprobe 1153096 [068] 613468.867794: module:module_free: xfs
-
-Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
-Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
----
-Changes in v2:
-  - Fix build error.
----
- kernel/trace/trace_event_perf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index 05e791241812..3ff9caa4a71b 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -352,10 +352,16 @@ void perf_uprobe_destroy(struct perf_event *p_event)
- int perf_trace_add(struct perf_event *p_event, int flags)
- {
- 	struct trace_event_call *tp_event = p_event->tp_event;
-+	struct hw_perf_event *hwc = &p_event->hw;
-
- 	if (!(flags & PERF_EF_START))
- 		p_event->hw.state = PERF_HES_STOPPED;
-
-+	if (is_sampling_event(p_event)) {
-+		hwc->last_period = hwc->sample_period;
-+		perf_swevent_set_period(p_event);
-+	}
-+
- 	/*
- 	 * If TRACE_REG_PERF_ADD returns false; no custom action was performed
- 	 * and we need to take the default action of enqueueing our event on
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-
+--=20
+Regards
+Yafang
