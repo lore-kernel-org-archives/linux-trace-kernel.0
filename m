@@ -1,86 +1,61 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D9810E9;
-	Sat, 14 Sep 2024 08:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5E343ABD;
+	Sat, 14 Sep 2024 13:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726301376; cv=none; b=aYv3G5Ay1IpwBG4P4Ld04KzvZn9GZ/+D6lGVjVQGfXntxqHRd2f5cC5MPr3xbf/bGfw5HnKi6/ayB+eNFTpnGPl/8F+7cvB02yuk/JtXo8uAg+0YI9soQVUeggKCYrIDRmnQnIb5ECeATQ2BPXlqcuNiVZtcSFOaeUpEZKXleG4=
+	t=1726320589; cv=none; b=paIdI5+/mLWSc/t5DA+xxP1qOs7uUJeWKm+RQMotOh+EHHhQHHunHnki6Uh+my7hz0flTsVLdyWeNQp9ijfaQk3JlPTi6kLl1UX2gDnr1++3P//ntzFYdH9V3Y5ArQG0XU58M+WqAsHRfdMX6au55vCEPyt2w4KNXvqgaYkehLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726301376; c=relaxed/simple;
-	bh=hsbtLFpJhDGNRlHyhZUO4BRjdVPEg0v1yCWp3kAGgSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mDcz+eAnnwmTt5ly/T0/gHn+xURDiB1bSATl4Pr8Ibl9EaXgORZJSSRRjz+inGHwfOOAebD/h9ykDtvDWtNNMpANtFwK6E4tkgTzOFCXjwIJm/ScwVESFbc+k4UPktg5B99B9s6i0g+pYIGxbLOT6eMyJtnMSwC31HcevSB+1yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X5P0t1LSLzmYkK;
-	Sat, 14 Sep 2024 16:07:26 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 175F91800A0;
-	Sat, 14 Sep 2024 16:09:31 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 14 Sep 2024 16:09:30 +0800
-Message-ID: <bc88a7b9-3be8-4084-86a1-fe464ce99213@huawei.com>
-Date: Sat, 14 Sep 2024 16:09:30 +0800
+	s=arc-20240116; t=1726320589; c=relaxed/simple;
+	bh=ENS4d4cBqvHMS4kIgC6CuenSU8fTI9WWXBs8vM2d6ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HfefLIQ5mrzNABtlrgyKiiMmQuvtyvljcKOotcQSlujIHLEalVjyoC7rJ6BxMmK2TzlsHvXhVSy0ohwk5gkFa6HwKxyIjWH9uab3+RcA2UC/MHI9tkmvrxgg5dcRRWOBw508iNeHzgn/AeNbvnfTNJ+mcFWFB+ESgDXNlnbOwG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzjWpVK1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzjWpVK1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F4AC4CEC0;
+	Sat, 14 Sep 2024 13:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726320588;
+	bh=ENS4d4cBqvHMS4kIgC6CuenSU8fTI9WWXBs8vM2d6ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hzjWpVK1yXxkliKL/M5G51lind0Oepjslbqrkk0BjXrSelRw7+TSziaqII9maQF9l
+	 hHvFMrPYOlXSd2bn4Ky9urZO5ayqTCwUJ9wQc7A+jf6N5jZd7EjviT59+sD+JOHsIx
+	 cisM+srUui55e8ei+XYZhG48/aITB4P0IFJynHw8z9JYJVDnUgufZFYDS0bphb8SZg
+	 yxgO9MfOGBpbV+Zjdq//HgjWHGURnTfGTM+/VFzaR6JLUqiGej+N48guCq2itdejCV
+	 tZAGkgRoxIc3cCfa1mzBrXOlZZ2sgJGHcmmyjTCmHp+88ZkOgF3ehb/NUFxxc6iITN
+	 8MK88dvLNUnHQ==
+Date: Sat, 14 Sep 2024 15:29:38 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+	David Sterba <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-mm@kvack.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/11] fs: multigrain timestamp redux
+Message-ID: <20240914-umfang-kojen-e9bf965393bd@brauner>
+References: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v3 0/2] Introduce tracepoint for hugetlbfs
-Content-Language: en-US
-To: <muchun.song@linux.dev>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-mm@kvack.org>,
-	<david@fromorbit.com>, <songmuchun@bytedance.com>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-References: <20240829064110.67884-1-lihongbo22@huawei.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20240829064110.67884-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240913-mgtime-v7-0-92d4020e3b00@kernel.org>
 
-Hi,
+On Fri, Sep 13, 2024 at 09:54:09AM GMT, Jeff Layton wrote:
+> Once more into the breach, dear friends!
 
-Just a gently ping for this. Does this patch have a change of making it 
-into this cycle?
-
-Thanks,
-Hongbo
-
-On 2024/8/29 14:41, Hongbo Li wrote:
-> Here we add some basic tracepoints for debugging hugetlbfs: {alloc, free,
-> evict}_inode, setattr and fallocate.
-> 
-> v2 can be found at:
-> https://lore.kernel.org/all/ZoYY-sfj5jvs8UpQ@casper.infradead.org/T/
-> 
-> Changes since v2:
->    - Simplify the tracepoint output for setattr.
->    - Make every token be space separated.
-> 
-> 
-> v1 can be found at:
-> https://lore.kernel.org/linux-mm/20240701194906.3a9b6765@gandalf.local.home/T/
-> 
-> Changes since v1:
->    - Decrease the parameters for setattr tracer suggested by Steve and Mathieu.
->    - Replace current_user_ns() with init_user_ns when translate uid/gid.
-> 
-> Hongbo Li (2):
->    hugetlbfs: support tracepoint
->    hugetlbfs: use tracepoints in hugetlbfs functions.
-> 
->   MAINTAINERS                      |   1 +
->   fs/hugetlbfs/inode.c             |  17 +++-
->   include/trace/events/hugetlbfs.h | 156 +++++++++++++++++++++++++++++++
->   3 files changed, 172 insertions(+), 2 deletions(-)
->   create mode 100644 include/trace/events/hugetlbfs.h
-> 
+I think this will have to be the v6.13 breach. :/
