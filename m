@@ -1,257 +1,326 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7631A7D405;
-	Sat, 14 Sep 2024 22:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7E4BA49;
+	Sat, 14 Sep 2024 23:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726352846; cv=none; b=q28rIqil+9jVwd0/kxFDFW5Bjyi5WR51ERmDnM9smqG3QWEulwKKVxYbn34F1eMFVdKefLEY6f0HsF8Ref+wSVxubu1FpXUC1jXHkurjTD/eCeS0FaNtK1dRsw5FxvFUlMEwNlBn4AIKODA/Dl8s6nkGw4JLvJHbzHlwlpCdoh0=
+	t=1726355650; cv=none; b=JiAfVRTYCIYBOTCg5z+2V/iZqo6/cI/WMQBj1yz6oNieFE3QZ6KBhANvwRRo0qXHHRvKsxZ9YStqy5doOVq7u170ozKoCaiD5xhVl3xwY2EGBlf3ZLkofFRtOV5QAu0eF3f+w9rzseGfLgCK7f9hnjAhwdqDKaWtb/ZlDzdgatE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726352846; c=relaxed/simple;
-	bh=kXHQ/nA3IGU83zXrkZOHQopDJj/qiJ+jyxnz3cPSqlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLxWuqfvRLwrU2d6OJxwtuPNZFu+Vc0nN8TtFm7861FEBQGx8PtCkGPg4JyvHMLVKZka/ztSX+ON81574xxMf6Wigk1B2B2YevMUUX2KrUdvPXDJTG0bXHWNAxkU3/PB8PU/gu8GcMLV8p2kkBamN98JNNUUVSp1QoKEXRKwAuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FCzHAecQ; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726355650; c=relaxed/simple;
+	bh=Tlf3ImrTd3tKtsB4NFTexVCJZGdlq1aFiKphnW52w6o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LDwhsaNlz+K4Ne1W3Ee8oafrY7Om77NFC7teYpJyIVlFonJBoTx8ZtvUynPpLmYiLJdWLDLitHl9wRUaB6fq4qawOE5zAGNnLlg5hgj69F/dMykTYL4XhMOo1MthnI/0OcsrriZVgiq9dYPPMDK08tXjgW7/Q2ev6itN+tlGAyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsY7qSbS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FCzHAecQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726352845; x=1757888845;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kXHQ/nA3IGU83zXrkZOHQopDJj/qiJ+jyxnz3cPSqlo=;
-  b=FCzHAecQz7YuGLJp346DqoeCXa7ykvy5t8VjVaQBenvpU2OzmLvUsm/z
-   9A4xZIpsG+5dkSZgUfTsZPaxuTnsbffZUPMORXwnUWh3D/psCLAKFimvz
-   FcpmeS8ls6yW20FliFUE1XDYWhMmoBMRgDXx3o+ShU2d0i4spdrWaNhXG
-   N/INfymGPXzAgjjGIwRhMDCUXDDEgWyMem3g5LR5pAtwPy9hX3YjEbtUN
-   dx7L/I/uP33Rm4yCVtvcGEhsCs8U9iaBexJO6r5sIoxXpeWMP3VUTyPK8
-   09LTXgyAZJI1FeYmHc8sLRbUHy+pjBLfaWE5x0aPa/Rr5iqOqFX/WuVjU
-   g==;
-X-CSE-ConnectionGUID: gwxF1zJmTI6N+mBlBH6qQQ==
-X-CSE-MsgGUID: dhTeGvLpR5W7rhLrWE8Oig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11195"; a="35905856"
-X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
-   d="scan'208";a="35905856"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2024 15:27:24 -0700
-X-CSE-ConnectionGUID: bOCOHGs4RlSf4BIebvCY0w==
-X-CSE-MsgGUID: h9cYkHMQQxij9JQJ9URGtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,229,1719903600"; 
-   d="scan'208";a="72867586"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 14 Sep 2024 15:27:21 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1spbEd-0008CA-0p;
-	Sat, 14 Sep 2024 22:27:19 +0000
-Date: Sun, 15 Sep 2024 06:26:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Donglin Peng <dolinux.peng@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Donglin Peng <dolinux.peng@gmail.com>
-Subject: Re: [PATCH v1] function_graph: Support recording and printing the
- function return address
-Message-ID: <202409150605.HgUmU8ea-lkp@intel.com>
-References: <20240913123456.600950-1-dolinux.peng@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsY7qSbS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FD42C4CEC0;
+	Sat, 14 Sep 2024 23:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726355649;
+	bh=Tlf3ImrTd3tKtsB4NFTexVCJZGdlq1aFiKphnW52w6o=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=BsY7qSbS/NUdA3Wwt8/6uhL91WzrSGHZq4tPn1LcKvCPB3S62LXop13Kg+qd9mHOm
+	 IM+Iyxx/D+2oAw4Nv1dgozyAEtyvPQZg/5qx9gGHedbdf6mKArsOpreAr6meZvIltH
+	 X0H+J4kxN5y9rNES1PIXA8hLWZOBmuKgL+CS3L0nRC/+ZCHfv/eSVLnqsDL1CezJzF
+	 yLNm8YWQZzb6Z9Qrxbv6ZfOxQZXMhtI75Bo4/CBOiHq/X6hB6/e9a6yz2gDyIGGljv
+	 knHzaTskLy7fwdpRgB/39ONiHLG6eRs3jnpdZmJ5+1M3aR9ZqOjGY0nY7a1Wxcs8Id
+	 mYLOsYJF5poig==
+Message-ID: <a273a8e6bb6785c5666bd2b8b83e3a437ebdeae4.camel@kernel.org>
+Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
+ handling into timekeeper
+From: Jeff Layton <jlayton@kernel.org>
+To: John Stultz <jstultz@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>,  Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+ <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
+ Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,  Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
+ <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org,  linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org,  linux-btrfs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Date: Sat, 14 Sep 2024 19:14:06 -0400
+In-Reply-To: <CANDhNCpaySH5HmkEb9BS738Fo+Kk=6s0_zNwB=uYtOQ63uc6xw@mail.gmail.com>
+References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
+	 <20240914-mgtime-v8-1-5bd872330bed@kernel.org>
+	 <CANDhNCpaySH5HmkEb9BS738Fo+Kk=6s0_zNwB=uYtOQ63uc6xw@mail.gmail.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40app2) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240913123456.600950-1-dolinux.peng@gmail.com>
 
-Hi Donglin,
+On Sat, 2024-09-14 at 13:10 -0700, John Stultz wrote:
+> On Sat, Sep 14, 2024 at 10:07=E2=80=AFAM Jeff Layton <jlayton@kernel.org>=
+ wrote:
+> >=20
+> > For multigrain timestamps, we must keep track of the latest timestamp
+> > that has ever been handed out, and never hand out a coarse time below
+> > that value.
+> >=20
+> > Add a static singleton atomic64_t into timekeeper.c that we can use to
+> > keep track of the latest fine-grained time ever handed out. This is
+> > tracked as a monotonic ktime_t value to ensure that it isn't affected b=
+y
+> > clock jumps.
+> >=20
+> > Add two new public interfaces:
+> >=20
+> > - ktime_get_coarse_real_ts64_mg() fills a timespec64 with the later of =
+the
+> >   coarse-grained clock and the floor time
+> >=20
+> > - ktime_get_real_ts64_mg() gets the fine-grained clock value, and tries
+> >   to swap it into the floor. A timespec64 is filled with the result.
+> >=20
+> > Since the floor is global, we take great pains to avoid updating it
+> > unless it's absolutely necessary. If we do the cmpxchg and find that th=
+e
+> > value has been updated since we fetched it, then we discard the
+> > fine-grained time that was fetched in favor of the recent update.
+> >=20
+> > To maximize the window of this occurring when multiple tasks are racing
+> > to update the floor, ktime_get_coarse_real_ts64_mg returns a cookie
+> > value that represents the state of the floor tracking word, and
+> > ktime_get_real_ts64_mg accepts a cookie value that it uses as the "old"
+> > value when calling cmpxchg().
+>=20
+> This last bit seems out of date.
+>=20
 
-kernel test robot noticed the following build errors:
+Thanks. Dropped the last paragraph.
 
-[auto build test ERROR on shuah-kselftest/next]
-[also build test ERROR on shuah-kselftest/fixes linus/master v6.11-rc7]
-[cannot apply to next-20240913]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > ---
+> >  include/linux/timekeeping.h |  4 +++
+> >  kernel/time/timekeeping.c   | 82 +++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  2 files changed, 86 insertions(+)
+> >=20
+> > diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+> > index fc12a9ba2c88..7aa85246c183 100644
+> > --- a/include/linux/timekeeping.h
+> > +++ b/include/linux/timekeeping.h
+> > @@ -45,6 +45,10 @@ extern void ktime_get_real_ts64(struct timespec64 *t=
+v);
+> >  extern void ktime_get_coarse_ts64(struct timespec64 *ts);
+> >  extern void ktime_get_coarse_real_ts64(struct timespec64 *ts);
+> >=20
+> > +/* Multigrain timestamp interfaces */
+> > +extern void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts);
+> > +extern void ktime_get_real_ts64_mg(struct timespec64 *ts);
+> > +
+> >  void getboottime64(struct timespec64 *ts);
+> >=20
+> >  /*
+> > diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> > index 5391e4167d60..16937242b904 100644
+> > --- a/kernel/time/timekeeping.c
+> > +++ b/kernel/time/timekeeping.c
+> > @@ -114,6 +114,13 @@ static struct tk_fast tk_fast_raw  ____cacheline_a=
+ligned =3D {
+> >         .base[1] =3D FAST_TK_INIT,
+> >  };
+> >=20
+> > +/*
+> > + * This represents the latest fine-grained time that we have handed ou=
+t as a
+> > + * timestamp on the system. Tracked as a monotonic ktime_t, and conver=
+ted to the
+> > + * realtime clock on an as-needed basis.
+> > + */
+> > +static __cacheline_aligned_in_smp atomic64_t mg_floor;
+> > +
+> >  static inline void tk_normalize_xtime(struct timekeeper *tk)
+> >  {
+> >         while (tk->tkr_mono.xtime_nsec >=3D ((u64)NSEC_PER_SEC << tk->t=
+kr_mono.shift)) {
+> > @@ -2394,6 +2401,81 @@ void ktime_get_coarse_real_ts64(struct timespec6=
+4 *ts)
+> >  }
+> >  EXPORT_SYMBOL(ktime_get_coarse_real_ts64);
+> >=20
+> > +/**
+> > + * ktime_get_coarse_real_ts64_mg - get later of coarse grained time or=
+ floor
+> > + * @ts: timespec64 to be filled
+> > + *
+> > + * Adjust floor to realtime and compare it to the coarse time. Fill
+> > + * @ts with the latest one. Note that this is a filesystem-specific
+> > + * interface and should be avoided outside of that context.
+> > + */
+> > +void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts)
+> > +{
+> > +       struct timekeeper *tk =3D &tk_core.timekeeper;
+> > +       u64 floor =3D atomic64_read(&mg_floor);
+> > +       ktime_t f_real, offset, coarse;
+> > +       unsigned int seq;
+> > +
+> > +       WARN_ON(timekeeping_suspended);
+> > +
+> > +       do {
+> > +               seq =3D read_seqcount_begin(&tk_core.seq);
+> > +               *ts =3D tk_xtime(tk);
+> > +               offset =3D *offsets[TK_OFFS_REAL];
+> > +       } while (read_seqcount_retry(&tk_core.seq, seq));
+> > +
+> > +       coarse =3D timespec64_to_ktime(*ts);
+> > +       f_real =3D ktime_add(floor, offset);
+> > +       if (ktime_after(f_real, coarse))
+> > +               *ts =3D ktime_to_timespec64(f_real);
+> > +}
+> > +EXPORT_SYMBOL_GPL(ktime_get_coarse_real_ts64_mg);
+> > +
+> > +/**
+> > + * ktime_get_real_ts64_mg - attempt to update floor value and return r=
+esult
+> > + * @ts:                pointer to the timespec to be set
+> > + *
+> > + * Get a current monotonic fine-grained time value and attempt to swap
+> > + * it into the floor. @ts will be filled with the resulting floor valu=
+e,
+> > + * regardless of the outcome of the swap. Note that this is a filesyst=
+em
+> > + * specific interface and should be avoided outside of that context.
+> > + */
+> > +void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie)
+>=20
+> Still passing a cookie. It doesn't match the header definition, so I'm
+> surprised this builds.
+>=20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Donglin-Peng/function_graph-Support-recording-and-printing-the-function-return-address/20240913-204403
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
-patch link:    https://lore.kernel.org/r/20240913123456.600950-1-dolinux.peng%40gmail.com
-patch subject: [PATCH v1] function_graph: Support recording and printing the function return address
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240915/202409150605.HgUmU8ea-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240915/202409150605.HgUmU8ea-lkp@intel.com/reproduce)
+Yeah, I didn't see a warning when I built it. Luckily the extra
+parameter is ignored anyway, so it no harm. I've fixed that up in my
+tree.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409150605.HgUmU8ea-lkp@intel.com/
+> > +{
+> > +       struct timekeeper *tk =3D &tk_core.timekeeper;
+> > +       ktime_t old =3D atomic64_read(&mg_floor);
+> > +       ktime_t offset, mono;
+> > +       unsigned int seq;
+> > +       u64 nsecs;
+> > +
+> > +       WARN_ON(timekeeping_suspended);
+> > +
+> > +       do {
+> > +               seq =3D read_seqcount_begin(&tk_core.seq);
+> > +
+> > +               ts->tv_sec =3D tk->xtime_sec;
+> > +               mono =3D tk->tkr_mono.base;
+> > +               nsecs =3D timekeeping_get_ns(&tk->tkr_mono);
+> > +               offset =3D *offsets[TK_OFFS_REAL];
+> > +       } while (read_seqcount_retry(&tk_core.seq, seq));
+> > +
+> > +       mono =3D ktime_add_ns(mono, nsecs);
+> > +
+> > +       if (atomic64_try_cmpxchg(&mg_floor, &old, mono)) {
+> > +               ts->tv_nsec =3D 0;
+> > +               timespec64_add_ns(ts, nsecs);
+> > +       } else {
+> > +               /*
+> > +                * Something has changed mg_floor since "old" was
+> > +                * fetched. "old" has now been updated with the
+> > +                * current value of mg_floor, so use that to return
+> > +                * the current coarse floor value.
+> > +                */
+> > +               *ts =3D ktime_to_timespec64(ktime_add(old, offset));
+> > +       }
+> > +}
+> > +EXPORT_SYMBOL_GPL(ktime_get_real_ts64_mg);
+>=20
+> Other than those issues, I'm ok with it. Thanks again for working
+> through my concerns!
+>=20
+> Since I'm traveling for LPC soon, to save the next cycle, once the
+> fixes above are sorted:
+>  Acked-by: John Stultz <jstultz@google.com>
+>=20
 
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/trace/trace.c:8677:
->> kernel/trace/trace_selftest.c:910:18: error: incompatible function pointer types initializing 'trace_func_graph_ent_t' (aka 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *, struct fgraph_extras *)') with an expression of type 'int (struct ftrace_graph_ent *, struct fgraph_ops *)' [-Wincompatible-function-pointer-types]
-     910 |                         .entryfunc              = store_entry,
-         |                                                   ^~~~~~~~~~~
-   kernel/trace/trace_selftest.c:918:18: error: incompatible function pointer types initializing 'trace_func_graph_ent_t' (aka 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *, struct fgraph_extras *)') with an expression of type 'int (struct ftrace_graph_ent *, struct fgraph_ops *)' [-Wincompatible-function-pointer-types]
-     918 |                         .entryfunc              = store_entry,
-         |                                                   ^~~~~~~~~~~
-   kernel/trace/trace_selftest.c:926:18: error: incompatible function pointer types initializing 'trace_func_graph_ent_t' (aka 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *, struct fgraph_extras *)') with an expression of type 'int (struct ftrace_graph_ent *, struct fgraph_ops *)' [-Wincompatible-function-pointer-types]
-     926 |                         .entryfunc              = store_entry,
-         |                                                   ^~~~~~~~~~~
-   kernel/trace/trace_selftest.c:934:18: error: incompatible function pointer types initializing 'trace_func_graph_ent_t' (aka 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *, struct fgraph_extras *)') with an expression of type 'int (struct ftrace_graph_ent *, struct fgraph_ops *)' [-Wincompatible-function-pointer-types]
-     934 |                         .entryfunc              = store_entry,
-         |                                                   ^~~~~~~~~~~
->> kernel/trace/trace_selftest.c:1029:38: error: too few arguments to function call, expected 3, have 2
-    1029 |         return trace_graph_entry(trace, gops);
-         |                ~~~~~~~~~~~~~~~~~            ^
-   kernel/trace/trace.h:689:5: note: 'trace_graph_entry' declared here
-     689 | int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
-         |     ^                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     690 |                       struct fgraph_extras *priv);
-         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from kernel/trace/trace.c:8677:
-   kernel/trace/trace_selftest.c:1033:16: error: incompatible function pointer types initializing 'trace_func_graph_ent_t' (aka 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *, struct fgraph_extras *)') with an expression of type 'int (*)(struct ftrace_graph_ent *, struct fgraph_ops *)' [-Wincompatible-function-pointer-types]
-    1033 |         .entryfunc              = &trace_graph_entry_watchdog,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   6 errors generated.
-
-
-vim +910 kernel/trace/trace_selftest.c
-
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   906) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   907) static struct fgraph_fixture store_bytes[4] __initdata = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   908) 	[0] = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   909) 		.gops = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03  @910) 			.entryfunc		= store_entry,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   911) 			.retfunc		= store_return,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   912) 		},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   913) 		.store_size = 1,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   914) 		.store_type_name = "byte",
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   915) 	},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   916) 	[1] = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   917) 		.gops = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   918) 			.entryfunc		= store_entry,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   919) 			.retfunc		= store_return,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   920) 		},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   921) 		.store_size = 2,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   922) 		.store_type_name = "short",
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   923) 	},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   924) 	[2] = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   925) 		.gops = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   926) 			.entryfunc		= store_entry,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   927) 			.retfunc		= store_return,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   928) 		},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   929) 		.store_size = 4,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   930) 		.store_type_name = "word",
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   931) 	},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   932) 	[3] = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   933) 		.gops = {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   934) 			.entryfunc		= store_entry,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   935) 			.retfunc		= store_return,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   936) 		},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   937) 		.store_size = 8,
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   938) 		.store_type_name = "long long",
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   939) 	},
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   940) };
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   941) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   942) static __init int test_graph_storage_multi(void)
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   943) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   944) 	struct fgraph_fixture *fixture;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   945) 	bool printed = false;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   946) 	int i, ret;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   947) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   948) 	pr_cont("PASSED\n");
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   949) 	pr_info("Testing multiple fgraph storage on a function: ");
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   950) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   951) 	for (i = 0; i < ARRAY_SIZE(store_bytes); i++) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   952) 		fixture = &store_bytes[i];
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   953) 		ret = init_fgraph_fixture(fixture);
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   954) 		if (ret && ret != -ENODEV) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   955) 			pr_cont("*Could not set filter* ");
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   956) 			printed = true;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   957) 			goto out;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   958) 		}
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   959) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   960) 		ret = register_ftrace_graph(&fixture->gops);
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   961) 		if (ret) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   962) 			pr_warn("Failed to init store_bytes fgraph tracing\n");
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   963) 			printed = true;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   964) 			goto out;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   965) 		}
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   966) 	}
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   967) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   968) 	DYN_FTRACE_TEST_NAME();
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   969) out:
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   970) 	while (--i >= 0) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   971) 		fixture = &store_bytes[i];
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   972) 		unregister_ftrace_graph(&fixture->gops);
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   973) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   974) 		if (fixture->error_str && !printed) {
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   975) 			pr_cont("*** %s ***", fixture->error_str);
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   976) 			printed = true;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   977) 		}
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   978) 	}
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   979) 	return printed ? -1 : 0;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   980) }
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   981) 
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   982) /* Test the storage passed across function_graph entry and return */
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   983) static __init int test_graph_storage(void)
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   984) {
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   985) 	int ret;
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   986) 
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   987) 	ret = test_graph_storage_single(&store_bytes[0]);
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   988) 	if (ret)
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   989) 		return ret;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   990) 	ret = test_graph_storage_single(&store_bytes[1]);
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   991) 	if (ret)
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   992) 		return ret;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   993) 	ret = test_graph_storage_single(&store_bytes[2]);
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   994) 	if (ret)
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   995) 		return ret;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   996) 	ret = test_graph_storage_single(&store_bytes[3]);
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   997) 	if (ret)
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03   998) 		return ret;
-dd120af2d5f8f3 Masami Hiramatsu (Google  2024-06-03   999) 	ret = test_graph_storage_multi();
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1000) 	if (ret)
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1001) 		return ret;
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1002) 	return 0;
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1003) }
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1004) #else
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1005) static inline int test_graph_storage(void) { return 0; }
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1006) #endif /* CONFIG_DYNAMIC_FTRACE */
-47c3c70aa36971 Steven Rostedt (VMware    2024-06-03  1007) 
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1008  /* Maximum number of functions to trace before diagnosing a hang */
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1009  #define GRAPH_MAX_FUNC_TEST	100000000
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1010  
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1011  static unsigned int graph_hang_thresh;
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1012  
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1013  /* Wrap the real function entry probe to avoid possible hanging */
-37238abe3cb47b Steven Rostedt (VMware    2024-06-03  1014) static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
-37238abe3cb47b Steven Rostedt (VMware    2024-06-03  1015) 				      struct fgraph_ops *gops)
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1016  {
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1017  	/* This is harmlessly racy, we want to approximately detect a hang */
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1018  	if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1019  		ftrace_graph_stop();
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1020  		printk(KERN_WARNING "BUG: Function graph tracer hang!\n");
-19f0423fd55c30 Huang Yiwei               2024-02-23  1021  		if (ftrace_dump_on_oops_enabled()) {
-7fe70b579c9e3d Steven Rostedt (Red Hat   2013-03-15  1022) 			ftrace_dump(DUMP_ALL);
-7fe70b579c9e3d Steven Rostedt (Red Hat   2013-03-15  1023) 			/* ftrace_dump() disables tracing */
-7fe70b579c9e3d Steven Rostedt (Red Hat   2013-03-15  1024) 			tracing_on();
-7fe70b579c9e3d Steven Rostedt (Red Hat   2013-03-15  1025) 		}
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1026  		return 0;
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1027  	}
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1028  
-37238abe3cb47b Steven Rostedt (VMware    2024-06-03 @1029) 	return trace_graph_entry(trace, gops);
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1030  }
-cf586b61f80229 Frederic Weisbecker       2009-03-22  1031  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks for the review!
+--=20
+Jeff Layton <jlayton@kernel.org>
