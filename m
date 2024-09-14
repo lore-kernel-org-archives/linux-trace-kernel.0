@@ -1,68 +1,86 @@
-Received: from cmccmta2.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E2919A28D;
-	Sat, 14 Sep 2024 07:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D9810E9;
+	Sat, 14 Sep 2024 08:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726297410; cv=none; b=XZwDUV+vdK93KkSObux7ALut9NNZGZvCIwRMJzlMEPQFVLANCVCCBvBxxbavA08v1otGqQsvo+KzhEQqkLYSaFuIwYQImBIIbr2jH3JD6rUdG7SNgdNbQp7P8kckbPuYfoOUmb3huqEy51squHU7mUZJI6UP+dv40rSgdQd9w40=
+	t=1726301376; cv=none; b=aYv3G5Ay1IpwBG4P4Ld04KzvZn9GZ/+D6lGVjVQGfXntxqHRd2f5cC5MPr3xbf/bGfw5HnKi6/ayB+eNFTpnGPl/8F+7cvB02yuk/JtXo8uAg+0YI9soQVUeggKCYrIDRmnQnIb5ECeATQ2BPXlqcuNiVZtcSFOaeUpEZKXleG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726297410; c=relaxed/simple;
-	bh=tcqWTr7Itqz6svcPpXaB8dypodWAkX77iIsMyl3DS6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BDrjTpp/Buu3gIQQI+rxW5CWvLAlnDDOPu74vZb9yLq+y4WKzT7+ldcjGJOsDrmz011Ca94KbjGFppv2WWP+AL0Vn9ArPM36w9PLC45sovCLcQNnBEo2iZ/3SmmpefMwtQGe3bgaE2j/mwniOnXpxHPXpEBx3HLibao/7g3ZHWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee766e53533bbf-38bc5;
-	Sat, 14 Sep 2024 15:03:16 +0800 (CST)
-X-RM-TRANSID:2ee766e53533bbf-38bc5
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[223.108.79.100])
-	by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee566e535271fc-933a3;
-	Sat, 14 Sep 2024 15:03:16 +0800 (CST)
-X-RM-TRANSID:2ee566e535271fc-933a3
-From: Ba Jing <bajing@cmss.chinamobile.com>
-To: rostedt@goodmis.org
-Cc: bajing@cmss.chinamobile.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] trace: Correct the grammatical errors in the comments
-Date: Tue,  3 Sep 2024 08:30:19 +0800
-Message-Id: <20240903003019.8969-1-bajing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1726301376; c=relaxed/simple;
+	bh=hsbtLFpJhDGNRlHyhZUO4BRjdVPEg0v1yCWp3kAGgSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mDcz+eAnnwmTt5ly/T0/gHn+xURDiB1bSATl4Pr8Ibl9EaXgORZJSSRRjz+inGHwfOOAebD/h9ykDtvDWtNNMpANtFwK6E4tkgTzOFCXjwIJm/ScwVESFbc+k4UPktg5B99B9s6i0g+pYIGxbLOT6eMyJtnMSwC31HcevSB+1yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X5P0t1LSLzmYkK;
+	Sat, 14 Sep 2024 16:07:26 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 175F91800A0;
+	Sat, 14 Sep 2024 16:09:31 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Sat, 14 Sep 2024 16:09:30 +0800
+Message-ID: <bc88a7b9-3be8-4084-86a1-fe464ce99213@huawei.com>
+Date: Sat, 14 Sep 2024 16:09:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v3 0/2] Introduce tracepoint for hugetlbfs
+Content-Language: en-US
+To: <muchun.song@linux.dev>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <linux-mm@kvack.org>,
+	<david@fromorbit.com>, <songmuchun@bytedance.com>
+CC: <linux-trace-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+References: <20240829064110.67884-1-lihongbo22@huawei.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20240829064110.67884-1-lihongbo22@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-The word "trace" begins with a consonant sound, 
-so "a" should be used instead of "an".
+Hi,
 
-Signed-off-by: Ba Jing <bajing@cmss.chinamobile.com>
----
- tools/verification/rv/src/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just a gently ping for this. Does this patch have a change of making it 
+into this cycle?
 
-diff --git a/tools/verification/rv/src/trace.c b/tools/verification/rv/src/trace.c
-index 2c7deed47f8d..1b9f9bfa1893 100644
---- a/tools/verification/rv/src/trace.c
-+++ b/tools/verification/rv/src/trace.c
-@@ -81,7 +81,7 @@ void trace_instance_destroy(struct trace_instance *trace)
- }
- 
- /**
-- * trace_instance_init - create an trace instance
-+ * trace_instance_init - create a trace instance
-  *
-  * It is more than the tracefs instance, as it contains other
-  * things required for the tracing, such as the local events and
--- 
-2.33.0
+Thanks,
+Hongbo
 
-
-
+On 2024/8/29 14:41, Hongbo Li wrote:
+> Here we add some basic tracepoints for debugging hugetlbfs: {alloc, free,
+> evict}_inode, setattr and fallocate.
+> 
+> v2 can be found at:
+> https://lore.kernel.org/all/ZoYY-sfj5jvs8UpQ@casper.infradead.org/T/
+> 
+> Changes since v2:
+>    - Simplify the tracepoint output for setattr.
+>    - Make every token be space separated.
+> 
+> 
+> v1 can be found at:
+> https://lore.kernel.org/linux-mm/20240701194906.3a9b6765@gandalf.local.home/T/
+> 
+> Changes since v1:
+>    - Decrease the parameters for setattr tracer suggested by Steve and Mathieu.
+>    - Replace current_user_ns() with init_user_ns when translate uid/gid.
+> 
+> Hongbo Li (2):
+>    hugetlbfs: support tracepoint
+>    hugetlbfs: use tracepoints in hugetlbfs functions.
+> 
+>   MAINTAINERS                      |   1 +
+>   fs/hugetlbfs/inode.c             |  17 +++-
+>   include/trace/events/hugetlbfs.h | 156 +++++++++++++++++++++++++++++++
+>   3 files changed, 172 insertions(+), 2 deletions(-)
+>   create mode 100644 include/trace/events/hugetlbfs.h
+> 
