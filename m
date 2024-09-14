@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CE3129A78;
-	Sat, 14 Sep 2024 21:48:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EFE12C465;
+	Sat, 14 Sep 2024 21:48:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726350496; cv=none; b=Aewe+uVt2VihcbtqtxCAhaR97s3X0JOpv3VfuGkACcbroXajnSFNHIfthk+GL4qwHJ0CywLdhwvdT9xopbalTMJ/7ciWp/YWNvoE0DSHQ53niGDlok2vgm0wOhw8Pi5jWrwa4v1FGCahtZ4GwU8mMCr/+41FWxlwzG2hHtjq2Oc=
+	t=1726350496; cv=none; b=OhuCzSC1i0ZMRnglRmOJmGKq/otxqHMqf894iJfkXX5c0SbAxM9tS7HUWiPDGWMM76VHIA7NMKsQAeE36Rt20UOcI3V/RZMtEhDflIYXIHtbFPoU0+ebbxjM64aY1jCoTD7TA3s9+OlRHda3ZTta+NhpZf3QvodlqoUP0vke458=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1726350496; c=relaxed/simple;
-	bh=mqsPsipmMzX5aQKrZsKwwaooDmHvTfVKasp5nWvAj/Q=;
+	bh=AyQ6kWzDrg2C4r5zFtuNVawjnMnZFU85WGInwOdVPj8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WC9CFI1R/fscdh9Pq2tAOR4/0oJ+BkQOqdtIshy1cqcHM/fDld44YQkiV7+tCr/TVs3wmRfgK/qQBbDa1hB0pl/xC20E8YMZs+LvbkFUsCM6+VapGPRQPBRqzQQiuPQ3ymdeRg5uM6pxBmDpdvWGfWIfQcAmZJMEd7YmmvGC1Ig=
+	 Content-Type; b=WyswkokvOkZFbxjGHuMo2Z6aCDrCWTC+9cxlMySidcuS5+URtnrfoDCJ3ZI5mdix6/IPPWh2TEw+msNOsqVJPU4d9hm5pByqegD6ghEODrnQCms4VlNG2rai+jHHepGiedIY0dCii+5XV1hPYt/EnODHEGfxAI+mNKLDrOIV4EY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3706C4CECD;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE002C4CEC0;
 	Sat, 14 Sep 2024 21:48:15 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1spad1-00000001GuI-1084;
-	Sat, 14 Sep 2024 17:48:27 -0400
-Message-ID: <20240914214827.096968730@goodmis.org>
+	id 1spad0-00000001GtJ-3qTx;
+	Sat, 14 Sep 2024 17:48:26 -0400
+Message-ID: <20240914214826.780323141@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 14 Sep 2024 17:48:08 -0400
+Date: Sat, 14 Sep 2024 17:48:06 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Jiri Olsa <olsajiri@gmail.com>
-Subject: [PATCH 3/3] ftrace: Have calltime be saved in the fgraph storage
+Subject: [PATCH 1/3] fgraph: Use fgraph data to store subtime for profiler
 References: <20240914214805.779822616@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,266 +41,184 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The calltime field in the shadow stack frame is only used by the function
-graph tracer and profiler. But now that there's other users of the function
-graph infrastructure, this adds overhead and wastes space on the shadow
-stack. Move the calltime to the fgraph data storage, where the function
-graph and profiler entry functions will save it in its own graph storage and
-retrieve it in its exit functions.
+Instead of having the "subtime" for the function profiler in the
+infrastructure ftrace_ret_stack structure, have it use the fgraph data
+reserve and retrieve functions.
+
+This will keep the limited shadow stack from wasting 8 bytes for something
+that is seldom used.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ftrace.h               |  1 -
- kernel/trace/fgraph.c                |  5 ---
- kernel/trace/ftrace.c                | 19 ++++-----
- kernel/trace/trace_functions_graph.c | 60 +++++++++++++++++++---------
- 4 files changed, 51 insertions(+), 34 deletions(-)
+ include/linux/ftrace.h |  4 +--
+ kernel/trace/fgraph.c  | 64 ++++++++++++++++++++++++++++++++----------
+ kernel/trace/ftrace.c  | 23 +++++++--------
+ 3 files changed, 62 insertions(+), 29 deletions(-)
 
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 6bbd78052f7a..eafe43a5fa0d 100644
+index fd5e84d0ec47..6bbd78052f7a 100644
 --- a/include/linux/ftrace.h
 +++ b/include/linux/ftrace.h
-@@ -1065,7 +1065,6 @@ void *fgraph_retrieve_parent_data(int idx, int *size_bytes, int depth);
- struct ftrace_ret_stack {
+@@ -1055,6 +1055,7 @@ struct fgraph_ops {
+ 
+ void *fgraph_reserve_data(int idx, int size_bytes);
+ void *fgraph_retrieve_data(int idx, int *size_bytes);
++void *fgraph_retrieve_parent_data(int idx, int *size_bytes, int depth);
+ 
+ /*
+  * Stack of return addresses for functions
+@@ -1065,9 +1066,6 @@ struct ftrace_ret_stack {
  	unsigned long ret;
  	unsigned long func;
--	unsigned long long calltime;
+ 	unsigned long long calltime;
+-#ifdef CONFIG_FUNCTION_PROFILER
+-	unsigned long long subtime;
+-#endif
  #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
  	unsigned long fp;
  #endif
 diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index b2e95bf82211..58a28ec35dab 100644
+index d7d4fb403f6f..095ceb752b28 100644
 --- a/kernel/trace/fgraph.c
 +++ b/kernel/trace/fgraph.c
-@@ -558,7 +558,6 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 			 int fgraph_idx)
+@@ -390,21 +390,7 @@ void *fgraph_reserve_data(int idx, int size_bytes)
+  */
+ void *fgraph_retrieve_data(int idx, int *size_bytes)
  {
- 	struct ftrace_ret_stack *ret_stack;
--	unsigned long long calltime;
- 	unsigned long val;
- 	int offset;
- 
-@@ -588,8 +587,6 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 		return -EBUSY;
- 	}
- 
--	calltime = trace_clock_local();
+-	int offset = current->curr_ret_stack - 1;
+-	unsigned long val;
 -
- 	offset = READ_ONCE(current->curr_ret_stack);
- 	ret_stack = RET_STACK(current, offset);
- 	offset += FGRAPH_FRAME_OFFSET;
-@@ -623,7 +620,6 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 
- 	ret_stack->ret = ret;
- 	ret_stack->func = func;
--	ret_stack->calltime = calltime;
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	ret_stack->fp = frame_pointer;
- #endif
-@@ -757,7 +753,6 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
- 	*offset += FGRAPH_FRAME_OFFSET;
- 	*ret = ret_stack->ret;
- 	trace->func = ret_stack->func;
--	trace->calltime = ret_stack->calltime;
- 	trace->overrun = atomic_read(&current->trace_overrun);
- 	trace->depth = current->curr_ret_depth;
- 	/*
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f3d1702a7d8d..5dccb02b6525 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -821,6 +821,7 @@ void ftrace_graph_graph_time_control(bool enable)
+-	val = get_fgraph_entry(current, offset);
+-	while (__get_type(val) == FGRAPH_TYPE_DATA) {
+-		if (__get_data_index(val) == idx)
+-			goto found;
+-		offset -= __get_data_size(val) + 1;
+-		val = get_fgraph_entry(current, offset);
+-	}
+-	return NULL;
+-found:
+-	if (size_bytes)
+-		*size_bytes = __get_data_size(val) * sizeof(long);
+-	return get_data_type_data(current, offset);
++	return fgraph_retrieve_parent_data(idx, size_bytes, 0);
  }
  
- struct profile_fgraph_data {
-+	unsigned long long		calltime;
- 	unsigned long long		subtime;
- 	unsigned long long		sleeptime;
- };
-@@ -842,6 +843,7 @@ static int profile_graph_entry(struct ftrace_graph_ent *trace,
+ /**
+@@ -460,6 +446,54 @@ get_ret_stack(struct task_struct *t, int offset, int *frame_offset)
+ 	return RET_STACK(t, offset);
+ }
  
- 	profile_data->subtime = 0;
- 	profile_data->sleeptime = current->ftrace_sleeptime;
-+	profile_data->calltime = trace_clock_local();
++/**
++ * fgraph_retrieve_parent_data - get data from a parent function
++ * @idx: The index into the fgraph_array (fgraph_ops::idx)
++ * @size_bytes: A pointer to retrieved data size
++ * @depth: The depth to find the parent (0 is the current function)
++ *
++ * This is similar to fgraph_retrieve_data() but can be used to retrieve
++ * data from a parent caller function.
++ *
++ * Return: a pointer to the specified parent data or NULL if not found
++ */
++void *fgraph_retrieve_parent_data(int idx, int *size_bytes, int depth)
++{
++	struct ftrace_ret_stack *ret_stack = NULL;
++	int offset = current->curr_ret_stack;
++	unsigned long val;
++
++	if (offset <= 0)
++		return NULL;
++
++	for (;;) {
++		int next_offset;
++
++		ret_stack = get_ret_stack(current, offset, &next_offset);
++		if (!ret_stack || --depth < 0)
++			break;
++		offset = next_offset;
++	}
++
++	if (!ret_stack)
++		return NULL;
++
++	offset--;
++
++	val = get_fgraph_entry(current, offset);
++	while (__get_type(val) == FGRAPH_TYPE_DATA) {
++		if (__get_data_index(val) == idx)
++			goto found;
++		offset -= __get_data_size(val) + 1;
++		val = get_fgraph_entry(current, offset);
++	}
++	return NULL;
++found:
++	if (size_bytes)
++		*size_bytes = __get_data_size(val) * sizeof(long);
++	return get_data_type_data(current, offset);
++}
++
+ /* Both enabled by default (can be cleared by function_graph tracer flags */
+ static bool fgraph_sleep_time = true;
+ 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 4c28dd177ca6..196647059800 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -823,7 +823,7 @@ void ftrace_graph_graph_time_control(bool enable)
+ static int profile_graph_entry(struct ftrace_graph_ent *trace,
+ 			       struct fgraph_ops *gops)
+ {
+-	struct ftrace_ret_stack *ret_stack;
++	unsigned long long *subtime;
+ 
+ 	function_profile_call(trace->func, 0, NULL, NULL);
+ 
+@@ -831,9 +831,9 @@ static int profile_graph_entry(struct ftrace_graph_ent *trace,
+ 	if (!current->ret_stack)
+ 		return 0;
+ 
+-	ret_stack = ftrace_graph_get_ret_stack(current, 0);
+-	if (ret_stack)
+-		ret_stack->subtime = 0;
++	subtime = fgraph_reserve_data(gops->idx, sizeof(*subtime));
++	if (subtime)
++		*subtime = 0;
  
  	return 1;
  }
-@@ -850,9 +852,9 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+@@ -841,11 +841,12 @@ static int profile_graph_entry(struct ftrace_graph_ent *trace,
+ static void profile_graph_return(struct ftrace_graph_ret *trace,
  				 struct fgraph_ops *gops)
  {
- 	struct profile_fgraph_data *profile_data;
--	struct profile_fgraph_data *parent_data;
+-	struct ftrace_ret_stack *ret_stack;
  	struct ftrace_profile_stat *stat;
  	unsigned long long calltime;
-+	unsigned long long rettime = trace_clock_local();
++	unsigned long long *subtime;
  	struct ftrace_profile *rec;
  	unsigned long flags;
- 	int size;
-@@ -862,29 +864,28 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
- 	if (!stat->hash || !ftrace_profile_enabled)
- 		goto out;
- 
-+	profile_data = fgraph_retrieve_data(gops->idx, &size);
-+
- 	/* If the calltime was zero'd ignore it */
--	if (!trace->calltime)
-+	if (!profile_data || !profile_data->calltime)
- 		goto out;
- 
--	calltime = trace->rettime - trace->calltime;
-+	calltime = rettime - profile_data->calltime;
- 
- 	if (!fgraph_sleep_time) {
--		profile_data = fgraph_retrieve_data(gops->idx, &size);
--		if (profile_data && current->ftrace_sleeptime)
-+		if (current->ftrace_sleeptime)
- 			calltime -= current->ftrace_sleeptime - profile_data->sleeptime;
- 	}
- 
- 	if (!fgraph_graph_time) {
-+		struct profile_fgraph_data *parent_data;
- 
- 		/* Append this call time to the parent time to subtract */
- 		parent_data = fgraph_retrieve_parent_data(gops->idx, &size, 1);
- 		if (parent_data)
- 			parent_data->subtime += calltime;
- 
--		if (!profile_data)
--			profile_data = fgraph_retrieve_data(gops->idx, &size);
--
--		if (profile_data && profile_data->subtime && profile_data->subtime < calltime)
-+		if (profile_data->subtime && profile_data->subtime < calltime)
- 			calltime -= profile_data->subtime;
- 		else
- 			calltime = 0;
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 14b82fb7082c..ff0871a9425a 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -127,13 +127,18 @@ static inline int ftrace_graph_ignore_irqs(void)
- 	return in_hardirq();
- }
- 
-+struct fgraph_times {
-+	unsigned long long		calltime;
-+	unsigned long long		sleeptime; /* may be optional! */
-+};
-+
- int trace_graph_entry(struct ftrace_graph_ent *trace,
- 		      struct fgraph_ops *gops)
- {
- 	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
- 	struct trace_array_cpu *data;
--	unsigned long *sleeptime;
-+	struct fgraph_times *ftimes;
- 	unsigned long flags;
- 	unsigned int trace_ctx;
- 	long disabled;
-@@ -168,12 +173,18 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	if (ftrace_graph_ignore_irqs())
- 		return 0;
- 
--	/* save the current sleep time if we are to ignore it */
--	if (!fgraph_sleep_time) {
--		sleeptime = fgraph_reserve_data(gops->idx, sizeof(*sleeptime));
--		if (sleeptime)
--			*sleeptime = current->ftrace_sleeptime;
-+	if (fgraph_sleep_time) {
-+		/* Only need to record the calltime */
-+		ftimes = fgraph_reserve_data(gops->idx, sizeof(ftimes->calltime));
-+	} else {
-+		ftimes = fgraph_reserve_data(gops->idx, sizeof(*ftimes));
-+		if (ftimes)
-+			ftimes->sleeptime = current->ftrace_sleeptime;
- 	}
-+	if (!ftimes)
-+		return 0;
-+
-+	ftimes->calltime = trace_clock_local();
- 
- 	/*
- 	 * Stop here if tracing_threshold is set. We only write function return
-@@ -247,19 +258,13 @@ void __trace_graph_return(struct trace_array *tr,
- }
- 
- static void handle_nosleeptime(struct ftrace_graph_ret *trace,
--			       struct fgraph_ops *gops)
-+			       struct fgraph_times *ftimes,
-+			       int size)
- {
--	unsigned long long *sleeptime;
--	int size;
--
--	if (fgraph_sleep_time)
--		return;
--
--	sleeptime = fgraph_retrieve_data(gops->idx, &size);
--	if (!sleeptime)
-+	if (fgraph_sleep_time || size < sizeof(*ftimes))
- 		return;
- 
--	trace->calltime += current->ftrace_sleeptime - *sleeptime;
-+	ftimes->calltime += current->ftrace_sleeptime - ftimes->sleeptime;
- }
- 
- void trace_graph_return(struct ftrace_graph_ret *trace,
-@@ -268,9 +273,11 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
- 	struct trace_array_cpu *data;
-+	struct fgraph_times *ftimes;
- 	unsigned long flags;
- 	unsigned int trace_ctx;
- 	long disabled;
 +	int size;
- 	int cpu;
- 
- 	ftrace_graph_addr_finish(gops, trace);
-@@ -280,7 +287,13 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 		return;
- 	}
- 
--	handle_nosleeptime(trace, gops);
-+	ftimes = fgraph_retrieve_data(gops->idx, &size);
-+	if (!ftimes)
-+		return;
-+
-+	handle_nosleeptime(trace, ftimes, size);
-+
-+	trace->calltime = ftimes->calltime;
  
  	local_irq_save(flags);
- 	cpu = raw_smp_processor_id();
-@@ -297,6 +310,9 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 				      struct fgraph_ops *gops)
- {
-+	struct fgraph_times *ftimes;
-+	int size;
-+
- 	ftrace_graph_addr_finish(gops, trace);
+ 	stat = this_cpu_ptr(&ftrace_profile_stats);
+@@ -861,13 +862,13 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 	if (!fgraph_graph_time) {
  
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
-@@ -304,10 +320,16 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 		return;
+ 		/* Append this call time to the parent time to subtract */
+-		ret_stack = ftrace_graph_get_ret_stack(current, 1);
+-		if (ret_stack)
+-			ret_stack->subtime += calltime;
++		subtime = fgraph_retrieve_parent_data(gops->idx, &size, 1);
++		if (subtime)
++			*subtime += calltime;
+ 
+-		ret_stack = ftrace_graph_get_ret_stack(current, 0);
+-		if (ret_stack && ret_stack->subtime < calltime)
+-			calltime -= ret_stack->subtime;
++		subtime = fgraph_retrieve_data(gops->idx, &size);
++		if (subtime && *subtime && *subtime < calltime)
++			calltime -= *subtime;
+ 		else
+ 			calltime = 0;
  	}
- 
--	handle_nosleeptime(trace, gops);
-+	ftimes = fgraph_retrieve_data(gops->idx, &size);
-+	if (!ftimes)
-+		return;
-+
-+	handle_nosleeptime(trace, ftimes, size);
-+
-+	trace->calltime = ftimes->calltime;
- 
- 	if (tracing_thresh &&
--	    (trace->rettime - trace->calltime < tracing_thresh))
-+	    (trace->rettime - ftimes->calltime < tracing_thresh))
- 		return;
- 	else
- 		trace_graph_return(trace, gops);
 -- 
 2.45.2
 
