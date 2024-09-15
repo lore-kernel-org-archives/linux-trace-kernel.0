@@ -1,61 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8E91C7B67
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Sep 2024 15:04:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCFD1C6F40
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Sep 2024 15:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726412698; cv=none; b=AuLhudQRJllyOUc8JnEOPD+LDssU9/RsQdSAAEhIjg2dM5V2z8X5cydYHCIYNr36TdUqrDGleO1t4IR+Xy/KFM1do9JPd3LeqyB4pUOJh+V3mMT+HEiIVeFY7Qb0rcIOqnae4x1FJaVCYdwujFQI++9TLiFKmzHKWWv1VNDxPtY=
+	t=1726413509; cv=none; b=fVznBVgZ3E71T6sSmj8sHdYG2G4Ina8Bd2xkLMCPLQG/QpaOWBYoPhmtToZNqkH8Z8jfq33CvMLXQ0bJZx3++O3/rk53xEp8i+XV+OxuIubJPzMgd+3NvekM26zqHtpuWp3HTWEGeAmHX3/AeuGAZgypQBPizS15VLSot0K391I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726412698; c=relaxed/simple;
-	bh=muriC4vnR1Pgp6FrCmeUYns5egLK2oHEwfG6/WSz7Bs=;
+	s=arc-20240116; t=1726413509; c=relaxed/simple;
+	bh=HEkOL+SIIOorjKmQLQpDyWskuma7P7RHDiNjkYWeAX4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fhtun900e5y6wS2NwoMe5VNhGjoC3G7uQFq5MvmXxM4DAG6ZMFWMUylE1WnUZM7gpPAb7roMBWmt2SOkRweupOGSN/wFqrHoH4vLR4drQpEVpqqTh0xjTnnqMRo5YWC7wuE4MRIeUfISvhIy13gdcciNrLTH+2suQDYyfmCPyDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pe2BZpXn; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGlB1AOtwKor81IpnoyRPiEED/T8XY1cy1nhESWSGmvzVbSoDHk8ca4Fo6twOzMhlHlMcTydAZntsrcYVy0lZdMSkjIb5pFYrrvaOcbjZAR6boc0WDOYQvbBffTydK3BntbsnxLjkgehFdH+NxH7hYtD7u0Bn9RtijXqZQvaeq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpEnEgeo; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pe2BZpXn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpEnEgeo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726412695;
+	s=mimecast20190719; t=1726413506;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PgPXoGAgWEmJuNaNaMNmxrMHZdG9YhV6gHMHUQ6h5z0=;
-	b=Pe2BZpXn7Ctn4wLqVaZuLt3H1sam31Go0SvM+qWd0dNn2xbdn2/ASZZQswg2VbSjuPgiZb
-	dpQ8Avb9EPdVVALHDOIbbsb6yNDOvrPh+jpeuzjhflswWXgo1FdEqN20ktxZuGjn7R6SL+
-	EhdO8kzDLv17P7ouJZlj/N4TybXC15U=
+	bh=HEkOL+SIIOorjKmQLQpDyWskuma7P7RHDiNjkYWeAX4=;
+	b=EpEnEgeoyYGsWdDIZDTMzLOMlVKt9jbQjDOs8kub9FoMw7mhSdho1r+MDvP40VV7wQtPXF
+	EIZ+fNjwJXf9VyC0F6PL8CVqxIjflI2M/0Sh4LIl/1R+SGaHREZ6w332wNnvWeEkXgqKTa
+	uWkpRvt7iLEmkJcq57PgzJei49JkEtY=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-582-JbosABjIMUe7gj9-zuvLyw-1; Sun,
- 15 Sep 2024 11:04:52 -0400
-X-MC-Unique: JbosABjIMUe7gj9-zuvLyw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-bfz7UB-uO_CIuHYov_OE5A-1; Sun,
+ 15 Sep 2024 11:18:23 -0400
+X-MC-Unique: bfz7UB-uO_CIuHYov_OE5A-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B0DA119560B1;
-	Sun, 15 Sep 2024 15:04:49 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D93319560AB;
+	Sun, 15 Sep 2024 15:18:21 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.40])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 09EE51956086;
-	Sun, 15 Sep 2024 15:04:43 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A769119560AA;
+	Sun, 15 Sep 2024 15:18:17 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 15 Sep 2024 17:04:37 +0200 (CEST)
-Date: Sun, 15 Sep 2024 17:04:30 +0200
+	oleg@redhat.com; Sun, 15 Sep 2024 17:18:08 +0200 (CEST)
+Date: Sun, 15 Sep 2024 17:18:04 +0200
 From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
-	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org,
-	jannh@google.com
-Subject: Re: [PATCH 2/2] uprobes: add speculative lockless
- VMA-to-inode-to-uprobe resolution
-Message-ID: <20240915150429.GC27726@redhat.com>
-References: <20240906051205.530219-1-andrii@kernel.org>
- <20240906051205.530219-3-andrii@kernel.org>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
+ contention on siglock
+Message-ID: <20240915151803.GD27726@redhat.com>
+References: <20240815014629.2685155-1-liaochang1@huawei.com>
+ <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,27 +63,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240906051205.530219-3-andrii@kernel.org>
+In-Reply-To: <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 09/05, Andrii Nakryiko wrote:
+Hi Liao,
+
+On 09/14, Liao, Chang wrote:
 >
-> +static struct uprobe *find_active_uprobe_speculative(unsigned long bp_vaddr)
-> +{
-> +	const vm_flags_t flags = VM_HUGETLB | VM_MAYEXEC | VM_MAYSHARE;
-...
-> +	if (!vm_file || (vma->vm_flags & flags) != VM_MAYEXEC)
-> +		goto bail;
+> Hi, Oleg
+>
+> Kindly ping.
+>
+> This series have been pending for a month. Is thre any issue I overlook?
 
-Not that this can really simplify your patch, feel free to ignore, but I don't
-think you need to check vma->vm_flags.
+Well, I have already acked both patches.
 
-Yes, find_active_uprobe_rcu() does the same valid_vma(vma, false) check, but it
-too can/should be removed, afaics.
-
-valid_vma(vma, false) makes sense in, say, unapply_uprobe() to quickly filter
-out vma's which can't have this bp installed, but not in the handle_swbp() paths.
+Please resend them to Peter/Masami, with my acks included.
 
 Oleg.
 
