@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B823A6FDC;
-	Sun, 15 Sep 2024 09:16:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6D96FDC;
+	Sun, 15 Sep 2024 09:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726391765; cv=none; b=Cwu8jT3dD78ugZryl7mJD9lkvJrcbNlOQyeD/GkvFD+G7h75UPSZeXgvohJ48zmhBTYYuoUW9yE6qO26o5nM6YFTI7YT8O1kNRjTKIAt0gNn9iv5mkfqZgeLmBUkdS2/2lmKUKfU76OgF5+WVoLu1HkaA0IWSWLuvp95n6IYNnQ=
+	t=1726391870; cv=none; b=Kv5EuFJmqC59YFra954sR+6On1L5JIyMlJtJ415aixyI3Ez8/H1mYDK3pn08BLj0UtC+jzIiczknSUW3RLKfK+7waKmh7dBImwC5OEuky1i2mbqCbig4m9ZB8d0O8cmzzEbAoeSoyt3Rxd5oyKjpjplGWwdLnnZDDcTEtVyy9Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726391765; c=relaxed/simple;
-	bh=DHogwraaYJjORWowdIFoNbjDyvIC9E7PU0WFcpktdwE=;
+	s=arc-20240116; t=1726391870; c=relaxed/simple;
+	bh=xuQbYsRh2q9OhOR3BrOKiAnOXRk25jT5wvpmVOIVmXk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jus/vP9FyXODQFPY/M9ljQPffeyBl7dUGl5BxPx0JXeO+AzO/cFUETvwUGZyCtgy2JwT4UzsB4Qp61MuAYjLvXUup9byZCf10DAW4vfWBIfJooudruCElw3/N5xxMhM9hotKQMHv6B5NG2bbZ4J584aq/L5xSu6jWeNVFSo0I+Q=
+	 MIME-Version:Content-Type; b=FEvoBFdx7LvfkGXti6mRQlUU9DdbHuQu03FuQSjIVMTGfeea2MrBwHYn9iIlwQz5Djt14kOB8VlvWOpdj5NJUeTc6kjO5a/rq6ViTYhaTT4spbcJPtyecrShbSYKTthQp0/xqomBxY9iV/OVk9xUWM9fCzzrY8VfGVZo0NBD07g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E95C4CEC3;
-	Sun, 15 Sep 2024 09:16:02 +0000 (UTC)
-Date: Sun, 15 Sep 2024 05:15:59 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B210C4CEC3;
+	Sun, 15 Sep 2024 09:17:45 +0000 (UTC)
+Date: Sun, 15 Sep 2024 05:17:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, linux-s390@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Peter Zijlstra <peterz@infradead.org>
 Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Florent Revest
  <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
  <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri
@@ -26,7 +26,7 @@ Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Florent Revest
  Borkmann <daniel@iogearbox.net>, Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v14 04/19] function_graph: Replace fgraph_ret_regs with
  ftrace_regs
-Message-ID: <20240915051559.435abfcd@rorschach.local.home>
+Message-ID: <20240915051742.73c9bb2e@rorschach.local.home>
 In-Reply-To: <172615373091.133222.1812791604518973124.stgit@devnote2>
 References: <172615368656.133222.2336770908714920670.stgit@devnote2>
  <172615373091.133222.1812791604518973124.stgit@devnote2>
@@ -41,7 +41,7 @@ Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
 
-Can I get an Acked-by from the S390 maintainers for this patch?
+Can I get an Acked-by from the X86 maintainers for this patch?
 
 Thanks!
 
