@@ -1,87 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA401B85C6;
-	Sun, 15 Sep 2024 05:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792D63CF65;
+	Sun, 15 Sep 2024 08:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726377757; cv=none; b=OjE41G67tcC0zZ7JqIiajrgzXHyB8Ghd77RYNF72LHNfvRVDMvNIQV/sxi3H998JwnZmWKrxz/PlA3RUomKhFh8UFQyPG607d6Dm9db4w5kfkNHLFuedNHPWp5gbCGgLpJqzbJ89k0/v12btwBaGe0Sr+2BrS3hgfN4CHXGcJXI=
+	t=1726388500; cv=none; b=u7dwMO8bFgRa4QVeyFpjIhzEg6ZlR8bvymBqt4xyqPxe7tG8eh0OdcLVuFbRDxoiLgXfYyOqIWwcL1App8ckdroUhHZTB4VwMq4N4dTxU/Cxgwkme3e9knABQAb1hTejiPCQqQSF1c0e0MMVaEJoUoO9BuYI7S0zGgugO8+hGxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726377757; c=relaxed/simple;
-	bh=1CqsCyV6zjXceSWEZum34kBlQu5zVb957vGfVYBBrwM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=l2Jth7Kah2BtP3hdcSk6TX6Ow1bNhMLFtei9sfZ1tituavDZH4ePmKLLEv0Ri9zmXffVy3qSgcZa1vVWAhc/WEOewMQX08Zc3bdNJuCC8zGgw/eZmUGvb3zefgTAyDaPOGRAJgoLxKBKL9epnKokdLYWwvo9FrZdRXi6U1j2TDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQvLwS0v; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQvLwS0v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC4DC4CEC3;
-	Sun, 15 Sep 2024 05:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726377756;
-	bh=1CqsCyV6zjXceSWEZum34kBlQu5zVb957vGfVYBBrwM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oQvLwS0v3fv/8IZzzHbMtEkGcrSq9ZZk1+q9zbgD15HKHf8iG4xZ3L9/55Ph9dOtj
-	 Zju/zAlWeGkNFvWKbpf17pWYTzAGVEdolQDWglJMwnE7ETiGCyJvskZrWrBfPmiNCr
-	 nMQ6Eqh2kjmdD2pYvL6oQn+WwsKm4Ty+EVR/D0CZoxqgZ66RPGaApxDnnAwQDK+AQi
-	 Se4YFKCrRMPMr3T1oMuhgdE/2OgEZT4o+8iTnTZJapcvIo7Z6CDJ90nnA7T5N0+cUg
-	 qpCWhBQHCDvDh9FFvqDbKWdSAADpyQn27onsn0JPDl+ZlqpDgmRHJtJIKKlz9qQDtc
-	 SbPJwyhfGObRw==
-Date: Sun, 15 Sep 2024 14:22:33 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Jiri Olsa <olsajiri@gmail.com>
-Subject: Re: [PATCH 0/3] fgraph: Do not save calltime in shadow stack
-Message-Id: <20240915142233.168da2dcd06000dc86a34a1e@kernel.org>
-In-Reply-To: <20240914214805.779822616@goodmis.org>
-References: <20240914214805.779822616@goodmis.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1726388500; c=relaxed/simple;
+	bh=PeoedWCKagiT8z+bdtbNESZCqWIWuC6HOpNq4s4KZmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y8gwJNJR6ngGxlpNFgIznIZEo1zUwAFnslMpX/WHJ+8SBPPvud4X72u+HuA5TkcXtjKwfQSAfOFPoU2vcGYzwT2cwJnT/wVFR5jhGwEZWSuZ+YKWTEGOlrard6aDaxUrJ/bcaQsycOGr+cd4uiFAbP+K5jDZS54gfwyTb+djfCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D9DC4CEC3;
+	Sun, 15 Sep 2024 08:21:28 +0000 (UTC)
+Date: Sun, 15 Sep 2024 04:21:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Chandan
+ Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>,
+ Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+ <dsterba@suse.com>, Hugh Dickins <hughd@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Chuck Lever <chuck.lever@oracle.com>, Vadim
+ Fedorenko <vadim.fedorenko@linux.dev>, Randy Dunlap
+ <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v8 05/11] fs: tracepoints around multigrain timestamp
+ events
+Message-ID: <20240915042122.50635cc8@rorschach.local.home>
+In-Reply-To: <20240914-mgtime-v8-5-5bd872330bed@kernel.org>
+References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
+	<20240914-mgtime-v8-5-5bd872330bed@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 14 Sep 2024 17:48:05 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, 14 Sep 2024 13:07:18 -0400
+Jeff Layton <jlayton@kernel.org> wrote:
 
-> 
-> Now that there's more users of the function graph infrastructure, the
-> calltime field on the shadow stack wastes space and also getting the
-> timestamp is a waste of time for those that do not use it.
-> 
-> Instead, have the only two users of it (function graph tracer and the
-> profiler) store it in its own shadow stack variable.
+> Add some tracepoints around various multigrain timestamp events.
+>=20
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
 
-This series looks good to me. Instead of adding add-hoc flag, this
-solves call-time clearer.
+=46rom a tracing POV, nothing looks out of ordinary.
 
-For this series,
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> 
-> Steven Rostedt (3):
->       fgraph: Use fgraph data to store subtime for profiler
->       ftrace: Use a running sleeptime instead of saving in shadow stack
->       ftrace: Have calltime be saved in the fgraph storage
-> 
-> ----
->  include/linux/ftrace.h               |  5 +--
->  include/linux/sched.h                |  1 +
->  kernel/trace/fgraph.c                | 85 +++++++++++++++++++++---------------
->  kernel/trace/ftrace.c                | 45 +++++++++++++------
->  kernel/trace/trace.h                 |  1 +
->  kernel/trace/trace_functions_graph.c | 52 +++++++++++++++++++++-
->  6 files changed, 137 insertions(+), 52 deletions(-)
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
