@@ -1,95 +1,61 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AD82B9AA;
-	Mon, 16 Sep 2024 15:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4AFA29;
+	Mon, 16 Sep 2024 16:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726502034; cv=none; b=LTbYDXZwIw19xSh7qqxdYGSiQgsH+EJXP/NaMq+XCUuXmuAESdHXq/Mo5JJOgba/MSX9F78ytuz2zkVRzrnb7wBd7LzaI03KdxJGTz0u6ueFauCq4LTQIGJRVCxWLDnMX2SvkHtVA8IsREG6cR0gqqHvatOkhYlBWr3HuoC4XgY=
+	t=1726504178; cv=none; b=eLWYpTPkLe7PFL5ulk7t9pgtPiZk6K7R/+oG+g/VO/5KYJkTTQQIsfxubCm0uGWvgTsbJ+gAEipHi2bi4Djci3F2FZ1D3AiDFldqWjP/atbCU7tO4ViEyj693qoE9p2LB3PfvJ8A+mB0vb4Y9I0zG5wL7qH3EpujKlIi30fsQUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726502034; c=relaxed/simple;
-	bh=uw0Xybb7UQONV7AUP+zdNBOTaZYJ9vHM92tdymSzwgg=;
-	h=Subject:MIME-Version:Content-Type:Date:Message-ID:To:CC:From:
-	 References:In-Reply-To; b=HA7fPKbcg+qZMb+3P0IISagbJf5Oi5IjK0LON8VajcTxgHuS35Z+TC1LDN7dl9dIvq0b5L9+pKQPJ1/bFS+C4/XNS5jXUnz7PgJiWKQOOAdEDfoiI1wutcg5JkwBgt2q4TRlMaMGiVOjGpIm0QuRHlyu4CVshhXYLdHOnqV0g+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=sHtQeF5k; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sHtQeF5k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1726502033; x=1758038033;
-  h=mime-version:content-transfer-encoding:date:message-id:
-   to:cc:from:references:in-reply-to:subject;
-  bh=uw0Xybb7UQONV7AUP+zdNBOTaZYJ9vHM92tdymSzwgg=;
-  b=sHtQeF5kndNn+pIlBdjos1k+Q5FzIBWC/HXSDqk59+xK5xHEk8eA4reJ
-   8jXuSq/cmG/KWq4iIO1EBLBlXtvwMDfKu11Jtzs2X8uWSfljTlJ4fAqoE
-   Aq6yT+nPeU0b1rMtczJ+2hwScH3qfu3k8p7ZFOxLBfnqGBRrZ0Zg0vu9L
-   g=;
-X-IronPort-AV: E=Sophos;i="6.10,233,1719878400"; 
-   d="scan'208";a="126308750"
-Subject: Re: [PATCH 11/18] KVM: x86: Pass the instruction length on memory fault
- user-space exits
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 15:53:49 +0000
-Received: from EX19MTAEUA001.ant.amazon.com [10.0.10.100:54655]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.43.112:2525] with esmtp (Farcaster)
- id 2d162f68-8f74-48a2-9420-8f12008a1ef2; Mon, 16 Sep 2024 15:53:48 +0000 (UTC)
-X-Farcaster-Flow-ID: 2d162f68-8f74-48a2-9420-8f12008a1ef2
-Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
- EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 16 Sep 2024 15:53:48 +0000
-Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
- (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Mon, 16 Sep 2024
- 15:53:42 +0000
+	s=arc-20240116; t=1726504178; c=relaxed/simple;
+	bh=Nm+KjuDd/6vIz7azXq22szrifIq7ZmeKemLmdwemJwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WOMWbZM9FY/3qwehvoc+z4SFQ8FRUYRIlep/cH+V/3MOVjN1KXFeVVAGNELBDKVUqhTorlSSIWD0R+1Md3c4WBnR0zfbSoVcojj9msXCM2FD1ScU7Qv2p78oyqzH7CIncayJEho0iwMdsnR2Ov4OypAXaxfLDih6kiQscIZW27w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76A5C4CEC4;
+	Mon, 16 Sep 2024 16:29:34 +0000 (UTC)
+Date: Mon, 16 Sep 2024 12:29:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, linux-s390@vger.kernel.org, "Masami Hiramatsu
+ (Google)" <mhiramat@kernel.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v14 04/19] function_graph: Replace fgraph_ret_regs with
+ ftrace_regs
+Message-ID: <20240916122930.523af6c5@rorschach.local.home>
+In-Reply-To: <20240916121656.20933-B-hca@linux.ibm.com>
+References: <172615368656.133222.2336770908714920670.stgit@devnote2>
+	<172615373091.133222.1812791604518973124.stgit@devnote2>
+	<20240915051559.435abfcd@rorschach.local.home>
+	<20240916121656.20933-B-hca@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-Date: Mon, 16 Sep 2024 15:53:39 +0000
-Message-ID: <D47TVY7H7E3C.3V3RA9GPJGT6E@amazon.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <linux-doc@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
-	<dwmw2@infradead.org>, <mlevitsk@redhat.com>, <jgowans@amazon.com>,
-	<corbet@lwn.net>, <decui@microsoft.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <amoorthy@google.com>
-From: Nicolas Saenz Julienne <nsaenz@amazon.com>
-X-Mailer: aerc 0.18.2-0-ge037c095a049-dirty
-References: <20240609154945.55332-1-nsaenz@amazon.com>
- <20240609154945.55332-12-nsaenz@amazon.com> <ZuSOaTw1vgwquqTE@google.com>
-In-Reply-To: <ZuSOaTw1vgwquqTE@google.com>
-X-ClientProxiedBy: EX19D045UWC002.ant.amazon.com (10.13.139.230) To
- EX19D004EUC001.ant.amazon.com (10.252.51.190)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri Sep 13, 2024 at 7:11 PM UTC, Sean Christopherson wrote:
-> On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
-> > In order to simplify Hyper-V VSM secure memory intercept generation in
-> > user-space (it avoids the need of implementing an x86 instruction
-> > decoder and the actual decoding). Pass the instruction length being run
-> > at the time of the guest exit as part of the memory fault exit
-> > information.
->
-> Why does userspace need the instruction length, but not the associated co=
-de stream?
+On Mon, 16 Sep 2024 14:16:56 +0200
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-Since the fault already provides the GPA it's trivial to read it from
-the VMM. Then again, now that I've dug deeper into the RWX memory
-attributes's edge cases, this doesn't always work. For example when
-getting a fault during a page walk (the CPU being unable to access the
-page that contains the next GPTE due to it being marked non-readable by
-a memattr). The fault exit GPA will not point to the code stream.
+> This does not pass the ftrace selftests. Please merge the patch below
+> into this patch. With that:
+> 
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
 
-I will rework/rethink this once I have the complete memattrs story.
+Thank you very much, this is why I wanted arch maintainers acks before
+taking anything.
 
-Thanks,
-Nicolas
+There may be other patches in this series that I didn't Cc everyone
+(yet). Did you look at the other patches? If not, I'll go and do the Cc.
+It's a manual process.
+
+-- Steve
