@@ -1,92 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CE317753;
-	Mon, 16 Sep 2024 16:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C49A158853
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 17:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726504771; cv=none; b=j+JrlwyyGKpcrZ7R0B2VPgXxL2gNT2rYtj1NhUJFy7ET4OOCoy10jcUeIhh/yqECkT6jhXOhMhtiOkMfi8nYq9bEWmNHyjwnvGPS5kJsaXeTCDwe8YDttXY0a/s5FFtuRDadECygu/DATpMfc8YZpHiSnM6K74gNngAVfGm3yF0=
+	t=1726509522; cv=none; b=mPQunUkD6GOYewarmDpSW6tHkb5bYacqbHeagLFuzVAUD2ycMJ2ZZKmXlbCrezNf/vZERs9Z3IbxpJF/WbHLUtvlT5mQwEIZppWyRSl1ICyJ9hiZuPrvcT5rgkgFPRiZihmd17hdhIX+OHP9t4/ysrBUllZanadcG8WfZ6TQnm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726504771; c=relaxed/simple;
-	bh=gv8EgQe8x2SyriNJcVhFuJKrcV/u44CqCxDex4u+n8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AmO/GfNb7uYXwa09IaiaQNel3Yvytm3BH4L3BpVeHjc6qQOinGtkKJEcXp3VZ/cvaEX8+t0HoVWN71ityezwH1L5sg7jh9L50Qii23hxM95G4vjpI9U2oiJ1LOH2vw4y4CVi6s0Vd7ru9QAaTYgvGepDXGkdG/TZtBUAC1FFPwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCECC4CEC4;
-	Mon, 16 Sep 2024 16:39:29 +0000 (UTC)
-Date: Mon, 16 Sep 2024 12:39:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Puranjay Mohan
- <puranjay@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] function_graph: remove unnecessary initialization in
+	s=arc-20240116; t=1726509522; c=relaxed/simple;
+	bh=bJPhYjV1Ia+Z2638ng73cI1m7y7FpPcRshmyKsgcsrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6uB1596B4uALOVSd/ECdL1+LzVEPMXJYU5NA5bfKqGaOS7N0mk66PYlnsleDWkiuU4cLpTkWLGhQ2ENWt+gXVJeTK+DdUBXG04egVmTrsLC2EbepfboXuTubRc+IWRQjpO6IF23H5XcMi9UJ8JO0rHDASldV2yWM2tfuqOJXw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pt+Yllyn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pt+Yllyn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726509519;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g83vBmJfBn8qhZUpht5ADDtAOeCHq/XCkkkKewo9hDw=;
+	b=Pt+YllynCmbN04cCMH0M3UY6+FaosFOZerLIusqlE4YBIFxRTqhxvkK3BF/gaTg6NPPZYM
+	BbhDTpKe+CdSgZZjjUO9k0nhvdIFiKd7dmM7e49qAT0yDmUkGESK81cloOOoSCLYy27TTO
+	wsfd8Mf5MIt6BYzTXRXAY7P5bVo8cdU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-2QkwuvQxPeaBODy0SoxaWg-1; Mon,
+ 16 Sep 2024 13:58:36 -0400
+X-MC-Unique: 2QkwuvQxPeaBODy0SoxaWg-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AECBA1955DC4;
+	Mon, 16 Sep 2024 17:58:34 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.93])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 633123001FEF;
+	Mon, 16 Sep 2024 17:58:31 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 16 Sep 2024 19:58:22 +0200 (CEST)
+Date: Mon, 16 Sep 2024 19:58:19 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] function_graph: remove unnecessary initialization in
  ftrace_graph_ret_addr()
-Message-ID: <20240916123925.5398abdf@rorschach.local.home>
-In-Reply-To: <20240916135643.GA23958@redhat.com>
+Message-ID: <20240916175818.GA28944@redhat.com>
 References: <20240916135643.GA23958@redhat.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20240916123925.5398abdf@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240916123925.5398abdf@rorschach.local.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, 16 Sep 2024 15:56:43 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+After the commit 29c1c24a2707 ("function_graph: Fix up ftrace_graph_ret_addr()")
+ftrace_graph_ret_addr() doesn't need to initialize "int i" at the start.
 
-> After the commit 29c1c24a2707 ("function_graph: Fix up ftrace_graph_ret_addr()")
-> ftrace_graph_ret_addr() doesn't need to initialize "int i" at the start.
-> 
-> While at it, move the declaration of "ret_stack" into the main loop.
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Should not make two changes like this, because it risks the entire
-patch being denied.
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index d7d4fb403f6f..45c02bf18304 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -892,7 +892,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ {
+ 	struct ftrace_ret_stack *ret_stack;
+ 	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
+-	int i = task->curr_ret_stack;
++	int i;
+ 
+ 	if (ret != return_handler)
+ 		return ret;
+-- 
+2.25.1.362.g51ebf55
 
-
-> 
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  kernel/trace/fgraph.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index d7d4fb403f6f..d45a8bc97997 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -890,9 +890,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
->  unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
->  				    unsigned long ret, unsigned long *retp)
->  {
-> -	struct ftrace_ret_stack *ret_stack;
->  	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
-> -	int i = task->curr_ret_stack;
-> +	int i;
-
-I'm fine with removing the unneeded init of i.
-
->  
->  	if (ret != return_handler)
->  		return ret;
-> @@ -902,7 +901,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
->  
->  	i = *idx ? : task->curr_ret_stack;
->  	while (i > 0) {
-> -		ret_stack = get_ret_stack(task, i, &i);
-> +		struct ftrace_ret_stack *ret_stack = get_ret_stack(task, i, &i);
-
-This is just a preference. Sometimes I like the declaration up on top,
-sometimes in the block it used. But this case, I wont it at top.
-
-Please make a v2 with just the change to i.
-
--- Steve
-
-
->  		if (!ret_stack)
->  			break;
->  		/*
 
