@@ -1,138 +1,194 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01651482FE
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 12:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CD047A62
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 12:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726489623; cv=none; b=IWqcSXoJYbH8iUJkPtiJpJphP4gjRtcypoAL4NnlEV0TftnVN85TScK+rPb03m/3PGLnsdvB7B+nSDLRzp47sWEJ/CtjWC3ZBn/t0+ROS0XHbsqOSJDEtbz71xBsC9raLVZpdZ4pQ4t/UHMmkSbOx56QxnvtaphZgUn67R3Co9k=
+	t=1726490360; cv=none; b=XdR+rSxjizs0SAMx2AtP/B1ziAZkCtADUg6z0+b40kV+OLCLaRhzsWzKLGE0Al79KC6PFt80/z7W2Ojb5tB1+IdYDC/n1Y1tfo2Gb9nw62lj1+BzZL6NrmZz5UlZKe8g799s+ZRXxr/jzGzrjpasipdrXXCHP5WOQbi92OEosuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726489623; c=relaxed/simple;
-	bh=DFPhNfr7hYwKA9cyov4Ik6Y18sTDWCejmluJKi2Yt2k=;
+	s=arc-20240116; t=1726490360; c=relaxed/simple;
+	bh=RZkKybt20BrFAMvkBvu8gcqvGmwdfqgMDLPcU+OPREs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kN3KYWkzfMqYF8k7fMCVwDA3ND/roZmG5CesjKDmCkAUEr/Ncvd6sxrcG42u/oeJe2s2MGbBGyzHcqEeSU+z5ijgIc5iQkbh9IOK/FcO1RuP9ZmTauz/i9E0BT9sWHdZ7Mrt6FIvTUYOZESVT1WpvXXCjqOkWo2RFu5x7hZKvp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bEg348KV; arc=none smtp.client-ip=209.85.128.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=hMGutpNh2/tyU1iyncpXdI3GoNrZn+M86joMuNyYoKcIA0h9sUgLe75O2yBZ5HX0syUunmlgTG1YgDbTZWeFjzM+9+VqH3QZZoS7xKKJky4zyJWQeaovbeWGN5DB/sfnhRZHzTTFO26FFC0+Ghtb4mNRMbItVls+lRADilK1sys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w+1cK7Ow; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bEg348KV"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42cb8dac900so43098755e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 05:27:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w+1cK7Ow"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42cacabd2e0so37398615e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 05:39:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726489620; x=1727094420; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=15A8yM/DyPjFL6/g9+SQPBBqxk8J5Uf7zhxTAVeSYR0=;
-        b=bEg348KVd2LM99eSTbZi/S6MP8ilTtTJcGluI6+T+HzuF8WNK0EYSYefVwjR250Ch9
-         7tvEykyORDENtx/hZfDSFtwHcnn0YJ4fjJpPCKIyT6hjM1jnGTUqsDe+DCex0lT5+l+2
-         wTS9mCLKB/mkeqd30aQqKM58fFCZuM06Nx7x5uakG+nIHNBldsDgUAg//BohEA4YZJBZ
-         tlbRErtvUjDn1AZCQvKvhEMxyJL79yfSgtQQ4JC4SDaR12jceHx6GYDZLYFytMICKhwT
-         kBHu+v8vZ2nw8eT2HZcNb9a/U8g8ST8gB1pfnTVVMQszLribDT4/r6fYg3krkLYyyiVG
-         88Dw==
+        d=google.com; s=20230601; t=1726490356; x=1727095156; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dxWchoWn22rdAe/2dB1cdrVrt6OnsXWFBRvbrcWerg8=;
+        b=w+1cK7Owrj/RPB1TTGRg/Zck2jw881n2XTgP20D66xFtjUV9hw1OKkaYWpT0AABziv
+         HLOGEfkqjhBox7e1egQbR/OghAmfN6hAoeNWKTZPrW9pHaOXTBsrARJKKWxrzGl1G9kF
+         EeR02GWAKrJMUlsFpzubZQGlPmce98Z13hFbjjzs120VwkSmCyzesuxOMHE5+DJ0rtwo
+         etGtnYu1tCe5wiH6M1jN8DOGtuM/0baCSGDguDe9mqCjLlggdk6AOng4ojHMTp+4yk8I
+         ZEVxrL0X7t+YqtbiWLOcU21mR4F6zC+Mg5vHN/qgE/JjRcFbGI9Fug09XIRf3zLd1ZbA
+         HNNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726489620; x=1727094420;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=15A8yM/DyPjFL6/g9+SQPBBqxk8J5Uf7zhxTAVeSYR0=;
-        b=OxwePDOIUKNDz8z08pOzrZ/jypcXFgO58k5MKzVE3Nd1McUkGvC+PIx4lMhnwr580Y
-         nxp4hCXfbu47ppXu4SW+O/Tz07cugHhAx1lrwVYtdxXegMjLDrXfV2I8uA1osMpTEc1X
-         MyVnW/cpQwodclJxZHCkVtlLWWAph9+1VDBU4lW7fMlLJ404gEBTPSKy509A6s//jlZM
-         eAklnTBKNNrr6+QLHCV53E8dbDEOPV3Z+cASf2rNg6Gqo1wXHLKL/HMqgxS9Eg1VwK7z
-         7L2Mf54Dt32XAtWxeLNrrFVVcqu+d5uIf0V/gyoi2smaKUle71t93wMHLQJCdm4+2492
-         slpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjlPOEy4bbNc2KDGBzDRmvbHqeI2lEbCC4l+UvoV7fCR/BW+rmCNIrH2ZKtAfJ730vKnfzFYdifJgCryp0V4UsiNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygW7L+6oaCPVh+t/wB1UCz0q8nCOEvsfYgn3036/5ZqDFYmWqR
-	sAO4TUgSTlvqV7BoQn8Mht+8wejful7KlUYrpW870ztAMj21JG4nUq63p6u5Fw==
-X-Google-Smtp-Source: AGHT+IFXXqArRaKN8lGBqGMZxuy2MN0d1q9ekHi709FhVqk+dt+tqGTyO5rnafncd8Z5Mm4RnI1h8g==
-X-Received: by 2002:a05:600c:46c3:b0:42c:b16e:7a0a with SMTP id 5b1f17b1804b1-42cdb5486c4mr92830385e9.20.1726489619782;
-        Mon, 16 Sep 2024 05:26:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1726490356; x=1727095156;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dxWchoWn22rdAe/2dB1cdrVrt6OnsXWFBRvbrcWerg8=;
+        b=Yu/UGRU927wfM1CgccWHWbDtKMRZkFtaVFew5PsYhLaEOmmwDmglbrIOV7Jfepdqdf
+         S8T1imHOpd/cSZVFUu1k3ZOdjOw9sWyauwzSzIpjhRazhE+VHTXPcuFg8clboVoPOQab
+         i335zaA7n044pN03w4fZQMdpqnPagRTO8GPW0rpIFBr2SANEs+tjhzA2qn7H+8YEmPXp
+         qqOeyBJnYnVEUXPftxO3rbn0ClnzFOY8TLjHB3Xy9y5lRXSk7BVRv7E/Am4KDtdiDhc5
+         s1by2yl1rUtXO0mWR2JhQBW813rER3Xx8XZthotvCoCfIdARp5ut3+NrRAAwNAvVHifc
+         2GFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWm0Vb82U6UPzfJRKvvxo13uv2DPfF1J9qwBqMRjz9cGDZ652zFujvfm0LjxTJ9W0DyOR+fEQTCX/3jO1w15+cOKpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydVdAbLhym0nP9uZ3LjdxI0MB4UTuUcEwD+FNMEFhP0gFCR2FW
+	pzwVQNvOtRtLzwe8b8zYESznjaR19igNe2M1/TWGy5sysnFdxi35yR2iXYoJ/Q==
+X-Google-Smtp-Source: AGHT+IFQMybW3PX0qI+sz8J2Ss9CRF+75CADSBG6Hly78QAjV2aOvJ2n6gpbAy2/S/tFK1yOGYBOvw==
+X-Received: by 2002:a05:600c:1c91:b0:42c:bd5a:945b with SMTP id 5b1f17b1804b1-42cdb53f8aemr110146165e9.21.1726490355612;
+        Mon, 16 Sep 2024 05:39:15 -0700 (PDT)
 Received: from google.com (109.36.187.35.bc.googleusercontent.com. [35.187.36.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42d9b189acasm109513545e9.37.2024.09.16.05.26.59
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42d9b1947e2sm113668245e9.44.2024.09.16.05.39.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 05:26:59 -0700 (PDT)
-Date: Mon, 16 Sep 2024 13:26:55 +0100
+        Mon, 16 Sep 2024 05:39:15 -0700 (PDT)
+Date: Mon, 16 Sep 2024 13:39:11 +0100
 From: Vincent Donnefort <vdonnefort@google.com>
-To: John Stultz <jstultz@google.com>, g@google.com
+To: John Stultz <jstultz@google.com>
 Cc: rostedt@goodmis.org, mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
 	oliver.upton@linux.dev, kvmarm@lists.linux.dev, will@kernel.org,
 	qperret@google.com, kernel-team@android.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/13] KVM: arm64: Add clock support in the nVHE hyp
-Message-ID: <ZugkDxmBGTJwjFXb@google.com>
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Christopher S. Hall" <christopher.s.hall@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+Subject: Re: [PATCH 09/13] KVM: arm64: Add clock for hyp tracefs
+Message-ID: <Zugm77Z47-kal5rf@google.com>
 References: <20240911093029.3279154-1-vdonnefort@google.com>
- <20240911093029.3279154-7-vdonnefort@google.com>
- <CANDhNCr8ptL+JbCTFwtkRx+=yLscqrTQ=P0dmu3rGStuZiBeuw@mail.gmail.com>
+ <20240911093029.3279154-10-vdonnefort@google.com>
+ <CANDhNCqvwn7W8JgdzY=2PrEk0unm3E0Kso7h2CCZBPO+hzLaOw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANDhNCr8ptL+JbCTFwtkRx+=yLscqrTQ=P0dmu3rGStuZiBeuw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANDhNCqvwn7W8JgdzY=2PrEk0unm3E0Kso7h2CCZBPO+hzLaOw@mail.gmail.com>
 
-[...]
-
-> > +static struct clock_data {
-> > +       struct {
-> > +               u32 mult;
-> > +               u32 shift;
-> > +               u64 epoch_ns;
-> > +               u64 epoch_cyc;
-> > +       } data[2];
-> > +       u64 cur;
-> > +} trace_clock_data;
-> > +
-> > +/* Does not guarantee no reader on the modified bank. */
-> > +void trace_clock_update(u32 mult, u32 shift, u64 epoch_ns, u64 epoch_cyc)
+On Fri, Sep 13, 2024 at 04:21:05PM -0700, 'John Stultz' via kernel-team wrote:
+> On Wed, Sep 11, 2024 at 2:31 AM Vincent Donnefort <vdonnefort@google.com> wrote:
+> >
+> > Configure the hypervisor tracing clock before starting tracing. For
+> > tracing purpose, the boot clock is interesting as it doesn't stop on
+> > suspend. However, it is corrected on a regular basis, which implies we
+> > need to re-evaluate it every once in a while.
+> >
+> > Cc: John Stultz <jstultz@google.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Christopher S. Hall <christopher.s.hall@intel.com>
+> > Cc: Richard Cochran <richardcochran@gmail.com>
+> > Cc: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> >
+> ...
+> > +static void __hyp_clock_work(struct work_struct *work)
 > > +{
-> > +       struct clock_data *clock = &trace_clock_data;
-> > +       u64 bank = clock->cur ^ 1;
+> > +       struct delayed_work *dwork = to_delayed_work(work);
+> > +       struct hyp_trace_buffer *hyp_buffer;
+> > +       struct hyp_trace_clock *hyp_clock;
+> > +       struct system_time_snapshot snap;
+> > +       u64 rate, delta_cycles;
+> > +       u64 boot, delta_boot;
+> > +       u64 err = 0;
 > > +
-> > +       clock->data[bank].mult          = mult;
-> > +       clock->data[bank].shift         = shift;
-> > +       clock->data[bank].epoch_ns      = epoch_ns;
-> > +       clock->data[bank].epoch_cyc     = epoch_cyc;
+> > +       hyp_clock = container_of(dwork, struct hyp_trace_clock, work);
+> > +       hyp_buffer = container_of(hyp_clock, struct hyp_trace_buffer, clock);
 > > +
-> > +       smp_store_release(&clock->cur, bank);
-> > +}
+> > +       ktime_get_snapshot(&snap);
+> > +       boot = ktime_to_ns(snap.boot);
+> > +
+> > +       delta_boot = boot - hyp_clock->boot;
+> > +       delta_cycles = snap.cycles - hyp_clock->cycles;
+> > +
+> > +       /* Compare hyp clock with the kernel boot clock */
+> > +       if (hyp_clock->mult) {
+> > +               u64 cur = delta_cycles;
+> > +
+> > +               cur *= hyp_clock->mult;
 > 
-> Can't see from the context in this patch how it's called, but with
-> timekeeping there can be multiple updaters (settimeofday, timer tick,
-> etc).
-> So would it be smart to have some serialization here to avoid you
-> don't get parallel updates here?
+> Mult overflow protection (I see you already have a max_delta value) is
+> probably needed here.
 
-Yeah, it is serialized later by the trace_rb_lock spinlock. 
- 
+That should never happen really with the max_delta. But I could add a WARN_ON
+and fallback to a 128-bits compute instead here too? 
 > 
+> > +               cur >>= hyp_clock->shift;
+> > +               cur += hyp_clock->boot;
 > > +
-> > +/* Using host provided data. Do not use for anything else than debugging. */
-> > +u64 trace_clock(void)
-> > +{
-> > +       struct clock_data *clock = &trace_clock_data;
-> > +       u64 bank = smp_load_acquire(&clock->cur);
-> > +       u64 cyc, ns;
+> > +               err = abs_diff(cur, boot);
 > > +
-> > +       cyc = __arch_counter_get_cntpct() - clock->data[bank].epoch_cyc;
+> > +               /* No deviation, only update epoch if necessary */
+> > +               if (!err) {
+> > +                       if (delta_cycles >= hyp_clock->max_delta)
+> > +                               goto update_hyp;
 > > +
-> > +       ns = cyc * clock->data[bank].mult;
-> > +       ns >>= clock->data[bank].shift;
+> > +                       goto resched;
+> > +               }
 > > +
-> > +       return (u64)ns + clock->data[bank].epoch_ns;
-> > +}
+> > +               /* Warn if the error is above tracing precision (1us) */
+> > +               if (hyp_buffer->tracing_on && err > NSEC_PER_USEC)
+> > +                       pr_warn_ratelimited("hyp trace clock off by %lluus\n",
+> > +                                           err / NSEC_PER_USEC);
 > 
-> You might want some overflow protection on the mult?  See the
-> max_cycles value we use in timekeeping_cycles_to_ns()
+> I'm curious in practice, does this come up often? If so, does it
+> converge down nicely? Have you done much disruption testing using
+> adjtimex?
 
-In the RFC, I was doing a 128-bits mult. Now as I have the __hyp_clock_work() in
-the kernel that keeps the epoch up-to-date, I do not expect this overflow ever.
-
-But then I could combine both to fallback on a slower 128-bits in case the
-64-bits overflowed.
+So far, I haven't seen any error above ~100 ns on the machine I have tested
+with, but that's a good point, I'll check how it looks when the boot clock is
+less stable.
 
 > 
+> > +       }
+> > +
+> > +       if (delta_boot > U32_MAX) {
+> > +               do_div(delta_boot, NSEC_PER_SEC);
+> > +               rate = delta_cycles;
+> > +       } else {
+> > +               rate = delta_cycles * NSEC_PER_SEC;
+> > +       }
+> > +
+> > +       do_div(rate, delta_boot);
+> > +
+> > +       clocks_calc_mult_shift(&hyp_clock->mult, &hyp_clock->shift,
+> > +                              rate, NSEC_PER_SEC, CLOCK_MAX_CONVERSION_S);
+> > +
+> > +update_hyp:
+> > +       hyp_clock->max_delta = (U64_MAX / hyp_clock->mult) >> 1;
+> > +       hyp_clock->cycles = snap.cycles;
+> > +       hyp_clock->boot = boot;
+> > +       kvm_call_hyp_nvhe(__pkvm_update_clock_tracing, hyp_clock->mult,
+> > +                         hyp_clock->shift, hyp_clock->boot, hyp_clock->cycles);
+> > +       complete(&hyp_clock->ready);
+> 
+> I'm very forgetful, so maybe it's unnecessary, but for future-you or
+> just other's like me, it might be worth adding some extra comments to
+> clarify the assumptions in these calculations.
+
+Ack.
+
+> 
+> 
+> thanks
 > -john
+
+Thanks for your time!
+
+-- 
+Vincent
