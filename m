@@ -1,92 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C49A158853
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Sep 2024 17:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E58614264A;
+	Mon, 16 Sep 2024 18:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726509522; cv=none; b=mPQunUkD6GOYewarmDpSW6tHkb5bYacqbHeagLFuzVAUD2ycMJ2ZZKmXlbCrezNf/vZERs9Z3IbxpJF/WbHLUtvlT5mQwEIZppWyRSl1ICyJ9hiZuPrvcT5rgkgFPRiZihmd17hdhIX+OHP9t4/ysrBUllZanadcG8WfZ6TQnm4=
+	t=1726512463; cv=none; b=ibF/lI1TmbNF+fVVb1GG11Rr0mXtOnASdTfxTelp13TtOxvD6ogJ+yRjWYFYWXAtyQSHebIa0yepIHMwLECtsahrgqglaXlE5fCW8grgVGmLUmvmHFyMsNWV4v09DX+JXIUepFMyRlwD9U7UMp3flJ8MvtvFc3z0NWdMl4EkCR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726509522; c=relaxed/simple;
-	bh=bJPhYjV1Ia+Z2638ng73cI1m7y7FpPcRshmyKsgcsrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6uB1596B4uALOVSd/ECdL1+LzVEPMXJYU5NA5bfKqGaOS7N0mk66PYlnsleDWkiuU4cLpTkWLGhQ2ENWt+gXVJeTK+DdUBXG04egVmTrsLC2EbepfboXuTubRc+IWRQjpO6IF23H5XcMi9UJ8JO0rHDASldV2yWM2tfuqOJXw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pt+Yllyn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1726512463; c=relaxed/simple;
+	bh=YONIu19JZeROs0DNZfx7fAzpgVhaKHDQf+Xd3Y0Y7jw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=clH/61lZ9FLh95KCwoqdBq733MYSiomPYzrHT2Ol1XX/KvpM4XtznwwuyvY08Q0ishsahj/LdBzgcij28I1XWOcU+BcGX4aX3F+IDXLvFCjMmN31wO/IQ21N35JlVnMxw+7ELOKeXumbpkqvo6yHOr/zE3taMQZ5NpomHms70L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABtgotaV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pt+Yllyn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726509519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g83vBmJfBn8qhZUpht5ADDtAOeCHq/XCkkkKewo9hDw=;
-	b=Pt+YllynCmbN04cCMH0M3UY6+FaosFOZerLIusqlE4YBIFxRTqhxvkK3BF/gaTg6NPPZYM
-	BbhDTpKe+CdSgZZjjUO9k0nhvdIFiKd7dmM7e49qAT0yDmUkGESK81cloOOoSCLYy27TTO
-	wsfd8Mf5MIt6BYzTXRXAY7P5bVo8cdU=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-2QkwuvQxPeaBODy0SoxaWg-1; Mon,
- 16 Sep 2024 13:58:36 -0400
-X-MC-Unique: 2QkwuvQxPeaBODy0SoxaWg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AECBA1955DC4;
-	Mon, 16 Sep 2024 17:58:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.93])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 633123001FEF;
-	Mon, 16 Sep 2024 17:58:31 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 16 Sep 2024 19:58:22 +0200 (CEST)
-Date: Mon, 16 Sep 2024 19:58:19 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] function_graph: remove unnecessary initialization in
- ftrace_graph_ret_addr()
-Message-ID: <20240916175818.GA28944@redhat.com>
-References: <20240916135643.GA23958@redhat.com>
- <20240916123925.5398abdf@rorschach.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABtgotaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30299C4CEC4;
+	Mon, 16 Sep 2024 18:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726512463;
+	bh=YONIu19JZeROs0DNZfx7fAzpgVhaKHDQf+Xd3Y0Y7jw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ABtgotaVgCYOmMXISzBoxSvfF476n8+kLCfxtoSgQhtz5c4K6gBVrEmzHUQWOqe5+
+	 jXO6Mk8V+sE+dqNgNFjg7IQD1dZ+0vKMUjul15ZkSz0RS92YUclRdSwqSVAHdkRMWF
+	 X4xgAnw33lEZJsk+N8Rp5l+Xo32sK7zAtUby7Lti6ccllCU2qW+3JEht/h8xoGKevW
+	 bVQm6TSM7ruQ92ef17SSV69c5A5CAn7Vry97UE6zJYK8PS6N06Kn4HTJ7idZB9L/Sl
+	 CE2f5M846jUQxnAa3PiIg7SGXcp0146XaJA3wPx1HzL6Ukw7fsLJfXN9bjzzFoK7MZ
+	 2fG+yB0LjTVEQ==
+Date: Tue, 17 Sep 2024 03:47:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
+ Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, Joel
+ Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
+ Michael Jeanson <mjeanson@efficios.com>
+Subject: Re: [PATCH 2/8] tracing/ftrace: guard syscall probe with
+ preempt_notrace
+Message-Id: <20240917034732.67af2533dec577f96bdb36f8@kernel.org>
+In-Reply-To: <20240909201652.319406-3-mathieu.desnoyers@efficios.com>
+References: <20240909201652.319406-1-mathieu.desnoyers@efficios.com>
+	<20240909201652.319406-3-mathieu.desnoyers@efficios.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240916123925.5398abdf@rorschach.local.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-After the commit 29c1c24a2707 ("function_graph: Fix up ftrace_graph_ret_addr()")
-ftrace_graph_ret_addr() doesn't need to initialize "int i" at the start.
+On Mon,  9 Sep 2024 16:16:46 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/trace/fgraph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> In preparation for allowing system call enter/exit instrumentation to
+> handle page faults, make sure that ftrace can handle this change by
+> explicitly disabling preemption within the ftrace system call tracepoint
+> probes to respect the current expectations within ftrace ring buffer
+> code.
+> 
+> This change does not yet allow ftrace to take page faults per se within
+> its probe, but allows its existing probes to adapt to the upcoming
+> change.
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index d7d4fb403f6f..45c02bf18304 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -892,7 +892,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- {
- 	struct ftrace_ret_stack *ret_stack;
- 	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
--	int i = task->curr_ret_stack;
-+	int i;
- 
- 	if (ret != return_handler)
- 		return ret;
+OK, this looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> 
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Michael Jeanson <mjeanson@efficios.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: bpf@vger.kernel.org
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> ---
+>  include/trace/trace_events.h  | 38 ++++++++++++++++++++++++++++-------
+>  kernel/trace/trace_syscalls.c | 12 +++++++++++
+>  2 files changed, 43 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
+> index 8bcbb9ee44de..0228d9ed94a3 100644
+> --- a/include/trace/trace_events.h
+> +++ b/include/trace/trace_events.h
+> @@ -263,6 +263,9 @@ static struct trace_event_fields trace_event_fields_##call[] = {	\
+>  	tstruct								\
+>  	{} };
+>  
+> +#undef DECLARE_EVENT_SYSCALL_CLASS
+> +#define DECLARE_EVENT_SYSCALL_CLASS DECLARE_EVENT_CLASS
+> +
+>  #undef DEFINE_EVENT_PRINT
+>  #define DEFINE_EVENT_PRINT(template, name, proto, args, print)
+>  
+> @@ -396,11 +399,11 @@ static inline notrace int trace_event_get_offsets_##call(		\
+>  
+>  #include "stages/stage6_event_callback.h"
+>  
+> -#undef DECLARE_EVENT_CLASS
+> -#define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
+> -									\
+> +
+> +#undef __DECLARE_EVENT_CLASS
+> +#define __DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print) \
+>  static notrace void							\
+> -trace_event_raw_event_##call(void *__data, proto)			\
+> +do_trace_event_raw_event_##call(void *__data, proto)			\
+>  {									\
+>  	struct trace_event_file *trace_file = __data;			\
+>  	struct trace_event_data_offsets_##call __maybe_unused __data_offsets;\
+> @@ -425,15 +428,34 @@ trace_event_raw_event_##call(void *__data, proto)			\
+>  									\
+>  	trace_event_buffer_commit(&fbuffer);				\
+>  }
+> +
+> +#undef DECLARE_EVENT_CLASS
+> +#define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
+> +__DECLARE_EVENT_CLASS(call, PARAMS(proto), PARAMS(args), PARAMS(tstruct), \
+> +		      PARAMS(assign), PARAMS(print))			\
+> +static notrace void							\
+> +trace_event_raw_event_##call(void *__data, proto)			\
+> +{									\
+> +	do_trace_event_raw_event_##call(__data, args);			\
+> +}
+> +
+> +#undef DECLARE_EVENT_SYSCALL_CLASS
+> +#define DECLARE_EVENT_SYSCALL_CLASS(call, proto, args, tstruct, assign, print) \
+> +__DECLARE_EVENT_CLASS(call, PARAMS(proto), PARAMS(args), PARAMS(tstruct), \
+> +		      PARAMS(assign), PARAMS(print))			\
+> +static notrace void							\
+> +trace_event_raw_event_##call(void *__data, proto)			\
+> +{									\
+> +	guard(preempt_notrace)();					\
+> +	do_trace_event_raw_event_##call(__data, args);			\
+> +}
+> +
+>  /*
+>   * The ftrace_test_probe is compiled out, it is only here as a build time check
+>   * to make sure that if the tracepoint handling changes, the ftrace probe will
+>   * fail to compile unless it too is updated.
+>   */
+>  
+> -#undef DECLARE_EVENT_SYSCALL_CLASS
+> -#define DECLARE_EVENT_SYSCALL_CLASS DECLARE_EVENT_CLASS
+> -
+>  #undef DEFINE_EVENT
+>  #define DEFINE_EVENT(template, call, proto, args)			\
+>  static inline void ftrace_test_probe_##call(void)			\
+> @@ -443,6 +465,8 @@ static inline void ftrace_test_probe_##call(void)			\
+>  
+>  #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+>  
+> +#undef __DECLARE_EVENT_CLASS
+> +
+>  #include "stages/stage7_class_define.h"
+>  
+>  #undef DECLARE_EVENT_CLASS
+> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+> index 067f8e2b930f..abf0e0b7cd0b 100644
+> --- a/kernel/trace/trace_syscalls.c
+> +++ b/kernel/trace/trace_syscalls.c
+> @@ -299,6 +299,12 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+>  	int syscall_nr;
+>  	int size;
+>  
+> +	/*
+> +	 * Syscall probe called with preemption enabled, but the ring
+> +	 * buffer and per-cpu data require preemption to be disabled.
+> +	 */
+> +	guard(preempt_notrace)();
+> +
+>  	syscall_nr = trace_get_syscall_nr(current, regs);
+>  	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+>  		return;
+> @@ -338,6 +344,12 @@ static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
+>  	struct trace_event_buffer fbuffer;
+>  	int syscall_nr;
+>  
+> +	/*
+> +	 * Syscall probe called with preemption enabled, but the ring
+> +	 * buffer and per-cpu data require preemption to be disabled.
+> +	 */
+> +	guard(preempt_notrace)();
+> +
+>  	syscall_nr = trace_get_syscall_nr(current, regs);
+>  	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+>  		return;
+> -- 
+> 2.39.2
+> 
+
+
 -- 
-2.25.1.362.g51ebf55
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
