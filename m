@@ -1,129 +1,133 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970C9256D;
-	Mon, 16 Sep 2024 01:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726448489; cv=none; b=Yz+g5pMxahac/X813kLmJRDdHdRBLMKW/ebPFphE0SD6z1FGeMYl0ieTMZRCE4jtt8mTvRrdc/IDZknrmBUgmCoHDQ5pRoD1AkPg2l0n4N4ly4J6t8RIRVIrTW/CGruRnnIVd/Iy5S/kq/98SLUC945h93HuJc8O+bj95tFnr44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726448489; c=relaxed/simple;
-	bh=7D/C5zl6x2ll3AyrS76fk4gpdsq3I5CMMCG+mMI8Elo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FOP8JcKzVXqDJrdMzufjF9Y0dGi5t19iYu60anZG8fkv3aD1t5aqjJRry//UUmWYe9v8I7r4cAUWvhDbH/OK8HPGB/CZP4cYCANaxfqluIGbBCPYlMAZYI8liPiPybReVxZ/FeS2Xj2iK1gS7INmuCK3N2NhPVPS1lw034c4lS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmL+WM2g; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1930134BD;
+	Mon, 16 Sep 2024 05:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726464850; cv=pass; b=OjvldgrYYIapUFwHqLf3eraCUjXJFUwoHMSPxmpyRlersfZRtljLrkohv8afr6DGbgzuz2dYfYJOJNTNqbf57aghiCl2QBX4vQW7uRlV+o/92GpsI9g4Y0VdNhaAVbLM7u27Z4FNNCUpIMAdTaTABnSM2J48tZ2sWfJnglE+zj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726464850; c=relaxed/simple;
+	bh=34qGeTO/Y/p11RVt+zifaL0yAYJNxE+WVf8jP/6JUU8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=n+pJRynkYCHNq1xfZWfK3Y/LI4NQnNGZPtV67nzbE5PIuxqwI8yMab885p3y9dRDoH799WdlpOMjBBTWic5K32SefAnr5Y2hTzz/3WWllh0gdC96FJea27kbdS1tr3G25BP7IRvy5e6gvYEGVrSkDtXi6Kf/gZ9KEIpy5GsQGKU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=JvIlPtB+; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmL+WM2g"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7db12af2f31so3492658a12.1;
-        Sun, 15 Sep 2024 18:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726448487; x=1727053287; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7D/C5zl6x2ll3AyrS76fk4gpdsq3I5CMMCG+mMI8Elo=;
-        b=cmL+WM2gDuP4O+bn690YwmFhQ0vXL4n+Be4FXT+6NrMbMwJNsOaHCVSbLsB5bVCFJx
-         BoykbxIOQC/tyxrPBwl5hd28pQ7453AMb7wKDMRvidhChCLiodiG/Q0BVIMXGtMskbP6
-         4P++jFgGMx4wUmT0eCHLQY484hbjkJsbk1ZnbzjhFaSNM0nmAd/4WWRWXEGdU7O8jNhO
-         gBL/Y+tMU5V1dE4gQ1NjG2kI677N7CTb6gI/q8LnACmUw+/50q4KXVpnT6nqfzeR0kyN
-         cD0yYIKFaxwn/ySnatFQtmYJzfl0ZMvI5mJe3ihqMZu3L2uioZkdPiF4tSh/ljuUrwIx
-         q2og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726448487; x=1727053287;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7D/C5zl6x2ll3AyrS76fk4gpdsq3I5CMMCG+mMI8Elo=;
-        b=hfW4uY9AHq2FrjNEzDvRlq8d3/HgJ3Rnv6JBCwYqaYZ+7+v5ojnLJkRGX0/A8gJ1Tl
-         D9SJuCpwJ/wzj+ZykfhyhZikww6ju9902U7NRu4b10RGG2qvH+me0TRbix7E4QlXDk3s
-         BXYU/gwtPLTvvIHs46gVnacrMEguPXiHjLz2gztt0ZePKIBMdMf/1llR7NTtKeYVTuyF
-         jwouKQs8mVPcn/65WODXRlC9wULPUQ9VKBI34VYiUMgQL+rn7LTLSx+4iuPSwxCzuGte
-         Ro+GjV6fCi0Od6HKUXXA+gw1CY2FYzDdzGMHeWsD7wSGaq+POWmUWLpAV6UaTZGRpIMJ
-         w1nw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6gPr6GZiCCWvt87JPJZVop2HKVTWtmVfHW75j87HPwqWOE5Q/h1pObTZ/Yr29Buo05MyMLiLq3Yi5dw==@vger.kernel.org, AJvYcCV+ef29yjCDReIQSI1xZTFW2FLbDMTdERqTZe+N9+YV19U2tExX5UUudVu5TFOd0o59XCm/YQJHoIcEpg==@vger.kernel.org, AJvYcCV1KfMhFRPYeB5wR2w0hVRrYO9VuCVX4fz7Gte9MsQan4vgya3oDBTjCGcF8G5uX2x8ogZ3xtmULzgo1SSRq38Zx/QK@vger.kernel.org, AJvYcCWHfzt861yQB6PRHHjgspZWyNtMHHeSLOxEQHB+dJE70zlhLOP/0Gsqy/NFRHYUMG7yXMR7VFDAlxsM@vger.kernel.org, AJvYcCXUWmz5+px2CjpNev7KKw47RQ8WCx22TjafwAgk+eWFfUgalQcefImg5fefHP6jZbytlNcVC2aR4SRQ@vger.kernel.org, AJvYcCXUbzumcfbGFuHyCoQ8Ryt6l5sYnpUc54wX1SVTXcrM8tCSs6JcFb9vYVmpC6LIJ4ciRKa8Xf1E+IBJKqt+RQ==@vger.kernel.org, AJvYcCXbP1nbH+5Tuh6XuD2Tcnv1agPva2WVUpkrkE/xO2vZ9QHVnFL0F9aarFtoz5UbyY20LHFWWbvHOJJ5@vger.kernel.org, AJvYcCXcS83TFyAh+8dHwtvClGNdMmaYs53fi5jSd+2GuqwPk2TKk+AFoghdtmOWXUk59WXmY90IDUmgkPbdQiER@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgf38IRsysiWk+NNSdQQB6MN94TiM5M+zWiK/dfv1ZAZP0EZdI
-	WGaTyYeu+27E7ua+8xEBkhDODMA33TixslZEhkOMudLyHKkIsSfz
-X-Google-Smtp-Source: AGHT+IHeKKZs+OQSLFWh2p0zJ8126QggRcFIs3Yl9qB6SRWRR42B+47A+pkLNPsEo9M1k9q1ghVFtw==
-X-Received: by 2002:a17:902:da84:b0:206:adc8:2dcb with SMTP id d9443c01a7336-2076e35b147mr249054285ad.25.1726448486481;
-        Sun, 15 Sep 2024 18:01:26 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2079473d05dsm27143635ad.287.2024.09.15.18.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2024 18:01:25 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 8220D4A358AE; Mon, 16 Sep 2024 08:01:22 +0700 (WIB)
-Date: Mon, 16 Sep 2024 08:01:22 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v8 07/11] Documentation: add a new file documenting
- multigrain timestamps
-Message-ID: <ZueDYmduQtlAnX_5@archie.me>
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
- <20240914-mgtime-v8-7-5bd872330bed@kernel.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="JvIlPtB+"
+ARC-Seal: i=1; a=rsa-sha256; t=1726464837; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=BJ8Tt0yZ0UbVwR9RthmcNPkW990Cht2xUd/LKwpvhXv6pEU7yB/kGXHgTVWcqDM5C2nLsqOQLXVcGvPYLK7lzU5g4vUtHTC2RBrQPNUjATqnv4nv+KbQaGwFhyGAasFbpYG5muUPmnoo8uQWf2L0o44yb4d1ok1M6AlUbBY6B04=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1726464837; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XbjH4XBzgY2HoXkpITtf/KzqoIar+GVTSpiIDHcPY9U=; 
+	b=oFwkU1zEpTvOfKFOlrrgE/NX8rmK4s3qwSbFKNToOyyIK1NGJLa3clbUIWmbAgO0xEznrbkS/61mX+usWuBbomfoGg7s8Jj65aWAYpi1dMfaJQ9ZB+wAe0jQ6tpBSIwSSQ1zRGLurIR5v/Sod1vtGMPtJ6Nr8OorMABLVTNPgX0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
+	dmarc=pass header.from=<Usama.Anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1726464837;
+	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=XbjH4XBzgY2HoXkpITtf/KzqoIar+GVTSpiIDHcPY9U=;
+	b=JvIlPtB+n8nRZuU5mnm2/vXPcKElZ9juqgz1EEh7d05JFPlLRHgoiI8SynylAva6
+	RURWuiYXaZZlYJMyG0Yw6ry0EtZuIAKn3USMqBN0yybD9L9vS/ROFNb81t9JNDbhqpi
+	oE/7GwmCWmWpZ82RDszBlBjM8KWTI/A9s/6DNf74=
+Received: by mx.zohomail.com with SMTPS id 1726464835114940.5451116990921;
+	Sun, 15 Sep 2024 22:33:55 -0700 (PDT)
+Message-ID: <a7977fd3-2c48-4f31-be64-8d8007824f8c@collabora.com>
+Date: Mon, 16 Sep 2024 10:33:47 +0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kwvsaHxP9Dj4QI8r"
-Content-Disposition: inline
-In-Reply-To: <20240914-mgtime-v8-7-5bd872330bed@kernel.org>
+User-Agent: Mozilla Thunderbird
+Cc: Usama.Anjum@collabora.com, Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Daniel Bristot de Oliveira <bristot@kernel.org>, kernel@collabora.com,
+ gustavo.padovan@collabora.com, helen.koike@collabora.com
+Subject: Re: [Report] rtla: Failed to set runtime and/or period
+To: Daniel Wagner <wagi@monom.org>
+References: <d3468fce-088c-45d0-8543-a2bc9fef07c9@collabora.com>
+ <5b7e6aa4-8fe1-4ba3-b5e9-80bfa710afb9@flourine.local>
+Content-Language: en-US
+From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
+In-Reply-To: <5b7e6aa4-8fe1-4ba3-b5e9-80bfa710afb9@flourine.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
+Thanks you Daniel for replying!
 
---kwvsaHxP9Dj4QI8r
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/13/24 6:47 PM, Daniel Wagner wrote:
+> On Thu, Sep 12, 2024 at 06:58:02PM GMT, Muhammad Usama Anjum wrote:
+>> We are running rt-tests on KernelCI. I'm looking at failures and I found
+>> out that rtla osnoise and rtla timerlat are failing. We have just
+>> enabled these tests and they are failing from day one.
+> 
+> Thanks a lot on working on this!
+> 
+>> The first thing I fixed in my local setup is to sync the version of rtla
+>> with that of the running kernel from the source. It resolves the Tracer
+>> timerlat not found!" error as we had installed the older rtla package
+>> from Debian on CI.
+> 
+> There is some dependency between kernel version and the rtla tool suite.
+> I suppose there is a window of version which you can differ but I
+> suppose the Debian packaged version is way too old for recent kernels.
+> 
+>> I'll update it. Is the version of rtla dependent on
+>> the exact kernel version or any recent rtla version is acceptable?
+> 
+> I have to figure this out. It could be that we need to build/provide
+> matching rtla versions to the kernel. In theory the API should be stable
+> etc but I suspect the APIs got broken (not on purpose) in the early
+> days. Anyway, we have to figure this out as we can't ask Daniel sadly.
+> 
+>> The other errors are persistent:
+>>
+>> ➜  sudo ./rtla osnoise hist -r 900000
+>> Failed to set runtime and/or period
+>> Could not apply config
+> 
+> This works on my Tumbleweed kernel (pretty much a vanila kernel)
+> 6.10.9-1-default with the matching rtla version 6.10.9.
+> 
+> What version do you use?
+I'll report back the version.
 
-On Sat, Sep 14, 2024 at 01:07:20PM -0400, Jeff Layton wrote:
-> +Multigrain timestamps aim to remedy this by selectively using fine-grain=
-ed
-> +timestamps when a file has had its timestamps queried recently, and the =
-current
-> +coarse-grained time does not cause a change.
+> 
+>> I thought maybe some argument are wrong. I ran the example from man page:
+>>
+>> ➜  sudo ./rtla osnoise hist -P F:1 -c 0-11 -r 900000 -d 1M -b 10 -E 25
+>> Failed to apply CPUs config
+>> Could not apply config
+> 
+> Same here. This works on my local kernel.
+> 
+>> Is there some configuration which is missing for running rtla? Please
+>> let me know.
+> 
+> Are these
+> 
+>     CONFIG_OSNOISE_TRACER
+>     CONFIG_TIMERLAT_TRACER
+> 
+> config option enabled in your kernel?
+I'd missed these configurations. I'm trying with them now. I think this
+is the root cause. I'll test with them. Hopefully problem would be gone
+after it. Otherwise I'll look into installing the matching rtla binary
+as well.
 
-Do you mean using fine-grained timestamps when timestamps of a file has been
-recently queried/modified BUT its coarse-grained timestamps aren't changed?
+> 
+> Thanks,
+> Daniel
+> 
 
-Confused...
+-- 
+BR,
+Muhammad Usama Anjum
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---kwvsaHxP9Dj4QI8r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZueDXQAKCRD2uYlJVVFO
-o9i4AP0T1JkEX2kwhV2+holu89lH/60QVNXUO2Lay3YffP3/dQD9G4CUoLWZ82Xp
-x8Jx3+7J66rerRpl5waFiihhu7wbiQ0=
-=tXkm
------END PGP SIGNATURE-----
-
---kwvsaHxP9Dj4QI8r--
