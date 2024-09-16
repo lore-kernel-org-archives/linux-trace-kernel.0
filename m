@@ -1,133 +1,182 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1930134BD;
-	Mon, 16 Sep 2024 05:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726464850; cv=pass; b=OjvldgrYYIapUFwHqLf3eraCUjXJFUwoHMSPxmpyRlersfZRtljLrkohv8afr6DGbgzuz2dYfYJOJNTNqbf57aghiCl2QBX4vQW7uRlV+o/92GpsI9g4Y0VdNhaAVbLM7u27Z4FNNCUpIMAdTaTABnSM2J48tZ2sWfJnglE+zj4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726464850; c=relaxed/simple;
-	bh=34qGeTO/Y/p11RVt+zifaL0yAYJNxE+WVf8jP/6JUU8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=n+pJRynkYCHNq1xfZWfK3Y/LI4NQnNGZPtV67nzbE5PIuxqwI8yMab885p3y9dRDoH799WdlpOMjBBTWic5K32SefAnr5Y2hTzz/3WWllh0gdC96FJea27kbdS1tr3G25BP7IRvy5e6gvYEGVrSkDtXi6Kf/gZ9KEIpy5GsQGKU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b=JvIlPtB+; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542DD14BFB0;
+	Mon, 16 Sep 2024 10:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1726481581; cv=none; b=PpixcNevIYC8HE6xL65nbcSMlvo04w3Zh0Ttiq5XmzgmHVsIask1/9Ha8cvrAhbg1N5xgY86WMQZmcHnIHbte+CffDOJNAxEC4KV+Kvsn+TpAxTlsLOAClPXasIJEnYfQ8df7lLa0WAQ8heEFX4GFC8hO4SUWlQ8337TCgr0TY0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1726481581; c=relaxed/simple;
+	bh=7f22G+6r66QEwau72pU8x4w4ZuPvjQGUXc8asSZd1lI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UaOQMJm1JaeMiVU4tSZDBhKKOVC8Npq/iseFUs9P0hqGQnXuAzTS0QaMYDLAm2KtGr8cahzyH8fEGuRkvV0J877xTTfvcJmOHCEpYbxjKRVrqrTLSc5bKKLGBtdVqG9lmJW64aTDVViwW/x3tfl6Gbg58ZjoGEFdwqn5/Lr9qgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v1sVvDod; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ft94qdf3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=Usama.Anjum@collabora.com header.b="JvIlPtB+"
-ARC-Seal: i=1; a=rsa-sha256; t=1726464837; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BJ8Tt0yZ0UbVwR9RthmcNPkW990Cht2xUd/LKwpvhXv6pEU7yB/kGXHgTVWcqDM5C2nLsqOQLXVcGvPYLK7lzU5g4vUtHTC2RBrQPNUjATqnv4nv+KbQaGwFhyGAasFbpYG5muUPmnoo8uQWf2L0o44yb4d1ok1M6AlUbBY6B04=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1726464837; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XbjH4XBzgY2HoXkpITtf/KzqoIar+GVTSpiIDHcPY9U=; 
-	b=oFwkU1zEpTvOfKFOlrrgE/NX8rmK4s3qwSbFKNToOyyIK1NGJLa3clbUIWmbAgO0xEznrbkS/61mX+usWuBbomfoGg7s8Jj65aWAYpi1dMfaJQ9ZB+wAe0jQ6tpBSIwSSQ1zRGLurIR5v/Sod1vtGMPtJ6Nr8OorMABLVTNPgX0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=Usama.Anjum@collabora.com;
-	dmarc=pass header.from=<Usama.Anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1726464837;
-	s=zohomail; d=collabora.com; i=Usama.Anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=XbjH4XBzgY2HoXkpITtf/KzqoIar+GVTSpiIDHcPY9U=;
-	b=JvIlPtB+n8nRZuU5mnm2/vXPcKElZ9juqgz1EEh7d05JFPlLRHgoiI8SynylAva6
-	RURWuiYXaZZlYJMyG0Yw6ry0EtZuIAKn3USMqBN0yybD9L9vS/ROFNb81t9JNDbhqpi
-	oE/7GwmCWmWpZ82RDszBlBjM8KWTI/A9s/6DNf74=
-Received: by mx.zohomail.com with SMTPS id 1726464835114940.5451116990921;
-	Sun, 15 Sep 2024 22:33:55 -0700 (PDT)
-Message-ID: <a7977fd3-2c48-4f31-be64-8d8007824f8c@collabora.com>
-Date: Mon, 16 Sep 2024 10:33:47 +0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v1sVvDod";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ft94qdf3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1726481577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v3ll6KO8H5UrZC6yCuHnxrKwZc40QeoVwfA712SGpCg=;
+	b=v1sVvDodszPQaC6MYGfaSe4O0YiaY1fze0PmCKJ6c2G23tPz7qhE8S1B1sLtwUgWIXMmak
+	lcl5g5XiApkWPI1SCVyw7s9z1iO9KN6mpCWlZuVUdZluKI8O4fUF6eIdjm1NesbAgwTjm9
+	L5r8Exaw6kxoLg3DrFsWi8+mp8bsCM3zkFSSojxJ6whDP0q0k1EnEEodbLafdu9xFs6uaz
+	8eHdofzdFoTnlGmddqeYRaFKXUxsd24x8fzw0LItUenj5KjkqN5heAotraD7Uf01iomULo
+	x3kKNZ67/a7jl0TuyFLafUFm2vFpo2t7LtFrG+RNKJkiP8/m8yTSt9sPqggSzw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1726481577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=v3ll6KO8H5UrZC6yCuHnxrKwZc40QeoVwfA712SGpCg=;
+	b=ft94qdf3mKKez4Fq6giUKHTG2x5ATRcMmRN9N6Lxg1hlqvpyZTzutygIeaN9KywFwHwHHJ
+	c1DaKC+nUT0MDZDQ==
+To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
+ <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
+ Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
+ <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
+ <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
+ <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
+ linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-mm@kvack.org, Jeff Layton
+ <jlayton@kernel.org>
+Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
+ handling into timekeeper
+In-Reply-To: <20240914-mgtime-v8-1-5bd872330bed@kernel.org>
+References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
+ <20240914-mgtime-v8-1-5bd872330bed@kernel.org>
+Date: Mon, 16 Sep 2024 12:12:55 +0200
+Message-ID: <87a5g79aag.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Usama.Anjum@collabora.com, Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Bristot de Oliveira <bristot@kernel.org>, kernel@collabora.com,
- gustavo.padovan@collabora.com, helen.koike@collabora.com
-Subject: Re: [Report] rtla: Failed to set runtime and/or period
-To: Daniel Wagner <wagi@monom.org>
-References: <d3468fce-088c-45d0-8543-a2bc9fef07c9@collabora.com>
- <5b7e6aa4-8fe1-4ba3-b5e9-80bfa710afb9@flourine.local>
-Content-Language: en-US
-From: Muhammad Usama Anjum <Usama.Anjum@collabora.com>
-In-Reply-To: <5b7e6aa4-8fe1-4ba3-b5e9-80bfa710afb9@flourine.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain
 
-Thanks you Daniel for replying!
+On Sat, Sep 14 2024 at 13:07, Jeff Layton wrote:
+> For multigrain timestamps, we must keep track of the latest timestamp
 
-On 9/13/24 6:47 PM, Daniel Wagner wrote:
-> On Thu, Sep 12, 2024 at 06:58:02PM GMT, Muhammad Usama Anjum wrote:
->> We are running rt-tests on KernelCI. I'm looking at failures and I found
->> out that rtla osnoise and rtla timerlat are failing. We have just
->> enabled these tests and they are failing from day one.
-> 
-> Thanks a lot on working on this!
-> 
->> The first thing I fixed in my local setup is to sync the version of rtla
->> with that of the running kernel from the source. It resolves the Tracer
->> timerlat not found!" error as we had installed the older rtla package
->> from Debian on CI.
-> 
-> There is some dependency between kernel version and the rtla tool suite.
-> I suppose there is a window of version which you can differ but I
-> suppose the Debian packaged version is way too old for recent kernels.
-> 
->> I'll update it. Is the version of rtla dependent on
->> the exact kernel version or any recent rtla version is acceptable?
-> 
-> I have to figure this out. It could be that we need to build/provide
-> matching rtla versions to the kernel. In theory the API should be stable
-> etc but I suspect the APIs got broken (not on purpose) in the early
-> days. Anyway, we have to figure this out as we can't ask Daniel sadly.
-> 
->> The other errors are persistent:
->>
->> ➜  sudo ./rtla osnoise hist -r 900000
->> Failed to set runtime and/or period
->> Could not apply config
-> 
-> This works on my Tumbleweed kernel (pretty much a vanila kernel)
-> 6.10.9-1-default with the matching rtla version 6.10.9.
-> 
-> What version do you use?
-I'll report back the version.
+What is a multgrain timestamp? Can you please describe the concept
+behind it? I'm not going to chase random documentation or whatever
+because change logs have to self contained.
 
-> 
->> I thought maybe some argument are wrong. I ran the example from man page:
->>
->> ➜  sudo ./rtla osnoise hist -P F:1 -c 0-11 -r 900000 -d 1M -b 10 -E 25
->> Failed to apply CPUs config
->> Could not apply config
-> 
-> Same here. This works on my local kernel.
-> 
->> Is there some configuration which is missing for running rtla? Please
->> let me know.
-> 
-> Are these
-> 
->     CONFIG_OSNOISE_TRACER
->     CONFIG_TIMERLAT_TRACER
-> 
-> config option enabled in your kernel?
-I'd missed these configurations. I'm trying with them now. I think this
-is the root cause. I'll test with them. Hopefully problem would be gone
-after it. Otherwise I'll look into installing the matching rtla binary
-as well.
+And again 'we' do nothing. Describe the problem in technical terms and
+do not impersonate code.
 
-> 
-> Thanks,
-> Daniel
-> 
+> To maximize the window of this occurring when multiple tasks are racing
+> to update the floor, ktime_get_coarse_real_ts64_mg returns a cookie
+> value that represents the state of the floor tracking word, and
+> ktime_get_real_ts64_mg accepts a cookie value that it uses as the "old"
+> value when calling cmpxchg().
 
--- 
-BR,
-Muhammad Usama Anjum
+Clearly:
 
+> +void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie)
+
+Can you please get your act together?
+
+> +/**
+> + * ktime_get_coarse_real_ts64_mg - get later of coarse grained time or floor
+> + * @ts: timespec64 to be filled
+> + *
+> + * Adjust floor to realtime and compare it to the coarse time. Fill
+> + * @ts with the latest one.
+
+This explains nothing.
+
+>      Note that this is a filesystem-specific
+> + * interface and should be avoided outside of that context.
+> + */
+> +void ktime_get_coarse_real_ts64_mg(struct timespec64 *ts)
+> +{
+> +	struct timekeeper *tk = &tk_core.timekeeper;
+> +	u64 floor = atomic64_read(&mg_floor);
+> +	ktime_t f_real, offset, coarse;
+> +	unsigned int seq;
+> +
+> +	WARN_ON(timekeeping_suspended);
+> +
+> +	do {
+> +		seq = read_seqcount_begin(&tk_core.seq);
+> +		*ts = tk_xtime(tk);
+> +		offset = *offsets[TK_OFFS_REAL];
+
+Why this indirection? What's wrong with using
+tk_core.timekeeper.offs_real directly?
+
+> +	} while (read_seqcount_retry(&tk_core.seq, seq));
+> +
+> +	coarse = timespec64_to_ktime(*ts);
+> +	f_real = ktime_add(floor, offset);
+
+How is any of this synchronized against concurrent updates of the floor
+value or the offset? I'm failing to see anything which keeps this
+consistent. If this is magically consistent then it wants a big fat
+comment in the code which explains it.
+
+> +void ktime_get_real_ts64_mg(struct timespec64 *ts, u64 cookie)
+
+What is this cookie argument for and how does that match the
+declaration?
+
+> +extern void ktime_get_real_ts64_mg(struct timespec64 *ts);
+
+This does not even build.
+
+> +{
+> +	struct timekeeper *tk = &tk_core.timekeeper;
+> +	ktime_t old = atomic64_read(&mg_floor);
+> +	ktime_t offset, mono;
+> +	unsigned int seq;
+> +	u64 nsecs;
+> +
+> +	WARN_ON(timekeeping_suspended);
+
+WARN_ON_ONCE() if at all.
+
+> +	do {
+> +		seq = read_seqcount_begin(&tk_core.seq);
+> +
+> +		ts->tv_sec = tk->xtime_sec;
+> +		mono = tk->tkr_mono.base;
+> +		nsecs = timekeeping_get_ns(&tk->tkr_mono);
+> +		offset = *offsets[TK_OFFS_REAL];
+> +	} while (read_seqcount_retry(&tk_core.seq, seq));
+> +
+> +	mono = ktime_add_ns(mono, nsecs);
+> +
+> +	if (atomic64_try_cmpxchg(&mg_floor, &old, mono)) {
+> +		ts->tv_nsec = 0;
+> +		timespec64_add_ns(ts, nsecs);
+> +	} else {
+> +		/*
+> +		 * Something has changed mg_floor since "old" was
+> +		 * fetched. "old" has now been updated with the
+> +		 * current value of mg_floor, so use that to return
+> +		 * the current coarse floor value.
+
+'Something has changed' is a truly understandable technical
+explanation.
+
+I'm not going to accept this voodoo which makes everyone scratch his
+head who wasn't involved in this.
+
+Thanks,
+
+        tglx
