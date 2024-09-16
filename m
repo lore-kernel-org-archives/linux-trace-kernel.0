@@ -1,61 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4AFA29;
-	Mon, 16 Sep 2024 16:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5841C28E;
+	Mon, 16 Sep 2024 16:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726504178; cv=none; b=eLWYpTPkLe7PFL5ulk7t9pgtPiZk6K7R/+oG+g/VO/5KYJkTTQQIsfxubCm0uGWvgTsbJ+gAEipHi2bi4Djci3F2FZ1D3AiDFldqWjP/atbCU7tO4ViEyj693qoE9p2LB3PfvJ8A+mB0vb4Y9I0zG5wL7qH3EpujKlIi30fsQUM=
+	t=1726504400; cv=none; b=qGDrbB3Cv+9thSdplZrLXtd8DeTNem7fV6zYNDQw7+x7eBrRMH5yRK0ynAfNEu61gQ5RnUzlA+DVrHUYIMIt6Dkdc39JFk2xKbLi73Y4fW8I5WgABm4nEMhP4fBlYH5UNRewp/H+dGj6NPOh4H0mgoRuYKhpY6M+zQovl62AJEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726504178; c=relaxed/simple;
-	bh=Nm+KjuDd/6vIz7azXq22szrifIq7ZmeKemLmdwemJwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WOMWbZM9FY/3qwehvoc+z4SFQ8FRUYRIlep/cH+V/3MOVjN1KXFeVVAGNELBDKVUqhTorlSSIWD0R+1Md3c4WBnR0zfbSoVcojj9msXCM2FD1ScU7Qv2p78oyqzH7CIncayJEho0iwMdsnR2Ov4OypAXaxfLDih6kiQscIZW27w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76A5C4CEC4;
-	Mon, 16 Sep 2024 16:29:34 +0000 (UTC)
-Date: Mon, 16 Sep 2024 12:29:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, linux-s390@vger.kernel.org, "Masami Hiramatsu
- (Google)" <mhiramat@kernel.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Arnaldo
- Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v14 04/19] function_graph: Replace fgraph_ret_regs with
- ftrace_regs
-Message-ID: <20240916122930.523af6c5@rorschach.local.home>
-In-Reply-To: <20240916121656.20933-B-hca@linux.ibm.com>
-References: <172615368656.133222.2336770908714920670.stgit@devnote2>
-	<172615373091.133222.1812791604518973124.stgit@devnote2>
-	<20240915051559.435abfcd@rorschach.local.home>
-	<20240916121656.20933-B-hca@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1726504400; c=relaxed/simple;
+	bh=2BbvgXonCHBHnrI9Z7+Ify0OIb25BwJ33TpYDlTYK6g=;
+	h=Subject:MIME-Version:Content-Type:Date:Message-ID:To:CC:From:
+	 References:In-Reply-To; b=VGwx/dRKcfX045xm+40A5vYWC2d74uwhvqGCI68mXjcheD+rRwv6Sue7L6TKhtZ1bsF4U1Cnm5ZQx8iuFJPoFISXox6I+qQ0N3lzcAlNM2NLJfG7r1oMgOxKiZh6nSZG5bEUAJUGytGlkRH+yTr030B9g2mECcAkqyvSF/e97DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Lt8/AirC; arc=none smtp.client-ip=207.171.190.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Lt8/AirC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1726504399; x=1758040399;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   to:cc:from:references:in-reply-to:subject;
+  bh=vaEcfC/w1S3Egx7r/IoKG6EaTpC7QKbehfqIGwBFT84=;
+  b=Lt8/AirCPdhFrfkziewRPjLqIpjhAqr9qSwFjMcFm6wuiK4DBGi5z+YQ
+   4QWqYy5iuQRQZB5DrifKt6CMajY+lqHFouBLEm2YmofPlgzs+4NLoeiQL
+   VLQSZcv2HTbSqhvUxAIf3aLb8TOyONJgJMQ2lNziPfzoIDheg/hzaHWV2
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.10,233,1719878400"; 
+   d="scan'208";a="368416637"
+Subject: Re: [PATCH 00/18] Introducing Core Building Blocks for Hyper-V VSM Emulation
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2024 16:32:56 +0000
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.43.254:23051]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.9.8:2525] with esmtp (Farcaster)
+ id 2fbf8d00-c6e4-4567-9513-91621abe81cc; Mon, 16 Sep 2024 16:32:52 +0000 (UTC)
+X-Farcaster-Flow-ID: 2fbf8d00-c6e4-4567-9513-91621abe81cc
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Mon, 16 Sep 2024 16:32:52 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34; Mon, 16 Sep 2024
+ 16:32:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 16 Sep 2024 16:32:43 +0000
+Message-ID: <D47UPV0JIIMY.35CRZ8ZNZCGA1@amazon.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<pbonzini@redhat.com>, <vkuznets@redhat.com>, <linux-doc@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <graf@amazon.de>,
+	<dwmw2@infradead.org>, <paul@amazon.com>, <mlevitsk@redhat.com>,
+	<jgowans@amazon.com>, <corbet@lwn.net>, <decui@microsoft.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <amoorthy@google.com>
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+X-Mailer: aerc 0.18.2-0-ge037c095a049-dirty
+References: <20240609154945.55332-1-nsaenz@amazon.com>
+ <ZuSQNZYWfeHTpAKN@google.com>
+In-Reply-To: <ZuSQNZYWfeHTpAKN@google.com>
+X-ClientProxiedBy: EX19D046UWB002.ant.amazon.com (10.13.139.181) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On Mon, 16 Sep 2024 14:16:56 +0200
-Heiko Carstens <hca@linux.ibm.com> wrote:
+On Fri Sep 13, 2024 at 7:19 PM UTC, Sean Christopherson wrote:
+> On Sun, Jun 09, 2024, Nicolas Saenz Julienne wrote:
+> > This series introduces core KVM functionality necessary to emulate Hype=
+r-V's
+> > Virtual Secure Mode in a Virtual Machine Monitor (VMM).
+>
+> ...
+>
+> > As discussed at LPC2023 and in our previous RFC [2], we decided to mode=
+l each
+> > VTL as a distinct KVM VM. With this approach, and the RWX memory attrib=
+utes
+> > introduced in this series, we have been able to implement VTL memory
+> > protections in a non-intrusive way, using generic KVM APIs. Additionall=
+y, each
+> > CPU's VTL is modeled as a distinct KVM vCPU, owned by the KVM VM tracki=
+ng that
+> > VTL's state. VTL awareness is fully removed from KVM, and the responsib=
+ility
+> > for VTL-aware hypercalls, VTL scheduling, and state transfer is delegat=
+ed to
+> > userspace.
+> >
+> > Series overview:
+> > - 1-8: Introduce a number of Hyper-V hyper-calls, all of which are VTL-=
+aware and
+> >        expected to be handled in userspace. Additionally an new VTL-spe=
+cifc MP
+> >        state is introduced.
+> > - 9-10: Pass the instruction length as part of the userspace fault exit=
+ data
+> >         in order to simplify VSM's secure intercept generation.
+> > - 11-17: Introduce RWX memory attributes as well as extend userspace fa=
+ults.
+> > - 18: Introduces the main VSM CPUID bit which gates all VTL configurati=
+on and
+> >       runtime hypercalls.
+>
+> Aside from the RWX attributes, which to no one's surprise will need a lot=
+ of work
+> to get them performant and functional, are there any "big" TODO items tha=
+t you see
+> in KVM?
 
-> This does not pass the ftrace selftests. Please merge the patch below
-> into this patch. With that:
-> 
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Aside from VTLs and VTL switching, there is bunch of KVM features we
+still need to be fully compliant with the VSM spec:
+- KVM_TRANSLATE2, which Nikolas Wipper posted a week ago [1].
+  Technically we can do this in user-space, but it's way simpler to
+  re-use KVM's page-walker.
 
-Thank you very much, this is why I wanted arch maintainers acks before
-taking anything.
+- Hv's TlbFlushInhibit, it allows VTL1 to block VTL0 vCPUs from issuing
+  TLB Flushes, and blocks them until uninhibited. Note this only applies
+  to para-virtualized TLB flushes:
+  HvFlushVirtualAddress{Space,SpaceEx,List,ListEx}, so it's 100% Hyper-V
+  specific.
 
-There may be other patches in this series that I didn't Cc everyone
-(yet). Did you look at the other patches? If not, I'll go and do the Cc.
-It's a manual process.
+- CPU register pinning/intecepting, we plan on reusing what HEKI
+  proposed some time ago, and expose it through an IOCTL using ONE_REG
+  to represent registers.
 
--- Steve
+- MBEC aware memory attributes, we don't plan on enabling support for
+  these with the first RWX memattrs submission. We'll do it as a follow
+  up, especially as not every Windows VBS feature requires it
+  (Credential Guard doesn't need it, HVCI does).
+
+> If this series is more or less code complete, IMO modeling VTLs as distin=
+ct VM
+> structures is a clear win.
+
+I agree.
+
+> Except for the "idle VTL" stuff, which I think we can simplify, this
+> series is quite boring, and I mean that in the best possible way :-)
+
+:)
+
+Thanks,
+Nicolas
+
+[1] https://lore.kernel.org/kvm/20240910152207.38974-1-nikwip@amazon.de
