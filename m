@@ -1,191 +1,251 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5413E47B;
-	Tue, 17 Sep 2024 12:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFF217BA4;
+	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726577494; cv=none; b=bQ1ZHitSRIkmKvSpeV1dabfva2GoJPqs0WDLWiNrgFpNWuevOCBTG0p/wj15fUxzm2rFz4Ov7M1od1NZli3EffJXzJUQUx9C/QOFPVCJsEFPhQx6xGpxR+ASEzr5c/cZGPTt27c2QfiyY8Eu2haEpht+31r03L34HW7RtoxjY9Y=
+	t=1726586552; cv=none; b=sWSqrTcI2+8M2USfI+Qu+7MeZIzXm1+yHlz795C0GpNZPoca/JCY7YPnHu04ZbBgoUKNRvOMxCQOF5jDjycAxf51Ps6rSaTm67hUNnhrbus9AvFOvWYrZckFM+5YgzlxLwODz4CVQfKijCCaexQgqVi3kluYBSv118ZBzGJFGmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726577494; c=relaxed/simple;
-	bh=zS/D1wq4UCMEE+38ZtAXafYF7IIcKz0YGu54fl21LG8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jyf5NwfL0hkKvVEnmGz8bypU5npSxP0OJ3wP5f8+XPAk7VoSmWxZtLdPl9MznUg5iIyQnczRow1OOwTsBdsQi43QxYAmxNraydswcwS2x/GEtH4hG4mj4ST5tx2K66D39266LOTLJD2aTgT6URNeCsdS6h8GRswdmv1NIitpQCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j6zsrvkL; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726586552; c=relaxed/simple;
+	bh=b17dV6kcYCKjtkCgvF4MqWi0LIWAWld8+sLS8KVrnNg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q+vnGLweqc5iTRdLc/WGmm0EReb/R6eOGtEUc8OdDsrvj8SLeWjnFG5VpkfTOOr4AaMeL3kS0dwhp8oM8P2P/aqqJPZFtJB+uLPfCDE1d77iWF9C5wYrVCZavSAUSUy6/77fK251WybxvGleNk60LJTJDTUQIUZ19pfjPBgRf+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXPZ7FsD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6zsrvkL"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42cc43454d5so35992085e9.3;
-        Tue, 17 Sep 2024 05:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726577491; x=1727182291; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AqXzNlf+uoSPRUa4ng6hfr1FL9Ao0p8UeM2cOowwwRE=;
-        b=j6zsrvkLM0daBVGcEnyY/kCwkXTUf5Eq2MM+6wFqL6bbWsuswzR20b/SKS1Sn2l8Pv
-         /CtngwhXTdBp8vdUxOclvIOoVZdMnQaeQsuqbxbzjaw15pv58sut8ca54OfvHHVH2QgE
-         Jvi27N4V7cSMQGcnj4NY8KhLI2klkB1Ulw3b6PaefQxukRRde4VnPLSuC+K+cPLFAcoa
-         Kl/ehteNQS9m+9GDCR3mC0aZXYLbd+wuP3TQU4b7JlptWzLKkr/qk7FKfI8rBVWos4FF
-         Lrh2yBYP6xAzQL0S/wLkMvfo8OgOY9zbdwwmCxE2hWG4pG46+6U2s2lTm4frwyJG/2Pe
-         VTVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726577491; x=1727182291;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AqXzNlf+uoSPRUa4ng6hfr1FL9Ao0p8UeM2cOowwwRE=;
-        b=dQ6asotpiGAehFpsiO6kmQXYHNdrWKwIsyCqz5TfQbJ92HMM5gbogrzsJDlTgCGtT2
-         OSdPi5zIPjmlR8aIqjGU9cqaBtTRhLe0RHE+GIwSrnK8JGfbB6vcFUgnzIC4lojSYCGR
-         rChhIwIxcCSyslUiWYwzPbtF1kpMNvd67OpuEvMCBt3qPKVibid3+yDpaymZlAWc16/2
-         YTzXlw1VhZ79LH/8QsyJB3fWvwGnyauZb9sCQSe1Lk5IJqvdo7q6P7rDKnMsWztSf+73
-         LKmQUn+3ZG7n6p/udG4MqKpBGomyJCX8CMolOMhJ7Xy8Iq946at+Rii1Y2YEYp/DKMQt
-         OctA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVhsHyOyKceEG+odgSMtoCOh47ENr34l+h5ox+ToOYeEJaQa4yZTndazXPA80v3wFlfyM=@vger.kernel.org, AJvYcCWrFm8A6vb4U2x2OIBzuzMUpoX0BuBE9gg9MB0oPJefDdMbkvufm8nVNk9ol06n9+qhKMGM2OsAaE+78RdW@vger.kernel.org, AJvYcCXUKKhi3IluwF+aVADFyjk2IY2deyRVl6d20rdMyNF1Z7EtjVYI+yzZZ+ROWk8BGVR49EcuUclnJeaTHmDXqJcGJCdy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+U7x9TV25TgsoJxfyV+5PbCWEGDQJpQ/vJpHuQIDTfNpZV1Cf
-	CZysO8+Fnp+/rAddu8/XI321A0pWOj1NZhvXCWrWMDq+ZWZeUI6T
-X-Google-Smtp-Source: AGHT+IH+AsafrfuPxIbs88nEZp4gLlTEC3JF63M85W7cpkE9lUoC2mUjKaxYikYSPLXvYLTpdrM+tA==
-X-Received: by 2002:a05:600c:468a:b0:426:6326:4cec with SMTP id 5b1f17b1804b1-42d964e0f42mr106350065e9.29.1726577490501;
-        Tue, 17 Sep 2024 05:51:30 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42da24215besm102322355e9.30.2024.09.17.05.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2024 05:51:29 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 17 Sep 2024 14:51:28 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 02/14] uprobe: Add support for session consumer
-Message-ID: <Zul7UCsftY_ZX6wT@krava>
-References: <20240917085024.765883-1-jolsa@kernel.org>
- <20240917085024.765883-3-jolsa@kernel.org>
- <20240917120250.GA7752@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXPZ7FsD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A9826C4CEC5;
+	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726586551;
+	bh=b17dV6kcYCKjtkCgvF4MqWi0LIWAWld8+sLS8KVrnNg=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=nXPZ7FsDTlchEG+c7929e2Sf7D4yuNZs/KU/cPNCc4xj+BkoXvIHzOA3/9ZQdVfm4
+	 PBKe/jSEQEF82HetQgKXZ9u0h9CsRxKnVlnszHg8F+cT2q5ZG842wTB5dvNsVS3yNG
+	 IGADHuNB26kxG3TRIordt22pyy6OGDFzewFPdXKF3eJ03yMwFlLaKOknx3d+VHxsmx
+	 f3rElLXPONblsZKK4KOp6YgmJl9Sr0IAhVnKrQNRk8YXScvnLZbQ+7p3bJOB2eVQJa
+	 7o5bQt6HdlFRTS21z1Zl04o6F97YFfd4Ki5VHo362RJXAZCnjIrUzCSxfTgYp2FPs2
+	 nyWa+Qxdiw+cQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C77CAC58A;
+	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
+From: Daniel Gomez via B4 Relay <devnull+da.gomez.samsung.com@kernel.org>
+Date: Tue, 17 Sep 2024 17:22:18 +0200
+Subject: [PATCH RFC] blktrace: add i/o alignment information
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240917120250.GA7752@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240917-blktrace-algn-v1-1-9fb54b7b1dfa@samsung.com>
+X-B4-Tracking: v=1; b=H4sIAKme6WYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDS0Mz3aSc7JKixORU3cSc9DzdRENDYyMDY1NjQwsjJaCegqLUtMwKsHn
+ RSkFuzkqxtbUAq9kXRGQAAAA=
+To: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, gost.dev@samsung.com, 
+ John Garry <john.g.garry@oracle.com>, Dave Chinner <dchinner@redhat.com>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>, 
+ Dan Helmick <dan.helmick@samsung.com>, Daniel Gomez <d@kruces.com>, 
+ Daniel Gomez <da.gomez@samsung.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1726586542; l=6584;
+ i=da.gomez@samsung.com; s=20240621; h=from:subject:message-id;
+ bh=JygrMCTMhPqX/bAPRMl20ITyAtI+tYOaIShANk2aGlU=;
+ b=8mwlKU1v1feiAFYqL5Z0fOTBZ/cJLiS6UtnWxVXzTXO9WPZQ6SrTPGrgd5Ar2yXHEumZtQMHM
+ EeF05YyiVFRA2JQc2Iisq0RLzDK7A4smn7CIZ22sYd4U3gRUvnOjZiL
+X-Developer-Key: i=da.gomez@samsung.com; a=ed25519;
+ pk=BqYk31UHkmv0WZShES6pIZcdmPPGay5LbzifAdZ2Ia4=
+X-Endpoint-Received: by B4 Relay for da.gomez@samsung.com/20240621 with
+ auth_id=175
+X-Original-From: Daniel Gomez <da.gomez@samsung.com>
+Reply-To: da.gomez@samsung.com
 
-On Tue, Sep 17, 2024 at 02:03:17PM +0200, Oleg Nesterov wrote:
-> I don't see anything wrong after a quick glance, but I don't
-> really understand the UPROBE_HANDLER_IGNORE logic, see below.
-> 
-> On 09/17, Jiri Olsa wrote:
-> >
-> > + * UPROBE_HANDLER_IWANTMYCOOKIE
-> > + * - Store cookie and pass it to ret_handler (if defined).
-> 
-> Cough ;) yes it was me who used this name in the previous discussion, but maybe
-> 
-> 	UPROBE_HANDLER_COOKIE
-> 
-> will look a bit better? Feel free to ignore.
+From: Daniel Gomez <da.gomez@samsung.com>
 
-ok, no fun it is..
+This patch introduces max I/O alignment boundaries in terms of LBA and
+size in blktrace for issued I/Os.
 
-> 
-> >  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
-> ...
-> > +		if (!uc->ret_handler || rc == UPROBE_HANDLER_REMOVE)
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * If alloc_return_instance and push_consumer fail, the return probe
-> > +		 * won't be prepared, but we'll finish to execute all entry handlers.
-> > +		 *
-> > +		 * We need to store handler's return value in case the return uprobe
-> > +		 * gets installed and contains consumers that need to be ignored.
-> > +		 */
-> > +		if (!ri)
-> > +			ri = alloc_return_instance();
-> > +
-> > +		if (rc == UPROBE_HANDLER_IWANTMYCOOKIE || rc == UPROBE_HANDLER_IGNORE)
-> > +			ri = push_consumer(ri, push_idx++, uc->id, cookie, rc);
-> 
-> So this code allocates ri (which implies prepare_uretprobe!) and calls push_consumer()
-> even if rc == UPROBE_HANDLER_IGNORE.
-> 
-> Why? The comment in uprobes.h says:
-> 
-> 	UPROBE_HANDLER_IGNORE
-> 	- Ignore ret_handler callback for this consumer
-> 
-> but the ret_handler callback won't be ignored?
-> 
-> To me this code should do:
-> 
-> 		if (!uc->ret_handler || UPROBE_HANDLER_REMOVE || UPROBE_HANDLER_IGNORE)
-> 			continue;
-> 
-> 		if (!ri)
-> 			ri = alloc_return_instance();
-> 
-> 		if (rc == UPROBE_HANDLER_IWANTMYCOOKIE)
-> 			ri = push_consumer(...);
-> 
-> And,
-> 
-> >  handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
-> ...
-> >  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
-> >  				 srcu_read_lock_held(&uprobes_srcu)) {
-> > +		ric = return_consumer_find(ri, &ric_idx, uc->id);
-> > +		if (ric && ric->rc == UPROBE_HANDLER_IGNORE)
-> > +			continue;
-> >  		if (uc->ret_handler)
-> > -			uc->ret_handler(uc, ri->func, regs);
-> > +			uc->ret_handler(uc, ri->func, regs, ric ? &ric->cookie : NULL);
-> >  	}
-> 
-> the UPROBE_HANDLER_IGNORE check above and the new ric->rc member should die,
-> 
-> 		if (!uc->ret_handler)
-> 			continue;
-> 
-> 		ric = return_consumer_find(...);
-> 		uc->ret_handler(..., ric ? &ric->cookie : NULL);
-> 
-> as we have already discussed, the session ret_handler(data) can simply do
-> 
-> 		// my ->handler() wasn't called or it didn't return
-> 		// UPROBE_HANDLER_IWANTMYCOOKIE
-> 		if (!data)
-> 			return;
-> 
-> at the start.
-> 
-> Could you explain why this can't work?
+Tracing alignment information is important for high-capacity and QLC
+SSDs with Indirection Units greater than 4 KiB. These devices are still
+4 KiB in Logical Block Size (LBS) but because they work at higher IUs,
+unaligned writes to the IU boundaries can imply in a read-modify-write
+(RMW).
 
-I'll try ;-) it's for the case when consumer does not use UPROBE_HANDLER_IWANTMYCOOKIE
+This patch enables blktrace to report alignment details via new
+alignment parameter, which will be calculated during I/O tracing.
 
-let's have 2 consumers on single uprobe, consumer-A returning UPROBE_HANDLER_IGNORE
-and the consumer-B returning zero, so we want the return uprobe installed, but we
-want just consumer-B to be executed
+Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+---
+This patch introduces support for tracing maximum I/O alignment
+boundaries in terms of Logical Block Addressing (LBA) and size within
+blktrace for issued I/Os.
 
-  - so uprobe gets installed and handle_uretprobe_chain goes over all consumers
-    calling ret_handler callback
+Note: the term alignment has been previously discussed here [1], where
+it was suggested to use "largest block size granularity". In this RFC,
+alignment term is kept, though further suggestions for an appropriate
+term are welcomed.
 
-  - but we don't know consumer-A needs to be ignored, and it does not
-    expect cookie so we have no way to find out it needs to be ignored
+[1] https://lore.kernel.org/all/a7f9079f-6f47-4a47-a327-98497bd33dfe@oracle.com
 
-the change solves this by storing also return value for consumer
+Tracing alignment information is important for high-capacity and QLC
+SSDs with Indirection Units greater than 4 KiB. These devices are still
+4 KiB in Logical Block Size (LBS) but because they work at higher IUs,
+unaligned writes to the IU boundaries can imply in a read-modify-write
+(RMW).
 
-if all consumers ignore the ret_handler callback return uprobe is not installed
+More information about the motivation can be found in the first LBS
+patch series [2].
 
-jirka
+[2] Subject: [RFC 00/23] Enable block size > page size in XFS
+https://lore.kernel.org/lkml/20230915183848.1018717-1-kernel@pankajraghav.com/
+
+Additionally, Dan Helmick's talk [3] provides further context on the
+importance of I/O granularity and alignment, specifically in the context
+of NVMe.
+
+[3] SDC2022 – Optimal Performance Parameters for NVMe SSDs
+
+The graph below is a representation of the device IU vs what is
+considered here the I/O block alignment.
+
+    |--- IU Boundaries ----|      |-PS-|
+a)  [====][====][====][====][····][····][····]--
+    |                      |
+b)  [····][====][====][====][====][····][····]--
+    |                      |
+c)  [····][····][====][====][····][····][····]--
+    |                      |
+LBA 0                      4
+
+    Key:
+    [====] = I/O Block
+    [····] = Memory in Page Size (PS) chunks
+    PS: System base Page Size (e.g. x86_64 is 4 KiB)
+
+a) I/O matches IU boundaries (LBA and block size). I/O is aligned to
+IU boundaries.
+b) The size of the I/O matches the IU size but the I/O is not aligned to
+the IU boundaries. I/O is unaligned.
+c) I/O does not match in either size or LBA. I/O is unaligned.
+
+This patch enables blktrace to report alignment details via new
+alignment parameter, which will be calculated during I/O tracing. For
+the example above, the following values would be reported:
+
+a) |16384|: I/O aligned to 16 KiB boundaries.
+b) |4096|:  I/O aligned to 4 KiB boundaries.
+c) |8192|:  I/O aligned to 8 KiB boundaries.
+
+Finally, this patch requires some minor changes [4] in the blktrace
+tool. If this moves forward, the changes will be submitted accordingly.
+
+[4] https://github.com/dkruces/blktrace/tree/algn
+---
+ include/linux/blktrace_api.h      |  2 ++
+ include/uapi/linux/blktrace_api.h |  1 +
+ kernel/trace/blktrace.c           | 38 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 41 insertions(+)
+
+diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
+index 122c62e561fc..17f1a21ffb5a 100644
+--- a/include/linux/blktrace_api.h
++++ b/include/linux/blktrace_api.h
+@@ -26,6 +26,8 @@ struct blk_trace {
+ 	struct dentry *dir;
+ 	struct list_head running_list;
+ 	atomic_t dropped;
++	u32 lbs;
++	u8 lba_shift;
+ };
+ 
+ extern int blk_trace_ioctl(struct block_device *, unsigned, char __user *);
+diff --git a/include/uapi/linux/blktrace_api.h b/include/uapi/linux/blktrace_api.h
+index 690621b610e5..d6df0c10ece1 100644
+--- a/include/uapi/linux/blktrace_api.h
++++ b/include/uapi/linux/blktrace_api.h
+@@ -110,6 +110,7 @@ struct blk_io_trace {
+ 	__u32 cpu;		/* on what cpu did it happen */
+ 	__u16 error;		/* completion error */
+ 	__u16 pdu_len;		/* length of data after this trace */
++	__u32 alignment;	/* i/o alignment boundaries */
+ 	/* cgroup id will be stored here if exists */
+ };
+ 
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 8fd292d34d89..8330455458b8 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -208,6 +208,39 @@ static const u32 ddir_act[2] = { BLK_TC_ACT(BLK_TC_READ),
+ #define MASK_TC_BIT(rw, __name) ((__force u32)(rw & REQ_ ## __name) <<	\
+ 	  (ilog2(BLK_TC_ ## __name) + BLK_TC_SHIFT - __REQ_ ## __name))
+ 
++static inline bool blk_trace_lba_aligned(u32 len, u32 algn_len, u64 lba,
++				      u32 algn_lba)
++{
++	return !(len % algn_len) && !(lba % algn_lba);
++}
++
++static inline u32 blk_trace_align(struct blk_trace *bt, u64 sector,
++					u32 len)
++{
++	u64 lba = sector >> (bt->lba_shift - SECTOR_SHIFT);
++	u32 align_len = len;
++	u32 align_lba = align_len / bt->lbs;
++	u32 alignment = bt->lbs;
++
++	if (is_power_of_2(len) &&
++	    blk_trace_lba_aligned(len, align_len, lba, align_lba))
++		return len;
++
++	align_len = bt->lbs << 1UL;
++	align_lba = align_len / bt->lbs;
++
++	while (align_len < len) {
++		if (!blk_trace_lba_aligned(len, align_len, lba, align_lba))
++			break;
++
++		alignment = align_len;
++		align_len = align_len << 1UL;
++		align_lba = align_len / bt->lbs;
++	}
++
++	return alignment;
++}
++
+ /*
+  * The worker for the various blk_add_trace*() types. Fills out a
+  * blk_io_trace structure and places it in a per-cpu subbuffer.
+@@ -296,6 +329,9 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
+ 		t->device = bt->dev;
+ 		t->error = error;
+ 		t->pdu_len = pdu_len + cgid_len;
++		if (((what & 0xffff) & ~__BLK_TA_CGROUP) == __BLK_TA_ISSUE)
++			t->alignment =
++				blk_trace_align(bt, sector, bytes);
+ 
+ 		if (cgid_len)
+ 			memcpy((void *)t + sizeof(*t), &cgid, cgid_len);
+@@ -597,6 +633,8 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 		bt->act_mask = (u16) -1;
+ 
+ 	blk_trace_setup_lba(bt, bdev);
++	bt->lbs = queue_logical_block_size(q);
++	bt->lba_shift = ilog2(bt->lbs);
+ 
+ 	/* overwrite with user settings */
+ 	if (buts->start_lba)
+
+---
+base-commit: 4f3e012d4cfd1d9bf837870c961f462ca9f23ebe
+change-id: 20240916-blktrace-algn-a11320353182
+
+Best regards,
+-- 
+Daniel Gomez <da.gomez@samsung.com>
+
+
