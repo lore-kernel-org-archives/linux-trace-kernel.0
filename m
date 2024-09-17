@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3397158D8F;
-	Tue, 17 Sep 2024 10:08:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C56A20323;
+	Tue, 17 Sep 2024 10:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726567734; cv=none; b=FxRG6gLLT2I+tM5sa//OaAYuhAXLqIXtjNa4juzLBoL0nInEv21vaqa6b44ytr4QXlSooRGp1onkP2QpfqAJHGPzvCxkPKo/sz40y+CiamAhLEXKJcUgx9IMj3bfgxw9k5cT83adhx3ti9CSirW7hQmynsAiyognW7Z7rlLjj1s=
+	t=1726568100; cv=none; b=eDIDErotlXJ6GoomqMDUTB5pcFRYvzSS2qyKltaqdKtfonLtv0vEtjlb7ey3TqXZxNZodXNn8n1azvI6SZtgSGfGky0B1zR+8KwQYkyFbMjv+lVsD0M8eNINe6PtySiX6XqmOYDYGxI17dNDvbSX605rV8dNr/0dgdwJCxR+0so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726567734; c=relaxed/simple;
-	bh=+p+xzX06Jj/qgHQUUsyqMfiIDzxXJxTBwKU5YNzm6aE=;
+	s=arc-20240116; t=1726568100; c=relaxed/simple;
+	bh=+YgselXGB2n7Utocil+BbkClg7VXcbVrdFZwYP7vL0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dKti/vhFAlWfso/HaNsftVyBPi6GEKZfuoSnrPm2mFoOhz+eJU5x4UPxgAdfMZ9YDqo/Pt31caIMJq2yImDV/becAOFfmiK8Zo0M9D5+X3KCWalKx8ykyEk+lnR/y/Eua3TDLk/cigYxl5zc+XW+Iuzdic7nzvAJQSC0mF12O3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7T5lCk5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bm+eBgxBXt6+eh2g797uIUup7OM4J0sYe6l7BKxmfpRkltv9aNNnjgTy8v/sNLFO4HKABKfx7iQ5bIKfPLr7t8YdOgcHzQBNuT46OXB8CKqdiwp4tGaEvtrdC3MH63D+KciDtlpiqpvxZWFfA5vKRmf0CkvVhVH2JQiBTKC5A7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNfuLgMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7T5lCk5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5243BC4CEC5;
-	Tue, 17 Sep 2024 10:08:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNfuLgMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB92C4CEC5;
+	Tue, 17 Sep 2024 10:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726567734;
-	bh=+p+xzX06Jj/qgHQUUsyqMfiIDzxXJxTBwKU5YNzm6aE=;
+	s=k20201202; t=1726568099;
+	bh=+YgselXGB2n7Utocil+BbkClg7VXcbVrdFZwYP7vL0w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V7T5lCk5nRzzKAhyIkC6pLUkkNBm9pTCQq2/12J0Pc/Uze6ei05mfSz4Fr+XtaV2G
-	 jHprXcyCpfQcU/8wHY5VRw09tfgnj3qGtNr1k29ejZsi6kh/p0UUvZ9zYG5aY3+JHP
-	 /ZtrwCM08+NCT7aGwBjfL4/1x/pVHFSD+grUyT+SnU126u1yRm2KgE2DBzp65iC96t
-	 Xf5+zbcXwPLKX/h7xy9x3H65XWbKBOvVWqq9/Hc1bFGHyKi8wQ3ABHpJ2+SylHHGC9
-	 0SzNm81H7ohWIuRyigQBcl/X6sKK2cCUskdg3iu3svC//jbOv787dtvKRmC1hE7TYL
-	 O9xBlVa51CegA==
-Date: Tue, 17 Sep 2024 11:08:48 +0100
+	b=DNfuLgMoDNgLE6AjUI9dUk5KyYXunWTX1B3p0KG9DF/YKjE3tFPCZpo+0AlF9G3AE
+	 GCyOLgAR99oIqXi4yYGxp0n4F5sJFngmwgjQ89H/oD2/QUdc9o78MxJo2KmFYRNzLW
+	 D6yNfA6gbDMHmcCQANNAwp+jbPirSKHbj2chKBGi8m2t8vaQWW99qb3H6CatIqtSJq
+	 iAFrL78yjkAS+adew9XIkEOBvlkuKPu1AikIhRfX2HiKvy32nfv7pwXBNhQX+6+i4i
+	 N7uUgxBuJHV7n6t9IVbduPNZT3nkbun74GBWQ77YbslwruQMhpOJAV9OTwhMZx4JIG
+	 CM5vJzazbG4WQ==
+Date: Tue, 17 Sep 2024 11:14:54 +0100
 From: Will Deacon <will@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,
@@ -39,11 +39,12 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
 	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v14 05/19] function_graph: Pass ftrace_regs to retfunc
-Message-ID: <20240917100848.GB27384@willie-the-truck>
+Subject: Re: [PATCH v14 08/19] tracing: Add ftrace_partial_regs() for
+ converting ftrace_regs to pt_regs
+Message-ID: <20240917101454.GC27384@willie-the-truck>
 References: <172615368656.133222.2336770908714920670.stgit@devnote2>
- <172615374207.133222.13117574733580053025.stgit@devnote2>
- <20240915044920.29a86d25@rorschach.local.home>
+ <172615377576.133222.5911358383330497277.stgit@devnote2>
+ <20240915052204.3dff1f75@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -52,86 +53,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240915044920.29a86d25@rorschach.local.home>
+In-Reply-To: <20240915052204.3dff1f75@rorschach.local.home>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Sun, Sep 15, 2024 at 04:49:20AM -0400, Steven Rostedt wrote:
-> On Fri, 13 Sep 2024 00:09:02 +0900
+On Sun, Sep 15, 2024 at 05:22:04AM -0400, Steven Rostedt wrote:
+> On Fri, 13 Sep 2024 00:09:35 +0900
 > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
 > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > Pass ftrace_regs to the fgraph_ops::retfunc(). If ftrace_regs is not
-> > available, it passes a NULL instead. User callback function can access
-> > some registers (including return address) via this ftrace_regs.
+> > Add ftrace_partial_regs() which converts the ftrace_regs to pt_regs.
+> > This is for the eBPF which needs this to keep the same pt_regs interface
+> > to access registers.
+> > Thus when replacing the pt_regs with ftrace_regs in fprobes (which is
+> > used by kprobe_multi eBPF event), this will be used.
+> > 
+> > If the architecture defines its own ftrace_regs, this copies partial
+> > registers to pt_regs and returns it. If not, ftrace_regs is the same as
+> > pt_regs and ftrace_partial_regs() will return ftrace_regs::regs.
 > > 
 > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Acked-by: Florent Revest <revest@chromium.org>
 > > ---
+> >  Changes in v14:
+> >   - Add riscv change.
 > >  Changes in v8:
-> >   - Pass ftrace_regs to retfunc, instead of adding retregfunc.
-> >  Changes in v6:
-> >   - update to use ftrace_regs_get_return_value() because of reordering
-> >     patches.
-> >  Changes in v3:
-> >   - Update for new multiple fgraph.
-> >   - Save the return address to instruction pointer in ftrace_regs.
+> >   - Add the reason why this required in changelog.
+> >  Changes from previous series: NOTHING, just forward ported.
 > > ---
-> >  include/linux/ftrace.h               |    3 ++-
-> >  kernel/trace/fgraph.c                |   16 +++++++++++-----
-> >  kernel/trace/ftrace.c                |    3 ++-
-> >  kernel/trace/trace.h                 |    3 ++-
-> >  kernel/trace/trace_functions_graph.c |    7 ++++---
-> >  kernel/trace/trace_irqsoff.c         |    3 ++-
-> >  kernel/trace/trace_sched_wakeup.c    |    3 ++-
-> >  kernel/trace/trace_selftest.c        |    3 ++-
-> >  8 files changed, 27 insertions(+), 14 deletions(-)
+> >  arch/arm64/include/asm/ftrace.h |   11 +++++++++++
+> >  arch/riscv/include/asm/ftrace.h |   12 ++++++++++++
+> >  include/linux/ftrace.h          |   17 +++++++++++++++++
+> >  3 files changed, 40 insertions(+)
 > > 
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 13987cd63553..e7c41d9988e1 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -1069,7 +1069,8 @@ struct fgraph_ops;
-> >  
-> >  /* Type of the callback handlers for tracing function graph*/
-> >  typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *,
-> > -				       struct fgraph_ops *); /* return */
-> > +				       struct fgraph_ops *,
-> > +				       struct ftrace_regs *); /* return */
-> >  typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *,
-> >  				      struct fgraph_ops *,
-> >  				      struct ftrace_regs *); /* entry */
-> > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> > index 30bebe43607d..6a3e2db16aa4 100644
-> > --- a/kernel/trace/fgraph.c
-> > +++ b/kernel/trace/fgraph.c
-> > @@ -297,7 +297,8 @@ static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops,
+> > diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> > index dffaab3dd1f1..5cd587afab6d 100644
+> > --- a/arch/arm64/include/asm/ftrace.h
+> > +++ b/arch/arm64/include/asm/ftrace.h
+> > @@ -132,6 +132,17 @@ ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
+> >  	return fregs->fp;
 > >  }
 > >  
-> >  /* ftrace_graph_return set to this to tell some archs to run function graph */
-> > -static void return_run(struct ftrace_graph_ret *trace, struct fgraph_ops *ops)
-> > +static void return_run(struct ftrace_graph_ret *trace, struct fgraph_ops *ops,
-> > +		       struct ftrace_regs *fregs)
-> >  {
-> >  }
-> >  
-> > @@ -491,7 +492,8 @@ int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
-> >  }
-> >  
-> >  static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace,
-> > -				  struct fgraph_ops *gops)
-> > +				  struct fgraph_ops *gops,
-> > +				  struct ftrace_regs *fregs)
-> >  {
-> >  }
-> >  
-> > @@ -787,6 +789,9 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
-> >  	}
-> >  
-> >  	trace.rettime = trace_clock_local();
-> > +	if (fregs)
-> > +		ftrace_regs_set_instruction_pointer(fregs, ret);
+> > +static __always_inline struct pt_regs *
+> > +ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> > +{
+> > +	memcpy(regs->regs, fregs->regs, sizeof(u64) * 9);
+> > +	regs->sp = fregs->sp;
+> > +	regs->pc = fregs->pc;
+> > +	regs->regs[29] = fregs->fp;
+> > +	regs->regs[30] = fregs->lr;
+> > +	return regs;
+> > +}
 
-Where does the instruction pointer get used after this? The arm64
-'return_to_handler' function doesn't look at it when we return.
+Ah, I guess this is where we pick up the lr that was set in patch 5.
+
+Acked-by: Will Deacon <will@kernel.org>
 
 Will
