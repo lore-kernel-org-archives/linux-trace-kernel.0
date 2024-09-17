@@ -1,94 +1,91 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E81C154454;
-	Tue, 17 Sep 2024 08:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCB22905;
+	Tue, 17 Sep 2024 08:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726561214; cv=none; b=PghvA2wJjqlklhiPx/jkfy4XaNI9YSswh/b8A8cHJ7X4RA4waxxV0obLBNNvSCgE+SR2M9azC9JhRK+8g1bGCE+yhSEdNWePjKriDcC3UGrgDjgwIaWAneriJYjkroX/XaQzlySAlMo9PhKmcJUpncOWX0w6UBj1cWlsT3GqYaI=
+	t=1726561591; cv=none; b=b0QJZ+7PRHYR/TnwKbAafYM696n+HWYZStVVdkhfrGSnd3iIiD70CyyEjzQhTx3wDI0Izi9QQ0aaZmFTxXzE0y21JY1MkAEDigj931zw5f3l3foyUzNnQdoI14ylAVRc8HV9mLo3QlmPP7cDBfjZ26LWkT32ggMDT4Q//FLJ/1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726561214; c=relaxed/simple;
-	bh=m8MW2HrKG5QYTZJEo4ienELOMIdCuJwtNwQzR66o780=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fTpAKwj2mVHKaDUWczYbXRMtv1LBLxUAgddbxWxyLBJ+VPwSyILfs1MKz6MOxykDm4vjvPmKVR3kXjVzKje7O+Bz2koqVf4KsBNP0YQc39JGbGD6aWYdGOGtLxmnT8oiIXARqGAwOh6bSR3bivPwmY67aqBCgiv9hrijNT5vb0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvt8OWI7; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1726561591; c=relaxed/simple;
+	bh=yX8WybCaNIWhzTkbjSWRx9jTOwkDZkYTQGTxrYRDcI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgsECLyn9eMKdaeE5kmFgA1hHtZTUSQ9KEYdwwMevbascEekpqECZhiy8ckckDzb0h0g6nuf/nnyPyVrFgV9O8yDYFq8+jtCzJuXFTZFyLVHWQ8iFm5W2d5FsphsusSOXLyOFSBzgYlu+NpZJ9SI63tUKz2N9PRQMsI9Yf+CxGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rifoRMQL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvt8OWI7"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2068acc8a4fso38562075ad.1;
-        Tue, 17 Sep 2024 01:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726561213; x=1727166013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8MW2HrKG5QYTZJEo4ienELOMIdCuJwtNwQzR66o780=;
-        b=fvt8OWI7Hhlqqu/kF2VBsSqD8KLNw6gBzfmTlqvyrSJyFcPhj4QZQJ4xyOPO4+o8/W
-         sMt25J/Nt6r48EjYEuxtA4h1A6/HH/2js3HDRE/rUFTQ/aSm4AuOsGcxz57jTorxUX/y
-         I26zg83HAl+aHm+/FAzH4Z5NYPFvGHUmSMV7RNM4HERNI2Mfm6IpGMMRDPlVk6XN4jcS
-         hiPVM67FveHut6f3uMJSFrmGMnd4gKw3wnS8u6sHuMAafCZrrIgb7OM013Ac4M8pqF4l
-         bucLh1OV34tL+3m3vvXfLdjcEX4Y6bcM0J4JkWekAOxudXj5WcFlbfGSrqODedhaEJLZ
-         /z/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726561213; x=1727166013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m8MW2HrKG5QYTZJEo4ienELOMIdCuJwtNwQzR66o780=;
-        b=hZoW4CTztkCknkWUkeOKWeTDPiq455AufHPG/rfc3k7ezPeMwDH69sqVM3XmR63jEJ
-         fKJd/i5GhwcGfRyMy+s8vsYKOwrDG0EDp2ordaJMKbXDEYCZUsUjBABoxd5nDMLOPJEQ
-         /vFjroJczYZYY+M/AxEpWkvIyHCNWUCpbNEsYzpd4b17Fca/4+zXUzFYSVuStb6ICVvP
-         MgRpRoQef7kuJgITfFYBIUhWvnozB7PNvezKr7qgZd+cmWtbwjEKuXlK4N7cKIkDTT+B
-         8CfvZrCMEWFpcsQOLkwUNHY0eM+e+JQ9BRHbbpImdY5GpEHfgQheSJesPPvNTHjxDk+k
-         EDrw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1yAAQHloadVdJ9d34GD3IyMBRydn0kziFLv7PpvuSIriiieANLxucyYQR7eH4UGBmPV/B4KZqjcDPMCXEmxep8Yhp@vger.kernel.org, AJvYcCWPkq8AYe1OcY4/UdyRd+1kxezHOTq0vlNrJlUk9CXDQcaMA3PWh8ety8cC8RxtYfKyvFoiIsHWxz9zXzYt@vger.kernel.org, AJvYcCXVOPkaoHC67P/geokui2FJmNEUOnDCgkBqJR4qETnU63v4CN7OjOJn3zSEpz2lft8ShW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk0zgmy8npTLe89Bznu0kBDjDJAAZZE7EZx7PUltqzrYs8raGN
-	gOX6C9VeKuqBA6ze7bTgd5rKuXfpr4lhT3+zxdbK0lq3jPaeI4+hPuTRedofO8d01ZQcIdPkypx
-	W3L00w15BJGrfJ6Y/p6J2RhR9Ub0=
-X-Google-Smtp-Source: AGHT+IGqZuqN4wbUVLy2kShgQISeGWkP8uFVIVUOjDvFst0QujTleRUDrYVW4atXOBBckrqHnoCswQnQJ2RLymQ6fXw=
-X-Received: by 2002:a17:90a:ad8e:b0:2d8:c17b:5018 with SMTP id
- 98e67ed59e1d1-2dbb9dee8b8mr18340308a91.11.1726561212740; Tue, 17 Sep 2024
- 01:20:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rifoRMQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 138CCC4CEC6;
+	Tue, 17 Sep 2024 08:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726561591;
+	bh=yX8WybCaNIWhzTkbjSWRx9jTOwkDZkYTQGTxrYRDcI4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rifoRMQL3+zR0FXXPfapgOmRYlb9GjXyEP6JxSCdSt51CcQHUrVMqO8TJqg3ogKsD
+	 cXQkEv/N8owpRl+A1Jv2OudODUg3VP1xEKvq/PUU3vPWmiTwXYlnG5GxTyK5lJkAf+
+	 G/lupAVj5DCYBCDBtBZ9+zTNBNZuFbrn9hC0HElmW17HAoaYRtD/RaaAgPmPfKQPFm
+	 Y9Ycxexf9DHiMrhUvOvYEfJzgMfay78SwfZDaxOh71qbrAuQBFKBwTNHpfB/ZHDZ3Y
+	 12Tyb6aq37kF/XIhLPT2P/14mNmmKDD1M13i4+UNfkU/p6TI/MEZ5li8iYSIpiodmk
+	 xrIyGp2Uf68zg==
+Date: Tue, 17 Sep 2024 09:26:25 +0100
+From: Will Deacon <will@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Florent Revest <revest@chromium.org>,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v14 03/19] function_graph: Pass ftrace_regs to entryfunc
+Message-ID: <20240917082624.GC27290@willie-the-truck>
+References: <172615368656.133222.2336770908714920670.stgit@devnote2>
+ <172615372005.133222.15797801841635819220.stgit@devnote2>
+ <20240915044614.5721947e@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909224903.3498207-1-andrii@kernel.org> <20240909224903.3498207-4-andrii@kernel.org>
- <20240915145105.GB27726@redhat.com>
-In-Reply-To: <20240915145105.GB27726@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 17 Sep 2024 10:20:01 +0200
-Message-ID: <CAEf4BzYCMj911cj=qdntxLi3Roeav43AJPkMggKVHD4mp5OyWw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] uprobes: implement SRCU-protected lifetime for
- single-stepped uprobe
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
-	paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240915044614.5721947e@rorschach.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Sun, Sep 15, 2024 at 4:51=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 09/09, Andrii Nakryiko wrote:
-> >
-> > Similarly to how we SRCU-protect uprobe instance (and avoid refcounting
-> > it unnecessarily) when waiting for return probe hit, use hprobe approac=
-h
-> > to do the same with single-stepped uprobe. Same hprobe_* primitives are
-> > used. We also reuse ri_timer() callback to expire both pending
-> > single-step uprobe and return instances.
->
-> Well, I still think it would be better (and much simpler) to simply kill
-> utask->active_uprobe, iirc I even sent the RFC patch...
->
+On Sun, Sep 15, 2024 at 04:46:14AM -0400, Steven Rostedt wrote:
+> Can I get an Acked-by from the AARCH64 maintainers for this patch?
 
-let's do it, please send non-RFC patches and get them landed!
+Sorry, I wasn't CC'd on the thread, so I missed this.
 
-> Oleg.
->
+> On Fri, 13 Sep 2024 00:08:40 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
+> > available, it passes a NULL instead. User callback function can access
+> > some registers (including return address) via this ftrace_regs.
+
+Under which circumstances is 'ftrace_regs' NULL?
+
+The arm64 implementation of ftrace_graph_func() is:
+
+> > diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+> > index a650f5e11fc5..bc647b725e6a 100644
+> > --- a/arch/arm64/kernel/ftrace.c
+> > +++ b/arch/arm64/kernel/ftrace.c
+> > @@ -481,7 +481,25 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
+> >  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+> >  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+> >  {
+> > -	prepare_ftrace_return(ip, &fregs->lr, fregs->fp);
+> > +	unsigned long return_hooker = (unsigned long)&return_to_handler;
+> > +	unsigned long frame_pointer = fregs->fp;
+
+Which dereferences the unchecked pointer here ^^.
+
+Will
