@@ -1,222 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932EF158550;
-	Tue, 17 Sep 2024 08:53:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF7214BFBF;
+	Tue, 17 Sep 2024 09:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726563202; cv=none; b=pucX2nVC1wnCorUFR6678W7T5MzqWAd+1AWSaBRhMIfDeL+LYstGtjx6IM0xVp2kOX61ZTuQDQGyNi4Bf5QBKUiHxvu3/Un97QNxD4z9V2tNjKziPCO6p+sIlnYyDDxvBviRhb1z2HsFtxxOvumP/MC9tKiHHOM1y9BeUTWvIXQ=
+	t=1726564126; cv=none; b=klplqVg/5ap8icbGn8y1AmhlYveOLgFRfnRDonfxfId5Yf4Fr5421mpSexz0Z9P8e7oO2Dd+Br5PfafJflT3LZiOn+BHiw5lrpr1qHOB7Uls+S0N36fDOytz2/qOVZ3aLmEGWgRU/W27nAIE8VdyjFLHa0iJsuFTKqdERMOnzhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726563202; c=relaxed/simple;
-	bh=7A9EdOCx4qTXb70yo06M1I8B1//8v5dhcqxszDj04s4=;
+	s=arc-20240116; t=1726564126; c=relaxed/simple;
+	bh=azJUVNHYNElM/NT9dnn2Q0hDdHV7qlIV7OAkTgeCV4k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qKz/yhdkgvkzK6Md0Nr8eAqTQz8l0S4GE345/cFVE/LBpV1di13UPHOtp7hmRFX3arsXF15YMk2m07czZxkwhPTnhdKo9/y93glCPhNS9LO32oaXfDe6lBlRDz+z/OF7om7S30l8SirajEmAbcM2yzavv5AmRv940FNfGbpnOaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ichzMza1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qtim8IppsLZeQpoyEPu4IsSZTWY1sooZMYpmsoX5uBZeH7IOPNBDuFIEb5tJzhEydmRECtnegdO0dlPgfs2UWS1kDFdX8uCUm6YFuhIAULC54+gVvIbbz+9VZTwK8P5rpSLydNQmQ55MYcFvCg8YyY+xEdlJrsOT+qQKI8PCroo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUfcUy92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ichzMza1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE37BC4CEC5;
-	Tue, 17 Sep 2024 08:53:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUfcUy92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D6FC4CEC5;
+	Tue, 17 Sep 2024 09:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726563202;
-	bh=7A9EdOCx4qTXb70yo06M1I8B1//8v5dhcqxszDj04s4=;
+	s=k20201202; t=1726564126;
+	bh=azJUVNHYNElM/NT9dnn2Q0hDdHV7qlIV7OAkTgeCV4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ichzMza1gv5xa4YKI8apJxzftQFN1F+c8zALITGUBXsfUh4JTuP9hE0xFY8d+YRuO
-	 5enrQiEzuvbl/lfetN+Vn8Y5IRsz56oSJF0NCu9FAzeuh+C3GkMoAaME7ZoUp+PKnb
-	 z7D/JCrySOAB9YQ2cBKi0dA6uWU7iyLKfSQzNQjJ0S9Hn00+qg1KHXtimcfqMaFnzs
-	 nW7mMCu4O4TkvFlCdECDEse2XOKp7lpVlqDPHMMgjUvnnC3Qg38pEuQJQKT0a+fafp
-	 lHtu0fZ65EU0m2RpQSPo9btMlab14NymHx058wSRvRUrnoTxDuSRlmLSD3tWkmRPmn
-	 tUzFw1VZqmEkA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv4 14/14] selftests/bpf: Add consumers stress test on single uprobe
-Date: Tue, 17 Sep 2024 10:50:24 +0200
-Message-ID: <20240917085024.765883-15-jolsa@kernel.org>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240917085024.765883-1-jolsa@kernel.org>
-References: <20240917085024.765883-1-jolsa@kernel.org>
+	b=aUfcUy92PU0MPuiaRrGx0VIEyuAK4cWFnVl8n9U9Xw7zo2T8pVVaqKMiaYQGErvBZ
+	 VZdmT8KmoiyKO0plJy0JstCw9jdkijXmMsebyyzriQXsgz8NUbZY21gURR+6SDGgu6
+	 b+4WKjZGHNabmdLUMQ3vvbjR6Uee6Ey52slfOa+BzDjMUgJzawteuce90UFFOyLSHV
+	 mEVQNuyoZJcQbHJix7hRdsPYPe16G795X0wzYJM8C2HeiJQUrxjDyoadscYFbNApAx
+	 dVbQj2OwYjNjV1fHQv6W9vIFKg/CyD+XkkceFcmtJwIvdJ46BhZ96AT80tQUtHKvXU
+	 hIZcqkG03TIQA==
+From: Christian Brauner <brauner@kernel.org>
+To: muchun.song@linux.dev,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-mm@kvack.org,
+	david@fromorbit.com,
+	Hongbo Li <lihongbo22@huawei.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 0/2] Introduce tracepoint for hugetlbfs
+Date: Tue, 17 Sep 2024 11:08:37 +0200
+Message-ID: <20240917-tilgen-entlud-cc122ddfb41a@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240829064110.67884-1-lihongbo22@huawei.com>
+References: <20240829064110.67884-1-lihongbo22@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1273; i=brauner@kernel.org; h=from:subject:message-id; bh=azJUVNHYNElM/NT9dnn2Q0hDdHV7qlIV7OAkTgeCV4k=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS9dBe7LhscwXBA9x/PlMms2t/T//Cs3PFEar8Tz7aah y+S9eemd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkcS3Df5/wn6zFew3u8P2Y rJb5jlP53+HIpcXmasdu7X9+OyNB9wDD/xSfo+n6Dtd/Jn7s//Tb3ezoh5TD4ZfyxKY9jKqdvjH 7PxsA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-We create multiple threads each trying to attach and detach uprobe
-consumers on the same uprobe, while main thread is hitting on that
-uprobe. All that for 5 seconds.
+On Thu, 29 Aug 2024 14:41:08 +0800, Hongbo Li wrote:
+> Here we add some basic tracepoints for debugging hugetlbfs: {alloc, free,
+> evict}_inode, setattr and fallocate.
+> 
+> v2 can be found at:
+> https://lore.kernel.org/all/ZoYY-sfj5jvs8UpQ@casper.infradead.org/T/
+> 
+> Changes since v2:
+>   - Simplify the tracepoint output for setattr.
+>   - Make every token be space separated.
+> 
+> [...]
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../bpf/prog_tests/uprobe_multi_test.c        | 82 +++++++++++++++++++
- .../bpf/progs/uprobe_multi_consumer_stress.c  | 29 +++++++
- 2 files changed, 111 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c
+Applied to the vfs.misc.v6.13 branch of the vfs/vfs.git tree.
+Patches in the vfs.misc.v6.13 branch should appear in linux-next soon.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-index 594aa8c06f58..dcc128507212 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-@@ -3,6 +3,7 @@
- #include <unistd.h>
- #include <pthread.h>
- #include <test_progs.h>
-+#include <time.h>
- #include "uprobe_multi.skel.h"
- #include "uprobe_multi_bench.skel.h"
- #include "uprobe_multi_usdt.skel.h"
-@@ -10,6 +11,7 @@
- #include "uprobe_multi_session_single.skel.h"
- #include "uprobe_multi_session_cookie.skel.h"
- #include "uprobe_multi_session_recursive.skel.h"
-+#include "uprobe_multi_consumer_stress.skel.h"
- #include "uprobe_multi_verifier.skel.h"
- #include "bpf/libbpf_internal.h"
- #include "testing_helpers.h"
-@@ -848,6 +850,84 @@ static void test_bench_attach_usdt(void)
- 	printf("%s: detached in %7.3lfs\n", __func__, detach_delta);
- }
- 
-+static int done;
-+
-+static void *worker(void *p)
-+{
-+	struct uprobe_multi_consumer_stress *skel = p;
-+	struct bpf_link *link = NULL;
-+
-+	srand(time(NULL));
-+
-+	while (!done) {
-+		LIBBPF_OPTS(bpf_uprobe_multi_opts, opts);
-+		struct bpf_program *prog;
-+
-+		switch (rand() % 4) {
-+		case 0:
-+			prog = skel->progs.uprobe_session_0;
-+			opts.session = true;
-+			break;
-+		case 1:
-+			prog = skel->progs.uprobe_session_1;
-+			opts.session = true;
-+			break;
-+		case 2:
-+			prog = skel->progs.uprobe;
-+			break;
-+		case 3:
-+			prog = skel->progs.uretprobe;
-+			opts.retprobe = true;
-+			break;
-+		}
-+
-+		link = bpf_program__attach_uprobe_multi(prog, -1, "/proc/self/exe",
-+							"uprobe_multi_func_1", &opts);
-+		bpf_link__destroy(link);
-+	}
-+
-+	return NULL;
-+}
-+
-+#define THREAD_COUNT 4
-+
-+static void test_session_consumer_stress(void)
-+{
-+	struct uprobe_multi_consumer_stress *skel;
-+	pthread_t threads[THREAD_COUNT];
-+	time_t start;
-+	int i, err;
-+
-+	/*
-+	 * We create multiple threads each trying to attach and detach uprobe
-+	 * consumer on the same uprobe, while main thread is hitting on that
-+	 * uprobe. All that for 5 seconds.
-+	 */
-+	skel = uprobe_multi_consumer_stress__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "uprobe_multi_consumer_stress"))
-+		goto cleanup;
-+
-+	for (i = 0; i < THREAD_COUNT; i++) {
-+		err = pthread_create(threads + i, NULL, worker, skel);
-+		if (!ASSERT_OK(err, "pthread_create"))
-+			goto join;
-+	}
-+
-+	start = time(NULL);
-+
-+	while (start + 5 > time(NULL))
-+		uprobe_multi_func_1();
-+
-+	done = 1;
-+
-+join:
-+	for (i = 0; i < THREAD_COUNT; i++)
-+		pthread_join(threads[i], NULL);
-+
-+cleanup:
-+	uprobe_multi_consumer_stress__destroy(skel);
-+}
-+
- void test_uprobe_multi_test(void)
- {
- 	if (test__start_subtest("skel_api"))
-@@ -872,5 +952,7 @@ void test_uprobe_multi_test(void)
- 		test_session_cookie_skel_api();
- 	if (test__start_subtest("session_cookie_recursive"))
- 		test_session_recursive_skel_api();
-+	if (test__start_subtest("consumer_stress"))
-+		test_session_consumer_stress();
- 	RUN_TESTS(uprobe_multi_verifier);
- }
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c b/tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c
-new file mode 100644
-index 000000000000..5390108a21ff
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/bpf.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+SEC("uprobe.session")
-+int uprobe_session_0(struct pt_regs *ctx)
-+{
-+	return 0;
-+}
-+
-+SEC("uprobe.session")
-+int uprobe_session_1(struct pt_regs *ctx)
-+{
-+	return 1;
-+}
-+
-+SEC("uprobe.multi")
-+int uprobe(struct pt_regs *ctx)
-+{
-+	return 0;
-+}
-+
-+SEC("uprobe.multi")
-+int uretprobe(struct pt_regs *ctx)
-+{
-+	return 0;
-+}
--- 
-2.46.0
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc.v6.13
+
+[1/2] hugetlbfs: support tracepoint
+      https://git.kernel.org/vfs/vfs/c/318580ad7f28
+[2/2] hugetlbfs: use tracepoints in hugetlbfs functions.
+      https://git.kernel.org/vfs/vfs/c/014ad7c42a69
