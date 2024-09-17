@@ -1,91 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCB22905;
-	Tue, 17 Sep 2024 08:26:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8499515667E;
+	Tue, 17 Sep 2024 08:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726561591; cv=none; b=b0QJZ+7PRHYR/TnwKbAafYM696n+HWYZStVVdkhfrGSnd3iIiD70CyyEjzQhTx3wDI0Izi9QQ0aaZmFTxXzE0y21JY1MkAEDigj931zw5f3l3foyUzNnQdoI14ylAVRc8HV9mLo3QlmPP7cDBfjZ26LWkT32ggMDT4Q//FLJ/1I=
+	t=1726563032; cv=none; b=a2HRa87fB25N0g2AalobNCWQF18crZLjFtn+omKk+lT8/hqFHTIPeodLLtNabNt5n9npltRM2HsaYJQg2o4WHXoQvjZcY9HOaTSaIKJt0/DoEebThyivjWQl21RJPux1oSLILSDx/RZaW0zD6I2IT+X+1RwlWZ2nei9lgTmgfoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726561591; c=relaxed/simple;
-	bh=yX8WybCaNIWhzTkbjSWRx9jTOwkDZkYTQGTxrYRDcI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kgsECLyn9eMKdaeE5kmFgA1hHtZTUSQ9KEYdwwMevbascEekpqECZhiy8ckckDzb0h0g6nuf/nnyPyVrFgV9O8yDYFq8+jtCzJuXFTZFyLVHWQ8iFm5W2d5FsphsusSOXLyOFSBzgYlu+NpZJ9SI63tUKz2N9PRQMsI9Yf+CxGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rifoRMQL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726563032; c=relaxed/simple;
+	bh=h/QmTo1KvZhaAd/PjbHW8qmqQposFpAVwPsudk425Lc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QZqUFjJwf11jvDrXtsLhVN6ib60ES60VzT3qzTOof+EqseZ3MDwym97mgJEYHTQXrcmu8h/X1Mx4trsX4wD3wounBPAA8CCd/jZJWeBRE39CM5hxdvtCsVLXxfVTNgEhhJhynKOBPSDOUF6JkkZbUpitERasXnPAfQ2w8d9cxmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WpZ641AA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rifoRMQL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 138CCC4CEC6;
-	Tue, 17 Sep 2024 08:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WpZ641AA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389DCC4CEC6;
+	Tue, 17 Sep 2024 08:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726561591;
-	bh=yX8WybCaNIWhzTkbjSWRx9jTOwkDZkYTQGTxrYRDcI4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rifoRMQL3+zR0FXXPfapgOmRYlb9GjXyEP6JxSCdSt51CcQHUrVMqO8TJqg3ogKsD
-	 cXQkEv/N8owpRl+A1Jv2OudODUg3VP1xEKvq/PUU3vPWmiTwXYlnG5GxTyK5lJkAf+
-	 G/lupAVj5DCYBCDBtBZ9+zTNBNZuFbrn9hC0HElmW17HAoaYRtD/RaaAgPmPfKQPFm
-	 Y9Ycxexf9DHiMrhUvOvYEfJzgMfay78SwfZDaxOh71qbrAuQBFKBwTNHpfB/ZHDZ3Y
-	 12Tyb6aq37kF/XIhLPT2P/14mNmmKDD1M13i4+UNfkU/p6TI/MEZ5li8iYSIpiodmk
-	 xrIyGp2Uf68zg==
-Date: Tue, 17 Sep 2024 09:26:25 +0100
-From: Will Deacon <will@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	s=k20201202; t=1726563032;
+	bh=h/QmTo1KvZhaAd/PjbHW8qmqQposFpAVwPsudk425Lc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WpZ641AAsui1/5e6nz19v9VvtTsriJgA1g7mSdZlSVSKcZC7xYW80YL+FNeiFo1pO
+	 YZ6R6FCTuIGKsAbTGulnf4Q3WvtLeYR9WwQ4RuxKrb/Rn81Y+ayIU5pjbkq2JUzUDx
+	 Kn13T9q00Ho9B7k/HfWahok/kkelJdDRt6DDgRpM/j866YHjKipgmk45KGquR97X8P
+	 4RmqlptlymkjIUejdcHQB8mKGnKOZakEgnTPz2NWGY8kAHvAo1FsnQEIAyf3SX8xPx
+	 a2W8orqyAa72C5SjPrNi04E+zGjRfB0NavpsY6OfupFx5IHc2sJpJoEhnBbOSumYP8
+	 kmrBFskf1cclA==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v14 03/19] function_graph: Pass ftrace_regs to entryfunc
-Message-ID: <20240917082624.GC27290@willie-the-truck>
-References: <172615368656.133222.2336770908714920670.stgit@devnote2>
- <172615372005.133222.15797801841635819220.stgit@devnote2>
- <20240915044614.5721947e@rorschach.local.home>
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv4 00/14] uprobe, bpf: Add session support
+Date: Tue, 17 Sep 2024 10:50:10 +0200
+Message-ID: <20240917085024.765883-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240915044614.5721947e@rorschach.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 15, 2024 at 04:46:14AM -0400, Steven Rostedt wrote:
-> Can I get an Acked-by from the AARCH64 maintainers for this patch?
+hi,
+this patchset is adding support for session uprobe attachment and
+using it through bpf link for bpf programs.
 
-Sorry, I wasn't CC'd on the thread, so I missed this.
+The session means that the uprobe consumer is executed on entry
+and return of probed function with additional control:
+  - entry callback can control execution of the return callback
+  - entry and return callbacks can share data/cookie
 
-> On Fri, 13 Sep 2024 00:08:40 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
-> > available, it passes a NULL instead. User callback function can access
-> > some registers (including return address) via this ftrace_regs.
+On more details please see patch #2.
 
-Under which circumstances is 'ftrace_regs' NULL?
+It's based on Peter's perf/core:
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
 
-The arm64 implementation of ftrace_graph_func() is:
+v4 changes:
+  - rework the uprobe consumer allocation based on Oleg's suggestions [Oleg]
+  - moved docs about handler return values to uprobes.h header [Oleg]
+  - use libbpf's attach_uprobe_multi for session attach [Andrii]
+  - make verifier to check session return values [Andrii]
+  - various small review changes
+  - added more tests
+  - added acks
 
-> > diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> > index a650f5e11fc5..bc647b725e6a 100644
-> > --- a/arch/arm64/kernel/ftrace.c
-> > +++ b/arch/arm64/kernel/ftrace.c
-> > @@ -481,7 +481,25 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent,
-> >  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-> >  		       struct ftrace_ops *op, struct ftrace_regs *fregs)
-> >  {
-> > -	prepare_ftrace_return(ip, &fregs->lr, fregs->fp);
-> > +	unsigned long return_hooker = (unsigned long)&return_to_handler;
-> > +	unsigned long frame_pointer = fregs->fp;
+patch #6 is already in bpf-next tree, but we need that as dependency
 
-Which dereferences the unchecked pointer here ^^.
+thanks,
+jirka
 
-Will
+
+---
+Jiri Olsa (14):
+      uprobe: Add data pointer to consumer handlers
+      uprobe: Add support for session consumer
+      bpf: Add support for uprobe multi session attach
+      bpf: Add support for uprobe multi session context
+      bpf: Allow return values 0 and 1 for uprobe/kprobe session
+      libbpf: Fix uretprobe.multi.s programs auto attachment
+      libbpf: Add support for uprobe multi session attach
+      selftests/bpf: Add uprobe session test
+      selftests/bpf: Add uprobe session cookie test
+      selftests/bpf: Add uprobe session recursive test
+      selftests/bpf: Add uprobe session verifier test for return value
+      selftests/bpf: Add kprobe session verifier test for return value
+      selftests/bpf: Add uprobe session single consumer test
+      selftests/bpf: Add consumers stress test on single uprobe
+
+ include/linux/uprobes.h                                            |  29 +++++++++-
+ include/uapi/linux/bpf.h                                           |   1 +
+ kernel/bpf/syscall.c                                               |   9 ++-
+ kernel/bpf/verifier.c                                              |  10 ++++
+ kernel/events/uprobes.c                                            | 150 ++++++++++++++++++++++++++++++++++++++++----------
+ kernel/trace/bpf_trace.c                                           |  66 ++++++++++++++++------
+ kernel/trace/trace_uprobe.c                                        |  12 ++--
+ tools/include/uapi/linux/bpf.h                                     |   1 +
+ tools/lib/bpf/bpf.c                                                |   1 +
+ tools/lib/bpf/libbpf.c                                             |  22 +++++++-
+ tools/lib/bpf/libbpf.h                                             |   4 +-
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c              |   2 +-
+ tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c         |   2 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c         | 252 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c          |  31 +++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c   |  29 ++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session.c           |  71 ++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c    |  48 ++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c |  44 +++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c    |  44 +++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c          |  31 +++++++++++
+ 21 files changed, 798 insertions(+), 61 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_consumer_stress.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c
