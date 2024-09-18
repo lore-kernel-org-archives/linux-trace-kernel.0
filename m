@@ -1,144 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BC1BAEE6;
-	Wed, 18 Sep 2024 14:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D116B172BDE;
+	Wed, 18 Sep 2024 21:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726670550; cv=none; b=VvI2LxV2N4lQHRPuhenu3i6EY3+k3KP25iIDkBwDRCb2qCJ5Q9CwtThFxQctbCbJ5JVjzhx8q3dhbY8RgkDFTV5yd1ZQixAGU9XCs47rXz5HBkGaJGZlU5IONwYj6MFDbymyTjDBi/PccwA0LQZ7I/UgVJF0HG2HA0dIz9zFfNY=
+	t=1726694576; cv=none; b=hIhXPz7pBR3OSk2peZBNYDeqOTlPLC7Ba+K90IuJmPuX/ReVehWYt7QL9L2d3hLVVM/Q0at1n4qhr94HVz2ICMUBy+hhSg1r66GfUrrofH08eawWYW4X51oDJvnJ5DnFg5M7Ny/1b68bdqbEyyBUcpSRyqp2NQqnX3Ddfqzs/Zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726670550; c=relaxed/simple;
-	bh=f6DO9H9tbPadLV/AmMWoIvT7LPqXcop24V18dsnD8vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FQegAAWmHErJO70EtXZW6w/98bNEswbsYXfU/6vU0ELreebW+CRDcnqeOgpa5KMOerKxFEu0veKvzdb6HtPcsN0rWUMZvhtOA+7i2h4LzlxZ+6Lp51vh2B3xjpVufBegMSbPjwUi8BU3phtC6x3/CaKDyrOBF2Qi1HFnP9t+imY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nb04d4PT; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726694576; c=relaxed/simple;
+	bh=AxTxj99dIVccR7LN4Pl4VKcLuuOVdN43YIHzdQiko2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aIr8TZK48vT+JrFfrEXsKwm0Q+Mdx16AQPJuH5aCMvrsuckQ0ZYnTHrQuErctE0vxm9vs4DnZmvQct63lzPjBjIFlBOMegua1JMI7frmdQmXiW6thnO20HdX04RPWndMD/5t9jYz8DeS4+GIaHrDrXuQX909tojXUceJZV7ZBR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4VQSuOf; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nb04d4PT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726670549; x=1758206549;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f6DO9H9tbPadLV/AmMWoIvT7LPqXcop24V18dsnD8vo=;
-  b=Nb04d4PT/EFuRd22htC3110pJV12b0sP4okNNA/tU8M86F2UpCsJSNtd
-   V29Gnw1c2JR1AzXMTlUlQyeUm1az5JffCP07628uh/yoNr+NGshq6LthB
-   9W2ZEpDhAN96IIoCDhwVj3EG7i4P7K0fFpzy37+TslKpryx6k+WPPCm6K
-   lEFL4RUTT4XF6ZDhlfoRV1hRjKBlGfc9TahQ05u/QzNiW6SdFd0iE0cpg
-   oOiaPot+3R6vBl8SJbiyDfxA4jWRU/qa/4FQ6pWr33pxsVHmWLIMoyQcB
-   YSuCx1DIXuktVBviH6BZf6R6v9PLNj4QIrs5t83+aEl4JAbslYyBXz973
-   Q==;
-X-CSE-ConnectionGUID: 1Nqbf2+wTR+mvS8BVAYn/Q==
-X-CSE-MsgGUID: wQTfSd89SFuKHITLs5ztOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="36255024"
-X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="36255024"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2024 07:42:27 -0700
-X-CSE-ConnectionGUID: 4A/Qk+DiRdul4OYr8AZigA==
-X-CSE-MsgGUID: 6d1nul30RZG2Lo5fGPjqjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,239,1719903600"; 
-   d="scan'208";a="100312619"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 18 Sep 2024 07:42:22 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sqvsp-000CJe-18;
-	Wed, 18 Sep 2024 14:42:19 +0000
-Date: Wed, 18 Sep 2024 22:41:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Liao Chang <liaochang1@huawei.com>, mhiramat@kernel.org,
-	oleg@redhat.com, andrii@kernel.org, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
- scalability
-Message-ID: <202409182246.UMkGsMXl-lkp@intel.com>
-References: <20240918012752.2045713-1-liaochang1@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4VQSuOf"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2da55ea8163so136410a91.1;
+        Wed, 18 Sep 2024 14:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726694574; x=1727299374; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kOdXjoeQ4nEmJ8UMVlYl/8AvhkHTD6zkaDk+W7dD8fI=;
+        b=T4VQSuOfHLgxhyqYp8xvV4WkfzM1vqhzqxi9610vRCJhl4EsmfD8LEnymKv5QDxnj1
+         HfbvHRaNGcQ43ZZazg8synIlanfYJC1m2XLfxhJN//48pu7Mr3hmPwq4Hbn6ucMqc0K4
+         qEvvLb1KX9+Wno5KrxORP504dGwLJXpJawThqS9px7cvOul6Xob6FDKXvQocOdGbrZgS
+         gCu8Cskn1wkSA8BkOLPc3Rl3t3yqED+HnY0JVFR/71N4mnTDc60ZA74CGAN6x97Ie1UQ
+         9j/0Je3cCPLV3GFeAllU9fAVcFbhTmHslyXUEFsI/OrzUwxo5HwyrgU2WighjRg2YD8Q
+         LrjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726694574; x=1727299374;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kOdXjoeQ4nEmJ8UMVlYl/8AvhkHTD6zkaDk+W7dD8fI=;
+        b=XankQ8KbTKhbBPVKVePr4qwRSZRqKpjsN9H7ipagbKwNINGEyYZrsCCgtb6ImpFgvf
+         zx5rBLMjehgATEc7/6L/tul5ercUGZN5JhPhDsObKNtzHdfILxO5amawqnsVRjCsEiK8
+         HD+cCrbIWlVBTsyzc7vKtijeu9dmSMcLfjGf+mkBpo26bZmhF/XSqJyqDxYoGWVbhAnk
+         Xv6xl55oMA2V9VZQPgVDjWoe6jO9CSSCov/rjT4MPCfAqCPIm1m5KObV5u5s8stnt7wK
+         ltaY8AHSD04Cg5PHm8TXhP33asIz8McNBg+v8k+3+LDtamyhGolMsbSXKYR/9lOtqUHc
+         IbrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzaaqEG1ODqhnZ+kg+r7z+3Jj7idkYrtXuwOcTMb/0aSnjFzyRIXYz8SjQHGLvzXyWyXvPKE4m3/enuW9j@vger.kernel.org, AJvYcCVbz56OPDKQ0ZgoPKS0tfFcVY4othw8RTCruOnXn4h9KySpH3qZZwWLSIIeQVVWlUph+Zg=@vger.kernel.org, AJvYcCVlR7etx48nGG8doOM1wiuZhC6vFVJVs8wMj2OxZiaqTENccDkDnNpaQNDtCP0Fjq8ENanYoXsf1YwNJw==@vger.kernel.org, AJvYcCXstS1ST/ST7/MLmLfCw2W8YvbQld+xkcZA4rfgnMhN/dTN5FEHbtin6btfdovOtJCv/nH/64gvle6B6m6mNrUothY6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzojm1mcPEQRYumjRbBjjE1DqkaH0+XHTWF88zC5676mIGZ4laz
+	xOoqe0InIIrBx2cQdrIcS4NSa/p2Usd2ZhCViR5q0nLWqcV38wWwnnxfQXxioiYNDrj47BDFxZb
+	4HLKwOlasSS2f7vS4c4xgDFbI7yU=
+X-Google-Smtp-Source: AGHT+IEGPQsCbfwy2x9UpqhHd4Kkjvl2bDFZeUZSzoulljt4aDiYCy2c2rxCKPyVUcQL6nh9Hkk7/uOcSXl9fewAuK8=
+X-Received: by 2002:a17:90b:4c41:b0:2c9:3370:56e3 with SMTP id
+ 98e67ed59e1d1-2dba008304amr26880812a91.34.1726694574055; Wed, 18 Sep 2024
+ 14:22:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240918012752.2045713-1-liaochang1@huawei.com>
+References: <172639136989.366111.11359590127009702129.stgit@devnote2>
+In-Reply-To: <172639136989.366111.11359590127009702129.stgit@devnote2>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 18 Sep 2024 23:22:41 +0200
+Message-ID: <CAEf4BzZAPjZEZR9m66hPr6srzJwuu=B8zu6cNhxe-7__5+LpHw@mail.gmail.com>
+Subject: Re: [PATCH v15 00/19] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Florent Revest <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>, 
+	linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Liao,
+On Sun, Sep 15, 2024 at 11:09=E2=80=AFAM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> Hi,
+>
+> Here is the 15th version of the series to re-implement the fprobe on
+> function-graph tracer. The previous version is;
+>
+> https://lore.kernel.org/all/172615368656.133222.2336770908714920670.stgit=
+@devnote2/
+>
+> This version rebased on Steve's calltime change[1] instead of the last
+> patch in the previous series, and adds a bpf patch to add get_entry_ip()
+> for arm64. Note that [1] is not included in this series, so please use
+> the git branch[2].
+>
 
-kernel test robot noticed the following build errors:
+With LPC and Kernel Recipes back-to-back I won't have time to look
+through the code, but I did manage to run some benchmarks tonight, and
+they look pretty good now, thanks! Seems like the kprobe regression is
+gone, and kretprobes are a bit faster. So, nice work, thanks!
 
-[auto build test ERROR on tip/perf/core]
-[cannot apply to perf-tools-next/perf-tools-next perf-tools/perf-tools linus/master acme/perf/core v6.11 next-20240918]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+BEFORE
+=3D=3D=3D=3D=3D=3D
+kprobe         :   25.052 =C2=B1 0.032M/s
+kprobe-multi   :   28.102 =C2=B1 0.167M/s
+kretprobe      :   10.724 =C2=B1 0.008M/s
+kretprobe-multi:   11.337 =C2=B1 0.054M/s
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Liao-Chang/uprobes-Improve-the-usage-of-xol-slots-for-better-scalability/20240918-093915
-base:   tip/perf/core
-patch link:    https://lore.kernel.org/r/20240918012752.2045713-1-liaochang1%40huawei.com
-patch subject: [PATCH] uprobes: Improve the usage of xol slots for better scalability
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240918/202409182246.UMkGsMXl-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240918/202409182246.UMkGsMXl-lkp@intel.com/reproduce)
+AFTER
+=3D=3D=3D=3D=3D
+kprobe         :   25.206 =C2=B1 0.026M/s
+kprobe-multi   :   30.167 =C2=B1 0.148M/s
+kretprobe      :   10.714 =C2=B1 0.016M/s
+kretprobe-multi:   13.436 =C2=B1 0.328M/s
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409182246.UMkGsMXl-lkp@intel.com/
+> [1] https://lore.kernel.org/all/20240914214805.779822616@goodmis.org/
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/lo=
+g/?h=3Dtopic/fprobe-on-fgraph
+>
 
-All errors (new ones prefixed by >>):
-
-   In file included from arch/arm/probes/uprobes/actions-arm.c:10:
->> include/linux/uprobes.h:81:2: error: unknown type name 'refcount_t'
-           refcount_t                      slot_ref;
-           ^
-   1 error generated.
-
-
-vim +/refcount_t +81 include/linux/uprobes.h
-
-    58	
-    59	/*
-    60	 * uprobe_task: Metadata of a task while it singlesteps.
-    61	 */
-    62	struct uprobe_task {
-    63		enum uprobe_task_state		state;
-    64	
-    65		union {
-    66			struct {
-    67				struct arch_uprobe_task	autask;
-    68				unsigned long		vaddr;
-    69			};
-    70	
-    71			struct {
-    72				struct callback_head	dup_xol_work;
-    73				unsigned long		dup_xol_addr;
-    74			};
-    75		};
-    76	
-    77		struct uprobe			*active_uprobe;
-    78		unsigned long			xol_vaddr;
-    79	
-    80		struct list_head		gc;
-  > 81		refcount_t			slot_ref;
-    82		int				insn_slot;
-    83	
-    84		struct arch_uprobe              *auprobe;
-    85	
-    86		struct return_instance		*return_instances;
-    87		unsigned int			depth;
-    88	};
-    89	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[...]
