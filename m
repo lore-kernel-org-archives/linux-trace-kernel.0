@@ -1,251 +1,376 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFF217BA4;
-	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9565723B0;
+	Wed, 18 Sep 2024 01:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726586552; cv=none; b=sWSqrTcI2+8M2USfI+Qu+7MeZIzXm1+yHlz795C0GpNZPoca/JCY7YPnHu04ZbBgoUKNRvOMxCQOF5jDjycAxf51Ps6rSaTm67hUNnhrbus9AvFOvWYrZckFM+5YgzlxLwODz4CVQfKijCCaexQgqVi3kluYBSv118ZBzGJFGmk=
+	t=1726623496; cv=none; b=r/NEiPVnO7W72Z68WGRpW29C3yhg0aBt3XxsCtbLmKaqyXU1yxlhYmgfxj3uBgWb01iXDg67IHM7rFWIaB7hcDjCRwBlUlB5GccH5X4QS0C7I9v5bFWefKVUzQniaYLfBPehWqMtVfIpEW6kwqvXUw8o8rOL76AkZWyK0SNtL0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726586552; c=relaxed/simple;
-	bh=b17dV6kcYCKjtkCgvF4MqWi0LIWAWld8+sLS8KVrnNg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q+vnGLweqc5iTRdLc/WGmm0EReb/R6eOGtEUc8OdDsrvj8SLeWjnFG5VpkfTOOr4AaMeL3kS0dwhp8oM8P2P/aqqJPZFtJB+uLPfCDE1d77iWF9C5wYrVCZavSAUSUy6/77fK251WybxvGleNk60LJTJDTUQIUZ19pfjPBgRf+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXPZ7FsD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXPZ7FsD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A9826C4CEC5;
-	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726586551;
-	bh=b17dV6kcYCKjtkCgvF4MqWi0LIWAWld8+sLS8KVrnNg=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=nXPZ7FsDTlchEG+c7929e2Sf7D4yuNZs/KU/cPNCc4xj+BkoXvIHzOA3/9ZQdVfm4
-	 PBKe/jSEQEF82HetQgKXZ9u0h9CsRxKnVlnszHg8F+cT2q5ZG842wTB5dvNsVS3yNG
-	 IGADHuNB26kxG3TRIordt22pyy6OGDFzewFPdXKF3eJ03yMwFlLaKOknx3d+VHxsmx
-	 f3rElLXPONblsZKK4KOp6YgmJl9Sr0IAhVnKrQNRk8YXScvnLZbQ+7p3bJOB2eVQJa
-	 7o5bQt6HdlFRTS21z1Zl04o6F97YFfd4Ki5VHo362RJXAZCnjIrUzCSxfTgYp2FPs2
-	 nyWa+Qxdiw+cQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C77CAC58A;
-	Tue, 17 Sep 2024 15:22:31 +0000 (UTC)
-From: Daniel Gomez via B4 Relay <devnull+da.gomez.samsung.com@kernel.org>
-Date: Tue, 17 Sep 2024 17:22:18 +0200
-Subject: [PATCH RFC] blktrace: add i/o alignment information
+	s=arc-20240116; t=1726623496; c=relaxed/simple;
+	bh=6h/5sh8g6PzXThSEboHpnwPsFdNAKItWhvM2XS4n8Xo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RPW2E+ce3IKqsSI2A/uraCSTMBVsW5BnPQk9w7am/H3eq6GehTIitI4iHmefhVQBmRmFeQRcPEKs5vO0UC6k7B8UbEGb2zglkEFXEMBpu6Rwdoz/tQDkGaWh9wgecex27Tj0KVbnIYCJ0XEceeEczHIfBPByvoqYEV2AR4Yis0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4X7h9W0CFlzFqn6;
+	Wed, 18 Sep 2024 09:37:51 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 726961800A0;
+	Wed, 18 Sep 2024 09:38:04 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 18 Sep
+ 2024 09:38:01 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <mhiramat@kernel.org>, <oleg@redhat.com>, <andrii@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: [PATCH] uprobes: Improve the usage of xol slots for better scalability
+Date: Wed, 18 Sep 2024 01:27:52 +0000
+Message-ID: <20240918012752.2045713-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240917-blktrace-algn-v1-1-9fb54b7b1dfa@samsung.com>
-X-B4-Tracking: v=1; b=H4sIAKme6WYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDS0Mz3aSc7JKixORU3cSc9DzdRENDYyMDY1NjQwsjJaCegqLUtMwKsHn
- RSkFuzkqxtbUAq9kXRGQAAAA=
-To: Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, gost.dev@samsung.com, 
- John Garry <john.g.garry@oracle.com>, Dave Chinner <dchinner@redhat.com>, 
- Luis Chamberlain <mcgrof@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>, 
- Dan Helmick <dan.helmick@samsung.com>, Daniel Gomez <d@kruces.com>, 
- Daniel Gomez <da.gomez@samsung.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1726586542; l=6584;
- i=da.gomez@samsung.com; s=20240621; h=from:subject:message-id;
- bh=JygrMCTMhPqX/bAPRMl20ITyAtI+tYOaIShANk2aGlU=;
- b=8mwlKU1v1feiAFYqL5Z0fOTBZ/cJLiS6UtnWxVXzTXO9WPZQ6SrTPGrgd5Ar2yXHEumZtQMHM
- EeF05YyiVFRA2JQc2Iisq0RLzDK7A4smn7CIZ22sYd4U3gRUvnOjZiL
-X-Developer-Key: i=da.gomez@samsung.com; a=ed25519;
- pk=BqYk31UHkmv0WZShES6pIZcdmPPGay5LbzifAdZ2Ia4=
-X-Endpoint-Received: by B4 Relay for da.gomez@samsung.com/20240621 with
- auth_id=175
-X-Original-From: Daniel Gomez <da.gomez@samsung.com>
-Reply-To: da.gomez@samsung.com
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-From: Daniel Gomez <da.gomez@samsung.com>
+The kprobe handler allocates xol slot from xol_area and quickly release
+it in the single-step handler. The atomic operations on the xol bitmap
+and slot_count lead to expensive cache line bouncing between multiple
+CPUs. Given the xol slot is on the hot path for kprobe and kretprobe
+handling, the profiling results on some Arm64 machine show that nearly
+80% of cycles are spent on this. So optimizing xol slot usage will
+become important to scalability after the Andrii's series land.
 
-This patch introduces max I/O alignment boundaries in terms of LBA and
-size in blktrace for issued I/Os.
+This patch address this scalability issues from two perspectives:
 
-Tracing alignment information is important for high-capacity and QLC
-SSDs with Indirection Units greater than 4 KiB. These devices are still
-4 KiB in Logical Block Size (LBS) but because they work at higher IUs,
-unaligned writes to the IU boundaries can imply in a read-modify-write
-(RMW).
+- Allocated xol slot is now saved in the thread associated utask data.
+  It allows to reuse it throughout the therad's lifetime. This avoid
+  the frequent atomic operation on the slot bitmap and slot_count of
+  xol_area data, which is the major negative impact on scalability.
 
-This patch enables blktrace to report alignment details via new
-alignment parameter, which will be calculated during I/O tracing.
+- A garbage collection routine xol_recycle_insn_slot() is introduced to
+  reclaim unused xol slots. utask instances that own xol slot but
+  haven't reclaimed them are linked in a linked list. When xol_area runs
+  out of slots, the garbage collection routine travel the list to free
+  one slot. Allocated xol slots is marked as unused in single-step
+  handler. While the marking relies on the refcount of utask instance,
+  due to thread can't run on multiple CPUs at same time, therefore, it
+  is unlikely CPUs take the refcount of same utask, minimizing cache
+  line bouncing.
 
-Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+  Upon thread exit, the utask is deleted from the linked-list, and the
+  associated xol slot will be free.
+
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
 ---
-This patch introduces support for tracing maximum I/O alignment
-boundaries in terms of Logical Block Addressing (LBA) and size within
-blktrace for issued I/Os.
+ include/linux/uprobes.h |   4 +
+ kernel/events/uprobes.c | 173 ++++++++++++++++++++++++++++++----------
+ 2 files changed, 135 insertions(+), 42 deletions(-)
 
-Note: the term alignment has been previously discussed here [1], where
-it was suggested to use "largest block size granularity". In this RFC,
-alignment term is kept, though further suggestions for an appropriate
-term are welcomed.
-
-[1] https://lore.kernel.org/all/a7f9079f-6f47-4a47-a327-98497bd33dfe@oracle.com
-
-Tracing alignment information is important for high-capacity and QLC
-SSDs with Indirection Units greater than 4 KiB. These devices are still
-4 KiB in Logical Block Size (LBS) but because they work at higher IUs,
-unaligned writes to the IU boundaries can imply in a read-modify-write
-(RMW).
-
-More information about the motivation can be found in the first LBS
-patch series [2].
-
-[2] Subject: [RFC 00/23] Enable block size > page size in XFS
-https://lore.kernel.org/lkml/20230915183848.1018717-1-kernel@pankajraghav.com/
-
-Additionally, Dan Helmick's talk [3] provides further context on the
-importance of I/O granularity and alignment, specifically in the context
-of NVMe.
-
-[3] SDC2022 – Optimal Performance Parameters for NVMe SSDs
-
-The graph below is a representation of the device IU vs what is
-considered here the I/O block alignment.
-
-    |--- IU Boundaries ----|      |-PS-|
-a)  [====][====][====][====][····][····][····]--
-    |                      |
-b)  [····][====][====][====][====][····][····]--
-    |                      |
-c)  [····][····][====][====][····][····][····]--
-    |                      |
-LBA 0                      4
-
-    Key:
-    [====] = I/O Block
-    [····] = Memory in Page Size (PS) chunks
-    PS: System base Page Size (e.g. x86_64 is 4 KiB)
-
-a) I/O matches IU boundaries (LBA and block size). I/O is aligned to
-IU boundaries.
-b) The size of the I/O matches the IU size but the I/O is not aligned to
-the IU boundaries. I/O is unaligned.
-c) I/O does not match in either size or LBA. I/O is unaligned.
-
-This patch enables blktrace to report alignment details via new
-alignment parameter, which will be calculated during I/O tracing. For
-the example above, the following values would be reported:
-
-a) |16384|: I/O aligned to 16 KiB boundaries.
-b) |4096|:  I/O aligned to 4 KiB boundaries.
-c) |8192|:  I/O aligned to 8 KiB boundaries.
-
-Finally, this patch requires some minor changes [4] in the blktrace
-tool. If this moves forward, the changes will be submitted accordingly.
-
-[4] https://github.com/dkruces/blktrace/tree/algn
----
- include/linux/blktrace_api.h      |  2 ++
- include/uapi/linux/blktrace_api.h |  1 +
- kernel/trace/blktrace.c           | 38 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+)
-
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 122c62e561fc..17f1a21ffb5a 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -26,6 +26,8 @@ struct blk_trace {
- 	struct dentry *dir;
- 	struct list_head running_list;
- 	atomic_t dropped;
-+	u32 lbs;
-+	u8 lba_shift;
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index e6f4e73125ff..87fa24c74eb8 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -77,6 +77,10 @@ struct uprobe_task {
+ 	struct uprobe			*active_uprobe;
+ 	unsigned long			xol_vaddr;
+ 
++	struct list_head		gc;
++	refcount_t			slot_ref;
++	int				insn_slot;
++
+ 	struct arch_uprobe              *auprobe;
+ 
+ 	struct return_instance		*return_instances;
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 86fcb2386ea2..5ba1bd3ad27f 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -111,6 +111,12 @@ struct xol_area {
+ 	 * the vma go away, and we must handle that reasonably gracefully.
+ 	 */
+ 	unsigned long 			vaddr;		/* Page(s) of instruction slots */
++	struct list_head		gc_list;	/* The list for the
++							   garbage slots */
++	spinlock_t			list_lock;	/* Hold for
++							   list_add_rcu() and
++							   list_del_rcu() on
++							   gc_list */
  };
  
- extern int blk_trace_ioctl(struct block_device *, unsigned, char __user *);
-diff --git a/include/uapi/linux/blktrace_api.h b/include/uapi/linux/blktrace_api.h
-index 690621b610e5..d6df0c10ece1 100644
---- a/include/uapi/linux/blktrace_api.h
-+++ b/include/uapi/linux/blktrace_api.h
-@@ -110,6 +110,7 @@ struct blk_io_trace {
- 	__u32 cpu;		/* on what cpu did it happen */
- 	__u16 error;		/* completion error */
- 	__u16 pdu_len;		/* length of data after this trace */
-+	__u32 alignment;	/* i/o alignment boundaries */
- 	/* cgroup id will be stored here if exists */
- };
+ static void uprobe_warn(struct task_struct *t, const char *msg)
+@@ -1557,6 +1563,8 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
  
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 8fd292d34d89..8330455458b8 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -208,6 +208,39 @@ static const u32 ddir_act[2] = { BLK_TC_ACT(BLK_TC_READ),
- #define MASK_TC_BIT(rw, __name) ((__force u32)(rw & REQ_ ## __name) <<	\
- 	  (ilog2(BLK_TC_ ## __name) + BLK_TC_SHIFT - __REQ_ ## __name))
+ 	area->vaddr = vaddr;
+ 	init_waitqueue_head(&area->wq);
++	INIT_LIST_HEAD(&area->gc_list);
++	spin_lock_init(&area->list_lock);
+ 	/* Reserve the 1st slot for get_trampoline_vaddr() */
+ 	set_bit(0, area->bitmap);
+ 	atomic_set(&area->slot_count, 1);
+@@ -1613,37 +1621,91 @@ void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm)
+ 	}
+ }
  
-+static inline bool blk_trace_lba_aligned(u32 len, u32 algn_len, u64 lba,
-+				      u32 algn_lba)
++static __always_inline
++struct uprobe_task *test_and_get_task_slot(struct uprobe_task *utask)
 +{
-+	return !(len % algn_len) && !(lba % algn_lba);
++	return refcount_inc_not_zero(&utask->slot_ref) ? utask : NULL;
 +}
 +
-+static inline u32 blk_trace_align(struct blk_trace *bt, u64 sector,
-+					u32 len)
++static __always_inline
++struct uprobe_task *test_and_put_task_slot(struct uprobe_task *utask)
 +{
-+	u64 lba = sector >> (bt->lba_shift - SECTOR_SHIFT);
-+	u32 align_len = len;
-+	u32 align_lba = align_len / bt->lbs;
-+	u32 alignment = bt->lbs;
++	return refcount_dec_if_one(&utask->slot_ref) ? utask : NULL;
++}
 +
-+	if (is_power_of_2(len) &&
-+	    blk_trace_lba_aligned(len, align_len, lba, align_lba))
-+		return len;
++static __always_inline
++void put_task_slot(struct uprobe_task *utask)
++{
++	refcount_dec(&utask->slot_ref);
++}
 +
-+	align_len = bt->lbs << 1UL;
-+	align_lba = align_len / bt->lbs;
++static __always_inline
++void get_task_slot(struct uprobe_task *utask)
++{
++	refcount_inc(&utask->slot_ref);
++}
 +
-+	while (align_len < len) {
-+		if (!blk_trace_lba_aligned(len, align_len, lba, align_lba))
++/*
++ * xol_recycle_insn_slot - recycle a slot from the garbage collection list.
++ */
++static int xol_recycle_insn_slot(struct xol_area *area)
++{
++	struct uprobe_task *utask;
++	int slot = UINSNS_PER_PAGE;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(utask, &area->gc_list, gc) {
++		/*
++		 * The utask associated slot is in-use or recycling when
++		 * utask associated slot_ref is not one.
++		 */
++		if (test_and_put_task_slot(utask)) {
++			slot = utask->insn_slot;
++			utask->insn_slot = UINSNS_PER_PAGE;
++			clear_bit(slot, area->bitmap);
++			atomic_dec(&area->slot_count);
++			get_task_slot(utask);
 +			break;
-+
-+		alignment = align_len;
-+		align_len = align_len << 1UL;
-+		align_lba = align_len / bt->lbs;
++		}
 +	}
++	rcu_read_unlock();
 +
-+	return alignment;
++	return slot;
 +}
 +
  /*
-  * The worker for the various blk_add_trace*() types. Fills out a
-  * blk_io_trace structure and places it in a per-cpu subbuffer.
-@@ -296,6 +329,9 @@ static void __blk_add_trace(struct blk_trace *bt, sector_t sector, int bytes,
- 		t->device = bt->dev;
- 		t->error = error;
- 		t->pdu_len = pdu_len + cgid_len;
-+		if (((what & 0xffff) & ~__BLK_TA_CGROUP) == __BLK_TA_ISSUE)
-+			t->alignment =
-+				blk_trace_align(bt, sector, bytes);
+  *  - search for a free slot.
+  */
+-static unsigned long xol_take_insn_slot(struct xol_area *area)
++static int xol_take_insn_slot(struct xol_area *area)
+ {
+-	unsigned long slot_addr;
+ 	int slot_nr;
  
- 		if (cgid_len)
- 			memcpy((void *)t + sizeof(*t), &cgid, cgid_len);
-@@ -597,6 +633,8 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 		bt->act_mask = (u16) -1;
+ 	do {
+ 		slot_nr = find_first_zero_bit(area->bitmap, UINSNS_PER_PAGE);
+-		if (slot_nr < UINSNS_PER_PAGE) {
+-			if (!test_and_set_bit(slot_nr, area->bitmap))
+-				break;
++		if (slot_nr == UINSNS_PER_PAGE)
++			slot_nr = xol_recycle_insn_slot(area);
++
++		if (slot_nr == UINSNS_PER_PAGE)
++			wait_event(area->wq,
++				   (atomic_read(&area->slot_count) <
++				    UINSNS_PER_PAGE));
++		else if (!test_and_set_bit(slot_nr, area->bitmap))
++			break;
  
- 	blk_trace_setup_lba(bt, bdev);
-+	bt->lbs = queue_logical_block_size(q);
-+	bt->lba_shift = ilog2(bt->lbs);
+-			slot_nr = UINSNS_PER_PAGE;
+-			continue;
+-		}
+-		wait_event(area->wq, (atomic_read(&area->slot_count) < UINSNS_PER_PAGE));
++		slot_nr = UINSNS_PER_PAGE;
+ 	} while (slot_nr >= UINSNS_PER_PAGE);
  
- 	/* overwrite with user settings */
- 	if (buts->start_lba)
-
----
-base-commit: 4f3e012d4cfd1d9bf837870c961f462ca9f23ebe
-change-id: 20240916-blktrace-algn-a11320353182
-
-Best regards,
+-	slot_addr = area->vaddr + (slot_nr * UPROBE_XOL_SLOT_BYTES);
+ 	atomic_inc(&area->slot_count);
+ 
+-	return slot_addr;
++	return slot_nr;
+ }
+ 
+ /*
+  * xol_get_insn_slot - allocate a slot for xol.
+  * Returns the allocated slot address or 0.
+  */
+-static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
++static unsigned long xol_get_insn_slot(struct uprobe_task *utask,
++				       struct uprobe *uprobe)
+ {
+ 	struct xol_area *area;
+ 	unsigned long xol_vaddr;
+@@ -1652,16 +1714,45 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+ 	if (!area)
+ 		return 0;
+ 
+-	xol_vaddr = xol_take_insn_slot(area);
+-	if (unlikely(!xol_vaddr))
++	/*
++	 * The utask associated slot is recycling when utask associated
++	 * slot_ref is zero.
++	 */
++	if (!test_and_get_task_slot(utask))
+ 		return 0;
+ 
++	if (utask->insn_slot == UINSNS_PER_PAGE) {
++		utask->insn_slot = xol_take_insn_slot(area);
++		spin_lock(&area->list_lock);
++		list_add_rcu(&utask->gc, &area->gc_list);
++		spin_unlock(&area->list_lock);
++	}
++
++	xol_vaddr = area->vaddr + (utask->insn_slot * UPROBE_XOL_SLOT_BYTES);
++
+ 	arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
+ 			      &uprobe->arch.ixol, sizeof(uprobe->arch.ixol));
+ 
+ 	return xol_vaddr;
+ }
+ 
++/*
++ * xol_delay_free_insn_slot - Make the slot available for garbage collection
++ */
++static void xol_delay_free_insn_slot(void)
++{
++	struct xol_area *area = current->mm->uprobes_state.xol_area;
++
++	/*
++	 * This refcount would't cause expensive cache line bouncing
++	 * between CPUs, as it is unlikely that multiple CPUs take the
++	 * slot_ref of same utask.
++	 */
++	put_task_slot(current->utask);
++	if (waitqueue_active(&area->wq))
++		wake_up(&area->wq);
++}
++
+ /*
+  * xol_free_insn_slot - If slot was earlier allocated by
+  * @xol_get_insn_slot(), make the slot available for
+@@ -1670,35 +1761,31 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+ static void xol_free_insn_slot(struct task_struct *tsk)
+ {
+ 	struct xol_area *area;
+-	unsigned long vma_end;
+-	unsigned long slot_addr;
++	unsigned long flags;
++	int slot_nr;
+ 
+ 	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
+ 		return;
+ 
+-	slot_addr = tsk->utask->xol_vaddr;
+-	if (unlikely(!slot_addr))
+-		return;
+-
+ 	area = tsk->mm->uprobes_state.xol_area;
+-	vma_end = area->vaddr + PAGE_SIZE;
+-	if (area->vaddr <= slot_addr && slot_addr < vma_end) {
+-		unsigned long offset;
+-		int slot_nr;
+-
+-		offset = slot_addr - area->vaddr;
+-		slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
+-		if (slot_nr >= UINSNS_PER_PAGE)
+-			return;
+ 
+-		clear_bit(slot_nr, area->bitmap);
+-		atomic_dec(&area->slot_count);
+-		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
+-		if (waitqueue_active(&area->wq))
+-			wake_up(&area->wq);
++	spin_lock_irqsave(&area->list_lock, flags);
++	list_del_rcu(&tsk->utask->gc);
++	spin_unlock_irqrestore(&area->list_lock, flags);
++	synchronize_rcu();
+ 
+-		tsk->utask->xol_vaddr = 0;
+-	}
++	slot_nr = tsk->utask->insn_slot;
++	if (unlikely(slot_nr == UINSNS_PER_PAGE))
++		return;
++
++	tsk->utask->insn_slot = UINSNS_PER_PAGE;
++	clear_bit(slot_nr, area->bitmap);
++	atomic_dec(&area->slot_count);
++	smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
++	if (waitqueue_active(&area->wq))
++		wake_up(&area->wq);
++
++	tsk->utask->xol_vaddr = 0;
+ }
+ 
+ void __weak arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+@@ -1779,8 +1866,12 @@ void uprobe_free_utask(struct task_struct *t)
+  */
+ static struct uprobe_task *get_utask(void)
+ {
+-	if (!current->utask)
++	if (!current->utask) {
+ 		current->utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
++		current->utask->insn_slot = UINSNS_PER_PAGE;
++		INIT_LIST_HEAD(&current->utask->gc);
++		refcount_set(&current->utask->slot_ref, 1);
++	}
+ 	return current->utask;
+ }
+ 
+@@ -1978,7 +2069,7 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+ 	if (!try_get_uprobe(uprobe))
+ 		return -EINVAL;
+ 
+-	xol_vaddr = xol_get_insn_slot(uprobe);
++	xol_vaddr = xol_get_insn_slot(utask, uprobe);
+ 	if (!xol_vaddr) {
+ 		err = -ENOMEM;
+ 		goto err_out;
+@@ -1988,10 +2079,8 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+ 	utask->vaddr = bp_vaddr;
+ 
+ 	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
+-	if (unlikely(err)) {
+-		xol_free_insn_slot(current);
++	if (unlikely(err))
+ 		goto err_out;
+-	}
+ 
+ 	utask->active_uprobe = uprobe;
+ 	utask->state = UTASK_SSTEP;
+@@ -2340,7 +2429,7 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+ 	put_uprobe(uprobe);
+ 	utask->active_uprobe = NULL;
+ 	utask->state = UTASK_RUNNING;
+-	xol_free_insn_slot(current);
++	xol_delay_free_insn_slot();
+ 
+ 	spin_lock_irq(&current->sighand->siglock);
+ 	recalc_sigpending(); /* see uprobe_deny_signal() */
 -- 
-Daniel Gomez <da.gomez@samsung.com>
-
+2.34.1
 
