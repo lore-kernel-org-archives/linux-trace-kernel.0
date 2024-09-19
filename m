@@ -1,105 +1,125 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48919DF65;
-	Thu, 19 Sep 2024 12:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1475D41746;
+	Thu, 19 Sep 2024 13:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726748861; cv=none; b=r29MWvhNkwyk0Hqq1drKXNCns9mh+N7XO8U3QYaQ6S4eq1bgW6NLIDIorPoWoUMPtj/BT/G7P7oypWsa00v1YcNp3zS6YKKdDfyD0JoHuTZ7q9XnMmbgOuGHXCXUnuwuHeIj3KEM81COET+7+4HssFh/hH9p155jdUzpzh7AvD4=
+	t=1726752854; cv=none; b=IPYsUnLYgVJsQnGrVtODNIayurbvj+OEaxyjBsuGgK4pN1rIFDjyqtZiSQt9JOnmNgK9otZ4IXiedXAeb6dJS46iframflZkwDWK2lIZEl/eMETkshrgbo3Ql+D6NZ36HFiiCh4wWIJKJsU3v/kulhKOFJ38F5fGfKY9hCtvurU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726748861; c=relaxed/simple;
-	bh=sVdW3pEklIiiGVIPV681lRhmKdKVdMgyfeS8voww1y8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=im+25ycbyGigOr35z7Bmu1LWgMe3N2fqKVcpOeDv42+O3e2MqtMY7EYOfbkPEbbpzdZyuLVszfEgyxo8+OARB/TwJ8FLZmZ7n5QOSxProGigjWieOclzEm39nzsPqCYRRpynDlXVpoJpTUaxKzkPQRrgg8Gv6KHuXNIgKuBhjoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4X8ZXM4Ww2zFqnX;
-	Thu, 19 Sep 2024 20:27:15 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id A132A18010F;
-	Thu, 19 Sep 2024 20:27:30 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 19 Sep
- 2024 20:27:30 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
-	<catalin.marinas@arm.com>, <will@kernel.org>, <mark.rutland@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
-Date: Thu, 19 Sep 2024 12:17:19 +0000
-Message-ID: <20240919121719.2148361-1-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1726752854; c=relaxed/simple;
+	bh=J6I5LoVXfcU39JpBCU/5fJc/ayssxvwodGSPH59Yh3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I73hObEwBeDvJwX73VZmSOn7ObnB97WNa/HHApFY5suovpj3do+yj9tpN58DSPjNa+E7VX8p6Irl6mCi1l21llBWd24TsTIrU0zKJkB9hlzMP1thfdnOkqnQgPaasQgogLvUW+FW+uH8Adywe32+vSqCnmzxCHalCzpXCPsFgQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ID87dfxr; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ID87dfxr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726752853; x=1758288853;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J6I5LoVXfcU39JpBCU/5fJc/ayssxvwodGSPH59Yh3A=;
+  b=ID87dfxrQ9wUep/Sa/Mv3rAU6YQ3BIYn2FgZG27KyfTPgpjmQUUg6TxI
+   A0srIE5T6BqgJwKMyU/k3Alq//NVHIdQggRl8D8EehfzA40XTZdAs8d2P
+   iACAnHJjlBvQ9Dv8aPsUcTGWWx+fE6CXRQsz5k09VeY7SNXwQ/k2S6kcY
+   yt+d9Hh5QjuoCmv42Cn5zM0o95PI99ACzHbOiaTZDC9hAWnV4EbAKCwB+
+   EOgH23PoserIGWBLP3n3H81WSU/u+YRY8y6fDsNXU6C6gKHkiNsX3Z1Gq
+   VFxb5Y5wzYgObFckiPQ8M9TwGDNwTnoQMs7ulXdVzzLXHTKL4zv0EruT0
+   Q==;
+X-CSE-ConnectionGUID: 1rYYBDZOTxqeNoA8UUglRw==
+X-CSE-MsgGUID: AcNcQMGeROm3sLVXHIKDDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11199"; a="29503812"
+X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
+   d="scan'208";a="29503812"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:34:13 -0700
+X-CSE-ConnectionGUID: HgB11EeXQGunjZweSXhUEQ==
+X-CSE-MsgGUID: bMuo+53oQl+qth8N4GGRMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,241,1719903600"; 
+   d="scan'208";a="69535638"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2024 06:34:12 -0700
+Date: Thu, 19 Sep 2024 06:34:10 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, oleg@redhat.com, andrii@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
+ scalability
+Message-ID: <ZuwoUmqXrztp-Mzh@tassilo>
+References: <20240918012752.2045713-1-liaochang1@huawei.com>
+ <87jzf9b12w.fsf@linux.intel.com>
+ <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
 
-The profiling of single-thread selftests bench reveals a bottlenect in
-caches_clean_inval_pou() on ARM64. On my local testing machine, this
-function takes approximately 34% of CPU cycles for trig-uprobe-nop and
-trig-uprobe-push.
+> Sorry, I know nothing about the ThreadSanitizer and related annotation,
+> could you provide some information about it, thanks.
 
-This patch add a check to avoid unnecessary cache flush when writing
-instruction to the xol slot. If the instruction is same with the
-existing instruction in slot, there is no need to synchronize D/I cache.
-Since xol slot allocation and updates occur on the hot path of uprobe
-handling, The upstream kernel running on Kunpeng916 (Hi1616), 4 NUMA
-nodes, 64 cores@ 2.4GHz reveals this optimization has obvious gain for
-nop and push testcases.
+Documentation/dev-tools/kcsan.rst
 
-Before (next-20240918)
-----------------------
-uprobe-nop      ( 1 cpus):    0.418 ± 0.001M/s  (  0.418M/s/cpu)
-uprobe-push     ( 1 cpus):    0.411 ± 0.005M/s  (  0.411M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.052 ± 0.002M/s  (  2.052M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.350 ± 0.000M/s  (  0.350M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.353 ± 0.000M/s  (  0.353M/s/cpu)
-uretprobe-ret   ( 1 cpus):    1.074 ± 0.001M/s  (  1.074M/s/cpu)
+> > Would be good to have some commentary why doing so
+> > many write operations with merely a rcu_read_lock as protection is safe.
+> > It might be safer to put some write type operations under a real lock. 
+> > Also it is unclear how the RCU grace period for utasks is enforced.
+> 
+> You are right, but I think using atomic refcount routine might be a more
+> suitable apprach for this scenario. The slot_ret field of utask instance
 
-After
------
-uprobe-nop      ( 1 cpus):    0.926 ± 0.000M/s  (  0.926M/s/cpu)
-uprobe-push     ( 1 cpus):    0.910 ± 0.001M/s  (  0.910M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.056 ± 0.001M/s  (  2.056M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.653 ± 0.001M/s  (  0.653M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.645 ± 0.000M/s  (  0.645M/s/cpu)
-uretprobe-ret   ( 1 cpus):    1.093 ± 0.001M/s  (  1.093M/s/cpu)
+Does it really all need to be lockless? Perhaps you can only make the 
+common case lockless, but then only when the list overflows take a lock 
+and avoid a lot of races. That might be good enough for performance.
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/kernel/probes/uprobes.c | 4 ++++
- 1 file changed, 4 insertions(+)
+If you really want a complex lockless scheme you need very clear documentation
+in comments and commit logs at least.
 
-diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-index d49aef2657cd..5ee27509d6f6 100644
---- a/arch/arm64/kernel/probes/uprobes.c
-+++ b/arch/arm64/kernel/probes/uprobes.c
-@@ -17,12 +17,16 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
- 	void *xol_page_kaddr = kmap_atomic(page);
- 	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
- 
-+	if (!memcmp(dst, src, len))
-+		goto done;
-+
- 	/* Initialize the slot */
- 	memcpy(dst, src, len);
- 
- 	/* flush caches (dcache/icache) */
- 	sync_icache_aliases((unsigned long)dst, (unsigned long)dst + len);
- 
-+done:
- 	kunmap_atomic(xol_page_kaddr);
- }
- 
--- 
-2.34.1
+Also there should be a test case that stresses the various cases.
+
+I would just use a lock 
+> is used to track the status of insn_slot. slot_ret supports three values.
+> A value of 2 means the utask associated insn_slot is currently in use by
+> uprobe. A value of 1 means the slot is no being used by uprobe. A value
+> of 0 means the slot has been reclaimed. So in some term, the atomic refcount
+> routine test_and_pout_task_slot() also avoid the racing when writing to
+> the utask instance, providing additional status information about insn_slot.
+> 
+> BTW, You reminded me that since it might recycle the slot after deleting the
+> utask from the garbage collection list, so it's necessary to use
+> test_and_put_task_slot() to avoid the racing on the stale utask. the correct
+> code might be something like this:
+> 
+> @@ -1771,16 +1783,16 @@ static void xol_free_insn_slot(struct task_struct *tsk)
+> 
+>         spin_lock_irqsave(&area->list_lock, flags);
+>         list_del_rcu(&tsk->utask->gc);
+> +       /* Ensure the slot is not in use or reclaimed on other CPU */
+> +       if (test_and_put_task_slot(tsk->utask)) {
+> +               clear_bit(tsk->utask->insn_slot, area->bitmap);
+> +               atomic_dec(&area->slot_count);
+> +               tsk->utask->insn_slot = UINSNS_PER_PAGE;
+> +               get_task_slot(tsk->utask);
+> +       }
+
+I would have expected you would add a if (racing) bail out, assume the
+other CPU will do the work type check but that doesn't seem to be what
+the code is doing.
+
+-Andi
 
