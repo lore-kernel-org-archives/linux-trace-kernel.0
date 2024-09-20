@@ -1,106 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E696054277;
-	Fri, 20 Sep 2024 08:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4450013A86C;
+	Fri, 20 Sep 2024 08:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726820286; cv=none; b=o/HF/nnDTIrGSKanI1gxA5zWfJrnNBnED25fgABiiHMJ92RG6z3blcaewFlmq5PaJv5GbXzC7Ob2AMtKHh6IE8HEUBP4BJzes5knNJqdOQYRaJ0pVPDn496O8HAMMt1uxwz230xjMrHTN+BWKkF7TDNHkJKWwhEELKq96CFWWdk=
+	t=1726822718; cv=none; b=bv9mSZwzIEPMlD/yjVAAPX3yGvq+aReDXjr6zHH6sm6rQh3iIUvgACbdjnvovPW5J3SzzKF46pRmtZUe+xSYD/GsXK0coPeRg5JOusrbfWAdDD3sBHj1Qa874EBAmO2hondMJmozsliTRSrg9ArjMWMFLZF5NlS/Cyhu8eJjqhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726820286; c=relaxed/simple;
-	bh=seGYfVYfyPjidQeia0MSEPXhvPjaDb+jdaPoJ9YM/L8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=a5n/uhhS2bSv5+zYcU5kyLaTP8ua66grBbe8waEuiDfhyQ8TmDh24tm39q5AhuxEUqdErARIRqKkm1Xs9oM6H9tOM9dY3+YP1jjczHl0u8Mj2OmpyE2JmztSJaaUTEbpMLMWZ4wKQ0CkMD6gAUmHLnD81MwE8uY9W1296ynXlqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKVW8JD9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKVW8JD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61DC5C4CED1;
-	Fri, 20 Sep 2024 08:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726820285;
-	bh=seGYfVYfyPjidQeia0MSEPXhvPjaDb+jdaPoJ9YM/L8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UKVW8JD9v7gxZ3lO5eOVhRM7Dae/E7cQ/gy5OZ/2TDHkPK6L3ccoY11FyDHU8I9oK
-	 DBNgEyHPIPFAo+rYuN4gGStSeD+eT3YZNV3LKIH7pssRNPXkAVHfegsg022ejDjuvN
-	 dVyz7L45+/PdN+j9Y+T/0AFCKD3pabW0L3HSfVimyaJk90mr01cBQSRBWXEZvPClhR
-	 PVx2tTnro6fTEsHVeDo19mZTMhMrb60xS30VeOVtyDAHbi+ZcqrMPMf8IAWM0WmSor
-	 CZ8nWn8uzP+gWaa0W3sNnsbl9/EHuWTZQ6Vv80MMR+jmXliaTg4OckmsjJIBc+YAZh
-	 b++MGYJd8X2ig==
-Date: Fri, 20 Sep 2024 10:17:58 +0200
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-csky@vger.kernel.org
-Subject: Re: [PATCH 0/7] add function arguments to ftrace
-Message-Id: <20240920101758.60419ec040c6f0643b475720@kernel.org>
-In-Reply-To: <yt9djzfgccoo.fsf@linux.ibm.com>
-References: <20240904065908.1009086-1-svens@linux.ibm.com>
-	<20240905111620.5211d9f8@gandalf.local.home>
-	<yt9dv7z9l2zp.fsf@linux.ibm.com>
-	<20240906100738.2526cffd@gandalf.local.home>
-	<20240908222830.01a01b10d62d59ed73dcb676@kernel.org>
-	<yt9dh6ape022.fsf@linux.ibm.com>
-	<yt9djzfgccoo.fsf@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1726822718; c=relaxed/simple;
+	bh=/umz4JPSo/PPCvKDA0j1UJajeC/raPXyTA2p9xmoVZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UBoph2HlrxkWIpORs1wv1G+gKv37g06cFaQ54VLQkyQQZdiuSW968ys66q/SJHqHgipM/2QkPNzAIQubzTnTp8d7La1gBqT11WsS/bZxKJnkHlNw/XBCbGVo+eeiYbvX/7vKndWlSLDKe9+9SP7NWZQjS3Npoty7/ejH0hsnv4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4X95r06M24zySBk;
+	Fri, 20 Sep 2024 16:57:36 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 632D2180064;
+	Fri, 20 Sep 2024 16:58:32 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 20 Sep 2024 16:58:31 +0800
+Message-ID: <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com>
+Date: Fri, 20 Sep 2024 16:58:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <mhiramat@kernel.org>, <peterz@infradead.org>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20240919121719.2148361-1-liaochang1@huawei.com>
+ <20240919141824.GB12149@redhat.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <20240919141824.GB12149@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Fri, 13 Sep 2024 08:03:51 +0200
-Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> Sven Schnelle <svens@linux.ibm.com> writes:
+
+在 2024/9/19 22:18, Oleg Nesterov 写道:
+> On 09/19, Liao Chang wrote:
+>>
+>> --- a/arch/arm64/kernel/probes/uprobes.c
+>> +++ b/arch/arm64/kernel/probes/uprobes.c
+>> @@ -17,12 +17,16 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+>>  	void *xol_page_kaddr = kmap_atomic(page);
+>>  	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
+>>
+>> +	if (!memcmp(dst, src, len))
+>> +		goto done;
 > 
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
-> >
-> >> On Fri, 6 Sep 2024 10:07:38 -0400
-> >> Steven Rostedt <rostedt@goodmis.org> wrote:
-> >>
-> >>> On Fri, 06 Sep 2024 08:18:02 +0200
-> >>> Sven Schnelle <svens@linux.ibm.com> wrote:
-> >>> 
-> >>> 
-> >>> > One thing i learned after submitting the series is that struct
-> >>> > ftrace_regs depends on CONFIG_FUNCTION_TRACER, so it cannot be used
-> >>> > with the graph tracer.
-> >>
-> >> Yeah, this is solved by my series [1].
-> >>
-> >> [1] https://patchwork.kernel.org/project/linux-trace-kernel/patch/172398532480.293426.13232399076477198126.stgit@devnote2/
-> >>
-> >> So I think this series is easier to apply after my series, which
-> >> passes fgraph_regs in return handler.
-> >
-> > Thanks, i'll rebase my changes on top of your patches then.
+> can't really comment, I know nothing about arm64...
 > 
-> While doing so i noticed that i completely forgot about arguments
-> located on the stack. The current patchset tries to read from the
-> current kernel stack, which is obviously wrong. So either the tracer
-> needs to save the stack frame in the ringbuffer (which would be quite
-> a lot of data), or ftrace only prints arguments located in registers.
-> Also not nice. Opinions?
+> but don't we need to change __create_xol_area()
+> 
+> 	-	area->page = alloc_page(GFP_HIGHUSER);
+> 	+	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+> 
+> to avoid the false positives?
 
-We can limit it to first 6 arguments in the ftrace_regs by default,
-no need to save all of them. We can add an option to specify how
-many stack entries (but it is set 0 by default).
+Indeed, it would be safer.
 
-Thank you,
-
+Could we tolerate these false positives? Even if the page are not reset
+to zero bits, if the existing bits are the same as the instruction being
+copied, it still can execute the correct instruction.
 
 > 
-> Thanks
-> Sven
-
+> Oleg.
+> 
+> 
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+BR
+Liao, Chang
