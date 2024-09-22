@@ -1,123 +1,112 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125E1376;
-	Sun, 22 Sep 2024 13:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888C163D;
+	Sun, 22 Sep 2024 14:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727011908; cv=none; b=tH95NPRsbfC9YQFL74eOrLzed3QoYgOb/T4ZoSOIWje7g0nyW65vPzbHmppjSLrNTcDuQ5pspE+h9Xe6YyDSpmkJ0IUdzpI8Gdti7dQ85DTdXdPw1ftvgtyKOTjSqZ3jay4P2IvxhLeUJSnoaHGfHGPQGMc5sVnngWhWaiZYMFg=
+	t=1727014157; cv=none; b=DbMwrq/2OUFSngnqP/ZlNFbf7NxAs35ntvxClxCIq7+F3n3XSmqMWFYwGW6VvGutWEBS80DKxmuBSXXpfNqcOtA3nQsrX/ZTS64x1ekXoT7f7oaAFaTSMpx0kL5Hj9XhhP84h3Pe44jFdcQTP1YqK8Hs0E/TGV5JCPlkZ78bgkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727011908; c=relaxed/simple;
-	bh=n1V31JdnsfrSdsVXN7bDlOoQ3BVtUu/IioetLfG4smc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=POoGWIK9WpN7XpoAashgLmaCxbZ6A7/tldOXiPUAGmOIwanmLnQpxEOKHw3pJYJZ9fLnLedOK4lEgKg8psxmiD+qKD40arik385LfIgFE0T3UjtoWtA/JewxdNskBIC1hmsdd08FaZCtEXKTpOhwUryBsJBsqfvFkItOkrSIvqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJk/qhus; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727014157; c=relaxed/simple;
+	bh=4cbjSwV1hEvFOITCR8e5fXcH066EpaFxjqWOysM0esY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ownhcWFdUz+UDC36jnN79g0Cnv0Y1Y1reNwVkntWs+hi0U+/kQBpz2ApQxfVNqByTgvmxXZesEcDN+kdL8zbxZQo8AWjG1X0M1/3bXm01d1jqFwn1JjzNJmKfwA+0E16tgsz2z7TVklwH827YwCXkdZOASsD3rtO/L/hH76M5xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMigkMuG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJk/qhus"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2059112f0a7so30865295ad.3;
-        Sun, 22 Sep 2024 06:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727011906; x=1727616706; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FteN1NVxM87RoJV6pgBXiOh96b1d0IQZBxvTcTzb5no=;
-        b=QJk/qhusejDQI7hKdSJ0T1QoaDpS+Des+HZAdTGrCXIipN9rut6PwHnVsphM2sRbDG
-         U2c9fv9v1a/BCmr4LmTZBdhruBdjeq3wigm31bZM7xAOQvIKTLAFh/nozeiUcQp5+M7q
-         PFHQO0hsWppshj/2hnNthgrFI1IL3icMWRJDKpDnoOuhVFWui86HldGyV80W2cbUNiwy
-         c1D3/7KM+P4yBb09cdT2GnPYqbU1r7cNFlE1iaRhNJ/jsrYCyVIQmKI8TuWsvib6itih
-         qE1pRpKA9glo1xDtkA64leeqYUdMqYUZLog3Dc/uLL/qiTXF7RkZ32gNa7dO6vhu8CDb
-         1nFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727011906; x=1727616706;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FteN1NVxM87RoJV6pgBXiOh96b1d0IQZBxvTcTzb5no=;
-        b=Il4NVSyMkxV9Jl2bdRvigStcqIzHsG11QPSLDVTyhTl/A+x3gWZUiiT8/kQXkaoR7v
-         2Cz+mDAt3c3CHVg0Uew2DbOxHQGubjcYu8lFE9C2HXKHPfTroEYMa8/KMSlJapTwwCMO
-         802w7dB7hIgiuS9Bya1odn//siXLMS+6RkhZIhESL16fNToqMkH/Ywat2QJZV1lWCZTV
-         YtxlWrVznccNyM4Q+Xw+LRFPZOw8G0i7RQaH9KYv7hCuE17Ev1SbFMaV0sfXLlz7sjqb
-         YKAyd0nykmC0UaGvMQxdn/Ii0L9TCQ4V7/imrJCS175QqdCkdmz9GwQWWVdKaRmch37L
-         uY1w==
-X-Forwarded-Encrypted: i=1; AJvYcCV6I90KrGXq7o2a7+KVNjfpNbReBGJ57Y4GbnR/d8MlcrHJZ3ltzq0pTa5plZ9DZYmdQUKqe4v506snQP/lUjW8g5yV@vger.kernel.org, AJvYcCWDWOsEs8f2H5aOpScP7yjPLr1kiBHGCcrYRBHv+TyBm+KrlWpeiqjwGKXsjJC4bSr9YuSOhgrmYb0=@vger.kernel.org, AJvYcCXPXsC6sG+Wm7aVvOJUMb7skwIyd2UzaI9lfj6K5sPk6qKYwE2YoJJMuVoDR0aRs98m28CCLq3hSxAYGoPU@vger.kernel.org
-X-Gm-Message-State: AOJu0YysC+xj5w865/M5V9fy3Z5l/zN5zO+senCF1zcTBeQwiEklvsur
-	MW1JfsXBypNtUVFuc8XRUW3E1A9dl2DB7YuOZCcYqq4eQoX2pXbG
-X-Google-Smtp-Source: AGHT+IHhgNAHLVFJ4uCDYFpKauQ1a4rjzI1C6yXb7CGQvMsulRV1fZT4i2gUEYjDvoot92MxL2WJaw==
-X-Received: by 2002:a17:902:cecb:b0:207:6e51:41af with SMTP id d9443c01a7336-208d83fc79fmr135416405ad.43.1727011906111;
-        Sun, 22 Sep 2024 06:31:46 -0700 (PDT)
-Received: from 0x7f800001.hitronhub.home ([2407:4d00:3c04:81a0:f26f:1ad7:c7bb:baa7])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-207946d27dasm119972225ad.172.2024.09.22.06.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Sep 2024 06:31:45 -0700 (PDT)
-From: "Yo-Jung (Leo) Lin" <0xff07@gmail.com>
-To: 
-Cc: linux-kernel-mentees@lists.linuxfoundation.org,
-	ricardo@marliere.net,
-	skhan@linuxfoundation.org,
-	0xff07@gmail.com,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] trace doc: document the device_pm_callback events
-Date: Sun, 22 Sep 2024 21:26:28 +0800
-Message-ID: <20240922132636.34413-1-0xff07@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMigkMuG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3280DC4CEC3;
+	Sun, 22 Sep 2024 14:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727014157;
+	bh=4cbjSwV1hEvFOITCR8e5fXcH066EpaFxjqWOysM0esY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FMigkMuGQUnyYCLlp7jO+pCXv0G1eCStZn9Nw28iipxMY/8jhNOsZPyHYzRqKfeYM
+	 A/iuWlWPSQnINyhvoA9Nqdyy4fnSXaYtM0417eaAghJ7jewTPz7ydwAreS5IR92OK2
+	 KcyKoep+Gdv26ym4VgcsSeLKV9NgXOJlWgBwy8Z+u/SJXbeR+2aGSmKaQtfJ04NXGs
+	 e1qPmB59epal/QmckXkPI0u2E39FY7Gr8TibWxdPxwABNHLkeGSYdYI39aDazo2Pg2
+	 vJAP000d89l7xGF4sXC84/eR1PZU+jLHcToEDVJMHscV1tipSKOOUqQUqkufSAEqFM
+	 lWK/opz17Wj9g==
+Date: Sun, 22 Sep 2024 15:09:11 +0100
+From: Will Deacon <will@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	"Liao, Chang" <liaochang1@huawei.com>, mhiramat@kernel.org,
+	peterz@infradead.org, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
+Message-ID: <20240922140910.GA31288@willie-the-truck>
+References: <20240919121719.2148361-1-liaochang1@huawei.com>
+ <20240919141824.GB12149@redhat.com>
+ <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com>
+ <Zu2VdYrLWTJbVOAt@arm.com>
+ <20240920173223.GA20847@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240920173223.GA20847@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Add documentation for the device_pm_callback_{start, end} events
-under the "Subsystem Trace Points: power" section.
+On Fri, Sep 20, 2024 at 07:32:23PM +0200, Oleg Nesterov wrote:
+> On 09/20, Catalin Marinas wrote:
+> >
+> > On Fri, Sep 20, 2024 at 04:58:31PM +0800, Liao, Chang wrote:
+> > >
+> > >
+> > > 在 2024/9/19 22:18, Oleg Nesterov 写道:
+> > > > On 09/19, Liao Chang wrote:
+> > > >>
+> > > >> --- a/arch/arm64/kernel/probes/uprobes.c
+> > > >> +++ b/arch/arm64/kernel/probes/uprobes.c
+> > > >> @@ -17,12 +17,16 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+> > > >>  	void *xol_page_kaddr = kmap_atomic(page);
+> > > >>  	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
+> > > >>
+> > > >> +	if (!memcmp(dst, src, len))
+> > > >> +		goto done;
+> > > >
+> > > > can't really comment, I know nothing about arm64...
+> > > >
+> > > > but don't we need to change __create_xol_area()
+> > > >
+> > > > 	-	area->page = alloc_page(GFP_HIGHUSER);
+> > > > 	+	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
+> > > >
+> > > > to avoid the false positives?
+> > >
+> > > Indeed, it would be safer.
+> > >
+> > > Could we tolerate these false positives? Even if the page are not reset
+> > > to zero bits, if the existing bits are the same as the instruction being
+> > > copied, it still can execute the correct instruction.
+> >
+> > Not if the I-cache has stale data. If alloc_page() returns a page with
+> > some random data that resembles a valid instruction but there was never
+> > a cache flush (sync_icache_aliases() on arm64), it's irrelevant whether
+> > the compare (on the D-cache side) succeeds or not.
+> 
+> But shouldn't the page fault paths on arm64 flush I-cache ?
+> 
+> If alloc_page() returns a page with some random data that resembles a valid
+> instruction, user-space can't execute this instruction until
+> special_mapping_fault() installs the page allocated in __create_xol_area().
+> 
+> Again, I know nothing about arm64/icache/etc, I am just curious and trying
+> to understand...
 
-Signed-off-by: Yo-Jung (Leo) Lin <0xff07@gmail.com>
----
- Documentation/trace/events-power.rst | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+We defer the icache maintenance until set_pte_at() time, where we call
+__sync_icache_dcache() if we're installing a present, executable user
+eintry. That also elides the maintenance if PG_arch_1 is set (i.e. the
+kernel only takes responsibility for the freshly allocated page).
 
-diff --git a/Documentation/trace/events-power.rst b/Documentation/trace/events-power.rst
-index f45bf11fa88d..7031954f7ed3 100644
---- a/Documentation/trace/events-power.rst
-+++ b/Documentation/trace/events-power.rst
-@@ -102,3 +102,30 @@ And, there are events used for CPU latency QoS add/update/remove request.
-   pm_qos_remove_request     "value=%d"
- 
- The parameter is the value to be added/updated/removed.
-+
-+5. Device PM callback events
-+============================
-+The device PM callback events are placed right before and after an invocation of
-+a device PM callback during a system-wide suspend/resume attempt.
-+::
-+
-+  device_pm_callback_start     "%s %s, parent: %s, %s[%s]"
-+  device_pm_callback_end       "%s %s, err=%d"
-+
-+The first two parameters in both events are the same. They are:
-+
-+  - The name of the driver.
-+  - The device whose PM callbacks get called.
-+
-+For device_pm_callback_start, the rest of the parameters are:
-+
-+  - The parent device of the device (if any).
-+  - Level in the power management hierarchy the callback belongs to (e.g. power
-+    domain, type, class, bus, driver). Some stages (e.g. early, late, noirq)
-+    will also be explicitly mentioned in this string.
-+  - The ongoing PM event. You may find definitions of those events in the
-+    PM_EVENT_* macros in include/linux/pm.h
-+
-+For device_pm_callback_end, the only remaining parameter is:
-+
-+  - The return value of the PM callback.
--- 
-2.43.0
+Will
 
+> 
+> Oleg.
+> 
