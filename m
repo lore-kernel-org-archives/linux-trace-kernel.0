@@ -1,72 +1,34 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C4B762D7
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Sep 2024 12:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C114A8B;
+	Mon, 23 Sep 2024 16:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727093630; cv=none; b=mXC7bbTlmMo4sRNbJK3qlh3mnWQ1zxtC/VLSnEgdCMGhpCh/hcpv5t+vaXGPizFXyd+l7F1ITEQgxCd6ZHsrCX1AccnGX/7v6W4ly0pM7nrQhhqdsgZX5+ISdjP//Zz4Qbq2pvceE+jSNTfBhwJhqi/RMwrVw1GgyUrGpXpOuRg=
+	t=1727107441; cv=none; b=owuJS4WQ2Ume+gr4aaWjhWWhHin9qSyAc0R4D6Z3/69NfWVvfDI2IWspEAcu16cW1hiiJNs4yBLsAT2NX5vBbO56G7hlSFLdgaMb9ylAAmnh5RCO0NdmSmz18kllfp3ikH3RNAPxM84j8PAFgQjmY1fi8CiAr/02MskpE3uwxZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727093630; c=relaxed/simple;
-	bh=QEy7BbUv17XgPef66l5Pl1s/1sq3pazOx8siZI8jVpY=;
+	s=arc-20240116; t=1727107441; c=relaxed/simple;
+	bh=0mEJ/dawlRKh0O4jYqFhB00pGHwtBHJjZiyQBB7qDT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBKxbevIH/7rJgqx+NprpgqhHbN4+h449UGXs8ITJNJwArI4z9ZnrYSln7R/k/1vU6jfBsPvZRE6kqWZkhWEYV1isOJCjFECqkA2a4n5rMRV10nGliLWFWTVW3j+Ew911+h68yXBK0N7WPZHCfvCvqGEJ+Lil0iW7EkOCQzM8cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aAB4D5a3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aAB4D5a3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727093627;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QEy7BbUv17XgPef66l5Pl1s/1sq3pazOx8siZI8jVpY=;
-	b=aAB4D5a3mfLL6MEhNTrCdXMQjJVA8Z6RxO7pn0iZUpKMEiUAuxqwWflQ5MXhCuIfcb0DCS
-	3MZLa1UtUZV1OiYS+YaAdFr6rCTYSYgfSdg5YtdOFUpUT1M9UecSEOxhhsmU7sPF1X8TZF
-	DxwZUPIv/IcUETDHSX/SAb58J5V6A9E=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-46-1OYWd4CiNoKU5SzGIIWhLQ-1; Mon,
- 23 Sep 2024 08:13:46 -0400
-X-MC-Unique: 1OYWd4CiNoKU5SzGIIWhLQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C24C1190C4D3;
-	Mon, 23 Sep 2024 12:13:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.16])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A22751956060;
-	Mon, 23 Sep 2024 12:13:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 23 Sep 2024 14:13:31 +0200 (CEST)
-Date: Mon, 23 Sep 2024 14:13:23 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv4 02/14] uprobe: Add support for session consumer
-Message-ID: <20240923121322.GC20793@redhat.com>
-References: <20240917085024.765883-1-jolsa@kernel.org>
- <20240917085024.765883-3-jolsa@kernel.org>
- <20240917120250.GA7752@redhat.com>
- <Zul7UCsftY_ZX6wT@krava>
- <20240922152722.GA12833@redhat.com>
- <ZvEhL114tyhLmfB1@krava>
- <20240923100552.GA20793@redhat.com>
- <ZvFKy9WLiz18GjEZ@krava>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q62WEQzwyFvKU4X9Zgp4OCLXilbD2F5G2+kkE8fCD+edToJ4LGFg6J92misijMbakX2TK7MszGXjnWuGNzgjLahv/BZbY4U+95kvPf7csfxWzBSWUMQuA9xSVlCmuB2Xs0tv9W2PAUlinxZh8pL6nttzpjwHO/CdR2/N32Ua/Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB45C4CEC4;
+	Mon, 23 Sep 2024 16:03:59 +0000 (UTC)
+Date: Mon, 23 Sep 2024 17:03:57 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: "Liao, Chang" <liaochang1@huawei.com>, Oleg Nesterov <oleg@redhat.com>,
+	mhiramat@kernel.org, peterz@infradead.org, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
+Message-ID: <ZvGRbeAtpAkZVhLt@arm.com>
+References: <20240919121719.2148361-1-liaochang1@huawei.com>
+ <20240919141824.GB12149@redhat.com>
+ <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com>
+ <Zu2VdYrLWTJbVOAt@arm.com>
+ <b90ce6f1-0d47-2429-5536-a8d5d91d6a70@huawei.com>
+ <20240923071856.GA31866@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,37 +37,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZvFKy9WLiz18GjEZ@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20240923071856.GA31866@willie-the-truck>
 
-On 09/23, Jiri Olsa wrote:
->
-> On Mon, Sep 23, 2024 at 12:05:53PM +0200, Oleg Nesterov wrote:
-> > On 09/23, Jiri Olsa wrote:
-> > >
-> > > change below should do what you proposed originally
-> >
-> > LGTM, just one nit below.
-> >
-> > But I guess you need to do this on top of bpf/bpf.git, Andrii has already
-> > applied your series.
->
-> that seems confusing
+On Mon, Sep 23, 2024 at 08:18:57AM +0100, Will Deacon wrote:
+> On Mon, Sep 23, 2024 at 09:57:14AM +0800, Liao, Chang wrote:
+> > Unfortunately, the comparison assumes the D-cache and I-cache are already
+> > in sync for the slot being copied. But this assumption is flawed if we start
+> > with a page with some random bits and D-cache has not been sychronized with
+> > I-cache. So, besides __GFP_ZERO, should we have a additional cache flush
+> > after page allocation?
+> 
+> No, I think Oleg's right. The initial cache maintenance will happen when the
+> executable pte is installed.
 
-Yes ;)
+For some reason I had kprobes in mind, did not realise that this page
+ends up in user-space. So yes, we have cache maintenance when the pte is
+set to point to this page. Subsequent changes will need cache
+maintenance.
 
-> but looks like just that one fix with the
-> commit link in [1] was applied
+> However, we should use __GFP_ZERO anyway because I don't think it's a
+> good idea to map an uninitialised page into userspace.
 
-Ah, OK.
+Oh, that's not good.
 
-> > And to remind, 02/14 must be fixed in any case unless I am totally confused,
-> > handler_chain() can leak return_instance.
->
-> yep it was missing kfree, but it's not needed in this new version
-
-Yes, yes, the new version looks fine to me.
-
-Oleg.
-
+-- 
+Catalin
