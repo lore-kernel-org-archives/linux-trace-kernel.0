@@ -1,34 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913C114A8B;
-	Mon, 23 Sep 2024 16:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606DF2907;
+	Mon, 23 Sep 2024 23:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727107441; cv=none; b=owuJS4WQ2Ume+gr4aaWjhWWhHin9qSyAc0R4D6Z3/69NfWVvfDI2IWspEAcu16cW1hiiJNs4yBLsAT2NX5vBbO56G7hlSFLdgaMb9ylAAmnh5RCO0NdmSmz18kllfp3ikH3RNAPxM84j8PAFgQjmY1fi8CiAr/02MskpE3uwxZI=
+	t=1727135538; cv=none; b=ty7L+0u7fbj5ZKn2Oe4DBsHWSvlGP184dYQMa8vsUysTU5ijxrgGBhAZdLZA6UBGa/MmfjKBR0zYPfhj87Fe+sUPyyjmOsLaQBTYzqUk6J+J6T6mID3SlATNMCl0/Rmc1qkre46S0gPg2zNT7jLUyLbfMp2Hw+TM9WcUoGbRy1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727107441; c=relaxed/simple;
-	bh=0mEJ/dawlRKh0O4jYqFhB00pGHwtBHJjZiyQBB7qDT8=;
+	s=arc-20240116; t=1727135538; c=relaxed/simple;
+	bh=liU3xrMhCJ00+SP18e8Pf+o8QqUPpogn+daULb1u5gg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q62WEQzwyFvKU4X9Zgp4OCLXilbD2F5G2+kkE8fCD+edToJ4LGFg6J92misijMbakX2TK7MszGXjnWuGNzgjLahv/BZbY4U+95kvPf7csfxWzBSWUMQuA9xSVlCmuB2Xs0tv9W2PAUlinxZh8pL6nttzpjwHO/CdR2/N32Ua/Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB45C4CEC4;
-	Mon, 23 Sep 2024 16:03:59 +0000 (UTC)
-Date: Mon, 23 Sep 2024 17:03:57 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: "Liao, Chang" <liaochang1@huawei.com>, Oleg Nesterov <oleg@redhat.com>,
-	mhiramat@kernel.org, peterz@infradead.org, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
-Message-ID: <ZvGRbeAtpAkZVhLt@arm.com>
-References: <20240919121719.2148361-1-liaochang1@huawei.com>
- <20240919141824.GB12149@redhat.com>
- <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com>
- <Zu2VdYrLWTJbVOAt@arm.com>
- <b90ce6f1-0d47-2429-5536-a8d5d91d6a70@huawei.com>
- <20240923071856.GA31866@willie-the-truck>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UtbD3KucfanxvOpTfq1F/i0XKEid1XIgveKrNfGnX5OcURo+WE1Oj2C9d8eXZgjYQamlOZohxf4TvJznTvR5lmZ93xcr1NBH4ZaTolzGSunxsPkILtRaiDuytIulK4xM9O+Eqpst9LvJvUfo0FJ9fBnT/grkuHRi+fFdFL0kGdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cwHgw9OY; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cwHgw9OY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727135537; x=1758671537;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=liU3xrMhCJ00+SP18e8Pf+o8QqUPpogn+daULb1u5gg=;
+  b=cwHgw9OYgjB6tl2JKRDBD6M6kVvrvFvsVJ919+rzSz6CjO62DUvb1NXe
+   Ck8eM6jkMS8htUsnyra8EI7EJnaENzHGmJl5ota8BVeC53s9lZ/t4lFm+
+   QUAUJYhyNKVHtpbWH2JSIO/krqZ76eAcjC9B426cIgs0H6lp1XcFHB3vb
+   iXM+CvMQ3dbearrEnR7dPKZKoPS98G6vhStcaA3OHyMZobym0TEOMDEPd
+   PYPAEG6+Ou6TJ9p+qfQwAu/ltyRWOknD4blMCEK6425q+UcXYR5KUUZNJ
+   BlQbAvunUJBGd+rzfkVCdrC03xhn1544Hgmpc+XMfqe1P01YLUBLg2iqR
+   w==;
+X-CSE-ConnectionGUID: nw+T26XTTKShSQneEeBCjA==
+X-CSE-MsgGUID: RjQOmo4DQUuZ4Mp/KRqxGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11204"; a="37472806"
+X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
+   d="scan'208";a="37472806"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 16:52:16 -0700
+X-CSE-ConnectionGUID: ebY8c56xTvWzZ2bYe8EGqA==
+X-CSE-MsgGUID: buCkN+fmRTOabrQlEgwvMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,252,1719903600"; 
+   d="scan'208";a="75755546"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2024 16:52:15 -0700
+Date: Mon, 23 Sep 2024 16:52:14 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, oleg@redhat.com, andrii@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
+ scalability
+Message-ID: <ZvH_LiUeOtAwommF@tassilo>
+References: <20240918012752.2045713-1-liaochang1@huawei.com>
+ <87jzf9b12w.fsf@linux.intel.com>
+ <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com>
+ <ZuwoUmqXrztp-Mzh@tassilo>
+ <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,28 +70,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240923071856.GA31866@willie-the-truck>
+In-Reply-To: <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com>
 
-On Mon, Sep 23, 2024 at 08:18:57AM +0100, Will Deacon wrote:
-> On Mon, Sep 23, 2024 at 09:57:14AM +0800, Liao, Chang wrote:
-> > Unfortunately, the comparison assumes the D-cache and I-cache are already
-> > in sync for the slot being copied. But this assumption is flawed if we start
-> > with a page with some random bits and D-cache has not been sychronized with
-> > I-cache. So, besides __GFP_ZERO, should we have a additional cache flush
-> > after page allocation?
-> 
-> No, I think Oleg's right. The initial cache maintenance will happen when the
-> executable pte is installed.
+> Thanks for the suggestions, I will experiment with a read-write lock, meanwhile,
+> adding the documentation and testing for the lockless scheme.
 
-For some reason I had kprobes in mind, did not realise that this page
-ends up in user-space. So yes, we have cache maintenance when the pte is
-set to point to this page. Subsequent changes will need cache
-maintenance.
+Read-write locks are usually not worth it for short critical sections,
+in fact they can be slower due to cache line effects.
 
-> However, we should use __GFP_ZERO anyway because I don't think it's a
-> good idea to map an uninitialised page into userspace.
+> Sorry, I may not probably get the point clear here, and it would be very
+> nice if more details are provided for the concern. Do you mean it's necessary
+> to make the if-body excution exclusive among the CPUs? If that's the case,
+> I guess the test_and_put_task_slot() is the equvialent to the race condition
+> check. test_and_put_task_slot() uses a compare and exchange operation on the
+> slot_ref of utask instance. Regardless of the work type being performed by
+> other CPU, it will always bail out unless the slot_ref has a value of one,
+> indicating the utask is free to access from local CPU.
 
-Oh, that's not good.
+What I meant is that the typical pattern for handling races in destruction
+is to detect someone else is racing and then let it do the destruction
+work or reacquire the resource (so just bail out).
 
--- 
-Catalin
+But that's not what you're doing here, in fact you're adding a
+completely new code path that has different semantics? I haven't checked
+all the code, but it looks dubious.
+
+-Andi
