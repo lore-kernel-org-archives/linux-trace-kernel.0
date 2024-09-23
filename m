@@ -1,119 +1,111 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB01D195985;
-	Mon, 23 Sep 2024 11:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C4B762D7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Sep 2024 12:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727090200; cv=none; b=XNZYceyImDVwNw+4r+B9mOMZD0XEVUF6/g31qzbSdlAzSMC1FPfjcSK/V7CL5gy9nYS1S14zeD4eBTDu8pCNt306SPxvYhKM8CBLmxA8v1Ld/Vlb7te5H4AJCQqhD9LWiPuSRdsPCzjhFfslLSA8l1FoK2X6ezW9WSxmdqZkRNA=
+	t=1727093630; cv=none; b=mXC7bbTlmMo4sRNbJK3qlh3mnWQ1zxtC/VLSnEgdCMGhpCh/hcpv5t+vaXGPizFXyd+l7F1ITEQgxCd6ZHsrCX1AccnGX/7v6W4ly0pM7nrQhhqdsgZX5+ISdjP//Zz4Qbq2pvceE+jSNTfBhwJhqi/RMwrVw1GgyUrGpXpOuRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727090200; c=relaxed/simple;
-	bh=V91hipl91S+w3t5stQOLIg/YqcOv7WdMlL/qqgM5cjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Dee05EQGZwX82jApdeixow6uISUKCPuZpoYevWAcvcrLTgrnI1TiyI4EJ3kWIepMOSUoMlUs2y+S/DRnKz/y/1U0uAN0x9bH4aoul190gbnrStEabBPAvfDnjUIeXhzPzG6AW5yGtBs6hgdj/5bZlleJbFoXlPoAEC7X/OamTEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XC0m54jg8z1SByW;
-	Mon, 23 Sep 2024 19:15:49 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0D04C140202;
-	Mon, 23 Sep 2024 19:16:35 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 23 Sep 2024 19:16:34 +0800
-Message-ID: <fac08b4b-6b64-44e6-4c67-e28945f5b763@huawei.com>
-Date: Mon, 23 Sep 2024 19:16:33 +0800
+	s=arc-20240116; t=1727093630; c=relaxed/simple;
+	bh=QEy7BbUv17XgPef66l5Pl1s/1sq3pazOx8siZI8jVpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBKxbevIH/7rJgqx+NprpgqhHbN4+h449UGXs8ITJNJwArI4z9ZnrYSln7R/k/1vU6jfBsPvZRE6kqWZkhWEYV1isOJCjFECqkA2a4n5rMRV10nGliLWFWTVW3j+Ew911+h68yXBK0N7WPZHCfvCvqGEJ+Lil0iW7EkOCQzM8cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aAB4D5a3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aAB4D5a3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727093627;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QEy7BbUv17XgPef66l5Pl1s/1sq3pazOx8siZI8jVpY=;
+	b=aAB4D5a3mfLL6MEhNTrCdXMQjJVA8Z6RxO7pn0iZUpKMEiUAuxqwWflQ5MXhCuIfcb0DCS
+	3MZLa1UtUZV1OiYS+YaAdFr6rCTYSYgfSdg5YtdOFUpUT1M9UecSEOxhhsmU7sPF1X8TZF
+	DxwZUPIv/IcUETDHSX/SAb58J5V6A9E=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-46-1OYWd4CiNoKU5SzGIIWhLQ-1; Mon,
+ 23 Sep 2024 08:13:46 -0400
+X-MC-Unique: 1OYWd4CiNoKU5SzGIIWhLQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C24C1190C4D3;
+	Mon, 23 Sep 2024 12:13:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.16])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A22751956060;
+	Mon, 23 Sep 2024 12:13:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 23 Sep 2024 14:13:31 +0200 (CEST)
+Date: Mon, 23 Sep 2024 14:13:23 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 02/14] uprobe: Add support for session consumer
+Message-ID: <20240923121322.GC20793@redhat.com>
+References: <20240917085024.765883-1-jolsa@kernel.org>
+ <20240917085024.765883-3-jolsa@kernel.org>
+ <20240917120250.GA7752@redhat.com>
+ <Zul7UCsftY_ZX6wT@krava>
+ <20240922152722.GA12833@redhat.com>
+ <ZvEhL114tyhLmfB1@krava>
+ <20240923100552.GA20793@redhat.com>
+ <ZvFKy9WLiz18GjEZ@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
-To: Will Deacon <will@kernel.org>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov
-	<oleg@redhat.com>, <mhiramat@kernel.org>, <peterz@infradead.org>,
-	<mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20240919121719.2148361-1-liaochang1@huawei.com>
- <20240919141824.GB12149@redhat.com>
- <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com> <Zu2VdYrLWTJbVOAt@arm.com>
- <b90ce6f1-0d47-2429-5536-a8d5d91d6a70@huawei.com>
- <20240923071856.GA31866@willie-the-truck>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <20240923071856.GA31866@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZvFKy9WLiz18GjEZ@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+On 09/23, Jiri Olsa wrote:
+>
+> On Mon, Sep 23, 2024 at 12:05:53PM +0200, Oleg Nesterov wrote:
+> > On 09/23, Jiri Olsa wrote:
+> > >
+> > > change below should do what you proposed originally
+> >
+> > LGTM, just one nit below.
+> >
+> > But I guess you need to do this on top of bpf/bpf.git, Andrii has already
+> > applied your series.
+>
+> that seems confusing
 
+Yes ;)
 
-在 2024/9/23 15:18, Will Deacon 写道:
-> On Mon, Sep 23, 2024 at 09:57:14AM +0800, Liao, Chang wrote:
->> 在 2024/9/20 23:32, Catalin Marinas 写道:
->>> On Fri, Sep 20, 2024 at 04:58:31PM +0800, Liao, Chang wrote:
->>>> 在 2024/9/19 22:18, Oleg Nesterov 写道:
->>>>> On 09/19, Liao Chang wrote:
->>>>>> --- a/arch/arm64/kernel/probes/uprobes.c
->>>>>> +++ b/arch/arm64/kernel/probes/uprobes.c
->>>>>> @@ -17,12 +17,16 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
->>>>>>  	void *xol_page_kaddr = kmap_atomic(page);
->>>>>>  	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
->>>>>>
->>>>>> +	if (!memcmp(dst, src, len))
->>>>>> +		goto done;
->>>>>
->>>>> can't really comment, I know nothing about arm64...
->>>>>
->>>>> but don't we need to change __create_xol_area()
->>>>>
->>>>> 	-	area->page = alloc_page(GFP_HIGHUSER);
->>>>> 	+	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
->>>>>
->>>>> to avoid the false positives?
->>>>
->>>> Indeed, it would be safer.
->>>>
->>>> Could we tolerate these false positives? Even if the page are not reset
->>>> to zero bits, if the existing bits are the same as the instruction being
->>>> copied, it still can execute the correct instruction.
->>>
->>> Not if the I-cache has stale data. If alloc_page() returns a page with
->>> some random data that resembles a valid instruction but there was never
->>> a cache flush (sync_icache_aliases() on arm64), it's irrelevant whether
->>> the compare (on the D-cache side) succeeds or not.
->>
->> Absolutly right, I overlooked the comparsion is still performed in the D-cache.
->> However, the most important thing is ensuring the I-cache sees the accurate bits,
->> which is why a cache flush in necessary for each xol slot.
->>
->>>
->>> I think using __GFP_ZERO should do the trick. All 0s is a permanently
->>> undefined instruction, not something we'd use with xol.
->>
->> Unfortunately, the comparison assumes the D-cache and I-cache are already
->> in sync for the slot being copied. But this assumption is flawed if we start
->> with a page with some random bits and D-cache has not been sychronized with
->> I-cache. So, besides __GFP_ZERO, should we have a additional cache flush
->> after page allocation?
-> 
-> No, I think Oleg's right. The initial cache maintenance will happen when the
-> executable pte is installed. However, we should use __GFP_ZERO anyway
-> because I don't think it's a good idea to map an uninitialised page into
-> userspace.
+> but looks like just that one fix with the
+> commit link in [1] was applied
 
-I will use __GFP_ZERO for xol page allocation in v2.
+Ah, OK.
 
-> 
-> Will
-> 
+> > And to remind, 02/14 must be fixed in any case unless I am totally confused,
+> > handler_chain() can leak return_instance.
+>
+> yep it was missing kfree, but it's not needed in this new version
 
--- 
-BR
-Liao, Chang
+Yes, yes, the new version looks fine to me.
+
+Oleg.
+
