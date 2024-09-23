@@ -1,109 +1,107 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A321854;
-	Mon, 23 Sep 2024 01:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF52C3FE4;
+	Mon, 23 Sep 2024 03:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727056641; cv=none; b=pAXJ6ni/18m5C7yXklhtoMpWJ40ycQGqIQoDReSOju7Daonb60u5J5U/Em0yGucVrwRB35utEV9wJSiSEqb2VKoIAweBSlNIqqbPr9qba67riNT3Auls3FqLqkrT9wNaZW0GlglpStO4zKUnLTVv7jjeHRJ5I9/NR8xGiqlRNgk=
+	t=1727063993; cv=none; b=rzZ8QSctURc9UvI4J6pa8s18rXmUuedCiF4PNLWXZrwi77L40lHAljhfBuIe6YZ6p3cDw/rVzm6urEEDHlob/s/EkuIPFFHSfIvzgx7BYBNY0ubbHNfrK86vnJLBMqjZegghQREBalMMD4cut7awpHpn3XwLXXnTc+znT10p/eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727056641; c=relaxed/simple;
-	bh=fL4p/lQI+D7HNKmdgiSiCtz6bBMspJIBsmABtRppagw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WiYXm6LIB8x/ecoHGP1a2QWxdmuIIDXk+tgBTwPYhR8aSLQ3MZOiWyUJcXcBKG5B6EHNLKePgvu2c2/AySQ0W/zFMX6IsaWLVV9XqsjcBwwIbO/mIqONe5FTqtB/yB9Fwpnmc9FwIJrD5loR9opdzBmLUpjkMpmxOSMK23Umr4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4XBmMc2CkQz1ym7M;
-	Mon, 23 Sep 2024 09:57:16 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 291F01A016C;
-	Mon, 23 Sep 2024 09:57:15 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 23 Sep 2024 09:57:14 +0800
-Message-ID: <b90ce6f1-0d47-2429-5536-a8d5d91d6a70@huawei.com>
-Date: Mon, 23 Sep 2024 09:57:14 +0800
+	s=arc-20240116; t=1727063993; c=relaxed/simple;
+	bh=flf5fs08m6nwFou6VuxHcfEhuPJQqrpb0xWwYDz0XHY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5VBojJnewbp5aDmPoWxKWIiDkDn3Vr4qaNA7RXD5fLCaQ8cCMN4q93YHJxT+Sjipn8crgBkjvUnc4kxAd8JsmkI+ywldEQ3AUQbR9cfE4+7wl+BZcywLux42fsFFcKy9BRW3w7iiUTd/o9MSftDyoNxBnXEMlJ7OHo6P2GaFoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J5KrbesH; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J5KrbesH"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7db53a20d1fso2368469a12.0;
+        Sun, 22 Sep 2024 20:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727063991; x=1727668791; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9vWSfWfegAN1Rouk3V+ma1Oz3R4yoVwe8VY8Ox45QeM=;
+        b=J5KrbesHc5OSmEwr9yl6iAEhI9uuR3/vf99wT7EhGfZ74oa9c8/4M+I+cOp26GEBa7
+         Zg1AGNBXUoN/+7sD+wU7iIoFkVfjtHpF3na5WiJ2bSOLyrzZLQM/UIJg3O7AcYqspaoG
+         Z6YZweEBfX1kDBa//l5ATy/d+h2T/MCbyASndUK3+iZ2lxgt7j0Q2cj+c1ZElqXd2SwU
+         FHdISt2HEE65wOxCypQQojiOsOXQKUuokomoWbGb4Le38qrdkAdfuKu1Mcp8zDIEjq6N
+         ikvjG0i0TEKQXrWBhZxELv7zNZFH1NhzozIFP44Q0Yu1lkniaP+McRCEGUTUeszg2zQU
+         Zanw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727063991; x=1727668791;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9vWSfWfegAN1Rouk3V+ma1Oz3R4yoVwe8VY8Ox45QeM=;
+        b=B/xLMjuPK1OmfBzKlmmiQaGI2cL1A+uWhabyeVz6ZPOXa4eMMzkP0vxGTN0oNlyJPo
+         /j6kZlZrfBx/DzyhVs+djDCRDyRSuBoiECEfnMM2IAi3n03yEWT2Ywnou99yKc3oRbkP
+         UbZr4TYM8ReB4v2IJO47PSXjLp7eHBAxwICTKCUuy4KjjtoqF5Qfxx84neqXyGe4QFYj
+         ETJU/4fScqPZNwYrYvtHvIcC1WWckO6oi50WW5cufPGswstzgMJ97O1NrRJLqkE15FRE
+         0hED5Qqn5Fvphk34SFgSzzUCY25bturtthdfMC3wYtNhce+g711DumrG1sx7Yvey7C9Y
+         Oklg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1h+XfcuGjPbSuUQc4MAhNgx6BwrgiHZeg7jZy1L6XPXjvMprQYZGRppAWphBktEG7WHdF2ugV/wPNvkxcpxWssqm2@vger.kernel.org, AJvYcCXJ0cfHxcSa7bmxjZuS39S0QHPRLQrA+DFjm0Hiu2LYZYL0JTq+6v0DEOpvZDZVJ14d0u4yex1gXTmJ/GA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUIOUgbhQMzPSytIA3jAPVp1GeUI1BOO4eT/nr4gcS5sF2Obj/
+	7TwKMG3w1owRfEbuCD5GQe1a+XYR7Ay7YCgQhSgPHMfhgeGcChZP
+X-Google-Smtp-Source: AGHT+IE7nNRhO1v4BqYlPdXQ15r7kg6MiuZWEdjs4cv7Aqqwz3KeTt2GJhqvRkBUeMXyHYHxZ/7jlw==
+X-Received: by 2002:a05:6a21:a247:b0:1cf:4da0:d95c with SMTP id adf61e73a8af0-1d30ca206e0mr14258710637.23.1727063990988;
+        Sun, 22 Sep 2024 20:59:50 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:13a:f00:4b94:68e0:2d8b:3983])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7db4990cebbsm14571877a12.37.2024.09.22.20.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Sep 2024 20:59:50 -0700 (PDT)
+From: Tatsuya S <tatsuya.s2862@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Tatsuya S <tatsuya.s2862@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ftrace: Hide a extra entry in stack trace
+Date: Mon, 23 Sep 2024 12:59:15 +0900
+Message-ID: <20240923035916.6567-1-tatsuya.s2862@gmail.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: Oleg Nesterov <oleg@redhat.com>, <mhiramat@kernel.org>,
-	<peterz@infradead.org>, <will@kernel.org>, <mark.rutland@arm.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-References: <20240919121719.2148361-1-liaochang1@huawei.com>
- <20240919141824.GB12149@redhat.com>
- <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com> <Zu2VdYrLWTJbVOAt@arm.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <Zu2VdYrLWTJbVOAt@arm.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
+A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
 
+    [003] .....   110.171589: vfs_write <-__x64_sys_write
+    [003] .....   110.171600: <stack trace>
+ => XXXXXXXXX (Wrong function name)
+ => vfs_write
+ => __x64_sys_write
+ => do_syscall_64
+ => entry_SYSCALL_64_after_hwframe
 
-在 2024/9/20 23:32, Catalin Marinas 写道:
-> On Fri, Sep 20, 2024 at 04:58:31PM +0800, Liao, Chang wrote:
->>
->>
->> 在 2024/9/19 22:18, Oleg Nesterov 写道:
->>> On 09/19, Liao Chang wrote:
->>>>
->>>> --- a/arch/arm64/kernel/probes/uprobes.c
->>>> +++ b/arch/arm64/kernel/probes/uprobes.c
->>>> @@ -17,12 +17,16 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
->>>>  	void *xol_page_kaddr = kmap_atomic(page);
->>>>  	void *dst = xol_page_kaddr + (vaddr & ~PAGE_MASK);
->>>>
->>>> +	if (!memcmp(dst, src, len))
->>>> +		goto done;
->>>
->>> can't really comment, I know nothing about arm64...
->>>
->>> but don't we need to change __create_xol_area()
->>>
->>> 	-	area->page = alloc_page(GFP_HIGHUSER);
->>> 	+	area->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
->>>
->>> to avoid the false positives?
->>
->> Indeed, it would be safer.
->>
->> Could we tolerate these false positives? Even if the page are not reset
->> to zero bits, if the existing bits are the same as the instruction being
->> copied, it still can execute the correct instruction.
-> 
-> Not if the I-cache has stale data. If alloc_page() returns a page with
-> some random data that resembles a valid instruction but there was never
-> a cache flush (sync_icache_aliases() on arm64), it's irrelevant whether
-> the compare (on the D-cache side) succeeds or not.
+To resolve this, increment skip in __ftrace_trace_stack().
+The reason why skip is incremented in __ftrace_trace_stack()
+is because __ftrace_trace_stack() in stack trace is the only function
+that wasn't skipped from anywhere.
 
-Absolutly right, I overlooked the comparsion is still performed in the D-cache.
-However, the most important thing is ensuring the I-cache sees the accurate bits,
-which is why a cache flush in necessary for each xol slot.
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+---
+ kernel/trace/trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> I think using __GFP_ZERO should do the trick. All 0s is a permanently
-> undefined instruction, not something we'd use with xol.
-
-Unfortunately, the comparison assumes the D-cache and I-cache are already
-in sync for the slot being copied. But this assumption is flawed if we start
-with a page with some random bits and D-cache has not been sychronized with
-I-cache. So, besides __GFP_ZERO, should we have a additional cache flush
-after page allocation?
-
-> 
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index c3b2c7dfadef..e0d98621ff23 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2919,6 +2919,8 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ #ifndef CONFIG_UNWINDER_ORC
+ 	if (!regs)
+ 		skip++;
++#else
++	skip++;
+ #endif
+ 
+ 	preempt_disable_notrace();
 -- 
-BR
-Liao, Chang
+2.46.1
+
