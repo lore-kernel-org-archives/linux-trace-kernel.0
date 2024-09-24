@@ -1,25 +1,25 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5B6482D8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 09:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A39315884D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 09:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727171632; cv=none; b=AIt8OghAPWjTruQrVSG0i5Pfg1NyZiPUHaYE8kOg+mB0FZrY7MNVZ3chbMMYOKaUNZk8CUrvf5/agRVB4/9XhKtsscSJqnIAZBix8Lt8xnKrs45n3GT0TC/3mDuavHr1I4scIx0k/Tl5zL2OGgZ122Mb0x0thbU+/umQQBT/7m8=
+	t=1727171634; cv=none; b=EcZ4ovIuXZb+hTQkZoxPiVZ/hjjMoTvL/hAF3kF4LOJIhOtHOItVNEJHoRRTiWNEW4XRVhZVsY2NK5pLU0xfdNfnP186umRkmmlDxIbNL/fkJOxgYAwOehmIJum1c6arqY+4d0fvSFJZcxA4GEsrUwcc+X6jALwxJEzaNCZlvfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727171632; c=relaxed/simple;
-	bh=0Ui2ljAR/w50xPuEf3VpL87GSUBeC8ecWbJvjJ8Gd4o=;
+	s=arc-20240116; t=1727171634; c=relaxed/simple;
+	bh=EC8X3+UaNzudnYqucqUr2vw07O9Tg8gwI4s0TE74nUg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WzXIPY3zG6chhTBOjMSyYs6X1f9nzQmOBgVxDpItbD2q06FCIym+yBfi3lDL7joQQJBNcR+YgTQKvcq3bBW/TSC7Hn5RSWG2cNipJvNUaGNZ8gYCf8I9Xj5MUaGbh8/JcOFNChPT2MGTWS2SrYNwnpqqp/UUJ5+y/kmo0aoCs30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+	 MIME-Version:Content-Type; b=a6yI+QiQ8W93yPpFw86cON+ix7DRCWL5WMWIq8x4bU+tf2Sjr2Ai8gVyf5KxtfNgeNE0CmocpNd5TdJHpVeZB1dFRLfSDCh4/d07cBnVrN8wcn9xBpXoCikEMa3ZhJxMPFuhY8uHJJ0zwgMkHayLknfHKCUS/XYsY5qpjPhNH2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XCZsl0Bc9zySBd;
-	Tue, 24 Sep 2024 17:52:43 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XCZtW358Bz20pNW;
+	Tue, 24 Sep 2024 17:53:23 +0800 (CST)
 Received: from kwepemd100024.china.huawei.com (unknown [7.221.188.41])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB09D140393;
-	Tue, 24 Sep 2024 17:53:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 93CDC140119;
+	Tue, 24 Sep 2024 17:53:43 +0800 (CST)
 Received: from ubuntu-20-04.huawei.com (10.175.103.91) by
  kwepemd100024.china.huawei.com (7.221.188.41) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -29,9 +29,9 @@ To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
 	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Daniel Bristot de Oliveira <bristot@redhat.com>
 CC: <linux-trace-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>
-Subject: [PATCH 2/5] tracing/timerlat: Drop interface_lock in stop_kthread()
-Date: Tue, 24 Sep 2024 17:45:12 +0800
-Message-ID: <20240924094515.3561410-3-liwei391@huawei.com>
+Subject: [PATCH 3/5] tracing/timerlat: Fix a race during cpuhp processing
+Date: Tue, 24 Sep 2024 17:45:13 +0800
+Message-ID: <20240924094515.3561410-4-liwei391@huawei.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240924094515.3561410-1-liwei391@huawei.com>
 References: <20240924094515.3561410-1-liwei391@huawei.com>
@@ -46,69 +46,81 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemd100024.china.huawei.com (7.221.188.41)
 
-stop_kthread() is the offline callback for "trace/osnoise:online", since
-commit 5bfbcd1ee57b ("tracing/timerlat: Add interface_lock around clearing
-of kthread in stop_kthread()"), the following ABBA deadlock scenario is
-introduced:
+There is another found exception that the "timerlat/1" thread was
+scheduled on CPU0, and lead to timer corruption finally:
 
-T1                            | T2 [BP]               | T3 [AP]
-osnoise_hotplug_workfn()      | work_for_cpu_fn()     | cpuhp_thread_fun()
-                              |   _cpu_down()         |   osnoise_cpu_die()
-  mutex_lock(&interface_lock) |                       |     stop_kthread()
-                              |     cpus_write_lock() |       mutex_lock(&interface_lock)
-  cpus_read_lock()            |     cpuhp_kick_ap()   |
+```
+ODEBUG: init active (active state 0) object: ffff888237c2e108 object type: hrtimer hint: timerlat_irq+0x0/0x220
+WARNING: CPU: 0 PID: 426 at lib/debugobjects.c:518 debug_print_object+0x7d/0xb0
+Modules linked in:
+CPU: 0 UID: 0 PID: 426 Comm: timerlat/1 Not tainted 6.11.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+RIP: 0010:debug_print_object+0x7d/0xb0
+...
+Call Trace:
+ <TASK>
+ ? __warn+0x7c/0x110
+ ? debug_print_object+0x7d/0xb0
+ ? report_bug+0xf1/0x1d0
+ ? prb_read_valid+0x17/0x20
+ ? handle_bug+0x3f/0x70
+ ? exc_invalid_op+0x13/0x60
+ ? asm_exc_invalid_op+0x16/0x20
+ ? debug_print_object+0x7d/0xb0
+ ? debug_print_object+0x7d/0xb0
+ ? __pfx_timerlat_irq+0x10/0x10
+ __debug_object_init+0x110/0x150
+ hrtimer_init+0x1d/0x60
+ timerlat_main+0xab/0x2d0
+ ? __pfx_timerlat_main+0x10/0x10
+ kthread+0xb7/0xe0
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2d/0x40
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork_asm+0x1a/0x30
+ </TASK>
+```
 
-As the interface_lock here in just for protecting the "kthread" field of
-the osn_var, use xchg() instead to fix this issue. Also use
-for_each_online_cpu() back in stop_per_cpu_kthreads() as it can take
-cpu_read_lock() again.
+After tracing the scheduling event, it was discovered that the migration
+of the "timerlat/1" thread was performed during thread creation. Further
+analysis confirmed that it is because the CPU online processing for
+osnoise is implemented through workers, which is asynchronous with the
+offline processing. When the worker was scheduled to create a thread, the
+CPU may has already been removed from the cpu_online_mask during the offline
+process, resulting in the inability to select the right CPU:
 
-Fixes: 5bfbcd1ee57b ("tracing/timerlat: Add interface_lock around clearing of kthread in stop_kthread()")
+T1                       | T2
+[CPUHP_ONLINE]           | cpu_device_down()
+osnoise_hotplug_workfn() |
+                         |     cpus_write_lock()
+                         |     takedown_cpu(1)
+                         |     cpus_write_unlock()
+[CPUHP_OFFLINE]          |
+    cpus_read_lock()     |
+    start_kthread(1)     |
+    cpus_read_unlock()   |
+
+To fix this, skip online processing if the CPU is already offline.
+
+Fixes: c8895e271f79 ("trace/osnoise: Support hotplug operations")
 Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- kernel/trace/trace_osnoise.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ kernel/trace/trace_osnoise.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 934a14bc72e6..ddc9afb9b7d4 100644
+index ddc9afb9b7d4..6ed4008e6d62 100644
 --- a/kernel/trace/trace_osnoise.c
 +++ b/kernel/trace/trace_osnoise.c
-@@ -1953,12 +1953,8 @@ static void stop_kthread(unsigned int cpu)
- {
- 	struct task_struct *kthread;
+@@ -2097,6 +2097,8 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ 	mutex_lock(&interface_lock);
+ 	cpus_read_lock();
  
--	mutex_lock(&interface_lock);
--	kthread = per_cpu(per_cpu_osnoise_var, cpu).kthread;
-+	kthread = xchg_relaxed(&(per_cpu(per_cpu_osnoise_var, cpu).kthread), NULL);
- 	if (kthread) {
--		per_cpu(per_cpu_osnoise_var, cpu).kthread = NULL;
--		mutex_unlock(&interface_lock);
--
- 		if (cpumask_test_and_clear_cpu(cpu, &kthread_cpumask) &&
- 		    !WARN_ON(!test_bit(OSN_WORKLOAD, &osnoise_options))) {
- 			kthread_stop(kthread);
-@@ -1972,7 +1968,6 @@ static void stop_kthread(unsigned int cpu)
- 			put_task_struct(kthread);
- 		}
- 	} else {
--		mutex_unlock(&interface_lock);
- 		/* if no workload, just return */
- 		if (!test_bit(OSN_WORKLOAD, &osnoise_options)) {
- 			/*
-@@ -1994,8 +1989,12 @@ static void stop_per_cpu_kthreads(void)
- {
- 	int cpu;
++	if (!cpu_online(cpu))
++		goto out_unlock;
+ 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
+ 		goto out_unlock;
  
--	for_each_possible_cpu(cpu)
-+	cpus_read_lock();
-+
-+	for_each_online_cpu(cpu)
- 		stop_kthread(cpu);
-+
-+	cpus_read_unlock();
- }
- 
- /*
 -- 
 2.25.1
 
