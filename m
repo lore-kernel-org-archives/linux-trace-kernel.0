@@ -1,40 +1,40 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1181482D8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 09:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EE413A896
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 11:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727171634; cv=none; b=U8B6rcjuR2q6MvBHtaJuZwttzeW2bUS7pqETpTD+NOLbx/XYVKldS9HbxSrLSr6AQWhkNmXAg2SMEZBmy4fRBD1oon0V+bFGGbHPb7JXZaM19zY6+TUUi3IyxfTeKpRqk0RXoOfU3vzUH+pHR9/yqioeEVbwg8UERxaYV9wKXrw=
+	t=1727178925; cv=none; b=TMBNzZTPddUtx28DwfEe1cwRHwLyIszMVBWepW6r/6Tt5ZsbVXqnGhSfluHVknZVr23DVk8rC2WcY/88ZbwlCe2AIqMJOdvboaMDSUz1gjLXfb9AuWaDuooQIk0IAJmVeEyKUYtN3b8oPqe7H6MYwFDlLnLtjq3gbMb3Q/sCUkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727171634; c=relaxed/simple;
-	bh=pHR0UkvKEGYhOkAyV8FTZLacUpWReaRNRwQOAV91g5k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lcZf/4A8fNo7kDONPZ3AIEOKdjyA5iql79Uqm5wKMMCSUV1EdXHbnfRvzEJrzHZNKyp5yuv4gyD4upXVRnz8VXoE687hdZgxuYYL7q4gYshEwsrO4wVKPEEygEP3T+MUpunOQWQmz/E0o4VL5k2X2kvhRFWpUUhIAqmuQk/VLSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4XCZtX3l51zQrQZ;
-	Tue, 24 Sep 2024 17:53:24 +0800 (CST)
-Received: from kwepemd100024.china.huawei.com (unknown [7.221.188.41])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF6AF180087;
-	Tue, 24 Sep 2024 17:53:44 +0800 (CST)
-Received: from ubuntu-20-04.huawei.com (10.175.103.91) by
- kwepemd100024.china.huawei.com (7.221.188.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Sep 2024 17:53:44 +0800
-From: Wei Li <liwei391@huawei.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>
-CC: <linux-trace-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>
-Subject: [PATCH 5/5] tracing/hwlat: Fix deadlock in cpuhp processing
-Date: Tue, 24 Sep 2024 17:45:15 +0800
-Message-ID: <20240924094515.3561410-6-liwei391@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240924094515.3561410-1-liwei391@huawei.com>
-References: <20240924094515.3561410-1-liwei391@huawei.com>
+	s=arc-20240116; t=1727178925; c=relaxed/simple;
+	bh=Bl2qzzEHgpGdJKV0zGc3PMz9DFh7mAtoqj4IPeX/p/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eAnyIk2yMiF4wswwVzGElATk6yQHEOhvt6/WW4ZbvRS8jiH6vu+BsFA+shOkSvMK+19xmH9m4r2CfivvVVh8N987qEPKDebawjcroashmUVbyyyjGtqR34KGGcruVpLoQbgFubbxTanvjkm6zQ1/pBXC5aAojPFxY3Ju1pcR7PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:beb3:bbd4:b9cd:84ae])
+	by xavier.telenet-ops.be with cmsmtp
+	id GBvL2D00N3rtkie01BvLdZ; Tue, 24 Sep 2024 13:55:21 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1st48S-000Su2-Qp;
+	Tue, 24 Sep 2024 13:55:20 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1st48W-005iAg-MA;
+	Tue, 24 Sep 2024 13:55:20 +0200
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-bcachefs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] bcachefs: BCACHEFS_PATH_TRACEPOINTS should depend on TRACING
+Date: Tue, 24 Sep 2024 13:55:15 +0200
+Message-Id: <b8436d9d368d1436a2d7e156a879bac5e31a799d.1727178847.git.geert@linux-m68k.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -42,43 +42,29 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100024.china.huawei.com (7.221.188.41)
 
-Another "hung task" error was reported during the test, and i figured out
-the deadlock scenario is as follows:
+When tracing is disabled, there is no point in asking the user about
+enabling extra btree_path tracepoints in bcachefs.
 
-T1 [BP]               | T2 [AP]                     | T3 [hwlatd/1]                  | T4
-work_for_cpu_fn()     | cpuhp_thread_fun()          | kthread_fn()                   | hwlat_hotplug_workfn()
-  _cpu_down()         |   stop_cpu_kthread()        |                                |   mutex_lock(&hwlat_data.lock)
-    cpus_write_lock() |     kthread_stop(hwlatd/1)  |   mutex_lock(&hwlat_data.lock) |
-    __cpuhp_kick_ap() |       wait_for_completion() |                                |   cpus_read_lock()
-
-It constitutes ABBA deadlock indirectly between "cpu_hotplug_lock" and
-"hwlat_data.lock", make the mutex obtaining in kthread_fn() interruptible
-to fix this.
-
-Fixes: ba998f7d9531 ("trace/hwlat: Support hotplug operations")
-Signed-off-by: Wei Li <liwei391@huawei.com>
+Fixes: 32ed4a620c5405be ("bcachefs: Btree path tracepoints")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- kernel/trace/trace_hwlat.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/bcachefs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index 3bd6071441ad..4c228ccb8a38 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -370,7 +370,8 @@ static int kthread_fn(void *data)
- 		get_sample();
- 		local_irq_enable();
+diff --git a/fs/bcachefs/Kconfig b/fs/bcachefs/Kconfig
+index 5bac803ea367c034..e8549d04dcb8dd1b 100644
+--- a/fs/bcachefs/Kconfig
++++ b/fs/bcachefs/Kconfig
+@@ -89,7 +89,7 @@ config BCACHEFS_SIX_OPTIMISTIC_SPIN
  
--		mutex_lock(&hwlat_data.lock);
-+		if (mutex_lock_interruptible(&hwlat_data.lock))
-+			break;
- 		interval = hwlat_data.sample_window - hwlat_data.sample_width;
- 		mutex_unlock(&hwlat_data.lock);
- 
+ config BCACHEFS_PATH_TRACEPOINTS
+ 	bool "Extra btree_path tracepoints"
+-	depends on BCACHEFS_FS
++	depends on BCACHEFS_FS && TRACING
+ 	help
+ 	Enable extra tracepoints for debugging btree_path operations; we don't
+ 	normally want these enabled because they happen at very high rates.
 -- 
-2.25.1
+2.34.1
 
