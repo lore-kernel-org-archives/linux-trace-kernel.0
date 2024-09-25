@@ -1,107 +1,98 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8378E31A60
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 18:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4FC288B5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Sep 2024 06:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727200874; cv=none; b=tJfTFPBU/K262Qy2FDUTzR+6TXayKy03h8F1g+1LlwGSv7JmgyzCGMFMecd4SmmG52LMmFSqfNSL/8Dz1dAO5E6GEZKLzAr8IUfMf+UrQITpNetjABqQbX7E+p8DesOmJ2JOTmFelU4/u28MPJdiwa8IHvWOLixRNWLh1NqpIsw=
+	t=1727247217; cv=none; b=O4ge4LH/AfteTKcC8Aah85JXKSddC+VxV/54ku1PjFU6gJYGA+Lsdum+5M7rGg8ZSCdZCkF+dETd0f+3PQInoMMR4tED9wvrU8cEJtAk2g3rPmpXP1B37F8XKJg9ER/Qa+0YBAJS7qL20RuC2GQQOKA9yAJzQCjhTXXjNDpY5zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727200874; c=relaxed/simple;
-	bh=A15kpu7Y1O25FNXdv/Y2yPmP7X/PnOCFalZNHC+1jXE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gpTwYG4sVNUGbPsGA1X21SKreZwd7Gi//bbYml4XDRu2CVpq+83Ftjcmglqwz5gBSFUmA0T0IU1lxksZxxeFOKp1q3gpVqgthXtszjZASKCuSY51Dn5lSku7YTUpPMmk33EJEw99rGQP+L6COYTW3ytILzmLvufd7DF2HAeGYbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xW2GnKWp; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1727247217; c=relaxed/simple;
+	bh=r9kf0qnXwSSLeWJNN9IRx8zdyaGKS9+VO6ORyI7NPGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HdgMP+JRAgMxIdUJe6FascXiqIPcUMH24WDDflJks/Ys67Mv5EE0XuIBZRa31v+2nJV+b3gaV0GcOtfcyN5wPeOWtR+jm1lVnkLXIzG2LYD93RPNTpKww/ur3yyci5SDu6hVabuzC/QF6zecjC5LUT+nyWtjMyeIDaWSjYssWoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=P5PCAtDu; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xW2GnKWp"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5c247dd0899so2619a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 11:01:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="P5PCAtDu"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5e1baf0f764so1923326eaf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Sep 2024 23:53:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727200871; x=1727805671; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cjhiFYP9ZLzgH4eZvCkFY1gAOy9o8UQ0O08H+0Dp/FU=;
-        b=xW2GnKWp+peKeWhGjxYJN/23TVphx7aPdHUqBzBf7C6FesYkKu2X+lEuU+Hl06ASu2
-         kj7bwYa3RMHwxWPcZ6ZjbpxyPdsosaLPBW31M3nuvwFou4KLvXgJpQzKFmF70iukukGc
-         dGNf47puZ16G6qTtLT/YJ58F2DDwwiH1ytMwkqlOjigm5i66nFPspS8xK5gi28Y9Ildo
-         D3ysdCSLyn7m1esqMJ2020vTlaDf7vlmFF4C2HtOrM3FmfGAAkMfyacfmTyUlHstrXfl
-         +SVtxbbmP/jc8kHB75YE4/oD0ERvAp9MsZJljZH9LmFhxTanMnR3JXVQq9FKF24p8bQN
-         pN5g==
+        d=broadcom.com; s=google; t=1727247214; x=1727852014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/PmnBcy5yJpNGNWEKH0ddst5UIranDsBHIcPf5w/S+c=;
+        b=P5PCAtDuOMNlVX7HU2r+e+juYe5XW3BCoEqJDW9BPg6ZTlWFZxp1Tpz7bLI5lkq9QD
+         sPdWjaddlJL0cY0fSwRX3XbzwpfMb5HvOFFlVQNOl2wYdeTLBdF/FizLZvTSikXtqt6F
+         E7b0YaNJXpfAAQnLWHFqOfF+eQ6sTFtKB4fJA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727200871; x=1727805671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cjhiFYP9ZLzgH4eZvCkFY1gAOy9o8UQ0O08H+0Dp/FU=;
-        b=ZS7nTTVwxkrAQrmUPQA/QkDMHsb5LA3bpAAL3gwzMKsItYeDvoPfcyi6OUIF6e25Zt
-         yIsLM3Wt5YafXrfr56LWuWzeCPCT6pfkg4hUno/qQ6JgctFO6cq3VcN4meGGjXQN/GPW
-         QpW9tV54xxexOziH2KWni0OzcmKJOQOnJerka2tRsHL3CbYQ+IHbWr1mSbltQRnJ47Yk
-         y8Cqs4WXrmghe+3sQ6NNB41jAg/qTyYvEuTZwB0vTyPNilsr0ekapOQDXbbRbyHeC073
-         hDshoYrzZHU26S+ET0sCORJdqBIdpdAHLSb9mdwDgYvKhxYdf0NsuRu4IhJ2lqRtDSDh
-         Z0Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCXctsgveJ09IHB4/qvcEBVEqUshp8mL4ctrreTKPxnnfVi6+SGhGlKkmO0HizozSj+H+9zOrp6+0d9BUZPMum+mzi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrtdGFYbc5VInKvvp+CLMTIkn0A+gvtJ1nMFGat/bYzNNiUABr
-	1UdMGY7T/n5iEUmUdImNmuunh8ltGyjAsQ2gsWfazCrmYFN73ggE+mR50Rlvgf6oQCgBswmfJJU
-	bkrS1oY4kqtppD+4h15EkwGZjmRO5TTrJvBb/
-X-Google-Smtp-Source: AGHT+IGauZmcTAmbWAYK0JUSi5/BirlMPx1JVwLFWuHaMRUoRmepOtiQ7z74xNp5Rgwdm/FNTBH4pFL40akueNX7x10=
-X-Received: by 2002:a05:6402:26d3:b0:5c5:c5fb:d3f0 with SMTP id
- 4fb4d7f45d1cf-5c7209c91fcmr22261a12.4.1727200870366; Tue, 24 Sep 2024
- 11:01:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727247214; x=1727852014;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/PmnBcy5yJpNGNWEKH0ddst5UIranDsBHIcPf5w/S+c=;
+        b=V8sZvY/pkQJScTausMhMLu6lFDe6r/DY0WJqahhz77E1/9cYFYS/36tfMQ8uf/nRvN
+         SWj4Sgi0jzNG3cVVW1yaUhvep9aEmA1F+qgLYkn/UkREBDBZyd1oJ5wa/ubQIO2Q3tTx
+         /iuZ/jbFmo+R4U+ywwFSSemkQQwvKcPjOrjCt2+q9KAitHdUZv5dSZUZCkY8OJNl4OA8
+         hiiHrL8b1M0lGUrAIAQnZhgYAwGSWaBqM+wwvGKoUdiW9O/2nzj045M+paJTdl7YErfk
+         DKjrq8HWbe1O5ZVCqkCeuhww8CFFSYGeUJPtRhCp1KBzVJqGGS28fQk6/Oh6Q6q9pb/N
+         KnUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXZG2MBt42bXfDWzgyk9SWHnsMt38tzSQCZpTde3THCiTnSTY62qPe56BJ3p8wwECNS8+vPC9dVQGPnC7YLC04wuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOjJGcsiBIV5b9RMn7CXDWWfSv2DoX92XRUFEg1s1kvm9rB5iT
+	zBCNjZjLZTe53F6U8flr2JO+KXfqv6rhU15dEAcYR0W0EOJoKGHphaG3cXpFCQ==
+X-Google-Smtp-Source: AGHT+IHaAKW1G7G4hKmqrze6WNPhBVr8M5JmwpNcogPuxjcL+2zikfRrYl0d2dAryi2RUaSlQRjsGg==
+X-Received: by 2002:a05:6870:14d0:b0:277:c113:5b26 with SMTP id 586e51a60fabf-286e12b8902mr1438664fac.7.1727247214307;
+        Tue, 24 Sep 2024 23:53:34 -0700 (PDT)
+Received: from shivania.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71afc97b623sm2147203b3a.169.2024.09.24.23.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Sep 2024 23:53:33 -0700 (PDT)
+From: Shivani Agarwal <shivani.agarwal@broadcom.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com,
+	vasavi.sirnapalli@broadcom.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	jpoimboe@redhat.com,
+	sashal@kernel.org,
+	Shivani Agarwal <shivania2@vmware.com>
+Subject: [PATCH 0/2 v5.10] Fix CVE-2024-38588
+Date: Tue, 24 Sep 2024 23:53:22 -0700
+Message-Id: <20240925065324.121176-1-shivani.agarwal@broadcom.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJuCfpFFqqUWYOob_WYG_aY=PurnKvZjxznnx7V0=ESbNzHr_w@mail.gmail.com>
- <20240912210222.186542-1-surenb@google.com> <CAG48ez131NJWvo_RrxL7Ss0p4jd_aKOu71z1vm9wfaH7Qjn+qw@mail.gmail.com>
- <ZvLzueEY9Sbyz1H4@casper.infradead.org>
-In-Reply-To: <ZvLzueEY9Sbyz1H4@casper.infradead.org>
-From: Jann Horn <jannh@google.com>
-Date: Tue, 24 Sep 2024 20:00:32 +0200
-Message-ID: <CAG48ez0c=ExHdoxQWqDN9hFAhwUKab8vgk-nJ-JGqTUm4xVUsw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm: introduce mmap_lock_speculation_{start|end}
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jolsa@kernel.org, paulmck@kernel.org, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org, andrii@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 24, 2024 at 7:15=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
-> On Fri, Sep 13, 2024 at 12:52:39AM +0200, Jann Horn wrote:
-> > FWIW, I would still feel happier if this was a 64-bit number, though I
-> > guess at least with uprobes the attack surface is not that large even
-> > if you can wrap that counter... 2^31 counter increments are not all
-> > that much, especially if someone introduces a kernel path in the
-> > future that lets you repeatedly take the mmap_lock for writing within
-> > a single syscall without doing much work, or maybe on some machine
-> > where syscalls are really fast. I really don't like hinging memory
-> > safety on how fast or slow some piece of code can run, unless we can
-> > make strong arguments about it based on how many memory writes a CPU
-> > core is capable of doing per second or stuff like that.
->
-> You could repeatedly call munmap(1, 0) which will take the
-> mmap_write_lock, do no work and call mmap_write_unlock().  We could
-> fix that by moving the start/len validation outside the
-> mmap_write_lock(), but it won't increase the path length by much.
-> How many syscalls can we do per second?
-> https://blogs.oracle.com/linux/post/syscall-latency suggests 217ns per
-> syscall, so we'll be close to 4.6m syscalls/second or 466 seconds (7
-> minutes, 46 seconds).
+From: Shivani Agarwal <shivania2@vmware.com>
 
-Yeah, that seems like a pretty reasonable guess.
+Hi,
 
-One method that may or may not be faster would be to use an io-uring
-worker to dispatch a bunch of IORING_OP_MADVISE operations - that
-would save on syscall entry overhead but in exchange you'd have to
-worry about feeding a constant stream of work into the worker thread
-in a cache-efficient way, maybe by having one CPU constantly switch
-back and forth between a userspace thread and a uring worker or
-something like that.
+ To Fix CVE-2024-38588 e60b613df8b6 is required, but it has a dependency
+ on aebfd12521d9. Therefore backported both patches for v5.10.
+
+Thanks,
+Shivani
+
+Shivani Agarwal (2):
+  x86/ibt,ftrace: Search for __fentry__ location
+  ftrace: Fix possible use-after-free issue in  ftrace_location()
+
+ arch/x86/kernel/kprobes/core.c | 11 +-----
+ kernel/bpf/trampoline.c        | 20 ++--------
+ kernel/kprobes.c               |  8 +---
+ kernel/trace/ftrace.c          | 71 ++++++++++++++++++++++++++--------
+ 4 files changed, 63 insertions(+), 47 deletions(-)
+
+-- 
+2.39.4
+
