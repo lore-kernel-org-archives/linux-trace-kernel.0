@@ -1,54 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74711199FB0;
-	Wed, 25 Sep 2024 11:50:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5EB1D86D8;
+	Wed, 25 Sep 2024 12:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727265025; cv=none; b=tjuow89QaMS1jCCModc8LhqiJG3flzQpJ4CZBeTl4ykuizNcttfIRdLYThd3dIIJqbXlPzsY9YXEnXK8TQ77IJYnFLfRlwTdxFIrS5VaAbFTpztalFoBXHFbRQdj9n4rT/Lf+DzVo9umEtLT1WQ9o0weZ3tKpINPm+SZdYsKQQw=
+	t=1727265686; cv=none; b=MkEjgAxDV86PHjXxMv4WcnGniTkXp7tJARmInG+mJKLgE14RBLij7gm33udgk0LGe75TVbTCHsP97tTTNAUfoeLxeao2KT4XVxNMKHb9gVWWP4PZ11uAMf1EItldKEITN6+cv4mpBmJejxIeVlM/BmAXhRM8t1RZkmNKTsO0G/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727265025; c=relaxed/simple;
-	bh=VbcyGCc7unU7tQPQ4hu6+gAFeQ6uc7j5JaVtJt2TSu4=;
+	s=arc-20240116; t=1727265686; c=relaxed/simple;
+	bh=siFgHDU3+DIfq5cAByMJnmPETN9KVVCUrvCYwmjKU9s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q6kUggzG+OPBlHp7ln+rwjf3ZV6DVQzCmXNq980mtIvn2EXm6bJ4L/1/B5oODo82dC9AOdZwQfdLC4yX665cK7EVFpy4ybcA4PHX1BEV3ynoGQJepg26lF/TdqTzbiKcwAhQDHaLGTmCiDGQ6woowuKgmsbdWh6xFmOz5I91kmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLw2nvJP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BMO6yWsvmBzwtQk71NpQwS5fMSsDDvb+AHWxIGcvuoq/ls9yG9oD1TdbZ/kB0p2J8Ln53t7F5/euT7w9YFAHLMpejCvo6O/lu+sIaYc/Q/W9v7JkTjUSLdM9Azz/1ZH3MPKh8uCk+f8QzencyNG3+CHJWvB8p3QGqUERfJCbJek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjAs29vZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLw2nvJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F554C4CECE;
-	Wed, 25 Sep 2024 11:50:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjAs29vZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E49C4CEC7;
+	Wed, 25 Sep 2024 12:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727265025;
-	bh=VbcyGCc7unU7tQPQ4hu6+gAFeQ6uc7j5JaVtJt2TSu4=;
+	s=k20201202; t=1727265686;
+	bh=siFgHDU3+DIfq5cAByMJnmPETN9KVVCUrvCYwmjKU9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mLw2nvJPZXVeLdqN1sbcMvMy1H3IX/vLtoLD163G/ox+87UrtN2oEuRk5EKAjq6zw
-	 g5EkA8G0kllCNPYVsRG/rlU4C8wO5pnOUvGyC0x3BMfa5bB5PGnRZ1C3l5tInO5fvk
-	 Qn00o4GoD+sCj/TwfoeKKHgo7rByi00g5S0llO9cBH+evfKVe8GUQR9BWJP6srrjRJ
-	 BGHxX8EYFutcnDnO/DYWWMjUrB+9N6h6u0li15ygxeZHhYIZmcOeartp7WaDcUG9O7
-	 MwlcmdxI2stC7NEQ2BLXVwzCJwFY0VQaHgQB6Rs5fpQoPVcfa0D/d17P7DTmBgEys6
-	 2Yfi8t5cd8J0w==
+	b=cjAs29vZE6mNBj00nqpNSSlO6+whgvx0r+t6lRpCGZDthNJ0No9GPjIlOK/mwqWEm
+	 LdQx4G7vS4Vs8YrjjbHnY/nxoEZzR9EHgyvRp2exj4Mt/34YmkEA9IPut8e9VfAvK4
+	 b2vXDrIvC70MLkLhfLnn4m8v9XIHINOUqmpbC24ySzbxvm+hOq4n3g19p01g4BAAeE
+	 xTo0vSD7sc/zRMLRdZsEI4BJOAnZ+RtU9+y4Q5G/atwLcIF8FhuVG9aUZUFMRhhrQl
+	 HRn4IoDNJEHFKM+o5X8dA21aLgoSyZHcy6znHPEJgF53NAmt9iyT0I3HEKT5zzv/SY
+	 /u7F+1St/2rSQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
+	rostedt@goodmis.org,
 	mhiramat@kernel.org,
-	oleg@redhat.com,
-	linux-perf-users@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.11 197/244] perf,x86: avoid missing caller address in stack traces captured in uprobe
-Date: Wed, 25 Sep 2024 07:26:58 -0400
-Message-ID: <20240925113641.1297102-197-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.10 071/197] netfs: Cancel dirty folios that have no storage destination
+Date: Wed, 25 Sep 2024 07:51:30 -0400
+Message-ID: <20240925115823.1303019-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240925113641.1297102-1-sashal@kernel.org>
-References: <20240925113641.1297102-1-sashal@kernel.org>
+In-Reply-To: <20240925115823.1303019-1-sashal@kernel.org>
+References: <20240925115823.1303019-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,197 +52,81 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11
+X-stable-base: Linux 6.10.11
 Content-Transfer-Encoding: 8bit
 
-From: Andrii Nakryiko <andrii@kernel.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit cfa7f3d2c526c224a6271cc78a4a27a0de06f4f0 ]
+[ Upstream commit 8f246b7c0a1be0882374f2ff831a61f0dbe77678 ]
 
-When tracing user functions with uprobe functionality, it's common to
-install the probe (e.g., a BPF program) at the first instruction of the
-function. This is often going to be `push %rbp` instruction in function
-preamble, which means that within that function frame pointer hasn't
-been established yet. This leads to consistently missing an actual
-caller of the traced function, because perf_callchain_user() only
-records current IP (capturing traced function) and then following frame
-pointer chain (which would be caller's frame, containing the address of
-caller's caller).
+Kafs wants to be able to cache the contents of directories (and symlinks),
+but whilst these are downloaded from the server with the FS.FetchData RPC
+op and similar, the same as for regular files, they can't be updated by
+FS.StoreData, but rather have special operations (FS.MakeDir, etc.).
 
-So when we have target_1 -> target_2 -> target_3 call chain and we are
-tracing an entry to target_3, captured stack trace will report
-target_1 -> target_3 call chain, which is wrong and confusing.
+Now, rather than redownloading a directory's content after each change made
+to that directory, kafs modifies the local blob.  This blob can be saved
+out to the cache, and since it's using netfslib, kafs just marks the folios
+dirty and lets ->writepages() on the directory take care of it, as for an
+regular file.
 
-This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-(`push %ebp` on 32-bit architecture) instruction being traced. Given
-entire kernel implementation of user space stack trace capturing works
-under assumption that user space code was compiled with frame pointer
-register (%rbp/%ebp) preservation, it seems pretty reasonable to use
-this instruction as a strong indicator that this is the entry to the
-function. In that case, return address is still pointed to by %rsp/%esp,
-so we fetch it and add to stack trace before proceeding to unwind the
-rest using frame pointer-based logic.
+This is fine as long as there's a cache as although the upload stream is
+disabled, there's a cache stream to drive the procedure.  But if the cache
+goes away in the meantime, suddenly there's no way do any writes and the
+code gets confused, complains "R=%x: No submit" to dmesg and leaves the
+dirty folio hanging.
 
-We also check for `endbr64` (for 64-bit modes) as another common pattern
-for function entry, as suggested by Josh Poimboeuf. Even if we get this
-wrong sometimes for uprobes attached not at the function entry, it's OK
-because stack trace will still be overall meaningful, just with one
-extra bogus entry. If we don't detect this, we end up with guaranteed to
-be missing caller function entry in the stack trace, which is worse
-overall.
+Fix this by just cancelling the store of the folio if neither stream is
+active.  (If there's no cache at the time of dirtying, we should just not
+mark the folio dirty).
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20240729175223.23914-1-andrii@kernel.org
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+Link: https://lore.kernel.org/r/20240814203850.2240469-23-dhowells@redhat.com/ # v2
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c  | 63 +++++++++++++++++++++++++++++++++++++++++
- include/linux/uprobes.h |  2 ++
- kernel/events/uprobes.c |  2 ++
- 3 files changed, 67 insertions(+)
+ fs/netfs/write_issue.c       | 6 +++++-
+ include/trace/events/netfs.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index be01823b1bb45..65ab6460aed4d 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -41,6 +41,8 @@
- #include <asm/desc.h>
- #include <asm/ldt.h>
- #include <asm/unwind.h>
-+#include <asm/uprobes.h>
-+#include <asm/ibt.h>
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 32bc88bee5d18..3c7eb43a2ec69 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -408,13 +408,17 @@ static int netfs_write_folio(struct netfs_io_request *wreq,
+ 	folio_unlock(folio);
  
- #include "perf_event.h"
- 
-@@ -2816,6 +2818,46 @@ static unsigned long get_segment_base(unsigned int segment)
- 	return get_desc_base(desc);
- }
- 
-+#ifdef CONFIG_UPROBES
-+/*
-+ * Heuristic-based check if uprobe is installed at the function entry.
-+ *
-+ * Under assumption of user code being compiled with frame pointers,
-+ * `push %rbp/%ebp` is a good indicator that we indeed are.
-+ *
-+ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
-+ * If we get this wrong, captured stack trace might have one extra bogus
-+ * entry, but the rest of stack trace will still be meaningful.
-+ */
-+static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-+{
-+	struct arch_uprobe *auprobe;
-+
-+	if (!current->utask)
-+		return false;
-+
-+	auprobe = current->utask->auprobe;
-+	if (!auprobe)
-+		return false;
-+
-+	/* push %rbp/%ebp */
-+	if (auprobe->insn[0] == 0x55)
-+		return true;
-+
-+	/* endbr64 (64-bit only) */
-+	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-+		return true;
-+
-+	return false;
-+}
-+
-+#else
-+static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_UPROBES */
-+
- #ifdef CONFIG_IA32_EMULATION
- 
- #include <linux/compat.h>
-@@ -2827,6 +2869,7 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 	unsigned long ss_base, cs_base;
- 	struct stack_frame_ia32 frame;
- 	const struct stack_frame_ia32 __user *fp;
-+	u32 ret_addr;
- 
- 	if (user_64bit_mode(regs))
- 		return 0;
-@@ -2836,6 +2879,12 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 
- 	fp = compat_ptr(ss_base + regs->bp);
- 	pagefault_disable();
-+
-+	/* see perf_callchain_user() below for why we do this */
-+	if (is_uprobe_at_func_entry(regs) &&
-+	    !get_user(ret_addr, (const u32 __user *)regs->sp))
-+		perf_callchain_store(entry, ret_addr);
-+
- 	while (entry->nr < entry->max_stack) {
- 		if (!valid_user_frame(fp, sizeof(frame)))
- 			break;
-@@ -2864,6 +2913,7 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- {
- 	struct stack_frame frame;
- 	const struct stack_frame __user *fp;
-+	unsigned long ret_addr;
- 
- 	if (perf_guest_state()) {
- 		/* TODO: We don't support guest os callchain now */
-@@ -2887,6 +2937,19 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
- 		return;
- 
- 	pagefault_disable();
-+
-+	/*
-+	 * If we are called from uprobe handler, and we are indeed at the very
-+	 * entry to user function (which is normally a `push %rbp` instruction,
-+	 * under assumption of application being compiled with frame pointers),
-+	 * we should read return address from *regs->sp before proceeding
-+	 * to follow frame pointers, otherwise we'll skip immediate caller
-+	 * as %rbp is not yet setup.
-+	 */
-+	if (is_uprobe_at_func_entry(regs) &&
-+	    !get_user(ret_addr, (const unsigned long __user *)regs->sp))
-+		perf_callchain_store(entry, ret_addr);
-+
- 	while (entry->nr < entry->max_stack) {
- 		if (!valid_user_frame(fp, sizeof(frame)))
- 			break;
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b503fafb7fb3e..a270a5892ab4f 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -76,6 +76,8 @@ struct uprobe_task {
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
- 
-+	struct arch_uprobe              *auprobe;
-+
- 	struct return_instance		*return_instances;
- 	unsigned int			depth;
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 50d7949be2b17..333c44f2ce55d 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2081,6 +2081,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 	bool need_prep = false; /* prepare return uprobe, when needed */
- 
- 	down_read(&uprobe->register_rwsem);
-+	current->utask->auprobe = &uprobe->arch;
- 	for (uc = uprobe->consumers; uc; uc = uc->next) {
- 		int rc = 0;
- 
-@@ -2095,6 +2096,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 
- 		remove &= rc;
- 	}
-+	current->utask->auprobe = NULL;
- 
- 	if (need_prep && !remove)
- 		prepare_uretprobe(uprobe, regs); /* put bp at return */
+ 	if (fgroup == NETFS_FOLIO_COPY_TO_CACHE) {
+-		if (!fscache_resources_valid(&wreq->cache_resources)) {
++		if (!cache->avail) {
+ 			trace_netfs_folio(folio, netfs_folio_trace_cancel_copy);
+ 			netfs_issue_write(wreq, upload);
+ 			netfs_folio_written_back(folio);
+ 			return 0;
+ 		}
+ 		trace_netfs_folio(folio, netfs_folio_trace_store_copy);
++	} else if (!upload->avail && !cache->avail) {
++		trace_netfs_folio(folio, netfs_folio_trace_cancel_store);
++		netfs_folio_written_back(folio);
++		return 0;
+ 	} else if (!upload->construct) {
+ 		trace_netfs_folio(folio, netfs_folio_trace_store);
+ 	} else {
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 24ec3434d32ee..102696abe8c9e 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -140,6 +140,7 @@
+ 	EM(netfs_streaming_cont_filled_page,	"mod-streamw-f+") \
+ 	/* The rest are for writeback */			\
+ 	EM(netfs_folio_trace_cancel_copy,	"cancel-copy")	\
++	EM(netfs_folio_trace_cancel_store,	"cancel-store")	\
+ 	EM(netfs_folio_trace_clear,		"clear")	\
+ 	EM(netfs_folio_trace_clear_cc,		"clear-cc")	\
+ 	EM(netfs_folio_trace_clear_g,		"clear-g")	\
 -- 
 2.43.0
 
