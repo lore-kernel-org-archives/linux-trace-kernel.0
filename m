@@ -1,67 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947C4132103;
-	Wed, 25 Sep 2024 07:08:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C411AED4D;
+	Wed, 25 Sep 2024 11:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727248108; cv=none; b=h3sB62bkfkNkar3uapAOvD/LwrdPPg6pl4DNvQ4duqvE9TtwrDbuw1asO+b6oEQ840PYo47DHYHCFNBvOpcBfbX7TaJE+3q/5lWdSCe4j0NxhtMJqPjZPoTr59fA4uonwUpiSByD4sPvEK5U5oAdZ1PQRDzYT8bN9S9YhZsjDG0=
+	t=1727264415; cv=none; b=af5YQ90PGUohIa0FaAzeypOWm/v9jp6THo7F+a+d7iHKOJCJRcdb1v6IgbMTJM1pkrH1C5OuLDmzxWPhj2hB46jUIoexzMKb2Me0AtQBhDc8rh12hgpUg7UqDe+Te5C8TsMq4Ga7B0DXrRzjd0VkvxdcdU8kpDRrpFnC2sqAIek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727248108; c=relaxed/simple;
-	bh=8C9zq1a496NalKgWmrzYn8bXqhj/Q05OOw+7Zz22H1w=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=KnD+R6Awt9AUmn3yGYkBhMKa/joPMtIRGjY1RYLL20F+SQQ6Fl+vnvXr5kRTB7w/KmTs4T0cAeyVvlPnOWUuvcIXEjWl2LQqY5jMvQg58Tb5fjGWUwy2M1pSTEAmkbDXQf3L3TQKD6pbcNWeHfBXEL7xh9kI/LYiQXjFc6MRRxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8U4dPJw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727264415; c=relaxed/simple;
+	bh=29/0Evw/Ct649xv2s42Fn0NvJ7869yMChaP7sa3u7PI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uy+hrO6Oms2xgFoa3Njq16UKRRlqHtyCBUBdiX7BC7o67vetJ8RogG6PkdH9+IuUhbjHsdWQiE97YdXk0ZC/3gGSW0D6UbIP+KpWMeCOIZ0+M5W2PNYR50NFcwLgwSQLYCLfZC2xq9dtzrKsLZCZMRQXNioSlTMZLadiwnMqo7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ulNxVt6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8U4dPJw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 303DEC4CEC3;
-	Wed, 25 Sep 2024 07:08:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ulNxVt6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954FAC4CECD;
+	Wed, 25 Sep 2024 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727248108;
-	bh=8C9zq1a496NalKgWmrzYn8bXqhj/Q05OOw+7Zz22H1w=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=t8U4dPJwqPVePK5ibIHYaUUfrJdlCelv6H/y687rQt6wyCNuhcAHJc6TjAh5Y9MKC
-	 xKtA1Qsvzjy7ds+LAP4atySalx5H/RfM+riSwuvKjr5uYn/SqzQ5F/3/NVkmBtUdcc
-	 DFyxBwaHD/lOwQDqX4FEGN9+G+ZRA4tw2LXj+Zuq0NAHNRwAOs6ev3SL0JO1mmsxpk
-	 BcTgms1h2rnf6dXE78EutsUqAUlNjmE94enSgB0pDdF2k6m5FnJnX/bP+WZNsgW0vM
-	 YaC00xT3EZCSsGRuCqwPqVowrFpB4ywM836hGWRTVnjpAxdSSwBhWh2sQoYqot7BRO
-	 cD7EJMcIcaxOg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>,  "David S . Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
-  linux-wireless@vger.kernel.org,  netdev@vger.kernel.org,
-  linux-trace-kernel@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] mac80211: MAC80211_MESSAGE_TRACING should depend on
- TRACING
-References: <85bbe38ce0df13350f45714e2dc288cc70947a19.1727179690.git.geert@linux-m68k.org>
-Date: Wed, 25 Sep 2024 10:08:24 +0300
-In-Reply-To: <85bbe38ce0df13350f45714e2dc288cc70947a19.1727179690.git.geert@linux-m68k.org>
-	(Geert Uytterhoeven's message of "Tue, 24 Sep 2024 14:08:57 +0200")
-Message-ID: <87a5fw9pnb.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1727264415;
+	bh=29/0Evw/Ct649xv2s42Fn0NvJ7869yMChaP7sa3u7PI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ulNxVt6BohzdJYEbAIPZCxGx+WQ1mWpnPqGyE5CAU/zYIyIski/MU/Vc1YLG25ixj
+	 C1tlE8QHkHd4YExzsFZPe7u0jP8zYjCjBdjHLD6jMt9CCNLm8jLI1WoR4KkRxYAwZM
+	 x+UEejPfhGROULYlLyUDu23GAzetRVA+MAKs93p06nCEyjNf5YgZV1cGfS31dfeIDM
+	 0HJ2S+csUIsfJEIwSou4KHNz1Q9fO7guXEwhlSHhJBOL70FTg/KoY5dl9ytBdTUyyf
+	 4fkSjuQw2IwjZc/1sG/MCEDt3oaOV/DW057gSRPN1So4htEor9oMXw1KnChROlrLke
+	 lEZ+AFOW2ThGw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: David Howells <dhowells@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.11 086/244] netfs: Cancel dirty folios that have no storage destination
+Date: Wed, 25 Sep 2024 07:25:07 -0400
+Message-ID: <20240925113641.1297102-86-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240925113641.1297102-1-sashal@kernel.org>
+References: <20240925113641.1297102-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.11
+Content-Transfer-Encoding: 8bit
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
+From: David Howells <dhowells@redhat.com>
 
-> When tracing is disabled, there is no point in asking the user about
-> enabling tracing of all mac80211 debug messages.
->
-> Fixes: 3fae0273168026ed ("mac80211: trace debug messages")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+[ Upstream commit 8f246b7c0a1be0882374f2ff831a61f0dbe77678 ]
 
-mac80211 patches go to wireless tree, not net. Also 'wifi:' missing from
-subject but I suspect Johannes can fix that during commit, so no need to
-resend (I hope).
+Kafs wants to be able to cache the contents of directories (and symlinks),
+but whilst these are downloaded from the server with the FS.FetchData RPC
+op and similar, the same as for regular files, they can't be updated by
+FS.StoreData, but rather have special operations (FS.MakeDir, etc.).
 
+Now, rather than redownloading a directory's content after each change made
+to that directory, kafs modifies the local blob.  This blob can be saved
+out to the cache, and since it's using netfslib, kafs just marks the folios
+dirty and lets ->writepages() on the directory take care of it, as for an
+regular file.
+
+This is fine as long as there's a cache as although the upload stream is
+disabled, there's a cache stream to drive the procedure.  But if the cache
+goes away in the meantime, suddenly there's no way do any writes and the
+code gets confused, complains "R=%x: No submit" to dmesg and leaves the
+dirty folio hanging.
+
+Fix this by just cancelling the store of the folio if neither stream is
+active.  (If there's no cache at the time of dirtying, we should just not
+mark the folio dirty).
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+Link: https://lore.kernel.org/r/20240814203850.2240469-23-dhowells@redhat.com/ # v2
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/netfs/write_issue.c       | 6 +++++-
+ include/trace/events/netfs.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 3f7e37e50c7d0..3ae287bb19a0a 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -410,13 +410,17 @@ static int netfs_write_folio(struct netfs_io_request *wreq,
+ 	folio_unlock(folio);
+ 
+ 	if (fgroup == NETFS_FOLIO_COPY_TO_CACHE) {
+-		if (!fscache_resources_valid(&wreq->cache_resources)) {
++		if (!cache->avail) {
+ 			trace_netfs_folio(folio, netfs_folio_trace_cancel_copy);
+ 			netfs_issue_write(wreq, upload);
+ 			netfs_folio_written_back(folio);
+ 			return 0;
+ 		}
+ 		trace_netfs_folio(folio, netfs_folio_trace_store_copy);
++	} else if (!upload->avail && !cache->avail) {
++		trace_netfs_folio(folio, netfs_folio_trace_cancel_store);
++		netfs_folio_written_back(folio);
++		return 0;
+ 	} else if (!upload->construct) {
+ 		trace_netfs_folio(folio, netfs_folio_trace_store);
+ 	} else {
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 606b4a0f92dae..edcc3b3a3ecf8 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -141,6 +141,7 @@
+ 	EM(netfs_streaming_cont_filled_page,	"mod-streamw-f+") \
+ 	/* The rest are for writeback */			\
+ 	EM(netfs_folio_trace_cancel_copy,	"cancel-copy")	\
++	EM(netfs_folio_trace_cancel_store,	"cancel-store")	\
+ 	EM(netfs_folio_trace_clear,		"clear")	\
+ 	EM(netfs_folio_trace_clear_cc,		"clear-cc")	\
+ 	EM(netfs_folio_trace_clear_g,		"clear-g")	\
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.43.0
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
