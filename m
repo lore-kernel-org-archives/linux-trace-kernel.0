@@ -1,130 +1,76 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67831157E61;
-	Thu, 26 Sep 2024 16:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC1A1C6B4;
+	Thu, 26 Sep 2024 17:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727369988; cv=none; b=KFZqSsudVxjUOnB/wp+EfxywikuXBeE8mdaTfQHbAfkgrDzUzZbovkJcKcgG+UsQDjRYSQzd5DAD+8Upt2RWhXNr0SD5LQ2aFp9JdFqjxxmVMao4sWuVt6b6pCd4NFOI0+U+OZSNXRV4cY8O5LFcVyzd8Hzx5Qw3h7Fp0oXmy4I=
+	t=1727370122; cv=none; b=dQb15c0E7Z/fkG7ILtR7Hc07KrQJNo2ESF4lYmGMesIR5H9HtvOFBfmX8DSydQPh0KTvj1Uw9guOzjad5Itd2Y4r3X2ioI37obl5aDkXfuMhjIe7K6FsBCL3kNGAs3ALS06gaG/oIebsSSb7IuVr6aQsarBkAB2P+jYD4P0PH1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727369988; c=relaxed/simple;
-	bh=FvyFBt+Vd5UF2A+sqhYijCe2ynDIwnVNWV+evOwSXP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B1SiIdFW46NHrhcKA1/acXKyGIfdRGzUO6oJuUKaO7IE995Z9i8dJ/BGNLPEXukuznYmuKMF8u2++mxYIMAZf1zO4VUmYKPWbE0C+E9tQSWDzm1kWYne+2qbSMhCE2v2YiytYXjJQE03FGKxmPteJxz7JnSgnr0CgGvlulVFyuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OyPAll4O; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OyPAll4O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=vZZTa11CAK73ciRtK/MoLNusDFg6dIj6Gmywiet9pEk=; b=OyPAll4OChxKP8zrcRtGRnwDsS
-	zgKDZwCOCsLmEc3+M7QxVMRw982AGTIfUzIiE0r3n23a11U3UDZEMxLYNM618gxtGhCmRWJP9IslZ
-	9+fiZSZkbwBnKX2dlUHKkc3YWMFduEcnt37crCl9ejx+ykHfIKIsY2xu7mT6c09KLkFB6Nj2shRI/
-	b9o0cncTZMvy1eY9nrSfrqswutAzEmxTAPzp6LD6L9+WM7TNgOssSkIjNUWpwRnM5fRfscLCL093N
-	0O2bR8GyaCgxQdhUQxbDRrz9hy5l7wu9KZI/IeAiNOYxC27i+h5n/x1QgIcty/TPcFVrW1NPOWxWe
-	lyN231og==;
-Received: from [50.53.2.24] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1strpz-000000078sX-1WvG;
-	Thu, 26 Sep 2024 16:59:32 +0000
-Message-ID: <fadc1ea2-fb43-41e2-af8c-8a93cf9e7865@infradead.org>
-Date: Thu, 26 Sep 2024 09:59:21 -0700
+	s=arc-20240116; t=1727370122; c=relaxed/simple;
+	bh=K9C9IfIihUP2RQiCo+rWgpc2wkCABq/E2CmKe9wU09U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WoKL9ICh50gcuhjDHydFst1OdKmk0qSY6oG2bNGFrslgFJsVTkSCx3QxUpDTkjzmrPH6nDyPXjrHQa7Ef4OoLX7Q07IE2GrD/6/pm4ixmF1leB471tHF1gFktaGbM4fJX4IyyCrR2WCuxJHj77wjyT+QTB1iF6ogHhktMqZiiwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B8BC4CEC5;
+	Thu, 26 Sep 2024 17:02:01 +0000 (UTC)
+Date: Thu, 26 Sep 2024 13:01:59 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mike Rapoport <mike.rapoport@gmail.com>,
+ Kees Cook <keescook@chromium.org>, Hans de Goede <hdegoede@redhat.com>, Ard
+ Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] Documentation/tracing: Mention that RESET_ATTACK_MITIGATION
+ can clear memory
+Message-ID: <20240926130159.19e6d0e2@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/11] fs: multigrain timestamp redux
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
- Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>,
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>,
- Chuck Lever <chuck.lever@oracle.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Jeff,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-On 9/14/24 10:07 AM, Jeff Layton wrote:
-> This is a fairly small update to the v7 set. It seems to pass all of my
-> testing. Again, most of the changes are in the first two patches, but
-> there are some differences in the patch that adds percpu counters as
-> well.
-> 
-> Since the report of a performance regression came just before the merge
-> window, it looks like we're going to have to wait for yet another
-> release, so consider this version v6.13 material.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
+At the 2024 Linux Plumbers Conference, I was talking with Hans de Goede
+about the persistent buffer to display traces from previous boots. He
+mentioned that UEFI can clear memory. In my own tests I have not seen
+this. He later informed me that it requires the config option:
 
-> ---
-> Jeff Layton (11):
->       timekeeping: move multigrain timestamp floor handling into timekeeper
->       fs: add infrastructure for multigrain timestamps
->       fs: have setattr_copy handle multigrain timestamps appropriately
->       fs: handle delegated timestamps in setattr_copy_mgtime
->       fs: tracepoints around multigrain timestamp events
->       fs: add percpu counters for significant multigrain timestamp events
->       Documentation: add a new file documenting multigrain timestamps
->       xfs: switch to multigrain timestamps
->       ext4: switch to multigrain timestamps
->       btrfs: convert to multigrain timestamps
->       tmpfs: add support for multigrain timestamps
-> 
->  Documentation/filesystems/index.rst         |   1 +
->  Documentation/filesystems/multigrain-ts.rst | 121 ++++++++++++
->  fs/attr.c                                   |  60 +++++-
->  fs/btrfs/file.c                             |  25 +--
->  fs/btrfs/super.c                            |   3 +-
->  fs/ext4/super.c                             |   2 +-
->  fs/inode.c                                  | 278 +++++++++++++++++++++++++---
->  fs/stat.c                                   |  42 ++++-
->  fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
->  fs/xfs/xfs_iops.c                           |  10 +-
->  fs/xfs/xfs_super.c                          |   2 +-
->  include/linux/fs.h                          |  36 +++-
->  include/linux/timekeeping.h                 |   5 +
->  include/trace/events/timestamp.h            | 124 +++++++++++++
->  kernel/time/timekeeping.c                   |  83 +++++++++
->  kernel/time/timekeeping_debug.c             |  12 ++
->  kernel/time/timekeeping_internal.h          |   3 +
->  mm/shmem.c                                  |   2 +-
->  18 files changed, 742 insertions(+), 73 deletions(-)
-> ---
-> base-commit: da3ea35007d0af457a0afc87e84fddaebc4e0b63
+ CONFIG_RESET_ATTACK_MITIGATION
 
-IME it would be better to make this series apply to linux-next-($latest)
-instead of base mainline Linux. for integration reasons.
+It appears that setting this will allow the memory to be cleared on boot
+up, which will definitely clear out the trace of the previous boot.
 
-You can add
+Add this information under the trace_instance in kernel-parameters.txt
+to let people know that this can cause issues.
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # documentation bits
+Link: https://lore.kernel.org/all/20170825155019.6740-2-ard.biesheuvel@linaro.org/
 
-for all patches if you want to.
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index bb48ae24ae69..f9b79294f84a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6850,6 +6850,9 @@
+ 
+ 				reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff^traceprintk@trace,sched,irq
+ 
++			Note, CONFIG_RESET_ATTACK_MITIGATION can force a memory reset on boot which
++			will clear any trace that was stored.
++
+ 			See also Documentation/trace/debugging.rst
+ 
+ 
+-- 
+2.45.2
 
-> change-id: 20240913-mgtime-20c98bcda88e
-> 
-> Best regards,
