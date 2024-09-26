@@ -1,93 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38AC13A24D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Sep 2024 14:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCE115B96C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Sep 2024 16:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727361296; cv=none; b=jZcHV0SOfz9vZyvL06MgXWLafW7cQUq4SwJdSY8MI/AKUOadADae43thlwLji5vdAX9bXzX1J4pljy6Cqt4X8BI5DiYwnKa6f1HaN9HDAXXU+NAKtFh5wPXtTOy555Gz+WfinYMU+WbbfSpEp2XjzuMZ2J8qwIGFsIRKsnT/H/I=
+	t=1727366930; cv=none; b=Sf6PPvao/59aEJDCW/cRrCv+o5inbJyvnL9ffC/8ThHJ4laaKncL5KyIBdRuxbXTKe9W84sq+3jxkxICR0Xh4KFTF9D8XpXGMFElfuSVOG3EMG6nhsJ0b1o3mTKbQ5+FRpUEQUy2velqCj7rwOX2sBnAiDJTYr/XdJBGsCAhS2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727361296; c=relaxed/simple;
-	bh=+WScVdfovixo0ZPCL9eSPSMSKuZ7RAGeUilkyLQGOvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uCCWFHDzQ9zx/pOJA2QfBxiUHKkACHKisn5jFXbASp2n6Cx763PlUFUstwrjTsJxCg6sQqJQwcsFV86Vay+lVCShmU63oKvA7IJOkIKsKb4RbdO7dWtiGB+Gjk5v8gthm5DMKhon1bX/p3KStZySYGyh+49i7ovT5dR9LVrFi0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ay2H53hV; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1727366930; c=relaxed/simple;
+	bh=Tye5qerO5CBCY8lsDm6znBw3VH/UFoDPiSxLCCPG9w4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gfyGUp3NIS4YO6zEx9DBKds1Aokqow9aHS8/g3Q952iHyckPxU78eGe8MteDOKHM1KIz3k3l7gJnZA3yL+Qv0ny39cZuw+aL3yvOTdc130sOjKatUbMKUE0z+8NQJj5egG7hk/YcJr7vjRY/1dJBeCnt/8bW9g0PSU8ox+OV1Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S8qCmsUh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ay2H53hV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S8qCmsUh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727361293;
+	s=mimecast20190719; t=1727366927;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SSHYC4Q5Z+iBFAoFsX5X4KzGymPFRdWV82Y9YZAZ6ug=;
-	b=ay2H53hVanorC3acC8ABa3lzq2w8PFVvhutHttEX8J6s50K6wLQxQChi4jE8EOVek0buBG
-	ODfIkIpC4QkuxUqHs/rO5L2tqgHA0fwiAmicN+Zx34vCMZ8wA6M9G/dBhCpVsYIig+5j1D
-	mff72zuxhJz770Wk+hiPWTdocnM1nQA=
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tye5qerO5CBCY8lsDm6znBw3VH/UFoDPiSxLCCPG9w4=;
+	b=S8qCmsUh7nvukf/56QwaWlcwsoPzNusxbMQlfVYE4di0wE+l/s/vA+3Gj+2VK3W6+9XZ34
+	eziHzaGmvYJxJ3/6PliYSrHjmCfdzLYONR4i0r/JKM19+++qMi7/aeLcJAxyQmtLYQCjiX
+	7oPmCjr76Dsn6t+7AwV4juxPYfcBAT0=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-jS_tIlAKP2W2O0EEgm1nPA-1; Thu,
- 26 Sep 2024 10:34:50 -0400
-X-MC-Unique: jS_tIlAKP2W2O0EEgm1nPA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-FPkTXSsUOLG-ml5MbKYVPg-1; Thu,
+ 26 Sep 2024 12:08:44 -0400
+X-MC-Unique: FPkTXSsUOLG-ml5MbKYVPg-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A03E41954AF1;
-	Thu, 26 Sep 2024 14:34:49 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.194.30])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2FE6E1979063;
-	Thu, 26 Sep 2024 14:34:46 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH] rtla: Fix consistency in getopt_long for timerlat_hist
-Date: Thu, 26 Sep 2024 16:34:17 +0200
-Message-ID: <20240926143417.54039-1-gmonaco@redhat.com>
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D04419792DE;
+	Thu, 26 Sep 2024 16:08:42 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.133])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7C22E195605A;
+	Thu, 26 Sep 2024 16:08:38 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 26 Sep 2024 18:08:28 +0200 (CEST)
+Date: Thu, 26 Sep 2024 18:08:24 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>, mhiramat@kernel.org,
+	peterz@infradead.org, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: uprobes: Optimize cache flushes for xol slot
+Message-ID: <20240926160823.GA2592@redhat.com>
+References: <20240919121719.2148361-1-liaochang1@huawei.com>
+ <20240919141824.GB12149@redhat.com>
+ <41fdfc47-4161-d2e4-6528-4079b660424f@huawei.com>
+ <Zu2VdYrLWTJbVOAt@arm.com>
+ <b90ce6f1-0d47-2429-5536-a8d5d91d6a70@huawei.com>
+ <20240923071856.GA31866@willie-the-truck>
+ <20240923105228.GB20793@redhat.com>
+ <522284d3-9655-3703-00e9-33f358dbc78d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <522284d3-9655-3703-00e9-33f358dbc78d@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Commit e9a4062e1527 ("rtla: Add --trace-buffer-size option") adds a new
-long option to rtla utilities, but among all affected files,
-timerlat_hist misses a trailing `:` in the corresponding short option
-inside the getopt string (e.g. `\3:`). This patch propagates the `:`.
+On 09/26, Liao, Chang wrote:
+>
+> 在 2024/9/23 18:52, Oleg Nesterov 写道:
+> > On 09/23, Will Deacon wrote:
+> >>
+> >> However, we should use __GFP_ZERO anyway
+> >> because I don't think it's a good idea to map an uninitialised page into
+> >> userspace.
+> >
+> > Agreed, and imo this even needs a separate "fix info leak" patch.
+>
+> Do you mean to fill the entire page with CPU specific illegal instructions
+> in this patch?
 
-Although this change is not functionally required, it improves
-consistency and slightly reduces the likelihood a future change would
-introduce a problem.
+Hmm. Why?? No... OK, I'll write the changelog and send the trivial patch
+in a minute.
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- tools/tracing/rtla/src/timerlat_hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index a3907c390d67..1f9137c592f4 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -778,7 +778,7 @@ static struct timerlat_hist_params
- 		/* getopt_long stores the option index here. */
- 		int option_index = 0;
- 
--		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3",
-+		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
- 				 long_options, &option_index);
- 
- 		/* detect the end of the options. */
-
-base-commit: 11a299a7933e03c83818b431e6a1c53ad387423d
--- 
-2.46.1
+Oleg.
 
