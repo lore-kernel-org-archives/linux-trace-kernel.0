@@ -1,33 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6F446B8;
-	Thu, 26 Sep 2024 12:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDE72AF09
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Sep 2024 12:58:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727355124; cv=none; b=ota1iIB1LPTukavWaXw7+K3itcqpwJgPFpY0H/IJngZlVbgPJj9dx3glUxdWdzxgHmGS0gxsRzB2MK8gK7hpLMxyghe/7ggBlE1jYYGdmSU63kVYuqGteBfdqMqTrhcLmnAGP3rPcqMk1wQaPcD20iKuKDUnD9UvvrWV2F4oBGQ=
+	t=1727355508; cv=none; b=FkJYpPL/jWy8ZWHRtYiA6ypzv6btTpaI5FhHJSCZrLTjxTTgGTmoWEf4AxLyxrBgejoCSqJwd5J20UyTDN2upOhv3fkE+HdNGdzuqyEj9z+AWxfXbYUz60hENO6VJUk1rr03VKjMc7KbVQcQxS/7vd0t021J7EbGdIOndG9AfRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727355124; c=relaxed/simple;
-	bh=KdrTlAxVPGzgCG2oBMur4u+A3dRAEZXCNNqql/A8E0k=;
+	s=arc-20240116; t=1727355508; c=relaxed/simple;
+	bh=MuPcXyTeuK9viOXgyrToQYwy2Nr83HJ3C85C+B9HiVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M/EP4dIWPWhcAXUOjiCu9tf5XKd7DFvT1aPOJHviiJDoNVEkb/otvfKC0kbECqctoNXWiSIWMH9hTThuCwMhI9bASHBf6EeKDDvx2iYueoxFFfEi4zl2KHIuVxOpdnal/NFqmsc238zS6hFMjP1kesZlSYYUgbYff1zg+verIZY=
+	 MIME-Version:Content-Type; b=ixfVhSb1S5PjRzaDGvMEwPQfyj/hL0LLHL44AL0Jy/5sWgZIovRGhkeSNu8Oy84bSYuKqiL3b08dzHPRGEUHUV7XqSC88yNbjIPZi0c2RN4h82yuDlKaKAR+ZPOFwI8aWiQpztW8YbqDKHCA/f5LQyXiXV4T85lPcZQXSgdFFLQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA8CC4CEC5;
-	Thu, 26 Sep 2024 12:51:48 +0000 (UTC)
-Date: Thu, 26 Sep 2024 08:51:18 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E88C4CEC5;
+	Thu, 26 Sep 2024 12:58:20 +0000 (UTC)
+Date: Thu, 26 Sep 2024 08:57:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Levi Yun <yeoreum.yun@arm.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- a.p.zijlstra@chello.nl, mingo@elte.hu, mark.rutland@arm.com,
- james.clark@linaro.org, nd@arm.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v2] trace/trace_event_perf: remove duplicate samples on
- the first tracepoint event
-Message-ID: <20240926085118.0a823138@rorschach.local.home>
-In-Reply-To: <20240913021347.595330-1-yeoreum.yun@arm.com>
-References: <20240913021347.595330-1-yeoreum.yun@arm.com>
+To: Wei Li <liwei391@huawei.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>,
+ <xiexiuqi@huawei.com>, Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH 0/5] tracing: Fix several deadlock/race issues in
+ timerlat and hwlat tracer
+Message-ID: <20240926085553.462d3e6b@rorschach.local.home>
+In-Reply-To: <20240924094515.3561410-1-liwei391@huawei.com>
+References: <20240924094515.3561410-1-liwei391@huawei.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,83 +35,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Can one of the perf folks give me an Ack, and I'll take this through my tree.
+
+Daniel, is unfortunately no longer the maintainer of this code:
+
+  https://lwn.net/Articles/979912/
+
+I'll try to take a look at this next week.
+
+Thanks,
 
 -- Steve
 
 
-On Fri, 13 Sep 2024 03:13:47 +0100
-Levi Yun <yeoreum.yun@arm.com> wrote:
+On Tue, 24 Sep 2024 17:45:10 +0800
+Wei Li <liwei391@huawei.com> wrote:
 
-> When a tracepoint event is created with attr.freq = 1,
-> 'hwc->period_left' is not initialized correctly. As a result,
-> in the perf_swevent_overflow() function, when the first time the event occurs,
-> it calculates the event overflow and the perf_swevent_set_period() returns 3,
-> this leads to the event are recorded for three duplicate times.
+> These issues are found in concurrent CPU-hotplug and tracer-toggling
+> testing, the test cases are as follows:
 > 
-> Step to reproduce:
->     1. Enable the tracepoint event & starting tracing
->          $ echo 1 > /sys/kernel/tracing/events/module/module_free
->          $ echo 1 > /sys/kernel/tracing/tracing_on
+> Background: *test_hotplug.sh*
+> ```
+> #!/bin/sh
 > 
->     2. Record with perf
->          $ perf record -a --strict-freq -F 1 -e "module:module_free"
+> while true
+> do
+> 	echo 0 > /sys/devices/system/cpu/cpu1/online
+> 	echo 1 > /sys/devices/system/cpu/cpu1/online
+> done
+> ```
 > 
->     3. Trigger module_free event.
->          $ modprobe -i sunrpc
->          $ modprobe -r sunrpc
+> Test 1: *test_timerlat.sh*
+> ```
+> #!/bin/sh
 > 
-> Result:
->      - Trace pipe result:
->          $ cat trace_pipe
->          modprobe-174509  [003] .....  6504.868896: module_free: sunrpc
+> while true
+> do
+> 	echo timerlat > /sys/kernel/debug/tracing/current_tracer
+> 	echo nop > /sys/kernel/debug/tracing/current_tracer
+> done
+> ```
 > 
->      - perf sample:
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
->          modprobe  174509 [003]  6504.868980: module:module_free: sunrpc
+> Test 2: *test_hwlat.sh*
+> ```
+> #!/bin/sh
 > 
-> By setting period_left via perf_swevent_set_period() as other sw_event did,
-> This problem could be solved.
+> echo per-cpu > /sys/kernel/debug/tracing/hwlat_detector/mode
+> while true
+> do
+> 	echo hwlat > /sys/kernel/debug/tracing/current_tracer
+> 	echo nop > /sys/kernel/debug/tracing/current_tracer
+> done
+> ```
 > 
-> After patch:
->      - Trace pipe result:
->          $ cat trace_pipe
->          modprobe 1153096 [068] 613468.867774: module:module_free: xfs
+> Wei Li (5):
+>   tracing/timerlat: Fix duplicated kthread creation due to CPU
+>     online/offline
+>   tracing/timerlat: Drop interface_lock in stop_kthread()
+>   tracing/timerlat: Fix a race during cpuhp processing
+>   tracing/hwlat: Fix a race during cpuhp processing
+>   tracing/hwlat: Fix deadlock in cpuhp processing
 > 
->      - perf sample
->          modprobe 1153096 [068] 613468.867794: module:module_free: xfs
+>  kernel/trace/trace_hwlat.c   |  5 ++++-
+>  kernel/trace/trace_osnoise.c | 22 +++++++++++++---------
+>  2 files changed, 17 insertions(+), 10 deletions(-)
 > 
-> Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
-> Signed-off-by: Levi Yun <yeoreum.yun@arm.com>
-> ---
-> Changes in v2:
->   - Fix build error.
-> ---
->  kernel/trace/trace_event_perf.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-> index 05e791241812..3ff9caa4a71b 100644
-> --- a/kernel/trace/trace_event_perf.c
-> +++ b/kernel/trace/trace_event_perf.c
-> @@ -352,10 +352,16 @@ void perf_uprobe_destroy(struct perf_event *p_event)
->  int perf_trace_add(struct perf_event *p_event, int flags)
->  {
->  	struct trace_event_call *tp_event = p_event->tp_event;
-> +	struct hw_perf_event *hwc = &p_event->hw;
-> 
->  	if (!(flags & PERF_EF_START))
->  		p_event->hw.state = PERF_HES_STOPPED;
-> 
-> +	if (is_sampling_event(p_event)) {
-> +		hwc->last_period = hwc->sample_period;
-> +		perf_swevent_set_period(p_event);
-> +	}
-> +
->  	/*
->  	 * If TRACE_REG_PERF_ADD returns false; no custom action was performed
->  	 * and we need to take the default action of enqueueing our event on
-> --
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
