@@ -1,100 +1,58 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BF61BBBD3;
-	Fri, 27 Sep 2024 10:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB01B134B6;
+	Fri, 27 Sep 2024 11:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727431320; cv=none; b=iRx9PvR3RwgJpGrxE3wAM2lOJrAd4Ok3fp0+Qn8VWPAaT8aZGXufOPkgs3QNIcPVlWLfN4c0x3hi0MZobSLPglzfvkA96P5LU+Zeyy1zrQ34PrTGAY7Z5yB0s8AKbEZ51FO34e9pHfplMyQ75Wr9baku9dI3TvKaLr+Sam0fzPs=
+	t=1727437596; cv=none; b=nbKd/kEbqC7KxSyJYIitZF1FEQnmG9NhzxByRMwl6GrkGinquwyjDEB9/+MH0GSbXcFAD4+aM3mXGzj+BO92nl90aSZvBc2pJJxN3fslolZ8YvnFNjjFE+LGgf+AbQizdlt1uhmRsPr+Z1JH/HTwJ6qqtjIDjj87kZkEEbJWisg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727431320; c=relaxed/simple;
-	bh=ht6fokgBdYVUP0yIwXleLxvN52k0ajk5Rwp9U1rQadM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ttKYFomj1oqMVR8riap1P91ToztnKdVeLm248mQUwpTn0eT1BU+vTnpaKp/DXBi3g++9GJynNJAO7GcigRSW8b7Pdm+qpaSdYr3xBzsmahLcGbeVo2goMQCzzE5EqqVtVaaNXIZ9ORTfMwsvG8yUX/LptnQsTEmbgZnGJE+BqDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XFQvv2JvVz1SBvB;
-	Fri, 27 Sep 2024 18:00:59 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0E8214037C;
-	Fri, 27 Sep 2024 18:01:49 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 27 Sep 2024 18:01:40 +0800
-Message-ID: <e9a3066a-ff07-6d57-9b97-17ecebe95e59@huawei.com>
-Date: Fri, 27 Sep 2024 18:01:39 +0800
+	s=arc-20240116; t=1727437596; c=relaxed/simple;
+	bh=dStRcOI3wRHGwyPOMAjhcXhP+7MbUeEwmd89EjykG3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AatBpcPVjUUXWlE2KCee7OwzM/F7JR9/E6+Xyjx2C5eVdnq5tnnsiz1Uw/oEpcSUu6/UZw+2k5P2i48HAVGomr0SRHicb59pi8VR33Z8MHb4HEji6TpGeUtu1qB8JF9Fwr2OuPuIig6hKuq0+W50T7F2LEw21duQbQ7LoFyEyo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L1iYMhVT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L1iYMhVT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876B5C4CEC4;
+	Fri, 27 Sep 2024 11:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1727437596;
+	bh=dStRcOI3wRHGwyPOMAjhcXhP+7MbUeEwmd89EjykG3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L1iYMhVTsVsFAVRObZoQwFFyAkbLZSsAPY47XLzojb2uD0JyIKmbeT5jLwQfaxszo
+	 weXCeJ6QpV9PkpwsWbuL11FjIJfoA64ErU5i7sT4wtth0L/FyIApV5fdCR3Y4Q7Gen
+	 odtMoQxUpaa0MmmHb1jHR5+/MLos4DUOQxI0FxSc=
+Date: Fri, 27 Sep 2024 13:46:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Shivani Agarwal <shivani.agarwal@broadcom.com>
+Cc: stable@vger.kernel.org, ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, jpoimboe@redhat.com, sashal@kernel.org,
+	Shivani Agarwal <shivania2@vmware.com>
+Subject: Re: [PATCH 0/2 v5.10] Fix CVE-2024-38588
+Message-ID: <2024092727-kinetic-syndrome-fca3@gregkh>
+References: <20240925065324.121176-1-shivani.agarwal@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Improve the usage of xol slots for better
- scalability
-To: Andi Kleen <ak@linux.intel.com>
-CC: <mhiramat@kernel.org>, <oleg@redhat.com>, <andrii@kernel.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240918012752.2045713-1-liaochang1@huawei.com>
- <87jzf9b12w.fsf@linux.intel.com>
- <7a6ba3f3-dffa-cdac-73c7-074505ea4b44@huawei.com> <ZuwoUmqXrztp-Mzh@tassilo>
- <0939300c-a825-5b46-d86f-72ce89b2b95f@huawei.com> <ZvH_LiUeOtAwommF@tassilo>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZvH_LiUeOtAwommF@tassilo>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240925065324.121176-1-shivani.agarwal@broadcom.com>
 
-
-
-在 2024/9/24 7:52, Andi Kleen 写道:
->> Thanks for the suggestions, I will experiment with a read-write lock, meanwhile,
->> adding the documentation and testing for the lockless scheme.
+On Tue, Sep 24, 2024 at 11:53:22PM -0700, Shivani Agarwal wrote:
+> From: Shivani Agarwal <shivania2@vmware.com>
 > 
-> Read-write locks are usually not worth it for short critical sections,
-> in fact they can be slower due to cache line effects.
-
-OK, I will start from a simple spinlock.
-
+> Hi,
 > 
->> Sorry, I may not probably get the point clear here, and it would be very
->> nice if more details are provided for the concern. Do you mean it's necessary
->> to make the if-body excution exclusive among the CPUs? If that's the case,
->> I guess the test_and_put_task_slot() is the equvialent to the race condition
->> check. test_and_put_task_slot() uses a compare and exchange operation on the
->> slot_ref of utask instance. Regardless of the work type being performed by
->> other CPU, it will always bail out unless the slot_ref has a value of one,
->> indicating the utask is free to access from local CPU.
-> 
-> What I meant is that the typical pattern for handling races in destruction
-> is to detect someone else is racing and then let it do the destruction
-> work or reacquire the resource (so just bail out).
+>  To Fix CVE-2024-38588 e60b613df8b6 is required, but it has a dependency
+>  on aebfd12521d9. Therefore backported both patches for v5.10.
 
-Agreed.
+All queued up, thanks.
 
-> 
-> But that's not what you're doing here, in fact you're adding a
-> completely new code path that has different semantics? I haven't checked
-> all the code, but it looks dubious.
-
-Andi, I've just sent v2. Looking forward to your feedback. Thanks.
-
-  https://lore.kernel.org/all/20240927094549.3382916-1-liaochang1@huawei.com/
-
-> 
-> -Andi
-> 
-
--- 
-BR
-Liao, Chang
+greg k-h
