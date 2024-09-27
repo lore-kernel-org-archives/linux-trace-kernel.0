@@ -1,40 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB01B134B6;
-	Fri, 27 Sep 2024 11:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341691C1ADB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Sep 2024 17:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727437596; cv=none; b=nbKd/kEbqC7KxSyJYIitZF1FEQnmG9NhzxByRMwl6GrkGinquwyjDEB9/+MH0GSbXcFAD4+aM3mXGzj+BO92nl90aSZvBc2pJJxN3fslolZ8YvnFNjjFE+LGgf+AbQizdlt1uhmRsPr+Z1JH/HTwJ6qqtjIDjj87kZkEEbJWisg=
+	t=1727457551; cv=none; b=P/sKcobc+bl8y0NlKYy4Fm/ZZCQj+CHsswvY7gUKBkCbWfEvjzPPxrkvygRf9VEGvPX1wOuj9UZGTzZAbaOHLE1+vrHxVHLj0nNo6by/4BVQRVNps309Z3IGC1OorUM4dc9wiFwcs8xvq/PFfFmbmAs7r0bXb9Hlk9YUmnrE++w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727437596; c=relaxed/simple;
-	bh=dStRcOI3wRHGwyPOMAjhcXhP+7MbUeEwmd89EjykG3I=;
+	s=arc-20240116; t=1727457551; c=relaxed/simple;
+	bh=Zp6SyMPgdhEkHqeCFYD6sX1hBb7DHCkuERt7Hc0a3xk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AatBpcPVjUUXWlE2KCee7OwzM/F7JR9/E6+Xyjx2C5eVdnq5tnnsiz1Uw/oEpcSUu6/UZw+2k5P2i48HAVGomr0SRHicb59pi8VR33Z8MHb4HEji6TpGeUtu1qB8JF9Fwr2OuPuIig6hKuq0+W50T7F2LEw21duQbQ7LoFyEyo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=L1iYMhVT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DA/oHyYPd19rC/gFWAagr5nNKgdgtlNyptOpPVqCVNg9pHEKQFuA3VB7x0dp7MFbwuRjlXOIOSylZWp59701iFtslMOZ43JSmaAjHu+ljGTungGXXZr4dOGteL4WzpYtgz99IJfS4t402rXqRFqseTTR5dP9N8fzgX7Y9W9mbf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=idVGOOc1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="L1iYMhVT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876B5C4CEC4;
-	Fri, 27 Sep 2024 11:46:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727437596;
-	bh=dStRcOI3wRHGwyPOMAjhcXhP+7MbUeEwmd89EjykG3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L1iYMhVTsVsFAVRObZoQwFFyAkbLZSsAPY47XLzojb2uD0JyIKmbeT5jLwQfaxszo
-	 weXCeJ6QpV9PkpwsWbuL11FjIJfoA64ErU5i7sT4wtth0L/FyIApV5fdCR3Y4Q7Gen
-	 odtMoQxUpaa0MmmHb1jHR5+/MLos4DUOQxI0FxSc=
-Date: Fri, 27 Sep 2024 13:46:33 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Shivani Agarwal <shivani.agarwal@broadcom.com>
-Cc: stable@vger.kernel.org, ajay.kaher@broadcom.com,
-	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org, jpoimboe@redhat.com, sashal@kernel.org,
-	Shivani Agarwal <shivania2@vmware.com>
-Subject: Re: [PATCH 0/2 v5.10] Fix CVE-2024-38588
-Message-ID: <2024092727-kinetic-syndrome-fca3@gregkh>
-References: <20240925065324.121176-1-shivani.agarwal@broadcom.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idVGOOc1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727457548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kkF/xzfEMxIlkPDkfo2c1lZs/o5nQk9VkvqNorbPdc4=;
+	b=idVGOOc1Uf3us4uLRqSLjOkRbV/sEJukDPuuysvrZj6XAhjRRsxDAZXUHD1HT0YMzJon4/
+	5t8omOqjkzDjXsIBd7r6E5eUY9YghkDLvOybzqbrykubgc3DHvMCNi3N6499MOQ39Vrepv
+	Ef/vkat9ydyaZKR3vbbZSElYNRTOJLs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-sWABljdNP5uxXiN9FFPMhw-1; Fri,
+ 27 Sep 2024 13:19:03 -0400
+X-MC-Unique: sWABljdNP5uxXiN9FFPMhw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81B0219792DE;
+	Fri, 27 Sep 2024 17:19:00 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.23])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 70CBD1956054;
+	Fri, 27 Sep 2024 17:18:52 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 27 Sep 2024 19:18:47 +0200 (CEST)
+Date: Fri, 27 Sep 2024 19:18:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: ak@linux.intel.com, mhiramat@kernel.org, andrii@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
+ scalability
+Message-ID: <20240927171838.GA15877@redhat.com>
+References: <20240927094549.3382916-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,16 +65,70 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240925065324.121176-1-shivani.agarwal@broadcom.com>
+In-Reply-To: <20240927094549.3382916-1-liaochang1@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Tue, Sep 24, 2024 at 11:53:22PM -0700, Shivani Agarwal wrote:
-> From: Shivani Agarwal <shivania2@vmware.com>
-> 
-> Hi,
-> 
->  To Fix CVE-2024-38588 e60b613df8b6 is required, but it has a dependency
->  on aebfd12521d9. Therefore backported both patches for v5.10.
+On 09/27, Liao Chang wrote:
+>
+> +int recycle_utask_slot(struct uprobe_task *utask, struct xol_area *area)
+> +{
+> +	int slot = UINSNS_PER_PAGE;
+> +
+> +	/*
+> +	 * Ensure that the slot is not in use on other CPU. However, this
+> +	 * check is unnecessary when called in the context of an exiting
+> +	 * thread. See xol_free_insn_slot() called from uprobe_free_utask()
+> +	 * for more details.
+> +	 */
+> +	if (test_and_put_task_slot(utask)) {
+> +		list_del(&utask->gc);
+> +		clear_bit(utask->insn_slot, area->bitmap);
+> +		atomic_dec(&area->slot_count);
+> +		utask->insn_slot = UINSNS_PER_PAGE;
+> +		refcount_set(&utask->slot_ref, 1);
 
-All queued up, thanks.
+This lacks a barrier, CPU can reorder the last 2 insns
 
-greg k-h
+		refcount_set(&utask->slot_ref, 1);
+		utask->insn_slot = UINSNS_PER_PAGE;
+
+so the "utask->insn_slot == UINSNS_PER_PAGE" check in xol_get_insn_slot()
+can be false negative.
+
+> +static unsigned long xol_get_insn_slot(struct uprobe_task *utask,
+> +				       struct uprobe *uprobe)
+>  {
+>  	struct xol_area *area;
+>  	unsigned long xol_vaddr;
+> @@ -1665,16 +1740,46 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+>  	if (!area)
+>  		return 0;
+>
+> -	xol_vaddr = xol_take_insn_slot(area);
+> -	if (unlikely(!xol_vaddr))
+> +	/*
+> +	 * The racing on the utask associated slot_ref can occur unless the
+> +	 * area runs out of slots. This isn't a common case. Even if it does
+> +	 * happen, the scalability bottleneck will shift to another point.
+> +	 */
+
+I don't understand the comment, I guess it means the race with
+recycle_utask_slot() above.
+
+> +	if (!test_and_get_task_slot(utask))
+>  		return 0;
+
+No, we can't do this. xol_get_insn_slot() should never fail.
+
+OK, OK, currently xol_get_insn_slot() _can_ fail, but only if get_xol_area()
+fails to allocate the memory. Which should "never" happen and we can do nothing
+in this case anyway.
+
+But it certainly must not fail if it races with another thread, this is insane.
+
+And. This patch changes the functions which ask for cleanups. I'll try to send
+a couple of simple patches on Monday.
+
+Oleg.
+
