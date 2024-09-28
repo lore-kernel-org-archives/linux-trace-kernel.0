@@ -1,134 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341691C1ADB
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Sep 2024 17:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FBDF9E8;
+	Sat, 28 Sep 2024 00:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727457551; cv=none; b=P/sKcobc+bl8y0NlKYy4Fm/ZZCQj+CHsswvY7gUKBkCbWfEvjzPPxrkvygRf9VEGvPX1wOuj9UZGTzZAbaOHLE1+vrHxVHLj0nNo6by/4BVQRVNps309Z3IGC1OorUM4dc9wiFwcs8xvq/PFfFmbmAs7r0bXb9Hlk9YUmnrE++w=
+	t=1727482679; cv=none; b=cEAzH/FwYyA/2HiZlMwwhBiqq0Em7ZrjVXKMAOL6M5WuJo7Bx6QhhBt2ji4J/6BcKVCtsnU+savuz8KMCdbEKEimiBnMJgWjM9YrVNvfTC9veZSGQZ+mQUtQpuRsvDh1YZQdDvHjEzItEvquAgPCnk4V+wCw+N9an434XOouHV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727457551; c=relaxed/simple;
-	bh=Zp6SyMPgdhEkHqeCFYD6sX1hBb7DHCkuERt7Hc0a3xk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DA/oHyYPd19rC/gFWAagr5nNKgdgtlNyptOpPVqCVNg9pHEKQFuA3VB7x0dp7MFbwuRjlXOIOSylZWp59701iFtslMOZ43JSmaAjHu+ljGTungGXXZr4dOGteL4WzpYtgz99IJfS4t402rXqRFqseTTR5dP9N8fzgX7Y9W9mbf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=idVGOOc1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idVGOOc1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727457548;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kkF/xzfEMxIlkPDkfo2c1lZs/o5nQk9VkvqNorbPdc4=;
-	b=idVGOOc1Uf3us4uLRqSLjOkRbV/sEJukDPuuysvrZj6XAhjRRsxDAZXUHD1HT0YMzJon4/
-	5t8omOqjkzDjXsIBd7r6E5eUY9YghkDLvOybzqbrykubgc3DHvMCNi3N6499MOQ39Vrepv
-	Ef/vkat9ydyaZKR3vbbZSElYNRTOJLs=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-sWABljdNP5uxXiN9FFPMhw-1; Fri,
- 27 Sep 2024 13:19:03 -0400
-X-MC-Unique: sWABljdNP5uxXiN9FFPMhw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81B0219792DE;
-	Fri, 27 Sep 2024 17:19:00 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.23])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 70CBD1956054;
-	Fri, 27 Sep 2024 17:18:52 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 27 Sep 2024 19:18:47 +0200 (CEST)
-Date: Fri, 27 Sep 2024 19:18:39 +0200
-From: Oleg Nesterov <oleg@redhat.com>
+	s=arc-20240116; t=1727482679; c=relaxed/simple;
+	bh=zurLLRn4Ari54Wawnuv0F4Oi02USadk8lwG5rf57RYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m/YY070HOpk2wpu1jiyAb2YNJgwGMJyKlUt6nYL5YhqgNxRCHNlKEs1oV1xsYeYN6OMl4TJAGv70q3O3MXXyJwCMOYyMByIA1vPBgyuL+wLyfr2lxpKKHIBs6hBVw4WH6eh9MvW+VDHeawvfpIzqDOUsFrqVYJayUoLhPJgzstQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E260AC4CEC4;
+	Sat, 28 Sep 2024 00:17:57 +0000 (UTC)
+Date: Fri, 27 Sep 2024 20:17:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
 To: Liao Chang <liaochang1@huawei.com>
-Cc: ak@linux.intel.com, mhiramat@kernel.org, andrii@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
- scalability
-Message-ID: <20240927171838.GA15877@redhat.com>
-References: <20240927094549.3382916-1-liaochang1@huawei.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+ <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] function_graph: Simplify the initialization of fgraph
+ LRU data
+Message-ID: <20240927201755.6402ed04@rorschach.local.home>
+In-Reply-To: <20240912111550.1752115-1-liaochang1@huawei.com>
+References: <20240912111550.1752115-1-liaochang1@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240927094549.3382916-1-liaochang1@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 09/27, Liao Chang wrote:
->
-> +int recycle_utask_slot(struct uprobe_task *utask, struct xol_area *area)
-> +{
-> +	int slot = UINSNS_PER_PAGE;
-> +
-> +	/*
-> +	 * Ensure that the slot is not in use on other CPU. However, this
-> +	 * check is unnecessary when called in the context of an exiting
-> +	 * thread. See xol_free_insn_slot() called from uprobe_free_utask()
-> +	 * for more details.
-> +	 */
-> +	if (test_and_put_task_slot(utask)) {
-> +		list_del(&utask->gc);
-> +		clear_bit(utask->insn_slot, area->bitmap);
-> +		atomic_dec(&area->slot_count);
-> +		utask->insn_slot = UINSNS_PER_PAGE;
-> +		refcount_set(&utask->slot_ref, 1);
+On Thu, 12 Sep 2024 11:15:50 +0000
+Liao Chang <liaochang1@huawei.com> wrote:
 
-This lacks a barrier, CPU can reorder the last 2 insns
+> This patch uses [first ... last] = value to initialize fgraph_array[].
+> And it declares all the callbacks in fgraph_stub as static, as they are
+> not called from external code.
 
-		refcount_set(&utask->slot_ref, 1);
-		utask->insn_slot = UINSNS_PER_PAGE;
+This patch doesn't look like a simplification, and it is incorrect
+about the "not called from external code" as the kernel test robot
+pointed out!
 
-so the "utask->insn_slot == UINSNS_PER_PAGE" check in xol_get_insn_slot()
-can be false negative.
-
-> +static unsigned long xol_get_insn_slot(struct uprobe_task *utask,
-> +				       struct uprobe *uprobe)
->  {
->  	struct xol_area *area;
->  	unsigned long xol_vaddr;
-> @@ -1665,16 +1740,46 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
->  	if (!area)
->  		return 0;
->
-> -	xol_vaddr = xol_take_insn_slot(area);
-> -	if (unlikely(!xol_vaddr))
-> +	/*
-> +	 * The racing on the utask associated slot_ref can occur unless the
-> +	 * area runs out of slots. This isn't a common case. Even if it does
-> +	 * happen, the scalability bottleneck will shift to another point.
-> +	 */
-
-I don't understand the comment, I guess it means the race with
-recycle_utask_slot() above.
-
-> +	if (!test_and_get_task_slot(utask))
->  		return 0;
-
-No, we can't do this. xol_get_insn_slot() should never fail.
-
-OK, OK, currently xol_get_insn_slot() _can_ fail, but only if get_xol_area()
-fails to allocate the memory. Which should "never" happen and we can do nothing
-in this case anyway.
-
-But it certainly must not fail if it races with another thread, this is insane.
-
-And. This patch changes the functions which ask for cleanups. I'll try to send
-a couple of simple patches on Monday.
-
-Oleg.
-
+-- Steve
