@@ -1,132 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from yyz.mikelr.com (yyz.mikelr.com [170.75.163.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDD1183CC9
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 29 Sep 2024 14:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D1118EAB;
+	Sun, 29 Sep 2024 20:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.75.163.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727621002; cv=none; b=o7u913SI74dM0CK9AHAqS6pdbiONIsn62gn9Bop0MYwEQfb1/veNarNivFBG3fHWFnnVKf6D3QkbrWXdQFKxJkTZxp2dB8QHBcJRIlj3qRy2QDr2DPvOHJHjbLzmTiiKOOjFg12fiIq0dWNQeBSVTSgQ7U+sRzo39FA5qNnGNQ8=
+	t=1727641004; cv=none; b=hcfMoDoMX9f+1Z6A2sIGJ22rugV4r1fWTuXQj6ms+405tTMfhsYfQ7EEjYMOrAXAey+l3bxIubAvOP/nvPwHQPTh9rKeIQSPtWrjnufnyDE6IozMp9m9TdjSdotMvUKvWTxbhJPCn1nDFTrQJitk8IyKSPbCSyDEHLc5VfFReAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727621002; c=relaxed/simple;
-	bh=FfaZhrQq34BZlheLdSwojN4sapArypT72+Y+nLTOLDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=HfBnbHLGkdmbH4HZ9zr6ATiqY5e158mmKy8m0m7hCYUuNM1XpeELRbMX2oARkYbDV97uLyMr+gwfuuZjjSlEmJu+OPB3TioiRk+SMDTIVdMrqD9Y3EDWc92L9QuQWe638r7/+fq6FZTS6rbOtWpQyTFj/Y0/7yt7Y6LUmXDf1CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fcOlL1X9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fcOlL1X9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727621000;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=PFEiL3F5MSjU++Jxe01AvOazddBzZZRjIDhG9rgyzoQ=;
-	b=fcOlL1X9TFa4n8u/GCm8dWpVUOpDmdhiRws/8o/KJTDva0nQyHtKi7KGxGe6lE7ac6hsli
-	2V3CV4FlleOhUfOy9o/0TLn1BX6sm5N0o6J39/T81V+DJgBi9hH+oQCLEKT0unIZei5kLy
-	NzbyHbJfnuoqjHyCTBZrKuAAnbGMU/k=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-530-2aiClEGVNq6dSkKRgCxqKg-1; Sun,
- 29 Sep 2024 10:43:16 -0400
-X-MC-Unique: 2aiClEGVNq6dSkKRgCxqKg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
+	s=arc-20240116; t=1727641004; c=relaxed/simple;
+	bh=tredQinZXruqSuQ7IrvoqP1PQHlHvSY4FpRmlPpn8dc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxjt8alQCvg1SuGN8ak/hxm0QH9fnLSlcBnGOqYyifD4aB8OjVeSNh6XumPelxWktv7xfWRrvEl1MoZNsVKvOZIAdU+Q2kgAjNSQcN8y76UDA9DJTLAc5EWW2WjFb88+Fj615FVb+ImBVg8HzBQaGwsvr2Dl2z+BHBJJZPkKfjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com; spf=pass smtp.mailfrom=mikelr.com; arc=none smtp.client-ip=170.75.163.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikelr.com
+Received: from basin.ykf.mikelr.com (unknown [IPv6:2607:f2c0:e554:1200:4b8f:795f:f483:85bf])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 42BB0195FE21;
-	Sun, 29 Sep 2024 14:43:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.44])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 90E271979060;
-	Sun, 29 Sep 2024 14:43:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 29 Sep 2024 16:43:01 +0200 (CEST)
-Date: Sun, 29 Sep 2024 16:42:58 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by yyz.mikelr.com (Postfix) with ESMTPSA id 0791271753;
+	Sun, 29 Sep 2024 16:09:56 -0400 (EDT)
+From: Mikel Rychliski <mikel@mikelr.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Liao Chang <liaochang1@huawei.com>, linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Mikel Rychliski <mikel@mikelr.com>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 7/7] uprobes: deny mremap(xol_vma)
-Message-ID: <20240929144258.GA9492@redhat.com>
+Subject: [PATCH] tracing/probes: Fix MAX_TRACE_ARGS limit handling
+Date: Sun, 29 Sep 2024 16:09:37 -0400
+Message-ID: <20240929200939.162524-1-mikel@mikelr.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240929144201.GA9429@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-kernel/events/uprobes.c assumes that xol_area->vaddr is always correct but
-a malicious application can remap its "[uprobes]" vma to another adress to
-confuse the kernel. Introduce xol_mremap() to make this impossible.
+When creating a trace_probe we would set nr_args prior to truncating the
+arguments to MAX_TRACE_ARGS. However, we would only initialize arguments
+up to the limit.
 
-With this change utask->xol_vaddr in xol_free_insn_slot() can't be invalid,
-we can turn the offset check into WARN_ON_ONCE(offset >= PAGE_SIZE).
+This caused invalid memory access when attempting to set up probes with
+more than 128 fetchargs.
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+  BUG: kernel NULL pointer dereference, address: 0000000000000020
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+  CPU: 0 UID: 0 PID: 1769 Comm: cat Not tainted 6.11.0-rc7+ #8
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-1.fc39 04/01/2014
+  RIP: 0010:__set_print_fmt+0x134/0x330
+
+Resolve the issue by applying the MAX_TRACE_ARGS limit earlier. This
+restores the prior behaviour of silently ignoring excess arguments.
+
+Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
+Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
 ---
- kernel/events/uprobes.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ kernel/trace/trace_eprobe.c | 5 +++--
+ kernel/trace/trace_fprobe.c | 3 ++-
+ kernel/trace/trace_kprobe.c | 3 ++-
+ kernel/trace/trace_uprobe.c | 3 ++-
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index da45d0e5bcf4..20c58b6ee1ad 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1475,9 +1475,15 @@ static vm_fault_t xol_fault(const struct vm_special_mapping *sm,
- 	return 0;
- }
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index b0e0ec85912e..62c1a1fba403 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -914,7 +914,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
  
-+static int xol_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-+{
-+	return -EPERM;
-+}
-+
- static const struct vm_special_mapping xol_mapping = {
- 	.name = "[uprobes]",
- 	.fault = xol_fault,
-+	.mremap = xol_mremap,
- };
+ 	mutex_lock(&event_mutex);
+ 	event_call = find_and_get_event(sys_name, sys_event);
+-	ep = alloc_event_probe(group, event, event_call, argc - 2);
++	ep = alloc_event_probe(group, event, event_call, min(argc - 2, MAX_TRACE_ARGS));
+ 	mutex_unlock(&event_mutex);
  
- /* Slot allocation for XOL */
-@@ -1670,21 +1676,19 @@ static void xol_free_insn_slot(struct uprobe_task *utask)
- {
- 	struct xol_area *area = current->mm->uprobes_state.xol_area;
- 	unsigned long offset = utask->xol_vaddr - area->vaddr;
-+	unsigned int slot_nr;
+ 	if (IS_ERR(ep)) {
+@@ -936,8 +936,9 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 		ep->filter_str = NULL;
  
- 	utask->xol_vaddr = 0;
--	/*
--	 * xol_vaddr must fit into [area->vaddr, area->vaddr + PAGE_SIZE).
--	 * This check can only fail if the "[uprobes]" vma was mremap'ed.
--	 */
--	if (offset < PAGE_SIZE) {
--		int slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
--
--		clear_bit(slot_nr, area->bitmap);
--		atomic_dec(&area->slot_count);
--		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
--		if (waitqueue_active(&area->wq))
--			wake_up(&area->wq);
--	}
-+	/* xol_vaddr must fit into [area->vaddr, area->vaddr + PAGE_SIZE) */
-+	if (WARN_ON_ONCE(offset >= PAGE_SIZE))
-+		return;
-+
-+	slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
-+	clear_bit(slot_nr, area->bitmap);
-+	atomic_dec(&area->slot_count);
-+	smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
-+	if (waitqueue_active(&area->wq))
-+		wake_up(&area->wq);
- }
+ 	argc -= 2; argv += 2;
++	argc = min(argc, MAX_TRACE_ARGS);
+ 	/* parse arguments */
+-	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
++	for (i = 0; i < argc; i++) {
+ 		trace_probe_log_set_index(i + 2);
+ 		ret = trace_eprobe_tp_update_arg(ep, argv, i);
+ 		if (ret)
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index a079abd8955b..ca72fe8a04e7 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -1187,6 +1187,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 		argc = new_argc;
+ 		argv = new_argv;
+ 	}
++	argc = min(argc, MAX_TRACE_ARGS);
  
- void __weak arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
+ 	if (ret)
+@@ -1203,7 +1204,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	}
+ 
+ 	/* parse arguments */
+-	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
++	for (i = 0; i < argc; i++) {
+ 		trace_probe_log_set_index(i + 2);
+ 		ctx.offset = 0;
+ 		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], &ctx);
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 61a6da808203..10d16b574db5 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1013,6 +1013,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 		argc = new_argc;
+ 		argv = new_argv;
+ 	}
++	argc = min(argc, MAX_TRACE_ARGS);
+ 
+ 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
+ 	if (ret)
+@@ -1029,7 +1030,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	}
+ 
+ 	/* parse arguments */
+-	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
++	for (i = 0; i < argc; i++) {
+ 		trace_probe_log_set_index(i + 2);
+ 		ctx.offset = 0;
+ 		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index c3df411a2684..985d23d57702 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -676,6 +676,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
+ 
+ 	argc -= 2;
+ 	argv += 2;
++	argc = min(argc, MAX_TRACE_ARGS);
+ 
+ 	tu = alloc_trace_uprobe(group, event, argc, is_return);
+ 	if (IS_ERR(tu)) {
+@@ -690,7 +691,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
+ 	tu->filename = filename;
+ 
+ 	/* parse arguments */
+-	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
++	for (i = 0; i < argc; i++) {
+ 		struct traceprobe_parse_context ctx = {
+ 			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
+ 		};
+
+base-commit: 886f3732878dc92fb0ad6d8b6740b66410d1d50a
 -- 
-2.25.1.362.g51ebf55
+2.46.1
 
