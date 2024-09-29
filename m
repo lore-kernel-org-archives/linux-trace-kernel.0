@@ -1,34 +1,51 @@
-Received: from yyz.mikelr.com (yyz.mikelr.com [170.75.163.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D1118EAB;
-	Sun, 29 Sep 2024 20:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.75.163.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E789418EB0;
+	Sun, 29 Sep 2024 20:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727641004; cv=none; b=hcfMoDoMX9f+1Z6A2sIGJ22rugV4r1fWTuXQj6ms+405tTMfhsYfQ7EEjYMOrAXAey+l3bxIubAvOP/nvPwHQPTh9rKeIQSPtWrjnufnyDE6IozMp9m9TdjSdotMvUKvWTxbhJPCn1nDFTrQJitk8IyKSPbCSyDEHLc5VfFReAI=
+	t=1727643445; cv=none; b=RpLkAkPcm6O9dgl5iitZnsnW8GFfPZUFz2YWr3wzH/qTHV9KzftrIJmSmAai/Y2VnDbQY1PiOYGG2UC7aob282udMbjWnXEGTKZ9MBzbOGGu9/zzqd5MpuydzC2enI6oa9PkFsAZkD3lUO88M/4r5XXkg3tuiPq2RCpwZg5ffKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727641004; c=relaxed/simple;
-	bh=tredQinZXruqSuQ7IrvoqP1PQHlHvSY4FpRmlPpn8dc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hxjt8alQCvg1SuGN8ak/hxm0QH9fnLSlcBnGOqYyifD4aB8OjVeSNh6XumPelxWktv7xfWRrvEl1MoZNsVKvOZIAdU+Q2kgAjNSQcN8y76UDA9DJTLAc5EWW2WjFb88+Fj615FVb+ImBVg8HzBQaGwsvr2Dl2z+BHBJJZPkKfjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com; spf=pass smtp.mailfrom=mikelr.com; arc=none smtp.client-ip=170.75.163.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikelr.com
-Received: from basin.ykf.mikelr.com (unknown [IPv6:2607:f2c0:e554:1200:4b8f:795f:f483:85bf])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by yyz.mikelr.com (Postfix) with ESMTPSA id 0791271753;
-	Sun, 29 Sep 2024 16:09:56 -0400 (EDT)
-From: Mikel Rychliski <mikel@mikelr.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	s=arc-20240116; t=1727643445; c=relaxed/simple;
+	bh=Suqh0zl7SOWbmpoXGqTt1K3EKX7jBF08yX+TqSXmcHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wpz5dcogmHPiWcuBFUosuo/jMsAALfAX3d+o7WGWSTSSrFOuYoyt+hWyYfceILBeMaRdB6pUX1dOd5V7JT7ZzwlVRmBPV5lVepkdbM2uzCV7GTwoXtqoqNGnBmUGX2PC/M8Hl5xpdnszR6VRgi0DXhhMObSUU0yfSK9kZshCtOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7hQhK4D; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7hQhK4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B131CC4CEC5;
+	Sun, 29 Sep 2024 20:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727643444;
+	bh=Suqh0zl7SOWbmpoXGqTt1K3EKX7jBF08yX+TqSXmcHM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O7hQhK4DI5DnfTeNCamnKEN3ZiNVwBGYk+gzwN578XGS5VXfAABv7up7iGXViLUj+
+	 OdxowpUbOmoALhGY+PbyfDmjAhC5sHIt32LcflH7smkL3kgwFYahtdyhfT9gGd4Bgr
+	 pG9S5W/IR9Dd90JOP0zx/L6jLENBA7yxBgPBhTlAUDt3mfX0B21AefZo/XAs1tbz1X
+	 fPPAdMApbdsfbmXsRHnGd9ePEJqv1qXtq/BxNAmU1op0CELIVYTqHGx/EXlcgMTIY7
+	 xl4fht350hRaXLyxOeR4eXVhX9YfUkIiFeythI5uiEPxwcrNZkFGVTCE34+UYjzPBn
+	 sbBrjSVpEo+nQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Mikel Rychliski <mikel@mikelr.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing/probes: Fix MAX_TRACE_ARGS limit handling
-Date: Sun, 29 Sep 2024 16:09:37 -0400
-Message-ID: <20240929200939.162524-1-mikel@mikelr.com>
+Subject: [PATCHv5 bpf-next 00/13] uprobe, bpf: Add session support
+Date: Sun, 29 Sep 2024 22:57:04 +0200
+Message-ID: <20240929205717.3813648-1-jolsa@kernel.org>
 X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,123 +55,74 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When creating a trace_probe we would set nr_args prior to truncating the
-arguments to MAX_TRACE_ARGS. However, we would only initialize arguments
-up to the limit.
+hi,
+this patchset is adding support for session uprobe attachment and
+using it through bpf link for bpf programs.
 
-This caused invalid memory access when attempting to set up probes with
-more than 128 fetchargs.
+The session means that the uprobe consumer is executed on entry
+and return of probed function with additional control:
+  - entry callback can control execution of the return callback
+  - entry and return callbacks can share data/cookie
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000020
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-  CPU: 0 UID: 0 PID: 1769 Comm: cat Not tainted 6.11.0-rc7+ #8
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-1.fc39 04/01/2014
-  RIP: 0010:__set_print_fmt+0x134/0x330
+On more details please see patch #2.
 
-Resolve the issue by applying the MAX_TRACE_ARGS limit earlier. This
-restores the prior behaviour of silently ignoring excess arguments.
+Kernel uprobe changes are applicable on Peter's perf/core:
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
 
-Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
-Signed-off-by: Mikel Rychliski <mikel@mikelr.com>
+The whole patchset is based on bpf-next/master because the tooling
+bits need changes that are not yet merged in peter's tree.
+
+v5 changes:
+  - removed IWANTMYCOOKIE return value, instead we pass cookie when both
+    'handler' and 'ret_handler' callbacks are defined in consumer [Andrii]
+  - move return_consumer_find call under uc->ret_handler check [Oleg] 
+  - dropped uprobe stress selftest, don't think it's needed
+
+thanks,
+jirka
+
+
 ---
- kernel/trace/trace_eprobe.c | 5 +++--
- kernel/trace/trace_fprobe.c | 3 ++-
- kernel/trace/trace_kprobe.c | 3 ++-
- kernel/trace/trace_uprobe.c | 3 ++-
- 4 files changed, 9 insertions(+), 5 deletions(-)
+Jiri Olsa (13):
+      uprobe: Add data pointer to consumer handlers
+      uprobe: Add support for session consumer
+      bpf: Add support for uprobe multi session attach
+      bpf: Add support for uprobe multi session context
+      bpf: Allow return values 0 and 1 for uprobe/kprobe session
+      libbpf: Add support for uprobe multi session attach
+      selftests/bpf: Add uprobe session test
+      selftests/bpf: Add uprobe session cookie test
+      selftests/bpf: Add uprobe session recursive test
+      selftests/bpf: Add uprobe session verifier test for return value
+      selftests/bpf: Add kprobe session verifier test for return value
+      selftests/bpf: Add uprobe session single consumer test
+      selftests/bpf: Add uprobe sessions to consumer test
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index b0e0ec85912e..62c1a1fba403 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -914,7 +914,7 @@ static int __trace_eprobe_create(int argc, const char *argv[])
- 
- 	mutex_lock(&event_mutex);
- 	event_call = find_and_get_event(sys_name, sys_event);
--	ep = alloc_event_probe(group, event, event_call, argc - 2);
-+	ep = alloc_event_probe(group, event, event_call, min(argc - 2, MAX_TRACE_ARGS));
- 	mutex_unlock(&event_mutex);
- 
- 	if (IS_ERR(ep)) {
-@@ -936,8 +936,9 @@ static int __trace_eprobe_create(int argc, const char *argv[])
- 		ep->filter_str = NULL;
- 
- 	argc -= 2; argv += 2;
-+	argc = min(argc, MAX_TRACE_ARGS);
- 	/* parse arguments */
--	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+	for (i = 0; i < argc; i++) {
- 		trace_probe_log_set_index(i + 2);
- 		ret = trace_eprobe_tp_update_arg(ep, argv, i);
- 		if (ret)
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index a079abd8955b..ca72fe8a04e7 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -1187,6 +1187,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		argc = new_argc;
- 		argv = new_argv;
- 	}
-+	argc = min(argc, MAX_TRACE_ARGS);
- 
- 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
- 	if (ret)
-@@ -1203,7 +1204,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	}
- 
- 	/* parse arguments */
--	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+	for (i = 0; i < argc; i++) {
- 		trace_probe_log_set_index(i + 2);
- 		ctx.offset = 0;
- 		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], &ctx);
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 61a6da808203..10d16b574db5 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1013,6 +1013,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		argc = new_argc;
- 		argv = new_argv;
- 	}
-+	argc = min(argc, MAX_TRACE_ARGS);
- 
- 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
- 	if (ret)
-@@ -1029,7 +1030,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	}
- 
- 	/* parse arguments */
--	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+	for (i = 0; i < argc; i++) {
- 		trace_probe_log_set_index(i + 2);
- 		ctx.offset = 0;
- 		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index c3df411a2684..985d23d57702 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -676,6 +676,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 
- 	argc -= 2;
- 	argv += 2;
-+	argc = min(argc, MAX_TRACE_ARGS);
- 
- 	tu = alloc_trace_uprobe(group, event, argc, is_return);
- 	if (IS_ERR(tu)) {
-@@ -690,7 +691,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	tu->filename = filename;
- 
- 	/* parse arguments */
--	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+	for (i = 0; i < argc; i++) {
- 		struct traceprobe_parse_context ctx = {
- 			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
- 		};
-
-base-commit: 886f3732878dc92fb0ad6d8b6740b66410d1d50a
--- 
-2.46.1
-
+ include/linux/uprobes.h                                            |  25 +++++++--
+ include/uapi/linux/bpf.h                                           |   1 +
+ kernel/bpf/syscall.c                                               |   9 +++-
+ kernel/bpf/verifier.c                                              |  10 ++++
+ kernel/events/uprobes.c                                            | 148 +++++++++++++++++++++++++++++++++++++++++------------
+ kernel/trace/bpf_trace.c                                           |  66 +++++++++++++++++-------
+ kernel/trace/trace_uprobe.c                                        |  12 +++--
+ tools/include/uapi/linux/bpf.h                                     |   1 +
+ tools/lib/bpf/bpf.c                                                |   1 +
+ tools/lib/bpf/libbpf.c                                             |  22 ++++++--
+ tools/lib/bpf/libbpf.h                                             |   4 +-
+ tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c              |   2 +-
+ tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c         |   2 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c         | 233 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c          |  31 ++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_consumers.c         |  16 +++++-
+ tools/testing/selftests/bpf/progs/uprobe_multi_session.c           |  71 ++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c    |  48 ++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c |  44 ++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c    |  44 ++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c          |  31 ++++++++++++
+ 21 files changed, 744 insertions(+), 77 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c
