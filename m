@@ -1,70 +1,148 @@
-Received: from yyz.mikelr.com (yyz.mikelr.com [170.75.163.43])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508EC1A288;
-	Mon, 30 Sep 2024 03:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.75.163.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4901026AD9;
+	Mon, 30 Sep 2024 05:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727666238; cv=none; b=YRP9GPGRCDi66My95WiTMVT4TIOWuMnK5MecIDsOeLxKFIWfx/1jRCW5HeGzr8R7LeFirfzZf9JQwlHrLtHah8luSogrNin/kflLfzCOggkXSKrI3xqdr0ECr8G6uS4J5hYMazqiJw7SpF0lPlcAOW5+0O+ss7jPjo9MkjP69Pg=
+	t=1727674482; cv=none; b=eAbVImR6TMCLKJ7gJCYXgywle0ebUfHZDsH0uaa22/xMazIMAJn+pWOlabOu7dyZsL5FqJpDPRZQp5e+njOtty4HNsZ8FZhQG+cXkbHQ7v5OHNP/bgYO4fJPdyiSdPuXzZQ1BN07t/lcflJHx0oyPEEAPAYM+3xTknthUJ1a20k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727666238; c=relaxed/simple;
-	bh=ijKjfhqMhIly6LuC3gIrBHyqN6Pec3WfVZ1m+ada39Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JoEkH56qhQ7KFp0a2A+VipmSO1RP2C2Ln1VACbEUOmKuSg+IWT+Vih6EVuU01kqzoo3U4HDwmy+XQ8BIiatutRHfkpCg9KknTC1GbGEMgs+qYbVb/s2dydk8i/rL6H+MJ4QJ2fNPNhWXTYb1dR5DFk2E6twcuQ7QiH/F0v6kO/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com; spf=pass smtp.mailfrom=mikelr.com; arc=none smtp.client-ip=170.75.163.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikelr.com
-Received: from basin.localnet (unknown [IPv6:2607:f2c0:e554:1200:4b8f:795f:f483:85bf])
-	by yyz.mikelr.com (Postfix) with ESMTPA id 020CF717A8;
-	Sun, 29 Sep 2024 23:17:14 -0400 (EDT)
-From: Mikel Rychliski <mikel@mikelr.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/probes: Fix MAX_TRACE_ARGS limit handling
-Date: Sun, 29 Sep 2024 23:17:14 -0400
-Message-ID: <9997571.eNJFYEL58v@basin>
-In-Reply-To: <20240930084018.a725f6e59a3be7be3e356e27@kernel.org>
-References:
- <20240929200939.162524-1-mikel@mikelr.com>
- <20240930084018.a725f6e59a3be7be3e356e27@kernel.org>
+	s=arc-20240116; t=1727674482; c=relaxed/simple;
+	bh=QNgJ2471DAo5PBH4araXSREbTuPnfC1NKgUDngutpvw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dWrXxYiNzg9CsUicXvdhRGUmhSYH3AXiYzZklkdKKG8xLOhlQ5fvqNiATxt18LqoVApx2Xe0h3rNGTaqahsMIPKkSe7oNXJnBFKETQcCp9ZfFhxFpE0vlveUeanF7HxeqTNM1/MQSYSQYfk9eJuSb9/it1MCc+UDPq83orn2Bys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lAtGeCiL; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lAtGeCiL"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48T9wpCw010857;
+	Mon, 30 Sep 2024 05:33:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	cgkgCdD8MJY3Rd/1F//mH53/BFW4BMvD0+YrzQ8BWS8=; b=lAtGeCiLfDF5ICoA
+	W/mu48Lb0LwwBNe1SEUwx+ycS2Sln7JFrWdAEvMWcIBZfe8VVSCb5NxFDff5Ki29
+	46vTBKPxNg2OTEv0kjS/JG5MBcqoJnnhGIoplKIiGRGjIreCL7gn9H2l+9VdFJcU
+	mh/0+j6mfJjQPmU3VlZbmxaK+DGFiL3ZZcpy9sdmg6zdnQLxUC2YH/YoTvnRZlu7
+	4cmDSioTImUy6N4nfiFFI4NHpmw8dCdHLjZcjpyZUks1cm1YpAIAD+KUHd03r8Iq
+	axtFCJQyMLrDNqGGQ868hFDMJvw5TjlK85eFGNXzHHOTbKs2rTtbATHwUWAwhbTq
+	XTw5Aw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x9f7ydhd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Sep 2024 05:33:48 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 48U5Xl2g008425;
+	Mon, 30 Sep 2024 05:33:47 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41x9f7ydha-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Sep 2024 05:33:47 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48U5ALJC002386;
+	Mon, 30 Sep 2024 05:33:46 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41xxu0vekq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Sep 2024 05:33:46 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 48U5XhcJ47644978
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Sep 2024 05:33:43 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 34AF920043;
+	Mon, 30 Sep 2024 05:33:43 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9959D20040;
+	Mon, 30 Sep 2024 05:33:39 +0000 (GMT)
+Received: from [9.203.115.143] (unknown [9.203.115.143])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Sep 2024 05:33:39 +0000 (GMT)
+Message-ID: <32249e74-633d-4757-8931-742b682a63d3@linux.ibm.com>
+Date: Mon, 30 Sep 2024 11:03:38 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 17/17] powerpc64/bpf: Add support for bpf trampolines
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf <bpf@vger.kernel.org>,
+        linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vishal Chourasia <vishalc@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20240915205648.830121-1-hbathini@linux.ibm.com>
+ <20240915205648.830121-18-hbathini@linux.ibm.com>
+ <CAADnVQL60XXW95tgwKn3kVgSQAN7gr1STy=APuO1xQD7mz-aXA@mail.gmail.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <CAADnVQL60XXW95tgwKn3kVgSQAN7gr1STy=APuO1xQD7mz-aXA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: wetF4buMaLPTrBakXdZ-howbEduaj1dN
+X-Proofpoint-ORIG-GUID: qkAqFR7ZS0h1tu3GBp6zr4aPrEqa9AXK
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-30_04,2024-09-27_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 clxscore=1011 adultscore=0 mlxscore=0 impostorscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=910 malwarescore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2409300035
 
-On Sunday, September 29, 2024 7:40:18 P.M. EDT Masami Hiramatsu wrote:
-> Good catch! But this silently drop the arguments after MAX_TRACE_ARGS.
-> I rather like to reject such input with an error (-E2BIG) as below.
-> (Hmm, and I also need a new ftracetest test case for this.)
+
+
+On 17/09/24 1:20 pm, Alexei Starovoitov wrote:
+> On Sun, Sep 15, 2024 at 10:58 PM Hari Bathini <hbathini@linux.ibm.com> wrote:
+>>
+>> +
+>> +       /*
+>> +        * Generated stack layout:
+>> +        *
+>> +        * func prev back chain         [ back chain        ]
+>> +        *                              [                   ]
+>> +        * bpf prog redzone/tailcallcnt [ ...               ] 64 bytes (64-bit powerpc)
+>> +        *                              [                   ] --
+> ...
+>> +
+>> +       /* Dummy frame size for proper unwind - includes 64-bytes red zone for 64-bit powerpc */
+>> +       bpf_dummy_frame_size = STACK_FRAME_MIN_SIZE + 64;
 > 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 39877c80d6cb..3f6654127d8c 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -2194,6 +2194,9 @@ int trace_probe_create(const char *raw_command, int
-> (*createfn)(int, const char if (!argv)
->                 return -ENOMEM;
-> 
-> +       if (argc > MAX_TRACE_ARGS + 2)
-> +               return -E2BIG;
-> +
->         if (argc)
->                 ret = createfn(argc, (const char **)argv);
+> What is the goal of such a large "red zone" ?
+> The kernel stack is a limited resource.
+> Why reserve 64 bytes ?
+> tail call cnt can probably be optional as well.
 
-I think the logic still needs to be cleaned up in the individual probe 
-implementations (either to count consistently or remove the limit enforcement 
-there), otherwise you can get an oops with something like:
+Hi Alexei, thanks for reviewing.
+FWIW, the redzone on ppc64 is 288 bytes. BPF JIT for ppc64 was using
+a redzone of 80 bytes since tailcall support was introduced [1].
+It came down to 64 bytes thanks to [2]. The red zone is being used
+to save NVRs and tail call count when a stack is not setup. I do
+agree that we should look at optimizing it further. Do you think
+the optimization should go as part of PPC64 trampoline enablement
+being done here or should that be taken up as a separate item, maybe?
 
-	echo "f:testprobe copy_process" arg{1..127}=\$stack "\$arg*" > out
-	cat out > /sys/kernel/debug/tracing/dynamic_events
+[1] 
+https://lore.kernel.org/all/40b65ab2bb3a48837ab047a70887de3ccd70c56b.1474661927.git.naveen.n.rao@linux.vnet.ibm.com/
+[2] https://lore.kernel.org/all/20180503230824.3462-11-daniel@iogearbox.net/
 
-BTF argument expansion results in >128 arguments, but we still attempt to 
-process the excess unparsed ones.
-
-
+Thanks
+Hari
