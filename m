@@ -1,456 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A98189902
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Sep 2024 09:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDA318A926;
+	Mon, 30 Sep 2024 11:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727689247; cv=none; b=npIat5qAlsr2vjWe6a/JN2UTh2hUHskkjTdsSdkCEVRU1md9q2Q2fwG+bV7rz+k7uDRE3QJdbsc9v8ZHsXAOAPVj5kGHAVW6PqaMFKHISEX3373i+Oml9zf7s18SwKddy3fLx4gVfP7H+aetKLUifPD0DQC8eVdekLNhJO1tovo=
+	t=1727695303; cv=none; b=kSu9CAI+ScKlSUuIn1DvxRezgW6Y1TL9l4xF8GDjp9vu6aekQokRutr1paDy+SSwl0Zt1Ij1nvGrtl0GuDdlHUG2ufp2AEf2RT9+UeA40j1OliYcgIvZSIcpLVaId+iWTSaM1TDXZVniSJ9Xg9cS/8TRwyKQrx4rGkApmpc/E9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727689247; c=relaxed/simple;
-	bh=cvR51nrfsAexTy67HhXjj6ohzaXX0/38qIkbN+szIoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1CZ002DZBxl1W8x3G0NrX76I21aaMAOSDe8NaVJ6B75y7fSnIOcXeL7AO406iw8ekXAaEx6NuE1fDDGDSI3n61SfLeDEyWip40gd/eiBNYRJWpdeKphnX8Cjy6cq18haROIoWaO27heTAlSo+Iu5RV0iI96DA5oUt+n/8Hcd+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dSYm9uxq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1727695303; c=relaxed/simple;
+	bh=rgAYbIHR+nhPtrrRBq3CzRqixIFEvPXFZ9pgtqmmkAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ROhyPYffgSwvQDgDORnIJTC12zIIBI+gCs6Lda8MKoiXmcZCBwdVBaIBEgM5/FGpV/xs89ge33ssn193gCriXY0rnogV90f7RvCAsUd5JXLv+SKKjWkYfOEC868WRKD9RTHXo0qtfvTCc0mcwD0NjReJhZfv0PX7ezy8d7bJX6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=N5Crvn6K; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dSYm9uxq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727689244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v0E+qKNNngUa/s7lIUGOnbui4nnSmqw78cj0HvRaCzg=;
-	b=dSYm9uxqFso3aQIbmjejzJ4fOSYhedixNmUM06d9ugEh9eBidkFai/KC03DbK1uDhKnXQX
-	S6mL7ARFuhSnuGUcFXsk7T6/5NOdCIz1PZ8PV8+jmlNPMATMVMFf4M+mJKUNigLKzJIIL9
-	8Yls30gThjh0JOpnn+XjQX9M9W4bvpI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-HttAFN4iNH-QDBGEmmn92w-1; Mon,
- 30 Sep 2024 05:40:38 -0400
-X-MC-Unique: HttAFN4iNH-QDBGEmmn92w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E7CC19030B9;
-	Mon, 30 Sep 2024 09:40:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.88])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E8354195419F;
-	Mon, 30 Sep 2024 09:40:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 30 Sep 2024 11:40:22 +0200 (CEST)
-Date: Mon, 30 Sep 2024 11:40:15 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv5 bpf-next 02/13] uprobe: Add support for session consumer
-Message-ID: <20240930094014.GB18499@redhat.com>
-References: <20240929205717.3813648-1-jolsa@kernel.org>
- <20240929205717.3813648-3-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="N5Crvn6K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9JFHu5GN4m1ZIa7hFOr/S0cR7gAkAibwxtDh3yT9bKQ=;
+  b=N5Crvn6Kq6KpHSPNN73aCiDy+RvsqlM0pHtSseTwUaXi/R+AUcNhRU/s
+   cjlHPMFgIZOJllRTItDSSyRCzG1SoWucsK69kp3cC+hyWG6w77VR7U5lk
+   50vSZgwZFWWTGfQ7neSTgSg1frKowyQAjCduh7p7sY9rw2OBXSFMSw4B2
+   4=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.11,165,1725314400"; 
+   d="scan'208";a="185956867"
+Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2024 13:21:25 +0200
+From: Julia Lawall <Julia.Lawall@inria.fr>
+To: linux-gpio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	audit@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org,
+	linux-mm@kvack.org,
+	maple-tree@lists.infradead.org,
+	alsa-devel@alsa-project.org,
+	Sanyog Kale <sanyog.r.kale@intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	dccp@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jan Kara <jack@suse.cz>,
+	drbd-dev@lists.linbit.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	linux-leds@vger.kernel.org,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	tipc-discussion@lists.sourceforge.net,
+	Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-wireless@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org
+Subject: [PATCH 00/35] Reorganize kerneldoc parameter names
+Date: Mon, 30 Sep 2024 13:20:46 +0200
+Message-Id: <20240930112121.95324-1-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240929205717.3813648-3-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-Jiri,
+Reorganize kerneldoc parameter names to match the parameter
+order in the function header.
 
-LGTM. But I'm afraid you need to send v6, sorry ;)
+The misordered cases were identified using the following
+Coccinelle semantic patch:
 
-This change has some (trivial) conflicts in prepare_uretprobe() with the
-cleanups I sent yesterday, and Peter is going to queue them.
+// <smpl>
+@initialize:ocaml@
+@@
 
-See https://lore.kernel.org/all/20240929144201.GA9429@redhat.com/
+let parse_doc l =
+  let pieces = List.map String.trim (String.split_on_char '*' l) in
+  let l = String.concat " " pieces in
+  match String.split_on_char ':' l with
+    x::xs -> x
+  | _ -> ""
 
-Oleg.
+let params ps =
+  List.rev
+    (List.fold_left
+       (fun prev (pm,_) ->
+	 let ty =
+	   String.trim(Pretty_print_c.string_of_fullType pm.Ast_c.p_type) in
+	 if ty = "void" && pm.Ast_c.p_namei = None
+	 then prev
+	 else
+	   let name =
+	     match pm.Ast_c.p_namei with
+	       Some name -> name
+	     | None -> failwith "function parameter has no name" in
+	   (String.trim (Pretty_print_c.string_of_name name),ty)::prev)
+       [] ps)
 
-On 09/29, Jiri Olsa wrote:
->
-> This change allows the uprobe consumer to behave as session which
-> means that 'handler' and 'ret_handler' callbacks are connected in
-> a way that allows to:
-> 
->   - control execution of 'ret_handler' from 'handler' callback
->   - share data between 'handler' and 'ret_handler' callbacks
-> 
-> The session concept fits to our common use case where we do filtering
-> on entry uprobe and based on the result we decide to run the return
-> uprobe (or not).
-> 
-> It's also convenient to share the data between session callbacks.
-> 
-> To achive this we are adding new return value the uprobe consumer
-> can return from 'handler' callback:
-> 
->   UPROBE_HANDLER_IGNORE
->   - Ignore 'ret_handler' callback for this consumer.
-> 
-> And store cookie and pass it to 'ret_handler' when consumer has both
-> 'handler' and 'ret_handler' callbacks defined.
-> 
-> We store shared data in the return_consumer object array as part of
-> the return_instance object. This way the handle_uretprobe_chain can
-> find related return_consumer and its shared data.
-> 
-> We also store entry handler return value, for cases when there are
-> multiple consumers on single uprobe and some of them are ignored and
-> some of them not, in which case the return probe gets installed and
-> we need to have a way to find out which consumer needs to be ignored.
-> 
-> The tricky part is when consumer is registered 'after' the uprobe
-> entry handler is hit. In such case this consumer's 'ret_handler' gets
-> executed as well, but it won't have the proper data pointer set,
-> so we can filter it out.
-> 
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  include/linux/uprobes.h |  21 +++++-
->  kernel/events/uprobes.c | 148 +++++++++++++++++++++++++++++++---------
->  2 files changed, 137 insertions(+), 32 deletions(-)
-> 
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index bb265a632b91..dbaf04189548 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -23,8 +23,17 @@ struct inode;
->  struct notifier_block;
->  struct page;
->  
-> +/*
-> + * Allowed return values from uprobe consumer's handler callback
-> + * with following meaning:
-> + *
-> + * UPROBE_HANDLER_REMOVE
-> + * - Remove the uprobe breakpoint from current->mm.
-> + * UPROBE_HANDLER_IGNORE
-> + * - Ignore ret_handler callback for this consumer.
-> + */
->  #define UPROBE_HANDLER_REMOVE		1
-> -#define UPROBE_HANDLER_MASK		1
-> +#define UPROBE_HANDLER_IGNORE		2
->  
->  #define MAX_URETPROBE_DEPTH		64
->  
-> @@ -44,6 +53,8 @@ struct uprobe_consumer {
->  	bool (*filter)(struct uprobe_consumer *self, struct mm_struct *mm);
->  
->  	struct list_head cons_node;
-> +
-> +	__u64 id;	/* set when uprobe_consumer is registered */
->  };
->  
->  #ifdef CONFIG_UPROBES
-> @@ -83,14 +94,22 @@ struct uprobe_task {
->  	unsigned int			depth;
->  };
->  
-> +struct return_consumer {
-> +	__u64	cookie;
-> +	__u64	id;
-> +};
-> +
->  struct return_instance {
->  	struct uprobe		*uprobe;
->  	unsigned long		func;
->  	unsigned long		stack;		/* stack pointer */
->  	unsigned long		orig_ret_vaddr; /* original return address */
->  	bool			chained;	/* true, if instance is nested */
-> +	int			consumers_cnt;
->  
->  	struct return_instance	*next;		/* keep as stack */
-> +
-> +	struct return_consumer	consumers[] __counted_by(consumers_cnt);
->  };
->  
->  enum rp_check {
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2ba93f8a31aa..76fe535c9b3c 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -65,7 +65,7 @@ struct uprobe {
->  	struct rcu_head		rcu;
->  	loff_t			offset;
->  	loff_t			ref_ctr_offset;
-> -	unsigned long		flags;
-> +	unsigned long		flags;		/* "unsigned long" so bitops work */
->  
->  	/*
->  	 * The generic code assumes that it has two members of unknown type
-> @@ -825,8 +825,11 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
->  
->  static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  {
-> +	static atomic64_t id;
-> +
->  	down_write(&uprobe->consumer_rwsem);
->  	list_add_rcu(&uc->cons_node, &uprobe->consumers);
-> +	uc->id = (__u64) atomic64_inc_return(&id);
->  	up_write(&uprobe->consumer_rwsem);
->  }
->  
-> @@ -1797,6 +1800,34 @@ static struct uprobe_task *get_utask(void)
->  	return current->utask;
->  }
->  
-> +static size_t ri_size(int consumers_cnt)
-> +{
-> +	struct return_instance *ri;
-> +
-> +	return sizeof(*ri) + sizeof(ri->consumers[0]) * consumers_cnt;
-> +}
-> +
-> +#define DEF_CNT 4
-> +
-> +static struct return_instance *alloc_return_instance(void)
-> +{
-> +	struct return_instance *ri;
-> +
-> +	ri = kzalloc(ri_size(DEF_CNT), GFP_KERNEL);
-> +	if (!ri)
-> +		return ZERO_SIZE_PTR;
-> +
-> +	ri->consumers_cnt = DEF_CNT;
-> +	return ri;
-> +}
-> +
-> +static struct return_instance *dup_return_instance(struct return_instance *old)
-> +{
-> +	size_t size = ri_size(old->consumers_cnt);
-> +
-> +	return kmemdup(old, size, GFP_KERNEL);
-> +}
-> +
->  static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
->  {
->  	struct uprobe_task *n_utask;
-> @@ -1809,11 +1840,10 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
->  
->  	p = &n_utask->return_instances;
->  	for (o = o_utask->return_instances; o; o = o->next) {
-> -		n = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
-> +		n = dup_return_instance(o);
->  		if (!n)
->  			return -ENOMEM;
->  
-> -		*n = *o;
->  		/*
->  		 * uprobe's refcnt has to be positive at this point, kept by
->  		 * utask->return_instances items; return_instances can't be
-> @@ -1906,39 +1936,35 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
->  	utask->return_instances = ri;
->  }
->  
-> -static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
-> +static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
-> +			      struct return_instance *ri)
->  {
-> -	struct return_instance *ri;
->  	struct uprobe_task *utask;
->  	unsigned long orig_ret_vaddr, trampoline_vaddr;
->  	bool chained;
->  
->  	if (!get_xol_area())
-> -		return;
-> +		goto free;
->  
->  	utask = get_utask();
->  	if (!utask)
-> -		return;
-> +		goto free;
->  
->  	if (utask->depth >= MAX_URETPROBE_DEPTH) {
->  		printk_ratelimited(KERN_INFO "uprobe: omit uretprobe due to"
->  				" nestedness limit pid/tgid=%d/%d\n",
->  				current->pid, current->tgid);
-> -		return;
-> +		goto free;
->  	}
->  
->  	/* we need to bump refcount to store uprobe in utask */
->  	if (!try_get_uprobe(uprobe))
-> -		return;
-> -
-> -	ri = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
-> -	if (!ri)
-> -		goto fail;
-> +		goto free;
->  
->  	trampoline_vaddr = uprobe_get_trampoline_vaddr();
->  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
->  	if (orig_ret_vaddr == -1)
-> -		goto fail;
-> +		goto put;
->  
->  	/* drop the entries invalidated by longjmp() */
->  	chained = (orig_ret_vaddr == trampoline_vaddr);
-> @@ -1956,7 +1982,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
->  			 * attack from user-space.
->  			 */
->  			uprobe_warn(current, "handle tail call");
-> -			goto fail;
-> +			goto put;
->  		}
->  		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
->  	}
-> @@ -1971,9 +1997,10 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
->  	utask->return_instances = ri;
->  
->  	return;
-> -fail:
-> -	kfree(ri);
-> +put:
->  	put_uprobe(uprobe);
-> +free:
-> +	kfree(ri);
->  }
->  
->  /* Prepare to single-step probed instruction out of line. */
-> @@ -2125,35 +2152,91 @@ static struct uprobe *find_active_uprobe_rcu(unsigned long bp_vaddr, int *is_swb
->  	return uprobe;
->  }
->  
-> +static struct return_instance*
-> +push_consumer(struct return_instance *ri, int idx, __u64 id, __u64 cookie)
-> +{
-> +	if (unlikely(ri == ZERO_SIZE_PTR))
-> +		return ri;
-> +
-> +	if (unlikely(idx >= ri->consumers_cnt)) {
-> +		struct return_instance *old_ri = ri;
-> +
-> +		ri->consumers_cnt += DEF_CNT;
-> +		ri = krealloc(old_ri, ri_size(old_ri->consumers_cnt), GFP_KERNEL);
-> +		if (!ri) {
-> +			kfree(old_ri);
-> +			return ZERO_SIZE_PTR;
-> +		}
-> +	}
-> +
-> +	ri->consumers[idx].id = id;
-> +	ri->consumers[idx].cookie = cookie;
-> +	return ri;
-> +}
-> +
-> +static struct return_consumer *
-> +return_consumer_find(struct return_instance *ri, int *iter, int id)
-> +{
-> +	struct return_consumer *ric;
-> +	int idx = *iter;
-> +
-> +	for (ric = &ri->consumers[idx]; idx < ri->consumers_cnt; idx++, ric++) {
-> +		if (ric->id == id) {
-> +			*iter = idx + 1;
-> +			return ric;
-> +		}
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static bool ignore_ret_handler(int rc)
-> +{
-> +	return rc == UPROBE_HANDLER_REMOVE || rc == UPROBE_HANDLER_IGNORE;
-> +}
-> +
->  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  {
->  	struct uprobe_consumer *uc;
-> -	int remove = UPROBE_HANDLER_REMOVE;
-> -	bool need_prep = false; /* prepare return uprobe, when needed */
-> -	bool has_consumers = false;
-> +	bool has_consumers = false, remove = true;
-> +	struct return_instance *ri = NULL;
-> +	int push_idx = 0;
->  
->  	current->utask->auprobe = &uprobe->arch;
->  
->  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
->  				 srcu_read_lock_held(&uprobes_srcu)) {
-> +		bool session = uc->handler && uc->ret_handler;
-> +		__u64 cookie = 0;
->  		int rc = 0;
->  
->  		if (uc->handler) {
-> -			rc = uc->handler(uc, regs, NULL);
-> -			WARN(rc & ~UPROBE_HANDLER_MASK,
-> +			rc = uc->handler(uc, regs, &cookie);
-> +			WARN(rc < 0 || rc > 2,
->  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
->  		}
->  
-> -		if (uc->ret_handler)
-> -			need_prep = true;
-> -
-> -		remove &= rc;
-> +		remove &= rc == UPROBE_HANDLER_REMOVE;
->  		has_consumers = true;
-> +
-> +		if (!uc->ret_handler || ignore_ret_handler(rc))
-> +			continue;
-> +
-> +		if (!ri)
-> +			ri = alloc_return_instance();
-> +
-> +		if (session)
-> +			ri = push_consumer(ri, push_idx++, uc->id, cookie);
->  	}
->  	current->utask->auprobe = NULL;
->  
-> -	if (need_prep && !remove)
-> -		prepare_uretprobe(uprobe, regs); /* put bp at return */
-> +	if (!ZERO_OR_NULL_PTR(ri)) {
-> +		/*
-> +		 * The push_idx value has the final number of return consumers,
-> +		 * and ri->consumers_cnt has number of allocated consumers.
-> +		 */
-> +		ri->consumers_cnt = push_idx;
-> +		prepare_uretprobe(uprobe, regs, ri);
-> +	}
->  
->  	if (remove && has_consumers) {
->  		down_read(&uprobe->register_rwsem);
-> @@ -2172,14 +2255,17 @@ static void
->  handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
->  {
->  	struct uprobe *uprobe = ri->uprobe;
-> +	struct return_consumer *ric;
->  	struct uprobe_consumer *uc;
-> -	int srcu_idx;
-> +	int srcu_idx, ric_idx = 0;
->  
->  	srcu_idx = srcu_read_lock(&uprobes_srcu);
->  	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
->  				 srcu_read_lock_held(&uprobes_srcu)) {
-> -		if (uc->ret_handler)
-> -			uc->ret_handler(uc, ri->func, regs, NULL);
-> +		if (uc->ret_handler) {
-> +			ric = return_consumer_find(ri, &ric_idx, uc->id);
-> +			uc->ret_handler(uc, ri->func, regs, ric ? &ric->cookie : NULL);
-> +		}
->  	}
->  	srcu_read_unlock(&uprobes_srcu, srcu_idx);
->  }
-> -- 
-> 2.46.1
-> 
+@r@
+comments c;
+identifier fn;
+position p;
+parameter list ps;
+type T;
+@@
 
+T@c fn@p(ps) { ... }
+
+@script:ocaml@
+p << r.p;
+c << r.c;
+(_,ps) << r.ps;
+@@
+
+let isdoc c ps =
+  List.length ps > 1 &&
+  (let c = String.trim c in
+  String.length c > 3 && String.sub c 0 3 = "/**" && String.get c 3 != '*') in
+
+let subset l1 l2 =
+  List.for_all (fun x -> List.mem x l2) l1 in
+
+let (cb,cm,ca) = List.hd c in
+match List.rev cb with
+  c::_ when isdoc c ps ->
+    let pieces = String.split_on_char '@' c in
+    (match pieces with
+      _::tl ->
+	let d_names = List.map parse_doc tl in
+	(* check parameters *)
+	let p_names = List.map fst (params ps) in
+	if d_names <> [] && not(d_names = p_names)
+	then
+	  begin
+	    if List.sort compare d_names = List.sort compare p_names
+	    then Coccilib.print_main "out of order" p
+	    else if subset d_names p_names
+	    then Coccilib.print_main "doc is missing a parameter" p
+	    else if subset d_names p_names
+	    then Coccilib.print_main "doc has an extra parameter" p
+	  end
+    | _ -> ())
+| _ -> ()
+// </smpl>
+
+---
+
+ arch/arm/mach-omap2/prm2xxx_3xxx.c              |    1 -
+ arch/powerpc/platforms/ps3/interrupt.c          |    2 +-
+ arch/powerpc/platforms/ps3/repository.c         |    2 +-
+ drivers/base/firmware_loader/main.c             |    2 +-
+ drivers/comedi/drivers/comedi_8254.c            |    2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c          |    2 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c        |    2 +-
+ drivers/gpu/drm/drm_gem_framebuffer_helper.c    |    3 +--
+ drivers/gpu/drm/drm_gpuvm.c                     |    2 +-
+ drivers/gpu/drm/radeon/radeon_ib.c              |    2 +-
+ drivers/iommu/iommu.c                           |    2 +-
+ drivers/leds/leds-gpio-register.c               |    2 +-
+ drivers/mfd/atmel-smc.c                         |    4 ++--
+ drivers/misc/mei/bus.c                          |    2 +-
+ drivers/mtd/ubi/eba.c                           |    2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_hwrm.c  |    2 +-
+ drivers/net/ethernet/intel/e1000/e1000_hw.c     |    2 +-
+ drivers/net/ethernet/intel/i40e/i40e_common.c   |    7 +++----
+ drivers/net/ethernet/intel/ice/ice_common.c     |    2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_common.c |    2 +-
+ drivers/nvdimm/dimm_devs.c                      |    2 +-
+ drivers/pci/hotplug/pci_hotplug_core.c          |    2 +-
+ drivers/pinctrl/pinmux.c                        |    2 +-
+ drivers/slimbus/messaging.c                     |    2 +-
+ drivers/soc/qcom/qmi_interface.c                |    2 +-
+ drivers/soundwire/stream.c                      |    2 +-
+ drivers/usb/gadget/config.c                     |    4 ++--
+ fs/char_dev.c                                   |    2 +-
+ fs/dcache.c                                     |    4 ++--
+ fs/seq_file.c                                   |    2 +-
+ kernel/audit.c                                  |    2 +-
+ kernel/resource.c                               |    2 +-
+ kernel/sysctl.c                                 |    1 -
+ kernel/trace/ring_buffer.c                      |    2 +-
+ lib/lru_cache.c                                 |    2 +-
+ lib/maple_tree.c                                |    2 +-
+ mm/mmu_notifier.c                               |    2 +-
+ net/dccp/feat.c                                 |    2 +-
+ net/mac80211/mesh_hwmp.c                        |    6 +++---
+ net/mac80211/mesh_pathtbl.c                     |   10 +++++-----
+ net/socket.c                                    |    2 +-
+ net/sunrpc/xprt.c                               |    2 +-
+ net/tipc/link.c                                 |   14 +++++++-------
+ net/tipc/msg.c                                  |    2 +-
+ sound/pci/hda/hda_codec.c                       |    2 +-
+ 45 files changed, 60 insertions(+), 64 deletions(-)
