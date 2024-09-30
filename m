@@ -1,85 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C9E18FDDA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Sep 2024 15:21:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB7F1922FA;
+	Mon, 30 Sep 2024 15:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727709687; cv=none; b=A2N9k55GZFAXCWFyolEg1FQD4Ef/wpYdXsOFZ2SMJGBL6v9kPeqjTKZWBJAcxtepVKC6IqEBDzrBLtmGYGuAjzoKU8ZmNkagae3wIsx9aV9mJ0Kzm0ZFPNymjLQxstM0fT/XPNm7BgkXNS8Hs8JNyiVZYDhlXUnA4HdPuVZV2wE=
+	t=1727710098; cv=none; b=WiwgvNalzemgdkp0wAM5qfOXwIeQnxOHhYmptOyYf5CfApY+YOXSZtT/bfLFXJtHZQIcurPE+2NUzwRVYjkhxpIthnHmyqkO2fBlK5DtizG3Ot8yO23bOhFOhR8ov6BlB8pq2xml3uDFH/z9hnYCBdnXHudvP6uaUujBdyQBlqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727709687; c=relaxed/simple;
-	bh=Uir1zyQpp8pFgPeuDOaJoz5kXprveWc5MyXzA+WiQW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QYzk/68QkwHwx2ct8Mcg0HbHb1gzQKwoEyiR+6EJsTGj2seHc1c5g26CKRx9uwG4L1beCZgqKWcmAl1YpxQrT10WAw5Efwtu7bO4vjj+Db0n83qQnVyC3f+h86kL3ev91qupQzj5oC9v/d4u/jIE8FJcjFyYJj+cAYVbt8xSypY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10CF6C4CEC7;
-	Mon, 30 Sep 2024 15:21:26 +0000 (UTC)
-Date: Mon, 30 Sep 2024 11:22:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Maverickk 78 <maverickk1778@gmail.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: Re: ftrace not tracing pciehp probe
-Message-ID: <20240930112213.4dc0916e@gandalf.local.home>
-In-Reply-To: <CALfBBTtqho0iEV5rpG=2uead0MPZQoRiins8yeXwY-WfZnR08Q@mail.gmail.com>
-References: <CALfBBTtqho0iEV5rpG=2uead0MPZQoRiins8yeXwY-WfZnR08Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727710098; c=relaxed/simple;
+	bh=eQtbKlab/bjzIBfgSHVGCGy6nQGMVGQqzzDAVlBPocU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Ldyms5V6F2PBOegiUNHLemV0DU5r1H6UE6Zj0vUiUigcLaEP+pxWg4tc7TapvbHP4sNyLGTRn6I3QcxhoxOgZQkz7rWICrRWho/Et3oBjr9xVEqUyFuzHybiF2rrFlw6guzNtCA4YoRF9xmJRSNKq6vqV3FNOS1USRsjQkKRSew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pz624xMO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz624xMO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C638CC4CEC7;
+	Mon, 30 Sep 2024 15:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727710097;
+	bh=eQtbKlab/bjzIBfgSHVGCGy6nQGMVGQqzzDAVlBPocU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Pz624xMOZ6Oai8DI3Lo3SjH7OPg2F3Hb3nP2qGesJv6VO6eQHmGgiPMb2JWhn73Hr
+	 4++YDlvTdlpAAKdhkwUqoJtHb6df6G7Mmas0PTT467m1zhfsGj9Oyxj6rcsi40TXO3
+	 YMKhNH/XroAZsPSpgyiy9If1hOx6UB+P5+Ds3y0Bo2DkbVkkRmDDwtV9qBcqfPfJ7Z
+	 44ECSWhEX9BtH+DS99WwKIgJGTRQQLodzuoOS0XhWXw+L0hbZcyde6J+4f0BoBhZ60
+	 9+YadP4i3ajHMJdD/1DpApKBn6yS/P5f++OPXQ7mrYGsCO5Z22nQtvBOVZ7/0fm8/H
+	 O4qsaGuA2RvQA==
+Date: Tue, 1 Oct 2024 00:28:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: Question about config UPROBES and UPROBE_EVENTS
+Message-Id: <20241001002813.6012587b5e52737a576f1d0b@kernel.org>
+In-Reply-To: <20240930100630.7894c442@gandalf.local.home>
+References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
+	<20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
+	<f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
+	<20240930100630.7894c442@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Sep 2024 18:16:01 +0530
-Maverickk 78 <maverickk1778@gmail.com> wrote:
+On Mon, 30 Sep 2024 10:06:30 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Hello,
+> On Mon, 30 Sep 2024 09:33:42 +0800
+> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 > 
-> I enabled ftrace and set a filter on the command line as *pcie*, I
-> dont see some of the pciehp(eg: pciehp_probe from pciehp_core.c)
-> module function calls in ftrace, It does trace pciehp_isr but nothing
-> else.
+> > > the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
+> > > depending on it, the uprobe_events menu is hidden. I don't like this.  
+> > 
+> > This is somehow like the current status of CONFIG_KPROBES and
+> > CONFIG_KPROBE_EVENTS.
 > 
-> My command line is "ftrace=function_graph ftrace_graph_filter=*pcie*
-> ", is there any restriction on tracing static function calls?
+> The question is, can uprobes be used without uprobe_events? With the
+> current BPF work that I haven't been following, it may be possible now.
 
-Only if the compiler inlines them.
+uprobe_register/unregister APIs are exposed to the kernel modules,
+since systemtap had been introduced this feature.
 
-Ftrace only traces true function calls. That is, locations that something
-performs a jump to via the call instruction for x86, or a branch-and-link
-for several other architectures. The function has a prologue where gcc or
-clang will insert code that will allow ftrace to attach to it.
-
-If the compiler decides to inline the function, it will no longer be
-visible to ftrace as the compiler will not add the necessary logic to allow
-ftrace to hook to it. In the binary, the function simply "disappears" and
-the content of that function is injected directly into the calling function.
-
-If you do not see the function you want listed in:
-
-  /sys/kernel/tracing/available_filter_functions 
-
-Then it likely was inlined by the compiler. If you don't want the compiler
-to inline your function, simply add "noinline" to that function:
-
-static noinline int foo(void)
-{
-}
-
-And that should tell gcc not to inline it.
-
--- Steve
+Thank you,
 
 > 
-> # cat /proc/cmdline
-> BOOT_IMAGE=/boot/vmlinuz-6.11.0+
-> root=UUID=f563804b-1b93-4921-90e1-4114c8111e8f ro
-> ftrace=function_graph ftrace_graph_filter=*pcie* pciehp.pciehp_force=1
-> pciehp.pciehp_debug=1 pcie_ports=native quite splash
-> crashkernel=512M-:192M vt.handoff=7
+> If uprobes can be used without uprobe events, like kprobes can be used
+> without kprobe events, then I can see having uprobes as a separate config
+> menu option. If not, then no, it shouldn't be.
 > 
-> 
-> Raghu
+> -- Steve
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
