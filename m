@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE1518FDAB;
-	Mon, 30 Sep 2024 14:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF33433B6
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Sep 2024 14:07:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727705145; cv=none; b=ce8zbOB7vKEzy3Q60To5LSIG2lFqV4RaHu4eiIIoExCGrSZ+VFPfD3INdQL9FRvdBeXma4DoQPbPlTJs0OCjnf9QLI2AECZljZqbwOSHtdM5mIwDPbHWhOb+oWSRleB3RdhNoJ9ZghEEcSuIqO2qHgVSu40M34PhM2EoF714Vpo=
+	t=1727705249; cv=none; b=u0DO32aKAeKqeFZhvWjSN+QuRlDR0DvZNPzsFVJyu0e3bIvFVNB0XLVXNciVhu8rJPkkOAAvKRYHGol3KRAbnhZadYPS5ycFceHyJ7v7FnWyh1jxjZoyaK2QursqqEM7aoL/J1wEN9kfeNYVFqG7FnhdMi15yUPMPOF58xVtdDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727705145; c=relaxed/simple;
-	bh=gUJi+citqOcF0chQ1QSkOqV+A+ms+uqytlnu1RCrA1k=;
+	s=arc-20240116; t=1727705249; c=relaxed/simple;
+	bh=MQgQ5Y+wyV7M+P7cn+6b2fe9xs8I8tLEPHAixmPTGLo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHp+UtP1tJ+LMVj6uJx8qtcMY64bvsCjmxbG2BcxVHrutHmiSIGO3hhVnvemose95Yx4C0TtGFKD3spduIlUTmCuqNUn5CcqiGyshWd+tbDZPu/ARAIDEQEvlWa921N8pg0B8ELMttnLoSW6EkUIP5cYlCpAUucQ8VV3C3JWmX4=
+	 MIME-Version:Content-Type; b=WycvS4CM2M77n//cwEofgHfJRAbDa4aQ8nMUwj95yN5cxSI9aMYI2Aw4i2L8wism8A1VL8Bxn3B6tlNfD6BSmHooYl2Hr86uOXDouBRbGRZrwgn2d3bgAiRCJ5WbXNJV1VGrzv65OoSgCMVlw5D4qC0hTX8j1G4VFAHzQA704Vc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FAD6C4CEC7;
-	Mon, 30 Sep 2024 14:05:44 +0000 (UTC)
-Date: Mon, 30 Sep 2024 10:06:30 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BCBC4CEC7;
+	Mon, 30 Sep 2024 14:07:28 +0000 (UTC)
+Date: Mon, 30 Sep 2024 10:08:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Question about config UPROBES and UPROBE_EVENTS
-Message-ID: <20240930100630.7894c442@gandalf.local.home>
-In-Reply-To: <f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
-References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
-	<20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
-	<f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
+To: furkanonder <furkanonder@protonmail.com>
+Cc: Clark Williams <williams@redhat.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tools/timerlat: Enhance Error Handling and Readability
+ for timerlat_load.py
+Message-ID: <20240930100814.7635e21e@gandalf.local.home>
+In-Reply-To: <NPl8CXZesS-2Yga8ePwiOTlriUFANh7fZqkSvuHS4wL7AOEGoQ7OYcm-QozD4jffDJ68Bd11N9GQBaOnhT4Iq55T4hWEML-kvNbHMkUlfc8=@protonmail.com>
+References: <2eV3oMRbTimO2AnpsTNrv5qQFnWBqljnkXxLciVNWDGDWP4rTQS1nfvRZAsJ9-Mx9U9GsxMyQZ5UZ94FSBjZrFeuJHKloPzE45D3k-3LnIA=@protonmail.com>
+	<20240926003823.50a14245@rorschach.local.home>
+	<NPl8CXZesS-2Yga8ePwiOTlriUFANh7fZqkSvuHS4wL7AOEGoQ7OYcm-QozD4jffDJ68Bd11N9GQBaOnhT4Iq55T4hWEML-kvNbHMkUlfc8=@protonmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,23 +33,18 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 30 Sep 2024 09:33:42 +0800
-Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On Sun, 29 Sep 2024 23:21:05 +0000
+furkanonder <furkanonder@protonmail.com> wrote:
 
-> > the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
-> > depending on it, the uprobe_events menu is hidden. I don't like this.  
-> 
-> This is somehow like the current status of CONFIG_KPROBES and
-> CONFIG_KPROBE_EVENTS.
+> I=E2=80=99m sorry; I included the patch as an attachment in the email wit=
+hout noticing.
 
-The question is, can uprobes be used without uprobe_events? With the
-current BPF work that I haven't been following, it may be possible now.
+Yes, but still, you need to have the patch with the change log and the
+signed-off-by. Not as a separate email.
 
-If uprobes can be used without uprobe events, like kprobes can be used
-without kprobe events, then I can see having uprobes as a separate config
-menu option. If not, then no, it shouldn't be.
+Try using "git send-email", that can probably help.
 
 -- Steve
