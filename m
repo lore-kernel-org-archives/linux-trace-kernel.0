@@ -1,111 +1,238 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6C9EDE;
-	Mon, 30 Sep 2024 21:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D73AEDE;
+	Mon, 30 Sep 2024 21:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727732117; cv=none; b=naEh++21QmxFDDKo6Dfl0rDBnD3dCjZpaXQgR83FzX6sgU47Fz1pbAkTx3Dmkao9Y2lwFqS04ThIKwpv1B68+WmTcQy29LMYdyodBmfXys3sXzOS+YA3TItpqIBbZedCqYJhhTfpfAtwi75Uym5z99vO8BNFNfGtE3xB3GCVPvE=
+	t=1727732171; cv=none; b=RL2eyVNlXXLBsuxe1tnK9Ah0MgvSmbbehGsJdx9BN1x347v6iYHPw17jppizrw71Mg/fXZp0fwAiOu+hX8/9IIjccJkR7HZ6vdxG5DYFIBbb4JcRqkmt94acRVv1nz3PRt1LZE7Sxt869D35HitG27wU8ql7HXie2mCposeOaLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727732117; c=relaxed/simple;
-	bh=dxuL2+8ZVHuUyZGDZyBs/XcF0TJ+A4SDCBg5GNm49/8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QoGacCURkZJ84TA7yV+AECPhkWqYMUcLtIoI8OjAlrnRLO8G2LgMQuDTiQ7jvBmSdyfF5pwSL4nIoEp0mjHLNeo5a2j2c4kNl+gxcpWsCg27c5ZqaxzjdgOUALM0kRN9/7KBNW+zADvEmZItFf8GZ7QEqNKtDI7Z25ExrKPnyE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YgR2fuSG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OLBn3xaq; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1727732171; c=relaxed/simple;
+	bh=9tfL9wQxgrBlxahazI54GgJyU0iR6ozS3a21nGuIk2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fG9IN9w+fbBRG8sCnIWnPdeyFJhSCayvIuourb111o76Otbh2ZYS7pCsFul0govRATSHE4uvkhBKKJcwWk4ZoUJg8fwdx0KrrYB5yygZXDpraKFUTr3gYvJKlnnbMF+6zlZGCJIj98hPXAUtKHUYkfPk9K5SfEg/rkNnr7dppsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TI7lx5bR; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YgR2fuSG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OLBn3xaq"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1727732113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uVbdFg6I8fwu/3AqZyEvbGS1WvCMLB3EhLlpsNhR5nI=;
-	b=YgR2fuSGQ+1CC0G5H4MzE4t8olbAFU5BafUyaLxjF2QIjTs3UbzCwwk7QvMFHeeLW8vuY5
-	HIuz05kBaI+PAU5kDbE9O5ysw0ZigkKVd+8BT9ZePG9tf2kJcuF4pv35EhkZ99cPbhVZbC
-	GQ7Jjbx9vgE0Rcx85zIefGMO0cL2dvmr4gN0aD9m2NtQeKfb7b8TsCdFADjl1RJyD/x6T5
-	2c0wF9l6tXZjPe+9VRbHHcVyeREQUnQ1EWRZc+6eA8hsmw0RLjF4PEs0g0/Gf5TgScX/Mf
-	xmwiJC8MCArfDFIIe+35ZCXxip+JZBfa+y8nD1s/uIVBn02yxnXIdg3SaXmy3A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1727732113;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uVbdFg6I8fwu/3AqZyEvbGS1WvCMLB3EhLlpsNhR5nI=;
-	b=OLBn3xaqldkwQyCXLWWfC5gXBWhLeCEwb2syNUFGVZ4mPsvyd455m2aCZBRPk2SHmQTkzb
-	bQfsnyFmm/fDZ2Dg==
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
- <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
- Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
- <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
- handling into timekeeper
-In-Reply-To: <79a32ab9308d6e63e066aa17c5c2492b51b55850.camel@kernel.org>
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
- <20240914-mgtime-v8-1-5bd872330bed@kernel.org> <87a5g79aag.ffs@tglx>
- <874j6f99dg.ffs@tglx>
- <b300fec8b6f611662195e0339f290d473a41607c.camel@kernel.org>
- <878qv90x6w.ffs@tglx>
- <4933075b1023f466edb516e86608e0938de28c1d.camel@kernel.org>
- <87y138zyfu.ffs@tglx>
- <79a32ab9308d6e63e066aa17c5c2492b51b55850.camel@kernel.org>
-Date: Mon, 30 Sep 2024 23:35:13 +0200
-Message-ID: <87plokzuy6.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TI7lx5bR"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e09a276ec6so4052028a91.0;
+        Mon, 30 Sep 2024 14:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727732169; x=1728336969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O5TNy8FUp7Y17NDv++FYm3jaxXapKnzyrZ3LuJg6jIQ=;
+        b=TI7lx5bRJ5+9tlI5JcdU6jPHHyqN2COINhY4zJQYIJpMVt6ZMQo+chEHfq928jFg+C
+         EtRv/oOwmI2UzTh4Q1QD5S2gQKHR7rYu4mnnfvj+UMG4Jr1jRNDIeMfT1t66dYtgmQ0C
+         SU9xxaQ52+8vRcuc5KETnpoYi16zBtgzthyaWjJXLCSFCzd/Dvp9q8M58ou0t0i/ZaAg
+         OsBQYuN5s9tpc79V26Lo/ys7xFn8coN5fZB03pLCPTy56I3O2C9xY6YENL4QHEwsjUvJ
+         2BFNydTRkZ4Q5+65Xb9H18vU2J3aaiwyuSRedldX5x8u0AMAp0Gm2RNfKD2dsdTYHptx
+         GuJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727732169; x=1728336969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O5TNy8FUp7Y17NDv++FYm3jaxXapKnzyrZ3LuJg6jIQ=;
+        b=fntn8oEWPsF/uG0xvH+IRgeRsjxmGRLJ+WaJ89M4zN8tHKUzvhGnPxzcaEUdEdRqvP
+         jBWJKXDNYzt4ZLvlS+i9pdrTtFdoBtXG99Ve74uQoXkfOGpl/z4bMMQBD1gSVj5AOVXg
+         Qp6ipUTgm4CbU72D7XdvDlX71k2w3MSLez1STESBdfDBMIcYy+O1DgxJSe/e5PXLBAMR
+         BDum9xR6EVvThfVY9u8FV3Xre1ALw+WUhvNArZYJhuum1mBsdOAdR1aqAoAJO3v6BqNj
+         hdODYBZO9VySs7svIM+WGO0MAIekNnKVUVc4XLlEmhcQ8OLWJMgZ4GGOZjEA/fgjjh/t
+         xjmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUobS81iJNV0JhjPMjht+o8v6K+I3Qb79v0DuPLlPqXDX2FWay9rHpYnLoJv7bNmsIEQoQjJH6qXRzbubRv@vger.kernel.org, AJvYcCX02IrnmW8/Nsp9R6eswD/xLC4uJxEF8KmSR2wmscINr7kldhTDR+Yh9FkOboT4J2cNJec=@vger.kernel.org, AJvYcCXPPlGvUYWbCT7hdFsFpo9+cdLIDusPRqmdRVxWTAMLB0RWr/4hxzJkWyU7vRncY2rw7i8IlSbrZGVXIkQUFHRBFz9e@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys8AtzBpUdzMbcDE32ZMVNoAdfmbRO7KZrXENEQv0y14XEl2GV
+	UmfLCtmZfAkRknvL/iPYUmA5O82iPcg2xYm1qHP+13h4IrvIQKhQcsJCtuucUy9gqHEXuIxtXSS
+	Knh/haMQtkJ5Y4jbSOb2GSLONI9qAEA==
+X-Google-Smtp-Source: AGHT+IFFXWQ5Z2qvn32uDaXHYCPmS6wjmK5V5OmdaaKB1A1pOvX5kfq+v8VzPRst+a0PDmyQvlNnm0+R3rD6PVt5dgc=
+X-Received: by 2002:a17:90a:d3c1:b0:2d8:8175:38c9 with SMTP id
+ 98e67ed59e1d1-2e0b8b41469mr15798989a91.20.1727732169114; Mon, 30 Sep 2024
+ 14:36:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240929205717.3813648-1-jolsa@kernel.org> <20240929205717.3813648-2-jolsa@kernel.org>
+In-Reply-To: <20240929205717.3813648-2-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 30 Sep 2024 14:35:56 -0700
+Message-ID: <CAEf4BzaOSShQu7M2p0AMJp_+podqakap_c9XWadd4f_40XG-Ng@mail.gmail.com>
+Subject: Re: [PATCHv5 bpf-next 01/13] uprobe: Add data pointer to consumer handlers
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 30 2024 at 16:53, Jeff Layton wrote:
-> On Mon, 2024-09-30 at 22:19 +0200, Thomas Gleixner wrote:
->> On Mon, Sep 30 2024 at 15:37, Jeff Layton wrote:
->> > If however, two threads have racing syscalls that overlap in time, then there                       
->> > is no such guarantee, and the second file may appear to have been modified                          
->> > before, after or at the same time as the first, regardless of which one was                         
->> > submitted first.
->> 
->> That makes me ask a question. Are the timestamps always taken in thread
->> (syscall) context or can they be taken in other contexts (worker,
->> [soft]interrupt, etc.) too?
->> 
+On Sun, Sep 29, 2024 at 1:57=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> That's a good question.
+> Adding data pointer to both entry and exit consumer handlers and all
+> its users. The functionality itself is coming in following change.
 >
-> The main place we do this is inode_set_ctime_current(). That is mostly
-> called in the context of a syscall or similar sort of operation
-> (io_uring, nfsd RPC request, etc.).
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/uprobes.h                              |  4 ++--
+>  kernel/events/uprobes.c                              |  4 ++--
+>  kernel/trace/bpf_trace.c                             |  6 ++++--
+>  kernel/trace/trace_uprobe.c                          | 12 ++++++++----
+>  .../testing/selftests/bpf/bpf_testmod/bpf_testmod.c  |  2 +-
+>  5 files changed, 17 insertions(+), 11 deletions(-)
 >
-> I certainly wouldn't rule out a workqueue job calling that function,
-> but this is something we do while dirtying an inode, and that's not
-> typically done in interrupt context.
 
-The reason I'm asking is that if it's always syscall context,
-i.e. write() or io_uring()/RPC request etc., then you can avoid the
-whole global floor value dance and make it strictly per thread, which
-simplifies the exercise significantly.
+LGTM
 
-But even if it's not syscall/thread context then the worker or io_uring
-state machine might just require to serialize against itself and not
-coordinate with something else. But what do I know.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Thanks,
 
-        tglx
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index 2b294bf1881f..bb265a632b91 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -37,10 +37,10 @@ struct uprobe_consumer {
+>          * for the current process. If filter() is omitted or returns tru=
+e,
+>          * UPROBE_HANDLER_REMOVE is effectively ignored.
+>          */
+> -       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
+);
+> +       int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs=
+, __u64 *data);
+>         int (*ret_handler)(struct uprobe_consumer *self,
+>                                 unsigned long func,
+> -                               struct pt_regs *regs);
+> +                               struct pt_regs *regs, __u64 *data);
+>         bool (*filter)(struct uprobe_consumer *self, struct mm_struct *mm=
+);
+>
+>         struct list_head cons_node;
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 2ec796e2f055..2ba93f8a31aa 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2139,7 +2139,7 @@ static void handler_chain(struct uprobe *uprobe, st=
+ruct pt_regs *regs)
+>                 int rc =3D 0;
+>
+>                 if (uc->handler) {
+> -                       rc =3D uc->handler(uc, regs);
+> +                       rc =3D uc->handler(uc, regs, NULL);
+>                         WARN(rc & ~UPROBE_HANDLER_MASK,
+>                                 "bad rc=3D0x%x from %ps()\n", rc, uc->han=
+dler);
+>                 }
+> @@ -2179,7 +2179,7 @@ handle_uretprobe_chain(struct return_instance *ri, =
+struct pt_regs *regs)
+>         list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
+>                                  srcu_read_lock_held(&uprobes_srcu)) {
+>                 if (uc->ret_handler)
+> -                       uc->ret_handler(uc, ri->func, regs);
+> +                       uc->ret_handler(uc, ri->func, regs, NULL);
+>         }
+>         srcu_read_unlock(&uprobes_srcu, srcu_idx);
+>  }
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index a582cd25ca87..fdab7ecd8dfa 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3244,7 +3244,8 @@ uprobe_multi_link_filter(struct uprobe_consumer *co=
+n, struct mm_struct *mm)
+>  }
+>
+>  static int
+> -uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *r=
+egs)
+> +uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *r=
+egs,
+> +                         __u64 *data)
+>  {
+>         struct bpf_uprobe *uprobe;
+>
+> @@ -3253,7 +3254,8 @@ uprobe_multi_link_handler(struct uprobe_consumer *c=
+on, struct pt_regs *regs)
+>  }
+>
+>  static int
+> -uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long=
+ func, struct pt_regs *regs)
+> +uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long=
+ func, struct pt_regs *regs,
+> +                             __u64 *data)
+>  {
+>         struct bpf_uprobe *uprobe;
+>
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index f7443e996b1b..11103dde897b 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -88,9 +88,11 @@ static struct trace_uprobe *to_trace_uprobe(struct dyn=
+_event *ev)
+>  static int register_uprobe_event(struct trace_uprobe *tu);
+>  static int unregister_uprobe_event(struct trace_uprobe *tu);
+>
+> -static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs=
+ *regs);
+> +static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs=
+ *regs,
+> +                            __u64 *data);
+>  static int uretprobe_dispatcher(struct uprobe_consumer *con,
+> -                               unsigned long func, struct pt_regs *regs)=
+;
+> +                               unsigned long func, struct pt_regs *regs,
+> +                               __u64 *data);
+>
+>  #ifdef CONFIG_STACK_GROWSUP
+>  static unsigned long adjust_stack_addr(unsigned long addr, unsigned int =
+n)
+> @@ -1500,7 +1502,8 @@ trace_uprobe_register(struct trace_event_call *even=
+t, enum trace_reg type,
+>         }
+>  }
+>
+> -static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs=
+ *regs)
+> +static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs=
+ *regs,
+> +                            __u64 *data)
+>  {
+>         struct trace_uprobe *tu;
+>         struct uprobe_dispatch_data udd;
+> @@ -1530,7 +1533,8 @@ static int uprobe_dispatcher(struct uprobe_consumer=
+ *con, struct pt_regs *regs)
+>  }
+>
+>  static int uretprobe_dispatcher(struct uprobe_consumer *con,
+> -                               unsigned long func, struct pt_regs *regs)
+> +                               unsigned long func, struct pt_regs *regs,
+> +                               __u64 *data)
+>  {
+>         struct trace_uprobe *tu;
+>         struct uprobe_dispatch_data udd;
+> diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tool=
+s/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> index 8835761d9a12..12005e3dc3e4 100644
+> --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+> @@ -461,7 +461,7 @@ static struct bin_attribute bin_attr_bpf_testmod_file=
+ __ro_after_init =3D {
+>
+>  static int
+>  uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
+> -                  struct pt_regs *regs)
+> +                  struct pt_regs *regs, __u64 *data)
+>
+>  {
+>         regs->ax  =3D 0x12345678deadbeef;
+> --
+> 2.46.1
+>
+>
