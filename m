@@ -1,106 +1,122 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A7015E97;
-	Mon, 30 Sep 2024 19:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E19199958;
+	Mon, 30 Sep 2024 19:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727723772; cv=none; b=GtMMYZBvEC1SgCXR1ptCoqaqutmuoIOD/LJy9MzzGtK5SMs29GKjVMLGGX0Mx6dMaNNIK/mEs8znq69wUywuY2y2IhzGxnMSESjOWSUuPsrbv9YywrYjk9ZzJIq8easu/uImBJqir8eyKGioSUtz0YauFLGp9dlYs6/i9PnPM7Q=
+	t=1727724393; cv=none; b=urX6L+L8YHrtt9l83UFWoDoE9ZyJWtFdzt+H9KK8EPv0gLRnr/P5kMauSR/MI2vAI7zT4CBWBNNlE0lkl8FhsNfKkVNknXVkYohG0mYOPe+1gJvEZxNpKp5dCs8gs8JfKtTzeBc9kjNJrnet180h9dxMDMGuB4QqlX1hzgoOwN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727723772; c=relaxed/simple;
-	bh=mbPkm7okFjtQ2jT5AxFJj8n1vkGBMmVePJJNRPRtVno=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SYB5Jb+ILjv9fLDB5aWBsRhvMIxD09DgHSY3khBtoldZTIZ6zAwmId3E155hy2yaN+iceizbUz3QuVoKEu1qgDDQznDVGTg/DbWzQG5snbcwqKs8TRbfkNDTOjjn1WVG31LPK0m0+HnEqseBQp3hTQDta/g1PlaWf8H1EbTojRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k15weHyo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LzSX6w1K; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1727724393; c=relaxed/simple;
+	bh=Tm4OTWwkc5oRA+KD89Y73K8phozgTHCOkq6JpA1oLUo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fv3YG8+SRK7mcL/hGSwdTiy45isxfOgvW+upv60V3K2X6wCJJfM6P0HhOgo2KtgyXrRxFB7sALkwTqUNHWcciy1OxSBxx1D0CmauRKIeCr/h0bRoBj+2V1AnUwSqVZGvWf50QXI+7hbx9BCaBo+zEMeH7LLnpejLzMsquLNpOho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=dJUROlr4; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k15weHyo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LzSX6w1K"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1727723768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCvcoZK/1u84ANwEMkWcEIyXDRG96pAVEQ+ONN9fVq4=;
-	b=k15weHyo206AD3mAwvey/aNEbq7AsI86ZKn2w2uPvLQHKUfl8PURomKwotvHQfopogWV78
-	4/u/SUbDveNrg/WjTDPr2Wdd1MiAggTT9wKElFbifsDpJP2tV3R7ae+EKq4Q6/QzlqeNxn
-	WZqPyEX1GyKTSWT3ZiaDR+Utg16zM0UCH2/hOEwUOdq8LR2/Z0iYzDB86sKictH7HFnNfP
-	hHoMMn1gQculKdiwekmOWTHzLxzji3XFQRAOSbjC6FhSOS3CI7LV1EhvTP5hp0AZ6dyKV4
-	+Bkuk94NckRLi+lb/354Mx6/uxWCTq6ZMh1JcutjbVnDauYAmc63ARXa793j4g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1727723768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCvcoZK/1u84ANwEMkWcEIyXDRG96pAVEQ+ONN9fVq4=;
-	b=LzSX6w1KCMyStlPEYZz2PdVadv24ltBggYWSH7NJOFSXKkHbhvWBDpTDR7J0PNWEX23gko
-	9a03sH2Ia9XjYBBQ==
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
- <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
- Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
- <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
- handling into timekeeper
-In-Reply-To: <b300fec8b6f611662195e0339f290d473a41607c.camel@kernel.org>
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
- <20240914-mgtime-v8-1-5bd872330bed@kernel.org> <87a5g79aag.ffs@tglx>
- <874j6f99dg.ffs@tglx>
- <b300fec8b6f611662195e0339f290d473a41607c.camel@kernel.org>
-Date: Mon, 30 Sep 2024 21:16:07 +0200
-Message-ID: <878qv90x6w.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="dJUROlr4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1727724390;
+	bh=Tm4OTWwkc5oRA+KD89Y73K8phozgTHCOkq6JpA1oLUo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dJUROlr4te6U5eUZ5LWrej5l6X+WWFQyrKMMh74umyVLCzZPqVEx99Sa+1+Wc/FDC
+	 0wjBoMiQlw9Dij61B3RQNL1IswF1qie8ZVDuqakggaJcXrzveRF4mc/zPYK90ffMYy
+	 P0ccf7lk+u17uHyrW4lVbjAB1TwwB+qY1uaVKBDYMdTUDGbd9AFKEtXrbs21r2Pamk
+	 43pf5FhuEf5PaiG6CHVODtfHNKmFRVW69Qg3PY0Un7ZoKjgMj8SUOJuH2FkqBul3IU
+	 9kpRzv3Yr7IATusRk+AfZ+NjdozpXPY3zzw4NfQNbO7t3A8QQ40QecBZnso4l0aQed
+	 LJxlAmCxpPZ5A==
+Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XHWK22gtBzQdD;
+	Mon, 30 Sep 2024 15:26:30 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH resend 0/8] tracing: Allow system call tracepoints to handle page faults
+Date: Mon, 30 Sep 2024 15:23:49 -0400
+Message-Id: <20240930192357.1154417-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 16 2024 at 06:57, Jeff Layton wrote:
-> On Mon, 2024-09-16 at 12:32 +0200, Thomas Gleixner wrote:
->> > 'Something has changed' is a truly understandable technical
->> > explanation.
->> 
->>      old = mg_floor
->>                                 mono = T1;
->>                                 mg_floor = mono
->> preemption
->> 
->>      do {
->>         mono = T2;
->>      }
->> 
->>      cmpxchg fails and the function returns a value based on T1
->> 
->> No?
->> 
->> 
->
-> Packing for LPC, so I can't respond to all of these just now, but I
-> will later. You're correct, but either outcome is OK.
->
-> The requirement is that we don't hand out any values that were below
-> the floor at the time that the task entered the kernel. Since the time
-> changed while the task was already inside the kernel, either T1 or T2
-> would be valid timestamps.
+Wire up the system call tracepoints with Tasks Trace RCU to allow
+the ftrace, perf, and eBPF tracers to handle page faults.
 
-That really needs to be documented. A similar scenario exists
-vs. ktime_get_coarse_real_ts64_mg().
+This series does the initial wire-up allowing tracers to handle page
+faults, but leaves out the actual handling of said page faults as future
+work.
+
+This series was compile and runtime tested with ftrace and perf syscall
+tracing and raw syscall tracing, adding a WARN_ON_ONCE() in the
+generated code to validate that the intended probes are used for raw
+syscall tracing. The might_fault() added within those probes validate
+that they are called from a context where handling a page fault is OK.
+
+This series replaces the "Faultable Tracepoints v6" series found at [1].
+
+This has been rebased on v6.11.1, without any conflicts. I've added the
+Acked-by and Tested-by tags to relevant commits.
+
+Steven, can you merge it through the tracing tree ?
 
 Thanks,
 
-        tglx
+Mathieu
+
+Link: https://lore.kernel.org/lkml/20240828144153.829582-1-mathieu.desnoyers@efficios.com/ # [1]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: bpf@vger.kernel.org
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Mathieu Desnoyers (8):
+  tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL
+  tracing/ftrace: guard syscall probe with preempt_notrace
+  tracing/perf: guard syscall probe with preempt_notrace
+  tracing/bpf: guard syscall probe with preempt_notrace
+  tracing: Allow system call tracepoints to handle page faults
+  tracing/ftrace: Add might_fault check to syscall probes
+  tracing/perf: Add might_fault check to syscall probes
+  tracing/bpf: Add might_fault check to syscall probes
+
+ include/linux/tracepoint.h      | 87 +++++++++++++++++++++++++--------
+ include/trace/bpf_probe.h       | 13 +++++
+ include/trace/define_trace.h    |  5 ++
+ include/trace/events/syscalls.h |  4 +-
+ include/trace/perf.h            | 43 ++++++++++++++--
+ include/trace/trace_events.h    | 61 +++++++++++++++++++++--
+ init/Kconfig                    |  1 +
+ kernel/entry/common.c           |  4 +-
+ kernel/trace/trace_syscalls.c   | 36 ++++++++++++--
+ 9 files changed, 218 insertions(+), 36 deletions(-)
+
+-- 
+2.39.2
