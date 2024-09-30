@@ -1,149 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84DCF4A0F;
-	Sun, 29 Sep 2024 23:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 909FC6FC3;
+	Mon, 30 Sep 2024 01:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727653903; cv=none; b=jYy7U5hbTyBoFxM08GxazySrPJWc8FeAsAWpmhx7tEmCzEp4Kmw1fD+O0AUTHuZp8mJHjHItjTHWce1Y4/ZWZB6ZjzOAGKpr0yUOGXp8yaO1I73Zgg88OBmU1uYA01SAmmrXFA0u+gUdjD7/QpOqTGaj2kMwghkbsI8XW8v7rPc=
+	t=1727660038; cv=none; b=GJ9FzUqGhkfqSFQezRh5R6PZROSInrmaWVVliwlGQ7wrMjRQukO7JSk6f07q+rlSzEiZoTn4oIw1rRQFxWzFBSJS6XU85qf4nJeZkv1AUwdqq+6gvb07Fshl5aTLKDEghK+q1c3FwD5zCYaPIPahVzzfNqFRApTQawlyVS/P2Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727653903; c=relaxed/simple;
-	bh=3dIOy/xT3PSITjI7lq+Wrvac7kPT+EMIENbrXsmPCBg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TwafG+IE/iPwjWQCNbPoYUUvncTnImUtAmVG2tipxFMEZo0/sOZYD296wZH4Pk8vlV9VNJJ9kvvOjf6ZNgHXHtd8g4JczUsZKJB3rfTVRwVuqfNjD8j3//R/8sMBsXodAEmab16/hrfbefLtQObOooZntuYQ8wdy1rHIZWEaeq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCS3eZSH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCS3eZSH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CBDC4CEC5;
-	Sun, 29 Sep 2024 23:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727653903;
-	bh=3dIOy/xT3PSITjI7lq+Wrvac7kPT+EMIENbrXsmPCBg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RCS3eZSHpKHajfU1KwvOl30XiV07wcOaWPpsgdmlJ2BXQhYsP03lto+oTTMvpRZn6
-	 ggfJ40TNMHymfkDMKZH6ng5+xHsvKzgKtIB+03a7PUtpK9A87vJHvlw/iwRwwfici3
-	 IK/DhEWngiMH6rtcOA7NdDwy/wduNeoeTxOydXeT2GTpM6OyrsNnBgDYFzsbZZtLfb
-	 18n2d9CTjOCH+0F3iGhwxJEDwte8heWHBwFlE8NFZwuhRINDtdRc9u5pPff36w7xKl
-	 uafU4AV96PgD9mZSqZC8bZr3tTR4Gy/Tu2sF+Yd34LUB1W6GrIlJyB8Z+rfedLTWaV
-	 WR7UiW1ggmkHg==
-Date: Mon, 30 Sep 2024 08:51:39 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tatsuya S <tatsuya.s2862@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ftrace: Hide a extra entry in stack trace
-Message-Id: <20240930085139.5d34f28236a67ef1e9143655@kernel.org>
-In-Reply-To: <20240926061311.25625-1-tatsuya.s2862@gmail.com>
-References: <20240926061311.25625-1-tatsuya.s2862@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727660038; c=relaxed/simple;
+	bh=roVW00bT7xfGdc0pP8uGHYrUwIoTJyPIyEdTjtIb8DY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=K+BynpTdd6+cRzuXJ7itNdFbYTAltgoa6gUj9U7OyQgntVXfo31klG1AaUElWGYyzAcujiIv2fYkH3hm1/3Cz+Djve0WtCR0th5503pgrWkqqM7ks4i2IfPY2sAnqta25O+lAFrPJaOLhW0KaLznAC6/baarM+YCLT+SWeTez48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxLOv4__lms1IEAA--.4221S3;
+	Mon, 30 Sep 2024 09:33:45 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front2 (Coremail) with SMTP id qciowMAxa8b2__lmisYYAA--.22840S3;
+	Mon, 30 Sep 2024 09:33:43 +0800 (CST)
+Subject: Re: Question about config UPROBES and UPROBE_EVENTS
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
+ <20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
+Date: Mon, 30 Sep 2024 09:33:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+In-Reply-To: <20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qciowMAxa8b2__lmisYYAA--.22840S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uF48uw47CFWfCr4rJw48Zrc_yoW8AFyfpF
+	s2ya9aqrs3GFZYyrZFyw4xCFW0qrZ5JrW3Gr1rGFyrAan5A3y8Ar1IgrWYyFy7uwnFqFWY
+	yFn7tFZrZay5AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1EksDUU
+	UUU==
 
-On Thu, 26 Sep 2024 15:13:07 +0900
-Tatsuya S <tatsuya.s2862@gmail.com> wrote:
+On 09/30/2024 07:15 AM, Masami Hiramatsu (Google) wrote:
+> On Wed, 11 Sep 2024 14:40:56 +0800
+> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>> Hi Masami,
+>>
+>> I am a little confused about config UPROBES and UPROBE_EVENTS.
+>> Uprobes is the user-space counterpart to kprobes, I want to do
+>> some small changes:
+>>
+>> (1) since config KPROBES can be selectable, just make config UPROBES
+>>      selectable too.
+>>
+>> (2) since config KPROBE_EVENTS depends on KPROBES rather than select
+>>      KPROBES, just make config UPROBE_EVENTS depends on UPROBES rather
+>>      than select UPROBES.
+>>
+>> Could you please let me know are you OK with the following changes?
+>> If yes, I will send formal patches later.
+>
+> Hm, I don't completely reject this idea,
 
-> A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
-> 
->     [003] .....   110.171589: vfs_write <-__x64_sys_write
->     [003] .....   110.171600: <stack trace>
->  => XXXXXXXXX (Wrong function name)
->  => vfs_write
->  => __x64_sys_write
->  => do_syscall_64
->  => entry_SYSCALL_64_after_hwframe
+Thanks for your reply. I have almost dropped this idea due to my
+thoughtless after receiving the reply of Steven Rostedt [1].
 
-OK, I confirmed it;
+> but I'm not sure about the benefits
+> to users and keeping backward compatibility.
 
-------
-echo 1 > options/func_stack_trace 
-echo "vfs_write" >> set_ftrace_filter
-echo "function" > current_tracer
-echo > /dev/null
-cat trace
-              sh-136     [005] .....   266.884180: vfs_write <-ksys_write
-              sh-136     [005] .....   266.884188: <stack trace>
- => 0xffffffffa0004099
- => vfs_write
- => ksys_write
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
-------
+Yes, I think so too.
 
-> 
-> To resolve this, increment skip in __ftrace_trace_stack().
-> The reason why skip is incremented in __ftrace_trace_stack()
-> is because __ftrace_trace_stack() in stack trace is the only function
-> that wasn't skipped from anywhere.
-> 
-> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
-> ---
->  kernel/trace/trace.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index c3b2c7dfadef..0f2e255f563c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -2916,10 +2916,8 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
->  	 * Add one, for this function and the call to save_stack_trace()
->  	 * If regs is set, then these functions will not be in the way.
->  	 */
+> Especially, the latter one
+> may hide uprobe_events by default.
 
-Hmm, with this change, the above comment should also be updated.
+Yes.
 
+> As you can see, the CONFIG_KPROBES is
+> enabled by default, thus it does not hide the CONFIG_KPROBE_EVENTS.But
 
-> -#ifndef CONFIG_UNWINDER_ORC
-> -	if (!regs)
-> +	if (IS_ENABLED(CONFIG_UNWINDER_ORC) || !regs)
->  		skip++;
-> -#endif
+Maybe I missed something, AFAICT, the CONFIG_KPROBES is disabled by
+default, it needs to enable manually by the users, and also we can
+not see the CONFIG_KPROBE_EVENTS menu if CONFIG_KPROBES is not set
+because CONFIG_KPROBE_EVENTS depends on CONFIG_KPROBES.
 
-Also, this solves just one pattern (only enable function tracer) but if
-there are fprobes (or kprobes) on the same function, it introduces another issue.
-e.g. (with this fix)
+> the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
+> depending on it, the uprobe_events menu is hidden. I don't like this.
 
-------
-echo 1 > options/func_stack_trace
-echo 1 > options/stacktrace
-echo "vfs_write" >> set_ftrace_filter
-echo "function" > current_tracer
-echo "f:myevent vfs_write" > dynamic_events
-echo 1 > events/fprobes/myevent/enable
-echo > /dev/null
-cat trace
-...
-              sh-140     [001] ...1.    18.352601: myevent: (vfs_write+0x4/0x560)
-              sh-140     [001] ...1.    18.352602: <stack trace>
- => ksys_write
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
-              sh-140     [001] ...1.    18.352602: vfs_write <-ksys_write
-              sh-140     [001] ...1.    18.352604: <stack trace>
- => ftrace_regs_call
- => vfs_write
- => ksys_write
- => do_syscall_64
- => entry_SYSCALL_64_after_hwframe
-------
-As you can see, myevent skips "vfs_write".
-(and function tracer still have ftrace_regs_call() )
-
-Thank you,
-
->  
->  	preempt_disable_notrace();
->  
-> -- 
-> 2.46.1
-> 
+This is somehow like the current status of CONFIG_KPROBES and
+CONFIG_KPROBE_EVENTS.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+[1] https://lore.kernel.org/all/20240911094317.4a28fc3b@gandalf.local.home/
+
+Thanks,
+Tiezhu
+
