@@ -1,88 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527CC192B85;
-	Mon, 30 Sep 2024 15:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DD419342B;
+	Mon, 30 Sep 2024 17:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727710991; cv=none; b=FkWJMrFzQC/wasvsDepUgggC3vyMSjyeLDpsosLfuJesSpwT9Jy2n08299keMVrrhDtZhiVyQJvTKGZErau5nCzzP0p0SKjojMd5j7og3Lhu25mETaqw2zjta3usy9Hckc6c9wIUMv8zYG3l74g9+OEn8s/zfJn/PfqyhiBFtzY=
+	t=1727716412; cv=none; b=YYkMrxTC+fLzX8KSOBQw2BVC1iHzdQx3H7zLwqTCEXE1zCO70Go/sAaets1hMCJxB89OG7K6PiYeuYuRJphApQip8/dpNOfMIj8ARRGN1PYBOVatuYaoPcfs6CVVAISHjO6Cnr5/Q0W65zstgG9EQdcq3mSomO7zrjKi/+Hhs/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727710991; c=relaxed/simple;
-	bh=CoxL3mse1j+1/0Vmg4ViQ03Qs3SQ3ejMT8d+9OSDtEg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qunVbVNP4eQvCijlXLR5eoiVudNf99q0LV2WlK4bqQEGSB6iNwuVsQKzSWdzR0eO5mYytjejULKQpZqsjMFlV3dMzae9YVx2W7GSeZ63d8RrgbgxGH/QsWRKNuBotepooCu+OoWS1N94RChS6boQxEc1UIY7/2y3JNwK+b7m218=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k8is/Ufk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k8is/Ufk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF1EC4CEC7;
-	Mon, 30 Sep 2024 15:43:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727710991;
-	bh=CoxL3mse1j+1/0Vmg4ViQ03Qs3SQ3ejMT8d+9OSDtEg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k8is/UfkluPrlvs4+Pa9eSkgxcWP43y6xG+h/arA4/lAAJA6YStHwtUa0WPVqgmqX
-	 lNtU4S+d1fV0PzB9DRHBGHH7xgjM14FexHWz6oL9eB/J8udNb21n+0EzczSg2VvcCA
-	 86jEV1Bs+wiOK6AeAKt239NN/mOEhFEJvf3qv5Ib8yTNEUYQ8uNHwwnZivBUyx6vFI
-	 OrkAcNPVRd2WEIKql0RIn9rc0Jk3y9AZ/nPM23o+OzZ+LahV1i1kTV2f2KWQ8D5Zvg
-	 XISQw+aIYMYP4oyEAA1M3y3CIswYe/UUftVLkDQcpBspZ77+AMlFE5WZvCg+Srr+jE
-	 EN1gqGhsz7uoQ==
-Date: Tue, 1 Oct 2024 00:43:07 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Question about config UPROBES and UPROBE_EVENTS
-Message-Id: <20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
-In-Reply-To: <20240930113231.6c87108d@gandalf.local.home>
-References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
-	<20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
-	<f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
-	<20240930100630.7894c442@gandalf.local.home>
-	<20241001002813.6012587b5e52737a576f1d0b@kernel.org>
-	<20240930113231.6c87108d@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727716412; c=relaxed/simple;
+	bh=Eew9bXlDuPZUSAxAdTkv17Hsuq5cqSvBcNnD9EMG2lE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tSqFUHsjXSpdBqzq+55VkPxZHGpsoOemAlPJZa2BNBpYeo2IWhAcHlW7mPgApEOW35XixgC43cL1UqCe25eLDF3TakbFwDOP9b+FU1jtsu09sDHxI9ZfLIL/rJB6bPMoFl1vfua2npvnIy4wUoBtBu2g8smsTIUBRwJtx3XmPm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F91C4CECE;
+	Mon, 30 Sep 2024 17:13:28 +0000 (UTC)
+Date: Mon, 30 Sep 2024 13:14:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mike Rapoport <mike.rapoport@gmail.com>, Kees Cook <keescook@chromium.org>,
+ Ard Biesheuvel <ardb@kernel.org>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] Documentation/tracing: Mention that
+ RESET_ATTACK_MITIGATION can clear memory
+Message-ID: <20240930131415.1438c0b7@gandalf.local.home>
+In-Reply-To: <f8546c5d-fa2e-416f-8a1b-431025b4df4d@redhat.com>
+References: <20240926130159.19e6d0e2@rorschach.local.home>
+	<f8546c5d-fa2e-416f-8a1b-431025b4df4d@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Sep 2024 11:32:31 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 26 Sep 2024 19:54:48 +0200
+Hans de Goede <hdegoede@redhat.com> wrote:
 
-> On Tue, 1 Oct 2024 00:28:13 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> Hi,
 > 
-> > On Mon, 30 Sep 2024 10:06:30 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> On 26-Sep-24 7:01 PM, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
 > > 
-> > > On Mon, 30 Sep 2024 09:33:42 +0800
-> > > Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> > >   
-> > > > > the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
-> > > > > depending on it, the uprobe_events menu is hidden. I don't like this.    
-> > > > 
-> > > > This is somehow like the current status of CONFIG_KPROBES and
-> > > > CONFIG_KPROBE_EVENTS.  
-> > > 
-> > > The question is, can uprobes be used without uprobe_events? With the
-> > > current BPF work that I haven't been following, it may be possible now.  
+> > At the 2024 Linux Plumbers Conference, I was talking with Hans de Goede
+> > about the persistent buffer to display traces from previous boots. He
+> > mentioned that UEFI can clear memory. In my own tests I have not seen
+> > this. He later informed me that it requires the config option:
 > > 
-> > uprobe_register/unregister APIs are exposed to the kernel modules,
-> > since systemtap had been introduced this feature.
-> >
+> >  CONFIG_RESET_ATTACK_MITIGATION
+> > 
+> > It appears that setting this will allow the memory to be cleared on boot
+> > up, which will definitely clear out the trace of the previous boot.
+> > 
+> > Add this information under the trace_instance in kernel-parameters.txt
+> > to let people know that this can cause issues.
+> > 
+> > Link: https://lore.kernel.org/all/20170825155019.6740-2-ard.biesheuvel@linaro.org/
+> > 
+> > Reported-by: Hans de Goede <hdegoede@redhat.com>
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
 > 
-> OK, but since they have always been visible, I would just make
-> CONFIG_UPROBES a normal option and CONFIG_UPROBE_EVENTS select it if it
-> gets selected, and not depend on it.
-
-Agreed.
+> Thanks, patch looks good to me:
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Thanks,
 
+And I forgot to send this to the Documentation maintainers :-p
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Jon, could you take this? Do you need me to resend, or can you just pull it
+from lore?
+
+   https://lore.kernel.org/linux-trace-kernel/20240926130159.19e6d0e2@rorschach.local.home/
+
+-- Steve
+
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index bb48ae24ae69..f9b79294f84a 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -6850,6 +6850,9 @@
+> >  
+> >  				reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff^traceprintk@trace,sched,irq
+> >  
+> > +			Note, CONFIG_RESET_ATTACK_MITIGATION can force a memory reset on boot which
+> > +			will clear any trace that was stored.
+> > +
+> >  			See also Documentation/trace/debugging.rst
+> >  
+> >    
+
