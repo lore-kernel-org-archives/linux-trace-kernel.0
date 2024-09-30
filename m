@@ -1,33 +1,33 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72691199E82;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1E4199E8B;
 	Mon, 30 Sep 2024 19:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727724394; cv=none; b=giofidvLKvMALowA3zNNQ/xN5POJbezXFHJCfETIk3t/fRQpWmYlukq5UonYCbr8gtUzlb1bOAyksd9o0okQ+2Av2aeh1bdmJhLV8v6QR+aKcdpm9OKn9N3yLorXXhlqBX9hlpYIEQUIQTcaqZ4HJcu94OwJa8wHSYyWjbVheeQ=
+	t=1727724394; cv=none; b=LbgQ/BOYvQaZbrqB1D/VxQ6tPzwJikG755ExkTldDIs0FE5ASwx+sRhJMYiTUC1wbiGKg8ox27nDaNXnMetw13wfRO39dreuDtgaIe4mrc6qVxjCYkiwovkpVflWkzqzNLbx8BEYIjf4OqeO2s6MPIv5Z1Q8PowUORyek5YB4ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1727724394; c=relaxed/simple;
-	bh=l2ujnQzLE5sJ+zSp4VjmrpS8WBs1Z995gnqtqR4i1nA=;
+	bh=uQvGGRjFBg81/CMoacZvVtIn7AY3sce+G3Hk/Qjw2wU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p9uA2F8Ajd7idn6lJHk1SLaCJ5fxZPmhy5wM3o0WZsq81ysa/9QCyy69qGK8st4YW9x/FaJtoqBqDBC1faBDOpXZzmNGLU26cn+DHH/QE6HA6wfxIwnwzJbRocxIZtrLX13VBtRU3MuaznmZmI3xehmKyRgq2CpbA08fdljjuZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rSXz/Ok9; arc=none smtp.client-ip=167.114.26.122
+	 MIME-Version; b=YMDfbFrTdn9Z1MAIarMbAGLf+hiDFxKc3ocr1iBwbMCH9rEbpey83588mUW3lhJ7erTMzZQrcTTlMEkzG4iQOTSb99cvdIZfMnfnUQ0tUU6waTQvLg9gTh2GRBWBHOoY8qRWcmlZq6m9jCEFqsdwTGeSCOIuGNG0SeFdF6SEp1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FqR0hWKG; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rSXz/Ok9"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FqR0hWKG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1727724391;
-	bh=l2ujnQzLE5sJ+zSp4VjmrpS8WBs1Z995gnqtqR4i1nA=;
+	s=smtpout1; t=1727724392;
+	bh=uQvGGRjFBg81/CMoacZvVtIn7AY3sce+G3Hk/Qjw2wU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rSXz/Ok9aQTzjCKRw5X2p1Lz39a9+bj6VrFO8dc5qAJh6GzeUYYhxBF8H81HdLBQU
-	 W9nxy+AOdlKz2LPa9yuOjWtTO+BMGmmTiyvxwp9ELNHix9k54L8E9v2icLqPLUOz0v
-	 N4IYYbXmohpzyF+SuKLnwbH+/SkZgVeJBMhlCqhoOWIamKZm2/iH8DN/d7bcyhSFqD
-	 susYhk56LuTE7fUI1IWntwWmWxuY8jzlE1RTK1TkDDH0dnhu7bRR4hRRYfo+W5W5LQ
-	 d1UTwEwTpJwdKxZUdKa4QhQIrHeJ5Lq0KsTbJeZ+GRLXEfzqrxgyW3WfMouDWhN/l/
-	 xjWQFgSUEEmJw==
+	b=FqR0hWKG0kr5XJzMo2Jfeb7KmZjhMfJFpUg5zW8DW474CA9bJGBICnOoGwK8ePETB
+	 PcNmwPWAWSUNZlOl0QaJ6JagTTRhNp5MYjn7DNVVGqTTd+xMkhThx15GLYcxS5nQXv
+	 9iigsrup3zLAaNXazmDxRPIuLDsFVkZQZXZEZAcdFWHiMmZDq1FjSZu9iA9UDzdyOr
+	 nHconsWJe0gZCC4ej5KSIvtf70w9iUHVcpWSFszC4MK4oDUpxBufowWnYpUqWN9ZgC
+	 01T/r0CnXN+/NjqKxyzFXhkBDqdvwlc+V0/GeAlkJrsHKod00S6s7MgeSyJ8lcTN4U
+	 7HmlcJFjhZ+BQ==
 Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XHWK30h9WzQXn;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XHWK364vfzQXq;
 	Mon, 30 Sep 2024 15:26:31 -0400 (EDT)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
@@ -47,10 +47,11 @@ Cc: linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Joel Fernandes <joel@joelfernandes.org>,
 	linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
 	Michael Jeanson <mjeanson@efficios.com>
-Subject: [PATCH resend 2/8] tracing/ftrace: guard syscall probe with preempt_notrace
-Date: Mon, 30 Sep 2024 15:23:51 -0400
-Message-Id: <20240930192357.1154417-3-mathieu.desnoyers@efficios.com>
+Subject: [PATCH resend 4/8] tracing/bpf: guard syscall probe with preempt_notrace
+Date: Mon, 30 Sep 2024 15:23:53 -0400
+Message-Id: <20240930192357.1154417-5-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240930192357.1154417-1-mathieu.desnoyers@efficios.com>
 References: <20240930192357.1154417-1-mathieu.desnoyers@efficios.com>
@@ -63,17 +64,16 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 In preparation for allowing system call enter/exit instrumentation to
-handle page faults, make sure that ftrace can handle this change by
-explicitly disabling preemption within the ftrace system call tracepoint
-probes to respect the current expectations within ftrace ring buffer
-code.
+handle page faults, make sure that bpf can handle this change by
+explicitly disabling preemption within the bpf system call tracepoint
+probes to respect the current expectations within bpf tracing code.
 
-This change does not yet allow ftrace to take page faults per se within
-its probe, but allows its existing probes to adapt to the upcoming
-change.
+This change does not yet allow bpf to take page faults per se within its
+probe, but allows its existing probes to adapt to the upcoming change.
 
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Tested-by: Andrii Nakryiko <andrii@kernel.org> # BPF parts
 Cc: Michael Jeanson <mjeanson@efficios.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
@@ -90,117 +90,32 @@ Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: bpf@vger.kernel.org
 Cc: Joel Fernandes <joel@joelfernandes.org>
 ---
- include/trace/trace_events.h  | 38 ++++++++++++++++++++++++++++-------
- kernel/trace/trace_syscalls.c | 12 +++++++++++
- 2 files changed, 43 insertions(+), 7 deletions(-)
+ include/trace/bpf_probe.h | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index 8bcbb9ee44de..0228d9ed94a3 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -263,6 +263,9 @@ static struct trace_event_fields trace_event_fields_##call[] = {	\
- 	tstruct								\
- 	{} };
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index c85bbce5aaa5..211b98d45fc6 100644
+--- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -53,8 +53,17 @@ __bpf_trace_##call(void *__data, proto)					\
+ #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
+ 	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))
  
-+#undef DECLARE_EVENT_SYSCALL_CLASS
-+#define DECLARE_EVENT_SYSCALL_CLASS DECLARE_EVENT_CLASS
-+
- #undef DEFINE_EVENT_PRINT
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)
- 
-@@ -396,11 +399,11 @@ static inline notrace int trace_event_get_offsets_##call(		\
- 
- #include "stages/stage6_event_callback.h"
- 
--#undef DECLARE_EVENT_CLASS
--#define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
--									\
-+
-+#undef __DECLARE_EVENT_CLASS
-+#define __DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print) \
- static notrace void							\
--trace_event_raw_event_##call(void *__data, proto)			\
-+do_trace_event_raw_event_##call(void *__data, proto)			\
- {									\
- 	struct trace_event_file *trace_file = __data;			\
- 	struct trace_event_data_offsets_##call __maybe_unused __data_offsets;\
-@@ -425,15 +428,34 @@ trace_event_raw_event_##call(void *__data, proto)			\
- 									\
- 	trace_event_buffer_commit(&fbuffer);				\
- }
-+
-+#undef DECLARE_EVENT_CLASS
-+#define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
-+__DECLARE_EVENT_CLASS(call, PARAMS(proto), PARAMS(args), PARAMS(tstruct), \
-+		      PARAMS(assign), PARAMS(print))			\
++#define __BPF_DECLARE_TRACE_SYSCALL(call, proto, args)			\
 +static notrace void							\
-+trace_event_raw_event_##call(void *__data, proto)			\
-+{									\
-+	do_trace_event_raw_event_##call(__data, args);			\
-+}
-+
-+#undef DECLARE_EVENT_SYSCALL_CLASS
-+#define DECLARE_EVENT_SYSCALL_CLASS(call, proto, args, tstruct, assign, print) \
-+__DECLARE_EVENT_CLASS(call, PARAMS(proto), PARAMS(args), PARAMS(tstruct), \
-+		      PARAMS(assign), PARAMS(print))			\
-+static notrace void							\
-+trace_event_raw_event_##call(void *__data, proto)			\
++__bpf_trace_##call(void *__data, proto)					\
 +{									\
 +	guard(preempt_notrace)();					\
-+	do_trace_event_raw_event_##call(__data, args);			\
++	CONCATENATE(bpf_trace_run, COUNT_ARGS(args))(__data, CAST_TO_U64(args));	\
 +}
 +
- /*
-  * The ftrace_test_probe is compiled out, it is only here as a build time check
-  * to make sure that if the tracepoint handling changes, the ftrace probe will
-  * fail to compile unless it too is updated.
-  */
- 
--#undef DECLARE_EVENT_SYSCALL_CLASS
+ #undef DECLARE_EVENT_SYSCALL_CLASS
 -#define DECLARE_EVENT_SYSCALL_CLASS DECLARE_EVENT_CLASS
--
- #undef DEFINE_EVENT
- #define DEFINE_EVENT(template, call, proto, args)			\
- static inline void ftrace_test_probe_##call(void)			\
-@@ -443,6 +465,8 @@ static inline void ftrace_test_probe_##call(void)			\
++#define DECLARE_EVENT_SYSCALL_CLASS(call, proto, args, tstruct, assign, print)	\
++	__BPF_DECLARE_TRACE_SYSCALL(call, PARAMS(proto), PARAMS(args))
  
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
- 
-+#undef __DECLARE_EVENT_CLASS
-+
- #include "stages/stage7_class_define.h"
- 
- #undef DECLARE_EVENT_CLASS
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 067f8e2b930f..abf0e0b7cd0b 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -299,6 +299,12 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
- 	int syscall_nr;
- 	int size;
- 
-+	/*
-+	 * Syscall probe called with preemption enabled, but the ring
-+	 * buffer and per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
-+
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
-@@ -338,6 +344,12 @@ static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
- 	struct trace_event_buffer fbuffer;
- 	int syscall_nr;
- 
-+	/*
-+	 * Syscall probe called with preemption enabled, but the ring
-+	 * buffer and per-cpu data require preemption to be disabled.
-+	 */
-+	guard(preempt_notrace)();
-+
- 	syscall_nr = trace_get_syscall_nr(current, regs);
- 	if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
- 		return;
+ /*
+  * This part is compiled out, it is only here as a build time check
 -- 
 2.39.2
 
