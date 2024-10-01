@@ -1,108 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B3B19D88D;
-	Tue,  1 Oct 2024 12:55:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F529EEC5;
+	Tue,  1 Oct 2024 13:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727787319; cv=none; b=W700VYkZGIPFKcOWZ8/U2auaX/GQgAnO78+XIqbYSPd5w4FgvL1xWEdhuGJqoK0f+Zu3O2pRqokvmYo3esIWtf3TtzJ8Ju0PSbYMjmlhWMU2KCYzrqugHzrhv68aF3sh0dlA4Y5B8R08yxjHDrnMG0weOMi9Ba5GPNrxloBEMVo=
+	t=1727788484; cv=none; b=nczEXTuSLrxgJSX+NrKF/cqOgSuf4t7eupV5K0OX0KxiE8OACt/tHp5M9KssyrCvXhnBc40dosHBJKku5BRK+7MlGGIEglFw3fisf4uwzEvn3/DzdOF5Vccg1btplTS9XIOa9rsBG24auPvuCbFzoRa1bNXHkVVeTQh2kTJ/Cp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727787319; c=relaxed/simple;
-	bh=4jYLX63CHrFBvYvxwP4y6kaYbM2w8WN3NfNT6GNQ0H8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Pg7apwKtx3MsN7QPvvNm97Vhcin3+IdMhpRrcarunRtJ9DU0i4WlaDMOmtEl7uGdecGqdO77mWeNMvIcxiZ4sBhUwPJyg2vxqIci8no7gsgFT3q/F9ERbw+IJa9uapJ7kL2J+0H0y+UvPkuXpPNftqKe9TaWEXUzBoC0m6agy+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc+tbpwN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc+tbpwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F86AC4CECD;
-	Tue,  1 Oct 2024 12:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727787318;
-	bh=4jYLX63CHrFBvYvxwP4y6kaYbM2w8WN3NfNT6GNQ0H8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kc+tbpwN8O31sDzcMN4ydFZNEGz+egj6SYAuwdxQN0jJtzY1e5QZ3g0OjV0W5qswr
-	 s57CtXojP86rVknEvsFidaFcWTJUWyToqHME1MUBgKTMn0QR3U3OGI++O47PH75ocM
-	 MoYc92YvFHl56+ph4E3suuGyLlstP3pO7Lelq9a7njB2Uj4UdeuAUGZB3MIZmVKljQ
-	 xMAVyJU+M3XDiV/L3i4zhKkqKQJFmU5JwuBUno4Dw6LOylrvCJ9E8oKhvN+LBQkGv7
-	 7GLulPRmTXkLGFVI0aegcZf7Dp7YVQoqBm8gVeDNcaHaGPHwHG8MrdtQ52zdOvVrli
-	 GaW+rEY3ubViw==
-Date: Tue, 1 Oct 2024 21:55:11 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, linux-s390@vger.kernel.org,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Mark Rutland <mark.rutland@arm.com>, Sven
- Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v14 04/19] function_graph: Replace fgraph_ret_regs with
- ftrace_regs
-Message-Id: <20241001215511.e01163ada44914ac8c6cffc1@kernel.org>
-In-Reply-To: <20240916185905.5704-A-hca@linux.ibm.com>
-References: <172615368656.133222.2336770908714920670.stgit@devnote2>
-	<172615373091.133222.1812791604518973124.stgit@devnote2>
-	<20240915051559.435abfcd@rorschach.local.home>
-	<20240916121656.20933-B-hca@linux.ibm.com>
-	<20240916122930.523af6c5@rorschach.local.home>
-	<20240916185905.5704-A-hca@linux.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727788484; c=relaxed/simple;
+	bh=oyGA8rO9KmQUz/TMGCoig5Jh+IEWCufzGTgu4HNGJyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LMqQPseEhQWsLiZzSiKkztCW1Lput8u9fD8GH74/aMpUdtPMd+nAddlgZvMdYgGJ8zUseScOgCQ0kWasICqL2u2oSwg/WHmUVdHgeu3j1m5jPdsq1dyCqLyaVL1OMypVuyGQG3WMkRPd8FEGEJzsCSE1B0TiqR+9IRIKB+Pav4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6112CC4CEC6;
+	Tue,  1 Oct 2024 13:14:38 +0000 (UTC)
+Date: Tue, 1 Oct 2024 09:15:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard
+ Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
+ <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, "=?UTF-8?B?Qmo=?=
+ =?UTF-8?B?w7Zybg==?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin
+ <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+ linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak
+ <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-arm-kernel@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
+ <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Samuel Holland
+ <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
+ <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
+ <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ loongarch@lists.linux.dev, Carlos Llamas <cmllamas@google.com>
+Subject: Re: [PATCH v8 0/5] Tracepoints and static branch in Rust
+Message-ID: <20241001091527.2fe4e039@gandalf.local.home>
+In-Reply-To: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
+References: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Sep 2024 20:59:05 +0200
-Heiko Carstens <hca@linux.ibm.com> wrote:
 
-> On Mon, Sep 16, 2024 at 12:29:30PM -0400, Steven Rostedt wrote:
-> > On Mon, 16 Sep 2024 14:16:56 +0200
-> > Heiko Carstens <hca@linux.ibm.com> wrote:
-> > 
-> > > This does not pass the ftrace selftests. Please merge the patch below
-> > > into this patch. With that:
-> > > 
-> > > Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> > 
-> > Thank you very much, this is why I wanted arch maintainers acks before
-> > taking anything.
-> > 
-> > There may be other patches in this series that I didn't Cc everyone
-> > (yet). Did you look at the other patches? If not, I'll go and do the Cc.
-> > It's a manual process.
+Hi Alice,
+
+Can you rebase this series on v6.12-rc1?
+
+Thanks,
+
+-- Steve
+
+
+On Thu, 22 Aug 2024 12:04:12 +0000
+Alice Ryhl <aliceryhl@google.com> wrote:
+
+> An important part of a production ready Linux kernel driver is
+> tracepoints. So to write production ready Linux kernel drivers in Rust,
+> we must be able to call tracepoints from Rust code. This patch series
+> adds support for calling tracepoints declared in C from Rust.
 > 
-> I just had a quick look and tried Masami's git tree with the
-> topic/fprobe-on-fgraph branch and tried the ftrace selftests, which
-> resulted in the provided small fix.
-
-Thanks, and sorry, my change on s390 was wrong. I confused that 
-`stack_frame` can be a part of `ftrace_regs`. But at least in this
-moment, `ftrace_regs` should replace only `fgraph_ret_regs`.
-
+> This series includes a patch that adds a user of tracepoits to the
+> rust_print sample. Please see that sample for details on what is needed
+> to use this feature in Rust code.
 > 
-> But now that you ask, I can see that FPROBE is not available on s390
-> anymore with the full series, since HAVE_FTRACE_GRAPH_FUNC is not
-> available.
-
-Right, this is required for implementing fprobe.
-
+> This is intended for use in the Rust Binder driver, which was originally
+> sent as an RFC [1]. The RFC did not include tracepoint support, but you
+> can see how it will be used in Rust Binder at [2]. The author has
+> verified that the tracepoint support works on Android devices.
 > 
-> Also the s390 variant of arch_ftrace_fill_perf_regs() seems to be
-> incorrect.
-
-Can you tell me what part will be wrong?
-
-Thank you,
-
+> This implementation implements support for static keys in Rust so that
+> the actual static branch happens in the Rust object file. However, the
+> __DO_TRACE body remains in C code. See v1 for an implementation where
+> __DO_TRACE is also implemented in Rust.
 > 
-> Looks like some work is needed from our side.
+> When compiling for x86, this patchset has a dependency on [3] as we need
+> objtool to convert jmp instructions to nop instructions. This patchset
+> is based on top of the series containing [3].
+> 
+> There is also a conflict with splitting up the C helpers [4]. I've
+> included an alternate version of the first patch that shows how to
+> resolve the conflict. When using the alternate version of the first
+> patch, this series applies cleanly on top of rust-next.
+> 
+> Both [3] and [4] are already in rust-next.
+> 
+> Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+> Link: https://r.android.com/3119993 [2]
+> Link: https://lore.kernel.org/all/20240725183325.122827-7-ojeda@kernel.org/ [3]
+> Link: https://lore.kernel.org/all/20240815103016.2771842-1-nmi@metaspace.dk/ [4]
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+> Changes in v8:
+> - Use OBJTREE instead of SRCTREE for temporary asm file.
+> - Adjust comments on `asm!` wrapper to be less confusing.
+> - Include resolution of conflict with helpers splitting.
+> - Link to v7: https://lore.kernel.org/r/20240816-tracepoint-v7-0-d609b916b819@google.com
+> 
+> Changes in v7:
+> - Fix spurious file included in first patch.
+> - Fix issue with riscv asm.
+> - Fix tags on fourth patch to match fifth patch.
+> - Add Reviewed-by/Acked-by tags where appropriate.
+> - Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
+> 
+> Changes in v6:
+> - Add support for !CONFIG_JUMP_LABEL.
+> - Add tracepoint to rust_print sample.
+> - Deduplicate inline asm.
+> - Require unsafe inside `declare_trace!`.
+> - Fix bug on x86 due to use of intel syntax.
+> - Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
+> 
+> Changes in v5:
+> - Update first patch regarding inline asm duplication.
+> - Add __rust_do_trace helper to support conditions.
+> - Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
+> - Get rid of glob-import in tracepoint macro.
+> - Address safety requirements on tracepoints in docs.
+> - Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
+> 
+> Changes in v4:
+> - Move arch-specific code into rust/kernel/arch.
+> - Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
+> - Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
+> 
+> Changes in v3:
+> - Support for Rust static_key on loongarch64 and riscv64.
+> - Avoid failing compilation on architectures that are missing Rust
+>   static_key support when the archtectures does not actually use it.
+> - Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
+> 
+> Changes in v2:
+> - Call into C code for __DO_TRACE.
+> - Drop static_call patch, as it is no longer needed.
+> - Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
+> 
+> ---
+> Alice Ryhl (5):
+>       rust: add generic static_key_false
+>       rust: add tracepoint support
+>       rust: samples: add tracepoint to Rust sample
+>       jump_label: adjust inline asm to be consistent
+>       rust: add arch_static_branch
+> 
+>  MAINTAINERS                             |  1 +
+>  arch/arm/include/asm/jump_label.h       | 14 +++--
+>  arch/arm64/include/asm/jump_label.h     | 20 +++++---
+>  arch/loongarch/include/asm/jump_label.h | 16 +++---
+>  arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
+>  arch/x86/include/asm/jump_label.h       | 38 ++++++--------
+>  include/linux/tracepoint.h              | 22 +++++++-
+>  include/trace/define_trace.h            | 12 +++++
+>  include/trace/events/rust_sample.h      | 31 +++++++++++
+>  rust/Makefile                           |  5 +-
+>  rust/bindings/bindings_helper.h         |  3 ++
+>  rust/helpers.c                          |  9 ++++
+>  rust/kernel/.gitignore                  |  3 ++
+>  rust/kernel/arch_static_branch_asm.rs.S |  7 +++
+>  rust/kernel/jump_label.rs               | 91 +++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs                      | 37 ++++++++++++++
+>  rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
+>  samples/rust/Makefile                   |  3 +-
+>  samples/rust/rust_print.rs              | 18 +++++++
+>  samples/rust/rust_print_events.c        |  8 +++
+>  scripts/Makefile.build                  |  9 +++-
+>  21 files changed, 379 insertions(+), 67 deletions(-)
+> ---
+> base-commit: 88359b25b950670432ef1da4352eb6cc62e0fa9f
+> change-id: 20240606-tracepoint-31e15b90e471
+> 
+> Best regards,
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
