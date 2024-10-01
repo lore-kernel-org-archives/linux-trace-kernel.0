@@ -1,107 +1,179 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFE17DA62;
-	Tue,  1 Oct 2024 06:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921323307B;
+	Tue,  1 Oct 2024 07:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727764248; cv=none; b=ggdvtNOOBzV/Ub9XWrzuIcOyOj2DV++iLl/lzp0J8bxxEOQ5aaIT/VEa5yBYCU1fQz92eXuVaqtpXm9FT43d0ICETNbaHDNBBRp1CAj5rZLFVHgk4LyUeSgullnj76qyu86RiDeXs+qVS3/9CEkmrSbY0lAo6XTTt4Xr8i9UPCc=
+	t=1727767180; cv=none; b=Cz6i5mqJlV4dIb1nouU7Maf6dM6VbruBA27XclqZ4lY6T4VZTbGSPMVv9TV0t1IDoHnl+2RpbSKGABxbOUS2udU5ZggKArgdVFlNcfVM1cJhKVR27601E5D7QFSQKxB/q7KM4bwL/O+H4LVD1KJJnLBqcs1YA/TIqECXARBMdU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727764248; c=relaxed/simple;
-	bh=aeEMi5y4Wm7t12xkLSyziUL1L+zL5VmxY8/gvt8bHZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ASY/OktgFPPVUCweab4X+6l7pssdhoJveBXpNwvlksIJGVZQ2ULeEbti5DsiVzDqr2B/FrK4PyTwcAUR0LMwin8EgDwrAkxMYwg+wg85o/LQryS+D/ct5VKd9x9c3s8r50z4G2cfX4LnMzU4JBRQvTvSSxxT8GVnxC6vYy5q5oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [36.44.125.240])
-	by gateway (Coremail) with SMTP id _____8BxkugOl_tmKW8FAA--.5998S3;
-	Tue, 01 Oct 2024 14:30:38 +0800 (CST)
-Received: from [192.168.0.109] (unknown [36.44.125.240])
-	by front1 (Coremail) with SMTP id qMiowMCxrtcJl_tmbPUWAA--.63107S3;
-	Tue, 01 Oct 2024 14:30:37 +0800 (CST)
-Message-ID: <10d33d7f-5785-93e1-128d-5ad6ac2e771f@loongson.cn>
-Date: Tue, 1 Oct 2024 14:30:33 +0800
+	s=arc-20240116; t=1727767180; c=relaxed/simple;
+	bh=n01BNZbF9ejiB2KdEN2OeP8SsSt6kV6tDAX9IasD2yo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fB61RRR9GnXvwlI9sE5PIHfDssw1m/xE3ZVWRXxW+CCgnZMIrwEfsZ2alj1EiGSpq7SrTwlq0J4ZYV3zEKr9rsbBAlDiO0XI57Vqk4GlrjZFi6z9Tnh4o3XqLzWgI7qj2oW9/MMdVQ+ojFaKiNXYLtxXQvpEY/TCz2kDRoAxZQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UhhulmnP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UhhulmnP"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4916L9ex011324;
+	Tue, 1 Oct 2024 07:18:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	nVeO7YF2qI6ks2gsAqC/25H4gdCxGkd3m/X2UTY0ILY=; b=UhhulmnPyVi7zDDc
+	MiYTsb4EjCA9S5khRljvKZZFH+E7fNMDN/hsqh3bppnsfIWUAQWeIQoheidbuzTC
+	C9587f7+VgsgnppBNvYrGnbRho16NiNMkAKA0n6LyMqRB4vc0khuf3l5NxfaZfXg
+	WuUMnEPcuRphLF0t7r/yv+NXtuXgsGJkF9AQYHAgmlJxBNJ+zbjRp+UBpaVakpBQ
+	phraW1hlwDGw57HpLVSjA1zTEeYKNHpJn/WsiAQbqakshqgizGwfNKnMCdR/g5Gz
+	lBgL1rYbPDmJGd50Mw+lqiJXd8WkqOqPSNBlnbW6uQIWdMLcV/HqDCoxQAGB2VLP
+	I7sPig==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420bqs08jd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 07:18:42 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4917IgPY005898;
+	Tue, 1 Oct 2024 07:18:42 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 420bqs08jb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 07:18:42 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4915MFix007994;
+	Tue, 1 Oct 2024 07:18:41 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41xvgxu0xv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Oct 2024 07:18:41 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4917IbaV50332034
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Oct 2024 07:18:37 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 88C8820040;
+	Tue,  1 Oct 2024 07:18:37 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6E6E320043;
+	Tue,  1 Oct 2024 07:18:33 +0000 (GMT)
+Received: from [9.203.115.143] (unknown [9.203.115.143])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  1 Oct 2024 07:18:33 +0000 (GMT)
+Message-ID: <7afc9cc7-95cd-45c7-b748-28040206d9a0@linux.ibm.com>
+Date: Tue, 1 Oct 2024 12:48:32 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 17/17] powerpc64/bpf: Add support for bpf trampolines
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf <bpf@vger.kernel.org>,
+        linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vishal Chourasia <vishalc@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20240915205648.830121-1-hbathini@linux.ibm.com>
+ <20240915205648.830121-18-hbathini@linux.ibm.com>
+ <CAADnVQL60XXW95tgwKn3kVgSQAN7gr1STy=APuO1xQD7mz-aXA@mail.gmail.com>
+ <32249e74-633d-4757-8931-742b682a63d3@linux.ibm.com>
+ <CAADnVQKfSH_zkP0-TwOB_BLxCBH9efot9mk03uRuooCTMmWnWA@mail.gmail.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <CAADnVQKfSH_zkP0-TwOB_BLxCBH9efot9mk03uRuooCTMmWnWA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SM-pZFexbR8K0U23khEKm2Gk2BFix6Vn
+X-Proofpoint-ORIG-GUID: o8_9c23Vj1cySEYDs0mB8nQmYzb-zRAw
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: Question about config UPROBES and UPROBE_EVENTS
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
- <20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
- <f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
- <20240930100630.7894c442@gandalf.local.home>
- <20241001002813.6012587b5e52737a576f1d0b@kernel.org>
- <20240930113231.6c87108d@gandalf.local.home>
- <20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-In-Reply-To: <20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCxrtcJl_tmbPUWAA--.63107S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7KrWkKw4Duw4DZw43JF17CFX_yoW8XrWUpa
-	4vyFs2van5Jwsayr4qyr1kCayrtrWDGrW7Xrn5AFyxJrnY93y8Ar10gF45uFy7Wr12qr4a
-	yFZ2qa9xZayUJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
-	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
-	UUU==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-01_04,2024-09-30_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 suspectscore=0 mlxlogscore=950
+ bulkscore=0 phishscore=0 spamscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2408220000 definitions=main-2410010048
 
-On 9/30/24 23:43, Masami Hiramatsu (Google) wrote:
-> On Mon, 30 Sep 2024 11:32:31 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> On Tue, 1 Oct 2024 00:28:13 +0900
->> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+
+On 30/09/24 6:25 pm, Alexei Starovoitov wrote:
+> On Sun, Sep 29, 2024 at 10:33 PM Hari Bathini <hbathini@linux.ibm.com> wrote:
 >>
->>> On Mon, 30 Sep 2024 10:06:30 -0400
->>> Steven Rostedt <rostedt@goodmis.org> wrote:
->>>
->>>> On Mon, 30 Sep 2024 09:33:42 +0800
->>>> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>>    
->>>>>> the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
->>>>>> depending on it, the uprobe_events menu is hidden. I don't like this.
->>>>>
->>>>> This is somehow like the current status of CONFIG_KPROBES and
->>>>> CONFIG_KPROBE_EVENTS.
+>>
+>>
+>> On 17/09/24 1:20 pm, Alexei Starovoitov wrote:
+>>> On Sun, Sep 15, 2024 at 10:58 PM Hari Bathini <hbathini@linux.ibm.com> wrote:
 >>>>
->>>> The question is, can uprobes be used without uprobe_events? With the
->>>> current BPF work that I haven't been following, it may be possible now.
+>>>> +
+>>>> +       /*
+>>>> +        * Generated stack layout:
+>>>> +        *
+>>>> +        * func prev back chain         [ back chain        ]
+>>>> +        *                              [                   ]
+>>>> +        * bpf prog redzone/tailcallcnt [ ...               ] 64 bytes (64-bit powerpc)
+>>>> +        *                              [                   ] --
+>>> ...
+>>>> +
+>>>> +       /* Dummy frame size for proper unwind - includes 64-bytes red zone for 64-bit powerpc */
+>>>> +       bpf_dummy_frame_size = STACK_FRAME_MIN_SIZE + 64;
 >>>
->>> uprobe_register/unregister APIs are exposed to the kernel modules,
->>> since systemtap had been introduced this feature.
->>>
+>>> What is the goal of such a large "red zone" ?
+>>> The kernel stack is a limited resource.
+>>> Why reserve 64 bytes ?
+>>> tail call cnt can probably be optional as well.
 >>
->> OK, but since they have always been visible, I would just make
->> CONFIG_UPROBES a normal option and CONFIG_UPROBE_EVENTS select it if it
->> gets selected, and not depend on it.
+>> Hi Alexei, thanks for reviewing.
+>> FWIW, the redzone on ppc64 is 288 bytes. BPF JIT for ppc64 was using
+>> a redzone of 80 bytes since tailcall support was introduced [1].
+>> It came down to 64 bytes thanks to [2]. The red zone is being used
+>> to save NVRs and tail call count when a stack is not setup. I do
+>> agree that we should look at optimizing it further. Do you think
+>> the optimization should go as part of PPC64 trampoline enablement
+>> being done here or should that be taken up as a separate item, maybe?
 > 
-> Agreed.
+> The follow up is fine.
+> It just odd to me that we currently have:
+> 
+> [   unused red zone ] 208 bytes protected
+> 
+> I simply don't understand why we need to waste this much stack space.
+> Why can't it be zero today ?
+> 
 
-Thanks very much for your discussions. I agree with you.
+The ABI for ppc64 has a redzone of 288 bytes below the current
+stack pointer that can be used as a scratch area until a new
+stack frame is created. So, no wastage of stack space as such.
+It is just red zone that can be used before a new stack frame
+is created. The comment there is only to show how redzone is
+being used in ppc64 BPF JIT. I think the confusion is with the
+mention of "208 bytes" as protected. As not all of that scratch
+area is used, it mentions the remaining as unused. Essentially
+288 bytes below current stack pointer is protected from debuggers
+and interrupt code (red zone). Note that it should be 224 bytes
+of unused red zone instead of 208 bytes as red zone usage in
+ppc64 BPF JIT come down from 80 bytes to 64 bytes since [2].
+Hope that clears the misunderstanding..
 
-Then, CONFIG_KPROBE_EVENTS should depend on or select CONFIG_KPROBES?
-In the current code, CONFIG_KPROBE_EVENTS depend on CONFIG_KPROBES,
-the CONFIG_KPROBE_EVENTS menu is hidden if CONFIG_KPROBES is not set.
+>> [1]
+>> https://lore.kernel.org/all/40b65ab2bb3a48837ab047a70887de3ccd70c56b.1474661927.git.naveen.n.rao@linux.vnet.ibm.com/
+>> [2] https://lore.kernel.org/all/20180503230824.3462-11-daniel@iogearbox.net/
+>>
 
-Thanks,
-Tiezhu
-
+Thanks
+Hari
