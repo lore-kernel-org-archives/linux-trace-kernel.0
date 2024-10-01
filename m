@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726151CEEA7;
-	Tue,  1 Oct 2024 23:10:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEB5158218;
+	Tue,  1 Oct 2024 23:24:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727824242; cv=none; b=IiehTPVKL/6THXMW2/Bh75WPhVKstbfoDOJODvnysUco+pNY861Sxbdc2P3Nh40SK9pzOikxWI3A3qJns13uWENK4a5uSdi4xayYoLnGj4azmJSNsSCjhkBMGZwXDmDg8XcIxOewFH1YG7iaZDrAHW7dzMDVe/Rgv3YvPASkAFM=
+	t=1727825087; cv=none; b=OD9SLDJlwp5wWKDYfIKS0INnArftQtgSk4eRs3H/T8Cu+0LKkbcQ+IlMPfYSnRaqICWK9xcZR5AIjWJjvCcYNEjnjmjx82j427+gOU1PdAhRSW9Eh07JgBzS5oWcaVRnzOiBZGoLnx14Skn0gcLvyACNlVvKfMufMQBpCo+82fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727824242; c=relaxed/simple;
-	bh=DcJk0ZurD4m477NZqGPsjHZFR3HoBgS1o2cMcYNYB2s=;
+	s=arc-20240116; t=1727825087; c=relaxed/simple;
+	bh=E7pdhOtR2rHLVVHc5+lB03lkJEdDwGbAarZ8dCCD65I=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=eWSW0FbdbOk5Q2n9WQEKZ+ORRXmqc1nA+IdILGEIfMRlHnaw7Wl/1Hzq8Yd1LKPGXiFoBosQC5q5HOd9Kb0BqLNXvdTxGIc9fL/uWdewQefBTXqy6b3h3jcKfTLQOKpDQXXPuRlgx9oB7A01ZsOl6dKm9Rq2Qt4Fh1LnY3ccM2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/nIdavm; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=AIl44RZASMyTVJaK7dHCDW9+MnztisKtkHAa9mNRQizolbI7tZsijZ4n7oKCyjv7wSVIKA2xM1MrVu9V2xAMgDhV3tDp0KcQvVq+wK/LZ+RDZs7+vwG30H9wpxAzPzuBpn1zX1ImZrBvyVQj/TvZORUTNfqdgZvhlHgsEdOtdqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyM4qsCi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/nIdavm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A67C4CEC6;
-	Tue,  1 Oct 2024 23:10:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyM4qsCi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DA0C4CEC6;
+	Tue,  1 Oct 2024 23:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727824242;
-	bh=DcJk0ZurD4m477NZqGPsjHZFR3HoBgS1o2cMcYNYB2s=;
+	s=k20201202; t=1727825085;
+	bh=E7pdhOtR2rHLVVHc5+lB03lkJEdDwGbAarZ8dCCD65I=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=W/nIdavm1JqAX/giEtnJOkGz3xbjdMq6KQkVw4ljhSRaSLSeInkxiw57CPANodEdt
-	 BDUmGhFZm3fprZ+HevIktBUAx5izVq2R/JTp8im484EKY4oXw8NTt5t6oKNbAQp1kC
-	 e8yGKgKRY02ydyHb6dqxZyFPr4GJ8e9yA250mszB4bEa89E1LainJdofTupgX33ff2
-	 LHU3kk6t+C1PUfcD4xRbxeFFbInkC08OQmL7FF6cple4SqU8vaHvD8uzGuqokjYtWd
-	 GNQDdGXc7GtxZBSNqO/lNAEZp+2CDk/O28MXbb+Aezidxvikak450fAzj1jNkx2SkF
-	 /ltNKeuVdCAyA==
-Date: Wed, 2 Oct 2024 08:10:37 +0900
+	b=QyM4qsCixCY6idN6G/ACjPAk+bwTXxn1GoEWZ/Q4BNv1DW7CWNqco3BAiX/Hd3Zid
+	 iKIbHk4OGqFMuHW+Ak6DaH7DJ00+6RJ5xCn7yUy0TSq93AKBAnjxnYPdhRNG8+VQIl
+	 mTOKyj9pcQ6mXtLeDZcPQw6csAicl53FA/krEd05pk6da00RPr0M7xmZdSW+hIfBjW
+	 TSNZhx/J1EIZOxfIS81WTCzd692ZXu6NLa8FVjT79JpeTx3/riCMLuOJV5qySEdaY9
+	 6xSx+SfEKS5LO/2Byv3F5ZsiuMAns23zOdXwlwFHiHCZmFiqi/Tq7Dcz32N5pEkAfS
+	 PWdZ6QZ0sRcEQ==
+Date: Wed, 2 Oct 2024 08:24:40 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Will Deacon <will@kernel.org>, Catalin Marinas
@@ -36,15 +36,14 @@ Cc: Will Deacon <will@kernel.org>, Catalin Marinas
  <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri
  Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
  Borkmann <daniel@iogearbox.net>, Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v14 04/19] function_graph: Replace fgraph_ret_regs with
- ftrace_regs
-Message-Id: <20241002081037.e9b825f7456ce4815eccad1b@kernel.org>
-In-Reply-To: <20240930145548.08c8f666@gandalf.local.home>
+Subject: Re: [PATCH v14 05/19] function_graph: Pass ftrace_regs to retfunc
+Message-Id: <20241002082440.6fd01f29dcc00e7fe4d10cdd@kernel.org>
+In-Reply-To: <20240930150302.6c5c9f0a@gandalf.local.home>
 References: <172615368656.133222.2336770908714920670.stgit@devnote2>
-	<172615373091.133222.1812791604518973124.stgit@devnote2>
-	<20240915051144.445681c2@rorschach.local.home>
-	<20240917095538.GA27384@willie-the-truck>
-	<20240930145548.08c8f666@gandalf.local.home>
+	<172615374207.133222.13117574733580053025.stgit@devnote2>
+	<20240915044920.29a86d25@rorschach.local.home>
+	<20240917100848.GB27384@willie-the-truck>
+	<20240930150302.6c5c9f0a@gandalf.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,79 +54,61 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 30 Sep 2024 14:55:48 -0400
+On Mon, 30 Sep 2024 15:03:02 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Tue, 17 Sep 2024 10:55:39 +0100
+> On Tue, 17 Sep 2024 11:08:48 +0100
 > Will Deacon <will@kernel.org> wrote:
 > 
-> > The arm64 part looks good to me, although passing a partially-populated
-> > struct out of asm feels like it's going to cause us hard-to-debug
-> > problems down the line if any of those extra fields get used. How hard
-> > would it be to poison the unpopulated members of 'ftrace_regs'?
+> > > > @@ -787,6 +789,9 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+> > > >  	}
+> > > >  
+> > > >  	trace.rettime = trace_clock_local();
+> > > > +	if (fregs)
+> > > > +		ftrace_regs_set_instruction_pointer(fregs, ret);  
+> > 
+> > Where does the instruction pointer get used after this? The arm64
+> > 'return_to_handler' function doesn't look at it when we return.
 > 
-> The purpose of creating ftrace_regs was to allow a partially populated
-> pt_regs to be sent around, as Thomas Gleixner and Peter Zijlstra were
-> against using pt_regs that were not fully populated. Hence, I created
-> "ftrace_regs" for this purpose.
-> 
-> ftrace_regs should never be accessed via its internal elements but only with
-> its accessor functions, as depending on the arch or functionality used, the
-> content of the structure should never be trusted. The accessor functions
-> will do all the verification needed.
-> 
-> I may add some compiler hacks to enforce this. Something like:
-> 
-> struct ftrace_regs {
-> 	void *nothing_to_see_here;
-> };
+> It's for the hooks to the return instruction. kretprobes will start using
 
-Yeah, OK. But sizeof(fregs) may be changed. (Shouldn't we do too?)
+not kretprobes, but fprobe. kretprobes continue using rethook.
 
+> function graph tracer to hook to a return of a function (via fprobes), and
+> the callbacks will need access to the return pointer. The callbacks get
+> passed the ftrace_regs, and this is how they can see what the function is
+> returning to. For example, BPF programs will need this.
 > 
-> And then change the arch code to be something like:
-> 
-> // in arch/arm64/include/asm/ftrace.h:
-> 
-> struct arch_ftrace_regs {
->         /* x0 - x8 */
->         unsigned long regs[9];
-> 
-> #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->         unsigned long direct_tramp;
-> #else
->         unsigned long __unused;
-> #endif
-> 
->         unsigned long fp;
->         unsigned long lr;
-> 
->         unsigned long sp;
->         unsigned long pc;
-> };
+> So it's not needed for the infrastructure, only the callbacks that hook to
+> it.
 
-And if it is pt_regs compatible, 
+Yes, it will be used for showing where to return in the fprobe exit event.
+More specifically, in the fprobe_return()@kernel/trace/fprobe.c in PATCH 13/19,
+it is extracted from fregs.
 
-#define arch_ftrace_regs pt_regs
++static void fprobe_return(struct ftrace_graph_ret *trace,
++			  struct fgraph_ops *gops,
++			  struct ftrace_regs *fregs)
++{
++	unsigned long *fgraph_data = NULL;
++	unsigned long ret_ip;
++	unsigned long val;
++	struct fprobe *fp;
++	int size, curr;
++	int size_words;
++
++	fgraph_data = (unsigned long *)fgraph_retrieve_data(gops->idx, &size);
++	if (WARN_ON_ONCE(!fgraph_data))
+ 		return;
++	size_words = SIZE_IN_LONG(size);
++	ret_ip = ftrace_regs_get_instruction_pointer(fregs);
++
 
-?
+Thank you,
 
-> 
-> #define get_arch_ftrace_regs(fregs) ((struct arch_ftrace_regs *)(fregs))
-> 
-> static __always_inline void
-> ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->                                     unsigned long pc)
-> {
-> 	struct arch_ftrace_regs *afregs = get_ftrace_regs(fregs);
->         afregs->pc = pc;
-> }
-> 
 > 
 > -- Steve
 
-
-Thanks,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
