@@ -1,87 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98271C6F64
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 14:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288B61C6F73;
+	Tue,  1 Oct 2024 14:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727793005; cv=none; b=JTAGbOMlSaAoMRAmoNEKqqniv1+6diDpP4tzsatFJWo5WNc2otiWarrdpmYM+Dn0Q8uN3lXzLatNX7h1xNa2kD8effbkmK1iVIGHkd4B50S2x/YHSEsyVSZ+BocUaB//giHCnVNiu7uIyT6V/GFnnZWectLM6H0Tc5YOSSgHLbw=
+	t=1727794436; cv=none; b=CkFCLLZ15QMb9rMBX8w5lpMywDjbUOmtCqqeFJ6AvSsXjQr5PLWyZoZ+e/KEbL1v40YCmiiR/j/nbxBrvbqNV4P7Gvguf2G77HnlgGa9CWghFJh4xjB3HUXXjeYLnb5ryK5jN80baazPezTBvYQJn7ZaYz3AC4kg3rBdCd0oOFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727793005; c=relaxed/simple;
-	bh=+Nl1kEdwPimOPfPmlicMbcqdvXouyxBlkRlYIlQixwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnWA0gcjCxJHDLVwUgx8Dy7uKMltoIVsayvQ5vZ5d8Gq3g2B+GXcCRtLgSg78V3XhFSdw7f4s3BKxEChD2Auj97qK6F6P85mMlfMA87MFZJ89D7UWBd+zLUUmyMilmhg4SlM5JHzXgBayMClsz6E3W1DtgSXvGEcRtR+jUHQGc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UY5MNY+k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1727794436; c=relaxed/simple;
+	bh=NiNTmNONqUG6rArLU6+DW/koYHBP+PdkO5eQL5qKW5E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bGzE361Ky27XXrz9vSHdhAxkCdsKL2mXIVHzUyFQp91Ljmkj6rPXQ78SXE6dEsHMDkFdWksdoXXT6IEpVGdfM6MKPASQg5wHYKoOy4/HT6DW8XAXwICYAQcT8nbot719qTvcLI11G7/BFHQbHtFHyTA1NQPGxHZ1C+2PdU9RAuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIoF4RLA; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UY5MNY+k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727793002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NYxlu4wEpUycV3Br8yC3N1dH9hq1z+35+N/eS8vjAyg=;
-	b=UY5MNY+k9OX8XhSI4Mdqu9xiSsAIEXPbAbPwtE/3o1j+r2Gc9W79QrzGehsAPlRHxPfO2C
-	FTa8vXhiyFE0QihVbetyPtYgAIG0sPijB2IwY3UfdoxTKUjgb3YQrIWbKd5a6Knl2sKve/
-	Po6tEP3mvTkCA5Lk7IDVbXdV7D7hK4Y=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-ihUUIuxaMROXiGPoN2tIbQ-1; Tue,
- 01 Oct 2024 10:29:59 -0400
-X-MC-Unique: ihUUIuxaMROXiGPoN2tIbQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF50F196C415;
-	Tue,  1 Oct 2024 14:29:56 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.88])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7FD061979074;
-	Tue,  1 Oct 2024 14:29:50 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  1 Oct 2024 16:29:43 +0200 (CEST)
-Date: Tue, 1 Oct 2024 16:29:35 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: ak@linux.intel.com, mhiramat@kernel.org, andrii@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
- scalability
-Message-ID: <20241001142935.GC23907@redhat.com>
-References: <20240927094549.3382916-1-liaochang1@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIoF4RLA"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-37cdb6ebc1cso2160624f8f.1;
+        Tue, 01 Oct 2024 07:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727794433; x=1728399233; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FSTnPU9v6H2GxBsNTOAiZzPo6DZqtIPh6ogHLJkD69Y=;
+        b=cIoF4RLAJ5CKomWNW2LZn2p/in6XaxaKLzxMj/AfmU4vVPEI5fcbc2uQ6734WwsH/D
+         VbW2Gz1vseKhOclIVlLJeMUow+KlnVlmh6GgAO0PQJgEIHqEUdGlaYEsUB5GZ0yoLMIt
+         rJjW40tlq7OXis+Trc603C1pUbCe5aDN2hAnBGRYkXYN9AWJjezLEf+0wlnC37R0eedr
+         IaTkcu6M+xvzuOPNCnZANxhuWK7+tuhoUrJ8tc+LZ/9n5zsQYtBrZutqLHjuLicYy8Ad
+         GvpgVNxzB2sn/slp14qP0aJX7yUjVBvppzhsBel3en5EYzRcdf+VTz5ypepb7nRYgunc
+         dg/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727794433; x=1728399233;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FSTnPU9v6H2GxBsNTOAiZzPo6DZqtIPh6ogHLJkD69Y=;
+        b=XyFl9/KMIw/xKQfRv6h6rhqXWgVORH/6hlm4QFr2A5zl+TMcxj+59s34ybfzlUeSv1
+         XBzFi2PV3e3DHxQrnCCB+xj276qORjQnKDIHP8Xujo1Eu9pPQjf+KqiEM843Wh+gXI2c
+         llXuBDDHEtasi1buwLcvL5y/zWD7XaydR32OnUPoTWSQWAubbZUiW5um4MImBpVWO/Pf
+         RBhzN0OXwfFQ+Sgxs8H7vHUo2Qb8a4aUW/7qPXi1kxZzsUQ0gA07xc8cYZJHNsH0dsZo
+         eNbh4+qJQ/K/wXK3m4HiUGsncV2Vil8JbKhm0hGC3bkaKBC1x66xo9/pJkvJixj/QFIw
+         Gggg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlydnOAlaU0RhrN493vW3f4XIs4uaslbMQ/EI+905H4aOyxHxZ5ezVl5I0GPf7c1kopr1WEPEeaWDV+ZBl@vger.kernel.org, AJvYcCVZfto3bu0yMVvLB5sMqg0Gb4BU6AWLdFnA7HvMA+42qCOQoU3naMSJwhu8DP9HM/H+0Xo=@vger.kernel.org, AJvYcCW01P2UxcSlPZTG4Q4y0IDMCjvC0HEw9R0vtLm5UMgRGb7BcGyqBTZ4I0m88Z2u26DTn4/gK9WQo2On+04+M9lQVjEu@vger.kernel.org, AJvYcCWL4OUHcvGfPxT7i4gg8kepsPWnMkPRvfw01jAV1PPHMy7BGKTVgbwY/ky68Y/bhRtJVZQV/IfzXg4sPuy5@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlrv6C5gmesX2OGkjCL8Nm31H1QYkSfQ6dQpFJJGnaM6CGrgHp
+	55IlLIhrCM06Glu1QRpES7Gkh2DAaUcagUzCoj5BO7/L5XwUpR0qAZ4KoyyeR/J9ZWICpXMnEs+
+	+BaTI/5gwKhx9AEhbiEH/FigrfGXNvvPp
+X-Google-Smtp-Source: AGHT+IEm8GKzd4fqUPp6LAzM4CsjfnUSOgffnLlYkAgZo42PyQhxjWYeeN/iWESnCrPx+63wt9+U+2OjWQ/iO36f9Zg=
+X-Received: by 2002:a05:6000:e42:b0:37c:d2d2:7f5a with SMTP id
+ ffacd0b85a97d-37cd5aef979mr6359211f8f.32.1727794433399; Tue, 01 Oct 2024
+ 07:53:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240927094549.3382916-1-liaochang1@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20240915205648.830121-1-hbathini@linux.ibm.com>
+ <20240915205648.830121-18-hbathini@linux.ibm.com> <CAADnVQL60XXW95tgwKn3kVgSQAN7gr1STy=APuO1xQD7mz-aXA@mail.gmail.com>
+ <32249e74-633d-4757-8931-742b682a63d3@linux.ibm.com> <CAADnVQKfSH_zkP0-TwOB_BLxCBH9efot9mk03uRuooCTMmWnWA@mail.gmail.com>
+ <7afc9cc7-95cd-45c7-b748-28040206d9a0@linux.ibm.com>
+In-Reply-To: <7afc9cc7-95cd-45c7-b748-28040206d9a0@linux.ibm.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 1 Oct 2024 07:53:42 -0700
+Message-ID: <CAADnVQJjqnSVqq2n70-uqfrYRHH3n=5s9=t3D2AMooxxAHYfJQ@mail.gmail.com>
+Subject: Re: [PATCH v5 17/17] powerpc64/bpf: Add support for bpf trampolines
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"Naveen N. Rao" <naveen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicholas Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Vishal Chourasia <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/27, Liao Chang wrote:
+On Tue, Oct 1, 2024 at 12:18=E2=80=AFAM Hari Bathini <hbathini@linux.ibm.co=
+m> wrote:
 >
-> The uprobe handler allocates xol slot from xol_area and quickly release
-> it in the single-step handler. The atomic operations on the xol bitmap
-> and slot_count lead to expensive cache line bouncing between multiple
-> CPUs.
+>
+>
+> On 30/09/24 6:25 pm, Alexei Starovoitov wrote:
+> > On Sun, Sep 29, 2024 at 10:33=E2=80=AFPM Hari Bathini <hbathini@linux.i=
+bm.com> wrote:
+> >>
+> >>
+> >>
+> >> On 17/09/24 1:20 pm, Alexei Starovoitov wrote:
+> >>> On Sun, Sep 15, 2024 at 10:58=E2=80=AFPM Hari Bathini <hbathini@linux=
+.ibm.com> wrote:
+> >>>>
+> >>>> +
+> >>>> +       /*
+> >>>> +        * Generated stack layout:
+> >>>> +        *
+> >>>> +        * func prev back chain         [ back chain        ]
+> >>>> +        *                              [                   ]
+> >>>> +        * bpf prog redzone/tailcallcnt [ ...               ] 64 byt=
+es (64-bit powerpc)
+> >>>> +        *                              [                   ] --
+> >>> ...
+> >>>> +
+> >>>> +       /* Dummy frame size for proper unwind - includes 64-bytes re=
+d zone for 64-bit powerpc */
+> >>>> +       bpf_dummy_frame_size =3D STACK_FRAME_MIN_SIZE + 64;
+> >>>
+> >>> What is the goal of such a large "red zone" ?
+> >>> The kernel stack is a limited resource.
+> >>> Why reserve 64 bytes ?
+> >>> tail call cnt can probably be optional as well.
+> >>
+> >> Hi Alexei, thanks for reviewing.
+> >> FWIW, the redzone on ppc64 is 288 bytes. BPF JIT for ppc64 was using
+> >> a redzone of 80 bytes since tailcall support was introduced [1].
+> >> It came down to 64 bytes thanks to [2]. The red zone is being used
+> >> to save NVRs and tail call count when a stack is not setup. I do
+> >> agree that we should look at optimizing it further. Do you think
+> >> the optimization should go as part of PPC64 trampoline enablement
+> >> being done here or should that be taken up as a separate item, maybe?
+> >
+> > The follow up is fine.
+> > It just odd to me that we currently have:
+> >
+> > [   unused red zone ] 208 bytes protected
+> >
+> > I simply don't understand why we need to waste this much stack space.
+> > Why can't it be zero today ?
+> >
+>
+> The ABI for ppc64 has a redzone of 288 bytes below the current
+> stack pointer that can be used as a scratch area until a new
+> stack frame is created. So, no wastage of stack space as such.
+> It is just red zone that can be used before a new stack frame
+> is created. The comment there is only to show how redzone is
+> being used in ppc64 BPF JIT. I think the confusion is with the
+> mention of "208 bytes" as protected. As not all of that scratch
+> area is used, it mentions the remaining as unused. Essentially
+> 288 bytes below current stack pointer is protected from debuggers
+> and interrupt code (red zone). Note that it should be 224 bytes
+> of unused red zone instead of 208 bytes as red zone usage in
+> ppc64 BPF JIT come down from 80 bytes to 64 bytes since [2].
+> Hope that clears the misunderstanding..
 
-Liao, could you please check if this series
+I see. That makes sense. So it's similar to amd64 red zone,
+but there we have an issue with irqs, hence the kernel is
+compiled with -mno-red-zone.
 
-	[PATCH 0/2] uprobes: kill xol_area->slot_count
-	https://lore.kernel.org/all/20241001142416.GA13599@redhat.com/
-
-makes any difference performance-wise in your testing?
-
-Oleg.
-
+I guess ppc always has a different interrupt stack and
+it's not an issue?
