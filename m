@@ -1,101 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137F0188A01;
-	Tue,  1 Oct 2024 12:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4271C3312;
+	Tue,  1 Oct 2024 12:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727786721; cv=none; b=R+XuNA1f94QrDT391vex4Uo4Y7enu3SNOsOGRjflMsZhwGZysIXtMMtEDvEsDXWC0Q/guxbPnt+jfRm8mNkOInMIK1PZT3GPtV3AenfEe7p+ubSh6WviYRoOEnxVtTUUEVSefZDrzUfJ2Z2ffGUDVZOAnHgy7MSRFBMCJObA9MA=
+	t=1727787159; cv=none; b=NeFlaRHJSOGl1jHiizdrXS9eKdeQVtOo6jHmeU7da4G7AapR/crViAvqgsfCSyBm0mv07Q7O2w1KPVNPdkomeLtFBDEKdAEfba4COWtMclrMofRl0+fiv1kTA+uTvwapGIEgAt+nC4MS1BpXXQZfvuZN+HnUV/yeawBMkXPQTMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727786721; c=relaxed/simple;
-	bh=yv21nIoxt2G1+TKHhwI6It6b6JK37ExoWIj1knINT+M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WYFhtiDYIwSgqFfGwxCnIqNc7nzgRn3a0E3bRtrRDFyctWu7V5AGDGx1e+iJrHMdqUZmQE9Bfa8WKP2M/Z66Q+bglvgHeGdw0gaSyLUlqvVJ7ibwoNSLvnAxMnCFdwjXyXHHGQ7zUTUpM4qHp2WKVqO7gfhKJxygFV/nUdwkeTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qa86wiHY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J5x8Q9UD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qa86wiHY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J5x8Q9UD"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1727786717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wloN27YoSxiWKp6fQGqBt4c8axyymw0Hk/QN5VGPdHc=;
-	b=Qa86wiHY5udGbTL/4RbGP4MQElJwzeGrubSygjC1tQRy4zfMQXolM4/rdSgHW4aJ4pa7Sx
-	Q+O/4+vGx/sNJTbKYXMz5OLOImXaYf16vuEWJGfu9jGd7Pe8Oe4wko1CKa3r1Wmo/BxmpV
-	KBm+5T4xozujbGHa6wPPK8WpyQM15uWJnEuiRgimTY2zeOcCwWdlezQwO0yXiEQRFdxwXO
-	F81jdaerQPF+4+x4zENY5l572B4SqKZGduMGTwWUtFj5dqgYuIRy2piVLxTiUZMzRYeEAt
-	Ilm2DMAemuc8XGtm4muAJ2r/8epa7DzGpWnwN3YdoRfheVaCCRI+1tin3061Yg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1727786717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wloN27YoSxiWKp6fQGqBt4c8axyymw0Hk/QN5VGPdHc=;
-	b=J5x8Q9UDN+URvo6b7cPp4+Jh2nNorxNY4jIijs4dArCgLFGPkpanNKVIjGpOrcWyCk6yoJ
-	fNP1c9ZTZ+79dgBA==
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet
- <corbet@lwn.net>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J.
- Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Dilger
- <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, Josef Bacik
- <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Hugh Dickins
- <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, Chuck Lever
- <chuck.lever@oracle.com>, Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v8 01/11] timekeeping: move multigrain timestamp floor
- handling into timekeeper
-In-Reply-To: <4aa41dcb6f4be736355506dd500c4d255e008764.camel@kernel.org>
-References: <20240914-mgtime-v8-0-5bd872330bed@kernel.org>
- <20240914-mgtime-v8-1-5bd872330bed@kernel.org> <87a5g79aag.ffs@tglx>
- <874j6f99dg.ffs@tglx>
- <b300fec8b6f611662195e0339f290d473a41607c.camel@kernel.org>
- <878qv90x6w.ffs@tglx>
- <4933075b1023f466edb516e86608e0938de28c1d.camel@kernel.org>
- <87y138zyfu.ffs@tglx>
- <79a32ab9308d6e63e066aa17c5c2492b51b55850.camel@kernel.org>
- <87plokzuy6.ffs@tglx>
- <4aa41dcb6f4be736355506dd500c4d255e008764.camel@kernel.org>
-Date: Tue, 01 Oct 2024 14:45:17 +0200
-Message-ID: <8734lgyote.ffs@tglx>
+	s=arc-20240116; t=1727787159; c=relaxed/simple;
+	bh=aGaAIKBOaEg38Bg0Blb5V51gc+udAfeRUBy9Fk/mbKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UwrV69YtlAbqT1QO0gbSuGALypImnezfyZ9nZxj4s10TbL4RqdiCYxWSeOKhNxRcGuRIK25ZYvhJRzd5jJ5I+YhfalYQawrPUvpHzyiZGqOgGIl0F0/H77X6F8s5ZMRArN+lUOQoSvz54mGjX0hG2uovZmQjUS4rszGJhYsAgXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F3EC4CEC6;
+	Tue,  1 Oct 2024 12:52:38 +0000 (UTC)
+Date: Tue, 1 Oct 2024 08:53:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mike Rapoport <mike.rapoport@gmail.com>, Kees Cook <keescook@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] Documentation/tracing: Mention that
+ RESET_ATTACK_MITIGATION can clear memory
+Message-ID: <20241001085326.5841a9ce@gandalf.local.home>
+In-Reply-To: <CAMj1kXGz2isSBBkm1R7DiinNt5nxELRTvrD4XXN9v_TRQrNr-A@mail.gmail.com>
+References: <20240926130159.19e6d0e2@rorschach.local.home>
+	<CAMj1kXF1=2wLgM8HP6BvUxdZLK4EdnaORLUTjoDJSZP-hhDJwA@mail.gmail.com>
+	<80930b34-3b31-46d7-8172-6c0cd2ee497f@redhat.com>
+	<CAMj1kXGz2isSBBkm1R7DiinNt5nxELRTvrD4XXN9v_TRQrNr-A@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 01 2024 at 05:45, Jeff Layton wrote:
-> On Mon, 2024-09-30 at 23:35 +0200, Thomas Gleixner wrote:
->> > I certainly wouldn't rule out a workqueue job calling that function,
->> > but this is something we do while dirtying an inode, and that's not
->> > typically done in interrupt context.
->> 
->> The reason I'm asking is that if it's always syscall context,
->> i.e. write() or io_uring()/RPC request etc., then you can avoid the
->> whole global floor value dance and make it strictly per thread, which
->> simplifies the exercise significantly.
->> 
->
-> I'm not sure I follow what you're proposing here.
->
-> Consider two threads doing writes serially to different files. IOW, the
-> second thread enters the write() syscall after the first thread returns
-> from its write(). In that situation, the second timestamp mustn't
-> appear to be earlier than the first (assuming no backward clock jump,
-> of course).
->
-> How would we ensure that with only per-thread structures?
+On Tue, 1 Oct 2024 11:35:53 +0200
+Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Bah. Right. Ignore my sleep deprived rambling.
+> All I am asking for is a line in the documentation that says that
+> clobbered trace buffers could occur at any time, regardless of whether
+> CONFIG_RESET_ATTACK_MITIGATION is enabled or not. That way, we have
+> something to refer to when people start filing bugs against the EFI
+> component when this breaks.
+
+How about if I change the comment to this?
+
+        Note, saving the trace buffer across reboots does require that the system
+        is set up to not wipe memory. For instance, CONFIG_RESET_ATTACK_MITIGATION
+        can force a memory reset on boot which will clear any trace that was stored.
+        This is just one of many ways that can clear memory. Make sure your system
+        keeps the content of memory across reboots before relying on this option.
+
+Would that be better?
+
+I want to stress that this doesn't work for every setup. It just so happens
+to work for mine and others. I do not want people thinking that it's a bug
+if it doesn't work for them.
+
+-- Steve
