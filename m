@@ -1,110 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1261C6F67;
-	Tue,  1 Oct 2024 10:59:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4631C2424;
+	Tue,  1 Oct 2024 12:29:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727780384; cv=none; b=m+P57GVxJiFloHxOHVYSQ1ZLjE/EM7aJqLSZpSYqztZDoidSCS95Zq002Rq0nEzbMz1Yb5g0wpcTNNV2JFaTS63p6eqqd/zpsMBEWKpcfKXyK65uAiHcU3yIOuYYJo0/3UaDDHQPKruAxrC44j/ydlyZme69201ooG3jqPZoRRU=
+	t=1727785795; cv=none; b=GlFH0nVwA/uCeUO04WwhSSgBVxShybO6mhL5WPGjQt9ozTRnOjBewfWdDTTcmGfPCV2PLsDwDOt/10qq773h8t1wV23jRfh7qMMkR97S7z5DsaQkBnS1OVC/itbx9O+JalAsA9YuuVettM2LEk0QwnPa2LqCJ8qYI7KdaCG+s8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727780384; c=relaxed/simple;
-	bh=vfABgeY7uP8db917PbV1dpj3MLFQbmpQZkOBbve6x6s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DPH6kTSvf8NXNPmlagRC+plNrs0Msnr7RRSPv1ogFMuUDKfIcunSdMeqb+tCx//3J7N0oe4plvBfFnmqqXhWujG2lYTBYz7071JZ96PgOPbUZMK/elm/oxtIgXcifuJYW5BdDvpRYc5NyPmrBbBHIDOvePyMmLp3SGCidwo5e2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqhWoLr2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqhWoLr2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428E1C4CECD;
-	Tue,  1 Oct 2024 10:59:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727780383;
-	bh=vfABgeY7uP8db917PbV1dpj3MLFQbmpQZkOBbve6x6s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NqhWoLr2qLRQdOkLcMCIBUNS616yE7Wsn2Do3FYKCPxTNAtUhlMY/8vPDqL9CORJ8
-	 gawIrH/IWI+r3aob9UJ951bTu/BMDqZyz55vv0Dwt75DKG3XVFJh+t15nLMHHgmMbn
-	 96Izn6X94VrbCOjG3imdMEt1RCnZa7cVICavqgsbX/cY5RAUpWFPvAf367i7Z/eUkH
-	 fV3g68UZZQ5YPZXcLa396R8kWtFuPbB7nD86sjo58JBtkRSEyAc54RJQT5xRH6ebl3
-	 h/caq+ZGm7/fH6u2XMHwCQ3JTm55c66IdUVEDyJC+VNQhN/gDSUWfHmV3q+IsazEps
-	 HUQADV0X3MASA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 01 Oct 2024 06:59:06 -0400
-Subject: [PATCH v8 12/12] tmpfs: add support for multigrain timestamps
+	s=arc-20240116; t=1727785795; c=relaxed/simple;
+	bh=JfwHqGpu9TO7VwbUdNhKeCu3aGNCFV16+/kIFIdtKPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CeLYRk+OKdS1gr4HHzEBJBiOu0bLKksavTiHrSOaZD/721zzW6hmZrTapiFmfYZ0h0WkcxBKdjoH2P8hTviXGA3ezmiRjbQJNY11RW1tUNXlFPFa8LzX4pB5DNqhP/53rf3+0sI9JFSfWPoQ/lA9ksadZ8Trw0QaL2UphFSP30c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3824C4CEC6;
+	Tue,  1 Oct 2024 12:29:53 +0000 (UTC)
+Date: Tue, 1 Oct 2024 08:30:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Question about config UPROBES and UPROBE_EVENTS
+Message-ID: <20241001083042.12f388e7@gandalf.local.home>
+In-Reply-To: <10d33d7f-5785-93e1-128d-5ad6ac2e771f@loongson.cn>
+References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
+	<20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
+	<f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
+	<20240930100630.7894c442@gandalf.local.home>
+	<20241001002813.6012587b5e52737a576f1d0b@kernel.org>
+	<20240930113231.6c87108d@gandalf.local.home>
+	<20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
+	<10d33d7f-5785-93e1-128d-5ad6ac2e771f@loongson.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241001-mgtime-v8-12-903343d91bc3@kernel.org>
-References: <20241001-mgtime-v8-0-903343d91bc3@kernel.org>
-In-Reply-To: <20241001-mgtime-v8-0-903343d91bc3@kernel.org>
-To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
- Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
- Chandan Babu R <chandan.babu@oracle.com>, 
- "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
- Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
- Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
- Chuck Lever <chuck.lever@oracle.com>, 
- Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
- linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=932; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=vfABgeY7uP8db917PbV1dpj3MLFQbmpQZkOBbve6x6s=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm+9X7QDV7gFcbV+IsKkmQpXurd3+vww+OClJdZ
- SSWm3r5Cg2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZvvV+wAKCRAADmhBGVaC
- FV6PEACdz7xhqHbN+F1/z0hQRO4/mNdSl1k7n8dBoxQIuT87EzYxjm+op9ZONXBq7Wi9B7zpVO4
- +yg18nLaWlVJ/wyVOFlsN9AyY3M3qJ0E1xVqYGkg+D0siO/CKOYvUIi6DTP6n5rxvjrgB96B6be
- 3qVtF/YPIEC6ZXkd5pBa1nyA5B8NYkHJNp1mM1DLxDSyui4SfSdOR42NDEYGBB7AYXZHL8I+fGu
- VN+hVOpC0sW/rp4dEYSNd0rYKNGEc43bN+N6wG8SurCZMFMQYaGXkcTCti3PhldmzKH1WfFX9TG
- MqF0eshQ5RDGJP7c94SJeYoZrHOoDAV0ad9MDFseXziUXUbJewSI/WdpUbQbcPDdCRw58Qy1gDG
- VkD2HVjbK9ty8Rpe5GtkhmudPY3sb7BLC9DRg2W++B4uXM5qJO4GPZwHSJ9buzL9grC/6q28BRo
- lGEJN8oAh0jMElH6cjMSnFA9Kw4waaK2pCj0337UyhmARAFHrE1yXon1oqS6j9XmT68wrXeLw4m
- bQhXGdsxvFGNn91k35C9P60R3dKONLg5/DcccX8F8HSwGDDH65KbRzt65ICP7217BznAXCP8VQY
- ywjpwBUVXttEZ9/AGCiJLXq/xZnoaRs6Ss+0JHgEbIbzV4eeXQ5bfTjomIrl9R4boIUCfbf0/k3
- JXXFUvScYgNP0ng==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the timestamp whenever it has been written after
-being actively observed via getattr.
+On Tue, 1 Oct 2024 14:30:33 +0800
+Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 
-tmpfs only requires the FS_MGTIME flag.
+> Then, CONFIG_KPROBE_EVENTS should depend on or select CONFIG_KPROBES?
+> In the current code, CONFIG_KPROBE_EVENTS depend on CONFIG_KPROBES,
+> the CONFIG_KPROBE_EVENTS menu is hidden if CONFIG_KPROBES is not set.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Tested-by: Randy Dunlap <rdunlap@infradead.org> # documentation bits
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- mm/shmem.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We could just for consistency. KPROBE_EVENTS would then need to depend on
+HAVE_KPROBES as well. It does add some duplication.
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 4f11b5506363..3444efc275b1 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4951,7 +4951,7 @@ static struct file_system_type shmem_fs_type = {
- 	.parameters	= shmem_fs_parameters,
- #endif
- 	.kill_sb	= kill_litter_super,
--	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP,
-+	.fs_flags	= FS_USERNS_MOUNT | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- 
- void __init shmem_init(void)
-
--- 
-2.46.2
-
+-- Steve
