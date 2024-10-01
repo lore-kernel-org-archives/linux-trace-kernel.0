@@ -1,331 +1,325 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9957C1C4606
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 13:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCCEEC5;
+	Tue,  1 Oct 2024 13:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727789447; cv=none; b=apjDB7iS0kjZqusoXrhDRkcc2XILDcEmN+zkqJQzs3y6+K3NDkSHod6jChsokquB3moYPSeTXXUw+7ILLC7w7LXl1M6cbZpjQpHR9EzUgaToIksvzKHnbF+fMaGK9RYcBT2tULLAoU8OJvnwG58Z1LehVNkHwwUdRTiaOHovVbs=
+	t=1727789547; cv=none; b=n4614+MK8rmcjreLV2CKTZFDGz1mya1HVW+h0GDmGLxNADJxVE/VVRkMA2C0nlY7ba+9fQhtoa+lhP3TzbuJHvqf54Ov667qEAE3tNon9qxtcnCyeZtTCzgGmD3a4mc2aQn0icDZvIIXLEPYhRYUVh0SUA4Cqn0cbPb01mvFBV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727789447; c=relaxed/simple;
-	bh=B20XPkbS2BldO1VNXORVIshLvelvNfCPEDgTJEytqJk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T+ZtPeB4Ln9ws4sm+88qrV+uh1m1CzGpb8xqkWjxFc/LbITQ8WZlMm/ugFVsYE/dif82QlaVh58MdtjAXAGboQpqmvXE/ysXaL3G9yy/kuHijsCP3lsKlqXNtqN/naFt9NUb9jv870IBcZHyrlvC6sYrjeqOeVFber7USYjzQXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mWd7FH7J; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1727789547; c=relaxed/simple;
+	bh=HW2VSXeX/jBgYNRhPYF7a3Igw5CEPNBegW6vQHHcbU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tyw4fZth/0ucL94Go2LLyUd1x5dMcfXJ6MChZo86rlL4DFRcQKI+hWyN7xeQIAcEG4QPYl8HMwcwGDYFtl0tRUcWEm+BfW3wV6EJW/KpDdnsGKEVs81RyjxUPCG6zIYVWMXFEFV2xJNtyWQWsDXSk2txA96zGckXE6yLWni7Z0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rDj2Daeg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B1A5Czx/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rDj2Daeg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B1A5Czx/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mWd7FH7J"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e25cef43f5aso6533486276.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Oct 2024 06:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727789444; x=1728394244; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkhFbvRkdz/oOfeYJrLg9+G9M/Uj0+RwqIl1/SZKHXU=;
-        b=mWd7FH7JGFa3Gmit9k9qrqYpmzypSjOq0B+iR7etHOEcNwmL5SelAIN/ztqNMygNgZ
-         Nn7y7zdPjvXK4C735rKcFGm77HLdXzIs/Fxm5WgOuCjC5PgVwieqScpVHTjPglwFvlPM
-         NA7IyS239cAimrCfXV83l+gS8FpPaghu8FDREHolZtKf5IV/wIiqJcQs7Z7GCoLPTF8J
-         aCCX1upy1R57pTlvFqzQcfTgvE28Ap62LFKON2kqLdD6olPYq2USSNRSh3ZjiqqaeM8w
-         1V1TOUjED7lkPH7v0Va+eT29GBij7ey0UaaULBfKUakonbv0CIGMoNOp/QR+Qhp80Rsu
-         rBjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727789444; x=1728394244;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkhFbvRkdz/oOfeYJrLg9+G9M/Uj0+RwqIl1/SZKHXU=;
-        b=VoYAHtXD4KeoFG14gxZ+wAtbIQ9n1Yt+yvk4bOB7mqQ2w4q1U3Y80A+Bm2QPUqBln6
-         0ftkcq8PhiITJ1q42TwszTh/S9aISq5blIs32eI56Z8/7sakWgoE9DwkjK/YHyejdEaP
-         +CJL81sf0sYnmY0xjd7xvw+2SF/rMjnUyrcK95xCbindQaOdzaNGfsKRFryH96QZZ70e
-         4COPbU3xPMiINFeYNrpFPDgqZGgemstQFc+8qmaN1XG+tjb9oMQxbqlyk2Bf29KFlMrQ
-         Q1XcliNyzNm+nbb9XhNHIXa59AjL4w3HEzcayT69usDI/35oEysLNc+fZ7QY0v4WFc/a
-         U5Mg==
-X-Gm-Message-State: AOJu0YxSCpTmQhvxuyffLhHWeRa6M8DI+WPuTERaM3hwadXkywzeDyjQ
-	1eR0KuVRkHCiq3/0OjJd/ARWpDbmc882QSIXQh2VhJk6MLpXhlietc3JeeTSjawZKhBj3hvkGU3
-	LyWGFRQuBT1zvKw==
-X-Google-Smtp-Source: AGHT+IHx8WYLlRQ85MZlmXhOzStV8hphkC3W/SA4f78hZMUVqK+AieUKfwBlCdSzSifKonxye2KCvb5tQYoxE/A=
-X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:35bd])
- (user=aliceryhl job=sendgmr) by 2002:a25:8304:0:b0:e1a:a29d:33f6 with SMTP id
- 3f1490d57ef6-e2604b2bbd3mr134063276.3.1727789444352; Tue, 01 Oct 2024
- 06:30:44 -0700 (PDT)
-Date: Tue, 01 Oct 2024 13:30:02 +0000
-In-Reply-To: <20241001-tracepoint-v9-0-1ad3b7d78acb@google.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rDj2Daeg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B1A5Czx/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rDj2Daeg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B1A5Czx/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BC9501F813;
+	Tue,  1 Oct 2024 13:32:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1727789543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJyVh7xpKFUerqgpvOUGQtwMuhiG+vMZUA+eKVSBOeQ=;
+	b=rDj2Daegw8acNetwuj+igR8urk35s9IZ5Ei4I5Xxg1Hf1yqHsGh07lzo6akylF2rlreVuA
+	RBAeL6aZkGoF0vKutQUZhkX3qKm/b1/jlPlXDc2TU6/f+CeVzyg5lpcXpqHqMArMLoBpqB
+	v9XWD2kMJCRuN9Moac3CaUXQnIsYDQE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1727789543;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJyVh7xpKFUerqgpvOUGQtwMuhiG+vMZUA+eKVSBOeQ=;
+	b=B1A5Czx/JU851NEzyiwPym53Dc/Uk7kviKL8OOcS1KkhL/cvrtNrUAxf40xEk6CgQKiBQn
+	jRfTdeTqntkjpyCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1727789543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJyVh7xpKFUerqgpvOUGQtwMuhiG+vMZUA+eKVSBOeQ=;
+	b=rDj2Daegw8acNetwuj+igR8urk35s9IZ5Ei4I5Xxg1Hf1yqHsGh07lzo6akylF2rlreVuA
+	RBAeL6aZkGoF0vKutQUZhkX3qKm/b1/jlPlXDc2TU6/f+CeVzyg5lpcXpqHqMArMLoBpqB
+	v9XWD2kMJCRuN9Moac3CaUXQnIsYDQE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1727789543;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EJyVh7xpKFUerqgpvOUGQtwMuhiG+vMZUA+eKVSBOeQ=;
+	b=B1A5Czx/JU851NEzyiwPym53Dc/Uk7kviKL8OOcS1KkhL/cvrtNrUAxf40xEk6CgQKiBQn
+	jRfTdeTqntkjpyCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AEA3713A73;
+	Tue,  1 Oct 2024 13:32:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vHWbKuf5+2ZwDwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 01 Oct 2024 13:32:23 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6A189A0881; Tue,  1 Oct 2024 15:32:19 +0200 (CEST)
+Date: Tue, 1 Oct 2024 15:32:19 +0200
+From: Jan Kara <jack@suse.cz>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+	linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v8 04/12] fs: handle delegated timestamps in
+ setattr_copy_mgtime
+Message-ID: <20241001133219.aenkpa5ydeefqqyd@quack3>
+References: <20241001-mgtime-v8-0-903343d91bc3@kernel.org>
+ <20241001-mgtime-v8-4-903343d91bc3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241001-tracepoint-v9-0-1ad3b7d78acb@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8506; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=B20XPkbS2BldO1VNXORVIshLvelvNfCPEDgTJEytqJk=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBm+/lyTWXV0qt+2jySV7mW4g92htG/ndvQ8HqpA
- dk6PB1Bf0yJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZvv5cgAKCRAEWL7uWMY5
- RkGpEACtKcH0XvxL+nqPbUO1qDZYBp7bMUnck3VQWyZKLA989Zc7bnXqY74U0cmqeyfj/XoMJ5Z
- lnQ5jogYpeKqs3goYSkOH+M4p4ej9Ie95XbXHIMRYWpPojVgq4djGHfYMtRJrD3hjvEO6RlaQMc
- AeL+nbrCeI1NUFAMheXguFI4z5YgMNFrkdJ3LujbqXfax5LKBopJpR9sIf+2zmz5cC56fRIAyop
- p2Br8NEWvvZd37qk9WAK8Bb8SQTqhS5MslcMU6ATBjPTChXJVV9Zw0Yu9EVkparyOh+lILISo6l
- nj3W1hFE4wA765Q6mxAlnKubwjV5oWtEyPu5Ju6wnL0gXlHvr+c7DmEA0wnBLV37vuy0Vp/6Kpt
- hF041c9wo0ehSoZObI95FnGdJsjNLcm3CdNagGhlWLDqT/juXtplimiVk4Yru1uEtsAKIncI0Kh
- 2vBc9thKTWi4uiKDUgoR80YNDNo/khAorOcLybKN7XOXe6XWuZvSsb/Q9vJwO3Rz6PJjFK1/szN
- VWquccbjzSPl3/zsb1gR1lEcyEUuJg9/oIAi7qCT9l7ArCrWTOwyeReOGled4NdKqDou3bXF3fL
- 1CoH3B2NyClyJ50UDrVa4jHNW/AwmSHJp8dqwKeIqLeYIpyIxb72ihi3ukO1m3EOe7JWuBRc626 8ofGkmyjOxUAWFQ==
-X-Mailer: b4 0.13.0
-Message-ID: <20241001-tracepoint-v9-5-1ad3b7d78acb@google.com>
-Subject: [PATCH v9 5/5] rust: add arch_static_branch
-From: Alice Ryhl <aliceryhl@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241001-mgtime-v8-4-903343d91bc3@kernel.org>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLy4jt9zmnbk4oncb1qwahh5jo)];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,infradead.org:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-To allow the Rust implementation of static_key_false to use runtime code
-patching instead of the generic implementation, pull in the relevant
-inline assembly from the jump_label.h header by running the C
-preprocessor on a .rs.S file. Build rules are added for .rs.S files.
+On Tue 01-10-24 06:58:58, Jeff Layton wrote:
+> When updating the ctime on an inode for a SETATTR with a multigrain
+> filesystem, we usually want to take the latest time we can get for the
+> ctime. The exception to this rule is when there is a nfsd write
+> delegation and the server is proxying timestamps from the client.
+> 
+> When nfsd gets a CB_GETATTR response, we want to update the timestamp
+> value in the inode to the values that the client is tracking. The client
+> doesn't send a ctime value (since that's always determined by the
+> exported filesystem), but it can send a mtime value. In the case where
+> it does, then we may need to update the ctime to a value commensurate
+> with that instead of the current time.
+> 
+> If ATTR_DELEG is set, then use ia_ctime value instead of setting the
+> timestamp to the current time.
+> 
+> With the addition of delegated timestamps we can also receive a request
+> to update only the atime, but we may not need to set the ctime. Trust
+> the ATTR_CTIME flag in the update and only update the ctime when it's
+> set.
+> 
+> Tested-by: Randy Dunlap <rdunlap@infradead.org> # documentation bits
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Since the relevant inline asm has been adjusted to export the inline asm
-via the ARCH_STATIC_BRANCH_ASM macro in a consistent way, the Rust side
-does not need architecture specific code to pull in the asm.
+Looks good. Feel free to add:
 
-It is not possible to use the existing C implementation of
-arch_static_branch via a Rust helper because it passes the argument
-`key` to inline assembly as an 'i' parameter. Any attempt to add a C
-helper for this function will fail to compile because the value of `key`
-must be known at compile-time.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/Makefile                           |  5 ++-
- rust/kernel/.gitignore                  |  3 ++
- rust/kernel/arch_static_branch_asm.rs.S |  7 ++++
- rust/kernel/jump_label.rs               | 64 ++++++++++++++++++++++++++++++++-
- rust/kernel/lib.rs                      | 35 ++++++++++++++++++
- scripts/Makefile.build                  |  9 ++++-
- 6 files changed, 120 insertions(+), 3 deletions(-)
+								Honza
 
-diff --git a/rust/Makefile b/rust/Makefile
-index b5e0a73b78f3..09ea07cc4001 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -36,6 +36,8 @@ always-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.c
- obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
- obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
- 
-+always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/arch_static_branch_asm.rs
-+
- # Avoids running `$(RUSTC)` for the sysroot when it may not be available.
- ifdef CONFIG_RUST
- 
-@@ -421,7 +423,8 @@ $(obj)/uapi.o: $(src)/uapi/lib.rs \
- $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
-     --extern build_error --extern macros --extern bindings --extern uapi
- $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
--    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
-+    $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o \
-+	$(obj)/kernel/arch_static_branch_asm.rs FORCE
- 	+$(call if_changed_rule,rustc_library)
- 
- endif # CONFIG_RUST
-diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
-new file mode 100644
-index 000000000000..d082731007c6
---- /dev/null
-+++ b/rust/kernel/.gitignore
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+/arch_static_branch_asm.rs
-diff --git a/rust/kernel/arch_static_branch_asm.rs.S b/rust/kernel/arch_static_branch_asm.rs.S
-new file mode 100644
-index 000000000000..9e373d4f7567
---- /dev/null
-+++ b/rust/kernel/arch_static_branch_asm.rs.S
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/jump_label.h>
-+
-+// Cut here.
-+
-+::kernel::concat_literals!(ARCH_STATIC_BRANCH_ASM("{symb} + {off} + {branch}", "{l_yes}"))
-diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-index 011e1fc1d19a..ccfd20589c21 100644
---- a/rust/kernel/jump_label.rs
-+++ b/rust/kernel/jump_label.rs
-@@ -23,7 +23,69 @@ macro_rules! static_key_false {
-         let _key: *const $keytyp = ::core::ptr::addr_of!($key);
-         let _key: *const $crate::bindings::static_key = ::core::ptr::addr_of!((*_key).$field);
- 
--        $crate::bindings::static_key_count(_key.cast_mut()) > 0
-+        #[cfg(not(CONFIG_JUMP_LABEL))]
-+        {
-+            $crate::bindings::static_key_count(_key.cast_mut()) > 0
-+        }
-+
-+        #[cfg(CONFIG_JUMP_LABEL)]
-+        $crate::jump_label::arch_static_branch! { $key, $keytyp, $field, false }
-     }};
- }
- pub use static_key_false;
-+
-+/// Assert that the assembly block evaluates to a string literal.
-+#[cfg(CONFIG_JUMP_LABEL)]
-+const _: &str = include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(CONFIG_JUMP_LABEL)]
-+#[cfg(not(CONFIG_HAVE_JUMP_LABEL_HACK))]
-+macro_rules! arch_static_branch {
-+    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
-+        $crate::asm!(
-+            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+            l_yes = label {
-+                break 'my_label true;
-+            },
-+            symb = sym $key,
-+            off = const ::core::mem::offset_of!($keytyp, $field),
-+            branch = const $crate::jump_label::bool_to_int($branch),
-+        );
-+
-+        break 'my_label false;
-+    }};
-+}
-+
-+#[macro_export]
-+#[doc(hidden)]
-+#[cfg(CONFIG_JUMP_LABEL)]
-+#[cfg(CONFIG_HAVE_JUMP_LABEL_HACK)]
-+macro_rules! arch_static_branch {
-+    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
-+        $crate::asm!(
-+            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+            l_yes = label {
-+                break 'my_label true;
-+            },
-+            symb = sym $key,
-+            off = const ::core::mem::offset_of!($keytyp, $field),
-+            branch = const 2 | $crate::jump_label::bool_to_int($branch),
-+        );
-+
-+        break 'my_label false;
-+    }};
-+}
-+
-+#[cfg(CONFIG_JUMP_LABEL)]
-+pub use arch_static_branch;
-+
-+/// A helper used by inline assembly to pass a boolean to as a `const` parameter.
-+///
-+/// Using this function instead of a cast lets you assert that the input is a boolean, and not some
-+/// other type that can also be cast to an integer.
-+#[doc(hidden)]
-+pub const fn bool_to_int(b: bool) -> i32 {
-+    b as i32
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 77610e19df96..448af0880785 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -148,3 +148,38 @@ macro_rules! container_of {
-         ptr.sub(offset) as *const $type
-     }}
- }
-+
-+/// Helper for `.rs.S` files.
-+#[doc(hidden)]
-+#[macro_export]
-+macro_rules! concat_literals {
-+    ($( $asm:literal )* ) => {
-+        ::core::concat!($($asm),*)
-+    };
-+}
-+
-+/// Wrapper around `asm!` configured for use in the kernel.
-+///
-+/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
-+/// syntax.
-+// For x86, `asm!` uses intel syntax by default, but we want to use at&t syntax in the kernel.
-+#[cfg(target_arch = "x86_64")]
-+#[macro_export]
-+macro_rules! asm {
-+    ($($asm:expr),* ; $($rest:tt)*) => {
-+        ::core::arch::asm!( $($asm)*, options(att_syntax), $($rest)* )
-+    };
-+}
-+
-+/// Wrapper around `asm!` configured for use in the kernel.
-+///
-+/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
-+/// syntax.
-+// For non-x86 arches we just pass through to `asm!`.
-+#[cfg(not(target_arch = "x86_64"))]
-+#[macro_export]
-+macro_rules! asm {
-+    ($($asm:expr),* ; $($rest:tt)*) => {
-+        ::core::arch::asm!( $($asm)*, $($rest)* )
-+    };
-+}
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 8f423a1faf50..03ee558fcd4d 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -248,12 +248,13 @@ $(obj)/%.lst: $(obj)/%.c FORCE
- # Compile Rust sources (.rs)
- # ---------------------------------------------------------------------------
- 
--rust_allowed_features := new_uninit
-+rust_allowed_features := asm_const,asm_goto,new_uninit
- 
- # `--out-dir` is required to avoid temporaries being created by `rustc` in the
- # current working directory, which may be not accessible in the out-of-tree
- # modules case.
- rust_common_cmd = \
-+	OBJTREE=$(abspath $(objtree)) \
- 	RUST_MODFILE=$(modfile) $(RUSTC_OR_CLIPPY) $(rust_flags) \
- 	-Zallow-features=$(rust_allowed_features) \
- 	-Zcrate-attr=no_std \
-@@ -303,6 +304,12 @@ quiet_cmd_rustc_ll_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
- $(obj)/%.ll: $(obj)/%.rs FORCE
- 	+$(call if_changed_dep,rustc_ll_rs)
- 
-+quiet_cmd_rustc_rs_rs_S = RSCPP $(quiet_modtag) $@
-+      cmd_rustc_rs_rs_S = $(CPP) $(c_flags) -xc -C -P $< | sed '1,/^\/\/ Cut here.$$/d' >$@
-+
-+$(obj)/%.rs: $(obj)/%.rs.S FORCE
-+	+$(call if_changed_dep,rustc_rs_rs_S)
-+
- # Compile assembler sources (.S)
- # ---------------------------------------------------------------------------
- 
-
+> ---
+>  fs/attr.c          | 28 +++++++++++++--------
+>  fs/inode.c         | 72 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fs.h |  2 ++
+>  3 files changed, 92 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/attr.c b/fs/attr.c
+> index 3bcbc45708a3..392eb62aa609 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -286,16 +286,20 @@ static void setattr_copy_mgtime(struct inode *inode, const struct iattr *attr)
+>  	unsigned int ia_valid = attr->ia_valid;
+>  	struct timespec64 now;
+>  
+> -	/*
+> -	 * If the ctime isn't being updated then nothing else should be
+> -	 * either.
+> -	 */
+> -	if (!(ia_valid & ATTR_CTIME)) {
+> -		WARN_ON_ONCE(ia_valid & (ATTR_ATIME|ATTR_MTIME));
+> -		return;
+> +	if (ia_valid & ATTR_CTIME) {
+> +		/*
+> +		 * In the case of an update for a write delegation, we must respect
+> +		 * the value in ia_ctime and not use the current time.
+> +		 */
+> +		if (ia_valid & ATTR_DELEG)
+> +			now = inode_set_ctime_deleg(inode, attr->ia_ctime);
+> +		else
+> +			now = inode_set_ctime_current(inode);
+> +	} else {
+> +		/* If ATTR_CTIME isn't set, then ATTR_MTIME shouldn't be either. */
+> +		WARN_ON_ONCE(ia_valid & ATTR_MTIME);
+>  	}
+>  
+> -	now = inode_set_ctime_current(inode);
+>  	if (ia_valid & ATTR_ATIME_SET)
+>  		inode_set_atime_to_ts(inode, attr->ia_atime);
+>  	else if (ia_valid & ATTR_ATIME)
+> @@ -354,8 +358,12 @@ void setattr_copy(struct mnt_idmap *idmap, struct inode *inode,
+>  		inode_set_atime_to_ts(inode, attr->ia_atime);
+>  	if (ia_valid & ATTR_MTIME)
+>  		inode_set_mtime_to_ts(inode, attr->ia_mtime);
+> -	if (ia_valid & ATTR_CTIME)
+> -		inode_set_ctime_to_ts(inode, attr->ia_ctime);
+> +	if (ia_valid & ATTR_CTIME) {
+> +		if (ia_valid & ATTR_DELEG)
+> +			inode_set_ctime_deleg(inode, attr->ia_ctime);
+> +		else
+> +			inode_set_ctime_to_ts(inode, attr->ia_ctime);
+> +	}
+>  }
+>  EXPORT_SYMBOL(setattr_copy);
+>  
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 4ec1e71e9a9d..7a324d999816 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -2751,6 +2751,78 @@ struct timespec64 inode_set_ctime_current(struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(inode_set_ctime_current);
+>  
+> +/**
+> + * inode_set_ctime_deleg - try to update the ctime on a delegated inode
+> + * @inode: inode to update
+> + * @update: timespec64 to set the ctime
+> + *
+> + * Attempt to atomically update the ctime on behalf of a delegation holder.
+> + *
+> + * The nfs server can call back the holder of a delegation to get updated
+> + * inode attributes, including the mtime. When updating the mtime we may
+> + * need to update the ctime to a value at least equal to that.
+> + *
+> + * This can race with concurrent updates to the inode, in which
+> + * case we just don't do the update.
+> + *
+> + * Note that this works even when multigrain timestamps are not enabled,
+> + * so use it in either case.
+> + */
+> +struct timespec64 inode_set_ctime_deleg(struct inode *inode, struct timespec64 update)
+> +{
+> +	struct timespec64 now, cur_ts;
+> +	u32 cur, old;
+> +
+> +	/* pairs with try_cmpxchg below */
+> +	cur = smp_load_acquire(&inode->i_ctime_nsec);
+> +	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
+> +	cur_ts.tv_sec = inode->i_ctime_sec;
+> +
+> +	/* If the update is older than the existing value, skip it. */
+> +	if (timespec64_compare(&update, &cur_ts) <= 0)
+> +		return cur_ts;
+> +
+> +	ktime_get_coarse_real_ts64_mg(&now);
+> +
+> +	/* Clamp the update to "now" if it's in the future */
+> +	if (timespec64_compare(&update, &now) > 0)
+> +		update = now;
+> +
+> +	update = timestamp_truncate(update, inode);
+> +
+> +	/* No need to update if the values are already the same */
+> +	if (timespec64_equal(&update, &cur_ts))
+> +		return cur_ts;
+> +
+> +	/*
+> +	 * Try to swap the nsec value into place. If it fails, that means
+> +	 * we raced with an update due to a write or similar activity. That
+> +	 * stamp takes precedence, so just skip the update.
+> +	 */
+> +retry:
+> +	old = cur;
+> +	if (try_cmpxchg(&inode->i_ctime_nsec, &cur, update.tv_nsec)) {
+> +		inode->i_ctime_sec = update.tv_sec;
+> +		mgtime_counter_inc(mg_ctime_swaps);
+> +		return update;
+> +	}
+> +
+> +	/*
+> +	 * Was the change due to someone marking the old ctime QUERIED?
+> +	 * If so then retry the swap. This can only happen once since
+> +	 * the only way to clear I_CTIME_QUERIED is to stamp the inode
+> +	 * with a new ctime.
+> +	 */
+> +	if (!(old & I_CTIME_QUERIED) && (cur == (old | I_CTIME_QUERIED)))
+> +		goto retry;
+> +
+> +	/* Otherwise, it was a new timestamp. */
+> +	cur_ts.tv_sec = inode->i_ctime_sec;
+> +	cur_ts.tv_nsec = cur & ~I_CTIME_QUERIED;
+> +	return cur_ts;
+> +}
+> +EXPORT_SYMBOL(inode_set_ctime_deleg);
+> +
+>  /**
+>   * in_group_or_capable - check whether caller is CAP_FSETID privileged
+>   * @idmap:	idmap of the mount @inode was found from
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 23908bad166c..b1a3bd07711b 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1584,6 +1584,8 @@ static inline bool fsuidgid_has_mapping(struct super_block *sb,
+>  
+>  struct timespec64 current_time(struct inode *inode);
+>  struct timespec64 inode_set_ctime_current(struct inode *inode);
+> +struct timespec64 inode_set_ctime_deleg(struct inode *inode,
+> +					struct timespec64 update);
+>  
+>  static inline time64_t inode_get_atime_sec(const struct inode *inode)
+>  {
+> 
+> -- 
+> 2.46.2
+> 
 -- 
-2.46.1.824.gd892dcdcdd-goog
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
