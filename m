@@ -1,191 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F529EEC5;
-	Tue,  1 Oct 2024 13:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE9536C;
+	Tue,  1 Oct 2024 13:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727788484; cv=none; b=nczEXTuSLrxgJSX+NrKF/cqOgSuf4t7eupV5K0OX0KxiE8OACt/tHp5M9KssyrCvXhnBc40dosHBJKku5BRK+7MlGGIEglFw3fisf4uwzEvn3/DzdOF5Vccg1btplTS9XIOa9rsBG24auPvuCbFzoRa1bNXHkVVeTQh2kTJ/Cp0=
+	t=1727788670; cv=none; b=Kkd1BwBvYLiz2h8CG3S5KoXvEjhlO5XsAs7tIK4ZjuIkJmCx8ApUTKM6hXeN0H+PWmfQq6UIaYj9iRiLdOfSIIC1gdxM1EkuZKlRR4iJh0hNUuGMry/PW9XpOnby0O1lgyjiuhRE/T7peOKUkZ7wbzBhMpOWhB1YQ4TkU+9OlfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727788484; c=relaxed/simple;
-	bh=oyGA8rO9KmQUz/TMGCoig5Jh+IEWCufzGTgu4HNGJyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LMqQPseEhQWsLiZzSiKkztCW1Lput8u9fD8GH74/aMpUdtPMd+nAddlgZvMdYgGJ8zUseScOgCQ0kWasICqL2u2oSwg/WHmUVdHgeu3j1m5jPdsq1dyCqLyaVL1OMypVuyGQG3WMkRPd8FEGEJzsCSE1B0TiqR+9IRIKB+Pav4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6112CC4CEC6;
-	Tue,  1 Oct 2024 13:14:38 +0000 (UTC)
-Date: Tue, 1 Oct 2024 09:15:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard
- Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
- <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, "=?UTF-8?B?Qmo=?=
- =?UTF-8?B?w7Zybg==?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin
- <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>,
- linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak
- <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-arm-kernel@lists.infradead.org, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
- <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
- Dooley <conor.dooley@microchip.com>, Samuel Holland
- <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
- <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
- <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev, Carlos Llamas <cmllamas@google.com>
-Subject: Re: [PATCH v8 0/5] Tracepoints and static branch in Rust
-Message-ID: <20241001091527.2fe4e039@gandalf.local.home>
-In-Reply-To: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
-References: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727788670; c=relaxed/simple;
+	bh=WPMpOd8Iw2kSzbRwKqXYnnhA6JW5T7DbmEoD1hPbr0g=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/nFz+mAiEm7K7kqsvto74K5wQiYtl5D6r6NT266AZP+YOpupMrr7keKKOeFoftdn8rs8Rs7yhpRWVYcHRlIKyfqwicHo9zKndnu+Ai25dWHs6g737JwPhIsgAXL7YlyroWN3G2Kkf4O3IjhHKpbCg5nPGbTd3wIDrURPIyAqYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MDKxZk/D; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDKxZk/D"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42cb7a2e4d6so49019655e9.0;
+        Tue, 01 Oct 2024 06:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727788667; x=1728393467; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KmPQDwzcEIkFp9T4l5sYPEseGg7Xn9NS3SfB4A7nlZo=;
+        b=MDKxZk/DXhlGaSoEl/bInKCTw936Z5MecSoL4J28H2jq+UukrNwEElTq2//vpHrP4l
+         sGblphVYPE16IH60NRTqfoPQWisC12PNWSXD5hcKRS9jvxGfpUtatWyUkbXt4t8BWP4Z
+         MwPc55n1lYUH8dEMOwvnVufEUtJZGGmuMsNwWTSJAw+ScuIQb6zSk0F2avZhIB9F509l
+         dJ8WM+qCCptx3AHEwTlzI0o/ah/iBlYQVsAMKlj2++vCjD5OUQV3tHQ0fT6xnt8UUjoc
+         LNj61Va4/3z2AlHd8dsVkDknOdz42sMsy74JTt16GivngwH7sGSKc4scsP/HyG6SOy9e
+         ajhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727788667; x=1728393467;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KmPQDwzcEIkFp9T4l5sYPEseGg7Xn9NS3SfB4A7nlZo=;
+        b=U9p4P68rzcnnE6vAogJkIoUJPMoWHIBqmirxacCV7YAABHARex4yiFwTxHeanbgsLC
+         Jm8q37QNCu3COiFn80P0OMpmD4RBTlQ9jqpuZ3+yVRLtbq8v6Kb5xSvaM/KPIZn+0lHo
+         8SqtNPcjhpRXZKDKmpcM+raavZ1yFaBayV9dgZR6mWSd6yuxI4rkxyeiw3FJ6w3Yvb1B
+         6GWAH7EIKS5c/jah5t7kY2F1qLCawJkXlx2eNaVTEu1KErNRC8Joh13ArU/cngo5yIwX
+         roqbjVIsW1ocK+KznctXjhd0L/jv6+b8pXIIKw0eQDVY7PvyFsD1g33Knu9g4q2Hq7dv
+         EF3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVGDZe0vsfIxRS2kY89bAirhm0NUAtg1A+qMgup3qyRIZHjUELg1Py+mQZOrDltJAReOizpHc1YHHGIgdcVjRG+9014@vger.kernel.org, AJvYcCVjvaU3G197ps2NQr5dcu4A8MThbNVmAv2e9NmDAVGAly5fcZDmVCk6XptURtMdtSic7vI9jzmFt0CyRl5K@vger.kernel.org, AJvYcCWFtQpK6i8UHfOh4yeq4veSqlFPWoUEugj1NCM8Ju4U5iwTBw/P2ejc3eX5s2irvZjMOhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5TFUXbEw0w5pKrveNQqhucUMJARf1dEzGLjYBhWHlsFCOyaCT
+	oPfnOGhdYeueoeKtl4WNcn9vPDeSJCfajYdE2/RLYhyRreBnofyB
+X-Google-Smtp-Source: AGHT+IEnDE6wjI9HEWyGeV7WUmvdmKD0dOfKUy24RV3qN1iuRE12CVnQRS17JvbbpRmY7MQrsDtpbg==
+X-Received: by 2002:a5d:5052:0:b0:37c:d537:9dc0 with SMTP id ffacd0b85a97d-37cd5a6bf42mr10272474f8f.12.1727788666869;
+        Tue, 01 Oct 2024 06:17:46 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37cd565e21dsm11807727f8f.33.2024.10.01.06.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 06:17:46 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 1 Oct 2024 15:17:44 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv5 bpf-next 02/13] uprobe: Add support for session consumer
+Message-ID: <Zvv2eM2YNuiv7C8-@krava>
+References: <20240929205717.3813648-1-jolsa@kernel.org>
+ <20240929205717.3813648-3-jolsa@kernel.org>
+ <CAEf4BzZ+1=YU=61mVup8pAc80SOvNuYtMzNdz4miH+Sm4qV4ig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZ+1=YU=61mVup8pAc80SOvNuYtMzNdz4miH+Sm4qV4ig@mail.gmail.com>
 
+On Mon, Sep 30, 2024 at 02:36:03PM -0700, Andrii Nakryiko wrote:
+> On Sun, Sep 29, 2024 at 1:57 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > This change allows the uprobe consumer to behave as session which
+> > means that 'handler' and 'ret_handler' callbacks are connected in
+> > a way that allows to:
+> >
+> >   - control execution of 'ret_handler' from 'handler' callback
+> >   - share data between 'handler' and 'ret_handler' callbacks
+> >
+> > The session concept fits to our common use case where we do filtering
+> > on entry uprobe and based on the result we decide to run the return
+> > uprobe (or not).
+> >
+> > It's also convenient to share the data between session callbacks.
+> >
+> > To achive this we are adding new return value the uprobe consumer
+> > can return from 'handler' callback:
+> >
+> >   UPROBE_HANDLER_IGNORE
+> >   - Ignore 'ret_handler' callback for this consumer.
+> >
+> > And store cookie and pass it to 'ret_handler' when consumer has both
+> > 'handler' and 'ret_handler' callbacks defined.
+> >
+> > We store shared data in the return_consumer object array as part of
+> > the return_instance object. This way the handle_uretprobe_chain can
+> > find related return_consumer and its shared data.
+> >
+> > We also store entry handler return value, for cases when there are
+> > multiple consumers on single uprobe and some of them are ignored and
+> > some of them not, in which case the return probe gets installed and
+> > we need to have a way to find out which consumer needs to be ignored.
+> >
+> > The tricky part is when consumer is registered 'after' the uprobe
+> > entry handler is hit. In such case this consumer's 'ret_handler' gets
+> > executed as well, but it won't have the proper data pointer set,
+> > so we can filter it out.
+> >
+> > Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  include/linux/uprobes.h |  21 +++++-
+> >  kernel/events/uprobes.c | 148 +++++++++++++++++++++++++++++++---------
+> >  2 files changed, 137 insertions(+), 32 deletions(-)
+> >
+> 
+> LGTM,
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> 
+> 
+> Note also that I just resent the last patch from my patch set ([0]),
+> hopefully it will get applied, in which case you'd need to do a tiny
+> rebase.
+> 
+>   [0] https://lore.kernel.org/linux-trace-kernel/20240930212246.1829395-1-andrii@kernel.org/
 
-Hi Alice,
+the rebase is fine, but what I'm not clear about is that after yours and
+Oleg's changes get in, my kernel changes will depend on peter's perf/core,
+but bpf selftests changes will need bpf-next/master
 
-Can you rebase this series on v6.12-rc1?
-
-Thanks,
-
--- Steve
-
-
-On Thu, 22 Aug 2024 12:04:12 +0000
-Alice Ryhl <aliceryhl@google.com> wrote:
-
-> An important part of a production ready Linux kernel driver is
-> tracepoints. So to write production ready Linux kernel drivers in Rust,
-> we must be able to call tracepoints from Rust code. This patch series
-> adds support for calling tracepoints declared in C from Rust.
-> 
-> This series includes a patch that adds a user of tracepoits to the
-> rust_print sample. Please see that sample for details on what is needed
-> to use this feature in Rust code.
-> 
-> This is intended for use in the Rust Binder driver, which was originally
-> sent as an RFC [1]. The RFC did not include tracepoint support, but you
-> can see how it will be used in Rust Binder at [2]. The author has
-> verified that the tracepoint support works on Android devices.
-> 
-> This implementation implements support for static keys in Rust so that
-> the actual static branch happens in the Rust object file. However, the
-> __DO_TRACE body remains in C code. See v1 for an implementation where
-> __DO_TRACE is also implemented in Rust.
-> 
-> When compiling for x86, this patchset has a dependency on [3] as we need
-> objtool to convert jmp instructions to nop instructions. This patchset
-> is based on top of the series containing [3].
-> 
-> There is also a conflict with splitting up the C helpers [4]. I've
-> included an alternate version of the first patch that shows how to
-> resolve the conflict. When using the alternate version of the first
-> patch, this series applies cleanly on top of rust-next.
-> 
-> Both [3] and [4] are already in rust-next.
-> 
-> Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
-> Link: https://r.android.com/3119993 [2]
-> Link: https://lore.kernel.org/all/20240725183325.122827-7-ojeda@kernel.org/ [3]
-> Link: https://lore.kernel.org/all/20240815103016.2771842-1-nmi@metaspace.dk/ [4]
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> Changes in v8:
-> - Use OBJTREE instead of SRCTREE for temporary asm file.
-> - Adjust comments on `asm!` wrapper to be less confusing.
-> - Include resolution of conflict with helpers splitting.
-> - Link to v7: https://lore.kernel.org/r/20240816-tracepoint-v7-0-d609b916b819@google.com
-> 
-> Changes in v7:
-> - Fix spurious file included in first patch.
-> - Fix issue with riscv asm.
-> - Fix tags on fourth patch to match fifth patch.
-> - Add Reviewed-by/Acked-by tags where appropriate.
-> - Link to v6: https://lore.kernel.org/r/20240808-tracepoint-v6-0-a23f800f1189@google.com
-> 
-> Changes in v6:
-> - Add support for !CONFIG_JUMP_LABEL.
-> - Add tracepoint to rust_print sample.
-> - Deduplicate inline asm.
-> - Require unsafe inside `declare_trace!`.
-> - Fix bug on x86 due to use of intel syntax.
-> - Link to v5: https://lore.kernel.org/r/20240802-tracepoint-v5-0-faa164494dcb@google.com
-> 
-> Changes in v5:
-> - Update first patch regarding inline asm duplication.
-> - Add __rust_do_trace helper to support conditions.
-> - Rename DEFINE_RUST_DO_TRACE_REAL to __DEFINE_RUST_DO_TRACE.
-> - Get rid of glob-import in tracepoint macro.
-> - Address safety requirements on tracepoints in docs.
-> - Link to v4: https://lore.kernel.org/rust-for-linux/20240628-tracepoint-v4-0-353d523a9c15@google.com
-> 
-> Changes in v4:
-> - Move arch-specific code into rust/kernel/arch.
-> - Restore DEFINE_RUST_DO_TRACE at end of define_trace.h
-> - Link to v3: https://lore.kernel.org/r/20240621-tracepoint-v3-0-9e44eeea2b85@google.com
-> 
-> Changes in v3:
-> - Support for Rust static_key on loongarch64 and riscv64.
-> - Avoid failing compilation on architectures that are missing Rust
->   static_key support when the archtectures does not actually use it.
-> - Link to v2: https://lore.kernel.org/r/20240610-tracepoint-v2-0-faebad81b355@google.com
-> 
-> Changes in v2:
-> - Call into C code for __DO_TRACE.
-> - Drop static_call patch, as it is no longer needed.
-> - Link to v1: https://lore.kernel.org/r/20240606-tracepoint-v1-0-6551627bf51b@google.com
-> 
-> ---
-> Alice Ryhl (5):
->       rust: add generic static_key_false
->       rust: add tracepoint support
->       rust: samples: add tracepoint to Rust sample
->       jump_label: adjust inline asm to be consistent
->       rust: add arch_static_branch
-> 
->  MAINTAINERS                             |  1 +
->  arch/arm/include/asm/jump_label.h       | 14 +++--
->  arch/arm64/include/asm/jump_label.h     | 20 +++++---
->  arch/loongarch/include/asm/jump_label.h | 16 +++---
->  arch/riscv/include/asm/jump_label.h     | 50 ++++++++++--------
->  arch/x86/include/asm/jump_label.h       | 38 ++++++--------
->  include/linux/tracepoint.h              | 22 +++++++-
->  include/trace/define_trace.h            | 12 +++++
->  include/trace/events/rust_sample.h      | 31 +++++++++++
->  rust/Makefile                           |  5 +-
->  rust/bindings/bindings_helper.h         |  3 ++
->  rust/helpers.c                          |  9 ++++
->  rust/kernel/.gitignore                  |  3 ++
->  rust/kernel/arch_static_branch_asm.rs.S |  7 +++
->  rust/kernel/jump_label.rs               | 91 +++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs                      | 37 ++++++++++++++
->  rust/kernel/tracepoint.rs               | 49 ++++++++++++++++++
->  samples/rust/Makefile                   |  3 +-
->  samples/rust/rust_print.rs              | 18 +++++++
->  samples/rust/rust_print_events.c        |  8 +++
->  scripts/Makefile.build                  |  9 +++-
->  21 files changed, 379 insertions(+), 67 deletions(-)
-> ---
-> base-commit: 88359b25b950670432ef1da4352eb6cc62e0fa9f
-> change-id: 20240606-tracepoint-31e15b90e471
-> 
-> Best regards,
-
+jirka
