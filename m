@@ -1,170 +1,83 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1091CBE91
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 14:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD34D1C1733
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 14:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727792016; cv=none; b=YIfmZUGFd67Fl6VEq9USH9YZ4uJeOA1uFtsAiiGpNTrZaGF+Xtb5lgd07avQrZUdQ4THUov4Rav7nSl9n33djzqp4fbWZOPkSYR5FHwwG9DoE6XcHdyhV082pm9UvM1x76rK3YtIACMXBc8PmV3PZbpITg5in520j5vlw6uclEQ=
+	t=1727792696; cv=none; b=rtmCkwxdiA3+j9TUUXHajim+W7Y6aZDHRxinw+ONDXs+SLPd5AaodL8Apq5xckotzTsB+Xpw2Hc4l8YGQEq+QrMfhEgLe04WQFf32baqsjBexMQmphuf/aq/u273hqaF1XCz+4+6snjmW7T0kUe9quVj2p06TWGkkn5H25iMrnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727792016; c=relaxed/simple;
-	bh=w8hIawvAr2J+L+amI/5+VhvadK+7PheFbsRC9H17ZV0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H5TKxoadGkEQO2bnSxxuyXCYkswcKiQF0DERBDDN4MWgcA4ppsd4zQaggQ2rDYOdYpbqwG1TYY954eOmcHlrVnEYGpUaYN1rlwaYVc5exZ+RJTMXIQO60hI8oU4r3auARxkWFFvIGhwvUmYp79X8SLHuu6wHwdXUoquw63gkG2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rDgSa8/E; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1727792696; c=relaxed/simple;
+	bh=GhELIXQEnLOmvW3++pNEmKV/qOEcq0CL1OoAkU/AQDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oMpmprWwKJn3p2e9v3v43AZutdEig3rj4nI3kNs35SiFHPHhfoY5CAQY2zPEpqe01Vfa3DksZ1DmoLS/W7hUSBzhGNocpAd40Wqr4rg/YT2co611Xknj3QyjvSVPMOWTQsWXvZvd3Dqy/irPdu7hCRwX1lEd/hYHs3Q4+qi5Gyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZKeYTFvl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rDgSa8/E"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3770320574aso3763340f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Oct 2024 07:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727792012; x=1728396812; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5obgxVfAZEyoG+iqtZvjYkscvrOCzI2Q3//aei7Jed8=;
-        b=rDgSa8/EJze7UuhBKXoxiTwcgkiP1HjeNGxToaXRvuw57kypL0UFYmwfcXpZC+Jn2p
-         Jb3SrwcqEM3rNnMMC4lfWe8FoWN7GXfXxdXxblWZbGvlqS3iwEqGyIfPDlNE7emu9TMQ
-         4KBbaohzVyzMVfHdxSHiCBQbuQooDzecK6KLf4t5W9Ry1d/GwuSeDs8dZ1tTbzMgxXzQ
-         G2eVoObNN6ldePG92HXRcOecVDcAn9wPv65hAp+HN9+6ucTgocPXD7WEd7S8WKWXuppV
-         EkgUqhBP6aCUE8HVBFdFaMP5EiYW05LEafStv7wOmP/RVHWzLtZlTDVNEGRRamaUKylT
-         DT6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727792012; x=1728396812;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5obgxVfAZEyoG+iqtZvjYkscvrOCzI2Q3//aei7Jed8=;
-        b=ScdQEV6XhH50323qnzabGqbmB1wi/CibU/EvVNaAQjTGm4e6Sfep74MnWsdcw/5Nrm
-         KMmilL3/VOLCoYscMtNilmRJMHITHvUq35gPSmr7pWY27c7ZbT7xYca8ztTWNQGnyyXN
-         HIgiuPVRPqx+XAhkItPPP8B/cGU+z+pmxKyRduYUcqWNwQudctFe63VZnPm8cNUsVAZG
-         EHt7P3DxPmRjtELwn+QIywHOW6PK90vv0+2d1kKUP85/CZpndZ3BvR8JbT3nYa5YHwai
-         V7PE1edEMR2RGhz7JglNCHoLo7Ea/MAR1fjk7Z9p+NKRdNpwXqcMNhTvrTkP5OVNvWt3
-         bFgw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQmwYSVqXyIOFZ+kBX3+ipjujHMSB4RzOpoLz5lhb3EjJTmzX810l/v5jyx/uAgNT31qkIdDDDH6hyAIBBPACSvFY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+P9LZ/m7m+B/QVSWeUJDFPVf2LWAwecChT1TW3u3fyJO37vLt
-	sLBp8STHphSYLlRLhuzfq1bcmpyaBG7KDUyCZen9ts/15qwUaj0TubtDtavBajFpFS0BhQw/Oyj
-	jxZcp3L7p6Utb0IO7J+Yd4IhXwePxIIbovWyS
-X-Google-Smtp-Source: AGHT+IEGav/rdbRGd4XLNTrqSljOoF/btIXDS4OkzP2Czz8bQKx69WPhqo0AphFZ55+q0RxYyyAvw7unwTk9BVpCMtE=
-X-Received: by 2002:a5d:4e09:0:b0:37c:cd0d:208f with SMTP id
- ffacd0b85a97d-37cd5aed7d3mr9191230f8f.49.1727792011796; Tue, 01 Oct 2024
- 07:13:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZKeYTFvl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727792693;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=YMo3yy8PMkJte30wHnko3dY0ReElk0bDYgkXeRTFMzo=;
+	b=ZKeYTFvlfK14b940cQvwS0szLcJ/2QSYT4dVCm4y0nkA8RjzlE3ThvPDbsoOpVoN+LrkdG
+	Zc3tI1a2vL0aU2KAVYmB6gyjUZQYn17LJ07muXFZvXo4MhOEbWNfgH4dYDBA86oI1YiGFJ
+	N9rlD1u1RjSwEEmME6LavUq/98RYF/A=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-597-nnMdWSITOZ-Hll4tghcaJA-1; Tue,
+ 01 Oct 2024 10:24:50 -0400
+X-MC-Unique: nnMdWSITOZ-Hll4tghcaJA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 347B41944CFE;
+	Tue,  1 Oct 2024 14:24:49 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.88])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 89C9818B8F6C;
+	Tue,  1 Oct 2024 14:24:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  1 Oct 2024 16:24:26 +0200 (CEST)
+Date: Tue, 1 Oct 2024 16:24:16 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Liao Chang <liaochang1@huawei.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] uprobes: kill xol_area->slot_count
+Message-ID: <20241001142416.GA13599@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001-tracepoint-v9-0-1ad3b7d78acb@google.com>
- <20241001-tracepoint-v9-1-1ad3b7d78acb@google.com> <20241001101201.7a43726d@gandalf.local.home>
-In-Reply-To: <20241001101201.7a43726d@gandalf.local.home>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 1 Oct 2024 16:13:18 +0200
-Message-ID: <CAH5fLggkS-W93KoNANGpKuCgExJ40oNEtC1JtF1ffJyjhZ9Q8g@mail.gmail.com>
-Subject: Re: [PATCH v9 1/5] rust: add generic static_key_false
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, Oct 1, 2024 at 4:11=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Tue, 01 Oct 2024 13:29:58 +0000
-> Alice Ryhl <aliceryhl@google.com> wrote:
->
-> > Add just enough support for static key so that we can use it from
-> > tracepoints. Tracepoints rely on `static_key_false` even though it is
-> > deprecated, so we add the same functionality to Rust.
-> >
-> > This patch only provides a generic implementation without code patching
-> > (matching the one used when CONFIG_JUMP_LABEL is disabled). Later
-> > patches add support for inline asm implementations that use runtime
-> > patching.
-> >
-> > When CONFIG_JUMP_LABEL is unset, `static_key_count` is a static inline
-> > function, so a Rust helper is defined for `static_key_count` in this
-> > case. If Rust is compiled with LTO, this call should get inlined. The
-> > helper can be eliminated once we have the necessary inline asm to make
-> > atomic operations from Rust.
-> >
-> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/bindings/bindings_helper.h |  1 +
-> >  rust/helpers/helpers.c          |  1 +
-> >  rust/helpers/jump_label.c       | 15 +++++++++++++++
-> >  rust/kernel/jump_label.rs       | 29 +++++++++++++++++++++++++++++
-> >  rust/kernel/lib.rs              |  1 +
-> >  5 files changed, 47 insertions(+)
-> >
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_h=
-elper.h
-> > index ae82e9c941af..e0846e7e93e6 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/ethtool.h>
-> >  #include <linux/firmware.h>
-> >  #include <linux/jiffies.h>
-> > +#include <linux/jump_label.h>
-> >  #include <linux/mdio.h>
-> >  #include <linux/phy.h>
-> >  #include <linux/refcount.h>
-> > diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> > index 30f40149f3a9..17e1b60d178f 100644
-> > --- a/rust/helpers/helpers.c
-> > +++ b/rust/helpers/helpers.c
-> > @@ -12,6 +12,7 @@
-> >  #include "build_assert.c"
-> >  #include "build_bug.c"
-> >  #include "err.c"
-> > +#include "jump_label.c"
-> >  #include "kunit.c"
-> >  #include "mutex.c"
-> >  #include "page.c"
-> > diff --git a/rust/helpers/jump_label.c b/rust/helpers/jump_label.c
-> > new file mode 100644
-> > index 000000000000..0e9ed15903f6
-> > --- /dev/null
-> > +++ b/rust/helpers/jump_label.c
-> > @@ -0,0 +1,15 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +/*
-> > + * Copyright (C) 2024 Google LLC.
-> > + */
-> > +
-> > +#include <linux/jump_label.h>
-> > +
->
-> Nit, the above line has a spurious space.
+Hello,
 
-Thanks. Looks like the function body also uses 7 spaces instead of a
-tab. I'll fix it.
+On top of
 
-Alice
+	[PATCH 0/7] uprobes: deuglify xol_get_insn_slot/xol_free_insn_slot paths
+	https://lore.kernel.org/all/20240929144201.GA9429@redhat.com/
+
+To me this change looks like a simplification, but perhaps it can
+also be considered as optimization.
+
+Yes, in the contended case xol_get_slot_nr() will be called twice,
+the second time after prepare_to_wait_event(), but I don't think it
+can hurt in the slow path when the caller is likely going to sleep.
+
+Oleg.
+---
+
+ kernel/events/uprobes.c | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+
