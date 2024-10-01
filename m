@@ -1,114 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC56C153;
-	Tue,  1 Oct 2024 06:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DFE17DA62;
+	Tue,  1 Oct 2024 06:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727763470; cv=none; b=MeWcK1jvSjNp9IRRynE0Dl4yevG+iRJhF0g0EcJ4ht8lnF4NqFo0jpTx4/isIeILSIfgP5LzgVavTRu+K2uEZ6KJT/tH/OTKpcZfG6CojJAEwLUTdTUTZuJI1PpG/p6RtA8jIaew/YJ1Aonkn8aRBNvr2KCPv99yzZWLViUv64s=
+	t=1727764248; cv=none; b=ggdvtNOOBzV/Ub9XWrzuIcOyOj2DV++iLl/lzp0J8bxxEOQ5aaIT/VEa5yBYCU1fQz92eXuVaqtpXm9FT43d0ICETNbaHDNBBRp1CAj5rZLFVHgk4LyUeSgullnj76qyu86RiDeXs+qVS3/9CEkmrSbY0lAo6XTTt4Xr8i9UPCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727763470; c=relaxed/simple;
-	bh=kBUT3EwDlDLkppuHGAjL9CS1vbLaheFqYLZFALiq2jE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J3xT5zn7YSYPuOl0nIUxxRuKgpqjPXpPen+6zDYMzFRUAURbgLSy6PYUVNjYeTsoJnaNcoV17lEAzNIVvqiJ9/Ww4yCuHhx98zT2Nw5uCSYKOBBJJoRFYRaOGKAidiLPw5JZ0zR+Jea8tizx1jFx+DvpTIyhUdUSja76Hw/m+UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZO6iwsC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZO6iwsC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CA4C4AF0B;
-	Tue,  1 Oct 2024 06:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727763470;
-	bh=kBUT3EwDlDLkppuHGAjL9CS1vbLaheFqYLZFALiq2jE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lZO6iwsChTVHWcmVkbtT+HEtmVpn8/DKDSyrzfGSWVNoS2AsJW61BFCi6ds8dXJPv
-	 AvaOc5J3KZI2Yy1AUHhSN+VhfXyI9QL8XIDcnPvmAGVofLcAd4OJuMuzIounjyq5oh
-	 4iMDh5sh6w7ADcuYi3c2GdKb3LMK8K4uTB9y7GUiOscFo79syHV5MmMUEsZYeNfp8e
-	 OgLocX6VB8gopaE2DjeQpaFYl1REcNgAt816X0lJdv1DCboYchrbZsDZXrH6Qn2a1E
-	 LPT5hoFNEQ/b4F5t7T8X/LsTxGIBZQsdH7ozYnLdO9JfXy3uK582So2CshwWhvEsQO
-	 LNAnh7Q9i8/6g==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2fad15b3eeeso14777211fa.2;
-        Mon, 30 Sep 2024 23:17:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnB0YDMkdvYF6hzyWQyerfD8ZTCyahsi9mc2lZMYfMjC02hoKxpesrq6waPyl9DT3TPDpKy307Vx4tWne2usVMQ6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUz7rXf02TXttH9lOqYSu+vxz1scJyRp04v447OhJBy9harqWi
-	8ndSPp0kuJRdrVo9zwXDORlivLnkM0GcxSfDi6BgnDJ1bsvK+3fvMYv3LljShc0Rlfsht+MsteP
-	ANKP1eL9X389ZBj9EUExEbg99iN8=
-X-Google-Smtp-Source: AGHT+IGbGutJbA/ztjpsmdWguIxi5XOiBbzu9AF9cYX2DKiBEjTC2FnLnXg5HamKCCDbnP0XS+ChLWVKT0u3KmUQaUc=
-X-Received: by 2002:a2e:beaa:0:b0:2ee:8453:5164 with SMTP id
- 38308e7fff4ca-2f9d3dbc770mr72590261fa.0.1727763468614; Mon, 30 Sep 2024
- 23:17:48 -0700 (PDT)
+	s=arc-20240116; t=1727764248; c=relaxed/simple;
+	bh=aeEMi5y4Wm7t12xkLSyziUL1L+zL5VmxY8/gvt8bHZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ASY/OktgFPPVUCweab4X+6l7pssdhoJveBXpNwvlksIJGVZQ2ULeEbti5DsiVzDqr2B/FrK4PyTwcAUR0LMwin8EgDwrAkxMYwg+wg85o/LQryS+D/ct5VKd9x9c3s8r50z4G2cfX4LnMzU4JBRQvTvSSxxT8GVnxC6vYy5q5oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [36.44.125.240])
+	by gateway (Coremail) with SMTP id _____8BxkugOl_tmKW8FAA--.5998S3;
+	Tue, 01 Oct 2024 14:30:38 +0800 (CST)
+Received: from [192.168.0.109] (unknown [36.44.125.240])
+	by front1 (Coremail) with SMTP id qMiowMCxrtcJl_tmbPUWAA--.63107S3;
+	Tue, 01 Oct 2024 14:30:37 +0800 (CST)
+Message-ID: <10d33d7f-5785-93e1-128d-5ad6ac2e771f@loongson.cn>
+Date: Tue, 1 Oct 2024 14:30:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240926130159.19e6d0e2@rorschach.local.home>
-In-Reply-To: <20240926130159.19e6d0e2@rorschach.local.home>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 1 Oct 2024 08:17:37 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF1=2wLgM8HP6BvUxdZLK4EdnaORLUTjoDJSZP-hhDJwA@mail.gmail.com>
-Message-ID: <CAMj1kXF1=2wLgM8HP6BvUxdZLK4EdnaORLUTjoDJSZP-hhDJwA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/tracing: Mention that RESET_ATTACK_MITIGATION
- can clear memory
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <mike.rapoport@gmail.com>, 
-	Kees Cook <keescook@chromium.org>, Hans de Goede <hdegoede@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: Question about config UPROBES and UPROBE_EVENTS
+Content-Language: en-US
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1a3567d5-e558-351a-c45d-73b2e5a8788c@loongson.cn>
+ <20240930081529.f6f9161c20db9b95c9b46252@kernel.org>
+ <f639079e-bc1c-7f2a-4c3f-de1a6780da84@loongson.cn>
+ <20240930100630.7894c442@gandalf.local.home>
+ <20241001002813.6012587b5e52737a576f1d0b@kernel.org>
+ <20240930113231.6c87108d@gandalf.local.home>
+ <20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+In-Reply-To: <20241001004307.bc238bbda81907c08a8c1e96@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMCxrtcJl_tmbPUWAA--.63107S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KrWkKw4Duw4DZw43JF17CFX_yoW8XrWUpa
+	4vyFs2van5Jwsayr4qyr1kCayrtrWDGrW7Xrn5AFyxJrnY93y8Ar10gF45uFy7Wr12qr4a
+	yFZ2qa9xZayUJ3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzV
+	AYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UU
+	UUU==
 
-On Thu, 26 Sept 2024 at 19:02, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> At the 2024 Linux Plumbers Conference, I was talking with Hans de Goede
-> about the persistent buffer to display traces from previous boots. He
-> mentioned that UEFI can clear memory. In my own tests I have not seen
-> this. He later informed me that it requires the config option:
->
->  CONFIG_RESET_ATTACK_MITIGATION
->
-> It appears that setting this will allow the memory to be cleared on boot
-> up, which will definitely clear out the trace of the previous boot.
->
-> Add this information under the trace_instance in kernel-parameters.txt
-> to let people know that this can cause issues.
->
-> Link: https://lore.kernel.org/all/20170825155019.6740-2-ard.biesheuvel@linaro.org/
->
-> Reported-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index bb48ae24ae69..f9b79294f84a 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -6850,6 +6850,9 @@
->
->                                 reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff^traceprintk@trace,sched,irq
->
-> +                       Note, CONFIG_RESET_ATTACK_MITIGATION can force a memory reset on boot which
-> +                       will clear any trace that was stored.
-> +
+On 9/30/24 23:43, Masami Hiramatsu (Google) wrote:
+> On Mon, 30 Sep 2024 11:32:31 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>> On Tue, 1 Oct 2024 00:28:13 +0900
+>> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>>
+>>> On Mon, 30 Sep 2024 10:06:30 -0400
+>>> Steven Rostedt <rostedt@goodmis.org> wrote:
+>>>
+>>>> On Mon, 30 Sep 2024 09:33:42 +0800
+>>>> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>>>>    
+>>>>>> the CONFIG_UPROBES is disabled by default and make CONFIG_UPROBE_EVENTS
+>>>>>> depending on it, the uprobe_events menu is hidden. I don't like this.
+>>>>>
+>>>>> This is somehow like the current status of CONFIG_KPROBES and
+>>>>> CONFIG_KPROBE_EVENTS.
+>>>>
+>>>> The question is, can uprobes be used without uprobe_events? With the
+>>>> current BPF work that I haven't been following, it may be possible now.
+>>>
+>>> uprobe_register/unregister APIs are exposed to the kernel modules,
+>>> since systemtap had been introduced this feature.
+>>>
+>>
+>> OK, but since they have always been visible, I would just make
+>> CONFIG_UPROBES a normal option and CONFIG_UPROBE_EVENTS select it if it
+>> gets selected, and not depend on it.
+> 
+> Agreed.
 
-CONFIG_RESET_ATTACK_MITIGATION can force a wipe of system RAM at warm
-reboot on systems that have a TPM enabled, but disabling it does not
-prevent it. Also, there are many other reasons why the trace buffer
-region may be wiped and/or reused for other purposes, so singling out
-CONFIG_RESET_ATTACK_MITIGATION like this is not that useful imo.
+Thanks very much for your discussions. I agree with you.
 
-As I indicated when this feature was under review, it should be made
-very clear that any kernel side changes that affect the system's
-behavior in this regard should not be considered regressions. So
-instead of mentioning CONFIG_RESET_ATTACK_MITIGATION here, perhaps it
-would be better to document that system firmware generally makes no
-guarantees about preserving memory contents, and so this feature may
-break without warning.
+Then, CONFIG_KPROBE_EVENTS should depend on or select CONFIG_KPROBES?
+In the current code, CONFIG_KPROBE_EVENTS depend on CONFIG_KPROBES,
+the CONFIG_KPROBE_EVENTS menu is hidden if CONFIG_KPROBES is not set.
 
-Note that on UEFI systems, there is a so-called 'capsule' interface
-which does allow the OS to preserve an arbitrary buffer across a warm
-reboot. However, whether it works on all systems is anybody's guess.
+Thanks,
+Tiezhu
+
