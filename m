@@ -1,106 +1,94 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4337D1C3F0A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 13:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8621C5792;
+	Tue,  1 Oct 2024 13:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727789579; cv=none; b=KgJyV/3j37wbTuOyquEWe+8fRwuc2ZLJwkAK1g0JlPfAe5ja6UDmRKpZg2W10gzDYztQ1lOvU44k7lGjxMbGPYPliY+IzMJxat1EXSYy9E6Hi9Av/ewun+hgKLmCznQs08H33UtNKlbIHn1iK5griPuxgkamEZiZHs1ZIYV8uig=
+	t=1727789585; cv=none; b=IQDnl+u1JtNzBPlp1mNGmzpIDMGeHmi8nezLvJIkHZF5P29iYD7hT7mASs6+2rYl2VczuVZ1L6qbUrbZTViRxV/2okHLBwD9we9KlNIdzo8iQ736R2qHhOyNT6bE0nswxZ6JZqJT4qkkLoiut+ElwxLq9zfMT6yCEcDBETE8rE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727789579; c=relaxed/simple;
-	bh=jG1f8aoHpacDaHdb5KmywmlItDO2TWAWsVpCx9NXHQc=;
+	s=arc-20240116; t=1727789585; c=relaxed/simple;
+	bh=ZGubvIhsHDnwCLkDL4aq2NgC5wnx1n/UcbgMP479nKs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EpIb+/CmEhA8l4yaHuqGTIY60q2YwuuQgT3Jp1ivDWjvGCcuQuMAjI0oGVbn+hbA0dC+JAvdt1L6XnFTIeIPA33QEgM54tohej/zFcJKWJZh5gySatICUpm70pORafCLV6l21QDVLarR+ptibD4LggAuR0oBscd6Mgh92NpRE1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O1mX0LwS; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=fBVELZ3bfuLpC7X7MxBgMRoLQJ27ZKsaDMf+T54elWlTFOR1F5uc/JW+uNFCfJA259q0UZpRYBmf/wtrhmUxhZCXwogOMedSnFcAtszhGUhZv8B2KV+ogGdqXUSk2mw2y2ge18xGab8hOWZBgfe4ynZbgSDIO4LlSEur8Rkx+JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6mIFTY9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O1mX0LwS"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-37cc5fb1e45so3770480f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Oct 2024 06:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727789575; x=1728394375; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jG1f8aoHpacDaHdb5KmywmlItDO2TWAWsVpCx9NXHQc=;
-        b=O1mX0LwSRL3zNP4rjkvL89rfY1wt70Vs+hGAibEAvPb/0ImD5dJ0lNh90KQyMEwFM8
-         X66kLAI6cqq/dmNOhZxPoOgdzVwKGD59HSTLm2x9dTSv2cHV/S5XIJ5P2seYvlR8fC+O
-         B1QPClmPDFncpHNToWU7ZLCfdviBk1/0m8ta587kHmLl9nHX8V3ryi96JW/wExoD9eES
-         BisXkDQwHWseMz/RsXoGWSNX0SVZ/d0D5D117bZZxJBFN6eH5nCLAUjcOZMtAdhnvJ8i
-         rXFFoBjd8YkeY2o//LqVOenjPpK+SA0ILAAsNnx4N6u5pGw81QKK+QNbX96OEX7h1vxN
-         XeIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727789575; x=1728394375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jG1f8aoHpacDaHdb5KmywmlItDO2TWAWsVpCx9NXHQc=;
-        b=DaYi9f250W4U3vX9+Nd2awSw6bn71QNs1J+sbFGQVQ53wB68luLk63gdbJlhXg0JrQ
-         uflIp03mjToPgBm97aPFjRY5050rm2oblFBZ88kJGE6A7KmP+gA032ZYm8O5KkbQSPW7
-         pCHEqIOnbyuou/seuJPSI/2qyJAn8/5SIAPw9IOZAS4p4XZH+rHYCEIWEcBCHcKXgEDM
-         H1RrmHWxfCf4dn1tEId1orH0PWzuvWzid9YAMLl87FvKVSdtUZxQbihfOdRDD+rKUz+B
-         mWlE8vWxRfHIVYZjDWsxnbjKtAqKjkLeNSjoPC1deRN8rUA1rFkMEOCneai48X7vs317
-         a7yA==
-X-Forwarded-Encrypted: i=1; AJvYcCW907VOB4vTGLiIh+Cnf4GNtl96eSPJ+QFBu53GnBuFta3ey4qGO3L4ejoi47kGJ1PmiRG8e5oMhdI/jS48TfaBPts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz88MRTY/jmUOvOQCW/pctC8B9R9OAzuo3fUheVLvqsSZFwRk8
-	zha83qwUiAmZZkOd7NTgcs+GgSZuqFomlpEAYVeRZG4eDBOpdnHG6C1sINUkjtZqvrNX7m+iGML
-	ZdvQFqzhvRcUlQPxN1810PDTmI+oH+Rt2nAcl
-X-Google-Smtp-Source: AGHT+IHyQsBQmmP7WyMzsvnT7IUWl/PkBkfPPLhhwzoxkBXURriZ4Opu2OW3tEtRkPbGqwQWer73IFV8Bp15N9mptmE=
-X-Received: by 2002:adf:e8c1:0:b0:37c:d261:3c6e with SMTP id
- ffacd0b85a97d-37cd5aa9a0dmr7774912f8f.10.1727789575379; Tue, 01 Oct 2024
- 06:32:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6mIFTY9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7697C4AF0B;
+	Tue,  1 Oct 2024 13:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727789584;
+	bh=ZGubvIhsHDnwCLkDL4aq2NgC5wnx1n/UcbgMP479nKs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=H6mIFTY9Le6jvgLsc9yncMGHg684ZtowFh6jY+r6LmlTMJzZL6pzUxNleys5kDSTe
+	 +T+RALTTqzkw54zOTK8paqkDgdM3W8Qtq8TyZCwg90dba1iI1XDisEwyZkfTW9kC0P
+	 1ZRQJFLrqxaN/LD8EBj+vVJZZH/fUrF0Y385KdYTTrOdZGipxJRdzXHcPQup7nrCSb
+	 BrZ3gXsXjiF/antmFbtNnvumkCiUHzKRMKyTWK3nFDhloZmH0ohWZxRJeAMp8QZLQA
+	 nNy0qoLRJjv7a0vav15MZj2IFKQXzy+76lobAQcFavtfzb5hUw/UEeGwaYMblbWQbB
+	 Yr6b48Y6ex+Qw==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5398e4ae9efso3264362e87.1;
+        Tue, 01 Oct 2024 06:33:04 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU88DcFrbtDHTNxQr9ZT+Y7x7yeBG5CeFLE4Da5l/DVQ7Sb9EwOnHQn9vsQXXQKa8iqhZCp3Nlff2o3kSg=@vger.kernel.org, AJvYcCWyOEl8pa0aKbc3UV2d2WhSdVE64jRv4wpSxTnJh6NIPe6PiO9yKrg+T2Ki0M8AXoKoO8S1MoXZc6cfJP5O2OMeL3gI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUYEu0OJzsoXL9xRmz7qrDg2V0EQ5tHPaJcwr/nWD3UWxzrddU
+	/1DaPJwQB/bzdMYULW2KpH/dCKueFmod9UJ55+p0iBaF5pht4dCw12B01gwCUYjATPMhFchA21r
+	NGKVLEKHqeDhKJk/LBXyt9l7lzXc=
+X-Google-Smtp-Source: AGHT+IF3XSiyqGcqqKsyS7S/gG5zCgoFaLbgSHfT5W8/vP8o7ZWrcXvi0HOCrJyxvNSX31JD317PS2jtbArhkrxWbww=
+X-Received: by 2002:a05:6512:eaa:b0:52d:b226:9428 with SMTP id
+ 2adb3069b0e04-5389fc33037mr9710257e87.6.1727789583084; Tue, 01 Oct 2024
+ 06:33:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240822-tracepoint-v8-0-f0c5899e6fd3@google.com> <20241001091527.2fe4e039@gandalf.local.home>
-In-Reply-To: <20241001091527.2fe4e039@gandalf.local.home>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 1 Oct 2024 15:32:41 +0200
-Message-ID: <CAH5fLghOiGmcpQZvOwn=d2Jyo5+CDA_cinbGjkmjTgSeusAC2Q@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] Tracepoints and static branch in Rust
+References: <20240926130159.19e6d0e2@rorschach.local.home> <CAMj1kXF1=2wLgM8HP6BvUxdZLK4EdnaORLUTjoDJSZP-hhDJwA@mail.gmail.com>
+ <80930b34-3b31-46d7-8172-6c0cd2ee497f@redhat.com> <CAMj1kXGz2isSBBkm1R7DiinNt5nxELRTvrD4XXN9v_TRQrNr-A@mail.gmail.com>
+ <20241001085326.5841a9ce@gandalf.local.home>
+In-Reply-To: <20241001085326.5841a9ce@gandalf.local.home>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 1 Oct 2024 15:32:50 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHeEjBXnfz5bx2QYX4g6o1DpFN1b6xCTey2wUcqrmMuDg@mail.gmail.com>
+Message-ID: <CAMj1kXHeEjBXnfz5bx2QYX4g6o1DpFN1b6xCTey2wUcqrmMuDg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/tracing: Mention that RESET_ATTACK_MITIGATION
+ can clear memory
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev, 
-	Carlos Llamas <cmllamas@google.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <mike.rapoport@gmail.com>, 
+	Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 1, 2024 at 3:14=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
+On Tue, 1 Oct 2024 at 14:52, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
+> On Tue, 1 Oct 2024 11:35:53 +0200
+> Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> Hi Alice,
+> > All I am asking for is a line in the documentation that says that
+> > clobbered trace buffers could occur at any time, regardless of whether
+> > CONFIG_RESET_ATTACK_MITIGATION is enabled or not. That way, we have
+> > something to refer to when people start filing bugs against the EFI
+> > component when this breaks.
 >
-> Can you rebase this series on v6.12-rc1?
+> How about if I change the comment to this?
+>
+>         Note, saving the trace buffer across reboots does require that the system
+>         is set up to not wipe memory. For instance, CONFIG_RESET_ATTACK_MITIGATION
+>         can force a memory reset on boot which will clear any trace that was stored.
+>         This is just one of many ways that can clear memory. Make sure your system
+>         keeps the content of memory across reboots before relying on this option.
+>
+> Would that be better?
+>
 
-Done:
-https://lore.kernel.org/rust-for-linux/20241001-tracepoint-v9-0-1ad3b7d78ac=
-b@google.com/
+Yes, that looks much better. Thanks.
 
-Alice
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+> I want to stress that this doesn't work for every setup. It just so happens
+> to work for mine and others. I do not want people thinking that it's a bug
+> if it doesn't work for them.
+
+Exactly. I can see how this feature is very useful if it happens to
+work on your system firmware, but it should be documented as not being
+covered by the 'no user visible regressions' policy.
