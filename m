@@ -1,172 +1,164 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-il1-f201.google.com (mail-il1-f201.google.com [209.85.166.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F60184527;
-	Mon, 30 Sep 2024 21:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D294C17E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Oct 2024 00:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727732210; cv=none; b=ArSGUMhYaLi2c59+C/HBe1Qq9W0K+zFRMxgX6q6B+RusWP2a3zRsNznnVxtriE2FKYH7a0sJsR3vCFqXVLJpUvDvs37TPo3g/TKkMoE7o3OJ3jp9AkrMeywIabDSBmNzJ1N7SoGzsvFSGM5bk9JlHp9JipSMmvLXAPZQB21cqww=
+	t=1727741029; cv=none; b=Y95XG2mNm4UBVsmMkK6heuKrMyOZaQSwnzNiqA+4DiKr8TcvhJauuMh4UNrp34/Vk1uQ53w1hVYncKKbR4SIRQfrcXY7VaFHDsDJespvhlT+/mUq1E/Go3xX10LnM9kCdwpgDNRtvH649fXtWzZTP+KNHGNU1rgII0U9kWj5HZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727732210; c=relaxed/simple;
-	bh=GXmvbsvNEqoHGNrJu2SrieazMifYZhOquLiAVHxWLxQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M4wZrCkF87ITyfmXCBM5x/Hm4s356PuDjXHnlVZmW0uXeEB4qib+wwLtkJmwxmoXuMtL8Yp8ZpRTpAjp+Dj2jVS+xhZyqy4KK/iCIKxyyBZPyXy9YDiRPQyj85vBI3N49xOO1zQNmLR6DmcAIKMISgjUE4qi5tmJF+z9zdZPQ1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0IdNwHg; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727741029; c=relaxed/simple;
+	bh=820IcyqCs7+T/TOejXHPpSMJYxzvLXB8fiX8/yiykJg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JcP7AL049VOC22C8w69iVCrhpg1BYVyN4cZQIH0e0D9T+WOa+LZu9DVvdTIRfxNS8CzWjFJ8nyH6/ua/hCjObmIBngYiLf6aztFmtW+fEzbpkP2ctlsDBYemto3I01jxgrFr6dVCQ6ASTjxa83pIXRGD1hha+ZvZ9E5GLrxMv2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UW60OOY4; arc=none smtp.client-ip=209.85.166.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0IdNwHg"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2e0af6e5da9so3074305a91.2;
-        Mon, 30 Sep 2024 14:36:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UW60OOY4"
+Received: by mail-il1-f201.google.com with SMTP id e9e14a558f8ab-3a0cb7141adso73681825ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Sep 2024 17:03:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727732208; x=1728337008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aLjmuJdgY04vPZgQ7wfu5wG7oZ0LAGRAYlcoftUXrC4=;
-        b=T0IdNwHgdDyWPiTstBzBME6+glNC45vRAKdNfchySuGO94mtDoro+KvhHv4lTb+dpz
-         OlnVT0mFwHeOvvXDyJ2Mt8VZYTs4KSCIuiZN3ruGWmKxW3ajnrquJLTuo/+guF/akeOT
-         CI1FM8vWCX7cqj5JrQdbO5wQfgXYG/2N7qciaBgohFDNnnspxkDWcuo7y0mDCu0IyPgd
-         OPo58r0lU2jJ+BJOK32J8VHvs3Bf/rjad4T2TFkQyWI6TFgsP5pczEh7b/mtv8WSB6Px
-         YszJFwvyg0ApftyXut+I9zOKZrQU1YPeYVWEVduLcf3kukSZ+j239nVVqGD4WIsGpT2H
-         Eu2g==
+        d=google.com; s=20230601; t=1727741027; x=1728345827; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O7sX1wqGBxbtPFBtTAq4huaNxr3STgR9xkPM02Bw42k=;
+        b=UW60OOY4pwYqAg+6HaUvqh7J9F9l75UVTmz34KbqJbsVBZzF0nVgjijEAIkW1AlRYy
+         GGOcxHlwmWXeLfSZxdhft2SxJR4L8CLTAbc5cb6ORP6v2eNjYS4ss7KKoB42AKPM7SzN
+         zgvy7SjlFvy+taRk/koaWFIqFbl3Zizr8krO3obsO8p2yypA4h7yHaVuQEIHyNgeaFDM
+         FB6w/3YrHyA+q87cuQRX1hqZcSlf1B865WFLJEraz89nZ6nOgEHZKRoy9aDZw2yXc01V
+         Pq13Gfrl5ELNwzuUPfLzSU/1B1SCFol9kEKSCwMHiuibgC0eeVXByP8YJP3ASifz74Nj
+         CIdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727732208; x=1728337008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aLjmuJdgY04vPZgQ7wfu5wG7oZ0LAGRAYlcoftUXrC4=;
-        b=RKqyhlkfAUnH1kx26OV5pF95JWr3hf4m8VGGy+n+B+DDX2x3rJom3H/B66MK5PhrKF
-         yKUPTYvrIoIONeMESmohI20AYYOipJGXi19T0A8SBaTiMAvR0OHrrIJia8PYtVbqPor5
-         vfwxzLOQl0W1gL7HLM1jtIOopUrfPKIIDEe0sz54cx4ZkXBjljqXQQT7DSQ6H+hzpOGX
-         atCFDmxFR8rgqSjSzwTd/fNOBSo43Bsazm1nFF+Jbbp2S7t6xSr6euiMcmp0DIuVuqoT
-         TVU+Xs8nKqWiFEZWWWko1oHO5sWSZfS3+5l6o9CXYrj+TcV5C0VBmLiUMHAzafdRO5EN
-         NHtg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8Z5rL2erkXLWgPu1cAYDbJDsJUodOKytNIHGPuN7ufa76Sff8kkEIqnqT/T+CobL9anKpHMl1gd9dT+uc2lY7ZGC3@vger.kernel.org, AJvYcCXiuKKd0amUgJAjBMn4qcdkD13F9YYAZsKrZzvjv/sT2zQ5ObeMyULo5A9/aC4vs2zfDMc=@vger.kernel.org, AJvYcCXma2IwElANNT/7vTH0UbPZSJihyK4tofUfuKQdm77VWnaBndgaB7mLgAQxT4wFyIvLGpGIRapd9kE/Trbh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvFUCVBFJ3snwGyyQQcHa2FEOiQVyqVWyrinPpEqC/5CJthx0O
-	UPF5jT16tLW4rekr33fZ8MV9s28fypmSPzxbMFjz6nNr3xLW8vuPYgN2/07W0bwba/wOzDNebfr
-	bIjhMSF7GjpIk2GbFToSK6Sid4Us=
-X-Google-Smtp-Source: AGHT+IGrecAdvHcSYgeuLmnKQSCfWKC9mn/PnT0z7da7XCLAC3HexVDjABjdU3yGwmAKJ+kqDL1ESJcquMJmDutfTto=
-X-Received: by 2002:a17:90a:9ea:b0:2d3:c34e:2fda with SMTP id
- 98e67ed59e1d1-2e0b89d961cmr15187610a91.14.1727732208036; Mon, 30 Sep 2024
- 14:36:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727741027; x=1728345827;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O7sX1wqGBxbtPFBtTAq4huaNxr3STgR9xkPM02Bw42k=;
+        b=lLAt9oKXbwlis/mPO1wW6fAi1yLGLl/YT4GaARv5xWVq7JXH+iIyMFIeNLQX0AfHHP
+         oE8BBqKYXgEnHX31jX/SGNxbWfbs+se1WNCdOX2B9Gy5IXRI8VbVwrm/Fpe/kyPZnJxH
+         yOLv7INq2+2kKWrnXU/KvCz4/bpx0+nreZ+00Sz3+bZA9q06Zr/+IWJaz0afvniNEBct
+         Tsc/qOEzt0WukGxv5+MkLwOyciNSdEi0zXXTfTG++MM9iI8zyc38mIb8LwVfTgNc0Q7E
+         0IqYJw5uE0NWY+souHa1OscKiPDpufGcq4rA1WI4ESBKtYMKhUqT1ak9myEUX/LxWwzJ
+         OSMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDYFVOprJ87GWCDMszQT+g5nywjHl7h0ArUG11S+f1O+YGG7Sp45tpu2PaUvT5DgwZseQRe3Wxtr3Mk7Elu7OR4Fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR/7zfYpRfnHKg20bNhmMjONUti3YaSaKB5XTo9F9WHskzb8ls
+	aMq8uqWVBq6/hjF1J8I+J/5cm8bDXeH7AaexagViA5qlXEa4ESAgFWU1BUv46F154oemwde4+AT
+	72VY+3bjspOMtw/z72/0HuQ==
+X-Google-Smtp-Source: AGHT+IFW65PL0mRlJiI5TO7iIxstS0LHU6Jw3egJeK7nKtUNejIwUqkyKodc7CrRGLU91KDv5IaQ5HbaRaJPeB0JGg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a92:c26d:0:b0:3a3:3a77:919f with SMTP
+ id e9e14a558f8ab-3a3452ced05mr1839825ab.4.1727741027091; Mon, 30 Sep 2024
+ 17:03:47 -0700 (PDT)
+Date: Mon, 30 Sep 2024 17:03:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240929205717.3813648-1-jolsa@kernel.org> <20240929205717.3813648-7-jolsa@kernel.org>
-In-Reply-To: <20240929205717.3813648-7-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 30 Sep 2024 14:36:35 -0700
-Message-ID: <CAEf4BzYQLo41DtTPpkZ-mMWx-34G4h2pFKY_mDrBfFibjGHjPA@mail.gmail.com>
-Subject: Re: [PATCHv5 bpf-next 06/13] libbpf: Add support for uprobe multi
- session attach
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGE8+2YC/yWNwQrCMBAFf6Xs2YW0jRD9FZES4osullh2Q1FK/
+ 92gl4G5zGxkUIHRudtIsYrJqzTpDx2lRyx3sNya0+AG706jY6ta0vLhJ7Rg5qox4c8JK0q1Kct coZw4ex/HHHw49oFacFFkef9ml+u+fwF7qakEfAAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1727741025; l=3204;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=820IcyqCs7+T/TOejXHPpSMJYxzvLXB8fiX8/yiykJg=; b=Aby9lKMnQ53tWHvDf9Y4RnflLVgStoq85NOjaNHjIKfUR/wy0GMDZzWXmuAdw6uslbdbPhy3e
+ mwnS/yicvF+AWa/t9uHxCfQyLHHsxEJ3mSaMPf8F7Sd0Bn3mjCIEZXy
+X-Mailer: b4 0.12.3
+Message-ID: <20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com>
+Subject: [PATCH] tracing: replace multiple deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 
-On Sun, Sep 29, 2024 at 1:58=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding support to attach program in uprobe session mode
-> with bpf_program__attach_uprobe_multi function.
->
-> Adding session bool to bpf_uprobe_multi_opts struct that allows
-> to load and attach the bpf program via uprobe session.
-> the attachment to create uprobe multi session.
->
-> Also adding new program loader section that allows:
->   SEC("uprobe.session/bpf_fentry_test*")
->
-> and loads/attaches uprobe program as uprobe session.
->
-> Adding sleepable hook (uprobe.session.s) as well.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/lib/bpf/bpf.c    |  1 +
->  tools/lib/bpf/libbpf.c | 21 ++++++++++++++++++---
->  tools/lib/bpf/libbpf.h |  4 +++-
->  3 files changed, 22 insertions(+), 4 deletions(-)
->
+strncpy() is deprecated for use on NUL-terminated destination strings [1] and
+as such we should prefer more robust and less ambiguous string interfaces.
 
-LGTM, though see the nit below
+We expect the @pattern and @num_buf strings to be NUL-terminated, as
+evidenced by their manual NUL-byte assignments immediately following
+each copy.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Switch to using strscpy which guarantees NUL-termination for the
+destination buffer -- eschewing manual NUL-byte assignments. strscpy
+does not NUL-pad so to keep this behavior zero-allocate @num_buf. @pred
+is already zero-allocated before the copies.
+	pred = kzalloc(sizeof(*pred), GFP_KERNEL);
 
-> diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
-> index 2a4c71501a17..becdfa701c75 100644
-> --- a/tools/lib/bpf/bpf.c
-> +++ b/tools/lib/bpf/bpf.c
-> @@ -776,6 +776,7 @@ int bpf_link_create(int prog_fd, int target_fd,
->                         return libbpf_err(-EINVAL);
->                 break;
->         case BPF_TRACE_UPROBE_MULTI:
-> +       case BPF_TRACE_UPROBE_SESSION:
->                 attr.link_create.uprobe_multi.flags =3D OPTS_GET(opts, up=
-robe_multi.flags, 0);
->                 attr.link_create.uprobe_multi.cnt =3D OPTS_GET(opts, upro=
-be_multi.cnt, 0);
->                 attr.link_create.uprobe_multi.path =3D ptr_to_u64(OPTS_GE=
-T(opts, uprobe_multi.path, 0));
-> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> index 3587ed7ec359..563ff5e64269 100644
-> --- a/tools/lib/bpf/libbpf.c
-> +++ b/tools/lib/bpf/libbpf.c
-> @@ -9410,8 +9410,10 @@ static const struct bpf_sec_def section_defs[] =3D=
- {
->         SEC_DEF("kprobe.session+",      KPROBE, BPF_TRACE_KPROBE_SESSION,=
- SEC_NONE, attach_kprobe_session),
->         SEC_DEF("uprobe.multi+",        KPROBE, BPF_TRACE_UPROBE_MULTI, S=
-EC_NONE, attach_uprobe_multi),
->         SEC_DEF("uretprobe.multi+",     KPROBE, BPF_TRACE_UPROBE_MULTI, S=
-EC_NONE, attach_uprobe_multi),
-> +       SEC_DEF("uprobe.session+",      KPROBE, BPF_TRACE_UPROBE_SESSION,=
- SEC_NONE, attach_uprobe_multi),
->         SEC_DEF("uprobe.multi.s+",      KPROBE, BPF_TRACE_UPROBE_MULTI, S=
-EC_SLEEPABLE, attach_uprobe_multi),
->         SEC_DEF("uretprobe.multi.s+",   KPROBE, BPF_TRACE_UPROBE_MULTI, S=
-EC_SLEEPABLE, attach_uprobe_multi),
-> +       SEC_DEF("uprobe.session.s+",    KPROBE, BPF_TRACE_UPROBE_SESSION,=
- SEC_SLEEPABLE, attach_uprobe_multi),
->         SEC_DEF("ksyscall+",            KPROBE, 0, SEC_NONE, attach_ksysc=
-all),
->         SEC_DEF("kretsyscall+",         KPROBE, 0, SEC_NONE, attach_ksysc=
-all),
->         SEC_DEF("usdt+",                KPROBE, 0, SEC_USDT, attach_usdt)=
-,
-> @@ -11733,7 +11735,10 @@ static int attach_uprobe_multi(const struct bpf_=
-program *prog, long cookie, stru
->                 ret =3D 0;
->                 break;
->         case 3:
-> -               opts.retprobe =3D str_has_pfx(probe_type, "uretprobe.mult=
-i");
-> +               if (str_has_pfx(probe_type, "uprobe.session"))
-> +                       opts.session =3D true;
-> +               else
-> +                       opts.retprobe =3D str_has_pfx(probe_type, "uretpr=
-obe.multi");
+This should result in no behavioral changes whilst helping towards the
+goal of [2] -- with the ultimate goal of removing strncpy in favor of
+less ambiguous and more robust alternatives.
 
-nit: this is very non-uniform, can you please just do:
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90 [2]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Cc: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ kernel/trace/trace_events_filter.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-opts.session =3D str_has_pfx(probe_type, "uprobe.session");
-opts.retprobe =3D str_has_pfx(probe_type, "uretprobe.multi");
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 0c611b281a5b..76b55eead8ac 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1506,7 +1506,7 @@ static int parse_pred(const char *str, void *data,
+ 	unsigned long offset;
+ 	unsigned long size;
+ 	unsigned long ip;
+-	char num_buf[24];	/* Big enough to hold an address */
++	char num_buf[24] = {0};	/* Big enough to hold an address */
+ 	char *field_name;
+ 	char *name;
+ 	bool function = false;
+@@ -1616,8 +1616,7 @@ static int parse_pred(const char *str, void *data,
+ 				goto err_free;
+ 			}
+ 
+-			strncpy(num_buf, str + s, len);
+-			num_buf[len] = 0;
++			strscpy(num_buf, str + s, len);
+ 
+ 			ret = kstrtoul(num_buf, 0, &ip);
+ 			if (ret) {
+@@ -1694,8 +1693,7 @@ static int parse_pred(const char *str, void *data,
+ 		if (!pred->regex)
+ 			goto err_mem;
+ 		pred->regex->len = len;
+-		strncpy(pred->regex->pattern, str + s, len);
+-		pred->regex->pattern[len] = 0;
++		strscpy(pred->regex->pattern, str + s, len);
+ 
+ 	} else if (!strncmp(str + i, "CPUS", 4)) {
+ 		unsigned int maskstart;
+@@ -1859,8 +1857,7 @@ static int parse_pred(const char *str, void *data,
+ 		if (!pred->regex)
+ 			goto err_mem;
+ 		pred->regex->len = len;
+-		strncpy(pred->regex->pattern, str + s, len);
+-		pred->regex->pattern[len] = 0;
++		strscpy(pred->regex->pattern, str + s, len);
+ 
+ 		filter_build_regex(pred);
+ 
+@@ -1919,8 +1916,7 @@ static int parse_pred(const char *str, void *data,
+ 			goto err_free;
+ 		}
+ 
+-		strncpy(num_buf, str + s, len);
+-		num_buf[len] = 0;
++		strscpy(num_buf, str + s, len);
+ 
+ 		/* Make sure it is a value */
+ 		if (field->is_signed)
 
-There is no need to micro-optimize str_has_pfx() calls, IMO.
+---
+base-commit: bc83b4d1f08695e85e85d36f7b803da58010161d
+change-id: 20240930-strncpy-kernel-trace-trace_events_filter-c-f44a3f848518
 
->                 *link =3D bpf_program__attach_uprobe_multi(prog, -1, bina=
-ry_path, func_name, &opts);
->                 ret =3D libbpf_get_error(*link);
->                 break;
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-[...]
