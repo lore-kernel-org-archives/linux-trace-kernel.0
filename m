@@ -1,103 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453EC11187;
-	Wed,  2 Oct 2024 04:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DC61C2E;
+	Wed,  2 Oct 2024 05:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727844832; cv=none; b=nqioNcvCzatyIGqCGChqycNpkyOdH4LQY4mAST6gZsWbyAnDdiGAs5JeH75FWg/H2BuoZyrQaKub7Mp27Uv1+g08OLsatM03VEyicA5ylBbMX5gbGFiL6UF6rbkGC6DdROarjsIj0hHoxWWo4BCDqu30ha4rN+BlXPgE9cv5U+I=
+	t=1727846193; cv=none; b=h/yqkmri3CwxBBRF/hv30WCQVK/t2TiOvCMgegOdZQv9x9erMGoSbh2aCYXf72b2Ew6pEdquOd6icDG4TEz2HmoUZIopqAv4pYwUqnFr+S0MJ5X7/+P8HfuQQHy0itsYU+ddEooL4inE4e+yweowJLBMRJV7GakuqG7Ss8jT9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727844832; c=relaxed/simple;
-	bh=B2ZAQKodtjVu7cBwU2oU+uI8JVPYDT8FSzV0LYMamag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V6y8he0t4VGMI2so2t1iMOKkO0dfm5gQ5DLjmxm1hILqwm+wUWDcYGhlfiN0W1hFJoSPEVH96mNJPCbo2O0eXq94N3mxFhkKJdF2pVIhKg5MhzZCi0vW2YcX1VFMLydjIluhp4LmgHlk1Oh+X7LUFTs1XlI+uEK4vl1XduCNzk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEkKxegf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727846193; c=relaxed/simple;
+	bh=POqbTVQkBfyYouV2OWpajfzUVSx7N7+PG1c3MgO3rVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gf1AzUkuVNxiwrSoD2acgJbIYLacb65QrQfARudcBuwk5CFi9YFr9tzA868rIbk9AlsbGIqxZw0TzAlU9gpIhUXiZ/Fx6JffiUFeQujr/tBEuvj6MxONZgkqqwZjAmd6AvbHL/iGHi4k2QAHsyBhaJUc/ZZ6DXOZxjMio+9x06A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPMrn/wZ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEkKxegf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31909C4CEC5;
-	Wed,  2 Oct 2024 04:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727844831;
-	bh=B2ZAQKodtjVu7cBwU2oU+uI8JVPYDT8FSzV0LYMamag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CEkKxegfpkX4Zw2CaHm5skQNLmPRJhWvRWrfwNVlh+TFSz9BPuRZdgUJT+gZ23vFJ
-	 IxhXfrAdi/5Tzs2K9tvjU3gGZB7VVKI4WK6iDn0vYP8Or/TvoXD3w3WnjkCdL7pIqo
-	 yAvyTAGmv5OmjrtPe8R7vrLNoxKPxUOfc15RGQ+nZr1J+I99IYLiEMGzK5HchaL0Rb
-	 fCgXSnWAkdoQPpNtPUVza5lz7aLWm5cSFY86HH4WWW1emta+IbTxS2QRhxf7N54ops
-	 vKi+l2ymUNL9BK54SZfzJOyLLVNlGP4C8ThAbAA+5rGKWDt7DLBpJn9rzmHQgg9i3o
-	 dEWzEr1A+63LQ==
-Date: Tue, 1 Oct 2024 21:53:47 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Wentao Zhang <wentaoz5@illinois.edu>
-Cc: Matt.Kelly2@boeing.com, akpm@linux-foundation.org,
-	andrew.j.oppelt@boeing.com, anton.ivanov@cambridgegreys.com,
-	ardb@kernel.org, arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
-	chuck.wolber@boeing.com, dave.hansen@linux.intel.com,
-	dvyukov@google.com, hpa@zytor.com, jinghao7@illinois.edu,
-	johannes@sipsolutions.net, jpoimboe@kernel.org,
-	justinstitt@google.com, kees@kernel.org, kent.overstreet@linux.dev,
-	linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	llvm@lists.linux.dev, luto@kernel.org, marinov@illinois.edu,
-	masahiroy@kernel.org, maskray@google.com,
-	mathieu.desnoyers@efficios.com, matthew.l.weber3@boeing.com,
-	mhiramat@kernel.org, mingo@redhat.com, morbo@google.com,
-	ndesaulniers@google.com, oberpar@linux.ibm.com, paulmck@kernel.org,
-	peterz@infradead.org, richard@nod.at, rostedt@goodmis.org,
-	samitolvanen@google.com, samuel.sarkisian@boeing.com,
-	steven.h.vanderleest@boeing.com, tglx@linutronix.de,
-	tingxur@illinois.edu, tyxu@illinois.edu, x86@kernel.org
-Subject: Re: [PATCH v2 0/4] Enable measuring the kernel's Source-based Code
- Coverage and MC/DC with Clang
-Message-ID: <20241002045347.GE555609@thelio-3990X>
-References: <20240824230641.385839-1-wentaoz5@illinois.edu>
- <20240905043245.1389509-1-wentaoz5@illinois.edu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPMrn/wZ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e06f5d4bc7so5335518a91.2;
+        Tue, 01 Oct 2024 22:16:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727846191; x=1728450991; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WCqeEc4kHjJN+qKJxeRl8YtHyO81TTDTeJh40XSBpyw=;
+        b=dPMrn/wZ3SoTGkAQ0uUurAaXsnwkjjeDGqoiFY9L5TrOgITlw/3oW9bxtx6fb9U9q/
+         /wcqe7LgqqK4n5VuOIK9L4+OfR/UzyN4Uv/zVMFGGfs+jm6HNr6bim4kG0cFnoK/QSh/
+         rhEjD75UyVukekSY9aanAOxcqtf6W6SGHzCGhplNxZZT2d3h3oR9FPHl/XVXYfBiAxcM
+         REHUbP3zdPzuKQb4kDDrYfRYSJngwPo34rO7J0AVMP+8l+njrn0SD51KEcyv64vBb6ui
+         dmZkFnRJJsuOL2PvGNtf3EA9fOKrMXLD/vyTAow4WrHK9dZg4mSayDRK1zqd7/iLxORd
+         +PhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727846191; x=1728450991;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WCqeEc4kHjJN+qKJxeRl8YtHyO81TTDTeJh40XSBpyw=;
+        b=gmnOolEl24PdUYidFgqbjk8AFQhSAyrg065LFb2wMG4c/dz7YQHEOpX2zUO4rbMsiH
+         HDBZ9jtyR/0Wa5vi3OeX9Ua+5iXKCqK2qOM39qWiWQvGjwM8DMObR88CywLwO2zx1iDm
+         Kj51YOtPpCEsFXUvp3JS/N3nXVTJLu2b2Irk01+wOZbRMxIZ0lR/TFlWlqQ2q9q3Crv8
+         D90u/hYiPgqdC5SikTDeNWhTZXCR8YFzabL1YVMA+W23ufnYibv0O4syhdnkbREq+NVY
+         zMVy7S/1b4ySp7wgs+8F9JVQvyJ/+6TX1jpZhsuh6rjggRXfFsZzkKXulJq5EPSo016g
+         YL0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVh/QaJazWt+DC3d92OODScWOAuh6ucGjPi6H18zNATbsVOP4cX+cHQa9lpdZPVlqIx6TOnHhR/IAIp54o=@vger.kernel.org, AJvYcCWlRg34BoX+8l2yehCFcpYkkVEa2MWXTvX8LKEEGNdk6PJFwwk/AY6+4aYU6zxBJC5JPxCjZ6ZH8HK1zgOfxn8ObGrk@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOhi9thVOT3jedgorcNLYRbJ9k5g/M5sb5LxfKZcW38puk2y6l
+	qcMWsJOdy2q06i9zyamU4ehsAnbfkx0DXvv6IeqOne3XhKSq8GiIfdnbh59P
+X-Google-Smtp-Source: AGHT+IFW70BLwEBHPfhDcV07fv7397/t7EEbzfh7xCzuTU0inUzEF9f5/ZQ3vLoVFTQAZJmkYCfxZw==
+X-Received: by 2002:a17:90b:b06:b0:2c9:9f50:3f9d with SMTP id 98e67ed59e1d1-2e18452703emr2849392a91.5.1727846190818;
+        Tue, 01 Oct 2024 22:16:30 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:13a:f00:4b94:68e0:2d8b:3983])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e18f799b60sm624405a91.29.2024.10.01.22.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 22:16:30 -0700 (PDT)
+From: Tatsuya S <tatsuya.s2862@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Tatsuya S <tatsuya.s2862@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v3] ftrace: Hide a extra entry in stack trace
+Date: Wed,  2 Oct 2024 14:13:48 +0900
+Message-ID: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240905043245.1389509-1-wentaoz5@illinois.edu>
+Content-Transfer-Encoding: 8bit
 
-Hi Wentao,
+A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
 
-I took this series for a spin on next-20241001 with LLVM 19.1.0 using a
-distribution configuration tailored for a local development VM using
-QEMU. You'll notice on the rebase for 6.12-rc1 but there is a small
-conflict in kernel/Makefile due to commit 0e8b67982b48 ("mm: move
-kernel/numa.c to mm/").
+[003] .....   110.171589: vfs_write <-__x64_sys_write
+[003] .....   110.171600: <stack trace>
+=> XXXXXXXXX (Wrong function name)
+=> vfs_write
+=> ksys_write
+=> do_syscall_64
+=> entry_SYSCALL_64_after_hwframe
 
-I initially did the build on one of my test machines which has 16
-threads with 32GB of RAM and ld.lld got killed while linking vmlinux.o.
-Is your comment in the MC/DC patch "more memory is consumed if larger
-decisions are getting counted" relevant here or is that talking about
-runtime memory on the target device? I assume the latter but I figured I
-would make sure. If not, it might be worth a comment somewhere that this
-can also require some heftier build resources possibly? If that is not
-expected, I am happy to help look into why it is happening.
+To resolve this, increment skip for __ftrace_trace_stack() in
+function_stack_trace_call().
+The reason why skip is incremented for __ftrace_trace_stack()
+is because __ftrace_trace_stack() in stack trace is the only function
+that wasn't skipped from anywhere.
 
-I was able to successfully build that same configuration and setup with
-my primary workstation, which is much beefier. Unfortunately, the
-resulting kernel did not boot with my usual VM testing setup. I will see
-if I can narrow down a particular configuration option that causes this
-tomorrow because I did a test with defconfig +
-CONFIG_LLVM_COV_PROFILE_ALL and it booted fine. Perhaps some other
-option that is not compatible with this? I'll follow up with more
-information as I have it.
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+---
+V2 -> V3: Changed the place to increment skip number
+V1 -> V2: Fixed redundant code
 
-On the integration front, I think the -mm tree, run by Andrew Morton,
-would probably be the best place to land this with Acks from the -tip
-folks for the x86 bits? Once the issue above has been understood, I
-think you can send v3 with any of the comments I made addressed and a
-potential fix for the above issue if necessary directly to him, instead
-of just on cc, so that it gets his attention. Other maintainers are free
-to argue that it should go through their trees instead but I think it
-would be good to decide on that sooner rather than later so this
-patchset is not stuck in limbo.
+ kernel/trace/trace_functions.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-Cheers,
-Nathan
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 3b0cea37e029..27089d8e65d4 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -203,23 +203,21 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	ftrace_test_recursion_unlock(bit);
+ }
+ 
+-#ifdef CONFIG_UNWINDER_ORC
+-/*
+- * Skip 2:
+- *
+- *   function_stack_trace_call()
+- *   ftrace_call()
+- */
+-#define STACK_SKIP 2
+-#else
+ /*
+  * Skip 3:
+- *   __trace_stack()
+- *   function_stack_trace_call()
+- *   ftrace_call()
++ *   Skipped functions if CONFIG_UNWINDER_ORC is defined
++ *
++ *     __ftrace_trace_stack()
++ *     function_stack_trace_call()
++ *     ftrace_call()
++ *
++ *   Otherwise
++ *
++ *     __trace_stack()
++ *     function_stack_trace_call()
++ *     ftrace_call()
+  */
+ #define STACK_SKIP 3
+-#endif
+ 
+ static void
+ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+-- 
+2.46.2
+
