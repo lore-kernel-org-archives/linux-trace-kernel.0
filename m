@@ -1,182 +1,188 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2049.outbound.protection.outlook.com [40.107.237.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5B31CFEA3;
-	Wed,  2 Oct 2024 16:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727886924; cv=fail; b=N9m3Xy+YZz38k3YGkE3VIyyw3xIzPXddfoSkrJPABM0ah1kvcwTk8AY9OTx6tSzfmO7m0sypwoIzERY8cChZX2tBhCdYrx8GrdBzChOvgr4xtnuq7PzadJM4xqC1YIztSnLtYXfDBfzjPYSF+ATOVq79oWkslmVSbd6hMvVKld4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727886924; c=relaxed/simple;
-	bh=saIwAPf6j/40I9a6x7db5svLfSbsWOZE/UYDvYdIHKo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=g6B4cj5zbEDkbln2IUC0ZYZ/j803BRUP/IMHXO/anji5iuCWwn84KdqG+2YGyL3TC1acehuADZzNbyjlA8h8/GpvlUxbZI28wqU4TYHBptdnan/AP+gEpoRYzedJBAF4qVrNx5EvnxPGBX0YFWo4WDVGvkjGgtJzokcHK73YUhU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lhwb1CGJ; arc=fail smtp.client-ip=40.107.237.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151C512C54D;
+	Wed,  2 Oct 2024 18:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1727894993; cv=none; b=gObJ2rs+nzmFJ64yR4mU8cPoICG23SjslHeer/XCllCncuRzGHsJF2c11/OxLmVrFsXxwLOiFWtczepXsLRYdn0BNo5y5dU6xV76Rpr+S1m/yOAoQnSC77FCCpT01ZzAdg5/6GdLVyOxp9YsdrH6eS31p+l1qlDlmRi/S4GrpZ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1727894993; c=relaxed/simple;
+	bh=bkr/giBTZadF4+ZaiqM9ZsvG/mHxPB6xi2TaYAALx5E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=H7DFFIQEJlQ7JvQk9N4q2H15cGRdNHwgTWGO6oX/tY+q6ptt7oesZPh+WR9vgtk2qaotx7Kn8lk5MxI4PN97hHuCUq3/WQRCSaA86rf6715OX9CuLwrkigd6Cv5XxyH8LhbkC+Pb227wGTlc5BlIuRrNJqE+SWYqGGZ+Q8SIWH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LTOBUXlL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lhwb1CGJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CDxOjxGn4+lhGmuUB1l/BfBy8py27/uxPCaCEgxALtqqLhWZ+S5BN63lkhOCkSGiuYihkKmguYUEe/Iwhfv8sza/sHJQ7pdpJb1xt0XWX0w4pKjc4FHmb89Ed18ISPNwfmyMSAp45MxaikG+7mjaDNT5+TA9H/9V6Ip1C/DBOOSe25WcW71ATxVEwtamVg7xD0ubaXIDGbZhD+9fQgwBgau3tTfYPrNumdXFRz8oFrsVGIPn7Exd6PbBEpZIrIlYcAd1yyGwzGYLbfeJi1RP0S03WZcEj49mvn/yyTZX9Lp9lJQLpqha0LBd4K561R1iOcjIxOc4wBZM1QDS8SLOCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=atl8pZhb1k6vrgfuaTPwTd+YR0wir6GpqewyhHD5SgQ=;
- b=idD3yPineBsninwNeqUtYpMuQi7UKwa4NYaolHQMp2iJopdPDYY5TRbnrFZLoqBFLwNgWyhSMW7wmgbG6A7Abr0fwULR7+8+QFlnqMm5VIRKCRprNAASaU5gOHKWaDHLTD4LEBO94sm2HMoTRZSlNBh4mbGjyBbhLG8Pj2SvVzs1hQ403a29v/kpiyBEDh6FDLbd4+KoWyx/uoSffzIiskjRHP4kCMnEozS3XbroCUq5c6VwU+mj7iYS7JnwqGIHfL4eySOMMExm+syekOmnoHZY8lzyxSjbCemzgYAs20Z7aAWPZh3MoTMpIszdkOSndES7Eq/LMrF2eEK11DcTHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=atl8pZhb1k6vrgfuaTPwTd+YR0wir6GpqewyhHD5SgQ=;
- b=lhwb1CGJfYYnitDnMaAcOV2uIUiD5Ny0X7lGxRgIE4jBX/Srg/Hoa0AXtT/kL121egbKdXc4mmgEau+A6wiccYEF3rSURY6ZG3tJ6uEC4Q2XJvYrT9D+BzcZ42CmcqWHvKTRswjDUDyAerQEynPeuBRLUVrEjD3QP2dkEnZyXUw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH0PR12MB5388.namprd12.prod.outlook.com (2603:10b6:610:d7::15)
- by PH0PR12MB7960.namprd12.prod.outlook.com (2603:10b6:510:287::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8005.25; Wed, 2 Oct
- 2024 16:35:20 +0000
-Received: from CH0PR12MB5388.namprd12.prod.outlook.com
- ([fe80::a363:f18a:cdd1:9607]) by CH0PR12MB5388.namprd12.prod.outlook.com
- ([fe80::a363:f18a:cdd1:9607%6]) with mapi id 15.20.8026.016; Wed, 2 Oct 2024
- 16:35:19 +0000
-Message-ID: <bb69e3a6-6cbe-4e94-936d-5ad0e5b19f19@amd.com>
-Date: Wed, 2 Oct 2024 11:35:16 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] tracing: Add __print_dynamic_array() helper
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Avadhut Naik <avadhut.naik@amd.com>
-Cc: x86@kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, bp@alien8.de, tony.luck@intel.com,
- rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com, lenb@kernel.org,
- mchehab@kernel.org, james.morse@arm.com, airlied@gmail.com,
- yazen.ghannam@amd.com, john.allen@amd.com
-References: <20241001181617.604573-1-avadhut.naik@amd.com>
- <20241001181617.604573-3-avadhut.naik@amd.com>
- <20241002110641.3575c632@gandalf.local.home>
- <20241002122903.24e591bd@gandalf.local.home>
-From: "Naik, Avadhut" <avadnaik@amd.com>
-In-Reply-To: <20241002122903.24e591bd@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0031.namprd08.prod.outlook.com
- (2603:10b6:805:66::44) To CH0PR12MB5388.namprd12.prod.outlook.com
- (2603:10b6:610:d7::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LTOBUXlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36A2C4CEC2;
+	Wed,  2 Oct 2024 18:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727894992;
+	bh=bkr/giBTZadF4+ZaiqM9ZsvG/mHxPB6xi2TaYAALx5E=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LTOBUXlL6D2ckQYybkdmOWsZzG2yHmK14UFnGZpmydG5YBgdkkKttR4EwCpHBIqUA
+	 skJdfpEhebw4UzbgcWxV6PemWSdZBcKCcApa6WfsN/l613bwcpsV29Rfk2zn25oglC
+	 vaEqSLJQtts3g0P1RGnt9ODaU6nSahiVv9eg+O0GmNhttqykL90DMGTQAk/dovOLEy
+	 prSfA6XLGs1emmxJ1GKDxG+ejZ526z1ednTpcg8D0mgGHfohtQMjDP3KMoKfOhk8uD
+	 XLaUhkZD+DGlvA3Oz+dJY/m1Y6tRSpLt+ji0XQEVTwHx/HuGxAN2iQCCTqg7lwY4Qo
+	 KmFujK/ZUY+Ug==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v9 00/12] fs: multigrain timestamp redux
+Date: Wed, 02 Oct 2024 14:49:28 -0400
+Message-Id: <20241002-mgtime-v9-0-77e2baad57ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR12MB5388:EE_|PH0PR12MB7960:EE_
-X-MS-Office365-Filtering-Correlation-Id: 391e09a0-bf62-4b51-8807-08dce30033f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TnFxT0NvNWpQcWpJL2o0L1MvZTlEZHBwMUpmNkh5eXFMSk5OdWRMc0k4NnZW?=
- =?utf-8?B?UWhRTmFjNkRWeFNrcE1PUCt2M1BzaDdnTXN2K09VcXozcFMwS2ZMVndKa0FU?=
- =?utf-8?B?R0UxeG8yazFPM2lTY0J0YStueDUvZGR3OVlsTHNUMmVEa0NpbWxqUHp1TCs5?=
- =?utf-8?B?eTFhaWtYUjIzY1dUZC9Na00wbElxSFE4aDVDRUEvOFh0WUY1dG1yQXlIUFAx?=
- =?utf-8?B?MUpEcld4NisxTjg3T0RLS1BsalB6QjZiOFpPSVdDKzZudVdrcEh2NU5Ccmt4?=
- =?utf-8?B?NExPbGtZcDhEWEZzVk1qc3ZDYXBTZmwyQnppcFFIeUhDWW9YejNVZzMvQ1Jj?=
- =?utf-8?B?ck05OTdocDlGMUpEcE5MaXNxY2dERS94V0hOVWh1ZWR1dFVobXZNckgzdkhp?=
- =?utf-8?B?d0krSHgycGRsRDdIczVFSUtZK2hoV1NTT3VlWGpsejc4a3pGNkdjYmlSeE1T?=
- =?utf-8?B?MzcwSUJsNzJtZkx0MWtCWXVWMVcweElqaFBuUWcxRzdsQW1KT0JFL1Aza0ti?=
- =?utf-8?B?WEtVcm9qTmxNamxsc1JtWGpUMlByZFNuVWdIdlRqUWl6MjIxV1l1YVFnMUxP?=
- =?utf-8?B?UmxHVC9mSHdBWTgreHZHK2djVDR4THdWbFoxbkZmZU0rYVAyQ2VVNkVBWEhh?=
- =?utf-8?B?QUhPZmRPd2hEWldoTExDN1BuYUx4TlhFM2diRnU5ZXF0ZllYRHlYVlc1VkJD?=
- =?utf-8?B?UXQyRmp3allvSUVvUEFWRnVFUzRjYVZ1N3dwRVlwdWQzNXQvOC8yZlNuVmJW?=
- =?utf-8?B?b1hscmw2dGxkNmZqOTFCVFNFRkpJODZFTnl1YXBlalM0aHlvWU5VeGNxUjFB?=
- =?utf-8?B?N3IwQmtMMEtaRDl6d0RGbjNlTDJzekVHOWZKd2xrRHlmTkNKOElZTWFpRVF3?=
- =?utf-8?B?WkhvK1J6RUNQMGw2T0QxUXB5V3EzbURxSG1zRVBNTGlOZGRrUkF4ZExOYnBX?=
- =?utf-8?B?NlVSM0pqeFhkd1hwbkxXVGxNS1pSM243RUVqSXBUbWtFTWlRbzROY3lJRVVY?=
- =?utf-8?B?UUIrRVJLNHNHTjVyV0ZwWWhKRlFjeWlFZVJja0dtWkRWSmVybDJnR1hLOU50?=
- =?utf-8?B?N0hHTVBQTzVaMWdiNFBhc0lGZEVyaHdHRURpY0dzVGpCdmVBWjkzSmpkWDdF?=
- =?utf-8?B?ZjhwUEJyTUI1bENLbHEzc0hqVFJ2R3hJVitPWWg1eEx4akdiejhxT2NrSERa?=
- =?utf-8?B?VU5iYlV6d2FDVTlLRkJwcWlXYWd5SE1EVmdYN1RPRzJReVQ0SEFBMVIvckdE?=
- =?utf-8?B?ZlluS0djM003Q2xSeW9TalpKc05pQjF1WnFHcVErMzJKKzR0QXFJNFVZK0VD?=
- =?utf-8?B?ajAxcC9oZE02VjUrRjB5MUxVZjNhMUZFRXVxMkZBSHlGVXY5TGJ1SGd0UWo3?=
- =?utf-8?B?VVZ2L2VuWjdGdXRFcGJwTnNEbnJTNDBFYjNuTXQ0NkRiaEs2QlVRaHZ1T0hr?=
- =?utf-8?B?cFNmbHAxQWZUU1hlaVpZcjJIYkRhcG92SllmRVhCM2xRSmxsZzdKQnNGdkYv?=
- =?utf-8?B?UHRlaXByRC9UOHBRbjREemJFVWU2UnNFSUo0WU5sakpyZVM3dWZIaFdzR0Zh?=
- =?utf-8?B?Tlplbi92Mm1LaUlXY2Rxamt4ekt1OXNKZmo3RW8vUUM1YTIrQUh4bEQ0bTJz?=
- =?utf-8?B?MmZtYVNIYTQrUFhkTGJiMllxeUZyYXpGa3hkZUExTnMwSjQyNmxKSTBtRTRN?=
- =?utf-8?B?N2tKM3hxWVdjM244Y0QrNnQzeHR0d1p5MnBiYUx3UUd5V3dxeEpLSXFBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR12MB5388.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R1lXcW43ZFJnUG9kMHFUbUZFcEVzVnozSUI2MFhxdDJiU3lxUkFDZytCaUYx?=
- =?utf-8?B?ZDA1cWUrNHVVV3JmSHFJNS9nM2pKbExuWDZKenF2SG9RZ05sTVIxUk4rNjJh?=
- =?utf-8?B?RjZtMHdITmNEeGhISWRtSmxubnR0bG80N2V1U3Y2UHdYS0xBcXFoLzR4WVRx?=
- =?utf-8?B?ZEVLbCtGbGRrdmJxdFhjYTI4QWFmdFVWeDhLMU5keUg5OW16SWdLMmFvb21s?=
- =?utf-8?B?KzNvQnl1Zk9mekNycjd1cEcwdWllaU1yanJEbGJ4bXkza01iMjNJOFdadmRp?=
- =?utf-8?B?WkFQdXFRdGxlbTFUM04zL0NvVUNnTDJWb3J5RGxsc05hUUQ0c3BIejBXQi9S?=
- =?utf-8?B?aCtleXcrSlZwajhMTUxrWnpUdHE3ZTJEREg0bElsOE9MYkROdVN2QXhzMURI?=
- =?utf-8?B?UWIrSG9RV21xTXVyRklMY2lwdlkzRWdvS1RMVTFLN0NlVzdUYWZjMUxveEFQ?=
- =?utf-8?B?amNWV2tjMTdJaSttZktSdUl6U1RRRVJvRVV4cGlYRERPQTd0MFpVUThqL1Vn?=
- =?utf-8?B?NmVhZmZsSFUxbXZZR1FReEZyOUdBUHl1Y2Ntc25tcWJETDNCL0hLWllEM2FX?=
- =?utf-8?B?UHk0eTR3d0hsRzdRcjFGMVlON1QrMjIxRmFENjJXeElKVWRGZ1FKRXFTaDRo?=
- =?utf-8?B?ZVRDN0s0dUlhYjZQL21SbTNWWm9DUUZOaml0WW91b2NRbE9GN2lxSU9nVnR6?=
- =?utf-8?B?ek00ekJEbHU5NU1JTjNTNmxBLzN1TXk3RnFLWERnNXdoL0VKbHZsNmRBdzY1?=
- =?utf-8?B?Rkk0Ris0Ny9qVUtoYlJST1lLQW9yTXRSanl5bHV0RW5OKzNnNURyVW9SNTdI?=
- =?utf-8?B?SWk5Yno5Um1KcURLb0R4NVdhODIrN2xvbE1IVXpPaWZHM1U5Mk1xZFhaR0pP?=
- =?utf-8?B?SFREVDIra0dnMDNFQUZNUFpoT3ZYUytsSFVkUzBZZXhvMzQyTGp3MDJXMkRo?=
- =?utf-8?B?VHU1dTFoclFKaDdrTVBiZzhaT25udG1wdkZ2Tng5MzF2bGk3aGQ0NE9vVWNR?=
- =?utf-8?B?N05nKzFWZHVna0tBbGw1VURGWHJnUVZTbVNHanI0cVhEVEdFbm9xZThLOThS?=
- =?utf-8?B?QitnSWNIcjl5emxjRXIrbUJnemdoOERtNW5LamRqOC9xVEJxK2ZxTzA4cjl0?=
- =?utf-8?B?RlFrQTZmZjJ3Zmc0VTMvV2xTSTd4bmNjQW04YVhHYStEaTRDUVVmVnpPaUU0?=
- =?utf-8?B?WTBiUzBTZTluMUloSzg0ZksvSUdJdHpURTZwTkQvTklqVncrQUR0VXhZYmFm?=
- =?utf-8?B?UDBOOFMxWG5zRjBtZlBnd0tKWkxuZjBjQTRIZGRYenFibE9uQmZXNk1malN3?=
- =?utf-8?B?Y2V3OFlFY1RHTmJpdVBHY0hzR1dDeXc3dTluZDBFOTRaV3c0MXJzOC9MR0Rs?=
- =?utf-8?B?TUlQa0JCbGtKeGNmeDNkdTJkdUZoazlBWEtZUXlpZ0RzM3lTRTRwOVQrQWxY?=
- =?utf-8?B?STFpdjh6a1FjbWJyS1FvR0szRzBuQ1RGemlweEFiNm5HdkdhNzVrV0ZIOXVX?=
- =?utf-8?B?QUxHdGxiL2dUT1dnVC9lQXlZYzFxVDNROXFHekthZ2NUNzJVcFJxMldSTlRU?=
- =?utf-8?B?NlAwZ3M2S1ptZExFR3A5cHpzdUZ6OHNoOEk3bDVIa29GYXRMeUVsYi8rZFJw?=
- =?utf-8?B?UXA4NngrR1BmSUdBZU53VzRoaUtTWnhJTkQreWlBZHRzQ0E0MlZ3V3N6d2Jh?=
- =?utf-8?B?Sk5TVHYzR0Y0aVpOV1prV2h0ZkI1aUtnVko4b3krL0hOMEQ5clF0RkZrK21O?=
- =?utf-8?B?NFNRK0gyenRVR2p3SUtKMHhGdEZwaEM4cnczcWRHQ3dyNCs2c0tCT2pMNFk2?=
- =?utf-8?B?SzhueDVtM3lOZHk4Vk1lS0xlT21Ha1dZejlhOGU5MmdUeldraWd0UFBtNkFW?=
- =?utf-8?B?cXJYaWN0bmJjZkZiK2FENW4zNzNuaE5lbjd1UUpxNHR5Zit6Tmp4Vi9FM0s0?=
- =?utf-8?B?Zlg5SGVnSUIrSThUVElIelhkbHVuVW5GQWNHcld5V3pWWUZmMzcrSDhiMDRq?=
- =?utf-8?B?T2tKYmVSbHhJRzNvL3NOTkMrbmZreU55WkRmZndzZSs1SktqRzk5L3JBVmp0?=
- =?utf-8?B?N2k2elFWVko3ZS82RnN2cXc3cWhSRE5vbHl2anpHK0wvMUl6NjBsVG01K05w?=
- =?utf-8?Q?hNG7J7ukpIoruUVX901UDOFvi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 391e09a0-bf62-4b51-8807-08dce30033f0
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR12MB5388.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Oct 2024 16:35:19.2806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KrJVZfDe07mUN+ogZz/O20mTXWdrX+tdWWeG7aGHP2v8tqYTqtci1kc0lIKAqdKQds+diH0mPGAeQE29uw6fXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7960
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALiV/WYC/2XNTQ6CMBCG4auQrq2Z/gCtK+9hXFA6QqOCaUmjI
+ dzdghE1Lr9Jn7cjCegdBrLLRuIxuuD6Lg29yUjdVl2D1Nm0CQcuQTNBr83grkg51FqZ2lZKIUm
+ Pbx5P7r6EDse0WxeG3j+Wbizm6ytRsvydiAUFKhXmVkhjuan2Z/QdXra9b8jciOXHfX0dy+Q0t
+ xI4oDAAf06tjgGw1anZgRBSWM1MLX7cNE1Py3mcRA0BAAA=
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4801; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=bkr/giBTZadF4+ZaiqM9ZsvG/mHxPB6xi2TaYAALx5E=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm/ZXGaarTxxkWaNZ/Bc1x5dRpKVleGFmW4G93p
+ yeU+T33FouJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZv2VxgAKCRAADmhBGVaC
+ FaalEAClzTf0+QC+AiBd5ATPquIjfAeFwnewaup6LZ/09jEA0sS0+bxA8pbRMLDga7cYu4LfYSe
+ fN3F9l9h+JBHlo9dFG+ep0UUlgCQmA75t5aSnJWUKAZh4NYy4/JUayrZlcUdXU+tTRiPSButiUj
+ G2wrHgeelBzrjzlYuF7W5MUu2rR9wJTCbiwVMpxub6YBWoA8emENI+aGinV41vUjPQGDvGInzfG
+ 4ONhuU2Tm/ZR3CHANJ4FBW2GYMeURFV7eyy/g8miB6UlFt1eTNWb1HpR58zaKd2F5ofHZJ0Rueg
+ 0MmYXXfuDrsBGPlwyxMSH+b9KE+FRf+2E311ToVif53zKGUWSISz57YGGwCFN4M0o45dt9J+XQw
+ Sr9JJjGq6j6UNhiPAHxHPqJaGDzhsiPhUbbfJlW6Fd4Sfst6DSO6xIABQW8uptQ9sI1OROKRtlS
+ MPqbE5NLAr/E0JGt6XfJkjhTSA+KLDBDwlDi7l3wWlk6Kf8wWC8Z86XTghHwBq6YsHHD5qC4fLJ
+ 2RJSNv4OLQm4mxM9Tkn+9J1l2D6IP2A0+r/PDiXyhYw9slEar48XLomicHODNoS8BiD55LyPI7T
+ pEQighu0Eo1xlGGpLxv3/nB1OLunevvbeOFNzSCz2LZPqCbux82f3Woht/OvZ5zbFCJneU3wrDx
+ 0H9IS0cpGNM8ioA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
+This is a replacement for the v6 series sitting in Christian's
+vfs.mgtime branch. The main changes here are to the changelogs,
+documentation and comments. The code itself is largely unchanged.
 
+The pipe1_threads test shows these averages on my test rig with this
+series:
 
-On 10/2/2024 11:29, Steven Rostedt wrote:
-> On Wed, 2 Oct 2024 11:06:41 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> I'm currently adding code where I need this patch too ;-)
->>
->> I can make a branch that only has this patch based off of v6.12-rc1 where
->> we can both use it. Can we do that?
-> 
-> I take this back. I'm doing something a little different (updating ftrace
-> specific events, which has their own macros).
-> 
-> Feel free to keep using it and pulling it into your tree.
-> 
-Okay, thanks!
-> -- Steve
+    v6.11:				89233600 (baseline)
+    v6.11 + v9 series:			88460897 (<1% slower)
 
+Acked-by's and Reviewed-by's would be welcome (particularly from the
+timekeeper folks).
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v9:
+- Comment and documentation cleanups.
+- Drop the EXPORT_SYMBOL_GPL() from new timekeeper interfaces
+- Link to v8: https://lore.kernel.org/r/20241001-mgtime-v8-0-903343d91bc3@kernel.org
+
+Changes in v8:
+- split patch that adds percpu counters into fs and timekeeping patches
+- convert percpu counters to unsigned longs
+- directly access the offs_real value in timekeeper instead of going
+  through offsets array
+- drop WARN_ON's in timekeeping patches
+- better changelogs and more comments for the timekeeping bits
+- better document how backward realtime clock jumps affect things
+- Link to v7: https://lore.kernel.org/r/20240913-mgtime-v7-0-92d4020e3b00@kernel.org
+
+Changes in v7:
+- move the floor value handling into timekeeper for better performance
+- Link to v6: https://lore.kernel.org/r/20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org
+
+Changes in v6:
+- Normalize timespec64 in inode_set_ctime_to_ts
+- use DEFINE_PER_CPU counters for better vfs consistency
+- skip ctime cmpxchg if the result means nothing will change
+- add trace_ctime_xchg_skip to track skipped ctime updates
+- use __print_flags in ctime_ns_xchg tracepoint
+- Link to v5: https://lore.kernel.org/r/20240711-mgtime-v5-0-37bb5b465feb@kernel.org
+
+Changes in v5:
+- refetch coarse time in coarse_ctime if not returning floor
+- timestamp_truncate before swapping new ctime value into place
+- track floor value as atomic64_t
+- cleanups to Documentation file
+- Link to v4: https://lore.kernel.org/r/20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org
+
+Changes in v4:
+- reordered tracepoint fields for better packing
+- rework percpu counters again to also count fine grained timestamps
+- switch to try_cmpxchg for better efficiency
+- Link to v3: https://lore.kernel.org/r/20240705-mgtime-v3-0-85b2daa9b335@kernel.org
+
+Changes in v3:
+- Drop the conversion of i_ctime fields to ktime_t, and use an unused bit
+  of the i_ctime_nsec field as QUERIED flag.
+- Better tracepoints for tracking floor and ctime updates
+- Reworked percpu counters to be more useful
+- Track floor as monotonic value, which eliminates clock-jump problem
+
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
+
+---
+Jeff Layton (12):
+      timekeeping: add interfaces for handling timestamps with a floor value
+      fs: add infrastructure for multigrain timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      fs: handle delegated timestamps in setattr_copy_mgtime
+      fs: tracepoints around multigrain timestamp events
+      fs: add percpu counters for significant multigrain timestamp events
+      timekeeping: add percpu counter for tracking floor swap events
+      Documentation: add a new file documenting multigrain timestamps
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ Documentation/filesystems/index.rst         |   1 +
+ Documentation/filesystems/multigrain-ts.rst | 125 ++++++++++++
+ fs/attr.c                                   |  60 +++++-
+ fs/btrfs/file.c                             |  25 +--
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 282 +++++++++++++++++++++++++---
+ fs/stat.c                                   |  46 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |  10 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  36 +++-
+ include/linux/timekeeping.h                 |   5 +
+ include/trace/events/timestamp.h            | 124 ++++++++++++
+ kernel/time/timekeeping.c                   | 106 +++++++++++
+ kernel/time/timekeeping_debug.c             |  13 ++
+ kernel/time/timekeeping_internal.h          |   9 +
+ mm/shmem.c                                  |   2 +-
+ 18 files changed, 784 insertions(+), 73 deletions(-)
+---
+base-commit: 7f1416b4fe6bd3363878a91894cd770f8ee1b5d0
+change-id: 20240913-mgtime-20c98bcda88e
+
+Best regards,
 -- 
-Thanks,
-Avadhut Naik
+Jeff Layton <jlayton@kernel.org>
+
