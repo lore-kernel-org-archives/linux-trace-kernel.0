@@ -1,35 +1,35 @@
 Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0071D096B;
-	Wed,  2 Oct 2024 16:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8B01D0E19;
+	Wed,  2 Oct 2024 16:08:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727885340; cv=none; b=TQYkwBpK6dK5x85kKpkCff/Jx+AM5STh84alaUTLIoZcoA4rf40JXJ7cp1dApxcLMmvH57BxRhWRx7qY1NinrApU+FZ3YfcuIgmOD7Pnwa+bpmHIHxcqdjEszyke0uH4vLbJofIOkw6abUzhoNa9Lzd8P4G5aDstC/k1zgQ4CTs=
+	t=1727885341; cv=none; b=RFUpVY1pM7i6B87ZxTW3BUj+TZAoEHe978iE+ngY5BQykNmlJFkaSSNDmoZBeWDJvtJHEnww+olJFjLZxMcmXwwTzTHy/BW3dVLDC6s4FY0zph2VXlTGBEu//aO8dD+3M/ggpgObYCjf6SUZnwN94g7v4jMi2O6an0+zWQQbv1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727885340; c=relaxed/simple;
-	bh=Ph1JSH3so2QDpuJP4xo6S6knDf1xV5EBulULkB1cgbg=;
+	s=arc-20240116; t=1727885341; c=relaxed/simple;
+	bh=jdoey+uksmyfcJ5iDcu5tqp2xlukBo0sMMs91TZYJco=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HbvX3eOcNXUb1RaybNHqGimMBW4IuK/Wq/6yGO3m9zKfuHhOmJJ6Pw8xPfKMX3xTIvPU9G+P5qCyWiph0ttIHoV09oazmJueYTIgXE8DKxYpaQ+wYCbyfwEoLn6AdHD/51AEq5EJGY+D0dJLBcrw9jvFqFVBvtmeyYXXgEqZth4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=Wl/qGGKH; arc=none smtp.client-ip=178.154.239.200
+	 MIME-Version; b=qnkQyoXOp1Z2ij+ZDRcu1wodLclEeb0BDTVUciP0O6TKP+gHSK/Tfj1RlI3ek/RwEJCdsvOIaM75v4kS8Tlhws3WYmetMiSQIenwJmmxRptu4bGL7wG/AkBYiXmjte20uhody7/1Fmnf5DwUovynoisHbX4syRHYEZu0jpU0jD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com; spf=pass smtp.mailfrom=yandex-team.com; dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b=rISzUCre; arc=none smtp.client-ip=178.154.239.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="Wl/qGGKH"
+	dkim=pass (1024-bit key) header.d=yandex-team.com header.i=@yandex-team.com header.b="rISzUCre"
 Received: from mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:b1cb:0:640:2a1e:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id 2065060A59;
-	Wed,  2 Oct 2024 19:08:53 +0300 (MSK)
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id C8E5760A6D;
+	Wed,  2 Oct 2024 19:08:55 +0300 (MSK)
 Received: from dellarbn.yandex.net (unknown [10.214.35.248])
-	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-Eli2J3P3;
-	Wed, 02 Oct 2024 19:08:51 +0300
+	by mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id Z8emWD2IhiE0-NNW0FOgv;
+	Wed, 02 Oct 2024 19:08:54 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.com;
-	s=default; t=1727885332;
-	bh=4BDwgTNznoqh19FbW1xbxFVkO1uBqVi3RNsbBRD27Tk=;
+	s=default; t=1727885334;
+	bh=FEwZkDU2VcUSP99EqMYuNuirJIt2aNspqQO+oi3JBZ0=;
 	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Wl/qGGKHTSFA9wWN1bbDi0YbwEitbGlvPpRRrKsCp6ccao0ouB11BBtvPJ8m+RQU9
-	 S1A+woHBqqO/jmqdf0EgywyOtxMlp2iXTZwnlRl9UdmwlHpLYKiFEQdpmQ5pmgN62h
-	 H2VfuCOascBrttGcumZxN4A5bl1+FwHOgUl+Ts/8=
+	b=rISzUCreiYPr5KO7sSHN36OWn/OE/1SW6J4qWdFjSKXFl/OmP3/AsvrO93oc/rfO3
+	 E5TEW/kK1jsj+bzA3aigLi1L2TRjEmagB2KlDbxL85Ej/R71PObcT7q7wfbME/qBX8
+	 269sah/PVLakog1l83ZOSHYhyBL6jgF+dNfxMlRE=
 Authentication-Results: mail-nwsmtp-smtp-corp-main-56.klg.yp-c.yandex.net; dkim=pass header.i=@yandex-team.com
 From: Andrey Ryabinin <arbn@yandex-team.com>
 To: linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: Alexander Graf <graf@amazon.com>,
 	linux-trace-kernel@vger.kernel.org,
 	valesini@yandex-team.com,
 	Andrey Ryabinin <arbn@yandex-team.com>
-Subject: [RFC PATCH 1/7] kstate: Add kstate - a mechanism to migrate some kernel state across kexec
-Date: Wed,  2 Oct 2024 18:07:16 +0200
-Message-ID: <20241002160722.20025-2-arbn@yandex-team.com>
+Subject: [RFC PATCH 2/7] kexec: Hack and abuse crashkernel for the kstate's migration stream
+Date: Wed,  2 Oct 2024 18:07:17 +0200
+Message-ID: <20241002160722.20025-3-arbn@yandex-team.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241002160722.20025-1-arbn@yandex-team.com>
 References: <20241002160722.20025-1-arbn@yandex-team.com>
@@ -67,425 +67,270 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Yandex-Filter: 1
 
-kstate (kernel state) is a mechanism to describe internal kernel state
-(partially), save it into the memory and restore the state after kexec
-in new kernel.
+This is an early ugly hack just for now. Will be completely redone later.
+This abuses crashkernel segment of memory for the kstate purposes to
+save and restore object descriptions.
 
-The end goal here and the main use case for this is to be able to
-update host kernel under VMs with VFIO pass-through devices running
-on that host.
-We are pretty far from that end goal yet. This and following patches
-only try to establish some basic infrastructure to describe and migrate
-complex in-kernel states. And as a demonstration, the state of trace buffer
-migrated across kexec to new kernel (in the follow up patches).
-
-States (usually this is some struct) are described by the
-'struct kstate_description' containing the array of individual
-fields descpriptions - 'struct kstate_field'.
-Fields have different types like:
-   KS_SIMPLE  - trivial type that just copied by value
-
-   KS_POINTER - field contains pointer, it will be dereferenced to copy
-     the value during save/restore phases.
-
-   KS_STRUCT - contains another struct,
-       field->ksd must point to another 'struct kstate_dscription'
-
-   KS_CUSTOM - something that requires fit trivial types as above,
-               for this fields the callbacks field->save()/->restore() must
-	       do all job
-   KS_ARRAY_OF_POINTER - array of pointers, the size of array determined by the
-                         field->count() callback
-   KS_END - special flag indicating the end of migration stream data.
-
-kstate_register() call accepts kstate_description along with an instance
-of an object and registers it in the global 'states' list.
-
-During kexec reboot phase this list iterated, and for each instance
-in the list 'struct kstate_entry' formed and saved in the migration stream.
-'kstate_entry' contains information like ID of kstate_description, version
-of it, size of migration data and the data itself.
-
-After the reboot, when the kstate_register() called it parses migration
-stream, finds the appropriate 'kstate_entry' and restores the contents of the
-object.
-
-This is an early RFC, so the code is somewhat hacky and some parts
-of this feature isn't well thought trough yet (like dealing with
-struct changes between old and new kernel, fixed size of migrate stream
-memory, and many more).
+The proper solution probably would be using segments in ordinary kexec
+mechanism, however since kstate requires such segments very late
+(at reboot stage, not the load stage) some thought and work will be
+required to make that happen. The KEXEC_FILE_MIGRATE/KEXEC_TYPE_MIGRATE flags
+also likely won't be required.
 
 Signed-off-by: Andrey Ryabinin <arbn@yandex-team.com>
 ---
- include/linux/kstate.h | 118 ++++++++++++++++++++++++
- kernel/Kconfig.kexec   |  12 +++
- kernel/Makefile        |   1 +
- kernel/kstate.c        | 198 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 329 insertions(+)
- create mode 100644 include/linux/kstate.h
- create mode 100644 kernel/kstate.c
+ arch/x86/kernel/kexec-bzimage64.c  | 36 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c |  5 ++++-
+ include/linux/kexec.h              |  6 +++--
+ include/uapi/linux/kexec.h         |  2 ++
+ kernel/crash_core.c                |  3 ++-
+ kernel/kexec_core.c                | 10 ++++++++-
+ kernel/kexec_file.c                | 15 +++++++++++--
+ 7 files changed, 70 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/kstate.h b/include/linux/kstate.h
-new file mode 100644
-index 0000000000000..c97804d0243ea
---- /dev/null
-+++ b/include/linux/kstate.h
-@@ -0,0 +1,118 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _KSTATE_H
-+#define _KSTATE_H
-+
-+#include <linux/atomic.h>
-+#include <linux/list.h>
-+#include <linux/stringify.h>
-+
-+struct kstate_description;
-+enum kstate_flags {
-+	KS_SIMPLE = (1 << 0),
-+	KS_POINTER = (1 << 1),
-+	KS_STRUCT = (1 << 2),
-+	KS_CUSTOM = (1 << 3),
-+	KS_ARRAY_OF_POINTER = (1 << 4),
-+	KS_END = (1UL << 31),
-+};
-+
-+struct kstate_field {
-+	const char *name;
-+	size_t offset;
-+	size_t size;
-+	enum kstate_flags flags;
-+	const struct kstate_description *ksd;
-+	int version_id;
-+	int (*restore)(void *mig_stream, void *obj, const struct kstate_field *field);
-+	int (*save)(void *mig_stream, void *obj, const struct kstate_field *field);
-+	int (*count)(void);
-+};
-+
-+enum kstate_ids {
-+	KSTATE_LAST_ID = -1,
-+};
-+
-+struct kstate_description {
-+	const char *name;
-+	enum kstate_ids id;
-+	atomic_t instance_id;
-+	int version_id;
-+	struct list_head state_list;
-+
-+	const struct kstate_field *fields;
-+};
-+
-+struct state_entry {
-+	u64 id;
-+	struct list_head list;
-+	struct kstate_description *kstd;
-+	void *obj;
-+};
-+
-+static inline bool kstate_get_byte(void **mig_stream)
-+{
-+	bool ret = **(u8 **)mig_stream;
-+	(*mig_stream)++;
-+	return ret;
-+}
-+static inline void *kstate_save_byte(void *mig_stream, u8 val)
-+{
-+	*(u8 *)mig_stream = val;
-+	return mig_stream + sizeof(val);
-+}
-+
-+static inline void *kstate_save_ulong(void *mig_stream, unsigned long val)
-+{
-+	*(unsigned long *)mig_stream = val;
-+	return mig_stream + sizeof(val);
-+}
-+static inline unsigned long kstate_get_ulong(void **mig_stream)
-+{
-+	unsigned long ret = **(unsigned long **)mig_stream;
-+	(*mig_stream) += sizeof(unsigned long);
-+	return ret;
-+}
-+
-+#ifdef CONFIG_KSTATE
-+bool is_migrate_kernel(void);
-+
-+void save_migrate_state(unsigned long mig_stream);
-+
-+void __kstate_register(struct kstate_description *state,
-+		void *obj, struct state_entry *se);
-+int kstate_register(struct kstate_description *state, void *obj);
-+
-+struct kstate_entry;
-+void *save_kstate(void *stream, int id, const struct kstate_description *kstate,
-+		void *obj);
-+void *restore_kstate(struct kstate_entry *ke, int id,
-+		const struct kstate_description *kstate, void *obj);
-+#else
-+
-+#define __kstate_register(state, obj, se)
-+#define kstate_register(state, obj)
-+
-+static inline void save_migrate_state(unsigned long mig_stream) { }
-+
-+#endif
-+
-+
-+#define KSTATE_SIMPLE(_f, _state) {			\
-+		.name = (__stringify(_f)),		\
-+		.size = sizeof_field(_state, _f),	\
-+		.flags = KS_SIMPLE,			\
-+		.offset = offsetof(_state, _f),		\
-+	}
-+
-+#define KSTATE_POINTER(_f, _state) {			\
-+		.name = (__stringify(_f)),		\
-+		.size = sizeof(*(((_state *)0)->_f)),	\
-+		.flags = KS_POINTER,			\
-+		.offset = offsetof(_state, _f),		\
-+	}
-+
-+#define KSTATE_END_OF_LIST() {	\
-+		.flags = KS_END,\
-+	}
-+
-+#endif
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 6c34e63c88ff4..d8fecf29e384a 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -151,4 +151,16 @@ config CRASH_MAX_MEMORY_RANGES
- 	  the computation behind the value provided through the
- 	  /sys/kernel/crash_elfcorehdr_size attribute.
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 68530fad05f74..71c82841e6b12 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -18,6 +18,7 @@
+ #include <linux/mm.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
++#include <linux/vmalloc.h>
  
-+config KSTATE
-+	bool "Migrate certain internal kernel state across kexec"
-+	default n
-+	depends on CRASH_DUMP
-+	help
-+	  Enable functionality to migrate some internal kernel states to new
-+	  kernel across kexec. Currently capable only migrating trace buffers
-+	  as an example. Can be extended to other states like IOMMU page tables,
-+	  VFIO state of the device...
-+	  Description of the trace buffer saved into memory preserved across kexec.
-+	  The new kernel reads description to restore the state of trace buffers.
+ #include <asm/bootparam.h>
+ #include <asm/setup.h>
+@@ -77,6 +78,11 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+ 		len = sprintf(cmdline_ptr,
+ 			"elfcorehdr=0x%lx ", image->elf_load_addr);
+ 	}
++	if (image->type == KEXEC_TYPE_MIGRATE) {
++		len = sprintf(cmdline_ptr,
++			"migrate_stream=0x0%llx ", crashk_res.start);
++	}
 +
- endmenu
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 87866b037fbed..6bdf947fc84f5 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -75,6 +75,7 @@ obj-$(CONFIG_CRASH_DUMP) += crash_core.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
- obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-+obj-$(CONFIG_KSTATE) += kstate.o
- obj-$(CONFIG_BACKTRACE_SELF_TEST) += backtracetest.o
- obj-$(CONFIG_COMPAT) += compat.o
- obj-$(CONFIG_CGROUPS) += cgroup/
-diff --git a/kernel/kstate.c b/kernel/kstate.c
-new file mode 100644
-index 0000000000000..0ef228baef94e
---- /dev/null
-+++ b/kernel/kstate.c
-@@ -0,0 +1,198 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/ctype.h>
-+#include <linux/kexec.h>
+ 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+ 	cmdline_len += len;
+ 
+@@ -389,6 +395,29 @@ static int bzImage64_probe(const char *buf, unsigned long len)
+ 	return ret;
+ }
+ 
++static int load_migrate_segments(struct kimage *image)
++{
++	int ret;
++	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
++				  .buf_max = ULONG_MAX, .top_down = false };
++
++	kbuf.bufsz = 4096;
++	kbuf.buffer = vzalloc(kbuf.bufsz);
++
++	kbuf.memsz = 8*1024*1024;
++
++	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
++	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
++	ret = kexec_add_buffer(&kbuf);
++	if (ret)
++		return ret;
++	image->mig_stream = kbuf.mem;
++	kexec_dprintk("kstate: Loaded mig_stream at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
++		      image->mig_stream, kbuf.bufsz, kbuf.memsz);
++
++	return ret;
++}
++
+ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 			    unsigned long kernel_len, char *initrd,
+ 			    unsigned long initrd_len, char *cmdline,
+@@ -444,6 +473,13 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	}
+ #endif
+ 
++	if (image->type == KEXEC_TYPE_MIGRATE) {
++		ret = load_migrate_segments(image);
++		if (ret)
++			return ERR_PTR(ret);
++
++	}
++
+ 	/*
+ 	 * Load purgatory. For 64bit entry point, purgatory  code can be
+ 	 * anywhere.
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 9c9ac606893e9..edf6234b75baf 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -572,7 +572,10 @@ static void kexec_mark_crashkres(bool protect)
+ 	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
+ 
+ 	/* Don't touch the control code page used in crash_kexec().*/
+-	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
++	if (kexec_image && kexec_image->type & KEXEC_TYPE_MIGRATE)
++		control = PFN_PHYS(page_to_pfn(kexec_image->control_code_page));
++	else if (kexec_crash_image)
++		control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
+ 	/* Control code page is located in the 2nd page. */
+ 	kexec_mark_range(crashk_res.start, control + PAGE_SIZE - 1, protect);
+ 	control += KEXEC_CONTROL_PAGE_SIZE;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3c..182ef76f21860 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -299,6 +299,7 @@ struct kimage {
+ 	unsigned long start;
+ 	struct page *control_code_page;
+ 	struct page *swap_page;
++	unsigned long mig_stream;
+ 	void *vmcoreinfo_data_copy; /* locates in the crash memory */
+ 
+ 	unsigned long nr_segments;
+@@ -312,9 +313,10 @@ struct kimage {
+ 	unsigned long control_page;
+ 
+ 	/* Flags to indicate special processing */
+-	unsigned int type : 1;
++	unsigned int type : 2;
+ #define KEXEC_TYPE_DEFAULT 0
+ #define KEXEC_TYPE_CRASH   1
++#define KEXEC_TYPE_MIGRATE 2
+ 	unsigned int preserve_context : 1;
+ 	/* If set, we are using file mode kexec syscall */
+ 	unsigned int file_mode:1;
+@@ -401,7 +403,7 @@ bool kexec_load_permitted(int kexec_image_type);
+ 
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+-				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
++				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG | KEXEC_FILE_MIGRATE)
+ 
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 5ae1741ea8ea0..454dc7c8a7d86 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -27,6 +27,8 @@
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+ #define KEXEC_FILE_DEBUG	0x00000008
++#define KEXEC_FILE_MIGRATE	0X00000010
++
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index c1048893f4b68..87b9a52d60352 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -42,7 +42,8 @@ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
+ 
+ 	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
+ 		return 0;
+-	if (image->type != KEXEC_TYPE_CRASH)
++	if (image->type != KEXEC_TYPE_CRASH &&
++	    image->type != KEXEC_TYPE_MIGRATE)
+ 		return 0;
+ 
+ 	/*
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0caa14880c3b..ca6283d21235e 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -13,6 +13,7 @@
+ #include <linux/slab.h>
+ #include <linux/fs.h>
+ #include <linux/kexec.h>
 +#include <linux/kstate.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/highmem.h>
+@@ -196,7 +197,8 @@ int sanity_check_segment_list(struct kimage *image)
+ 	 * kernel could corrupt things.
+ 	 */
+ 
+-	if (image->type == KEXEC_TYPE_CRASH) {
++	if (image->type == KEXEC_TYPE_CRASH ||
++	    image->type == KEXEC_TYPE_MIGRATE) {
+ 		for (i = 0; i < nr_segments; i++) {
+ 			unsigned long mstart, mend;
+ 
+@@ -461,6 +463,7 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
+ 		break;
+ #ifdef CONFIG_CRASH_DUMP
+ 	case KEXEC_TYPE_CRASH:
++	case KEXEC_TYPE_MIGRATE:
+ 		pages = kimage_alloc_crash_control_pages(image, order);
+ 		break;
+ #endif
+@@ -859,6 +862,7 @@ int kimage_load_segment(struct kimage *image,
+ 		break;
+ #ifdef CONFIG_CRASH_DUMP
+ 	case KEXEC_TYPE_CRASH:
++	case KEXEC_TYPE_MIGRATE:
+ 		result = kimage_load_crash_segment(image, segment);
+ 		break;
+ #endif
+@@ -1044,9 +1048,13 @@ int kernel_kexec(void)
+ 		 */
+ 		cpu_hotplug_enable();
+ 		pr_notice("Starting new kernel\n");
++		arch_kexec_unprotect_crashkres();
+ 		machine_shutdown();
+ 	}
+ 
++	if (kexec_image->type & KEXEC_TYPE_MIGRATE)
++		save_migrate_state(kexec_image->mig_stream);
 +
-+static LIST_HEAD(states);
-+
-+struct kstate_entry {
-+	int state_id;
-+	int version_id;
-+	int instance_id;
-+	int size;
-+	DECLARE_FLEX_ARRAY(u8, data);
-+};
-+
-+void *save_kstate(void *stream, int id, const struct kstate_description *kstate,
-+		void *obj)
-+{
-+	const struct kstate_field *field = kstate->fields;
-+	struct kstate_entry *ke = stream;
-+
-+	stream = ke->data;
-+
-+	ke->state_id = kstate->id;
-+	ke->version_id = kstate->version_id;
-+	ke->instance_id = id;
-+
-+	while (field->flags != KS_END) {
-+		void *first,  *cur;
-+		int n_elems = 1;
-+		int size, i;
-+
-+		first = obj + field->offset;
-+
-+		if (field->flags & KS_POINTER)
-+			first = *(void **)(obj + field->offset);
-+		if (field->count)
-+			n_elems = field->count();
-+		size = field->size;
-+		for (i = 0; i < n_elems; i++) {
-+			cur = first + i * size;
-+
-+			if (field->flags & KS_ARRAY_OF_POINTER)
-+				cur = *(void **)cur;
-+
-+			if (field->flags & KS_STRUCT)
-+				stream = save_kstate(stream, 0, field->ksd, cur);
-+			else if (field->flags & KS_CUSTOM) {
-+				if (field->save)
-+					stream += field->save(stream, cur, field);
-+			} else if (field->flags & (KS_SIMPLE|KS_POINTER)) {
-+				memcpy(stream, cur, size);
-+				stream += size;
-+			} else
-+				WARN_ON_ONCE(1);
-+
-+		}
-+		field++;
-+
+ 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+ 	machine_kexec(kexec_image);
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad8..4a576db4141cd 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -293,6 +293,11 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 	}
+ #endif
+ 
++	if (flags & KEXEC_FILE_MIGRATE) {
++		image->control_page = crashk_res.start;
++		image->type = KEXEC_TYPE_MIGRATE;
 +	}
 +
-+	ke->size = (u8 *)stream - ke->data;
-+	return stream;
-+}
+ 	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
+ 					   cmdline_ptr, cmdline_len, flags);
+ 	if (ret)
+@@ -360,6 +365,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ #endif
+ 		dest_image = &kexec_image;
+ 
++	if (image_type == KEXEC_TYPE_MIGRATE)
++		if (*dest_image)
++			arch_kexec_unprotect_crashkres();
 +
-+void save_migrate_state(unsigned long mig_stream)
-+{
-+	struct state_entry *se;
-+	struct kstate_entry *ke;
-+	void *dest;
-+	struct page *page;
-+
-+	page = boot_pfn_to_page(mig_stream >> PAGE_SHIFT);
-+	arch_kexec_post_alloc_pages(page_address(page), 512, 0);
-+	dest = page_address(page);
-+	list_for_each_entry(se, &states, list)
-+		dest = save_kstate(dest, se->id, se->kstd, se->obj);
-+	ke = dest;
-+	ke->state_id = KSTATE_LAST_ID;
-+}
-+
-+void *restore_kstate(struct kstate_entry *ke, int id,
-+		const struct kstate_description *kstate, void *obj)
-+{
-+	const struct kstate_field *field = kstate->fields;
-+	u8 *stream = ke->data;
-+
-+	WARN_ONCE(ke->version_id != kstate->version_id, "version mismatch %d %d\n",
-+		ke->version_id, kstate->version_id);
-+
-+	WARN_ONCE(ke->instance_id != id, "instance id mismatch %d %d\n",
-+		ke->instance_id, id);
-+
-+	while (field->flags != KS_END) {
-+		void *first, *cur;
-+		int n_elems = 1;
-+		int size, i;
-+
-+		first = obj + field->offset;
-+		if (field->flags & KS_POINTER)
-+			first = *(void **)(obj + field->offset);
-+		if (field->count)
-+			n_elems = field->count();
-+		size = field->size;
-+		for (i = 0; i < n_elems; i++) {
-+			cur = first + i * size;
-+
-+			if (field->flags & KS_ARRAY_OF_POINTER)
-+				cur = *(void **)cur;
-+
-+			if (field->flags & KS_STRUCT)
-+				stream = restore_kstate((struct kstate_entry *)stream,
-+							0, field->ksd, cur);
-+			else if (field->flags & KS_CUSTOM) {
-+				if (field->restore)
-+					stream += field->restore(stream, cur, field);
-+			} else if (field->flags & (KS_SIMPLE|KS_POINTER)) {
-+				memcpy(cur, stream, size);
-+				stream += size;
-+			} else
-+				WARN_ON_ONCE(1);
-+
-+		}
-+		field++;
-+	}
-+
-+	return stream;
-+}
-+
-+static void restore_migrate_state(unsigned long mig_stream,
-+				struct state_entry *se)
-+{
-+	char *dest;
-+	struct kstate_entry *ke;
-+
-+	if (mig_stream == -1)
-+		return;
-+
-+	dest = phys_to_virt(mig_stream);
-+	ke = (struct kstate_entry *)dest;
-+	while (ke->state_id != KSTATE_LAST_ID) {
-+		if (ke->state_id != se->kstd->id ||
-+		    ke->instance_id != se->id) {
-+			ke = (struct kstate_entry *)(ke->data + ke->size);
-+			continue;
-+		}
-+
-+		restore_kstate(ke, se->id, se->kstd, se->obj);
-+		ke = (struct kstate_entry *)(ke->data + ke->size);
-+	}
-+}
-+
-+unsigned long long migrate_stream_addr = -1;
-+EXPORT_SYMBOL_GPL(migrate_stream_addr);
-+unsigned long long migrate_stream_size;
-+
-+bool is_migrate_kernel(void)
-+{
-+	return migrate_stream_addr != -1;
-+}
-+
-+void __kstate_register(struct kstate_description *state, void *obj, struct state_entry *se)
-+{
-+	se->kstd = state;
-+	se->id = atomic_inc_return(&state->instance_id);
-+	se->obj = obj;
-+	list_add(&se->list, &states);
-+	restore_migrate_state(migrate_stream_addr, se);
-+}
-+
-+int kstate_register(struct kstate_description *state, void *obj)
-+{
-+	struct state_entry *se;
-+
-+	se = kmalloc(sizeof(*se), GFP_KERNEL);
-+	if (!se)
-+		return -ENOMEM;
-+
-+	__kstate_register(state, obj, se);
-+	return 0;
-+}
-+
-+static int __init setup_migrate(char *arg)
-+{
-+	char *end;
-+
-+	if (!arg)
-+		return -EINVAL;
-+	migrate_stream_addr = memparse(arg, &end);
-+	if (*end == '@') {
-+		migrate_stream_size = migrate_stream_addr;
-+		migrate_stream_addr = memparse(end + 1, &end);
-+	}
-+	return end > arg ? 0 : -EINVAL;
-+}
-+early_param("migrate_stream", setup_migrate);
+ 	if (flags & KEXEC_FILE_UNLOAD)
+ 		goto exchange;
+ 
+@@ -428,7 +437,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	image = xchg(dest_image, image);
+ out:
+ #ifdef CONFIG_CRASH_DUMP
+-	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
++	if (((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image) ||
++	    ((flags & KEXEC_FILE_MIGRATE) && kexec_image))
+ 		arch_kexec_protect_crashkres();
+ #endif
+ 
+@@ -608,7 +618,8 @@ static int kexec_walk_resources(struct kexec_buf *kbuf,
+ 				int (*func)(struct resource *, void *))
+ {
+ #ifdef CONFIG_CRASH_DUMP
+-	if (kbuf->image->type == KEXEC_TYPE_CRASH)
++	if (kbuf->image->type == KEXEC_TYPE_CRASH ||
++	    kbuf->image->type == KEXEC_TYPE_MIGRATE)
+ 		return walk_iomem_res_desc(crashk_res.desc,
+ 					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 					   crashk_res.start, crashk_res.end,
 -- 
 2.45.2
 
