@@ -1,85 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979BE1D0DD7;
-	Wed,  2 Oct 2024 15:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462941D0B8F;
+	Wed,  2 Oct 2024 15:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727882147; cv=none; b=h71GGFXgUApRXxaGfVr0uwbOiAxF5JoI5UHTjTXohoNSkWBuqw4DxjckmV8SqqoIQXpG4IAyDsp0rf3q3+VebqW/bfa91Z4RC3XwfwmH7fydocgR8JR+/+obT056egHDRC735UKh/LoCM2s/0+5PL4DPfSIZGFpuwTHghV2FKSs=
+	t=1727882905; cv=none; b=gVU0BQ1VeSfEKSrl0H+OvA3pSiA6LcdQpjYvXUIFCbGW0JJ1uC64F5dy5gt/f8YkUYaLkTemHKPN9sh8L/8GY1XHERQCLvMIIOvtt6067ctsigStPiVwVRjVxLGYc2vi8aHsLID3NAcv/JsnGRnc6mz8A0hsv4DzX5ihGJuf6yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727882147; c=relaxed/simple;
-	bh=cSqy+Y3vymMzfEFegTaxBbJQYuRNrId6yjcvXt55yYc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=e4Bpyqy0VQyrj5Y/G0ETZB2obfKatHfX0HBf0qLaKC2si7SmZLJGOOT/L3atCnsjf25eXqotT/oTe1L+sSvOpy4wsasZ0suXj/FpMonndHtebzRGsUU7kPLjxMlGFW+upxO35jjJ718liz7CE62YJZ7qRpue3OmeL4WNhroI6XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rDvCacMz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FhIpWKKa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1727882905; c=relaxed/simple;
+	bh=GIFJ+ub0dyf/6HINdN+6nnod9cYqbUkDdTMCF2Ad3ag=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=hs31Q8CzNL7v/p8VseZOwQcdkMm9bqVYWvTBPXM1Oh7J69o1HDa3B9X/d0dg9IEQ/ZJQfXykXzDGTOLwWb+zlG3t4ZcpOuPf4WhrefKTF2rQXpIGtiATeTfoiMDLNxv/ZtsYPx4crljR8E1TUj6a163ZC7wmiFy+EDruDDRo4Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aftqCKRS; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rDvCacMz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FhIpWKKa"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1727882144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BmmHochcpTDD7Nu+HELtF8u1Zb7Blq+ChOF2S341j/0=;
-	b=rDvCacMzuet95MZzwovEdkA+zsyx3l+zIP/ab4c4JTEvqWEQ6FKDCvoq1/IwwFkFD8NzA/
-	P6hBvqRJdInQoqm8kPzJOuXU3yFafwEar1L2ZiBw6IUCUGHipNr3kQC7Dn7tmKSE3pNzeW
-	LWVOsmuZrFYYIVP4zdn1hqrq5JeAGIR9lnnTZJ5jlWYLQ6GTRFIOsMfxlgYffXZDCr3ql5
-	amScW/N6ty5nLZ17mtHTFVmLQp7VZ3MtmCw4KHQ17gsFuZFwYCkbVKgOaSXRi8iaxJcs7t
-	tt72ObY0P76yQOuC/LQuyG1S2lNSq5CdkQHuMqB7wJK05L8IgBK4ReVLS55WcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1727882144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BmmHochcpTDD7Nu+HELtF8u1Zb7Blq+ChOF2S341j/0=;
-	b=FhIpWKKaMXGVRmZoXfaPmBClAoeNc5GNzkxYHFHf39NSc8KrEoqj1zUbkyqd4lEQ8Ap2r5
-	V/21uE2P1FuWl7BQ==
-To: Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org, maz@kernel.org,
- oliver.upton@linux.dev
-Cc: kvmarm@lists.linux.dev, will@kernel.org, qperret@google.com,
- kernel-team@android.com, linux-kernel@vger.kernel.org, Vincent Donnefort
- <vdonnefort@google.com>, John Stultz <jstultz@google.com>, Stephen Boyd
- <sboyd@kernel.org>, "Christopher S. Hall" <christopher.s.hall@intel.com>,
- Richard Cochran <richardcochran@gmail.com>, Lakshmi Sowjanya D
- <lakshmi.sowjanya.d@intel.com>
-Subject: Re: [PATCH 04/13] timekeeping: Add the boot clock to system time
- snapshot
-In-Reply-To: <20240911093029.3279154-5-vdonnefort@google.com>
-References: <20240911093029.3279154-1-vdonnefort@google.com>
- <20240911093029.3279154-5-vdonnefort@google.com>
-Date: Wed, 02 Oct 2024 17:15:43 +0200
-Message-ID: <87r08ywn6o.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aftqCKRS"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20b84bfbdfcso7106135ad.0;
+        Wed, 02 Oct 2024 08:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727882903; x=1728487703; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YyjcuBAlSHDXXjE8TsusNbHHDeY3Wi2wIqHrUP4l/HM=;
+        b=aftqCKRSiaXC2jxPjRRHUBjrLiHaep3723gSH8WruA3WGVhs6KNIlLGd9Sr9sK/mlk
+         5bz9HJjHC7In7An2FH0DyitUpI2hSEGQL230Rp1NlTR/k0DG5FjapsVF7qFiw0AFf4x4
+         4YkIbRS5hxRz13yd/NTQCuCNevvPSxaIhhs0rs6b1D7QDgNxAyuTg3G2WmBo8UuX8LV+
+         lZjm1wx40cRb4f5IXhwnP+//TIZWbsSNzCrCj3KYhlzj4VIlJPXa3z8qafCESOTMwrUl
+         bPCdQh5E1WITvOEsnpLe5c+lmvhq4QR9dSYO5vbtKji9+atzqW3QHVfgenXRkh4goTgA
+         j84Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727882903; x=1728487703;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YyjcuBAlSHDXXjE8TsusNbHHDeY3Wi2wIqHrUP4l/HM=;
+        b=cP7Rxjla9N0gEHLjHDTXUJugd9ejJ93UL+aH1wogCuGee7+Rvq0SRWl5So+gHrDn0m
+         oi+1f1oG/4Cn9C/IWQ7FiDzH3kqaaUD3ro8UMwp1W452mF7X2n3EUOc/y8ZVTKgJqVRA
+         AwnLDmdyzKzoQEsKMxcpi8/K9UC6uIyS7m0G2tUYLpusqOQl7zoGghmzXqA4/z9be1bV
+         Fr2P1iUsXzBpSjw52Uc/N1aANbN07eSzf7kV6B8auLP2yyxWCVelBQV5yuyDu6hZLbpi
+         WFOwM+r8bpoF98K6uwQWMO+QAYwuQstZXV7EQYPo4vm+3V9tLlvYf9kXuJkVUQiNynW2
+         Ao4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBxHxp65bcKWbKatJRMG06X72dt4QTvU7KB4WX2icWZR/j0ClRfXFEhvr1RJcyiTlOKEGvajL0y7OSPPYfREahXVjX@vger.kernel.org, AJvYcCXL8QGjBVw76JJ48+Kt2/z5SA900IypcNBdOzUAhm5aqFCRdyzv2ND6ZKtv7aC/twMCS416y67hppcC/KE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNBYY71wvG1qavbGkO9gvX6EbqpqB+xqCOoaY7m7ZMMt4PqAII
+	jWEHvjNQDODgL0W76c0tCceMaS+raAPKHg0Gr7J5bme8CIbmK/xPHeKSUg3l
+X-Google-Smtp-Source: AGHT+IF+Gf6cjizYVvRSNUcp9b2roP0RQpJsmKcgGNneaG3XjrInuh9rIxwkeoySbHtFlmVsuP0lmQ==
+X-Received: by 2002:a17:90a:3482:b0:2d8:85fc:464c with SMTP id 98e67ed59e1d1-2e1b38c6e58mr10030a91.11.1727882903363;
+        Wed, 02 Oct 2024 08:28:23 -0700 (PDT)
+Received: from ?IPV6:240d:1a:13a:f00:4b94:68e0:2d8b:3983? ([240d:1a:13a:f00:4b94:68e0:2d8b:3983])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e18fa43767sm1692186a91.48.2024.10.02.08.28.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2024 08:28:22 -0700 (PDT)
+Message-ID: <920d0c47-bc4a-418f-a9ea-ceeb931748f5@gmail.com>
+Date: Thu, 3 Oct 2024 00:28:28 +0900
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+From: Tatsuya S <tatsuya.s2862@gmail.com>
+Subject: Re: [PATCH v3] ftrace: Hide a extra entry in stack trace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
+ <20241002095640.55e6cc37@gandalf.local.home>
+Content-Language: en-US
+In-Reply-To: <20241002095640.55e6cc37@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 11 2024 at 10:30, Vincent Donnefort wrote:
-> For tracing purpose, the boot clock is interesting as it doesn't stop on
-> suspend. Export it as part of the time snapshot. This will later allow
-> the hypervisor to add boot clock timestamps to its events.
->
-> Cc: John Stultz <jstultz@google.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Christopher S. Hall <christopher.s.hall@intel.com>
-> Cc: Richard Cochran <richardcochran@gmail.com>
-> Cc: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-I've queued this in on top of v6.12-rc1 as I have upcoming time keeping
-changes. I've tagged this commit so it can be pulled by the arm64/kvm
-people to base the other changes on:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tk-for-arm64-kvm
+On 10/2/24 10:56 PM, Steven Rostedt wrote:
+> On Wed,  2 Oct 2024 14:13:48 +0900
+> Tatsuya S <tatsuya.s2862@gmail.com> wrote:
+> 
+>> A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
+>>
+>> [003] .....   110.171589: vfs_write <-__x64_sys_write
+>> [003] .....   110.171600: <stack trace>
+>> => XXXXXXXXX (Wrong function name)
+> 
+> BTW, instead of X'ing it out, can you show what that extra function was.
+> Just saying "Wrong function name" doesn't give me any idea of what happened.
+This is changed each shutdown.
+For example, client_init_data, hidpp_driver_init, rfcomm_init.
 
-Thanks,
+The same function name was displayed each time if system was not shutdown.
 
-        tglx
+And I added "nokaslr" to the kernel command line and boot, got same result.
+> 
+>> => vfs_write
+>> => ksys_write
+>> => do_syscall_64
+>> => entry_SYSCALL_64_after_hwframe
+>>
+>> To resolve this, increment skip for __ftrace_trace_stack() in
+>> function_stack_trace_call().
+>> The reason why skip is incremented for __ftrace_trace_stack()
+>> is because __ftrace_trace_stack() in stack trace is the only function
+>> that wasn't skipped from anywhere.
+> 
+> Is that the function that was "wrong"?
+Unrelated?
+> 
+> -- Steve
+> 
+>>
+>> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+>> ---
+>> V2 -> V3: Changed the place to increment skip number
+>> V1 -> V2: Fixed redundant code
+>>
+>>   kernel/trace/trace_functions.c | 24 +++++++++++-------------
+>>   1 file changed, 11 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+>> index 3b0cea37e029..27089d8e65d4 100644
+>> --- a/kernel/trace/trace_functions.c
+>> +++ b/kernel/trace/trace_functions.c
+>> @@ -203,23 +203,21 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+>>   	ftrace_test_recursion_unlock(bit);
+>>   }
+>>   
+>> -#ifdef CONFIG_UNWINDER_ORC
+>> -/*
+>> - * Skip 2:
+>> - *
+>> - *   function_stack_trace_call()
+>> - *   ftrace_call()
+>> - */
+>> -#define STACK_SKIP 2
+>> -#else
+>>   /*
+>>    * Skip 3:
+>> - *   __trace_stack()
+>> - *   function_stack_trace_call()
+>> - *   ftrace_call()
+>> + *   Skipped functions if CONFIG_UNWINDER_ORC is defined
+>> + *
+>> + *     __ftrace_trace_stack()
+>> + *     function_stack_trace_call()
+>> + *     ftrace_call()
+>> + *
+>> + *   Otherwise
+>> + *
+>> + *     __trace_stack()
+>> + *     function_stack_trace_call()
+>> + *     ftrace_call()
+>>    */
+>>   #define STACK_SKIP 3
+>> -#endif
+>>   
+>>   static void
+>>   function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+> 
+
+thanks
+
