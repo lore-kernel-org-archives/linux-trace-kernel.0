@@ -1,135 +1,198 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8731946B9;
-	Wed,  2 Oct 2024 20:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F76745F4;
+	Wed,  2 Oct 2024 21:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727899390; cv=none; b=PtdG2JjIaRsUHlG76U8GLm41sWRxCX8fRtu3is6mD2j3dYhm+PLJAztXd78gMbZsKzHNUZ+6Na+wfGzvwarsV5KsiyB2O24wKguuVHsTg5bwHyI7g9QiSrsu9FajRI1E/KXrYq3AvxM0uitKNlIu4iU6GrK4MyA+RlmPFGCQ/DU=
+	t=1727904454; cv=none; b=ba4eafgY/GmLHOauxnouM4Vlh28eTm1yXBsRtaw8WO5/dd/Qbq33o4OYC6VQOma8FRa+emJr6GDCTeISJ5s2HKjGvu1DI09WHE0WcKyw4ph13QQSsuIdPiWYq+uz6F49tCb7puIuJkm0vsiJZRCKBAT2y79PRTr7N0ICjL2afks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727899390; c=relaxed/simple;
-	bh=kVG5FiqtGznQH5mlDfqZJIZJextSvCeF6BHOUvrQN/8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XK9JGQZZnOnjmZx4G0VgBiYgqHKOrkhVhQii6daCE5qgOO4gh50xAPw6qRFzjeGhgl4isPBhpYb+uNOuQe2F6NpXLctqVEKJlDvmac15lr3/ijnIABt0xl7/cPot7/DU1U/OW+5L/1tUNt87ckdyCi5Uk12pYGhtyrEGzqFobZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EnnH/Uim; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1727904454; c=relaxed/simple;
+	bh=Y5NHoq1D66E6MhHGAOXPO50U8Tj9wg921VuqUM47n1c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bG0AHyoct8m1fJGHty7Q9UUC8U/MECQ/lwiRW/3dPwu/XCyp91CQtTI9StDJIqzi6Dd24s3GjAUtjyZGQ4IwISFQMpmAG4OjiBLGrRbVe0H9rN8RsSt7icBnOtnrdVmRSDX0LFcgodAZNQyZMwBrC6UAJNezG9cstndzbHdtdRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcXFxU3o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnnH/Uim"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-20b0b2528d8so1544305ad.2;
-        Wed, 02 Oct 2024 13:03:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727899388; x=1728504188; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QiRp+YwmdyiMme5vt1vRR+VBvbe+ehGGnDWss9t/xgA=;
-        b=EnnH/UimL1lW9ZuCWc1RKUPY3IJC5Ph8t6ZJIXgE6a0HMGUZNhVJonyiEA0K1E8GPf
-         PsjqsCF/60SWwDRQdLPricVCIbDFkiImlbwj2Q8WHcCE9UCcd+yg76R0iuN63+VJqnWo
-         teTjCh8agpRJEXD8EWrcFI9rLvWlAE5e9PIZ6Kva5OjlghwAwCnp0Fl5bySax6B7QZHe
-         11XitfUPkhIuhZtAVjUzEJ8FUihvAbd/SThX9JUVFSGJUlicPlGp3EZSKsbNIq8k6Ywr
-         lf37c93UFNyN1+XUqzOWuzoo1I0xgjAOlydyz5X4aMA6t0B4LDjUZ2kzgYYZvOfw52i2
-         HM/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727899388; x=1728504188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QiRp+YwmdyiMme5vt1vRR+VBvbe+ehGGnDWss9t/xgA=;
-        b=UhuX2n7hA5eRnDcBYyk9DtdIpzgOqAyQSq/EQHCCljz7eb9+/KS/suV0n1UHbna+72
-         9+IDJnyExifSmub7K1S2so1ga/8ngpCLt2ln7bWKpJIOqT0z2DMKSkrnlAA8pDAfUtz7
-         R1csKVh2AHUHCk0/1NlVZ84rtcyinJRpvA4KEcvsXvGGLwJZ38llnQH2UyskvYJKIVdf
-         LPZ3IAoRf+ErGoVyOlxUcdaILjwiHqe7lHixMmt7tJHS2DJHxaQMzyWP1WzC8eE0O95D
-         t0SGa1e2i52P8SMF1DB7LEm2K3pDre64uEj2O2alGwJIV6ys3tiONEJKVkIc+GI7HV8V
-         5o3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXvaR+lDHNkROCVnSl1Yi2DbeS/y9GWyGC3/8r6fir6ojbXsvUWUHvaEnJodYsSOoGUyFwGJGEhyMdPbtLxsvjf59@vger.kernel.org, AJvYcCWa+MuSqOqO5AgYhecS37rh20FS0mNd1+kd1iHz/reCSviEpdA8huFhegBEoT8N52F00Seihf0Gn2D4uI9n@vger.kernel.org, AJvYcCWcycHzTQ8FZkVgV+7fM9LHjjD7lO/iPpTZGtcr8qJMKW7tA8mbpUp9G2P33JVmvRcAJe8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzpiq347PMWbsZtoHvwbx/S41rc4P0okkbTqVU8Z/0Pz0aN4XML
-	UkYH/Zz1cAUMIcQD+flSaQZC8wcdwq+fLfJdiVfcbzH96ykbXKcChd1Q8du0u0v88poWl60mS3S
-	AIkKnESlD0oeHKPaDeK0n5pC5REc=
-X-Google-Smtp-Source: AGHT+IEg4DbjqfRXka9aAkfSEmR+s0GKyrJw/htMlsm0Ur8gSdFunyN8Ro8pAlFUZqeVBvUpKSRHiFXvpXPYiqGxEcE=
-X-Received: by 2002:a17:902:f70a:b0:20b:c1e4:2d77 with SMTP id
- d9443c01a7336-20bc5a94ec2mr72842175ad.38.1727899388225; Wed, 02 Oct 2024
- 13:03:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcXFxU3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7406C4CEC2;
+	Wed,  2 Oct 2024 21:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727904451;
+	bh=Y5NHoq1D66E6MhHGAOXPO50U8Tj9wg921VuqUM47n1c=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tcXFxU3ofaRyX9PSIuU+dnEpVSM/iumnaLK9a5v7TRdkrtwP0QNqH27GmUbZcI1tG
+	 oYge+zigzJPA1JlMSEgw/KdA581RhzhSY2EXPXC24TcYb/fxHkk2JC3p2pYVf1dhpl
+	 uTFc8CnIho9ca+o5HduPQWYL6McWHSds7sm+jMg4ijNCAepuwpa0wEE1g2kauctk49
+	 DSHzGyfbIwqSARHG+mFXPk12jQQ8+Dr9gm/lQDr2W7vbZjlbkISYQgNfSimTqXm91W
+	 EFckdWyhiqKZgr9kr2ycRGM1jRvMAK9cowQ98S4qExt0fLZE2bvIhe3zvSgP6dO3wS
+	 GGNPr5QZTTZCg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v10 00/12] timekeeping/fs: multigrain timestamp redux
+Date: Wed, 02 Oct 2024 17:27:15 -0400
+Message-Id: <20241002-mgtime-v10-0-d1c4717f5284@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241001225207.2215639-1-andrii@kernel.org> <20241001225207.2215639-6-andrii@kernel.org>
- <20241002072522.GB27552@redhat.com>
-In-Reply-To: <20241002072522.GB27552@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 2 Oct 2024 13:02:56 -0700
-Message-ID: <CAEf4Bzbpw-MDJFC8iNboEK02LVHcpeyzTKsQxrxt44fKm3MDRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 tip/perf/core 5/5] uprobes: add speculative lockless
- VMA-to-inode-to-uprobe resolution
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
-	paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
-	brauner@kernel.org, jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, 
-	mingo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALO6/WYC/2XOSw7CIBCA4asY1mKGRwu48h7GBY+xErU11BCN6
+ d2lNVaNy5nw/cOD9Jgi9mS9eJCEOfaxa8vAYLkg/mDbBmkMZUE4cAmGCXpurvGMlIM32vlgtUZ
+ SHl8S7uNtKm13ZT7E/tql+xTO9bh9JRSr3olcU6BSYxWEdIE7uzliavG06lJDxkZWH/d1OqviD
+ A8SOKBwAH9Oz44BsNnp0YEQUgTDnBd/znw7PjtTnFJYfmhDpaz/ccMwPAGOhG0LRgEAAA==
+X-Change-ID: 20240913-mgtime-20c98bcda88e
+To: John Stultz <jstultz@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+ Stephen Boyd <sboyd@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Hugh Dickins <hughd@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, 
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org, linux-mm@kvack.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5223; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Y5NHoq1D66E6MhHGAOXPO50U8Tj9wg921VuqUM47n1c=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBm/bq5Ucxpe+2dO/4f2N9Del8gbRSKkXWJ4RxvE
+ m32RFAxn22JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZv26uQAKCRAADmhBGVaC
+ FbJjD/4ich0/NyeGFTRSWS1TM6qXVjXQ8xiLD/NLSZ2ncXBcG3V1hR+AI5b74oW1NMX++R6i4gB
+ T4DeOOvnUvb9hYQzATPVtCEMnTs/zmfiO+2KdNNNMT+l8TLfGQ/lZcLoVOxLDKMz9AFbDkAeSr7
+ c6kjXrU0eBwUVT1gDRxmqojgNY+HGQe2vLNRFERnBRe3NDtNi+MCmot32asaXK/7KvjnrwEjzHz
+ 3x6+s9pu0nlJw7d6H/Lb5KvbeyTDrqckDBjXOC1nJp4C8fKnAxYBYVjP4cUtlkwTWwr20hD+Rwd
+ mnjXCPtQ3ATyHOir3Y3b6y2/YdxjR990iPnP2Xc5w2JgpskMUhEtm5SnjP0BnOzBlpnl0kHALXj
+ Eh85QVu4qubOl+4hGsJ9EL7CKh0CVckteSwd3EVlAM7AkGJhn03xeplu/pt7S/R9QtQbkWQxlct
+ wjg9ADGhboyjclGC6lU1GYHkz1nYOy75cd5gEpOKN/j5Xg4eKN6tuBYJQTi1J+5vtMfhZBeDs3J
+ PTh40/58qSFsYQcSbNKZCoXKa5UPTkcFRQwGEFhU9rEbPH9N6wSthLdJECY/UWrNYW1DtxceroA
+ D8dDhy1XDRaUnAsnroLHI9/TPzjvO5y1al84sZ8El7GNodyr9+ILoihcGqtO8dQm/l7WS7BU4dS
+ x01qjjvjnCAepRQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, Oct 2, 2024 at 12:25=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 10/01, Andrii Nakryiko wrote:
-> >
-> > +static struct uprobe *find_active_uprobe_speculative(unsigned long bp_=
-vaddr)
-> > +{
-> > +     struct mm_struct *mm =3D current->mm;
-> > +     struct uprobe *uprobe =3D NULL;
-> > +     struct vm_area_struct *vma;
-> > +     struct file *vm_file;
-> > +     loff_t offset;
-> > +     long seq;
-> > +
-> > +     guard(rcu)();
-> > +
-> > +     if (!mmap_lock_speculation_start(mm, &seq))
-> > +             return NULL;
-> > +
-> > +     vma =3D vma_lookup(mm, bp_vaddr);
-> > +     if (!vma)
-> > +             return NULL;
-> > +
-> > +     /* vm_file memory can be reused for another instance of struct fi=
-le,
-> > +      * but can't be freed from under us, so it's safe to read fields =
-from
-> > +      * it, even if the values are some garbage values; ultimately
-> > +      * find_uprobe_rcu() + mmap_lock_speculation_end() check will ens=
-ure
-> > +      * that whatever we speculatively found is correct
-> > +      */
-> > +     vm_file =3D READ_ONCE(vma->vm_file);
-> > +     if (!vm_file)
-> > +             return NULL;
-> > +
-> > +     offset =3D (loff_t)(vma->vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vm=
-a->vm_start);
->
-> LGTM. But perhaps vma->vm_pgoff and vma->vm_start need READ_ONCE() as wel=
-l,
-> if nothing else to shut up KCSAN if this code races with, say, __split_vm=
-a() ?
+This is a replacement for the v6 series sitting in Christian's
+vfs.mgtime branch. The main changes here are to the changelogs,
+documentation and comments. I've also moved the timekeeping patches to
+the front of the series, and done some minor cleanups.
 
-We keep going back and forth between reading directly, using
-READ_ONCE(), and annotating with data_race(). I don't think it matters
-in terms of correctness or performance, so I'm happy to add whatever
-incantations that will make everyone satisfied. Let's see what others
-think, and I'll incorporate that into the next revision.
+The pipe1_threads test shows these averages on my test rig with this
+series:
 
->
-> > +     uprobe =3D find_uprobe_rcu(vm_file->f_inode, offset);
->
-> OK, I guess vm_file->f_inode is fine without READ_ONCE...
->
-> Oleg.
->
+    v6.11:				89233600 (baseline)
+    v6.11 + v9 series:			88460897 (<1% slower)
+
+Thanks for all of the review so far!
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v10:
+- Reorder timekeeping patches to front of series
+- Better separate timekeeping and fs changes
+- add data_race annotations to per_cpu fetches
+- get rid of pointless test for unsigned long to go negative
+- better spacing for declarations and definitions in timekeeping_internal.h
+- minor style cleanups
+- Link to v9: https://lore.kernel.org/r/20241002-mgtime-v9-0-77e2baad57ac@kernel.org
+
+Changes in v9:
+- Comment and documentation cleanups.
+- Drop the EXPORT_SYMBOL_GPL() from new timekeeper interfaces
+- Link to v8: https://lore.kernel.org/r/20241001-mgtime-v8-0-903343d91bc3@kernel.org
+
+Changes in v8:
+- split patch that adds percpu counters into fs and timekeeping patches
+- convert percpu counters to unsigned longs
+- directly access the offs_real value in timekeeper instead of going
+  through offsets array
+- drop WARN_ON's in timekeeping patches
+- better changelogs and more comments for the timekeeping bits
+- better document how backward realtime clock jumps affect things
+- Link to v7: https://lore.kernel.org/r/20240913-mgtime-v7-0-92d4020e3b00@kernel.org
+
+Changes in v7:
+- move the floor value handling into timekeeper for better performance
+- Link to v6: https://lore.kernel.org/r/20240715-mgtime-v6-0-48e5d34bd2ba@kernel.org
+
+Changes in v6:
+- Normalize timespec64 in inode_set_ctime_to_ts
+- use DEFINE_PER_CPU counters for better vfs consistency
+- skip ctime cmpxchg if the result means nothing will change
+- add trace_ctime_xchg_skip to track skipped ctime updates
+- use __print_flags in ctime_ns_xchg tracepoint
+- Link to v5: https://lore.kernel.org/r/20240711-mgtime-v5-0-37bb5b465feb@kernel.org
+
+Changes in v5:
+- refetch coarse time in coarse_ctime if not returning floor
+- timestamp_truncate before swapping new ctime value into place
+- track floor value as atomic64_t
+- cleanups to Documentation file
+- Link to v4: https://lore.kernel.org/r/20240708-mgtime-v4-0-a0f3c6fb57f3@kernel.org
+
+Changes in v4:
+- reordered tracepoint fields for better packing
+- rework percpu counters again to also count fine grained timestamps
+- switch to try_cmpxchg for better efficiency
+- Link to v3: https://lore.kernel.org/r/20240705-mgtime-v3-0-85b2daa9b335@kernel.org
+
+Changes in v3:
+- Drop the conversion of i_ctime fields to ktime_t, and use an unused bit
+  of the i_ctime_nsec field as QUERIED flag.
+- Better tracepoints for tracking floor and ctime updates
+- Reworked percpu counters to be more useful
+- Track floor as monotonic value, which eliminates clock-jump problem
+
+Changes in v2:
+- Added Documentation file
+- Link to v1: https://lore.kernel.org/r/20240626-mgtime-v1-0-a189352d0f8f@kernel.org
+
+---
+Jeff Layton (12):
+      timekeeping: add interfaces for handling timestamps with a floor value
+      timekeeping: add percpu counter for tracking floor swap events
+      fs: add infrastructure for multigrain timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      fs: handle delegated timestamps in setattr_copy_mgtime
+      fs: tracepoints around multigrain timestamp events
+      fs: add percpu counters for significant multigrain timestamp events
+      Documentation: add a new file documenting multigrain timestamps
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ Documentation/filesystems/index.rst         |   1 +
+ Documentation/filesystems/multigrain-ts.rst | 125 ++++++++++++
+ fs/attr.c                                   |  60 +++++-
+ fs/btrfs/file.c                             |  25 +--
+ fs/btrfs/super.c                            |   3 +-
+ fs/ext4/super.c                             |   2 +-
+ fs/inode.c                                  | 282 +++++++++++++++++++++++++---
+ fs/stat.c                                   |  46 ++++-
+ fs/xfs/libxfs/xfs_trans_inode.c             |   6 +-
+ fs/xfs/xfs_iops.c                           |  10 +-
+ fs/xfs/xfs_super.c                          |   2 +-
+ include/linux/fs.h                          |  36 +++-
+ include/linux/timekeeping.h                 |   5 +
+ include/trace/events/timestamp.h            | 124 ++++++++++++
+ kernel/time/timekeeping.c                   | 106 +++++++++++
+ kernel/time/timekeeping_debug.c             |  14 ++
+ kernel/time/timekeeping_internal.h          |  15 ++
+ mm/shmem.c                                  |   2 +-
+ 18 files changed, 791 insertions(+), 73 deletions(-)
+---
+base-commit: 98f7e32f20d28ec452afb208f9cffc08448a2652
+change-id: 20240913-mgtime-20c98bcda88e
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
