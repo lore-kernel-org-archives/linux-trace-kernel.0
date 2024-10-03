@@ -1,191 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF251CEE90;
-	Thu,  3 Oct 2024 22:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CC11AB52C;
+	Thu,  3 Oct 2024 23:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727995287; cv=none; b=N4vqNG9CIuRBb6PgZmfvdTX0gOTpSXKM7UxjOYQrGOKjNEsBC/QX6s+2HV4vLuWbd4eJ++7yExhnpe3vjM51QlK5+p9qFGkHNFhqhkTsMYU/epnZf87VEIwwYwp4BHCNV6rO9ffe+3jDFDh7lpUgw1AOKHJ47oZSwi2ExFXz2+Q=
+	t=1727996749; cv=none; b=NciefPMVUk1aQ5Bcc+W1c/S+xDzuwYzIfQs3HtOHo/jQpWdayQSR9Kh6E15zG/qarxDoy+FLQgFOoBCpZk+c74G1BPIc3zkO31Tt+nkf9cDwjyGs7NxepWpuOj4q0005vgtbA2C/wOHsUAVbUud0Yo+q0IDHQDetH3Pdx8n1Zcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727995287; c=relaxed/simple;
-	bh=2kFx0zW6ylmIO9ZqfBwscYHqc1CTTaEYZL1RdiJ73pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mNWq1ogXOTqYjxAf5yvj75yz7/1LR8sKQpU2HzCd0ENfRQuOSDl8DMP+xbV/sebfUVA8IIZPHcP16awUSCvnedg3W007J6LHuZZH3Kfl8GKnGBUEttE1ROHzVbzIYQMwdmrNV2h+yafB67FTUaVqhLu6Byv2veBD8C3+9plula0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B550C4CEC5;
-	Thu,  3 Oct 2024 22:41:26 +0000 (UTC)
-Date: Thu, 3 Oct 2024 18:42:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Joel Fernandes <joel@joelfernandes.org>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] tracepoint: Remove SRCU protection
-Message-ID: <20241003184220.0dc21d35@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727996749; c=relaxed/simple;
+	bh=GJK8MxVOy9r24pLbZWAA+hcaotGVtjt0vYTanGiEQBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CiwuHI0Dz++APW3jkNIN6hQTmPLAUgVpsckjHJZzmc2iwf+kBh8C4uYjZs+5aF5LNIKu9+BvjodhVoUvLukSYXI9c6/DTqcey8C9fCKb1OpEfDHeM1Kk4vG2ZZI+4A+BqmRioQmYvI5EKyF7XLqPQYBv6UBHXTj4xj7N1CXHBFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=joWcI1HA; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joWcI1HA"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a90188ae58eso190137266b.1;
+        Thu, 03 Oct 2024 16:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727996745; x=1728601545; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qiv5EFW/VrsTiKdI6YCW2xt9YR/sCLybPV9j/RuSzd8=;
+        b=joWcI1HADKzeHLQRDqaf0NqLpSayvBHlLccsfnWzyTQKjBxpHAk7lhN3FXcBA6rL14
+         QxHuhZXcCGZSStFviYPJo29RLIGJG5Ce3ramWSgRJGWSMgaeIVGvH36Et9fBbqJCxa+q
+         0Y/HXDO4WZHF3d1Yd0OJZKy8gbmvMRh243YIwv53zs3Xrf+X0qe2/vx1SQVBc5hr90M+
+         7CVaQdY0mF5wLHVLHJMo+OdnzF0ejEtvA9aUhVj86TtAu7P+sGgJCY7VOi+buXxDnAH1
+         wJmde5CN1grGYW1VdSUmI+yxpHgupxKLEQ5i7C5VJN8X41hj/CNKqlbTHAhhneaHZbJQ
+         HvFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727996745; x=1728601545;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qiv5EFW/VrsTiKdI6YCW2xt9YR/sCLybPV9j/RuSzd8=;
+        b=YpFr6pLwN/CknTAu3Dq3l/Mz2lr+WVeHqKid/3UOr2o9iXjOaJUh+RbJfmFd5enmsN
+         33OERJ2tz9fry3g0KphEShiJ3eBGBvaM1lGzu68DDRehhUHhvZc0E0psiN+IQ/sCgYTG
+         E7dTcLrDmE17Oj2xl7aU7PkYyPs7F7gKVGyYG3frGB26Qz053uBc1ToJIxXlxcbXWALu
+         kJUDKcotDiWGiQFmFueKrxzD3wlRKaiqj+KC+0DcRt5Y5swtBfWDzY38kGGubryDYCLE
+         B2msLZTR0bMw+L7lcKqUJyi287qQS54teRNjs2e7C23p3H86+RU3JH4ovkj+jLpHFW5q
+         RuAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoQAM6AmBsZKYFIXVqTx/EvCX/npcUXj6CQGPuk+wc4mQtkindSfzgEda73B4I/w5LQe1y+I0VqUKYNdvp@vger.kernel.org, AJvYcCWk0L+gIiIGFp/wvRmmm9MagLbpM8yAimAC0UGHRM/fVP/hFrZX0WdEYQF278mDSk/w659ArHbwex5u95ccJUuOT+7D@vger.kernel.org, AJvYcCWly7lDozJkfKuCcfKgDHiJnQXBD4WlJJKfvBuWQcbHlj3YZuHAf8+WF/ktU4T7MAb6qWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy390Gt/bGSIvYjQhRhPnklsPZYvKj1HS8PUXUSNi+mdRpnwqQg
+	X5W01Tm1u3nPOSq1fXH7O/T2+FY+Khdt806oN1ceIrPPr+vuOvSlyiqJtiILnkhpHNKQrpA+aGZ
+	0Xa8O0ezUF8WGsA7K2NVKsJn1+AM=
+X-Google-Smtp-Source: AGHT+IHQAbJf0SjHlooLFwT3AMWZlGMPUoE9vfL5iZoG8q8yjr86EKrsaiYSlEZFeN28E6i32Z8MUDazi37kLGhOlns=
+X-Received: by 2002:a17:907:1c10:b0:a8a:445f:ac4d with SMTP id
+ a640c23a62f3a-a991bd3f96fmr80094066b.18.1727996744662; Thu, 03 Oct 2024
+ 16:05:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
+ <20241003151638.1608537-5-mathieu.desnoyers@efficios.com> <20241003182604.09e4851d@gandalf.local.home>
+In-Reply-To: <20241003182604.09e4851d@gandalf.local.home>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 3 Oct 2024 16:05:33 -0700
+Message-ID: <CAADnVQJf535hwud5XtQKStOge9=pYVYWSiq_8Q2YAvN5rba==A@mail.gmail.com>
+Subject: Re: [PATCH v1 4/8] tracing/bpf: guard syscall probe with preempt_notrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf <bpf@vger.kernel.org>, 
+	Joel Fernandes <joel@joelfernandes.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Michael Jeanson <mjeanson@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Oct 3, 2024 at 3:25=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Thu,  3 Oct 2024 11:16:34 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>
+> > In preparation for allowing system call enter/exit instrumentation to
+> > handle page faults, make sure that bpf can handle this change by
+> > explicitly disabling preemption within the bpf system call tracepoint
+> > probes to respect the current expectations within bpf tracing code.
+> >
+> > This change does not yet allow bpf to take page faults per se within it=
+s
+> > probe, but allows its existing probes to adapt to the upcoming change.
+> >
+>
+> I guess the BPF folks should state if this is needed or not?
+>
+> Does the BPF hooks into the tracepoints expect preemption to be disabled
+> when called?
 
-With the removal of the trace_*_rcuidle() tracepoints, there is no reason
-to protect tracepoints with SRCU. The reason the SRCU protection was
-added, was because it can protect tracepoints when RCU is not "watching".
-Now that tracepoints are only used when RCU is watching, remove the SRCU
-protection. It just made things more complex and confusing anyway.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-This is based on top of:
-
-    https://lore.kernel.org/linux-trace-kernel/20241003181629.36209057@gandalf.local.home/
-
- include/linux/tracepoint.h |  4 ---
- kernel/tracepoint.c        | 51 +-------------------------------------
- 2 files changed, 1 insertion(+), 54 deletions(-)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 9b85a02b8575..fa130c360179 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -32,8 +32,6 @@ struct trace_eval_map {
- 
- #define TRACEPOINT_DEFAULT_PRIO	10
- 
--extern struct srcu_struct tracepoint_srcu;
--
- extern int
- tracepoint_probe_register(struct tracepoint *tp, void *probe, void *data);
- extern int
-@@ -109,7 +107,6 @@ void for_each_tracepoint_in_module(struct module *mod,
- #ifdef CONFIG_TRACEPOINTS
- static inline void tracepoint_synchronize_unregister(void)
- {
--	synchronize_srcu(&tracepoint_srcu);
- 	synchronize_rcu();
- }
- #else
-@@ -207,7 +204,6 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		if (!(cond))						\
- 			return;						\
- 									\
--		/* keep srcu and sched-rcu usage consistent */		\
- 		preempt_disable_notrace();				\
- 									\
- 		__DO_TRACE_CALL(name, TP_ARGS(args));			\
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 8879da16ef4d..cfd3e0ed413d 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -25,9 +25,6 @@ enum tp_func_state {
- extern tracepoint_ptr_t __start___tracepoints_ptrs[];
- extern tracepoint_ptr_t __stop___tracepoints_ptrs[];
- 
--DEFINE_SRCU(tracepoint_srcu);
--EXPORT_SYMBOL_GPL(tracepoint_srcu);
--
- enum tp_transition_sync {
- 	TP_TRANSITION_SYNC_1_0_1,
- 	TP_TRANSITION_SYNC_N_2_1,
-@@ -37,7 +34,6 @@ enum tp_transition_sync {
- 
- struct tp_transition_snapshot {
- 	unsigned long rcu;
--	unsigned long srcu;
- 	bool ongoing;
- };
- 
-@@ -50,7 +46,6 @@ static void tp_rcu_get_state(enum tp_transition_sync sync)
- 
- 	/* Keep the latest get_state snapshot. */
- 	snapshot->rcu = get_state_synchronize_rcu();
--	snapshot->srcu = start_poll_synchronize_srcu(&tracepoint_srcu);
- 	snapshot->ongoing = true;
- }
- 
-@@ -61,8 +56,6 @@ static void tp_rcu_cond_sync(enum tp_transition_sync sync)
- 	if (!snapshot->ongoing)
- 		return;
- 	cond_synchronize_rcu(snapshot->rcu);
--	if (!poll_state_synchronize_srcu(&tracepoint_srcu, snapshot->srcu))
--		synchronize_srcu(&tracepoint_srcu);
- 	snapshot->ongoing = false;
- }
- 
-@@ -85,9 +78,6 @@ static LIST_HEAD(tracepoint_module_list);
-  */
- static DEFINE_MUTEX(tracepoints_mutex);
- 
--static struct rcu_head *early_probes;
--static bool ok_to_free_tracepoints;
--
- /*
-  * Note about RCU :
-  * It is used to delay the free of multiple probes array until a quiescent
-@@ -111,56 +101,17 @@ static inline void *allocate_probes(int count)
- 	return p == NULL ? NULL : p->probes;
- }
- 
--static void srcu_free_old_probes(struct rcu_head *head)
--{
--	kfree(container_of(head, struct tp_probes, rcu));
--}
--
- static void rcu_free_old_probes(struct rcu_head *head)
- {
--	call_srcu(&tracepoint_srcu, head, srcu_free_old_probes);
--}
--
--static __init int release_early_probes(void)
--{
--	struct rcu_head *tmp;
--
--	ok_to_free_tracepoints = true;
--
--	while (early_probes) {
--		tmp = early_probes;
--		early_probes = tmp->next;
--		call_rcu(tmp, rcu_free_old_probes);
--	}
--
--	return 0;
-+	kfree(container_of(head, struct tp_probes, rcu));
- }
- 
--/* SRCU is initialized at core_initcall */
--postcore_initcall(release_early_probes);
--
- static inline void release_probes(struct tracepoint_func *old)
- {
- 	if (old) {
- 		struct tp_probes *tp_probes = container_of(old,
- 			struct tp_probes, probes[0]);
- 
--		/*
--		 * We can't free probes if SRCU is not initialized yet.
--		 * Postpone the freeing till after SRCU is initialized.
--		 */
--		if (unlikely(!ok_to_free_tracepoints)) {
--			tp_probes->rcu.next = early_probes;
--			early_probes = &tp_probes->rcu;
--			return;
--		}
--
--		/*
--		 * Tracepoint probes are protected by both sched RCU and SRCU,
--		 * by calling the SRCU callback in the sched RCU callback we
--		 * cover both cases. So let us chain the SRCU and sched RCU
--		 * callbacks to wait for both grace periods.
--		 */
- 		call_rcu(&tp_probes->rcu, rcu_free_old_probes);
- 	}
- }
--- 
-2.45.2
-
+Andrii pointed it out already.
+bpf doesn't need preemption to be disabled.
+Only migration needs to be disabled.
