@@ -1,207 +1,191 @@
-Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615ED1DFED
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Oct 2024 03:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AC8433AD;
+	Thu,  3 Oct 2024 03:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727925277; cv=none; b=fKVqZBBVlXQQ6ztdFtBhMlcvYNBwz0PJZtxfYxfM2r5t5PLvGc6pjcqXxtvA6dg8eFJqtxUFdbYNZt07VbqJIJ85KnyXeoBCH0BnQRq1nQmv/XTwg5aWdR2qbvVx361X7cQ9+0BVBe1KQFWixTMc+YDwu78SbEQoTnI+115A3s8=
+	t=1727927374; cv=none; b=KILZF34rOnl8R5YiRnKT6JMGcZOPaG6jNJD4O+HS4AFkU302m+nZMeTHPbmuCV+855Xsz+JyO+ztZ/w13HZdfx0t0GIrMqAYx/puYO1cE+bL0UsTWDqm5QoNg3ddhLjq1Ry6eISZnVTaxsbx9CFkYvDct2ph/34O+bM4mGz0DJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727925277; c=relaxed/simple;
-	bh=jKTsXBcNO/miLEA0jRPsm6kZWhLrFZu0gIUjdZSMDbU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n4lPQsOm66TuK4EbklH1JfHdBAgQswIvmI7jcBSy5ee3tsb4LoWAv89664MEz+HwgboZMkoMroaVYAaR9RuKnngnMtxTi3yNQIEvKwrVhyCBWTXYVK8CYheE5hs57mzUHmF2u3cWgKbRWPCC3ZUZ9SYqCtUXkqa8Y01Zk43eIbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois-edu.20230601.gappssmtp.com header.i=@illinois-edu.20230601.gappssmtp.com header.b=RyXLRa78; arc=none smtp.client-ip=209.85.222.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
+	s=arc-20240116; t=1727927374; c=relaxed/simple;
+	bh=An8O4mbnSLbKIRATS8g9ud8YKLZlAjwKUF7u0FIPPsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XzByd/egj7SMjzo4kdLuQEzJ8F8GhevGSWF643s40eqMBxQgfTozBmOrdfJn08fhzi8TigLkf4lh/BSzWu7KonwaHOPhNdOPDyroCTp062wMlYk/9tC1XiCIl1H6tow6nUxSnP+61hdqYodiiLZcW39J/3iCrZL8sd05uIAz7rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kC3KXl2b; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois-edu.20230601.gappssmtp.com header.i=@illinois-edu.20230601.gappssmtp.com header.b="RyXLRa78"
-Received: by mail-qk1-f193.google.com with SMTP id af79cd13be357-7a99d23e036so51500485a.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Oct 2024 20:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=illinois-edu.20230601.gappssmtp.com; s=20230601; t=1727925273; x=1728530073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bVmdUELTDUmyOs2T634ZSBxOSroRBta42gzygmF21tA=;
-        b=RyXLRa78Q/eUKVFYaCd/tclyx2QoGYtdKAWCcsWRR6dzm7b41l2xPTm5P7T956sBBF
-         nomdJJTM2c2cWkzgx7H2BuSC53CfNHXb5mU8Du/PI0eWQcQmUEPGKHbPnVozxK8EpL2V
-         l8SmMhBnEoX7M1G93ie3ItkT35qaElp6afhfiw2doDr/beM8PfMU4ZmHBWDkN1GW/BL1
-         Xf50p5mctT7HynzQ3AHeDwz6k9g1IANORPLevVN6wF+0bey0nN0m43kSNgPLiSVDTJQY
-         5IU0fjKtSfW+Tgz09cKaAi5/0+JEkES1Hfjf8uoX/UZ21aIWEDGwcZnt7RVlcH57WjH3
-         lzOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727925273; x=1728530073;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bVmdUELTDUmyOs2T634ZSBxOSroRBta42gzygmF21tA=;
-        b=nn+Kz7ifRg3J4tOWM7k1nvQI82D2D/1eBY5feQayGGy6z6VxA2r/+PwjaTdd9CcNpH
-         eAZUfl8UD++paurEtG8ErghizBF8Rbp8TSuWA7jsck6Q/yLkIW5UuU4dQt68IcswC+W7
-         K9H5gaQ8tZHmxe1xsGzA3NTg/sHKe8rPT663W9vzFzJM3KrbZcKOWrYS2MndodGNWtGI
-         SP3ygRsGfw3JBmpuiKhW0eRg16+Dnkk6K52OgHj2ojLQZ/ITlnwoaaeONzeJyb7XhQj1
-         vmGiyCnhV4zeO/qjBYRBdMZQny0m5kEIPIbZ4ygcerAiJAxfi84FH9w+iW4ajOCNBjTE
-         q+2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWiMFbL4fX8wrdwrz2r71iqcNBTJjyD4Y+dp5B14YimD4DYCrnLVOhZDUU2j0fd7h/Aod/YQh3us/tAXJQHgvs4TmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS2P4HYjr+ArLd1pMwENphd2jNhjH2jp+Bxfv7XP6VSbL8Pbue
-	/KsJw6rWwE3k2KVUBa/TEtBkyD84g2fwOgjIxVcN6vae0c6LACuigF6LilzE3Q==
-X-Google-Smtp-Source: AGHT+IHyjSRkhjgcIpyEOBBu1F4Ot9eDMUivzJG0kRwm+KN8Ac30ciJk502QH5kn26uBubpxXFT/Wg==
-X-Received: by 2002:a05:620a:1923:b0:7a9:a63a:9f48 with SMTP id af79cd13be357-7ae626ac34dmr793486485a.11.1727925273322;
-        Wed, 02 Oct 2024 20:14:33 -0700 (PDT)
-Received: from shizuku.. ([2620:0:e00:550a:6782:866c:334a:d5e9])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae6b29e2c9sm6901385a.15.2024.10.02.20.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Oct 2024 20:14:33 -0700 (PDT)
-From: Wentao Zhang <wentaoz5@illinois.edu>
-To: nathan@kernel.org
-Cc: Matt.Kelly2@boeing.com,
-	akpm@linux-foundation.org,
-	andrew.j.oppelt@boeing.com,
-	anton.ivanov@cambridgegreys.com,
-	ardb@kernel.org,
-	arnd@arndb.de,
-	bhelgaas@google.com,
-	bp@alien8.de,
-	chuck.wolber@boeing.com,
-	dave.hansen@linux.intel.com,
-	dvyukov@google.com,
-	hpa@zytor.com,
-	jinghao7@illinois.edu,
-	johannes@sipsolutions.net,
-	jpoimboe@kernel.org,
-	justinstitt@google.com,
-	kees@kernel.org,
-	kent.overstreet@linux.dev,
-	linux-arch@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	llvm@lists.linux.dev,
-	luto@kernel.org,
-	marinov@illinois.edu,
-	masahiroy@kernel.org,
-	maskray@google.com,
-	mathieu.desnoyers@efficios.com,
-	matthew.l.weber3@boeing.com,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	morbo@google.com,
-	ndesaulniers@google.com,
-	oberpar@linux.ibm.com,
-	paulmck@kernel.org,
-	peterz@infradead.org,
-	richard@nod.at,
-	rostedt@goodmis.org,
-	samitolvanen@google.com,
-	samuel.sarkisian@boeing.com,
-	steven.h.vanderleest@boeing.com,
-	tglx@linutronix.de,
-	tingxur@illinois.edu,
-	tyxu@illinois.edu,
-	wentaoz5@illinois.edu,
-	x86@kernel.org
-Subject: Re: [PATCH v2 2/4] llvm-cov: add Clang's MC/DC support
-Date: Wed,  2 Oct 2024 22:14:29 -0500
-Message-Id: <20241003031429.46276-1-wentaoz5@illinois.edu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241002011030.GB555609@thelio-3990X>
-References: <20241002011030.GB555609@thelio-3990X>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kC3KXl2b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1727927373; x=1759463373;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=An8O4mbnSLbKIRATS8g9ud8YKLZlAjwKUF7u0FIPPsM=;
+  b=kC3KXl2bfW6DN9u1KRYO9ysJ5FBoBq4feZZ+EoygDDotkrNt+f1O4bdN
+   7AHF6P2QXsbzwXcidFGd90JcYjWOhMUkvWbbOWM+rdS9BIJ8C9oDJmuEy
+   jl24+Bzi++AJrCJINXfYMqndx/Pv78/lUx2znwi4NDRR1KMEVRlR2ozG3
+   SSpXw10hOMicd0E9GAdU7nBG4nfng61BI2/BXqXaOcBQ6Pr18TfOINi1p
+   BDsrisAeyR3+hotINja9JcUzDSusyGCIq15K/nAXtpTqVnfoEwn8DObTs
+   1SP/9eKQtcjqVW44BR8AFGjrWr+zIQHF7DCAcHHfo356GWD2Kv1qA0d8D
+   Q==;
+X-CSE-ConnectionGUID: T/i3MY8WSIuAqGIwyp2yLQ==
+X-CSE-MsgGUID: wRVBbbq6TFmkqYxtwGEhJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11213"; a="27242233"
+X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
+   d="scan'208";a="27242233"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 20:49:32 -0700
+X-CSE-ConnectionGUID: fVstdIJyQZGkB6t0/1+RRg==
+X-CSE-MsgGUID: gJCNttERT5y8Sk25I6acKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,173,1725346800"; 
+   d="scan'208";a="74220555"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.117])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2024 20:49:31 -0700
+Date: Wed, 2 Oct 2024 20:49:29 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-cxl@vger.kernel.org
+Subject: Re: RIP: 0010:trace_check_vprintf 6.12-rc1 & CXL test
+Message-ID: <Zv4USZVyEctYiCgM@aschofie-mobl2.lan>
+References: <Zv3z5UsG_jsO9_Tb@aschofie-mobl2.lan>
+ <20241002221114.74bf1b85@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241002221114.74bf1b85@gandalf.local.home>
 
-Hi Nathan,
-
-Thanks for your review! See some of my responses below inline. Other
-comments, including those to [1/4] and [4/4], are acknowledged and will be
-updated in v3.
-
-On 2024-10-01 20:10, Nathan Chancellor wrote:
-> ...
-> > maximum value supported by Clang is 32767. According to local experiments,
-> > the working maximum for Linux kernel is 46, with the largest decisions in
-> > kernel codebase (with 47 conditions, as of v6.11) excluded, otherwise the
-> > kernel image size limit will be exceeded. The largest decisions in kernel
-> > are contributed for example by macros checking CPUID.
+On Wed, Oct 02, 2024 at 10:11:14PM -0400, Steven Rostedt wrote:
+> On Wed, 2 Oct 2024 18:31:17 -0700
+> Alison Schofield <alison.schofield@intel.com> wrote:
+> 
+> > Hi Steve,
 > > 
-> > Code exceeding LLVM_COV_KERNEL_MCDC_MAX_CONDITIONS will produce compiler
-> > warnings.
+> > Using 6.12-rc1 hitting this on every trace attempt.
+> > Is this a known issue?
+> 
+> No, but the backtrace looks funny.
+> 
+
+Removing tp_printk from command line made problem go away.
+More below -
+
 > > 
-> > As of LLVM 19, certain expressions are still not covered, and will produce
-> > build warnings when they are encountered:
+> > --Alison
 > > 
-> > "[...] if a boolean expression is embedded in the nest of another boolean
-> >  expression but separated by a non-logical operator, this is also not
-> >  supported. For example, in x = (a && b && c && func(d && f)), the d && f
-> >  case starts a new boolean expression that is separated from the other
-> >  conditions by the operator func(). When this is encountered, a warning
-> >  will be generated and the boolean expression will not be
-> >  instrumented." [4]
+> > [  110.689666] BUG: kernel NULL pointer dereference, address: 0000000000000058
+> > [  110.691694] #PF: supervisor read access in kernel mode
+> > [  110.693058] #PF: error_code(0x0000) - not-present page
+> > [  110.694420] PGD 0 P4D 0 
+> > [  110.695347] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> > [  110.696613] CPU: 2 UID: 0 PID: 1518 Comm: bash Tainted: G           O     N 6.12.0-rc1 #304
+> > [  110.698454] Tainted: [O]=OOT_MODULE, [N]=TEST
+> > [  110.699665] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+> > [  110.701447] RIP: 0010:trace_check_vprintf+0x3d/0x610
 > 
-> These two sets of warnings appear to be pretty noisy in my build
-> testing... Is there any way to shut them up? Perhaps it is good for
-
-These two warnings are currently implemented as custom diagnostic in
-clang/lib/CodeGen/CodeGenPGO.cpp:dataTraverseStmtPost. So I'm afraid there
-is no corresponding "-W[no-]xxx" flag at this moment. I agree such switches
-would be desirable but we might have to nudge this in LLVM community.
-
-> users to see these limitations but it basically makes the build output
-> useless. If there were switches, then they could be disabled in the
-> default case with a Kconfig option to turn them on if the user is
-> concerned with seeing which parts of their code are not instrumented. I
-> could see developers wanting to run this for writing tests and they
-> might not care about this as much as someone else might.
+> I think the above is:
 > 
-> I did leave LLVM_COV_KERNEL_MCDC_MAX_CONDITIONS at its default value.
-> Perhaps there is a more reasonable default that would result in less
-> noisy build output but not run afoul of potential memory usage concerns?
-> I assume that mention means that memory usage may be a concern for the
-> type of deployments this technology would commonly be used with?
-
-To my own experiences, enlarging this threshold won't really help with the
-issue, because the other type of warning ("nested boolean") is even more
-prevalent in kernel codebase. I once built the kernel serially and counted
-the number of instances from the gigantic log:
-
-  unsupported number of conditions (>6): 837
-  unsupported nested boolean:            8029
-
-So again we should probably improve this on the tool side. I can talk to
-developers there separately.
-
-> ...
-> > diff --git a/Makefile b/Makefile
-> > index 51498134c..1185b38d6 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -740,6 +740,12 @@ all: vmlinux
-> >  CFLAGS_LLVM_COV := -fprofile-instr-generate -fcoverage-mapping
-> >  export CFLAGS_LLVM_COV
-> >  
-> > +CFLAGS_LLVM_COV_MCDC := -fcoverage-mcdc
-> > +ifdef CONFIG_LLVM_COV_KERNEL_MCDC_MAX_CONDITIONS
-> > +CFLAGS_LLVM_COV_MCDC += -Xclang -fmcdc-max-conditions=$(CONFIG_LLVM_COV_KERNEL_MCDC_MAX_CONDITIONS)
+> 	if (iter->fmt == static_fmt_buf)
+> 		goto print;
 > 
-> Why is -Xclang needed here? Is this not a full frontend flag?
+> That is at least what trace_check_vprintf+0x3d is on my kernel.
 
-"-fmcdc-max-conditions" is a cc1 option only, while "-fcoverage-mcdc" is
-both a cc1 option and a clang option. See llvm/llvm-project#82448 and their
-changes to clang/include/clang/Driver/Options.td.
-
-Thanks,
-Wentao
+Mine lands on the first assignment:
+	long text_delta = iter->tr->text_delta;
 
 > 
-> > +endif
-> > +export CFLAGS_LLVM_COV_MCDC
-> > +
-> >  CFLAGS_GCOV	:= -fprofile-arcs -ftest-coverage
-> >  ifdef CONFIG_CC_IS_GCC
-> >  CFLAGS_GCOV	+= -fno-tree-loop-im
+> > [  110.702370] Code: 55 b0 48 8b 17 48 85 f6 0f 84 74 05 00 00 49 89 fc 0f 1f 44 00 00 0f b6 06 48 81 bf d8 00 00 00 00 24 de 83 0f 84 50 05 00 00 <48> 8b 7a 58 49 89 f1 48 89 7d b8 48 8b 7a 60 48 89 7d 98 84 c0 74
+> > [  110.705146] RSP: 0018:ffffc9000ec8ba00 EFLAGS: 00010007
+> > [  110.706110] RAX: 000000000000006d RBX: ffff888000180000 RCX: ffff888001bfe0b0
+> > [  110.707290] RDX: 0000000000000000 RSI: ffffffffa0c40750 RDI: ffff888000180000
+> > [  110.708465] RBP: ffffc9000ec8ba78 R08: 000000000000000a R09: ffff8880001801f4
+> > [  110.709640] R10: 0000000000000001 R11: 000000000000b6a5 R12: ffff888000180000
+> > [  110.710819] R13: ffff8880001801d8 R14: ffff8880001800e8 R15: ffff8880001800e8
+> > [  110.711791] FS:  00007f7353bc2740(0000) GS:ffff88807d900000(0000) knlGS:0000000000000000
+> > [  110.712674] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  110.713386] CR2: 0000000000000058 CR3: 000000000b8b6000 CR4: 00000000000006f0
+> > [  110.714194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  110.715002] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [  110.715811] Call Trace:
+> > [  110.716263]  <TASK>
+> > [  110.716678]  ? show_regs+0x5f/0x70
+> > [  110.717201]  ? __die+0x1f/0x70
+> > [  110.717682]  ? page_fault_oops+0x14b/0x460
+> > [  110.718261]  ? trace_check_vprintf+0x3d/0x610
+> > [  110.718859]  ? search_exception_tables+0x5b/0x60
+> > [  110.719464]  ? fixup_exception+0x22/0x300
+> > [  110.720036]  ? kernelmode_fixup_or_oops.constprop.0+0x5a/0x70
+> > [  110.720710]  ? __bad_area_nosemaphore+0x17d/0x240
+> > [  110.723080]  ? bad_area_nosemaphore+0x11/0x20
+> > [  110.725055]  ? do_user_addr_fault+0x2b5/0x750
+> > [  110.726985]  ? __this_cpu_preempt_check+0x13/0x20
+> > [  110.729010]  ? exc_page_fault+0x6e/0x230
+> > [  110.730815]  ? asm_exc_page_fault+0x27/0x30
+> > [  110.732279]  ? trace_check_vprintf+0x3d/0x610
+> > [  110.733569]  ? vsnprintf+0x182/0x530
+> > [  110.734719]  trace_event_printf+0x4d/0x60
+> > [  110.735964]  trace_raw_output_cxl_generic_event+0x105/0x130 [cxl_core]
+> 
+> The above is for calling output from the ring buffer.
+> 
+> > [  110.737704]  trace_event_buffer_commit+0x13b/0x280
+> 
+> Hmm, do you have "tp_printk" on the kernel command line?
+
+Yes I did and when I remove it the problem goes away.
+
+-- Alison
+
+> 
+> -- Steve
+> 
+> > [  110.739102]  trace_event_raw_event_cxl_generic_event+0x1f9/0x290 [cxl_core]
+> > [  110.740877]  cxl_event_trace_record+0x1f2/0x370 [cxl_core]
+> > [  110.742595]  __cxl_event_trace_record+0x95/0xf0 [cxl_core]
+> > [  110.744738]  cxl_mem_get_records_log+0xf9/0x270 [cxl_core]
+> > [  110.746833]  cxl_mem_get_event_records+0x55/0xa0 [cxl_core]
+> > [  110.748920]  event_trigger_store+0x82/0x90 [cxl_mock_mem]
+> > [  110.750945]  dev_attr_store+0x12/0x30
+> > [  110.752222]  sysfs_kf_write+0x47/0x60
+> > [  110.753292]  kernfs_fop_write_iter+0x13d/0x1f0
+> > [  110.754490]  vfs_write+0x25d/0x500
+> > [  110.755518]  ksys_write+0x5d/0xe0
+> > [  110.756530]  __x64_sys_write+0x14/0x20
+> > [  110.757609]  x64_sys_call+0x1d2a/0x1f30
+> > [  110.758690]  do_syscall_64+0x64/0x140
+> > [  110.759740]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> > [  110.760992] RIP: 0033:0x7f7353ccdee4
+> > [  110.762029] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 80 3d 85 74 0d 00 00 74 13 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20 48 89
+> > [  110.764713] RSP: 002b:00007ffd83c599d8 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+> > [  110.765837] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f7353ccdee4
+> > [  110.766912] RDX: 0000000000000002 RSI: 0000561932b72bd0 RDI: 0000000000000001
+> > [  110.767993] RBP: 00007ffd83c59a00 R08: 0000000000001428 R09: 0000000100000000
+> > [  110.769058] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+> > [  110.770118] R13: 0000561932b72bd0 R14: 00007f7353d9e5c0 R15: 00007f7353d9bf20
+> > [  110.771180]  </TASK>
+> > [  110.771738] Modules linked in: cxl_test(ON) cxl_mem(ON) cxl_port(ON) cxl_pmem(ON) cxl_acpi(ON) nd_pmem(ON) dax_pmem(ON) nd_btt(ON) device_dax(ON) kmem dax_cxl nd_e820(ON) nfit(ON) cxl_mock_mem(ON) cxl_mock(ON) libnvdimm(ON) nfit_test_iomap(ON) cxl_core(ON) [last unloaded: cxl_port(ON)]
+> > [  110.774348] CR2: 0000000000000058
+> > [  110.774885] ---[ end trace 0000000000000000 ]---
+> > [  110.775519] RIP: 0010:trace_check_vprintf+0x3d/0x610
+> > [  110.776166] Code: 55 b0 48 8b 17 48 85 f6 0f 84 74 05 00 00 49 89 fc 0f 1f 44 00 00 0f b6 06 48 81 bf d8 00 00 00 00 24 de 83 0f 84 50 05 00 00 <48> 8b 7a 58 49 89 f1 48 89 7d b8 48 8b 7a 60 48 89 7d 98 84 c0 74
+> > [  110.778140] RSP: 0018:ffffc9000ec8ba00 EFLAGS: 00010007
+> > [  110.778846] RAX: 000000000000006d RBX: ffff888000180000 RCX: ffff888001bfe0b0
+> > [  110.779678] RDX: 0000000000000000 RSI: ffffffffa0c40750 RDI: ffff888000180000
+> > [  110.780521] RBP: ffffc9000ec8ba78 R08: 000000000000000a R09: ffff8880001801f4
+> > [  110.781364] R10: 0000000000000001 R11: 000000000000b6a5 R12: ffff888000180000
+> > [  110.782204] R13: ffff8880001801d8 R14: ffff8880001800e8 R15: ffff8880001800e8
+> > [  110.783049] FS:  00007f7353bc2740(0000) GS:ffff88807d900000(0000) knlGS:0000000000000000
+> > [  110.783966] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  110.784705] CR2: 0000000000000058 CR3: 000000000b8b6000 CR4: 00000000000006f0
+> > [  110.785558] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [  110.786393] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [  110.787225] note: bash[1518] exited with irqs disabled
+> > [  110.787936] note: bash[1518] exited with preempt_count 3
+> 
