@@ -1,97 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6016126C13;
-	Thu,  3 Oct 2024 14:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC4F8286A;
+	Thu,  3 Oct 2024 15:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727966913; cv=none; b=ng9zOvSiI/A+N1a0wMsFXIdBGACl5X3TGirBz6tF9QyqgNZEC+6RYp19vhQR58keXsSMQvo2UPl3x+8Dg8g9cubuoKXaQrD78KYQ0rl6xrur0labCbaUCo+eKR0XyVpChDrju98565rkiXmcDXaErmn9qeLot9N4pJR++/GNbco=
+	t=1727968728; cv=none; b=ssvwvB4bFZb2Ni7g+ZFAaxJTkapKeSsMeduA027Se43XmqEu1HU9nCVNVNFRGvUud4NDwnEe9fa05X4tIPIwZLrNUwoO9ED89/1+CG2zXsGygDLdo9+kAmA90kCTAkbNxotswzDqLAwEaR2ZidPrbUFhIgzf1ekxE7+MydX4oU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727966913; c=relaxed/simple;
-	bh=9H1UCUJdO03zoRskdQul88BnU5jqtiSwZBcVv5KNzmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RyeE378f4DqEJoOgvT1dIajrlp8NXfly5f76dJ2sdxntFpHGpEkwci0fGqcpGXMifBMVnvMviOsXZYAmG7cX00pFT+T12aQki/nq/kxBfngGug2VlbOxaxBgYwAmLeFhON3z80jDqcfP8UoHVfMvtgUrOHQgb5yKLjd0LIE4kqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B195FC4CEC5;
-	Thu,  3 Oct 2024 14:48:31 +0000 (UTC)
-Date: Thu, 3 Oct 2024 10:49:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alison Schofield
- <alison.schofield@intel.com>
-Subject: [PATCH] tracing: Fix trace_check_vprintf() when tp_printk is used
-Message-ID: <20241003104925.4e1b1fd9@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1727968728; c=relaxed/simple;
+	bh=WwB3VDOeGHvQJGcXKLuEG8OTMh8msNB+Csvq2kbvg0o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=udY0je9ld2T2Q6PV4MocAmFOI1wUxdA5O9Lvl+2vEu/xxxyU9sFrMqZAbSS+Zri4UT6Vtf1sZuB1JmVVjbhzOIsKrMLq7AZdvTH6R3d1svgWMUdtpjpDm5DyhE8uoem3kJs0HlKThr2qmdb0GjPhqQDFdtY2WAvA00QOwe7y7AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=JwBf4ywS; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="JwBf4ywS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1727968723;
+	bh=WwB3VDOeGHvQJGcXKLuEG8OTMh8msNB+Csvq2kbvg0o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JwBf4ywSwMXPPg+Ha3ITARTCo+8eqctYd6vXVEyimvz+a5FUgPFoD5RlLwL09HFu+
+	 zIFbHFbOYad/7PrQJlmaa4Iw3OWjI+ZWpguBaL2EUVzTXCE4h4fx5jP+aMiST6sG/q
+	 /cOkz9cyrwb2uDV5xa2go95JKa2Wl2NgNJvjg5Ry8hiO+nNHn5Pd+zH99xhT+TGQhp
+	 +Rz3wyEcPJNqtxlIoIodfscDm8FOEOUctA49Y+1Cf+W9BTm86JnmLLb6rQO30fPK5n
+	 BZwUwUfv0Jti8YAGNjsWQV+XxqM4qeBjFPm0CE9Fp6mq1wHBfeIaK3C0iMxxBk8KzU
+	 ZPBnGrMiG9TMw==
+Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XKFgk5wXjz5t1;
+	Thu,  3 Oct 2024 11:18:42 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v1 0/8] tracing: Allow system call tracepoints to handle page faults
+Date: Thu,  3 Oct 2024 11:16:30 -0400
+Message-Id: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Wire up the system call tracepoints with Tasks Trace RCU to allow
+the ftrace, perf, and eBPF tracers to handle page faults.
 
-When the tp_printk kernel command line is used, the trace events go
-directly to printk(). It is still checked via the trace_check_vprintf()
-function to make sure the pointers of the trace event are legit.
+This series does the initial wire-up allowing tracers to handle page
+faults, but leaves out the actual handling of said page faults as future
+work.
 
-The addition of reading buffers from previous boots required adding a
-delta between the addresses of the previous boot and the current boot so
-that the pointers in the old buffer can still be used. But this required
-adding a trace_array pointer to acquire the delta offsets.
+This series was compile and runtime tested with ftrace and perf syscall
+tracing and raw syscall tracing, adding a WARN_ON_ONCE() in the
+generated code to validate that the intended probes are used for raw
+syscall tracing. The might_fault() added within those probes validate
+that they are called from a context where handling a page fault is OK.
 
-The tp_printk code does not provide a trace_array (tr) pointer, so when
-the offsets were examined, a NULL pointer dereference happened and the
-kernel crashed.
+This series replaces the "Faultable Tracepoints v6" series found at [1].
 
-If the trace_array does not exist, just default the delta offsets to zero,
-as that also means the trace event is not being read from a previous boot.
+This has been rebased on v6.12-rc1, without any conflicts. I have fixed
+the build bot warnings, those were caused by build error with
+CONFIG_TRACING=n. I've added the Acked-by and Tested-by tags to relevant
+commits.
 
-Link: https://lore.kernel.org/all/Zv3z5UsG_jsO9_Tb@aschofie-mobl2.lan/
+Steven, can you merge it through the tracing tree ?
 
-Reported-by: Alison Schofield <alison.schofield@intel.com>
-Fixes: 07714b4bb3f98 ("tracing: Handle old buffer mappings for event strings and functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Thanks,
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c01375adc471..1c69ca1f1088 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3697,8 +3697,8 @@ static void test_can_verify(void)
- void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 			 va_list ap)
- {
--	long text_delta = iter->tr->text_delta;
--	long data_delta = iter->tr->data_delta;
-+	long text_delta = 0;
-+	long data_delta = 0;
- 	const char *p = fmt;
- 	const char *str;
- 	bool good;
-@@ -3710,6 +3710,17 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 	if (static_branch_unlikely(&trace_no_verify))
- 		goto print;
- 
-+	/*
-+	 * When the kernel is booted with the tp_printk command line
-+	 * parameter, trace events go directly through to printk().
-+	 * It also is checked by this function, but it does not
-+	 * have an associated trace_array (tr) for it.
-+	 */
-+	if (iter->tr) {
-+		text_delta = iter->tr->text_delta;
-+		data_delta = iter->tr->data_delta;
-+	}
-+
- 	/* Don't bother checking when doing a ftrace_dump() */
- 	if (iter->fmt == static_fmt_buf)
- 		goto print;
+Mathieu
+
+Link: https://lore.kernel.org/lkml/20240828144153.829582-1-mathieu.desnoyers@efficios.com/ # [1]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: bpf@vger.kernel.org
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Mathieu Desnoyers (8):
+  tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL
+  tracing/ftrace: guard syscall probe with preempt_notrace
+  tracing/perf: guard syscall probe with preempt_notrace
+  tracing/bpf: guard syscall probe with preempt_notrace
+  tracing: Allow system call tracepoints to handle page faults
+  tracing/ftrace: Add might_fault check to syscall probes
+  tracing/perf: Add might_fault check to syscall probes
+  tracing/bpf: Add might_fault check to syscall probes
+
+ include/linux/tracepoint.h      | 104 ++++++++++++++++++++++++++++----
+ include/trace/bpf_probe.h       |  13 ++++
+ include/trace/define_trace.h    |   5 ++
+ include/trace/events/syscalls.h |   4 +-
+ include/trace/perf.h            |  43 ++++++++++++-
+ include/trace/trace_events.h    |  61 +++++++++++++++++--
+ init/Kconfig                    |   1 +
+ kernel/entry/common.c           |   4 +-
+ kernel/trace/trace_syscalls.c   |  44 +++++++++++---
+ 9 files changed, 247 insertions(+), 32 deletions(-)
+
 -- 
-2.45.2
-
+2.39.2
