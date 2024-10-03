@@ -1,101 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AB4BA41;
-	Thu,  3 Oct 2024 19:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC48B4C8F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Oct 2024 20:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727983561; cv=none; b=JPyHaowmkRG7wL5bKO3IwnwW5WBQa1UL1lrdGbRdy6D4TWsR1k/F/ZCFzK94ArL+/o0CfM/ZHZsQM+QBYDCWDAQzYVIpwiHcOBz6sqYHvcJ4ZGbWiFICYK0FLbsCFMFbwPA7HRFa4pEtumwtK9u4Z/ADG0xobIfUQF1oR8NMBNk=
+	t=1727986694; cv=none; b=WSiwmWwZqL2t6W30LxcoVUTLCzBYSSaymWo0dBuAWHIh4SPBVY5hOFqEKVKPzlgLGAFWZy8yI021begix/FEAJLOO/slr9my2QUOukrer0rUaG1RBYyx3w4MSqsDJg90QF7FPAvwulyboFfBJX83CmbhPVLBKW39i9ypDNdyK98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727983561; c=relaxed/simple;
-	bh=O8dX0nNjihxeUHEv4jagn6dcZruVuvtbTDZtrab0Zrk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oztlI8Bn6AHeE0X471d0G0Aot9R/+KhzMs0uTWTdr0CDzHt0ZoDEcbJ5TOYEIX+rbL+I/T8COd+SrMoQJkIBCx0socO/ia31wFp/GGmaw4k9dRokmfk728BazFQ5TGpPjv/tXqbaaMRRcy0cwvkqctI+aV+uYWWwbQGeQ8RJU8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SemZVDVR; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SemZVDVR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1727983560; x=1759519560;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O8dX0nNjihxeUHEv4jagn6dcZruVuvtbTDZtrab0Zrk=;
-  b=SemZVDVR8ili4FfC3Gao9LQ9GHzypHYNtJ0h0LZ7xbHy5ZrezK4uiNf3
-   /DEeOQz0abosMpXT3xGX1CYOlGpyeqgF6sEBX28Stt6LH+raR4560NeYO
-   HqHgLTZkERNTn5wacGaf8J/cmtDEPAOgs9lB8h7vBHzkVoiqImSuF3FUA
-   XuvxXeaRyoIbagNAjasaC2Si17C9N48XXY3hZ2XXdnHOVaETgEFC1fkaA
-   +3gRTgFLLvXXcoblhRWofnCotjFUTPBAfOtGByEOsF5aLc0V3gfWM1/MY
-   0NmnvYNOz3n0anXVwFUxalndVUp00FHgvRnBCTUC205IdnGhug7KAV2JR
-   w==;
-X-CSE-ConnectionGUID: d2A3C92wS4qU2frtiO0USw==
-X-CSE-MsgGUID: 56nmABOcQCKTxKTDTaV7lA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11214"; a="27082453"
-X-IronPort-AV: E=Sophos;i="6.11,175,1725346800"; 
-   d="scan'208";a="27082453"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 12:25:59 -0700
-X-CSE-ConnectionGUID: +PxXlB/lSM+mKvaTsQRosg==
-X-CSE-MsgGUID: 2n6BlCxcR3Sh1JrAC0VSLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,175,1725346800"; 
-   d="scan'208";a="79215312"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.109.145])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2024 12:25:59 -0700
-Date: Thu, 3 Oct 2024 12:25:57 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Fix trace_check_vprintf() when tp_printk is used
-Message-ID: <Zv7vxSu9gAhuA0ws@aschofie-mobl2.lan>
-References: <20241003104925.4e1b1fd9@gandalf.local.home>
+	s=arc-20240116; t=1727986694; c=relaxed/simple;
+	bh=m5bea/4j5TVSB+iecsEyojOZroaT7bU9dNuNava/SWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l3hpT9y2O7oEi+YQL+BNBbMQRKVm1KcETqTvUo5XZDY9tKBMBNzha24m6H7TjYeXU8CyKUoFR0AbGzkvPBobfOv7NLlw/2OR+iB+fccJrb6TMYwHEVZptnTodMzkkADT9a29Sxjzj71kSmXw5KDfDjTEw474HynCw5tuGC1CP8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB1DC4CEC5;
+	Thu,  3 Oct 2024 20:18:13 +0000 (UTC)
+Date: Thu, 3 Oct 2024 16:19:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Wei Li <liwei391@huawei.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, <linux-trace-kernel@vger.kernel.org>,
+ <xiexiuqi@huawei.com>
+Subject: Re: [PATCH 5/5] tracing/hwlat: Fix deadlock in cpuhp processing
+Message-ID: <20241003161907.52eda097@gandalf.local.home>
+In-Reply-To: <20240924094515.3561410-6-liwei391@huawei.com>
+References: <20240924094515.3561410-1-liwei391@huawei.com>
+	<20240924094515.3561410-6-liwei391@huawei.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241003104925.4e1b1fd9@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 03, 2024 at 10:49:25AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When the tp_printk kernel command line is used, the trace events go
-> directly to printk(). It is still checked via the trace_check_vprintf()
-> function to make sure the pointers of the trace event are legit.
-> 
-> The addition of reading buffers from previous boots required adding a
-> delta between the addresses of the previous boot and the current boot so
-> that the pointers in the old buffer can still be used. But this required
-> adding a trace_array pointer to acquire the delta offsets.
-> 
-> The tp_printk code does not provide a trace_array (tr) pointer, so when
-> the offsets were examined, a NULL pointer dereference happened and the
-> kernel crashed.
-> 
-> If the trace_array does not exist, just default the delta offsets to zero,
-> as that also means the trace event is not being read from a previous boot.
-> 
-> Link: https://lore.kernel.org/all/Zv3z5UsG_jsO9_Tb@aschofie-mobl2.lan/
-> 
+On Tue, 24 Sep 2024 17:45:15 +0800
+Wei Li <liwei391@huawei.com> wrote:
 
-Thanks Steve!
-
-Tested-by: Alison Schofield <alison.schofield@intel.com>
-
-
-> Reported-by: Alison Schofield <alison.schofield@intel.com>
-> Fixes: 07714b4bb3f98 ("tracing: Handle old buffer mappings for event strings and functions")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Another "hung task" error was reported during the test, and i figured out
+> the deadlock scenario is as follows:
+> 
+> T1 [BP]               | T2 [AP]                     | T3 [hwlatd/1]                  | T4
+> work_for_cpu_fn()     | cpuhp_thread_fun()          | kthread_fn()                   | hwlat_hotplug_workfn()
+>   _cpu_down()         |   stop_cpu_kthread()        |                                |   mutex_lock(&hwlat_data.lock)
+>     cpus_write_lock() |     kthread_stop(hwlatd/1)  |   mutex_lock(&hwlat_data.lock) |
+>     __cpuhp_kick_ap() |       wait_for_completion() |                                |   cpus_read_lock()
+> 
+> It constitutes ABBA deadlock indirectly between "cpu_hotplug_lock" and
+> "hwlat_data.lock", make the mutex obtaining in kthread_fn() interruptible
+> to fix this.
+> 
+> Fixes: ba998f7d9531 ("trace/hwlat: Support hotplug operations")
+> Signed-off-by: Wei Li <liwei391@huawei.com>
 > ---
->  kernel/trace/trace.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+>  kernel/trace/trace_hwlat.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->
-snip
+> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+> index 3bd6071441ad..4c228ccb8a38 100644
+> --- a/kernel/trace/trace_hwlat.c
+> +++ b/kernel/trace/trace_hwlat.c
+> @@ -370,7 +370,8 @@ static int kthread_fn(void *data)
+>  		get_sample();
+>  		local_irq_enable();
+>  
+> -		mutex_lock(&hwlat_data.lock);
+> +		if (mutex_lock_interruptible(&hwlat_data.lock))
+> +			break;
+
+So basically this requires as signal to break it out of the loop?
+
+But if it receives a signal for any other reason, it breaks out of the loop
+too. Which is not what we want. If anything, it should be:
+
+		if (mutex_lock_interruptible(&hwlat_data.lock))
+			continue;
+
+But I still don't really like this solution, as it will still report a
+	deadlock.
+
+Is it possible to switch the cpu_read_lock() to be taken before the
+hwlat_data.lock?
+
+-- Steve
+
+
+>  		interval = hwlat_data.sample_window - hwlat_data.sample_width;
+>  		mutex_unlock(&hwlat_data.lock);
+>  
+
