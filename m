@@ -1,202 +1,71 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDEE1A2C32;
-	Thu,  3 Oct 2024 15:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD80EDDA8;
+	Thu,  3 Oct 2024 15:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727968733; cv=none; b=uIzWSrPFltPa7DLTk136GhoAZs/+w4TmAeG6kpwUkKXY69stX23i/HUfIEeWuEkjiAcaA/zhEyB89H07L29bS4flGOFKuzpWW6yo5L0tDKRgaViMOoBa+XDgSXhqXUS9gzBz/bOSoXZ0BtKj7yozIdwKmGi3ffy+UqJO6rwaHSI=
+	t=1727969222; cv=none; b=f8j9SkgQ1X+tXYjoqDHy/KDnXYy5kktW+XV8LU6pB/PHd4UDHJ5/aPw6ZRzmXuJQ318pHGEsNeBufnbqNBFBzC2fXmEpViGerKSqDHvJxXKrMsmD5/VotItQf3+Ut3NyjvjRWgNQoRhcWRdWWtrjom7KKCtNkSRLQ3lquqnj5Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727968733; c=relaxed/simple;
-	bh=cFKaryhx8iL3A0KR0AkdZdd7ZsIGBNvmJeXwPGSJJBE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AZNaTIhD6sKF65IP68xMEdZ6Syz5O0BN/aJavqHwkCo+bmzBwwE9758ycMtzSNy7Tm59zFewafmsJMwJ/CV5sZEOv063fgrtt3X1u2xfrkdeNMg4W2tiuzgQ2kykp4FzddtsazcWJ6YwIrCMzxKFZacUjZnXN1CtCsf+wSddVCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=ba7jj/3k; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ba7jj/3k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1727968725;
-	bh=cFKaryhx8iL3A0KR0AkdZdd7ZsIGBNvmJeXwPGSJJBE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ba7jj/3kHWelvv8zFIa0KiKXxkHJoQSR8ucgpInmUSXf1Ddq3iHqFe/ylEeBA2B59
-	 JL0juShEwPw7iLpsYPQQCEAoohnReLjCelQ0mAjOQ/jUn0x9kK5Re3ZHZmD0n5uhGG
-	 ELM1iqbb+lAcDIzUnS+IAgewwdMMU8v3Lpy27Q23gIgEc1VnprQDoyhzEz7jM2iu7Y
-	 LbuYDIhqyOa88gen751+RbBgYY/fMX5W3mLE8uUeGaXyTyoX2RJcpKD08OCmoU51/z
-	 gZ3jjipHklwwbED1/hkxcL13lQ52HCkMrEOIhTJCoxUz8mHPAPRoQqr3Dxm4j2eSTY
-	 wTrIvxv706lKQ==
-Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XKFgm5G4rz5pT;
-	Thu,  3 Oct 2024 11:18:44 -0400 (EDT)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	bpf@vger.kernel.org,
-	Joel Fernandes <joel@joelfernandes.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Michael Jeanson <mjeanson@efficios.com>
-Subject: [PATCH v1 5/8] tracing: Allow system call tracepoints to handle page faults
-Date: Thu,  3 Oct 2024 11:16:35 -0400
-Message-Id: <20241003151638.1608537-6-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
-References: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1727969222; c=relaxed/simple;
+	bh=RJWtPH/d+fY3ScW0SysxW4UYHxYKo0H2iwDu/3Nz9z0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UfjiW90rdsAZDwr5s8GXtMa15qQboJn7gNSreKLc0oSSC8zGVL3qugdxGyMYEqwWIudK8dRJwEsaovMD+XxU2mRvIkVJO5qMiyfU1g/EBKPlLW6UtkL9/1WAXzZEf/4kVkoe2LLswbp3PorNyqW8yTv/NohuvHekL3POcziGoOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733B0C4CEC5;
+	Thu,  3 Oct 2024 15:27:01 +0000 (UTC)
+Date: Thu, 3 Oct 2024 11:27:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH] tracing: doc: Fix typo in ftrace histogram
+Message-ID: <20241003112755.62b88e33@gandalf.local.home>
+In-Reply-To: <20241003122334.44682-2-gmonaco@redhat.com>
+References: <20241003122334.44682-2-gmonaco@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use Tasks Trace RCU to protect iteration of system call enter/exit
-tracepoint probes to allow those probes to handle page faults.
+On Thu,  3 Oct 2024 14:23:35 +0200
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-In preparation for this change, all tracers registering to system call
-enter/exit tracepoints should expect those to be called with preemption
-enabled.
+> The Tracing > Histogram page contains a typo in the field display
+> modifiers table.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  Documentation/trace/histogram.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
+> index 3c9b263de9c2..0aada18c38c6 100644
+> --- a/Documentation/trace/histogram.rst
+> +++ b/Documentation/trace/histogram.rst
+> @@ -81,7 +81,7 @@ Documentation written by Tom Zanussi
+>  	.usecs         display a common_timestamp in microseconds
+>          .percent       display a number of percentage value
+>          .graph         display a bar-graph of a value
+> -	.stacktrace    display as a stacktrace (must by a long[] type)
 
-This allows tracers to fault-in userspace system call arguments such as
-path strings within their probe callbacks.
+ "Pat, I would like to b(u)y a long[] type"
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Michael Jeanson <mjeanson@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org
-Cc: Joel Fernandes <joel@joelfernandes.org>
----
- include/linux/tracepoint.h | 25 +++++++++++++++++--------
- init/Kconfig               |  1 +
- 2 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 666499b9f3be..6faf34e5efc9 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -17,6 +17,7 @@
- #include <linux/errno.h>
- #include <linux/types.h>
- #include <linux/rcupdate.h>
-+#include <linux/rcupdate_trace.h>
- #include <linux/tracepoint-defs.h>
- #include <linux/static_call.h>
- 
-@@ -109,6 +110,7 @@ void for_each_tracepoint_in_module(struct module *mod,
- #ifdef CONFIG_TRACEPOINTS
- static inline void tracepoint_synchronize_unregister(void)
- {
-+	synchronize_rcu_tasks_trace();
- 	synchronize_srcu(&tracepoint_srcu);
- 	synchronize_rcu();
- }
-@@ -211,7 +213,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * it_func[0] is never NULL because there is at least one element in the array
-  * when the array itself is non NULL.
-  */
--#define __DO_TRACE(name, args, cond, rcuidle)				\
-+#define __DO_TRACE(name, args, cond, rcuidle, syscall)			\
- 	do {								\
- 		int __maybe_unused __idx = 0;				\
- 									\
-@@ -222,8 +224,12 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 			      "Bad RCU usage for tracepoint"))		\
- 			return;						\
- 									\
--		/* keep srcu and sched-rcu usage consistent */		\
--		preempt_disable_notrace();				\
-+		if (syscall) {						\
-+			rcu_read_lock_trace();				\
-+		} else {						\
-+			/* keep srcu and sched-rcu usage consistent */	\
-+			preempt_disable_notrace();			\
-+		}							\
- 									\
- 		/*							\
- 		 * For rcuidle callers, use srcu since sched-rcu	\
-@@ -241,7 +247,10 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
- 		}							\
- 									\
--		preempt_enable_notrace();				\
-+		if (syscall)						\
-+			rcu_read_unlock_trace();			\
-+		else							\
-+			preempt_enable_notrace();			\
- 	} while (0)
- 
- #ifndef MODULE
-@@ -251,7 +260,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		if (static_key_false(&__tracepoint_##name.key))		\
- 			__DO_TRACE(name,				\
- 				TP_ARGS(args),				\
--				TP_CONDITION(cond), 1);			\
-+				TP_CONDITION(cond), 1, 0);		\
- 	}
- #else
- #define __DECLARE_TRACE_RCU(name, proto, args, cond)
-@@ -284,7 +293,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		if (static_key_false(&__tracepoint_##name.key))		\
- 			__DO_TRACE(name,				\
- 				TP_ARGS(args),				\
--				TP_CONDITION(cond), 0);			\
-+				TP_CONDITION(cond), 0, 0);		\
- 		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
- 			WARN_ONCE(!rcu_is_watching(),			\
- 				  "RCU not watching for tracepoint");	\
-@@ -295,7 +304,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		if (static_key_false(&__tracepoint_##name.key))		\
- 			__DO_TRACE(name,				\
- 				TP_ARGS(args),				\
--				TP_CONDITION(cond), 1);			\
-+				TP_CONDITION(cond), 1, 0);		\
- 	}								\
- 	static inline int						\
- 	register_trace_##name(void (*probe)(data_proto), void *data)	\
-@@ -330,7 +339,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		if (static_key_false(&__tracepoint_##name.key))		\
- 			__DO_TRACE(name,				\
- 				TP_ARGS(args),				\
--				TP_CONDITION(cond), 0);			\
-+				TP_CONDITION(cond), 0, 1);		\
- 		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
- 			WARN_ONCE(!rcu_is_watching(),			\
- 				  "RCU not watching for tracepoint");	\
-diff --git a/init/Kconfig b/init/Kconfig
-index fbd0cb06a50a..eedd0064fb36 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1984,6 +1984,7 @@ config BINDGEN_VERSION_TEXT
- #
- config TRACEPOINTS
- 	bool
-+	select TASKS_TRACE_RCU
- 
- source "kernel/Kconfig.kexec"
- 
--- 
-2.39.2
+> +	.stacktrace    display as a stacktrace (must be a long[] type)
+>  	=============  =================================================
+>  
+>    Note that in general the semantics of a given field aren't
+> 
+> base-commit: e32cde8d2bd7d251a8f9b434143977ddf13dcec6
 
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
