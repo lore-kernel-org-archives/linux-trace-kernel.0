@@ -1,161 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30014215F4A;
-	Fri,  4 Oct 2024 13:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB761BC23;
+	Fri,  4 Oct 2024 14:17:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728048326; cv=none; b=ph7Ts/quLZ6kDENNbofw2yREp+2fAzlHVG5uCsOhLAsyuI9Zsphq/ss7W4wOSPc8PKYOMLFkTDoO2Q0TPT6HvvO+81eWq1f9DBa1Xd+7s84anTrsg5JOlgTIBzqOD5YkgBIvVjFB+KZ91aXQvI9lR2Px8EfquR+xltE8ymPc8Sg=
+	t=1728051456; cv=none; b=RlREb2f2eAS662A5vmjxpmiZa0e8CTS/6EAE6hTHXt1WCQl45r4GnyKZs6xt5T/quzdtQiIJ2EAbvtTdMfECX8/XODkraL4CWMmJPaGFx4P/PCv9RO44J9QncpckhTip/l4BQ4VZHrbR9fbXyVY7MeHiOWBj9+fXvyfmJ3fLxJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728048326; c=relaxed/simple;
-	bh=PY7WDjKmcN9GMO1EwQuntVNzRSGl/jKf+GrigyIqudg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AjEoB6lxvrHGL/UWSg3KfdcQbJjGTyuDui4OSa2D2084ZygNm51Tl6/pke3OgVAK9JWMqc1EKYIbQTUqQqv9OO8oq9T5/+X68KVRZ7IaagoNWol8517LE6SFBKLaOJO5oajgUheKc9Y2AIOZZdEA4P9FPkXYIzVYIFumRAYExnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E569C4CEC6;
-	Fri,  4 Oct 2024 13:25:23 +0000 (UTC)
-Date: Fri, 4 Oct 2024 09:26:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
- Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, Joel
- Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
- Michael Jeanson <mjeanson@efficios.com>
-Subject: Re: [PATCH v1 2/8] tracing/ftrace: guard syscall probe with
- preempt_notrace
-Message-ID: <20241004092619.0be53f90@gandalf.local.home>
-In-Reply-To: <90ca2fee-cdfb-4d48-ab9e-57d8d2b8b8d8@efficios.com>
-References: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
-	<20241003151638.1608537-3-mathieu.desnoyers@efficios.com>
-	<20241003182304.2b04b74a@gandalf.local.home>
-	<6dc21f67-52e1-4ed5-af7f-f047c3c22c11@efficios.com>
-	<20241003210403.71d4aa67@gandalf.local.home>
-	<90ca2fee-cdfb-4d48-ab9e-57d8d2b8b8d8@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728051456; c=relaxed/simple;
+	bh=X4xq/NbuSXO7BJmTN7sQjUOwsklgqQwxSaneSZECvQ0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=k4uVaZToPmNade46WoothUNqjEUTxl2NcW1IOIyRSuMhl7o1Ong/Sdx55Ih6U8YLyaBVZFwGX+PWJ+N3HEbvSkGMXsTpqYhunviW3ginix6guEtV8Boib37mk3C9k8LtCV1pbG1y5Nie0zIpvj1XFTpGDdDwH/UXwMuJ9XY6zyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tf+rHoSQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tf+rHoSQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC7FC4CEC6;
+	Fri,  4 Oct 2024 14:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728051455;
+	bh=X4xq/NbuSXO7BJmTN7sQjUOwsklgqQwxSaneSZECvQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Tf+rHoSQ/tklcnMEZ3dJWLvQDwN4ADFiH2kLIMj1u8snJ4o8acLBlkjRuu+e1qna1
+	 wkarJWHxyfmVtbjasS0QpsTjFgU3yxRot/a4gNbZuDAwt+MDMWqIW08Q3FVd+59yD0
+	 t4lcXsXhaMCpQZI6QfKU/konm786J8y0qH/sB5S88zcaaGYqyLE9wXHQG/tmMksuMJ
+	 NYack17GuzKBSifVhXIQq0YsivHJJDm6yqZ9aYBSSYU2vguYc5B3i3CzCHWWxKU85X
+	 NSXF/OTniQ5vf0RnTj9uv6rcoMRykxVbqah6QFi8GWnMwaiwk2aC0JNxs1apS85zPU
+	 NCI626j645Asw==
+Date: Fri, 4 Oct 2024 23:17:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Tatsuya S <tatsuya.s2862@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ftrace: Hide a extra entry in stack trace
+Message-Id: <20241004231732.247301975e1e8f1511b50c6a@kernel.org>
+In-Reply-To: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
+References: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 3 Oct 2024 21:33:16 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Wed,  2 Oct 2024 14:13:48 +0900
+Tatsuya S <tatsuya.s2862@gmail.com> wrote:
 
-> On 2024-10-04 03:04, Steven Rostedt wrote:
-> > On Thu, 3 Oct 2024 20:26:29 -0400
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> > 
-> >   
-> >> static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
-> >> {
-> >>           struct trace_array *tr = data;
-> >>           struct trace_event_file *trace_file;
-> >>           struct syscall_trace_enter *entry;
-> >>           struct syscall_metadata *sys_data;
-> >>           struct trace_event_buffer fbuffer;
-> >>           unsigned long args[6];
-> >>           int syscall_nr;
-> >>           int size;
-> >>
-> >>           syscall_nr = trace_get_syscall_nr(current, regs);
-> >>           if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
-> >>                   return;
-> >>
-> >>           /* Here we're inside tp handler's rcu_read_lock_sched (__DO_TRACE) */
-> >>           trace_file = rcu_dereference_sched(tr->enter_syscall_files[syscall_nr]);
-> >>
-> >> ^^^^ this function explicitly states that preempt needs to be disabled by
-> >> tracepoints.  
-> > 
-> > Ah, I should have known it was the syscall portion. I don't care for this
-> > hidden dependency. I rather add a preempt disable here and not expect it to
-> > be disabled when called.  
+> A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
 > 
-> Which is exactly what this patch is doing.
+> [003] .....   110.171589: vfs_write <-__x64_sys_write
+> [003] .....   110.171600: <stack trace>
+> => XXXXXXXXX (Wrong function name)
+> => vfs_write
+> => ksys_write
+> => do_syscall_64
+> => entry_SYSCALL_64_after_hwframe
+> 
+> To resolve this, increment skip for __ftrace_trace_stack() in
+> function_stack_trace_call().
+> The reason why skip is incremented for __ftrace_trace_stack()
+> is because __ftrace_trace_stack() in stack trace is the only function
+> that wasn't skipped from anywhere.
 
-I was thinking of putting the protection in the function and not the macro.
+Hi Tatsuya,
+
+Can you focus on making test cases which checks what combinations caused
+this wrong values and what does not? Also it should be checked with
+various kconfigs. That is more valuable than making add-hoc fixes.
+
+Thank you,
 
 > 
-> >   
-> >>
-> >>           if (!trace_file)
-> >>                   return;
-> >>
-> >>           if (trace_trigger_soft_disabled(trace_file))
-> >>                   return;
-> >>
-> >>           sys_data = syscall_nr_to_meta(syscall_nr);
-> >>           if (!sys_data)
-> >>                   return;
-> >>
-> >>           size = sizeof(*entry) + sizeof(unsigned long) * sys_data->nb_args;
-> >>
-> >>           entry = trace_event_buffer_reserve(&fbuffer, trace_file, size);
-> >> ^^^^ it reserves space in the ring buffer without disabling preemption explicitly.
-> >>
-> >> And also:
-> >>
-> >> void *trace_event_buffer_reserve(struct trace_event_buffer *fbuffer,
-> >>                                    struct trace_event_file *trace_file,
-> >>                                    unsigned long len)
-> >> {
-> >>           struct trace_event_call *event_call = trace_file->event_call;
-> >>
-> >>           if ((trace_file->flags & EVENT_FILE_FL_PID_FILTER) &&
-> >>               trace_event_ignore_this_pid(trace_file))
-> >>                   return NULL;
-> >>
-> >>           /*
-> >>            * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
-> >>            * preemption (adding one to the preempt_count). Since we are
-> >>            * interested in the preempt_count at the time the tracepoint was
-> >>            * hit, we need to subtract one to offset the increment.
-> >>            */
-> >> ^^^ This function also explicitly expects preemption to be disabled.
-> >>
-> >> So I rest my case. The change I'm introducing for tracepoints
-> >> don't make any assumptions about whether or not each tracer require
-> >> preempt off or not: it keeps the behavior the _same_ as it was before.
-> >>
-> >> Then it's up to each tracer's developer to change the behavior of their
-> >> own callbacks as they see fit. But I'm not introducing regressions in
-> >> tracers with the "big switch" change of making syscall tracepoints
-> >> faultable. This will belong to changes that are specific to each tracer.  
-> > 
-> > 
-> > I rather remove these dependencies at the source. So, IMHO, these places
-> > should be "fixed" first.
-> > 
-> > At least for the ftrace users. But I think the same can be done for the
-> > other users as well. BPF already stated it just needs "migrate_disable()".
-> > Let's see what perf has.
-> > 
-> > We can then audit all the tracepoint users to make sure they do not need
-> > preemption disabled.  
+> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+> ---
+> V2 -> V3: Changed the place to increment skip number
+> V1 -> V2: Fixed redundant code
 > 
-> Why does it need to be a broad refactoring of the entire world ? What is
-> wrong with the simple approach of introducing this tracepoint faultable
-> syscall support as a no-op from the tracer's perspective ?
-
-Because we want in-tree users too ;-)
-
+>  kernel/trace/trace_functions.c | 24 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 13 deletions(-)
 > 
-> Then we can build on top and figure out if we want to relax things
-> on a tracer-per-tracer basis.
+> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+> index 3b0cea37e029..27089d8e65d4 100644
+> --- a/kernel/trace/trace_functions.c
+> +++ b/kernel/trace/trace_functions.c
+> @@ -203,23 +203,21 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+>  	ftrace_test_recursion_unlock(bit);
+>  }
+>  
+> -#ifdef CONFIG_UNWINDER_ORC
+> -/*
+> - * Skip 2:
+> - *
+> - *   function_stack_trace_call()
+> - *   ftrace_call()
+> - */
+> -#define STACK_SKIP 2
+> -#else
+>  /*
+>   * Skip 3:
+> - *   __trace_stack()
+> - *   function_stack_trace_call()
+> - *   ftrace_call()
+> + *   Skipped functions if CONFIG_UNWINDER_ORC is defined
+> + *
+> + *     __ftrace_trace_stack()
+> + *     function_stack_trace_call()
+> + *     ftrace_call()
+> + *
+> + *   Otherwise
+> + *
+> + *     __trace_stack()
+> + *     function_stack_trace_call()
+> + *     ftrace_call()
+>   */
+>  #define STACK_SKIP 3
+> -#endif
+>  
+>  static void
+>  function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+> -- 
+> 2.46.2
+> 
 
-Looking deeper into how ftrace can implement this, it may require some more
-work. Doing it your way may be fine for now, but we need this working for
-something in-tree instead of having it only work for LTTng.
 
-Note, it doesn't have to be ftrace either. It could be perf or BPF. Or
-simply the sframe code (doing stack traces at the entry of system calls).
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
