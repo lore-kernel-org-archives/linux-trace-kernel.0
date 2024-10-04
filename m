@@ -1,127 +1,78 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021819475;
-	Fri,  4 Oct 2024 04:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC6B84D29;
+	Fri,  4 Oct 2024 08:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728017368; cv=none; b=QJqXhmXioBBS/Ij9ez1rK/DT9XPBR4z2Yo6Ougf5ONJ97BVXHgoudQxmX2/Aw3rGP7dBgLVjhNM7O8+v9jaoY4dX8FUbwy2rSMRxMTWMhulcXg0JgugMtebYbjlRfKp6Jm22LBHUUG6pEaroc2YEV9dyM1dvOcNqUfmC0SmsI1Y=
+	t=1728028902; cv=none; b=OPUL+DU/42ARJ2YqczWDUJmdvV4NQmt41ieKAArPXW9Z2okm1/PTjbaWHZV6zL3L3OHRYL5ah9bBLT31aKDOfT8POFXD09cvAauxesCyIlsCmN+3TVXpIxEnw2912bV6Hn0yR76ncUHs7XsWoBdHjJPxWnJ5CrYz7ULt6aofsRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728017368; c=relaxed/simple;
-	bh=TUsrG1YURfFbI9ZQ5O9KwQkkpUD3OiESPgahQWq2Rus=;
+	s=arc-20240116; t=1728028902; c=relaxed/simple;
+	bh=czh6SU5zL2iJcYy6jW4TFILwI5XBwlvFj/KY4P03WUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dQXOooEoqL21yRBaPHJ8i6qFu++3c+hZc0QA5OJydLIGGocFyAp5/HdU+lYmhg4MKa7BNvjfpZeSFpilEfsBWFmATkPAqMe/MAIHXfLk/a5rZxnBNil+VddPrhHBwUpPxbApR/I5RLPD7njcinx5EIecMHhDwnHesGhtGVTm+UE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hVi6pqYK; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeKLpDwqRrGT26Aq1BoqEh8A8bEi/w/2Km0Lqg3/cbjO1OuC3Bl97M82jgNejcd6BmV5dbKCZfdJY9SVOrF4P18t+8NobPgg9NqKAPkoZ/dqllsXJ/TOWS2BBvLPZFVyV7YKUvn8e9CThycXq24KT0NEJTRIGdOwdgOqBVhcCrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uPAQ/fIA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hVi6pqYK"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20b64584fd4so16764895ad.1;
-        Thu, 03 Oct 2024 21:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728017366; x=1728622166; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TUsrG1YURfFbI9ZQ5O9KwQkkpUD3OiESPgahQWq2Rus=;
-        b=hVi6pqYKrn8dgM0eI9ixdE8WIexPLQwey+MXTfB7nkMehLW5N3wwatdfeCYP5P02+P
-         2aMcfARvvz6lnmj9H4QNS8Chz3SCOo/wpbpjaKnt67xRwmxyEBC3Uh+qL9jGRgcttizR
-         Y3obqhXJYcJtmHgppDwYb6UgiuyKEn5X7OuhkL6Jemp7p56srEJI9qiiwuoB7P4s81Zx
-         4Xfk9k9xx7B8gfvGyNaDO5sCPtOkqllD66J9SwR9p3xoqS9JFydoFzsnzeMV3+zy/TwC
-         HQ0+jUweQGQLIi8GVThtk9Mgkegm2Wndm0gsgyV0QfDwMDawVRGsoMhX+hwa4J7M8biJ
-         x1AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728017366; x=1728622166;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TUsrG1YURfFbI9ZQ5O9KwQkkpUD3OiESPgahQWq2Rus=;
-        b=Uez4rjhsNmKsYoe/XaFg5wOnVucWeobAg6vKPA4F7oT0SCiuIO6JvRz/l/lF1FpvVN
-         +HqU7MoeRGpedZyghSTDfz8D/9UrZAnQJwZmPwB00knZMY8mbt2Z04RH0ICFdWkh7c82
-         XRyB3290xnQtSTENukEB+C1yu51eDxHKNcgSLYfb+Jq0Du0bhdWPOST3rwljGhfxv1um
-         aWnkmOs2J7btwWymgTGvnWn1hc1lFB4htCTABQd3mTAjiDqdkaJZ6wb+b4HZ50+qNqUt
-         ChHrU65wjXyUb6C9UHo2ao5XOehiyZmGIdT7sd6k3N7yRw64BQ+S4fkdzAOjWz2T0vll
-         Q1Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE9Wo63qg9LZj4tgHdX9hTRtxJIIiYRmo1O3MQLP0Iqaoqb3c5m6kZYSKVBzUKFHgGx/DkS39rrbwF@vger.kernel.org, AJvYcCUO6FHwqC5n1RM1ObWoHF1jDCASQwObgBmxEKd5qUNpW4knWog6o+ILbUHBsnI7E1AT5X8Wf7lXwu/g4SbOAg==@vger.kernel.org, AJvYcCVJ/w4XsBf3ZYT4XO/1DJevRd02A//DnFnyQKwT5ApSIg6hxObHOlJRm4x+WOGrCbqkCokIcpUvNGF9hQ==@vger.kernel.org, AJvYcCVSB36FTaycSaEu8J8sAXgWHEPjodeUcSstg1neePtKwxZIJ1oxj077SUtUpJJl7lTDHZpfxymIUcv4@vger.kernel.org, AJvYcCX/AmP27C06Gn1XnE8fi1EJ3uGc1/p3E4ioPVh64bpYWIQuU/WyO4cYRW3ExQsdiCvhG3oQ2AKVbkWm@vger.kernel.org, AJvYcCXCAgarJlzAGjaaSpZ4eQYgEiJo+XufLAUWqej1/qz/QjzFxnBb8WIp/Vw5LzXBu6Q0eAW3i67JxyvJ6y7sfRv5ET5u@vger.kernel.org, AJvYcCXuSJ94SmW3oLDSqh4gEuVSZ6cpIMwNINwHrW0saYiWLOpYh56DNlcoeLdW0XJAR7i/DYF+261CeGn+OQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7szFqV9+BoQphTwgaC/Agvqk6AH1gOSDsgquNsL8WDjZo5XDK
-	2on3CWckidUp6/2J0bwVQkcP+KBJZfZXoH4fXQ0rRaeEolu+HQTf
-X-Google-Smtp-Source: AGHT+IEOZ5VHabq4uat+pKHrLZtskvm5qkTvRMBGxvUt1yb7vzghAthcJh027s31hSLyjL6Ys/bM7A==
-X-Received: by 2002:a17:902:ec87:b0:20b:5046:356 with SMTP id d9443c01a7336-20bff04fad3mr14990785ad.36.1728017366009;
-        Thu, 03 Oct 2024 21:49:26 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beef8decasm16481015ad.142.2024.10.03.21.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 21:49:25 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id CE80345D328D; Fri, 04 Oct 2024 11:49:22 +0700 (WIB)
-Date: Fri, 4 Oct 2024 11:49:22 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jeff Layton <jlayton@kernel.org>, John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v9 08/12] Documentation: add a new file documenting
- multigrain timestamps
-Message-ID: <Zv9z0qWAvTuS8zg7@archie.me>
-References: <20241002-mgtime-v9-0-77e2baad57ac@kernel.org>
- <20241002-mgtime-v9-8-77e2baad57ac@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uPAQ/fIA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8BFC4CECD;
+	Fri,  4 Oct 2024 08:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728028901;
+	bh=czh6SU5zL2iJcYy6jW4TFILwI5XBwlvFj/KY4P03WUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uPAQ/fIAE/QAAjeYGXWo1YTo3Y0qqWBhc/8Y/n0CMFHT2N1RT8KtWDpQStMeiGlkt
+	 rbq2a1fnLhcuWcxo3xc3K2rQ0DOJ4IUq8kQQyNc1baSXmayh3uPGajSN6/K9CjE5HX
+	 7UjKViGzApNDpCSTdeI0WcidECgzLJgnwAEW959FuxTuCr26DAKT/MyLXbMvygh08X
+	 rAB+T91BbTMa5I9efZZvLvdc8O/T6kmDhnb7zrYqN4kTjejmW90sIyfPoCVI+3ZJJ/
+	 C6AFH41VHQIBZzj241AyYWqiQStA2hNt6zLdbAqhNOa5qrUIFB9hb9ismRdq+xvV7O
+	 7zs6JklKtCP+g==
+Date: Fri, 4 Oct 2024 10:01:35 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
+	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, 
+	surenb@google.com, akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, 
+	jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, mingo@kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [PATCH v2 tip/perf/core 3/5] fs: add back RCU-delayed freeing of
+ FMODE_BACKING file
+Message-ID: <20241004-holzweg-wahrgemacht-c1429b882127@brauner>
+References: <20241001225207.2215639-1-andrii@kernel.org>
+ <20241001225207.2215639-4-andrii@kernel.org>
+ <20241003-lachs-handel-4f3a9f31403d@brauner>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OBP6+ccGLM5fNBOy"
-Content-Disposition: inline
-In-Reply-To: <20241002-mgtime-v9-8-77e2baad57ac@kernel.org>
-
-
---OBP6+ccGLM5fNBOy
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20241003-lachs-handel-4f3a9f31403d@brauner>
 
-On Wed, Oct 02, 2024 at 02:49:36PM -0400, Jeff Layton wrote:
-> Add a high-level document that describes how multigrain timestamps work,
-> rationale for them, and some info about implementation and tradeoffs.
->=20
+On Thu, Oct 03, 2024 at 11:13:54AM GMT, Christian Brauner wrote:
+> On Tue, Oct 01, 2024 at 03:52:05PM GMT, Andrii Nakryiko wrote:
+> > 6cf41fcfe099 ("backing file: free directly") switched FMODE_BACKING
+> > files to direct freeing as back then there were no use cases requiring
+> > RCU protected access to such files.
+> > 
+> > Now, with speculative lockless VMA-to-uprobe lookup logic, we do need to
+> > have a guarantee that struct file memory is not going to be freed from
+> > under us during speculative check. So add back RCU-delayed freeing
+> > logic.
+> > 
+> > We use headless kfree_rcu_mightsleep() variant, as file_free() is only
+> > called for FMODE_BACKING files in might_sleep() context.
+> > 
+> > Suggested-by: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Christian Brauner <brauner@kernel.org>
+> > Cc: Amir Goldstein <amir73il@gmail.com>
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> 
+> Reviewed-by: Christian Brauner <brauner@kernel.org>
 
-LGTM, thanks!
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---OBP6+ccGLM5fNBOy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZv9zzgAKCRD2uYlJVVFO
-o8z+AQDazz4grBaoJ/mtVu4UdxF3vdyAVG6PXKSWPFhB0JejcwD9E8qbXnSUInxR
-88neK7F3Iq9tS3rwTgLVOuOzET6WWAE=
-=TFot
------END PGP SIGNATURE-----
-
---OBP6+ccGLM5fNBOy--
+Fwiw, I have another patch series for files that I'm testing that will
+require me to switch FMODE_BACKING to a SLAB_TYPSAFE_BY_RCU cache. That
+shouldn't matter for your use-case though.
