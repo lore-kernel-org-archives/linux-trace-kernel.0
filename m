@@ -1,153 +1,177 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FC81AE000;
-	Fri,  4 Oct 2024 20:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7124231C8E;
+	Fri,  4 Oct 2024 20:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728072275; cv=none; b=Wrg23OtnMUiESk4QfyBlV4QV0w14Yr5byltQ9HnV/vy+1+ydmZag9Ix9jTtSqvUlnBEllR8oaWgMmvYF8W1L5FXfGPFnlOheTSJAo/+d/O80O7qjKmHMfqzKq6jc+WvhpGbdEV5eanER+NkfirlRPKNXyK9JRR7DVl352B81uOY=
+	t=1728073141; cv=none; b=h+I0ru0Fp7iDOQvF2JOFy0/fd+D+3X6xpNfsy7DCTscGbvlAkU0oU8eREOW3VMzXob8Dxng7Qrk/TUOXbqsHyrc0sThtMYfchIP7yZgi7gzLmfQVe62YMics4K4wO4u/v5s3/5buVbtiYsKYnpbzacJi3b4qL9ytpg6fUWIT/e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728072275; c=relaxed/simple;
-	bh=cCdDTcUm4bFPThg2lM08rNCWleBMqiey7gEaVCUSrxI=;
+	s=arc-20240116; t=1728073141; c=relaxed/simple;
+	bh=kO8h2yh/96qdBvgnAEctiSIaSRu5H1VvkCa+5VUd7og=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=czl8jJ845fmz/kNqa/pbTka2HBKFNjtjQvoYkqrnQCD1rnBbVBM8sG2iExSUNH+91/xaoWaed526E7OYhy6Q1dvFhnR/zFfXirmkRgJRClEsLoxvpnbjXOxRjxNVz2Qfx5B/kFi18I42bxolJppiu7ZR9z6D+u8f8NQdiQww9G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+oAieAA; arc=none smtp.client-ip=209.85.216.50
+	 To:Cc:Content-Type; b=nfITi+mEWI8BzR5coKJ6sevBbxEtuGTsJvAJxCQoqPZ77V4v8wrHLTxjZ4ksyg754t6x1REUoAdz9tmBptw6t1arAj7GfF/5OqxmUuPFaibWFZydYrci1N8ooAywpN8H1OC56I/FPTlyiYtStOG1Ct5LN4GAhStTkhshfjdRxrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8diY9L5; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+oAieAA"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2e078d28fe9so1851982a91.2;
-        Fri, 04 Oct 2024 13:04:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8diY9L5"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20b90ab6c19so27521245ad.0;
+        Fri, 04 Oct 2024 13:18:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728072273; x=1728677073; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728073139; x=1728677939; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cCdDTcUm4bFPThg2lM08rNCWleBMqiey7gEaVCUSrxI=;
-        b=h+oAieAATR88aEyk8Fv2uGuwnkrkXOVAVFwBCVYLNuc0Qe2EnlZvDJvdMASRo3zwlH
-         Yml1aODVAK0IdeGaY14J2iywMRXoRFK5ACrWhnXYoU1RP9aMIRgcqc7uiV/cY6XJm0ZD
-         K8zqdml3YZp01u12xtSAo5ogPWwYjiQtmDydIwLfkB4Z+tDXRoET9/7pPy81PkBOS0XW
-         0OTgpO13WeJ4SyVU2aM93movsFbgo/RHf7J0oMckatSE4Q+1pADyM7/qDScPHfJWMDqT
-         dMpPZ9i7INa53dLDA8XZpKOgIaiLNW/jn1XecrwqbP5xtc7Kn5folBTHIYaKTK3fqm6N
-         qJKQ==
+        bh=2FLheXzq/15q2f96LLXhH5P16czCOjKPDgTOb73CTE8=;
+        b=G8diY9L55L5b6FrbSACK1iIu9gZTCHol9Z88vB5eKnn/ivwxa4er6d//MyU/Veg+4X
+         TExezbJFz8UuQ177LcIiVM76gXNp5E/QIOfszlRr7DVOt3qUbqBUmVXqo/YCb4LojN86
+         lLLCxqzejAOvq/4MS67bYloV5UbrRa1KSTkDcS9WVebZ4+InAIii/4H6y05MkQ19LEKX
+         95aW4grZ/cPivPD3tln58tFeDegsL4GzK5qxIgU++naSfOXnwcvns7dOAfUbKthzbIWG
+         jXn/YiPAMTBC4UKZ7ELZtL6VGK4NWfO6phip7bFTq4JKzDUBXnYS4fQ/5v+pDeOg9M3A
+         TmbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728072273; x=1728677073;
+        d=1e100.net; s=20230601; t=1728073139; x=1728677939;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cCdDTcUm4bFPThg2lM08rNCWleBMqiey7gEaVCUSrxI=;
-        b=jqxX9QzMim6wjLwmWxjzcx5kQ6iu7HKwcXH6ZB28bj3uPUAOKA3aAThpYhnrse8aRt
-         DsdOgJ6mRdI9T9wUAWU4CGF4MBVBITUbr1BT7Kpwy/9fYD9Vz3qAUwlIsuEC4fJyOHM0
-         HXerR8J5aQGeHyKjCzRpm46GwlfMQvXlXdvj5m4EU+sMw2e/o+yi+R7Z7yGiJ9PNeFoI
-         BCUedbm5E0nVILaVvX6eWgnyGbnlNOiSkjXmow5ww5x2FoGHKEsOsK3ZHliIXTS45pve
-         mqpMLHd8UCUUk+81LCV05SLYIvGIwNiFexm+yovDMLUdUkLo6PWlpgLJQwN8Xhyy4qQH
-         9lng==
-X-Forwarded-Encrypted: i=1; AJvYcCUapnnpWxdxaPc4euxLU/1jslYSpvWQPyoE1QyV25+WO29W6q0WPkaMeRUi8vV5Qs0bBkSoC4cCkdidSkHl@vger.kernel.org, AJvYcCUzQhWVII4C1maCgD195aI/zm+AYsfkX0IHR1cG+7Z/pv/BCCmRM2dpc6/f8KyDwnn+w7S4DtwJK7yE6oyOuTCEFJZf@vger.kernel.org, AJvYcCVD7/G6tTlR0V5YTuYF+lIeYiyrfZMSJKsPKy91u7mBRVIZwwwNxJDb+AWeSCLQqt5T39I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0CDJxYxf72HqZkXqRWIsr4GMiw+W7rLguGxZkgnyUg5be3C3U
-	S3Yi8xaU3SQ7HiAnanugtXb8FckuO+TbGVjTGGXKEfhSq40BM/PAoZ+A78oAEI17XRgz4ppR/oc
-	4ZCejahLeVQsPsZmOxZ/2LL3Hxuc=
-X-Google-Smtp-Source: AGHT+IFQaZ6vae6vffxFo9uyG8YGJ9VcxjSrqhSww64Y2yjTDJ/Nrff6qKFiOLgb8v51yyr+nVi0h1iA86TuS8otjmg=
-X-Received: by 2002:a17:90b:3889:b0:2cb:4c25:f941 with SMTP id
- 98e67ed59e1d1-2e1e6264456mr4150777a91.17.1728072273163; Fri, 04 Oct 2024
- 13:04:33 -0700 (PDT)
+        bh=2FLheXzq/15q2f96LLXhH5P16czCOjKPDgTOb73CTE8=;
+        b=SXv+9qLxdti201G21nqTCybXWDkXeSasedgHJZEXRAuyIOIZwEUrMYJepqL9EQMg/A
+         Sp13R3z1MzLYrNTWaHt6X0JWiC3mesosSFzNJbS9Vp3D5hTPkd5WlmXoYyCZhuW/bohK
+         cArlWoLx27bCu5aE8aWHcl4z7XVXiCXpnASZFBeddYaTqP6TEUM6vUI+EYy6ZeKaaFa4
+         wk9QeSzAeWgsBQRFo+i8chpgwEbpI/CqbqFEkwQ20maTin+f+6sXbn/4tbY83LF+QOnZ
+         Fz7i/uG43ceIVrlAU26maK7WhqMw4yahDCKI5ZRIxaovYdYR3rtWuWrzE6SKzffw4sxH
+         xX1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsDQ16n085wUoLT3pqQpmuiYciEdOxh96gBwrzBACeveM2xJ5eRaAYC9tPf+oEUD1BoFsWedLa3alELXYX@vger.kernel.org, AJvYcCW4UlaeGKTNRP4LxQOL0LmcVqh46iSGseYnew/64Aw0BtMTAFY1zu/fKp8v0DcFrIWpX3c=@vger.kernel.org, AJvYcCWNIZl4zFpl9eY0lYCO4iDChgmoomX+kW2Mcr5KahDZQ32j1/fVra4dOHpu+dN2iHnq5Xe39XMajDkVNDChPwzmOSCP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxvs1e8wCMgw3mUxguMPfO5qb36daPeE0s32UEKqOxOSPkQpbM
+	fNIBLZv0DJmVF7HzWIWSTHDuAhqZstiAdiXk9OlQTY84DGw1qQdpmxV3/387sO+QHxTbaG508EE
+	VVqE5iz9DKfEzO3HByW/n7j2MZtI=
+X-Google-Smtp-Source: AGHT+IFosWxYbZhnzaNUh9VcJNKxeVjZan6qDfHnjL8KTgP25O9RmU3CjTba4VmgHvpvWOfuS33JHNtRt6/gz3P+yVo=
+X-Received: by 2002:a17:902:ea11:b0:202:28b1:9f34 with SMTP id
+ d9443c01a7336-20bff04acbemr40906135ad.56.1728073139155; Fri, 04 Oct 2024
+ 13:18:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
- <20241003151638.1608537-3-mathieu.desnoyers@efficios.com> <20241003182304.2b04b74a@gandalf.local.home>
- <6dc21f67-52e1-4ed5-af7f-f047c3c22c11@efficios.com> <20241003210403.71d4aa67@gandalf.local.home>
- <90ca2fee-cdfb-4d48-ab9e-57d8d2b8b8d8@efficios.com> <20241004092619.0be53f90@gandalf.local.home>
- <e547819a-7993-4c80-b358-6719ca420cf8@efficios.com> <20241004105211.13ea45da@gandalf.local.home>
- <4f1046e7-7b62-4db3-93d4-815dc8c27185@efficios.com>
-In-Reply-To: <4f1046e7-7b62-4db3-93d4-815dc8c27185@efficios.com>
+References: <20240909224903.3498207-1-andrii@kernel.org> <20240909224903.3498207-2-andrii@kernel.org>
+ <20240915144910.GA27726@redhat.com> <CAEf4BzZ7=NFAUB_GzAt1SCO=LnCFSbqX_NThtjrs8EfkjBUr7A@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ7=NFAUB_GzAt1SCO=LnCFSbqX_NThtjrs8EfkjBUr7A@mail.gmail.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 4 Oct 2024 13:04:21 -0700
-Message-ID: <CAEf4BzYHXz0UFOOnkAeKDK-yt59cwz-66_4wL-bjmv3zxryftg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/8] tracing/ftrace: guard syscall probe with preempt_notrace
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	bpf@vger.kernel.org, Joel Fernandes <joel@joelfernandes.org>, 
-	linux-trace-kernel@vger.kernel.org, Michael Jeanson <mjeanson@efficios.com>
+Date: Fri, 4 Oct 2024 13:18:46 -0700
+Message-ID: <CAEf4BzYO0i0f_pui6PwAfEHCVwaP0yR9BDY8-+EfvgbPjFXxbg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] uprobes: allow put_uprobe() from non-sleepable
+ softirq context
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 4, 2024 at 7:53=E2=80=AFAM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On Tue, Sep 17, 2024 at 1:19=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On 2024-10-04 16:52, Steven Rostedt wrote:
-> > On Fri, 4 Oct 2024 10:19:36 -0400
-> > Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> On Sun, Sep 15, 2024 at 4:49=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> w=
+rote:
 > >
-> >> The eBPF people want to leverage this. When I last discussed this with
-> >> eBPF maintainers, they were open to adapt eBPF after this infrastructu=
-re
-> >> series is merged. Based on this eBPF attempt from 2022:
-> >>
-> >> https://lore.kernel.org/lkml/c323bce9-a04e-b1c3-580a-783fde259d60@fb.c=
-om/
+> > On 09/09, Andrii Nakryiko wrote:
+> > >
+> > > Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), whi=
+ch
+> > > makes it unsuitable to be called from more restricted context like so=
+ftirq.
+> > >
+> > > Let's make put_uprobe() agnostic to the context in which it is called=
+,
+> > > and use work queue to defer the mutex-protected clean up steps.
 > >
-> > Sorry, I wasn't part of that discussion.
+> > ...
 > >
-> >>
-> >> The sframe code is just getting in shape (2024), but is far from being=
- ready.
-> >>
-> >> Everyone appears to be waiting for this infrastructure work to go in
-> >> before they can build on top. Once this infrastructure is available,
-> >> multiple groups can start working on introducing use of this into thei=
-r
-> >> own code in parallel.
-> >>
-> >> Four years into this effort, and this is the first time we're told we =
-need
-> >> to adapt in-tree tracers to handle the page faults before this can go =
-in.
-> >>
-> >> Could you please stop moving the goal posts ?
+> > > +static void uprobe_free_deferred(struct work_struct *work)
+> > > +{
+> > > +     struct uprobe *uprobe =3D container_of(work, struct uprobe, wor=
+k);
+> > > +
+> > > +     /*
+> > > +      * If application munmap(exec_vma) before uprobe_unregister()
+> > > +      * gets called, we don't get a chance to remove uprobe from
+> > > +      * delayed_uprobe_list from remove_breakpoint(). Do it here.
+> > > +      */
+> > > +     mutex_lock(&delayed_uprobe_lock);
+> > > +     delayed_uprobe_remove(uprobe, NULL);
+> > > +     mutex_unlock(&delayed_uprobe_lock);
+> > > +
+> > > +     kfree(uprobe);
+> > > +}
+> > > +
+> > >  static void uprobe_free_rcu(struct rcu_head *rcu)
+> > >  {
+> > >       struct uprobe *uprobe =3D container_of(rcu, struct uprobe, rcu)=
+;
+> > >
+> > > -     kfree(uprobe);
+> > > +     INIT_WORK(&uprobe->work, uprobe_free_deferred);
+> > > +     schedule_work(&uprobe->work);
+> > >  }
 > >
-> > I don't think I'm moving the goal posts. I was mentioning to show an
-> > in-tree user. If BPF wants this, I'm all for it. The only thing I saw w=
-as a
-> > generalization in the cover letter about perf, bpf and ftrace using
-> > faultible tracepoints. I just wanted to see a path for that happening.
+> > This is still wrong afaics...
+> >
+> > If put_uprobe() can be called from softirq (after the next patch), then
+> > put_uprobe() and all other users of uprobes_treelock should use
+> > write_lock_bh/read_lock_bh to avoid the deadlock.
 >
-> AFAIU eBPF folks are very eager to start making use of this, so we won't
-> have to wait long.
+> Ok, I see the problem, that's unfortunate.
+>
+> I see three ways to handle that:
+>
+> 1) keep put_uprobe() as is, and instead do schedule_work() from the
+> timer thread to postpone put_uprobe(). (but I'm not a big fan of this)
+> 2) move uprobes_treelock part of put_uprobe() into rcu callback, I
+> think it has no bearing on correctness, uprobe_is_active() is there
+> already to handle races between putting uprobe and removing it from
+> uprobes_tree (I prefer this one over #1 )
+> 3) you might like this the most ;) I think I can simplify
+> hprobes_expire() from patch #2 to not need put_uprobe() at all, if I
+> protect uprobe lifetime with non-sleepable
+> rcu_read_lock()/rcu_read_unlock() and perform try_get_uprobe() as the
+> very last step after cmpxchg() succeeded.
+>
+> I'm leaning towards #3, but #2 seems fine to me as well.
 
-I already gave my ack on BPF parts of this patch set, but I'll
-elaborate a bit more here for the record. There seems to be two things
-that's been discussed.
+Ok, so just a short update. I don't think #3 works, I do need
+try_get_uprobe() before I know for sure that cmpxchg() succeeds. Which
+means I'd need a compensating put_uprobe() if cmpxchg() fails. So for
+put_uprobe(), I just made it do all the locking in deferred work
+callback (which is #2 above), which I think resolved the issue you
+pointed out with potential deadlock and removes any limitations on
+put_uprobe().
 
-First, preempt_disable() vs migrate_disable(). We only need the
-latter, but the former just preserves current behavior and I think
-it's fine, we can follow up with BPF-specific bits later to optimize
-and clean this up further. No big deal.
-
-Second, whether BPF can utilize sleepable (faultable) tracepoints
-right now with these changes. No, we need a bit more work (again, in
-BPF specific parts) to allow faultable tracepoint attachment for BPF
-programs. But it's a bit nuanced piece of code to get everything
-right, and it's best done by someone more familiar with BPF internals.
-So I wouldn't expect Mathieu to do this either.
-
-So, tl;dr, I think patches are fine as-is (from BPF perspective), and
-we'd like to see them applied and get to bpf-next for further
-development on top of that.
+Also, I rewrote the hprobe_consume() and hprobe_expire() in terms of
+an explicit state machine with 4 possible states (LEASED, STABLE,
+GONE, CONSUMED), which I think makes the logic a bit more
+straightforward to follow. Hopefully that will make the change more
+palatable for you. I'm probably going to post patches next week,
+though.
 
 >
-> Thanks,
+> >
+> > To be honest... I simply can't force myself to even try to read 2/3 ;) =
+I'll
+> > try to do this later, but I am sure I will never like it, sorry.
 >
-> Mathieu
+> This might sound rude, but the goal here is not to make you like it :)
+> The goal is to improve performance with minimal complexity. And I'm
+> very open to any alternative proposals as to how to make uretprobes
+> RCU-protected to avoid refcounting in the hot path.
 >
-> --
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> https://www.efficios.com
+> I think #3 proposal above will make it a bit more palatable (but there
+> is still locklessness, cmpxchg, etc, I see no way around that,
+> unfortunately).
 >
+> >
+> > Oleg.
+> >
