@@ -1,130 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB761BC23;
-	Fri,  4 Oct 2024 14:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB61216A3F;
+	Fri,  4 Oct 2024 14:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728051456; cv=none; b=RlREb2f2eAS662A5vmjxpmiZa0e8CTS/6EAE6hTHXt1WCQl45r4GnyKZs6xt5T/quzdtQiIJ2EAbvtTdMfECX8/XODkraL4CWMmJPaGFx4P/PCv9RO44J9QncpckhTip/l4BQ4VZHrbR9fbXyVY7MeHiOWBj9+fXvyfmJ3fLxJY=
+	t=1728051669; cv=none; b=KuFe0c7giAvPb3NMsbd2iLygfm0l31pwShntjgHGWBpMaDc2dFMfWCXykABQ+IAU4LzSNvZcm5C60UHUAb7XzJbkTRgxoUBXpcL7XL71dU0C9LLrRgio66Mp9T4DOw9ku/j5FzjoR1JYPJlYPfYai8OQ3Lrx8722MwIIIGujUvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728051456; c=relaxed/simple;
-	bh=X4xq/NbuSXO7BJmTN7sQjUOwsklgqQwxSaneSZECvQ0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=k4uVaZToPmNade46WoothUNqjEUTxl2NcW1IOIyRSuMhl7o1Ong/Sdx55Ih6U8YLyaBVZFwGX+PWJ+N3HEbvSkGMXsTpqYhunviW3ginix6guEtV8Boib37mk3C9k8LtCV1pbG1y5Nie0zIpvj1XFTpGDdDwH/UXwMuJ9XY6zyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tf+rHoSQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728051669; c=relaxed/simple;
+	bh=xGZVsNftekr8WT4WvGI2SOfuewhewH/sye43N5K4ri8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JfKgpBDvriFCRyw/vuwVwtXImToj9KnGtsr/QGCBcMO/QpQh0eg8OehlJxfHu7hk6sI8ptgo1QtPS/XVuN9v8ycgCm695P5uZctrjIqX6z52XnDuJ5f8XMlX/sLxiqEANUr5vrGfxeMwvtcJF35bIQj5a034qLfTjKr8cwPdbHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=AcM0vt7T; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tf+rHoSQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CC7FC4CEC6;
-	Fri,  4 Oct 2024 14:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728051455;
-	bh=X4xq/NbuSXO7BJmTN7sQjUOwsklgqQwxSaneSZECvQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Tf+rHoSQ/tklcnMEZ3dJWLvQDwN4ADFiH2kLIMj1u8snJ4o8acLBlkjRuu+e1qna1
-	 wkarJWHxyfmVtbjasS0QpsTjFgU3yxRot/a4gNbZuDAwt+MDMWqIW08Q3FVd+59yD0
-	 t4lcXsXhaMCpQZI6QfKU/konm786J8y0qH/sB5S88zcaaGYqyLE9wXHQG/tmMksuMJ
-	 NYack17GuzKBSifVhXIQq0YsivHJJDm6yqZ9aYBSSYU2vguYc5B3i3CzCHWWxKU85X
-	 NSXF/OTniQ5vf0RnTj9uv6rcoMRykxVbqah6QFi8GWnMwaiwk2aC0JNxs1apS85zPU
-	 NCI626j645Asw==
-Date: Fri, 4 Oct 2024 23:17:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tatsuya S <tatsuya.s2862@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ftrace: Hide a extra entry in stack trace
-Message-Id: <20241004231732.247301975e1e8f1511b50c6a@kernel.org>
-In-Reply-To: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
-References: <20241002051347.4239-3-tatsuya.s2862@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="AcM0vt7T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1728051660;
+	bh=xGZVsNftekr8WT4WvGI2SOfuewhewH/sye43N5K4ri8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AcM0vt7TQlGl3UU5KbIG3MnQA3xFuF+AgWZipNjvjNi6ZNzclsgohCdzD9K+wNpgx
+	 Y0Qa7Q2K3FEpu79MZ2GSxyiLp6oiDWshkW1aqj8iXagrfJHBnv0Vp0p1Vm3F5XaaAG
+	 L+bHEBxEKaTiByL4vabMl6sobp4+Tpm6YZuWYhqYfRdLHPQ8ArHLmBGWiGl/rOrkzs
+	 OwnzsmAPkCkO4hCtimLdvFPKjyTRXlLFPO0g4vwCCEl5h5pIxSrAl4IJalGNdjjeu5
+	 V3LnfsTid1/O3sJxnoWEHdll5HdiwdDYyPHOqj3pDmnFVe8AS13acA7ctXsRvMELdy
+	 vHsJcipyVUL7A==
+Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XKrLh0NN2zLDZ;
+	Fri,  4 Oct 2024 10:21:00 -0400 (EDT)
+Message-ID: <db35f840-1c90-406a-906f-c26aca29be84@efficios.com>
+Date: Fri, 4 Oct 2024 10:18:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/8] tracing/ftrace: guard syscall probe with
+ preempt_notrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
+ Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+ Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
+ Michael Jeanson <mjeanson@efficios.com>
+References: <20241003151638.1608537-1-mathieu.desnoyers@efficios.com>
+ <20241003151638.1608537-3-mathieu.desnoyers@efficios.com>
+ <20241003182304.2b04b74a@gandalf.local.home>
+ <6dc21f67-52e1-4ed5-af7f-f047c3c22c11@efficios.com>
+ <20241003210403.71d4aa67@gandalf.local.home>
+ <90ca2fee-cdfb-4d48-ab9e-57d8d2b8b8d8@efficios.com>
+ <20241004092619.0be53f90@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20241004092619.0be53f90@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed,  2 Oct 2024 14:13:48 +0900
-Tatsuya S <tatsuya.s2862@gmail.com> wrote:
-
-> A extra entry is shown on stack trace(CONFIG_UNWINDER_ORC=y).
+On 2024-10-04 15:26, Steven Rostedt wrote:
+> On Thu, 3 Oct 2024 21:33:16 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> [003] .....   110.171589: vfs_write <-__x64_sys_write
-> [003] .....   110.171600: <stack trace>
-> => XXXXXXXXX (Wrong function name)
-> => vfs_write
-> => ksys_write
-> => do_syscall_64
-> => entry_SYSCALL_64_after_hwframe
+>> On 2024-10-04 03:04, Steven Rostedt wrote:
+>>> On Thu, 3 Oct 2024 20:26:29 -0400
+>>> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+>>>
+>>>    
+>>>> static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+>>>> {
+>>>>            struct trace_array *tr = data;
+>>>>            struct trace_event_file *trace_file;
+>>>>            struct syscall_trace_enter *entry;
+>>>>            struct syscall_metadata *sys_data;
+>>>>            struct trace_event_buffer fbuffer;
+>>>>            unsigned long args[6];
+>>>>            int syscall_nr;
+>>>>            int size;
+>>>>
+>>>>            syscall_nr = trace_get_syscall_nr(current, regs);
+>>>>            if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+>>>>                    return;
+>>>>
+>>>>            /* Here we're inside tp handler's rcu_read_lock_sched (__DO_TRACE) */
+>>>>            trace_file = rcu_dereference_sched(tr->enter_syscall_files[syscall_nr]);
+>>>>
+>>>> ^^^^ this function explicitly states that preempt needs to be disabled by
+>>>> tracepoints.
+>>>
+>>> Ah, I should have known it was the syscall portion. I don't care for this
+>>> hidden dependency. I rather add a preempt disable here and not expect it to
+>>> be disabled when called.
+>>
+>> Which is exactly what this patch is doing.
 > 
-> To resolve this, increment skip for __ftrace_trace_stack() in
-> function_stack_trace_call().
-> The reason why skip is incremented for __ftrace_trace_stack()
-> is because __ftrace_trace_stack() in stack trace is the only function
-> that wasn't skipped from anywhere.
+> I was thinking of putting the protection in the function and not the macro.
 
-Hi Tatsuya,
+I'm confused by your comment. The protection is added to the function here:
 
-Can you focus on making test cases which checks what combinations caused
-this wrong values and what does not? Also it should be checked with
-various kconfigs. That is more valuable than making add-hoc fixes.
+diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
+index 67ac5366f724..ab4db8c23f36 100644
+--- a/kernel/trace/trace_syscalls.c
++++ b/kernel/trace/trace_syscalls.c
+@@ -299,6 +299,12 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
+         int syscall_nr;
+         int size;
+  
++       /*
++        * Syscall probe called with preemption enabled, but the ring
++        * buffer and per-cpu data require preemption to be disabled.
++        */
++       guard(preempt_notrace)();
++
+         syscall_nr = trace_get_syscall_nr(current, regs);
+         if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+                 return;
+@@ -338,6 +344,12 @@ static void ftrace_syscall_exit(void *data, struct pt_regs *regs, long ret)
+         struct trace_event_buffer fbuffer;
+         int syscall_nr;
+  
++       /*
++        * Syscall probe called with preemption enabled, but the ring
++        * buffer and per-cpu data require preemption to be disabled.
++        */
++       guard(preempt_notrace)();
++
+         syscall_nr = trace_get_syscall_nr(current, regs);
+         if (syscall_nr < 0 || syscall_nr >= NR_syscalls)
+                 return;
 
-Thank you,
+(I'll answer to the rest of your message in a separate email)
 
-> 
-> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
-> ---
-> V2 -> V3: Changed the place to increment skip number
-> V1 -> V2: Fixed redundant code
-> 
->  kernel/trace/trace_functions.c | 24 +++++++++++-------------
->  1 file changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-> index 3b0cea37e029..27089d8e65d4 100644
-> --- a/kernel/trace/trace_functions.c
-> +++ b/kernel/trace/trace_functions.c
-> @@ -203,23 +203,21 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
->  	ftrace_test_recursion_unlock(bit);
->  }
->  
-> -#ifdef CONFIG_UNWINDER_ORC
-> -/*
-> - * Skip 2:
-> - *
-> - *   function_stack_trace_call()
-> - *   ftrace_call()
-> - */
-> -#define STACK_SKIP 2
-> -#else
->  /*
->   * Skip 3:
-> - *   __trace_stack()
-> - *   function_stack_trace_call()
-> - *   ftrace_call()
-> + *   Skipped functions if CONFIG_UNWINDER_ORC is defined
-> + *
-> + *     __ftrace_trace_stack()
-> + *     function_stack_trace_call()
-> + *     ftrace_call()
-> + *
-> + *   Otherwise
-> + *
-> + *     __trace_stack()
-> + *     function_stack_trace_call()
-> + *     ftrace_call()
->   */
->  #define STACK_SKIP 3
-> -#endif
->  
->  static void
->  function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
-> -- 
-> 2.46.2
-> 
+Thanks,
 
+Mathieu
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
