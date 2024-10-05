@@ -1,136 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-43167.protonmail.ch (mail-43167.protonmail.ch [185.70.43.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E19915AF6;
-	Sat,  5 Oct 2024 14:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DA21B813
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  5 Oct 2024 17:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728137606; cv=none; b=XHX3kfWsqhjxBpU/u6rEr31DDO38qZ3VgH2ylrqrwnYynQuXRkCqo1IdsRJb8/yZF5Msb+mZC8FVvLatZEq/8pEz7D1udhxr7iauUkFeKI75COXABAooqA2K4V9jn/Ftw8iMwgR+UMItxVFlZZSZ7elniRIrgfjCyMMO5KD0/0Q=
+	t=1728148852; cv=none; b=nPJnsRNlF93VNViXVSMmw4ecB38lNOwtjIGzK1RaLmiXS81I7XkuRT0I0QuysoLctgXP81hXh4CQThz962ewqH5SbLkTd6yiFlI9tghZj7UVUZwNRC5GiQsqXU5CqhJIDQ4JmYIyBHQdxHOl2LDWaR58k71ULOfkeet9075ZpBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728137606; c=relaxed/simple;
-	bh=k8cdQUvfCIdUlb3RlxUUrYdbkkPaLnrGvqHOFOXBcjU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mEw1UKzWBJqwkiw/7aY/pu7EAR4mJIWabchKrfmUBq/XTuTe5YFlD48N43OghLPRCtapWdIWw1cqFXC0iox4i70WK/Wrsdn5VRv5E8G6tpk6X9AZftyqQQrkjiAlPaWcuJVR/+WjqVeLtihtfUqHEeFd5mWsv8fxuT0X3yDw4ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255B4C4CEC2;
-	Sat,  5 Oct 2024 14:13:24 +0000 (UTC)
-Date: Sat, 5 Oct 2024 10:13:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Xie <jeff.xie@linux.dev>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehuan09@gmail.com, dolinux.peng@gmail.com, chensong_2000@189.cn
-Subject: Re: [PATCH v3] ftrace: Get the true parent ip for function tracer
-Message-ID: <20241005101320.766c1100@rorschach.local.home>
-In-Reply-To: <20240910133620.19711-1-jeff.xie@linux.dev>
-References: <20240910133620.19711-1-jeff.xie@linux.dev>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728148852; c=relaxed/simple;
+	bh=smA2hdV1RlzKlLoJwEo3P/8mGiVh6ZQ0EM4xV42YRNE=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=e8ZsxlBi/kUvpdvMCr1uV4T/M0+RrYz2P1bu70Wgm0OckzqIj+I0UiOmpWnGaFGg1727acBtb5DPmd0J5XBnTJP9rnfdbE+ERMxUXHiYFSPu6wAkKR9S9B7B6MZyLGbftFljf0L1wFlJeQ3ZjHBznlGlLh4Kd4LCl3jmSRcTbEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=ywkBnj5/; arc=none smtp.client-ip=185.70.43.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ywkBnj5/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1728148843; x=1728408043;
+	bh=BJNISnU/2z367aZjwR4dNZ7EAu+af/4MFDjU5kVH32w=;
+	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=ywkBnj5/KENKo5MailajfS+cU/hkVrzrJuV46oL7XzVg7bi4Me0a5Kyy37Esf/gIj
+	 qL81X+ff8pX1ZJ/gA/807Gv8z+cWr37bQVNBnbq5GkNFF5ZGb7pWWbSogGR2igA9Or
+	 PswO9GiZHeUyMAR4H5TzlBK1ksIRVMAHdIUR+pDuj5c/jjuCEC8KerTTkFumULonaG
+	 SIAsor7hVsHaNWvfWizfgZjryFGz/lyKw8JHSEH58SvPoA58UaE7NrYTrhP/IVJr4i
+	 PCpaxofCNZptkLO+8WhWMyuvIwqKGVX0nEgOmCGBQ8tJKrAh3PYHk1lyum1U9nqbOF
+	 HDfmhhhS9iHgg==
+Date: Sat, 05 Oct 2024 17:20:37 +0000
+To: "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
+From: furkanonder <furkanonder@protonmail.com>
+Subject: [PATCH] tools/rtla: Enhance Error Handling and Readability for timerlat
+Message-ID: <HAxOlk1o3vhrAUlyVMtrSLGP39PFS1TLfGT9C9pB6cXgQpGB_fiNeGSuWS_4-4zeMxunluuBnkc4Y-k_c0qrlstVpYQvgfkJN2p_VnfMO-k=@protonmail.com>
+Feedback-ID: 14203677:user:proton
+X-Pm-Message-ID: 82a949d8e13af8bcadd8a7b7559cc928331234eb
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 10 Sep 2024 21:36:20 +0800
-Jeff Xie <jeff.xie@linux.dev> wrote:
+The enhancements made to timerlat_load.py focus on improving error
+handling, readability, and overall user experience. These changes aim to
+make the script more robust and easier to maintain while providing clearer
+feedback to users. Key modifications include:
 
-> When using both function tracer and function graph simultaneously,
-> it is found that function tracer sometimes captures a fake parent ip
-> (return_to_handler) instead of the true parent ip.
-> 
-> This issue is easy to reproduce. Below are my reproduction steps:
-> 
-> jeff-labs:~/bin # ./trace-net.sh
+Type Declaration in Argument Parsing
+Added type declarations for command-line arguments in the argument parser.
+This removes the need for manual type checks later in the code, improving
+clarity and safety.
 
-I applied this and it failed one of my testes:
+String Formatting
+Replaced string concatenation with an f-string to enhancing readability
+and conciseness.
 
-On x86 32 bit:
+Enhanced Exception Handling and Consistent Error Reporting
+Specific exceptions are now caught and printed with clearer messages,
+providing context for errors when opening file descriptors. Added
+exception handling for the data file descriptor opening to ensure
+uniformity across the script.
 
-[  668.043429] BUG: kernel NULL pointer dereference, address: 0000003c
-[  668.045840] #PF: supervisor read access in kernel mode
-[  668.047869] #PF: error_code(0x0000) - not-present page
-[  668.049867] *pdpt = 000000000afad001 *pde = 0000000000000000 
-[  668.052481] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-[  668.054408] CPU: 3 UID: 0 PID: 4347 Comm: cat Not tainted 6.12.0-rc1-test-00008-gc274c40c37e8-dirty #444
-[  668.057679] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  668.060944] EIP: function_trace_call+0x14b/0x1a0
-[  668.062824] Code: ff b8 10 00 00 00 e9 56 ff ff ff 8d 74 26 00 e8 1b c7 c0 00 eb a1 2e 8d b4 26 00 00 00 00 90 8b 45 e0 8d 55 ec b9 98 9e 10 c7 <ff> 70 3c 89 f8 e8 eb 0a 01 00 89 45 e8 5a e9 47 ff ff ff 8b 87 ac
-[  668.068726] EAX: 00000000 EBX: c1b02000 ECX: c7109e98 EDX: cab21e50
-[  668.071076] ESI: fffffff7 EDI: ca828000 EBP: cab21e64 ESP: cab21e44
-[  668.073425] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010246
-[  668.075938] CR0: 80050033 CR2: 0000003c CR3: 091a0000 CR4: 000006f0
-[  668.078331] Call Trace:
-[  668.079687]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.081541]  ? __die_body.cold+0x14/0x1b
-[  668.083440]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.085347]  ? __die+0x21/0x28
-[  668.087062]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.088944]  ? page_fault_oops+0x68/0x120
-[  668.091245]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.093208]  ? kernelmode_fixup_or_oops.constprop.0+0x58/0x70
-[  668.095669]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.097574]  ? __bad_area_nosemaphore.constprop.0+0x107/0x130
-[  668.101278]  ? ftrace_graph_caller+0x18/0x1c
-[  668.103358]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.105272]  ? bad_area_nosemaphore+0xf/0x20
-[  668.107276]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.109279]  ? do_user_addr_fault+0x20b/0x3d0
-[  668.111518]  ? exc_page_fault+0x5b/0x240
-[  668.113474]  ? pvclock_clocksource_read_nowd+0x110/0x110
-[  668.115738]  ? handle_exception+0x133/0x133
-[  668.117689]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.119827]  ? ftrace_graph_set_hash+0xbb/0x1c0
-[  668.121955]  ? pvclock_clocksource_read_nowd+0x110/0x110
-[  668.124258]  ? function_trace_call+0x14b/0x1a0
-[  668.126456]  ? pvclock_clocksource_read_nowd+0x110/0x110
-[  668.128773]  ? function_trace_call+0x14b/0x1a0
-[  668.130909]  ? sched_tick+0x370/0x370
-[  668.134063]  ? ftrace_graph_caller+0x1c/0x1c
-[  668.136213]  ? ftrace_stacktrace_count+0xa0/0xa0
+  Before:
+     $ sudo python timerlat_load.py 122
+     Error setting affinity
+  After:
+     $ sudo python timerlat_load.py 122
+     Error setting affinity: [Errno 22] Invalid argument
 
-The crash happened here:
+  Before:
+     $ sudo python timerlat_load.py 1 -p 950
+     Error setting priority
+  After:
+     $ sudo python timerlat_load.py 1 -p 950
+     Error setting priority: [Errno 22] Invalid argument
 
-static __always_inline unsigned long
-function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-{
-        unsigned long true_parent_ip;
-        int idx = 0;
+  Before:
+     $ python timerlat_load.py 1
+     Error opening timerlat fd, did you run timerlat -U?
+  After:
+     $ python timerlat_load.py 1
+     Permission denied. Please check your access rights.
 
-        true_parent_ip = parent_ip;
-        if (unlikely(parent_ip == (unsigned long)&return_to_handler))
-                true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,  <<<----- CRASH
-                                (unsigned long *)fregs->regs.sp);
-        return true_parent_ip;
-}
+Changes for the read Infinite Loop
+The original generic exception clause has been replaced with more
+specific exception types to provide clearer feedback on errors.
 
-It appears that on some archs (x86 32 bit) the function tracer can be
-called when "current" is not set up yet, and can crash when accessing it.
+Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
+---
+ tools/tracing/rtla/sample/timerlat_load.py | 56 +++++++++++++++++++++++---=
+-----------------
+ 1 file changed, 30 insertions(+), 26 deletions(-)
 
-So perhaps we need to add:
+diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtl=
+a/sample/timerlat_load.py
+index 8cc5eb2d2e69..a819c3588073 100644
+--- a/tools/tracing/rtla/sample/timerlat_load.py
++++ b/tools/tracing/rtla/sample/timerlat_load.py
+@@ -25,50 +25,54 @@ import sys
+ import os
 
-#ifdef CONFIG_ARCH_WANTS_NO_INSTR
-static __always_inline unsigned long
-function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-{
-        unsigned long true_parent_ip;
-        int idx = 0;
+ parser =3D argparse.ArgumentParser(description=3D'user-space timerlat thre=
+ad in Python')
+-parser.add_argument("cpu", help=3D'CPU to run timerlat thread')
+-parser.add_argument("-p", "--prio", help=3D'FIFO priority')
+-
++parser.add_argument("cpu", type=3Dint, help=3D'CPU to run timerlat thread'=
+)
++parser.add_argument("-p", "--prio", type=3Dint, help=3D'FIFO priority')
+ args =3D parser.parse_args()
 
-        true_parent_ip = parent_ip;
-        if (unlikely(parent_ip == (unsigned long)&return_to_handler))
-                true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,  <<<----- CRASH
-                                (unsigned long *)fregs->regs.sp);
-        return true_parent_ip;
-}
-#else
-# define function_get_true_parent_ip(parent_ip, fregs)  parent_ip
-#endif
+ try:
+-    affinity_mask =3D { int(args.cpu) }
+-except:
+-    print("Invalid cpu: " + args.cpu)
+-    exit(1)
+-
+-try:
+-    os.sched_setaffinity(0, affinity_mask);
+-except:
+-    print("Error setting affinity")
+-    exit(1)
++    affinity_mask =3D {args.cpu}
++    os.sched_setaffinity(0, affinity_mask)
++except Exception as e:
++    print(f"Error setting affinity: {e}")
++    sys.exit(1)
 
-That is, if the arch has noinstr implemented, it should always be safe
-to access current, but if not, then there's no guarantee.
+-if (args.prio):
++if args.prio:
+     try:
+-        param =3D os.sched_param(int(args.prio))
++        param =3D os.sched_param(args.prio)
+         os.sched_setscheduler(0, os.SCHED_FIFO, param)
+-    except:
+-        print("Error setting priority")
+-        exit(1)
++    except Exception as e:
++        print(f"Error setting priority: {e}")
++        sys.exit(1)
 
-?
+ try:
+-    timerlat_path =3D "/sys/kernel/tracing/osnoise/per_cpu/cpu" + args.cpu=
+ + "/timerlat_fd"
++    timerlat_path =3D f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu}/=
+timerlat_fd"
+     timerlat_fd =3D open(timerlat_path, 'r')
+-except:
++except PermissionError:
++    print("Permission denied. Please check your access rights.")
++    sys.exit(1)
++except OSError:
+     print("Error opening timerlat fd, did you run timerlat -U?")
+-    exit(1)
++    sys.exit(1)
 
--- Steve
+ try:
+-    data_fd =3D open("/dev/full", 'r');
+-except:
+-    print("Error opening data fd")
++    data_fd =3D open("/dev/full", 'r')
++except Exception as e:
++    print(f"Error opening data fd: {e}")
++    sys.exit(1)
+
+ while True:
+     try:
+         timerlat_fd.read(1)
+-        data_fd.read(20*1024*1024)
+-    except:
++        data_fd.read(20 * 1024 * 1024)
++    except KeyboardInterrupt:
+         print("Leaving")
+         break
++    except IOError as e:
++        print(f"I/O error occurred: {e}")
++        break
++    except Exception as e:
++        print(f"Unexpected error: {e}")
++        break
+
+ timerlat_fd.close()
+ data_fd.close()
+
+--
+2.46.2
