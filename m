@@ -1,65 +1,74 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D1B17B4E9;
-	Mon,  7 Oct 2024 13:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8355338D;
+	Mon,  7 Oct 2024 14:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728309099; cv=none; b=qDo87AACu9JqZ+m24EPK25I65CUQ8g1hGSuTOV6xnK+7VRNmynvIFTSRyQ0yKFCpQGMLciTYh+uJXiyRwcsaHAgabY00DCV5kEnf9Y0NeabAc89kvvD7NpsmPfSVcbyrPGOKVUx6TDuLlbUXB6tXbGEbT8O3pL+KegQmX7M7ZP4=
+	t=1728310964; cv=none; b=jsUiUHWS4eOVd9ajW+JBIVNnfTm/qg8DYo44ji+GMbsrSgU7kuFVyCAIX1q+4AfEeMWFvkmUrFgibAUl9TQyTlj2Cu+BdyZ+xwAWfXCJFMb2QXG4EqRUYmK74WJpSSTvzK2CcNOCv7AZLww3pj5HCsRFvqaY9ISPT8NKsqyZWF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728309099; c=relaxed/simple;
-	bh=YW1TLeRgf3X5WEfXbhRqUOfyZiKkWMAtBU8XW+ig4+A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Imjpc1z9Le/JA5UQ4SOKd+PMp9fnQp5cNEvYiQvB9riDlps2gJjQ3GnS4iYtZtFVxCph9m5kwCsqjV5z7lp5VmWJolF+NeoOWOSJo2iXBAsnBd9PQh2olOJbN6f4blBAl3Rl2uq1kwFAsr7xZ6b1KC/5m2JaErfV/9bwr3i2US0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7358DFEC;
-	Mon,  7 Oct 2024 06:52:06 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E16103F64C;
-	Mon,  7 Oct 2024 06:51:35 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Dave.Martin@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] tracing: Consider the NULL character when validating the event length
-Date: Mon,  7 Oct 2024 14:51:26 +0100
-Message-Id: <20241007135126.873234-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1728310964; c=relaxed/simple;
+	bh=8+q+UdEhtowo/cYRIkBbmMZjdoDF7YOauFhtK2XM9DE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=agGbh9qJMVpssNX2HUVPDpY9pMpuBFBurrNA84/FrcRm1at8ztjlKbH9d0DTkjrOhlwoIRDne3k/raYL7yfEPBGw2WzM6mlSRPww1T+HwrFcDWA+XCY/3Mg3r6hgXU4B3qbvHMt+IK0tVb0yyfHTH5A7or1ERyrVgsF2qEkNxBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7B5C4CEC6;
+	Mon,  7 Oct 2024 14:22:42 +0000 (UTC)
+Date: Mon, 7 Oct 2024 10:22:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dave.Martin@arm.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Consider the NULL character when validating
+ the event length
+Message-ID: <20241007102242.18d2636e@gandalf.local.home>
+In-Reply-To: <20241007135126.873234-1-leo.yan@arm.com>
+References: <20241007135126.873234-1-leo.yan@arm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-strlen() returns a string length excluding the null byte. This commit
-adds 1 to account for the NULL terminating character when checking if an
-event string is within the maximum length.
+On Mon,  7 Oct 2024 14:51:26 +0100
+Leo Yan <leo.yan@arm.com> wrote:
 
-Fixes: dec65d79fd26 ("tracing/probe: Check event name length correctly")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- kernel/trace/trace_probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> strlen() returns a string length excluding the null byte. This commit
+> adds 1 to account for the NULL terminating character when checking if an
+> event string is within the maximum length.
+> 
+> Fixes: dec65d79fd26 ("tracing/probe: Check event name length correctly")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 39877c80d6cb..376ba56c3680 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -276,7 +276,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  		}
+>  		trace_probe_log_err(offset, NO_EVENT_NAME);
+>  		return -EINVAL;
+> -	} else if (len > MAX_EVENT_NAME_LEN) {
+> +	} else if (len + 1 > MAX_EVENT_NAME_LEN) {
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 39877c80d6cb..376ba56c3680 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -276,7 +276,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
- 		}
- 		trace_probe_log_err(offset, NO_EVENT_NAME);
- 		return -EINVAL;
--	} else if (len > MAX_EVENT_NAME_LEN) {
-+	} else if (len + 1 > MAX_EVENT_NAME_LEN) {
- 		trace_probe_log_err(offset, EVENT_TOO_LONG);
- 		return -EINVAL;
- 	}
--- 
-2.34.1
+Usually, the check is:
+
+	} else if (len >= MAX_EVENT_NAME_LEN) {
+
+Which is a better way to check max length.
+
+-- Steve
+
+
+>  		trace_probe_log_err(offset, EVENT_TOO_LONG);
+>  		return -EINVAL;
+>  	}
 
