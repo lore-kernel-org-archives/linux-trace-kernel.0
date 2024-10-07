@@ -1,79 +1,85 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB61F1DCB0A;
-	Mon,  7 Oct 2024 17:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207421DC195;
+	Mon,  7 Oct 2024 17:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728320970; cv=none; b=jEFaOdvlDdu35n9T/bVZ5Canoj02Czv3p2aqqJD+w5of1/fEyc96lWJu7+bBqvPzWF+ZzAkdqpR3LMJjZtho9ltJ3jp8eU6rqL+FrCA69s2GteQYP5AJYHqYQovANx8sW6q4Ylj6+O614tksEVx7YmdbfTqhj5Rm2Pmzsg6R3yk=
+	t=1728321414; cv=none; b=O3xKwFvPHnKPpxR62NxkbXz70a/DlTDck3y6FN50MkwoEyfBKazzv8raYO6/G7VLcc7Tpk7pVMa+YAZ2ss3MIFNOOaJzAaI1AfEpdfJA4y491dgxnrcE2FHFGlG3GwqCVSFnhBZJsL4f8wWNL8gqh8eVQJ4QooIS6j1gXq3ludY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728320970; c=relaxed/simple;
-	bh=8QtiTrPq+vnNdTEmG0dB4hPOrEwkXA0yBJnMemaot5M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ugs/QvQNq0MJruycSAGLNu6AYTHzqan9S34x5ZejxT6y9r1gswwwlW6sPhb9CSmtDcYgGAde/jUqXgUZ56c1l2omHoezPGFbl8/tdwqKFltraUT2D+kC0Gv3NMEoynRZkk8hP26tNL+imP5VZNGBzZTlvIIX++lZV3GW9n9ulh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=CuWuSpuz; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="CuWuSpuz"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DE0F242C0D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1728320968; bh=3sv9BCwao8j241sA//vFMAl7XpICVcPJJIxzAhkQeqU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CuWuSpuzhO9pImNXnU2hKa21vpWMMRls+IAH15YxEygb9tiGjxw+nAAP26sPaGanW
-	 ecr/mzSNVW/stgLl6YFOgFVPH57F7HAtgyti6fS/a+R09EKADU1bTRPpEz15yKuEtJ
-	 //0bkf3VQ1mxO6P2iyQ9ODRjR73YChUI1D1KfLNWPHdpLGoLa7X8yIxhbT2gBBj2A5
-	 gkXQ/3m0WBUIgB9rnDOANdcDrhzHWaHoQe64sGUQ56U6fmDy213XdzIf2Qy57qgjeb
-	 6cYWH2nwWMePEOdDSJ7S85BQQx5tRCNUD1oGNwNWRgrXb7caLyF8Ouy9LmXaZiwTOL
-	 BoXu35BnGYakw==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id DE0F242C0D;
-	Mon,  7 Oct 2024 17:09:27 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: SurajSonawane2415 <surajsonawane0215@gmail.com>, rostedt@goodmis.org
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, SurajSonawane2415 <surajsonawane0215@gmail.com>
-Subject: Re: [PATCH] docs: fix WARNING document not included in any toctree
-In-Reply-To: <20241002195817.22972-1-surajsonawane0215@gmail.com>
-References: <20241002195817.22972-1-surajsonawane0215@gmail.com>
-Date: Mon, 07 Oct 2024 11:09:27 -0600
-Message-ID: <87iku3kfg8.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1728321414; c=relaxed/simple;
+	bh=lH24Udzh2CIejB1eq0MjXnTe3f1g+72yysWMgDnZksY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F07MinscO6lBvYY3PSWtsBJOM2ieAW5rS5FmqG+TqBjCJBDSTutyQ4aZwtwQxeTNovlIa/RNlqxKNwZl57BFIOmcZsGMj4PqKfVKZGIUUcvzkxAKwdLGd6N6hbXdqteR1MTfV3zs0ZXR3haQM3d9jOqvtoJqsD1O0JQZbvyPTOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EB5C4CECF;
+	Mon,  7 Oct 2024 17:16:52 +0000 (UTC)
+Date: Mon, 7 Oct 2024 13:16:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers 
+ <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, Mike 
+ Rapoport <mike.rapoport@gmail.com>, Kees Cook <keescook@chromium.org>, Ard
+  Biesheuvel <ardb@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3] Documentation/tracing: Mention that
+ RESET_ATTACK_MITIGATION can clear memory
+Message-ID: <20241007131653.35837081@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-SurajSonawane2415 <surajsonawane0215@gmail.com> writes:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> Add debugging.rst to the relevant toctree to fix warning
-> about missing documentation inclusion in toctree.
->
-> Signed-off-by: SurajSonawane2415 <surajsonawane0215@gmail.com>
-> ---
->  Documentation/trace/index.rst | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-> index 0b300901f..2c991dc96 100644
-> --- a/Documentation/trace/index.rst
-> +++ b/Documentation/trace/index.rst
-> @@ -24,6 +24,7 @@ Linux Tracing Technologies
->     histogram
->     histogram-design
->     boottime-trace
-> +   debugging
->     hwlat_detector
+At the 2024 Linux Plumbers Conference, I was talking with Hans de Goede
+about the persistent buffer to display traces from previous boots. He
+mentioned that UEFI can clear memory. In my own tests I have not seen
+this. He later informed me that it requires the config option:
 
-Applied, thanks.
+ CONFIG_RESET_ATTACK_MITIGATION
 
-For future reference, please use your proper name in your signed-off-by
-line.
+It appears that setting this will allow the memory to be cleared on boot
+up, which will definitely clear out the trace of the previous boot.
 
-jon
+Add this information under the trace_instance in kernel-parameters.txt
+to let people know that this can cause issues.
+
+Link: https://lore.kernel.org/all/20170825155019.6740-2-ard.biesheuvel@linaro.org/
+
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/20241001095734.11a67b4b@gandalf.local.home
+
+- Fixed typo of "you system"
+
+ Documentation/admin-guide/kernel-parameters.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 1518343bbe22..3978fb704c53 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6867,6 +6867,12 @@
+ 
+ 				reserve_mem=12M:4096:trace trace_instance=boot_map^traceoff^traceprintk@trace,sched,irq
+ 
++			Note, saving the trace buffer across reboots does require that the system
++			is set up to not wipe memory. For instance, CONFIG_RESET_ATTACK_MITIGATION
++			can force a memory reset on boot which will clear any trace that was stored.
++			This is just one of many ways that can clear memory. Make sure your system
++			keeps the content of memory across reboots before relying on this option.
++
+ 			See also Documentation/trace/debugging.rst
+ 
+ 
+-- 
+2.45.2
+
