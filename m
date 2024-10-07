@@ -1,129 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F386315D5C1;
-	Mon,  7 Oct 2024 10:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE8A1CACC0
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Oct 2024 11:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728298714; cv=none; b=jwJnNg5UFPdwvncNbgOHpU3ge8MnLePNH36mNBmYPLDggaqB9IT8bqjihmIFsdr5KXyjsX0mx4uSFYtFuKLPIlKr1f4AwljXKeq8P3ta/lVcf9uPMSUGDYTmmbJLaqkhOQNejJk0wpQTg4am/SD+QuWHtlXUmDGDo0CY65H3Cn8=
+	t=1728300976; cv=none; b=lf0AwUOaP9rhJSiWQ7Etc+1ddQZ/xD6K1hOE9wsG45BJSbAvTduhjSls9B6zIksln0QJBT3/lBPwNHEA224WKURfuybVU+3UBC9DtPjHfq+7odyuweY3NS1k5eZDqEJd9neXI8O1VK28ETLGR99Si7tuXxbAaNEQXqZjrXODANU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728298714; c=relaxed/simple;
-	bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lRDly8FY6G9BuBtQstwR5mm4mJtcBabfECSTlYEtxqE1Uv96++qT8p1FEvkiQLz0f7EEMKYB01BCaCk8Kfrrp7ZhTPc74i6jT5TO5ixuf3VGwXTC8Baf7HvZGQXZ/JOqeEWohuJnTZvMnJSNTd/Ia7oAmWxr9aASZNiiBluOXvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xo6a7QoP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728300976; c=relaxed/simple;
+	bh=P5BPFG8e5ClLH2i6KDp+sSNB6btkuosh3rUzkEErfp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uUvukFfGUVaS0lbmevwkwlRSyYz4nL6t3E+sxvpHOHo0N0B6yGpDwCAivNN0MOv2CxIB6cbDfI1TW2LBADpy/frgoFTn5NK/bkAYXPWyMEqUI+yo96VLLn2xzwmAPi3dai/qr7hx7hepd10Gvbuw9LFB+cb7E5FUD1gEd7fjK6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RYLwNgCB; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xo6a7QoP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F3CC4CECF;
-	Mon,  7 Oct 2024 10:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728298713;
-	bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Xo6a7QoPaAsdhkEDock0VKt30RgKQGDYB55iSjs8d7YTjilKAWw7i3RESilp0cQmJ
-	 RkjDVaYeEP4FP9Um0SKIfeDcDl7H+Fi+NhKi0FBYdFB987Lxfsc/g9l1JNp8UGKwMc
-	 Fw4+iKLZ4j5+PeS1HlhU82WbFMjMgy9PbJI3nNlnMDRZI+xMrTIf9oliBkKKNKIEUV
-	 3iQt4cjUHMHjHCiQn6OAZh2AOaoIPFY3DYE1VAJSG1MGdziqr64pvzgt8d9LGQCH6l
-	 6Yp4ik5VqzQOvKusiZPsiQyiGE/GDJ+EKPs8F/8xOnQ5XAM59NbuIRCxgjag482bXQ
-	 /nWr7X/hM+SpQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Jeff Layton <jlayton@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RYLwNgCB"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1728300971;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qzZxe9R4Jas3GMKD/rY0M+GDfcweX2HMw86N1Uklvi0=;
+	b=RYLwNgCBMYrdaoidtO0jhIscDgC6nY1KmcddhnIpfslmjqcOMFg0+jfGPluMuCqXZBxuuB
+	Jys7R6acf65s5/fHhvEN4dGloNGqpFLqpc3Ywa8sB84fYpNJY8956oB+vfWFRQ7mLPn5bj
+	RaxOBUz425FwjOP6c0TS5r9sd2XXEBI=
+From: Jeff Xie <jeff.xie@linux.dev>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
 	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-xfs@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-mm@kvack.org,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	Hugh Dickins <hughd@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Subject: Re: (subset) [PATCH v10 00/12] timekeeping/fs: multigrain timestamp redux
-Date: Mon,  7 Oct 2024 12:58:21 +0200
-Message-ID: <20241007-restlaufzeit-birnen-2f412852441e@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241002-mgtime-v10-0-d1c4717f5284@kernel.org>
-References: <20241002-mgtime-v10-0-d1c4717f5284@kernel.org>
+	linux-kernel@vger.kernel.org,
+	xiehuan09@gmail.com,
+	dolinux.peng@gmail.com,
+	chensong_2000@189.cn,
+	Jeff Xie <jeff.xie@linux.dev>
+Subject: [PATCH v4] ftrace: Get the true parent ip for function tracer
+Date: Mon,  7 Oct 2024 19:35:37 +0800
+Message-ID: <20241007113537.19686-1-jeff.xie@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2375; i=brauner@kernel.org; h=from:subject:message-id; bh=2GHIYkn8cRFjuA6UoXjds38baJgePZQPA32Pa4pACIs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQz7zt3ROG96vKmhmAJRb2iW0lPrWYvcrN65X025sO3H TIF+Vq3O0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZSuo7hD++GxO7jd4sfeZ2Y e2VOTlbbRvlo2xPWddtPcQQeKVu3dBrDP+O0xuMVC6u2NJnKzzd25XLIvFWufkOs6q/e5LaD4Z3 LWQE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 02 Oct 2024 17:27:15 -0400, Jeff Layton wrote:
-> This is a replacement for the v6 series sitting in Christian's
-> vfs.mgtime branch. The main changes here are to the changelogs,
-> documentation and comments. I've also moved the timekeeping patches to
-> the front of the series, and done some minor cleanups.
-> 
-> The pipe1_threads test shows these averages on my test rig with this
-> series:
-> 
-> [...]
+When using both function tracer and function graph simultaneously,
+it is found that function tracer sometimes captures a fake parent ip
+(return_to_handler) instead of the true parent ip.
 
-I've merged the tag that Thomas provided with the time specific changes and
-pulled the remaining patches - excluding 01/12 and 02/12.
+This issue is easy to reproduce. Below are my reproduction steps:
 
+jeff-labs:~/bin # ./trace-net.sh
+
+jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace | grep return_to_handler
+    trace-net.sh-405     [001] ...2.    31.859501: avc_has_perm+0x4/0x190 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859503: simple_setattr+0x4/0x70 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859503: truncate_pagecache+0x4/0x60 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859505: unmap_mapping_range+0x4/0x140 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...3.    31.859508: _raw_spin_unlock+0x4/0x30 <-return_to_handler+0x0/0x40
+    [...]
+
+The following is my simple trace script:
+
+<snip>
+jeff-labs:~/bin # cat ./trace-net.sh
+TRACE_PATH="/sys/kernel/debug/tracing"
+
+set_events() {
+        echo 1 > $1/events/net/enable
+        echo 1 > $1/events/tcp/enable
+        echo 1 > $1/events/sock/enable
+        echo 1 > $1/events/napi/enable
+        echo 1 > $1/events/fib/enable
+        echo 1 > $1/events/neigh/enable
+}
+
+set_events ${TRACE_PATH}
+echo 1 > ${TRACE_PATH}/options/sym-offset
+echo 1 > ${TRACE_PATH}/options/funcgraph-tail
+echo 1 > ${TRACE_PATH}/options/funcgraph-proc
+echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
+
+echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
+echo function_graph > ${TRACE_PATH}/current_tracer
+
+INSTANCE_FOO=${TRACE_PATH}/instances/foo
+if [ ! -e $INSTANCE_FOO ]; then
+        mkdir ${INSTANCE_FOO}
+fi
+set_events ${INSTANCE_FOO}
+echo 1 > ${INSTANCE_FOO}/options/sym-offset
+echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
+echo function > ${INSTANCE_FOO}/current_tracer
+
+echo 1 > ${TRACE_PATH}/tracing_on
+echo 1 > ${INSTANCE_FOO}/tracing_on
+
+echo > ${TRACE_PATH}/trace
+echo > ${INSTANCE_FOO}/trace
+</snip>
+
+Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
 ---
+v4:
+  https://lore.kernel.org/linux-trace-kernel/20241005101320.766c1100@rorschach.local.home/
+- fixed the crash when accessing the "current" if the arch has not implemented noinstr
+  thanks steve for the testing and the detailed explanation
 
-Applied to the vfs.mgtime branch of the vfs/vfs.git tree.
-Patches in the vfs.mgtime branch should appear in linux-next soon.
+v3:
+  https://lore.kernel.org/linux-trace-kernel/20240910001326.87f27e6b312f1d956cf352a2@kernel.org/
+- fixed build error when CONFIG_FUNCTION_GRAPH_TRACER=n suggested by Masami
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+v2:
+  https://lore.kernel.org/linux-trace-kernel/20240821095910.1888d7fa@gandalf.local.home/
+- Adding __always_inline to function_get_true_parent_ip suggested by Steve
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+ kernel/trace/trace_functions.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 3b0cea37e029..46b663d22c37 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -176,6 +176,27 @@ static void function_trace_start(struct trace_array *tr)
+ 	tracing_reset_online_cpus(&tr->array_buffer);
+ }
+ 
++#if defined(CONFIG_FUNCTION_GRAPH_TRACER) && defined(CONFIG_ARCH_WANTS_NO_INSTR)
++static __always_inline unsigned long
++function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
++{
++	unsigned long true_parent_ip;
++	int idx = 0;
++
++	true_parent_ip = parent_ip;
++	if (unlikely(parent_ip == (unsigned long)&return_to_handler))
++		true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,
++				(unsigned long *)fregs->regs.sp);
++	return true_parent_ip;
++}
++#else
++static __always_inline unsigned long
++function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
++{
++	return parent_ip;
++}
++#endif
++
+ static void
+ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		    struct ftrace_ops *op, struct ftrace_regs *fregs)
+@@ -193,6 +214,8 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (bit < 0)
+ 		return;
+ 
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
++
+ 	trace_ctx = tracing_gen_ctx();
+ 
+ 	cpu = smp_processor_id();
+@@ -241,6 +264,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	 * recursive protection is performed.
+ 	 */
+ 	local_irq_save(flags);
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = raw_smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	disabled = atomic_inc_return(&data->disabled);
+@@ -309,6 +333,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (bit < 0)
+ 		return;
+ 
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	if (atomic_read(&data->disabled))
+@@ -356,6 +381,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	 * recursive protection is performed.
+ 	 */
+ 	local_irq_save(flags);
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = raw_smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	disabled = atomic_inc_return(&data->disabled);
+-- 
+2.43.0
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.mgtime
-
-[03/12] fs: add infrastructure for multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/4e40eff0b573
-[04/12] fs: have setattr_copy handle multigrain timestamps appropriately
-        https://git.kernel.org/vfs/vfs/c/b82f92d5dd1a
-[05/12] fs: handle delegated timestamps in setattr_copy_mgtime
-        https://git.kernel.org/vfs/vfs/c/d8d11298e8a1
-[06/12] fs: tracepoints around multigrain timestamp events
-        https://git.kernel.org/vfs/vfs/c/a80f53809ccc
-[07/12] fs: add percpu counters for significant multigrain timestamp events
-        https://git.kernel.org/vfs/vfs/c/7b1aba010c47
-[08/12] Documentation: add a new file documenting multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/95c6907be544
-[09/12] xfs: switch to multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/0f4865448420
-[10/12] ext4: switch to multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/e44ab3151adc
-[11/12] btrfs: convert to multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/0d4f9f7ad685
-[12/12] tmpfs: add support for multigrain timestamps
-        https://git.kernel.org/vfs/vfs/c/cba2a92eff80
