@@ -1,238 +1,196 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F6F1CD02
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Oct 2024 02:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DC43BBCB
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Oct 2024 03:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728353886; cv=none; b=MBk9NpoXfpt89qI7Xg+dXoj0O3tpcBPyTmdN85FtZ1CXG4slwJi36q3CVqB3jLma00fqG77uXlhO0g/WPDgyzCoOch/0BfVS7X5Vjzj+YrYVwlBsCIvjLwoAuGpyZIO+n/VJHkLpbIsnc6dOrkZ8z2Mnmw0KbxFvAK+j2i4B77A=
+	t=1728358351; cv=none; b=GnWO1hXEgGwhJr9S8RFX1Ca/ZmA46+igCjL9HYiQzCqUQVakOk7lAPdyfSKBvNmmdSXJhelb2bjtdrL6NxidX7R3WPRk+rBdZtkxmBCKEq1Lsuwz+mVH0t89c3tNOYK0sUv1RXAr98v/PiMSefIhNgfe6Ovic349JbfYGQeFqLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728353886; c=relaxed/simple;
-	bh=4HxZXNRDeeFXzUmVpqVyQFLwedYD7QQ31GGcL+vxdsE=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=B1J75aMGta5yb/LSV0fkfjvJZfhxgOOAf6TpkwsWvLlh9QxwBPn6qN3T6fso55uS6CvZB8Y7NUw72S04Mpu5r8HnkNu88fO6Huu0IJyaTtuQ+vHEBYzB/mI4U99XVrhbnGCEZC5M26T5b+ptUs2oxcwFFSfR21+LbgjE5gevlew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rpzDSh5C; arc=none smtp.client-ip=91.218.175.172
+	s=arc-20240116; t=1728358351; c=relaxed/simple;
+	bh=PaukYXKVKjrCDOkV4PFDg9sPsWa5nulyO71UKyRO7Ug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PYVLtQfnF7sBeIzIAJp/pphLXK/dbd9GKnpOleiq4L9qMAfNGuW2R+QvvyuitHfKEce7TEPu/bzke4jtl7+3DKY0fFcBpbPzsG01Wr06Nm8wKgXjW1iHtJcFHEJ2RqAFRTNrRw9pb5NhcKqNoiE1RbdDGp+q3tJXMjKakxRdeE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=apnEPwxL; arc=none smtp.client-ip=91.218.175.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rpzDSh5C"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="apnEPwxL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1728358346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6F9ykY/tuHztluF+GdmaM1qP7Xvh4mEADCbA7XwmAyc=;
+	b=apnEPwxLCL6E2q+Ry/n++/iwPLAiMz7yf776gtMLkSWQMLgSsa9sulCle93olDTNfumCx7
+	WXiStHNcv3X9LGiN/o5JldqbWvAkmNnzwb8jSsI2GNemqRqLOvtPialkmyzlJUbmE6tMgZ
+	3SS9nBMnIutKvY8RCuuJO4im5JPVnKs=
+From: Jeff Xie <jeff.xie@linux.dev>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	xiehuan09@gmail.com,
+	dolinux.peng@gmail.com,
+	chensong_2000@189.cn,
+	Jeff Xie <jeff.xie@linux.dev>
+Subject: [PATCH v5] ftrace: Get the true parent ip for function tracer
+Date: Tue,  8 Oct 2024 11:31:59 +0800
+Message-ID: <20241008033159.22459-1-jeff.xie@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1728353882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j9bOzFVKK3JfHEBqVTHAFgXoxGivGN6wQGN2dmoR/qk=;
-	b=rpzDSh5CLpTDTCORn3ec7W8JUNv+F2eDnE1PPWx6AjAZa+7D3K59QiUDnX3xwcyX1gM4n0
-	sTGsy9sIhBUtFnPOExA92/7FouDxuseeNkEKgai+VDnyrZH4R9d+vlPRLxbtKGc40p19C+
-	PwNmqgqjomS/5bs2TRCxWnnrSA+evqY=
-Date: Tue, 08 Oct 2024 02:17:57 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: jeff.xie@linux.dev
-Message-ID: <5bc5b9b07d997e299b048005826bc6d592265c67@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH v3] ftrace: Get the true parent ip for function tracer
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehuan09@gmail.com, dolinux.peng@gmail.com, chensong_2000@189.cn
-In-Reply-To: <20241007171027.629bdafd@gandalf.local.home>
-References: <20240910133620.19711-1-jeff.xie@linux.dev>
- <20241005101320.766c1100@rorschach.local.home>
- <20241007171027.629bdafd@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-October 8, 2024 at 5:10 AM, "Steven Rostedt" <rostedt@goodmis.org> wrote:
+When using both function tracer and function graph simultaneously,
+it is found that function tracer sometimes captures a fake parent ip
+(return_to_handler) instead of the true parent ip.
 
+This issue is easy to reproduce. Below are my reproduction steps:
 
+jeff-labs:~/bin # ./trace-net.sh
 
->=20
->=20On Sat, 5 Oct 2024 10:13:20 -0400
->=20
->=20Steven Rostedt <rostedt@goodmis.org> wrote:
->=20
->=20>=20
->=20> The crash happened here:
-> >=20
->=20
-> This has been bothering me all weekend so I dug more into it.
->=20
->=20The reason it was bothering me is because we use current later on, an=
-d it
->=20
->=20has no issue. But then I noticed the real bug!
->=20
->=20I was confused because the crashed instruction pointer was in the
->=20
->=20get_current() code. But that's not where the crash actually happened.
->=20
->=20>=20
->=20> static __always_inline unsigned long
-> >=20
->=20>  function_get_true_parent_ip(unsigned long parent_ip, struct ftrace=
-_regs *fregs)
-> >=20
->=20>  {
-> >=20
->=20>  unsigned long true_parent_ip;
-> >=20
->=20>  int idx =3D 0;
-> >=20
->=20>=20=20
->=20>=20
->=20>  true_parent_ip =3D parent_ip;
-> >=20
->=20>  if (unlikely(parent_ip =3D=3D (unsigned long)&return_to_handler))
-> >=20
->=20>  true_parent_ip =3D ftrace_graph_ret_addr(current, &idx, parent_ip,=
- <<<----- CRASH
-> >=20
->=20
-> That's not the crash
->=20
->=20>=20
->=20> (unsigned long *)fregs->regs.sp);
-> >=20
->=20
-> The above is!
->=20
->=20fregs should *NEVER* be used directly. OK, I need to make:
->=20
->=20struct ftrace_regs {
->=20
->=20 void *nothing_here[];
->=20
->=20};
->=20
->=20Now, to stop bugs like this.
->=20
->=20fregs is unique by architecture, and may not even be defined! That is=
-, it
->=20
->=20can pass NULL for fregs. And only x86 has fregs->regs available. Othe=
-r
->=20
->=20archs do not.
+jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace | grep return_to_handler
+    trace-net.sh-405     [001] ...2.    31.859501: avc_has_perm+0x4/0x190 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859503: simple_setattr+0x4/0x70 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859503: truncate_pagecache+0x4/0x60 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...2.    31.859505: unmap_mapping_range+0x4/0x140 <-return_to_handler+0x0/0x40
+    trace-net.sh-405     [001] ...3.    31.859508: _raw_spin_unlock+0x4/0x30 <-return_to_handler+0x0/0x40
+    [...]
 
-Thanks, I just saw this comment from include/linux/ftrace.h
+The following is my simple trace script:
 
- * NOTE: user *must not* access regs directly, only do it via APIs, becau=
-se
- * the member can be changed according to the architecture.
- */
-struct ftrace_regs {
-        struct pt_regs          regs;
-};
+<snip>
+jeff-labs:~/bin # cat ./trace-net.sh
+TRACE_PATH="/sys/kernel/debug/tracing"
 
+set_events() {
+        echo 1 > $1/events/net/enable
+        echo 1 > $1/events/tcp/enable
+        echo 1 > $1/events/sock/enable
+        echo 1 > $1/events/napi/enable
+        echo 1 > $1/events/fib/enable
+        echo 1 > $1/events/neigh/enable
+}
 
->=20
->=20You must use the fregs helper functions, thus the above can be:
->=20
->=20static __always_inline unsigned long
->=20
->=20function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_re=
-gs *fregs)
->=20
->=20{
->=20
->=20 unsigned long true_parent_ip;
->=20
->=20 int idx =3D 0;
->=20
->=20 true_parent_ip =3D parent_ip;
->=20
->=20 if (unlikely(parent_ip =3D=3D (unsigned long)&return_to_handler) && =
-fregs)
->=20
->=20 true_parent_ip =3D ftrace_graph_ret_addr(current, &idx, parent_ip,
->=20
->=20 (unsigned long *)ftrace_regs_get_stack_pointer(fregs));
->=20
->=20 return true_parent_ip;
->=20
->=20}
->=20
->=20So you can make a v5 with this update. And I'll go and make the empty
->=20
->=20ftrace_regs structure.
+set_events ${TRACE_PATH}
+echo 1 > ${TRACE_PATH}/options/sym-offset
+echo 1 > ${TRACE_PATH}/options/funcgraph-tail
+echo 1 > ${TRACE_PATH}/options/funcgraph-proc
+echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
 
-Thanks, I will update the patch.
+echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
+echo function_graph > ${TRACE_PATH}/current_tracer
 
->=20
->=20Thanks!
->=20
->=20-- Steve
->=20
->=20>=20
->=20> return true_parent_ip;
-> >=20
->=20>  }
-> >=20
->=20>=20=20
->=20>=20
->=20>  It appears that on some archs (x86 32 bit) the function tracer can=
- be
-> >=20
->=20>  called when "current" is not set up yet, and can crash when access=
-ing it.
-> >=20
->=20>=20=20
->=20>=20
->=20>  So perhaps we need to add:
-> >=20
->=20>=20=20
->=20>=20
->=20>  #ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> >=20
->=20>  static __always_inline unsigned long
-> >=20
->=20>  function_get_true_parent_ip(unsigned long parent_ip, struct ftrace=
-_regs *fregs)
-> >=20
->=20>  {
-> >=20
->=20>  unsigned long true_parent_ip;
-> >=20
->=20>  int idx =3D 0;
-> >=20
->=20>=20=20
->=20>=20
->=20>  true_parent_ip =3D parent_ip;
-> >=20
->=20>  if (unlikely(parent_ip =3D=3D (unsigned long)&return_to_handler))
-> >=20
->=20>  true_parent_ip =3D ftrace_graph_ret_addr(current, &idx, parent_ip,=
- <<<----- CRASH
-> >=20
->=20>  (unsigned long *)fregs->regs.sp);
-> >=20
->=20>  return true_parent_ip;
-> >=20
->=20>  }
-> >=20
->=20>  #else
-> >=20
->=20>  # define function_get_true_parent_ip(parent_ip, fregs) parent_ip
-> >=20
->=20>  #endif
-> >=20
->=20>=20=20
->=20>=20
->=20>  That is, if the arch has noinstr implemented, it should always be =
-safe
-> >=20
->=20>  to access current, but if not, then there's no guarantee.
-> >=20
->=20>=20=20
->=20>=20
->=20>  ?
-> >
->
+INSTANCE_FOO=${TRACE_PATH}/instances/foo
+if [ ! -e $INSTANCE_FOO ]; then
+        mkdir ${INSTANCE_FOO}
+fi
+set_events ${INSTANCE_FOO}
+echo 1 > ${INSTANCE_FOO}/options/sym-offset
+echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
+echo function > ${INSTANCE_FOO}/current_tracer
+
+echo 1 > ${TRACE_PATH}/tracing_on
+echo 1 > ${INSTANCE_FOO}/tracing_on
+
+echo > ${TRACE_PATH}/trace
+echo > ${INSTANCE_FOO}/trace
+</snip>
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
+---
+v5:
+  https://lore.kernel.org/linux-trace-kernel/5bc5b9b07d997e299b048005826bc6d592265c67@linux.dev/T/#me683cf5ac3858711230e54e5d5924a82e85917e6
+- Using fregs helper function to get the stack pointer 
+  
+v4:
+  https://lore.kernel.org/linux-trace-kernel/20241005101320.766c1100@rorschach.local.home/
+- fixed the crash when accessing the "current" if the arch has not implemented noinstr
+  thanks steve for the testing and the detailed explanation
+
+v3:
+  https://lore.kernel.org/linux-trace-kernel/20240910001326.87f27e6b312f1d956cf352a2@kernel.org/
+- fixed build error when CONFIG_FUNCTION_GRAPH_TRACER=n suggested by Masami
+
+v2:
+  https://lore.kernel.org/linux-trace-kernel/20240821095910.1888d7fa@gandalf.local.home/
+- Adding __always_inline to function_get_true_parent_ip suggested by Steve
+
+ kernel/trace/trace_functions.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 3b0cea37e029..46c79a349d8c 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -176,6 +176,27 @@ static void function_trace_start(struct trace_array *tr)
+ 	tracing_reset_online_cpus(&tr->array_buffer);
+ }
+ 
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++static __always_inline unsigned long
++function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
++{
++	unsigned long true_parent_ip;
++	int idx = 0;
++
++	true_parent_ip = parent_ip;
++	if (unlikely(parent_ip == (unsigned long)&return_to_handler) && fregs)
++		true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,
++				(unsigned long *)ftrace_regs_get_stack_pointer(fregs));
++	return true_parent_ip;
++}
++#else
++static __always_inline unsigned long
++function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
++{
++	return parent_ip;
++}
++#endif
++
+ static void
+ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		    struct ftrace_ops *op, struct ftrace_regs *fregs)
+@@ -193,6 +214,8 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (bit < 0)
+ 		return;
+ 
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
++
+ 	trace_ctx = tracing_gen_ctx();
+ 
+ 	cpu = smp_processor_id();
+@@ -241,6 +264,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	 * recursive protection is performed.
+ 	 */
+ 	local_irq_save(flags);
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = raw_smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	disabled = atomic_inc_return(&data->disabled);
+@@ -309,6 +333,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (bit < 0)
+ 		return;
+ 
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	if (atomic_read(&data->disabled))
+@@ -356,6 +381,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	 * recursive protection is performed.
+ 	 */
+ 	local_irq_save(flags);
++	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+ 	cpu = raw_smp_processor_id();
+ 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+ 	disabled = atomic_inc_return(&data->disabled);
+-- 
+2.43.0
+
