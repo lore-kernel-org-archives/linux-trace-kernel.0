@@ -1,111 +1,90 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F12F1D097F;
-	Tue,  8 Oct 2024 06:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101AC19067C;
+	Tue,  8 Oct 2024 10:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728368668; cv=none; b=vBAkHf1B3kY1oQpI6gWSqToHx1VSdcIRZk00iEbaBP5jBE25UgCgm6eNLgQiM6Vp3ju5KTCRc7jz1l/hs4eo9tlERr6x7nBBsn/JZhjWviAQ4gVwG7Lv3Dvsj/SMkd5C8FMm21qncVKQEMBWr2xGSC/hX3VrPFXpZ+Uj29MB66I=
+	t=1728381846; cv=none; b=NeW5s6V8TT1wRPtudApoi05Qh50OP7ilvYcB//253JkwD+XsY2v6ehkCKEP3CRHHuzU07A/UXeGJydcaoMWQJH532asr2dQkjhyk6f5aX7zmdKi57pSmfGYHxJDDuyGhu+/ujbuib+8z3ZYU0/ePfIIOcsd87uYUksl56OmZAoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728368668; c=relaxed/simple;
-	bh=W10THfaXd5oXjdQ1soLRjb0+jNqS8m+NgN0nOjbWOqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+V0N21cPQ6g5sNB3NHblbS41jS2D6zmLiEOSiJGssOrOe1DobzyltoORPNb7KqeaLT1tOQE3obP5HnhfPA1c+rIopwqSB/bFrgjLUD7PLtX8yTlfkHrh5CUAxtPGQo+zdMA+jFObRF+BIPx8m1Zqj5dsnSjPPppOic9hgpII6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4XN5Zw3r7hz9sPd;
-	Tue,  8 Oct 2024 08:24:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 83WsnfrASkNO; Tue,  8 Oct 2024 08:24:24 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4XN5Zw2vlKz9rvV;
-	Tue,  8 Oct 2024 08:24:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F4488B788;
-	Tue,  8 Oct 2024 08:24:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id WqcteU_NOog8; Tue,  8 Oct 2024 08:24:24 +0200 (CEST)
-Received: from [192.168.233.14] (unknown [192.168.233.14])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0CB258B763;
-	Tue,  8 Oct 2024 08:24:23 +0200 (CEST)
-Message-ID: <8e99826f-b38a-4cb3-ba5e-a20512248853@csgroup.eu>
-Date: Tue, 8 Oct 2024 08:24:22 +0200
+	s=arc-20240116; t=1728381846; c=relaxed/simple;
+	bh=SU8Tx39SBVHlL1bRNkXM2zIDtQra3W9DOH4t5+MKZBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NU8yFGtGTbEElCcnHXnaceGJIyv/qvefbr1M7CryijC/WOEpd4HC18Z9sVam0++fveAAfvkaRfGxmPONCEcBvXVJXHLnZeLjzAKW6ms0p1QldPNVi/MnkL0XMWUrOF4Ntqq/oV8teyf4UDZUZ2fw6YWqmxALfCIyn7WQz9DzYAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49794C4CEC7;
+	Tue,  8 Oct 2024 10:04:00 +0000 (UTC)
+Date: Tue, 8 Oct 2024 11:03:57 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
+Message-ID: <ZwUDjbrYZNC7HLZS@arm.com>
+References: <20241007204743.41314f1d@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>
-References: <20241007204743.41314f1d@gandalf.local.home>
- <20241007205458.2bbdf736@gandalf.local.home>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20241007205458.2bbdf736@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241007204743.41314f1d@gandalf.local.home>
 
+On Mon, Oct 07, 2024 at 08:47:43PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> ftrace_regs was created to hold registers that store information to save
+> function parameters, return value and stack. Since it is a subset of
+> pt_regs, it should only be used by its accessor functions. But because
+> pt_regs can easily be taken from ftrace_regs (on most archs), it is
+> tempting to use it directly. But when running on other architectures, it
+> may fail to build or worse, build but crash the kernel!
+> 
+> Instead, make struct ftrace_regs an empty structure and have the
+> architectures define __arch_ftrace_regs and all the accessor functions
+> will typecast to it to get to the actual fields. This will help avoid
+> usage of ftrace_regs directly.
+> 
+> Link: https://lore.kernel.org/all/20241007171027.629bdafd@gandalf.local.home/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Note, I tried to cros-compile the affected architectures,
+> but my builds failed for 32 bit powerpc and s390 (without this patch).
+> It mostly compiled, and the affected files seemed to build.
+> 
+>  arch/arm64/include/asm/ftrace.h          | 20 +++++++++--------
+>  arch/arm64/kernel/asm-offsets.c          | 22 +++++++++----------
+>  arch/arm64/kernel/ftrace.c               | 10 ++++-----
 
+For arm64:
 
-Le 08/10/2024 à 02:54, Steven Rostedt a écrit :
-> On Mon, 7 Oct 2024 20:47:43 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> +#ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
->> +struct __arch_ftrace_regs {
->> +	struct pt_regs		regs;
->> +};
->> +
->> +#define arch_ftrace_get_regs(fregs)					\
->> +	({ struct __arch_fregs_regs *__f = (struct __arch_ftrace_regs *)(fregs); \
->> +		&__f->regs;						\
->> +	})
-> 
-> I wrote the arch_ftrace_get_regs() at the start of creating this patch.
-> 
->> +
->> +struct ftrace_regs;
->> +#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
->> +
-> 
-> I just realized I can simplify it with:
-> 
-> #define arch_ftrace_get_regs(fregs)	({ &arch_ftrace_regs(fregs)->regs; })
-
-Is it possible to write it as a static inline function to enforce type 
-checking ?
-
-> 
-> I may send a v2 (tomorrow).
-> 
-> -- Steve
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
