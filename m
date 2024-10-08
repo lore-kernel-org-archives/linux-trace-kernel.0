@@ -1,46 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD52A1E0B84;
-	Tue,  8 Oct 2024 17:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2256220B1E5;
+	Tue,  8 Oct 2024 18:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728408807; cv=none; b=LjbSpB337OqVu7xQT3nPg9g3xwvNg+pFT+I54mwHE1lHP8utgYWSqsagClV2Nf90c9VYiAWnq+5bprZauUZtFU1vR9TsT5aD+cQCSwMKlKZ1IwzcDjXwH7kgi1Cxxfigu3GQ4mgjNJj8mLlekLKYWjCXuIoTqSJLJfCY5ct3Qtc=
+	t=1728412360; cv=none; b=Qe7AYX56iSzM7/BaoyX5wsqROFt6Zy0z8Y+ziYaL4NI6B5NnGCNoUcjorz/nOawz0XfcS/kdaxp/pPPTtlrb9VY+EaMAeizgFszMcNuxNKpdAFfKcqHyJxuYkuqFBLaEzuMGGZh5CkebilED5XC+2bWxXfnp3T/UFYsprmxVF0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728408807; c=relaxed/simple;
-	bh=V/O67xgHBvSlN/RwcF5jeWewjjQlkU+oj9wOlfQfWhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ikm9K1vjwl7K3Ma6CZnU07l8rwz0uLK7wa22qWQruqQXtqgnrE5zyaRwpKBcEzVzTfoeO98Y0s83MTaz78yxfSISeSno/8pltxrs934NsP2yLHijQgzh/jjSkw2feA5r0G3nsU6o5WuZ44UNUsaiJWKVih4QkE2YjQN9r9HiOWw=
+	s=arc-20240116; t=1728412360; c=relaxed/simple;
+	bh=0FfDYnXMTG/JsCokRVjwyaALkft25mZFiJ+o6dDSIAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FkmghwhtOeH6FNsKboxnnIpfQuP0L+1NUvpVrlTyoOZuSVZYIF7QIMEsxw8uIlbH2Nl/oXuxB9TGpKfmaXfngHFILhoDtmv5n6iWMErXAl4ns7+6GLPlm18SOrO1yXrWRk+mldBt+5XmnwPJrQC9bIHpEiOExqqYyb2ihQUXu8U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95454C4CEC7;
-	Tue,  8 Oct 2024 17:33:22 +0000 (UTC)
-Date: Tue, 8 Oct 2024 13:33:25 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68393C4CECE;
+	Tue,  8 Oct 2024 18:32:39 +0000 (UTC)
+Date: Tue, 8 Oct 2024 14:32:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "x86@kernel.org"
- <x86@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
- <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
-Message-ID: <20241008133325.47b7b457@gandalf.local.home>
-In-Reply-To: <20241008145852.27223-E-hca@linux.ibm.com>
-References: <20241007204743.41314f1d@gandalf.local.home>
-	<20241007205458.2bbdf736@gandalf.local.home>
-	<20241008145852.27223-E-hca@linux.ibm.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Do not have boot mapped buffers hook to CPU
+ hotplug
+Message-ID: <20241008143242.25e20801@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,26 +32,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 8 Oct 2024 16:58:52 +0200
-Heiko Carstens <hca@linux.ibm.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> On Mon, Oct 07, 2024 at 08:54:58PM -0400, Steven Rostedt wrote:
-> > On Mon, 7 Oct 2024 20:47:43 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > #define arch_ftrace_get_regs(fregs)	({ &arch_ftrace_regs(fregs)->regs; })
-> > 
-> > I may send a v2 (tomorrow).  
-> 
-> Could you also write against which tree this patch is?
-> It doesn't apply on top of Linus' master branch.
+The boot mapped ring buffer has its buffer mapped at a fixed location
+found at boot up. It is not dynamic. It cannot grow or be expanded when
+new CPUs come online.
 
-Ah, sorry, I should have specified. It applies to my ftrace/for-next branch
-(which is also part of linux-next). I just checked out linux-next, and it
-still applies but with some shifts, so updates from other trees do affect
-it slightly.
+Do not hook fixed memory mapped ring buffers to the CPU hotplug callback,
+otherwise it can cause a crash when it tries to add the buffer to the
+memory that is already fully occupied.
 
-If you want it to apply cleanly, use this tree:
+Fixes: be68d63a139bd ("ring-buffer: Add ring_buffer_alloc_range()")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/  ftrace/for-next
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 77dc0b25140e..fb04445f92c3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2337,9 +2337,12 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 	if (!buffer->buffers[cpu])
+ 		goto fail_free_buffers;
+ 
+-	ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
+-	if (ret < 0)
+-		goto fail_free_buffers;
++	/* If already mapped, do not hook to CPU hotplug */
++	if (!start) {
++		ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
++		if (ret < 0)
++			goto fail_free_buffers;
++	}
+ 
+ 	mutex_init(&buffer->mutex);
+ 
+-- 
+2.45.2
 
--- Steve
