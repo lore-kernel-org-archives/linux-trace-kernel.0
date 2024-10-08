@@ -1,97 +1,61 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CF01E0490;
-	Tue,  8 Oct 2024 14:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535D81E0B8F
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Oct 2024 15:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728399587; cv=none; b=XuLwVarJmHbCoq4iEktgXg7qPRzHbzAa+EaRd2kh25bDNMDGegy1vdXWZL07LxjBinSIpRCUCnxzny1IT5JAK29gOA7aNRq/th+uZVRUx8Fqyga6yCtMEA3elLHocvvEmEhdTdwyEytNn0lUGvXYPuIGIc5+QNHdqWAra7NWoUc=
+	t=1728400887; cv=none; b=cTHRPQdQq5N5RraHCgPo3FDcjZdRk8gfJVvyICZN/XuiVDwGwzVsSkpuGQDGhdPS5hxuXU1pScP8eH2BryI4xgI2nmOtipj78SXfZHhmFJjsGp/a+rwotcSrtsHQjpUPA61D6guKkspOmeGpIK4v+/fScAggwDV10mFrr4nvS7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728399587; c=relaxed/simple;
-	bh=7222kW1vYZGn0bygoHz5Dp7kuC06E7SBQ6UwpZbJ4kw=;
+	s=arc-20240116; t=1728400887; c=relaxed/simple;
+	bh=V6wv7UuW3HAgTnvx4RGFnn4y4Ee+TSsmIYQNAmcoo/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DLuW4JqcJEE1eoUqkYANuYARSapb0gHAH/e0ioqq93SUSSaVCIdGCBlTovrMzI34/BPuJ3vdxYjADK6wOTPnZJEdjzbKo6/LQsQzXpMYTO7I3GibTfdl2J7TCCyrDc1+47AGS0+RSodtoxleDhWo+2LSvIStwYqQaMd5g4An9Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r9CRYLuq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iHl+v2RAwsJpyeEaQYBNcltffBXvMnWMtZYnaPH8mmVJuem/aPD4L8h5/6GgTps0kqZA1okavYgv2Emg7aPrmykF1vhk/65AhpVmng3N/C8RFnHhrYVpWin9f3A1Q/TvbsIT46jHWWD3Y61kQ/yXM1W+d6ehAUTAvl5h4JYE27g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HK7Aoff2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r9CRYLuq"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 498AnhDi003703;
-	Tue, 8 Oct 2024 14:59:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=BQI8GJBzvYzMZY9guzB38AAkQep
-	hutvxTMxerY22j98=; b=r9CRYLuq87IoMuZlkQ0Ni4dlH5oab8oUZHdJ1O7eW/f
-	ASY5wTgBmrRdV197eKYTzRIgFr9QF/X/3sGswuCcNpP4Ra/xeM/rqwS7VZxYkOmc
-	FEOukCnltW7eFV5Iw1RtzWtn+BYigF7m66Uv12aF2Yf65bknIsb/IWpigr3apkpT
-	fP6/5nmpiI8n5/dTZAbyLf7Md7VQAfeKilpLeNbpwAHp2lkfFbpelSgIrDv0Dqt1
-	L6b6y2EFRDszfq1Bb+GSYImWr34yTiNS8khAMGgSk+R+OjdHtNwo/v+WwPvZ4T7+
-	OKNMuUWTzzK5Ar+C4fVeDFQEEQDZP3sk4gYojXB9i9Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4253axshkh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Oct 2024 14:59:00 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 498EwxvT020967;
-	Tue, 8 Oct 2024 14:59:00 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4253axshkc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Oct 2024 14:58:59 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 498Ccg58011524;
-	Tue, 8 Oct 2024 14:58:58 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 423g5xn1k8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Oct 2024 14:58:58 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 498EwsmQ53805504
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Oct 2024 14:58:54 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 963E92005A;
-	Tue,  8 Oct 2024 14:58:54 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AFF592004B;
-	Tue,  8 Oct 2024 14:58:53 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  8 Oct 2024 14:58:53 +0000 (GMT)
-Date: Tue, 8 Oct 2024 16:58:52 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
-Message-ID: <20241008145852.27223-E-hca@linux.ibm.com>
-References: <20241007204743.41314f1d@gandalf.local.home>
- <20241007205458.2bbdf736@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HK7Aoff2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728400885;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ruYSLgW7gfmln5kN4ADH0+uUUeJjmQiMQYi2GHJLhGM=;
+	b=HK7Aoff28qaYRPW+oEg61pRvs5yX643eJBrrHhXXrs3FckMrnWyI5GHz4mDzjsBJGneAO0
+	xT1eyIpwFx5sYJ2WU7dHMClAJ4Kzlc5kv6S9nJhv54M2IIJIlW8wPy0DyVgZ1pcZyFqfXm
+	CN1ksvPrNR0v9wXvevho3FrPv5BvjYo=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-BuiWbL8bPueyNVxlgpUhdA-1; Tue,
+ 08 Oct 2024 11:21:22 -0400
+X-MC-Unique: BuiWbL8bPueyNVxlgpUhdA-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19AB51955F3D;
+	Tue,  8 Oct 2024 15:21:19 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.71])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 68A7219560A7;
+	Tue,  8 Oct 2024 15:21:12 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  8 Oct 2024 17:21:05 +0200 (CEST)
+Date: Tue, 8 Oct 2024 17:20:57 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, akpm@linux-foundation.org,
+	linux-mm@kvack.org, mjguzik@gmail.com, brauner@kernel.org,
+	jannh@google.com, mhocko@kernel.org, vbabka@suse.cz,
+	mingo@kernel.org
+Subject: Re: [PATCH v2 tip/perf/core 0/5] uprobes,mm: speculative lockless
+ VMA-to-uprobe lookup
+Message-ID: <20241008152056.GA9508@redhat.com>
+References: <20241001225207.2215639-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -100,25 +64,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241007205458.2bbdf736@gandalf.local.home>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rpCzCkGFqxcT_39UaFTAgq0pycf5z52K
-X-Proofpoint-GUID: r9NhdoWBAoOlbu5hPW1yGJhlEeNksSe2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-08_13,2024-10-08_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=9 clxscore=1011 suspectscore=0
- phishscore=0 adultscore=0 bulkscore=0 mlxscore=9 priorityscore=1501
- impostorscore=0 spamscore=9 mlxlogscore=101 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410080096
+In-Reply-To: <20241001225207.2215639-1-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Oct 07, 2024 at 08:54:58PM -0400, Steven Rostedt wrote:
-> On Mon, 7 Oct 2024 20:47:43 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> #define arch_ftrace_get_regs(fregs)	({ &arch_ftrace_regs(fregs)->regs; })
-> 
-> I may send a v2 (tomorrow).
+Well. I am in no position to ack these changes.
 
-Could you also write against which tree this patch is?
-It doesn't apply on top of Linus' master branch.
+But let me say that I personally like this series and I see nothing wrong,
+except perhaps 5/5 needs some data_race/etc annotations as we have already
+discussed.
+
+Thanks,
+
+Oleg.
+
+On 10/01, Andrii Nakryiko wrote:
+>
+> Implement speculative (lockless) resolution of VMA to inode to uprobe,
+> bypassing the need to take mmap_lock for reads, if possible. Patch #1 by Suren
+> adds mm_struct helpers that help detect whether mm_struct were changed, which
+> is used by uprobe logic to validate that speculative results can be trusted
+> after all the lookup logic results in a valid uprobe instance. Patch #2
+> follows to make mm_lock_seq into 64-bit counter (on 64-bit architectures).
+>
+> Patch #3 adds back RCU-delayed freeing for FMODE_BACKING files, which is
+> necessary to make speculation safe to access struct file's memory in any
+> possible situation.
+>
+> Patch #4 is a simplification to uprobe VMA flag checking, suggested by Oleg.
+>
+> And, finally, patch #5 is the speculative VMA-to-uprobe resolution logic. See
+> corresponding patch for details and benchmarking results.
+>
+> v1->v2:
+> - adjusted vma_end_write_all() comment to point out it should never be called
+>   manually now, but I wasn't sure how ACQUIRE/RELEASE comments should be
+>   reworded (previously requested by Jann), so I'd appreciate some help there
+>   (Jann);
+> - int -> long change for mm_lock_seq, as agreed at LPC2024 (Jann, Suren, Liam);
+> - kfree_rcu_mightsleep() for FMODE_BACKING (Suren, Christian);
+> - vm_flags simplification in find_active_uprobe_rcu() and
+>   find_active_uprobe_speculative() (Oleg);
+> - guard(rcu)() simplified find_active_uprobe_speculative() implementation.
+>
+> Andrii Nakryiko (4):
+>   mm: switch to 64-bit mm_lock_seq/vm_lock_seq on 64-bit architectures
+>   fs: add back RCU-delayed freeing of FMODE_BACKING file
+>   uprobes: simplify find_active_uprobe_rcu() VMA checks
+>   uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
+>
+> Suren Baghdasaryan (1):
+>   mm: introduce mmap_lock_speculation_{start|end}
+>
+>  fs/file_table.c           |  2 +-
+>  include/linux/mm.h        |  6 ++--
+>  include/linux/mm_types.h  |  7 ++--
+>  include/linux/mmap_lock.h | 72 ++++++++++++++++++++++++++++++++-------
+>  kernel/events/uprobes.c   | 46 ++++++++++++++++++++++++-
+>  kernel/fork.c             |  3 --
+>  6 files changed, 114 insertions(+), 22 deletions(-)
+>
+> --
+> 2.43.5
+>
+
