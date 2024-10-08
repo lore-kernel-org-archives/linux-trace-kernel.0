@@ -1,133 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40031189BBD;
-	Mon,  7 Oct 2024 21:10:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7145420ED;
+	Tue,  8 Oct 2024 00:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728335433; cv=none; b=m/8WqiPyURVqPaseIyVoD3yEt0xWU24oo3emyMFOETN9Q1RAFTLP2MlVjfQR9A5rpYYgoxxbLS8tisAuX61M+laQqhN2BmE0MmnaONQCojptIMUas9CW1jCdxHKU2TnOrER9p3b8W862slJroRE6nJ38MgOI8RY2o8GV7xgH81M=
+	t=1728347159; cv=none; b=DWKl+13SmzHWY5M0/GTp6AjoHM8k9ejmipXhziMS6ms0YP9alvV2+vhoHVEC+PnfzD/Uga5oWThX8/GNmypBJO7whilHne/KRo9WVgyQ+OHOQ2xobd8j8rg6/PlnGB/Iwz+2fxfvzUJp1RqTf/SNg6kIwMgft9XkMgYh6vV9wmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728335433; c=relaxed/simple;
-	bh=xGN35DS+Reg5MuMSn2us7xaD9u0dVlS84VO+lKwKRig=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tSIK5rF8FJ13Z+rq/0i0dfTUQy1M8FcIOnjA/tsApdZc2qnlfjGjEVmy7MC5IUEB5tgwNyDT0nU1vLOFpq8KpRpmeEWs/jgoIzoA/D1vTZYlb95A5CkmoZ187Qt8dH1jyVgicS8HmS7Vc7FeFmcJH2Nw2wb/zQ5ccobg+EglvPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABE3C4CEC6;
-	Mon,  7 Oct 2024 21:10:31 +0000 (UTC)
-Date: Mon, 7 Oct 2024 17:10:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Xie <jeff.xie@linux.dev>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehuan09@gmail.com, dolinux.peng@gmail.com, chensong_2000@189.cn
-Subject: Re: [PATCH v3] ftrace: Get the true parent ip for function tracer
-Message-ID: <20241007171027.629bdafd@gandalf.local.home>
-In-Reply-To: <20241005101320.766c1100@rorschach.local.home>
-References: <20240910133620.19711-1-jeff.xie@linux.dev>
-	<20241005101320.766c1100@rorschach.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728347159; c=relaxed/simple;
+	bh=cCwIj8LnQFwevOQ/BGPARxkFz7CHLKYsnaMOyfuJ9S4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KCVSrER5P1ksBvGBGygPU3ROLcnxP8AnvcIqoDj4WlqFtqt+CeYT138DcNObmTdQBWpaoK3Y/zw1TSO55sshK0qhfvOb3E8yQ0wTlulpkl8TUCykfVeophzwGNwWh4HobuqC0erUiGRuTUxeBzr2dXFSW05poBzJn0EGOWvsA/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfPKuaGK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfPKuaGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01E2C4CEC6;
+	Tue,  8 Oct 2024 00:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728347159;
+	bh=cCwIj8LnQFwevOQ/BGPARxkFz7CHLKYsnaMOyfuJ9S4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XfPKuaGKTP/DQ2W3Zg3By9fsVBA+GoZPxSrjryx1KDmy9nZgRjlTwuVfyT9BCE2dY
+	 NmiK+byHP9T2CgwjvTrEvoPwHYyaVYoFUF3l4HsrNC8KbbYEgrZO05u1eMPGqugxkS
+	 7sGPfN2S8N3DM6Q6kNANaAOQ+lv/P1bxmLteZRUhxJPLg6x3qh9lzXSO+ucn6DQBOu
+	 Y3tAsGFcC7onaJKt5Z8eXdFeUuvAZx6ypybx84yUArTsp6OApSsGQJ+gMx+0l9kGnp
+	 J3Ex7GMiVHWVuSH1KTHPEUDPX3XgRKdQb4WkUQrvGjKZR+Gp1LkQZT3R+f7HKJhU9e
+	 5bfsAmU3KCbEg==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	oleg@redhat.com
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mingo@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jolsa@kernel.org,
+	paulmck@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v2 tip/perf/core 0/2] SRCU-protected uretprobes hot path
+Date: Mon,  7 Oct 2024 17:25:54 -0700
+Message-ID: <20241008002556.2332835-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, 5 Oct 2024 10:13:20 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Recently landed changes make uprobe entry hot code path makes use of RCU Tasks
+Trace to avoid touching uprobe refcount, which at high frequency of uprobe
+triggering leads to excessive cache line bouncing and limited scalability with
+increased number of CPUs that simultaneously execute uprobe handlers.
 
-> The crash happened here:
+This patch set adds return uprobe (uretprobe) side of this, this time
+utilizing SRCU for the same reasons. Given the time between entry uprobe
+activation (at which point uretprobe code hijacks user-space stack to get
+activated on user function return) and uretprobe activation can be arbitrarily
+long and is completely under control of user code, we need to protect
+ourselves from too long or unbounded SRCU grace periods.
 
-This has been bothering me all weekend so I dug more into it.
+To that end we keep SRCU protection only for a limited time, and if user space
+code takes longer to return, pending uretprobe instances are "downgraded" to
+refcounted ones. This gives us best scalability and performance for
+high-frequency uretprobes, and keeps upper bound on SRCU grace period duration
+for low frequency uretprobes.
 
-The reason it was bothering me is because we use current later on, and it
-has no issue. But then I noticed the real bug!
+There are a bunch of synchronization issues between timer callback running in
+IRQ handler and current thread executing uretprobe handlers, which is
+abstracted away behind "hybrid lifetime uprobe" (hprobe) wrapper around uprobe
+instance itself.
 
-I was confused because the crashed instruction pointer was in the
-get_current() code. But that's not where the crash actually happened.
+There is now a speculative try_get_uprobe() and, possibly, a compensating
+put_uprobe() being done from the timer thread (softirq), so we need to make
+sure that put_uprobe() is working well from any context. This is what patch #1
+does, employing deferred work callback, and shifting all the locking to it.
 
-> 
-> static __always_inline unsigned long
-> function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-> {
->         unsigned long true_parent_ip;
->         int idx = 0;
-> 
->         true_parent_ip = parent_ip;
->         if (unlikely(parent_ip == (unsigned long)&return_to_handler))
->                 true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,  <<<----- CRASH
-
-That's not the crash
-
->                                 (unsigned long *)fregs->regs.sp);
-
-The above is!
-
-fregs should *NEVER* be used directly. OK, I need to make:
-
-struct ftrace_regs {
-	void *nothing_here[];
-};
-
-Now, to stop bugs like this.
-
-fregs is unique by architecture, and may not even be defined! That is, it
-can pass NULL for fregs. And only x86 has fregs->regs available. Other
-archs do not.
-
-You must use the fregs helper functions, thus the above can be:
-
-
-static __always_inline unsigned long
-function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-{
-	unsigned long true_parent_ip;
-	int idx = 0;
-
-	true_parent_ip = parent_ip;
-	if (unlikely(parent_ip == (unsigned long)&return_to_handler) && fregs)
-		true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,
-				(unsigned long *)ftrace_regs_get_stack_pointer(fregs));
-
-	return true_parent_ip;
-}
-
-So you can make a v5 with this update. And I'll go and make the empty
-ftrace_regs structure.
-
-Thanks!
-
--- Steve
+v1->v2:
+  - dropped single-stepped uprobes changes to make this change a bit more
+    palatable to Oleg and get some good will from him :)
+  - fixed the bug with not calling __srcu_read_unlock when "expiring" leased
+    uprobe, but failing to get refcount;
+  - switched hprobe implementation to an explicit state machine, which seems
+    to make logic more straightforward, evidenced by this allowing me to spot
+    the above subtle LEASED -> GONE transition bug;
+  - re-ran uprobe-stress many-many times, it was instrumental for getting
+    confidence in implementation and spotting subtle bugs (including the above
+    one, once I modified timer logic to ran at fixed interval to increase the
+    probability of races with the normal uretprobe consumer code);
+rfc->v1:
+  - made put_uprobe() work in any context, not just user context (Oleg);
+  - changed to unconditional mod_timer() usage to avoid races (Oleg).
+  - I kept single-stepped uprobe changes, as they have a simple use of all the
+    hprobe functionality developed in patch #1.
 
 
->         return true_parent_ip;
-> }
-> 
-> It appears that on some archs (x86 32 bit) the function tracer can be
-> called when "current" is not set up yet, and can crash when accessing it.
-> 
-> So perhaps we need to add:
-> 
-> #ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> static __always_inline unsigned long
-> function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
-> {
->         unsigned long true_parent_ip;
->         int idx = 0;
-> 
->         true_parent_ip = parent_ip;
->         if (unlikely(parent_ip == (unsigned long)&return_to_handler))
->                 true_parent_ip = ftrace_graph_ret_addr(current, &idx, parent_ip,  <<<----- CRASH
->                                 (unsigned long *)fregs->regs.sp);
->         return true_parent_ip;
-> }
-> #else
-> # define function_get_true_parent_ip(parent_ip, fregs)  parent_ip
-> #endif
-> 
-> That is, if the arch has noinstr implemented, it should always be safe
-> to access current, but if not, then there's no guarantee.
-> 
-> ?
+Andrii Nakryiko (2):
+  uprobes: allow put_uprobe() from non-sleepable softirq context
+  uprobes: SRCU-protect uretprobe lifetime (with timeout)
+
+ include/linux/uprobes.h |  54 ++++++-
+ kernel/events/uprobes.c | 312 ++++++++++++++++++++++++++++++++++------
+ 2 files changed, 321 insertions(+), 45 deletions(-)
+
+-- 
+2.43.5
+
