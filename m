@@ -1,70 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B045A13C9DE;
-	Tue,  8 Oct 2024 23:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0F23C39;
+	Wed,  9 Oct 2024 00:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728430405; cv=none; b=u+RPICdkq8+gkYseKrvMFs56k/pleVhYs911dR7UVoaAfGCLciOPwcWiNe87kwOT9U9g8YqlZRbth+fgLqmh44A+qCV5NikDmoc61+SdhHN7uZ1Bq1aOwx5L9h87huwG207xIPbl5RnOJNfIKjDNMkA1p7IWTXSOq/LeFlh7KIY=
+	t=1728435106; cv=none; b=p/qOSxpzOG4B8V8I1mcfyGAo+YZm3sOQsPmvz+bA3tWFmoqtbiPC1V90K+8c058GbqklY1+95dTFYAe6xVAej0MFmISGgdRryrGjhFHUOi7Lt6H5UcgxTYN1/M5iNLsDK4c4OZ0YYnGSAcWL9iSvRMpZow/5BQQBAPQLSWT6FvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728430405; c=relaxed/simple;
-	bh=dKVDfFAr0b0MtvkBJcDzwoo6jTmZ7IoYhnfqUJiQ+BA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e4HkoPsivlzMgcyGSMfz87G8zdPeRAw+n3nfw8RnpyNFu/UwK97TKh2kpb3P5G59bPo+Pj0lWd6j2q8hWBExWtO8aC/Ty9+vf+CeqrbTUjqtnVdXkxZTQDZAyUw+yiIt5kXsgYDuikrSKz9tfiiOkVg0X0thfpcCNZGIHEkzB8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575A0C4CEC7;
-	Tue,  8 Oct 2024 23:33:23 +0000 (UTC)
-Date: Tue, 8 Oct 2024 19:33:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
- Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, Joel
- Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] tracing: Allow system call tracepoints to handle
- page faults
-Message-ID: <20241008193326.5ec7fb10@gandalf.local.home>
-In-Reply-To: <20241004145818.1726671-1-mathieu.desnoyers@efficios.com>
-References: <20241004145818.1726671-1-mathieu.desnoyers@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728435106; c=relaxed/simple;
+	bh=1XfTTdw5dQ3fF+V6PcEuPOr8WlFewqaZxrEX7tEQlPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FtleL6MWBpTNqUdeL9uvVTWsQF39iQjXp+5X1SNbl3+zGFI+hT/vkmZLPuiItUxjln1Vr22iCulCItYH/bfL8lYTnEmW9pP+Bm3xRY31ioriFzrz50EmRZkoyQe9HV5lAlxzIBnhJ0hE7z1Nnqzs8/+Q12vE4rC35i/p3yM+WYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=PzJNVlEo; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="PzJNVlEo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1728435101;
+	bh=1XfTTdw5dQ3fF+V6PcEuPOr8WlFewqaZxrEX7tEQlPA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PzJNVlEouMt6HNBOUo3QVQL3MlE4zwmQSabtdOsnLfFoDNUOq3YW8Qwo/1TUwiL0H
+	 8pxQQKGGOUXw/UamEbOIxadr0BngBmubpWM5HygCA4uoFVs4SITlsi8Q9qX93e8mUY
+	 zTIyogVfk1oeSZdCD3lkTOY8b/xHKCs3EhpjVLXpYWjSUCvjxW6es6soOntpM/vKMC
+	 SpiFVvSlxg557I1zyP706eW5Ve4vOc9LJpzlSnWn04+RKYkgNuu0iCDPvZ1xC2yvyj
+	 7+IxB59DAUR03NmVg13y6ayrUlxT3801qoqPSYTghbtPqe3Xbm8kUGreuAnJqQI6bs
+	 y6aob3kuK5hlA==
+Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XNZ8Y4Kx5zRwV;
+	Tue,  8 Oct 2024 20:51:41 -0400 (EDT)
+Message-ID: <cbd40019-9034-4aad-a632-f63f16a9c9e3@efficios.com>
+Date: Tue, 8 Oct 2024 20:49:43 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/8] tracing/ftrace: guard syscall probe with
+ preempt_notrace
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
+ Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+ Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
+ Michael Jeanson <mjeanson@efficios.com>
+References: <20241004145818.1726671-1-mathieu.desnoyers@efficios.com>
+ <20241004145818.1726671-3-mathieu.desnoyers@efficios.com>
+ <20241008191957.6cb66fa2@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20241008191957.6cb66fa2@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri,  4 Oct 2024 10:58:10 -0400
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On 2024-10-09 01:19, Steven Rostedt wrote:
+> On Fri,  4 Oct 2024 10:58:12 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> +		      PARAMS(assign), PARAMS(print))			\
+>> +static notrace void							\
+>> +trace_event_raw_event_##call(void *__data, proto)			\
+>> +{									\
+>> +	guard(preempt_notrace)();					\
+>> +	do_trace_event_raw_event_##call(__data, args);			\
+>> +}
+>> +
+> 
+> Do we really need to use "guard()" for a single line function? Why make the
+> compiler do more work?
+> 
+> static notrace void							\
+> trace_event_raw_event_##call(void *__data, proto)			\
+> {									\
+> 	preempt_disable_notrace();					\
+> 	do_trace_event_raw_event_##call(__data, args);			\
+> 	preempt_enable_notrace();					\
+> }
+> 
+> Is more readable.
 
-> Wire up the system call tracepoints with Tasks Trace RCU to allow
-> the ftrace, perf, and eBPF tracers to handle page faults.
+I don't care. I'll do it your way (for all 3 patches).
 
-Hi Mathieu,
+Thanks,
 
-Looks good besides the little nits I mentioned.
+Mathieu
 
-Could you fix them up and rebase on top of:
+> 
+> -- Steve
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
-  branch: trace/core
-
-The biggest difference is that I added Josh's patch to not use the obsolete
-static_key_false() anymore. I fixed up your patch before applying it by
-basically just doing a:
-
-  s/static_key_false/static_branch_unlikely/
-
-And then removing the extra tabs at the end. That allowed it to apply
-without more tweaks.
-
-If you can send a v4 with those updates, I'll apply it and start testing it.
-
--- Steve
