@@ -1,117 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC4B198E83;
-	Wed,  9 Oct 2024 13:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8C7199FAD;
+	Wed,  9 Oct 2024 14:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728481400; cv=none; b=bflVi1I3sXQCRA9J5Xuq69/UhCSewrqT9j6/CyNmHx0GeU6I/Nye0lLX2v+orOhWjU6Ot2cmI8guJ56szBJ09gaHpmzczqIKH18d4yzIJWlu5BbDDRt4SO9sTiWGdd1QT2Fi2SOti4Px6B7xZ8psw0p5zlVGbBuDE0qSHu1izCQ=
+	t=1728482533; cv=none; b=lDCJVFBSFdQLWWrCU76LgIHlybHvEtkeJue7NTHNANy9w4SuDkWBQEzO+4AicTJrUNYteieoS+4sE75ZkxZT0KOTKO911dohA7W7NgaTd9M7TP2LWIC295rsJpEBNUDUdhYf5MKt5BaSjDl+hYuD5PfgxcN9sG1emDUWPDiqc5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728481400; c=relaxed/simple;
-	bh=S/oj15sxPWHK5m6VWGXl6leJe6peXcKr2JHoaMiRrOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a8O9ERMIM20wqlEFlzpeiIfFxDLaOz9UQBhhnHxHjs/DpO1IYseE4NBu+Lg0iBOTy9tYjG4z6P6WcnaY0TJ5sDcTN9LIAYi2jQVG6SO5Lm+WCcS0hS+JWOOZts9NesHAZAcT3+0f88tuIzc1z0WCinDrvwAFMX4h0av4TFaQgZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62A7C4CECD;
-	Wed,  9 Oct 2024 13:43:16 +0000 (UTC)
-Date: Wed, 9 Oct 2024 09:43:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, "linux-arch@vger.kernel.org"
- <linux-arch@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen
- N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul
-  Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas 
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav 
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] ftrace: Consolidate ftrace_regs accessor
- functions for archs using pt_regs
-Message-ID: <20241009094321.3f41f8a4@gandalf.local.home>
-In-Reply-To: <20241009134723.6b9eabfdc3cfee10f3757d85@kernel.org>
-References: <20241008230527.674939311@goodmis.org>
-	<20241008230629.118325673@goodmis.org>
-	<20241009134723.6b9eabfdc3cfee10f3757d85@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728482533; c=relaxed/simple;
+	bh=h3m4z6CvMibfnLPKSuhUW4y2ERcRckWqfbUIGewtTgA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gko3qFIA7ySIKrtnRhTQDL3Nc7WfLuLU47kx2Wa3L38e8+FJmS3BEfkI2TQfn8S5MnoYQy3O9cCcFdTzSjz0BdLeyl1WSVpzr2jeGe1JyOL+VUiSa7ErTY35XCj+kvmrEwjUGmQ7whAsu8484YJL20j2/mLsyDh5fMlyhpclqT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jBio+YSL; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jBio+YSL"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fabb837ddbso97352331fa.1;
+        Wed, 09 Oct 2024 07:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728482529; x=1729087329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fux8O+IPEy0HaEPq1LQWkC9rakbrNGkKReW143DXdkk=;
+        b=jBio+YSLvW/v9ZcCaqGifActK68OxkMMWpOV97blu4joO2YwljZWEGHqVYgMqsjeIC
+         MEQHdkKUIaGAhn9ZRGcPnUjeyQ2qQZt1wMjH8IZj1zNeQ/IOmzytsOIkEhk3Kzuqq7b/
+         naLSpjCu/4C9+kDeJnFqscAJoaxF+BGDKFxgEDr+fTFEXMaimQAO4LVUZouaKN2hc+wM
+         lPc7eqlu65lskFk/oPytT5NB91D4sff1w4TAolOPlCjCmbK9eEwUXtD+Sibe0CRFhalO
+         JGCiatpB+D30GjbtyHb/vChmmYWQ/3esVjcrOy89dlPxg7IqYVWh4/W04atcRRJKQLti
+         NyPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728482529; x=1729087329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fux8O+IPEy0HaEPq1LQWkC9rakbrNGkKReW143DXdkk=;
+        b=BHxCPIMYRJepqe2XKZs7b73CqN0al1Bu2lFNItAEW5tL0kUyUlWBpwIhEpreCgCyHl
+         /oa0SgQLPFGBUx9O7Ig6l8qm8zphQghSuky26OCtajE2EKBaanavFXK0axV4cpdOYh31
+         ofINPcAcnPiZuqxLYjHjdzx3rS7Vxip9E2Rq00EiXG8AYm3LJ+dTACImMLJ7T6OGwg/Y
+         AHc8hy8Ve9AgIn5t+3N3Xc09fGInq8JCJrGJP0hQWqPvstxs8e40u1sQK5Epx2009KOX
+         u6dZ2cIYero3zD2nOv/LkkwsUJyQLuqqX0GBBCr6ItW8RahNrYwdl41GC/sIsnFw1z0A
+         /6SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHDbLxQT20S0l4Wq1IPSnIL/9WnZGsHYoQ4YIGK7ecF1ALIiXViUgWCOXwlrlM4vYl2bxXBNJJ1Sf+NW9OXndRdDJB@vger.kernel.org, AJvYcCWe5pMydatn9l1tcR402bp9nXsZngPQtW0j0bOKvW8iaW7sDfuvshSqFJi0r/34VXcFVw5Fpi3twvbeCCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/pI0UPYRxY3G/K7GBnyhN936IBzpyIkXnYB0q1pcj6WtdB07u
+	J9pv4KhwrSZtK4u+n8mOINjg/m40AtfQJNyW1Xis2+bJ9aSQLBUtT4g+zpaFsEpMYqfOn725JUj
+	wCpPtpXhPdOlK6J86NynqjKj1oX0=
+X-Google-Smtp-Source: AGHT+IE2xJSoWcX/hyk+DBnCLkBl9b9V1fw1iJ7KcvOaLL+XUUaJziclV1ZQIqm1bRikHL11f0vIzGOn/47eie7GFP8=
+X-Received: by 2002:a05:651c:547:b0:2f7:6653:8053 with SMTP id
+ 38308e7fff4ca-2fb1873d455mr23071641fa.18.1728482527487; Wed, 09 Oct 2024
+ 07:02:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241009030340.16400-1-dolinux.peng@gmail.com> <20241009093727.4e99c1e2@gandalf.local.home>
+In-Reply-To: <20241009093727.4e99c1e2@gandalf.local.home>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Wed, 9 Oct 2024 22:01:51 +0800
+Message-ID: <CAErzpms1mGeBw364qsX1YV_4=4sPhMhTRsWsjHZmH8Ro5xWoyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 RESEND] function_graph: Support recording and printing
+ the function return address
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 9 Oct 2024 13:47:23 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed, Oct 9, 2024 at 9:37=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> On Wed,  9 Oct 2024 11:03:40 +0800
+> Donglin Peng <dolinux.peng@gmail.com> wrote:
+>
+> > From: Donglin Peng <pengdonglin@xiaomi.com>
+> >
+> > When using function_graph tracer to analyze the flow of kernel function
+> > execution, it is often necessary to quickly locate the exact line of co=
+de
+> > where the call occurs. While this may be easy at times, it can be more
+> > time-consuming when some functions are inlined or the flow is too long.
+> >
+> > This feature aims to simplify the process by recording the return addre=
+ss
+> > of traced funcions and printing it when outputing trace logs.
+> >
+> > To enhance human readability, the prefix 'ret=3D' is used for the kerne=
+l return
+> > value, while '<-' serves as the prefix for the return address in trace =
+logs to
+> > make it look more like the function tracer.
+> >
+> > A new trace option named 'funcgraph-retaddr' has been introduced, and t=
+he
+> > existing option 'sym-addr' can be used to control the format of the ret=
+urn
+> > address.
+> >
+>
+> Is there a reason for the resend? I already have it in my for-next branch=
+.
 
-> > --- /dev/null
-> > +++ b/include/linux/ftrace_regs.h
-> > @@ -0,0 +1,36 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _LINUX_FTRACE_TYPES_H
-> > +#define _LINUX_FTRACE_TYPES_H  
->                ^^^^^^^^^^^^^^^^  Is this _LINUX_FTRACE_REGS_H?
+I'm sorry and I did not notice it.
 
-Ah, I originally called it ftrace_types.h, but later decided that name
-didn't really fit. I changed all references to it but this one.
-
-Thanks for catching this.
-
-> 
-> 
-> > +
-> > +/*
-> > + * For archs that just copy pt_regs in ftrace regs, it can use this default.
-> > + * If an architecture does not use pt_regs, it must define all the below
-> > + * accessor functions.
-> > + */
-> > +#ifndef HAVE_ARCH_FTRACE_REGS
-> > +struct __arch_ftrace_regs {
-> > +	struct pt_regs		regs;
-> > +};
-> > +
-> > +#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
-> > +
-> > +struct ftrace_regs;
-> > +
-> > +#define ftrace_regs_get_instruction_pointer(fregs) \
-> > +	instruction_pointer(arch_ftrace_get_regs(fregs))
-> > +#define ftrace_regs_get_argument(fregs, n) \
-> > +	regs_get_kernel_argument(arch_ftrace_get_regs(fregs), n)
-> > +#define ftrace_regs_get_stack_pointer(fregs) \
-> > +	kernel_stack_pointer(arch_ftrace_get_regs(fregs))
-> > +#define ftrace_regs_return_value(fregs) \
-> > +	regs_return_value(arch_ftrace_get_regs(fregs))
-> > +#define ftrace_regs_set_return_value(fregs, ret) \
-> > +	regs_set_return_value(arch_ftrace_get_regs(fregs), ret)
-> > +#define ftrace_override_function_with_return(fregs) \
-> > +	override_function_with_return(arch_ftrace_get_regs(fregs))
-> > +#define ftrace_regs_query_register_offset(name) \
-> > +	regs_query_register_offset(name)
-> > +
-> > +#endif /* HAVE_ARCH_FTRACE_REGS */
-> > +
-> > +#endif /* _LINUX_FTRACE_TYPES_H */  
-> 
-> Ditto.
-> 
-> Others looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-I'll send a v2 with this update.
-
--- Steve
+>
+> -- Steve
