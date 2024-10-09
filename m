@@ -1,176 +1,125 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5C418C31;
-	Wed,  9 Oct 2024 00:58:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B910417C61;
+	Wed,  9 Oct 2024 01:09:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728435531; cv=none; b=M7CaheHNIFfKSgGj8CQF/erL6gFQhXWzpBHSMcwxPKOM5+qhrjS54QjvAfAIs0yXkWfIHAY8JqZiDRCQn5ns1Gk7C2RPIFnxBDm7SuNj1qIUkQ1R7Yttlhpi0UraJgLSd5x+pHC4dioFRtDIgWpe7awduzgDvDJDkYioTjRZ4hA=
+	t=1728436168; cv=none; b=gy5YrAveLh2XirZSsKmov8lkatTHDNotm+wotTNVyt/C0sSGKVOOyUpJjwvgVZQWEScBAplIJfFQVtnpir7jyw1Od43pZOQmGcaSpVhUYBRMfaLVZeBywdFElRV/ZSWiL+OTfIn7ZMyIvr9eUARqavrVN5nPgPvGIAk6rIXH36g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728435531; c=relaxed/simple;
-	bh=94+ST9p9ZEZx/gYVfmyH38elST3i1/AeA9RBXiRn/eg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gdv43cjn4PHwODWFpIDgTvpbr8cHJW4X2GW+9htvLYWyeM7XEGppzoYwpUEid+/OQlUY5+gZRgTm1S+ZoGIOlgCN/4MWXqy7kvTpPCF8uA5Ixd24wcvdVPL2Hk/4449USUsue/kjA71JZFLCxrOPxy+Uf9xWberr6bQU/h9rZdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=er78mva5; arc=none smtp.client-ip=167.114.26.122
+	s=arc-20240116; t=1728436168; c=relaxed/simple;
+	bh=9GSgJUiuUUyJLkUUQnuNrpGIyn0mhnN05LAJ0S/rlTM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tJ9Y3EPW5lB8wA7ucbGjVxM8NWwLONUSw3c0cue+Zs/HDcUWjsChS6Bm8ziM5frFRnSYDaE1zUjeyHVQPssC1NWSt3QtQEvMlbDTonFAq8E9jvcD1g6IGSSqZ6Un95k4xaqvpiUP7rEWv3ZzzOQo2GT9TyoQUC1ynAnjuiXECg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=BehcG5d7; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="er78mva5"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BehcG5d7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1728435528;
-	bh=94+ST9p9ZEZx/gYVfmyH38elST3i1/AeA9RBXiRn/eg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=er78mva5H84qSS+DrO+FFLZNhR6jQFx4KMWPz9soeRQZ1fLAEPm6MEUMEC4Ze/SGF
-	 wUVzFJH+Xw0XxOABG7guUjARHKUWLG8MxK0tMC+WpG8Y0aZiZFSnFu3UWTSGU1uaJW
-	 +ZwIsefYapDwzZjExa2ES9TDmJxWarAQBZdMM+eZ8xCWQ9juQ4+tRicjkab0ztNnQz
-	 i8tg5mzqU7dlpLVuuLWEoWGLpHtUuZz+f2JEMVIFrTtSxHq+i+8aNg0dQ800EuZKJq
-	 syMSJNpfB2Ul/I0lRhXff9vmXs3TT5mWlcecYo3XGHCkVIBr5Y1P2H2zZ5NKKham3b
-	 G6cVapbPHUnqQ==
-Received: from [IPV6:2606:6d00:100:4000:cacb:9855:de1f:ded2] (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XNZJm1FWfzSRw;
-	Tue,  8 Oct 2024 20:58:48 -0400 (EDT)
-Message-ID: <74d621a3-5b82-4831-a875-7c04e56dec7b@efficios.com>
-Date: Tue, 8 Oct 2024 20:56:51 -0400
+	s=smtpout1; t=1728436164;
+	bh=9GSgJUiuUUyJLkUUQnuNrpGIyn0mhnN05LAJ0S/rlTM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BehcG5d7wYRsBvNCQvyTZMLiPJtGjG/toVnu0rjx7DQrLy6dUrD6L+G0YkscmTkXM
+	 xSAJxccuGz/W+LtR4nl6qYHL+dCCNb9o7AV2tWSrYtESSYRh/KbJGcue018xOd3azU
+	 g5bM2wemAJ6dkNWQMr7dapknP5z0UfRJjVgKbxf6aVxWDZqP3EPWOzMmB0BxcnT5IH
+	 ALx4eWV+Ufl4NJ8zoyNPW0+TH/82y3CWx1+Li1HvKg7uqIE/SKhFJ1uzBF9VuqBdag
+	 Z6oV2SbE7ih22NiJZC1s8fX8XEYi8Z24+S8HbARYRxET7dsHMKRGQOt/TfZuH/Ihw4
+	 1LY/PBu7BTbag==
+Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XNZY01CsyzS7R;
+	Tue,  8 Oct 2024 21:09:24 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 0/8] tracing: Allow system call tracepoints to handle page faults
+Date: Tue,  8 Oct 2024 21:07:10 -0400
+Message-Id: <20241009010718.2050182-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] tracing: Allow system call tracepoints to handle
- page faults
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Alexei Starovoitov <ast@kernel.org>,
- Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Namhyung Kim <namhyung@kernel.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
- Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
- Michael Jeanson <mjeanson@efficios.com>
-References: <20241004145818.1726671-1-mathieu.desnoyers@efficios.com>
- <20241004145818.1726671-6-mathieu.desnoyers@efficios.com>
- <20241008192334.54180520@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20241008192334.54180520@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-10-09 01:23, Steven Rostedt wrote:
-> On Fri,  4 Oct 2024 10:58:15 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
->> Use Tasks Trace RCU to protect iteration of system call enter/exit
->> tracepoint probes to allow those probes to handle page faults.
->>
->> In preparation for this change, all tracers registering to system call
->> enter/exit tracepoints should expect those to be called with preemption
->> enabled.
->>
->> This allows tracers to fault-in userspace system call arguments such as
->> path strings within their probe callbacks.
->>
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Michael Jeanson <mjeanson@efficios.com>
->> Cc: Steven Rostedt <rostedt@goodmis.org>
->> Cc: Masami Hiramatsu <mhiramat@kernel.org>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Alexei Starovoitov <ast@kernel.org>
->> Cc: Yonghong Song <yhs@fb.com>
->> Cc: Paul E. McKenney <paulmck@kernel.org>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Namhyung Kim <namhyung@kernel.org>
->> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
->> Cc: bpf@vger.kernel.org
->> Cc: Joel Fernandes <joel@joelfernandes.org>
->> ---
->>   include/linux/tracepoint.h | 12 ++++++++++--
->>   init/Kconfig               |  1 +
->>   2 files changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
->> index 014790495ad8..cefd44b7c91f 100644
->> --- a/include/linux/tracepoint.h
->> +++ b/include/linux/tracepoint.h
->> @@ -17,6 +17,7 @@
->>   #include <linux/errno.h>
->>   #include <linux/types.h>
->>   #include <linux/rcupdate.h>
->> +#include <linux/rcupdate_trace.h>
->>   #include <linux/tracepoint-defs.h>
->>   #include <linux/static_call.h>
->>   
->> @@ -107,6 +108,7 @@ void for_each_tracepoint_in_module(struct module *mod,
->>   #ifdef CONFIG_TRACEPOINTS
->>   static inline void tracepoint_synchronize_unregister(void)
->>   {
->> +	synchronize_rcu_tasks_trace();
->>   	synchronize_rcu();
->>   }
->>   #else
->> @@ -204,11 +206,17 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->>   		if (!(cond))						\
->>   			return;						\
->>   									\
->> -		preempt_disable_notrace();				\
-> 
-> Should add a comment somewhere stating that the syscall version is to allow faults.
+Wire up the system call tracepoints with Tasks Trace RCU to allow
+the ftrace, perf, and eBPF tracers to handle page faults.
 
-I plan to add this comment on top of __TO_TRACE:
+This series does the initial wire-up allowing tracers to handle page
+faults, but leaves out the actual handling of said page faults as future
+work.
 
-+ *
-+ * With @syscall=0, the tracepoint callback array dereference is
-+ * protected by disabling preemption.
-+ * With @syscall=1, the tracepoint callback array dereference is
-+ * protected by Tasks Trace RCU, which allows probes to handle page
-+ * faults.
+This series was compile and runtime tested with ftrace and perf syscall
+tracing and raw syscall tracing, adding a WARN_ON_ONCE() in the
+generated code to validate that the intended probes are used for raw
+syscall tracing. The might_fault() added within those probes validate
+that they are called from a context where handling a page fault is OK.
+
+The eBPF people have been needing this feature for quite a while:
+https://lore.kernel.org/lkml/c323bce9-a04e-b1c3-580a-783fde259d60@fb.com/
+
+This series replaces the "Faultable Tracepoints v6" series found at [1].
+
+This has been rebased on trace/core commit:
+
+1537519062e2 (trace/core) tracepoint: Remove SRCU protection
+
+The changes since v3 take care of feedback from Steven.
 
 Thanks,
 
 Mathieu
 
+Link: https://lore.kernel.org/lkml/20240828144153.829582-1-mathieu.desnoyers@efficios.com/ # [1]
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: bpf@vger.kernel.org
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: linux-trace-kernel@vger.kernel.org
 
-> 
-> -- Steve
-> 
->> +		if (syscall)						\
->> +			rcu_read_lock_trace();				\
->> +		else							\
->> +			preempt_disable_notrace();			\
->>   									\
->>   		__DO_TRACE_CALL(name, TP_ARGS(args));			\
->>   									\
->> -		preempt_enable_notrace();				\
->> +		if (syscall)						\
->> +			rcu_read_unlock_trace();			\
->> +		else							\
->> +			preempt_enable_notrace();			\
->>   	} while (0)
->>   
->>   /*
->> diff --git a/init/Kconfig b/init/Kconfig
->> index fbd0cb06a50a..eedd0064fb36 100644
->> --- a/init/Kconfig
->> +++ b/init/Kconfig
->> @@ -1984,6 +1984,7 @@ config BINDGEN_VERSION_TEXT
->>   #
->>   config TRACEPOINTS
->>   	bool
->> +	select TASKS_TRACE_RCU
->>   
->>   source "kernel/Kconfig.kexec"
->>   
-> 
+Mathieu Desnoyers (8):
+  tracing: Declare system call tracepoints with TRACE_EVENT_SYSCALL
+  tracing/ftrace: disable preemption in syscall probe
+  tracing/perf: disable preemption in syscall probe
+  tracing/bpf: disable preemption in syscall probe
+  tracing: Allow system call tracepoints to handle page faults
+  tracing/ftrace: Add might_fault check to syscall probes
+  tracing/perf: Add might_fault check to syscall probes
+  tracing/bpf: Add might_fault check to syscall probes
+
+ include/linux/tracepoint.h      | 71 ++++++++++++++++++++++++++-------
+ include/trace/bpf_probe.h       | 14 +++++++
+ include/trace/define_trace.h    |  5 +++
+ include/trace/events/syscalls.h |  4 +-
+ include/trace/perf.h            | 44 ++++++++++++++++++--
+ include/trace/trace_events.h    | 62 ++++++++++++++++++++++++++--
+ init/Kconfig                    |  1 +
+ kernel/trace/trace_syscalls.c   | 28 +++++++++++++
+ 8 files changed, 205 insertions(+), 24 deletions(-)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+2.39.2
