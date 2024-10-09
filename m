@@ -1,126 +1,106 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABA81E32C2;
-	Wed,  9 Oct 2024 22:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A7816BE3A;
+	Wed,  9 Oct 2024 22:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728511624; cv=none; b=Z7swuTHjq55r9KEXNFwT6+Zfd30X4I/1aFYAHQ9b7UFZZMBTpmfRb98ZRLPJ7Auaid+b6lzDnIOx2wgGSzJdy4TVL256D6y9yZOSbwrn0EN0wq3b2sEIUKnN0zcql73mi6ZnZBhgKskTh9HeE5vYFfzQUVUMdPu3Dm5LL3VOORQ=
+	t=1728512633; cv=none; b=ZFo8BFFJTy6kc/8ZL25UxCnTBthkV7yoiGVu6a9s6EBCleeckbd4w9UGshJWOPY9C1oXc1rSEFNiclMpNrXhBbV2irQH+mYaiQIPvrOKDPQVuL0RNPMV1c7xe86nwfpPgXHDcu7/uliYIZKF3arUQln6RyucfWHpiMlghB+yP3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728511624; c=relaxed/simple;
-	bh=vamGcFrPRyfG19X12b4a/YEYp7dSMGPkZd9DEbWGDM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dT4lIL93yA2zAVn7J/4NSOspyNFbP/C0WxMKy4YdFyVpPX1r+G2sr70ZIIob9yXeezas1zbF2KYdQqcZAxh/QbNjH2kQMXfqbkDsAecavQLgMCHVQ46enho42ieNLWt3PdqpX8tCbM3qA8FSemFHAW9Guzxnaf7KKlIK37drNxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajlEsEXv; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728512633; c=relaxed/simple;
+	bh=w4l9dzDzlilO4E+6HL//zAT4zhaj8ld4amfc5zECEfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BgZFNti6Cp5Zfvo74gnk4Y8sLJAE2yWeVysachcCehMVU98fZPCD6GG8MhgZ7YuMkXblZpnp/uSOOh6Fmb/P8mNrKQwAZMewbybzD/XACx8v86FzAZG7HvMag8xUwjXsZowwlyicC2jB2InIeWDF+mHEezf9NUBZfSYXQMXOLpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wiwa3rlr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajlEsEXv"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6e330a7b120so1330677b3.2;
-        Wed, 09 Oct 2024 15:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728511622; x=1729116422; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZGOsm3YR+E73cJ0SGQHJhXA862v5jLb24Y7Aj3c+FE=;
-        b=ajlEsEXv09GzmaWk7BNIG7MOsyUtIRZhxCmwbBmLHgxzH7gXRbMrPYD09E2cml2/2C
-         rppHWyTMrib4L5omndUWBS3ltg38VLVjVnH+3KTIJT9nbsKbv/spAEF5kOn0rNVBbVdg
-         6hru/P9KlKBp8T+DP7roHnxMWtOVWuMrP19siLbIKe55SdwFmagMt5qfIzIT5EyEBQoC
-         FzUCJU+OzpB2Z8/kckZ3FamC35mPUszZwwB4A+AOcLBHCQk5TPR7pYjdTrfAYvSIC99c
-         rSwcTqDSSDGMw3o2l6phqZj/0uaWZbBqm6OtI17z60iTgSZ21ezOWdHlxUdEWUN5PxK2
-         jEPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728511622; x=1729116422;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZGOsm3YR+E73cJ0SGQHJhXA862v5jLb24Y7Aj3c+FE=;
-        b=M0+Jvd4CDBoDcyV+K4YmxWIVwRFhUO+aooaYg7r0NwsCpkf+9EKZeiRCvqyNm4qyVM
-         ub0GMvfNGDnGhC9646wtwAFpbZZEhXrgtJGcFRfaMx3upgzNn01kwwZmJTPxC7DhmOxW
-         Zr8M7n6Cnb52OdTzUCAfGqjgoQBOQE20SxG/OkzddtcohTF5EAa5CL4A+aw70yh3fvwr
-         FkZ5WpTLv/7mk+zWuKXyfpfqDZUPhzEO+LHYaq8143H93LSGtG0IG3x/14QlgFMpsiD1
-         OZx736HyOd9wjMBPZgcml81OAF8Aih9TGFFGKQAPNuHvkSONgoFOl8c0zDB63P8omDAQ
-         rfEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVffa/kvHoihrrMi0R6PehurCp7U1nvz28OBeikQ/sWOgALUvTdlV97RCXntxJjy7uh4RUG2rZlJdJjaBRY02Lv@vger.kernel.org, AJvYcCWaSU2XtXLrKFpfEIItrLUFqfV+7VOo1L/EUjE81c55sYxcMUpv5SZwDm9abkDIPFa1YTM9Kuyw+hDYvO4=@vger.kernel.org, AJvYcCXSRIPxkHQt7BLPn2LP3UbiCqjmfrDHmfHhR+6r7Ym3vO6jdv4WAyZiRab4k+3KZm21PeoJFr8VEHoNvxzF1IgLXTIO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG/rYjuNqUc1/X7D4RT6sw1DYGFjr0WKrHR5XDjTU3Pz5rqC+j
-	OYKxGUUowJ96JtsF4uWI7a92mRsY0EXV7NtAJn4TUlNSL55xskZheU9t06FB
-X-Google-Smtp-Source: AGHT+IF1uyZrUK2/Sy4TPteRgeer5kAxQj+FQiPxRggZ89itv4Zhagt8kBp2ymbhkdbDtg6qJgOcpw==
-X-Received: by 2002:a05:690c:113:b0:6e3:ceb:ce2b with SMTP id 00721157ae682-6e32250ade9mr39798427b3.44.1728511622150;
-        Wed, 09 Oct 2024 15:07:02 -0700 (PDT)
-Received: from dev-ubuntu-0.. (104-15-236-76.lightspeed.rlghnc.sbcglobal.net. [104.15.236.76])
-        by smtp.googlemail.com with ESMTPSA id 00721157ae682-6e2d926b44esm20294217b3.16.2024.10.09.15.07.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 15:07:01 -0700 (PDT)
-From: Tyrone Wu <wudevelops@gmail.com>
-To: bpf@vger.kernel.org,
-	wudevelops@gmail.com
-Cc: kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	song@kernel.org,
-	jolsa@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	kernel-patches-bot@fb.com
-Subject: [PATCH bpf v1 2/2] selftests/bpf: assert link info uprobe_multi count & path_size if unset
-Date: Wed,  9 Oct 2024 22:06:38 +0000
-Message-ID: <20241009220638.333429-2-wudevelops@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241009220638.333429-1-wudevelops@gmail.com>
-References: <20241009220638.333429-1-wudevelops@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wiwa3rlr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C8D7C4CECC;
+	Wed,  9 Oct 2024 22:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728512632;
+	bh=w4l9dzDzlilO4E+6HL//zAT4zhaj8ld4amfc5zECEfQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Wiwa3rlrYH9BC46EoCHkt+QLbJoTT1X2QA01HAqIYKjAte3oUq44GaeL+zZ4AkJ2c
+	 2fmhTarWCgJZzvugjgiXFaapdrUxRw+aMHjQkxk7R7tMQ4X8TAISQfJF8mwZjkVS1k
+	 P8ckfmO9JeSeyS8x4lu0kJaTjkOtHpLIIPYKJmo4HQ1/9VWZa6uO3ff20ntiwcvv+8
+	 WNsOi1fvz3WyQp8/mTsIKp1bTZX1Q46ddgghD/obeQF4nyOrExSGPC7njchLh/Wo1L
+	 w8uAfe7NKlqBlMlX1oAMsBsi5zUdQStu0GaxZpBZ0z6hB0R3qZA3l0SEImsa2B3CEC
+	 jNcMMmsZn1/Ag==
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a394418442so1476475ab.0;
+        Wed, 09 Oct 2024 15:23:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU61D2CRcLaVMIBuI6bY2KR8gDO+54vJTIDrd9dXpGnlhfz9PSeIgFxDEo0aa683hEME9WacFNEcK75/Q==@vger.kernel.org, AJvYcCU6d3T+xfYZy2ZFXy9VmY0Bz4A9MHDIH3H1Dt3ynUChED1Q2uAlSOfIdOM6LQQ9gJ3QHvtJ58hVz3HIyt6ZAg==@vger.kernel.org, AJvYcCUAd9vKSVac0AFdqFCSYRMUhYB+UQLfnbKVNt9XTL7TY1kal0FuLABW1DsLU43cPhtJW/5DDpstPUugb0hi@vger.kernel.org, AJvYcCUYrvTnCSh4MK873qv36UUCOhdtHj19TbOGgvM8d0S8sWOsfqIyiJ6jPS0CEqCe9YN2eoeS1IyefRRd1mNpLA==@vger.kernel.org, AJvYcCVI5+g2UIN13rDvUyTWLgNl03epMtsNWRHbF8T6c3XzRTEe5Te85331sYOS5vLSJ23RA4w=@vger.kernel.org, AJvYcCW5r0tPZikGROllmLilDHOQcXRNzPcUchdGX0JolS0jcZy30DBVKz4HMtBSYTVRlFHWXAQCfX1lLLx0fw==@vger.kernel.org, AJvYcCWIF2EZtnabVrRizeMQ/Tep9LTVr87ZDxZx83HJvZQQQ86NsOwKQHEzOKDN0Xqawqdss2IsMK+oO/OFnG3apSU=@vger.kernel.org, AJvYcCWW7Pza1E4TOk00NSKM83YK/yh7inog4RCog7HafeZksnpyNXVeFZSoFS5NHHbNTJ47fNcRqy0QITM+Vw==@vger.kernel.org, AJvYcCXCTVRsAhw+rPuKzky04p2bXjw8VQZ82+vrCqfA4Yx0DnKKYncBjkvhgSv79h37ER6NxmrHjY27AuB+/w==@vger.kernel.org, AJvYcCXZRssXwAo/AoVv+xF31T8SbmiHry76PkvJONpDdg1KO/SSvumEAS5ouqmtI6xptdmebRNO62viHxFfT5k=@vger.kernel.org, AJvYcCXbg/L4OaMANur3cTXZeXkAmiqmyFSK97rxe7C5AHGfqMAi/4MIVi9X8X3oe03WPJ1PJjJxhdVnmVODVzTSzoA8gESi@vger.kernel.org, AJvYcCXpMyniBp7nUwtryj0Diu50gmpx6gzO6of+c7dZofHAtVJRf6vBep9vIVdkig4y3/RA7XDZODFZ33O86nEc@vger.kernel.org, AJvYcCXvXb0vrL9zsDB5gWaymu5B7GP/LIsC0kSisKZlo3yGno3edCKU/B6Jm+pbe0yvNRKmGUHLzNlxAFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXv35Vz6MPYXtnQB6bXHLaTDBgUIz1+Bcw9ur/SOVy01qpX3mK
+	8AU3HMd55oMTZ91TqFK75LVJk+fRg3aWoLiA1riG08HddGm4Y6BbnmK+3053It5O/qJYBG15IR0
+	V5jvbKTFl4U5B0UDDgnKBlf2+VeQ=
+X-Google-Smtp-Source: AGHT+IE+0c/kMVosLTSGHy+n6QvIYJcOAn6W5BXDQkMmjF/nhxZwOJHSZ6SOjh26Vu9mUcUiW0DFRwoy/+Y0vdg6KQk=
+X-Received: by 2002:a05:6e02:1fe6:b0:3a0:aac2:a0a4 with SMTP id
+ e9e14a558f8ab-3a397cffa21mr40549325ab.9.1728512631542; Wed, 09 Oct 2024
+ 15:23:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241009180816.83591-1-rppt@kernel.org> <20241009180816.83591-5-rppt@kernel.org>
+In-Reply-To: <20241009180816.83591-5-rppt@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Wed, 9 Oct 2024 15:23:40 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com>
+Message-ID: <CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] module: prepare to handle ROX allocations for text
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@infradead.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add assertions in `bpf_link_info.uprobe_multi` test to verify that
-`count` and `path_size` fields are correctly populated when the fields
-are unset.
+On Wed, Oct 9, 2024 at 11:10=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
+[...]
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 88ecc5e9f523..7039f609c6ef 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -367,6 +367,8 @@ enum mod_mem_type {
+>
+>  struct module_memory {
+>         void *base;
+> +       void *rw_copy;
+> +       bool is_rox;
+>         unsigned int size;
 
-This tests a previous bug where the `path_size` field was not populated
-when `path` and `path_size` were unset.
+Do we really need to hold the rw_copy all the time? I was
+thinking we only need a temporary buffer when we want to
+update anything. The buffer might be much smaller than "size".
 
-Signed-off-by: Tyrone Wu <wudevelops@gmail.com>
----
- tools/testing/selftests/bpf/prog_tests/fill_link_info.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks,
+Song
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-index f3932941bbaa..a38cf2a999fe 100644
---- a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-@@ -417,6 +417,13 @@ verify_umulti_link_info(int fd, bool retprobe, __u64 *offsets,
- 	if (!ASSERT_NEQ(err, -1, "readlink"))
- 		return -1;
- 
-+	memset(&info, 0, sizeof(info));
-+	err = bpf_link_get_info_by_fd(fd, &info, &len);
-+
-+	ASSERT_EQ(info.uprobe_multi.count, 3, "info.uprobe_multi.count");
-+	ASSERT_EQ(info.uprobe_multi.path_size, strlen(path) + 1,
-+		  "info.uprobe_multi.path_size");
-+
- 	for (bit = 0; bit < 8; bit++) {
- 		memset(&info, 0, sizeof(info));
- 		info.uprobe_multi.path = ptr_to_u64(path_buf);
--- 
-2.43.0
-
+[...]
