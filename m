@@ -1,419 +1,543 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852371311AC;
-	Wed,  9 Oct 2024 16:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC5C19D89D;
+	Wed,  9 Oct 2024 17:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728491548; cv=none; b=Ab9sYlIg1rJspSUEwXQA1ob+RMrpVXjFzbzxKBohfOEvEf0sStOgrMgtgAOf/hYhaq+N+fhQMGu1n5zGOFHRdZAX/7CKWMzE+XuhP/fS2wfOOId45f4jeVx4xc2xmMY7DKv+HnQMzzoT4b67cMHeavJcO9rvMTn87ME03GWHmVQ=
+	t=1728493753; cv=none; b=nj4ZP6F/26QrN/P+8VgWOCsf3TjsDn5htW7AO6acnhvFCCz0cXsKwKgYUG7d0VoN23mWe7PwUZlqiy/frc4WcVkROJfsKAj+IQ2G5UwilKUhCXtKUVjth4F1KIrDhTDOMMlhmzFjA/oVbFr74tFlRu8QMrM+Xit3xhe66yKTzUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728491548; c=relaxed/simple;
-	bh=H8kMD+ZLPbOuplsVxJVxDttLpii+7PcM5K3w8mLdXKE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mgsRgSuVWP1KmyckEQdSiF1qRXSRJkqP6oQWjBL1geWgRU7HT2Ykwa+iODmW9N6EMuE9nbQKUxLixqq8cWI074jnQlpKD/1siVkWxz9bCAL9HUO/y407Y4+CTRVa1TGZbYLV+dhxkCtroD5b5sRgPNiMApEbPaEcc4AmSZpPupk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhkWnZKz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728493753; c=relaxed/simple;
+	bh=kgixgc+a7mFRlSrMz54ba+jdRY71a0kwT1CdseV36pg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=txycXv40q7mYLGdQQNS5IlDIy1Tr7RzdS3/T/+na3onZ1fpmkG7pnF7ckN1wjN5sfTyUmxJBYcegz0sPAOQpIZxYkf/ETRspwpBRBs+2A8TnEBiJAEN5HOcO7iys8HFn1dWUYKybcAOVNQUru1QhHXxNbVSbGbduRJxJLK1Vo5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=P2PqLt2R; arc=none smtp.client-ip=192.134.164.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhkWnZKz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 539CBC4CEC3;
-	Wed,  9 Oct 2024 16:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728491546;
-	bh=H8kMD+ZLPbOuplsVxJVxDttLpii+7PcM5K3w8mLdXKE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jhkWnZKzaaNFJkEcCbrLP5OBfqHgK0h5oIp/9e/1NheldWTND29S8MEIawx2LEp0L
-	 y8xmLnRwimc0JTLIHRI4cBRsLhn8piQtps/HajACJW+V8vIPW0Ut9/MVhh5fCNVmYh
-	 DQU4zFTmMolB6LsKXqM4lUf/9YlPazGpnOCf9k2RIgwdp+M3iukxBQMLZR/USORsnT
-	 DOpGD9EpdCoZ9DhnLFy5bXRz7fm+/l/9kj66Dr5TQotIkIMvPH8o9hJbvt1MqAzhYr
-	 nwop7gVoKhdD9MtjeS94miOt/onaTB4d12cfb0j/e67TBTub1pJpRaY6ISJQZwjDPI
-	 fbA4y4O6f1vHg==
-Date: Thu, 10 Oct 2024 01:32:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Donglin Peng <dolinux.peng@gmail.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 RESEND] function_graph: Support recording and
- printing the function return address
-Message-Id: <20241010013222.3748287f165e9f874eda0f84@kernel.org>
-In-Reply-To: <20241009030340.16400-1-dolinux.peng@gmail.com>
-References: <20241009030340.16400-1-dolinux.peng@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="P2PqLt2R"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Ei5tc3PfylWx64diDodItk/7guQ0rWtWfXKiWLfUtgQ=;
+  b=P2PqLt2RJ+Vn9j341bwlMFTU0FcgGXEDMFVS+UK6LZzeDKmKGXto1w8j
+   K/UPWGc5Oo6GHXmTdg8fStaJMC/k3hx+pSQdL8w3lyFTdpS8OkkG5zDEG
+   Y7Pccq9IONrVVfDA82M2vhDcH9SREB3ieHiHQ3R+Ik67CNB3LEXQoDFz1
+   4=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.11,190,1725314400"; 
+   d="scan'208";a="98667983"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2024 19:08:59 +0200
+Date: Wed, 9 Oct 2024 19:08:58 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+cc: Vlastimil Babka <vbabka@suse.cz>, Uladzislau Rezki <urezki@gmail.com>, 
+    "Jason A. Donenfeld" <Jason@zx2c4.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Julia Lawall <Julia.Lawall@inria.fr>, linux-block@vger.kernel.org, 
+    kernel-janitors@vger.kernel.org, bridge@lists.linux.dev, 
+    linux-trace-kernel@vger.kernel.org, 
+    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, kvm@vger.kernel.org, 
+    linuxppc-dev@lists.ozlabs.org, 
+    "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    Nicholas Piggin <npiggin@gmail.com>, netdev@vger.kernel.org, 
+    wireguard@lists.zx2c4.com, linux-kernel@vger.kernel.org, 
+    ecryptfs@vger.kernel.org, Neil Brown <neilb@suse.de>, 
+    Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+    Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
+    linux-can@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>, 
+    netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+    kasan-dev <kasan-dev@googlegroups.com>
+Subject: Re: [PATCH 00/14] replace call_rcu by kfree_rcu for simple
+ kmem_cache_free callback
+In-Reply-To: <acf7a96b-facb-469b-8079-edbec7770780@paulmck-laptop>
+Message-ID: <2ae9cb0-b16e-58a-693b-7cd927657946@inria.fr>
+References: <36c60acd-543e-48c5-8bd2-6ed509972d28@suse.cz> <ZnFT1Czb8oRb0SE7@pc636> <5c8b2883-962f-431f-b2d3-3632755de3b0@paulmck-laptop> <9967fdfa-e649-456d-a0cb-b4c4bf7f9d68@suse.cz> <6dad6e9f-e0ca-4446-be9c-1be25b2536dd@paulmck-laptop>
+ <4cba4a48-902b-4fb6-895c-c8e6b64e0d5f@suse.cz> <ZnVInAV8BXhgAjP_@pc636> <df0716ac-c995-498c-83ee-b8c25302f9ed@suse.cz> <b3d9710a-805e-4e37-8295-b5ec1133d15c@paulmck-laptop> <37807ec7-d521-4f01-bcfc-a32650d5de25@suse.cz>
+ <acf7a96b-facb-469b-8079-edbec7770780@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed,  9 Oct 2024 11:03:40 +0800
-Donglin Peng <dolinux.peng@gmail.com> wrote:
+Hello,
 
-> From: Donglin Peng <pengdonglin@xiaomi.com>
-> 
-> When using function_graph tracer to analyze the flow of kernel function
-> execution, it is often necessary to quickly locate the exact line of code
-> where the call occurs. While this may be easy at times, it can be more
-> time-consuming when some functions are inlined or the flow is too long.
-> 
-> This feature aims to simplify the process by recording the return address
-> of traced funcions and printing it when outputing trace logs.
-> 
-> To enhance human readability, the prefix 'ret=' is used for the kernel return
-> value, while '<-' serves as the prefix for the return address in trace logs to
-> make it look more like the function tracer.
-> 
-> A new trace option named 'funcgraph-retaddr' has been introduced, and the
-> existing option 'sym-addr' can be used to control the format of the return
-> address.
-> 
-> See below logs with both funcgraph-retval and funcgraph-retaddr enabled.
-> 
-> 0)             | load_elf_binary() { /* <-bprm_execve+0x249/0x600 */
-> 0)             |   load_elf_phdrs() { /* <-load_elf_binary+0x84/0x1730 */
-> 0)             |     __kmalloc_noprof() { /* <-load_elf_phdrs+0x4a/0xb0 */
-> 0)   3.657 us  |       __cond_resched(); /* <-__kmalloc_noprof+0x28c/0x390 ret=0x0 */
-> 0) + 24.335 us |     } /* __kmalloc_noprof ret=0xffff8882007f3000 */
-> 0)             |     kernel_read() { /* <-load_elf_phdrs+0x6c/0xb0 */
-> 0)             |       rw_verify_area() { /* <-kernel_read+0x2b/0x50 */
-> 0)             |         security_file_permission() { /* <-kernel_read+0x2b/0x50 */
-> 0)             |           selinux_file_permission() { /* <-security_file_permission+0x26/0x40 */
-> 0)             |             __inode_security_revalidate() { /* <-selinux_file_permission+0x6d/0x140 */
-> 0)   2.034 us  |               __cond_resched(); /* <-__inode_security_revalidate+0x5f/0x80 ret=0x0 */
-> 0)   6.602 us  |             } /* __inode_security_revalidate ret=0x0 */
-> 0)   2.214 us  |             avc_policy_seqno(); /* <-selinux_file_permission+0x107/0x140 ret=0x0 */
-> 0) + 16.670 us |           } /* selinux_file_permission ret=0x0 */
-> 0) + 20.809 us |         } /* security_file_permission ret=0x0 */
-> 0) + 25.217 us |       } /* rw_verify_area ret=0x0 */
-> 0)             |       __kernel_read() { /* <-load_elf_phdrs+0x6c/0xb0 */
-> 0)             |         ext4_file_read_iter() { /* <-__kernel_read+0x160/0x2e0 */
-> 
-> Then, we can use the faddr2line to locate the source code, for example:
-> 
-> $ ./scripts/faddr2line ./vmlinux load_elf_phdrs+0x6c/0xb0
-> load_elf_phdrs+0x6c/0xb0:
-> elf_read at fs/binfmt_elf.c:471
-> (inlined by) load_elf_phdrs at fs/binfmt_elf.c:531
+I have rerun the semantic patch that removes call_rcu calls in cases where
+the callback function just does some pointer arithmetic and calls
+kmem_cache_free.  Let me know if this looks ok, and if so, I can make a
+more formal patch submission.
 
-Hi, I found this introduced "extras" to the fgraph callback interface
-but it is only used in function_graph tracer. Can we move this in the
-function_graph tracer, like below?
+This is against:
 
-Thank you,
+commit 75b607fab38d149f232f01eae5e6392b394dd659 (HEAD -> master, origin/master, origin/HEAD)
+Merge: 5b7c893ed5ed e0ed52154e86
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Oct 8 12:54:04 2024 -0700
+
+    Merge tag 'sched_ext-for-6.12-rc2-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext
 
 
-From 8c2851452dd11a3a20ab22bd6bf8dd663c3c4b9c Mon Sep 17 00:00:00 2001
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Date: Thu, 10 Oct 2024 00:58:12 +0900
-Subject: [PATCH] tracing/fgraph: Simplify return address printing in function
- graph tracer
+julia
 
-Simplify return address printing in the function graph tracer by removing
-fgraph_extras. Since this feature is only used by the function graph
-tracer and we can check the flag directly in the function graph tracer,
-we can remove the fgraph_extras from the fgraph callback.
+diff -u -p a/arch/powerpc/kvm/book3s_mmu_hpte.c b/arch/powerpc/kvm/book3s_mmu_hpte.c
+--- a/arch/powerpc/kvm/book3s_mmu_hpte.c
++++ b/arch/powerpc/kvm/book3s_mmu_hpte.c
+@@ -92,12 +92,6 @@ void kvmppc_mmu_hpte_cache_map(struct kv
+ 	spin_unlock(&vcpu3s->mmu_lock);
+ }
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/linux/ftrace.h               | 16 ++++------
- kernel/trace/fgraph.c                | 45 ++++++++++++++++++----------
- kernel/trace/ftrace.c                |  3 +-
- kernel/trace/trace.h                 |  3 +-
- kernel/trace/trace_functions_graph.c | 14 ++++-----
- kernel/trace/trace_irqsoff.c         |  3 +-
- kernel/trace/trace_sched_wakeup.c    |  3 +-
- kernel/trace/trace_selftest.c        |  8 ++---
- 8 files changed, 48 insertions(+), 47 deletions(-)
-
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 2ac3b3b53cd0..997e1f0335b6 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1068,29 +1068,20 @@ struct ftrace_graph_ret {
- 	unsigned long long rettime;
- } __packed;
- 
--struct fgraph_extras;
- struct fgraph_ops;
- 
- /* Type of the callback handlers for tracing function graph*/
- typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *,
- 				       struct fgraph_ops *); /* return */
- typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *,
--				      struct fgraph_ops *,
--				      struct fgraph_extras *); /* entry */
-+				      struct fgraph_ops *); /* entry */
- 
- extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
--				   struct fgraph_ops *gops,
--				   struct fgraph_extras *extras);
-+				   struct fgraph_ops *gops);
- bool ftrace_pids_enabled(struct ftrace_ops *ops);
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 
--/* Used to convey some extra datas when creating a graph entry */
--struct fgraph_extras {
--	u32 flags;
--	unsigned long retaddr;
--};
+-static void free_pte_rcu(struct rcu_head *head)
+-{
+-	struct hpte_cache *pte = container_of(head, struct hpte_cache, rcu_head);
+-	kmem_cache_free(hpte_cache, pte);
+-}
 -
- struct fgraph_ops {
- 	trace_func_graph_ent_t		entryfunc;
- 	trace_func_graph_ret_t		retfunc;
-@@ -1131,12 +1122,15 @@ function_graph_enter(unsigned long ret, unsigned long func,
- 
- struct ftrace_ret_stack *
- ftrace_graph_get_ret_stack(struct task_struct *task, int skip);
-+unsigned long ftrace_graph_top_ret_addr(struct task_struct *task);
- 
- unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 				    unsigned long ret, unsigned long *retp);
- unsigned long *fgraph_get_task_var(struct fgraph_ops *gops);
- 
- u32 graph_tracer_flags_get(u32 flags);
-+#define graph_tracer_flags_is_set(flags)	\
-+	(graph_tracer_flags_get(flags) == (flags))
- 
+ static void invalidate_pte(struct kvm_vcpu *vcpu, struct hpte_cache *pte)
+ {
+ 	struct kvmppc_vcpu_book3s *vcpu3s = to_book3s(vcpu);
+@@ -126,7 +120,7 @@ static void invalidate_pte(struct kvm_vc
+
+ 	spin_unlock(&vcpu3s->mmu_lock);
+
+-	call_rcu(&pte->rcu_head, free_pte_rcu);
++	kfree_rcu(pte, rcu_head);
+ }
+
+ static void kvmppc_mmu_pte_flush_all(struct kvm_vcpu *vcpu)
+diff -u -p a/block/blk-ioc.c b/block/blk-ioc.c
+--- a/block/blk-ioc.c
++++ b/block/blk-ioc.c
+@@ -32,13 +32,6 @@ static void get_io_context(struct io_con
+ 	atomic_long_inc(&ioc->refcount);
+ }
+
+-static void icq_free_icq_rcu(struct rcu_head *head)
+-{
+-	struct io_cq *icq = container_of(head, struct io_cq, __rcu_head);
+-
+-	kmem_cache_free(icq->__rcu_icq_cache, icq);
+-}
+-
  /*
-  * Sometimes we don't want to trace a function with the function
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 27e523f01ed2..ee829d65f301 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -290,8 +290,7 @@ static inline unsigned long make_data_type_val(int idx, int size, int offset)
+  * Exit an icq. Called with ioc locked for blk-mq, and with both ioc
+  * and queue locked for legacy.
+@@ -102,7 +95,7 @@ static void ioc_destroy_icq(struct io_cq
+ 	 */
+ 	icq->__rcu_icq_cache = et->icq_cache;
+ 	icq->flags |= ICQ_DESTROYED;
+-	call_rcu(&icq->__rcu_head, icq_free_icq_rcu);
++	kfree_rcu(icq, __rcu_head);
  }
- 
- /* ftrace_graph_entry set to this to tell some archs to run function graph */
--static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops,
--		     struct fgraph_extras *extras)
-+static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops)
- {
- 	return 0;
+
+ /*
+diff -u -p a/drivers/net/wireguard/allowedips.c b/drivers/net/wireguard/allowedips.c
+--- a/drivers/net/wireguard/allowedips.c
++++ b/drivers/net/wireguard/allowedips.c
+@@ -48,11 +48,6 @@ static void push_rcu(struct allowedips_n
+ 	}
  }
-@@ -519,8 +518,7 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
- #endif
- 
- int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
--			    struct fgraph_ops *gops,
--			    struct fgraph_extras *extras)
-+			    struct fgraph_ops *gops)
- {
- 	return 0;
- }
-@@ -648,20 +646,13 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 			 unsigned long frame_pointer, unsigned long *retp)
- {
- 	struct ftrace_graph_ent trace;
--	struct fgraph_extras extras;
- 	unsigned long bitmap = 0;
- 	int offset;
- 	int i;
--	int idx = 0;
- 
- 	trace.func = func;
- 	trace.depth = ++current->curr_ret_depth;
- 
--	extras.flags = graph_tracer_flags_get(TRACE_GRAPH_PRINT_RETADDR);
--	if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR)
--		&& extras.flags & TRACE_GRAPH_PRINT_RETADDR)
--		extras.retaddr = ftrace_graph_ret_addr(current, &idx, ret, retp);
+
+-static void node_free_rcu(struct rcu_head *rcu)
+-{
+-	kmem_cache_free(node_cache, container_of(rcu, struct allowedips_node, rcu));
+-}
 -
- 	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0);
- 	if (offset < 0)
- 		goto out;
-@@ -670,7 +661,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 	if (static_branch_likely(&fgraph_do_direct)) {
- 		int save_curr_ret_stack = current->curr_ret_stack;
- 
--		if (static_call(fgraph_func)(&trace, fgraph_direct_gops, &extras))
-+		if (static_call(fgraph_func)(&trace, fgraph_direct_gops))
- 			bitmap |= BIT(fgraph_direct_gops->idx);
- 		else
- 			/* Clear out any saved storage */
-@@ -688,7 +679,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 
- 			save_curr_ret_stack = current->curr_ret_stack;
- 			if (ftrace_ops_test(&gops->ops, func, NULL) &&
--			    gops->entryfunc(&trace, gops, &extras))
-+			    gops->entryfunc(&trace, gops))
- 				bitmap |= BIT(i);
- 			else
- 				/* Clear out any saved storage */
-@@ -905,6 +896,29 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
- 	return ret_stack;
+ static void root_free_rcu(struct rcu_head *rcu)
+ {
+ 	struct allowedips_node *node, *stack[MAX_ALLOWEDIPS_DEPTH] = {
+@@ -330,13 +325,13 @@ void wg_allowedips_remove_by_peer(struct
+ 			child = rcu_dereference_protected(
+ 					parent->bit[!(node->parent_bit_packed & 1)],
+ 					lockdep_is_held(lock));
+-		call_rcu(&node->rcu, node_free_rcu);
++		kfree_rcu(node, rcu);
+ 		if (!free_parent)
+ 			continue;
+ 		if (child)
+ 			child->parent_bit_packed = parent->parent_bit_packed;
+ 		*(struct allowedips_node **)(parent->parent_bit_packed & ~3UL) = child;
+-		call_rcu(&parent->rcu, node_free_rcu);
++		kfree_rcu(parent, rcu);
+ 	}
  }
- 
-+/**
-+ * ftrace_graph_top_ret_addr - return the top return address in the shadow stack
-+ * @task: The task to read the shadow stack from.
-+ *
-+ * Return the first return address on the shadow stack of the @task, which is
-+ * not the fgraph's return_to_handler.
-+ */
-+unsigned long ftrace_graph_top_ret_addr(struct task_struct *task)
-+{
-+	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
-+	struct ftrace_ret_stack *ret_stack = NULL;
-+	int offset = task->curr_ret_stack;
-+
-+	if (offset < 0)
-+		return 0;
-+
-+	do {
-+		ret_stack = get_ret_stack(task, offset, &offset);
-+	} while (ret_stack && ret_stack->ret == return_handler);
-+
-+	return ret_stack ? ret_stack->ret : 0;
-+}
-+
+
+diff -u -p a/fs/ecryptfs/dentry.c b/fs/ecryptfs/dentry.c
+--- a/fs/ecryptfs/dentry.c
++++ b/fs/ecryptfs/dentry.c
+@@ -51,12 +51,6 @@ static int ecryptfs_d_revalidate(struct
+
+ struct kmem_cache *ecryptfs_dentry_info_cache;
+
+-static void ecryptfs_dentry_free_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(ecryptfs_dentry_info_cache,
+-		container_of(head, struct ecryptfs_dentry_info, rcu));
+-}
+-
  /**
-  * ftrace_graph_ret_addr - return the original value of the return address
-  * @task: The task the unwinder is being executed on
-@@ -1145,8 +1159,7 @@ void ftrace_graph_exit_task(struct task_struct *t)
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- static int fgraph_pid_func(struct ftrace_graph_ent *trace,
--			   struct fgraph_ops *gops,
--			   struct fgraph_extras *extras)
-+			   struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = gops->ops.private;
- 	int pid;
-@@ -1160,7 +1173,7 @@ static int fgraph_pid_func(struct ftrace_graph_ent *trace,
- 			return 0;
+  * ecryptfs_d_release
+  * @dentry: The ecryptfs dentry
+@@ -68,7 +62,7 @@ static void ecryptfs_d_release(struct de
+ 	struct ecryptfs_dentry_info *p = dentry->d_fsdata;
+ 	if (p) {
+ 		path_put(&p->lower_path);
+-		call_rcu(&p->rcu, ecryptfs_dentry_free_rcu);
++		kfree_rcu(p, rcu);
  	}
- 
--	return gops->saved_func(trace, gops, NULL);
-+	return gops->saved_func(trace, gops);
  }
- 
- void fgraph_update_pid_func(void)
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 5d87dac83b80..cae388122ca8 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -827,8 +827,7 @@ struct profile_fgraph_data {
- };
- 
- static int profile_graph_entry(struct ftrace_graph_ent *trace,
--			       struct fgraph_ops *gops,
--			       struct fgraph_extras *extras)
-+			       struct fgraph_ops *gops)
- {
- 	struct profile_fgraph_data *profile_data;
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 13f08f257c0b..6adf48ef4312 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -695,8 +695,7 @@ void trace_default_header(struct seq_file *m);
- void print_trace_header(struct seq_file *m, struct trace_iterator *iter);
- 
- void trace_graph_return(struct ftrace_graph_ret *trace, struct fgraph_ops *gops);
--int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops,
--		      struct fgraph_extras *extras);
-+int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops *gops);
- 
- void tracing_start_cmdline_record(void);
- void tracing_stop_cmdline_record(void);
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 3dd63ae2afe8..e3cda79653ee 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -179,8 +179,7 @@ struct fgraph_times {
- };
- 
- int trace_graph_entry(struct ftrace_graph_ent *trace,
--		      struct fgraph_ops *gops,
--		      struct fgraph_extras *extras)
-+		      struct fgraph_ops *gops)
- {
- 	unsigned long *task_var = fgraph_get_task_var(gops);
- 	struct trace_array *tr = gops->private;
-@@ -246,11 +245,12 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	disabled = atomic_inc_return(&data->disabled);
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
--		if (unlikely(IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) && extras
--				&& (extras->flags & TRACE_GRAPH_PRINT_RETADDR)))
--			ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx,
--							  extras->retaddr);
--		else
-+		if (unlikely(IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
-+			graph_tracer_flags_is_set(TRACE_GRAPH_PRINT_RETADDR))) {
-+			unsigned long retaddr = ftrace_graph_top_ret_addr(current);
-+
-+			ret = __trace_graph_retaddr_entry(tr, trace, trace_ctx, retaddr);
-+		} else
- 			ret = __trace_graph_entry(tr, trace, trace_ctx);
- 	} else {
- 		ret = 0;
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index eb3aa36cf10f..fce064e20570 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -176,8 +176,7 @@ static int irqsoff_display_graph(struct trace_array *tr, int set)
+
+diff -u -p a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -572,13 +572,6 @@ opaque_hashval(const void *ptr, int nbyt
+ 	return x;
  }
- 
- static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
--			       struct fgraph_ops *gops,
--			       struct fgraph_extras *extras)
-+			       struct fgraph_ops *gops)
+
+-static void nfsd4_free_file_rcu(struct rcu_head *rcu)
+-{
+-	struct nfs4_file *fp = container_of(rcu, struct nfs4_file, fi_rcu);
+-
+-	kmem_cache_free(file_slab, fp);
+-}
+-
+ void
+ put_nfs4_file(struct nfs4_file *fi)
  {
- 	struct trace_array *tr = irqsoff_trace;
- 	struct trace_array_cpu *data;
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 155de2551507..ae2ace5e515a 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -113,8 +113,7 @@ static int wakeup_display_graph(struct trace_array *tr, int set)
- }
- 
- static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
--			      struct fgraph_ops *gops,
--			      struct fgraph_extras *extras)
-+			      struct fgraph_ops *gops)
- {
- 	struct trace_array *tr = wakeup_trace;
- 	struct trace_array_cpu *data;
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index fbb99f8c8062..d3a14ae47e26 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -774,8 +774,7 @@ struct fgraph_fixture {
- };
- 
- static __init int store_entry(struct ftrace_graph_ent *trace,
--			      struct fgraph_ops *gops,
--			      struct fgraph_extras *extras)
-+			      struct fgraph_ops *gops)
- {
- 	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
- 	const char *type = fixture->store_type_name;
-@@ -1026,8 +1025,7 @@ static unsigned int graph_hang_thresh;
- 
- /* Wrap the real function entry probe to avoid possible hanging */
- static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
--				      struct fgraph_ops *gops,
--				      struct fgraph_extras *extras)
-+				      struct fgraph_ops *gops)
- {
- 	/* This is harmlessly racy, we want to approximately detect a hang */
- 	if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
-@@ -1041,7 +1039,7 @@ static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
- 		return 0;
+@@ -586,7 +579,7 @@ put_nfs4_file(struct nfs4_file *fi)
+ 		nfsd4_file_hash_remove(fi);
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
+ 		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
+-		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
++		kfree_rcu(fi, fi_rcu);
  	}
- 
--	return trace_graph_entry(trace, gops, NULL);
-+	return trace_graph_entry(trace, gops);
  }
- 
- static struct fgraph_ops fgraph_ops __initdata  = {
--- 
-2.34.1
 
+diff -u -p a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -413,18 +413,11 @@ static struct k_itimer * alloc_posix_tim
+ 	return tmr;
+ }
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-static void k_itimer_rcu_free(struct rcu_head *head)
+-{
+-	struct k_itimer *tmr = container_of(head, struct k_itimer, rcu);
+-
+-	kmem_cache_free(posix_timers_cache, tmr);
+-}
+-
+ static void posix_timer_free(struct k_itimer *tmr)
+ {
+ 	put_pid(tmr->it_pid);
+ 	sigqueue_free(tmr->sigq);
+-	call_rcu(&tmr->rcu, k_itimer_rcu_free);
++	kfree_rcu(tmr, rcu);
+ }
+
+ static void posix_timer_unhash_and_free(struct k_itimer *tmr)
+diff -u -p a/net/batman-adv/translation-table.c b/net/batman-adv/translation-table.c
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -408,19 +408,6 @@ static void batadv_tt_global_size_dec(st
+ }
+
+ /**
+- * batadv_tt_orig_list_entry_free_rcu() - free the orig_entry
+- * @rcu: rcu pointer of the orig_entry
+- */
+-static void batadv_tt_orig_list_entry_free_rcu(struct rcu_head *rcu)
+-{
+-	struct batadv_tt_orig_list_entry *orig_entry;
+-
+-	orig_entry = container_of(rcu, struct batadv_tt_orig_list_entry, rcu);
+-
+-	kmem_cache_free(batadv_tt_orig_cache, orig_entry);
+-}
+-
+-/**
+  * batadv_tt_orig_list_entry_release() - release tt orig entry from lists and
+  *  queue for free after rcu grace period
+  * @ref: kref pointer of the tt orig entry
+@@ -433,7 +420,7 @@ static void batadv_tt_orig_list_entry_re
+ 				  refcount);
+
+ 	batadv_orig_node_put(orig_entry->orig_node);
+-	call_rcu(&orig_entry->rcu, batadv_tt_orig_list_entry_free_rcu);
++	kfree_rcu(orig_entry, rcu);
+ }
+
+ /**
+diff -u -p a/net/bridge/br_fdb.c b/net/bridge/br_fdb.c
+--- a/net/bridge/br_fdb.c
++++ b/net/bridge/br_fdb.c
+@@ -73,13 +73,6 @@ static inline int has_expired(const stru
+ 	       time_before_eq(fdb->updated + hold_time(br), jiffies);
+ }
+
+-static void fdb_rcu_free(struct rcu_head *head)
+-{
+-	struct net_bridge_fdb_entry *ent
+-		= container_of(head, struct net_bridge_fdb_entry, rcu);
+-	kmem_cache_free(br_fdb_cache, ent);
+-}
+-
+ static int fdb_to_nud(const struct net_bridge *br,
+ 		      const struct net_bridge_fdb_entry *fdb)
+ {
+@@ -329,7 +322,7 @@ static void fdb_delete(struct net_bridge
+ 	if (test_and_clear_bit(BR_FDB_DYNAMIC_LEARNED, &f->flags))
+ 		atomic_dec(&br->fdb_n_learned);
+ 	fdb_notify(br, f, RTM_DELNEIGH, swdev_notify);
+-	call_rcu(&f->rcu, fdb_rcu_free);
++	kfree_rcu(f, rcu);
+ }
+
+ /* Delete a local entry if no other port had the same address.
+diff -u -p a/net/can/gw.c b/net/can/gw.c
+--- a/net/can/gw.c
++++ b/net/can/gw.c
+@@ -577,13 +577,6 @@ static inline void cgw_unregister_filter
+ 			  gwj->ccgw.filter.can_mask, can_can_gw_rcv, gwj);
+ }
+
+-static void cgw_job_free_rcu(struct rcu_head *rcu_head)
+-{
+-	struct cgw_job *gwj = container_of(rcu_head, struct cgw_job, rcu);
+-
+-	kmem_cache_free(cgw_cache, gwj);
+-}
+-
+ static int cgw_notifier(struct notifier_block *nb,
+ 			unsigned long msg, void *ptr)
+ {
+@@ -603,7 +596,7 @@ static int cgw_notifier(struct notifier_
+ 			if (gwj->src.dev == dev || gwj->dst.dev == dev) {
+ 				hlist_del(&gwj->list);
+ 				cgw_unregister_filter(net, gwj);
+-				call_rcu(&gwj->rcu, cgw_job_free_rcu);
++				kfree_rcu(gwj, rcu);
+ 			}
+ 		}
+ 	}
+@@ -1168,7 +1161,7 @@ static void cgw_remove_all_jobs(struct n
+ 	hlist_for_each_entry_safe(gwj, nx, &net->can.cgw_list, list) {
+ 		hlist_del(&gwj->list);
+ 		cgw_unregister_filter(net, gwj);
+-		call_rcu(&gwj->rcu, cgw_job_free_rcu);
++		kfree_rcu(gwj, rcu);
+ 	}
+ }
+
+@@ -1236,7 +1229,7 @@ static int cgw_remove_job(struct sk_buff
+
+ 		hlist_del(&gwj->list);
+ 		cgw_unregister_filter(net, gwj);
+-		call_rcu(&gwj->rcu, cgw_job_free_rcu);
++		kfree_rcu(gwj, rcu);
+ 		err = 0;
+ 		break;
+ 	}
+diff -u -p a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -292,15 +292,9 @@ static const int inflate_threshold = 50;
+ static const int halve_threshold_root = 15;
+ static const int inflate_threshold_root = 30;
+
+-static void __alias_free_mem(struct rcu_head *head)
+-{
+-	struct fib_alias *fa = container_of(head, struct fib_alias, rcu);
+-	kmem_cache_free(fn_alias_kmem, fa);
+-}
+-
+ static inline void alias_free_mem_rcu(struct fib_alias *fa)
+ {
+-	call_rcu(&fa->rcu, __alias_free_mem);
++	kfree_rcu(fa, rcu);
+ }
+
+ #define TNODE_VMALLOC_MAX \
+diff -u -p a/net/ipv4/inetpeer.c b/net/ipv4/inetpeer.c
+--- a/net/ipv4/inetpeer.c
++++ b/net/ipv4/inetpeer.c
+@@ -128,11 +128,6 @@ static struct inet_peer *lookup(const st
+ 	return NULL;
+ }
+
+-static void inetpeer_free_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(peer_cachep, container_of(head, struct inet_peer, rcu));
+-}
+-
+ /* perform garbage collect on all items stacked during a lookup */
+ static void inet_peer_gc(struct inet_peer_base *base,
+ 			 struct inet_peer *gc_stack[],
+@@ -168,7 +163,7 @@ static void inet_peer_gc(struct inet_pee
+ 		if (p) {
+ 			rb_erase(&p->rb_node, &base->rb_root);
+ 			base->total--;
+-			call_rcu(&p->rcu, inetpeer_free_rcu);
++			kfree_rcu(p, rcu);
+ 		}
+ 	}
+ }
+@@ -242,7 +237,7 @@ void inet_putpeer(struct inet_peer *p)
+ 	WRITE_ONCE(p->dtime, (__u32)jiffies);
+
+ 	if (refcount_dec_and_test(&p->refcnt))
+-		call_rcu(&p->rcu, inetpeer_free_rcu);
++		kfree_rcu(p, rcu);
+ }
+ EXPORT_SYMBOL_GPL(inet_putpeer);
+
+diff -u -p a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -198,16 +198,9 @@ static void node_free_immediate(struct n
+ 	net->ipv6.rt6_stats->fib_nodes--;
+ }
+
+-static void node_free_rcu(struct rcu_head *head)
+-{
+-	struct fib6_node *fn = container_of(head, struct fib6_node, rcu);
+-
+-	kmem_cache_free(fib6_node_kmem, fn);
+-}
+-
+ static void node_free(struct net *net, struct fib6_node *fn)
+ {
+-	call_rcu(&fn->rcu, node_free_rcu);
++	kfree_rcu(fn, rcu);
+ 	net->ipv6.rt6_stats->fib_nodes--;
+ }
+
+diff -u -p a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -178,12 +178,6 @@ __be32 xfrm6_tunnel_alloc_spi(struct net
+ }
+ EXPORT_SYMBOL(xfrm6_tunnel_alloc_spi);
+
+-static void x6spi_destroy_rcu(struct rcu_head *head)
+-{
+-	kmem_cache_free(xfrm6_tunnel_spi_kmem,
+-			container_of(head, struct xfrm6_tunnel_spi, rcu_head));
+-}
+-
+ static void xfrm6_tunnel_free_spi(struct net *net, xfrm_address_t *saddr)
+ {
+ 	struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
+@@ -200,7 +194,7 @@ static void xfrm6_tunnel_free_spi(struct
+ 			if (refcount_dec_and_test(&x6spi->refcnt)) {
+ 				hlist_del_rcu(&x6spi->list_byaddr);
+ 				hlist_del_rcu(&x6spi->list_byspi);
+-				call_rcu(&x6spi->rcu_head, x6spi_destroy_rcu);
++				kfree_rcu(x6spi, rcu_head);
+ 				break;
+ 			}
+ 		}
+diff -u -p a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -1584,14 +1584,6 @@ static int kcm_ioctl(struct socket *sock
+ 	return err;
+ }
+
+-static void free_mux(struct rcu_head *rcu)
+-{
+-	struct kcm_mux *mux = container_of(rcu,
+-	    struct kcm_mux, rcu);
+-
+-	kmem_cache_free(kcm_muxp, mux);
+-}
+-
+ static void release_mux(struct kcm_mux *mux)
+ {
+ 	struct kcm_net *knet = mux->knet;
+@@ -1619,7 +1611,7 @@ static void release_mux(struct kcm_mux *
+ 	knet->count--;
+ 	mutex_unlock(&knet->mutex);
+
+-	call_rcu(&mux->rcu, free_mux);
++	kfree_rcu(mux, rcu);
+ }
+
+ static void kcm_done(struct kcm_sock *kcm)
+diff -u -p a/net/netfilter/nf_conncount.c b/net/netfilter/nf_conncount.c
+--- a/net/netfilter/nf_conncount.c
++++ b/net/netfilter/nf_conncount.c
+@@ -275,14 +275,6 @@ bool nf_conncount_gc_list(struct net *ne
+ }
+ EXPORT_SYMBOL_GPL(nf_conncount_gc_list);
+
+-static void __tree_nodes_free(struct rcu_head *h)
+-{
+-	struct nf_conncount_rb *rbconn;
+-
+-	rbconn = container_of(h, struct nf_conncount_rb, rcu_head);
+-	kmem_cache_free(conncount_rb_cachep, rbconn);
+-}
+-
+ /* caller must hold tree nf_conncount_locks[] lock */
+ static void tree_nodes_free(struct rb_root *root,
+ 			    struct nf_conncount_rb *gc_nodes[],
+@@ -295,7 +287,7 @@ static void tree_nodes_free(struct rb_ro
+ 		spin_lock(&rbconn->list.list_lock);
+ 		if (!rbconn->list.count) {
+ 			rb_erase(&rbconn->node, root);
+-			call_rcu(&rbconn->rcu_head, __tree_nodes_free);
++			kfree_rcu(rbconn, rcu_head);
+ 		}
+ 		spin_unlock(&rbconn->list.list_lock);
+ 	}
+diff -u -p a/net/netfilter/nf_conntrack_expect.c b/net/netfilter/nf_conntrack_expect.c
+--- a/net/netfilter/nf_conntrack_expect.c
++++ b/net/netfilter/nf_conntrack_expect.c
+@@ -367,18 +367,10 @@ void nf_ct_expect_init(struct nf_conntra
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_expect_init);
+
+-static void nf_ct_expect_free_rcu(struct rcu_head *head)
+-{
+-	struct nf_conntrack_expect *exp;
+-
+-	exp = container_of(head, struct nf_conntrack_expect, rcu);
+-	kmem_cache_free(nf_ct_expect_cachep, exp);
+-}
+-
+ void nf_ct_expect_put(struct nf_conntrack_expect *exp)
+ {
+ 	if (refcount_dec_and_test(&exp->use))
+-		call_rcu(&exp->rcu, nf_ct_expect_free_rcu);
++		kfree_rcu(exp, rcu);
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_expect_put);
+
+diff -u -p a/net/netfilter/xt_hashlimit.c b/net/netfilter/xt_hashlimit.c
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -256,18 +256,11 @@ dsthash_alloc_init(struct xt_hashlimit_h
+ 	return ent;
+ }
+
+-static void dsthash_free_rcu(struct rcu_head *head)
+-{
+-	struct dsthash_ent *ent = container_of(head, struct dsthash_ent, rcu);
+-
+-	kmem_cache_free(hashlimit_cachep, ent);
+-}
+-
+ static inline void
+ dsthash_free(struct xt_hashlimit_htable *ht, struct dsthash_ent *ent)
+ {
+ 	hlist_del_rcu(&ent->node);
+-	call_rcu(&ent->rcu, dsthash_free_rcu);
++	kfree_rcu(ent, rcu);
+ 	ht->count--;
+ }
+ static void htable_gc(struct work_struct *work);
