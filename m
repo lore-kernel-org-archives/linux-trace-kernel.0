@@ -1,192 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624EC199230;
-	Wed,  9 Oct 2024 15:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E287199FB4;
+	Wed,  9 Oct 2024 15:31:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728487440; cv=none; b=nzOtYo+kQInHMdoYPDKj62oxRGH00l+6bftstVfb0Lp97dBwmeGiM6sSmTeX9qLI2c9VLklngUokUQJ9A2QYA4WVueuDbhUAZJBfDOcj8GtK4zpsZhhAjbWDIqr2JvcpdFnc3ZLwAHpKLVHPJ97s/Pby26XStM1sST1EpbABnlE=
+	t=1728487873; cv=none; b=Fisl0RbntehJvCOc22bs8oFKTKVeCNj9NGE1zOeNTGm0HbCrNTpywRYu+DkOh7kn4vsQjs1uYhJJ6VEmab1PMZZMdujacjLdAF2ApK6wGoxqrwXwgQK1dedRMEg0aeApwvM4NCnsXi2ywP/veAlRZMjyCQ/Rd4dwAsSkIewZkVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728487440; c=relaxed/simple;
-	bh=4AjksnzzW5k8hBBme1kBI/+DD7QGwpafnwlUuyqFM6g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Di3OKqWHvFYh/6WmD2h50TYEe99HGt42PrAGo4Nli9OZJ5gYYt7UnXco9meL88z2vksvF14QtovQ/pNNt0fRffC6BHHHQ86CUChe6Poo4JG7nTBM+3LkrzrbcmhK9WZgx/3BGJqhXEMRZwYQruwe/c262yjvC5mSyrSZimzhZIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOKOvzKx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOKOvzKx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6846C4CEC5;
-	Wed,  9 Oct 2024 15:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728487439;
-	bh=4AjksnzzW5k8hBBme1kBI/+DD7QGwpafnwlUuyqFM6g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hOKOvzKxW6op8p2Rq75UJoop9Pd0jFDZDJXovc+WfjxUYXz+3mIUeE+rqO8deMQol
-	 D5Q3zUA2oddqsXKrwAYpUx3bSQVX+ifmZDaQcwFkhqcmlYKbkRvQQSygISBlUEYBiz
-	 lwIbYr5wZA0P1+iQQH52qhdR8w68Xqow/FF9F6Ktjv5n+WLCQrdhmpx8dj00R8El+E
-	 1s8C+p+0+ykam250o5nlc5/KtVQdMDSoZGcveRbLtfo5TutKX+KDW+EFjRaTtT/sgx
-	 YdUBVf2B++TXBgNKhR8m1OEuIQjCyQvBCHF8mhTQDPplS3zIR4l17t7YN6gzrsovb7
-	 cxqKuczpR6kxQ==
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5399651d21aso6431179e87.3;
-        Wed, 09 Oct 2024 08:23:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVSqw7DXJFD/KBIu2FRQ5/BLxSMR3sOif7mqyf+M30dn45vTM/jM9dasFLY7D8KUZAvxn4=@vger.kernel.org, AJvYcCVUD4XTm8jfWizf6AY3U6KTxSye+7ilclhu+uveEQYIRcMqJV5rFuSVLWO6riVg2QpEfmJkOaglHvP4wwo1rnGgmZ4A@vger.kernel.org, AJvYcCVan0fOKVSaxuY3mpehjrSGT9F/kT7y22gnpq0tonMwm2k4YLYZPbAxxDqvC12a32QNDoP7yqaozElEDhy8@vger.kernel.org, AJvYcCWw+glId4vP2hKM+OKSS1Q0chwzxlSvZ1cDMDIlfAH0kBthl/mqRtHXPZmKmP2GDSp6HjZL4E36r8sO5yeB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsLppdR/il1B8UBBhoqeVT4qkPRiEoGNcrSFclK4DsnmEJ3Ncg
-	Wt3WQO7PeA2ehksrpnQl5wVcMu0QTFlpJ+e/Y+2c6WVX0aSCNB6deTJMKxys/cYkLLPNuNO10eJ
-	3OoFv4phxq1jrD56fF53lgpk4fns=
-X-Google-Smtp-Source: AGHT+IEiWPw+RQ+TnDaHXfM/Mw/zmdX2TI3sj1La8whAJdJcZ29a26S9fWhexgESxPKq+5AXQsmOXW5h7DnougX3kLY=
-X-Received: by 2002:a05:6512:1188:b0:539:9d24:9ea with SMTP id
- 2adb3069b0e04-539c48d93dfmr1743896e87.34.1728487438407; Wed, 09 Oct 2024
- 08:23:58 -0700 (PDT)
+	s=arc-20240116; t=1728487873; c=relaxed/simple;
+	bh=o17P+55KsrlNUzByYpVtjAhlHKstGPAq6g6HHrOJ/f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f3yX3PBXfVtn/mx0w1eUNRVUhryECoR7ulD3tV70BkgF1KByBqJ90HgfK+aSPaFqOfrradGVOxjuesRgCgD1uiq89k8KhFTTMs5dcuj8ssfoNmCo6tahvXp7tkeH87QLyMYyQrEyb5EZH93wXHRCDyd9g57Efu2Yg1VSnjqhbS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35537C4CEC3;
+	Wed,  9 Oct 2024 15:31:09 +0000 (UTC)
+Date: Wed, 9 Oct 2024 11:31:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, "linux-arch@vger.kernel.org"
+ <linux-arch@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
+ <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul 
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas 
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav 
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] ftrace: Consolidate ftrace_regs accessor
+ functions for archs using pt_regs
+Message-ID: <20241009113114.1da0d84d@gandalf.local.home>
+In-Reply-To: <20241008230629.118325673@goodmis.org>
+References: <20241008230527.674939311@goodmis.org>
+	<20241008230629.118325673@goodmis.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240915205648.830121-1-hbathini@linux.ibm.com> <20240915205648.830121-12-hbathini@linux.ibm.com>
-In-Reply-To: <20240915205648.830121-12-hbathini@linux.ibm.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Thu, 10 Oct 2024 00:23:21 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS9LPPxVOU55t2C_vkXYXK-8_2bHCVPWVxYdwrSrxCduw@mail.gmail.com>
-Message-ID: <CAK7LNAS9LPPxVOU55t2C_vkXYXK-8_2bHCVPWVxYdwrSrxCduw@mail.gmail.com>
-Subject: Re: [PATCH v5 11/17] kbuild: Add generic hook for architectures to
- use before the final vmlinux link
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Naveen N. Rao" <naveen@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Nicholas Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Vishal Chourasia <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 16, 2024 at 5:58=E2=80=AFAM Hari Bathini <hbathini@linux.ibm.co=
-m> wrote:
->
-> From: Naveen N Rao <naveen@kernel.org>
->
-> On powerpc, we would like to be able to make a pass on vmlinux.o and
-> generate a new object file to be linked into vmlinux. Add a generic pass
-> in Makefile.vmlinux that architectures can use for this purpose.
->
-> Architectures need to select CONFIG_ARCH_WANTS_PRE_LINK_VMLINUX and must
-> provide arch/<arch>/tools/Makefile with .arch.vmlinux.o target, which
-> will be invoked prior to the final vmlinux link step.
->
-> Signed-off-by: Naveen N Rao <naveen@kernel.org>
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->
-> Changes in v5:
-> * Intermediate files named .vmlinux.arch.* instead of .arch.vmlinux.*
->
->
->  arch/Kconfig             | 6 ++++++
->  scripts/Makefile.vmlinux | 7 +++++++
->  scripts/link-vmlinux.sh  | 7 ++++++-
->  3 files changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 975dd22a2dbd..ef868ff8156a 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -1643,4 +1643,10 @@ config CC_HAS_SANE_FUNCTION_ALIGNMENT
->  config ARCH_NEED_CMPXCHG_1_EMU
->         bool
->
-> +config ARCH_WANTS_PRE_LINK_VMLINUX
-> +       def_bool n
-
-
-Redundant default. This line should be "bool".
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 
 
+Loongarch maintainers, please note the below comments!
 
 
-
-> +       help
-> +         An architecture can select this if it provides arch/<arch>/tool=
-s/Makefile
-> +         with .arch.vmlinux.o target to be linked into vmlinux.
-> +
->  endmenu
-> diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
-> index 49946cb96844..edf6fae8d960 100644
-> --- a/scripts/Makefile.vmlinux
-> +++ b/scripts/Makefile.vmlinux
-> @@ -22,6 +22,13 @@ targets +=3D .vmlinux.export.o
->  vmlinux: .vmlinux.export.o
->  endif
->
-> +ifdef CONFIG_ARCH_WANTS_PRE_LINK_VMLINUX
-> +vmlinux: arch/$(SRCARCH)/tools/.vmlinux.arch.o
-
-If you move this to arch/*/tools/, there is no reason
-to make it a hidden file.
+On Tue, 08 Oct 2024 19:05:29 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
 
-vmlinux: arch/$(SRCARCH)/tools/vmlinux.arch.o
-
-
-
-
-> +arch/$(SRCARCH)/tools/.vmlinux.arch.o: vmlinux.o
-
-FORCE is missing.
-
-
-arch/$(SRCARCH)/tools/vmlinux.arch.o: vmlinux.o FORCE
-
-
-
-> +       $(Q)$(MAKE) $(build)=3Darch/$(SRCARCH)/tools $@
-> +endif
-> +
->  ARCH_POSTLINK :=3D $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postli=
-nk)
->
->  # Final link of vmlinux with optional arch pass after final link
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index f7b2503cdba9..b3a940c0e6c2 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -100,7 +100,7 @@ vmlinux_link()
->         ${ld} ${ldflags} -o ${output}                                   \
->                 ${wl}--whole-archive ${objs} ${wl}--no-whole-archive    \
->                 ${wl}--start-group ${libs} ${wl}--end-group             \
-> -               ${kallsymso} ${btf_vmlinux_bin_o} ${ldlibs}
-> +               ${kallsymso} ${btf_vmlinux_bin_o} ${arch_vmlinux_o} ${ldl=
-ibs}
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index bbb69c7751b9..5ccff4de7f09 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -54,6 +54,7 @@ extern void return_to_handler(void);
+>  unsigned long ftrace_call_adjust(unsigned long addr);
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> +#define HAVE_ARCH_FTRACE_REGS
+>  struct dyn_ftrace;
+>  struct ftrace_ops;
+>  struct ftrace_regs;
+> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+> index 0e15d36ce251..8f13eaeaa325 100644
+> --- a/arch/loongarch/include/asm/ftrace.h
+> +++ b/arch/loongarch/include/asm/ftrace.h
+> @@ -43,43 +43,20 @@ void prepare_ftrace_return(unsigned long self_addr, unsigned long *parent);
+>  
+>  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>  struct ftrace_ops;
+> -struct ftrace_regs;
+> -#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
+>  
+> -struct __arch_ftrace_regs {
+> -	struct pt_regs regs;
+> -};
+> +#include <linux/ftrace_regs.h>
+>  
+>  static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
+>  {
+>  	return &arch_ftrace_regs(fregs)->regs;
 >  }
->
->  # generate .BTF typeinfo from DWARF debuginfo
-> @@ -214,6 +214,11 @@ fi
->
->  ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=3Dinit init/version-t=
-imestamp.o
->
-> +arch_vmlinux_o=3D""
-> +if is_enabled CONFIG_ARCH_WANTS_PRE_LINK_VMLINUX; then
-> +       arch_vmlinux_o=3Darch/${SRCARCH}/tools/.vmlinux.arch.o
+
+The above function is incorrect. I know I just added the comment about how
+it is to work below, but if pt_regs is not fully filled, then
+arch_ftrace_get_regs() must return NULL.
+
+This is because if a callback is registered with ftrace, and forgets to add
+the FTRACE_OPS_FL_SAVE_REGS flag, then when it does:
+
+	regs = ftrace_get_regs(fregs);
+
+it should get NULL and not a partially filled pt_regs set. Because the API
+is that ftrace_get_regs() will return either a full pt_regs (where the
+caller can know that it has all the correct registers) or NULL where it
+does not have any registers.
+
+It's an all or nothing approach.
+
+You can see x86 has:
+
+static __always_inline struct pt_regs *
+arch_ftrace_get_regs(struct ftrace_regs *fregs)
+{
+	/* Only when FL_SAVE_REGS is set, cs will be non zero */
+	if (!arch_ftrace_regs(fregs)->regs.cs)
+		return NULL;
+	return &arch_ftrace_regs(fregs)->regs;
+}
+
+Where it checks if regs.cs is set to determine if it has all the regs or
+not.
+
+Please do something similar for your architecture.
+
+>  
+> -static __always_inline unsigned long
+> -ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
+> -{
+> -	return instruction_pointer(&arch_ftrace_regs(fregs)->regs);
+> -}
+> -
+>  static __always_inline void
+>  ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs, unsigned long ip)
+>  {
+>  	instruction_pointer_set(&arch_ftrace_regs(fregs)->regs, ip);
+>  }
+>  
+> 
 
 
-arch_vmlinux_o=3Darch/${SRCARCH}/tools/vmlinux.arch.o
-
-
-
-> +fi
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index f7d4f152f84d..c96f9b0eb86e 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -113,6 +113,8 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
+>  
+>  #ifdef CONFIG_FUNCTION_TRACER
+>  
+> +#include <linux/ftrace_regs.h>
 > +
->  btf_vmlinux_bin_o=3D
->  kallsymso=3D
->  strip_debug=3D
-> --
-> 2.46.0
->
+>  extern int ftrace_enabled;
+>  
+>  /**
+> @@ -150,14 +152,11 @@ struct ftrace_regs {
+>  #define ftrace_regs_size()	sizeof(struct __arch_ftrace_regs)
+>  
+>  #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> -
+> -struct __arch_ftrace_regs {
+> -	struct pt_regs		regs;
+> -};
+> -
+> -struct ftrace_regs;
+> -#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
+> -
+> +/*
+> + * Architectures that define HAVE_DYNAMIC_FTRACE_WITH_ARGS must define their own
+> + * arch_ftrace_get_regs() where it only returns pt_regs *if* it is fully
+> + * populated. It should return NULL otherwise.
+> + */
+
+I'm adding the above comment to help other architectures know of this requirement.
+
+>  static inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *fregs)
+>  {
+>  	return &arch_ftrace_regs(fregs)->regs;
 
 
---
-Best Regards
-Masahiro Yamada
+-- Steve
