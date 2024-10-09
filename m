@@ -1,96 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A8918BC36;
-	Wed,  9 Oct 2024 10:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C734F1C6BE;
+	Wed,  9 Oct 2024 10:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728470159; cv=none; b=DvNjFyfofuK8zfKFN+C9EFa1Hxt/umn8rm5cq6m0qD7jVd/9aybIYtIoQVTWhnhT8JTc36FduQfjAn7lEa0xTVVJ8cyUTGW19Vfx+2jP5gmzV+uxBirWVPqkc6cQivNPgSVPBxggNNE92OJjIMvRt06uTsD2YaJI2Kx9up+73B4=
+	t=1728471441; cv=none; b=oMAIVTLOLC72xSaZu1M/lwhgAuIZ5lWGr0Et8hF+tWQeszpzBHpiC448OSqjNKT0aUyv6bBw9L6wzy4SURomFfw3gUp85IaAHytZaJW3hyCZfwUAt1rFc3OlCeHK7wRwu8jhqKGv/PnWLT6a0eXviGKSga6QXWXvakfgoL8182E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728470159; c=relaxed/simple;
-	bh=dxh0uEpbnl4YUFu8vCE4kg9SVY7NzZOGXbkINTFN82A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2+O2fZdoEvU+5TlEeXHgo1eCKg/1gU05NakpTbYMEvwpK6IeV1k6wH56ldlwqxr874Y1pJDD1Df1560WKQXhngs43/oF4U/urnaO5go8+Qvs1Q2g164nEq/YQlKbFd3noPMXRiMTvqBTCI3gbzTOVIf8qw04wkbWeuimbXJBPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0qqQdLW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728471441; c=relaxed/simple;
+	bh=032ziiroQTiNKVawf3Wn8Zdl0dIKkOZPqEzlfNUst9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kcgz2gjoiumYkUSrv+B4Pyj0ctgV8AIK3Iv+gdPriPN/XiuplfjqywGabH9Wl49h/8nMaGgMyyCbLI+wz6p+ST9lOjCKXBc4FJ6YGTPnWFeFk5xWiTxY7BfLh9iAqVGrSfR8KqKKD+DqVCjsLFz2XCeeX4nPbhD7aBk4n0prfLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xmlcLvkV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KNnoJu19; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0qqQdLW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444EBC4CEC5;
-	Wed,  9 Oct 2024 10:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728470159;
-	bh=dxh0uEpbnl4YUFu8vCE4kg9SVY7NzZOGXbkINTFN82A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R0qqQdLWcpznVsXkP11aNhQX2M05ik9AKGWy0E+dOQ4NroPWyzTmb5UNSQPTzNFvh
-	 ukjwLQFCOS4ElwWMFENJvy1JorVya3KUCg7Lg7k1U+k6MPggWQn7vc/L1Wn5m3Efc9
-	 S+aSWf2yV4VaEYArRP1RqQq91TWzxZZlQObH6oy8lU2iTG3n+EjxinABa33RWqdmJg
-	 5Fgv8gpuQdcqxgSxynAjKy67wMxjWsuOQa57MYM7+jqRhyU81ZvMPrcGrB9RJw8Piu
-	 h2YdXc+Jrn9b9eDjo3GIRGxbW3MzMcarmFfJIK97SwlusgU7X4uIu0q/ZJFV7mNC+S
-	 Wc0uP9+8wMYCg==
-Date: Wed, 9 Oct 2024 12:35:52 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
-	akpm@linux-foundation.org, linux-mm@kvack.org, mjguzik@gmail.com, jannh@google.com, 
-	mhocko@kernel.org, vbabka@suse.cz, mingo@kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v2 tip/perf/core 3/5] fs: add back RCU-delayed freeing of
- FMODE_BACKING file
-Message-ID: <20241009-eisvogel-zugelangt-d211199df267@brauner>
-References: <20241001225207.2215639-1-andrii@kernel.org>
- <20241001225207.2215639-4-andrii@kernel.org>
- <20241003-lachs-handel-4f3a9f31403d@brauner>
- <20241004-holzweg-wahrgemacht-c1429b882127@brauner>
- <CAEf4BzY5fy1VVykbSdcLbVhaHRuT6pRNYNgpYteaD79vRM7N5A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xmlcLvkV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KNnoJu19"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1728471437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Vkl75nSoihF4r5UGBNtRtcHj1AUP5VT9Ah3G70neEFs=;
+	b=xmlcLvkVj/n+hn5pJRvkgi5ESkA88PLftWrnTW2J69OS63cyJ1AUc0CmrjszlEh9zfpRUV
+	LlA6GkGcqwDBcL4/ZORiPahfIqXOowLoy2BkX1jP+5PfCGZiaMGUBxVUm1qyWnGV7zjfzJ
+	iWdvPT+/QzeL8iexRAboBP4kijRk0xXamGlz3B8UzYJ9YTcMthMXO9LcSSP31pY/SmzTEz
+	67dlTT7wggItgwU8O9RE9U91Ik1z2SeJR7c+CTo0G11dKD4J1t8FUMoowjP38fhcvN3gMy
+	+XsqidnP3zL4GVDEB8hDIjG7Sh9fOVIaXyJmiCQOtQDj3yGCs/nJTmHvb5A1Wg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1728471437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Vkl75nSoihF4r5UGBNtRtcHj1AUP5VT9Ah3G70neEFs=;
+	b=KNnoJu19Nv00iejIUriVVffmSwyMtzgj9WaBesY/sCsOHI4hjvMU54yRZkAoBoRGdka0S/
+	bx6aj/iEztaPtuAQ==
+To: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	tglx@linutronix.de,
+	mingo@kernel.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	ankur.a.arora@oracle.com,
+	efault@gmx.de,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH 0/3] Lazy preemption leftovers
+Date: Wed,  9 Oct 2024 12:50:54 +0200
+Message-ID: <20241009105709.887510-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzY5fy1VVykbSdcLbVhaHRuT6pRNYNgpYteaD79vRM7N5A@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 04, 2024 at 12:58:00PM GMT, Andrii Nakryiko wrote:
-> On Fri, Oct 4, 2024 at 1:01 AM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Thu, Oct 03, 2024 at 11:13:54AM GMT, Christian Brauner wrote:
-> > > On Tue, Oct 01, 2024 at 03:52:05PM GMT, Andrii Nakryiko wrote:
-> > > > 6cf41fcfe099 ("backing file: free directly") switched FMODE_BACKING
-> > > > files to direct freeing as back then there were no use cases requiring
-> > > > RCU protected access to such files.
-> > > >
-> > > > Now, with speculative lockless VMA-to-uprobe lookup logic, we do need to
-> > > > have a guarantee that struct file memory is not going to be freed from
-> > > > under us during speculative check. So add back RCU-delayed freeing
-> > > > logic.
-> > > >
-> > > > We use headless kfree_rcu_mightsleep() variant, as file_free() is only
-> > > > called for FMODE_BACKING files in might_sleep() context.
-> > > >
-> > > > Suggested-by: Suren Baghdasaryan <surenb@google.com>
-> > > > Cc: Christian Brauner <brauner@kernel.org>
-> > > > Cc: Amir Goldstein <amir73il@gmail.com>
-> > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > ---
-> > >
-> > > Reviewed-by: Christian Brauner <brauner@kernel.org>
-> >
-> > Fwiw, I have another patch series for files that I'm testing that will
-> > require me to switch FMODE_BACKING to a SLAB_TYPSAFE_BY_RCU cache. That
-> > shouldn't matter for your use-case though.
-> 
-> Correct, we assume SLAB_TYPESAFE_BY_RCU semantics for the common case
-> anyways. But hopefully my change won't cause major merge conflicts
-> with your patch set.
+This is a followup to PeterZ'
+	https://lore.kernel.org/20241007074609.447006177@infradead.org
 
-Please drop this patch and pull the following tag which adds
-SLAB_TYPE_SAFE_BY_RCU protection for FMODE_BACKING files aligning them
-with regular files lifetime (even though not needed). The branch the tag
-is based on is stable and won't change anymore:
+in PREEMPT_RT we had initially "LAZY preempt" this then morphed into
+PREEMPT_AUTO and is becoming "Lazy preemption".=20
+These are the tracing bits from that time that were used up to
+PREEMPT_AUTO. With RT's RiscV support, they also contributed
+PREEMPT_AUTO support which I just updated to current edition.
 
-git pull -S git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git tags/vfs-6.13.for-bpf.file
+I used to have ARM* and POWERPC*, too support for the "LAZY preempt" but
+this relied on assembly support and I dropped this during the switch to
+PREEMPT_AUTO.
+
+Sebastian
+
