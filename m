@@ -1,124 +1,79 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF983B784;
-	Wed,  9 Oct 2024 01:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72BE1362;
+	Wed,  9 Oct 2024 01:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728436171; cv=none; b=SmiBNfUg1CvfoppuR48Gtv9K1InUz/U0C9IrDyblvBBzWD0egkgCFBq+QzKpYWT4zSEFPikIYU1ZPYvogySGnWl1wnI/c+0MCG5ZM4R4uEpJaEhvNUFzbcKfa10cNQzHKTKtja+E/xDcU2sPz4uTzW2ZN1LG10awiiyJk1kDBFs=
+	t=1728436381; cv=none; b=b8aAsWIgc7ynfV0iAcqt0SYDE6ZNCq8J8Zb/nRnozJ80oU/zBOZvxrZx301F3BnIaCZ4QHqSYdvmnOQaYVxZLhS7BN7mIneQXsutbcErI8sPvm0qc0yspMnFdvVDm4d8t8Vd9QpYRVd0BbKsdpd5M9lKzou2RIYcWj1f4svLQhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728436171; c=relaxed/simple;
-	bh=Nz6l5GPgkpr6Cfo7qykznkJo1tIGMBS6YBtk78ruMYM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R5o4xuO0nraA+53kumpGZIvcmK4tG87LzXOk3MAQbOI00Pxn0/LVHzutfDCF2bSKmtrLBhnClKuAgvNBM5R3TY3l6atRHrw5qdM93HHQhG0fvD17zFJ1TZ/8Lr4UXivc1pxdKe+gQ15Ts9ubJgEhYGR2+z7YwRn1mwoPZs6zNRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rs6T9K0l; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rs6T9K0l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1728436168;
-	bh=Nz6l5GPgkpr6Cfo7qykznkJo1tIGMBS6YBtk78ruMYM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rs6T9K0lz/+X3Rfi74RpNqHZ9qwr/bjoaIALNIS/y8+zBGlEDPM+yIenRz9kjPp7n
-	 rWLL3L2RuHTmaWnEneUCDM0UHNawBRYQU5eosPsgrcKXFhEOexEgq7xoDpULuKOCyV
-	 xETUzreIUYhD0Am/4hrqfQ8VGu0XopXjmOrKavJkWhs9MMMVqxjfG1gwO4D+SMfUut
-	 gx3QN1VftQGG3nhxBnK1+jDsTdmSUBlqcZKG9jZDsS+lKzZCB1lV8R1AoE0wmWzb43
-	 CKR+1YaWnbyLW2aH1glTjodgumuexehjMMGc/xJ/7uo0Ud2RRYhlirotMowI9dGDPO
-	 /w7dV2piTXuow==
-Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XNZY40N1KzSJd;
-	Tue,  8 Oct 2024 21:09:28 -0400 (EDT)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	bpf@vger.kernel.org,
-	Joel Fernandes <joel@joelfernandes.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Michael Jeanson <mjeanson@efficios.com>
-Subject: [PATCH v4 7/8] tracing/perf: Add might_fault check to syscall probes
-Date: Tue,  8 Oct 2024 21:07:17 -0400
-Message-Id: <20241009010718.2050182-8-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20241009010718.2050182-1-mathieu.desnoyers@efficios.com>
-References: <20241009010718.2050182-1-mathieu.desnoyers@efficios.com>
+	s=arc-20240116; t=1728436381; c=relaxed/simple;
+	bh=XqYIw9ZcG3ewoGXFKf4LopgaOJar4Q/9yePITHPI7Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lOKccXdQacRjrDsg7ju5qlFU3lhMjzs7/o7Zv2PDRjM6Mt2MtFU9CNG90bH4OIJ9jFst5vBYP3cbymy4exoPWgt5RiT6mjJJ0ksAQPk20j79/rv2jfAko6BWVVsMxnRAm1qSps4LiG0ZsTe804VRGLjcUYRWISckA3YPofQQu60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B703C4CEC7;
+	Wed,  9 Oct 2024 01:12:58 +0000 (UTC)
+Date: Tue, 8 Oct 2024 21:12:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees
+ Cook <kees@kernel.org>
+Subject: Re: [PATCH] tracing: replace multiple deprecated strncpy with
+ strscpy
+Message-ID: <20241008211257.6c9c9f88@rorschach.local.home>
+In-Reply-To: <20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com>
+References: <20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a might_fault() check to validate that the perf sys_enter/sys_exit
-probe callbacks are indeed called from a context where page faults can
-be handled.
+On Mon, 30 Sep 2024 17:03:45 -0700
+Justin Stitt <justinstitt@google.com> wrote:
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Michael Jeanson <mjeanson@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org
-Cc: Joel Fernandes <joel@joelfernandes.org>
----
- include/trace/perf.h          | 1 +
- kernel/trace/trace_syscalls.c | 2 ++
- 2 files changed, 3 insertions(+)
+> strncpy() is deprecated for use on NUL-terminated destination strings [1] and
+> as such we should prefer more robust and less ambiguous string interfaces.
+> 
+> We expect the @pattern and @num_buf strings to be NUL-terminated, as
+> evidenced by their manual NUL-byte assignments immediately following
+> each copy.
+> 
+> Switch to using strscpy which guarantees NUL-termination for the
+> destination buffer -- eschewing manual NUL-byte assignments. strscpy
+> does not NUL-pad so to keep this behavior zero-allocate @num_buf. @pred
+> is already zero-allocated before the copies.
+> 	pred = kzalloc(sizeof(*pred), GFP_KERNEL);
+> 
+> This should result in no behavioral changes whilst helping towards the
+> goal of [2] -- with the ultimate goal of removing strncpy in favor of
+> less ambiguous and more robust alternatives.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index 15cde7eac8b4..a1754b73a8f5 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -84,6 +84,7 @@ perf_trace_##call(void *__data, proto)					\
- 	u64 __count __attribute__((unused));				\
- 	struct task_struct *__task __attribute__((unused));		\
- 									\
-+	might_fault();							\
- 	preempt_disable_notrace();					\
- 	do_perf_trace_##call(__data, args);				\
- 	preempt_enable_notrace();					\
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 6d6bbd56ed92..46aab0ab9350 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -602,6 +602,7 @@ static void perf_syscall_enter(void *ignore, struct pt_regs *regs, long id)
- 	 * Syscall probe called with preemption enabled, but the ring
- 	 * buffer and per-cpu data require preemption to be disabled.
- 	 */
-+	might_fault();
- 	guard(preempt_notrace)();
- 
- 	syscall_nr = trace_get_syscall_nr(current, regs);
-@@ -710,6 +711,7 @@ static void perf_syscall_exit(void *ignore, struct pt_regs *regs, long ret)
- 	 * Syscall probe called with preemption enabled, but the ring
- 	 * buffer and per-cpu data require preemption to be disabled.
- 	 */
-+	might_fault();
- 	guard(preempt_notrace)();
- 
- 	syscall_nr = trace_get_syscall_nr(current, regs);
--- 
-2.39.2
+So this breaks my tests. This is why I have trouble with taking changes
+like this :-(
 
+Before this patch, his worked:
+
+ # echo 'common_pid != 0 && common_pid != 120 && common_pid != 1253 && common_pid != 17 && common_pid != 394 && common_pid != 81 && common_pid != 87' > /sys/kernel/tracing/events/sched/sched_switch/filter
+
+But now it gives an error of:
+
+ -bash: echo: write error: Invalid argument
+
+I have to drop this.
+
+-- Steve
