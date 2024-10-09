@@ -1,30 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B5BB194AE6;
-	Wed,  9 Oct 2024 13:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC4B198E83;
+	Wed,  9 Oct 2024 13:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728481043; cv=none; b=t32K/l8nkK8g+G4fSEJoXUbU8Z76V/WuGCiKvasI56QpW9JT5Vx80SpQq8GOB6oqVbLuAbUaiKCBaHyxt4f/0SpWnt7lnR/rAIZ6qs+G6s87/oWFEVduYgADw6tiPAeAgX6LHlTZ5gDd5tRByUuMyO+6+B27c0Ce7cT3C/1HfeY=
+	t=1728481400; cv=none; b=bflVi1I3sXQCRA9J5Xuq69/UhCSewrqT9j6/CyNmHx0GeU6I/Nye0lLX2v+orOhWjU6Ot2cmI8guJ56szBJ09gaHpmzczqIKH18d4yzIJWlu5BbDDRt4SO9sTiWGdd1QT2Fi2SOti4Px6B7xZ8psw0p5zlVGbBuDE0qSHu1izCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728481043; c=relaxed/simple;
-	bh=4x+DjWEWW/g2qDtgfiW8HbmZDDg8PDZam+6X3h2se0w=;
+	s=arc-20240116; t=1728481400; c=relaxed/simple;
+	bh=S/oj15sxPWHK5m6VWGXl6leJe6peXcKr2JHoaMiRrOQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sC9xhDu2zCxz5/6oer0ipeoJHx2yJ3lTQrYzucfcy5RwdgzEP1jSzLApFgnzCSIHJnjLYtESP7x0R6S8EQOre5mOvr5eiIraKu5j/xWLLauYt/nSW0BKExUyj9R+Ws+5l7yJIh0N8j6MHcGvjEddrdtG9NUVQpZcODXAZ2KWCCs=
+	 MIME-Version:Content-Type; b=a8O9ERMIM20wqlEFlzpeiIfFxDLaOz9UQBhhnHxHjs/DpO1IYseE4NBu+Lg0iBOTy9tYjG4z6P6WcnaY0TJ5sDcTN9LIAYi2jQVG6SO5Lm+WCcS0hS+JWOOZts9NesHAZAcT3+0f88tuIzc1z0WCinDrvwAFMX4h0av4TFaQgZM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B5CC4CEC5;
-	Wed,  9 Oct 2024 13:37:22 +0000 (UTC)
-Date: Wed, 9 Oct 2024 09:37:26 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62A7C4CECD;
+	Wed,  9 Oct 2024 13:43:16 +0000 (UTC)
+Date: Wed, 9 Oct 2024 09:43:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Donglin Peng <dolinux.peng@gmail.com>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 RESEND] function_graph: Support recording and
- printing the function return address
-Message-ID: <20241009093727.4e99c1e2@gandalf.local.home>
-In-Reply-To: <20241009030340.16400-1-dolinux.peng@gmail.com>
-References: <20241009030340.16400-1-dolinux.peng@gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, "linux-arch@vger.kernel.org"
+ <linux-arch@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
+ <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
+ <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen
+ N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul
+  Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas 
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav 
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] ftrace: Consolidate ftrace_regs accessor
+ functions for archs using pt_regs
+Message-ID: <20241009094321.3f41f8a4@gandalf.local.home>
+In-Reply-To: <20241009134723.6b9eabfdc3cfee10f3757d85@kernel.org>
+References: <20241008230527.674939311@goodmis.org>
+	<20241008230629.118325673@goodmis.org>
+	<20241009134723.6b9eabfdc3cfee10f3757d85@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,28 +52,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  9 Oct 2024 11:03:40 +0800
-Donglin Peng <dolinux.peng@gmail.com> wrote:
+On Wed, 9 Oct 2024 13:47:23 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: Donglin Peng <pengdonglin@xiaomi.com>
-> 
-> When using function_graph tracer to analyze the flow of kernel function
-> execution, it is often necessary to quickly locate the exact line of code
-> where the call occurs. While this may be easy at times, it can be more
-> time-consuming when some functions are inlined or the flow is too long.
-> 
-> This feature aims to simplify the process by recording the return address
-> of traced funcions and printing it when outputing trace logs.
-> 
-> To enhance human readability, the prefix 'ret=' is used for the kernel return
-> value, while '<-' serves as the prefix for the return address in trace logs to
-> make it look more like the function tracer.
-> 
-> A new trace option named 'funcgraph-retaddr' has been introduced, and the
-> existing option 'sym-addr' can be used to control the format of the return
-> address.
-> 
+> > --- /dev/null
+> > +++ b/include/linux/ftrace_regs.h
+> > @@ -0,0 +1,36 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_FTRACE_TYPES_H
+> > +#define _LINUX_FTRACE_TYPES_H  
+>                ^^^^^^^^^^^^^^^^  Is this _LINUX_FTRACE_REGS_H?
 
-Is there a reason for the resend? I already have it in my for-next branch.
+Ah, I originally called it ftrace_types.h, but later decided that name
+didn't really fit. I changed all references to it but this one.
+
+Thanks for catching this.
+
+> 
+> 
+> > +
+> > +/*
+> > + * For archs that just copy pt_regs in ftrace regs, it can use this default.
+> > + * If an architecture does not use pt_regs, it must define all the below
+> > + * accessor functions.
+> > + */
+> > +#ifndef HAVE_ARCH_FTRACE_REGS
+> > +struct __arch_ftrace_regs {
+> > +	struct pt_regs		regs;
+> > +};
+> > +
+> > +#define arch_ftrace_regs(fregs) ((struct __arch_ftrace_regs *)(fregs))
+> > +
+> > +struct ftrace_regs;
+> > +
+> > +#define ftrace_regs_get_instruction_pointer(fregs) \
+> > +	instruction_pointer(arch_ftrace_get_regs(fregs))
+> > +#define ftrace_regs_get_argument(fregs, n) \
+> > +	regs_get_kernel_argument(arch_ftrace_get_regs(fregs), n)
+> > +#define ftrace_regs_get_stack_pointer(fregs) \
+> > +	kernel_stack_pointer(arch_ftrace_get_regs(fregs))
+> > +#define ftrace_regs_return_value(fregs) \
+> > +	regs_return_value(arch_ftrace_get_regs(fregs))
+> > +#define ftrace_regs_set_return_value(fregs, ret) \
+> > +	regs_set_return_value(arch_ftrace_get_regs(fregs), ret)
+> > +#define ftrace_override_function_with_return(fregs) \
+> > +	override_function_with_return(arch_ftrace_get_regs(fregs))
+> > +#define ftrace_regs_query_register_offset(name) \
+> > +	regs_query_register_offset(name)
+> > +
+> > +#endif /* HAVE_ARCH_FTRACE_REGS */
+> > +
+> > +#endif /* _LINUX_FTRACE_TYPES_H */  
+> 
+> Ditto.
+> 
+> Others looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+I'll send a v2 with this update.
 
 -- Steve
