@@ -1,108 +1,111 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC25319B3D7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 17:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFAC19AA6B;
+	Thu, 10 Oct 2024 17:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728579888; cv=none; b=uLd8yVreOZk7YdvzqweTXe2iBtJV04WMssQFAlxu9zkX4a/hx0I1F+4ZRXjmxeX7OgkQ/+dCd+dpwsSIB2viNvTxX6hoNKs/BKnaryaVmdUMQ4TiWrqFW8obVoN1KNFrTJ9d5zZ/UXJZEIifSlC7KTChYPO+QK011E62u9QXFvk=
+	t=1728580712; cv=none; b=Kl2XB1eeRlt7qxPKIwMIMP7olnumK8gsjJMdy2L3KMxHkQaNbIfABk/e85bza+2ZV9kujedqmxgAsZ/7UHvHteAozt+gNCAh2sb1p5lkceC65fn97tZU/tZhUEfepe8lQT7Be24UTyQY55lDz+RPjCL2k3j29J71oGya5mYSaP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728579888; c=relaxed/simple;
-	bh=i5dx0UhQ/tTF7VQwfxB7kDXoCRCqQDi/mml7CFO95Q0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dOK4qj51MGIQ9Qx6x+gLsGbrVlNfSd7OQqcVZ9HUdTgL6aM+HD/0h01v7FHrQT97HnlIBHYb1gTgI67zP+uI+/DsPg5/jgvrmIWtYVZfZtfTOJmQgZj3akV0Lpt3XPMYOrJ+/tos9suYaAbE+rOooomX8rhC+32i8r+axAzgZTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DiY/AwjH; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1728580712; c=relaxed/simple;
+	bh=vaucBuX2fMrEpT3kygwI4CcFnWG5blOdj+4yYIH1/lc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VdyUqTy6CptoVSqVgvzdYJMqPU6hJwsDnJ2c5zqIj6cq6ZJnMSFz+hXc2D2YP6Tse4+y88y9zq6qQC1ceGSi9VIEQs4p9Plc0JwM+xWYtQbrO0SE/qLvB32fevMLBuTF7BrXn0G85g2OsFxS51nidUHgDFJa6qrYyTpEbUHrqSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YGQC3YGT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DiY/AwjH"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a3a5cd2a3bso6316155ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 10:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1728579885; x=1729184685; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hUDkh/kjwV3Ai2AwiP8Kl7C0pSMOQvoqahsvYlIjyPA=;
-        b=DiY/AwjH3vRMI8RIly/8DBpdIklJc4macdRuaz7zn4YVoIczvq2qSJ2bZHOinEBign
-         dQD5AUcR9pOO7FMPC7vnLuPVvn0Px1iZBhrTp3Gtl/koseS7A79zSGy+l/lL/3xkK2yO
-         XCuRSHMmBBjlLU/bGNozV19ei8CJoBTvwoQ+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728579885; x=1729184685;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hUDkh/kjwV3Ai2AwiP8Kl7C0pSMOQvoqahsvYlIjyPA=;
-        b=QtS4xNe+Va2BUeqAOcMiTZGk3cIyDNpbKCw5FlH7GY4bzV3Yu41Oi32eUWCsbTa4dJ
-         OBX/gRlYu/pZCz9zPeg3qeJPzB3WUSw7w3chQ496CLOdd3k0SVf8pyTAZZHAwc+lyYCo
-         vi6CSq+2NI54zOxU3G41C8MbSUv5kRkusGHOlBGGqqvFDoIhiVRbVaSEiIasdhXyIW2V
-         vkTYd5aL+OJ+LHjY5i5n0zLdp18TT1odkOlfGwpt+T3e0dvsrkhai8ZZXXgBvIBMijj8
-         9LpY9kLrpbKSvzV6YLl35ItuX9zo++DFhZ2Wu7WxtfXH8QVWtb6abJ3w0f/1cKi4Tl8u
-         14Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyEbvT23bkPEtwLteL4sBtlxmRbvkUMNgQhl3GVdt7lbUB3evWRIsmY3CQjue9TtStZLTomiMm17IXLSUnZfCSbBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWm9tbqTe23LIZMdKNT63XMoBZfNVCXP8fn/+NrCWQ/deReH7
-	9iCTnnArqpPqqPPvwvIFGIA8wiXl/4teS4yc7ShhKNammqxlZNtyff6CP2SDooY=
-X-Google-Smtp-Source: AGHT+IEmIOQmx+WWs5L52kh0YJyVZPtoP5znB1H5OJDnusEZHA3cnEBsF6SLubdvdK9UJeIt/LZ+bQ==
-X-Received: by 2002:a05:6e02:178d:b0:3a3:9337:4ce2 with SMTP id e9e14a558f8ab-3a397cda124mr63977615ab.2.1728579884706;
-        Thu, 10 Oct 2024 10:04:44 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbada84990sm311977173.113.2024.10.10.10.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 10:04:44 -0700 (PDT)
-Message-ID: <63a7811c-c2cb-472f-bfa1-3b45bc65da10@linuxfoundation.org>
-Date: Thu, 10 Oct 2024 11:04:43 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YGQC3YGT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E86C4CED1;
+	Thu, 10 Oct 2024 17:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728580711;
+	bh=vaucBuX2fMrEpT3kygwI4CcFnWG5blOdj+4yYIH1/lc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YGQC3YGTpIM/Tv02Vn7usGJD/6tt+x+KTKu3UxnMO5NCC8+C7ZPh5ezrehFriglwe
+	 0kHT558np8Wr8rw+tHrk6iFdI6TYZzj/XuDQyl1ohCHGBlLvqRKvMY9o2gFo+NuycW
+	 y20uvBOD9Gdu+xnvXvzrx2PBIPwMfqD7Kk74Y5ZM4wURiZxI3kabAPnyXgltKV5Te8
+	 nLgYuMl0XB6UP3CI6ocVV8lyp79EB210TDlqZm0fWRLk96yJAx28fczirFRv8Ok4xn
+	 g28YaYfndtMh2lJkpow1r3uH0m1V9UcGEfvj2KBq6mV0UhVTJerIhIuFum/RTZvtMI
+	 Z12HDd0NC/l1Q==
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-8354851fcabso48911939f.2;
+        Thu, 10 Oct 2024 10:18:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNwS4nU0i1pFTedEe9QquUZznRCoLc+3xUgysql3JpZQ1HE+HaPatufKWc8qr0x/Ye2SQsxkziAepgcw==@vger.kernel.org, AJvYcCURTNsCKHxmNg85Q0OquBOAAn4jXzp/HSvwityJzy1FP4UBfrQS5ey7549dEMoRJBoqS9u+h2FK5J1O1Q==@vger.kernel.org, AJvYcCUnXjAFL7Vh4gBrRhVyEqBEd8t7lq75QzDLkU1jQpu2pPeqMTjdN0rG+XEjvXFfcEgIwZrUtX9iKlnYuZl1Iw==@vger.kernel.org, AJvYcCUpsoApLKAYKbB/pB5ltcSLmuksx4pmT57XP4Qx563kh6rXnFT7j/pvr+QRHXsv5PpsC1hMx2rrNHaaQA==@vger.kernel.org, AJvYcCUujDcBpwF8M6Qg6H2w77GxDLXtQ6Xokb0ZnQ0XkGg8nSLYIfwOopK4UFUL7XDf1Xq/gGar3qy1fSoKKIyQsQ==@vger.kernel.org, AJvYcCVceqbqnoD8upMwp/2rMzTQA+NnTmzxnZYka3o5PMZK0SOnabs3WzoIzYtuNHcGv17yAVbwdSAnLAP741oYp1068Njm@vger.kernel.org, AJvYcCVtUOzBZjY/yodlV6U3dIaM80pFkBdfOsoKfaz6TGmw57MrAN7kZC7WJeTmxobtSTkk1AoqdjwrNfc=@vger.kernel.org, AJvYcCVtYIpyyF4KPkwJbK0dSAr8z/fZQfE/nEvPhH1FlGGEIhNujLo9NzrcQWT8hZZGg1MM832Sv4mM5/YgOw==@vger.kernel.org, AJvYcCWMFvZbSRThFQeP2ZvabB4MrRYbmwFHdF4xKCT4Sau2vCUtG5OivWCBhzdTpUxAl7M41KjCuFW7bGqFhAY=@vger.kernel.org, AJvYcCWcPvgouWs6OFoewglssFG7UHTBjYz/7OKk2nN1Ovn1QIhK2B3HNcbOeqHTS/9TFy8wFXTOAnuPwbM7AxRY@vger.kernel.org, AJvYcCWgcrmvKS+saR8ChWJ38tf6CjCHieZyZn8se624ihvJDrH/8Hd8woMODD9mOtz/sMEzCi0=@vger.kernel.org, AJvYcCWsKsLVzkoC7SAiMH7xEL4hMOOAvV863DEiMnc42F7DPzDatuylHqJQNdtM5UIa2cyFJv+gpo5iu2pckVXg@vger.kernel.org, AJvYcCXfHFj95a4sWp51N7WEhfSNNqDmCkH5z7GRG7BzYeyhUFXbus+OhaAaGyRp8Kf0QQULH+MkcC0Xpe/rI66Tg44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQR8Mgvc/yWBlexpByTgWAPe9ne4Og5hO9d59xlmOJSOhlNgN2
+	cf5Fd0Crb6QwfYEcRnE0TZbARHYJQ6Xgji+ynd/D7NOUT8aORLlv06NQJVa7qMltWwCZRZY6TRu
+	QtAxxGqpEubkGQgWES9J+UiGKsgE=
+X-Google-Smtp-Source: AGHT+IGszKBBrf1gYsUhslMqcPNpC/f6sAFFbsmL+u+zGmeEd2sYZs3+7Tvb9T+CKCsx/nhk3yidKvoEgysxI18Lmn4=
+X-Received: by 2002:a05:6e02:144d:b0:3a0:92e5:af68 with SMTP id
+ e9e14a558f8ab-3a3b51daa94mr2839515ab.15.1728580710921; Thu, 10 Oct 2024
+ 10:18:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ftrace/selftest: Test combination of function_graph
- tracer and function profiler
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20241004145618.18436d7e@gandalf.local.home>
- <20241008093314.8b263b6bd2e23c6a8345b65f@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20241008093314.8b263b6bd2e23c6a8345b65f@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241009180816.83591-1-rppt@kernel.org> <20241009180816.83591-5-rppt@kernel.org>
+ <CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com> <ZwdpnPKKQGF5DtSv@kernel.org>
+In-Reply-To: <ZwdpnPKKQGF5DtSv@kernel.org>
+From: Song Liu <song@kernel.org>
+Date: Thu, 10 Oct 2024 10:18:19 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6gb76T_75TPzb-AvfyAcYE83iYhDpjJNHJQWDd3Fki_Q@mail.gmail.com>
+Message-ID: <CAPhsuW6gb76T_75TPzb-AvfyAcYE83iYhDpjJNHJQWDd3Fki_Q@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] module: prepare to handle ROX allocations for text
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@infradead.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, 
+	Helge Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, 
+	Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>, 
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-mm@kvack.org, linux-modules@vger.kernel.org, 
+	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/7/24 18:33, Masami Hiramatsu (Google) wrote:
-> On Fri, 4 Oct 2024 14:56:18 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> Masami reported a bug when running function graph tracing then the
->> function profiler. The following commands would cause a kernel crash:
->>
->>    # cd /sys/kernel/tracing/
->>    # echo function_graph > current_tracer
->>    # echo 1 > function_profile_enabled
->>
->> In that order. Create a test to test this two to make sure this does not
->> come back as a regression.
->>
->> Link: https://lore.kernel.org/172398528350.293426.8347220120333730248.stgit@devnote2
->>
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Thanks!
-> 
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Wed, Oct 9, 2024 at 10:47=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wro=
+te:
+>
+> On Wed, Oct 09, 2024 at 03:23:40PM -0700, Song Liu wrote:
+> > On Wed, Oct 9, 2024 at 11:10=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
+ wrote:
+> > [...]
+> > > diff --git a/include/linux/module.h b/include/linux/module.h
+> > > index 88ecc5e9f523..7039f609c6ef 100644
+> > > --- a/include/linux/module.h
+> > > +++ b/include/linux/module.h
+> > > @@ -367,6 +367,8 @@ enum mod_mem_type {
+> > >
+> > >  struct module_memory {
+> > >         void *base;
+> > > +       void *rw_copy;
+> > > +       bool is_rox;
+> > >         unsigned int size;
+> >
+> > Do we really need to hold the rw_copy all the time?
+>
+> We hold it only during module initialization, it's freed in
+> post_relocation.
 
-Steve, Would you like me take this one through my tree?
+Ah, I missed this part. Sorry for the noise.
 
-thanks,
--- Shuah
-
+Song
