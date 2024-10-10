@@ -1,58 +1,35 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339941E882D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 08:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E16919F41D;
+	Thu, 10 Oct 2024 09:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728549050; cv=none; b=bM0IGrnbCB8AXZpNCa3RI7LLDG18ZZdVwd9RnJnLMXmu0dP3P49vkEtnUfVbCnp+N6ZkqtpsmXGiXnCJwRCQnHWufFzFOcbMg/QV4OBXkZ4sm6D2Jf7bK6NLID2yAYFxUMSLJoINOcq3eIB8n4f2ZfKZEocod3OLACn39Oiua/g=
+	t=1728552807; cv=none; b=qPbpPVDQ+a8w6ozik17wcF4sHnzlSlMtYbOOBirI1CMQ7+FaASMvxnkQT84rDIHBrntHdnO4iEosLxOUZQa8SmUQGYr9DaJv+xEzR3v4/zcN8qEY9NRQaAZsDCe73IqkOWfDbNaxYTazOrc7k0bSNL6zeym/myyb35m2V6Bfp5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728549050; c=relaxed/simple;
-	bh=ciGEzLPrN7XbFB5cK/viPY+fgmysJA4dkt9WpJTF0yc=;
+	s=arc-20240116; t=1728552807; c=relaxed/simple;
+	bh=IHjj8Pm1cvim8ImsaUaQl0ADY0QKS9kDKJZxcyI9510=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8TBwOqox0yKjvzq6vfW/sVEOcH4IMVorGz4rFKja44E6WWxD6CWzojwCB8JrYNYqEhWxHFmbmdPymeubwnMf2kaTM8DPTwMXiOlGpQrX1KK6ZgnS+JVpZ1QO8dGFKIbX4jRG/ni/oWKCRoau47Jzte8Ysd/BQ2MjDedFeqIPuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=V6GGARyi; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=P/kr7K7j/QChCjIu/QlHZg+ZRwrQVwQxKsyHLxgkTbFOEYPnBEgIqKDJxaMzUqyKWyjV/9jfdPxGIV2KeMOft14D/2mFu75sW25ifO3tF+kcunTi0J88LrnA4YI+JF9sL/alYVzkHMgepippNUT45QyNC9v5b6Aey+zKF7CbpTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOVNNKtr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V6GGARyi"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2e2d73e6a9fso246233a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 01:30:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1728549047; x=1729153847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xjRgM2erkgK9qh8AbT3u9Jz1xqlQ+SHokymxxsnkwPs=;
-        b=V6GGARyi90X+B17khH8hgRXfkBE9ec0tP9aPBognNcsNGhdlAyv2TpWda74Rrygr43
-         wm/TFHucQh7st1/A3E0U/wGDw06wEopcR47DAwsyoGCllaHrH5KtzktV31CtVJ2punOw
-         q/WMnORmUlcaLeudv40KSjAkX+bc+k5zSVRLU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728549047; x=1729153847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xjRgM2erkgK9qh8AbT3u9Jz1xqlQ+SHokymxxsnkwPs=;
-        b=iPywyBCFEPIGcGcRr2k/Sp8Yo+RumqkyiwzyQuH3yTrV1EArRrpGS3OD5M/Eb4neNe
-         XLH1MxxAnOzpZ7f5HntLsnp953ZvLIotzrVxl+ssVOC0IUHJvazdik1xismFcnb1ybR5
-         1dvXGAhX9LAKh07Y+1XDs5HMhgwRCYHFhP9+/gs8mE9KrZ1uDqOQB8xm2ywBcqW6A9qt
-         BeSxN7oNjubpYqtU2MrbHxyT7jJ28oquL5TssHjbNZFZk0qMb/MLFGQjxTWslAW/Ytpe
-         /qTQlw5HkHV0FaNWvMloIuFVXcnCR3gpMLSGX1pzO7iHzstl8RHfPZ7j9mRgrBw4bt6K
-         oB8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWIPSaEJMhINhbH6JFwNr+2xsUJnzjLyPBnBWwZpeL5bOwOqQ52Oqq1G9cr73RJXtm3MH4XI8mJHK0I1Y2XBKXHKPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzC0wnUnZPhrioHOTvY1IbvV+kEGA1ivHGVjGIOmZwWJA/C8kQS
-	6UYANGAT8Cjfp4RdLcPT9nLrlTLYvfM/a7zZIWICr878QxJDSDktYqQ8zM436A==
-X-Google-Smtp-Source: AGHT+IGiHJLVn7EEJZoiHDg1IHJwEmo5BKI2W3X+EqMqHJDA19Xi8bq+M3epyy60EICvZVegJa7iQQ==
-X-Received: by 2002:a17:90a:178e:b0:2e2:cc47:ce1a with SMTP id 98e67ed59e1d1-2e2cc47ce65mr2245610a91.1.1728549047177;
-        Thu, 10 Oct 2024 01:30:47 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c13a:abb0:1c8:a3c3])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e2d5f0a424sm730808a91.28.2024.10.10.01.30.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 01:30:46 -0700 (PDT)
-Date: Thu, 10 Oct 2024 17:30:33 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOVNNKtr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18111C4CEC5;
+	Thu, 10 Oct 2024 09:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728552807;
+	bh=IHjj8Pm1cvim8ImsaUaQl0ADY0QKS9kDKJZxcyI9510=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TOVNNKtrf8daQuuMacjY7pAlRlt/k4vb7wjQCQYF0aVuw/4MxtY1IEDmecYy869WA
+	 eL70bjSLCWzeSg87onzBIfUU+BSv9+MhwYkC/eIJ924jg8Lyc5Ubk1r7GreDoZptDJ
+	 teVpdajxre4MsBPJA9mql4sRA7irY3J0uloNZaSVW+zDmxt4CzZVh6D1UOnW7YD45l
+	 /XMlYCHBMS9YgkvBhtdnENr2FDWIvohUoNzgrqIpRpXIOWraQQuc8IrP9OJlfmnsWJ
+	 /Y7TcehyVVbI3ky02lFC2Bu9TlmKaTridXnO8cdxvFKPK24cuDB2/RZZ9PsqYrxZV2
+	 Py4W9D9Jti/XA==
+Date: Thu, 10 Oct 2024 12:29:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andreas Larsson <andreas@gaisler.com>,
 	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
 	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
 	Brian Cain <bcain@quicinc.com>,
@@ -95,11 +72,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
 	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Bisected: [PATCH v5 8/8] x86/module: enable ROX caches for module
- text
-Message-ID: <20241010083033.GA1279924@google.com>
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <Zweeg3oc-zrrG_D9@kernel.org>
 References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-9-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+ <20241009132427.5c94fb5942bae3832446bca5@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -108,73 +85,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241009180816.83591-9-rppt@kernel.org>
+In-Reply-To: <20241009132427.5c94fb5942bae3832446bca5@linux-foundation.org>
 
-On (24/10/09 21:08), Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Wed, Oct 09, 2024 at 01:24:27PM -0700, Andrew Morton wrote:
+> On Wed,  9 Oct 2024 21:08:15 +0300 Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-> text allocations.
+> > Using large pages to map text areas reduces iTLB pressure and improves
+> > performance.
+> 
+> Are there any measurable performance improvements?
+
+I don't have any numbers, I just followed the common sense of "less TLB
+entries is better" and relied on Thomas comments from previous discussions.
+ 
+> What are the effects of this series upon overall memory consumption?
+ 
+There will be some execmem cache fragmentation and an increase in memory
+consumption. It depends on the actual modules loaded and how large it the
+fragmentation.
+
+For a set of pretty randomly chosen modules where most come from
+net/netfilter I see an increase from 19M to 25M.
+
+> The lack of acks is a bit surprising for a v5 patch, but I'll add all
+> this to mm.git for some testing, thanks.
 > 
 
-With this modprobe disappoints kmemleak
-
-[   12.700128] kmemleak: Found object by alias at 0xffffffffa000a000
-[   12.702179] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
-[   12.704656] Tainted: [N]=TEST
-[   12.705526] Call Trace:
-[   12.706250]  <TASK>
-[   12.706888]  dump_stack_lvl+0x3e/0xdb
-[   12.707961]  __find_and_get_object+0x100/0x110
-[   12.709256]  kmemleak_no_scan+0x2e/0xb0
-[   12.710354]  kmemleak_load_module+0xad/0xe0
-[   12.711557]  load_module+0x2391/0x45a0
-[   12.712507]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.713599]  do_syscall_64+0x54/0xf0
-[   12.714477]  ? irqentry_exit_to_user_mode+0x33/0x100
-[   12.715696]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.716931] RIP: 0033:0x7fc7af51f059
-[   12.717816] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
-[   12.722324] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[   12.724173] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
-[   12.725884] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
-[   12.727617] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
-[   12.729361] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
-[   12.731101] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
-[   12.732814]  </TASK>
-[   12.733362] kmemleak: Object 0xffffffffa0000000 (size 2097152):
-[   12.734800] kmemleak:   comm "modprobe", pid 410, jiffies 4294880489
-[   12.736334] kmemleak:   min_count = 2
-[   12.737228] kmemleak:   count = 0
-[   12.738043] kmemleak:   flags = 0x5
-[   12.738917] kmemleak:   checksum = 0
-[   12.739783] kmemleak:   backtrace:
-[   12.740606]  kmemleak_vmalloc+0x29/0xc0
-[   12.741532]  kasan_alloc_module_shadow+0xbe/0xe0
-[   12.742649]  execmem_vmalloc+0x116/0x220
-[   12.743596]  execmem_alloc+0xfb/0x3d0
-[   12.744479]  load_module+0x1e84/0x45a0
-[   12.745383]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.746452]  do_syscall_64+0x54/0xf0
-[   12.747319]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.748772] kmemleak: Not scanning unknown object at 0xffffffffa000a000
-[   12.750364] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
-[   12.752441] Tainted: [N]=TEST
-[   12.753165] Call Trace:
-[   12.753760]  <TASK>
-[   12.754279]  dump_stack_lvl+0x3e/0xdb
-[   12.755165]  kmemleak_load_module+0xad/0xe0
-[   12.756165]  load_module+0x2391/0x45a0
-[   12.757068]  __se_sys_finit_module+0x4e0/0x7a0
-[   12.758135]  do_syscall_64+0x54/0xf0
-[   12.759099]  ? irqentry_exit_to_user_mode+0x33/0x100
-[   12.760292]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   12.761508] RIP: 0033:0x7fc7af51f059
-[   12.762372] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
-[   12.772361] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-[   12.774957] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
-[   12.776635] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
-[   12.778283] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
-[   12.779949] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
-[   12.781619] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
-[   12.783319]  </TASK>
+-- 
+Sincerely yours,
+Mike.
