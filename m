@@ -1,202 +1,154 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F6A1E9091;
-	Thu, 10 Oct 2024 22:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7759814D6F9;
+	Thu, 10 Oct 2024 22:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728598961; cv=none; b=OarNxrTpmfivUPGUKxRapNKqPma977gbmAKcalwrb5eu846Zonn1/t5kiySaCGdm3zCTcxGBJhwl0g40b/g5RGpMmLQdvkcMoDu4yihzVlM3ShJ96Ee6OiaSKNM/yym3Ja8m8hUIMc1z2UgTJtqfPPop09z4bFZzgMoyWV+dHRo=
+	t=1728600857; cv=none; b=edvVwIMv/uSuuTeYfXUaIvAQxtfCMJ6j9/azAupsStM9AC9v1ojywydz7gw54XdarbgXTEq6AoeI+e8QoW2PgsgRuS7KHuvQOrkdbZGapUPeHq8P+I8PXu3WZxTBTPAo9M2hhLRBuxlohx/35i1UieecMCblqbaoKcPuR1ksxAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728598961; c=relaxed/simple;
-	bh=gemCiS2iR6rMBKQV+E/ag/riT2JdV0rWSQPpaz+ddsk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mrWGSZ5vEfvYT9SWQSahToAL/bk66exvWqa+vVvaIY2ofj1Wkrvb7HnWArjSk1VPVGx2eXyDJDdAi/jlj3XRe2gZwUFYhls2xLLwu4fGMT/ypqZIl8wXQ5rPcbzMHFqbsmzInUZML+tgt5vJa0ytbEBVhSOSWtV03HF09qXBBq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HvOHar8S; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728600857; c=relaxed/simple;
+	bh=dRFHj5mtH0xn8PBj2ZbOuI6o6u0ly0QH1iws5fctk8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlyrANTR49TIms1r6cbk02Vsc8uMP6JqFfBKZ0WmjqDyP6aQURMg8bNtMN3cBEPscbvVnvlF3NuqR8fPHCGQI1FmqkBWk6cbmcPE710QDExqjxoHuRHwBgvHQZw4fO0yH7bYV6UHfroaYjMzU7mfGf9+7S2tyUUf2RK9FlnPf2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiUIOLSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvOHar8S"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2e2bb1efe78so1035205a91.1;
-        Thu, 10 Oct 2024 15:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728598959; x=1729203759; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DJ3QmMlS95A6MHzFTxNEnAHvRaHc4Cdj7eqnkirwFiE=;
-        b=HvOHar8SlYD0VRxO5vJvbMLR9NL9xhl7T7VpZ8zBrGlOsLkbomeJRhryhGmDOWNS9B
-         1t0RhoDeMcQJ/Ke4oEJpgxuXXSujmQ32+IhE5DuxF6nmpyC9NU/skwzQVMVOBEiLRkcm
-         TDzEScUxuKwTwmJ4mGaax/K712CrqXbTZ5J6JenT+GkfOJ7OskcaLb1IXxQ5C4S0qFoA
-         FXdhEX8e8Qnr2LdHfOgNF3GHB+gvBIkcroOgfL3e/c2JVfV1M/M6ecnsqIR3Oq3uw7Ua
-         dDhVoVnSdqvPmn1mwipP99lME5Pm7FGQAPD/OZsP1S4YbJF5IQ8rUvPt7Gn668B8c2t2
-         ms/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728598959; x=1729203759;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DJ3QmMlS95A6MHzFTxNEnAHvRaHc4Cdj7eqnkirwFiE=;
-        b=FxbqNEwR6neWk2599CByhen7aUmeBNUCKrVV2pVd2hyjK5roZ/HiiNH8sx2YVGb03W
-         gvueZxRLQI42UyPOI6hGofN05mYUb0Pi2QUVrgvYvMJqI1Oc0seiO9+GSM5rxDJAZIwj
-         zDYIzouPKpb6rubLY4h/DCKecv430vD98CunKmwGlgyzDSpi4z2Vq4Z2DuncTBfJ1/rC
-         sL2CZFFg5Kl5YC2WqIikPAbjkS+T2FVfWM8TeFR9HANXi82sBP3bRYbDAZtRl+46LqZM
-         FGobnej4u7q+wmP+IYqW2mTjSHNQKIInZAcOOjg167U32PqYvjZQu1rud4hrNj3Yl5+V
-         aPOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTeKSuJ4Zc6NHVA6YNtsXbuO46A/M8WvZtH0PQpIDwqMe3JDkulisDON8qpaw2TSeuCpetzYZHwjWOdu2S@vger.kernel.org, AJvYcCW+fMd3/5kyse24J1z7ZOHBeqBokQ6QjpV7ocG0R0aGQ3GUEgLjiZY/fv3OB95USlOQdko=@vger.kernel.org, AJvYcCXsR9LNjOHYtro0Xuw/bfcAA8FMgZNoB74KxbXWyd58dthlu2AtVist5BiJSycoUu/UnPdM+gegOz81yCL3LYDY+fIs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiGXV1CgKUi+4LcDXBi8t6L9mDzpOX/F8mrp1gCbCA1VGqAq5j
-	EvgYheVja2TswqlktS8YHcAWMOgEXHFPmWH3PFhu2lPXXyJCbb2hMgG9YOA0SaG7FPt31xp6HZw
-	IoXaRUnEmzXQe3A/kH+hqijSt2AondJ/6
-X-Google-Smtp-Source: AGHT+IF0HWG7jJwsVwL+jVP75fRAK56Gx2iufwCdfrFqkGu3wPHuQlDLS+8o28DvbEI4M7jB5O+2jJtOXHzLUVjMsOE=
-X-Received: by 2002:a17:90a:a412:b0:2d8:b510:170f with SMTP id
- 98e67ed59e1d1-2e2c81d3daamr6242625a91.20.1728598958986; Thu, 10 Oct 2024
- 15:22:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiUIOLSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E7BFC4CEC5;
+	Thu, 10 Oct 2024 22:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728600856;
+	bh=dRFHj5mtH0xn8PBj2ZbOuI6o6u0ly0QH1iws5fctk8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QiUIOLSBcasoVYYND8KdWz7eQh/+0boOgNRGeOQlhf5jvA1/EBnMYKjn5VICJ3eAY
+	 cnnu9shlCLMfTHHTHra7MnZ0rLJlXd0Hph0c0PBZ21X9KTVg4eVdzFCTR7+dIRdltD
+	 hxCWp0qmt+fIbgTEcIZSFHp2Q6iE2wK9yyyZ4vyAJOkCE63MHkbL8C+vAlgxvUIB86
+	 jOXbNmyf7S3aQkYS+MyXLrzvy5GjYypHqnc1WER+qWs986tCcEJrL1436xfNVNVaY8
+	 SuEhjakzc9ZUyRU5YtUSasIp4EiqD3HrJhbPDpQFeVHrdwLEF3yFgOYnlD+BEfVYYI
+	 t/83JFWrskzLQ==
+Date: Thu, 10 Oct 2024 15:54:11 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 6/8] x86/module: perpare module loading for ROX
+ allocations of text
+Message-ID: <20241010225411.GA922684@thelio-3990X>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-7-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909071114.1150053-1-liaochang1@huawei.com>
- <CAEf4BzZVUPZHyuyt6zGZVTQ3sB8u64Wxfuks9BGq-HXGM1yp3A@mail.gmail.com> <ZwezYJIIsiAeK46P@J2N7QTR9R3>
-In-Reply-To: <ZwezYJIIsiAeK46P@J2N7QTR9R3>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 10 Oct 2024 15:22:26 -0700
-Message-ID: <CAEf4BzbEGN4zpjg9fwdfnj0pjBDT2_YzE1WkpwVjee-FZL1_ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: insn: Simulate nop instruction for better
- uprobe performance
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Liao Chang <liaochang1@huawei.com>, will@kernel.org, catalin.marinas@arm.com, 
-	ast@kernel.org, puranjay@kernel.org, andrii@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241009180816.83591-7-rppt@kernel.org>
 
-On Thu, Oct 10, 2024 at 3:58=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
->
-> Hi Andrii,
->
-> On Wed, Oct 09, 2024 at 04:54:25PM -0700, Andrii Nakryiko wrote:
-> > On Mon, Sep 9, 2024 at 12:21=E2=80=AFAM Liao Chang <liaochang1@huawei.c=
-om> wrote:
->
-> > I'm curious what's the status of this patch? It received no comments
-> > so far in the last month. Can someone on the ARM64 side of things
-> > please take a look? (or maybe it was applied to some tree and there
-> > was just no notification?)
-> >
-> > This is a very useful performance optimization for uprobe tracing on
-> > ARM64, so would be nice to get it in during current release cycle.
-> > Thank you!
->
-> Sorry, I got busy chasing up a bunch of bugs and hadn't gotten round to
-> this yet.
->
-> I've replied with a couple of minor comments and an ack, and I reckon we
-> can queue this up this cycle. Usually this sort of thing starts to get
-> queued around -rc3.
+Hi Mike,
 
-Thanks Mark! I'm happy to backport it internally before it goes into
-official kernel release, as long as it's clear that the patch is in
-the final state. So once Liao posts a new version with your ack, I'll
-just go ahead and use it internally.
+On Wed, Oct 09, 2024 at 09:08:14PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> When module text memory will be allocated with ROX permissions, the
+> memory at the actual address where the module will live will contain
+> invalid instructions and there will be a writable copy that contains the
+> actual module code.
+> 
+> Update relocations and alternatives patching to deal with it.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-When you get a chance, please also take another look at Liao's second
-optimization targeting STP instruction. I know it was more
-controversial, but hopefully we can arrive at some maintainable
-solution that would still benefit a very common uprobe tracing use
-case. Thanks in advance!
+I bisected a boot failure that I see with CONFIG_CFI_CLANG enabled to
+this change as commit be712757cabd ("x86/module: perpare module loading
+for ROX allocations of text") in -next.
 
-  [0] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1-l=
-iaochang1@huawei.com/
+  $ echo CONFIG_CFI_CLANG=y >arch/x86/configs/cfi.config
 
->
-> Mark.
->
-> >
-> > > diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/i=
-nsn.h
-> > > index 8c0a36f72d6f..dd530d5c3d67 100644
-> > > --- a/arch/arm64/include/asm/insn.h
-> > > +++ b/arch/arm64/include/asm/insn.h
-> > > @@ -549,6 +549,12 @@ static __always_inline bool aarch64_insn_uses_li=
-teral(u32 insn)
-> > >                aarch64_insn_is_prfm_lit(insn);
-> > >  }
-> > >
-> > > +static __always_inline bool aarch64_insn_is_nop(u32 insn)
-> > > +{
-> > > +       return aarch64_insn_is_hint(insn) &&
-> > > +              ((insn & 0xFE0) =3D=3D AARCH64_INSN_HINT_NOP);
-> > > +}
-> > > +
-> > >  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
-> > >  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u=
-32 insn);
-> > >  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
-> > > diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kern=
-el/probes/decode-insn.c
-> > > index 968d5fffe233..be54539e309e 100644
-> > > --- a/arch/arm64/kernel/probes/decode-insn.c
-> > > +++ b/arch/arm64/kernel/probes/decode-insn.c
-> > > @@ -75,6 +75,15 @@ static bool __kprobes aarch64_insn_is_steppable(u3=
-2 insn)
-> > >  enum probe_insn __kprobes
-> > >  arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *a=
-pi)
-> > >  {
-> > > +       /*
-> > > +        * While 'nop' instruction can execute in the out-of-line slo=
-t,
-> > > +        * simulating them in breakpoint handling offers better perfo=
-rmance.
-> > > +        */
-> > > +       if (aarch64_insn_is_nop(insn)) {
-> > > +               api->handler =3D simulate_nop;
-> > > +               return INSN_GOOD_NO_SLOT;
-> > > +       }
-> > > +
-> > >         /*
-> > >          * Instructions reading or modifying the PC won't work from t=
-he XOL
-> > >          * slot.
-> > > diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/ke=
-rnel/probes/simulate-insn.c
-> > > index 22d0b3252476..5e4f887a074c 100644
-> > > --- a/arch/arm64/kernel/probes/simulate-insn.c
-> > > +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> > > @@ -200,3 +200,14 @@ simulate_ldrsw_literal(u32 opcode, long addr, st=
-ruct pt_regs *regs)
-> > >
-> > >         instruction_pointer_set(regs, instruction_pointer(regs) + 4);
-> > >  }
-> > > +
-> > > +void __kprobes
-> > > +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-> > > +{
-> > > +       /*
-> > > +        * Compared to instruction_pointer_set(), it offers better
-> > > +        * compatibility with single-stepping and execution in target
-> > > +        * guarded memory.
-> > > +        */
-> > > +       arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> > > +}
-> > > diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/ke=
-rnel/probes/simulate-insn.h
-> > > index e065dc92218e..efb2803ec943 100644
-> > > --- a/arch/arm64/kernel/probes/simulate-insn.h
-> > > +++ b/arch/arm64/kernel/probes/simulate-insn.h
-> > > @@ -16,5 +16,6 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struc=
-t pt_regs *regs);
-> > >  void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
-> > >  void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *reg=
-s);
-> > >  void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *r=
-egs);
-> > > +void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
-> > >
-> > >  #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
-> > > --
-> > > 2.34.1
-> > >
+  $ make -skj"$(nproc)" ARCH=x86_64 LLVM=1 mrproper defconfig cfi.config bzImage
+
+  $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/download/20230707-182910/x86_64-rootfs.cpio.zst | zstd -d >rootfs.cpio
+
+  $ qemu-system-x86_64 \
+      -display none \
+      -nodefaults \
+      -M q35 \
+      -d unimp,guest_errors \
+      -append 'console=ttyS0 earlycon=uart8250,io,0x3f8' \
+      -kernel arch/x86/boot/bzImage \
+      -initrd rootfs.cpio \
+      -cpu host \
+      -enable-kvm \
+      -m 512m \
+      -smp 8 \
+      -serial mon:stdio
+  [    0.000000] Linux version 6.12.0-rc2-00140-gbe712757cabd (nathan@n3-xlarge-x86) (ClangBuiltLinux clang version 19.1.0 (https://github.com/llvm/llvm-project.git a4bf6cd7cfb1a1421ba92bca9d017b49936c55e4), ClangBuiltLinux LLD 19.1.0 (https://github.com/llvm/llvm-project.git a4bf6cd7cfb1a1421ba92bca9d017b49936c55e4)) #1 SMP PREEMPT_DYNAMIC Thu Oct 10 22:42:57 UTC 2024
+  ...
+  [    0.092204] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+  [    0.093207] TAA: Mitigation: TSX disabled
+  [    0.093711] MMIO Stale Data: Mitigation: Clear CPU buffers
+  [    0.094228] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+  [    0.095203] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+  [    0.096203] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+  [    0.097203] x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+  [    0.098003] x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+  [    0.098203] x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+  [    0.099203] x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+  [    0.100204] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+  [    0.101204] x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+  [    0.102203] x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+  [    0.103204] x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+  [    0.104051] x86/fpu: xstate_offset[9]: 2432, xstate_sizes[9]:    8
+  [    0.104204] x86/fpu: Enabled xstate features 0x2e7, context size is 2440 bytes, using 'compacted' format.
+
+then nothing after that. Boot is successful if CFI is not enabled (the
+initrd will just shutdown the machine after printing the version string).
+
+If there is any further information I can provide or patches I can test,
+I am more than happy to do so.
+
+Cheers,
+Nathan
