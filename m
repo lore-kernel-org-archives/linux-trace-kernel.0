@@ -1,143 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440DB1C4610;
-	Thu, 10 Oct 2024 12:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E410F1C7B8F;
+	Thu, 10 Oct 2024 13:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728563149; cv=none; b=p3JeMzSvXcD+mK3w8dBIkWioooTYwWVafaBmfesPGdFPyXkFqrXb7ELJzqmlNQObndxN+RN474sQcLvVd9LdepS8s0zB2X3mW1xdnTjneyeoh1eVSssD8sf9keUlpgreKpZE8Ga25DdPwpNblTEG5USKDgjPgiusRFLF3exSzbo=
+	t=1728565284; cv=none; b=DcyQ2lBwhdjZpkOtJ0PVBCmjCGD1FVEdtBoY+Vt9YOPmefsw6xtUGEpcUQcKlY/F1m1LCJ42gQTfWMLWkVo3ylensI4c5KES77YOTlZs/JBfFqhWp+FaARZRjeerXjRxiyenDdvjG8bSTRX6jYFCdXBg/b9QZ2geR0losu8w+RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728563149; c=relaxed/simple;
-	bh=9fH9wulpqdp/Ge5H+zi24V1LwNgG+nqf6Y4SypcfTqI=;
+	s=arc-20240116; t=1728565284; c=relaxed/simple;
+	bh=0gFND+MAHX6q3fPU9Dm7aa3AX+VkNdk2ZdK9663ePGM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uzfzKHnShNacqoeSsbiwaVmYaaGoA2g8jR/vzE0msztV8uq9qZGAwZeHEZnJEbbEyre1FtxMS9FblFApHZiLMpeKlK7NfGtXrWi6OfRjrMRksmG8QPIyv/mVJjtUvs3UnQ9lNZPFSVlNvhE+Oe7QqxYfRRUAkM5XGHdtDodeLMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WGjskZ4m; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHb+GC/B; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPeAz5Ni8C8daLh6FKYFhAMiYN0TD/1HqsU8wbKvJe0Z96mlV4S/cQ4aA9JGIWhDCQX+fFSmqLW1kHLjy1Cmhn4zUraIWN9+Brw1aE5Qxw1vW6bJpPnhVMnzUg/0rvwT+mhs8pNzO7S5K0Em/Lmvh+wR4pwb5oeMN9aCafu4rkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i15xpEq/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WGjskZ4m";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHb+GC/B"
-Date: Thu, 10 Oct 2024 14:25:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1728563146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NX5RhoJ/MlDzG/mTrF+6FZ25OV+y6FcZq4dFLjVx4SI=;
-	b=WGjskZ4medTthYhTN1hTfBi2C+3qJZ4gzTSK59E4KX2R2lENvV8mTzhLvItJrnrejYf40z
-	Q5wm4v8ko/nvtu2IKKqjJjGUY2m+LeAbQ8cO5IIfE6f9hr3UfQYmQghc4hoILunPuRfG5s
-	U44nadd+ifH6qgfT/Pgl2IzabckesgYmgOGxnef7uVBxxO3/y5hTe9QMmhs2N1KZpfYkVL
-	AXu6xd3WyNwUmVT4ZN02k1BaLPboo7PYIOVCQw4W7tUyAR+wjicO54xwzd/5IHRGn4ECTO
-	W3nar6q+fAkYlWn0JCE/7IWHVhhZtxE9fkNLyRmlHjaPK9+jNuOpJHdj53MtDg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1728563146;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NX5RhoJ/MlDzG/mTrF+6FZ25OV+y6FcZq4dFLjVx4SI=;
-	b=GHb+GC/Bkoyk2lO1G6yM5dzZxHOF/pBHJI4gm0V8sOIzQtpo1GzC92nQgNGvsUkqxSCBhx
-	y1mpbo/unAXBsMAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@kernel.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, ankur.a.arora@oracle.com, efault@gmx.de,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i15xpEq/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3F0EC4CEC5;
+	Thu, 10 Oct 2024 13:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728565283;
+	bh=0gFND+MAHX6q3fPU9Dm7aa3AX+VkNdk2ZdK9663ePGM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i15xpEq/kuFAv6DlXG15A1e80Zkeyfpm7KcH2z/4b7LHy0huNtJIfhTPl8l4m2Thz
+	 DrC+EerzAtj77QkSwvdLuoM9HsdVcSXAYblfY52ni7z3rWCwNvYecLnzzamyv05TxQ
+	 MvyRQw4iBhqZGVncP0l5I4u44ZK9GkUbVv2NjZJ1KmbX6KkRkPzCVKd/P5aEdD5W04
+	 r/juMpxct8TYbYtPQygo8mwFvlF95PkeOYNJV8aiyjpOL0HlbI0t0P6KYVnwxFYXRs
+	 bP4FdthxlHe3zfpEHTln3UXCWui5XHPdWaBkcJjwrkqkqBVwNb4EXbX5FI3Wx8W6oT
+	 ueyyZehAwF8+A==
+Date: Thu, 10 Oct 2024 15:57:33 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
-Subject: [PATCH v2 3/3] riscv: add PREEMPT_LAZY support
-Message-ID: <20241010122545.7N_x3GuX@linutronix.de>
-References: <20241009105709.887510-1-bigeasy@linutronix.de>
- <20241009105709.887510-4-bigeasy@linutronix.de>
- <20241009130307.GN17263@noisy.programming.kicks-ass.net>
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+Message-ID: <ZwfPPZrxHzQgYfx7@kernel.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+ <Zwd7GRyBtCwiAv1v@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241009130307.GN17263@noisy.programming.kicks-ass.net>
+In-Reply-To: <Zwd7GRyBtCwiAv1v@infradead.org>
 
-=46rom: Jisheng Zhang <jszhang@kernel.org>
+On Wed, Oct 09, 2024 at 11:58:33PM -0700, Christoph Hellwig wrote:
+> On Wed, Oct 09, 2024 at 09:08:15PM +0300, Mike Rapoport wrote:
+> >  /**
+> >   * struct execmem_info - architecture parameters for code allocations
+> > + * @fill_trapping_insns: set memory to contain instructions that will trap
+> >   * @ranges: array of parameter sets defining architecture specific
+> >   * parameters for executable memory allocations. The ranges that are not
+> >   * explicitly initialized by an architecture use parameters defined for
+> >   * @EXECMEM_DEFAULT.
+> >   */
+> >  struct execmem_info {
+> > +	void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
+> >  	struct execmem_range	ranges[EXECMEM_TYPE_MAX];
+> 
+> Why is the filler an indirect function call and not an architecture
+> hook?
 
-riscv has switched to GENERIC_ENTRY, so adding PREEMPT_LAZY is as simple
-as adding TIF_NEED_RESCHED_LAZY related definitions and enabling
-ARCH_HAS_PREEMPT_LAZY.
+The idea is to keep everything together and have execmem_info describe all
+that architecture needs. 
 
-[bigeasy: Replace old PREEMPT_AUTO bits with new PREEMPT_LAZY ]
-
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-
-v1=E2=80=A6v2:
-  - shuffle TIF bits around to make RESCHED next to RESCHED_LAZY.
-    Compiles & boots.
-
- arch/riscv/Kconfig                   |  1 +
- arch/riscv/include/asm/thread_info.h | 10 ++++++----
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 62545946ecf43..3516c58480612 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -39,6 +39,7 @@ config RISCV
- 	select ARCH_HAS_MMIOWB
- 	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PMEM_API
-+	select ARCH_HAS_PREEMPT_LAZY
- 	select ARCH_HAS_PREPARE_SYNC_CORE_CMD
- 	select ARCH_HAS_PTE_DEVMAP if 64BIT && MMU
- 	select ARCH_HAS_PTE_SPECIAL
-diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/=
-thread_info.h
-index 9c10fb180f438..f5916a70879a8 100644
---- a/arch/riscv/include/asm/thread_info.h
-+++ b/arch/riscv/include/asm/thread_info.h
-@@ -107,9 +107,10 @@ int arch_dup_task_struct(struct task_struct *dst, stru=
-ct task_struct *src);
-  * - pending work-to-be-done flags are in lowest half-word
-  * - other flags in upper half-word(s)
-  */
--#define TIF_NOTIFY_RESUME	1	/* callback before returning to user */
--#define TIF_SIGPENDING		2	/* signal pending */
--#define TIF_NEED_RESCHED	3	/* rescheduling necessary */
-+#define TIF_NEED_RESCHED	0	/* rescheduling necessary */
-+#define TIF_NEED_RESCHED_LAZY	1       /* Lazy rescheduling needed */
-+#define TIF_NOTIFY_RESUME	2	/* callback before returning to user */
-+#define TIF_SIGPENDING		3	/* signal pending */
- #define TIF_RESTORE_SIGMASK	4	/* restore signal mask in do_signal() */
- #define TIF_MEMDIE		5	/* is terminating due to OOM killer */
- #define TIF_NOTIFY_SIGNAL	9	/* signal notifications exist */
-@@ -117,9 +118,10 @@ int arch_dup_task_struct(struct task_struct *dst, stru=
-ct task_struct *src);
- #define TIF_32BIT		11	/* compat-mode 32bit process */
- #define TIF_RISCV_V_DEFER_RESTORE	12 /* restore Vector before returing to =
-user */
-=20
-+#define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-+#define _TIF_NEED_RESCHED_LAZY	(1 << TIF_NEED_RESCHED_LAZY)
- #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
- #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
--#define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
- #define _TIF_NOTIFY_SIGNAL	(1 << TIF_NOTIFY_SIGNAL)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_RISCV_V_DEFER_RESTORE	(1 << TIF_RISCV_V_DEFER_RESTORE)
---=20
-2.45.2
-
+-- 
+Sincerely yours,
+Mike.
