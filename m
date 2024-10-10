@@ -1,111 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133A020DD2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 15:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8052C6BB;
+	Thu, 10 Oct 2024 15:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728573060; cv=none; b=mRlNxS7Kjw5aIib0ejd8FqWycLQ3h4GnPtEp45CMXD+IjGDBMTHsI4E223xFHaj10TRGfXVDzvVWXnWOVcNXl/IdI4y8R9E2okv+Yx2yftIy+HyT+q7Xaza88lByScBitjhbF3DjMbNe7ymCts4SaiT4fSISR6ZBHtZJcavBVog=
+	t=1728573328; cv=none; b=KpF7q0z04CixQqobG/KPQ0YPaa/vgRIpgiVyQ3HNPVmRcwRG552yeNGvewSruskbUlN2xPxzDJwHFIDKTDZ3fr6dleNlatz4Spf5LfqDjghCaZbQfsQb6gJdU0dPKk7nIn/4LhODKqsagOpVLd0JypNzPgZ6Ok0MHlpQWk9WKn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728573060; c=relaxed/simple;
-	bh=vv7FoLT/BiNcE50eI8e+RHka34AVKuvU0855Sv669wM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LAbcMHhhBv+/w6hzE346kyuR9I59wF5/Bxah+cJnoLxyod49w4iPxtzieAZiPAtGaOrUjoDl2sOLemrNenPGZDfi18NUmyRs8Nhw1H2eDp46rCbeUJSVdZedn+q4b/LlYPcI7eQ1kQnuRS+tdNxnXxJj/5VbKbcBr0jlJmxa9fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E5C6+l6X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728573328; c=relaxed/simple;
+	bh=pwem6AnXkFSasb99NiY3aDxV6jRbi25P+ChdAp6soTA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=GVRwI/pC2K4rx+OMIg0HNzpRmzNl8yWQyF6PqvPgdbeI043GE/VZO6IuIZxjzgLp3CVcx4c+2qpkt1rVbfsaEQVe4UfXVNrkBYgMTaCg0moOtKStAnM0ppfAAt2bof47LZVpB5k+Y1fvT6iBas4TnjphVv4jinhL6qfWDWh7Z2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uz+AIHdU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E5C6+l6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728573058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BjA55q+krBtyKpu1UrvE4kCe5ypwnXLDju+HFDL51q8=;
-	b=E5C6+l6X3TjHspEtAv1kzQWHB9AxEj6oPwSqhATqB5XvmfHcbqsxumws+i6HUb5mZ8p3Tl
-	528AXmMX4lwYRmh0SB4luuXOudv1ZCaVfarlociawEddGfl57RuAzlrbqXABXewkfbElM8
-	RtWGLNcnnLIiHcbOBMkrVqNe/BtEeJw=
-Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
- [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-s4pEcf0eOJuYHoBMXh_RsA-1; Thu, 10 Oct 2024 11:10:57 -0400
-X-MC-Unique: s4pEcf0eOJuYHoBMXh_RsA-1
-Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-28778791da6so1018401fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 08:10:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728573056; x=1729177856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BjA55q+krBtyKpu1UrvE4kCe5ypwnXLDju+HFDL51q8=;
-        b=ouR2016KHRVlFIlgjqHiO2uFa5ELR6Q33LdjsZvkzPcB9l9sB+Ys6Xaz+PjJrRpNte
-         mdw4v4IonHXdLpvnm05Mg/HfUemPjpgyt5l3p4MUCMqmSFW4tT/qIHIWsdXOpXWS7QEy
-         +ZlSKnf2BRvSbrwBaEAl5r4sBtWH9wvMkFlGXfohMT0cpbu5EzebvQ7r4gjQFxx2buQn
-         CPxst0Fiopxth5WzFEaBL9qCIGgbMcg8upJv2kWwyf9fDacfhT6ejEILP3rmaBu7iQVc
-         yB4dHqGoEMFVDm3B+HPNnv7zXgxGT3tHpFYt+cJPjQk7iQ5KjQqsyDgf+Yytiexk7Z3l
-         1auQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWZWA1auuQGQ6EkFhM4OwOS2VHEAli6Lu7LrjVXe/UCSkhzIN3Em/SY2a7Y28z12RbChxqJg5wy3yLvOiBOlVHrQJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkLdN13FPrIm8xLOV+mlwTZoDxSSeUtwnb9Q9QOfUc+AP7Jj/C
-	Y8X19tAmXqXDqDWYKiA6wDe8/IYRME6G4I0+OpMngd91w8bNSPapopf3GvBY+pc3X9o9IRnDkhx
-	3WVahCITwG6uembVXJvV5LcTunKjNqxLGkrsINmLqV6D1i2RHTiucR5eZtdFi/GnTdy4Ebn0jOo
-	MC4q/0EMbUn5kCKS7XRAcW7UbgnVjmb6GBUCJHv2jSNG2h
-X-Received: by 2002:a05:6870:3327:b0:27c:52a1:f311 with SMTP id 586e51a60fabf-28834526ad2mr5129383fac.42.1728573056181;
-        Thu, 10 Oct 2024 08:10:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIB7HsgwV6fuJpvkUQunBq6VUSoqHhvwFCo7dOAfNi+vwTrro16B+0BF1xEsApsHvhZ3NuLGuCIrJFJ3LYhAo=
-X-Received: by 2002:a05:6870:3327:b0:27c:52a1:f311 with SMTP id
- 586e51a60fabf-28834526ad2mr5129356fac.42.1728573055919; Thu, 10 Oct 2024
- 08:10:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uz+AIHdU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88668C4CEC5;
+	Thu, 10 Oct 2024 15:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728573327;
+	bh=pwem6AnXkFSasb99NiY3aDxV6jRbi25P+ChdAp6soTA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uz+AIHdUgV3L574qp7sQLE/hPCnqi8Ci3oKcL9EcSYI4g+1t5IQNOI5jOX/U/0E53
+	 c12ofCBG05EotGdwLEgxPhUo748NnL6wiXFFYNgTL1Gk+S8mXcIdAes/lVk/y0nHPN
+	 x7+doXnxD7ilQU0rKqUCDBFt5Unv/68/aOSugYSrT2cVAwghU08Ei+KHAuGAoJUKS4
+	 DB51TaepWuRp9Tm0QQFwxlWblylW6xgR5A22I+QX7dCthfm5PldE44CXqz6aBEkk+v
+	 IreTfc+17PWHnHqlA7p6dhvi99rfngJ0/gFLU9nv+PqXuC+6SzPrGFqhQexCVI+rxQ
+	 3WGGtd5XW1k1Q==
+Date: Fri, 11 Oct 2024 00:15:24 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dave.Martin@arm.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Consider the NULL character when validating
+ the event length
+Message-Id: <20241011001524.773836a84af82edede5349b2@kernel.org>
+In-Reply-To: <20241007144724.920954-1-leo.yan@arm.com>
+References: <20241007144724.920954-1-leo.yan@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <c355dc9ad23470098d6a8d0f31fbd702551c9ea8.1728552769.git.jstancek@redhat.com>
- <45c1f78d4f0e7f1b786443ffdd462d7670ec1634.1728552769.git.jstancek@redhat.com>
- <CAP4=nvRLgwu3y_c_m-SdPxaWm6rO_LVFKK98pkjFiLJ42LqhpQ@mail.gmail.com> <20241010105539.5b5aa41f@gandalf.local.home>
-In-Reply-To: <20241010105539.5b5aa41f@gandalf.local.home>
-From: Jan Stancek <jstancek@redhat.com>
-Date: Thu, 10 Oct 2024 17:10:37 +0200
-Message-ID: <CAASaF6x2gddQ3UTQD+aXBfV3vXsX24kMMVNDigwC5wk_q4VABg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tools/rtla: fix collision with glibc sched_attr/sched_set_attr
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jforbes@redhat.com, ezulian@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 10, 2024 at 5:02=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 10 Oct 2024 14:25:11 +0200
-> Tomas Glozar <tglozar@redhat.com> wrote:
->
-> > > --- a/tools/tracing/rtla/src/utils.c
-> > > +++ b/tools/tracing/rtla/src/utils.c
-> > > @@ -229,7 +229,7 @@ long parse_ns_duration(char *val)
-> > >
-> > >  #define SCHED_DEADLINE         6
-> > >
-> > > -static inline int sched_setattr(pid_t pid, const struct sched_attr *=
-attr,
-> > > +static inline int rtla_sched_setattr(pid_t pid, const struct sched_a=
-ttr *attr,
-> >
-> > Hmm, rtla_sched_attr sounds to me like the function does something
-> > specific to rtla. Maybe syscall_sched_attr would be a better name?
->
-> Should I be waiting for a v2 with this addressed?
+On Mon,  7 Oct 2024 15:47:24 +0100
+Leo Yan <leo.yan@arm.com> wrote:
 
-I don't have strong opinion here, I sent v2 with name Tomas suggested.
+> strlen() returns a string length excluding the null byte. If the string
+> length equals to the maximum buffer length, the buffer will have no
+> space for the NULL terminating character.
+> 
+> This commit checks this condition and returns failure for it.
+> 
 
-Regards,
-Jan
+Ah, good catch! The traceprobe_parse_event_name() requires
+MAX_EVENT_NAME_LEN buffer.
 
->
-> -- Steve
->
+----
+/* @buf must has MAX_EVENT_NAME_LEN size */
+int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+----
 
+But the macro name is a bit confusing. We may need below and use it around.
+
+#define EVENT_NAME_BUFSIZE (MAX_EVENT_NAME_LEN + 1)
+
+Anyway, I think this fix is correct.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Fixes: dec65d79fd26 ("tracing/probe: Check event name length correctly")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> 
+> Changes from v1:
+> Refined for condition checking (Steve).
+> 
+>  kernel/trace/trace_probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 39877c80d6cb..16a5e368e7b7 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -276,7 +276,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  		}
+>  		trace_probe_log_err(offset, NO_EVENT_NAME);
+>  		return -EINVAL;
+> -	} else if (len > MAX_EVENT_NAME_LEN) {
+> +	} else if (len >= MAX_EVENT_NAME_LEN) {
+>  		trace_probe_log_err(offset, EVENT_TOO_LONG);
+>  		return -EINVAL;
+>  	}
+> -- 
+> 2.34.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
