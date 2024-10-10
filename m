@@ -1,34 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F3F1BDAA0;
-	Thu, 10 Oct 2024 10:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9400829AF;
+	Thu, 10 Oct 2024 10:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728557579; cv=none; b=tl/CTpCXDKb/+KdWmU12IRzcnouFWcXQgZ5ig7N9bXWZ5X/40tPEtm4FgqRn9fzMCAg21Wqke/t5SaQUXJ3Z79am8w+EkQCMEiolGgofuK57CaA9ZE5HuqMexdCTJwq5MJJDUdXMrWvvDoJYtPlRujJwzVP6gsyvsYI5SO7GBUo=
+	t=1728557776; cv=none; b=PKrU63UsDY4oQGU4+n1h22hKZnps4NIMK+uBwebjC/+qSUwM0Cxdqognt88FOEgINENgqqRFddhIjFDQ7EREbQ8HqXpbMN9DtxzUedQNzu8oTsbDkmpov1xXZ5G36Ol8YTl5qHaWB+cnpFYrTZFJqphEJ0vqymlOJ6uvaGcnht8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728557579; c=relaxed/simple;
-	bh=3nBY+r72A2NZGoMcahve99LHPkxjRYwF/W92mnKOjhw=;
+	s=arc-20240116; t=1728557776; c=relaxed/simple;
+	bh=sM/WpCGRUFat8NJ8Aj7W8AxtMjWtIcKJ2XFfTMtncT8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a53VnOOT5JedIP9yDTh6mBBR2IV+A6rKzDYUQGCThNJ3vaDzss0F+1zTZPphzzavV5PxXtiGYOfZ9XNPZzOax/rS1F33bNPBS2NOmLNW7CwSjEfogNL1ce+7MI/OQ7gy6wVCKvA1H2L504FjXAkLvBRhs/k2ZwsZ26frDLVKO3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF394497;
-	Thu, 10 Oct 2024 03:53:25 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F6DE3F58B;
-	Thu, 10 Oct 2024 03:52:54 -0700 (PDT)
-Date: Thu, 10 Oct 2024 11:52:51 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: catalin.marinas@arm.com, will@kernel.org, ast@kernel.org,
-	puranjay@kernel.org, andrii@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: insn: Simulate nop instruction for better
- uprobe performance
-Message-ID: <ZweyA3tZc1BiBcb6@J2N7QTR9R3>
-References: <20240909071114.1150053-1-liaochang1@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=tLkG9MPCEfMZn0Sdemwm6e8oCgelDgqe/Es/geSIkJ3gx4B3+snNpcA9in4kO8omag+Ig+XrhNAtRA+rC5yJAazsTUgraBfqsHMqD/f3HIQwfYenVUn2XfgaXVMsfwxI0/wT/XNTW7FhjHNPdGHtmLU8jd27tL+Z8HIWRaIjYv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YAhC9fwP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RkIsZK1z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YAhC9fwP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RkIsZK1z"
+Date: Thu, 10 Oct 2024 12:56:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1728557772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2h+cf/fY+xugXV5EJ6YNiysYlAKXMnFhqgcdS4IEblg=;
+	b=YAhC9fwPgC/4FrBt5yq4FbjTel1N3mXX2/Fl6np5nBfp479zEHKMnZ5ZjzZ0FhkD8hwzbj
+	Q7+iFmrVAb/EC9DaEkilOTb4ptYGfEUR/K0TRQEn9W/yWOF2uN6zmYsRh8y0U6lDNr+FMD
+	yAFJUECjO4bDiGZhqMvCtArqzC+8YU1ZLh7ce+HY906gu7tY1WvX06zzxi2kS/V/lZZAMM
+	KenDTWve72VXyAd1Vm816y6rusMQGc/3b/kTeb1L60eETDS7KHwgniLzwwClqXvYlsp2uG
+	KDKryKg4ANBnouFnu85jiJaJNZqxclh2joyiM4Y7uZL3O9sT3+EV0w2ikl6lbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1728557772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2h+cf/fY+xugXV5EJ6YNiysYlAKXMnFhqgcdS4IEblg=;
+	b=RkIsZK1zyUHiLWNpg4Nh3Hr8YsNQv6E2KXdmYwBvuZ4bfBGHau47Lyy7UnSEv0efPCzQqD
+	RqSgSTQOn9n5mPBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+	mingo@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, efault@gmx.de,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH 2/3] tracing: Record task flag NEED_RESCHED_LAZY.
+Message-ID: <20241010105611.VArhcxcr@linutronix.de>
+References: <20241009105709.887510-1-bigeasy@linutronix.de>
+ <20241009105709.887510-3-bigeasy@linutronix.de>
+ <87iku1b2vf.fsf@oracle.com>
+ <20241009133328.23fc671c@gandalf.local.home>
+ <87bjztaz7e.fsf@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,173 +62,82 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240909071114.1150053-1-liaochang1@huawei.com>
+In-Reply-To: <87bjztaz7e.fsf@oracle.com>
 
-On Mon, Sep 09, 2024 at 07:11:14AM +0000, Liao Chang wrote:
-> v2->v1:
-> 1. Remove the simuation of STP and the related bits.
-> 2. Use arm64_skip_faulting_instruction for single-stepping or FEAT_BTI
->    scenario.
+On 2024-10-09 11:49:41 [-0700], Ankur Arora wrote:
+> > So this should be:
+> >
+> > 	if (IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) &&
+> > 	    tif_test_bit(TIF_NEED_RESCHED_LAZY))
+> >
+> > ?
 > 
-> As Andrii pointed out, the uprobe/uretprobe selftest bench run into a
-> counterintuitive result that nop and push variants are much slower than
-> ret variant [0]. The root cause lies in the arch_probe_analyse_insn(),
-> which excludes 'nop' and 'stp' from the emulatable instructions list.
-> This force the kernel returns to userspace and execute them out-of-line,
-> then trapping back to kernel for running uprobe callback functions. This
-> leads to a significant performance overhead compared to 'ret' variant,
-> which is already emulated.
-> 
-> Typicall uprobe is installed on 'nop' for USDT and on function entry
-> which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
-> and fp into stack regardless kernel or userspace binary. In order to
-> improve the performance of handling uprobe for common usecases. This
-> patch supports the emulation of Arm64 equvialents instructions of 'nop'
-> and 'push'. The benchmark results below indicates the performance gain
-> of emulation is obvious.
-> 
-> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
-> 
-> xol (1 cpus)
-> ------------
-> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
-> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
-> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
-> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
-> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
-> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
-> 
-> emulation (1 cpus)
-> -------------------
-> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
-> uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
-> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
-> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
-> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
-> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
-> 
-> As shown above, the performance gap between 'nop/push' and 'ret'
-> variants has been significantly reduced. Due to the emulation of 'push'
-> instruction needs to access userspace memory, it spent more cycles than
-> the other.
-> 
-> As Mark suggested [1], it is painful to emulate the correct atomicity
-> and ordering properties of STP, especially when it interacts with MTE,
-> POE, etc. So this patch just focus on the simuation of 'nop'. The
-> simluation of STP and related changes will be addressed in a separate
-> patch.
-> 
-> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
-> [1] https://lore.kernel.org/all/Zr3RN4zxF5XPgjEB@J2N7QTR9R3/
-> 
-> CC: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Liao Chang <liaochang1@huawei.com>
-> ---
->  arch/arm64/include/asm/insn.h            |  6 ++++++
->  arch/arm64/kernel/probes/decode-insn.c   |  9 +++++++++
->  arch/arm64/kernel/probes/simulate-insn.c | 11 +++++++++++
->  arch/arm64/kernel/probes/simulate-insn.h |  1 +
->  4 files changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
-> index 8c0a36f72d6f..dd530d5c3d67 100644
-> --- a/arch/arm64/include/asm/insn.h
-> +++ b/arch/arm64/include/asm/insn.h
-> @@ -549,6 +549,12 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
->  	       aarch64_insn_is_prfm_lit(insn);
->  }
->  
-> +static __always_inline bool aarch64_insn_is_nop(u32 insn)
-> +{
-> +	return aarch64_insn_is_hint(insn) &&
-> +	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
-> +}
+> Yeah, exactly that.
 
-Can we please make this:
+Okay, this makes sense, this is what I ended up with:
 
-static __always_inline bool aarch64_insn_is_nop(u32 insn)
-{
-	return insn == aarch64_insn_gen_nop();
-}
-
-That way we don't need to duplicate the encoding details, and it's
-"obviously correct".
-
-> +
->  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
->  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
->  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
-> diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-> index 968d5fffe233..be54539e309e 100644
-> --- a/arch/arm64/kernel/probes/decode-insn.c
-> +++ b/arch/arm64/kernel/probes/decode-insn.c
-> @@ -75,6 +75,15 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
->  enum probe_insn __kprobes
->  arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
->  {
-> +	/*
-> +	 * While 'nop' instruction can execute in the out-of-line slot,
-> +	 * simulating them in breakpoint handling offers better performance.
-> +	 */
-> +	if (aarch64_insn_is_nop(insn)) {
-> +		api->handler = simulate_nop;
-> +		return INSN_GOOD_NO_SLOT;
-> +	}
-> +
->  	/*
->  	 * Instructions reading or modifying the PC won't work from the XOL
->  	 * slot.
-> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-> index 22d0b3252476..5e4f887a074c 100644
-> --- a/arch/arm64/kernel/probes/simulate-insn.c
-> +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> @@ -200,3 +200,14 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
->  
->  	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
->  }
-> +
-> +void __kprobes
-> +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-> +{
-> +	/*
-> +	 * Compared to instruction_pointer_set(), it offers better
-> +	 * compatibility with single-stepping and execution in target
-> +	 * guarded memory.
-> +	 */
-> +	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> +}
-
-Can we please delete the comment? i.e. make this:
-
-	void __kprobes
-	simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-	{
-		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-	}
-
-With those two changes:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-... and I can go chase up fixing the other issues in this file.
-
-Mark.
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index d5c0fcf20f024..4cae6f2581379 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -185,6 +185,7 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status);
+ enum trace_flag_type {
+ 	TRACE_FLAG_IRQS_OFF		= 0x01,
+ 	TRACE_FLAG_NEED_RESCHED		= 0x02,
++	TRACE_FLAG_NEED_RESCHED_LAZY	= 0x04,
+ 	TRACE_FLAG_HARDIRQ		= 0x08,
+ 	TRACE_FLAG_SOFTIRQ		= 0x10,
+ 	TRACE_FLAG_PREEMPT_RESCHED	= 0x20,
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1c69ca1f10886..fb839d00aad12 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2544,6 +2544,8 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status)
+ 		trace_flags |= TRACE_FLAG_NEED_RESCHED;
+ 	if (test_preempt_need_resched())
+ 		trace_flags |= TRACE_FLAG_PREEMPT_RESCHED;
++	if (IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) && tif_test_bit(TIF_NEED_RESCHED_LAZY))
++		trace_flags |= TRACE_FLAG_NEED_RESCHED_LAZY;
+ 	return (trace_flags << 16) | (min_t(unsigned int, pc & 0xff, 0xf)) |
+ 		(min_t(unsigned int, migration_disable_value(), 0xf)) << 4;
+ }
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 829daa0764dd9..23ca2155306b1 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -463,17 +463,29 @@ int trace_print_lat_fmt(struct trace_seq *s, struct trace_entry *entry)
+ 		!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_SUPPORT) ? 'X' :
+ 		'.';
+ 
+-	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
++	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY |
+ 				TRACE_FLAG_PREEMPT_RESCHED)) {
++	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_PREEMPT_RESCHED:
++		need_resched = 'B';
++		break;
+ 	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_PREEMPT_RESCHED:
+ 		need_resched = 'N';
+ 		break;
++	case TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_PREEMPT_RESCHED:
++		need_resched = 'L';
++		break;
++	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY:
++		need_resched = 'b';
++		break;
+ 	case TRACE_FLAG_NEED_RESCHED:
+ 		need_resched = 'n';
+ 		break;
+ 	case TRACE_FLAG_PREEMPT_RESCHED:
+ 		need_resched = 'p';
+ 		break;
++	case TRACE_FLAG_NEED_RESCHED_LAZY:
++		need_resched = 'l';
++		break;
+ 	default:
+ 		need_resched = '.';
+ 		break;
+-- 
+2.45.2
 
 
-> diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-> index e065dc92218e..efb2803ec943 100644
-> --- a/arch/arm64/kernel/probes/simulate-insn.h
-> +++ b/arch/arm64/kernel/probes/simulate-insn.h
-> @@ -16,5 +16,6 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
->  void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
->  void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
->  void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
-> +void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
->  
->  #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
-> -- 
-> 2.34.1
-> 
-> 
+Sebastian
