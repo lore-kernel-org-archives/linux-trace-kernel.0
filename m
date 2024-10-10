@@ -1,82 +1,77 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847BB19B3CB;
-	Thu, 10 Oct 2024 19:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097F515B0F2;
+	Thu, 10 Oct 2024 19:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728590068; cv=none; b=surGdjtxLfrXWJdE79c/KCHL4hQcD/tKyBCERkeygPca2x6aX9WsiEBzyqd3tTzYz8jBdFZE6XG49iN5TkuAjbTzElyJ64uPB+KNhYc89LgeL9JdcU8MU/UIpJq+i1DxKoWvXH5jQf7rhBlzDLhxm9crZ+vNx9Bx7bfNSWTq62g=
+	t=1728590173; cv=none; b=szYi06zDrnH4toysEODD3ZJYEfg/Nmm/Gt7PG9/+0hh0F07HfBgkJlAIZRGCIEKiPyp1RjEn+DZDmWrsHqqNIsqrshwEqyCEL+UvsICMTn2CeoGT+IHy9jF8jVi7k3Z7XU+k6qv9tNVMZJfpNMs/UnViwlicmgVCtW1w9WjV/vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728590068; c=relaxed/simple;
-	bh=Mp+NSHuQ3PaW2Ut+1wNtbzV8zGtQDEkTebMOTQDXOrI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YIfo7mtM1N2jbzaSO7iuFNmV5qYVNyCc3UhHtU9ei8N4A9dwF+zUI6ZACJ+rGz4H4pOREq9Nln/PJw8Yr/GSyEIMjUr/IY/FAOmr1TM5yx9rWt9j0WYmCmGFuDz6EgeBV4MbJpXWOlWZAR1gflp2IyRoYXOUKJQ2w8/AFdcmp6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=KV/XNnqj; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1728590173; c=relaxed/simple;
+	bh=MkUEUVGcuuhQE68KsERgu8vbOlc8YB+zuF14JiQ8QrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DEwOV4C9J57tds13TYax3a/nrEWsYgg2fuge7teIrmO8p438xV32Efl+uRsKv1iTc6Hfd7ykr4nninUgMlauAiUVJABwSX7iASN9eW1g5Sp39w77F9gOcot9SRnZpzX5iMngr0XsnxMIWTTEzeFsaqgvcahop8Aml6cVLB9fat0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azDC+v2p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="KV/XNnqj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jXk5N6BqpmRr9oTzuzv1AOIztPQsWeFIkvJ+kq0iaUg=;
-  b=KV/XNnqjtAF1i6hGzxFDIkPwYbo4ovPr+cUw9ioiS3K76Nby/N9JQVSx
-   4o2MoGyw9dOxzUaBtp9l/9n0iV/b+D5j7LZNaZdi84MUi4JgOs++hfR8W
-   4UmTuUYj3M+eyZunWOULYd6kYjBFRZ4/jlERfZBQWTDYf7xRMgj90lsdf
-   M=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.11,194,1725314400"; 
-   d="scan'208";a="98793900"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 21:54:15 +0200
-Date: Thu, 10 Oct 2024 21:54:14 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azDC+v2p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB09C4CECC;
+	Thu, 10 Oct 2024 19:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728590172;
+	bh=MkUEUVGcuuhQE68KsERgu8vbOlc8YB+zuF14JiQ8QrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=azDC+v2pYvXDTaQ2tJSkkBwsoE4vg2Ma7W0FClxtYW8UFxPSVYr3aEgbXiQpnmKTH
+	 GrLfLKhskiXqdxkJXRrFcp+f7Hkssn3rQLvciVEW21B95mcLKtxUSuVsllbbzavNC2
+	 vsjID/wJ1vMPoyxx5cQcTKp+4pwTfFHFK3NakLNsbJwf2r6wf3zVpGu+X6rzJ8+mXE
+	 LljFr93BEK8sd9PcXkDdn4CyMdjEKT54g8MXy3IBlz/4vBoZoNBn5ewT2lxYwyoay4
+	 dvL7sT085KzacjlylnKSKJDGXarFJa9FSJQDt0lFFVGMqDZywJuFrJXHeiWDT+2tXM
+	 NwnGZ9sR3lq8Q==
+Date: Thu, 10 Oct 2024 12:56:10 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-cc: kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-    linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/35] ring-buffer: Reorganize kerneldoc parameter
- names
-In-Reply-To: <20241010153653.1809bca9@gandalf.local.home>
-Message-ID: <alpine.DEB.2.22.394.2410102153540.3363@hadrien>
-References: <20240930112121.95324-1-Julia.Lawall@inria.fr> <20240930112121.95324-22-Julia.Lawall@inria.fr> <20240930111431.258b72d1@gandalf.local.home> <20241010153653.1809bca9@gandalf.local.home>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org,
+	Sven Schnelle <svens@stackframe.org>,
+	linux-trace-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] parisc/ftrace: Fix function graph tracing disablement
+Message-ID: <20241010195610.25mraxgovi4vowo2@treble>
+References: <5962b9e161b2b9296509c3d65c7f16c11b07bd16.1727904678.git.jpoimboe@kernel.org>
+ <20241010154840.6e158c78@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241010154840.6e158c78@gandalf.local.home>
 
+On Thu, Oct 10, 2024 at 03:48:40PM -0400, Steven Rostedt wrote:
+> > +++ b/arch/parisc/kernel/ftrace.c
+> > @@ -87,7 +87,7 @@ int ftrace_enable_ftrace_graph_caller(void)
+> >  
+> >  int ftrace_disable_ftrace_graph_caller(void)
+> >  {
+> > -	static_key_enable(&ftrace_graph_enable.key);
+> > +	static_key_disable(&ftrace_graph_enable.key);
+> >  	return 0;
+> >  }
+> >  #endif
+> 
+> Awfully quite :-/
+> 
+> I wonder if anyone cares about parisc today?
+> 
+> Hmm.
 
+I still see some git activity in arch/parisc, so apparently so...
 
-On Thu, 10 Oct 2024, Steven Rostedt wrote:
+I only stumbled on this by accident (code inspection) while making
+another unrelated change.
 
-> On Mon, 30 Sep 2024 11:14:31 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Mon, 30 Sep 2024 13:21:07 +0200
-> > Julia Lawall <Julia.Lawall@inria.fr> wrote:
-> >
-> > > Reorganize kerneldoc parameter names to match the parameter
-> > > order in the function header.
-> > >
-> > > Problems identified using Coccinelle.
-> > >
-> > > Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-> >
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->
-> This is part of a series, but do you want me to take it through my tree, or
-> is this going though another tree?
-
-Please take it.  Thanks.
-
-julia
-
->
-> -- Steve
->
+-- 
+Josh
