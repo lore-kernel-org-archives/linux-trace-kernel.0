@@ -1,103 +1,119 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB9C558B7;
-	Thu, 10 Oct 2024 03:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FC5405F7;
+	Thu, 10 Oct 2024 05:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728532717; cv=none; b=uXPe/LrAwdW4kR5gvgEMqpy+Drfnkx9q8qe7CmfMOBpwV7U9MrXODuAKJuWvTWnSBi2SSgOJVP5dHClZ0qinquiLUi/MmLUKorJNyQYZLx2T1W5DedjYKCE0o0oaztasgoZyAZrafDHBSKiK2ia3I6syAC7BmMP87/zl+aiZ5TI=
+	t=1728539265; cv=none; b=cv/oGvcrxMWln7mGF8UalM8qPtwK3dNjVe+BaNdW+oBG3OEOCun6HieFydJqRfRQHR3nFHZr5N8WSeTeOXq9/TuRQ8kPr2DcYodCVcbXmDo5MQoamxdrlmZZVx4BWrueHRNDc8CTw7G5IHSg69PHJtIWzElXS7WayY03DKlkPjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728532717; c=relaxed/simple;
-	bh=cotlwAtYcnHpA/YeAouBcmCIIpppbLsNpV5hYeima7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z8MUjCnQKwq/Z12Jt3jjNsUj7BgMO2uiEhUBoEhUyVbLvFcNkswmY6zrgPt/ARcKZvePOyL+as4pkE43lfdRMQlM9ZZYnXJpWs6T6Ry1UsZXrm5bl/BwftCBg+YCLN8mVjn8RqGqqF3slidTALqAsbLIyLsKC4Oi5oM4TT2sjXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=abjz9f0o; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728539265; c=relaxed/simple;
+	bh=OTuy4VqE5rZSLBEA0/Pnb2zLZJiAXIMvgimloV5JAr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4lGI7A3Fh4yMonxTaOkY1I+UG0qK0Inn/WfbbKuXJxfgokCN0fXsi6eRtVgTzuDJFKdl/TTg4q6COKtaRRCBAaICOZeZoimi1OFGtXCtcWJnp47vTYpIjGAscCBRaC5p/S65QXM+gwT+2lyRpwZN0WT68t3V5/euD5T7Fy25vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1wK0sqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abjz9f0o"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-20c693b68f5so4436995ad.1;
-        Wed, 09 Oct 2024 20:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728532715; x=1729137515; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SrF578u0d9xAkj32TSqG9KE1d9KA0G+m1TWYGifgxs=;
-        b=abjz9f0orcXajJsU2oLpdlQrpJhV17/vsRyiedgtq3ecAdlvmqifoiPKVZDeOxIy+Q
-         EQ54as9NsWmBcYSJsR/srltyAcEVmpfrjjZqUJQg9z+pwrsITWgCCcmDbndBfYyNvKfc
-         z7Tlm9NzfW0+QTCcNhLywijTJxx0eHaOtHDHpezAlSDzXzgEawxQCc04CBBxAE99lW+p
-         2XT6MLhkICl2k0Fjz00MBwZp4HExmBVj5elNY2DHqEQiHWZU6K3qrVOUyuO+YImUU0OV
-         00NAqzjgbX47Ory3BKLraRyQ691Q3mY83K7pTtJH26p3wEPSBPOKSUGB8UL7O96D7A/3
-         24mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728532715; x=1729137515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0SrF578u0d9xAkj32TSqG9KE1d9KA0G+m1TWYGifgxs=;
-        b=X9g7Xa5xf8JzyQjyCi9VgR1C1OG8XqURlNTZvjlsll8d8wZpq+v8v+hnPTimeuhoHf
-         0bKVyDzNRYyYoZ2KP1SllcF8czFw5cCn9lAuGWBxxGPJ76/rySQ1nCZLgbaPjUALCjmU
-         Y2C6LSsup7e3w4NQ3HZrzKtCjzjPV55fphHzSWwU0ecUzC0Ja74eYB0dqId0CDQffGO+
-         +733xPMQYgNtnkQRqz3f2K0kPY3Ejv5pFSNOB9/euxAOhdJsbJjixXA01GfWGg46nwo4
-         M8h7/GJMb1um3Qoe3ciHlsBQZewACzFG5e7RFuPFAHdSBoViTvGzEbsDI6G/LjVXc75M
-         C1RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUN9xTaj48D4xIuFHF0dFtUdDFspeSoQeOn6zfl0avuOttHZRZr49DTqaCE/nv9Bw1JaB7GmepbCWOBeXX3DFZvzqW6@vger.kernel.org, AJvYcCVd5UciEHZqdAC9cWI9EzQoKiOBkk7uZqdWsKb9mC1uqYB5AYCcPT/nztf6U2+gwT5R1ZRp8DE4W0p8Qn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrM4v6kEIKCJOudsYRkWwgVfA2+MobDYAeFkR2GV7/hpo1mtMv
-	U6QBHvSheTbdS4wnsfvPQK05/Q9dfYKDLgd8Fcefp7Fj00twOtYp
-X-Google-Smtp-Source: AGHT+IE1YK470ZxwimR3x/Y7dWQuDSA1+kpgWxP4DpxlcXxM146+7Wi9s/wj+oRQU9YOg1LqAICttA==
-X-Received: by 2002:a17:902:ec8a:b0:20b:b0c1:712c with SMTP id d9443c01a7336-20c6375a893mr70813875ad.35.1728532715127;
-        Wed, 09 Oct 2024 20:58:35 -0700 (PDT)
-Received: from ubuntu.localdomain ([43.224.245.236])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c21d3b5sm1665105ad.215.2024.10.09.20.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Oct 2024 20:58:34 -0700 (PDT)
-From: Donglin Peng <dolinux.peng@gmail.com>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	zhengyejian@huaweicloud.com,
-	sfr@canb.auug.org.au,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Donglin Peng <dolinux.peng@gmail.com>
-Subject: [PATCH] function_graph: no need to invoke the function call_filter_check_discard
-Date: Thu, 10 Oct 2024 11:58:26 +0800
-Message-Id: <20241010035826.567827-1-dolinux.peng@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1wK0sqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941A0C4CECC;
+	Thu, 10 Oct 2024 05:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728539264;
+	bh=OTuy4VqE5rZSLBEA0/Pnb2zLZJiAXIMvgimloV5JAr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e1wK0sqCj1hFSMccCG8VnSk9aTxpzFJTrYzsRT9VXVEEoRS3hraEZu619qHthJzSx
+	 DynBiJLcPJQRbA9J0lLh6ATNk3FB4/xFOM4dXnLEGXWPkSrxd0XcoTxriiWODdioLD
+	 1sWIJTn6uT4ZOaW12OrRLOdpildKc5e58UW0/bc2P0yDusD5bq7Iwbf8r4b7hIX5Iy
+	 XccbgL+BkzqR13hBcI+eIsGnGBFTEruC5c+E0zapz7RRHpVu6gMKoZHI6cwfi2IRZM
+	 bP+nlVliXD/Sq3TcOU7AO/E8ZEwKb501SlYT1dTNQaVEK/mrQ9FtlySueDuymdFkFN
+	 xybmhUi0XMlmg==
+Date: Thu, 10 Oct 2024 08:43:56 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Song Liu <song@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 4/8] module: prepare to handle ROX allocations for text
+Message-ID: <ZwdpnPKKQGF5DtSv@kernel.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-5-rppt@kernel.org>
+ <CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW66etfdU3Fvk0KsELXcgWD6_TkBFjJ-BTHQu5OejDsP2w@mail.gmail.com>
 
-From: Donglin Peng <pengdonglin@xiaomi.com>
+On Wed, Oct 09, 2024 at 03:23:40PM -0700, Song Liu wrote:
+> On Wed, Oct 9, 2024 at 11:10 AM Mike Rapoport <rppt@kernel.org> wrote:
+> [...]
+> > diff --git a/include/linux/module.h b/include/linux/module.h
+> > index 88ecc5e9f523..7039f609c6ef 100644
+> > --- a/include/linux/module.h
+> > +++ b/include/linux/module.h
+> > @@ -367,6 +367,8 @@ enum mod_mem_type {
+> >
+> >  struct module_memory {
+> >         void *base;
+> > +       void *rw_copy;
+> > +       bool is_rox;
+> >         unsigned int size;
+> 
+> Do we really need to hold the rw_copy all the time? 
 
-The function call_filter_check_discard has been removed in the
-commit [1].
+We hold it only during module initialization, it's freed in
+post_relocation.
 
-[1] https://lore.kernel.org/all/20240911010026.2302849-1-zhengyejian@huaweicloud.com/
+> Thanks,
+> Song
+> 
+> [...]
 
-Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
----
- kernel/trace/trace_functions_graph.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 3b210e6bcd70..98f347c049d2 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -148,8 +148,7 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
- 	entry->graph_ent.func = trace->func;
- 	entry->graph_ent.depth = trace->depth;
- 	entry->graph_ent.retaddr = retaddr;
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- 
- 	return 1;
- }
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
