@@ -1,156 +1,429 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC4163D;
-	Thu, 10 Oct 2024 00:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EC8BE57;
+	Thu, 10 Oct 2024 02:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728519491; cv=none; b=jQ49PleyGREsUhEMnprUDhNhTp7pIwH0Ca6CVpMgD+HrnMQSAvawpqmVFq1OohHWam1kZ/1ioEEL9yXfERKsd3ODmcvOuqjFu/ZvEg32RX+lPGgMARiLwHmmUMFpXsSLflfjjqtyG9yVRWog5IhPYer44/O2Z4RzOarDf6iYt6I=
+	t=1728528023; cv=none; b=tddR9zyDQkQTj4CzZLwQtTcStatnXV9TlaglRIXdQeyvKfF4xPq407FapfM8qH6zIpN9EUR+i/436Vuyiainb8WjpzeqN15N5Wtvz8SXkql309bLI5WqtUXmfTQYH092SByB9qBsEdaqoQRSTcqsC8dx/66VzB38RKkKb7Mv//o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728519491; c=relaxed/simple;
-	bh=O9xG58odvWsucqMWWVo7YHR3ZrvcTUfms9diIUAGq/w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ftq4gSHAytbaTnKWfmZKfd/yHVQyN6LUxGN7kF+zBhXzxGQUpDqVsSMSYDbWUKEfwNs7clhpA1Ex4txSBfkw4D1o50Z4wOezQsjr9pgpRUyWiB1RZ25ZTDz2xXa6VZ+a4lJqkKljPaEWJH9RJKeS5eKIqZRUV9V2qgmXw1TiRyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=CyV8pAek; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1728528023; c=relaxed/simple;
+	bh=rGAH/Wrse2jTqvtDE174W2OmsmcUmjiZ3HfAAx00wvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hiNHQUwK1IVDF0/Nkhy586u2tD1p0OifogN11MkhkQrsos6zZz3W5u/zbb4hpz1M2PIyc+bZLfqWXEbB2Jzmv81qxjY2HvBOohtjeKOoDX226H4mnmKW65aR7KzSRrv7+Ivpkoohox1LImKA+31i9Nk2c0ZDpW4YvnFHKHzsy0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EoOHvbh/; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="CyV8pAek"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1728519486;
-	bh=JCKWnvIHgN7NeIxYtThHAhakmq8YAiBt/o4wQGaz8/w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=CyV8pAekV/TOve0+yV3IEThJzCD8ee59ddQlBIzCCvWemKc/ImFTYPHIm8jTvew0E
-	 2RDGh4pbUM9m9Jzk1MkSVWzDUKNAGDraYErd4MKcPTf3w8FQhfsKQgv0LWZqH3dPKo
-	 2q+ccE1Ic0uxYQmUxGLyQjXJb9JhGNC9Dc4D/BDfGj7yEuPzFZ7oCUBMNUYklrervk
-	 0rsMC99cZxcDUj+/f+cIqfFiu9qKdmuQGB3SO3eu6awPx3tiAQUhtP+Zq6bQ9xbrH+
-	 Yk3vNRNh4aceCVyFBzMhabgs3VMdOh1hhQtkbXYZ3SxHW966Il1rAHeSFno4GT2GT/
-	 g4EPuh3btN2Mw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4XP9MK39qRz4wnw;
-	Thu, 10 Oct 2024 11:18:05 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Hari Bathini
- <hbathini@linux.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf <bpf@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Linux Kbuild
- mailing list <linux-kbuild@vger.kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, "Naveen N. Rao" <naveen@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Daniel Borkmann <daniel@iogearbox.net>,
- Masahiro Yamada <masahiroy@kernel.org>, Nicholas Piggin
- <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia
- <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v5 17/17] powerpc64/bpf: Add support for bpf trampolines
-In-Reply-To: <CAADnVQJjqnSVqq2n70-uqfrYRHH3n=5s9=t3D2AMooxxAHYfJQ@mail.gmail.com>
-References: <20240915205648.830121-1-hbathini@linux.ibm.com>
- <20240915205648.830121-18-hbathini@linux.ibm.com>
- <CAADnVQL60XXW95tgwKn3kVgSQAN7gr1STy=APuO1xQD7mz-aXA@mail.gmail.com>
- <32249e74-633d-4757-8931-742b682a63d3@linux.ibm.com>
- <CAADnVQKfSH_zkP0-TwOB_BLxCBH9efot9mk03uRuooCTMmWnWA@mail.gmail.com>
- <7afc9cc7-95cd-45c7-b748-28040206d9a0@linux.ibm.com>
- <CAADnVQJjqnSVqq2n70-uqfrYRHH3n=5s9=t3D2AMooxxAHYfJQ@mail.gmail.com>
-Date: Thu, 10 Oct 2024 11:18:05 +1100
-Message-ID: <875xq07qv6.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EoOHvbh/"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a994c322aefso283209066b.1;
+        Wed, 09 Oct 2024 19:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728528018; x=1729132818; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YMg9krN3yzkEltID3K4x9aNk7g8NYyZZa5q5H5Su3V4=;
+        b=EoOHvbh/lLrCIdBc4gj7FKjK9dcq2mWwm9QFtBLcny0KmMkVkeWzxOcCpT1jULTwcv
+         8DH5GRcEbkDC55unjFAwepycpDS3kARGlnd0WIeu+msp8Z4LFbv2Uvis+uomsv8jcL1s
+         Gom4p4QaK3hWTAnSKTNLTDHbjUxP+PnHjyFItk1Y7ubAnu3d10+9YsJdaOJlzpO8j3EL
+         5MIP7ss3RRy36j3DH9Ux1QyV8kfqhsEKCInf1/ol8dnupgycTb9VEoUtBa9BGYLbbqLY
+         lB1ZBG3WdkKoXODfcxR1Oczq1e+iSD18qLz9UItbQRqFSF9Rv/cjffTTLiB4PU5mZ2nQ
+         OsNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728528018; x=1729132818;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YMg9krN3yzkEltID3K4x9aNk7g8NYyZZa5q5H5Su3V4=;
+        b=pwk3aDKE5lzXZg6MZhvLIWpca8kTp22Y2bhWvwui/VHYJ1/RYgbuLWbN2dXVsy+gMo
+         q4nehEB48MsL22XK0UxBoDhtAm7VcUUBxXAxBolyoNqqJtIv0UaO/VyvkxZloq15eFoZ
+         cuPkGXkHDEXiXKncrKEG140BjeNiJLlxRFL9LVSaZ+wtxW3+CrX9TnamBb588xeDD3DG
+         5WtBZUdOP5NlVprzL1+RzHkMxWNPjzbxlb1j2vZ8xA/h1FjvAcUCaJGUt4wQEoUpZ8rB
+         LNYTDTr6i0TvbKO4gxylRVDfEmM9k/xvwh2EndQGW/P4qwYeLHRbwwopwcZ+Fjs3zbCs
+         cu2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsI5pZAF95yCa2qHZmfKbgOq2vDo+ytasgKtDt5BWAKck/g0dCnIOzVjWEcpxx7ezgqoR7KCa5T4o0SO72sEXISrTR@vger.kernel.org, AJvYcCXnu1557GsVrZyZyB5PHYxfeM9e2mLlUjH+pkCwnaKD7Zk2FlsT4WCl34vcxXHGXFXHtBNTFtZGX7tblrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLmnDHLoiKCnaSccFPpnk35x+UPYm1UThsWUPqPlouGwrn3xGt
+	ETXaiXQrYnHL7NL5ivMbSzxQRUyp9g/vPj/PcMBc9No+uGzS5IKTwPQDInsWM63Rok8fNWQNtar
+	bDPWu6Muy3l92FlP/P5r4/sqwPGDqYpXcfeI=
+X-Google-Smtp-Source: AGHT+IG4kJplsnkKi+Upx9qk5F0Cji2epKf5IGbeB5JOcTzyo6AA2MnQZcP+TWq7ox4dkC09CbytEduXpTiArqexFyA=
+X-Received: by 2002:a17:907:2dab:b0:a99:4ad2:acb7 with SMTP id
+ a640c23a62f3a-a99a110927fmr141871866b.18.1728528018150; Wed, 09 Oct 2024
+ 19:40:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <172851694646.226680.6609563595100451829.stgit@devnote2>
+In-Reply-To: <172851694646.226680.6609563595100451829.stgit@devnote2>
+From: Donglin Peng <dolinux.peng@gmail.com>
+Date: Thu, 10 Oct 2024 10:40:02 +0800
+Message-ID: <CAErzpmtyA9hh611jGS=FHT9K4YyfsRv5=9mg6YLD2m5XQS8dyw@mail.gmail.com>
+Subject: Re: [PATCH] tracing/fgraph: Simplify return address printing in
+ function graph tracer
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, mark.rutland@arm.com, 
+	mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> On Tue, Oct 1, 2024 at 12:18=E2=80=AFAM Hari Bathini <hbathini@linux.ibm.=
-com> wrote:
->> On 30/09/24 6:25 pm, Alexei Starovoitov wrote:
->> > On Sun, Sep 29, 2024 at 10:33=E2=80=AFPM Hari Bathini <hbathini@linux.=
-ibm.com> wrote:
->> >> On 17/09/24 1:20 pm, Alexei Starovoitov wrote:
->> >>> On Sun, Sep 15, 2024 at 10:58=E2=80=AFPM Hari Bathini <hbathini@linu=
-x.ibm.com> wrote:
->> >>>>
->> >>>> +
->> >>>> +       /*
->> >>>> +        * Generated stack layout:
->> >>>> +        *
->> >>>> +        * func prev back chain         [ back chain        ]
->> >>>> +        *                              [                   ]
->> >>>> +        * bpf prog redzone/tailcallcnt [ ...               ] 64 by=
-tes (64-bit powerpc)
->> >>>> +        *                              [                   ] --
->> >>> ...
->> >>>> +
->> >>>> +       /* Dummy frame size for proper unwind - includes 64-bytes r=
-ed zone for 64-bit powerpc */
->> >>>> +       bpf_dummy_frame_size =3D STACK_FRAME_MIN_SIZE + 64;
->> >>>
->> >>> What is the goal of such a large "red zone" ?
->> >>> The kernel stack is a limited resource.
->> >>> Why reserve 64 bytes ?
->> >>> tail call cnt can probably be optional as well.
->> >>
->> >> Hi Alexei, thanks for reviewing.
->> >> FWIW, the redzone on ppc64 is 288 bytes. BPF JIT for ppc64 was using
->> >> a redzone of 80 bytes since tailcall support was introduced [1].
->> >> It came down to 64 bytes thanks to [2]. The red zone is being used
->> >> to save NVRs and tail call count when a stack is not setup. I do
->> >> agree that we should look at optimizing it further. Do you think
->> >> the optimization should go as part of PPC64 trampoline enablement
->> >> being done here or should that be taken up as a separate item, maybe?
->> >
->> > The follow up is fine.
->> > It just odd to me that we currently have:
->> >
->> > [   unused red zone ] 208 bytes protected
->> >
->> > I simply don't understand why we need to waste this much stack space.
->> > Why can't it be zero today ?
->>
->> The ABI for ppc64 has a redzone of 288 bytes below the current
->> stack pointer that can be used as a scratch area until a new
->> stack frame is created. So, no wastage of stack space as such.
->> It is just red zone that can be used before a new stack frame
->> is created. The comment there is only to show how redzone is
->> being used in ppc64 BPF JIT. I think the confusion is with the
->> mention of "208 bytes" as protected. As not all of that scratch
->> area is used, it mentions the remaining as unused. Essentially
->> 288 bytes below current stack pointer is protected from debuggers
->> and interrupt code (red zone). Note that it should be 224 bytes
->> of unused red zone instead of 208 bytes as red zone usage in
->> ppc64 BPF JIT come down from 80 bytes to 64 bytes since [2].
->> Hope that clears the misunderstanding..
+On Thu, Oct 10, 2024 at 7:35=E2=80=AFAM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
 >
-> I see. That makes sense. So it's similar to amd64 red zone,
-> but there we have an issue with irqs, hence the kernel is
-> compiled with -mno-red-zone.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Simplify return address printing in the function graph tracer by removing
+> fgraph_extras. Since this feature is only used by the function graph
+> tracer and the feature flags can directly accessible from the function
+> graph tracer, fgraph_extras can be removed from the fgraph callback.
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  include/linux/ftrace.h               |   16 ++++--------
+>  kernel/trace/fgraph.c                |   45 ++++++++++++++++++++++------=
+------
+>  kernel/trace/ftrace.c                |    3 +-
+>  kernel/trace/trace.h                 |    3 +-
+>  kernel/trace/trace_functions_graph.c |   14 +++++------
+>  kernel/trace/trace_irqsoff.c         |    3 +-
+>  kernel/trace/trace_sched_wakeup.c    |    3 +-
+>  kernel/trace/trace_selftest.c        |    8 ++----
+>  8 files changed, 48 insertions(+), 47 deletions(-)
+>
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 2ac3b3b53cd0..997e1f0335b6 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -1068,29 +1068,20 @@ struct ftrace_graph_ret {
+>         unsigned long long rettime;
+>  } __packed;
+>
+> -struct fgraph_extras;
+>  struct fgraph_ops;
+>
+>  /* Type of the callback handlers for tracing function graph*/
+>  typedef void (*trace_func_graph_ret_t)(struct ftrace_graph_ret *,
+>                                        struct fgraph_ops *); /* return */
+>  typedef int (*trace_func_graph_ent_t)(struct ftrace_graph_ent *,
+> -                                     struct fgraph_ops *,
+> -                                     struct fgraph_extras *); /* entry *=
+/
+> +                                     struct fgraph_ops *); /* entry */
+>
+>  extern int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
+> -                                  struct fgraph_ops *gops,
+> -                                  struct fgraph_extras *extras);
+> +                                  struct fgraph_ops *gops);
+>  bool ftrace_pids_enabled(struct ftrace_ops *ops);
+>
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>
+> -/* Used to convey some extra datas when creating a graph entry */
+> -struct fgraph_extras {
+> -       u32 flags;
+> -       unsigned long retaddr;
+> -};
+> -
+>  struct fgraph_ops {
+>         trace_func_graph_ent_t          entryfunc;
+>         trace_func_graph_ret_t          retfunc;
+> @@ -1131,12 +1122,15 @@ function_graph_enter(unsigned long ret, unsigned =
+long func,
+>
+>  struct ftrace_ret_stack *
+>  ftrace_graph_get_ret_stack(struct task_struct *task, int skip);
+> +unsigned long ftrace_graph_top_ret_addr(struct task_struct *task);
+>
+>  unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+>                                     unsigned long ret, unsigned long *ret=
+p);
+>  unsigned long *fgraph_get_task_var(struct fgraph_ops *gops);
+>
+>  u32 graph_tracer_flags_get(u32 flags);
+> +#define graph_tracer_flags_is_set(flags)       \
+> +       (graph_tracer_flags_get(flags) =3D=3D (flags))
 
-I assume that issue is that the interrupt entry unconditionally writes
-some data below the stack pointer, disregarding the red zone?
+Do we need to retain the function graph_tracer_flags_get? it will be
+only invoked in the
+file trace_functions_graph.c, so we may access the tracer_flags
+variable directly.
 
-> I guess ppc always has a different interrupt stack and
-> it's not an issue?
-
-No, the interrupt entry allocates a frame that is big enough to cover
-the red zone as well as the space it needs to save registers.
-
-See STACK_INT_FRAME_SIZE which includes KERNEL_REDZONE_SIZE:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
-rch/powerpc/include/asm/ptrace.h?commit=3D8cf0b93919e13d1e8d4466eb4080a4c4d=
-9d66d7b#n165
-
-Which is renamed to INT_FRAME_SIZE in asm-offsets.c and then is used in
-the interrupt entry here:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
-rch/powerpc/kernel/exceptions-64s.S?commit=3D8cf0b93919e13d1e8d4466eb4080a4=
-c4d9d66d7b#n497
-
-cheers
+>
+>  /*
+>   * Sometimes we don't want to trace a function with the function
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 27e523f01ed2..ee829d65f301 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -290,8 +290,7 @@ static inline unsigned long make_data_type_val(int id=
+x, int size, int offset)
+>  }
+>
+>  /* ftrace_graph_entry set to this to tell some archs to run function gra=
+ph */
+> -static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *=
+ops,
+> -                    struct fgraph_extras *extras)
+> +static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *=
+ops)
+>  {
+>         return 0;
+>  }
+> @@ -519,8 +518,7 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
+>  #endif
+>
+>  int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace,
+> -                           struct fgraph_ops *gops,
+> -                           struct fgraph_extras *extras)
+> +                           struct fgraph_ops *gops)
+>  {
+>         return 0;
+>  }
+> @@ -648,20 +646,13 @@ int function_graph_enter(unsigned long ret, unsigne=
+d long func,
+>                          unsigned long frame_pointer, unsigned long *retp=
+)
+>  {
+>         struct ftrace_graph_ent trace;
+> -       struct fgraph_extras extras;
+>         unsigned long bitmap =3D 0;
+>         int offset;
+>         int i;
+> -       int idx =3D 0;
+>
+>         trace.func =3D func;
+>         trace.depth =3D ++current->curr_ret_depth;
+>
+> -       extras.flags =3D graph_tracer_flags_get(TRACE_GRAPH_PRINT_RETADDR=
+);
+> -       if (IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR)
+> -               && extras.flags & TRACE_GRAPH_PRINT_RETADDR)
+> -               extras.retaddr =3D ftrace_graph_ret_addr(current, &idx, r=
+et, retp);
+> -
+>         offset =3D ftrace_push_return_trace(ret, func, frame_pointer, ret=
+p, 0);
+>         if (offset < 0)
+>                 goto out;
+> @@ -670,7 +661,7 @@ int function_graph_enter(unsigned long ret, unsigned =
+long func,
+>         if (static_branch_likely(&fgraph_do_direct)) {
+>                 int save_curr_ret_stack =3D current->curr_ret_stack;
+>
+> -               if (static_call(fgraph_func)(&trace, fgraph_direct_gops, =
+&extras))
+> +               if (static_call(fgraph_func)(&trace, fgraph_direct_gops))
+>                         bitmap |=3D BIT(fgraph_direct_gops->idx);
+>                 else
+>                         /* Clear out any saved storage */
+> @@ -688,7 +679,7 @@ int function_graph_enter(unsigned long ret, unsigned =
+long func,
+>
+>                         save_curr_ret_stack =3D current->curr_ret_stack;
+>                         if (ftrace_ops_test(&gops->ops, func, NULL) &&
+> -                           gops->entryfunc(&trace, gops, &extras))
+> +                           gops->entryfunc(&trace, gops))
+>                                 bitmap |=3D BIT(i);
+>                         else
+>                                 /* Clear out any saved storage */
+> @@ -905,6 +896,29 @@ ftrace_graph_get_ret_stack(struct task_struct *task,=
+ int idx)
+>         return ret_stack;
+>  }
+>
+> +/**
+> + * ftrace_graph_top_ret_addr - return the top return address in the shad=
+ow stack
+> + * @task: The task to read the shadow stack from.
+> + *
+> + * Return the first return address on the shadow stack of the @task, whi=
+ch is
+> + * not the fgraph's return_to_handler.
+> + */
+> +unsigned long ftrace_graph_top_ret_addr(struct task_struct *task)
+> +{
+> +       unsigned long return_handler =3D (unsigned long)dereference_kerne=
+l_function_descriptor(return_to_handler);
+> +       struct ftrace_ret_stack *ret_stack =3D NULL;
+> +       int offset =3D task->curr_ret_stack;
+> +
+> +       if (offset < 0)
+> +               return 0;
+> +
+> +       do {
+> +               ret_stack =3D get_ret_stack(task, offset, &offset);
+> +       } while (ret_stack && ret_stack->ret =3D=3D return_handler);
+> +
+> +       return ret_stack ? ret_stack->ret : 0;
+> +}
+> +
+>  /**
+>   * ftrace_graph_ret_addr - return the original value of the return addre=
+ss
+>   * @task: The task the unwinder is being executed on
+> @@ -1145,8 +1159,7 @@ void ftrace_graph_exit_task(struct task_struct *t)
+>
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  static int fgraph_pid_func(struct ftrace_graph_ent *trace,
+> -                          struct fgraph_ops *gops,
+> -                          struct fgraph_extras *extras)
+> +                          struct fgraph_ops *gops)
+>  {
+>         struct trace_array *tr =3D gops->ops.private;
+>         int pid;
+> @@ -1160,7 +1173,7 @@ static int fgraph_pid_func(struct ftrace_graph_ent =
+*trace,
+>                         return 0;
+>         }
+>
+> -       return gops->saved_func(trace, gops, NULL);
+> +       return gops->saved_func(trace, gops);
+>  }
+>
+>  void fgraph_update_pid_func(void)
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 5d87dac83b80..cae388122ca8 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -827,8 +827,7 @@ struct profile_fgraph_data {
+>  };
+>
+>  static int profile_graph_entry(struct ftrace_graph_ent *trace,
+> -                              struct fgraph_ops *gops,
+> -                              struct fgraph_extras *extras)
+> +                              struct fgraph_ops *gops)
+>  {
+>         struct profile_fgraph_data *profile_data;
+>
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 13f08f257c0b..6adf48ef4312 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -695,8 +695,7 @@ void trace_default_header(struct seq_file *m);
+>  void print_trace_header(struct seq_file *m, struct trace_iterator *iter)=
+;
+>
+>  void trace_graph_return(struct ftrace_graph_ret *trace, struct fgraph_op=
+s *gops);
+> -int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops =
+*gops,
+> -                     struct fgraph_extras *extras);
+> +int trace_graph_entry(struct ftrace_graph_ent *trace, struct fgraph_ops =
+*gops);
+>
+>  void tracing_start_cmdline_record(void);
+>  void tracing_stop_cmdline_record(void);
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_fu=
+nctions_graph.c
+> index 3dd63ae2afe8..e3cda79653ee 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
+> @@ -179,8 +179,7 @@ struct fgraph_times {
+>  };
+>
+>  int trace_graph_entry(struct ftrace_graph_ent *trace,
+> -                     struct fgraph_ops *gops,
+> -                     struct fgraph_extras *extras)
+> +                     struct fgraph_ops *gops)
+>  {
+>         unsigned long *task_var =3D fgraph_get_task_var(gops);
+>         struct trace_array *tr =3D gops->private;
+> @@ -246,11 +245,12 @@ int trace_graph_entry(struct ftrace_graph_ent *trac=
+e,
+>         disabled =3D atomic_inc_return(&data->disabled);
+>         if (likely(disabled =3D=3D 1)) {
+>                 trace_ctx =3D tracing_gen_ctx_flags(flags);
+> -               if (unlikely(IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&=
+ extras
+> -                               && (extras->flags & TRACE_GRAPH_PRINT_RET=
+ADDR)))
+> -                       ret =3D __trace_graph_retaddr_entry(tr, trace, tr=
+ace_ctx,
+> -                                                         extras->retaddr=
+);
+> -               else
+> +               if (unlikely(IS_ENABLED(CONFIG_FUNCTION_GRAPH_RETADDR) &&
+> +                       graph_tracer_flags_is_set(TRACE_GRAPH_PRINT_RETAD=
+DR))) {
+> +                       unsigned long retaddr =3D ftrace_graph_top_ret_ad=
+dr(current);
+> +
+> +                       ret =3D __trace_graph_retaddr_entry(tr, trace, tr=
+ace_ctx, retaddr);
+> +               } else
+>                         ret =3D __trace_graph_entry(tr, trace, trace_ctx)=
+;
+>         } else {
+>                 ret =3D 0;
+> diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+> index eb3aa36cf10f..fce064e20570 100644
+> --- a/kernel/trace/trace_irqsoff.c
+> +++ b/kernel/trace/trace_irqsoff.c
+> @@ -176,8 +176,7 @@ static int irqsoff_display_graph(struct trace_array *=
+tr, int set)
+>  }
+>
+>  static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
+> -                              struct fgraph_ops *gops,
+> -                              struct fgraph_extras *extras)
+> +                              struct fgraph_ops *gops)
+>  {
+>         struct trace_array *tr =3D irqsoff_trace;
+>         struct trace_array_cpu *data;
+> diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched=
+_wakeup.c
+> index 155de2551507..ae2ace5e515a 100644
+> --- a/kernel/trace/trace_sched_wakeup.c
+> +++ b/kernel/trace/trace_sched_wakeup.c
+> @@ -113,8 +113,7 @@ static int wakeup_display_graph(struct trace_array *t=
+r, int set)
+>  }
+>
+>  static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+> -                             struct fgraph_ops *gops,
+> -                             struct fgraph_extras *extras)
+> +                             struct fgraph_ops *gops)
+>  {
+>         struct trace_array *tr =3D wakeup_trace;
+>         struct trace_array_cpu *data;
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.=
+c
+> index fbb99f8c8062..d3a14ae47e26 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -774,8 +774,7 @@ struct fgraph_fixture {
+>  };
+>
+>  static __init int store_entry(struct ftrace_graph_ent *trace,
+> -                             struct fgraph_ops *gops,
+> -                             struct fgraph_extras *extras)
+> +                             struct fgraph_ops *gops)
+>  {
+>         struct fgraph_fixture *fixture =3D container_of(gops, struct fgra=
+ph_fixture, gops);
+>         const char *type =3D fixture->store_type_name;
+> @@ -1026,8 +1025,7 @@ static unsigned int graph_hang_thresh;
+>
+>  /* Wrap the real function entry probe to avoid possible hanging */
+>  static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace,
+> -                                     struct fgraph_ops *gops,
+> -                                     struct fgraph_extras *extras)
+> +                                     struct fgraph_ops *gops)
+>  {
+>         /* This is harmlessly racy, we want to approximately detect a han=
+g */
+>         if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
+> @@ -1041,7 +1039,7 @@ static int trace_graph_entry_watchdog(struct ftrace=
+_graph_ent *trace,
+>                 return 0;
+>         }
+>
+> -       return trace_graph_entry(trace, gops, NULL);
+> +       return trace_graph_entry(trace, gops);
+>  }
+>
+>  static struct fgraph_ops fgraph_ops __initdata  =3D {
+>
