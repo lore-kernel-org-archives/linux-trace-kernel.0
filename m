@@ -1,138 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 739021C1AD1;
-	Thu, 10 Oct 2024 10:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f196.google.com (mail-yb1-f196.google.com [209.85.219.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C7C1BFE12;
+	Thu, 10 Oct 2024 11:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728557928; cv=none; b=WV2jBAuBPHO4boqlQi7k2N4I1YXOVAoLFTxHsGS2zBl6TYugPi59t2wUgIEaUEnzJZYM66P5Fp7nLNgfmmSSTMFLv8a7J+Qz/j084/27jbq5mEfY+9CIYcKNYCLK0KSu4PB7ECpRRHuNwGQ8n0SVknt6VabY3sy0IIzVZJ1sTTE=
+	t=1728558382; cv=none; b=Ft5a1hzFX4Vopx7nC9sijPJfNNUPZJcQp6swGcOGh1l6rG1iMb3YA41AJ6Zccrhe5qdG7iEUwAZr1YuqjEMWqEX7Iwg/PwVCPTIUq/32ZmdWNv+h/siYxtwhhgOvZuXq5yaHGdUgi1+HIoY08I2Ng6oGGkljrf9b7QT9TSzLMik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728557928; c=relaxed/simple;
-	bh=qYwH4tGIR+4FLqvSTaIjtz7u5nRLPHm/L9JJjwTwmIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dvfx/FhW4BKDd/y/CWzZ8/Rv8svkeDSemuSolkaEUOr3avLD7wFuwthUWhnXRFK0jNUEc3gYyib7u/kkXbKzyO7k5GMYlymx/xxMD5yOUNIfQUOcmwLCPerxFH4WsPOysN4kOGnBUFI9Fj69ggu2DHRxbLt/mNCqsZBBH5+s+oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57F1B497;
-	Thu, 10 Oct 2024 03:59:15 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BEB93F58B;
-	Thu, 10 Oct 2024 03:58:43 -0700 (PDT)
-Date: Thu, 10 Oct 2024 11:58:40 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Liao Chang <liaochang1@huawei.com>, will@kernel.org,
-	catalin.marinas@arm.com, ast@kernel.org, puranjay@kernel.org,
-	andrii@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: insn: Simulate nop instruction for better
- uprobe performance
-Message-ID: <ZwezYJIIsiAeK46P@J2N7QTR9R3>
-References: <20240909071114.1150053-1-liaochang1@huawei.com>
- <CAEf4BzZVUPZHyuyt6zGZVTQ3sB8u64Wxfuks9BGq-HXGM1yp3A@mail.gmail.com>
+	s=arc-20240116; t=1728558382; c=relaxed/simple;
+	bh=2U7+swKAAmw08h0DPcAMPCat1Scw7idxysE2ZzSVzJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mYNEfR0HRg+7jbukJ/vHewpU3r/FIY3Z+ngnNpGa6Nr1VOZXB+b/EpRzV7Jm6C5j+LIdIGiAhPPxHk2uHQ/8S6sGdBVoy2RTEABwHj9s77oDKFjkPgfs4WAXO8sHndr8hi3GG3R2u15NQp1ScfLaDmWy1Ut1mDzph9ZFpOTb0Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJig6mhT; arc=none smtp.client-ip=209.85.219.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJig6mhT"
+Received: by mail-yb1-f196.google.com with SMTP id 3f1490d57ef6-dff1ccdc17bso826322276.0;
+        Thu, 10 Oct 2024 04:06:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728558379; x=1729163179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2U7+swKAAmw08h0DPcAMPCat1Scw7idxysE2ZzSVzJE=;
+        b=cJig6mhTUZ9K8a9YDNseP93tylbgZdkQaJn0PZSjP3X1quhU64a0si4qrR4akxPYWB
+         0DxjFxDfvyGwo5v8TXTduG1eI76T4jSkov/yp7vdERZa18O5TrbYDfxEMKhwi/iHoi/e
+         f35uifEQ4dtQb/ijsDhF++PawaDTbenyEYXBFvHmL6q/rqI5FRqXY125hyi6uBUY1gbt
+         gHdozKOcgdixaftrcD91oBgGPLhxrAxlPY3/kPiPX2QfYn+Y5WoTfJ68GnpQuFbAaXH7
+         ANax7GoHc9mRlwvUzgVfFvnHS3iHqiEvwf0t9EzbsWiQIiZJ5jmrpssf99M3dzrBuifi
+         4ivQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728558379; x=1729163179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2U7+swKAAmw08h0DPcAMPCat1Scw7idxysE2ZzSVzJE=;
+        b=M0ESPE2qRPfpA+Iri7Z866IT0dM9EuYU3zZMpUoHwjOVr/+WZVDHddrfH84XJ1ow8z
+         gmlCqmiV5iR4gPGegLignbGF8ZvkGGUTaj8BJSjZZLGPvxz0K5S+WkMMggrfpMSS+YZf
+         olICAZBFLHLvnC8FRV1HLdXbCKDpW0qw/Vjoplx6BJxWhmpqXIc7Pxyx2hdQts8Z38LN
+         vXO4bxlX7j9f6QRZoOdTkMmin5yxD4xp9VGnEhmI26TUEQmUnWQvEuLM/xvcIvLxWJLI
+         Ab2EU5AwEYyeVORwN75yh8QEQD0ZE1+m3DQ07jtLOZ+EfwUIF7G9R+jPbl8x5DNBJke4
+         LHYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSGulo1940gsDVU+EOV6g6F8o9rZEEqp6v0GNmu/VPT4g3MCDS9k5BLhVe1VQTM9XDZ99CGup8@vger.kernel.org, AJvYcCXASYKy/iox44Vqyaz3e5jB5CbrgGz+YTrxdSWseWLOds0b95MS0Mc3mDADm4y9pmLsPhz1BL76PXmYOog=@vger.kernel.org, AJvYcCXnVkhKaqlX9L1+ghl+9R6k69JoecXWFW72jstLw8OkCrBIX8sf5FV4dmdMlDvrCuSm4ljAVjTGIUM29Bu0P5SBwl4J@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWpKpcb8s5DtIDi+tzqbHXCSYgwLPftz287Ti1NW3cn8sBUgJg
+	9esTyxc4AyJAY7XC+wU5grQrf9x09BkTz2eL0zz/DCjfwWOYoxOpmL26ND4qC8M4PDjMcrr7wfO
+	4LMQBzaVTOrdq3p/hOttGY3lDE3M=
+X-Google-Smtp-Source: AGHT+IFVVZzZzpFh1Fx2ik7fwEcjo6mL58ZZLuyObjsrW8NPsx7AoOnKFrHOY58Oywki1hSOLCcNo65JzO3qJLGyrT4=
+X-Received: by 2002:a05:6902:18c6:b0:e28:75c8:49b with SMTP id
+ 3f1490d57ef6-e2909b34092mr4244261276.0.1728558379383; Thu, 10 Oct 2024
+ 04:06:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZVUPZHyuyt6zGZVTQ3sB8u64Wxfuks9BGq-HXGM1yp3A@mail.gmail.com>
+References: <20241009121705.850222-1-dongml2@chinatelecom.cn> <CANn89iLKVh0_wkgZ-a2+Dr9xz6wOs58CE8PpwzZEH8ZHMn=jsA@mail.gmail.com>
+In-Reply-To: <CANn89iLKVh0_wkgZ-a2+Dr9xz6wOs58CE8PpwzZEH8ZHMn=jsA@mail.gmail.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Thu, 10 Oct 2024 19:07:01 +0800
+Message-ID: <CADxym3YonoJ5GUToUxJTnVpd3O-_SsSZK2tPMmUkXCzs3Oy-XQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: tcp: add tracepoint skb_latency for latency monitor
+To: Eric Dumazet <edumazet@google.com>, vadim.fedorenko@linux.dev, 
+	Jason Xing <kerneljasonxing@gmail.com>
+Cc: kuba@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	dsahern@kernel.org, yan@cloudflare.com, dongml2@chinatelecom.cn, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrii,
-
-On Wed, Oct 09, 2024 at 04:54:25PM -0700, Andrii Nakryiko wrote:
-> On Mon, Sep 9, 2024 at 12:21 AM Liao Chang <liaochang1@huawei.com> wrote:
-
-> I'm curious what's the status of this patch? It received no comments
-> so far in the last month. Can someone on the ARM64 side of things
-> please take a look? (or maybe it was applied to some tree and there
-> was just no notification?)
-> 
-> This is a very useful performance optimization for uprobe tracing on
-> ARM64, so would be nice to get it in during current release cycle.
-> Thank you!
-
-Sorry, I got busy chasing up a bunch of bugs and hadn't gotten round to
-this yet.
-
-I've replied with a couple of minor comments and an ack, and I reckon we
-can queue this up this cycle. Usually this sort of thing starts to get
-queued around -rc3.
-
-Mark.
-
-> 
-> > diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
-> > index 8c0a36f72d6f..dd530d5c3d67 100644
-> > --- a/arch/arm64/include/asm/insn.h
-> > +++ b/arch/arm64/include/asm/insn.h
-> > @@ -549,6 +549,12 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
-> >                aarch64_insn_is_prfm_lit(insn);
-> >  }
+On Wed, Oct 9, 2024 at 11:53=E2=80=AFPM Eric Dumazet <edumazet@google.com> =
+wrote:
+>
+> On Wed, Oct 9, 2024 at 2:17=E2=80=AFPM Menglong Dong <menglong8.dong@gmai=
+l.com> wrote:
 > >
-> > +static __always_inline bool aarch64_insn_is_nop(u32 insn)
-> > +{
-> > +       return aarch64_insn_is_hint(insn) &&
-> > +              ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
-> > +}
-> > +
-> >  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
-> >  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
-> >  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
-> > diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-> > index 968d5fffe233..be54539e309e 100644
-> > --- a/arch/arm64/kernel/probes/decode-insn.c
-> > +++ b/arch/arm64/kernel/probes/decode-insn.c
-> > @@ -75,6 +75,15 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
-> >  enum probe_insn __kprobes
-> >  arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
-> >  {
-> > +       /*
-> > +        * While 'nop' instruction can execute in the out-of-line slot,
-> > +        * simulating them in breakpoint handling offers better performance.
-> > +        */
-> > +       if (aarch64_insn_is_nop(insn)) {
-> > +               api->handler = simulate_nop;
-> > +               return INSN_GOOD_NO_SLOT;
-> > +       }
-> > +
-> >         /*
-> >          * Instructions reading or modifying the PC won't work from the XOL
-> >          * slot.
-> > diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-> > index 22d0b3252476..5e4f887a074c 100644
-> > --- a/arch/arm64/kernel/probes/simulate-insn.c
-> > +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> > @@ -200,3 +200,14 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
+> > In this commit, we introduce a new tracepoint "skb_latency", which is
+> > used to trace the latency on sending or receiving packet. For now, only
+> > TCP is supported. Maybe we should call it "tcp_latency"?
 > >
-> >         instruction_pointer_set(regs, instruction_pointer(regs) + 4);
-> >  }
-> > +
-> > +void __kprobes
-> > +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-> > +{
-> > +       /*
-> > +        * Compared to instruction_pointer_set(), it offers better
-> > +        * compatibility with single-stepping and execution in target
-> > +        * guarded memory.
-> > +        */
-> > +       arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> > +}
-> > diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-> > index e065dc92218e..efb2803ec943 100644
-> > --- a/arch/arm64/kernel/probes/simulate-insn.h
-> > +++ b/arch/arm64/kernel/probes/simulate-insn.h
-> > @@ -16,5 +16,6 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
-> >  void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
-> >  void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
-> >  void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
-> > +void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
+> > There are 6 stages are introduced in this commit to trace the networkin=
+g
+> > latency.
 > >
-> >  #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
-> > --
-> > 2.34.1
+> > The existing SO_TIMESTAMPING and MSG_TSTAMP_* can obtain the timestampi=
+ng
+> > of sending and receiving packet, but it's not convenient.
 > >
+> > First, most applications didn't use this function when implement, and w=
+e
+> > can't make them implement it right now when networking latency happens.
+> >
+> > Second, it's inefficient, as it need to get the timestamping from the
+> > error queue with syscalls.
+> >
+> > Third, the timestamping it offers is not enough to analyse the latency
+> > on sending or receiving packet.
+> >
+> > As for me, the main usage of this tracepoint is to be hooked by my BPF
+> > program, and do some filter, and capture the latency that I interested
+> > in.
+> >
+> > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+> > ---
+>
+> Big NACK from my side.
+>
+> Adding tcp_mstamp_refresh() all over the place is not what I call 'tracin=
+g'.
+
+The tcp_mstamp_refresh() is optional, as we can update skb->tstamp with
+tcp_clock_ns() directly instead (maybe with a control of the static branch)=
+.
+
+As @Vadim says, @Jason Xing already has a similar series on the
+networking latency monitor before, which is based on BPF.
+
+(what a coincidence :/)
+
+So let's focus on Jason's series.
+
+Thanks!
+Menglong Dong
