@@ -1,30 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809461E3786;
-	Thu, 10 Oct 2024 23:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C318B1E3DE0;
+	Thu, 10 Oct 2024 23:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728603379; cv=none; b=lPj8xeoUCTmjdokNJ9mxxowTnonjp7xfO+f/lcFS3Vhcx/JXLt4a6DboSeZpT7mBYV9Ngyl9wcguCs/Xi1ZACgZRjpK1ItDrCweePy2bh5dWypCw1HW/aDyW2QHjFot/mPmi2Qbqyyu0tsQ0vGT702lINtVJWXaWOXTDsJpQiIQ=
+	t=1728603615; cv=none; b=esvl3Stx9q/CaelInQ30OgSiLpCWOJAB6sAk8foHVa25ZcufAZQ3Nl05Fwr1U+1DR2QxwnAKoDYjQAXr/F4iC4UAC2DA4ue4lMkA8HN5vXCmwP7PIs6E05+5SDmqbnlFUv3Lxe/3MWfoDUYKCZP1NbvmT30RihwhNUHGZ4LQt+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728603379; c=relaxed/simple;
-	bh=tKzeG/jfgL8J8LY9AyU3+IbFtdZr3+soVid8mGX2MDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mcLOMLCE4iTbvwK8eWA2sz3lxLfgRjaHxLVbpNZuVUe0/V/FxO4e0WsMAdo+ijfd5fCPYK7dhjfV09jukEupOxuwomurj22IHBdtdXouIQY+NAoGBUQe6ShbJdAVy/nLvVwzThle/0hMe2IHzJ85DoXCsF3bmwOeIXXGYIxBq6E=
+	s=arc-20240116; t=1728603615; c=relaxed/simple;
+	bh=dJFN72gV9RZOP4y1IjOhN9T6CcWa4weQEqUHyI2Qq+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nVhlHULqqtDBGFPKbyWkbjVPQGrRMjYvJ3KLezS0XmisEouANFwbprv1s4JqtZ+l7A2KoNPUorU+ZheO9itvmD+/u3HwM2ZDn0bw3gfgoT4z2pOcxRzgT3OZzQjArEnt8nxTsGlIz4TFbXx/DQp6PhBZBQR/rIs4lf8keJKXQxY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20041C4CEC5;
-	Thu, 10 Oct 2024 23:36:18 +0000 (UTC)
-Date: Thu, 10 Oct 2024 19:36:26 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905B2C4CEC5;
+	Thu, 10 Oct 2024 23:40:12 +0000 (UTC)
+Date: Thu, 10 Oct 2024 19:40:20 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Donglin Peng <dolinux.peng@gmail.com>
-Cc: mhiramat@kernel.org, zhengyejian@huaweicloud.com, sfr@canb.auug.org.au,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] function_graph: no need to invoke the function
- call_filter_check_discard
-Message-ID: <20241010193626.76e7ff33@gandalf.local.home>
-In-Reply-To: <20241010035826.567827-1-dolinux.peng@gmail.com>
-References: <20241010035826.567827-1-dolinux.peng@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Donglin Peng <dolinux.peng@gmail.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: fgragh: No need to invoke the function call_filter_check_discard()
+Message-ID: <20241010194020.46192b21@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,45 +32,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Oct 2024 11:58:26 +0800
-Donglin Peng <dolinux.peng@gmail.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> From: Donglin Peng <pengdonglin@xiaomi.com>
-> 
-> The function call_filter_check_discard has been removed in the
-> commit [1].
-> 
-> [1] https://lore.kernel.org/all/20240911010026.2302849-1-zhengyejian@huaweicloud.com/
-> 
-> Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
-> ---
->  kernel/trace/trace_functions_graph.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> index 3b210e6bcd70..98f347c049d2 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -148,8 +148,7 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
->  	entry->graph_ent.func = trace->func;
->  	entry->graph_ent.depth = trace->depth;
->  	entry->graph_ent.retaddr = retaddr;
-> -	if (!call_filter_check_discard(call, entry, buffer, event))
-> -		trace_buffer_unlock_commit_nostack(buffer, event);
-> +	trace_buffer_unlock_commit_nostack(buffer, event);
->  
->  	return 1;
->  }
+The function call_filter_check_discard() has been removed in the
+commit 49e4154f4b16 ("tracing: Remove TRACE_EVENT_FL_FILTERED logic"),
+from another topic branch. But when merged together with commit
+21e92806d39c6 ("function_graph: Support recording and printing the
+function return address") which added another call to
+call_filter_check_discard(), it caused the build to fail. Since the
+function call_filter_check_discard() is useless, it can simply be removed
+regardless of being merged with commit 49e4154f4b16 or not.
 
-This still fails:
+Link: https://lore.kernel.org/all/20241010134649.43ed357c@canb.auug.org.au/
 
-kernel/trace/trace_functions_graph.c:140:27: error: unused variable 'call' [-Werror,-Wunused-variable]
-  140 |         struct trace_event_call *call = &event_fgraph_retaddr_entry;
-      |                                  ^~~~
-1 error generated.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 21e92806d39c6 ("function_graph: Support recording and printing the function return address")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_functions_graph.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I'll just fix it up.
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 20d0c579d3b5..03c5a0d300a5 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -137,7 +137,6 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
+ 				unsigned int trace_ctx,
+ 				unsigned long retaddr)
+ {
+-	struct trace_event_call *call = &event_fgraph_retaddr_entry;
+ 	struct ring_buffer_event *event;
+ 	struct trace_buffer *buffer = tr->array_buffer.buffer;
+ 	struct fgraph_retaddr_ent_entry *entry;
+@@ -150,8 +149,7 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
+ 	entry->graph_ent.func = trace->func;
+ 	entry->graph_ent.depth = trace->depth;
+ 	entry->graph_ent.retaddr = retaddr;
+-	if (!call_filter_check_discard(call, entry, buffer, event))
+-		trace_buffer_unlock_commit_nostack(buffer, event);
++	trace_buffer_unlock_commit_nostack(buffer, event);
+ 
+ 	return 1;
+ }
+-- 
+2.45.2
 
-Thanks,
-
--- Steve
