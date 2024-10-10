@@ -1,76 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565291E885F;
-	Thu, 10 Oct 2024 19:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77CF1D0E10;
+	Thu, 10 Oct 2024 19:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728589714; cv=none; b=iDTupoffsgggkZS87q9OdpM5bohafWkNg/bN4TSXTgr80RQD+vZ3LDAbc1ptv++iqrQplpl1ZXQLkGLUPKQK2iRT7MI8Y2uRnf8xWtWURDavKT+yQqkouhv6ucAAxIKlb6wjSdCPN6acgBNYJRf/bM5LOMuUaQmveruuyduTY/Y=
+	t=1728589929; cv=none; b=I9SfAs0W94RsGwv74xxdvXvsc5oVOpk6rvdaoN12Mas9dtcJ405+V9n0534wlVmLf+VfVKxUfuCBCYzpOUnK/RxoMTv5fq9TNgxm5A83gCuVlNqVU1yY1NHfP+/yp5xZ4egiy6Yx/WjhhzqAS+DjXtcIGhn0x57xSpsyumaqmCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728589714; c=relaxed/simple;
-	bh=F2HPyfn7AS7sxdWUgbKoi+uuw+6C/R/lmzaG67e9Seo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aVTtzOUI8mtnLRG5zx76nVkEQ/o4Jfit1XQsYr/fCSv/Gc6c1hDPCMpYO0aaVwhveuwcxtsAe5LCyp2vQBOCqLKG1ob0159Nxzu3GIQWO46N/zOxcKK2msZYTF0LH0XgfAIDNwmOcm1EWcqpOrzWg3qKkLJ9hvtn41oJy8ODfpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85BC2C4CED5;
-	Thu, 10 Oct 2024 19:48:32 +0000 (UTC)
-Date: Thu, 10 Oct 2024 15:48:40 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge
- Deller <deller@gmx.de>, linux-kernel@vger.kernel.org, Sven Schnelle
- <svens@stackframe.org>, linux-trace-kernel@vger.kernel.org,
- linux-parisc@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] parisc/ftrace: Fix function graph tracing disablement
-Message-ID: <20241010154840.6e158c78@gandalf.local.home>
-In-Reply-To: <5962b9e161b2b9296509c3d65c7f16c11b07bd16.1727904678.git.jpoimboe@kernel.org>
-References: <5962b9e161b2b9296509c3d65c7f16c11b07bd16.1727904678.git.jpoimboe@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728589929; c=relaxed/simple;
+	bh=qcw6j0ZeUrCc7n9ZciGlFMxJdT8988R8ntWHIog88Pw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p6aiOzS2OvE3ey9GtfOt5sXNzJh3X/ynnEOp6XFwb1yfwFTRMXNSKB9VlD2nL1Vu2IG8R+Auy4SnUgI7xQo6XsSH2HXxX3moNwoCSs5zquxkH+FfnfabnDMFYNHBJL/aiHq2JlR9RWA2IagLBA1CWSw3AbU9Gu6nyxJkdghJ/4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=G5a9H1SV; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="G5a9H1SV"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D259242C00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1728589921; bh=g/gqbhjttoQMvUxgUOCqWQJ3rN+RGvjKpCYXLspiUSU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=G5a9H1SViQHuvk3GfgRHnlBWW/amvewQgCVgyRaNquaNEXlAfSI+eJsvoj17InQ5c
+	 jPv4NiR8jzFWe+jxgIA6KdvA7sBCOSKhT6PRwDK5CnoFtssD8etgc2+gISua1jyANs
+	 k32YoozCSGHxCx2siZ6zW7VPJzOpL6vx/JzE1JJwfLnleK1JA2kNeTgRwjL/yo6mLa
+	 JWYfK/NNUY1T9Bvy/NiE+7k3EHGXXAWl4q3B27989WJXgrXIimQ1CAiJVqzCeifZ7t
+	 IF0x8Q7yVNhWReSiqrXKaQTOZsuqT310HUZgFfNE0UC+ZxS7XaaSFrO4qwwcqOaTaJ
+	 82ohLVF9s9pLg==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id D259242C00;
+	Thu, 10 Oct 2024 19:52:00 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Steven Rostedt <rostedt@goodmis.org>, SurajSonawane2415
+ <surajsonawane0215@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: fix WARNING document not included in any toctree
+In-Reply-To: <20241010154708.0bf658a3@gandalf.local.home>
+References: <20241002195817.22972-1-surajsonawane0215@gmail.com>
+ <20241010154708.0bf658a3@gandalf.local.home>
+Date: Thu, 10 Oct 2024 13:51:59 -0600
+Message-ID: <87y12vzqg0.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Wed,  2 Oct 2024 14:32:04 -0700
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-> Due to an apparent copy-paste bug, the parisc implementation of
-> ftrace_disable_ftrace_graph_caller() doesn't actually do anything.  It
-> enables the (already-enabled) static key rather than disabling it.
-> 
-> The result is that after function graph tracing has been "disabled", any
-> subsequent (non-graph) function tracing will inadvertently also enable
-> the slow fgraph return address hijacking.
-> 
-> Fixes: 98f2926171ae ("parisc/ftrace: use static key to enable/disable function graph tracer")
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  arch/parisc/kernel/ftrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-> index c91f9c2e61ed..f8d08eab7db8 100644
-> --- a/arch/parisc/kernel/ftrace.c
-> +++ b/arch/parisc/kernel/ftrace.c
-> @@ -87,7 +87,7 @@ int ftrace_enable_ftrace_graph_caller(void)
->  
->  int ftrace_disable_ftrace_graph_caller(void)
->  {
-> -	static_key_enable(&ftrace_graph_enable.key);
-> +	static_key_disable(&ftrace_graph_enable.key);
->  	return 0;
->  }
->  #endif
+> On Thu,  3 Oct 2024 01:28:17 +0530
+> SurajSonawane2415 <surajsonawane0215@gmail.com> wrote:
+>
+>> Add debugging.rst to the relevant toctree to fix warning
+>> about missing documentation inclusion in toctree.
+>> 
+>> Signed-off-by: SurajSonawane2415 <surajsonawane0215@gmail.com>
+>> ---
+>>  Documentation/trace/index.rst | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+>> index 0b300901f..2c991dc96 100644
+>> --- a/Documentation/trace/index.rst
+>> +++ b/Documentation/trace/index.rst
+>> @@ -24,6 +24,7 @@ Linux Tracing Technologies
+>>     histogram
+>>     histogram-design
+>>     boottime-trace
+>> +   debugging
+>
+> If order matters here, I'd like the debugging to be at the top. As I plan
+> on it being more of a tutorial for using tracing, and should be the first
+> document people see.
+>
+> I need to take some time out and start filling it up!
 
-Awfully quite :-/
+That's the order that the links will show up in the rendered page, so
+yes, it matters.
 
-I wonder if anyone cares about parisc today?
-
-Hmm.
-
--- Steve
+jon
