@@ -1,109 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964E1CCEDF
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 17:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 220E51DF72A;
+	Thu, 10 Oct 2024 18:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728581960; cv=none; b=kfPU02Uvu4JdGthZx0LgXiHwx2nbgKvBdqYLSz445cfOVKqz7+sMTXu9dnzjJU+YyIYMAExonMrOMxOCXyiP++C0fC1UIlFlqPChpLnCBFk+aZIyrr1Ny4OY7+Bq91TR0sRb9+cpd8hnk13MgyMnc/4HV3tIK29q3+OgacAZ5Eg=
+	t=1728585360; cv=none; b=dOvroi/js4/s+5vBC9/wTT+IQCyUi1WsTbwwb+ao9Ik4yeOJ41B7qDSW7LsKTRs+yNfP1EtZr+sLCi1rQ5TkCY8qc6Tp5e70lNBB9kQFrYMzwGGNSk7bnrhZwhIBkE68G2XuMHNfHNZoEDxyNzEfMqeBcNf6K/IlSvno66gPzBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728581960; c=relaxed/simple;
-	bh=Np8QzsYabkUrhLeTsELlCeLTHqygJf1kkjkjTZEo5es=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RnU2ddOqAvkONAXw0JA7fHUrF/ubopBPTfoHQlr+uRzijW+LZlMjASjpueaWvgtc/IPFciHC+jdnEV0GKIRjOyGWC08Sn+qRK/p8Z/E9QDrNpD7FjHgJJQC+FUAY1WP+OKbv4Kc+D4L7XE2zGIV27FnCsD+nBBSivZ5PguvuyP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SoXBKuRR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728585360; c=relaxed/simple;
+	bh=eO8i66PrBt/aJfIHr67M2yWYkbNNStHt47cJJCQ8lLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p6USq3tZmLh/VI+USVzGN9SvsoTWtGP+h3G0LYMhZDvt2yzVRAZFzQ8JlkKQR++CFWIJXCyCnPTDrSdR+NxSu2L9rdbTP3hTw21/XnuTHbCvhz0jsbx4dQuMQSsZj28G+JCkK7awC0/Ow8CokDHL8PmrtjWYUdRbz1akGYr8VKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=TnwSfC3B; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SoXBKuRR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728581957;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyXyYUaizqbaiHdQmCGuTHVEnPVLFmK7yd261DQHof4=;
-	b=SoXBKuRRbLogkfrP4R2POC97hJE4r03AtmSOG8hsKRwJMenkeyWp/cLsRf0vRbvB5lLWPv
-	+Sp1NJ4T1okMEtkg2mUYxJLVsfV1fvc4z7shh4zEZgkhdtxUlJGTWLE46e1ZZiQhe+aG//
-	MWJXWEP2q+NioTgHH/oRDw2AeEpDRck=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-395-spequBRKPEapmICKUphwBg-1; Thu, 10 Oct 2024 13:39:16 -0400
-X-MC-Unique: spequBRKPEapmICKUphwBg-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-6e28b624bfcso19454627b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 10:39:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728581955; x=1729186755;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oyXyYUaizqbaiHdQmCGuTHVEnPVLFmK7yd261DQHof4=;
-        b=RPLuna7PjrlLY4RobRHZV5vg0cSKoPw9RdnjmAuyOIJIRl7PoxCBy3lH5BlZ9O9uxF
-         dm3EF/NYOeT55WSicwxCeKsSAiOtILsIvQqK8VjipnNOHjkHaWGEtcMNNM9fBnKzxxl5
-         a6I/Q3+JjEKp1NzQXlLflcm/+swIdfK4awxjKkLT0joLAV4uygs50zugyJqPucDXaSfE
-         bIVlb56rTicVloA1WdWA7TEfda0zfTLA1/hbv77LJo1hR3jdCMbjsXzSGDPlpl/q4gNb
-         peU0a/litrlQ9n6WUlVuygUuJ4PmNvMcAfAHnyTXrZTbuKBIxRo+hUtPoVL09GUOy3eO
-         8aqg==
-X-Forwarded-Encrypted: i=1; AJvYcCURSGxfvZqTr/8eo0YY1vOvVirnviKL1OK0AZC1jZFSy/WdcdjCEj5dgZOGV5/e/NjguSk5DuYX/rljtHlbsUdmCKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsiJ0IwpjCxArZAKmbF3zcnf/cZhH6QISkNn+Dc+6A7Pvlra6G
-	acH28/NciDN7WhB9D3ejgRgHAQP4x9EpoMYlOu9R8hXI+XYWclg4JNZ7FNaf9C8/JPk066lyl4A
-	E4USkWYFb6cDRSbYORu7WwD/qtMHKOIeiu3Nm/1YOIHwd34pBvvkpJAEcn3xCcYSTZQB8N4GixX
-	OHTg==
-X-Received: by 2002:a05:690c:94:b0:6e3:b8f:59d1 with SMTP id 00721157ae682-6e3224d0af8mr60086037b3.31.1728581955566;
-        Thu, 10 Oct 2024 10:39:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8aBE9VJkeXHMRogPEcBIWQ6lN2ik1TVE/v7vhFtFCpu94jsnvIVjehmWnPbzO3QVhS7jVdw==
-X-Received: by 2002:a05:690c:94:b0:6e3:b8f:59d1 with SMTP id 00721157ae682-6e3224d0af8mr60085797b3.31.1728581955283;
-        Thu, 10 Oct 2024 10:39:15 -0700 (PDT)
-Received: from fionn ([142.189.102.234])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe85b7751sm7356376d6.31.2024.10.10.10.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 10:39:14 -0700 (PDT)
-Date: Thu, 10 Oct 2024 13:39:13 -0400 (EDT)
-From: John Kacur <jkacur@redhat.com>
-To: Ben Hutchings <benh@debian.org>
-cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Subject: Re: tools/rtla: Fix installation from out-of-tree build
-In-Reply-To: <ZudubuoU_JHjPZ7w@decadent.org.uk>
-Message-ID: <5508e99b-f22e-ab01-61f0-4ae352e595d2@redhat.com>
-References: <ZudubuoU_JHjPZ7w@decadent.org.uk>
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="TnwSfC3B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1728585350; bh=eO8i66PrBt/aJfIHr67M2yWYkbNNStHt47cJJCQ8lLg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TnwSfC3B0BzzbrbBXfYCTvLzIQE1VFcC2vDoODjZOiRbhCpvxs+nfBrgLRAmHbBcp
+	 5nDkTl4JQCQ0Wy/pLIF9/vFfww5UJ7PllGdlDfCRY4FgF60cuMAONiSY28SXpZ/fah
+	 ofsTg0sJAj3lUJpCxa6onaZfbwwGyEE3F+sIl/MzmrdHNasu+qZYD2CQrQKKnIrTre
+	 jEGUntoI51WphR4XjRXlRX68PsX4ZEqW4Lig8ApC7stf8X5g23ZhKSrvK2T2Yg2D5A
+	 bDv/1YoYnX+4WK7gSe7xgNsbMfMhOH2hPirF455+QlQzq1JgcpZmps0ommzymfrvIp
+	 q2yGRxotng1Sc5OlnXZIYfIyoPLe78QPg5yomWhS/7EpKy8gm5XCv2fZL2X1/G4BTR
+	 HL2kBhQM874WRNw9Pe4sCOauh/y6zMseb5uFaaTGvb5Bwf1+uMfTKAYUXYiqB6xWHZ
+	 FMRiB8gbs1uwwHzedLTctQNTtkBO6P4IZltp+SoRTwdUBuk2Am+I+Y/c5xNGGQwcTo
+	 dfQXGkuiHFMt18pGbziRX9AoIhYRkcXuQB6IdBahXiHe06KoZakmU5fKhn5ggdgeZF
+	 sIwBjRHZR9oCPZjKzUyfzG6lTzteD6iFNQ1wWMF1seN66YAyRB45H5n//oQ2UNHpBx
+	 anTYx1ofeL2gjEtOuPaxF2ZM=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id DF155167DD7;
+	Thu, 10 Oct 2024 20:35:47 +0200 (CEST)
+Message-ID: <936057f4-e461-4977-85e7-6100127c9574@ijzerbout.nl>
+Date: Thu, 10 Oct 2024 20:35:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen
+ <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Matt Turner <mattst88@gmail.com>,
+ Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>,
+ Song Liu <song@kernel.org>, Stafford Horne <shorne@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, x86@kernel.org
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-8-rppt@kernel.org>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20241009180816.83591-8-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On Mon, 16 Sep 2024, Ben Hutchings wrote:
-
-> rtla now supports out-of-tree builds, but installation fails as it
-> still tries to install the rtla binary from the source tree.  Use the
-> existing macro $(RTLA) to refer to the binary.
-> 
-> Fixes: 01474dc706ca ("tools/rtla: Use tools/build makefiles to build rtla")
-> Signed-off-by: Ben Hutchings <benh@debian.org>
+Op 09-10-2024 om 20:08 schreef Mike Rapoport:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>
+> Using large pages to map text areas reduces iTLB pressure and improves
+> performance.
+>
+> Extend execmem_alloc() with an ability to use huge pages with ROX
+> permissions as a cache for smaller allocations.
+>
+> To populate the cache, a writable large page is allocated from vmalloc with
+> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
+> ROX.
+>
+> Portions of that large page are handed out to execmem_alloc() callers
+> without any changes to the permissions.
+>
+> When the memory is freed with execmem_free() it is invalidated again so
+> that it won't contain stale instructions.
+>
+> The cache is enabled when an architecture sets EXECMEM_ROX_CACHE flag in
+> definition of an execmem_range.
+>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > ---
-> --- a/tools/tracing/rtla/Makefile.rtla
-> +++ b/tools/tracing/rtla/Makefile.rtla
-> @@ -38,7 +38,7 @@ BINDIR		:= /usr/bin
->  .PHONY: install
->  install: doc_install
->  	@$(MKDIR) -p $(DESTDIR)$(BINDIR)
-> -	$(call QUIET_INSTALL,rtla)$(INSTALL) rtla -m 755 $(DESTDIR)$(BINDIR)
-> +	$(call QUIET_INSTALL,rtla)$(INSTALL) $(RTLA) -m 755 $(DESTDIR)$(BINDIR)
->  	@$(STRIP) $(DESTDIR)$(BINDIR)/rtla
->  	@test ! -f $(DESTDIR)$(BINDIR)/osnoise || $(RM) $(DESTDIR)$(BINDIR)/osnoise
->  	@$(LN) rtla $(DESTDIR)$(BINDIR)/osnoise
-> 
-
-Is Debian using out of tree builds Ben?
-This is upstream already which is fine, but I remember Daniel telling me 
-that he believed the distributions were no longer using out of tree builds
-and he wanted to remove this capability in order to simplify the build 
-system.
-
-John Kacur
-
+>   include/linux/execmem.h |   2 +
+>   mm/execmem.c            | 317 +++++++++++++++++++++++++++++++++++++++-
+>   mm/internal.h           |   1 +
+>   mm/vmalloc.c            |   5 +
+>   4 files changed, 320 insertions(+), 5 deletions(-)
+> [...]
+> +static void execmem_cache_clean(struct work_struct *work)
+> +{
+> +	struct maple_tree *free_areas = &execmem_cache.free_areas;
+> +	struct mutex *mutex = &execmem_cache.mutex;
+> +	MA_STATE(mas, free_areas, 0, ULONG_MAX);
+> +	void *area;
+> +
+> +	mutex_lock(mutex);
+> +	mas_for_each(&mas, area, ULONG_MAX) {
+> +		size_t size;
+> +
+No need to check for !area, because it is already guaranteed by the 
+while loop condition (mas_for_each)
+> +		if (!area)
+> +			continue;
+> +
+> +		size = mas_range_len(&mas);
+> +
+> +		if (IS_ALIGNED(size, PMD_SIZE) &&
+> +		    IS_ALIGNED(mas.index, PMD_SIZE)) {
+> +			struct vm_struct *vm = find_vm_area(area);
+> +
+> +			execmem_set_direct_map_valid(vm, true);
+> +			mas_store_gfp(&mas, NULL, GFP_KERNEL);
+> +			vfree(area);
+> +		}
+> +	}
+> +	mutex_unlock(mutex);
+> +}
+>
