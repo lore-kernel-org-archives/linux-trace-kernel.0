@@ -1,146 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAC71CC146;
-	Thu, 10 Oct 2024 15:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC25319B3D7
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 17:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728573883; cv=none; b=eGuiKwfNt5EeK2L+p3GpJvpvhjOCDQd8f2FvlFZK+oNh6Yyln98htJS7xhllkqSK96MDO4RVrPLnCQ3OODE0JJVEzvBzmprYJu0twqWeUnMj8pCVx13Gvwzcwiq1XVzh8w8FnvRojIvtjGcgpXVyMlNOh65ay4RZEsRP0EJPI2I=
+	t=1728579888; cv=none; b=uLd8yVreOZk7YdvzqweTXe2iBtJV04WMssQFAlxu9zkX4a/hx0I1F+4ZRXjmxeX7OgkQ/+dCd+dpwsSIB2viNvTxX6hoNKs/BKnaryaVmdUMQ4TiWrqFW8obVoN1KNFrTJ9d5zZ/UXJZEIifSlC7KTChYPO+QK011E62u9QXFvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728573883; c=relaxed/simple;
-	bh=gnTehr7qrLMKw/pUpKhTMaCY3tpDIt6F6aFobT96HoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jH4/QwYdMYSRHgNrkotABtQpbYoq36PP1zZrVAMHMH/BrigC0mQ3WPBRfCDGKC5uYCSHibLw6MWil3ENOwGHkkXp3Ab0iCgO/KFE4EQtoEUIjSS8aVxYFfcXRyklCG/w8YapZ65fM/iUqWy6hXh+0kxtuuILYCj6NtnWD0M86os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekagPdIZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728579888; c=relaxed/simple;
+	bh=i5dx0UhQ/tTF7VQwfxB7kDXoCRCqQDi/mml7CFO95Q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dOK4qj51MGIQ9Qx6x+gLsGbrVlNfSd7OQqcVZ9HUdTgL6aM+HD/0h01v7FHrQT97HnlIBHYb1gTgI67zP+uI+/DsPg5/jgvrmIWtYVZfZtfTOJmQgZj3akV0Lpt3XPMYOrJ+/tos9suYaAbE+rOooomX8rhC+32i8r+axAzgZTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DiY/AwjH; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekagPdIZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D86C4CEC5;
-	Thu, 10 Oct 2024 15:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728573883;
-	bh=gnTehr7qrLMKw/pUpKhTMaCY3tpDIt6F6aFobT96HoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekagPdIZxqT4SWWRuS6VjAHAzc6oWKEW/4hsSTRm4pLygcR/K/5nYo1MRhIB1W8Bi
-	 WhUInbNKfRaSZHzNuMbNo/gh/Dm11IzVkhHlBcuZvhkOJMQBELbJP+QR/GYDeVHSby
-	 +1ODj4I12HqiH5y8g34fzvrSEzf2u/HDRwYAX/nNnTn9iTEhJxcxooLVqAwIKD6FZv
-	 b3fbK7YHQj8tX05PEVkLu2GJn3pxXz8GTYW1p2sF1xOis1mXNPjG1oTG9dYByuOZVe
-	 q0nYNSfpcIxt1MrmJaX80Vmf5bsmJaexf7/nT75nIm1VGT6H7a1RxSwQLd/ELhYVan
-	 63H6TXss7XvhQ==
-Date: Thu, 10 Oct 2024 18:20:53 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: Bisected: [PATCH v5 8/8] x86/module: enable ROX caches for
- module text
-Message-ID: <Zwfw1bC-muLe6I9-@kernel.org>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-9-rppt@kernel.org>
- <20241010083033.GA1279924@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DiY/AwjH"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3a3a5cd2a3bso6316155ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Oct 2024 10:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1728579885; x=1729184685; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hUDkh/kjwV3Ai2AwiP8Kl7C0pSMOQvoqahsvYlIjyPA=;
+        b=DiY/AwjH3vRMI8RIly/8DBpdIklJc4macdRuaz7zn4YVoIczvq2qSJ2bZHOinEBign
+         dQD5AUcR9pOO7FMPC7vnLuPVvn0Px1iZBhrTp3Gtl/koseS7A79zSGy+l/lL/3xkK2yO
+         XCuRSHMmBBjlLU/bGNozV19ei8CJoBTvwoQ+M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728579885; x=1729184685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hUDkh/kjwV3Ai2AwiP8Kl7C0pSMOQvoqahsvYlIjyPA=;
+        b=QtS4xNe+Va2BUeqAOcMiTZGk3cIyDNpbKCw5FlH7GY4bzV3Yu41Oi32eUWCsbTa4dJ
+         OBX/gRlYu/pZCz9zPeg3qeJPzB3WUSw7w3chQ496CLOdd3k0SVf8pyTAZZHAwc+lyYCo
+         vi6CSq+2NI54zOxU3G41C8MbSUv5kRkusGHOlBGGqqvFDoIhiVRbVaSEiIasdhXyIW2V
+         vkTYd5aL+OJ+LHjY5i5n0zLdp18TT1odkOlfGwpt+T3e0dvsrkhai8ZZXXgBvIBMijj8
+         9LpY9kLrpbKSvzV6YLl35ItuX9zo++DFhZ2Wu7WxtfXH8QVWtb6abJ3w0f/1cKi4Tl8u
+         14Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyEbvT23bkPEtwLteL4sBtlxmRbvkUMNgQhl3GVdt7lbUB3evWRIsmY3CQjue9TtStZLTomiMm17IXLSUnZfCSbBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYWm9tbqTe23LIZMdKNT63XMoBZfNVCXP8fn/+NrCWQ/deReH7
+	9iCTnnArqpPqqPPvwvIFGIA8wiXl/4teS4yc7ShhKNammqxlZNtyff6CP2SDooY=
+X-Google-Smtp-Source: AGHT+IEmIOQmx+WWs5L52kh0YJyVZPtoP5znB1H5OJDnusEZHA3cnEBsF6SLubdvdK9UJeIt/LZ+bQ==
+X-Received: by 2002:a05:6e02:178d:b0:3a3:9337:4ce2 with SMTP id e9e14a558f8ab-3a397cda124mr63977615ab.2.1728579884706;
+        Thu, 10 Oct 2024 10:04:44 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4dbada84990sm311977173.113.2024.10.10.10.04.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Oct 2024 10:04:44 -0700 (PDT)
+Message-ID: <63a7811c-c2cb-472f-bfa1-3b45bc65da10@linuxfoundation.org>
+Date: Thu, 10 Oct 2024 11:04:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241010083033.GA1279924@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ftrace/selftest: Test combination of function_graph
+ tracer and function profiler
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20241004145618.18436d7e@gandalf.local.home>
+ <20241008093314.8b263b6bd2e23c6a8345b65f@kernel.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20241008093314.8b263b6bd2e23c6a8345b65f@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 10, 2024 at 05:30:33PM +0900, Sergey Senozhatsky wrote:
-> On (24/10/09 21:08), Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > Enable execmem's cache of PMD_SIZE'ed pages mapped as ROX for module
-> > text allocations.
-> > 
+On 10/7/24 18:33, Masami Hiramatsu (Google) wrote:
+> On Fri, 4 Oct 2024 14:56:18 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> With this modprobe disappoints kmemleak
+>> From: Steven Rostedt <rostedt@goodmis.org>
+>>
+>> Masami reported a bug when running function graph tracing then the
+>> function profiler. The following commands would cause a kernel crash:
+>>
+>>    # cd /sys/kernel/tracing/
+>>    # echo function_graph > current_tracer
+>>    # echo 1 > function_profile_enabled
+>>
+>> In that order. Create a test to test this two to make sure this does not
+>> come back as a regression.
+>>
+>> Link: https://lore.kernel.org/172398528350.293426.8347220120333730248.stgit@devnote2
+>>
 > 
-> [   12.700128] kmemleak: Found object by alias at 0xffffffffa000a000
-> [   12.702179] CPU: 5 UID: 0 PID: 410 Comm: modprobe Tainted: G                 N 6.12.0-rc2+ #760
-> [   12.704656] Tainted: [N]=TEST
-> [   12.705526] Call Trace:
-> [   12.706250]  <TASK>
-> [   12.706888]  dump_stack_lvl+0x3e/0xdb
-> [   12.707961]  __find_and_get_object+0x100/0x110
-> [   12.709256]  kmemleak_no_scan+0x2e/0xb0
-> [   12.710354]  kmemleak_load_module+0xad/0xe0
-> [   12.711557]  load_module+0x2391/0x45a0
-> [   12.712507]  __se_sys_finit_module+0x4e0/0x7a0
-> [   12.713599]  do_syscall_64+0x54/0xf0
-> [   12.714477]  ? irqentry_exit_to_user_mode+0x33/0x100
-> [   12.715696]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [   12.716931] RIP: 0033:0x7fc7af51f059
-> [   12.717816] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 8f 1d 0d 00 f7 d8 64 89 01 48
-> [   12.722324] RSP: 002b:00007ffc1d0b0c18 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> [   12.724173] RAX: ffffffffffffffda RBX: 00005618a9439b20 RCX: 00007fc7af51f059
-> [   12.725884] RDX: 0000000000000000 RSI: 000056187aea098b RDI: 0000000000000003
-> [   12.727617] RBP: 0000000000000000 R08: 0000000000000060 R09: 00005618a943af60
-> [   12.729361] R10: 0000000000000038 R11: 0000000000000246 R12: 000056187aea098b
-> [   12.731101] R13: 0000000000040000 R14: 00005618a9439ac0 R15: 0000000000000000
-> [   12.732814]  </TASK>
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Thanks!
+> 
+>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Below is a quick fix, I'll revisit module - kmemleak interaction in v6
+Steve, Would you like me take this one through my tree?
 
+thanks,
+-- Shuah
 
-diff --git a/kernel/module/debug_kmemleak.c b/kernel/module/debug_kmemleak.c
-index b4cc03842d70..df873dad049d 100644
---- a/kernel/module/debug_kmemleak.c
-+++ b/kernel/module/debug_kmemleak.c
-@@ -14,7 +14,8 @@ void kmemleak_load_module(const struct module *mod,
- {
- 	/* only scan writable, non-executable sections */
- 	for_each_mod_mem_type(type) {
--		if (type != MOD_DATA && type != MOD_INIT_DATA)
-+		if (type != MOD_DATA && type != MOD_INIT_DATA &&
-+		    !mod->mem[type].is_rox)
- 			kmemleak_no_scan(mod->mem[type].base);
- 	}
- }
-
--- 
-Sincerely yours,
-Mike.
