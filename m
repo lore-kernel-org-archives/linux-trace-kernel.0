@@ -1,79 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C318B1E3DE0;
-	Thu, 10 Oct 2024 23:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AC91E3DE0;
+	Thu, 10 Oct 2024 23:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728603615; cv=none; b=esvl3Stx9q/CaelInQ30OgSiLpCWOJAB6sAk8foHVa25ZcufAZQ3Nl05Fwr1U+1DR2QxwnAKoDYjQAXr/F4iC4UAC2DA4ue4lMkA8HN5vXCmwP7PIs6E05+5SDmqbnlFUv3Lxe/3MWfoDUYKCZP1NbvmT30RihwhNUHGZ4LQt+g=
+	t=1728603648; cv=none; b=EtkS/iCz+Urd3FjmyojymBnNE5x42vB01sJ056o8GndXY8eeaqY33dbdCl527eMasWHEzvnJIeAqt/zvrvbmbbVtYQmSw5kuwWbm5leytsDcij9UjuI6pnSEZ34Q8ublDNRQ/jlyzGPM2L/TE2MLZLEybW7MhzIIv8WC8IZUqDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728603615; c=relaxed/simple;
-	bh=dJFN72gV9RZOP4y1IjOhN9T6CcWa4weQEqUHyI2Qq+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nVhlHULqqtDBGFPKbyWkbjVPQGrRMjYvJ3KLezS0XmisEouANFwbprv1s4JqtZ+l7A2KoNPUorU+ZheO9itvmD+/u3HwM2ZDn0bw3gfgoT4z2pOcxRzgT3OZzQjArEnt8nxTsGlIz4TFbXx/DQp6PhBZBQR/rIs4lf8keJKXQxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 905B2C4CEC5;
-	Thu, 10 Oct 2024 23:40:12 +0000 (UTC)
-Date: Thu, 10 Oct 2024 19:40:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Donglin Peng <dolinux.peng@gmail.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: fgragh: No need to invoke the function call_filter_check_discard()
-Message-ID: <20241010194020.46192b21@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728603648; c=relaxed/simple;
+	bh=iGGlFY2rrvyG4+iAA/qO6ZG9WmpdD1GQIKwf3ap0s6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PenpxCQ6akFsRUAXSIBKyt4e/RAL4cEnF6j4MGidoNz8V3F/sMMgJoplsowrJ12jUjXufp5B61nanPOMHjDdo8DKV2B6lMmzJDYs/HhVWdFR439Ls5Pa+oSPMrpIIwOr3wUfHxBjhPbG+MTdsbZkSNxYXM8Cbu0aNqD7WGyyxIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KrMGFW+b; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KrMGFW+b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1728603647; x=1760139647;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iGGlFY2rrvyG4+iAA/qO6ZG9WmpdD1GQIKwf3ap0s6M=;
+  b=KrMGFW+bHOnVGqmGM4p8QhtcNx/wLAX/jantSx0cII/BMUXZnR0HouFl
+   vZ8OmT+NedOIxopQNmW5UCe7X7DYCCdZPnDTLhTU7P5d2eeqFbTreY97Q
+   TgePki+GDPmOroOzQdvkJgzTxhNbIROYB5GtfLpA+Y7UEh+ypSJGxdvYN
+   etLQJWuPfwUwb0XOoNWBd43AwG60TwptDDaMjcDTU/OeljgqzEi7JbQfQ
+   JTdP0j9M2ogikUgJpntoJ+l8lyigeD0krLiRNEj7Fl/XBkd0e1Tz6lurs
+   kFvu0S596Yg1pQzwROyIzgesbjD7yNMAbPwk7oXd8Wc2TTiFb7yz4ImvF
+   A==;
+X-CSE-ConnectionGUID: cMz3OFk7SVmErx/UvdXKaA==
+X-CSE-MsgGUID: aka81XBSSEq1A/yHq6P9+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="28081158"
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="28081158"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 16:40:46 -0700
+X-CSE-ConnectionGUID: HszBBIMRTr6Xau5a/ruJOA==
+X-CSE-MsgGUID: yugHOdlDQkiylavkANyiSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
+   d="scan'208";a="81347586"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 10 Oct 2024 16:40:39 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sz2lp-000BPx-04;
+	Thu, 10 Oct 2024 23:40:37 +0000
+Date: Fri, 11 Oct 2024 07:39:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
+Message-ID: <202410110707.OaEI6wYh-lkp@intel.com>
+References: <20241007204743.41314f1d@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241007204743.41314f1d@gandalf.local.home>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi Steven,
 
-The function call_filter_check_discard() has been removed in the
-commit 49e4154f4b16 ("tracing: Remove TRACE_EVENT_FL_FILTERED logic"),
-from another topic branch. But when merged together with commit
-21e92806d39c6 ("function_graph: Support recording and printing the
-function return address") which added another call to
-call_filter_check_discard(), it caused the build to fail. Since the
-function call_filter_check_discard() is useless, it can simply be removed
-regardless of being merged with commit 49e4154f4b16 or not.
+kernel test robot noticed the following build errors:
 
-Link: https://lore.kernel.org/all/20241010134649.43ed357c@canb.auug.org.au/
+[auto build test ERROR on next-20241004]
+[cannot apply to s390/features arm64/for-next/core powerpc/next powerpc/fixes linus/master v6.12-rc2 v6.12-rc1 v6.11 v6.12-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 21e92806d39c6 ("function_graph: Support recording and printing the function return address")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_functions_graph.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Make-ftrace_regs-abstract-from-direct-use/20241008-084930
+base:   next-20241004
+patch link:    https://lore.kernel.org/r/20241007204743.41314f1d%40gandalf.local.home
+patch subject: [PATCH] ftrace: Make ftrace_regs abstract from direct use
+config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20241011/202410110707.OaEI6wYh-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241011/202410110707.OaEI6wYh-lkp@intel.com/reproduce)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 20d0c579d3b5..03c5a0d300a5 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -137,7 +137,6 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
- 				unsigned int trace_ctx,
- 				unsigned long retaddr)
- {
--	struct trace_event_call *call = &event_fgraph_retaddr_entry;
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct fgraph_retaddr_ent_entry *entry;
-@@ -150,8 +149,7 @@ int __trace_graph_retaddr_entry(struct trace_array *tr,
- 	entry->graph_ent.func = trace->func;
- 	entry->graph_ent.depth = trace->depth;
- 	entry->graph_ent.retaddr = retaddr;
--	if (!call_filter_check_discard(call, entry, buffer, event))
--		trace_buffer_unlock_commit_nostack(buffer, event);
-+	trace_buffer_unlock_commit_nostack(buffer, event);
- 
- 	return 1;
- }
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202410110707.OaEI6wYh-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from ./arch/openrisc/include/generated/asm/ftrace.h:1,
+                    from include/linux/ftrace.h:23,
+                    from include/linux/perf_event.h:52,
+                    from include/linux/trace_events.h:10,
+                    from include/trace/syscall.h:7,
+                    from include/linux/syscalls.h:93,
+                    from init/main.c:21:
+>> include/asm-generic/ftrace.h:5: error: unterminated #ifndef
+       5 | #ifndef __ASM_GENERIC_FTRACE_H__
+
+
+vim +5 include/asm-generic/ftrace.h
+
+38f5bf84bd588a GuanXuetao 2011-01-15 @5  #ifndef __ASM_GENERIC_FTRACE_H__
+38f5bf84bd588a GuanXuetao 2011-01-15  6  #define __ASM_GENERIC_FTRACE_H__
+38f5bf84bd588a GuanXuetao 2011-01-15  7  
+
 -- 
-2.45.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
