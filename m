@@ -1,114 +1,150 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F0A1D0F68;
-	Fri, 11 Oct 2024 19:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBEF1D0486
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 19:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728675259; cv=none; b=ITlTV3U1oto4q4qCx526GEL5QMBF6XzVlI+rwA6tjCQrbFToEz5/ghvGrgibvY/6vkwOGsRVRtKqcd7f0RL93AFfmEKfzSg/cf1HFMuLODDGfdqtEkf/OSj9L+2rH3TNi/aW5t9QQ0IdrcECVM7Z/lFAF12XeChv9vo4v/R3iVo=
+	t=1728675511; cv=none; b=qSavJOTFElIWMDO/gz3owuPMiL5hw0DbYgU/z9U/ALBK90xARqAiFpHej05j2UiZUWLlcg1VGj0YxOOv0T/18YRIiqr74w5QtB5c52CNy0d929NkzHOBRd/tjzfoblDqtTPEsP0gkTvE4wHbw/UTnuYqaYZs/SsWQ1rKwsoIVWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728675259; c=relaxed/simple;
-	bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
+	s=arc-20240116; t=1728675511; c=relaxed/simple;
+	bh=lIT4MF3P08EUQ/ItxiJCyTg8JaALptzUPgWCabDCkKc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BvuDmYL3LrMo66CWXxqatVrcpVW0BN/zGflvIbHr08Jxz8iGWCsEnKWdZbg4xRp7Zm4lNx2yNrIValc6SygXFRP1AXFOG8/ItLv+1MBSPk7CMlqyDqZBUXjY79qDfTv8n0seLjN06Wbk7EruAk7EEUt8yaoAVq38xVdm9y5PeKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvzTZeps; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=nLkQDT1zO2F/LQ6ydGiTT5ggwDJTPNca3ASmq0gDtCQIhWWONqpBfdcsSroT5frzF1pEB5ytMAnqoYHPfmNmKT5SWNR051QRdgXSp8Up8Vy+Js1w2wdTJpU6wLx8v1HYHAV2rq8gexL8Q+NK83k76Cdp6xxrsPzdroqWWwh7y4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XjkjknEt; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvzTZeps"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c693b68f5so24859605ad.1;
-        Fri, 11 Oct 2024 12:34:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XjkjknEt"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4603d3e0547so40541cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 12:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728675257; x=1729280057; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728675507; x=1729280307; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
-        b=DvzTZepsNdLc7fIdGUYPJan5CoA1ooCRHkYmComRvdJUuknKc49wmVqMTZJdo2KD1g
-         IJclV31tBF4a1Dt2fxetF2PXxhjhd+jT9qwY9gLmcighaJcm/sazpcc7rQA28eAban7+
-         U0wfJIjXzne/dy207x1X36gi2zee8TPmt/3cgosrUMojs7n+ejusa5ivPEimaN5P0qpS
-         aFCJibeen+28/5T49cgWOCEvI3+70T2vVZa/hKpNbgs1tgc83wHiJ7l7C21h+fkM0Tcr
-         XHGJcpf4PjjQutCmVhJ7yr3mz4QTDF9orBhnEYvX0YLnJZr433cdItl4F25BqaD6zWQQ
-         Unkw==
+        bh=f4/PPqatSk2BAD8kUIT/38Gyd1BY7fTrP7ap/2S9Mqk=;
+        b=XjkjknEt5tftq70KCGlTHLD1Bh2BPjVE2PxpnBWMyyvy0Sp3gh+Ou2AGHu9p3dWutG
+         Ly3++jhiM30xrysorDSmgJ1/CrEZtf6ayIU3Zmwx3Vb8IUgL3FRRSfyF9Uq+Uzbj3vUN
+         u/bUYraAbm5jodAmY4pqow/Khq+dr2J2OnWFkAw+h8J7APJ1G+1llNpGccZsVYLd3rvD
+         +QBQRdyuhuBJG6aMG9ikacbC88xyvg5Opx9d5h6aw4PuP1rE87zMIrrAmpxqP3AFOGuK
+         ExS8+5YeQleDH4F25vvvICWGh0gbjOcW75+6kisVvnRm7+3uDYn2SyaicjpmO643m7Cu
+         Y50g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728675257; x=1729280057;
+        d=1e100.net; s=20230601; t=1728675507; x=1729280307;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2Bxp5SBO/hNaAA6txUfEYpCg2c3t/Jlez5bVGWr70vc=;
-        b=FcZKmyNABqCY0uDOQx6MH6gwBTttbw8y7fW7Jxdf1ekodfZwrCzC/prpzHBaJaPDOf
-         S1TMSOPFLjmzAH9vYnYhWDol3sVaG+X7F1yk8It6rlkAymBp69dhUMgqqnq9w1Kwxkkc
-         UKOLb8L45cFjb8v5GEihhwmsbXWvolkv32rWUcGGlN5ytVfsUhBxyQmxb6LXH38VKV3q
-         wFI3mS9Orl5UeAEMspH2ZfLMklqmNROoc3CSxg+bZ/AxFNbU1uuv+tMptOTusM3qKCKA
-         ZLtI7oMsGSlqsQt+oA/62pljashFZ3MbxWvp8X5POz8WhriOfIgNgOxssit4yzIE0+O2
-         LvKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkYA+kwTsA4hHJupilJIkWNnBxacW9Nt2D+Fo4Ur/i3gQPwruxQjh6vWvbfb3Q75SlwgOJmzEPZw9pbWWqTc/FMotd@vger.kernel.org, AJvYcCVC8KifKmHtDAzSRhxE4PMGxAbZRzMIfVEqK8FzG7kRsKTetF9MVpvn7Bax9CokwozB8NQiLE3+3A3rAZpu@vger.kernel.org, AJvYcCWeXtn3KiC1lHNGShcB8cOWr+cRxEgVdtiN2kuXVgFhHw4JJakcjpj/7Fiya+Den+F2MKo=@vger.kernel.org, AJvYcCWijPYK6eYejEYWK+X7oajN+sbYx16Ev/pySlBimail2jFIAUcu4T9zleSlYf+fVjjZN3muxTjBjkztrgUgGD4Dqw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp0rmceCMk0jOIF7/gI/yBjADGifaVfPxhplkWWc1kKIfKmDXk
-	31zYY09JzgSUcmFwz2J4FmIqILJgrUAd2kJjsA3XQgtSCqpfax3+l8iQle2yPLDNc4Xwom/bF6m
-	KW1qf9xAKitjFhKcVSJ+t7/r3ssY=
-X-Google-Smtp-Source: AGHT+IE2ZM5M+/QVnQkT/2SITUnPd+KQkWFrXXxbnQiWQFjfVwQ66uPXYqYvfsYfOwELDaMn5VH6AKPQvNeVlz9XfYk=
-X-Received: by 2002:a17:90a:c708:b0:2e2:b64e:f501 with SMTP id
- 98e67ed59e1d1-2e2f0d7f1fbmr4355634a91.30.1728675257506; Fri, 11 Oct 2024
- 12:34:17 -0700 (PDT)
+        bh=f4/PPqatSk2BAD8kUIT/38Gyd1BY7fTrP7ap/2S9Mqk=;
+        b=c4nTFTE/D8cnPPkaYL1ESO3WuPKsRopyaqBC28f2FjRvF2UqMQtxS0ZfgWOueqa2el
+         sWu4pf4et6kEpqVO/Vf5+q0hwc0I0Rs94QyA2wsFQil5FYrV0fzamgEKYeoLICNQ/F0n
+         LndxsTZcC49NpNLL0M6giEqs2x4U+D6yuHIL2KN8Gjcy88Zn9gWUOHACe5g+bzlQ8HSr
+         BmUZS3hZqgr2njuaUUM8IxqrG8/hKmMjgojwOIMikFjOau+6J9xnJrOxSVsJSYYUS/xL
+         XD9KnFYnW/5s8jN+Y0AbKu3VM061x3oQ6odOICHxPTm6LzUS3FXeYTLZLjrIZo6Z7B+Y
+         EZNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8FlBal6/DNapQ8WZ2s9FA+gz93xHpa7w3Hfbkw6Pv7+O75o0yli0sQ6wNnY6jiJRvslWzE+ZtX8P1v8VBZRskSxw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLhwRNQKbPQaoXnRkwAJjBA4Sc/FJXWdER06xv1wjoakwFwv6B
+	8tOO4tAh0fcU349vQ7xbvyBUa4SZCyKW1GrvaBiYiRHWuV8S4UlZXkgSzHwOSd4/RnwCoc+6X3+
+	0pVyIF4tQuwWJ2+sjl5xglQWQgY4hD7rslKBG
+X-Google-Smtp-Source: AGHT+IEJvq2uzdDh3W2Sfu5aWaK5xhLaKiCn2xWH/iIRkxgpB4FklAs+UX9kaTQ1TkS7P0dLyhTRAOjn/li4z+5WdqQ=
+X-Received: by 2002:a05:622a:468c:b0:45c:9eab:cce0 with SMTP id
+ d75a77b69052e-46059046571mr529141cf.15.1728675507274; Fri, 11 Oct 2024
+ 12:38:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815014629.2685155-1-liaochang1@huawei.com>
- <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com> <20240915151803.GD27726@redhat.com>
- <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
-In-Reply-To: <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 11 Oct 2024 12:34:05 -0700
-Message-ID: <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov <oleg@redhat.com>
+References: <20240909054318.1809580-1-almasrymina@google.com>
+ <20240909054318.1809580-11-almasrymina@google.com> <Zwe3lWTN36IUaIdd@ly-workstation>
+ <CAHS8izPuEUA20BDXvwq2vW-24ez36YFJFMQok-oBDbgk6bajSA@mail.gmail.com> <20241011082707.5de66f15@kernel.org>
+In-Reply-To: <20241011082707.5de66f15@kernel.org>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 11 Oct 2024 12:38:14 -0700
+Message-ID: <CAHS8izMVjfrYopPpmg4dN33VL7bF-icS=HFDPOhmW96rgthErg@mail.gmail.com>
+Subject: Re: [PATCH net-next v25 10/13] net: add SO_DEVMEM_DONTNEED setsockopt
+ to release RX frags
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	Magnus Karlsson <magnus.karlsson@intel.com>, 
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
+	Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
+	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>, yi1.lai@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 17, 2024 at 7:05=E2=80=AFPM Liao, Chang <liaochang1@huawei.com>=
- wrote:
+On Fri, Oct 11, 2024 at 8:27=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
-> Hi, Peter and Masami
+> On Thu, 10 Oct 2024 12:05:38 -0700 Mina Almasry wrote:
+> > diff --git a/net/core/sock.c b/net/core/sock.c
+> > index 083d438d8b6f..cb3d8b19de14 100644
+> > --- a/net/core/sock.c
+> > +++ b/net/core/sock.c
+> > @@ -1071,11 +1071,11 @@ sock_devmem_dontneed(struct sock *sk,
+> > sockptr_t optval, unsigned int optlen)
+> >             optlen > sizeof(*tokens) * MAX_DONTNEED_TOKENS)
+> >                 return -EINVAL;
+> >
+> > -       tokens =3D kvmalloc_array(optlen, sizeof(*tokens), GFP_KERNEL);
+> > +       num_tokens =3D optlen / sizeof(struct dmabuf_token);
+> > +       tokens =3D kvmalloc_array(num_tokens, sizeof(*tokens), GFP_KERN=
+EL);
+> >         if (!tokens)
+> >                 return -ENOMEM;
+> >
+> > -       num_tokens =3D optlen / sizeof(struct dmabuf_token);
+> >         if (copy_from_sockptr(tokens, optval, optlen)) {
+> >                 kvfree(tokens);
+> >                 return -EFAULT;
+> > @@ -1083,6 +1083,10 @@ sock_devmem_dontneed(struct sock *sk, sockptr_t
+> > optval, unsigned int optlen)
+> >
+> >         xa_lock_bh(&sk->sk_user_frags);
+> >         for (i =3D 0; i < num_tokens; i++) {
+> > +
+> > +               if (tokens[i].token_count > MAX_DONTNEED_TOKENS)
+> > +                       continue;
 >
-> I look forward to your inputs on these series. Andrii has proven they are
-> hepful for uprobe scalability.
+> For the real fix let's scan the tokens before we take the xa lock
+> and return an error rather than silently skipping?
 >
-> Thanks.
+> >                 for (j =3D 0; j < tokens[i].token_count; j++) {
 >
-> =E5=9C=A8 2024/9/15 23:18, Oleg Nesterov =E5=86=99=E9=81=93:
-> > Hi Liao,
-> >
-> > On 09/14, Liao, Chang wrote:
-> >>
-> >> Hi, Oleg
-> >>
-> >> Kindly ping.
-> >>
-> >> This series have been pending for a month. Is thre any issue I overloo=
-k?
-> >
-> > Well, I have already acked both patches.
-> >
-> > Please resend them to Peter/Masami, with my acks included.
-> >
 
-Hey Liao,
+Yes, sorry, I called the diff above an 'untested fix' but it was more
+of a hack to see if I got the root cause right. For a proper fix, we
+should do exactly that. Scan and see how many tokens the user is
+asking us to free ahead of time, then exit early if it's too much
+before we acquire locks and loop. Will do!
 
-I didn't see v4 from you for this patch set with Oleg's acks. Did you
-get a chance to rebase, add acks, and send the latest version?
-
-> > Oleg.
-> >
-> >
->
-> --
-> BR
-> Liao, Chang
+--=20
+Thanks,
+Mina
