@@ -1,132 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9146212623;
-	Fri, 11 Oct 2024 10:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF8D198A3F
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 10:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728643474; cv=none; b=R9nXaVSwmmhRd2Y32N81IhZx/TfNJfmkkzX+CfUiYTipwimnEceDYKkqQyUjGB7pKSwkaUuSzk6HLVYCQQYLUO7HzFYsdrK3C6VDAP8wu7K6sDCHHrvLJ6DbYnsBz+dzeCJfpOUA79aH100q9Kao6VIyNPmdMur68ifcSJsTYqE=
+	t=1728643589; cv=none; b=XtILPaw1spzprvgdrckDAuUxYNYZGsD9SM1SYbswNjdYcz6kidmGkgZ47BtfhNQ16uL5xk+s/Cn6sMIbPU1X+99KkDINFvX8kZ8QBmQ7g9sGm+GYMaO/vdYxuozbPwtRBEsMuCTLIogm3gqarm1mupQKf8MNezgMrEYRMqmMn0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728643474; c=relaxed/simple;
-	bh=aLkwNoL+Bumhk3uwLGo9YRl0ADW9V4dVzznxlZue0eM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=by5z1+hPF5q4R4kQpleb/D8hPKScypKnCyRYPnJM5RIgyA65Y1izLdvg23O6z+K/HwHtq6EFNOFNzKZcYuoz/uGqPKjnNcbqvOIOF3421vqymLfcztwU1Db20fTPDCW/m5cwAOBBBwpYTCW3Cz6mm/ioF1ae5yxYVPC0Tdnf/uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 5Qzed0R0Tzmb8OsOfJEdlw==
-X-CSE-MsgGUID: fUouArolRPCUnmxyqtrKRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="31945375"
-X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
-   d="scan'208";a="31945375"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 03:44:31 -0700
-X-CSE-ConnectionGUID: i7HRo/ZrRyqIZExO8A9FwA==
-X-CSE-MsgGUID: C8b20lxITgu7qel/zjZDuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,195,1725346800"; 
-   d="scan'208";a="77078265"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 03:44:23 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1szD86-00000001rYz-2dPC;
-	Fri, 11 Oct 2024 13:44:18 +0300
-Date: Fri, 11 Oct 2024 13:44:18 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: David Gow <davidgow@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Brendan Higgins <brendanhiggins@google.com>,
-	Rae Moar <rmoar@google.com>, Kees Cook <kees@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Brown <broonie@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Daniel Latypov <dlatypov@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	David Howells <dhowells@redhat.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
-Message-ID: <ZwkBgkthcQM7rLl7@smile.fi.intel.com>
-References: <20241011072509.3068328-2-davidgow@google.com>
- <20241011072509.3068328-5-davidgow@google.com>
+	s=arc-20240116; t=1728643589; c=relaxed/simple;
+	bh=z+hoVd7HmcKFQ/KTSjaNHnElfpGbfutvAi0O+nOwq8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=He7BO5VLmNU38MA6euigViOUVF0FB8l4ytBjqlYGzejCpqwRtrHyCwUFhXcXjZW/rcJMBGpXEQkVlEmjZj1iTiTvfLAbVnwjIwHpT7yY7WGcVX+OZG1WHUmGnnchRZ6yK+TN3ZXo64duITP6CuOwnvFw5oXJoWV/Gp5dLG58Koc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SEetEDZk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEetEDZk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728643586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z+hoVd7HmcKFQ/KTSjaNHnElfpGbfutvAi0O+nOwq8Q=;
+	b=SEetEDZknmECjNs84g2tda2hmGutCB1vK+gIJTK/8yMfHgSaxASeGihub392da+Q0ZNI8r
+	TjM2BIWpDQFPUDQ99Yzl2zRyIZ651MxPTzbKEjPKg/b3z+v4KErPGAGKjVQwp5qpaA4S4C
+	K8olNC+N/lDKL4g5pQgRMQpAm2f7gFM=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-400-x5HE5QQ0MFuFgJ6nSDPitg-1; Fri, 11 Oct 2024 06:46:25 -0400
+X-MC-Unique: x5HE5QQ0MFuFgJ6nSDPitg-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a995056fad9so140198866b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 03:46:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728643584; x=1729248384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z+hoVd7HmcKFQ/KTSjaNHnElfpGbfutvAi0O+nOwq8Q=;
+        b=urL4mj64OgNMuuC2my6/QlB5ZQiFI65ew0DSXGkVmYT8Tz+UmsxcDq32KIIp1FM5sI
+         scNCfnfzoF94E7dZrlb3CR4x9Pnspmk4mEIZu82YyK7BhrSAWi68EE3nTuXHWe8NEtw6
+         2sXfjwaf4XhzVGHEjR2Sltv3IJXF8JApJpytlST0vzDg6tw+Ze/aUGF/F8wNf/lcYWT3
+         RbCpzWPwEDEM7EB/Y7+AsDdCDtjj9Ixm4H+5yxnM5bo3bDJPFSkEQPS2MwcM7XftMmrH
+         +mdsLc0rP2quqbgeu5i1KM2ZUy1EO7IAoUM4wl8uVPeaPmqjnJTQU/E3giRzZn1+dpcA
+         FZww==
+X-Gm-Message-State: AOJu0YxLu9CsYU/5wjPEe8tWVkRBox8yi3VtiR5/nj+sfdCjRNTXYU/8
+	76d9lBXF3gwV7UX6giXtfA4URM2AW+bDIx7mK1T1gxgMMqtkrLY7iEbiv5Ac7pq8nxz5AdrLqx0
+	TtV41iV/UY8apQSkHxZKdn3rNT4maqXR1Fp48Kqph+O3CAfeTBedx/TvPoP0iq11rebyfXeDhwL
+	styEX/oQHhf+syZ4bTILX6CDjLCo9xL4kmjcR8C1+0WCtz
+X-Received: by 2002:a17:907:940c:b0:a8d:29b7:ecf3 with SMTP id a640c23a62f3a-a99b930e9d1mr174007766b.13.1728643584073;
+        Fri, 11 Oct 2024 03:46:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtGhhBlf70YMusmFyFxV2Hg8ctO2ko4xKYjA3/oDoChs6bbjyeJoZL0B/QuxqamTFe+DEMr33r9jaigl1hvCU=
+X-Received: by 2002:a17:907:940c:b0:a8d:29b7:ecf3 with SMTP id
+ a640c23a62f3a-a99b930e9d1mr174006566b.13.1728643583712; Fri, 11 Oct 2024
+ 03:46:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241011072509.3068328-5-davidgow@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20241004095014.2492813-1-tglozar@redhat.com> <20241004095014.2492813-4-tglozar@redhat.com>
+ <20241010160637.4340b269@gandalf.local.home>
+In-Reply-To: <20241010160637.4340b269@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 11 Oct 2024 12:46:12 +0200
+Message-ID: <CAP4=nvSk1ZWM5NfU1oov+P1245BRuKuSp-6M=fFQ9Xpo1EVSSg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v3 3/6] rtla/utils: Add idle state disabling via libcpupower
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jwyatt@redhat.com, jkacur@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
-> From: Kees Cook <kees@kernel.org>
-> 
-> Following from the recent KUnit file naming discussion[1], move all
-> KUnit tests in lib/ into lib/tests/.
-> 
-> Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> Acked-by: Jakub Kicinski <kuba@kernel.org>
-> Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> Reviewed-by: David Gow <davidgow@google.com>
-> [Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
-> Signed-off-by: David Gow <davidgow@google.com>
+=C4=8Dt 10. 10. 2024 v 22:06 odes=C3=ADlatel Steven Rostedt <rostedt@goodmi=
+s.org> napsal:
+>
+> If nr_states is zero, this returns 0 without ever allocating
+> saved_cpu_idle_disable_state.
+>
+>> ...
+>
+> This returns -1 even if nr_states is zero. That is,
+> save_cpu_idle_disable_state() can return success, but this restore will
+> return failure.
+>
+> -- Steve
 
->  rename lib/{ => tests}/bitfield_kunit.c (100%)
->  rename lib/{ => tests}/checksum_kunit.c (100%)
->  rename lib/{ => tests}/cmdline_kunit.c (100%)
->  rename lib/{ => tests}/cpumask_kunit.c (100%)
->  rename lib/{ => tests}/fortify_kunit.c (100%)
->  rename lib/{ => tests}/hashtable_test.c (100%)
->  rename lib/{ => tests}/is_signed_type_kunit.c (100%)
->  rename lib/{ => tests}/kunit_iov_iter.c (100%)
->  rename lib/{ => tests}/list-test.c (100%)
->  rename lib/{ => tests}/memcpy_kunit.c (100%)
->  rename lib/{ => tests}/overflow_kunit.c (100%)
->  rename lib/{ => tests}/siphash_kunit.c (100%)
->  rename lib/{ => tests}/slub_kunit.c (100%)
->  rename lib/{ => tests}/stackinit_kunit.c (100%)
->  rename lib/{ => tests}/string_helpers_kunit.c (100%)
->  rename lib/{ => tests}/string_kunit.c (100%)
->  rename lib/{ => tests}/test_bits.c (100%)
->  rename lib/{ => tests}/test_fprobe.c (100%)
->  rename lib/{ => tests}/test_hash.c (100%)
->  rename lib/{ => tests}/test_kprobes.c (100%)
->  rename lib/{ => tests}/test_linear_ranges.c (100%)
->  rename lib/{ => tests}/test_list_sort.c (100%)
->  rename lib/{ => tests}/test_sort.c (100%)
->  rename lib/{ => tests}/usercopy_kunit.c (100%)
+Oh I see: there might be no idle states to save,
+saved_cpu_idle_disable_state doesn't get allocated at all, and then
+restore_cpu_idle_disable_state behaves as the saves weren't saved
+before. Checking for nr_state should fix that; I'll send a v3.
 
-While I support the idea, I think this adds an additional churn in creating a
-duplicate 'test' in the filenames. Why they all can't be cut while removing?
-(at least this question is not answered in the commit message)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Tomas
 
