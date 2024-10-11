@@ -1,27 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404ED16F27E;
-	Fri, 11 Oct 2024 15:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69BD8002A;
+	Fri, 11 Oct 2024 16:00:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728660522; cv=none; b=sQq+r8BUh6f83NAIuVI11+cmo3XpLC2q4tkBhWn2K+6UCE66pVvoD5JCLArmuPA9D4V5CoR4JFit0PNd9mzql0AVXjiOFBIheVUxiiSPxYWvsGx1A2hX2xD6FGUKHSkaOt1P9GzEm0YLwI5qItav7emBbUj+yyVwWaKRieWXRLY=
+	t=1728662420; cv=none; b=TRKR8yUcjhyrAfKisC0Kj7Vxk4ktOjvgvYoF3QyUjVZf1FAje0g7NLlNHLIDwVPMn7oRXWR5l8J595ToRoUE12AMcoSCTeJk5jwLGzf65JUwVbZ2DuwmfIbvXu9OHcDScuzHpO+JD4LI1UqStrSpA0VGTEcSPqRmuPFq+kd4QAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728660522; c=relaxed/simple;
-	bh=qPzl/EHoC5JnTiITbzwlGp/NFQGcfPSkb0S5T3wqoy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aOEz9eWz1H2CL+ftwyKcvkVjUeIFtcfJqmUH3aL3CKg4ZQtzCDpPvzC4bdvhyMCKK5Saxv0BWNOWzmZ18DZUIfPhgpwgdx1C7+Pa0wDc4NC6xYKNzczN9sLUeQe/f1i2ZLuWD/8A1fl18KcdOLAnC1S0HJCHaWIhnf4dtja6kwA=
+	s=arc-20240116; t=1728662420; c=relaxed/simple;
+	bh=+Z0USPv7t42JmSxqVwA+aZ0L2/6J/9w7Iymbl0jaVtc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kFdAVd6N2E6hoNsKe5UkZzmV11t38B7OCWRYiXGeWVxHWK9GvhAT80FlVaJk+y+Iks6QqcoXKf0Wd/RboL32hyx6010C6HCxNVOoPB0JDfsrHA0F6Wr/QkD6Oms9IQSoBQM/M9EeFsaXlyeBVIzlKwN0yMJeaA9u/y9dE3LWRVY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AE11C4CEC3;
-	Fri, 11 Oct 2024 15:28:41 +0000 (UTC)
-Date: Fri, 11 Oct 2024 11:28:50 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE51FC4CEC3;
+	Fri, 11 Oct 2024 16:00:18 +0000 (UTC)
+Date: Fri, 11 Oct 2024 12:00:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH] ring-buffer: Synchronize ring_buffer_subbuf_order_set()
- with rb_check_pages()
-Message-ID: <20241011112850.17212b25@gandalf.local.home>
+To: syzbot <syzbot+list3bf21e6ac0139f8d008d@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mhiramat@kernel.org, syzkaller-bugs@googlegroups.com, Jens Axboe
+ <axboe@kernel.dk>, linux-block@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [syzbot] Monthly trace report (Oct 2024)
+Message-ID: <20241011120028.1e4ed71c@gandalf.local.home>
+In-Reply-To: <67094369.050a0220.4cbc0.000d.GAE@google.com>
+References: <67094369.050a0220.4cbc0.000d.GAE@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,56 +34,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 11 Oct 2024 08:25:29 -0700
+syzbot <syzbot+list3bf21e6ac0139f8d008d@syzkaller.appspotmail.com> wrote:
 
-The rb_check_pages() scans the ring buffer sub buffers to make sure they
-are valid after an update. But locks are released during the update to not
-hold preemption for too long.
+> Hello trace maintainers/developers,
+> 
+> This is a 31-day syzbot report for the trace subsystem.
+> All related reports/information can be found at:
+> https://syzkaller.appspot.com/upstream/s/trace
+> 
+> During the period, 1 new issues were detected and 0 were fixed.
+> In total, 10 issues are still open and 38 have been fixed so far.
+> 
+> Some of the still happening issues:
+> 
+> Ref Crashes Repro Title
+> <1> 34      Yes   INFO: task hung in blk_trace_ioctl (4)
+>                   https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
 
-The ring_buffer_subbuf_order_set() updates the counter used by
-rb_check_pages() without any locks. But it also updates the pages. Even
-though it is likely that the buffer->mutex is enough to protect this, but
-since rb_check_pages() uses the cpu_buffer->reader_lock for
-synchronization, take that lock as well when updating the pages and
-counter in ring_buffer_subbuf_order_set().
+If you check the maintainers file, blktrace.c has:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Note, this is based on top of:
+BLOCK LAYER
+M:      Jens Axboe <axboe@kernel.dk>
+L:      linux-block@vger.kernel.org
 
-  https://lore.kernel.org/linux-trace-kernel/20240715145141.5528-1-petr.pavlu@suse.com/
 
- kernel/trace/ring_buffer.c | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 696d422d5b35..0672df07b599 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6774,6 +6774,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	}
- 
- 	for_each_buffer_cpu(buffer, cpu) {
-+		unsigned long flags;
- 
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			continue;
-@@ -6800,11 +6801,15 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 						     struct buffer_page, list);
- 		list_del_init(&cpu_buffer->reader_page->list);
- 
-+		/* Synchronize with rb_check_pages() */
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+
- 		/* The cpu_buffer pages are a link list with no head */
- 		cpu_buffer->pages = cpu_buffer->new_pages.next;
- 		cpu_buffer->new_pages.next->prev = cpu_buffer->new_pages.prev;
- 		cpu_buffer->new_pages.prev->next = cpu_buffer->new_pages.next;
- 		cpu_buffer->cnt++;
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
- 		/* Clear the new_pages list */
- 		INIT_LIST_HEAD(&cpu_buffer->new_pages);
--- 
-2.45.2
+> <2> 32      Yes   WARNING in bpf_get_stack_raw_tp
+>                   https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+
+bpf_trace.c has:
+
+M:      Alexei Starovoitov <ast@kernel.org>
+M:      Daniel Borkmann <daniel@iogearbox.net>
+M:      Andrii Nakryiko <andrii@kernel.org>
+R:      Martin KaFai Lau <martin.lau@linux.dev>
+R:      Eduard Zingerman <eddyz87@gmail.com>
+R:      Song Liu <song@kernel.org>
+R:      Yonghong Song <yonghong.song@linux.dev>
+R:      John Fastabend <john.fastabend@gmail.com>
+R:      KP Singh <kpsingh@kernel.org>
+R:      Stanislav Fomichev <sdf@fomichev.me>
+R:      Hao Luo <haoluo@google.com>
+R:      Jiri Olsa <jolsa@kernel.org>
+L:      bpf@vger.kernel.org
+
+> <3> 13      Yes   WARNING in get_probe_ref
+>                   https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+> <4> 6       Yes   INFO: task hung in blk_trace_remove (2)
+>                   https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+> <5> 4       Yes   possible deadlock in __mod_timer (4)
+>                   https://syzkaller.appspot.com/bug?extid=83a876aef81c9a485ae8
+
+None of these look like they are tracing infrastructure related.
+
+-- Steve
+
+
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> To disable reminders for individual bugs, reply with the following command:
+> #syz set <Ref> no-reminders
+> 
+> To change bug's subsystems, reply with:
+> #syz set <Ref> subsystems: new-subsystem
+> 
+> You may send multiple commands in a single email message.
 
