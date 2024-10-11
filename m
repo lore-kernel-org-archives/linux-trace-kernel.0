@@ -1,119 +1,139 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FF1D1503
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 21:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEAE1D0E2B
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 21:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728681990; cv=none; b=Enm9ARPVzBahplIR/Y0vefMyEFTEqpd2m9raa+hckQfNvcHH5T6oPJTI90vmtzw3NqqNLqWtzQF2Obqs2ClGsoyoSqeJY3bQK6NQyj1jfElRy4YOahYGc9DmPjc4gtw4rAEgtAr/rkVSR3P4Kr/uhfJaneOuIiaIn5RzEBjnXjA=
+	t=1728683970; cv=none; b=bAnE1iedD2haToQmVhBf7ainFzD4v3tMBAX5QSwCDecdrKER8P0B9yVLPNBaWsS6my0tYs/m/pet8HKLuTD8dxONqfppYE5Y5KG/yB+Zh7K7atgr1qa072fDLz9qkasljxQ8wjhZfJ5OK87+K+AgErYvyIWDmPxtqWIsi2unYc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728681990; c=relaxed/simple;
-	bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+	s=arc-20240116; t=1728683970; c=relaxed/simple;
+	bh=L3zF4Rcc2RuIq/gLEbQW4A7mBM+oakBixRF5GSvBQBY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BRcJTtjvw31HGwnoIk0KLEYohTPl6J/tS34W2odC2UR9X5IJ56SBFWya3FqX5LCB4B2W26iMlUk0pq9cj9+qxKAe1bQaDhOux9qT08KzCRel23HtssBYljOvmoeWs14UoGRZvUmSU5AJEpF/Uhtwk80KVnOUR1EU/4dFksm7dUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U0ZN+L8u; arc=none smtp.client-ip=209.85.160.175
+	 To:Cc:Content-Type; b=Mm/ddaI9uCYuDPUePm2VNeLS5x/HSuICYiMW/RB5o/fHCgc54e7RAxxWec2INT+kFN9WJjv5oqTsvQfPeDxKL9AzPf1Og2risLFAuSWOE0wq4oLd9OvQXtX3m8MGkDGJQn+j+IFpLlWCl1DxlznFMfS2JWIFm2CcuEPTQkTuJgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=anPUP/G1; arc=none smtp.client-ip=209.85.217.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U0ZN+L8u"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-460395fb1acso71261cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 14:26:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="anPUP/G1"
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4a3b97cfbf8so887065137.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 14:59:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728681988; x=1729286788; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1728683968; x=1729288768; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
-        b=U0ZN+L8uihImO99bgGJbn6H8ka1Xgw5xwf6XJMARnqwI73Wdn0fvNXQPqzNTPakdbY
-         Rug+GWKtl+e00Xd5ELfRFvMEe+RR9CAKng/cvtr+IXqp7gqHfI0UCswCfej9Rykd9SK0
-         UqNXJ0qQdOLxuAXoB2owh3RcdawxR2D1dJrepWqKdrHwctO/Zy7RnMHyIIdZHrZHV7+n
-         92HwxlivEHuM4LCAyv3lk8JnTX69ULmtrL3sZrrB3vbBDKLDJnfB07RjFlllY//9lu11
-         011pnrmu00wm0EV0Tao2bpXNMTuoiQDqDBmpqXTn4nyijBRzj8pjh9Hoo2TRREqOJ8zz
-         2vOA==
+        bh=7k7VDDT1YUOyH2lMqiN1RCUHYbTDQjQw36x/4vj46K8=;
+        b=anPUP/G1wfNi5G4oFSdiztYlYQjjYQhw5VLURh4DvweFzHa/7gP3ZHmOqdp4a1Yn6v
+         59o3lhCSJFXkhd0m2jAUfdMgpblAZr9HC4RyIrwqMcshPjUpUS4icTWwo4H+fup2F55Y
+         t/5GbCeU5p8Lr65vFeS2PYJKmOZtbuSE8XsSqtRWpHkpONGWTdytnmun+u20jNI6BhXC
+         T21dNmC3CxUhQxgpFSGMg1WFWu2tEjK8HYkBaaSJMMK74/GteOApFmxZHNVAs7lDHMJr
+         YjBttKK2DVPUQYzuU2o61lpmMneTA4ukiIZ6HfvV+nWue20Zh1h6M0ryJp6BoDnafSex
+         ATqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728681988; x=1729286788;
+        d=1e100.net; s=20230601; t=1728683968; x=1729288768;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
-        b=Nq8IM2ovH0EX0V7JdW80wWNJ/33YrbrcWxyKeDG+1cHTIJ9kIbyEsBJciQ9/K7ru/f
-         lOpNE/9HISXKmqBbQmcL3+72BAkdOEwpsS5anJqLCUZBlx0pvwby/WQhxEp+OLvoUH75
-         2QxttImXhwyBYmJGpz/sCO0+rz6p1ffFiF2jVoOrJfDhmHbM55Kq6E8ETUWcS6kjTJqc
-         yi66Hob8npRU37JDicteqMqZqR3ctWg0S8IpUk9UYcs8RmPerpngp7Q5XordK2Kd7oI1
-         BtvIDGFDPSfIjYZIg+ay918ZWcgrPNCS/j8Ll5u+XrsW68+Dhn1vp4E47L3nVu1nNdsT
-         UY5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWULTD5FT7vpepi+hM8Vz2s/pl/z1rAoJ1PjcAanhYLVOHD/aCqIUgkFBlEIwatOEOdCksZnX8jhL3oyPOZyw3zhz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz140OINp72J2YgLd+MKtz45JOPEbK909FriOJjDHjGOf5QuTHJ
-	9YftD4ViR7jNWaFNPdlel/6IsRCPr6dZ1Z2AjQhDULuELyTR6ftau3Z1wbLeWk1ZNernYNXiqdr
-	FHmzUY6bbWb30UW9TxcIQdPVhXfhb073QO2R/
-X-Google-Smtp-Source: AGHT+IEKEmVjWoOqBswBr3NiTYKK5Z9SghdMPP5nc66QbnU8P8zaScBXP/19wKkNBoIcY46P8FQCMYQuouKvAahW2eQ=
-X-Received: by 2002:a05:622a:a60d:b0:460:48fc:3cd8 with SMTP id
- d75a77b69052e-46059bf45e5mr189701cf.5.1728681987767; Fri, 11 Oct 2024
- 14:26:27 -0700 (PDT)
+        bh=7k7VDDT1YUOyH2lMqiN1RCUHYbTDQjQw36x/4vj46K8=;
+        b=kzbZnrngEZZPi1zlQuMjnRhJcj8nwVr5JbUBP6wf3r5IByBgs8HFA5unQXFs3/4DtK
+         /rT+UeZtrC+qeYfWdQrx3/RSZZfsPE8bhEwDeY4Z5vX/Vqen2PLU//CFvAHwedafgRwg
+         TXJ7kMXl6VNS9cqU5sMIN48pPyt9JOBCpz6HFPY/e4qSrLSkqSaQu28cONQ/SfGwtGPI
+         D1t9+f/Ht9qZWxp6tjc6V2lHCMtmREiYzXBjsc1z+Hn4UG+FnPbfsibDq68LsffxTdyZ
+         ojwVVzRgBiV808l43jGzw4oGY64arR0Vl2kn5oswOnkjw9Yu9lYVptOTmsH5whOvKP57
+         t6Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCXO13r9NWo6Lc0hG3OM8EjtCAO5lgcUw7iis1VZBtCMOif/D0cKNfA9a8l9wGi0yR/vIe1YL29l9zy2eFdXHy9i0AI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/asGlwozzU9Mq6Emvf9MXKP2NAAlNl0F/d6ZFT8hPS41YzPPh
+	H8TCWMO7+04u/t3WgAIzg2wfv9Kc8h+ukru+owvJIxz/vX2gOGczin/IT89zB9vqeqDf7bvO108
+	q/sBYpyqV7WwgDgqRhOiVH6l/deoCaYIg5LqO
+X-Google-Smtp-Source: AGHT+IGtoLDRR+ZP2gKCjdPIyccQzAfSiQwzBOLIFIB8MF3Yp2GP8aKxafdurozbqAky4MiDKCwSpTVZPXNFO35cEsg=
+X-Received: by 2002:a05:6102:1620:b0:49b:cfbc:63ac with SMTP id
+ ada2fe7eead31-4a475f04481mr1020027137.6.1728683967980; Fri, 11 Oct 2024
+ 14:59:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
- <20241011-tracepoint-v10-1-7fbde4d6b525@google.com> <20241011131316.5d6e5d10@eugeo>
- <CABCJKuesYQWvfScFaqv_rW5ZqAJNn4zK9iOFAmyTaYKO3S5hgw@mail.gmail.com>
- <20241011171251.0bd53f01@eugeo> <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
- <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
-In-Reply-To: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Fri, 11 Oct 2024 14:25:49 -0700
-Message-ID: <CABCJKuduZJ4aogg4A6idcMAPMa2N0d4f9aJgbR8HL0YEyTONmA@mail.gmail.com>
-Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for static_key_false
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
-	linux-arm-kernel@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
-	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+References: <20240930-strncpy-kernel-trace-trace_events_filter-c-v1-1-feed30820b83@google.com>
+ <20241008211257.6c9c9f88@rorschach.local.home>
+In-Reply-To: <20241008211257.6c9c9f88@rorschach.local.home>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 11 Oct 2024 14:59:16 -0700
+Message-ID: <CAFhGd8pGaMxXpsk5gMS98223FW5wq-vQPyt1srVCrP_Fg6Ex9g@mail.gmail.com>
+Subject: Re: [PATCH] tracing: replace multiple deprecated strncpy with strscpy
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 12:48=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
+On Tue, Oct 8, 2024 at 6:13=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
-> On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@googl=
-e.com> wrote:
-> >
-> > It's just one line per helper, but sure, I do see your point.
+> So this breaks my tests. This is why I have trouble with taking changes
+> like this :-(
+
+Shoot.
+
+I think deprecated API cleanups are important but creating more bugs
+in the process is not helping anybody. I dropped the ball here... my
+patch has an off-by-one.
+
 >
-> I guess we will have a lot of helpers added over time, so even if it
-> is one line, it may end up being a lot of lines in total. The rules
-> should stay constant, which would be better. Having said that, it is
-> true the extra complexity of the rules isn't great either.
+> Before this patch, his worked:
+>
+>  # echo 'common_pid !=3D 0 && common_pid !=3D 120 && common_pid !=3D 1253=
+ && common_pid !=3D 17 && common_pid !=3D 394 && common_pid !=3D 81 && comm=
+on_pid !=3D 87' > /sys/kernel/tracing/events/sched/sched_switch/filter
 
-My only concern is that custom C build rules must be kept in sync with
-Makefile.build changes, while EXPORT_SYMBOL lines should be basically
-maintenance-free. However, perhaps this isn't really an issue since
-most of the complexity is already contained in rule_cc_o_c that we can
-conveniently reuse. Anyway, I think this is something we can worry
-about later if we actually run into problems. I was mostly interested
-in the reasoning behind these changes.
+Thanks for providing the test case, this made triaging dead simple.
 
-Sami
+>
+> But now it gives an error of:
+>
+>  -bash: echo: write error: Invalid argument
+>
+> I have to drop this.
+
+In many cases where folks are doing 1) strncpy and 2) manual NUL-byte
+assignment, the clear replacement is strscpy. However most of those
+cases look like this:
+
+  strncpy(dst, src, len);
+  dst[len-1] =3D '\0';
+
+and this case was just
+
+  strncpy(dst, src, len);
+  dst[len] =3D '\0';
+
+Since we have an explicit size check before the first copy, ensuring
+@len doesn't overflow @dst, this code is fine but I missed the
+off-by-one.
+
+So, assuming I haven't lost your faith, I can send a v2 along the lines of:
+
+1)
+  strscpy(num_buf, str + s, len + 1);
+
+  ... or
+2)
+  memcpy(num_buf, str + s, len);
+  num_buf[len] =3D 0;
+
+And if you're wondering about option 3: "Don't change anything because
+the code works". I'd reiterate that I think it's important to replace
+bad ambiguous APIs. There are many cases where folks use strncpy() as
+a glorified memcpy because they want the padding behavior, or they use
+it on non-null terminated destinations or tons of other "misuses".
+Ambiguous code like that poses a real danger to the maintainability of
+the codebase and opens threat vectors.
+
+>
+> -- Steve
+
+Thanks
+Justin
