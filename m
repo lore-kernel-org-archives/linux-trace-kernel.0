@@ -1,72 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B077199231;
-	Fri, 11 Oct 2024 20:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FF1D1503
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 21:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728679935; cv=none; b=hJHK1BcT6QruKTTzMpe1anXl7aJ5PQDf1McaEnKwA+BkhQ1L6yWpVIOr2PM9xD6N/kbZ4N5znSZ18OHUpgschka33IZH+IgZIJuvW9klISirMJ+m7K2+mC6dSz+n96fAfO1FqPA5kyj2SXCl8bGZyPTySYGYb9Hzgi6NpGny+SM=
+	t=1728681990; cv=none; b=Enm9ARPVzBahplIR/Y0vefMyEFTEqpd2m9raa+hckQfNvcHH5T6oPJTI90vmtzw3NqqNLqWtzQF2Obqs2ClGsoyoSqeJY3bQK6NQyj1jfElRy4YOahYGc9DmPjc4gtw4rAEgtAr/rkVSR3P4Kr/uhfJaneOuIiaIn5RzEBjnXjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728679935; c=relaxed/simple;
-	bh=/mEtVoE39iP2Qc58gy8XZrokqEhMtz0bKnzSQsjF+j4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kWXPXVQcgFt59vP4kDKAQje3ELE++i1CE2S1vkqWjljjG/GSf2rqstsqapHuZAmZhjgA4Zq3ZKsOxO52H5qGHA/nLBRyYE1d+qtuRSxgZ7WTPmJhbfmxgbFmIdKDLcT/PdkZYKb4A8JM972XVIqZNyPVr++9WQkBnM9XfIekE5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C89AC4CEC3;
-	Fri, 11 Oct 2024 20:52:14 +0000 (UTC)
-Date: Fri, 11 Oct 2024 16:52:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ring-buffer: Fix refcount setting of boot mapped buffers
-Message-ID: <20241011165224.33dd2624@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728681990; c=relaxed/simple;
+	bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BRcJTtjvw31HGwnoIk0KLEYohTPl6J/tS34W2odC2UR9X5IJ56SBFWya3FqX5LCB4B2W26iMlUk0pq9cj9+qxKAe1bQaDhOux9qT08KzCRel23HtssBYljOvmoeWs14UoGRZvUmSU5AJEpF/Uhtwk80KVnOUR1EU/4dFksm7dUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U0ZN+L8u; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U0ZN+L8u"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-460395fb1acso71261cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 14:26:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728681988; x=1729286788; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+        b=U0ZN+L8uihImO99bgGJbn6H8ka1Xgw5xwf6XJMARnqwI73Wdn0fvNXQPqzNTPakdbY
+         Rug+GWKtl+e00Xd5ELfRFvMEe+RR9CAKng/cvtr+IXqp7gqHfI0UCswCfej9Rykd9SK0
+         UqNXJ0qQdOLxuAXoB2owh3RcdawxR2D1dJrepWqKdrHwctO/Zy7RnMHyIIdZHrZHV7+n
+         92HwxlivEHuM4LCAyv3lk8JnTX69ULmtrL3sZrrB3vbBDKLDJnfB07RjFlllY//9lu11
+         011pnrmu00wm0EV0Tao2bpXNMTuoiQDqDBmpqXTn4nyijBRzj8pjh9Hoo2TRREqOJ8zz
+         2vOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728681988; x=1729286788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ka+AjjRuR/G5QQKRrwr0FE8Ey+JDrFkkvTACYvoWcLM=;
+        b=Nq8IM2ovH0EX0V7JdW80wWNJ/33YrbrcWxyKeDG+1cHTIJ9kIbyEsBJciQ9/K7ru/f
+         lOpNE/9HISXKmqBbQmcL3+72BAkdOEwpsS5anJqLCUZBlx0pvwby/WQhxEp+OLvoUH75
+         2QxttImXhwyBYmJGpz/sCO0+rz6p1ffFiF2jVoOrJfDhmHbM55Kq6E8ETUWcS6kjTJqc
+         yi66Hob8npRU37JDicteqMqZqR3ctWg0S8IpUk9UYcs8RmPerpngp7Q5XordK2Kd7oI1
+         BtvIDGFDPSfIjYZIg+ay918ZWcgrPNCS/j8Ll5u+XrsW68+Dhn1vp4E47L3nVu1nNdsT
+         UY5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWULTD5FT7vpepi+hM8Vz2s/pl/z1rAoJ1PjcAanhYLVOHD/aCqIUgkFBlEIwatOEOdCksZnX8jhL3oyPOZyw3zhz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz140OINp72J2YgLd+MKtz45JOPEbK909FriOJjDHjGOf5QuTHJ
+	9YftD4ViR7jNWaFNPdlel/6IsRCPr6dZ1Z2AjQhDULuELyTR6ftau3Z1wbLeWk1ZNernYNXiqdr
+	FHmzUY6bbWb30UW9TxcIQdPVhXfhb073QO2R/
+X-Google-Smtp-Source: AGHT+IEKEmVjWoOqBswBr3NiTYKK5Z9SghdMPP5nc66QbnU8P8zaScBXP/19wKkNBoIcY46P8FQCMYQuouKvAahW2eQ=
+X-Received: by 2002:a05:622a:a60d:b0:460:48fc:3cd8 with SMTP id
+ d75a77b69052e-46059bf45e5mr189701cf.5.1728681987767; Fri, 11 Oct 2024
+ 14:26:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
+ <20241011-tracepoint-v10-1-7fbde4d6b525@google.com> <20241011131316.5d6e5d10@eugeo>
+ <CABCJKuesYQWvfScFaqv_rW5ZqAJNn4zK9iOFAmyTaYKO3S5hgw@mail.gmail.com>
+ <20241011171251.0bd53f01@eugeo> <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
+ <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+In-Reply-To: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+From: Sami Tolvanen <samitolvanen@google.com>
+Date: Fri, 11 Oct 2024 14:25:49 -0700
+Message-ID: <CABCJKuduZJ4aogg4A6idcMAPMa2N0d4f9aJgbR8HL0YEyTONmA@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for static_key_false
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, Oct 11, 2024 at 12:48=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@googl=
+e.com> wrote:
+> >
+> > It's just one line per helper, but sure, I do see your point.
+>
+> I guess we will have a lot of helpers added over time, so even if it
+> is one line, it may end up being a lot of lines in total. The rules
+> should stay constant, which would be better. Having said that, it is
+> true the extra complexity of the rules isn't great either.
 
-A ring buffer which has its buffered mapped at boot up to fixed memory
-should not be freed. Other buffers can be. The ref counting setup was
-wrong for both. It made the not mapped buffers ref count have zero, and the
-boot mapped buffer a ref count of 1. But an normally allocated buffer
-should be 1, where it can be removed.
+My only concern is that custom C build rules must be kept in sync with
+Makefile.build changes, while EXPORT_SYMBOL lines should be basically
+maintenance-free. However, perhaps this isn't really an issue since
+most of the complexity is already contained in rule_cc_o_c that we can
+conveniently reuse. Anyway, I think this is something we can worry
+about later if we actually run into problems. I was mostly interested
+in the reasoning behind these changes.
 
-Keep the ref count of a normal boot buffer with its setup ref count (do
-not decrement it), and increment the fixed memory boot mapped buffer's ref
-count.
-
-Fixes: e645535a954ad ("tracing: Add option to use memmapped memory for trace boot instance")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c01375adc471..5ba40f39c8b5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10610,10 +10610,10 @@ __init static void enable_instances(void)
- 		 * cannot be deleted by user space, so keep the reference
- 		 * to it.
- 		 */
--		if (start)
-+		if (start) {
- 			tr->flags |= TRACE_ARRAY_FL_BOOT;
--		else
--			trace_array_put(tr);
-+			tr->ref++;
-+		}
- 
- 		while ((tok = strsep(&curr_str, ","))) {
- 			early_enable_events(tr, tok, true);
--- 
-2.45.2
-
+Sami
