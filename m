@@ -1,145 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B892141C8;
-	Fri, 11 Oct 2024 13:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2954431;
+	Fri, 11 Oct 2024 14:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728655052; cv=none; b=NAM1ZA/4ak+OVBxUhy9Zd5cYJJncfjoeTD04E5UpjUpCJqvD1TEXl5lX+xq3buSUxaiZ+J895t9NiEVB22dn5dTQw5g7+99HchK5uxHUNrHRc4XZ2JmxvzjDtsfZnJlXELLppduHP7ghK6nq0y83pXxi8O9+5d1zgneJjl4orrw=
+	t=1728655284; cv=none; b=fOGp4gQJHMq+KBVxVidIs/H/ppbzzojXktwBJkFhGC05H2qXQD3PmhUHZGU1GmEVE4JxWUQRbuF9LX/wCdPQY15AwFklpr2yT0KToJG1S4XeHWGW9QPbyZpRnJMhTvguT00FtXfve0CvF9TlyzNHDE8vkc8CDp3wlh18c3p7Q1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728655052; c=relaxed/simple;
-	bh=FlqDCnWuL4KNQhR+h6uUEKDEhbwcTxPaUFOaJyJ6vok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZsrSC07SD16AKKvSyWgRIJndvsCDBfd8BMg4jzPZCERMFVPHeo2GTHFtwqwPERrzB5qOAcs04ZRvdcUkMSWXkB8FnQNNS9eIB6nHz42fphr9LeHWdqm2AvyCUFyMwUfUNjAVhuanxm1ykF+63LWUV8sz5nQ8Oe3CR79gRIvJzpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: pNCWxJ7TSm69TECq9dWJWQ==
-X-CSE-MsgGUID: +fhCADBgT/6dYiFP86g8GQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="28003221"
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="28003221"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:57:30 -0700
-X-CSE-ConnectionGUID: 4cV1aK6qSp6BUgLfnhSevw==
-X-CSE-MsgGUID: aMc7/KfQQemJwd0eoRBBcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,196,1725346800"; 
-   d="scan'208";a="81533277"
-Received: from smile.fi.intel.com ([10.237.72.154])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2024 06:57:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1szG8r-00000001uQy-0nOd;
-	Fri, 11 Oct 2024 16:57:17 +0300
-Date: Fri, 11 Oct 2024 16:57:16 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: David Gow <davidgow@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Brendan Higgins <brendanhiggins@google.com>,
-	Rae Moar <rmoar@google.com>, Kees Cook <kees@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Brown <broonie@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Daniel Latypov <dlatypov@google.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	David Howells <dhowells@redhat.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Fangrui Song <maskray@google.com>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
-Message-ID: <ZwkuvKogPuik90fN@smile.fi.intel.com>
-References: <20241011072509.3068328-2-davidgow@google.com>
- <20241011072509.3068328-5-davidgow@google.com>
- <ZwkBgkthcQM7rLl7@smile.fi.intel.com>
- <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
+	s=arc-20240116; t=1728655284; c=relaxed/simple;
+	bh=Iwpl98h1V5EgQRGx6yjRbC4ERp0lCtfsNEnt5QdUewM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZzOfpeQZnt78rZ2jtgUv0QXTSy96R10T14CfqwY+mpOwVbBcrdbkHZ0aeFvUIfG62Z5uNUdM5ZwNk/73yaLzcS+shp5Ycn8bQyNQWHlGQxXbHLb77rez2ie6Y4jIWZ8daWTvIjdPTnC9u5CTSyc3PQIUjTqJzVsfPr35SLIuLl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C6CC4CEC3;
+	Fri, 11 Oct 2024 14:01:23 +0000 (UTC)
+Date: Fri, 11 Oct 2024 10:01:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Have the buffer update counter be atomic
+Message-ID: <20241011100132.456f903a@gandalf.local.home>
+In-Reply-To: <1924e096-916a-4311-a3d5-07d3813f50da@suse.com>
+References: <20241010195849.2f77cc3f@gandalf.local.home>
+	<1924e096-916a-4311-a3d5-07d3813f50da@suse.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
-> Hi Andy,
+On Fri, 11 Oct 2024 10:05:51 +0200
+Petr Pavlu <petr.pavlu@suse.com> wrote:
+
+> On 10/11/24 01:58, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > In order to prevent any subtle races with the buffer update counter,
+> > change it to an atomic_t. Also, since atomic_t is 32 bits, move its
+> > location in the ring_buffer_per_cpu structure next to "current_context" as
+> > that too is only 32 bits (making 64 bit alignment).
+> > 
+> > The counter is only used to detect that the buffer has been updated when
+> > the buffer verifier check is being done. It's not really that important
+> > that it's atomic or not. But since the updates to the counter are never in
+> > the fast path, having it be consistent isn't a bad thing.
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> > Note, this is based on top of:
+> > 
+> >   https://lore.kernel.org/linux-trace-kernel/20240715145141.5528-1-petr.pavlu@suse.com/  
 > 
-> On Fri, Oct 11, 2024 at 12:44 PM Andy Shevchenko <andy@kernel.org> wrote:
-> > On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
-> > > From: Kees Cook <kees@kernel.org>
-> > >
-> > > Following from the recent KUnit file naming discussion[1], move all
-> > > KUnit tests in lib/ into lib/tests/.
-> > >
-> > > Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
-> > > Signed-off-by: Kees Cook <kees@kernel.org>
-> > > Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > > Acked-by: Jakub Kicinski <kuba@kernel.org>
-> > > Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> > > Reviewed-by: David Gow <davidgow@google.com>
-> > > [Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
-> > > Signed-off-by: David Gow <davidgow@google.com>
-> >
-> > >  rename lib/{ => tests}/bitfield_kunit.c (100%)
-> > >  rename lib/{ => tests}/checksum_kunit.c (100%)
-> > >  rename lib/{ => tests}/cmdline_kunit.c (100%)
-> > >  rename lib/{ => tests}/cpumask_kunit.c (100%)
-> > >  rename lib/{ => tests}/fortify_kunit.c (100%)
-> > >  rename lib/{ => tests}/hashtable_test.c (100%)
-> > >  rename lib/{ => tests}/is_signed_type_kunit.c (100%)
-> > >  rename lib/{ => tests}/kunit_iov_iter.c (100%)
-> > >  rename lib/{ => tests}/list-test.c (100%)
-> > >  rename lib/{ => tests}/memcpy_kunit.c (100%)
-> > >  rename lib/{ => tests}/overflow_kunit.c (100%)
-> > >  rename lib/{ => tests}/siphash_kunit.c (100%)
-> > >  rename lib/{ => tests}/slub_kunit.c (100%)
-> > >  rename lib/{ => tests}/stackinit_kunit.c (100%)
-> > >  rename lib/{ => tests}/string_helpers_kunit.c (100%)
-> > >  rename lib/{ => tests}/string_kunit.c (100%)
-> > >  rename lib/{ => tests}/test_bits.c (100%)
-> > >  rename lib/{ => tests}/test_fprobe.c (100%)
-> > >  rename lib/{ => tests}/test_hash.c (100%)
-> > >  rename lib/{ => tests}/test_kprobes.c (100%)
-> > >  rename lib/{ => tests}/test_linear_ranges.c (100%)
-> > >  rename lib/{ => tests}/test_list_sort.c (100%)
-> > >  rename lib/{ => tests}/test_sort.c (100%)
-> > >  rename lib/{ => tests}/usercopy_kunit.c (100%)
-> >
-> > While I support the idea, I think this adds an additional churn in creating a
-> > duplicate 'test' in the filenames. Why they all can't be cut while removing?
-> > (at least this question is not answered in the commit message)
+> Sorry for not replying to your last comment on my patch, I was ill.
 > 
-> To avoid duplicate *.ko file names?
+> The member ring_buffer_per_cpu.cnt is intended to be accessed under the
+> reader_lock, same as the pages pointer which it is tied to, so this
+> change shouldn't be strictly needed.
+> 
 
-With what? Sorry, but I don't see how it's a problem. These are test cases.
-Do they use kernel command line parameters? If so, shouldn't KUnit take care
-about it in a more proper way?
+Right, but there was one location that the cnt was updated outside the
+lock. The one I commented on. But instead of adding a lock around it, I
+decided to just make it an atomic. Then there would be no need for the
+lock. Hmm, it still needs a memory barrier though. At least a
+smp_mb__after_atomic().
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-- Steve
