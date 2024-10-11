@@ -1,60 +1,81 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0329720A5D5
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 08:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12A820C46C;
+	Fri, 11 Oct 2024 09:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728633956; cv=none; b=FHbq1tlM7oDZVK2DgjDd0kohBwsxzz9Zt3ZoI1X0EVot/F1HmT8y7UeuENnAX1KM+xkMZw5DGdSdIWt+eMR8p1SaJJg4pguzDKOI0woCrrb9C1gy7HS5Ax9GpAqwQA82eSkQ2LMDUlgaAceQ1XvTwtyjhtC39er9FKv0UazxwQU=
+	t=1728638101; cv=none; b=fu51cCwrn1HwJ0eXjIMxG2sqcvAN8aQTVQnukGV4s+eV3kGUi185RvTrh6gnb4zhDPKCRE1946k0LqgEvSQp0DyDWzNSbIyfnpIyzLO8sIP/Mvv+Q9RcxGVyoPkpAV7gXAsDw+GdrzhKvw4J2UjSRBisNQQe7BIgFm09FZ9+nfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728633956; c=relaxed/simple;
-	bh=3tOQwfdhHnMP0MSS6J7QSkSN09vNrNJKNrPT5TcaSDs=;
+	s=arc-20240116; t=1728638101; c=relaxed/simple;
+	bh=nEMm5LqG4HAtAJOD8nzaXUqC7qSrkcmnjCEnbWGzWGs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sS+FC19BvGpEb7JRPixpySQD8V0wrL6UBrsGtPEaNb9PCkTIyS05nc1vLniM5W7dvAm2BT1vWoSwGILgA4IKtxuVfW1e8lQ/nfVRFQTIXHLG4KuICJMV2adT1wsW1atbM1flDj9P+5ileq6Uv1qL5uEqa1t67kZBoeA2LzcnB4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=B9xPUWXA; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=N0gTiOsfMkjtk0f5kJI1B1HtrJq/fOy3+gw6zFkVbJLfQ9MWfJNqVXTWOy7h2ZV2lYWZ21UevQArklQWyMVlCiFnLDF8ocCDa2yG+mGLx6/fha/nrtUECItpwfU6johXp4bVv3Cn09jtNgdJG5FzDs7c4US79sWLMTkQ/dwUVs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MbnvOXZU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5S3YYNuA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YhXi4WSx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WFU9SVm7; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="B9xPUWXA"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a99c0beaaa2so29260966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 01:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1728633952; x=1729238752; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mjACApyXQrxGUpFqc8LmjYOKGlYiSQDto47FI0kbrTM=;
-        b=B9xPUWXAde4vVVNGYXdL6g+MHqawyIJhj3ogvMGEVFflJFtT6PmkSyKeiMLGIBTstn
-         eqQk8L3JLUQgoCfzGstAHDHSZWfQYvP0URprZVgHsGhUCVqG80NflPqaVPH+OtjfCb6z
-         aLeNlFBURaJ7LBQKAonBYSzN3CalstSypzWK1Fljq0RpJTth+BJF/ok6+racIoyOxL/h
-         JARQQu1c3zHQsb9w9BTMBSFp7VWftVvZjF+IhzGTrGs6S3Isf/61ebX8ohzSyKEI2rHj
-         3njsb6y12eF9VWVPOlFUlqEEZ6tLxlbHgkk+0WPD2fjiG3QscLMnbbipK+qgXU5QGLy0
-         0t/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728633952; x=1729238752;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjACApyXQrxGUpFqc8LmjYOKGlYiSQDto47FI0kbrTM=;
-        b=dalsG8IGwerto5tW33OZIyr3NEImIe/Id4D8YR6ebFapN3lWaJuNds2p55bhMPZ/QY
-         577wh1eROvHiMmAQ7mQsuUYwVxNhFXn1btkY5XNS6R/mk/QY3mCLaAN59KVJJtARPEu6
-         wXRwDm1WL3aOj0Bygnr3lyHNYjqkeoy8KvO+q9UN0kI/GdtQXiql7yVeuWn5jBT9G7N0
-         u/5wWouYGWbsSYnCmMf7rz3i8hv1btKPwnH+7hY/gi1z3DWciybJ0j4TJrPfRkv5A4f0
-         dIkMvAt7bqeQDXyD46bkNBlOO+Iau76RpbCiwGMLBVB5kS9mikyUNJRx6OYxZFZ2Kh4Y
-         +k9g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/Ioy1hTXzTeyv1yTYJiwniht9Gf9qE8Cg2ZtSJWYyWokjhVLLwKxgBWZ42b+HjGn0B5RkUmNc+S7Rzpe2WXebM/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbENmhErQ0V2TNVBK7UMt7DenLIVmo+AJ7GMBcCgQmPZI9Roeo
-	pr2ShK72vaHZ4gEptieml5wWuPaRLeMnDI0/E1BmLMFJp5hrtErGcb46xrh/bu6ftkGQaCLXUp0
-	h
-X-Google-Smtp-Source: AGHT+IHlL4OYwlNrC9fGU1p8LcVHJqipNbNTAMPO+miJyVt8Iu/S7CwvZLsWTUdg29kFc5DsZ+eCmQ==
-X-Received: by 2002:a17:907:f7a9:b0:a99:6b71:299b with SMTP id a640c23a62f3a-a99b9589568mr148510966b.37.1728633952307;
-        Fri, 11 Oct 2024 01:05:52 -0700 (PDT)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99a80f2737sm183678566b.217.2024.10.11.01.05.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 01:05:52 -0700 (PDT)
-Message-ID: <1924e096-916a-4311-a3d5-07d3813f50da@suse.com>
-Date: Fri, 11 Oct 2024 10:05:51 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MbnvOXZU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5S3YYNuA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YhXi4WSx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WFU9SVm7"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DF7E41FC07;
+	Fri, 11 Oct 2024 09:14:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728638098; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+SvjsvdtAXrD538ofyAfSVlI9tkgdX7SxPFr8XZvvjw=;
+	b=MbnvOXZUOwGv8spnrwbr2/+f/QvJJaqVqyYCFsIf3KEQH629O1own7vxYWjVfvSyXmSEar
+	SUQWd6e6fH7EIGjXVxcZRpDWRnNVDwGEKn6FdFr1uvyhnrJYF2gsZXWpWliflO2dg8PB1f
+	76emHhNSTPulNyZiQDZm2OXpsF+V8/4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728638098;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+SvjsvdtAXrD538ofyAfSVlI9tkgdX7SxPFr8XZvvjw=;
+	b=5S3YYNuAIvPJE5Ug8RmUdnwwbP0riH5BbscvbTOeIzwgF+qbsMq+6xtVNxBHXSs0OZkMxX
+	qUT4SPgyISAyhAAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YhXi4WSx;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WFU9SVm7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1728638097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+SvjsvdtAXrD538ofyAfSVlI9tkgdX7SxPFr8XZvvjw=;
+	b=YhXi4WSxLIufIISDJ1C6J5MMrzWj3ob4sQJE6EX1GBM6bfZByW09CoB9V7noF8dM5UJ1On
+	dAlVL6bOLnXzDFTtUxKj76F2qgGNbwfKJev7t+r35oizQVkgAPo8cvPi5U86S8Pk0c84ng
+	fygXmzu4ML8LY0h1asNEbFECpQV+wPM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1728638097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+SvjsvdtAXrD538ofyAfSVlI9tkgdX7SxPFr8XZvvjw=;
+	b=WFU9SVm744llweVIQLEQZn/MnZsxL+n+JmSdTweHGaOl2qpzwUyk3haIVm+PLbLZs9a+Hh
+	1u5s4JHiKnUCf7Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 87E6A136E0;
+	Fri, 11 Oct 2024 09:14:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uEpZIJHsCGdfKgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 11 Oct 2024 09:14:57 +0000
+Message-ID: <08682e72-a7e2-409d-85a5-fa4c2fbfdcc1@suse.cz>
+Date: Fri, 11 Oct 2024 11:17:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,44 +83,91 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ring-buffer: Have the buffer update counter be atomic
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20241010195849.2f77cc3f@gandalf.local.home>
+Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
+To: David Gow <davidgow@google.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ Brendan Higgins <brendanhiggins@google.com>, Rae Moar <rmoar@google.com>,
+ Kees Cook <kees@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+ Yury Norov <yury.norov@gmail.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ "Jason A . Donenfeld" <Jason@zx2c4.com>, Andy Shevchenko <andy@kernel.org>,
+ "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ "David S . Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown <broonie@kernel.org>,
+ linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Palmer Dabbelt <palmer@rivosinc.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Charlie Jenkins <charlie@rivosinc.com>, Simon Horman <horms@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Daniel Latypov <dlatypov@google.com>, Guenter Roeck <linux@roeck-us.net>,
+ David Howells <dhowells@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, Marco Elver <elver@google.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Nathan Chancellor <nathan@kernel.org>, Fangrui Song <maskray@google.com>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>
+References: <20241011072509.3068328-2-davidgow@google.com>
+ <20241011072509.3068328-5-davidgow@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20241010195849.2f77cc3f@gandalf.local.home>
+In-Reply-To: <20241011072509.3068328-5-davidgow@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: DF7E41FC07
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[38];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,googlegroups.com,canb.auug.org.au,gmail.com,rasmusvillemoes.dk,zx2c4.com,kernel.org,linux.ibm.com,intel.com,davemloft.net,rivosinc.com,csgroup.eu,arndb.de,google.com,roeck-us.net,redhat.com,digikod.net,arm.com,linux-m68k.org,goodmis.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RL63kxeufebbfchdakdyrqufr3)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email,suse.cz:dkim,suse.cz:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On 10/11/24 01:58, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On 10/11/24 9:25 AM, David Gow wrote:
+> From: Kees Cook <kees@kernel.org>
 > 
-> In order to prevent any subtle races with the buffer update counter,
-> change it to an atomic_t. Also, since atomic_t is 32 bits, move its
-> location in the ring_buffer_per_cpu structure next to "current_context" as
-> that too is only 32 bits (making 64 bit alignment).
+> Following from the recent KUnit file naming discussion[1], move all
+> KUnit tests in lib/ into lib/tests/.
 > 
-> The counter is only used to detect that the buffer has been updated when
-> the buffer verifier check is being done. It's not really that important
-> that it's atomic or not. But since the updates to the counter are never in
-> the fast path, having it be consistent isn't a bad thing.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Note, this is based on top of:
-> 
->   https://lore.kernel.org/linux-trace-kernel/20240715145141.5528-1-petr.pavlu@suse.com/
+> Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kernel.org/ [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 
-Sorry for not replying to your last comment on my patch, I was ill.
+Acked-by: Vlastimil Babka <vbabka@suse.cz> #slab
 
-The member ring_buffer_per_cpu.cnt is intended to be accessed under the
-reader_lock, same as the pages pointer which it is tied to, so this
-change shouldn't be strictly needed.
-
--- 
-Thanks,
-Petr
+> Reviewed-by: David Gow <davidgow@google.com>
+> [Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
+> Signed-off-by: David Gow <davidgow@google.com>
