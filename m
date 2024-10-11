@@ -1,156 +1,250 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C85A19343E
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 15:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DE728684
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 15:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728659431; cv=none; b=CilWx1q66suduwRHcvRhfg4yfzCu023ZFWnvCq6cphGVsJhIA8eIg+VUR0px//zB95bHlyLSAolLW8ds47I82nUHpapv8NVj8TgENwQHPPXXFYxLTL572BZd2qE4AD/5KKLN9XXhT30SGsShYHgrxkLWE6l/BWx+itGoEAv27+U=
+	t=1728660018; cv=none; b=N5NIIFcJ+Dt1vSaCuY20uR0/eT8yKUMzTbaT8XOS3DRh6iQO4GvhmZausUmSJQgi5cTpkGcNRIDSK35hqPAuuuhy+iPhWDoHabdHMK1motgKpHleBxbIhPB5uySFlEGhj2IsdxmlA1kFv9dw6C7w4k565Ko5YiDy0vRcmCYd3zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728659431; c=relaxed/simple;
-	bh=lw104qm+G0+JdmIZx7f4XeZ61O0BxitCsy4Oi++bCDU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tHiFiv98rIO7/Ac/CHdew/fu7EvEujF9Bco5exOBt3GA78UwBFUHKRFIGmO4DZXA/7NQuw3Gbz/lKysOC/ECVJ/ak6pieQSdyBcmV+PJyIUCwCqe5mrp8Z3Kron7VsPp4Oj4a6l1BajRfQH9Scku6JwejIo7wrib75KUsnHOD2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H3VgEMIS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1728660018; c=relaxed/simple;
+	bh=QyyCDr+XDFpZPpcpRdBxw9m6INREx7DfUX0Go5hHUVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ufM/+PKRevQlleCIMvLRky2LLt04cK91crHtHfMQCnmJCBUarxst6ZwLHgmyeTDl+YlWZqmMWiT6SujY6aVDphWTKtjJoTYSP6cPuFDdsFB2ebUE/XSEy1PbHMG4QIoVtB78QEkbiRrFAft0ismqkPXQ2MsyuI/yIaM+0t0raeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ffhr88EC; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3VgEMIS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728659429;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=m24vUpCYQQcbV3XB46UeKIxQNXS2Npg8Axx+7syAJlk=;
-	b=H3VgEMISB0Va83xptwD9yucchD8FTZRyDPLa1lJJD3IKqdv4mKECZlPcp940d/EHe4Kq7Y
-	AnxK29RN4Nbac3WJh0BxwHt0H43tSaUrcrP95U9c9QTsFMOg5+oXzLx32ye4HXlUnRikPr
-	DU7RMb/MY+ZL2j5Spu7w8W7IbZsUWzM=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-540-TBwVjmF9Psqrw8kNuf8C5Q-1; Fri, 11 Oct 2024 11:10:28 -0400
-X-MC-Unique: TBwVjmF9Psqrw8kNuf8C5Q-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b115cfb15aso212674085a.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 08:10:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ffhr88EC"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a995f56ea2dso340526766b.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 08:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1728660014; x=1729264814; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rs/Y9AH+EkVMh4yGKvg5xJ3wqArgRcUQv4x27SKzh7Y=;
+        b=ffhr88EC+cj4EiLBEXG8BQoVLJO6Dmzd0UrMjnaKiKQh8X5QbaMbIcWOkJ4xxZlMT1
+         t0bMJpODytO+kXaw5zW0enQPM5/nEwtpsv6q2ZkXySac4jspj3R1sZqo/FKEhakbGLsR
+         5/xh1i0udt2KZHF1tiJVBqtt65PGxmTRJnR2aOS+L0RtL4sNhoHCfDBdmV9sGO+9g2KG
+         IdUnacqTI3LzNJUxlqJRlT8tnogX5Yt3h4Jd4XfgMq0DRDNAq7WiZtHJJGUybx1M3RSP
+         anLqEMgCkkql3EgR+304tjUqEaRqaeDQ6p04RGUB2nD8FBUypiLXdUxYylYpna8jy4xp
+         5ueg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728659427; x=1729264227;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m24vUpCYQQcbV3XB46UeKIxQNXS2Npg8Axx+7syAJlk=;
-        b=AhCq99Mb1ZizJfgZ1FjLr0nEUcflD7Hih9o3DVpLoInCisKKj0AmflHvP5urrFBLgE
-         pyntnP6RxwA0WFI9QBqr2ZebHkoTScvjE/q3ffuGBkKHaxbmg2LITU54PdggshLdhCpa
-         h/2XhlkuBak/PxjrWNlMN5zwb/ppfWkWjO4dXlAZQHAKuqbTaevoQjox/F4Hn+V5xCAS
-         EfGyPUwzjGHpdAauh1+76SnbkPncupqeYEOskw9ENWuPsrDaP9V9PYDCf1F5UoA60jXP
-         5tWfPJvU+jedyo9aZJM+N2OEDFtUE+YRxhPnPBVztiv+DquwbHn5X22UyPY8U275+2R4
-         qPcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUihIGDg4lifLCboiESxy7V8fTtvlVHtm8WKJWRb0ufkeNMYY9RbYjHVsfMIIxzRCHFqpccikRQaiq16+79AAAB/j4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7P0Bn6bOAhKoBRGUYSp3GwxQLitKCBWUN8ublG5Ua+QZYiY0s
-	VgV+4hnXPlPB03/KJN48SfBHRnvF3TzdwgJVN08I+KkSYVS6rPEVML2HXfaadoXXItvN6tGO/W8
-	XF21o7TNieLAgDBg5Bnf06jHCbcjjAe8Qb/Q03svogIvZ2vMCtW4gZ3cd7bcrGt2URsgQuA==
-X-Received: by 2002:a05:620a:28d1:b0:7af:cd33:33b3 with SMTP id af79cd13be357-7b11a3a9ccbmr480236885a.42.1728659427698;
-        Fri, 11 Oct 2024 08:10:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNNlcpFHz+ulTVxOY4ANKKzLPBOEsf3PRA5tA3JB3mgtgEjWz+S0wtn4+4mk/xI3zoG884Kw==
-X-Received: by 2002:a05:620a:28d1:b0:7af:cd33:33b3 with SMTP id af79cd13be357-7b11a3a9ccbmr480232885a.42.1728659427333;
-        Fri, 11 Oct 2024 08:10:27 -0700 (PDT)
-Received: from fionn ([142.189.102.234])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b11497a783sm139724885a.106.2024.10.11.08.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 08:10:27 -0700 (PDT)
-Date: Fri, 11 Oct 2024 11:10:25 -0400 (EDT)
-From: John Kacur <jkacur@redhat.com>
-To: Tomas Glozar <tglozar@redhat.com>
-cc: rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, lgoncalv@redhat.com, 
-    Attila Fazekas <afazekas@redhat.com>
-Subject: Re: [PATCH 2/2] rtla/timerlat: Make timerlat_hist_cpu->*_count
- unsigned long long
-In-Reply-To: <20241011121015.2868751-2-tglozar@redhat.com>
-Message-ID: <d016d069-6c89-3798-18c5-b0038a55efe5@redhat.com>
-References: <20241011121015.2868751-1-tglozar@redhat.com> <20241011121015.2868751-2-tglozar@redhat.com>
+        d=1e100.net; s=20230601; t=1728660014; x=1729264814;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rs/Y9AH+EkVMh4yGKvg5xJ3wqArgRcUQv4x27SKzh7Y=;
+        b=PZ0OIgQDHN9P29Rh7V03jW0SOvy/2spMrqnhoMe5tyg9eN5CNSuqI5FJEO9VIdpoa9
+         vTHonoUq2/tad1m9eJfUwdsIYy6+OW84UbmIPW/Y/xrs4okghXFF2gnivlqB/ovvqqlk
+         P/w7F2gXVK+LC8DzlbbPR5UbvVJNymW6Spxu7+E7oFzpSWrFKlitmcjbK1D/bdR5mXf3
+         xnhnwBZxxITOan5qhxIou3aybiy9Mye6XgwII2YwgZD6QVGwj1rcwrk/efdTL8trMfa+
+         yIzOCbZlP9E5QtrKfMNC1uyC6DxpPo+T6Vwoag6t4XxlVXQLjPPNbe4EegS4m52aYPym
+         mmcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTRJcUjix9KFZXCpTQEKUAJPyZqsLryyonvbCAwU7C60f0bFTinpCw4J7YOfffJ3lOwvM2bB/re7RGdAmM00evVW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx56ZMuQIF4UqkcOkmu4cfQhPFsdOe0Ami34POEOhLU4gN4Fr0V
+	z+Bh96lZxnOxHsTl8NUuVEm6VoTiyIQS46CHphxa5dVUZZLCJf177DEQlK+UXPzsoMKQ+gppstN
+	7
+X-Google-Smtp-Source: AGHT+IEwg6JHmLhq3E2hwmyCaEeQdGK/8NrPaDQ2Sn5iADWsJzSvQnJLhKo1wvW3EV8uZz/mEc/BpA==
+X-Received: by 2002:a17:907:6ea2:b0:a86:799d:f8d1 with SMTP id a640c23a62f3a-a99e3e4487dmr2548466b.47.1728660013663;
+        Fri, 11 Oct 2024 08:20:13 -0700 (PDT)
+Received: from [10.100.51.161] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a99a80c1ae4sm223016166b.129.2024.10.11.08.20.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Oct 2024 08:20:13 -0700 (PDT)
+Message-ID: <84179edb-dba1-42fd-88a9-70d05d8915ec@suse.com>
+Date: Fri, 11 Oct 2024 17:20:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Have the buffer update counter be atomic
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20241010195849.2f77cc3f@gandalf.local.home>
+ <1924e096-916a-4311-a3d5-07d3813f50da@suse.com>
+ <20241011100132.456f903a@gandalf.local.home>
+ <20241011104848.7f5b180b@gandalf.local.home>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20241011104848.7f5b180b@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On Fri, 11 Oct 2024, tglozar@redhat.com wrote:
-
-> From: Tomas Glozar <tglozar@redhat.com>
+On 10/11/24 16:48, Steven Rostedt wrote:
+> On Fri, 11 Oct 2024 10:01:32 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Do the same fix as in previous commit also for timerlat-hist.
+>>> Sorry for not replying to your last comment on my patch, I was ill.
+>>>
+>>> The member ring_buffer_per_cpu.cnt is intended to be accessed under the
+>>> reader_lock, same as the pages pointer which it is tied to, so this
+>>> change shouldn't be strictly needed.
+>>>   
+>>
+>> Right, but there was one location that the cnt was updated outside the
+>> lock. The one I commented on. But instead of adding a lock around it, I
+>> decided to just make it an atomic. Then there would be no need for the
+>> lock. Hmm, it still needs a memory barrier though. At least a
+>> smp_mb__after_atomic().
 > 
-> Reported-by: Attila Fazekas <afazekas@redhat.com>
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
-> ---
->  tools/tracing/rtla/src/timerlat_hist.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> Hmm, I don't like how the update in ring_buffer_subbuf_order_set() is
+> unprotected. I think this is the proper patch:
 > 
-> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-> index a3907c390d67..bbeaba8b5183 100644
-> --- a/tools/tracing/rtla/src/timerlat_hist.c
-> +++ b/tools/tracing/rtla/src/timerlat_hist.c
-> @@ -62,9 +62,9 @@ struct timerlat_hist_cpu {
->  	int			*thread;
->  	int			*user;
->  
-> -	int			irq_count;
-> -	int			thread_count;
-> -	int			user_count;
-> +	unsigned long long	irq_count;
-> +	unsigned long long	thread_count;
-> +	unsigned long long	user_count;
->  
->  	unsigned long long	min_irq;
->  	unsigned long long	sum_irq;
-> @@ -304,15 +304,15 @@ timerlat_print_summary(struct timerlat_hist_params *params,
->  			continue;
->  
->  		if (!params->no_irq)
-> -			trace_seq_printf(trace->seq, "%9d ",
-> +			trace_seq_printf(trace->seq, "%9llu ",
->  					data->hist[cpu].irq_count);
->  
->  		if (!params->no_thread)
-> -			trace_seq_printf(trace->seq, "%9d ",
-> +			trace_seq_printf(trace->seq, "%9llu ",
->  					data->hist[cpu].thread_count);
->  
->  		if (params->user_hist)
-> -			trace_seq_printf(trace->seq, "%9d ",
-> +			trace_seq_printf(trace->seq, "%9llu ",
->  					 data->hist[cpu].user_count);
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 696d422d5b35..0672df07b599 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -6774,6 +6774,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
 >  	}
->  	trace_seq_printf(trace->seq, "\n");
-> @@ -488,15 +488,15 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
->  		trace_seq_printf(trace->seq, "count:");
 >  
->  	if (!params->no_irq)
-> -		trace_seq_printf(trace->seq, "%9d ",
-> +		trace_seq_printf(trace->seq, "%9llu ",
->  				 sum.irq_count);
+>  	for_each_buffer_cpu(buffer, cpu) {
+> +		unsigned long flags;
 >  
->  	if (!params->no_thread)
-> -		trace_seq_printf(trace->seq, "%9d ",
-> +		trace_seq_printf(trace->seq, "%9llu ",
->  				 sum.thread_count);
+>  		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+>  			continue;
+> @@ -6800,11 +6801,15 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+>  						     struct buffer_page, list);
+>  		list_del_init(&cpu_buffer->reader_page->list);
 >  
->  	if (params->user_hist)
-> -		trace_seq_printf(trace->seq, "%9d ",
-> +		trace_seq_printf(trace->seq, "%9llu ",
->  				 sum.user_count);
+> +		/* Synchronize with rb_check_pages() */
+> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +
+>  		/* The cpu_buffer pages are a link list with no head */
+>  		cpu_buffer->pages = cpu_buffer->new_pages.next;
+>  		cpu_buffer->new_pages.next->prev = cpu_buffer->new_pages.prev;
+>  		cpu_buffer->new_pages.prev->next = cpu_buffer->new_pages.next;
+>  		cpu_buffer->cnt++;
+> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
 >  
->  	trace_seq_printf(trace->seq, "\n");
-> -- 
-> 2.47.0
+>  		/* Clear the new_pages list */
+>  		INIT_LIST_HEAD(&cpu_buffer->new_pages);
 > 
-> 
-> 
-Reviewed by: John Kacur <jkacur@redhat.com>
-Tested by: John Kacur <jkacur@redhat.com>
+> Even though it's also protected by the buffer->mutex, I feel more
+> comfortable with this.
+
+Sorry, I missed context of your comment and that it is about
+ring_buffer_subbuf_order_set().
+
+I agree, I also noticed the missing locking in this function and it
+looked to me as something that should be fixed. I happen to have
+a somewhat more complex patch for it from a few months ago (pasted
+below). I think I didn't send it to the list because I then noticed
+other potential locking problems with the subbuf code, which I wanted to
+examine more closely first.
+
+-- 
+Petr
+
+
+From 359f5aa523bc27ca8600b4efae471eefc0514ce0 Mon Sep 17 00:00:00 2001
+From: Petr Pavlu <petr.pavlu@suse.com>
+Date: Tue, 16 Jul 2024 11:35:00 +0200
+Subject: [PATCH] ring-buffer: Fix reader locking when changing the sub buffer
+ order
+
+The function ring_buffer_subbuf_order_set() updates each
+ring_buffer_per_cpu and installs new sub buffers that match the requested
+page order. This operation may be invoked concurrently with readers that
+rely on some of the modified data, such as the head bit (RB_PAGE_HEAD), or
+the ring_buffer_per_cpu.pages and reader_page pointers. However, no
+exclusive access is acquired by ring_buffer_subbuf_order_set(). Modyfing
+the mentioned data while a reader also operates on them can then result in
+incorrect memory access and various crashes.
+
+Fix the problem by taking the reader_lock when updating a specific
+ring_buffer_per_cpu in ring_buffer_subbuf_order_set().
+
+Fixes: 8e7b58c27b3c ("ring-buffer: Just update the subbuffers when changing their allocation order")
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+---
+ kernel/trace/ring_buffer.c | 41 ++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 4c24191fa47d..d324f4f9ab9d 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6773,36 +6773,38 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 	}
+ 
+ 	for_each_buffer_cpu(buffer, cpu) {
++		struct buffer_data_page *old_free_data_page;
++		struct list_head old_pages;
++		unsigned long flags;
+ 
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			continue;
+ 
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
++		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++
+ 		/* Clear the head bit to make the link list normal to read */
+ 		rb_head_page_deactivate(cpu_buffer);
+ 
+-		/* Now walk the list and free all the old sub buffers */
+-		list_for_each_entry_safe(bpage, tmp, cpu_buffer->pages, list) {
+-			list_del_init(&bpage->list);
+-			free_buffer_page(bpage);
+-		}
+-		/* The above loop stopped an the last page needing to be freed */
+-		bpage = list_entry(cpu_buffer->pages, struct buffer_page, list);
+-		free_buffer_page(bpage);
+-
+-		/* Free the current reader page */
+-		free_buffer_page(cpu_buffer->reader_page);
++		/*
++		 * Collect buffers from the cpu_buffer pages list and the
++		 * reader_page on old_pages, so they can be freed later when not
++		 * under a spinlock. The pages list is a linked list with no
++		 * head, adding old_pages turns it into a regular list with
++		 * old_pages being the head.
++		 */
++		list_add(&old_pages, cpu_buffer->pages);
++		list_add(&cpu_buffer->reader_page->list, &old_pages);
+ 
+ 		/* One page was allocated for the reader page */
+ 		cpu_buffer->reader_page = list_entry(cpu_buffer->new_pages.next,
+ 						     struct buffer_page, list);
+ 		list_del_init(&cpu_buffer->reader_page->list);
+ 
+-		/* The cpu_buffer pages are a link list with no head */
++		/* Install the new pages, remove the head from the list */
+ 		cpu_buffer->pages = cpu_buffer->new_pages.next;
+-		cpu_buffer->new_pages.next->prev = cpu_buffer->new_pages.prev;
+-		cpu_buffer->new_pages.prev->next = cpu_buffer->new_pages.next;
++		list_del(&cpu_buffer->new_pages);
+ 		cpu_buffer->cnt++;
+ 
+ 		/* Clear the new_pages list */
+@@ -6815,11 +6817,20 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
+ 		cpu_buffer->nr_pages = cpu_buffer->nr_pages_to_update;
+ 		cpu_buffer->nr_pages_to_update = 0;
+ 
+-		free_pages((unsigned long)cpu_buffer->free_page, old_order);
++		old_free_data_page = cpu_buffer->free_page;
+ 		cpu_buffer->free_page = NULL;
+ 
+ 		rb_head_page_activate(cpu_buffer);
+ 
++		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++
++		/* Free old sub buffers */
++		list_for_each_entry_safe(bpage, tmp, &old_pages, list) {
++			list_del_init(&bpage->list);
++			free_buffer_page(bpage);
++		}
++		free_pages((unsigned long)old_free_data_page, old_order);
++
+ 		rb_check_pages(cpu_buffer);
+ 	}
+ 
 
