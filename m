@@ -1,109 +1,162 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BD1D517;
-	Fri, 11 Oct 2024 14:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC1B21B45C;
+	Fri, 11 Oct 2024 14:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728655761; cv=none; b=hKJodcTLFytUW0U7gpZ9gaOuodcBeDyabUmlvk8xk4/rwmhlnfgY+33S0nOcxWKGqfikg6d7FjC3QuCy6jnoka4PhkOUJLUfbdzBePLTUyzAJkd70VBNFVp5I7rSPkBedbxRDKwcn8ZmKS+VDNymqpYwdb773at5Z1EEyujHdPQ=
+	t=1728656082; cv=none; b=ax2fM2bSK2rW+HGj1BYawU0+HV86mpK1KZizXmagqQZ8958hFnf7GTFHg0DhU2vANsBRhsNlj/nxtMgO0snlMcBO/0UBno35qiyMaF6BrdR5V1cdZCg17xlpcqFbMj/tZMIX1G05hrrXnIShnm0pTz7MpY4g36doRGZa+8McJy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728655761; c=relaxed/simple;
-	bh=SWJI6AtNFeMCvy+plH9cRhAgS79km6odsVVk8npktac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uEukxSb7T15ubph2ixvkEXpgQR3jKS1I36vxAXiMMRk1CSM6cdUdZk075LXHtF4G94Pfu4YFnCMb2OC0lDHGdYLBMvnEMw08yy2M3bnyhjN1vjXqF2/SGIKsJLzsvv1KlhP2dNhu6Y+VGRbOGMPt6zIjjwaupQTLibCRX8sj3Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqoK3Qms; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1728656082; c=relaxed/simple;
+	bh=ryyL7dxIat+0r10d+WkpqRKV7UFPwxP7xx/GPr0VPuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C1rPPbZIPj0dbHkAX9KTkjIw/LGEZDZDUHqvt3D9PvpohkxHK910iy7b4Rvr7nIXUdraXkV2CMH7FYE3hJ8em4RwQJYAE+eKI/x1g07Djh0h+Ev455DeGzAJFWTocwZ9KKsKTxT1TahpcUXeMhXUfnTQPswfh++dJi6oFE3GR6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqoK3Qms"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-71df468496fso1960209b3a.1;
-        Fri, 11 Oct 2024 07:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728655759; x=1729260559; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Rcg0ROco3qLe8jIJ+Thg083U2+rmvUpLmc/6AhnQr9A=;
-        b=aqoK3Qms4n4IErcGOqUCQras7jnwbqRp8z7nosXhpwNCcdehb97XEuBF6Oo+Vje4PG
-         012HvjlxxRc1+kXORTQNsjyAYo+rK9caVJZZ6RAys8zH8T9ak6SvctJLyO93dJ8sRUQR
-         /+ITNaFUgeveYPMdbybW9UGfugcge04ioVCNAUCSZ488j9HbCjpTywLySUcaegteYy3L
-         QYk2U2iIImrNRv0tD/myVmN+FFt0iJ+16mLiKclwIjy8kiwRR+BZmEv35SSLHmli3uHI
-         wilGhJjTy+mkwmAgHDIjGWh3yuodlVSKQVU7KAGGWEEoxJHWblUGS+f3DurpsavnLLbu
-         ktMw==
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e291b96a64dso801854276.3;
+        Fri, 11 Oct 2024 07:14:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728655759; x=1729260559;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rcg0ROco3qLe8jIJ+Thg083U2+rmvUpLmc/6AhnQr9A=;
-        b=K0xtAnwhNZTdZUyXbHJyiEGLvq4vg18HOsDRZx7ouedu2hpkOXl8lMY0O+YhQL5DWY
-         +lwBlX0EuUpc8Pk/sN+RKMD8CDtZN3Lcv1KR78VkEMyOKXy/fhdiw5Z1JlqZO2dct0qO
-         rrOHLLFah4B+2FHHuXfOXalRTYNeZE2cNH991TJ84AKBI5uNnvUO7H+4nBj6sencvjJY
-         HbEC8bXdCs6crRVWe4GTQ2oEqRgYI4nuef+6Er5ZKkOKR6pNfVsfn6aHAORVWfRaZ3tu
-         +CcFTD8C1iDVZschuRGLemZb4Tm8tSEz+AfdokxUmxdeBAg3pG1DHgEHHmZg1YYhX7/z
-         srAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9OWrJ+yzzTzPpZWyFcbWn/ADZMICNpeH+gcBEQzEt4d30s+H804MIewK7aXAomBPtiUWQ89oTG2k4bXW/mvcFTgan@vger.kernel.org, AJvYcCWcaQb+rNYqnrL4YjGQn2SaKuD6Rhg+J+ekwJyo5S5XZwlUXQJ10RpPRQosggbuuzPfPr7SKYg0RtA3nGm6@vger.kernel.org, AJvYcCWvu+Q2DUa7n0lysgJWOKdKLmj3pMpaZIBKNRyPFVm/PKnzyWkYFe6iWgeSbDwruxHuHnAOOR1HsH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXyqnHGY5mkUAguAdUax0UdjDGri8oA3BkAgvQC1NSKq5aKMDJ
-	R459obZfhH6KwrzAQsSsXPSu623K8pXpn9iYEyfscElFDG8Tu27Zs9OO0WwN
-X-Google-Smtp-Source: AGHT+IFe0JYKeAj4bzyu3lnqsbMeGoDavyNJ+1+e78xHDD7VxRZpU8+w4HyJUo6GbvphhM+vKSYStQ==
-X-Received: by 2002:a05:6a00:9a1:b0:71d:f215:1d96 with SMTP id d2e1a72fcca58-71e37e287e7mr4971182b3a.6.1728655759072;
-        Fri, 11 Oct 2024 07:09:19 -0700 (PDT)
-Received: from ?IPV6:2409:40c0:11a4:8d8a:49e2:9be2:176a:6b10? ([2409:40c0:11a4:8d8a:49e2:9be2:176a:6b10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71e2a9e9607sm2616856b3a.7.2024.10.11.07.09.15
+        d=1e100.net; s=20230601; t=1728656077; x=1729260877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gKxV6SBUpmC9EeWLExsOgYq7J6RKtlJifOwyXdEfMFs=;
+        b=bi5WIXRHq6KenqTi6MdjLUFe1o1I0TLBwnBuioAD/JdSakCWRgt57Yn1CI93W/qHIs
+         qO8g/9JVnm6PUCOmb7NnIlgk2lIoiKCc90GVEAoSaLKUrFkU87GUT24rxBUr2fJbqOp8
+         dFfEVDnt6NWNk/glhNIQ13VRlWqcm9+imvnZs9qqcil8XqFVbsseOLA1ovTv36D1NTtF
+         WIJcNEcmA/hrzGK+IQO7k+/Gl9CCqWF3yKLyvi1V6Qhn+PHw9UXNdVOAMLynu3aLtZ41
+         L33KKRdeqVbgh36fUOZtd0dAdvTXO1Cj+ZX58xswEDKvNu2/6i5b2t3IHbKuszRmh7oE
+         l4Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGKNcG4V23JJwh55Ncmr1tFQVeiGGPfwSjStInJS26gFkBnIaBCCPUEMBsTE8uDBnMBOxFaF8/Xw4aKf0XD9XM@vger.kernel.org, AJvYcCUhnbxJ/AnobMAX60ymTxxVLegweX6+m1F18rUFfIAVsMXb4MgkJafyGg55OQzPGtqxx8Dmoz5pbqkjb72v7sc=@vger.kernel.org, AJvYcCVdNE4bjy9aunlHXd3H5ELPg7iXIL6pro5YjAFULn+kzD0vpGSfG+eOfUKDqId8PkukVywMYTJuqjxLB+IS@vger.kernel.org, AJvYcCVqX/PvNphbWwr0pnJSZuXvIqXIvsySMnPHgzKcX3W1W+yCPdl62fp1lSFIlcNhhyTGbZlQ3lyTD8FU4evjzVoaTbDI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Lgejb447dCFXw8cmu0hEpzzlGXcH0/nHiyaCNy/nBMN4Ssml
+	Y5IkFWfgj5ufT7Ic1fLmKNmA8VMfZzB5vosRAVPaMMtTXDJTNr/pa4P83eaC7s0=
+X-Google-Smtp-Source: AGHT+IGTGqF0lbsKbzdsjjpRLwPnSYvYN3jwWle7fZAE9967toH1WgDPgGhPoiX6its1dQztCIVWxQ==
+X-Received: by 2002:a05:6902:1503:b0:e20:2e8a:5b95 with SMTP id 3f1490d57ef6-e2919fe5e9cmr2674502276.39.1728656077261;
+        Fri, 11 Oct 2024 07:14:37 -0700 (PDT)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e290ef7a8easm824512276.57.2024.10.11.07.14.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Oct 2024 07:09:18 -0700 (PDT)
-Message-ID: <2ccc6f29-45d1-48b4-b39f-3b2a01cb6068@gmail.com>
-Date: Fri, 11 Oct 2024 19:39:12 +0530
+        Fri, 11 Oct 2024 07:14:36 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6dbc9a60480so19562197b3.0;
+        Fri, 11 Oct 2024 07:14:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVNNb79bCN3NrwZKEUwrh1+s68GfEw82mFSRgW3uKgDPBAVdcKF+LjB04TUIgOAcFg0hA36LFRF3deARCkrwP0+VMhS@vger.kernel.org, AJvYcCWYC6+jIKC2JbcG/F/lB/QSGOXuz0G+UyHfuuseBWQuJZDIOx463MFWMRTjm/R2LhSWz6oKxlILTl1jaw7U@vger.kernel.org, AJvYcCWc94QVCG2PrRSiOjDjBYQQSeOHjoPbzE5PrMm45pOvGTbsE0NeQyd5WEoidCdfd8ua1flInUoD06AubJo8Ek0=@vger.kernel.org, AJvYcCXGlcFOwZCqOwNCnaSP3QT7yLiXG2l5852T/1C5xwLIBUb+UiyaeK5gyz0b0g0r7noWJNNag0h8RUba334wrGGS@vger.kernel.org
+X-Received: by 2002:a05:690c:d85:b0:6de:351:3e with SMTP id
+ 00721157ae682-6e3477c0654mr20357467b3.8.1728656076179; Fri, 11 Oct 2024
+ 07:14:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: fix WARNING document not included in any toctree
-To: Jonathan Corbet <corbet@lwn.net>, Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20241002195817.22972-1-surajsonawane0215@gmail.com>
- <20241010154708.0bf658a3@gandalf.local.home> <87y12vzqg0.fsf@trenco.lwn.net>
- <e7851def-91ce-43e7-880a-22dc5752c4ad@gmail.com>
- <87h69izs3b.fsf@trenco.lwn.net>
-Content-Language: en-US
-From: Suraj Sonawane <surajsonawane0215@gmail.com>
-In-Reply-To: <87h69izs3b.fsf@trenco.lwn.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20241011072509.3068328-2-davidgow@google.com> <20241011072509.3068328-5-davidgow@google.com>
+ <ZwkBgkthcQM7rLl7@smile.fi.intel.com> <CAMuHMdW=MF0H8YVuY6moLomTaxFEeCHgut1fruRGEkn79sbuTA@mail.gmail.com>
+ <ZwkuvKogPuik90fN@smile.fi.intel.com>
+In-Reply-To: <ZwkuvKogPuik90fN@smile.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 11 Oct 2024 16:14:24 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+Message-ID: <CAMuHMdU_1oZEeJ5Onrbtx-iZjrK_bQ6YWNMdRYp-E1_5E7rMSQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] lib: Move KUnit tests into tests/ subdirectory
+To: Andy Shevchenko <andy@kernel.org>
+Cc: David Gow <davidgow@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Shuah Khan <skhan@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, 
+	Rae Moar <rmoar@google.com>, Kees Cook <kees@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, "Jason A . Donenfeld" <Jason@zx2c4.com>, 
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	linux-hardening@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Simon Horman <horms@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Latypov <dlatypov@google.com>, 
+	Guenter Roeck <linux@roeck-us.net>, David Howells <dhowells@redhat.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Nathan Chancellor <nathan@kernel.org>, Fangrui Song <maskray@google.com>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/10/24 18:58, Jonathan Corbet wrote:
-> Suraj Sonawane <surajsonawane0215@gmail.com> writes:
-> 
->> Can I send an updated patch with this change (moving debugging section
->> to the top)?
-> 
-> The patch is already applied, so no.  You can send a new patch against
-> docs-next if that sort of movement is warranted.
+Hi Andy,
 
-Sure! I will send a patch against docs-next to move the debugging 
-section to the top.
+On Fri, Oct 11, 2024 at 3:57=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
+rote:
+> On Fri, Oct 11, 2024 at 03:38:00PM +0200, Geert Uytterhoeven wrote:
+> > On Fri, Oct 11, 2024 at 12:44=E2=80=AFPM Andy Shevchenko <andy@kernel.o=
+rg> wrote:
+> > > On Fri, Oct 11, 2024 at 03:25:07PM +0800, David Gow wrote:
+> > > > From: Kees Cook <kees@kernel.org>
+> > > >
+> > > > Following from the recent KUnit file naming discussion[1], move all
+> > > > KUnit tests in lib/ into lib/tests/.
+> > > >
+> > > > Link: https://lore.kernel.org/lkml/20240720165441.it.320-kees@kerne=
+l.org/ [1]
+> > > > Signed-off-by: Kees Cook <kees@kernel.org>
+> > > > Acked-by: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > > > Acked-by: Jakub Kicinski <kuba@kernel.org>
+> > > > Acked-by: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> > > > Reviewed-by: David Gow <davidgow@google.com>
+> > > > [Rebased onto mm-nonmm-unstable, moved usercopy_kunit]
+> > > > Signed-off-by: David Gow <davidgow@google.com>
+> > >
+> > > >  rename lib/{ =3D> tests}/bitfield_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/checksum_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/cmdline_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/cpumask_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/fortify_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/hashtable_test.c (100%)
+> > > >  rename lib/{ =3D> tests}/is_signed_type_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/kunit_iov_iter.c (100%)
+> > > >  rename lib/{ =3D> tests}/list-test.c (100%)
+> > > >  rename lib/{ =3D> tests}/memcpy_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/overflow_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/siphash_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/slub_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/stackinit_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/string_helpers_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/string_kunit.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_bits.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_fprobe.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_hash.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_kprobes.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_linear_ranges.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_list_sort.c (100%)
+> > > >  rename lib/{ =3D> tests}/test_sort.c (100%)
+> > > >  rename lib/{ =3D> tests}/usercopy_kunit.c (100%)
+> > >
+> > > While I support the idea, I think this adds an additional churn in cr=
+eating a
+> > > duplicate 'test' in the filenames. Why they all can't be cut while re=
+moving?
+> > > (at least this question is not answered in the commit message)
+> >
+> > To avoid duplicate *.ko file names?
+>
+> With what? Sorry, but I don't see how it's a problem. These are test case=
+s.
+> Do they use kernel command line parameters? If so, shouldn't KUnit take c=
+are
+> about it in a more proper way?
 
-> 
-> Honestly, though, just shuffling one file around only seems so useful.
-> What would be nice would be to turn index.rst into a good starting point
-> for people wanting to learn about tracing, rather than just a jumble of
-> files.  It needs organization into sections and some connecting text; as
-> an example, see the (minimal) organizational work that I did for
-> Documentation/process/index.rst.
-> 
-> It's more work, but would certainly pay off.
-> 
-> Thanks,
-> 
-> jon
+If .e.g. lib/list_sort.o could be modular, its module would be called
+"list_sort.ko", conflicting with the "list_sort.ko" test module.
 
-I’ve also seen the structure in Documentation/process/index.rst with the 
-clear titles and descriptions.
+Gr{oetje,eeting}s,
 
-Thanks,
-Suraj Sonawane
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
