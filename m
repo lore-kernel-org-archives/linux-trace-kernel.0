@@ -1,133 +1,275 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4486ABE5E;
-	Fri, 11 Oct 2024 00:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC122F22;
+	Fri, 11 Oct 2024 00:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728605302; cv=none; b=rd1OBAWv/apBQr0egjDqB76HnSZIhqo2Bp2bCXnT79xuPncwR9/tncLSVcIuRUWnmsCijLBupZ3aRgmU/8pxwx92KHzEeoAOPt+kRMzH4JNlc59q/9RVZouzm37hH2MyPpTN2egN0oOL4qLbiF/GwrPTkeBtUSrzyrV0iXXVPLc=
+	t=1728605516; cv=none; b=Du05WZVNxO5dmaVc5k2E67Ti4UF0ysYNIWkMRMXkAP/9M28cC4tXzg0BWAQNfag/8BMjUM+e1XY0kPgufKZeh0zoGq+ZfjmIaRqNHjCz7VRDzd9LpDn7hE2+WD3f2WR24jMmxJsYpjCvWKUomrAegAadpdWRMwcQw6O+tLqGIA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728605302; c=relaxed/simple;
-	bh=ZVEfdiz6c4s0EMsLl5NC5d2FujU4f+4LZAUMJpXdVPs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gx0VNemZeBLUV/GBSb0eZhyagX+7bFUkw7cGIpucnfz9/m/qhhm7MzoWe6ApuLYofGfNXVbG1tigBiR4P84/w/bx8coZJokhefLFRFGIlAF/qF22S7P9XeyyWX4HHIyDjqZUwxwkZtnmuBdB3yyckSKmnVfSDgz8Gu2t5JWXMV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=df/iC3wa; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="df/iC3wa"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e2903a48ef7so1398112276.2;
-        Thu, 10 Oct 2024 17:08:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728605300; x=1729210100; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/JR01YXV1P2okZLmugRB7I4AbkNbyiLPSpahOb0ItU8=;
-        b=df/iC3wafK1NVWea1Pf/ptA5MExN3qkbNIlLRzvUqbFx5DL8Y/MVaatyi8vvfSTZNF
-         2bfT2XZ4s8v0DZh3bG25HvYBpWSyj4LvDHLxbZUqz9f3A4tOHQoGR0j+SjwSJVLMhhpZ
-         T2vqC0L8LVGk4x4Swu9QVQ2D/eOjYXlendmCc9YYDY4yAf1OLHRtfEhBMeymYmqRN6Wi
-         XssEdqWmFO8ZKyleEu2q3e2VlSjCeLFmQw7eIsfX9Jz/ARQtj+lrMYos3KDh37YtzBJC
-         9r4s4xXNwZ8HU1B7kf6gF5+vDUNRNjETqyajd38lgJq+z6T7eH/9WU4X9q0SrdMEaa5X
-         Z8WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728605300; x=1729210100;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/JR01YXV1P2okZLmugRB7I4AbkNbyiLPSpahOb0ItU8=;
-        b=a7aAm2lEWxNsCgvEAx50u3vNAd/53eIY4/6lRDTOnDAJS3RKok9kEiz9K1w3JohQTO
-         uCWuoi/F9VJPp1P2SjbegHzrjg+zogdGZkovRg6Psoki7u0W+KpJIFjfQE6Iptia2wbX
-         daJ1cIPhFOd/AhcG7Cp99tg6Uns8GHPAgx7Ucqf4g3Vu/sOwy88uO8g6fpjvoUlmU/WF
-         cewg+TCk83fDrnbnZHgTYYb+Sel2CkAtNt82FPvtt1HzlUNy6UZCF9wrUMQn6RcOo2lT
-         lSAozc52+iZlewnyeRO6PjvOBFleNSW/8/MHx8fHUn61r9SzEzF5CKYKslSSrfgS6336
-         CF6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUJUBel8EepFbSnraSrWIOvjlJiX5iNCocXv5vrj8FhmFMWZ7vFCqu0te230tFrsbXDprwV6fwrO2upyXxf@vger.kernel.org, AJvYcCUq5XhGsJhPGqIowNZh59tfYcjR0tyoluKkjbAo35wVUgUiIUvBuyEKLFlUUA8p7UdDep4K5w6wXzCkJida3dmq2Lu1@vger.kernel.org, AJvYcCVuSFCHSQtnMUZvRe33D3cGrQje2sYoVXObp7u+Lp/AetsI6grUiyf2NNP9JJU21hb6UNE=@vger.kernel.org, AJvYcCXSxcTrHRtSeJ1U954r+y4Y1tXnRQUgqzJoho2PrHyGgkwaIzZsaHclOgE20ziy1GuqVK064aKQ3i49GrqnIFB5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx76Vv2SKCHrlE9ofFbG37BDXxTg1J0RpkZ6sqg3NS90ETTOR7U
-	gGICQmkPKfD9HeuzuFKpN9QrMFQsANYZWfiG9VdK7k0/BouV8/Ha
-X-Google-Smtp-Source: AGHT+IFwDWFQTYbCMg/5uEcXYx9WIfItSgCBpQ+5PvxXxZHKQcRO3JRwS9Ecz4+YSnkK9upsXsacjw==
-X-Received: by 2002:a05:6902:1021:b0:e28:f132:3fae with SMTP id 3f1490d57ef6-e2919ff3fd0mr778508276.48.1728605300083;
-        Thu, 10 Oct 2024 17:08:20 -0700 (PDT)
-Received: from dev-ubuntu-0.. (104-15-236-76.lightspeed.rlghnc.sbcglobal.net. [104.15.236.76])
-        by smtp.googlemail.com with ESMTPSA id 3f1490d57ef6-e290edf37dcsm548028276.1.2024.10.10.17.08.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 17:08:19 -0700 (PDT)
-From: Tyrone Wu <wudevelops@gmail.com>
-To: andrii.nakryiko@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kernel-patches-bot@fb.com,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	mattbobrowski@google.com,
-	mhiramat@kernel.org,
-	mykolal@fb.com,
-	rostedt@goodmis.org,
-	sdf@fomichev.me,
-	shuah@kernel.org,
-	song@kernel.org,
-	wudevelops@gmail.com,
-	yonghong.song@linux.dev
-Subject: [PATCH bpf v2 2/2] selftests/bpf: assert link info uprobe_multi count & path_size if unset
-Date: Fri, 11 Oct 2024 00:08:03 +0000
-Message-ID: <20241011000803.681190-2-wudevelops@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241011000803.681190-1-wudevelops@gmail.com>
-References: <CAEf4BzYo12vao0GPYPC=3SMTzc5c8kZSFCE+D63ACgtjs7QhVw@mail.gmail.com>
- <20241011000803.681190-1-wudevelops@gmail.com>
+	s=arc-20240116; t=1728605516; c=relaxed/simple;
+	bh=u6VX0nC/ytIr+G5bsWAwAr0AQyvwq0E4hRHOXjus8mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W1vtZyHFCFCp8RO/v4d9k+DTapxfVjmTrugp4YPhLMwIwYww/zqCw1ofrd45L+M3RnoA8SgzfsQJS1z9O6IKdrBar8vpgkiZbfgtQnW6czUa6L/zBv1skjrq8nUNfZKYDL7GgkTNVBIymXD2cBlmReRJ9gnSBlf/HIujDcVSdcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F66DC4CECD;
+	Fri, 11 Oct 2024 00:11:52 +0000 (UTC)
+Date: Thu, 10 Oct 2024 20:12:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: kernel test robot <lkp@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, "x86@kernel.org"
+ <x86@kernel.org>, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
+ <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Thomas
+ Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] ftrace: Make ftrace_regs abstract from direct use
+Message-ID: <20241010201200.729d4fcb@gandalf.local.home>
+In-Reply-To: <202410110707.uHvgl9S7-lkp@intel.com>
+References: <20241007204743.41314f1d@gandalf.local.home>
+	<202410110707.uHvgl9S7-lkp@intel.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add assertions in `bpf_link_info.uprobe_multi` test to verify that
-`count` and `path_size` fields are correctly populated when the fields
-are unset.
+On Fri, 11 Oct 2024 08:00:21 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-This tests a previous bug where the `path_size` field was not populated
-when `path` and `path_size` were unset.
+> Hi Steven,
+> 
+> kernel test robot noticed the following build errors:
 
-Signed-off-by: Tyrone Wu <wudevelops@gmail.com>
----
-V1 -> V2:
-- Verify bpf_link_get_info_by_fd was successful before continuing with test
+Hmm,
 
- tools/testing/selftests/bpf/prog_tests/fill_link_info.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I wonder if we can not waste resources if a v2 version of a patch is sent
+out. Not sure when this was picked up, but I sent out an updated version
+with this fixed yesterday.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-index 745c5ada4c4b..d50cbd8040d4 100644
---- a/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-+++ b/tools/testing/selftests/bpf/prog_tests/fill_link_info.c
-@@ -420,6 +420,15 @@ verify_umulti_link_info(int fd, bool retprobe, __u64 *offsets,
- 	if (!ASSERT_NEQ(err, -1, "readlink"))
- 		return -1;
- 
-+	memset(&info, 0, sizeof(info));
-+	err = bpf_link_get_info_by_fd(fd, &info, &len);
-+	if (!ASSERT_OK(err, "bpf_link_get_info_by_fd"))
-+		return -1;
-+
-+	ASSERT_EQ(info.uprobe_multi.count, 3, "info.uprobe_multi.count");
-+	ASSERT_EQ(info.uprobe_multi.path_size, strlen(path) + 1,
-+		  "info.uprobe_multi.path_size");
-+
- 	for (bit = 0; bit < 8; bit++) {
- 		memset(&info, 0, sizeof(info));
- 		info.uprobe_multi.path = ptr_to_u64(path_buf);
--- 
-2.43.0
+  https://lore.kernel.org/all/20241008230628.958778821@goodmis.org/
+
+-- Steve
+
+
+> 
+> [auto build test ERROR on next-20241004]
+> [cannot apply to s390/features arm64/for-next/core powerpc/next powerpc/fixes linus/master v6.12-rc2 v6.12-rc1 v6.11 v6.12-rc2]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Make-ftrace_regs-abstract-from-direct-use/20241008-084930
+> base:   next-20241004
+> patch link:    https://lore.kernel.org/r/20241007204743.41314f1d%40gandalf.local.home
+> patch subject: [PATCH] ftrace: Make ftrace_regs abstract from direct use
+> config: um-allnoconfig (https://download.01.org/0day-ci/archive/20241011/202410110707.uHvgl9S7-lkp@intel.com/config)
+> compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241011/202410110707.uHvgl9S7-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202410110707.uHvgl9S7-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from kernel/time/time.c:31:
+>    In file included from include/linux/timekeeper_internal.h:10:
+>    In file included from include/linux/clocksource.h:22:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      548 |         val = __raw_readb(PCI_IOBASE + addr);
+>          |                           ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+>          |                                                         ~~~~~~~~~~ ^
+>    include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+>       37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+>          |                                                   ^
+>    In file included from kernel/time/time.c:31:
+>    In file included from include/linux/timekeeper_internal.h:10:
+>    In file included from include/linux/clocksource.h:22:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+>          |                                                         ~~~~~~~~~~ ^
+>    include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+>       35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+>          |                                                   ^
+>    In file included from kernel/time/time.c:31:
+>    In file included from include/linux/timekeeper_internal.h:10:
+>    In file included from include/linux/clocksource.h:22:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      585 |         __raw_writeb(value, PCI_IOBASE + addr);
+>          |                             ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+>          |                                                       ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+>          |                                                       ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      693 |         readsb(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      701 |         readsw(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      709 |         readsl(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      718 |         writesb(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      727 |         writesw(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      736 |         writesl(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    In file included from kernel/time/time.c:33:
+>    In file included from include/linux/syscalls.h:93:
+>    In file included from include/trace/syscall.h:7:
+>    In file included from include/linux/trace_events.h:10:
+>    In file included from include/linux/perf_event.h:52:
+>    In file included from include/linux/ftrace.h:23:
+>    In file included from ./arch/um/include/generated/asm/ftrace.h:1:
+> >> include/asm-generic/ftrace.h:5:2: error: unterminated conditional directive  
+>        5 | #ifndef __ASM_GENERIC_FTRACE_H__
+>          |  ^
+>    12 warnings and 1 error generated.
+> --
+>    In file included from kernel/time/hrtimer.c:30:
+>    In file included from include/linux/syscalls.h:93:
+>    In file included from include/trace/syscall.h:7:
+>    In file included from include/linux/trace_events.h:9:
+>    In file included from include/linux/hardirq.h:11:
+>    In file included from arch/um/include/asm/hardirq.h:5:
+>    In file included from include/asm-generic/hardirq.h:17:
+>    In file included from include/linux/irq.h:20:
+>    In file included from include/linux/io.h:14:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      548 |         val = __raw_readb(PCI_IOBASE + addr);
+>          |                           ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+>          |                                                         ~~~~~~~~~~ ^
+>    include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+>       37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+>          |                                                   ^
+>    In file included from kernel/time/hrtimer.c:30:
+>    In file included from include/linux/syscalls.h:93:
+>    In file included from include/trace/syscall.h:7:
+>    In file included from include/linux/trace_events.h:9:
+>    In file included from include/linux/hardirq.h:11:
+>    In file included from arch/um/include/asm/hardirq.h:5:
+>    In file included from include/asm-generic/hardirq.h:17:
+>    In file included from include/linux/irq.h:20:
+>    In file included from include/linux/io.h:14:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+>          |                                                         ~~~~~~~~~~ ^
+>    include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+>       35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+>          |                                                   ^
+>    In file included from kernel/time/hrtimer.c:30:
+>    In file included from include/linux/syscalls.h:93:
+>    In file included from include/trace/syscall.h:7:
+>    In file included from include/linux/trace_events.h:9:
+>    In file included from include/linux/hardirq.h:11:
+>    In file included from arch/um/include/asm/hardirq.h:5:
+>    In file included from include/asm-generic/hardirq.h:17:
+>    In file included from include/linux/irq.h:20:
+>    In file included from include/linux/io.h:14:
+>    In file included from arch/um/include/asm/io.h:24:
+>    include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      585 |         __raw_writeb(value, PCI_IOBASE + addr);
+>          |                             ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+>          |                                                       ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+>          |                                                       ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      693 |         readsb(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      701 |         readsw(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      709 |         readsl(PCI_IOBASE + addr, buffer, count);
+>          |                ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      718 |         writesb(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      727 |         writesw(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>      736 |         writesl(PCI_IOBASE + addr, buffer, count);
+>          |                 ~~~~~~~~~~ ^
+>    In file included from kernel/time/hrtimer.c:30:
+>    In file included from include/linux/syscalls.h:93:
+>    In file included from include/trace/syscall.h:7:
+>    In file included from include/linux/trace_events.h:10:
+>    In file included from include/linux/perf_event.h:52:
+>    In file included from include/linux/ftrace.h:23:
+>    In file included from ./arch/um/include/generated/asm/ftrace.h:1:
+> >> include/asm-generic/ftrace.h:5:2: error: unterminated conditional directive  
+>        5 | #ifndef __ASM_GENERIC_FTRACE_H__
+>          |  ^
+>    kernel/time/hrtimer.c:121:21: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+>      121 |         [CLOCK_REALTIME]        = HRTIMER_BASE_REALTIME,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:119:27: note: previous initialization is here
+>      119 |         [0 ... MAX_CLOCKS - 1]  = HRTIMER_MAX_CLOCK_BASES,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:122:22: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+>      122 |         [CLOCK_MONOTONIC]       = HRTIMER_BASE_MONOTONIC,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:119:27: note: previous initialization is here
+>      119 |         [0 ... MAX_CLOCKS - 1]  = HRTIMER_MAX_CLOCK_BASES,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:123:21: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+>      123 |         [CLOCK_BOOTTIME]        = HRTIMER_BASE_BOOTTIME,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:119:27: note: previous initialization is here
+>      119 |         [0 ... MAX_CLOCKS - 1]  = HRTIMER_MAX_CLOCK_BASES,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:124:17: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+>      124 |         [CLOCK_TAI]             = HRTIMER_BASE_TAI,
+>          |                                   ^~~~~~~~~~~~~~~~
+>    kernel/time/hrtimer.c:119:27: note: previous initialization is here
+>      119 |         [0 ... MAX_CLOCKS - 1]  = HRTIMER_MAX_CLOCK_BASES,
+>          |                                   ^~~~~~~~~~~~~~~~~~~~~~~
+>    16 warnings and 1 error generated.
+> 
+> 
+> vim +5 include/asm-generic/ftrace.h
+> 
+> 38f5bf84bd588a GuanXuetao 2011-01-15 @5  #ifndef __ASM_GENERIC_FTRACE_H__
+> 38f5bf84bd588a GuanXuetao 2011-01-15  6  #define __ASM_GENERIC_FTRACE_H__
+> 38f5bf84bd588a GuanXuetao 2011-01-15  7  
+> 
 
