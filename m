@@ -1,188 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469D04A06
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 00:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79260748F;
+	Fri, 11 Oct 2024 02:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728606589; cv=none; b=NJHyH4alcMZFXZa973cYRI54hzdsJzd4f4Lfc+rBOSkAxwXUl1JnNYhYhNgeaJKpBNCaEPMSEFGHaB6/DFPOIDVykpuxqoOVbeovnUHTySixMwee4Hrg8ONxXfU6XqXvI2CUy2O5gDKSzQ2GW6PSjmB6GH1buSnJM/ezzPqmmB8=
+	t=1728613203; cv=none; b=KL5eSBzOhbvLC9jjJN+f+xUGE8FK1e97JkCzaxFxdor+vM2ca61uaBdsNTq4SPVC3O2eM7AEt431EfyDDFI9RHUG0TU1GT9wtaGX2QOJZjjiMnd42vBlrFc71KsqKU9t/5iKadg1+zk2fbBgxcy2eA6t3dfyxec5QeSRUbF1gqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728606589; c=relaxed/simple;
-	bh=yK9sXPWVgFxq090roxPVExH2KmktNeD8jxmsPQ7+tMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pa86wmpk8Tm+I7k7l2DQtS6RDT1Na4DdHjoPMK4CZ0XhNlxbC1QJoYEGxecimYYC1L6wrIJ5o5KDGPMSPWTWBuiiMZNrmn1IzjJMcUBpSNmfMBOMYUUa4JK+9xBFfrt2X1kZi0ks+td0fogk3etPRnFAU9XCK7MS17f6QXce9eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A02C4CECC;
-	Fri, 11 Oct 2024 00:29:48 +0000 (UTC)
-Date: Thu, 10 Oct 2024 20:29:56 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: furkanonder <furkanonder@protonmail.com>
-Cc: "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Tomas Glozar <tglozar@redhat.com>
-Subject: Re: [PATCH] tools/rtla: Enhance Error Handling and Readability for
- timerlat
-Message-ID: <20241010202956.5aa773a7@gandalf.local.home>
-In-Reply-To: <HAxOlk1o3vhrAUlyVMtrSLGP39PFS1TLfGT9C9pB6cXgQpGB_fiNeGSuWS_4-4zeMxunluuBnkc4Y-k_c0qrlstVpYQvgfkJN2p_VnfMO-k=@protonmail.com>
-References: <HAxOlk1o3vhrAUlyVMtrSLGP39PFS1TLfGT9C9pB6cXgQpGB_fiNeGSuWS_4-4zeMxunluuBnkc4Y-k_c0qrlstVpYQvgfkJN2p_VnfMO-k=@protonmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1728613203; c=relaxed/simple;
+	bh=BuWWt9J3d5LmtGizNy0RWMaMy0OvpvtNZEvoJlggdsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7xGSV4ChQ/eFDRjNXbbTdwC1C+1jcIpV3rWya3U5IVfaBAyruRuLoccFr1gChnBEP9ucg7Gl0hK1Y4V+q0Vy9trftpvvHBHXB63z3M0PqU6VUiv+2mc4tmaHI0XnxrsdNF08jZ7HcUgNYGo76V793SYUtuqkplYrS3EYKI8Yxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V3vjoR08; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3vjoR08"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2e050b1c3so752824a91.0;
+        Thu, 10 Oct 2024 19:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728613202; x=1729218002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LLhOIYaSD3mZ10qNGhaTSWJ8llOcmLQ9hp+Mf//qB4E=;
+        b=V3vjoR08E9TR5w5YQYHiMVziOIVdEVn0gcT8NdXVMMRI1NHTWCzWa6WotE3Lbh+ibk
+         JhwOyZLgREFtfn2dj7320wCWKdtsrMwE/I0/IJgSuFhw1K9fDNs3JeytoqNDdvqo6pIp
+         2M/IvgaUZp5oJYCfYuENG2Z4BPGsgxGpe10szNzkhKe4SjQMtkEYxtiLn6MnpvoyO7QN
+         OUMl9w7MQCZUaMvTYGiEkTXvKD9REe8/0/guaxoQ+fSdTtqcG8cnJMiUvdFDvh+mkWw3
+         K49PPcg1AxmxDaZXkaiTDsKX6PHKdDZnfshKnNj5MXffjW/P6mEe7TJ+bDqa7ScwbWqM
+         YA0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728613202; x=1729218002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LLhOIYaSD3mZ10qNGhaTSWJ8llOcmLQ9hp+Mf//qB4E=;
+        b=ZDSkTpI2F/G+xcBcPxxx9sVTDeiNqzjohGfVRzSfTBp7D5aJsbtkL50CpNjzcAPB5e
+         FfsgKLoJtQaah7ZSfQY/XZIyMpCAGumIwQYQTxCRLEuqOPuT6khu7faHO3k7yY10eQvn
+         5OdibTfC0dxDMF2oy7U/v/jxwzMDjDOYDkd8lGRQvGnh14gsxz233saLoZZUcFZ3h+d+
+         8oZ6NLwowbk6WJbs7LuQyLCa5AXfsVt4JgRfshSyF7cW9/0eFs+TbFs2QH8x+3Uw/vm4
+         SHK3I2u15G0ZG9VPerRyefkDM9ePxBLGhx+wrVE86e4CONcEyE8XPi4qoGIu9MgxhFOl
+         qgqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQAFkA7ca0RnD/3pG13TMeru4Dmi6vx2AklvuSm94OCvQh6G9Gs9Rs0Faq1UjoEPD5tw5+a+QY5inpZ6WZ@vger.kernel.org, AJvYcCWP0dn4QW2H/uhPwN+uaW95tkgF+fDgP6y7Ho3mmedhP4hvH9esm0CEPhZe78hU8fCTSmI=@vger.kernel.org, AJvYcCX54V98Jjwf+4d6Gwh++aVPg0okAO+vnywQTp1RNxY6IjARgsD3M93VonG3xGhLyMMB+Y8LEOn8HUUEHz9wXM/mEv4j@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYFRyWWSsijoXzymdy8ph4lzgT0Ki1BC2ugsNXTq6pQACQglFp
+	fi9o0KWyyc02gYOtlD1cz/thFgDnIyBO58jPS1d1/jnpbeZiI75Cr9ebdEMDg4Y9l17pqL8sLvg
+	CHy6czDThDv8bessWEXENYeAh/5M=
+X-Google-Smtp-Source: AGHT+IG1I4iFVqrY5V/vK7jeWCCxVnW1eUMByhbkTIBDME0FM3UNcH2kH7ZEZ8SIqjT5wvAWRPg9sAnwXXcaz7e478U=
+X-Received: by 2002:a17:90b:3844:b0:2da:88b3:cff8 with SMTP id
+ 98e67ed59e1d1-2e2f0aa5610mr1953711a91.6.1728613201788; Thu, 10 Oct 2024
+ 19:20:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241010200957.2750179-1-jolsa@kernel.org> <20241010200957.2750179-4-jolsa@kernel.org>
+In-Reply-To: <20241010200957.2750179-4-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 10 Oct 2024 19:19:49 -0700
+Message-ID: <CAEf4BzZV4AS2w5iXhTh+hEA1W+6uxHv7sJ9hAUvpUiBFbuOC+Q@mail.gmail.com>
+Subject: Re: [PATCHv6 bpf-next 03/16] bpf: Allow return values 0 and 1 for
+ kprobe session
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-Tomas,
-
-Can you review this patch?
-
-Thanks,
-
--- Steve
-
-
-On Sat, 05 Oct 2024 17:20:37 +0000
-furkanonder <furkanonder@protonmail.com> wrote:
-
-> The enhancements made to timerlat_load.py focus on improving error
-> handling, readability, and overall user experience. These changes aim to
-> make the script more robust and easier to maintain while providing clearer
-> feedback to users. Key modifications include:
-> 
-> Type Declaration in Argument Parsing
-> Added type declarations for command-line arguments in the argument parser.
-> This removes the need for manual type checks later in the code, improving
-> clarity and safety.
-> 
-> String Formatting
-> Replaced string concatenation with an f-string to enhancing readability
-> and conciseness.
-> 
-> Enhanced Exception Handling and Consistent Error Reporting
-> Specific exceptions are now caught and printed with clearer messages,
-> providing context for errors when opening file descriptors. Added
-> exception handling for the data file descriptor opening to ensure
-> uniformity across the script.
-> 
->   Before:
->      $ sudo python timerlat_load.py 122
->      Error setting affinity
->   After:
->      $ sudo python timerlat_load.py 122
->      Error setting affinity: [Errno 22] Invalid argument
-> 
->   Before:
->      $ sudo python timerlat_load.py 1 -p 950
->      Error setting priority
->   After:
->      $ sudo python timerlat_load.py 1 -p 950
->      Error setting priority: [Errno 22] Invalid argument
-> 
->   Before:
->      $ python timerlat_load.py 1
->      Error opening timerlat fd, did you run timerlat -U?
->   After:
->      $ python timerlat_load.py 1
->      Permission denied. Please check your access rights.
-> 
-> Changes for the read Infinite Loop
-> The original generic exception clause has been replaced with more
-> specific exception types to provide clearer feedback on errors.
-> 
-> Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
+On Thu, Oct 10, 2024 at 1:10=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> The kprobe session program can return only 0 or 1,
+> instruct verifier to check for that.
+>
+> Fixes: 535a3692ba72 ("bpf: Add support for kprobe session attach")
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  tools/tracing/rtla/sample/timerlat_load.py | 56 +++++++++++++++++++++++--------------------
->  1 file changed, 30 insertions(+), 26 deletions(-)
-> 
-> diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtla/sample/timerlat_load.py
-> index 8cc5eb2d2e69..a819c3588073 100644
-> --- a/tools/tracing/rtla/sample/timerlat_load.py
-> +++ b/tools/tracing/rtla/sample/timerlat_load.py
-> @@ -25,50 +25,54 @@ import sys
->  import os
-> 
->  parser = argparse.ArgumentParser(description='user-space timerlat thread in Python')
-> -parser.add_argument("cpu", help='CPU to run timerlat thread')
-> -parser.add_argument("-p", "--prio", help='FIFO priority')
-> -
-> +parser.add_argument("cpu", type=int, help='CPU to run timerlat thread')
-> +parser.add_argument("-p", "--prio", type=int, help='FIFO priority')
->  args = parser.parse_args()
-> 
->  try:
-> -    affinity_mask = { int(args.cpu) }
-> -except:
-> -    print("Invalid cpu: " + args.cpu)
-> -    exit(1)
-> -
-> -try:
-> -    os.sched_setaffinity(0, affinity_mask);
-> -except:
-> -    print("Error setting affinity")
-> -    exit(1)
-> +    affinity_mask = {args.cpu}
-> +    os.sched_setaffinity(0, affinity_mask)
-> +except Exception as e:
-> +    print(f"Error setting affinity: {e}")
-> +    sys.exit(1)
-> 
-> -if (args.prio):
-> +if args.prio:
->      try:
-> -        param = os.sched_param(int(args.prio))
-> +        param = os.sched_param(args.prio)
->          os.sched_setscheduler(0, os.SCHED_FIFO, param)
-> -    except:
-> -        print("Error setting priority")
-> -        exit(1)
-> +    except Exception as e:
-> +        print(f"Error setting priority: {e}")
-> +        sys.exit(1)
-> 
->  try:
-> -    timerlat_path = "/sys/kernel/tracing/osnoise/per_cpu/cpu" + args.cpu + "/timerlat_fd"
-> +    timerlat_path = f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu}/timerlat_fd"
->      timerlat_fd = open(timerlat_path, 'r')
-> -except:
-> +except PermissionError:
-> +    print("Permission denied. Please check your access rights.")
-> +    sys.exit(1)
-> +except OSError:
->      print("Error opening timerlat fd, did you run timerlat -U?")
-> -    exit(1)
-> +    sys.exit(1)
-> 
->  try:
-> -    data_fd = open("/dev/full", 'r');
-> -except:
-> -    print("Error opening data fd")
-> +    data_fd = open("/dev/full", 'r')
-> +except Exception as e:
-> +    print(f"Error opening data fd: {e}")
-> +    sys.exit(1)
-> 
->  while True:
->      try:
->          timerlat_fd.read(1)
-> -        data_fd.read(20*1024*1024)
-> -    except:
-> +        data_fd.read(20 * 1024 * 1024)
-> +    except KeyboardInterrupt:
->          print("Leaving")
->          break
-> +    except IOError as e:
-> +        print(f"I/O error occurred: {e}")
-> +        break
-> +    except Exception as e:
-> +        print(f"Unexpected error: {e}")
-> +        break
-> 
->  timerlat_fd.close()
->  data_fd.close()
-> 
+>  kernel/bpf/verifier.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 7d9b38ffd220..787008872a14 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -15910,6 +15910,15 @@ static int check_return_code(struct bpf_verifier=
+_env *env, int regno, const char
+>                         return -ENOTSUPP;
+>                 }
+>                 break;
+> +       case BPF_PROG_TYPE_KPROBE:
+> +               switch (env->prog->expected_attach_type) {
+> +               case BPF_TRACE_KPROBE_SESSION:
+> +                       range =3D retval_range(0, 1);
+> +                       break;
+> +               default:
+> +                       return 0;
+> +               }
+> +               break;
+>         case BPF_PROG_TYPE_SK_LOOKUP:
+>                 range =3D retval_range(SK_DROP, SK_PASS);
+>                 break;
 > --
 > 2.46.2
-
+>
