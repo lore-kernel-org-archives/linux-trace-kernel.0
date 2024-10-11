@@ -1,126 +1,123 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFA9216432;
-	Fri, 11 Oct 2024 11:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225C9216450
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 12:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728646611; cv=none; b=R4T/jagikSDVGINZYBrRa8sZySVgL2dTdjog/UXg48s+eclNlrVEHYK605fl9/RqlA92ExnHGzTyd5hGCv7iUo+khMmHzZ48BFHZqXzv3xJopzDTGy3AzhIZwIJkEKf3No2qF38nXcNBeCY1BdDq9ZPSUue6upPq+vUj36qHMAw=
+	t=1728648673; cv=none; b=rz/Pi0yAC9UEihL3Wfcn/ge8kkXh5B4PTJCtQ7FLOtroGhJepzLkoIZS/Lh9V9V0qqA6E/o9CWJng7dUAHGnULEpAsDRio7PZk1+QX1aZv0Ny/sSsM1kTH3aLhOU7qRSWRknjQrZyUYGVh/2LzhcfAZEhsSxNn9L54dt9tgBUF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728646611; c=relaxed/simple;
-	bh=fS12zFfDSg5QRtQKUz0FYz6oR+Aj6burkqiVH1GI3sk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mqz50jtThzYa1YQbpdfjZ4vGcU3xO7fYyqLz5KZbEAoyBkG11wh00m3DXvl7Tuh/eSOZanSkGffubRXjK590PGZIWWmHyxv7Efz+iRR1M8T7o2TPu/+G9oAEW3WmeVmOlgrLgH0adSxxjEs1GOeJS8c2w5S/QKl5K3p6L3fSIcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G66Tc2YL; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728648673; c=relaxed/simple;
+	bh=FW3Re/4MHihDttNtVRFbhXjPmq3mJgrq2bIrt+qc2FY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BaZuewnHsHCRpxdozdJ9IWWTc/G79gQSJpGqlMmdaMnmm4ydQHv9dOdyMHqeZi4zNeAO4oAfJWf9m73wSBwhsR9Qrk0zLy2FMCX/1oSUDQXP0Nl1MMEO2RgdmKAJWPDDWPA08XqnsT7DYm5KxRD5AU0pEDDsvnKRfa8kMKY2uxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VxyV1qkT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G66Tc2YL"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d4821e6b4so1050110f8f.3;
-        Fri, 11 Oct 2024 04:36:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728646608; x=1729251408; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fYCLJth7NLoOYxi6Dz0gKrn8jpcKzLs3AoDhQjsXJ1I=;
-        b=G66Tc2YLNMdy57Q/Sf3g9HaRzqmXMS3qpExyOJ0ZnP5+1gDkNIhLhdNP31anGoStTJ
-         CVWgJY4yHiunuK2er/yVRfSRGXnh1f7iNv3ucgd+UHgt78RMZ+kgqx/WpXyplGjIt1Oq
-         tLxnALaHWCV69QPIwk8VcBghsbop099oimOZ3qKkHuN14TMTyKp1XpS9562RLaxjuRKY
-         Gy7avAi0BSHp3OQCDALobq6CE1jL3XwytctN0AXTvE2ZeZiGnYm+Jz0t/990FQAjF8iQ
-         kJu2N7+ayzSSA8RyaUwUJeZwEprizYJjeMFbr0QaVMx1gg89v8Fsj+1EK8uqbfEWyl73
-         5Evg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728646608; x=1729251408;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fYCLJth7NLoOYxi6Dz0gKrn8jpcKzLs3AoDhQjsXJ1I=;
-        b=YIs1+3ZtaTNbchpAX6g+VUWZZ1t4I9prcZNjm9LwH/c33jQNhJaIbUqBvGx/Dbo6Kq
-         H9Hf8Lz+4BM/YCWOgdVzqexSmNy4XsbyFOoqZrSRyTtfwwdvbYinIjgEBmzUB+svjR2/
-         TiRCg3uSzFbUI3citkWdplxYFihWJ8e4Q5v1kHGbsi4jmVFBlPr1TVXypO3joNpsxLQJ
-         DEmKofJ3V0o0wc1TIJPfHXS23jKncvSgQpPlfafyis9hyyQcOLeUim7ZUFpW+jlwRjag
-         RsrCb5+1JdmCNm3PJ3DU22sTRVvoBSMez/rRB0peyXYTQfEmKkGiCv7R2PehPUPfgcN7
-         FUog==
-X-Forwarded-Encrypted: i=1; AJvYcCW+lvmrIFJ6GKbvDOFGyTxTR/vlZcFsc+s6aeMi+45otf2M76265UnGXveIBxmxayoX2JsW3/3ztxW2ZB23@vger.kernel.org, AJvYcCWCTQH30fSy1YAojaYJVrxf5gcO2CoJEWaFphpKKyaYPXhnZGfKV1PJrUx1+zvutZvTUskxc++4IevmyadAnunpvffV@vger.kernel.org, AJvYcCX+wyA41rWoQ/fZ+5FtyEdmryYEM5qsuVakK0cKzr+xiCWL1hNmnY+MTBYlWD9NtEK62so=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe2aAzAEiz6uVzQr73FW9XkmVmwn9OLs5yxjLsdm43CFD3IPQz
-	k2f3yI8wHAQo/09Lg27vKc6nY/YtcjVo328FTaZ6xG1HCFHnTAPa
-X-Google-Smtp-Source: AGHT+IEmFwW6QnxlYpKGtEGpfRqk3WRVeaIiOPfgUcGsKcP0IodfnMtjmOHC04e/Tf0U4P7yW90N0g==
-X-Received: by 2002:adf:f58a:0:b0:37d:4ab2:9cdc with SMTP id ffacd0b85a97d-37d551b07ebmr1483999f8f.13.1728646608087;
-        Fri, 11 Oct 2024 04:36:48 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d4b6d0217sm3710381f8f.60.2024.10.11.04.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 04:36:47 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 11 Oct 2024 13:36:45 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv6 bpf-next 15/16] selftests/bpf: Add uprobe sessions to
- consumer test
-Message-ID: <ZwkNzWPlpK4P2Iyh@krava>
-References: <20241010200957.2750179-1-jolsa@kernel.org>
- <20241010200957.2750179-16-jolsa@kernel.org>
- <CAEf4BzY5zgoYAgJG7tfa84F2Zzjq=YFjh3=OzWqA6h39FfXB4Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VxyV1qkT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728648671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fR97u16bwxFaVWpMfck9/Mx40KkeiFmSRTriXUbZio0=;
+	b=VxyV1qkT+DThD8gDlgpaTO2oYKZoWzLCWQJJhtWW6ZUhR/aSmatHJI0yj1lHIK3HoS7xMI
+	yfnWUmKoyX5Y9fpJbdcIeegvGlYe8ownVHMsvFOsCyfWhcUhTngoVGaBBrIc/1IvPZdTYf
+	bh8TVFspCg0nIZb65lyDBxcFpkK27WA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-694-mYXRnlHWOXOON-vqiW7jYQ-1; Fri,
+ 11 Oct 2024 08:11:10 -0400
+X-MC-Unique: mYXRnlHWOXOON-vqiW7jYQ-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2B06119560BF;
+	Fri, 11 Oct 2024 12:11:09 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.178])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 882FD1955F42;
+	Fri, 11 Oct 2024 12:11:06 +0000 (UTC)
+From: tglozar@redhat.com
+To: rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jkacur@redhat.com,
+	lgoncalv@redhat.com,
+	Tomas Glozar <tglozar@redhat.com>,
+	Attila Fazekas <afazekas@redhat.com>
+Subject: [PATCH 1/2] rtla/timerlat: Make timerlat_top_cpu->*_count unsigned long long
+Date: Fri, 11 Oct 2024 14:10:14 +0200
+Message-ID: <20241011121015.2868751-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzY5zgoYAgJG7tfa84F2Zzjq=YFjh3=OzWqA6h39FfXB4Q@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, Oct 10, 2024 at 07:30:19PM -0700, Andrii Nakryiko wrote:
-> On Thu, Oct 10, 2024 at 1:13 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Adding uprobe session consumers to the consumer test,
-> > so we get the session into the test mix.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  .../bpf/prog_tests/uprobe_multi_test.c        | 63 +++++++++++++++----
-> >  .../bpf/progs/uprobe_multi_consumers.c        | 16 ++++-
-> >  2 files changed, 66 insertions(+), 13 deletions(-)
-> >
-> 
-> you are undoing most of the changes done in the previous patch... it
-> seems like it would be better to just combine  both patches
+From: Tomas Glozar <tglozar@redhat.com>
 
-ok, the diff looks actualy ok, I'll squash them together
+Most fields of struct timerlat_top_cpu are unsigned long long, but the
+fields {irq,thread,user}_count are int (32-bit signed).
 
-thanks,
-jirka
+This leads to overflow when tracing on a large number of CPUs for a long
+enough time:
+$ rtla timerlat top -a20 -c 1-127 -d 12h
+...
+  0 12:00:00   |          IRQ Timer Latency (us)        |         Thread Timer Latency (us)
+CPU COUNT      |      cur       min       avg       max |      cur       min       avg       max
+ 1 #43200096  |        0         0         1         2 |        3         2         6        12
+...
+127 #43200096  |        0         0         1         2 |        3         2         5        11
+ALL #119144 e4 |                  0         5         4 |                  2        28        16
 
-> 
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > index 2effe4d693b4..df9314309bc3 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-> > @@ -761,6 +761,10 @@ get_program(struct uprobe_multi_consumers *skel, int prog)
-> >                 return skel->progs.uprobe_0;
-> >         case 1:
-> >                 return skel->progs.uprobe_1;
-> > +       case 2:
-> > +               return skel->progs.uprobe_2;
-> > +       case 3:
-> > +               return skel->progs.uprobe_3;
-> >         default:
-> >                 ASSERT_FAIL("get_program");
-> >                 return NULL;
-> 
-> [...]
+The average latency should be 0-1 for IRQ and 5-6 for thread, but is
+reported as 5 and 28, about 4 to 5 times more, due to the count
+overflowing when summed over all CPUs: 43200096 * 127 = 5486412192,
+however, 1191444898 (= 5486412192 mod MAX_INT) is reported instead, as
+seen on the last line of the output, and the averages are thus ~4.6
+times higher than they should be (5486412192 / 1191444898 = ~4.6).
+
+Fix the issue by changing {irq,thread,user}_count fields to unsigned
+long long, similarly to other fields in struct timerlat_top_cpu and to
+the count variable in timerlat_top_print_sum.
+
+Reported-by: Attila Fazekas <afazekas@redhat.com>
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/timerlat_top.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 210b0f533534..ee7c291fc9bb 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -54,9 +54,9 @@ struct timerlat_top_params {
+ };
+ 
+ struct timerlat_top_cpu {
+-	int			irq_count;
+-	int			thread_count;
+-	int			user_count;
++	unsigned long long	irq_count;
++	unsigned long long	thread_count;
++	unsigned long long	user_count;
+ 
+ 	unsigned long long	cur_irq;
+ 	unsigned long long	min_irq;
+@@ -280,7 +280,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
+ 	/*
+ 	 * Unless trace is being lost, IRQ counter is always the max.
+ 	 */
+-	trace_seq_printf(s, "%3d #%-9d |", cpu, cpu_data->irq_count);
++	trace_seq_printf(s, "%3d #%-9llu |", cpu, cpu_data->irq_count);
+ 
+ 	if (!cpu_data->irq_count) {
+ 		trace_seq_printf(s, "%s %s %s %s |", no_value, no_value, no_value, no_value);
+-- 
+2.47.0
+
