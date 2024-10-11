@@ -1,59 +1,59 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27AF1F9409;
-	Fri, 11 Oct 2024 06:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30AC20967E;
+	Fri, 11 Oct 2024 07:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728628437; cv=none; b=SNMHWTdPPFvhXNPia2uWymZulYkjvHkPzM87JxRYAAOHl8Fv6E4Qjyv/UQatVpGPXcZeKJWW+0UaIg9DIR9Ynj0FPGOvL3lAs8no16Yqocm7YgeiQbMQpy9pfbd1fFKIW4X+eVw5GmEa1am3zJlK9SrQSzDy5Y/tviLn3qM5LOw=
+	t=1728630744; cv=none; b=gLRueFtB1nWRVU3zSZHbGnCgmSkHSZg3oO8Md6amdbud5H3I9JoF4misSUL6hXqYk6KM0sYSkAFqJfTCpA7HaOBao22qRqCBDfDPjbH5QcyJaKiCOBQ/opbaC9XiHH4qJDMSrK+TCFGHsbX5OSW2sdbqttp824Yhu57+gSbOhwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728628437; c=relaxed/simple;
-	bh=ArjalxxQ+s6rtUD5kzrvbWQPdJuCy05+qv3EO41cnzw=;
+	s=arc-20240116; t=1728630744; c=relaxed/simple;
+	bh=tY4TYXxX/WadAeNKarfkA3AXEpoRczdft7qlw/eTD8E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UUZmkUKQZC6B9ABULwTdu0XOz5tZ8UNUD9/MTpUJySDYkwNkafkon1MESkTMm1tM0IRAyDhyJoLFQwdzX/nNpYTtQLT3/q3sNNuHmvbvabzE4sreAgdxqVbJ8p+kfZr360HKTSsi+y7Nyq4gpXsFUhH+Mg+3JZ5qai9hYWA9ER4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WhWZoY6f; arc=none smtp.client-ip=209.85.214.178
+	 In-Reply-To:Content-Type; b=oNCnD1ktXE3zrEmj37MH0mDcUKkZZ0aqfLRX5mk2XoCzIsS7wOyZ8fEIQp9lgcb0kgbeVBMQ5aC5yXqI+lAfuGDYu9+hqqefl2q/ixUadENBwSQ3eeo9hN+DhoHVKnuZIBQA4KcwVCI1FZ4eP501L1qpDJEACK9Sx3X47djuCDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hjVTwDlu; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WhWZoY6f"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c805a0753so14710185ad.0;
-        Thu, 10 Oct 2024 23:33:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjVTwDlu"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-20c693b68f5so17453775ad.1;
+        Fri, 11 Oct 2024 00:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728628435; x=1729233235; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728630741; x=1729235541; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=3WnRI6VJW3LMJo7XyXYei3wi8KKKDu4i1MPedhJrbTs=;
-        b=WhWZoY6fKlkmkHhr+XdkKXaP67O6mRMqzorx0TjpL+peeBTK7hP1k4Tl5FGZ1Xqhz4
-         lwMJQY8L2xcg+3Y4PTveVs9Dbrxha22+ANB4iVxkC0O8NnoiDgQ5ypj1esF/rLUo4tmq
-         fheVDQLz+tpt2vLUq9k5Fklv7DJnv/WKnA21qPFovAXj6DaXSzHwWAuEhmH4f02wxoiR
-         ZfVHglnqzZv71wgFHWBvFIPdKboVxm/NmvSYQCbLhNCAt3yi60u3NYQgECoR6trCCCE7
-         0+28WQ2wU24fQkqLAxnwhM0quiQ1yjhhz/N/087LmYSG4NSqhHOURcXCSAxaMn8KTAP5
-         1P5w==
+        bh=cF7M0cebwJ63IntgzoRMWt16PVXK9O5OCPTAkQex8RI=;
+        b=hjVTwDluv1aEkscT/lvYwZ/4Cf6XSjscs0I/T+oeRcAUWQ+uuxt2hXGXG4vJ+ZjaP0
+         2NUSvdNR5JUTGy0XXcDRlDXV4NZ2aORDqmI6nfwNUmiLdTuIfbmH1jBSbJMeX5Mr4xnx
+         xzAyJKFCn+ydgmhhb0PRQxec+v4b/aAOZTDKWlq/nDNnvjUEtaFlW1S3qQ0BFD4IV0of
+         kJTUdRboA1Oz0bf1UTqEyXPpScgQPd03+m53Mdl3UUf8YtlhMOspAx7OZEXpdOM8Eyi6
+         Yup48+0KSdJpq7eyTlCY+y5ysAPYgsIqApY9Dx9Ac4nKNRzwS0Jk4nHQa20esUXiFcRL
+         UgWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728628435; x=1729233235;
+        d=1e100.net; s=20230601; t=1728630741; x=1729235541;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3WnRI6VJW3LMJo7XyXYei3wi8KKKDu4i1MPedhJrbTs=;
-        b=vN32zBD+He80SeNGB1LuBk5Ol7/mL90eIUhdEkOeXNHoParYQSRvH11oPDGi5ZOA0c
-         keigWg8wM2/fH9ECetGh0Wust0Jd8Vrivt2wJTwYnqGgmwwU0Je8fk84BbPaNbmyUFLk
-         /B8+Wg6ykq5nrD4RQVzPqGg36Qp0ENoLMRIzCqhF0ig5erix0AttABQp0MUw5zffamdS
-         PIPA7LYtOdBz4DcJ/pE/63vGuds/Fkp9kRM0/Vf0wMWjlW1UnwcudveVdeLGUKT25IUt
-         Sxb5aZHi6MCpKZrn4vCjtNbxkj2/QNJJBF1gu9xN0zvce+Wkz2qhC+AkdjZ5WFcHMEj9
-         s5Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6mwPNk/aeHObKoq6vRsGqlL3uIzYlakMS3w0809Emote5nBhcP9tnqj7MnJNxbZg+6VRQFIIrWfjGrTI=@vger.kernel.org, AJvYcCXicqqKOXnxziQYUzbv8SJZRhv4O2Sr4ptJhBG8oe4ErkbbzD3mrYWMDOUFn0qX2C90iF91AplYJOFkB4+KPa4ynT/6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxobvbFt7vSVNG2UmvuVHtyRUKzP/zA0iGNb8VIVE3l5k34Yaxg
-	cVwJSReLBMNPV/AfI1OXanF7kiUUgx6V7FWmuE+TWIb3hn1JLEdBlAOXqgOa
-X-Google-Smtp-Source: AGHT+IGuBokSOGFJjSMAWGi7G5B5xEW5Hzvq7E3ESeZXv9hQ8ngmO1CJIkB5s1U2pM5S8nH44z3Zag==
-X-Received: by 2002:a17:903:2b10:b0:20b:8bf5:cd72 with SMTP id d9443c01a7336-20ca16dd70dmr24748315ad.49.1728628434968;
-        Thu, 10 Oct 2024 23:33:54 -0700 (PDT)
-Received: from ?IPV6:240d:1a:13a:f00:4b94:68e0:2d8b:3983? ([240d:1a:13a:f00:4b94:68e0:2d8b:3983])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c33ffe2sm18189905ad.270.2024.10.10.23.33.53
+        bh=cF7M0cebwJ63IntgzoRMWt16PVXK9O5OCPTAkQex8RI=;
+        b=LxswpN1tLdKDvbuueJd2USrDkijUk9A7Q/jLwAeaILQV20tf6eFhDq/a9g3mCtXhrf
+         xEmGAQjXQ9QjGD0o7f4YT3zrNxI9VTUGj622Tq1Ffnnwd3X0OaIi81OFjolx1OWtFOA7
+         xVTpNVoTRR83Bgy35AZ5PrHiSef4ghRoGViTE4RoEm69Aay6Hz0NBcZB7qS2r4Jx9QwN
+         ZHkas2hzEeDFMrbx2nAyIJThAiINIhTDlzZTVVZE2AgwrI+ZxgBdHAbl9Ssdoge8+H4K
+         ULsqedi8oRfTVjEbPcBplJiUj99bknzhVHuQP35U+CI3fYVoXwyxflSLWXWrD+Cir7hY
+         gu6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUijNgc6V90C2V+0KZ7R6/HPgAbgSnG89HD7z8ZjlEBTLp3DpesIGAcl7HwXLPVL5BeOt6MpovRwcg=@vger.kernel.org, AJvYcCVk7aa5Ey0ol1GnNjNcdXA8ZXeieD2QjhBpf0BMcpxguwz8HiMWYL5M3iTxJY9c/UvOHWdHZ0t8ejwR4W13yJ+QlYzc@vger.kernel.org, AJvYcCWhDRSWPj/7Ro+Ye7Xak7EZG0G+rpwksNqv3XXPEPAo17NdPnw5n/p4K6hoasVsInNG1l6pxoxxMjwPkrgk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiPy7hugOTcCO4XrxyMzYlvmF/kLisb059vxmUff+f4X11XR+e
+	v8NjFXO2NTA84wBAuPlOf82QpLt9I5FklYiK7gpQKcoSsEAb5O66
+X-Google-Smtp-Source: AGHT+IGurRqmXPgBljb7X8G/0d/ADwpqBXAygImRXg3sHuPg55cFVXhCCEzdFL6RWOZYFe6ikJ5dcw==
+X-Received: by 2002:a17:902:e845:b0:20b:b26e:c149 with SMTP id d9443c01a7336-20ca1467cf5mr22313035ad.29.1728630740851;
+        Fri, 11 Oct 2024 00:12:20 -0700 (PDT)
+Received: from ?IPV6:2409:40c0:11a4:8d8a:4468:2628:16ef:9650? ([2409:40c0:11a4:8d8a:4468:2628:16ef:9650])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8c0e74aesm18692215ad.152.2024.10.11.00.12.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Oct 2024 23:33:54 -0700 (PDT)
-Message-ID: <c6cf37dc-a2c8-4b81-bb99-1231636ea3fc@gmail.com>
-Date: Fri, 11 Oct 2024 15:34:07 +0900
+        Fri, 11 Oct 2024 00:12:20 -0700 (PDT)
+Message-ID: <e7851def-91ce-43e7-880a-22dc5752c4ad@gmail.com>
+Date: Fri, 11 Oct 2024 12:42:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,81 +61,58 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: Fix function name for trampoline
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20241010130300.2083-1-tatsuya.s2862@gmail.com>
- <20241011000347.4b16dc96221873388475cb40@kernel.org>
+Subject: Re: [PATCH] docs: fix WARNING document not included in any toctree
+To: Jonathan Corbet <corbet@lwn.net>, Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20241002195817.22972-1-surajsonawane0215@gmail.com>
+ <20241010154708.0bf658a3@gandalf.local.home> <87y12vzqg0.fsf@trenco.lwn.net>
 Content-Language: en-US
-From: Tatsuya S <tatsuya.s2862@gmail.com>
-In-Reply-To: <20241011000347.4b16dc96221873388475cb40@kernel.org>
+From: Suraj Sonawane <surajsonawane0215@gmail.com>
+In-Reply-To: <87y12vzqg0.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 10/11/24 12:03 AM, Masami Hiramatsu (Google) wrote:
-> On Thu, 10 Oct 2024 22:02:59 +0900
-> Tatsuya S <tatsuya.s2862@gmail.com> wrote:
+On 11/10/24 01:21, Jonathan Corbet wrote:
+> Steven Rostedt <rostedt@goodmis.org> writes:
 > 
->> The issue that unrelated function name is shown on stack trace like
->> following even though it should be trampoline code address is caused by
->> the creation of trampoline code in the area where .init.text section
->> of module was freed after module is loaded.
+>> On Thu,  3 Oct 2024 01:28:17 +0530
+>> SurajSonawane2415 <surajsonawane0215@gmail.com> wrote:
 >>
->> bash-1344    [002] .....    43.644608: <stack trace>
->>    => (MODULE INIT FUNCTION)
->>    => vfs_write
->>    => ksys_write
->>    => do_syscall_64
->>    => entry_SYSCALL_64_after_hwframe
+>>> Add debugging.rst to the relevant toctree to fix warning
+>>> about missing documentation inclusion in toctree.
+>>>
+>>> Signed-off-by: SurajSonawane2415 <surajsonawane0215@gmail.com>
+>>> ---
+>>>   Documentation/trace/index.rst | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+>>> index 0b300901f..2c991dc96 100644
+>>> --- a/Documentation/trace/index.rst
+>>> +++ b/Documentation/trace/index.rst
+>>> @@ -24,6 +24,7 @@ Linux Tracing Technologies
+>>>      histogram
+>>>      histogram-design
+>>>      boottime-trace
+>>> +   debugging
 >>
->> To resolve this, when function address of stack trace entry is in
->> trampoline, output without looking up symbol name.
+>> If order matters here, I'd like the debugging to be at the top. As I plan
+>> on it being more of a tutorial for using tracing, and should be the first
+>> document people see.
 >>
->> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
->> ---
->>   kernel/trace/trace_output.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
->> index 868f2f912f28..32a0858373e2 100644
->> --- a/kernel/trace/trace_output.c
->> +++ b/kernel/trace/trace_output.c
->> @@ -1246,6 +1246,11 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
->>   			break;
->>   
->>   		trace_seq_puts(s, " => ");
->> +		if (is_ftrace_trampoline((*p) + delta)) {
->> +			trace_seq_printf(s, "0x%08lx", (*p) + delta);
-> 
-> If we know that address is the ftrace trampoline, we'd better show something
-> like "[FTRACE TRAMPOLINE]"
-> 
->> +			trace_seq_putc(s, '\n');
-> 
-> And this is not needed. So for example,
-> 
-> 			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
-> 
-> is enough.
 
-Thanks for review. OK.
+Thanks for the feedback!
 
+>> I need to take some time out and start filling it up!
 > 
->> +			continue;
->> +		}
->>   		seq_print_ip_sym(s, (*p) + delta, flags);
->>   		trace_seq_putc(s, '\n');
->>   	}
+> That's the order that the links will show up in the rendered page, so
+> yes, it matters.
 > 
-> Thank you,
-> 
->> -- 
->> 2.46.2
->>
-> 
-> 
+> jon
+Can I send an updated patch with this change (moving debugging section 
+to the top)?
 
+Best,
+Suraj
