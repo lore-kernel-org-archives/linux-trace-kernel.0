@@ -1,150 +1,108 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBEF1D0486
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 19:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A001D0DCB;
+	Fri, 11 Oct 2024 19:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728675511; cv=none; b=qSavJOTFElIWMDO/gz3owuPMiL5hw0DbYgU/z9U/ALBK90xARqAiFpHej05j2UiZUWLlcg1VGj0YxOOv0T/18YRIiqr74w5QtB5c52CNy0d929NkzHOBRd/tjzfoblDqtTPEsP0gkTvE4wHbw/UTnuYqaYZs/SsWQ1rKwsoIVWc=
+	t=1728676128; cv=none; b=NFFiR0NG1DfTYaunyrlNoau9ErWV0P4x2KGzHj2r9D+6g+tsu+oirgoVhYb3jNInSKPvrc13DwmDLEuHJ0kELso9WNVZ6yK3v4MBqrkY2Fg2HNaoN8YHy6jOUBChYyYrF8A9ic3tws95hB7m4TyTSp18KfVzclDrw8gQDDhhyog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728675511; c=relaxed/simple;
-	bh=lIT4MF3P08EUQ/ItxiJCyTg8JaALptzUPgWCabDCkKc=;
+	s=arc-20240116; t=1728676128; c=relaxed/simple;
+	bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nLkQDT1zO2F/LQ6ydGiTT5ggwDJTPNca3ASmq0gDtCQIhWWONqpBfdcsSroT5frzF1pEB5ytMAnqoYHPfmNmKT5SWNR051QRdgXSp8Up8Vy+Js1w2wdTJpU6wLx8v1HYHAV2rq8gexL8Q+NK83k76Cdp6xxrsPzdroqWWwh7y4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XjkjknEt; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=lIEblLOYoNyBrx2TBFhlVY8DmDGhN4nSsmWDVGK/nxd+QDPrNMnP2BvebZ7Oe0kYOrtnkt1pxOk+GpeJaJlfJx44Myl4g3e176XFkamLcoXhe5jwC/7sD9eBrbY2aMjo/fKLSiYv+ZhyUjvdCSI57WYUc/5zFcAuVKW8KRsBqL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EuJ4qsYT; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XjkjknEt"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4603d3e0547so40541cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Oct 2024 12:38:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuJ4qsYT"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71e02ceccd0so294914b3a.0;
+        Fri, 11 Oct 2024 12:48:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1728675507; x=1729280307; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1728676126; x=1729280926; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f4/PPqatSk2BAD8kUIT/38Gyd1BY7fTrP7ap/2S9Mqk=;
-        b=XjkjknEt5tftq70KCGlTHLD1Bh2BPjVE2PxpnBWMyyvy0Sp3gh+Ou2AGHu9p3dWutG
-         Ly3++jhiM30xrysorDSmgJ1/CrEZtf6ayIU3Zmwx3Vb8IUgL3FRRSfyF9Uq+Uzbj3vUN
-         u/bUYraAbm5jodAmY4pqow/Khq+dr2J2OnWFkAw+h8J7APJ1G+1llNpGccZsVYLd3rvD
-         +QBQRdyuhuBJG6aMG9ikacbC88xyvg5Opx9d5h6aw4PuP1rE87zMIrrAmpxqP3AFOGuK
-         ExS8+5YeQleDH4F25vvvICWGh0gbjOcW75+6kisVvnRm7+3uDYn2SyaicjpmO643m7Cu
-         Y50g==
+        bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
+        b=EuJ4qsYTMtpL7ptb2A5o8sbXNkWJIkDxx2H6yfQVT6/Ykx2AcFtb6OhQ5TF3R/hYml
+         sAx3bwas+OINEWD8nUU2MQ/wpPLhaMGAp8uVyOaNZwglxP0/wkv8MoVLnMCuW0M87GkK
+         OVg6Y3RpNWVlbm7nlaxReer0AT3SYE1kaTkn05cDOJ/Q19yX0lXCX/1M6jfjjR/yDEu2
+         9+O0Mu4wyhg0dxM0pHzvZ7EpuC+SevDBXfsLcRn1dh1IDiz9ST8IvqqLPMoDU9Bxekt7
+         TyL8LEBP9HHjJpsDfE9VPD8Fd96D68TKzv9rS1jCrSu8acYUlzR3iQfQnNaGoPr5aN7W
+         Aw1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728675507; x=1729280307;
+        d=1e100.net; s=20230601; t=1728676126; x=1729280926;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f4/PPqatSk2BAD8kUIT/38Gyd1BY7fTrP7ap/2S9Mqk=;
-        b=c4nTFTE/D8cnPPkaYL1ESO3WuPKsRopyaqBC28f2FjRvF2UqMQtxS0ZfgWOueqa2el
-         sWu4pf4et6kEpqVO/Vf5+q0hwc0I0Rs94QyA2wsFQil5FYrV0fzamgEKYeoLICNQ/F0n
-         LndxsTZcC49NpNLL0M6giEqs2x4U+D6yuHIL2KN8Gjcy88Zn9gWUOHACe5g+bzlQ8HSr
-         BmUZS3hZqgr2njuaUUM8IxqrG8/hKmMjgojwOIMikFjOau+6J9xnJrOxSVsJSYYUS/xL
-         XD9KnFYnW/5s8jN+Y0AbKu3VM061x3oQ6odOICHxPTm6LzUS3FXeYTLZLjrIZo6Z7B+Y
-         EZNg==
-X-Forwarded-Encrypted: i=1; AJvYcCW8FlBal6/DNapQ8WZ2s9FA+gz93xHpa7w3Hfbkw6Pv7+O75o0yli0sQ6wNnY6jiJRvslWzE+ZtX8P1v8VBZRskSxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLhwRNQKbPQaoXnRkwAJjBA4Sc/FJXWdER06xv1wjoakwFwv6B
-	8tOO4tAh0fcU349vQ7xbvyBUa4SZCyKW1GrvaBiYiRHWuV8S4UlZXkgSzHwOSd4/RnwCoc+6X3+
-	0pVyIF4tQuwWJ2+sjl5xglQWQgY4hD7rslKBG
-X-Google-Smtp-Source: AGHT+IEJvq2uzdDh3W2Sfu5aWaK5xhLaKiCn2xWH/iIRkxgpB4FklAs+UX9kaTQ1TkS7P0dLyhTRAOjn/li4z+5WdqQ=
-X-Received: by 2002:a05:622a:468c:b0:45c:9eab:cce0 with SMTP id
- d75a77b69052e-46059046571mr529141cf.15.1728675507274; Fri, 11 Oct 2024
- 12:38:27 -0700 (PDT)
+        bh=eHR1pJM+yQAJRr+EhCLcm5xM2IPL3wNgQ41k9P8Ch74=;
+        b=lM+vVSSRy7mC1moOtGQ7VHkM4UbQcD2IJ+KDAbdld71/IujD4nCLtIWLnTiBsoABGA
+         3vQJibx9EzXovkuSfG7xZucZxgU/etko5VqtKOKtKj3cFUmi7drwDWCcR8AjjbFPjg3S
+         gUHMV/hSHWcxL0XHJRLZt/OuckDQh98AHcRahKK/gR8YtLioXErt+zZlABO2HtWz1z6+
+         gKGHlmd0L9+BXgvAEM/xy/qpNJUSmHrljAsdhZ5TJVUp8M10IBkfKMp5I0VOewNoYXAO
+         J7LpCw6Y/HfRhdO4NF08eN571B17dMaKvHdCYakwYXeKAQPjuiz/xDpb4oUOk472gDtu
+         sM0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUS+zmL2T89XJtn/vYfltBiBqjBpZAhKNdggR9xrVE+Iy/Evy3ufRHLwn2E2mC9kZmzdmyBNXsr6L+W@vger.kernel.org, AJvYcCUX/GnPxllPO4CM05HNScN/Uwu2GbThIkLzX93qTpSBBVFlNze+cgGX0TIhYIoG5CaJhrFkocW5sNUhrdZq@vger.kernel.org, AJvYcCUfLgzYWJfPv4whYsWvFZUEqmR4dSyN7YWRW5CwahwPZi0YXyUWzBNmd+r2o2HDfM4NMtQYTr7K1Fef687yPG8=@vger.kernel.org, AJvYcCWTaY0T3jva5TyHxTHZ/PXFr38HkQuFwu0SJ9nCqYIy3vE7AO/1X7nL10mX9v0iG+FssbwFlTPUZyfV9qNuPFkB226r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyzj8iYKBrI/QNcbZAWb8HFXk21SHqSqQrBYrTEJ4JMJgn/zxvk
+	0jGg5/y011+fU5baK12PpSAeBQGdHly6MhW0KEG/O5AuDsQyyjgQ/UJ05bzHsrpWfBqcUej0oQt
+	cBQpOW1YDQB3dt0c2vZo5xetmfNU=
+X-Google-Smtp-Source: AGHT+IFm+UwkG6WIg1AqvuqnbDwrR2uK/LvnAOy5vxbnvuoTMa/HQ5sfAKze/sYR1OTnuhhXIrv49b/1Hp/O75r3s04=
+X-Received: by 2002:a05:6a00:9494:b0:71e:3ee6:f8a8 with SMTP id
+ d2e1a72fcca58-71e3ee6f918mr1949743b3a.1.1728676125868; Fri, 11 Oct 2024
+ 12:48:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909054318.1809580-1-almasrymina@google.com>
- <20240909054318.1809580-11-almasrymina@google.com> <Zwe3lWTN36IUaIdd@ly-workstation>
- <CAHS8izPuEUA20BDXvwq2vW-24ez36YFJFMQok-oBDbgk6bajSA@mail.gmail.com> <20241011082707.5de66f15@kernel.org>
-In-Reply-To: <20241011082707.5de66f15@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 11 Oct 2024 12:38:14 -0700
-Message-ID: <CAHS8izMVjfrYopPpmg4dN33VL7bF-icS=HFDPOhmW96rgthErg@mail.gmail.com>
-Subject: Re: [PATCH net-next v25 10/13] net: add SO_DEVMEM_DONTNEED setsockopt
- to release RX frags
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "Lai, Yi" <yi1.lai@linux.intel.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Donald Hunter <donald.hunter@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Magnus Karlsson <magnus.karlsson@intel.com>, 
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	Nikolay Aleksandrov <razor@blackwall.org>, Taehee Yoo <ap420073@gmail.com>, 
-	Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>, yi1.lai@intel.com
+References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
+ <20241011-tracepoint-v10-1-7fbde4d6b525@google.com> <20241011131316.5d6e5d10@eugeo>
+ <CABCJKuesYQWvfScFaqv_rW5ZqAJNn4zK9iOFAmyTaYKO3S5hgw@mail.gmail.com>
+ <20241011171251.0bd53f01@eugeo> <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
+In-Reply-To: <CABCJKue7qT9drhgrXPEjBO=gPw79vYELAZxz747Z8WMF=vj2MQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 11 Oct 2024 21:48:32 +0200
+Message-ID: <CANiq72nOCkzTyJCydHOrkz3MRizb27sDO_5Y_cKEv3oZDNNqqQ@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for static_key_false
+To: Sami Tolvanen <samitolvanen@google.com>
+Cc: Gary Guo <gary@garyguo.net>, Alice Ryhl <aliceryhl@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, 
+	Andrew Jones <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Conor Dooley <conor.dooley@microchip.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	linux-riscv@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 11, 2024 at 8:27=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
+On Fri, Oct 11, 2024 at 7:52=E2=80=AFPM Sami Tolvanen <samitolvanen@google.=
+com> wrote:
 >
-> On Thu, 10 Oct 2024 12:05:38 -0700 Mina Almasry wrote:
-> > diff --git a/net/core/sock.c b/net/core/sock.c
-> > index 083d438d8b6f..cb3d8b19de14 100644
-> > --- a/net/core/sock.c
-> > +++ b/net/core/sock.c
-> > @@ -1071,11 +1071,11 @@ sock_devmem_dontneed(struct sock *sk,
-> > sockptr_t optval, unsigned int optlen)
-> >             optlen > sizeof(*tokens) * MAX_DONTNEED_TOKENS)
-> >                 return -EINVAL;
-> >
-> > -       tokens =3D kvmalloc_array(optlen, sizeof(*tokens), GFP_KERNEL);
-> > +       num_tokens =3D optlen / sizeof(struct dmabuf_token);
-> > +       tokens =3D kvmalloc_array(num_tokens, sizeof(*tokens), GFP_KERN=
-EL);
-> >         if (!tokens)
-> >                 return -ENOMEM;
-> >
-> > -       num_tokens =3D optlen / sizeof(struct dmabuf_token);
-> >         if (copy_from_sockptr(tokens, optval, optlen)) {
-> >                 kvfree(tokens);
-> >                 return -EFAULT;
-> > @@ -1083,6 +1083,10 @@ sock_devmem_dontneed(struct sock *sk, sockptr_t
-> > optval, unsigned int optlen)
-> >
-> >         xa_lock_bh(&sk->sk_user_frags);
-> >         for (i =3D 0; i < num_tokens; i++) {
-> > +
-> > +               if (tokens[i].token_count > MAX_DONTNEED_TOKENS)
-> > +                       continue;
->
-> For the real fix let's scan the tokens before we take the xa lock
-> and return an error rather than silently skipping?
->
-> >                 for (j =3D 0; j < tokens[i].token_count; j++) {
->
+> It's just one line per helper, but sure, I do see your point.
 
-Yes, sorry, I called the diff above an 'untested fix' but it was more
-of a hack to see if I got the root cause right. For a proper fix, we
-should do exactly that. Scan and see how many tokens the user is
-asking us to free ahead of time, then exit early if it's too much
-before we acquire locks and loop. Will do!
+I guess we will have a lot of helpers added over time, so even if it
+is one line, it may end up being a lot of lines in total. The rules
+should stay constant, which would be better. Having said that, it is
+true the extra complexity of the rules isn't great either.
 
---=20
-Thanks,
-Mina
+Cheers,
+Miguel
