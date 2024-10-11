@@ -1,297 +1,214 @@
-Received: from GBR01-LO4-obe.outbound.protection.outlook.com (mail-lo4gbr01on2127.outbound.protection.outlook.com [40.107.122.127])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2081B1BDAA1;
-	Fri, 11 Oct 2024 12:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.122.127
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728648809; cv=fail; b=JUPEcAAIqRnPFb0FavFDahCApJ5vnHk/H7sD/gFlbZvPSdTtnWTmfRsUlZtFC36+7HSaGRgoMQAlLfwG/K3/qQjzrLX3Z4QPrk0Wi+8EttGQZdW9nlL1cZNe+6jgvjaNpwt6DnRNlPZOHW8TP4PphqFsX2M3urgCxWXP9sf2g90=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728648809; c=relaxed/simple;
-	bh=N6kBlFnhxHbzzRLvy2n0TO0HMSJSC/kk/oHPglWikRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MR78ImdvcpAkDDRPT2v5qMTx3deUfaiaj4A8rDj5VvYp0hJNU6KB1Ry6sRQdlfX02v9ePrmHJha9hxt7kAlJIYPFuzEhCLH9fpM/1Pj5IBHOIux5li8+ALIRD2ShZxq8DJBZeKpSJqBJcmGDlMlw4Q5fUVOgBlRmIbn3VKQaAWg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=qnVAhyz1; arc=fail smtp.client-ip=40.107.122.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=garyguo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD882218D69;
+	Fri, 11 Oct 2024 13:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1728651715; cv=none; b=Qyoiimoe8Ms2p2HcaJ+vIuN+xrB6uhv9YpsdQLKJabgCs0Ii50l7NXielSprcakeUTNDbPtUysZMZPZlQbuBZoLGs3H78ZXZAyAZKNPZjVv8vyYSwhHLfcJzELtYx7MscuDcakpW2iAmj04t1+cl6HCLoTZOsYg00IB7ZdX2rCA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1728651715; c=relaxed/simple;
+	bh=j6FIkJsgrJb7Fy59tSRAkzfdThNSkDRiwl7mc5Gyfrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lui3SpDtahZHaPTCJziDEtUrwD2PfBBiKXeauK5K+qjqfR2Q2Q/ewELhImdolxa1PbOUES4jOUS8BqybyoOnnJxcSIl5/22kK+Vsen8mOOf4pISca40n2fmHaM8qTPEago80rPSFs5uj1J+78kSB5Kdch4Auo3yuoxkqSG0cd/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaq6u26x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="qnVAhyz1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EzYC0uPxcOlWNviNH7x9xIWyTraI2XgloWvh3c8Gloom7etjsN03lV9zIGh2EEkEUK+2RhbOpIuV6wp5dPEakLpsdwjYNUHei6uzP1XGrqGwnQH5O9ARdjDVrD06XrsXIRQkdz4GEV/J+0OYl/UeRrIp7HvyfYcgyRWdC0NFPzV/cb1glPxUMY85xjgsMJytXY1pQnXl84xHRRVBSNKoy3rPvJP53BkQvo1ssLxQOzKYnmJheHBIXffl4E+2eeNawCXKxOuHLeJ8pfqPXwJAObHWGTsc9myPjbvtd3qEGjdRVuac/Mx712Xu/XgbXdGvoR76ggyz7OdsgCGp46FdEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4DDq+WoksRSvViNEEuG0Aq4sek7ulKuTsXTctEeA4ds=;
- b=VutUZ6OC5TPcAq8vwuXBg5hrdHkShEU3+f9MiLLTy/6eyGuWZaepJleJYhUJs/kNTaIZ+q9pggxyPlzhhn88R7AjKLpPeSF1PAnWP98zRZyBexJkPnq3ENFIXXMS6x/VswKLyJn7P/HXLgmZ1HqLwdaRtcRXKuFUMuPMe1y3TAGuEfBujG9p40k+pB+7bQkRBszF4DdQjMzs6iIn3jBNt+l147/4FEBMnIyLsdTOmazM2hWHzOTsgiUHHvJYl+P5wGdT1eJXvU1sxIdvpx9Qz484kMVxx0L7sq0HXJBtIiXaQJ4gNdBDLZ05pl3VBsmSjZ5gCVjnDp9IQHV4SvDzcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4DDq+WoksRSvViNEEuG0Aq4sek7ulKuTsXTctEeA4ds=;
- b=qnVAhyz17o0GN+MJ/M1UCcjojgVCA4OuJOWs2C2BT4AfboW+qLLo+nYrjRF4UdsVJeJ2lC7UZs0vSgx9iq9aZGkGoO7H3Jbcnt/R8W0bPcVo6jw8CfnO+Dqb+arbp2xrBfWHjqLq8z6AVTy8KuR+wpUMTta/q6o7uKpgPnmVUyc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=garyguo.net;
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:253::10)
- by LO2P265MB7220.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:31d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8048.18; Fri, 11 Oct
- 2024 12:13:20 +0000
-Received: from LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7]) by LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1818:a2bf:38a7:a1e7%3]) with mapi id 15.20.8048.013; Fri, 11 Oct 2024
- 12:13:20 +0000
-Date: Fri, 11 Oct 2024 13:13:16 +0100
-From: Gary Guo <gary@garyguo.net>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
- <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor
- <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, "=?UTF-8?B?QmrDtnJu?= Roy Baron"
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas
- Hindborg <a.hindborg@kernel.org>, linux-trace-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann
- <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>,
- Uros Bizjak <ubizjak@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
- <oliver.upton@linux.dev>, Mark Rutland <mark.rutland@arm.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-arm-kernel@lists.infradead.org, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Anup Patel <apatel@ventanamicro.com>, Andrew Jones
- <ajones@ventanamicro.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, Conor
- Dooley <conor.dooley@microchip.com>, Samuel Holland
- <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Bibo Mao
- <maobibo@loongson.cn>, Tiezhu Yang <yangtiezhu@loongson.cn>, Andrew Morton
- <akpm@linux-foundation.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
- loongarch@lists.linux.dev
-Subject: Re: [PATCH v10 1/5] rust: add static_branch_unlikely for
- static_key_false
-Message-ID: <20241011131316.5d6e5d10@eugeo>
-In-Reply-To: <20241011-tracepoint-v10-1-7fbde4d6b525@google.com>
-References: <20241011-tracepoint-v10-0-7fbde4d6b525@google.com>
-	<20241011-tracepoint-v10-1-7fbde4d6b525@google.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0147.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c4::20) To LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:253::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaq6u26x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DABE8C4CECC;
+	Fri, 11 Oct 2024 13:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728651714;
+	bh=j6FIkJsgrJb7Fy59tSRAkzfdThNSkDRiwl7mc5Gyfrs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oaq6u26xuDAEns7R2BMHzk4mIfr5FvGiVAeZZthgyUlPcz06DFRl95J0wmkdOT54S
+	 YxSAeidiUzjAm9FHVkdDWMVY0Rbrih0bi/ggL0JYHKzOopKm6PqY7SOiicdRP66yLH
+	 5VGXr5I3OyVhwrNf1s3DsezlYqKELPmsDJA9V5PkevyRbR9c/cPzuOfoCS+m2Co7l0
+	 +b6MYlu7b05Tu5XRA7HGcdEBXgbkMUXnasokDLcI2U83NwvkTB9/gQY3jZ2G5u5tvh
+	 AFQJNhIyJak3q6KuqIiMeMoh+g8h6wyqQ854Avo5pBLLyOPI6RqZBJ4HC26lw54SRH
+	 zUMItw7kbSuLg==
+Date: Fri, 11 Oct 2024 15:58:04 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 6/8] x86/module: perpare module loading for ROX
+ allocations of text
+Message-ID: <Zwkg3LwlNJOwNWZh@kernel.org>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-7-rppt@kernel.org>
+ <20241010225411.GA922684@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LO2P265MB5183:EE_|LO2P265MB7220:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c607e1f-375d-4803-d0ab-08dce9ee1888
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?4KmlhvFrBP+lj8H48hDcT2TITHOKv8hRseuNwNm2hRXEveDdPzHhzxsH2CdF?=
- =?us-ascii?Q?xH7zrifqryJ9IqKjf0UNUBzsF+ibsOd4j5Keo82JkRxlgNi3e2NvBquWSVTP?=
- =?us-ascii?Q?tQALpF1hKYLEZjavxJSzYA032BgL3zmD43CPLR4DSZkMS3IAgiTyodg/tn8m?=
- =?us-ascii?Q?fM+q0FOjm7A+lMVIN3VvoLwKs6Fc8sWEWWgJ0dM2A0eAsakxEzCeePzlKlgl?=
- =?us-ascii?Q?d3sVpUHlW4EDz55yI449jRmRhH5wX0falpS3DpBbd9bZs/HJnCa8x8emzP11?=
- =?us-ascii?Q?+cycVBccsxr+9FwXYSLaf4NKsedQWxuLyj+bAW0tsfK8dbgFzjirTmQSzWdW?=
- =?us-ascii?Q?ygLrzc+aa3+VsHxA0N13glIqqIN1LJA/Dlz/Je+hQGxJo1BJpE3H5mo1AfiM?=
- =?us-ascii?Q?dyIQpyQ6UNQDx7d6lZxZBUnMF0nAQ04oDXjC9a8cdKF+sI5OCLfk5NR/6XWh?=
- =?us-ascii?Q?VfWongQ5iCTE5NdPPFwgv1aPy0GhXkfn7q+vFMSmOSJcrH1dxh4e+KbBn7pl?=
- =?us-ascii?Q?REzGg76+0QfTph3oLvi8rl13sWaxU4FjNddkpRVQA04LIEIe4WSebw55frSq?=
- =?us-ascii?Q?mbsTQeeGUtksyW3wpVeywtPgZLMmbiGPJShwMHW397/hmY3cFLFFeEQ8XN5k?=
- =?us-ascii?Q?2kT5D9EEL81r+G+V4rmE9D1PjrN7Dp42bKzlUNgYqC08T7EwVRGiyer+upCc?=
- =?us-ascii?Q?Hk+/GXTNo3QUapo9NwUnfpzy8PaJV9lD6ojlZDr8pqqPM4vGl+dE370scUJ9?=
- =?us-ascii?Q?DdOMlhpYGxJUQ8IEjV51BiqRF3ARV/HeqLjLYdfBAeG4hcTeS73iKI+ZzLg/?=
- =?us-ascii?Q?UY7gi+MCEDOmBNbhgZcfVWBdJ3PysMaByyp/5LwjwaP+vV3HG5m2uo3ASejI?=
- =?us-ascii?Q?xbcX3FmP0DXQWLrqifgnBxkQJYfTTCTaYWffZjtsFBcKqG0K2jDEJzn7ngwM?=
- =?us-ascii?Q?/MOV34smDdl0EzB5qRwZLNsJa5NdvqkRW+k99kSG5YxB8ftTxtWYPos/x2ek?=
- =?us-ascii?Q?y96P4tMHlayNO0A66jjZdarsadl2x5b3NozAatiFIf8+UY0a7Hldc4/jEq2Y?=
- =?us-ascii?Q?qoxdD/MVNMkmkiYQ2X05LEjudjwSNr07HhCtVEMZ16QTQkI1rD5r7PM0QnzP?=
- =?us-ascii?Q?McWNeHVDLgJVn9uFLL0/SEuN7jMOwtpYRwXtKtQvNSe1Bo8QdpCekV+pE3Rs?=
- =?us-ascii?Q?uWux4h3sl5mv74lgc57XTFm9215zYI8hYyTJ8eV+hfTOcsX2eJtyvSucAGO2?=
- =?us-ascii?Q?H+En+ONv1J256CFLG9VYOcON2ussfTN8w4vYC4qREA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(10070799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?j91FfNDrTiFiRpiVXy2lWKofa/oTZHu3IkvBmMmuHU5lNac290UkOWCR9AOV?=
- =?us-ascii?Q?xrhmR/W+WdEk+qVYsn8wD9xVkFbIIqHMoA7KYUvmwTJyYoNCkbolMppekQzl?=
- =?us-ascii?Q?HqyirYc8oKHEDe1zngxKVxObEHtOpsZssXpkxJu/WJx/a3jNHYz+lYAlVgfH?=
- =?us-ascii?Q?HaCW14OA4XXZQqlRy75UoILqmlbRIUASOdLPOgKsigD1W3Rrd9Gtg6WUZjT7?=
- =?us-ascii?Q?ZO5dPNg4rh0GovoWlkFe6jR7ACcqqGo4/P0ipWopjoFgz7IxrKUC1gLOASM4?=
- =?us-ascii?Q?GVhiu3aM9ygQ31kb/yNyoi+cHskFYRMVQI8cCHRLyE40cFpn9B+wBBO4C3Ng?=
- =?us-ascii?Q?/ZphUT9IPL81W7TTFSOEA1LLdlYjqfsiTsaBl3PB0PTakC8IbE8NdVP7l9TY?=
- =?us-ascii?Q?YHH7EfvuWpSkv9PyH7QtfGH+6E1orcA5bOGmZ1PuVLBmTGSobpF0seI6rbQm?=
- =?us-ascii?Q?L5PKHejWEn9UxYGK/g9dLuf8j0E1ZdZjuGrXX2PMbiONub5rzreTZ+MJWC/F?=
- =?us-ascii?Q?kn7netWg2aF1DoXTNPiCksOim9N8bLJVUJZOd3jUHVGf7FNo+KPKgmI433D/?=
- =?us-ascii?Q?EAC/2Mo3X44KppThGpgU/gI3O7F7m8U9asvtKn8S83oMdQkJr5/dpSnmBO8a?=
- =?us-ascii?Q?2TkPOHfedtZtk13FGPpI/HcOEvxvKRTnb982Rye6q4Kxmtbm3jLlwO83UCXs?=
- =?us-ascii?Q?oT5neN7Vh+PhRCj1pcLvqXGZTkGBu2cp2lzNHHnzPZkPVDzxRR7AnnQbjKWf?=
- =?us-ascii?Q?J5V9PuG6bFkmN8v9FXGposERROnTzoxnIURp/DYjbz5JE0ijreiPnoJnuc5U?=
- =?us-ascii?Q?ZglaZLBkL1oqX2fVOLGDAFnlKTCk7hhK0LVraW+C78uXMnx5OyZjd63bsVMy?=
- =?us-ascii?Q?0RStUOyrhZAgo1ID95reyVpWU262XM0Qq7IKX7LpTOf4O7Zuc13ua0UI1PyJ?=
- =?us-ascii?Q?mgUMS/f+zFnSvqLQHFEqsMH5Wcq+k176WXL0K8aV48zRQQvxIrjkZF6UeOlt?=
- =?us-ascii?Q?kTpj5M7euc8ieV+tWtRAsEsMIt9nkNBRSBUGkvGe1N9hJ+/wVZuf09gcB3/7?=
- =?us-ascii?Q?jjI7TcYPhHjdc//p2LJ5AAb2jU6Wx6o4azx+ZtG83sXRIWpC3zjZ3u2+1cBZ?=
- =?us-ascii?Q?CuUSQJmV1/BcHHUyAMP9qUPxr5EI/jtlerWh3WrR5CUQiLu5xcn6R1n3bgti?=
- =?us-ascii?Q?JSZziZDBN7FZziex/fszn4QNNfDOy9faXhk/iQFrZ0Ku5OnJO+J1MKfhOAdw?=
- =?us-ascii?Q?F12GkWCYZ8kNUKLhV55dd9ptqFXIC0pwcmXBJpH68ns80pr7WqXPmKhmmH69?=
- =?us-ascii?Q?lPnJmGnkaSt/nEZD7moQW76HReAo8uc/X3tK9ymIjD3fw+NyQp17J/hYdMYi?=
- =?us-ascii?Q?WR+A75qwMD3KDYcoQR1Ia1d9RUsXFZoYIqFGuBKA8iDGfb/TI4gd0z4qF/VZ?=
- =?us-ascii?Q?aou2DNiO+UqPuK/9si5gRHml1yFgiq8M0fDMS/SV8Ztd/+AalRofXMgY/4qG?=
- =?us-ascii?Q?RvsCCDg6btT2UYH72hmCSBPgiHfufTkIZffTumoDM/42SVz1Xd1J6SSDtl5P?=
- =?us-ascii?Q?y+/9G6tmhLjbQOimPiD3InDQyaBphSFyZs9hbqZ7Wjs/byOwOfJyVupMoaO6?=
- =?us-ascii?Q?2YlOy3Lw3rY2UcnMjyt7172YPE89IUmx8Ofuy62lsMLj?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c607e1f-375d-4803-d0ab-08dce9ee1888
-X-MS-Exchange-CrossTenant-AuthSource: LO2P265MB5183.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2024 12:13:20.4375
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2iCnu3LGOlsfDjHddHxOIqzT/oSYetllUbLhkmG76LI+BaTdHOuI+OePGmQ0GWJG6UQFt6hiPw7Wohb4SSLLXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB7220
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241010225411.GA922684@thelio-3990X>
 
-On Fri, 11 Oct 2024 10:13:34 +0000
-Alice Ryhl <aliceryhl@google.com> wrote:
-
-> Add just enough support for static key so that we can use it from
-> tracepoints. Tracepoints rely on `static_branch_unlikely` with a `struct
-> static_key_false`, so we add the same functionality to Rust.
+On Thu, Oct 10, 2024 at 03:54:11PM -0700, Nathan Chancellor wrote:
+> Hi Mike,
 > 
-> This patch only provides a generic implementation without code patching
-> (matching the one used when CONFIG_JUMP_LABEL is disabled). Later
-> patches add support for inline asm implementations that use runtime
-> patching.
+> On Wed, Oct 09, 2024 at 09:08:14PM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > When module text memory will be allocated with ROX permissions, the
+> > memory at the actual address where the module will live will contain
+> > invalid instructions and there will be a writable copy that contains the
+> > actual module code.
+> > 
+> > Update relocations and alternatives patching to deal with it.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 > 
-> When CONFIG_JUMP_LABEL is unset, `static_key_count` is a static inline
-> function, so a Rust helper is defined for `static_key_count` in this
-> case. If Rust is compiled with LTO, this call should get inlined. The
-> helper can be eliminated once we have the necessary inline asm to make
-> atomic operations from Rust.
+> I bisected a boot failure that I see with CONFIG_CFI_CLANG enabled to
+> this change as commit be712757cabd ("x86/module: perpare module loading
+> for ROX allocations of text") in -next.
+ 
+>   [    0.000000] Linux version 6.12.0-rc2-00140-gbe712757cabd (nathan@n3-xlarge-x86) (ClangBuiltLinux clang version 19.1.0 (https://github.com/llvm/llvm-project.git a4bf6cd7cfb1a1421ba92bca9d017b49936c55e4), ClangBuiltLinux LLD 19.1.0 (https://github.com/llvm/llvm-project.git a4bf6cd7cfb1a1421ba92bca9d017b49936c55e4)) #1 SMP PREEMPT_DYNAMIC Thu Oct 10 22:42:57 UTC 2024
+>   ...
+>   [    0.092204] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl
+>   [    0.093207] TAA: Mitigation: TSX disabled
+>   [    0.093711] MMIO Stale Data: Mitigation: Clear CPU buffers
+>   [    0.094228] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+>   [    0.095203] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+>   [    0.096203] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+>   [    0.097203] x86/fpu: Supporting XSAVE feature 0x020: 'AVX-512 opmask'
+>   [    0.098003] x86/fpu: Supporting XSAVE feature 0x040: 'AVX-512 Hi256'
+>   [    0.098203] x86/fpu: Supporting XSAVE feature 0x080: 'AVX-512 ZMM_Hi256'
+>   [    0.099203] x86/fpu: Supporting XSAVE feature 0x200: 'Protection Keys User registers'
+>   [    0.100204] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+>   [    0.101204] x86/fpu: xstate_offset[5]:  832, xstate_sizes[5]:   64
+>   [    0.102203] x86/fpu: xstate_offset[6]:  896, xstate_sizes[6]:  512
+>   [    0.103204] x86/fpu: xstate_offset[7]: 1408, xstate_sizes[7]: 1024
+>   [    0.104051] x86/fpu: xstate_offset[9]: 2432, xstate_sizes[9]:    8
+>   [    0.104204] x86/fpu: Enabled xstate features 0x2e7, context size is 2440 bytes, using 'compacted' format.
 > 
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/bindings/bindings_helper.h |  1 +
->  rust/helpers/helpers.c          |  1 +
->  rust/helpers/jump_label.c       | 15 +++++++++++++++
->  rust/kernel/jump_label.rs       | 30 ++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs              |  1 +
->  5 files changed, 48 insertions(+)
+> then nothing after that. Boot is successful if CFI is not enabled (the
+> initrd will just shutdown the machine after printing the version string).
 > 
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index ae82e9c941af..e0846e7e93e6 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -14,6 +14,7 @@
->  #include <linux/ethtool.h>
->  #include <linux/firmware.h>
->  #include <linux/jiffies.h>
-> +#include <linux/jump_label.h>
->  #include <linux/mdio.h>
->  #include <linux/phy.h>
->  #include <linux/refcount.h>
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index 30f40149f3a9..17e1b60d178f 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -12,6 +12,7 @@
->  #include "build_assert.c"
->  #include "build_bug.c"
->  #include "err.c"
-> +#include "jump_label.c"
->  #include "kunit.c"
->  #include "mutex.c"
->  #include "page.c"
-> diff --git a/rust/helpers/jump_label.c b/rust/helpers/jump_label.c
-> new file mode 100644
-> index 000000000000..6948cae5738f
-> --- /dev/null
-> +++ b/rust/helpers/jump_label.c
-> @@ -0,0 +1,15 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (C) 2024 Google LLC.
-> + */
-> +
-> +#include <linux/jump_label.h>
-> +
-> +#ifndef CONFIG_JUMP_LABEL
-> +int rust_helper_static_key_count(struct static_key *key)
-> +{
-> +	return static_key_count(key);
-> +}
-> +EXPORT_SYMBOL_GPL(rust_helper_static_key_count);
+> If there is any further information I can provide or patches I can test,
+> I am more than happy to do so.
 
-^ Explicit export should be removed. This only works because we didn't
-remove export.h from all helpers.c yet, but there's a patch to do
-that and this will stop working.
+I overlooked how cfi_*_callers routines update addr.
+This patch should fix it:
 
-You can add a Reviewed-by from me with this fixed.
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 3b3fa93af3b1..cf782f431110 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1148,11 +1148,13 @@ static int cfi_disable_callers(s32 *start, s32 *end, struct module *mod)
+ 
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+-		void *wr_addr = module_writable_address(mod, addr);
++		void *wr_addr;
+ 		u32 hash;
+ 
+ 		addr -= fineibt_caller_size;
+-		hash = decode_caller_hash(addr);
++		wr_addr = module_writable_address(mod, addr);
++		hash = decode_caller_hash(wr_addr);
++
+ 		if (!hash) /* nocfi callers */
+ 			continue;
+ 
+@@ -1172,11 +1174,12 @@ static int cfi_enable_callers(s32 *start, s32 *end, struct module *mod)
+ 
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+-		void *wr_addr = module_writable_address(mod, addr);
++		void *wr_addr;
+ 		u32 hash;
+ 
+ 		addr -= fineibt_caller_size;
+-		hash = decode_caller_hash(addr);
++		wr_addr = module_writable_address(mod, addr);
++		hash = decode_caller_hash(wr_addr);
+ 		if (!hash) /* nocfi callers */
+ 			continue;
+ 
+@@ -1249,11 +1252,12 @@ static int cfi_rand_callers(s32 *start, s32 *end, struct module *mod)
+ 
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+-		void *wr_addr = module_writable_address(mod, addr);
++		void *wr_addr;
+ 		u32 hash;
+ 
+ 		addr -= fineibt_caller_size;
+-		hash = decode_caller_hash(addr);
++		wr_addr = module_writable_address(mod, addr);
++		hash = decode_caller_hash(wr_addr);
+ 		if (hash) {
+ 			hash = -cfi_rehash(hash);
+ 			text_poke_early(wr_addr + 2, &hash, 4);
+@@ -1269,14 +1273,15 @@ static int cfi_rewrite_callers(s32 *start, s32 *end, struct module *mod)
+ 
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+-		void *wr_addr = module_writable_address(mod, addr);
++		void *wr_addr;
+ 		u32 hash;
+ 
+ 		addr -= fineibt_caller_size;
+-		hash = decode_caller_hash(addr);
++		wr_addr = module_writable_address(mod, addr);
++		hash = decode_caller_hash(wr_addr);
+ 		if (hash) {
+ 			text_poke_early(wr_addr, fineibt_caller_start, fineibt_caller_size);
+-			WARN_ON(*(u32 *)(addr + fineibt_caller_hash) != 0x12345678);
++			WARN_ON(*(u32 *)(wr_addr + fineibt_caller_hash) != 0x12345678);
+ 			text_poke_early(wr_addr + fineibt_caller_hash, &hash, 4);
+ 		}
+ 		/* rely on apply_retpolines() */
+ 
+> Cheers,
+> Nathan
 
-> +#endif
-> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-> new file mode 100644
-> index 000000000000..4b7655b2a022
-> --- /dev/null
-> +++ b/rust/kernel/jump_label.rs
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +// Copyright (C) 2024 Google LLC.
-> +
-> +//! Logic for static keys.
-> +//!
-> +//! C header: [`include/linux/jump_label.h`](srctree/include/linux/jump_label.h).
-> +
-> +/// Branch based on a static key.
-> +///
-> +/// Takes three arguments:
-> +///
-> +/// * `key` - the path to the static variable containing the `static_key`.
-> +/// * `keytyp` - the type of `key`.
-> +/// * `field` - the name of the field of `key` that contains the `static_key`.
-> +///
-> +/// # Safety
-> +///
-> +/// The macro must be used with a real static key defined by C.
-> +#[macro_export]
-> +macro_rules! static_branch_unlikely {
-> +    ($key:path, $keytyp:ty, $field:ident) => {{
-> +        let _key: *const $keytyp = ::core::ptr::addr_of!($key);
-> +        let _key: *const $crate::bindings::static_key_false = ::core::ptr::addr_of!((*_key).$field);
-> +        let _key: *const $crate::bindings::static_key = _key.cast();
-> +
-> +        $crate::bindings::static_key_count(_key.cast_mut()) > 0
-> +    }};
-> +}
-> +pub use static_branch_unlikely;
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index b5f4b3ce6b48..708ff817ccc3 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -36,6 +36,7 @@
->  pub mod firmware;
->  pub mod init;
->  pub mod ioctl;
-> +pub mod jump_label;
->  #[cfg(CONFIG_KUNIT)]
->  pub mod kunit;
->  pub mod list;
-> 
-
+-- 
+Sincerely yours,
+Mike.
