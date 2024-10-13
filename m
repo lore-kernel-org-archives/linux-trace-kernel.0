@@ -1,121 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3BB2AD18;
-	Sun, 13 Oct 2024 08:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31406231C8D
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 13 Oct 2024 21:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728809253; cv=none; b=ZBP2jS1zWUwdHFhlOMpJiE8y8fDIwDkgpTLiP6bjZTNSdsmxh0XI4nBiKcYdkQhdnXt1XH66Tyz8gZclfA1onLz11IcZ6nSPXjJwVVtbkWWlqDH9+KdboqfvvU4NEzlEZY5+ygVqLqmXWn5M9RdKGIDwjE0taVUCsfDaxhgXLaA=
+	t=1728853369; cv=none; b=ug7EmYgNgKv4w/v7hEp37Dkj2CW3kQ1JZNYN7fuSLW/FO2WMNCes9tLKnTqlG8BIvujuNOPCS15isSItNni5/Ugw2FHXQ3zzjzIKIJmNQi6lSpwkalVRwGjlreNeMVR3vK+x/DSYNt2NSzxt6kXa0c9jS1fnh+sI+XyJqOD8k/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728809253; c=relaxed/simple;
-	bh=oCkJ2115ozRiZPDG4YoFw9nArbpLGJybX01Iv//69uE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ygnui3j1dp0vTwYL36AbZ8rQMm94Kb5QuV/3bce/6xN+todAZtzBWtCG7/n24nYsXbPsldBGWLiNWMecdojowQG9shqma41CUyUmjrMlwESL38BzRn/sNmW5e/3KEvOlWDQ26kh2r5r3NX7L+Q7pQ8XYZYpGMjIBuOKPzvdD3r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E8OMxiME; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728853369; c=relaxed/simple;
+	bh=B17gd8a5jfA8hxcKqEKGNXRDIfGK4yjn1ezwVBWnDLM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VIObARe0b0R4cRlCsGjmRi8YaD5mh+JrvoJmHP5/3zujazej6qXnWlo+n3AFhAh4jw/ZK73sOQtX64urtk/sq9tT9hsWwiHAn4+sswgzdUaFB7p4VZ35poulg+CISP7KLThEIRjBq4kapLZr5KzcjZQRDGijzGObdXIsq6Tj/9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=l1tyB0Kl; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E8OMxiME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00D61C4CECD;
-	Sun, 13 Oct 2024 08:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728809253;
-	bh=oCkJ2115ozRiZPDG4YoFw9nArbpLGJybX01Iv//69uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E8OMxiMEktF+GQmyT4EDIYDJPag5y6VDyo/Ga7wsRXJJ99cwzji7jLF1sUHlppQrC
-	 kfjLbesywWMnxfXjdxF/ttfJW0S6OCnAeNyYzQJk2u4D3I/IHI9w4eKpfc6/PVtfuE
-	 WndRqsL5ofKVGyFE9G/gSdQ0nGfWKHlQ3BhJP58mfPjvLaZMFmHfTrH7D6YY90Mj1Y
-	 Bf6s6/XciGtUwI6Emh7Lkdsn+ce052geMCuH5U+Tb+yPiRy+C2Qz+9+N2Qx0N42A/1
-	 /daXS+24OOYM/5Gk5f/vkwwYyUK7ykCQAd22G6E+/Xf2yKVuhiVY41QpTSBy6H62Ks
-	 p+MyUT+rRu6SQ==
-Date: Sun, 13 Oct 2024 11:43:41 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <ZwuIPZkjX0CfzhjS@kernel.org>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-8-rppt@kernel.org>
- <Zwd7GRyBtCwiAv1v@infradead.org>
- <ZwfPPZrxHzQgYfx7@kernel.org>
- <ZwjXz0dz-RldVNx0@infradead.org>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="l1tyB0Kl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SKxKWiDL7w/02i2pEqRvDT81AHzeBtGyzzjGhSejj78=; b=l1tyB0KlxsIxonaHlQ2DYtcL9j
+	x7lJ48u4xEVXJJHvLWWzZ6dhQLvCha16bK1KBHq+Oge3aKqqqTpVcA+bE/ibsP7JCIErnwcyc6iVv
+	Sz+9OPUbsD1z26b1DefuYM6s9eOikRnJoamsA/TpHiZyeSzFqgY+y7I3pPl9CT3CGdyviKCvRmgqS
+	WWv0nGPiVGYLUTKD/ZGdVPQ70pUw79nTZ0Ggw10fSYXxiyEBiUGGiKAfVwgY9Ow+Qi94MpqLBlNHY
+	kMGNE4eTuI/iwIlTU1+dHkbJfLEn6Iu352eRsL23/SDc8NGwCNIpDMffn37ybhvTvLskFDnxbzj9H
+	4ufmF9Zw==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <benh@debian.org>)
+	id 1t05Ip-005JT4-2p; Sun, 13 Oct 2024 20:34:58 +0000
+Message-ID: <c075dbb7639d1c835b5fdb867462d6b455626e03.camel@debian.org>
+Subject: Re: tools/rtla: Fix installation from out-of-tree build
+From: Ben Hutchings <benh@debian.org>
+To: John Kacur <jkacur@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Date: Sun, 13 Oct 2024 22:34:49 +0200
+In-Reply-To: <5508e99b-f22e-ab01-61f0-4ae352e595d2@redhat.com>
+References: <ZudubuoU_JHjPZ7w@decadent.org.uk>
+	 <5508e99b-f22e-ab01-61f0-4ae352e595d2@redhat.com>
+Organization: Debian
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-utzahS+9ymal4TmeORoI"
+User-Agent: Evolution 3.54.0-1+b1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZwjXz0dz-RldVNx0@infradead.org>
+X-Debian-User: benh
 
-On Fri, Oct 11, 2024 at 12:46:23AM -0700, Christoph Hellwig wrote:
-> On Thu, Oct 10, 2024 at 03:57:33PM +0300, Mike Rapoport wrote:
-> > On Wed, Oct 09, 2024 at 11:58:33PM -0700, Christoph Hellwig wrote:
-> > > On Wed, Oct 09, 2024 at 09:08:15PM +0300, Mike Rapoport wrote:
-> > > >  /**
-> > > >   * struct execmem_info - architecture parameters for code allocations
-> > > > + * @fill_trapping_insns: set memory to contain instructions that will trap
-> > > >   * @ranges: array of parameter sets defining architecture specific
-> > > >   * parameters for executable memory allocations. The ranges that are not
-> > > >   * explicitly initialized by an architecture use parameters defined for
-> > > >   * @EXECMEM_DEFAULT.
-> > > >   */
-> > > >  struct execmem_info {
-> > > > +	void (*fill_trapping_insns)(void *ptr, size_t size, bool writable);
-> > > >  	struct execmem_range	ranges[EXECMEM_TYPE_MAX];
-> > > 
-> > > Why is the filler an indirect function call and not an architecture
-> > > hook?
-> > 
-> > The idea is to keep everything together and have execmem_info describe all
-> > that architecture needs. 
-> 
-> But why?  That's pretty different from our normal style of arch hooks,
-> and introduces an indirect call in a security sensitive area.
 
-Will change to __weak hook. 
+--=-utzahS+9ymal4TmeORoI
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Sincerely yours,
-Mike.
+On Thu, 2024-10-10 at 13:39 -0400, John Kacur wrote:
+>=20
+> On Mon, 16 Sep 2024, Ben Hutchings wrote:
+>=20
+> > rtla now supports out-of-tree builds, but installation fails as it
+> > still tries to install the rtla binary from the source tree.  Use the
+> > existing macro $(RTLA) to refer to the binary.
+> >=20
+> > Fixes: 01474dc706ca ("tools/rtla: Use tools/build makefiles to build rt=
+la")
+> > Signed-off-by: Ben Hutchings <benh@debian.org>
+> > ---
+> > --- a/tools/tracing/rtla/Makefile.rtla
+> > +++ b/tools/tracing/rtla/Makefile.rtla
+> > @@ -38,7 +38,7 @@ BINDIR		:=3D /usr/bin
+> >  .PHONY: install
+> >  install: doc_install
+> >  	@$(MKDIR) -p $(DESTDIR)$(BINDIR)
+> > -	$(call QUIET_INSTALL,rtla)$(INSTALL) rtla -m 755 $(DESTDIR)$(BINDIR)
+> > +	$(call QUIET_INSTALL,rtla)$(INSTALL) $(RTLA) -m 755 $(DESTDIR)$(BINDI=
+R)
+> >  	@$(STRIP) $(DESTDIR)$(BINDIR)/rtla
+> >  	@test ! -f $(DESTDIR)$(BINDIR)/osnoise || $(RM) $(DESTDIR)$(BINDIR)/o=
+snoise
+> >  	@$(LN) rtla $(DESTDIR)$(BINDIR)/osnoise
+> >=20
+>=20
+> Is Debian using out of tree builds Ben?
+[...]
+
+In the linux package specifically, yes, we try to do all builds out-of-
+tree.
+
+Ben.
+
+--=20
+Ben Hutchings - Debian developer, member of kernel, installer and LTS
+teams
+
+--=-utzahS+9ymal4TmeORoI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmcMLukACgkQ57/I7JWG
+EQl2jhAAnVx3tFzCAhr+1/jRQCOqg/CrnSbcbzQIsCYmr6tL1Gl12ScP2NAfW4Hh
+owBYy5Xx/CO2zl8tX5kddOYWfeF+TQHDQBznAf23EQsifUG1ZBQ8L8Hbyh8cf8iO
+ieM5oXdm+ebou+K0F4snq5VpyobYAxWxxDNxACPkiglnVx+LZhbnxACkSOHFSsUv
+kUpMpd4ssmlAEanw4oBwp+cPBiXne4wqhdun2lHzxjllFhmxNMp7L88nhE3HnbHM
+Deq41XG+K8Pt//AazzS0ldZ0ZFtZrEZ8o6Fv5ojZ28r9i8kugHTCnNfVOIIMHebt
+qkQLowHXnzYSdSmY8TzwyHxcecVGkUnOv9wKhuG0b2CnUsw8bZ0xhjc3StM36hQ6
+3OMEobdFF1yUB3FmvVVMoj7Z+25PXg7FIFUSnDUUQ5rw96Zg9AIttStveNVwOagJ
+uRwHXGsrKKTvBLg4rG2fFuA73qx6O2a8jEnD8cilkx81WvlMB2/q5TNcW87XqZhh
+8v5bJ4C+5qfDx0vA5v3JkTSQUOa1ycZq7ImRcIanUZFKYh6foy12N9ktJ9G17DJN
+rI6OtIlRFApsal0D4tJPlVhVc4sbyPsjrCJY4kT5QjuTv8bb/nuVJ2W3Zu7dpk2M
+evVLYq//a7auOt9WdbeaBiYL0wGYFX7Y7tsEy4cAVVhAeNoBXEc=
+=MR1s
+-----END PGP SIGNATURE-----
+
+--=-utzahS+9ymal4TmeORoI--
