@@ -1,99 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE61154BE2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Oct 2024 08:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 502C71AB6DA;
+	Mon, 14 Oct 2024 11:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728896275; cv=none; b=kqAJtKTErm7gxo2QgXIUMTaebUpyuA4rsWdxb/tgyBOhtqe3B1dKP+huMBe/fi8tcIoC9YLDWmJEZJEtCwE2FXkODYXeML2SigKKGqGguyTzEN1Slplv7BOedgr+khkS22GvhAgyzzO622ZBLcryPPgXK53gvMJ637dY19STPS0=
+	t=1728903624; cv=none; b=QYGIgnM30DXedKEOiBsQ6by9ZS+cWIRh/DkwNJ7MUqCbNKOvFdRmNOAl/XsrN2qr+hBlDCSAykgHMJ93Eum8y8R7ziEzTxmLm6ImbmjYu3zLrvnKLn6NXPGUu/Ypl3QtcBStfFA3CAG5IxjgSBPIURpdFMhhQMShRr3QvVQMYwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728896275; c=relaxed/simple;
-	bh=oIiQmayO/M0rscDY2JPYBUNFS9Gh1tN1sxn9bgN2BLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mGw74+JGvbFoHNF9qEjssB32MFnlX/vAPJ7ECS4lazSBrgPveFN7IASrgDw4ylp5sOIrMggpCnwZRzNJr8A820LF85FV+ijWsiq8rLr9cI1kVERrKh7+W/yOtdEDwWJbR53fDJEyHoZ2wgaCbzkZrKxnjacKPhmhxWYRcTSTIAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RvSDwrOq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvSDwrOq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728896273;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oIiQmayO/M0rscDY2JPYBUNFS9Gh1tN1sxn9bgN2BLU=;
-	b=RvSDwrOq0FQ+hKfkmFxUCuogTIZGudPIA5R+lruC6stfviqVI9NGW+IHrAcD5frFH7tOpM
-	ASwFBmyM2bdIrOoOkKW4bhTtwMDc0lwIqY6ov/rwhWnJF0QcnPYzyfevLQVWnOzM8TXsh4
-	CAf1gPfRdwq6sUJQFIE46savUNHI6VA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-QJHekHEuNqaBgs-QhsrRWw-1; Mon, 14 Oct 2024 04:57:50 -0400
-X-MC-Unique: QJHekHEuNqaBgs-QhsrRWw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a9a004bfc1cso78892366b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Oct 2024 01:57:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728896269; x=1729501069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oIiQmayO/M0rscDY2JPYBUNFS9Gh1tN1sxn9bgN2BLU=;
-        b=LbMBZgY8FOWRUjEE5Qt1AOiq1TSzML2nUDHCPFAUvfko2Z5X4h0sdAEC8QGzQWehxp
-         P53O0suGWaFtEL73kgXJZrDDjVdlWQVuksWCT3ecoVavX227yQUGesSi08y+1sS6wZ/X
-         Es4JsfG99svcRerDJmdZAVZsNNyzNg7975Txuc0DLVLdEfJyGRcTrc27fFe97PljhpWO
-         nzzBKUjIQfLNfkNRR0DIEa6Dv0IumVgu07AfkEzFM7bjPPJW3rlC5IsqtnYlz5jkGmFj
-         uOPv4ioeQOmuZ3nt19ZykoIWaGKnhDJRzKVUTw6+Kisk+p5VFYpFacfkQccFGYAs70Oa
-         cp4g==
-X-Gm-Message-State: AOJu0YxydbGWdfEa9dmztUPhToCSrTKsoLnStgffOKJhW7XPdlzW2FGT
-	RBvRreXrEYUmuMz3rI9MBOaZx5Nv0fl+eFReByJ60ZdtnemwzK8emuFGW7+WN7yZHirYFfJP+qG
-	vBvQ5vMFupymeMyROwM29S1TvSa4DCLXWejYuXgfAoNNpS/Je6X91ZdLj0aZiK9SFbIYxuDsFIf
-	/l1jMBt4yzdC5AUfkg4QDfiLkL+IGVnkF8iumtv4NJ7fSU
-X-Received: by 2002:a17:907:2ce6:b0:a99:ff70:3abd with SMTP id a640c23a62f3a-a99ff703c38mr334453666b.31.1728896269118;
-        Mon, 14 Oct 2024 01:57:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPAQSthAxdUlKLMrCSRaNSm0eV4krUcbONfq7qXqZ01cmONSYTgFBnYa5QptEtUa4rzWI36TnTtiDiMv2dcHE=
-X-Received: by 2002:a17:907:2ce6:b0:a99:ff70:3abd with SMTP id
- a640c23a62f3a-a99ff703c38mr334451966b.31.1728896268776; Mon, 14 Oct 2024
- 01:57:48 -0700 (PDT)
+	s=arc-20240116; t=1728903624; c=relaxed/simple;
+	bh=ViWA2SK7ai4kd7Q4uLzkOMtdX8lq35uYLetmmGTNaas=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FDdN9biZnJV30HEiK/XuQlv3VU+o+HSi2c1QamlQBo+0a1/rC0Olft21a7xHEdpUdB63ZxGbH71YOql+7/yArZ00VvL3J0pQ8rS9g4JzpC5E2+nZKc1yVIF+ho0zzzOaHTk+S6MgSMWMxczdpmbQcYlHUzX++BfhVE781CDNB1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65FA91688;
+	Mon, 14 Oct 2024 04:00:52 -0700 (PDT)
+Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09E9C3F51B;
+	Mon, 14 Oct 2024 04:00:19 -0700 (PDT)
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Greg Marsden <greg.marsden@oracle.com>,
+	Ivan Ivanov <ivan.ivanov@suse.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Will Deacon <will@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 18/57] trace: Remove PAGE_SIZE compile-time constant assumption
+Date: Mon, 14 Oct 2024 11:58:25 +0100
+Message-ID: <20241014105912.3207374-18-ryan.roberts@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241014105912.3207374-1-ryan.roberts@arm.com>
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241011121015.2868751-1-tglozar@redhat.com> <20241011132356.28c48902@gandalf.local.home>
-In-Reply-To: <20241011132356.28c48902@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 14 Oct 2024 10:57:38 +0200
-Message-ID: <CAP4=nvR+RML-=owASqjqQvhn1ernCP5QtREcPU=FLiOZ5G-RBA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rtla/timerlat: Make timerlat_top_cpu->*_count
- unsigned long long
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jkacur@redhat.com, lgoncalv@redhat.com, Attila Fazekas <afazekas@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-p=C3=A1 11. 10. 2024 v 19:23 odes=C3=ADlatel Steven Rostedt <rostedt@goodmi=
-s.org> napsal:
->
-> Thanks, I'm applying these, but could you or someone else create a test
-> directory in rtla and even rv that tests this code. I just examine it and
-> run some basic operations, but I have no idea if it is really working or =
-not.
->
-> Having a utest directory or something would be really beneficial. That wa=
-y,
-> I can at least run that test before I push it up to my tree.
->
+To prepare for supporting boot-time page size selection, refactor code
+to remove assumptions about PAGE_SIZE being compile-time constant. Code
+intended to be equivalent when compile-time page size is active.
 
-Yeah, we definitely need that, ideally to test expected behavior for
-each common set of command line options. That would prevent unexpected
-changes, like the recent defaulting to userspace threads requiring -k
-to be used together with -U, otherwise, -U has no effect (because -u
-is added by default). I'll look into that.
+Convert BUILD_BUG_ON() BUG_ON() since the argument depends on PAGE_SIZE
+and its not trivial to test against a page size limit.
 
-Tomas
+Redefine FTRACE_KSTACK_ENTRIES so that "struct ftrace_stacks" is always
+sized at 32K for 64-bit and 16K for 32-bit. It was previously defined in
+terms of PAGE_SIZE (and worked out at the quoted sizes for a 4K page
+size). But for 64K pages, the size expanded to 512K. Given the ftrace
+stacks should be invariant to page size, this seemed like a waste. As a
+side effect, it removes the PAGE_SIZE compile-time constant assumption
+from this code.
+
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+---
+
+***NOTE***
+Any confused maintainers may want to read the cover note here for context:
+https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+
+ kernel/trace/fgraph.c | 2 +-
+ kernel/trace/trace.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index d7d4fb403f6f0..47aa5c8d8090e 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -534,7 +534,7 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (!current->ret_stack)
+ 		return -EBUSY;
+ 
+-	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
++	BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
+ 
+ 	/* Set val to "reserved" with the delta to the new fgraph frame */
+ 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index c3b2c7dfadef1..0f2ec3d30579f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2887,7 +2887,7 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
+ /* Allow 4 levels of nesting: normal, softirq, irq, NMI */
+ #define FTRACE_KSTACK_NESTING	4
+ 
+-#define FTRACE_KSTACK_ENTRIES	(PAGE_SIZE / FTRACE_KSTACK_NESTING)
++#define FTRACE_KSTACK_ENTRIES	(SZ_4K / FTRACE_KSTACK_NESTING)
+ 
+ struct ftrace_stack {
+ 	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
+-- 
+2.43.0
 
