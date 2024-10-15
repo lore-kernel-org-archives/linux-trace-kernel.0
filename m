@@ -1,97 +1,194 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA1818B488;
-	Tue, 15 Oct 2024 09:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A2919F132
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Oct 2024 10:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728985759; cv=none; b=V0eC1/3IfXzICI4j8IkWr0QfClzNg05VZWt1WAHIxoceOAcbNFVpDZ5rMUYfKUaAqJO0GgN45buAe/3LvxD+P3ZKiYxdP5mEsBNwNlbnOgmTBE57DVuLbZIGSEKZmt/Ngl8G+Sus9oNGqBp0gG7GzUK07RCFIkBpRM+0kAhERJg=
+	t=1728986745; cv=none; b=jzFBOW3iGP/x8L/fLjl1WVmfBejbstWY19Zf9Hu53TTXXZHShq2F0XTj5v/rMBo4r4pIOvsE7+EquRYO/Ezb0P85rwzSBY3y4LGJHW5CaRHqlAVqxo/L9wgxeyn0fVIbou22XOlIDrvAdn9RrDNYzu2qCkvEkpbwcGQYsAJ4HEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728985759; c=relaxed/simple;
-	bh=pkfmR86OLnLflTvdgJ9gzMh0Z9LchJNRWECKaDZz6OQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uUaISoqcT/AmLxGCvyX4DCnYerUdbwJ1TSxShaxhllqQqxEEKsd1oGOwkr3insAytlVLPgqtrGC5SmSbwdh//rgtZCeVvI77cMoZ4DOHYsFOGUAXy/7hkF3OoC8s6etllP+03SUL5we0L4IIy+vA2n9YTkHc32xAHP582iE7sUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Z+6wr2fC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1728986745; c=relaxed/simple;
+	bh=BPsnlM4jiS7NsX7J2NdZKdPrFoWf/4f2HMA3nR+Yv3g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J+tjGN/lMyvZK95ai2KOuEOIjlXOqxeKpljF4qUpDyL43hFLgZ7+lAdFqJ4LsOF3l1CStmnio64C8GWs3jbV8v9oSjlaTDVI9AmVcG4K9LpvzcUROoPiU4hZZKv3gEBl+S+c8Qq7jCibwPbIOS4wKl3UDAVmrLeg0PDBVrO15o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V6lwJAi9; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Z+6wr2fC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6977440E01A5;
-	Tue, 15 Oct 2024 09:49:13 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RDGTe0vdMgzz; Tue, 15 Oct 2024 09:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1728985748; bh=Lwyk6dqtr7douMO9sTb0q4k/d7+lucp4olJGes24ZKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z+6wr2fCWcN7NxjV2gLBlDR2ZIkUsxGW2YbCCNhqTlDNBF4TOlJkO9MMzGG/n0RqP
-	 J+RZnIeo2TkRdUofHSjYHykMbIkt6ZmHK9eMatG214fJA+UHJihZ2sGqNSGwf6Yv14
-	 0IidpmyhCSWEuhRjGT4hGJjwj1vtreCKPUwivoMvul7R70TwHF+G7iRT4DHvi/mhWm
-	 FOxC8EWptJXFTlm3OinccDTT0S5U9Nw0tNS0473cBMEnsz9lZ085tD2taDrjGXFVPs
-	 Sef6eziy8AOJaBQ7eoXNmhsISYRSL669ChJ+hxVjza1yh8VSpJ73kRWd3R+pfLnwC3
-	 26F/CbH2fap/1qOse7+4fwUfDHG9tDWu2LhfCA9R/eXIxB2Yjc23Mc0phc6E8LCMed
-	 3rH1/CqduFpOkivyQmmq6+Bd6Nu98Pzt6Wi6pmseQKJiqquBRYG3S2GQjljXyJ/j9l
-	 +PuOkL342QMGILMrvynG6aKz4FjJYIYLA8HclFIFLjcVA3Lt1eHudgSM6eWuuWvPqh
-	 XQcg5TXFke3trKS378NfW27ym2eHK5SNM27g9YiOdm51jsGTVwFdXBjxvg74/Zi6Dq
-	 z19oYO8B0lw+DKw7QRB1pjKwwC/uL76tWCYO1krDO12tUoUhHZ5/5FaPdi6FYJTK7L
-	 Wo0wuQD/3mPZrq2AAJ/ALP0s=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 695D740E0184;
-	Tue, 15 Oct 2024 09:48:49 +0000 (UTC)
-Date: Tue, 15 Oct 2024 11:48:43 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-	"john.allen@amd.com" <john.allen@amd.com>,
-	"avadnaik@amd.com" <avadnaik@amd.com>
-Subject: Re: [PATCH v5 1/5] x86/mce: Add wrapper for struct mce to export
- vendor specific info
-Message-ID: <20241015094843.GAZw46e6KKVjigUatc@fat_crate.local>
-References: <20241001181617.604573-1-avadhut.naik@amd.com>
- <20241001181617.604573-2-avadhut.naik@amd.com>
- <CY8PR11MB713406B2C492D55428397AFA89452@CY8PR11MB7134.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V6lwJAi9"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2e0d9b70455so4022445a91.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Oct 2024 03:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1728986743; x=1729591543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Qrkg/ZRV10IdU56/7mYKjiH6Upw8Qx1eT1zUM9r+QU=;
+        b=V6lwJAi9ATBprSXBlwBEAF/EGPX0fGKWZ5th8Gob+kRbtYG9mJs2uKI9PkK7Y0NN+H
+         mUhOao3UYL2oE5vUuQFyLVjiUeGDpPeeEKqiSioPCd8IqttXBZtZSjFlFvbO7wZ+Oati
+         NxNyw+6EhjvGJGDLKIN35YUJ6mQXyqkkmFlNAcszDk7mFsg3mLDB0ACbWEtav9EFsVik
+         XxN5Su2yG0Rvi//ID9/qiV+AAqgCl2H9BTAP7b5NXKALPLLJfjUmg4dHl9szGAJUl9pw
+         N/PcITj00ryexU6JjyWFleZzQYpxfQvcsx/9PlBcG1PgcB+LfV4ieboFg9rkyBAylrZV
+         VStA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728986743; x=1729591543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Qrkg/ZRV10IdU56/7mYKjiH6Upw8Qx1eT1zUM9r+QU=;
+        b=PdAYyqf+HgBVKG9HJcm8gUXrdnyc7l4axOnFvndaYVXNITnKaxeGo5lVOhlBIQl7P7
+         Fc/xOjRcdSb+ihWJiIHH/W9eYuqadFL2nvMAX/D/GzNW/+Dkxj/evg/Xuat2oq6X5H5d
+         7UJ/pmHB/uR3WK3jO8of7bu7HJOtrqPNPhCtsrtwCbvFVKFa0NyNcxXBVfxqf4MjYYtd
+         V7VnKTiMHBIOSmxRMVVcVqaCUhDzUga+/pbNpEu/h9woL+cd8zGyYnZn9JiiGi/ZCRLJ
+         f33S3VMrrieu3llOs2pJmU5ekjp9SAT2XnkS/2IB/jw4e2na4zKXmz3zrM7K/n24XoKE
+         RHTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXZuKbIhSnIo+NCMj9Pj/RZd+brHwX9bEoMh+otW4YeaExRUDYMKvVRIjoqjO/rcLIIDE/rG4EIQ+Fy/ERxc9zavCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIjtX4qWbGHQN/M7UIxTejksAV8LYz0707xOlMiVF9pNVfqg0/
+	yTuAk2qTEditdA+IHX5TnLTXJ8BafpN2wejV9/KUHwiUdh7hKCHjtvhCZ4aQdiO9M35q32iX7dj
+	Js4gzkZKa5t1iLW3dIiKRlyQufA54EYGr8Xj7
+X-Google-Smtp-Source: AGHT+IHbXOGzJCKOgpup02dkaO5xVaIhqtf9TGZtn/M5v/vKmEv8ALqVeLPqkRz25CJYOQrboeLU0AvZT7KH0o5zi68=
+X-Received: by 2002:a17:90a:ee85:b0:2e2:e8fc:e0dd with SMTP id
+ 98e67ed59e1d1-2e2f0dc33f8mr15829263a91.35.1728986742588; Tue, 15 Oct 2024
+ 03:05:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CY8PR11MB713406B2C492D55428397AFA89452@CY8PR11MB7134.namprd11.prod.outlook.com>
+References: <67094369.050a0220.4cbc0.000d.GAE@google.com> <20241011120028.1e4ed71c@gandalf.local.home>
+In-Reply-To: <20241011120028.1e4ed71c@gandalf.local.home>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 15 Oct 2024 12:05:29 +0200
+Message-ID: <CANp29Y4KERQxwOwMCW5a4+YahhA8gWyJ=btE=OxnNgrF6puFgw@mail.gmail.com>
+Subject: Re: [syzbot] Monthly trace report (Oct 2024)
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: syzbot <syzbot+list3bf21e6ac0139f8d008d@syzkaller.appspotmail.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com, 
+	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 15, 2024 at 06:53:41AM +0000, Zhuo, Qiuxu wrote:
-> The word 'mce' isn't too long. IMHO using 'mce' instead of 'm' as
-> a variable name is more meaningful :-).
-> 
->     struct mce mce;
+Hi Steven,
 
-No, this is not better. Because sometimes it is ambiguous whether the struct
-"mce" is meant or the variable "mce".
+Thanks for the analysis!
 
--- 
-Regards/Gruss,
-    Boris.
+On Fri, Oct 11, 2024 at 6:00=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Fri, 11 Oct 2024 08:25:29 -0700
+> syzbot <syzbot+list3bf21e6ac0139f8d008d@syzkaller.appspotmail.com> wrote:
+>
+> > Hello trace maintainers/developers,
+> >
+> > This is a 31-day syzbot report for the trace subsystem.
+> > All related reports/information can be found at:
+> > https://syzkaller.appspot.com/upstream/s/trace
+> >
+> > During the period, 1 new issues were detected and 0 were fixed.
+> > In total, 10 issues are still open and 38 have been fixed so far.
+> >
+> > Some of the still happening issues:
+> >
+> > Ref Crashes Repro Title
+> > <1> 34      Yes   INFO: task hung in blk_trace_ioctl (4)
+> >                   https://syzkaller.appspot.com/bug?extid=3Ded812ed4614=
+71ab17a0c
+>
+> If you check the maintainers file, blktrace.c has:
+>
+> BLOCK LAYER
+> M:      Jens Axboe <axboe@kernel.dk>
+> L:      linux-block@vger.kernel.org
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Judging by MAINTAINERS and ./scripts/get_maintainer.pl,
+kernel/trace/blktrace.c belongs to both "BLOCK LAYER" and "TRACING".
+
+$ ./scripts/get_maintainer.pl kernel/trace/blktrace.c
+< ... >
+linux-block@vger.kernel.org (open list:BLOCK LAYER)
+linux-kernel@vger.kernel.org (open list:TRACING)
+
+
+>
+>
+>
+> > <2> 32      Yes   WARNING in bpf_get_stack_raw_tp
+> >                   https://syzkaller.appspot.com/bug?extid=3Dce35de20ed6=
+652f60652
+>
+> bpf_trace.c has:
+>
+> M:      Alexei Starovoitov <ast@kernel.org>
+> M:      Daniel Borkmann <daniel@iogearbox.net>
+> M:      Andrii Nakryiko <andrii@kernel.org>
+> R:      Martin KaFai Lau <martin.lau@linux.dev>
+> R:      Eduard Zingerman <eddyz87@gmail.com>
+> R:      Song Liu <song@kernel.org>
+> R:      Yonghong Song <yonghong.song@linux.dev>
+> R:      John Fastabend <john.fastabend@gmail.com>
+> R:      KP Singh <kpsingh@kernel.org>
+> R:      Stanislav Fomichev <sdf@fomichev.me>
+> R:      Hao Luo <haoluo@google.com>
+> R:      Jiri Olsa <jolsa@kernel.org>
+> L:      bpf@vger.kernel.org
+
+Same for kernel/trace/bpf_trace.c:
+
+$ ./scripts/get_maintainer.pl kernel/trace/bpf_trace.c
+< ... >
+Matt Bobrowski <mattbobrowski@google.com> (maintainer:BPF [SECURITY &
+LSM] (Security Audit and Enforc...)
+Steven Rostedt <rostedt@goodmis.org> (maintainer:TRACING)
+
+>
+> > <3> 13      Yes   WARNING in get_probe_ref
+> >                   https://syzkaller.appspot.com/bug?extid=3D8672dcb9d10=
+011c0a160
+> > <4> 6       Yes   INFO: task hung in blk_trace_remove (2)
+> >                   https://syzkaller.appspot.com/bug?extid=3D2373f6be3e6=
+de4f92562
+> > <5> 4       Yes   possible deadlock in __mod_timer (4)
+> >                   https://syzkaller.appspot.com/bug?extid=3D83a876aef81=
+c9a485ae8
+>
+> None of these look like they are tracing infrastructure related.
+
+Like get_maintainer.pl, syzbot relies on the MAINTAINERS file to
+attribute bugs to the individual kernel subsystems. If several ones
+are suitable, the bug is assigned several labels at once. It's now
+actually the case for all open "trace" findings:
+
+https://syzkaller.appspot.com/upstream/s/trace
+
+(FWIW it's also possible to manually overwrite these labels and remove
+specific bugs from the monthly reports).
+
+I could make syzbot set "trace" only if there's no other good
+candidate, but I wonder if that could hide the findings in the trace
+infrastructure that manifested themselves in some specific traced
+subsystem.
+
+--=20
+Aleksandr
+
+>
+> -- Steve
+>
+>
+> >
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > To disable reminders for individual bugs, reply with the following comm=
+and:
+> > #syz set <Ref> no-reminders
+> >
+> > To change bug's subsystems, reply with:
+> > #syz set <Ref> subsystems: new-subsystem
+> >
+> > You may send multiple commands in a single email message.
+>
