@@ -1,121 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6BE1E7661;
-	Tue, 15 Oct 2024 11:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A557A189BB2;
+	Tue, 15 Oct 2024 11:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728990372; cv=none; b=sDiISXfs3LwUEOI5U3+X8LkmBqDG4hqx2BuIBGmkXbqrFi9+z22HJhb9gsXvJO/iD6wTOKnuU0od7OPTIv0ptQORS4q8BXZqgG2l8XOSBD7wxiR9II5vFjiOkSm7piiAxQhnNI3m0ZeqddXAlkpBaHfknFRTM2qUVwTRbKPpzjs=
+	t=1728990585; cv=none; b=P8KY7OXuAImGCrnHL2np8qRhkiTeRWiXlJPNEzBHozR2a8T52je5jfhXESJ08d5pAER3kJOQZVl+KBhcMTuJyczPOznob016EuOxD5ZAVgOhc/rmxiDoUgDdfVn8p6tkLvlp62KDLDUynOrtCzhpFVeT066l6o8tj7jMxYwCnlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728990372; c=relaxed/simple;
-	bh=Pg16ByItMJPVcLGJK175Zzik1c1YLvWigsny1vC9XfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7BaptdOP4Yx3+yNOwte+A7QcVEKzjim9AAEaE0MPDGwduUU8YeGau5C7SH11XemASjsKOx4qS7gGqLwz4LBPzowx9mQhWpPwFDZ+XeJrqSfTvMfBYGK+uF86twb94ggFPvvsoWAvO3He/8Nktgl52SAFymWciz+ZAwknYvAWVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xg3N86VX; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xg3N86VX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728990371; x=1760526371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Pg16ByItMJPVcLGJK175Zzik1c1YLvWigsny1vC9XfU=;
-  b=Xg3N86VXvUMMCFpx4SMAHT6G8dXyolZYOaL/GLKELTDZ+/EhpoUtDAQ3
-   oq49POZsEU7bb3NaAz1B2v1YKlc445Z5Geso2X9D2aZr9sVE0Bzq3A6uE
-   bjKJcoUei63jYRo9iRzh6Ocg5ZmNnUN35puHi1btNezYBp8fE9BnwStAz
-   61Jw8niswDSbpaYsXZgVmHy2jTlBUWR/y6JvIq6LA4Op7b+UY4c+3Wece
-   265ufoA7oCNyhCa4t8AjRx3ud8lLIg/DGccdfAHs+FcZxNDHbLmZDTHAS
-   8+ndbJ8PsHA5vOmNMGWI/LbvCw0dM/oCepBrsW9PKUA2KjfcCQKWX9MXW
-   Q==;
-X-CSE-ConnectionGUID: nKxYCfGwQCWS2cRvjAYiWw==
-X-CSE-MsgGUID: J3GU7bUwSt+7ws4ms7wGfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11225"; a="16000036"
-X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="16000036"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Oct 2024 04:05:56 -0700
-X-CSE-ConnectionGUID: J8FqnB8lTp+Vvc/ge+MtMw==
-X-CSE-MsgGUID: 5lprZAhjT+akXkKmb4LJAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,204,1725346800"; 
-   d="scan'208";a="78312581"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 15 Oct 2024 04:05:48 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1t0fN4-000I0F-0F;
-	Tue, 15 Oct 2024 11:05:46 +0000
-Date: Tue, 15 Oct 2024 19:05:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alice Ryhl <aliceryhl@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v10 5/5] rust: add arch_static_branch
-Message-ID: <202410151814.WmLlAkCq-lkp@intel.com>
-References: <20241011-tracepoint-v10-5-7fbde4d6b525@google.com>
+	s=arc-20240116; t=1728990585; c=relaxed/simple;
+	bh=tXPO7KmjdcWYool96chGvBJ0Wdccziar2tj15Bs1opo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IpepYUxK0M0FlRluwu+JY4FZiinohuatOJEGWGcuSW1EnTbF2U4+n0FbY03QCRGUIt2Y+IFzGta/digB94v6jDzuBuVav2NhNYyGsFWZfiCP1T7WYkbCMDCXy5UmkDJa9K7UXpiSJZGDWHml0+mPE1ClbPHA/so04L6pbo2PxE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60B211007;
+	Tue, 15 Oct 2024 04:10:12 -0700 (PDT)
+Received: from [10.57.86.207] (unknown [10.57.86.207])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE1ED3F51B;
+	Tue, 15 Oct 2024 04:09:39 -0700 (PDT)
+Message-ID: <e5067bb8-0fcd-4739-9bca-0e872037d5a1@arm.com>
+Date: Tue, 15 Oct 2024 12:09:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241011-tracepoint-v10-5-7fbde4d6b525@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 18/57] trace: Remove PAGE_SIZE compile-time
+ constant assumption
+Content-Language: en-GB
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ David Hildenbrand <david@redhat.com>, Greg Marsden
+ <greg.marsden@oracle.com>, Ivan Ivanov <ivan.ivanov@suse.com>,
+ Kalesh Singh <kaleshsingh@google.com>, Marc Zyngier <maz@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Matthias Brugger <mbrugger@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+ Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20241014105514.3206191-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-1-ryan.roberts@arm.com>
+ <20241014105912.3207374-18-ryan.roberts@arm.com>
+ <20241014124656.3ffb0f65@gandalf.local.home>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241014124656.3ffb0f65@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Alice,
+On 14/10/2024 17:46, Steven Rostedt wrote:
+> On Mon, 14 Oct 2024 11:58:25 +0100
+> Ryan Roberts <ryan.roberts@arm.com> wrote:
+> 
+>> To prepare for supporting boot-time page size selection, refactor code
+>> to remove assumptions about PAGE_SIZE being compile-time constant. Code
+>> intended to be equivalent when compile-time page size is active.
+>>
+>> Convert BUILD_BUG_ON() BUG_ON() since the argument depends on PAGE_SIZE
+>> and its not trivial to test against a page size limit.
+>>
+>> Redefine FTRACE_KSTACK_ENTRIES so that "struct ftrace_stacks" is always
+>> sized at 32K for 64-bit and 16K for 32-bit. It was previously defined in
+>> terms of PAGE_SIZE (and worked out at the quoted sizes for a 4K page
+>> size). But for 64K pages, the size expanded to 512K. Given the ftrace
+>> stacks should be invariant to page size, this seemed like a waste. As a
+>> side effect, it removes the PAGE_SIZE compile-time constant assumption
+>> from this code.
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>
+>> ***NOTE***
+>> Any confused maintainers may want to read the cover note here for context:
+>> https://lore.kernel.org/all/20241014105514.3206191-1-ryan.roberts@arm.com/
+>>
+>>  kernel/trace/fgraph.c | 2 +-
+>>  kernel/trace/trace.c  | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+>> index d7d4fb403f6f0..47aa5c8d8090e 100644
+>> --- a/kernel/trace/fgraph.c
+>> +++ b/kernel/trace/fgraph.c
+>> @@ -534,7 +534,7 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+>>  	if (!current->ret_stack)
+>>  		return -EBUSY;
+>>  
+>> -	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
+>> +	BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
+> 
+> Absolutely not!
+> 
+> BUG_ON() is in no way a substitution of any BUILD_BUG_ON(). BUILD_BUG_ON()
+> is a non intrusive way to see if something isn't lined up correctly, and
+> can fix it before you execute any code. BUG_ON() is the most intrusive way
+> to say something is wrong and you crash the system.
 
-kernel test robot noticed the following build errors:
+Yep, totally agree. I'm afraid this was me being lazy, and there are a couple of
+other instances where I have done this in other patches that I'll need to fix.
+Most of the time, I've been able to keep BUILD_BUG_ON() and simply compare
+against a page size limit.
 
-[auto build test ERROR on eb887c4567d1b0e7684c026fe7df44afa96589e6]
+Looking at this again, perhaps the better solution is to define
+SHADOW_STACK_SIZE as PAGE_SIZE_MIN? Then it remains a compile-time constant. Is
+there any need for SHADOW_STACK_SIZE to increase with page size?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alice-Ryhl/rust-add-static_branch_unlikely-for-static_key_false/20241011-181703
-base:   eb887c4567d1b0e7684c026fe7df44afa96589e6
-patch link:    https://lore.kernel.org/r/20241011-tracepoint-v10-5-7fbde4d6b525%40google.com
-patch subject: [PATCH v10 5/5] rust: add arch_static_branch
-config: riscv-randconfig-r062-20241015 (https://download.01.org/0day-ci/archive/20241015/202410151814.WmLlAkCq-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241015/202410151814.WmLlAkCq-lkp@intel.com/reproduce)
+> 
+> Not to mention, when function graph tracing is enabled, this gets triggered
+> for *every* function call! So I do not want any runtime test done. Every
+> nanosecond counts in this code path.
+> 
+> If anything, this needs to be moved to initialization and checked once, if
+> it fails, gives a WARN_ON() and disables function graph tracing.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202410151814.WmLlAkCq-lkp@intel.com/
+I'm hoping my suggestion above to decouple SHADOW_STACK_SIZE from PAGE_SIZE is
+acceptable and simpler? If not, happy to do as you suggest here.
 
-All errors (new ones prefixed by >>):
+Thanks,
+Ryan
 
->> /bin/sh: 1: cannot create rust/kernel/arch_static_branch_asm.rs: Directory nonexistent
-   make[3]: *** [scripts/Makefile.build:311: rust/kernel/arch_static_branch_asm.rs] Error 2
-   make[3]: Target 'rust/' not remade because of errors.
-   make[2]: *** [Makefile:1209: prepare] Error 2
-   make[1]: *** [Makefile:224: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:224: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+> 
+> -- Steve
+> 
+> 
+>>  
+>>  	/* Set val to "reserved" with the delta to the new fgraph frame */
+>>  	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>> index c3b2c7dfadef1..0f2ec3d30579f 100644
+>> --- a/kernel/trace/trace.c
+>> +++ b/kernel/trace/trace.c
+>> @@ -2887,7 +2887,7 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
+>>  /* Allow 4 levels of nesting: normal, softirq, irq, NMI */
+>>  #define FTRACE_KSTACK_NESTING	4
+>>  
+>> -#define FTRACE_KSTACK_ENTRIES	(PAGE_SIZE / FTRACE_KSTACK_NESTING)
+>> +#define FTRACE_KSTACK_ENTRIES	(SZ_4K / FTRACE_KSTACK_NESTING)
+>>  
+>>  struct ftrace_stack {
+>>  	unsigned long		calls[FTRACE_KSTACK_ENTRIES];
+> 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
