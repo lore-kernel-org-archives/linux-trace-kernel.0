@@ -1,119 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B28C1C4A31
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Oct 2024 13:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EA91FC7ED;
+	Tue, 15 Oct 2024 14:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728999389; cv=none; b=JHT48rMRfV8/V4YQxqiSpwqW6o/vWcxrQYdSM/hj2zsdaJpsbG/TdVN74Kej0zJpEXjxL2YKftjyyFe+8NgxPmOfs23ylh1pHq3/KRhkGtg38W6uWNEBT6WWLeBU09KG/XTxdPimx4pcRQ0X20YSQifKSVsOSaE/Ep+lgbSIjW4=
+	t=1729000854; cv=none; b=kdMch6MUX4SC+SVMZoFxbAiNpJW7zd8cEhAp4QX2TGeG+4CWWFO2fNtfToJMAkohzowg4kLDyfffb6p3UG36dEn4+/XnaAnt1LY55gG+iEYD4k40NCo94pPH1fYMtnoievSf79qWSOSFzafDgqFEb5EUFqFkWkiLxxVUC2jz9K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728999389; c=relaxed/simple;
-	bh=iY21IH3eF8iJdFXYvdZBPuYiIxe6V7mRo+rrMEF6eKI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CMf0hc14AoYerSHC1uXS3/oE+XzFKOm8CHrHA1TOhnWCKcJ+8AZCJijyRal+58Z/phjMu9Z/oz1R5bUVigGfPSK7MeK6yfXmjRy0pj/A4zf2O8orHwrNcg0XGVBuB33gJbDc7B6/WILTBHQ+iuzZsLGo1z6veXL4hwQBTV45hHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EmeTQ0sa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EmeTQ0sa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728999385;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pPNyQIVmdnqt03qJYroky5p+HPi+skedO7eQPH1tSRI=;
-	b=EmeTQ0sacbXrUEbkkSWkDglgQTYnVYRyziVXLhFd090kDfgbbKbGT6lO+hfv888I0Votzd
-	9xGSC6a9EgULbnsMuzz3RfsPhq2dHfHgANnaBGZ4QWhp0nIuJ15WtI9gDm5hdIgQlcDSdY
-	b4tM6Ao0tdFbEEbMc95rX7CrI0Mf67I=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-385-6GRVnCvLOn-rx6IgJXUCVA-1; Tue,
- 15 Oct 2024 09:36:21 -0400
-X-MC-Unique: 6GRVnCvLOn-rx6IgJXUCVA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B75471955D5B;
-	Tue, 15 Oct 2024 13:36:20 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.159])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E8BA119560A3;
-	Tue, 15 Oct 2024 13:36:18 +0000 (UTC)
-From: tglozar@redhat.com
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jkacur@redhat.com,
-	jwyatt@redhat.com,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v4 6/6] rtla: Documentation: Mention --deepest-idle-state
-Date: Tue, 15 Oct 2024 15:35:52 +0200
-Message-ID: <20241015133552.3043040-7-tglozar@redhat.com>
-In-Reply-To: <20241015133552.3043040-1-tglozar@redhat.com>
-References: <20241015133552.3043040-1-tglozar@redhat.com>
+	s=arc-20240116; t=1729000854; c=relaxed/simple;
+	bh=VBUKXGXAfb3iJDIYwPpB6hIzs1UeTcK6+tEEqYQ8IlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iTD67bKS8gcsADtV8RM3IRHX/v8qw9Hw9nTMmYHl4Fm4cqcpf9zz2lVd71wprJOtpN2aQgii9sdt8FQ/tXiXqM6deTsu3inRzgHzw3E+GP+cgBX5McXQ5eu/D5PoPaNQGX/hQEpjBYh4QX2PKu1BR2HFZ6dMZvb57IHwYhJR/I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1324C4CEC6;
+	Tue, 15 Oct 2024 14:00:52 +0000 (UTC)
+Date: Tue, 15 Oct 2024 10:01:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Jose E. Marchesi" <jemarch@gnu.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, Nick Desaulniers <ndesaulniers@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Subject: Re: Have compiler remove __fentry locations from overwritten weak
+ functions
+Message-ID: <20241015100111.37adfb28@gandalf.local.home>
+In-Reply-To: <20241015080149.GP16066@noisy.programming.kicks-ass.net>
+References: <20241014210841.5a4764de@gandalf.local.home>
+	<20241015080149.GP16066@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Tomas Glozar <tglozar@redhat.com>
+On Tue, 15 Oct 2024 10:01:49 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Add --deepest-idle-state to manpage and mention libcpupower dependency
-in README.txt.
+> On Mon, Oct 14, 2024 at 09:08:41PM -0400, Steven Rostedt wrote:
+> > There's a long standing issue with having fentry in weak functions that
+> > were overwritten. This was first caught when a "notrace" function was
+> > showing up in the /sys/kernel/tracing/available_filter_functions list.
+> > 
+> >    https://lore.kernel.org/all/20220412094923.0abe90955e5db486b7bca279@kernel.org/
+> > 
+> > What was happening is that ftrace uses kallsyms (what is basically listed
+> > by nm)   
+> 
+> Ah, if only. NM lists the symbol table, and that has strictly more
+> information than kallsyms, notably it includes symbol length. Using
+> symbol length it is trivial to distinguish the case you're tripping
+> over.
+> 
+> > to map the location of __fentry to the previous symbol ahead of it.
+> > Then it says that function is the name of the function for that __fentry.
+> > But when you have weak functions, you can have this:
+> > 
+> > 
+> >   int notrace do_not_watch_me(void)
+> >   {
+> > 	return whatever;
+> >   }
+> > 
+> >   void __weak define_me_in_arch(void)
+> >   {
+> > 	return;
+> >   }
+> > 
+> > The define_me_in_arch() gets a __fentry, but because it is overwritten, it
+> > becomes attached to the end of do_not_watch_me(). When ftrace asks kallsyms
+> > for the symbol name of that __fentry location, it returns
+> > do_not_watch_me(), and ftrace will simply list that.  
+> 
+> Which is a kallsym bug that does not exists in the ELF space.
+> 
+> There is a patch set that tries to fix this here:
+> 
+>   https://lore.kernel.org/all/20240723063258.2240610-1-zhengyejian@huaweicloud.com/T/#u
+> 
+> Instead of adding size to kallsyms it adds extra symbols to denote the
+> holes, which ends up being similar.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- Documentation/tools/rtla/common_timerlat_options.rst | 8 ++++++++
- tools/tracing/rtla/README.txt                        | 4 ++++
- 2 files changed, 12 insertions(+)
+Yeah, I was looking at this patch when I thought the compiler could do it
+for us. Especially since it now creates the __mcount_locs too.
 
-diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
-index cef6651f1435..10dc802f8d65 100644
---- a/Documentation/tools/rtla/common_timerlat_options.rst
-+++ b/Documentation/tools/rtla/common_timerlat_options.rst
-@@ -31,6 +31,14 @@
-         *cyclictest* sets this value to *0* by default, use **--dma-latency** *0* to have
-         similar results.
- 
-+**--deepest-idle-state** *n*
-+        Disable idle states higher than *n* for cpus that are running timerlat threads to
-+        reduce exit from idle latencies. If *n* is -1, all idle states are disabled.
-+        On exit from timerlat, the idle state setting is restored to its original state
-+        before running timerlat.
-+
-+        Requires rtla to be built with libcpupower.
-+
- **-k**, **--kernel-threads**
- 
-         Use timerlat kernel-space threads, in contrast of **-u**.
-diff --git a/tools/tracing/rtla/README.txt b/tools/tracing/rtla/README.txt
-index 4af3fd40f171..dd5621038c55 100644
---- a/tools/tracing/rtla/README.txt
-+++ b/tools/tracing/rtla/README.txt
-@@ -11,6 +11,7 @@ RTLA depends on the following libraries and tools:
- 
-  - libtracefs
-  - libtraceevent
-+ - libcpupower (optional, for --deepest-idle-state)
- 
- It also depends on python3-docutils to compile man pages.
- 
-@@ -26,6 +27,9 @@ For development, we suggest the following steps for compiling rtla:
-   $ make
-   $ sudo make install
-   $ cd ..
-+  $ cd $libcpupower_src
-+  $ make
-+  $ sudo make install
-   $ cd $rtla_src
-   $ make
-   $ sudo make install
--- 
-2.47.0
+> 
+> > But I was thinking, since gcc (and perhaps clang?) now has:
+> > 
+> >   -mrecord-mcount
+> > 
+> > that creates the __mcount_loc section that ftrace uses to find where the
+> > __fentry's are. Perhaps the compiler can simply remove any of those
+> > __fentry's that happen to exist in a weak function that was overridden.
+> > 
+> > Would this be something that the compiler could do?  
+> 
+> Linker, this is link time. The linker would not only have to drop the
+> (weak) symbol from the symbol table (which is all it really does), but
+> it would now have to go and muck about with other sections.
 
+Shucks, I was hoping that the linker would have enough info to know what
+was inside the locations of those symbols. Oh well.
+
+> 
+> It would have to go re-write the __mcount_loc section and drop entrie(s)
+> that were inside the dropped symbol. But then, what about other extra
+> sections? For instance, we can have (and still patch) alternatives in
+> the 'dead' weak text.
+> 
+> Where does this stop?
+> 
+> LTO can do the right thing and completely eliminate the weak function,
+> but anything short of that is a really big ask. Esp. since this is a
+> problem of our own making -- kallsyms is a flawed representation of the
+> symbol table.
+
+Yeah, if it's too much of an ask, then forget it. But I decided to ask to
+find out how much of an ask it is ;-)
+
+-- Steve
