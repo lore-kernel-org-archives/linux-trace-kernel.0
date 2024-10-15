@@ -1,85 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ACF17335E;
-	Tue, 15 Oct 2024 08:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475D3148FE1;
+	Tue, 15 Oct 2024 08:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728980951; cv=none; b=BpGslpAjb/SScjF6F21OPKp+TH/nP5BXNhVm3OJC5e3DzloFNGYTrPaIPnn0Dk7o7T9A2nycDD/vwTKmZSI2CKBmmH6b/kkhIH1D6IN8DAE4N+qJwXMHLdhVE1es9xCY1Ve2RQwxYhxEKgbdSQecTTMFHsgdsr6ArDr2XY2z9MA=
+	t=1728982379; cv=none; b=XKNvFR08mK+900h5tmHSkbgUGfmjnfJ/KecFUSK8RtcVNtXdnWUE6UVeN7fi1V5auLju6Ua3NMGu4sfiUYSGlZjPjlaUKN8eTI5QkHyfrxFfljxp74Cj0xBvGnwC3Ux5kvJYFcpI/g97dZzrem1PuakOrtbU+OxXVmPlaRDiqM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728980951; c=relaxed/simple;
-	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
+	s=arc-20240116; t=1728982379; c=relaxed/simple;
+	bh=BKJ3P8C8X9Uyv3rS2m9K9VYrOMNfdiuDwYEdrx5Njhc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DXgvpzrUod20Noaa/8bLii5yxXW7uUaTmt925QivCJv8uQa6AikUCy3ZpfBJTKGT101k50Ih3SSxzVl5Hyzzprfk5FOq4MYDpyqpSLeM8erfL/Ek5qxul1RTIPsZUkbrF0f0xwW7lF6b937+FxTcq83N2lZgk/fmnsEzCciKrdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egqvVNG6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MBr6iTn/ULx0WLNEBl87+RWCpOQm+bSY2ZKSbgUyponmLlRxAJcim9qc49idgdnPb9XIQlVSDBPq0Znjd3O6vSNg10JDrHmrKGQxNn4yI9r1JGNn7D9i4sBYJzjdgR2cm2SiRf682P5DNtlC33QhKblHimoZCYOC7lRVgjATSTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N52+UOcm; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egqvVNG6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFDFC4CEC7;
-	Tue, 15 Oct 2024 08:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728980950;
-	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=egqvVNG6q9wlgpkO2ihI5nbC6bmr+MKMXS2UkyLdtZUnRa2mJjPhb/GoHeE8B3JIV
-	 VDOtfy1iCH02B47+vC2mLdYrhXPmRCcdJ1+Qf6WXe8/wfp0qMu9/oa8S2JtMyqJO/O
-	 ZmBQkqH3b1vcstwGj/aIQZ/QJ/x/VWHD7oxFh+9oQa2EPZRfC0PAr1bUMSRbgTw0WX
-	 C7Lug7jeKA6ulz3nyHPgkg0UGzQL6Atd/tuR2Y2ST5aOa7GcMnBjH9MVS3YMhP6L1x
-	 3BVwGozDPiF2n6afO7840UO9nN2SDmvcqv5gq/FNe0QhCmwM6wOayqIt/j1N459swo
-	 /mUI7oPo31iJQ==
-Date: Tue, 15 Oct 2024 01:29:05 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N52+UOcm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=tADmReae8PUwtMPdqzngbDG531D18HRsicXZDEfUBf4=; b=N52+UOcmR8BpG8UetqR9ABLorp
+	IeCmTlgMpuLKHB9gikzYYNv7+ACeyjoZfqkfE9eR4gOdlEQPt0n/joEfsN8LLxnaepVikhHpZfUQl
+	AJuJ8l+u4hFL94wTd/gHKHq5/VMveZec3jhSC9//zNUV5wIzBI1A8KuTQjsamz+7xSgUASSPGMfuv
+	278j/wOkMWTmDWtCKgrluCXP2wbM+G7MZeQwFtk24HcGzaZpLytaCtApUoq2NjrB7D90DdiGQQHb6
+	3nUPMKvaeFuuNCsE2Aa53KqD2satQqpj6YRmh1DxwBDKSFiAD4MM+PGp43ec9BXivPgU5PyPr3njt
+	FF3L0LEQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t0dIN-00000006WOH-2NwR;
+	Tue, 15 Oct 2024 08:52:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 84D47300777; Tue, 15 Oct 2024 10:52:45 +0200 (CEST)
+Date: Tue, 15 Oct 2024 10:52:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Jose E. Marchesi" <jemarch@gnu.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v5 6/8] x86/module: perpare module loading for ROX
- allocations of text
-Message-ID: <20241015082905.GA1235948@thelio-3990X>
-References: <20241009180816.83591-1-rppt@kernel.org>
- <20241009180816.83591-7-rppt@kernel.org>
- <20241010225411.GA922684@thelio-3990X>
- <Zwkg3LwlNJOwNWZh@kernel.org>
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Zheng Yejian <zhengyejian@huaweicloud.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Subject: Re: Have compiler remove __fentry locations from overwritten weak
+ functions
+Message-ID: <20241015085245.GO33184@noisy.programming.kicks-ass.net>
+References: <20241014210841.5a4764de@gandalf.local.home>
+ <20241015080149.GP16066@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -88,88 +58,18 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zwkg3LwlNJOwNWZh@kernel.org>
+In-Reply-To: <20241015080149.GP16066@noisy.programming.kicks-ass.net>
 
-On Fri, Oct 11, 2024 at 03:58:04PM +0300, Mike Rapoport wrote:
-> I overlooked how cfi_*_callers routines update addr.
-> This patch should fix it:
+On Tue, Oct 15, 2024 at 10:01:49AM +0200, Peter Zijlstra wrote:
 
-Thanks, can confirm. My boot is working again and LKDTM's
-CFI_FORWARD_PROTO test properly fails.
-
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 3b3fa93af3b1..cf782f431110 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -1148,11 +1148,13 @@ static int cfi_disable_callers(s32 *start, s32 *end, struct module *mod)
->  
->  	for (s = start; s < end; s++) {
->  		void *addr = (void *)s + *s;
-> -		void *wr_addr = module_writable_address(mod, addr);
-> +		void *wr_addr;
->  		u32 hash;
->  
->  		addr -= fineibt_caller_size;
-> -		hash = decode_caller_hash(addr);
-> +		wr_addr = module_writable_address(mod, addr);
-> +		hash = decode_caller_hash(wr_addr);
-> +
->  		if (!hash) /* nocfi callers */
->  			continue;
->  
-> @@ -1172,11 +1174,12 @@ static int cfi_enable_callers(s32 *start, s32 *end, struct module *mod)
->  
->  	for (s = start; s < end; s++) {
->  		void *addr = (void *)s + *s;
-> -		void *wr_addr = module_writable_address(mod, addr);
-> +		void *wr_addr;
->  		u32 hash;
->  
->  		addr -= fineibt_caller_size;
-> -		hash = decode_caller_hash(addr);
-> +		wr_addr = module_writable_address(mod, addr);
-> +		hash = decode_caller_hash(wr_addr);
->  		if (!hash) /* nocfi callers */
->  			continue;
->  
-> @@ -1249,11 +1252,12 @@ static int cfi_rand_callers(s32 *start, s32 *end, struct module *mod)
->  
->  	for (s = start; s < end; s++) {
->  		void *addr = (void *)s + *s;
-> -		void *wr_addr = module_writable_address(mod, addr);
-> +		void *wr_addr;
->  		u32 hash;
->  
->  		addr -= fineibt_caller_size;
-> -		hash = decode_caller_hash(addr);
-> +		wr_addr = module_writable_address(mod, addr);
-> +		hash = decode_caller_hash(wr_addr);
->  		if (hash) {
->  			hash = -cfi_rehash(hash);
->  			text_poke_early(wr_addr + 2, &hash, 4);
-> @@ -1269,14 +1273,15 @@ static int cfi_rewrite_callers(s32 *start, s32 *end, struct module *mod)
->  
->  	for (s = start; s < end; s++) {
->  		void *addr = (void *)s + *s;
-> -		void *wr_addr = module_writable_address(mod, addr);
-> +		void *wr_addr;
->  		u32 hash;
->  
->  		addr -= fineibt_caller_size;
-> -		hash = decode_caller_hash(addr);
-> +		wr_addr = module_writable_address(mod, addr);
-> +		hash = decode_caller_hash(wr_addr);
->  		if (hash) {
->  			text_poke_early(wr_addr, fineibt_caller_start, fineibt_caller_size);
-> -			WARN_ON(*(u32 *)(addr + fineibt_caller_hash) != 0x12345678);
-> +			WARN_ON(*(u32 *)(wr_addr + fineibt_caller_hash) != 0x12345678);
->  			text_poke_early(wr_addr + fineibt_caller_hash, &hash, 4);
->  		}
->  		/* rely on apply_retpolines() */
->  
-> > Cheers,
-> > Nathan
+> > Would this be something that the compiler could do?
 > 
-> -- 
-> Sincerely yours,
-> Mike.
+> Linker, this is link time. The linker would not only have to drop the
+> (weak) symbol from the symbol table (which is all it really does), but
+> it would now have to go and muck about with other sections.
+
+Ah, one thing that might actually help is if instead of dropping the
+weak symbol from the table, it would retain it but rename it -- add a
+unique suffix or somesuch.
+
+Then it becomes yet another unused symbol.
