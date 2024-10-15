@@ -1,145 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6878015884A;
-	Tue, 15 Oct 2024 01:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC82916B38B;
+	Tue, 15 Oct 2024 03:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728955923; cv=none; b=b+C2nsAm61sR5mJUiS1tY/0gSuJuPgn0DT7MdooPi+dxrzdsQxapb71QMOqzrKFqBz8DjwyDYNK4t4G7VH8Mwhpdys79fbI9XbxLMtYw7dLbJpwndbeWhOsibqtCATUSdiWre+oUaqkHF1dvAC+nqMIu4Iugjgk2BFN2NFYlGxc=
+	t=1728963651; cv=none; b=g+zeNsMe2z4HgeIuu5I1BGpswDWfJifZ5y/aZXbQvQgqqLbCEM+GiohXiS08zo4+GCKU1ai6akdw6LsTvU92k/bRaxHIgjkUmMse8VKPOEcMPqRr6g5dwnUvmbLe2/gqUutClg5rMBBYQY/pQy2Cj2P2/2+ClE1uhNz7mCIRBMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728955923; c=relaxed/simple;
-	bh=5zoBkzFaOJl7tH9L4LSZfLmjahc28XB6pBP4WeEvYWM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iEikaKlMTHJsNaTNXnL7xvMIZr1JB7Uc44JaqCgfsbaiJLLvRN5GJuUWCouTMtKn1zJaeOLIoFipWCF+O7XgFmwEcc3K57knxo8DsiEY/M+Uizl0i45qWT4yZeVqL5mS4Ip3WDibNPgPZjN7uWFsKEbjGQFvobnvMdVqk5ZlzH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3j/OZbs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728963651; c=relaxed/simple;
+	bh=m1BIgydw+BK/Cu+/JPGs9ohupKxofVR0Don2K73xLHY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=eerD1H/FQsbOOBJxriuiQpaesvO89/Yz43orseudlhlK83tLjmN2xxCP9bPNKyuIrxDX4TpxzDxCO432gsBUx0pcslKWJHko/lywyBaAxUvjlpdR2eYsqy75Kr4jxxcEq8wvHAT6oQn0y0xTidNA2idgbk4QYYN34+4cxji7V2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Kg2gBM0G; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3j/OZbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD49C4CEC3;
-	Tue, 15 Oct 2024 01:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728955923;
-	bh=5zoBkzFaOJl7tH9L4LSZfLmjahc28XB6pBP4WeEvYWM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P3j/OZbsTW7NGO3C4WQ7+hH4wsDVTjNL6Dz6qUJ4nOtEmHRhSy9HuhowMF/8CmEo+
-	 YfHmrVr7ann0yulBxFPco5f8jdM34Tsao+HRtjwmipkvyvbDo7S+iaSnNMAZSwixGK
-	 LMLQ68EJZtar9RXphg6Dz0jqXHu6OET/IbL5qNaxN9Hfw8zUlB4JW4QrCFQ1xs6elY
-	 Ej8anf7M83puFmleN2Wcf2LNIoFmwDftdSpAGa6PCPiLZ5okpHotUQrsLTp7SToJwO
-	 FZRBYzXdrmHtHdBb7avCOqHlf3LNsslhHAz1Bo8h10zGNfBx+ydhsIKeGsXYrO5Yqf
-	 pPJIEILRzmbUg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v16 18/18] bpf: Add get_entry_ip() for arm64
-Date: Tue, 15 Oct 2024 10:31:58 +0900
-Message-ID: <172895591858.107311.3214711054345114072.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <172895571278.107311.14000164546881236558.stgit@devnote2>
-References: <172895571278.107311.14000164546881236558.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Kg2gBM0G"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728963646; h=Content-Type:Mime-Version:Subject:From:Date:Message-Id:To;
+	bh=SoE4b6Fh2i+wNz9A6qzp58ws/Tpioj00Mn3o6HsCXi4=;
+	b=Kg2gBM0GaZMDJo5asC2IudkdV1Vf33pRhwXRV3ALDkfHcwaid/AkOC164RM1F4ihl1wXIcFCxtqA5+gB6K2VPhO6FdbdMkOclrz5c70lvnP8HZ8k1FZ5O89s9dcC3lNukEOru59eIj0yEM3jVjPhBc0qiclVjcRqGUNbDRX/Tic=
+Received: from smtpclient.apple(mailfrom:mqaio@linux.alibaba.com fp:SMTPD_---0WHBoqmQ_1728963644 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 15 Oct 2024 11:40:45 +0800
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] uprobe: avoid out-of-bounds memory access of fetching
+ args
+From: maqiao.mq <mqaio@linux.alibaba.com>
+In-Reply-To: <20241014145808.GA8567@redhat.com>
+Date: Tue, 15 Oct 2024 11:40:34 +0800
+Cc: linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ mathieu.desnoyers@efficios.com,
+ namhyung.kim@lge.com,
+ linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C45A2710-BAC4-42FF-93A6-C0165A3EC446@linux.alibaba.com>
+References: <20241014061405.3139467-1-mqaio@linux.alibaba.com>
+ <20241014145808.GA8567@redhat.com>
+To: Oleg Nesterov <oleg@redhat.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add get_entry_ip() implementation for arm64. This is based on the
-information in ftrace_call_adjust() on arm64. Basically function entry
-address = ftrace call entry_ip - 4, but when there is a BTI at the first
-instruction, we need one more instruction back (entry_ip - 8.)
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/bpf_trace.c |   64 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+> 2024=E5=B9=B410=E6=9C=8814=E6=97=A5 =E4=B8=8B=E5=8D=8810:58=EF=BC=8COleg=
+ Nesterov <oleg@redhat.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> Sorry, currently I don't have time to even try to read this patch, =
+just
+> one note below...
+>=20
+> On 10/14, Ma Qiao wrote:
+>>=20
+>> @@ -979,6 +980,11 @@ static struct uprobe_cpu_buffer =
+*prepare_uprobe_buffer(struct trace_uprobe *tu,
+>> 	ucb =3D uprobe_buffer_get();
+>> 	ucb->dsize =3D tu->tp.size + dsize;
+>>=20
+>> +	if (WARN_ON_ONCE(ucb->dsize > MAX_UCB_BUFFER_SIZE)) {
+>> +		ucb->dsize =3D MAX_UCB_BUFFER_SIZE;
+>> +		dsize =3D MAX_UCB_BUFFER_SIZE - tu->tp.size;
+>> +	}
+>> +
+>=20
+> Then you can probably kill the
+>=20
+> 	if (WARN_ON_ONCE(ucb->dsize > PAGE_SIZE))
+>=20
+> check in __uprobe_trace_func(), no?
+>=20
+> Oleg.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index edd577297dc2..a7827a0a6d81 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1042,6 +1042,70 @@ static unsigned long get_entry_ip(unsigned long fentry_ip)
- 		fentry_ip -= ENDBR_INSN_SIZE;
- 	return fentry_ip;
- }
-+#elif defined(CONFIG_ARM64)
-+#include <asm/insn.h>
-+
-+static unsigned long get_entry_ip(unsigned long fentry_ip)
-+{
-+	u32 insn;
-+
-+	/*
-+	 * When using patchable-function-entry without pre-function NOPS, ftrace
-+	 * entry is the address of the first NOP after the function entry point.
-+	 *
-+	 * The compiler has either generated:
-+	 *
-+	 * func+00:	func:	NOP		// To be patched to MOV X9, LR
-+	 * func+04:		NOP		// To be patched to BL <caller>
-+	 *
-+	 * Or:
-+	 *
-+	 * func-04:		BTI	C
-+	 * func+00:	func:	NOP		// To be patched to MOV X9, LR
-+	 * func+04:		NOP		// To be patched to BL <caller>
-+	 *
-+	 * The fentry_ip is the address of `BL <caller>` which is at `func + 4`
-+	 * bytes in either case.
-+	 */
-+	if (!IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-+		return fentry_ip - AARCH64_INSN_SIZE;
-+
-+	/*
-+	 * When using patchable-function-entry with pre-function NOPs, BTI is
-+	 * a bit different.
-+	 *
-+	 * func+00:	func:	NOP		// To be patched to MOV X9, LR
-+	 * func+04:		NOP		// To be patched to BL <caller>
-+	 *
-+	 * Or:
-+	 *
-+	 * func+00:	func:	BTI	C
-+	 * func+04:		NOP		// To be patched to MOV X9, LR
-+	 * func+08:		NOP		// To be patched to BL <caller>
-+	 *
-+	 * The fentry_ip is the address of `BL <caller>` which is at either
-+	 * `func + 4` or `func + 8` depends on whether there is a BTI.
-+	 */
-+
-+	/* If there is no BTI, the func address should be one instruction before. */
-+	if (!IS_ENABLED(CONFIG_ARM64_BTI_KERNEL))
-+		return fentry_ip - AARCH64_INSN_SIZE;
-+
-+	/* We want to be extra safe in case entry ip is on the page edge,
-+	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-+	 */
-+	if ((fentry_ip & ~PAGE_MASK) < AARCH64_INSN_SIZE * 2) {
-+		if (get_kernel_nofault(insn, (u32 *)(fentry_ip - AARCH64_INSN_SIZE * 2)))
-+			return fentry_ip - AARCH64_INSN_SIZE;
-+	} else {
-+		insn = *(u32 *)(fentry_ip - AARCH64_INSN_SIZE * 2);
-+	}
-+
-+	if (aarch64_insn_is_bti(le32_to_cpu((__le32)insn)))
-+		return fentry_ip - AARCH64_INSN_SIZE * 2;
-+
-+	return fentry_ip - AARCH64_INSN_SIZE;
-+}
- #else
- #define get_entry_ip(fentry_ip) fentry_ip
- #endif
-
+Thanks for reminder, I will remove it in v2=
