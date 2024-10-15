@@ -1,54 +1,85 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4CC1741C3;
-	Tue, 15 Oct 2024 08:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0ACF17335E;
+	Tue, 15 Oct 2024 08:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728979325; cv=none; b=MT/xJutRVnZDZCKSvViZl1JDoUywoNVcF4f18JaEWOzztyx8IYjyQPwGsB3GtPO0GpBngJ3qjJBsnllDTdUon5nOMoTK39NGqQ5lKuVNvW/RiXNUkEjGt7M6DzBfI2dxH9AeMhRa+HfgN2umiixJUuS0ICbzgEpRkIv05B0pPI0=
+	t=1728980951; cv=none; b=BpGslpAjb/SScjF6F21OPKp+TH/nP5BXNhVm3OJC5e3DzloFNGYTrPaIPnn0Dk7o7T9A2nycDD/vwTKmZSI2CKBmmH6b/kkhIH1D6IN8DAE4N+qJwXMHLdhVE1es9xCY1Ve2RQwxYhxEKgbdSQecTTMFHsgdsr6ArDr2XY2z9MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728979325; c=relaxed/simple;
-	bh=ub78Fj7PCTFI7adxyeCQY8inXoEvVxn+YvQzp6OGWQQ=;
+	s=arc-20240116; t=1728980951; c=relaxed/simple;
+	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KY80wX+gMYfrU0RmaoDcW+8nJUcF2LvWHXlSWnc2FVZAXXwTwEO84RdQm+qfEaTUn+cn02Jalfq/QRkPvhlhoLuTdtUNl3xUEaU8R5YSlZCCzt7jqiOfI10JswMVZfeMRvFioee8E/vceEQW55ils/sd1b+YFhhG983RtJhHi/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZumZydWW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXgvpzrUod20Noaa/8bLii5yxXW7uUaTmt925QivCJv8uQa6AikUCy3ZpfBJTKGT101k50Ih3SSxzVl5Hyzzprfk5FOq4MYDpyqpSLeM8erfL/Ek5qxul1RTIPsZUkbrF0f0xwW7lF6b937+FxTcq83N2lZgk/fmnsEzCciKrdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egqvVNG6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZumZydWW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gO8AXV3B3+bik/RmMlaIBDc/tPOhu1CUoXsAdzC3rhk=; b=ZumZydWWVsQBa++m6UFoeoy0vB
-	FLXl1TcBc3Zi01yXnKrG+W1FK/OPXske7V28LyWG3UTejn0fKVutu8yHOiw4r89dhFcgh0qPU/kFg
-	Sd8j/HxQ1iqps4UtWEKJyl6cQYNjUlcFKwoGKmiJ0583SbH64+FdS63WwNvgxW+29QXRhSTwm0Isj
-	dznMNsZ6cJAugWGqilbiTWdLg/ZlVUQIF7q7SfkWEoqOJS6pYYftmOdJS5HEM622IdIiJZLpnWSps
-	v6AkB1rvlFbP2yXB5d/TuxLicOz1lEaPeox7a/aINoGk3DnPQ68McYutFNJcJ5ytM6/RZgkRBg73C
-	yQVDoHew==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t0cV4-00000006VX3-0lUY;
-	Tue, 15 Oct 2024 08:01:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CEFE43005AF; Tue, 15 Oct 2024 10:01:49 +0200 (CEST)
-Date: Tue, 15 Oct 2024 10:01:49 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Jose E. Marchesi" <jemarch@gnu.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egqvVNG6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFDFC4CEC7;
+	Tue, 15 Oct 2024 08:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728980950;
+	bh=DsgcZIwzu+lcz+sCcqq5yd6bbrmg5UWNN75kmiN7u1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egqvVNG6q9wlgpkO2ihI5nbC6bmr+MKMXS2UkyLdtZUnRa2mJjPhb/GoHeE8B3JIV
+	 VDOtfy1iCH02B47+vC2mLdYrhXPmRCcdJ1+Qf6WXe8/wfp0qMu9/oa8S2JtMyqJO/O
+	 ZmBQkqH3b1vcstwGj/aIQZ/QJ/x/VWHD7oxFh+9oQa2EPZRfC0PAr1bUMSRbgTw0WX
+	 C7Lug7jeKA6ulz3nyHPgkg0UGzQL6Atd/tuR2Y2ST5aOa7GcMnBjH9MVS3YMhP6L1x
+	 3BVwGozDPiF2n6afO7840UO9nN2SDmvcqv5gq/FNe0QhCmwM6wOayqIt/j1N459swo
+	 /mUI7oPo31iJQ==
+Date: Tue, 15 Oct 2024 01:29:05 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Zheng Yejian <zhengyejian@huaweicloud.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: Have compiler remove __fentry locations from overwritten weak
- functions
-Message-ID: <20241015080149.GP16066@noisy.programming.kicks-ass.net>
-References: <20241014210841.5a4764de@gandalf.local.home>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v5 6/8] x86/module: perpare module loading for ROX
+ allocations of text
+Message-ID: <20241015082905.GA1235948@thelio-3990X>
+References: <20241009180816.83591-1-rppt@kernel.org>
+ <20241009180816.83591-7-rppt@kernel.org>
+ <20241010225411.GA922684@thelio-3990X>
+ <Zwkg3LwlNJOwNWZh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,75 +88,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241014210841.5a4764de@gandalf.local.home>
+In-Reply-To: <Zwkg3LwlNJOwNWZh@kernel.org>
 
-On Mon, Oct 14, 2024 at 09:08:41PM -0400, Steven Rostedt wrote:
-> There's a long standing issue with having fentry in weak functions that
-> were overwritten. This was first caught when a "notrace" function was
-> showing up in the /sys/kernel/tracing/available_filter_functions list.
+On Fri, Oct 11, 2024 at 03:58:04PM +0300, Mike Rapoport wrote:
+> I overlooked how cfi_*_callers routines update addr.
+> This patch should fix it:
+
+Thanks, can confirm. My boot is working again and LKDTM's
+CFI_FORWARD_PROTO test properly fails.
+
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 3b3fa93af3b1..cf782f431110 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -1148,11 +1148,13 @@ static int cfi_disable_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+> +
+>  		if (!hash) /* nocfi callers */
+>  			continue;
+>  
+> @@ -1172,11 +1174,12 @@ static int cfi_enable_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (!hash) /* nocfi callers */
+>  			continue;
+>  
+> @@ -1249,11 +1252,12 @@ static int cfi_rand_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (hash) {
+>  			hash = -cfi_rehash(hash);
+>  			text_poke_early(wr_addr + 2, &hash, 4);
+> @@ -1269,14 +1273,15 @@ static int cfi_rewrite_callers(s32 *start, s32 *end, struct module *mod)
+>  
+>  	for (s = start; s < end; s++) {
+>  		void *addr = (void *)s + *s;
+> -		void *wr_addr = module_writable_address(mod, addr);
+> +		void *wr_addr;
+>  		u32 hash;
+>  
+>  		addr -= fineibt_caller_size;
+> -		hash = decode_caller_hash(addr);
+> +		wr_addr = module_writable_address(mod, addr);
+> +		hash = decode_caller_hash(wr_addr);
+>  		if (hash) {
+>  			text_poke_early(wr_addr, fineibt_caller_start, fineibt_caller_size);
+> -			WARN_ON(*(u32 *)(addr + fineibt_caller_hash) != 0x12345678);
+> +			WARN_ON(*(u32 *)(wr_addr + fineibt_caller_hash) != 0x12345678);
+>  			text_poke_early(wr_addr + fineibt_caller_hash, &hash, 4);
+>  		}
+>  		/* rely on apply_retpolines() */
+>  
+> > Cheers,
+> > Nathan
 > 
->    https://lore.kernel.org/all/20220412094923.0abe90955e5db486b7bca279@kernel.org/
-> 
-> What was happening is that ftrace uses kallsyms (what is basically listed
-> by nm) 
-
-Ah, if only. NM lists the symbol table, and that has strictly more
-information than kallsyms, notably it includes symbol length. Using
-symbol length it is trivial to distinguish the case you're tripping
-over.
-
-> to map the location of __fentry to the previous symbol ahead of it.
-> Then it says that function is the name of the function for that __fentry.
-> But when you have weak functions, you can have this:
-> 
-> 
->   int notrace do_not_watch_me(void)
->   {
-> 	return whatever;
->   }
-> 
->   void __weak define_me_in_arch(void)
->   {
-> 	return;
->   }
-> 
-> The define_me_in_arch() gets a __fentry, but because it is overwritten, it
-> becomes attached to the end of do_not_watch_me(). When ftrace asks kallsyms
-> for the symbol name of that __fentry location, it returns
-> do_not_watch_me(), and ftrace will simply list that.
-
-Which is a kallsym bug that does not exists in the ELF space.
-
-There is a patch set that tries to fix this here:
-
-  https://lore.kernel.org/all/20240723063258.2240610-1-zhengyejian@huaweicloud.com/T/#u
-
-Instead of adding size to kallsyms it adds extra symbols to denote the
-holes, which ends up being similar.
-
-> But I was thinking, since gcc (and perhaps clang?) now has:
-> 
->   -mrecord-mcount
-> 
-> that creates the __mcount_loc section that ftrace uses to find where the
-> __fentry's are. Perhaps the compiler can simply remove any of those
-> __fentry's that happen to exist in a weak function that was overridden.
-> 
-> Would this be something that the compiler could do?
-
-Linker, this is link time. The linker would not only have to drop the
-(weak) symbol from the symbol table (which is all it really does), but
-it would now have to go and muck about with other sections.
-
-It would have to go re-write the __mcount_loc section and drop entrie(s)
-that were inside the dropped symbol. But then, what about other extra
-sections? For instance, we can have (and still patch) alternatives in
-the 'dead' weak text.
-
-Where does this stop?
-
-LTO can do the right thing and completely eliminate the weak function,
-but anything short of that is a really big ask. Esp. since this is a
-problem of our own making -- kallsyms is a flawed representation of the
-symbol table.
-
+> -- 
+> Sincerely yours,
+> Mike.
