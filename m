@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9AB1FB3;
-	Wed, 16 Oct 2024 00:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DA713AF2;
+	Wed, 16 Oct 2024 00:53:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729037274; cv=none; b=ApcJV9FPCwOhvbscd2hcMRu2+OzMb1I+AiRSzO6AqXrGWhjIoJynKeTqDZiwvD8r8DFE96hdaMyLmLnE2cHq0o0M9AzNPwez9JkR1MAE+KxN3lrHmO7hEtvTeWBEyzR0yTMkqfQCqW0r071BtoQycZiG2KNarZ6BCOzgLff9P6w=
+	t=1729040009; cv=none; b=Gwpcd773+1CV2F4hGM2512PUg0mkIxANMB5WD9FCH8DLRb/7r+DqKYxILdgokdI/LGqZO0vbqymtpxCnAeQRhT5UhqrlVkxio1RaBZUR9KPYrSpq6J0AsfvkYAL2R5jGz/Lsv1HzFteNudB7KFMcc+4V0TTuJZWeoVWGTdanuPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729037274; c=relaxed/simple;
-	bh=QP0jEtEt8KM1SoNPtsl9UELosrNb8yVZtSK44pVY5Og=;
+	s=arc-20240116; t=1729040009; c=relaxed/simple;
+	bh=3Jw+/zXOc7n7uaOHukE6ywARpluWPCIQyRzKTeLkOZs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=garh5kDyDtGf3NCOhAFq2OFGN4ppISh2rEo5hYzw/hI3lv+2ZeTPYSo3ZxK6OsyqIOrlXSCJf6l4TCn1gXmFoD7fU0Q19Pzu6hfsixyZtfzQR4/wHot3arZUWiWDY1LyCgXHnFr0HXXhMFfqNUS8SJYRvtS8DlosY9HLDCL6h7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RczbOjwZ; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Nl+EyLXZPxN5uIwzhACjTzEdDZuSVr440ZOaLLngcWXqWKIaXM8CzrXGoFjzG+87JWLYCzjYVQpxvXzZf+3+KHBYUSvIcqOGwOSFqosfYhGqtMl6cn0OijXx7Ukl0XUlw8XgBHWC0h0a0j+PrGr74WHnYhSVFJ4eSm0eFW5z3p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q93vvCO3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RczbOjwZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84FF9C4CEC6;
-	Wed, 16 Oct 2024 00:07:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q93vvCO3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C25ACC4CEC6;
+	Wed, 16 Oct 2024 00:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729037273;
-	bh=QP0jEtEt8KM1SoNPtsl9UELosrNb8yVZtSK44pVY5Og=;
+	s=k20201202; t=1729040008;
+	bh=3Jw+/zXOc7n7uaOHukE6ywARpluWPCIQyRzKTeLkOZs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RczbOjwZD+UYGIfozeODz55aN2R+XmDoHNt+APL/AWfHrP5Z6OIbD8rBUkT/e+dZJ
-	 8Rqw4ZhMNsCxlJsz0z74MPsWrc6YddE6xlCthTZkaU0cVFVuGYAsqWBuv36AQhaPma
-	 6/eNopyeymMq/cIqL//1yGcudAQQHVcp0rspl4hx3ig9AHphL4QJ72+r9VFGkDN1JZ
-	 NxRnqBoMTafQFTGAvhfCFfYM69MnUTD70Hv8k1hAaDoJpvstVk+ugl+SnoHVls4BL/
-	 PKlEUVnus/rqZlgUL82O7vbof5rn5+XUSKO+gWz1i+FdS3P4ceswPZuOHcdJFyvy0P
-	 IwBwh776vKZng==
-Date: Wed, 16 Oct 2024 09:07:47 +0900
+	b=Q93vvCO3saJSrY/00MBQfUj2NRcrZbCQkyC2GYeAgCw3fovaiDpWItogJyvnJGFsw
+	 Fk1JjDsn5RZJNU752wwb9cRPvZWs00/lBewLtOm/lhK0Yjkym+HCyA5p019zJInPaf
+	 CrRaK3ntJQrNn58iF/cGTTjqDZ/QiS5pdq5C7ARVsya2GVU5TmOMVMNZt+a1hNusCV
+	 XSPcCKA9Vbfw/ikF8hkAtDRKOPK5WE4/pg2tIU5Hx+WsgJEFgg+iyrlv56U4qcIXXd
+	 f+NWJUJ+owa98zfbocnr5AqFwpucE904h28BhhY0hxDM9jXiBJvfqs5PXTZ5GYdLmC
+	 wi6z2+MgwV5rQ==
+Date: Wed, 16 Oct 2024 09:53:24 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- bpf@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>, Song Liu
- <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv6 perf/core 02/16] uprobe: Add support for session
- consumer
-Message-Id: <20241016090747.6a675265244880ace7d41718@kernel.org>
-In-Reply-To: <20241010200957.2750179-3-jolsa@kernel.org>
-References: <20241010200957.2750179-1-jolsa@kernel.org>
-	<20241010200957.2750179-3-jolsa@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH RFC] rethook: inline arch_rethook_trampoline_callback()
+ in assembly code
+Message-Id: <20241016095324.6277c64a744af80c704c3636@kernel.org>
+In-Reply-To: <CAEf4Bza9X_yp84ujDMwGengK1wTPjwZhtH7aXtPfXj6eT1M5Eg@mail.gmail.com>
+References: <20240425000211.708557-1-andrii@kernel.org>
+	<CAEf4Bza9X_yp84ujDMwGengK1wTPjwZhtH7aXtPfXj6eT1M5Eg@mail.gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,383 +44,179 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 10 Oct 2024 22:09:43 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
+Hi Andrii,
 
-> This change allows the uprobe consumer to behave as session which
-> means that 'handler' and 'ret_handler' callbacks are connected in
-> a way that allows to:
-> 
->   - control execution of 'ret_handler' from 'handler' callback
->   - share data between 'handler' and 'ret_handler' callbacks
-> 
-> The session concept fits to our common use case where we do filtering
-> on entry uprobe and based on the result we decide to run the return
-> uprobe (or not).
-> 
-> It's also convenient to share the data between session callbacks.
-> 
-> To achive this we are adding new return value the uprobe consumer
-> can return from 'handler' callback:
-> 
->   UPROBE_HANDLER_IGNORE
->   - Ignore 'ret_handler' callback for this consumer.
+Sorry I excavated this from patchwork.
 
-This is interesting idea. This means we can cancel exit handler
-dynamically.
+On Mon, 29 Apr 2024 15:38:08 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> 
-> And store cookie and pass it to 'ret_handler' when consumer has both
-> 'handler' and 'ret_handler' callbacks defined.
-> 
-> We store shared data in the return_consumer object array as part of
-> the return_instance object. This way the handle_uretprobe_chain can
-> find related return_consumer and its shared data.
-> 
-> We also store entry handler return value, for cases when there are
-> multiple consumers on single uprobe and some of them are ignored and
-> some of them not, in which case the return probe gets installed and
-> we need to have a way to find out which consumer needs to be ignored.
-> 
-> The tricky part is when consumer is registered 'after' the uprobe
-> entry handler is hit. In such case this consumer's 'ret_handler' gets
-> executed as well, but it won't have the proper data pointer set,
-> so we can filter it out.
+> On Wed, Apr 24, 2024 at 5:02 PM Andrii Nakryiko <andrii@kernel.org> wrote:
+> >
+> > At the lowest level, rethook-based kretprobes on x86-64 architecture go
+> > through arch_rethoook_trampoline() function, manually written in
+> > assembly, which calls into a simple arch_rethook_trampoline_callback()
+> > function, written in C, and only doing a few straightforward field
+> > assignments, before calling further into rethook_trampoline_handler(),
+> > which handles kretprobe callbacks generically.
+> >
+> > Looking at simplicity of arch_rethook_trampoline_callback(), it seems
+> > not really worthwhile to spend an extra function call just to do 4 or
+> > 5 assignments. As such, this patch proposes to "inline"
+> > arch_rethook_trampoline_callback() into arch_rethook_trampoline() by
+> > manually implementing it in an assembly code.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Yeah, I think it is possible, but this makes code ugly, that is
+trade-off. As you say, we should move this with other ugly inline
+assembly code into kprobe.S or something like it. With my current
+fprobe-on-fgraph, rethook is only required for kretprobes, so it
+is natual and simple to have kprobe.S.
 
 Thank you,
 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  include/linux/uprobes.h |  21 +++++-
->  kernel/events/uprobes.c | 148 ++++++++++++++++++++++++++++++++--------
->  2 files changed, 139 insertions(+), 30 deletions(-)
+> >
+> > This has two motivations. First, we do get a bit of runtime speed up by
+> > avoiding function calls. Using BPF selftests's bench tool, we see
+> > 0.6%-0.8% throughput improvement for kretprobe/multi-kretprobe
+> > triggering code path:
+> >
+> > BEFORE (latest probes/for-next)
+> > ===============================
+> > kretprobe      :   10.455 ± 0.024M/s
+> > kretprobe-multi:   11.150 ± 0.012M/s
+> >
+> > AFTER (probes/for-next + this patch)
+> > ====================================
+> > kretprobe      :   10.540 ± 0.009M/s (+0.8%)
+> > kretprobe-multi:   11.219 ± 0.042M/s (+0.6%)
+> >
+> > Second, and no less importantly for some specialized use cases, this
+> > avoids unnecessarily "polluting" LBR records with an extra function call
+> > (recorded as a jump by CPU). This is the case for the retsnoop ([0])
+> > tool, which relies havily on capturing LBR records to provide users with
+> > lots of insight into kernel internals.
+> >
+> > This RFC patch is only inlining this function for x86-64, but it's
+> > possible to do that for 32-bit x86 arch as well and then remove
+> > arch_rethook_trampoline_callback() implementation altogether. Please let
+> > me know if this change is acceptable and whether I should complete it
+> > with 32-bit "inlining" as well. Thanks!
+> >
+> >   [0] https://nakryiko.com/posts/retsnoop-intro/#peering-deep-into-functions-with-lbr
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  arch/x86/kernel/asm-offsets_64.c |  4 ++++
+> >  arch/x86/kernel/rethook.c        | 37 +++++++++++++++++++++++++++-----
+> >  2 files changed, 36 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/asm-offsets_64.c b/arch/x86/kernel/asm-offsets_64.c
+> > index bb65371ea9df..5c444abc540c 100644
+> > --- a/arch/x86/kernel/asm-offsets_64.c
+> > +++ b/arch/x86/kernel/asm-offsets_64.c
+> > @@ -42,6 +42,10 @@ int main(void)
+> >         ENTRY(r14);
+> >         ENTRY(r15);
+> >         ENTRY(flags);
+> > +       ENTRY(ip);
+> > +       ENTRY(cs);
+> > +       ENTRY(ss);
+> > +       ENTRY(orig_ax);
+> >         BLANK();
+> >  #undef ENTRY
+> >
+> > diff --git a/arch/x86/kernel/rethook.c b/arch/x86/kernel/rethook.c
+> > index 8a1c0111ae79..3e1c01beebd1 100644
+> > --- a/arch/x86/kernel/rethook.c
+> > +++ b/arch/x86/kernel/rethook.c
+> > @@ -6,6 +6,7 @@
+> >  #include <linux/rethook.h>
+> >  #include <linux/kprobes.h>
+> >  #include <linux/objtool.h>
+> > +#include <asm/asm-offsets.h>
+> >
+> >  #include "kprobes/common.h"
+> >
+> > @@ -34,10 +35,36 @@ asm(
+> >         "       pushq %rsp\n"
+> >         "       pushfq\n"
+> >         SAVE_REGS_STRING
+> > -       "       movq %rsp, %rdi\n"
+> > -       "       call arch_rethook_trampoline_callback\n"
+> > +       "       movq %rsp, %rdi\n" /* $rdi points to regs */
+> > +       /* fixup registers */
+> > +       /* regs->cs = __KERNEL_CS; */
+> > +       "       movq $" __stringify(__KERNEL_CS) ", " __stringify(pt_regs_cs) "(%rdi)\n"
+> > +       /* regs->ip = (unsigned long)&arch_rethook_trampoline; */
+> > +       "       movq $arch_rethook_trampoline, " __stringify(pt_regs_ip) "(%rdi)\n"
+> > +       /* regs->orig_ax = ~0UL; */
+> > +       "       movq $0xffffffffffffffff, " __stringify(pt_regs_orig_ax) "(%rdi)\n"
+> > +       /* regs->sp += 2*sizeof(long); */
+> > +       "       addq $16, " __stringify(pt_regs_sp) "(%rdi)\n"
+> > +       /* 2nd arg is frame_pointer = (long *)(regs + 1); */
+> > +       "       lea " __stringify(PTREGS_SIZE) "(%rdi), %rsi\n"
 > 
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index bb265a632b91..dbaf04189548 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -23,8 +23,17 @@ struct inode;
->  struct notifier_block;
->  struct page;
->  
-> +/*
-> + * Allowed return values from uprobe consumer's handler callback
-> + * with following meaning:
-> + *
-> + * UPROBE_HANDLER_REMOVE
-> + * - Remove the uprobe breakpoint from current->mm.
-> + * UPROBE_HANDLER_IGNORE
-> + * - Ignore ret_handler callback for this consumer.
-> + */
->  #define UPROBE_HANDLER_REMOVE		1
-> -#define UPROBE_HANDLER_MASK		1
-> +#define UPROBE_HANDLER_IGNORE		2
->  
->  #define MAX_URETPROBE_DEPTH		64
->  
-> @@ -44,6 +53,8 @@ struct uprobe_consumer {
->  	bool (*filter)(struct uprobe_consumer *self, struct mm_struct *mm);
->  
->  	struct list_head cons_node;
-> +
-> +	__u64 id;	/* set when uprobe_consumer is registered */
->  };
->  
->  #ifdef CONFIG_UPROBES
-> @@ -83,14 +94,22 @@ struct uprobe_task {
->  	unsigned int			depth;
->  };
->  
-> +struct return_consumer {
-> +	__u64	cookie;
-> +	__u64	id;
-> +};
-> +
->  struct return_instance {
->  	struct uprobe		*uprobe;
->  	unsigned long		func;
->  	unsigned long		stack;		/* stack pointer */
->  	unsigned long		orig_ret_vaddr; /* original return address */
->  	bool			chained;	/* true, if instance is nested */
-> +	int			consumers_cnt;
->  
->  	struct return_instance	*next;		/* keep as stack */
-> +
-> +	struct return_consumer	consumers[] __counted_by(consumers_cnt);
->  };
->  
->  enum rp_check {
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 6b44c386a5df..4ef4b51776eb 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -64,7 +64,7 @@ struct uprobe {
->  	struct rcu_head		rcu;
->  	loff_t			offset;
->  	loff_t			ref_ctr_offset;
-> -	unsigned long		flags;
-> +	unsigned long		flags;		/* "unsigned long" so bitops work */
->  
->  	/*
->  	 * The generic code assumes that it has two members of unknown type
-> @@ -823,8 +823,11 @@ static struct uprobe *alloc_uprobe(struct inode *inode, loff_t offset,
->  
->  static void consumer_add(struct uprobe *uprobe, struct uprobe_consumer *uc)
->  {
-> +	static atomic64_t id;
-> +
->  	down_write(&uprobe->consumer_rwsem);
->  	list_add_rcu(&uc->cons_node, &uprobe->consumers);
-> +	uc->id = (__u64) atomic64_inc_return(&id);
->  	up_write(&uprobe->consumer_rwsem);
->  }
->  
-> @@ -1761,6 +1764,34 @@ static struct uprobe_task *get_utask(void)
->  	return current->utask;
->  }
->  
-> +static size_t ri_size(int consumers_cnt)
-> +{
-> +	struct return_instance *ri;
-> +
-> +	return sizeof(*ri) + sizeof(ri->consumers[0]) * consumers_cnt;
-> +}
-> +
-> +#define DEF_CNT 4
-> +
-> +static struct return_instance *alloc_return_instance(void)
-> +{
-> +	struct return_instance *ri;
-> +
-> +	ri = kzalloc(ri_size(DEF_CNT), GFP_KERNEL);
-> +	if (!ri)
-> +		return ZERO_SIZE_PTR;
-> +
-> +	ri->consumers_cnt = DEF_CNT;
-> +	return ri;
-> +}
-> +
-> +static struct return_instance *dup_return_instance(struct return_instance *old)
-> +{
-> +	size_t size = ri_size(old->consumers_cnt);
-> +
-> +	return kmemdup(old, size, GFP_KERNEL);
-> +}
-> +
->  static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
->  {
->  	struct uprobe_task *n_utask;
-> @@ -1773,11 +1804,10 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
->  
->  	p = &n_utask->return_instances;
->  	for (o = o_utask->return_instances; o; o = o->next) {
-> -		n = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
-> +		n = dup_return_instance(o);
->  		if (!n)
->  			return -ENOMEM;
->  
-> -		*n = *o;
->  		/*
->  		 * uprobe's refcnt has to be positive at this point, kept by
->  		 * utask->return_instances items; return_instances can't be
-> @@ -1870,35 +1900,31 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
->  	utask->return_instances = ri;
->  }
->  
-> -static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
-> +static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
-> +			      struct return_instance *ri)
->  {
->  	struct uprobe_task *utask = current->utask;
->  	unsigned long orig_ret_vaddr, trampoline_vaddr;
-> -	struct return_instance *ri;
->  	bool chained;
->  
->  	if (!get_xol_area())
-> -		return;
-> +		goto free;
->  
->  	if (utask->depth >= MAX_URETPROBE_DEPTH) {
->  		printk_ratelimited(KERN_INFO "uprobe: omit uretprobe due to"
->  				" nestedness limit pid/tgid=%d/%d\n",
->  				current->pid, current->tgid);
-> -		return;
-> +		goto free;
->  	}
->  
->  	/* we need to bump refcount to store uprobe in utask */
->  	if (!try_get_uprobe(uprobe))
-> -		return;
-> -
-> -	ri = kmalloc(sizeof(struct return_instance), GFP_KERNEL);
-> -	if (!ri)
-> -		goto fail;
-> +		goto free;
->  
->  	trampoline_vaddr = uprobe_get_trampoline_vaddr();
->  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
->  	if (orig_ret_vaddr == -1)
-> -		goto fail;
-> +		goto put;
->  
->  	/* drop the entries invalidated by longjmp() */
->  	chained = (orig_ret_vaddr == trampoline_vaddr);
-> @@ -1916,7 +1942,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
->  			 * attack from user-space.
->  			 */
->  			uprobe_warn(current, "handle tail call");
-> -			goto fail;
-> +			goto put;
->  		}
->  		orig_ret_vaddr = utask->return_instances->orig_ret_vaddr;
->  	}
-> @@ -1931,9 +1957,10 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
->  	utask->return_instances = ri;
->  
->  	return;
-> -fail:
-> -	kfree(ri);
-> +put:
->  	put_uprobe(uprobe);
-> +free:
-> +	kfree(ri);
->  }
->  
->  /* Prepare to single-step probed instruction out of line. */
-> @@ -2077,34 +2104,90 @@ static struct uprobe *find_active_uprobe_rcu(unsigned long bp_vaddr, int *is_swb
->  	return uprobe;
->  }
->  
-> +static struct return_instance*
-> +push_consumer(struct return_instance *ri, int idx, __u64 id, __u64 cookie)
-> +{
-> +	if (unlikely(ri == ZERO_SIZE_PTR))
-> +		return ri;
-> +
-> +	if (unlikely(idx >= ri->consumers_cnt)) {
-> +		struct return_instance *old_ri = ri;
-> +
-> +		ri->consumers_cnt += DEF_CNT;
-> +		ri = krealloc(old_ri, ri_size(old_ri->consumers_cnt), GFP_KERNEL);
-> +		if (!ri) {
-> +			kfree(old_ri);
-> +			return ZERO_SIZE_PTR;
-> +		}
-> +	}
-> +
-> +	ri->consumers[idx].id = id;
-> +	ri->consumers[idx].cookie = cookie;
-> +	return ri;
-> +}
-> +
-> +static struct return_consumer *
-> +return_consumer_find(struct return_instance *ri, int *iter, int id)
-> +{
-> +	struct return_consumer *ric;
-> +	int idx = *iter;
-> +
-> +	for (ric = &ri->consumers[idx]; idx < ri->consumers_cnt; idx++, ric++) {
-> +		if (ric->id == id) {
-> +			*iter = idx + 1;
-> +			return ric;
-> +		}
-> +	}
-> +	return NULL;
-> +}
-> +
-> +static bool ignore_ret_handler(int rc)
-> +{
-> +	return rc == UPROBE_HANDLER_REMOVE || rc == UPROBE_HANDLER_IGNORE;
-> +}
-> +
->  static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
->  {
->  	struct uprobe_consumer *uc;
-> -	int remove = UPROBE_HANDLER_REMOVE;
-> -	bool need_prep = false; /* prepare return uprobe, when needed */
-> -	bool has_consumers = false;
-> +	bool has_consumers = false, remove = true;
-> +	struct return_instance *ri = NULL;
-> +	int push_idx = 0;
->  
->  	current->utask->auprobe = &uprobe->arch;
->  
->  	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-> +		bool session = uc->handler && uc->ret_handler;
-> +		__u64 cookie = 0;
->  		int rc = 0;
->  
->  		if (uc->handler) {
-> -			rc = uc->handler(uc, regs, NULL);
-> -			WARN(rc & ~UPROBE_HANDLER_MASK,
-> +			rc = uc->handler(uc, regs, &cookie);
-> +			WARN(rc < 0 || rc > 2,
->  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
->  		}
->  
-> -		if (uc->ret_handler)
-> -			need_prep = true;
-> -
-> -		remove &= rc;
-> +		remove &= rc == UPROBE_HANDLER_REMOVE;
->  		has_consumers = true;
-> +
-> +		if (!uc->ret_handler || ignore_ret_handler(rc))
-> +			continue;
-> +
-> +		if (!ri)
-> +			ri = alloc_return_instance();
-> +
-> +		if (session)
-> +			ri = push_consumer(ri, push_idx++, uc->id, cookie);
->  	}
->  	current->utask->auprobe = NULL;
->  
-> -	if (need_prep && !remove)
-> -		prepare_uretprobe(uprobe, regs); /* put bp at return */
-> +	if (!ZERO_OR_NULL_PTR(ri)) {
-> +		/*
-> +		 * The push_idx value has the final number of return consumers,
-> +		 * and ri->consumers_cnt has number of allocated consumers.
-> +		 */
-> +		ri->consumers_cnt = push_idx;
-> +		prepare_uretprobe(uprobe, regs, ri);
-> +	}
->  
->  	if (remove && has_consumers) {
->  		down_read(&uprobe->register_rwsem);
-> @@ -2123,12 +2206,19 @@ static void
->  handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
->  {
->  	struct uprobe *uprobe = ri->uprobe;
-> +	struct return_consumer *ric;
->  	struct uprobe_consumer *uc;
-> +	int ric_idx = 0;
->  
->  	rcu_read_lock_trace();
->  	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-> -		if (uc->ret_handler)
-> -			uc->ret_handler(uc, ri->func, regs, NULL);
-> +		bool session = uc->handler && uc->ret_handler;
-> +
-> +		if (uc->ret_handler) {
-> +			ric = return_consumer_find(ri, &ric_idx, uc->id);
-> +			if (!session || ric)
-> +				uc->ret_handler(uc, ri->func, regs, ric ? &ric->cookie : NULL);
-> +		}
->  	}
->  	rcu_read_unlock_trace();
->  }
-> -- 
-> 2.46.2
+> BTW, all this __stringify() ugliness can be avoided if we move this
+> assembly into its own .S file, like lots of other assembly functions
+> in arch/x86/kernel subdir. That has another benefit of generating
+> better line information in DWARF for those assembly instructions. It's
+> lots more work, so before I do this, I'd like to get confirmation that
+> this change is acceptable in principle.
 > 
+> > +       /*
+> > +        * The return address at 'frame_pointer' is recovered by the
+> > +        * arch_rethook_fixup_return() which called from this
+> > +        * rethook_trampoline_handler().
+> > +        */
+> > +       "       call rethook_trampoline_handler\n"
+> > +       /*
+> > +        * Copy FLAGS to 'pt_regs::ss' so we can do RET right after POPF.
+> > +        *
+> > +        * We don't save/restore %rax below, because we ignore
+> > +        * rethook_trampoline_handler result.
+> > +        *
+> > +        * *(unsigned long *)&regs->ss = regs->flags;
+> > +        */
+> > +       "       mov " __stringify(pt_regs_flags) "(%rsp), %rax\n"
+> > +       "       mov %rax, " __stringify(pt_regs_ss) "(%rsp)\n"
+> >         RESTORE_REGS_STRING
+> > -       /* In the callback function, 'regs->flags' is copied to 'regs->ss'. */
+> > +       /* We just copied 'regs->flags' into 'regs->ss'. */
+> >         "       addq $16, %rsp\n"
+> >         "       popfq\n"
+> >  #else
+> > @@ -61,6 +88,7 @@ asm(
+> >  );
+> >  NOKPROBE_SYMBOL(arch_rethook_trampoline);
+> >
+> > +#ifdef CONFIG_X86_32
+> >  /*
+> >   * Called from arch_rethook_trampoline
+> >   */
+> > @@ -70,9 +98,7 @@ __used __visible void arch_rethook_trampoline_callback(struct pt_regs *regs)
+> >
+> >         /* fixup registers */
+> >         regs->cs = __KERNEL_CS;
+> > -#ifdef CONFIG_X86_32
+> >         regs->gs = 0;
+> > -#endif
+> >         regs->ip = (unsigned long)&arch_rethook_trampoline;
+> >         regs->orig_ax = ~0UL;
+> >         regs->sp += 2*sizeof(long);
+> > @@ -92,6 +118,7 @@ __used __visible void arch_rethook_trampoline_callback(struct pt_regs *regs)
+> >         *(unsigned long *)&regs->ss = regs->flags;
+> >  }
+> >  NOKPROBE_SYMBOL(arch_rethook_trampoline_callback);
+> > +#endif
+> >
+> >  /*
+> >   * arch_rethook_trampoline() skips updating frame pointer. The frame pointer
+> > --
+> > 2.43.0
+> >
 
 
 -- 
