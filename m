@@ -1,125 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2C41C9DC8;
-	Wed, 16 Oct 2024 10:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3F22076D1;
+	Wed, 16 Oct 2024 10:49:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729075491; cv=none; b=aVJRpJeeuCfA088n8apUXU0J5NhbVjFC9mVuT2HJGHLyYg6mnblpCpdRvSAw9GhAd1joR7jWlTKI+mvLjXF30seoUMpqAT5CzOpijDDdcDSoYMOi2005uf17czDoaIAmSBs0ZVkaabazWsQ/eSy86ou5vq3CnfZOg5JlQ7MuPq4=
+	t=1729075760; cv=none; b=FjmXH0AtgZKoNgtl0QIqI8nAg+024066R7AK5QUGVht0od8DAD9oDXaPEMYEK+X0yTgHRGoNJDzQCsuEHJi/YVA9WQR6jWBk9hVBNFdki+3IVhX1sfquExU/qo6BfVA4Pd66hGw/gHJNxvy+ZvmD52S6lgi7PSkgHBysZ4aUubE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729075491; c=relaxed/simple;
-	bh=REY0yUs/eb8jGqS7iPmNLu0O7M3zjCPm2K1uOQnlIfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YfWqYCZ0cda3DGVYPs/1s0FKMi5bcMzksfVhVb4m9JqnkyLoKypMooWDasO+QH4lkeuomcSO3EsCGRhsBuK76A/7ZWyq3+1BRSR4FxRaGOAZQKiK4RJSp3s/O4dcYZhMj5IIAIvpfwBHMQ5W/pJ1MHu50HBhB8mFYDHZZsHrQl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tu7R+TE5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729075760; c=relaxed/simple;
+	bh=FEayBlbykrVTjYuMEz+BFZKS8/AP+nKNYBRbQnR+8s4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AAzTAXaLefxsSq0fdrC/NZI+DUsPcKaAOwYx6xxp8n4SNcgtJ9zhhU7IGOYrOj2GzprIvpU1KBfJ4fm3bkplZUGvOhV1AolPxTvTtHD3lZzWtUEZnO9ACc9MgSErrUnengpqksx8HExVNVbicdRB8XB1B4PhIQ2R6bRAfTBLdo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyzDllOb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tu7R+TE5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A439EC4CEC5;
-	Wed, 16 Oct 2024 10:44:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyzDllOb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618FCC4CED6;
+	Wed, 16 Oct 2024 10:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729075491;
-	bh=REY0yUs/eb8jGqS7iPmNLu0O7M3zjCPm2K1uOQnlIfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tu7R+TE5l4rMjxEyzDDIH6fpt5ZNmC1c7xJx7SQDlI9CzDxMt5yOQnVYNAW9hdV8J
-	 OeaDo9Hr12xvhUKQgId1tm4/CewmMpWCLOk3wgiUJwXyvWq4QlFB+Uh/pOgd95q0F1
-	 zyNekZpzro5oJZ2JEUpyorUNUZLep/wgUFWwzFdkGHL+BF7JNIRifDS33KF/5qGC2v
-	 jYrUvBLfr/xZZ4LfL7bWflm1YPeuIUzgGbLP+eWNj7AbuOUcsPGdhrgXCl4uUGrO38
-	 j9PqqivnqqmoYQsjfU9edkgWUJ3Ic8/MVLUiY8xlv+pKvbZQmwKQdokHEcp8hCdCUB
-	 nLnfE4mx3UK6g==
-Date: Wed, 16 Oct 2024 13:40:55 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org, kdevops@lists.linux.dev
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <Zw-YN4JIltntY52Y@kernel.org>
-References: <20241009180816.83591-8-rppt@kernel.org>
- <Zwd7GRyBtCwiAv1v@infradead.org>
- <ZwfPPZrxHzQgYfx7@kernel.org>
- <ZwjXz0dz-RldVNx0@infradead.org>
- <ZwuIPZkjX0CfzhjS@kernel.org>
- <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
- <Zw1uBBcG-jAgxF_t@bombadil.infradead.org>
- <Zw3rDS3GRWZe4CBu@bombadil.infradead.org>
- <Zw4DlTTbz4QwhOvU@kernel.org>
- <Zw7MirnsHnhRveBB@bombadil.infradead.org>
+	s=k20201202; t=1729075759;
+	bh=FEayBlbykrVTjYuMEz+BFZKS8/AP+nKNYBRbQnR+8s4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QyzDllObsNdSWlHUkqNWjNdgY5TxfY6Zcics+F4XqWSkjiSn/FTT9/wmQTWHT/VAu
+	 RH23LQg4WDjEMJnK4CtzVb4cgvfEyNDfmHC/HqfpTtK3lqrna85wBR9jnxA4YM9JaF
+	 NmkLo0cNXjZuLvAPDmCuR2qgaCpgD2olRiLO1Ma9X/pX6b2NWs/OKl4i2Q7NjCl97g
+	 ccAcWnLZFJKtdU1mAsRLizmaoyhcW6m6/xkwG6tRClOQFAAmCgQkP6B2EoPlQODgrf
+	 Caq+l0xaUYqDHbvBsxQxen1gHcyI5YEeb8vh9NSnI5xa64EJizptqluvjbOXxX+vzO
+	 Y0RkV3IG7xACg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Tom Zanussi <zanussi@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v6 0/3] tracing: Support poll on event hist file
+Date: Wed, 16 Oct 2024 19:49:15 +0900
+Message-ID:  <172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.47.0.rc1.288.g06298d1525-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zw7MirnsHnhRveBB@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 15, 2024 at 01:11:54PM -0700, Luis Chamberlain wrote:
-> On Tue, Oct 15, 2024 at 08:54:29AM +0300, Mike Rapoport wrote:
-> > On Mon, Oct 14, 2024 at 09:09:49PM -0700, Luis Chamberlain wrote:
-> > > Mike, please run this with kmemleak enabled and running, and also try to get
-> > > tools/testing/selftests/kmod/kmod.sh to pass.
-> > 
-> > There was an issue with kmemleak, I fixed it here:
-> > 
-> > https://lore.kernel.org/linux-mm/20241009180816.83591-1-rppt@kernel.org/T/#m020884c1795218cc2be245e8091fead1cda3f3e4
-> 
-> Ah, so this was a side fix, not part of this series, thanks.
-> 
-> > > I run into silly boot issues with just a guest.
-> > 
-> > Was it kmemleak or something else?
-> 
-> Both kmemleak and the kmod selftest failed, here is a run of the test
-> with this patch series:
-> 
-> https://github.com/linux-kdevops/linux-modules-kpd/actions/runs/11352286624/job/31574722735
+Hi,
 
-Is there a kernel log to look at? Could not find it in the run report
- 
->   Luis
+Here is the v6 patch to support polling on event 'hist' file.
+The previous version is here;
 
--- 
-Sincerely yours,
-Mike.
+https://lore.kernel.org/all/172398710447.295714.4489282566285719918.stgit@devnote2
+
+This version is rebased on the ftrace/for-next branch of the
+linux-trace tree, and use global irq_work and wq instead of per-event
+one.
+
+Background
+----------
+There has been interest in allowing user programs to monitor kernel
+events in real time. Ftrace provides `trace_pipe` interface to wait
+on events in the ring buffer, but it is needed to wait until filling
+up a page with events in the ring buffer. We can also peek the
+`trace` file periodically, but that is inefficient way to monitor
+a randomely happening event.
+
+Overview
+--------
+This patch set allows user to `poll`(or `select`, `epoll`) on event
+histogram interface. As you know each event has its own `hist` file
+which shows histograms generated by trigger action. So user can set
+a new hist trigger on any event you want to monitor, and poll on the
+`hist` file until it is updated.
+
+There are 2 poll events are supported, POLLIN and POLLPRI. POLLIN
+means that there are any readable update on `hist` file and this
+event will be flashed only when you call read(). So, this is
+useful if you want to read the histogram periodically.
+The other POLLPRI event is for monitoring trace event. Like the
+POLLIN, this will be returned when the histogram is updated, but
+you don't need to read() the file and use poll() again.
+
+Note that this waits for histogram update (not event arrival), thus
+you must set a histogram on the event at first.
+
+Usage
+-----
+Here is an example usage:
+
+----
+TRACEFS=/sys/kernel/tracing
+EVENT=$TRACEFS/events/sched/sched_process_free
+
+# setup histogram trigger and enable event
+echo "hist:key=comm" >> $EVENT/trigger
+echo 1 > $EVENT/enable
+
+# Wait for update
+poll pri $EVENT/hist
+
+# Event arrived.
+echo "process free event is comming"
+tail $TRACEFS/trace
+----
+
+The 'poll' command is in the selftest patch.
+
+You can take this series also from here;
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/event-hist-poll
+
+Thank you,
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing/hist: Add poll(POLLIN) support on hist file
+      tracing/hist: Support POLLPRI event for poll on histogram
+      selftests/tracing: Add hist poll() support test
+
+
+ include/linux/trace_events.h                       |   14 +++
+ kernel/trace/trace_events.c                        |   14 +++
+ kernel/trace/trace_events_hist.c                   |  100 +++++++++++++++++++-
+ tools/testing/selftests/ftrace/Makefile            |    2 
+ tools/testing/selftests/ftrace/poll.c              |   74 +++++++++++++++
+ .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 +++++++++++++++
+ 6 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/poll.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
