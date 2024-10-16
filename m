@@ -1,158 +1,172 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD81F185939;
-	Wed, 16 Oct 2024 18:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E92144D6;
+	Wed, 16 Oct 2024 19:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729102553; cv=none; b=BZWctEm+bIw1gHTSZ+XHHglx2Bl368yu5S3COnRkQxTMc0OW1xKCasfTumgwVUcwLp3u1IXirrlCXdmxsIDML9Xqn0bRliha3XAaacj1erQX8JIY8AH5PmAJHvL6fxDSEnUJKbmLVXsQ9SSDDayadLejLaj+NMy8P29QmD7gvvw=
+	t=1729107336; cv=none; b=JesjPsRE5y4JoJk0j1WjzMJ0Vs5rNncZni3wzIQMI2GOy1ZvpldCjDx4GDg08QUPkMA+n3a0TikqUqML0JCmUzeFpXc6kBhmZ9dW7LUFlbRjm9dohRoQnQuspIDGNALeoePgksLKnZU3yZwyKrxcnnyo5X0EcKDoYAkMHNUYtQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729102553; c=relaxed/simple;
-	bh=JufLHtMSuGaTzBKJg/6VeV666klq+gVXM9Gg7iqlmoo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=odzQT4IsD+bKrRtyD4DOrFU0ifoszAvECB2Tbx0bYFPYWntP0N/g/62UWQ/MpyiE3mATiZ5E2Pulna9ByMZkOWGtf5M9KWh2s7QyRsjTIrdbP6xlOABLCtDtUChEkDGIll6iu7w5MMZjkw7oFBwS17yGjoZI7UEADjj7mbNNBmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XWzifagy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1729107336; c=relaxed/simple;
+	bh=NNrE3qOWb+EtP1SO1axezSvQxQFBxRZOewvdPogIiNY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cgOfup+EwBPQmnRArmfTfZKjWE/D3N5HOwWvaUKRxLv3Td7Z10J0++qacDPc1H2aIO2iI7Rnn7yt7cqx/gJzZ92zUdp99iz7s3nu7jnmJmQC6O9ofDLDy5OP69vna/Xp5aGyx0wWPRQXo9WCCj6OokbF0KX/HvZXzqrPQ2eDdBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLtq5enn; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XWzifagy"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49GHxvak008364;
-	Wed, 16 Oct 2024 18:15:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=JufLHtMSuGaTzBKJg/6VeV666klq+g
-	VXM9Gg7iqlmoo=; b=XWzifagydH7B4bw0tHvnm/lB+4FgXIAfy4lEglWfPwncrU
-	oQx+wYIUVZ+woEv/bEUzosB+AxFswJ4X9hpV3Kkr6vv78PrPMlCHi6DPzOxqBoty
-	0GaKfAfyWDs4W7Gwp/M1wFkoFlqTJd7jdnvamjthyu71uiJtq0vhnhGSUomlD1Fi
-	mNsQf8XowSQZIgLorYX0dEdmUN4QEJQNjKxJ9+tKAS6JOdZTTs1E3iJ7SDzhgg6n
-	7NmP//l8vUjm41MgZiw1wQWYvV7SgyIl5Fx9PY6ZuKxcEy875PW0fxUxJUmo3vSQ
-	i16jW4/xPBmFKhq/ppxlkSf1uLAD6ZB2bGMeEVIA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ajcjr1tv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 18:15:01 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49GIF1EK005111;
-	Wed, 16 Oct 2024 18:15:01 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42ajcjr1tq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 18:15:01 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49GF0iJY005946;
-	Wed, 16 Oct 2024 18:14:59 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4286512f5v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Oct 2024 18:14:59 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49GIEuOR27001366
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Oct 2024 18:14:56 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 02FBE20043;
-	Wed, 16 Oct 2024 18:14:56 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 32E4320040;
-	Wed, 16 Oct 2024 18:14:55 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 16 Oct 2024 18:14:55 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt
- <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Alan
- Maguire <alan.maguire@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>, linux-arch@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy
- <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Paul Walmsley
- <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert
- Ou <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily
- Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov
- <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v17 11/16] fprobe: Rewrite fprobe on function-graph tracer
-In-Reply-To: <20241016234628.b7eba1db0db39d2197a2ea4f@kernel.org> (Masami
-	Hiramatsu's message of "Wed, 16 Oct 2024 23:46:28 +0900")
-References: <172904026427.36809.516716204730117800.stgit@devnote2>
-	<172904040206.36809.2263909331707439743.stgit@devnote2>
-	<yt9ded4gfdz0.fsf@linux.ibm.com>
-	<20241016234628.b7eba1db0db39d2197a2ea4f@kernel.org>
-Date: Wed, 16 Oct 2024 20:14:54 +0200
-Message-ID: <yt9d5xprgbj5.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: aVgmt4uBhiNvRvAHxsRA41t7dXjhThcz
-X-Proofpoint-ORIG-GUID: BHPv_kPDWrWmiNA2N_cY_1A-wk1t9MVb
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLtq5enn"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e5130832aso118005b3a.0;
+        Wed, 16 Oct 2024 12:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729107334; x=1729712134; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=COadM9mdsklFEqY/AYc1kTUqOtiuxLFYkQWjQblcUb8=;
+        b=HLtq5enn+P7wkznoglSsUZSekjpbt17gufFZdVQ9s7qT+aXeQZ3MeSr8xY+yTLEZpX
+         U4wzUYwV8oeqqGa9TjiKAaxQUuliyTYY1bu/V41jvEm04a3AbsRYtzvpwMbUeC3W54bB
+         ABY71juL3H1fFfN9C5IY80DJOZOtCwhQ+NT+1l324/acgP++8PWTfAHNAVo4rpsz95WX
+         S/vI5wmwV0o05dWku3EBC6JxMihyAxwErdGuz5vQavXVEUDDK+0kUX7AXYIeGxxSFyal
+         V4SatUVc5zQTmD1ORstit0X08/BSVLYO6tvzBprMP6TbYEwnyGI5prBIGHxy9b6UU7LR
+         pvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729107334; x=1729712134;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=COadM9mdsklFEqY/AYc1kTUqOtiuxLFYkQWjQblcUb8=;
+        b=V9jU8WqZTakG7hEKTio8q5LfTthTExlMq7HPlg5g0oVhsYzE9l2PEuCrF8vM41zuh/
+         JaMjffM3E3nvM7lTkLt3zupb23FZCjDYHF1aUEMa5RLVzUNEHzEN8PgCnFqcFAC10sYU
+         iJw/43cvQsl7W7ZhqlIH/dS3384yzL9fHOFwrHv/0PABE9Waw6WX5pkDJOi04pBRhMjU
+         6bNGDvQZl6n/0Ioln/2eAQIHjl+vZwTZyPFKViUA4W0YC4n9HnIK4e/8u2wSn2R95QvQ
+         vpl+LpYLW4GAgX7P+WsUftnbqXY+pzOEsq+18uWtjNBSRTmUD3/8vqVABY4gB70uqnKA
+         UJQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUM7/p+rcfmCEQ46Fm3+SUs82OKzvl7QPqwuyhftNOHW5qAQrqGy3WK9STPzDh5hraohTbJwwKiOAt6ES3eilrd6g==@vger.kernel.org, AJvYcCWztfmMYTj6nYdXME8svb730k3z1m2g8UDoZuo/CkPJcIqyyk8HgWoFLXoTv383pcwKrwo=@vger.kernel.org, AJvYcCXu5QuclPf2rw/n3Y94GVw0xQWLEwhq6LRbO2GTVflsCQFRNW4xYhxK/+T/kq1xlBac8RO/mbeLhuwObA3t@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLig/mAq3CLW6/k1PxdMaCGvKzFmatimIF9GLvDM/078TSv+6E
+	OoKekkkGEXHJIezZof0bvpS5dXfyICfAY+kI0FeJxnpf40huLAb07S2BPIr9DrpHU4y3G0kcJGM
+	JLhpbMG1M5kIc9UZkWPguf1Ohv8k=
+X-Google-Smtp-Source: AGHT+IFoR2J8QArYG4GdvA2ZTWym2yAF0bf4yapmxEQIyk6yGf8CBIPNs9eBCYoDoGXIUYd1KvkSmPfdgVyJgfl2iMU=
+X-Received: by 2002:a05:6a00:2e11:b0:71e:6ed:9108 with SMTP id
+ d2e1a72fcca58-71e4c13db67mr24548702b3a.2.1729107333688; Wed, 16 Oct 2024
+ 12:35:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- impostorscore=0 mlxlogscore=626 mlxscore=0 priorityscore=1501 spamscore=0
- phishscore=0 adultscore=0 suspectscore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2409260000
- definitions=main-2410160115
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 16 Oct 2024 12:35:21 -0700
+Message-ID: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+Subject: The state of uprobes work and logistics
+To: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Liao Chang <liaochang1@huawei.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> writes:
+Hello,
 
-> On Wed, 16 Oct 2024 14:07:31 +0200
-> Sven Schnelle <svens@linux.ibm.com> wrote:
->> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> writes:
->> I think that still has the issue that the size is encoded in the
->> leftmost fields of the pointer, which doesn't work on all
->> architectures. I reported this already in v15
->> (https://lore.kernel.org/all/yt9dmsjyx067.fsf@linux.ibm.com/)
->
-> Oops, thanks for reporting. I should missed that.
->
->> I haven't yet fully understood why this logic is needed, but the
->> WARN_ON_ONCE triggers on s390. I'm assuming this fails because fp always
->> has the upper bits of the address set on x86 (and likely others). As an
->> example, in my test setup, fp is 0x8feec218 on s390, while it is
->> 0xffff888100add118 in x86-kvm.
->
-> Ah, so s390 kernel/user memory layout is something like 4G/4G?
-> Hmm, this encode expects the leftmost 4bit is filled. For the
-> architecture which has 32bit address space, we may be possible to
-> use "unsigned long long" for 'val' on shadow stack (and use the
-> first 32bit for fp and another 32bit for size).
->
-> Anyway, I need to redesign it depending on architecture.
+I wanted to provide a bit of a context about and tie together a few
+separate work streams (across a few separate kernel trees) all
+revolving around uprobe improvements, as there are a bunch of them and
+I'm sure it's hard to keep track of all of them. And hopefully I can
+also get Peter and ARM maintainer's input on some specific questions I
+asked below. Thank you in advance!
 
-Could you explain a bit more what redesign means? Thanks!
+In short, in the last few months there was a high activity around
+fixing and improving uprobes. All this is the result of increased and
+more varied use of uprobes/uretprobe in production settings. Uprobe
+performance is **very** important, and yes, we do have real use cases
+that go to millions per second uprobe/uretprobe triggering throughput,
+unfortunately. So any small bit of performance and scalability
+improvement is helpful. No, this isn't just some nerdy perf
+optimization work (I've been asked this a few times, so I thought I'd
+emphasize this again).
+
+So, we've already landed a bunch of work, mainly (not an exhaustive list):
+
+  - various clean ups, API improvements, and bug fixes from Oleg
+Nesterov ([0], [1]). This simplified internal APIs and was a
+prerequisite of the rest of the work;
+  - changes to refcounting and RCU-ifying of uprobe lifetime from me
+([2]). This improved single-threaded performance somewhat, but mainly
+significantly improved scalability in the presence of multiple CPUs
+triggering lots of uprobes;
+  - ARM64-specific optimization of uprobe emulation of NOP instruction
+by Liao Chang ([3]). This change alone gives 2x (!) speed up for a
+USDT tracing use cases *on ARM64* (we already have this optimization
+in x86-64);
+  - there was a bit earlier work by Jiri Olsa ([4]) to add uretprobe()
+syscall, giving +30% speed ups.
+
+And there are a few more outstanding changes:
+
+  - Jiri Olsa's uprobe "session" support ([5]). This is less
+performance focused, but important functionality by itself. But I'm
+calling this out here because the first two patches are pure uprobe
+internal changes, and I believe they should go into tip/perf/core to
+avoid conflicts with the rest of pending uprobe changes.
+
+Peter, do you mind applying those two and creating a stable tag for
+bpf-next to pull? We'll apply the rest of Jiri's series to
+bpf-next/master.
+
+  - Liao Chang's ARM64-specific STP instruction emulation support
+([6]). This one will give 2x (!) improvement for a common case of
+having STP instruction being a first instruction in traced user
+function (similar to NOP for USDTs).
+
+ARM64 maintainers (cc'ed Catalin, Will, and Mark), can you guys please
+take another look? This one was a bit more controversial, but
+hopefully there is a way to massage it to be acceptable and not
+introduce unnecessary slowdowns (there were some concerns about memory
+ordering/visibility, which hopefully don't apply to uprobe cases).
+It's an important improvement, I'd really appreciate it if we can make
+progress here, thank you!
+
+  - my speculative VMA-to-uprobe lookup series ([7]). This makes entry
+uprobe scalability scale linearly with the number of CPUs (the
+ultimate goal of uprobe scalability work).
+
+I think it's ready to go in. It has **implicit** dependency on
+Christian Brauner's recent change for FMODE_BACKING, for which he
+provided a stable tag. Peter, do you have any remaining concerns or
+this can be also merged soon?
+
+  - another patch set of mine, switching uretprobe fast path to SRCU
+(with timeout) ([8]). This makes return uprobes (uretprobes) linearly
+scalable in the common case (again, the ultimate scalability goal).
+
+I haven't gotten much feedback here, would love to get some objective
+review here. This is an important counterpart to the speculative
+VMA-to-uprobe lookup series. Both are needed in practice.
+
+  - patch set dropping unnecessary siglock usage in uprobe by Liao
+Chang ([9]). This one removes yet another lock, for a less common case
+(at least on x86-64) of single-stepped uprobe (where the probed
+instruction can't be emulated).
+
+This one needs a rebase, but it was already acked by Oleg. Liao,
+please prioritize the rebase and send v4 ASAP, so this is not lost.
+
+
+As you can see, lots of stuff needs to be landed and most of it is in
+good shape already. I'd love to hear thoughts of relevant people
+called out above, thank you!
+
+
+  [0] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@redhat.com/
+  [1] https://lore.kernel.org/linux-trace-kernel/20240929144201.GA9429@redhat.com/
+  [2] https://lore.kernel.org/linux-trace-kernel/20240903174603.3554182-1-andrii@kernel.org/
+  [3] https://lore.kernel.org/linux-trace-kernel/20240909071114.1150053-1-liaochang1@huawei.com/
+  [4] https://lore.kernel.org/linux-trace-kernel/20240523121149.575616-1-jolsa@kernel.org/
+  [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.org/
+  [6] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1-liaochang1@huawei.com/
+  [7] https://lore.kernel.org/linux-trace-kernel/20241010205644.3831427-1-andrii@kernel.org/
+  [8] https://lore.kernel.org/linux-trace-kernel/20241008002556.2332835-1-andrii@kernel.org/
+  [9] https://lore.kernel.org/linux-trace-kernel/20240815014629.2685155-1-liaochang1@huawei.com/
+
+-- Andrii
