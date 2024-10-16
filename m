@@ -1,260 +1,295 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2083.outbound.protection.outlook.com [40.107.93.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E0A1925AB;
-	Wed, 16 Oct 2024 06:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729060895; cv=none; b=SibXk5+KOwbSyqM/kf2+M38sFShJmofj/99q7RDVsnbTyrD+LIEXiS+KPFHU/sFXraJ8rc+mpXAATbZ5iQGS4HnzuW+UesXKO/Hvt4MLAY9I5lg+Gi7PHwT3zqPFMVNW989psKbmbzJsBQtrkm77y0oOH9HCecCvoAbIL6yc3k8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729060895; c=relaxed/simple;
-	bh=9buN6B0a1P/fouEa7lGOzxQEmtGq3mQx/ABtI/ocsE8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AqpqeLZA+faU/N4WTNioSpAfDqsXaB9P+tbl1BcNC4rZW0XG2orYqpKtpO1eDfGpK/2CbcZkCb5AEcEWmk7DEkb841lQ+u6hA9OoQr9u6w6z2T8YnVYVl4Ug9sa/iTYE+YmYoR+S8P4sFWonE3wT42kelVw1TqN9sVNFyyp5sT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dz8oliIk; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A02A18C93B;
+	Wed, 16 Oct 2024 06:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1729060896; cv=fail; b=MLcd7otf0i/V3GBJ16Khux6wd4yxC/HLpn3OjyESIvAGl1ay3SpH3I7w3hSlynl2j7r6+j68BTIwNOUW1kQ5yTy3laMQKK6Wtz0yinZ7vQDyEvdj91Zk21jnyPhY4cXiuqQnF51LEQGZ2v2qum/qdnUgv9iKXr0jt9v3HAhHAn0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1729060896; c=relaxed/simple;
+	bh=nZnTfP7D/JUBZ48e6ireRnopg1bzWIyrHbRnPBdRIV0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sfFDwYrjEd33g/A59sS7cH2EHDaOiggFhjwatPCBPDRmSFR+R99UNc+O4zk9MAiruZZLQF5K8CYskrByINcqN5z8QkuKXYdFCf2FOQ+YVWs489a4zs9cZXgzaInlVzTkgFhhu7/jNxWgiP3gnGEb/s4nB515fmV7WvaFo+ixGn4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2K2QBi94; arc=fail smtp.client-ip=40.107.93.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dz8oliIk"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-37d47b38336so3922735f8f.3;
-        Tue, 15 Oct 2024 23:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729060892; x=1729665692; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7i5+HvUzunWz4n5qk4xNRl8y+WY1cbMRKJb/pt3aQHc=;
-        b=Dz8oliIkdt8XpWUZeGP6W2fRCJIBBHG/47kIR2qk66OybbU8EVPo0CZi4gTvaL8baG
-         jV4yi86p2Qf4Z6nSQDGwlTtpJuGG4Y5ZF8u1KPFpaE2c8e2b41+IU0MWI9yspB6PPj1s
-         0RBd0VziiWow1nVf1ibaxmwdrg7gOXbnxan6kXRxjnK6qnRhcdXlzrpkUn4TAwDO9M+c
-         /hmt8znCCph4zIz4mHC05NUHvT06D/uJs74b/JGJ2A5cJoVL9nuOSqN7SPyI6bvJ2oab
-         dgI5CYHTGXTg3xATAL6lvN289FAjnXBKgdJMIYMVNmOm9p9XGoVCLLcmMunRfjAz/946
-         f1Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729060892; x=1729665692;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7i5+HvUzunWz4n5qk4xNRl8y+WY1cbMRKJb/pt3aQHc=;
-        b=DHpXAFMUYGPfHu/5u3mM0FMTrnC3wN8f9eo/wQ8aVUDvEQAj4Hah/aR+YYJShoNaeN
-         OUPvoaBWAvyYAfNiRLow0a7O8hkMhvMv9LxMWSejyNS9TaKErlWnsx8iM0Gkx8yiHfeM
-         CmsZP7uyc+J2dOV1IgGaZe037AgPeFcRfv7DK6RXlqxxRr6LkUJUhpvJpWnFLmRXLOns
-         LLzPRZ2Nv+m0+9g1myQO08N++fcsatQdVySzyc9JAUKVTHD+FFGP4QqHxT4vQtUT42Cv
-         4jSwFa1V3MWaZ9r52iT8IEyF763zHbVI5ZHGGtKUYNWepRY5Wd3mV5y5f/3ziuGsRgzD
-         yxCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmQdBkZYQljdCOEMjrxn+EC0QLKHr5V+CzoQvJ3Ftx5ldEr45uohiHW2PAPw/wvyrNXM4=@vger.kernel.org, AJvYcCWDC/zg3xe2EpZwugtVHQ4hzZcM57b5P69AY8mJRcg456iy384eS0zPY8FmLxolE1a+BMMHzhV9YR7VhgH5@vger.kernel.org, AJvYcCWdEVRD8Q0x0j1QqnR4VL6LhuKgW09p0t5TRZZmuCQav0ACCcqs/z5A8S1vEdSC5XGeUR/AjsRRk7WJSGPILmMP/TjR@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQXCFdfRrXn647QWlk+kVL22p5kYn/nwXueJuOnm1fiFbJH06S
-	HkCLNWJgkZ91AM6eclaAZHMAFCmelL3XKX3oQvrlTB/JvSSKIYoT
-X-Google-Smtp-Source: AGHT+IHScn5eSmr6CSg99RKXGS5vqmTkYKp9jkZ1GtMKlD+JPiocBjIv4k8z1L7JwltrBMgrXt9OeA==
-X-Received: by 2002:adf:fd0a:0:b0:37d:4f1b:359 with SMTP id ffacd0b85a97d-37d86d59ae3mr1892701f8f.53.1729060891702;
-        Tue, 15 Oct 2024 23:41:31 -0700 (PDT)
-Received: from krava ([213.0.100.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d7fc419ffsm3448080f8f.111.2024.10.15.23.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 23:41:31 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 16 Oct 2024 08:41:28 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv6 perf/core 01/16] uprobe: Add data pointer to consumer
- handlers
-Message-ID: <Zw9gGHzQNY9BLJCZ@krava>
-References: <20241010200957.2750179-1-jolsa@kernel.org>
- <20241010200957.2750179-2-jolsa@kernel.org>
- <20241016072426.c6f7b9572b946dd31c0c1fb8@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2K2QBi94"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R8gPO74Vfu5Q4e+2ZSkNVMyneNkoNTAnOkeqoZYnxGwqUFKCJ58K5ADmqEo1U8PBKj7Mz0AAr3gBvlrKIZmqlPoev351oZKy/3tLbONg5/lV8vCW4hueivpQR3LzVyWvyhHWpWa51vra89+YnrTTcKriCki7rZukoQS3J1sPCuaN8FZ0yq3vtGCfAJYIT9550SDxDZpBmXFzdhC8XlEieW4LlmDXMNM7ZaDyr5Njoq3ECefZw1uG4lMLLFls/i1tZf5GdFSamTVnYPQZOP/qBafpO+T0Bi1Rb65mhyla7Gvg5Gza5Bqp3kgUDjgZIJNqA/cTpitQN5C4KQfn24tZ7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=94vue54+OnYWJRo8fRs+9t/0+QadbO5lCOwTy6UU7ws=;
+ b=QBlx6hDa3KpFZCWXlqf2QK8bp470X9DUl8znvBRQz33NUPvSjfZCAHmbZyI7hOlWEsp5ML+QNpFZ8LTxLFQDuWb2ktBwjJSpTBJNTvXoTNe7TP1c+3kEEcI8M+AcNofBjnbi8HUYoBd6NMdnPInRHYi1RgxZlNpKWCJ90AAS9VDg953DkjMVl9IlBl2InJx6/7LXldvx+dWIc5g6wtVncq71qsK2awYk2qClLHtLYT97I4pNs+FMSjLIiZGiF/8ToyTxpX7nZGuPwJkZ3K0hNzki7cznL5fToW7VCv6no3o/63lUZ+YLQsw84tdB7h2NwQi0Zc5dAvIoVTa3f8S1kg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=94vue54+OnYWJRo8fRs+9t/0+QadbO5lCOwTy6UU7ws=;
+ b=2K2QBi94qtLBwCR76oaW8cyZelzmId1hRLaVcOi8in5wHF7AJWynD0xOySd0mizwVuwAaaNAnprM8QypuYkU/37ZVsnrtMC9xOzUDMIwE1IRuJvpYI6TOlqX/+4AP9CGhvA4qyqD+GMSv5xNaZ53qAK48IMv3BED0BPKdXRjoRE=
+Received: from CH5PR04CA0011.namprd04.prod.outlook.com (2603:10b6:610:1f4::27)
+ by SN7PR12MB6792.namprd12.prod.outlook.com (2603:10b6:806:267::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.18; Wed, 16 Oct
+ 2024 06:41:30 +0000
+Received: from CH1PEPF0000AD7C.namprd04.prod.outlook.com
+ (2603:10b6:610:1f4:cafe::cf) by CH5PR04CA0011.outlook.office365.com
+ (2603:10b6:610:1f4::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8069.17 via Frontend
+ Transport; Wed, 16 Oct 2024 06:41:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH1PEPF0000AD7C.mail.protection.outlook.com (10.167.244.84) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8069.17 via Frontend Transport; Wed, 16 Oct 2024 06:41:29 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 16 Oct 2024 01:41:28 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <x86@kernel.org>, <linux-edac@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
+	<qiuxu.zhuo@intel.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<rostedt@goodmis.org>, <mchehab@kernel.org>, <yazen.ghannam@amd.com>,
+	<john.allen@amd.com>, <avadhut.naik@amd.com>
+Subject: [PATCH v6 5/5] EDAC/mce_amd: Add support for FRU Text in MCA
+Date: Wed, 16 Oct 2024 06:36:31 +0000
+Message-ID: <20241016064021.2773618-6-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241016064021.2773618-1-avadhut.naik@amd.com>
+References: <20241016064021.2773618-1-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241016072426.c6f7b9572b946dd31c0c1fb8@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7C:EE_|SN7PR12MB6792:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a0ea322-0a85-4f17-b11b-08dcedad911c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dCRmVQUqesNw57Jj1wQmpeJCGQvJPMI2mHDblS/QnFhJ5vYT7svzbRKWkdD3?=
+ =?us-ascii?Q?Oz1IA/O5Synw5/1pFEYmxUnCR6Z52VfcmfYZXswKtgLvbjRSkcsTyEAzayDd?=
+ =?us-ascii?Q?DjQ2GyAGTXZov4pHDO/1MTd+ATNOmvYxWUWqPhRqIhknb39PJAjipVyMZjNx?=
+ =?us-ascii?Q?bJbBQpoeaEjVMSz4y09jEXo7cF3RTOlMwV1mslplANi/9fzUln4UMHRRf3xm?=
+ =?us-ascii?Q?itXVuJhK1YPI3557UyB+m+OsIHB6yxDD0tM0LyWwEjI3utTshpZPjvomVMOq?=
+ =?us-ascii?Q?D5BzilBLYkUntVllqeAmjJwnqaB2iYxNEE6YmqQInoyCcL134ancQWIjKbme?=
+ =?us-ascii?Q?pBS9UHNxiHNHYesPuy1kCG0cT/SK2UNfvUV78uCZWLhzpPGovP0ArqyQ6gME?=
+ =?us-ascii?Q?zrMEmunNZF/XKqmDeBu+yGT8OWAQ8tvKNmxZ+Q+t9OehEsA0oRF6rJNDBMnx?=
+ =?us-ascii?Q?TVchM5D+DSFUD7hLsABrSLsikRcMpazchiTlI/PYfGR+TaQ476UaAPvAl5Qx?=
+ =?us-ascii?Q?WKf3BkxSVu0fqNbqtsoOfFCdE20pnHyzp7rh7nMwAUYzd3NGKHAICIq90PkS?=
+ =?us-ascii?Q?hSreO8OYJw1j9eG83GMF47kt22TTaMPonMV0JZhngHAWwajgTe/GxjlUy2ll?=
+ =?us-ascii?Q?1ipBFuds4l4nWpBRiw2j/RQBSdoZg3KvyOSziwBTv8KKg0DfjspXN2EzFrwp?=
+ =?us-ascii?Q?V0IvNvrCz/OvHB4KovE9qn1s5AU0hnyyTvvDCEtRm7CtBM4BcKFckWM1sQEk?=
+ =?us-ascii?Q?b60nJwL4ybNN+0jPQmQC/luNt+RbEvaxoHSX2l4CC+qlwGtc0z4UeZftZMMf?=
+ =?us-ascii?Q?8BvsUYBlh2bo4GYKKQ180guiBV3Y0lj1gEHSHZXd6kGtQA4AXDgUX8jzxtHZ?=
+ =?us-ascii?Q?TDNcJgKqD2PuleRGMx75EsxOTEt5lYFkcapaZ8JgNDyIv8qj6nnX2ZLPotwP?=
+ =?us-ascii?Q?aPFjnILuAcT3lyF1aCE50V4OO3tva7iJiMapC6RukCpkxav0/iUAlNzo+yGb?=
+ =?us-ascii?Q?qrBaCBjfSDrdQLvuF1OfIan48dsTxTSuon5BWuX5A0ejWScVY/s6InTnD6nt?=
+ =?us-ascii?Q?rsNakYOFRaSthk0tpORZnyO64Q8jH/AeILwkoL06CgxbNe1I0r1MCQKOX5Q4?=
+ =?us-ascii?Q?z66Me9oBRQM+U/t6AYysBjqzJ4IZ2C93EY2wOlp2Bw2IKi6Pn3gBTRicCL+P?=
+ =?us-ascii?Q?SJJv8ie+d7p8Xz87fP16QoQ8zHRJvtDAB/0SXTLFYUZs/83+BD9cyJggRn1T?=
+ =?us-ascii?Q?cktt9AW4fdJpXtRQ9qI5mbTXUxgZzaAoyTacD/zBsVnJotqqS7Yk5VNw52Yo?=
+ =?us-ascii?Q?9JapfTAxRhh2oF3Cn5MLdX4pwTNhsH77SqQNbONk9OU8KX4zGDv0GyJo7dyy?=
+ =?us-ascii?Q?g7wALxkgRopkabJ4egYOPfawMH3P?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2024 06:41:29.8532
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a0ea322-0a85-4f17-b11b-08dcedad911c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6792
 
-On Wed, Oct 16, 2024 at 07:24:26AM +0900, Masami Hiramatsu wrote:
-> On Thu, 10 Oct 2024 22:09:42 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > Adding data pointer to both entry and exit consumer handlers and all
-> > its users. The functionality itself is coming in following change.
-> > 
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Alexei, please merge this series via bpf tree, since most of the patches
-> in this series are for bpf.
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
+A new "FRU Text in MCA" feature is defined where the Field Replaceable
+Unit (FRU) Text for a device is represented by a string in the new
+MCA_SYND1 and MCA_SYND2 registers. This feature is supported per MCA
+bank, and it is advertised by the McaFruTextInMca bit (MCA_CONFIG[9]).
 
-hi,
-so the uprobe changes are based on Peter's perf/core and bpf changes
-on bpf-next/master.. I merged them locally as a base for this patchset
+The FRU Text is populated dynamically for each individual error state
+(MCA_STATUS, MCA_ADDR, et al.). This handles the case where an MCA bank
+covers multiple devices, for example, a Unified Memory Controller (UMC)
+bank that manages two DIMMs.
 
-Andrii has an idea how we could proceed with merging:
+Since MCA_CONFIG[9] is instrumental in decoding FRU Text, it has to be
+exported through the mce_record tracepoint so that userspace tools like
+the rasdaemon can determine if FRU Text has been reported through the
+MCA_SYND1 and MCA_SYND2 registers and output it.
 
-	> I think uprobe parts should stay in tip/perf/core (if that's where all
-	> uprobe code goes in), as we have a bunch of ongoing work that all will
-	> conflict a bit with each other, if it lands across multiple trees.
-	>
-	> So that means that patches #1 and #2 ideally land in tip/perf/core.
-	> But you have a lot of BPF-specific things that would be inconvenient
-	> to route through tip, so I'd say those should go through bpf-next.
-	>
-	> What we can do, if Ingo and Peter are OK with that, is to create a
-	> stable (non-rebaseable) branch off of your first two patches (applied
-	> in tip/perf/core), which we'll merge into bpf-next/master and land the
-	> rest of your patch set there. We've done that with recent struct fd
-	> changes, and there were few other similar cases in the past, and that
-	> all worked well.
-	>
-	> Peter, Ingo, are you guys OK with that approach?
+[Yazen: Add Avadhut as co-developer for wrapper changes.]
 
-jirka
+Co-developed-by: Avadhut Naik <avadhut.naik@amd.com>
+Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+---
+Changes in v2:
+[1] https://lore.kernel.org/linux-edac/20240521125434.1555845-1-yazen.ghannam@amd.com/
+[2] https://lore.kernel.org/linux-edac/20240523155641.2805411-1-yazen.ghannam@amd.com/
 
-> 
-> Thank you,
-> 
-> > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  include/linux/uprobes.h                              |  4 ++--
-> >  kernel/events/uprobes.c                              |  4 ++--
-> >  kernel/trace/bpf_trace.c                             |  6 ++++--
-> >  kernel/trace/trace_uprobe.c                          | 12 ++++++++----
-> >  .../testing/selftests/bpf/bpf_testmod/bpf_testmod.c  |  2 +-
-> >  5 files changed, 17 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > index 2b294bf1881f..bb265a632b91 100644
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -37,10 +37,10 @@ struct uprobe_consumer {
-> >  	 * for the current process. If filter() is omitted or returns true,
-> >  	 * UPROBE_HANDLER_REMOVE is effectively ignored.
-> >  	 */
-> > -	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
-> > +	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs, __u64 *data);
-> >  	int (*ret_handler)(struct uprobe_consumer *self,
-> >  				unsigned long func,
-> > -				struct pt_regs *regs);
-> > +				struct pt_regs *regs, __u64 *data);
-> >  	bool (*filter)(struct uprobe_consumer *self, struct mm_struct *mm);
-> >  
-> >  	struct list_head cons_node;
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 2a0059464383..6b44c386a5df 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -2090,7 +2090,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
-> >  		int rc = 0;
-> >  
-> >  		if (uc->handler) {
-> > -			rc = uc->handler(uc, regs);
-> > +			rc = uc->handler(uc, regs, NULL);
-> >  			WARN(rc & ~UPROBE_HANDLER_MASK,
-> >  				"bad rc=0x%x from %ps()\n", rc, uc->handler);
-> >  		}
-> > @@ -2128,7 +2128,7 @@ handle_uretprobe_chain(struct return_instance *ri, struct pt_regs *regs)
-> >  	rcu_read_lock_trace();
-> >  	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
-> >  		if (uc->ret_handler)
-> > -			uc->ret_handler(uc, ri->func, regs);
-> > +			uc->ret_handler(uc, ri->func, regs, NULL);
-> >  	}
-> >  	rcu_read_unlock_trace();
-> >  }
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index a582cd25ca87..fdab7ecd8dfa 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -3244,7 +3244,8 @@ uprobe_multi_link_filter(struct uprobe_consumer *con, struct mm_struct *mm)
-> >  }
-> >  
-> >  static int
-> > -uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs)
-> > +uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs,
-> > +			  __u64 *data)
-> >  {
-> >  	struct bpf_uprobe *uprobe;
-> >  
-> > @@ -3253,7 +3254,8 @@ uprobe_multi_link_handler(struct uprobe_consumer *con, struct pt_regs *regs)
-> >  }
-> >  
-> >  static int
-> > -uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long func, struct pt_regs *regs)
-> > +uprobe_multi_link_ret_handler(struct uprobe_consumer *con, unsigned long func, struct pt_regs *regs,
-> > +			      __u64 *data)
-> >  {
-> >  	struct bpf_uprobe *uprobe;
-> >  
-> > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> > index c40531d2cbad..5895eabe3581 100644
-> > --- a/kernel/trace/trace_uprobe.c
-> > +++ b/kernel/trace/trace_uprobe.c
-> > @@ -89,9 +89,11 @@ static struct trace_uprobe *to_trace_uprobe(struct dyn_event *ev)
-> >  static int register_uprobe_event(struct trace_uprobe *tu);
-> >  static int unregister_uprobe_event(struct trace_uprobe *tu);
-> >  
-> > -static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs);
-> > +static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs,
-> > +			     __u64 *data);
-> >  static int uretprobe_dispatcher(struct uprobe_consumer *con,
-> > -				unsigned long func, struct pt_regs *regs);
-> > +				unsigned long func, struct pt_regs *regs,
-> > +				__u64 *data);
-> >  
-> >  #ifdef CONFIG_STACK_GROWSUP
-> >  static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
-> > @@ -1517,7 +1519,8 @@ trace_uprobe_register(struct trace_event_call *event, enum trace_reg type,
-> >  	}
-> >  }
-> >  
-> > -static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
-> > +static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs,
-> > +			     __u64 *data)
-> >  {
-> >  	struct trace_uprobe *tu;
-> >  	struct uprobe_dispatch_data udd;
-> > @@ -1548,7 +1551,8 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
-> >  }
-> >  
-> >  static int uretprobe_dispatcher(struct uprobe_consumer *con,
-> > -				unsigned long func, struct pt_regs *regs)
-> > +				unsigned long func, struct pt_regs *regs,
-> > +				__u64 *data)
-> >  {
-> >  	struct trace_uprobe *tu;
-> >  	struct uprobe_dispatch_data udd;
-> > diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > index 8835761d9a12..12005e3dc3e4 100644
-> > --- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > +++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
-> > @@ -461,7 +461,7 @@ static struct bin_attribute bin_attr_bpf_testmod_file __ro_after_init = {
-> >  
-> >  static int
-> >  uprobe_ret_handler(struct uprobe_consumer *self, unsigned long func,
-> > -		   struct pt_regs *regs)
-> > +		   struct pt_regs *regs, __u64 *data)
-> >  
-> >  {
-> >  	regs->ax  = 0x12345678deadbeef;
-> > -- 
-> > 2.46.2
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+1. Drop dependencies on sets [1] and [2] above and rebase on top of
+tip/master.
+
+Changes in v3:
+1. Modify commit message per feedback provided.
+2. Remove call to memset() for the string frutext. Instead, just ensure
+that it is NULL terminated.
+2. Fix SoB chain to properly reflect the patch path.
+
+Changes in v4:
+1. Rebase on top of tip/master to avoid merge conflicts.
+
+Changes in v5:
+1. No changes except rebasing on top of tip/master.
+
+Changes in v6:
+1. No changes except rebasing on top of tip/master.
+---
+ arch/x86/include/asm/mce.h     |  2 ++
+ arch/x86/kernel/cpu/mce/amd.c  |  1 +
+ arch/x86/kernel/cpu/mce/apei.c |  2 ++
+ arch/x86/kernel/cpu/mce/core.c |  3 +++
+ drivers/edac/mce_amd.c         | 21 ++++++++++++++-------
+ 5 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index c2466b20fe79..72a69ad7d692 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -61,6 +61,7 @@
+  *  - TCC bit is present in MCx_STATUS.
+  */
+ #define MCI_CONFIG_MCAX		0x1
++#define MCI_CONFIG_FRUTEXT	BIT_ULL(9)
+ #define MCI_IPID_MCATYPE	0xFFFF0000
+ #define MCI_IPID_HWID		0xFFF
+ 
+@@ -213,6 +214,7 @@ struct mce_hw_err {
+ 		struct {
+ 			u64 synd1;		/* MCA_SYND1 MSR */
+ 			u64 synd2;		/* MCA_SYND2 MSR */
++			u64 config;		/* MCA_CONFIG MSR */
+ 		} amd;
+ 	} vendor;
+ };
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 6ca80fff1fea..65ace034af08 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -796,6 +796,7 @@ static void __log_error(unsigned int bank, u64 status, u64 addr, u64 misc)
+ 
+ 	if (mce_flags.smca) {
+ 		rdmsrl(MSR_AMD64_SMCA_MCx_IPID(bank), m->ipid);
++		rdmsrl(MSR_AMD64_SMCA_MCx_CONFIG(bank), err.vendor.amd.config);
+ 
+ 		if (m->status & MCI_STATUS_SYNDV) {
+ 			rdmsrl(MSR_AMD64_SMCA_MCx_SYND(bank), m->synd);
+diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
+index 0a89947e47bc..19a1c72fc2bf 100644
+--- a/arch/x86/kernel/cpu/mce/apei.c
++++ b/arch/x86/kernel/cpu/mce/apei.c
+@@ -155,6 +155,8 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 		fallthrough;
+ 	/* MCA_CONFIG */
+ 	case 4:
++		err.vendor.amd.config = *(i_mce + 3);
++		fallthrough;
+ 	/* MCA_MISC0 */
+ 	case 3:
+ 		m->misc = *(i_mce + 2);
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index b7f4a49a1053..923983009c61 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -208,6 +208,8 @@ static void __print_mce(struct mce_hw_err *err)
+ 			pr_cont("SYND2 %llx ", err->vendor.amd.synd2);
+ 		if (m->ipid)
+ 			pr_cont("IPID %llx ", m->ipid);
++		if (err->vendor.amd.config)
++			pr_cont("CONFIG %llx ", err->vendor.amd.config);
+ 	}
+ 
+ 	pr_cont("\n");
+@@ -681,6 +683,7 @@ static noinstr void mce_read_aux(struct mce_hw_err *err, int i)
+ 
+ 	if (mce_flags.smca) {
+ 		m->ipid = mce_rdmsrl(MSR_AMD64_SMCA_MCx_IPID(i));
++		err->vendor.amd.config = mce_rdmsrl(MSR_AMD64_SMCA_MCx_CONFIG(i));
+ 
+ 		if (m->status & MCI_STATUS_SYNDV) {
+ 			m->synd = mce_rdmsrl(MSR_AMD64_SMCA_MCx_SYND(i));
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index 194d9fd47d20..d69a1466f0bc 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -795,6 +795,7 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ 	struct mce *m = (struct mce *)data;
+ 	struct mce_hw_err *err = to_mce_hw_err(m);
+ 	unsigned int fam = x86_family(m->cpuid);
++	u64 mca_config = err->vendor.amd.config;
+ 	int ecc;
+ 
+ 	if (m->kflags & MCE_HANDLED_CEC)
+@@ -814,11 +815,7 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ 		((m->status & MCI_STATUS_PCC)	? "PCC"	  : "-"));
+ 
+ 	if (boot_cpu_has(X86_FEATURE_SMCA)) {
+-		u32 low, high;
+-		u32 addr = MSR_AMD64_SMCA_MCx_CONFIG(m->bank);
+-
+-		if (!rdmsr_safe(addr, &low, &high) &&
+-		    (low & MCI_CONFIG_MCAX))
++		if (mca_config & MCI_CONFIG_MCAX)
+ 			pr_cont("|%s", ((m->status & MCI_STATUS_TCC) ? "TCC" : "-"));
+ 
+ 		pr_cont("|%s", ((m->status & MCI_STATUS_SYNDV) ? "SyndV" : "-"));
+@@ -853,8 +850,18 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ 
+ 		if (m->status & MCI_STATUS_SYNDV) {
+ 			pr_cont(", Syndrome: 0x%016llx\n", m->synd);
+-			pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
+-				 err->vendor.amd.synd1, err->vendor.amd.synd2);
++			if (mca_config & MCI_CONFIG_FRUTEXT) {
++				char frutext[17];
++
++				frutext[16] = '\0';
++				memcpy(&frutext[0], &err->vendor.amd.synd1, 8);
++				memcpy(&frutext[8], &err->vendor.amd.synd2, 8);
++
++				pr_emerg(HW_ERR "FRU Text: %s", frutext);
++			} else {
++				pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
++					 err->vendor.amd.synd1, err->vendor.amd.synd2);
++			}
+ 		}
+ 
+ 		pr_cont("\n");
+-- 
+2.43.0
+
