@@ -1,27 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD84F1DE2C9;
-	Thu, 17 Oct 2024 15:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE421DDC1D;
+	Thu, 17 Oct 2024 15:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729179043; cv=none; b=b77s/hPfl6GZkbpp4GTwVCQwBAXeoHghxBDB9791GF+eh1PIXkmUKQWDUHElIgn4+k5LjVANqz40nq0sQaulRlqto1FMKrgBTdZfNNDQUHUjGnq/89R9LEHm9bvX6k1QIfFqACmBDuODILxhSStLV03TXZKPgjjgisrNoU902wc=
+	t=1729179286; cv=none; b=gnkhFvfIsu1e3HXAQQ2xmPowsyDUcMGry6bQHA523GDl70ZhP9o0Lj/44tvt1x0gThEazKiMzor+JB6PxB87NjTNcVORw7nCOqyepIfheT86U/Mw/amFEhJBnVNjQmg+biQI3SNfNun/WAk+f9XLqJjwM7I5g0MPV3xOcTKixVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729179043; c=relaxed/simple;
-	bh=9LVb4k0xluyfrwEgNONwAXsPXVPCz1o2fCkjs7f1+yw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cBgTD6ffgwKvtBxHssmwLAGtpWvjoKkSjhyhlTwFariQN01n9Hh5N7TyA4Hrv+KqqBjs4TTavaQSLK8dZCOlYbVsfg96T+8KOxZBpG1f7maJnDPmoV7tJoUZyUD1YeFnCwLn3jL85eltIUhTkAl2Z7dFTmpVROvE42uzVQn4gnE=
+	s=arc-20240116; t=1729179286; c=relaxed/simple;
+	bh=nzTlkeEckY4SDdkxVWF1AoJhGSXOvj0VWFdu9nVmTI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lfb0X/j8HiT1wP4TwY80yI0sauTal+b2h5MP3DYOhz4YMUghfURHMluSo+UQUrUs8cyaW7hkNWvzoobTjZIzK/9l+i3RNO8rsxPKDzIEp2a++sJy1ffu+wGM3YD0BbR+nZJLofsx+CSfUZT8ljG+uomntP+0pdczqk66dYeSdxk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5878FC4CECD;
-	Thu, 17 Oct 2024 15:30:42 +0000 (UTC)
-Date: Thu, 17 Oct 2024 11:31:05 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1027DC4CECD;
+	Thu, 17 Oct 2024 15:34:38 +0000 (UTC)
+Date: Thu, 17 Oct 2024 11:35:02 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mike Rapoport <rppt@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] ftrace: Show timings of how long nop patching took
-Message-ID: <20241017113105.1edfa943@gandalf.local.home>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, Andreas
+ Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, Ard
+ Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Borislav
+ Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Christoph Hellwig <hch@infradead.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Helge
+ Deller <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet
+ <kent.overstreet@linux.dev>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Matt Turner <mattst88@gmail.com>, Max Filippov
+ <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek
+ <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Richard Weinberger <richard@nod.at>, Russell King
+ <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, Stafford Horne
+ <shorne@gmail.com>, Suren Baghdasaryan <surenb@google.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner
+ <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>, Vineet Gupta
+ <vgupta@kernel.org>, Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+ linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+ linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org,
+ linux-snps-arc@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-um@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ loongarch@lists.linux.dev, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v6 6/8] x86/module: prepare module loading for ROX
+ allocations of text
+Message-ID: <20241017113453.685ba175@gandalf.local.home>
+In-Reply-To: <ZxD0EVBoO-jcxEGE@kernel.org>
+References: <20241016122424.1655560-1-rppt@kernel.org>
+	<20241016122424.1655560-7-rppt@kernel.org>
+	<20241016170128.7afeb8b0@gandalf.local.home>
+	<20241017093515.GU16066@noisy.programming.kicks-ass.net>
+	<ZxD0EVBoO-jcxEGE@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,108 +69,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 17 Oct 2024 14:25:05 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-Since the beginning of ftrace, the code that did the patching had its
-timings saved on how long it took to complete. But this information was
-never exposed. It was used for debugging and exposing it was always
-something that was on the TODO list. Now it's time to expose it. There's
-even a file that is where it should go!
+> With this series the module text is allocated as ROX at the first place, so
+> the modifications ftrace does to module text have to either use text poking
+> even before complete_formation() or deal with a writable copy like I did
+> for relocations and alternatives.
+> 
+> I've been carrying the ftrace changes from a very old prototype and
+> didn't pay enough attention to them them until Steve's complaint.
+> 
+> I'll look into it.
 
-Also include how long patching modules took as a separate value.
+I just posted a patch where you can see the effects of these changes with
+respect to ftrace patching times.
 
- # cat /sys/kernel/tracing/dyn_ftrace_total_info
- 57680 pages:231 groups: 9
- ftrace boot update time = 14024666 (ns)
- ftrace module total update time = 126070 (ns)
+  https://lore.kernel.org/all/20241017113105.1edfa943@gandalf.local.home/
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 11 ++++++++---
- kernel/trace/trace.c  | 15 +++++++++++----
- kernel/trace/trace.h  |  2 ++
- 3 files changed, 21 insertions(+), 7 deletions(-)
+I'll be adding this to the next merge window.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index e9fd4fb2769e..7fb0d2934a23 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3686,7 +3686,8 @@ static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
- }
- 
- 
--static u64		ftrace_update_time;
-+u64			ftrace_update_time;
-+u64			ftrace_total_mod_time;
- unsigned long		ftrace_update_tot_cnt;
- unsigned long		ftrace_number_of_pages;
- unsigned long		ftrace_number_of_groups;
-@@ -3706,7 +3707,7 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
- 	bool init_nop = ftrace_need_init_nop();
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *p;
--	u64 start, stop;
-+	u64 start, stop, update_time;
- 	unsigned long update_cnt = 0;
- 	unsigned long rec_flags = 0;
- 	int i;
-@@ -3750,7 +3751,11 @@ static int ftrace_update_code(struct module *mod, struct ftrace_page *new_pgs)
- 	}
- 
- 	stop = ftrace_now(raw_smp_processor_id());
--	ftrace_update_time = stop - start;
-+	update_time = stop - start;
-+	if (mod)
-+		ftrace_total_mod_time += update_time;
-+	else
-+		ftrace_update_time = update_time;
- 	ftrace_update_tot_cnt += update_cnt;
- 
- 	return 0;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c01375adc471..405dcf498159 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8548,15 +8548,22 @@ tracing_read_dyn_info(struct file *filp, char __user *ubuf,
- 	char *buf;
- 	int r;
- 
--	/* 256 should be plenty to hold the amount needed */
--	buf = kmalloc(256, GFP_KERNEL);
-+	/* 512 should be plenty to hold the amount needed */
-+#define DYN_INFO_BUF_SIZE	512
-+
-+	buf = kmalloc(DYN_INFO_BUF_SIZE, GFP_KERNEL);
- 	if (!buf)
- 		return -ENOMEM;
- 
--	r = scnprintf(buf, 256, "%ld pages:%ld groups: %ld\n",
-+	r = scnprintf(buf, DYN_INFO_BUF_SIZE,
-+		      "%ld pages:%ld groups: %ld\n"
-+		      "ftrace boot update time = %llu (ns)\n"
-+		      "ftrace module total update time = %llu (ns)\n",
- 		      ftrace_update_tot_cnt,
- 		      ftrace_number_of_pages,
--		      ftrace_number_of_groups);
-+		      ftrace_number_of_groups,
-+		      ftrace_update_time,
-+		      ftrace_total_mod_time);
- 
- 	ret = simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- 	kfree(buf);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 6adf48ef4312..3307dad4d917 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -775,6 +775,8 @@ extern void trace_event_follow_fork(struct trace_array *tr, bool enable);
- extern unsigned long ftrace_update_tot_cnt;
- extern unsigned long ftrace_number_of_pages;
- extern unsigned long ftrace_number_of_groups;
-+extern u64 ftrace_update_time;
-+extern u64 ftrace_total_mod_time;
- void ftrace_init_trace_array(struct trace_array *tr);
- #else
- static inline void ftrace_init_trace_array(struct trace_array *tr) { }
--- 
-2.45.2
-
+-- Steve
