@@ -1,228 +1,188 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C504C1FC7E9;
-	Thu, 17 Oct 2024 18:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFF7201270
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Oct 2024 19:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729191353; cv=none; b=rGvkdjVR+YY2MzLc/rZKBpzYapQq2TxJRfF0D15SES072s1mMC3NaTpvbyr6hQvsySY8QM3rmoZMxixivCGxkPuyJUa3u945HOeTlfxpE/VMFVUDAd5viiSVdMKatLuZ1iUpIBSZ+3GE+iEFzsKHElWanQQk87pQAf+K4M8Jgzo=
+	t=1729193540; cv=none; b=GLPRWm+HzSiqFNo7SCzHlh2CWQ5S2rwscp1R0X2iX9AxbsLbiEM7MDnDDhqluYvr3HOty1k8+zjIi2qkdIPEupfstlOe+C/2VWE+ru5/AUmcZ2I4huFAyKx5FwZZLYIpDO9twpuun19gj8Kdg4yLVJNIpz/pnr7SOQ6ih1tFcRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729191353; c=relaxed/simple;
-	bh=qMyss1VcsCqXR3v2FJfORrVe+pGagFza/3h51H/c8gY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YMNTS3ETdte8g6tW7THro+i89VZ7+/nkAj3xVOwjY53NLpr7RiuS4kRqjSylcu5L66FG8yqQguGUfaXQ/c0YfQ7au8wG/ETQj9xH4+Tcx/K/Aou0NJnsJt7KADZYXNNfubzsbF/bqII8qfqwimSrPl8fMWLAloVMyYpCEeAAsZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz0Tk4Ny; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729193540; c=relaxed/simple;
+	bh=vcUXd5tt9utnmCVe/nP6iWVCPF6al6ngb6a3ypPbz8U=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=WIkkH6fDjGeAkozfxTHZP/MikPcRr0xkmLfQgx8GmwXYq2wm9BleU9a1Qj634l49HFKLyaHB8z/uD6o7brjVD44K+GaCVcI+xadCl6aso1RjTKB/RnJf4ANCFunCiPVlsn+86Hz4AQbXqJOpui5wQJn+gzoCMPkyX3mpsCafkGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=C92aSNRl; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz0Tk4Ny"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-71e6f085715so1024373b3a.2;
-        Thu, 17 Oct 2024 11:55:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="C92aSNRl"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-71e7086c231so981718b3a.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Oct 2024 12:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729191348; x=1729796148; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jCbiAckxU+1LrXu7YNeHArlba++n1QiAkjUcgAqY7TM=;
-        b=Rz0Tk4NyHPEH2AH+whr2p0xPWN28ghw03rXRAYWF2kYUpJxq6snR2jnIgCkJxVcKaF
-         ENSlHAhKdLGOZEvzbPnuH4BGN4hOCRUd3pHCMTyEoAja3Tj/Gp8AeuhsaKQah1rYnZjI
-         eZtKWtAkqW+p/iJQsvD5dS946Va9Ab4tPjzBPSo8cUKETw45snMBORXqjVG7GOrJv5Tb
-         QWXS6iARrEI7uxaPVv74c1spBR5IV3IJksbzc7N2nIMDI2fdnNsUb7LWOfzslUtSri/K
-         jcufxSCkNKBNBNBq0/xcGOHNpriO39n+VAcw0p28ZaZ8LKe6L2Ws8lXr5CW1BO2Lz/JP
-         ms/w==
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1729193535; x=1729798335; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
+        b=C92aSNRliXUZa4r6bkC42hbLvd1ICOB0CikdQCc4o/w1HHZOf+RWUVIB4jFrkZ54Uj
+         0vgr4ZQ+OeN+1hf3uuvkORB5LcPgLjgoBV1QP3pvVsHXDMheAOE/ndDCakwvdY+qeCT+
+         gSKx1wUbQmWgNWnCbN/+6+XFdK8VWI28xh5ophXT20imLaeKUDux8sGW5soAhYc9iZts
+         kSUvO2HtaYXFRg1eUAMY13vaP6NMx6iGQHu0DVJKHGckQL/Ih+VvLpZchsRZ8y+FKPHn
+         z+9mbSqniDgYEr28lhAiJSWic/N1jiRPSUcyOjoPRPg99tsw2VGR4XyXjkD+Nnr0GtAS
+         YK2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729191348; x=1729796148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jCbiAckxU+1LrXu7YNeHArlba++n1QiAkjUcgAqY7TM=;
-        b=f/uliCe4/jsJIZ5gNxMlhvu+skIjpt/re3xmfWFWfqEe3RBPQJhcczMThYrYLTdbgG
-         jqwAbSv4ELACrxjIT89Ri/RvXiZ7OItxxt2qqXxOwplrt4/E1XKMSaKp1fpK8xTESQ2q
-         qyGejGRK2GHJiSr7KoEmcDDBHq33WBKmUeigmx88LDvVEfEEslSgah5SbJLqnCR6Av67
-         2PqB1h85TB07hZ4Njad76dVeEudup4TdWxU/Nj44ZKdWHgam/fe02SrtB2wu5kRmrUus
-         h3tBgB06ggk87cAkqjWi52/nY3aPJ+nAETTDzNfj/pQ1MfWs+hbQFq0X7gDMYd1sc05v
-         psOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBKjvhszFbFM2Obzs/cjkw0ptnHaS0jFOzQdlyDOav4ej3TGjqzoHjt7mkFNtFfrTOiHgrI24DhhMc8c1X@vger.kernel.org, AJvYcCW14dkOm3QHWpli/i7Dzyhm9kiy47qyBwLHQfJa+I+0WIZwVflpVjOv9skE7PLJHo1BHUU=@vger.kernel.org, AJvYcCXQnHjrGkef7VnSZdeC6CNLjbdmiFq0QrM5RtbXBguejvGbdPp1QWJUsaUALI/1qEQuxWT9SdMPAVT21QhQbHHkejQs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmo1auM8UciaMw0hiI3OBch37zIVFvXWEAEznWmzNWCY1912tV
-	nQmTD+uegX1+dwicZR0zchqh7BgK61uHgp3G6nA1i8GpMbi18GSMTgY9Q/AlMnAePQl9+9tQ4Qt
-	GGVDRsv1wKGQEDw0pJOQJlGiXnc0=
-X-Google-Smtp-Source: AGHT+IGCdpUfDxA6zAdi5OINLOxawquAP3ymgOYackxEhc10GVlIEJPFiB03uSJkD6QlvJghlEnn0pw9AdKdAXMwGgo=
-X-Received: by 2002:a05:6a00:1250:b0:71e:fb4:6c98 with SMTP id
- d2e1a72fcca58-71e4c1cfc05mr35446834b3a.23.1729191347929; Thu, 17 Oct 2024
- 11:55:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729193535; x=1729798335;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TfCj0XZYQNwVFG9YcnvaiklTwIyQ/GhWVOU/ROFZAio=;
+        b=c7+SJkG0hC0/HtCP4rHr/TRr3G9mHb9NmWCjOOZBnyE6kK+QQjWA3Jkcs0cx6VwUKH
+         jM4DqqY1Sju8nQedcV30gD3aGJgJIYVxfHmY1uJ9jpd8p9qVVila8Mibwbj5elvSJ46y
+         /p1DJH9ou6LT5Uovk7wRrGeF0n2ip3V/W6jqTuNmwxBpRhvMCtTW/JjjwLOgRZgvhBLx
+         c/VZ4zeBokKzXMoFgQQ44brXP4Z39L0JMdOSYiPy/nCV6PPkFuEaas4tYSz+qn2y111x
+         HLfsuRW3EsSt0ww/Q/dzCpu9SjCAZQexHOaEOOjZbIjJJ3HhPwJy/bbmSWFyDXn0zhyS
+         lqtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWPY52IS8a1pvfsxqfWCZPIGNSaZdNECNl+zvA0WByIgkl0Q1EIKYlsvCj+sQQQx05wwuFmDaEgkTLqv0jWVDsujqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkEy62IZURbnZGswwY7xRBSoYwFYRsU0quAazdlDfkB0Tuu14a
+	6RK5J84KPYuN161G2B0pXOMvwMrGDk9XCoBruJ/zIpC8BNvE9PRxROVjWFxhBNI=
+X-Google-Smtp-Source: AGHT+IEYQqSWyT9DM1JblvCRXie6c7wEQ7WCCMd8WOwGbnCY29CemQ9nchGTw3++94PPWZqamrgDPA==
+X-Received: by 2002:a05:6a00:2d25:b0:71e:5950:97d2 with SMTP id d2e1a72fcca58-71ea3328e08mr68611b3a.17.1729193534443;
+        Thu, 17 Oct 2024 12:32:14 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71ea34a7fa8sm9965b3a.184.2024.10.17.12.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
+Date: Thu, 17 Oct 2024 12:32:13 -0700 (PDT)
+X-Google-Original-Date: Thu, 17 Oct 2024 12:32:02 PDT (-0700)
+Subject:     Re: [PATCH v11 4/5] jump_label: adjust inline asm to be consistent
+In-Reply-To: <20241015-tracepoint-v11-4-cceb65820089@google.com>
+CC: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+  peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, Ard Biesheuvel <ardb@kernel.org>,
+  ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+  gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+  linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+  Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, ubizjak@gmail.com,
+  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+  oliver.upton@linux.dev, Mark Rutland <mark.rutland@arm.com>, ryan.roberts@arm.com, tabba@google.com,
+  linux-arm-kernel@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+  apatel@ventanamicro.com, ajones@ventanamicro.com, alexghiti@rivosinc.com,
+  Conor Dooley <conor.dooley@microchip.com>, samuel.holland@sifive.com, linux-riscv@lists.infradead.org,
+  chenhuacai@kernel.org, kernel@xen0n.name, maobibo@loongson.cn, yangtiezhu@loongson.cn,
+  akpm@linux-foundation.org, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, aliceryhl@google.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: aliceryhl@google.com
+Message-ID: <mhng-0614da52-c420-4be1-a5b9-64dacae91d0e@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-3-andrii@kernel.org>
- <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy> <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
-In-Reply-To: <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 17 Oct 2024 11:55:35 -0700
-Message-ID: <CAEf4BzbOXrbixQA=fpg17QPBv+4myAQrHvCX42hVye0Ww9W2Aw@mail.gmail.com>
-Subject: Re: [PATCH v3 tip/perf/core 2/4] mm: switch to 64-bit
- mm_lock_seq/vm_lock_seq on 64-bit architectures
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, peterz@infradead.org, 
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
-	paulmck@kernel.org, willy@infradead.org, akpm@linux-foundation.org, 
-	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org, 
-	vbabka@suse.cz, hannes@cmpxchg.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 16, 2024 at 7:02=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
+On Tue, 15 Oct 2024 06:14:58 PDT (-0700), aliceryhl@google.com wrote:
+> To avoid duplication of inline asm between C and Rust, we need to
+> import the inline asm from the relevant `jump_label.h` header into Rust.
+> To make that easier, this patch updates the header files to expose the
+> inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
 >
-> On Sun, Oct 13, 2024 at 12:56=E2=80=AFAM Shakeel Butt <shakeel.butt@linux=
-.dev> wrote:
-> >
-> > On Thu, Oct 10, 2024 at 01:56:42PM GMT, Andrii Nakryiko wrote:
-> > > To increase mm->mm_lock_seq robustness, switch it from int to long, s=
-o
-> > > that it's a 64-bit counter on 64-bit systems and we can stop worrying
-> > > about it wrapping around in just ~4 billion iterations. Same goes for
-> > > VMA's matching vm_lock_seq, which is derived from mm_lock_seq.
+> The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
+> takes the same arguments in a consistent order so that Rust can use the
+> same logic for every architecture.
 >
-> vm_lock_seq does not need to be long but for consistency I guess that
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  arch/arm/include/asm/jump_label.h       | 14 +++++----
+>  arch/arm64/include/asm/jump_label.h     | 20 ++++++++-----
+>  arch/loongarch/include/asm/jump_label.h | 16 +++++++----
+>  arch/riscv/include/asm/jump_label.h     | 50 ++++++++++++++++++---------------
+>  arch/x86/include/asm/jump_label.h       | 35 +++++++++--------------
+>  5 files changed, 73 insertions(+), 62 deletions(-)
 
-How come, we literally assign vm_lock_seq from mm_lock_seq and do
-direct comparisons. They have to be exactly the same type, no?
+[...]
 
-> makes sense. While at it, can you please change these seq counters to
-> be unsigned?
-
-There is `vma->vm_lock_seq =3D -1;` in kernel/fork.c, should it be
-switched to ULONG_MAX then? In general, unless this is critical for
-correctness, I'd very much like stuff like this to be done in the mm
-tree afterwards, but it seems trivial enough, so if you insist I'll do
-it.
-
-> Also, did you check with pahole if the vm_area_struct layout change
-> pushes some members into a difference cacheline or creates new gaps?
+> diff --git a/arch/riscv/include/asm/jump_label.h b/arch/riscv/include/asm/jump_label.h
+> index 1c768d02bd0c..87a71cc6d146 100644
+> --- a/arch/riscv/include/asm/jump_label.h
+> +++ b/arch/riscv/include/asm/jump_label.h
+> @@ -16,21 +16,28 @@
 >
-
-Just did. We had 3 byte hole after `bool detached;`, it now grew to 7
-bytes (so +4) and then vm_lock_seq itself is now 8 bytes (so +4),
-which now does push rb and rb_subtree_last into *THE SAME* cache line
-(which sounds like an improvement to me). vm_lock_seq and vm_lock stay
-in the same cache line. vm_pgoff and vm_file are now in the same cache
-line, and given they are probably always accessed together, seems like
-a good accidental change as well. See below pahole outputs before and
-after.
-
-That singular detached bool looks like a complete waste, tbh. Maybe it
-would be better to roll it into vm_flags and save 8 bytes? (not that I
-want to do those mm changes in this patch set, of course...).
-vm_area_struct is otherwise nicely tightly packed.
-
-tl;dr, seems fine, and detached would be best to get rid of, if
-possible (but that's a completely separate thing)
-
-BEFORE
-=3D=3D=3D=3D=3D=3D
-struct vm_area_struct {
-        union {
-                struct {
-                        long unsigned int vm_start;      /*     0     8 */
-                        long unsigned int vm_end;        /*     8     8 */
-                };                                       /*     0    16 */
-                struct callback_head vm_rcu;             /*     0    16 */
-        } __attribute__((__aligned__(8)));               /*     0    16 */
-        struct mm_struct *         vm_mm;                /*    16     8 */
-        pgprot_t                   vm_page_prot;         /*    24     8 */
-        union {
-                const vm_flags_t   vm_flags;             /*    32     8 */
-                vm_flags_t         __vm_flags;           /*    32     8 */
-        };                                               /*    32     8 */
-        bool                       detached;             /*    40     1 */
-
-        /* XXX 3 bytes hole, try to pack */
-
-        int                        vm_lock_seq;          /*    44     4 */
-        struct vma_lock *          vm_lock;              /*    48     8 */
-        struct {
-                struct rb_node     rb;                   /*    56    24 */
-                /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago ---=
- */
-                long unsigned int  rb_subtree_last;      /*    80     8 */
-        }                                                /*    56    32 */
-        struct list_head           anon_vma_chain;       /*    88    16 */
-        struct anon_vma *          anon_vma;             /*   104     8 */
-        const struct vm_operations_struct  * vm_ops;     /*   112     8 */
-        long unsigned int          vm_pgoff;             /*   120     8 */
-        /* --- cacheline 2 boundary (128 bytes) --- */
-        struct file *              vm_file;              /*   128     8 */
-        void *                     vm_private_data;      /*   136     8 */
-        atomic_long_t              swap_readahead_info;  /*   144     8 */
-        struct mempolicy *         vm_policy;            /*   152     8 */
-        struct vma_numab_state *   numab_state;          /*   160     8 */
-        struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   168     8 */
-
-        /* size: 176, cachelines: 3, members: 18 */
-        /* sum members: 173, holes: 1, sum holes: 3 */
-        /* forced alignments: 2 */
-        /* last cacheline: 48 bytes */
-} __attribute__((__aligned__(8)));
-
-AFTER
-=3D=3D=3D=3D=3D
-struct vm_area_struct {
-        union {
-                struct {
-                        long unsigned int vm_start;      /*     0     8 */
-                        long unsigned int vm_end;        /*     8     8 */
-                };                                       /*     0    16 */
-                struct callback_head vm_rcu;             /*     0    16 */
-        } __attribute__((__aligned__(8)));               /*     0    16 */
-        struct mm_struct *         vm_mm;                /*    16     8 */
-        pgprot_t                   vm_page_prot;         /*    24     8 */
-        union {
-                const vm_flags_t   vm_flags;             /*    32     8 */
-                vm_flags_t         __vm_flags;           /*    32     8 */
-        };                                               /*    32     8 */
-        bool                       detached;             /*    40     1 */
-
-        /* XXX 7 bytes hole, try to pack */
-
-        long int                   vm_lock_seq;          /*    48     8 */
-        struct vma_lock *          vm_lock;              /*    56     8 */
-        /* --- cacheline 1 boundary (64 bytes) --- */
-        struct {
-                struct rb_node     rb;                   /*    64    24 */
-                long unsigned int  rb_subtree_last;      /*    88     8 */
-        }                                                /*    64    32 */
-        struct list_head           anon_vma_chain;       /*    96    16 */
-        struct anon_vma *          anon_vma;             /*   112     8 */
-        const struct vm_operations_struct  * vm_ops;     /*   120     8 */
-        /* --- cacheline 2 boundary (128 bytes) --- */
-        long unsigned int          vm_pgoff;             /*   128     8 */
-        struct file *              vm_file;              /*   136     8 */
-        void *                     vm_private_data;      /*   144     8 */
-        atomic_long_t              swap_readahead_info;  /*   152     8 */
-        struct mempolicy *         vm_policy;            /*   160     8 */
-        struct vma_numab_state *   numab_state;          /*   168     8 */
-        struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     8 */
-
-        /* size: 184, cachelines: 3, members: 18 */
-        /* sum members: 177, holes: 1, sum holes: 7 */
-        /* forced alignments: 2 */
-        /* last cacheline: 56 bytes */
-} __attribute__((__aligned__(8)));
-
-
-> > >
-> > > I didn't use __u64 outright to keep 32-bit architectures unaffected, =
-but
-> > > if it seems important enough, I have nothing against using __u64.
-> > >
-> > > Suggested-by: Jann Horn <jannh@google.com>
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+>  #define JUMP_LABEL_NOP_SIZE 4
 >
+> +#define JUMP_TABLE_ENTRY(key, label)			\
+> +	".pushsection	__jump_table, \"aw\"	\n\t"	\
+> +	".align		" RISCV_LGPTR "		\n\t"	\
+> +	".long		1b - ., " label " - .	\n\t"	\
+> +	"" RISCV_PTR "	" key " - .		\n\t"	\
+> +	".popsection				\n\t"
+> +
+> +/* This macro is also expanded on the Rust side. */
+> +#define ARCH_STATIC_BRANCH_ASM(key, label)		\
+> +	"	.align		2		\n\t"	\
+> +	"	.option push			\n\t"	\
+> +	"	.option norelax			\n\t"	\
+> +	"	.option norvc			\n\t"	\
+> +	"1:	nop				\n\t"	\
+> +	"	.option pop			\n\t"	\
+> +	JUMP_TABLE_ENTRY(key, label)
+> +
+>  static __always_inline bool arch_static_branch(struct static_key * const key,
+>  					       const bool branch)
+>  {
+>  	asm goto(
+> -		"	.align		2			\n\t"
+> -		"	.option push				\n\t"
+> -		"	.option norelax				\n\t"
+> -		"	.option norvc				\n\t"
+> -		"1:	nop					\n\t"
+> -		"	.option pop				\n\t"
+> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
+> -		"	.align		" RISCV_LGPTR "		\n\t"
+> -		"	.long		1b - ., %l[label] - .	\n\t"
+> -		"	" RISCV_PTR "	%0 - .			\n\t"
+> -		"	.popsection				\n\t"
+> +		ARCH_STATIC_BRANCH_ASM("%0", "%l[label]")
+>  		:  :  "i"(&((char *)key)[branch]) :  : label);
+>
+>  	return false;
+> @@ -38,21 +45,20 @@ static __always_inline bool arch_static_branch(struct static_key * const key,
+>  	return true;
+>  }
+>
+> +#define ARCH_STATIC_BRANCH_JUMP_ASM(key, label)		\
+> +	"	.align		2		\n\t"	\
+> +	"	.option push			\n\t"	\
+> +	"	.option norelax			\n\t"	\
+> +	"	.option norvc			\n\t"	\
+> +	"1:	j	" label "		\n\t" \
+> +	"	.option pop			\n\t"	\
+> +	JUMP_TABLE_ENTRY(key, label)
+> +
+>  static __always_inline bool arch_static_branch_jump(struct static_key * const key,
+>  						    const bool branch)
+>  {
+>  	asm goto(
+> -		"	.align		2			\n\t"
+> -		"	.option push				\n\t"
+> -		"	.option norelax				\n\t"
+> -		"	.option norvc				\n\t"
+> -		"1:	j		%l[label]		\n\t"
+> -		"	.option pop				\n\t"
+> -		"	.pushsection	__jump_table, \"aw\"	\n\t"
+> -		"	.align		" RISCV_LGPTR "		\n\t"
+> -		"	.long		1b - ., %l[label] - .	\n\t"
+> -		"	" RISCV_PTR "	%0 - .			\n\t"
+> -		"	.popsection				\n\t"
+> +		ARCH_STATIC_BRANCH_JUMP_ASM("%0", "%l[label]")
+>  		:  :  "i"(&((char *)key)[branch]) :  : label);
+>
+>  	return false;
+
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
