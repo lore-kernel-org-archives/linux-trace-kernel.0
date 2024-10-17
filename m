@@ -1,125 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB08161326;
-	Wed, 16 Oct 2024 23:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D6128E0F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Oct 2024 02:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729123099; cv=none; b=hvWB13YpvSDMupLs2xW+03HRgDOwga50spkpqLx52kc6tTV4f+inKHLvfO5ZofLkSRRdNqmPVnbQ1QxNzAmBNNmRpqXtJb03Wo6OIlBZGSqDELrN31ud2oKaqYErCMtmZSb96fY3xsVX/1Qv1/VynQCi7s2ikNOVEp25xFzqR7w=
+	t=1729130534; cv=none; b=MbG6bNrbxKHtPwdxCA57AbaUdRYWXLdhbm46qvLllS4CUiE2V4zYUlwqT9gYrpKtURY9Wl4jsQvuv8Cr7JrFbpaA8XzxiTHKGOrWVOgpwfg5Hf48IxWubVsahLRGq/AagYmxyc6+PHsa2npNZzVLLQgzXBdFlDE1vAjwrPEhqG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729123099; c=relaxed/simple;
-	bh=dl4ZMMi6UkY66eeJUj39rk75iod/Rq4ydDN6GkT6Ce0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6ltQe0Uez5ux6YgMw2Obb/cHsFqXjgU3ORgKYV7BmZRvo6MKTwAYZ5pMnOAbsSpLxNJClr6ShxUa4D729VDBcpVyaRP8hDtCGfRchUMslOCCVEUUFWodp2Rnq1f3mYbBuFl4US+RE9/BphEEWDpGKO354pyHivz/xKbx23r/r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUyJRTRo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729130534; c=relaxed/simple;
+	bh=3keh0drJK4A5IspIKmRy+fJb/NxoXe2holMkNt2ddy8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t6aZ/i/cawSlcMKkcbWRYVlz5cUhlA9JAjttR12gJDZcRHgp/n3HskQLrlH8NQGM4+n0gSXVLvRr4qgFpXD2N18ZwPpkU86/LgUGJdWldtFOglLd4BAPq+IMTVXkFH7t7WzUqGUz+j+yjTIGCtE9MUmIEfRYRUcpiNQSh5Befak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4CF6VfZs; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUyJRTRo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0128CC4CEC5;
-	Wed, 16 Oct 2024 23:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729123098;
-	bh=dl4ZMMi6UkY66eeJUj39rk75iod/Rq4ydDN6GkT6Ce0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aUyJRTRo0x2+3z/2y/FQ+aEK3XYUoN8mcz2N9MbvfVeg7WtoOgXSHf9qFPMa9WqK4
-	 I4Eb7NqiTNyvOxrYQ0Ck1crWzLXaJyBVvU1iHXhrLqptfZmWv1nwU+oeXM6onwo7B1
-	 Bjome/eLzoTdbg0LAyDRkQaPt6vpNKaP3Fks19G43RKkcc3xWsk/OAukW5yOL9KK4T
-	 DRNRLea/INzHDvb30jc2JX11dyzgwAjaplu5U/zrOnXLPkT+ALdxPNd3g3qhlwF7Nb
-	 IhixQCW/u2nVSk7r2vmTsqvA+1zxrdLaddel3zcxJ5QIG57g91CYpQvbUsqReiBH8k
-	 JX5BKTdKfsQpQ==
-Date: Wed, 16 Oct 2024 16:58:15 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org, kdevops@lists.linux.dev
-Subject: Re: [PATCH v5 7/8] execmem: add support for cache of large ROX pages
-Message-ID: <ZxBTFyyzZhByMjmo@bombadil.infradead.org>
-References: <Zwd7GRyBtCwiAv1v@infradead.org>
- <ZwfPPZrxHzQgYfx7@kernel.org>
- <ZwjXz0dz-RldVNx0@infradead.org>
- <ZwuIPZkjX0CfzhjS@kernel.org>
- <20241013202626.81f430a16750af0d2f40d683@linux-foundation.org>
- <Zw1uBBcG-jAgxF_t@bombadil.infradead.org>
- <Zw3rDS3GRWZe4CBu@bombadil.infradead.org>
- <Zw4DlTTbz4QwhOvU@kernel.org>
- <Zw7MirnsHnhRveBB@bombadil.infradead.org>
- <Zw-YN4JIltntY52Y@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4CF6VfZs"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3a3b3f4b599so135655ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Oct 2024 19:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729130531; x=1729735331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3keh0drJK4A5IspIKmRy+fJb/NxoXe2holMkNt2ddy8=;
+        b=4CF6VfZsmcVhs9FVWN7vQWsp0mAuwkJou1loNyaqadIKjIP9/MgIDTzEl48E24V1H2
+         T0behTmA2D1etVjys8fra/K//eX3Fv8Ku+20xwgjKvWlUBY96m7rih/TCQ0ubwt85dbM
+         z7i4Li6Z/u3Tz0uJewIkIpKQOrQDfRrC5xjn/e7ssVSLilBz6N2oDnvcJX4B1AH7WXR1
+         k+QLkKnWHJAsBzp+ZKqwv6muKIqWyoKLMC50FaHZJHFrWVG1vsuYYg899HDCbgUcj/BP
+         Yhro9Opl3N0u3Ap/lkz4robPdSblY/dYQCpuENpn5R672Gpl7QfJ06NXFj/tYnfViCiK
+         oLtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729130531; x=1729735331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3keh0drJK4A5IspIKmRy+fJb/NxoXe2holMkNt2ddy8=;
+        b=mzsRXATIp4ctxK3f83cHqUm4VR5aH/HsphTgRmlBT6jv/RvvbIhNHGxeRVPJmKoSis
+         H0hny+CP4Br8EpnxMUNrCq+sgIyUv0+s7DtNYto8KKszISG198sodQNIFMDhY+BdoWng
+         8T0tuBc1r6mjAYZ1pJg/d6v5JMtyruX50SmGwkcbRjQbELUxgr3vx3MH3vnAUMTstKrg
+         6mXavHxhha0PbKBEP/Fd4ZUZtvRZsUR+TWw388sF6lU5mBZdyemOVJ8y2/WsZwoFrk6E
+         u5P3ON4hl4nwYfoJ/k8yVK7gmwWs7ATTw0IZXY/58rQ5l+62xd3Hs6a3SyR37hVVZnte
+         heWw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2DosfPVUwlhMGE1xzoH5Q7Z1DCEmkKUnxg1wbds+1RUMqPB++CVeCPAEsUhlT67Lzw6jWgrWB/hS/r5Twu03jKgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza1VvxHoRFRh7wG3YA9+LDitTWArsP4m31cVVbmffsA/+ze5kP
+	Hp76BP2AdyiiLr7RNVFYKiagW+MnVcHZEyROxQXARRs61+eZDBV39+KZvzdsDzs17KMeqtEsIkE
+	EQtf6bZL9tTJj8iIUjCktsZjWfz6Q/FzfP+LR
+X-Google-Smtp-Source: AGHT+IH5iPpq9np2Qf/cswLWKMwDXvm2L6Ui8ogR+LLbQ2zhopltvCLAK8nRlN0DajbqNCn5EW+t6Jy5Dar3BZzKulY=
+X-Received: by 2002:a05:6e02:1b06:b0:3a3:a053:c0ad with SMTP id
+ e9e14a558f8ab-3a3ea04e3e7mr1425915ab.25.1729130530610; Wed, 16 Oct 2024
+ 19:02:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zw-YN4JIltntY52Y@kernel.org>
+References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-3-andrii@kernel.org>
+ <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy>
+In-Reply-To: <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 16 Oct 2024 19:01:59 -0700
+Message-ID: <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 tip/perf/core 2/4] mm: switch to 64-bit
+ mm_lock_seq/vm_lock_seq on 64-bit architectures
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, peterz@infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	willy@infradead.org, akpm@linux-foundation.org, mjguzik@gmail.com, 
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, 
+	hannes@cmpxchg.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 01:40:55PM +0300, Mike Rapoport wrote:
-> On Tue, Oct 15, 2024 at 01:11:54PM -0700, Luis Chamberlain wrote:
-> > On Tue, Oct 15, 2024 at 08:54:29AM +0300, Mike Rapoport wrote:
-> > > On Mon, Oct 14, 2024 at 09:09:49PM -0700, Luis Chamberlain wrote:
-> > > > Mike, please run this with kmemleak enabled and running, and also try to get
-> > > > tools/testing/selftests/kmod/kmod.sh to pass.
-> > > 
-> > > There was an issue with kmemleak, I fixed it here:
-> > > 
-> > > https://lore.kernel.org/linux-mm/20241009180816.83591-1-rppt@kernel.org/T/#m020884c1795218cc2be245e8091fead1cda3f3e4
-> > 
-> > Ah, so this was a side fix, not part of this series, thanks.
-> > 
-> > > > I run into silly boot issues with just a guest.
-> > > 
-> > > Was it kmemleak or something else?
-> > 
-> > Both kmemleak and the kmod selftest failed, here is a run of the test
-> > with this patch series:
-> > 
-> > https://github.com/linux-kdevops/linux-modules-kpd/actions/runs/11352286624/job/31574722735
-> 
-> Is there a kernel log to look at? Could not find it in the run report
+On Sun, Oct 13, 2024 at 12:56=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.d=
+ev> wrote:
+>
+> On Thu, Oct 10, 2024 at 01:56:42PM GMT, Andrii Nakryiko wrote:
+> > To increase mm->mm_lock_seq robustness, switch it from int to long, so
+> > that it's a 64-bit counter on 64-bit systems and we can stop worrying
+> > about it wrapping around in just ~4 billion iterations. Same goes for
+> > VMA's matching vm_lock_seq, which is derived from mm_lock_seq.
 
-No, I forgot to include the guestfs console on artifacts, I'll do that
-in the next run.
+vm_lock_seq does not need to be long but for consistency I guess that
+makes sense. While at it, can you please change these seq counters to
+be unsigned?
+Also, did you check with pahole if the vm_area_struct layout change
+pushes some members into a difference cacheline or creates new gaps?
 
-  Luis
+> >
+> > I didn't use __u64 outright to keep 32-bit architectures unaffected, bu=
+t
+> > if it seems important enough, I have nothing against using __u64.
+> >
+> > Suggested-by: Jann Horn <jannh@google.com>
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+>
+> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
