@@ -1,160 +1,228 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA971E00A3
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Oct 2024 18:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C504C1FC7E9;
+	Thu, 17 Oct 2024 18:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729188852; cv=none; b=X4DvVUMSsXqITJOQq8H8/wuDJIpij5Zh3pB3uADoGoR6Bg7IWOxojVf03uAZXwm8RTWSgAsu6NVmotX9OxFfypJF4Zq96K4irkSkKA+MUz0/wRejqPH0sGHR2BMy6+MxQJ7KMIKzaFJy8kX0pop6IiNI5Y2nmVavCzaoVNQe0yg=
+	t=1729191353; cv=none; b=rGvkdjVR+YY2MzLc/rZKBpzYapQq2TxJRfF0D15SES072s1mMC3NaTpvbyr6hQvsySY8QM3rmoZMxixivCGxkPuyJUa3u945HOeTlfxpE/VMFVUDAd5viiSVdMKatLuZ1iUpIBSZ+3GE+iEFzsKHElWanQQk87pQAf+K4M8Jgzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729188852; c=relaxed/simple;
-	bh=XO+oLqPhK2FCwtl+k5xHn8MLn0qkKcZlSKIG+z+asss=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mXH0i3MpU96d6soPRSZB6JVfAC0NPiHiZmIOzjYL/tNeQwPZxX8olJ1JRZnvQzJCAjOExPPrRgJoSasotUFHDleSRiX2r+4qGCDb+tZNO3IE5EcBlDDggRThpQz3wZJpxDD8Slc1R/zn21TNLezG9NBb9K83uJmGN1lsilVpyCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DmzVUPhL; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1729191353; c=relaxed/simple;
+	bh=qMyss1VcsCqXR3v2FJfORrVe+pGagFza/3h51H/c8gY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YMNTS3ETdte8g6tW7THro+i89VZ7+/nkAj3xVOwjY53NLpr7RiuS4kRqjSylcu5L66FG8yqQguGUfaXQ/c0YfQ7au8wG/ETQj9xH4+Tcx/K/Aou0NJnsJt7KADZYXNNfubzsbF/bqII8qfqwimSrPl8fMWLAloVMyYpCEeAAsZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz0Tk4Ny; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DmzVUPhL"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1729188843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tzHmyuSvQgBZ0rMpQ3JAK1It+QHSTZx2/NVdS2eTqbg=;
-	b=DmzVUPhLoqfcjzLAgI1+LMhg5q1KFfE1s5gk20uMsJjxwUS9QufgUU8YwIfE9NPRib7BJW
-	UJ+aHLeiADWbmV0bMTB+11DZ001h8fPxyAMepyI8CLpwKxqPJQ8hBQqjj4Y1Lga2qLMlJ6
-	daoMIfJc+4VhkPX0MUOPqiB7jT+tUwY=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Christoph Hellwig <hch@lst.de>,
-	iommu@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Robin Murphy <robin.murphy@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH 1/3] dma-mapping: Trace dma_alloc/free direction
-Date: Thu, 17 Oct 2024 14:13:52 -0400
-Message-Id: <20241017181354.2834674-2-sean.anderson@linux.dev>
-In-Reply-To: <20241017181354.2834674-1-sean.anderson@linux.dev>
-References: <20241017181354.2834674-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz0Tk4Ny"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-71e6f085715so1024373b3a.2;
+        Thu, 17 Oct 2024 11:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729191348; x=1729796148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jCbiAckxU+1LrXu7YNeHArlba++n1QiAkjUcgAqY7TM=;
+        b=Rz0Tk4NyHPEH2AH+whr2p0xPWN28ghw03rXRAYWF2kYUpJxq6snR2jnIgCkJxVcKaF
+         ENSlHAhKdLGOZEvzbPnuH4BGN4hOCRUd3pHCMTyEoAja3Tj/Gp8AeuhsaKQah1rYnZjI
+         eZtKWtAkqW+p/iJQsvD5dS946Va9Ab4tPjzBPSo8cUKETw45snMBORXqjVG7GOrJv5Tb
+         QWXS6iARrEI7uxaPVv74c1spBR5IV3IJksbzc7N2nIMDI2fdnNsUb7LWOfzslUtSri/K
+         jcufxSCkNKBNBNBq0/xcGOHNpriO39n+VAcw0p28ZaZ8LKe6L2Ws8lXr5CW1BO2Lz/JP
+         ms/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729191348; x=1729796148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jCbiAckxU+1LrXu7YNeHArlba++n1QiAkjUcgAqY7TM=;
+        b=f/uliCe4/jsJIZ5gNxMlhvu+skIjpt/re3xmfWFWfqEe3RBPQJhcczMThYrYLTdbgG
+         jqwAbSv4ELACrxjIT89Ri/RvXiZ7OItxxt2qqXxOwplrt4/E1XKMSaKp1fpK8xTESQ2q
+         qyGejGRK2GHJiSr7KoEmcDDBHq33WBKmUeigmx88LDvVEfEEslSgah5SbJLqnCR6Av67
+         2PqB1h85TB07hZ4Njad76dVeEudup4TdWxU/Nj44ZKdWHgam/fe02SrtB2wu5kRmrUus
+         h3tBgB06ggk87cAkqjWi52/nY3aPJ+nAETTDzNfj/pQ1MfWs+hbQFq0X7gDMYd1sc05v
+         psOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBKjvhszFbFM2Obzs/cjkw0ptnHaS0jFOzQdlyDOav4ej3TGjqzoHjt7mkFNtFfrTOiHgrI24DhhMc8c1X@vger.kernel.org, AJvYcCW14dkOm3QHWpli/i7Dzyhm9kiy47qyBwLHQfJa+I+0WIZwVflpVjOv9skE7PLJHo1BHUU=@vger.kernel.org, AJvYcCXQnHjrGkef7VnSZdeC6CNLjbdmiFq0QrM5RtbXBguejvGbdPp1QWJUsaUALI/1qEQuxWT9SdMPAVT21QhQbHHkejQs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmo1auM8UciaMw0hiI3OBch37zIVFvXWEAEznWmzNWCY1912tV
+	nQmTD+uegX1+dwicZR0zchqh7BgK61uHgp3G6nA1i8GpMbi18GSMTgY9Q/AlMnAePQl9+9tQ4Qt
+	GGVDRsv1wKGQEDw0pJOQJlGiXnc0=
+X-Google-Smtp-Source: AGHT+IGCdpUfDxA6zAdi5OINLOxawquAP3ymgOYackxEhc10GVlIEJPFiB03uSJkD6QlvJghlEnn0pw9AdKdAXMwGgo=
+X-Received: by 2002:a05:6a00:1250:b0:71e:fb4:6c98 with SMTP id
+ d2e1a72fcca58-71e4c1cfc05mr35446834b3a.23.1729191347929; Thu, 17 Oct 2024
+ 11:55:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-3-andrii@kernel.org>
+ <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy> <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
+In-Reply-To: <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 17 Oct 2024 11:55:35 -0700
+Message-ID: <CAEf4BzbOXrbixQA=fpg17QPBv+4myAQrHvCX42hVye0Ww9W2Aw@mail.gmail.com>
+Subject: Re: [PATCH v3 tip/perf/core 2/4] mm: switch to 64-bit
+ mm_lock_seq/vm_lock_seq on 64-bit architectures
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, peterz@infradead.org, 
+	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, akpm@linux-foundation.org, 
+	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org, 
+	vbabka@suse.cz, hannes@cmpxchg.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In preparation for using these tracepoints in a few more places, trace
-the DMA direction as well. For coherent allocations this is always
-bidirectional.
+On Wed, Oct 16, 2024 at 7:02=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Sun, Oct 13, 2024 at 12:56=E2=80=AFAM Shakeel Butt <shakeel.butt@linux=
+.dev> wrote:
+> >
+> > On Thu, Oct 10, 2024 at 01:56:42PM GMT, Andrii Nakryiko wrote:
+> > > To increase mm->mm_lock_seq robustness, switch it from int to long, s=
+o
+> > > that it's a 64-bit counter on 64-bit systems and we can stop worrying
+> > > about it wrapping around in just ~4 billion iterations. Same goes for
+> > > VMA's matching vm_lock_seq, which is derived from mm_lock_seq.
+>
+> vm_lock_seq does not need to be long but for consistency I guess that
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+How come, we literally assign vm_lock_seq from mm_lock_seq and do
+direct comparisons. They have to be exactly the same type, no?
 
- include/trace/events/dma.h | 18 ++++++++++++------
- kernel/dma/mapping.c       |  6 ++++--
- 2 files changed, 16 insertions(+), 8 deletions(-)
+> makes sense. While at it, can you please change these seq counters to
+> be unsigned?
 
-diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
-index b0f41265191c..012729cc178f 100644
---- a/include/trace/events/dma.h
-+++ b/include/trace/events/dma.h
-@@ -116,8 +116,9 @@ DEFINE_EVENT(dma_unmap, dma_unmap_resource,
- 
- TRACE_EVENT(dma_alloc,
- 	TP_PROTO(struct device *dev, void *virt_addr, dma_addr_t dma_addr,
--		 size_t size, gfp_t flags, unsigned long attrs),
--	TP_ARGS(dev, virt_addr, dma_addr, size, flags, attrs),
-+		 size_t size, enum dma_data_direction dir, gfp_t flags,
-+		 unsigned long attrs),
-+	TP_ARGS(dev, virt_addr, dma_addr, size, dir, flags, attrs),
- 
- 	TP_STRUCT__entry(
- 		__string(device, dev_name(dev))
-@@ -125,6 +126,7 @@ TRACE_EVENT(dma_alloc,
- 		__field(u64, dma_addr)
- 		__field(size_t, size)
- 		__field(gfp_t, flags)
-+		__field(enum dma_data_direction, dir)
- 		__field(unsigned long, attrs)
- 	),
- 
-@@ -137,8 +139,9 @@ TRACE_EVENT(dma_alloc,
- 		__entry->attrs = attrs;
- 	),
- 
--	TP_printk("%s dma_addr=%llx size=%zu virt_addr=%p flags=%s attrs=%s",
-+	TP_printk("%s dir=%s dma_addr=%llx size=%zu virt_addr=%p flags=%s attrs=%s",
- 		__get_str(device),
-+		decode_dma_data_direction(__entry->dir),
- 		__entry->dma_addr,
- 		__entry->size,
- 		__entry->virt_addr,
-@@ -148,14 +151,15 @@ TRACE_EVENT(dma_alloc,
- 
- TRACE_EVENT(dma_free,
- 	TP_PROTO(struct device *dev, void *virt_addr, dma_addr_t dma_addr,
--		 size_t size, unsigned long attrs),
--	TP_ARGS(dev, virt_addr, dma_addr, size, attrs),
-+		 size_t size, enum dma_data_direction dir, unsigned long attrs),
-+	TP_ARGS(dev, virt_addr, dma_addr, size, dir, attrs),
- 
- 	TP_STRUCT__entry(
- 		__string(device, dev_name(dev))
- 		__field(void *, virt_addr)
- 		__field(u64, dma_addr)
- 		__field(size_t, size)
-+		__field(enum dma_data_direction, dir)
- 		__field(unsigned long, attrs)
- 	),
- 
-@@ -164,11 +168,13 @@ TRACE_EVENT(dma_free,
- 		__entry->virt_addr = virt_addr;
- 		__entry->dma_addr = dma_addr;
- 		__entry->size = size;
-+		__entry->dir = dir;
- 		__entry->attrs = attrs;
- 	),
- 
--	TP_printk("%s dma_addr=%llx size=%zu virt_addr=%p attrs=%s",
-+	TP_printk("%s dir=%s dma_addr=%llx size=%zu virt_addr=%p attrs=%s",
- 		__get_str(device),
-+		decode_dma_data_direction(__entry->dir),
- 		__entry->dma_addr,
- 		__entry->size,
- 		__entry->virt_addr,
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 864a1121bf08..944ac835030a 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -619,7 +619,8 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 	else
- 		return NULL;
- 
--	trace_dma_alloc(dev, cpu_addr, *dma_handle, size, flag, attrs);
-+	trace_dma_alloc(dev, cpu_addr, *dma_handle, size, DMA_BIDIRECTIONAL,
-+			flag, attrs);
- 	debug_dma_alloc_coherent(dev, size, *dma_handle, cpu_addr, attrs);
- 	return cpu_addr;
- }
-@@ -644,7 +645,8 @@ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
- 	if (!cpu_addr)
- 		return;
- 
--	trace_dma_free(dev, cpu_addr, dma_handle, size, attrs);
-+	trace_dma_free(dev, cpu_addr, dma_handle, size, DMA_BIDIRECTIONAL,
-+		       attrs);
- 	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
- 	if (dma_alloc_direct(dev, ops))
- 		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
--- 
-2.35.1.1320.gc452695387.dirty
+There is `vma->vm_lock_seq =3D -1;` in kernel/fork.c, should it be
+switched to ULONG_MAX then? In general, unless this is critical for
+correctness, I'd very much like stuff like this to be done in the mm
+tree afterwards, but it seems trivial enough, so if you insist I'll do
+it.
 
+> Also, did you check with pahole if the vm_area_struct layout change
+> pushes some members into a difference cacheline or creates new gaps?
+>
+
+Just did. We had 3 byte hole after `bool detached;`, it now grew to 7
+bytes (so +4) and then vm_lock_seq itself is now 8 bytes (so +4),
+which now does push rb and rb_subtree_last into *THE SAME* cache line
+(which sounds like an improvement to me). vm_lock_seq and vm_lock stay
+in the same cache line. vm_pgoff and vm_file are now in the same cache
+line, and given they are probably always accessed together, seems like
+a good accidental change as well. See below pahole outputs before and
+after.
+
+That singular detached bool looks like a complete waste, tbh. Maybe it
+would be better to roll it into vm_flags and save 8 bytes? (not that I
+want to do those mm changes in this patch set, of course...).
+vm_area_struct is otherwise nicely tightly packed.
+
+tl;dr, seems fine, and detached would be best to get rid of, if
+possible (but that's a completely separate thing)
+
+BEFORE
+=3D=3D=3D=3D=3D=3D
+struct vm_area_struct {
+        union {
+                struct {
+                        long unsigned int vm_start;      /*     0     8 */
+                        long unsigned int vm_end;        /*     8     8 */
+                };                                       /*     0    16 */
+                struct callback_head vm_rcu;             /*     0    16 */
+        } __attribute__((__aligned__(8)));               /*     0    16 */
+        struct mm_struct *         vm_mm;                /*    16     8 */
+        pgprot_t                   vm_page_prot;         /*    24     8 */
+        union {
+                const vm_flags_t   vm_flags;             /*    32     8 */
+                vm_flags_t         __vm_flags;           /*    32     8 */
+        };                                               /*    32     8 */
+        bool                       detached;             /*    40     1 */
+
+        /* XXX 3 bytes hole, try to pack */
+
+        int                        vm_lock_seq;          /*    44     4 */
+        struct vma_lock *          vm_lock;              /*    48     8 */
+        struct {
+                struct rb_node     rb;                   /*    56    24 */
+                /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago ---=
+ */
+                long unsigned int  rb_subtree_last;      /*    80     8 */
+        }                                                /*    56    32 */
+        struct list_head           anon_vma_chain;       /*    88    16 */
+        struct anon_vma *          anon_vma;             /*   104     8 */
+        const struct vm_operations_struct  * vm_ops;     /*   112     8 */
+        long unsigned int          vm_pgoff;             /*   120     8 */
+        /* --- cacheline 2 boundary (128 bytes) --- */
+        struct file *              vm_file;              /*   128     8 */
+        void *                     vm_private_data;      /*   136     8 */
+        atomic_long_t              swap_readahead_info;  /*   144     8 */
+        struct mempolicy *         vm_policy;            /*   152     8 */
+        struct vma_numab_state *   numab_state;          /*   160     8 */
+        struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   168     8 */
+
+        /* size: 176, cachelines: 3, members: 18 */
+        /* sum members: 173, holes: 1, sum holes: 3 */
+        /* forced alignments: 2 */
+        /* last cacheline: 48 bytes */
+} __attribute__((__aligned__(8)));
+
+AFTER
+=3D=3D=3D=3D=3D
+struct vm_area_struct {
+        union {
+                struct {
+                        long unsigned int vm_start;      /*     0     8 */
+                        long unsigned int vm_end;        /*     8     8 */
+                };                                       /*     0    16 */
+                struct callback_head vm_rcu;             /*     0    16 */
+        } __attribute__((__aligned__(8)));               /*     0    16 */
+        struct mm_struct *         vm_mm;                /*    16     8 */
+        pgprot_t                   vm_page_prot;         /*    24     8 */
+        union {
+                const vm_flags_t   vm_flags;             /*    32     8 */
+                vm_flags_t         __vm_flags;           /*    32     8 */
+        };                                               /*    32     8 */
+        bool                       detached;             /*    40     1 */
+
+        /* XXX 7 bytes hole, try to pack */
+
+        long int                   vm_lock_seq;          /*    48     8 */
+        struct vma_lock *          vm_lock;              /*    56     8 */
+        /* --- cacheline 1 boundary (64 bytes) --- */
+        struct {
+                struct rb_node     rb;                   /*    64    24 */
+                long unsigned int  rb_subtree_last;      /*    88     8 */
+        }                                                /*    64    32 */
+        struct list_head           anon_vma_chain;       /*    96    16 */
+        struct anon_vma *          anon_vma;             /*   112     8 */
+        const struct vm_operations_struct  * vm_ops;     /*   120     8 */
+        /* --- cacheline 2 boundary (128 bytes) --- */
+        long unsigned int          vm_pgoff;             /*   128     8 */
+        struct file *              vm_file;              /*   136     8 */
+        void *                     vm_private_data;      /*   144     8 */
+        atomic_long_t              swap_readahead_info;  /*   152     8 */
+        struct mempolicy *         vm_policy;            /*   160     8 */
+        struct vma_numab_state *   numab_state;          /*   168     8 */
+        struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     8 */
+
+        /* size: 184, cachelines: 3, members: 18 */
+        /* sum members: 177, holes: 1, sum holes: 7 */
+        /* forced alignments: 2 */
+        /* last cacheline: 56 bytes */
+} __attribute__((__aligned__(8)));
+
+
+> > >
+> > > I didn't use __u64 outright to keep 32-bit architectures unaffected, =
+but
+> > > if it seems important enough, I have nothing against using __u64.
+> > >
+> > > Suggested-by: Jann Horn <jannh@google.com>
+> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> >
+> > Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+>
