@@ -1,252 +1,200 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6AD18858C
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Oct 2024 07:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5377D15445B;
+	Fri, 18 Oct 2024 08:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729237050; cv=none; b=eXchwjXAmwb+maIpQR73zF5ZxFr+syg9U3HFW4qtosuwH/SsMajYPYtrCe9FdYUMxucqG1RV8JD79OBh+DBqUvHC/VA3gmNd+VXk2zy+NWf5I11nyNB2Mt5I8hS7gmVD4klXEKJX/KpjgI+H3+n6kqiBhKCac4ve7GaQyvdjHmo=
+	t=1729239972; cv=none; b=adlYNHv8js4EliAVqthS9HXIrYBRgp5yf8ItV83tarIz16fvK7o12FG85pDAQrZ6rqeZUKrKhLnAZZXtuFEFvQ7YXoGBKXILxy6HUZHJpe4eYSgwX0GqHRGESBG19HWxUfEY0YYgPuc65JmjbFS5VXomLZonnWc22Ig2hC6oTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729237050; c=relaxed/simple;
-	bh=3j32HDsoXxcNnfMxlhAz+OPZcnUlVBMR8ZevjD4mCy0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lO0aWzBv347ruFW7wrcCdbGoqMNU+Rhyx0tc3X7DlObuZNU5uUW7zMQVpdRE7VVYtLISVZyh1J4oU7BXJWdbb2VHrtuFGVvSobiPw4q/uoGXyC9ET2RvGMTrPE6v13LrNLDfGI/rJ+yeP9j+s4gokOKdHd2Lfu4qXgJ8I+nellI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a3c3ecaaabso18733545ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Oct 2024 00:37:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729237048; x=1729841848;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PceIiyZTW4DaHDkzJQNil/nz6nGZZ3KEslMKSIiwl3c=;
-        b=V65JQQp354x3CJNbqnCFjES4lyzFJ97nTTi87Gv8E1QyKFhdl5NVMjr+X7sGV7UX5D
-         k4v1hHr+lwhRJAGOcDPCRRJwWQM2wnf7ZdtFUJkWqA0OwAkbadNh6tjLYAPEYcQoAFS3
-         0Rr6/miz6OXA+ydTihjhaFH7dTHMnh99mMV8HBvHsnbkmr2cRnlv3vXOG8OgARDY7tuq
-         I1dAOX90MOnhhJyqy7cqx/hv1ok/iX2bMWeEsixE+0bzXenDhpd/5/TNzuNpjurKCj7Z
-         YbQ258UAqvYInNshlL2IESFnQVAFlFzcCmGVKV1FWnoii/bUyO4sk0TlfFGGXimYU/hc
-         jq6w==
-X-Forwarded-Encrypted: i=1; AJvYcCV4ksuJD4vSPmmRm9XaPDbHoeJmvBPUmpVw06AgtidM13F67V7RvLfa9D0dGxEHirXQwBVsdKmz8Rg0Pm3Z3m4+azY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiIHCMqkY1Le9SKBkiTL3x8BJ9615I9IvPCi8GYVxLx06Uy31h
-	Ow+Woe62+v/KhtbXEpoL8PEazPNG57M8we/I+Dmt3oOeiMHuB1h0TzISzgB1jNt/TyHtEgFMCd2
-	6ZGMqFlC1X2RhB88kguMC2y7IEfp3uzr+gipVDaEphoAkpQNb+b0qfgQ=
-X-Google-Smtp-Source: AGHT+IFQO01hq61sLP2nhUaFpL/LYiVoNqV2CfPCR7g/qxrX9KLvjXdOr8uyseCIEmcRMdJe64k49pIWTEPgSVLDVxMIl68U+l7H
+	s=arc-20240116; t=1729239972; c=relaxed/simple;
+	bh=9r43XS4+hO3CCCvk2gQSw9q1OhEUnIT0UTONLiSknSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZzxIGqj4hngo3UxFyMT7qihs2mZDfdwwUl+mhPFYmzbL7NwHKRF3jAW3HzfYFf50aWErv5kwxzdPAWLhm7723lTqw7UsE4QJK/OsYWYBqAxuGFIUprQRdNeOj3rpBYRf9pDyLAXdsVDcJF2GZGzz7d2UyZHIy5ptVoZS34zqOYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ote0cm8h; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ote0cm8h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gJboHb/BMbPaOUcsvW06gXD2GtuhaNwdjAM91CMzA8I=; b=Ote0cm8hlN5HfkRMzMjzlIp4r9
+	Gc9nZqHlik7uUgyLRW0BRJJW/eDOeYEbXgpr2jRwtpdaJ1lJmK8R/dhFAGkPUoqeSl8oCQPy9JczE
+	WUOl1SXPaMKC3ZNRLA+D0HJ4iMV/qPPItcBKarrRAXvaIIrDdKwC1M3VOhhE+rFPF4LcNMJpEduWn
+	43GY9EpcNvxhkcijhRjsGdMyicVLB8dmoJ5Om5p+UaOerCWFdH2A7nVLjKmXpOiCce4Qq8kN+cQdO
+	hjMXX7et8C+0oPj0nAeFExog5/AqmxKRDbgN/NZdwauacFjSG6VWWlLilw9ojFXieqEALZDnGIZJW
+	ZRdbdZ0g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t1iJB-0000000Civ3-1t6G;
+	Fri, 18 Oct 2024 08:26:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 823773005AF; Fri, 18 Oct 2024 10:26:05 +0200 (CEST)
+Date: Fri, 18 Oct 2024 10:26:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, mingo@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+	paulmck@kernel.org
+Subject: Re: [PATCH v2 tip/perf/core 1/2] uprobes: allow put_uprobe() from
+ non-sleepable softirq context
+Message-ID: <20241018082605.GD17263@noisy.programming.kicks-ass.net>
+References: <20241008002556.2332835-1-andrii@kernel.org>
+ <20241008002556.2332835-2-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c8e:b0:39f:5efe:ae73 with SMTP id
- e9e14a558f8ab-3a3f40500a4mr16847475ab.5.1729237047997; Fri, 18 Oct 2024
- 00:37:27 -0700 (PDT)
-Date: Fri, 18 Oct 2024 00:37:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67121037.050a0220.10f4f4.000f.GAE@google.com>
-Subject: [syzbot] [trace?] [bpf?] KASAN: slab-use-after-free Read in
- bpf_trace_run2 (2)
-From: syzbot <syzbot+b390c8062d8387b6272a@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241008002556.2332835-2-andrii@kernel.org>
 
-Hello,
+On Mon, Oct 07, 2024 at 05:25:55PM -0700, Andrii Nakryiko wrote:
+> Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), which
+> makes it unsuitable to be called from more restricted context like softirq.
 
-syzbot found the following issue on:
+This is delayed_uprobe_lock, right?
 
-HEAD commit:    15e7d45e786a Add linux-next specific files for 20241016
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b01830580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c36416f1c54640c0
-dashboard link: https://syzkaller.appspot.com/bug?extid=b390c8062d8387b6272a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=153ef887980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cf2ad43c81cc/disk-15e7d45e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c85347a66a1c/vmlinux-15e7d45e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/648cf8e59c13/bzImage-15e7d45e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b390c8062d8387b6272a@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in __bpf_trace_run kernel/trace/bpf_trace.c:2304 [inline]
-BUG: KASAN: slab-use-after-free in bpf_trace_run2+0xfa/0x540 kernel/trace/bpf_trace.c:2359
-Read of size 8 at addr ffff88805faaeb18 by task syz-executor/5664
-
-CPU: 0 UID: 0 PID: 5664 Comm: syz-executor Not tainted 6.12.0-rc3-next-20241016-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- __bpf_trace_run kernel/trace/bpf_trace.c:2304 [inline]
- bpf_trace_run2+0xfa/0x540 kernel/trace/bpf_trace.c:2359
- __bpf_trace_sys_enter+0x38/0x60 include/trace/events/syscalls.h:18
- __traceiter_sys_enter+0x2b/0x50 include/trace/events/syscalls.h:18
- trace_sys_enter+0xd9/0x150 include/trace/events/syscalls.h:18
- syscall_trace_enter+0xf8/0x150 kernel/entry/common.c:61
- syscall_enter_from_user_mode_work include/linux/entry-common.h:168 [inline]
- syscall_enter_from_user_mode include/linux/entry-common.h:198 [inline]
- do_syscall_64+0xcc/0x230 arch/x86/entry/common.c:79
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f83bb719959
-Code: 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 0f 1f 40 00 90 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 c7 c0 0f 00 00 00 0f 05 <0f> 1f 80 00 00 00 00 48 81 ec 48 01 00 00 49 89 d0 64 48 8b 04 25
-RSP: 002b:00007ffe2c16e340 EFLAGS: 00000202 ORIG_RAX: 000000000000000f
-RAX: ffffffffffffffda RBX: 0000000000001623 RCX: 00007f83bb719959
-RDX: 00007ffe2c16e340 RSI: 00007ffe2c16e470 RDI: 0000000000000011
-RBP: 00007ffe2c16e8ec R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffe2c16e970
-R13: 00007ffe2c16e978 R14: 0000000000000009 R15: 0000000000000000
- </TASK>
-
-Allocated by task 5681:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x243/0x390 mm/slub.c:4304
- kmalloc_noprof include/linux/slab.h:901 [inline]
- kzalloc_noprof include/linux/slab.h:1037 [inline]
- bpf_raw_tp_link_attach+0x2a0/0x6e0 kernel/bpf/syscall.c:3829
- bpf_raw_tracepoint_open+0x177/0x1f0 kernel/bpf/syscall.c:3876
- __sys_bpf+0x3c0/0x810 kernel/bpf/syscall.c:5691
- __do_sys_bpf kernel/bpf/syscall.c:5756 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5754 [inline]
- __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5754
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 24:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:582
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2329 [inline]
- slab_free mm/slub.c:4588 [inline]
- kfree+0x1a0/0x460 mm/slub.c:4736
- rcu_do_batch kernel/rcu/tree.c:2567 [inline]
- rcu_core+0xaaa/0x17a0 kernel/rcu/tree.c:2823
- handle_softirqs+0x2c5/0x980 kernel/softirq.c:554
- run_ksoftirqd+0xca/0x130 kernel/softirq.c:921
- smpboot_thread_fn+0x544/0xa30 kernel/smpboot.c:164
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Last potentially related work creation:
- kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
- __kasan_record_aux_stack+0xac/0xc0 mm/kasan/generic.c:544
- __call_rcu_common kernel/rcu/tree.c:3086 [inline]
- call_rcu+0x167/0xa70 kernel/rcu/tree.c:3190
- bpf_link_put_direct kernel/bpf/syscall.c:3045 [inline]
- bpf_link_release+0x78/0x90 kernel/bpf/syscall.c:3052
- __fput+0x23c/0xa50 fs/file_table.c:434
- task_work_run+0x24f/0x310 kernel/task_work.c:239
- get_signal+0x15e8/0x1740 kernel/signal.c:2690
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0xc9/0x370 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88805faaeb00
- which belongs to the cache kmalloc-128 of size 128
-The buggy address is located 24 bytes inside of
- freed 128-byte region [ffff88805faaeb00, ffff88805faaeb80)
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5faae
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801ac41a00 ffffea0000bc2e40 dead000000000002
-raw: 0000000000000000 0000000000100010 00000001f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5361, tgid 5361 (syz-executor), ts 814297773699, free_ts 814275036984
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1537
- prep_new_page mm/page_alloc.c:1545 [inline]
- get_page_from_freelist+0x3123/0x3270 mm/page_alloc.c:3493
- __alloc_pages_noprof+0x292/0x710 mm/page_alloc.c:4769
- alloc_pages_mpol_noprof+0x3e8/0x680 mm/mempolicy.c:2265
- alloc_slab_page+0x6a/0x120 mm/slub.c:2399
- allocate_slab+0x5a/0x2f0 mm/slub.c:2565
- new_slab mm/slub.c:2618 [inline]
- ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3805
- __slab_alloc+0x58/0xa0 mm/slub.c:3895
- __slab_alloc_node mm/slub.c:3970 [inline]
- slab_alloc_node mm/slub.c:4131 [inline]
- __do_kmalloc_node mm/slub.c:4272 [inline]
- __kmalloc_node_track_caller_noprof+0x2e9/0x4c0 mm/slub.c:4292
- kmemdup_noprof+0x2a/0x60 mm/util.c:135
- rds_tcp_init_net+0x66/0x320 net/rds/tcp.c:557
- ops_init+0x31e/0x590 net/core/net_namespace.c:139
- setup_net+0x287/0x9e0 net/core/net_namespace.c:363
- copy_net_ns+0x33f/0x570 net/core/net_namespace.c:501
- create_new_namespaces+0x425/0x7b0 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0x124/0x180 kernel/nsproxy.c:228
-page last free pid 9 tgid 9 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1108 [inline]
- free_unref_page+0xcfb/0xf20 mm/page_alloc.c:2674
- vfree+0x186/0x2e0 mm/vmalloc.c:3377
- delayed_vfree_work+0x56/0x80 mm/vmalloc.c:3298
- process_one_work kernel/workqueue.c:3229 [inline]
- process_scheduled_works+0xa63/0x1850 kernel/workqueue.c:3310
- worker_thread+0x870/0xd30 kernel/workqueue.c:3391
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Memory state around the buggy address:
- ffff88805faaea00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88805faaea80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88805faaeb00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff88805faaeb80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88805faaec00: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
+So can't we do something like so instead? 
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/events/uprobes.c | 40 +++++++++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 17 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 2a0059464383..d17a9046de35 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -83,9 +83,11 @@ struct delayed_uprobe {
+ 	struct list_head list;
+ 	struct uprobe *uprobe;
+ 	struct mm_struct *mm;
++	struct rcu_head rcu;
+ };
+ 
+-static DEFINE_MUTEX(delayed_uprobe_lock);
++/* XXX global state; use per mm list instead ? */
++static DEFINE_SPINLOCK(delayed_uprobe_lock);
+ static LIST_HEAD(delayed_uprobe_list);
+ 
+ /*
+@@ -289,9 +291,11 @@ delayed_uprobe_check(struct uprobe *uprobe, struct mm_struct *mm)
+ {
+ 	struct delayed_uprobe *du;
+ 
+-	list_for_each_entry(du, &delayed_uprobe_list, list)
++	guard(rcu)();
++	list_for_each_entry_rcu(du, &delayed_uprobe_list, list) {
+ 		if (du->uprobe == uprobe && du->mm == mm)
+ 			return du;
++	}
+ 	return NULL;
+ }
+ 
+@@ -308,7 +312,8 @@ static int delayed_uprobe_add(struct uprobe *uprobe, struct mm_struct *mm)
+ 
+ 	du->uprobe = uprobe;
+ 	du->mm = mm;
+-	list_add(&du->list, &delayed_uprobe_list);
++	scoped_guard(spinlock, &delayed_uprobe_lock)
++		list_add_rcu(&du->list, &delayed_uprobe_list);
+ 	return 0;
+ }
+ 
+@@ -316,19 +321,21 @@ static void delayed_uprobe_delete(struct delayed_uprobe *du)
+ {
+ 	if (WARN_ON(!du))
+ 		return;
+-	list_del(&du->list);
+-	kfree(du);
++	scoped_guard(spinlock, &delayed_uprobe_lock)
++		list_del(&du->list);
++	kfree_rcu(du, rcu);
+ }
+ 
+ static void delayed_uprobe_remove(struct uprobe *uprobe, struct mm_struct *mm)
+ {
+-	struct list_head *pos, *q;
+ 	struct delayed_uprobe *du;
++	struct list_head *pos;
+ 
+ 	if (!uprobe && !mm)
+ 		return;
+ 
+-	list_for_each_safe(pos, q, &delayed_uprobe_list) {
++	guard(rcu)();
++	list_for_each_rcu(pos, &delayed_uprobe_list) {
+ 		du = list_entry(pos, struct delayed_uprobe, list);
+ 
+ 		if (uprobe && du->uprobe != uprobe)
+@@ -434,12 +441,10 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+ 			return ret;
+ 	}
+ 
+-	mutex_lock(&delayed_uprobe_lock);
+ 	if (d > 0)
+ 		ret = delayed_uprobe_add(uprobe, mm);
+ 	else
+ 		delayed_uprobe_remove(uprobe, mm);
+-	mutex_unlock(&delayed_uprobe_lock);
+ 
+ 	return ret;
+ }
+@@ -645,9 +650,7 @@ static void put_uprobe(struct uprobe *uprobe)
+ 	 * gets called, we don't get a chance to remove uprobe from
+ 	 * delayed_uprobe_list from remove_breakpoint(). Do it here.
+ 	 */
+-	mutex_lock(&delayed_uprobe_lock);
+ 	delayed_uprobe_remove(uprobe, NULL);
+-	mutex_unlock(&delayed_uprobe_lock);
+ 
+ 	call_rcu_tasks_trace(&uprobe->rcu, uprobe_free_rcu);
+ }
+@@ -1350,13 +1353,18 @@ static void build_probe_list(struct inode *inode,
+ /* @vma contains reference counter, not the probed instruction. */
+ static int delayed_ref_ctr_inc(struct vm_area_struct *vma)
+ {
+-	struct list_head *pos, *q;
+ 	struct delayed_uprobe *du;
++	struct list_head *pos;
+ 	unsigned long vaddr;
+ 	int ret = 0, err = 0;
+ 
+-	mutex_lock(&delayed_uprobe_lock);
+-	list_for_each_safe(pos, q, &delayed_uprobe_list) {
++	/*
++	 * delayed_uprobe_list is added to when the ref_ctr is not mapped
++	 * and is consulted (this function) when adding maps. And since
++	 * mmap_lock serializes these, it is not possible miss an entry.
++	 */
++	guard(rcu)();
++	list_for_each_rcu(pos, &delayed_uprobe_list) {
+ 		du = list_entry(pos, struct delayed_uprobe, list);
+ 
+ 		if (du->mm != vma->vm_mm ||
+@@ -1370,9 +1378,9 @@ static int delayed_ref_ctr_inc(struct vm_area_struct *vma)
+ 			if (!err)
+ 				err = ret;
+ 		}
++
+ 		delayed_uprobe_delete(du);
+ 	}
+-	mutex_unlock(&delayed_uprobe_lock);
+ 	return err;
+ }
+ 
+@@ -1596,9 +1604,7 @@ void uprobe_clear_state(struct mm_struct *mm)
+ {
+ 	struct xol_area *area = mm->uprobes_state.xol_area;
+ 
+-	mutex_lock(&delayed_uprobe_lock);
+ 	delayed_uprobe_remove(NULL, mm);
+-	mutex_unlock(&delayed_uprobe_lock);
+ 
+ 	if (!area)
+ 		return;
