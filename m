@@ -1,35 +1,55 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074E117837F;
-	Fri, 18 Oct 2024 05:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4382A2BAEF;
+	Fri, 18 Oct 2024 07:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729229265; cv=none; b=b85HQIP5F7HiIY+1BQ5zUljpkSUsZx45w8etqZr5rmc10b3nI3VZcwUYZ5G5CApAqHBlCb/5GE2PIEkAMcaQCoujFYzCxUtWG+swZy9kR+AyjLCdq9dlbr0nVVQEvMLSVOpI8uqHnjI+1tmiAV2YIaqqzQnvGyWGwOLlq9k0ggw=
+	t=1729236999; cv=none; b=GcgUNRiAUpKciI+zdwWjtD/5Eh3Wy4lkG+vatl2JuvKwdr2LCe+/bRAF/+PpCYA3C+K2auaj5Q6bKDAIIb6eCv8iiR409su8YEaSjd2EQ7zDwlG0YV02NPLxWOIIyPYtAwlIr6yEG7bFEQcRb0BIAVNLT9KijUYGtJ2PuF2zmIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729229265; c=relaxed/simple;
-	bh=zuvQWdEGQt2takvATObbj2UEmAahbnLWjYKE3v8ZmAQ=;
+	s=arc-20240116; t=1729236999; c=relaxed/simple;
+	bh=3IfLJ4pjse76+ZyfYwtjQuaoG74v06OITHVdsWiYv/Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TYBjZ+rOF0xMR+hCEUEu7SRVaWHv2x6puQsrfF6kgXUSxvhaD3oPSWxAIACcfj4EUYKBEtsYlMPSifeodyWF6kuOzhSpxD4likL56m9DK7xELqnEpswFTrso/mD+wWE3KFeYeW7Gm3VgX/bmTEioQoFqB2cmo9lTzuvSvaSDFe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 98A6A227A8E; Fri, 18 Oct 2024 07:27:38 +0200 (CEST)
-Date: Fri, 18 Oct 2024 07:27:38 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8snB3HDLgnw3nYklKCQr60ZhSkfwki4Sn7WhkFD7O2zpzpIweiwyUrdlV1mPW1rgY3lnJQrkbrsEbWP5a/els7z7J48sdkBrL5Q9zHQ9694UPNZlLC5yjswPqWC/5JsCQHnRLD1ILhhhbsxcL+GC/4x+MBC6KBoN+omKOtzpLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Oj2cg8dJ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Oj2cg8dJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=srtrSatCDAehrfmBU/pr314pv7W9OyFy0E8IHnhv/R4=; b=Oj2cg8dJ5LL+pWCTiTRREEMOK9
+	8+T5wYe8lX7IT7R3F1AHOiyyPn5vsKvsowyvGr0KN7o2yL8+m2IYO9iiLZ2TURTQ+PQEujL3iJjxJ
+	lQBkD/IgY2/P+D/92DNxvnMBz+Uvh5QsECKBDQLAwgwzJAswcC+moAqGF2aAm0Ie79TXTLoJENL+J
+	77ham7tIpTbFTSQTF2vpelha73SaCavdxzGkz6X8VZi9xcNWehz9kTNZlxNCyyIpMKK2zQ9ib87c1
+	SABASl8Xr7B22vLcYaznw7ytooCj5Q4L4HPqjOtCeKpdgkEB9UT6xoFyOSulhF3LcZakuroxfQRWg
+	9UuiGjFw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t1hXA-0000000Cc54-2BFa;
+	Fri, 18 Oct 2024 07:36:29 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8097B3005AF; Fri, 18 Oct 2024 09:36:28 +0200 (CEST)
+Date: Fri, 18 Oct 2024 09:36:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 2/3] dma-mapping: Use trace_dma_alloc for dma_alloc*
- instead of using trace_dma_map
-Message-ID: <20241018052738.GA20045@lst.de>
-References: <20241017181354.2834674-1-sean.anderson@linux.dev> <20241017181354.2834674-3-sean.anderson@linux.dev>
+	Liao Chang <liaochang1@huawei.com>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Kernel Team <kernel-team@meta.com>
+Subject: Re: The state of uprobes work and logistics
+Message-ID: <20241018073628.GC17263@noisy.programming.kicks-ass.net>
+References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,29 +58,21 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241017181354.2834674-3-sean.anderson@linux.dev>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
 
-On Thu, Oct 17, 2024 at 02:13:53PM -0400, Sean Anderson wrote:
-> +DECLARE_EVENT_CLASS(_dma_alloc,
->  	TP_PROTO(struct device *dev, void *virt_addr, dma_addr_t dma_addr,
->  		 size_t size, enum dma_data_direction dir, gfp_t flags,
->  		 unsigned long attrs),
-> @@ -149,7 +149,60 @@ TRACE_EVENT(dma_alloc,
->  		decode_dma_attrs(__entry->attrs))
->  );
->  
-> -TRACE_EVENT(dma_free,
-> +DEFINE_EVENT(_dma_alloc, dma_alloc,
-> +	TP_PROTO(struct device *dev, void *virt_addr, dma_addr_t dma_addr,
-> +		 size_t size, enum dma_data_direction dir, gfp_t flags,
-> +		 unsigned long attrs),
-> +	TP_ARGS(dev, virt_addr, dma_addr, size, dir, flags, attrs));
-> +
-> +DEFINE_EVENT(_dma_alloc, dma_alloc_pages,
+On Wed, Oct 16, 2024 at 12:35:21PM -0700, Andrii Nakryiko wrote:
 
-The scheme we used in XFS (fs/xfs/xfs_trace.h) for the event classes is
-to give the class a _class postdix, and use macros to avoid the repeated
-DEFINE_EVENT boilerplate.  Any chance you could rewrite this to use
-a similar scheme?
+>   - Jiri Olsa's uprobe "session" support ([5]). This is less
+> performance focused, but important functionality by itself. But I'm
+> calling this out here because the first two patches are pure uprobe
+> internal changes, and I believe they should go into tip/perf/core to
+> avoid conflicts with the rest of pending uprobe changes.
+> 
+> Peter, do you mind applying those two and creating a stable tag for
+> bpf-next to pull? We'll apply the rest of Jiri's series to
+> bpf-next/master.
 
+>   [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.org/
+
+I don't actually appear to have these.. Jiri, can you bounce them my
+way or resend?
