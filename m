@@ -1,77 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E813E155A2F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Oct 2024 16:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1722022D6;
+	Fri, 18 Oct 2024 17:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729269886; cv=none; b=hzEiygH3Pmj8sOQ7dsVrxKSyLTzSBEOtKAxsFLKM0zdNwQdkQkzXo7lXrikf9hOyTH2UJrlemd9HfEroVNFa2VoA+qRPATrghz+s5yQKy+Tje0ZDpQfOOT4ksgVtgKsUu6eDIJQD8xU7zeAbauYmy/sWN7xg3CjWWIHA2wEhWig=
+	t=1729273034; cv=none; b=cCkll7YE8oMAb78tDVLxIbrxaQVXa0xfrbNFBqGROp8zUZawFKWWsKxNFNN9BOXYw7BqLYHMaqbOelPJP676Z/kOcnJvnaYiXUojCdhCHGSHwOVF0bEbTfHZomfUWUTLf+1y6o5M0VPzIk4rub1ZVqxbZRvr027xvjvxVQk9QR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729269886; c=relaxed/simple;
-	bh=G0cqPEahkysujxB/PBn4LPwSyVzrV66i/fETGksNg1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pzGH5YOpD39WlN1MTn35pdFd3XuW7DYX8CMdOP+xVjZ2/f1SEm57Qbse1HLG4Pfkq3cgxgExcqtEbiRt7jPdqjSXBmvD49wyRkme1SNVFCzL44pv4DKzwbIecM+iNA2y4EAvN9EV257UF9hVpmC6dPdL//pDMOYeY7ymaZctWVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24608C4CEC3;
-	Fri, 18 Oct 2024 16:44:46 +0000 (UTC)
-Date: Fri, 18 Oct 2024 12:45:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: Adding ftrace support for coldfire ?
-Message-ID: <20241018124511.70d29198@gandalf.local.home>
-In-Reply-To: <12dbe761-d2e7-4289-88b1-4b7d548b4e8c@yoseli.org>
-References: <12dbe761-d2e7-4289-88b1-4b7d548b4e8c@yoseli.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729273034; c=relaxed/simple;
+	bh=OHa/5zWi0vXq4rcvFOVZBvchbuev/e5QhlYi7bktsvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=doOHhNg73qd7qFPoYg4/fM2+XOarMA9sE763yU5F/eQfaDVflVZPthjQAEX67y8x63hbj333ExnKSXqVxbxLLzZvXpqDCC5hIYGtoC9d9S3vjksHW5xrMpGxChYnu9rKG1sXP341ltculagEYR3aN+9b/lNZaKh2I7gyh8wHMaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=govUo/QW; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="govUo/QW"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49I9m5SF015438;
+	Fri, 18 Oct 2024 17:36:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=oL9IMEzVW/uiWNE33
+	1Qsj0y4/iuYLMGRaqR2BGXECGI=; b=govUo/QWtIxF90G2UJGKTLmlERhRafMVx
+	IfjDkyVwkCQ1smfyqpYHgah1XY0mAbzqeQodBGwMtMqZCRoaQh2tbsjzbStVt5Mr
+	lvdNicvd4QRrX7dbWf/nJVywpnhRpeqlUUCDF8VP9layYK3fgK6q4gxHGscMVC41
+	SS6fUx3kANk1SPuBFLoM5orI2QSIUXRRX9b4MvXnNtf/GwbHqAtBGLdaK5ZE6/d+
+	bJABKd3I7wLVjAPvpn2/S5go1kt+z7DlhUBtyvZeycpqxmM95s/eAicoONpcTC4H
+	yB0Mw0KrhO/qt3QgdBXfA6E0y1m4pZ0Bp/kN1xBgAlZsXIV2o6y5w==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42aqgracf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Oct 2024 17:36:47 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49IHakP3009380;
+	Fri, 18 Oct 2024 17:36:46 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42aqgracf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Oct 2024 17:36:46 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49IH7CmD006674;
+	Fri, 18 Oct 2024 17:36:45 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4283ese5ru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 18 Oct 2024 17:36:45 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49IHaguB32244354
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 18 Oct 2024 17:36:42 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3881420043;
+	Fri, 18 Oct 2024 17:36:42 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2198B20040;
+	Fri, 18 Oct 2024 17:36:38 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.99.188])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 18 Oct 2024 17:36:37 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, "Naveen N. Rao" <naveen@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vishal Chourasia <vishalc@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Subject: [PATCH v6 01/17] powerpc/trace: Account for -fpatchable-function-entry support by toolchain
+Date: Fri, 18 Oct 2024 23:06:16 +0530
+Message-ID: <20241018173632.277333-2-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20241018173632.277333-1-hbathini@linux.ibm.com>
+References: <20241018173632.277333-1-hbathini@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qreVLQ2fwO0r0YyIsFvzm78eaidVgshv
+X-Proofpoint-GUID: 3IpwSKqhGPkW8erZ7fEpG8dlsULJrk7V
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 adultscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2409260000 definitions=main-2410180111
 
-On Fri, 18 Oct 2024 16:37:39 +0200
-Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+From: Naveen N Rao <naveen@kernel.org>
 
-> Hi there !
-> 
-> I always have been a fan of ftrace, in particular when it comes to 
-> latency issues debugging.
-> 
-> I would love to use it on my coldfire custom board (M54418 based).
-> I can see that it needs TRACE_IRQFLAGS_SUPPORT and STACKTRACE_SUPPORT, 
-> both are missing.
-> 
-> Is it not doable ? If it is, what is required ? Implementing the 
-> save_stack_trace() ? I suppose it is not enough :-) ?
-> 
-> Thanks in advance, as it would be a great helper !
-> 
+So far, we have relied on the fact that gcc supports both
+-mprofile-kernel, as well as -fpatchable-function-entry, and clang
+supports neither. Our Makefile only checks for CONFIG_MPROFILE_KERNEL to
+decide which files to build. Clang has a feature request out [*] to
+implement -fpatchable-function-entry, and is unlikely to support
+-mprofile-kernel.
 
-The TRACE_IRQFLAGS_SUPPORT requires the architecture to call
-trace_hardirqs_off() when interrupts are disabled and trace_hardirqs_on()
-when they are enabled. Now this is mostly done for you when you use the
-function local_irq_save() and local_irq_restore() and friends from C code.
+Update our Makefile checks so that we pick up the correct files to build
+once clang picks up support for -fpatchable-function-entry.
 
-But each architecture needs to add those calls in the assembly for when
-that happens, or even in C code where interrupts are being enabled or
-disabled by other functions than generic code.
+[*] https://github.com/llvm/llvm-project/issues/57031
 
-Now, x86 has been updated to basically enable interrupts almost immediately
-when coming back into the kernel from a system call. Also the irq_enter()
-and irq_exit() routines handle this for you too. Today x86 doesn't even call
-trace_hardirqs_on/off() anywhere, but still supports TRACE_IRQFLAGS. It may
-be possible that your architecture already supports TRACE_IRQFLAGS.
+Signed-off-by: Naveen N Rao <naveen@kernel.org>
+---
+ arch/powerpc/kernel/trace/Makefile | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Basically, it is a requirement to use lockdep properly. If you enable
-TRACE_IRQFLAGS_SUPPORT and enable lockdep, it will give you nasty warnings
-if the architecture isn't keeping the irqflags in sync with the tracer. 
-
-As for STACKTRACE_SUPPORT, you just need to implement save_stack_trace() or
-arch_stack_walk() (which would be needed for live kernel patching). See the
-code in kernel/stacktrace.c.
-
--- Steve
+diff --git a/arch/powerpc/kernel/trace/Makefile b/arch/powerpc/kernel/trace/Makefile
+index 125f4ca588b9..d6c3885453bd 100644
+--- a/arch/powerpc/kernel/trace/Makefile
++++ b/arch/powerpc/kernel/trace/Makefile
+@@ -9,12 +9,15 @@ CFLAGS_REMOVE_ftrace.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_ftrace_64_pg.o = $(CC_FLAGS_FTRACE)
+ endif
+ 
+-obj32-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o ftrace_entry.o
+-ifdef CONFIG_MPROFILE_KERNEL
+-obj64-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o ftrace_entry.o
++ifdef CONFIG_FUNCTION_TRACER
++obj32-y					+= ftrace.o ftrace_entry.o
++ifeq ($(CONFIG_MPROFILE_KERNEL)$(CONFIG_ARCH_USING_PATCHABLE_FUNCTION_ENTRY),)
++obj64-y					+= ftrace_64_pg.o ftrace_64_pg_entry.o
+ else
+-obj64-$(CONFIG_FUNCTION_TRACER)		+= ftrace_64_pg.o ftrace_64_pg_entry.o
++obj64-y					+= ftrace.o ftrace_entry.o
++endif
+ endif
++
+ obj-$(CONFIG_TRACING)			+= trace_clock.o
+ 
+ obj-$(CONFIG_PPC64)			+= $(obj64-y)
+-- 
+2.47.0
 
