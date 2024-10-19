@@ -1,68 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39252A59;
-	Sat, 19 Oct 2024 19:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C837647F53;
+	Sat, 19 Oct 2024 22:17:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729366195; cv=none; b=hRN6rL7fcCMbV03V+z4IUAJzeopariZaxyKmya9M9uPDk5oO4Oiuq6c5YkanrEinn6Ezh0JlJu78GEpGLTQho+nkm9piZb8fLe0TNfKpL14F3e2xb4sD6kv9kbO9f7p2O4Qyra2KhCiGjCcQIehgMQe55mK3x4nOFKiJObbRFWE=
+	t=1729376234; cv=none; b=bPYTtgHg5njHBvkLZ9vQ58eklhvocJ8JIQHGgn6oydzCXdXRulgZeNZr618MRBp/LO7QvBhjbwdfZSPb41yw+fz8z+wrLrb52U7witVQKwYR5acEmwe6fGTb+5xlhngOSJGpjqxhDB7TFxHFXZyEg9Yv1au9silV9JrUb7LjZCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729366195; c=relaxed/simple;
-	bh=e/bZ/6qu4+8ZIh7lBsxWSX2qAbUed7FU+h5KuxoPDuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kf2lyulUKcADe//mt/ReG7ZmohWLE/bg563RdP4G7cB6yeG+06ayjY7CWf7zZfSrKTxaM9vUhpRlm6ZZG2Xg723nReFx2dltVRqIpKbljGQgVw6t0u0P8lPOTlSGzC3JWUhlFkPtxFHhalZaM3DT0LR5QoZrM1cAz6bcaPrQzTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91AC1C4CEC5;
-	Sat, 19 Oct 2024 19:29:53 +0000 (UTC)
-Date: Sat, 19 Oct 2024 15:29:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ryan Roberts <ryan.roberts@arm.com>
-Subject: [PATCH] fgraph: Separate size of ret_stack from PAGE_SIZE
-Message-ID: <20241019152951.053f9646@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729376234; c=relaxed/simple;
+	bh=Z2c0wsfmuX1zi8SflpbS251BcU2hxlDOujSruYyu/d0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ep6vGmEM6thKxeHMYCkQ2ihUoH2L33cAIh50WSmS1QEWddxgoUWHv6ZZrgXDZ5SsGftxFkODdoWoFtFWsGMgEYtVa9Om/eN1TWdUcLVb9RFSFXdPL8KIfbkV0oQJgofC1KqWxOYiIMi+u5JbhI827l4eSyth8ohv0DZBvvNmIVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3/Gl4uf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3/Gl4uf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BF9C4CEC5;
+	Sat, 19 Oct 2024 22:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729376233;
+	bh=Z2c0wsfmuX1zi8SflpbS251BcU2hxlDOujSruYyu/d0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Y3/Gl4ufOW+DMjq3rv6lYuhhIdTKFTpnYyq9HW3K85Fpw/HAzL0vMrW4IM6WgA6ot
+	 bjEzE8mPv3G48TEzrc49STj8tErEueRnWJWErlpFGCRDNYXxf9im+wvXTmSV4zaKV0
+	 ldRIuiJMSPHK7+jcRgJoan6AukGaTfuRN0fLb0k4bEoOLO4bzzu30c0zr4xQe5rqsB
+	 ele2dWq5/Lat3gCmSxFXcXRfJdqOONJR5Y9PAtRblqYiPb3tzG5o6SkuYpbslQB3Wg
+	 ZrBARuLjQoY8sKdBblenF5FJQAR6rsrhvv/Ra8Vcs8mcf/tC+y4RqwTBTJVaeAg57/
+	 Qr4B5j9wt3E/A==
+Date: Sat, 19 Oct 2024 15:17:10 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v6 1/8] mm: vmalloc: group declarations depending on
+ CONFIG_MMU together
+Message-ID: <ZxQv5vUuaFBT6Kxd@bombadil.infradead.org>
+References: <20241016122424.1655560-1-rppt@kernel.org>
+ <20241016122424.1655560-2-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241016122424.1655560-2-rppt@kernel.org>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Oct 16, 2024 at 03:24:17PM +0300, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> There are a couple of declarations that depend on CONFIG_MMU in
+> include/linux/vmalloc.h spread all over the file.
+> 
+> Group them all together to improve code readability.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-The ret_stack (shadow stack used by function graph infrastructure) is
-currently defined as PAGE_SIZE. But some architectures which have 64K
-PAGE_SIZE, this is way overkill. Also there's an effort to allow the
-PAGE_SIZE to be defined at boot up.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Hard code it for now to 4096. In the future, this size may change and even
-be dependent on specific architectures.
-
-Link: https://lore.kernel.org/all/e5067bb8-0fcd-4739-9bca-0e872037d5a1@arm.com/
-
-Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/fgraph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index ee829d65f301..51e81b299a0d 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -153,7 +153,7 @@ enum {
-  * SHADOW_STACK_OFFSET:	The size in long words of the shadow stack
-  * SHADOW_STACK_MAX_OFFSET: The max offset of the stack for a new frame to be added
-  */
--#define SHADOW_STACK_SIZE	(PAGE_SIZE)
-+#define SHADOW_STACK_SIZE	(4096)
- #define SHADOW_STACK_OFFSET	(SHADOW_STACK_SIZE / sizeof(long))
- /* Leave on a buffer at the end */
- #define SHADOW_STACK_MAX_OFFSET				\
--- 
-2.45.2
-
+  Luis
