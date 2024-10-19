@@ -1,282 +1,307 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D9E204953;
-	Fri, 18 Oct 2024 20:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C5173;
+	Sat, 19 Oct 2024 00:09:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729284239; cv=none; b=BFr9k5ddRnk3hMuqC8MwpTY9iCmc5e3KrdZw5kbh3YMYnt7/TXp9fChbzgceHKaxM6Oj81PYPMoS1lfK20CGsrMRL68vk+jl+j6lYMWUIK2fG/liV4yXjUd7Y/ZZbZgCN4wze+QG1Qo3WkCBjOgUczDRGTI2rODhnYlwTxJOr8Q=
+	t=1729296548; cv=none; b=VgMTenedrRdbeznA5o4YzMuXFXBaa1M1uimdD/MZIVbFK1fovgkE07/C1EY2Nl37DHFmxbYKGRtPD1fi+ZwVfd2H/O84o/Q/wZdcebOIZ3jPZNongaSlHZmKGHhlPFyuFol+HhEQFYy8z+Ch2jyHZZ+99euc4nQZ8lr4V3saZP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729284239; c=relaxed/simple;
-	bh=pTG0eoCi2cwlEEnPjFZATQKK+Rr2HsrTjR6DuJXFZ58=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HqwxX5pUcjlR7i+3PQOdMaQJQ6i0lpix/+S+Uxr0U/92wQs3B6P5LOVUbtg6eOQH/KzHYHzDhfbGdFpZPIPo9+SqyeBkudCUk+sBRS+YEZiAn/Zajsq61kJnt1SSstU+XkCS3S4j19C8n+1eUdGP+4ig3u8mueTh5Kn8VyFtJn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wm/epFNd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729296548; c=relaxed/simple;
+	bh=jzUKTbSkd04sRQh3xPurQDxdL63C7Ml+w1QQqgW6N1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l4zKhYMKjiNYzpSvMYWqVUudXCGfCujhWPeEls2L8U5a4h0WEgb5Ki3Hy3eMd6N4jSCKEWNKOWODw9/AHNlwDumd4gkiC/G3Mgi/xNgk95xfqN7BJc0ktny9KDY6prsIzQJaJUO59CNABllWxQ6XpwiknvLJEbcUBXPkHMhYROQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYOCy4IZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wm/epFNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62444C4CEC3;
-	Fri, 18 Oct 2024 20:43:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYOCy4IZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D9A2C4CEC3;
+	Sat, 19 Oct 2024 00:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729284239;
-	bh=pTG0eoCi2cwlEEnPjFZATQKK+Rr2HsrTjR6DuJXFZ58=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wm/epFNdp8/hI7SQO+v6P5DXmbo0qJDGb/Ia5OhuIeIthknWkIprwpBObOa5aaKHy
-	 1cqgbAIHmgI4P5cCnFeoIRLEMwLotY0tEx5dV744VJF6nlg1RGDauAbK/0Mci2nwzA
-	 6IVya/y4AfTa9JQQ7Iqx4CQ9Bgq0WkcDZwoSai7bGDBSXOa8wr6sNsr6oYa/5ZVO7W
-	 ymIEz9xpNGr2j5ZVhD0jTbaLKfUigYfyF9kCeSiKXX072hDiKmHbCDpw1yHvqNdEuZ
-	 X/Kvyj4G3RTypLqVYTQFrCu0qY8jIDjSp3pnn4tlw8RdqJ9ozjyonYAI7dIo3Im+ao
-	 AuquiSRlnWXwg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv8 bpf-next 13/13] selftests/bpf: Add threads to consumer test
-Date: Fri, 18 Oct 2024 22:41:09 +0200
-Message-ID: <20241018204109.713820-14-jolsa@kernel.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241018204109.713820-1-jolsa@kernel.org>
-References: <20241018204109.713820-1-jolsa@kernel.org>
+	s=k20201202; t=1729296547;
+	bh=jzUKTbSkd04sRQh3xPurQDxdL63C7Ml+w1QQqgW6N1A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=oYOCy4IZxG3PVJzueGEjbsvi7U+2fwBd/z4MFq29Kyd7PBDvPzHnImWZUA1p48H/w
+	 7YWtxD8Y/uyEorZQXUE+LdVUpAcjG53TSidiHGFV1WtV6wJmpPYKOq1g8C60a1G4ar
+	 mov7Wo6g/8zIEMSTc0NG/P2Xy1NRWrmaH253+9d0K89XBm1uW+1LJrGpWBzlgce7m6
+	 /g8Yy4uASYe0WxFxqRl4G7INq1Sp8crj+qyN4H03spbkhFNiTq2fKGnfnCDQDIe0F0
+	 HWEtl9pQcQc7BS/xq4o8Gf8//APYIzvIjn1ZSgFwvZjaMDTImDsNVfcnVt+nLp7TeI
+	 +xqvcVQKit0Kw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1E2EDCE0995; Fri, 18 Oct 2024 17:09:07 -0700 (PDT)
+Date: Fri, 18 Oct 2024 17:09:07 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, mingo@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Subject: Re: [PATCH v2 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
+ lifetime (with timeout)
+Message-ID: <c728b2bf-f188-4602-9b1c-b05e3bdea324@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20241008002556.2332835-1-andrii@kernel.org>
+ <20241008002556.2332835-3-andrii@kernel.org>
+ <20241018101647.GA36494@noisy.programming.kicks-ass.net>
+ <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
 
-With recent uprobe fix [1] the sync time after unregistering uprobe is
-much longer and prolongs the consumer test which creates and destroys
-hundreds of uprobes.
+On Fri, Oct 18, 2024 at 11:22:09AM -0700, Andrii Nakryiko wrote:
+> On Fri, Oct 18, 2024 at 3:16 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, Oct 07, 2024 at 05:25:56PM -0700, Andrii Nakryiko wrote:
+> >
+> 
+> [...]
+> 
+> > > +
+> > > +             /* We lost the race, undo refcount bump (if it ever happened) */
+> > > +             if (uprobe)
+> > > +                     put_uprobe(uprobe);
+> > > +             /*
+> > > +              * Even if hprobe_consume() or another hprobe_expire() wins
+> > > +              * the state update race and unlocks SRCU from under us, we
+> > > +              * still have a guarantee that underyling uprobe won't be
+> > > +              * freed due to ongoing caller's SRCU lock region, so we can
+> > > +              * return it regardless. The caller then can attempt its own
+> > > +              * try_get_uprobe() to preserve the instance, if necessary.
+> > > +              * This is used in dup_utask().
+> > > +              */
+> > > +             return uprobe;
+> > > +     }
+> > > +     default:
+> > > +             WARN(1, "unknown hprobe state %d", hstate);
+> > > +             return NULL;
+> > > +     }
+> > > +}
+> >
+> > So... after a few readings I think I'm mostly okay with this. But I got
+> > annoyed by the whole HPROBE_STABLE with uprobe=NULL weirdness. Also,
+> > that data_race() usage is weird, what is that about?
+> 
+> People keep saying that evil KCSAN will come after me if I don't add
+> data_race() for values that can change under me, so I add it to make
+> it explicit that it's fine. But I can of course just drop data_race(),
+> as it has no bearing on correctness.
 
-This change adds 16 threads (which fits the test logic) and speeds up
-the test.
+Use data_race() if you know that the compiler cannot mess you up or when
+its messing you up is acceptable.  An example of the latter is code that
+gathers statistics or debug information, at least in some cases.
 
-Before the change:
+Something like READ_ONCE() or atomic_read() is better when the compiler
+can mess you up.
 
-  # perf stat --null ./test_progs -t uprobe_multi_test/consumers
-  #421/9   uprobe_multi_test/consumers:OK
-  #421     uprobe_multi_test:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+For more information:  https://lwn.net/Articles/793253/
+https://lwn.net/Articles/799218/
 
-   Performance counter stats for './test_progs -t uprobe_multi_test/consumers':
+							Thanx, Paul
 
-        28.818778973 seconds time elapsed
-
-         0.745518000 seconds user
-         0.919186000 seconds sys
-
-After the change:
-
-  # perf stat --null ./test_progs -t uprobe_multi_test/consumers 2>&1
-  #421/9   uprobe_multi_test/consumers:OK
-  #421     uprobe_multi_test:OK
-  Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
-
-   Performance counter stats for './test_progs -t uprobe_multi_test/consumers':
-
-         3.504790814 seconds time elapsed
-
-         0.012141000 seconds user
-         0.751760000 seconds sys
-
-[1] commit 87195a1ee332 ("uprobes: switch to RCU Tasks Trace flavor for better performance")
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../bpf/prog_tests/uprobe_multi_test.c        | 98 +++++++++++++++----
- 1 file changed, 80 insertions(+), 18 deletions(-)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-index e96b153a0f5d..cdb986871835 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-@@ -789,7 +789,7 @@ get_link(struct uprobe_multi_consumers *skel, int link)
- 	}
- }
- 
--static int uprobe_attach(struct uprobe_multi_consumers *skel, int idx)
-+static int uprobe_attach(struct uprobe_multi_consumers *skel, int idx, unsigned long offset)
- {
- 	struct bpf_program *prog = get_program(skel, idx);
- 	struct bpf_link **link = get_link(skel, idx);
-@@ -798,6 +798,9 @@ static int uprobe_attach(struct uprobe_multi_consumers *skel, int idx)
- 	if (!prog || !link)
- 		return -1;
- 
-+	opts.offsets = &offset;
-+	opts.cnt = 1;
-+
- 	/*
- 	 * bit/prog: 0 uprobe entry
- 	 * bit/prog: 1 uprobe return
-@@ -807,9 +810,7 @@ static int uprobe_attach(struct uprobe_multi_consumers *skel, int idx)
- 	opts.retprobe = idx == 1;
- 	opts.session  = idx == 2 || idx == 3;
- 
--	*link = bpf_program__attach_uprobe_multi(prog, 0, "/proc/self/exe",
--						"uprobe_consumer_test",
--						&opts);
-+	*link = bpf_program__attach_uprobe_multi(prog, 0, "/proc/self/exe", NULL, &opts);
- 	if (!ASSERT_OK_PTR(*link, "bpf_program__attach_uprobe_multi"))
- 		return -1;
- 	return 0;
-@@ -830,7 +831,8 @@ static bool test_bit(int bit, unsigned long val)
- 
- noinline int
- uprobe_consumer_test(struct uprobe_multi_consumers *skel,
--		     unsigned long before, unsigned long after)
-+		     unsigned long before, unsigned long after,
-+		     unsigned long offset)
- {
- 	int idx;
- 
-@@ -843,15 +845,43 @@ uprobe_consumer_test(struct uprobe_multi_consumers *skel,
- 	/* ... and attach all new programs in 'after' state */
- 	for (idx = 0; idx < 4; idx++) {
- 		if (!test_bit(idx, before) && test_bit(idx, after)) {
--			if (!ASSERT_OK(uprobe_attach(skel, idx), "uprobe_attach_after"))
-+			if (!ASSERT_OK(uprobe_attach(skel, idx, offset), "uprobe_attach_after"))
- 				return -1;
- 		}
- 	}
- 	return 0;
- }
- 
-+/*
-+ * We generate 16 consumer_testX functions that will have uprobe installed on
-+ * and will be called in separate threads. All function pointer are stored in
-+ * "consumers" section and each thread will pick one function based on index.
-+ */
-+
-+extern const void *__start_consumers;
-+
-+#define __CONSUMER_TEST(func) 							\
-+noinline int func(struct uprobe_multi_consumers *skel, unsigned long before,	\
-+		  unsigned long after, unsigned long offset)			\
-+{										\
-+	return uprobe_consumer_test(skel, before, after, offset);		\
-+}										\
-+static void *__ ## func __used __attribute__((section("consumers"))) = (void *) func;
-+
-+#define CONSUMER_TEST(func) __CONSUMER_TEST(func)
-+
-+#define C1  CONSUMER_TEST(__PASTE(consumer_test, __COUNTER__))
-+#define C4  C1 C1 C1 C1
-+#define C16 C4 C4 C4 C4
-+
-+C16
-+
-+typedef int (*test_t)(struct uprobe_multi_consumers *, unsigned long,
-+		      unsigned long, unsigned long);
-+
- static int consumer_test(struct uprobe_multi_consumers *skel,
--			 unsigned long before, unsigned long after)
-+			 unsigned long before, unsigned long after,
-+			 test_t test, unsigned long offset)
- {
- 	int err, idx, ret = -1;
- 
-@@ -860,12 +890,12 @@ static int consumer_test(struct uprobe_multi_consumers *skel,
- 	/* 'before' is each, we attach uprobe for every set idx */
- 	for (idx = 0; idx < 4; idx++) {
- 		if (test_bit(idx, before)) {
--			if (!ASSERT_OK(uprobe_attach(skel, idx), "uprobe_attach_before"))
-+			if (!ASSERT_OK(uprobe_attach(skel, idx, offset), "uprobe_attach_before"))
- 				goto cleanup;
- 		}
- 	}
- 
--	err = uprobe_consumer_test(skel, before, after);
-+	err = test(skel, before, after, offset);
- 	if (!ASSERT_EQ(err, 0, "uprobe_consumer_test"))
- 		goto cleanup;
- 
-@@ -934,14 +964,46 @@ static int consumer_test(struct uprobe_multi_consumers *skel,
- 	return ret;
- }
- 
--static void test_consumers(void)
-+#define CONSUMER_MAX 16
-+
-+/*
-+ * Each thread runs 1/16 of the load by running test for single
-+ * 'before' number (based on thread index) and full scale of
-+ * 'after' numbers.
-+ */
-+static void *consumer_thread(void *arg)
- {
-+	unsigned long idx = (unsigned long) arg;
- 	struct uprobe_multi_consumers *skel;
--	int before, after;
-+	unsigned long offset;
-+	const void *func;
-+	int after;
- 
- 	skel = uprobe_multi_consumers__open_and_load();
- 	if (!ASSERT_OK_PTR(skel, "uprobe_multi_consumers__open_and_load"))
--		return;
-+		return NULL;
-+
-+	func = *((&__start_consumers) + idx);
-+
-+	offset = get_uprobe_offset(func);
-+	if (!ASSERT_GE(offset, 0, "uprobe_offset"))
-+		goto out;
-+
-+	for (after = 0; after < CONSUMER_MAX; after++)
-+		if (consumer_test(skel, idx, after, func, offset))
-+			goto out;
-+
-+out:
-+	uprobe_multi_consumers__destroy(skel);
-+	return NULL;
-+}
-+
-+
-+static void test_consumers(void)
-+{
-+	pthread_t pt[CONSUMER_MAX];
-+	unsigned long idx;
-+	int err;
- 
- 	/*
- 	 * The idea of this test is to try all possible combinations of
-@@ -982,14 +1044,14 @@ static void test_consumers(void)
- 	 * before/after bits.
- 	 */
- 
--	for (before = 0; before < 16; before++) {
--		for (after = 0; after < 16; after++)
--			if (consumer_test(skel, before, after))
--				goto out;
-+	for (idx = 0; idx < CONSUMER_MAX; idx++) {
-+		err = pthread_create(&pt[idx], NULL, consumer_thread, (void *) idx);
-+		if (!ASSERT_OK(err, "pthread_create"))
-+			break;
- 	}
- 
--out:
--	uprobe_multi_consumers__destroy(skel);
-+	while (idx)
-+		pthread_join(pt[--idx], NULL);
- }
- 
- static struct bpf_program *uprobe_multi_program(struct uprobe_multi_pid_filter *skel, int idx)
--- 
-2.46.2
-
+> > And then there's the case where we end up doing:
+> >
+> >   try_get_uprobe()
+> >   put_uprobe()
+> >   try_get_uprobe()
+> >
+> > in the dup path. Yes, it's unlikely, but gah.
+> >
+> >
+> > So how about something like this?
+> 
+> Yep, it makes sense to start with HPROBE_GONE if it's already NULL, no
+> problem. I'll roll those changes in.
+> 
+> I'm fine with the `bool get` flag as well. Will incorporate all that
+> into the next revision, thanks!
+> 
+> The only problem I can see is in the assumption that `srcu_idx < 0` is
+> never going to be returned by srcu_read_lock(). Paul says that it can
+> only be 0 or 1, but it's not codified as part of a contract. So until
+> we change that, probably safer to pass an extra bool specifying
+> whether srcu_idx is valid or not, is that OK?
+> 
+> (and I assume you want me to drop verbose comments for various states, right?)
+> 
+> 
+> 
+> >
+> > ---
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 06ec41c75c45..efb4f5ee6212 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -657,20 +657,19 @@ static void put_uprobe(struct uprobe *uprobe)
+> >         call_srcu(&uretprobes_srcu, &uprobe->rcu, uprobe_free_srcu);
+> >  }
+> >
+> > -/* Initialize hprobe as SRCU-protected "leased" uprobe */
+> > -static void hprobe_init_leased(struct hprobe *hprobe, struct uprobe *uprobe, int srcu_idx)
+> > +static void hprobe_init(struct hprobe *hprobe, struct uprobe *uprobe, int srcu_idx)
+> >  {
+> > -       hprobe->state = HPROBE_LEASED;
+> > -       hprobe->uprobe = uprobe;
+> > -       hprobe->srcu_idx = srcu_idx;
+> > -}
+> > +       enum hprobe_state state = HPROBE_GONE;
+> >
+> > -/* Initialize hprobe as refcounted ("stable") uprobe (uprobe can be NULL). */
+> > -static void hprobe_init_stable(struct hprobe *hprobe, struct uprobe *uprobe)
+> > -{
+> > -       hprobe->state = HPROBE_STABLE;
+> > +       if (uprobe) {
+> > +               state = HPROBE_LEASED;
+> > +               if (srcu_idx < 0)
+> > +                       state = HPROBE_STABLE;
+> > +       }
+> > +
+> > +       hprobe->state = state;
+> >         hprobe->uprobe = uprobe;
+> > -       hprobe->srcu_idx = -1;
+> > +       hprobe->srcu_idx = srcu_idx;
+> >  }
+> >
+> >  /*
+> > @@ -713,8 +712,7 @@ static void hprobe_finalize(struct hprobe *hprobe, enum hprobe_state hstate)
+> >                 __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu_idx);
+> >                 break;
+> >         case HPROBE_STABLE:
+> > -               if (hprobe->uprobe)
+> > -                       put_uprobe(hprobe->uprobe);
+> > +               put_uprobe(hprobe->uprobe);
+> >                 break;
+> >         case HPROBE_GONE:
+> >         case HPROBE_CONSUMED:
+> > @@ -739,8 +737,9 @@ static void hprobe_finalize(struct hprobe *hprobe, enum hprobe_state hstate)
+> >   * refcount, so caller has to attempt try_get_uprobe(), if it needs to
+> >   * preserve uprobe beyond current SRCU lock region. See dup_utask().
+> >   */
+> > -static struct uprobe* hprobe_expire(struct hprobe *hprobe)
+> > +static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
+> >  {
+> > +       struct uprobe *uprobe = NULL;
+> >         enum hprobe_state hstate;
+> >
+> >         /*
+> > @@ -749,25 +748,18 @@ static struct uprobe* hprobe_expire(struct hprobe *hprobe)
+> >          */
+> >         lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
+> >
+> > -       hstate = data_race(READ_ONCE(hprobe->state));
+> > +       hstate = READ_ONCE(hprobe->state);
+> >         switch (hstate) {
+> >         case HPROBE_STABLE:
+> > -               /* uprobe is properly refcounted, return it */
+> > -               return hprobe->uprobe;
+> > +               uprobe = hprobe->uprobe;
+> > +               break;
+> > +
+> >         case HPROBE_GONE:
+> > -               /*
+> > -                * SRCU was unlocked earlier and we didn't manage to take
+> > -                * uprobe refcnt, so it's effectively NULL
+> > -                */
+> > -               return NULL;
+> >         case HPROBE_CONSUMED:
+> > -               /*
+> > -                * uprobe was consumed, so it's effectively NULL as far as
+> > -                * uretprobe processing logic is concerned
+> > -                */
+> > -               return NULL;
+> > -       case HPROBE_LEASED: {
+> > -               struct uprobe *uprobe = try_get_uprobe(hprobe->uprobe);
+> > +               break;
+> > +
+> > +       case HPROBE_LEASED:
+> > +               uprobe = try_get_uprobe(hprobe->uprobe);
+> >                 /*
+> >                  * Try to switch hprobe state, guarding against
+> >                  * hprobe_consume() or another hprobe_expire() racing with us.
+> > @@ -778,27 +770,26 @@ static struct uprobe* hprobe_expire(struct hprobe *hprobe)
+> >                 if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_STABLE : HPROBE_GONE)) {
+> >                         /* We won the race, we are the ones to unlock SRCU */
+> >                         __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu_idx);
+> > -                       return uprobe;
+> > +                       break;
+> >                 }
+> >
+> >                 /* We lost the race, undo refcount bump (if it ever happened) */
+> > -               if (uprobe)
+> > +               if (uprobe && !get) {
+> >                         put_uprobe(uprobe);
+> > -               /*
+> > -                * Even if hprobe_consume() or another hprobe_expire() wins
+> > -                * the state update race and unlocks SRCU from under us, we
+> > -                * still have a guarantee that underyling uprobe won't be
+> > -                * freed due to ongoing caller's SRCU lock region, so we can
+> > -                * return it regardless. The caller then can attempt its own
+> > -                * try_get_uprobe() to preserve the instance, if necessary.
+> > -                * This is used in dup_utask().
+> > -                */
+> > +                       uprobe = NULL;
+> > +               }
+> > +
+> >                 return uprobe;
+> > -       }
+> > +
+> >         default:
+> >                 WARN(1, "unknown hprobe state %d", hstate);
+> >                 return NULL;
+> >         }
+> > +
+> > +       if (uprobe && get)
+> > +               return try_get_uprobe(uprobe);
+> > +
+> > +       return uprobe;
+> >  }
+> >
+> >  static __always_inline
+> > @@ -1920,9 +1911,8 @@ static void ri_timer(struct timer_list *timer)
+> >         /* RCU protects return_instance from freeing. */
+> >         guard(rcu)();
+> >
+> > -       for_each_ret_instance_rcu(ri, utask->return_instances) {
+> > -               hprobe_expire(&ri->hprobe);
+> > -       }
+> > +       for_each_ret_instance_rcu(ri, utask->return_instances)
+> > +               hprobe_expire(&ri->hprobe, false);
+> >  }
+> >
+> >  static struct uprobe_task *alloc_utask(void)
+> > @@ -1975,10 +1965,7 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+> >
+> >                 *n = *o;
+> >
+> > -               /* see hprobe_expire() comments */
+> > -               uprobe = hprobe_expire(&o->hprobe);
+> > -               if (uprobe) /* refcount bump for new utask */
+> > -                       uprobe = try_get_uprobe(uprobe);
+> > +               uprobe = hprobe_expire(&o->hprobe, true);
+> >
+> >                 /*
+> >                  * New utask will have stable properly refcounted uprobe or
+> > @@ -1986,7 +1973,7 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+> >                  * need to preserve full set of return_instances for proper
+> >                  * uretprobe handling and nesting in forked task.
+> >                  */
+> > -               hprobe_init_stable(&n->hprobe, uprobe);
+> > +               hprobe_init(&n->hprobe, uprobe, -1);
+> >
+> >                 n->next = NULL;
+> >                 rcu_assign_pointer(*p, n);
+> > @@ -2131,7 +2118,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+> >
+> >         utask->depth++;
+> >
+> > -       hprobe_init_leased(&ri->hprobe, uprobe, srcu_idx);
+> > +       hprobe_init(&ri->hprobe, uprobe, srcu_idx);
+> >         ri->next = utask->return_instances;
+> >         rcu_assign_pointer(utask->return_instances, ri);
+> >
