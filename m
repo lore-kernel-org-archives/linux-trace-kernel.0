@@ -1,116 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805941F4FAB;
-	Mon, 21 Oct 2024 13:57:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 436CE1EABC4;
+	Mon, 21 Oct 2024 14:01:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729519047; cv=none; b=fk56+yvpGjW46XtNJHEh0n3G5G1f40UyHM1pANu3nURSgEptbe8/h6peXyfE36kqJkKM+macQ1ddOFIisdua9CBF+cvuWXge2Bp7sc2Scfmwcu0mcGHJJEmjJyteK/2di3qh4R7fMfw84eCVlT+F9Yqwb8kHvG71B22Or4VMOn0=
+	t=1729519286; cv=none; b=SpzLJPoZggwM9RIm3rGmjtJ/jkfXP2zTSeFhe2ShV9/UaXaIdbk47RjYLcBV3wLhkj6Avu2xjGYFUzfps/QHQILZ2kC3BwnjVK4URlLy+ZV73EXpq6NKSYZONxSxaNp/D8Q0cNIt3+PxBRUDP45FTUCmifJHotXKcpzOkAMF1g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729519047; c=relaxed/simple;
-	bh=Dpacqvghjn+prdNdw3RYq6t7J0XmTTREpNbPYnoLUrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nuK9Ix8InYJlUVl9gZCAsg5MJYn95VsrloSTfeOBfl31YJP0Pqvq4cCsWN585T9MiM58Wc0tGXIbFyaJwfzVDZ3BZQ/kAyhfpFOcQD2Rr3Fad6/pcKMXO0wh3R9XDKw+htq+z7mZQhCJswzy5djsfjiMePhhlyWsIn/Ks9l5cAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjcTtZZY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729519286; c=relaxed/simple;
+	bh=FnatMlsWR8HNVRvD27PQukDVaOYbEhYZxP9yRQAEeiM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iYKUlWpXMBbUTUq4IhOqqemYVgX0Df7OIkWd8aeFgtNEjjz4rs3QnC+08KTlEZakvhYE7LaWVW3sczzliPReYmtE5ypY+hB1COddAwnaXhl3aF18vblWYJzsuqEkohJFahxh09W8i9hdElPm8B5/Twfh/rqi55LPVVmD1Y05qFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/qUsyH2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjcTtZZY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEC8C4CEC3;
-	Mon, 21 Oct 2024 13:57:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/qUsyH2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FC7C4CEC3;
+	Mon, 21 Oct 2024 14:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729519047;
-	bh=Dpacqvghjn+prdNdw3RYq6t7J0XmTTREpNbPYnoLUrU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=CjcTtZZYTojvnp6s7clNB5dxncnCSBBXNhCVQc/Og6/p52mTFfYTX2As9rfdlXcmg
-	 wr6bO3JP5AL/X1UOyNuJfk40xyW6a2TmOscAKqwuTVybqXa6WDyeEWkYM8vbYBj+F5
-	 pw0+YSW1Sg67Sa+aezPOT2nKpkgZpmjycb1eQPtOGvfbCGqfUVpVpLCQmMlQpVZ7A/
-	 0HwcyHMM+hQFh0nWupBDa64V63Di1jx3d5J+UzAc93xz+c4FnMukS/s6JOq5TsN6/P
-	 1jmDs5Yca5x/mw0/hR1PM9SsTs4r8znoVg0Yute46kOtKJroaoPx2UBYQC+wt57wpQ
-	 9ABize7D40V+g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 7D3B8CE0DFD; Mon, 21 Oct 2024 06:57:26 -0700 (PDT)
-Date: Mon, 21 Oct 2024 06:57:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
-	rostedt@goodmis.org, mhiramat@kernel.org, mingo@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
-Subject: Re: [PATCH v2 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
- lifetime (with timeout)
-Message-ID: <b70994c4-04dd-4120-8598-fe1d604a07d8@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20241008002556.2332835-1-andrii@kernel.org>
- <20241008002556.2332835-3-andrii@kernel.org>
- <20241018101647.GA36494@noisy.programming.kicks-ass.net>
- <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
- <20241021104815.GC6791@noisy.programming.kicks-ass.net>
+	s=k20201202; t=1729519285;
+	bh=FnatMlsWR8HNVRvD27PQukDVaOYbEhYZxP9yRQAEeiM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L/qUsyH2EJpc48hNSUv+N7ygmzYckvdEGROuSPAxfADw7yTg1u0AKLcHMMlR6hSP6
+	 Yyomk7CL+L7aSFMn49J7hm5OHTg74PO0NHzx32auKXbGoao8znEsCkQaTT4xN2d3py
+	 QD7H2nabyDkPFzFlN9WcPc3ZHj92e/uE5ES0HqpDNwNg4Kzy2R/XXDinBnZiZORHsq
+	 sn2qNOwEYWbk0KbGIBroq0itVylb2MYYyTUkgTsloBGe8EEhYvnRHK+LjHXzMLcRWU
+	 +R7ccjtN1SLKGUR0aKFf08NAe8L5+stP6jWsixcbdh8DH/3Yee0cY+ICdqMnz3enY+
+	 us7m9vfVwfg+w==
+Date: Mon, 21 Oct 2024 23:01:21 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
+ <davem@davemloft.net>, <kees@kernel.org>, <gustavoars@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 0/3] kprobes: Annotate structs with __counted_by()
+Message-Id: <20241021230121.a5a6c2f746d3141d9640c483@kernel.org>
+In-Reply-To: <20240813115334.3922580-1-ruanjinjie@huawei.com>
+References: <20240813115334.3922580-1-ruanjinjie@huawei.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241021104815.GC6791@noisy.programming.kicks-ass.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Oct 21, 2024 at 12:48:15PM +0200, Peter Zijlstra wrote:
-> On Fri, Oct 18, 2024 at 11:22:09AM -0700, Andrii Nakryiko wrote:
-> 
-> > > So... after a few readings I think I'm mostly okay with this. But I got
-> > > annoyed by the whole HPROBE_STABLE with uprobe=NULL weirdness. Also,
-> > > that data_race() usage is weird, what is that about?
-> > 
-> > People keep saying that evil KCSAN will come after me if I don't add
-> > data_race() for values that can change under me, so I add it to make
-> > it explicit that it's fine. But I can of course just drop data_race(),
-> > as it has no bearing on correctness.
-> 
-> AFAICT this was READ_ONCE() vs xchg(), and that should work. Otherwise I
-> have to yell at KCSAN people again :-)
-> 
-> > > And then there's the case where we end up doing:
-> > >
-> > >   try_get_uprobe()
-> > >   put_uprobe()
-> > >   try_get_uprobe()
-> > >
-> > > in the dup path. Yes, it's unlikely, but gah.
-> > >
-> > >
-> > > So how about something like this?
-> > 
-> > Yep, it makes sense to start with HPROBE_GONE if it's already NULL, no
-> > problem. I'll roll those changes in.
-> > 
-> > I'm fine with the `bool get` flag as well. Will incorporate all that
-> > into the next revision, thanks!
-> > 
-> > The only problem I can see is in the assumption that `srcu_idx < 0` is
-> > never going to be returned by srcu_read_lock(). Paul says that it can
-> > only be 0 or 1, but it's not codified as part of a contract.
-> 
-> Yeah, [0,1] is the current range. Fundamentally that thing is an array
-> index, so negative values are out and generally safe to use as 'error'
-> codes. Paul can't we simply document that the SRCU cookie is always a
-> positive integer (or zero) and the negative space shall not be used?
+On Tue, 13 Aug 2024 19:53:31 +0800
+Jinjie Ruan <ruanjinjie@huawei.com> wrote:
 
-We are looking at a few approaches, but they all guarantee that the
-return value will be non-negative.  My current guess is that we will
-just document this non-negative return value, but in all cases, you
-should feel free to assume non-negative starting now.
+> Annotate structs with __counted_by() for kprobe and do some cleanup.
+> 
+> Jinjie Ruan (3):
+>   kprobes: Annotate structs with __counted_by()
+>   kprobes: Cleanup the config comment
+>   kprobes: Cleanup collect_one_slot() and __disable_kprobe()
+> 
+>  kernel/kprobes.c | 87 ++++++++++++++++++++++++------------------------
+>  1 file changed, 44 insertions(+), 43 deletions(-)
 
-							Thanx, Paul
+This series looks good to me.
 
-> > So until we change that, probably safer to pass an extra bool
-> > specifying whether srcu_idx is valid or not, is that OK?
+Thanks for cleaning up!
+
 > 
-> I think Changeing the SRCU documentation to provide us this guarantee
-> should be an achievable goal.
+> -- 
+> 2.34.1
 > 
-> > (and I assume you want me to drop verbose comments for various states, right?)
-> 
-> I axed the comments because I made them invalid and didn't care enough
-> to fix them up. If you like them feel free to amend them to reflect the
-> new state of things.
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
