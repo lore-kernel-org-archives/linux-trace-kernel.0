@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB035EEB3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB77A1E7677;
 	Mon, 21 Oct 2024 15:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729523590; cv=none; b=U8dMSD2b71NRa3j4jqnWDCbdJnbqCjgXUXwzkKvqcN9YOZhLHVUXWNF3+/X6o+J8TheUHvIXvEl6aMFLKdKBtZU6s4jjhmuvjwZ4Ijap68MM+2A8XxmThdOEHLl2/QnElrLAjPCIL0GAJwOIjSoqA1GaPaxhwJskMpRgcr4QDRg=
+	t=1729523590; cv=none; b=VcUQVDVG8se3ioYWe844CsxPhiAsbAj4chS6VX6Vv5vV8lJ7N5Ib8lujzFLpj2lx+EC2JNUoS4XgPR+PYp3slQ/w+F4rw5nyUN8cyW2mPDbNhUOsmuS9yQe7q/GfYMjVspUtxNWvvQilwAMYZiqwl5VUvMJSxzd8RPKUNuDxxk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1729523590; c=relaxed/simple;
-	bh=2AKw56P/tViNVJdwOECZveIh/P6MkPNPfSKa2q43zSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FX801zkcjyY7UYNCTEqcLN7+k9ZEfImQiaH/KaXP5e6ylOsrtWDknarXEFFCByox/cIBIArr/ZsVQwyT1BnjMb6NQ8YfoODziFE//HZ8cZ8pl1r5bNdU/IUmF2ShyRiComsaR7spvQ8it8fj3gFpOPSkPq3a5+YednKnlPa5aOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=du58+yYD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uqgGrCyN; arc=none smtp.client-ip=193.142.43.55
+	bh=5P2NQ2LTGqAw9tTdB+yi629BK+jCITFq2F+INjGiWE0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oU1aqxQ4M30/dLamIV26sXaDIQRnk/oUxmTPzpfLQ43MOsM2OIabf8bNTcKEEUjXADb1I5gAo8KY4Q3+ZBxiEXl1CDvIJ2I61MfbUwtZTHQfsVqOLAXl3ArfzJMswcuM9mcN0+p/aYQTL0JO4TnEpdpsh+htSjxjrsG5oSec6BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aqz0JA1e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bt0EUuMo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="du58+yYD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uqgGrCyN"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqz0JA1e";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bt0EUuMo"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1729523586;
+	s=2020; t=1729523587;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=b8YSql3xP0SHoPJurf2xbHM8Q3BHoK810vSQxF0qUds=;
-	b=du58+yYDfq/DjnitNbVpmoZ2jpmHYqyizWoSJo5V5RzBF+T9yHo0Lf07HvgatKG4u7ZyVp
-	MfsrTiGWgw7SXcWi04dnRGKAxGu6fhH2Z1fDAHbTHhFXsRNFbfgGh2y3jY9cMayVj3PtRw
-	SCztr9bEzDNVuAI/tDOskE1w1pR00agW7KpSxTf2pIbAVA1VG4/xx/5y2mj0Ar1qGiJiM2
-	JQVjn1EBUuS3SvWPQ1BYdExXgz4Hodazkf/KvXEM39qKJLjVKN67PjqmrorRoyKVxEca04
-	hJSyMv+uQjrdtm1AWiVYkTAqif1fopHpmctLGgTa5QKtKPZ5NbKW5a5ZyZg/3g==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mJYXpgOv9Nb7Ka4YZwNzbNkv6qUKCXI6IA+AOiHpw0=;
+	b=aqz0JA1e6EeyFYhZrVsWivhxlRtoaOJPvtOlZgPaez4aAgYGdKbf+VtkSIlB4x0yt630Qr
+	8KJuyBA5pIpIZa8ik9mXHddNUJFU68vUETZpzgUTPv+QaijhRp2+Bd5TnD2uVs+gBpo6Gr
+	WqgkAWYXLwVxRTVvCTjo7n5MpytrngZyNnHhnPBZR+1PcsDagkpj3iNObLuhIya609Rs5h
+	3uHPkpHLZKUoJ/g2Yy2XAbn83lUFRXJ2G9yrLgHZoM2jPfhWox1Pjl+SdAeozWAyIr2MzL
+	18+ZCEpeBY6kcFuzGIgyQlpaG0ya5rjZc4PvkgUw6HB4aAaiToqFkd8WcwfiLA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1729523586;
+	s=2020e; t=1729523587;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=b8YSql3xP0SHoPJurf2xbHM8Q3BHoK810vSQxF0qUds=;
-	b=uqgGrCyNMrKNOLykncvCj6sfnT0b4+CHzIghG+TNUOjyPOk91RsUt4mw3yUEvJTdefZsBl
-	qgE3xPhaJQR1bUCw==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4mJYXpgOv9Nb7Ka4YZwNzbNkv6qUKCXI6IA+AOiHpw0=;
+	b=Bt0EUuMo3fNCd6WivN40VtziHpHTDLxPNT8znL9fd6ifNCCpdgyFgUGoMWN4sscs6wdb7Q
+	K5fX91JEUfMNaKDw==
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -51,40 +54,79 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	ankur.a.arora@oracle.com,
 	efault@gmx.de,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2 0/3] Lazy preemption leftovers
-Date: Mon, 21 Oct 2024 17:08:39 +0200
-Message-ID: <20241021151257.102296-1-bigeasy@linutronix.de>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v2 1/3] tracing: Replace TRACE_FLAG_IRQS_NOSUPPORT with its config option.
+Date: Mon, 21 Oct 2024 17:08:40 +0200
+Message-ID: <20241021151257.102296-2-bigeasy@linutronix.de>
+In-Reply-To: <20241021151257.102296-1-bigeasy@linutronix.de>
+References: <20241021151257.102296-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-This is a followup to PeterZ'
-	https://lore.kernel.org/20241007074609.447006177@infradead.org
+From: Thomas Gleixner <tglx@linutronix.de>
 
-in PREEMPT_RT we had initially "LAZY preempt" this then morphed into
-PREEMPT_AUTO and is becoming "Lazy preemption".
-These are the tracing bits from that time that were used up to
-PREEMPT_AUTO. With RT's RiscV support, they also contributed
-PREEMPT_AUTO support which I just updated to current edition.
+The TRACE_FLAG_IRQS_NOSUPPORT flag is used by tracing_gen_ctx.*() to
+signal that CONFIG_TRACE_IRQFLAGS_SUPPORT is not enabled and tracing IRQ
+flags is not supported.
 
-I used to have ARM* and POWERPC*, too support for the "LAZY preempt" but
-this relied on assembly support and I dropped this during the switch to
-PREEMPT_AUTO.
+This could be replaced by using the 0 as flags and then deducting that
+there is no IRQFLAGS_SUPPORT based on the config option. The downside is
+that without CONFIG_TRACE_IRQFLAGS_SUPPORT we can not distinguish
+between no-IRQ passed flags and callers which passed 0. On the upside we
+have room for one additional flags which could be used for LAZY_PREEMPTION.
 
-v1=E2=80=A6v2 https://lore.kernel.org/all/20241009105709.887510-1-bigeasy@l=
-inutronix.de :
-  - Added IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) to
-    tracing_gen_ctx_irq_test() to only record lazy flags if the
-    architecture supports it (Ankur Arora).
+Remove TRACE_FLAG_IRQS_NOSUPPORT and set it flags are 0 and
+CONFIG_TRACE_IRQFLAGS_SUPPORT is not set.
 
-  - Added a bit of Documentation for the additional context status
-    (Shrikanth Hegde)
+[bigeasy: Commit descrption.]
 
-Sebastian
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/trace_events.h |    7 +++----
+ kernel/trace/trace_output.c  |    2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -184,8 +184,7 @@ unsigned int tracing_gen_ctx_irq_test(un
+=20
+ enum trace_flag_type {
+ 	TRACE_FLAG_IRQS_OFF		=3D 0x01,
+-	TRACE_FLAG_IRQS_NOSUPPORT	=3D 0x02,
+-	TRACE_FLAG_NEED_RESCHED		=3D 0x04,
++	TRACE_FLAG_NEED_RESCHED		=3D 0x02,
+ 	TRACE_FLAG_HARDIRQ		=3D 0x08,
+ 	TRACE_FLAG_SOFTIRQ		=3D 0x10,
+ 	TRACE_FLAG_PREEMPT_RESCHED	=3D 0x20,
+@@ -211,11 +210,11 @@ static inline unsigned int tracing_gen_c
+=20
+ static inline unsigned int tracing_gen_ctx_flags(unsigned long irqflags)
+ {
+-	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
++	return tracing_gen_ctx_irq_test(0);
+ }
+ static inline unsigned int tracing_gen_ctx(void)
+ {
+-	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
++	return tracing_gen_ctx_irq_test(0);
+ }
+ #endif
+=20
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -460,7 +460,7 @@ int trace_print_lat_fmt(struct trace_seq
+ 		(entry->flags & TRACE_FLAG_IRQS_OFF && bh_off) ? 'D' :
+ 		(entry->flags & TRACE_FLAG_IRQS_OFF) ? 'd' :
+ 		bh_off ? 'b' :
+-		(entry->flags & TRACE_FLAG_IRQS_NOSUPPORT) ? 'X' :
++		!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_SUPPORT) ? 'X' :
+ 		'.';
+=20
+ 	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
