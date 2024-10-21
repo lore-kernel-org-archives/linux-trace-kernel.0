@@ -1,165 +1,155 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7731FAC3B;
-	Mon, 21 Oct 2024 15:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208FD1F9AAA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Oct 2024 15:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729523595; cv=none; b=pTY/KacfYdzctliPY0ZffwmDD6iR6q1lsB+wwAChABJZc3+EFlB5eYBjlES/rxhQnsdxiBwLrDc+fKjBZwWjgu4HQpPs19vecHtcHhQ6mtPIL8hEibo9FgXTl+d5mnx0oPXOvR8XueMZ08jcJTS0FQ5Mnuffo3ub3fJnYynmzFk=
+	t=1729523644; cv=none; b=qOZskcJTxcg2CDWPU50pqoJTDU4makfUBwSGjcJKc+1Tfc/K4fEbnsscU7xKtquQz9wVTiJxnhm7WZp9Vgt2J+rl8lQhFPA6T+MAdvUQHWddF7kwDC5rHzhReJxpPgRbYgSRvlwk92E7TjcrRrHdFt6n94ji2d+WoOvB2WucsFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729523595; c=relaxed/simple;
-	bh=QjIvZlCtVBiBsmsnr8cISyDYLEv8628810IVww1WNSg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L4LspOB1TaSomrWA4IBdgN4kgl/dx7bqWPV1ZxZ6S8yHCDWv0cqzgzyN4/Z4CSW6ME4Ze+PoyJGFcHAbS+lMXSVbwNXByWu6Ek/q0QXrgqBXC9n3ci8097HF/adwxRDIvrMxTfhEj+nUuE9wIw5JgEK8uIYXwPUnp3kjAohTenc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0HF2jZDA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WeY5DLKy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1729523644; c=relaxed/simple;
+	bh=WqwyJPFrX14EIYPb8NlDkhijgJLXM1i58qlxJzwdzUI=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=Hp8RcWImTaXMKhL1rFQ1HoE+VcmmWbeUe++EBV82OuJBxAvlofCzdNpa2g2bVw9m9e4xENJAmJtRSRoggOegetyNqzFPPO2PLGpEA5f4Ch/6oTd8gFCLiISKXNDRM6k2c/bPPVg3xdCACZWIIHiS0zw3ONO+sHTei+GY4ruIWyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=LM42rcxd; arc=none smtp.client-ip=185.70.43.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0HF2jZDA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WeY5DLKy"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1729523587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HaEaP85s+bDV/FR3UNIae3NhDHTKAM5R8mgLmDl9h4A=;
-	b=0HF2jZDAXbmVVSgQ6C909u3k9wAUIjb5QwKmPFALR1hwemXqQft7BwtjujT4D1xRW460GW
-	uwiJ5fGXhxuNtxopfV+jG//m2aUk6ugATphTWuvJ8Q69NVo0nFJ3BULKvcghCV7v8Dl5Jq
-	Q9LlejV0LMuU7kuGyMxDs48z1UrkfVKkGnrtoH25+HWx7VuOlF++AMp/EuKINMQTqmgcbR
-	dx43OP5ikRlFIc03+PBTulOLqUt6zssS7XGfpGW4rmRHK2VKN5yn64FJWjYQ7Fo2KvBwV9
-	7WO2D4F2jDtuUIouWHi4jRhw2Hefs+ThkR4ukmUT8zBvABStt2ICTXiOotTKdA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1729523587;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HaEaP85s+bDV/FR3UNIae3NhDHTKAM5R8mgLmDl9h4A=;
-	b=WeY5DLKyyb2I3Br33YRRtuMkTu3/UaKNldq7aX4F8R4F7RrE1hS+3GyQJaTrmHX8H0HGhP
-	58by9NFPNJIm1mCw==
-To: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	tglx@linutronix.de,
-	mingo@kernel.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	ankur.a.arora@oracle.com,
-	efault@gmx.de,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 2/3] tracing: Record task flag NEED_RESCHED_LAZY.
-Date: Mon, 21 Oct 2024 17:08:41 +0200
-Message-ID: <20241021151257.102296-3-bigeasy@linutronix.de>
-In-Reply-To: <20241021151257.102296-1-bigeasy@linutronix.de>
-References: <20241021151257.102296-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LM42rcxd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1729523641; x=1729782841;
+	bh=PVPeEX/Ul854Zb5vevT8sNbYHxTrQfiI9hsvWrSh50U=;
+	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=LM42rcxdqSbt1ZMdTDHIa/ea9frAWDq/1bwYrFGoyUZ5I1k1aTC8UPQqEeQaBFydz
+	 SbN9jJlJP4Y+8eF5s+vOXJIs6FkT9CEp8bgZStO8fCAlX7YgQXCJqvEXgbwFiWbei7
+	 OErSlyrgvmQzUgzvfUzUH6vnqIjDOTFXYlI+6w5YNbm7QG/cUXrT/0N/wE5OqsAF+q
+	 ixWowGhxOJCjpFeDFHF3O3EasqNjl9t3dbQapCB0sCP3ZWFbIjVYOzQuFcoag8nMhh
+	 eStAkeXFASJzu1hXAYitee7f6xkYAQuFct+BEXWEmCWppah3WaVB8NVA2W4vFu28Xg
+	 Wwb2q9uUmsKKw==
+Date: Mon, 21 Oct 2024 15:13:57 +0000
+To: Tomas Glozar <tglozar@redhat.com>, "lgoncalv@redhat.com" <lgoncalv@redhat.com>, "jkacur@redhat.com" <jkacur@redhat.com>, "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+From: furkanonder <furkanonder@protonmail.com>
+Subject: [PATCH 3/3] tools/rtla: Improve exception handling in timerlat_load.py
+Message-ID: <Q_k1s4hBtUy2px8ou0QKenjEK2_T_LoV8IxAE79aBakBogb-7uHp2fpET3oWtI1t3dy8uKjWeRzQOdKNzIzOOpyM4OjutJOriZ9TrGY6b-g=@protonmail.com>
+Feedback-ID: 14203677:user:proton
+X-Pm-Message-ID: 7be97eec64c3fdebc1d45f9ab1d692f0aa8623d1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-From: Thomas Gleixner <tglx@linutronix.de>
+The enhancements made to timerlat_load.py are intended to improve the scrip=
+t's exception handling.
 
-The scheduler added NEED_RESCHED_LAZY scheduling. Record this state as
-part of trace flags and expose it in the need_resched field.
+Summary of the changes:
+  - Specific exceptions are now caught for CPU affinity and priority
+    settings, with clearer error messages provided.
+  - The timerlat file descriptor opening now includes handling for
+    PermissionError and OSError, with informative messages.
+  - In the infinite loop, generic exceptions have been replaced with
+    specific types like KeyboardInterrupt and IOError, improving feedback.
 
-Record and expose NEED_RESCHED_LAZY.
+ Before:
+    $ sudo python timerlat_load.py 122
+    Error setting affinity
+ After:
+    $ sudo python timerlat_load.py 122
+    Error setting affinity: [Errno 22] Invalid argument
 
-[bigeasy: Commit description, documentation bits.]
+ Before:
+    $ sudo python timerlat_load.py 1 -p 950
+    Error setting priority
+ After:
+    $ sudo python timerlat_load.py 1 -p 950
+    Error setting priority: [Errno 22] Invalid argument
 
-Reviewed-by: Ankur Arora <ankur.a.arora@oracle.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+ Before:
+    $ python timerlat_load.py 1
+    Error opening timerlat fd, did you run timerlat -U?
+ After:
+    $ python timerlat_load.py 1
+    Permission denied. Please check your access rights.
+
+Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
 ---
- Documentation/trace/ftrace.rst |    4 ++++
- include/linux/trace_events.h   |    1 +
- kernel/trace/trace.c           |    2 ++
- kernel/trace/trace_output.c    |   14 +++++++++++++-
- 4 files changed, 20 insertions(+), 1 deletion(-)
+ tools/tracing/rtla/sample/timerlat_load.py | 37 +++++++++++++++++++++-----=
+-----------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1036,9 +1036,13 @@ explains which is which.
- 		be printed here.
-=20
-   need-resched:
-+	- 'B' all, TIF_NEED_RESCHED, PREEMPT_NEED_RESCHED and TIF_RESCHED_LAZY is=
- set,
- 	- 'N' both TIF_NEED_RESCHED and PREEMPT_NEED_RESCHED is set,
- 	- 'n' only TIF_NEED_RESCHED is set,
- 	- 'p' only PREEMPT_NEED_RESCHED is set,
-+	- 'L' borg PREEMPT_NEED_RESCHED and TIF_RESCHED_LAZY is set,
-+	- 'b' borg TIF_NEED_RESCHED and TIF_RESCHED_LAZY is set,
-+	- 'l' only TIF_RESCHED_LAZY is set
- 	- '.' otherwise.
-=20
-   hardirq/softirq:
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -185,6 +185,7 @@ unsigned int tracing_gen_ctx_irq_test(un
- enum trace_flag_type {
- 	TRACE_FLAG_IRQS_OFF		=3D 0x01,
- 	TRACE_FLAG_NEED_RESCHED		=3D 0x02,
-+	TRACE_FLAG_NEED_RESCHED_LAZY	=3D 0x04,
- 	TRACE_FLAG_HARDIRQ		=3D 0x08,
- 	TRACE_FLAG_SOFTIRQ		=3D 0x10,
- 	TRACE_FLAG_PREEMPT_RESCHED	=3D 0x20,
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2544,6 +2544,8 @@ unsigned int tracing_gen_ctx_irq_test(un
- 		trace_flags |=3D TRACE_FLAG_NEED_RESCHED;
- 	if (test_preempt_need_resched())
- 		trace_flags |=3D TRACE_FLAG_PREEMPT_RESCHED;
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) && tif_test_bit(TIF_NEED_RES=
-CHED_LAZY))
-+		trace_flags |=3D TRACE_FLAG_NEED_RESCHED_LAZY;
- 	return (trace_flags << 16) | (min_t(unsigned int, pc & 0xff, 0xf)) |
- 		(min_t(unsigned int, migration_disable_value(), 0xf)) << 4;
- }
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -463,17 +463,29 @@ int trace_print_lat_fmt(struct trace_seq
- 		!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_SUPPORT) ? 'X' :
- 		'.';
-=20
--	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
-+	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED=
-_LAZY |
- 				TRACE_FLAG_PREEMPT_RESCHED)) {
-+	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_=
-PREEMPT_RESCHED:
-+		need_resched =3D 'B';
-+		break;
- 	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_PREEMPT_RESCHED:
- 		need_resched =3D 'N';
- 		break;
-+	case TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_PREEMPT_RESCHED:
-+		need_resched =3D 'L';
-+		break;
-+	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY:
-+		need_resched =3D 'b';
-+		break;
- 	case TRACE_FLAG_NEED_RESCHED:
- 		need_resched =3D 'n';
- 		break;
- 	case TRACE_FLAG_PREEMPT_RESCHED:
- 		need_resched =3D 'p';
- 		break;
-+	case TRACE_FLAG_NEED_RESCHED_LAZY:
-+		need_resched =3D 'l';
-+		break;
- 	default:
- 		need_resched =3D '.';
- 		break;
+diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtl=
+a/sample/timerlat_load.py
+index d7341ed5127a..a819c3588073 100644
+--- a/tools/tracing/rtla/sample/timerlat_load.py
++++ b/tools/tracing/rtla/sample/timerlat_load.py
+@@ -31,43 +31,48 @@ args =3D parser.parse_args()
+
+ try:
+     affinity_mask =3D {args.cpu}
+-except:
+-    print("Invalid cpu: " + args.cpu)
+-    exit(1)
+-
+-try:
+     os.sched_setaffinity(0, affinity_mask)
+-except:
+-    print("Error setting affinity")
+-    exit(1)
++except Exception as e:
++    print(f"Error setting affinity: {e}")
++    sys.exit(1)
+
+ if args.prio:
+     try:
+         param =3D os.sched_param(args.prio)
+         os.sched_setscheduler(0, os.SCHED_FIFO, param)
+-    except:
+-        print("Error setting priority")
+-        exit(1)
++    except Exception as e:
++        print(f"Error setting priority: {e}")
++        sys.exit(1)
+
+ try:
+     timerlat_path =3D f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu}/=
+timerlat_fd"
+     timerlat_fd =3D open(timerlat_path, 'r')
+-except:
++except PermissionError:
++    print("Permission denied. Please check your access rights.")
++    sys.exit(1)
++except OSError:
+     print("Error opening timerlat fd, did you run timerlat -U?")
+-    exit(1)
++    sys.exit(1)
+
+ try:
+     data_fd =3D open("/dev/full", 'r')
+-except:
+-    print("Error opening data fd")
++except Exception as e:
++    print(f"Error opening data fd: {e}")
++    sys.exit(1)
+
+ while True:
+     try:
+         timerlat_fd.read(1)
+         data_fd.read(20 * 1024 * 1024)
+-    except:
++    except KeyboardInterrupt:
+         print("Leaving")
+         break
++    except IOError as e:
++        print(f"I/O error occurred: {e}")
++        break
++    except Exception as e:
++        print(f"Unexpected error: {e}")
++        break
+
+ timerlat_fd.close()
+ data_fd.close()
+--
+2.46.2
