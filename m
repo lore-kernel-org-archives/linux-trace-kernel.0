@@ -1,114 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DD21D3590;
-	Mon, 21 Oct 2024 12:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805941F4FAB;
+	Mon, 21 Oct 2024 13:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729514368; cv=none; b=H246lQv+t9xiuToz/V67ts4BmG3pLMAofdIZHtB4IS8kJnt4FF0Z+sS3bJoIJd7GaPwQ9lPVfzpBGRGrvyooSa8TthBv/Dm9gciBkIxDqXpBOD5p0JYO/mQVym1Q91UL/FziQDmxbf372diOZ9M0WFSo7LdMyJRv8iO5UF4uA5w=
+	t=1729519047; cv=none; b=fk56+yvpGjW46XtNJHEh0n3G5G1f40UyHM1pANu3nURSgEptbe8/h6peXyfE36kqJkKM+macQ1ddOFIisdua9CBF+cvuWXge2Bp7sc2Scfmwcu0mcGHJJEmjJyteK/2di3qh4R7fMfw84eCVlT+F9Yqwb8kHvG71B22Or4VMOn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729514368; c=relaxed/simple;
-	bh=UJohLTk3ngvcaNviWbvpljvgtu0o3NnL5UktcNqod6Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jNUrA240Fj68G4twEgVi31IuWx6i9oWFtA9RjhWK+2TYdC6zOn+PFtLqhDCKDYb2uoOqS+rLYdXQMMzJEIm+035lbHak/aFKNCUr75AEcJQnveGmbagMHfN8cRsN0x8KJOly/Ng+KOAR+BJH4iMOPE3TjL6a0r9+a6HethYluZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c89jvIpS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729519047; c=relaxed/simple;
+	bh=Dpacqvghjn+prdNdw3RYq6t7J0XmTTREpNbPYnoLUrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuK9Ix8InYJlUVl9gZCAsg5MJYn95VsrloSTfeOBfl31YJP0Pqvq4cCsWN585T9MiM58Wc0tGXIbFyaJwfzVDZ3BZQ/kAyhfpFOcQD2Rr3Fad6/pcKMXO0wh3R9XDKw+htq+z7mZQhCJswzy5djsfjiMePhhlyWsIn/Ks9l5cAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjcTtZZY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c89jvIpS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE735C4CEC3;
-	Mon, 21 Oct 2024 12:39:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjcTtZZY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEC8C4CEC3;
+	Mon, 21 Oct 2024 13:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729514367;
-	bh=UJohLTk3ngvcaNviWbvpljvgtu0o3NnL5UktcNqod6Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=c89jvIpSmquVbt/INjj+OvxECAQ0eO7HULL741B5Qz6zx06vFckwWtFEAhDvtb2Wu
-	 CZNbaQcOSiQM7k00dgmBPuH33AAepkE1VmBv1USQKxXwlOKojvCGwqHfafh4TlOXBI
-	 9tFa26iQrK4/HFkba+E2ooo7zWV2aOY+YHirMz2+qnbpaysDFkPQcaCac9mBwjZ2Ne
-	 Yi0MItdn4tc4LTdld8suIsU4h6lInFPwzniVcuLyxs9R8PGFD07IgiVEX4tfvErIY4
-	 m9jxuMb0KVsThXUyIRhhVuDNXi0JOYG+8VqgpHaNZysfAKRDvCmmRFJDXUpfcrbZdd
-	 VlQp/v0QroSHg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] x86/kprobes: Cleanup kprobes on ftrace code
-Date: Mon, 21 Oct 2024 21:39:22 +0900
-Message-ID: <172951436219.167263.18330240454389154327.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=k20201202; t=1729519047;
+	bh=Dpacqvghjn+prdNdw3RYq6t7J0XmTTREpNbPYnoLUrU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=CjcTtZZYTojvnp6s7clNB5dxncnCSBBXNhCVQc/Og6/p52mTFfYTX2As9rfdlXcmg
+	 wr6bO3JP5AL/X1UOyNuJfk40xyW6a2TmOscAKqwuTVybqXa6WDyeEWkYM8vbYBj+F5
+	 pw0+YSW1Sg67Sa+aezPOT2nKpkgZpmjycb1eQPtOGvfbCGqfUVpVpLCQmMlQpVZ7A/
+	 0HwcyHMM+hQFh0nWupBDa64V63Di1jx3d5J+UzAc93xz+c4FnMukS/s6JOq5TsN6/P
+	 1jmDs5Yca5x/mw0/hR1PM9SsTs4r8znoVg0Yute46kOtKJroaoPx2UBYQC+wt57wpQ
+	 9ABize7D40V+g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 7D3B8CE0DFD; Mon, 21 Oct 2024 06:57:26 -0700 (PDT)
+Date: Mon, 21 Oct 2024 06:57:26 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, oleg@redhat.com,
+	rostedt@goodmis.org, mhiramat@kernel.org, mingo@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org
+Subject: Re: [PATCH v2 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
+ lifetime (with timeout)
+Message-ID: <b70994c4-04dd-4120-8598-fe1d604a07d8@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20241008002556.2332835-1-andrii@kernel.org>
+ <20241008002556.2332835-3-andrii@kernel.org>
+ <20241018101647.GA36494@noisy.programming.kicks-ass.net>
+ <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
+ <20241021104815.GC6791@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021104815.GC6791@noisy.programming.kicks-ass.net>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, Oct 21, 2024 at 12:48:15PM +0200, Peter Zijlstra wrote:
+> On Fri, Oct 18, 2024 at 11:22:09AM -0700, Andrii Nakryiko wrote:
+> 
+> > > So... after a few readings I think I'm mostly okay with this. But I got
+> > > annoyed by the whole HPROBE_STABLE with uprobe=NULL weirdness. Also,
+> > > that data_race() usage is weird, what is that about?
+> > 
+> > People keep saying that evil KCSAN will come after me if I don't add
+> > data_race() for values that can change under me, so I add it to make
+> > it explicit that it's fine. But I can of course just drop data_race(),
+> > as it has no bearing on correctness.
+> 
+> AFAICT this was READ_ONCE() vs xchg(), and that should work. Otherwise I
+> have to yell at KCSAN people again :-)
+> 
+> > > And then there's the case where we end up doing:
+> > >
+> > >   try_get_uprobe()
+> > >   put_uprobe()
+> > >   try_get_uprobe()
+> > >
+> > > in the dup path. Yes, it's unlikely, but gah.
+> > >
+> > >
+> > > So how about something like this?
+> > 
+> > Yep, it makes sense to start with HPROBE_GONE if it's already NULL, no
+> > problem. I'll roll those changes in.
+> > 
+> > I'm fine with the `bool get` flag as well. Will incorporate all that
+> > into the next revision, thanks!
+> > 
+> > The only problem I can see is in the assumption that `srcu_idx < 0` is
+> > never going to be returned by srcu_read_lock(). Paul says that it can
+> > only be 0 or 1, but it's not codified as part of a contract.
+> 
+> Yeah, [0,1] is the current range. Fundamentally that thing is an array
+> index, so negative values are out and generally safe to use as 'error'
+> codes. Paul can't we simply document that the SRCU cookie is always a
+> positive integer (or zero) and the negative space shall not be used?
 
-Cleanup kprobes on ftrace code for x86.
- - Set instruction pointer (ip + MCOUNT_INSN_SIZE) after pre_handler only
-   when p->post_handler exists.
- - Use INT3_INSN_SIZE instead of 1.
- - Use instruction_pointer/instruction_pointer_set() functions instead of
-   accessing regs->ip directly.
+We are looking at a few approaches, but they all guarantee that the
+return value will be non-negative.  My current guess is that we will
+just document this non-negative return value, but in all cases, you
+should feel free to assume non-negative starting now.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- arch/x86/kernel/kprobes/ftrace.c |   19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+							Thanx, Paul
 
-diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
-index 15af7e98e161..2be55ec3f392 100644
---- a/arch/x86/kernel/kprobes/ftrace.c
-+++ b/arch/x86/kernel/kprobes/ftrace.c
-@@ -9,6 +9,7 @@
- #include <linux/hardirq.h>
- #include <linux/preempt.h>
- #include <linux/ftrace.h>
-+#include <asm/text-patching.h>
- 
- #include "common.h"
- 
-@@ -36,23 +37,25 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 	if (kprobe_running()) {
- 		kprobes_inc_nmissed_count(p);
- 	} else {
--		unsigned long orig_ip = regs->ip;
-+		unsigned long orig_ip = instruction_pointer(regs);
-+
- 		/* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
--		regs->ip = ip + sizeof(kprobe_opcode_t);
-+		instruction_pointer_set(regs, ip + INT3_INSN_SIZE);
- 
- 		__this_cpu_write(current_kprobe, p);
- 		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
- 		if (!p->pre_handler || !p->pre_handler(p, regs)) {
--			/*
--			 * Emulate singlestep (and also recover regs->ip)
--			 * as if there is a 5byte nop
--			 */
--			regs->ip = (unsigned long)p->addr + MCOUNT_INSN_SIZE;
- 			if (unlikely(p->post_handler)) {
-+				/*
-+				 * Emulate singlestep (and also recover regs->ip)
-+				 * as if there is a 5byte nop
-+				 */
-+				instruction_pointer_set(regs, ip + MCOUNT_INSN_SIZE);
- 				kcb->kprobe_status = KPROBE_HIT_SSDONE;
- 				p->post_handler(p, regs, 0);
- 			}
--			regs->ip = orig_ip;
-+			/* Recover IP address */
-+			instruction_pointer_set(regs, orig_ip);
- 		}
- 		/*
- 		 * If pre_handler returns !0, it changes regs->ip. We have to
-
+> > So until we change that, probably safer to pass an extra bool
+> > specifying whether srcu_idx is valid or not, is that OK?
+> 
+> I think Changeing the SRCU documentation to provide us this guarantee
+> should be an achievable goal.
+> 
+> > (and I assume you want me to drop verbose comments for various states, right?)
+> 
+> I axed the comments because I made them invalid and didn't care enough
+> to fix them up. If you like them feel free to amend them to reflect the
+> new state of things.
