@@ -1,102 +1,218 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B22A1E47A8;
-	Mon, 21 Oct 2024 10:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78C5C1E47A6;
+	Mon, 21 Oct 2024 10:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729506719; cv=none; b=sb+G2p+JhpvLR8IwWcctVgGz7wA2zFOtmxR90lpWfyh3BTbWDGrj/fX1GCIkwiACvFXv+unBON3J/PqcePrAYQJR0URN1b91lcPYG9psinBreXGIQKDmvpfYtBmGsRASADar9ys8bf0CFfcOSZuVODYnew8plT/bynE8vXSYhtI=
+	t=1729507142; cv=none; b=JdTf0mx/AJ4WAomIlZZ3cUKTu4kTz0E58ToTVlY8XFG79mPTTStqWDsXQaTBPjicvZbiOrkLIqDN1F4BgwUXJP9WmwQzBPFcpKmBHf357pPYQClY47+Dj9xLTeqzDE1yhPt0hXZu+pC+pJvjQCBh7VxKjnZXUQqvTPUqtq/rFZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729506719; c=relaxed/simple;
-	bh=YZCUVyUfC9oHB1G3sSi+PNeE6ieKKL19wAfEIPQup68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pKxd9lZOIT/0LGwYFGAxIXqCISMEr62SdHNg6S1S6tm3Y26Q8GGUVTusJBf5fDMFC4YhZl6kO2gfc5Ats6mVbtWT30tJMJoWgH8UJLTEYMa9TG+jA5EvoLV657RBs+ApyCy+O14i6ktb/MV0SgyLNVnCFGzdNT5bxKvHWhCvyYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L8K452Ew; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8K452Ew"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=wi9e0+QnD1dTbzyWBEfkmQr/IejLdT70yHhTQuDJUYc=; b=L8K452Ewo82ZQfKAONe56ZGczR
-	22Yv4qFuuagkbhjGhDEgrCLL7cGoAXgtMs4a0H52VGFEdTmbECF5lUvTdXJ2hAUcn9vloNnLBwaEx
-	6511cxJ7EY72BqI3paOA8f+1gDgARpZnCvXHFEUFinMcFAHjH/W19QNU7dnBjdVqNq9CgugNJXhGO
-	BjQRxYQcCa6IicjOiOCvxRl8nvtc1yuFa7lfSMDvD0PTnOXl6ETALMDXADZG+FQcO9Zxj0j7W+Qqh
-	rWQbhB6LAAfm04mHFjn6/eTiLKREofnu5zcjbAbfZkwwSEm4AGQNfCC2IMsTey6uw2UF6t8ki4RO5
-	vekOssQA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t2phY-00000007t8k-3IUM;
-	Mon, 21 Oct 2024 10:31:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 00A4830073F; Mon, 21 Oct 2024 12:31:51 +0200 (CEST)
-Date: Mon, 21 Oct 2024 12:31:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH v2 tip/perf/core 1/2] uprobes: allow put_uprobe() from
- non-sleepable softirq context
-Message-ID: <20241021103151.GB6791@noisy.programming.kicks-ass.net>
-References: <20241008002556.2332835-1-andrii@kernel.org>
- <20241008002556.2332835-2-andrii@kernel.org>
- <20241018082605.GD17263@noisy.programming.kicks-ass.net>
- <CAEf4Bzb3xjTH7Qh8c_j95jEr4fNxBgG11a0sCe4hoF9chwUtYg@mail.gmail.com>
+	s=arc-20240116; t=1729507142; c=relaxed/simple;
+	bh=tMugbO/bsoQ+XfVhI+TNQJ6afsV5wimqtsGC/0Z8IAs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UMaHi4t02tsypTpuFvNBf+9mjdyQ3CnZgnt1ChZ9n5gFDzFJekgf+WgRaExTfw0qcS+XBJIxY6cAwUbTPjjIwv+Zqf7d5rUB1EjycWlHwWA1nF3m1GHu28DNwfMEFs3rSzZdHeOJ4BlWG9rlvNyX5t8WIJEjSCCI0CpQhCb57m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCB3BDA7;
+	Mon, 21 Oct 2024 03:39:22 -0700 (PDT)
+Received: from [10.57.88.139] (unknown [10.57.88.139])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 928F33F73B;
+	Mon, 21 Oct 2024 03:38:51 -0700 (PDT)
+Message-ID: <5e01b376-b905-4775-badf-41d31d2a821c@arm.com>
+Date: Mon, 21 Oct 2024 11:38:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bzb3xjTH7Qh8c_j95jEr4fNxBgG11a0sCe4hoF9chwUtYg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] dma-mapping: Trace more error paths
+To: Sean Anderson <sean.anderson@linux.dev>, Christoph Hellwig <hch@lst.de>,
+ iommu@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20241017181354.2834674-1-sean.anderson@linux.dev>
+ <20241017181354.2834674-4-sean.anderson@linux.dev>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20241017181354.2834674-4-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 18, 2024 at 11:22:00AM -0700, Andrii Nakryiko wrote:
-> On Fri, Oct 18, 2024 at 1:26 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Oct 07, 2024 at 05:25:55PM -0700, Andrii Nakryiko wrote:
-> > > Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), which
-> > > makes it unsuitable to be called from more restricted context like softirq.
-> >
-> > This is delayed_uprobe_lock, right?
+On 2024-10-17 7:13 pm, Sean Anderson wrote:
+> It can be surprising to the user if DMA functions are only traced on
+> success. On failure, it can be unclear what the source of the problem
+> is. Fix this by tracing all functions even when they fail. Cases where
+> we BUG/WARN are skipped, since those should be sufficiently noisy
+> already.
 > 
-> Not just delated_uprobe_lock, there is also uprobes_treelock (I forgot
-> to update the commit message to mention that). Oleg had concerns (see
-> [0]) with that being taken from the timer thread, so I just moved all
-> of the locking into deferred work callback.
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
 > 
->   [0] https://lore.kernel.org/linux-trace-kernel/20240915144910.GA27726@redhat.com/
-
-Right, but at least that's not a sleeping lock. He's right about it
-needing to become a softirq-safe lock though. And yeah, unfortunate
-that.
-
-> > So can't we do something like so instead?
+>   include/trace/events/dma.h | 41 ++++++++++++++++++++++++++++++++++++++
+>   kernel/dma/mapping.c       | 27 +++++++++++++++++--------
+>   2 files changed, 60 insertions(+), 8 deletions(-)
 > 
-> I'll need to look at this more thoroughly (and hopefully Oleg will get
-> a chance as well), dropping lock from delayed_ref_ctr_inc() is a bit
-> scary, but might be ok.
+> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
+> index 9bc647f9ad4d..321cce327404 100644
+> --- a/include/trace/events/dma.h
+> +++ b/include/trace/events/dma.h
+> @@ -161,6 +161,12 @@ DEFINE_EVENT(_dma_alloc, dma_alloc_pages,
+>   		 unsigned long attrs),
+>   	TP_ARGS(dev, virt_addr, dma_addr, size, dir, flags, attrs));
+>   
+> +DEFINE_EVENT(_dma_alloc, dma_alloc_sgt_err,
+> +	TP_PROTO(struct device *dev, void *virt_addr, dma_addr_t dma_addr,
+> +		 size_t size, enum dma_data_direction dir, gfp_t flags,
+> +		 unsigned long attrs),
+> +	TP_ARGS(dev, virt_addr, dma_addr, size, dir, flags, attrs));
+> +
+>   TRACE_EVENT(dma_alloc_sgt,
+>   	TP_PROTO(struct device *dev, struct sg_table *sgt, size_t size,
+>   		 enum dma_data_direction dir, gfp_t flags, unsigned long attrs),
+> @@ -325,6 +331,41 @@ TRACE_EVENT(dma_map_sg,
+>   		decode_dma_attrs(__entry->attrs))
+>   );
+>   
+> +TRACE_EVENT(dma_map_sg_err,
+> +	TP_PROTO(struct device *dev, struct scatterlist *sgl, int nents,
+> +		 int err, enum dma_data_direction dir, unsigned long attrs),
+> +	TP_ARGS(dev, sgl, nents, err, dir, attrs),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(device, dev_name(dev))
+> +		__dynamic_array(u64, phys_addrs, nents)
+> +		__field(int, err)
+> +		__field(enum dma_data_direction, dir)
+> +		__field(unsigned long, attrs)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		struct scatterlist *sg;
+> +		int i;
+> +
+> +		__assign_str(device);
+> +		for_each_sg(sgl, sg, nents, i)
+> +			((u64 *)__get_dynamic_array(phys_addrs))[i] = sg_phys(sg);
+> +		__entry->err = err;
+> +		__entry->dir = dir;
+> +		__entry->attrs = attrs;
+> +	),
+> +
+> +	TP_printk("%s dir=%s dma_addrs=%s err=%d attrs=%s",
+> +		__get_str(device),
+> +		decode_dma_data_direction(__entry->dir),
+> +		__print_array(__get_dynamic_array(phys_addrs),
+> +			      __get_dynamic_array_len(phys_addrs) /
+> +				sizeof(u64), sizeof(u64)),
+> +		__entry->err,
+> +		decode_dma_attrs(__entry->attrs))
+> +);
+> +
+>   TRACE_EVENT(dma_unmap_sg,
+>   	TP_PROTO(struct device *dev, struct scatterlist *sgl, int nents,
+>   		 enum dma_data_direction dir, unsigned long attrs),
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index b8a6bc492fae..636dbb0629a4 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -223,6 +223,7 @@ static int __dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
+>   		debug_dma_map_sg(dev, sg, nents, ents, dir, attrs);
+>   	} else if (WARN_ON_ONCE(ents != -EINVAL && ents != -ENOMEM &&
+>   				ents != -EIO && ents != -EREMOTEIO)) {
+> +		trace_dma_map_sg_err(dev, sg, nents, ents, dir, attrs);
 
-So I figured that update_ref_ctr() is already doing the
-__update_ref_ctr() thing without holding the lock, so that lock really
-is only there to manage the list.
+Isn't this just a case of moving the existing tracepoint up outside the 
+"if (ents > 0)" condition?
 
-And that list is super offensive... That really wants to be a per-mm
-rb-tree or somesuch.
+>   		return -EIO;
+>   	}
+>   
+> @@ -604,20 +605,26 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+>   	if (WARN_ON_ONCE(flag & __GFP_COMP))
+>   		return NULL;
+>   
+> -	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr))
+> +	if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr)) {
+> +		trace_dma_alloc(dev, cpu_addr, *dma_handle, size,
+> +				DMA_BIDIRECTIONAL, flag, attrs);
+>   		return cpu_addr;
+> +	}
+>   
+>   	/* let the implementation decide on the zone to allocate from: */
+>   	flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
+>   
+> -	if (dma_alloc_direct(dev, ops))
+> +	if (dma_alloc_direct(dev, ops)) {
+>   		cpu_addr = dma_direct_alloc(dev, size, dma_handle, flag, attrs);
+> -	else if (use_dma_iommu(dev))
+> +	} else if (use_dma_iommu(dev)) {
+>   		cpu_addr = iommu_dma_alloc(dev, size, dma_handle, flag, attrs);
+> -	else if (ops->alloc)
+> +	} else if (ops->alloc) {
+>   		cpu_addr = ops->alloc(dev, size, dma_handle, flag, attrs);
+> -	else
+> +	} else {
+> +		trace_dma_alloc(dev, NULL, 0, size, DMA_BIDIRECTIONAL, flag,
+> +				attrs);
+>   		return NULL;
 
-AFAICT the only reason it is a mutex, is because doing unbouded list
-iteration under a spinlock is a really bad idea.
+Similarly just move this return down past the tracepoint, same as the 
+hunk below?
 
-> But generally speaking, what's your concern with doing deferred work
-> in put_uprobe()? It's not a hot path by any means, worst case we'll
-> have maybe thousands of uprobes attached/detached.
+> +	}
+>   
+>   	trace_dma_alloc(dev, cpu_addr, *dma_handle, size, DMA_BIDIRECTIONAL,
+>   			flag, attrs);
+> @@ -642,11 +649,11 @@ void dma_free_attrs(struct device *dev, size_t size, void *cpu_addr,
+>   	 */
+>   	WARN_ON(irqs_disabled());
+>   
+> -	if (!cpu_addr)
+> -		return;
+> -
+>   	trace_dma_free(dev, cpu_addr, dma_handle, size, DMA_BIDIRECTIONAL,
+>   		       attrs);
+> +	if (!cpu_addr)
+> +		return;
+> +
+>   	debug_dma_free_coherent(dev, size, cpu_addr, dma_handle);
+>   	if (dma_alloc_direct(dev, ops))
+>   		dma_direct_free(dev, size, cpu_addr, dma_handle, attrs);
+> @@ -688,6 +695,8 @@ struct page *dma_alloc_pages(struct device *dev, size_t size,
+>   		trace_dma_alloc_pages(dev, page_to_virt(page), *dma_handle,
+>   				      size, dir, gfp, 0);
+>   		debug_dma_map_page(dev, page, 0, size, dir, *dma_handle, 0);
+> +	} else {
+> +		trace_dma_alloc_pages(dev, NULL, 0, size, dir, gfp, 0);
 
-Mostly I got offended by the level of crap in that code, and working
-around crap instead of fixing crap just ain't right.
+Could we move the page_to_virt() into the event definiton and let that 
+handle NULL, then similarly hoist the tracepoint out of the condition?
+
+>   	}
+>   	return page;
+>   }
+> @@ -772,6 +781,8 @@ struct sg_table *dma_alloc_noncontiguous(struct device *dev, size_t size,
+>   		sgt->nents = 1;
+>   		trace_dma_alloc_sgt(dev, sgt, size, dir, gfp, attrs);
+>   		debug_dma_map_sg(dev, sgt->sgl, sgt->orig_nents, 1, dir, attrs);
+> +	} else {
+> +		trace_dma_alloc_sgt_err(dev, NULL, 0, size, gfp, dir, attrs);
+
+And again similarly here - if I'm interested in calls to 
+dma_alloc_contiguous(), I'd rather have a "dma_alloc_contiguous" 
+tracepoint which can tell me both the arguments and the result at a 
+glance, than have to remember to trace two distinct other things based 
+on internal details.
+
+Thanks,
+Robin.
+
+>   	}
+>   	return sgt;
+>   }
 
