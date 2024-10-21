@@ -1,109 +1,150 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2621EBA17;
-	Mon, 21 Oct 2024 10:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5A51EABC3;
+	Mon, 21 Oct 2024 12:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729507701; cv=none; b=Z4UliePByGI4d2tWdVb4eEDiEVdSpZ4Gp4dUFIwsV4/fbAKaaqAI5YkaRmBYRh+mFE8eUDtMfhootwjCUGBz4wxe56hcl3ViXEfKY9LKCWSjlKUjCQ8eibgjPZuqCRwuzXA7Itwea7EJt6hug4lZk6XB3zRA7DSK9F108fRSc+E=
+	t=1729512242; cv=none; b=cnkh0Zj+ltBWYUMeuDr39ZqGkeoC/JGbP6V0p8HSIKgO/4sxbNTUvSxClUhmjGrG84oU7cWmhbtJ7EfJNJ4oEbOGG2qZ46mfnccc0T6WcTfQH87hpzsxleOFfakkDev91vl76lS+6TrXhmyfQ22hD1EEpuwrHx6Xkmrg+f39+QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729507701; c=relaxed/simple;
-	bh=Po2snFgeTrzgadxSlfIpIeFgxFSFGjUIBP2VrnUvZI4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EzpJ4znbMGVDXY5DujlpIQfwRtrfTjEugC0hZgwb/E7AQvkL5h3fgD74v4VTNONQrEfmfR3CWj8398yzo/imtJKaeEMb31GyTHXOMoIG7cXZlGEAYmzKdc9kitsGGNT2K2ZrZxeeWl2HT7tJll/WLSsmxbz6X4W44x12MXH8SZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MwoAI8l5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MwoAI8l5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XJWSXDEmTz10iT7O0Zf08zwnUMKpBRU/Y+jJiekO3bk=; b=MwoAI8l5epAYqpSlT2cz4vWB4k
-	zdlEE+AwQcCYSnta1RjpMCw/ZHNlAbzUyb9FhZ2nkWcr21MrGummeFi7s17GEto6lm4JQmUhx1ahP
-	9RjKOghZzq00Z/ahNdIcQ35E4Pad6feHEcAw2j3nMQBofPwYRMoTyCcYnn58O4inXmZo3hPVhu54y
-	3rTtZ8il+AfjsRW4GzpHqxuoC9RqA+BW2SknPwiHfy8U4TltqD5Q3TcFrPOqdEvO4UYRBz4t4/9Lb
-	N+ZZvYlYxoEJm+PKlDuohbcjhJHPsKeFGVWgMFlZ1az+O9Kt2C+0t3VnIMsJ0tirPEQJ8VUKOLl48
-	2egPlGjw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t2pxP-00000007tNc-2GyP;
-	Mon, 21 Oct 2024 10:48:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3251730073F; Mon, 21 Oct 2024 12:48:15 +0200 (CEST)
-Date: Mon, 21 Oct 2024 12:48:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH v2 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
- lifetime (with timeout)
-Message-ID: <20241021104815.GC6791@noisy.programming.kicks-ass.net>
-References: <20241008002556.2332835-1-andrii@kernel.org>
- <20241008002556.2332835-3-andrii@kernel.org>
- <20241018101647.GA36494@noisy.programming.kicks-ass.net>
- <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
+	s=arc-20240116; t=1729512242; c=relaxed/simple;
+	bh=MexqYOOCFAKTWp7wFixbyK1Hi5aI+zLK7LGUYsL1zjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XrUaWGJVa1avsWdihAs7W/H0Ee7dcGVy1tbcmZTpQafLpBLvrFGzoOLbHOFWhaGJTvReMhGMXpuaN5C5bK+UqGO+4R9+vrtsG4vLCBIT1xE/fkW8eafmkW+KvpOSldTZB0JDoeB/Ch77qETzq9ODUcEJZxrseZOvctGJ5pL+1AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XXDSQ5FcBzpX4d;
+	Mon, 21 Oct 2024 20:01:58 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A15518005F;
+	Mon, 21 Oct 2024 20:03:56 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 21 Oct 2024 20:03:55 +0800
+Message-ID: <895ce437-d6b1-46ba-b06f-e422f58a03cb@huawei.com>
+Date: Mon, 21 Oct 2024 20:03:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZaZGE7Kb+AZkN0eTH+0ny-_0WUxKT7ydDzAfEwP8cKVg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
+ scalability
+To: Oleg Nesterov <oleg@redhat.com>
+CC: <ak@linux.intel.com>, <mhiramat@kernel.org>, <andrii@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+References: <20240927094549.3382916-1-liaochang1@huawei.com>
+ <20240927171838.GA15877@redhat.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <20240927171838.GA15877@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Fri, Oct 18, 2024 at 11:22:09AM -0700, Andrii Nakryiko wrote:
+Oleg,
 
-> > So... after a few readings I think I'm mostly okay with this. But I got
-> > annoyed by the whole HPROBE_STABLE with uprobe=NULL weirdness. Also,
-> > that data_race() usage is weird, what is that about?
+My bad to take so long to reply. I have recently returned from a long vacation.
+
+在 2024/9/28 1:18, Oleg Nesterov 写道:
+> On 09/27, Liao Chang wrote:
+>>
+>> +int recycle_utask_slot(struct uprobe_task *utask, struct xol_area *area)
+>> +{
+>> +	int slot = UINSNS_PER_PAGE;
+>> +
+>> +	/*
+>> +	 * Ensure that the slot is not in use on other CPU. However, this
+>> +	 * check is unnecessary when called in the context of an exiting
+>> +	 * thread. See xol_free_insn_slot() called from uprobe_free_utask()
+>> +	 * for more details.
+>> +	 */
+>> +	if (test_and_put_task_slot(utask)) {
+>> +		list_del(&utask->gc);
+>> +		clear_bit(utask->insn_slot, area->bitmap);
+>> +		atomic_dec(&area->slot_count);
+>> +		utask->insn_slot = UINSNS_PER_PAGE;
+>> +		refcount_set(&utask->slot_ref, 1);
 > 
-> People keep saying that evil KCSAN will come after me if I don't add
-> data_race() for values that can change under me, so I add it to make
-> it explicit that it's fine. But I can of course just drop data_race(),
-> as it has no bearing on correctness.
-
-AFAICT this was READ_ONCE() vs xchg(), and that should work. Otherwise I
-have to yell at KCSAN people again :-)
-
-> > And then there's the case where we end up doing:
-> >
-> >   try_get_uprobe()
-> >   put_uprobe()
-> >   try_get_uprobe()
-> >
-> > in the dup path. Yes, it's unlikely, but gah.
-> >
-> >
-> > So how about something like this?
+> This lacks a barrier, CPU can reorder the last 2 insns
 > 
-> Yep, it makes sense to start with HPROBE_GONE if it's already NULL, no
-> problem. I'll roll those changes in.
+> 		refcount_set(&utask->slot_ref, 1);
+> 		utask->insn_slot = UINSNS_PER_PAGE;
 > 
-> I'm fine with the `bool get` flag as well. Will incorporate all that
-> into the next revision, thanks!
+> so the "utask->insn_slot == UINSNS_PER_PAGE" check in xol_get_insn_slot()
+> can be false negative.
+
+Good catcha! Would an atomic_set() with release ordering be sufficient here
+instead of smp_mb()?
+
 > 
-> The only problem I can see is in the assumption that `srcu_idx < 0` is
-> never going to be returned by srcu_read_lock(). Paul says that it can
-> only be 0 or 1, but it's not codified as part of a contract.
+>> +static unsigned long xol_get_insn_slot(struct uprobe_task *utask,
+>> +				       struct uprobe *uprobe)
+>>  {
+>>  	struct xol_area *area;
+>>  	unsigned long xol_vaddr;
+>> @@ -1665,16 +1740,46 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+>>  	if (!area)
+>>  		return 0;
+>>
+>> -	xol_vaddr = xol_take_insn_slot(area);
+>> -	if (unlikely(!xol_vaddr))
+>> +	/*
+>> +	 * The racing on the utask associated slot_ref can occur unless the
+>> +	 * area runs out of slots. This isn't a common case. Even if it does
+>> +	 * happen, the scalability bottleneck will shift to another point.
+>> +	 */
+> 
+> I don't understand the comment, I guess it means the race with
+> recycle_utask_slot() above.
+> >> +	if (!test_and_get_task_slot(utask))
 
-Yeah, [0,1] is the current range. Fundamentally that thing is an array
-index, so negative values are out and generally safe to use as 'error'
-codes. Paul can't we simply document that the SRCU cookie is always a
-positive integer (or zero) and the negative space shall not be used?
+Exactly, While introducing another refcount operation here might seem like
+a downside, the potential racing on it should be less than the ones on
+xol_area->bitmap and xol_area->slot_count(which you've already optimized).
 
-> So until we change that, probably safer to pass an extra bool
-> specifying whether srcu_idx is valid or not, is that OK?
+>>  		return 0;
+> 
+> No, we can't do this. xol_get_insn_slot() should never fail.
+> 
+> OK, OK, currently xol_get_insn_slot() _can_ fail, but only if get_xol_area()
+> fails to allocate the memory. Which should "never" happen and we can do nothing
+> in this case anyway.
 
-I think Changeing the SRCU documentation to provide us this guarantee
-should be an achievable goal.
+Sorry, I haven't trace the exact path where xol_get_insn_slot() fails. I suspect
+it might repeatedly trigger BRK exceptions before get_xol_area() successfully
+returns. Please correct me if I am wrong.
 
-> (and I assume you want me to drop verbose comments for various states, right?)
+> 
+> But it certainly must not fail if it races with another thread, this is insane.
 
-I axed the comments because I made them invalid and didn't care enough
-to fix them up. If you like them feel free to amend them to reflect the
-new state of things.
+Agreed, it is somewhat costly when race fails. I suggest that it allocates a new
+slot upon the race fails instead of returning 0.
+
+> 
+> And. This patch changes the functions which ask for cleanups. I'll try to send
+> a couple of simple patches on Monday.
+
+Thank you for pointing that out, I must have missed some patches while I was on
+vacation, I will carefully review the mailing list to ensure that this patch can
+work with any recent cleanups.
+
+> 
+> Oleg.
+> 
+> 
+
+-- 
+BR
+Liao, Chang
+
