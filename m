@@ -1,105 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE8E440C;
-	Mon, 21 Oct 2024 07:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02FC71E1026;
+	Mon, 21 Oct 2024 07:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729496620; cv=none; b=pq8S34td29ZUou6YiDJ11JwNo9f+8EtdyONx9FhibrGMb81ZaVeYmarZgUDiAFcl/pKjF5SXXked1mCepFuyc0EggqyauIHs6hgU2nBEnSB5oMrFFgD6eCK7hL0qldLQ36oPPHJZs27IncdzqWzwQJeHbHziFF09mjSgHdNdmEI=
+	t=1729497497; cv=none; b=orCz+lzEphH3tNz3qQtLp1Y33VZSTMpnoWW7IImLCjJuMXNUn+tHtq1oDuXS0T04X+A21yg43UkVRyev4Rh8wfzRRTg2ed2fe7CEld0/qNKtHaCJ5xwIuH4pyzuM8Wk3tNxARVXfU3YcOAlUGg7Jy7m6gxXuRWAYoKYw1WyawMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729496620; c=relaxed/simple;
-	bh=jVUvL+nwzIhExDvhRX8qXKXjV5D8t+xunCafnMybz/A=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fN0wKXnDXX7D1vXVOp2T/FAnnRLlNUfIu3phKvt6W+lDf1elBM59SeIMTvhraRFfSLNC9ypeaU0OjNddIUjv3PisLomMUUsqX2Pi86B1fZbleouUYSylE9fhvxQJdJvImDaU8THv5TlY21e6XwEkI+yfRXz9mrsCcxSWTG3FwGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiNqqyiv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiNqqyiv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A332C4CECD;
-	Mon, 21 Oct 2024 07:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729496620;
-	bh=jVUvL+nwzIhExDvhRX8qXKXjV5D8t+xunCafnMybz/A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MiNqqyivYG2b+sSOANKdt73+QK7Tru8NNJg4rTayYdGd2a3SHPqpwxp2eLlZBMf9s
-	 7cFZn00Cu1+hWjNO0yNXzGdj5BKIbjJiZK7WzXEWzcUo+TESD/uxfV3rOcNBsF+kX+
-	 15FrDGxpIOeKNwHsIg8VvzE+72gG7kddsK+nOFIEJpWQYMlThRnyIAJXgm5z8NXt1K
-	 nPPSvggesWtOKTgOmMskGJqdJaK48Mdny/ah58v/6IJXrEnlKW+cja3jo12tLbUKqB
-	 dtlJ7S9EBpF24Rxp9jr1Fkxud3ixoyFYJeu0LkhZ4oMYDzm9laF7FOFt47UhtVFkYc
-	 Qer8Y/g+vcFRw==
-Date: Mon, 21 Oct 2024 16:43:36 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] fgraph: Allocate ret_stack_list with proper size
-Message-Id: <20241021164336.79a90af16419aa6e3f065bf3@kernel.org>
-In-Reply-To: <20241018215212.23f13f40@rorschach>
-References: <20241018215212.23f13f40@rorschach>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729497497; c=relaxed/simple;
+	bh=4rpysPQB20+ebB4iRt48r73mCvjGBhQyADVxUByaoN0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nlZTXudv1qMfS596uyOGSxwTtzG14Nubd2mxYL8eyTfykgmmpUixoIw8veL1yStjw0Uy4AwsTsomJ9oh0GD0jtLKfKcB0SZesByzmbY7JGo/izKozoHCcStTLTNOtbbkb27QRi9eFJEcb1bRMY4NyLCl57rWpQwuW9f/TxZg5Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C87C4DA7;
+	Mon, 21 Oct 2024 00:58:43 -0700 (PDT)
+Received: from [10.57.87.148] (unknown [10.57.87.148])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 017B43F71E;
+	Mon, 21 Oct 2024 00:58:12 -0700 (PDT)
+Message-ID: <bf425884-b355-4da9-8e2b-6da693f2760b@arm.com>
+Date: Mon, 21 Oct 2024 08:58:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fgraph: Give ret_stack its own kmem cache
+Content-Language: en-GB
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20241019152719.321772eb@rorschach.local.home>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241019152719.321772eb@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 18 Oct 2024 21:52:12 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
+On 19/10/2024 20:27, Steven Rostedt wrote:
 > From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> The ret_stack_list is an array of ret_stack shadow stacks for the function
-> graph usage. When the first function graph is enabled, all tasks in the
-> system get a shadow stack. The ret_stack_list is a 32 element array of
-> pointers to these shadow stacks. It allocates the shadow stack in batches
-> (32 stacks at a time), assigns them to running tasks, and continues until
-> all tasks are covered.
+> The ret_stack (shadow stack used by function graph infrastructure) is
+> created for every task on the system when function graph is enabled. Give
+> it its own kmem_cache. This will make it easier to see how much memory is
+> being used specifically for function graph shadow stacks.
 > 
-> When the function graph shadow stack changed from an array of
-> ftrace_ret_stack structures to an array of longs, the allocation of
-> ret_stack_list went from allocating an array of 32 elements to just a
-> block defined by SHADOW_STACK_SIZE. Luckily, that's defined as PAGE_SIZE
-> and is much more than enough to hold 32 pointers. But it is way overkill
-> for the amount needed to allocate.
+> In the future, this size may change and may not be a power of two. Having
+> its own cache can also keep it from fragmenting memory.
 > 
-> Change the allocation of ret_stack_list back to a kcalloc() of
-> FTRACE_RETSTACK_ALLOC_SIZE pointers.
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> 
-> Fixes: 42675b723b484 ("function_graph: Convert ret_stack to a series of longs")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/fgraph.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kernel/trace/fgraph.c | 35 ++++++++++++++++++++++++++++++-----
+>  1 file changed, 30 insertions(+), 5 deletions(-)
 > 
 > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 43f4e3f57438..41e7a15dcb50 100644
+> index 51e81b299a0d..51849bc42d3a 100644
 > --- a/kernel/trace/fgraph.c
 > +++ b/kernel/trace/fgraph.c
-> @@ -1162,7 +1162,8 @@ static int start_graph_tracing(void)
->  	unsigned long **ret_stack_list;
->  	int ret;
+> @@ -172,6 +172,8 @@ enum {
+>  DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+>  int ftrace_graph_active;
 >  
-> -	ret_stack_list = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
-> +	ret_stack_list = kcalloc(FTRACE_RETSTACK_ALLOC_SIZE,
-> +				 sizeof(*ret_stack_list), GFP_KERNEL);
+> +static struct kmem_cache *fgraph_stack_cachep;
+> +
+>  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+>  static unsigned long fgraph_array_bitmask;
 >  
->  	if (!ret_stack_list)
->  		return -ENOMEM;
-> -- 
-> 2.45.2
-> 
+> @@ -1022,8 +1024,11 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  	int start = 0, end = FTRACE_RETSTACK_ALLOC_SIZE;
+>  	struct task_struct *g, *t;
+>  
+> +	if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +		return -ENOMEM;
+> +
+>  	for (i = 0; i < FTRACE_RETSTACK_ALLOC_SIZE; i++) {
+> -		ret_stack_list[i] = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +		ret_stack_list[i] = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  		if (!ret_stack_list[i]) {
+>  			start = 0;
+>  			end = i;
+> @@ -1054,7 +1059,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  	rcu_read_unlock();
+>  free:
+>  	for (i = start; i < end; i++)
+> -		kfree(ret_stack_list[i]);
+> +		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
+>  	return ret;
+>  }
+>  
+> @@ -1117,9 +1122,12 @@ void ftrace_graph_init_idle_task(struct task_struct *t, int cpu)
+>  	if (ftrace_graph_active) {
+>  		unsigned long *ret_stack;
+>  
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +
+>  		ret_stack = per_cpu(idle_ret_stack, cpu);
+>  		if (!ret_stack) {
+> -			ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +			ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  			if (!ret_stack)
+>  				return;
+>  			per_cpu(idle_ret_stack, cpu) = ret_stack;
+> @@ -1139,7 +1147,10 @@ void ftrace_graph_init_task(struct task_struct *t)
+>  	if (ftrace_graph_active) {
+>  		unsigned long *ret_stack;
+>  
+> -		ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +
+> +		ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  		if (!ret_stack)
+>  			return;
+>  		graph_init_task(t, ret_stack);
+> @@ -1154,7 +1165,11 @@ void ftrace_graph_exit_task(struct task_struct *t)
+>  	/* NULL must become visible to IRQs before we free it: */
+>  	barrier();
+>  
+> -	kfree(ret_stack);
+> +	if (ret_stack) {
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +		kmem_cache_free(fgraph_stack_cachep, ret_stack);
+> +	}
+>  }
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> @@ -1290,6 +1305,16 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  
+>  	mutex_lock(&ftrace_lock);
+>  
+> +	if (!fgraph_stack_cachep) {
+> +		fgraph_stack_cachep = kmem_cache_create("fgraph_stack",
+> +							SHADOW_STACK_SIZE,
+> +							SHADOW_STACK_SIZE, 0, NULL);
 
+(I don't have any experience with this code, but...) is there any value/need to
+destroy the cache in unregister_ftrace_graph()? I guess you would need to
+refcount it, so its created on the first call to register and destroyed on the
+last call to unregister?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Ryan
+
+> +		if (!fgraph_stack_cachep) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +	}
+> +
+>  	if (!fgraph_array[0]) {
+>  		/* The array must always have real data on it */
+>  		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
+
