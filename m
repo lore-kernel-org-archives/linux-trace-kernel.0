@@ -1,155 +1,155 @@
-Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208FD1F9AAA
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 21 Oct 2024 15:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224576A8D2;
+	Mon, 21 Oct 2024 15:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729523644; cv=none; b=qOZskcJTxcg2CDWPU50pqoJTDU4makfUBwSGjcJKc+1Tfc/K4fEbnsscU7xKtquQz9wVTiJxnhm7WZp9Vgt2J+rl8lQhFPA6T+MAdvUQHWddF7kwDC5rHzhReJxpPgRbYgSRvlwk92E7TjcrRrHdFt6n94ji2d+WoOvB2WucsFk=
+	t=1729523744; cv=none; b=QMgPg1DLETwUtOj7lF7xkqdhCDihBlL81bntJkzLscoKEih1/p44fONu+XTQWEz7XL1k/7qIgMIzmjckCZI1wY792GLxnQCDsVm2g05EZFR+fwtOqgO/Tf21NIayuGPBVuc+ColHzteJECKKM8Sv+PHC/DHPLnefE1j29k/Ogsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729523644; c=relaxed/simple;
-	bh=WqwyJPFrX14EIYPb8NlDkhijgJLXM1i58qlxJzwdzUI=;
-	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=Hp8RcWImTaXMKhL1rFQ1HoE+VcmmWbeUe++EBV82OuJBxAvlofCzdNpa2g2bVw9m9e4xENJAmJtRSRoggOegetyNqzFPPO2PLGpEA5f4Ch/6oTd8gFCLiISKXNDRM6k2c/bPPVg3xdCACZWIIHiS0zw3ONO+sHTei+GY4ruIWyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=LM42rcxd; arc=none smtp.client-ip=185.70.43.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1729523744; c=relaxed/simple;
+	bh=3Ie81PJaB3Z2D/AicTp4yUNXRV46tqz0pVjMH/bKZBU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Dunf1B/pOdTRN1DOPbliJ02XjZDBUJ/sNJWYIU7Wbfr69MyHCzvZE3GqPfynXH5ezPLOTnHYnMWUCsSKx3vMhuJNucQCqtz16X8x3lg8ezNZ9w0GvXI2nIwY1tbcg5uTd2iMnjwQvYp63DvLZgFZYtiiNAZICRsTI50h9RWTDYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6hB2/iB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="LM42rcxd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1729523641; x=1729782841;
-	bh=PVPeEX/Ul854Zb5vevT8sNbYHxTrQfiI9hsvWrSh50U=;
-	h=Date:To:From:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=LM42rcxdqSbt1ZMdTDHIa/ea9frAWDq/1bwYrFGoyUZ5I1k1aTC8UPQqEeQaBFydz
-	 SbN9jJlJP4Y+8eF5s+vOXJIs6FkT9CEp8bgZStO8fCAlX7YgQXCJqvEXgbwFiWbei7
-	 OErSlyrgvmQzUgzvfUzUH6vnqIjDOTFXYlI+6w5YNbm7QG/cUXrT/0N/wE5OqsAF+q
-	 ixWowGhxOJCjpFeDFHF3O3EasqNjl9t3dbQapCB0sCP3ZWFbIjVYOzQuFcoag8nMhh
-	 eStAkeXFASJzu1hXAYitee7f6xkYAQuFct+BEXWEmCWppah3WaVB8NVA2W4vFu28Xg
-	 Wwb2q9uUmsKKw==
-Date: Mon, 21 Oct 2024 15:13:57 +0000
-To: Tomas Glozar <tglozar@redhat.com>, "lgoncalv@redhat.com" <lgoncalv@redhat.com>, "jkacur@redhat.com" <jkacur@redhat.com>, "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-From: furkanonder <furkanonder@protonmail.com>
-Subject: [PATCH 3/3] tools/rtla: Improve exception handling in timerlat_load.py
-Message-ID: <Q_k1s4hBtUy2px8ou0QKenjEK2_T_LoV8IxAE79aBakBogb-7uHp2fpET3oWtI1t3dy8uKjWeRzQOdKNzIzOOpyM4OjutJOriZ9TrGY6b-g=@protonmail.com>
-Feedback-ID: 14203677:user:proton
-X-Pm-Message-ID: 7be97eec64c3fdebc1d45f9ab1d692f0aa8623d1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6hB2/iB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93016C4CECD;
+	Mon, 21 Oct 2024 15:15:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729523743;
+	bh=3Ie81PJaB3Z2D/AicTp4yUNXRV46tqz0pVjMH/bKZBU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O6hB2/iB4wLSkH+h4kqg9A82MI6C6IV/Jv5g90mM8cP4PlUevnewputwtJBeguYBB
+	 ltrz1sjQxRpcFOYGuHOL+ughjbvCW5qRRlIMGoY4EPHgHL1Qo8XZZIV1jlQuaY52rb
+	 p2NjWr0hYlHUeJinima3br77dEtuQysAuE4hhjcgNJWKraMq83QbOSNYYFcK+Es1D4
+	 OuwPPrE5Dp0Y7rba+PMbIYfJRQ+I2XEfIgX8mwI+09jxh7MW62PR3NBhgnoDqRcAaL
+	 V1WlHRu/ywpY2YElacTzveP2eCaR6BS0b5dinhgMAnhkpRhkcGdqZei7LtAua/+j9p
+	 GZwVnrgH2NZrA==
+Date: Tue, 22 Oct 2024 00:15:34 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Sven Schnelle
+ <svens@linux.ibm.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew
+ Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v17 11/16] fprobe: Rewrite fprobe on function-graph
+ tracer
+Message-Id: <20241022001534.96c0d1813d8f4a26563d4663@kernel.org>
+In-Reply-To: <20241018124952.17670-E-hca@linux.ibm.com>
+References: <172904026427.36809.516716204730117800.stgit@devnote2>
+	<172904040206.36809.2263909331707439743.stgit@devnote2>
+	<yt9ded4gfdz0.fsf@linux.ibm.com>
+	<20241016101022.185f741b@gandalf.local.home>
+	<20241018124952.17670-E-hca@linux.ibm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The enhancements made to timerlat_load.py are intended to improve the scrip=
-t's exception handling.
+On Fri, 18 Oct 2024 14:49:52 +0200
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-Summary of the changes:
-  - Specific exceptions are now caught for CPU affinity and priority
-    settings, with clearer error messages provided.
-  - The timerlat file descriptor opening now includes handling for
-    PermissionError and OSError, with informative messages.
-  - In the infinite loop, generic exceptions have been replaced with
-    specific types like KeyboardInterrupt and IOError, improving feedback.
+> On Wed, Oct 16, 2024 at 10:10:22AM -0400, Steven Rostedt wrote:
+> > On Wed, 16 Oct 2024 14:07:31 +0200
+> > Sven Schnelle <svens@linux.ibm.com> wrote:
+> > > I haven't yet fully understood why this logic is needed, but the
+> > > WARN_ON_ONCE triggers on s390. I'm assuming this fails because fp always
+> > > has the upper bits of the address set on x86 (and likely others). As an
+> > > example, in my test setup, fp is 0x8feec218 on s390, while it is
+> > > 0xffff888100add118 in x86-kvm.
+> > 
+> > Since we only need to save 4 bits for size, we could have what it is
+> > replacing always be zero or always be f, depending on the arch. The
+> > question then is, is s390's 4 MSBs always zero?
+> > 
+> > Thus we could make it be:
+> > 
+> > static inline int decode_fprobe_header(unsigned long val, struct fprobe **fp)
+> > {
+> > 	unsigned long ptr;
+> > 
+> > 	ptr = (val & FPROBE_HEADER_PTR_MASK) | FPROBE_HEADER_MSB_MASK;
+> > 	if (fp)
+> > 		*fp = (struct fprobe *)ptr;
+> > 	return val >> FPROBE_HEADER_PTR_BITS;
+> > }
+> > 
+> > And define FPROBE_HEADER_MSB_MASK to be either:
+> > 
+> > For most archs:
+> > 
+> > #define FPROBE_HEADER_MSB_MASK	(0xf << FPROBE_HEADER_PTR_BITS)
+> > 
+> > or on s390:
+> > 
+> > #define FPROBE_HEADER_MSB_MASK	(0x0)
+> > 
+> > Would this work?
+> 
+> This would work for s390. Right now we don't make any use of the four
+> MSBs, and they are always zero. If for some reason this would ever
+> change, we would need to come up with a different solution.
 
- Before:
-    $ sudo python timerlat_load.py 122
-    Error setting affinity
- After:
-    $ sudo python timerlat_load.py 122
-    Error setting affinity: [Errno 22] Invalid argument
+Ah, so fill with zero works for s390 kernel. Thanks for the info.
 
- Before:
-    $ sudo python timerlat_load.py 1 -p 950
-    Error setting priority
- After:
-    $ sudo python timerlat_load.py 1 -p 950
-    Error setting priority: [Errno 22] Invalid argument
+> Please note that this only works for addresses in the kernel address
+> space. For user space the full 64 bit address range (minus the top
+> page) can be used for user space applications.
 
- Before:
-    $ python timerlat_load.py 1
-    Error opening timerlat fd, did you run timerlat -U?
- After:
-    $ python timerlat_load.py 1
-    Permission denied. Please check your access rights.
+I wonder what is the unsigned long size (stack entry size) of the
+s390? is it 64bit?
 
-Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
----
- tools/tracing/rtla/sample/timerlat_load.py | 37 +++++++++++++++++++++-----=
------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+> I'm just writing this
+> here, just in case something like this comes up for uprobes or
+> something similar as well.
 
-diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/rtl=
-a/sample/timerlat_load.py
-index d7341ed5127a..a819c3588073 100644
---- a/tools/tracing/rtla/sample/timerlat_load.py
-+++ b/tools/tracing/rtla/sample/timerlat_load.py
-@@ -31,43 +31,48 @@ args =3D parser.parse_args()
+I'm considering another solution if it doesn't work. Of course if
+above works, it is the best compression ratio.
 
- try:
-     affinity_mask =3D {args.cpu}
--except:
--    print("Invalid cpu: " + args.cpu)
--    exit(1)
--
--try:
-     os.sched_setaffinity(0, affinity_mask)
--except:
--    print("Error setting affinity")
--    exit(1)
-+except Exception as e:
-+    print(f"Error setting affinity: {e}")
-+    sys.exit(1)
+This is only if it doesn't work, we can consolidate a set of
+fprobe header in N + 1 entries as
 
- if args.prio:
-     try:
-         param =3D os.sched_param(args.prio)
-         os.sched_setscheduler(0, os.SCHED_FIFO, param)
--    except:
--        print("Error setting priority")
--        exit(1)
-+    except Exception as e:
-+        print(f"Error setting priority: {e}")
-+        sys.exit(1)
+0: [# of fprobes(4bit)|4bit array of sizes]
+1: [fp 1]
+2: [fp 1 data]
+...
 
- try:
-     timerlat_path =3D f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu}/=
-timerlat_fd"
-     timerlat_fd =3D open(timerlat_path, 'r')
--except:
-+except PermissionError:
-+    print("Permission denied. Please check your access rights.")
-+    sys.exit(1)
-+except OSError:
-     print("Error opening timerlat fd, did you run timerlat -U?")
--    exit(1)
-+    sys.exit(1)
+So if we have 3 fprobes on the same entry and has 0, 3, 2 data size, then
 
- try:
-     data_fd =3D open("/dev/full", 'r')
--except:
--    print("Error opening data fd")
-+except Exception as e:
-+    print(f"Error opening data fd: {e}")
-+    sys.exit(1)
+0:[3|0|3|2|0...0]
+1:[fp1]
+2:[fp2]
+3:[fp2 data 1]
+4:[fp2 data 2]
+5:[fp2 data 3]
+6:[fp3]
+7:[fp3 data 1]
+8:[fp3 data 2]
 
- while True:
-     try:
-         timerlat_fd.read(1)
-         data_fd.read(20 * 1024 * 1024)
--    except:
-+    except KeyboardInterrupt:
-         print("Leaving")
-         break
-+    except IOError as e:
-+        print(f"I/O error occurred: {e}")
-+        break
-+    except Exception as e:
-+        print(f"Unexpected error: {e}")
-+        break
+Thank you,
 
- timerlat_fd.close()
- data_fd.close()
---
-2.46.2
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
