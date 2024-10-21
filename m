@@ -1,31 +1,31 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2496B1E32B1;
-	Mon, 21 Oct 2024 10:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBF01E47B2;
+	Mon, 21 Oct 2024 10:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729507458; cv=none; b=kN1WwFfML2uLWfcOw7xjt+9LAsDehxe86sEFzjtnsCtLUoJgGBJ7NZD235EhI/cRo7EU6xHMRYd6OJFOEO9rmxrWNJenM9+Dq1R5l+kYlcomizmKpeNrBXfx0OiR0GaRAnojx+qica6mM5gFHSwulaSkNW2pzXajJc45CISnzxI=
+	t=1729507532; cv=none; b=SMH56dJEOOCsUnWlXvzZINL5UYcP2mt0oRspNrZLR5T5LGaeCY1YCftLhKzFPd51moWBPJ99+biTGjVwSyU3N8LEn2tGleiU3w/COJf9VOMkgb7DFIPUkvmeN5zT+GSJpw/6JfsZRsq/ROoi6/6hVMV6vxdcth8Vt5LW/UdNGto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729507458; c=relaxed/simple;
-	bh=aKibnnChL7ppBa28//JCFhonLN2ZBROjgZQWz9aMYoI=;
+	s=arc-20240116; t=1729507532; c=relaxed/simple;
+	bh=vvXe8Z0w0Le7DSs3zokVIHd04LLEwNqimymWGLhsaaA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MPHguTCEtr10ZWmFYY3EnxvHISnDaQBPFrS4he4zKtyW8U+We2agZ12jaOHE50xchkRTJ4WqQincjzgYi6Nh8FlA9ZsC/PGwO8sNoVoxP2sdnAN4qOT9khyJcrwMCFGq+jjAJsILk91Fx6+NoXkcKpGZQ1crRl8G1iPmSniKYCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	 In-Reply-To:Content-Type; b=p1d1n/KfK3UfWBHQhNIt45gtU2wYM83pF2s27zcW4rtaLXhStEjY+6IGQUEYiB8ViPgPVlZ9rdQlK7tdqks7fc0tl35NKkFvxy0CEtkgGzbWQt+iXL8bUKsVGLKdZFpuESEuEYIIpLmfFXcq20rsGRfm+7rIIPzwDmYAEYsDhmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XXBj86vrZz1jBG4;
-	Mon, 21 Oct 2024 18:42:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4XXBjk62slz1T8wt;
+	Mon, 21 Oct 2024 18:43:22 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6020D1402D0;
-	Mon, 21 Oct 2024 18:44:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DA1F114022E;
+	Mon, 21 Oct 2024 18:45:21 +0800 (CST)
 Received: from [10.67.110.108] (10.67.110.108) by
  kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 21 Oct 2024 18:44:12 +0800
-Message-ID: <06a3d2cd-04d3-4d59-871c-4c6d7383ce11@huawei.com>
-Date: Mon, 21 Oct 2024 18:44:12 +0800
+ 15.2.1258.34; Mon, 21 Oct 2024 18:45:21 +0800
+Message-ID: <91d19848-f5f4-4e0e-b3c7-77ac2befae3e@huawei.com>
+Date: Mon, 21 Oct 2024 18:45:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,24 +35,24 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] arm64: insn: Simulate nop instruction for better
  uprobe performance
-To: Mark Rutland <mark.rutland@arm.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <ast@kernel.org>,
-	<puranjay@kernel.org>, <andrii@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+To: Catalin Marinas <catalin.marinas@arm.com>, <will@kernel.org>,
+	<ast@kernel.org>, <puranjay@kernel.org>, <andrii@kernel.org>,
+	<mark.rutland@arm.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
 References: <20240909071114.1150053-1-liaochang1@huawei.com>
- <ZweyA3tZc1BiBcb6@J2N7QTR9R3>
+ <172901867521.2735310.14333146229393737694.b4-ty@arm.com>
 From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZweyA3tZc1BiBcb6@J2N7QTR9R3>
+In-Reply-To: <172901867521.2735310.14333146229393737694.b4-ty@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemd200013.china.huawei.com (7.221.188.133)
 
 
 
-在 2024/10/10 18:52, Mark Rutland 写道:
-> On Mon, Sep 09, 2024 at 07:11:14AM +0000, Liao Chang wrote:
+在 2024/10/16 2:58, Catalin Marinas 写道:
+> On Mon, 09 Sep 2024 07:11:14 +0000, Liao Chang wrote:
 >> v2->v1:
 >> 1. Remove the simuation of STP and the related bits.
 >> 2. Use arm64_skip_faulting_instruction for single-stepping or FEAT_BTI
@@ -67,167 +67,42 @@ X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
 >> leads to a significant performance overhead compared to 'ret' variant,
 >> which is already emulated.
 >>
->> Typicall uprobe is installed on 'nop' for USDT and on function entry
->> which starts with the instrucion 'stp x29, x30, [sp, #imm]!' to push lr
->> and fp into stack regardless kernel or userspace binary. In order to
->> improve the performance of handling uprobe for common usecases. This
->> patch supports the emulation of Arm64 equvialents instructions of 'nop'
->> and 'push'. The benchmark results below indicates the performance gain
->> of emulation is obvious.
->>
->> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
->>
->> xol (1 cpus)
->> ------------
->> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>
->> emulation (1 cpus)
->> -------------------
->> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/prod)
->> uprobe-push: 1.743 ± 0.006M/s  (1.743M/prod)
->> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/prod)
->> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/prod)
->> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/prod)
->> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/prod)
->>
->> As shown above, the performance gap between 'nop/push' and 'ret'
->> variants has been significantly reduced. Due to the emulation of 'push'
->> instruction needs to access userspace memory, it spent more cycles than
->> the other.
->>
->> As Mark suggested [1], it is painful to emulate the correct atomicity
->> and ordering properties of STP, especially when it interacts with MTE,
->> POE, etc. So this patch just focus on the simuation of 'nop'. The
->> simluation of STP and related changes will be addressed in a separate
->> patch.
->>
->> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
->> [1] https://lore.kernel.org/all/Zr3RN4zxF5XPgjEB@J2N7QTR9R3/
->>
->> CC: Andrii Nakryiko <andrii.nakryiko@gmail.com>
->> CC: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  arch/arm64/include/asm/insn.h            |  6 ++++++
->>  arch/arm64/kernel/probes/decode-insn.c   |  9 +++++++++
->>  arch/arm64/kernel/probes/simulate-insn.c | 11 +++++++++++
->>  arch/arm64/kernel/probes/simulate-insn.h |  1 +
->>  4 files changed, 27 insertions(+)
->>
->> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
->> index 8c0a36f72d6f..dd530d5c3d67 100644
->> --- a/arch/arm64/include/asm/insn.h
->> +++ b/arch/arm64/include/asm/insn.h
->> @@ -549,6 +549,12 @@ static __always_inline bool aarch64_insn_uses_literal(u32 insn)
->>  	       aarch64_insn_is_prfm_lit(insn);
->>  }
->>  
->> +static __always_inline bool aarch64_insn_is_nop(u32 insn)
->> +{
->> +	return aarch64_insn_is_hint(insn) &&
->> +	       ((insn & 0xFE0) == AARCH64_INSN_HINT_NOP);
->> +}
+>> [...]
 > 
-> Can we please make this:
+> Applied to arm64 (for-next/probes), thanks! I fixed it up according to
+> Mark's comments.
 > 
-> static __always_inline bool aarch64_insn_is_nop(u32 insn)
-> {
-> 	return insn == aarch64_insn_gen_nop();
-> }
+> [1/1] arm64: insn: Simulate nop instruction for better uprobe performance
+>       https://git.kernel.org/arm64/c/ac4ad5c09b34
 > 
-> That way we don't need to duplicate the encoding details, and it's
-> "obviously correct".
 
-Absolutely agree.
+Mark, Catalin and Andrii,
 
-> 
->> +
->>  enum aarch64_insn_encoding_class aarch64_get_insn_class(u32 insn);
->>  u64 aarch64_insn_decode_immediate(enum aarch64_insn_imm_type type, u32 insn);
->>  u32 aarch64_insn_encode_immediate(enum aarch64_insn_imm_type type,
->> diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
->> index 968d5fffe233..be54539e309e 100644
->> --- a/arch/arm64/kernel/probes/decode-insn.c
->> +++ b/arch/arm64/kernel/probes/decode-insn.c
->> @@ -75,6 +75,15 @@ static bool __kprobes aarch64_insn_is_steppable(u32 insn)
->>  enum probe_insn __kprobes
->>  arm_probe_decode_insn(probe_opcode_t insn, struct arch_probe_insn *api)
->>  {
->> +	/*
->> +	 * While 'nop' instruction can execute in the out-of-line slot,
->> +	 * simulating them in breakpoint handling offers better performance.
->> +	 */
->> +	if (aarch64_insn_is_nop(insn)) {
->> +		api->handler = simulate_nop;
->> +		return INSN_GOOD_NO_SLOT;
->> +	}
->> +
->>  	/*
->>  	 * Instructions reading or modifying the PC won't work from the XOL
->>  	 * slot.
->> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
->> index 22d0b3252476..5e4f887a074c 100644
->> --- a/arch/arm64/kernel/probes/simulate-insn.c
->> +++ b/arch/arm64/kernel/probes/simulate-insn.c
->> @@ -200,3 +200,14 @@ simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs)
->>  
->>  	instruction_pointer_set(regs, instruction_pointer(regs) + 4);
->>  }
->> +
->> +void __kprobes
->> +simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
->> +{
->> +	/*
->> +	 * Compared to instruction_pointer_set(), it offers better
->> +	 * compatibility with single-stepping and execution in target
->> +	 * guarded memory.
->> +	 */
->> +	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
->> +}
-> 
-> Can we please delete the comment? i.e. make this:
-> 
-> 	void __kprobes
-> 	simulate_nop(u32 opcode, long addr, struct pt_regs *regs)
-> 	{
-> 		arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> 	}
-> 
-> With those two changes:
+I am just back from a long vacation, thanks for reviewing and involvement for
+this patch.
 
-I wrote this comment to ensure I don't misunderstand the usage of
-arm64_skip_faulting_instruction() here. This comment should be removed from
-the final patch.
+I've sent a patch [1] that simulates STP at function entry, It maps user
+stack pages to kernel address space, allowing kernel to use STP directly
+to push fp/lr onto stack. Unfortunately, the profiling results below show
+reveals this approach increases the uprobe-push throughput by 29.3% (from
+0.868M/s/cpu to 1.1238M/s/cpu) and uretprobe-push by 15.9% (from 0.616M/s/cpu
+to 0.714M/s/cpu). As Andrii pointed out, this approach is a bit complex and
+overkill for STP simluation. So I look forward to more input about this patch,
+is it possible to reach a better result? Or should I pause this work for now
+and wait for Arm64 to add some instruction for storing pairs of registers to
+unprivileged memory in privileged exception level? Thanks.
 
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> ... and I can go chase up fixing the other issues in this file.
-> 
-> Mark.
-> 
-> 
->> diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
->> index e065dc92218e..efb2803ec943 100644
->> --- a/arch/arm64/kernel/probes/simulate-insn.h
->> +++ b/arch/arm64/kernel/probes/simulate-insn.h
->> @@ -16,5 +16,6 @@ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
->>  void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
->>  void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
->>  void simulate_ldrsw_literal(u32 opcode, long addr, struct pt_regs *regs);
->> +void simulate_nop(u32 opcode, long addr, struct pt_regs *regs);
->>  
->>  #endif /* _ARM_KERNEL_KPROBES_SIMULATE_INSN_H */
->> -- 
->> 2.34.1
->>
->>
-> 
+xol-stp
+-------
+uprobe-push     ( 1 cpus):    0.868 ± 0.001M/s  (  0.868M/s/cpu)
+uretprobe-push  ( 1 cpus):    0.616 ± 0.001M/s  (  0.616M/s/cpu)
+
+simulated-stp
+-------------
+uprobe-push     ( 1 cpus):    1.128 ± 0.002M/s  (  1.128M/s/cpu)
+uretprobe-push  ( 1 cpus):    0.714 ± 0.001M/s  (  0.714M/s/cpu)
+
+[1] https://lore.kernel.org/all/20240910060407.1427716-1-liaochang1@huawei.com/
 
 -- 
 BR
