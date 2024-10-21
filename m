@@ -1,100 +1,102 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9071E1C11;
-	Mon, 21 Oct 2024 10:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B22A1E47A8;
+	Mon, 21 Oct 2024 10:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729506304; cv=none; b=eJ2Qkjlh2bvpz0TtupCa3Fp/ua7X2QNkxeZLavkgMWhl2+GCaYbvbh0GUB48BbWDaE8g7oOrIY3d5GbYTA/5IDlm70D3/JZ73YWdDOcmb+xiJ4RLZvgEYo6oU0jY/3InFL52DSFmciGe5N3O0mTEl0LOX393FOvtuQLGLc2Wo8o=
+	t=1729506719; cv=none; b=sb+G2p+JhpvLR8IwWcctVgGz7wA2zFOtmxR90lpWfyh3BTbWDGrj/fX1GCIkwiACvFXv+unBON3J/PqcePrAYQJR0URN1b91lcPYG9psinBreXGIQKDmvpfYtBmGsRASADar9ys8bf0CFfcOSZuVODYnew8plT/bynE8vXSYhtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729506304; c=relaxed/simple;
-	bh=KD9M1VGnNWT2jlHW4Y1ujgavmnn4/lXTInJPOGU392s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HiM4Fby3apBPFXoSi9ffV6YInT4vkVxn5aHUs2NU0zOh123HG0AXfttgddoRxJJBuwiC2IuOdZeSPJXRgN46PqJpRqxEhnFcbRhqDfiPLnLbhhO/x0MmNTZnRnKpvvOR+2hrtbD6e/m0x+6o/KpBCBmqZXF6ihB94/NGuSAzMt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EuEeWO0E; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729506719; c=relaxed/simple;
+	bh=YZCUVyUfC9oHB1G3sSi+PNeE6ieKKL19wAfEIPQup68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pKxd9lZOIT/0LGwYFGAxIXqCISMEr62SdHNg6S1S6tm3Y26Q8GGUVTusJBf5fDMFC4YhZl6kO2gfc5Ats6mVbtWT30tJMJoWgH8UJLTEYMa9TG+jA5EvoLV657RBs+ApyCy+O14i6ktb/MV0SgyLNVnCFGzdNT5bxKvHWhCvyYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=L8K452Ew; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuEeWO0E"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4314c4cb752so45391445e9.2;
-        Mon, 21 Oct 2024 03:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729506301; x=1730111101; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NAwlhGQzbSLoByA/ARxTjenPoWKomOS+mOggtCmqFeo=;
-        b=EuEeWO0EFyGAkkRU0pVqGLqebR9A+rMv4McZTTmU03uPoK1GavRGKDPhYJsAQxZtju
-         o2ZaX/ty72Hi6yRuJUlbrrJezAHnJbJSJtrohXJkXiRpHQsSJowhWgd02dvbLhBdSDYB
-         +IqTd7Ors8Rq0Vog0iNEUpGrdQFPRn3N0DQm1ta9QEbT6XM04Nci+WRscZuiG9Sgzc/r
-         Ql6cj7KYsdPTVejyO/cw6fvWTpbkfIjEv7l07/nA42QL3iUeSO2zY3ZyWMT/vEH6DqNB
-         lFrobzV7awtN/c3ijFzzd5GfdiA7w36YiPY0RKGmSyNyFjfWzhxMO1kqy9aVuIR41Hvt
-         W/+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729506301; x=1730111101;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NAwlhGQzbSLoByA/ARxTjenPoWKomOS+mOggtCmqFeo=;
-        b=EoMcvyJjzXI4K/yVZ/AZGJUrs7wKKxbjTUytOb/enQLz/HldYpVKp2aO67ZhHb1EK4
-         OvHWWKiwVAFUmxa3/C3o2a3l/p7wvH8z3VIw/k7umYJDPIazh9iJHBheOEjApbZyiv/8
-         9jamxINN4W4G8CmP0bUlT8rwc5zi0W5rmV39O3diNfY0YA+vrCehp8xlb1D22S0SmiZX
-         CMWvU8kxVOWlTjtNucXb7E3MBSXVZc8E5CsHK34dKU15jJmfmXbftWti55npXtf3kWuE
-         2uHX8BEkq2SaFDX1xRHlxoD2usLB85LsleDaA0V0FKFrVhGBE8H2+Elepd68ZFLjMoXs
-         tJ/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVUnloJGHbAjyeTqGnM1j2IGBL2X+BPJ3i1dl2q7zY4ZVjsF8wGrBTBkiHat8InjKKfkob7RuAyXSh2B5MWgY1+c70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJQSY0yt8G/fyiFi6U6zwlfuizXT39sZ9XQAbEOOQAcunP8udu
-	nZztVrMbIepSMpqETXEXUg1mJp6+FJF+UWGpAA7rB4fz+CAWf9xVrn9iu4BzFWY=
-X-Google-Smtp-Source: AGHT+IHvZKAo57+wfpvREVx3okbJ9A8oAFQP2M2WMnLoWssShO7pbdFvZWN0MzFBdqS1iwDl5Mkfjg==
-X-Received: by 2002:a05:600c:1c85:b0:42c:b3e5:f688 with SMTP id 5b1f17b1804b1-4316161f338mr70928435e9.4.1729506300709;
-        Mon, 21 Oct 2024 03:25:00 -0700 (PDT)
-Received: from gi4n-KLVL-WXX9.. ([2a01:e11:5400:7400:ff60:75e8:cc8e:6028])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5cb88csm52269085e9.39.2024.10.21.03.25.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 03:25:00 -0700 (PDT)
-From: Gianfranco Trad <gianf.trad@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	Gianfranco Trad <gianf.trad@gmail.com>
-Subject: [PATCH] fgraph: fix unused value in register_ftrace_graph()
-Date: Mon, 21 Oct 2024 12:24:29 +0200
-Message-ID: <20241021102428.287998-2-gianf.trad@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L8K452Ew"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=wi9e0+QnD1dTbzyWBEfkmQr/IejLdT70yHhTQuDJUYc=; b=L8K452Ewo82ZQfKAONe56ZGczR
+	22Yv4qFuuagkbhjGhDEgrCLL7cGoAXgtMs4a0H52VGFEdTmbECF5lUvTdXJ2hAUcn9vloNnLBwaEx
+	6511cxJ7EY72BqI3paOA8f+1gDgARpZnCvXHFEUFinMcFAHjH/W19QNU7dnBjdVqNq9CgugNJXhGO
+	BjQRxYQcCa6IicjOiOCvxRl8nvtc1yuFa7lfSMDvD0PTnOXl6ETALMDXADZG+FQcO9Zxj0j7W+Qqh
+	rWQbhB6LAAfm04mHFjn6/eTiLKREofnu5zcjbAbfZkwwSEm4AGQNfCC2IMsTey6uw2UF6t8ki4RO5
+	vekOssQA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t2phY-00000007t8k-3IUM;
+	Mon, 21 Oct 2024 10:31:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 00A4830073F; Mon, 21 Oct 2024 12:31:51 +0200 (CEST)
+Date: Mon, 21 Oct 2024 12:31:51 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jolsa@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH v2 tip/perf/core 1/2] uprobes: allow put_uprobe() from
+ non-sleepable softirq context
+Message-ID: <20241021103151.GB6791@noisy.programming.kicks-ass.net>
+References: <20241008002556.2332835-1-andrii@kernel.org>
+ <20241008002556.2332835-2-andrii@kernel.org>
+ <20241018082605.GD17263@noisy.programming.kicks-ass.net>
+ <CAEf4Bzb3xjTH7Qh8c_j95jEr4fNxBgG11a0sCe4hoF9chwUtYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzb3xjTH7Qh8c_j95jEr4fNxBgG11a0sCe4hoF9chwUtYg@mail.gmail.com>
 
-Coverity reports unused assignment to value ret. [1]
-ret is assigned to 0 here, but that stored value is overwritten before
-it can be used. The overwrite might happen either at line 1277, 1290 
-or eventually at line 1306. Therefore, cleanup the unused assignment.
+On Fri, Oct 18, 2024 at 11:22:00AM -0700, Andrii Nakryiko wrote:
+> On Fri, Oct 18, 2024 at 1:26 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, Oct 07, 2024 at 05:25:55PM -0700, Andrii Nakryiko wrote:
+> > > Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), which
+> > > makes it unsuitable to be called from more restricted context like softirq.
+> >
+> > This is delayed_uprobe_lock, right?
+> 
+> Not just delated_uprobe_lock, there is also uprobes_treelock (I forgot
+> to update the commit message to mention that). Oleg had concerns (see
+> [0]) with that being taken from the timer thread, so I just moved all
+> of the locking into deferred work callback.
+> 
+>   [0] https://lore.kernel.org/linux-trace-kernel/20240915144910.GA27726@redhat.com/
 
-[1] Coverity Scan, CID 1633338
+Right, but at least that's not a sleeping lock. He's right about it
+needing to become a softirq-safe lock though. And yeah, unfortunate
+that.
 
-Signed-off-by: Gianfranco Trad <gianf.trad@gmail.com>
----
- kernel/trace/fgraph.c | 1 -
- 1 file changed, 1 deletion(-)
+> > So can't we do something like so instead?
+> 
+> I'll need to look at this more thoroughly (and hopefully Oleg will get
+> a chance as well), dropping lock from delayed_ref_ctr_inc() is a bit
+> scary, but might be ok.
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 41e7a15dcb50..cc2e065c1c8d 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1262,7 +1262,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 			return ret;
- 		}
- 		fgraph_initialized = true;
--		ret = 0;
- 	}
- 
- 	if (!fgraph_array[0]) {
--- 
-2.43.0
+So I figured that update_ref_ctr() is already doing the
+__update_ref_ctr() thing without holding the lock, so that lock really
+is only there to manage the list.
+
+And that list is super offensive... That really wants to be a per-mm
+rb-tree or somesuch.
+
+AFAICT the only reason it is a mutex, is because doing unbouded list
+iteration under a spinlock is a really bad idea.
+
+> But generally speaking, what's your concern with doing deferred work
+> in put_uprobe()? It's not a hot path by any means, worst case we'll
+> have maybe thousands of uprobes attached/detached.
+
+Mostly I got offended by the level of crap in that code, and working
+around crap instead of fixing crap just ain't right.
 
