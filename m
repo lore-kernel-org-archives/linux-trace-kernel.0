@@ -1,183 +1,100 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958BF946C;
-	Mon, 21 Oct 2024 09:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9071E1C11;
+	Mon, 21 Oct 2024 10:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729503895; cv=none; b=o0/pthBJiAKRYPwY2o4j1JiPgSPsC8dRutsu/GCzBMe2XQCmPmo5Os2BR0F1n7z70duK2RuorqK06q/QiAlVaDkQQXcc7Hw7sf5v8TBAmqGdxH8AX5RISkulowMJ3lpR8yA8DuGB5fFQiQQ9j2jv07D5CBieWOhmJuQD+ms0bqQ=
+	t=1729506304; cv=none; b=eJ2Qkjlh2bvpz0TtupCa3Fp/ua7X2QNkxeZLavkgMWhl2+GCaYbvbh0GUB48BbWDaE8g7oOrIY3d5GbYTA/5IDlm70D3/JZ73YWdDOcmb+xiJ4RLZvgEYo6oU0jY/3InFL52DSFmciGe5N3O0mTEl0LOX393FOvtuQLGLc2Wo8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729503895; c=relaxed/simple;
-	bh=0xBD3A8MKB2zAVhLnpz+RBecfEobXW6DqqxmgJzTRQY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qbIkSyQWes2i5cFmAx9odUQOgSFThl7bEbCc8gyGUxFEETGbd5S3ehchVyXJnlw+CfWN6Lz6bWiFDrahbsl2tvYclHaxoIJ0c4BsvUlZseA1a3+U7vqBO37iZk1GaE/dLrKM5OAWikRJKs6TDZsTKy9dou8eO1hFXIRWELHMoM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=bl4phBrr; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1729506304; c=relaxed/simple;
+	bh=KD9M1VGnNWT2jlHW4Y1ujgavmnn4/lXTInJPOGU392s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HiM4Fby3apBPFXoSi9ffV6YInT4vkVxn5aHUs2NU0zOh123HG0AXfttgddoRxJJBuwiC2IuOdZeSPJXRgN46PqJpRqxEhnFcbRhqDfiPLnLbhhO/x0MmNTZnRnKpvvOR+2hrtbD6e/m0x+6o/KpBCBmqZXF6ihB94/NGuSAzMt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EuEeWO0E; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="bl4phBrr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B01C1C0006;
-	Mon, 21 Oct 2024 09:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1729503885;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/+btbJTjZs1+lS1NAnUYjVfMHwFlz7titLmmGTREl3s=;
-	b=bl4phBrrYC9KDxapFsTg5eDARIJrHeAabZk1ZNjr+nlJUvpptFhoV22FSG/Pczs7IRG5he
-	4MkxG3Xmdr3l50ypsycWRbZIsx6hrikliM5YgXc9g+LNBXpNdO38FMxh1FsSsB/4DE3H6v
-	XfvIe2iM39vr4PpwJh9ISsnIijIBQFpmfdediamJClW5mU/3CdtIUZGdN0NoTuY+0HrnGy
-	Zpp8fgqzFVRP+Ui0w7DhTz4ElxQHYk6xhD544s9EJEsAncUZEy3sR7KKOhPBfNl46x9aVT
-	M2D6TidbdLxpEHe8iR+lfhFg8340VA7HppexXT8NFv2n855yf1pFnD709UpwUw==
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Date: Mon, 21 Oct 2024 11:44:43 +0200
-Subject: [PATCH RFC 2/2] arch: m68k: Add STACKTRACE support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EuEeWO0E"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4314c4cb752so45391445e9.2;
+        Mon, 21 Oct 2024 03:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729506301; x=1730111101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAwlhGQzbSLoByA/ARxTjenPoWKomOS+mOggtCmqFeo=;
+        b=EuEeWO0EFyGAkkRU0pVqGLqebR9A+rMv4McZTTmU03uPoK1GavRGKDPhYJsAQxZtju
+         o2ZaX/ty72Hi6yRuJUlbrrJezAHnJbJSJtrohXJkXiRpHQsSJowhWgd02dvbLhBdSDYB
+         +IqTd7Ors8Rq0Vog0iNEUpGrdQFPRn3N0DQm1ta9QEbT6XM04Nci+WRscZuiG9Sgzc/r
+         Ql6cj7KYsdPTVejyO/cw6fvWTpbkfIjEv7l07/nA42QL3iUeSO2zY3ZyWMT/vEH6DqNB
+         lFrobzV7awtN/c3ijFzzd5GfdiA7w36YiPY0RKGmSyNyFjfWzhxMO1kqy9aVuIR41Hvt
+         W/+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729506301; x=1730111101;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAwlhGQzbSLoByA/ARxTjenPoWKomOS+mOggtCmqFeo=;
+        b=EoMcvyJjzXI4K/yVZ/AZGJUrs7wKKxbjTUytOb/enQLz/HldYpVKp2aO67ZhHb1EK4
+         OvHWWKiwVAFUmxa3/C3o2a3l/p7wvH8z3VIw/k7umYJDPIazh9iJHBheOEjApbZyiv/8
+         9jamxINN4W4G8CmP0bUlT8rwc5zi0W5rmV39O3diNfY0YA+vrCehp8xlb1D22S0SmiZX
+         CMWvU8kxVOWlTjtNucXb7E3MBSXVZc8E5CsHK34dKU15jJmfmXbftWti55npXtf3kWuE
+         2uHX8BEkq2SaFDX1xRHlxoD2usLB85LsleDaA0V0FKFrVhGBE8H2+Elepd68ZFLjMoXs
+         tJ/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUnloJGHbAjyeTqGnM1j2IGBL2X+BPJ3i1dl2q7zY4ZVjsF8wGrBTBkiHat8InjKKfkob7RuAyXSh2B5MWgY1+c70=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJQSY0yt8G/fyiFi6U6zwlfuizXT39sZ9XQAbEOOQAcunP8udu
+	nZztVrMbIepSMpqETXEXUg1mJp6+FJF+UWGpAA7rB4fz+CAWf9xVrn9iu4BzFWY=
+X-Google-Smtp-Source: AGHT+IHvZKAo57+wfpvREVx3okbJ9A8oAFQP2M2WMnLoWssShO7pbdFvZWN0MzFBdqS1iwDl5Mkfjg==
+X-Received: by 2002:a05:600c:1c85:b0:42c:b3e5:f688 with SMTP id 5b1f17b1804b1-4316161f338mr70928435e9.4.1729506300709;
+        Mon, 21 Oct 2024 03:25:00 -0700 (PDT)
+Received: from gi4n-KLVL-WXX9.. ([2a01:e11:5400:7400:ff60:75e8:cc8e:6028])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5cb88csm52269085e9.39.2024.10.21.03.25.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Oct 2024 03:25:00 -0700 (PDT)
+From: Gianfranco Trad <gianf.trad@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Gianfranco Trad <gianf.trad@gmail.com>
+Subject: [PATCH] fgraph: fix unused value in register_ftrace_graph()
+Date: Mon, 21 Oct 2024 12:24:29 +0200
+Message-ID: <20241021102428.287998-2-gianf.trad@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241021-add-m68k-tracing-support-v1-2-0883d704525b@yoseli.org>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
-In-Reply-To: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
- Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1729503882; l=3197;
- i=jeanmichel.hautbois@yoseli.org; s=20240925; h=from:subject:message-id;
- bh=0xBD3A8MKB2zAVhLnpz+RBecfEobXW6DqqxmgJzTRQY=;
- b=zFWQdtyHJmiGamfZyWwH9J+qr9vfkOA9rNEYW/hcR1Pc1AC+I0W3hUAX7EdAX8oqRCzV1AN8j
- KstOEx18llODcBKoOZnENOjOk4Yipcew21bDx1hyix/bVlqbMcoL2sa
-X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
- pk=MsMTVmoV69wLIlSkHlFoACIMVNQFyvJzvsJSQsn/kq4=
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Transfer-Encoding: 8bit
 
-In order to use tracing, implement a basic arch_stack_walk() based on
-the one in PowerPC.
-Tested on a M54418 coldfire.
+Coverity reports unused assignment to value ret. [1]
+ret is assigned to 0 here, but that stored value is overwritten before
+it can be used. The overwrite might happen either at line 1277, 1290 
+or eventually at line 1306. Therefore, cleanup the unused assignment.
 
-Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+[1] Coverity Scan, CID 1633338
+
+Signed-off-by: Gianfranco Trad <gianf.trad@gmail.com>
 ---
- arch/m68k/Kconfig             |  5 ++++
- arch/m68k/kernel/Makefile     |  1 +
- arch/m68k/kernel/stacktrace.c | 70 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
+ kernel/trace/fgraph.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index ab3375475721fa63418c40d4ba6ac76679ebc77d..7142f9759181a90269ae1ba9e682d331ee2ddbf6 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -40,6 +40,7 @@ config M68K
- 	select UACCESS_MEMCPY if !MMU
- 	select ZONE_DMA
- 	select TRACE_IRQFLAGS_SUPPORT
-+	select ARCH_STACKWALK
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 41e7a15dcb50..cc2e065c1c8d 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1262,7 +1262,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 			return ret;
+ 		}
+ 		fgraph_initialized = true;
+-		ret = 0;
+ 	}
  
- config CPU_BIG_ENDIAN
- 	def_bool y
-@@ -107,6 +108,10 @@ config BOOTINFO_PROC
- 	  Say Y to export the bootinfo used to boot the kernel in a
- 	  "bootinfo" file in procfs.  This is useful with kexec.
- 
-+config STACKTRACE_SUPPORT
-+	bool
-+	default y
-+
- menu "Platform setup"
- 
- source "arch/m68k/Kconfig.cpu"
-diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
-index f335bf3268a108a45bab079fbf0a1c8ead9beb71..4efe92af0b711b19cb1d5129f74e67a739e289b1 100644
---- a/arch/m68k/kernel/Makefile
-+++ b/arch/m68k/kernel/Makefile
-@@ -31,3 +31,4 @@ obj-$(CONFIG_UBOOT)		+= uboot.o
- 
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
- 
-+obj-y	+= stacktrace.o
-diff --git a/arch/m68k/kernel/stacktrace.c b/arch/m68k/kernel/stacktrace.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..06c7459373bd25b3bb3540cfe2a909259c1db3ce
---- /dev/null
-+++ b/arch/m68k/kernel/stacktrace.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Stack trace utility functions etc.
-+ *
-+ * Copyright 2024 Jean-Michel Hautbois, Yoseli SAS.
-+ */
-+
-+#include <asm/current.h>
-+#include <asm/ptrace.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/stacktrace.h>
-+
-+static inline unsigned long current_stack_frame(void)
-+{
-+	unsigned long sp;
-+
-+	asm volatile("movl %%sp, %0" : "=r"(sp));
-+	return sp;
-+}
-+
-+static inline int validate_sp(unsigned long sp, struct task_struct *task)
-+{
-+	unsigned long stack_start, stack_end;
-+
-+	if (task == current)
-+		stack_start = (unsigned long)task_stack_page(task);
-+	else
-+		stack_start = (unsigned long)task->thread.esp0;
-+
-+	stack_end = stack_start + THREAD_SIZE;
-+
-+	if (sp < stack_start || sp >= stack_end)
-+		return 0;
-+
-+	return 1;
-+}
-+
-+void __no_sanitize_address arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+					   struct task_struct *task, struct pt_regs *regs)
-+{
-+	unsigned long sp;
-+
-+	if (regs && !consume_entry(cookie, regs->pc))
-+		return;
-+
-+	if (regs)
-+		sp = (unsigned long) regs;
-+	else if (task == current)
-+		sp = current_stack_frame();
-+	else
-+		sp = task->thread.ksp;
-+
-+	for (;;) {
-+		unsigned long *stack = (unsigned long *) sp;
-+		unsigned long newsp, ip;
-+
-+		if (!validate_sp(sp, task))
-+			return;
-+
-+		newsp = stack[0];
-+		ip = stack[1];
-+
-+		if (!consume_entry(cookie, ip))
-+			return;
-+
-+		sp = newsp;
-+	}
-+}
-
+ 	if (!fgraph_array[0]) {
 -- 
-2.39.5
+2.43.0
 
