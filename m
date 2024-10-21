@@ -1,143 +1,140 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD2C1E8838;
-	Mon, 21 Oct 2024 17:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05B01E3780;
+	Mon, 21 Oct 2024 17:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729530297; cv=none; b=TdzX3r1zN9PiMDH1kuCVTUrgSProCWB7WgCSi5e1NuJGC/s4WoU0J/Gn1jQXzbiAAIBjKy/zZozQcanBbVF3gbNmCGcayiE4lciEMvgVGDG4oCAy4xfEKZWk2J+cmEWKJHzoVFAuVRvavtQ1ApUgcP77IuqiLIVSU9IwjCpBFq8=
+	t=1729531106; cv=none; b=i7xEM7q8f6nQWcHujK+tw+IEa+Yo1a48nfyxFi3sXBBJH1LG7VhkmNHlj0nPUDJKM4E7r+TJGEoAOD6j9h0SxJLm5+bQ8Ud1ahdt15U1hHrB+46IQqgYQLoDy0L6zw151aEBt8+uoPd1j7TSAjLMKxlmD/sJWSUZxrZhMk874xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729530297; c=relaxed/simple;
-	bh=CR5RjoyQjmJ04onc1gUas0ad+msgrElFQsuZL2VMhg8=;
+	s=arc-20240116; t=1729531106; c=relaxed/simple;
+	bh=V7TFdLX2hJz506Bk2w4njaCkNtCSH4Ab/bCQMimnPR4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bBIlojKivQvF5wjsT3cLAYNoh4AhzrvXUOTHDCx3uSZBMSklsCkjU9ERGLMROF3kIw0lkru8dg/wCrYykXF91gxUfWDb6apyLzilxCcdDxpjq/5dGQ+aHlYsIbiOXKALdHstc61Wf5k1D4XY/ppeY2hSkglT1mwzkWYUKbolHbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MmYY5Esa; arc=none smtp.client-ip=209.85.210.169
+	 To:Cc:Content-Type; b=o3nT0GrwPWHdpSzkOcB6a/XL7aTXgW4iIwmWfJugxA0yQRuF9Jw7gqfHaLJYz6GHr8PQVMfAPBfs7K+gWDPuWRmmITF3WHl8Sal4rlDBBHpqcgTd54pM6elmRxLEZWmRXMnYqdgsiukZNN7KwXcbJ90TUZyTf0qa0Z5POIgdM0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k45W+BAr; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MmYY5Esa"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-71e4e481692so3921441b3a.1;
-        Mon, 21 Oct 2024 10:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k45W+BAr"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7db54269325so3671334a12.2;
+        Mon, 21 Oct 2024 10:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729530295; x=1730135095; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729531104; x=1730135904; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CQG6MR1AENI44ceUDAJNSQ0PP8riW7rnDgze7XGFkjc=;
-        b=MmYY5Esavq423IKt5JTW5b/WFtbH4MAvNZR3NNo3xWuWFAV4aBht278kBFKaplyG1X
-         wmX+ct32HQs4uBzCqVPE1VJLDJvH8TN0F5g3GDryiXZ+LCV6ht9zMcbrRC1cRv/CAk/q
-         OhLG/4A2L/XjEfGYs4filL3mWOewwRUbvKB4VzLv5uDGrxtLvrs42UVRZ7QDs18LmiSi
-         Yn6uDTOs8E1ifeX8/agysaGMtRc0zywk/r4yjiDgAQAzX4BDlnpCdZZAmX0Qb7MeDMdB
-         cbOuqM3esN9kVkrIMznQ/jH6A50Z5I/xFjam+4iTDS/0SQ4QhsMjTc/okl7gG83hOK7K
-         C6tw==
+        bh=V7TFdLX2hJz506Bk2w4njaCkNtCSH4Ab/bCQMimnPR4=;
+        b=k45W+BAr9sYS2lSfTtB+2DQUElMXCp/mxWzY8dFoqfqt6ql4jGiPHWJxUlBtkk3RMN
+         s/kDO2iWykCuKg7Yzrjq3braWBM8neeNVxHL0K+DNuBicdtKV3lnnG2n/shW/Dc1ZuDI
+         Frk2cLa3Zrr36pHPYCoSuaBW2Hifyl6yErNxM0+MQQJcTSy2hAMSjLoaIUq+67BK4mGK
+         eEObe64XQaQO9VR7NfY+nTX75yKITdGmv5/DLXGDwQgkD1qBYoF1yPAf0QN8SkXpB+DY
+         JPAWIP4ZQzsT69uD/FLPSyGElO/JxRQFJcT9XtotHmdcBCLbZd54Mfq9o3d3/YU624Pb
+         ie2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729530295; x=1730135095;
+        d=1e100.net; s=20230601; t=1729531104; x=1730135904;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CQG6MR1AENI44ceUDAJNSQ0PP8riW7rnDgze7XGFkjc=;
-        b=c8U4In53Xh28X3D9wbZFNS/ED8YhkOmIgDsf2xAXa8JH8y43DzY4GnoGuO/cBlHfKI
-         ki2bBmQMZdBBQVLg/GtYwnnc55fedOE/3I+RpNSzlaAL3553uddsROjoZyC5FxmjseZm
-         H9zsI5TT+u3EnTK479Bl5D7K8pz5NXGP6CYllfss2V6tw8YGyCf8GQPLu/vO2malXOkm
-         Kc3iKQRuMLrqBB1w4xvmRQW13G8kf0s3ssKOYyFfqIgSXqAlyYGYa3ODFRbQIkTzzBBE
-         V/6xiHwNa3f5hyVf/Y8Cf7U/Teau0LCym9IATw0ho8if9+EQ8kXfsMqten1WSrsA6qEz
-         czgg==
-X-Forwarded-Encrypted: i=1; AJvYcCV98qJWkb8v00cF8EL+eEGywC+FvTsAZ/J13HNnkDofkJVOs55f2W+KTvPnwntzatMQBYw=@vger.kernel.org, AJvYcCWSkBbYCiPegsm6SMrZ649Gm29rYBLPUtb8w89TwZNbmheuK9jS2I29rSfth1M6jUmMkWRFDs8z5scKS9sc@vger.kernel.org, AJvYcCXovAmEBKy1C8GPUzGAh6xekzwLyLEXyP6bsMIS7V+KTSZGB7pF7NzNDuyrR4rvGiwdDtWAcVCMIHTTwFTTdaduq+jF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3u/yGTBdtInPQjIKQs7Ucuz+3gJPU8YqMJtfnMeUFAp7FvIpG
-	GUEHic+AKLQP1dKaV7NZlD3VI20Ks87jHFrGlM554COOzwB4xadAsS0qpru0pufHvxhmLzp63tv
-	dDK7id9VV0WP/oKASGOU7JHGhdTY=
-X-Google-Smtp-Source: AGHT+IEay4FYcmWDyON/XJSoe4K5dh73uhcv1K355uE7k7CYuYjr+hj+dv937U/aUdp++6LOQ1wbUKe7+LSa3MzXpMc=
-X-Received: by 2002:a05:6a00:3e0f:b0:71e:4a1b:2204 with SMTP id
- d2e1a72fcca58-71ea331b398mr15912077b3a.25.1729530295151; Mon, 21 Oct 2024
- 10:04:55 -0700 (PDT)
+        bh=V7TFdLX2hJz506Bk2w4njaCkNtCSH4Ab/bCQMimnPR4=;
+        b=sMELOA2X9k53ss41KDnj90wQwwiHmPur2j6s2clZUsXRhcHTUThkbY8YAuCVqS1vjJ
+         RqOFj7Ac8yJVJzWbow5sdtwsdSUoAOZZxXFyoTzLEbMhVLrA0h6yrUBWOIgVcOoLZb5B
+         Z5C7WWgMMQqiyG2VOI0X5u5oxmd87ZGFMMxaqDEXZdNdHHAURKURSwEQkU86A1G/PcIB
+         Hnj0B5uWbphRvrwiLLL2YBKxb/IHpzDCnyoB9s1aHwr7SrlBc1PW+PxAQ0sUY5UTCq2T
+         SIYTvhtqfWAdaszFTm3eQDSD/ZWVQlViygkdvPdEs/nLwBDnoB2UVntZzLBaIJSJLx6s
+         KV9A==
+X-Forwarded-Encrypted: i=1; AJvYcCULx8tsrs7o60/G2ADJQ5oLT1oDtJh68SBT6riD9AJolrC4eabZHPw+06GPciFQELnv5ToEKvmFTI49ewgIgVDPLQ==@vger.kernel.org, AJvYcCVHD8dFXRUS2OApzcKU6488QPviJsMwymEq8ZvMDofCSnQY3ZPXJcX0YalRHr3f6ybgo7xvbOnd5WNzhEw6+BVw6ddq@vger.kernel.org, AJvYcCWxjVr0SO+Sk3bOSR3PJG44G8hZAxLch1RHhOt44/0DcKDZHkMzjtpkHxdGO4duDcj3fiMEqDnCPTmFeb+k@vger.kernel.org, AJvYcCXgKwBtcNDck7o8TAGxwhLqep8x5/Tk2wbkVr/HOKKPvGKb4KBWq870dzVnn9/EETjffbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ8gijyE/bKUuj8z49cniU0Z+p+32gS7ouujBBkr/aNL8wLkX5
+	0O1ua1/8BM5/Y9vaVJoShhjU/zr7hqlCWEGiqfCAi7tFYRLvT8ZhuejHvczoVO/SbxF0XzAe+n+
+	+8mSXbMsPMgOlK202jq/mcLYrO9A=
+X-Google-Smtp-Source: AGHT+IEtjRnzsFF0rccF8dhsyizMIfwjKbdz+eyx5/1jxrXi2lAdRxwdwQPa2usdahgePbWs7gtMmySSeSiKkVlwd2E=
+X-Received: by 2002:a05:6a21:6711:b0:1d9:261c:5937 with SMTP id
+ adf61e73a8af0-1d92c59992cmr15712304637.33.1729531103939; Mon, 21 Oct 2024
+ 10:18:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241008002556.2332835-1-andrii@kernel.org> <20241008002556.2332835-2-andrii@kernel.org>
- <20241018082605.GD17263@noisy.programming.kicks-ass.net> <CAEf4Bzb3xjTH7Qh8c_j95jEr4fNxBgG11a0sCe4hoF9chwUtYg@mail.gmail.com>
- <20241021103151.GB6791@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241021103151.GB6791@noisy.programming.kicks-ass.net>
+References: <20240815014629.2685155-1-liaochang1@huawei.com>
+ <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com> <20240915151803.GD27726@redhat.com>
+ <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com> <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
+ <e62dbebc-d366-453a-b305-67f50baeff05@huawei.com>
+In-Reply-To: <e62dbebc-d366-453a-b305-67f50baeff05@huawei.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 21 Oct 2024 10:04:43 -0700
-Message-ID: <CAEf4BzYc-YACW6XnHMVZLE+8_zJqkaJWBKE4iNeo3Jfj9RwaNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 tip/perf/core 1/2] uprobes: allow put_uprobe() from
- non-sleepable softirq context
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mingo@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
-	paulmck@kernel.org
+Date: Mon, 21 Oct 2024 10:18:11 -0700
+Message-ID: <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
+ contention on siglock
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov <oleg@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Oct 21, 2024 at 3:31=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Mon, Oct 21, 2024 at 3:43=E2=80=AFAM Liao, Chang <liaochang1@huawei.com>=
+ wrote:
 >
-> On Fri, Oct 18, 2024 at 11:22:00AM -0700, Andrii Nakryiko wrote:
-> > On Fri, Oct 18, 2024 at 1:26=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > >
-> > > On Mon, Oct 07, 2024 at 05:25:55PM -0700, Andrii Nakryiko wrote:
-> > > > Currently put_uprobe() might trigger mutex_lock()/mutex_unlock(), w=
-hich
-> > > > makes it unsuitable to be called from more restricted context like =
-softirq.
-> > >
-> > > This is delayed_uprobe_lock, right?
+>
+>
+> =E5=9C=A8 2024/10/12 3:34, Andrii Nakryiko =E5=86=99=E9=81=93:
+> > On Tue, Sep 17, 2024 at 7:05=E2=80=AFPM Liao, Chang <liaochang1@huawei.=
+com> wrote:
+> >>
+> >> Hi, Peter and Masami
+> >>
+> >> I look forward to your inputs on these series. Andrii has proven they =
+are
+> >> hepful for uprobe scalability.
+> >>
+> >> Thanks.
+> >>
+> >> =E5=9C=A8 2024/9/15 23:18, Oleg Nesterov =E5=86=99=E9=81=93:
+> >>> Hi Liao,
+> >>>
+> >>> On 09/14, Liao, Chang wrote:
+> >>>>
+> >>>> Hi, Oleg
+> >>>>
+> >>>> Kindly ping.
+> >>>>
+> >>>> This series have been pending for a month. Is thre any issue I overl=
+ook?
+> >>>
+> >>> Well, I have already acked both patches.
+> >>>
+> >>> Please resend them to Peter/Masami, with my acks included.
+> >>>
 > >
-> > Not just delated_uprobe_lock, there is also uprobes_treelock (I forgot
-> > to update the commit message to mention that). Oleg had concerns (see
-> > [0]) with that being taken from the timer thread, so I just moved all
-> > of the locking into deferred work callback.
+> > Hey Liao,
 > >
-> >   [0] https://lore.kernel.org/linux-trace-kernel/20240915144910.GA27726=
-@redhat.com/
+> > I didn't see v4 from you for this patch set with Oleg's acks. Did you
+> > get a chance to rebase, add acks, and send the latest version?
 >
-> Right, but at least that's not a sleeping lock. He's right about it
-> needing to become a softirq-safe lock though. And yeah, unfortunate
-> that.
+> Andrii,
 >
-> > > So can't we do something like so instead?
+> I am ready to send v4 based on the latest kernel from next tree. Otherwis=
+e,
+> I haven't heard back from any of maintainers except Oleg, so I'm a bit un=
+sure
+> if I should make further changes to this series.
+>
+
+Let's just rebase to the latest tip/perf/core and resend with Oleg's
+ack. Hopefully this should be enough.
+
 > >
-> > I'll need to look at this more thoroughly (and hopefully Oleg will get
-> > a chance as well), dropping lock from delayed_ref_ctr_inc() is a bit
-> > scary, but might be ok.
+> >>> Oleg.
+> >>>
+> >>>
+> >>
+> >> --
+> >> BR
+> >> Liao, Chang
 >
-> So I figured that update_ref_ctr() is already doing the
-> __update_ref_ctr() thing without holding the lock, so that lock really
-> is only there to manage the list.
+> --
+> BR
+> Liao, Chang
 >
-> And that list is super offensive... That really wants to be a per-mm
-> rb-tree or somesuch.
-
-Probably hard to justify to add that to mm_struct, tbh, given that
-uprobe+refcnt case (which is USDT with semaphore) isn't all that
-frequent, and even then it will be active on a very small subset of
-processes in the system, most probably. But, even if (see below),
-probably should be a separate change.
-
->
-> AFAICT the only reason it is a mutex, is because doing unbouded list
-> iteration under a spinlock is a really bad idea.
->
-> > But generally speaking, what's your concern with doing deferred work
-> > in put_uprobe()? It's not a hot path by any means, worst case we'll
-> > have maybe thousands of uprobes attached/detached.
->
-> Mostly I got offended by the level of crap in that code, and working
-> around crap instead of fixing crap just ain't right.
->
-
-Ok, so where are we at? Do you insist on the delayed_ref_ctr_inc()
-rework, switching uprobe_treelock to be softirq-safe and leaving
-put_uprobe() mostly as is? Or is it ok, to do a quick deferred work
-change for put_uprobe()  to unblock uretprobe+SRCU and land it sooner?
-What if we split this work into two independent patch sets, go with
-deferred work for uretprobe + SRCU, and then work with Oleg and you on
-simplifying and improving delayed_uprobe_lock-related stuff?
-
-After all, neither deferred work nor delayed_ref_ctr_inc() change has
-much practical bearing on real-world performance. WDYT?
