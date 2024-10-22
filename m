@@ -1,113 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E71E1DDF5;
-	Tue, 22 Oct 2024 05:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9597C5A79B;
+	Tue, 22 Oct 2024 05:28:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729574272; cv=none; b=u6Y7r00649oZbrUZsJjUEWLhbWTmxG3l4i364QbE1YF9DC/oRFlrs7oOiHsaf6y6PgSL9mFancSkI8jp3FJ3dmIXlNGK8kYOKUPtVTeB/SVpHchi/caAYOZCE6ZSzNswAVt1u39Q9hrs8kX0RaYh9GZFS/Hmb71rJBv1tUgLtKE=
+	t=1729574893; cv=none; b=D4IqpvaGLZeqSIYRu2tFTIj3vVqjc0Qk5qQQc2T3cHufAmPL6VUPQ5eeoRNCkRcdwNz5S9k/X1Dqq5eYlEl2NUXThxjmN4IQrANPR/nEclvXifpeZk/E3wbsRrxEHXr+6veRisvBIiLqs7esOEkqPxwCTMhwUOPcLLEp2bANGiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729574272; c=relaxed/simple;
-	bh=WJVe5y2/2RttbuSJfaUlaPFZBKz5XuicHH9Kdsg1OjY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DvftKfkVP3TpPXsFlN2qodqhMnoJazhuNPkQk9nLvRH0YZWoMPv+lhHKGepn6pUx22wFkhWZhgJC3wju8kLLE1brFr951LwrjSrYdOq2t39J9b2czRJcW9zSPiFNryRgwaxDHihFil9+f/uyK1zVYdVm6V6taUbldm/mZN5zxQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCQhNSZ2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCQhNSZ2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628A3C4CEC3;
-	Tue, 22 Oct 2024 05:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729574271;
-	bh=WJVe5y2/2RttbuSJfaUlaPFZBKz5XuicHH9Kdsg1OjY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rCQhNSZ2c7eXTPf3U4mqQ3VQKd/xa/IULAcHHBQElCTvZxmv0jq3DIB/J3ayF4p2Q
-	 2Ri1J6hV5x1Pm1OnuZV31v0BbnXiC5BEVwbsu3pMG9j1O+NTPi3aezz11FuwZAN2no
-	 YzqxtoljVM+MhgUY7C9I0Z4S1624hGaUMi6FZx5juJNEL6CZo1DNR/G+5+EljRSzXU
-	 Zxl5Y9SOVMw/tTWSFCxQtKzDlJMs40SAL/rQXOgF8+BBw8YMvQMBhHAyTlDMEKSOPC
-	 k+lMODnFlmwLTJ9zP71qe8ul2241XIUVW5i7vri8g0R9PdJOaZgqcaysMQsBOS7qFM
-	 bD8I6MvVYUj4Q==
-Date: Tue, 22 Oct 2024 14:17:48 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Matt Wu
- <wuqiang.matt@bytedance.com>, bpf@vger.kernel.org, Andrii Nakryiko
- <andrii@kernel.org>
-Subject: Re: [PATCH v2] objpool: fix choosing allocation for percpu slots
-Message-Id: <20241022141748.521cb2d6a4a86428c9bfc99e@kernel.org>
-In-Reply-To: <20240826060718.267261-1-vmalik@redhat.com>
-References: <20240826060718.267261-1-vmalik@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729574893; c=relaxed/simple;
+	bh=MU6k+o8mlxN01YgfI+hrtN6FEbvyXOUUdJtvRafczeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O9zQeV5GRDp2Mm9qRnmadQmHLn9woIz57b0nlsWrfi9pQ8xXxOkQUCZGQKdCxpeVsi6WfOE6nAUFZOQFugmle2kzefeq0Ll3bp7OS6FtITCZTJncbjdXdpRpSfFktx3LkUxnsbjCl+I+ruLyRyOKdqZsg4FgFH205Pavyb/wJH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D30C4CEC3;
+	Tue, 22 Oct 2024 05:28:12 +0000 (UTC)
+Date: Tue, 22 Oct 2024 01:28:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/2] m68k: Add tracirqs
+Message-ID: <20241022012809.1ef083cd@rorschach.local.home>
+In-Reply-To: <20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+	<20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 26 Aug 2024 08:07:18 +0200
-Viktor Malik <vmalik@redhat.com> wrote:
+On Mon, 21 Oct 2024 11:44:42 +0200
+Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
 
-> objpool intends to use vmalloc for default (non-atomic) allocations of
-> percpu slots and objects. However, the condition checking if GFP flags
-> are equal to GFP_ATOMIC is wrong b/c GFP_ATOMIC is a combination of bits
-
-You meant "whether GFP flags sets any bit of GFP_ATOMIC is wrong"?
-
-> (__GFP_HIGH|__GFP_KSWAPD_RECLAIM) and so `pool->gfp & GFP_ATOMIC` will
-> be true if either bit is set. Since GFP_ATOMIC and GFP_KERNEL share the
-> ___GFP_KSWAPD_RECLAIM bit, kmalloc will be used in cases when GFP_KERNEL
-> is specified, i.e. in all current usages of objpool.
+> The TRACE_IRQFLAGS_SUPPORT requires the architecture to call
+> trace_hardirqs_off() when interrupts are disabled and
+> trace_hardirqs_on() when they are enabled.
+> Add those calls to do_IRQ function.
 > 
-> This may lead to unexpected OOM errors since kmalloc cannot allocate
-> large amounts of memory.
-> 
-> For instance, objpool is used by fprobe rethook which in turn is used by
-> BPF kretprobe.multi and kprobe.session probe types. Trying to attach
-> these to all kernel functions with libbpf using
-> 
->     SEC("kprobe.session/*")
->     int kprobe(struct pt_regs *ctx)
->     {
->         [...]
->     }
-> 
-> fails on objpool slot allocation with ENOMEM.
-> 
-> Fix the condition to truly use vmalloc by default.
-> 
-
-Anyway, this looks good to me.
-
-Thank you,
-
-> Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC")
-> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Reviewed-by: Matt Wu <wuqiang.matt@bytedance.com>
+> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 > ---
->  lib/objpool.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/m68k/Kconfig      | 1 +
+>  arch/m68k/kernel/irq.c | 2 ++
+>  2 files changed, 3 insertions(+)
 > 
-> diff --git a/lib/objpool.c b/lib/objpool.c
-> index 234f9d0bd081..fd108fe0d095 100644
-> --- a/lib/objpool.c
-> +++ b/lib/objpool.c
-> @@ -76,7 +76,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
->  		 * mimimal size of vmalloc is one page since vmalloc would
->  		 * always align the requested size to page size
->  		 */
-> -		if (pool->gfp & GFP_ATOMIC)
-> +		if ((pool->gfp & GFP_ATOMIC) == GFP_ATOMIC)
->  			slot = kmalloc_node(size, pool->gfp, cpu_to_node(i));
->  		else
->  			slot = __vmalloc_node(size, sizeof(void *), pool->gfp,
-> -- 
-> 2.46.0
-> 
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index cc26df907bfe3c8143a931d259eceabb16af7411..ab3375475721fa63418c40d4ba6ac76679ebc77d 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -39,6 +39,7 @@ config M68K
+>  	select OLD_SIGSUSPEND3
+>  	select UACCESS_MEMCPY if !MMU
+>  	select ZONE_DMA
+> +	select TRACE_IRQFLAGS_SUPPORT
+>  
+>  config CPU_BIG_ENDIAN
+>  	def_bool y
+> diff --git a/arch/m68k/kernel/irq.c b/arch/m68k/kernel/irq.c
+> index 9ab4f550342e5de11c528f55781432675ffd66bf..74cf60ebbc4bca51f3caa4046dbd2bdb02355711 100644
+> --- a/arch/m68k/kernel/irq.c
+> +++ b/arch/m68k/kernel/irq.c
+> @@ -21,9 +21,11 @@ asmlinkage void do_IRQ(int irq, struct pt_regs *regs)
+>  {
+>  	struct pt_regs *oldregs = set_irq_regs(regs);
+>  
+> +	trace_hardirqs_off();
+>  	irq_enter();
+>  	generic_handle_irq(irq);
+>  	irq_exit();
+> +	trace_hardirqs_on();
+
+This part of the patch shouldn't be needed because those shoudl be
+called by irq_enter() and irq_exit(). Does this not work if you don't
+have these?
+
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
+>  
+>  	set_irq_regs(oldregs);
+>  }
+> 
+
