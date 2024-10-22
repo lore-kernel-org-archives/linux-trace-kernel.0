@@ -1,134 +1,136 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D663C196DA2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 09:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136D5196DA2;
+	Tue, 22 Oct 2024 09:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729590614; cv=none; b=C6ilkCMgOFQuwXYwXPEKH9Ns5HtSjI6vAOrXvXfmmsXfxR9YajTYG8PZCB7s9V22O7cLQb74vwT2O3/kQJXV75jMMAix7RaqZMhRtvWdziluYH20wTA/+YPt8tZmZUYaCaJOnKxpbB8Wjkl5bGYLA4U5ELXoNkZbJ8YFi73G4UU=
+	t=1729590769; cv=none; b=YTcWT8vWPlC6ayRRvl8xHq4FhT4GSaRNPifOrn6hOrFxkdHPPm14Q84O9whWAjI11ISvZsWWcopKDSyRMjcjOygxQFf3ZWXxCB10riAF56j05v+79AxIbwJAMWNLD3X+dxLMW3AZFvmm0rcLP80u/ULrCCiwTG41G8dsodyQcQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729590614; c=relaxed/simple;
-	bh=dkg8331t8LxpNGCdxPCOB732ygnUsv+AQW0it3BPDd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oj4/PIPDeuuLlR2TLoK1jcXCy8ibh4dYZWN58ekzk9z8OJnAapgCV58cNInZlvJtjL6PuU6mtz0Kxy5rNhL2a6B4meoYjd5+kc/cQbrP04800z2UtOq8H6OOweQNdjKUK6M9izby0GLLmpcEancygkYpyD1mtMe8nKlz884KZ/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IvVS7Nuy; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1729590769; c=relaxed/simple;
+	bh=g8SqYRPpp9QS/7VfSNtj2g5eMi+MSb3EK815FIJkP78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=emjTEw9iA6xty+uCTY9P+JSXBrAO5TVUZWz3fl6lP7+ZY0MqLfUSH2kYTraZnL9mUCp4t58jZ2LsJ2oiW6Dl9TJXVU6EvYINqoZG+Mag2zRN9tDTyikgMQR3pZLTKqM45ZM3RM94BtkC8OO6AmXBWp01o6bxsRQ+992lmLpNc9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xUvyRuQG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HLgvkWQ0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IvVS7Nuy"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5cb72918bddso2150352a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 02:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1729590610; x=1730195410; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GuEtkiKrWTPUPMX7DUf6yDaOYLap9WgquDZggw/uRXI=;
-        b=IvVS7NuyVKVz5NLkjhX05d4qSVzZQQMQgTU/EFb9Kk2V8Ia+SJHCu5mqBp3YA9e4Wc
-         mFm+fNlJrVHzyfPY7m2FkGTouQFcDDekgczC3WZu8Of7Oz9bbBJIFovmCQ03y8CmdeZx
-         5NpIALe1XdPy7nPW1VXFBkHVoAv7Zn7Z6JDuAQOx/oWd/5FOXIyhvEM0v5hSEUw4HTOr
-         J5CNBI6YiPaR8cL2EgeFAknwxeUEfA83PsmLqQW29Wqsz4/aBLj0yafngKB+ZzyGp/V0
-         2n0lB1NPyK8jgXig3hsUa663erjJ7BRiGzdBAkuzTAZCEX/rT4Zcv/ObNnR8b8u/Z2ru
-         hEQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729590610; x=1730195410;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GuEtkiKrWTPUPMX7DUf6yDaOYLap9WgquDZggw/uRXI=;
-        b=unlo0vvwb1KQVLUQtS0j5zOcVMKW1ka4BHO64Ja7Tv+5A5hiyA0lStoauDBhL5LbQO
-         4a4duj+d9TOBor3eITJwYmezzrM9AebHExama4o1O6jVy8PKuRYlnHtKqx6ReK7k8ILJ
-         yk7Rpe6eXMuKW+/m1D5bLkm9Ur5UIis1xdiWRXENwR6lSSz/h/VvjVX2uk+b8OO0RB6h
-         tnkekwtz9AezVRqWa3DoSrhdkKQka5bg7ogviS69GZtIFaub+DKILuSwa0aetVIWF6CM
-         1X5u5tnkIuYK2v3bvXebPus702UaJiabPGxGEsOTwb4q6a0UcIurYN+wUy94xTjq3xb8
-         sgyQ==
-X-Gm-Message-State: AOJu0YwIcWILH5fYlqJNPcO4UQD5jTolANqTZfi07sg6JJzwnOLTXKcN
-	UgRyabnAFdKg4D+uQMI9U6J3ESZ3neDOibwvoJC2ih/oypOKnmG77wTfCBC9d090rHpgpv/JO+Y
-	Q
-X-Google-Smtp-Source: AGHT+IFqkw6hYudDWT0n79eevXlzc/mIXkiPKeu6FoSZDKy0FN+X4s8oixI6Rz+UzhvDt9/kRj/Vug==
-X-Received: by 2002:a17:906:f59f:b0:a99:f4c3:580d with SMTP id a640c23a62f3a-a9aad21a920mr224925066b.42.1729590609946;
-        Tue, 22 Oct 2024 02:50:09 -0700 (PDT)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a915993basm313815866b.203.2024.10.22.02.50.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Oct 2024 02:50:09 -0700 (PDT)
-Message-ID: <5eb3d33e-b238-4023-8c1b-2b24c0d5d923@suse.com>
-Date: Tue, 22 Oct 2024 11:50:08 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xUvyRuQG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HLgvkWQ0"
+Date: Tue, 22 Oct 2024 11:52:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1729590766;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uClmIrEfw80CJ6sauv6iuELG9p3dkThn+i0/JrfpKaw=;
+	b=xUvyRuQGCvvTFp5I4SLMsJgHYdgmGeoY1dLwZeO0RRkjtJfq7J94/YReUnmKqDU+Mb+n55
+	wOn4mrszb4UkR8GjSFI+esuIc1SsasEQVG2glq9DzuOrJcGazjh7mCxNxURWa7ZmCBMwmh
+	8H1ENRUmVFx90/1tu+fVr8YyBGh+kT0C9T0Pka1fK0/GVhroffgoX9SnyPQkAgYcUhkZiu
+	fA7wJGgoXNcUOo42rbUNGclHrrrOceKOVltgA8FC3wUwFLB0nlKpa+tvk4C+OhoipxPMcB
+	oFQh/vCO4vGCq7TtJxMW/jnAHUg+Ykwh/3Si9gkH0KW9aVrO+Mk7aMeubKJNAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1729590766;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uClmIrEfw80CJ6sauv6iuELG9p3dkThn+i0/JrfpKaw=;
+	b=HLgvkWQ0361OgKtGn/+/JWTm3eSwPP7L4s9s2nFDGC2narcjMhP0ZN0r2c8oACjBoNUP9S
+	eti9g6i7gOwkUMCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+	mingo@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com, ankur.a.arora@oracle.com, efault@gmx.de,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2 1/3] tracing: Replace TRACE_FLAG_IRQS_NOSUPPORT with
+ its config option.
+Message-ID: <20241022095241.RFY4Iiu_@linutronix.de>
+References: <20241021151257.102296-1-bigeasy@linutronix.de>
+ <20241021151257.102296-2-bigeasy@linutronix.de>
+ <20241022031418.12154e63@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] ring-buffer: Limit time with disabled interrupts in
- rb_check_pages()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-trace-kernel@vger.kernel.org
-References: <d51fd42f-9fc7-4b0b-aae3-ee8bfd909d69@stanley.mountain>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <d51fd42f-9fc7-4b0b-aae3-ee8bfd909d69@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241022031418.12154e63@rorschach.local.home>
 
-On 10/22/24 11:09, Dan Carpenter wrote:
-> Hello Petr Pavlu,
+On 2024-10-22 03:14:18 [-0400], Steven Rostedt wrote:
+> On Mon, 21 Oct 2024 17:08:40 +0200
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 > 
-> Commit 1f1c2bc9d075 ("ring-buffer: Limit time with disabled
-> interrupts in rb_check_pages()") from Jul 15, 2024 (linux-next),
-> leads to the following Smatch static checker warning:
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> > 
+> > The TRACE_FLAG_IRQS_NOSUPPORT flag is used by tracing_gen_ctx.*() to
+> > signal that CONFIG_TRACE_IRQFLAGS_SUPPORT is not enabled and tracing IRQ
+> > flags is not supported.
+> > 
+> > This could be replaced by using the 0 as flags and then deducting that
+> > there is no IRQFLAGS_SUPPORT based on the config option. The downside is
+> > that without CONFIG_TRACE_IRQFLAGS_SUPPORT we can not distinguish
+> > between no-IRQ passed flags and callers which passed 0. On the upside we
+> > have room for one additional flags which could be used for LAZY_PREEMPTION.
+> > 
+> > Remove TRACE_FLAG_IRQS_NOSUPPORT and set it flags are 0 and
+> > CONFIG_TRACE_IRQFLAGS_SUPPORT is not set.
 > 
-> 	kernel/trace/ring_buffer.c:1540 rb_check_pages()
-> 	warn: ignoring unreachable code.
+> We could also add that we have:
 > 
-> kernel/trace/ring_buffer.c
->     1501 static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
->     1502 {
->     1503         struct list_head *head, *tmp;
->     1504         unsigned long buffer_cnt;
->     1505         unsigned long flags;
->     1506         int nr_loops = 0;
->     1507 
->     1508         /*
->     1509          * Walk the linked list underpinning the ring buffer and validate all
->     1510          * its next and prev links.
->     1511          *
->     1512          * The check acquires the reader_lock to avoid concurrent processing
->     1513          * with code that could be modifying the list. However, the lock cannot
->     1514          * be held for the entire duration of the walk, as this would make the
->     1515          * time when interrupts are disabled non-deterministic, dependent on the
->     1516          * ring buffer size. Therefore, the code releases and re-acquires the
->     1517          * lock after checking each page. The ring_buffer_per_cpu.cnt variable
->     1518          * is then used to detect if the list was modified while the lock was
->     1519          * not held, in which case the check needs to be restarted.
->     1520          *
->     1521          * The code attempts to perform the check at most three times before
->     1522          * giving up. This is acceptable because this is only a self-validation
->     1523          * to detect problems early on. In practice, the list modification
->     1524          * operations are fairly spaced, and so this check typically succeeds at
->     1525          * most on the second try.
->     1526          */
->     1527 again:
->     1528         if (++nr_loops > 3)
->     1529                 return;
->     1530 
->     1531         raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->     1532         head = rb_list_head(cpu_buffer->pages);
->     1533         if (!rb_check_links(cpu_buffer, head))
->     1534                 goto out_locked;
->     1535         buffer_cnt = cpu_buffer->cnt;
->     1536         tmp = head;
->     1537         raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->     1538                 return;
->                          ^^^^^^
-> You probably intended to delete this return?
+> #
+> # Minimum requirements an architecture has to meet for us to
+> # be able to offer generic tracing facilities:
+> #
+> config TRACING_SUPPORT
+>         bool
+>         depends on TRACE_IRQFLAGS_SUPPORT
+>         depends on STACKTRACE_SUPPORT
+>         default y
+> 
+> So this can't even be built without TRACE_IRQFLAGS_SUPPORT!
 
-There was a problem with rebasing the patch, see
-https://lore.kernel.org/oe-kbuild-all/20241019110743.72fa5f29@gandalf.local.home/
+Good point. So we could TRACE_FLAG_IRQS_NOSUPPORT since it can't be
+used. This is since commit 0ea5ee035133a ("tracing: Remove PPC32 wart
+from config TRACING_SUPPORT").
 
-It has been fixed in ftrace/for-next.
+> > +++ b/include/linux/trace_events.h
+> > @@ -184,8 +184,7 @@ unsigned int tracing_gen_ctx_irq_test(un
+> >  
+> >  enum trace_flag_type {
+> >  	TRACE_FLAG_IRQS_OFF		= 0x01,
+> > -	TRACE_FLAG_IRQS_NOSUPPORT	= 0x02,
+> > -	TRACE_FLAG_NEED_RESCHED		= 0x04,
+> > +	TRACE_FLAG_NEED_RESCHED		= 0x02,
+> 
+> These flags are user visible (I probably should move them into uapi).
+> They are parsed by libtraceevent.
+> 
+> Please just remove NOSUPPORT and do not touch NEED_RESCHED.
 
--- 
-Thanks,
-Petr
+Then I put the lazy bit where we have not NOSUPPORT.
+
+> >  	TRACE_FLAG_HARDIRQ		= 0x08,
+> >  	TRACE_FLAG_SOFTIRQ		= 0x10,
+> >  	TRACE_FLAG_PREEMPT_RESCHED	= 0x20,
+> > --- a/kernel/trace/trace_output.c
+> > +++ b/kernel/trace/trace_output.c
+> > @@ -460,7 +460,7 @@ int trace_print_lat_fmt(struct trace_seq
+> >  		(entry->flags & TRACE_FLAG_IRQS_OFF && bh_off) ? 'D' :
+> >  		(entry->flags & TRACE_FLAG_IRQS_OFF) ? 'd' :
+> >  		bh_off ? 'b' :
+> > -		(entry->flags & TRACE_FLAG_IRQS_NOSUPPORT) ? 'X' :
+> > +		!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_SUPPORT) ? 'X' :
+> 
+> Probably can even remove this check.
+
+Yes.
+
+> -- Steve
+
+Sebastian
