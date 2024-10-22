@@ -1,157 +1,155 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB4319538D;
-	Tue, 22 Oct 2024 11:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043401474BC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 11:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729594880; cv=none; b=NWAatVRr/GixmUEaGtCB769VU0aEEc+Ex9i2q8mK7XzKLIYz8KP9Mcl4anyaBRe4znWu5mjVJ2fpER7ie+Y1oK0jQ29jPyR7rcuRlWsOP42skaLRxS8rCfzN2H25cQeG4WsUmp1q4onzRx2oY08g4G/0OVxv/BJHuWA36eLHI3g=
+	t=1729597516; cv=none; b=NTVxX3RARcWvbqNs9XKlzM8LzYs1N+tEHJK6ngRC0v1trUMvratEfxHBbzRpQRRu9w+c2B6gKFHQRasFxfUQo1208z1zkGXrD6PoDLHYLP1UltPYtZtFilKh19m44HQNB/8/YZRRduYlKUOkILw+P1B48AHcvG0n0+HBEEW4w+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729594880; c=relaxed/simple;
-	bh=HVkSqnGOBpsqQO1xHCUF3g/eS3YtpU/pW0Qa2VQhcVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UD0mSW/uFfNjY474mBbUjxoG43hcsuzENjb7QXZaE4rm06isW0sVwrGLp4/aXqRCIBikqu8N7H3ZMD2tZxYqOAeKKbG4NKxua3YXcDOadguZkBx7zg+8uD+ZMhkTs56ffUq1dOKsnXpYbry+D0sG5n/8sF8jI3BgHzfJ0l+UzW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aOuoyCDT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=55dRDKH9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1729597516; c=relaxed/simple;
+	bh=WZr6nhUUy78YTMOWnUJE5GttoIrEa/0NxsjsM9zKj14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7M998wsthXgGL/KPbbfSozipLuEmUgbb1RugGWRB2cu6QotUHI0fDPL8zuJ1tqsHew7jzaF2W2ct4VH6uL07yIlPfL0V3hVjbmCb15bkdXjar/mZ6tQC3qE55PPOwGNnMloCazwG+ETUcvT9uabrXtdqz47KjwtwDSvDCnp3Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AO5Uxen3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aOuoyCDT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="55dRDKH9"
-Date: Tue, 22 Oct 2024 13:01:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1729594876;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AO5Uxen3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729597514;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MxWE8Uynb/jxx/OThMKkflP3dXRyCIEezsyO4Jj/tDM=;
-	b=aOuoyCDTCtzYrSC7zWBIvNccKev0DfTTHileph1IOMFgoXm/tGslE2qedbli9Kwy2KDGeO
-	ipkCUtta6hWFn5kIBSfk2RHl9hzwd/ma1wrsfIxnt0KQBGl9rnsx30zL92r4dyTsTOlyEZ
-	3oaetfZLyEJR1/brlALLaxTmHi5q/nC2vY5WHTpGqX04IKd3b3fqKdX8K1kXJy+LZZvhqN
-	+1tHVxXEoholOyqpEy5i45kJPxCTfURDKAZSF5QtrsW7e7Oo418mQpHO9TaXVsqcW5zpKE
-	iQFVpRUNz6BnuwKuffJHXQIfJeU+M+RAbSAAbH21D3vIpPQfJE3h6/iUCKoxew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1729594876;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MxWE8Uynb/jxx/OThMKkflP3dXRyCIEezsyO4Jj/tDM=;
-	b=55dRDKH9DtGUzOIo5theAQ35TpeMQ8seadi4YfHOPmJDy0wIlthYeKZxBONVHToZf5hbp2
-	rRDevhZkVN3Jx+Bw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-	mingo@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, ankur.a.arora@oracle.com, efault@gmx.de,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Remove TRACE_FLAG_IRQS_NOSUPPORT
-Message-ID: <20241022110112.XJI8I9T2@linutronix.de>
-References: <20241021151257.102296-1-bigeasy@linutronix.de>
- <20241021151257.102296-2-bigeasy@linutronix.de>
- <20241022031418.12154e63@rorschach.local.home>
+	bh=7enNsG1bpUFHlhr1DT8YO4p834Hmfug+sy6xBqiLvdU=;
+	b=AO5Uxen37M7uVO4VYYY/nBrMjBilmsdr4OtXiZLAeZMYGxSgpZR9yd3rHNLWO/O9nTFTRw
+	XGTaniNYLPHM3M1tW56oubuUvaEc3pnv8GWyHbpvKPJHl2HnZ3F6klI1oTVnHFzRkSpEy2
+	W5ypVNhAIunWaf3lqkTVc8wEKXjGVnI=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-504-MF3KpZ9zPTqpVPlc665N2g-1; Tue, 22 Oct 2024 07:45:11 -0400
+X-MC-Unique: MF3KpZ9zPTqpVPlc665N2g-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-37d4cf04be1so2770921f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 04:45:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729597510; x=1730202310;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7enNsG1bpUFHlhr1DT8YO4p834Hmfug+sy6xBqiLvdU=;
+        b=XKyxRGXjRft2k7elLpyIWY/C/rJMHdEgCPSeTfm2WyibfL/LZexfFECT1esYRzYcVX
+         9KDmENzHm/yX3D/R5g3zpWjtwHqIvCL3vMaUkGlrlsxhxaO6YzTzU9r6C6gMDRSDnrwb
+         njq+CjTE9MCxlOkSEI/iW0FgJr63g6dUee+SqRjzFlagXfm/ny6QNaCy9dje5kY3tnlk
+         TPZBWGk7kmRNqTn7XzvVadb7THYZH3d0yqiAMMuRGTknaDAzBczJ7r6oWqePd/HLysNq
+         1p4YXkNH7TnNpyPey85GwV2o12BuArUfLYlDdp7w7CnYRXCqh2pjjyhXJ9Fm2venW7BT
+         7OFg==
+X-Gm-Message-State: AOJu0YzcVYJScsHHbVO2wnA2xQis911jy1sS3qmmaVgcA4Y8QsXOe4Se
+	qMjR/lXd+ZIyhlWh+LYlPVuQjlk7rEmXlL3p1+jQeYVFIwCTaXe08Zlve3CTr0+abpnqNtO1zO1
+	lq8n2wrOxUAqs2kSuRwJrVUCkOFOZSTwceGXD3arUC0kZ21gCB5fYKssIdFViw9ntgRTl
+X-Received: by 2002:a5d:4ac5:0:b0:37d:5035:451 with SMTP id ffacd0b85a97d-37ef2132fc5mr1627612f8f.10.1729597510365;
+        Tue, 22 Oct 2024 04:45:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9/lCtcCldWBfFoCPcs0bS+J8BhKQ+FTbLQ1w6APtRdz0iPaHCYLpmwsuxKuNHk9sPkkLKSg==
+X-Received: by 2002:a5d:4ac5:0:b0:37d:5035:451 with SMTP id ffacd0b85a97d-37ef2132fc5mr1627593f8f.10.1729597509995;
+        Tue, 22 Oct 2024 04:45:09 -0700 (PDT)
+Received: from [10.43.17.17] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37ee0a3650esm6504274f8f.4.2024.10.22.04.45.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Oct 2024 04:45:09 -0700 (PDT)
+Message-ID: <3d1ad598-531a-4e31-a0cc-b8fe05d37f64@redhat.com>
+Date: Tue, 22 Oct 2024 13:45:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241022031418.12154e63@rorschach.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] objpool: fix choosing allocation for percpu slots
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Matt Wu <wuqiang.matt@bytedance.com>, bpf@vger.kernel.org,
+ Andrii Nakryiko <andrii@kernel.org>
+References: <20240826060718.267261-1-vmalik@redhat.com>
+ <20241022141748.521cb2d6a4a86428c9bfc99e@kernel.org>
+From: Viktor Malik <vmalik@redhat.com>
+In-Reply-To: <20241022141748.521cb2d6a4a86428c9bfc99e@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-It was possible to enable tracing with no IRQ tracing support. The
-tracing infrastructure would then record TRACE_FLAG_IRQS_NOSUPPORT as
-the only tracing flag and show an 'X' in the output.
+On 10/22/24 07:17, Masami Hiramatsu (Google) wrote:
+> On Mon, 26 Aug 2024 08:07:18 +0200
+> Viktor Malik <vmalik@redhat.com> wrote:
+> 
+>> objpool intends to use vmalloc for default (non-atomic) allocations of
+>> percpu slots and objects. However, the condition checking if GFP flags
+>> are equal to GFP_ATOMIC is wrong b/c GFP_ATOMIC is a combination of bits
+> 
+> You meant "whether GFP flags sets any bit of GFP_ATOMIC is wrong"?
 
-The last user of this feature was PPC32 which managed to implement it
-during PowerPC merge in 2009. Since then, it was unused and the PPC32
-dependency was finally removed in commit 0ea5ee035133a ("tracing: Remove
-PPC32 wart from config TRACING_SUPPORT").
-Since the PowerPC merge the code behind !CONFIG_TRACE_IRQFLAGS_SUPPORT
-with TRACING enabled can no longer be selected used and the 'X' is not
-displayed or recorded.
+Well, I meant that the condition is wrong w.r.t. what is supposedly its
+original purpose. But feel free to rephrase as you seem fit or I can
+send v3 if you prefer.
 
-Remove the CONFIG_TRACE_IRQFLAGS_SUPPORT from the tracing code. Remove
-TRACE_FLAG_IRQS_NOSUPPORT.
+Thanks.
+Viktor
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-On 2024-10-22 03:14:18 [-0400], Steven Rostedt wrote:
-> So this can't even be built without TRACE_IRQFLAGS_SUPPORT!
-
-What about this as a first step? This bit was not used since 2009.
-
- Documentation/trace/ftrace.rst |  3 ---
- include/linux/trace_events.h   | 13 -------------
- kernel/trace/trace_output.c    |  1 -
- 3 files changed, 17 deletions(-)
-
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 4073ca48af4ad..74d5bd801b1a8 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1031,9 +1031,6 @@ explains which is which.
-   CPU#: The CPU which the process was running on.
- 
-   irqs-off: 'd' interrupts are disabled. '.' otherwise.
--	.. caution:: If the architecture does not support a way to
--		read the irq flags variable, an 'X' will always
--		be printed here.
- 
-   need-resched:
- 	- 'N' both TIF_NEED_RESCHED and PREEMPT_NEED_RESCHED is set,
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 42bedcddd5113..467dadb990cbe 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -184,7 +184,6 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status);
- 
- enum trace_flag_type {
- 	TRACE_FLAG_IRQS_OFF		= 0x01,
--	TRACE_FLAG_IRQS_NOSUPPORT	= 0x02,
- 	TRACE_FLAG_NEED_RESCHED		= 0x04,
- 	TRACE_FLAG_HARDIRQ		= 0x08,
- 	TRACE_FLAG_SOFTIRQ		= 0x10,
-@@ -193,7 +192,6 @@ enum trace_flag_type {
- 	TRACE_FLAG_BH_OFF		= 0x80,
- };
- 
--#ifdef CONFIG_TRACE_IRQFLAGS_SUPPORT
- static inline unsigned int tracing_gen_ctx_flags(unsigned long irqflags)
- {
- 	unsigned int irq_status = irqs_disabled_flags(irqflags) ?
-@@ -207,17 +205,6 @@ static inline unsigned int tracing_gen_ctx(void)
- 	local_save_flags(irqflags);
- 	return tracing_gen_ctx_flags(irqflags);
- }
--#else
--
--static inline unsigned int tracing_gen_ctx_flags(unsigned long irqflags)
--{
--	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
--}
--static inline unsigned int tracing_gen_ctx(void)
--{
--	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
--}
--#endif
- 
- static inline unsigned int tracing_gen_ctx_dec(void)
- {
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 868f2f912f280..2ee6613dce6dc 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -460,7 +460,6 @@ int trace_print_lat_fmt(struct trace_seq *s, struct trace_entry *entry)
- 		(entry->flags & TRACE_FLAG_IRQS_OFF && bh_off) ? 'D' :
- 		(entry->flags & TRACE_FLAG_IRQS_OFF) ? 'd' :
- 		bh_off ? 'b' :
--		(entry->flags & TRACE_FLAG_IRQS_NOSUPPORT) ? 'X' :
- 		'.';
- 
- 	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
--- 
-2.45.2
+> 
+>> (__GFP_HIGH|__GFP_KSWAPD_RECLAIM) and so `pool->gfp & GFP_ATOMIC` will
+>> be true if either bit is set. Since GFP_ATOMIC and GFP_KERNEL share the
+>> ___GFP_KSWAPD_RECLAIM bit, kmalloc will be used in cases when GFP_KERNEL
+>> is specified, i.e. in all current usages of objpool.
+>>
+>> This may lead to unexpected OOM errors since kmalloc cannot allocate
+>> large amounts of memory.
+>>
+>> For instance, objpool is used by fprobe rethook which in turn is used by
+>> BPF kretprobe.multi and kprobe.session probe types. Trying to attach
+>> these to all kernel functions with libbpf using
+>>
+>>     SEC("kprobe.session/*")
+>>     int kprobe(struct pt_regs *ctx)
+>>     {
+>>         [...]
+>>     }
+>>
+>> fails on objpool slot allocation with ENOMEM.
+>>
+>> Fix the condition to truly use vmalloc by default.
+>>
+> 
+> Anyway, this looks good to me.
+> 
+> Thank you,
+> 
+>> Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC")
+>> Signed-off-by: Viktor Malik <vmalik@redhat.com>
+>> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+>> Reviewed-by: Matt Wu <wuqiang.matt@bytedance.com>
+>> ---
+>>  lib/objpool.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/lib/objpool.c b/lib/objpool.c
+>> index 234f9d0bd081..fd108fe0d095 100644
+>> --- a/lib/objpool.c
+>> +++ b/lib/objpool.c
+>> @@ -76,7 +76,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
+>>  		 * mimimal size of vmalloc is one page since vmalloc would
+>>  		 * always align the requested size to page size
+>>  		 */
+>> -		if (pool->gfp & GFP_ATOMIC)
+>> +		if ((pool->gfp & GFP_ATOMIC) == GFP_ATOMIC)
+>>  			slot = kmalloc_node(size, pool->gfp, cpu_to_node(i));
+>>  		else
+>>  			slot = __vmalloc_node(size, sizeof(void *), pool->gfp,
+>> -- 
+>> 2.46.0
+>>
+> 
+> 
 
