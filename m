@@ -1,135 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12CF1487F6
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 08:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C49DDC1
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 08:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729585756; cv=none; b=nDa9g+Qj50oAkEY5s2cKl9xT4qH/R8g9wxsVKiJf63EvgcbVK6moPHSAWZ3WTlXnNrS30KSMlC5vWidlhXK1iqzBXSessqf7bqS0eEWU1fJKDOuGOu88UynMj50VUwZXNML6hKOystE3h2wEN25s5NpF1f99a2J7zZgUvGcToaE=
+	t=1729585829; cv=none; b=o7f1XTGNcCDg+NEWs+pwmh9aLw3wV8NpHAnXWoDfSKr7gqL0vzomYvFEqjEET8qB8M5WYhyo5b3vpMMlDYecEp5xiW1LXyOwcjCmkSVprv+mo/Ap1hXlvznsu4ZKO9bx65MLoZJvtTFjOqyDdRVDqe9UIleNgOmm0iMyV5uXBoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729585756; c=relaxed/simple;
-	bh=cb0thsKCxz5VIj09AN1tmqphvkDj5hY0NrY6HqAG/1k=;
+	s=arc-20240116; t=1729585829; c=relaxed/simple;
+	bh=iWvGO9uYNRA6rs8CudgTvRjKBP18DP4ytaTcowfWNio=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fPtUHxRwFsxARLzxHLLH7G43J003IFdubw2/gACiYGTWG6AvkEmK9el+/rp8glCQPxiYsH8bfk46xRCjk+efOJS1RLX4MWrimXxwNCxqTkONJ5B3Up90W0VkGcw6TYPMLW79nZa8MpBuDdXv02+DFKeggRYRY95o227XVHBsxH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YeGNGlIV; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=rDlGSkahhRD30TmUx0uiJCEOW2Vx7OHlNWXzv/gqZiE8omBvHZGs6S7H6s0+ivAvMDu+EBjbRdFoaLUuTuHNsNJFauoAOZ8FYgmW7nyym7T1uFCC1doMJjh2/qQSYzjT1cQybdIR/7sb578hxFn0lMo3wLQegccmPykC9Un/sdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gaac3Q0H; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YeGNGlIV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaac3Q0H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729585753;
+	s=mimecast20190719; t=1729585826;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vGRPiN187IfR7144rSm3DUecJF6sy1+NJCS3lLSr/HU=;
-	b=YeGNGlIVPS4jglpKcvZ00BHM60g4Dv2gZX8mu37xClTm6S2zTMnV1np6aBJIIXfpIEvnlO
-	mLng5x3HF0eFdAGEk3nsICja9eY2RDuy0A2vifr1Aiw5hQwGhE6FJJxCgxJ2h7WFx6/N7K
-	Rcd9MwYIav1ST7nhRnYeL19EHMXMJTw=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=5ZWqvMWje2mdmMMuJtKHJzOVBsHUAZ+wKvim28vpaDY=;
+	b=gaac3Q0H9XHZ+zTzJuZ+fbrZbC9+ZDk+3BGATl7caIwa0NGhpSnNr/ijrckzIWjSHN/O/C
+	8H/Iw2rHC8X41kMKYjnaZYnxUEHNP2e6Y4pTo8uY98OH7dYbLO9ZhSOb4MEKclTuILD/PB
+	dEfojjM0SlE0jKuQ3z+GEvwsQ+KMDrA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-1KjYeogSP9eUyYRRt2LpIw-1; Tue, 22 Oct 2024 04:29:12 -0400
-X-MC-Unique: 1KjYeogSP9eUyYRRt2LpIw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99ea3e1448so375417166b.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 01:29:11 -0700 (PDT)
+ us-mta-196-Yk5QDaVoPpqd6caftdfNNA-1; Tue, 22 Oct 2024 04:30:23 -0400
+X-MC-Unique: Yk5QDaVoPpqd6caftdfNNA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a9a23eada74so363258866b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 01:30:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729585751; x=1730190551;
+        d=1e100.net; s=20230601; t=1729585822; x=1730190622;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vGRPiN187IfR7144rSm3DUecJF6sy1+NJCS3lLSr/HU=;
-        b=qyjeNMelV2Uwdi/i7mk5wT9G7/Vwxmo8iFeYDiSpCDQbMHdbp6fsnwReIOWaYYFotW
-         UN0NX8NiCpk1ZnnFIMHSwXFxiHV3hE6xBZQTGjnYB9wfhLu9FFLBy/2ctdrzA0xECpgx
-         D73HUN9ThS8PhoNvtXll6fA5WcYThcVzed/PR15ZcEs4JsMbTl78wDDpVITTL46d75TN
-         3zXvmWc5hSNCkrht+Qnyb8dY7i7gdHloztY8myh7XRoBT+IZ16F9McXHjwqyiAnHP0iK
-         0OWGw5QGLO/EWW6tLs5vGJr5OetyGghl75rMezZEsxMdvfK6eih/49zSiJn0yk1NQeIz
-         LajQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXF9K2FCTtO0E0vaNx8bCNiuChPcaxVHZzLkscMW9ZoOAQbRB5rcbLTMR05WEvTOZD7cC+4wJZVIxJIbtO+1kj+Toc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywxooPAKA12wqovpBJE6PGB0ePbrxIlhom+pZAhZ4PgfeYdxz6
-	nMNWaWHaQwhKBmMpEnVGquOIuDUCghJyYpE955zilhixdPQs7ZJbH9JVCn9cR2/R6ZmXuY5jkb9
-	0I+fnpLkgBlUzEsko845zHck2q60gGheFES9sHyX9AS9GghPCZ5+Tr/7eQhynx+heGx1kmrTW4l
-	7wWlQMX6/6g2BuKrkLY3Ld95rr/IZvdn/08Lh6dKB/uyOc
-X-Received: by 2002:a17:907:9721:b0:a99:d3f4:ff3b with SMTP id a640c23a62f3a-a9a69a7dae9mr1339314366b.27.1729585750691;
-        Tue, 22 Oct 2024 01:29:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFRAhNlRA1mjZB/wl32UmxVftUYiMV4a2riZV2UQZ/XsHWa01nqI7UdeZhTJDlgSuRXPijMuwPIBkhJ2hZtcY8=
-X-Received: by 2002:a17:907:9721:b0:a99:d3f4:ff3b with SMTP id
- a640c23a62f3a-a9a69a7dae9mr1339312166b.27.1729585750239; Tue, 22 Oct 2024
- 01:29:10 -0700 (PDT)
+        bh=5ZWqvMWje2mdmMMuJtKHJzOVBsHUAZ+wKvim28vpaDY=;
+        b=W0hTJRPDog30/wiv3aifrU4sm3iQ5QGcpUn/Oa2S14DhyoqbWAUSNYDrpjhVFDeeG9
+         7QgCmWgJs2gaHrZ7oha91u49sX1XI9WmGend4AdaCbKHHqEhkUW+2moASQzK1SOmRalu
+         uazPky0WjefNlxRlSx6jRSrqWR1m2GwTN4ClYPXBJ3xiocrjcN/gTQt/2y6S8nXusvuz
+         I/3pbyA52pTcmOZxDPHau9je2yWlNEz8pJkeTLVImP9KpzlPZ7LjGrp2Xb1j1axZy/bg
+         aV4awG1pAmYBAunxZozTrlvzRXq/Zce1+ZQAsae/++Fn1F7iVJUpiNwwsU5ymXxnMfM7
+         Ztvw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9KzgKZ0NTPXej0eyM/tKvZJuKBy6fEXDsl3fJFhOIa3Q+4FcVMGuqr2whIhfNFdfCqd8oNq9SbIyo8D2S8vC/6l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPqaG/RTRnIUiG3M19k3Y1rH+qGGbMIFiyd/fCZ++C57XDw4XO
+	briUDNKnRLbOx/Jn3J1t5IGL5sJ3DVN15xXB7N2gaRc+w05fRNVizZi0fpgFWTB5VAZdE4YwvUX
+	EThGbyMQ99omTWejHAdHUm+3seg0O+u65O2FK9nbJgg1EcowOHDycFlaik1Y3kO9PhiTQB1wfRl
+	Y36FP10LAPl+8dta+soUAjScuF+9yaD7NHBJFG3O5Oedlu
+X-Received: by 2002:a17:907:6e8d:b0:a9a:dc3:c86e with SMTP id a640c23a62f3a-a9aace25527mr166308566b.11.1729585822085;
+        Tue, 22 Oct 2024 01:30:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRyAjZc7is+FtVdvisqTmnsQFG2L5kkwggXtst2PrYAdxiDhmZHSYD6B08tKIinZeybQvmxIVuvtZvYDiYZWg=
+X-Received: by 2002:a17:907:6e8d:b0:a9a:dc3:c86e with SMTP id
+ a640c23a62f3a-a9aace25527mr166307066b.11.1729585821767; Tue, 22 Oct 2024
+ 01:30:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <QfgO7ayKD9dsLk8_ZDebkAV0OF7wla7UmasbP9CBmui_sChOeizy512t3RqCHTjvQoUBUDP8dwEOVCdHQ5KvVNEiP69CynMY94SFDERWl94=@protonmail.com>
-In-Reply-To: <QfgO7ayKD9dsLk8_ZDebkAV0OF7wla7UmasbP9CBmui_sChOeizy512t3RqCHTjvQoUBUDP8dwEOVCdHQ5KvVNEiP69CynMY94SFDERWl94=@protonmail.com>
+References: <Q_k1s4hBtUy2px8ou0QKenjEK2_T_LoV8IxAE79aBakBogb-7uHp2fpET3oWtI1t3dy8uKjWeRzQOdKNzIzOOpyM4OjutJOriZ9TrGY6b-g=@protonmail.com>
+In-Reply-To: <Q_k1s4hBtUy2px8ou0QKenjEK2_T_LoV8IxAE79aBakBogb-7uHp2fpET3oWtI1t3dy8uKjWeRzQOdKNzIzOOpyM4OjutJOriZ9TrGY6b-g=@protonmail.com>
 From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 22 Oct 2024 10:28:59 +0200
-Message-ID: <CAP4=nvQoHvC1=eGwy_VGZAC3Xx=zr2h5pgb_f5GDdf6o7q=WLA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tools/rtla: Enhance argument parsing in timerlat_load.py
+Date: Tue, 22 Oct 2024 10:30:11 +0200
+Message-ID: <CAP4=nvTLV_ftWrqqvvT_US4MbUvQ1sUGy5mgOH+Kik31AXSdeQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] tools/rtla: Improve exception handling in timerlat_load.py
 To: furkanonder <furkanonder@protonmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"jkacur@redhat.com" <jkacur@redhat.com>, "lgoncalv@redhat.com" <lgoncalv@redhat.com>
+Cc: "lgoncalv@redhat.com" <lgoncalv@redhat.com>, "jkacur@redhat.com" <jkacur@redhat.com>, 
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-po 21. 10. 2024 v 17:12 odes=C3=ADlatel furkanonder
+po 21. 10. 2024 v 17:14 odes=C3=ADlatel furkanonder
 <furkanonder@protonmail.com> napsal:
 >
-> The enhancements made to timerlat_load.py are aimed at improving the clar=
-ity of argument parsing.
+> The enhancements made to timerlat_load.py are intended to improve the scr=
+ipt's exception handling.
 >
-> Summary of Changes:
-> - The cpu argument is now specified as an integer type in the argument
->   parser to enforce input validation, and the construction of affinity_ma=
-sk
->   has been simplified to directly use the integer value of args.cpu.
-> - The prio argument is similarly updated to be of integer type for
->   consistency and validation, eliminating the need for the conversion of
->   args.prio to an integer, as this is now handled by the argument parser.
+> Summary of the changes:
+>   - Specific exceptions are now caught for CPU affinity and priority
+>     settings, with clearer error messages provided.
+>   - The timerlat file descriptor opening now includes handling for
+>     PermissionError and OSError, with informative messages.
+>   - In the infinite loop, generic exceptions have been replaced with
+>     specific types like KeyboardInterrupt and IOError, improving feedback=
+.
+>
+>  Before:
+>     $ sudo python timerlat_load.py 122
+>     Error setting affinity
+>  After:
+>     $ sudo python timerlat_load.py 122
+>     Error setting affinity: [Errno 22] Invalid argument
+>
+>  Before:
+>     $ sudo python timerlat_load.py 1 -p 950
+>     Error setting priority
+>  After:
+>     $ sudo python timerlat_load.py 1 -p 950
+>     Error setting priority: [Errno 22] Invalid argument
+>
+>  Before:
+>     $ python timerlat_load.py 1
+>     Error opening timerlat fd, did you run timerlat -U?
+>  After:
+>     $ python timerlat_load.py 1
+>     Permission denied. Please check your access rights.
 >
 > Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
 > ---
->  tools/tracing/rtla/sample/timerlat_load.py | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+>  tools/tracing/rtla/sample/timerlat_load.py | 37 +++++++++++++++++++++---=
+-------------
+>  1 file changed, 21 insertions(+), 16 deletions(-)
 >
 > diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/r=
 tla/sample/timerlat_load.py
-> index 785e9a83539a..d7341ed5127a 100644
+> index d7341ed5127a..a819c3588073 100644
 > --- a/tools/tracing/rtla/sample/timerlat_load.py
 > +++ b/tools/tracing/rtla/sample/timerlat_load.py
-> @@ -25,13 +25,12 @@ import sys
->  import os
->
->  parser =3D argparse.ArgumentParser(description=3D'user-space timerlat th=
-read in Python')
-> -parser.add_argument("cpu", help=3D'CPU to run timerlat thread')
-> -parser.add_argument("-p", "--prio", help=3D'FIFO priority')
-> -
-> +parser.add_argument("cpu", type=3Dint, help=3D'CPU to run timerlat threa=
-d')
-> +parser.add_argument("-p", "--prio", type=3Dint, help=3D'FIFO priority')
->  args =3D parser.parse_args()
+> @@ -31,43 +31,48 @@ args =3D parser.parse_args()
 >
 >  try:
-> -    affinity_mask =3D { int(args.cpu) }
-> +    affinity_mask =3D {args.cpu}
->  except:
->      print("Invalid cpu: " + args.cpu)
->      exit(1)
-> @@ -44,7 +43,7 @@ except:
+>      affinity_mask =3D {args.cpu}
+> -except:
+> -    print("Invalid cpu: " + args.cpu)
+> -    exit(1)
+> -
+> -try:
+>      os.sched_setaffinity(0, affinity_mask)
+> -except:
+> -    print("Error setting affinity")
+> -    exit(1)
+> +except Exception as e:
+> +    print(f"Error setting affinity: {e}")
+> +    sys.exit(1)
 >
 >  if args.prio:
 >      try:
-> -        param =3D os.sched_param(int(args.prio))
-> +        param =3D os.sched_param(args.prio)
+>          param =3D os.sched_param(args.prio)
 >          os.sched_setscheduler(0, os.SCHED_FIFO, param)
->      except:
->          print("Error setting priority")
+> -    except:
+> -        print("Error setting priority")
+> -        exit(1)
+> +    except Exception as e:
+> +        print(f"Error setting priority: {e}")
+> +        sys.exit(1)
+>
+>  try:
+>      timerlat_path =3D f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu=
+}/timerlat_fd"
+>      timerlat_fd =3D open(timerlat_path, 'r')
+> -except:
+> +except PermissionError:
+> +    print("Permission denied. Please check your access rights.")
+> +    sys.exit(1)
+> +except OSError:
+>      print("Error opening timerlat fd, did you run timerlat -U?")
+> -    exit(1)
+> +    sys.exit(1)
+>
+>  try:
+>      data_fd =3D open("/dev/full", 'r')
+> -except:
+> -    print("Error opening data fd")
+> +except Exception as e:
+> +    print(f"Error opening data fd: {e}")
+> +    sys.exit(1)
+>
+>  while True:
+>      try:
+>          timerlat_fd.read(1)
+>          data_fd.read(20 * 1024 * 1024)
+> -    except:
+> +    except KeyboardInterrupt:
+>          print("Leaving")
+>          break
+> +    except IOError as e:
+> +        print(f"I/O error occurred: {e}")
+> +        break
+> +    except Exception as e:
+> +        print(f"Unexpected error: {e}")
+> +        break
+>
+>  timerlat_fd.close()
+>  data_fd.close()
 > --
 > 2.46.2
 >
