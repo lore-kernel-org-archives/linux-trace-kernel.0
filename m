@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027EF1494B2
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 08:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12CF1487F6
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 08:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729585728; cv=none; b=KxlnOBBv59kDeTYDmxIHJjzwgrtUbH/DuUk8AJmCNOYRMr1P9xecHc6VDvSodEivN3+z53T7LjgO91hZGxNlnCbn9u9wSq8HS58t0mBZHRq7XLF1KfKSMOIodCh2cUuPJxfOsHr5QkinYbTVU8v/ILOkk3Qlt/dF7uGbEIFPzZI=
+	t=1729585756; cv=none; b=nDa9g+Qj50oAkEY5s2cKl9xT4qH/R8g9wxsVKiJf63EvgcbVK6moPHSAWZ3WTlXnNrS30KSMlC5vWidlhXK1iqzBXSessqf7bqS0eEWU1fJKDOuGOu88UynMj50VUwZXNML6hKOystE3h2wEN25s5NpF1f99a2J7zZgUvGcToaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729585728; c=relaxed/simple;
-	bh=D2/HjL8fYaK0V1zdyY6FlA7iud6uZlw38e+jkWYFUjE=;
+	s=arc-20240116; t=1729585756; c=relaxed/simple;
+	bh=cb0thsKCxz5VIj09AN1tmqphvkDj5hY0NrY6HqAG/1k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NUbbFarQGTXCC20s4HmpME6cDcw6w/UMSU13cuHrK90+tVuhDt1GBr0ObVDywqo0G90v5Ok3PRdZkjfO6plBYo8FdhS0Tp/6+UFHJo4bBS4IEOIDFR2pRYBJaFgXP3UIGAZd1lWr5181n5HEHyCS8LcSZNzdckBUBuunw+87+Tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T5pjOMmk; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=fPtUHxRwFsxARLzxHLLH7G43J003IFdubw2/gACiYGTWG6AvkEmK9el+/rp8glCQPxiYsH8bfk46xRCjk+efOJS1RLX4MWrimXxwNCxqTkONJ5B3Up90W0VkGcw6TYPMLW79nZa8MpBuDdXv02+DFKeggRYRY95o227XVHBsxH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YeGNGlIV; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T5pjOMmk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YeGNGlIV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729585725;
+	s=mimecast20190719; t=1729585753;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=th0KlitpWOgI2xLbjUY3717b3+mGXGriqhUdr26to2A=;
-	b=T5pjOMmk2jzsS1iETdR356lTcEMTEuniv28y/uqTExHQr75SkoftPejBaEoDzXJKW/nxdr
-	gNNK9wIGgDXTACSGe9FaLD0QX/q6ZnCB68l7q1vC9Jelaeh/s6+Bq6gNnqsqG/bcl0CyNa
-	PHXjgb5FWpAxG4YkSV01OlpP5X7t8+A=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=vGRPiN187IfR7144rSm3DUecJF6sy1+NJCS3lLSr/HU=;
+	b=YeGNGlIVPS4jglpKcvZ00BHM60g4Dv2gZX8mu37xClTm6S2zTMnV1np6aBJIIXfpIEvnlO
+	mLng5x3HF0eFdAGEk3nsICja9eY2RDuy0A2vifr1Aiw5hQwGhE6FJJxCgxJ2h7WFx6/N7K
+	Rcd9MwYIav1ST7nhRnYeL19EHMXMJTw=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-10-I6mS-FDMP7OPre7Ux9FYnQ-1; Tue, 22 Oct 2024 04:28:44 -0400
-X-MC-Unique: I6mS-FDMP7OPre7Ux9FYnQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-539f5f33333so4229546e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 01:28:44 -0700 (PDT)
+ us-mta-655-1KjYeogSP9eUyYRRt2LpIw-1; Tue, 22 Oct 2024 04:29:12 -0400
+X-MC-Unique: 1KjYeogSP9eUyYRRt2LpIw-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a99ea3e1448so375417166b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 01:29:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729585723; x=1730190523;
+        d=1e100.net; s=20230601; t=1729585751; x=1730190551;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=th0KlitpWOgI2xLbjUY3717b3+mGXGriqhUdr26to2A=;
-        b=qLyOxuhJzbITRFlQeSY/aTzn8SzmQum/M+WbxO/HhPtByxOhyMu10E26HeCxb8rpvd
-         ql3UhC0+BYqNYR92RABpPwD78FCZ0jE75vHKoVPMT+C5hOmJWh0oDavLnYH377SYvmwe
-         +kShu7GwqCnDm1x6O1lAYSx8fni2D/jbU0iaGUY85PGmgJ3xDd1btzyqcEQcVHEr8UuU
-         69nAXHSS+71jNKpORnf990xuJfGb7+bqAXIWPOZaz3jDrT9SH6+5+uvFvKQX5bMv23Wh
-         Ppd7EN7L/1BZ3OZ+y9TnCsdIDEjh3XiVnRZoEzAuC0nDI7qYe7ICPzHnAaAk4H5FL1x2
-         VHDA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0rGifN5tVzAvVLTALqvBxMQIoyV5wF1I0JWrS1hLbNKF/RmzYRh1ZLvTQrNmaO196Qj9/MvUEPWl2FNPPEtJCsj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzh6/a2/swSD+O19GF80o7EwgxrH7l2uP27yBlNZ2XU0iHeJVF
-	siatJucryDmYcPUdSu+rSl7dUJ5SDLsGTjzyMLERlYNIx5DFvpLeN4F7xFRM6O7Q2+nfDWHeWIt
-	02LJXz2KQy060zYs03RoWDeR2FHBaONBewm52ew9ItmMq5w6leptD7ipaP92v7go58RYhcr3tYH
-	ZBrdUVfjj9D3iSRtqwkxFMCQQexglSZZEl4/boaNNUDg7N
-X-Received: by 2002:a05:6512:1051:b0:539:f10b:ff93 with SMTP id 2adb3069b0e04-53a15229dc3mr6845164e87.27.1729585723007;
-        Tue, 22 Oct 2024 01:28:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVQ7GBQa87DLkdUq9QijZLFoILvHKWFkYQEtrL9jTxAF5AMT35QlttgZTdyIOfFnWz5bVV7T801TJE1JDP49c=
-X-Received: by 2002:a05:6512:1051:b0:539:f10b:ff93 with SMTP id
- 2adb3069b0e04-53a15229dc3mr6845143e87.27.1729585722566; Tue, 22 Oct 2024
- 01:28:42 -0700 (PDT)
+        bh=vGRPiN187IfR7144rSm3DUecJF6sy1+NJCS3lLSr/HU=;
+        b=qyjeNMelV2Uwdi/i7mk5wT9G7/Vwxmo8iFeYDiSpCDQbMHdbp6fsnwReIOWaYYFotW
+         UN0NX8NiCpk1ZnnFIMHSwXFxiHV3hE6xBZQTGjnYB9wfhLu9FFLBy/2ctdrzA0xECpgx
+         D73HUN9ThS8PhoNvtXll6fA5WcYThcVzed/PR15ZcEs4JsMbTl78wDDpVITTL46d75TN
+         3zXvmWc5hSNCkrht+Qnyb8dY7i7gdHloztY8myh7XRoBT+IZ16F9McXHjwqyiAnHP0iK
+         0OWGw5QGLO/EWW6tLs5vGJr5OetyGghl75rMezZEsxMdvfK6eih/49zSiJn0yk1NQeIz
+         LajQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXF9K2FCTtO0E0vaNx8bCNiuChPcaxVHZzLkscMW9ZoOAQbRB5rcbLTMR05WEvTOZD7cC+4wJZVIxJIbtO+1kj+Toc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywxooPAKA12wqovpBJE6PGB0ePbrxIlhom+pZAhZ4PgfeYdxz6
+	nMNWaWHaQwhKBmMpEnVGquOIuDUCghJyYpE955zilhixdPQs7ZJbH9JVCn9cR2/R6ZmXuY5jkb9
+	0I+fnpLkgBlUzEsko845zHck2q60gGheFES9sHyX9AS9GghPCZ5+Tr/7eQhynx+heGx1kmrTW4l
+	7wWlQMX6/6g2BuKrkLY3Ld95rr/IZvdn/08Lh6dKB/uyOc
+X-Received: by 2002:a17:907:9721:b0:a99:d3f4:ff3b with SMTP id a640c23a62f3a-a9a69a7dae9mr1339314366b.27.1729585750691;
+        Tue, 22 Oct 2024 01:29:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFRAhNlRA1mjZB/wl32UmxVftUYiMV4a2riZV2UQZ/XsHWa01nqI7UdeZhTJDlgSuRXPijMuwPIBkhJ2hZtcY8=
+X-Received: by 2002:a17:907:9721:b0:a99:d3f4:ff3b with SMTP id
+ a640c23a62f3a-a9a69a7dae9mr1339312166b.27.1729585750239; Tue, 22 Oct 2024
+ 01:29:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <j2B-ted7pv3TaldTyqfIHrMmjq2fVyBFgnu3TskiQJsyRzy9loPTVVJoqHnrCWu5T88MDIFc612jUglH6Sxkdg9LN-I1XuITmoL70uECmus=@protonmail.com>
-In-Reply-To: <j2B-ted7pv3TaldTyqfIHrMmjq2fVyBFgnu3TskiQJsyRzy9loPTVVJoqHnrCWu5T88MDIFc612jUglH6Sxkdg9LN-I1XuITmoL70uECmus=@protonmail.com>
+References: <QfgO7ayKD9dsLk8_ZDebkAV0OF7wla7UmasbP9CBmui_sChOeizy512t3RqCHTjvQoUBUDP8dwEOVCdHQ5KvVNEiP69CynMY94SFDERWl94=@protonmail.com>
+In-Reply-To: <QfgO7ayKD9dsLk8_ZDebkAV0OF7wla7UmasbP9CBmui_sChOeizy512t3RqCHTjvQoUBUDP8dwEOVCdHQ5KvVNEiP69CynMY94SFDERWl94=@protonmail.com>
 From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 22 Oct 2024 10:28:31 +0200
-Message-ID: <CAP4=nvRpL76sVM4DayG0ysUfbQgJgVL88bwP31V-5QrYf6wB9g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] tools/rtla: Improve code readability in timerlat_load.py
+Date: Tue, 22 Oct 2024 10:28:59 +0200
+Message-ID: <CAP4=nvQoHvC1=eGwy_VGZAC3Xx=zr2h5pgb_f5GDdf6o7q=WLA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] tools/rtla: Enhance argument parsing in timerlat_load.py
 To: furkanonder <furkanonder@protonmail.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, 
 	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
@@ -77,73 +77,59 @@ X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-po 21. 10. 2024 v 17:10 odes=C3=ADlatel furkanonder
+po 21. 10. 2024 v 17:12 odes=C3=ADlatel furkanonder
 <furkanonder@protonmail.com> napsal:
 >
-> The enhancements made to timerlat_load.py are intended to improve the
-> script's robustness and readability.
+> The enhancements made to timerlat_load.py are aimed at improving the clar=
+ity of argument parsing.
 >
-> Summary of the changes:
-> - Unnecessary semicolons at the end of lines have been removed.
-> - Parentheses surrounding the if statement checking args.prio have been
-> eliminated.
-> - String concatenation for constructing timerlat_path has been replaced
-> with an f-string.
-> - Spacing in a multiplication expression has been adjusted for improved
-> clarity.
+> Summary of Changes:
+> - The cpu argument is now specified as an integer type in the argument
+>   parser to enforce input validation, and the construction of affinity_ma=
+sk
+>   has been simplified to directly use the integer value of args.cpu.
+> - The prio argument is similarly updated to be of integer type for
+>   consistency and validation, eliminating the need for the conversion of
+>   args.prio to an integer, as this is now handled by the argument parser.
 >
 > Signed-off-by: Furkan Onder <furkanonder@protonmail.com>
 > ---
->  tools/tracing/rtla/sample/timerlat_load.py | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  tools/tracing/rtla/sample/timerlat_load.py | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 >
 > diff --git a/tools/tracing/rtla/sample/timerlat_load.py b/tools/tracing/r=
 tla/sample/timerlat_load.py
-> index 8cc5eb2d2e69..785e9a83539a 100644
+> index 785e9a83539a..d7341ed5127a 100644
 > --- a/tools/tracing/rtla/sample/timerlat_load.py
 > +++ b/tools/tracing/rtla/sample/timerlat_load.py
-> @@ -37,12 +37,12 @@ except:
->      exit(1)
+> @@ -25,13 +25,12 @@ import sys
+>  import os
+>
+>  parser =3D argparse.ArgumentParser(description=3D'user-space timerlat th=
+read in Python')
+> -parser.add_argument("cpu", help=3D'CPU to run timerlat thread')
+> -parser.add_argument("-p", "--prio", help=3D'FIFO priority')
+> -
+> +parser.add_argument("cpu", type=3Dint, help=3D'CPU to run timerlat threa=
+d')
+> +parser.add_argument("-p", "--prio", type=3Dint, help=3D'FIFO priority')
+>  args =3D parser.parse_args()
 >
 >  try:
-> -    os.sched_setaffinity(0, affinity_mask);
-> +    os.sched_setaffinity(0, affinity_mask)
+> -    affinity_mask =3D { int(args.cpu) }
+> +    affinity_mask =3D {args.cpu}
 >  except:
->      print("Error setting affinity")
+>      print("Invalid cpu: " + args.cpu)
 >      exit(1)
+> @@ -44,7 +43,7 @@ except:
 >
-> -if (args.prio):
-> +if args.prio:
+>  if args.prio:
 >      try:
->          param =3D os.sched_param(int(args.prio))
+> -        param =3D os.sched_param(int(args.prio))
+> +        param =3D os.sched_param(args.prio)
 >          os.sched_setscheduler(0, os.SCHED_FIFO, param)
-> @@ -51,21 +51,21 @@ if (args.prio):
->          exit(1)
->
->  try:
-> -    timerlat_path =3D "/sys/kernel/tracing/osnoise/per_cpu/cpu" + args.c=
-pu + "/timerlat_fd"
-> +    timerlat_path =3D f"/sys/kernel/tracing/osnoise/per_cpu/cpu{args.cpu=
-}/timerlat_fd"
->      timerlat_fd =3D open(timerlat_path, 'r')
->  except:
->      print("Error opening timerlat fd, did you run timerlat -U?")
->      exit(1)
->
->  try:
-> -    data_fd =3D open("/dev/full", 'r');
-> +    data_fd =3D open("/dev/full", 'r')
->  except:
->      print("Error opening data fd")
->
->  while True:
->      try:
->          timerlat_fd.read(1)
-> -        data_fd.read(20*1024*1024)
-> +        data_fd.read(20 * 1024 * 1024)
 >      except:
->          print("Leaving")
->          break
+>          print("Error setting priority")
 > --
 > 2.46.2
 >
