@@ -1,52 +1,51 @@
-Received: from yyz.mikelr.com (yyz.mikelr.com [170.75.163.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AD13B297;
-	Tue, 22 Oct 2024 03:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.75.163.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E339C12E1CA;
+	Tue, 22 Oct 2024 03:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729567443; cv=none; b=hkgMbQIAbm7o8LMJrWuHMBofwh3MPmK+TadKFLpAW353yxYsaB9VXDV5DGe17P8QGjI3X2pL1CzBTw+mxKWBc+ai06OIkTrJS8RmLpxzSCKI5Pw4gQnYknbrVRrS/WfDjPIm6MUaQrVukJtXI4WEvHmoQN3E1kxmwRN1l/873K0=
+	t=1729568159; cv=none; b=CJ0HtXCIPlkpP7KEOFuSNnmbJPhASU0DlPKNmm/JDt2P4/XKtEYh1mVfkQyjT2JUH+8EQkcjhFjqNBFu4yro69vgbFHxvXSpmQVPiKT8BMExcOMF7meW17kINvFrBSW3/hg6h07+IgbQUzBPr/NqZQ3pdhggTRT9L8HCxutd1gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729567443; c=relaxed/simple;
-	bh=agnfK24D1Yckr5UF3L0PseJtUdVRlECbtIOOQQXBbOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MAZ9rWvCfAT/v4iOcq4hh/frgt+fjT0kj9hkZWrvF8cRMg/F0o2pIQVYoxQAqF4uVnrafkTUrCLwkqhIktoOpaTvfduTbnb6XC8Nfbu81gauoActflmtUtYxwRMJRfw9mcbBnLj5GvZtP85nDe3cwjGT6VqMrRlHDdQLMOcaMms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com; spf=pass smtp.mailfrom=mikelr.com; arc=none smtp.client-ip=170.75.163.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikelr.com
-Received: from basin.localnet (unknown [IPv6:2607:f2c0:e554:1200:4b8f:795f:f483:85bf])
-	by yyz.mikelr.com (Postfix) with ESMTPA id 9963D71AFA;
-	Mon, 21 Oct 2024 23:14:54 -0400 (EDT)
-From: Mikel Rychliski <mikel@mikelr.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/probes: Fix MAX_TRACE_ARGS limit handling
-Date: Mon, 21 Oct 2024 23:14:54 -0400
-Message-ID: <5391163.OV4Wx5bFTl@basin>
-In-Reply-To: <20240930202656.292869-1-mikel@mikelr.com>
-References:
- <20241001004050.972e999c644d0e45fd2a94f8@kernel.org>
- <20240930202656.292869-1-mikel@mikelr.com>
+	s=arc-20240116; t=1729568159; c=relaxed/simple;
+	bh=K+vjaqwAPjLf9VJ3/xPLj8PYjIGgIDJyTnutxu/NoAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W+Fqno62Xwkkd5M3lTj+5d33A5GkOjVukKuQKjPSh/YhmeL/T59lNc+uASsau3P0Zx9pe6IrFkSndMvQcuk6RlsHR2kB3ghsNVvoPQuh2bjIDrJCe2Bp2oUrgeNM1I4fxT+pv0KOKfAFZRPFyC7cL3YUeB23aKZyeQMTO0ixKMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ADA6C4CEC3;
+	Tue, 22 Oct 2024 03:35:58 +0000 (UTC)
+Date: Mon, 21 Oct 2024 23:35:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] fgraph: Use CPU hotplug mechanism to initialize idle
+ shadow stacks
+Message-ID: <20241021233555.47001ddd@rorschach.local.home>
+In-Reply-To: <20241021145810.9a9daec35cb83a04fe10208a@kernel.org>
+References: <20241018214300.6df82178@rorschach>
+	<20241021145810.9a9daec35cb83a04fe10208a@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Monday, September 30, 2024 4:26:54 P.M. EDT Mikel Rychliski wrote:
-> V1 -> V2: Return error instead of dropping excessive arguments
+On Mon, 21 Oct 2024 14:58:10 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Hi Masami,
+> > +	if (!fgraph_initialized) {
+> > +		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph_idle_init",  
+> 
+> Nit: Maybe it is better to call it as "tracing/fgraph:online" ?
 
-Thanks for the feedback so far. Was wondering if you had a chance to look at 
-the updated patch?
+Ah this already went upstream. But yeah, I can rename it for the merge
+window.
 
-Thanks,
-Mikel
-
-
+-- Steve
