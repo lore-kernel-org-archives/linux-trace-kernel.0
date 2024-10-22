@@ -1,29 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579C2811F1;
-	Tue, 22 Oct 2024 06:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31713153BE4;
+	Tue, 22 Oct 2024 07:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729580202; cv=none; b=Bg0I7yBHXzqEYUavo0k1F/vFlsjhAgzO8eC2XYRE8mhWSqPcBhd04BnVuc4yiK0mDRPT6iZpqi4+xqu4pOn7qgtwGBKBKNnadOrC2mjN9PpmsApKbQQ3x1GS/1bUxxiVXnvgL57U4i5AR6YzGT9S/RsKmFPknRSDnYc7B/Qm/is=
+	t=1729581264; cv=none; b=lTio/RucFI8X+P9lC8dfCsMkZefCDe1IAwbBIoMkRsL+NoFAFDxYchu80W8Edomwe9OvIHrLsoTDXn/A4ovjf0MTOiNcZ32DeM8v9vZj4JxFpTR/oloQdFNR9VwluRFWzrIpNwju8OIL9hKUQhWCyL27Aj618VHDli2e1M3D9+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729580202; c=relaxed/simple;
-	bh=1yIlvSXY/Rv3BHmPoud25WQ741qvCQ2J1M4VqyS72VM=;
+	s=arc-20240116; t=1729581264; c=relaxed/simple;
+	bh=kwGzMaCTwZNlmr7cTlrGkXOAsf0h9e0Emk902bwUv/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MtGcX563G2mGj4hGPX9HSUNnXZRbDU1vO99mfx6RUrsXje+l1QJNFYUJE11EsroCVG5Og7piL6Iq4xiGa70SQA30abd8H2oYOMcwL41Vy0Jddira1t/u/8NTxqa9A7p7L8O9LVMMmpzGn4MjkPkDbzJPxvTZOQtYdmnrOuQHhSo=
+	 MIME-Version:Content-Type; b=QxjPIVXhJDMzLbiv/1l0UcHkIu+l2WQQVG5ZTBGtgHt/QRptzwN3DmFEHeM00xg3KEOPmoIaiu10ESec9g/a0ZdFrYDxzPWqRG9fXeYY/+FWGIAIIuSHDR5I8gAr2zYeAcXDJc8yyTjM1QCnEuSTmhlBQJKOnVA9UYt8kOeCOPk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5F2C4CEC3;
-	Tue, 22 Oct 2024 06:56:40 +0000 (UTC)
-Date: Tue, 22 Oct 2024 02:56:37 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B357CC4CEC3;
+	Tue, 22 Oct 2024 07:14:21 +0000 (UTC)
+Date: Tue, 22 Oct 2024 03:14:18 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Gianfranco Trad <gianf.trad@gmail.com>
-Cc: mhiramat@kernel.org, mark.rutland@arm.com,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, skhan@linuxfoundation.org
-Subject: Re: [PATCH] fgraph: fix unused value in register_ftrace_graph()
-Message-ID: <20241022025637.6852bac9@rorschach.local.home>
-In-Reply-To: <20241021102428.287998-2-gianf.trad@gmail.com>
-References: <20241021102428.287998-2-gianf.trad@gmail.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Peter
+ Zijlstra <peterz@infradead.org>, tglx@linutronix.de, mingo@kernel.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, ankur.a.arora@oracle.com, efault@gmx.de, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v2 1/3] tracing: Replace TRACE_FLAG_IRQS_NOSUPPORT with
+ its config option.
+Message-ID: <20241022031418.12154e63@rorschach.local.home>
+In-Reply-To: <20241021151257.102296-2-bigeasy@linutronix.de>
+References: <20241021151257.102296-1-bigeasy@linutronix.de>
+	<20241021151257.102296-2-bigeasy@linutronix.de>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,49 +40,95 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 21 Oct 2024 12:24:29 +0200
-Gianfranco Trad <gianf.trad@gmail.com> wrote:
+On Mon, 21 Oct 2024 17:08:40 +0200
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
 
-> Coverity reports unused assignment to value ret. [1]
-> ret is assigned to 0 here, but that stored value is overwritten before
-> it can be used. The overwrite might happen either at line 1277, 1290 
-> or eventually at line 1306. Therefore, cleanup the unused assignment.
+> From: Thomas Gleixner <tglx@linutronix.de>
 > 
-> [1] Coverity Scan, CID 1633338
+> The TRACE_FLAG_IRQS_NOSUPPORT flag is used by tracing_gen_ctx.*() to
+> signal that CONFIG_TRACE_IRQFLAGS_SUPPORT is not enabled and tracing IRQ
+> flags is not supported.
+> 
+> This could be replaced by using the 0 as flags and then deducting that
+> there is no IRQFLAGS_SUPPORT based on the config option. The downside is
+> that without CONFIG_TRACE_IRQFLAGS_SUPPORT we can not distinguish
+> between no-IRQ passed flags and callers which passed 0. On the upside we
+> have room for one additional flags which could be used for LAZY_PREEMPTION.
+> 
+> Remove TRACE_FLAG_IRQS_NOSUPPORT and set it flags are 0 and
+> CONFIG_TRACE_IRQFLAGS_SUPPORT is not set.
 
-What does the above mean? For such a simple change, is it really
-unnecessary?
+We could also add that we have:
+
+#
+# Minimum requirements an architecture has to meet for us to
+# be able to offer generic tracing facilities:
+#
+config TRACING_SUPPORT
+        bool
+        depends on TRACE_IRQFLAGS_SUPPORT
+        depends on STACKTRACE_SUPPORT
+        default y
+
+So this can't even be built without TRACE_IRQFLAGS_SUPPORT!
 
 > 
-> Signed-off-by: Gianfranco Trad <gianf.trad@gmail.com>
+> [bigeasy: Commit descrption.]
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->  kernel/trace/fgraph.c | 1 -
->  1 file changed, 1 deletion(-)
+>  include/linux/trace_events.h |    7 +++----
+>  kernel/trace/trace_output.c  |    2 +-
+>  2 files changed, 4 insertions(+), 5 deletions(-)
 > 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 41e7a15dcb50..cc2e065c1c8d 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -1262,7 +1262,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->  			return ret;
->  		}
->  		fgraph_initialized = true;
-> -		ret = 0;
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -184,8 +184,7 @@ unsigned int tracing_gen_ctx_irq_test(un
+>  
+>  enum trace_flag_type {
+>  	TRACE_FLAG_IRQS_OFF		= 0x01,
+> -	TRACE_FLAG_IRQS_NOSUPPORT	= 0x02,
+> -	TRACE_FLAG_NEED_RESCHED		= 0x04,
+> +	TRACE_FLAG_NEED_RESCHED		= 0x02,
 
-Not to mention that if this is to go, why not get rid of the
-declaration part too? That is:
+These flags are user visible (I probably should move them into uapi).
+They are parsed by libtraceevent.
 
--	int ret = 0;
-+	int ret;
+Please just remove NOSUPPORT and do not touch NEED_RESCHED.
 
-But still, this code is about to be merged with other code where this
-change may cause issues. This is such a slow path that getting rid of
-the extra initialization may not be worth it.
+
+>  	TRACE_FLAG_HARDIRQ		= 0x08,
+>  	TRACE_FLAG_SOFTIRQ		= 0x10,
+>  	TRACE_FLAG_PREEMPT_RESCHED	= 0x20,
+> @@ -211,11 +210,11 @@ static inline unsigned int tracing_gen_c
+>  
+>  static inline unsigned int tracing_gen_ctx_flags(unsigned long irqflags)
+>  {
+> -	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
+> +	return tracing_gen_ctx_irq_test(0);
+>  }
+>  static inline unsigned int tracing_gen_ctx(void)
+>  {
+> -	return tracing_gen_ctx_irq_test(TRACE_FLAG_IRQS_NOSUPPORT);
+> +	return tracing_gen_ctx_irq_test(0);
+>  }
+>  #endif
+>  
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -460,7 +460,7 @@ int trace_print_lat_fmt(struct trace_seq
+>  		(entry->flags & TRACE_FLAG_IRQS_OFF && bh_off) ? 'D' :
+>  		(entry->flags & TRACE_FLAG_IRQS_OFF) ? 'd' :
+>  		bh_off ? 'b' :
+> -		(entry->flags & TRACE_FLAG_IRQS_NOSUPPORT) ? 'X' :
+> +		!IS_ENABLED(CONFIG_TRACE_IRQFLAGS_SUPPORT) ? 'X' :
+
+Probably can even remove this check.
 
 -- Steve
 
-
->  	}
+>  		'.';
 >  
->  	if (!fgraph_array[0]) {
+>  	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
 
