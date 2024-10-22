@@ -1,85 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A620D1494A3;
-	Tue, 22 Oct 2024 07:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF1F152160;
+	Tue, 22 Oct 2024 07:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729582015; cv=none; b=J9Qa3ESFYUhTTe+Ev4a+/ihraPjSTfDCg0KjGAz1OmIvLqV5zkXKi8Gytv0Hq8w87mm0MCSM5Lk8B5DnHGbHD1wDkY1kABVLHOuoNJZ4bgvH2jIirbYbn6BiggnzITVWVSkfVPZSe/O2ulLKWUq17cs3Ce0Nrjm3kPqhmVHrxgc=
+	t=1729582950; cv=none; b=kr2mapSr8H3SWQoQYanFEb8wRjLLDDlbnC4xTvylsZSBdAwRWNfhtdjRr+WNOu4y6ZJv2gNJ9+ekP8bS6mEdXj9s8HqiG0cZWO1iyQbvRY+wsrFy4qlrCoawMMH5Ljy3Mu2NCnDwkH87cvZK15CqFhjV9qR2BycdhFp8HEWZUIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729582015; c=relaxed/simple;
-	bh=ibOhkUXvRYMK8jkZzE2HY0TBChY/cc2OecVh8ThPhWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibClg1/jTiLuTS53Uc5Iz6ajTR1ueS3lH98yGygva1w5sFV5BnwyvpT8FZ9h6R+v3xRVWj5e11Th+5nL7mHQfGKaNSD3WW3NXbK7gwaO2tQuVJIO8uV8db+qgpK+3/HOyPp4iWe6dUVHikpUBLX3LmlA5ehE0LubZEaav05MltQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oPIgL9TI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DmDSI1Uw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oPIgL9TI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DmDSI1Uw"
-Date: Tue, 22 Oct 2024 09:26:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1729582006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fSPfzACEXYEYmj8ajCysd204o0hQNSbJqJG3tf/rdtQ=;
-	b=oPIgL9TIlmVFMOGmChRdpryNKfi184JhP/yYNuee0+HLn77GrmdygJM6uszNkA8GofupxW
-	72XBQOsqwzAOru2LcnK8sqJnRw++lx0J1AafvI+hrdRSDDsOKV18+smC6ABgEGGvw8UeKG
-	4PLjsowAcVuUMHU4DwETZCNYFCwo6sNInmIpiQLtHGClmnwPkHuxIzq1fGL7zq5pN/upRd
-	vPJGpujVqEWeB2hXIJ1Xo16Ci2I5Asg8rdBP3C8hGobiylyRWP3neObyuJ3rakK3BmaguB
-	IW/60TnTYfGOlnZYpbVcoeTmqJvh7/RW6l+38A2r3Zw2cSWd/Q/K7AhSeekrQw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1729582006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fSPfzACEXYEYmj8ajCysd204o0hQNSbJqJG3tf/rdtQ=;
-	b=DmDSI1UwyvYWxeWvwgFsYXjh5msTVid8/6UOeryfDdB9h7VeRc8u7PGD7PyeBbJUW1534/
-	8IXDWmMMrs23uLDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-	mingo@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, ankur.a.arora@oracle.com, efault@gmx.de,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v2 2/3] tracing: Record task flag NEED_RESCHED_LAZY.
-Message-ID: <20241022072644.Tw-k3d95@linutronix.de>
-References: <20241021151257.102296-1-bigeasy@linutronix.de>
- <20241021151257.102296-3-bigeasy@linutronix.de>
- <20241022031827.21e70b2b@rorschach.local.home>
+	s=arc-20240116; t=1729582950; c=relaxed/simple;
+	bh=Sns24Kn2/dehSLQImOAaNKLYhQYfH0psondXhJgNDFw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ny6f9V825piJJPKTsh9bGD+wwZpP2770zpyXrh2sSuZ8Ag/eo1cQT+/Q5wFwv0FYmgyBuLco37zGctJpFLO/CIEGFIcdzlBCc+f7b2JLyYDkgE2HpzpFB70FWjNvbc5LdPcX9j/n3L+5ClwR+8YxHbqMnapFo8zFDq8VeVzro9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XXkdS2Xz2z20qWg;
+	Tue, 22 Oct 2024 15:41:32 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id D7580140361;
+	Tue, 22 Oct 2024 15:42:22 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 22 Oct
+ 2024 15:42:22 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <andrii.nakryiko@gmail.com>, <mhiramat@kernel.org>, <oleg@redhat.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: [PATCH v4 0/2] uprobes: Improve scalability by reducing the contention on siglock
+Date: Tue, 22 Oct 2024 07:31:39 +0000
+Message-ID: <20241022073141.3291245-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241022031827.21e70b2b@rorschach.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On 2024-10-22 03:18:27 [-0400], Steven Rostedt wrote:
-> On Mon, 21 Oct 2024 17:08:41 +0200
-> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> 
-> >  enum trace_flag_type {
-> >  	TRACE_FLAG_IRQS_OFF		= 0x01,
-> >  	TRACE_FLAG_NEED_RESCHED		= 0x02,
-> > +	TRACE_FLAG_NEED_RESCHED_LAZY	= 0x04,
-> >  	TRACE_FLAG_HARDIRQ		= 0x08,
-> >  	TRACE_FLAG_SOFTIRQ		= 0x10,
-> >  	TRACE_FLAG_PREEMPT_RESCHED	= 0x20,
-> 
-> As I stated in the other email, these are user visible. Should probably
-> make the LAZY flag 0x100, as the trace_flags are 16 bits worth.
+The profiling result of BPF selftest on ARM64 platform reveals the
+significant contention on the current->sighand->siglock is the
+scalability bottleneck. The reason is also very straightforward that all
+producer threads of benchmark have to contend the spinlock mentioned to
+resume the TIF_SIGPENDING bit in thread_info that might be removed in
+uprobe_deny_signal().
 
-What about struct trace_entry? That flags is stored as 8bit in
-tracing_generic_entry_update().
+The contention on current->sighand->siglock is unnecessary, this series
+remove them thoroughly. I've use the script developed by Andrii in [1]
+to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
+64 cores@2.4GHz running the kernel on next tree + the optimization in
+[2] for get_xol_insn_slot().
 
-> 
-> -- Steve
+before-opt
+----------
+uprobe-nop      ( 1 cpus):    0.907 ± 0.003M/s  (  0.907M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.676 ± 0.008M/s  (  0.838M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.210 ± 0.003M/s  (  0.802M/s/cpu)
+uprobe-nop      ( 8 cpus):    4.457 ± 0.003M/s  (  0.557M/s/cpu)
+uprobe-nop      (16 cpus):    3.724 ± 0.011M/s  (  0.233M/s/cpu)
+uprobe-nop      (32 cpus):    2.761 ± 0.003M/s  (  0.086M/s/cpu)
+uprobe-nop      (64 cpus):    1.293 ± 0.015M/s  (  0.020M/s/cpu)
 
-Sebastian
+uprobe-push     ( 1 cpus):    0.883 ± 0.001M/s  (  0.883M/s/cpu)
+uprobe-push     ( 2 cpus):    1.642 ± 0.005M/s  (  0.821M/s/cpu)
+uprobe-push     ( 4 cpus):    3.086 ± 0.002M/s  (  0.771M/s/cpu)
+uprobe-push     ( 8 cpus):    3.390 ± 0.003M/s  (  0.424M/s/cpu)
+uprobe-push     (16 cpus):    2.652 ± 0.005M/s  (  0.166M/s/cpu)
+uprobe-push     (32 cpus):    2.713 ± 0.005M/s  (  0.085M/s/cpu)
+uprobe-push     (64 cpus):    1.313 ± 0.009M/s  (  0.021M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.774 ± 0.000M/s  (  1.774M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.350 ± 0.001M/s  (  1.675M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.604 ± 0.000M/s  (  1.651M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.706 ± 0.005M/s  (  0.838M/s/cpu)
+uprobe-ret      (16 cpus):    5.231 ± 0.001M/s  (  0.327M/s/cpu)
+uprobe-ret      (32 cpus):    5.743 ± 0.003M/s  (  0.179M/s/cpu)
+uprobe-ret      (64 cpus):    4.726 ± 0.016M/s  (  0.074M/s/cpu)
+
+after-opt
+---------
+uprobe-nop      ( 1 cpus):    0.985 ± 0.002M/s  (  0.985M/s/cpu)
+uprobe-nop      ( 2 cpus):    1.773 ± 0.005M/s  (  0.887M/s/cpu)
+uprobe-nop      ( 4 cpus):    3.304 ± 0.001M/s  (  0.826M/s/cpu)
+uprobe-nop      ( 8 cpus):    5.328 ± 0.002M/s  (  0.666M/s/cpu)
+uprobe-nop      (16 cpus):    6.475 ± 0.002M/s  (  0.405M/s/cpu)
+uprobe-nop      (32 cpus):    4.831 ± 0.082M/s  (  0.151M/s/cpu)
+uprobe-nop      (64 cpus):    2.564 ± 0.053M/s  (  0.040M/s/cpu)
+
+uprobe-push     ( 1 cpus):    0.964 ± 0.001M/s  (  0.964M/s/cpu)
+uprobe-push     ( 2 cpus):    1.766 ± 0.002M/s  (  0.883M/s/cpu)
+uprobe-push     ( 4 cpus):    3.290 ± 0.009M/s  (  0.823M/s/cpu)
+uprobe-push     ( 8 cpus):    4.670 ± 0.002M/s  (  0.584M/s/cpu)
+uprobe-push     (16 cpus):    5.197 ± 0.004M/s  (  0.325M/s/cpu)
+uprobe-push     (32 cpus):    5.068 ± 0.161M/s  (  0.158M/s/cpu)
+uprobe-push     (64 cpus):    2.605 ± 0.026M/s  (  0.041M/s/cpu)
+
+uprobe-ret      ( 1 cpus):    1.833 ± 0.001M/s  (  1.833M/s/cpu)
+uprobe-ret      ( 2 cpus):    3.384 ± 0.003M/s  (  1.692M/s/cpu)
+uprobe-ret      ( 4 cpus):    6.677 ± 0.004M/s  (  1.669M/s/cpu)
+uprobe-ret      ( 8 cpus):    6.854 ± 0.005M/s  (  0.857M/s/cpu)
+uprobe-ret      (16 cpus):    6.508 ± 0.006M/s  (  0.407M/s/cpu)
+uprobe-ret      (32 cpus):    5.793 ± 0.009M/s  (  0.181M/s/cpu)
+uprobe-ret      (64 cpus):    4.743 ± 0.016M/s  (  0.074M/s/cpu)
+
+Above benchmark results demonstrates a obivious improvement in the
+scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
+of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
+
+v4->v3:
+1. Rebase v3 [3] to the lateset tip/perf/core.
+2. Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3. Acked-by: Oleg Nesterov <oleg@redhat.com>
+
+v3->v2:
+Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
+
+v2->v1:
+Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
+completion of singlestep which leads to handle_singlestep() has no
+chance to restore the removed TIF_SIGPENDING [3] and some case in
+question. So this revision proposes to use a flag in uprobe_task to
+track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
+
+[1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
+[2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
+[3] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@huawei.com/ 
+
+Liao Chang (2):
+  uprobes: Remove redundant spinlock in uprobe_deny_signal()
+  uprobes: Remove the spinlock within handle_singlestep()
+
+ include/linux/uprobes.h |  1 +
+ kernel/events/uprobes.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.34.1
+
