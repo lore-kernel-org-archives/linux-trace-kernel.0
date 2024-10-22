@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43BE2BAF5;
-	Tue, 22 Oct 2024 13:45:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA7319DF4C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Oct 2024 13:47:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729604724; cv=none; b=j7huyOdGfTvXyvlAblaEGvZMC9vzjRuL09ReVpLtmRRMkn8WJ6547EV9dMKrs5NEu9HgUJHacxQ//PiIq1dRYjv1lya197WpID1jnNBshi8AJb3Sh0aerOz0mdkad2QT2RWxhIHmMdteRW0DWtbKNGwVSl8ugRWpwL0NGyq0+ho=
+	t=1729604879; cv=none; b=QqkRRq/PPRL2q00DgJ2h/bYlivqQ2fcpedP4ycDQPJMEDDZg4ImD/YWSDKJhqTY696xgjpd70EzpxFauI971IiZSIG8o7ziAuiszpDCqdVk+um8P5rBk5nBmFxGI6c6z22F9PtbAlDZCKdUPTY9rtbdrob2mKe/e6kbg4AxsSco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729604724; c=relaxed/simple;
-	bh=Y3of95RA9/HwSVZtOVvqqjWXqboGxrXcyJVBeg4xcTU=;
+	s=arc-20240116; t=1729604879; c=relaxed/simple;
+	bh=2oHwPk6tPZCTs+KI6gw234PNFbc45zOPAT6ZZoA0/80=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qBZQcCwVaB7XTwgtFkvnJUgr1ijjSk1C5BPfJf6dT8U+6H3PoOM3TID2K88tBZCP7Mp9RvNf1TnWslI3NPjCNneif19l3xI18dRSN18sRWYAJfLjsMtV9G7ZgpBRqcW6XmF+nAU+XW2MswP3/aTQsN+Z895dTFmGVfTrvZ4K3ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWJCeoHG; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Q0QyUMBwKfirXaVYKoRL28+vl+qMq14Kvs2SP4uRuFcsCz4Zadk6daGtun2xbVmxBoJAPAJOWVVwQ9XQuPGaedr3xChw7mTZI9fie5t0fHWagyXAk4zljyIw+/SX5kMGS0yGWx0a8BwgLdZ47rgxn1uLfB8oTSfhkIIqC9lzI0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2YX1uGb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWJCeoHG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987CDC4CEC7;
-	Tue, 22 Oct 2024 13:45:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2YX1uGb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70AAC4CEC3;
+	Tue, 22 Oct 2024 13:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729604724;
-	bh=Y3of95RA9/HwSVZtOVvqqjWXqboGxrXcyJVBeg4xcTU=;
+	s=k20201202; t=1729604879;
+	bh=2oHwPk6tPZCTs+KI6gw234PNFbc45zOPAT6ZZoA0/80=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BWJCeoHGh0I9e3yHUThIVP2IL/fYYGYtuwHfEqmBey+lfIs6NyqHZ5RlC8xSBNhcL
-	 6UUQYLiWF4kdeYGmTfMkxy0billLB7gHTx0HCERsyjcUyXC2VlA2ELbifKn8g5ZCqa
-	 EvW8dwtq4442MIkAo2Rfj64gdnmhBgs3ZRiqmMkZnjkoJrBdR2Jzpuo6+C9TY2glhd
-	 nI0AF5sBlPpQLdHBwHtTc8JNiUDPvvs/iBSzqHskVHB5S06Dv9njNMMPX/ldcS7FnS
-	 G8dgoQYo0pHhGCJBusI2YBXD6bTDtDNdo06XdHqVcHfFBfVvcAG1uKUSgHhlR4Dzk2
-	 hECHPmcKOxSZg==
-Date: Tue, 22 Oct 2024 22:45:20 +0900
+	b=G2YX1uGbKmQaoNugFB9P2VmUsUYu37TI0GBYN9t5C2Owl9MbamLauItz8+exE4pTj
+	 Blu6yP32bU8z3lVMvgB2SUp3MZH1rhz+jSRYPAGK7fp8NoAyqbA+buCrszU0AsLEvj
+	 L6022/71sGgAoBov5xv7s+slRQjI/DaLo8aLR9Ki+sb02WKJJTMVICNn05fC9RlIHq
+	 h2Dwpl5SikWP4rLnQR2d19RwVbiCTiUB2Fb8IhlHEow3bAKlK9HI1sXGp1JTxIgQnw
+	 7ibBk0Y8gi6VfQ/2LUgvi0M7UHcNsLcDH8TYP7QlQ9ayX7hd+GRPahkNQLETEpehEK
+	 xydzZlwjP5EpA==
+Date: Tue, 22 Oct 2024 22:47:55 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Viktor Malik <vmalik@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, Steven Rostedt
- <rostedt@goodmis.org>, Matt Wu <wuqiang.matt@bytedance.com>,
- bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v2] objpool: fix choosing allocation for percpu slots
-Message-Id: <20241022224520.33f753971ce61ce7d0f1fc93@kernel.org>
-In-Reply-To: <3d1ad598-531a-4e31-a0cc-b8fe05d37f64@redhat.com>
-References: <20240826060718.267261-1-vmalik@redhat.com>
-	<20241022141748.521cb2d6a4a86428c9bfc99e@kernel.org>
-	<3d1ad598-531a-4e31-a0cc-b8fe05d37f64@redhat.com>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: "Fernando F. Mancera" <ffmancera@riseup.net>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/probes: fix traceprobe out-of-bounds argument
+ allocation
+Message-Id: <20241022224755.307a77ca9f32fbb67e2a6bfb@kernel.org>
+In-Reply-To: <20241022144045.429a1a8a3f55e9df43d9a869@kernel.org>
+References: <20240813172546.3151-1-ffmancera@riseup.net>
+	<20240825164132.024faee7897e0ac126d8c58e@kernel.org>
+	<fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
+	<20240826085659.939bde641e4bf13249dec6ec@kernel.org>
+	<88bc4212-8bca-45ff-9078-d0f7b9e6a64b@riseup.net>
+	<20241022144045.429a1a8a3f55e9df43d9a869@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,86 +51,128 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Oct 2024 13:45:08 +0200
-Viktor Malik <vmalik@redhat.com> wrote:
+Hi Fernando,
 
-> On 10/22/24 07:17, Masami Hiramatsu (Google) wrote:
-> > On Mon, 26 Aug 2024 08:07:18 +0200
-> > Viktor Malik <vmalik@redhat.com> wrote:
-> > 
-> >> objpool intends to use vmalloc for default (non-atomic) allocations of
-> >> percpu slots and objects. However, the condition checking if GFP flags
-> >> are equal to GFP_ATOMIC is wrong b/c GFP_ATOMIC is a combination of bits
-> > 
-> > You meant "whether GFP flags sets any bit of GFP_ATOMIC is wrong"?
+I found the patch from Mikel solves the same issue and his v2 patch fixes
+wider situation ("$arg*" BTF argument case). So I decided to pick his patch.
+
+https://lore.kernel.org/all/20240930202656.292869-1-mikel@mikelr.com/
+
+Let me know if there is any case the above fix does not cover.
+
+Thank you,
+
+
+On Tue, 22 Oct 2024 14:40:45 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> Hi,
 > 
-> Well, I meant that the condition is wrong w.r.t. what is supposedly its
-> original purpose. But feel free to rephrase as you seem fit or I can
-> send v3 if you prefer.
-
-No problem :) let me rephrase that part.
-
-Thank you!
-
+> On Thu, 5 Sep 2024 00:19:16 +0200
+> "Fernando F. Mancera" <ffmancera@riseup.net> wrote:
 > 
-> Thanks.
-> Viktor
+> > Hi,
+> > 
+> > On 26/08/2024 01:56, Masami Hiramatsu (Google) wrote:
+> > > On Sun, 25 Aug 2024 19:06:22 +0200
+> > > "Fernando F. Mancera" <ffmancera@riseup.net> wrote:
+> > > 
+> > >> Hi,
+> > >>
+> > >> On 25/08/2024 09:41, Masami Hiramatsu (Google) wrote:
+> > >>> Hi,
+> > >>>
+> > >>> On Tue, 13 Aug 2024 13:25:40 -0400
+> > >>> Fernando Fernandez Mancera <ffmancera@riseup.net> wrote:
+> > >>>
+> > >>>> When initializing trace_probes::nr_args, make sure the maximum number of
+> > >>>> probe arguments is honored. Oherwise, we can hit a NULL pointer
+> > >>>> dereferences in multiple situations like on traceprobe_set_print_fmt().
+> > >>>>
+> > >>>> Link: https://bugzilla.redhat.com/2303876
+> > >>>
+> > >>> Sorry for replying later. I'm not sure why but I did not found this in my mbox...
+> > >>>
+> > >>
+> > >> No worries!
+> > >>
+> > >>> Anyway, trace_probe_init() should return -E2BIG in this case because
+> > >>> it is actuall wrong value.
+> > >>>
+> > >>> Can you update your patch?
+> > >>>
+> > >>
+> > >> I agree this is the right solution but it would mean a change in
+> > >> behavior. Is that fine? Before merging 035ba76014c0, it was writing up
+> > >> to the maximum number of arguments and ignoring the rest. If you confirm
+> > >> it is fine to change the behavior, I will update the patch.
+> > > 
+> > > Yes, I think this is the better behavior for users too, rather than
+> > > silently droping some arguments.
+> > > We also need to handle this error code in callsite and log an error,
+> > > and add a testcase in the syntax error testcase. But that should be done
+> > > in another series. We should fix this first.
+> > > 
+> > 
+> > Just in case this fell through the cracks, I've sent a V2 patch. In 
+> > addition I also have a series ready for the logging and syntax error 
+> > testcase in kselftest but I didn't send it because it requires this 
+> > patch to be applied.
 > 
-> > 
-> >> (__GFP_HIGH|__GFP_KSWAPD_RECLAIM) and so `pool->gfp & GFP_ATOMIC` will
-> >> be true if either bit is set. Since GFP_ATOMIC and GFP_KERNEL share the
-> >> ___GFP_KSWAPD_RECLAIM bit, kmalloc will be used in cases when GFP_KERNEL
-> >> is specified, i.e. in all current usages of objpool.
-> >>
-> >> This may lead to unexpected OOM errors since kmalloc cannot allocate
-> >> large amounts of memory.
-> >>
-> >> For instance, objpool is used by fprobe rethook which in turn is used by
-> >> BPF kretprobe.multi and kprobe.session probe types. Trying to attach
-> >> these to all kernel functions with libbpf using
-> >>
-> >>     SEC("kprobe.session/*")
-> >>     int kprobe(struct pt_regs *ctx)
-> >>     {
-> >>         [...]
-> >>     }
-> >>
-> >> fails on objpool slot allocation with ENOMEM.
-> >>
-> >> Fix the condition to truly use vmalloc by default.
-> >>
-> > 
-> > Anyway, this looks good to me.
+> I think that v2 was lost in my mailbox, but I found that in patchwork.
+> Let me pick it.
+> 
+> Thanks, 
+> 
 > > 
 > > Thank you,
+> > Fernando.
 > > 
-> >> Fixes: b4edb8d2d464 ("lib: objpool added: ring-array based lockless MPMC")
-> >> Signed-off-by: Viktor Malik <vmalik@redhat.com>
-> >> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >> Reviewed-by: Matt Wu <wuqiang.matt@bytedance.com>
-> >> ---
-> >>  lib/objpool.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/lib/objpool.c b/lib/objpool.c
-> >> index 234f9d0bd081..fd108fe0d095 100644
-> >> --- a/lib/objpool.c
-> >> +++ b/lib/objpool.c
-> >> @@ -76,7 +76,7 @@ objpool_init_percpu_slots(struct objpool_head *pool, int nr_objs,
-> >>  		 * mimimal size of vmalloc is one page since vmalloc would
-> >>  		 * always align the requested size to page size
-> >>  		 */
-> >> -		if (pool->gfp & GFP_ATOMIC)
-> >> +		if ((pool->gfp & GFP_ATOMIC) == GFP_ATOMIC)
-> >>  			slot = kmalloc_node(size, pool->gfp, cpu_to_node(i));
-> >>  		else
-> >>  			slot = __vmalloc_node(size, sizeof(void *), pool->gfp,
-> >> -- 
-> >> 2.46.0
-> >>
-> > 
-> > 
+> > > Thank you,
+> > > 
+> > > 
+> > >>
+> > >> Thank you!
+> > >>
+> > >>> Thank you,
+> > >>>
+> > >>>
+> > >>>>
+> > >>>> Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
+> > >>>> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+> > >>>> ---
+> > >>>>    kernel/trace/trace_probe.c | 8 ++++++--
+> > >>>>    1 file changed, 6 insertions(+), 2 deletions(-)
+> > >>>>
+> > >>>> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > >>>> index 39877c80d6cb..f577b5e71026 100644
+> > >>>> --- a/kernel/trace/trace_probe.c
+> > >>>> +++ b/kernel/trace/trace_probe.c
+> > >>>> @@ -2043,10 +2043,14 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+> > >>>>    		goto error;
+> > >>>>    	}
+> > >>>>    
+> > >>>> -	tp->nr_args = nargs;
+> > >>>> +	if (nargs > MAX_TRACE_ARGS)
+> > >>>> +		tp->nr_args = MAX_TRACE_ARGS;
+> > >>>> +	else
+> > >>>> +		tp->nr_args = nargs;
+> > >>>> +
+> > >>>>    	/* Make sure pointers in args[] are NULL */
+> > >>>>    	if (nargs)
+> > >>>> -		memset(tp->args, 0, sizeof(tp->args[0]) * nargs);
+> > >>>> +		memset(tp->args, 0, sizeof(tp->args[0]) * tp->nr_args);
+> > >>>>    
+> > >>>>    	return 0;
+> > >>>>    
+> > >>>
+> > >>>
+> > > 
+> > > 
 > 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
