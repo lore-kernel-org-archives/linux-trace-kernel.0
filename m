@@ -1,85 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from yyz.mikelr.com (yyz.mikelr.com [170.75.163.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB34132124;
-	Tue, 22 Oct 2024 02:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8AD13B297;
+	Tue, 22 Oct 2024 03:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.75.163.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729563748; cv=none; b=UqaqIgq/WG8bv5PWkvwvali5ejltA1yVAQ7Z2Y5U7+sp/iICnKIgY/G1b78M4JpGox+S9GRVXP1Y3vCkWlaFralCerMOday5mejdPkMCNYxaXAgoGYa0yL7PpLAm8Z2y0tZnn5bhIx3xo7SWcRf8sQO4eWkeYYgduyjviFryMJY=
+	t=1729567443; cv=none; b=hkgMbQIAbm7o8LMJrWuHMBofwh3MPmK+TadKFLpAW353yxYsaB9VXDV5DGe17P8QGjI3X2pL1CzBTw+mxKWBc+ai06OIkTrJS8RmLpxzSCKI5Pw4gQnYknbrVRrS/WfDjPIm6MUaQrVukJtXI4WEvHmoQN3E1kxmwRN1l/873K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729563748; c=relaxed/simple;
-	bh=cvOmKRaGaYic+n9hOuxtcNdHZWL09dWwyvl2zywQ6YA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=f+Ocb1HJ7YkU195LIm+OlNhMAPr5RKrO+tEKiKAYQazUYQhJpDozHK7fuvBuI5jx1f5r6rsmUaZg8KTcXlFJXH8hdMyzytT41zDyRW0iPiEGyy/9lspdt2mwGvMquRPvbve230vc9FcVMuekP1jBEYR+u57ur16n+C4kejdmQIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBjvOxRG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBjvOxRG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B84C4CEC3;
-	Tue, 22 Oct 2024 02:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729563746;
-	bh=cvOmKRaGaYic+n9hOuxtcNdHZWL09dWwyvl2zywQ6YA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vBjvOxRGdj9JZ0nSM7TA2sy0vRXPjqAC1D6zruQaiuk9dyPya31u1p8bAQmzZk3a3
-	 9x5nFBCwPdGYk4CRPzLkxQ4g8FMfpgm5/44kbrdG3SezFZL9tUN8wnJ+zpzhbEIfoZ
-	 EhFIEhRksSf1VbHTjvR7fr+1EHGkD7A3fbN0pTbgsxfWikGhu9a+/wItrxUO57uC29
-	 5j6cUda1NSV3q3sDWWwqCUtquUVqGhU7d2R/VnxYV84o85n3ujbbFAzHtO1Z8AP+nL
-	 CWELl1DIrHS379TaS08rbjd3VMdbSS9uIkkEFblzA54ArRR2MLiEUDWJ2lsEw+UIQP
-	 Njwqo4GA6PZGg==
-Date: Tue, 22 Oct 2024 11:22:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Liao Chang <liaochang1@huawei.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- mhiramat@kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Remove redundant spinlock in
- uprobe_deny_signal
-Message-Id: <20241022112222.1edeeac3aee13714a53c217c@kernel.org>
-In-Reply-To: <20240731141231.GB16718@redhat.com>
-References: <20240731095017.1560516-1-liaochang1@huawei.com>
-	<20240731141231.GB16718@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729567443; c=relaxed/simple;
+	bh=agnfK24D1Yckr5UF3L0PseJtUdVRlECbtIOOQQXBbOM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MAZ9rWvCfAT/v4iOcq4hh/frgt+fjT0kj9hkZWrvF8cRMg/F0o2pIQVYoxQAqF4uVnrafkTUrCLwkqhIktoOpaTvfduTbnb6XC8Nfbu81gauoActflmtUtYxwRMJRfw9mcbBnLj5GvZtP85nDe3cwjGT6VqMrRlHDdQLMOcaMms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com; spf=pass smtp.mailfrom=mikelr.com; arc=none smtp.client-ip=170.75.163.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mikelr.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikelr.com
+Received: from basin.localnet (unknown [IPv6:2607:f2c0:e554:1200:4b8f:795f:f483:85bf])
+	by yyz.mikelr.com (Postfix) with ESMTPA id 9963D71AFA;
+	Mon, 21 Oct 2024 23:14:54 -0400 (EDT)
+From: Mikel Rychliski <mikel@mikelr.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/probes: Fix MAX_TRACE_ARGS limit handling
+Date: Mon, 21 Oct 2024 23:14:54 -0400
+Message-ID: <5391163.OV4Wx5bFTl@basin>
+In-Reply-To: <20240930202656.292869-1-mikel@mikelr.com>
+References:
+ <20241001004050.972e999c644d0e45fd2a94f8@kernel.org>
+ <20240930202656.292869-1-mikel@mikelr.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 31 Jul 2024 16:12:32 +0200
-Oleg Nesterov <oleg@redhat.com> wrote:
+On Monday, September 30, 2024 4:26:54 P.M. EDT Mikel Rychliski wrote:
+> V1 -> V2: Return error instead of dropping excessive arguments
 
-> On 07/31, Liao Chang wrote:
-> >
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
-> >  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
-> >  
-> >  	if (task_sigpending(t)) {
-> > -		spin_lock_irq(&t->sighand->siglock);
-> >  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
-> > -		spin_unlock_irq(&t->sighand->siglock);
-> 
-> Agreed, in this case ->siglock buys nothing, another signal can come
-> right after spin_unlock().
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> 
-> 
+Hi Masami,
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Peter, can you pick this?
+Thanks for the feedback so far. Was wondering if you had a chance to look at 
+the updated patch?
 
 Thanks,
+Mikel
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
