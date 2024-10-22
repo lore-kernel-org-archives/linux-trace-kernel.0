@@ -1,126 +1,82 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE821E495;
-	Tue, 22 Oct 2024 06:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579C2811F1;
+	Tue, 22 Oct 2024 06:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729577942; cv=none; b=bCJZIHCzR/89jL2QPXW/vo+STiB3ODI/Y4W73rTh5B2lnOb+uJyEKtgPWnMczxTKCYDHeglhPUiQ0DM8kmJs4A5IV6bQ/gTvF/lWhCKbvoA3aDHpM35WDwJ9aCsqqgHp4VTYavaG5etBETIx6Rxvnuu4TwlrRb6sqBVIrY52yZ0=
+	t=1729580202; cv=none; b=Bg0I7yBHXzqEYUavo0k1F/vFlsjhAgzO8eC2XYRE8mhWSqPcBhd04BnVuc4yiK0mDRPT6iZpqi4+xqu4pOn7qgtwGBKBKNnadOrC2mjN9PpmsApKbQQ3x1GS/1bUxxiVXnvgL57U4i5AR6YzGT9S/RsKmFPknRSDnYc7B/Qm/is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729577942; c=relaxed/simple;
-	bh=tLiAn0BeLFoim24NopHHPe7F7XmfCPa+lJJMTWGqkMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=piqLs/HJjdMZ59EUKWw8geKvJBI4b1zd6gzjioxN6R/wk48hkB+0AzN+cSM5WMUa/Et6FItpoB7VALh8CNaXem5LF44c7E5K4+9AM/bZLw3zFqZlxWArAhavEsW315i/OBtD7D0yRFbqNfgmW1zt3LFui0f30pDn1jhvknaZpVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XXhmX0DYXz1jBJk;
-	Tue, 22 Oct 2024 14:17:32 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C7B11A016C;
-	Tue, 22 Oct 2024 14:18:53 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 22 Oct 2024 14:18:52 +0800
-Message-ID: <04cecf07-85c0-4830-9f98-ffe96923d440@huawei.com>
-Date: Tue, 22 Oct 2024 14:18:52 +0800
+	s=arc-20240116; t=1729580202; c=relaxed/simple;
+	bh=1yIlvSXY/Rv3BHmPoud25WQ741qvCQ2J1M4VqyS72VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MtGcX563G2mGj4hGPX9HSUNnXZRbDU1vO99mfx6RUrsXje+l1QJNFYUJE11EsroCVG5Og7piL6Iq4xiGa70SQA30abd8H2oYOMcwL41Vy0Jddira1t/u/8NTxqa9A7p7L8O9LVMMmpzGn4MjkPkDbzJPxvTZOQtYdmnrOuQHhSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE5F2C4CEC3;
+	Tue, 22 Oct 2024 06:56:40 +0000 (UTC)
+Date: Tue, 22 Oct 2024 02:56:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gianfranco Trad <gianf.trad@gmail.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH] fgraph: fix unused value in register_ftrace_graph()
+Message-ID: <20241022025637.6852bac9@rorschach.local.home>
+In-Reply-To: <20241021102428.287998-2-gianf.trad@gmail.com>
+References: <20241021102428.287998-2-gianf.trad@gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov
-	<oleg@redhat.com>
-References: <20240815014629.2685155-1-liaochang1@huawei.com>
- <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com>
- <20240915151803.GD27726@redhat.com>
- <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
- <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
- <e62dbebc-d366-453a-b305-67f50baeff05@huawei.com>
- <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 21 Oct 2024 12:24:29 +0200
+Gianfranco Trad <gianf.trad@gmail.com> wrote:
 
-
-在 2024/10/22 1:18, Andrii Nakryiko 写道:
-> On Mon, Oct 21, 2024 at 3:43 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/10/12 3:34, Andrii Nakryiko 写道:
->>> On Tue, Sep 17, 2024 at 7:05 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>
->>>> Hi, Peter and Masami
->>>>
->>>> I look forward to your inputs on these series. Andrii has proven they are
->>>> hepful for uprobe scalability.
->>>>
->>>> Thanks.
->>>>
->>>> 在 2024/9/15 23:18, Oleg Nesterov 写道:
->>>>> Hi Liao,
->>>>>
->>>>> On 09/14, Liao, Chang wrote:
->>>>>>
->>>>>> Hi, Oleg
->>>>>>
->>>>>> Kindly ping.
->>>>>>
->>>>>> This series have been pending for a month. Is thre any issue I overlook?
->>>>>
->>>>> Well, I have already acked both patches.
->>>>>
->>>>> Please resend them to Peter/Masami, with my acks included.
->>>>>
->>>
->>> Hey Liao,
->>>
->>> I didn't see v4 from you for this patch set with Oleg's acks. Did you
->>> get a chance to rebase, add acks, and send the latest version?
->>
->> Andrii,
->>
->> I am ready to send v4 based on the latest kernel from next tree. Otherwise,
->> I haven't heard back from any of maintainers except Oleg, so I'm a bit unsure
->> if I should make further changes to this series.
->>
+> Coverity reports unused assignment to value ret. [1]
+> ret is assigned to 0 here, but that stored value is overwritten before
+> it can be used. The overwrite might happen either at line 1277, 1290 
+> or eventually at line 1306. Therefore, cleanup the unused assignment.
 > 
-> Let's just rebase to the latest tip/perf/core and resend with Oleg's
-> ack. Hopefully this should be enough.
+> [1] Coverity Scan, CID 1633338
 
-OK, the v4 is on the way with Masami's Acked-by.
+What does the above mean? For such a simple change, is it really
+unnecessary?
 
 > 
->>>
->>>>> Oleg.
->>>>>
->>>>>
->>>>
->>>> --
->>>> BR
->>>> Liao, Chang
->>
->> --
->> BR
->> Liao, Chang
->>
+> Signed-off-by: Gianfranco Trad <gianf.trad@gmail.com>
+> ---
+>  kernel/trace/fgraph.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 41e7a15dcb50..cc2e065c1c8d 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1262,7 +1262,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  			return ret;
+>  		}
+>  		fgraph_initialized = true;
+> -		ret = 0;
 
--- 
-BR
-Liao, Chang
+Not to mention that if this is to go, why not get rid of the
+declaration part too? That is:
+
+-	int ret = 0;
++	int ret;
+
+But still, this code is about to be merged with other code where this
+change may cause issues. This is such a slow path that getting rid of
+the extra initialization may not be worth it.
+
+-- Steve
+
+
+>  	}
+>  
+>  	if (!fgraph_array[0]) {
 
