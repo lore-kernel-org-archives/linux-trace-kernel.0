@@ -1,37 +1,31 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CAB13B59E;
-	Tue, 22 Oct 2024 05:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE821E495;
+	Tue, 22 Oct 2024 06:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729575735; cv=none; b=iKMl3ehm01w63X5Krm/JUiIrcGlJFRqBnJUXP4nOQu949TNqFPHpovZh2lrp34+S4flPjpdKAYSJ3/eNY5Vsf2socRTsoFIDchg7lDR2JC2H5oECzSHpfwUZ80VbUZiSDWTHweZqQsovnGapLYHX8r+Ttv85cEgm5YFdRX9OjPU=
+	t=1729577942; cv=none; b=bCJZIHCzR/89jL2QPXW/vo+STiB3ODI/Y4W73rTh5B2lnOb+uJyEKtgPWnMczxTKCYDHeglhPUiQ0DM8kmJs4A5IV6bQ/gTvF/lWhCKbvoA3aDHpM35WDwJ9aCsqqgHp4VTYavaG5etBETIx6Rxvnuu4TwlrRb6sqBVIrY52yZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729575735; c=relaxed/simple;
-	bh=ITGPMDLWm1cpr9OdganmwN/ZJufyuOaNs7Ifn1uexTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LKQoqeWXGqNViZ0nyiPf3MoTmfS0Tj6PRXzwuD5g2aflz9+1it4qOhG1CJKLkBlRoXzPAEBDu0S5W3YWEZXUJ27d0vqSxSGP1YSuHzuoL9lPa7l6oFUpaFUIou05VNJ1qhoIGALOa7hZeHMPj0Za5ffy8HPPX2S+PgDyJGvlULY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=c5MaUZ3t; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="c5MaUZ3t"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 37E8E20004;
-	Tue, 22 Oct 2024 05:42:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1729575731;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0OvqaX/hJ3L/xnjQ+i7iCYEcS54tFywcWXvR7vkK5io=;
-	b=c5MaUZ3tbaNyEtgwjwrVzYpYWklJbdpcujBLdw8rFoZNr2QTu6Yg2cvbaW9382lSSM69wD
-	3IP1VDH8IK+hfbg0O6sP8Hnt5w7ELY4Vs07zd5m9n40ht5uuPBWFi2XkoZGY19SJ32Walz
-	buZLuQtKuCfgc/rYLEWB2+uMMNtHkKesp0IQx5lXaKcun+STjvyr8aP5Py3G2C8w7Wgny9
-	43NBGVn/ZCb8O4cFmP90vx745zSSNJqwxjJEJ5Eto78x3jNoGd5L4w+hzZWA6FNgnOmdT3
-	/PpmgU/bKAOHnhqpo+Kb7hm5/YS6N75TnBmTs1UvbS1KOQ8evzOfFXRRLx55eQ==
-Message-ID: <075d6720-a690-437c-a10f-e2746651e2a8@yoseli.org>
-Date: Tue, 22 Oct 2024 07:42:10 +0200
+	s=arc-20240116; t=1729577942; c=relaxed/simple;
+	bh=tLiAn0BeLFoim24NopHHPe7F7XmfCPa+lJJMTWGqkMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=piqLs/HJjdMZ59EUKWw8geKvJBI4b1zd6gzjioxN6R/wk48hkB+0AzN+cSM5WMUa/Et6FItpoB7VALh8CNaXem5LF44c7E5K4+9AM/bZLw3zFqZlxWArAhavEsW315i/OBtD7D0yRFbqNfgmW1zt3LFui0f30pDn1jhvknaZpVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XXhmX0DYXz1jBJk;
+	Tue, 22 Oct 2024 14:17:32 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7C7B11A016C;
+	Tue, 22 Oct 2024 14:18:53 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 22 Oct 2024 14:18:52 +0800
+Message-ID: <04cecf07-85c0-4830-9f98-ffe96923d440@huawei.com>
+Date: Tue, 22 Oct 2024 14:18:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,70 +33,94 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] m68k: Add tracirqs
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
- <20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
- <20241022012809.1ef083cd@rorschach.local.home>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20241022012809.1ef083cd@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Subject: Re: [PATCH v3 0/2] uprobes: Improve scalability by reducing the
+ contention on siglock
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Oleg Nesterov
+	<oleg@redhat.com>
+References: <20240815014629.2685155-1-liaochang1@huawei.com>
+ <cfa88a34-617b-9a24-a648-55262a4e8a4c@huawei.com>
+ <20240915151803.GD27726@redhat.com>
+ <c5765c03-a584-3527-8ca4-54b646f49433@huawei.com>
+ <CAEf4BzbWLf3K4C7GT58nXZ0FJfnoeCdLeRvKtwA76oM9Jdm7jg@mail.gmail.com>
+ <e62dbebc-d366-453a-b305-67f50baeff05@huawei.com>
+ <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <CAEf4BzYUdPJrgy1Dqinxk5ATPxA8WCTzQW3QcWobZpXjiYDZNw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Hi Steve,
 
-On 22/10/2024 07:28, Steven Rostedt wrote:
-> On Mon, 21 Oct 2024 11:44:42 +0200
-> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
-> 
->> The TRACE_IRQFLAGS_SUPPORT requires the architecture to call
->> trace_hardirqs_off() when interrupts are disabled and
->> trace_hardirqs_on() when they are enabled.
->> Add those calls to do_IRQ function.
+
+在 2024/10/22 1:18, Andrii Nakryiko 写道:
+> On Mon, Oct 21, 2024 at 3:43 AM Liao, Chang <liaochang1@huawei.com> wrote:
 >>
->> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
->> ---
->>   arch/m68k/Kconfig      | 1 +
->>   arch/m68k/kernel/irq.c | 2 ++
->>   2 files changed, 3 insertions(+)
 >>
->> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
->> index cc26df907bfe3c8143a931d259eceabb16af7411..ab3375475721fa63418c40d4ba6ac76679ebc77d 100644
->> --- a/arch/m68k/Kconfig
->> +++ b/arch/m68k/Kconfig
->> @@ -39,6 +39,7 @@ config M68K
->>   	select OLD_SIGSUSPEND3
->>   	select UACCESS_MEMCPY if !MMU
->>   	select ZONE_DMA
->> +	select TRACE_IRQFLAGS_SUPPORT
->>   
->>   config CPU_BIG_ENDIAN
->>   	def_bool y
->> diff --git a/arch/m68k/kernel/irq.c b/arch/m68k/kernel/irq.c
->> index 9ab4f550342e5de11c528f55781432675ffd66bf..74cf60ebbc4bca51f3caa4046dbd2bdb02355711 100644
->> --- a/arch/m68k/kernel/irq.c
->> +++ b/arch/m68k/kernel/irq.c
->> @@ -21,9 +21,11 @@ asmlinkage void do_IRQ(int irq, struct pt_regs *regs)
->>   {
->>   	struct pt_regs *oldregs = set_irq_regs(regs);
->>   
->> +	trace_hardirqs_off();
->>   	irq_enter();
->>   	generic_handle_irq(irq);
->>   	irq_exit();
->> +	trace_hardirqs_on();
+>>
+>> 在 2024/10/12 3:34, Andrii Nakryiko 写道:
+>>> On Tue, Sep 17, 2024 at 7:05 PM Liao, Chang <liaochang1@huawei.com> wrote:
+>>>>
+>>>> Hi, Peter and Masami
+>>>>
+>>>> I look forward to your inputs on these series. Andrii has proven they are
+>>>> hepful for uprobe scalability.
+>>>>
+>>>> Thanks.
+>>>>
+>>>> 在 2024/9/15 23:18, Oleg Nesterov 写道:
+>>>>> Hi Liao,
+>>>>>
+>>>>> On 09/14, Liao, Chang wrote:
+>>>>>>
+>>>>>> Hi, Oleg
+>>>>>>
+>>>>>> Kindly ping.
+>>>>>>
+>>>>>> This series have been pending for a month. Is thre any issue I overlook?
+>>>>>
+>>>>> Well, I have already acked both patches.
+>>>>>
+>>>>> Please resend them to Peter/Masami, with my acks included.
+>>>>>
+>>>
+>>> Hey Liao,
+>>>
+>>> I didn't see v4 from you for this patch set with Oleg's acks. Did you
+>>> get a chance to rebase, add acks, and send the latest version?
+>>
+>> Andrii,
+>>
+>> I am ready to send v4 based on the latest kernel from next tree. Otherwise,
+>> I haven't heard back from any of maintainers except Oleg, so I'm a bit unsure
+>> if I should make further changes to this series.
+>>
 > 
-> This part of the patch shouldn't be needed because those shoudl be
-> called by irq_enter() and irq_exit(). Does this not work if you don't
-> have these?
+> Let's just rebase to the latest tip/perf/core and resend with Oleg's
+> ack. Hopefully this should be enough.
 
-Thanks for your quick review !
-Indeed, it works without those lines, so the patch is now a one-liner 
-:-). I will wait for the second part to be reviewed before sending v2.
+OK, the v4 is on the way with Masami's Acked-by.
 
-JM
+> 
+>>>
+>>>>> Oleg.
+>>>>>
+>>>>>
+>>>>
+>>>> --
+>>>> BR
+>>>> Liao, Chang
+>>
+>> --
+>> BR
+>> Liao, Chang
+>>
+
+-- 
+BR
+Liao, Chang
+
