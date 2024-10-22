@@ -1,217 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C273319D06E;
-	Tue, 22 Oct 2024 13:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9535F1A3BC8;
+	Tue, 22 Oct 2024 15:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729605107; cv=none; b=TAE+cnsiCNoTW2A4+8sQhwycFjuaXPNLv6Fg1ST+oFhxltboCP7J1YKmDRmYcmqfjB62sTXQ32/2H6OtPZA15iARbk1Y5/3ToN1rd+9AV0XnvWslnPOyCEH9qHKgGsZ05BB3cMljqiJkMY8eJdfXIUKzYU9hflXICObNn8dkWQM=
+	t=1729610449; cv=none; b=bCfj1IwgU1OthU0o8ZpjL5IndVnS+f5ZlvnJ5DjiUk8/9pvignboHVcCAKJesI/voZRZuZ3qeWZQqcZaCkl3YqSfopzLXfM/XiAnARc583z1dcLQymyakCsiXPdvDTtC/A2qUV+Bfy5/vAzDYfsUAzj5I2v7i+E+5IS4gkvZJUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729605107; c=relaxed/simple;
-	bh=0dYhrO3cdLqDyeSrNGp649WKMlUusxaP/x5CsNscNOo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=B7n5iKDznDTE17jJ4jlmMD/R5Seytvil+cf4pMFR6CKC9z+9M4xOPytbwSXyFxD8wUYd2NKYOTOeWTCFxTrCAjrxka03S0DWWOeoABvsg4fVtsocF1Bx8ul9MhfIBD53qhXAzN0pEY2FDFsof3RBTmH8WhHkdj50UxgXuJ96oQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHsxKtoB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729610449; c=relaxed/simple;
+	bh=CI8O5/CEGDNzrlkCIwc8zGa7x4u/7L0USxNN8JbWDqM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZTv1HlkH0L/qZiK0Fov41EOrT6tjuUgyqnq7dIR9acIjMHS1xguHA4Jdr9+WYrq6RzyoEuj3D2+fzqiEMFnun1AXXVrsQ/fAwDAGjV44DcVSXL7ws231coCUgFmrO49pg2A8/4rfhJlLcfIokVVcslMV1OJ0Ll8nmP1hz4XHAU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=H2AhGVLw; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHsxKtoB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE006C4CEC3;
-	Tue, 22 Oct 2024 13:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729605107;
-	bh=0dYhrO3cdLqDyeSrNGp649WKMlUusxaP/x5CsNscNOo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CHsxKtoBldbVxpAuloSM9i1rR9V0j9Gnv8YXifRV3dgRbQ5W3myECujSBCQrP8ZWo
-	 uFNNH96MSPEysvvvDifhJYmkuMdlRtvQkOi1XmmwGz/mjG6IE7y1xuFhMhOZWC4tis
-	 w0Jlyl6c7OcmQctVrev7GDE4sRziA34GV6yJd4mJFGIXTk0Ztgs4PSDdivTCko/bDL
-	 UkGDi4RO23+eO93vemj7NfG7zH7XTFIiVIbUBUmANceJa2fUSYkXyDvqJStW5vTwbI
-	 t1xwxbwcK4+sFTBZ2AbUSxGcZmZmAiq0u4SazBf5tcupf2n5GixZ76NZImTqszVsSX
-	 bk+x8Wojf7V+g==
-Date: Tue, 22 Oct 2024 22:51:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Tatsuya S <tatsuya.s2862@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tracing: Fix function name for trampoline
-Message-Id: <20241022225143.6fb54c2c0900f523326d403f@kernel.org>
-In-Reply-To: <20241021071454.34610-2-tatsuya.s2862@gmail.com>
-References: <20241021071454.34610-2-tatsuya.s2862@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="H2AhGVLw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1729610445;
+	bh=CI8O5/CEGDNzrlkCIwc8zGa7x4u/7L0USxNN8JbWDqM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H2AhGVLwtzfh0cKNLNJ0gUkFZN9B9hxEg7u7bQtCzMKat/KCY46BsZ+w9g8zibYt8
+	 CG88VT1nk7Z591jzXN7TrdEDXtVxDrDohGYseGSTbyxwbSsVDu20pyedpYO+paBpVs
+	 73t1Lj/t0GUM8p10K9nXPxD9EPZGHipdw7ucG1DEIbp6VCqrbEVhPvG0fKsQpjAE3G
+	 O4PCp7HwHOPSIJE4B+vyK8Jp7qjgokb0wU7C3I7K+KpfOV8SrozfNr96vOlbswkU6a
+	 r1VUtvvTJOs4SEa1H20m8BWXJSLaM6HBqFzB6id0tmhjgC+usQdV3F/6RWEJc1e4kW
+	 xGEqY6zZ4bvsw==
+Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XXwqK1PGvzQmX;
+	Tue, 22 Oct 2024 11:20:45 -0400 (EDT)
+Message-ID: <29c58126-3146-4c61-8166-a894c0e84d08@efficios.com>
+Date: Tue, 22 Oct 2024 11:19:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [trace?] [bpf?] KASAN: slab-use-after-free Read in
+ bpf_trace_run2 (2)
+To: Steven Rostedt <rostedt@goodmis.org>, Jordan Rife <jrife@google.com>
+Cc: syzbot+b390c8062d8387b6272a@syzkaller.appspotmail.com, andrii@kernel.org,
+ ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+ eddyz87@gmail.com, haoluo@google.com, john.fastabend@gmail.com,
+ jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev,
+ mattbobrowski@google.com, mhiramat@kernel.org, sdf@fomichev.me,
+ song@kernel.org, syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+References: <67121037.050a0220.10f4f4.000f.GAE@google.com>
+ <20241021182347.77750-1-jrife@google.com>
+ <20241022042001.09055543@rorschach.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20241022042001.09055543@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 21 Oct 2024 07:14:53 +0000
-Tatsuya S <tatsuya.s2862@gmail.com> wrote:
-
-> The issue that unrelated function name is shown on stack trace like
-> following even though it should be trampoline code address is caused by
-> the creation of trampoline code in the area where .init.text section
-> of module was freed after module is loaded.
+On 2024-10-22 04:20, Steven Rostedt wrote:
 > 
-> bash-1344    [002] .....    43.644608: <stack trace>
-> => (MODULE INIT FUNCTION)
-> => vfs_write
-> => ksys_write
-> => do_syscall_64
-> => entry_SYSCALL_64_after_hwframe
-> 
-> To resolve this, when function address of stack trace entry is in
-> trampoline, output without looking up symbol name.
-> 
+> Mathieu, can you look at this?
 
-This looks good to me.
+Sure,
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
-> ---
-> V3 -> V4: Change header file to define FTRACE_TRAMPOLINE_MARKER.
-> 	  Rename category name of commit message.
-> V2 -> V3: Instead of saving the trampoline address, marker was introduced.
-> V1 -> V2: Instead of checking trampoline when displaying "trace" results,
-> 	  it stores trampoline when generating the stacktrace entry.
 > 
->  kernel/trace/trace.c        | 33 +++++++++++++++++++++++++--------
->  kernel/trace/trace.h        |  7 +++++++
->  kernel/trace/trace_output.c |  4 ++++
->  3 files changed, 36 insertions(+), 8 deletions(-)
+> [ more below ]
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index a8f52b6527ca..3d86937da610 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -988,7 +988,8 @@ static inline void trace_access_lock_init(void)
->  #endif
->  
->  #ifdef CONFIG_STACKTRACE
-> -static void __ftrace_trace_stack(struct trace_buffer *buffer,
-> +static void __ftrace_trace_stack(struct trace_array *tr,
-> +				 struct trace_buffer *buffer,
->  				 unsigned int trace_ctx,
->  				 int skip, struct pt_regs *regs);
->  static inline void ftrace_trace_stack(struct trace_array *tr,
-> @@ -997,7 +998,8 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
->  				      int skip, struct pt_regs *regs);
->  
->  #else
-> -static inline void __ftrace_trace_stack(struct trace_buffer *buffer,
-> +static inline void __ftrace_trace_stack(struct trace_array *tr,
-> +					struct trace_buffer *buffer,
->  					unsigned int trace_ctx,
->  					int skip, struct pt_regs *regs)
->  {
-> @@ -2928,7 +2930,8 @@ struct ftrace_stacks {
->  static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
->  static DEFINE_PER_CPU(int, ftrace_stack_reserve);
->  
-> -static void __ftrace_trace_stack(struct trace_buffer *buffer,
-> +static void __ftrace_trace_stack(struct trace_array *tr,
-> +				 struct trace_buffer *buffer,
->  				 unsigned int trace_ctx,
->  				 int skip, struct pt_regs *regs)
->  {
-> @@ -2975,6 +2978,20 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
->  		nr_entries = stack_trace_save(fstack->calls, size, skip);
->  	}
->  
-> +#ifdef CONFIG_DYNAMIC_FTRACE
-> +	/* Mark entry of stack trace as trampoline code */
-> +	if (tr->ops && tr->ops->trampoline) {
-> +		unsigned long tramp_start = tr->ops->trampoline;
-> +		unsigned long tramp_end = tramp_start + tr->ops->trampoline_size;
-> +		unsigned long *calls = fstack->calls;
-> +
-> +		for (int i = 0; i < nr_entries; i++) {
-> +			if (calls[i] >= tramp_start && calls[i] < tramp_end)
-> +				calls[i] = FTRACE_TRAMPOLINE_MARKER;
-> +		}
-> +	}
-> +#endif
-> +
->  	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
->  				    struct_size(entry, caller, nr_entries),
->  				    trace_ctx);
-> @@ -3005,7 +3022,7 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
->  	if (!(tr->trace_flags & TRACE_ITER_STACKTRACE))
->  		return;
->  
-> -	__ftrace_trace_stack(buffer, trace_ctx, skip, regs);
-> +	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, regs);
->  }
->  
->  void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
-> @@ -3014,7 +3031,7 @@ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
->  	struct trace_buffer *buffer = tr->array_buffer.buffer;
->  
->  	if (rcu_is_watching()) {
-> -		__ftrace_trace_stack(buffer, trace_ctx, skip, NULL);
-> +		__ftrace_trace_stack(tr, buffer, trace_ctx, skip, NULL);
->  		return;
->  	}
->  
-> @@ -3031,7 +3048,7 @@ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
->  		return;
->  
->  	ct_irq_enter_irqson();
-> -	__ftrace_trace_stack(buffer, trace_ctx, skip, NULL);
-> +	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, NULL);
->  	ct_irq_exit_irqson();
->  }
->  
-> @@ -3048,8 +3065,8 @@ void trace_dump_stack(int skip)
->  	/* Skip 1 to skip this function. */
->  	skip++;
->  #endif
-> -	__ftrace_trace_stack(printk_trace->array_buffer.buffer,
-> -			     tracing_gen_ctx(), skip, NULL);
-> +	__ftrace_trace_stack(printk_trace, printk_trace->array_buffer.buffer,
-> +				tracing_gen_ctx(), skip, NULL);
->  }
->  EXPORT_SYMBOL_GPL(trace_dump_stack);
->  
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index c866991b9c78..30d6675c78cf 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -2176,4 +2176,11 @@ static inline int rv_init_interface(void)
->  }
->  #endif
->  
-> +/*
-> + * This is used only to distinguish
-> + * function address from trampoline code.
-> + * So this value has no meaning.
-> + */
-> +#define FTRACE_TRAMPOLINE_MARKER  ((unsigned long) INT_MAX)
-> +
->  #endif /* _LINUX_KERNEL_TRACE_H */
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index 868f2f912f28..c14573e5a903 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -1246,6 +1246,10 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
->  			break;
->  
->  		trace_seq_puts(s, " => ");
-> +		if ((*p) == FTRACE_TRAMPOLINE_MARKER) {
-> +			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
-> +			continue;
-> +		}
->  		seq_print_ip_sym(s, (*p) + delta, flags);
->  		trace_seq_putc(s, '\n');
->  	}
-> -- 
-> 2.47.0
+> On Mon, 21 Oct 2024 18:23:47 +0000
+> Jordan Rife <jrife@google.com> wrote:
 > 
+>> I performed a bisection and this issue starts with commit a363d27cdbc2
+>> ("tracing: Allow system call tracepoints to handle page faults") which
+>> introduces this change.
+>>
+>>> + *
+>>> + * With @syscall=0, the tracepoint callback array dereference is
+>>> + * protected by disabling preemption.
+>>> + * With @syscall=1, the tracepoint callback array dereference is
+>>> + * protected by Tasks Trace RCU, which allows probes to handle page
+>>> + * faults.
+>>>    */
+>>>   #define __DO_TRACE(name, args, cond, syscall)				\
+>>>   	do {								\
+>>> @@ -204,11 +212,17 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>>>   		if (!(cond))						\
+>>>   			return;						\
+>>>   									\
+>>> -		preempt_disable_notrace();				\
+>>> +		if (syscall)						\
+>>> +			rcu_read_lock_trace();				\
+>>> +		else							\
+>>> +			preempt_disable_notrace();			\
+>>>   									\
+>>>   		__DO_TRACE_CALL(name, TP_ARGS(args));			\
+>>>   									\
+>>> -		preempt_enable_notrace();				\
+>>> +		if (syscall)						\
+>>> +			rcu_read_unlock_trace();			\
+>>> +		else							\
+>>> +			preempt_enable_notrace();			\
+>>>   	} while (0)
+>>
+>> Link: https://lore.kernel.org/bpf/20241009010718.2050182-6-mathieu.desnoyers@efficios.com/
+>>
+>> I reproduced the bug locally by running syz-execprog inside a QEMU VM.
+>>
+>>> ./syz-execprog -repeat=0 -procs=5 ./repro.syz.txt
+>>
+>> I /think/ what is happening is that with this change preemption may now
+>> occur leading to a scenario where the RCU grace period is insufficient
+>> in a few places where call_rcu() is used. In other words, there are a
+>> few scenarios where call_rcu_tasks_trace() should be used instead to
+>> prevent a use-after-free bug when a preempted tracepoint call tries to
+>> access a program, link, etc. that was freed. It seems the syzkaller
+>> program induces page faults while attaching raw tracepoints to
+>> sys_enter making preemption more likely to occur.
+>>
+>> kernel/tracepoint.c
+>> ===================
+>>> ...
+>>> static inline void release_probes(struct tracepoint_func *old)
+>>> {
+>>> 	...
+>>> 	call_rcu(&tp_probes->rcu, rcu_free_old_probes); <-- Here
+> 
+> Have you tried just changing this one to call_rcu_tasks_trace()?
 
+Actually, I see two possible solutions there:
+
+1) If we want to keep unchanged register/unregister functions as a single
+    API for normal and syscall tracepoints, and we don't want to add additional
+    flags in the tracepoint struct, then we need to chain the call_rcu:
+
+    call_rcu() -> rcu_free_old_probes -> call_rcu_tasks_trace() -> rcu_tasks_trace_free_old_probes.
+
+    Just like we did when we used SRCU.
+
+    This is not perfect because we'd be adding extra delay for reclaim of
+    the old probes array for every tracepoint being updated, not just the
+    syscall tracepoints, but we probably don't care. This is a straightforward
+    initial solution.
+
+    We did something similar with SRCU before and it was OK.
+
+2) If we want something more elegant, we can add a flag to struct tracepoint
+    for syscall tracepoints, and use that flag to choose between call_rcu()
+    and call_rcu_tasks_trace(). But maybe this additional complexity is not
+    even useful.
+
+I'll prepare a patch implementing (1) and send it your way as RFC for further
+testing.
+
+Thanks,
+
+Mathieu
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
+
