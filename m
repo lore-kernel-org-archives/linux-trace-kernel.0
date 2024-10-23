@@ -1,55 +1,55 @@
-Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A919B19F128;
-	Wed, 23 Oct 2024 12:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1AC1D555
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Oct 2024 13:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729688385; cv=none; b=p0/MPyI5ggQpQZxZf5MlDxz26JB6geNPNezcxAgEG1sHVrmmT192tvSL7IUHkdwozwC3XICBLKtDUUw8pY/xJisSyImJim1fSAO9cjeT5w16XPll8EG2vHr5Hvj+FFR10Anua9DrL/1t5CNVapHGgkBv9jr0SRAoUqw9i2J1rFw=
+	t=1729688498; cv=none; b=NBo6p2QbnYuuXzoSpi7f2ntZpcXQRU1YE2AM3vXDBLNbQQWtUU2UmnuMTEqewVfcQ02aIB31eU6Nlwidp6Y2+cnVJtEqlih0me23rx96xX2NV70L9eO+A8V6+9bzVPbpGXnNjDXxHwUCfKIoU70R+MnZwnZnz1BZYYz6ftHhgkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729688385; c=relaxed/simple;
-	bh=3oa8Leei3NJJNtKIKDDThyy6c+pB58h2gSEuVKYNfB4=;
+	s=arc-20240116; t=1729688498; c=relaxed/simple;
+	bh=nbmo5aGA7LT0Hgov1qAGwKoPu5C3RFLgaH6+HqPHBBY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XEfrxIPBnPpwp/Xrv7EytVkBDtBvBBZvhTnnsUsIr0Mc0biGVbSd0KCCRqXyFaivNB1ttiDhzbHdImIBqoimB8ECD/X/oiDSaRxOwSPi/eihZ7Sal7IhgY9NZrtrFlU2pok+UPltTf0r/nGLmaLBzuTYmTKCIbHFgURW/thGrKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Acl7PTL4; arc=none smtp.client-ip=209.85.128.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=qAwaFoCwamFZArg9QhkITZAo5GySka0aLD1JZGcHgccp946XAjvN7ITnyud/Mdrk5cdyZegJl34dpDpYFUAm/3BRptgVrfYVJQ7yXAyXDdWr7VpJyc3C5EYDPo29vC8npC4Pp5jh1rheDlDUFRL3ImYI5b+FF56oQyJ4J9JK8oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZwKgjnpG; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Acl7PTL4"
-Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-6e38ebcc0abso75632357b3.2;
-        Wed, 23 Oct 2024 05:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZwKgjnpG"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a99eb8b607aso734797866b.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Oct 2024 06:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729688383; x=1730293183; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729688495; x=1730293295; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x4DJT8BxkVRQ/cAmVHD8/GaR9GRwN8z9DhbG7As1RPA=;
-        b=Acl7PTL4wQWQ2iOSt7Y7ZZ0mYyPIZs7eXxTeMmmOlmorOMXHJMiP7o0uVY5Q4dzEmJ
-         yfDjzZ9EL4YID0pIDkmhznZbv28ywf5kLuT4z8U+roaXEd+KwsmhbMTtvd1r6ohf6A87
-         sbaBwKsUlGjgj7KdoNweubp6pDKhmTjcJnxmeiC2Yxwcni99IIfwnWz3M5DLNY5M9k/7
-         BJMvj7qjsHlAOGnu3wDTVGxBkmKnNXo6nr7QXvQapZCpA3/3BO8EBN6JReOYDGqGZ4Ne
-         V5Nosj3iUkoQnBBzgULTaILoFrQvFVywFl9MFGz4/TbqSAx1kh5bXYiEILPc5hUVDs+v
-         p3Fg==
+        bh=nbmo5aGA7LT0Hgov1qAGwKoPu5C3RFLgaH6+HqPHBBY=;
+        b=ZwKgjnpGbffcnVl712PAV41xilwX37reIo0QhMQDjvIgRY0rNjqgy7087dBpAIFgma
+         O+R+W+xo2DIV2BrvIagxxx4hupqYp4qRW8P4mB1DxnZ3VjPMXca2oaV0X/eST0QKP7AF
+         YZ0XevBOu2wTTN8iV/TjjMXlyMpaW6CuVvOmJ3jzsMII1XDqNah6xq5PndCMWQz9afx7
+         b3+Ty30nISli+8AksENZCtG0I/T0O2Puhi+b52T9YPoe3VobrOmBDN2kHmrvimBLWfWZ
+         t3ZADQxYl9RrwZ134vG5AdicsGZnRKb7M0DzSxsAJmLBZoLOEeUgixjzlK7hCP1Gj5Ob
+         8X3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729688383; x=1730293183;
+        d=1e100.net; s=20230601; t=1729688495; x=1730293295;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x4DJT8BxkVRQ/cAmVHD8/GaR9GRwN8z9DhbG7As1RPA=;
-        b=aemutgyH1N5CRxgpYEef3LvLb958RrJ/K1Ulc6h/HyKdh/SH+7lt2Et6XkWt5wD8aj
-         ymu1jFS0zUa70a1+KLre8nXOKC3jkGHAQvzXPiPsrzJFrs+bqgDjAWI4rUX4fGKd2H/H
-         YmlOOdCGHX7k4DFIA0lstgJ3edgwkemQuVVqPJkqVCt1B2kqYOonxR7FDm6laep7lrRG
-         mK+waovq/4NIRirK5iNdYafPKYXcsIeYDYxSfxS94I25xcFJlSzzSwG0XmLnZTfpZYjP
-         GF+/ecBvcjTfJ8Yxxi3mwL1b/N5m7A+N/Q7A6bK5ywYpwGlF7v9+sKFxRQq9Q3DJGM53
-         vzVw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4NdgwQJvO6PtP7ug3I3w/o5DkvfDLESVa1jq4rdk4qiHmczqRwbB8BJzLuaUoAtwSNvvz/I4Nohhd+ykEvXl+Ehg=@vger.kernel.org, AJvYcCWsX20Zca1UiD9VWxHXffw2jO8RV14SLcLs1OAfMRXXt6KY9HQhgUHAZkW5WPwBVBHU17RPpO4E@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHa1RKl46ejwFfNmoEddRPb8/zDrfU6VrhKoGiE+Z+8FPiLM8H
-	5ghtd3j7gBA9H6VO7hUkIy+2o4VjCKGbi85nil/mheMM5B/ASLVSOm+4y4aI+kAxZ/Q6Sf/+Tnq
-	/+dPONsGJdB5TUlqoLtcWqmAtGSo=
-X-Google-Smtp-Source: AGHT+IGM3gfm8ZAnmDOBp/u4OR1D4E742kNwplG3h23ACX//IvRsTs2YkNZpypTMWx8bNFp6lc2mrlYY+wozSKYCPFo=
-X-Received: by 2002:a05:690c:2a8b:b0:6e2:43ea:552 with SMTP id
- 00721157ae682-6e7f0e11519mr20019767b3.16.1729688382711; Wed, 23 Oct 2024
- 05:59:42 -0700 (PDT)
+        bh=nbmo5aGA7LT0Hgov1qAGwKoPu5C3RFLgaH6+HqPHBBY=;
+        b=uwhYbTqcl31T5oEnxD+RA5nE5FYnCkVn0+oeIPwEHY1HV5divtkufBIQx0coAgn1t8
+         pZJQPoR811Fe780whhQKAqXpp8hVchiGfDpF6zdQ5F/YqG14SIbknvZWRAMkfs0OeVXl
+         OqjsarGWXeBjlik/JfaFZ/uBRMoCt8RVm+vx1v7xKXQ3cGzg7a41G7rTgT5AUegIgM8r
+         xh1uPN4hMSShvP/zEMg9yEMcPrAzFzkKAsM5pGUMwldKADPnvtQoPM3eL7rFYcv8k7Yj
+         fpDmlgRHtrKUF9IHDEr34N5X3EpnxbAfWekPxhhutWn+SzMD8doINwPZjyL6O7abRq1B
+         I5sg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTOtYy1aWzbMZS1UBa5a/54V2iHPLsqycMhDcEGEj5bb2FhWxidAEI5m+QTteWsq2ljVPgV7mFBNptjpFr21br66Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnVhw98CHsEKwEA7CS+Dw6dZoOP3T6JPHpax/H/OA05/V2CmGx
+	MwBigqaT7vCoxIEUJrxgip/eddGBXknNBos2eUyUdZKa45tjcRfoVVDyV2BuTllWQVddNza6GL+
+	kQJeRI/5E3LgS3Ulho2ysDVLcM74YfrvnTy/t
+X-Google-Smtp-Source: AGHT+IHT805g+LbGy0EqqXtuxcuYkq9Wu1QcCa4o398B7x0nju7lBTF/vbBIneUpiRF9UyUOqDWCaTIvci00Oy8nL28=
+X-Received: by 2002:a17:907:2da6:b0:a99:42e7:21f with SMTP id
+ a640c23a62f3a-a9abf8ab018mr221805366b.37.1729688494348; Wed, 23 Oct 2024
+ 06:01:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,19 +58,19 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20241023123212.15908-1-laoar.shao@gmail.com>
 In-Reply-To: <20241023123212.15908-1-laoar.shao@gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 23 Oct 2024 21:00:38 +0800
-Message-ID: <CADxym3YB4ywpSp92Zctmh_k1K5OL7vTUAadFOsFuV=RdEvvwgA@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 23 Oct 2024 15:01:20 +0200
+Message-ID: <CANn89iJuShCmidCi_ZkYABtmscwbVjhuDta1MS5LxV_4H9tKOA@mail.gmail.com>
 Subject: Re: [PATCH] net: Add tcp_drop_reason tracepoint
 To: Yafang Shao <laoar.shao@gmail.com>
-Cc: edumazet@google.com, davem@davemloft.net, dsahern@kernel.org, 
-	kuba@kernel.org, pabeni@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+Cc: davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, 
+	pabeni@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
 	mathieu.desnoyers@efficios.com, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
+	linux-trace-kernel@vger.kernel.org, Menglong Dong <menglong8.dong@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2024 at 8:33=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+On Wed, Oct 23, 2024 at 2:33=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
 wrote:
 >
 > We previously hooked the tcp_drop_reason() function using BPF to monitor
@@ -80,117 +80,12 @@ wrote:
 nt
 > for monitoring.
 
-Hello,
+This patch would require changes in user space tracers.
+I am surprised no one came up with a noinline variant.
 
-Can the existing tracepoint kfree_skb do this work? AFAIK, you
-can attach you BPF to the kfree_skb tracepoint and do some filter
-according to the "protocol" field, or the information "sk" field. And
-this works fine in my tool.
+__bpf_kfunc is using
 
-I hope I'm not missing something :/
+#define __bpf_kfunc __used __retain noinline
 
-BTW, I do such filter in probe_parse_skb_sk() in
-https://github.com/OpenCloudOS/nettrace/blob/master/shared/bpf/skb_parse.h
-
-Thanks!
-Menglong Dong
->
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Menglong Dong <menglong8.dong@gmail.com>
-> ---
->  include/trace/events/tcp.h | 53 ++++++++++++++++++++++++++++++++++++++
->  net/ipv4/tcp_input.c       |  1 +
->  2 files changed, 54 insertions(+)
->
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index a27c4b619dff..056f7026224c 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -12,6 +12,7 @@
->  #include <net/tcp.h>
->  #include <linux/sock_diag.h>
->  #include <net/rstreason.h>
-> +#include <net/dropreason-core.h>
->
->  /*
->   * tcp event with arguments sk and skb
-> @@ -728,6 +729,58 @@ DEFINE_EVENT(tcp_ao_event_sne, tcp_ao_rcv_sne_update=
-,
->         TP_ARGS(sk, new_sne)
->  );
->
-> +#undef FN
-> +#undef FNe
-> +#define FN(reason)     { SKB_DROP_REASON_##reason, #reason },
-> +#define FNe(reason)    { SKB_DROP_REASON_##reason, #reason }
-> +
-> +TRACE_EVENT(tcp_drop_reason,
-> +
-> +       TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-> +                const enum skb_drop_reason reason),
-> +
-> +       TP_ARGS(sk, skb, reason),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(const void *, skbaddr)
-> +               __field(const void *, skaddr)
-> +               __field(int, state)
-> +               __field(enum skb_drop_reason, reason)
-> +               __array(__u8, saddr, sizeof(struct sockaddr_in6))
-> +               __array(__u8, daddr, sizeof(struct sockaddr_in6))
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->skbaddr =3D skb;
-> +               __entry->skaddr =3D sk;
-> +               /* Zero means unknown state. */
-> +               __entry->state =3D sk ? sk->sk_state : 0;
-> +
-> +               memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-> +               memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-> +
-> +               if (sk && sk_fullsock(sk)) {
-> +                       const struct inet_sock *inet =3D inet_sk(sk);
-> +
-> +                       TP_STORE_ADDR_PORTS(__entry, inet, sk);
-> +               } else {
-> +                       const struct tcphdr *th =3D (const struct tcphdr =
-*)skb->data;
-> +
-> +                       TP_STORE_ADDR_PORTS_SKB(skb, th, entry->saddr, en=
-try->daddr);
-> +               }
-> +               __entry->reason =3D reason;
-> +       ),
-> +
-> +       TP_printk("skbaddr=3D%p skaddr=3D%p src=3D%pISpc dest=3D%pISpc st=
-ate=3D%s reason=3D%s",
-> +                 __entry->skbaddr, __entry->skaddr,
-> +                 __entry->saddr, __entry->daddr,
-> +                 __entry->state ? show_tcp_state_name(__entry->state) : =
-"UNKNOWN",
-> +                 __print_symbolic(__entry->reason, DEFINE_DROP_REASON(FN=
-, FNe)))
-> +);
-> +
-> +#undef FN
-> +#undef FNe
-> +
->  #endif /* _TRACE_TCP_H */
->
->  /* This part must be outside protection */
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index cc05ec1faac8..44795555596a 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -4897,6 +4897,7 @@ static bool tcp_ooo_try_coalesce(struct sock *sk,
->  static void tcp_drop_reason(struct sock *sk, struct sk_buff *skb,
->                             enum skb_drop_reason reason)
->  {
-> +       trace_tcp_drop_reason(sk, skb, reason);
->         sk_drops_add(sk, skb);
->         sk_skb_reason_drop(sk, skb, reason);
->  }
-> --
-> 2.43.5
->
+I would rather not have include/trace/events/tcp.h becoming the
+biggest file in TCP stack...
