@@ -1,438 +1,156 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7612C2AD20;
-	Wed, 23 Oct 2024 03:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736D04B5AE;
+	Wed, 23 Oct 2024 03:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729655292; cv=none; b=KouQHtt9ZqkpIL6JIFcXOwI/6fp4uIkATQ+IssJ4sv3Dmgv+A/Di6HYtJitBNp89KU/Ga5jqCRHPuTtbhwzHBR27UBJu+LDu+IZmKz53sAx+XQx2lUNbAQTaRN8ym20FzAAbs9yGGnFucEvAvu5lQxTEXNLHmjXRdd7bRsy8/80=
+	t=1729655651; cv=none; b=AFf6TAwNq6vIE92DmM7atuQXY856k2sNq/jHWz5pN3vCdZfMxeohU4KnnkrIYFSAncLx4YnXdzEhAVXtZ3WJocG2MTIMgUc1zXoyt0N+HaoPFxtVED+B7L2rEdZDOqTGyyDHR3SZdV9Oq0/Fn/s9t9OxV2gx/eKTCRycWzqZcwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729655292; c=relaxed/simple;
-	bh=IBEoBR/dDKlRcsu8ONxOis+9sgK2u7yyPubCxR3/cw8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jJFxyUq7rTJs4mGAFZd6WLiu3sGBK8aGL5+VSwIT41ou4tcHXAYlwBapajDVI+b5bA2PIByoumvinvjISy+AxmKZcD1kEFwtjHLA1MjbRY04h3UXMHd75rlj7MLKWDp8URxo7APtMoqhnEFTXVpOSBK64weKA8jXfmM5S2Om2jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XYFMs3zbpzyTPd;
-	Wed, 23 Oct 2024 11:46:33 +0800 (CST)
-Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7ED6180103;
-	Wed, 23 Oct 2024 11:48:04 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemg200008.china.huawei.com (7.202.181.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 23 Oct 2024 11:48:03 +0800
-Message-ID: <f9b4a78d-4470-9be0-6d70-fdbe5229960b@huawei.com>
-Date: Wed, 23 Oct 2024 11:48:03 +0800
+	s=arc-20240116; t=1729655651; c=relaxed/simple;
+	bh=wIYPFd1ECFqYcBpUUBUDNuBZLsQHxVKxItc1oZ/BPq0=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=BQpm64UeWzbJS5jdZw3jEwYDrU4IbGoSMzsHmShrQwZLp9vYtvwoj7YkJzBDrEtLTu5lx0MhBOiN1JiLvuHRH57DCI+4alYiP0Tu7IaUPhG0h86oPjz9KcWJ9lKyx1mwLJ0KsTYhvm9KSLqYJtf7NaxefPIFyuoq5//B1SoMcBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmedK4xn; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmedK4xn"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-207115e3056so53486175ad.2;
+        Tue, 22 Oct 2024 20:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729655650; x=1730260450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=47KfYWZzbJlPbzsig/V/+47dXkCR0XBbErKjie4MZZc=;
+        b=NmedK4xnZdw4F8ywKhIy8oVHWE0pZsLepTcMbRKIeWsBErkuRsQUBYhOQe8TXMUPIV
+         RF8qA66VSjALzciBzasozoGY8kiWXMMtnEXIAHD/fcyERIxpqdKWbOMHJ53731223rIW
+         PDk37AviXtW+wI/5Ss7qx6kPivaVaUuoeM8k14HvO7KYSO1YeVGa2WDSYiUkxeavFDjG
+         3mNL46z6n9/0/xVOOrtb2J1gwchclreOgK+05dc/B65Wtxs63c5Bs1WsWyZhQn0yKWx8
+         fexq3T/4uD/P4zgqHdxHaejX+7Ymxw65HlBN9XeR2BvOVbcUiSiVczxzWrO3995koTw0
+         dU+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729655650; x=1730260450;
+        h=content-transfer-encoding:in-reply-to:mime-version:user-agent:date
+         :message-id:from:cc:references:to:subject:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=47KfYWZzbJlPbzsig/V/+47dXkCR0XBbErKjie4MZZc=;
+        b=HZmKlPNnV9rcUIqal5J7ScvHuwQ1Ga+5ngQCsx68pZRyJdzfwnU0fBmj7NGAqpWwWj
+         Y/m/4shndWVaby5ePXBXGJcrnKzO74sIDJ8+NvMLX3gxTexfu2yxdRM+QxsKnRQwIQsb
+         YU+Yd+b7ZWz2Ir8FANL+GLqrpUKneD4/u3MX7sHqVWqzJpjuPjT2h6UdeeJ2NC3J2f6H
+         c/Ea1eQUgGzklM8RfMiW0NbOdB+FNjmSXWbWvXmuHyI97ePsVyKc+i5pVKpBNzvKgrjy
+         mHrov5TXZ4CA3TyA3MO8MnnkUBtDfcQb6xkDmXCf81uAdCsibIA8yPgMxp8TH4jkhg3E
+         IvtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBMSJQNxQwP34WttKl+OvONphgAniUUSAiPk4yAkTiV6ZGT0aUua8gkg+g4M9tH5URp0BZKn1uqqMpUBo=@vger.kernel.org, AJvYcCX5s0Q97TJPmy1SeB+hcyizuFMAuLENdJEixf8o1iZXXF/bh/fOPF/Zf/wlJGpDlNYvQa4ew1o4sRhkkMYh6yMckg2y@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt5FweIEjvvC2qlFnK4c6ecJ29j8+LXCHMa/si9ilFSul4EygK
+	k4+4ndsXA2J173rc7l292552Z55cmlVbsYdGulpskUpHwehOsrLATqrxCg==
+X-Google-Smtp-Source: AGHT+IGUdfCfM3QYCu6suXxsF586R6Gdy9CD3PBp1aBTBnfp+rRc4cVRKvMmcFpQ4p0Hgi9KZL3jFQ==
+X-Received: by 2002:a17:902:c951:b0:20c:d04a:a53f with SMTP id d9443c01a7336-20fab2dbbf9mr19307115ad.58.1729655649555;
+        Tue, 22 Oct 2024 20:54:09 -0700 (PDT)
+Received: from [10.1.1.24] (125-238-248-82-fibre.sparkbb.co.nz. [125.238.248.82])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7eee6408sm49390995ad.37.2024.10.22.20.54.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2024 20:54:09 -0700 (PDT)
+Subject: Re: [PATCH RFC 1/2] m68k: Add tracirqs
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+ <20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org
+From: Michael Schmitz <schmitzmic@gmail.com>
+Message-ID: <4ab85330-5a50-bde1-f014-99a8e7cb28cc@gmail.com>
+Date: Wed, 23 Oct 2024 16:53:58 +1300
+User-Agent: Mozilla/5.0 (X11; Linux ppc; rv:45.0) Gecko/20100101
+ Icedove/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2] arm: Add KPROBES_ON_FTRACE supported
-Content-Language: en-US
-To: Masami Hiramatsu <mhiramat@kernel.org>
-CC: <corbet@lwn.net>, <rostedt@goodmis.org>, <mark.rutland@arm.com>,
-	<linux@armlinux.org.uk>, <ardb@kernel.org>, <yangtiezhu@loongson.cn>,
-	<arnd@arndb.de>, <kees@kernel.org>, <rmk+kernel@armlinux.org.uk>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-References: <20240618035242.3491691-1-ruanjinjie@huawei.com>
- <20241021174026.6133c7e847c8e94b9cd7e169@kernel.org>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20241021174026.6133c7e847c8e94b9cd7e169@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg200008.china.huawei.com (7.202.181.35)
+
+Jean-Michel,
+
+thanks for your patches!
+
+Am 21.10.2024 um 22:44 schrieb Jean-Michel Hautbois:
+> The TRACE_IRQFLAGS_SUPPORT requires the architecture to call
+> trace_hardirqs_off() when interrupts are disabled and
+> trace_hardirqs_on() when they are enabled.
+> Add those calls to do_IRQ function.
+
+You will also have to add these calls to the three sites in 
+arch/m68k/coldfire/head.S where interrupts are enabled or disabled.
+
+Here:
+> ENTRY(system_call)
+>         SAVE_ALL_SYS
+>         move    #0x2000,%sr             /* enable intrs again */
+>         GET_CURRENT(%d2)
+
+and here:
+> ret_from_exception:
+>         move    #0x2700,%sr             /* disable intrs */
+>         btst    #5,%sp@(PT_OFF_SR)      /* check if returning to kernel */
+>         jeq     Luser_return            /* if so, skip resched, signals */
+
+and here:
+> Lwork_to_do:
+>         movel   %a0@(TINFO_FLAGS),%d1   /* get thread_info->flags */
+>         move    #0x2000,%sr             /* enable intrs again */
+>         btst    #TIF_NEED_RESCHED,%d1
+>         jne     reschedule
+
+There's one similar site in arch/m68k/kernel/head.S (ret_from_exception) 
+where interrupts are enabled that would need a similar change, if you 
+want to enable this for all m68k.
+
+Registers %d0-%d5 and %a0-%a2 are saved on the stack at this point and 
+can be clobbered if need be.
+
+Cheers,
+
+	Michael
 
 
-
-On 2024/10/21 16:40, Masami Hiramatsu wrote:
-> Hi Jinjie,
-> 
-> Sorry for reviewing so late. I have some comments below.
-> 
-> On Tue, 18 Jun 2024 11:52:42 +0800
-> Jinjie Ruan <ruanjinjie@huawei.com> wrote:
-> 
->> Add support for kprobes on ftrace call sites to avoid much of the overhead
->> with regular kprobes. Try it with simple steps:
->>
->> 	cd /sys/kernel/debug/tracing/
->> 	echo 'p:myprobe sys_clone r0=%r0 r1=%r1 r2=%r2' > kprobe_events
->> 	echo 1 > events/kprobes/enable
->> 	echo  1 > events/kprobes/myprobe/enable
->> 	cat trace
->> 	# tracer: nop
->> 	#
->> 	# entries-in-buffer/entries-written: 2/2   #P:4
->> 	#
->> 	#                                _-----=> irqs-off/BH-disabled
->> 	#                               / _----=> need-resched
->> 	#                              | / _---=> hardirq/softirq
->> 	#                              || / _--=> preempt-depth
->> 	#                              ||| / _-=> migrate-disable
->> 	#                              |||| /     delay
->> 	#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->> 	#              | |         |   |||||     |         |
->> 	              sh-75      [000] .....    33.793362: myprobe: (sys_clone+0xc/0xa0) r0=0x1200011 r1=0x0 r2=0x0
->> 	              sh-75      [000] .....    34.817804: myprobe: (sys_clone+0xc/0xa0) r0=0x1200011 r1=0x0 r2=0x0
->>
->> 	cat /sys/kernel/debug/kprobes/list
->> 		c03453e8  k  sys_clone+0xc    [FTRACE]
->> 					       ^^^^^^
->>
->> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/oe-kbuild-all/202406160646.J89U1UKK-lkp@intel.com/
->> ---
->> v2:
->> - Fix the allmodconfig compile issue by renaming "NOP" to "FTRACE_NOP".
->> ---
->>  .../debug/kprobes-on-ftrace/arch-support.txt  |  2 +-
->>  arch/arm/Kconfig                              |  1 +
->>  arch/arm/include/asm/ftrace.h                 | 17 ++++++
->>  arch/arm/kernel/ftrace.c                      | 19 +------
->>  arch/arm/probes/Makefile                      |  1 +
->>  arch/arm/probes/ftrace.c                      | 53 +++++++++++++++++++
->>  arch/arm/probes/kprobes/core.c                | 32 +++++++++++
->>  7 files changed, 106 insertions(+), 19 deletions(-)
->>  create mode 100644 arch/arm/probes/ftrace.c
->>
->> diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
->> index 02febc883588..4ecd7d53e859 100644
->> --- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
->> +++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
->> @@ -8,7 +8,7 @@
->>      -----------------------
->>      |       alpha: | TODO |
->>      |         arc: | TODO |
->> -    |         arm: | TODO |
->> +    |         arm: |  ok  |
->>      |       arm64: | TODO |
->>      |        csky: |  ok  |
->>      |     hexagon: | TODO |
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index 9f09a16338e3..036381c5d42f 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -114,6 +114,7 @@ config ARM
->>  	select HAVE_KERNEL_LZO
->>  	select HAVE_KERNEL_XZ
->>  	select HAVE_KPROBES if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
->> +	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL && !CPU_ENDIAN_BE32 && !CPU_V7M
-> 
-> You should write this as
-> 
-> select HAVE_KPROBES_ON_FTRACE if HAVE_KPROBES
-> 
-> to clear that this needs more restrictions than Kprobes or not.
-> 
->>  	select HAVE_KRETPROBES if HAVE_KPROBES
->>  	select HAVE_MOD_ARCH_SPECIFIC
->>  	select HAVE_NMI
->> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
->> index 5be3ddc96a50..ecf5590f3657 100644
->> --- a/arch/arm/include/asm/ftrace.h
->> +++ b/arch/arm/include/asm/ftrace.h
->> @@ -22,6 +22,23 @@ struct dyn_arch_ftrace {
->>  #endif
->>  };
->>  
->> +/*
->> + * The compiler emitted profiling hook consists of
->> + *
->> + *   PUSH    {LR}
->> + *   BL	     __gnu_mcount_nc
->> + *
->> + * To turn this combined sequence into a NOP, we need to restore the value of
->> + * SP before the PUSH. Let's use an ADD rather than a POP into LR, as LR is not
->> + * modified anyway, and reloading LR from memory is highly likely to be less
->> + * efficient.
->> + */
->> +#ifdef CONFIG_THUMB2_KERNEL
->> +#define	FTRACE_NOP		0xf10d0d04	/* add.w sp, sp, #4 */
->> +#else
->> +#define	FTRACE_NOP		0xe28dd004	/* add   sp, sp, #4 */
->> +#endif
->> +
->>  static inline unsigned long ftrace_call_adjust(unsigned long addr)
->>  {
->>  	/* With Thumb-2, the recorded addresses have the lsb set */
->> diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
->> index e61591f33a6c..0bb372f5aa1d 100644
->> --- a/arch/arm/kernel/ftrace.c
->> +++ b/arch/arm/kernel/ftrace.c
->> @@ -25,23 +25,6 @@
->>  #include <asm/stacktrace.h>
->>  #include <asm/patch.h>
->>  
->> -/*
->> - * The compiler emitted profiling hook consists of
->> - *
->> - *   PUSH    {LR}
->> - *   BL	     __gnu_mcount_nc
->> - *
->> - * To turn this combined sequence into a NOP, we need to restore the value of
->> - * SP before the PUSH. Let's use an ADD rather than a POP into LR, as LR is not
->> - * modified anyway, and reloading LR from memory is highly likely to be less
->> - * efficient.
->> - */
->> -#ifdef CONFIG_THUMB2_KERNEL
->> -#define	NOP		0xf10d0d04	/* add.w sp, sp, #4 */
->> -#else
->> -#define	NOP		0xe28dd004	/* add   sp, sp, #4 */
->> -#endif
->> -
->>  #ifdef CONFIG_DYNAMIC_FTRACE
->>  
->>  static int __ftrace_modify_code(void *data)
->> @@ -60,7 +43,7 @@ void arch_ftrace_update_code(int command)
->>  
->>  static unsigned long ftrace_nop_replace(struct dyn_ftrace *rec)
->>  {
->> -	return NOP;
->> +	return FTRACE_NOP;
->>  }
->>  
->>  void ftrace_caller_from_init(void);
->> diff --git a/arch/arm/probes/Makefile b/arch/arm/probes/Makefile
->> index 8b0ea5ace100..b3c355942a21 100644
->> --- a/arch/arm/probes/Makefile
->> +++ b/arch/arm/probes/Makefile
->> @@ -1,6 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  obj-$(CONFIG_UPROBES)		+= decode.o decode-arm.o uprobes/
->>  obj-$(CONFIG_KPROBES)		+= decode.o kprobes/
->> +obj-$(CONFIG_KPROBES_ON_FTRACE)	+= ftrace.o
->>  ifdef CONFIG_THUMB2_KERNEL
->>  obj-$(CONFIG_KPROBES)		+= decode-thumb.o
->>  else
->> diff --git a/arch/arm/probes/ftrace.c b/arch/arm/probes/ftrace.c
->> new file mode 100644
->> index 000000000000..0f54b8e5d2a6
->> --- /dev/null
->> +++ b/arch/arm/probes/ftrace.c
->> @@ -0,0 +1,53 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/kprobes.h>
->> +
->> +/* Ftrace callback handler for kprobes -- called under preepmt disabled */
->> +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->> +			   struct ftrace_ops *ops, struct ftrace_regs *regs)
-> 
-> nit: ftrace_regs argument should be 'fregs' to distinguish from pt_regs.
-> 
->> +{
-> 
-> To avoid accessing regs inside fregs, use ftrace_get_regs() here.
-> 
-> struct pt_regs *regs = ftrace_get_regs(fregs);
-> 
-> And check regs is not NULL.
-> 
->> +	struct kprobe *p;
->> +	struct kprobe_ctlblk *kcb;
-> 
-> ----
-> 	int bit;
-> 
-> 	if (unlikely(kprobe_ftrace_disabled))
-> 		return;
-> 
-> 	bit = ftrace_test_recursion_trylock(ip, parent_ip);
-> 	if (bit < 0)
-> 		return;
-> ----
-> 
-> See arch/x86/kernel/kprobes/ftrace.c 
-> 
->> +
->> +	p = get_kprobe((kprobe_opcode_t *)ip);
->> +	if (unlikely(!p) || kprobe_disabled(p))
->> +		return;
->> +
->> +	kcb = get_kprobe_ctlblk();
->> +	if (kprobe_running()) {
->> +		kprobes_inc_nmissed_count(p);
->> +	} else {
->> +		unsigned long orig_ip = instruction_pointer(&(regs->regs));
->> +
->> +		instruction_pointer_set(&(regs->regs), ip);
->> +
->> +		__this_cpu_write(current_kprobe, p);
->> +		kcb->kprobe_status = KPROBE_HIT_ACTIVE;
->> +		if (!p->pre_handler || !p->pre_handler(p, &(regs->regs))) {
->> +			/*
->> +			 * Emulate singlestep (and also recover regs->pc)
->> +			 * as if there is a nop
->> +			 */
->> +			instruction_pointer_set(&(regs->regs),
->> +						(unsigned long)p->addr + MCOUNT_INSN_SIZE);
-> 
-> Hm, x86 implementation is somewhat wrong (not good). This instruction
-> pointer should be updated only if p->post_handler is there...
-> 
->> +			if (unlikely(p->post_handler)) {
->> +				kcb->kprobe_status = KPROBE_HIT_SSDONE;
->> +				p->post_handler(p, &(regs->regs), 0);
->> +			}
->> +			instruction_pointer_set(&(regs->regs), orig_ip);
->> +		}
->> +
->> +		/*
->> +		 * If pre_handler returns !0, it changes regs->pc. We have to
->> +		 * skip emulating post_handler.
->> +		 */
->> +		__this_cpu_write(current_kprobe, NULL);
->> +	}
-> 
-> And 
-> 
-> out:
-> 	ftrace_test_recursion_unlock(bit);
-> 
->> +}
->> +NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->> +
->> +int arch_prepare_kprobe_ftrace(struct kprobe *p)
->> +{
->> +	p->ainsn.insn = NULL;
->> +	return 0;
->> +}
->> diff --git a/arch/arm/probes/kprobes/core.c b/arch/arm/probes/kprobes/core.c
->> index d8238da095df..45ccf8bea5e4 100644
->> --- a/arch/arm/probes/kprobes/core.c
->> +++ b/arch/arm/probes/kprobes/core.c
->> @@ -45,6 +45,38 @@ DEFINE_PER_CPU(struct kprobe *, current_kprobe) = NULL;
->>  DEFINE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
->>  
->>  
->> +kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
->> +					 bool *on_func_entry)
->> +{
-> 
-> Here @addr is a symbol address and @offset is the probe offset from symbol.
-> 
->> +#ifdef CONFIG_KPROBES_ON_FTRACE
->> +	unsigned long nop_offset = 0;
-> 
-> In the above comment in ftrace.h, the mcount callsite code should be
-> 
-> <FUNCTION>:
->  PUSH {LR}
->  FTRACE_NOP
-> 
-> Thus if the @offset is 0 or 4, then we should check the function's entry
-> sequence (2 instructions) should be the above pattern, and if so,
-> the offset should be skipped and the address should be @addr + 4.
-> If there is no such pattern, do not change it, return @addr + @offset.
-
-Hi, Masami,
-
-Actually, it doesn't have to be, the following is some example for
-arm32, before the { psu {lr}, bl mocunt}, there may be different number
-of push stack instructions:
-
-c04fa4dc <do_sys_open>:
-c04fa4dc:       e92d4030        push    {r4, r5, lr}
-c04fa4e0:       e24dd03c        sub     sp, sp, #60     ; 0x3c
-c04fa4e4:       e52de004        push    {lr}            ; (str lr, [sp,
-#-4]!)
-c04fa4e8:       ebf85796        bl      c0310348 <__gnu_mcount_nc>
-
-c03453dc <__se_sys_clone>:
-c03453dc:       e92d40f0        push    {r4, r5, r6, r7, lr}
-c03453e0:       e24dd05c        sub     sp, sp, #92     ; 0x5c
-c03453e4:       e52de004        push    {lr}            ; (str lr, [sp,
-#-4]!)
-c03453e8:       ebff2bd6        bl      c0310348 <__gnu_mcount_nc>
-c03453ec:       e1a06003        mov     r6, r3
-
-
-c0378820 <sched_show_task>
-c0378820:      e92d4810         push    {r4, fp, lr}
-c0378824:      e28db008         add     fp, sp, #8
-c0378828:      e24dd00c         sub     sp, sp, #12
-c037882c:      e52de004         push    {lr}            ;(str lr,[sp,#-4]!)
-c0378830:      ebfe5ec4         bl      c0310348 <__gnu_mcount_nc>
-
-8010111c <handle_fiq_as_nmi>:
-8010111c:       e92d4070        push    {r4, r5, r6, lr}
-80101120:       e52de004        push    {lr}            ; (str lr, [sp,
-#-4]!)
-80101124:       eb007f4a        bl      80120e54 <__gnu_mcount_nc>
-
-
-80101334 <__do_softirq>:
-80101334:       e52de004        push    {lr}            ; (str lr, [sp,
-#-4]!)
-80101338:       eb007ec5        bl      80120e54 <__gnu_mcount_nc>
-
-
-> 
-> So, something like,
-> 
-> #define ARM_MCOUNT_OFFSET 4
-> 
-> if (offset <= ARM_MCOUNT_OFFSET) {
-> 	if (copy_from_kernel_nofault())
-> 		goto out;
-> 	if (insn != FTRACE_PUSH_LR)
-> 		goto out;
-> 	if (copy_from_kernel_nofault())
-> 		goto out;
-> 	if (insn != FTRACE_NOP)
-> 		goto out;
-> 	if (!offset)
-> 		
-> 	offset = ARM_MCOUNT_OFFSET;
-> 	*on_func_entry = true;
-> }
-> out:
-> 	return addr + offset;
-> 
-> Thank you,
-> 
->> +	u32 insn = 0;
->> +
->> +	/*
->> +	 * Since 'addr' is not guaranteed to be safe to access, use
->> +	 * copy_from_kernel_nofault() to read the instruction:
->> +	 */
->> +	if (copy_from_kernel_nofault(&insn, (void *)(addr + nop_offset),
->> +				     sizeof(u32)))
->> +		return NULL;
->> +
->> +	while (insn != FTRACE_NOP) {
->> +		nop_offset += 4;
->> +		if (copy_from_kernel_nofault(&insn, (void *)(addr + nop_offset),
->> +					     sizeof(u32)))
->> +			return NULL;
->> +	}
->> +
->> +	*on_func_entry = offset <= nop_offset;
->> +	if (*on_func_entry)
->> +		offset = nop_offset;
->> +#else
->> +	*on_func_entry = !offset;
->> +#endif
->> +
->> +	return (kprobe_opcode_t *)(addr + offset);
->> +}
->> +
->>  int __kprobes arch_prepare_kprobe(struct kprobe *p)
->>  {
->>  	kprobe_opcode_t insn;
->> -- 
->> 2.34.1
->>
-> 
-> 
+>
+> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> ---
+>  arch/m68k/Kconfig      | 1 +
+>  arch/m68k/kernel/irq.c | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+> index cc26df907bfe3c8143a931d259eceabb16af7411..ab3375475721fa63418c40d4ba6ac76679ebc77d 100644
+> --- a/arch/m68k/Kconfig
+> +++ b/arch/m68k/Kconfig
+> @@ -39,6 +39,7 @@ config M68K
+>  	select OLD_SIGSUSPEND3
+>  	select UACCESS_MEMCPY if !MMU
+>  	select ZONE_DMA
+> +	select TRACE_IRQFLAGS_SUPPORT
+>
+>  config CPU_BIG_ENDIAN
+>  	def_bool y
+> diff --git a/arch/m68k/kernel/irq.c b/arch/m68k/kernel/irq.c
+> index 9ab4f550342e5de11c528f55781432675ffd66bf..74cf60ebbc4bca51f3caa4046dbd2bdb02355711 100644
+> --- a/arch/m68k/kernel/irq.c
+> +++ b/arch/m68k/kernel/irq.c
+> @@ -21,9 +21,11 @@ asmlinkage void do_IRQ(int irq, struct pt_regs *regs)
+>  {
+>  	struct pt_regs *oldregs = set_irq_regs(regs);
+>
+> +	trace_hardirqs_off();
+>  	irq_enter();
+>  	generic_handle_irq(irq);
+>  	irq_exit();
+> +	trace_hardirqs_on();
+>
+>  	set_irq_regs(oldregs);
+>  }
+>
