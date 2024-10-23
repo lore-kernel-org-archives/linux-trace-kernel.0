@@ -1,80 +1,104 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104B614AD20;
-	Wed, 23 Oct 2024 19:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC16114658F;
+	Wed, 23 Oct 2024 19:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729710181; cv=none; b=oKNk+4YlX2RItimmkLuWLY+sbKF4o7oKh0HLIKaMjV2gOcoodMeWgYTKftMBYH6hSKXXOwN52rOyrxFRXH8oDFPSXdGO46HfmzwXhqaJ8Q5lXfjaeLggWn0vlpbcub8rGvIE+F+2ueIJFw3MHg5y0SzB3cV2Md2ikeZq/DHMA0I=
+	t=1729710735; cv=none; b=U/xr9qNJM5QXzL1LSRDd6ggKwpXZsllx6IbPdsfRLLms/Als91QOfLQ3oUKwQjJHpwxzvzqsrZnbTAc5+s57DhZMNvxAA+ZVkV/6ygr6QhkvGg4+Tz2uuxBonsx92e2qWXiwhN+rycuKwEiH39ovlhTdHF+svUb6PBK+5E5+UVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729710181; c=relaxed/simple;
-	bh=PDoEunpivtmDkHdtof8mc0xQNBak0TRvQREGtJWbwVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h9l9n+k9Qjy5renxfUNtgNpxmq3JvsyDW8uX87XaTKWg6+HAc4ZfGZbhOSDHDvWuD8iDN/+VK1SUMt7kmD7VRXWSR+n/WrEERqxrOwxiKtOhlHcdqryenYYoLTl990CZ7NtD/WPdbtSlrdNmBTux71/V4fTd7bblbuuYY0lm2PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SBMLHsEH; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1729710735; c=relaxed/simple;
+	bh=mZMCb9yADboBtfszxVAciCHEEoeJ/Di+xLmjzlPY/Ig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uVxBgyAQrv9N53KOBEazc2Axu8614rh0EbyOWld2Y5NulXhiXySAei+jjCgA4CokKoZCGA+mPTbrcORGz0oymyyxHSSgrIyiF7kneBDdino9sZvzZ0zMS1d8QF09UPnsETbpvX5UJZtTLooBCp7ehSqOnW5TMcHXlOt+Dm0UsLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=atThM6F9; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SBMLHsEH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=cy23GZhRUgFLT1RLGlJ+GbqizeM20Ndew3cr/vC2tLs=; b=SBMLHsEHxhhf0ar8KzSMn6aotF
-	r4QPIPmiHes7w7/hUrZYSrcVoZJ2odDy0RxYAsPGPEo05wX7gZo29VEDq9tkfl1gZOOYNrGHIgNvV
-	TtoYU4ozWH3/KNf0Gyjk7mCdfP90veappHaDW5OjdMxE/Z5EIc7w4TYdxQGfQ4BbJUFxJNGpxkhaC
-	auqucZVkU8Jl8WJ/06zfCZd77gylKTqm5oBszE5Pq8mSNbM2kOA97R9kBy8rUkoMd+qhh4uALVLRC
-	IkbHNvKyWYeVc06x8CFJVlgNgHN6ldv1uzpd1EZGq3nUqmJjIxqGv60FSMf7cxU+DDpTdFf+O0tCn
-	XHLEPpHQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1t3gcz-00000008Wsk-0r4w;
-	Wed, 23 Oct 2024 19:02:41 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8E96430073F; Wed, 23 Oct 2024 21:02:40 +0200 (CEST)
-Date: Wed, 23 Oct 2024 21:02:40 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-	paulmck@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
-	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com,
-	mhocko@kernel.org, vbabka@suse.cz, hannes@cmpxchg.org,
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
-Subject: Re: [PATCH v3 tip/perf/core 2/4] mm: switch to 64-bit
- mm_lock_seq/vm_lock_seq on 64-bit architectures
-Message-ID: <20241023190240.GA11151@noisy.programming.kicks-ass.net>
-References: <20241010205644.3831427-1-andrii@kernel.org>
- <20241010205644.3831427-3-andrii@kernel.org>
- <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy>
- <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="atThM6F9"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-7eae96e6624so73139a12.2;
+        Wed, 23 Oct 2024 12:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1729710733; x=1730315533; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mZMCb9yADboBtfszxVAciCHEEoeJ/Di+xLmjzlPY/Ig=;
+        b=atThM6F9Ezzcf85W59c7aF7FXCTDMkqQiKL8rME8RrDm/mW0oh8Zex/7sM90AKy3dX
+         WievXRgsgrncXrapyhHN6IQkTdvDPLxnUl60ObllOw4rkocKzzIvCMWR+v1d5p5Qex6p
+         M3q+Gh9MzbT3YzyK6Y2XJD6q26VcAdVjAPLQEqFBKLDFz26ylG2cS6XalCrWfjeR5nDf
+         qQXXNbsb7Jamstam1oWSd1IUsG88XSK+5QZvZznNaCAV5X2m/D50pf9oI4Vyg3Hsnxno
+         YlnsBG3QpTc0tUlXAUGX0vvusaS9Ie73e3GoXz6HuDhiOJoFjmehm74dU28eArzQxk7O
+         2BxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729710733; x=1730315533;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mZMCb9yADboBtfszxVAciCHEEoeJ/Di+xLmjzlPY/Ig=;
+        b=lGr4FmezeKIJRXUFrbQ61rf8MwhspDJwBoNW01YdohPAAvQVXxpn/WZI/0fMWilvbn
+         TDc5qzeVuWxwhmgQQbnLGV3ohkzaYx61D6zvwNHauVBxhpvsRSVB8ivmWsiZZksFYl/q
+         L98V7WtHmCeA2WvSOXQDlbEOJ+xPe+0SQXWIMmTy+/3AWM9UUI8n6kv9BshFv55IN+fQ
+         PgBosgnRAPNfppdgegd3vpnRqX9KMs4D1iNwSc5EH/3hLOGRjGP0Vd3uAszJXWxN6i2j
+         OeXwGNidHUoRpQakZRaPDNdP5D7g7Dn+eQWuNJSs0RWK+43efXUoHFBsBBKr9p6k+WEu
+         WOdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn8z0AwsEgzMvLfx20gSlSuJgIOqDqYn3wgfATLhjDgXz3pWRNbBROszPsKhojS3zUMr9sml4i8l2i9y1s@vger.kernel.org, AJvYcCXaGQDLN/ofqi+Ih+Lxk9Q6Iv/ucJE05Ie5wsODmSFRa4dRbh7E5S7m355qWpRd4v1ygS50la040ofgVgWiKLhW9/89@vger.kernel.org, AJvYcCXz8XET8sQOtxiAe179coSrOoMdCuPQyN/HDIBd6UVGN6ggbczoCbU6xz+OXF+Sx9z5EIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVFmuBGVwKwXmB1FzFRQa7/u7JDqM6d9L/kkCJ3yQ+nygQtWgw
+	YnNQKa/8S3aJXuv3c1S4Ee3ERrKo1pRVnANMGGoo6OG+SqlUbQ6MAZ+tiwQc5Su50ZyV8OfKX2A
+	rRahKHs9SNxhe0l3v2RhY7L/3s+k=
+X-Google-Smtp-Source: AGHT+IEgBQBY50NgmUSwv7WeWN6RgmhxUSqpC8efKbbtYOPUDXTyDNRkjloglseKzk4fJn/E39uuA/XUO26JB9Ea3Yo=
+X-Received: by 2002:a05:6a21:9206:b0:1d9:1784:49f with SMTP id
+ adf61e73a8af0-1d978bd6445mr3959442637.46.1729710733319; Wed, 23 Oct 2024
+ 12:12:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com>
+References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-3-andrii@kernel.org>
+ <55hskn2iz5ixsl6wvupnhx7hkzcvx2u4muswvzi4wuqplmu2uo@rj72ypyeksjy>
+ <CAJuCfpFpPvBLgZNxwHuT-kLsvBABWyK9H6tFCmsTCtVpOxET6Q@mail.gmail.com> <20241023190240.GA11151@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241023190240.GA11151@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 23 Oct 2024 12:12:00 -0700
+Message-ID: <CAEf4BzZxM2khxd0YNLT6STCvpNz+uqAgS0e8NmtbxcpPLJMvpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 tip/perf/core 2/4] mm: switch to 64-bit
+ mm_lock_seq/vm_lock_seq on 64-bit architectures
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Suren Baghdasaryan <surenb@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, akpm@linux-foundation.org, 
+	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org, 
+	vbabka@suse.cz, hannes@cmpxchg.org, Liam.Howlett@oracle.com, 
+	lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 16, 2024 at 07:01:59PM -0700, Suren Baghdasaryan wrote:
-> On Sun, Oct 13, 2024 at 12:56 AM Shakeel Butt <shakeel.butt@linux.dev> wrote:
+On Wed, Oct 23, 2024 at 12:02=E2=80=AFPM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+>
+> On Wed, Oct 16, 2024 at 07:01:59PM -0700, Suren Baghdasaryan wrote:
+> > On Sun, Oct 13, 2024 at 12:56=E2=80=AFAM Shakeel Butt <shakeel.butt@lin=
+ux.dev> wrote:
+> > >
+> > > On Thu, Oct 10, 2024 at 01:56:42PM GMT, Andrii Nakryiko wrote:
+> > > > To increase mm->mm_lock_seq robustness, switch it from int to long,=
+ so
+> > > > that it's a 64-bit counter on 64-bit systems and we can stop worryi=
+ng
+> > > > about it wrapping around in just ~4 billion iterations. Same goes f=
+or
+> > > > VMA's matching vm_lock_seq, which is derived from mm_lock_seq.
 > >
-> > On Thu, Oct 10, 2024 at 01:56:42PM GMT, Andrii Nakryiko wrote:
-> > > To increase mm->mm_lock_seq robustness, switch it from int to long, so
-> > > that it's a 64-bit counter on 64-bit systems and we can stop worrying
-> > > about it wrapping around in just ~4 billion iterations. Same goes for
-> > > VMA's matching vm_lock_seq, which is derived from mm_lock_seq.
-> 
-> vm_lock_seq does not need to be long but for consistency I guess that
-> makes sense. While at it, can you please change these seq counters to
-> be unsigned?
+> > vm_lock_seq does not need to be long but for consistency I guess that
+> > makes sense. While at it, can you please change these seq counters to
+> > be unsigned?
+>
+> Yeah, that. Kees is waging war on signed types that 'overflow'. These
+> sequence counter thingies are designed to wrap and should very much be
+> unsigned.
 
-Yeah, that. Kees is waging war on signed types that 'overflow'. These
-sequence counter thingies are designed to wrap and should very much be
-unsigned.
+Ah, ok, I already forgot I need to update this. Will do.
