@@ -1,216 +1,159 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7931F1B652C;
-	Wed, 23 Oct 2024 17:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53E91D04BB;
+	Wed, 23 Oct 2024 17:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729705150; cv=none; b=WAfg+v2aqHbP+WmilQPJXw7Tx1xvg50anhgRoFKY3i8GdtaQwJbQfPs+6jEYHqMZgv/ST+WEPW9fjFoGUilmKPIoOQiU+zPdq4CwZ776AleU+0vd9yDGfn8sqsTkTU+FDJvosO6/+T3lu1Ttb8vPsdBRfA/HVurSS8GpU1RMmgw=
+	t=1729706089; cv=none; b=AxTlKP73JHHvBVgBkFvRRkLDIePHsSRCpZcAkOtWNYxyQ6UgSrtccA0oFT2cQAPQkdiUJTlDIsn/6ZBu16PpW7oKKNjCklf25m1dW/mMV6mTaOH6mEHBBusWkMqYNmrdJrjlgOqAXHs5Xys6eSx8KSNAb7TQFXCGHpjaBYBsh3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729705150; c=relaxed/simple;
-	bh=D09xnxmrSjdgS5FrT2I25115nOJgEcySe0O5Fg3OvQE=;
+	s=arc-20240116; t=1729706089; c=relaxed/simple;
+	bh=Op9slF3hj7QkRdJK4MJ0WM2ve3FfTirYm86ftYNV8PY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LBjcO9XsofRBjtryr3pSLtIPhveboWLe+wx7u+uUq0djgN6mBWMF/qkOfsiGerBv2w//RnVOAt69YTwfPRTm3ymKRUPCb6s+pq91zLs7hb8EP+C0j55gPmlBwrEhcQdTMPNJB4IUA0+nMHpx9eImgX9aFU+eYQ4hIfj3f2TLoMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHIC+5zm; arc=none smtp.client-ip=209.85.215.173
+	 To:Cc:Content-Type; b=SCQGweWelICLIQKb9DY5sXLF44UhJBUjtGcOW16t/3eJPEHPzVRv5XDVCm38BdtfMxVmw/zStj5rMZdsBuZfp/Jijluv9BRIteJayvZetLsyPNBdSdkgxEyHGYxhD6UAgB4hMHD+4n7EWO0zu6CTM/kZ3U8iaVvl4AYn9irOo7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDOQnivy; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHIC+5zm"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7ea9739647bso31882a12.0;
-        Wed, 23 Oct 2024 10:39:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDOQnivy"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71e983487a1so68403b3a.2;
+        Wed, 23 Oct 2024 10:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729705148; x=1730309948; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1729706087; x=1730310887; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
-        b=fHIC+5zmCtSFK5GilycIQX5Sh/Xol4e8rh5DPQBvRVwFp42bU8XiMLwGZEvrTC6753
-         t7dPR2jypCS6eSeIchTno1TF/UZ0/qrQgbnpS04vh422f12HOU6stl9DqDqrdwniOSOB
-         5FNIDJpwLkJmfRdnkyul7idmMg7WCSr9OG4MluCzSsHGkrcZ8S3XvitK1Pm1t0tKrTyi
-         /tPi4sI/PKojr/rUYA+wY9fiYuBXU2b1QGzoVvS2p3oPU1SNu/u7hYnbXaID1Wyn2eX1
-         4LWklzrD2k9fIypAdYzAt5hPSBHo9lwrLhkljxsesMcrH0tyhEeStwCM4mgBrG8AxU2/
-         /SCA==
+        bh=uzC0zojgdAaM2rfn3YXXNhX5GBn8pCVofhKBdnpRhHA=;
+        b=kDOQnivydrnQyR2TXVHyi5gHt264Mk29VJwvSiRkxrN4ij/wR88+m4tzk5yhv5ug+4
+         3N35/YyqcvkOlpmgy6dPTXEeh5nxBgoHa1Na8HXdqdnmcl6/Os6P1EvT7sfYA5Ffh5oh
+         JH0ttQMDATi+MUcq72JinnBtEkj1juNaeXl/ILWQz4GkHkL3eCee+KnTvD1yTM1eGcxy
+         3ftH8A8ECotp7Mmh4sKKwLViuEB7mWkmWtPeN7c/taDMoNeg/WmxlgO6PwTW2egRw7ye
+         urJfUcHf0X4OED7aKz6XJUZsVzu5gWRbTteyIoIy1QGAJd28kfF2EH+SV449GKj1ZrmW
+         Br9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729705148; x=1730309948;
+        d=1e100.net; s=20230601; t=1729706087; x=1730310887;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4RFNnnB+O0p0aRvheGlQAuqZY0fWkIb7EfMdt4bgYjU=;
-        b=gsY4UoMLrk6sxqxhJlkMb+9sjQLB488Iy2Uv5RfVCUg11dnDidQ3Jr/Fc3eNQFCKvO
-         /vDAf2oAh3ricdhWjG/hwLF0PuUir6VTCcjcLcBZsjD3v3EUZlladz2X5NVwwKVXTpCp
-         VMgSJlMtyZdThebbrNn5cTDg22PuBLB/ZnjfWzJvA9f/CWiV/lyyjk1TYAlFWn5GWa9i
-         GOAaNdsl2sZB+OCGRplm83DbfGJWQKR91/EirpauP1b5j3uh1swRea4WYLNdtm6vb9zd
-         6Mn2n2VY1IvXYmjjQedMNrbhVcXB5d4GqCfP1cn6sLSHoaqJZtRbNvjdTdzERN04bCnD
-         Lazg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJuIJor0+h/ZRrPCeNXkfBb1w5n/9kZzbeVPnYxEntOX+HtwwwyOW8Q4X85XLTGUw0J/B7t6AmQoQn9ileOG9z5g==@vger.kernel.org, AJvYcCVZWnkXaRaSLtZmwXf4VeC0fc0Ywe6NK5h14PK96d0OBdmE8j35Am8Ec260ORgMsA7prUonUeQG1kLOzJlB@vger.kernel.org, AJvYcCWBRAElr9Q2f3RxvpzezpokrG6QxkBn3oZiihWZNSmOWHIsy5QhPGo2Vu7/GUqn1cMoqgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2yIGElI5k8qsd9/627X33yogMRZI4FSk8FwUxG7qHHPglfZ3S
-	BcLWL5lY31fO6DHw1yX2qO6rpYs2tHnuycodpiGGGr/uIBSbbg2JuxmpXP4rtpo8O1HoPopK5sY
-	5D1QQNLOkU2q79h7mL4+XEW+nqq4=
-X-Google-Smtp-Source: AGHT+IEi3chO4cJaxRAniC9KHshTFGfUXN96jvePl/7aNO37ofgEOlQMW+oad4DUIwtadK1f+w1v1UP4u0KBo3qeVKc=
-X-Received: by 2002:a05:6a21:178a:b0:1d9:aa7:d6cc with SMTP id
- adf61e73a8af0-1d978b2da18mr4156793637.24.1729705146359; Wed, 23 Oct 2024
- 10:39:06 -0700 (PDT)
+        bh=uzC0zojgdAaM2rfn3YXXNhX5GBn8pCVofhKBdnpRhHA=;
+        b=brTf4zekySKgHtCzkDROT/5vYLYn4UmMY4mD+hoawJ9vss7k63YrTLXFleHhorP73o
+         ae6pOEf9CJz4iGwUk4XxwXF58l3Z1nWvmRIIiZA9SGZ+DfgNaRLqg0sgOM0dCAh1JllV
+         QTrjHho8hFv35peH7CRBfDCV5mSkLQ4mcL5KHbSq0DgcE/zKC5U4/yHw3fi92FoFRB1D
+         PXt0cjOjQTReOU006MipbMeWnh5ohWvJnJ17fgLw01ih4ydh2gFxxxWgq+6UeBWRlKJN
+         zpmKix4kNcT+2sdwkFi0Qa6yK7DYVs1IACfeFeceMi1saG/UDrg+aH3l4XjOewDbU+B0
+         SIrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKtyKWzYtI9vdgIXMV8289zIrjmd52AZHhCCaqJwPtwpBCpf+pIZqWmwNY+sKsgzVODIkpemGImqzZyg+a@vger.kernel.org, AJvYcCXBxVu3/0nsU6dGQr3hcGnvn2eV2HyF/7TefUrrfOoESfAOuSgk8EEmLUR7zU/m2mKwbeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCj0UjPuI8XJhAVx4ZtuC6zkbYaAPe7htmFgwxRUMLs0eXR4gg
+	7Yj3keV1V3Z4KdyoFS8Ban/3GWlZ7XxqgDnHc6ap/BLfbVC0GHPCTcjFGcFjn7Shgs3XBsRvto4
+	08RqQrMvitKGbz/bifduVXNNliYs=
+X-Google-Smtp-Source: AGHT+IH8r6pSZYJrhlvyswY9keD0vhNapeUVfc4WgwLysEX15Sns9APZ9b0HudC/bFg3ZXdudugL5NyKX/kM9UGRi0Y=
+X-Received: by 2002:a05:6a00:811:b0:71e:680d:5e94 with SMTP id
+ d2e1a72fcca58-72030b61979mr5015362b3a.19.1729706087069; Wed, 23 Oct 2024
+ 10:54:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
-In-Reply-To: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
+References: <20241010205644.3831427-1-andrii@kernel.org>
+In-Reply-To: <20241010205644.3831427-1-andrii@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Oct 2024 10:38:54 -0700
-Message-ID: <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
-Subject: Re: The state of uprobes work and logistics
-To: Peter Ziljstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Liao Chang <liaochang1@huawei.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, Kernel Team <kernel-team@meta.com>
+Date: Wed, 23 Oct 2024 10:54:34 -0700
+Message-ID: <CAEf4BzbJRUjcT9J7tFOMmyLsiTwoCMgZDp08EkVrF1vxO66DAA@mail.gmail.com>
+Subject: Re: [PATCH v3 tip/perf/core 0/4] uprobes,mm: speculative lockless
+ VMA-to-uprobe lookup
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	akpm@linux-foundation.org, mjguzik@gmail.com, brauner@kernel.org, 
+	jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, shakeel.butt@linux.dev, 
+	hannes@cmpxchg.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Ok, 7 days has passed, let's see how we are doing here...
-
-On Wed, Oct 16, 2024 at 12:35=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Thu, Oct 10, 2024 at 1:56=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org>=
+ wrote:
 >
-> Hello,
+> Implement speculative (lockless) resolution of VMA to inode to uprobe,
+> bypassing the need to take mmap_lock for reads, if possible. Patch #1 by =
+Suren
+> adds mm_struct helpers that help detect whether mm_struct was changed, wh=
+ich
+> is used by uprobe logic to validate that speculative results can be trust=
+ed
+> after all the lookup logic results in a valid uprobe instance. Patch #2
+> follows to make mm_lock_seq into 64-bit counter (on 64-bit architectures)=
+, as
+> requested by Jann Horn.
 >
-> I wanted to provide a bit of a context about and tie together a few
-> separate work streams (across a few separate kernel trees) all
-> revolving around uprobe improvements, as there are a bunch of them and
-> I'm sure it's hard to keep track of all of them. And hopefully I can
-> also get Peter and ARM maintainer's input on some specific questions I
-> asked below. Thank you in advance!
+> Patch #3 is a simplification to uprobe VMA flag checking, suggested by Ol=
+eg.
 >
-> In short, in the last few months there was a high activity around
-> fixing and improving uprobes. All this is the result of increased and
-> more varied use of uprobes/uretprobe in production settings. Uprobe
-> performance is **very** important, and yes, we do have real use cases
-> that go to millions per second uprobe/uretprobe triggering throughput,
-> unfortunately. So any small bit of performance and scalability
-> improvement is helpful. No, this isn't just some nerdy perf
-> optimization work (I've been asked this a few times, so I thought I'd
-> emphasize this again).
+> And, finally, patch #4 is the speculative VMA-to-uprobe resolution logic
+> itself, and is the focal point of this patch set. It makes entry uprobes =
+in
+> common case scale very well with number of CPUs, as we avoid any locking =
+or
+> cache line bouncing between CPUs. See corresponding patch for details and
+> benchmarking results.
 >
-> So, we've already landed a bunch of work, mainly (not an exhaustive list)=
-:
+> Note, this patch set assumes that FMODE_BACKING files were switched to ha=
+ve
+> SLAB_TYPE_SAFE_BY_RCU semantics, which was recently done by Christian Bra=
+uner
+> in [0]. This change can be pulled into perf/core through stable
+> tags/vfs-6.13.for-bpf.file tag from [1].
 >
->   - various clean ups, API improvements, and bug fixes from Oleg
-> Nesterov ([0], [1]). This simplified internal APIs and was a
-> prerequisite of the rest of the work;
->   - changes to refcounting and RCU-ifying of uprobe lifetime from me
-> ([2]). This improved single-threaded performance somewhat, but mainly
-> significantly improved scalability in the presence of multiple CPUs
-> triggering lots of uprobes;
->   - ARM64-specific optimization of uprobe emulation of NOP instruction
-> by Liao Chang ([3]). This change alone gives 2x (!) speed up for a
-> USDT tracing use cases *on ARM64* (we already have this optimization
-> in x86-64);
->   - there was a bit earlier work by Jiri Olsa ([4]) to add uretprobe()
-> syscall, giving +30% speed ups.
+>   [0] https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/=
+?h=3Dvfs-6.13.for-bpf.file&id=3D8b1bc2590af61129b82a189e9dc7c2804c34400e
+>   [1] git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
 >
-> And there are a few more outstanding changes:
+> v2->v3:
+> - dropped kfree_rcu() patch (Christian);
+> - added data_race() annotations for fields of vma and vma->vm_file which =
+could
+>   be modified during speculative lookup (Oleg);
+> - fixed int->long problem in stubs for mmap_lock_speculation_{start,end}(=
+),
+>   caught by Kernel test robot;
+> v1->v2:
+> - adjusted vma_end_write_all() comment to point out it should never be ca=
+lled
+>   manually now, but I wasn't sure how ACQUIRE/RELEASE comments should be
+>   reworded (previously requested by Jann), so I'd appreciate some help th=
+ere
+>   (Jann);
+> - int -> long change for mm_lock_seq, as agreed at LPC2024 (Jann, Suren, =
+Liam);
+> - kfree_rcu_mightsleep() for FMODE_BACKING (Suren, Christian);
+> - vm_flags simplification in find_active_uprobe_rcu() and
+>   find_active_uprobe_speculative() (Oleg);
+> - guard(rcu)() simplified find_active_uprobe_speculative() implementation=
+.
 >
->   - Jiri Olsa's uprobe "session" support ([5]). This is less
-> performance focused, but important functionality by itself. But I'm
-> calling this out here because the first two patches are pure uprobe
-> internal changes, and I believe they should go into tip/perf/core to
-> avoid conflicts with the rest of pending uprobe changes.
+> Andrii Nakryiko (3):
+>   mm: switch to 64-bit mm_lock_seq/vm_lock_seq on 64-bit architectures
+>   uprobes: simplify find_active_uprobe_rcu() VMA checks
+>   uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
 >
-> Peter, do you mind applying those two and creating a stable tag for
-> bpf-next to pull? We'll apply the rest of Jiri's series to
-> bpf-next/master.
-
-Jiri has reposted patches this time CC'ing Peter, heh :), it would be
-great to apply those two patches and get a stable tag. This is
-blocking the landing of uprobe sessions in bpf-next and also my
-remaining patches will be based on top of Jiri's uprobe changes, most
-probably. Peter, please take another look, thank you.
-
+> Suren Baghdasaryan (1):
+>   mm: introduce mmap_lock_speculation_{start|end}
 >
->   - Liao Chang's ARM64-specific STP instruction emulation support
-> ([6]). This one will give 2x (!) improvement for a common case of
-> having STP instruction being a first instruction in traced user
-> function (similar to NOP for USDTs).
+>  include/linux/mm.h        |  6 ++--
+>  include/linux/mm_types.h  |  7 ++--
+>  include/linux/mmap_lock.h | 72 ++++++++++++++++++++++++++++++++-------
+>  kernel/events/uprobes.c   | 52 +++++++++++++++++++++++++++-
+>  kernel/fork.c             |  3 --
+>  5 files changed, 119 insertions(+), 21 deletions(-)
 >
-> ARM64 maintainers (cc'ed Catalin, Will, and Mark), can you guys please
-> take another look? This one was a bit more controversial, but
-> hopefully there is a way to massage it to be acceptable and not
-> introduce unnecessary slowdowns (there were some concerns about memory
-> ordering/visibility, which hopefully don't apply to uprobe cases).
-> It's an important improvement, I'd really appreciate it if we can make
-> progress here, thank you!
->
-
-Ping. ARM64 folks, can you please take a look and reply? Thank you.
-
->   - my speculative VMA-to-uprobe lookup series ([7]). This makes entry
-> uprobe scalability scale linearly with the number of CPUs (the
-> ultimate goal of uprobe scalability work).
->
-> I think it's ready to go in. It has **implicit** dependency on
-> Christian Brauner's recent change for FMODE_BACKING, for which he
-> provided a stable tag. Peter, do you have any remaining concerns or
-> this can be also merged soon?
-
-No changes, still ready to go in. Might need a rebase if Jiri's
-patches are applied.
-
->
->   - another patch set of mine, switching uretprobe fast path to SRCU
-> (with timeout) ([8]). This makes return uprobes (uretprobes) linearly
-> scalable in the common case (again, the ultimate scalability goal).
->
-> I haven't gotten much feedback here, would love to get some objective
-> review here. This is an important counterpart to the speculative
-> VMA-to-uprobe lookup series. Both are needed in practice.
+> --
+> 2.43.5
 >
 
-The only thing that has progressed, thank you. I'll apply suggested
-state changes, but I intend to postpone delayed_uprobe_lock rework to
-a separate follow up patch set. Just a heads up.
+This applies cleanly to tip/perf/core with or without Jiri's patches
+([0]). No need to rebase and resend, this is ready to go in.
 
->   - patch set dropping unnecessary siglock usage in uprobe by Liao
-> Chang ([9]). This one removes yet another lock, for a less common case
-> (at least on x86-64) of single-stepped uprobe (where the probed
-> instruction can't be emulated).
->
-> This one needs a rebase, but it was already acked by Oleg. Liao,
-> please prioritize the rebase and send v4 ASAP, so this is not lost.
->
-
-This was rebased and acked by Masami. Seems to be ready to be applied.
-
->
-> As you can see, lots of stuff needs to be landed and most of it is in
-> good shape already. I'd love to hear thoughts of relevant people
-> called out above, thank you!
->
->
->   [0] https://lore.kernel.org/linux-trace-kernel/20240729134444.GA12293@r=
-edhat.com/
->   [1] https://lore.kernel.org/linux-trace-kernel/20240929144201.GA9429@re=
-dhat.com/
->   [2] https://lore.kernel.org/linux-trace-kernel/20240903174603.3554182-1=
--andrii@kernel.org/
->   [3] https://lore.kernel.org/linux-trace-kernel/20240909071114.1150053-1=
--liaochang1@huawei.com/
->   [4] https://lore.kernel.org/linux-trace-kernel/20240523121149.575616-1-=
-jolsa@kernel.org/
->   [5] https://lore.kernel.org/bpf/20241015091050.3731669-1-jolsa@kernel.o=
-rg/
->   [6] https://lore.kernel.org/linux-trace-kernel/20240910060407.1427716-1=
--liaochang1@huawei.com/
->   [7] https://lore.kernel.org/linux-trace-kernel/20241010205644.3831427-1=
--andrii@kernel.org/
->   [8] https://lore.kernel.org/linux-trace-kernel/20241008002556.2332835-1=
--andrii@kernel.org/
->   [9] https://lore.kernel.org/linux-trace-kernel/20240815014629.2685155-1=
--liaochang1@huawei.com/
->
-> -- Andrii
+  [0] https://lore.kernel.org/all/20241018202252.693462-1-jolsa@kernel.org/
