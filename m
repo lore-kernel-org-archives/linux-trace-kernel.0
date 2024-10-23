@@ -1,83 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B2A158A33;
-	Wed, 23 Oct 2024 08:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CA6148FF3
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 23 Oct 2024 08:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729673236; cv=none; b=g/VA1Ouafjq/JcP1Y6ku7sO2PPsy6DPqaJ6qFgp24ckCUXpyRBUSZ17+rpNqLloZjqa6dx0wfdaZwF+ksb7tKpgObacLMVDmQUTB1W4xupzmD21771is+QO5uz/7ft9cRk2BronqKNBxpgxJXlQiActivumJDeFkSmqirKYfAfU=
+	t=1729673310; cv=none; b=fR6m4qBaMjKyN1URz/b4ms8otyhm1KV+UxpwMOeWJoSVoy59n5cMbJavye/yTDZxBiOLXOa01ydimhYfh6ey7tk1u3Kgio1EGEuVw6cvREX6x7U+HmjUYO90cJBd7SOf4PFUMYigl0yTcTQR9lHiQ4zjJv10fJCqsLhFbO7qRz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729673236; c=relaxed/simple;
-	bh=jE+psI9L5oywH/YvfvyfipOHf6eGhY0aBTmDvQ6Tfrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MzZje9anW7O/yuA1fSGo2qBzcE0dTxUVBmPCsRT3KyuWcn840CB6xGwoZPu53ZSRig7DT0DLLcBeukjhLY6tPTN0imDo5/mna+PwmbCpQR9yks4QOt8biNJIFcfJsA7IhZlumVoSdgC/qS0yR8yBlW8SAMslFto6tcFNG5/v2ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FAA2C4CEC6;
-	Wed, 23 Oct 2024 08:47:14 +0000 (UTC)
-Date: Wed, 23 Oct 2024 04:47:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] m68k: Add tracirqs
-Message-ID: <20241023044711.3eb838fe@rorschach.local.home>
-In-Reply-To: <2c79be22-1157-41e4-9f3a-53443112ca9a@yoseli.org>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
-	<20241021-add-m68k-tracing-support-v1-1-0883d704525b@yoseli.org>
-	<20241022012809.1ef083cd@rorschach.local.home>
-	<075d6720-a690-437c-a10f-e2746651e2a8@yoseli.org>
-	<20241022043037.13efb239@rorschach.local.home>
-	<2c79be22-1157-41e4-9f3a-53443112ca9a@yoseli.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1729673310; c=relaxed/simple;
+	bh=zxmgpZj+uNafJJSM0FuRn/1ucicfHuJwYTUtE+RYZfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b9sfSZuwatjJuz0UcNjaK0wVcUFhOU0c+IUwBDktrQu1sJU9CT7R84TMo/WxETQyxbbyqhGdz0nqNESFY8gXEpf3HbdXjg3S3SsvGApAeyMqHXJ3do8LPpIfi8rhNet2xRgZfF3nX6mPhFMIu+NpJwNoSOVG6K2b2Bl/PJTiVoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=sej+4oZV; arc=none smtp.client-ip=198.252.153.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="sej+4oZV"
+Received: from fews02-sea.riseup.net (fews02-sea-pn.riseup.net [10.0.1.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.riseup.net (Postfix) with ESMTPS id 4XYN471DWszDqP1;
+	Wed, 23 Oct 2024 08:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1729673303; bh=zxmgpZj+uNafJJSM0FuRn/1ucicfHuJwYTUtE+RYZfw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sej+4oZVpiDbxxk1osAA3UGCztwiwTwgC1VYcDoDl2aH6jCJgFTAoAnQibaNTLWz8
+	 XF8mbeA/8jeSG7U4sNc2j0sHzZuMDAEYpKPDUVd5UkzdE7Q++azn91tty4i4YoljSG
+	 9WnbBP7P0yu45IfQYeJPlyPBm/mBAoL/Atyg/Xdg=
+X-Riseup-User-ID: D44E42525645740D1ED78E6B1D41889280576DF6B52AFB0F16353932084BF072
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews02-sea.riseup.net (Postfix) with ESMTPSA id 4XYN460wZYzFskv;
+	Wed, 23 Oct 2024 08:48:21 +0000 (UTC)
+Message-ID: <71e24cc4-ce84-4f52-8b76-efbfd778e057@riseup.net>
+Date: Wed, 23 Oct 2024 10:48:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH] tracing/probes: fix traceprobe out-of-bounds argument
+ allocation
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+References: <20240813172546.3151-1-ffmancera@riseup.net>
+ <20240825164132.024faee7897e0ac126d8c58e@kernel.org>
+ <fc31cca4-bec6-461c-9843-b4121ac1ba20@riseup.net>
+ <20240826085659.939bde641e4bf13249dec6ec@kernel.org>
+ <88bc4212-8bca-45ff-9078-d0f7b9e6a64b@riseup.net>
+ <20241022144045.429a1a8a3f55e9df43d9a869@kernel.org>
+Content-Language: en-US
+From: "Fernando F. Mancera" <ffmancera@riseup.net>
+In-Reply-To: <20241022144045.429a1a8a3f55e9df43d9a869@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Oct 2024 11:21:34 +0200
-Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+Hi,
 
+On 22/10/2024 07:40, Masami Hiramatsu (Google) wrote:
+> Hi,
 > 
-> I was not really expecting you to review the m68k one no :-).
-> I think I have other issues which might have impact on ftrace too.
-> For instance, when I launch cyclictest I have a warning about HRTIMERS:
-> # cyclictest -p 99
-> WARN: stat /dev/cpu_dma_latency failed: No such file or directory
-> WARN: High resolution timers not available
-> policy: fifo: loadavg: 1.21 0.40 0.14 1/122 245
+> On Thu, 5 Sep 2024 00:19:16 +0200
+> "Fernando F. Mancera" <ffmancera@riseup.net> wrote:
 > 
-> T: 0 (  245) P:99 I:1000 C:  11203 Min:     92 Act:  623 Avg:  775 Max: 
->    3516
+>> Hi,
+>>
+>> On 26/08/2024 01:56, Masami Hiramatsu (Google) wrote:
+>>> On Sun, 25 Aug 2024 19:06:22 +0200
+>>> "Fernando F. Mancera" <ffmancera@riseup.net> wrote:
+>>>
+>>>> Hi,
+>>>>
+>>>> On 25/08/2024 09:41, Masami Hiramatsu (Google) wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Tue, 13 Aug 2024 13:25:40 -0400
+>>>>> Fernando Fernandez Mancera <ffmancera@riseup.net> wrote:
+>>>>>
+>>>>>> When initializing trace_probes::nr_args, make sure the maximum number of
+>>>>>> probe arguments is honored. Oherwise, we can hit a NULL pointer
+>>>>>> dereferences in multiple situations like on traceprobe_set_print_fmt().
+>>>>>>
+>>>>>> Link: https://bugzilla.redhat.com/2303876
+>>>>>
+>>>>> Sorry for replying later. I'm not sure why but I did not found this in my mbox...
+>>>>>
+>>>>
+>>>> No worries!
+>>>>
+>>>>> Anyway, trace_probe_init() should return -E2BIG in this case because
+>>>>> it is actuall wrong value.
+>>>>>
+>>>>> Can you update your patch?
+>>>>>
+>>>>
+>>>> I agree this is the right solution but it would mean a change in
+>>>> behavior. Is that fine? Before merging 035ba76014c0, it was writing up
+>>>> to the maximum number of arguments and ignoring the rest. If you confirm
+>>>> it is fine to change the behavior, I will update the patch.
+>>>
+>>> Yes, I think this is the better behavior for users too, rather than
+>>> silently droping some arguments.
+>>> We also need to handle this error code in callsite and log an error,
+>>> and add a testcase in the syntax error testcase. But that should be done
+>>> in another series. We should fix this first.
+>>>
+>>
+>> Just in case this fell through the cracks, I've sent a V2 patch. In
+>> addition I also have a series ready for the logging and syntax error
+>> testcase in kselftest but I didn't send it because it requires this
+>> patch to be applied.
 > 
-> The latencies are quite high...
+> I think that v2 was lost in my mailbox, but I found that in patchwork.
+> Let me pick it.
+> 
 
-Yes, if you don't have high resolution timers, the latency will be high.
+Sure, let me know if you need me to rebase it. Thanks for taking a look 
+to it :)
 
+> Thanks,
 > 
-> But regarding ftrace it seems that the trace is not able to give me more 
-> than a microsecond precision. I addded a few trace_printk() in a driver 
-> of mine and I get:
->   irq/182-dspi-sl-112     [000] D....   277.160000: dspi_interrupt: 
-> Received 2 bytes
->   irq/182-dspi-sl-112     [000] D....   277.160000: dspi_interrupt: 
-> Received 2 bytes
->   irq/182-dspi-sl-112     [000] D....   277.163000: dspi_interrupt: 
-> dspi_interrupt
->   irq/182-dspi-sl-112     [000] D....   277.163000: dspi_interrupt: TX 
-> FIFO overflow
->   irq/182-dspi-sl-112     [000] D....   277.163000: dspi_interrupt: 
-> Restart FIFO
+>>
+>> Thank you,
+>> Fernando.
+>>
+>>> Thank you,
+>>>
+>>>
+>>>>
+>>>> Thank you!
+>>>>
+>>>>> Thank you,
+>>>>>
+>>>>>
+>>>>>>
+>>>>>> Fixes: 035ba76014c0 ("tracing/probes: cleanup: Set trace_probe::nr_args at trace_probe_init")
+>>>>>> Signed-off-by: Fernando Fernandez Mancera <ffmancera@riseup.net>
+>>>>>> ---
+>>>>>>     kernel/trace/trace_probe.c | 8 ++++++--
+>>>>>>     1 file changed, 6 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+>>>>>> index 39877c80d6cb..f577b5e71026 100644
+>>>>>> --- a/kernel/trace/trace_probe.c
+>>>>>> +++ b/kernel/trace/trace_probe.c
+>>>>>> @@ -2043,10 +2043,14 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
+>>>>>>     		goto error;
+>>>>>>     	}
+>>>>>>     
+>>>>>> -	tp->nr_args = nargs;
+>>>>>> +	if (nargs > MAX_TRACE_ARGS)
+>>>>>> +		tp->nr_args = MAX_TRACE_ARGS;
+>>>>>> +	else
+>>>>>> +		tp->nr_args = nargs;
+>>>>>> +
+>>>>>>     	/* Make sure pointers in args[] are NULL */
+>>>>>>     	if (nargs)
+>>>>>> -		memset(tp->args, 0, sizeof(tp->args[0]) * nargs);
+>>>>>> +		memset(tp->args, 0, sizeof(tp->args[0]) * tp->nr_args);
+>>>>>>     
+>>>>>>     	return 0;
+>>>>>>     
+>>>>>
+>>>>>
+>>>
+>>>
 > 
-> Do you have any clue ?
-
-Yes. The ring buffer clock is dependent on the architecture's clock. By
-default, it uses whatever the scheduler clock uses. If the scheduler
-clock is 1ms resolution, so will the tracing data be.
-
--- Steve
+> 
 
