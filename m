@@ -1,82 +1,70 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E29D22B660
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 19:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3934C2170BC;
+	Thu, 24 Oct 2024 20:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729798634; cv=none; b=lEL+bfy+SFdCx48hqGjOB0SQMDILrVKYJ+QKGEUd9WRUSJPimNcmao0JxpNkuIbmQWpFFaT7nJJ9LqPyCXfrqfmhp9c+zuJ2EGNt0dqnYmv+Z0xDdvNzbYI1NluUffW7M8xROGJVfzJ7iNHRbFEJh2VlYOIk4c+md63cdlkV+e8=
+	t=1729801696; cv=none; b=gqmTe7pun9QqSQLkXtb4UXpKYiJ8UZRCa2Ur7cbuYcy+WTkdHG0gpDj6uF8sZr6KaiokDoVwvZYSTiDhy2ZkR73jO6AwLLmvkN8zuflEM2dTp3fO3OZ0kZ4qE2zxd1RgviA5a7gYzQ1vhAGgVDDRk8KeyIYtcCxx4Lr611Ka8Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729798634; c=relaxed/simple;
-	bh=cK6bBwEwe8Knb20h7wlOE2i2Cfj9jY4wKifjSI62suc=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=U+sEwimoqJke2N0zd/1QhJhDQqx5GupY7Iv4uQM5D7t7Rga2YMRTkmze6NbSMUeDtU5CzTMVYFFcxGO4Sp1T8O9jRkEXhpj7CmBcHZinZAaODkKhWhHkq2042QkUEeljR1bfFzFdVQ6058HQUnrYbqqxD0wf7FCUYkGZ2Y+8Xqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=RLA4f60q; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1729801696; c=relaxed/simple;
+	bh=DcE6NAwnE7Vp+mfdLRCEr0jK6SJKDbVQNlu1DU/5Knk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dEI3BJCrplKoHGD8u/Xf8pGeHBxBEu9UdIwlZ3e8kJjreeSRUrkjTzbyodIb5avgnTo6vz/lAwfsBDJt6okbKQW1BVvJcarSfmI2z96kD7X39Hl0TaAGNsjcg8qN1le+TCzu3hmhzOym4xp5oAXjD6zVqkJurC3LwMPlrSQ6b0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ff+DpKk1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="RLA4f60q"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7180ab89c58so855145a34.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 12:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1729798630; x=1730403430; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dgNeK1Z6KIWekDlGcWVDGGoz1nSoRxMds735VUHAEPg=;
-        b=RLA4f60q2T3ibemSBNLMOvtbq3s10cgLlSw3nLz+U2k9tAwtnA7jxDDc2YCRWmB1KJ
-         E7kHJ5qVMlRXHkTiqdYCTQVWxAhRzVmKFZYARnFO0Vkue86RMu481fKcWhCV9OCWNklQ
-         a0mg6UezO9xylH+h7xXcCmbYTnKujq4Awn8ZGXheVbR5yIy17DNOXhX1YgPw9Q3WVKUT
-         0EZTIOjACF/yF7dlPXVUK3jwYoLB7rLxKraj6D2BU07Ux2lHQfKdEh59GMLWiP2y6faD
-         7KzwZKU2oRDFZ6QELtI37yvxTnDcPphesOrli0Ob6GVWNbnYJEPazNa2e8wlA69WuMs5
-         MUEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729798630; x=1730403430;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dgNeK1Z6KIWekDlGcWVDGGoz1nSoRxMds735VUHAEPg=;
-        b=GcJjV/PNiCng1tJC9g/Ah7ntDhUOBeag9mtqsMfpOOQ5t0wklHCWQTIFuJq8Zaw2rD
-         dBU9N96WuuRjDfHwrsKBfe06rXmGnYhMsNRDAogJ71UnuU32mQara4I8/yUkOPxL4L4s
-         JzeOcXnaDnjhwdx5yO+9+CyYKck3csqqh1WYlepBcqH/FXWCZCcGT/4He/DZkcE3Qvq4
-         JdWTTPA1T/G27sXUP86Ulc0jUnNNQP/nJb/GU/8q8YtdtEOpxv1lQTQrFT+Iw6VqNO1g
-         y89REWYpGu81YHwZkQ8xzTxkuB6moZcThiBJWCvKq4lDKMeoqKUHnGyuMKF4aDmu+IHV
-         YDOQ==
-X-Gm-Message-State: AOJu0YxEQN2yoNhqL4814vsnpGcaJ+JPBjGnWlzR5ZPHRTVXcmjTAlnP
-	VDdaGM8z7gf11hKX9s++ozrc4STnQnN2quO6SzquD+lG1RsrJ+oTX+44jTM9UA==
-X-Google-Smtp-Source: AGHT+IGDaCeBHQn/6q/o/rgDKzA3P9FSd8bJpnIlTLiZTxBcrw+C7QpjQy37LPEKmKd5AyfsYIF9CA==
-X-Received: by 2002:a05:6359:5fa2:b0:1c3:7b75:24ec with SMTP id e5c5f4694b2df-1c3d811d147mr531244255d.15.1729798630471;
-        Thu, 24 Oct 2024 12:37:10 -0700 (PDT)
-Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b165a892cbsm512196885a.136.2024.10.24.12.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 12:37:10 -0700 (PDT)
-Date: Thu, 24 Oct 2024 15:37:09 -0400
-Message-ID: <0920e116b02c7872e6f1897afbe3f702@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ff+DpKk1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27265C4CECD;
+	Thu, 24 Oct 2024 20:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729801695;
+	bh=DcE6NAwnE7Vp+mfdLRCEr0jK6SJKDbVQNlu1DU/5Knk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ff+DpKk1fsAgK675JQXlB36GNbt62N5rUeQhDTx2fspnZ0Zcpw+KD/Bk+vy0fpgyR
+	 TDEJRauuyv/vhXmZ8RQKR8lC3/Xd5CdbVOVZWtt+CUfrEncHG4NMQki26bZGMJK30N
+	 beWxuDpdosDEp+GyKQyPOoaQlLtLmPcRaLuxghTV/i5oLG+vT/MNCL3+bNhIHx3PEh
+	 Yx1UwylRYqsEusvnBRrbsVyhJKV1kxQIiH4FaLm2ZOzrpD2Wvo/63kbMtXVPrWPGY8
+	 Zr+Z5Mzx268mRW9+2z2CRyI+HiPTfyCets1AEnEUvL70N4eSZjmZaEHp/AEQYI0Uz0
+	 R/V18ymnwn6lg==
+Date: Thu, 24 Oct 2024 20:28:11 +0000
+From: sergeh@kernel.org
+To: Jordan Rome <linux@jordanrome.com>
+Cc: linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Subject: Re: [v1] security: add trace event for cap_capable
+Message-ID: <Zxqt29vYukIGw8QV@lei>
+References: <20241024104012.1815022-1-linux@jordanrome.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20241024_1524/pstg-lib:20241024_1230/pstg-pwork:20241024_1524
-From: Paul Moore <paul@paul-moore.com>
-To: Jordan Rome <linux@jordanrome.com>, linux-security-module@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>, Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: [PATCH v1] security: add trace event for cap_capable
-References: <20241024104012.1815022-1-linux@jordanrome.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20241024104012.1815022-1-linux@jordanrome.com>
 
-On Oct 24, 2024 Jordan Rome <linux@jordanrome.com> wrote:
-> 
+On Thu, Oct 24, 2024 at 03:40:12AM -0700, Jordan Rome wrote:
 > In cases where we want a stable way to observe/trace
 > cap_capable (e.g. protection from inlining and API updates)
 > add a tracepoint that passes:
 > - The credentials used
 > - The user namespace which needs the capability
+
+"the user namespace which needs the capability" is not quite the
+right way to put this.  It's the user namespace against which the
+capability is needed.  It's an object, not a subject.  Or maybe
+"the user namespace of the resource being accessed".
+
 > - The user namespace that actually has the capability (if one exists)
+
+How about "the user namespace in which the task has the
+capability targeted at the resource"?  (It's not the user
+namespace itself that has the capability)
+
 > - The capability to check for
 > - Bitmask of options defined in include/linux/security.h
 > - The return value of the check
@@ -88,9 +76,19 @@ On Oct 24, 2024 Jordan Rome <linux@jordanrome.com> wrote:
 >  security/commoncap.c              | 21 +++++++----
 >  3 files changed, 74 insertions(+), 6 deletions(-)
 >  create mode 100644 include/trace/events/capability.h
-
-...
-
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cc40a9d9b8cd..210e9076c858 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4994,6 +4994,7 @@ M:	Serge Hallyn <serge@hallyn.com>
+>  L:	linux-security-module@vger.kernel.org
+>  S:	Supported
+>  F:	include/linux/capability.h
+> +F:	include/trace/events/capability.h
+>  F:	include/uapi/linux/capability.h
+>  F:	kernel/capability.c
+>  F:	security/commoncap.c
 > diff --git a/include/trace/events/capability.h b/include/trace/events/capability.h
 > new file mode 100644
 > index 000000000000..092b8e77063a
@@ -114,6 +112,9 @@ On Oct 24, 2024 Jordan Rome <linux@jordanrome.com> wrote:
 > + *
 > + * @cred: The credentials used
 > + * @targ_ns:  The user namespace which needs the capability
+
+(same here)
+
 > + * @capable_ns:  The user namespace that actually has the capability
 > + *               if ret is 0 otherwise this will be NULL
 > + * @cap: The capability to check for
@@ -123,14 +124,7 @@ On Oct 24, 2024 Jordan Rome <linux@jordanrome.com> wrote:
 > + * Allows to trace calls to cap_capable in commoncap.c
 > + */
 > +TRACE_EVENT(capable,
-
-This should either be named "cap_capable" if you are only interested in
-the CAP_XXX capability checks or "capable" if you are interested in all
-of the checks that are performed when capable() is called from within
-the kernel.  Presently safesetid, apparmor, and selinux all enforce
-access controls when capable() is called, with the potential for
-additional checks in future kernel releases.
-
+> +
 > +	TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
 > +		struct user_namespace *capable_ns, int cap, unsigned int opts, int ret),
 > +
@@ -162,6 +156,76 @@ additional checks in future kernel releases.
 > +
 > +/* This part must be outside protection */
 > +#include <trace/define_trace.h>
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 162d96b3a676..675d40fbaa77 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -27,6 +27,9 @@
+>  #include <linux/mnt_idmapping.h>
+>  #include <uapi/linux/lsm.h>
+> 
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/capability.h>
+> +
+>  /*
+>   * If a non-root user executes a setuid-root binary in
+>   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+> @@ -68,6 +71,7 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  		int cap, unsigned int opts)
+>  {
+>  	struct user_namespace *ns = targ_ns;
+> +	int ret = 0;
+> 
+>  	/* See if cred has the capability in the target user namespace
+>  	 * by examining the target user namespace and all of the target
+> @@ -75,22 +79,26 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  	 */
+>  	for (;;) {
+>  		/* Do we have the necessary capabilities? */
+> -		if (ns == cred->user_ns)
+> -			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+> +		if (ns == cred->user_ns) {
+> +			ret = cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+> +			break;
+> +		}
+> 
+>  		/*
+>  		 * If we're already at a lower level than we're looking for,
+>  		 * we're done searching.
+>  		 */
+> -		if (ns->level <= cred->user_ns->level)
+> -			return -EPERM;
+> +		if (ns->level <= cred->user_ns->level) {
+> +			ret = -EPERM;
+> +			break;
+> +		}
+> 
+>  		/*
+>  		 * The owner of the user namespace in the parent of the
+>  		 * user namespace has all caps.
+>  		 */
+>  		if ((ns->parent == cred->user_ns) && uid_eq(ns->owner, cred->euid))
+> -			return 0;
+> +			break;
+> 
+>  		/*
+>  		 * If you have a capability in a parent user ns, then you have
+> @@ -99,7 +107,8 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  		ns = ns->parent;
+>  	}
+> 
+> -	/* We never get here */
 
---
-paul-moore.com
+With this change, I become less comfortable with us assuming that it is
+the case that we'll never just drop off the end of the while loop.  I'd
+be more comfortable if you set ret = -EPERM at the top, and set it to 0
+in the last break.
+
+> +	trace_capable(cred, targ_ns, ret == 0 ? ns : NULL, cap, opts, ret);
+> +	return ret;
+>  }
+> 
+>  /**
+> --
+> 2.43.5
+> 
