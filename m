@@ -1,195 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764701E32CF;
-	Thu, 24 Oct 2024 15:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C3B1D5AB2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 16:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729783286; cv=none; b=nDuSUC5Hc1or47VWJ37HZYv8xMM2APeJaBQ4xTzhVRkQZ8VaK6gebrNCn1Csy8n8AGULEjeMz6ONK05H3JzNZheL19TBs/ojJT590PYNzkShzBfqW3X3EHXQcEOWCG8jMaNN+76q+ohfckbCVFoZnr7LasJbYztvH2OBXaw+wRQ=
+	t=1729787299; cv=none; b=P5NuyWsZR3ak7p7EI6a9F9JmaZlZ/5VL7VBYqjO+F6W36IaXraxMfyU2s0aAH/2NILZt5ce7WBK1l+r3ayldSiLJ7N6spkFP6jL18ma2rC4ASHbOFpCGZyuV8PpuVZ8clfs6Nv32LuzeupqF6rwoCIsL0S/eN9Cknq8sIgfwDO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729783286; c=relaxed/simple;
-	bh=rU2UyjO1s88B+A8vM/eeOZclPr5qfuS9ztIVbc4jOus=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jyEuItsQUCPYwRn72K0mO13Wzp3oSoWmciHfIUTqUb8XPDEYq6OVN58KHCXUbjW+eWIMwD1TRfI9u+YuL+KSkZRDqcDQKZqqHhHO+IIiGRL+m7ytFs2jNEpz/Ou+bL1EgbPoyxvNTlsvD/JzKAFP1AfzUPgtJcg6+mLBp1seVmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V2wtmxZA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729787299; c=relaxed/simple;
+	bh=BAMyVf69I0HQ8TnNfDk6Bau81x3CTlj07KBYZ5ws5Tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lFOLooCjTtiXe+12hvzzk0GWLy1gpISCejnjOOfKMzc+692LCTHB53Fv8dss0gTEBL5UgWxoLOVQxPIKTT5F2Dk4nN3+KGRgJelugiHY363wi+bHRKbhRn0fXUVH5zpBm/K47KDDoyoQriks6n7+W622U3tRkEeYjV9tOjp5gz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VqXhsCtn; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V2wtmxZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BE4C4CEC7;
-	Thu, 24 Oct 2024 15:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729783286;
-	bh=rU2UyjO1s88B+A8vM/eeOZclPr5qfuS9ztIVbc4jOus=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=V2wtmxZAh0mHiX+Gjp5lrpwt8SgK1kjudOPJsog20hoTb2B+OrAfmwDHFbWkwDXLM
-	 vGZash402ZNiqPDTVj9zeKbIMOrUMoP9BwTf5b+N2FMd7ihDEnz0R5XlC9saEwkxdl
-	 ESEQktrfu0CdTjE1u7bEEtu2M9KwicV4IycAXLoNf2d+ciAzSG5fx0rHug4LCDfVVg
-	 MciT4uxRAcb3u9aEtBYeQaisaU9ZD74Gu1GN8kX0Ue5j9TBmnGqSnaYmT9qFzEV0cB
-	 LSkS2D9Ph/fIr+WmJNH9XCYXmX264w0h1+TpgWobJ4dX0Qfbfax4ulnos+K0gWlRk5
-	 TzabtYU4CIwJA==
-Date: Fri, 25 Oct 2024 00:21:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Peter
- Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/2] fgraph: Free ret_stack when task is done with it
-Message-Id: <20241025002121.ef5dc8be87e1b6baa2dd544c@kernel.org>
-In-Reply-To: <20241024092952.709200360@goodmis.org>
-References: <20241024092723.817582319@goodmis.org>
-	<20241024092952.709200360@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VqXhsCtn"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4315a8cff85so485e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 09:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729787296; x=1730392096; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BAMyVf69I0HQ8TnNfDk6Bau81x3CTlj07KBYZ5ws5Tc=;
+        b=VqXhsCtns+ufLmDPexYhJarMnrxej8oSEXMijBEdGNWB5jJnDjohC3Jb+4GoTg3Uxf
+         PsFFFznWc/x/B+FkXDKaCPGu7SZqFve/jC5gRe9vjFDDzSUdq+bXwyDp/9IAZKD5YtjW
+         nHR3Gz0/VwKGJK5ZdoeyepW/FPyfli4Epi973EQjURGDu9o7DpD7O99ggmy3LZuSVO8I
+         0bVxpRft3EaFw6T5U4CZPuB5qzM3xzhLgMiWM/O5KGV8u+s8In5kvMV2q9YQvnRKCGoX
+         musX8hLLTv4U7JgpJz0rcqkLzpywXOs9u6mmTnGXXqwfdiF+KGleUpuqyPgiqxtC4cXp
+         oooQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729787296; x=1730392096;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BAMyVf69I0HQ8TnNfDk6Bau81x3CTlj07KBYZ5ws5Tc=;
+        b=EidefIvZV+7oSP5jA2AhsR7Cjo+mLFRu93he4b66ke7Ebsh1zxPXTfT8RkVkPQNHzO
+         A1+xaGRuVxEbqGFLExsO1OY/5QXYJsZDyN9m2/sMUbQlQ3HMtoWXNbhzk5wf+2n3tPCG
+         82FzGiZLwEKPgl6bkKZjwSv2/1lJjhYtRofDbJ6e3FohP5yWGJJ+0PUF0e6LnpirqPgt
+         wACCb0CW3zRlkUW1r55RDUSLqll4CugZ/mct0jLCTq01TqtJlgh1P7RLAhqwQ0xfFZPt
+         bBXfhYa0x9n12xQ+SjEufe4/2cgWhDt2HWKYTsKsokbqGvWQu5EcL8smQqWDwCOwtGqG
+         uvCA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4dC0dS5UcEK7jOz4+55CIi8SS85HrPSh9ctKT5GfNCSQLfESbSMx7qKmYRJpNROByU3gsjPqA2YmPxC5RQ4HgV8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwJZEWAMoN8J6gc4ko6yUb6mo5KTFOWK1527Tyw/dzKHTqJ7e9
+	uW2jttyScsy1SxOg2CGzR01r4wW7uAuBSY2Snhr2MiS7aLGBk8+ncqF5hAjwRv+IizXYj+CqJ5R
+	CJdi1wUbEQCvWYQlMo7PpDtvmGkCtKrlG3enkekP/7vZkT/2eF6Yw
+X-Google-Smtp-Source: AGHT+IH6GaCTFse8PHhR99yRvdJU42XjOZhxxrVWX7RUwgX5aK9xyEy94yBYp/VrB+JAVrmpWoM6bBGXa7q1ktnK+/A=
+X-Received: by 2002:a05:600c:b8d:b0:42b:a961:e51 with SMTP id
+ 5b1f17b1804b1-4318a4ace7bmr5573175e9.0.1729787295526; Thu, 24 Oct 2024
+ 09:28:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-2-andrii@kernel.org>
+ <20241023201031.GF11151@noisy.programming.kicks-ass.net> <CAJuCfpFMhoCmqGJMU2uc4JHmk9zh88JzhZAeSz3DgvXEh+u+_g@mail.gmail.com>
+ <20241024095659.GD9767@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241024095659.GD9767@noisy.programming.kicks-ass.net>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 24 Oct 2024 09:28:01 -0700
+Message-ID: <CAJuCfpGxu=z-2Wsf41-m4MQ6t7DjfiiWXD408BW8SjTfx0NGTg@mail.gmail.com>
+Subject: Re: [PATCH v3 tip/perf/core 1/4] mm: introduce mmap_lock_speculation_{start|end}
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org, 
+	paulmck@kernel.org, willy@infradead.org, akpm@linux-foundation.org, 
+	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org, 
+	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 24 Oct 2024 05:27:25 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Oct 24, 2024 at 2:57=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Oct 23, 2024 at 03:17:01PM -0700, Suren Baghdasaryan wrote:
+>
+> > > Or better yet, just use seqcount...
+> >
+> > Yeah, with these changes it does look a lot like seqcount now...
+> > I can take another stab at rewriting this using seqcount_t but one
+> > issue that Jann was concerned about is the counter being int vs long.
+> > seqcount_t uses unsigned, so I'm not sure how to address that if I
+> > were to use seqcount_t. Any suggestions how to address that before I
+> > move forward with a rewrite?
+>
+> So if that issue is real, it is not specific to this case. Specifically
+> preemptible seqcount will be similarly affected. So we should probably
+> address that in the seqcount implementation.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The shadow stack used for function graph is only freed when function graph
-> is done for those tasks that are no longer using them. That's because a
-> function that does a long sleep (like poll) could be traced, and its
-> original return address on the stack has been replaced with a pointer to a
-> trampoline, but that return address is saved on the shadow stack. It can
-> not be freed until the function returns and there's no more return
-> addresses being stored on the shadow stack.
-> 
-> Add a static_branch test in the return part of the function graph code
-> that is called after the return address on the shadow stack is popped. If
-> the shadow stack is empty, call an irq_work that will call a work queue
-> that will run the shadow stack freeing code again. This will clean up all
-> the shadow stacks that were not removed when function graph ended but are
-> no longer being used.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/fgraph.c | 37 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index 3c7f115217b4..7520ceba7748 100644
-> --- a/kernel/trace/fgraph.c
-> +++ b/kernel/trace/fgraph.c
-> @@ -174,6 +174,11 @@ int ftrace_graph_active;
->  
->  static struct kmem_cache *fgraph_stack_cachep;
->  
-> +DEFINE_STATIC_KEY_FALSE(fgraph_ret_stack_cleanup);
-> +static struct workqueue_struct *fgraph_ret_stack_wq;
-> +static struct work_struct fgraph_ret_stack_work;
-> +static struct irq_work fgraph_ret_stack_irq_work;
-> +
->  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
->  static unsigned long fgraph_array_bitmask;
->  
-> @@ -849,8 +854,15 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
->  	 */
->  	barrier();
->  	current->curr_ret_stack = offset - FGRAPH_FRAME_OFFSET;
-> -
->  	current->curr_ret_depth--;
-> +
-> +	/*
-> +	 * If function graph is done and this task is no longer using ret_stack
-> +	 * then start the work to free it.
-> +	 */
-> +	if (static_branch_unlikely(&fgraph_ret_stack_cleanup) && current->curr_ret_depth < 0)
-> +		irq_work_queue(&fgraph_ret_stack_irq_work);
-> +
->  	return ret;
->  }
->  
-> @@ -1375,6 +1387,21 @@ static void free_ret_stacks(void)
->  	}
->  }
->  
-> +static void fgraph_ret_stack_work_func(struct work_struct *work)
-> +{
-> +	mutex_lock(&ftrace_lock);
-> +	if (!ftrace_graph_active)
-> +		free_ret_stacks();
-> +	mutex_unlock(&ftrace_lock);
-> +}
+Sounds good. Let me try rewriting this patch using seqcount_t and I'll
+work with Jann on a separate patch to change seqcount_t.
+Thanks for the feedback!
 
-Hmm, will you scan all tasks everytime? Shouldn't we have another global
-list of skipped tasks in remove_ret_stack(), like below?
-
-static void remove_ret_stack(struct task_struct *t, struct list_head *freelist, struct list_head *skiplist, int list_index)
-{
-	struct ret_stack_free_data *free_data;
-	struct list_head *head;
-
-	/* If the ret_stack is still in use, skip this */
-	if (t->curr_ret_depth >= 0)
-		head = skiplist;
-	else
-		head = freelist;
-
-	free_data = (struct ret_stack_free_data*)(t->ret_stack + list_index);
-	list_add(&free_data->list, head);
-	free_data->task = t;
-}
-
-Then we can scan only skiplist in free_ret_stacks() in fgraph_ret_stack_work_func().
-
-Of course this will need to decouple preparing freelist/skiplist and
-actual free function.
-
-Thank you,
-
-> +
-> +static void fgraph_ret_stack_irq_func(struct irq_work *iwork)
-> +{
-> +	if (unlikely(!fgraph_ret_stack_wq))
-> +		return;
-> +	queue_work(fgraph_ret_stack_wq, &fgraph_ret_stack_work);
-> +}
-> +
->  static __init int fgraph_init(void)
->  {
->  	int ret;
-> @@ -1385,6 +1412,12 @@ static __init int fgraph_init(void)
->  		pr_warn("fgraph: Error to init cpu hotplug support\n");
->  		return ret;
->  	}
-> +	fgraph_ret_stack_wq = alloc_workqueue("fgraph_ret_stack_wq",
-> +				      WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
-> +	WARN_ON(!fgraph_ret_stack_wq);
-> +
-> +	INIT_WORK(&fgraph_ret_stack_work, fgraph_ret_stack_work_func);
-> +	init_irq_work(&fgraph_ret_stack_irq_work, fgraph_ret_stack_irq_func);
->  	return 0;
->  }
->  core_initcall(fgraph_init)
-> @@ -1434,6 +1467,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->  		ftrace_graph_disable_direct(true);
->  
->  	if (ftrace_graph_active == 1) {
-> +		static_branch_disable(&fgraph_ret_stack_cleanup);
->  		ftrace_graph_enable_direct(false, gops);
->  		register_pm_notifier(&ftrace_suspend_notifier);
->  		ret = start_graph_tracing();
-> @@ -1502,6 +1536,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
->  		ftrace_graph_entry = ftrace_graph_entry_stub;
->  		unregister_pm_notifier(&ftrace_suspend_notifier);
->  		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
-> +		static_branch_enable(&fgraph_ret_stack_cleanup);
->  		free_ret_stacks();
->  	}
->   out:
-> -- 
-> 2.45.2
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
