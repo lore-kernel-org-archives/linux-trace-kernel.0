@@ -1,101 +1,117 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4AF42A93;
-	Thu, 24 Oct 2024 02:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D14155308;
+	Thu, 24 Oct 2024 04:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729737953; cv=none; b=CpS9VCyMOlcMB0uQIRXhmZsDog7t/CuRx1g1L8sQxvtQ5dJ6f6f4JuF2SGlC3+ARhkcIRABOYadoXAy6DWNL+1nkxbXLhp1pbIceO0GMKxbdpiL7KC2E0rUZlM53KFrRYAeyoxnLlDPBrHqxaUnyFmlGDB56Df+5lCa9a5eCpxA=
+	t=1729744923; cv=none; b=CGyTi/IIW8ZKc+KqHjhAPtK4PShRo+U6daSPffNDfl/IphGNQ1aqUtcNmqer5MT+K4M4UyPUOAfZtGtg1e9TCyppVOzrmJIneCibfUEmK8451FdC37sfRDlYVUh47inMw2MFXG6OtdJNsySfWy1C9QyfZGisXj9DoFyRBZWNLzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729737953; c=relaxed/simple;
-	bh=TdWQF7T4YKAWC48K53Jh6GCzZJ70lSJ6D69qBmpAjOI=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=qk0DqzYeDG9OYA2lH59e+NjdbpxYpGHc1P3kztjaQvYDWOz5g7/PWiqgArjSkFi4FOp39l6JYQ+NBse7sVKpByntcHnEOozweFJ7t0o0AhNw7U3KmU514gDrQ7SgGJ8L7+M78Exhcgi/fBZT1vG90RK6FK2Mpc2GShrDgqJaaXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XYqxW5nCPzyTlg;
-	Thu, 24 Oct 2024 10:44:15 +0800 (CST)
-Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0D603140393;
-	Thu, 24 Oct 2024 10:45:48 +0800 (CST)
-Received: from [10.67.110.237] (10.67.110.237) by
- kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 24 Oct 2024 10:45:47 +0800
-Subject: Re: [PATCH] fgraph: Fix missing unlock in register_ftrace_graph()
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: <dan.carpenter@linaro.org>, <mhiramat@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<oe-kbuild@lists.linux.dev>, <lkp@intel.com>
-References: <20241023170448.808512-1-lihuafei1@huawei.com>
- <20241023052948.0285eb2c@rorschach.local.home>
-From: Li Huafei <lihuafei1@huawei.com>
-Message-ID: <49d1672e-71e2-dc87-1fb3-cde430e0339f@huawei.com>
-Date: Thu, 24 Oct 2024 10:45:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+	s=arc-20240116; t=1729744923; c=relaxed/simple;
+	bh=U8IRrTU/pt5P5yBPwVDyPSezRT9FW6UdCcA8/gGFhiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=szYhN9uNqm5dr+kY88F8Gv9+rjk1cWRzZ1qtuY5wCGs8MhmyrBFnRA1I7G4sgrwBVtfnYR3xNv5zVpUuDi330wDoSj+CfJcq7eEfW/8IzFj82pK0OlFTOe5ChOGEJjZ1NDTyCYly5NXCVX5EsueOEJG6XIesgzE7QwqgAVncv1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpuJ0Duw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpuJ0Duw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B85C4CEC7;
+	Thu, 24 Oct 2024 04:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729744922;
+	bh=U8IRrTU/pt5P5yBPwVDyPSezRT9FW6UdCcA8/gGFhiM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mpuJ0Duwrveb/DT/GO5KLEkU46IUfW2Vqk+w56Mb8orDODkxFVsF9dn2fDJXdQ7wJ
+	 d81HmV/9GN8INXFRVhNakM9TrnNzRhjtxF37+ch8KGEXWpDGyP9vRPqLBugFyKORD8
+	 Ib+MqvWL6WQQW3QL7yEjxPvLZnPkw3WcNlWHiOErGT1N00ov+NsweHYV8sIE9YT3yM
+	 y26CQaaF135YvL28ihqeG9b7QjR8dnidw2AEtb5LQos8xdp67JPqKolxaLFHG1RS88
+	 0vvfrleWZrCttq2UGY0ImxHCKwarLx5ys++KW2I36YXsXdvEDCwDK0JSSW7C8yFuRz
+	 EWzA3+Zr1wrxg==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	oleg@redhat.com
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mingo@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jolsa@kernel.org,
+	paulmck@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v3 tip/perf/core 0/2] SRCU-protected uretprobes hot path
+Date: Wed, 23 Oct 2024 21:41:57 -0700
+Message-ID: <20241024044159.3156646-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20241023052948.0285eb2c@rorschach.local.home>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemf500004.china.huawei.com (7.202.181.242)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Steve,
+Recently landed changes make uprobe entry hot code path makes use of RCU Tasks
+Trace to avoid touching uprobe refcount, which at high frequency of uprobe
+triggering leads to excessive cache line bouncing and limited scalability with
+increased number of CPUs that simultaneously execute uprobe handlers.
 
-On 2024/10/23 17:29, Steven Rostedt wrote:
-> On Thu, 24 Oct 2024 01:04:48 +0800
-> Li Huafei <lihuafei1@huawei.com> wrote:
-> 
->> Instead of returning an error, goto the mutex unlock at the end of the
->> function.
->>
->> Fixes smatch warning:
->>
->> kernel/trace/fgraph.c:1317 register_ftrace_graph() warn: inconsistent returns '&ftrace_lock'.
->>
->> Fixes: 2c02f7375e65 ("fgraph: Use CPU hotplug mechanism to initialize idle shadow stacks")
->> Reported-by: kernel test robot <lkp@intel.com>
->> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
->> Closes: https://lore.kernel.org/r/202410220121.wxg0olfd-lkp@intel.com/
->> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
->> ---
->>  kernel/trace/fgraph.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
->> index 41e7a15dcb50..98fa7b2a4903 100644
->> --- a/kernel/trace/fgraph.c
->> +++ b/kernel/trace/fgraph.c
->> @@ -1259,7 +1259,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
->>  					fgraph_cpu_init, NULL);
->>  		if (ret < 0) {
->>  			pr_warn("fgraph: Error to init cpu hotplug support\n");
->> -			return ret;
->> +			goto out;
->>  		}
->>  		fgraph_initialized = true;
->>  		ret = 0;
-> 
-> Actually, I'm thinking we just should use guard(mutex)(&ftrace_lock);
-> 
+This patch set adds return uprobe (uretprobe) side of this, this time
+utilizing SRCU for the same reasons. Given the time between entry uprobe
+activation (at which point uretprobe code hijacks user-space stack to get
+activated on user function return) and uretprobe activation can be arbitrarily
+long and is completely under control of user code, we need to protect
+ourselves from too long or unbounded SRCU grace periods.
 
-Agreed, this will make the code simpler and avoid mistakes. If we need
-to replace all mutex(&ftrace_lock), would it be better to submit another
-cleanup patch? We can fix the issue here first.
+To that end we keep SRCU protection only for a limited time, and if user space
+code takes longer to return, pending uretprobe instances are "downgraded" to
+refcounted ones. This gives us best scalability and performance for
+high-frequency uretprobes, and keeps upper bound on SRCU grace period duration
+for low frequency uretprobes.
 
-Thanks,
-Huafei
+There are a bunch of synchronization issues between timer callback running in
+IRQ handler and current thread executing uretprobe handlers, which is
+abstracted away behind "hybrid lifetime uprobe" (hprobe) wrapper around uprobe
+instance itself.
 
-> -- Steve
-> 
-> .
-> 
+There is now a speculative try_get_uprobe() and, possibly, a compensating
+put_uprobe() being done from the timer thread (softirq), so we need to make
+sure that put_uprobe() is working well from any context. This is what patch #1
+does, employing deferred work callback, and shifting all the locking to it.
+
+v2->v3:
+  - rebased onto peterz/queue.git's perf/core on top of Jiri's changes;
+  - simplify hprobe states by utilizing HPROBE_GONE for NULL uprobe (Peter);
+  - hprobe_expire() can return uprobe with refcount, if requested (Peter);
+  - keep hprobe_init_leased() and hprobe_init_stable() to a) avoid srcu_idx
+    bikeshedding dependency and b) leased constructor shouldn't accept NULL
+    uprobe, so it's nice to be able to easily express and enforce that;
+  - patch #1 stays the same, we'll work on uprobe_delayed_lock separately;
+v1->v2:
+  - dropped single-stepped uprobes changes to make this change a bit more
+    palatable to Oleg and get some good will from him :)
+  - fixed the bug with not calling __srcu_read_unlock when "expiring" leased
+    uprobe, but failing to get refcount;
+  - switched hprobe implementation to an explicit state machine, which seems
+    to make logic more straightforward, evidenced by this allowing me to spot
+    the above subtle LEASED -> GONE transition bug;
+  - re-ran uprobe-stress many-many times, it was instrumental for getting
+    confidence in implementation and spotting subtle bugs (including the above
+    one, once I modified timer logic to ran at fixed interval to increase the
+    probability of races with the normal uretprobe consumer code);
+rfc->v1:
+  - made put_uprobe() work in any context, not just user context (Oleg);
+  - changed to unconditional mod_timer() usage to avoid races (Oleg).
+  - I kept single-stepped uprobe changes, as they have a simple use of all the
+    hprobe functionality developed in patch #1.
+
+Andrii Nakryiko (2):
+  uprobes: allow put_uprobe() from non-sleepable softirq context
+  uprobes: SRCU-protect uretprobe lifetime (with timeout)
+
+ include/linux/uprobes.h |  54 ++++++-
+ kernel/events/uprobes.c | 309 +++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 322 insertions(+), 41 deletions(-)
+
+-- 
+2.43.5
+
