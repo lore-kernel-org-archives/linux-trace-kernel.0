@@ -1,107 +1,119 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC241FBF58;
-	Thu, 24 Oct 2024 17:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5911F585D;
+	Thu, 24 Oct 2024 17:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729791530; cv=none; b=IqT22sQdJkhlMYbQC6tNpiiZMg4LRQHIP8eszt8qxnqO5k1EAubNPZFNNjGUVAiNHU1+nT4/PI1L0WvHgJZcp5mQ8bSzxHTb3ji34/9zRitCkozi1Yl2nmlYFTgjd/Ea1JFamQd2FkISvqz1y3leE0VIfAboHfCuOqquqktj9Hc=
+	t=1729792150; cv=none; b=J/rgAt2PKptV/p8tKWvDXD+LyN9myws2Pu2cXG00IN2J4CS0uLbqYXEoWdM5Omv8b48PTTFZTVmEibdrG3DZrmNRD4e5YYlyEPLqQuoynHIG8DMtzvPxikrrb5I0YVC+i/7RZfRFcdTM7iooJIupK0eUwbUkwgrg8Zoek6YVV00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729791530; c=relaxed/simple;
-	bh=pINhcv0N6nz/VfV5Jhpd2PDP/ExPppcDqdNC675LxOA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qIlnuc0n/5Sk8p5f9KL4l+eEHXO7PtdqBNjkWKlx6YZBCl5C3hAsAlE4Bw7CZUijAiIKZfF8opl8Pcn/DgDaW++262oAyAKE6gTvEf3L003+UByDAkYCxEyl+CuITzGHXaSG/WOafTlrGmRkHc9n0BbPjt7eb/+V1dHALEekEOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QPy0JSZl; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1729792150; c=relaxed/simple;
+	bh=o33mdDcr08NnMI6+EuH+0VIB/xt6TEqaE50XcDUztqs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fr8f/mbYdPZSWOW2Sqa/DCe4pAb9g8rJykGoOPFgMm9jTL5uTa1Iui71Rst6b239TSLbGPtr+I1P8xBbc/UAQu0Kc8g2y66mToTfgimJHnR66vY/yOyxYQMWNYI6B090/4NtMdWWpiIDU93RTWqMZ/8fZup9w83pbOsFg52sO+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkqyQzka; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPy0JSZl"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9aa8895facso175828066b.2;
-        Thu, 24 Oct 2024 10:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkqyQzka"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7ea76a12c32so790798a12.1;
+        Thu, 24 Oct 2024 10:49:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729791526; x=1730396326; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yYax1c4EcHPuvhMblqzST6JvEaLizq8jVu6/eC35yLo=;
-        b=QPy0JSZlYrDqQcNSKQ1Ttwf+1A2a2svMJu22TfKA9s+Jc+44PBuad3+V9n9UuwlFCE
-         oha2aORjAP0kp1CqckOq7w+BS5ojZZId5x2fraoGmMPLdMvrkkrb+osNHs3lkR2kTT6J
-         +fC/qDxMBsUpJOYmVu45wnN+gl5QwZjPDNWNneQVUnQpM9mDrvx2qA/m+FBTbWyqtVkA
-         17taZ8uX4V6i0JTzvrA3+d5+3UcUF2iEYNw+udf/OVvfllqTQUhQEnpoIhdo1r5E1vxc
-         T2vBEpF2FTD0G+E1bTeJnwEKCDvgXRuuLPhvWv+sUnKO7bBmuxqYbcEOGlp7CyG0183X
-         83KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729791526; x=1730396326;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1729792147; x=1730396947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yYax1c4EcHPuvhMblqzST6JvEaLizq8jVu6/eC35yLo=;
-        b=mO/HB/mZpFz0N1eFHc8skiK9TNW0g+0gMy46WKy/4m9SDdBD7tqnjk8XPv9BZccTic
-         Vb0qQDVEQFCjpW/ifMZzd/b37W1n0rNEcQTjlLqyDSlPr1OPfQze/OLb6pC7pWoaq7ke
-         JQmEaqsA/0IQ6LmqJ5xURnZZNQJjHDCK+xlH2LSkZGoYQ3XvypiHiiiUpHFLhhMog6Mq
-         MaftCAMLDY/5IzlpQlUb1gyTFvAEM8FK5xgTM45ahBK9qTLoD8xueATVI0Knri+bDJ3O
-         gy1kZHivDnrCfndJJLtTgMYGCOziJKBUVp7Px0d6xsoFO4zPuYxPoFTdmJQSv6i1dy9u
-         eeTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUqCLdAqd2H6w8VzQ48a2Shf63mBtk5JWtZbwHLX7uOYzsVoWfP4xUhpcCs6uWug3MTYSHcsckkCw+LFwSvd3+1/25@vger.kernel.org, AJvYcCV8OHI3SKkFxvoVOSmmFeA33JsVf5dCglQQWvwxShKIP9b0Vtk3L0eTO/R/JPTFg74SYi4BW3nYbfURhVWHXu5xvg==@vger.kernel.org, AJvYcCW1RSCtGDRTj81Oycbotg4A3amotkSPZIc3hHMgNu5bLE6AD7jZE3Oc+QqEvmxhYNMop5M=@vger.kernel.org, AJvYcCWuWm0nrMbpVaJHv/pfbGlH6R1vfQC34DA8Bb29WNw4q+5s815PEpuBHzQ1olOmdM7kBSQQ3MSJM/zHuz+l@vger.kernel.org
-X-Gm-Message-State: AOJu0YznULrke/Adyr3tlzd3Lpxk/6S06EKCtLwogS3wfck+WaLoXCsy
-	M9LbrZlxPQZ9kYoGj5VgeNfGWtK2hlrq1kQ1EEAGW9dTFtaK++jX
-X-Google-Smtp-Source: AGHT+IGQijkEwwhyn+S+mnlYVM5n4XrYCdRooz1oxvJslidQBkR9XRDm1xeUlhBy5dOaYPMf48xVKQ==
-X-Received: by 2002:a17:907:7b85:b0:a99:ffdb:6fef with SMTP id a640c23a62f3a-a9ad2814065mr285615766b.46.1729791525922;
-        Thu, 24 Oct 2024 10:38:45 -0700 (PDT)
-Received: from krava (85-193-35-80.rib.o2.cz. [85.193.35.80])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9a91598f11sm642982666b.193.2024.10.24.10.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 10:38:45 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 24 Oct 2024 19:38:43 +0200
-To: Peter Ziljstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	bpf <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Liao Chang <liaochang1@huawei.com>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: The state of uprobes work and logistics
-Message-ID: <ZxqGIyvIQMXCyApJ@krava>
-References: <CAEf4BzarhiBHAQXECJzP5e-z0fbSaTpfQNPaSXwdgErz2f0vUA@mail.gmail.com>
- <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
+        bh=ikFyTCNo4lCkc/He2G82/uKVruxJK5os7sSXWZwAzOQ=;
+        b=WkqyQzkaG8NrCzqXtK0qQShsiELgMbAyFLLO39Cy8ELDwKgxJ3V/9qOhF2xcpuO8V3
+         y2q/PFdPNR5tesFq82z17CYnCar07aQSISKoYVzsNtoIeJWu85b5zEYCrd80YXXa8INa
+         qdPASdBuo6t1Mr9+i2cZwpO+Bag3XxqIx5zruo2Js6hXm2CVof0ZFX8BTP/HJpy3QdVn
+         Mi8kdEtTlZ/QTJ7L4rcMVQzUlaWQ41pFfsnz4iHZBDPjaREhAxZC+EHm6iSfKUaginGQ
+         dCHgLdGJ3jvWA59QupJ/p4ZycGSpTyXwvrqxRguxUcFgu6gNUlyHK3YvwgkcPGWux4j7
+         PSBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729792147; x=1730396947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ikFyTCNo4lCkc/He2G82/uKVruxJK5os7sSXWZwAzOQ=;
+        b=Wfq3Q+dPaOG7QqKAwI/nIMHpqTYZGe6Nn5XfD7kZcsKV8iwUNpcfilYgQzcCkk9Sdl
+         YDYowhwgNiiERU/qaZd4tieXI/zjwF5NUW63lrO9YFBtIuXw50LHtCdYt7wafIR1IgKD
+         O9RpCDQqa3fuyaTek3oUKOhwekDAMKMdAESkhx5P2j9g/U1guGwfgA6zOPdGgkhH6hh4
+         biALmbwZhpClQP4x6Ycwk5LJFlIypjMoWdjLiTnITt5A1jKwyFuWokazhu8AIJvMl9vg
+         9yrGlVepTGzqSzx8K8+qPND5p479cCe7TaffJuyyporj1yTSumrmjPDizG568E3/fHo5
+         3ykQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHuFw/XyhhUQQfG5FZhyspr0uaaXXPxkgwrRFAFXbQQvCKQjw05aNuvuhHXswiDc3k/7K8mL5KDQZxtCiLxYqMcRdupY0=@vger.kernel.org, AJvYcCXABUknxHrQUuhEf1Xbdjr03QSZ70lOb1vEvHELsn4wQBtDptJhITjaH6WiEV/njgdRh3srPE9K9eDUgxgeLjY8zOkk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmoYVxoafYIeO5LTZgPr23YZvZHpTZBj6QXvZLdj1BEpsd+KS5
+	iXst+O72rAH9BjrdVJ8C45pQOUog2rAVSRl3bQa57CPcZlR7AqtxvDJTU+izS3Ltxs2PPATuN5w
+	sCVWpoISEeI2Z1Cuwh/Q7XB6gD1c=
+X-Google-Smtp-Source: AGHT+IEsjKUtq8o9rAgB39zgiEtf+gJZYutfiVjAzLYKGRVAld7uL9YPG545/aHblFPil+Go6LDHrgYKUEYNXpqCkpA=
+X-Received: by 2002:a05:6a20:d805:b0:1d9:261c:5943 with SMTP id
+ adf61e73a8af0-1d978ad5a29mr8702453637.10.1729792147606; Thu, 24 Oct 2024
+ 10:49:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzacLW14OmuW1nV4s=cMcSqcrSAO2Y_0XY3jT2efGNfmuw@mail.gmail.com>
+References: <20241024104012.1815022-1-linux@jordanrome.com> <20241024091904.2650d758@rorschach.local.home>
+In-Reply-To: <20241024091904.2650d758@rorschach.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 24 Oct 2024 10:48:55 -0700
+Message-ID: <CAEf4BzaZvSHnHBPcgkznq62sm_E2JNi1Bwg3g_a9PutfZLicmQ@mail.gmail.com>
+Subject: Re: [v1] security: add trace event for cap_capable
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jordan Rome <linux@jordanrome.com>, linux-security-module@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
+	Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>, 
+	Yonghong Song <yonghong.song@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 23, 2024 at 10:38:54AM -0700, Andrii Nakryiko wrote:
+On Thu, Oct 24, 2024 at 6:19=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Thu, 24 Oct 2024 03:40:12 -0700
+> Jordan Rome <linux@jordanrome.com> wrote:
+>
+> > +TRACE_EVENT(capable,
+> > +
+> > +     TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
+> > +             struct user_namespace *capable_ns, int cap, unsigned int =
+opts, int ret),
+> > +
+> > +     TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
+> > +
+> > +     TP_STRUCT__entry(
+> > +             __field(const struct cred *, cred)
+> > +             __field(struct user_namespace *, targ_ns)
+> > +             __field(struct user_namespace *, capable_ns)
+> > +             __field(int, cap)
+> > +             __field(unsigned int, opts)
+> > +             __field(int, ret)
+> > +     ),
+> > +
+> > +     TP_fast_assign(
+> > +             __entry->cred       =3D cred;
+> > +             __entry->targ_ns    =3D targ_ns;
+> > +             __entry->capable_ns =3D capable_ns;
+> > +             __entry->cap        =3D cap;
+> > +             __entry->opts       =3D opts;
+> > +             __entry->ret        =3D ret;
+> > +     ),
+> > +
+> > +     TP_printk("cap %d, opts %u, ret %d",
+> > +             __entry->cap, __entry->opts, __entry->ret)
+> > +);
+> > +
+>
+> You record cred, targ_ns and capable_ns but don't use it in TP_printk?
+>
+> It's fine to print pointers there. Is there a reason you do not?
 
-SNIP
+Are those pointers really useful for anything? Maybe it's better to
+print ns->ns.inum instead? At least that's something that is usable
+from user space side, no?
 
-> > Peter, do you mind applying those two and creating a stable tag for
-> > bpf-next to pull? We'll apply the rest of Jiri's series to
-> > bpf-next/master.
-> 
-> Jiri has reposted patches this time CC'ing Peter, heh :), it would be
-> great to apply those two patches and get a stable tag. This is
-
-hi,
-any news on this one? I saw the patches in peterz/perf/core,
-but I think we still need the stable tag for bpf-next/master
-
-thanks,
-jirka
-
-
-> blocking the landing of uprobe sessions in bpf-next and also my
-> remaining patches will be based on top of Jiri's uprobe changes, most
-> probably. Peter, please take another look, thank you.
-
-SNIP
+>
+> -- Steve
