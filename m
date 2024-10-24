@@ -1,259 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CE11CACE9;
-	Thu, 24 Oct 2024 09:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C52F1B6CE2;
+	Thu, 24 Oct 2024 09:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729762153; cv=none; b=d6m6HMC8WBi6UE5JKlWxDj39p0gJq1sbCfGguxrUatuKSsc0XMZjK1daml072RfEBYw/cidQLm6IRIr9TckxGNWQ0+9YdoHrLYot35Glst/GY/BAtfR4hOqfTF/jTkWUXGp2dt57tJTEopZGes3mJ2osQZvJW72Jv0iBG7EoTM8=
+	t=1729763839; cv=none; b=dB4L27WMLouv6umZpTlMkVXnlGwz4g51ygq8sAGu6SuNBXZmJHdch5CKGf3zUu/h6t1MMQis/cp8kaC3HWTULAMtpibLj8iSlnu19KHZ55sYWOO6RUXBI2EUXQlCd5DDRTl95YtaVB18NsLtbQnKlbWXrnKCgi7MsuOhR+q3HBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729762153; c=relaxed/simple;
-	bh=Iusn7I/ITIVf0mTwtIm4Buql5rFUoD0utGNhmNXwINM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=S4o5w5Fak2WcU5SBTLVIpvacnKTjz/HmfzYcBlM8VMtbzQV54fU+i3hLJFlV3Z/roqRla7ulXzdTcH4IKtKjqql22RJPfrYzrIcbP70u0/Z7mIi/8E9Zbu65GhnkM1JS4IFl5UvX5PPOmMEA2uGTvfJSHXiHYF3Oz2bT9pEZII8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E77C4CEE7;
-	Thu, 24 Oct 2024 09:29:13 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1t3uAC-00000004n7c-2t7f;
-	Thu, 24 Oct 2024 05:29:52 -0400
-Message-ID: <20241024092952.549693956@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 24 Oct 2024 05:27:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 1/2] fgraph: Free ret_stacks when graph tracing is done
-References: <20241024092723.817582319@goodmis.org>
+	s=arc-20240116; t=1729763839; c=relaxed/simple;
+	bh=CZeq0cZpSpFXcRcaNBDH6xOyf+OZwVKpMGiQjSVFnvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q3f2PTQqb2HvdUh6IyvOhrH4rHsjHxmr+ufu2OnUlBC/mRkSqzoQqNiauvT/lJxTkwiMMFveMZW1UjeE/zzxsjHMGUyuctW6soptDVW7h55ihfdmcM2FFIoVwQewEAF2YSDqoUPmudjdHH/JJT7uHg7AC6eoh1XkORatKU1Vzr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QWlWgIhc; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QWlWgIhc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rzpvzquYLWtBHVgVkBB32hWAp+AI3BVUB9oT07w6q0k=; b=QWlWgIhchbPRGKHewwzWOna/4/
+	p/ueuwd3CjrM2/ZUlhh+eYL/Dxdn0K61jVg9/tSzMzxb2eVGvKW2BK9oixA+0CpgPP5sMu0kRrSsP
+	mZxbEwUMev3gMfIhcWP8P6x+7Gc3/8MdOyNC20el1poSgIn5MOZof6FDGwNCQKRlIBMdFDQ1kbpOo
+	e2OvUDgkSMJFsciLZgoVHVMoR7nYztJfaE/c6zl9oyDDG/DXUon3rgaMDkzirZd06WUsOzRUiLFq9
+	65NEWncjyDKBMQUa6nE0OXNgGHTIs1mcK/ohhjuuwTC2tjRybStJmWzJk0iUBwljvdxwJpnRqxpyR
+	PKkx2SOQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1t3uaS-00000008dc2-1BLX;
+	Thu, 24 Oct 2024 09:57:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 63EEB300599; Thu, 24 Oct 2024 11:56:59 +0200 (CEST)
+Date: Thu, 24 Oct 2024 11:56:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, oleg@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, akpm@linux-foundation.org, mjguzik@gmail.com,
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
+	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org,
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
+Subject: Re: [PATCH v3 tip/perf/core 1/4] mm: introduce
+ mmap_lock_speculation_{start|end}
+Message-ID: <20241024095659.GD9767@noisy.programming.kicks-ass.net>
+References: <20241010205644.3831427-1-andrii@kernel.org>
+ <20241010205644.3831427-2-andrii@kernel.org>
+ <20241023201031.GF11151@noisy.programming.kicks-ass.net>
+ <CAJuCfpFMhoCmqGJMU2uc4JHmk9zh88JzhZAeSz3DgvXEh+u+_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpFMhoCmqGJMU2uc4JHmk9zh88JzhZAeSz3DgvXEh+u+_g@mail.gmail.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Oct 23, 2024 at 03:17:01PM -0700, Suren Baghdasaryan wrote:
 
-Since function graph tracing was added to the kernel, it needed shadow
-stacks for every process in order to be able to hijack the return address
-and replace it with its own trampoline to trace when the function exits.
-The first time function graph was used, it allocated PAGE_SIZE for each
-task on the system (including idle tasks). But because these stacks may
-still be in use long after tracing is done, they were never freed (except
-when a task exits). That means any task that never exits (including kernel
-tasks), would always have these shadow stacks allocated even when they
-were no longer needed.
+> > Or better yet, just use seqcount...
+> 
+> Yeah, with these changes it does look a lot like seqcount now...
+> I can take another stab at rewriting this using seqcount_t but one
+> issue that Jann was concerned about is the counter being int vs long.
+> seqcount_t uses unsigned, so I'm not sure how to address that if I
+> were to use seqcount_t. Any suggestions how to address that before I
+> move forward with a rewrite?
 
-The race that needed to be avoided was tracing functions that sleep for
-long periods of time (i.e. poll()). If it gets traced, its original return
-address is saved on the shadow stack. That means the shadow stack can not
-be freed until the task is no longer using it.
-
-Luckily, it is easy to know if the task is done with its shadow stack.
-After function graph is disabled, the shadow stack will never grow, and
-once the last element is removed off of it, nothing will use it again.
-
-When function graph is done and the last user unregisters, all the tasks
-in the system can be examined and if the shadow stack pointer
-(curr_ret_depth), is zero, then it can be freed. But since there's no
-memory barriers on the CPUs doing the tracing, it has to be moved to a
-link list first and then after a call to synchronize_rcu_tasks_trace() the
-shadow stacks can be freed.
-
-As the shadow stack is not going to grow anymore, the end of the shadow
-stack can be used to store a structure that holds the list_head for the
-link list as well as a pointer to the task. This can be used to delay the
-freeing until all the shadow stacks to be freed are added to the link list
-and the synchronize_rcu_tasks_trace() has finished.
-
-Note, tasks that are still using their shadow stack will not have them
-freed. They will stay until the task exits or if another instance of
-function graph is registered and unregistered and the shadow stack is no
-longer being used.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/fgraph.c | 113 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 99 insertions(+), 14 deletions(-)
-
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 0b7cf2507569..3c7f115217b4 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1144,6 +1144,7 @@ void ftrace_graph_init_task(struct task_struct *t)
- 	t->curr_ret_stack = 0;
- 	t->curr_ret_depth = -1;
- 
-+	mutex_lock(&ftrace_lock);
- 	if (ftrace_graph_active) {
- 		unsigned long *ret_stack;
- 
-@@ -1155,6 +1156,7 @@ void ftrace_graph_init_task(struct task_struct *t)
- 			return;
- 		graph_init_task(t, ret_stack);
- 	}
-+	mutex_unlock(&ftrace_lock);
- }
- 
- void ftrace_graph_exit_task(struct task_struct *t)
-@@ -1292,19 +1294,106 @@ static void ftrace_graph_disable_direct(bool disable_branch)
- 	fgraph_direct_gops = &fgraph_stub;
- }
- 
--/* The cpu_boot init_task->ret_stack will never be freed */
--static int fgraph_cpu_init(unsigned int cpu)
-+static void __fgraph_cpu_init(unsigned int cpu)
- {
- 	if (!idle_task(cpu)->ret_stack)
- 		ftrace_graph_init_idle_task(idle_task(cpu), cpu);
-+}
-+
-+static int fgraph_cpu_init(unsigned int cpu)
-+{
-+	if (ftrace_graph_active)
-+		__fgraph_cpu_init(cpu);
- 	return 0;
- }
- 
-+struct ret_stack_free_data {
-+	struct list_head		list;
-+	struct task_struct		*task;
-+};
-+
-+static void remove_ret_stack(struct task_struct *t, struct list_head *head, int list_index)
-+{
-+	struct ret_stack_free_data *free_data;
-+
-+	/* If the ret_stack is still in use, skip this */
-+	if (t->curr_ret_depth >= 0)
-+		return;
-+
-+	free_data = (struct ret_stack_free_data*)(t->ret_stack + list_index);
-+	list_add(&free_data->list, head);
-+	free_data->task = t;
-+}
-+
-+static void free_ret_stacks(void)
-+{
-+	struct ret_stack_free_data *free_data, *n;
-+	struct task_struct *g, *t;
-+	LIST_HEAD(stacks);
-+	int list_index;
-+	int list_sz;
-+	int cpu;
-+
-+	/* Calculate the size in longs to hold ret_stack_free_data */
-+	list_sz = DIV_ROUND_UP(sizeof(struct ret_stack_free_data), sizeof(long));
-+
-+	/*
-+	 * We do not want to race with __ftrace_return_to_handler() where this
-+	 * CPU can see the update to curr_ret_depth going to zero before it
-+	 * actually does. As tracing is disabled, the ret_stack is not going
-+	 * to be used anymore and there will be no more callbacks. Use
-+	 * the top of the stack as the link list pointer to attach this
-+	 * ret_stack to @head. Then at the end, run an RCU trace synthronization
-+	 * which will guarantee that there are no more uses of the ret_stacks
-+	 * and they can all be freed.
-+	 */
-+	list_index = SHADOW_STACK_MAX_OFFSET - list_sz;
-+
-+	read_lock(&tasklist_lock);
-+	for_each_process_thread(g, t) {
-+		if (t->ret_stack)
-+			remove_ret_stack(t, &stacks, list_index);
-+	}
-+	read_unlock(&tasklist_lock);
-+
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		t = idle_task(cpu);
-+		if (t->ret_stack)
-+			remove_ret_stack(t, &stacks, list_index);
-+	}
-+	cpus_read_unlock();
-+
-+	/* Make sure nothing is using the ret_stacks anymore */
-+	synchronize_rcu_tasks_trace();
-+
-+	list_for_each_entry_safe(free_data, n, &stacks, list) {
-+		unsigned long *stack = free_data->task->ret_stack;
-+
-+		free_data->task->ret_stack = NULL;
-+		kmem_cache_free(fgraph_stack_cachep, stack);
-+	}
-+}
-+
-+static __init int fgraph_init(void)
-+{
-+	int ret;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph_idle_init",
-+				fgraph_cpu_init, NULL);
-+	if (ret < 0) {
-+		pr_warn("fgraph: Error to init cpu hotplug support\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+core_initcall(fgraph_init)
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
--	static bool fgraph_initialized;
- 	int command = 0;
- 	int ret = 0;
-+	int cpu;
- 	int i = -1;
- 
- 	mutex_lock(&ftrace_lock);
-@@ -1319,17 +1408,6 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		}
- 	}
- 
--	if (!fgraph_initialized) {
--		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph_idle_init",
--					fgraph_cpu_init, NULL);
--		if (ret < 0) {
--			pr_warn("fgraph: Error to init cpu hotplug support\n");
--			return ret;
--		}
--		fgraph_initialized = true;
--		ret = 0;
--	}
--
- 	if (!fgraph_array[0]) {
- 		/* The array must always have real data on it */
- 		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
-@@ -1346,6 +1424,12 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 
- 	ftrace_graph_active++;
- 
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		__fgraph_cpu_init(cpu);
-+	}
-+	cpus_read_unlock();
-+
- 	if (ftrace_graph_active == 2)
- 		ftrace_graph_disable_direct(true);
- 
-@@ -1418,6 +1502,7 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		ftrace_graph_entry = ftrace_graph_entry_stub;
- 		unregister_pm_notifier(&ftrace_suspend_notifier);
- 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
-+		free_ret_stacks();
- 	}
-  out:
- 	gops->saved_func = NULL;
--- 
-2.45.2
-
+So if that issue is real, it is not specific to this case. Specifically
+preemptible seqcount will be similarly affected. So we should probably
+address that in the seqcount implementation.
 
