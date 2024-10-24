@@ -1,236 +1,172 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437C414831C;
-	Thu, 24 Oct 2024 10:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FDE1B0F16;
+	Thu, 24 Oct 2024 12:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729767259; cv=none; b=rdAzDXI1IfDm6HldyHol3amaNy0jkVkiRhRQ7hnpCIpDEiVQ5svyTOE6etBqQAroRldir/Oop9PCtEihxvTYbC1AUgJOQQvwqGaQmKwhFO0qmI6h0t5lViujEDKK4oVwTiNdHap9II6zBmAPQ3NSD+9qGjo89wq6udmCKYL2L+E=
+	t=1729774124; cv=none; b=XdXR2HY3dCUOhcPqLs81dRF9U5MXea9mU4Yi5YNWAZpLNhE9LHH3vjR3CRQQcgfw2BihSHt/hV2iLIqV1ocRkoa3naRoBDG71cfLRbEMcdEHv4cxCJet7y4Ot5ZbKJJeFHpysQxoi1+8ZSwHOvPARUbcJpVyC+DpPXTRKqkh2Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729767259; c=relaxed/simple;
-	bh=yGIhl8mYevvDwyWw0FFi2f+T/poFxSeXxHfTIzF4olA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DNgRv93/NRRkI2N3qPMpG8wPdJqaGwuscz343Y/f2wYfY4gijofdsv9Urq4pX00MKY7b4uymB1OBZb7E1gPQkJ5zjtn556GWetoMMThnnMYi/HQpnfjUdkhqxxeQUeiN/ppSc6ullyohM4mjQA+0Z3Brb31x+O9VJKuxB0aOzrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=jordanrome.com; dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b=yVPt70Ay; arc=none smtp.client-ip=74.208.4.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jordanrome.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b="yVPt70Ay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jordanrome.com;
-	s=s1-ionos; t=1729767255; x=1730372055; i=linux@jordanrome.com;
-	bh=oJqlOpA89ifM9UfzkwxEnEOmCn8Ap7GuPAMpz+Oz/kk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=yVPt70AyWB5HYKSf/5Xr3eF7oS5J1Yh/LZ85KvlmGJcizowMLvHfUMNMR/dImE/w
-	 c7Fmwpiv+l25dhBuIBrbdzGw5KqkFYPLv0Y1JNBh/eFYIuPNZs4M3lsO2U1XAu4It
-	 KEFOG1kk31EgzxgrRVWBR2fHoTy3hKyjZofLNyu0JGgqX6ITncBtHAS+4jhIgbOuK
-	 aeLGUwRJqB35cJtHhqbBbH30j7fkCHOibRUzcU4fGnxmGnOIQ1OPLVlirOyt/nmKl
-	 ClOiDFNHwf0mxGHqD2iaSdVb5eB6DYx6QaspyO+suA5KqbG5BEayY0f0ZBp9t4+ZU
-	 Pv2V2ap8/nN/BH9q3Q==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([69.171.251.3]) by mrelay.perfora.net (mreueus003
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0MgdCj-1tI2263BkV-00QPIJ; Thu, 24 Oct
- 2024 12:40:29 +0200
-From: Jordan Rome <linux@jordanrome.com>
-To: linux-security-module@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Serge Hallyn <serge@hallyn.com>,
-	Yonghong Song <yonghong.song@linux.dev>
-Subject: [v1] security: add trace event for cap_capable
-Date: Thu, 24 Oct 2024 03:40:12 -0700
-Message-ID: <20241024104012.1815022-1-linux@jordanrome.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1729774124; c=relaxed/simple;
+	bh=MdggDXIi+w1JotD/hWApURsDP2o4HDuEtCr+Bi9lOC8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=b6KZwUM+YRYm3p6x2Sdwjnr36gK/Y4KOYPix+/xKUOR0RZUdyWzsxhoHJiHD2Me+q908hEBPWapyFCOX3Z53Zp6t80Z1UpWAfMr12eXzJaBxtPBCZXSfI685U/GNEbwQ64cewbUccztAdLvYLBDqRup4msJjeWJ9Na/Nj6s/Gkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 328F261E5FE05;
+	Thu, 24 Oct 2024 14:48:10 +0200 (CEST)
+Message-ID: <598d4118-3f63-44dd-b0da-e19efbb73933@molgen.mpg.de>
+Date: Thu, 24 Oct 2024 14:48:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TVLmjv9MGLQr2eBCQ37lyn4wW2quWy1IpY9KEsq7D1rmN4JXD0N
- vVc8FcYlq5By0D2QXlZetNCFrJVTSUI+qx73ky1b1JhUewG9xqzS7QgvCJwVUo/LajQWVuh
- rSSx6rgZpnN2PyIcOo7VvfMn1Cbm7NdJT8AV7zZ8DwHJjb6u5u440p5nqHYob6dpVUEdZZd
- qPHv99tjWF322v5FRvNtg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8uJ27nw4f44=;aKSKps/DGaGxF+uMKLQPLJTFIlH
- +BRb3dGAi4khsG1Xg0td5apFwTEjXfZBFYIdaUevRcmwwJgN07hqVWaMr6E943Uh8QsGpuIqn
- 6AA1yYi+Pd6qB+2hBlEq5TUA/YBE4jnYIiOowCCELWpf6E20ZDGtnRjMYzaGMnc9NY5XlXPu2
- svwIfu38SBNXeZPy1hSlG+R/g7vJAEc0vHlwYnAxFUpkutZ2DDOP/jyt97PHoIyU2ocsn+h4T
- ol5Zfk+uySBOlwL0lvexcauC9y2gSIHvforw7BQO0rJh6pROFu36rPgeGko5nxXLzKqlUYbjj
- 3ypmzbwI6WKiwrwejRsaj8MeW4cWUN24/xd7zw8B6r4+GvjFsjGTrCBFfXNIdr1rT0tpsYWoG
- 5G8hu1HO99fau+AHwKYTakUIMAH93YIddSeDQnGZQS2Bh7u9oO8kH9H2OBIkkCKhCtZMO1MjB
- up5zWtpjDOUS2FP6ciLFR3cQMrMIhpvvuZ0evsJbsoSSCpj0UR2OP47/v36erztZwSg/VggCa
- 6OTyzTMcyTinPJv+he4imqvQbqqtXtRymiYE4/NpnO7MbCNe5OusGs5Ce88tPrR86WgP+8PEq
- PS0Wzi+TKd7Z7UJmgofRPPE5SNzOioi+1aobUAFkssWv8srIhoXwwYJg1LdpbJW/I00BxL5OY
- KlCzjuGSSqfkbiInvIRmfEhPc5zEdeT0zNc+F/Ii14iPfZzLeLTCADOFRN9CZjbNWIPglE+2h
- T5BdrHK342ND0b8hyrsncMyXWV+wK3EYg==
+User-Agent: Mozilla Thunderbird
+Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
+ #08!!! on Dell XPS 13 9360
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de>
+ <87o7ak411y.fsf@somnus> <256fdb2e-9b83-4837-bd31-0c34e4267c31@molgen.mpg.de>
+ <87sezv7ytw.fsf@somnus> <1cf78f6f-af21-48bc-a9d8-755dd7bf8503@molgen.mpg.de>
+ <9de8ebd1-53fc-48d7-af11-b5c1ed828b3d@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <9de8ebd1-53fc-48d7-af11-b5c1ed828b3d@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-In cases where we want a stable way to observe/trace
-cap_capable (e.g. protection from inlining and API updates)
-add a tracepoint that passes:
-- The credentials used
-- The user namespace which needs the capability
-- The user namespace that actually has the capability (if one exists)
-- The capability to check for
-- Bitmask of options defined in include/linux/security.h
-- The return value of the check
+Dear Anna-Maria,
 
-Signed-off-by: Jordan Rome <linux@jordanrome.com>
-=2D--
- MAINTAINERS                       |  1 +
- include/trace/events/capability.h | 58 +++++++++++++++++++++++++++++++
- security/commoncap.c              | 21 +++++++----
- 3 files changed, 74 insertions(+), 6 deletions(-)
- create mode 100644 include/trace/events/capability.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc40a9d9b8cd..210e9076c858 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4994,6 +4994,7 @@ M:	Serge Hallyn <serge@hallyn.com>
- L:	linux-security-module@vger.kernel.org
- S:	Supported
- F:	include/linux/capability.h
-+F:	include/trace/events/capability.h
- F:	include/uapi/linux/capability.h
- F:	kernel/capability.c
- F:	security/commoncap.c
-diff --git a/include/trace/events/capability.h b/include/trace/events/capa=
-bility.h
-new file mode 100644
-index 000000000000..092b8e77063a
-=2D-- /dev/null
-+++ b/include/trace/events/capability.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM capability
-+
-+#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_CAPABILITY_H
-+
-+#include <linux/cred.h>
-+#include <linux/tracepoint.h>
-+#include <linux/user_namespace.h>
-+
-+/**
-+ * capable - called after it's determined if a task has a particular
-+ * effective capability
-+ *
-+ * @cred: The credentials used
-+ * @targ_ns:  The user namespace which needs the capability
-+ * @capable_ns:  The user namespace that actually has the capability
-+ *               if ret is 0 otherwise this will be NULL
-+ * @cap: The capability to check for
-+ * @opts: Bitmask of options defined in include/linux/security.h
-+ * @ret: The return value of the check: 0 if it does, -ve if it does not
-+ *
-+ * Allows to trace calls to cap_capable in commoncap.c
-+ */
-+TRACE_EVENT(capable,
-+
-+	TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
-+		struct user_namespace *capable_ns, int cap, unsigned int opts, int ret)=
-,
-+
-+	TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(const struct cred *, cred)
-+		__field(struct user_namespace *, targ_ns)
-+		__field(struct user_namespace *, capable_ns)
-+		__field(int, cap)
-+		__field(unsigned int, opts)
-+		__field(int, ret)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cred       =3D cred;
-+		__entry->targ_ns    =3D targ_ns;
-+		__entry->capable_ns =3D capable_ns;
-+		__entry->cap        =3D cap;
-+		__entry->opts       =3D opts;
-+		__entry->ret        =3D ret;
-+	),
-+
-+	TP_printk("cap %d, opts %u, ret %d",
-+		__entry->cap, __entry->opts, __entry->ret)
-+);
-+
-+#endif /* _TRACE_CAPABILITY_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 162d96b3a676..675d40fbaa77 100644
-=2D-- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -27,6 +27,9 @@
- #include <linux/mnt_idmapping.h>
- #include <uapi/linux/lsm.h>
+Am 21.08.24 um 23:01 schrieb Paul Menzel:
+> [Added URLs for files.]
+> 
+> Am 21.08.24 um 10:20 schrieb Paul Menzel:
+>> Dear Anna-Maria,
+>>
+>>
+>> Thank you very much for the support. I was finally able to collect the 
+>> data you asked for.
+>>
+>> Am 09.04.24 um 09:57 schrieb Anna-Maria Behnsen:
+>>> Paul Menzel writes:
+>>
+>> […]
+>>
+>>>> Am 08.04.24 um 12:10 schrieb Anna-Maria Behnsen:
+>>>>
+>>>>> Paul Menzel writes:
+>>>>
+>>>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 
+>>>>>> 6.9- rc2+
+>>>>>> built from commit b1e6ec0a0fd0 (Merge tag 'docs-6.9-fixes' of
+>>>>>> git://git.lwn.net/linux) the external USB-C adapter Dell DA300 
+>>>>>> stopped
+>>>>>> working (only the Ethernet port was used). Linux logged:
+>>>>>
+>>>>> thanks for the report. Can you please provide a trace beside the dmesg
+>>>>> output? The following trace events should be enabled (via kernel 
+>>>>> command
+>>>>> line):
+>>>>>
+>>>>> trace_event=timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit
+>>>> Unfortunately I haven’t been able to reproduce it until now. Should it
+>>>> happen again, I am going to try your suggestion.
+>>>
+>>> Thanks for letting me know.
+>>
+>> I wanted to configure that in the running system, but wasn’t able to 
+>> set all of these at once with `set_event`:
+>>
+>>      echo 'timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit' | sudo tee /sys/kernel/tracing/set_event
+>>
+>> For some reason setting them individually also did *not* work:
+>>
+>>      for e in timer:* timer_migration:* sched:sched_switch sched:sched_wakeup sched:sched_process_hang irq:softirq_entry irq:softirq_raise irq:softirq_exit'; do echo "$e" | sudo tee -a /sys/ kernel/tracing/set_event; done
+>>
+>> I then used
+>>
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer_migration/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_switch/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_wakeup/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_process_hang/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_entry/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_raise/enable
+>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_exit/enable
+>>
+>> and also had to increase the buffer to bridge the gap between the 
+>> event and me noticing it:
+>>
+>>      echo 96000 | sudo tee /sys/kernel/tracing/buffer_size_kb
+>>
+>> Then, with Linux v6.11-rc4-11-g521b1e7f4cf0b, I was able to get the 
+>> trace for the event below:
+>>
+>>      [ 7542.706299] NOHZ tick-stop error: local softirq work is pending, handler #08!!!
+>>
+>> $ sudo cat /sys/kernel/tracing/trace
+>> […]
+>>   MediaPD~der #28-14000   [000] d..1.  7542.703768: hrtimer_cancel: hrtimer=000000008d2c9f3f
+>>   MediaPD~der #28-14000   [000] .....  7542.703810: hrtimer_init: hrtimer=00000000c6f259e7 clockid=CLOCK_MONOTONIC mode=ABS
+>>   MediaPD~der #28-14000   [000] d..1.  7542.703812: hrtimer_start:hrtimer=00000000c6f259e7 function=hrtimer_wakeup expires=7602581538204 softexpires=7602581488204 mode=ABS
+>>   MediaPD~der #28-14000   [000] d..2.  7542.703821: sched_switch: prev_comm=MediaPD~der #28 prev_pid=14000 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dN.2.  7542.703931: sched_wakeup: comm=ImageBridgeChld pid=6041 prio=120 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.703937: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=ImageBridgeChld next_pid=6041 next_prio=120
+>>   ImageBridgeChld-6041    [000] d..2.  7542.704041: sched_switch: prev_comm=ImageBridgeChld prev_pid=6041 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dN.2.  7542.704174: sched_wakeup: comm=Renderer pid=4113 prio=120 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.704179: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Renderer next_pid=4113 next_prio=120
+>>          Renderer-4113    [000] d..2.  7542.704245: sched_switch: prev_comm=Renderer prev_pid=4113 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dNh2.  7542.704260: sched_wakeup: comm=IPC I/O Child pid=6029 prio=120 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.704267: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==>  next_comm=IPC I/O Child next_pid=6029 next_prio=120
+>>     IPC I/O Child-6029    [000] d..2.  7542.704340: sched_switch: prev_comm=IPC I/O Child prev_pid=6029 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dN.2.  7542.704786: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.704791: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
+>>        Compositor-4123    [000] d..2.  7542.704944: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dN.2.  7542.705943: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.705950: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
+>>        Compositor-4123    [000] d..2.  7542.706105: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] d.h2.  7542.706328: hrtimer_cancel: hrtimer=000000009bbda66a
+>>            <idle>-0       [000] d.h1.  7542.706329: hrtimer_expire_entry: hrtimer=000000009bbda66a function=tick_nohz_handler now=7542584007490
+>>            <idle>-0       [000] d.h1.  7542.706333: softirq_raise: vec=9 [action=RCU]
+>>            <idle>-0       [000] d.h1.  7542.706338: softirq_raise: vec=7 [action=SCHED]
+>>            <idle>-0       [000] d.h1.  7542.706339: hrtimer_expire_exit: hrtimer=000000009bbda66a
+>>            <idle>-0       [000] d.h2.  7542.706340: hrtimer_start: hrtimer=000000009bbda66a function=tick_nohz_handler expires=7542588000000 softexpires=7542588000000 mode=ABS
+>>            <idle>-0       [000] ..s1.  7542.706345: softirq_entry: vec=7 [action=SCHED]
+>>            <idle>-0       [000] ..s1.  7542.706359: softirq_exit: vec=7 [action=SCHED]
+>>            <idle>-0       [000] ..s1.  7542.706360: softirq_entry: vec=9 [action=RCU]
+>>            <idle>-0       [000] ..s1.  7542.706362: softirq_exit: vec=9 [action=RCU]
+>>            <idle>-0       [000] dNh4.  7542.707672: sched_wakeup:  comm=irq/51-DLL075B: pid=194 prio=49 target_cpu=000
+>>            <idle>-0       [000] d..2.  7542.707685: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=irq/51-DLL075B: next_pid=194 next_prio=49
+>>   irq/51-DLL075B:-194     [000] .....  7542.707708: timer_init: timer=00000000630ae178
+>>   irq/51-DLL075B:-194     [000] d..1.  7542.707710: timer_start: timer=00000000630ae178 function=process_timeout expires=4296778179 [timeout=250] bucket_expiry=4296778184 cpu=0 idx=121 flags=
+>>   irq/51-DLL075B:-194     [000] d..2.  7542.707718: sched_switch: prev_comm=irq/51-DLL075B: prev_pid=194 prev_prio=49 prev_state=D ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>            <idle>-0       [000] dN.2.  7542.709072: sched_wakeup: comm=AudioIP~ent RPC pid=6671 prio=120 target_cpu=000
+>> […]
+>>
+>> The trace file is 320 MB big. If you need the full trace and log, 
+>> please tell me, and I’ll upload it somewhere.
+> 
+> https://owww.molgen.mpg.de/~pmenzel/20240821--linux-6.10-rc4+.txt
+> https://owww.molgen.mpg.de/~pmenzel/20240821--soft-irq--trace.7z
 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/capability.h>
-+
- /*
-  * If a non-root user executes a setuid-root binary in
-  * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-@@ -68,6 +71,7 @@ int cap_capable(const struct cred *cred, struct user_nam=
-espace *targ_ns,
- 		int cap, unsigned int opts)
- {
- 	struct user_namespace *ns =3D targ_ns;
-+	int ret =3D 0;
+Just for the record, I am still seeing this with 
+6.12.0-rc4-00047-gc2ee9f594da8 (KVM: selftests: Fix build on on non-x86 
+architectures).
 
- 	/* See if cred has the capability in the target user namespace
- 	 * by examining the target user namespace and all of the target
-@@ -75,22 +79,26 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
- 	 */
- 	for (;;) {
- 		/* Do we have the necessary capabilities? */
--		if (ns =3D=3D cred->user_ns)
--			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
-+		if (ns =3D=3D cred->user_ns) {
-+			ret =3D cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
-+			break;
-+		}
 
- 		/*
- 		 * If we're already at a lower level than we're looking for,
- 		 * we're done searching.
- 		 */
--		if (ns->level <=3D cred->user_ns->level)
--			return -EPERM;
-+		if (ns->level <=3D cred->user_ns->level) {
-+			ret =3D -EPERM;
-+			break;
-+		}
+Kind regards,
 
- 		/*
- 		 * The owner of the user namespace in the parent of the
- 		 * user namespace has all caps.
- 		 */
- 		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))
--			return 0;
-+			break;
-
- 		/*
- 		 * If you have a capability in a parent user ns, then you have
-@@ -99,7 +107,8 @@ int cap_capable(const struct cred *cred, struct user_na=
-mespace *targ_ns,
- 		ns =3D ns->parent;
- 	}
-
--	/* We never get here */
-+	trace_capable(cred, targ_ns, ret =3D=3D 0 ? ns : NULL, cap, opts, ret);
-+	return ret;
- }
-
- /**
-=2D-
-2.43.5
-
+Paul
