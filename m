@@ -1,55 +1,55 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020EC22B641;
-	Thu, 24 Oct 2024 23:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B441167D80
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 23:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729812026; cv=none; b=jj6l/Jf35xzXB5QzAODjZSI9Z8aRUGuqgJiwMbTnIvBlwBVXPj7AqUKkD2apFlRXZrGlK13192ISWW1/n9rdY7SmmjZaHONzJnup5b4qZJ1pkRbN6ID3JZmxMJQxKhwVJgKJorVLgU5zmCPpmo7VajMvDD1Dt63VojyLI+LUCtU=
+	t=1729812797; cv=none; b=uS63vl5DxsjRQ2JJmgFvJLB4haGNC5LeEae7GTBO253nx0Jx7cjOvVFn+yk6gZOjXQsSEcQm0AAsPTaAaztT1JWOVJl5Y2TvEwPWykgl9SkuL81uBLXuNGoi3H/0wEzFlqrzg7CFWsymX5QqTYwoqYsdnBhnpiqji3AiSZXSTKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729812026; c=relaxed/simple;
-	bh=96LTyYdL2JmmeBYXIFbZtoBmhJndFdhQld9KioymC3Q=;
+	s=arc-20240116; t=1729812797; c=relaxed/simple;
+	bh=vmsuMNCTMsnSpAb3EIoplVmMWZi2viZaThCOjLNdh50=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V+ZiW3WnoCoXqQ1MEfZfte83M6UyNzjMhVytYvOgsqN8ZQqD07WmXI/XhoIbTLub8XsI3hgAzfzjR5hMTLKJtQvOG6uwXmYldlz05nVYyhnZybOH9Ze60LAgTU5QsEakGKg3o+NzC9R1yngQ3VZFIlBpn2fHkL//ted/mrQ43yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l3iJPLxT; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=s18K2521l+Ypb8iwV6EcSSLFUtdAzFi65BCyyrr/rwCrn2jDEJc4GvrhBYmVPDlz1mXcKmyBfgsypHNo1HzPY7aPBDrhV78JvL+TThk1Y/o6PQ1W/YBb2Nwhkn7SRJkUZdatYXIpqL+j0po6A/ClOCQF+5RfWyhCRftC7/Q9OPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tfdcDEUq; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3iJPLxT"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7ea76a12c32so980976a12.1;
-        Thu, 24 Oct 2024 16:20:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tfdcDEUq"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-460a8d1a9b7so73221cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Oct 2024 16:33:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729812024; x=1730416824; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1729812794; x=1730417594; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=96LTyYdL2JmmeBYXIFbZtoBmhJndFdhQld9KioymC3Q=;
-        b=l3iJPLxTyukctWXjJUOS0qgCMVkrMu0Tvn6Hqz8JpZbADyqW6xJdRcVQhW3s65qbar
-         HJJvYw4RkwLsOeKKA0GtJ5VNuzPfdLTGWjlYhhS0RdA56bjnnuRo+U+/vPU/2QfsqLJd
-         EXQE5u3tqXth58ouIQ9doq8+KPL8c7QkVUankQmDtrQbxyxzJvYCGd9yJm9PQYYenzlN
-         eyqpiIrjXkHi0InnP1ISGga7JXLm5jNN2jMW94LL/Wo5S0bklMBnsqCjMXz/WJEU2vgn
-         tyc6Fs1Biyi2sAZAeC/AHGSAte5rwZRAH19rQy2HnMsp39/+uTdpdcrP6iXhJGIFaceQ
-         F9uA==
+        bh=vmsuMNCTMsnSpAb3EIoplVmMWZi2viZaThCOjLNdh50=;
+        b=tfdcDEUq2adZ82IcpiIp3q/1BtXOwFrLGvMGNmW2hecD8bmVONbp5sPneD7xuPU4oO
+         yRx0Oqw3sTGIef+wmGSMtat9V7PBEy2IBSpn/4peEElJrwwuzbH2cDa/k6Tg85ORD99L
+         Wcc2EyhZ577TNqfG4Di5YC0YsoP5VcFVQPtIN4SS+3oENY3hHffhsrKJPZ+HWTFyf2uy
+         kGhgPDOH+GTJIKtjzpI9ftE8bBY7dy9gmbrfZoSi7U84aqvB3M9DeSMMK64eviBn2QQ9
+         hhFLuBGyTUTjI6iZa7YzywplUV5gMilkemZe0xnfgKoKWIfkFgOUWauPhtymVL3vwdCh
+         5FZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729812024; x=1730416824;
+        d=1e100.net; s=20230601; t=1729812794; x=1730417594;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=96LTyYdL2JmmeBYXIFbZtoBmhJndFdhQld9KioymC3Q=;
-        b=piV8TmCt5plToQx0Ar6vvuaEu9X3Lm0AhnHLDu5LN4NgHtTxJK3T7FSExHDcZRQTzs
-         DGq+iDSoG1w3VcACzwC9VRi6MPK/z4EYNYSnAi8MxEg5OtKoe3DEKMq3Xr8h5svRN6fu
-         kidwswHACqfJALaj4Bb6BUwP8g85wZATtcsyTGQ+Qu6Xn90vsX2jMBlGQRK4/qPdfDBy
-         000kUE89c1y3NiOM65cO45si6fvlSQOjQmIjhtbWohKHyDSyomxxcUU+v8yl93QvlaKO
-         41gHcrhX7Ld3ECVhgrCMRBIpdIXzz6VIk7145wUWjph3+2KhY/bdjd5A/ivsnjPl8hRS
-         pt4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVagDV8wel+VtL0p0Swd6ieXKBIkD2G8BTb1stQcJMV8k34Sv3M1tJHykKu24RrWz+1+QFcWHslYcawYvSvBEbM2rW5@vger.kernel.org, AJvYcCW7vLNIyE2MAl/Nmf0yg+YcBnDiY07GYIP0wygy7mdXMj5Et88HJUvO2STQsKA/J21b09yIRT5Mq0HXTJpW@vger.kernel.org, AJvYcCXNd3rxin5GnqdTOdTg8B7Zqde4L0dLTfGNfGD01EqOrh3Jg6XRnimhXYgVWVxWtbqKIWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFUdVAQZUxNEMQRHV0JJcIP7tmcBcu1fktFZ2sNvws4iaIug2b
-	h9ar4ZNhcc05km+RhytE2Ax4Q5xnUcFWp85J3MUMlzKPyyc25e9WAN7raCvoJKDNPVeKMGgLBeI
-	QIw46dHtGnhg5yW39bHd0kTYjkZo=
-X-Google-Smtp-Source: AGHT+IGz7ULrL/xoNu5+rVxJsNZlD+tDD1RJbGgRccyic28alkfr8h3zJBxXB5fAn56GxrJNoWw7RQtGGn0zmHw7i2o=
-X-Received: by 2002:a05:6a20:d805:b0:1d9:261c:5943 with SMTP id
- adf61e73a8af0-1d978ad5a29mr9768557637.10.1729812024062; Thu, 24 Oct 2024
- 16:20:24 -0700 (PDT)
+        bh=vmsuMNCTMsnSpAb3EIoplVmMWZi2viZaThCOjLNdh50=;
+        b=PhdNRJZwQiDGtHxzQ52tNCaVGjhrNdWG1U74qMbIpSqN78/tPz97Y7r8G7wUMc7+js
+         OSdem1NkJi8RNmpsmNsqUisuUUdZo9Dew/XRkrKQtC1u2jRhEXrpW+G4axhXq84iT5jy
+         CMXC8e2pB72BX4Ayi6IkqO6Sjs9Zra5xUf0PzYRdAnv6+U1zdar7AQW9Bi94pHZ1Trne
+         k/h50Aj0yC83iQBCI47YMh7F5YjfoPEd0eMIU6dfzIiyLWLTsRIr0LpCV/KS5UprdYrY
+         SQtvemA85BdVB6F/Om6x4i6wlgOSCsR9bdWxuH+JHp66IjiXv7Dn1srHSYByg5Dxxnfo
+         +nFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLzHI3OYmVAd1Sqz2vhAdVBtV3GKOZWQGLgPuyMxLscRF1eyGWgUAVbKEnRaCSVuPzNh6ddgxCztqBImJRA9SMjLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhzMTOp46iAV7VqDQVIWQ43RIyxujhvAsEv1xb4GFJdSQDvlPV
+	Y6iFsaRkGk1ge22oGbnfq5HhCaa0Xff/HcbiXV9lNehW0vUuTH7vQnu2NBLaE/qkVkBgiLby6+M
+	ZMxibj30z8JLKSQYZkym4H1LqOQJzrP3EgKOz
+X-Google-Smtp-Source: AGHT+IEW2JMaWRvxKfmcu8sr08V97Ij3HhW3jaebS9MGMkSOQxIgxXNcePp71xFUudebLmPyfGSMJ3WTInWv/8QJhg8=
+X-Received: by 2002:a05:622a:548e:b0:460:8444:d017 with SMTP id
+ d75a77b69052e-461306e214bmr542231cf.27.1729812794080; Thu, 24 Oct 2024
+ 16:33:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -59,13 +59,13 @@ MIME-Version: 1.0
 References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-2-andrii@kernel.org>
  <20241023201031.GF11151@noisy.programming.kicks-ass.net> <CAJuCfpFMhoCmqGJMU2uc4JHmk9zh88JzhZAeSz3DgvXEh+u+_g@mail.gmail.com>
  <20241024095659.GD9767@noisy.programming.kicks-ass.net> <CAJuCfpGxu=z-2Wsf41-m4MQ6t7DjfiiWXD408BW8SjTfx0NGTg@mail.gmail.com>
- <CAJuCfpGYzG+3aLjobsXcTSoo9Jo9MCYA_QcROPyLRKEeVHkLGA@mail.gmail.com>
-In-Reply-To: <CAJuCfpGYzG+3aLjobsXcTSoo9Jo9MCYA_QcROPyLRKEeVHkLGA@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 24 Oct 2024 16:20:11 -0700
-Message-ID: <CAEf4Bzbf_2tJL1ogZegy2sD=WbNmdKHXuXCXtAALGYuWYgyEEw@mail.gmail.com>
+ <CAJuCfpGYzG+3aLjobsXcTSoo9Jo9MCYA_QcROPyLRKEeVHkLGA@mail.gmail.com> <CAEf4Bzbf_2tJL1ogZegy2sD=WbNmdKHXuXCXtAALGYuWYgyEEw@mail.gmail.com>
+In-Reply-To: <CAEf4Bzbf_2tJL1ogZegy2sD=WbNmdKHXuXCXtAALGYuWYgyEEw@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 24 Oct 2024 16:33:01 -0700
+Message-ID: <CAJuCfpFJG8MS=LMC2saYYRPGv+xs+UXkrPWD9_Eo1VqY=7v1ow@mail.gmail.com>
 Subject: Re: [PATCH v3 tip/perf/core 1/4] mm: introduce mmap_lock_speculation_{start|end}
-To: Suren Baghdasaryan <surenb@google.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, 
 	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, oleg@redhat.com, 
 	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
@@ -77,44 +77,57 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 24, 2024 at 2:04=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
+On Thu, Oct 24, 2024 at 4:20=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On Thu, Oct 24, 2024 at 9:28=E2=80=AFAM Suren Baghdasaryan <surenb@google=
+> On Thu, Oct 24, 2024 at 2:04=E2=80=AFPM Suren Baghdasaryan <surenb@google=
 .com> wrote:
 > >
-> > On Thu, Oct 24, 2024 at 2:57=E2=80=AFAM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
+> > On Thu, Oct 24, 2024 at 9:28=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
 > > >
-> > > On Wed, Oct 23, 2024 at 03:17:01PM -0700, Suren Baghdasaryan wrote:
-> > >
-> > > > > Or better yet, just use seqcount...
+> > > On Thu, Oct 24, 2024 at 2:57=E2=80=AFAM Peter Zijlstra <peterz@infrad=
+ead.org> wrote:
 > > > >
-> > > > Yeah, with these changes it does look a lot like seqcount now...
-> > > > I can take another stab at rewriting this using seqcount_t but one
-> > > > issue that Jann was concerned about is the counter being int vs lon=
-g.
-> > > > seqcount_t uses unsigned, so I'm not sure how to address that if I
-> > > > were to use seqcount_t. Any suggestions how to address that before =
+> > > > On Wed, Oct 23, 2024 at 03:17:01PM -0700, Suren Baghdasaryan wrote:
+> > > >
+> > > > > > Or better yet, just use seqcount...
+> > > > >
+> > > > > Yeah, with these changes it does look a lot like seqcount now...
+> > > > > I can take another stab at rewriting this using seqcount_t but on=
+e
+> > > > > issue that Jann was concerned about is the counter being int vs l=
+ong.
+> > > > > seqcount_t uses unsigned, so I'm not sure how to address that if =
 I
-> > > > move forward with a rewrite?
+> > > > > were to use seqcount_t. Any suggestions how to address that befor=
+e I
+> > > > > move forward with a rewrite?
+> > > >
+> > > > So if that issue is real, it is not specific to this case. Specific=
+ally
+> > > > preemptible seqcount will be similarly affected. So we should proba=
+bly
+> > > > address that in the seqcount implementation.
 > > >
-> > > So if that issue is real, it is not specific to this case. Specifical=
-ly
-> > > preemptible seqcount will be similarly affected. So we should probabl=
-y
-> > > address that in the seqcount implementation.
+> > > Sounds good. Let me try rewriting this patch using seqcount_t and I'l=
+l
+> > > work with Jann on a separate patch to change seqcount_t.
+> > > Thanks for the feedback!
 > >
-> > Sounds good. Let me try rewriting this patch using seqcount_t and I'll
-> > work with Jann on a separate patch to change seqcount_t.
-> > Thanks for the feedback!
+> > I posted the patchset to convert mm_lock_seq into seqcount_t and to
+> > add speculative functions at
+> > https://lore.kernel.org/all/20241024205231.1944747-1-surenb@google.com/=
+.
 >
-> I posted the patchset to convert mm_lock_seq into seqcount_t and to
-> add speculative functions at
-> https://lore.kernel.org/all/20241024205231.1944747-1-surenb@google.com/.
+> Thanks, Suren! Hopefully it can land soon!
 
-Thanks, Suren! Hopefully it can land soon!
+Would incorporating them into your patchset speed things up? If so,
+feel free to include them into your series.
+The only required change in your other patches is the renaming of
+mmap_lock_speculation_start() to mmap_lock_speculation_begin().
 
 >
 > >
 > > >
+> > > >
