@@ -1,152 +1,255 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F1F22B641;
-	Fri, 25 Oct 2024 05:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F321C0DF0;
+	Fri, 25 Oct 2024 11:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729833161; cv=none; b=LRGcVxEHtHffAWkj8cUYns90515Qe9CqKl/RIExmkRiPCip9QnaefNYDIPwrIO8hCfNwthAUiVRICAz0Cj8uFX1pQLtRFsjz8gXW/Vx+wChJepmWbUy0enaKYNi1MZri2TN3GD1ZG9ubsbd6QomuO6C/dz9is9dxMT8k3ShMxFU=
+	t=1729855093; cv=none; b=AGVzvPV3NPh2ZfnXYYHeuD1ZU+ZC7vPLeYiu14uR76L3spB1cDAmEniOnkeFf+B5yx/wRfjWNKT6EeIsHJeMrCdR1cNqjuq9OdDKUJcgEplXfZT+lTzkX3NN3kyLKPcFfWI7aXYVN6rwOi7/7b9k5HUzt9Zvd5D2SyYYzGgrQq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729833161; c=relaxed/simple;
-	bh=/Tpkj435EOyN50vCRF2Ax6BCjnil4B9JArHmpZ92C68=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DcvdcnNUtNIesWF/Ke7+LtQDlM/2vjtoRmZvnw531f+CHl2pOA3sykdR2HfZmH9HKJNBLYRS7nIBf/qVuLnRkcX3D+bNMeAHyuzLbV7ySRFq8oB6F47qINUR/hLgQ05Mc2UmbnNDEhp7dTBujO/+MOxhbLWJOYzjuTX7G3Qpgvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UFXjaBdP; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729855093; c=relaxed/simple;
+	bh=+LZ7E+Ddcu94pAHJrOHz1m+x/3fDG1FAj32qjJjWgkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SEKJfCmy3dRV5lx3+eQIhsllmACVhK0tLiJo4nkcWZMMSGh7MHnkNsh5yiRmCl1z0rjpzwnJAIN8Hv7mn3LZ8dJVU1mPnqgLTEUP8oZRvJE0lAimZxz1vsRwxNfcoOXi37M+mHWrwxAs39for7WRU0VQSpXOd00VqKZeIwkt97s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPuRGZZT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UFXjaBdP"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-71e67d12d04so1223609b3a.1;
-        Thu, 24 Oct 2024 22:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729833159; x=1730437959; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Tpkj435EOyN50vCRF2Ax6BCjnil4B9JArHmpZ92C68=;
-        b=UFXjaBdPMuEsxjm/8PXonrsCCxbJEUrAzFZ7q7+5gHcGNh9Iq8OJDWkfs9f8kVYBEF
-         IC82IEVkF5mztYBjMqOIQiQEcClMhS15UjxrWkgMpCX0Li20xSh2l3YVOEyKHJtUBx/b
-         0pJSOBLUp+H+Ju2vK51fPmZdU69VVlilsLRFMdOakL4uovJ030YFQcDZRPcr3PToil9M
-         1xUDwK38BJtM4cMbAxiw0BuEVhknSYTc1teEbGh6fTJtDm4yZEV2+snWokAmZZDnl1Rg
-         0aKgC4sVrbMgTvvvYqzpdvTDbZINx0P7uzRtaOFskW7ru5lHp3GtYVB77AA5PQoE89MB
-         U8yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729833159; x=1730437959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Tpkj435EOyN50vCRF2Ax6BCjnil4B9JArHmpZ92C68=;
-        b=NLxXRMxBaDKMj0ABiViNW3B4UXO1n4flmccrjyH/9XnIt9tHuUO9BDXlZEuHK43H6n
-         7MPckXmenJ+WVkfIL6LZwssO1pC3kL9MmDygdygUIWUwhElhc/tVycyqh0/P0sabEs4y
-         4BruU8UkKjg56NV/KuaHxPLppQuLSgK4Ppbw2wXiM3JKoe5dWot/ohqj6Rl+hDEdfRUl
-         ijeUwqNIbV4glnxRJJ2PsORaHdWM9K11d/t+wTsMxHr2gnAQN50fvvrskGrCZ9yn0b7w
-         rdXxJbtWkmvWQOb16B8WiySzYLMvbDwcwj0/jUCP8dKf/O+KMsHOUDaeEpe0CTfj3wju
-         n4qA==
-X-Forwarded-Encrypted: i=1; AJvYcCWy9eJgpbQPCDVcHRm2xOcK+TNZjraiY/mU1LfRBjihAxRJMY9vpCZd8S2dOatl7smPfYG6Y+LXuq/V5r3Lro0AZCYF@vger.kernel.org, AJvYcCX2CplE+3tEnFs0mJ55nJEFuQBvxe+q1LIerxZn5GT1r9BNlgUGpEO8862QLgCwwUK1Lfs=@vger.kernel.org, AJvYcCXFiMYtDQ6roqPRClSZlCSnQjWmdd7fiV2KM4QXsmuvHoc30XlCPprL9PjO9WiL5iNkdqenjPzAhIVmA4xp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx03yk765VvP9rfd71iz4VOzvE4K4mTZzZh/vvLWyMgdglE+1dh
-	l7CUYubhGlNOHU5NVh7HggdkDdJIPPb6AuVD4q3/kD6DjjoAw8FYAkWZjh46euSa7KohpNngPJ8
-	pv4ljZXvVuG0mRLd+KndAKnYiSig=
-X-Google-Smtp-Source: AGHT+IEAk9YojetBkRLJe53COqtiLGEYhreTaZK/7pHC6B7uYCYlMywQUqjE4kFyEuwzJ2rYrbPOLuLkU41RwAyyzlk=
-X-Received: by 2002:a05:6a21:168e:b0:1d9:2a0e:971e with SMTP id
- adf61e73a8af0-1d978bb27c5mr8798561637.46.1729833159199; Thu, 24 Oct 2024
- 22:12:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPuRGZZT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E21C5C4CECC;
+	Fri, 25 Oct 2024 11:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729855093;
+	bh=+LZ7E+Ddcu94pAHJrOHz1m+x/3fDG1FAj32qjJjWgkA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FPuRGZZTKi+y96dRyYO0i/pceUGZ+Cd0xayaJlcLabIv/J//fhdPMHlvnY4blMHvG
+	 qSexMFtQ7CFRUovK5S41N5MAW2xdHMUNF61QEY64Xfr0dDWXnBiex9k7uDaS/EIPpd
+	 rzUgHVZG+6AsDev+dYlH94xYmMEofLE05n+guWuD9rxnCEaTpjZnSTTjYDrb21T38L
+	 +Ed8pjIwB+pcrzoWQ6ZSP6POJ5cvsrIei7B6xkguTUvd4iYWDKud1IJhRIdc6Hvnel
+	 0BSKTMjem93K20ktKupgz2asUJrVR1IEgUQA40bj8yi7mLciDTzDtz3wNu3WnyuXTJ
+	 Slty0wr7ci8Fg==
+Date: Fri, 25 Oct 2024 11:18:09 +0000
+From: sergeh@kernel.org
+To: Jordan Rome <jordan@jordanrome.com>
+Cc: linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Subject: Re: [v1] security: add trace event for cap_capable
+Message-ID: <Zxt-cRp3QMP6dpCa@lei>
+References: <20241024104012.1815022-1-linux@jordanrome.com>
+ <Zxqt29vYukIGw8QV@lei>
+ <CA+QiOd4J9=7-7v_Vh5YR7+BVTGYPzD6ARKxrrKWtPtKP3Oj8SQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241010205644.3831427-1-andrii@kernel.org> <20241010205644.3831427-2-andrii@kernel.org>
- <20241023201031.GF11151@noisy.programming.kicks-ass.net> <CAJuCfpFMhoCmqGJMU2uc4JHmk9zh88JzhZAeSz3DgvXEh+u+_g@mail.gmail.com>
- <20241024095659.GD9767@noisy.programming.kicks-ass.net> <CAJuCfpGxu=z-2Wsf41-m4MQ6t7DjfiiWXD408BW8SjTfx0NGTg@mail.gmail.com>
- <CAJuCfpGYzG+3aLjobsXcTSoo9Jo9MCYA_QcROPyLRKEeVHkLGA@mail.gmail.com>
- <CAEf4Bzbf_2tJL1ogZegy2sD=WbNmdKHXuXCXtAALGYuWYgyEEw@mail.gmail.com> <CAJuCfpFJG8MS=LMC2saYYRPGv+xs+UXkrPWD9_Eo1VqY=7v1ow@mail.gmail.com>
-In-Reply-To: <CAJuCfpFJG8MS=LMC2saYYRPGv+xs+UXkrPWD9_Eo1VqY=7v1ow@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 24 Oct 2024 22:12:26 -0700
-Message-ID: <CAEf4BzbHs+XQK9GZQ59VB27s9Jz6AR7fQmX2XTsyTdz050xkOw@mail.gmail.com>
-Subject: Re: [PATCH v3 tip/perf/core 1/4] mm: introduce mmap_lock_speculation_{start|end}
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, akpm@linux-foundation.org, mjguzik@gmail.com, 
-	brauner@kernel.org, jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, 
-	shakeel.butt@linux.dev, hannes@cmpxchg.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+QiOd4J9=7-7v_Vh5YR7+BVTGYPzD6ARKxrrKWtPtKP3Oj8SQ@mail.gmail.com>
 
-On Thu, Oct 24, 2024 at 4:33=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Thu, Oct 24, 2024 at 4:20=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
+On Thu, Oct 24, 2024 at 09:15:56PM -0400, Jordan Rome wrote:
+> On Thu, Oct 24, 2024 at 4:28 PM <sergeh@kernel.org> wrote:
 > >
-> > On Thu, Oct 24, 2024 at 2:04=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Thu, Oct 24, 2024 at 9:28=E2=80=AFAM Suren Baghdasaryan <surenb@go=
-ogle.com> wrote:
-> > > >
-> > > > On Thu, Oct 24, 2024 at 2:57=E2=80=AFAM Peter Zijlstra <peterz@infr=
-adead.org> wrote:
-> > > > >
-> > > > > On Wed, Oct 23, 2024 at 03:17:01PM -0700, Suren Baghdasaryan wrot=
-e:
-> > > > >
-> > > > > > > Or better yet, just use seqcount...
-> > > > > >
-> > > > > > Yeah, with these changes it does look a lot like seqcount now..=
-.
-> > > > > > I can take another stab at rewriting this using seqcount_t but =
-one
-> > > > > > issue that Jann was concerned about is the counter being int vs=
- long.
-> > > > > > seqcount_t uses unsigned, so I'm not sure how to address that i=
-f I
-> > > > > > were to use seqcount_t. Any suggestions how to address that bef=
-ore I
-> > > > > > move forward with a rewrite?
-> > > > >
-> > > > > So if that issue is real, it is not specific to this case. Specif=
-ically
-> > > > > preemptible seqcount will be similarly affected. So we should pro=
-bably
-> > > > > address that in the seqcount implementation.
-> > > >
-> > > > Sounds good. Let me try rewriting this patch using seqcount_t and I=
-'ll
-> > > > work with Jann on a separate patch to change seqcount_t.
-> > > > Thanks for the feedback!
-> > >
-> > > I posted the patchset to convert mm_lock_seq into seqcount_t and to
-> > > add speculative functions at
-> > > https://lore.kernel.org/all/20241024205231.1944747-1-surenb@google.co=
-m/.
+> > On Thu, Oct 24, 2024 at 03:40:12AM -0700, Jordan Rome wrote:
+> > > In cases where we want a stable way to observe/trace
+> > > cap_capable (e.g. protection from inlining and API updates)
+> > > add a tracepoint that passes:
+> > > - The credentials used
+> > > - The user namespace which needs the capability
 > >
-> > Thanks, Suren! Hopefully it can land soon!
->
-> Would incorporating them into your patchset speed things up? If so,
-> feel free to include them into your series.
-
-I don't really think so. At this point the uprobe part is done (next
-revision has a comment style fix, that's all). So I'll just wait for
-your patches to be acked and applied, then I'll just do a trivial
-rebase. This will be easier for everyone at this point, IMO, to not
-couple them into a single patch set with two authors.
-
-Hopefully Peter will take those patches through tip/perf/core, though,
-so I don't have to wait for mm and tip trees to converge.
-
-> The only required change in your other patches is the renaming of
-> mmap_lock_speculation_start() to mmap_lock_speculation_begin().
-
-Yep, no problem.
-
->
+> > "the user namespace which needs the capability" is not quite the
+> > right way to put this.  It's the user namespace against which the
+> > capability is needed.  It's an object, not a subject.  Or maybe
+> > "the user namespace of the resource being accessed".
 > >
+> 
+> I like "The user namespace of the resource being accessed"
+> 
+> > > - The user namespace that actually has the capability (if one exists)
+> >
+> > How about "the user namespace in which the task has the
+> > capability targeted at the resource"?  (It's not the user
+> > namespace itself that has the capability)
+> >
+> 
+> This phrasing seems a little confusing. How about:
+> "The user namespace that has the capability to access the targeted resource" ?
+
+The problem again is that it's not the user namespace that has the
+capability.  The cred has the capability in that user namespace.
+
+"The user namespace in which the credential has the capability to access
+the targeted resource"?
+
+Or maybe s/has/provides/.
+
+> > > - The capability to check for
+> > > - Bitmask of options defined in include/linux/security.h
+> > > - The return value of the check
 > > >
-> > > >
-> > > > >
+> > > Signed-off-by: Jordan Rome <linux@jordanrome.com>
+> > > ---
+> > >  MAINTAINERS                       |  1 +
+> > >  include/trace/events/capability.h | 58 +++++++++++++++++++++++++++++++
+> > >  security/commoncap.c              | 21 +++++++----
+> > >  3 files changed, 74 insertions(+), 6 deletions(-)
+> > >  create mode 100644 include/trace/events/capability.h
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index cc40a9d9b8cd..210e9076c858 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -4994,6 +4994,7 @@ M:      Serge Hallyn <serge@hallyn.com>
+> > >  L:   linux-security-module@vger.kernel.org
+> > >  S:   Supported
+> > >  F:   include/linux/capability.h
+> > > +F:   include/trace/events/capability.h
+> > >  F:   include/uapi/linux/capability.h
+> > >  F:   kernel/capability.c
+> > >  F:   security/commoncap.c
+> > > diff --git a/include/trace/events/capability.h b/include/trace/events/capability.h
+> > > new file mode 100644
+> > > index 000000000000..092b8e77063a
+> > > --- /dev/null
+> > > +++ b/include/trace/events/capability.h
+> > > @@ -0,0 +1,58 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#undef TRACE_SYSTEM
+> > > +#define TRACE_SYSTEM capability
+> > > +
+> > > +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
+> > > +#define _TRACE_CAPABILITY_H
+> > > +
+> > > +#include <linux/cred.h>
+> > > +#include <linux/tracepoint.h>
+> > > +#include <linux/user_namespace.h>
+> > > +
+> > > +/**
+> > > + * capable - called after it's determined if a task has a particular
+> > > + * effective capability
+> > > + *
+> > > + * @cred: The credentials used
+> > > + * @targ_ns:  The user namespace which needs the capability
+> >
+> > (same here)
+> >
+> > > + * @capable_ns:  The user namespace that actually has the capability
+> > > + *               if ret is 0 otherwise this will be NULL
+> > > + * @cap: The capability to check for
+> > > + * @opts: Bitmask of options defined in include/linux/security.h
+> > > + * @ret: The return value of the check: 0 if it does, -ve if it does not
+> > > + *
+> > > + * Allows to trace calls to cap_capable in commoncap.c
+> > > + */
+> > > +TRACE_EVENT(capable,
+> > > +
+> > > +     TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
+> > > +             struct user_namespace *capable_ns, int cap, unsigned int opts, int ret),
+> > > +
+> > > +     TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
+> > > +
+> > > +     TP_STRUCT__entry(
+> > > +             __field(const struct cred *, cred)
+> > > +             __field(struct user_namespace *, targ_ns)
+> > > +             __field(struct user_namespace *, capable_ns)
+> > > +             __field(int, cap)
+> > > +             __field(unsigned int, opts)
+> > > +             __field(int, ret)
+> > > +     ),
+> > > +
+> > > +     TP_fast_assign(
+> > > +             __entry->cred       = cred;
+> > > +             __entry->targ_ns    = targ_ns;
+> > > +             __entry->capable_ns = capable_ns;
+> > > +             __entry->cap        = cap;
+> > > +             __entry->opts       = opts;
+> > > +             __entry->ret        = ret;
+> > > +     ),
+> > > +
+> > > +     TP_printk("cap %d, opts %u, ret %d",
+> > > +             __entry->cap, __entry->opts, __entry->ret)
+> > > +);
+> > > +
+> > > +#endif /* _TRACE_CAPABILITY_H */
+> > > +
+> > > +/* This part must be outside protection */
+> > > +#include <trace/define_trace.h>
+> > > diff --git a/security/commoncap.c b/security/commoncap.c
+> > > index 162d96b3a676..675d40fbaa77 100644
+> > > --- a/security/commoncap.c
+> > > +++ b/security/commoncap.c
+> > > @@ -27,6 +27,9 @@
+> > >  #include <linux/mnt_idmapping.h>
+> > >  #include <uapi/linux/lsm.h>
+> > >
+> > > +#define CREATE_TRACE_POINTS
+> > > +#include <trace/events/capability.h>
+> > > +
+> > >  /*
+> > >   * If a non-root user executes a setuid-root binary in
+> > >   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+> > > @@ -68,6 +71,7 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+> > >               int cap, unsigned int opts)
+> > >  {
+> > >       struct user_namespace *ns = targ_ns;
+> > > +     int ret = 0;
+> > >
+> > >       /* See if cred has the capability in the target user namespace
+> > >        * by examining the target user namespace and all of the target
+> > > @@ -75,22 +79,26 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+> > >        */
+> > >       for (;;) {
+> > >               /* Do we have the necessary capabilities? */
+> > > -             if (ns == cred->user_ns)
+> > > -                     return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+> > > +             if (ns == cred->user_ns) {
+> > > +                     ret = cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+> > > +                     break;
+> > > +             }
+> > >
+> > >               /*
+> > >                * If we're already at a lower level than we're looking for,
+> > >                * we're done searching.
+> > >                */
+> > > -             if (ns->level <= cred->user_ns->level)
+> > > -                     return -EPERM;
+> > > +             if (ns->level <= cred->user_ns->level) {
+> > > +                     ret = -EPERM;
+> > > +                     break;
+> > > +             }
+> > >
+> > >               /*
+> > >                * The owner of the user namespace in the parent of the
+> > >                * user namespace has all caps.
+> > >                */
+> > >               if ((ns->parent == cred->user_ns) && uid_eq(ns->owner, cred->euid))
+> > > -                     return 0;
+> > > +                     break;
+> > >
+> > >               /*
+> > >                * If you have a capability in a parent user ns, then you have
+> > > @@ -99,7 +107,8 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+> > >               ns = ns->parent;
+> > >       }
+> > >
+> > > -     /* We never get here */
+> >
+> > With this change, I become less comfortable with us assuming that it is
+> > the case that we'll never just drop off the end of the while loop.  I'd
+> > be more comfortable if you set ret = -EPERM at the top, and set it to 0
+> > in the last break.
+> >
+> 
+> Sure. I can make this change.
+> 
+> > > +     trace_capable(cred, targ_ns, ret == 0 ? ns : NULL, cap, opts, ret);
+> > > +     return ret;
+> > >  }
+> > >
+> > >  /**
+> > > --
+> > > 2.43.5
+> > >
