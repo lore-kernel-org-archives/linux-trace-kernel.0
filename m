@@ -1,33 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779813C807;
-	Fri, 25 Oct 2024 02:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1B186AE3;
+	Fri, 25 Oct 2024 02:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729822800; cv=none; b=KjVYV06p9KWkYYRto9+lrz9bX4yOLT/nTAsSdX8GQghBHUWr2GiXki3O/XLDbCqRLx9g0XU8lafuzXVLxXjAKmZ+7wKzCDYse9S/gxMqV61AggzXR2LeYdCFYa3Zx9P7o7UcCq4UfQmTlAj5oJn+fld+6zOFO/suiZV+cpFPpq8=
+	t=1729823389; cv=none; b=QWF7jhIfUnezUWxXkGw1Kbzc8io/QernuvIhUQcV27wY1yLMfvIBfrGS4W6Zhun71ptvsfeysvmfiGvXo7b3Hj3iRCgtxCzRSucZ9aGdmMxo3GhNAlzgy4mFHXxz2OHW9/A1xbqdazwRh07qO4w3WZr4qVoOu/6SCtnzkznyUaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729822800; c=relaxed/simple;
-	bh=WbE/oAARqexUJVhWC65sM69ZtqaASCIS8W0in1r88bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lto+94efETvuQBI2IFK6GkYfFQZhI3G4CNJH6PZjK17TzZq8PSApGFME9NSJLEe7Zwfkr4sChbKdO6efnPZmL3uGw+UkjFeCKjXiEYZAC531O4ZxfJOnF8oaA3aqS616prTMwukMaQAxfSKQnDTLrEqLRQtw8+YV8OhyYTQCqiA=
+	s=arc-20240116; t=1729823389; c=relaxed/simple;
+	bh=maewG1pabUMM7p9GiBQcQL2cP2/TW16L+uJ1f9eSQM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MI39neiBdJK99TNW3wX2qa6BQt+31zty0JoHM2Ng4jb3JXSknkuplu0/7rEETkKGrV6owJCalp3DKxH1f1Ol/d2nWpS9XJCJWPskZpUFxqyHRbbNDACA3GQMFBR/VuRYug+fcbLoIMYAA3SmpcztELi6XNOkItS8nVV4qqAL9hE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23F3C4CEC7;
-	Fri, 25 Oct 2024 02:19:58 +0000 (UTC)
-Date: Thu, 24 Oct 2024 22:19:55 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06C4C4CEC7;
+	Fri, 25 Oct 2024 02:29:47 +0000 (UTC)
+Date: Thu, 24 Oct 2024 22:29:44 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Christoph Hellwig <hch@lst.de>, iommu@lists.linux.dev, Robin Murphy
- <robin.murphy@arm.com>, linux-trace-kernel@vger.kernel.org, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] dma-mapping: Use trace_dma_alloc for dma_alloc*
- instead of using trace_dma_map
-Message-ID: <20241024221955.2fd9356e@rorschach.local.home>
-In-Reply-To: <20241018150036.2878190-4-sean.anderson@linux.dev>
-References: <20241018150036.2878190-1-sean.anderson@linux.dev>
-	<20241018150036.2878190-4-sean.anderson@linux.dev>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] fgraph: Change the name of cpuhp state to "fgraph:online"
+Message-ID: <20241024222944.473d88c5@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,32 +30,35 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Fri, 18 Oct 2024 11:00:36 -0400
-Sean Anderson <sean.anderson@linux.dev> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> +	TP_printk("%s dir=3D%s dma_addr=3D%llx size=3D%zu phys_addrs=3D%s flags=
-=3D%s attrs=3D%s",
-> +		__get_str(device),
-> +		decode_dma_data_direction(__entry->dir),
-> +		__entry->dma_addr,
-> +		__entry->size,
-> +		__print_array(__get_dynamic_array(phys_addrs),
-> +			      __get_dynamic_array_len(phys_addrs) /
-> +				sizeof(u64), sizeof(u64)),
-> +		show_gfp_flags(__entry->flags),
-> +		decode_dma_attrs(__entry->attrs))
+The cpuhp state name given to cpuhp_setup_state() is "fgraph_idle_init"
+which doesn't really conform to the names that are used for cpu hotplug
+setups. Instead rename it to "fgraph:online" to be in line with other
+states.
 
-=46rom a tracing perspective, everything in the patch set looks good.
-Just a heads up that the above __print_array() should be changed after
-6.13 is out to use __print_dynamic_array().
+Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 2c02f7375e658 ("fgraph: Use CPU hotplug mechanism to initialize idle shadow stacks")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  https://lore.kernel.org/linux-trace-kernel/20241022194158.110073-3-avadhu=
-t.naik@amd.com/
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index cd1c2946018c..69e226a48daa 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1255,7 +1255,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	guard(mutex)(&ftrace_lock);
+ 
+ 	if (!fgraph_initialized) {
+-		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph_idle_init",
++		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph:online",
+ 					fgraph_cpu_init, NULL);
+ 		if (ret < 0) {
+ 			pr_warn("fgraph: Error to init cpu hotplug support\n");
+-- 
+2.45.2
 
-For the series:
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
