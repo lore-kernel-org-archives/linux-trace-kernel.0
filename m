@@ -1,218 +1,145 @@
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DE9217F3F;
-	Sat, 26 Oct 2024 10:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C101632D8;
+	Sat, 26 Oct 2024 10:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729937402; cv=none; b=gRys4M9Q6E4DrSvqVMg445lVq3y3JKx1EIjn+9qAkhd1gqAm3yUGj1TajDmBhlWiojQLZQmrqnbvLZ3nN7ND3siPsC+QOL/his41/tc0HWsTcFo5NDIBZj1MQf29nEIhEinZBgrUPtu+5aFLyEGdcU0PIEZP2pOgSohE1WQw2Hg=
+	t=1729938735; cv=none; b=jMLUJhboyVWTF29I3KvZFl0NZgjKwKmnUA8UVWm74zDOw69GwzriBajalI6YNsmzwSwQ+UDxWFyCWfWoP2acK1325svFvaJbNhJFIMctZfgKEmIIN2znPY0Y6cWcYwXMX/jdUmg7XhQxt6fxaurUOc/Yti+Cel2yy/tYzpT2i8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729937402; c=relaxed/simple;
-	bh=Ad++GURp9pKSIw2Kk9sijqJcyX9SSCEP2J1PVJXYZOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBsG2HiQDpkwMMxuPgpXAJVN4DduFiP5JPUGDwu3xD+d7R6NNNRZR5bjz4jAc8sry1UScW47PriAMsu6odpy27a0l4Qr/8wgbMSpaKMu2FMP3fknFJn9mLiHfauzW/mCppbIelpQxRMKSmQ9km5CcEnpMwCMq2mEy47ZxdGFIM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id 4DC1C160E; Sat, 26 Oct 2024 05:09:56 -0500 (CDT)
-Date: Sat, 26 Oct 2024 05:09:56 -0500
-From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Jordan Rome <linux@jordanrome.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: [v2] security: add trace event for cap_capable
-Message-ID: <20241026100956.GA105650@mail.hallyn.com>
-References: <20241025151128.1854905-1-linux@jordanrome.com>
- <CAEf4BzYsQsj50hJut3+a4NUenZ+6ajfaFL_31NcvBdyoeBTiPg@mail.gmail.com>
- <20241025195228.GA99159@mail.hallyn.com>
- <CA+QiOd6Ef6V2=DeAc=8VdCJhRtxG5eZCBOPiMzedob1ARnR-zg@mail.gmail.com>
+	s=arc-20240116; t=1729938735; c=relaxed/simple;
+	bh=mwWIEVhnQYpMAE1Bmx4YYs7/nSup60f/f4lI38YYiDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZaMu4zK6Dv1rXsximTRi1SKpNjdOZkIrCvQjVRquQ1wvIoski7XDrzbRH1WbA3IeMT7uJ5vj6QgILrFPMBSlWeN0t8kThYJN3jUl1n/gbg6Fac29RNFxiew/TwWebwfUHTIDPDHit3rOTnyS3jB5muu9ZfWzPWXmJe2lW4PqkwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37E2C4CEC6;
+	Sat, 26 Oct 2024 10:32:13 +0000 (UTC)
+Date: Sat, 26 Oct 2024 06:32:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ryan Roberts <ryan.roberts@arm.com>
+Subject: [PATCH v2] fgraph: Give ret_stack its own kmem cache
+Message-ID: <20241026063210.7d4910a7@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+QiOd6Ef6V2=DeAc=8VdCJhRtxG5eZCBOPiMzedob1ARnR-zg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 25, 2024 at 04:24:05PM -0400, Jordan Rome wrote:
-> On Fri, Oct 25, 2024 at 3:52 PM Serge E. Hallyn <serge@hallyn.com> wrote:
-> >
-> > On Fri, Oct 25, 2024 at 11:37:59AM -0700, Andrii Nakryiko wrote:
-> > > On Fri, Oct 25, 2024 at 8:15 AM Jordan Rome <linux@jordanrome.com> wrote:
-> > > >
-> > > > In cases where we want a stable way to observe/trace
-> > > > cap_capable (e.g. protection from inlining and API updates)
-> > > > add a tracepoint that passes:
-> > > > - The credentials used
-> > > > - The user namespace of the resource being accessed
-> > > > - The user namespace that has the capability to access the
-> > > > targeted resource
-> > > > - The capability to check for
-> > > > - Bitmask of options defined in include/linux/security.h
-> > > > - The return value of the check
-> > > >
-> > > > Signed-off-by: Jordan Rome <linux@jordanrome.com>
-> > > > ---
-> > > >  MAINTAINERS                       |  1 +
-> > > >  include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
-> > > >  security/commoncap.c              | 31 +++++++++++-----
-> > > >  3 files changed, 84 insertions(+), 8 deletions(-)
-> > > >  create mode 100644 include/trace/events/capability.h
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index cc40a9d9b8cd..210e9076c858 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -4994,6 +4994,7 @@ M:        Serge Hallyn <serge@hallyn.com>
-> > > >  L:     linux-security-module@vger.kernel.org
-> > > >  S:     Supported
-> > > >  F:     include/linux/capability.h
-> > > > +F:     include/trace/events/capability.h
-> > > >  F:     include/uapi/linux/capability.h
-> > > >  F:     kernel/capability.c
-> > > >  F:     security/commoncap.c
-> > > > diff --git a/include/trace/events/capability.h b/include/trace/events/capability.h
-> > > > new file mode 100644
-> > > > index 000000000000..e706ce690c38
-> > > > --- /dev/null
-> > > > +++ b/include/trace/events/capability.h
-> > > > @@ -0,0 +1,60 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +#undef TRACE_SYSTEM
-> > > > +#define TRACE_SYSTEM capability
-> > > > +
-> > > > +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-> > > > +#define _TRACE_CAPABILITY_H
-> > > > +
-> > > > +#include <linux/cred.h>
-> > > > +#include <linux/tracepoint.h>
-> > > > +#include <linux/user_namespace.h>
-> > > > +
-> > > > +/**
-> > > > + * cap_capable - called after it's determined if a task has a particular
-> > > > + * effective capability
-> > > > + *
-> > > > + * @cred: The credentials used
-> > > > + * @targ_ns: The user namespace of the resource being accessed
-> > > > + * @capable_ns: The user namespace in which the credential provides the
-> > > > + *              capability to access the targeted resource.
-> > > > + *              This will be NULL if ret is not 0.
-> > > > + * @cap: The capability to check for
-> > > > + * @opts: Bitmask of options defined in include/linux/security.h
-> > > > + * @ret: The return value of the check: 0 if it does, -ve if it does not
-> > > > + *
-> > > > + * Allows to trace calls to cap_capable in commoncap.c
-> > > > + */
-> > > > +TRACE_EVENT(cap_capable,
-> > > > +
-> > > > +       TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
-> > > > +               struct user_namespace *capable_ns, int cap, unsigned int opts, int ret),
-> > > > +
-> > > > +       TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
-> > > > +
-> > > > +       TP_STRUCT__entry(
-> > > > +               __field(const struct cred *, cred)
-> > > > +               __field(struct user_namespace *, targ_ns)
-> > > > +               __field(struct user_namespace *, capable_ns)
-> > > > +               __field(int, cap)
-> > > > +               __field(unsigned int, opts)
-> > > > +               __field(int, ret)
-> > > > +       ),
-> > > > +
-> > > > +       TP_fast_assign(
-> > > > +               __entry->cred       = cred;
-> > > > +               __entry->targ_ns    = targ_ns;
-> > > > +               __entry->capable_ns = capable_ns;
-> > > > +               __entry->cap        = cap;
-> > > > +               __entry->opts       = opts;
-> > > > +               __entry->ret        = ret;
-> > > > +       ),
-> > > > +
-> > > > +       TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d, opts %u, ret %d",
-> > > > +               __entry->cred, __entry->targ_ns, __entry->capable_ns, __entry->cap,
-> > > > +               __entry->opts, __entry->ret)
-> > > > +);
-> > > > +
-> > > > +#endif /* _TRACE_CAPABILITY_H */
-> > > > +
-> > > > +/* This part must be outside protection */
-> > > > +#include <trace/define_trace.h>
-> > > > diff --git a/security/commoncap.c b/security/commoncap.c
-> > > > index 162d96b3a676..12c3ddfe0d6e 100644
-> > > > --- a/security/commoncap.c
-> > > > +++ b/security/commoncap.c
-> > > > @@ -27,6 +27,9 @@
-> > > >  #include <linux/mnt_idmapping.h>
-> > > >  #include <uapi/linux/lsm.h>
-> > > >
-> > > > +#define CREATE_TRACE_POINTS
-> > > > +#include <trace/events/capability.h>
-> > > > +
-> > > >  /*
-> > > >   * If a non-root user executes a setuid-root binary in
-> > > >   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-> > > > @@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(const char *fname)
-> > > >  /**
-> > > >   * cap_capable - Determine whether a task has a particular effective capability
-> > > >   * @cred: The credentials to use
-> > > > - * @targ_ns:  The user namespace in which we need the capability
-> > > > + * @targ_ns:  The user namespace of the resource being accessed
-> > > >   * @cap: The capability to check for
-> > > >   * @opts: Bitmask of options defined in include/linux/security.h
-> > > >   *
-> > > > @@ -68,6 +71,7 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
-> > > >                 int cap, unsigned int opts)
-> > > >  {
-> > > >         struct user_namespace *ns = targ_ns;
-> > > > +       int ret = -EPERM;
-> > > >
-> > > >         /* See if cred has the capability in the target user namespace
-> > > >          * by examining the target user namespace and all of the target
-> > > > @@ -75,22 +79,32 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
-> > > >          */
-> > > >         for (;;) {
-> > > >                 /* Do we have the necessary capabilities? */
-> > > > -               if (ns == cred->user_ns)
-> > > > -                       return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
-> > > > +               if (ns == cred->user_ns) {
-> > > > +                       if (cap_raised(cred->cap_effective, cap))
-> > > > +                               ret = 0;
-> > > > +                       else
-> > > > +                               ns = NULL;
-> > >
-> > > This is a bit unfortunate :( so maybe all we needed was `ns =
-> > > ns->parent` for that one use case, and keep the original `ret ? NULL :
-> > > ns` inside trace_cap_capable().
-> >
-> > Yeah, that would be fine with me.  Or maybe just doing
-> >
-> >         /* in case of an error, trace should show ns=NULL */
-> >         if (ret)
-> >                 ns = NULL;
-> >
-> > right above the trace_cap_capable() call would be clearer.
-> 
-> I feel like having less trace specific logic in this function would be
-> a good thing,
-> so I'm for Andrii's suggestion of doing the ret check there but also
-> fine to do what security folks prefer :)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I think a comment is needed to remind us (me) in 2 years why the
-seting of ns to NULL is there.  But the comment of trace_cap_capable()
-probably suffices, so sure, go with Andrii's suggestion.  And then
+The ret_stack (shadow stack used by function graph infrastructure) is
+created for every task on the system when function graph is enabled. Give
+it its own kmem_cache. This will make it easier to see how much memory is
+being used specifically for function graph shadow stacks.
 
-Reviewed-by: Serge Hallyn <serge@hallyn.com>
+In the future, this size may change and may not be a power of two. Having
+its own cache can also keep it from fragmenting memory.
 
-for the capability code.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/20241019152719.321772eb@rorschach.local.home
 
-thanks,
--serge
+- Rebased on top of urgent merged into for-next (uses guard(mutex) now)
+
+ kernel/trace/fgraph.c | 33 ++++++++++++++++++++++++++++-----
+ 1 file changed, 28 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 4ce87982966a..001abf376c0c 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -172,6 +172,8 @@ enum {
+ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+ int ftrace_graph_active;
+ 
++static struct kmem_cache *fgraph_stack_cachep;
++
+ static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+ static unsigned long fgraph_array_bitmask;
+ 
+@@ -1022,8 +1024,11 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+ 	int start = 0, end = FTRACE_RETSTACK_ALLOC_SIZE;
+ 	struct task_struct *g, *t;
+ 
++	if (WARN_ON_ONCE(!fgraph_stack_cachep))
++		return -ENOMEM;
++
+ 	for (i = 0; i < FTRACE_RETSTACK_ALLOC_SIZE; i++) {
+-		ret_stack_list[i] = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
++		ret_stack_list[i] = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+ 		if (!ret_stack_list[i]) {
+ 			start = 0;
+ 			end = i;
+@@ -1054,7 +1059,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+ 	rcu_read_unlock();
+ free:
+ 	for (i = start; i < end; i++)
+-		kfree(ret_stack_list[i]);
++		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
+ 	return ret;
+ }
+ 
+@@ -1117,9 +1122,12 @@ void ftrace_graph_init_idle_task(struct task_struct *t, int cpu)
+ 	if (ftrace_graph_active) {
+ 		unsigned long *ret_stack;
+ 
++		if (WARN_ON_ONCE(!fgraph_stack_cachep))
++			return;
++
+ 		ret_stack = per_cpu(idle_ret_stack, cpu);
+ 		if (!ret_stack) {
+-			ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
++			ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+ 			if (!ret_stack)
+ 				return;
+ 			per_cpu(idle_ret_stack, cpu) = ret_stack;
+@@ -1139,7 +1147,10 @@ void ftrace_graph_init_task(struct task_struct *t)
+ 	if (ftrace_graph_active) {
+ 		unsigned long *ret_stack;
+ 
+-		ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
++		if (WARN_ON_ONCE(!fgraph_stack_cachep))
++			return;
++
++		ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+ 		if (!ret_stack)
+ 			return;
+ 		graph_init_task(t, ret_stack);
+@@ -1154,7 +1165,11 @@ void ftrace_graph_exit_task(struct task_struct *t)
+ 	/* NULL must become visible to IRQs before we free it: */
+ 	barrier();
+ 
+-	kfree(ret_stack);
++	if (ret_stack) {
++		if (WARN_ON_ONCE(!fgraph_stack_cachep))
++			return;
++		kmem_cache_free(fgraph_stack_cachep, ret_stack);
++	}
+ }
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+@@ -1294,6 +1309,14 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 
+ 	guard(mutex)(&ftrace_lock);
+ 
++	if (!fgraph_stack_cachep) {
++		fgraph_stack_cachep = kmem_cache_create("fgraph_stack",
++							SHADOW_STACK_SIZE,
++							SHADOW_STACK_SIZE, 0, NULL);
++		if (!fgraph_stack_cachep)
++			return -ENOMEM;
++	}
++
+ 	if (!fgraph_initialized) {
+ 		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph:online",
+ 					fgraph_cpu_init, NULL);
+-- 
+2.45.2
+
