@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47CA14D2BE;
-	Sun, 27 Oct 2024 11:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A1C1D540;
+	Sun, 27 Oct 2024 14:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730030396; cv=none; b=FIBWPewGPGcRulHWu4h+yeMo/AzvPRhJtmvYG7ZAHcfY6bF7G+HxIKfEop7eZhONhFqVGo8WwB6nztE5Sk5q4F1r/U71cLZNhUycKmvYqv46aGj5DpdQ7eiKEzPv2cKx1SO0nsC75QDDmhYbs0+oMNqCf0VNKj/iRXAODo4LtRA=
+	t=1730037784; cv=none; b=uCZzzCOafdLfNdFC8DBIt3hdX/GEeyrtcXf1sFBW3dg9A4RYPm8ozazlLAiojpgX0g/VMtpNurd5nvmkzpEkA/bAJiYmt72KBjQziZ2HdyaYyKBSp9zbf2QuPbeQSDBXPcw58PJjY4emE1YyEdyESDU7qGVVy2lEDbJydJQ1rYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730030396; c=relaxed/simple;
-	bh=no/+AbuoRzYxRFzGoq3ejOzhVao1LX1mcfFKJ9bkfXA=;
+	s=arc-20240116; t=1730037784; c=relaxed/simple;
+	bh=LhoYjWPnw5QWHt7GC9qloa0rQmmKlS9JcCkIHsCUrXI=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lZQTSpMGsZzeZGN8+4fpWMA9tuE3loKiLsM5ie5IXSOJmh3nEUMel7IvS1DeLEMRiVgtVllvGZa5T/MegWCQiKvQ4Fr2ClTK804Lm3OZe9Y32bPTtbiyvlCfIwVDjeg+pKpc/k9pxA7sU3KC4Xa2Z16ip2dCxeboqZnCESnYcLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQaknicl; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=R2VoXWvLBkbLn+shfQdxguMYs2KynOyd+4HC7Z6996LveKcuDzigligSWiGsqcAvtToBlOkHDWjBeqA46h5WRu26eMSgmaacKVJzam+UOH8pzYU4/mzJ1b/YGsTH+azh0UnlXuwQgDc4SZUZKvrAY3CB7GmUMoEu2YYXqr3sn8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GIrAL571; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQaknicl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E9AAC4CEE8;
-	Sun, 27 Oct 2024 11:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GIrAL571"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA151C4CEC3;
+	Sun, 27 Oct 2024 14:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730030396;
-	bh=no/+AbuoRzYxRFzGoq3ejOzhVao1LX1mcfFKJ9bkfXA=;
+	s=k20201202; t=1730037783;
+	bh=LhoYjWPnw5QWHt7GC9qloa0rQmmKlS9JcCkIHsCUrXI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UQakniclNBUTG4LjfMqiEotg1kwXjpTW6UewlaZYZztiW56k7Hv/KAzkG8kD3WkuI
-	 eOEBsIxpBEA2KQRhrmGHd9tGGTrjMX9G+GoRpv5yfiRo/InbkTdsfq9j0yL6BHs6hD
-	 SSUMHdt/0ziNpw7Bn3vf4GgwAnCkYLx1tO3IjDHXoa6M/gHnMLpTPxU87dmMC3O0Ow
-	 Y1ZU+AyokkNMySopDCxtgkg+EZEPkTznLqolcUBeR54eseZpi0JtOrEVDXzAwu/2u5
-	 yP6+Vq+QkzmhmD8zV8fPaA39f4FXeF2eGE+WUMDtfOTOM61g8aFHgfcYkva5rHjuaB
-	 L0dbhimjSYY0A==
-Date: Sun, 27 Oct 2024 20:59:52 +0900
+	b=GIrAL57198rDy9Hctkx4eClyY3UHQPHYQz9cTB+qHBOzRkl9kmSFaAJqiZPxKAYlg
+	 FKQhNaYEalQNtMb+ry+p84SaVhaQbZ70JOtvxAHUpBYbloCMpQ9aksHPojUmq0eZvX
+	 qYqR+Bqzdsj9p5NTDjH1zgYsGpv+J9RgDtV3YhxyF1uG613b/ym83iwn604Cr6SxeI
+	 16HYYSs/MKNtobg3fOI4Mvci5QanT16cBxWn0MULPP0t8pqPDPmkM8CeTOxqPgEz3b
+	 m9NFYpBE7QvW4yBZkOKLip+Uu0kVwnCDSmUHEMSU7hq6KqyskJtof42F3n7NChulon
+	 jz5Eqckc+L6gg==
+Date: Sun, 27 Oct 2024 23:02:59 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>
-Subject: Re: [PATCH] fgraph: Change the name of cpuhp state to
- "fgraph:online"
-Message-Id: <20241027205952.e9c65a883362d8fdbdd2fe15@kernel.org>
-In-Reply-To: <20241024222944.473d88c5@rorschach.local.home>
-References: <20241024222944.473d88c5@rorschach.local.home>
+ Desnoyers <mathieu.desnoyers@efficios.com>, Ryan Roberts
+ <ryan.roberts@arm.com>
+Subject: Re: [PATCH v2] fgraph: Give ret_stack its own kmem cache
+Message-Id: <20241027230259.d908b43b5d41833cebb9ff2c@kernel.org>
+In-Reply-To: <20241026063210.7d4910a7@rorschach.local.home>
+References: <20241026063210.7d4910a7@rorschach.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,43 +48,124 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Oct 2024 22:29:44 -0400
+On Sat, 26 Oct 2024 06:32:10 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> The cpuhp state name given to cpuhp_setup_state() is "fgraph_idle_init"
-> which doesn't really conform to the names that are used for cpu hotplug
-> setups. Instead rename it to "fgraph:online" to be in line with other
-> states.
+> The ret_stack (shadow stack used by function graph infrastructure) is
+> created for every task on the system when function graph is enabled. Give
+> it its own kmem_cache. This will make it easier to see how much memory is
+> being used specifically for function graph shadow stacks.
 > 
-> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Fixes: 2c02f7375e658 ("fgraph: Use CPU hotplug mechanism to initialize idle shadow stacks")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> In the future, this size may change and may not be a power of two. Having
+> its own cache can also keep it from fragmenting memory.
+> 
 
 Looks good to me.
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you!
+Thank youm
 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/fgraph.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v1: https://lore.kernel.org/20241019152719.321772eb@rorschach.local.home
+> 
+> - Rebased on top of urgent merged into for-next (uses guard(mutex) now)
+> 
+>  kernel/trace/fgraph.c | 33 ++++++++++++++++++++++++++++-----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
 > 
 > diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-> index cd1c2946018c..69e226a48daa 100644
+> index 4ce87982966a..001abf376c0c 100644
 > --- a/kernel/trace/fgraph.c
 > +++ b/kernel/trace/fgraph.c
-> @@ -1255,7 +1255,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+> @@ -172,6 +172,8 @@ enum {
+>  DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+>  int ftrace_graph_active;
+>  
+> +static struct kmem_cache *fgraph_stack_cachep;
+> +
+>  static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
+>  static unsigned long fgraph_array_bitmask;
+>  
+> @@ -1022,8 +1024,11 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  	int start = 0, end = FTRACE_RETSTACK_ALLOC_SIZE;
+>  	struct task_struct *g, *t;
+>  
+> +	if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +		return -ENOMEM;
+> +
+>  	for (i = 0; i < FTRACE_RETSTACK_ALLOC_SIZE; i++) {
+> -		ret_stack_list[i] = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +		ret_stack_list[i] = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  		if (!ret_stack_list[i]) {
+>  			start = 0;
+>  			end = i;
+> @@ -1054,7 +1059,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+>  	rcu_read_unlock();
+>  free:
+>  	for (i = start; i < end; i++)
+> -		kfree(ret_stack_list[i]);
+> +		kmem_cache_free(fgraph_stack_cachep, ret_stack_list[i]);
+>  	return ret;
+>  }
+>  
+> @@ -1117,9 +1122,12 @@ void ftrace_graph_init_idle_task(struct task_struct *t, int cpu)
+>  	if (ftrace_graph_active) {
+>  		unsigned long *ret_stack;
+>  
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +
+>  		ret_stack = per_cpu(idle_ret_stack, cpu);
+>  		if (!ret_stack) {
+> -			ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +			ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  			if (!ret_stack)
+>  				return;
+>  			per_cpu(idle_ret_stack, cpu) = ret_stack;
+> @@ -1139,7 +1147,10 @@ void ftrace_graph_init_task(struct task_struct *t)
+>  	if (ftrace_graph_active) {
+>  		unsigned long *ret_stack;
+>  
+> -		ret_stack = kmalloc(SHADOW_STACK_SIZE, GFP_KERNEL);
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +
+> +		ret_stack = kmem_cache_alloc(fgraph_stack_cachep, GFP_KERNEL);
+>  		if (!ret_stack)
+>  			return;
+>  		graph_init_task(t, ret_stack);
+> @@ -1154,7 +1165,11 @@ void ftrace_graph_exit_task(struct task_struct *t)
+>  	/* NULL must become visible to IRQs before we free it: */
+>  	barrier();
+>  
+> -	kfree(ret_stack);
+> +	if (ret_stack) {
+> +		if (WARN_ON_ONCE(!fgraph_stack_cachep))
+> +			return;
+> +		kmem_cache_free(fgraph_stack_cachep, ret_stack);
+> +	}
+>  }
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> @@ -1294,6 +1309,14 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>  
 >  	guard(mutex)(&ftrace_lock);
 >  
+> +	if (!fgraph_stack_cachep) {
+> +		fgraph_stack_cachep = kmem_cache_create("fgraph_stack",
+> +							SHADOW_STACK_SIZE,
+> +							SHADOW_STACK_SIZE, 0, NULL);
+> +		if (!fgraph_stack_cachep)
+> +			return -ENOMEM;
+> +	}
+> +
 >  	if (!fgraph_initialized) {
-> -		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph_idle_init",
-> +		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph:online",
+>  		ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "fgraph:online",
 >  					fgraph_cpu_init, NULL);
->  		if (ret < 0) {
->  			pr_warn("fgraph: Error to init cpu hotplug support\n");
 > -- 
 > 2.45.2
 > 
