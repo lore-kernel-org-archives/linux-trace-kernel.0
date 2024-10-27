@@ -1,290 +1,105 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9549175D4A;
-	Sun, 27 Oct 2024 18:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C259716EB54;
+	Sun, 27 Oct 2024 21:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730053301; cv=none; b=uaQkYUndyH27aJQNgihY42cCRqxYGXpCmumt+69gJyZL9tymU5e4DZuVe7hvkNyMNDOQCEIRj2WPR7FsHGlsHBI+ZWeilkoSjbe2ptAJA73BPj6IovjRAuWLZdfVvJRPkHxQaLWqXTdjgvtXHtutQCr9nWkxm4yQK6Yzl/q1Uxc=
+	t=1730063981; cv=none; b=hDEC1dHV/IgGnCMTkr2/I5vHnu/eAcTDE9B+1c1c37GRaO6AB14wYDl/ORVas1TUiTfJETt6I985wn4jFesIhyhQWK0JLMNGsWo3d1tUYjh2TtmZ8kTooJGx/n/XT7e5T77zsT5l1zMAHGPV0rzkP/PDD14H9Q7j702aAB2mePM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730053301; c=relaxed/simple;
-	bh=xFjRz0W5GU/jMN+73C/HusZiBed8KHgK8PHYiA4lQLg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L6A7rBY7JN+GGIxSYuzL1OqUjn6dfXuEEzid7GH6N+aFT6fUCAex1mpihgbGAJwlkhQBNJ+9jikZUvRBZpedj4LTwUiR153Mq8NvH7lxBUqGNH4N1Wab0sN5GMKsUawontKHd8QC66Dk8ihoSe2NJvWnoOkk9Cx1xjI4im6jwJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
+	s=arc-20240116; t=1730063981; c=relaxed/simple;
+	bh=KdJh3u3ZP0U2JiSBziw64zZvKITJSsDF5v402M9mu6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJZoOtLX8k4BTgp4IZaKGNVUiy9NghtOaE9jqHAgIgH8lhjHGXLDoDXX7ue07LyDKQWnIrGMhWabxeBRCO82/wS7xWrZwWyIUGyHBlaG+QyGY9KrlTyeClzYcO1Dt10I4YBbiZkVMUOU10MvVTYpmWUuSRZqsPq1DzVKD1VQ1S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhnbE+cJ; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3a398638ff9so13593655ab.3;
-        Sun, 27 Oct 2024 11:21:38 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhnbE+cJ"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2ab5bbc01so570944a91.2;
+        Sun, 27 Oct 2024 14:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730063979; x=1730668779; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AEQW5MOWjW7KV/lqVtyNAJeFCNbHriW6AQc/1TGHzzM=;
+        b=jhnbE+cJWpLpZzGJ04kihbeBSSIEFNnr7SujugP4qnG2io500mtz+Za5MOaK09SlZd
+         hDv/QQXsPmQzGDyecfHAzJnsPUtepW+D1Ornz914Ky4wNmCeKQGLc4kaa8cbe4ChjquV
+         7F/1MsQzw4cA9BaTMgQJ600vPaFrdpeki/IbzBT8tt7pgvUOn7eaPLlfVZxNE/jCse+O
+         YaIWmcWZUsG+6SO+NkmWb3stTYXaXblUNGbgdnko01durhs3NyjM5okyehw9FhhpdbCB
+         G5hKteW15w4cPLIhnTM1U4p1d7SPpoXEJ/m1aHsAEIzOtyVdSqhydhM1/vupY3aUjiBu
+         V5Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730053298; x=1730658098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KBVlJWzdLy/ya8eL90YFMh4p1F3X3tt8XKuflte087o=;
-        b=Bev5+L9MfeoFLnGy+7tTpEn3axTDQ15JjjQNOfHN+AEqK0tGhMFJVRc8yuGue5z48s
-         Kc+8+u7W2/CdNxmpOTZdqfr1gH5MUPq7fit+tXXvps7QqT5Uog1mYixO+n1CV6pHuetV
-         NzFBHGdSWkNKBbOIxNhwZ/ag1my3Q01Z6fkwPyhR8toDrMf7wKORI0BFaL1xszn7IOY3
-         GAUQb1zjCPWo8a+dwdRmjrELYl5Nd1t5guA9Mif56yfvipeGk2uEYnDkRt7riqnmJK79
-         SlrNrgsZw3jMJihH7myojy4cBOJ5AIGPhW1lIduxJJbmKEjaI9GE4NbnfQoIsVW/AEN6
-         cP1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV6kFWFyyBpSq9UXknQDlMWNZzovvws5LtdeJ4PPj6HFavG3xEchPovNHh1IXlmUD6mRFxm0PulMohMxYBV2mZP4rMvwtI=@vger.kernel.org, AJvYcCXYlJOtjuh1Lnw/nbBok+QOIpCJ0N1cKcu+BBzxPVu0dQ1CoV8W8NXNAlanZMRRxR+VvF70sZ7/7Ko6RbkKsiQXhk5V@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDb5bOxzLlSdfo00ngSvGKC8NxHQ3pOyskpg0m3e2OGu/x6SOo
-	hRdZjh51hOQlHNeg67VL1nikwarORBsAUMdxSdUYwxxOPI87/7S9rwynQmKt5YmbCax/Bh5nnE/
-	WdzNwiW2qnbVAGR1lYFF19tP4SHg=
-X-Google-Smtp-Source: AGHT+IFkUZqTQrQDofXcxJE2YOGBMxuxk6S2mMIyQDCVCRY3may9Cv40aInvayxBenz7IhrrEv7tRIO69tMVIutQbxI=
-X-Received: by 2002:a05:6e02:b49:b0:3a0:bc89:612 with SMTP id
- e9e14a558f8ab-3a4ed296443mr52283285ab.8.1730053297718; Sun, 27 Oct 2024
- 11:21:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730063979; x=1730668779;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AEQW5MOWjW7KV/lqVtyNAJeFCNbHriW6AQc/1TGHzzM=;
+        b=AiTTUBYfbWIVvOfGtoEb2sD7IuKTOviMALizgfbmFbEGZq3fTuf+j4c8BB2lKjE186
+         fE1C3KdWNkZ0pCWV+3hA65ASfbV7LNfriMn9AbpkLAvhpJClkI7ELUgmixW156b8fh/b
+         GzRivvuw6td5GVGJ74elE99sOav8Qw+jv0ZTCABvGo9CYDBufK1Q8FrVMNtfwJNrCGcj
+         aA6Vr/XN6i7aJobEJlSGpaTWXp2vxqMbfS2aspE55FNc4jp+0zkdLcUdXj8QUMIpcU05
+         dkpbN5JASTu1j9JuWSQinsOor2BORiEnW7HLuHDUMfowTO+KtitKAt5gPsc2BCVg3OfM
+         Vj3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ4MXJBq1AOxNpSisoyLdHLdmYKCEXwdmtI811dzMaKx4lmSgl0EZZtY9zYXN8SJGj41nabCJ2UkWePPH5UbCev9+H@vger.kernel.org, AJvYcCX+nBxOTGgLCtOs5xID+dFgYMDAZeG3SOHgVaiKx9gj/YE6DtWNFk/iS3lLpJ9mNL/QgWAy1GDQWY8zC3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMiDc7lEQIO4niZD+PIMbkzcPKn5mE/QWT/IL+nM+M7QYfRDEB
+	6of5l3fSOYEVG/I4xXQLC6zlvreM1OGaVkdfZad7sqD2jwOGgMkg
+X-Google-Smtp-Source: AGHT+IEOQnQ3OFqJ1bnyeZSnpt9CJgoKqnnMYnDe0BvRc7amn7cMEMJ+P4mQ2xX1emxWf5yAVIR3Ag==
+X-Received: by 2002:a05:6a21:9997:b0:1d9:1894:cdc4 with SMTP id adf61e73a8af0-1d9a8534ed8mr3959762637.11.1730063979023;
+        Sun, 27 Oct 2024 14:19:39 -0700 (PDT)
+Received: from motti-test.. ([2409:40f4:300a:9618:92ca:3f55:718b:1cab])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7edc89f2d19sm4383887a12.67.2024.10.27.14.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Oct 2024 14:19:38 -0700 (PDT)
+From: MottiKumar Babu <mottikumarbabu@gmail.com>
+To: 
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	anupnewsmail@gmail.com,
+	skhan@linuxfoundation.org
+Subject: [PATCH] Removed unnecessary initialization of "ret"
+Date: Mon, 28 Oct 2024 02:48:18 +0530
+Message-ID: <20241027211913.26718-2-mottikumarbabu@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241025151128.1854905-1-linux@jordanrome.com>
- <CAEf4BzYsQsj50hJut3+a4NUenZ+6ajfaFL_31NcvBdyoeBTiPg@mail.gmail.com>
- <20241025195228.GA99159@mail.hallyn.com> <CA+QiOd6Ef6V2=DeAc=8VdCJhRtxG5eZCBOPiMzedob1ARnR-zg@mail.gmail.com>
- <20241026100956.GA105650@mail.hallyn.com> <CA+QiOd6R4VcdqtaM3LX47Vjffuk_rSsdra4bdhe1i-+NGK7NDQ@mail.gmail.com>
- <20241026130011.GA106868@mail.hallyn.com>
-In-Reply-To: <20241026130011.GA106868@mail.hallyn.com>
-From: Jordan Rome <jordan@jordanrome.com>
-Date: Sun, 27 Oct 2024 14:21:26 -0400
-Message-ID: <CA+QiOd7GeAaZgps80dyAFpOV=uMQssaBLuHXb-dQBBs85RWKgQ@mail.gmail.com>
-Subject: Re: [v2] security: add trace event for cap_capable
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
-	Kernel Team <kernel-team@fb.com>, Yonghong Song <yonghong.song@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Oct 26, 2024 at 9:00=E2=80=AFAM Serge E. Hallyn <serge@hallyn.com> =
-wrote:
->
-> On Sat, Oct 26, 2024 at 07:22:29AM -0400, Jordan Rome wrote:
-> > On Sat, Oct 26, 2024 at 6:10=E2=80=AFAM Serge E. Hallyn <serge@hallyn.c=
-om> wrote:
-> > >
-> > > On Fri, Oct 25, 2024 at 04:24:05PM -0400, Jordan Rome wrote:
-> > > > On Fri, Oct 25, 2024 at 3:52=E2=80=AFPM Serge E. Hallyn <serge@hall=
-yn.com> wrote:
-> > > > >
-> > > > > On Fri, Oct 25, 2024 at 11:37:59AM -0700, Andrii Nakryiko wrote:
-> > > > > > On Fri, Oct 25, 2024 at 8:15=E2=80=AFAM Jordan Rome <linux@jord=
-anrome.com> wrote:
-> > > > > > >
-> > > > > > > In cases where we want a stable way to observe/trace
-> > > > > > > cap_capable (e.g. protection from inlining and API updates)
-> > > > > > > add a tracepoint that passes:
-> > > > > > > - The credentials used
-> > > > > > > - The user namespace of the resource being accessed
-> > > > > > > - The user namespace that has the capability to access the
-> > > > > > > targeted resource
-> > > > > > > - The capability to check for
-> > > > > > > - Bitmask of options defined in include/linux/security.h
-> > > > > > > - The return value of the check
-> > > > > > >
-> > > > > > > Signed-off-by: Jordan Rome <linux@jordanrome.com>
-> > > > > > > ---
-> > > > > > >  MAINTAINERS                       |  1 +
-> > > > > > >  include/trace/events/capability.h | 60 +++++++++++++++++++++=
-++++++++++
-> > > > > > >  security/commoncap.c              | 31 +++++++++++-----
-> > > > > > >  3 files changed, 84 insertions(+), 8 deletions(-)
-> > > > > > >  create mode 100644 include/trace/events/capability.h
-> > > > > > >
-> > > > > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > > > > index cc40a9d9b8cd..210e9076c858 100644
-> > > > > > > --- a/MAINTAINERS
-> > > > > > > +++ b/MAINTAINERS
-> > > > > > > @@ -4994,6 +4994,7 @@ M:        Serge Hallyn <serge@hallyn.co=
-m>
-> > > > > > >  L:     linux-security-module@vger.kernel.org
-> > > > > > >  S:     Supported
-> > > > > > >  F:     include/linux/capability.h
-> > > > > > > +F:     include/trace/events/capability.h
-> > > > > > >  F:     include/uapi/linux/capability.h
-> > > > > > >  F:     kernel/capability.c
-> > > > > > >  F:     security/commoncap.c
-> > > > > > > diff --git a/include/trace/events/capability.h b/include/trac=
-e/events/capability.h
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..e706ce690c38
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/include/trace/events/capability.h
-> > > > > > > @@ -0,0 +1,60 @@
-> > > > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > > > +#undef TRACE_SYSTEM
-> > > > > > > +#define TRACE_SYSTEM capability
-> > > > > > > +
-> > > > > > > +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MU=
-LTI_READ)
-> > > > > > > +#define _TRACE_CAPABILITY_H
-> > > > > > > +
-> > > > > > > +#include <linux/cred.h>
-> > > > > > > +#include <linux/tracepoint.h>
-> > > > > > > +#include <linux/user_namespace.h>
-> > > > > > > +
-> > > > > > > +/**
-> > > > > > > + * cap_capable - called after it's determined if a task has =
-a particular
-> > > > > > > + * effective capability
-> > > > > > > + *
-> > > > > > > + * @cred: The credentials used
-> > > > > > > + * @targ_ns: The user namespace of the resource being access=
-ed
-> > > > > > > + * @capable_ns: The user namespace in which the credential p=
-rovides the
-> > > > > > > + *              capability to access the targeted resource.
-> > > > > > > + *              This will be NULL if ret is not 0.
-> > > > > > > + * @cap: The capability to check for
-> > > > > > > + * @opts: Bitmask of options defined in include/linux/securi=
-ty.h
-> > > > > > > + * @ret: The return value of the check: 0 if it does, -ve if=
- it does not
-> > > > > > > + *
-> > > > > > > + * Allows to trace calls to cap_capable in commoncap.c
-> > > > > > > + */
-> > > > > > > +TRACE_EVENT(cap_capable,
-> > > > > > > +
-> > > > > > > +       TP_PROTO(const struct cred *cred, struct user_namespa=
-ce *targ_ns,
-> > > > > > > +               struct user_namespace *capable_ns, int cap, u=
-nsigned int opts, int ret),
-> > > > > > > +
-> > > > > > > +       TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
-> > > > > > > +
-> > > > > > > +       TP_STRUCT__entry(
-> > > > > > > +               __field(const struct cred *, cred)
-> > > > > > > +               __field(struct user_namespace *, targ_ns)
-> > > > > > > +               __field(struct user_namespace *, capable_ns)
-> > > > > > > +               __field(int, cap)
-> > > > > > > +               __field(unsigned int, opts)
-> > > > > > > +               __field(int, ret)
-> > > > > > > +       ),
-> > > > > > > +
-> > > > > > > +       TP_fast_assign(
-> > > > > > > +               __entry->cred       =3D cred;
-> > > > > > > +               __entry->targ_ns    =3D targ_ns;
-> > > > > > > +               __entry->capable_ns =3D capable_ns;
-> > > > > > > +               __entry->cap        =3D cap;
-> > > > > > > +               __entry->opts       =3D opts;
-> > > > > > > +               __entry->ret        =3D ret;
-> > > > > > > +       ),
-> > > > > > > +
-> > > > > > > +       TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d=
-, opts %u, ret %d",
-> > > > > > > +               __entry->cred, __entry->targ_ns, __entry->cap=
-able_ns, __entry->cap,
-> > > > > > > +               __entry->opts, __entry->ret)
-> > > > > > > +);
-> > > > > > > +
-> > > > > > > +#endif /* _TRACE_CAPABILITY_H */
-> > > > > > > +
-> > > > > > > +/* This part must be outside protection */
-> > > > > > > +#include <trace/define_trace.h>
-> > > > > > > diff --git a/security/commoncap.c b/security/commoncap.c
-> > > > > > > index 162d96b3a676..12c3ddfe0d6e 100644
-> > > > > > > --- a/security/commoncap.c
-> > > > > > > +++ b/security/commoncap.c
-> > > > > > > @@ -27,6 +27,9 @@
-> > > > > > >  #include <linux/mnt_idmapping.h>
-> > > > > > >  #include <uapi/linux/lsm.h>
-> > > > > > >
-> > > > > > > +#define CREATE_TRACE_POINTS
-> > > > > > > +#include <trace/events/capability.h>
-> > > > > > > +
-> > > > > > >  /*
-> > > > > > >   * If a non-root user executes a setuid-root binary in
-> > > > > > >   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-> > > > > > > @@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(con=
-st char *fname)
-> > > > > > >  /**
-> > > > > > >   * cap_capable - Determine whether a task has a particular e=
-ffective capability
-> > > > > > >   * @cred: The credentials to use
-> > > > > > > - * @targ_ns:  The user namespace in which we need the capabi=
-lity
-> > > > > > > + * @targ_ns:  The user namespace of the resource being acces=
-sed
-> > > > > > >   * @cap: The capability to check for
-> > > > > > >   * @opts: Bitmask of options defined in include/linux/securi=
-ty.h
-> > > > > > >   *
-> > > > > > > @@ -68,6 +71,7 @@ int cap_capable(const struct cred *cred, st=
-ruct user_namespace *targ_ns,
-> > > > > > >                 int cap, unsigned int opts)
-> > > > > > >  {
-> > > > > > >         struct user_namespace *ns =3D targ_ns;
-> > > > > > > +       int ret =3D -EPERM;
-> > > > > > >
-> > > > > > >         /* See if cred has the capability in the target user =
-namespace
-> > > > > > >          * by examining the target user namespace and all of =
-the target
-> > > > > > > @@ -75,22 +79,32 @@ int cap_capable(const struct cred *cred, =
-struct user_namespace *targ_ns,
-> > > > > > >          */
-> > > > > > >         for (;;) {
-> > > > > > >                 /* Do we have the necessary capabilities? */
-> > > > > > > -               if (ns =3D=3D cred->user_ns)
-> > > > > > > -                       return cap_raised(cred->cap_effective=
-, cap) ? 0 : -EPERM;
-> > > > > > > +               if (ns =3D=3D cred->user_ns) {
-> > > > > > > +                       if (cap_raised(cred->cap_effective, c=
-ap))
-> > > > > > > +                               ret =3D 0;
-> > > > > > > +                       else
-> > > > > > > +                               ns =3D NULL;
-> > > > > >
-> > > > > > This is a bit unfortunate :( so maybe all we needed was `ns =3D
-> > > > > > ns->parent` for that one use case, and keep the original `ret ?=
- NULL :
-> > > > > > ns` inside trace_cap_capable().
-> > > > >
-> > > > > Yeah, that would be fine with me.  Or maybe just doing
-> > > > >
-> > > > >         /* in case of an error, trace should show ns=3DNULL */
-> > > > >         if (ret)
-> > > > >                 ns =3D NULL;
-> > > > >
-> > > > > right above the trace_cap_capable() call would be clearer.
-> > > >
-> > > > I feel like having less trace specific logic in this function would=
- be
-> > > > a good thing,
-> > > > so I'm for Andrii's suggestion of doing the ret check there but als=
-o
-> > > > fine to do what security folks prefer :)
-> > >
-> > > I think a comment is needed to remind us (me) in 2 years why the
-> > > seting of ns to NULL is there.  But the comment of trace_cap_capable(=
-)
-> > > probably suffices, so sure, go with Andrii's suggestion.  And then
-> > >
-> > > Reviewed-by: Serge Hallyn <serge@hallyn.com>
-> > >
-> > > for the capability code.
-> > >
-> > > thanks,
-> > > -serge
-> >
-> > I think we're suggesting to not set ns =3D NULL here and instead
-> > check the ret value in the trace code e.g.
-> > `__entry->capable_ns =3D ret ? NULL : capable_ns;`
->
-> Perfect.  Was originally going to suggest this, but then thought well
-> the rest of the ns logic is purely capability not tracing related.
-> But since the comment is in trace_cap_capable(), putting the assignment
-> there makes sense.
->
+The initialization of ret to 0 was redundant since ret is set to meaningful values later in the function. This change simplifies the code and avoids confusion about its initial state.
 
-Actually, I had another idea. What about just having a separate
-variable in the `cap_capable` function for `capable_ns` that only gets
-set if ret is 0. Then we're not changing the `ns` variable at all for
-the purposes of the trace function.
+The issue was reported by Coverity Scan.
 
-> > I think the only trace-specific thing, which I can add a comment
-> > for, is this part `ns =3D ns->parent;` after we already set the ret to =
-0.
+Report:
+CID 1633338 Unused value - An assigned value that is never used may represent unnecessary computation, an incorrect algorithm, or possibly the need for cleanup or refactoring.
+In register_ftrace_graph: A value assigned to a variable is never used. (CWE-563)
+
+
+Signed-off-by: MottiKumar Babu <mottikumarbabu@gmail.com>
+---
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 69e226a48daa..b13ab2ad0e88 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1249,7 +1249,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ {
+ 	static bool fgraph_initialized;
+ 	int command = 0;
+-	int ret = 0;
++	int ret;
+ 	int i = -1;
+ 
+ 	guard(mutex)(&ftrace_lock);
+-- 
+2.43.0
+
