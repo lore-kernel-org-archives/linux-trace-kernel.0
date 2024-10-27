@@ -1,97 +1,122 @@
-Received: from lichtman.org (lichtman.org [149.28.33.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01170182B4;
-	Sat, 26 Oct 2024 15:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF40178C9D;
+	Sun, 27 Oct 2024 09:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729954842; cv=none; b=oWw7whdMqtQw/jya0NfCKVqO7WgLGT1gcy8yVK0d3pM79hN0iZAHDsFxaFZDdy3CowWbeWXV6BDZBoeutH3PAVey+1DRu9mUVZt6pOl5LsbOB8LZAu3O1O4HTnYYo3srl346vStEeO4bb7VQeD2u6khHEU3CBRvf2Ru4wmGwR28=
+	t=1730020506; cv=none; b=MNrzISs4zFhH3yBMIpCvlnDJZdGiwDKpMlQ82lKoIcKFQyFXurYCi4xRUSWERXYUEZbLu4+gmDnUgQTW4s+Ggk4LKe8Y0svhkm9v9hPZVlsiAUyF5Kbgk3r9f9j35Q9BykzwA9yguiFxe4YJdKQY1nI3An2qYkjSO8zS3dTwb84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729954842; c=relaxed/simple;
-	bh=1LOBijO8+8t8Q8WP98HjEGTmpGQ9fmPyBouPtW6mbBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DWGDPuQtlPLyG4vyvNw2rADgpyzHDUV8jfPR3ukvIeB+U1xniyilmJnbD9PoDEAp0T5W4ZEVGxaMnJTdpK7F1PoazPW/ssKwHVKZOxB3OZsG7LzrvAO0ei22iTX8JgVKN+VxBpSFQu3Zh3DhoXXm7njBDSpbd95tAxp/gT4KBJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=FqorxNqV; arc=none smtp.client-ip=149.28.33.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
+	s=arc-20240116; t=1730020506; c=relaxed/simple;
+	bh=k1KsRcgzwFXdAtNAW7/FLWTNb3Q1hSDQbTFJH/oZzh0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I4IvosVkhSCuKwTiRowMvLmuIBxDPu3EgealNPbvMG6fPc9iVDSXOZsZyDvS+jkyPZG2h7bG08VMXI0JNfTEmnLjzJHCQDeg4RsFY/QRcj75oPNQLESZOIWJcq3XXb5hAZVTCmHQVgmC5EsA9cTTpJ9Z21kJ2+JRQz5ilogwj+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XVestXT0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="FqorxNqV"
-Received: by lichtman.org (Postfix, from userid 1000)
-	id 1946F177103; Sat, 26 Oct 2024 15:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
-	t=1729954840; bh=1LOBijO8+8t8Q8WP98HjEGTmpGQ9fmPyBouPtW6mbBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FqorxNqVryyCnmkG7CnSzi+K4LAaFz3iVHymQ8XnzFQRDV0KKe+Ri2Pdxelw3JyJu
-	 OfcVCmxi7fx/zmjOIlNp8Z8GKWbj7ejhBU8kAM3BZ7nHJq/Yes9hUi2BEeRAh/VVIw
-	 DkoMMi4l2baedUUvtuZ11O3tbcc+XxdQz2b07J+Bev4ojAuXkGaxTv0sDcrG1MLSyE
-	 kf/3vHla1Gk9Hg1dfaANa4Tm1Hk26iv8wpTemjeKuBWd60xYK2SlEbMfs4MNjx66kI
-	 kbmE78YmihAhLLsRTTCub7vUMfmP10mXigt+pyGJV4IHsyVP+evmLEbC2888xl/N46
-	 J8lCxn2CIGlKg==
-Date: Sat, 26 Oct 2024 15:00:40 +0000
-From: Nir Lichtman <nir@lichtman.org>
-To: kgdb-bugreport@lists.sourceforge.net,
-	linux-trace-kernel@vger.kernel.org
-Cc: yuran.pereira@hotmail.com, jason.wessel@windriver.com,
-	daniel.thompson@linaro.org, dianders@chromium.org,
-	rostedt@goodmis.org, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v3 3/3] kdb: Remove fallback interpretation of arbitrary
- numbers as hex
-Message-ID: <20241026150040.GC892629@lichtman.org>
-References: <20241026144724.GA892311@lichtman.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XVestXT0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A03C4CEE9;
+	Sun, 27 Oct 2024 09:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730020506;
+	bh=k1KsRcgzwFXdAtNAW7/FLWTNb3Q1hSDQbTFJH/oZzh0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XVestXT0+yhJZgVrcJijfqIAW/B+3ykzbo/hyKArqkTlFYaU6ZbPehpw6Xj2KiVti
+	 fHfIfnV5I8PxLAe5DLQSCH4gNM1JKWkC0w+iA+NaU+0ducvrvVegTzFsQFcqnhX9qp
+	 3zzwj0ebYagGoW4eUHd8J6h8ZnXnpTVVMtP/nOOMQaYhZazxsmBOLxbPYoEUkj6w7v
+	 C2NDvqU3PfYyyVqL2mnreCn/cQRF7smkMkLmF7ZTJKw2g2YyknhTViMNK1nTG5/Qej
+	 Diyrsvtuu7PThhvWA4EqCHS0YCLRen4Q4IcK7W+6s9rxVjZQVbmTn0jWxhUE0WbF8T
+	 HBGDrNlZL5KyQ==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-539e5c15fd3so2992472e87.3;
+        Sun, 27 Oct 2024 02:15:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4ctrcAJT88JCGtqapTiJJ5KWp1PLQw6Q3EkQfnn185fSqmxDe7XEezzUVJbP2lASob/VqCuUPGVnNgtvmZmXOphgi@vger.kernel.org, AJvYcCVZlNVihg78+KwUdAU1tyHecaBMPQEWH9pLedCZotSGrq4rnhC5kdqb36jaV7q+UqqJmsYaHjir8VKduwGB@vger.kernel.org, AJvYcCWwZh7s0naQ0mFZzbzdURbxCYZq2pUFE5GdlYFtD2F7k996h4dl2IFViOXy6SXRpf121qc=@vger.kernel.org, AJvYcCXO5FlG3b5R0Sn3OdZZqdPAuSSKn6n19wL7qZ2yz7r/VfRwryAauGvVYNZDDO4rVoyDzRIZ+UvTVvjVHQWA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFA0gnMi0MFSN8atGBJciHv4tRh1DuP3vxWY02jI82iz7nuosE
+	tnJs1+je8kiyhM13oFGT7AlwIRarGBci/Ibqec/LUiW+L3C4eHGTMG53d7KUFvxnk+vAD7X+7lp
+	QNB8XdEH3Xw2bB+4vS4btAjKAe3o=
+X-Google-Smtp-Source: AGHT+IGJls0rHOV2LU5nnq3z6pVUca+erZrQxZ96fYuXcWPbiROC4rRHM9ZevPYab7r1XRwF1Pk0540wsseF9JTljFE=
+X-Received: by 2002:a05:6512:10c7:b0:539:fcb2:2ff4 with SMTP id
+ 2adb3069b0e04-53b34b373dcmr1403081e87.53.1730020504955; Sun, 27 Oct 2024
+ 02:15:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241026144724.GA892311@lichtman.org>
+References: <20241018173632.277333-1-hbathini@linux.ibm.com> <20241018173632.277333-12-hbathini@linux.ibm.com>
+In-Reply-To: <20241018173632.277333-12-hbathini@linux.ibm.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sun, 27 Oct 2024 18:14:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQOPgcPsHJVy7vxfRBX0fowMzOhnZ0RLcoerGMUCGdSGQ@mail.gmail.com>
+Message-ID: <CAK7LNAQOPgcPsHJVy7vxfRBX0fowMzOhnZ0RLcoerGMUCGdSGQ@mail.gmail.com>
+Subject: Re: [PATCH v6 11/17] kbuild: Add generic hook for architectures to
+ use before the final vmlinux link
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+	"Naveen N. Rao" <naveen@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Nicholas Piggin <npiggin@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove logic that enables a fallback of interpreting numbers supplied in KDB CLI
-to be interpreted as hex without explicit "0x" prefix as this can be confusing
-for the end users.
+On Sat, Oct 19, 2024 at 2:37=E2=80=AFAM Hari Bathini <hbathini@linux.ibm.co=
+m> wrote:
+>
+> From: Naveen N Rao <naveen@kernel.org>
+>
+> On powerpc, we would like to be able to make a pass on vmlinux.o and
+> generate a new object file to be linked into vmlinux. Add a generic pass
+> in Makefile.vmlinux that architectures can use for this purpose.
+>
+> Architectures need to select CONFIG_ARCH_WANTS_PRE_LINK_VMLINUX and must
+> provide arch/<arch>/tools/Makefile with .arch.vmlinux.o target, which
+> will be invoked prior to the final vmlinux link step.
+>
+> Signed-off-by: Naveen N Rao <naveen@kernel.org>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 
-Suggested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Nir Lichtman <nir@lichtman.org>
 
----
- kernel/debug/kdb/kdb_main.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -100,7 +100,7 @@ vmlinux_link()
+>         ${ld} ${ldflags} -o ${output}                                   \
+>                 ${wl}--whole-archive ${objs} ${wl}--no-whole-archive    \
+>                 ${wl}--start-group ${libs} ${wl}--end-group             \
+> -               ${kallsymso} ${btf_vmlinux_bin_o} ${ldlibs}
+> +               ${kallsymso} ${btf_vmlinux_bin_o} ${arch_vmlinux_o} ${ldl=
+ibs}
+>  }
+>
+>  # generate .BTF typeinfo from DWARF debuginfo
+> @@ -198,6 +198,11 @@ fi
+>
+>  ${MAKE} -f "${srctree}/scripts/Makefile.build" obj=3Dinit init/version-t=
+imestamp.o
+>
+> +arch_vmlinux_o=3D""
 
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 930de4fdc708..d929a4335078 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -402,23 +402,15 @@ static void kdb_printenv(void)
-  */
- int kdbgetularg(const char *arg, unsigned long *value)
- {
--	/*
--	 * If the first fails, also try base 16, for us
--	 * folks too lazy to type the leading 0x...
--	 */
--	if (kstrtoul(arg, 0, value)) {
--		if (kstrtoul(arg, 16, value))
--			return KDB_BADINT;
--	}
-+	if (kstrtoul(arg, 0, value))
-+		return KDB_BADINT;
- 	return 0;
- }
- 
- int kdbgetu64arg(const char *arg, u64 *value)
- {
--	if (kstrtou64(arg, 0, value)) {
--		if (kstrtou64(arg, 16, value))
--			return KDB_BADINT;
--	}
-+	if (kstrtou64(arg, 0, value))
-+		return KDB_BADINT;
- 	return 0;
- }
- 
--- 
-2.39.2
+Nit:  unnecessary double quotes.
+
+arch_vmlinux_o=3D
+
+is enough.
+
+
+Other than that,
+
+Acked-by: Masahiro Yamada <masahiroy@kernel.org>
+
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
