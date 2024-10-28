@@ -1,142 +1,112 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF7C14A088;
-	Mon, 28 Oct 2024 02:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A366214375C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 03:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730082212; cv=none; b=golnDRuYpIR52SqMwQwxbz8Pxqar1HnMS4Yyu21EQm9hlqZs46dPkyzHfnSQYv8GcuXkda9a9MMURSjmdcEw8rludFyIvVEq06Md4BkMzDqB3VRWXTt3m+4dasVDKo695w2cKWscIwPmf1VpIXUCiH7K0b75n34Z+BSQO6PE0vY=
+	t=1730085902; cv=none; b=f5Jb/AaCATRJKe512VrDxqxYU58DOxaWuj6FQoslSAhJVv7Cil90TM6MB1f9CZNtnIwxOdH+xCC585sowmj7mdF9nZyNVn1941A0SGaZhlrWgbiTr3ZQtIqNSrG/L3RZCdpzWe6wDWmw9uCLQGNRiL9XjB2+U6mQpde7oMwx+2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730082212; c=relaxed/simple;
-	bh=u/xTtnizdqRxZA7D0F1Ev2yUBsm0p/OFai4PrZAtDDg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Rxf7gLGvF7LrYNuxlV/bcyeA+11Zmtv7WgcOYFj3ueztQe/nc49zAQq4MqUMdiIcCltaKvIDg/7Q0hOOOwmBoQWkcK0e3HKdt2YJXuRJ1scyVZZzeE5MGYxU5ShlM9UPtmCoK2rl/cRC9Wbq+3JizAK2FFxBWgf1g1KGjWiCZEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=OZIawUAV; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1730085902; c=relaxed/simple;
+	bh=BgAxH7BuovLSb/VyMg+CeBt7AY44ASR1oxeFqo3yo44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kExa6orpYwBPHbnYxOyCJ+QUhr59uUEaYKJC1yAfVBaBcaup/Z8oUwKX3U6QbfKmoIgg7rMw7iETothY0Mu4CMcBotQ5kZUMrmHcoqzujQ1NDoK5ryQiE5fuHtCaDRxS2nk8QvNVB/dstQbd8XLFyPY0sd7oThjTnpPfBnDyXtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CLOlYape; arc=none smtp.client-ip=209.85.160.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="OZIawUAV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1730082202;
-	bh=wVzoc2YabnIij5HP3bkYWkQB3e64c7slt7BMmOIG3vk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=OZIawUAVvihaiXSwIbUZzcTz/tSg3C1U5LEaVYgOz4QoVISgtL6WviXd3+smevP7j
-	 R/hVpxpqQA2czH0OgbOsdZ/XN9oOlY7sbOzvWwnvGYYyYJsAuLhD8D2cGXk3zQ3Qcf
-	 Xlmo8LCM81g3VdyYneWeZi52VsFp2ozQKki9ZSVwqAf7xk8cYqaSwqlX4Mipqjed6a
-	 eYbw3SKM3H8Y7R3CxIjshRL1I3sLTmewm9KYFwOuMGXWKXrkByPLjplT3Ne2Vy4WLv
-	 oS3+EntGWYqofeVy/dSgM+jb9ZxRrfbS0RYyedkF7axBWtyZppZ+q42fJGbmWcXti8
-	 0jDbtveRkr5HQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4XcHHX4W29z4x89;
-	Mon, 28 Oct 2024 13:23:20 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Hari Bathini <hbathini@linux.ibm.com>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: "Naveen N. Rao" <naveen@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Daniel Borkmann <daniel@iogearbox.net>, Masahiro
- Yamada <masahiroy@kernel.org>, Nicholas Piggin <npiggin@gmail.com>, Alexei
- Starovoitov <ast@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia
- <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-Subject: Re: [PATCH v6 17/17] powerpc64/bpf: Add support for bpf trampolines
-In-Reply-To: <20241018173632.277333-18-hbathini@linux.ibm.com>
-References: <20241018173632.277333-1-hbathini@linux.ibm.com>
- <20241018173632.277333-18-hbathini@linux.ibm.com>
-Date: Mon, 28 Oct 2024 13:23:13 +1100
-Message-ID: <87wmhtrmni.fsf@mpe.ellerman.id.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CLOlYape"
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2884e6ed0daso1361860fac.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 27 Oct 2024 20:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1730085900; x=1730690700; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQps+ZocWxrGBOwCyIh53YeKrI3fc0l3GGoMpgWYcYE=;
+        b=CLOlYapeHgS7qupjvOvjXCSufM9OGk4V80iE3+Lgxny41pwpLnlauhIJgGQpzbIgTA
+         dLpWDwOwQS7GOjFmZagsxLJaFf71R9eW3yeY7VGXnNeBOjes6Sz266bzPib7nI9UtXv7
+         Um302kJ9X+BN8eNXMRMqwktxlY900lh7BT+lE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730085900; x=1730690700;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZQps+ZocWxrGBOwCyIh53YeKrI3fc0l3GGoMpgWYcYE=;
+        b=YPqv0rzkj1JUEELEPIUOVs226yipC0xmuliVtCPAaVU8U33qwSx3uj3TuprwZAXW0w
+         qCc/43v/2M51vC5842J8f3Pqmzuz2TxLmbAdlmZfWBN0gu16K4ol/Eo3ArzimLFvxrA0
+         Dpv+HwEYoKK6daPKKUZ0wuVDckvEYdZia0Av4L/n7MzBKn9Rpninq4rk6hnPDXe43Zgw
+         UCV9i6BTKvnh5UcAkqDrO6TjclSNgmxuYcoQz0XIp5Voj68giHbGde7+0YMMFapqwLH6
+         fkIuxnVkJi80d5x2GY8O/HYki2Ac06aONqkFWy6LwhhekaEA/YEgQbwfpd8GASbaufdh
+         w8jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/OyEQZUSLof0FGuCX1ykZFhAr5NNN16MS3iuiMwQcAtBSpwirr/kWFgP5qs/QX7CEuNgiCW5WfNWCx0BMQgR5PbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGn1esrmEA76MouNzr6wx9g9mBKZk7HOP+8Np5YJIy9Y+6F6XB
+	Bfv9xTfCnfokOHm2QUS3JL4j3tQBYUhzZZGyuqvJqPwiVRtuYEA3V9SVM46/hAo=
+X-Google-Smtp-Source: AGHT+IGE75zSHhwyyDDQtRp4FgDHkbHA5Xo/zZuHaCPkdqAGRqL3DWjJapnemFbOWTvX+FJ/kTXKiA==
+X-Received: by 2002:a05:6870:32d2:b0:286:f2cc:7a71 with SMTP id 586e51a60fabf-29051d705b0mr4868242fac.32.1730085899683;
+        Sun, 27 Oct 2024 20:24:59 -0700 (PDT)
+Received: from [10.200.3.216] (fs96f9c361.tkyc007.ap.nuro.jp. [150.249.195.97])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7edc8661061sm4781718a12.17.2024.10.27.20.24.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Oct 2024 20:24:59 -0700 (PDT)
+Message-ID: <5d87c8ba-8464-4d9c-9152-611097b5ae3e@linuxfoundation.org>
+Date: Sun, 27 Oct 2024 21:24:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Removed unnecessary initialization of "ret"
+To: MottiKumar Babu <mottikumarbabu@gmail.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+ anupnewsmail@gmail.com, Shuah Khan <skhan@linuxfoundation.org>
+References: <20241027211913.26718-2-mottikumarbabu@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20241027211913.26718-2-mottikumarbabu@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
-> From: Naveen N Rao <naveen@kernel.org>
->
-> Add support for bpf_arch_text_poke() and arch_prepare_bpf_trampoline()
-> for 64-bit powerpc. While the code is generic, BPF trampolines are only
-> enabled on 64-bit powerpc. 32-bit powerpc will need testing and some
-> updates.
+On 10/27/24 15:18, MottiKumar Babu wrote:
+> The initialization of ret to 0 was redundant since ret is set to meaningful values later in the function. This change simplifies the code and avoids confusion about its initial state.
+> 
+> The issue was reported by Coverity Scan.
+> 
+> Report:
+> CID 1633338 Unused value - An assigned value that is never used may represent unnecessary computation, an incorrect algorithm, or possibly the need for cleanup or refactoring.
+> In register_ftrace_graph: A value assigned to a variable is never used. (CWE-563)
+> 
+> 
 
-Hi Hari,
+Check submitting patches document for how to write short log and change logs.
 
-This is breaking the PCREL build for me:
+> Signed-off-by: MottiKumar Babu <mottikumarbabu@gmail.com>
+> ---
+>   kernel/trace/fgraph.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+> index 69e226a48daa..b13ab2ad0e88 100644
+> --- a/kernel/trace/fgraph.c
+> +++ b/kernel/trace/fgraph.c
+> @@ -1249,7 +1249,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+>   {
+>   	static bool fgraph_initialized;
+>   	int command = 0;
+> -	int ret = 0;
+> +	int ret;
+>   	int i = -1;
+>   
+>   	guard(mutex)(&ftrace_lock);
 
-  ERROR: 11:49:18: Failed building ppc64le_defconfig+pcrel@fedora
-  INFO: 11:49:18: (skipped 41 lines) ...
-  INFO: 11:49:18: /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |         ^~~~
-  /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
-    473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
-        |                                                                                        ^~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |              ^~~~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |                                    ^~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit_comp.c:791:17: note: in expansion of macro 'PPC64_LOAD_PACA'
-    791 |                 PPC64_LOAD_PACA();
-        |                 ^~~~~~~~~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:65: error: 'struct paca_struct' has no member named 'kernel_toc'; did you mean 'kernel_msr'?
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |                                                                 ^~~~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:29:34: note: in definition of macro 'PLANT_INSTR'
-     29 |         do { if (d) { (d)[idx] = instr; } idx++; } while (0)
-        |                                  ^~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |         ^~~~
-  /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
-    473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
-        |                                                                                        ^~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |              ^~~~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
-     90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
-        |                                    ^~~~~~~~
-  /linux/arch/powerpc/net/bpf_jit_comp.c:882:25: note: in expansion of macro 'PPC64_LOAD_PACA'
-    882 |                         PPC64_LOAD_PACA();
-        |                         ^~~~~~~~~~~~~~~
-  make[5]: *** [/linux/scripts/Makefile.build:229: arch/powerpc/net/bpf_jit_comp.o] Error 1
+It makes sense to initialize ret - i think you might see a warning about
+ret being not initialized before use. I don't see much value in saving
+unnecessary computation.
 
+thanks,
+-- Shuah
 
-To test it you need to enable CONFIG_POWER10_CPU, eg:
-
-  CONFIG_POWERPC64_CPU=n
-  CONFIG_POWER10_CPU=y
-  CONFIG_PPC_KERNEL_PCREL=y
-
-This diff gets it building, but I haven't tested it actually works:
-
-diff --git a/arch/powerpc/net/bpf_jit.h b/arch/powerpc/net/bpf_jit.h
-index 2d04ce5a23da..af6ff3eb621a 100644
---- a/arch/powerpc/net/bpf_jit.h
-+++ b/arch/powerpc/net/bpf_jit.h
-@@ -86,9 +86,14 @@
-                                                        0xffff));             \
-                } } while (0)
- #define PPC_LI_ADDR    PPC_LI64
-+
-+#ifndef CONFIG_PPC_KERNEL_PCREL
- #define PPC64_LOAD_PACA()                                                    \
-        EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
- #else
-+#define PPC64_LOAD_PACA() do {} while (0)
-+#endif
-+#else
- #define PPC_LI64(d, i) BUILD_BUG()
- #define PPC_LI_ADDR    PPC_LI32
- #define PPC64_LOAD_PACA() BUILD_BUG()
-
-cheers
