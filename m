@@ -1,112 +1,98 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from lichtman.org (lichtman.org [149.28.33.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB2618B03;
-	Mon, 28 Oct 2024 19:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521F18C922;
+	Mon, 28 Oct 2024 19:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.33.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730142250; cv=none; b=vCjamLZPNu4wS0jO0Nr/Bi+vPFQfmroyl3Txznaaw54bdQ8aUhwI+XOFFgJxcNoFBX0VzoHar4qhUEPx65Oe4lWcSjRp+pBz0FfqSRdqmXBcLdoMK8Uy8FlBxoH0Z+DXngDjVfZo0etQ2iXJ2HzC1uTogiLRl9AwygMfJCLG+0o=
+	t=1730143023; cv=none; b=HSCiuYud1WyesqcgbRKFB7qDpnqpOThKBbOom2w66x7szC0MApnH/Kha4EWNNXreO7BUXVBzl72ItyalHLjSioGn4cmtoVbTkg3PK6N14YY2Kq5DDEFA71YTEYLJSyK5zOxnnn94L9cXxNrVUt+HJx6rR/dCPd6R76HykuSBDtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730142250; c=relaxed/simple;
-	bh=q5Q8IBgjedCRqgzwvX4hN/KkdoiKiEG3yT0aFX2BRBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RDh2RZgl4MWcb2KAFQUQL1B7pUuJIA0w9Z1KRAkpZET0BKN87qI7JcjfbsKUvQAKdiDUTTqj6f/KOp8fnbJz1FH+28PUFjz0YFCtZKdoqkyNfmG0WnI0c7Ei8wltp+HRjJLkxs92yHnEkM34ECud5qvwsIqAL078taslTY1FYyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=D5FXZdoQ; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1730143023; c=relaxed/simple;
+	bh=y+6RmVA7Vuc+6PEZN2k36qLk2mZfoNZZoCo3OE7qqWg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=C7dThS/V2XLAOjji80MDAEs+MKoCsjgDhbE+Ob9HHXdf4waLwLVRdgIGQ8LyF3O90l8SaFTJAassFF/dzN5oR9SM3twembPj/s+T/Qe9yfMI34zfcxqFgFC+c5BmAuOJtVxRsNo293zl5KsRM763UEZNzltra7r88rFMB0YQ3x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org; spf=pass smtp.mailfrom=lichtman.org; dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b=iY1EWanW; arc=none smtp.client-ip=149.28.33.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lichtman.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtman.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="D5FXZdoQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1730142246;
-	bh=q5Q8IBgjedCRqgzwvX4hN/KkdoiKiEG3yT0aFX2BRBA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D5FXZdoQPL0GLbRlSBPe9CplLr1NiUjEay9oOZjdKwilIPXIJm00d3SAmBhIy4BB+
-	 J0/6++mk0r7mUZ2XI92aau7QCxGbPjbazBaVLB4qB13HYTtbzUYaHtCIkEcqqMzWr9
-	 AIVpnknOtLBq5flTl2IvNhCLVs/mbuOSVeO+sNj6y1TQGjmwQzQk3YcnpEb7KEyOUZ
-	 A4I5MfA6qqflxtLGo3wRw7T3TmHg7AZZgnrkyj8GrDhBfKM+lUXXg6xcJsYEJG6dn1
-	 HwFPeYvWwQcyKUmBAmCftGhLv1rc0Pme/v5TBCBsyKifQRJI7qparCgSJ5JakECtSF
-	 O9MsXgAU1HG7A==
-Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XcjVG0k1XzrvQ;
-	Mon, 28 Oct 2024 15:04:06 -0400 (EDT)
-Message-ID: <f6caee5c-9d4d-449c-b697-a0a27993bd33@efficios.com>
-Date: Mon, 28 Oct 2024 15:02:26 -0400
+	dkim=pass (2048-bit key) header.d=lichtman.org header.i=@lichtman.org header.b="iY1EWanW"
+Received: by lichtman.org (Postfix, from userid 1000)
+	id 9728D177105; Mon, 28 Oct 2024 19:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=lichtman.org; s=mail;
+	t=1730143020; bh=y+6RmVA7Vuc+6PEZN2k36qLk2mZfoNZZoCo3OE7qqWg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iY1EWanW1N71ET9sPPg78zaRQD0Fwm4YdA7vWsLDwsivNhXtaz1MhUiPOMUiGeglJ
+	 JuDqy6lVAyzzlWu6EZWQWuEP1SYEAzxlDD2qvv1I4Nw4i87gKr91HOKNP5Qm7t5dFF
+	 KVee8b7bBomGF0j67UhriHI+kUfNmWzTSh4C14cT0z2fV/VZHSVpB3O2PDrgQTGBe3
+	 2AzdTXeip/wy7/Pk6cZgwEmIf+Zudw5DmQ0racWGcvGYNCgFzEMXXD+xYih6Se2YG8
+	 +rsFtBkql9y5SGxMlP0X+anBrPOIdADK5Jwu25rWlj43+AjExvHNzLb0BjChyNyktm
+	 lzrg4kebzRqDA==
+Date: Mon, 28 Oct 2024 19:17:00 +0000
+From: Nir Lichtman <nir@lichtman.org>
+To: kgdb-bugreport@lists.sourceforge.net,
+	linux-trace-kernel@vger.kernel.org
+Cc: yuran.pereira@hotmail.com, jason.wessel@windriver.com,
+	daniel.thompson@linaro.org, dianders@chromium.org,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v4 0/3] Replace the use of simple_strtol/ul functions with
+ kstrto
+Message-ID: <20241028191700.GA918263@lichtman.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH resend 6/8] tracing/ftrace: Add might_fault check to
- syscall probes
-To: Thomas Gleixner <tglx@linutronix.de>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
- "Paul E . McKenney" <paulmck@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Namhyung Kim <namhyung@kernel.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
- Joel Fernandes <joel@joelfernandes.org>, linux-trace-kernel@vger.kernel.org,
- Michael Jeanson <mjeanson@efficios.com>
-References: <20240930192357.1154417-1-mathieu.desnoyers@efficios.com>
- <20240930192357.1154417-7-mathieu.desnoyers@efficios.com>
- <87cyjk2kgg.ffs@tglx>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <87cyjk2kgg.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2024-10-28 13:42, Thomas Gleixner wrote:
-> On Mon, Sep 30 2024 at 15:23, Mathieu Desnoyers wrote:
->> diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
->> index a3d8ac00793e..0430890cbb42 100644
->> --- a/kernel/trace/trace_syscalls.c
->> +++ b/kernel/trace/trace_syscalls.c
->> @@ -303,6 +303,7 @@ static void ftrace_syscall_enter(void *data, struct pt_regs *regs, long id)
->>   	 * Syscall probe called with preemption enabled, but the ring
->>   	 * buffer and per-cpu data require preemption to be disabled.
->>   	 */
->> +	might_fault();
->>   	guard(preempt_notrace)();
-> 
-> I find it odd that the might_fault() check is in all the implementations
-> and not in the tracepoint itself:
-> 
->      if (syscall) {
->          might_fault();
->   	rcu_read_unlock_trace();
->     } else ...
-> 
-> That's where I would have expected it to be.
+The simple_str* family of functions perform no error checking in
+scenarios where the input value overflows the intended output variable.
+This results in these function successfully returning even when the
+output does not match the input string.
 
-You raise a good point: we should also add a might_fault() check in
-__DO_TRACE() in the syscall case, so we can catch incorrect use of the
-syscall tracepoint even if no probes are registered to it.
+Or as it was mentioned [1], "...simple_strtol(), simple_strtoll(),
+simple_strtoul(), and simple_strtoull() functions explicitly ignore
+overflows, which may lead to unexpected results in callers."
+Hence, the use of those functions is discouraged.
 
-I've added the might_fault() in each tracer syscall probe to make sure
-a tracer don't end up registering a faultable probe on a tracepoint
-protected with preempt_disable by mistake. It validates that the tracers
-are using the tracepoint registration as expected.
+This patch series replaces uses of the simple_strto* series of function
+with the safer  kstrto* alternatives.
 
-I'll prepare separate a patch adding this and will add it to this
-series.
+  
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
 
-Thanks,
+Yuran Pereira (2):
+  kdb: Replace the use of simple_strto with safer kstrto in kdb_main
+  trace: kdb: Replace simple_strtoul with kstrtoul in kdb_ftdump
+Nir Lichtman (1):
+  kdb: Remove fallback interpretation of arbitrary numbers as hex
 
-Mathieu
+This patch is originally based upon
+https://lore.kernel.org/all/GV1PR10MB65635561FB160078C3744B5FE8B4A@GV1PR10MB6563.EURPRD10.PROD.OUTLOOK.COM/
 
-> 
-> Thanks,
-> 
->          tglx
+Since the original thread was left with a review and the comments have not been addressed,
+decided to continue the minor work left to move this patch forward.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+v2:
+- Styling fixes
+- Fix an invalid conversion to unsigned int instead of signed as it was supposed to be
+- Fix one of the conversions to return an error in case of failure, instead of silently falling back to a default value
+- Add Douglas's suggestion for removing the hex interpretation fallback
+v3: 
+- Split to 3 parts instead of 2 (in which the 3rd part now contains the hex interpretation fix)
+- Fix the patch series to properly reference the cover
+- Fix credit tags
+v4:
+- Fix regression between v2 to v3 in which I accidentaly
+reverted an improper unsigned/signed conversion
+- Fix nit of spacing in if condition parens split into multiple lines
 
+
+ kernel/debug/kdb/kdb_main.c | 69 +++++++++--------------------------
+ kernel/trace/trace_kdb.c    | 15 +++-----
+ 2 files changed, 23 insertions(+), 61 deletions(-)
+--
+2.39.2
