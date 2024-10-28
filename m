@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78B4185B56
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 22:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8584D19005F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 22:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730153158; cv=none; b=jwlhVJ9wQi+5ZyBHj6q7+dKmjQqoLPVyUbMUzBYCrep21ELR5U9zFnCbp7rUuok/dmY7G071U4KDWXyIOusvyYekgNK51Fn7Ma07cWzI3yH3+Qf6odbbSNOAdz49Bu8TQcfpi3L8N4eLzYXj6848x6R+jQpSKpp+PbvS+ALekp4=
+	t=1730153181; cv=none; b=G3YEXp6/9dkO8dDt6EHHpqNy6LL7ZDMHWoWUnZxn3QL2N7TGvhDLFpSru/uRAmfoAS3ADW68XQ3qkwojj0ZW+e5/FliqHMvdI+6V4uPajahJII3Ss4aX8gezoMiqD+Hui3oYe9V5pxC3U6qYO94vVfEm7PYYxplusdKDd9rtPAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730153158; c=relaxed/simple;
-	bh=EmllJLfP0nLO3+si2cN9oyclRZPtfrj39zUndlbiJNI=;
+	s=arc-20240116; t=1730153181; c=relaxed/simple;
+	bh=lnNh2MyW6k3PPWKeZ3lkSphmqc6oZlzuJG2jDdoCDuc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=E3AodLIC2QsB48l9LzNR9Kq52P7Y4FbWZspNrtpnyvyYJOPC7OeZpeGged9KpiXcUlbMypnmPamBHIVPRhW6OnPPtxLW1S4JrPRO8Ntcq1JIO4sFF+oW/IJnXmx2s5d8KNeisWh8Mmvb6ER8yzLuOL++ZS51oDCQaoa6rZ5pI5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ltuu5R4S; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=lK7JgLeuRRAkKABGqIcX5XWsqn/GsyMZyCRx494aBkoX0P5KQ43R8i8sjQl99a+pico4uFOxlgubd7/PtXT+mgl1tcf7LkbeAwujZSIIS1E0cds7csm/47k5zxa3ZIT2bHBRiPR0FCSKWo2Q2rToKwbliXvggdTRFhv1x19Z3a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XzAlhRyX; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ltuu5R4S"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e28ef71f0d8so9047030276.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 15:05:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XzAlhRyX"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e36cfed818so75057237b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 15:06:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730153154; x=1730757954; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1730153177; x=1730757977; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qgXMA3H1i71vePLOcuFKt/eJvEilt9qljsSwQxbfxX0=;
-        b=Ltuu5R4Sbpr4ZN0M6dvdhHpnmkkwzWkiHlVA7Pp5fyxc5Sb4Gr6leJCRfD+hmxs/b8
-         wXhbVa2xLkkHabOg3NUhArBYu8m2njbzro09ZYiBKZDkzkw2bHoot7qwd8fAERMSYUZC
-         BdAJZC0bF8APQqMtsDB2RnyZQ0biFTgsob9dxqdXBoJnGlctsT24Gi0rPxFNTlRIrUu2
-         +e08xwgDK7cITIAshELE5jofXirKU2PWi1hUZTBMszt5Lv7wKDIEoyg94XtVN/uz7Scw
-         GAEE/P7eyZ1DbBazPcDVXnx1Suo2yWFZgWwSWMa7662SchKZxYTqVgnbfKqd3gsNHW7m
-         GWkg==
+        bh=SOY2vgqJ0KtVzbKcwr3dZPfuHJS0Y1wX9dhGpLmmysU=;
+        b=XzAlhRyXDt0IKtNwkAaZzgCReQ5z9gGMXRlpYyOcbv/yDhp601ZroIh90cW7z2oleL
+         PnnSDR1CtNDuegX5Do3uZpJweqKdDa1pgLKYP5rYL5uT0UW9A2xi5IR6LRQteerYcjSp
+         xarBu5PuG1rXsYEckqswbikk+Pzz/Qy5x3/N3FqN3gxEpCc6AbNJF9xmbyeo1H/opSke
+         SpFifHzlrVSGMO3AmFWr6oldlytnMYL48QItnldGPMwGA3Y8rMtehV1l3+lpwBJ8io5q
+         HzZO/pb2IcslBZjMLGBOhoqQzzHybdY6WY97Z0qSPjIB0SX9DMp7HCxntTQYXP4gEcSL
+         MM1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730153154; x=1730757954;
+        d=1e100.net; s=20230601; t=1730153177; x=1730757977;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qgXMA3H1i71vePLOcuFKt/eJvEilt9qljsSwQxbfxX0=;
-        b=RLDrHQzTENaC+rc1KpIYQd7WsngPCv5H/WUPGgaVM44OOFwTw7VzzBdmTjI+rgFkHf
-         LQJI7mwwfLs6UdkbiFksxr0bwXD+eosBk64dltWwkrALkDjlfiBG/qnFhGelCh41n/1d
-         L3QlX9Fu6CjK8KTGggyFSSsbGBU+VJ8EL0AilRe3QyuzQV2oxz+yWGjRZu4FiwMe378Z
-         nB28Vb7yW7K/g+ultObcdY0s+hlRJntxusFsuLK9a9ORyFXbj2bVA5kSVaGJHv53ZqW3
-         0QmfvB8u/rMF6IptmDvWjBjAgr/DfqI4OBIpdhdboz/ZVN1hl1hJdn2aoi7WRcjXbKR6
-         YSjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPYGVqK9gt7/JwxKkgWvEHRdj7X9u58uH9Wp++qohFncMnRFb3nV0+++TF0FUo2/zOj6Tiqau0ENz5brtVwgdF+nQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx29OGn9DdklGndnI6vXURbpz/99RVPXsB6xL59gfxXlPvq7ofo
-	R6jKH2THV58q2ru2RHddJN0jOCvekGxsnEg3NLjbct2Gbb3bmsLCk9KdG3dSq3d3OKHoYsHSRen
-	KDCSQqtg8PUMZrh8kSr7Raw==
-X-Google-Smtp-Source: AGHT+IGF9Pi2lb2sUc0GUX/DYg5llr+NhdKdR00JACXX1x5oo3dzjoH/TRmaF857GPkgm+W8S7O8gnUmssb4hz0lRw==
+        bh=SOY2vgqJ0KtVzbKcwr3dZPfuHJS0Y1wX9dhGpLmmysU=;
+        b=W/zX8a/eOaMQLcdllYsKBzar5b+FWKfhJQbZGCZ0XNkA4BRJ4K/2LkKX8pfhTR49YI
+         SXXCI43uBIF9ca2qwU/28S5H7ZXIPEX1yoMXHaVz8cvHMJvPyYZkxBL+4L2eh9a/UePW
+         Rn4vaEDMeM1jddv7DHUo0l0oz5Xd0lwOClNzTVwBck3dTBP/CS3y0Pxp/xcnQ8j9sTh/
+         CuBKpFYZVjJ+zti1iFLZoVKutbph8XpPbuFIb9WqkCUghz9+fHC0gm5H1rXwzYqoAXy9
+         eMcU/WaDFekyXWANc50kq1qJEfztMD+g+b5SvmPR0S0QUi2ZynRSJboT50grUdJANLzF
+         Etbw==
+X-Forwarded-Encrypted: i=1; AJvYcCUM1AbsNDRdUv5lT1BnvPhvVZykQXLWG+ldIe8NSIMYniiHFfrdmloYsx7Dk4AFmK0FOLv4WvJhUyoFORZPX+P0aPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIljAsCjcJyWf4Sv2XxhRyFmVX5FhOgAXPlbTHADeLY7/afmtJ
+	b0RPiP8f6I+weN/7SGN/YXD/eg/wsZKIWHiY7ZhxaPMmRFe585Cs6eo8O7aATSjBqiktyYo87+H
+	ALkSKJsixinzI0cOVFy/87Q==
+X-Google-Smtp-Source: AGHT+IHJS7A7yrEb37MadLUrxRTDRexnft6XJqKZL6BE/v5PEF5d2AuI0hKlTnaiOAdoLKFKUc2XiD9OoW2teZTugQ==
 X-Received: from kalesh.mtv.corp.google.com ([2a00:79e0:2e3f:8:dd17:1d2c:7822:7fdf])
- (user=kaleshsingh job=sendgmr) by 2002:a05:6902:1822:b0:e1c:ed3d:7bb7 with
- SMTP id 3f1490d57ef6-e308784a6eamr7475276.1.1730153153942; Mon, 28 Oct 2024
- 15:05:53 -0700 (PDT)
-Date: Mon, 28 Oct 2024 14:43:58 -0700
+ (user=kaleshsingh job=sendgmr) by 2002:a05:690c:9682:b0:69b:c01:82a5 with
+ SMTP id 00721157ae682-6e9d8b89f8amr7192987b3.7.1730153177563; Mon, 28 Oct
+ 2024 15:06:17 -0700 (PDT)
+Date: Mon, 28 Oct 2024 14:43:59 -0700
 In-Reply-To: <20241028214550.2099923-1-kaleshsingh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20241028214550.2099923-1-kaleshsingh@google.com>
 X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Message-ID: <20241028214550.2099923-3-kaleshsingh@google.com>
-Subject: [PATCH 2/3] tracing/selftests: Add tracefs mount options test
+Message-ID: <20241028214550.2099923-4-kaleshsingh@google.com>
+Subject: [PATCH 3/3] tracing: Fix tracefs gid mount option
 From: Kalesh Singh <kaleshsingh@google.com>
 To: dhowells@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org
 Cc: surenb@google.com, jyescas@google.com, kernel-team@android.com, 
@@ -71,200 +71,97 @@ Cc: surenb@google.com, jyescas@google.com, kernel-team@android.com,
 	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add test to check the tracefs gid mount option is applied correctly
+Commit 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
+tracefs to use the new mount APIs caused mounting with the gid=<gid>
+option to not take effect.
 
-   ./ftracetest test.d/00basic/mount_options.tc
+The tracefs superblock can be updated from multiple paths:
+    - on fs_initcall() to init_trace_printk_function_export()
+    - form a work queue to initialize eventfs
+      tracer_init_tracefs_work_func()
+    - fsconfig() syscall to mount of remount sysfs
 
-Use the new readme string "[gid=<gid>] as a requirement and also update
-test_ownership.tc requirements to use this.
+The tracefs super block root inode gets created early on in
+init_trace_printk_function_export().
 
-mount_options.tc will fail currently, this is fixed by the subsequent
-patch in this series.
+With the new mount API tracefs effectively uses get_tree_single() instead
+of the old API mount_single().
 
+Previously, mount_single() ensured that the options are alway applied to
+the superblock root inode:
+    (1) If the root inode didn't exist, called fill_super() to create it
+        and apply the options.
+    (2) If the root inode exists, called reconfigure_single() which
+        effectively called tracefs_apply_options() to parse and apply
+        options to the subperblock's fs_info and inode and remount
+        eventfs (if necessary)
+
+On the other hand, get_tree_single() effectively calls vfs_get_super()
+which:
+    (3) If the root inode doesn't exists calls fill_super() to create it
+        and apply the options.
+    (4) If the root inode already exists, updates the fs_context root
+        with the superblock's root inode.
+
+(4) above is always the case for tracefs mounts, since the super block's
+root inode will already be created by init_trace_printk_function_export().
+
+This means that the gid mount option gets ignored:
+    - Since it isn't applied to the super block's root inode, it doesn't
+      get inherited by the children.
+    - Since eventfs is initialized from form a separate work queue and
+      before call to mount with the options, and it doesn't get remounted
+      for mount.
+
+Ensure that the mount options are applied to the super block and eventfs
+is remounted to respect the new mount options.
+
+[1] https://lore.kernel.org/r/536e99d3-345c-448b-adee-a21389d7ab4b@redhat.com/
+
+Fixes: 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
 Cc: David Howells <dhowells@redhat.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
 ---
- .../ftrace/test.d/00basic/mount_options.tc    | 101 ++++++++++++++++++
- .../ftrace/test.d/00basic/test_ownership.tc   |  16 +--
- .../testing/selftests/ftrace/test.d/functions |  25 +++++
- 3 files changed, 129 insertions(+), 13 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
+ fs/tracefs/inode.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc b/tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
-new file mode 100644
-index 000000000000..b8aff85ec259
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
-@@ -0,0 +1,101 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test tracefs GID mount option
-+# requires: "[gid=<gid>]":README
-+
-+fail() {
-+	local msg="$1"
-+
-+	echo "FAILED: $msg"
-+	exit_fail
-+}
-+
-+find_alternate_gid() {
-+	local original_gid="$1"
-+	tac /etc/group | grep -v ":$original_gid:" | head -1 | cut -d: -f3
-+}
-+
-+mount_tracefs_with_options() {
-+	local mount_point="$1"
-+	local options="$2"
-+
-+	mount -t tracefs -o "$options" nodev "$mount_point"
-+
-+	setup
-+}
-+
-+unmount_tracefs() {
-+	local mount_point="$1"
-+
-+	# Need to make sure the mount isn't busy so that we can umount it
-+	(cd $mount_point; finish_ftrace;)
-+
-+	cleanup
-+}
-+
-+create_instance() {
-+	local mount_point="$1"
-+	local instance="$mount_point/instances/$(mktemp -u test-XXXXXX)"
-+
-+	mkdir "$instance"
-+	echo "$instance"
-+}
-+
-+remove_instance() {
-+	local instance="$1"
-+
-+	rmdir "$instance"
-+}
-+
-+check_gid() {
-+	local mount_point="$1"
-+	local expected_gid="$2"
-+
-+	echo "Checking permission group ..."
-+
-+	cd "$mount_point"
-+
-+	for file in "." "events" "events/sched" "events/sched/sched_switch" "events/sched/sched_switch/enable"; do
-+		local gid=`stat -c "%g" $file`
-+		if [ "$gid" -ne "$expected_gid" ]; then
-+			cd - # Return to the previous working direcotry (tracefs root)
-+			fail "$(realpath $file): Expected group $expected_gid; Got group $gid"
-+		fi
-+	done
-+
-+	cd - # Return to the previous working direcotry (tracefs root)
-+}
-+
-+test_gid_mount_option() {
-+	local mount_point=$(get_mount_point)
-+	local mount_options=$(get_mnt_options "$mount_point")
-+	local original_group=$(stat -c "%g" .)
-+	local other_group=$(find_alternate_gid "$original_group")
-+
-+	# Set up mount options with new GID for testing
-+	local new_options=`echo "$mount_options" | sed -e "s/gid=[0-9]*/gid=$other_group/"`
-+	if [ "$new_options" = "$mount_options" ]; then
-+		new_options="$mount_options,gid=$other_group"
-+		mount_options="$mount_options,gid=$original_group"
-+	fi
-+
-+	# Unmount existing tracefs instance and mount with new GID
-+	unmount_tracefs "$mount_point"
-+	mount_tracefs_with_options "$mount_point" "$new_options"
-+
-+	check_gid "$mount_point" "$other_group"
-+
-+	# Check that files created after the mount inherit the GID
-+	local instance=$(create_instance "$mount_point")
-+	check_gid "$instance" "$other_group"
-+	remove_instance "$instance"
-+
-+	# Unmount and remount with the original GID
-+	unmount_tracefs "$mount_point"
-+	mount_tracefs_with_options "$mount_point" "$mount_options"
-+	check_gid "$mount_point" "$original_group"
-+}
-+
-+test_gid_mount_option
-+
-+exit 0
-diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-index 094419e190c2..e71cc3ad0bdf 100644
---- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-+++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-@@ -1,24 +1,14 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- # description: Test file and directory ownership changes for eventfs
-+# requires: "[gid=<gid>]":README
+diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+index 1748dff58c3b..cfc614c638da 100644
+--- a/fs/tracefs/inode.c
++++ b/fs/tracefs/inode.c
+@@ -392,6 +392,9 @@ static int tracefs_reconfigure(struct fs_context *fc)
+ 	struct tracefs_fs_info *sb_opts = sb->s_fs_info;
+ 	struct tracefs_fs_info *new_opts = fc->s_fs_info;
  
- original_group=`stat -c "%g" .`
- original_owner=`stat -c "%u" .`
++	if (!new_opts)
++		return 0;
++
+ 	sync_filesystem(sb);
+ 	/* structure copy of new mount options to sb */
+ 	*sb_opts = *new_opts;
+@@ -478,14 +481,17 @@ static int tracefs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_op = &tracefs_super_operations;
+ 	sb->s_d_op = &tracefs_dentry_operations;
  
--mount_point=`stat -c '%m' .`
-+local mount_point=$(get_mount_point)
- 
--# If stat -c '%m' does not work (e.g. busybox) or failed, try to use the
--# current working directory (which should be a tracefs) as the mount point.
--if [ ! -d "$mount_point" ]; then
--	if mount | grep -qw $PWD ; then
--		mount_point=$PWD
--	else
--		# If PWD doesn't work, that is an environmental problem.
--		exit_unresolved
--	fi
--fi
+-	tracefs_apply_options(sb, false);
 -
--mount_options=`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/\1/'`
-+mount_options=$(get_mnt_options "$mount_point")
- 
- # find another owner and group that is not the original
- other_group=`tac /etc/group | grep -v ":$original_group:" | head -1 | cut -d: -f3`
-diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
-index 779f3e62ec90..84d6a9c7ad67 100644
---- a/tools/testing/selftests/ftrace/test.d/functions
-+++ b/tools/testing/selftests/ftrace/test.d/functions
-@@ -193,3 +193,28 @@ ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
-     # "  Command: " and "^\n" => 13
-     test $(expr 13 + $pos) -eq $N
+ 	return 0;
  }
+ 
+ static int tracefs_get_tree(struct fs_context *fc)
+ {
+-	return get_tree_single(fc, tracefs_fill_super);
++	int err = get_tree_single(fc, tracefs_fill_super);
 +
-+# Helper to get the tracefs mount point
-+get_mount_point() {
-+	local mount_point=`stat -c '%m' .`
++	if (err)
++		return err;
 +
-+	# If stat -c '%m' does not work (e.g. busybox) or failed, try to use the
-+	# current working directory (which should be a tracefs) as the mount point.
-+	if [ ! -d "$mount_point" ]; then
-+		if mount | grep -qw "$PWD"; then
-+			mount_point=$PWD
-+		else
-+			# If PWD doesn't work, that is an environmental problem.
-+			exit_unresolved
-+		fi
-+	fi
-+	echo "$mount_point"
-+}
-+
-+# Helper function to retrieve mount options for a given mount point
-+get_mnt_options() {
-+	local mnt_point="$1"
-+	local opts=$(mount | grep -m1 "$mnt_point" | sed -e 's/.*(\(.*\)).*/\1/')
-+
-+	echo "$opts"
-+}
-\ No newline at end of file
++	return tracefs_reconfigure(fc);
+ }
+ 
+ static void tracefs_free_fc(struct fs_context *fc)
 -- 
 2.47.0.163.g1226f6d8fa-goog
 
