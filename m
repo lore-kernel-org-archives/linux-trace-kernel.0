@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAE4191473;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB0A1917FA;
 	Mon, 28 Oct 2024 07:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730099539; cv=none; b=N8+XRH4sD+7Q9bEU0KmwjwrV36psc85mHtB+p0gFAOf0KRfwGF29sib6BEsaiBQcS3Hh4hy2wVIXrMi7KdqKUPrcLly1CeD3LKlc15Glzm4GMIUAyV7UT7+8ehkkluTi+oBfiMAAQdlv4/8F6iAtTFVtAVM/FYZjoz29mWz7oEY=
+	t=1730099539; cv=none; b=A2cRM8vj79OYa9HllePPZy/Rc1PXVgwHiFkly9jEVa1dxCLB/jf52sygnDj6qIyOBImjJ6wuJgWCwS/AQf6VRG8bd5crL7Db9+3IxwglYUOWamXpao3lnCdJijxn+BmW3bW/REhv5T6EOJtH3GF2dOxWuSH2dqB+duokO7iUgPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730099539; c=relaxed/simple;
-	bh=9vBWJH11IbK66QgWVk9H9Vqyr8xXbIoeCjdz00lvw7I=;
+	bh=lCXGtBtcvfnsJggzf5kZ3rR7Y+fds+4jXs55q+WtBm4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=RbuvSxBfZWswrDtTlIHmpuWKIF60XLR33b+eJXbPkEBS/zbLRu7fDOUf1bU3A4IMrne8YUCRzH3OVi3pbFF/Fvt/BziabhoteewW+9BGGHkUwh/5qho1N3BasY9UoqLX/fkpBmv2uNz1RJIINOzlfkg0hEYquLBdBUXH3WMQFPU=
+	 Content-Type; b=JQnA9WREADszwA/xU7kq9J3Mayoyk5dggunBMdPGjDSdghb76IORBLsJLOfGPyKf3S/jjatmy9Pe8Y+4nLkhescAxkDF+QpdORHU524E8xgDZBtGC9di3hI42LUiL3c91wQJgHmi5kBj4zGscXE8FUfObqkGSoi4WJWh0KfKUDE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3A9C4CEEB;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80458C4CEC3;
 	Mon, 28 Oct 2024 07:12:19 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1t5Jw4-000000053E2-0xwV;
+	id 1t5Jw4-000000053EW-1bzP;
 	Mon, 28 Oct 2024 03:13:08 -0400
-Message-ID: <20241028071308.088458856@goodmis.org>
+Message-ID: <20241028071308.250787901@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 28 Oct 2024 03:12:31 -0400
+Date: Mon, 28 Oct 2024 03:12:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,7 +30,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 3/5] ftrace: Use guard to lock ftrace_lock in cache_mod()
+Subject: [PATCH 4/5] ftrace: Use guard to take the ftrace_lock in release_probe()
 References: <20241028071228.575900713@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,60 +42,35 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The ftrace_lock is held throughout cache_mod(), use guard to simplify the
-error paths.
+The ftrace_lock is held throughout the entire release_probe() function.
+Use guard to simplify any exit paths.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ kernel/trace/ftrace.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 44adc34643c9..64997416415e 100644
+index 64997416415e..c0fabd7da5b2 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -4947,14 +4947,14 @@ static int cache_mod(struct trace_array *tr,
+@@ -5288,7 +5288,7 @@ static void release_probe(struct ftrace_func_probe *probe)
  {
- 	struct ftrace_mod_load *ftrace_mod, *n;
- 	struct list_head *head = enable ? &tr->mod_trace : &tr->mod_notrace;
--	int ret;
+ 	struct ftrace_probe_ops *probe_ops;
  
 -	mutex_lock(&ftrace_lock);
 +	guard(mutex)(&ftrace_lock);
  
- 	/* We do not cache inverse filters */
- 	if (func[0] == '!') {
-+		int ret = -EINVAL;
-+
- 		func++;
--		ret = -EINVAL;
+ 	WARN_ON(probe->ref <= 0);
  
- 		/* Look to remove this hash */
- 		list_for_each_entry_safe(ftrace_mod, n, head, list) {
-@@ -4970,20 +4970,15 @@ static int cache_mod(struct trace_array *tr,
- 				continue;
- 			}
- 		}
--		goto out;
-+		return ret;
+@@ -5306,7 +5306,6 @@ static void release_probe(struct ftrace_func_probe *probe)
+ 		list_del(&probe->list);
+ 		kfree(probe);
  	}
- 
--	ret = -EINVAL;
- 	/* We only care about modules that have not been loaded yet */
- 	if (module_exists(module))
--		goto out;
-+		return -EINVAL;
- 
- 	/* Save this string off, and execute it when the module is loaded */
--	ret = ftrace_add_mod(tr, func, module, enable);
-- out:
 -	mutex_unlock(&ftrace_lock);
--
--	return ret;
-+	return ftrace_add_mod(tr, func, module, enable);
  }
  
- static int
+ static void acquire_probe_locked(struct ftrace_func_probe *probe)
 -- 
 2.45.2
 
