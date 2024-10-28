@@ -1,167 +1,87 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8584D19005F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 22:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45382188CDC;
+	Mon, 28 Oct 2024 23:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730153181; cv=none; b=G3YEXp6/9dkO8dDt6EHHpqNy6LL7ZDMHWoWUnZxn3QL2N7TGvhDLFpSru/uRAmfoAS3ADW68XQ3qkwojj0ZW+e5/FliqHMvdI+6V4uPajahJII3Ss4aX8gezoMiqD+Hui3oYe9V5pxC3U6qYO94vVfEm7PYYxplusdKDd9rtPAI=
+	t=1730157130; cv=none; b=DmaO6lqb9lzuA4Lgd+64eyM+aco3cFhApFMoQwwfAi11ugHB1xkSSwzCTiDwBFOQcvfYjq9IUHe0BWBHymOAv5Te23pX+rG4wQ4tlSRCqG8oZIuV8lENbvKekcpZhcKGXwCtHl4KsHERkrEgb1dYBXepmF0ZFboYXwau6W55dPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730153181; c=relaxed/simple;
-	bh=lnNh2MyW6k3PPWKeZ3lkSphmqc6oZlzuJG2jDdoCDuc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lK7JgLeuRRAkKABGqIcX5XWsqn/GsyMZyCRx494aBkoX0P5KQ43R8i8sjQl99a+pico4uFOxlgubd7/PtXT+mgl1tcf7LkbeAwujZSIIS1E0cds7csm/47k5zxa3ZIT2bHBRiPR0FCSKWo2Q2rToKwbliXvggdTRFhv1x19Z3a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XzAlhRyX; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XzAlhRyX"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6e36cfed818so75057237b3.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 15:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730153177; x=1730757977; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SOY2vgqJ0KtVzbKcwr3dZPfuHJS0Y1wX9dhGpLmmysU=;
-        b=XzAlhRyXDt0IKtNwkAaZzgCReQ5z9gGMXRlpYyOcbv/yDhp601ZroIh90cW7z2oleL
-         PnnSDR1CtNDuegX5Do3uZpJweqKdDa1pgLKYP5rYL5uT0UW9A2xi5IR6LRQteerYcjSp
-         xarBu5PuG1rXsYEckqswbikk+Pzz/Qy5x3/N3FqN3gxEpCc6AbNJF9xmbyeo1H/opSke
-         SpFifHzlrVSGMO3AmFWr6oldlytnMYL48QItnldGPMwGA3Y8rMtehV1l3+lpwBJ8io5q
-         HzZO/pb2IcslBZjMLGBOhoqQzzHybdY6WY97Z0qSPjIB0SX9DMp7HCxntTQYXP4gEcSL
-         MM1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730153177; x=1730757977;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SOY2vgqJ0KtVzbKcwr3dZPfuHJS0Y1wX9dhGpLmmysU=;
-        b=W/zX8a/eOaMQLcdllYsKBzar5b+FWKfhJQbZGCZ0XNkA4BRJ4K/2LkKX8pfhTR49YI
-         SXXCI43uBIF9ca2qwU/28S5H7ZXIPEX1yoMXHaVz8cvHMJvPyYZkxBL+4L2eh9a/UePW
-         Rn4vaEDMeM1jddv7DHUo0l0oz5Xd0lwOClNzTVwBck3dTBP/CS3y0Pxp/xcnQ8j9sTh/
-         CuBKpFYZVjJ+zti1iFLZoVKutbph8XpPbuFIb9WqkCUghz9+fHC0gm5H1rXwzYqoAXy9
-         eMcU/WaDFekyXWANc50kq1qJEfztMD+g+b5SvmPR0S0QUi2ZynRSJboT50grUdJANLzF
-         Etbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUM1AbsNDRdUv5lT1BnvPhvVZykQXLWG+ldIe8NSIMYniiHFfrdmloYsx7Dk4AFmK0FOLv4WvJhUyoFORZPX+P0aPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIljAsCjcJyWf4Sv2XxhRyFmVX5FhOgAXPlbTHADeLY7/afmtJ
-	b0RPiP8f6I+weN/7SGN/YXD/eg/wsZKIWHiY7ZhxaPMmRFe585Cs6eo8O7aATSjBqiktyYo87+H
-	ALkSKJsixinzI0cOVFy/87Q==
-X-Google-Smtp-Source: AGHT+IHJS7A7yrEb37MadLUrxRTDRexnft6XJqKZL6BE/v5PEF5d2AuI0hKlTnaiOAdoLKFKUc2XiD9OoW2teZTugQ==
-X-Received: from kalesh.mtv.corp.google.com ([2a00:79e0:2e3f:8:dd17:1d2c:7822:7fdf])
- (user=kaleshsingh job=sendgmr) by 2002:a05:690c:9682:b0:69b:c01:82a5 with
- SMTP id 00721157ae682-6e9d8b89f8amr7192987b3.7.1730153177563; Mon, 28 Oct
- 2024 15:06:17 -0700 (PDT)
-Date: Mon, 28 Oct 2024 14:43:59 -0700
-In-Reply-To: <20241028214550.2099923-1-kaleshsingh@google.com>
+	s=arc-20240116; t=1730157130; c=relaxed/simple;
+	bh=wcV09ZtY1F3z2hRq7z+lF1u5SCJeWxmgOeSAg0iKdEE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lskoM1qpyW2uXib/3jMwh+QJKk/Ra71aSZYr3/p0V0TwpVwQnXWzMHWEE2Rws+Y2j4erCvSg2cLBvYdIQfFqTbFGiu0dFISQFruy9qqK0VwRdkEXtYsYCCmubglUvfhadzq04EvI27t+oEdzA/Tlwx8H/w4eXgJc0xhLAOyPwwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D977C4CEC3;
+	Mon, 28 Oct 2024 23:12:07 +0000 (UTC)
+Date: Mon, 28 Oct 2024 19:12:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kalesh Singh <kaleshsingh@google.com>
+Cc: dhowells@redhat.com, mhiramat@kernel.org, surenb@google.com,
+ jyescas@google.com, kernel-team@android.com, android-mm@google.com, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
+ Ali Zahraee <ahzahraee@gmail.com>, Christian Brauner <brauner@kernel.org>,
+ Eric Sandeen <sandeen@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/3] tracing: Document tracefs gid mount option
+Message-ID: <20241028191204.0e6a9040@rorschach.local.home>
+In-Reply-To: <20241028214550.2099923-2-kaleshsingh@google.com>
+References: <20241028214550.2099923-1-kaleshsingh@google.com>
+	<20241028214550.2099923-2-kaleshsingh@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241028214550.2099923-1-kaleshsingh@google.com>
-X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
-Message-ID: <20241028214550.2099923-4-kaleshsingh@google.com>
-Subject: [PATCH 3/3] tracing: Fix tracefs gid mount option
-From: Kalesh Singh <kaleshsingh@google.com>
-To: dhowells@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org
-Cc: surenb@google.com, jyescas@google.com, kernel-team@android.com, 
-	android-mm@google.com, Kalesh Singh <kaleshsingh@google.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, 
-	Ali Zahraee <ahzahraee@gmail.com>, Eric Sandeen <sandeen@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Commit 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
-tracefs to use the new mount APIs caused mounting with the gid=<gid>
-option to not take effect.
+On Mon, 28 Oct 2024 14:43:57 -0700
+Kalesh Singh <kaleshsingh@google.com> wrote:
 
-The tracefs superblock can be updated from multiple paths:
-    - on fs_initcall() to init_trace_printk_function_export()
-    - form a work queue to initialize eventfs
-      tracer_init_tracefs_work_func()
-    - fsconfig() syscall to mount of remount sysfs
+> [1] and [2] introduced a new gid mount options that could apply to a
+> group to all entries in tracefs.
+> 
+> Document this in the tracing readme.
+> 
+> [1] https://lore.kernel.org/r/20211208075720.4855d180@gandalf.local.home/T/#u
+> [2] https://lore.kernel.org/r/20211207171729.2a54e1b3@gandalf.local.home/T/#u
 
-The tracefs super block root inode gets created early on in
-init_trace_printk_function_export().
+Your patch series is backwards. The first patch should be the fix, the
+second be this patch and the last one is the test case.
 
-With the new mount API tracefs effectively uses get_tree_single() instead
-of the old API mount_single().
+You should reference commit IDs and not links.
 
-Previously, mount_single() ensured that the options are alway applied to
-the superblock root inode:
-    (1) If the root inode didn't exist, called fill_super() to create it
-        and apply the options.
-    (2) If the root inode exists, called reconfigure_single() which
-        effectively called tracefs_apply_options() to parse and apply
-        options to the subperblock's fs_info and inode and remount
-        eventfs (if necessary)
+   Commit ee7f3666995d ("tracefs: Have new files inherit the ownership of
+   their parent") and commit 48b27b6b5191 ("tracefs: Set all files to the
+   same group ownership as the mount option") introduced a new gid..."
 
-On the other hand, get_tree_single() effectively calls vfs_get_super()
-which:
-    (3) If the root inode doesn't exists calls fill_super() to create it
-        and apply the options.
-    (4) If the root inode already exists, updates the fs_context root
-        with the superblock's root inode.
+-- Steve
 
-(4) above is always the case for tracefs mounts, since the super block's
-root inode will already be created by init_trace_printk_function_export().
-
-This means that the gid mount option gets ignored:
-    - Since it isn't applied to the super block's root inode, it doesn't
-      get inherited by the children.
-    - Since eventfs is initialized from form a separate work queue and
-      before call to mount with the options, and it doesn't get remounted
-      for mount.
-
-Ensure that the mount options are applied to the super block and eventfs
-is remounted to respect the new mount options.
-
-[1] https://lore.kernel.org/r/536e99d3-345c-448b-adee-a21389d7ab4b@redhat.com/
-
-Fixes: 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
-Cc: David Howells <dhowells@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
----
- fs/tracefs/inode.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-index 1748dff58c3b..cfc614c638da 100644
---- a/fs/tracefs/inode.c
-+++ b/fs/tracefs/inode.c
-@@ -392,6 +392,9 @@ static int tracefs_reconfigure(struct fs_context *fc)
- 	struct tracefs_fs_info *sb_opts = sb->s_fs_info;
- 	struct tracefs_fs_info *new_opts = fc->s_fs_info;
- 
-+	if (!new_opts)
-+		return 0;
-+
- 	sync_filesystem(sb);
- 	/* structure copy of new mount options to sb */
- 	*sb_opts = *new_opts;
-@@ -478,14 +481,17 @@ static int tracefs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	sb->s_op = &tracefs_super_operations;
- 	sb->s_d_op = &tracefs_dentry_operations;
- 
--	tracefs_apply_options(sb, false);
--
- 	return 0;
- }
- 
- static int tracefs_get_tree(struct fs_context *fc)
- {
--	return get_tree_single(fc, tracefs_fill_super);
-+	int err = get_tree_single(fc, tracefs_fill_super);
-+
-+	if (err)
-+		return err;
-+
-+	return tracefs_reconfigure(fc);
- }
- 
- static void tracefs_free_fc(struct fs_context *fc)
--- 
-2.47.0.163.g1226f6d8fa-goog
+> 
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+> ---
+>  kernel/trace/trace.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a8f52b6527ca..2b64b3ec67d9 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5501,6 +5501,10 @@ static const struct file_operations tracing_iter_fops = {
+>  
+>  static const char readme_msg[] =
+>  	"tracing mini-HOWTO:\n\n"
+> +	"By default tracefs removes all OTH file permission bits.\n"
+> +	"When mounting tracefs an optional group id can be specified\n"
+> +	"which adds the group to every directory and file in tracefs:\n\n"
+> +	"\t e.g. mount -t tracefs [-o [gid=<gid>]] nodev /sys/kernel/tracing\n\n"
+>  	"# echo 0 > tracing_on : quick way to disable tracing\n"
+>  	"# echo 1 > tracing_on : quick way to re-enable tracing\n\n"
+>  	" Important files:\n"
 
