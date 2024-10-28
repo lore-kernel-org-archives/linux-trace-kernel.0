@@ -1,105 +1,133 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C259716EB54;
-	Sun, 27 Oct 2024 21:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD4A8BEC;
+	Mon, 28 Oct 2024 01:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730063981; cv=none; b=hDEC1dHV/IgGnCMTkr2/I5vHnu/eAcTDE9B+1c1c37GRaO6AB14wYDl/ORVas1TUiTfJETt6I985wn4jFesIhyhQWK0JLMNGsWo3d1tUYjh2TtmZ8kTooJGx/n/XT7e5T77zsT5l1zMAHGPV0rzkP/PDD14H9Q7j702aAB2mePM=
+	t=1730077747; cv=none; b=KhrgK31D2h6YgbCPXolp3TSE9H1AHncEPLnD1rxEa820pWqMp3UiYbzifauN78t0Oj9OjU+qX8pUR+ZJHdBUN7bk2/EdnPZgVU+ogkWFg16RTN2Yn9L6w4C02vRwMitDtBRHjW9CNI1wR3XdMz4xfF1M1aM5NcfnysRFQ69T3BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730063981; c=relaxed/simple;
-	bh=KdJh3u3ZP0U2JiSBziw64zZvKITJSsDF5v402M9mu6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJZoOtLX8k4BTgp4IZaKGNVUiy9NghtOaE9jqHAgIgH8lhjHGXLDoDXX7ue07LyDKQWnIrGMhWabxeBRCO82/wS7xWrZwWyIUGyHBlaG+QyGY9KrlTyeClzYcO1Dt10I4YBbiZkVMUOU10MvVTYpmWUuSRZqsPq1DzVKD1VQ1S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhnbE+cJ; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730077747; c=relaxed/simple;
+	bh=cLHlFgsTefJ/63cMxsPXUMnfpmoCzVWJwou//7LsYNw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WAKIAP6wsHuXWcBM67eHpyMIqL/XCr5TOVeXiarlyYjVN6ZRqL36ZSL+IoEXjPo1uoWPC13s4p+riZ/PgMdNcGxX+mEsiPfLdTaxeUKOiI+Z0Z7M9fEJu3Ph6NE3KlIjaTR1D1vdcswi9U/aYYPiXb07GuccmTGFonwcufIgOBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gErwT3Bo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhnbE+cJ"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2e2ab5bbc01so570944a91.2;
-        Sun, 27 Oct 2024 14:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730063979; x=1730668779; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEQW5MOWjW7KV/lqVtyNAJeFCNbHriW6AQc/1TGHzzM=;
-        b=jhnbE+cJWpLpZzGJ04kihbeBSSIEFNnr7SujugP4qnG2io500mtz+Za5MOaK09SlZd
-         hDv/QQXsPmQzGDyecfHAzJnsPUtepW+D1Ornz914Ky4wNmCeKQGLc4kaa8cbe4ChjquV
-         7F/1MsQzw4cA9BaTMgQJ600vPaFrdpeki/IbzBT8tt7pgvUOn7eaPLlfVZxNE/jCse+O
-         YaIWmcWZUsG+6SO+NkmWb3stTYXaXblUNGbgdnko01durhs3NyjM5okyehw9FhhpdbCB
-         G5hKteW15w4cPLIhnTM1U4p1d7SPpoXEJ/m1aHsAEIzOtyVdSqhydhM1/vupY3aUjiBu
-         V5Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730063979; x=1730668779;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AEQW5MOWjW7KV/lqVtyNAJeFCNbHriW6AQc/1TGHzzM=;
-        b=AiTTUBYfbWIVvOfGtoEb2sD7IuKTOviMALizgfbmFbEGZq3fTuf+j4c8BB2lKjE186
-         fE1C3KdWNkZ0pCWV+3hA65ASfbV7LNfriMn9AbpkLAvhpJClkI7ELUgmixW156b8fh/b
-         GzRivvuw6td5GVGJ74elE99sOav8Qw+jv0ZTCABvGo9CYDBufK1Q8FrVMNtfwJNrCGcj
-         aA6Vr/XN6i7aJobEJlSGpaTWXp2vxqMbfS2aspE55FNc4jp+0zkdLcUdXj8QUMIpcU05
-         dkpbN5JASTu1j9JuWSQinsOor2BORiEnW7HLuHDUMfowTO+KtitKAt5gPsc2BCVg3OfM
-         Vj3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ4MXJBq1AOxNpSisoyLdHLdmYKCEXwdmtI811dzMaKx4lmSgl0EZZtY9zYXN8SJGj41nabCJ2UkWePPH5UbCev9+H@vger.kernel.org, AJvYcCX+nBxOTGgLCtOs5xID+dFgYMDAZeG3SOHgVaiKx9gj/YE6DtWNFk/iS3lLpJ9mNL/QgWAy1GDQWY8zC3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMiDc7lEQIO4niZD+PIMbkzcPKn5mE/QWT/IL+nM+M7QYfRDEB
-	6of5l3fSOYEVG/I4xXQLC6zlvreM1OGaVkdfZad7sqD2jwOGgMkg
-X-Google-Smtp-Source: AGHT+IEOQnQ3OFqJ1bnyeZSnpt9CJgoKqnnMYnDe0BvRc7amn7cMEMJ+P4mQ2xX1emxWf5yAVIR3Ag==
-X-Received: by 2002:a05:6a21:9997:b0:1d9:1894:cdc4 with SMTP id adf61e73a8af0-1d9a8534ed8mr3959762637.11.1730063979023;
-        Sun, 27 Oct 2024 14:19:39 -0700 (PDT)
-Received: from motti-test.. ([2409:40f4:300a:9618:92ca:3f55:718b:1cab])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7edc89f2d19sm4383887a12.67.2024.10.27.14.19.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Oct 2024 14:19:38 -0700 (PDT)
-From: MottiKumar Babu <mottikumarbabu@gmail.com>
-To: 
-Cc: rostedt@goodmis.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gErwT3Bo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5625EC4CEC3;
+	Mon, 28 Oct 2024 01:09:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730077746;
+	bh=cLHlFgsTefJ/63cMxsPXUMnfpmoCzVWJwou//7LsYNw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gErwT3Bohbwn/Qs4nZQrC6/plN8hPUAEzZyFdUnMgUIUqTUPjxWcD7YB9PKdeAWeF
+	 /aFgyBgP+3e+NJOOCxJsRO31EIHGiT3QtU7SY6/n3vwkWJsViVAW6tBUXvD3teHE4g
+	 QSvSYRP0xW1MkYuxGpJ/SJSQzvh5+U7IoVNmIhTPNwbvH9nMjaDpD852M5smDN+8XT
+	 z4higS6hVwHgvS8dIpOtc5Gn7gx0X2xHLVA0q72y5WY7wtsvlo9cfRrsUd+fbKdrNg
+	 gI6Ifdd54lkGARG2BRQ1cCrPQyEcQXaUSm7OWgBLItuJcymqg4vPaXa0mwX4d03DfR
+	 YKvLOq6xH89rA==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	peterz@infradead.org
+Cc: oleg@redhat.com,
+	rostedt@goodmis.org,
 	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
+	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	anupnewsmail@gmail.com,
-	skhan@linuxfoundation.org
-Subject: [PATCH] Removed unnecessary initialization of "ret"
-Date: Mon, 28 Oct 2024 02:48:18 +0530
-Message-ID: <20241027211913.26718-2-mottikumarbabu@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	jolsa@kernel.org,
+	paulmck@kernel.org,
+	willy@infradead.org,
+	surenb@google.com,
+	mjguzik@gmail.com,
+	brauner@kernel.org,
+	jannh@google.com,
+	mhocko@kernel.org,
+	vbabka@suse.cz,
+	shakeel.butt@linux.dev,
+	hannes@cmpxchg.org,
+	Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com,
+	david@redhat.com,
+	arnd@arndb.de,
+	richard.weiyang@gmail.com,
+	zhangpeng.00@bytedance.com,
+	linmiaohe@huawei.com,
+	viro@zeniv.linux.org.uk,
+	hca@linux.ibm.com,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v4 tip/perf/core 0/4] uprobes,mm: speculative lockless VMA-to-uprobe lookup
+Date: Sun, 27 Oct 2024 18:08:14 -0700
+Message-ID: <20241028010818.2487581-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The initialization of ret to 0 was redundant since ret is set to meaningful values later in the function. This change simplifies the code and avoids confusion about its initial state.
+Implement speculative (lockless) resolution of VMA to inode to uprobe,
+bypassing the need to take mmap_lock for reads, if possible. First two patches
+by Suren adds mm_struct helpers that help detect whether mm_struct was
+changed, which is used by uprobe logic to validate that speculative results
+can be trusted after all the lookup logic results in a valid uprobe instance.
 
-The issue was reported by Coverity Scan.
+Patch #3 is a simplification to uprobe VMA flag checking, suggested by Oleg.
 
-Report:
-CID 1633338 Unused value - An assigned value that is never used may represent unnecessary computation, an incorrect algorithm, or possibly the need for cleanup or refactoring.
-In register_ftrace_graph: A value assigned to a variable is never used. (CWE-563)
+And, finally, patch #4 is the speculative VMA-to-uprobe resolution logic
+itself, and is the focal point of this patch set. It makes entry uprobes in
+common case scale very well with number of CPUs, as we avoid any locking or
+cache line bouncing between CPUs. See corresponding patch for details and
+benchmarking results.
 
+Note, this patch set assumes that FMODE_BACKING files were switched to have
+SLAB_TYPE_SAFE_BY_RCU semantics, which was recently done by Christian Brauner
+in [0]. This change can be pulled into perf/core through stable
+tags/vfs-6.13.for-bpf.file tag from [1].
 
-Signed-off-by: MottiKumar Babu <mottikumarbabu@gmail.com>
----
- kernel/trace/fgraph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  [0] https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=vfs-6.13.for-bpf.file&id=8b1bc2590af61129b82a189e9dc7c2804c34400e
+  [1] git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 69e226a48daa..b13ab2ad0e88 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1249,7 +1249,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	static bool fgraph_initialized;
- 	int command = 0;
--	int ret = 0;
-+	int ret;
- 	int i = -1;
- 
- 	guard(mutex)(&ftrace_lock);
+v3->v4:
+- rebased and dropped data_race(), given mm_struct uses real seqcount (Peter);
+v2->v3:
+- dropped kfree_rcu() patch (Christian);
+- added data_race() annotations for fields of vma and vma->vm_file which could
+  be modified during speculative lookup (Oleg);
+- fixed int->long problem in stubs for mmap_lock_speculation_{start,end}(),
+  caught by Kernel test robot;
+v1->v2:
+- adjusted vma_end_write_all() comment to point out it should never be called
+  manually now, but I wasn't sure how ACQUIRE/RELEASE comments should be
+  reworded (previously requested by Jann), so I'd appreciate some help there
+  (Jann);
+- int -> long change for mm_lock_seq, as agreed at LPC2024 (Jann, Suren, Liam);
+- kfree_rcu_mightsleep() for FMODE_BACKING (Suren, Christian);
+- vm_flags simplification in find_active_uprobe_rcu() and
+  find_active_uprobe_speculative() (Oleg);
+- guard(rcu)() simplified find_active_uprobe_speculative() implementation.
+
+Andrii Nakryiko (2):
+  uprobes: simplify find_active_uprobe_rcu() VMA checks
+  uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
+
+Suren Baghdasaryan (2):
+  mm: Convert mm_lock_seq to a proper seqcount
+  mm: Introduce mmap_lock_speculation_{begin|end}
+
+ include/linux/mm.h               | 12 ++---
+ include/linux/mm_types.h         |  7 ++-
+ include/linux/mmap_lock.h        | 87 ++++++++++++++++++++++++--------
+ kernel/events/uprobes.c          | 47 ++++++++++++++++-
+ kernel/fork.c                    |  5 +-
+ mm/init-mm.c                     |  2 +-
+ tools/testing/vma/vma.c          |  4 +-
+ tools/testing/vma/vma_internal.h |  4 +-
+ 8 files changed, 129 insertions(+), 39 deletions(-)
+
 -- 
-2.43.0
+2.43.5
 
