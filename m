@@ -1,126 +1,97 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A65A18FC75
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 21:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A6F19007E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 22:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730149807; cv=none; b=UvcK6wvRsviKr7AIgX/423jRwsIJVLate7zSRNpfSuwk2GNo8/aGlYIZuov5tss8ZmaeMYKWRRayS77A7JcgSTiKrF4XLyi4Ht/ADtpz6B1KkRErjiNuzs8gDBycj/aBKElJSRV5MjC0ObEN3WR0iM+rYEi1/O/5ZQo0mwW0ntQ=
+	t=1730153109; cv=none; b=Rw0697Jhf0qwZbWO/xYH/bc6fuYJ4aExIn3vDyRJ7d832akGy+xu4n3o0Hp6bxN7awwMwDYwNYC4IeW0RejSH3UjjymEOUxGQEOJjimst4nhQHmP9135LQNlVgdVjZeNGnaHI7frXd1JuDV3QtEHRD356XXFTI80p1Eem0Zln14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730149807; c=relaxed/simple;
-	bh=U5fBolRnKer5O7b+t+buSpViHWFwAOhRMo1EaMEr+5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bx+MBMYp40jGHrI0osniIlqrZIFOpClwQushdszC1LhdYd6F+pD6qDwEUUbemRqgjFoJHRBHlc0a6yX0YrOG8fMs7/ny6ej6eIBkfoG8SkP3Kl4hSVzLQLAtnVPm4QKTDxX3ILgH6/PH6RVWV7lnLC5aoeIapKlOE040Lf8wNtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gK8kCnVa; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1730153109; c=relaxed/simple;
+	bh=0hoHck181vRn1NSr2f2PwuVWiPIZTgKgLGSUOf4IQxI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pxCu55TTd86gvZkhDNid4+34vw85TgpdBBkriO0DbMYV/Cv5Z67vVWNMiYLw9KqjxOEBFodzp4StyU6MJg5MqOvLe6YZjNPpChIVDJbrHdCkHFx49rHBYyb6Yjj1nhFJos8o9OoHKBTUrMCCRCCV/KE5i9Hc6hza3U/cSgmiews=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mx69UkXP; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kaleshsingh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gK8kCnVa"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-539fe02c386so5337173e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 14:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mx69UkXP"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e28fc8902e6so8855802276.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 15:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1730149802; x=1730754602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fg5LHsnihfFMeaE/D0viDwbqHN3M3/7wht3hCbvfo84=;
-        b=gK8kCnVacaOTsybP5EmUXGNp7JNyaEEBp4JKXvuSIkQ2R57IJgvO9TbHvbkmPsdNG5
-         EkFuenhR9CYabXcJYzhon7mIw9OtlLfTrBYf44K6r97CvNIlPw+x3JltXgHvGYShgFGe
-         SxbYP/M/ogx4VspXgjaVmmr0iuikpUv/C5nrw=
+        d=google.com; s=20230601; t=1730153107; x=1730757907; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oWhquCb49LKi5H2UYgYKpnhN10davrTJtCE6vqtRvG0=;
+        b=Mx69UkXPMwQkgGdN/igewvdBssfAnJIUmSPMX1dVSFcmQptL2aKyzHFv12uwgTkGi+
+         9QXQOAnvHaC7d3rxZ8gPM+FM1l/SiIJEjesgVVUoWfMoqNxu7jJ97muVPKtRMMcGWYOH
+         nIIKfI2QGF6bK/3RMdBqHXP5LYklBzFrvmSRDMxs12uv+hNyXERiBXziiF+2FTnufiXP
+         WjsFNlyxIcCp8iTjyEveW2bDAmGcDLTGBkuV5SxXAfHNt43s0whqouNBpIZpeHofCOWF
+         i+Ambb0jQmhN/YFFbSF+B4m8ZzJWfgPGyFfEeXvUWHb+ZHTv8zAdHUgE59Ef7gvFFu6Q
+         ZLfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730149802; x=1730754602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fg5LHsnihfFMeaE/D0viDwbqHN3M3/7wht3hCbvfo84=;
-        b=wb5sTGB2Gd87+P2cDpPflgLVn1jB5obkDOFbEq0U5KKDpAAvU6b1Wyd/fuZfHuioXT
-         +d8O0tXmgTAl/Ab8W0Uk5FlkL5f0gyEHYDWemAtOCngpSOBGrVId6vwSHMFxTtEC9mB4
-         bHvXA4+CPeQm7ZyyUlGFj/4kevNWSK9xlJcFTkbOkq1wXI9nWGa+BsnbmOFjOAvZeyWP
-         ALSxDok2dxwAIbaHNjpM1FHFWgnrq+pP89E0y86Y2YqA66Fp5aONUp73Ngf91g92n5Xw
-         MqF//jcOuFUAn8/9/2qOVpo9Giz7JrXHQ4sZkGTYzVGiJl/WwF7EeI4or91mQct9wmAF
-         k22Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0uDfDgdinX+ZBtd0YGbJ+tg4H7MQgeJ/3DidXL0ymXhulYguAGIcco8fR8aKpkgNAwoxeV57GnotCvu86kPBl0jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmXf9w/AUPG4ZU78T8IV4U1fTnloZS4jSNVFSgF0fDpyGgdmYG
-	Ri9LP6HJ0U/ZwBgAz1aq2Eb+Nz31qLxNrr7iQQrldGh4zxS0LIf7b1Q6ksdSyWcsuLN7MTPDlyY
-	iIw==
-X-Google-Smtp-Source: AGHT+IGe3+vwIE9L0fwDnZlHC606Fyg+ZFx3YX7QNteONe0ah31WIeOEAUYFPQpz0EVDflQjqYlk2g==
-X-Received: by 2002:a05:6512:3501:b0:539:fe02:c1fe with SMTP id 2adb3069b0e04-53b47437185mr252938e87.16.1730149801564;
-        Mon, 28 Oct 2024 14:10:01 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53b2e1d5e73sm1178787e87.234.2024.10.28.14.10.00
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2024 14:10:01 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fb5743074bso39137361fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 14:10:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU26XmBzNcmPSPdmLP/UZnxXrSWhEHkbP+MHyKGg95ay63ywDNGwc7qK2LJ8N5a8LFLGH2vg5v/JNCbCCG2CylD1no=@vger.kernel.org
-X-Received: by 2002:a2e:be20:0:b0:2fb:50e9:34cc with SMTP id
- 38308e7fff4ca-2fcda112689mr2795051fa.17.1730149799851; Mon, 28 Oct 2024
- 14:09:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730153107; x=1730757907;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oWhquCb49LKi5H2UYgYKpnhN10davrTJtCE6vqtRvG0=;
+        b=OAOjuPiwEbuNH85u8V/YeNsZdeFX875tCy07AWV31xm0hfG54TPUQZfi85fTw7nf8Z
+         D7lIRe00LxqOhAmOJr6KV+UhWTr9YXGcmGO4/Ck9a4ossI4Q37A0RV+uIsQHHB2649B4
+         qeXOHecyLWyYi5tsZcUPcpIcIsJtx3QErBfxB3dzqSIGafuZS0Pm36fvruN5Cosm1QEO
+         dwNCTCwqY0uUEUEYJEgNhOV7xefH1pRmsm07ZPSbj0iUQWBw0sWEWuCxddrV/3ufeOD9
+         84avaMZtuuRTTr4GhoSQ2KjoMkPuef9KyWnjF+U7oYB4GgKdUT7oyYjBtPdLOLxIIeyK
+         TJwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXFjud3Fi//57FBlE0HvXOTiEsylCwFiPzJ8nSYP1vuMMvaFZMbaW6XhISm/rXeQ1mY5nn0hT8GIZrZkGxPwDwzleM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbN4paJuw2VHa5Agcs0oxpZ/hep9PBXkzN8gO3TX0igd9v/pko
+	3/WMN8YlecCuxKaxIlT5nfEiH1hU2Hap7qqKeSXiJt//P8SULVudgXMrtK6BQpJvfV+dyBI+oHz
+	PzzyXI1Z1F3bCGnFTDL/byg==
+X-Google-Smtp-Source: AGHT+IEAnCfdVLBm6ktQBhqpFyGMf87tkH/Lnfvvyg2A06ArHO+JMopPeHeJSfmCQLpmkvHXVSBQbL+oME5hPCmQMQ==
+X-Received: from kalesh.mtv.corp.google.com ([2a00:79e0:2e3f:8:dd17:1d2c:7822:7fdf])
+ (user=kaleshsingh job=sendgmr) by 2002:a05:6902:521:b0:e29:7dd4:a945 with
+ SMTP id 3f1490d57ef6-e308784b3c3mr25736276.2.1730153106526; Mon, 28 Oct 2024
+ 15:05:06 -0700 (PDT)
+Date: Mon, 28 Oct 2024 14:43:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241028191700.GA918263@lichtman.org> <20241028191916.GA918454@lichtman.org>
-In-Reply-To: <20241028191916.GA918454@lichtman.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 28 Oct 2024 14:09:44 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X0TYPpLow=GGAcNGz5_joKG7-d=-DorDcxh9ppgNdQaA@mail.gmail.com>
-Message-ID: <CAD=FV=X0TYPpLow=GGAcNGz5_joKG7-d=-DorDcxh9ppgNdQaA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] kdb: Replace the use of simple_strto with safer
- kstrto in kdb_main
-To: Nir Lichtman <nir@lichtman.org>
-Cc: kgdb-bugreport@lists.sourceforge.net, linux-trace-kernel@vger.kernel.org, 
-	yuran.pereira@hotmail.com, jason.wessel@windriver.com, 
-	daniel.thompson@linaro.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.163.g1226f6d8fa-goog
+Message-ID: <20241028214550.2099923-1-kaleshsingh@google.com>
+Subject: [PATCH 0/3] Tracefs gid mount option fixes
+From: Kalesh Singh <kaleshsingh@google.com>
+To: dhowells@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org
+Cc: surenb@google.com, jyescas@google.com, kernel-team@android.com, 
+	android-mm@google.com, Kalesh Singh <kaleshsingh@google.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, 
+	Ali Zahraee <ahzahraee@gmail.com>, Eric Sandeen <sandeen@redhat.com>, 
+	Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi all,
 
-On Mon, Oct 28, 2024 at 12:19=E2=80=AFPM Nir Lichtman <nir@lichtman.org> wr=
-ote:
->
-> From: Yuran Pereira <yuran.pereira@hotmail.com>
->
-> The simple_str* family of functions perform no error checking in
-> scenarios where the input value overflows the intended output variable.
-> This results in these functions successfully returning even when the
-> output does not match the input string.
->
-> Or as it was mentioned [1], "...simple_strtol(), simple_strtoll(),
-> simple_strtoul(), and simple_strtoull() functions explicitly ignore
-> overflows, which may lead to unexpected results in callers."
-> Hence, the use of those functions is discouraged.
->
-> This patch replaces all uses of the simple_strto* series of functions
-> with their safer kstrto* alternatives.
->
-> Side effects of this patch:
-> - Every string to long or long long conversion using kstrto* is now
->   checked for failure.
-> - kstrto* errors are handled with appropriate `KDB_BADINT` wherever
->   applicable.
-> - A good side effect is that we end up saving a few lines of code
->   since unlike in simple_strto* functions, kstrto functions do not
->   need an additional "end pointer" variable, and the return values
->   of the latter can be directly checked in an "if" statement without
->   the need to define additional `ret` or `err` variables.
->   This, of course, results in cleaner, yet still easy to understand
->   code.
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#simple=
--strtol-simple-strtoll-simple-strtoul-simple-strtoull
->
-> Signed-off-by: Yuran Pereira <yuran.pereira@hotmail.com>
-> [nir: addressed review comments by fixing styling, invalid conversion and=
- a missing error return]
-> Signed-off-by: Nir Lichtman <nir@lichtman.org>
-> ---
->  kernel/debug/kdb/kdb_main.c | 69 +++++++++++--------------------------
->  1 file changed, 21 insertions(+), 48 deletions(-)
+This series is based on v6.12-rc4. It fixes an issue with the  tracefs
+gid mount option. Adds test case to prevent future breakages and updates
+the tracefs readme to document the expected behavior of this option.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Thanks,
+Kalesh
+
+Kalesh Singh (3):
+  tracing: Document tracefs gid mount option
+  tracing/selftests: Add tracefs mount options test
+  tracing: Fix tracefs gid mount option
+
+ fs/tracefs/inode.c                            |  12 ++-
+ kernel/trace/trace.c                          |   4 +
+ .../ftrace/test.d/00basic/mount_options.tc    | 101 ++++++++++++++++++
+ .../ftrace/test.d/00basic/test_ownership.tc   |  16 +--
+ .../testing/selftests/ftrace/test.d/functions |  25 +++++
+ 5 files changed, 142 insertions(+), 16 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
+
+
+base-commit: 42f7652d3eb527d03665b09edac47f85fb600924
+--
+2.47.0.163.g1226f6d8fa-goog
+
