@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6684B188737;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB32191493;
 	Mon, 28 Oct 2024 07:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730099539; cv=none; b=k9Avq3K6pQ2T1yoJxdML9d9UvVv0U9jLfpxpia3IAIFq/dMXpvZPjDBXkaqh3oPD8dQsgmtfdjlxUuzjbO5c0tGuweLgVbKwrrVEJOrc7ah+bmW5muBK6p7vFKNmTy24dsuVFF2VfGqqjofEvhbs0zfsfxPrQEFYBOzE5nCzKic=
+	t=1730099539; cv=none; b=jDIH41p8Rn8BBWt9s94ncSsytZRmGIf6reSQ+1Bmd5t6Iz7wnvuvGLz/twR1O7IFt/K9cA19YDBv+M7QbEkhCi/UTflZGn6QOGr2DC4XFZPCh689DEDm+Lj3DKWTqO62Zd8SwWoDnw6sxxs8XxT590hCdknlBx3VqBexmuks2jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1730099539; c=relaxed/simple;
-	bh=KsohIQAJFRxFyrJE+8Xs1vbrzneRIvJPl7fp30prFUk=;
+	bh=CrpZfsQvl+o/WpkUnkpWR88txNPc6znh+Atzuyb7wlw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VhX0SaGhg9LJ41DaPpSEus2uE+x/+7Af4PH4uxh5inMMf5gHPo+QfV+PZPR9WkvGK10n32m/5r3wa2uAHDsFKQ+qWuYjTkoJJFjz2cOaq0UyFxZnnwmiXzScau7ffL3gQyCRkz2CdDdrSq4vDXnoWZBTIbiFJyCm04TXuc81DYc=
+	 Content-Type; b=icU7R4tSwt0s7wNmmv8SB55jkFSKwkvYSLt+kXMWNgxWP/aGWNTCz0i7MvwFMVOSpIPAoIqrxM5hgLv6MLINSYi5if16sUWdEhfKyDrWYh92Yiy3ogxVuKpw6gZe0vt8rHBp2HZWHpFxPqcvchdtqeACgXgtQkHi8FdJzOFzOSw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23475C4CEC7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37328C4CEE3;
 	Mon, 28 Oct 2024 07:12:19 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1t5Jw3-000000053D3-3oGh;
-	Mon, 28 Oct 2024 03:13:07 -0400
-Message-ID: <20241028071307.770550792@goodmis.org>
+	id 1t5Jw4-000000053DY-0HWJ;
+	Mon, 28 Oct 2024 03:13:08 -0400
+Message-ID: <20241028071307.927146604@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 28 Oct 2024 03:12:29 -0400
+Date: Mon, 28 Oct 2024 03:12:30 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,7 +30,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 1/5] fgraph: Use guard(mutex)(&ftrace_lock) for unregister_ftrace_graph()
+Subject: [PATCH 2/5] ftrace: Use guard for match_records()
 References: <20241028071228.575900713@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,47 +42,56 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The ftrace_lock is held throughout unregister_ftrace_graph(), use a guard
-to simplify the error paths.
+The ftrace_lock is held for most of match_records() until the end of the
+function. Use guard to make error paths simpler.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ kernel/trace/ftrace.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 001abf376c0c..0bf78517b5d4 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1381,17 +1381,17 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index e9fd4fb2769e..44adc34643c9 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4829,15 +4829,13 @@ match_records(struct ftrace_hash *hash, char *func, int len, char *mod)
+ 		mod_g.len = strlen(mod_g.search);
+ 	}
  
 -	mutex_lock(&ftrace_lock);
 +	guard(mutex)(&ftrace_lock);
  
- 	if (unlikely(!ftrace_graph_active))
--		goto out;
-+		return;
+ 	if (unlikely(ftrace_disabled))
+-		goto out_unlock;
++		return 0;
  
- 	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE ||
- 		     fgraph_array[gops->idx] != gops))
--		goto out;
-+		return;
+-	if (func_g.type == MATCH_INDEX) {
+-		found = add_rec_by_index(hash, &func_g, clear_filter);
+-		goto out_unlock;
+-	}
++	if (func_g.type == MATCH_INDEX)
++		return add_rec_by_index(hash, &func_g, clear_filter);
  
- 	if (fgraph_lru_release_index(gops->idx) < 0)
--		goto out;
-+		return;
+ 	do_for_each_ftrace_rec(pg, rec) {
  
- 	fgraph_array[gops->idx] = &fgraph_stub;
+@@ -4846,16 +4844,12 @@ match_records(struct ftrace_hash *hash, char *func, int len, char *mod)
  
-@@ -1413,7 +1413,5 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 		unregister_pm_notifier(&ftrace_suspend_notifier);
- 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
- 	}
-- out:
- 	gops->saved_func = NULL;
+ 		if (ftrace_match_record(rec, &func_g, mod_match, exclude_mod)) {
+ 			ret = enter_record(hash, rec, clear_filter);
+-			if (ret < 0) {
+-				found = ret;
+-				goto out_unlock;
+-			}
++			if (ret < 0)
++				return ret;
+ 			found = 1;
+ 		}
+ 		cond_resched();
+ 	} while_for_each_ftrace_rec();
+- out_unlock:
 -	mutex_unlock(&ftrace_lock);
+ 
+ 	return found;
  }
 -- 
 2.45.2
