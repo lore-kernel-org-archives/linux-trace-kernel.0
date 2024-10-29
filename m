@@ -1,193 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C5F20721D;
-	Tue, 29 Oct 2024 21:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD932040A1
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Oct 2024 21:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730236377; cv=none; b=NdT2SIb8pCLuwCUwx3M0uwPdKan3zrFEp3Dx78Vq5KWSWJqUL/IbeJO4UMt8QmTfjKSlx8TdJa4kVy52cOxOKJq01nAxFkzAcAk6Uv7ts7TQTo57t6gthYS+oU30UDYsgLD5tiwBg6uslEMmBr5y1WdyjHrejxTaOhaGMxjfBtw=
+	t=1730237633; cv=none; b=d1GjQRh/D2qEyHxbqxvsbE+Qt6Wl+vY8VfX4LC9h/2mhDkpkoi1aPZSnxGLs+2Q0I9RqVNln2g0WVOjtwbFa1SFZYawVGKCBxJF6P/sjiDopSNHfohF2dImHmvDleN8qdwGbBPwTW1vu/N5h6XGBbi0mz0cefZh729b2xtqFXy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730236377; c=relaxed/simple;
-	bh=pnnz6YJDVpo+3JTcic1igBBQy1GhxvWeinL48k0cWgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qbbTxAuNQhQlO7VHPDTfPGu3eIIQ9F4WJ6FbLKLzN8Tq0zQJzN3n1r9EpADrsVE3ONflFjX8hNYwX665nnsQ0uZwZ6TlYIRKlebiVxsgt2xT5T+fQAPzdOx1PB9kZPhMFNL+bJyhkTKW5dONO/7+xjeFZy02tAY6IcjVOSBp7rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uUZhBL4E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730237633; c=relaxed/simple;
+	bh=h+puN0fhqWblaJnsZw9q5nmFY1+4n5wVKrQtRnvjDf0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hNZfe6ZE9DpIuAZ217FqNuQFvvPTZZ9J3H8lCYPPL2CvSwDQbbZSrH7Ct0Uh7fBn0wqxFKh0enzB/oFr2cPwb62PABhsvYxy/v2t2yMaqsTDoJat+YUCX7RoLG+U9URVN/E5wd/5Ym6lqq9cFbzPZvajgxU+j9sfRwuHO0j+LjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BNyoF1wb; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uUZhBL4E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C15C4CECD;
-	Tue, 29 Oct 2024 21:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730236376;
-	bh=pnnz6YJDVpo+3JTcic1igBBQy1GhxvWeinL48k0cWgs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uUZhBL4Eo3t4GUDy8k/WDYtsR5ehOcnR/VJnQfb1OvD4VB0Av8XmoyDPfz3cHXYNz
-	 Fz1hggskdcR7K5jHLtN6N0mC8Wk3uLs7ZUtUGqhcRH4WcMBt0Wpq6XwqB0/2/4A/s/
-	 fy/YYEl3m74LzW5ZWglWkkH0qFkxQJXDLRWUaoTiGk1v0FPf4uxGDFoWiCJ5WHFpsO
-	 8PC7VjP9ivr4WT4ZHOVUWgGd5YohSWix2WqAYYxGbnu11ZvFfbNb1GgdVmGW8MpuZk
-	 lIYyvY0WhtEHh3Izc1t+SqqQWhGo1buejpUmmTQzTfCcwLb0216ZVoQdodEGRlw8kI
-	 qz8guzvURO6lw==
-Date: Tue, 29 Oct 2024 14:12:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: naveen@kernel.org, anil.s.keshavamurthy@intel.com, davem@davemloft.net,
-	kees@kernel.org, gustavoars@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/3] kprobes: Annotate structs with __counted_by()
-Message-ID: <20241029211254.GA4146593@thelio-3990X>
-References: <20240813115334.3922580-1-ruanjinjie@huawei.com>
- <20240813115334.3922580-2-ruanjinjie@huawei.com>
- <20241022205557.GA3004519@thelio-3990X>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BNyoF1wb"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-539e681ba70so4477e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Oct 2024 14:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730237628; x=1730842428; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZLCevXoJGaR8oKfiYoaHQvhcyK6u+L88OrvNrE2LLbA=;
+        b=BNyoF1wbleE66/xgDAqCHqo/h2UJFNBJFEtgQ0Y0U+U3hnkqC5hmrEkBLvedVdJ9mS
+         Z111GU336U8LhEXvlpeUSDXN5x1V+8d+rdCczsKwbpezkrrOh6tiYaHwR3mhjfRO+B90
+         S55osjzp9wwFOz37FCedyhXKS+VJbeGlG0bm5AS7SGYoe9ZpVylPs2f7acusUsKK+0o5
+         6/Mo5Y6BQPeoYuXFTDei0n+cU5pfTJjxfx067qSxz5G6lSbxYvx5XdomKt8U+JI8tXgI
+         nT10QYvhgOLe4GjJCzzUWlTk5j6e17Bjrv7hllxCva3xruEChdpwjIJ/iGFtFQR/9L3g
+         Bptw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730237628; x=1730842428;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZLCevXoJGaR8oKfiYoaHQvhcyK6u+L88OrvNrE2LLbA=;
+        b=MKpeAW2YZt6lm0ED8X+jNPx8U34jRJUdO799sR6V/CpcE8iPRJJkdwTSwJrvh3pHog
+         4a5Eiq9TRF0MbyJJJq8wZ4a1wYqe0ymIa7Jp/zP6BD3h15VgxF1fX3+ecQxJEVY+uD1K
+         jtqgWxCuCV4Dx8XEtAjmpXZbBQ8W0t4vGS6tej7ybjNf6YhiKzOCWPvxRXPP+r/Xp0ml
+         f4JdsobI89NojFTBB/HFATaHMBWdpxQdS4hqqhpu1TlS7G9kWhDdKhZKu5GA3XlylaKj
+         L7qzGqvb8RGT4P6ZHfQ/Gqn5riJla2jysy1bKywMkqzvL7oqSl06VdR1WZ2OheWjBBUV
+         fZ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXlSaH+csNr0BzexNYDVFOqaAzDeV/mCSThAy0Lvv4nRnUdnu9oWHHWK2kxOBCGnBUGb3ni5fqVLIHty4yATgvyLj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGeymxnh0joKRPyBZ79tgMHnCE6JHbGWJl72OUdIoqIFErM96M
+	I2R3U16DvuvANw58FfnKZkLROZa18qhMzdrfSBXlz8w5JTL8BoQvMk43wpB/Mvlfiqb7SjBroY8
+	kzXGQ2ufsZVZXAP5Vf7stnUPwsufh8W5F5SJf
+X-Gm-Gg: ASbGncvQ1GoASKoqBwsAz3PVpfrLcI8ffjWmI1H8Jey5F2fAA8s4T/Yp+cbAINDoBkM
+	huxGkKQ92P9zoAWURELF8RrU6eWBUa1qJQdcnGxAWpA5DtRHMUkhNuU9BvZXsvw==
+X-Google-Smtp-Source: AGHT+IGYEgSe/xaLttCW468YzyVt+PJSqrl2F1hKgdaEVJVyCsWJcWbraB6StYd3H9kULin2IaXyAhjjioQjPAzPjxY=
+X-Received: by 2002:a05:6512:138c:b0:539:d0c4:5b53 with SMTP id
+ 2adb3069b0e04-53b480a3611mr660213e87.4.1730237627739; Tue, 29 Oct 2024
+ 14:33:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241022205557.GA3004519@thelio-3990X>
+References: <20241028214550.2099923-1-kaleshsingh@google.com>
+ <20241028214550.2099923-4-kaleshsingh@google.com> <bbbbaa42-444f-4973-b749-7c56b937ae5f@redhat.com>
+In-Reply-To: <bbbbaa42-444f-4973-b749-7c56b937ae5f@redhat.com>
+From: Kalesh Singh <kaleshsingh@google.com>
+Date: Tue, 29 Oct 2024 14:33:35 -0700
+Message-ID: <CAC_TJveyKz5be6tVr9J_P32g2cVWAOs2eaQVi4Yrx6ATfb==nQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] tracing: Fix tracefs gid mount option
+To: Eric Sandeen <sandeen@redhat.com>
+Cc: dhowells@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	surenb@google.com, jyescas@google.com, kernel-team@android.com, 
+	android-mm@google.com, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Shuah Khan <shuah@kernel.org>, Ali Zahraee <ahzahraee@gmail.com>, 
+	Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 22, 2024 at 01:56:01PM -0700, Nathan Chancellor wrote:
-> Hi,
-> 
-> On Tue, Aug 13, 2024 at 07:53:32PM +0800, Jinjie Ruan wrote:
-> > Add the __counted_by compiler attribute to the flexible array member
-> > stripes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
-> > CONFIG_FORTIFY_SOURCE.
-> > 
-> > Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+On Mon, Oct 28, 2024 at 8:00=E2=80=AFPM Eric Sandeen <sandeen@redhat.com> w=
+rote:
+>
+> On 10/28/24 4:43 PM, Kalesh Singh wrote:
+> > Commit 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
+> > tracefs to use the new mount APIs caused mounting with the gid=3D<gid>
+> > option to not take effect.
+>
+> Or any other mount options. I'm sure this isn't unique to gid, right?
+> So, might want to fix the commit title.
+
+Hi Eric,
+
+You are right, they same applies to any of the mount options. I'll
+update the commit text for v2.
+
+>
+> > The tracefs superblock can be updated from multiple paths:
+> >     - on fs_initcall() to init_trace_printk_function_export()
+> >     - form a work queue to initialize eventfs
+> >       tracer_init_tracefs_work_func()
+> >     - fsconfig() syscall to mount of remount sysfs
+> >
+> > The tracefs super block root inode gets created early on in
+> > init_trace_printk_function_export().
+> >
+> > With the new mount API tracefs effectively uses get_tree_single() inste=
+ad
+> > of the old API mount_single().
+> >
+> > Previously, mount_single() ensured that the options are alway applied t=
+o
+> > the superblock root inode:
+> >     (1) If the root inode didn't exist, called fill_super() to create i=
+t
+> >         and apply the options.
+> >     (2) If the root inode exists, called reconfigure_single() which
+> >         effectively called tracefs_apply_options() to parse and apply
+> >         options to the subperblock's fs_info and inode and remount
+> >         eventfs (if necessary)
+> >
+> > On the other hand, get_tree_single() effectively calls vfs_get_super()
+> > which:
+> >     (3) If the root inode doesn't exists calls fill_super() to create i=
+t
+> >         and apply the options.
+> >     (4) If the root inode already exists, updates the fs_context root
+> >         with the superblock's root inode.
+>
+> I'm honestly a little lost here, but given the differences between mount_=
+single()
+> and get_tree_single() - are other get_tree_single() users similarly broke=
+n?
+>
+
+I'm not sure if other filesystems are broken in the same way. The
+issue happened for tracefs due to the fact that the sb root is created
+before  calling mount -- from init_trace_printk_function_export(). If
+there are other filesystems that have similar early initialization
+(before mount) they may be broken as well.
+
+> Should get_tree_single() just be calling reconfigure_single() internally =
+like
+> mount_single() did? The comment in reconfigure_single() confuses me.
+>
+> > (4) above is always the case for tracefs mounts, since the super block'=
+s
+> > root inode will already be created by init_trace_printk_function_export=
+().
+>
+> this reminds me a little of
+>
+> commit a6097180d884ddab769fb25588ea8598589c218c
+> Author: NeilBrown <neilb@suse.de>
+> Date:   Mon Jan 17 09:07:26 2022 +1100
+>
+>     devtmpfs regression fix: reconfigure on each mount
+>
+
+Interesting, yes it seems like the same root cause. i.e. devtmpfs sb
+root is created early on from  kernel_init() .... --> driver_init()
+---> devtmpfs_init() which setups up the root inode for devtmpfs in
+shmem_get_tree() ... -> vfs_get_super(); which is the case (4),
+meaning that it would have ignored the options on mount for the same
+reason: the superblock root indoe already exists.
+
+I'm not very familiar with the filesystem area. If this is a common
+scenario, maybe there needs to be a separate API to handle this case?
+
+
+> > This means that the gid mount option gets ignored:
+> >     - Since it isn't applied to the super block's root inode, it doesn'=
+t
+> >       get inherited by the children.
+> >     - Since eventfs is initialized from form a separate work queue and
+> >       before call to mount with the options, and it doesn't get remount=
+ed
+> >       for mount.
+> >
+> > Ensure that the mount options are applied to the super block and eventf=
+s
+> > is remounted to respect the new mount options.
+> >
+> > [1] https://lore.kernel.org/r/536e99d3-345c-448b-adee-a21389d7ab4b@redh=
+at.com/
+> >
+> > Fixes: 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
+> > Cc: David Howells <dhowells@redhat.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
 > > ---
-> >  kernel/kprobes.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index da59c68df841..e6f7b0d3b29c 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -92,7 +92,7 @@ struct kprobe_insn_page {
-> >  	struct kprobe_insn_cache *cache;
-> >  	int nused;
-> >  	int ngarbage;
-> > -	char slot_used[];
-> > +	char slot_used[] __counted_by(nused);
-> >  };
-> >  
-> >  #define KPROBE_INSN_PAGE_SIZE(slots)			\
-> > -- 
-> > 2.34.1
-> > 
-> 
-> This change was not properly tested. In next-20241022, where this
-> changes appears as commit 0888460c9050 ("kprobes: Annotate structs with
-> __counted_by()"), I get a fortify failure because ->nused is initialized
-> after the call to memset(). For example, with Debian's powerpc64le
-> configuration (which is just the first configuration I happened to see
-> this warning in, I don't think it is architecture specific):
-> 
->   $ curl -LSso .config https://github.com/nathanchance/llvm-kernel-testing/raw/096eeab130a9077206d3ddd6f0c6e39187113869/configs/debian/powerpc64le.config
-> 
->   $ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc64le-linux-gnu- LLVM=1 olddefconfig zImage.epapr
-> 
->   $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/download/20230707-182910/ppc64le-rootfs.cpio.zst | zstd -d >rootfs.cpio
-> 
->   $ qemu-system-ppc64 \
->       -display none \
->       -nodefaults \
->       -device ipmi-bmc-sim,id=bmc0 \
->       -device isa-ipmi-bt,bmc=bmc0,irq=10 \
->       -machine powernv \
->       -kernel arch/powerpc/boot/zImage.epapr \
->       -initrd rootfs.cpio \
->       -m 2G \
->       -serial mon:stdio
->   ...
->   [    0.000000] Linux version 6.12.0-rc4-next-20241022 (nathan@n3-xlarge-x86) (ClangBuiltLinux clang version 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b), ClangBuiltLinux LLD 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)) #1 SMP Tue Oct 22 20:24:37 UTC 2024
->   ...
->   [    0.138628] ------------[ cut here ]------------
->   [    0.138816] memset: detected buffer overflow: 512 byte write of buffer size 0
->   [    0.140141] WARNING: CPU: 0 PID: 1 at lib/string_helpers.c:1033 __fortify_report+0x60/0x80
->   [    0.142208] Modules linked in:
->   [    0.142722] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-rc4-next-20241022 #1
->   [    0.143379] Hardware name: IBM PowerNV (emulated by qemu) POWER10 0x801200 opal:v7.1 PowerNV
->   [    0.143810] NIP:  c000000000900920 LR: c00000000090091c CTR: 0000000000000000
->   [    0.144098] REGS: c000000002acf290 TRAP: 0700   Not tainted  (6.12.0-rc4-next-20241022)
->   [    0.144457] MSR:  9000000002029033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24800280  XER: 00000000
->   [    0.145048] CFAR: c00000000014e414 IRQMASK: 0
->   [    0.145048] GPR00: c00000000090091c c000000002acf530 c0000000017bf0e0 0000000000000041
->   [    0.145048] GPR04: c0000000025911f8 c0000000ffffefff 0000000000000003 0000000000000001
->   [    0.145048] GPR08: 0000000000000003 0000000000000004 0000000000000000 9000000002001033
->   [    0.145048] GPR12: 0000000000800000 c00000000289e000 c000000000010eb8 0000000000000000
->   [    0.145048] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->   [    0.145048] GPR20: 0000000000000000 0000000000000000 0000000000000000 c0000000027fba70
->   [    0.145048] GPR24: 61c8864680b583eb 0000000000000000 0000000000001000 0000000000000000
->   [    0.145048] GPR28: c000000002a83400 c00000000262de68 c00000000262de30 c000000002acf5b0
->   [    0.147696] NIP [c000000000900920] __fortify_report+0x60/0x80
->   [    0.147934] LR [c00000000090091c] __fortify_report+0x5c/0x80
->   [    0.148277] Call Trace:
->   [    0.148465] [c000000002acf530] [c00000000090091c] __fortify_report+0x5c/0x80 (unreliable)
->   [    0.148855] [c000000002acf590] [c000000000900958] __fortify_panic+0x18/0x40
->   [    0.149133] [c000000002acf5b0] [c0000000002e3508] __get_insn_slot+0x308/0x320
->   [    0.149413] [c000000002acf620] [c0000000000586c4] arch_prepare_kprobe+0x1e4/0x270
->   [    0.149699] [c000000002acf6b0] [c0000000002e496c] register_kprobe+0x4cc/0x8e0
->   [    0.149975] [c000000002acf930] [c0000000020154ac] arch_init_kprobes+0x30/0x54
->   [    0.150262] [c000000002acf960] [c0000000020411bc] init_kprobes+0x80/0x120
->   [    0.150524] [c000000002acf9d0] [c000000000010630] do_one_initcall+0x120/0x3e0
->   [    0.150798] [c000000002acfd50] [c000000002005cb8] do_pre_smp_initcalls+0x70/0x114
->   [    0.151082] [c000000002acfd90] [c000000002005b70] kernel_init_freeable+0x14c/0x224
->   [    0.151365] [c000000002acfde0] [c000000000010eec] kernel_init+0x3c/0x250
->   [    0.151622] [c000000002acfe50] [c00000000000de3c] ret_from_kernel_user_thread+0x14/0x1c
->   [    0.151935] --- interrupt: 0 at 0x0
->   [    0.152433] Code: 3cc2fffc 70630001 3c62ffa0 78841f48 38c6f388 38636489 7c86202a 3cc2ff9c 38c62f30 7cc8305e 4b84d9e1 60000000 <0fe00000> 38210060 e8010010 7c0803a6
->   [    0.153155] ---[ end trace 0000000000000000 ]---
->   ...
-> 
-> Even if the current ->nused assignment is moved before the call to
-> memset(), the failure still occurs because 1 is clearly wrong for the
-> size of memset(), which is 512 bytes for this configuration. Could this
-> instance of memset() be avoided by using kzalloc() for the kip
-> allocation? Could also take the opportunity to use struct_size(). The
-> following diff fixes this issue for me but I did not do any further
-> testing. If this does not work for some reason and there is no other
-> obvious solution, I think this change should be reverted.
+> >  fs/tracefs/inode.c | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> > index 1748dff58c3b..cfc614c638da 100644
+> > --- a/fs/tracefs/inode.c
+> > +++ b/fs/tracefs/inode.c
+> > @@ -392,6 +392,9 @@ static int tracefs_reconfigure(struct fs_context *f=
+c)
+> >       struct tracefs_fs_info *sb_opts =3D sb->s_fs_info;
+> >       struct tracefs_fs_info *new_opts =3D fc->s_fs_info;
+> >
+> > +     if (!new_opts)
+> > +             return 0;
+>
+> Can this really happen?
 
-Ping? I still see this on next-20241029. I can also reproduce it with a
-tip of tree GCC.
+From init_trace_printk_function_export() the first time the super
+block is allocated and added to file_system_type->fs_supers;
+fc->s_fs_info is reset to NULL. [1]. I think that is ok since the
+fs_info would have already been copied to the super block. [2]
 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 98d71a5acb72..6adb0cc4e45c 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -95,10 +95,6 @@ struct kprobe_insn_page {
->  	char slot_used[] __counted_by(nused);
->  };
->  
-> -#define KPROBE_INSN_PAGE_SIZE(slots)			\
-> -	(offsetof(struct kprobe_insn_page, slot_used) +	\
-> -	 (sizeof(char) * (slots)))
-> -
->  static int slots_per_page(struct kprobe_insn_cache *c)
->  {
->  	return PAGE_SIZE/(c->insn_size * sizeof(kprobe_opcode_t));
-> @@ -175,7 +171,7 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
->  		goto retry;
->  
->  	/* All out of space.  Need to allocate a new page. */
-> -	kip = kmalloc(KPROBE_INSN_PAGE_SIZE(slots_per_page(c)), GFP_KERNEL);
-> +	kip = kzalloc(struct_size(kip, slot_used, slots_per_page(c)), GFP_KERNEL);
->  	if (!kip)
->  		goto out;
->  
-> @@ -185,10 +181,8 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
->  		goto out;
->  	}
->  	INIT_LIST_HEAD(&kip->list);
-> -	memset(kip->slot_used, SLOT_CLEAN, slots_per_page(c));
-> -	kip->slot_used[0] = SLOT_USED;
->  	kip->nused = 1;
-> -	kip->ngarbage = 0;
-> +	kip->slot_used[0] = SLOT_USED;
->  	kip->cache = c;
->  	list_add_rcu(&kip->list, &c->pages);
->  	slot = kip->insns;
+
+See sget_fc():
+
+[1] https://github.com/torvalds/linux/blob/v6.12-rc4/fs/super.c#L774
+[2] https://github.com/torvalds/linux/blob/v6.12-rc4/fs/super.c#L766
+
+
+--Kalesh
+>
+> > +
+> >       sync_filesystem(sb);
+> >       /* structure copy of new mount options to sb */
+> >       *sb_opts =3D *new_opts;
+>
+> FWIW doing this as a structure copy was probably a terrible choice on my =
+part. :(
+>
+> > @@ -478,14 +481,17 @@ static int tracefs_fill_super(struct super_block =
+*sb, struct fs_context *fc)
+> >       sb->s_op =3D &tracefs_super_operations;
+> >       sb->s_d_op =3D &tracefs_dentry_operations;
+> >
+> > -     tracefs_apply_options(sb, false);
+> > -
+> >       return 0;
+> >  }
+> >
+> >  static int tracefs_get_tree(struct fs_context *fc)
+> >  {
+> > -     return get_tree_single(fc, tracefs_fill_super);
+> > +     int err =3D get_tree_single(fc, tracefs_fill_super);
+> > +
+> > +     if (err)
+> > +             return err;
+> > +
+> > +     return tracefs_reconfigure(fc);
+> >  }
+> >
+> >  static void tracefs_free_fc(struct fs_context *fc)
+>
