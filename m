@@ -1,87 +1,246 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238FF747F;
-	Tue, 29 Oct 2024 15:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C09F7DA81;
+	Tue, 29 Oct 2024 16:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730214929; cv=none; b=Abm3WTx1cwIqi8AtcvNVpBz84jE3d7qqjT1VXZsfrcdVqem9Djn/HGTEQe8/Vr+iXtGvnIJX5Nm2LoQ/xl0mEYRmXkJGeqgsYINvyRvR5avNV3gIwfgrsJjKM2l4ft1cmDFNBu5ELX7Zj7TNVI4Gx4wqtUCJr3SyaTqmGKm2ASg=
+	t=1730220526; cv=none; b=Cs/DsF8SVRYeLAbVDfjT7T0iMjfpmMhrPg0hwhjTy4RwW84gKa3HIRL7R4IIlAm+yCnjwF8Zfv/iK+sBumAghohnb1uSdKsFFYHheCT2mLtjNljjvmj6TWklCfOBpRmb1EN0BF5ABHr3jhToot61a4+NK5gBmlCbqFlQYA8itCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730214929; c=relaxed/simple;
-	bh=XTdAOFFPHoByAW0zEX+1bZ8Eb08mn2sn6pazzDy8SQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X++KXxU52lTcxac3rGQX2ZubrPH8tC76ytnShrOGd8Ndl67z/aJHwqmjaBJ/hyvvIZXZHWs9F/O0j7BLCpBcgx3o06CX4i0bdCDpaOWLp5Sklmv4BXdkjq0d85pZsOYn+ewRRb23X7qJisaXj/9D2OzFID2+W4QTxI11Hd4+KAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tg7ldVYG; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730220526; c=relaxed/simple;
+	bh=abCjQ9sTcXYoApKfPsysi9jmUHdl89cU/VkNgGlaBpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FeNP28sw8AIJO3kw0Rb1DjTiv4DCetnHd2+Tzbwta+YK0v8yFLoSaXGk21d/KceRPJAq8dB+vBvd1bKS684BGE0xCGHwhK4iHrhJ9oLZvz0lp3SnTH1l2m91vRXu991bNz+0ow+I6fP2NIIBsF9BaIwzPRT762nQW9O9xqNRg/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kDAMLL5U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zOyf1ZQg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kDAMLL5U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zOyf1ZQg; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tg7ldVYG"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43167ff0f91so54990605e9.1;
-        Tue, 29 Oct 2024 08:15:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730214924; x=1730819724; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTdAOFFPHoByAW0zEX+1bZ8Eb08mn2sn6pazzDy8SQ8=;
-        b=Tg7ldVYGvgBn5fKGsXCcm8ZLDh9Iw+JfsRTyO9Lgv+LNV3njQHAJTtT2U8g6ZiOR8F
-         E1KA5Q7JyCJs6aJD/IjgtXahXbtYv795oT5HEGuuob/K9VlOan79YtCGrlvGs2tzt6bY
-         CJhZLS8siPBZLUYv5VGjDnrgLlsrPAVR0VdahVnGc9bsvAkJ3PFyx+/25vIh+cKHAsR7
-         6C2yyTBF7vbiqYWrUzSxDEZ0iEmlfyOdSMT47uuCRUfll6pRTNX1AcVvIak2xrpumVFP
-         TpGscsfwxFcgm9JQVDm6934Mte84klYBZEMnTy6k/Hk+5vkHGpF2/C/GdpX7osoHmo8D
-         pT+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730214924; x=1730819724;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XTdAOFFPHoByAW0zEX+1bZ8Eb08mn2sn6pazzDy8SQ8=;
-        b=dHh3heFWHUPEkEbYl5AyQEumFfbkw/VCsuW/TZPQtOktoPnj1LvL9MQZ+RmGWGlBba
-         jyJIP/S8Ol5vnONCKJy3mobSO31sAHaektvYbMOCJVNesFjPKxM3YMMIHT5JKe4qX8lw
-         XHnL921vAm+OgSviAoKsKASUlcUSYT97pEYkP/J1XLzN3Gu1NTaUH587IXOrF/ZoCgGn
-         MVXRODjNSxL593KvnETmzw/340sjB0Mh4YI+DFNy1ZpfFs9qeuPtybtyZYAuUls+EpO4
-         yF243uh0xpoXxM62JaG5Oa4A+BGbN2omds/wL0BgwnKLYr02jsZUrEXIOG2eq4rRgSpP
-         Bk5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUBS2f8F07LSQGFOBrl6g2RqMtS68PIAiFuYVVCoiM6qiUBt/nXb0IKZMzcZPnCc6posXgO7wJPrQipDBs=@vger.kernel.org, AJvYcCUhvZEmudXE+7X4zf2ttZR9wExw4acebvMCAG00kWcCd7lSLUgLzIEtm+WqfdxfCgL4+IcN/SVXff0Q5CrRqBIz5Bu3@vger.kernel.org, AJvYcCVCTxzJLB01CHJKFm/TBI/9RryLUIKV1nBQob6Ny6MhENqOt/hKY2+l+BX9qNa8xXljnvDWXXAz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+djwWjTt75RmsWKmDq2wO5tExJH2MLME8ch5xsWMPbq+OKqMY
-	OsgPkBGvKXKK9ZgDb7+nx0ZEak91/T9AD5kzG/w6eDm4M/tF9wzMjVgD/z+u0m0KWfRcJws9md/
-	vlBW9hBup7bXSJWZvI6eyqNU4CyY=
-X-Google-Smtp-Source: AGHT+IFt3LhIP+T08xuSWl2DD2ktCkrZyc5GBn2EFnoVWOdyMp9q0tyHDl7Px5ZlD2TVQmiWP3R/n24rbjSd9KDMM3M=
-X-Received: by 2002:a05:600c:3c9a:b0:431:5d14:1cae with SMTP id
- 5b1f17b1804b1-4319acb1d60mr101991675e9.19.1730214924190; Tue, 29 Oct 2024
- 08:15:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kDAMLL5U";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zOyf1ZQg";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kDAMLL5U";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zOyf1ZQg"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9C89E1FDF3;
+	Tue, 29 Oct 2024 16:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1730220521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
+	b=kDAMLL5UFtDxJauIcaQSNGIEtFL+x/tELEP8I2kSeuKPrWArjzRP9VODhA8L3Ar1O6Dquk
+	SAHftLds5ZqXi7K+4W1zvh1UAjEKzKnpMGf//qrXKMiN4gEQh+iXKoSvGRwWMdAoZQviIL
+	WTmFj1HJeMOUOCxz5TRCuvA9db18rYI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1730220521;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
+	b=zOyf1ZQgJBH2Wd9QN5YBb8aHU6emyEiYo+Swy61v+TbC6PHk17i4WPpadWh756aTNbTwsH
+	8lmDRtXjBn0FMaDw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=kDAMLL5U;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zOyf1ZQg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1730220521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
+	b=kDAMLL5UFtDxJauIcaQSNGIEtFL+x/tELEP8I2kSeuKPrWArjzRP9VODhA8L3Ar1O6Dquk
+	SAHftLds5ZqXi7K+4W1zvh1UAjEKzKnpMGf//qrXKMiN4gEQh+iXKoSvGRwWMdAoZQviIL
+	WTmFj1HJeMOUOCxz5TRCuvA9db18rYI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1730220521;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
+	b=zOyf1ZQgJBH2Wd9QN5YBb8aHU6emyEiYo+Swy61v+TbC6PHk17i4WPpadWh756aTNbTwsH
+	8lmDRtXjBn0FMaDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 64617136A5;
+	Tue, 29 Oct 2024 16:48:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0FgyGOkRIWeiKwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 29 Oct 2024 16:48:41 +0000
+Message-ID: <3febb57e-e805-4cb9-8929-e47b957192a6@suse.cz>
+Date: Tue, 29 Oct 2024 17:48:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241029143445.72132-1-technoboy85@gmail.com>
-In-Reply-To: <20241029143445.72132-1-technoboy85@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 29 Oct 2024 08:15:12 -0700
-Message-ID: <CAADnVQLdcJMddFAxVRRaySeD06eGkU+rt0x8LkSqRak0fHqNEw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpf: use kfunc hooks instead of program types
-To: Matteo Croce <technoboy85@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Network Development <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Matteo Croce <teknoraver@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 tip/perf/core 2/4] mm: Introduce
+ mmap_lock_speculation_{begin|end}
+Content-Language: en-US
+To: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, akpm@linux-foundation.org, peterz@infradead.org
+Cc: oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
+ paulmck@kernel.org, willy@infradead.org, surenb@google.com,
+ mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
+ shakeel.butt@linux.dev, hannes@cmpxchg.org, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, david@redhat.com, arnd@arndb.de,
+ richard.weiyang@gmail.com, zhangpeng.00@bytedance.com, linmiaohe@huawei.com,
+ viro@zeniv.linux.org.uk, hca@linux.ibm.com
+References: <20241028010818.2487581-1-andrii@kernel.org>
+ <20241028010818.2487581-3-andrii@kernel.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20241028010818.2487581-3-andrii@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9C89E1FDF3
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[redhat.com,goodmis.org,kernel.org,vger.kernel.org,infradead.org,google.com,gmail.com,linux.dev,cmpxchg.org,oracle.com,arndb.de,bytedance.com,huawei.com,zeniv.linux.org.uk,linux.ibm.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL9sdddhhbu1oo5wyhn6sr3k5b)];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Tue, Oct 29, 2024 at 7:34=E2=80=AFAM Matteo Croce <technoboy85@gmail.com=
-> wrote:
->
-> From: Matteo Croce <teknoraver@meta.com>
->
-> Pass to register_btf_kfunc_id_set() a btf_kfunc_hook directly, instead
-> of a bpf_prog_type.
-> Many program types share the same kfunc hook, so some calls to
-> register_btf_kfunc_id_set() can be removed.
+On 10/28/24 02:08, Andrii Nakryiko wrote:
+> From: Suren Baghdasaryan <surenb@google.com>
+> 
+> Add helper functions to speculatively perform operations without
+> read-locking mmap_lock, expecting that mmap_lock will not be
+> write-locked and mm is not modified from under us.
+> 
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Still nack for the same reason: let's avoid churn
-when kfunc registration needs a redesign.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-pw-bot: cr
+> ---
+>  include/linux/mmap_lock.h | 29 +++++++++++++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> index 6b3272686860..58dde2e35f7e 100644
+> --- a/include/linux/mmap_lock.h
+> +++ b/include/linux/mmap_lock.h
+> @@ -71,6 +71,7 @@ static inline void mmap_assert_write_locked(const struct mm_struct *mm)
+>  }
+>  
+>  #ifdef CONFIG_PER_VMA_LOCK
+> +
+>  static inline void mm_lock_seqcount_init(struct mm_struct *mm)
+>  {
+>  	seqcount_init(&mm->mm_lock_seq);
+> @@ -86,11 +87,35 @@ static inline void mm_lock_seqcount_end(struct mm_struct *mm)
+>  	do_raw_write_seqcount_end(&mm->mm_lock_seq);
+>  }
+>  
+> -#else
+> +static inline bool mmap_lock_speculation_begin(struct mm_struct *mm, unsigned int *seq)
+> +{
+> +	*seq = raw_read_seqcount(&mm->mm_lock_seq);
+> +	/* Allow speculation if mmap_lock is not write-locked */
+> +	return (*seq & 1) == 0;
+> +}
+> +
+> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, unsigned int seq)
+> +{
+> +	return !do_read_seqcount_retry(&mm->mm_lock_seq, seq);
+> +}
+> +
+> +#else /* CONFIG_PER_VMA_LOCK */
+> +
+>  static inline void mm_lock_seqcount_init(struct mm_struct *mm) {}
+>  static inline void mm_lock_seqcount_begin(struct mm_struct *mm) {}
+>  static inline void mm_lock_seqcount_end(struct mm_struct *mm) {}
+> -#endif
+> +
+> +static inline bool mmap_lock_speculation_begin(struct mm_struct *mm, unsigned int *seq)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, unsigned int seq)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif /* CONFIG_PER_VMA_LOCK */
+>  
+>  static inline void mmap_init_lock(struct mm_struct *mm)
+>  {
+
