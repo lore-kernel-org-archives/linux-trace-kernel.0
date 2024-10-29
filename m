@@ -1,199 +1,79 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8178A145B2C;
-	Tue, 29 Oct 2024 06:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8CB2036E0
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Oct 2024 08:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730184340; cv=none; b=JqLA0zh/do9Clnp8VJ51hqgdIoZdqxNluARnxtIVNbkQFT8BI7yHTyR1DJ1Vayuvxc6SjwENkZ2agc+Q9KtwnYllKU5yd6DV7Sa0saZ/4CMwEo/O2iJtgwj5H/wQsvkSFzZodkU7Z3NuG6Aja0FnTh9z67D5LHik1tFNHyVpJtQ=
+	t=1730189706; cv=none; b=tevT+6+m5CQhiCwk1DFpDEaUs+gALdcIKLWxNfknI4Uoe/S053xohU/ihQ+jcsbtKG7GvlfyrkR+1uMWpdaHWmSDWJavVTJiwRunVkF+SJPvRQXNE2dYzE6+ow2hodcqvwoEjpJniHqU6engtC6GRSxrdWh2QAo8XMfpxC/hCDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730184340; c=relaxed/simple;
-	bh=1DrL+8jrbRz5TXvELVZ3R7u/AfvuuYFORhxgcZBZzpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lejOKsxJN8IxTusLLsB9HRBf42Ys3hQveS/vQtsfU9uwupGAGXY8fxVa83V++8j/t92Jd5H6zHoDH0Lu88LO4oObwa4Eg2gCCEDX1t5rxHH04Z4qxB5M1CKS16zv99K+s+tDlJkpcPl1To/tq6TREOOq4SskzQpId8xpz1uFSdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iJAGDJX0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iJAGDJX0"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49T25Ta3007263;
-	Tue, 29 Oct 2024 06:44:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wpMMtU
-	T/7iLSb1CPes2U6yH2Knc2kYorBmqmySojMfw=; b=iJAGDJX0zp7I8wnDmOxnwR
-	nsM832ucdpVHkqQlx2nmn3aDhYFrvERJXw+QFNKGd0H1UhMEw6AIZDhCEjEexTAI
-	guKsHOoqJguJX/7T0/zQZAK+VWxiqz9f3CchJR+AXAmbWu3MJQC581JSC2+woml5
-	wu4gC23D4KkJH74McGOquG3CMMc2mmS+7vem9H1FJ2TbLKQmXSvskdWJa/iu90p4
-	0kpLJ8LHaYEpm2681wNPdpOFRtuVAAYCFr/xX16m5/yk5yQhxw+p8EF+TdfG3nR3
-	9ObEqtjhVEPKZWfz9X5implw3U26UFo9ZQNNGrlLtysJVwIYYNIg8BUynlDR1Gng
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42jb65bm7n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Oct 2024 06:44:40 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49T6idbf015515;
-	Tue, 29 Oct 2024 06:44:39 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42jb65bm7h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Oct 2024 06:44:39 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49T55BI6017313;
-	Tue, 29 Oct 2024 06:44:38 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 42harsa1gc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 29 Oct 2024 06:44:38 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49T6iZ7M40370472
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 29 Oct 2024 06:44:35 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4555820043;
-	Tue, 29 Oct 2024 06:44:35 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BBCF820040;
-	Tue, 29 Oct 2024 06:44:31 +0000 (GMT)
-Received: from [9.203.115.143] (unknown [9.203.115.143])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 29 Oct 2024 06:44:31 +0000 (GMT)
-Message-ID: <841804f7-d634-4d8c-8585-04a2e4ea40f0@linux.ibm.com>
-Date: Tue, 29 Oct 2024 12:14:30 +0530
+	s=arc-20240116; t=1730189706; c=relaxed/simple;
+	bh=jVZI0IwpcekhbnfOrIbgBgWJzqVFKuVUtoIm9N+jkVc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=O6TtV6pRMpRAy8GVkHVYtzX1DOu4PAvrcwMvgcItFHbTcEu39Eab3442sZH8hEEaerf4IJMHYTadDLEGrOvpC4bjPP4iE7f/s2bpvD1T0DTP+Cg/BMi80ASrkPcLNivk5CKBNuY5zjvTY1yKrR0rbPbKX9DOV39F4n6VVAlVYQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a4e41e2732so37494245ab.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Oct 2024 01:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730189703; x=1730794503;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5BTRHXytTFWgdZnYL2thO68nzA3wtruqd8M7jFd6tO8=;
+        b=EfEEx2Db5nor2Jc2Z/PTcKfMwpEL/OOM1FaGFHiGrcvKR06m61JS04Ri1vrdFfspWz
+         cXArVjBVd0iFR2RKyYczSViEg4RF5UBzVKHhEoPm+qSt0LdqX8NVZttB4b8L3OROd77m
+         TAy/oRq0LyP2zACv1tBEkd6PPYcw8pDF2S8QzO4GSyQZWpmV8DDOu1vPCxWoU5FI6cj/
+         Xtz7S8PjJiY0BqZ2S9rM/DZl1Nz1TEV7p50NlmS59Mcym2Qd9eCygoYPqNre2gr9sTGl
+         qoRe9fCmxsZ8raFiKnVqR+vKn3gdrzsoxRDCoPrRotKwv5agNiSsA+F0lYvPGTUwZAZQ
+         OdKA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2ZbLUfFRiuhS7HwuCjXeNDIo9sf/PSwXiqjN+sPJrK+HcRQSNnDx2WkyhBsvy7lEteHuojUzpx+Ywe0zYtJ6EnxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEeS/+p7Az2jXvSIuzRZJDWGpUS17srtFgs3AUtBetnqNJMR6R
+	SXrpwZhttJatgNse0+NW2Baq19bXUr3PxOTctBy286qA/mZVnX9S8ui9Axgm1CqdZ9B017xPrIH
+	TpQi0tsgQgjLNQZOjUAfgfVCBDNhj308ashBBxaz1z3XXNLL7lXFG4QA=
+X-Google-Smtp-Source: AGHT+IG8VvCIkrmNvSQH+kmC4iRLaOd+tCtOspcugELt4BK972V9xSrn5cpBxJ3eE49Xr5ZBxahDDGO4yGtK5fLRSCzt9o8VN2t+
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 17/17] powerpc64/bpf: Add support for bpf trampolines
-To: Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: "Naveen N. Rao" <naveen@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Vishal Chourasia <vishalc@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-References: <20241018173632.277333-1-hbathini@linux.ibm.com>
- <20241018173632.277333-18-hbathini@linux.ibm.com>
- <87wmhtrmni.fsf@mpe.ellerman.id.au>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <87wmhtrmni.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -iB9zBHmU6GGaR0CrGda44FqrDjFKDqK
-X-Proofpoint-GUID: 57WHYjnIt4dw8lVBHWWBue558w_N7zEI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2410290052
+X-Received: by 2002:a05:6e02:b49:b0:3a0:b631:76d4 with SMTP id
+ e9e14a558f8ab-3a4ed2663ecmr114857565ab.1.1730189703613; Tue, 29 Oct 2024
+ 01:15:03 -0700 (PDT)
+Date: Tue, 29 Oct 2024 01:15:03 -0700
+In-Reply-To: <66ed861a.050a0220.2abe4d.0015.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67209987.050a0220.4735a.0258.GAE@google.com>
+Subject: Re: [syzbot] [netfs?] KASAN: slab-use-after-free Read in iov_iter_advance
+From: syzbot <syzbot+7c48153a9d788824044b@syzkaller.appspotmail.com>
+To: aha310510@gmail.com, brauner@kernel.org, dhowells@redhat.com, 
+	hdanton@sina.com, jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netfs@lists.linux.dev, 
+	oliver.sang@intel.com, rostedt@goodmis.org, stfrench@microsoft.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+syzbot suspects this issue was fixed by commit:
 
+commit df9b455633aee0bad3e5c3dc9fc1c860b13c96d2
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu Sep 26 13:58:30 2024 +0000
 
-On 28/10/24 7:53 am, Michael Ellerman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
->> From: Naveen N Rao <naveen@kernel.org>
->>
->> Add support for bpf_arch_text_poke() and arch_prepare_bpf_trampoline()
->> for 64-bit powerpc. While the code is generic, BPF trampolines are only
->> enabled on 64-bit powerpc. 32-bit powerpc will need testing and some
->> updates.
-> 
-> Hi Hari,
-> 
-> This is breaking the PCREL build for me:
-> 
->    ERROR: 11:49:18: Failed building ppc64le_defconfig+pcrel@fedora
->    INFO: 11:49:18: (skipped 41 lines) ...
->    INFO: 11:49:18: /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |         ^~~~
->    /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
->      473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
->          |                                                                                        ^~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |              ^~~~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |                                    ^~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit_comp.c:791:17: note: in expansion of macro 'PPC64_LOAD_PACA'
->      791 |                 PPC64_LOAD_PACA();
->          |                 ^~~~~~~~~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:65: error: 'struct paca_struct' has no member named 'kernel_toc'; did you mean 'kernel_msr'?
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |                                                                 ^~~~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:29:34: note: in definition of macro 'PLANT_INSTR'
->       29 |         do { if (d) { (d)[idx] = instr; } idx++; } while (0)
->          |                                  ^~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |         ^~~~
->    /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
->      473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
->          |                                                                                        ^~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |              ^~~~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
->       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->          |                                    ^~~~~~~~
->    /linux/arch/powerpc/net/bpf_jit_comp.c:882:25: note: in expansion of macro 'PPC64_LOAD_PACA'
->      882 |                         PPC64_LOAD_PACA();
->          |                         ^~~~~~~~~~~~~~~
->    make[5]: *** [/linux/scripts/Makefile.build:229: arch/powerpc/net/bpf_jit_comp.o] Error 1
-> 
-> 
-> To test it you need to enable CONFIG_POWER10_CPU, eg:
-> 
->    CONFIG_POWERPC64_CPU=n
->    CONFIG_POWER10_CPU=y
->    CONFIG_PPC_KERNEL_PCREL=y
-> 
-> This diff gets it building, but I haven't tested it actually works:
+    netfs: Fix write oops in generic/346 (9p) and generic/074 (cifs)
 
-Thanks, Michael. Yeah, the below snippet will be sufficient as
-PPC64_LOAD_PACA() is used with !IS_ENABLED(CONFIG_PPC_KERNEL_PCREL)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c2eca7980000
+start commit:   a430d95c5efa Merge tag 'lsm-pr-20240911' of git://git.kern..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d85e1e571a820894
+dashboard link: https://syzkaller.appspot.com/bug?extid=7c48153a9d788824044b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1511a607980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10c7d69f980000
 
-- Hari
+If the result looks correct, please mark the issue as fixed by replying with:
 
-> diff --git a/arch/powerpc/net/bpf_jit.h b/arch/powerpc/net/bpf_jit.h
-> index 2d04ce5a23da..af6ff3eb621a 100644
-> --- a/arch/powerpc/net/bpf_jit.h
-> +++ b/arch/powerpc/net/bpf_jit.h
-> @@ -86,9 +86,14 @@
->                                                          0xffff));             \
->                  } } while (0)
->   #define PPC_LI_ADDR    PPC_LI64
-> +
-> +#ifndef CONFIG_PPC_KERNEL_PCREL
->   #define PPC64_LOAD_PACA()                                                    \
->          EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
->   #else
-> +#define PPC64_LOAD_PACA() do {} while (0)
-> +#endif
-> +#else
->   #define PPC_LI64(d, i) BUILD_BUG()
->   #define PPC_LI_ADDR    PPC_LI32
->   #define PPC64_LOAD_PACA() BUILD_BUG()
-> 
-> cheers
-> 
+#syz fix: netfs: Fix write oops in generic/346 (9p) and generic/074 (cifs)
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
