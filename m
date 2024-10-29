@@ -1,321 +1,126 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8034618FC83
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 23:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD69979F6;
+	Tue, 29 Oct 2024 00:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730157832; cv=none; b=PU0pGdxTOIA03LGBPaPeLzY6EMWpjw48xT5tsQQIyEjXU7fsdzvHqKBrlICxwuQZVnLaZbwYybZIQ90A465aWmQH2TlZmPesKWFdGV+cak6wdP+26E1mTnKM5gNozoaSqHjZYBVO0Eb4LVrHXjNBAWkJh7aEwl1D6MjfI4Hbv88=
+	t=1730161341; cv=none; b=rFm4mv52T9HWUgE0iI5dnUmQMzdZbe8L7wMG1Kww/WulAN9nBWlph4Xt/OMtHBeKJ/hIXkYpB7FYPbLR3D36NLpy7Qp8iQsmpF9gxHuJQ3w90yO99yWINJ6JWVfezfy0KFAwPnjJ+KfXA1aoKR2htoXFpMGgr+ZnROrEnRGpnyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730157832; c=relaxed/simple;
-	bh=2y8Wld8kncRsKF2kcLF1MVjG9QwSLhrT/+YnRDUOQM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VgkJ8ytWonctrZ1caFUSEP6XaTTPVNwR6/2vCxHJXf9yFCiG+hL3KBUKei6QdC0J/HF56i3rYmad+pLEJpiruYHF7iD23Gb2maeG+lq38zgpWa+qBFcSU6f4AEQ8DB3AJUUZIaexz68IiBo53KISBjq65pcj0fe9FUyR+8Zrtyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zea4tYM9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730161341; c=relaxed/simple;
+	bh=3WEEoFWaxGq+sKCybK00zkmLQC0BVNy62Aqv424bblk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bwf5Hm+x0M/flUdHSIasYVXrMGU4HNTCUXnTJFRr/RO9UM+kGsChPG5kc7X/vpXId4QMSOFynJ7lKta7eH66sGJtFEOJ2iMX7ZcQu53g4EQSNxKvCHpqi1OL2utbN3yyhPnbEZ7MAEJORjdeus4ZoNoWoDBRn7HgEkubFZSr9OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IV2FWtKc; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zea4tYM9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539e66ba398so5108e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 16:23:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IV2FWtKc"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2e2dcf4b153so3565168a91.1;
+        Mon, 28 Oct 2024 17:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730157827; x=1730762627; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c1zLuo0XC+XyyU+1UeAGiD6DsUYvZskyQ0u/pcuHjoM=;
-        b=zea4tYM9/eQ7Npf9GYiO0d1bFixO+LFbAqJQuQkJCFNxna2gbdIdIbCzlk6yKkPNpO
-         0UdTGZAvvW9pWtHNeD7sZ2kF9CZpkzvngElZIt84aPaut2VyG8CVHhpeiPY3WJg/8IaS
-         UqF72J4LnfRrd76gjJuFeKLn2xMVyCWQY97SgDbU2cybYSp3tUqdWLIZXCXPkKfch/5K
-         tIY/PTZcMG7DLkNfapfWWeIoV2a6cfWDWBGG6WvmfmEy8I4KSpPF0TEvFR5CvS8Mwvyu
-         CfaXDkwZ3OY39pvk5eT+u15iIwsRa0PZreEcO6xl1szXr1Zk59TEujxOL7RYfS8MJJhA
-         CPvQ==
+        d=gmail.com; s=20230601; t=1730161339; x=1730766139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bq5SxekQBwmDZwwnedhNJed3DRc+7578EvOxXxIqLD0=;
+        b=IV2FWtKcjBA5OiDfxRAhD+FIydgIXVF6H0Z0652OSLCFXx1aiIx4gPvBXWheZ0951J
+         WFfY5V3QDbeXNZI3HfylBVz5x2VEPfV6MG0WoaOgNQ/zbqS0ojYqKi6oZTlDXEM2+27S
+         ZeRCz8qGKSewQ2kzEgyhv4saMXzpSlTH9rkWj/fsPgxfWJxwEbBcK3Lsc6jRPhyR5DQ3
+         dYuHoGitMoNIbCfaQe6MlGUMH2BVtwfewusRGHB2zCdniIG6HlZvNzbfQ8k92WIeJ/+e
+         4wHgjKBUFhyfeQvRY/gJydgxcYQuoyR4VUsew4wsDXtL11utMIcQit3TskrheZMzvKjZ
+         +8cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730157827; x=1730762627;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c1zLuo0XC+XyyU+1UeAGiD6DsUYvZskyQ0u/pcuHjoM=;
-        b=lDPYj9GuswxZeTtGIKWDjvqiASe46BxrW6FL7itaKoWMj12tZlVJSUmcZ07GlLHJCj
-         EzWm2Ocr4xLytRQS5uq6mBiqg9xqrGZdFuOkgYOaqlWSqNP6aYMjYJv6jEGQw2VC4xE3
-         J5qvHMUtwnBe04XSyBNjXWcTRSj+OnUZ720oM4FOAYA7wozBA5fQbVYjqVihTm93pIgy
-         FLlpiWxQz9QvdX1JKOmdJVw4lfZuQlIVflr72ONt+Icvp0xm9z8rpVXd1rcifLbsDHKm
-         DYzS23YchKJQmygL4GidNYmBfR9kbFm1Q40QMzJG5p/QLFa1u0IIK6huM2pxCylQW2MX
-         pSPw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2MSIK4cqPZ4ELnHpmUuu9jMN9pTnzjG6lKIkCyUlHrpN1K0N+PD1K27rVRwPWRRoevGEOx0oiKxsNhw4uLPtX22s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeLlfK8fk+wQ2omuG10WDho4+eYxt0DM6JSsi/JqLa7NC8aAk5
-	NA3MJM/U7q7esHiSKvEt+XjA8yH0kqeMPqQWh2uBqXJvVUjHPUCFeohNA/qL9JKKU/lxwTceq0m
-	27uTHn1zAvz500RqWldysY51WLf4F7TH8WnNa
-X-Gm-Gg: ASbGnct09O8L9zXVQcQMtEwsB9Bix0W1cQ5KI1Kh/o7lZNjoa2n5CMibrQbBPUoGfX9
-	lW5jDLASBopTN0X0gVu+WkP/vcytm6rOPiFJv2QWrG9CIj42+c6uHaQaPMIR6GA==
-X-Google-Smtp-Source: AGHT+IEw7iNwQ2e8madGqWDXhgztbgFcMKXV7oI5e4FPMEUVgwXAgCN5telSrPHpmMDsyb9a4XxiOhjigX7nQfXvJD4=
-X-Received: by 2002:a05:6512:138c:b0:539:d0c4:5b53 with SMTP id
- 2adb3069b0e04-53b480a3611mr184188e87.4.1730157826478; Mon, 28 Oct 2024
- 16:23:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1730161339; x=1730766139;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bq5SxekQBwmDZwwnedhNJed3DRc+7578EvOxXxIqLD0=;
+        b=qmfKs5zpDXfg6DyLasWRiVe7dJKsCeSsFvUw7KTeNTSTzFhE/dmM5ReolsAOewPAzY
+         O/5qNkRd/n3zlb5PiqVYzyQJsuM45juong/aW4Szacb6AZSezsl4r0Raf67k+QMIFe7s
+         q3FKwyAehWpElYW0Fnjrj9gP6ySDvqYzCThoBUcQy1G2iyquJn//mHear7gqKLwxLmfw
+         SYTrL+adnJNfTIeC+zkMzUT1iRQaIUoG6zhp5nOSnQX9xo9zMRnaV9fKDUG/JKQ8DGLv
+         dg4xV9aNrltgUvidcDQvKIAZ6dGoKu/22yVJ1mJ8XC1rLHUa5JjZxdutoGbkFiObRlFK
+         A5+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUk+tydq92Cw7Z0sJ8Ghp8JA/+m5LcILQftP08aRQcZl28ODUJdotrs4rD2GhDhh/mKaerdAcIb1I3a9uLhDiMUr3LY@vger.kernel.org, AJvYcCWdOKcDs/bRBH0DZCPEgon6Xj2CLAgltim+/CQBS4y2TkO5MYjYqU79r0mGycSe52uUDLo=@vger.kernel.org, AJvYcCWfw8ZEKBDDxsyd6Rz12cfBKxpjhe5jK+nNOHv3/b4zZT7sllKraEuNAFpaLxsKJndDYr2gPB2Gbm/23hz8@vger.kernel.org, AJvYcCWlHV04vnGizr5lRPojJAz6subIYeBV2EXbHguVflJJASnWFEXsJ7HbhdQ3TtOBh/+fB6eRYO3HSfe1/pgSrnXZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkV8hqc9DeHq6OjEZS6DecQfdsjs3UxOHYWy10pppWvxeygiGj
+	y57tE0gy6BIpl9rs2GGc1La1KN8qijAM5nAfGCHBFGwkAsFyO/g0
+X-Google-Smtp-Source: AGHT+IEo2kdFUNLvFdAKcRWwfQDnStts3x0mY//DC4mxa5rXin+viUft2X2txeZ/w/B99WyA41VBZQ==
+X-Received: by 2002:a17:90a:710:b0:2d1:bf48:e767 with SMTP id 98e67ed59e1d1-2e8f11a8885mr11178010a91.29.1730161338938;
+        Mon, 28 Oct 2024 17:22:18 -0700 (PDT)
+Received: from pengdl-ub.localdomain ([106.37.77.202])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2e77e48e4a2sm10175507a91.2.2024.10.28.17.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2024 17:22:17 -0700 (PDT)
+From: Donglin Peng <dolinux.peng@gmail.com>
+To: andrii@kernel.org,
+	eddyz87@gmail.com
+Cc: ast@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH v4 0/3] bpf: Using binary search to improve the performance of btf_find_by_name_kind
+Date: Tue, 29 Oct 2024 08:22:05 +0800
+Message-Id: <20241029002208.1947947-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241028214550.2099923-1-kaleshsingh@google.com>
- <20241028214550.2099923-3-kaleshsingh@google.com> <20241028191448.5f62531a@rorschach.local.home>
-In-Reply-To: <20241028191448.5f62531a@rorschach.local.home>
-From: Kalesh Singh <kaleshsingh@google.com>
-Date: Mon, 28 Oct 2024 16:23:33 -0700
-Message-ID: <CAC_TJvf8aU07JRiBK9tgWynixXBX9MpqFJh6GVaUcEzqX6aLhQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] tracing/selftests: Add tracefs mount options test
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: dhowells@redhat.com, mhiramat@kernel.org, surenb@google.com, 
-	jyescas@google.com, kernel-team@android.com, android-mm@google.com, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, 
-	Ali Zahraee <ahzahraee@gmail.com>, Eric Sandeen <sandeen@redhat.com>, 
-	Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 28, 2024 at 4:14=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Mon, 28 Oct 2024 14:43:58 -0700
-> Kalesh Singh <kaleshsingh@google.com> wrote:
->
-> > Add test to check the tracefs gid mount option is applied correctly
-> >
-> >    ./ftracetest test.d/00basic/mount_options.tc
-> >
-> > Use the new readme string "[gid=3D<gid>] as a requirement and also upda=
-te
-> > test_ownership.tc requirements to use this.
-> >
-> > mount_options.tc will fail currently, this is fixed by the subsequent
-> > patch in this series.
->
-> Test cases should never be added when they can fail. They should always
-> come after the fix is applied. But it appears that you check the README
-> to make sure that it does work and not fail.
->
-> I'll take a look at these patches in more detail later.
+Currently, we are only using the linear search method to find the type
+id by the name, which has a time complexity of O(n). This change involves
+sorting the names of btf types in ascending order and using binary search,
+which has a time complexity of O(log(n)). This idea was inspired by the
+following patch:
 
-Hi Steve,
+60443c88f3a8 ("kallsyms: Improve the performance of kallsyms_lookup_name()").
 
-Thank you for the quick reviews, please feel free to ignore until you are b=
-ack.
+At present, this improvement is only for searching in vmlinux's and module's BTFs.
 
-I'll address these comments and resend a v2.
+Another change is the search direction, where we search the BTF first and
+then its base, the type id of the first matched btf_type will be returned.
 
-Thanks,
-Kalesh
+Here is a time-consuming result that finding 87590 type ids by their names in
+vmlinux's BTF.
 
->
-> Thanks,
->
-> -- Steve
->
->
-> >
-> > Cc: David Howells <dhowells@redhat.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
-> > ---
-> >  .../ftrace/test.d/00basic/mount_options.tc    | 101 ++++++++++++++++++
-> >  .../ftrace/test.d/00basic/test_ownership.tc   |  16 +--
-> >  .../testing/selftests/ftrace/test.d/functions |  25 +++++
-> >  3 files changed, 129 insertions(+), 13 deletions(-)
-> >  create mode 100644 tools/testing/selftests/ftrace/test.d/00basic/mount=
-_options.tc
-> >
-> > diff --git a/tools/testing/selftests/ftrace/test.d/00basic/mount_option=
-s.tc b/tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
-> > new file mode 100644
-> > index 000000000000..b8aff85ec259
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ftrace/test.d/00basic/mount_options.tc
-> > @@ -0,0 +1,101 @@
-> > +#!/bin/sh
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# description: Test tracefs GID mount option
-> > +# requires: "[gid=3D<gid>]":README
-> > +
-> > +fail() {
-> > +     local msg=3D"$1"
-> > +
-> > +     echo "FAILED: $msg"
-> > +     exit_fail
-> > +}
-> > +
-> > +find_alternate_gid() {
-> > +     local original_gid=3D"$1"
-> > +     tac /etc/group | grep -v ":$original_gid:" | head -1 | cut -d: -f=
-3
-> > +}
-> > +
-> > +mount_tracefs_with_options() {
-> > +     local mount_point=3D"$1"
-> > +     local options=3D"$2"
-> > +
-> > +     mount -t tracefs -o "$options" nodev "$mount_point"
-> > +
-> > +     setup
-> > +}
-> > +
-> > +unmount_tracefs() {
-> > +     local mount_point=3D"$1"
-> > +
-> > +     # Need to make sure the mount isn't busy so that we can umount it
-> > +     (cd $mount_point; finish_ftrace;)
-> > +
-> > +     cleanup
-> > +}
-> > +
-> > +create_instance() {
-> > +     local mount_point=3D"$1"
-> > +     local instance=3D"$mount_point/instances/$(mktemp -u test-XXXXXX)=
-"
-> > +
-> > +     mkdir "$instance"
-> > +     echo "$instance"
-> > +}
-> > +
-> > +remove_instance() {
-> > +     local instance=3D"$1"
-> > +
-> > +     rmdir "$instance"
-> > +}
-> > +
-> > +check_gid() {
-> > +     local mount_point=3D"$1"
-> > +     local expected_gid=3D"$2"
-> > +
-> > +     echo "Checking permission group ..."
-> > +
-> > +     cd "$mount_point"
-> > +
-> > +     for file in "." "events" "events/sched" "events/sched/sched_switc=
-h" "events/sched/sched_switch/enable"; do
-> > +             local gid=3D`stat -c "%g" $file`
-> > +             if [ "$gid" -ne "$expected_gid" ]; then
-> > +                     cd - # Return to the previous working direcotry (=
-tracefs root)
-> > +                     fail "$(realpath $file): Expected group $expected=
-_gid; Got group $gid"
-> > +             fi
-> > +     done
-> > +
-> > +     cd - # Return to the previous working direcotry (tracefs root)
-> > +}
-> > +
-> > +test_gid_mount_option() {
-> > +     local mount_point=3D$(get_mount_point)
-> > +     local mount_options=3D$(get_mnt_options "$mount_point")
-> > +     local original_group=3D$(stat -c "%g" .)
-> > +     local other_group=3D$(find_alternate_gid "$original_group")
-> > +
-> > +     # Set up mount options with new GID for testing
-> > +     local new_options=3D`echo "$mount_options" | sed -e "s/gid=3D[0-9=
-]*/gid=3D$other_group/"`
-> > +     if [ "$new_options" =3D "$mount_options" ]; then
-> > +             new_options=3D"$mount_options,gid=3D$other_group"
-> > +             mount_options=3D"$mount_options,gid=3D$original_group"
-> > +     fi
-> > +
-> > +     # Unmount existing tracefs instance and mount with new GID
-> > +     unmount_tracefs "$mount_point"
-> > +     mount_tracefs_with_options "$mount_point" "$new_options"
-> > +
-> > +     check_gid "$mount_point" "$other_group"
-> > +
-> > +     # Check that files created after the mount inherit the GID
-> > +     local instance=3D$(create_instance "$mount_point")
-> > +     check_gid "$instance" "$other_group"
-> > +     remove_instance "$instance"
-> > +
-> > +     # Unmount and remount with the original GID
-> > +     unmount_tracefs "$mount_point"
-> > +     mount_tracefs_with_options "$mount_point" "$mount_options"
-> > +     check_gid "$mount_point" "$original_group"
-> > +}
-> > +
-> > +test_gid_mount_option
-> > +
-> > +exit 0
-> > diff --git a/tools/testing/selftests/ftrace/test.d/00basic/test_ownersh=
-ip.tc b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > index 094419e190c2..e71cc3ad0bdf 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/00basic/test_ownership.tc
-> > @@ -1,24 +1,14 @@
-> >  #!/bin/sh
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  # description: Test file and directory ownership changes for eventfs
-> > +# requires: "[gid=3D<gid>]":README
-> >
-> >  original_group=3D`stat -c "%g" .`
-> >  original_owner=3D`stat -c "%u" .`
-> >
-> > -mount_point=3D`stat -c '%m' .`
-> > +local mount_point=3D$(get_mount_point)
-> >
-> > -# If stat -c '%m' does not work (e.g. busybox) or failed, try to use t=
-he
-> > -# current working directory (which should be a tracefs) as the mount p=
-oint.
-> > -if [ ! -d "$mount_point" ]; then
-> > -     if mount | grep -qw $PWD ; then
-> > -             mount_point=3D$PWD
-> > -     else
-> > -             # If PWD doesn't work, that is an environmental problem.
-> > -             exit_unresolved
-> > -     fi
-> > -fi
-> > -
-> > -mount_options=3D`mount | grep "$mount_point" | sed -e 's/.*(\(.*\)).*/=
-\1/'`
-> > +mount_options=3D$(get_mnt_options "$mount_point")
-> >
-> >  # find another owner and group that is not the original
-> >  other_group=3D`tac /etc/group | grep -v ":$original_group:" | head -1 =
-| cut -d: -f3`
-> > diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/te=
-sting/selftests/ftrace/test.d/functions
-> > index 779f3e62ec90..84d6a9c7ad67 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/functions
-> > +++ b/tools/testing/selftests/ftrace/test.d/functions
-> > @@ -193,3 +193,28 @@ ftrace_errlog_check() { # err-prefix command-with-=
-error-pos-by-^ command-file
-> >      # "  Command: " and "^\n" =3D> 13
-> >      test $(expr 13 + $pos) -eq $N
-> >  }
-> > +
-> > +# Helper to get the tracefs mount point
-> > +get_mount_point() {
-> > +     local mount_point=3D`stat -c '%m' .`
-> > +
-> > +     # If stat -c '%m' does not work (e.g. busybox) or failed, try to =
-use the
-> > +     # current working directory (which should be a tracefs) as the mo=
-unt point.
-> > +     if [ ! -d "$mount_point" ]; then
-> > +             if mount | grep -qw "$PWD"; then
-> > +                     mount_point=3D$PWD
-> > +             else
-> > +                     # If PWD doesn't work, that is an environmental p=
-roblem.
-> > +                     exit_unresolved
-> > +             fi
-> > +     fi
-> > +     echo "$mount_point"
-> > +}
-> > +
-> > +# Helper function to retrieve mount options for a given mount point
-> > +get_mnt_options() {
-> > +     local mnt_point=3D"$1"
-> > +     local opts=3D$(mount | grep -m1 "$mnt_point" | sed -e 's/.*(\(.*\=
-)).*/\1/')
-> > +
-> > +     echo "$opts"
-> > +}
-> > \ No newline at end of file
->
+Before: 158426 ms
+After:     114 ms
+
+The average lookup performance has improved more than 1000x in the above scenario.
+
+v4:
+ - Divide the patch into two parts: kernel and libbpf
+ - Use Eduard's code to sort btf_types in the btf__dedup function
+ - Correct some btf testcases due to modifications of the order of btf_types.
+
+v3:
+ - Link: https://lore.kernel.org/all/20240608140835.965949-1-dolinux.peng@gmail.com/
+ - Sort btf_types during build process other than during boot, to reduce the
+   overhead of memory and boot time.
+
+v2:
+ - Link: https://lore.kernel.org/all/20230909091646.420163-1-pengdonglin@sangfor.com.cn
+
+Donglin Peng (3):
+  libbpf: Sort btf_types in ascending order by name
+  bpf: Using binary search to improve the performance of
+    btf_find_by_name_kind
+  libbpf: Using binary search to improve the performance of
+    btf__find_by_name_kind
+
+ include/linux/btf.h                           |   1 +
+ kernel/bpf/btf.c                              | 157 +++++++++-
+ tools/lib/bpf/btf.c                           | 274 +++++++++++++---
+ tools/testing/selftests/bpf/prog_tests/btf.c  | 296 +++++++++---------
+ .../bpf/prog_tests/btf_dedup_split.c          |  64 ++--
+ 5 files changed, 555 insertions(+), 237 deletions(-)
+
+-- 
+2.34.1
+
