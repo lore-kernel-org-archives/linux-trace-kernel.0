@@ -1,246 +1,282 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C09F7DA81;
-	Tue, 29 Oct 2024 16:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CCC17D355;
+	Tue, 29 Oct 2024 17:03:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730220526; cv=none; b=Cs/DsF8SVRYeLAbVDfjT7T0iMjfpmMhrPg0hwhjTy4RwW84gKa3HIRL7R4IIlAm+yCnjwF8Zfv/iK+sBumAghohnb1uSdKsFFYHheCT2mLtjNljjvmj6TWklCfOBpRmb1EN0BF5ABHr3jhToot61a4+NK5gBmlCbqFlQYA8itCs=
+	t=1730221425; cv=none; b=GTuCXrt3BKQ9d0OEF6rNl3l2wR4L/vuz2RdB53CdmJ+G5hcyQLAv7iDAhMgPYoRYkDPzAUGS8j8M88/EUQ0RDZykzZhxZ0UimaQFsShMYh9+jTaEukAzsC2cfvH2wRCbfEcYPSmWEWDNvxC71UbCeS2eyon0HpOUt0sE3eJGlAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730220526; c=relaxed/simple;
-	bh=abCjQ9sTcXYoApKfPsysi9jmUHdl89cU/VkNgGlaBpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FeNP28sw8AIJO3kw0Rb1DjTiv4DCetnHd2+Tzbwta+YK0v8yFLoSaXGk21d/KceRPJAq8dB+vBvd1bKS684BGE0xCGHwhK4iHrhJ9oLZvz0lp3SnTH1l2m91vRXu991bNz+0ow+I6fP2NIIBsF9BaIwzPRT762nQW9O9xqNRg/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kDAMLL5U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zOyf1ZQg; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kDAMLL5U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=zOyf1ZQg; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1730221425; c=relaxed/simple;
+	bh=lwSUtwFr79ROiNYooLMev1A9P7sWUQF/Kw1fEhWjRmg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJWzHJzbc/Rr+EZRaObl4b6NU9d1z78W0k9DDYnLhqE4WcuRBHucNX/JztlUwBV3FtzdVPfq67BvvpxIeyfYnSjJsavwa7pcWnzuFr48pSBcJBjy6HcJF3UneOrsZe9ufcyVgVw/TR6gTjRciV/n6mqdFto6G21naCE61j1IGA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j14GxWXA; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kDAMLL5U";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zOyf1ZQg";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kDAMLL5U";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="zOyf1ZQg"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9C89E1FDF3;
-	Tue, 29 Oct 2024 16:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1730220521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
-	b=kDAMLL5UFtDxJauIcaQSNGIEtFL+x/tELEP8I2kSeuKPrWArjzRP9VODhA8L3Ar1O6Dquk
-	SAHftLds5ZqXi7K+4W1zvh1UAjEKzKnpMGf//qrXKMiN4gEQh+iXKoSvGRwWMdAoZQviIL
-	WTmFj1HJeMOUOCxz5TRCuvA9db18rYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1730220521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
-	b=zOyf1ZQgJBH2Wd9QN5YBb8aHU6emyEiYo+Swy61v+TbC6PHk17i4WPpadWh756aTNbTwsH
-	8lmDRtXjBn0FMaDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=kDAMLL5U;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=zOyf1ZQg
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1730220521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
-	b=kDAMLL5UFtDxJauIcaQSNGIEtFL+x/tELEP8I2kSeuKPrWArjzRP9VODhA8L3Ar1O6Dquk
-	SAHftLds5ZqXi7K+4W1zvh1UAjEKzKnpMGf//qrXKMiN4gEQh+iXKoSvGRwWMdAoZQviIL
-	WTmFj1HJeMOUOCxz5TRCuvA9db18rYI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1730220521;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wMtih/JfshDEE/Jc8JTNUYdJycairy8oF4UI8O3/Rn4=;
-	b=zOyf1ZQgJBH2Wd9QN5YBb8aHU6emyEiYo+Swy61v+TbC6PHk17i4WPpadWh756aTNbTwsH
-	8lmDRtXjBn0FMaDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 64617136A5;
-	Tue, 29 Oct 2024 16:48:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0FgyGOkRIWeiKwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 29 Oct 2024 16:48:41 +0000
-Message-ID: <3febb57e-e805-4cb9-8929-e47b957192a6@suse.cz>
-Date: Tue, 29 Oct 2024 17:48:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j14GxWXA"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7205646f9ebso3509287b3a.0;
+        Tue, 29 Oct 2024 10:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730221422; x=1730826222; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vQ5quqpYjVLMPdDfo3tC4CbHBEIdaRKYCIRCKB/c8rk=;
+        b=j14GxWXAN1z6gEmNjeGIvTUKadkZeT0T7gvXFkOanyqP98xWONKI/Hd9LvrpJ0dIEE
+         jQSTOdGdwcnLp6qp+Q6ZnV4R6jDlPo79LBdqWAvSM0UQoD0+KlRLpqjgcQNK0dQWsQhL
+         NiBpcQacEAdKwP9iuR71d7Z/8LrDE4HAVZ5gpv362fgvKtKz3H5lWhwJZbJ1xqYiXjT7
+         tXWIs8ZvPqA+WKR5GqDsgZpAjdkjjbVhz5XS5bbf1Telwvo8Xpvo1ByqkAl7Cp7haknU
+         NG36MMBtSxsH1PHplWFpJSnSVs52LSTOctFXzGI/oknPV4Mh6aiQU4pVdzr7FOUr1H0t
+         XCng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730221422; x=1730826222;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vQ5quqpYjVLMPdDfo3tC4CbHBEIdaRKYCIRCKB/c8rk=;
+        b=lWA95AOAlM7x2BCjxtIuPc84kyvy/kcgfbTDP4Rnul0JudeJlSvl4in/UTqht64BFD
+         JGWVwgYHy6nTVgyWIRGyhb44iMqvBWDN0gKM4PG3dANkQvsoSfhWsGozwsTqLnJ6DE5z
+         aZNy5F8ETWDbg3PXDnpCNu0Shs9+4W3sNIZ4DNUvuybHb6fAitSj35k8E15UkHNL0Vbh
+         7acHJU29+YP/A9WRQIg2PvwMPxjjvUmy2z7du7k0LiY/LvjUB28q5AK43rXI5qXy7Uqi
+         IBbcCgWKUHnEj36fMVbnjummSgQPx4+Il4atwtRbr5As3GeiibbLyl9Tzw3q/VAVa39t
+         V7pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtD1UTwo+T0xfSXCIqAxXTgawsYc7q0tJu6HZt+48HYKRfQEP6sQi+0hgvqZqxtT6Q2eI4r+IQz4MU9+k/11GYfDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOuo2RrmG9Xx+XYBMX/0ULbnRjQoXrsLq3IuKcc1CTvdxK+udT
+	nQn7x/wtQA7kFw7F7Z2ji6Cu/JOWSjARQzAgMUT98by4eSCTuT3T64/AOcSFg9f5Q45fb6pt7FM
+	b/Gig06wi7l0HPRoNWLlc/Pzs/Bc=
+X-Google-Smtp-Source: AGHT+IEue7iBJj2Mj+iH3oT9owLiI48gCKprAadAwmjFXyskGJ9+LC077vW73HCNOpgtPRL254wpb/lCxqfQz4c1fg8=
+X-Received: by 2002:a05:6a00:2e07:b0:71e:6743:7599 with SMTP id
+ d2e1a72fcca58-72062fa19b0mr19725711b3a.7.1730221422183; Tue, 29 Oct 2024
+ 10:03:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 tip/perf/core 2/4] mm: Introduce
- mmap_lock_speculation_{begin|end}
-Content-Language: en-US
-To: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, akpm@linux-foundation.org, peterz@infradead.org
-Cc: oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
- paulmck@kernel.org, willy@infradead.org, surenb@google.com,
- mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
- shakeel.butt@linux.dev, hannes@cmpxchg.org, Liam.Howlett@oracle.com,
- lorenzo.stoakes@oracle.com, david@redhat.com, arnd@arndb.de,
- richard.weiyang@gmail.com, zhangpeng.00@bytedance.com, linmiaohe@huawei.com,
- viro@zeniv.linux.org.uk, hca@linux.ibm.com
-References: <20241028010818.2487581-1-andrii@kernel.org>
- <20241028010818.2487581-3-andrii@kernel.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20241028010818.2487581-3-andrii@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9C89E1FDF3
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[redhat.com,goodmis.org,kernel.org,vger.kernel.org,infradead.org,google.com,gmail.com,linux.dev,cmpxchg.org,oracle.com,arndb.de,bytedance.com,huawei.com,zeniv.linux.org.uk,linux.ibm.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL9sdddhhbu1oo5wyhn6sr3k5b)];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+References: <20241029112038.1225847-1-linux@jordanrome.com>
+In-Reply-To: <20241029112038.1225847-1-linux@jordanrome.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 29 Oct 2024 10:03:29 -0700
+Message-ID: <CAEf4BzZJ6RMPx52EShBOFFuo3mfdKBCW8PzzpBCG1HhM=2bmcQ@mail.gmail.com>
+Subject: Re: [v3] security: add trace event for cap_capable
+To: Jordan Rome <linux@jordanrome.com>
+Cc: linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>, 
+	Yonghong Song <yonghong.song@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/28/24 02:08, Andrii Nakryiko wrote:
-> From: Suren Baghdasaryan <surenb@google.com>
-> 
-> Add helper functions to speculatively perform operations without
-> read-locking mmap_lock, expecting that mmap_lock will not be
-> write-locked and mm is not modified from under us.
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
+On Tue, Oct 29, 2024 at 4:21=E2=80=AFAM Jordan Rome <linux@jordanrome.com> =
+wrote:
+>
+> In cases where we want a stable way to observe/trace
+> cap_capable (e.g. protection from inlining and API updates)
+> add a tracepoint that passes:
+> - The credentials used
+> - The user namespace of the resource being accessed
+> - The user namespace in which the credential provides the
+> capability to access the targeted resource
+> - The capability to check for
+> - Bitmask of options defined in include/linux/security.h
+> - The return value of the check
+>
+> Signed-off-by: Jordan Rome <linux@jordanrome.com>
 > ---
->  include/linux/mmap_lock.h | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 6b3272686860..58dde2e35f7e 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -71,6 +71,7 @@ static inline void mmap_assert_write_locked(const struct mm_struct *mm)
->  }
->  
->  #ifdef CONFIG_PER_VMA_LOCK
+>  MAINTAINERS                       |  1 +
+>  include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
+>  security/commoncap.c              | 32 ++++++++++++-----
+>  3 files changed, 85 insertions(+), 8 deletions(-)
+>  create mode 100644 include/trace/events/capability.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cc40a9d9b8cd..210e9076c858 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4994,6 +4994,7 @@ M:        Serge Hallyn <serge@hallyn.com>
+>  L:     linux-security-module@vger.kernel.org
+>  S:     Supported
+>  F:     include/linux/capability.h
+> +F:     include/trace/events/capability.h
+>  F:     include/uapi/linux/capability.h
+>  F:     kernel/capability.c
+>  F:     security/commoncap.c
+> diff --git a/include/trace/events/capability.h b/include/trace/events/cap=
+ability.h
+> new file mode 100644
+> index 000000000000..e706ce690c38
+> --- /dev/null
+> +++ b/include/trace/events/capability.h
+> @@ -0,0 +1,60 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM capability
 > +
->  static inline void mm_lock_seqcount_init(struct mm_struct *mm)
+> +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_CAPABILITY_H
+> +
+> +#include <linux/cred.h>
+> +#include <linux/tracepoint.h>
+> +#include <linux/user_namespace.h>
+> +
+> +/**
+> + * cap_capable - called after it's determined if a task has a particular
+> + * effective capability
+> + *
+> + * @cred: The credentials used
+> + * @targ_ns: The user namespace of the resource being accessed
+> + * @capable_ns: The user namespace in which the credential provides the
+> + *              capability to access the targeted resource.
+> + *              This will be NULL if ret is not 0.
+> + * @cap: The capability to check for
+> + * @opts: Bitmask of options defined in include/linux/security.h
+> + * @ret: The return value of the check: 0 if it does, -ve if it does not
+> + *
+> + * Allows to trace calls to cap_capable in commoncap.c
+> + */
+> +TRACE_EVENT(cap_capable,
+> +
+> +       TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
+> +               struct user_namespace *capable_ns, int cap, unsigned int =
+opts, int ret),
+> +
+> +       TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(const struct cred *, cred)
+> +               __field(struct user_namespace *, targ_ns)
+> +               __field(struct user_namespace *, capable_ns)
+> +               __field(int, cap)
+> +               __field(unsigned int, opts)
+> +               __field(int, ret)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->cred       =3D cred;
+> +               __entry->targ_ns    =3D targ_ns;
+> +               __entry->capable_ns =3D capable_ns;
+> +               __entry->cap        =3D cap;
+> +               __entry->opts       =3D opts;
+> +               __entry->ret        =3D ret;
+> +       ),
+> +
+> +       TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d, opts %u, r=
+et %d",
+> +               __entry->cred, __entry->targ_ns, __entry->capable_ns, __e=
+ntry->cap,
+> +               __entry->opts, __entry->ret)
+> +);
+> +
+> +#endif /* _TRACE_CAPABILITY_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 162d96b3a676..7287feee0683 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -27,6 +27,9 @@
+>  #include <linux/mnt_idmapping.h>
+>  #include <uapi/linux/lsm.h>
+>
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/capability.h>
+> +
+>  /*
+>   * If a non-root user executes a setuid-root binary in
+>   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+> @@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(const char *fna=
+me)
+>  /**
+>   * cap_capable - Determine whether a task has a particular effective cap=
+ability
+>   * @cred: The credentials to use
+> - * @targ_ns:  The user namespace in which we need the capability
+> + * @targ_ns:  The user namespace of the resource being accessed
+>   * @cap: The capability to check for
+>   * @opts: Bitmask of options defined in include/linux/security.h
+>   *
+> @@ -67,7 +70,11 @@ static void warn_setuid_and_fcaps_mixed(const char *fn=
+ame)
+>  int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>                 int cap, unsigned int opts)
 >  {
->  	seqcount_init(&mm->mm_lock_seq);
-> @@ -86,11 +87,35 @@ static inline void mm_lock_seqcount_end(struct mm_struct *mm)
->  	do_raw_write_seqcount_end(&mm->mm_lock_seq);
->  }
->  
-> -#else
-> +static inline bool mmap_lock_speculation_begin(struct mm_struct *mm, unsigned int *seq)
-> +{
-> +	*seq = raw_read_seqcount(&mm->mm_lock_seq);
-> +	/* Allow speculation if mmap_lock is not write-locked */
-> +	return (*seq & 1) == 0;
-> +}
+> -       struct user_namespace *ns =3D targ_ns;
+> +       int ret =3D -EPERM;
+> +       struct user_namespace *capable_ns, *ns;
 > +
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, unsigned int seq)
-> +{
-> +	return !do_read_seqcount_retry(&mm->mm_lock_seq, seq);
-> +}
-> +
-> +#else /* CONFIG_PER_VMA_LOCK */
-> +
->  static inline void mm_lock_seqcount_init(struct mm_struct *mm) {}
->  static inline void mm_lock_seqcount_begin(struct mm_struct *mm) {}
->  static inline void mm_lock_seqcount_end(struct mm_struct *mm) {}
-> -#endif
-> +
-> +static inline bool mmap_lock_speculation_begin(struct mm_struct *mm, unsigned int *seq)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, unsigned int seq)
-> +{
-> +	return false;
-> +}
-> +
-> +#endif /* CONFIG_PER_VMA_LOCK */
->  
->  static inline void mmap_init_lock(struct mm_struct *mm)
->  {
+> +       capable_ns =3D NULL;
+> +       ns =3D targ_ns;
 
+nit:
+
+struct user_namespace *capable_ns =3D NULL, *ns =3D targ_ns;
+int ret =3D -EPERM;
+
+would be more succinct.
+
+But regardless:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>
+>         /* See if cred has the capability in the target user namespace
+>          * by examining the target user namespace and all of the target
+> @@ -75,22 +82,30 @@ int cap_capable(const struct cred *cred, struct user_=
+namespace *targ_ns,
+>          */
+>         for (;;) {
+>                 /* Do we have the necessary capabilities? */
+> -               if (ns =3D=3D cred->user_ns)
+> -                       return cap_raised(cred->cap_effective, cap) ? 0 :=
+ -EPERM;
+> +               if (ns =3D=3D cred->user_ns) {
+> +                       if (cap_raised(cred->cap_effective, cap)) {
+> +                               capable_ns =3D ns;
+> +                               ret =3D 0;
+> +                       }
+> +                       break;
+> +               }
+>
+>                 /*
+>                  * If we're already at a lower level than we're looking f=
+or,
+>                  * we're done searching.
+>                  */
+>                 if (ns->level <=3D cred->user_ns->level)
+> -                       return -EPERM;
+> +                       break;
+>
+>                 /*
+>                  * The owner of the user namespace in the parent of the
+>                  * user namespace has all caps.
+>                  */
+> -               if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner=
+, cred->euid))
+> -                       return 0;
+> +               if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner=
+, cred->euid)) {
+> +                       capable_ns =3D ns->parent;
+> +                       ret =3D 0;
+> +                       break;
+> +               }
+>
+>                 /*
+>                  * If you have a capability in a parent user ns, then you=
+ have
+> @@ -99,7 +114,8 @@ int cap_capable(const struct cred *cred, struct user_n=
+amespace *targ_ns,
+>                 ns =3D ns->parent;
+>         }
+>
+> -       /* We never get here */
+> +       trace_cap_capable(cred, targ_ns, capable_ns, cap, opts, ret);
+> +       return ret;
+>  }
+>
+>  /**
+> --
+> 2.43.5
+>
