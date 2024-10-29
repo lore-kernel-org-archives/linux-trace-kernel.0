@@ -1,282 +1,366 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CCC17D355;
-	Tue, 29 Oct 2024 17:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDDDBE49;
+	Tue, 29 Oct 2024 17:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730221425; cv=none; b=GTuCXrt3BKQ9d0OEF6rNl3l2wR4L/vuz2RdB53CdmJ+G5hcyQLAv7iDAhMgPYoRYkDPzAUGS8j8M88/EUQ0RDZykzZhxZ0UimaQFsShMYh9+jTaEukAzsC2cfvH2wRCbfEcYPSmWEWDNvxC71UbCeS2eyon0HpOUt0sE3eJGlAY=
+	t=1730224245; cv=none; b=jSoJPxvHQSoX9dHvPVmEm1m/4Je2frbk4pKP3bY4s85qFdcDbeFmUrUvXpQPZpAfTycTKBtrb2E8gX41vaOOyCVWZ1MMv0kGuuNQkkG5Y6vOZSu1F4U6GCaThIA1n7bWExWXkP6qd5ka39QDBNGYhEcnilyJY5gFVlSA1TN7x8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730221425; c=relaxed/simple;
-	bh=lwSUtwFr79ROiNYooLMev1A9P7sWUQF/Kw1fEhWjRmg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJWzHJzbc/Rr+EZRaObl4b6NU9d1z78W0k9DDYnLhqE4WcuRBHucNX/JztlUwBV3FtzdVPfq67BvvpxIeyfYnSjJsavwa7pcWnzuFr48pSBcJBjy6HcJF3UneOrsZe9ufcyVgVw/TR6gTjRciV/n6mqdFto6G21naCE61j1IGA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j14GxWXA; arc=none smtp.client-ip=209.85.210.176
+	s=arc-20240116; t=1730224245; c=relaxed/simple;
+	bh=3Ya/vna/josXfaP08+rZliV3Vbn6Ymxerk6FxliU00o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l5fmA/vivV5OJR/WTodPId3ngn1XnZSDK2qNicjDwqsSs6SBjNEjOVun9JsN9MjXOVIZ/NRIr+UlBSaMtMUe38AS8y7ulkT02SRn2ER79pxzet1hmInfq88I8auGCGI6AKjSdK7Vcce5AjlbIkK3nsl/kMSNEvQyd3HQZQVxI7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/iLY1sG; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j14GxWXA"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7205646f9ebso3509287b3a.0;
-        Tue, 29 Oct 2024 10:03:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/iLY1sG"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b14554468fso426553885a.1;
+        Tue, 29 Oct 2024 10:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730221422; x=1730826222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1730224242; x=1730829042; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vQ5quqpYjVLMPdDfo3tC4CbHBEIdaRKYCIRCKB/c8rk=;
-        b=j14GxWXAN1z6gEmNjeGIvTUKadkZeT0T7gvXFkOanyqP98xWONKI/Hd9LvrpJ0dIEE
-         jQSTOdGdwcnLp6qp+Q6ZnV4R6jDlPo79LBdqWAvSM0UQoD0+KlRLpqjgcQNK0dQWsQhL
-         NiBpcQacEAdKwP9iuR71d7Z/8LrDE4HAVZ5gpv362fgvKtKz3H5lWhwJZbJ1xqYiXjT7
-         tXWIs8ZvPqA+WKR5GqDsgZpAjdkjjbVhz5XS5bbf1Telwvo8Xpvo1ByqkAl7Cp7haknU
-         NG36MMBtSxsH1PHplWFpJSnSVs52LSTOctFXzGI/oknPV4Mh6aiQU4pVdzr7FOUr1H0t
-         XCng==
+        bh=BK/pLK7S1V1t6tuat6FFIn60WJ4TxvUKBBBCYp6IBH8=;
+        b=H/iLY1sGVq7BXbsUAQJa18NOoGtNgNev2tReGwqbyxPwInfb7s7Nh2cZS2DtJDcuiJ
+         lLAuEpArxeJe9H5Q2+liC5kfVNzgbh8NadT2AjCAQ+qqCFOpvRTB5044E8skqez2B3Rw
+         mxRLwces4rcHkbDy86QCEfCZivFLAwsO12EO0VXMLGyMmVdT4AJCWh0zj5P56r+Rm4xA
+         hKCOYPhBF9TNBbcJnGGP1+C1XX/nggQy0qVcb8nL884Zpyfq7YDB6Dbdnt3Kc8mYzGG4
+         gOvPXTDsw1o2zjmXEyhQKpVs2Vrtu8bXAacoX6+yz2u6ywlYnAofRJ/KECVjTNoc8SAh
+         GWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730221422; x=1730826222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1730224242; x=1730829042;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vQ5quqpYjVLMPdDfo3tC4CbHBEIdaRKYCIRCKB/c8rk=;
-        b=lWA95AOAlM7x2BCjxtIuPc84kyvy/kcgfbTDP4Rnul0JudeJlSvl4in/UTqht64BFD
-         JGWVwgYHy6nTVgyWIRGyhb44iMqvBWDN0gKM4PG3dANkQvsoSfhWsGozwsTqLnJ6DE5z
-         aZNy5F8ETWDbg3PXDnpCNu0Shs9+4W3sNIZ4DNUvuybHb6fAitSj35k8E15UkHNL0Vbh
-         7acHJU29+YP/A9WRQIg2PvwMPxjjvUmy2z7du7k0LiY/LvjUB28q5AK43rXI5qXy7Uqi
-         IBbcCgWKUHnEj36fMVbnjummSgQPx4+Il4atwtRbr5As3GeiibbLyl9Tzw3q/VAVa39t
-         V7pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtD1UTwo+T0xfSXCIqAxXTgawsYc7q0tJu6HZt+48HYKRfQEP6sQi+0hgvqZqxtT6Q2eI4r+IQz4MU9+k/11GYfDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOuo2RrmG9Xx+XYBMX/0ULbnRjQoXrsLq3IuKcc1CTvdxK+udT
-	nQn7x/wtQA7kFw7F7Z2ji6Cu/JOWSjARQzAgMUT98by4eSCTuT3T64/AOcSFg9f5Q45fb6pt7FM
-	b/Gig06wi7l0HPRoNWLlc/Pzs/Bc=
-X-Google-Smtp-Source: AGHT+IEue7iBJj2Mj+iH3oT9owLiI48gCKprAadAwmjFXyskGJ9+LC077vW73HCNOpgtPRL254wpb/lCxqfQz4c1fg8=
-X-Received: by 2002:a05:6a00:2e07:b0:71e:6743:7599 with SMTP id
- d2e1a72fcca58-72062fa19b0mr19725711b3a.7.1730221422183; Tue, 29 Oct 2024
- 10:03:42 -0700 (PDT)
+        bh=BK/pLK7S1V1t6tuat6FFIn60WJ4TxvUKBBBCYp6IBH8=;
+        b=lScCZv5D7dRE0prJlvZGflz6sMMbe345AlzYSk8pDf5vJR2qUC11fOHaABt/UE8v3M
+         LkTOrRIyEhamk3D+RDo2FJEP6qQVwL/MtJXyPv2CT9K9Za1MjmHRqUTf56FBhM8o4HXw
+         JQPEHxFO5cln33kCEMTDGjL6U5BxyXpSkrizHf7Vk3Ijqsmye33jpKf7OlKy1/e/8JKA
+         cPEudGuLvGB6FvoNlDWv3jBizCgy0NKjlsetpT2zuwaj0/Gc1b/lXp7RfJBYU5hgwoia
+         ttkU6h1KpCl3GuEh/GM76PI6p4lmrZ2wdvb3CyrYAgI8SXC+ZY3kyZlftjTAm3aynZz/
+         lqyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWk+tk6EhoLw837DWzQrzIcaN32J6WaHJrZhk2M3qjU9XIcosDWVf4UBGOMan6Tr/9aLoPvRSBR1YGXSCIc/MpH4ZVK@vger.kernel.org, AJvYcCXSRAbNakUSq7WcbZIiXsL4oN8AmlQw/AZ79oWZRlU8mTewGHtO7o84dROVkFtrot+OG8FR35fBXMl7@vger.kernel.org, AJvYcCXTHBe7XMi6ucYaGlB9/1oPddRwzVuBOLdu2h7W1+1YYuXb4vqDsPlE5EH8FX6veLQFmBwjUR9x7LgZxbFI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD3qxlDo89tFHa0ABZ+ZRhk7kbMsDdXVM+je4VFkTj/hLPYfpL
+	j2T5Rk5LnBU2hqbUhiQzso3XceDoA698s7fMx7D2mo+QGjTCDUMC
+X-Google-Smtp-Source: AGHT+IFGMVOBqxcUtZ7Un1nNcyqmn8u2lqCn/vEwPQlMDhoDECiVmLIANcB5IXjL+WWmWp1X0e6goQ==
+X-Received: by 2002:a05:6214:4603:b0:6cd:6ad4:1fc9 with SMTP id 6a1803df08f44-6d18585e11emr174482126d6.44.1730224242073;
+        Tue, 29 Oct 2024 10:50:42 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d179a565f4sm43845056d6.138.2024.10.29.10.50.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Oct 2024 10:50:41 -0700 (PDT)
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id AE8D6120006A;
+	Tue, 29 Oct 2024 13:50:40 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Tue, 29 Oct 2024 13:50:40 -0400
+X-ME-Sender: <xms:cCAhZ5TRRj75IS2Tzjtu63aZzV9zDi1UeLbOZ6_hFfDk7T8qW6AVhg>
+    <xme:cCAhZyxQ2PjsZEtNAV0l77rOvuexoFa8akCFADoXqh3RrCMgjGsi0uyAC3xsAL-fn
+    RK0gk0-jNsrBOCM1w>
+X-ME-Received: <xmr:cCAhZ-0CElQ-ri8IF4FVpuuH9UQmaVHSKBH2w8fJa68UhMEBscThH-OD4OE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrvdekuddguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhepgeelgeffvdelgedtgeetfeejvdeiueetueev
+    gffghfejieeuhfefvedtgffgfeeunecuffhomhgrihhnpehrshdrshgsnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhm
+    thhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvd
+    dqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhn
+    sggprhgtphhtthhopeehfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlih
+    gtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghho
+    ohgumhhishdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepmhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhitghiohhs
+    rdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtg
+    hpthhtohepjhhpohhimhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggr
+    rhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtoheprghruggssehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:cCAhZxCZq3d0UKYNwzqPWrFaA9y-XTAHxm_9BJmjE_XYMRQTg1ygdQ>
+    <xmx:cCAhZyhQmFYGDivfUtONNKb8UmOZ0MNrQs5cpxin0J_THuilmJtVpQ>
+    <xmx:cCAhZ1qtpMwug643Rt8r_Lup_7vByNKCy-1SOxkaayjBBdtdsyEm6w>
+    <xmx:cCAhZ9g8cmPze38Y9VJbL-e8QyQcfXE1cHAdxasFa5rjtWUp949vpQ>
+    <xmx:cCAhZ9TEHmr0HPX_vPEOyHq3JSpvWEm8sDab7uXAAslSI5xYvxNgHwSP>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 29 Oct 2024 13:50:39 -0400 (EDT)
+Date: Tue, 29 Oct 2024 10:50:38 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,	Jason Baron <jbaron@akamai.com>,
+ Ard Biesheuvel <ardb@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,	Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>,	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,	Ryan Roberts <ryan.roberts@arm.com>,
+ Fuad Tabba <tabba@google.com>,	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v11 5/5] rust: add arch_static_branch
+Message-ID: <ZyEgbhWdFa66p-G3@Boquns-Mac-mini.local>
+References: <20241015-tracepoint-v11-0-cceb65820089@google.com>
+ <20241015-tracepoint-v11-5-cceb65820089@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241029112038.1225847-1-linux@jordanrome.com>
-In-Reply-To: <20241029112038.1225847-1-linux@jordanrome.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 29 Oct 2024 10:03:29 -0700
-Message-ID: <CAEf4BzZJ6RMPx52EShBOFFuo3mfdKBCW8PzzpBCG1HhM=2bmcQ@mail.gmail.com>
-Subject: Re: [v3] security: add trace event for cap_capable
-To: Jordan Rome <linux@jordanrome.com>
-Cc: linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>, 
-	Yonghong Song <yonghong.song@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241015-tracepoint-v11-5-cceb65820089@google.com>
 
-On Tue, Oct 29, 2024 at 4:21=E2=80=AFAM Jordan Rome <linux@jordanrome.com> =
-wrote:
->
-> In cases where we want a stable way to observe/trace
-> cap_capable (e.g. protection from inlining and API updates)
-> add a tracepoint that passes:
-> - The credentials used
-> - The user namespace of the resource being accessed
-> - The user namespace in which the credential provides the
-> capability to access the targeted resource
-> - The capability to check for
-> - Bitmask of options defined in include/linux/security.h
-> - The return value of the check
->
-> Signed-off-by: Jordan Rome <linux@jordanrome.com>
+On Tue, Oct 15, 2024 at 01:14:59PM +0000, Alice Ryhl wrote:
+> To allow the Rust implementation of static_key_false to use runtime code
+> patching instead of the generic implementation, pull in the relevant
+> inline assembly from the jump_label.h header by running the C
+> preprocessor on a .rs.S file. Build rules are added for .rs.S files.
+> 
+> Since the relevant inline asm has been adjusted to export the inline asm
+> via the ARCH_STATIC_BRANCH_ASM macro in a consistent way, the Rust side
+> does not need architecture specific code to pull in the asm.
+> 
+> It is not possible to use the existing C implementation of
+> arch_static_branch via a Rust helper because it passes the argument
+> `key` to inline assembly as an 'i' parameter. Any attempt to add a C
+> helper for this function will fail to compile because the value of `key`
+> must be known at compile-time.
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
->  MAINTAINERS                       |  1 +
->  include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
->  security/commoncap.c              | 32 ++++++++++++-----
->  3 files changed, 85 insertions(+), 8 deletions(-)
->  create mode 100644 include/trace/events/capability.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cc40a9d9b8cd..210e9076c858 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4994,6 +4994,7 @@ M:        Serge Hallyn <serge@hallyn.com>
->  L:     linux-security-module@vger.kernel.org
->  S:     Supported
->  F:     include/linux/capability.h
-> +F:     include/trace/events/capability.h
->  F:     include/uapi/linux/capability.h
->  F:     kernel/capability.c
->  F:     security/commoncap.c
-> diff --git a/include/trace/events/capability.h b/include/trace/events/cap=
-ability.h
+>  rust/Makefile                           |  6 +++++
+>  rust/kernel/.gitignore                  |  3 +++
+>  rust/kernel/arch_static_branch_asm.rs.S |  7 +++++
+>  rust/kernel/jump_label.rs               | 46 ++++++++++++++++++++++++++++++++-
+>  rust/kernel/lib.rs                      | 35 +++++++++++++++++++++++++
+>  scripts/Makefile.build                  |  9 ++++++-
+>  6 files changed, 104 insertions(+), 2 deletions(-)
+> 
+> diff --git a/rust/Makefile b/rust/Makefile
+> index b5e0a73b78f3..c532f48b79de 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -36,6 +36,8 @@ always-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.c
+>  obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
+>  obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
+>  
+> +always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/arch_static_branch_asm.rs
+> +
+>  # Avoids running `$(RUSTC)` for the sysroot when it may not be available.
+>  ifdef CONFIG_RUST
+>  
+> @@ -424,4 +426,8 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
+>      $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
+>  	+$(call if_changed_rule,rustc_library)
+>  
+> +ifneq ($(CONFIG_JUMP_LABEL),)
+> +$(obj)/kernel.o: $(obj)/kernel/arch_static_branch_asm.rs
+> +endif
+> +
+>  endif # CONFIG_RUST
+> diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
 > new file mode 100644
-> index 000000000000..e706ce690c38
+> index 000000000000..d082731007c6
 > --- /dev/null
-> +++ b/include/trace/events/capability.h
-> @@ -0,0 +1,60 @@
+> +++ b/rust/kernel/.gitignore
+> @@ -0,0 +1,3 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +/arch_static_branch_asm.rs
+> diff --git a/rust/kernel/arch_static_branch_asm.rs.S b/rust/kernel/arch_static_branch_asm.rs.S
+> new file mode 100644
+> index 000000000000..2afb638708db
+> --- /dev/null
+> +++ b/rust/kernel/arch_static_branch_asm.rs.S
+> @@ -0,0 +1,7 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM capability
 > +
-> +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_CAPABILITY_H
+> +#include <linux/jump_label.h>
 > +
-> +#include <linux/cred.h>
-> +#include <linux/tracepoint.h>
-> +#include <linux/user_namespace.h>
+> +// Cut here.
 > +
-> +/**
-> + * cap_capable - called after it's determined if a task has a particular
-> + * effective capability
-> + *
-> + * @cred: The credentials used
-> + * @targ_ns: The user namespace of the resource being accessed
-> + * @capable_ns: The user namespace in which the credential provides the
-> + *              capability to access the targeted resource.
-> + *              This will be NULL if ret is not 0.
-> + * @cap: The capability to check for
-> + * @opts: Bitmask of options defined in include/linux/security.h
-> + * @ret: The return value of the check: 0 if it does, -ve if it does not
-> + *
-> + * Allows to trace calls to cap_capable in commoncap.c
-> + */
-> +TRACE_EVENT(cap_capable,
+> +::kernel::concat_literals!(ARCH_STATIC_BRANCH_ASM("{symb} + {off} + {branch}", "{l_yes}"))
+> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+> index 4b7655b2a022..2f2df03a3275 100644
+> --- a/rust/kernel/jump_label.rs
+> +++ b/rust/kernel/jump_label.rs
+> @@ -24,7 +24,51 @@ macro_rules! static_branch_unlikely {
+>          let _key: *const $crate::bindings::static_key_false = ::core::ptr::addr_of!((*_key).$field);
+>          let _key: *const $crate::bindings::static_key = _key.cast();
+>  
+> -        $crate::bindings::static_key_count(_key.cast_mut()) > 0
+> +        #[cfg(not(CONFIG_JUMP_LABEL))]
+> +        {
+> +            $crate::bindings::static_key_count(_key) > 0
+> +        }
 > +
-> +       TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
-> +               struct user_namespace *capable_ns, int cap, unsigned int =
-opts, int ret),
-> +
-> +       TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(const struct cred *, cred)
-> +               __field(struct user_namespace *, targ_ns)
-> +               __field(struct user_namespace *, capable_ns)
-> +               __field(int, cap)
-> +               __field(unsigned int, opts)
-> +               __field(int, ret)
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->cred       =3D cred;
-> +               __entry->targ_ns    =3D targ_ns;
-> +               __entry->capable_ns =3D capable_ns;
-> +               __entry->cap        =3D cap;
-> +               __entry->opts       =3D opts;
-> +               __entry->ret        =3D ret;
-> +       ),
-> +
-> +       TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d, opts %u, r=
-et %d",
-> +               __entry->cred, __entry->targ_ns, __entry->capable_ns, __e=
-ntry->cap,
-> +               __entry->opts, __entry->ret)
-> +);
-> +
-> +#endif /* _TRACE_CAPABILITY_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/security/commoncap.c b/security/commoncap.c
-> index 162d96b3a676..7287feee0683 100644
-> --- a/security/commoncap.c
-> +++ b/security/commoncap.c
-> @@ -27,6 +27,9 @@
->  #include <linux/mnt_idmapping.h>
->  #include <uapi/linux/lsm.h>
->
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/capability.h>
-> +
->  /*
->   * If a non-root user executes a setuid-root binary in
->   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-> @@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(const char *fna=
-me)
->  /**
->   * cap_capable - Determine whether a task has a particular effective cap=
-ability
->   * @cred: The credentials to use
-> - * @targ_ns:  The user namespace in which we need the capability
-> + * @targ_ns:  The user namespace of the resource being accessed
->   * @cap: The capability to check for
->   * @opts: Bitmask of options defined in include/linux/security.h
->   *
-> @@ -67,7 +70,11 @@ static void warn_setuid_and_fcaps_mixed(const char *fn=
-ame)
->  int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
->                 int cap, unsigned int opts)
->  {
-> -       struct user_namespace *ns =3D targ_ns;
-> +       int ret =3D -EPERM;
-> +       struct user_namespace *capable_ns, *ns;
-> +
-> +       capable_ns =3D NULL;
-> +       ns =3D targ_ns;
-
-nit:
-
-struct user_namespace *capable_ns =3D NULL, *ns =3D targ_ns;
-int ret =3D -EPERM;
-
-would be more succinct.
-
-But regardless:
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
->
->         /* See if cred has the capability in the target user namespace
->          * by examining the target user namespace and all of the target
-> @@ -75,22 +82,30 @@ int cap_capable(const struct cred *cred, struct user_=
-namespace *targ_ns,
->          */
->         for (;;) {
->                 /* Do we have the necessary capabilities? */
-> -               if (ns =3D=3D cred->user_ns)
-> -                       return cap_raised(cred->cap_effective, cap) ? 0 :=
- -EPERM;
-> +               if (ns =3D=3D cred->user_ns) {
-> +                       if (cap_raised(cred->cap_effective, cap)) {
-> +                               capable_ns =3D ns;
-> +                               ret =3D 0;
-> +                       }
-> +                       break;
-> +               }
->
->                 /*
->                  * If we're already at a lower level than we're looking f=
-or,
->                  * we're done searching.
->                  */
->                 if (ns->level <=3D cred->user_ns->level)
-> -                       return -EPERM;
-> +                       break;
->
->                 /*
->                  * The owner of the user namespace in the parent of the
->                  * user namespace has all caps.
->                  */
-> -               if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner=
-, cred->euid))
-> -                       return 0;
-> +               if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner=
-, cred->euid)) {
-> +                       capable_ns =3D ns->parent;
-> +                       ret =3D 0;
-> +                       break;
-> +               }
->
->                 /*
->                  * If you have a capability in a parent user ns, then you=
- have
-> @@ -99,7 +114,8 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
->                 ns =3D ns->parent;
->         }
->
-> -       /* We never get here */
-> +       trace_cap_capable(cred, targ_ns, capable_ns, cap, opts, ret);
-> +       return ret;
+> +        #[cfg(CONFIG_JUMP_LABEL)]
+> +        $crate::jump_label::arch_static_branch! { $key, $keytyp, $field, false }
+>      }};
 >  }
->
->  /**
-> --
-> 2.43.5
->
+>  pub use static_branch_unlikely;
+> +
+> +/// Assert that the assembly block evaluates to a string literal.
+> +#[cfg(CONFIG_JUMP_LABEL)]
+> +const _: &str = include!(concat!(
+> +    env!("OBJTREE"),
+> +    "/rust/kernel/arch_static_branch_asm.rs"
+> +));
+> +
+> +#[macro_export]
+> +#[doc(hidden)]
+> +#[cfg(CONFIG_JUMP_LABEL)]
+> +macro_rules! arch_static_branch {
+> +    ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
+> +        $crate::asm!(
+> +            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
+> +            l_yes = label {
+> +                break 'my_label true;
+> +            },
+> +            symb = sym $key,
+> +            off = const ::core::mem::offset_of!($keytyp, $field),
+> +            branch = const $crate::jump_label::bool_to_int($branch),
+> +        );
+> +
+> +        break 'my_label false;
+> +    }};
+> +}
+> +
+> +#[cfg(CONFIG_JUMP_LABEL)]
+> +pub use arch_static_branch;
+> +
+> +/// A helper used by inline assembly to pass a boolean to as a `const` parameter.
+> +///
+> +/// Using this function instead of a cast lets you assert that the input is a boolean, and not some
+> +/// other type that can also be cast to an integer.
+> +#[doc(hidden)]
+> +pub const fn bool_to_int(b: bool) -> i32 {
+> +    b as i32
+> +}
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 55f81f49024e..c0ae9ddd9468 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -148,3 +148,38 @@ macro_rules! container_of {
+>          ptr.sub(offset) as *const $type
+>      }}
+>  }
+> +
+> +/// Helper for `.rs.S` files.
+> +#[doc(hidden)]
+> +#[macro_export]
+> +macro_rules! concat_literals {
+> +    ($( $asm:literal )* ) => {
+> +        ::core::concat!($($asm),*)
+> +    };
+> +}
+> +
+> +/// Wrapper around `asm!` configured for use in the kernel.
+> +///
+> +/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
+> +/// syntax.
+> +// For x86, `asm!` uses intel syntax by default, but we want to use at&t syntax in the kernel.
+> +#[cfg(target_arch = "x86_64")]
+
+This should be:
+
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+
+for future proofing and um (usermode linux) support.
+
+> +#[macro_export]
+> +macro_rules! asm {
+> +    ($($asm:expr),* ; $($rest:tt)*) => {
+> +        ::core::arch::asm!( $($asm)*, options(att_syntax), $($rest)* )
+> +    };
+> +}
+> +
+> +/// Wrapper around `asm!` configured for use in the kernel.
+> +///
+> +/// Uses a semicolon to avoid parsing ambiguities, even though this does not match native `asm!`
+> +/// syntax.
+> +// For non-x86 arches we just pass through to `asm!`.
+> +#[cfg(not(target_arch = "x86_64"))]
+
+Ditto.
+
+With these fixed, feel free to add:
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+Regards,
+Boqun
+
+> +#[macro_export]
+> +macro_rules! asm {
+> +    ($($asm:expr),* ; $($rest:tt)*) => {
+> +        ::core::arch::asm!( $($asm)*, $($rest)* )
+> +    };
+> +}
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 8f423a1faf50..03ee558fcd4d 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -248,12 +248,13 @@ $(obj)/%.lst: $(obj)/%.c FORCE
+>  # Compile Rust sources (.rs)
+>  # ---------------------------------------------------------------------------
+>  
+> -rust_allowed_features := new_uninit
+> +rust_allowed_features := asm_const,asm_goto,new_uninit
+>  
+>  # `--out-dir` is required to avoid temporaries being created by `rustc` in the
+>  # current working directory, which may be not accessible in the out-of-tree
+>  # modules case.
+>  rust_common_cmd = \
+> +	OBJTREE=$(abspath $(objtree)) \
+>  	RUST_MODFILE=$(modfile) $(RUSTC_OR_CLIPPY) $(rust_flags) \
+>  	-Zallow-features=$(rust_allowed_features) \
+>  	-Zcrate-attr=no_std \
+> @@ -303,6 +304,12 @@ quiet_cmd_rustc_ll_rs = $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+>  $(obj)/%.ll: $(obj)/%.rs FORCE
+>  	+$(call if_changed_dep,rustc_ll_rs)
+>  
+> +quiet_cmd_rustc_rs_rs_S = RSCPP $(quiet_modtag) $@
+> +      cmd_rustc_rs_rs_S = $(CPP) $(c_flags) -xc -C -P $< | sed '1,/^\/\/ Cut here.$$/d' >$@
+> +
+> +$(obj)/%.rs: $(obj)/%.rs.S FORCE
+> +	+$(call if_changed_dep,rustc_rs_rs_S)
+> +
+>  # Compile assembler sources (.S)
+>  # ---------------------------------------------------------------------------
+>  
+> 
+> -- 
+> 2.47.0.rc1.288.g06298d1525-goog
+> 
