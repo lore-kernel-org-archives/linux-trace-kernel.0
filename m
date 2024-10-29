@@ -1,65 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B831345003
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 29 Oct 2024 03:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8178A145B2C;
+	Tue, 29 Oct 2024 06:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730170808; cv=none; b=HcJjN/zBuxTcdRN7v4P6UqgL+yt0YGtgQpJ2rPB9oSs5LSz8LcZ1jB8LawY4+KnOsvpLyTtNwTXpemtRNUydveDXTy53gIrWabkrz3UgvHpc1krRWOQdG8gKqQoHHyierSA7uNDD2RtdxurNHBnrJhyIT6dYOg2kK1FwTWh8kEE=
+	t=1730184340; cv=none; b=JqLA0zh/do9Clnp8VJ51hqgdIoZdqxNluARnxtIVNbkQFT8BI7yHTyR1DJ1Vayuvxc6SjwENkZ2agc+Q9KtwnYllKU5yd6DV7Sa0saZ/4CMwEo/O2iJtgwj5H/wQsvkSFzZodkU7Z3NuG6Aja0FnTh9z67D5LHik1tFNHyVpJtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730170808; c=relaxed/simple;
-	bh=VyTJt0xPH4N8n02lC7V7N8uV5NqqDi7U2Mnpgj43mds=;
+	s=arc-20240116; t=1730184340; c=relaxed/simple;
+	bh=1DrL+8jrbRz5TXvELVZ3R7u/AfvuuYFORhxgcZBZzpM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r7KZ7aCRQdx23ES08rWQHghPuG624OTGd+5aaWQQUzHlZd3XuFdimMpLjs7VY1CAF5aSPm+w3wNe++Fo5KoG0PwZTSqO1NGV5ZJ30RpwfZr6UsoP5yi8PfMn1MbhPw4pFq6yhdVyhGqqSOWerN1b8ejFwXYKPiSNjgxXMHVxZ+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sxsa5VhG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=lejOKsxJN8IxTusLLsB9HRBf42Ys3hQveS/vQtsfU9uwupGAGXY8fxVa83V++8j/t92Jd5H6zHoDH0Lu88LO4oObwa4Eg2gCCEDX1t5rxHH04Z4qxB5M1CKS16zv99K+s+tDlJkpcPl1To/tq6TREOOq4SskzQpId8xpz1uFSdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iJAGDJX0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sxsa5VhG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730170804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XM3NDn8/RrcDaH2dNFMKJrRw9os6K2fG5KwyMJ9szmk=;
-	b=Sxsa5VhGHJvAOSSXCKIrMold/+mhz9y0YNqu/A9joc9mcwX9KkicldvgbKWT5I0b3FYh85
-	6b8jo575bAFP1mDKB6MtrMIns/N7BJd1Vf0AVzg7DKWz+ZKMaHsIFsNiwHanMSnLNEq7xF
-	324m+q7aL+67mkZ+w/uMzn4/K02HbTc=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-No39kVq8MsK6f0FhpzTUhw-1; Mon, 28 Oct 2024 23:00:03 -0400
-X-MC-Unique: No39kVq8MsK6f0FhpzTUhw-1
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3a4f3d7d13fso17650325ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Oct 2024 20:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730170803; x=1730775603;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XM3NDn8/RrcDaH2dNFMKJrRw9os6K2fG5KwyMJ9szmk=;
-        b=GTzSLTvrAjnvor0sUhm8ECWsPF9mOfgHmEicuP5Tw8iKboZdEbQXDxuTf2/YurxMI7
-         /ywthlV6twXNih1K5iWVPVeY+TUzss2uHRqeViEQ7Frwgc+TWspqT6KreHxEmRnKNz+9
-         noofAUWge/xBWKBzhyxewaDdqp1Tsx/v9PWZuAvzoO6i8XEqNdOVBdCXstIV6yaBQojd
-         GxYRfYyZOyIRE7jkbf6eWlHxdYxv+Yg9HbCxPVXxnz2QAw3OEKBJ6QZMTVnoFo4dgT41
-         uT9wY2feyZVq3VoEnoDMvtNITUcfwIJQpEcOZtHvuP5EXagZTNaF2YjlbyAmkaV7z+/o
-         vTlw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5ANYXwvVtTsACcvAEQ1T6TESiOWhfwe0afnxC+z9rVAoTL1QD7cVIIGutPshjgIuix5aMIFnf79W988XMUKTl5/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNAB5YyNlh/Cqz1Zz/uJ//iMKsZAJupdqwaCaQfE9ziqr4Gfjt
-	WrA9Dr9xiIghVvouXyxJS8o5NqD77bxvJ1lhHOclSOvNSm+xA1y52W2ehD3ak4643o+iFiPudmE
-	oQ2A+fimF9fbCz0pl+0ZbW0Se8RuOXTG/puvKfUdNuTjj1vouv1IAYmtD1IxvypjHJLMoQA==
-X-Received: by 2002:a05:6e02:1c0d:b0:3a4:e8cc:2a89 with SMTP id e9e14a558f8ab-3a4ed2a9d71mr95089615ab.10.1730170802626;
-        Mon, 28 Oct 2024 20:00:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHJe1SOujsJgAA42pQ3L9xxLdE1LSrArTcwDuo+h5DT5bavlNuHR/AF4+9mUBERX5gv6wGYQ==
-X-Received: by 2002:a05:6e02:1c0d:b0:3a4:e8cc:2a89 with SMTP id e9e14a558f8ab-3a4ed2a9d71mr95089355ab.10.1730170802234;
-        Mon, 28 Oct 2024 20:00:02 -0700 (PDT)
-Received: from [10.0.0.71] ([65.128.110.20])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3a4e6df5919sm19338285ab.41.2024.10.28.20.00.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Oct 2024 20:00:01 -0700 (PDT)
-Message-ID: <bbbbaa42-444f-4973-b749-7c56b937ae5f@redhat.com>
-Date: Mon, 28 Oct 2024 22:00:00 -0500
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iJAGDJX0"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 49T25Ta3007263;
+	Tue, 29 Oct 2024 06:44:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=wpMMtU
+	T/7iLSb1CPes2U6yH2Knc2kYorBmqmySojMfw=; b=iJAGDJX0zp7I8wnDmOxnwR
+	nsM832ucdpVHkqQlx2nmn3aDhYFrvERJXw+QFNKGd0H1UhMEw6AIZDhCEjEexTAI
+	guKsHOoqJguJX/7T0/zQZAK+VWxiqz9f3CchJR+AXAmbWu3MJQC581JSC2+woml5
+	wu4gC23D4KkJH74McGOquG3CMMc2mmS+7vem9H1FJ2TbLKQmXSvskdWJa/iu90p4
+	0kpLJ8LHaYEpm2681wNPdpOFRtuVAAYCFr/xX16m5/yk5yQhxw+p8EF+TdfG3nR3
+	9ObEqtjhVEPKZWfz9X5implw3U26UFo9ZQNNGrlLtysJVwIYYNIg8BUynlDR1Gng
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42jb65bm7n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 06:44:40 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 49T6idbf015515;
+	Tue, 29 Oct 2024 06:44:39 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42jb65bm7h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 06:44:39 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 49T55BI6017313;
+	Tue, 29 Oct 2024 06:44:38 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 42harsa1gc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Oct 2024 06:44:38 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 49T6iZ7M40370472
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Oct 2024 06:44:35 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4555820043;
+	Tue, 29 Oct 2024 06:44:35 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBCF820040;
+	Tue, 29 Oct 2024 06:44:31 +0000 (GMT)
+Received: from [9.203.115.143] (unknown [9.203.115.143])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Oct 2024 06:44:31 +0000 (GMT)
+Message-ID: <841804f7-d634-4d8c-8585-04a2e4ea40f0@linux.ibm.com>
+Date: Tue, 29 Oct 2024 12:14:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,137 +69,131 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] tracing: Fix tracefs gid mount option
-To: Kalesh Singh <kaleshsingh@google.com>, dhowells@redhat.com,
- rostedt@goodmis.org, mhiramat@kernel.org
-Cc: surenb@google.com, jyescas@google.com, kernel-team@android.com,
- android-mm@google.com, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Ali Zahraee <ahzahraee@gmail.com>,
- Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20241028214550.2099923-1-kaleshsingh@google.com>
- <20241028214550.2099923-4-kaleshsingh@google.com>
-From: Eric Sandeen <sandeen@redhat.com>
-In-Reply-To: <20241028214550.2099923-4-kaleshsingh@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH v6 17/17] powerpc64/bpf: Add support for bpf trampolines
+To: Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: "Naveen N. Rao" <naveen@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vishal Chourasia <vishalc@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+References: <20241018173632.277333-1-hbathini@linux.ibm.com>
+ <20241018173632.277333-18-hbathini@linux.ibm.com>
+ <87wmhtrmni.fsf@mpe.ellerman.id.au>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <87wmhtrmni.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -iB9zBHmU6GGaR0CrGda44FqrDjFKDqK
+X-Proofpoint-GUID: 57WHYjnIt4dw8lVBHWWBue558w_N7zEI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2409260000 definitions=main-2410290052
 
-On 10/28/24 4:43 PM, Kalesh Singh wrote:
-> Commit 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
-> tracefs to use the new mount APIs caused mounting with the gid=<gid>
-> option to not take effect.
 
-Or any other mount options. I'm sure this isn't unique to gid, right?
-So, might want to fix the commit title.
 
-> The tracefs superblock can be updated from multiple paths:
->     - on fs_initcall() to init_trace_printk_function_export()
->     - form a work queue to initialize eventfs
->       tracer_init_tracefs_work_func()
->     - fsconfig() syscall to mount of remount sysfs
+On 28/10/24 7:53 am, Michael Ellerman wrote:
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> From: Naveen N Rao <naveen@kernel.org>
+>>
+>> Add support for bpf_arch_text_poke() and arch_prepare_bpf_trampoline()
+>> for 64-bit powerpc. While the code is generic, BPF trampolines are only
+>> enabled on 64-bit powerpc. 32-bit powerpc will need testing and some
+>> updates.
 > 
-> The tracefs super block root inode gets created early on in
-> init_trace_printk_function_export().
+> Hi Hari,
 > 
-> With the new mount API tracefs effectively uses get_tree_single() instead
-> of the old API mount_single().
+> This is breaking the PCREL build for me:
 > 
-> Previously, mount_single() ensured that the options are alway applied to
-> the superblock root inode:
->     (1) If the root inode didn't exist, called fill_super() to create it
->         and apply the options.
->     (2) If the root inode exists, called reconfigure_single() which
->         effectively called tracefs_apply_options() to parse and apply
->         options to the subperblock's fs_info and inode and remount
->         eventfs (if necessary)
+>    ERROR: 11:49:18: Failed building ppc64le_defconfig+pcrel@fedora
+>    INFO: 11:49:18: (skipped 41 lines) ...
+>    INFO: 11:49:18: /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |         ^~~~
+>    /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
+>      473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
+>          |                                                                                        ^~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |              ^~~~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |                                    ^~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit_comp.c:791:17: note: in expansion of macro 'PPC64_LOAD_PACA'
+>      791 |                 PPC64_LOAD_PACA();
+>          |                 ^~~~~~~~~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:65: error: 'struct paca_struct' has no member named 'kernel_toc'; did you mean 'kernel_msr'?
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |                                                                 ^~~~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:29:34: note: in definition of macro 'PLANT_INSTR'
+>       29 |         do { if (d) { (d)[idx] = instr; } idx++; } while (0)
+>          |                                  ^~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:9: note: in expansion of macro 'EMIT'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |         ^~~~
+>    /linux/arch/powerpc/include/asm/ppc-opcode.h:473:88: note: in expansion of macro 'IMM_DS'
+>      473 | #define PPC_RAW_LD(r, base, i)          (0xe8000000 | ___PPC_RT(r) | ___PPC_RA(base) | IMM_DS(i))
+>          |                                                                                        ^~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:14: note: in expansion of macro 'PPC_RAW_LD'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |              ^~~~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit.h:90:36: note: in expansion of macro 'offsetof'
+>       90 |         EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>          |                                    ^~~~~~~~
+>    /linux/arch/powerpc/net/bpf_jit_comp.c:882:25: note: in expansion of macro 'PPC64_LOAD_PACA'
+>      882 |                         PPC64_LOAD_PACA();
+>          |                         ^~~~~~~~~~~~~~~
+>    make[5]: *** [/linux/scripts/Makefile.build:229: arch/powerpc/net/bpf_jit_comp.o] Error 1
 > 
-> On the other hand, get_tree_single() effectively calls vfs_get_super()
-> which:
->     (3) If the root inode doesn't exists calls fill_super() to create it
->         and apply the options.
->     (4) If the root inode already exists, updates the fs_context root
->         with the superblock's root inode.
-
-I'm honestly a little lost here, but given the differences between mount_single()
-and get_tree_single() - are other get_tree_single() users similarly broken?
-
-Should get_tree_single() just be calling reconfigure_single() internally like
-mount_single() did? The comment in reconfigure_single() confuses me.
-
-> (4) above is always the case for tracefs mounts, since the super block's
-> root inode will already be created by init_trace_printk_function_export().
-
-this reminds me a little of 
-
-commit a6097180d884ddab769fb25588ea8598589c218c
-Author: NeilBrown <neilb@suse.de>
-Date:   Mon Jan 17 09:07:26 2022 +1100
-
-    devtmpfs regression fix: reconfigure on each mount
-
-> This means that the gid mount option gets ignored:
->     - Since it isn't applied to the super block's root inode, it doesn't
->       get inherited by the children.
->     - Since eventfs is initialized from form a separate work queue and
->       before call to mount with the options, and it doesn't get remounted
->       for mount.
 > 
-> Ensure that the mount options are applied to the super block and eventfs
-> is remounted to respect the new mount options.
+> To test it you need to enable CONFIG_POWER10_CPU, eg:
 > 
-> [1] https://lore.kernel.org/r/536e99d3-345c-448b-adee-a21389d7ab4b@redhat.com/
+>    CONFIG_POWERPC64_CPU=n
+>    CONFIG_POWER10_CPU=y
+>    CONFIG_PPC_KERNEL_PCREL=y
 > 
-> Fixes: 78ff64081949 ("vfs: Convert tracefs to use the new mount API")
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
-> ---
->  fs/tracefs/inode.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
-> index 1748dff58c3b..cfc614c638da 100644
-> --- a/fs/tracefs/inode.c
-> +++ b/fs/tracefs/inode.c
-> @@ -392,6 +392,9 @@ static int tracefs_reconfigure(struct fs_context *fc)
->  	struct tracefs_fs_info *sb_opts = sb->s_fs_info;
->  	struct tracefs_fs_info *new_opts = fc->s_fs_info;
->  
-> +	if (!new_opts)
-> +		return 0;
+> This diff gets it building, but I haven't tested it actually works:
 
-Can this really happen?
+Thanks, Michael. Yeah, the below snippet will be sufficient as
+PPC64_LOAD_PACA() is used with !IS_ENABLED(CONFIG_PPC_KERNEL_PCREL)
 
+- Hari
+
+> diff --git a/arch/powerpc/net/bpf_jit.h b/arch/powerpc/net/bpf_jit.h
+> index 2d04ce5a23da..af6ff3eb621a 100644
+> --- a/arch/powerpc/net/bpf_jit.h
+> +++ b/arch/powerpc/net/bpf_jit.h
+> @@ -86,9 +86,14 @@
+>                                                          0xffff));             \
+>                  } } while (0)
+>   #define PPC_LI_ADDR    PPC_LI64
 > +
->  	sync_filesystem(sb);
->  	/* structure copy of new mount options to sb */
->  	*sb_opts = *new_opts;
-
-FWIW doing this as a structure copy was probably a terrible choice on my part. :(
-
-> @@ -478,14 +481,17 @@ static int tracefs_fill_super(struct super_block *sb, struct fs_context *fc)
->  	sb->s_op = &tracefs_super_operations;
->  	sb->s_d_op = &tracefs_dentry_operations;
->  
-> -	tracefs_apply_options(sb, false);
-> -
->  	return 0;
->  }
->  
->  static int tracefs_get_tree(struct fs_context *fc)
->  {
-> -	return get_tree_single(fc, tracefs_fill_super);
-> +	int err = get_tree_single(fc, tracefs_fill_super);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	return tracefs_reconfigure(fc);
->  }
->  
->  static void tracefs_free_fc(struct fs_context *fc)
+> +#ifndef CONFIG_PPC_KERNEL_PCREL
+>   #define PPC64_LOAD_PACA()                                                    \
+>          EMIT(PPC_RAW_LD(_R2, _R13, offsetof(struct paca_struct, kernel_toc)))
+>   #else
+> +#define PPC64_LOAD_PACA() do {} while (0)
+> +#endif
+> +#else
+>   #define PPC_LI64(d, i) BUILD_BUG()
+>   #define PPC_LI_ADDR    PPC_LI32
+>   #define PPC64_LOAD_PACA() BUILD_BUG()
+> 
+> cheers
+> 
 
