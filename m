@@ -1,133 +1,224 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7982144A6;
-	Wed, 30 Oct 2024 15:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A19213ECD;
+	Wed, 30 Oct 2024 15:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730301869; cv=none; b=iARNJkxEVbTfN4f2+rZq5iPfGTmUr48e08Lcnmo4lbgHNJCLpvi2TFYJQx9MdVcdHxHgWflJl2EMzkbwyC8PUlJFcWdv7Nu5JKB6QCfNPgeNYbJP2NRouHOiusgkp7FB+ZDGv3+LlLbwUd21HClhqc7KajI2n5/AvcLrszVW52Y=
+	t=1730302224; cv=none; b=fShJhDAcGowNrThd3i9DWWk6h08e/kpAO6qdxPbDnpJKPoosidAcKrWcCrKxdhQQEQW2d6BFArFRZ6yaCYSfFaq3ORpRvFAso/XWID6mhKYDHXzgjFGOXJuaN4vVhtvq3EeGpWInIXbE0TgBnfvizFBtuiVfgidmG6q5DslzD20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730301869; c=relaxed/simple;
-	bh=n999IZOA4rDYc27Hp0H+miRj5tRQoBGIlyVHQmeFAb0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bYGOWeH8rdOb2gz/VB15/Lkvb0PDv/VKR1RACqf/8fNaOBAzGkBR1p9iJOAnolSMh6FO54ipVmhA+foTMLAGwfsgJnliwZTID0KUfgKguv8HcUmz0ieoJVrvc9K0sXuQpmqioL79FgNkYd33F+mHlEfqfRAjSPm8Ca8pKCW/OVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UCY+f7Hz; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCY+f7Hz"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a9a1b71d7ffso992316566b.1;
-        Wed, 30 Oct 2024 08:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730301865; x=1730906665; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lH03TetyHfAgyaa2uTodt4n0nCoJG2QadBNpvOTrh70=;
-        b=UCY+f7HziinpdOPcW2+WnKgKq0s6+ba5YaGcivNsd0NT/YBJQAvOt05Hg1i1SpelAR
-         ZmiIHAYM+x4f55wIFsbo/YQrPsnYHgYgvBtpixW2ukTDPti5f93U2ryM3/Sp96KOftF8
-         IZ5zNtNWF4cpw5lue2ZBkxaFTsuRmWNWSTryhJFcODfamFIVpIgDMgqUQieRisEG1f+l
-         XftghNUJm0znNrphrdNEUJp4OBdT3pFcHLTPgoj3uzsqFuttkdXCI3kGSJLXQiMMDoi0
-         G6nKv4207U+Mk5ENVfqdgZz8dRxHmo4YyLaqUTTE55MGc0tkgq8GmpMKqJvcGcUH8lr5
-         PP9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730301865; x=1730906665;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lH03TetyHfAgyaa2uTodt4n0nCoJG2QadBNpvOTrh70=;
-        b=U0yHcE8X1DYp18hpIHHzSWLniOu6hyeLyLoucv9zUO1gfcXZ6JYSukUTsHjKNXRI/4
-         8/tS7CSjau6teCeygWgNHgU+9nSncJKpwk3KzeHVg6BNu2/SQz+DvL2QehTNBCaGevCU
-         TfrK1ITJjNh6D6JF4ERfps45zKXrlp80M/ox5TkoSJnfgK+khH06r6vJgHeXPKHcQnHQ
-         c38qrVSG0BpzMw5Ct3S744xTGLBwG1ic0rU6bMetpFPJqk3hXMOHK2YzYqfAvsZPtHrG
-         SF8xN201C2GfjqiGPLeDADb82sQU++janJdNpx3wZP3QTSWiBnZ0zKkUCp3J6iE6AeGl
-         QzmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdOzvY/u3vm6TRNkjULjx/L3aFQPWcLAK6fk7VTtmFRwhUGdkYvshc4NGYTQ9SuVC4WhY=@vger.kernel.org, AJvYcCUzgMGQrke3fnF3ek926oG/DLptGT9bfmH10hWC+7WoXjgpmE1Kih/Ceus0oB5+OprPY2hIT4knypmUgLE+@vger.kernel.org, AJvYcCWVwuMB7Xl7DEV8qV7t11FfWEaImSo0TNX5dHS5CoGaWyTxgecwraG8fNbp+qQZzzzCjWsR0d5qLqH3l9LDBmna@vger.kernel.org, AJvYcCXNyNJxAOxD3yiRcFHUe8o4x3uzLPXb4kK9dmeU9LHzquyvK7lfxj3GrfryDPQHoczB2h2DrE2qSrDGxztuNtzts4eg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFXYTotpkPcftODwaFVuiUj6yC0j0GWlJeqAzUTxiu6AzJk/Pa
-	xQfIdl/n9TjVsDuyzB7yt8Djuej2dYZKQo7462gSq9AbYNdtn1rE95vCQUmTSjDiF0HtQ9FwaHb
-	nX1Od1GnvqtVhZmnfjpK3GI5OCNU=
-X-Google-Smtp-Source: AGHT+IEOif/f/Zl1LrJt+2Gcyo6SzzYJtNymmKKu1iahMKcKCBKKgoSUjNWuEBzxjc1lnPieK9zMO7mK1eUPJ+v9MGg=
-X-Received: by 2002:a17:907:9722:b0:a99:403e:2578 with SMTP id
- a640c23a62f3a-a9e3a57531amr379536766b.5.1730301865101; Wed, 30 Oct 2024
- 08:24:25 -0700 (PDT)
+	s=arc-20240116; t=1730302224; c=relaxed/simple;
+	bh=+39Xp1qJigpvCuuW9VNwa3DYixchO6pQySaxnN4SWiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2t9Zabdyy3p0BE18kMdsr8syprsq2rr/l9SY330rHCtcDj/Prhg/F6dDc9rADLRS6lQFXu/Zwf9U0Q9z/l+8c9LBgux/r6t8wYefotnt/jCg52eLY1o59go9g1Fn2O4camEMeTGtgcZl+PzDy0Gqz7VX1mC6P0CDk4crv/Tgkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 4B12475C; Wed, 30 Oct 2024 10:30:18 -0500 (CDT)
+Date: Wed, 30 Oct 2024 10:30:18 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Jordan Rome <linux@jordanrome.com>
+Cc: linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Subject: Re: [v4] security: add trace event for cap_capable
+Message-ID: <20241030153018.GA156194@mail.hallyn.com>
+References: <20241030013314.2188163-1-linux@jordanrome.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241029002208.1947947-1-dolinux.peng@gmail.com>
- <20241029002208.1947947-4-dolinux.peng@gmail.com> <CAEf4BzYZgAPZSQTTk20s8vUwDMipe+0HRyKNnQchM+C10-1qOQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYZgAPZSQTTk20s8vUwDMipe+0HRyKNnQchM+C10-1qOQ@mail.gmail.com>
-From: Donglin Peng <dolinux.peng@gmail.com>
-Date: Wed, 30 Oct 2024 23:24:13 +0800
-Message-ID: <CAErzpmsuf0e9O4p1srdadoCwn7zNN6rEb8wt5yEOT0FByx5RJw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] libbpf: Using binary search to improve the
- performance of btf__find_by_name_kind
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241030013314.2188163-1-linux@jordanrome.com>
 
-On Wed, Oct 30, 2024 at 6:15=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Oct 28, 2024 at 5:22=E2=80=AFPM Donglin Peng <dolinux.peng@gmail.=
-com> wrote:
-> >
-> > Currently, we are only using the linear search method to find the type =
-id
-> > by the name, which has a time complexity of O(n). This change involves
-> > sorting the names of btf types in ascending order and using binary sear=
-ch,
-> > which has a time complexity of O(log(n)).
-> >
-> > Another change is the search direction, where we search the BTF first a=
-nd
-> > then its base.
-> >
-> > Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
-> > ---
-> >  tools/lib/bpf/btf.c | 159 ++++++++++++++++++++++++++++++++++++++------
-> >  1 file changed, 140 insertions(+), 19 deletions(-)
-> >
->
-> same complaints as with kernel-side implementation
->
-> I'm not sure if this is the right approach, overall. I can see how
-> pre-sorting might be useful if done by pahole. But then I'd say we
-> should record some bit somewhere in btf_header claiming that this is
-> sorted BTF, and then if that bit is set and we confirmed (on the
-> kernel side) that sorting is indeed correct (and if not, reject, don't
-> silently ignore), then we can use that sorting to our advantage.
+On Tue, Oct 29, 2024 at 06:33:14PM -0700, Jordan Rome wrote:
+> In cases where we want a stable way to observe/trace
+> cap_capable (e.g. protection from inlining and API updates)
+> add a tracepoint that passes:
+> - The credentials used
+> - The user namespace of the resource being accessed
+> - The user namespace in which the credential provides the
+> capability to access the targeted resource
+> - The capability to check for
+> - Bitmask of options defined in include/linux/security.h
+> - The return value of the check
+> 
+> Signed-off-by: Jordan Rome <linux@jordanrome.com>
 
-Thank you, I also agree. we could utilize a bit of the flags within the
-btf_header structure to indicate if the btf file has been sorted.
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
->
-> I don't think libbpf should unconditionally sort or check sorting in
-> the way that you implemented.
+(To see if b4 will pick this up automagically)
 
->
-> > diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
-> > index 5290e9d59997..cbf88a6b92e5 100644
-> > --- a/tools/lib/bpf/btf.c
-> > +++ b/tools/lib/bpf/btf.c
-> > @@ -94,6 +94,10 @@ struct btf {
-> >          *   - for split BTF counts number of types added on top of bas=
-e BTF.
-> >          */
-> >         __u32 nr_types;
-> > +       /* number of types in this BTF instance which are sorted by nam=
-e:
-> > +        *   - doesn't include special [0] void type;
-> > +        */
-> > +       __u32 nr_types_sorted;
-> >         /* if not NULL, points to the base BTF on top of which the curr=
-ent
-> >          * split BTF is based
-> >          */
->
-> [...]
+> ---
+>  MAINTAINERS                       |  1 +
+>  include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
+>  security/commoncap.c              | 30 +++++++++++-----
+>  3 files changed, 83 insertions(+), 8 deletions(-)
+>  create mode 100644 include/trace/events/capability.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cc40a9d9b8cd..210e9076c858 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4994,6 +4994,7 @@ M:	Serge Hallyn <serge@hallyn.com>
+>  L:	linux-security-module@vger.kernel.org
+>  S:	Supported
+>  F:	include/linux/capability.h
+> +F:	include/trace/events/capability.h
+>  F:	include/uapi/linux/capability.h
+>  F:	kernel/capability.c
+>  F:	security/commoncap.c
+> diff --git a/include/trace/events/capability.h b/include/trace/events/capability.h
+> new file mode 100644
+> index 000000000000..e706ce690c38
+> --- /dev/null
+> +++ b/include/trace/events/capability.h
+> @@ -0,0 +1,60 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM capability
+> +
+> +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_CAPABILITY_H
+> +
+> +#include <linux/cred.h>
+> +#include <linux/tracepoint.h>
+> +#include <linux/user_namespace.h>
+> +
+> +/**
+> + * cap_capable - called after it's determined if a task has a particular
+> + * effective capability
+> + *
+> + * @cred: The credentials used
+> + * @targ_ns: The user namespace of the resource being accessed
+> + * @capable_ns: The user namespace in which the credential provides the
+> + *              capability to access the targeted resource.
+> + *              This will be NULL if ret is not 0.
+> + * @cap: The capability to check for
+> + * @opts: Bitmask of options defined in include/linux/security.h
+> + * @ret: The return value of the check: 0 if it does, -ve if it does not
+> + *
+> + * Allows to trace calls to cap_capable in commoncap.c
+> + */
+> +TRACE_EVENT(cap_capable,
+> +
+> +	TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
+> +		struct user_namespace *capable_ns, int cap, unsigned int opts, int ret),
+> +
+> +	TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(const struct cred *, cred)
+> +		__field(struct user_namespace *, targ_ns)
+> +		__field(struct user_namespace *, capable_ns)
+> +		__field(int, cap)
+> +		__field(unsigned int, opts)
+> +		__field(int, ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->cred       = cred;
+> +		__entry->targ_ns    = targ_ns;
+> +		__entry->capable_ns = capable_ns;
+> +		__entry->cap        = cap;
+> +		__entry->opts       = opts;
+> +		__entry->ret        = ret;
+> +	),
+> +
+> +	TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d, opts %u, ret %d",
+> +		__entry->cred, __entry->targ_ns, __entry->capable_ns, __entry->cap,
+> +		__entry->opts, __entry->ret)
+> +);
+> +
+> +#endif /* _TRACE_CAPABILITY_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 162d96b3a676..7a74eb27eebf 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -27,6 +27,9 @@
+>  #include <linux/mnt_idmapping.h>
+>  #include <uapi/linux/lsm.h>
+> 
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/capability.h>
+> +
+>  /*
+>   * If a non-root user executes a setuid-root binary in
+>   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+> @@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(const char *fname)
+>  /**
+>   * cap_capable - Determine whether a task has a particular effective capability
+>   * @cred: The credentials to use
+> - * @targ_ns:  The user namespace in which we need the capability
+> + * @targ_ns:  The user namespace of the resource being accessed
+>   * @cap: The capability to check for
+>   * @opts: Bitmask of options defined in include/linux/security.h
+>   *
+> @@ -67,7 +70,9 @@ static void warn_setuid_and_fcaps_mixed(const char *fname)
+>  int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  		int cap, unsigned int opts)
+>  {
+> -	struct user_namespace *ns = targ_ns;
+> +	int ret = -EPERM;
+> +	struct user_namespace *capable_ns = NULL,
+> +		*ns = targ_ns;
+> 
+>  	/* See if cred has the capability in the target user namespace
+>  	 * by examining the target user namespace and all of the target
+> @@ -75,22 +80,30 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  	 */
+>  	for (;;) {
+>  		/* Do we have the necessary capabilities? */
+> -		if (ns == cred->user_ns)
+> -			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+> +		if (ns == cred->user_ns) {
+> +			if (cap_raised(cred->cap_effective, cap)) {
+> +				capable_ns = ns;
+> +				ret = 0;
+> +			}
+> +			break;
+> +		}
+> 
+>  		/*
+>  		 * If we're already at a lower level than we're looking for,
+>  		 * we're done searching.
+>  		 */
+>  		if (ns->level <= cred->user_ns->level)
+> -			return -EPERM;
+> +			break;
+> 
+>  		/*
+>  		 * The owner of the user namespace in the parent of the
+>  		 * user namespace has all caps.
+>  		 */
+> -		if ((ns->parent == cred->user_ns) && uid_eq(ns->owner, cred->euid))
+> -			return 0;
+> +		if ((ns->parent == cred->user_ns) && uid_eq(ns->owner, cred->euid)) {
+> +			capable_ns = ns->parent;
+> +			ret = 0;
+> +			break;
+> +		}
+> 
+>  		/*
+>  		 * If you have a capability in a parent user ns, then you have
+> @@ -99,7 +112,8 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+>  		ns = ns->parent;
+>  	}
+> 
+> -	/* We never get here */
+> +	trace_cap_capable(cred, targ_ns, capable_ns, cap, opts, ret);
+> +	return ret;
+>  }
+> 
+>  /**
+> --
+> 2.43.5
