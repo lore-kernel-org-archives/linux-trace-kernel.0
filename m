@@ -1,131 +1,89 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834212141A1;
-	Wed, 30 Oct 2024 16:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE30E1E573B;
+	Wed, 30 Oct 2024 16:15:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730304364; cv=none; b=bQfa8wn6zuhnHZ0MM+qfZ7At4/sKLM4o0BNKX2TU8D0/W/3vuKPxJSOjdtzyYT5THy2MsmObmxNOdQiAnnBZOPiPthWOnIoujBaXVNr1KM9pGXm+oexZAahcxGZ1jdwOvUeGFtpTszEticS6ePKTxIEnREHifplCJmR3tUiL6wc=
+	t=1730304901; cv=none; b=hf5oAa+AA3DrGFir1+H8jTe2y8JTTUVwQER3ZjvUjrT2k52y53aQfouzyKV7p+zcFfBYmAQQutGKYZxguFERD4ochIG5mfo69FCoDDk0xipBD51rznTmtxOKeYuYxlBPxcsbPc3iGhMbo/7LuLzFKurfsNISrt3oM+s0j4nDeWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730304364; c=relaxed/simple;
-	bh=K5RfbokEe9SJslqHAgTzxGIKwLTk4MjbTLj0WPI4qmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMKaOhauoh5EuV7FhXiR2xsHsEafv/E/+CqUwL8Fmt3kSM12W6JkTYx2uLhKeIXoht1P5NQZdUOWvNgfPw9ZcwIiRgQgtd/qw2Tdb7oaoUGLbprS6UAXD6KhmNawCekEzylekqTuCUzWnyvZJEd+yCFcBHtGC6gxg9hl0dyHEyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UbPoSezr; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1730304901; c=relaxed/simple;
+	bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=byZBlXfppWDkEHrSSEudO0u6Qjhz3otOU+J/Ch1gELjlzxwkLV8toXcW5cqcyv2MmoBEmQTepRPDfNFPA3bn8S+BDJQDf1TSGH0W+y8YDGcDFAOdR0mdVVLTgH2DhjenmDfy5M4EDRSl6NYs2vawyca24k1QIV9XrK3PCb/+XVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgjWmxk+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UbPoSezr"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0B8B440E019C;
-	Wed, 30 Oct 2024 16:05:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rxmd0Gl-QDop; Wed, 30 Oct 2024 16:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730304338; bh=jnR65QrcFCF7T2SN80xCHIA06Ync0z3yyPLSbAqJc0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UbPoSezrnWSzk29OkIzZxt0ufSto8If09wJIBV8PWJSKlUBXEAT1HmdpVfaoEP0Ed
-	 GxmEJcaDelvtKK0SE7Ro1mwEcCDMbrTNjIHmFJY7Gm7FlZB/J6l66m3bFT19QcITWH
-	 EHTOLTEjC+w5zPlsRL80JfjYIylHmm8ALBEhK8jYb8zFXUU3jn/45rfA1WXCDR047v
-	 DZbrQoLBUdWijQ7csuBZzNYSKoL4Qtbcc+631JlZYAIxihjwuOnUcq+mT8cfbwsXzI
-	 lJNusLL0LMiPOuE+usMRiR7hUKwfaWKjvE2on9KKcd5JFctgNHhDIz9Cu8c7roifRq
-	 4xw10/mQUqYLlHBp3tN02LAPJfcRu8EiBSUsd0e1t6deX0DjKOncml6/nScYjZnn0C
-	 KSsg1TJmzavkwOxfUoJu8Tdq3ejM6Hryg8qOkk+38I0aSIo40ZofHoXVv9nA3FbTbw
-	 0XF/DBhtJHu+neRrpNsLNxu+cqfmpH2HjJZiKkZ0ObpnT6dWgPG7qvYzHBgCOxvISp
-	 b9rfP/ZBlDaFmlxECm8B8HdqbOb6qKV8/YxSO7x9x17Ivuv/El9Iu3gVpCGB1tyW7m
-	 MiCj5vq3fUwAg0Hnum8ijKl+0N8mqNWK8A37mHCYU02YDax1r1uIiaIxUHR+2dvmK4
-	 CGqTvrt1gUopgCTVMdB18kWM=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 530FB40E0219;
-	Wed, 30 Oct 2024 16:05:25 +0000 (UTC)
-Date: Wed, 30 Oct 2024 17:05:18 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Avadhut Naik <avadhut.naik@amd.com>
-Cc: x86@kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tony.luck@intel.com, qiuxu.zhuo@intel.com, tglx@linutronix.de,
-	mingo@redhat.com, rostedt@goodmis.org, mchehab@kernel.org,
-	yazen.ghannam@amd.com, john.allen@amd.com
-Subject: Re: [PATCH v7 5/5] EDAC/mce_amd: Add support for FRU Text in MCA
-Message-ID: <20241030160518.GEZyJZPrEL7G0eYac4@fat_crate.local>
-References: <20241022194158.110073-1-avadhut.naik@amd.com>
- <20241022194158.110073-6-avadhut.naik@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgjWmxk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6DCC4CECE;
+	Wed, 30 Oct 2024 16:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730304901;
+	bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=RgjWmxk+Ta/ZUEDhcnH9C0C5ZRjgiyQzdT+5BmFk7ppgAL8Us4vjU9vKAeZ/FeTXQ
+	 yMbrwccUMzIck74xpvaiyL2kauWNWEdOVT2ZOJk89fh3s5eDnNtTP7KPuVB42IRYff
+	 MjzkCg8hqwlhnb1dGmgEjMc4ooUTPS9OeTcz2IQP4ndjgVYPbtHcsoEeRnPoSPAeL8
+	 zErMvqG5Mx55yaHiQXzw281/tDBJ8Ad5NquUG0EG4SMf7QqX1ZC6/4kVHd3hXwCPdM
+	 mdINHTwUqJuKg5JnJKQz7vDUuv6Yr/NAzv/u+dWjeci3GdfqkevEGHsLm7y8rR9tfk
+	 nbo87a8Tzoicg==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/2] kprobes: Adjustments for __counted_by addition
+Date: Wed, 30 Oct 2024 09:14:47 -0700
+Message-Id: <20241030-kprobes-fix-counted-by-annotation-v1-0-8f266001fad0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20241022194158.110073-6-avadhut.naik@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHdbImcC/x2N0QqDMAxFf0XyvIBGhblfGXtobdQwSKXthiL+u
+ 8HHA/fcc0DmJJzhVR2Q+C9Zoho0jwrGxenMKMEYqKauqWnA75qi54yTbDjGnxYO6Hd0qrG4Yja
+ GwH7oiZ6+JbCfNbGN78b7c54XfUuhw3MAAAA=
+X-Change-ID: 20241029-kprobes-fix-counted-by-annotation-ddeb95228b32
+To: Masami Hiramatsu <mhiramat@kernel.org>, 
+ Naveen N Rao <naveen@kernel.org>, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>
+Cc: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Jinjie Ruan <ruanjinjie@huawei.com>, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ patches@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=950; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=N9werbf4NPq4LiWt3uHpAOCcksOcVaD4UmVzrTm7pkQ=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDOlK0c1zP6c6qvn8SU5i3coa33LcfIrFhcmXy+e/Vb7i9
+ dY0ZDdbRykLgxgXg6yYIkv1Y9XjhoZzzjLeODUJZg4rE8gQBi5OAZjILndGho9Fpz/e0/l7TZK1
+ efu2K27/aw7M+Hg0m+f70uuNHzfv+MTO8D/6nNjpRy2lnJe+OTyR+CN4aDHn5S18WnMu3F21gFn
+ slTIjAA==
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, Oct 22, 2024 at 07:36:31PM +0000, Avadhut Naik wrote:
-> @@ -853,8 +850,18 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
->  
->  		if (m->status & MCI_STATUS_SYNDV) {
->  			pr_cont(", Syndrome: 0x%016llx\n", m->synd);
-> -			pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
-> -				 err->vendor.amd.synd1, err->vendor.amd.synd2);
-> +			if (mca_config & MCI_CONFIG_FRUTEXT) {
-> +				char frutext[17];
-> +
-> +				frutext[16] = '\0';
-> +				memcpy(&frutext[0], &err->vendor.amd.synd1, 8);
-> +				memcpy(&frutext[8], &err->vendor.amd.synd2, 8);
-> +
-> +				pr_emerg(HW_ERR "FRU Text: %s", frutext);
-> +			} else {
-> +				pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
-> +					 err->vendor.amd.synd1, err->vendor.amd.synd2);
-> +			}
->  		}
+Hi all,
 
-Right, so let's turn this into:
+This series addresses the issues that I brought up at [1]. The first
+change is the actual functional fix and the second change is something I
+noticed while auditing this code, which is related but tangential to the
+actual fix, since the current code has a correct calculation.
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index bc5e67306f77..edc2c8033de8 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -208,8 +208,6 @@ static void __print_mce(struct mce_hw_err *err)
- 			pr_cont("SYND2 %llx ", err->vendor.amd.synd2);
- 		if (m->ipid)
- 			pr_cont("IPID %llx ", m->ipid);
--		if (err->vendor.amd.config)
--			pr_cont("CONFIG %llx ", err->vendor.amd.config);
- 	}
- 
- 	pr_cont("\n");
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index d69a1466f0bc..62fcd92bf9d2 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -858,9 +858,6 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 				memcpy(&frutext[8], &err->vendor.amd.synd2, 8);
- 
- 				pr_emerg(HW_ERR "FRU Text: %s", frutext);
--			} else {
--				pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
--					 err->vendor.amd.synd1, err->vendor.amd.synd2);
- 			}
- 		}
- 
-and simply treat synd1 and synd2 as FRU text. I don't want to expose
-mca_config to userspace yet but use it in the RAS code only. If a case appears
-that we want to really expose it to userspace, we can talk about a proper
-design then.
+This resolves the issue for me when testing both clang 19 and GCC 15
+(tip of tree, which is the only version that has __counted_by support).
 
-This patch doesn't make it part of the tracepoint either so...
+[1]: https://lore.kernel.org/20241022205557.GA3004519@thelio-3990X/
 
+---
+Nathan Chancellor (2):
+      kprobes: Fix __get_insn_slot() after __counted_by annotation
+      kprobes: Use struct_size() in __get_insn_slot()
+
+ kernel/kprobes.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+---
+base-commit: b5f348cbce367d5dcd34bf2b6c02c39a5be3fb97
+change-id: 20241029-kprobes-fix-counted-by-annotation-ddeb95228b32
+
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Nathan Chancellor <nathan@kernel.org>
 
-https://people.kernel.org/tglx/notes-about-netiquette
