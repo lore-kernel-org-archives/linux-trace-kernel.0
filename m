@@ -1,206 +1,258 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DCC146D40;
-	Wed, 30 Oct 2024 01:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E40DBE46;
+	Wed, 30 Oct 2024 01:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730251121; cv=none; b=cd29cLLtcXeXcRjWAZG1c7bIxHjMB2VMCdnUXHqaFmDBhKzz6BeFBe6LFCV0wQa/JxW7PvWO+6uZU/K70bboQiFFiQUwPmADZgT3HFp8KcrP0o+LbBU75F9MkE7hFOi6OMupeUL09d6VuQ+VHNM/TQv+QqTzqEPRedyhAO4KYjQ=
+	t=1730252045; cv=none; b=iwUpWSpvYul51oTzqOBxlS+TpadSCKDWvYjDQnJKCpwNTahEj1tqFoUYtduVhKbPqqfOJpwsyAPC1c8zL3U17+B3RY/+8+UCXEaBLOQuje7V8aYdalA/Rl8PEYnj13GMUCTDGlXhyqCliCgNl+GkWqFridETChBStFR9gdxwa8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730251121; c=relaxed/simple;
-	bh=sckwR4OmF0CBfThZAlWBnbWu/aRsXOAMexIRzo4IdcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Wku0lidfxT6FxHW8fdHrA5g+qtQVKZ2juAa0wNBmpPnI5ECEgBm/DOJGiZXZ2S3cQUaWBW68g2vBxThivkvJoRFi4c6WgS80Ffr6Y6eRNt2WLTNyDTpPH/wLLsr3eahvegJdTWPvK0wlO9/NUN7Ys/a1OSDfHLHLXiqpj2+AbI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4XdTjf6MhHzpXW7;
-	Wed, 30 Oct 2024 09:16:38 +0800 (CST)
-Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
-	by mail.maildlp.com (Postfix) with ESMTPS id 85035180064;
-	Wed, 30 Oct 2024 09:18:34 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemg200008.china.huawei.com (7.202.181.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 30 Oct 2024 09:18:33 +0800
-Message-ID: <17c39722-8d76-7e62-1c0d-d2df7e3385d5@huawei.com>
-Date: Wed, 30 Oct 2024 09:18:33 +0800
+	s=arc-20240116; t=1730252045; c=relaxed/simple;
+	bh=xuv/qa+XtFR3T0xCtXs2kBRhf8nyqdnrtq291acbDIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eUr4PHlmavJ0vtOF5a/cT+uD61hw4LhGTWjBJISMGBUGz+B62ZpQX9UDitkrn3A1KKP5bZRduGiEQqCHNEvXFx+Yjsab3cTvgt/8xAR/jc5UeIrwU0/UWadA41fw0UN+FpDdEWEu+GMoXLVFOdwvWQCcQiXCQWU+ZGRqRUcaRSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=jordanrome.com; dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b=HlTbuMFC; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jordanrome.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b="HlTbuMFC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jordanrome.com;
+	s=s1-ionos; t=1730252005; x=1730856805; i=linux@jordanrome.com;
+	bh=aEwKZ1iydmdmyI3mEPOkwX6hyct+//kwH/Nma7dvPxA=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HlTbuMFCxAd9umbLyqrIwoebifkJ97iDbfzBE1QEoV3zIzBBYoPXBqigqGQEdzTq
+	 9gTDrceZtvaWe94zoG4wUQKALsoivYZ1nGcO4hfuLbCgwcpWBprjui/QTLmPvRJgx
+	 xauOEaSXdj8FDiuDMPxf0rPxYs5D7Bx5K8zFqNNybLR1red137hSssDhj3QASG1+9
+	 SYO5qqsOvh9YqhPvBQru/UhbDn4m4Zmo+6o+O1rRPZyD2SlvXInrp9T1Xc1GUzddt
+	 lpzYd3YMTk7ChNhk9fHQiEixkHFQrIEEwGMWK6yggFge3I+vEy7ZizzfMwAi6fELg
+	 x621KTxDN2U2fysdiw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([69.171.251.116]) by mrelay.perfora.net (mreueus003
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0MKpCY-1t5xaP0Z60-00FDir; Wed, 30 Oct
+ 2024 02:33:25 +0100
+From: Jordan Rome <linux@jordanrome.com>
+To: linux-security-module@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Kernel Team <kernel-team@fb.com>,
+	Serge Hallyn <serge@hallyn.com>,
+	Yonghong Song <yonghong.song@linux.dev>
+Subject: [v4] security: add trace event for cap_capable
+Date: Tue, 29 Oct 2024 18:33:14 -0700
+Message-ID: <20241030013314.2188163-1-linux@jordanrome.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH 1/3] kprobes: Annotate structs with __counted_by()
-Content-Language: en-US
-To: Nathan Chancellor <nathan@kernel.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>
-CC: <naveen@kernel.org>, <anil.s.keshavamurthy@intel.com>,
-	<davem@davemloft.net>, <kees@kernel.org>, <gustavoars@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>
-References: <20240813115334.3922580-1-ruanjinjie@huawei.com>
- <20240813115334.3922580-2-ruanjinjie@huawei.com>
- <20241022205557.GA3004519@thelio-3990X>
- <20241029211254.GA4146593@thelio-3990X>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20241029211254.GA4146593@thelio-3990X>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg200008.china.huawei.com (7.202.181.35)
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1UYDUZOfplsFUotvYnTA4iMKn+/Ak0jJHOhPGyV8V7rOcbj6N/x
+ CgM83buls49bIAdk9UXf/fJ1aWV6HqHM72tFqRyRRPapNrSMXiQZtti3yLvOlR4XbQiMdww
+ EgH1u4rizRJBF0ZZfgEHcoRko87reKoOw56GoHy9J+iXqsCcham7J8TRVAua2vHfwgk572B
+ 4pyLw2VkpuZV/W9uYPK1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aTxEpAd42b8=;v84bSkeqsgygOMOBKAVi3lLmrb6
+ YECwjj9bURukzABB2xk4ZUYwytlGjH0ks+UhwfNtTZQctQz99BcSNjdd018/xBbFiXgKo5yKt
+ gORnI5vPpFNrlp37Tt5Okn5c+//qfFhxkhqT94GFdZutASPTTM+UTFhDdvEo4JNxtuJcGrOkR
+ hQOt8KzNl7HkqWI3PdXbXTshd/YDRO1/v87Rd1uUn+oLKhwizVSPzu+xTCeG9Xciyp5Y9akle
+ rIQyEV4O0IAgJfwZqFjTsoJ3EiD7XlF1hNIxttbhYbND7VgqX9FnEqTvYRB+I7wg38LgFgkIS
+ iamjz/vdEVaCc+PbzMv6aEiPklBpHK/GqITRNqKLMlfWE2ECTkCedyUBT5xtnAvOgceUIINLW
+ u0O5LzmH3jAY4yrzy5jebphb+X0v8+jdOJqLgCpmUSAWrgd5ZE5zX3lg9RJyEKx0/aUhBMU8T
+ GyaaMGX/GUl4xKlzNhGXv9ozjTvY+PkXfkimx1seWk2wkKq3uF0UCEhI/0YqfdTygCtb+kiYg
+ 8v+A1txlOyi5UNCRLL/rxTGc+oJ9PJB3XCnjjeVD6G8EpBL75g/E1Vu33TPN+voLG1CPe65J7
+ UayletCDt1sQG9g7TzEerQ6UncCm3Oy/F07oa96J3+qWLHW/TCxKfnXN1Gol8DIVlj5qNxd8U
+ QDhpHf/9TVrQfAboxQRaVGrMpm5oQW3T6ZOfdWnZ2RGhZbvECG0jQ0EwOF3an2wvlsO7UIGCd
+ iNT4bSTwLltlwQvkAnvtfUR1qmquL6sHA==
 
+In cases where we want a stable way to observe/trace
+cap_capable (e.g. protection from inlining and API updates)
+add a tracepoint that passes:
+- The credentials used
+- The user namespace of the resource being accessed
+- The user namespace in which the credential provides the
+capability to access the targeted resource
+- The capability to check for
+- Bitmask of options defined in include/linux/security.h
+- The return value of the check
 
+Signed-off-by: Jordan Rome <linux@jordanrome.com>
+=2D--
+ MAINTAINERS                       |  1 +
+ include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
+ security/commoncap.c              | 30 +++++++++++-----
+ 3 files changed, 83 insertions(+), 8 deletions(-)
+ create mode 100644 include/trace/events/capability.h
 
-On 2024/10/30 5:12, Nathan Chancellor wrote:
-> On Tue, Oct 22, 2024 at 01:56:01PM -0700, Nathan Chancellor wrote:
->> Hi,
->>
->> On Tue, Aug 13, 2024 at 07:53:32PM +0800, Jinjie Ruan wrote:
->>> Add the __counted_by compiler attribute to the flexible array member
->>> stripes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
->>> CONFIG_FORTIFY_SOURCE.
->>>
->>> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
->>> ---
->>>  kernel/kprobes.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->>> index da59c68df841..e6f7b0d3b29c 100644
->>> --- a/kernel/kprobes.c
->>> +++ b/kernel/kprobes.c
->>> @@ -92,7 +92,7 @@ struct kprobe_insn_page {
->>>  	struct kprobe_insn_cache *cache;
->>>  	int nused;
->>>  	int ngarbage;
->>> -	char slot_used[];
->>> +	char slot_used[] __counted_by(nused);
->>>  };
->>>  
->>>  #define KPROBE_INSN_PAGE_SIZE(slots)			\
->>> -- 
->>> 2.34.1
->>>
->>
->> This change was not properly tested. In next-20241022, where this
->> changes appears as commit 0888460c9050 ("kprobes: Annotate structs with
->> __counted_by()"), I get a fortify failure because ->nused is initialized
->> after the call to memset(). For example, with Debian's powerpc64le
->> configuration (which is just the first configuration I happened to see
->> this warning in, I don't think it is architecture specific):
->>
->>   $ curl -LSso .config https://github.com/nathanchance/llvm-kernel-testing/raw/096eeab130a9077206d3ddd6f0c6e39187113869/configs/debian/powerpc64le.config
->>
->>   $ make -skj"$(nproc)" ARCH=powerpc CROSS_COMPILE=powerpc64le-linux-gnu- LLVM=1 olddefconfig zImage.epapr
->>
->>   $ curl -LSs https://github.com/ClangBuiltLinux/boot-utils/releases/download/20230707-182910/ppc64le-rootfs.cpio.zst | zstd -d >rootfs.cpio
->>
->>   $ qemu-system-ppc64 \
->>       -display none \
->>       -nodefaults \
->>       -device ipmi-bmc-sim,id=bmc0 \
->>       -device isa-ipmi-bt,bmc=bmc0,irq=10 \
->>       -machine powernv \
->>       -kernel arch/powerpc/boot/zImage.epapr \
->>       -initrd rootfs.cpio \
->>       -m 2G \
->>       -serial mon:stdio
->>   ...
->>   [    0.000000] Linux version 6.12.0-rc4-next-20241022 (nathan@n3-xlarge-x86) (ClangBuiltLinux clang version 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b), ClangBuiltLinux LLD 19.1.2 (https://github.com/llvm/llvm-project.git 7ba7d8e2f7b6445b60679da826210cdde29eaf8b)) #1 SMP Tue Oct 22 20:24:37 UTC 2024
->>   ...
->>   [    0.138628] ------------[ cut here ]------------
->>   [    0.138816] memset: detected buffer overflow: 512 byte write of buffer size 0
->>   [    0.140141] WARNING: CPU: 0 PID: 1 at lib/string_helpers.c:1033 __fortify_report+0x60/0x80
->>   [    0.142208] Modules linked in:
->>   [    0.142722] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.0-rc4-next-20241022 #1
->>   [    0.143379] Hardware name: IBM PowerNV (emulated by qemu) POWER10 0x801200 opal:v7.1 PowerNV
->>   [    0.143810] NIP:  c000000000900920 LR: c00000000090091c CTR: 0000000000000000
->>   [    0.144098] REGS: c000000002acf290 TRAP: 0700   Not tainted  (6.12.0-rc4-next-20241022)
->>   [    0.144457] MSR:  9000000002029033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 24800280  XER: 00000000
->>   [    0.145048] CFAR: c00000000014e414 IRQMASK: 0
->>   [    0.145048] GPR00: c00000000090091c c000000002acf530 c0000000017bf0e0 0000000000000041
->>   [    0.145048] GPR04: c0000000025911f8 c0000000ffffefff 0000000000000003 0000000000000001
->>   [    0.145048] GPR08: 0000000000000003 0000000000000004 0000000000000000 9000000002001033
->>   [    0.145048] GPR12: 0000000000800000 c00000000289e000 c000000000010eb8 0000000000000000
->>   [    0.145048] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->>   [    0.145048] GPR20: 0000000000000000 0000000000000000 0000000000000000 c0000000027fba70
->>   [    0.145048] GPR24: 61c8864680b583eb 0000000000000000 0000000000001000 0000000000000000
->>   [    0.145048] GPR28: c000000002a83400 c00000000262de68 c00000000262de30 c000000002acf5b0
->>   [    0.147696] NIP [c000000000900920] __fortify_report+0x60/0x80
->>   [    0.147934] LR [c00000000090091c] __fortify_report+0x5c/0x80
->>   [    0.148277] Call Trace:
->>   [    0.148465] [c000000002acf530] [c00000000090091c] __fortify_report+0x5c/0x80 (unreliable)
->>   [    0.148855] [c000000002acf590] [c000000000900958] __fortify_panic+0x18/0x40
->>   [    0.149133] [c000000002acf5b0] [c0000000002e3508] __get_insn_slot+0x308/0x320
->>   [    0.149413] [c000000002acf620] [c0000000000586c4] arch_prepare_kprobe+0x1e4/0x270
->>   [    0.149699] [c000000002acf6b0] [c0000000002e496c] register_kprobe+0x4cc/0x8e0
->>   [    0.149975] [c000000002acf930] [c0000000020154ac] arch_init_kprobes+0x30/0x54
->>   [    0.150262] [c000000002acf960] [c0000000020411bc] init_kprobes+0x80/0x120
->>   [    0.150524] [c000000002acf9d0] [c000000000010630] do_one_initcall+0x120/0x3e0
->>   [    0.150798] [c000000002acfd50] [c000000002005cb8] do_pre_smp_initcalls+0x70/0x114
->>   [    0.151082] [c000000002acfd90] [c000000002005b70] kernel_init_freeable+0x14c/0x224
->>   [    0.151365] [c000000002acfde0] [c000000000010eec] kernel_init+0x3c/0x250
->>   [    0.151622] [c000000002acfe50] [c00000000000de3c] ret_from_kernel_user_thread+0x14/0x1c
->>   [    0.151935] --- interrupt: 0 at 0x0
->>   [    0.152433] Code: 3cc2fffc 70630001 3c62ffa0 78841f48 38c6f388 38636489 7c86202a 3cc2ff9c 38c62f30 7cc8305e 4b84d9e1 60000000 <0fe00000> 38210060 e8010010 7c0803a6
->>   [    0.153155] ---[ end trace 0000000000000000 ]---
->>   ...
->>
->> Even if the current ->nused assignment is moved before the call to
->> memset(), the failure still occurs because 1 is clearly wrong for the
->> size of memset(), which is 512 bytes for this configuration. Could this
->> instance of memset() be avoided by using kzalloc() for the kip
->> allocation? Could also take the opportunity to use struct_size(). The
->> following diff fixes this issue for me but I did not do any further
->> testing. If this does not work for some reason and there is no other
->> obvious solution, I think this change should be reverted.
-> 
-> Ping? I still see this on next-20241029. I can also reproduce it with a
-> tip of tree GCC.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cc40a9d9b8cd..210e9076c858 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4994,6 +4994,7 @@ M:	Serge Hallyn <serge@hallyn.com>
+ L:	linux-security-module@vger.kernel.org
+ S:	Supported
+ F:	include/linux/capability.h
++F:	include/trace/events/capability.h
+ F:	include/uapi/linux/capability.h
+ F:	kernel/capability.c
+ F:	security/commoncap.c
+diff --git a/include/trace/events/capability.h b/include/trace/events/capa=
+bility.h
+new file mode 100644
+index 000000000000..e706ce690c38
+=2D-- /dev/null
++++ b/include/trace/events/capability.h
+@@ -0,0 +1,60 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM capability
++
++#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_CAPABILITY_H
++
++#include <linux/cred.h>
++#include <linux/tracepoint.h>
++#include <linux/user_namespace.h>
++
++/**
++ * cap_capable - called after it's determined if a task has a particular
++ * effective capability
++ *
++ * @cred: The credentials used
++ * @targ_ns: The user namespace of the resource being accessed
++ * @capable_ns: The user namespace in which the credential provides the
++ *              capability to access the targeted resource.
++ *              This will be NULL if ret is not 0.
++ * @cap: The capability to check for
++ * @opts: Bitmask of options defined in include/linux/security.h
++ * @ret: The return value of the check: 0 if it does, -ve if it does not
++ *
++ * Allows to trace calls to cap_capable in commoncap.c
++ */
++TRACE_EVENT(cap_capable,
++
++	TP_PROTO(const struct cred *cred, struct user_namespace *targ_ns,
++		struct user_namespace *capable_ns, int cap, unsigned int opts, int ret)=
+,
++
++	TP_ARGS(cred, targ_ns, capable_ns, cap, opts, ret),
++
++	TP_STRUCT__entry(
++		__field(const struct cred *, cred)
++		__field(struct user_namespace *, targ_ns)
++		__field(struct user_namespace *, capable_ns)
++		__field(int, cap)
++		__field(unsigned int, opts)
++		__field(int, ret)
++	),
++
++	TP_fast_assign(
++		__entry->cred       =3D cred;
++		__entry->targ_ns    =3D targ_ns;
++		__entry->capable_ns =3D capable_ns;
++		__entry->cap        =3D cap;
++		__entry->opts       =3D opts;
++		__entry->ret        =3D ret;
++	),
++
++	TP_printk("cred %p, targ_ns %p, capable_ns %p, cap %d, opts %u, ret %d",
++		__entry->cred, __entry->targ_ns, __entry->capable_ns, __entry->cap,
++		__entry->opts, __entry->ret)
++);
++
++#endif /* _TRACE_CAPABILITY_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 162d96b3a676..7a74eb27eebf 100644
+=2D-- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -27,6 +27,9 @@
+ #include <linux/mnt_idmapping.h>
+ #include <uapi/linux/lsm.h>
 
-Hi, Nathan,
++#define CREATE_TRACE_POINTS
++#include <trace/events/capability.h>
++
+ /*
+  * If a non-root user executes a setuid-root binary in
+  * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+@@ -52,7 +55,7 @@ static void warn_setuid_and_fcaps_mixed(const char *fnam=
+e)
+ /**
+  * cap_capable - Determine whether a task has a particular effective capa=
+bility
+  * @cred: The credentials to use
+- * @targ_ns:  The user namespace in which we need the capability
++ * @targ_ns:  The user namespace of the resource being accessed
+  * @cap: The capability to check for
+  * @opts: Bitmask of options defined in include/linux/security.h
+  *
+@@ -67,7 +70,9 @@ static void warn_setuid_and_fcaps_mixed(const char *fnam=
+e)
+ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+ 		int cap, unsigned int opts)
+ {
+-	struct user_namespace *ns =3D targ_ns;
++	int ret =3D -EPERM;
++	struct user_namespace *capable_ns =3D NULL,
++		*ns =3D targ_ns;
 
-Could you send the patch to fix this?
+ 	/* See if cred has the capability in the target user namespace
+ 	 * by examining the target user namespace and all of the target
+@@ -75,22 +80,30 @@ int cap_capable(const struct cred *cred, struct user_n=
+amespace *targ_ns,
+ 	 */
+ 	for (;;) {
+ 		/* Do we have the necessary capabilities? */
+-		if (ns =3D=3D cred->user_ns)
+-			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
++		if (ns =3D=3D cred->user_ns) {
++			if (cap_raised(cred->cap_effective, cap)) {
++				capable_ns =3D ns;
++				ret =3D 0;
++			}
++			break;
++		}
 
-> 
->> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
->> index 98d71a5acb72..6adb0cc4e45c 100644
->> --- a/kernel/kprobes.c
->> +++ b/kernel/kprobes.c
->> @@ -95,10 +95,6 @@ struct kprobe_insn_page {
->>  	char slot_used[] __counted_by(nused);
->>  };
->>  
->> -#define KPROBE_INSN_PAGE_SIZE(slots)			\
->> -	(offsetof(struct kprobe_insn_page, slot_used) +	\
->> -	 (sizeof(char) * (slots)))
->> -
->>  static int slots_per_page(struct kprobe_insn_cache *c)
->>  {
->>  	return PAGE_SIZE/(c->insn_size * sizeof(kprobe_opcode_t));
->> @@ -175,7 +171,7 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
->>  		goto retry;
->>  
->>  	/* All out of space.  Need to allocate a new page. */
->> -	kip = kmalloc(KPROBE_INSN_PAGE_SIZE(slots_per_page(c)), GFP_KERNEL);
->> +	kip = kzalloc(struct_size(kip, slot_used, slots_per_page(c)), GFP_KERNEL);
->>  	if (!kip)
->>  		goto out;
->>  
->> @@ -185,10 +181,8 @@ kprobe_opcode_t *__get_insn_slot(struct kprobe_insn_cache *c)
->>  		goto out;
->>  	}
->>  	INIT_LIST_HEAD(&kip->list);
->> -	memset(kip->slot_used, SLOT_CLEAN, slots_per_page(c));
->> -	kip->slot_used[0] = SLOT_USED;
->>  	kip->nused = 1;
->> -	kip->ngarbage = 0;
->> +	kip->slot_used[0] = SLOT_USED;
->>  	kip->cache = c;
->>  	list_add_rcu(&kip->list, &c->pages);
->>  	slot = kip->insns;
-> 
+ 		/*
+ 		 * If we're already at a lower level than we're looking for,
+ 		 * we're done searching.
+ 		 */
+ 		if (ns->level <=3D cred->user_ns->level)
+-			return -EPERM;
++			break;
+
+ 		/*
+ 		 * The owner of the user namespace in the parent of the
+ 		 * user namespace has all caps.
+ 		 */
+-		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))
+-			return 0;
++		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))=
+ {
++			capable_ns =3D ns->parent;
++			ret =3D 0;
++			break;
++		}
+
+ 		/*
+ 		 * If you have a capability in a parent user ns, then you have
+@@ -99,7 +112,8 @@ int cap_capable(const struct cred *cred, struct user_na=
+mespace *targ_ns,
+ 		ns =3D ns->parent;
+ 	}
+
+-	/* We never get here */
++	trace_cap_capable(cred, targ_ns, capable_ns, cap, opts, ret);
++	return ret;
+ }
+
+ /**
+=2D-
+2.43.5
+
