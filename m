@@ -1,65 +1,61 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF5E1BD9F6;
-	Wed, 30 Oct 2024 18:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF11BD9DF;
+	Wed, 30 Oct 2024 18:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730311339; cv=none; b=AhNY6nwRO1ypENCTRLCUWTdry2AWwu+GTXeivvfrUyQfU8+Hf0JJnp8zub05Kmlh+O5kwGJHz5hT/oN9k0hC+LPF6neloPNEEZOFH7gkxGJ4u9KqYqyJyVyPGHkhwpeGy1BaBEf6NMkvdvV1r4UJLbHhFliOeibxp9/BDP0jIyM=
+	t=1730312710; cv=none; b=DuwF5y/a/ELSM4rcDn2BlDAXtsBPI1Oo41UiW8dtrC9l/tmE5MkiycaoI4l1TQwXgTeXVI0mHZJydxrsDSNUoIUTyXR0yfpDu7eW27m/aj/PaX4QIWz5tQHfEaZ3aRmc+0qy+WeQE4CiEhutwJIPHJp6XhucHIE4NQRH5nOXwGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730311339; c=relaxed/simple;
-	bh=UgvI6PkVlyajgEM1Xfd2/p1Zgl3QqjNh0Iv301xCL9s=;
+	s=arc-20240116; t=1730312710; c=relaxed/simple;
+	bh=xtHHaVHjQlJsAq8PH+DEgcvsognlHgDHLIjv3oQ2wlY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pjn7JM8uzbpV8ktVOEGHguam+pVSEzPeADExrzRAeRhtJg8pkPL6C4ugRaBvBGW0Ii0bGy8+j5i01LSLfuVS+8Se2igZccGKKoXbZx3eZoE9359GpmtZoQyT5lxtpfuO9lH7OdYrS9X6aG9Dm1fLXsvcUqGd9VnhzUG8wDZVnHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=WH3g1CY6; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVgotLEVySnNwu3qZ14MZp8HhA+wUM0eIinyBu11NTkqcsg7GfWv53N3k55lYqHxengXdIhthKeOibkxzh3Z3OmrNahOsrFb8aqfra0T1iiCamtvMSCevMoAnPQXVoewlxySfv/AOM3YRSeQlLt+47ri5ljgEw7H4k6vNAm7Uyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GrTJF2RG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="WH3g1CY6"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C665440E0219;
-	Wed, 30 Oct 2024 18:02:14 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 97m6go7JPOmf; Wed, 30 Oct 2024 18:02:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1730311329; bh=A7UlbAoEKkZqN3GUK0ves5JmgrAolNP4OucBH/HsqMc=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GrTJF2RG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6D8FC4CECE;
+	Wed, 30 Oct 2024 18:25:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730312709;
+	bh=xtHHaVHjQlJsAq8PH+DEgcvsognlHgDHLIjv3oQ2wlY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WH3g1CY6437MS55xSg+EqZ1TlG5bwB3WRUYxZyAETKqze9ZQYJY7m2imSd8Qt/B7L
-	 7kb/gYAejO09Y5vr04r1PM81yDQqtXZtSQV2UUMmQ1a9QKaiZzu0I6RFWD+a+Sjull
-	 9lw7J7MEeYd4KlPMTzcb/UdaGH4YNG4aOxr50jXD286JxkmKivDqzLw8H/hSgEWJG+
-	 DdqJzWzTqdzp1OQXVULQXQI3XK4kt725b/ZqBkMrMus15QaYbYdPW1jY+StLocCs6t
-	 8HGvCkWe1mHuDYjlaMYnnW384UqoB6QU5Bnkbp1XNU51VCiC1VZX1+FZ44VBexITa9
-	 oneICy2gmjEJr8eHuOiiaLMNutylKJ4hH/wA/SspgzMgoLPl6qsAaWzmwJZZ7xZfdY
-	 kP/I6xpkeODuhE2A1vBj5GHnxV6WKqUNM0O629L3cs/OQR0tR6p+y7Gk9OYgbHInio
-	 XiJhPBe6N/f1Qpyx3B3/kY/ppM72fjRmWdiAoxBOViANOcT1UtLpaI06bcupTbgrIR
-	 aL86KrF75hqsU37TnoUo8L91tCHgSQfpafC8MukPhKy94gfc4uKV+nAxUcYvi7zViW
-	 5bZETd3yWpbHZ9QWHyVHYSbHF2CV0cqwv0SZMRJaJ/Nh1RlVadkKMY5AOAhQyoG+qF
-	 EEtzk7rjat4jAj6qQ6NM0U1Y=
-Received: from zn.tnic (p5de8e8eb.dip0.t-ipconnect.de [93.232.232.235])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6577840E019C;
-	Wed, 30 Oct 2024 18:01:56 +0000 (UTC)
-Date: Wed, 30 Oct 2024 19:01:50 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Avadhut Naik <avadhut.naik@amd.com>, x86@kernel.org,
-	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, tony.luck@intel.com,
-	qiuxu.zhuo@intel.com, tglx@linutronix.de, mingo@redhat.com,
-	rostedt@goodmis.org, mchehab@kernel.org, john.allen@amd.com
-Subject: Re: [PATCH v7 5/5] EDAC/mce_amd: Add support for FRU Text in MCA
-Message-ID: <20241030180041.GGZyJ0SXfa73Q7NmwF@fat_crate.local>
-References: <20241022194158.110073-1-avadhut.naik@amd.com>
- <20241022194158.110073-6-avadhut.naik@amd.com>
- <20241030161550.GFZyJbthMO_2Wxe3bV@fat_crate.local>
- <20241030163147.GA1379143@yaz-khff2.amd.com>
- <20241030165002.GFZyJjuifxBLUDKyL6@fat_crate.local>
+	b=GrTJF2RGKuIXFDebsRtqeyL7zNcUh8IKtqpdL+hpaSxhZoQOXJF53fosdiIFI9YmB
+	 Mnuc7JRBtF8uQR/aMBAb32ukMXWR/bpqok0mPjjMu7zOOC0FjXt8qLE0tVevg8AbnY
+	 zRnhM+3PFkjSCZJwGoBbdcsfQLxIiSEf+ylQ1vCx2DRjRLDNlCgIiZtyoWJ1uUpFuF
+	 7QackYg/Iz77Pa41wRDlaQcty0urU+V8aG0PoGcmMrx83l4M88zjlayf0A3kU+UcPw
+	 Quqt+AJLwopq6XH4urDYoK+6Za2oKYLTrXisSJ4PiXFETFT68aFac9MCHrZ23V4hZ+
+	 vGCaEs1uLyWqw==
+Date: Wed, 30 Oct 2024 11:25:07 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v3 11/19] unwind: Add deferred user space unwinding API
+Message-ID: <20241030182507.wpjdsvnitn7k2q2p@treble.attlocal.net>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+ <a94eb70a80c4a13dedb2655b7848304a992cb1b0.1730150953.git.jpoimboe@kernel.org>
+ <20241029135617.GB14555@noisy.programming.kicks-ass.net>
+ <20241029171752.4y67p3ob24riogpi@treble.attlocal.net>
+ <bcd11a07-45fb-442b-a25b-5cadc6aac0e6@efficios.com>
+ <20241029183440.fbwoistveyxneezt@treble.attlocal.net>
+ <74afc8d4-621a-4876-a8cf-6165a913e4b3@efficios.com>
+ <20241030174752.gwzk6q6n2f3sg52a@treble.attlocal.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,103 +64,102 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20241030165002.GFZyJjuifxBLUDKyL6@fat_crate.local>
+In-Reply-To: <20241030174752.gwzk6q6n2f3sg52a@treble.attlocal.net>
 
-On Wed, Oct 30, 2024 at 05:50:02PM +0100, Borislav Petkov wrote:
-> Bah, crap. Lemme go back and take a second stab at this.
+On Wed, Oct 30, 2024 at 10:47:55AM -0700, Josh Poimboeuf wrote:
+> On Wed, Oct 30, 2024 at 09:44:14AM -0400, Mathieu Desnoyers wrote:
+> > What you want here is to move the point where you clear the task
+> > cookie to _after_ completion of stack unwind. There are a few ways
+> > this can be done:
+> > 
+> > A) Clear the task cookie in the task_work() right after the
+> >    unwind_user_deferred() is completed. Downside: if some long task work
+> >    happen to be done after the stack walk, a new unwind_user_deferred()
+> >    could be issued again and we may end up looping forever taking stack
+> >    unwind and never actually making forward progress.
+> > 
+> > B) Clear the task cookie after the exit_to_user_mode_loop is done,
+> >    before returning to user-space, while interrupts are disabled.
+> 
+> Problem is, if another tracer calls unwind_user_deferred() for the first
+> time, after the task work but before the task cookie gets cleared, it
+> will see the cookie is non-zero and will fail to schedule another task
+> work.  So its callback never gets called.
 
-Second try.
+How about we:
 
-The reason why I don't want to expose MCA_CONFIG to userspace is, well,
-userspace doesn't need to know any "management" information the hw gives. It
-either gets FRU text in that tracepoint or it doesn't. But it doesn't need to
-know what MCA_CONFIG said or didn't say.
+  - clear task cookie on entry or exit from user space
 
-Ok?
+  - use a different variable (rather than clearing of task cookie) to
+    communicate whether task work is pending
 
-Author: Yazen Ghannam <yazen.ghannam@amd.com>
-Date:   Tue Oct 22 19:36:31 2024 +0000
+  - keep track of which callbacks have been called for this cookie
 
-    EDAC/mce_amd: Add support for FRU text in MCA
-    
-    A new "FRU Text in MCA" feature is defined where the Field Replaceable
-    Unit (FRU) Text for a device is represented by a string in the new
-    MCA_SYND1 and MCA_SYND2 registers. This feature is supported per MCA
-    bank, and it is advertised by the McaFruTextInMca bit (MCA_CONFIG[9]).
-    
-    The FRU Text is populated dynamically for each individual error state
-    (MCA_STATUS, MCA_ADDR, et al.). Handle the case where an MCA bank covers
-    multiple devices, for example, a Unified Memory Controller (UMC) bank
-    that manages two DIMMs.
-    
-      [ Yazen: Add Avadhut as co-developer for wrapper changes. ]
-      [ bp: Do not expose MCA_CONFIG to userspace yet. ]
-    
-    Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-    Co-developed-by: Avadhut Naik <avadhut.naik@amd.com>
-    Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-    Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-    Link: https://lore.kernel.org/r/20241022194158.110073-6-avadhut.naik@amd.com
+something like so?
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index 4d936ee20e24..4543cf2eb5e8 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -61,6 +61,7 @@
-  *  - TCC bit is present in MCx_STATUS.
-  */
- #define MCI_CONFIG_MCAX		0x1
-+#define MCI_CONFIG_FRUTEXT	BIT_ULL(9)
- #define MCI_IPID_MCATYPE	0xFFFF0000
- #define MCI_IPID_HWID		0xFFF
- 
-diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
-index 194d9fd47d20..50d74d3bf0f5 100644
---- a/drivers/edac/mce_amd.c
-+++ b/drivers/edac/mce_amd.c
-@@ -795,6 +795,7 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 	struct mce *m = (struct mce *)data;
- 	struct mce_hw_err *err = to_mce_hw_err(m);
- 	unsigned int fam = x86_family(m->cpuid);
-+	u32 mca_config_lo = 0, dummy;
- 	int ecc;
- 
- 	if (m->kflags & MCE_HANDLED_CEC)
-@@ -814,11 +815,9 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 		((m->status & MCI_STATUS_PCC)	? "PCC"	  : "-"));
- 
- 	if (boot_cpu_has(X86_FEATURE_SMCA)) {
--		u32 low, high;
--		u32 addr = MSR_AMD64_SMCA_MCx_CONFIG(m->bank);
-+		rdmsr_safe(MSR_AMD64_SMCA_MCx_CONFIG(m->bank), &mca_config_lo, &dummy);
- 
--		if (!rdmsr_safe(addr, &low, &high) &&
--		    (low & MCI_CONFIG_MCAX))
-+		if (mca_config_lo & MCI_CONFIG_MCAX)
- 			pr_cont("|%s", ((m->status & MCI_STATUS_TCC) ? "TCC" : "-"));
- 
- 		pr_cont("|%s", ((m->status & MCI_STATUS_SYNDV) ? "SyndV" : "-"));
-@@ -853,8 +852,15 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
- 
- 		if (m->status & MCI_STATUS_SYNDV) {
- 			pr_cont(", Syndrome: 0x%016llx\n", m->synd);
--			pr_emerg(HW_ERR "Syndrome1: 0x%016llx, Syndrome2: 0x%016llx",
--				 err->vendor.amd.synd1, err->vendor.amd.synd2);
-+			if (mca_config_lo & MCI_CONFIG_FRUTEXT) {
-+				char frutext[17];
-+
-+				frutext[16] = '\0';
-+				memcpy(&frutext[0], &err->vendor.amd.synd1, 8);
-+				memcpy(&frutext[8], &err->vendor.amd.synd2, 8);
-+
-+				pr_emerg(HW_ERR "FRU Text: %s", frutext);
-+			}
- 		}
- 
- 		pr_cont("\n");
+int unwind_user_deferred(struct unwind_callback *callback, u64 *ctx_cookie, void *data)
+{
+	struct unwind_task_info *info = &current->unwind_task_info;
+	unsigned int work_pending = work_pending;
+	u64 cookie = info->ctx_cookie;
+	int idx = callback->idx;
+
+	if (WARN_ON_ONCE(in_nmi()))
+		return -EINVAL;
+
+	if (!current->mm)
+		return -EINVAL;
+
+	guard(irqsave)();
+
+	if (cookie && (info->pending_callbacks & (1 << idx))) {
+		/* callback already scheduled */
+		goto done;
+	}
+
+	/*
+	 * If this is the first call from any caller since the most recent
+	 * entry from user space, initialize the task context cookie.
+	 */
+	if (!cookie) {
+		u64 cpu = raw_smp_processor_id();
+		u64 ctx_ctr;
+
+		__this_cpu_inc(unwind_ctx_ctr);
+		ctx_ctr = __this_cpu_read(unwind_ctx_ctr);
+
+		cookie = ctx_to_cookie(cpu, ctx_ctr);
+		info->ctx_cookie = cookie;
+
+	} else {
+		if (cookie == info->last_cookies[idx]) {
+			/*
+			 * The callback has already been called with this unwind,
+			 * nothing to do.
+			 */
+			goto done;
+		}
+
+		if (info->pending_callbacks & (1 << idx)) {
+			/* callback already scheduled */
+			goto done;
+		}
+	}
+
+	info->pending_callbacks |= (1 << idx);
+	info->privs[idx] = data;
+	info->last_cookies[idx] = cookie;
+
+	if (!info->task_pending) {
+		info->task_pending = 1; /* cleared by unwind_user_task_work() */
+		task_work_add(current, &info->work, TWA_RESUME);
+	}
+
+done:
+	if (ctx_cookie)
+		*ctx_cookie = cookie;
+	return 0;
+}
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Josh
