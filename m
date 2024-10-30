@@ -1,54 +1,60 @@
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0390A19CC24;
-	Wed, 30 Oct 2024 20:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF7F217461;
+	Wed, 30 Oct 2024 21:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730321969; cv=none; b=X1HpMPFBOoB7VRpybW7fTGyIrHt08xkMp69OHdLOk2aXzeLD0o0UIrBGk7MoXa9KTLo/deQcw7Htta8zpQSOV6GqQ/KbW1pKwmKnEdysddhBsAesOZlz+MUsWRwzr1WzT6T7FbDezmpiljNi0Zqw8Meg57zEfjkltb5VUfoPUUk=
+	t=1730322935; cv=none; b=f/TZ3NE5r1SsuwtnaKnHaYxizRbxenLBYRsyWJS8U0XWOOFJzBQlsYkkBLkjWcVX1e/OML2TYhC1Ygp4gGvj5BfgMIBrdwJl4lPmeW8Pf56BML999pjvBjqySnwsa/dP5xOQBOp5olUKcvYdxRi+RaaElqCKnXWKIS67Wf+Z1Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730321969; c=relaxed/simple;
-	bh=6yZQof9bOtOgXNl/3jzelOOKHTSLQAkwb38Dh8q5LqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RcJfhIxv5CWnxAog2+VmahlCa7RoU9xFi/l+KP6PorAoMtoTZPOVpDfdcYJEGuDIQ3i0DxwAokcxehPP0rE+nRasA9Tvi8eF7Os0nKHc+Ly9fcjDqLCF1uuRJO8E7+q0pirQ/GXklbVtBgLJg/Lnl7AhnceiZRSLO02Y+u9s/aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id DF98067C; Wed, 30 Oct 2024 15:59:17 -0500 (CDT)
-Date: Wed, 30 Oct 2024 15:59:17 -0500
-From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Jordan Rome <linux@jordanrome.com>
-Cc: linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>, Serge Hallyn <serge@hallyn.com>,
-	Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: [v4] security: add trace event for cap_capable
-Message-ID: <20241030205917.GA160675@mail.hallyn.com>
-References: <20241030013314.2188163-1-linux@jordanrome.com>
+	s=arc-20240116; t=1730322935; c=relaxed/simple;
+	bh=83l95pjNKcaj8A+oDbBqZmvmNHpTJzt8dW28agHKm8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O54w7EcwZ8kxqZJoHHUw8aKP3XCQHvN2XkeYhxwM3JJAIbBgH3OGm9+d+a801dxF+5qqRp/aEWZI00bIa4QtLJgRRz5MgwbrQ+39AgUesZ5saHgv0UTK1KfGIMqnMJWSVY01ejAGN/SP2iubZufT5oxnnK36U4Yj+3jks5f/mYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6283C4CECE;
+	Wed, 30 Oct 2024 21:15:33 +0000 (UTC)
+Date: Wed, 30 Oct 2024 17:15:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Make percpu stack trace buffer invariant to
+ PAGE_SIZE
+Message-ID: <20241030171532.7ed01770@rorschach.local.home>
+In-Reply-To: <42f825a2-ceb6-488a-8c63-fcc879cce096@arm.com>
+References: <20241021141832.3668264-1-ryan.roberts@arm.com>
+	<42f825a2-ceb6-488a-8c63-fcc879cce096@arm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241030013314.2188163-1-linux@jordanrome.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Oct 29, 2024 at 06:33:14PM -0700, Jordan Rome wrote:
-> In cases where we want a stable way to observe/trace
-> cap_capable (e.g. protection from inlining and API updates)
-> add a tracepoint that passes:
-> - The credentials used
-> - The user namespace of the resource being accessed
-> - The user namespace in which the credential provides the
-> capability to access the targeted resource
-> - The capability to check for
-> - Bitmask of options defined in include/linux/security.h
-> - The return value of the check
+On Wed, 30 Oct 2024 08:50:16 +0000
+Ryan Roberts <ryan.roberts@arm.com> wrote:
+
+> On 21/10/2024 15:18, Ryan Roberts wrote:
+> > Previously the size of "struct ftrace_stacks" depended upon PAGE_SIZE.
+> > For the common 4K page size, on a 64-bit system, sizeof(struct
+> > ftrace_stacks) was 32K. But for a 64K page size, sizeof(struct
+> > ftrace_stacks) was 512K.
+> > 
+> > But ftrace stack usage requirements should be invariant to page size. So
+> > let's redefine FTRACE_KSTACK_ENTRIES so that "struct ftrace_stacks" is
+> > always sized at 32K for 64-bit and 16K for 32-bit.
+> > 
+> > As a side effect, it removes the PAGE_SIZE compile-time constant
+> > assumption from this code, which is required to reach the goal of
+> > boot-time page size selection.  
 > 
-> Signed-off-by: Jordan Rome <linux@jordanrome.com>
+> Just a polite bump on this... Does anyone have any comments?
 
-Thanks, applied to https://git.kernel.org/pub/scm/linux/kernel/git/sergeh/linux.git/log/?h=v6.12-rc1%2bcaps
+No, it's in my queue. I've just been traveling.
+
+-- Steve
