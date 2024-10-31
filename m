@@ -1,96 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E782B1C1ACB;
-	Thu, 31 Oct 2024 19:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0301CCB5E;
+	Thu, 31 Oct 2024 21:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730404352; cv=none; b=ucqC1u9QKlfNsF6EHt7UmdGI95m2D7BYFM+YlPR3wR/hFqxLd2btW7+ulG21kheQEKQoxoln2YWOq+KS2HXOqSaM5doB8tdJ4um6CB+bOzOoG5hpue/qnF8v8sMVxEtEDykkLPinobz+/BieTeuT1dPb1kcOXz1COWbJSPQubJY=
+	t=1730408990; cv=none; b=DFasd46F95FmL2k/TiCDQRX/JR7SyaHi16RgRUWKOI3ftuwK9Rddy32i++/MUEKwdz2QZ5nimHCDCzjRxjRWcA0/52nEAhJCh/skXuyp3qhkY2GjC6hGmwR0jsRk9CXZr9YEfkYLz7/r3MS1Rt/nYQ60iCoW2wLpmmvPfBK38EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730404352; c=relaxed/simple;
-	bh=cG9Og3G+txKUTnhb5mRAu1HCEYEecJi4IJLdo7xz4Qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cF9i7nDzSzH9HJH/FBx0pw8nLPpZPnmWAaMPWXKXPlFgKN1Udz6mCETlWPgoJh5RpIbM5qQlrazUKSbQ/50zf1zXHRw2pGAQP32/BlS8emvD4oV+tw6MqrRteczl/j6wbZyBcorLjQuDupzKLY9D+LZG2vT/CJu2i25MnSHR8q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1C2C4CEC3;
-	Thu, 31 Oct 2024 19:52:27 +0000 (UTC)
-Date: Thu, 31 Oct 2024 15:53:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
- <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v18 01/17] fgraph: Pass ftrace_regs to entryfunc
-Message-ID: <20241031155324.108ed8ef@gandalf.local.home>
-In-Reply-To: <172991733069.443985.15154246733356205391.stgit@devnote2>
-References: <172991731968.443985.4558065903004844780.stgit@devnote2>
-	<172991733069.443985.15154246733356205391.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730408990; c=relaxed/simple;
+	bh=xJTzBD6BpyYMRten0/IhV3TKzrQ+ciwoPgRAuiCLgWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BYXLUXqh2Rc2QBNyikmyNDxtuem5swGImND2md7E8XaWxID9w5I22h52rdten6HrzIy058yXJgY2ZCM79kyxIMAg8xO0vbuLmizs2Ca3t8elEfI5H+nsUnr7GW0DQgsSHJuxxIV0CN6D4bDgEobAUNQz52mrt7RFKAHBdipi8X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMmSnzG4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMmSnzG4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81545C4CEC3;
+	Thu, 31 Oct 2024 21:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730408989;
+	bh=xJTzBD6BpyYMRten0/IhV3TKzrQ+ciwoPgRAuiCLgWQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DMmSnzG4loA5DacydVvt+7G3FA4+p8BSEYnMRcKB+WLGHWGE9BEXHso4bTYx7U+0k
+	 xBBAWNfE/MljIp60YTwR6joAoniDiI2Oksa1jDa0iv0/tiWhOuUcGAcDCxMNbIiddj
+	 hK05uvLv7B1lbsNRebel2cP3B65bED2smZRy9DSnFk1W5bOf4ZCv9HwyQu31uumgy3
+	 8TSVAvbScK+Dvfw//5tZuIi7yO2i6bJXWxD9F6Op0VdM5ZW1GV/wKd0dmETzyFNaxm
+	 6SSu5OU/Ta5etKDSNIyiqUDDOIcNE5jE9FXB/ly1sPWprpvAZ5c4bAag+XPu6scKWj
+	 zw9cQqjlooXzQ==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	rostedt@goodmis.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	martin.lau@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	mhiramat@kernel.org,
+	peterz@infradead.org,
+	paulmck@kernel.org,
+	jrife@google.com,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH trace/for-next 1/3] bpf: put bpf_link's program when link is safe to be deallocated
+Date: Thu, 31 Oct 2024 14:09:36 -0700
+Message-ID: <20241031210938.1696639-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Sat, 26 Oct 2024 13:35:30 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+In general, BPF link's underlying BPF program should be considered to be
+reachable through attach hook -> link -> prog chain, and, pessimistically,
+we have to assume that as long as link's memory is not safe to free,
+attach hook's code might hold a pointer to BPF program and use it.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
-> available, it passes a NULL instead. User callback function can access
-> some registers (including return address) via this ftrace_regs.
-> 
-> Note that the ftrace_regs can be NULL when the arch does NOT define:
-> HAVE_DYNAMIC_FTRACE_WITH_ARGS or HAVE_DYNAMIC_FTRACE_WITH_REGS.
-> More specifically, if HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but
-> not the HAVE_DYNAMIC_FTRACE_WITH_ARGS, and the ftrace ops used to
-> register the function callback does not set FTRACE_OPS_FL_SAVE_REGS.
-> In this case, ftrace_regs can be NULL in user callback.
+As such, it's not (generally) correct to put link's program early before
+waiting for RCU GPs to go through. More eager bpf_prog_put() that we
+currently do is mostly correct due to BPF program's release code doing
+similar RCU GP waiting, but as will be shown in the following patches,
+BPF program can be non-sleepable (and, thus, reliant on only "classic"
+RCU GP), while BPF link's attach hook can have sleepable semantics and
+needs to be protected by RCU Tasks Trace, and for such cases BPF link
+has to go through RCU Tasks Trace + "classic" RCU GPs before being
+deallocated. And so, if we put BPF program early, we might free BPF
+program before we free BPF link, leading to use-after-free situation.
 
-If HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but not
-HAVE_DYNAMIC_FTRACE_WITH_ARGS is not, then the callback will have regs defined.
+So, this patch defers bpf_prog_put() until we are ready to perform
+bpf_link's deallocation. At worst, this delays BPF program freeing by
+one extra RCU GP, but that seems completely acceptable. Alternatively,
+we'd need more elaborate ways to determine BPF hook, BPF link, and BPF
+program lifetimes, and how they relate to each other, which seems like
+an unnecessary complication.
 
-> @@ -977,7 +980,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
->  
->  static struct ftrace_ops graph_ops = {
->  	.func			= ftrace_graph_func,
-> -	.flags			= FTRACE_OPS_GRAPH_STUB,
-> +	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+Note, for most BPF links we still will perform eager bpf_prog_put() and
+link dealloc, so for those BPF links there are no observable changes
+whatsoever. Only BPF links that use deferred dealloc might notice
+slightly delayed freeing of BPF programs.
 
-Enabling FTRACE_OPS_FL_SAVE_ARGS will pass full regs in that case. Are you
-just saying in the change log that this is what you did? As it currently
-reads, it sounds like a fgraph user needs to add FTRACE_OPS_FL_SAVE_REGS??
+Also, to reduce code and logic duplication, extract program put + link
+dealloc logic into bpf_link_dealloc() helper.
 
--- Steve
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ kernel/bpf/syscall.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index a8f1808a1ca5..aa7246a399f3 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2976,12 +2976,24 @@ void bpf_link_inc(struct bpf_link *link)
+ 	atomic64_inc(&link->refcnt);
+ }
+ 
++static void bpf_link_dealloc(struct bpf_link *link)
++{
++	/* now that we know that bpf_link itself can't be reached, put underlying BPF program */
++	if (link->prog)
++		bpf_prog_put(link->prog);
++
++	/* free bpf_link and its containing memory */
++	if (link->ops->dealloc_deferred)
++		link->ops->dealloc_deferred(link);
++	else
++		link->ops->dealloc(link);
++}
++
+ static void bpf_link_defer_dealloc_rcu_gp(struct rcu_head *rcu)
+ {
+ 	struct bpf_link *link = container_of(rcu, struct bpf_link, rcu);
+ 
+-	/* free bpf_link and its containing memory */
+-	link->ops->dealloc_deferred(link);
++	bpf_link_dealloc(link);
+ }
+ 
+ static void bpf_link_defer_dealloc_mult_rcu_gp(struct rcu_head *rcu)
+@@ -3003,7 +3015,6 @@ static void bpf_link_free(struct bpf_link *link)
+ 		sleepable = link->prog->sleepable;
+ 		/* detach BPF program, clean up used resources */
+ 		ops->release(link);
+-		bpf_prog_put(link->prog);
+ 	}
+ 	if (ops->dealloc_deferred) {
+ 		/* schedule BPF link deallocation; if underlying BPF program
+@@ -3014,8 +3025,9 @@ static void bpf_link_free(struct bpf_link *link)
+ 			call_rcu_tasks_trace(&link->rcu, bpf_link_defer_dealloc_mult_rcu_gp);
+ 		else
+ 			call_rcu(&link->rcu, bpf_link_defer_dealloc_rcu_gp);
+-	} else if (ops->dealloc)
+-		ops->dealloc(link);
++	} else if (ops->dealloc) {
++		bpf_link_dealloc(link);
++	}
+ }
+ 
+ static void bpf_link_put_deferred(struct work_struct *work)
+-- 
+2.43.5
 
->  #ifdef FTRACE_GRAPH_TRAMP_ADDR
->  	.trampoline		= FTRACE_GRAPH_TRAMP_ADDR,
->  	/* trampoline_size is only needed for dynamically allocated tramps */
-> @@ -987,7 +990,8 @@ static struct ftrace_ops graph_ops = {
->  void fgraph_init_ops(struct ftrace_ops *dst_ops,
->  		     struct ftrace_ops *src_ops)
->  {
-> -	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB;
-> +	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB |
-> +			 FTRACE_OPS_FL_SAVE_ARGS;
->  
->  #ifdef CONFIG_DYNAMIC_FTRACE
->  	if (src_ops) {
