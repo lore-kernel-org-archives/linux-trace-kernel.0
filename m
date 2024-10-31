@@ -1,56 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB3C4C80;
-	Thu, 31 Oct 2024 01:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4548713B280;
+	Thu, 31 Oct 2024 01:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730337542; cv=none; b=iT3QYgsAXdZXTen++41X50ID5RyavWYmhyzZXPKoiYWovLetck4fzAmKFhWHKX7Dm6BUJOwLWixy6QxyUYMxhW8CI49qzbRSNzIqwjHAz/ZupIVMKBY97Fzrd3VLtrYSFq6wmbNqCG2OoVElUopNly6UWTEnYuApKuZkxWZAF6E=
+	t=1730337606; cv=none; b=iRDUg5F6IwIp9pe+qz4bKgX29rJDze6y0OXnNZTMrLNbEVPz6JGd/A7yRCpyK0cbEVYox5I39dYCE1dpiSZ5Wg6VG7iZnJUvlxx3wJqB4zgQj7aR3PnPkb+S2xBCzzVhTMhqW8jTmc2eo5ZvCaKX0llZYxeoL3imIBOt+DYIJAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730337542; c=relaxed/simple;
-	bh=k6H+CiBEJWddN02hdN0mo06Ec/Er8fguVn5cPFWrTyE=;
+	s=arc-20240116; t=1730337606; c=relaxed/simple;
+	bh=n7MVTWqgW2sq1pNmrEu9M8ySxqOFlO6+vLFgYzO8lYQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fr5mLTcXvMgxTaDl4VuhtRW0t7ifCmyZdRY3S3LTBqIkdjoP8w2Ew5525eF9rJu8/J6nan8FeIde6cyLEM/IO8RZzFKAO0KL+jBqcjPILN2gz/fO2IiaFR3yEavXO6+aWxecCCDDdqOqPVE46V3c1W26sCuRct6wCWsLyvv9FpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDg4PJzd; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=G+YQ6eI2xIWLg7BXWyxSoUjxrVZgL2zKFn5LWQQOoOAZn5PYIVR9vJb2IuvZaeMBp0Eao6HdaY6aaqenx0VcOb3FpBeTggUCKYgloOWMMp4iAbuHlBs9Vp2SfWdxCO+B0aRZ9VExy/PnrhNfcNyzOV6kyVgiOmxTjckAe2t1MYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9Rvt7D0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDg4PJzd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E3FEC4CECE;
-	Thu, 31 Oct 2024 01:18:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9Rvt7D0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209E8C4CEF6;
+	Thu, 31 Oct 2024 01:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730337541;
-	bh=k6H+CiBEJWddN02hdN0mo06Ec/Er8fguVn5cPFWrTyE=;
+	s=k20201202; t=1730337605;
+	bh=n7MVTWqgW2sq1pNmrEu9M8ySxqOFlO6+vLFgYzO8lYQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mDg4PJzdtOtjUR3WsftvwH4KB5eO0CKN6FDp6lq4Tj+Z0uwKUIlQ+WW3yy2drijwS
-	 zTcebee4TmLSLhvTDeh1g0+O/xGWUtWMnI30LnwTuhbF6I+h3iA30h5ac2IjMPHNmp
-	 425sD+fPKmTI04Kw2TKo9oolPguB6Wq2dzxNtupzXOxmZEOSyPc7qYIDYqaC0y0IwA
-	 xX9EV8ShzI47iEOzNVw5nxt79FLrsCxxd8TVgbpaHnP7bkEgelxWNOQfdwM9oFz9JH
-	 jI73jIUbbrMK9LpQhvrsAPKlPeROh7aBP8fdm9uwghY0q7MD/QWKGuQ6Ui0vMkaMD0
-	 Dv1cC48tFrABQ==
-Date: Thu, 31 Oct 2024 10:18:53 +0900
+	b=Y9Rvt7D0BGIZbUFnBH1Hi0pPO212QDc3dichA8Myyphu4i3m/6HWTLfvYxGG2ankf
+	 XWZE2R9sTCx54+7Uq/xqybOtL6kWlXpk4bf8HJhXvCG4h58jBqwDd+D4G1KHZD4ke1
+	 Y81xNSAKL+uEVUYw+zziQBRUL5UnMZvjImxmrVj4RqQjFwx8aeYHTbNKXDTDoYupRT
+	 MjDZvdoASNaGslKqh7GVxJc44hBxjik+PForP/Pfiy6zRPKL0w1CT7LWYF20XcsEi7
+	 7VnosdvI32kfRGZ+so2SfDjj6bWAn4NVGd6o7IDLoKFq8ILhOt/L7I8/t0v9RiCfLc
+	 ule/WzKhi5ORw==
+Date: Thu, 31 Oct 2024 10:20:01 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
- <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arch@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao
- <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v18 01/17] fgraph: Pass ftrace_regs to entryfunc
-Message-Id: <20241031101853.898b866a21732350b5f02614@kernel.org>
-In-Reply-To: <20241028152512.GB2484@willie-the-truck>
+To: Sven Schnelle <svens@linux.ibm.com>
+Cc: "Steven Rostedt" <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>
+Subject: Re: [PATCH 0/1] s390: enable HAVE_FTRACE_GRAPH_FUNC
+Message-Id: <20241031102001.a5fe04365acdecbf84f54dd6@kernel.org>
+In-Reply-To: <20241028082738.3293096-1-svens@linux.ibm.com>
 References: <172991731968.443985.4558065903004844780.stgit@devnote2>
-	<172991733069.443985.15154246733356205391.stgit@devnote2>
-	<20241028152512.GB2484@willie-the-truck>
+	<20241028082738.3293096-1-svens@linux.ibm.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -61,71 +47,35 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 28 Oct 2024 15:25:13 +0000
-Will Deacon <will@kernel.org> wrote:
+On Mon, 28 Oct 2024 09:27:37 +0100
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> On Sat, Oct 26, 2024 at 01:35:30PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
-> > available, it passes a NULL instead. User callback function can access
-> > some registers (including return address) via this ftrace_regs.
-> > 
-> > Note that the ftrace_regs can be NULL when the arch does NOT define:
-> > HAVE_DYNAMIC_FTRACE_WITH_ARGS or HAVE_DYNAMIC_FTRACE_WITH_REGS.
-> > More specifically, if HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but
-> > not the HAVE_DYNAMIC_FTRACE_WITH_ARGS, and the ftrace ops used to
-> > register the function callback does not set FTRACE_OPS_FL_SAVE_REGS.
-> > In this case, ftrace_regs can be NULL in user callback.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Huacai Chen <chenhuacai@kernel.org>
-> > Cc: WANG Xuerui <kernel@xen0n.name>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Nicholas Piggin <npiggin@gmail.com>
-> > Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > Cc: Naveen N Rao <naveen@kernel.org>
-> > Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> > Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> > Cc: Albert Ou <aou@eecs.berkeley.edu>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: x86@kernel.org
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > 
-> > ---
-> >  Changes in v18:
-> >   - Remove unclear comment about `regs->fp` access on arm64.
-> >  Changes in v16:
-> >   - Add a note when the ftrace_regs can be NULL.
-> >   - Update against for the latest kernel.
-> >  Changes in v11:
-> >   - Update for the latest for-next branch.
-> >  Changes in v8:
-> >   - Just pass ftrace_regs to the handler instead of adding a new
-> >     entryregfunc.
-> >   - Update riscv ftrace_graph_func().
-> >  Changes in v3:
-> >   - Update for new multiple fgraph.
-> > ---
-> >  arch/arm64/kernel/ftrace.c               |   15 ++++++++-
+> Hi Masami,
 > 
-> For the arm64 bits:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
+> this enables HAVE_FTRACE_GRAPH_FUNC for s390. It is based on your
+> ftrace/fprope-on-fgraph patchset. I talked to Heiko, and we agreed that it
+> would be best if you include this patch in your "fprobe: function_graph:
+> Multi-function graph and fprobe on fgraph" patchset.
 
-Thank you for ack for arm64!
+Great! Thanks!
 
-> Will
+> 
+> Thanks,
+> Sven
+> 
+> Sven Schnelle (1):
+>   s390/tracing: Enable HAVE_FTRACE_GRAPH_FUNC
+> 
+>  arch/s390/Kconfig              |  1 +
+>  arch/s390/include/asm/ftrace.h |  5 ++++
+>  arch/s390/kernel/entry.h       |  1 -
+>  arch/s390/kernel/ftrace.c      | 48 ++++++++++------------------------
+>  arch/s390/kernel/mcount.S      | 11 --------
+>  5 files changed, 20 insertions(+), 46 deletions(-)
+> 
+> -- 
+> 2.45.2
+> 
 
 
 -- 
