@@ -1,91 +1,104 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A47A1A255A;
-	Thu, 31 Oct 2024 15:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC22119DFAB;
+	Thu, 31 Oct 2024 15:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730387635; cv=none; b=VHGXcfqTu02tSQmzgs5TzD9cQn51tGG2k+AMH80M2gsW4t46lh4J+ZQlnvWHmsrudwrxzymCpCu7AEkaulsAl/oTeAccmpmbZF34QkyyctyERQDz++7bDC98Ggn4eEKnBXlF6BOUmfh052tiodo6tjr1QXSwGDgWsG3WfUo67xs=
+	t=1730388160; cv=none; b=JSOA3V/SnqGWTTNTD9rWyvvM945AnhvuLN75l+YHdsX8Q0P7sEuPugvaLMjb3qH+l41HqCvFWk1DJlZjARNkJB/ydi+AKNMb6lM1HuOdrNgpmEGp7z5ItadHxiEbGWOBXZz7CZvMAE0DUcO4OHLoUIldXFAwdndN2pIb/GiXgAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730387635; c=relaxed/simple;
-	bh=e0FDu4Y/8lp/oWKK7nJK2wIx82ihYbOXtJFCGfy7B8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R601bRK09iw84jPUPaW+AoTCva8MLA65aeoJ8OuKKCJ+vcmA1x9GPqnF3AYV7spyH2hgf+0yPrsPzERxXti5vgUjwITuIYOR14YVWhC6XAjFx+qllVZLjqUkJy2zia+bYbcYEg9f/AoJncaphDshye+aPq4PFwEQJQtSa2AGCe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=FTAMcCF7; arc=none smtp.client-ip=167.114.26.122
+	s=arc-20240116; t=1730388160; c=relaxed/simple;
+	bh=AxuR2NgKi8pUaicQNUsWIlLcjILib7JICfE/q4l15Gc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bkByuV0KLjxk8RvHkFw7kTuP3EEUiPwy80sD9hdhOdVdV0WsBfj5gymRV2gBREynLK9t/XRsMOHXGZRJUTH10AbrN8d/3WMrVwLslEVkpCFL5zavl/6N3peQvw9vMTwKbWhyoPay0VXHHGaU+OaMVnQV5xH2OMfZKyUOAXWyul8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=abALbbYK; arc=none smtp.client-ip=167.114.26.122
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="FTAMcCF7"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="abALbbYK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1730387622;
-	bh=e0FDu4Y/8lp/oWKK7nJK2wIx82ihYbOXtJFCGfy7B8M=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=FTAMcCF7fZw9Q7lsj8e9USFwapKJyOtSgaSg4m+HSN54jfPYrzzddFRLVqfyQRLxD
-	 vLfIGco5bqELXbSb3ylxin6dZ+2Hak1b5AVcF5XJPrKiGrnOivofYS2MDqq3azYrPQ
-	 xnAE8m1qwGOzvO1EK8WxqzaKL8xRllTlrW56UggO5UnKWVYun+iHwuzLQlDj4Oqp6H
-	 VwqQBlKGAraGXWEzNaktyy7ertNxOeQGSh9d7thVnUoP2bVCaCNRj2XwR5PjQirdiS
-	 HezT1V9iJzEdVNpQSyZ0v5Vx0ebblXEVeVCnCBBf8CKb+cNL1b/tfl8/RuPss8p+NK
-	 IHw0xBCY10/kw==
-Received: from [172.16.0.134] (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XfSF25RZyzZ3T;
-	Thu, 31 Oct 2024 11:13:42 -0400 (EDT)
-Message-ID: <af478335-d0ad-40d8-a827-eeb06c1f4e70@efficios.com>
-Date: Thu, 31 Oct 2024 11:12:06 -0400
+	s=smtpout1; t=1730388156;
+	bh=AxuR2NgKi8pUaicQNUsWIlLcjILib7JICfE/q4l15Gc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=abALbbYK4IH0yfjyd0mtS7aZZK0TGOKWM3ZZPXAkd1Kyyw4kwOp85saOcLR4tS9XL
+	 F9lRYlCgq84vMqRg6WGV1UtCpw2IELGcsIt4k2j4Opgq5UqOYsROhh9g/7o9+t8pH6
+	 htkbiBY1Ft1XmAholzMy/8tRdSgo0Fw+NnkYyVMaw1Ba5x3tc7l4Tp1/QHDQa0IHGs
+	 ORgTLal4FHbnoNVPZATl7iAJHmpRGTUjSaJ6RsopYMRICslEbHPskp9kfxNiSrnG2U
+	 qTORLhc0tfG7ARnovBvoRAvqmF6YdwRC6UygZINRbGroCQNS2FLRRQHw9vuAPSuMY4
+	 JkyLIKG3terHw==
+Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XfSRJ2CcDzYsf;
+	Thu, 31 Oct 2024 11:22:36 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Michael Jeanson <mjeanson@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jordan Rife <jrife@google.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v5 resend 0/4] Faultable syscall tracepoints updates
+Date: Thu, 31 Oct 2024 11:20:52 -0400
+Message-Id: <20241031152056.744137-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracing: Replace strncpy() with strscpy() when copying
- comm
-To: Jinjie Ruan <ruanjinjie@huawei.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20241031120139.1343025-1-ruanjinjie@huawei.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20241031120139.1343025-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024-10-31 08:01, Jinjie Ruan wrote:
-> Replace the depreciated[1] strncpy() calls with strscpy()
-> when copying comm.
-> 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> ---
-> v2:
-> - Fix the trace_events_hist.c build problem.
-> ---
->   kernel/trace/trace.c              | 2 +-
->   kernel/trace/trace_events_hist.c  | 4 ++--
->   kernel/trace/trace_sched_switch.c | 2 +-
->   3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index a8f52b6527ca..cb2c66554212 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -1934,7 +1934,7 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
->   	max_data->critical_start = data->critical_start;
->   	max_data->critical_end = data->critical_end;
->   
-> -	strncpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
-> +	strscpy(max_data->comm, tsk->comm);
+This series addresses use-after-free of faultable syscall tracepoints
+reported by test bots using Syzkaller.
 
-make allyesconfig + make please ?
+This applies on linux-next 20241022.
 
 Thanks,
 
 Mathieu
 
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Michael Jeanson <mjeanson@efficios.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: bpf@vger.kernel.org
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: Jordan Rife <jrife@google.com>
+Cc: linux-trace-kernel@vger.kernel.org
 
+Mathieu Desnoyers (4):
+  tracing: Introduce tracepoint extended structure
+  tracing: Introduce tracepoint_is_faultable()
+  tracing: Fix syscall tracepoint use-after-free
+  tracing: Add might_fault() check in __DECLARE_TRACE_SYSCALL
+
+ include/linux/tracepoint-defs.h | 10 ++++++--
+ include/linux/tracepoint.h      | 44 ++++++++++++++++++++++++++++-----
+ include/trace/define_trace.h    |  2 +-
+ kernel/tracepoint.c             | 20 ++++++++-------
+ 4 files changed, 58 insertions(+), 18 deletions(-)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+2.39.5
