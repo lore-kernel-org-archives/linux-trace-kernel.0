@@ -1,90 +1,96 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2079D1A3BAD
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Oct 2024 16:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E782B1C1ACB;
+	Thu, 31 Oct 2024 19:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730393376; cv=none; b=jBuXVeP2vr94g3geuDTjoes3wf/NlokT1GY30OG5vPPekt7XVad9sHyyCjdoUecSo26v9uszIooZ7/TYn9+S8kNkSsiAiUMbJxMHATkpWc8HlMBAuH/Z06lr64Emr+Cxu6+G2XYjX5JKTPWW8THtS9Qs3Cys1JjePT7yiAnO5AY=
+	t=1730404352; cv=none; b=ucqC1u9QKlfNsF6EHt7UmdGI95m2D7BYFM+YlPR3wR/hFqxLd2btW7+ulG21kheQEKQoxoln2YWOq+KS2HXOqSaM5doB8tdJ4um6CB+bOzOoG5hpue/qnF8v8sMVxEtEDykkLPinobz+/BieTeuT1dPb1kcOXz1COWbJSPQubJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730393376; c=relaxed/simple;
-	bh=OSxiy8GRUoekUaEMakOMkmdOVD+6rbE34rWZ/k4TEXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ujrwBAfBgQ7hkf9a0Bf2PFh0CxNN4LkRhKK9t30Z5s7rjn7QKAvp3X5nGD/aUOxPIjozQGOPEGPjPt2fMYivXhJXAs6MNX1X8hDkEEF+9i5XRa3zU4X4ivoN/Hk/sC9GmSQ+SzYu17W/zjBDXpdvSACRwmunRtJHKUX8Ofsnh20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QCHPpQIy; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QCHPpQIy"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-28862804c9dso567034fac.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Oct 2024 09:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730393372; x=1730998172; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jbNCcry4Jdp8tstQ1PAiP/N0eIT0cFTfzUZLaR5kyBs=;
-        b=QCHPpQIyC8tEAKpSXXHWe0wsjPeuDgcQapL2xIwMgMghdSiViE7RNa7/KWplzJLJa4
-         T+eAud0sxVUDXOcrkoM+L2XDbUj8hvX8yfQ+GSShvGYwZvw1kWLUG15m8jsHh2k4BvTc
-         p46vPnVZtMe0hO3s4SP8RFsQ8nRPsqFBwsytsuTfpVXmgESKLI8IsJOGml7N1SeQc3JX
-         nJA6NLnmNMXugz+MY8U+Dcwg3N5EjZTaLqfP+wsrXZ60RZrY+QgJEJrQaRNJohcnGSQi
-         9c5rPYXnZaNYnWea5E7AkNkA55lXIjYTJPgYRaEpKH/nwWmaC1a6rkHaq7FwI+QnNCYy
-         5OvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730393372; x=1730998172;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jbNCcry4Jdp8tstQ1PAiP/N0eIT0cFTfzUZLaR5kyBs=;
-        b=g3lL6GfnMOwd9CSt8NCg/+zWBgBmPCu53h1Tkuoe8s+JH5YTliiExAcq1p9DzKkCVt
-         LWCA1d011uVLhrABvjMPlLMT+cc1VO1skKSil2R52E5lskHpWEmN6R/KGtcJTOTD7y1Y
-         228CQ5HQnNA/IuLY9UXYnru0fDKqgvkVFBqCN8ykflG5wlRFImOPdRixjQJx7E2Q9eED
-         6FA62WVr4HuBhqf3wCBKUKVekZUFYSxKRVV3axYbQRA3AecurMCUxlLfjuk7GAwAuHJL
-         qcoraY3iLVMZIpsZIRrsuFlcv/eru7JmWEX7HB262cM5jYHfOl7mzEOhxlGUor2Ox7fo
-         Llrw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2iHjPcCKsljxuVXh6n0Ya8lYwMebYZFawY74LyWWP/xwGvIeckosu6PAPy2XXv0VXMQaub+O7ou5Pq8tzsWcQZXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznBXvJuLhgJE37EpynYfeTQP70qpPp/2IIjaCYUaaXqQnTgLsf
-	ETu7dyK+mgHOyl4x+K6BF5gInrQilxDsb1dmAfe9WXq/WEgnqQmnw0vlb2mzfRo=
-X-Google-Smtp-Source: AGHT+IHbMtP+GNTrAp9Uf6Tmc5WK/ipNQKCVa0uX5AlX1qngcY2aNNmgvqKRDiyduTxjJWRwHOLcwg==
-X-Received: by 2002:a05:6870:30a:b0:288:db96:5a23 with SMTP id 586e51a60fabf-2949d1ebeabmr456408fac.20.1730393372260;
-        Thu, 31 Oct 2024 09:49:32 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-29487772015sm600040fac.51.2024.10.31.09.49.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 31 Oct 2024 09:49:31 -0700 (PDT)
-Message-ID: <00b6f820-5a87-4e05-b079-281074be669c@baylibre.com>
-Date: Thu, 31 Oct 2024 11:49:29 -0500
+	s=arc-20240116; t=1730404352; c=relaxed/simple;
+	bh=cG9Og3G+txKUTnhb5mRAu1HCEYEecJi4IJLdo7xz4Qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cF9i7nDzSzH9HJH/FBx0pw8nLPpZPnmWAaMPWXKXPlFgKN1Udz6mCETlWPgoJh5RpIbM5qQlrazUKSbQ/50zf1zXHRw2pGAQP32/BlS8emvD4oV+tw6MqrRteczl/j6wbZyBcorLjQuDupzKLY9D+LZG2vT/CJu2i25MnSHR8q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1C2C4CEC3;
+	Thu, 31 Oct 2024 19:52:27 +0000 (UTC)
+Date: Thu, 31 Oct 2024 15:53:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v18 01/17] fgraph: Pass ftrace_regs to entryfunc
+Message-ID: <20241031155324.108ed8ef@gandalf.local.home>
+In-Reply-To: <172991733069.443985.15154246733356205391.stgit@devnote2>
+References: <172991731968.443985.4558065903004844780.stgit@devnote2>
+	<172991733069.443985.15154246733356205391.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: axi-spi-engine: Emit trace events for spi transfers
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20241031111646.747692-2-u.kleine-koenig@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20241031111646.747692-2-u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 10/31/24 6:16 AM, Uwe Kleine-König wrote:
-> As this spi host controller driver implements the
-> .transfer_one_message() callback, it has to care about these traces
-> it-self. With the transfers being compiled it's difficult to determine
-> where handling of one transfer ends and the next begins, so just
-> generate the start events in batch before the hardware fifo is fed and
-> the end events when their completion triggered.
+On Sat, 26 Oct 2024 13:35:30 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
-> ---
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
+> available, it passes a NULL instead. User callback function can access
+> some registers (including return address) via this ftrace_regs.
+> 
+> Note that the ftrace_regs can be NULL when the arch does NOT define:
+> HAVE_DYNAMIC_FTRACE_WITH_ARGS or HAVE_DYNAMIC_FTRACE_WITH_REGS.
+> More specifically, if HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but
+> not the HAVE_DYNAMIC_FTRACE_WITH_ARGS, and the ftrace ops used to
+> register the function callback does not set FTRACE_OPS_FL_SAVE_REGS.
+> In this case, ftrace_regs can be NULL in user callback.
 
+If HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but not
+HAVE_DYNAMIC_FTRACE_WITH_ARGS is not, then the callback will have regs defined.
+
+> @@ -977,7 +980,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+>  
+>  static struct ftrace_ops graph_ops = {
+>  	.func			= ftrace_graph_func,
+> -	.flags			= FTRACE_OPS_GRAPH_STUB,
+> +	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+
+Enabling FTRACE_OPS_FL_SAVE_ARGS will pass full regs in that case. Are you
+just saying in the change log that this is what you did? As it currently
+reads, it sounds like a fgraph user needs to add FTRACE_OPS_FL_SAVE_REGS??
+
+-- Steve
+
+
+>  #ifdef FTRACE_GRAPH_TRAMP_ADDR
+>  	.trampoline		= FTRACE_GRAPH_TRAMP_ADDR,
+>  	/* trampoline_size is only needed for dynamically allocated tramps */
+> @@ -987,7 +990,8 @@ static struct ftrace_ops graph_ops = {
+>  void fgraph_init_ops(struct ftrace_ops *dst_ops,
+>  		     struct ftrace_ops *src_ops)
+>  {
+> -	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB;
+> +	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB |
+> +			 FTRACE_OPS_FL_SAVE_ARGS;
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  	if (src_ops) {
