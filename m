@@ -1,100 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429941E8856;
-	Wed, 30 Oct 2024 23:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B4F10E0;
+	Thu, 31 Oct 2024 00:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730331610; cv=none; b=OaLfdLb5HmSqGZVf9zey/EyIR8zv4X1M/iuW3DeOFHwMFxdUcdoR7Xz8fazaorcwcmJq4WWpRzxwsoYCaGye3KjksKSzsUdrQC0NZWvo+5MjRB+B0RW/DZUobwORNBh3G+6IoSf3/WSIEIdWRZc+R8utALwyk/KPEDqOjgbaWkU=
+	t=1730333513; cv=none; b=NpVIrkxbnb+lmTQBnT3g4J/povkm3+6Q0ez8hTvo2El1DSSPmmqS9xucqLpGCafE2j8I0G5UCdw3xPvaSfHH11hq/dP7zVuV9O2W9LZnoXEiG1Lj/Hb8b9VbO07cRF+BRPIc+AlDQJSqsAJ3CrJuN4iIr+x1SkD9Pu+pcWLdang=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730331610; c=relaxed/simple;
-	bh=P54VmbAjUDEuc9ALM89/kQ517bvFtFpeh51kBjdxCT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b+VO3xp/1Toyl7qCLLVJjTCAV/wJAn9ShzxRU6RsUFUUBWfq9AmDO3mh9FekoVu7phuNjqQEjuJlnHHzEZCrOxzKPaxN4YS/li9+RzZbPFO2EBHUxdicz3M1LURB3+LC6++lyLz0S9nUFWEArJRSSKw9AlBpo7lXzbGaYgMVBVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53114C4E692;
-	Wed, 30 Oct 2024 23:40:09 +0000 (UTC)
-Date: Wed, 30 Oct 2024 19:40:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Replace strncpy() with strscpy() when copying
- comm
-Message-ID: <20241030194006.4d29417c@rorschach.local.home>
-In-Reply-To: <20240731075058.617588-1-ruanjinjie@huawei.com>
-References: <20240731075058.617588-1-ruanjinjie@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730333513; c=relaxed/simple;
+	bh=Ceq1779UGAl8iOYIzrR6U8YByCcRrYMnJdZdGnLER50=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KbJDq4HZqlzusvl10MxsPgSKEhTXLGIt/ZVtwgpP3aGe4vLSPIRvvNf1tgN3ItQWac9ZwCuDXcEQ5v1sxOuvdb6HzhMNVQ9OUH0xjoRiRMoI/lhbwO9YHhx0A+uia8QOMox8B/8yjDGNPr+Pg0HPUmukSK/B+cQXUYriMB9fddE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=tZusAJI3; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tZusAJI3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ADnOlDvSfcc2o2XTsLbJuVcsj8qk7QSX8jkP5KkZ5Mw=; b=tZusAJI37JDe16l2CZBpAGOoEF
+	bwhxtvPkUCgV07xUfbic6dfNujjddnRpFUT28MncKLe8Cf9RmQNEQ2CluZau/8U5ySVsGog8VqShd
+	EFBOOAGnSgY3OCnoxcZfxON8e5KQ8V09Hh3+bH6dtqWaa2OqpYH3DbGXF1WaZX9l4oNY7VJdjWvz0
+	JulQkHoTGHzdnWrphAeFjrxUXwPucq8lnQH/pm3sH0UdPtqKBgsjh0uQgnAxpdSyzr/dvps0alFUp
+	2XKigXu9odZbDzMnWUvymb2OR8E4jOpAAD3qyv2n9sn0Wx4BlrHq0O5BRCP3jFtjBx92Vj2eWcf9S
+	Ynf3jZjA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38846)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1t6ImG-0000qB-0h;
+	Thu, 31 Oct 2024 00:11:06 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1t6Im2-0002OR-10;
+	Thu, 31 Oct 2024 00:10:50 +0000
+Date: Thu, 31 Oct 2024 00:10:50 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alice Ryhl <aliceryhl@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Fuad Tabba <tabba@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Bibo Mao <maobibo@loongson.cn>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>, loongarch@lists.linux.dev,
+	Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v12 4/5] jump_label: adjust inline asm to be consistent
+Message-ID: <ZyLLCmq9-9BX7GBd@shell.armlinux.org.uk>
+References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+ <20241030-tracepoint-v12-4-eec7f0f8ad22@google.com>
+ <20241030191316.2a27ff1b@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241030191316.2a27ff1b@rorschach.local.home>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, 31 Jul 2024 15:50:58 +0800
-Jinjie Ruan <ruanjinjie@huawei.com> wrote:
+On Wed, Oct 30, 2024 at 07:13:16PM -0400, Steven Rostedt wrote:
+> On Wed, 30 Oct 2024 16:04:27 +0000
+> Alice Ryhl <aliceryhl@google.com> wrote:
+> 
+> > To avoid duplication of inline asm between C and Rust, we need to
+> > import the inline asm from the relevant `jump_label.h` header into Rust.
+> > To make that easier, this patch updates the header files to expose the
+> > inline asm via a new ARCH_STATIC_BRANCH_ASM macro.
+> > 
+> > The header files are all updated to define a ARCH_STATIC_BRANCH_ASM that
+> > takes the same arguments in a consistent order so that Rust can use the
+> > same logic for every architecture.
+> > 
+> > Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Co-developed-by: Miguel Ojeda <ojeda@kernel.org>
+> > Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com> # RISC-V
+> 
+> Still missing an ack from the ARM maintainer (32 bit, just added) and loongarch.
+> 
+> I'll wait till Monday, if I don't hear anything against these patches
+> I'll pull them in.
 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 6ece1308d36a..4ee0e64719fa 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -1599,7 +1599,7 @@ static inline void save_comm(char *comm, struct tas=
-k_struct *task)
->  		return;
->  	}
-> =20
-> -	strncpy(comm, task->comm, TASK_COMM_LEN);
-> +	strscpy(comm, task->comm);
->  }
-> =20
+As of what has recently happened, I am not participating in technical
+activities until such time that I'm told what is now acceptable. So
+far, that has not been forthcoming, and thus I believe it is unwise to
+engage in technical discussion.
 
-Was this even compiled?
-
-In file included from /work/git/test-linux.git/include/linux/container_of.h=
-:5,
-                 from /work/git/test-linux.git/include/linux/list.h:5,
-                 from /work/git/test-linux.git/include/linux/module.h:12,
-                 from /work/git/test-linux.git/kernel/trace/trace_events_hi=
-st.c:8:
-/work/git/test-linux.git/kernel/trace/trace_events_hist.c: In function =E2=
-=80=98save_comm=E2=80=99:
-/work/git/test-linux.git/include/linux/build_bug.h:16:51: error: negative w=
-idth in bit-field =E2=80=98<anonymous>=E2=80=99
-   16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); }=
-)))
-      |                                                   ^
-/work/git/test-linux.git/include/linux/compiler.h:243:33: note: in expansio=
-n of macro =E2=80=98BUILD_BUG_ON_ZERO=E2=80=99
-  243 | #define __must_be_array(a)      BUILD_BUG_ON_ZERO(__same_type((a), =
-&(a)[0]))
-      |                                 ^~~~~~~~~~~~~~~~~
-/work/git/test-linux.git/include/linux/string.h:79:47: note: in expansion o=
-f macro =E2=80=98__must_be_array=E2=80=99
-   79 |         sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) =
-+    \
-      |                                               ^~~~~~~~~~~~~~~
-/work/git/test-linux.git/include/linux/args.h:25:24: note: in expansion of =
-macro =E2=80=98__strscpy0=E2=80=99
-   25 | #define __CONCAT(a, b) a ## b
-      |                        ^
-/work/git/test-linux.git/include/linux/args.h:26:27: note: in expansion of =
-macro =E2=80=98__CONCAT=E2=80=99
-   26 | #define CONCATENATE(a, b) __CONCAT(a, b)
-      |                           ^~~~~~~~
-/work/git/test-linux.git/include/linux/string.h:113:9: note: in expansion o=
-f macro =E2=80=98CONCATENATE=E2=80=99
-  113 |         CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, _=
-_VA_ARGS__)
-      |         ^~~~~~~~~~~
-/work/git/test-linux.git/kernel/trace/trace_events_hist.c:1602:9: note: in =
-expansion of macro =E2=80=98strscpy=E2=80=99
- 1602 |         strscpy(comm, task->comm);
-      |         ^~~~~~~
-
-Bah!
-
--- Steve
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
