@@ -1,160 +1,134 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2D6199395;
-	Thu, 31 Oct 2024 10:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841398479
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Oct 2024 11:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730371346; cv=none; b=gnI2TVUtl5K/AJDuVZcHf1TtdelpCBH0YuoVQ/sYYWDFRxo7pSFV2AoaKuGTIMRT6os3Y8X7IDIyLERAwPr1rjd23w3BzJ5k3ahkS04jgid+8ISpmfUHKhG/ThrHRjoBzBfiapDlM/XMS/4QD21+IuPuhghq4e0J7884+kmH88w=
+	t=1730373423; cv=none; b=SBMri2YQ9/DTrb4Ysgwcswu8SIi4unLSgeN7xGBNf8nRiFIGxkG8qPcfyHMy0GS56BXWAxV9w2EPbvn3RDL6RsfUgDuz1fp33pZtncU4HiKWV2a3qmraozyIrH/L/aSPprrsVX4Auiyh+mXtI1AcAfFKN66b+4zqAe7Bf6j6i2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730371346; c=relaxed/simple;
-	bh=LirR3kzbScaAvwOKGcEk0tU8aX0hkYtaRdjnyAUg0cA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gMCcwrT8qGm18JX3KLTwGt8USSqCHAPTWHPx8psi55r7JDjVkLjHf2eWazlM0J7uF9yfY5HzBCpdd7qWG9Zzb8to1TBEtPx9yXeVpXYB1iq3sLyGzNgIA34P/726lzshHlrusc4RKRE05XnE3CODNjkcNDWBtOTk+gvUkVse31Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=eE2nQMdK; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1730373423; c=relaxed/simple;
+	bh=AU1C6WZByxcu/+1LnkYBiuOlJjGmCMxgkG0ErXzal/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xq8+ZB9nD0Gu+1hA8vgdbnFKlRqRSqzTut0FsDTukhzVSec23/MmT6MukrnlBTGckIeT7OV/1LhCxZwcDO/mZbwJ7jz9ZmhWeGY9+BR9uljW+VwZtY88zIjvhowGYn+lzC8Cj6V7rBldGvoed3SzL4l/6yL/R3DNY/Asr9xCopk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=GyuoqoGr; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="eE2nQMdK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="GyuoqoGr"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-37d6ff1cbe1so605210f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 31 Oct 2024 04:17:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1730371345; x=1761907345;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2XSQmg9XPL/tUl5Uy9X9cqzqndsoHfM/nyIda+DnmYs=;
-  b=eE2nQMdKcNLuqicCNqHp/j4fLUzG++kDn/aXTaIkjrxy5eY2/n2qc5ry
-   EzFguMwjRcOQS5VGG5a41lkhKP6ZfTWaqVDNzaPKrgKQYgBX0k0gFbeLE
-   JPgqQh8ZhswAKPqQP8H1Rp4WrKhK2Ha3PN+RHSxJuaQgS+TfABckgWvzv
-   0=;
-X-IronPort-AV: E=Sophos;i="6.11,247,1725321600"; 
-   d="scan'208";a="37873631"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 10:42:19 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:53488]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.22.121:2525] with esmtp (Farcaster)
- id f575b9e2-c87c-4dc7-9ccf-8641a67b176b; Thu, 31 Oct 2024 10:42:18 +0000 (UTC)
-X-Farcaster-Flow-ID: f575b9e2-c87c-4dc7-9ccf-8641a67b176b
-Received: from EX19D003UWB002.ant.amazon.com (10.13.138.11) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Thu, 31 Oct 2024 10:42:09 +0000
-Received: from EX19MTAUWA001.ant.amazon.com (10.250.64.204) by
- EX19D003UWB002.ant.amazon.com (10.13.138.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Thu, 31 Oct 2024 10:42:09 +0000
-Received: from email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com
- (10.25.36.214) by mail-relay.amazon.com (10.250.64.204) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.34 via Frontend Transport; Thu, 31 Oct 2024 10:42:08 +0000
-Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
-	by email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com (Postfix) with ESMTPS id 524C0804C3;
-	Thu, 31 Oct 2024 10:42:02 +0000 (UTC)
-Message-ID: <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
-Date: Thu, 31 Oct 2024 10:42:00 +0000
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1730373419; x=1730978219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hgK3bgEOYLcZ3+GZtAj9wZF+v4Pmy3y8ET/FkteYCE=;
+        b=GyuoqoGrgW3Vjwd+CFuMxk8C/55KkY0quPJB8qB+Eq8KkM0AvcQae94dFmLQdM5ykp
+         PZ1GDRzglHLG55GKYFAysxQcVb7CW+QECgZ4jkofLl8yH2fPYNQt16Rz/jpWy9ZCQgLV
+         hbrDV7DOKUNIl4uYXOODuifWe6x3gkiGlEB42t+vYbuCegoN6R4jyEEAjdDunGZd0OS9
+         1aSedSLNceRua58UbnB2KpvtxIp6LlxhiTmAOcRbr/DIWvs6/zS1SQQKJK0sduXTBBKv
+         BwDzYbZmxGSvKuwBULpCjxz4sUrKeRoQTr2FSsy9y0FC7saOJIbMCiC4Vh26AsLod2gi
+         gIEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730373419; x=1730978219;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1hgK3bgEOYLcZ3+GZtAj9wZF+v4Pmy3y8ET/FkteYCE=;
+        b=kMEDk2YRp7S+deS8uvdCcGFSqAhW2vguqiKBz9HjpXURrU7DFa3hpqU/pfyJlSnIWJ
+         EGMzZySAxm1KtCLOM4sNS+tXE/IhiqXADWwZ0zlJRZp8KpfC1z8YxyRc/cwLLqyANt0d
+         mDZ8eVaTOfKIZci4Nppl9/yj25PBLsBCsaXgdEsVrBpozrTZI+YKFigC42PI9lshXge7
+         nmUn+sdFUgiRZXYVrM3pkgqZUGZ0gtse2+XGPrvNuwKItlrAd7a7NsqSaDjXJmTA+tdK
+         GMx2cZt/6Gm6eH3S2jOpvxln121ZovNxBi6kH1JgibmpvBgP/XVFsKKozShIvQcz7Jpy
+         iR4g==
+X-Forwarded-Encrypted: i=1; AJvYcCUnZCw6XS8Dta2CsMO1ifcLYUhYiJFslp0HmWpHHtq9WNRFOdyFic8mRKyFXJioQnMdqCTwxiUReW3YbqPJ46x4RUc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkhkNXneqh6tfyMGqJ/+rEcpwarHhYKL1shqx0W6V2kO8WOevb
+	FT44gFn9cjN437JUA3n7nMWfXFXbVJ+ddaUl70OFNrhWCQh4qGXu1SLVM0DMAdc=
+X-Google-Smtp-Source: AGHT+IFri4cMf29+7JWqBWPWpz3GBXSI5le/c+hDAh/KCAU7WnFzenq0O+/FN0Oc272417lgaHczhw==
+X-Received: by 2002:a5d:6d84:0:b0:37d:5129:f45e with SMTP id ffacd0b85a97d-381be7c8137mr2674908f8f.20.1730373418803;
+        Thu, 31 Oct 2024 04:16:58 -0700 (PDT)
+Received: from localhost (p50915d2d.dip0.t-ipconnect.de. [80.145.93.45])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4327d5ab254sm22594605e9.3.2024.10.31.04.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Oct 2024 04:16:58 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Michael Hennerich <michael.hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Mark Brown <broonie@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: [PATCH] spi: axi-spi-engine: Emit trace events for spi transfers
+Date: Thu, 31 Oct 2024 12:16:45 +0100
+Message-ID: <20241031111646.747692-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
-To: David Hildenbrand <david@redhat.com>, <tabba@google.com>,
-	<quic_eberman@quicinc.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<jthoughton@google.com>, <ackerleytng@google.com>, <vannapurve@google.com>,
-	<rppt@kernel.org>
-CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
-	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
-	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
-	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
-	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
-	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20241030134912.515725-1-roypat@amazon.co.uk>
- <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
-From: Patrick Roy <roypat@amazon.co.uk>
-Content-Language: en-US
-Autocrypt: addr=roypat@amazon.co.uk; keydata=
- xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
- NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
- wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
- CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
- AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
- AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
- IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
- 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
- 8hlxFQM=
-In-Reply-To: <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1836; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=AU1C6WZByxcu/+1LnkYBiuOlJjGmCMxgkG0ErXzal/4=; b=kA0DAAoBj4D7WH0S/k4ByyZiAGcjZx7IsIY0DcVODwag9FFNSgIhnNZXzdnbPmi/IJByviz1a 4kBMwQAAQoAHRYhBD+BrGk6eh5Zia3+04+A+1h9Ev5OBQJnI2ceAAoJEI+A+1h9Ev5Oi9UIAKFA TGz9Oci347ZoBRTdBkjitjoV1faJ80zA3le17wZoSvcpPfVgbXdwBo5YmczdfJ0VPmAHTydu11t w9CDVs30/FhpgHom+8RnUbkgCs/YAMUqi9loDQylIP1tzX0X+PuRuvvwCKuTZ8JiCFgOU3xdZye bL2/TieQC2cz65zWH4kEHw7SRlCPdFrznTeI4HnUDHJB+9QPthWFdTUsRJaPUk4sxC5d4cc3+x0 mSy5St8CRly8uxHmp9hWmHMWTWw5dCqONOt4z6a3jOJt5iyjf/IK1xmuPsd8ThYcl0SwEXNDej9 xdRYzuz5jebhjg+ViiJTrL3inrSRjHp2WD2Dzo4=
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-10-31 at 09:50 +0000, David Hildenbrand wrote:
-> On 30.10.24 14:49, Patrick Roy wrote:
->> Unmapping virtual machine guest memory from the host kernel's direct map
->> is a successful mitigation against Spectre-style transient execution
->> issues: If the kernel page tables do not contain entries pointing to
->> guest memory, then any attempted speculative read through the direct map
->> will necessarily be blocked by the MMU before any observable
->> microarchitectural side-effects happen. This means that Spectre-gadgets
->> and similar cannot be used to target virtual machine memory. Roughly 60%
->> of speculative execution issues fall into this category [1, Table 1].
->>
->> This patch series extends guest_memfd with the ability to remove its
->> memory from the host kernel's direct map, to be able to attain the above
->> protection for KVM guests running inside guest_memfd.
->>
->> === Changes to v2 ===
->>
->> - Handle direct map removal for physically contiguous pages in arch code
->>    (Mike R.)
->> - Track the direct map state in guest_memfd itself instead of at the
->>    folio level, to prepare for huge pages support (Sean C.)
->> - Allow configuring direct map state of not-yet faulted in memory
->>    (Vishal A.)
->> - Pay attention to alignment in ftrace structs (Steven R.)
->>
->> Most significantly, I've reduced the patch series to focus only on
->> direct map removal for guest_memfd for now, leaving the whole "how to do
->> non-CoCo VMs in guest_memfd" for later. If this separation is
->> acceptable, then I think I can drop the RFC tag in the next revision
->> (I've mainly kept it here because I'm not entirely sure what to do with
->> patches 3 and 4).
-> 
-> Hi,
-> 
-> keeping upcoming "shared and private memory in guest_memfd" in mind, I
-> assume the focus would be to only remove the direct map for private memory?
-> 
-> So in the current upstream state, you would only be removing the direct
-> map for private memory, currently translating to "encrypted"/"protected"
-> memory that is inaccessible either way already.
-> 
-> Correct?
+As this spi host controller driver implements the
+.transfer_one_message() callback, it has to care about these traces
+it-self. With the transfers being compiled it's difficult to determine
+where handling of one transfer ends and the next begins, so just
+generate the start events in batch before the hardware fifo is fed and
+the end events when their completion triggered.
 
-Yea, with the upcomming "shared and private" stuff, I would expect the
-the shared<->private conversions would call the routines from patch 3 to
-restore direct map entries on private->shared, and zap them on
-shared->private.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/spi/spi-axi-spi-engine.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-But as you said, the current upstream state has no notion of "shared"
-memory in guest_memfd, so everything is private and thus everything is
-direct map removed (although it is indeed already inaccessible anyway
-for TDX and friends. That's what makes this patch series a bit awkward
-:( )
+diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
+index 2dff95d2b3f5..7c252126b33e 100644
+--- a/drivers/spi/spi-axi-spi-engine.c
++++ b/drivers/spi/spi-axi-spi-engine.c
+@@ -15,6 +15,7 @@
+ #include <linux/overflow.h>
+ #include <linux/platform_device.h>
+ #include <linux/spi/spi.h>
++#include <trace/events/spi.h>
+ 
+ #define SPI_ENGINE_REG_RESET			0x40
+ 
+@@ -590,6 +591,13 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 
+ 	reinit_completion(&spi_engine->msg_complete);
+ 
++	if (trace_spi_transfer_start_enabled()) {
++		struct spi_transfer *xfer;
++
++		list_for_each_entry(xfer, &msg->transfers, transfer_list)
++			trace_spi_transfer_start(msg, xfer);
++	}
++
+ 	spin_lock_irqsave(&spi_engine->lock, flags);
+ 
+ 	if (spi_engine_write_cmd_fifo(spi_engine, msg))
+@@ -617,6 +625,13 @@ static int spi_engine_transfer_one_message(struct spi_controller *host,
+ 		msg->status = -ETIMEDOUT;
+ 	}
+ 
++	if (trace_spi_transfer_stop_enabled()) {
++		struct spi_transfer *xfer;
++
++		list_for_each_entry(xfer, &msg->transfers, transfer_list)
++			trace_spi_transfer_stop(msg, xfer);
++	}
++
+ 	spi_finalize_current_message(host);
+ 
+ 	return msg->status;
 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+base-commit: 9852d85ec9d492ebef56dc5f229416c925758edc
+-- 
+2.45.2
 
-Best, 
-Patrick
