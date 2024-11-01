@@ -1,267 +1,114 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CEA51CEAA2
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  1 Nov 2024 18:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF61A146592;
+	Fri,  1 Nov 2024 18:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730485764; cv=none; b=e7c6hYJUBObuPaCIjR4YEdEvGmaKCQ1GkGJKAh4N2Aj1bAe8XTMNMX2ZuQ9eKgD/JzJ1JrirYQTYjAPZ9ddcStn0LiZR5ri3U5kvwWSTe690o2U3nPHtsdpBsxCVvsmbVlRpNY1exWzPWb0/0cCmGHPmusgm2Lebt8hqzLsdofQ=
+	t=1730485880; cv=none; b=pIYomHORwYEI9SiEnfS6jdUwwmIBP3xZeK71ocDAY3Un/zLv6YOSmzROwq+tN12uQFluB4GxjlLI756HNXuGuS+FLpY3RGkd/FetX2t9aJopXb7AZzx6LiRGpomyU0vIreLotMyNNj60MMuUMJoDFSG7l05Mnxoea55Rz7SafUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730485764; c=relaxed/simple;
-	bh=bj+Z2+fK7QDnvOoriellPY4+kBoaVnOhGS4odslSkvs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JTaw/akBlmWsEOZ936K8XSh262s4TKuCdKauxlURRZ9V4zAKV3l6F1jGahAX13VCb+ea3bobFHLVQ15TNEIhZXkHlpDOQkoaZXQVNFs2630gULoukaoy15bLfeGwe4sU/c6qbyUrnAoRddXMes7PLh3J4c+KHc2A82iCcXt1GOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a6add3a52eso10816145ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 01 Nov 2024 11:29:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730485761; x=1731090561;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f3vpi1OtBL8kt4ooyM45FruA/dePfdJoBpblx/DDJSw=;
-        b=ALFtbG1kjs7gtlJf2xDgLdyNYONobCuOz6SwXZXw7Jntx3tMm470ccbQeOs46CnNyl
-         +WSTJDUt2xOvTS0mHh6YpRCTs18FGfwFqm+P+f3WFAkj1L9D7PDGFtCmt42jtXmeVnjr
-         rRjg30QvBGtlxiQ3RBDbozDb8rdKGfm8QvkZAWhBfprrmbJGd8qK0Fp4RNYDamq023eG
-         tqfsC7HKHIo2c2ABm9J+ZKrEiAV3R6BaKjkE3DIFrT6G5IyElS//EncHjepBKpatJYXa
-         KtpIu4R0RgzhPrfRfiNwVF8D9YjYuIzsHR0IyAm7ZRb5b99v6LB4lRZamGwIrFny4J6e
-         e2uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9ei3X1X/uYHef49Jxg1eVUKjWyds9tz7NzAjsm3nPBtVVSMadaudvWyGzxGAbcif4xkMkyw/dA1mTd+8piOJynSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMklbLhgAnyyEG+jAl2LPozGi1CKzQ3W4GP0r9xRwiXqsJuU6U
-	VOT/xVxeLX0KdnLDulSmHU7IsyZfkHyv1SA1K5/DbOFAai0Jt27lwHuFpYgoMyNCoyU/uIHjdSj
-	gH7shrDNsLSfVUW4cyNI5VDlmRX/0yZqQs+lCCsxBrz0aIu/dXJkgW9U=
-X-Google-Smtp-Source: AGHT+IH2fGGDjbGNAUswpIeICQIHOFI8a9e6JxTAYScOehBjCz9wkpnXujxXVYy06+99WjW3XaVed7sg9+fb87+SpcGkVU4y85ZJ
+	s=arc-20240116; t=1730485880; c=relaxed/simple;
+	bh=VBXbIFvMdAI0b5axWwLGdBXRoBbolCT6d2ZfYFcgkm4=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=eoZwB+eV71tk5QqFs6PCGXJCgsKWn3L1T0vnoxMDjbA76LJOrckRAy0tbzq1whHgioXBSWwxLWuUDKtGiTsAASZUnjntd5u+V+0jcCyZlI4xPcEAh9xBoxnu1d5pSWKzvu7FcBsMXh74mMbH/fS4/87mxNOgNM2kYXPsvN8Ok/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=eCAhZMbj; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eCAhZMbj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1730485878; x=1762021878;
+  h=message-id:date:mime-version:to:cc:references:subject:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VBXbIFvMdAI0b5axWwLGdBXRoBbolCT6d2ZfYFcgkm4=;
+  b=eCAhZMbjCsb1Ubg5PIF0neLVul3DHRNBD4YRpV/5j/xrdj+lEIZiS04b
+   DhYuyza5iscJnNXF103HVVzmUFPjzwETJuL4RiFO8nRdj0Xlan2TeqLmt
+   ZTNjpjkM/yKJFh2Zi84tkjV2yLQVOQkLoYFN9OOxiH5sVoeot3iWUMVfh
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.11,250,1725321600"; 
+   d="scan'208";a="142665536"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2024 18:31:18 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:58862]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.72:2525] with esmtp (Farcaster)
+ id dae0559c-5720-41e8-8da6-e0592ac6ae3b; Fri, 1 Nov 2024 18:31:17 +0000 (UTC)
+X-Farcaster-Flow-ID: dae0559c-5720-41e8-8da6-e0592ac6ae3b
+Received: from EX19D003UWC002.ant.amazon.com (10.13.138.169) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Fri, 1 Nov 2024 18:31:17 +0000
+Received: from [10.142.234.83] (10.142.234.83) by
+ EX19D003UWC002.ant.amazon.com (10.13.138.169) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Fri, 1 Nov 2024 18:31:14 +0000
+Message-ID: <37fbfc65-b145-4a22-a48c-1921204d5635@amazon.com>
+Date: Fri, 1 Nov 2024 11:31:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:339f:b0:3a0:9c04:8047 with SMTP id
- e9e14a558f8ab-3a6a94a3944mr52344175ab.6.1730485761737; Fri, 01 Nov 2024
- 11:29:21 -0700 (PDT)
-Date: Fri, 01 Nov 2024 11:29:21 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67251e01.050a0220.529b6.0161.GAE@google.com>
-Subject: [syzbot] [block?] [trace?] possible deadlock in blk_trace_ioctl
-From: syzbot <syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
+User-Agent: Mozilla Thunderbird
+To: <dave.hansen@intel.com>
+CC: <ackerleytng@google.com>, <agordeev@linux.ibm.com>,
+	<aou@eecs.berkeley.edu>, <borntraeger@linux.ibm.com>, <bp@alien8.de>,
+	<canellac@amazon.at>, <catalin.marinas@arm.com>, <chenhuacai@kernel.org>,
+	<corbet@lwn.net>, <dave.hansen@linux.intel.com>, <david@redhat.com>,
+	<derekmn@amazon.com>, <elena.reshetova@intel.com>,
+	<gerald.schaefer@linux.ibm.com>, <gor@linux.ibm.com>, <graf@amazon.com>,
+	<hca@linux.ibm.com>, <hpa@zytor.com>, <jgowans@amazon.com>,
+	<jthoughton@google.com>, <kalyazin@amazon.com>, <kernel@xen0n.name>,
+	<kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<luto@kernel.org>, <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
+	<mingo@redhat.com>, <mlipp@amazon.at>, <palmer@dabbelt.com>,
+	<paul.walmsley@sifive.com>, <pbonzini@redhat.com>, <peterz@infradead.org>,
+	<quic_eberman@quicinc.com>, <rostedt@goodmis.org>, <roypat@amazon.co.uk>,
+	<rppt@kernel.org>, <seanjc@google.com>, <shuah@kernel.org>,
+	<svens@linux.ibm.com>, <tabba@google.com>, <tglx@linutronix.de>,
+	<vannapurve@google.com>, <will@kernel.org>, <x86@kernel.org>,
+	<xmarcalx@amazon.com>
+References: <51fe5ad1-7057-4d43-b92c-580d187d2aeb@intel.com>
+Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+Content-Language: en-US
+From: "Manwaring, Derek" <derekmn@amazon.com>
+In-Reply-To: <51fe5ad1-7057-4d43-b92c-580d187d2aeb@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D040UWB001.ant.amazon.com (10.13.138.82) To
+ EX19D003UWC002.ant.amazon.com (10.13.138.169)
 
-Hello,
+On 2024-11-01 at 17:20+0000, Dave Hansen wrote:
+> On 11/1/24 09:56, Manwaring, Derek wrote:
+> > But if other mitigations completely prevent even speculative access
+> > of TD private memory like you're saying, then agree nothing to gain
+> > from direct map removal in the TDX case.
+> Remember, guest unmapping is done in the VMM.  The VMM is not trusted in
+> the TDX (or SEV-SNP) model.  If any VMM can harm the protections on
+> guest memory, then we have a big problem.
+>
+> That isn't to say big problem can't happen.  Say some crazy attack comes
+> to light where the VMM can attack TDX if the VMM has mapping for a guest
+> (or TDX module) memory.  Crazier things have happened, and guest
+> unmapping _would_ help there, if you trusted the VMM.
+>
+> Basically, I think guest unmapping only helps system security as a whole
+> if you must _already_ trust the VMM.
 
-syzbot found the following issue on:
+Yeah that makes a lot of sense. I just view the ideal outcome as a
+composition of strong, independent defenses. So as a guest you have the
+confidentiality and integrity guarantees of the hardware, *and* you have
+an up-to-date, good-hygiene (albeit not attested) host kernel just in
+case some crazy attack/gap comes up.
 
-HEAD commit:    f9f24ca362a4 Add linux-next specific files for 20241031
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10016630580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=328572ed4d152be9
-dashboard link: https://syzkaller.appspot.com/bug?extid=a3c16289c8c99b02cac1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125a9340580000
+From that standpoint I'm still tempted to turn the question around a bit
+for the host kernel's perspective. Like if the host kernel should not
+(and indeed cannot with TDX controls in place) access guest private
+memory, why not remove it from the direct map?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/eb84549dd6b3/disk-f9f24ca3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/beb29bdfa297/vmlinux-f9f24ca3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8881fe3245ad/bzImage-f9f24ca3.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.12.0-rc5-next-20241031-syzkaller #0 Not tainted
-------------------------------------------------------
-syz.0.15/6016 is trying to acquire lock:
-ffff88807ef8bde0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0xaa/0x120 mm/memory.c:6751
-
-but task is already holding lock:
-ffff8881437a2fc0 (&q->debugfs_mutex){+.+.}-{4:4}, at: blk_trace_ioctl+0xdd/0x9a0 kernel/trace/blktrace.c:735
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&q->debugfs_mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x1ac/0xee0 kernel/locking/mutex.c:735
-       blk_mq_init_sched+0x3fa/0x830 block/blk-mq-sched.c:473
-       elevator_init_mq+0x1d8/0x2d0 block/elevator.c:605
-       add_disk_fwnode+0x10d/0xf80 block/genhd.c:413
-       sd_probe+0xba6/0x1100 drivers/scsi/sd.c:4024
-       really_probe+0x2b8/0xad0 drivers/base/dd.c:658
-       __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:800
-       driver_probe_device+0x50/0x430 drivers/base/dd.c:830
-       __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:958
-       bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:459
-       __device_attach_async_helper+0x22d/0x300 drivers/base/dd.c:987
-       async_run_entry_fn+0xa8/0x420 kernel/async.c:129
-       process_one_work kernel/workqueue.c:3229 [inline]
-       process_scheduled_works+0xa63/0x1850 kernel/workqueue.c:3310
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3391
-       kthread+0x2f0/0x390 kernel/kthread.c:389
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #2 (&q->q_usage_counter(io)#66){++++}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       bio_queue_enter block/blk.h:75 [inline]
-       blk_mq_submit_bio+0x1510/0x2490 block/blk-mq.c:3069
-       __submit_bio+0x2c2/0x560 block/blk-core.c:629
-       __submit_bio_noacct_mq block/blk-core.c:710 [inline]
-       submit_bio_noacct_nocheck+0x4d3/0xe30 block/blk-core.c:739
-       ext4_io_submit fs/ext4/page-io.c:377 [inline]
-       io_submit_add_bh fs/ext4/page-io.c:418 [inline]
-       ext4_bio_write_folio+0x123a/0x1d70 fs/ext4/page-io.c:560
-       mpage_submit_folio+0x1af/0x230 fs/ext4/inode.c:1921
-       mpage_map_and_submit_buffers fs/ext4/inode.c:2167 [inline]
-       mpage_map_and_submit_extent fs/ext4/inode.c:2299 [inline]
-       ext4_do_writepages+0x1d1d/0x3d20 fs/ext4/inode.c:2724
-       ext4_writepages+0x213/0x3c0 fs/ext4/inode.c:2813
-       do_writepages+0x35d/0x870 mm/page-writeback.c:2702
-       __writeback_single_inode+0x14f/0x10d0 fs/fs-writeback.c:1656
-       writeback_sb_inodes+0x80c/0x1370 fs/fs-writeback.c:1952
-       __writeback_inodes_wb+0x11b/0x260 fs/fs-writeback.c:2023
-       wb_writeback+0x42f/0xbd0 fs/fs-writeback.c:2134
-       wb_check_background_flush fs/fs-writeback.c:2204 [inline]
-       wb_do_writeback fs/fs-writeback.c:2292 [inline]
-       wb_workfn+0xc58/0x1090 fs/fs-writeback.c:2319
-       process_one_work kernel/workqueue.c:3229 [inline]
-       process_scheduled_works+0xa63/0x1850 kernel/workqueue.c:3310
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3391
-       kthread+0x2f0/0x390 kernel/kthread.c:389
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #1 (jbd2_handle){++++}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       start_this_handle+0x1eb4/0x2110 fs/jbd2/transaction.c:448
-       jbd2__journal_start+0x2da/0x5d0 fs/jbd2/transaction.c:505
-       __ext4_journal_start_sb+0x239/0x600 fs/ext4/ext4_jbd2.c:112
-       __ext4_journal_start fs/ext4/ext4_jbd2.h:326 [inline]
-       ext4_dirty_inode+0x92/0x110 fs/ext4/inode.c:5981
-       __mark_inode_dirty+0x2ee/0xe90 fs/fs-writeback.c:2491
-       generic_update_time fs/inode.c:2110 [inline]
-       inode_update_time fs/inode.c:2123 [inline]
-       touch_atime+0x413/0x690 fs/inode.c:2195
-       file_accessed include/linux/fs.h:2538 [inline]
-       ext4_file_mmap+0x18c/0x540 fs/ext4/file.c:797
-       call_mmap include/linux/fs.h:2182 [inline]
-       mmap_file mm/internal.h:124 [inline]
-       __mmap_new_file_vma mm/vma.c:2287 [inline]
-       __mmap_new_vma mm/vma.c:2351 [inline]
-       __mmap_region+0x2204/0x2cd0 mm/vma.c:2452
-       mmap_region+0x226/0x2c0 mm/mmap.c:1373
-       do_mmap+0x8f0/0x1000 mm/mmap.c:496
-       vm_mmap_pgoff+0x214/0x430 mm/util.c:580
-       ksys_mmap_pgoff+0x4eb/0x720 mm/mmap.c:542
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3161 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3280 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3904
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5226
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       __might_fault+0xc6/0x120 mm/memory.c:6751
-       _inline_copy_from_user include/linux/uaccess.h:162 [inline]
-       _copy_from_user+0x2a/0xc0 lib/usercopy.c:18
-       copy_from_user include/linux/uaccess.h:212 [inline]
-       __blk_trace_setup kernel/trace/blktrace.c:626 [inline]
-       blk_trace_ioctl+0x1ad/0x9a0 kernel/trace/blktrace.c:740
-       blkdev_ioctl+0x40c/0x6a0 block/ioctl.c:682
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:907 [inline]
-       __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &mm->mmap_lock --> &q->q_usage_counter(io)#66 --> &q->debugfs_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&q->debugfs_mutex);
-                               lock(&q->q_usage_counter(io)#66);
-                               lock(&q->debugfs_mutex);
-  rlock(&mm->mmap_lock);
-
- *** DEADLOCK ***
-
-1 lock held by syz.0.15/6016:
- #0: ffff8881437a2fc0 (&q->debugfs_mutex){+.+.}-{4:4}, at: blk_trace_ioctl+0xdd/0x9a0 kernel/trace/blktrace.c:735
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 6016 Comm: syz.0.15 Not tainted 6.12.0-rc5-next-20241031-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2074
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2206
- check_prev_add kernel/locking/lockdep.c:3161 [inline]
- check_prevs_add kernel/locking/lockdep.c:3280 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3904
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5226
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
- __might_fault+0xc6/0x120 mm/memory.c:6751
- _inline_copy_from_user include/linux/uaccess.h:162 [inline]
- _copy_from_user+0x2a/0xc0 lib/usercopy.c:18
- copy_from_user include/linux/uaccess.h:212 [inline]
- __blk_trace_setup kernel/trace/blktrace.c:626 [inline]
- blk_trace_ioctl+0x1ad/0x9a0 kernel/trace/blktrace.c:740
- blkdev_ioctl+0x40c/0x6a0 block/ioctl.c:682
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f5890d7e719
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe77be6aa8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f5890f35f80 RCX: 00007f5890d7e719
-RDX: 0000000000000000 RSI: 00000000c0481273 RDI: 0000000000000003
-RBP: 00007f5890df132e R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007f5890f35f80 R14: 00007f5890f35f80 R15: 0000000000000304
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Derek
