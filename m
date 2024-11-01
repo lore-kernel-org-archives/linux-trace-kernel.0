@@ -1,78 +1,132 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF7C81ACA;
-	Fri,  1 Nov 2024 01:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E66C1C687;
+	Fri,  1 Nov 2024 01:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730425522; cv=none; b=LEkx3eHGboejcBv0BWx/Jk3Tt4XmMsJ5ZkCQuHGw/nuootYKHDs8GjztcjeahGrzps9H9QPgyS4BJMvCa5Z8ejZvKaduEg249L2GleJnugGB+CnM1hlVvYcOB3euTA+lcmrOJY+Ja7K9j6DMW4PJzUJzkMtbyuGlngG5O89SQYs=
+	t=1730425870; cv=none; b=Xat2SoLn+XAyzAcWywp4866f60D8lKxJknxsEdkmEIO6ncVfeuDOhJoDOr+vj+zwrpM5CtAK3CkQQXvsq4ybPp8zzNLXt7czZf0/Yg2spJgHGji8BeardXxPuQs5ibJ3Ov+94xeIc3XXCBTlDUi17yfW+XfV6PjmA7IynInByZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730425522; c=relaxed/simple;
-	bh=v1nWTFCmEiyff59rTwM1KgU4RA7eNdKHFTNPHxchZcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sdRYMZh/G3jdRGE56YLZIGC2daZRjxAeX+18Kp7U3uhCsGDpv8IeZfCaMyEnVZCHSo0hkWz2FtLbP+Z8R9SLp3UusBHcd+9NqI3XoIFjdfuiseuP/eF8TpBBn3lK6pAN2CPi2fXX7U8aOlqNiEDeZzDwo7FSdeB1UKgtFO4PjyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4XfkDX2f9cz20r9r;
-	Fri,  1 Nov 2024 09:44:12 +0800 (CST)
-Received: from kwepemg200008.china.huawei.com (unknown [7.202.181.35])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7592B1A0188;
-	Fri,  1 Nov 2024 09:45:13 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemg200008.china.huawei.com (7.202.181.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 1 Nov 2024 09:45:12 +0800
-Message-ID: <09e11947-beee-2e4e-843b-53ad7214f67c@huawei.com>
-Date: Fri, 1 Nov 2024 09:45:11 +0800
+	s=arc-20240116; t=1730425870; c=relaxed/simple;
+	bh=mQn2vYnNjvmJzZqgDpy9vINksBNngUZWVd/553rFPcg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RIbTKbJUtnhYt95m/A6CueI/50zBnolPubkdur9QR7BjhudH+EgAfKStEEYqcP0aow7CSX1kqIM29KGVoZo884cTp6r1nZ3M3Z7zXEz9iw6TQAX8m9HSd0FU+CX7NCOuhxoobIJ2t6hCRyCtTI2iNsvfMa+YUUnHYjWDLGXG8zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idYJx8Sj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idYJx8Sj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89BEC4CED0;
+	Fri,  1 Nov 2024 01:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730425870;
+	bh=mQn2vYnNjvmJzZqgDpy9vINksBNngUZWVd/553rFPcg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=idYJx8Sj8SnC5eI7bQ/Bw/TBQSTo5m7rTvgxVXcxDZ1TgiXPj5v/dNNgZVarZMfvm
+	 MaSdhyxrS7If1diO4gMx8+l9rvpJZ4hMCn9KzZOKhho/b4cfKBTeDnkKFmZc7tft7/
+	 3SCAfveMIjBKDFZmp7Bmf9lcs+q+WY/0BwbtIDBSEp1yPPGqJDnCSyYvLQgrjFaY1K
+	 zGAE5WMpmR27EQRg/4cTcfYpfNjAmRjKZNwU1ZANOziBrcN97FqpKq4qm6tngsjuBj
+	 0hJMd+uy5TgputFdONTk5KUbG2NVDEcUXBciFG61tdYS+TZrudw7xfq7z4en1T3XFk
+	 F11UOhSDgRHug==
+Date: Fri, 1 Nov 2024 10:51:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v18 01/17] fgraph: Pass ftrace_regs to entryfunc
+Message-Id: <20241101105102.eb308ab85b2b13d03444d4bf@kernel.org>
+In-Reply-To: <20241031155324.108ed8ef@gandalf.local.home>
+References: <172991731968.443985.4558065903004844780.stgit@devnote2>
+	<172991733069.443985.15154246733356205391.stgit@devnote2>
+	<20241031155324.108ed8ef@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2] tracing: Replace strncpy() with strscpy() when copying
- comm
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
-	<mathieu.desnoyers@efficios.com>
-CC: <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20241031120139.1343025-1-ruanjinjie@huawei.com>
- <af478335-d0ad-40d8-a827-eeb06c1f4e70@efficios.com>
- <20241031114838.02b404ba@gandalf.local.home>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20241031114838.02b404ba@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemg200008.china.huawei.com (7.202.181.35)
 
+On Thu, 31 Oct 2024 15:53:24 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 2024/10/31 23:48, Steven Rostedt wrote:
-> On Thu, 31 Oct 2024 11:12:06 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> On Sat, 26 Oct 2024 13:35:30 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
->>> --- a/kernel/trace/trace.c
->>> +++ b/kernel/trace/trace.c
->>> @@ -1934,7 +1934,7 @@ __update_max_tr(struct trace_array *tr, struct task_struct *tsk, int cpu)
->>>   	max_data->critical_start = data->critical_start;
->>>   	max_data->critical_end = data->critical_end;
->>>   
->>> -	strncpy(max_data->comm, tsk->comm, TASK_COMM_LEN);
->>> +	strscpy(max_data->comm, tsk->comm);  
->>
->> make allyesconfig + make please ?
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Pass ftrace_regs to the fgraph_ops::entryfunc(). If ftrace_regs is not
+> > available, it passes a NULL instead. User callback function can access
+> > some registers (including return address) via this ftrace_regs.
+> > 
+> > Note that the ftrace_regs can be NULL when the arch does NOT define:
+> > HAVE_DYNAMIC_FTRACE_WITH_ARGS or HAVE_DYNAMIC_FTRACE_WITH_REGS.
+> > More specifically, if HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but
+> > not the HAVE_DYNAMIC_FTRACE_WITH_ARGS, and the ftrace ops used to
+> > register the function callback does not set FTRACE_OPS_FL_SAVE_REGS.
+> > In this case, ftrace_regs can be NULL in user callback.
 > 
-> Or at a minimum, make sure all the code you change is compiled.
+> If HAVE_DYNAMIC_FTRACE_WITH_REGS is defined but not
+> HAVE_DYNAMIC_FTRACE_WITH_ARGS is not, then the callback will have regs defined.
+> 
+> > @@ -977,7 +980,7 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+> >  
+> >  static struct ftrace_ops graph_ops = {
+> >  	.func			= ftrace_graph_func,
+> > -	.flags			= FTRACE_OPS_GRAPH_STUB,
+> > +	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+> 
+> Enabling FTRACE_OPS_FL_SAVE_ARGS will pass full regs in that case. Are you
+> just saying in the change log that this is what you did? As it currently
+> reads, it sounds like a fgraph user needs to add FTRACE_OPS_FL_SAVE_REGS??
 
-Sure, x86 and arm64 allmodconfig is ok
+Ah, good catch! It should put the flag only when HAVE_DYNAMIC_FTRACE_WITH_ARGS
+is enabled.
 
-Thank you!
+static struct ftrace_ops graph_ops = {
+	.func			= ftrace_graph_func,
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+#elif defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS)
+	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_REGS,
+#else
+	.flags			= FTRACE_OPS_GRAPH_STUB,
+#endif
+
+This will save fregs or regs or NULL according to the configuration.
 
 > 
 > -- Steve
+> 
+> 
+> >  #ifdef FTRACE_GRAPH_TRAMP_ADDR
+> >  	.trampoline		= FTRACE_GRAPH_TRAMP_ADDR,
+> >  	/* trampoline_size is only needed for dynamically allocated tramps */
+> > @@ -987,7 +990,8 @@ static struct ftrace_ops graph_ops = {
+> >  void fgraph_init_ops(struct ftrace_ops *dst_ops,
+> >  		     struct ftrace_ops *src_ops)
+> >  {
+> > -	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB;
+> > +	dst_ops->flags = FTRACE_OPS_FL_PID | FTRACE_OPS_GRAPH_STUB |
+> > +			 FTRACE_OPS_FL_SAVE_ARGS;
+> >  
+> >  #ifdef CONFIG_DYNAMIC_FTRACE
+> >  	if (src_ops) {
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
