@@ -1,114 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2647D07D;
-	Fri,  1 Nov 2024 01:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0772A13DDB5;
+	Fri,  1 Nov 2024 05:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730425992; cv=none; b=Ru1PetGv+zwj50y8qwxbouamI1V6yHNmIKc6OoG7d6/k7SF5A/ZMICurScTvLn/VEWdPi5tDP6Yz/bP06Uq4kSuZdce/bPIR17JbOSfZfv4AEZfMVSSgvyzjMCI9E1BPaeyWVwi3Upq/5Gx6TdtdJ6VktWquB2RzggrhfScEybY=
+	t=1730437695; cv=none; b=QMIYvMXzymYB1NYZU9TinSqBwmEccHmZu2+al/jCFks40AQXOcnbegEUksDfiz0hV4O9vxG7xhsw1mOuLMYEWP9Vq1gj0NjmVbOf/EjhqjSY1CVL0lUwtGDlzOJEw3ouaIUMW7hZKYqPk/jn6NkuxzYf4OLPSFAhRFnALUGBFlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730425992; c=relaxed/simple;
-	bh=2TU62Hgp56g5+Sz4wGbj7LZ9edguPOOihgw6ErBjvh8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GJIIKMPirWVW5Yp/x4qontf0meN4/E9zapxYD2ZGgBwr1Clgf+pHQ2pq5/+otGc2fHLjcp827ZhI0hzXi2ATEXf55++WIgiPPpH1BCNXBzTDAS3l5WdaD4DR8I1MgLT5LyUN9pBst8IfOhPpZQsi5V0wR20BdXUTUBisPizZbHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEqFY/D0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730437695; c=relaxed/simple;
+	bh=gHCvEzqGz5HrCXCX8obbMOpf4rX8W8+whNsK2k2oVnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YbUdOaM6lczdv1OGcpGvSbOf0DT8sIjz9Kg+HULZ3tcmQivXIIpVPKQurfzn/gOwyrQyqnG4bIQmkMy5WHOb4vB/UBCaQ5DhXXzLgO+TiMHt4Kt4vtuQv9Vja6E6YQRRJsEUL5BKyWRzz8kuaEU3bkZkS+XOHkgoYQfrMkK3yGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pna30I00; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEqFY/D0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E254FC4CEC3;
-	Fri,  1 Nov 2024 01:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730425992;
-	bh=2TU62Hgp56g5+Sz4wGbj7LZ9edguPOOihgw6ErBjvh8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aEqFY/D0zWm2HZsvfEQD9UCb49YP/MdonDE5DUbK9KN4miXrUPKq5U4w2j+S7U3DM
-	 YkRIS1p71AWdz6Ao9SSI1mNogr/+9XlC1MhmzB5IUOSUTahn/C+Tti0H5RwgYOReaD
-	 lhQf9qPD1L0ADJgnGM7Z56U+6/6ezbDSNwqWXGb2LpyGL6ZgLxOkw7y62BS9FySg4Y
-	 BlCxjNNtgte7SmK8+K17yI0tR5ckLqb/eSmhF/fSVKqNMJkeJhASH0PTbY0T0obUkw
-	 H8Pioh/gQbMpn5lTsGv0hcbam2SdL0DA3saXKrOkX/lDOg4JPH39KwmSnOIT/MkpUl
-	 xkL4NLNzBUmjQ==
-Date: Fri, 1 Nov 2024 10:53:06 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Jinjie Ruan <ruanjinjie@huawei.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- patches@lists.linux.dev
-Subject: Re: [PATCH 1/2] kprobes: Fix __get_insn_slot() after __counted_by
- annotation
-Message-Id: <20241101105306.d198e543f9b60270cdcd570c@kernel.org>
-In-Reply-To: <20241031033731.GA2553234@thelio-3990X>
-References: <20241030-kprobes-fix-counted-by-annotation-v1-0-8f266001fad0@kernel.org>
-	<20241030-kprobes-fix-counted-by-annotation-v1-1-8f266001fad0@kernel.org>
-	<20241031105827.08b362cf0dcf558f9cf59ad8@kernel.org>
-	<20241031033731.GA2553234@thelio-3990X>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pna30I00"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1730437693; x=1761973693;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gHCvEzqGz5HrCXCX8obbMOpf4rX8W8+whNsK2k2oVnA=;
+  b=Pna30I00qwvxsgjCJ2ZGBz+MG/NgTSVx3NohWr0yOeYSsdXLVKujurCF
+   k3l2lfYt0v8FvanclCFF8xULDL7g5MBcKvaRgNzZIxYppy3MezPmb0Yhv
+   w3+8Xh9gm1BoFrgvthipX1tjO2rjxSCeeaVQdVkxU0MI+DYsmSqF/LeB9
+   Rpx2p4tlsCaHas8PB1v3dq9XUOcGVF9DYJxgzdLcLlZ5uk/TdKN+gLh2r
+   Ndopcg7M5v8b4SzPdG19+ZjarX338RepY9ScYbv5DgO7wa/B0RGu/ue6z
+   ec1SispCpggw83Q7sfVw8qjb8y9wDCZy8QyL8Fy/aROtXZl3FWz7xJsVK
+   Q==;
+X-CSE-ConnectionGUID: PXeyCiwUTDqCysut5AJ0sQ==
+X-CSE-MsgGUID: ZSxb6Eq1TAeezMRaooTtgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11242"; a="30091580"
+X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
+   d="scan'208";a="30091580"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2024 22:08:12 -0700
+X-CSE-ConnectionGUID: VVyBlTPCQpCKxcFXEHZ3sw==
+X-CSE-MsgGUID: kOLQEgr2QummUPom66znnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,248,1725346800"; 
+   d="scan'208";a="120315134"
+Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 31 Oct 2024 22:08:08 -0700
+Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1t6jtF-000h9t-30;
+	Fri, 01 Nov 2024 05:08:05 +0000
+Date: Fri, 1 Nov 2024 13:07:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, rostedt@goodmis.org, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+	peterz@infradead.org, paulmck@kernel.org, jrife@google.com,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH trace/for-next 3/3] bpf: ensure RCU Tasks Trace GP for
+ sleepable raw tracepoint BPF links
+Message-ID: <202411011255.GYntOfN5-lkp@intel.com>
+References: <20241031210938.1696639-3-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241031210938.1696639-3-andrii@kernel.org>
 
-On Wed, 30 Oct 2024 20:37:31 -0700
-Nathan Chancellor <nathan@kernel.org> wrote:
+Hi Andrii,
 
-> On Thu, Oct 31, 2024 at 10:58:27AM +0900, Masami Hiramatsu wrote:
-> > On Wed, 30 Oct 2024 09:14:48 -0700
-> > Nathan Chancellor <nathan@kernel.org> wrote:
-> > 
-> > > Commit 0888460c9050 ("kprobes: Annotate structs with __counted_by()")
-> > > added a __counted_by annotation without adjusting the code for the
-> > > __counted_by requirements, resulting in a panic when UBSAN_BOUNDS and
-> > > FORTIFY_SOURCE are enabled:
-> > > 
-> > >   | memset: detected buffer overflow: 512 byte write of buffer size 0
-> > >   | WARNING: CPU: 0 PID: 1 at lib/string_helpers.c:1032 __fortify_report+0x64/0x80
-> > >   | Call Trace:
-> > >   |  __fortify_report+0x60/0x80 (unreliable)
-> > >   |  __fortify_panic+0x18/0x1c
-> > >   |  __get_insn_slot+0x33c/0x340
-> > > 
-> > > __counted_by requires that the counter be set before accessing the
-> > > flexible array but ->nused is not set until after ->slot_used is
-> > > accessed via memset(). Even if the current ->nused assignment were moved
-> > > up before memset(), the value of 1 would be incorrect because the entire
-> > > array is being accessed, not just one element.
-> > 
-> > Ah, I think I misunderstood the __counted_by(). If so, ->nused can be
-> > smaller than the accessing element of slot_used[]. I should revert it.
-> > The accessing index and ->nused should have no relationship.
-> > 
-> > for example, slots_per_page(c) is 10, and 10 kprobes are registered
-> > and then, the 1st and 2nd kprobes are unregistered. At this moment,
-> > ->nused is 8 but slot_used[9] is still used. To unregister this 10th
-> > kprobe, we have to access slot_used[9].
-> 
-> Ah, I totally missed that bit of the code, sorry about that. Thanks for
-> the explanation!
-> 
-> > So let's just revert the commit 0888460c9050.
-> 
-> Reverting that change sounds totally reasonable to me based on the
-> above. Will you take care of that?
+kernel test robot noticed the following build errors:
 
-Yeah, probes/for-next is a working branch. So I just dropped it.
+[auto build test ERROR on trace/for-next]
 
-> 
-> For what it's worth, I think patch #2 should still be applicable, if you
-> are okay with that one.
+url:    https://github.com/intel-lab-lkp/linux/commits/Andrii-Nakryiko/bpf-decouple-BPF-link-attach-hook-and-BPF-program-sleepable-semantics/20241101-051131
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20241031210938.1696639-3-andrii%40kernel.org
+patch subject: [PATCH trace/for-next 3/3] bpf: ensure RCU Tasks Trace GP for sleepable raw tracepoint BPF links
+config: x86_64-buildonly-randconfig-001-20241101 (https://download.01.org/0day-ci/archive/20241101/202411011255.GYntOfN5-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241101/202411011255.GYntOfN5-lkp@intel.com/reproduce)
 
-Yes, other patches look good to me.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411011255.GYntOfN5-lkp@intel.com/
 
-Thank you,
+All errors (new ones prefixed by >>):
 
-> 
-> Cheers,
-> Nathan
+   kernel/bpf/syscall.c: In function 'bpf_raw_tp_link_attach':
+>> kernel/bpf/syscall.c:3866:33: error: implicit declaration of function 'tracepoint_is_faultable' [-Werror=implicit-function-declaration]
+    3866 |                                 tracepoint_is_faultable(btp->tp));
+         |                                 ^~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
+
+vim +/tracepoint_is_faultable +3866 kernel/bpf/syscall.c
+
+  3818	
+  3819	static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
+  3820					  const char __user *user_tp_name, u64 cookie)
+  3821	{
+  3822		struct bpf_link_primer link_primer;
+  3823		struct bpf_raw_tp_link *link;
+  3824		struct bpf_raw_event_map *btp;
+  3825		const char *tp_name;
+  3826		char buf[128];
+  3827		int err;
+  3828	
+  3829		switch (prog->type) {
+  3830		case BPF_PROG_TYPE_TRACING:
+  3831		case BPF_PROG_TYPE_EXT:
+  3832		case BPF_PROG_TYPE_LSM:
+  3833			if (user_tp_name)
+  3834				/* The attach point for this category of programs
+  3835				 * should be specified via btf_id during program load.
+  3836				 */
+  3837				return -EINVAL;
+  3838			if (prog->type == BPF_PROG_TYPE_TRACING &&
+  3839			    prog->expected_attach_type == BPF_TRACE_RAW_TP) {
+  3840				tp_name = prog->aux->attach_func_name;
+  3841				break;
+  3842			}
+  3843			return bpf_tracing_prog_attach(prog, 0, 0, 0);
+  3844		case BPF_PROG_TYPE_RAW_TRACEPOINT:
+  3845		case BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE:
+  3846			if (strncpy_from_user(buf, user_tp_name, sizeof(buf) - 1) < 0)
+  3847				return -EFAULT;
+  3848			buf[sizeof(buf) - 1] = 0;
+  3849			tp_name = buf;
+  3850			break;
+  3851		default:
+  3852			return -EINVAL;
+  3853		}
+  3854	
+  3855		btp = bpf_get_raw_tracepoint(tp_name);
+  3856		if (!btp)
+  3857			return -ENOENT;
+  3858	
+  3859		link = kzalloc(sizeof(*link), GFP_USER);
+  3860		if (!link) {
+  3861			err = -ENOMEM;
+  3862			goto out_put_btp;
+  3863		}
+  3864		bpf_link_init_sleepable(&link->link, BPF_LINK_TYPE_RAW_TRACEPOINT,
+  3865					&bpf_raw_tp_link_lops, prog,
+> 3866					tracepoint_is_faultable(btp->tp));
+  3867		link->btp = btp;
+  3868		link->cookie = cookie;
+  3869	
+  3870		err = bpf_link_prime(&link->link, &link_primer);
+  3871		if (err) {
+  3872			kfree(link);
+  3873			goto out_put_btp;
+  3874		}
+  3875	
+  3876		err = bpf_probe_register(link->btp, link);
+  3877		if (err) {
+  3878			bpf_link_cleanup(&link_primer);
+  3879			goto out_put_btp;
+  3880		}
+  3881	
+  3882		return bpf_link_settle(&link_primer);
+  3883	
+  3884	out_put_btp:
+  3885		bpf_put_raw_tracepoint(btp);
+  3886		return err;
+  3887	}
+  3888	
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
