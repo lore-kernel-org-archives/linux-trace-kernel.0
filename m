@@ -1,83 +1,197 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF151714D3;
-	Fri,  1 Nov 2024 10:55:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B12015820C;
+	Fri,  1 Nov 2024 11:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730458502; cv=none; b=MeKGleyk4g4+Ux9cdowHcMVazFmutVqZ0hAm5KF05Anq4l3j2uYzSvL/Z3pD8oC70eOTFDTads/MEUBFwUUM9Z2Rk5hyJjlqr4SyHltbfC7g+8KgDm0qJxuG3kGN3fjeXq3K19VOZSW0k1j92mTtiWjaLZ7tj+J1uk2BN6CJBRY=
+	t=1730461935; cv=none; b=C04GHCqpNJ+6pErEWehmlTGvTBFn+lxCWPDDkV+wCWasOZZo1GSx2pS8Qks2jRa9WjkNKV8zaqBJ5U/blO/B2e5Lxny2GpJX97ey+lvYlcXfx/uLTyxQxqRNewViKOtEUkA3NYC8efQsBAEmrldAGrlM4GPPvdLdcmhME8c5R0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730458502; c=relaxed/simple;
-	bh=w4OARYNlH21vGSocyAGaNhD+J6STVANXfmJukfpuOP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ABeB1nKGf/uF5XCIHaMCBMgnyNpYD5rE9dWoY9vRJmiBeRVxlAeuqtQPnfa0WEqcMKOfTRs3dPTNIegv2gy8bAOBaSVIcBYQYpSc6xh8ggYYx9R4KWssssMGkrHqtCr1UhcnayzSPPsxBoHhS6duybJiZ+6YQhjN6yqKzbEAg5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80D07C4CECD;
-	Fri,  1 Nov 2024 10:55:00 +0000 (UTC)
-Date: Fri, 1 Nov 2024 06:55:58 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@kernel.org,
- mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
- mhiramat@kernel.org, peterz@infradead.org, paulmck@kernel.org,
- jrife@google.com
-Subject: Re: [PATCH trace/for-next 1/3] bpf: put bpf_link's program when
- link is safe to be deallocated
-Message-ID: <20241101065558.4be28057@gandalf.local.home>
-In-Reply-To: <20241031210938.1696639-1-andrii@kernel.org>
-References: <20241031210938.1696639-1-andrii@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1730461935; c=relaxed/simple;
+	bh=57TfoCYTbEwQPkJzCSWfPWSdR5l5+Kvm1S5E2+Mg2eE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IecH52Nje4mSDuC0M+cjDS/SnHbUyY/3PmyGongnEXNFHI8OH3k0CpFpZBntllJ1owcM6qt1GXTHaM5sWF8zmtPk+vWmtuah8kB6zn7RLuc1hw2R5MKDvoBb58E9XRQFNXFlhKf54AVxS2599gX6pMJIOXRuA9TO1VCWm8PAVrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmAgbgm5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmAgbgm5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B166C4CECD;
+	Fri,  1 Nov 2024 11:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730461934;
+	bh=57TfoCYTbEwQPkJzCSWfPWSdR5l5+Kvm1S5E2+Mg2eE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KmAgbgm5I89HECc45z6DksI6Df2ImIw57iPYWvFdWioyuIg2lglcTgxjNnjfYfaHi
+	 CQJ/wNz0lQyJsmyJoOvW4SkLL6WBjKX9ldFMDxnNCVh5pxlGUK2FlCdBWWX9WifFhK
+	 YeYLtXId3O2e4dPfLvyd00mwkZ63RcOUuG9rhbthTm5vYa+SLjBtZAzi6WU5HW6EJo
+	 Z7SL1PoIFDrZhyBb7WJzTKFtiiVP4wq0c0YWXwIaAurmX2E0DWKcu2TmuxOYeilZt9
+	 j4R7qQGDlrizkruOpwX0zKtjhmMdWZOTbs5Uk29EXDETLovKzc8tW8fpXb4LIAHy0b
+	 cBP/zcHBdmZgA==
+Date: Fri, 1 Nov 2024 12:51:49 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Yun Zhou <yun.zhou@windriver.com>
+Cc: mcgrof@kernel.org, kees@kernel.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: add pid_max to pid_namespace
+Message-ID: <4jlpjuptn5fzgrfgbct2l3dyerb3gnxwd3ujir4dodwkxivmxs@u7mptlgts2wq>
+References: <20241030052933.1041408-1-yun.zhou@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241030052933.1041408-1-yun.zhou@windriver.com>
 
-On Thu, 31 Oct 2024 14:09:36 -0700
-Andrii Nakryiko <andrii@kernel.org> wrote:
-
-> In general, BPF link's underlying BPF program should be considered to be
-> reachable through attach hook -> link -> prog chain, and, pessimistically,
-> we have to assume that as long as link's memory is not safe to free,
-> attach hook's code might hold a pointer to BPF program and use it.
+On Wed, Oct 30, 2024 at 01:29:33PM +0800, Yun Zhou wrote:
+> It is necessary to have a different pid_max in different containers.
+> For example, multiple containers are running on a host, one of which
+> is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
+> it requires the global pid_max <= 65535. This will cause configuration
+> conflicts with other containers and also limit the maximum number of
+> tasks for the entire system.
 > 
-> As such, it's not (generally) correct to put link's program early before
-> waiting for RCU GPs to go through. More eager bpf_prog_put() that we
-> currently do is mostly correct due to BPF program's release code doing
-> similar RCU GP waiting, but as will be shown in the following patches,
-> BPF program can be non-sleepable (and, thus, reliant on only "classic"
-> RCU GP), while BPF link's attach hook can have sleepable semantics and
-> needs to be protected by RCU Tasks Trace, and for such cases BPF link
-> has to go through RCU Tasks Trace + "classic" RCU GPs before being
-> deallocated. And so, if we put BPF program early, we might free BPF
-> program before we free BPF link, leading to use-after-free situation.
+> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
+> ---
+>  include/linux/pid_namespace.h     |  1 +
+>  kernel/pid.c                      | 12 +++++------
+>  kernel/pid_namespace.c            | 35 ++++++++++++++++++++++++++-----
+>  kernel/sysctl.c                   |  9 --------
+>  kernel/trace/pid_list.c           |  2 +-
+>  kernel/trace/trace.h              |  2 --
+>  kernel/trace/trace_sched_switch.c |  2 +-
+>  7 files changed, 39 insertions(+), 24 deletions(-)
 > 
-> So, this patch defers bpf_prog_put() until we are ready to perform
-> bpf_link's deallocation. At worst, this delays BPF program freeing by
-> one extra RCU GP, but that seems completely acceptable. Alternatively,
-> we'd need more elaborate ways to determine BPF hook, BPF link, and BPF
-> program lifetimes, and how they relate to each other, which seems like
-> an unnecessary complication.
-> 
-> Note, for most BPF links we still will perform eager bpf_prog_put() and
-> link dealloc, so for those BPF links there are no observable changes
-> whatsoever. Only BPF links that use deferred dealloc might notice
-> slightly delayed freeing of BPF programs.
-> 
-> Also, to reduce code and logic duplication, extract program put + link
-> dealloc logic into bpf_link_dealloc() helper.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+> index f9f9931e02d6..064cfe2542fc 100644
+> --- a/include/linux/pid_namespace.h
+> +++ b/include/linux/pid_namespace.h
+> @@ -38,6 +38,7 @@ struct pid_namespace {
+>  	struct ucounts *ucounts;
+>  	int reboot;	/* group exit code if this pidns was rebooted */
+>  	struct ns_common ns;
+> +	int pid_max;
+>  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+>  	int memfd_noexec_scope;
+>  #endif
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 2715afb77eab..f8026a61436b 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -60,8 +60,6 @@ struct pid init_struct_pid = {
+>  	}, }
+>  };
+>  
+> -int pid_max = PID_MAX_DEFAULT;
+> -
+>  int pid_max_min = RESERVED_PIDS + 1;
+>  int pid_max_max = PID_MAX_LIMIT;
+>  /*
+> @@ -78,6 +76,7 @@ static u64 pidfs_ino = RESERVED_PIDS;
+>   */
+>  struct pid_namespace init_pid_ns = {
+>  	.ns.count = REFCOUNT_INIT(2),
+> +	.pid_max = PID_MAX_DEFAULT,
+>  	.idr = IDR_INIT(init_pid_ns.idr),
+>  	.pid_allocated = PIDNS_ADDING,
+>  	.level = 0,
+> @@ -198,7 +197,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  			tid = set_tid[ns->level - i];
+>  
+>  			retval = -EINVAL;
+> -			if (tid < 1 || tid >= pid_max)
+> +			if (tid < 1 || tid >= tmp->pid_max)
+>  				goto out_free;
+>  			/*
+>  			 * Also fail if a PID != 1 is requested and
+> @@ -238,7 +237,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+>  			 * a partially initialized PID (see below).
+>  			 */
+>  			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+> -					      pid_max, GFP_ATOMIC);
+> +					      tmp->pid_max, GFP_ATOMIC);
+>  		}
+>  		spin_unlock_irq(&pidmap_lock);
+>  		idr_preload_end();
+> @@ -653,11 +652,12 @@ void __init pid_idr_init(void)
+>  	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
+>  
+>  	/* bump default and minimum pid_max based on number of cpus */
+> -	pid_max = min(pid_max_max, max_t(int, pid_max,
+> +	init_pid_ns.pid_max = min(pid_max_max, max_t(int, init_pid_ns.pid_max,
+>  				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
+>  	pid_max_min = max_t(int, pid_max_min,
+>  				PIDS_PER_CPU_MIN * num_possible_cpus());
+> -	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
+> +	pr_info("pid_max: default: %u minimum: %u\n", init_pid_ns.pid_max,
+> +			pid_max_min);
+>  
+>  	idr_init(&init_pid_ns.idr);
+>  
+> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+> index d70ab49d5b4a..d8ddc0c56599 100644
+> --- a/kernel/pid_namespace.c
+> +++ b/kernel/pid_namespace.c
+> @@ -111,6 +111,7 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+>  	ns->user_ns = get_user_ns(user_ns);
+>  	ns->ucounts = ucounts;
+>  	ns->pid_allocated = PIDNS_ADDING;
+> +	ns->pid_max = parent_pid_ns->pid_max;
+>  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+>  	ns->memfd_noexec_scope = pidns_memfd_noexec_scope(parent_pid_ns);
+>  #endif
+> @@ -280,19 +281,45 @@ static int pid_ns_ctl_handler(const struct ctl_table *table, int write,
+>  
+>  	return ret;
+>  }
+> +#endif	/* CONFIG_CHECKPOINT_RESTORE */
+> +
+> +static int pid_max_ns_ctl_handler(const struct ctl_table *table, int write,
+> +		void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+> +	struct ctl_table tmp = *table;
+> +
+> +	if (write && !checkpoint_restore_ns_capable(pid_ns->user_ns))
+> +		return -EPERM;
+> +
+> +	tmp.data = &pid_ns->pid_max;
+> +	if (pid_ns->parent)
+> +		tmp.extra2 = &pid_ns->parent->pid_max;
+> +
+> +	return proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+> +}
+>  
+> -extern int pid_max;
+>  static struct ctl_table pid_ns_ctl_table[] = {
+> +#ifdef CONFIG_CHECKPOINT_RESTORE
+>  	{
+>  		.procname = "ns_last_pid",
+>  		.maxlen = sizeof(int),
+>  		.mode = 0666, /* permissions are checked in the handler */
+>  		.proc_handler = pid_ns_ctl_handler,
+>  		.extra1 = SYSCTL_ZERO,
+> -		.extra2 = &pid_max,
+> +		.extra2 = &init_pid_ns.pid_max,
+>  	},
+> -};
+>  #endif	/* CONFIG_CHECKPOINT_RESTORE */
+> +	{
+> +		.procname = "pid_max",
+> +		.maxlen = sizeof(int),
+> +		.mode = 0644,
+> +		.proc_handler = pid_max_ns_ctl_handler,
+> +		.extra1 = &pid_max_min,
+> +		.extra2 = &pid_max_max,
+> +	},
+> +	{ }
+There is no longer any need for sentinels in ctl_table arrays. Please
+remove this one for your next version.
 
+Best
 
-Hi Andrii,
+-- 
 
-Do you want me to add this on top of my queue? If so, would it be possible
-that I can get a tested-by from someone? As I don't do much to test BPF
-patches.
-
--- Steve
+Joel Granados
