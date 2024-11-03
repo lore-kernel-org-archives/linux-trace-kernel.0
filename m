@@ -1,41 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A972320B;
-	Sun,  3 Nov 2024 04:55:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF7B70812;
+	Sun,  3 Nov 2024 04:58:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730609751; cv=none; b=o5QsGLPnjJJBTBvMsmTzAQ3QKII+3y/Qi4kJelkiPKu7gX9oROD4eszT6IVXKtBendGLMg08tYBl5dx6c73WzQUIid6IP6I/WWy3czJU1vphZcCF7LyfvSemsDlrGrcTX+KqF1KpRJTP2s2mymPmQ5yvvVa2mlL6ebE9NWs66SQ=
+	t=1730609882; cv=none; b=PJMpCb11eIaruRzxEOyug2RmeVV2cr2yrlQpklWo/Biu6+Dp6KBJuK9SHUQzuygIRPqsCg5pheNqi18KmyZw7kQYnpukxPiCVxD6vGg7ipDYalcrkgx8w4+2pYV8hPXGNerP/e0D95kyEVdopcwk2mxV2PbdQLHgOUrVU88VnBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730609751; c=relaxed/simple;
-	bh=+09uscfLel9NWsLsYgmtDzXrHUoiLefG41k8w3meA4E=;
+	s=arc-20240116; t=1730609882; c=relaxed/simple;
+	bh=0tNRT0xSX7XmwNmCgdyMhAikThf/p4Wje8UYd8Iov6M=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PlhKZvagbE+GY8WSfeJIplz5icDelTN7Z0DTGGIwmpcRItP4U4U91wBNisDgpz15DQa7k5nK0gnWaz/Y1n3hkllmJLJDIBmn+JZ/xIHq2zj8zBLhBf4G+1KaGWLZWTzaoeuHXY8nyEPr9QOxCUcq/jF/wYtRtzDxAzjffAVP3HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UITFML6Y; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=jGStnaqEKVN5Z8zN/xHB46yeRH/tWFJHH1Noq2xBMwzkQ69ghoDkTUCOpsNdqL4dClYIUAZuQG8DB0hHP7smRoGwHMK7EtZ491VEBt2IERchFyu8+7qncfRUgSb83xsLY4VqxX/80cIX/Sseoe1minfR/V3us8q8zmic7oycSdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbJvURL9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UITFML6Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0442BC4CECD;
-	Sun,  3 Nov 2024 04:55:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbJvURL9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651A2C4CECD;
+	Sun,  3 Nov 2024 04:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730609751;
-	bh=+09uscfLel9NWsLsYgmtDzXrHUoiLefG41k8w3meA4E=;
+	s=k20201202; t=1730609882;
+	bh=0tNRT0xSX7XmwNmCgdyMhAikThf/p4Wje8UYd8Iov6M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UITFML6YWTmQKugoWzmkCCU54RTz9pfe2Z+gTtjRRW0lnlQTeP4PlRbDUS5Fv+6/L
-	 OJaIyQWeQv4FKt00bD1leamDtC4uUMFSi23xVAJ7tByCqpwSbxZhAIAJBbD5468XnQ
-	 afRGR0dlz8IlnM7bakuXfSWgb5EdaKcEpVe7CsIbsUY27TaD/sNUQ19YtSqUhQalRb
-	 59nredZ/s8EaB0VU5Or2jsaWvT6pjyw3sfV5uvvc1E55Qhm269FnWFg0GODsrR5g50
-	 WBx+4OHkO9AA6aKh10tzbWXf27tMFmNYsGVA65/oEDwmqacCmqzroaC8pMgHXXDM7y
-	 TF094RHQrEl0Q==
-Date: Sun, 3 Nov 2024 13:55:48 +0900
+	b=hbJvURL9eRPIU/g6T+sEX6cu3/Dyz7PJDR7coQCxz43K21RWvdqsaRUcphAQZORl2
+	 lc9iBejRtHGX98dTNtGBHSn3FEfCnn9hbwSzBY0DoBTTBmveSR1wRMEfWjPMWtYRLo
+	 uRlnuS5DjaU1k9Bs3WnHyXzjIMvepaTZygovC70cxHYfvAnJ8vm79BCnJe5ayaJQJn
+	 p8QIjT+73h7qQddW8Ysi/NLk2SOg+h8Ml08beoP5MzOU5DJQX18y6QeARV6fjG4DQl
+	 uXl9QyPzsC4fadu2wArDrz2uPr5/UB7BI9aFOIlqBq4NngzYmUwKjAY6YgfhEyRoN8
+	 p3RND3mWwDvIA==
+Date: Sun, 3 Nov 2024 13:57:58 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Re-order struct uprobe_task to save some space
-Message-Id: <20241103135548.0c19e1a1451e598c18d8c42f@kernel.org>
-In-Reply-To: <a9f541d0cedf421f765c77a1fb93d6a979778a88.1730495562.git.christophe.jaillet@wanadoo.fr>
-References: <a9f541d0cedf421f765c77a1fb93d6a979778a88.1730495562.git.christophe.jaillet@wanadoo.fr>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, "Naveen N. Rao" <naveen@kernel.org>, lkml
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for
+ ppc64le
+Message-Id: <20241103135758.5a5f8f0870a139ab1a5bc7b8@kernel.org>
+In-Reply-To: <20241101191925.1550493-1-hbathini@linux.ibm.com>
+References: <20241101191925.1550493-1-hbathini@linux.ibm.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,64 +50,40 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri,  1 Nov 2024 22:13:33 +0100
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Sat,  2 Nov 2024 00:49:25 +0530
+Hari Bathini <hbathini@linux.ibm.com> wrote:
 
-> On x86_64, with allmodconfig, struct uprobe_task is 72 bytes long, with a
-> hole and some padding.
-> 
-> 	/* size: 72, cachelines: 2, members: 7 */
-> 	/* sum members: 64, holes: 1, sum holes: 4 */
-> 	/* padding: 4 */
-> 	/* forced alignments: 1, forced holes: 1, sum forced holes: 4 */
-> 	/* last cacheline: 8 bytes */
-> 
-> Reorder the structure to fill the hole and avoid the padding.
-> 
-> This way, the whole structure fits in a single cacheline and some memory is
-> saved when it is allocated.
-> 
-> 	/* size: 64, cachelines: 1, members: 7 */
-> 	/* forced alignments: 1 */
+> For ppc64le, depending on the kernel configuration used, offset 16
+> from function start address can also be considered function entry.
+> Update the test case to accommodate such configurations.
 > 
 
-Looks good to me.
+Hi Hari, so have you met any error on this test case?
+Can you share the error result too?
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you,
 
-Thank you!
-
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 > ---
-> Compile tested only
-> ---
->  include/linux/uprobes.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  .../selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc    | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index dbaf04189548..c684a470477f 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -73,6 +73,9 @@ enum uprobe_task_state {
->  struct uprobe_task {
->  	enum uprobe_task_state		state;
->  
-> +	unsigned int			depth;
-> +	struct return_instance		*return_instances;
-> +
->  	union {
->  		struct {
->  			struct arch_uprobe_task	autask;
-> @@ -89,9 +92,6 @@ struct uprobe_task {
->  	unsigned long			xol_vaddr;
->  
->  	struct arch_uprobe              *auprobe;
-> -
-> -	struct return_instance		*return_instances;
-> -	unsigned int			depth;
->  };
->  
->  struct return_consumer {
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> index a16c6a6f6055..c03b94cc5784 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+> @@ -111,7 +111,11 @@ check_error 'p vfs_read $arg* ^$arg*'		# DOUBLE_ARGS
+>  if !grep -q 'kernel return probes support:' README; then
+>  check_error 'r vfs_read ^$arg*'			# NOFENTRY_ARGS
+>  fi
+> +if [ "$(uname -m)" = "ppc64le" ]; then
+> +check_error 'p vfs_read+20 ^$arg*'		# NOFENTRY_ARGS
+> +else
+>  check_error 'p vfs_read+8 ^$arg*'		# NOFENTRY_ARGS
+> +fi
+>  check_error 'p vfs_read ^hoge'			# NO_BTFARG
+>  check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
+>  check_error 'r kfree ^$retval'			# NO_RETVAL
 > -- 
 > 2.47.0
 > 
