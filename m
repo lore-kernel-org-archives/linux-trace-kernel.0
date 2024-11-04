@@ -1,125 +1,238 @@
-Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C0701B394C;
-	Mon,  4 Nov 2024 10:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655941B6CE9
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Nov 2024 12:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730716717; cv=none; b=RIPxT81VOgu9O99Qi82D0hI2DLAcsw2c0JT4VuDiG2rnQ+alDS7YIQPxd63F3gcU2U4eAUPtIa9f7aatf01JkB2Sl1TKx6bbZYLgJ1o2HD8SkfGa6C8y6rTDiKrqnyVSkXHypRZ+2S1hZxv9sjBot3E4ZWPHKdgYHkYni/NvadU=
+	t=1730722739; cv=none; b=pvk+qtXdHD5w1QSWuswmHdvJLM1OtZ1UfPjH2LlG8PLZ1KoQYIvWUDTi3N6TmXNEiDpUEEjLpSZ0vBfJM+U9y45pC8TMl/jrGIyOqhaF6VnuSb/b5vGmCMZBEYvmEaa7DW0tOdM0HOH1zJkPUq3G7e0NLyRvw0yjQsXOzep9/d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730716717; c=relaxed/simple;
-	bh=HGPGB0Mg253q0yrFI7BDnmDh/7TP1a+ibRRnqp9yLT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YoEXvYmS9rQ26lQ7JmVBsbM7iqO9oBjitB5ZXt0o1t7hokT/0iEIR1YYoDf6GdT+9F+kS3kCJ25TlJqrpC5kw1XznK/4eGzaMWx+zufI6IfUKJ7zTmiQzkAVXQOv0DnKtLIEUzAtQcOdFf6WRyNGaE9mHek2WGALHrS2xywpikY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A4AaIGG013804;
-	Mon, 4 Nov 2024 04:36:18 -0600
-Received: (from segher@localhost)
-	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A4AaGdn013795;
-	Mon, 4 Nov 2024 04:36:16 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date: Mon, 4 Nov 2024 04:36:15 -0600
-From: Segher Boessenkool <segher@kernel.crashing.org>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        "Naveen N. Rao" <naveen@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for ppc64le
-Message-ID: <20241104103615.GZ29862@gate.crashing.org>
-References: <20241101191925.1550493-1-hbathini@linux.ibm.com> <20241101205948.GW29862@gate.crashing.org> <1916cb5c-cb3d-427c-bcf0-2c1b905fd6d1@linux.ibm.com> <20241104094431.GY29862@gate.crashing.org> <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
+	s=arc-20240116; t=1730722739; c=relaxed/simple;
+	bh=mATfRnv3WaO/g2+GM7NFqpYOfENuJYPDfVgLx2OkuAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fL/WWsWl4SAlr/XmNoMRGJNBOPqyOj7RtBHCMLSxhH7z8l7xjyB1AsBMAz5XmAxZla1/boPk5pFOpBQMXe6Sny7KJ83tpH1jpjvCSI9+gyPTsgWTWp91FVbuxhYVy3bGXbFtOE07jKcRIApay5wRPGF5RW29vYk6U+v8968geRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jUov7vpC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jUov7vpC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730722736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ekj68x/5561NfPpq6VBhFf4fvoAXBdLk2oVjJQdOwyc=;
+	b=jUov7vpCQtK2+lqTNC9MByvAwwuPWQIZHX7xSsuJpl07/vgGHKlMawZXDLslZXmUIfDHxw
+	ORnaH6NvqdI9/L0qy8oGVvT7XMnKR7xJPpfO1o8MqqQidfsG+pCLTrUzQeyZ3BuAhvU8H2
+	J0u/uKwMJIsDX6I/vc7vLaWu1+fOvsw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-41-p0_c9ZMgOi27LOjiFi4ZRw-1; Mon, 04 Nov 2024 07:18:55 -0500
+X-MC-Unique: p0_c9ZMgOi27LOjiFi4ZRw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-37d3e8dccc9so2300168f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Nov 2024 04:18:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730722734; x=1731327534;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ekj68x/5561NfPpq6VBhFf4fvoAXBdLk2oVjJQdOwyc=;
+        b=nxsu5xx1LlWZTeFP3p5bskxniMVOjyrR2dYnB8h1BjjEP+MWqdOFsNMM4adM11m+H6
+         Sbq5wfPnudqKKqs7A4GvaVXDVcTkhFthNE50XeazHB55IJ4Vju97ROYMqXKoF6qwOSdQ
+         yNNYsvadvt+qB7mscSCrCZ69b6pM0HXKmhFqUKzWyHCShDXDNMnOu485BVxrrIvmvAt2
+         fphSsGTvaYhaKyUm2qdEp5x1vtA4SZw2vZGJdkF+iMPVWZC8oMWwe6Wqbw6E60bmBhGn
+         9zEZ8je3rwspfHA8jvarXByz46lbKWhJFV6IO2OmIOmN0Z4V6Zj845398gUI/XXwPmx+
+         64sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV07XgVj5g/phXyIY77tajmbJUp+YPfQjc3ZFPf+LTnu7TkSNMP+Hg+wKM2FTzk2Bk8bmdvAQWDPJIX9OMJLy+T14I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0v2dbw3xtTfowUCxCNDCqLgq3HfAIZzPKsUPHmbV7F3WyAu8f
+	Tj9b6Rx/t6HOMDOG2l5w0utH/tkJiEUo69SPZUj4G2XDDC3f5Z3M3JPXVJxrHqHHOAtoBUMVMlz
+	MielFrfdRPRrXSRFO5eIqS+LjA788JbkJvLxR098aMBlH66Y3bwabdtjdWMY+pIYKquy2AQ==
+X-Received: by 2002:a5d:64c7:0:b0:37d:4cd6:6f2b with SMTP id ffacd0b85a97d-381be7c6d38mr12976272f8f.14.1730722734190;
+        Mon, 04 Nov 2024 04:18:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFks1Vg1EGJ6kG/ABNcRU757iJju9STT8kBWmpSO5OP6IyVzEWTv0ofagBRVbHOOPCmUXAkvA==
+X-Received: by 2002:a5d:64c7:0:b0:37d:4cd6:6f2b with SMTP id ffacd0b85a97d-381be7c6d38mr12976219f8f.14.1730722733722;
+        Mon, 04 Nov 2024 04:18:53 -0800 (PST)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-381c10e7449sm13084440f8f.49.2024.11.04.04.18.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2024 04:18:53 -0800 (PST)
+Message-ID: <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
+Date: Mon, 4 Nov 2024 13:18:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
-User-Agent: Mutt/1.4.2.3i
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+To: Patrick Roy <roypat@amazon.co.uk>, tabba@google.com,
+ quic_eberman@quicinc.com, seanjc@google.com, pbonzini@redhat.com,
+ jthoughton@google.com, ackerleytng@google.com, vannapurve@google.com,
+ rppt@kernel.org
+Cc: graf@amazon.com, jgowans@amazon.com, derekmn@amazon.com,
+ kalyazin@amazon.com, xmarcalx@amazon.com, linux-mm@kvack.org,
+ corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org,
+ chenhuacai@kernel.org, kernel@xen0n.name, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, gerald.schaefer@linux.ibm.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, luto@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20241030134912.515725-1-roypat@amazon.co.uk>
+ <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
+ <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi!
-
-On Mon, Nov 04, 2024 at 03:40:26PM +0530, Hari Bathini wrote:
-> On 04/11/24 3:14 pm, Segher Boessenkool wrote:
-> >On Mon, Nov 04, 2024 at 02:51:57PM +0530, Hari Bathini wrote:
-> >>On 02/11/24 2:29 am, Segher Boessenkool wrote:
-> >>>On Sat, Nov 02, 2024 at 12:49:25AM +0530, Hari Bathini wrote:
-> >>>>For ppc64le, depending on the kernel configuration used, offset 16
-> >>>>from function start address can also be considered function entry.
-> >>>>Update the test case to accommodate such configurations.
-> >>>
-> >>>(This is true for all ELfv2, not just LE.  For the kernel that is about
-> >>>the same).
-> >>>
-> >>>The LEP and GEP can differ by zero, one, two, four, eight, or sixteen
-> >>>insns (where an insn is four bytes).  Four insns is common, yes, but
-> >>>maybe you can support all?  See the function symbol's st_other field
-> >>>to see what the offset is:
-> >>>0, 1: zero insns, zero bytes
-> >>>N = 2..6: 1 << (N-2) insns, i.e. 1<<N bytes
-> >>>7: reserved
-> >>>
-> >>>(This is the top 3 bits of st_other, the other bits have other meanings).
-> >>>
-> >>>Four insns is common, yes, but by no means the only possibility.
-> >>
-> >>Hi Segher,
-> >>
-> >>Querying for function arguments is supported on kprobes only at function
-> >>entry. This is a negative test case where the offset is intentionally
-> >>set beyond function entry while querying for function arguments.
-> >>I guess, simply setting the offset to 20 (vfs_read is anyway
-> >>going to be beyond 5 instructions) instead of 8 for powerpc would
-> >>make all platforms and ABI variants happy?
-> >
-> >I have no idea.  What is this "offset" anyway?
+On 31.10.24 11:42, Patrick Roy wrote:
+> On Thu, 2024-10-31 at 09:50 +0000, David Hildenbrand wrote:
+>> On 30.10.24 14:49, Patrick Roy wrote:
+>>> Unmapping virtual machine guest memory from the host kernel's direct map
+>>> is a successful mitigation against Spectre-style transient execution
+>>> issues: If the kernel page tables do not contain entries pointing to
+>>> guest memory, then any attempted speculative read through the direct map
+>>> will necessarily be blocked by the MMU before any observable
+>>> microarchitectural side-effects happen. This means that Spectre-gadgets
+>>> and similar cannot be used to target virtual machine memory. Roughly 60%
+>>> of speculative execution issues fall into this category [1, Table 1].
+>>>
+>>> This patch series extends guest_memfd with the ability to remove its
+>>> memory from the host kernel's direct map, to be able to attain the above
+>>> protection for KVM guests running inside guest_memfd.
+>>>
+>>> === Changes to v2 ===
+>>>
+>>> - Handle direct map removal for physically contiguous pages in arch code
+>>>     (Mike R.)
+>>> - Track the direct map state in guest_memfd itself instead of at the
+>>>     folio level, to prepare for huge pages support (Sean C.)
+>>> - Allow configuring direct map state of not-yet faulted in memory
+>>>     (Vishal A.)
+>>> - Pay attention to alignment in ftrace structs (Steven R.)
+>>>
+>>> Most significantly, I've reduced the patch series to focus only on
+>>> direct map removal for guest_memfd for now, leaving the whole "how to do
+>>> non-CoCo VMs in guest_memfd" for later. If this separation is
+>>> acceptable, then I think I can drop the RFC tag in the next revision
+>>> (I've mainly kept it here because I'm not entirely sure what to do with
+>>> patches 3 and 4).
+>>
+>> Hi,
+>>
+>> keeping upcoming "shared and private memory in guest_memfd" in mind, I
+>> assume the focus would be to only remove the direct map for private memory?
+>>
+>> So in the current upstream state, you would only be removing the direct
+>> map for private memory, currently translating to "encrypted"/"protected"
+>> memory that is inaccessible either way already.
+>>
+>> Correct?
 > 
-> offset (in bytes) from function start address..
+> Yea, with the upcomming "shared and private" stuff, I would expect the
+> the shared<->private conversions would call the routines from patch 3 to
+> restore direct map entries on private->shared, and zap them on
+> shared->private.
 
-But what is there?
+I wanted to follow-up to the discussion we had in the bi-weekly call.
 
-> >This is just the ELFv2 ABI.  No platform can make up its own thing at
-> >all (well, none decided to be gratuitously incompatible, so far).  And
-> >there are no "ABI variants"!
-> 
-> The test case applies for ABIv1 & ABIv2. All ppc32 & ppc64 platforms..
+We talked about shared (faultable) vs. private (unfaultable), and how it 
+would interact with the directmap patches here.
 
-Hrm.  So you allow essentially random entry points on other ABIs to
-work?
+As discussed, having private (unfaultable) memory with the direct-map 
+removed and shared (faultable) memory with the direct-mapping can make 
+sense for non-TDX/AMD-SEV/... non-CoCo use cases. Not sure about CoCo, 
+the discussion here seems to indicate that it might currently not be 
+required.
 
-> >You're just making assumptions here that are based on nothing else but
-> >observations of what is done most of the time.  That might work for a
-> >while -- maybe a long while even! -- but it can easily break down.
-> 
-> Hmmm.. I understand that you want the test case to read st_other field
-> but would you rather suggest an offset of 64?
+So one thing we could do is that shared (faultable) will have a direct 
+mapping and be gup-able and private (unfaultable) memory will not have a 
+direct mapping and is, by design, not gup-able.
 
-I have no idea what "offset" means here.
+Maybe it could make sense to not have a direct map for all guest_memfd 
+memory, making it behave like secretmem (and it would be easy to 
+implement)? But I'm not sure if that is really desirable in VM context.
 
-> Is a GEP of 8/16 instructions going to be true anytime soon or is it
-> true already for some cases? The reason I ask that is some kprobe/ftrace
-> code in the kernel might need a bit of re-look if that is the case.
+Having a mixture of "has directmap" and "has no directmap" for shared 
+(faultable) memory should not be done. Similarly, private memory really 
+should stay "unfaultable".
 
-An entry point has no instructions at all.  Oh, you mean the code at
-the GEP.
+I think one of the points raised during the bi-weekly call was that 
+using a viommu/swiotlb might be the right call, such that all memory can 
+be considered private (unfaultable) that is not explicitly 
+shared/expected to be modified by the hypervisor (-> faultable, -> 
+GUP-able).
 
-The LEP can already be all the allowed distances after the GEP.  And
-the .localentry GAS directive already supports all those distances
-always.  Not a lot of code written in assembler does use that, and
-certainly GCC does not use a lot of the freedom it has here, but it
-could (and so could assembler programmers).  Typically people will want
-to make the code here as short as possible, and there are restrictions
-on what is *allowed* to be done here anyway (ld, the link editor, can
-change this code after all!), so it is not too likely you will ever see
-big code at the GEP often, but times change, etc.
+Further, I think Sean had some good points why we should explore that 
+direction, but I recall that there were some issue to be sorted out 
+(interpreted instructions requiring direct map when accessing "private" 
+memory?), not sure if that is already working/can be made working in KVM.
 
+What's your opinion after the call and the next step for use cases like 
+you have in mind (IIRC firecracker, which wants to not have the 
+direct-map for guest memory where it can be avoided)?
 
-Segher
+-- 
+Cheers,
+
+David / dhildenb
+
