@@ -1,275 +1,275 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F1A154BFB
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  3 Nov 2024 10:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD82833FE;
+	Mon,  4 Nov 2024 00:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730630130; cv=none; b=Tqcka6slHs6IMdZpbsNFYuWRrVy64Op2lUwU7hsEz3Pc5jhn/VanilQKa+E8LO6RtG3k6T+DZwJ9kd9tHhDGTDffCXjV8xfC2UPChgq0LXc7tpe3H4LvPaiann9SKA7/fFTbvuvgh54s8Tpg6MzAVl+dd5/JN1yTAs5EF12GotQ=
+	t=1730681673; cv=none; b=uLzBC/B+tm7ZbqTapzefRJbjII8lUrVvFHqFed/KGFP1LZ8Lbo1uLNlw0y8pmcxaB5WfANAzF5KvimXt0+c2AasSf/l28fuibqqgqn+MJxhmdZDYy+thAUTSlPEbL0nLIR40yNTg5HxvtGwpBeTt2Wg/BymTtJwIANSE404iAi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730630130; c=relaxed/simple;
-	bh=aCCoNhKU58JwKcOYBV6xVXvp1zSJZVCSveJPMBPBXNs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GeSdP52L6TB1FR80hTEqHMy4v2WXzgwSOi5v8ZuGMGVmYSc/5N1KmCs2SQvjW/Iza45r/Xee3GkyLdEJI6tWnhAZFPi9JOcEHd2hkKAVDj7tEPUASVaTpccbNkcYCIJfZIfw6zUmyVUpdpoFu7SuTQBaqMAqM5KwBvsCI/GLvjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-83ac1f28d2bso341831839f.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 03 Nov 2024 02:35:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730630128; x=1731234928;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/6P+HvF1NOjI3Wf6qFp3bw1oixgUXXodDOs7TLeYnxU=;
-        b=rkCFdg/k3aGF004Fk1WHKhAKGJqh+dHtpT0Ua2hA/inN2yP8Jra8415IuMQ45Qhclf
-         55V4nbDdUO2hKyZBCoaCn4jIsF3kuP2ADwYQ3k5C5UdXTtYVAKheNXPLprE1ur45IACL
-         jqrn9lLgZC8f2QIJFXt0X/zMx7essHcbsrAevnyseMYz8nMb1X3chX16G1ErZItmJNH0
-         QWyxYhR21dZsLxgiKCjyVeCamrBH7GFWTXtJwsOnFSuIWZrE3fRIevYWdPYEGq9DrjgZ
-         NouAkPWuNidEzcqHaPe2Lmlrwn1eLOA0asXn4TznQP7v462/IO4zPq4Z2y605/glkvi7
-         qqaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWyxaOHTbXZpVrb9kGhBo6i/GLMdB1jFHyCnEO7BJgAIinP+uv7EMY6FthkOL3GPAHTDRLvEp86HjlzErSuFdX664k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsDYFqq+Z7tHb/rmAV+oo+djBkY8Suh9gUZ8obE2mZh4zoM7k6
-	uVmTx4abZ8/fAXir8AiG6qd0r3t8omi0HHrLbrL4H98WMCDB4zY4xYNieQWk3msSNyVVGnQ2cOe
-	WkLaj8cSm3YHkO9WA8+5NjhoObZK9Ul/JjKCpP6Pww62WqqvBOrdTVP4=
-X-Google-Smtp-Source: AGHT+IG39XZw81WaV3RNs1yWRAds/6zO+2icPhpvkpvGE4fawqzSr7ZzzI/Ahz640tALqNf0Z7FmEs/i0IV5bxEet237xcWh4Ti/
+	s=arc-20240116; t=1730681673; c=relaxed/simple;
+	bh=4P9Gt9Gti9J/0neH+YENuJ4M8tG8jPeCIcy94SL+xg0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RU9caDDuA0r4C4ohbYrYtGTAiGOEfP7cxQzqGndfssf57B4rAv7T224R43RRzTL0j82SRj17hOKqiuKCWeTh/8ktvdLqHUIejtEEOPM1FFHLSJOcmSPzr+F51RqDYeuhb5TElz/2J/ExdahGaC4EnNRIaTRHEiuPFtDGpIrrEx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A402Kor013211;
+	Mon, 4 Nov 2024 00:54:13 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 42nb2899m1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 04 Nov 2024 00:54:12 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Sun, 3 Nov 2024 16:54:11 -0800
+Received: from pek-lpd-ccm5.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.39 via Frontend Transport; Sun, 3 Nov 2024 16:54:09 -0800
+From: Yun Zhou <yun.zhou@windriver.com>
+To: <mcgrof@kernel.org>, <kees@kernel.org>, <joel.granados@kernel.org>,
+        <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+        <yun.zhou@windriver.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH v2] kernel: add pid_max to pid_namespace
+Date: Mon, 4 Nov 2024 08:54:08 +0800
+Message-ID: <20241104005408.1926451-1-yun.zhou@windriver.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:20c8:b0:3a1:f549:7272 with SMTP id
- e9e14a558f8ab-3a4ed305e5cmr235595385ab.23.1730630127746; Sun, 03 Nov 2024
- 02:35:27 -0800 (PST)
-Date: Sun, 03 Nov 2024 02:35:27 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <672751ef.050a0220.35b515.0199.GAE@google.com>
-Subject: [syzbot] [block?] [trace?] possible deadlock in blk_trace_setup
-From: syzbot <syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=CfNa56rl c=1 sm=1 tr=0 ts=67281b34 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=VlfZXiiP6vEA:10 a=t7CeM3EgAAAA:8 a=Xi3v-mgWfji5ICalIy4A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: eUeEofWin1bCxwW--EOrFriLJxjE-yLP
+X-Proofpoint-GUID: eUeEofWin1bCxwW--EOrFriLJxjE-yLP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-11-03_21,2024-11-01_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 adultscore=0 suspectscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2409260000 definitions=main-2411040005
 
-Hello,
+It is necessary to have a different pid_max in different containers.
+For example, multiple containers are running on a host, one of which
+is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
+it requires the global pid_max <= 65535. This will cause configuration
+conflicts with other containers and also limit the maximum number of
+tasks for the entire system.
 
-syzbot found the following issue on:
-
-HEAD commit:    c88416ba074a Add linux-next specific files for 20241101
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=117db55f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=704b6be2ac2f205f
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d8542c90a512dc95185
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13302987980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/760a8c88d0c3/disk-c88416ba.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/46e4b0a851a2/vmlinux-c88416ba.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/428e2c784b75/bzImage-c88416ba.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.12.0-rc5-next-20241101-syzkaller #0 Not tainted
-------------------------------------------------------
-syz.0.15/5976 is trying to acquire lock:
-ffff88807c8e8be0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0xaa/0x120 mm/memory.c:6751
-
-but task is already holding lock:
-ffff888143fd1c60 (&q->debugfs_mutex){+.+.}-{4:4}, at: blk_trace_setup+0xb0/0x1e0 kernel/trace/blktrace.c:647
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #4 (&q->debugfs_mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x1ac/0xee0 kernel/locking/mutex.c:735
-       blk_mq_init_sched+0x3fa/0x830 block/blk-mq-sched.c:473
-       elevator_init_mq+0x1d8/0x2d0 block/elevator.c:605
-       add_disk_fwnode+0x10d/0xf80 block/genhd.c:413
-       sd_probe+0xba6/0x1100 drivers/scsi/sd.c:4024
-       really_probe+0x2b8/0xad0 drivers/base/dd.c:658
-       __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:800
-       driver_probe_device+0x50/0x430 drivers/base/dd.c:830
-       __device_attach_driver+0x2d6/0x530 drivers/base/dd.c:958
-       bus_for_each_drv+0x24e/0x2e0 drivers/base/bus.c:459
-       __device_attach_async_helper+0x22d/0x300 drivers/base/dd.c:987
-       async_run_entry_fn+0xa8/0x420 kernel/async.c:129
-       process_one_work kernel/workqueue.c:3229 [inline]
-       process_scheduled_works+0xa63/0x1850 kernel/workqueue.c:3310
-       worker_thread+0x870/0xd30 kernel/workqueue.c:3391
-       kthread+0x2f0/0x390 kernel/kthread.c:389
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #3 (&q->q_usage_counter(io)#66){++++}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       bio_queue_enter block/blk.h:75 [inline]
-       blk_mq_submit_bio+0x1510/0x2490 block/blk-mq.c:3069
-       __submit_bio+0x2c2/0x560 block/blk-core.c:629
-       __submit_bio_noacct_mq block/blk-core.c:710 [inline]
-       submit_bio_noacct_nocheck+0x4d3/0xe30 block/blk-core.c:739
-       submit_bio_wait+0x106/0x200 block/bio.c:1391
-       blkdev_issue_write_zeroes block/blk-lib.c:166 [inline]
-       blkdev_issue_zeroout+0x4c4/0x7e0 block/blk-lib.c:319
-       sb_issue_zeroout include/linux/blkdev.h:1133 [inline]
-       ext4_init_inode_table+0x4f0/0x930 fs/ext4/ialloc.c:1595
-       ext4_run_li_request fs/ext4/super.c:3716 [inline]
-       ext4_lazyinit_thread+0x756/0x1930 fs/ext4/super.c:3807
-       kthread+0x2f0/0x390 kernel/kthread.c:389
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #2 (&meta_group_info[i]->alloc_sem){++++}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       down_read+0xb1/0xa40 kernel/locking/rwsem.c:1524
-       __ext4_new_inode+0x2032/0x4380 fs/ext4/ialloc.c:1188
-       ext4_create+0x279/0x550 fs/ext4/namei.c:2841
-       lookup_open fs/namei.c:3595 [inline]
-       open_last_lookups fs/namei.c:3694 [inline]
-       path_openat+0x1c03/0x3590 fs/namei.c:3930
-       do_filp_open+0x235/0x490 fs/namei.c:3960
-       do_sys_openat2+0x13e/0x1d0 fs/open.c:1419
-       do_sys_open fs/open.c:1434 [inline]
-       __do_sys_openat fs/open.c:1450 [inline]
-       __se_sys_openat fs/open.c:1445 [inline]
-       __x64_sys_openat+0x247/0x2a0 fs/open.c:1445
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (jbd2_handle){++++}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       start_this_handle+0x1eb4/0x2110 fs/jbd2/transaction.c:448
-       jbd2__journal_start+0x2da/0x5d0 fs/jbd2/transaction.c:505
-       __ext4_journal_start_sb+0x239/0x600 fs/ext4/ext4_jbd2.c:112
-       __ext4_journal_start fs/ext4/ext4_jbd2.h:326 [inline]
-       ext4_dirty_inode+0x92/0x110 fs/ext4/inode.c:5981
-       __mark_inode_dirty+0x2ee/0xe90 fs/fs-writeback.c:2491
-       generic_update_time fs/inode.c:2110 [inline]
-       inode_update_time fs/inode.c:2123 [inline]
-       touch_atime+0x413/0x690 fs/inode.c:2195
-       file_accessed include/linux/fs.h:2538 [inline]
-       ext4_file_mmap+0x18c/0x540 fs/ext4/file.c:794
-       call_mmap include/linux/fs.h:2182 [inline]
-       mmap_file mm/internal.h:124 [inline]
-       __mmap_new_file_vma mm/vma.c:2287 [inline]
-       __mmap_new_vma mm/vma.c:2351 [inline]
-       __mmap_region+0x2204/0x2cd0 mm/vma.c:2452
-       mmap_region+0x226/0x2c0 mm/mmap.c:1373
-       do_mmap+0x8f0/0x1000 mm/mmap.c:496
-       vm_mmap_pgoff+0x214/0x430 mm/util.c:580
-       ksys_mmap_pgoff+0x4eb/0x720 mm/mmap.c:542
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3161 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3280 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3904
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5226
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
-       __might_fault+0xc6/0x120 mm/memory.c:6751
-       _inline_copy_from_user include/linux/uaccess.h:162 [inline]
-       _copy_from_user+0x2a/0xc0 lib/usercopy.c:18
-       copy_from_user include/linux/uaccess.h:212 [inline]
-       __blk_trace_setup kernel/trace/blktrace.c:626 [inline]
-       blk_trace_setup+0xd2/0x1e0 kernel/trace/blktrace.c:648
-       sg_ioctl_common drivers/scsi/sg.c:1121 [inline]
-       sg_ioctl+0xa46/0x2e80 drivers/scsi/sg.c:1163
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:907 [inline]
-       __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  &mm->mmap_lock --> &q->q_usage_counter(io)#66 --> &q->debugfs_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&q->debugfs_mutex);
-                               lock(&q->q_usage_counter(io)#66);
-                               lock(&q->debugfs_mutex);
-  rlock(&mm->mmap_lock);
-
- *** DEADLOCK ***
-
-1 lock held by syz.0.15/5976:
- #0: ffff888143fd1c60 (&q->debugfs_mutex){+.+.}-{4:4}, at: blk_trace_setup+0xb0/0x1e0 kernel/trace/blktrace.c:647
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5976 Comm: syz.0.15 Not tainted 6.12.0-rc5-next-20241101-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2074
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2206
- check_prev_add kernel/locking/lockdep.c:3161 [inline]
- check_prevs_add kernel/locking/lockdep.c:3280 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3904
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5226
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
- __might_fault+0xc6/0x120 mm/memory.c:6751
- _inline_copy_from_user include/linux/uaccess.h:162 [inline]
- _copy_from_user+0x2a/0xc0 lib/usercopy.c:18
- copy_from_user include/linux/uaccess.h:212 [inline]
- __blk_trace_setup kernel/trace/blktrace.c:626 [inline]
- blk_trace_setup+0xd2/0x1e0 kernel/trace/blktrace.c:648
- sg_ioctl_common drivers/scsi/sg.c:1121 [inline]
- sg_ioctl+0xa46/0x2e80 drivers/scsi/sg.c:1163
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fcb37b7e719
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffc1f57c1c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fcb37d35f80 RCX: 00007fcb37b7e719
-RDX: 0000000000000000 RSI: 00000000c0481273 RDI: 0000000000000003
-RBP: 00007fcb37bf132e R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00007fcb37d35f80 R14: 00007fcb37d35f80 R15: 0000000000000304
- </TASK>
-
-
+Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ include/linux/pid_namespace.h     |  1 +
+ kernel/pid.c                      | 12 +++++------
+ kernel/pid_namespace.c            | 34 ++++++++++++++++++++++++++-----
+ kernel/sysctl.c                   |  9 --------
+ kernel/trace/pid_list.c           |  2 +-
+ kernel/trace/trace.h              |  2 --
+ kernel/trace/trace_sched_switch.c |  2 +-
+ 7 files changed, 38 insertions(+), 24 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.h
+index f9f9931e02d6a..064cfe2542fc5 100644
+--- a/include/linux/pid_namespace.h
++++ b/include/linux/pid_namespace.h
+@@ -38,6 +38,7 @@ struct pid_namespace {
+ 	struct ucounts *ucounts;
+ 	int reboot;	/* group exit code if this pidns was rebooted */
+ 	struct ns_common ns;
++	int pid_max;
+ #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+ 	int memfd_noexec_scope;
+ #endif
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 2715afb77eab8..f8026a61436bd 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -60,8 +60,6 @@ struct pid init_struct_pid = {
+ 	}, }
+ };
+ 
+-int pid_max = PID_MAX_DEFAULT;
+-
+ int pid_max_min = RESERVED_PIDS + 1;
+ int pid_max_max = PID_MAX_LIMIT;
+ /*
+@@ -78,6 +76,7 @@ static u64 pidfs_ino = RESERVED_PIDS;
+  */
+ struct pid_namespace init_pid_ns = {
+ 	.ns.count = REFCOUNT_INIT(2),
++	.pid_max = PID_MAX_DEFAULT,
+ 	.idr = IDR_INIT(init_pid_ns.idr),
+ 	.pid_allocated = PIDNS_ADDING,
+ 	.level = 0,
+@@ -198,7 +197,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+ 			tid = set_tid[ns->level - i];
+ 
+ 			retval = -EINVAL;
+-			if (tid < 1 || tid >= pid_max)
++			if (tid < 1 || tid >= tmp->pid_max)
+ 				goto out_free;
+ 			/*
+ 			 * Also fail if a PID != 1 is requested and
+@@ -238,7 +237,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+ 			 * a partially initialized PID (see below).
+ 			 */
+ 			nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+-					      pid_max, GFP_ATOMIC);
++					      tmp->pid_max, GFP_ATOMIC);
+ 		}
+ 		spin_unlock_irq(&pidmap_lock);
+ 		idr_preload_end();
+@@ -653,11 +652,12 @@ void __init pid_idr_init(void)
+ 	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
+ 
+ 	/* bump default and minimum pid_max based on number of cpus */
+-	pid_max = min(pid_max_max, max_t(int, pid_max,
++	init_pid_ns.pid_max = min(pid_max_max, max_t(int, init_pid_ns.pid_max,
+ 				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
+ 	pid_max_min = max_t(int, pid_max_min,
+ 				PIDS_PER_CPU_MIN * num_possible_cpus());
+-	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
++	pr_info("pid_max: default: %u minimum: %u\n", init_pid_ns.pid_max,
++			pid_max_min);
+ 
+ 	idr_init(&init_pid_ns.idr);
+ 
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index d70ab49d5b4a6..a5a8254825d55 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -111,6 +111,7 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+ 	ns->user_ns = get_user_ns(user_ns);
+ 	ns->ucounts = ucounts;
+ 	ns->pid_allocated = PIDNS_ADDING;
++	ns->pid_max = parent_pid_ns->pid_max;
+ #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+ 	ns->memfd_noexec_scope = pidns_memfd_noexec_scope(parent_pid_ns);
+ #endif
+@@ -280,19 +281,44 @@ static int pid_ns_ctl_handler(const struct ctl_table *table, int write,
+ 
+ 	return ret;
+ }
++#endif	/* CONFIG_CHECKPOINT_RESTORE */
++
++static int pid_max_ns_ctl_handler(const struct ctl_table *table, int write,
++		void *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct pid_namespace *pid_ns = task_active_pid_ns(current);
++	struct ctl_table tmp = *table;
++
++	if (write && !checkpoint_restore_ns_capable(pid_ns->user_ns))
++		return -EPERM;
++
++	tmp.data = &pid_ns->pid_max;
++	if (pid_ns->parent)
++		tmp.extra2 = &pid_ns->parent->pid_max;
++
++	return proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
++}
+ 
+-extern int pid_max;
+ static struct ctl_table pid_ns_ctl_table[] = {
++#ifdef CONFIG_CHECKPOINT_RESTORE
+ 	{
+ 		.procname = "ns_last_pid",
+ 		.maxlen = sizeof(int),
+ 		.mode = 0666, /* permissions are checked in the handler */
+ 		.proc_handler = pid_ns_ctl_handler,
+ 		.extra1 = SYSCTL_ZERO,
+-		.extra2 = &pid_max,
++		.extra2 = &init_pid_ns.pid_max,
+ 	},
+-};
+ #endif	/* CONFIG_CHECKPOINT_RESTORE */
++	{
++		.procname = "pid_max",
++		.maxlen = sizeof(int),
++		.mode = 0644,
++		.proc_handler = pid_max_ns_ctl_handler,
++		.extra1 = &pid_max_min,
++		.extra2 = &pid_max_max,
++	},
++};
+ 
+ int reboot_pid_ns(struct pid_namespace *pid_ns, int cmd)
+ {
+@@ -449,9 +475,7 @@ static __init int pid_namespaces_init(void)
+ {
+ 	pid_ns_cachep = KMEM_CACHE(pid_namespace, SLAB_PANIC | SLAB_ACCOUNT);
+ 
+-#ifdef CONFIG_CHECKPOINT_RESTORE
+ 	register_sysctl_init("kernel", pid_ns_ctl_table);
+-#endif
+ 
+ 	register_pid_ns_sysctl_table_vm();
+ 	return 0;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 79e6cb1d5c48f..676a0d675e7f8 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1804,15 +1804,6 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif
+-	{
+-		.procname	= "pid_max",
+-		.data		= &pid_max,
+-		.maxlen		= sizeof (int),
+-		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= &pid_max_min,
+-		.extra2		= &pid_max_max,
+-	},
+ 	{
+ 		.procname	= "panic_on_oops",
+ 		.data		= &panic_on_oops,
+diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
+index 4966e6bbdf6f3..c62b9b3cfb3d8 100644
+--- a/kernel/trace/pid_list.c
++++ b/kernel/trace/pid_list.c
+@@ -414,7 +414,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
+ 	int i;
+ 
+ 	/* According to linux/thread.h, pids can be no bigger that 30 bits */
+-	WARN_ON_ONCE(pid_max > (1 << 30));
++	WARN_ON_ONCE(init_pid_ns.pid_max > (1 << 30));
+ 
+ 	pid_list = kzalloc(sizeof(*pid_list), GFP_KERNEL);
+ 	if (!pid_list)
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index c866991b9c78b..e51851d64e4d9 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -715,8 +715,6 @@ extern unsigned long tracing_thresh;
+ 
+ /* PID filtering */
+ 
+-extern int pid_max;
+-
+ bool trace_find_filtered_pid(struct trace_pid_list *filtered_pids,
+ 			     pid_t search_pid);
+ bool trace_ignore_this_task(struct trace_pid_list *filtered_pids,
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index 8a407adb0e1c4..c20c80abe065b 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -442,7 +442,7 @@ int trace_alloc_tgid_map(void)
+ 	if (tgid_map)
+ 		return 0;
+ 
+-	tgid_map_max = pid_max;
++	tgid_map_max = init_pid_ns.pid_max;
+ 	map = kvcalloc(tgid_map_max + 1, sizeof(*tgid_map),
+ 		       GFP_KERNEL);
+ 	if (!map)
+-- 
+2.27.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
