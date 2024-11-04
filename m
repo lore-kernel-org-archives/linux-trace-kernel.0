@@ -1,38 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D2413C827;
-	Mon,  4 Nov 2024 15:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D74020326;
+	Mon,  4 Nov 2024 16:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730734028; cv=none; b=cyqLi5vwcwXO2lSiVKnmsP/l90uOcOZXjIAvz3dyLifTMAPsn47YVXpnAgnIff4nonoBo0EJA81CecCCcw5xsiRFZq9JPTX44ftprdnKIM6a4vtifU7HB+ryYKahYfm8fj+Aqn6R1P5dcgMChISd/lyJNOuW89zMC0al24AJI7Q=
+	t=1730738117; cv=none; b=Xncj0tbQdDHPIOe3L4FDEjz4xPxiZE76p72pOM2O/4YV2IbxK3FI5HHnQcJCUOB5e5xJM4IIb8PFReyEMaQsltuk4T2MoyiLQ8jD6b8KVfdBzn0EY7J+Iat9kBBzE6OipG/BzDhwzCkfYjraQ+XhbAic2MqQZsxaCqx4GXG0/Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730734028; c=relaxed/simple;
-	bh=vY0rBH99vGqCYCoZ8m5NHbbAj/+DeHnaysoxqekFov8=;
+	s=arc-20240116; t=1730738117; c=relaxed/simple;
+	bh=v8GPTNdK9xwTaNw72WfjxXu3vHLVXKrJ8w8nWc8DIwI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EotfordXswP6Ql6OXgzi30Q05NUDV/BIFkF4+I7zzb1ceRTLAqsFvhbhWjMFx6Jdzf6b3EfPIEWtd9cXbolYySwiZfTA5Y8/sweQhFva8l7N6JiC51839vZTqu3eRd98GTkazUAqux2PH2XGoETB90C7nMqNglJqvVoq1HO0qX4=
+	 MIME-Version:Content-Type; b=E9SiA5doD1qYt54qq115Cd5N0CeQP5Q9HxGgNxG/oOAeUR4bqny3Qs3pCluT3cV4EsbsPGznHr0MQoDLhPfnYJDUqfYLisYmJGkSJ5ySnzcpiIqkUp1GwPLm2o2jNXqk9iVnioELlwKUKf4LoeLmm9XdpLFlrhDwCZcpUsDhQVs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6E8C4CECE;
-	Mon,  4 Nov 2024 15:27:06 +0000 (UTC)
-Date: Mon, 4 Nov 2024 10:27:04 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF91C4CECE;
+	Mon,  4 Nov 2024 16:35:15 +0000 (UTC)
+Date: Mon, 4 Nov 2024 11:35:14 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, "Naveen N. Rao" <naveen@kernel.org>, lkml
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for
- ppc64le
-Message-ID: <20241104102704.7c20dc0b@gandalf.local.home>
-In-Reply-To: <20241104103615.GZ29862@gate.crashing.org>
-References: <20241101191925.1550493-1-hbathini@linux.ibm.com>
-	<20241101205948.GW29862@gate.crashing.org>
-	<1916cb5c-cb3d-427c-bcf0-2c1b905fd6d1@linux.ibm.com>
-	<20241104094431.GY29862@gate.crashing.org>
-	<245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
-	<20241104103615.GZ29862@gate.crashing.org>
+To: Yun Zhou <yun.zhou@windriver.com>
+Cc: <mcgrof@kernel.org>, <kees@kernel.org>, <joel.granados@kernel.org>,
+ <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kernel: add pid_max to pid_namespace
+Message-ID: <20241104113514.10625a03@gandalf.local.home>
+In-Reply-To: <20241104005408.1926451-1-yun.zhou@windriver.com>
+References: <20241104005408.1926451-1-yun.zhou@windriver.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,89 +35,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 4 Nov 2024 04:36:15 -0600
-Segher Boessenkool <segher@kernel.crashing.org> wrote:
+On Mon, 4 Nov 2024 08:54:08 +0800
+Yun Zhou <yun.zhou@windriver.com> wrote:
 
-> > >>Querying for function arguments is supported on kprobes only at function
-> > >>entry. This is a negative test case where the offset is intentionally
-> > >>set beyond function entry while querying for function arguments.
-> > >>I guess, simply setting the offset to 20 (vfs_read is anyway
-> > >>going to be beyond 5 instructions) instead of 8 for powerpc would
-> > >>make all platforms and ABI variants happy?  
-> > >
-> > >I have no idea.  What is this "offset" anyway?  
-> > 
-> > offset (in bytes) from function start address..  
+> It is necessary to have a different pid_max in different containers.
+> For example, multiple containers are running on a host, one of which
+> is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
+> it requires the global pid_max <= 65535. This will cause configuration
+> conflicts with other containers and also limit the maximum number of
+> tasks for the entire system.
 > 
-> But what is there?
+> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
 
-Function start address is what kallsyms returns. That is:
+I acked the first patch. You don't mention what's different about this one
+(which is something you should do below the '---' line and above the diffstat.
 
-  grep function /proc/kallsyms
+Like:
 
-> 
-> > >This is just the ELFv2 ABI.  No platform can make up its own thing at
-> > >all (well, none decided to be gratuitously incompatible, so far).  And
-> > >there are no "ABI variants"!  
-> > 
-> > The test case applies for ABIv1 & ABIv2. All ppc32 & ppc64 platforms..  
-> 
-> Hrm.  So you allow essentially random entry points on other ABIs to
-> work?
-> 
-> > >You're just making assumptions here that are based on nothing else but
-> > >observations of what is done most of the time.  That might work for a
-> > >while -- maybe a long while even! -- but it can easily break down.  
-> > 
-> > Hmmm.. I understand that you want the test case to read st_other field
-> > but would you rather suggest an offset of 64?  
-> 
-> I have no idea what "offset" means here.
+Changes since v1: https://lore.kernel.org/all/20241030052933.1041408-1-yun.zhou@windriver.com/
 
-The offset is the number of bytes from the address that is returned by
-kallsyms.
+- Describe what is different.
 
-
-> 
-> > Is a GEP of 8/16 instructions going to be true anytime soon or is it
-> > true already for some cases? The reason I ask that is some kprobe/ftrace
-> > code in the kernel might need a bit of re-look if that is the case.  
-> 
-> An entry point has no instructions at all.  Oh, you mean the code at
-> the GEP.
-> 
-> The LEP can already be all the allowed distances after the GEP.  And
-> the .localentry GAS directive already supports all those distances
-> always.  Not a lot of code written in assembler does use that, and
-> certainly GCC does not use a lot of the freedom it has here, but it
-> could (and so could assembler programmers).  Typically people will want
-> to make the code here as short as possible, and there are restrictions
-> on what is *allowed* to be done here anyway (ld, the link editor, can
-> change this code after all!), so it is not too likely you will ever see
-> big code at the GEP often, but times change, etc.
-
-
-This is all determined by the kernel. It's considered a function entry by
-the function:
-
-   arch_kprobe_on_func_entry()
-
-Which on PowerPC has:
-
-static bool arch_kprobe_on_func_entry(unsigned long offset)
-{
-#ifdef CONFIG_PPC64_ELF_ABI_V2
-#ifdef CONFIG_KPROBES_ON_FTRACE
-        return offset <= 16;
-#else
-        return offset <= 8;
-#endif
-#else
-        return !offset;
-#endif  
-}
-
-So, being greater than 16 on powerpc with config CONFIG_PPC64_ELF_ABI_V2
-set, would work. If that function changes, then the test needs to change.
+What changed? Is it big enough for me to re-review this one so that my ack
+needs to be reevaluated?
 
 -- Steve
