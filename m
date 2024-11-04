@@ -1,150 +1,125 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAFA1AF0DD
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  4 Nov 2024 10:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C0701B394C;
+	Mon,  4 Nov 2024 10:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730715249; cv=none; b=tNXbMW2M3+i+FmPL+17/K7hBDjZZ0adz14gqh2ILlKckekLqhLpfxW8G9nYzcD0EvAdaHPMbcU15LXZstwxQMs+hL7Ni4EyTXqrQznonfsVOVe+SH9Zmq48dbgmt6/YhrJbYSbnaZW5YHes50jHhJju+nlcP2c3BMRhiKXceiAw=
+	t=1730716717; cv=none; b=RIPxT81VOgu9O99Qi82D0hI2DLAcsw2c0JT4VuDiG2rnQ+alDS7YIQPxd63F3gcU2U4eAUPtIa9f7aatf01JkB2Sl1TKx6bbZYLgJ1o2HD8SkfGa6C8y6rTDiKrqnyVSkXHypRZ+2S1hZxv9sjBot3E4ZWPHKdgYHkYni/NvadU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730715249; c=relaxed/simple;
-	bh=1ZD8l+C1EuzgucsrrDGFXbeA8HL3duQOdkk9LUjOOuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oZFbVMl5EuuZotc7WsmpKK+pPugCIpOggzUU9aTLDT+2VOgMcYVmueIoz6fwT4liBTaG2Vipg9UBONLiLtJbuSwmUBjZELzOh1s/P/AqzGq0imoymP0wobsOq25J4YLPr64YtfWT0PTxtIB2htIdvQzta5Nck0JBDeY+uRRLwg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JBdTG2CD; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JBdTG2CD"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-539f7606199so1552080e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Nov 2024 02:14:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730715246; x=1731320046; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4c7jIDPXYCos97zH52V3Rx0a/Pe9j9klHJ/m3x5c878=;
-        b=JBdTG2CDsTk3bs7k7oFyMLdFf3h6mEPrlfvF8A+EXatQWii5XOEqByNOKFyzpNXT7A
-         gUc9w104s2pnumvfOHiGIz75TL/gkko1HsQT1BM/+uKKoIThYAg3eezlW7C4aqmgm+5O
-         YvqUaxNq5wTbcdLXVT3Cg0TKrZtZqnNyO+04V+TuwFLDr451GZ1xtm9MP6IpwWnXsqZq
-         I5cnC26we+v3aXyQ2613FQEoPfnMlBtwjnnZGAl/OGSjD8jdN19wuyYqeeWJ4dGKU+x/
-         eEpTHJNfuq+tTdJ3gUf2gqg/BG6AgbNanpmapup9zElD/2Doz3bbECi2eT0x1jo+nOKY
-         1usg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730715246; x=1731320046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4c7jIDPXYCos97zH52V3Rx0a/Pe9j9klHJ/m3x5c878=;
-        b=gwFwCXylnOcYHMi6FRxQt7eIjJ+ZyM2wQ9x4P3UWCnz7edV2JS9+dUeJKAXaArZ686
-         ylpOtIsiCtebAbUcisz8i9u7sP1R5O7k4mZ2gTvZu6fTIRZ8UjetVXBGVN2rbVJIWQU1
-         i4BRtCYz3aGCkckc4DwBGa+y3om4RgGbecXlhBWTp4vCoKGx5NgwwrYiBoanSIlNxkGP
-         QMU6ZbgKTRbmn6XCMRC09i/aHrYc3Ux8yVjsPuHIAzw1ANt539GtIdZlzPhLcxi2e/+o
-         wFrWSVgrbZy/rKLmoJD2jGB777GKUv7/8/eS3rBWRgaZsT2ZuWyrHXAfg2k1+j/ngV2i
-         iaeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSSO6Kr0lqRI3f3J95ycjkLzgnX3npSx4T6l/O4GvtaJ4dsss9jao59BChG2ywT9ljyKSITXvzdPeeVomrZ+LfPMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsT5dZTp/2BAyTn/FVXYYOHlRFIv0n12G1SMme7vj9YfZ/lTOF
-	PNHsVtsnHiv318OowK3bI5YBmAll+rc2vkSPEFD5Mh206ROmLW+sDJntNTBB+jXElr13/cU20BB
-	MC+fshaKARuYAit6So0GEhuhVk5rRBXPKvzYq
-X-Google-Smtp-Source: AGHT+IF3YrSYDNpUh7K6DP1BrHft72F43XaFavJhNPR1z+HcVXMbGOoX4JuofOBYs8pgr4OQ7WmvjdXbt+mvTRqeQfM=
-X-Received: by 2002:a05:6512:3041:b0:539:e6bf:ca97 with SMTP id
- 2adb3069b0e04-53b7ecf28d7mr10644101e87.32.1730715245823; Mon, 04 Nov 2024
- 02:14:05 -0800 (PST)
+	s=arc-20240116; t=1730716717; c=relaxed/simple;
+	bh=HGPGB0Mg253q0yrFI7BDnmDh/7TP1a+ibRRnqp9yLT0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoEXvYmS9rQ26lQ7JmVBsbM7iqO9oBjitB5ZXt0o1t7hokT/0iEIR1YYoDf6GdT+9F+kS3kCJ25TlJqrpC5kw1XznK/4eGzaMWx+zufI6IfUKJ7zTmiQzkAVXQOv0DnKtLIEUzAtQcOdFf6WRyNGaE9mHek2WGALHrS2xywpikY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A4AaIGG013804;
+	Mon, 4 Nov 2024 04:36:18 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A4AaGdn013795;
+	Mon, 4 Nov 2024 04:36:16 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Mon, 4 Nov 2024 04:36:15 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for ppc64le
+Message-ID: <20241104103615.GZ29862@gate.crashing.org>
+References: <20241101191925.1550493-1-hbathini@linux.ibm.com> <20241101205948.GW29862@gate.crashing.org> <1916cb5c-cb3d-427c-bcf0-2c1b905fd6d1@linux.ibm.com> <20241104094431.GY29862@gate.crashing.org> <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241030-tracepoint-v12-3-eec7f0f8ad22@google.com> <202411021421.jZ0FSDq6-lkp@intel.com>
-In-Reply-To: <202411021421.jZ0FSDq6-lkp@intel.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 4 Nov 2024 11:13:53 +0100
-Message-ID: <CAH5fLgjOxfKR+HE9KZRCuBGVW26adM=r4AxSCJ2B-G2eG_4FzA@mail.gmail.com>
-Subject: Re: [PATCH v12 3/5] rust: samples: add tracepoint to Rust sample
-To: kernel test robot <lkp@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Sean Christopherson <seanjc@google.com>, Uros Bizjak <ubizjak@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
+User-Agent: Mutt/1.4.2.3i
 
-On Sat, Nov 2, 2024 at 8:08=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi Alice,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on eb887c4567d1b0e7684c026fe7df44afa96589e6]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Alice-Ryhl/rust-ad=
-d-static_branch_unlikely-for-static_key_false/20241031-000709
-> base:   eb887c4567d1b0e7684c026fe7df44afa96589e6
-> patch link:    https://lore.kernel.org/r/20241030-tracepoint-v12-3-eec7f0=
-f8ad22%40google.com
-> patch subject: [PATCH v12 3/5] rust: samples: add tracepoint to Rust samp=
-le
-> config: x86_64-randconfig-103-20241101 (https://download.01.org/0day-ci/a=
-rchive/20241102/202411021421.jZ0FSDq6-lkp@intel.com/config)
-> compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51=
-eccf88f5321e7c60591c5546b254b6afab99)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20241102/202411021421.jZ0FSDq6-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202411021421.jZ0FSDq6-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
-> >> error[E0425]: cannot find value `__tracepoint_rust_sample_loaded` in c=
-rate `$crate::bindings`
->    --> samples/rust/rust_print.rs:87:5
->    |
->    87 | /     kernel::declare_trace! {
->    88 | |         /// # Safety
->    89 | |         ///
->    90 | |         /// Always safe to call.
->    91 | |         unsafe fn rust_sample_loaded(magic: c_int);
->    92 | |     }
->    | |_____^ not found in `$crate::bindings`
->    |
->    =3D note: this error originates in the macro `kernel::declare_trace` (=
-in Nightly builds, run with -Z macro-backtrace for more info)
-> --
-> >> error[E0425]: cannot find function `rust_do_trace_rust_sample_loaded` =
-in crate `$crate::bindings`
->    --> samples/rust/rust_print.rs:87:5
->    |
->    87 | /     kernel::declare_trace! {
->    88 | |         /// # Safety
->    89 | |         ///
->    90 | |         /// Always safe to call.
->    91 | |         unsafe fn rust_sample_loaded(magic: c_int);
->    92 | |     }
->    | |_____^ not found in `$crate::bindings`
->    |
->    =3D note: this error originates in the macro `kernel::declare_trace` (=
-in Nightly builds, run with -Z macro-backtrace for more info)
+Hi!
 
-This bot is using a buggy bindgen. Please see
-https://lore.kernel.org/all/20241030-bindgen-libclang-warn-v1-1-3a7ba9fedcf=
-e@google.com/
-which was also mentioned in the cover letter.
+On Mon, Nov 04, 2024 at 03:40:26PM +0530, Hari Bathini wrote:
+> On 04/11/24 3:14 pm, Segher Boessenkool wrote:
+> >On Mon, Nov 04, 2024 at 02:51:57PM +0530, Hari Bathini wrote:
+> >>On 02/11/24 2:29 am, Segher Boessenkool wrote:
+> >>>On Sat, Nov 02, 2024 at 12:49:25AM +0530, Hari Bathini wrote:
+> >>>>For ppc64le, depending on the kernel configuration used, offset 16
+> >>>>from function start address can also be considered function entry.
+> >>>>Update the test case to accommodate such configurations.
+> >>>
+> >>>(This is true for all ELfv2, not just LE.  For the kernel that is about
+> >>>the same).
+> >>>
+> >>>The LEP and GEP can differ by zero, one, two, four, eight, or sixteen
+> >>>insns (where an insn is four bytes).  Four insns is common, yes, but
+> >>>maybe you can support all?  See the function symbol's st_other field
+> >>>to see what the offset is:
+> >>>0, 1: zero insns, zero bytes
+> >>>N = 2..6: 1 << (N-2) insns, i.e. 1<<N bytes
+> >>>7: reserved
+> >>>
+> >>>(This is the top 3 bits of st_other, the other bits have other meanings).
+> >>>
+> >>>Four insns is common, yes, but by no means the only possibility.
+> >>
+> >>Hi Segher,
+> >>
+> >>Querying for function arguments is supported on kprobes only at function
+> >>entry. This is a negative test case where the offset is intentionally
+> >>set beyond function entry while querying for function arguments.
+> >>I guess, simply setting the offset to 20 (vfs_read is anyway
+> >>going to be beyond 5 instructions) instead of 8 for powerpc would
+> >>make all platforms and ABI variants happy?
+> >
+> >I have no idea.  What is this "offset" anyway?
+> 
+> offset (in bytes) from function start address..
 
-Alice
+But what is there?
+
+> >This is just the ELFv2 ABI.  No platform can make up its own thing at
+> >all (well, none decided to be gratuitously incompatible, so far).  And
+> >there are no "ABI variants"!
+> 
+> The test case applies for ABIv1 & ABIv2. All ppc32 & ppc64 platforms..
+
+Hrm.  So you allow essentially random entry points on other ABIs to
+work?
+
+> >You're just making assumptions here that are based on nothing else but
+> >observations of what is done most of the time.  That might work for a
+> >while -- maybe a long while even! -- but it can easily break down.
+> 
+> Hmmm.. I understand that you want the test case to read st_other field
+> but would you rather suggest an offset of 64?
+
+I have no idea what "offset" means here.
+
+> Is a GEP of 8/16 instructions going to be true anytime soon or is it
+> true already for some cases? The reason I ask that is some kprobe/ftrace
+> code in the kernel might need a bit of re-look if that is the case.
+
+An entry point has no instructions at all.  Oh, you mean the code at
+the GEP.
+
+The LEP can already be all the allowed distances after the GEP.  And
+the .localentry GAS directive already supports all those distances
+always.  Not a lot of code written in assembler does use that, and
+certainly GCC does not use a lot of the freedom it has here, but it
+could (and so could assembler programmers).  Typically people will want
+to make the code here as short as possible, and there are restrictions
+on what is *allowed* to be done here anyway (ld, the link editor, can
+change this code after all!), so it is not too likely you will ever see
+big code at the GEP often, but times change, etc.
+
+
+Segher
