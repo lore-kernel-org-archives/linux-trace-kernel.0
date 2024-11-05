@@ -1,151 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAC11FDFB8;
-	Mon,  4 Nov 2024 23:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from cmccmta1.chinamobile.com (cmccmta2.chinamobile.com [111.22.67.135])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76B4C28382;
+	Tue,  5 Nov 2024 01:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730762866; cv=none; b=DUmZPgGllUSpsCScWP67LZ4WMz+xT3AIpFq7UTpxuw5IfdeNNr8pE5DNZPab2rE0JxBnk3V8TCMgYZF5jbe1vGmyB5Lai0nFa1jEqP98FoTjJg38Us1QgBtAOjRLVG82HwqMwtRC1PPLrujn7N1zC02qF3YkIxvSa4oXiQfAZTM=
+	t=1730769281; cv=none; b=DGNA+OrzOY8Yn++fmx8vwGbQZN1J0UyckMTzELSHAT3Z88vVhJkeUN2Wfz+dy3LLXA1Ngk0qhc2WenCdTkPv4xS7iQaXa4qqlSI/a6HCkgS5/opW1ciaxZHFM5l6RunLSbAGK84e/GTVaXuptqajZuaYXdBPl38NG6qS/95oP0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730762866; c=relaxed/simple;
-	bh=G7tF/ZaqXBtDJLMTb97Oc+SktZk//Kx3oRVjwm2Gkec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMfr9ma5FM5iB+sdPQI+ndfM51faiAWWz/rSdiqVGlsTnRDmmrbVlCCzCVQfOR+CUMMgOC020tyydBrT60q6bI3PWwXC6wyIs3oc6FirponM3aGC8+VE9nH8tjmg1eu9f4qqmpUcBEEFUvDTV4354qXfHRoQYtp7o5KRUYqqpXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uD6aQVKZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uD6aQVKZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB3A7C4CECE;
-	Mon,  4 Nov 2024 23:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730762866;
-	bh=G7tF/ZaqXBtDJLMTb97Oc+SktZk//Kx3oRVjwm2Gkec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uD6aQVKZ8xYi+PTTwYupZ6PGdQoZjGxor3CJ6T/KZlWjFxurKitUGg4OsLqeVl22R
-	 oTMAQXmWqXP0EO6JaBIYZ9VEqoL35XGUitRTwgi+bJtDhjSL6UuAIcLW7XMfz2tbvE
-	 x3MFVpG1yHfJRXfsS6NaRprs6A1rIqEf/OZ8jX2sy+DwUFdsMetTULRZ3iOQoxlOsn
-	 5JoGBx6K0BrtfF9Z0+hxFGtNMWymLR+Dppngi0NxeJnTpYgOWeDN7FHowhaRXk3khA
-	 u6nha7LupF4lzkb6ryYEoHDIxLmpv0DY+XiF9diWn7xWUzJjMMZ/7hbbF3UF0ISQXS
-	 B++nhrf0RE3MQ==
-Date: Mon, 4 Nov 2024 16:27:41 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v7 6/8] x86/module: prepare module loading for ROX
- allocations of text
-Message-ID: <20241104232741.GA3843610@thelio-3990X>
-References: <20241023162711.2579610-1-rppt@kernel.org>
- <20241023162711.2579610-7-rppt@kernel.org>
+	s=arc-20240116; t=1730769281; c=relaxed/simple;
+	bh=pUYQyTocEQqu8+T1sJirl/QVBneAR8JBzeQWgDui8SU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QFojbqNW3voXedhuTN9x+oFJJBTR4XeMQfna/n3vKHXpZvuK2xj+R5NwDIAj6tndegieonDpudg8xVW1pC3DKlI7hQ2qqdSd1LBlv35HZsE1uNDQcBPBs/JKGxoNiRW8E/FzR9dNGSF0AjdQV7XIteo2oUfaz1hgwvJNw3DjlMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; arc=none smtp.client-ip=111.22.67.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app03-12003 (RichMail) with SMTP id 2ee3672970bdb58-9e376;
+	Tue, 05 Nov 2024 09:11:26 +0800 (CST)
+X-RM-TRANSID:2ee3672970bdb58-9e376
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from localhost.localdomain (unknown[223.108.79.103])
+	by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee8672970bd9a0-c3f2a;
+	Tue, 05 Nov 2024 09:11:26 +0800 (CST)
+X-RM-TRANSID:2ee8672970bd9a0-c3f2a
+From: Luo Yifan <luoyifan@cmss.chinamobile.com>
+To: mhiramat@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	trivial@kernel.org,
+	Luo Yifan <luoyifan@cmss.chinamobile.com>
+Subject: [PATCH] tools/bootconfig: Fix the wrong format specifier
+Date: Tue,  5 Nov 2024 09:10:48 +0800
+Message-Id: <20241105011048.201629-1-luoyifan@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241023162711.2579610-7-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Mike,
+Use '%u' instead of '%d' for unsigned int.
 
-On Wed, Oct 23, 2024 at 07:27:09PM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> When module text memory will be allocated with ROX permissions, the
-> memory at the actual address where the module will live will contain
-> invalid instructions and there will be a writable copy that contains the
-> actual module code.
-> 
-> Update relocations and alternatives patching to deal with it.
-> 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Tested-by: kdevops <kdevops@lists.linux.dev>
+Signed-off-by: Luo Yifan <luoyifan@cmss.chinamobile.com>
+---
+ tools/bootconfig/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hopefully the last time you have to hear from me, as I am only
-experiencing issues with only one of my test machines at this point and
-it is my only machine that supports IBT, so it seems to point to
-something specific with the IBT part of the FineIBT support. I notice
-either a boot hang or an almost immediate reboot (triple fault?). I
-guess this is how I missed reporting this earlier, as my machine was
-falling back to the default distribution kernel after the restart and I
-did not notice I was not actually testing a -next kernel.
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 156b62a16..8a48cc253 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -226,7 +226,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 	/* Wrong Checksum */
+ 	rcsum = xbc_calc_checksum(*buf, size);
+ 	if (csum != rcsum) {
+-		pr_err("checksum error: %d != %d\n", csum, rcsum);
++		pr_err("checksum error: %u != %u\n", csum, rcsum);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -395,7 +395,7 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 	xbc_get_info(&ret, NULL);
+ 	printf("\tNumber of nodes: %d\n", ret);
+ 	printf("\tSize: %u bytes\n", (unsigned int)size);
+-	printf("\tChecksum: %d\n", (unsigned int)csum);
++	printf("\tChecksum: %u\n", (unsigned int)csum);
+ 
+ 	/* TODO: Check the options by schema */
+ 	xbc_exit();
+-- 
+2.27.0
 
-Checking out the version of this change that is in next-20241104, commit
-7ca6ed09db62 ("x86/module: prepare module loading for ROX allocations of
-text"), it boots with either 'cfi=off' or 'cfi=kcfi' but it exhibits the
-issues noted above with 'cfi=fineibt'. At the immediate parent, commit
-b575d981092f ("arch: introduce set_direct_map_valid_noflush()"), all
-three combinations boot fine.
 
-  $ uname -r; tr ' ' '\n' </proc/cmdline | grep cfi=
 
-  6.12.0-rc5-debug-00214-g7ca6ed09db62
-  cfi=kcfi
-
-  6.12.0-rc5-debug-00214-g7ca6ed09db62
-  cfi=off
-
-  6.12.0-rc5-debug-00213-gb575d981092f
-  cfi=fineibt
-
-  6.12.0-rc5-debug-00213-gb575d981092f
-  cfi=kcfi
-
-  6.12.0-rc5-debug-00213-gb575d981092f
-  cfi=off
-
-I do not think this machine has an accessible serial port and I do not
-think IBT virtualization is supported via either KVM or TCG in QEMU, so
-I am not sure how to get more information about what is going on here. I
-wanted to try reverting these changes on top of next-20241104 but there
-was a non-trivial conflict in mm/execmem.c due to some changes on top,
-so I just tested in the mm history.
-
-If there is any other information I can provide or patches I can test, I
-am more than happy to do so.
-
-Cheers,
-Nathan
