@@ -1,368 +1,138 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F69F1D460E;
-	Tue,  5 Nov 2024 12:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BE71D63F4;
+	Tue,  5 Nov 2024 13:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730809339; cv=none; b=FS/xIyEuezG5QE8wUnSqRtgZuKSG45djXkwPQTUkhxkz5DNQvTTVQNSy2zoUOBJ/Kx1X6oVvgOY2oi40TwOW9kiqUre5FZhYBk4DHdrXYKR0LWIj3ND7XUb1AMM2kxBcihxKoBofHBMrSqBdKV4SdM9E8Eo5Byc/fo8i4ZxhSMU=
+	t=1730813651; cv=none; b=sSdsRbkdhVm1hsN6npZJa+KqctGkm7pdugGevIX3WeC6sRDpCMi44rH3boZ9mt3exObvB8/gCy6e4DDIHVTr4nhc0KWZcH1kGX8eesQC59vBJg3r+17edFe9lmjqs60eQXmORX9pUgZ/i0rC6kzXOgh7AgAm9cR2cIOS8XPYzg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730809339; c=relaxed/simple;
-	bh=OML+bH4Z4lVz1a/atUWg07jHrx6lWsbTB6Lg4hkS7MY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kKYuhyS3PgyoMevdF2vPmF3f1v50EPt7bCNfngY8we8FRJKQ/IInquTScA+YsYV5K0LUbsoMnD0C7dvyAmNSNvyHdkuqndsW0H9PelEyRoKWfuYJQczPVo0OVTeMpPTpjClaqXO5RIHWrxHTcRBRPbRb2jfGCiK4z4hW/tL3q6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4XjS8421x2z1T9h4;
-	Tue,  5 Nov 2024 20:19:48 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 08B37180105;
-	Tue,  5 Nov 2024 20:22:07 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 5 Nov 2024 20:22:06 +0800
-Message-ID: <46451dbe-056c-4c13-bfae-7ee8d6e115b5@huawei.com>
-Date: Tue, 5 Nov 2024 20:22:05 +0800
+	s=arc-20240116; t=1730813651; c=relaxed/simple;
+	bh=lueueggmqJh1jG3+SJ1RDmw3IpHs4MrLZqQ9gGf5CPo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pCzyjLemd+wZa9NnCeRd+48ELUdIUY2wFFCby0CGe8zr4yjnasjmOswr9S8Eoo6AZUxIrUfZPRZAN5DF0c10feYmMG0WpLFGDu12hTvvl+XcixTqiK4at7LJXD/RTwjRyyUOzPZa84vqNb3oYTZhd8u4mrM6jb8GkDWlv2hiIeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DuO2uDDu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DuO2uDDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3148C4CECF;
+	Tue,  5 Nov 2024 13:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730813650;
+	bh=lueueggmqJh1jG3+SJ1RDmw3IpHs4MrLZqQ9gGf5CPo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DuO2uDDuxdybcn/82DZkQ9p6iUToHpsBdnCSFhpWxkCMowE5NeHdf16NRN5nPp+us
+	 b0/T5VgZ68y5ijnHqv6Y+rQ5lrsqsF9DO9cYFLrQry1cojgysPtumQZbctURH3F16X
+	 gPsHgT/S98bv0RiIgGfHli4bOzU1Bp76170WA3k18HvkCD7UmlUUX9pxj2l2YMaGjK
+	 jE7gJPxv0I45pfzDAnRB9L3oZdXfHf1xt9QxevYQJ0UggrCLbp/E1dnxk7i1FHe/3z
+	 oWUHbA8nQlKITFEjF8vrBNen8OAz+JT6j5IaOt30EjR4UPiDtZJ1rXoddhwvsoLBQ1
+	 0l6mOsyztaRSw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC 00/11] uprobes: Add support to optimize usdt probes on x86_64
+Date: Tue,  5 Nov 2024 14:33:54 +0100
+Message-ID: <20241105133405.2703607-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: uprobes: Simulate STP for pushing fp/lr into user
- stack
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Mark Rutland
-	<mark.rutland@arm.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <mhiramat@kernel.org>,
-	<oleg@redhat.com>, <peterz@infradead.org>, <ast@kernel.org>,
-	<puranjay@kernel.org>, <andrii@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240910060407.1427716-1-liaochang1@huawei.com>
- <ZxpUX1rbppLqS0bD@J2N7QTR9R3.cambridge.arm.com>
- <CAEf4Bzb9fM+hx8quHpCCeRh2p7UVk9Kk6yGj3XvyJLTQu9C-2w@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4Bzb9fM+hx8quHpCCeRh2p7UVk9Kk6yGj3XvyJLTQu9C-2w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-Andrii and Mark.
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
 
-在 2024/10/26 4:51, Andrii Nakryiko 写道:
-> On Thu, Oct 24, 2024 at 7:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
->>
->> On Tue, Sep 10, 2024 at 06:04:07AM +0000, Liao Chang wrote:
->>> This patch is the second part of a series to improve the selftest bench
->>> of uprobe/uretprobe [0]. The lack of simulating 'stp fp, lr, [sp, #imm]'
->>> significantly impact uprobe/uretprobe performance at function entry in
->>> most user cases. Profiling results below reveals the STP that executes
->>> in the xol slot and trap back to kernel, reduce redis RPS and increase
->>> the time of string grep obviously.
->>>
->>> On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Arm64 cores@2.4GHz.
->>>
->>> Redis GET (higher is better)
->>> ----------------------------
->>> No uprobe: 49149.71 RPS
->>> Single-stepped STP: 46750.82 RPS
->>> Emulated STP: 48981.19 RPS
->>>
->>> Redis SET (larger is better)
->>> ----------------------------
->>> No uprobe: 49761.14 RPS
->>> Single-stepped STP: 45255.01 RPS
->>> Emulated stp: 48619.21 RPS
->>>
->>> Grep (lower is better)
->>> ----------------------
->>> No uprobe: 2.165s
->>> Single-stepped STP: 15.314s
->>> Emualted STP: 2.216s
->>
->> The results for grep are concerning.
->>
->> In theory, the overhead for stepping should be roughly double the
->> overhead for emulating, assuming the exception-entry and
->> exception-return are the dominant cost. The cost of stepping should be
->> trivial.
->>
->> Those results show emulating adds 0.051s (for a ~2.4% overhead), while
->> stepping adds 13.149s (for a ~607% overhead), meaning stepping is 250x
->> more expensive.
->>
->> Was this tested bare-metal, or in a VM?
-> 
-> Hey Mark, I hope Liao will have a chance to reply, I don't know the
-> details of his benchmarking. But I can try to give you my numbers and
-> maybe answer a few questions, hopefully that helps move the
-> conversation forward.
-> 
-> So, first of all, I did a quick benchmark on bare metal (without
-> Liao's optimization, though), here are my results:
-> 
-> uprobe-nop            ( 1 cpus):    2.334 ± 0.011M/s  (  2.334M/s/cpu)
-> uprobe-push           ( 1 cpus):    2.321 ± 0.010M/s  (  2.321M/s/cpu)
-> uprobe-ret            ( 1 cpus):    4.144 ± 0.041M/s  (  4.144M/s/cpu)
-> 
-> uretprobe-nop         ( 1 cpus):    1.684 ± 0.004M/s  (  1.684M/s/cpu)
-> uretprobe-push        ( 1 cpus):    1.736 ± 0.003M/s  (  1.736M/s/cpu)
-> uretprobe-ret         ( 1 cpus):    2.502 ± 0.006M/s  (  2.502M/s/cpu)
-> 
-> uretprobes are inherently slower, so I'll just compare uprobe, as the
-> differences are very clear either way.
-> 
-> -nop is literally nop (Liao solved that issue, I just don't have his
-> patch applied on my test machine). -push has `stp     x29, x30, [sp,
-> #-0x10]!` instruction traced. -ret is literally just `ret`
-> instruction.
-> 
-> So you can see that -ret is almost twice as fast as the -push variant
-> (it's a microbenchmark, yes, but still).
-> 
->>
->> AFAICT either:
->>
->> * Single-stepping is unexpectedly expensive.
->>
->>   Historically we had performance issues with hypervisor trapping of
->>   debug features, and there are things we might be able to improve in
->>   the hypervisor and kernel, which would improve stepping *all*
->>   instructions.
->>
-> 
-> Single-stepping will always be more expensive, as it necessitates
-> extra hop kernel->user space->kernel, so no matter the optimization
-> for single-stepping, if we can avoid it, we should. It will be
-> noticeable.
-> 
->>   If stepping is the big problem, we could move uprobes over to a BRK
->>   rather than a single-step. That would require require updating and
->>   fixing the logic to decide which instructions are steppable, but
->>   that's necessary anyway given it has extant soundness issues.
-> 
-> I'm afraid I don't understand what BRK means and what are the
-> consequences in terms of overheads. I'm not an ARM person either, so
-> sorry if that's a stupid question. But either way, I can't address
-> this. But see above, emulating an instruction feels like a much better
-> approach, if possible.
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
 
-As I understand, Mark's suggestion is to place a BRK instruction next to
-the instruction in the xol slot. Once the instruction in the xol slot
-executed, the BRK instruction would trigger a trap into kernel. This is
-a common technique used on platforms that don't support hardware single-
-step. However, since Arm64 does support hardware single-stepping, kernel
-enables it in pre_ssout(), allowing the CPU to automatically trap into kernel
-after instruction in xol slot executed. But even we move uprobes over
-to a BRK rather than a single-step. It can't reduce the overhead of user->
-kernel->user context switch on the bare-metal. Maybe I am wrong, Mark,
-could you give more details about the BRK.
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 7.
 
-> 
->>
->> * XOL management is absurdly expensive.
->>
->>   Does uprobes keep the XOL slot around (like krpobes does), or does it
->>   create the slot afresh for each trap?
-> 
-> XOL *page* is created once per process, lazily, and then we just
-> juggle a bunch of fixed slots there for each instance of
-> single-stepped uprobe. And yes, there are some bottlenecks in XOL
-> management, though it's mostly due to lock contention (as it is
-> implemented right now). Liao and Oleg have been improving XOL
-> management, but still, avoiding XOL in the first place is the much
-> preferred way.
-> 
->>
->>   If that's trying to create a slot afresh for each trap, there are
->>   several opportunities for improvement, e.g. keep the slot around for
->>   as long as the uprobe exists, or pre-allocate shared slots for common
->>   instructions and use those.
-> 
-> As I mentioned, a XOL page is allocated and mapped once, but yes, it
-> seems like we dynamically get a slot in it for each single-stepped
-> execution (see xol_take_insn_slot() in kernel/events/uprobes.c). It's
-> probably not a bad idea to just cache and hold a XOL slot for each
-> specific uprobe, I don't see why we should limit ourselves to just one
-> XOL page. We also don't need to pre-size each slot, we can probably
-> allocate just the right amount of space for a given uprobe.
-> 
-> All good ideas for sure, we should do them, IMO. But we'll still be
-> paying an extra kernel->user->kernel switch, which almost certainly is
-> slower than doing a simple stack push emulation just like we do in
-> x86-64 case, no?
-> 
-> 
-> BTW, I did a quick local profiling run. I don't think XOL management
-> is the main source of overhead. I see 5% of CPU cycles spent in
-> arch_uprobe_copy_ixol, but other than that XOL doesn't figure in stack
-> traces. There are at least 22% CPU cycles spent in some
-> local_daif_restore function, though, not sure what that is, but might
-> be related to interrupt handling, right?
+The first benchmark shows about 68% speed up (see below). The benchmark
+triggers usdt probe in a loop and counts how many of those happened
+per second.
 
-The local_daif_restore() is part of the path for all user->kernel->user
-context switch, including interrupt handling, breakpoints, and single-stepping
-etc. I am surprised to see it consuming 22% of CPU cycles as well. I haven't
-been enable to reproduce this on my local machine.
+It's still rfc state with some loose ends, but I'd be interested in
+any feedback about the direction of this.
 
-Andrii, could you use the patch below to see if it can reduce the 5% of
-CPU cycles spent in arch_uprobe_copy_ixol, I doubt that D/I cache
-synchronization is the cause of this part of overhead.
+It's based on tip/perf/core with bpf-next/master merged on top of
+that together with uprobe session patchset.
 
-https://lore.kernel.org/all/20240919121719.2148361-1-liaochang1@huawei.com/
+thanks,
+jirka
 
-> 
-> 
-> The take away I'd like to communicate here is avoiding the
-> single-stepping need is *the best way* to go, IMO. So if we can
-> emulate those STP instructions for uprobe *cheaply*, that would be
-> awesome.
 
-Given some significant uprobe optimizations from Oleg and Andrii
-merged, I am curious to see how these changes impact the profiling
-result on Arm64. So I re-ran the selftest bench on the latest kernel
-(based on tag next-20241104) and the kernel (based on tag next-20240909)
-that I used when I submitted this patch. The results re-ran are shown
-below.
+current:
+        # ./bench -w2 -d5 -a  trig-usdt
+        Setting up benchmark 'trig-usdt'...
+        Benchmark 'trig-usdt' started.
+        Iter   0 ( 46.982us): hits    4.893M/s (  4.893M/prod), drops    0.000M/s, total operations    4.893M/s
+        Iter   1 ( -5.967us): hits    4.892M/s (  4.892M/prod), drops    0.000M/s, total operations    4.892M/s
+        Iter   2 ( -2.771us): hits    4.899M/s (  4.899M/prod), drops    0.000M/s, total operations    4.899M/s
+        Iter   3 (  1.286us): hits    4.889M/s (  4.889M/prod), drops    0.000M/s, total operations    4.889M/s
+        Iter   4 ( -2.871us): hits    4.881M/s (  4.881M/prod), drops    0.000M/s, total operations    4.881M/s
+        Iter   5 (  1.005us): hits    4.886M/s (  4.886M/prod), drops    0.000M/s, total operations    4.886M/s
+        Iter   6 ( 11.626us): hits    4.906M/s (  4.906M/prod), drops    0.000M/s, total operations    4.906M/s
+        Iter   7 ( -6.638us): hits    4.896M/s (  4.896M/prod), drops    0.000M/s, total operations    4.896M/s
+        Summary: hits    4.893 +- 0.009M/s (  4.893M/prod), drops    0.000 +- 0.000M/s, total operations    4.893 +- 0.009M/s
 
-next-20240909(xol stp + xol nop)
---------------------------------
-uprobe-nop      ( 1 cpus):    0.424 ± 0.000M/s  (  0.424M/s/cpu)
-uprobe-push     ( 1 cpus):    0.415 ± 0.001M/s  (  0.415M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.101 ± 0.002M/s  (  2.101M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.347 ± 0.000M/s  (  0.347M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.349 ± 0.000M/s  (  0.349M/s/cpu)
-uretprobe-ret   ( 1 cpus):    1.051 ± 0.001M/s  (  1.051M/s/cpu)
+optimized:
+        # ./bench -w2 -d5 -a  trig-usdt
+        Setting up benchmark 'trig-usdt'...
+        Benchmark 'trig-usdt' started.
+        Iter   0 ( 46.073us): hits    8.258M/s (  8.258M/prod), drops    0.000M/s, total operations    8.258M/s
+        Iter   1 ( -5.752us): hits    8.264M/s (  8.264M/prod), drops    0.000M/s, total operations    8.264M/s
+        Iter   2 ( -1.333us): hits    8.263M/s (  8.263M/prod), drops    0.000M/s, total operations    8.263M/s
+        Iter   3 ( -2.996us): hits    8.265M/s (  8.265M/prod), drops    0.000M/s, total operations    8.265M/s
+        Iter   4 ( -0.620us): hits    8.264M/s (  8.264M/prod), drops    0.000M/s, total operations    8.264M/s
+        Iter   5 ( -2.624us): hits    8.236M/s (  8.236M/prod), drops    0.000M/s, total operations    8.236M/s
+        Iter   6 ( -0.840us): hits    8.232M/s (  8.232M/prod), drops    0.000M/s, total operations    8.232M/s
+        Iter   7 ( -1.783us): hits    8.235M/s (  8.235M/prod), drops    0.000M/s, total operations    8.235M/s
+        Summary: hits    8.249 +- 0.016M/s (  8.249M/prod), drops    0.000 +- 0.000M/s, total operations    8.249 +- 0.016M/s
 
-next-20240909(sim stp + sim nop)
---------------------------------
-uprobe-nop      ( 1 cpus):    2.042 ± 0.002M/s  (  2.042M/s/cpu)
-uprobe-push     ( 1 cpus):    1.363 ± 0.002M/s  (  1.363M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.052 ± 0.002M/s  (  2.052M/s/cpu)
-uretprobe-nop   ( 1 cpus):    1.049 ± 0.001M/s  (  1.049M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.780 ± 0.000M/s  (  0.780M/s/cpu)
-uretprobe-ret   ( 1 cpus):    1.065 ± 0.001M/s  (  1.065M/s/cpu)
+---
+Jiri Olsa (11):
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Add len argument to uprobe_write_opcode
+      uprobes: Add data argument to uprobe_write_opcode function
+      uprobes: Add mapping for optimized uprobe trampolines
+      uprobes: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Use 5-byte nop for x86 usdt probes
+      selftests/bpf: Add usdt trigger bench
+      selftests/bpf: Add uprobe/usdt optimized test
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
 
-next-20241104 (xol stp + sim nop)
----------------------------------
-uprobe-nop      ( 1 cpus):    2.044 ± 0.003M/s  (  2.044M/s/cpu)
-uprobe-push     ( 1 cpus):    0.415 ± 0.001M/s  (  0.415M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.047 ± 0.001M/s  (  2.047M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.832 ± 0.003M/s  (  0.832M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.328 ± 0.000M/s  (  0.328M/s/cpu)
-uretprobe-ret   ( 1 cpus):    0.833 ± 0.003M/s  (  0.833M/s/cpu)
-
-next-20241104 (sim stp + sim nop)
----------------------------------
-uprobe-nop      ( 1 cpus):    2.052 ± 0.002M/s  (  2.052M/s/cpu)
-uprobe-push     ( 1 cpus):    1.411 ± 0.002M/s  (  1.411M/s/cpu)
-uprobe-ret      ( 1 cpus):    2.052 ± 0.005M/s  (  2.052M/s/cpu)
-uretprobe-nop   ( 1 cpus):    0.839 ± 0.005M/s  (  0.839M/s/cpu)
-uretprobe-push  ( 1 cpus):    0.702 ± 0.002M/s  (  0.702M/s/cpu)
-uretprobe-ret   ( 1 cpus):    0.837 ± 0.001M/s  (  0.837M/s/cpu)
-
-It seems that the STP simluation approach in this patch significantly
-improves uprobe-push throughtput by 240% (from 0.415Ms/ to 1.411M/s)
-and uretprobe-push by 114% (from 0.328M/s to 0.702M/s) on kernels
-bases on next-20240909 and next-20241104. While there is still room
-for improvement to reach the throughput of -nop and -ret, the gains
-are very substantail.
-
-But I'm a bit puzzled by the throughput of uprobe/uretprobe-push using
-single-stepping stp, which are far lower compared to the result when
-when I submitted patch(look closely to the uprobe-push and uretprobe-push
-results in commit log). I'm certain that the tests were run on the
-same bare-metal machine with background tasked minimized. I doubt some
-uncommitted uprobe optimization on my local repo twist the result of
--push using single-step.
-
-In addition to the micro benchmark, I also re-ran Redis benchmark to
-compare the impact of single-stepping STP and simluated STP to the
-throughput of redis-server. I believe the impact of uprobe on the real
-application depends on the frequency of uprobe triggered and the application's
-hot paths. Therefore, I wouldn't say the simluated STP will benefit all
-real world applications.
-
-$ redis-benchmark -h [redis-server IP] -p 7778 -n 64000 -d 4 -c 128 -t SET
-$ redis-server --port 7778 --protected-mode no --save "" --appendonly no & &&
-  bpftrace -e 'uprobe:redis-server:readQueryFromClient{}
-               uprobe:redis-server:processCommand{}
-	       uprobe:redis-server:aeApiPoll {}'
-
-next-20241104
--------------
-RPS: 55602.1
-
-next-20241104 + ss stp
-----------------------
-RPS: 47220.9
-uprobe@@aeApiPoll: 554565
-uprobe@processCommand: 1275160
-uprobe@readQueryFromClient: 1277710
-
-next-20241104 + sim stp
------------------------
-RPS           54290.09
-uprobe@aeApiPoll: 496007
-uprobe@processCommand: 1275160
-uprobe@readQueryFromClient: 1277710
-
-Andrii expressed concern that the STP simulation in this patch is too
-expensive. If we believe the result I re-ran, perhaps it is not a
-bad way to simluate STP. Looking forward to your feedbacks, or someone
-could propose a cheaper way to simluate STP, I'm very happy to test it
-on my machine, thanks.
-
-[...]
-
->>>
->>> xol-stp
->>> -------
->>> uprobe-nop      ( 1 cpus):    1.566 ± 0.006M/s  (  1.566M/s/cpu)
->>> uprobe-push     ( 1 cpus):    0.868 ± 0.001M/s  (  0.868M/s/cpu)
->>> uprobe-ret      ( 1 cpus):    1.629 ± 0.001M/s  (  1.629M/s/cpu)
->>> uretprobe-nop   ( 1 cpus):    0.871 ± 0.001M/s  (  0.871M/s/cpu)
->>> uretprobe-push  ( 1 cpus):    0.616 ± 0.001M/s  (  0.616M/s/cpu)
->>> uretprobe-ret   ( 1 cpus):    0.878 ± 0.002M/s  (  0.878M/s/cpu)
->>>
->>> simulated-stp
->>> -------------
->>> uprobe-nop      ( 1 cpus):    1.544 ± 0.001M/s  (  1.544M/s/cpu)
->>> uprobe-push     ( 1 cpus):    1.128 ± 0.002M/s  (  1.128M/s/cpu)
->>> uprobe-ret      ( 1 cpus):    1.550 ± 0.005M/s  (  1.550M/s/cpu)
->>> uretprobe-nop   ( 1 cpus):    0.872 ± 0.004M/s  (  0.872M/s/cpu)
->>> uretprobe-push  ( 1 cpus):    0.714 ± 0.001M/s  (  0.714M/s/cpu)
->>> uretprobe-ret   ( 1 cpus):    0.896 ± 0.001M/s  (  0.896M/s/cpu)
->>>
->>> The profiling results based on the upstream kernel with spinlock
->>> optimization patches [2] reveals the simulation of STP increase the
->>> uprobe-push throughput by 29.3% (from 0.868M/s/cpu to 1.1238M/s/cpu) and
->>> uretprobe-push by 15.9% (from 0.616M/s/cpu to 0.714M/s/cpu).
->>>
->>> [0] https://lore.kernel.org/all/CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com/
->>> [1] https://lore.kernel.org/all/Zr3RN4zxF5XPgjEB@J2N7QTR9R3/
->>> [2] https://lore.kernel.org/all/20240815014629.2685155-1-liaochang1@huawei.com/
->>>
->>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->>> ---
->>>  arch/arm64/include/asm/insn.h            |  1 +
->>>  arch/arm64/kernel/probes/decode-insn.c   | 16 +++++
->>>  arch/arm64/kernel/probes/decode-insn.h   |  1 +
->>>  arch/arm64/kernel/probes/simulate-insn.c | 89 ++++++++++++++++++++++++
->>>  arch/arm64/kernel/probes/simulate-insn.h |  1 +
->>>  arch/arm64/kernel/probes/uprobes.c       | 21 ++++++
->>>  arch/arm64/lib/insn.c                    |  5 ++
->>>  7 files changed, 134 insertions(+)
->>>
-> 
-> [...]
-
--- 
-BR
-Liao, Chang
-
+ arch/x86/entry/syscalls/syscall_64.tbl                    |   1 +
+ arch/x86/include/asm/uprobes.h                            |   7 +++
+ arch/x86/kernel/uprobes.c                                 | 180 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                  |   2 +
+ include/linux/uprobes.h                                   |  25 +++++++++-
+ kernel/events/uprobes.c                                   | 222 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ kernel/fork.c                                             |   2 +
+ kernel/sys_ni.c                                           |   1 +
+ tools/testing/selftests/bpf/bench.c                       |   2 +
+ tools/testing/selftests/bpf/benchs/bench_trigger.c        |  45 +++++++++++++++++
+ tools/testing/selftests/bpf/prog_tests/uprobe_optimized.c | 252 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/trigger_bench.c         |  10 +++-
+ tools/testing/selftests/bpf/progs/uprobe_optimized.c      |  29 +++++++++++
+ tools/testing/selftests/bpf/sdt.h                         |   9 +++-
+ 14 files changed, 768 insertions(+), 19 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_optimized.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_optimized.c
