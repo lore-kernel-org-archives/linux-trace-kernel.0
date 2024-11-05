@@ -1,95 +1,88 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB2F18132A;
-	Tue,  5 Nov 2024 07:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48856762D2;
+	Tue,  5 Nov 2024 08:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730791216; cv=none; b=LwJ+/M3PAOJk31lQP5mPafJX7kaCvmcLyivJB2f/2ckg9nj4Z4Krnd341duKijTMBlGOmTDzUTl7m125+to5xBUOaMVQpNqyz1Oh62UhxElHkB68fL14wO97UNvVbMWs49j4f7S/x1Z6Z2ObNVyYiFJLWj+fhKPA/V/byMWHVQg=
+	t=1730795010; cv=none; b=cjbPWxCicfeTS/2M7jfiVUGKuhFrWE2TlJmpK8oU7wwsS07OcWZ+zapwU5t5Ab5aIt06Ig43MDIpTUPSUmXu4AiEM3PCf3LTM8r6ggJqNOI0Cb4VJDtbWW5ajgq9bEEaM8Q0zm6Hbn4KDLwBffMIqG2usdTMWFDGM9xOzjNzb6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730791216; c=relaxed/simple;
-	bh=GSUZY5wJ3MLnz3npdEq/2cld67mJl9yhHojFqBMiELw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZIUTyrThZ38UEtmk0ZjpuL467cc/XE2jF4OAEM2zFMx3/VH2MlTTAUzYs9PCO5j6kkYCgFU5/IvyglNumwH2RM7+Wubz5cudFSJx+Vfpj7glFT7KvUb/r7ahBoapixlyMAXb9DeuSxhEkDnfzacESDdyPqTtQavDlssEUPSARmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cl+mHPqs; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cl+mHPqs"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20cdb889222so48608675ad.3;
-        Mon, 04 Nov 2024 23:20:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730791214; x=1731396014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XKAHJzWLr2y1XDNxG2SQATXhIhZvmlarF7yids5u93g=;
-        b=cl+mHPqsb5t9yEzj61wCet3CrIIwEyFtx6gZQiOUb9xrU4vniWmPWtnA0l2S+zd55e
-         noy/3dBqf9GYNiuN1SM/oqGu7wVYdfBQIGp2Tq27XkOhACwEqFsx3/jpYZJopIu/XXOP
-         7GATfN9fbbpN/QvfR3wDpfKAjpnUYFpaXyxLEe6qZy3fWMxkpFLvHPPZeubUQ2NC+/LI
-         dMbXTH+YNbHckhXq3wvFbAP31U4D9BdGqCVd7K2s7kXICzypygirWhxseBxUbAcmLfQ8
-         wSrP55PAEK9YSFjIGYSvor4kxTu8sZX6cDgcTy/45zXWEjT3SPUDWW5EzhzEYNB6WFEf
-         XaAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730791214; x=1731396014;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XKAHJzWLr2y1XDNxG2SQATXhIhZvmlarF7yids5u93g=;
-        b=SNszhn8dpdeJ5xg4ALhy4DuhNN/JjP5uGUep64QZeqw/vQnUWzMYtj9GpbCkuklIxC
-         3ziX/b9ZhcKc5aZDHF30gqZNHOspssJ10cd4qvGwCXn4J3b4QD6OxCrYez/Q3pOEpFoW
-         jk+/LW3s89cA4sQGnZFv+fo69fZXqWM/5nOBdQk5dfIUDq48sqMH8d/1Q4k7VoL3pJuU
-         YkNAB1+EdmkkaY9wLwDJCqrLKI8lSvYc2qrdGYiM/hObvFbaYPfEN22VlsW09aQi6yyf
-         LrMVboLv3EJZoLvevv01KApQKf68dI7hrtSIsW8vqC2TmMOFdQBUbzYO7GMpAeJKWHWB
-         7sng==
-X-Forwarded-Encrypted: i=1; AJvYcCVbi/hXMevIGhF+gSTWYF6OK4PpKfr6CDnKW7XqPopr8IhOXSm7+Fx+Bmo/yHE6jfmV8CdPyOyPx8YCTSFoFQWHwwpI@vger.kernel.org, AJvYcCXbxo8ki8TDRcKZiEMnt56/jYe8jYctZek9jI9/hkInvGYJmPin7vD30GP+2ktC9sSNGlOXD9LcZZH+x8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDTUspfNXpANynZp6PtPH4njFZhsz8af98q9vqfnMlEcvCp/Ip
-	22pbFDOZXSYvx5/vF2bUOF0uBO630RDZ/e69FbL8I17Fz6mlEuTmYjpO6zMvRIs=
-X-Google-Smtp-Source: AGHT+IGTyGQ6mhQVLXMHzHVEiazlptO3WM8T1w8o1cVcjbmhxQ1C3vsJUHmwA1HY2BlM5Hk+UpXn1g==
-X-Received: by 2002:a17:902:d48b:b0:20e:5777:1b8d with SMTP id d9443c01a7336-21103ca7671mr275956815ad.57.1730791214547;
-        Mon, 04 Nov 2024 23:20:14 -0800 (PST)
-Received: from debian.resnet.ucla.edu (s-169-232-97-87.resnet.ucla.edu. [169.232.97.87])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-211057d3b18sm72468125ad.243.2024.11.04.23.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2024 23:20:14 -0800 (PST)
-From: Daniel Yang <danielyangkang@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Cc: Daniel Yang <danielyangkang@gmail.com>
-Subject: [PATCH] set_cmdline: replace fragile/deprecated strncpy with strscpy
-Date: Mon,  4 Nov 2024 23:20:07 -0800
-Message-Id: <20241105072007.426782-1-danielyangkang@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1730795010; c=relaxed/simple;
+	bh=UJqpPbGVgW/KtFagbKhgamo0nZStPQFRmJJZ6AeiT84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mapO+Xfusigd/8PsAm3ywmhkcPPjgKdqSJ5mJkMK+h3JucT4PsVZGfra4I4q709LJm7yuXN4B/3fush0ZnvXsQsU7lRbspBz6YNRPsCkVgnb2KzNhyO2sWMq3Rtf6fp8hEZaoktl3SSRFsJhiPqfkkF24zA5FYwl7R36grcRt4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 4A58KJ5r012914;
+	Tue, 5 Nov 2024 02:20:20 -0600
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 4A58KISZ012909;
+	Tue, 5 Nov 2024 02:20:18 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 5 Nov 2024 02:20:18 -0600
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for ppc64le
+Message-ID: <20241105082018.GA29862@gate.crashing.org>
+References: <20241101191925.1550493-1-hbathini@linux.ibm.com> <20241101205948.GW29862@gate.crashing.org> <1916cb5c-cb3d-427c-bcf0-2c1b905fd6d1@linux.ibm.com> <20241104094431.GY29862@gate.crashing.org> <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com> <20241104103615.GZ29862@gate.crashing.org> <f7e8243a-a4c8-44ce-ad03-7d232df461ed@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7e8243a-a4c8-44ce-ad03-7d232df461ed@linux.ibm.com>
+User-Agent: Mutt/1.4.2.3i
 
-Kernel docs identify strncpy as being fragile and ambiguous. Replaced
-strncpy with strscpy so dest str is null terminated and not padded.
+Hi!
 
-Signed-off-by: Daniel Yang <danielyangkang@gmail.com>
----
- kernel/trace/trace_sched_switch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Nov 04, 2024 at 11:06:23PM +0530, Hari Bathini wrote:
+> Seems like a bit of misunderstanding there. Function entry here intends
+> to mean the actual start of function code (function prologue) - after
+> GEP and function profiling sequence (mflr r0; bl mcount).
 
-diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-index 8a407adb0..573b5d8e8 100644
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -187,7 +187,7 @@ static inline char *get_saved_cmdlines(int idx)
- 
- static inline void set_cmdline(int idx, const char *cmdline)
- {
--	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
-+	strscpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
- }
- 
- static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
--- 
-2.39.2
+What you call "function entry" here simply does not exist.  The compiler
+can -- and ***WILL***, ***DOES*** -- mix up all of that.  In particular,
+"function prologue" does not exist at all (on any architecture worth
+its salt, including PowerPC), and all instructions you consider part of
+a function prologue might end up anywhere.  The "profiling sequence" is
+part of that btw, and that typically ends up *not* the first thing in
+the function, not the first thing after the LEP (register saves are
+earlier often, they are generated in that order in the first place,
+but they can (and will) be moved if that schedules better).
 
+> Function arguments can be accessed with kprobe only while setting a
+> probe at an address the kernel treats as function start address.
+
+That is a silly assumption to make.  There is no guarantee you can
+access function arguments *at all*, we're not in 1975 anymore.  You
+*need* to look at debug information if you want to deal with anything
+about your high-level language program.  Looking at the machine code
+can only tell you about the machine state, whatever is in registers
+etc.
+
+> Note that the test case pass criteria here is setting probe to fail by
+> providing an address (sym+offset) beyond the function start address.
+> 
+> And in this specific test case (with "vfs_read+8", where vfs_read is
+> the symbol and '8' is the offset), the test case was failing on powerpc
+> because setting the probe at 'sym+8' was succeeding, as anywhere between
+> 'sym' to 'sym+16' is treated as function start address on powerpc:
+
+Yeah, fragile tests sometimes break.  Changing a randomly chosen number
+to some other randomly chosen number will not fix the problem (but you
+can postpone having to deal with it, sure!)
+
+
+Segher
