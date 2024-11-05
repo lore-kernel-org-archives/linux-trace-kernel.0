@@ -1,55 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793BA1B394E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Nov 2024 06:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E3C1FEFD4;
+	Tue,  5 Nov 2024 07:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730789277; cv=none; b=QEzjRUQf1BVppXkvBK27ZHDtanaX6jNQRqkkkBTmVOXwNMCANN9lyjCjV2WAGaqxsdaVujvd6Cy3OU813vn8bXIStQE8872iEaLIDA+junXapagoyMxg4w20jDtlc21gmTMhW7aMlJh0CKUioxCzSJ0RDZUGWG6QnavcAyFPadM=
+	t=1730790175; cv=none; b=RcJeWZ6v52G06I3IJ7catWvPxRXIlj3AmNTX2upEKe1gL281mlAVS6gvBS/Dnx3uI01DCsNpKqn9u0c9oSZV5qwNVN7DlCoeW/sTgLbBL3Eh/eN1R+gPA887izB1NONSr5EHSJL9AFi5oQBp4jyT6f++7QML7iywRBOBvn02JEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730789277; c=relaxed/simple;
-	bh=4OSZ+Dr/HYpgzBe5gCu5KbSQJAbV4zx4N9uOqpFpgBc=;
+	s=arc-20240116; t=1730790175; c=relaxed/simple;
+	bh=vfcX72EWl1PlKyFBzjhHz5V71yaLAfzK3VjVgomZL4Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOP5F8rxhSBlBsPAoKEBh/ZQ7ut+EemZ6YLtgkcg+kXtVWka8wmP1WU4FOACPgItnGOrK6mKTYA6TGzrs/ljKYaOTVTBs+cYaQ382KRmIQCxJAusXQtrh08kyMwGAlZyGJaH16BOAkqUSLx2LJOqT6z6fVTiA5ysfjXSgdTYE6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d6xslsmW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uj/7jDTU/QqpD9FFIjKjnCvPfRZF9vJoxPylVeB5cmvjdCmI+cxnpcr9kIWY/H6xMRd+aj/A/5iI9dPeHF4wvcqSAQifexW70in+eKc3yObppkL/p9VI6ZIRoQCk7d1C1zWjQqppaNwnaOEV960KLEQc7l9IaQq/cGWTUHwoh24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3dpbmwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d6xslsmW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730789274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OSSiISjBEV9S7jAitSAByWMNKJbvVYBfy3jJPVgWuvQ=;
-	b=d6xslsmWd/MQBpwMzgOlrts30lUYFHnnW9T3MoLNtKA5W+7+8qMGx3AMak3R1GtxMiVQ+b
-	x6qhDPM1jsMZoxWy9RKCS5L8Fab8cJlF0I27NC9ecrFfIHB5O9+TIhl3Oea9+vrRoB5dkB
-	HMAe4iVPG2IvgLK6izCkNpXZT/m2aW4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-232-UWolMrigNN-kY1t1Lc4-Xw-1; Tue,
- 05 Nov 2024 01:47:51 -0500
-X-MC-Unique: UWolMrigNN-kY1t1Lc4-Xw-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C4A11955F54;
-	Tue,  5 Nov 2024 06:47:49 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.156])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA2E919560A2;
-	Tue,  5 Nov 2024 06:47:41 +0000 (UTC)
-Date: Tue, 5 Nov 2024 14:47:35 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: syzbot <syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [block?] [trace?] possible deadlock in blk_trace_ioctl
-Message-ID: <Zym_h_EYRVX18dSw@fedora>
-References: <67251e01.050a0220.529b6.0161.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3dpbmwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B12C4CECF;
+	Tue,  5 Nov 2024 07:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730790174;
+	bh=vfcX72EWl1PlKyFBzjhHz5V71yaLAfzK3VjVgomZL4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i3dpbmwHLfd+qUmJoaWeTGPHb10DC+M0kf+DMEykGWoYpGOuSUDviaUCAAx4zIAfi
+	 my4z1l/oyVoPrY5WEhvGAqrSv0MLPuXbzVIKUoMd0jh8oEVUCEONnRV4s7PDepCIp9
+	 ZD54y4ohFGVDY1Cs7nPdmpyfCNtvqUqW5KJ/Ch+xipF5ZFMCAivKT3JR6Xd9V1a/4G
+	 LvZ1wHQ1rlIUNyplCl+fPkOtsT/XeAFLJAPXe+EdvajpWUHCrgFIHiD89oCp0/Bkx4
+	 xYtH7/sknC5+POJtdvm/YMmFy0WRYObll2kMIURKDi3pF/30ytxQP7HSq81EZrmTXO
+	 namiYtOl86+Aw==
+Date: Tue, 5 Nov 2024 09:02:26 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+	Brian Cain <bcain@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+	Stafford Horne <shorne@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+	sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v7 6/8] x86/module: prepare module loading for ROX
+ allocations of text
+Message-ID: <ZynDAhW0lKCfOqZl@kernel.org>
+References: <20241023162711.2579610-1-rppt@kernel.org>
+ <20241023162711.2579610-7-rppt@kernel.org>
+ <20241104232741.GA3843610@thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,52 +88,91 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67251e01.050a0220.529b6.0161.GAE@google.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20241104232741.GA3843610@thelio-3990X>
 
-On Fri, Nov 01, 2024 at 11:29:21AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    f9f24ca362a4 Add linux-next specific files for 20241031
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10016630580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=328572ed4d152be9
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a3c16289c8c99b02cac1
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125a9340580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/eb84549dd6b3/disk-f9f24ca3.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/beb29bdfa297/vmlinux-f9f24ca3.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/8881fe3245ad/bzImage-f9f24ca3.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
-> 
+Hi Nathan,
 
-...
+On Mon, Nov 04, 2024 at 04:27:41PM -0700, Nathan Chancellor wrote:
+> Hi Mike,
+> 
+> On Wed, Oct 23, 2024 at 07:27:09PM +0300, Mike Rapoport wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > When module text memory will be allocated with ROX permissions, the
+> > memory at the actual address where the module will live will contain
+> > invalid instructions and there will be a writable copy that contains the
+> > actual module code.
+> > 
+> > Update relocations and alternatives patching to deal with it.
+> > 
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Tested-by: kdevops <kdevops@lists.linux.dev>
+> 
+> Hopefully the last time you have to hear from me, as I am only
+> experiencing issues with only one of my test machines at this point and
+> it is my only machine that supports IBT, so it seems to point to
+> something specific with the IBT part of the FineIBT support. I notice
+> either a boot hang or an almost immediate reboot (triple fault?). I
+> guess this is how I missed reporting this earlier, as my machine was
+> falling back to the default distribution kernel after the restart and I
+> did not notice I was not actually testing a -next kernel.
+> 
+> Checking out the version of this change that is in next-20241104, commit
+> 7ca6ed09db62 ("x86/module: prepare module loading for ROX allocations of
+> text"), it boots with either 'cfi=off' or 'cfi=kcfi' but it exhibits the
+> issues noted above with 'cfi=fineibt'. At the immediate parent, commit
+> b575d981092f ("arch: introduce set_direct_map_valid_noflush()"), all
+> three combinations boot fine.
+> 
+>   $ uname -r; tr ' ' '\n' </proc/cmdline | grep cfi=
+> 
+>   6.12.0-rc5-debug-00214-g7ca6ed09db62
+>   cfi=kcfi
+> 
+>   6.12.0-rc5-debug-00214-g7ca6ed09db62
+>   cfi=off
+> 
+>   6.12.0-rc5-debug-00213-gb575d981092f
+>   cfi=fineibt
+> 
+>   6.12.0-rc5-debug-00213-gb575d981092f
+>   cfi=kcfi
+> 
+>   6.12.0-rc5-debug-00213-gb575d981092f
+>   cfi=off
+> 
+> I do not think this machine has an accessible serial port and I do not
+> think IBT virtualization is supported via either KVM or TCG in QEMU, so
+> I am not sure how to get more information about what is going on here. I
+> wanted to try reverting these changes on top of next-20241104 but there
+> was a non-trivial conflict in mm/execmem.c due to some changes on top,
+> so I just tested in the mm history.
+> 
+> If there is any other information I can provide or patches I can test, I
+> am more than happy to do so.
 
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+Yes, please :)
 
-#syz test: https://github.com/ming1/linux.git for-next
+There's a silly mistake in cfi_rewrite_endbr() in that commit, the patch
+below should fix it. Can you please test?
 
-Thanks,
-Ming
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 3407efc26528..243843e44e89 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1241,7 +1241,7 @@ static void cfi_rewrite_endbr(s32 *start, s32 *end, struct module *mod)
+ 		void *addr = (void *)s + *s;
+ 		void *wr_addr = module_writable_address(mod, addr);
+ 
+-		poison_endbr(addr+16, wr_addr, false);
++		poison_endbr(addr + 16, wr_addr + 16, false);
+ 	}
+ }
+ 
+ 
+> Cheers,
+> Nathan
 
+-- 
+Sincerely yours,
+Mike.
