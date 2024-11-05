@@ -1,178 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E3C1FEFD4;
-	Tue,  5 Nov 2024 07:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715C3D984
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Nov 2024 07:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730790175; cv=none; b=RcJeWZ6v52G06I3IJ7catWvPxRXIlj3AmNTX2upEKe1gL281mlAVS6gvBS/Dnx3uI01DCsNpKqn9u0c9oSZV5qwNVN7DlCoeW/sTgLbBL3Eh/eN1R+gPA887izB1NONSr5EHSJL9AFi5oQBp4jyT6f++7QML7iywRBOBvn02JEU=
+	t=1730790908; cv=none; b=P93oMwKRPsJh3CptqymAS29cf3Ixe2M2oOMcbs1p3QciIy740PIMc7OrraG1uINo5kHLyfjg0ejxXfvTiByoLWgM8dzOn14b8afU0RzAKZgFPt+xe54bBvjdUe1+P8lxXNQDq+BC8/ZNPyo2xFb0r/InV2+B3TgClnOJSJs/JZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730790175; c=relaxed/simple;
-	bh=vfcX72EWl1PlKyFBzjhHz5V71yaLAfzK3VjVgomZL4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uj/7jDTU/QqpD9FFIjKjnCvPfRZF9vJoxPylVeB5cmvjdCmI+cxnpcr9kIWY/H6xMRd+aj/A/5iI9dPeHF4wvcqSAQifexW70in+eKc3yObppkL/p9VI6ZIRoQCk7d1C1zWjQqppaNwnaOEV960KLEQc7l9IaQq/cGWTUHwoh24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3dpbmwH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3dpbmwH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B12C4CECF;
-	Tue,  5 Nov 2024 07:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730790174;
-	bh=vfcX72EWl1PlKyFBzjhHz5V71yaLAfzK3VjVgomZL4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i3dpbmwHLfd+qUmJoaWeTGPHb10DC+M0kf+DMEykGWoYpGOuSUDviaUCAAx4zIAfi
-	 my4z1l/oyVoPrY5WEhvGAqrSv0MLPuXbzVIKUoMd0jh8oEVUCEONnRV4s7PDepCIp9
-	 ZD54y4ohFGVDY1Cs7nPdmpyfCNtvqUqW5KJ/Ch+xipF5ZFMCAivKT3JR6Xd9V1a/4G
-	 LvZ1wHQ1rlIUNyplCl+fPkOtsT/XeAFLJAPXe+EdvajpWUHCrgFIHiD89oCp0/Bkx4
-	 xYtH7/sknC5+POJtdvm/YMmFy0WRYObll2kMIURKDi3pF/30ytxQP7HSq81EZrmTXO
-	 namiYtOl86+Aw==
-Date: Tue, 5 Nov 2024 09:02:26 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-	Brian Cain <bcain@quicinc.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v7 6/8] x86/module: prepare module loading for ROX
- allocations of text
-Message-ID: <ZynDAhW0lKCfOqZl@kernel.org>
-References: <20241023162711.2579610-1-rppt@kernel.org>
- <20241023162711.2579610-7-rppt@kernel.org>
- <20241104232741.GA3843610@thelio-3990X>
+	s=arc-20240116; t=1730790908; c=relaxed/simple;
+	bh=AX0wnbzOVWBFJ0z+wYiz1cnR1V/qBBfEQHs42pi4lsI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RyR3C0qnZOq+yK4ujrIKFwFu0qY/O9T5IO5s2kDsKr4Rsv27zaYCpmOxl7kWYJRwBLH+ThJVYZMd0ETWkxg3p0+KEiRvP66pKbYV9W8xMBHXLjt7wrPH9UJmkKkCDnm3vB04SpX74R3YO2Z4sqryg6u8BXYkBUetpx9wJ80VGs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a6add3a52eso35278685ab.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Nov 2024 23:15:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730790904; x=1731395704;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=udJxfntUylZegD12LXtHmkhlsFp21Pyjgi/GZHXO0Q0=;
+        b=bxQUHGMg7Lur+DUaiRfcxAx5cM2TMTej6ZtwCEr6sjASjA7MxLqTX/b4Yb2Z43Rb+P
+         fkY/X7gh3dzLi5o/+kalquQVzDSg6j3im2BWPBVMfvhMFcKq/PPQ7jS7HHgIKqhn6G90
+         I/NmsXpFvM3I7AXoJo30dxoChBTSfhC8jPq4fIXFuDmk83FHkTdnkaWeqlP6WqEbAIYI
+         8WzEQ/GqgDJBswx4jozTTY/G4EkYdKBy97CBmfylCD7bSFrgDECz9FkNQNkhU5bBsyMS
+         Su1NajU1cGEX76NbiM8PHbPgKJZKnZTQFwCdmboA50xowRlWMhq2vC5ZcsRE5Xsj/eTE
+         ugrA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0zYRAgn40YmxOvZwJpcWQu7zrvS7AfmR5O38Cy4pMIEMV7JTSUwTx/0eN7mjM8/UYPIuHcoDGoyaa9x9clJqwCoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMPkKc3eGUS8aHk7dyiLKzJDcl0Gve3Y7wnqjvw8vZCStKuGG9
+	jlM+Gt/hCMDuqPWNtp1GJPHMTIGfHOz9Dp7Bpca4HLcPNtfP6P5H7kwW0SWGvJcRuSn7K+2NRv9
+	luTG1IcwxYw/XKCPKLIMDRoC+3FZ2DkIZkQOALxE0ts9j948rMt42QBM=
+X-Google-Smtp-Source: AGHT+IFENoTKKV4sJFxJHInjEOnTWgVx2bbjvJL+998wFc4aiBPfOT49lkWevLcZGh8gALCc97t8JyVFflWcXBzoaOwhSWirGlcN
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241104232741.GA3843610@thelio-3990X>
+X-Received: by 2002:a05:6e02:1387:b0:3a0:c8b8:1b0f with SMTP id
+ e9e14a558f8ab-3a6afeb07f8mr149769545ab.2.1730790904212; Mon, 04 Nov 2024
+ 23:15:04 -0800 (PST)
+Date: Mon, 04 Nov 2024 23:15:04 -0800
+In-Reply-To: <Zym_h_EYRVX18dSw@fedora>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6729c5f8.050a0220.2edce.1503.GAE@google.com>
+Subject: Re: [syzbot] [block?] [trace?] possible deadlock in blk_trace_ioctl
+From: syzbot <syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, ming.lei@redhat.com, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Nathan,
+Hello,
 
-On Mon, Nov 04, 2024 at 04:27:41PM -0700, Nathan Chancellor wrote:
-> Hi Mike,
-> 
-> On Wed, Oct 23, 2024 at 07:27:09PM +0300, Mike Rapoport wrote:
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> > 
-> > When module text memory will be allocated with ROX permissions, the
-> > memory at the actual address where the module will live will contain
-> > invalid instructions and there will be a writable copy that contains the
-> > actual module code.
-> > 
-> > Update relocations and alternatives patching to deal with it.
-> > 
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Tested-by: kdevops <kdevops@lists.linux.dev>
-> 
-> Hopefully the last time you have to hear from me, as I am only
-> experiencing issues with only one of my test machines at this point and
-> it is my only machine that supports IBT, so it seems to point to
-> something specific with the IBT part of the FineIBT support. I notice
-> either a boot hang or an almost immediate reboot (triple fault?). I
-> guess this is how I missed reporting this earlier, as my machine was
-> falling back to the default distribution kernel after the restart and I
-> did not notice I was not actually testing a -next kernel.
-> 
-> Checking out the version of this change that is in next-20241104, commit
-> 7ca6ed09db62 ("x86/module: prepare module loading for ROX allocations of
-> text"), it boots with either 'cfi=off' or 'cfi=kcfi' but it exhibits the
-> issues noted above with 'cfi=fineibt'. At the immediate parent, commit
-> b575d981092f ("arch: introduce set_direct_map_valid_noflush()"), all
-> three combinations boot fine.
-> 
->   $ uname -r; tr ' ' '\n' </proc/cmdline | grep cfi=
-> 
->   6.12.0-rc5-debug-00214-g7ca6ed09db62
->   cfi=kcfi
-> 
->   6.12.0-rc5-debug-00214-g7ca6ed09db62
->   cfi=off
-> 
->   6.12.0-rc5-debug-00213-gb575d981092f
->   cfi=fineibt
-> 
->   6.12.0-rc5-debug-00213-gb575d981092f
->   cfi=kcfi
-> 
->   6.12.0-rc5-debug-00213-gb575d981092f
->   cfi=off
-> 
-> I do not think this machine has an accessible serial port and I do not
-> think IBT virtualization is supported via either KVM or TCG in QEMU, so
-> I am not sure how to get more information about what is going on here. I
-> wanted to try reverting these changes on top of next-20241104 but there
-> was a non-trivial conflict in mm/execmem.c due to some changes on top,
-> so I just tested in the mm history.
-> 
-> If there is any other information I can provide or patches I can test, I
-> am more than happy to do so.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Yes, please :)
+Reported-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
+Tested-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
 
-There's a silly mistake in cfi_rewrite_endbr() in that commit, the patch
-below should fix it. Can you please test?
+Tested on:
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 3407efc26528..243843e44e89 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1241,7 +1241,7 @@ static void cfi_rewrite_endbr(s32 *start, s32 *end, struct module *mod)
- 		void *addr = (void *)s + *s;
- 		void *wr_addr = module_writable_address(mod, addr);
- 
--		poison_endbr(addr+16, wr_addr, false);
-+		poison_endbr(addr + 16, wr_addr + 16, false);
- 	}
- }
- 
- 
-> Cheers,
-> Nathan
+commit:         72697401 block: don't verify IO lock for freeze/unfree..
+git tree:       https://github.com/ming1/linux.git for-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e8ed5f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dfea72efa3e2aef2
+dashboard link: https://syzkaller.appspot.com/bug?extid=a3c16289c8c99b02cac1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
--- 
-Sincerely yours,
-Mike.
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
