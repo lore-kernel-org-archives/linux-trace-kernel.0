@@ -1,74 +1,95 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0715C3D984
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  5 Nov 2024 07:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB2F18132A;
+	Tue,  5 Nov 2024 07:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730790908; cv=none; b=P93oMwKRPsJh3CptqymAS29cf3Ixe2M2oOMcbs1p3QciIy740PIMc7OrraG1uINo5kHLyfjg0ejxXfvTiByoLWgM8dzOn14b8afU0RzAKZgFPt+xe54bBvjdUe1+P8lxXNQDq+BC8/ZNPyo2xFb0r/InV2+B3TgClnOJSJs/JZg=
+	t=1730791216; cv=none; b=LwJ+/M3PAOJk31lQP5mPafJX7kaCvmcLyivJB2f/2ckg9nj4Z4Krnd341duKijTMBlGOmTDzUTl7m125+to5xBUOaMVQpNqyz1Oh62UhxElHkB68fL14wO97UNvVbMWs49j4f7S/x1Z6Z2ObNVyYiFJLWj+fhKPA/V/byMWHVQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730790908; c=relaxed/simple;
-	bh=AX0wnbzOVWBFJ0z+wYiz1cnR1V/qBBfEQHs42pi4lsI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=RyR3C0qnZOq+yK4ujrIKFwFu0qY/O9T5IO5s2kDsKr4Rsv27zaYCpmOxl7kWYJRwBLH+ThJVYZMd0ETWkxg3p0+KEiRvP66pKbYV9W8xMBHXLjt7wrPH9UJmkKkCDnm3vB04SpX74R3YO2Z4sqryg6u8BXYkBUetpx9wJ80VGs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a6add3a52eso35278685ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 04 Nov 2024 23:15:04 -0800 (PST)
+	s=arc-20240116; t=1730791216; c=relaxed/simple;
+	bh=GSUZY5wJ3MLnz3npdEq/2cld67mJl9yhHojFqBMiELw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZIUTyrThZ38UEtmk0ZjpuL467cc/XE2jF4OAEM2zFMx3/VH2MlTTAUzYs9PCO5j6kkYCgFU5/IvyglNumwH2RM7+Wubz5cudFSJx+Vfpj7glFT7KvUb/r7ahBoapixlyMAXb9DeuSxhEkDnfzacESDdyPqTtQavDlssEUPSARmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cl+mHPqs; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cl+mHPqs"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-20cdb889222so48608675ad.3;
+        Mon, 04 Nov 2024 23:20:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730791214; x=1731396014; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XKAHJzWLr2y1XDNxG2SQATXhIhZvmlarF7yids5u93g=;
+        b=cl+mHPqsb5t9yEzj61wCet3CrIIwEyFtx6gZQiOUb9xrU4vniWmPWtnA0l2S+zd55e
+         noy/3dBqf9GYNiuN1SM/oqGu7wVYdfBQIGp2Tq27XkOhACwEqFsx3/jpYZJopIu/XXOP
+         7GATfN9fbbpN/QvfR3wDpfKAjpnUYFpaXyxLEe6qZy3fWMxkpFLvHPPZeubUQ2NC+/LI
+         dMbXTH+YNbHckhXq3wvFbAP31U4D9BdGqCVd7K2s7kXICzypygirWhxseBxUbAcmLfQ8
+         wSrP55PAEK9YSFjIGYSvor4kxTu8sZX6cDgcTy/45zXWEjT3SPUDWW5EzhzEYNB6WFEf
+         XaAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730790904; x=1731395704;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=udJxfntUylZegD12LXtHmkhlsFp21Pyjgi/GZHXO0Q0=;
-        b=bxQUHGMg7Lur+DUaiRfcxAx5cM2TMTej6ZtwCEr6sjASjA7MxLqTX/b4Yb2Z43Rb+P
-         fkY/X7gh3dzLi5o/+kalquQVzDSg6j3im2BWPBVMfvhMFcKq/PPQ7jS7HHgIKqhn6G90
-         I/NmsXpFvM3I7AXoJo30dxoChBTSfhC8jPq4fIXFuDmk83FHkTdnkaWeqlP6WqEbAIYI
-         8WzEQ/GqgDJBswx4jozTTY/G4EkYdKBy97CBmfylCD7bSFrgDECz9FkNQNkhU5bBsyMS
-         Su1NajU1cGEX76NbiM8PHbPgKJZKnZTQFwCdmboA50xowRlWMhq2vC5ZcsRE5Xsj/eTE
-         ugrA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0zYRAgn40YmxOvZwJpcWQu7zrvS7AfmR5O38Cy4pMIEMV7JTSUwTx/0eN7mjM8/UYPIuHcoDGoyaa9x9clJqwCoI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMPkKc3eGUS8aHk7dyiLKzJDcl0Gve3Y7wnqjvw8vZCStKuGG9
-	jlM+Gt/hCMDuqPWNtp1GJPHMTIGfHOz9Dp7Bpca4HLcPNtfP6P5H7kwW0SWGvJcRuSn7K+2NRv9
-	luTG1IcwxYw/XKCPKLIMDRoC+3FZ2DkIZkQOALxE0ts9j948rMt42QBM=
-X-Google-Smtp-Source: AGHT+IFENoTKKV4sJFxJHInjEOnTWgVx2bbjvJL+998wFc4aiBPfOT49lkWevLcZGh8gALCc97t8JyVFflWcXBzoaOwhSWirGlcN
+        d=1e100.net; s=20230601; t=1730791214; x=1731396014;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XKAHJzWLr2y1XDNxG2SQATXhIhZvmlarF7yids5u93g=;
+        b=SNszhn8dpdeJ5xg4ALhy4DuhNN/JjP5uGUep64QZeqw/vQnUWzMYtj9GpbCkuklIxC
+         3ziX/b9ZhcKc5aZDHF30gqZNHOspssJ10cd4qvGwCXn4J3b4QD6OxCrYez/Q3pOEpFoW
+         jk+/LW3s89cA4sQGnZFv+fo69fZXqWM/5nOBdQk5dfIUDq48sqMH8d/1Q4k7VoL3pJuU
+         YkNAB1+EdmkkaY9wLwDJCqrLKI8lSvYc2qrdGYiM/hObvFbaYPfEN22VlsW09aQi6yyf
+         LrMVboLv3EJZoLvevv01KApQKf68dI7hrtSIsW8vqC2TmMOFdQBUbzYO7GMpAeJKWHWB
+         7sng==
+X-Forwarded-Encrypted: i=1; AJvYcCVbi/hXMevIGhF+gSTWYF6OK4PpKfr6CDnKW7XqPopr8IhOXSm7+Fx+Bmo/yHE6jfmV8CdPyOyPx8YCTSFoFQWHwwpI@vger.kernel.org, AJvYcCXbxo8ki8TDRcKZiEMnt56/jYe8jYctZek9jI9/hkInvGYJmPin7vD30GP+2ktC9sSNGlOXD9LcZZH+x8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDTUspfNXpANynZp6PtPH4njFZhsz8af98q9vqfnMlEcvCp/Ip
+	22pbFDOZXSYvx5/vF2bUOF0uBO630RDZ/e69FbL8I17Fz6mlEuTmYjpO6zMvRIs=
+X-Google-Smtp-Source: AGHT+IGTyGQ6mhQVLXMHzHVEiazlptO3WM8T1w8o1cVcjbmhxQ1C3vsJUHmwA1HY2BlM5Hk+UpXn1g==
+X-Received: by 2002:a17:902:d48b:b0:20e:5777:1b8d with SMTP id d9443c01a7336-21103ca7671mr275956815ad.57.1730791214547;
+        Mon, 04 Nov 2024 23:20:14 -0800 (PST)
+Received: from debian.resnet.ucla.edu (s-169-232-97-87.resnet.ucla.edu. [169.232.97.87])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-211057d3b18sm72468125ad.243.2024.11.04.23.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 23:20:14 -0800 (PST)
+From: Daniel Yang <danielyangkang@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: Daniel Yang <danielyangkang@gmail.com>
+Subject: [PATCH] set_cmdline: replace fragile/deprecated strncpy with strscpy
+Date: Mon,  4 Nov 2024 23:20:07 -0800
+Message-Id: <20241105072007.426782-1-danielyangkang@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1387:b0:3a0:c8b8:1b0f with SMTP id
- e9e14a558f8ab-3a6afeb07f8mr149769545ab.2.1730790904212; Mon, 04 Nov 2024
- 23:15:04 -0800 (PST)
-Date: Mon, 04 Nov 2024 23:15:04 -0800
-In-Reply-To: <Zym_h_EYRVX18dSw@fedora>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6729c5f8.050a0220.2edce.1503.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] possible deadlock in blk_trace_ioctl
-From: syzbot <syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, ming.lei@redhat.com, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Kernel docs identify strncpy as being fragile and ambiguous. Replaced
+strncpy with strscpy so dest str is null terminated and not padded.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Signed-off-by: Daniel Yang <danielyangkang@gmail.com>
+---
+ kernel/trace/trace_sched_switch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reported-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
-Tested-by: syzbot+a3c16289c8c99b02cac1@syzkaller.appspotmail.com
+diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
+index 8a407adb0..573b5d8e8 100644
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -187,7 +187,7 @@ static inline char *get_saved_cmdlines(int idx)
+ 
+ static inline void set_cmdline(int idx, const char *cmdline)
+ {
+-	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
++	strscpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
+ }
+ 
+ static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
+-- 
+2.39.2
 
-Tested on:
-
-commit:         72697401 block: don't verify IO lock for freeze/unfree..
-git tree:       https://github.com/ming1/linux.git for-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e8ed5f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dfea72efa3e2aef2
-dashboard link: https://syzkaller.appspot.com/bug?extid=a3c16289c8c99b02cac1
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
