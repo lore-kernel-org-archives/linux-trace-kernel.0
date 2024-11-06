@@ -1,77 +1,92 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6C91D8A04;
-	Wed,  6 Nov 2024 09:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E814F1D9598
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  6 Nov 2024 09:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730884364; cv=none; b=Lq5IntFa7H0hnCY6oIMQs9TmWUfMigJFJY+kzRTJ3CP4kbGfxXbnbtb+hFyhObVWBxVCG2ZAUVCXYJKVOG52PPQSzGUCHdvlv7/IVbFlfvVasBqHN5zKpfVgQdpW6uKw02FPmh7y/gIAR+l4PlGQGfFDvCApivn4vxo4b+kpC+E=
+	t=1730884974; cv=none; b=fx1JUHT1cqCsulA27fgAQybTj2RGsbsnUlJZGmb5tcGPWBzu71XuAb0SDh7S2ugSyB1pssQVUncGzhg22XeluqYKo1ov0Kox6zjiehLl83bsRcrU7GTEWVPWtTYbPExX1hG1awSWk57C4KupBXajjiGcW1v/9Yl3ukD/4ATpSk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730884364; c=relaxed/simple;
-	bh=6YtzTxo27BLuqqybhSbmOu/ytxHDEfIPXSd/2vFzzVc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=JCI0Pqwn27tjouCGBNvtiz8zhizGBLWcEHDxNF0q8gdZBonXudVWy4CR3bgcZVvU1nPpfKeE7ISrBHaCjoWMeAfKDyayYN6aaRu8/y/tGW/uO/tOIhSNo0Yzaw+lUHt25L1aBfFQr94Y8pqFJCNnBFaO9srozMptUUoJttXwDJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Xjzvb0s1Zz10V78;
-	Wed,  6 Nov 2024 17:10:51 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id B723418010F;
-	Wed,  6 Nov 2024 17:12:37 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 6 Nov 2024 17:12:37 +0800
-Message-ID: <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
-Date: Wed, 6 Nov 2024 17:12:36 +0800
+	s=arc-20240116; t=1730884974; c=relaxed/simple;
+	bh=j1zaLifxSHG9dqHGVi3lzDCXh1QBtGfWizelzPv1KKI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gBWfz3uta8/QOsc7HF4Kh3hc2lm/9ZbPIAM57egM07fr1aCIZFPYxUrJjZHq72aDVQKrid/TG5buvTav/jfIactPwvAbhIw0TLXYL/cc266sSjjUOu6ju8X7Fk3xH0HTHPxsy5VTExBaIebKqJGy8IZOqMDAY1mi//S7HTzkSSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JhPbZSk6; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JhPbZSk6"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7ee7e87f6e4so2552234a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 06 Nov 2024 01:22:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1730884972; x=1731489772; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=j1zaLifxSHG9dqHGVi3lzDCXh1QBtGfWizelzPv1KKI=;
+        b=JhPbZSk6lltoIR5+KhKUlzcp3z9QFyaSlcWg43U/lZW9BUz9Xd/5ahyUPvSl0jtJV/
+         V0ZDFJ8/CTco7Ovc6KOYtTiCqtG7Kf6xRR5kqr/2ETzNlahoOT+5Jrl/JAmJk37tj7Tn
+         M4/FvSSypMocKpZV3UlPDbBuwCpGrrgFoteDTSkabDzJxn1Z6EVDror8UNBfwYw3kRDm
+         RZ2r/9eNWaDsQxqtathAodfIgX0Hma4+l1dJoHzY2+jS5VY595JMI6FIYOzJhub4Xr05
+         HYAr1ihww7j5m9wnnrTpaPPwGEk4WA10fZ3xMwcd9xN/+W5NVyjkXIUZ6JUNVXWtUcYn
+         N6/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730884972; x=1731489772;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j1zaLifxSHG9dqHGVi3lzDCXh1QBtGfWizelzPv1KKI=;
+        b=SjfZ1jvoenWPfA+vFwXc1fjb9wkSJ8ZhB75twv3HrZ47kDUiys2WpRAUD9M43zwMY/
+         O48LwtiuTqwYLIsGAGRFs8TgdU4uHdNFSSXzCGRZUC0xFfarnYzwk6q/7qwIs1nPn9AT
+         6RwPL9opfHzbleaEfNwZ3Ks4XdeK32INtes/71D9rDXYxBUyL9dEPgUC+9bYscBhWiZS
+         TXi3NM8Ozt1gUy/VyUAhJE9x2/zi/C/q4XrbgThytgFOvnQWq+2u58Q6bSXMsm++itdL
+         s2KgXBxcg4yNjl+CLW8FyWNra5hXEmLJrgWxTXg72dnKrCBAWk8nl4Bnq20zBetI3bGv
+         Ecxg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXv7272vqHKF92FxOC9u64DogAClr3JRITgA3vSL2nRwzeyKUxBM+BN5VH6AbA0Pp91W8DHh/xh4qFAFO1fVXEX2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzemnb8fA+3YzEveoFG/eZNxQl9PQJl2Hsi/+PxQESaMpaEj7nI
+	iXVgq3b2QFJn2eDFkhCf0DL0ohtB4Hr7bW7QwQhg/uITJxCIrdY5bnqdBHqNsAt53/hPKvXGjQ9
+	5Yl+bJX9d2Z4nBCLxm0lxrLotZdbSzgfUXCRh
+X-Google-Smtp-Source: AGHT+IHRgtOhdgUbzWm0hZmkvVPChJprngFowTe1zYH5hqiS5CqLKtCX4OnBjrenvIga2sRIn4q/sgidGoyGU7DNzxY=
+X-Received: by 2002:a05:6a20:d48e:b0:1d9:26b7:6ca with SMTP id
+ adf61e73a8af0-1dba556fbfemr27874210637.45.1730884971969; Wed, 06 Nov 2024
+ 01:22:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
- scalability
-From: "Liao, Chang" <liaochang1@huawei.com>
-To: <andrii@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov
-	<oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
-References: <20240927094549.3382916-1-liaochang1@huawei.com>
-In-Reply-To: <20240927094549.3382916-1-liaochang1@huawei.com>
+References: <20241105133610.1937089-1-elver@google.com> <20241105113111.76c46806@gandalf.local.home>
+ <CANpmjNMuTdLDMmSeJkHmGjr59OtMEsf4+Emkr8hWD++XjQpSpg@mail.gmail.com>
+ <20241105120247.596a0dc9@gandalf.local.home> <CANpmjNNTcrk7KtsQAdGVPmcOkiy446VmD-Y=YqxoUx+twTiOwA@mail.gmail.com>
+In-Reply-To: <CANpmjNNTcrk7KtsQAdGVPmcOkiy446VmD-Y=YqxoUx+twTiOwA@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Wed, 6 Nov 2024 10:22:15 +0100
+Message-ID: <CANpmjNP+CFijZ-nhwSR_sdxNDTjfRfyQ5c5wLE=fqN=nhL8FEA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Add task_prctl_unknown tracepoint
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
+	kasan-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
+On Tue, 5 Nov 2024 at 18:22, Marco Elver <elver@google.com> wrote:
+...
+> > > > I'm also surprised that the comm didn't show in the trace_pipe.
+> > >
+> > > Any config options or tweaks needed to get it to show more reliably?
+> > >
+> > > > I've
+> > > > updated the code so that it should usually find it. But saving it here may
+> > > > not be a big deal.
+> >
+> > How did you start it? Because it appears reliable for me.
+>
+> Very normally from bash. Maybe my env is broken in other ways, I'll
+> dig a little.
 
-
-在 2024/9/27 17:45, Liao Chang 写道:
->>  2 files changed, 139 insertions(+), 42 deletions(-)
->>
-> Liao,
-> 
-> Assuming your ARM64 improvements go through, would you still need
-> these changes? XOL case is a slow case and if possible should be
-> avoided at all costs. If all common cases for ARM64 are covered
-> through instruction emulation, would we need to add all this
-> complexity to optimize slow case?
-
-Andrii,
-
-I've studied the optimizations merged over the past month, it seems
-that part of the problem addressed in this patch has been resolved
-by Oleg(uprobes: kill xol_area->slot_count). And I hope you've received
-the email with the re-run results for -push using simulated STP on
-the latest kernel (tag next-20241104). It show significant improvements,
-althought there's still room to match the throughput of -nop and -ret.
-So based on these results, I would prioritize the STP simulation patch.
-
--- 
-BR
-Liao, Chang
-
+Some trial and error led me to conclude it's a race between the logic
+looking up the comm and the process exiting: If the test program exits
+soon after the traced event, it doesn't print the comm. Adding a
+generous usleep() before it exits reliably prints the comm.
