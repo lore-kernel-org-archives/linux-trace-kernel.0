@@ -1,60 +1,31 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A781EA84;
-	Wed,  6 Nov 2024 06:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6C91D8A04;
+	Wed,  6 Nov 2024 09:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730873518; cv=none; b=sJkHSuehyGMxvlDxrjhVxY9k7XPMCAzV5tOKhUO8MwRetGRtyCFnCjEIL1klLP8cLyNv/ZOSTpqg2i7+EAV5nvSohoXLTjIoTKngub8FXV4iUTD9Vu3yunehJvOF/k6KvPmDn9TBF6rdjhJfbt8sWgVJPSniHFe9Oqr4Jb1AYao=
+	t=1730884364; cv=none; b=Lq5IntFa7H0hnCY6oIMQs9TmWUfMigJFJY+kzRTJ3CP4kbGfxXbnbtb+hFyhObVWBxVCG2ZAUVCXYJKVOG52PPQSzGUCHdvlv7/IVbFlfvVasBqHN5zKpfVgQdpW6uKw02FPmh7y/gIAR+l4PlGQGfFDvCApivn4vxo4b+kpC+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730873518; c=relaxed/simple;
-	bh=tJ1rGgan2u7SVhW2GXwWBNCltOtVTaNjavpnt1+lswM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YKySuz6/WwWIq7hHrC6QhUEzCSq61Fty4Ma80UzmBxcr3p91+NPvfHzyoGj9bhc9pa2lZP85UJB+6qaGs5oAkxpy1uuMfojqn2gL9JoXAylBW2gRly7nDO6JftQ2WjOZYWtCQqeexTFSp3/u1szqHgNWgic37olb69LiOW8PeT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=W+2cJHzS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W+2cJHzS"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4A65eR0j031806;
-	Wed, 6 Nov 2024 05:54:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ysSqMG
-	tbwbmFOqT1XRY+kGYi4gISugGgiIjpkXQ26zE=; b=W+2cJHzSxKStqNEMsCJ6oE
-	oo4PRwZMT3VaXlB60G0+ql//qGBpP/dIRa8vvca2UVpU8ceiBC0w2R0YHBPVtqTg
-	AGTK65/PgYIWa8sq+ePofqXUYZUAhH6jo4rZ8m4FFCHMy4NgJRk8HFZCYKpeDEqH
-	Mw0panYRRr2Z3XGJyv2D7rLvMT/PcA9enRq6mwpxZMTrUm2GPRgiSzq3buYCapg1
-	Lpns4YFX2GhurjfD06WorpPEcY5O3Uh9BaSF3bNzFffo+YiC6oD5njQWOSnM12nD
-	+hmB/2mVG8ufb3rhigiHPJ23XVk14KUZVxQ3TP1LgAefH4th/gZK+iqwJ5NG8TXQ
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 42r2gq0164-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 05:54:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4A65WLMT008430;
-	Wed, 6 Nov 2024 05:54:39 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 42nywkqwav-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Nov 2024 05:54:39 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4A65sbAX58655144
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Nov 2024 05:54:37 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 430FE20043;
-	Wed,  6 Nov 2024 05:54:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 36E5E20040;
-	Wed,  6 Nov 2024 05:54:35 +0000 (GMT)
-Received: from [9.203.115.143] (unknown [9.203.115.143])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Nov 2024 05:54:35 +0000 (GMT)
-Message-ID: <e6ba6084-e224-44c8-86e6-f3ae408209c1@linux.ibm.com>
-Date: Wed, 6 Nov 2024 11:24:34 +0530
+	s=arc-20240116; t=1730884364; c=relaxed/simple;
+	bh=6YtzTxo27BLuqqybhSbmOu/ytxHDEfIPXSd/2vFzzVc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=JCI0Pqwn27tjouCGBNvtiz8zhizGBLWcEHDxNF0q8gdZBonXudVWy4CR3bgcZVvU1nPpfKeE7ISrBHaCjoWMeAfKDyayYN6aaRu8/y/tGW/uO/tOIhSNo0Yzaw+lUHt25L1aBfFQr94Y8pqFJCNnBFaO9srozMptUUoJttXwDJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Xjzvb0s1Zz10V78;
+	Wed,  6 Nov 2024 17:10:51 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id B723418010F;
+	Wed,  6 Nov 2024 17:12:37 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 6 Nov 2024 17:12:37 +0800
+Message-ID: <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
+Date: Wed, 6 Nov 2024 17:12:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,80 +33,45 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: update kprobe syntax error test for
- ppc64le
-Content-Language: en-US
-To: Segher Boessenkool <segher@kernel.crashing.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        "Naveen N. Rao"
- <naveen@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20241101191925.1550493-1-hbathini@linux.ibm.com>
- <20241101205948.GW29862@gate.crashing.org>
- <1916cb5c-cb3d-427c-bcf0-2c1b905fd6d1@linux.ibm.com>
- <20241104094431.GY29862@gate.crashing.org>
- <245fed6f-5fb4-4925-ba0a-fb2f32e650d0@linux.ibm.com>
- <20241104103615.GZ29862@gate.crashing.org>
- <f7e8243a-a4c8-44ce-ad03-7d232df461ed@linux.ibm.com>
- <20241105082018.GA29862@gate.crashing.org>
- <20241105181752.74a3d6fa2f06d0adfdf85322@kernel.org>
- <20241105195208.GC29862@gate.crashing.org>
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20241105195208.GC29862@gate.crashing.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: l3aRu8tgKptju9-xOMLrFcnp-sMl082c
-X-Proofpoint-GUID: l3aRu8tgKptju9-xOMLrFcnp-sMl082c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 impostorscore=0 malwarescore=0 phishscore=0
- clxscore=1015 mlxlogscore=841 adultscore=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2409260000 definitions=main-2411060043
+Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better
+ scalability
+From: "Liao, Chang" <liaochang1@huawei.com>
+To: <andrii@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov
+	<oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+References: <20240927094549.3382916-1-liaochang1@huawei.com>
+In-Reply-To: <20240927094549.3382916-1-liaochang1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
 
 
-On 06/11/24 1:22 am, Segher Boessenkool wrote:
-> Hi!
-> 
-> On Tue, Nov 05, 2024 at 06:17:51PM +0900, Masami Hiramatsu wrote:
->> On Tue, 5 Nov 2024 02:20:18 -0600
->> Segher Boessenkool <segher@kernel.crashing.org> wrote:
->>> On Mon, Nov 04, 2024 at 11:06:23PM +0530, Hari Bathini wrote:
->>>> Seems like a bit of misunderstanding there. Function entry here intends
->>>> to mean the actual start of function code (function prologue) - after
->>>> GEP and function profiling sequence (mflr r0; bl mcount).
->>>
->>> What you call "function entry" here simply does not exist.  The compiler
->>> can -- and ***WILL***, ***DOES*** -- mix up all of that.
+在 2024/9/27 17:45, Liao Chang 写道:
+>>  2 files changed, 139 insertions(+), 42 deletions(-)
 >>
->> Here is the "function entry" means the function address.
+> Liao,
 > 
-> "Function entry point".  "Function entry" can mean whatever nebulous
-> thing done at the start of a function :-)
-> 
-> You're free to use your own terminology of course, but it help to use
-> standard names for standard things!
-> 
->> Not the prologue.
-> 
-> But that is literally what Hari said, so it confused me.
+> Assuming your ARM64 improvements go through, would you still need
+> these changes? XOL case is a slow case and if possible should be
+> avoided at all costs. If all common cases for ARM64 are covered
+> through instruction emulation, would we need to add all this
+> complexity to optimize slow case?
 
-Sorry about that. I should have said.. maybe prologue or whatever
-nebulous thing at the start of a function :-)
+Andrii,
 
-Basically, the address provided to test case can be any insn in the
-function code expect what the kernel considers function entry address..
+I've studied the optimizations merged over the past month, it seems
+that part of the problem addressed in this patch has been resolved
+by Oleg(uprobes: kill xol_area->slot_count). And I hope you've received
+the email with the re-run results for -push using simulated STP on
+the latest kernel (tag next-20241104). It show significant improvements,
+althought there's still room to match the throughput of -nop and -ret.
+So based on these results, I would prioritize the STP simulation patch.
 
-Thanks
-Hari
+-- 
+BR
+Liao, Chang
 
