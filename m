@@ -1,111 +1,94 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5E81DE2DE;
-	Wed,  6 Nov 2024 16:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01B1205129;
+	Wed,  6 Nov 2024 17:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730910453; cv=none; b=jwKeQ7DEw6LUJ8ehsdf1qGrUJyLTl6Rr9kW+tJSLP5UakASEFiKxaXEmcpj2us6y3di4AsP724O+qZm90iexJOu+MsBXfrIQCeH0TjdTfYoJAJkiikq+QYMYthFlPjRYT99+hBwe5riwtd4ea0rU6ECGgz0rfv1oq4h11E/9Ck0=
+	t=1730912679; cv=none; b=iEaIwImkcDkn7WKRZfQOfrrtszIWx0BhRlh1FnMI2GfJhO6LGlxSEANmqtlNgiX5Ggj7Mv836gIPHV1vBnDQWlw3JvIKS1mYP0xycWLuauHEAmkDAwn+MkH0G/BwM/t8D4QNWkNF4WDKOL3KT6TKMLmu0EHW/j8dtnA6BzhIWj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730910453; c=relaxed/simple;
-	bh=dqDHGCKp076r/ubz/6dxcP+mhyFxuV6k2hXCDYfTq+Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P1qTUUnFZ5Mnt+KD0rSOXrsL0Nf9jOuAzPrRTiE9Vs2AIduVgYcWcACRphlBxrWayfbazbODArO3NYYZOqC8wZpm2Dejy7xcfHOE+0w5HOW1wxx2sAjetr8YRpqIo/B2KH8LkmjOG38f4UhCsuOqkyUb6o/9K2paGaU/Ne/A6ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTdcGpEV; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730912679; c=relaxed/simple;
+	bh=45lm7teIJIgBDhR6WrM3tTb7cS3pi+iWOg5nbyI7j9s=;
+	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
+	 In-Reply-To:Content-Type; b=P2OEFf0qVj99/zSGe16l3AyuSQa44eD07dZ4inQQMexq5SEUgEqmvYUFjgiafvqgCH7j5X0eKvWf4lhokwtJYRQT4ijrRtMSnikwFqdGjotLlupaFvH6xnWm6wkGbqj5pkNNW87xBEnmpBdvOSdKNa5YJJu5+TdR+fvZU4g7OAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=MntEmEzy; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTdcGpEV"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-20cdbe608b3so70161565ad.1;
-        Wed, 06 Nov 2024 08:27:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MntEmEzy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730910451; x=1731515251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
-        b=VTdcGpEV9ZKhzgxY6UBssZWiVgHtvHGLrHC4TtUnttALWq1yqNge6YKthOjF0lNDv6
-         JskF1QCKKbsQ5DVnxVUqFcE1qGQ/X5DmaugvNHc4ouZlgbhB9TW90zK9dGOveHjNmuEE
-         K9+Tn/5zFUdJ8GiKzx98vtXvIr6y5qauQ6GZXbOLQjA5CF96Sd+Es+bJSJbsjqTSDFAj
-         O5HwOPlRAypZQOhQo7KXMm2fJnhtuYLAejSm/fT5KA7uWwHV/kD6k9/fE1Gic6Ij8k3Z
-         wtWTrzlgeClOD33qKokL3tMVzWkuLfy5/Ojj9IuCQy1+jGZRc4pZdorepxeqXx2D4Mxy
-         LxEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730910451; x=1731515251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2WsPRBTQwc5dj4lXDl+OK/MBpD2SjiCdDP2sbqnAg9M=;
-        b=BzGGKxl3Jpe6MUtbDVbRJBvWH12vLycOaItRdqyDAPGeuMF5m+KUuUhhFcDtSU8S6w
-         Mkkt8jN+q708vTf67l6QSwBLvk6YgUEZrEQKzcYum34J0EGATW73go95eiZvdjmsQCE0
-         7P8RBcDFShNlTo3d+RArBIjuVpnKtGSYwKkDwBpnae38WS7Cl5HvIzzwsqi7Ym5L2MM2
-         LFMukoBJ9oATjUgF5DNnAy6HD9ZvjW2xUNHyquYACwBhNtxegl4PhRccNtESQa36iw4/
-         u63djSDQ0Zw+a/h585/Do0JVdczpNeAuw2U2lYn8oEXopvqct37m1SsqcCgwKDfhNWqC
-         jE+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVe7jc0s7Ox2B/pneA7DN0u3OwUWGP434+KRCu40mSVI+JmRBPOHtZb14X7qtp6l1HHXcIxEMRlxt/dl7xq@vger.kernel.org, AJvYcCW0gG3m0bJwoRT9ak5Sh08Hx+lZeAtQ+nHqsJpT2o7t8wjYok0NfG1tTZn/xncJ0DWQiXH0QuXrRiaR1qmF5/Booe3j@vger.kernel.org, AJvYcCXMkYAGetLmFK7XPjwPv7O65hun7SasqqVYDq/p738NNR6ChKJ/JPIprCAFJ15dU89qVJc=@vger.kernel.org, AJvYcCXcBOx76WF2GG2RE6ualqZmAV3v9moPXblhx2ouLF2gip8H5l8gP5OBX+uh6XSHrY4GKDIqrXuFxYEyH/7hQEJxlA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5nQX+4IVzGjKhJSibQr1ZnisHTN5XPhEddjvacg8XKS5d4pCv
-	yRTTzoppi6LrrfvwJ08W0sNduGIXyfdHmogMVqLzFF5zhQeXhROYdFaum5imq1fIgJBJ1C1OuN5
-	nYb0Q7QDT2OJ/nW4nLDPJrte1U8X8Ew==
-X-Google-Smtp-Source: AGHT+IFZ7HPko/c4Xkh8GcCqUVhoDlLwVi5fZbQ8zNvjsTCHeshsiiTyyBk7S/FdYeBvDsBuooWoB3NR+4xTtuy981A=
-X-Received: by 2002:a17:902:ec8c:b0:20e:5777:1b83 with SMTP id
- d9443c01a7336-210f75339d6mr395312835ad.24.1730910451252; Wed, 06 Nov 2024
- 08:27:31 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1730912678; x=1762448678;
+  h=message-id:date:mime-version:to:cc:references:subject:
+   from:in-reply-to:content-transfer-encoding;
+  bh=45lm7teIJIgBDhR6WrM3tTb7cS3pi+iWOg5nbyI7j9s=;
+  b=MntEmEzy4eKV8WMoKuJyil3cfPrevzWF7DEZpYXiDmtvyRiVc3D0lwNW
+   ltL3Lns9qmLFg6rgQLjlCj/B5cFfgGCN9ZF1r7ioMv3dg8jIP3mmlK7KS
+   QWFogHx/Gy/w/k1wiJjArCiCCfT24P0eAjEY0ovMHoIJZNO9D0petJvvj
+   o=;
+X-IronPort-AV: E=Sophos;i="6.11,263,1725321600"; 
+   d="scan'208";a="2538545"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2024 17:04:38 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:42869]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.35.42:2525] with esmtp (Farcaster)
+ id 18efcd76-237c-46fb-afb1-2dbc7d25b1d1; Wed, 6 Nov 2024 17:04:37 +0000 (UTC)
+X-Farcaster-Flow-ID: 18efcd76-237c-46fb-afb1-2dbc7d25b1d1
+Received: from EX19D003UWC002.ant.amazon.com (10.13.138.169) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Wed, 6 Nov 2024 17:04:37 +0000
+Received: from [192.168.12.4] (10.187.171.30) by EX19D003UWC002.ant.amazon.com
+ (10.13.138.169) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35; Wed, 6 Nov 2024
+ 17:04:34 +0000
+Message-ID: <7ad5d114-3d19-4c33-bb3c-7f8940ad114e@amazon.com>
+Date: Wed, 6 Nov 2024 10:04:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240927094549.3382916-1-liaochang1@huawei.com> <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
-In-Reply-To: <8bcc6d5b-08d6-48a8-99d2-d8bb2bef2d6c@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 6 Nov 2024 08:27:19 -0800
-Message-ID: <CAEf4BzbJZ72Yr6tQuGLpz6fpKFXeUw3cD1BRO3T3j1psV4Qkdg@mail.gmail.com>
-Subject: Re: [PATCH v2] uprobes: Improve the usage of xol slots for better scalability
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: andrii@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>
+User-Agent: Mozilla Thunderbird
+To: <elena.reshetova@intel.com>
+CC: <ackerleytng@google.com>, <agordeev@linux.ibm.com>,
+	<aou@eecs.berkeley.edu>, <borntraeger@linux.ibm.com>, <bp@alien8.de>,
+	<canellac@amazon.at>, <catalin.marinas@arm.com>, <chenhuacai@kernel.org>,
+	<corbet@lwn.net>, <dave.hansen@intel.com>, <dave.hansen@linux.intel.com>,
+	<david@redhat.com>, <derekmn@amazon.com>, <gerald.schaefer@linux.ibm.com>,
+	<gor@linux.ibm.com>, <graf@amazon.com>, <hca@linux.ibm.com>, <hpa@zytor.com>,
+	<jgowans@amazon.com>, <jthoughton@google.com>, <kalyazin@amazon.com>,
+	<kernel@xen0n.name>, <kvm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+	<linux-s390@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<loongarch@lists.linux.dev>, <luto@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>, <mingo@redhat.com>,
+	<mlipp@amazon.at>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+	<pbonzini@redhat.com>, <peterz@infradead.org>, <quic_eberman@quicinc.com>,
+	<rostedt@goodmis.org>, <roypat@amazon.co.uk>, <rppt@kernel.org>,
+	<seanjc@google.com>, <shuah@kernel.org>, <svens@linux.ibm.com>,
+	<tabba@google.com>, <tglx@linutronix.de>, <vannapurve@google.com>,
+	<will@kernel.org>, <x86@kernel.org>, <xmarcalx@amazon.com>
+References: <DM8PR11MB57509ED04CB0730680735AC9E7512@DM8PR11MB5750.namprd11.prod.outlook.com>
+Subject: RE: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+Content-Language: en-US
+From: "Manwaring, Derek" <derekmn@amazon.com>
+In-Reply-To: <DM8PR11MB57509ED04CB0730680735AC9E7512@DM8PR11MB5750.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D032UWB002.ant.amazon.com (10.13.139.190) To
+ EX19D003UWC002.ant.amazon.com (10.13.138.169)
 
-On Wed, Nov 6, 2024 at 1:12=E2=80=AFAM Liao, Chang <liaochang1@huawei.com> =
-wrote:
->
->
->
-> =E5=9C=A8 2024/9/27 17:45, Liao Chang =E5=86=99=E9=81=93:
-> >>  2 files changed, 139 insertions(+), 42 deletions(-)
-> >>
-> > Liao,
-> >
-> > Assuming your ARM64 improvements go through, would you still need
-> > these changes? XOL case is a slow case and if possible should be
-> > avoided at all costs. If all common cases for ARM64 are covered
-> > through instruction emulation, would we need to add all this
-> > complexity to optimize slow case?
->
-> Andrii,
->
-> I've studied the optimizations merged over the past month, it seems
-> that part of the problem addressed in this patch has been resolved
-> by Oleg(uprobes: kill xol_area->slot_count). And I hope you've received
-> the email with the re-run results for -push using simulated STP on
-> the latest kernel (tag next-20241104). It show significant improvements,
-> althought there's still room to match the throughput of -nop and -ret.
-> So based on these results, I would prioritize the STP simulation patch.
+On 2024-11-04 at 08:33+0000, Elena Reshetova wrote:
+> This statement *is* for integrity section. We have a separate TDX guidance
+> on side-channels (including speculative) [3] and some speculative attacks
+> that affect confidentiality (for example spectre v1) are listed as not covered
+> by TDX but remaining SW responsibility (as they are now).
 
-Great, I was hoping that Oleg's patches would help. And yes, I
-absolutely agree, STP simulation to avoid kernel->user->kernel switch
-is probably the biggest bang for the buck for ARM64 specifically now.
-Can you please send a fastest simulation approach that works like
-x86-64, and we can try to continue conversation on the refreshed
-patch?
+Thanks for the additional info, Elena. Given that clarification, I
+definitely see direct map removal and TDX as complementary.
 
->
-> --
-> BR
-> Liao, Chang
->
+Derek
