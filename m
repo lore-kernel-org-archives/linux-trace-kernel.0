@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A50F29CF4;
-	Thu,  7 Nov 2024 15:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DBC212D07;
+	Thu,  7 Nov 2024 15:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730993647; cv=none; b=SW3ngCSd0VyXf8f8yOPwotZfkJVQj5zVbF4Kb7ou2vSp7yTAVfGKbZu9z4oHm22n+FOfnEGGl4nYg2biJbSYekqiQQ4Cit7h9BQjCWqW0ecXq0j7jUjj2+Q+DtnnRdthX36qaW+nly3K83d5qB9h2KTfpb+Ezmf/Cv3wP/5BYlo=
+	t=1730994018; cv=none; b=K+ktUs7NGM5DMXbuwtJLGK7St6ur0XW/liWFZswk+NpOiVLum1YPJUIRRHSjqa2YKg0mXTSLD3mcQwjlmbyUiVCkmFoU9cU/Bu11+4wxwe18myke/Oq91W06GXcuChhKCrjCOEABebnF1nMc89iKzvrgir/64hagwyZciHn8kHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730993647; c=relaxed/simple;
-	bh=S6Nyhohw0ltQ8Oz53Oa5BTzKcX5Q+uWwtFFNHqwaBVo=;
+	s=arc-20240116; t=1730994018; c=relaxed/simple;
+	bh=GN85DQ8GT3OLecMcZypUXFbyGyUxDPAtwS2VSzX9syw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=se26WfMo3YsQcL7V7yapkDC/eXurnZ/ZkQuAIvBFoKpitkIgQKxhndFuZvwUznKNlTL+Ubb50UtA3Juu9oFSyCeCFMCZz2ByZRngwGD/fLbp2KwwOgZTooAx1fL0VNDiYfH3+Xn87h01s/z/vxc/z+ZiRB6JOffO9nTJdolOrOU=
+	 MIME-Version:Content-Type; b=ZZAJAQhEkWE8KF+WCOJXbgEK2j6r12N9woi2NWSScSfEPsXpV47SSbLP1bx0Z8OvPRgs4UlgE8DWBtE9Rjc1fGbbfV+R0P/IjLTR8wfuokOUCSASFbI8mxW50rtSDpHYaUSdppn+EEO1RHpWEzGcI9JRYOp7eB6VsRRURQHU+Vs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFB0C4CECC;
-	Thu,  7 Nov 2024 15:34:04 +0000 (UTC)
-Date: Thu, 7 Nov 2024 10:34:10 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73BE9C4CECC;
+	Thu,  7 Nov 2024 15:40:17 +0000 (UTC)
+Date: Thu, 7 Nov 2024 10:40:22 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Dmitry
- Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v2 1/2] tracing: Add task_prctl_unknown tracepoint
-Message-ID: <20241107103410.44721a3d@gandalf.local.home>
-In-Reply-To: <20241107122648.2504368-1-elver@google.com>
-References: <20241107122648.2504368-1-elver@google.com>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: Zheng Yejian <zhengyejian@huaweicloud.com>, <oe-lkp@lists.linux.dev>,
+ <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>
+Subject: Re: [linux-next:master] [tracing]  49e4154f4b:
+ INFO:task_blocked_for_more_than#seconds
+Message-ID: <20241107104022.47f2b527@gandalf.local.home>
+In-Reply-To: <202411072207.b2321310-oliver.sang@intel.com>
+References: <202411072207.b2321310-oliver.sang@intel.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,56 +35,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  7 Nov 2024 13:25:47 +0100
-Marco Elver <elver@google.com> wrote:
+On Thu, 7 Nov 2024 22:25:23 +0800
+kernel test robot <oliver.sang@intel.com> wrote:
 
-> +/**
-> + * task_prctl_unknown - called on unknown prctl() option
-> + * @task:	pointer to the current task
-> + * @option:	option passed
-> + * @arg2:	arg2 passed
-> + * @arg3:	arg3 passed
-> + * @arg4:	arg4 passed
-> + * @arg5:	arg5 passed
-> + *
-> + * Called on an unknown prctl() option.
-> + */
-> +TRACE_EVENT(task_prctl_unknown,
-> +
-> +	TP_PROTO(struct task_struct *task, int option, unsigned long arg2, unsigned long arg3,
-> +		 unsigned long arg4, unsigned long arg5),
-> +
-> +	TP_ARGS(task, option, arg2, arg3, arg4, arg5),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	comm,		task->comm	)
+> kernel test robot noticed "INFO:task_blocked_for_more_than#seconds" on:
+> 
+> commit: 49e4154f4b16345da5e219b23ed9737a6e735bc1 ("tracing: Remove TRACE_EVENT_FL_FILTERED logic")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> [test failed on linux-next/master 850f22c42f4b0a14a015aecc26f46f9948ded6dd]
+> 
+> in testcase: boot
 
-The question is, do we really need comm? From your example, it's redundant:
-
-  test-484     [000] .....   631.748104: task_prctl_unknown: comm=test option=1234 arg2=101 arg3=102 arg4=103 arg5=104
-  ^^^^                                                            ^^^^
+The commit in question does not even get executed in the boot process
+(unless you have tracing on boot enabled). So I'll simply ignore this.
 
 -- Steve
 
-
-> +		__field(	int,		option)
-> +		__field(	unsigned long,	arg2)
-> +		__field(	unsigned long,	arg3)
-> +		__field(	unsigned long,	arg4)
-> +		__field(	unsigned long,	arg5)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(comm);
-> +		__entry->option = option;
-> +		__entry->arg2 = arg2;
-> +		__entry->arg3 = arg3;
-> +		__entry->arg4 = arg4;
-> +		__entry->arg5 = arg5;
-> +	),
-> +
-> +	TP_printk("comm=%s option=%d arg2=%ld arg3=%ld arg4=%ld arg5=%ld",
-> +		  __get_str(comm), __entry->option,
-> +		  __entry->arg2, __entry->arg3, __entry->arg4, __entry->arg5)
-> +);
-> +
