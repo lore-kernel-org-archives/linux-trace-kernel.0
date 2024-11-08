@@ -1,118 +1,119 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5B71E47C4
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  8 Nov 2024 11:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1787C1E1C29;
+	Fri,  8 Nov 2024 13:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731065710; cv=none; b=kp0FzTUl4VjKsccL9GgEZTMyKcML2Fm2ZBHVatIlVJQYOu+LMIyKXqmrLMXPdKmKJ1fVrJLO3lJw5b9aeHsB47ejunYQC8tGVxWedZfg5W4NDwzQXa9s1qIk/T6uABdknfJXuxPsuDs0vgScALZPc9xsKRU1Fg6GMED5cfdAX/Y=
+	t=1731073554; cv=none; b=snPXurTeJiOOUNjZMtjQUUZzUajeWdvxYl66Ak/ik8Zb2EW3d1VG0/jSH3zAlbzonf0hZJXdTAbVqnMVgE9t9Uq+iDuG++SaCRNPxEdv84knkEr/u2HGe7La/TOfNeyxSwaL2eUKbiUwd5QrrDgQPGAxHhCRaZb5ewgcDyTvhXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731065710; c=relaxed/simple;
-	bh=hEHya/EWTyjGrJkb2WFQ/xz8flII2H8gY8bYE4SYXJc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=trr8rw0jISIOznGbRSkUzDL4NA0Lo2JpCDfm+hS/t5qiIJBfiM1jUTro+YedZTp5tyRvWypLfkeO/VGKcCltXw6yPvmnYlTI/qXUwTHhEUzeoItRUgZXQf//T+7klp0dy4vD4A8QvzIAEXomXnpNbjC55JDbC+xmMMalCDB1rpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fcpF/lF/; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1731073554; c=relaxed/simple;
+	bh=DlaqznImQXYX1sv03yCEQEkG4Rcr3MjdRRGOPmOm12U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j0JShK1jyqKDeE82rS4FqDjAlmLDlYMpRpOcflFqnqt66t9ZOZuEKuOogy/jwL1t8jz0pq10s4sCPaxMMI3COvAXZPfe44pp5qVuBqldwMdFM+oUI1vVzaKV3TcHDf8uzqCKlw/ftWW+WoQxxN/esZXUYxNyX5thJTsjKHlny9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rf37ETsR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fcpF/lF/"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-a9a004bfc1cso151814666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 08 Nov 2024 03:35:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731065707; x=1731670507; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WmVAOqvZ/Tu1S1PwD7c/mNbANvvbo6/nc3HYAPUr/Js=;
-        b=fcpF/lF/VD2YmfRPWkre+ZbqYng2N6TmHsRh79VKcKAvNoBX4bhXTFjiZRjEeMa/HV
-         eRjE7dMJTT8mG3hWHX4OnDjKTl4rFOqob5nV1NLKO2SJFgXNw9XzbW+afASmMDpnZx+5
-         XVNYp74WsG57RcYJWjEPkINX80BBTZdmkRRWquibZ7xM3NSA6/qouLGHW4yiSACFMF1y
-         WYdXPDI7dpTqrppTOjrwPfVJF7qOD0A4wOqNL6sCxf71fpLgV7i1b/AMRMk+17gttAs7
-         GHavfKCsyq/c6k1UqjyuWYFLHiTB46W3JhjSdLXZTDQnIuKO4oAHcOqfh9Pbo+VUcezL
-         PvMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731065707; x=1731670507;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WmVAOqvZ/Tu1S1PwD7c/mNbANvvbo6/nc3HYAPUr/Js=;
-        b=YFdE1dSCSJkRXS9lpLdEWSuTGH70n2J+wblaiFrboUEyO19KUfdR5POfLs6gIJQVMk
-         V+Bw1pVu0yaSRxoB762pfoILPS82aUSU9e1lt6Wa4mouBa5/cGTAL27qphdE/e0XR/ss
-         zg/ixXwvABe3ychDVU4r3EU6A5e3zECgna/FVKoNS94O/cMlUfCFvTS1YCL98AHz0hzz
-         NLdTKp0gtNk79wemiVqWtVug1Jfhg1ue4d1AxICXAYLZ1yeR+oXAEikhNop4JIRMt8QC
-         wUwJt/z7gbWFdU68m7O1Mh/MnVV/oyfN0Xv43tVqdU/fBPjR/zzVbQvvkaQS4TtAtbmS
-         pqpw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+RSHx2SajuhS/+YFWo6iqzX9nXsyfo9wKE9YUQGR3VUnSOohlYVF2VdlZ7kNPOKusADkFMiXDaRHH7VyTpnK9Ssc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoLsaUiQ15u7M0/nJqWcR9kHtYRZYqoCcsfDd0+O+ROQ/cjhyq
-	iX5jt4hKIZKdqbIRUd+sOJYkG5AJEtKdh2+GiyDNw0ZAYobz+bqXAousfNOwOdMwraXlAnD+FQ=
-	=
-X-Google-Smtp-Source: AGHT+IG2mwQUKoRUSpKj9hUWjVgwtRnTOzorVQZkyuHXLrzTO0C2kG5XBaRDL6I4WJyy3fUtsdzTNRaa+A==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:1d41:9aa5:8c04:911])
- (user=elver job=sendgmr) by 2002:a17:906:2557:b0:a9a:1769:f4db with SMTP id
- a640c23a62f3a-a9eeff38838mr49766b.5.1731065707141; Fri, 08 Nov 2024 03:35:07
- -0800 (PST)
-Date: Fri,  8 Nov 2024 12:34:25 +0100
-In-Reply-To: <20241108113455.2924361-1-elver@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rf37ETsR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F709C4CECD;
+	Fri,  8 Nov 2024 13:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731073553;
+	bh=DlaqznImQXYX1sv03yCEQEkG4Rcr3MjdRRGOPmOm12U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rf37ETsR2eZkx91LRDuGsTf7omjQET03oDI6ONerOec1cq6UBvGHKvSOmdBGvE63I
+	 IwfqJ2Z/m2NRWn6xfmCez1fDNUFSunP6Iz+zEXwn+ttNObqpYy6eSnYIlcTJ3R0fcS
+	 mcr9opoUND8W2afFjoQQu6jcUJ5QTXWoGtyMRT+x4S+THljzmt//gLf13mi/LePUi2
+	 wXHNHDPN9hEAy3waLJp29NeqoO9ZnJWPKy5F4O0khM6t/MpO1KhC9KIm7KqJiw887m
+	 S9t1sbBFKd+1TnZnT6G+qG6/TucbrcmKqGTaO3RtKxKfQB6amcYr8PkzbEmm3Xyi35
+	 tcsABoGWU8Cow==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@chromium.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv9 bpf-next 00/13] bpf: Add uprobe session support
+Date: Fri,  8 Nov 2024 14:45:31 +0100
+Message-ID: <20241108134544.480660-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241108113455.2924361-1-elver@google.com>
-X-Mailer: git-send-email 2.47.0.277.g8800431eea-goog
-Message-ID: <20241108113455.2924361-2-elver@google.com>
-Subject: [PATCH v3 2/2] tracing: Remove pid in task_rename tracing output
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Steven Rostedt <rostedt@goodmis.org>, 
-	Kees Cook <keescook@chromium.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Remove pid in task_rename tracepoint output, since that tracepoint only
-deals with the current task, and is printed by default. This also saves
-some space in the entry and avoids wasted padding.
+hi,
+this patchset is adding support for session uprobe attachment and
+using it through bpf link for bpf programs.
 
-Link: https://lkml.kernel.org/r/20241105120247.596a0dc9@gandalf.local.home
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Marco Elver <elver@google.com>
+The session means that the uprobe consumer is executed on entry
+and return of probed function with additional control:
+  - entry callback can control execution of the return callback
+  - entry and return callbacks can share data/cookie
+
+Uprobe changes (on top of perf/core [1] are posted in here [2].
+This patchset is based on bpf-next/master and will be merged once
+we pull [2] in bpf-next/master.
+
+v9 changes:
+  - rebased on bpf-next/master with perf/core tag merged (thanks Peter!)
+
+thanks,
+jirka
+
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/core
+[2] https://lore.kernel.org/bpf/20241018202252.693462-1-jolsa@kernel.org/T/#ma43c549c4bf684ca1b17fa638aa5e7cbb46893e9
 ---
-v2:
-* New patch
----
- include/trace/events/task.h | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Jiri Olsa (13):
+      bpf: Allow return values 0 and 1 for kprobe session
+      bpf: Force uprobe bpf program to always return 0
+      bpf: Add support for uprobe multi session attach
+      bpf: Add support for uprobe multi session context
+      libbpf: Add support for uprobe multi session attach
+      selftests/bpf: Add uprobe session test
+      selftests/bpf: Add uprobe session cookie test
+      selftests/bpf: Add uprobe session recursive test
+      selftests/bpf: Add uprobe session verifier test for return value
+      selftests/bpf: Add kprobe session verifier test for return value
+      selftests/bpf: Add uprobe session single consumer test
+      selftests/bpf: Add uprobe sessions to consumer test
+      selftests/bpf: Add threads to consumer test
 
-diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-index 209d315852fb..af535b053033 100644
---- a/include/trace/events/task.h
-+++ b/include/trace/events/task.h
-@@ -38,22 +38,19 @@ TRACE_EVENT(task_rename,
- 	TP_ARGS(task, comm),
- 
- 	TP_STRUCT__entry(
--		__field(	pid_t,	pid)
- 		__array(	char, oldcomm,  TASK_COMM_LEN)
- 		__array(	char, newcomm,  TASK_COMM_LEN)
- 		__field(	short,	oom_score_adj)
- 	),
- 
- 	TP_fast_assign(
--		__entry->pid = task->pid;
- 		memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
- 		strscpy(entry->newcomm, comm, TASK_COMM_LEN);
- 		__entry->oom_score_adj = task->signal->oom_score_adj;
- 	),
- 
--	TP_printk("pid=%d oldcomm=%s newcomm=%s oom_score_adj=%hd",
--		__entry->pid, __entry->oldcomm,
--		__entry->newcomm, __entry->oom_score_adj)
-+	TP_printk("oldcomm=%s newcomm=%s oom_score_adj=%hd",
-+		  __entry->oldcomm, __entry->newcomm, __entry->oom_score_adj)
- );
- 
- /**
--- 
-2.47.0.277.g8800431eea-goog
-
+ include/uapi/linux/bpf.h                                           |   1 +
+ kernel/bpf/syscall.c                                               |   9 ++-
+ kernel/bpf/verifier.c                                              |  10 +++
+ kernel/trace/bpf_trace.c                                           |  57 +++++++++++----
+ tools/include/uapi/linux/bpf.h                                     |   1 +
+ tools/lib/bpf/bpf.c                                                |   1 +
+ tools/lib/bpf/libbpf.c                                             |  19 ++++-
+ tools/lib/bpf/libbpf.h                                             |   4 +-
+ tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c         |   2 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c         | 337 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------
+ tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c          |  31 ++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_consumers.c         |   6 +-
+ tools/testing/selftests/bpf/progs/uprobe_multi_session.c           |  71 ++++++++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c    |  48 ++++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c |  44 +++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c    |  44 +++++++++++
+ tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c          |  31 ++++++++
+ 17 files changed, 653 insertions(+), 63 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/kprobe_multi_verifier.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_cookie.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_recursive.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session_single.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_verifier.c
