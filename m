@@ -1,105 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B098B233D83;
-	Fri,  8 Nov 2024 18:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699231E4BE;
+	Sat,  9 Nov 2024 14:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731091223; cv=none; b=HqWVeGsiTw9RWx+ryliX7TI33wq9c7n8ulBBDQA0Ud4vYpuG2KBEObt2JLoXcJ+6W0PNrS/LDGrcv8ComDhfKuwWy2183NXtIwo6A1uLHak/LofXIrena4hRtIsDxwETu4b+d80l6dOkgwn1Afm8HCJu4xRRYl3qbcNE04twJsQ=
+	t=1731162298; cv=none; b=MkBA3T4Juv4KfbnhvZadE5MjTN1i6nXqlnJWUgOy/gHxwBJH/vU8ChhjacK+pOdHboSsAzD3UGMUY/BGDOMaVYaZGjQBH4Fh2ygr9HYvDz2aBjqeocfn3KCnCvq2fArFhHRm9UrxCMeqg4Gj6wQinVOpn5jKGwZWAKm4/8yteVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731091223; c=relaxed/simple;
-	bh=isOCNhM7/InRuCIvcLSY/HCUam/j80uOJ1x4kGmRdzw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tfk8Qu//2KGicI3uQ1YnVyI3+H/q0rBvosfIk3wp0TI4p3NIdtU+SF23n0gEdd85JcJYnZcGf9DJ7hjzo5GIjsz2aqNgktoQvPQuv0koGEM/tW9b/Hdwee2/xhmNWquO5CW/P6Miv4jxwiVNGAX081p1VpsO/4jp1UAKSgOhCIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmbdEoQM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731162298; c=relaxed/simple;
+	bh=v9l5l8b91vxON4bj2aWHj1KqPysotO/V5/B7MgXRpkg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iYXQ6WGNmYDceWLk7kLjkdaAQvIQudmvxnbNC9JauF3YfpN/JP3sBxcLX19+9xH8O6hA1F3/Rw36IzYENvmFZARqo5QV+dnxKWxQ8QKyHQSTgXmWQFs9177iHzZaaOFOYqhiNv95B/x4/GQOx4OP8wdalRA2rIK2mNYEJj3USWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4sl1PyA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmbdEoQM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C510C4CECD;
-	Fri,  8 Nov 2024 18:40:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4sl1PyA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA46C4CECE;
+	Sat,  9 Nov 2024 14:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731091223;
-	bh=isOCNhM7/InRuCIvcLSY/HCUam/j80uOJ1x4kGmRdzw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fmbdEoQM/eSK1FEgGTkc0zVGpqRzHSgx7nWCbvpVc8Y0M4n8a5c7w4/s18yOZiqZa
-	 OXlNx97GgZvWPCoZOyWGCL1b3O34YKWm81oSMfvztb9cEj4KAkOTUUB2LXhxHpkX+c
-	 VEZxtWKTNSVyuFjVMYVsggFgMMdbQrGQpShN+Z/HXgIXB+gBJR/v6pqp+HZPTWR0HJ
-	 6TD+GoLQwCBemIAJvWViGAyDqfvvL5d5FBwdIECEV/uvDFz2sa8XrJxtpQhGpDDv4h
-	 tUczXCV965N0KcqOKKuo+ESKgDxuRxnGLaE6m9vKLLPgdbD9ypiPQKOgLF4rwtkTw4
-	 VPhbUKsrH7eCw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE553809A80;
-	Fri,  8 Nov 2024 18:40:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1731162297;
+	bh=v9l5l8b91vxON4bj2aWHj1KqPysotO/V5/B7MgXRpkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D4sl1PyAPw5ZC6cLLsXQDv+MOSOamLLaxOVvt4VrYfx6IgcRlbMJhnffk1A1Pc20a
+	 O8uza36K7i0TtCaepvX7gNMwLQq8912Mm+kYzzsSkR0CrGIU5oOz8hIoIoie3y2KZP
+	 zCtsTjGeS45sgKjYfL4lvE2hKvmAa/UnCqpceyJEMJkGbk5fxDkX8qMO4MMs6pot0U
+	 JEsjainnAeAmplxEbKIcCfECjocBbCPFEyD2fCw2Nxw1gOQSPpcq+cSW5Qbz15qkG5
+	 9jM4rh29L96GccbknSIsJw9MFFa33KBPf0S7hKPhzkB6yMHWJTH2Dzsu0JRJ1nmIms
+	 z48dPXNONT+/Q==
+Date: Sat, 9 Nov 2024 23:24:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v18 01/17] fgraph: Pass ftrace_regs to entryfunc
+Message-Id: <20241109232448.f1c3e174da2b1c4276530894@kernel.org>
+In-Reply-To: <20241101065023.72933d1b@gandalf.local.home>
+References: <172991731968.443985.4558065903004844780.stgit@devnote2>
+	<172991733069.443985.15154246733356205391.stgit@devnote2>
+	<20241031155324.108ed8ef@gandalf.local.home>
+	<20241101105102.eb308ab85b2b13d03444d4bf@kernel.org>
+	<20241101065023.72933d1b@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCHv9 bpf-next 00/13] bpf: Add uprobe session support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173109123276.2726733.16157399408495124649.git-patchwork-notify@kernel.org>
-Date: Fri, 08 Nov 2024 18:40:32 +0000
-References: <20241108134544.480660-1-jolsa@kernel.org>
-In-Reply-To: <20241108134544.480660-1-jolsa@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: oleg@redhat.com, peterz@infradead.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, bpf@vger.kernel.org, kafai@fb.com,
- songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@chromium.org, sdf@fomichev.me, haoluo@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Fri, 1 Nov 2024 06:50:23 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Fri,  8 Nov 2024 14:45:31 +0100 you wrote:
-> hi,
-> this patchset is adding support for session uprobe attachment and
-> using it through bpf link for bpf programs.
+> On Fri, 1 Nov 2024 10:51:02 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> The session means that the uprobe consumer is executed on entry
-> and return of probed function with additional control:
->   - entry callback can control execution of the return callback
->   - entry and return callbacks can share data/cookie
+> > Ah, good catch! It should put the flag only when HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> > is enabled.
+> > 
+> > static struct ftrace_ops graph_ops = {
+> > 	.func			= ftrace_graph_func,
+> > #ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> > 	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_ARGS,
+> > #elif defined(CONFIG_DYNAMIC_FTRACE_WITH_ARGS)
+> > 	.flags			= FTRACE_OPS_GRAPH_STUB | FTRACE_OPS_FL_SAVE_REGS,
+> > #else
+> > 	.flags			= FTRACE_OPS_GRAPH_STUB,
+> > #endif
+> > 
+> > This will save fregs or regs or NULL according to the configuration.
+> > 
 > 
-> [...]
+> Please do not add that to the C code. It's really ugly. Just correct the
+> comment. Note, FTRACE_OPS_FL_SAVE_ARGS is already dynamic by configuration:
+> 
+> #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> #define FTRACE_OPS_FL_SAVE_ARGS                        FTRACE_OPS_FL_SAVE_REGS
+> #else
+> #define FTRACE_OPS_FL_SAVE_ARGS                        0
+> #endif
+> 
+> I'm a bit confused at what you are trying to achieve here.
 
-Here is the summary with links:
-  - [PATCHv9,bpf-next,01/13] bpf: Allow return values 0 and 1 for kprobe session
-    https://git.kernel.org/bpf/bpf-next/c/1c9b65d7b569
-  - [PATCHv9,bpf-next,02/13] bpf: Force uprobe bpf program to always return 0
-    https://git.kernel.org/bpf/bpf-next/c/fb9618060bb7
-  - [PATCHv9,bpf-next,03/13] bpf: Add support for uprobe multi session attach
-    https://git.kernel.org/bpf/bpf-next/c/4c2c20b698ce
-  - [PATCHv9,bpf-next,04/13] bpf: Add support for uprobe multi session context
-    https://git.kernel.org/bpf/bpf-next/c/362ced90a9b9
-  - [PATCHv9,bpf-next,05/13] libbpf: Add support for uprobe multi session attach
-    https://git.kernel.org/bpf/bpf-next/c/894d0bd715f8
-  - [PATCHv9,bpf-next,06/13] selftests/bpf: Add uprobe session test
-    https://git.kernel.org/bpf/bpf-next/c/1932f3ffe604
-  - [PATCHv9,bpf-next,07/13] selftests/bpf: Add uprobe session cookie test
-    https://git.kernel.org/bpf/bpf-next/c/dce1b3b721b8
-  - [PATCHv9,bpf-next,08/13] selftests/bpf: Add uprobe session recursive test
-    https://git.kernel.org/bpf/bpf-next/c/9236020b0896
-  - [PATCHv9,bpf-next,09/13] selftests/bpf: Add uprobe session verifier test for return value
-    https://git.kernel.org/bpf/bpf-next/c/a773e1d169db
-  - [PATCHv9,bpf-next,10/13] selftests/bpf: Add kprobe session verifier test for return value
-    https://git.kernel.org/bpf/bpf-next/c/7dd198ccbe43
-  - [PATCHv9,bpf-next,11/13] selftests/bpf: Add uprobe session single consumer test
-    https://git.kernel.org/bpf/bpf-next/c/beab56332941
-  - [PATCHv9,bpf-next,12/13] selftests/bpf: Add uprobe sessions to consumer test
-    https://git.kernel.org/bpf/bpf-next/c/f343d91be2cb
-  - [PATCHv9,bpf-next,13/13] selftests/bpf: Add threads to consumer test
-    https://git.kernel.org/bpf/bpf-next/c/90aac4610851
+So it may need FTRACE_OPS_FL_SAVE_REGS instead of FTRACE_OPS_FL_SAVE_ARGS,
+right?
+OK, I'll do that.
 
-You are awesome, thank you!
+Thank you,
+
+> 
+> -- Steve
+
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
