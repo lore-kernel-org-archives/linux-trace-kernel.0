@@ -1,141 +1,179 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689C116D9B8;
-	Mon, 11 Nov 2024 14:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC0F1A4E77;
+	Mon, 11 Nov 2024 17:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731335681; cv=none; b=TFeuQEYY0SJ6jtuG+zE5uJQcvSDF4YvwnSahqReD+miaqVEe9+9CjiyR+BXaboTtfemW+6qcnw+OrYBrPfUeTG5+IscgYGZt7DakxzJcNTuyZju3fgokZrff2pJAiRJAz4lDcYi/ICRYVoCsZPJTZGPYrZuCKtgZu9Y1ftkb9u0=
+	t=1731345991; cv=none; b=MBgvgF0D6t1vnVc90Z48RqfiYJ+jtm0SoPnsygm4KNKcD6x4GKioHvxNvAK+bWWfNLyeoeVAydb/nQUzUGgu3A1++HstNGV7ofAMzYrs9mONCQuqh/WCJBxtwvP5bU7Zz1Qj1CkLj4VvBjUoVTKHi9UXQ9/wAHjfZiHtyipzYcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731335681; c=relaxed/simple;
-	bh=VOJskPes35d/MDk8uVewPYUAlhDZ99HRMRkVQpprJ64=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GHZJPePy4Itgy6UPuI2hgjjzmN4bNjnz+Mk5bAf26hd6AcU8q/+lizgFcUL2qYk2O0/ffXgr7b8TmJxlM4ubGGj2PlX1omStgTxFxP+vWiV+vR5o11oh7RGvw6QIGytJ6pgTesSxdZuJ54CN2mwzLe+ZHDzE22l8+XfZGBK3ggc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1731345991; c=relaxed/simple;
+	bh=Y7vWffxa7tt+oBwbv+U0Tu5Col7n9dUxGa2pP40+/HY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cieKNRMp17xWqA6p3oWkxDkrlYPkPsPJNZTeobADWZor10xH1bTPlrLWasotPOKrcEmruN+2aar9iGKss2RxY+SJxthdGwmUSt8WHNmkoxhu1yGRnfVI/vIGGsDKOg+OQy082/oAvEVQVtl20gJ2dJntHL5iyVsIfi8PxLYeQSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FAVqm8/f; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5cb15b84544so6764599a12.2;
-        Mon, 11 Nov 2024 06:34:39 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAVqm8/f"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7f45ab88e7fso877686a12.1;
+        Mon, 11 Nov 2024 09:26:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731345989; x=1731950789; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=446kiMyz10bq8FieaREKKmn4/b2mNECd8raHOngAG/s=;
+        b=FAVqm8/fpRfNHSS8w/SkiXyn9k1abjH1yiwqL3KBHGzKvRlcx4eOpZoUBq/sE9dkIC
+         DkaLP152S3hDTSytLL+AJ+/gkaYvOrC+AEZMSCbR6HwefSm5fHGKtiWGkuFfpjKlNw0+
+         NUORNnzTWAEGh4ANlR06b1ol6i8qrPX/pXZXVuSoWXd2VQjQBWZdUBw+277wI7vIqQd7
+         9PgKknbWYJYF5etndUAmdA2i0IEsL7+pzQzUF18f9smOo1uMrB7Vke6fMRqVd2hpJIce
+         Mj0Fq70hynkcmCu4NlagYuB1OWmBlIye3DBIRQCSPpjZxb+1v7B7iVCUuSF+XE2ZwXBy
+         uumg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731335678; x=1731940478;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hz6uHalMmUiaUFgiKior+KaxTNmvWdbfrpj+EULzQ5Q=;
-        b=IqRicIBM/KWhSADZCm8rAd2p/uzU3CFY6sf0hnygjN994XxoALAQx1ZxLnC+rx5OTh
-         nx7pDxAsD2lvnmjBTG0HJJozQ2ALPaJeokehm6Gp14RJtwQZ/xt9CBQ14zFpviMQxAzC
-         TwUAdghns5ViLM2WxVIjPhkAi2BtEXhbeKgc6tBkT/GB/CDGa4WVfnVxMpB9Em3OFlBT
-         1D+Ver+ke/p2su8ArXBTYVpBvl7HG2CCV8TU4Ka3rpyshPeBqmTgJ6yW04/pWJcUgj1M
-         Mqb/xyThT8QQpB9A8kkmY2Q4P+loD25ZfB4dDVk4+xiHPSoGGS38TZ4c1a6VfVA7xWxk
-         7/YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXXbGBy9XR3Vnv4t08KpSv/Z/QSRQNyjAMqwyABYCQAQ/zRhTg6lxV4YzqrZ6LNKgmhoow0QE0LJCuI64N09yIG@vger.kernel.org, AJvYcCXp2evfG8ALI3v6/wJGycoYqsnnqGonrtNvUMK2ctCIB+rjDAQ6tGFN6VbfXli6jqaNPWsYEp4xy+Na/TgnU+12c9w2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyC3GiKY7HsTdd4nCQCP/H5b44b/Ez38lipKInfvNqXvYvUUBmN
-	pbyikwxB6GiIroAGD72/EbqI18m/TmdKGVNDhHp7UtEM3MqCmAL7
-X-Google-Smtp-Source: AGHT+IHBvDYvseRFWb1bhjU2TZxmStwtfMLBxP+C1E1/LbVMrTP0tYJSHCmGBwbCfdHMRgkJtWDRwQ==
-X-Received: by 2002:a05:6402:1ecb:b0:5cf:757:f493 with SMTP id 4fb4d7f45d1cf-5cf0a44193dmr10097302a12.24.1731335677556;
-        Mon, 11 Nov 2024 06:34:37 -0800 (PST)
-Received: from localhost (fwdproxy-lla-002.fbsv.net. [2a03:2880:30ff:2::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5cf03b5d4e0sm4998883a12.10.2024.11.11.06.34.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Nov 2024 06:34:36 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Mon, 11 Nov 2024 06:30:30 -0800
-Subject: [PATCH v2] uprobes: Remove unnecessary RCU list traversal in
- filter_chain()
+        d=1e100.net; s=20230601; t=1731345989; x=1731950789;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=446kiMyz10bq8FieaREKKmn4/b2mNECd8raHOngAG/s=;
+        b=kQ+7cHD25Oa3X3guAv78VTIB0or5MNw8OK7vZmOgMfsHgLpDEU0CPMlx3aQERQP76U
+         mSxz5TLeBatUHajIXU3rCvWemr9K6usOPDM7zRauJlYKqWGtv3MRhxKjsXZ6S6sKma01
+         /2JVS5LGu4pfS5Anzyp7dnBK7Dgtn/tQgMKxRLlRwk7kZpH9xJ21RZei7whNIIIQ3jIR
+         fMRbG2fTQgM1kLI4l9tIPUJI7sgdgLblhk21bIy0bSBh+6Riv27Fh8E5glrQCl4K2GRR
+         UW4HiIgzU+FqKoBiyiDN3vyOBggk6OToDJGKH3Cf5UbXOLR4VJLkPQA90WQDn7jH0KrR
+         XstA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFZnUIVIL2aev+5qnta++GzYs8iEu81BuCeMdKTHjrlcpyPm13SPnW/ubYbRKyAsB9Lik=@vger.kernel.org, AJvYcCWJhHdhlJIIpUmET86HYIqeQ+yn6Eyd9ibEC1nO6wT+7BjgRJAh7j4yJ10yx2EONb+DAY1nWtMrJXsLZ4YN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi9ng/XQuEyle3nxL7/JlRVX5l4/UhbEqamFFKhMi/nL4ChP/u
+	8jEbJxbXZdUq2pF4MJsWRnm3gMx6mWn3bTDlZKYjJ2f08RIKIomTVwtIE0jVnmGqfsnctK3j3c0
+	yQfSeeHDXqX43an6SCYmlRSJHVNXJ5g==
+X-Google-Smtp-Source: AGHT+IHYut3+sEt3XzJfDiHtcSZtT9/Ehm9MZiVZDPX1nQCusxzbEs5rW24mOSm82XpfMduwn3JOTnvHCYtdPw0Ys3E=
+X-Received: by 2002:a17:90b:2b45:b0:2e2:b64e:f4f7 with SMTP id
+ 98e67ed59e1d1-2e9b177fc67mr17790610a91.29.1731345989175; Mon, 11 Nov 2024
+ 09:26:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241111-rcu_probe-v2-1-a091b59b58b6@debian.org>
-X-B4-Tracking: v=1; b=H4sIAAYVMmcC/x3MYQpAQBAG0KtM329bZlHaq0haazB/0Gyk5O7KO
- 8B7kMVUMgI9MLk0674hkC8IaY3bIk4nBIIvfc3M7Cydw2H7KK4c22mOTRXbyCgIh8ms9391/ft
- +qUJph1sAAAA=
-X-Change-ID: 20241111-rcu_probe-0b8dfa53a8a1
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kernel-team@meta.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2256; i=leitao@debian.org;
- h=from:subject:message-id; bh=VOJskPes35d/MDk8uVewPYUAlhDZ99HRMRkVQpprJ64=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnMhX6bKP9iOggzHd/RX/p63dQ7cUQRyF3IYp5D
- P6ISBvalBaJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZzIV+gAKCRA1o5Of/Hh3
- bZV9D/9NyrwgdSUq68jZb34b+QkqCgJeNPE+XN77ppfanCvSWaD+8OZaYX3Y8Hre8hzFUT45OSJ
- EKOsCICA0d9OvcIraU3PzxC0CIPzaq/q22X3c/OQkcm34s067RT+8beix80Me1ilrR3XHNYLZUb
- TOOztKWcl8C/xn++0cHabrsTlaWO1kuitPNgvMtkIopw55B+1Qz1Hi8VxwlLKHZa8EjG9e4Zmn7
- 7zuPM2cIKNAukIlj3AYe4jOcXlUMwzu1g9CM/I7HE3pT+k+rx3Q6SN47odccZO37CIdYzDOdgLn
- /YpCm/WT25/mc7ik9E7TRi/FiLJ53oHpgs+d6l3fCVubQ5v95o+RfwSlwCi+G5P4GeM0tkoH4C3
- pbXWXWFSXub6XZsxJb6Avyio5keMFtPtPstOgblUc5b1ZrLF9lB34/oWxlFaULT5kVdLqxn+zvG
- UWbMplKrUDcydjOiyf357yY5CJGeuP4wFN4J3X4KL8DxdUrQ6gsL22DH7A1jAAtl3LyG7w0n1th
- 0AT/x69wkaJ3Yisb0maSgFa7Ehw833cl+Z3A0SCB5Jkk198wK8tNhEJw1BFESh5FbVr/9TqU5An
- YhjTcoqI2YiGwnX6EncrRRwVI2cg1Gv67ejP2vUFcuwmdcbeVTrtxaU09zDIcBscxSKVudAxXcu
- djTaaazZ32EZo1A==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+References: <20241028010818.2487581-1-andrii@kernel.org> <CAEf4BzYPajbgyvcvm7z1EiPgkee1D1r=a8gaqxzd7k13gh9Uzw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYPajbgyvcvm7z1EiPgkee1D1r=a8gaqxzd7k13gh9Uzw@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 11 Nov 2024 09:26:17 -0800
+Message-ID: <CAEf4Bza=pwrZvd+3dz-a7eiAQMk9rwBDO1Kk_iwXSCM70CAARw@mail.gmail.com>
+Subject: Re: [PATCH v4 tip/perf/core 0/4] uprobes,mm: speculative lockless
+ VMA-to-uprobe lookup
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, peterz@infradead.org, oleg@redhat.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
+	willy@infradead.org, surenb@google.com, mjguzik@gmail.com, brauner@kernel.org, 
+	jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, shakeel.butt@linux.dev, 
+	hannes@cmpxchg.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	david@redhat.com, arnd@arndb.de, richard.weiyang@gmail.com, 
+	zhangpeng.00@bytedance.com, linmiaohe@huawei.com, viro@zeniv.linux.org.uk, 
+	hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The filter_chain() function was using list_for_each_entry_rcu() to traverse
-uprobe->consumers without holding an RCU read lock, causing warnings when
-CONFIG_RCU_PROVING is enabled:
+On Tue, Nov 5, 2024 at 6:01=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Sun, Oct 27, 2024 at 6:09=E2=80=AFPM Andrii Nakryiko <andrii@kernel.or=
+g> wrote:
+> >
+> > Implement speculative (lockless) resolution of VMA to inode to uprobe,
+> > bypassing the need to take mmap_lock for reads, if possible. First two =
+patches
+> > by Suren adds mm_struct helpers that help detect whether mm_struct was
+> > changed, which is used by uprobe logic to validate that speculative res=
+ults
+> > can be trusted after all the lookup logic results in a valid uprobe ins=
+tance.
+> >
+> > Patch #3 is a simplification to uprobe VMA flag checking, suggested by =
+Oleg.
+> >
+> > And, finally, patch #4 is the speculative VMA-to-uprobe resolution logi=
+c
+> > itself, and is the focal point of this patch set. It makes entry uprobe=
+s in
+> > common case scale very well with number of CPUs, as we avoid any lockin=
+g or
+> > cache line bouncing between CPUs. See corresponding patch for details a=
+nd
+> > benchmarking results.
+> >
+> > Note, this patch set assumes that FMODE_BACKING files were switched to =
+have
+> > SLAB_TYPE_SAFE_BY_RCU semantics, which was recently done by Christian B=
+rauner
+> > in [0]. This change can be pulled into perf/core through stable
+> > tags/vfs-6.13.for-bpf.file tag from [1].
+> >
+> >   [0] https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commi=
+t/?h=3Dvfs-6.13.for-bpf.file&id=3D8b1bc2590af61129b82a189e9dc7c2804c34400e
+> >   [1] git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> >
+> > v3->v4:
+> > - rebased and dropped data_race(), given mm_struct uses real seqcount (=
+Peter);
+> > v2->v3:
+> > - dropped kfree_rcu() patch (Christian);
+> > - added data_race() annotations for fields of vma and vma->vm_file whic=
+h could
+> >   be modified during speculative lookup (Oleg);
+> > - fixed int->long problem in stubs for mmap_lock_speculation_{start,end=
+}(),
+> >   caught by Kernel test robot;
+> > v1->v2:
+> > - adjusted vma_end_write_all() comment to point out it should never be =
+called
+> >   manually now, but I wasn't sure how ACQUIRE/RELEASE comments should b=
+e
+> >   reworded (previously requested by Jann), so I'd appreciate some help =
+there
+> >   (Jann);
+> > - int -> long change for mm_lock_seq, as agreed at LPC2024 (Jann, Suren=
+, Liam);
+> > - kfree_rcu_mightsleep() for FMODE_BACKING (Suren, Christian);
+> > - vm_flags simplification in find_active_uprobe_rcu() and
+> >   find_active_uprobe_speculative() (Oleg);
+> > - guard(rcu)() simplified find_active_uprobe_speculative() implementati=
+on.
+> >
+> > Andrii Nakryiko (2):
+> >   uprobes: simplify find_active_uprobe_rcu() VMA checks
+> >   uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
+> >
+> > Suren Baghdasaryan (2):
+> >   mm: Convert mm_lock_seq to a proper seqcount
+> >   mm: Introduce mmap_lock_speculation_{begin|end}
+> >
+> >  include/linux/mm.h               | 12 ++---
+> >  include/linux/mm_types.h         |  7 ++-
+> >  include/linux/mmap_lock.h        | 87 ++++++++++++++++++++++++--------
+> >  kernel/events/uprobes.c          | 47 ++++++++++++++++-
+> >  kernel/fork.c                    |  5 +-
+> >  mm/init-mm.c                     |  2 +-
+> >  tools/testing/vma/vma.c          |  4 +-
+> >  tools/testing/vma/vma_internal.h |  4 +-
+> >  8 files changed, 129 insertions(+), 39 deletions(-)
+> >
+> > --
+> > 2.43.5
+> >
+>
+> Hi!
+>
+> What's the status of this patch set? Are there any blockers for it to
+> be applied to perf/core? MM folks are OK with landing the first two
+> patches in perf/core, so hopefully we should be good to go?
 
-    kernel/events/uprobes.c:937 RCU-list traversed without holding the required lock!!
-        5 locks held by bench/182758:
-        #1: ffff888603aaac90 (&uprobe->register_rwsem){+.+.}-{3:3}, at: uprobe_unregister_nosync+0x28/0xc0
-        #4: ffff888603aaad28 (&uprobe->consumer_rwsem){++++}-{3:3}, at: filter_chain+0x20/0xe0
-
-The uprobe->consumers list is actually protected by uprobe->consumer_rwsem,
-which is already held when the list traversal begins. This means the RCU
-primitive is unnecessary here - the rwsem provides sufficient protection
-for the list traversal, as reported by Peterz.
-
-Replace list_for_each_entry_rcu() with list_for_each_entry() since the
-RCU read lock is not needed when accessing uprobe->consumers under the
-protection of consumer_rwsem.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Fixes: cc01bd044e6a ("uprobes: travers uprobe's consumer list locklessly under SRCU protection")
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
----
-Changelog:
-v2:
- * Move away from the RCU primitive (list_for_each_entry_rcu) to the
-   non-rcu one, since RCU is not needed here (Peter)
-
-v1:
- * https://lore.kernel.org/all/20241107-rcu_probe-v1-1-0ca8cc2dedfb@debian.org/
----
- kernel/events/uprobes.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4b52cb2ae6d620b2526de7e86291bdc137aa4f49..372fde678cefce72650b6c200ebea0093193ad6a 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -934,8 +934,7 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
- 	bool ret = false;
- 
- 	down_read(&uprobe->consumer_rwsem);
--	list_for_each_entry_srcu(uc, &uprobe->consumers, cons_node,
--				 srcu_read_lock_held(&uprobes_srcu)) {
-+	list_for_each_entry(uc, &uprobe->consumers, cons_node) {
- 		ret = consumer_filter(uc, mm);
- 		if (ret)
- 			break;
-
----
-base-commit: 774ca6d3bf24287ff60b7d6dd4171ebb6e47760a
-change-id: 20241111-rcu_probe-0b8dfa53a8a1
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+Another week, another ping. Peter, what can I do to make this land? MM
+parts are clearly ok with Andrew Morton, uprobe-side logic didn't
+change (modulo inconsequential data_race() back and forth) since at
+least August, was approved by Oleg, and seems to be very stable in
+testing. I think it's time to let me forget about this patch set and
+make actual use of it in production, please.
