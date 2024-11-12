@@ -1,82 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE2D1FE10A;
-	Tue, 12 Nov 2024 14:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F039F1632E9;
+	Tue, 12 Nov 2024 14:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.190.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731422672; cv=none; b=D839Pi9TwgEMO3Ut4KjGxJ+VlA96UwPQsupfesqBAVp7T1f68iIqqfP2WlVNJwE8Nq4KZy8eFpiEsySWE/fKS1v2AhSoJZhVYipR/j39LpewRHorc+qiRwrlpxkANZIL+QF2726dlR1/x6POqzojAGh2FtU+ypQXy6etyPL0tFA=
+	t=1731422952; cv=none; b=djSOUH/QVAEw5g8US+FliKC1P79dLi8CKqYsR4jU3A3hKLt6qzTp7RuQex4twYY3CRuClcKPBGlUFumvcHH2L9IZalunCT/hzHkLxjizESbVMvJwD07880KJ/cXC8EfBKg+eyVLCguT23w/4Dleu3OdoIwnLDqjhCRZW1fkRISw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731422672; c=relaxed/simple;
-	bh=spgfkYfdtxiRXj09AHTCjCq+F7GElLNu1CMfPrjHt4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hd+Dyo0CAH0eKdFXcHQ+J0kYCN/cy5N4PzWX8lxvqP4dBZW2FWgEMIDeMPZbrxPmweedH4n1fKu+nZDoxBB2WceB30+BtrRwqKfPwqoQqNJhFqbKTLTguzrzJegr5iEmKAzwI8N1Z3W7oUTgNsArmaOPUZzBe33gmX9iwfrZVLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A02C4CECD;
-	Tue, 12 Nov 2024 14:44:28 +0000 (UTC)
-Date: Tue, 12 Nov 2024 09:44:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
- <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
- <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
- Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v18 12/17] fprobe: Add fprobe_header encoding feature
-Message-ID: <20241112094437.59848631@gandalf.local.home>
-In-Reply-To: <20241110001054.b0a5afb2d7bb1c09b4bd6b0b@kernel.org>
-References: <172991731968.443985.4558065903004844780.stgit@devnote2>
-	<172991747946.443985.11014834036464028393.stgit@devnote2>
-	<20241101102212.5e9d74d9@gandalf.local.home>
-	<20241110001054.b0a5afb2d7bb1c09b4bd6b0b@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731422952; c=relaxed/simple;
+	bh=m0eo4X3kqJSUHkhXYkHQiXzeJnIdCYY/2I64fubKglY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=blO+0VSQYubZ2x5AWDh3o1vCXuGK1O9Dz0xUyBJh8E1XTeUKZmanqjeQeZEU4aQYTRW29MLoJR+jFN8iBz7Etlf8AYxR6UStytItOgl31PKgvojLrbYuH83khSQ/eLzuozpF4RRCUDosJz5QRVIWtxKeM0vgI6qzFRrda8ONfdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=UXrVeWYI; arc=none smtp.client-ip=207.171.190.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="UXrVeWYI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1731422952; x=1762958952;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jmAWYVWTItYY6sYiriVLXoFyHZtABKNORDlLDv0YA8o=;
+  b=UXrVeWYInzuGE/UWjF5JE2ASMqWuu2B1GqdN2+KVdccPWrmiIvRdvtDP
+   KQUIOXbCs+k38n1wQwKKf7+Gnh934HP2+T7wBs9BiGIpJr5FHgUs9VgbR
+   SnNiFeEU8uMFNMB7bq76hx1Z2IgJfKuqIT/fhBnFHSm6E8FwtCT8Jp2iG
+   4=;
+X-IronPort-AV: E=Sophos;i="6.12,148,1728950400"; 
+   d="scan'208";a="384565955"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 14:49:07 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:13328]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.18.131:2525] with esmtp (Farcaster)
+ id 10c75058-a729-46eb-ac89-a0cf40349664; Tue, 12 Nov 2024 14:49:05 +0000 (UTC)
+X-Farcaster-Flow-ID: 10c75058-a729-46eb-ac89-a0cf40349664
+Received: from EX19D030EUC001.ant.amazon.com (10.252.61.228) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 12 Nov 2024 14:48:58 +0000
+Received: from EX19MTAUEB002.ant.amazon.com (10.252.135.47) by
+ EX19D030EUC001.ant.amazon.com (10.252.61.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 12 Nov 2024 14:48:58 +0000
+Received: from email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com
+ (10.124.125.2) by mail-relay.amazon.com (10.252.135.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1258.34 via Frontend Transport; Tue, 12 Nov 2024 14:48:57 +0000
+Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
+	by email-imr-corp-prod-pdx-all-2c-619df93b.us-west-2.amazon.com (Postfix) with ESMTPS id 842D1402F3;
+	Tue, 12 Nov 2024 14:48:49 +0000 (UTC)
+Message-ID: <bb534fec-b45d-4ff8-aa55-7201766936b5@amazon.co.uk>
+Date: Tue, 12 Nov 2024 14:48:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 1/6] arch: introduce set_direct_map_valid_noflush()
+To: Vlastimil Babka <vbabka@suse.cz>, David Hildenbrand <david@redhat.com>,
+	<tabba@google.com>, <quic_eberman@quicinc.com>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <jthoughton@google.com>, <ackerleytng@google.com>,
+	<vannapurve@google.com>, <rppt@kernel.org>
+CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
+	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
+	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
+	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
+	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
+	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+References: <20241030134912.515725-1-roypat@amazon.co.uk>
+ <20241030134912.515725-2-roypat@amazon.co.uk>
+ <a774e13e-0616-4d96-bb51-bac0fcb2cb9b@redhat.com>
+ <440b2682-dbfb-4a5c-927c-2397413a7f9c@suse.cz>
+From: Patrick Roy <roypat@amazon.co.uk>
+Content-Language: en-US
+Autocrypt: addr=roypat@amazon.co.uk; keydata=
+ xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
+ NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
+ wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
+ CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
+ AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
+ AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
+ IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
+ 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
+ 8hlxFQM=
+In-Reply-To: <440b2682-dbfb-4a5c-927c-2397413a7f9c@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 
-On Sun, 10 Nov 2024 00:10:54 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > > +++ b/arch/x86/include/asm/fprobe.h
-> > > @@ -0,0 +1,9 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +#ifndef _ASM_X86_FPROBE_H
-> > > +#define _ASM_X86_FPROBE_H
-> > > +
-> > > +#ifdef CONFIG_64BIT
-> > > +#include <asm-generic/fprobe.h>
-> > > +#endif
-> > > +
-> > > +#endif /* _ASM_X86_FPROBE_H */
-> > > \ No newline at end of file  
-> > 
-> > Same for the above.  
+
+On Mon, 2024-11-11 at 12:12 +0000, Vlastimil Babka wrote:
+> On 10/31/24 10:57, David Hildenbrand wrote:
+>> On 30.10.24 14:49, Patrick Roy wrote:
+>>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>>
+>>> From: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>>
+>>> Add an API that will allow updates of the direct/linear map for a set of
+>>> physically contiguous pages.
+>>>
+>>> It will be used in the following patches.
+>>>
+>>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>> Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
+>>
+>>
+>> [...]
+>>
+>>>   #ifdef CONFIG_DEBUG_PAGEALLOC
+>>>   void __kernel_map_pages(struct page *page, int numpages, int enable)
+>>>   {
+>>> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
+>>> index e7aec20fb44f1..3030d9245f5ac 100644
+>>> --- a/include/linux/set_memory.h
+>>> +++ b/include/linux/set_memory.h
+>>> @@ -34,6 +34,12 @@ static inline int set_direct_map_default_noflush(struct page *page)
+>>>      return 0;
+>>>   }
+>>>
+>>> +static inline int set_direct_map_valid_noflush(struct page *page,
+>>> +                                           unsigned nr, bool valid)
+>>
+>> I recall that "unsigned" is frowned upon; "unsigned int".
+>>
+>>> +{
+>>> +    return 0;
+>>> +}
+>>
+>> Can we add some kernel doc for this?
+>>
+>> In particular
+>>
+>> (a) What does it mean when we return 0? That it worked? Then, this
 > 
-> OK, but x86 and riscv, we need this default template on 64bit only.
-> So those may keep it, right?
+> Seems so.
+> 
+>>      dummy function looks wrong. Or this it return the
+> 
+> That's !CONFIG_ARCH_HAS_SET_DIRECT_MAP and other functions around do it the
+> same way. Looks like the current callers can only exist with the CONFIG_
+> enabled in the first place.
 
-Hmm, I wonder if we could just add:
+Yeah, it looks a bit weird, but these functions seem to generally return
+0 if the operation is not supported. ARM specifically has 
 
-  generic-$(CONFIG_X86_32)
+	if (!can_set_direct_map())
+		return 0;
 
-But since I don't see that used anywhere, we may need this for archs that
-partially have it.
+inside `set_direct_map_invalid_{noflush,default}`. Documenting this
+definitely cannot hurt, I'll keep it on my todo list for the next
+iteration :)
 
--- Steve
+>>      number of processed entries? Then we'd have a possible "int" vs.
+>>      "unsigned int" inconsistency.
+>>
+>> (b) What are the semantics when we fail halfway through the operation
+>>      when processing nr > 1? Is it "all or nothing"?
+> 
+> Looking at x86 implementation it seems like it can just bail out in the
+> middle, but then I'm not sure if it can really fail in the middle, hmm...
+
+If I understood Mike correctly when talking about this at LPC, then it
+can only fail if during break-up of huge mappings, it fails to allocate
+page tables to hold the lower-granularity mappings (which happens before
+any present bits are modified).
+
+Best,
+Patrick
