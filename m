@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0DB209698;
-	Tue, 12 Nov 2024 21:12:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954AA1FEFD9;
+	Tue, 12 Nov 2024 22:33:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731445951; cv=none; b=FqkvrQr1fY60IN23GHz7o+TFfbDcZkT0cDwSUPYQHB0cI58DIodFgWOQ21pA9YUncF/f0Bm3TNYI9SXTfEpuhSkDlK6RixSqC60miqSAVp0snsGhPSEyvX2sjRRNr5X/AxMNnzevTp0Lb2JfvFe54/L77nBmLeXtbHs4HVlZB5s=
+	t=1731450795; cv=none; b=O+64ZC7hdo8D8wnPRigw4lk3XobhC2nKYx8GvDi14rpXnnyCKeXpRd1vdn1XJDX6jZ1WRXrQE4FhL0bkwM8Zn3qJwrzhkIg/C0eLt9fH5yIzgmzNqnzgvS5exwedw59PUz7HK28VdGXtrQqXzr8Rp4G5kEhN/a1gNaN5WpvB/co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731445951; c=relaxed/simple;
-	bh=7rOV68yhx3dvrMEB5tATmto7afNkLWcDEhR60GGt3ec=;
+	s=arc-20240116; t=1731450795; c=relaxed/simple;
+	bh=63RdlxJYEkmrjo66jbLlNsxb4Km11jUZ5M00MeIMh+A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fd1Ltg5Ez3twaeXJrOjND04C0TvmLY4E8KvKxOy+hPDTwK3aQXToLKu/UzXuRJueX4PRPEteMIEiK2HPeR6lm1Zt0dtE/Xr2dsr3/ic3h/JH0kXVmupHXxp61Z9sBneuJitQq40PqIlfWoR5mSF6AQqqAN7bKKBuYx6nznru4eA=
+	 MIME-Version:Content-Type; b=A54TgGfr2RBMhPz+z8hhmaT0zY78HiQ4SAXh7KzqmRc7A1hX0KBpFrubsju5YDaz2+mygwHf/3+HwY/fHZQD1hPuHJS6J7cPJEj84+Rm/ufNc5qzzZJAGZUrUu2kprOeBftDtu3G574r7Rtsk1MrYk0Hk3N8V+Xcxmw1wtoa++U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B18C4CECD;
-	Tue, 12 Nov 2024 21:12:30 +0000 (UTC)
-Date: Tue, 12 Nov 2024 16:12:48 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE8DC4CECD;
+	Tue, 12 Nov 2024 22:33:14 +0000 (UTC)
+Date: Tue, 12 Nov 2024 17:33:31 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Daniel Yang <danielyangkang@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org (open
- list:TRACING), linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: Re: [PATCH] set_cmdline: replace fragile/deprecated strncpy with
- strscpy
-Message-ID: <20241112161248.0fbdc802@gandalf.local.home>
-In-Reply-To: <20241105072007.426782-1-danielyangkang@gmail.com>
-References: <20241105072007.426782-1-danielyangkang@gmail.com>
+To: Yun Zhou <yun.zhou@windriver.com>
+Cc: <mcgrof@kernel.org>, <kees@kernel.org>, <joel.granados@kernel.org>,
+ <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kernel: add pid_max to pid_namespace
+Message-ID: <20241112173331.407a5be0@gandalf.local.home>
+In-Reply-To: <20241105031024.3866383-1-yun.zhou@windriver.com>
+References: <20241105031024.3866383-1-yun.zhou@windriver.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,35 +35,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon,  4 Nov 2024 23:20:07 -0800
-Daniel Yang <danielyangkang@gmail.com> wrote:
+On Tue, 5 Nov 2024 11:10:24 +0800
+Yun Zhou <yun.zhou@windriver.com> wrote:
 
-> Kernel docs identify strncpy as being fragile and ambiguous. Replaced
-> strncpy with strscpy so dest str is null terminated and not padded.
+> It is necessary to have a different pid_max in different containers.
+> For example, multiple containers are running on a host, one of which
+> is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
+> it requires the global pid_max <= 65535. This will cause configuration
+> conflicts with other containers and also limit the maximum number of
+> tasks for the entire system.
 > 
+> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
 
-Already been updated:
-
-https://lore.kernel.org/linux-trace-kernel/20241031120139.1343025-1-ruanjinjie@huawei.com/
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
 
-> Signed-off-by: Daniel Yang <danielyangkang@gmail.com>
 > ---
->  kernel/trace/trace_sched_switch.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched_switch.c
-> index 8a407adb0..573b5d8e8 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -187,7 +187,7 @@ static inline char *get_saved_cmdlines(int idx)
->  
->  static inline void set_cmdline(int idx, const char *cmdline)
->  {
-> -	strncpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
-> +	strscpy(get_saved_cmdlines(idx), cmdline, TASK_COMM_LEN);
->  }
->  
->  static void free_saved_cmdlines_buffer(struct saved_cmdlines_buffer *s)
-
+>  - Remove sentinels from ctl_table arrays.
+> v1 - https://lore.kernel.org/all/20241030052933.1041408-1-yun.zhou@windriver.com/
+> ---
+>  include/linux/pid_namespace.h     |  1 +
+>  kernel/pid.c                      | 12 +++++------
+>  kernel/pid_namespace.c            | 34 ++++++++++++++++++++++++++-----
+>  kernel/sysctl.c                   |  9 --------
+>  kernel/trace/pid_list.c           |  2 +-
+>  kernel/trace/trace.h              |  2 --
+>  kernel/trace/trace_sched_switch.c |  2 +-
+>  7 files changed, 38 insertions(+), 24 deletions(-)
