@@ -1,65 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954AA1FEFD9;
-	Tue, 12 Nov 2024 22:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F7921B42A;
+	Tue, 12 Nov 2024 23:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731450795; cv=none; b=O+64ZC7hdo8D8wnPRigw4lk3XobhC2nKYx8GvDi14rpXnnyCKeXpRd1vdn1XJDX6jZ1WRXrQE4FhL0bkwM8Zn3qJwrzhkIg/C0eLt9fH5yIzgmzNqnzgvS5exwedw59PUz7HK28VdGXtrQqXzr8Rp4G5kEhN/a1gNaN5WpvB/co=
+	t=1731455015; cv=none; b=j8dbDqVdufa5P3CjkKl6Ga9m9Qj+IkALooOO/XJXEvH11PnPzQvgYhuMZuZU9Ro9oJ3mkHMCk+cAix+GlF3YQ/uQAPvFs7UDZJesgiHZzpRW93n5zMfmg7u9EhJo+TUSSm3TGpkbRftMWh/xnMXB5ZxtSCz9bUhSWfkpLoqmf08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731450795; c=relaxed/simple;
-	bh=63RdlxJYEkmrjo66jbLlNsxb4Km11jUZ5M00MeIMh+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A54TgGfr2RBMhPz+z8hhmaT0zY78HiQ4SAXh7KzqmRc7A1hX0KBpFrubsju5YDaz2+mygwHf/3+HwY/fHZQD1hPuHJS6J7cPJEj84+Rm/ufNc5qzzZJAGZUrUu2kprOeBftDtu3G574r7Rtsk1MrYk0Hk3N8V+Xcxmw1wtoa++U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE8DC4CECD;
-	Tue, 12 Nov 2024 22:33:14 +0000 (UTC)
-Date: Tue, 12 Nov 2024 17:33:31 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Yun Zhou <yun.zhou@windriver.com>
-Cc: <mcgrof@kernel.org>, <kees@kernel.org>, <joel.granados@kernel.org>,
- <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kernel: add pid_max to pid_namespace
-Message-ID: <20241112173331.407a5be0@gandalf.local.home>
-In-Reply-To: <20241105031024.3866383-1-yun.zhou@windriver.com>
-References: <20241105031024.3866383-1-yun.zhou@windriver.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731455015; c=relaxed/simple;
+	bh=hb1Htn+5sDXBHE+CTAnltprKQkxsZPkpf1Cx8nA+0gE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pBulwNb+pcxRZcRXusbTpg9apV43f4tpYufQu1jncve/zhVKln6Qdz9pB8BZ1yIeFBezaTZFroQUBnz3aHDgIyJFyLUwo6cpYB3vzjlkR4hL4IxEBXULu3zO/3KZDCL91K+6Ka93wgWa/gCy2o062IHHtdOAhR+1C3Sw9HSQSL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URFA3fSM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URFA3fSM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60632C4CECD;
+	Tue, 12 Nov 2024 23:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731455014;
+	bh=hb1Htn+5sDXBHE+CTAnltprKQkxsZPkpf1Cx8nA+0gE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=URFA3fSMK8EIXeMZ0vESdJGmupyx9D8vAPUB2v7VtD4SV3JlPsmGkiFYDVfe0HMji
+	 dr9JJqLtxB5bvSYy06WtXI3pQmfjizEUnvtj7Ykc8X3P38HQr9HUD3ftqn/PmQMVlk
+	 aP/kjOUUuRH8Al20dwBf3TzGKszrhzLYAGnBQ0mZRZQ5vfFPCF+QBcyJGfFXOHbDLi
+	 wKv0beyyMkHH2s9Sl58ock67+jA6Ujo0pKFBULkpn0xbSu48ARN5croBQpLE4OGn6c
+	 Xj9Beedm7j8H1lBw09yxfHshaUidSi8UTNK0q3WehymSJqjEeYxZ8gMM4j9SvJNtOX
+	 vJn3V8okTmEsg==
+Date: Wed, 13 Nov 2024 08:43:25 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Huacai Chen
+ <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian
+ Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v18 12/17] fprobe: Add fprobe_header encoding feature
+Message-Id: <20241113084325.86ce3d6bb44e7d67f5008825@kernel.org>
+In-Reply-To: <20241112094437.59848631@gandalf.local.home>
+References: <172991731968.443985.4558065903004844780.stgit@devnote2>
+	<172991747946.443985.11014834036464028393.stgit@devnote2>
+	<20241101102212.5e9d74d9@gandalf.local.home>
+	<20241110001054.b0a5afb2d7bb1c09b4bd6b0b@kernel.org>
+	<20241112094437.59848631@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 5 Nov 2024 11:10:24 +0800
-Yun Zhou <yun.zhou@windriver.com> wrote:
+On Tue, 12 Nov 2024 09:44:37 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> It is necessary to have a different pid_max in different containers.
-> For example, multiple containers are running on a host, one of which
-> is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
-> it requires the global pid_max <= 65535. This will cause configuration
-> conflicts with other containers and also limit the maximum number of
-> tasks for the entire system.
+> On Sun, 10 Nov 2024 00:10:54 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
+> > > > +++ b/arch/x86/include/asm/fprobe.h
+> > > > @@ -0,0 +1,9 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +#ifndef _ASM_X86_FPROBE_H
+> > > > +#define _ASM_X86_FPROBE_H
+> > > > +
+> > > > +#ifdef CONFIG_64BIT
+> > > > +#include <asm-generic/fprobe.h>
+> > > > +#endif
+> > > > +
+> > > > +#endif /* _ASM_X86_FPROBE_H */
+> > > > \ No newline at end of file  
+> > > 
+> > > Same for the above.  
+> > 
+> > OK, but x86 and riscv, we need this default template on 64bit only.
+> > So those may keep it, right?
+> 
+> Hmm, I wonder if we could just add:
+> 
+>   generic-$(CONFIG_X86_32)
+> 
+> But since I don't see that used anywhere, we may need this for archs that
+> partially have it.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Since this mask is not available on 32bit (since 32-4 = 28bit is 256MB,
+which is too small for kernel space), I checked CONFIG_64BIT in 
+asm-generic header in v19. So now I can use generic-y for most
+architecture.
 
--- Steve
+Thank you,
 
-> ---
->  - Remove sentinels from ctl_table arrays.
-> v1 - https://lore.kernel.org/all/20241030052933.1041408-1-yun.zhou@windriver.com/
-> ---
->  include/linux/pid_namespace.h     |  1 +
->  kernel/pid.c                      | 12 +++++------
->  kernel/pid_namespace.c            | 34 ++++++++++++++++++++++++++-----
->  kernel/sysctl.c                   |  9 --------
->  kernel/trace/pid_list.c           |  2 +-
->  kernel/trace/trace.h              |  2 --
->  kernel/trace/trace_sched_switch.c |  2 +-
->  7 files changed, 38 insertions(+), 24 deletions(-)
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
