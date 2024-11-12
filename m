@@ -1,302 +1,278 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14B53F9D5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 12 Nov 2024 01:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EF41FF5EB;
+	Tue, 12 Nov 2024 14:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731373508; cv=none; b=JcavzQsN2ayiG9EQ/QmUcOEXISAgeuTnTrBel8hy7R+THKMibeDH7nb7LXQxlZU0kKF9aQcUJa8855+BOuiIRUY8DtZWpiNsjdiziNU6NDeWFrgfw4NEJkW+c/nlDp3hlmZPq8cwlitaw+vO5ThUqoRz3uDqb3FidWKzO/jUgus=
+	t=1731422452; cv=none; b=HpnvSyYZOMmjmwAHr3FUAaijoKmn6SfvQN2Fay0xWeCaCrgM4V8fht6PESIXRH1OBsUevy+Wpvj6c6UHwHMj7SCzVeWdTU16utGtkAU/CxW4WQ8bN6mMRpTwVsKiA8rmhkITEaJlPj3vKuuRQw1Pe6MrpRyZHtJM3142wqn3kqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731373508; c=relaxed/simple;
-	bh=tMZN9E2RFqdMlFIH69pyDtKNP+t+H6ghc5KgCb9xAWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AQpRUkJqhgXPLHBq/un/UJIN2O5V4b1TnBJIG/0efKfWDAUOHbDeSj/Ed3RLnZFPamZ9ibac+qk2lHAMWiph4zNHG6GUuqmIfCs94cvOeKcstPBfT6iGox3lBMbFa27rMJEhJOZs/9ZsdKqFrait4++Ku4CCthfmoSOgoTLj8v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dNFPx+xQ; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1731422452; c=relaxed/simple;
+	bh=86/oEwhJaaqF1ro8RpdbRVewta890HkENWKQJqjYIk0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=R8jLu/Sbt1v0KU78vRRhiPM6zGuRj7XRI08f81VSZJF7mqKAmf3xUCjcwmPo7r8SkWyiWIGu75V+1NKvNsKW1hkN2siV3ZpSWc6p+0PPss4LlR/B0WxgcIk1EL6R6ID5rcLTXtkmZZtgNdwk9qcxCXwluveRj9jHGrntq04Aofk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=jlJP+DXD; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNFPx+xQ"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-460969c49f2so119601cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 11 Nov 2024 17:05:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="jlJP+DXD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1731373505; x=1731978305; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zkdTVDim1ZzBmzlpVVSDkcbtyV/TYvAbmr4nsEJFTmI=;
-        b=dNFPx+xQLlISflt5D8kYEN+irJF5TvihyOXgsLYIpECeZCKWuOg1TW4tZbjRUWEm5V
-         ilUV+Wmko6YYI5l5htu16d9JJBewSMUP94WOeTzIBB5yJemzVeqZGbP8tul7sqMj+xDq
-         pqN7BfL6tYBD64EKs7H1lUGi7uj8MAdUZFx7b+EaBupmEz2S3KbAzdDZuT8ZeKKPlQM2
-         2ZNCBcJoHgnUZsJfcOA0VJLsb6CuUyEVgmz4B+rIYwKQMPn8zBoGeH32T4lLJ/dz0RFQ
-         ZX5ccl00mInaS6x6XABECH4XOESyxepBUXT+lFYPTlTMYSbhg7VW3w3NVRWo2wg/roJz
-         c98w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731373505; x=1731978305;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zkdTVDim1ZzBmzlpVVSDkcbtyV/TYvAbmr4nsEJFTmI=;
-        b=CnK4kU6OP/p3Y2sbVZsAYgk4U5U9yB7fjbYwGBstbPyQD2MLG+JNoYT2BXCcB4OCey
-         emC3MnrA7x4RNQHWUyFxAw5UDbdiea250nnIyqa8vL8cFrgG9/7hun7XC9EE52YvLgOl
-         HKG/SFEEOvVhde1E5LbtsjWo8ITSzLhfPGX1JPVCaudZmFEovCpo6CUSJd3ZtGtyDF14
-         zfek0a/3+oncwo7xdDh7KK2Sa1jvubtFZVaxOyqR8c0a5Wnu+JH65Em+E2YlXtO6qcgz
-         6TPp5BjjWbuOgvGvte8gtKFaJu0n9U57urpNw5JBpFKAZcUQ110XlTk6HdB5lzRyfirJ
-         f68g==
-X-Forwarded-Encrypted: i=1; AJvYcCX+oDLcZs9juSY1Peb0QlfXzctHJIEwZx70iNNaj0miH5lXYV2lgg5PEcr2Lm6DrVtLdpSTXEPqPytbxBefCiifQPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz35DZLgAei5InNz7/ZxHeCYp39J1Ob5vik5o0kJXBZnFDwXQYu
-	awNvIO6Pavf0lmKnag7pNOjM1xsNM0TbBkGHbIRNuEGEQvLKRA3HKFAgmX7tijTIL9KfVSLex+O
-	HQ1+zjGRJzb+8N2XbM/iKWJqobAvbuXYhKVRw
-X-Gm-Gg: ASbGnctHvV/jIEjzonF7Cl86Faz/3qIsZbHbL4UHJwOmlH/y6sfsIU7SZobZ7fi78C4
-	3LaTN4fpKyBXY5myRUTVIi6PuVjYpYNE=
-X-Google-Smtp-Source: AGHT+IFa81CijRE1MeCWud//eJQAC53OwMrr0PPUNOh3z+iinXXS0t7yiFi2lRvjks5Sh8V99+c/YY6jyEmTZnx2kQE=
-X-Received: by 2002:a05:622a:2c3:b0:461:67d8:1f50 with SMTP id
- d75a77b69052e-4633ef60960mr1574411cf.4.1731373505181; Mon, 11 Nov 2024
- 17:05:05 -0800 (PST)
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1731422451; x=1762958451;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nb3ZPMcPqSuSW35JdPXTP3uJnDnzKc6cTb8i3ccTWUQ=;
+  b=jlJP+DXDxawhnMCz2rxBBhLvKEs2pL4wyDrbwO8p9evpBLc48cv8QQog
+   2dOdxfob4ni6rVgBoHbWksvILH9BeUPpLpLwlyWwVLxC7lWSUGdjnlVdY
+   jhngP3Ql/Bnf10JX3Y28Va+/auv1YbZGMjqcrHpl0tzVpN2PCy+tMvBMC
+   g=;
+X-IronPort-AV: E=Sophos;i="6.12,148,1728950400"; 
+   d="scan'208";a="351640181"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 14:40:48 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:63790]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.22.163:2525] with esmtp (Farcaster)
+ id 26affe4d-b14b-4016-968a-2de60122a39b; Tue, 12 Nov 2024 14:40:47 +0000 (UTC)
+X-Farcaster-Flow-ID: 26affe4d-b14b-4016-968a-2de60122a39b
+Received: from EX19D003UWB002.ant.amazon.com (10.13.138.11) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Tue, 12 Nov 2024 14:40:41 +0000
+Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
+ EX19D003UWB002.ant.amazon.com (10.13.138.11) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Tue, 12 Nov 2024 14:40:40 +0000
+Received: from email-imr-corp-prod-pdx-all-2b-a57195ef.us-west-2.amazon.com
+ (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1258.34 via Frontend Transport; Tue, 12 Nov 2024 14:40:40 +0000
+Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
+	by email-imr-corp-prod-pdx-all-2b-a57195ef.us-west-2.amazon.com (Postfix) with ESMTPS id 53DF2A0219;
+	Tue, 12 Nov 2024 14:40:33 +0000 (UTC)
+Message-ID: <02f77d32-e2a1-431b-bb67-33d36c06acd3@amazon.co.uk>
+Date: Tue, 12 Nov 2024 14:40:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241028010818.2487581-1-andrii@kernel.org> <20241028010818.2487581-5-andrii@kernel.org>
- <20241112092816.cf5b0aa1ef10f50ce872892f@kernel.org>
-In-Reply-To: <20241112092816.cf5b0aa1ef10f50ce872892f@kernel.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 11 Nov 2024 17:04:54 -0800
-Message-ID: <CAJuCfpFPFRWrrMOQL2wbeTS0Y7eTc81TV3MX0cHaCuQ85foiag@mail.gmail.com>
-Subject: Re: [PATCH v4 tip/perf/core 4/4] uprobes: add speculative lockless
- VMA-to-inode-to-uprobe resolution
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, peterz@infradead.org, 
-	oleg@redhat.com, rostedt@goodmis.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, 
-	mhocko@kernel.org, vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
-	arnd@arndb.de, richard.weiyang@gmail.com, zhangpeng.00@bytedance.com, 
-	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+To: David Hildenbrand <david@redhat.com>, <tabba@google.com>,
+	<quic_eberman@quicinc.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<jthoughton@google.com>, <ackerleytng@google.com>, <vannapurve@google.com>,
+	<rppt@kernel.org>
+CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
+	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
+	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
+	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
+	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
+	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<faresx@amazon.com>
+References: <20241030134912.515725-1-roypat@amazon.co.uk>
+ <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
+ <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
+ <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
+ <90c9d8c0-814e-4c86-86ef-439cb5552cb6@amazon.co.uk>
+ <10e4d078-3cdb-4d1c-a1a3-80e91b247217@redhat.com>
+From: Patrick Roy <roypat@amazon.co.uk>
+Content-Language: en-US
+Autocrypt: addr=roypat@amazon.co.uk; keydata=
+ xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
+ NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
+ wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
+ CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
+ AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
+ AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
+ IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
+ 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
+ 8hlxFQM=
+In-Reply-To: <10e4d078-3cdb-4d1c-a1a3-80e91b247217@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Mon, Nov 11, 2024 at 4:28=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Sun, 27 Oct 2024 18:08:18 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
->
-> > Given filp_cachep is marked SLAB_TYPESAFE_BY_RCU (and FMODE_BACKING
-> > files, a special case, now goes through RCU-delated freeing), we can
-> > safely access vma->vm_file->f_inode field locklessly under just
-> > rcu_read_lock() protection, which enables looking up uprobe from
-> > uprobes_tree completely locklessly and speculatively without the need t=
-o
-> > acquire mmap_lock for reads. In most cases, anyway, assuming that there
-> > are no parallel mm and/or VMA modifications. The underlying struct
-> > file's memory won't go away from under us (even if struct file can be
-> > reused in the meantime).
-> >
-> > We rely on newly added mmap_lock_speculation_{begin,end}() helpers to
-> > validate that mm_struct stays intact for entire duration of this
-> > speculation. If not, we fall back to mmap_lock-protected lookup.
-> > The speculative logic is written in such a way that it will safely
-> > handle any garbage values that might be read from vma or file structs.
-> >
-> > Benchmarking results speak for themselves.
-> >
-> > BEFORE (latest tip/perf/core)
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> > uprobe-nop            ( 1 cpus):    3.384 =C2=B1 0.004M/s  (  3.384M/s/=
-cpu)
-> > uprobe-nop            ( 2 cpus):    5.456 =C2=B1 0.005M/s  (  2.728M/s/=
-cpu)
-> > uprobe-nop            ( 3 cpus):    7.863 =C2=B1 0.015M/s  (  2.621M/s/=
-cpu)
-> > uprobe-nop            ( 4 cpus):    9.442 =C2=B1 0.008M/s  (  2.360M/s/=
-cpu)
-> > uprobe-nop            ( 5 cpus):   11.036 =C2=B1 0.013M/s  (  2.207M/s/=
-cpu)
-> > uprobe-nop            ( 6 cpus):   10.884 =C2=B1 0.019M/s  (  1.814M/s/=
-cpu)
-> > uprobe-nop            ( 7 cpus):    7.897 =C2=B1 0.145M/s  (  1.128M/s/=
-cpu)
-> > uprobe-nop            ( 8 cpus):   10.021 =C2=B1 0.128M/s  (  1.253M/s/=
-cpu)
-> > uprobe-nop            (10 cpus):    9.932 =C2=B1 0.170M/s  (  0.993M/s/=
-cpu)
-> > uprobe-nop            (12 cpus):    8.369 =C2=B1 0.056M/s  (  0.697M/s/=
-cpu)
-> > uprobe-nop            (14 cpus):    8.678 =C2=B1 0.017M/s  (  0.620M/s/=
-cpu)
-> > uprobe-nop            (16 cpus):    7.392 =C2=B1 0.003M/s  (  0.462M/s/=
-cpu)
-> > uprobe-nop            (24 cpus):    5.326 =C2=B1 0.178M/s  (  0.222M/s/=
-cpu)
-> > uprobe-nop            (32 cpus):    5.426 =C2=B1 0.059M/s  (  0.170M/s/=
-cpu)
-> > uprobe-nop            (40 cpus):    5.262 =C2=B1 0.070M/s  (  0.132M/s/=
-cpu)
-> > uprobe-nop            (48 cpus):    6.121 =C2=B1 0.010M/s  (  0.128M/s/=
-cpu)
-> > uprobe-nop            (56 cpus):    6.252 =C2=B1 0.035M/s  (  0.112M/s/=
-cpu)
-> > uprobe-nop            (64 cpus):    7.644 =C2=B1 0.023M/s  (  0.119M/s/=
-cpu)
-> > uprobe-nop            (72 cpus):    7.781 =C2=B1 0.001M/s  (  0.108M/s/=
-cpu)
-> > uprobe-nop            (80 cpus):    8.992 =C2=B1 0.048M/s  (  0.112M/s/=
-cpu)
-> >
-> > AFTER
-> > =3D=3D=3D=3D=3D
-> > uprobe-nop            ( 1 cpus):    3.534 =C2=B1 0.033M/s  (  3.534M/s/=
-cpu)
-> > uprobe-nop            ( 2 cpus):    6.701 =C2=B1 0.007M/s  (  3.351M/s/=
-cpu)
-> > uprobe-nop            ( 3 cpus):   10.031 =C2=B1 0.007M/s  (  3.344M/s/=
-cpu)
-> > uprobe-nop            ( 4 cpus):   13.003 =C2=B1 0.012M/s  (  3.251M/s/=
-cpu)
-> > uprobe-nop            ( 5 cpus):   16.274 =C2=B1 0.006M/s  (  3.255M/s/=
-cpu)
-> > uprobe-nop            ( 6 cpus):   19.563 =C2=B1 0.024M/s  (  3.261M/s/=
-cpu)
-> > uprobe-nop            ( 7 cpus):   22.696 =C2=B1 0.054M/s  (  3.242M/s/=
-cpu)
-> > uprobe-nop            ( 8 cpus):   24.534 =C2=B1 0.010M/s  (  3.067M/s/=
-cpu)
-> > uprobe-nop            (10 cpus):   30.475 =C2=B1 0.117M/s  (  3.047M/s/=
-cpu)
-> > uprobe-nop            (12 cpus):   33.371 =C2=B1 0.017M/s  (  2.781M/s/=
-cpu)
-> > uprobe-nop            (14 cpus):   38.864 =C2=B1 0.004M/s  (  2.776M/s/=
-cpu)
-> > uprobe-nop            (16 cpus):   41.476 =C2=B1 0.020M/s  (  2.592M/s/=
-cpu)
-> > uprobe-nop            (24 cpus):   64.696 =C2=B1 0.021M/s  (  2.696M/s/=
-cpu)
-> > uprobe-nop            (32 cpus):   85.054 =C2=B1 0.027M/s  (  2.658M/s/=
-cpu)
-> > uprobe-nop            (40 cpus):  101.979 =C2=B1 0.032M/s  (  2.549M/s/=
-cpu)
-> > uprobe-nop            (48 cpus):  110.518 =C2=B1 0.056M/s  (  2.302M/s/=
-cpu)
-> > uprobe-nop            (56 cpus):  117.737 =C2=B1 0.020M/s  (  2.102M/s/=
-cpu)
-> > uprobe-nop            (64 cpus):  124.613 =C2=B1 0.079M/s  (  1.947M/s/=
-cpu)
-> > uprobe-nop            (72 cpus):  133.239 =C2=B1 0.032M/s  (  1.851M/s/=
-cpu)
-> > uprobe-nop            (80 cpus):  142.037 =C2=B1 0.138M/s  (  1.775M/s/=
-cpu)
-> >
-> > Previously total throughput was maxing out at 11mln/s, and gradually
-> > declining past 8 cores. With this change, it now keeps growing with eac=
-h
-> > added CPU, reaching 142mln/s at 80 CPUs (this was measured on a 80-core
-> > Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz).
-> >
->
-> Looks good to me, except one question below.
->
-> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > Suggested-by: Matthew Wilcox <willy@infradead.org>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  kernel/events/uprobes.c | 45 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> >
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 290c445768fa..efcd62f7051d 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -2074,6 +2074,47 @@ static int is_trap_at_addr(struct mm_struct *mm,=
- unsigned long vaddr)
-> >       return is_trap_insn(&opcode);
-> >  }
-> >
-> > +static struct uprobe *find_active_uprobe_speculative(unsigned long bp_=
-vaddr)
-> > +{
-> > +     struct mm_struct *mm =3D current->mm;
-> > +     struct uprobe *uprobe =3D NULL;
-> > +     struct vm_area_struct *vma;
-> > +     struct file *vm_file;
-> > +     loff_t offset;
-> > +     unsigned int seq;
-> > +
-> > +     guard(rcu)();
-> > +
-> > +     if (!mmap_lock_speculation_begin(mm, &seq))
-> > +             return NULL;
-> > +
-> > +     vma =3D vma_lookup(mm, bp_vaddr);
-> > +     if (!vma)
-> > +             return NULL;
-> > +
-> > +     /*
-> > +      * vm_file memory can be reused for another instance of struct fi=
-le,
-> > +      * but can't be freed from under us, so it's safe to read fields =
-from
-> > +      * it, even if the values are some garbage values; ultimately
-> > +      * find_uprobe_rcu() + mmap_lock_speculation_end() check will ens=
-ure
-> > +      * that whatever we speculatively found is correct
->
-> If vm_file is a garbage value, may `vm_file->f_inode` access be dangerous=
-?
->
-> > +      */
-> > +     vm_file =3D READ_ONCE(vma->vm_file);
-> > +     if (!vm_file)
-> > +             return NULL;
-> > +
-> > +     offset =3D (loff_t)(vma->vm_pgoff << PAGE_SHIFT) + (bp_vaddr - vm=
-a->vm_start);
-> > +     uprobe =3D find_uprobe_rcu(vm_file->f_inode, offset);
->                                        ^^^^ Here
->
-> if it only stores vm_file or NULL, there's no problem.
 
-IIRC correctly, vma->vm_file is RCU-safe and we are in the read RCU
-section, so it should not contain a garbage value.
+Hi David, 
 
->
-> Thank you,
->
-> > +     if (!uprobe)
-> > +             return NULL;
-> > +
-> > +     /* now double check that nothing about MM changed */
-> > +     if (!mmap_lock_speculation_end(mm, seq))
-> > +             return NULL;
-> > +
-> > +     return uprobe;
-> > +}
-> > +
-> >  /* assumes being inside RCU protected region */
-> >  static struct uprobe *find_active_uprobe_rcu(unsigned long bp_vaddr, i=
-nt *is_swbp)
-> >  {
-> > @@ -2081,6 +2122,10 @@ static struct uprobe *find_active_uprobe_rcu(uns=
-igned long bp_vaddr, int *is_swb
-> >       struct uprobe *uprobe =3D NULL;
-> >       struct vm_area_struct *vma;
-> >
-> > +     uprobe =3D find_active_uprobe_speculative(bp_vaddr);
-> > +     if (uprobe)
-> > +             return uprobe;
-> > +
-> >       mmap_read_lock(mm);
-> >       vma =3D vma_lookup(mm, bp_vaddr);
-> >       if (vma) {
-> > --
-> > 2.43.5
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+sorry for the late response, I ended up catching the flu last week and
+was out of commission for a while :(
+
+On Mon, 2024-11-04 at 21:30 +0000, David Hildenbrand wrote:
+>>> We talked about shared (faultable) vs. private (unfaultable), and how it
+>>> would interact with the directmap patches here.
+>>>
+>>> As discussed, having private (unfaultable) memory with the direct-map
+>>> removed and shared (faultable) memory with the direct-mapping can make
+>>> sense for non-TDX/AMD-SEV/... non-CoCo use cases. Not sure about CoCo,
+>>> the discussion here seems to indicate that it might currently not be
+>>> required.
+>>>
+>>> So one thing we could do is that shared (faultable) will have a direct
+>>> mapping and be gup-able and private (unfaultable) memory will not have a
+>>> direct mapping and is, by design, not gup-able.>
+>>> Maybe it could make sense to not have a direct map for all guest_memfd
+>>> memory, making it behave like secretmem (and it would be easy to
+>>> implement)? But I'm not sure if that is really desirable in VM context.
+>>
+>> This would work for us (in this scenario, the swiotlb areas would be
+>> "traditional" memory, e.g. set to shared via mem attributes instead of
+>> "shared" inside KVM), it's kinda what I had prototyped in my v1 of this
+>> series (well, we'd need to figure out how to get the mappings of gmem
+>> back into KVM, since in this setup, short-circuiting it into
+>> userspace_addr wouldn't work, unless we banish swiotlb into a different
+>> memslot altogether somehow).
+> 
+> Right.
+
+"right" as in, "yes we could do that"? :p
+
+>> But I don't think it'd work for pKVM, iirc
+>> they need GUP on gmem, and also want direct map removal (... but maybe,
+>> the gmem VMA for non-CoCo usecase and the gmem VMA for pKVM could be
+>> behave differently?  non-CoCo gets essentially memfd_secret, pKVM gets
+>> GUP+no faults of private mem).
+> 
+> Good question. So far my perception was that the directmap removal on
+> "private/unfaultable" would be sufficient.
+> 
+>>
+>>> Having a mixture of "has directmap" and "has no directmap" for shared
+>>> (faultable) memory should not be done. Similarly, private memory really
+>>> should stay "unfaultable".
+>>
+>> You've convinced me that having both GUP-able and non GUP-able
+>> memory in the same VMA will be tricky. However, I'm less convinced on
+>> why private memory should stay unfaultable; only that it shouldn't be
+>> faultable into a VMA that also allows GUP. Can we have two VMAs? One
+>> that disallows GUP, but allows userspace access to shared and private,
+>> and one that allows GUP, but disallows accessing private memory? Maybe
+>> via some `PROT_NOGUP` flag to `mmap`? I guess this is a slightly
+>> different spin of the above idea.
+> 
+> What we are trying to achieve is making guest_memfd not behave
+> completely different on that level for different "types" of VMs. So one
+> of the goals should be to try to unify it as much as possible.
+> 
+> shared -> faultable: GUP-able
+> private -> unfaultable: unGUP-able
+> 
+> 
+> And it makes sense, because a lot of future work will rely on some
+> important properties: for example, if private memory cannot be faulted
+> in + GUPed, core-MM will never have obtained valid references to such a
+> page. There is no need to split large folios into smaller ones for
+> tracking purposes; there is no need to maintain per-page refcounts and
+> pincounts ...
+> 
+> It doesn't mean that we cannot consider it if really required, but there
+> really has to be a strong case for it, because it will all get really messy.
+> 
+> For example, one issue is that a folio only has a single mapping
+> (folio->mapping), and that is used in the GUP-fast path (no VMA) to
+> determine whether GUP-fast is allowed or not.
+> 
+> So you'd have to force everything through GUP-slow, where you could
+> consider VMA properties :( It sounds quite suboptimal.
+> 
+> I don't think multiple VMAs are what we really want. See below.
+
+Ah, okay, I see. Thanks for explaining, this all makes a lot of sense to
+me now!
+
+>>
+>>> I think one of the points raised during the bi-weekly call was that
+>>> using a viommu/swiotlb might be the right call, such that all memory can
+>>> be considered private (unfaultable) that is not explicitly
+>>> shared/expected to be modified by the hypervisor (-> faultable, ->
+>>> GUP-able).
+>>>
+>>> Further, I think Sean had some good points why we should explore that
+>>> direction, but I recall that there were some issue to be sorted out
+>>> (interpreted instructions requiring direct map when accessing "private"
+>>> memory?), not sure if that is already working/can be made working in KVM.
+>>
+>> Yeah, the big one is MMIO instruction emulation on x86, which does guest
+>> page table walks and instruction fetch (and particularly the latter
+>> cannot be known ahead-of-time by the guest, aka cannot be explicitly
+>> "shared"). That's what the majority of my v2 series was about. For
+>> traditional memslots, KVM handles these via get_user and friends, but if
+>> we don't have a VMA that allows faulting all of gmem, then that's
+>> impossible, and we're in "temporarily restore direct map" land. Which
+>> comes with significantly performance penalties due to TLB flushes.
+> 
+> Agreed.
+> 
+>> >> What's your opinion after the call and the next step for use cases
+> like
+>>> you have in mind (IIRC firecracker, which wants to not have the
+>>> direct-map for guest memory where it can be avoided)?
+>>
+>> Yea, the usecase is for Firecracker to not have direct map entries for
+>> guest memory, unless needed for I/O (-> swiotlb).
+>>
+>> As for next steps, let's determine once and for all if we can do the
+>> KVM-internal guest memory accesses for MMIO emulation through userspace
+>> mappings (although if we can't I'll have some serious soul-searching to
+>> do, because all other solutions we talked about so far also have fairly
+>> big drawbacks; on-demand direct map reinsertion has terrible
+>> performance
+> So IIUC, KVM would have to access "unfaultable" guest_memfd memory using
+> fd+offset, and that's problematic because "no-directmap".
+> 
+> So you'd have to map+unmap the directmap repeatedly, and still expose it
+> temporarily in the direct map to others. I see how that is undesirable,
+> even when trying to cache hotspots (partly destroying the purpose of the
+> directmap removal).
+> 
+> 
+> Would a per-MM kernel mapping of these pages work, so KVM can access them?
+> 
+> It sounds a bit like what is required for clean per-MM allocations [1]:
+> establish a per-MM kernel mapping of (selected?) pages. Not necessarily
+> all of them.
+> 
+> Yes, we'd be avoiding VMAs, GUP, mapcounts, pincounts and everything
+> involved with ordinary user mappings for these private/unfaultable
+> thingies. Just like as discussed in, and similar to [1].
+> 
+> Just throwing it out there, maybe we really want to avoid the directmap
+> (keep it unmapped) and maintain a per-mm mapping for a bunch of folios
+> that can be easily removed when required by guest_memfd (ftruncate,
+> conversion private->shared) on request.
+
+I remember talking to someone at some point about whether we could reuse
+the proc-local stuff for guest memory, but I cannot remember the outcome
+of that discussion... (or maybe I just wanted to have a discussion about
+it, but forgot to follow up on that thought?).  I guess we wouldn't use
+proc-local _allocations_, but rather just set up proc-local mappings of
+the gmem allocations that have been removed from the direct map.
+
+I'm wondering, where exactly would be the differences to Sean's idea
+about messing with the CR3 register inside KVM to temporarily install
+page tables that contain all the gmem stuff, conceptually? Wouldn't we
+run into the same interrupt problems that Sean foresaw for the CR3
+stuff? (which, admittedly, I still don't quite follow what these are :(
+).
+
+(I've cc'd Fares Mehanna as well)
+
+> [1] https://lore.kernel.org/all/20240911143421.85612-1-faresx@amazon.de/T/#u
+> 
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
+
+Best,
+Patrick
