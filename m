@@ -1,49 +1,59 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD4D2231C;
-	Wed, 13 Nov 2024 03:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF7335885;
+	Wed, 13 Nov 2024 07:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731468705; cv=none; b=DZ8f8KGaALAN3qmtkMDO1D7d9obK5CjUgfQ1XjIeqi4AEd9UxHK2vmYI91tZkInWYpTP0gNniq27snI+xL1378mc6HvZ6zESK7sID/BQDF5npU/gjIKnSjwK3vXvDXfFdqsiljJYKm/CukaGwI8ciLpuZbtnSacPCklDiLpo2MM=
+	t=1731483170; cv=none; b=DAYCZJMEJk3HmhobzAfiU3efsZ0ayyDCmUgqlPKAbUqy9VmlQIpxy3oQTevlz/5subfkl4wlZ+nHl4Pvtl353/Iw/QcPvlLQmUDisS65b5rf7CHN08KCvYggF/ik/Em1916V6LZbDi2dPLCy8X91UmXrX4TgoERha2QQmE2ZY14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731468705; c=relaxed/simple;
-	bh=/bYsay7vg1weqenJRpb4pqt79mASw+nrIHAtGk1mYk0=;
-	h=Message-ID:Date:MIME-Version:To:CC:References:Subject:From:
-	 In-Reply-To:Content-Type; b=mZbLYxWyIoDj+Txve+6wv7kbAkLR9pgH7cxHe110BpJ7aDSbSZm+wRnatiymdB1B4ya2hua1oYLEVsHUU6z9zEZ+TpZ5mWdKLNkNehlAARKXTRDGKCI3jz2YZ/Gzq/7/haeGSrG/74wJLAKsMVlLKstE48q5C6py2tiUET7Qyb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=p2FyNdhI; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1731483170; c=relaxed/simple;
+	bh=sVsJxS9e8Feoju3z9kLVoX7oyF2LbuRtLNrwKHqDJ3E=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WWR/0yVO2K/VfHVrnxesUkC0ghH3StyAayVQpF71r9B9cqspjjfArYfYUI5Cub2OklFoaNtUmo8ANFilzNWTMw00/tqqVkRu0iViTF7Pq1RZzsOusM/W8JFeoJSrHC/c64KWKDuaBCfVtD/dYua9FYmFgnj4aBsQJCfYARohHnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VETkn3Rp; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="p2FyNdhI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VETkn3Rp"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7240d93fffdso5598327b3a.2;
+        Tue, 12 Nov 2024 23:32:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1731468703; x=1763004703;
-  h=message-id:date:mime-version:to:cc:references:subject:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/bYsay7vg1weqenJRpb4pqt79mASw+nrIHAtGk1mYk0=;
-  b=p2FyNdhIAi+6xoWhb29VwwL4rYVU/pPGGnyai28akMRJ0vFNwFs/T6Vj
-   eiueWOUGu4dnJNH5Hny1h8CHvZzYocsG0h16E+FlLNBRa8F3JcaIdqmrJ
-   KCD5NNrIGc573cvqyJrNOyw+0LzZnLf/WD6iGQCHkldT9dIQ+7S1M071M
-   M=;
-X-IronPort-AV: E=Sophos;i="6.12,149,1728950400"; 
-   d="scan'208";a="442195777"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.124.125.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2024 03:31:38 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:35392]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.13.112:2525] with esmtp (Farcaster)
- id 1975e212-552a-4756-aa4f-791440302fe9; Wed, 13 Nov 2024 03:31:37 +0000 (UTC)
-X-Farcaster-Flow-ID: 1975e212-552a-4756-aa4f-791440302fe9
-Received: from EX19D003UWC002.ant.amazon.com (10.13.138.169) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Wed, 13 Nov 2024 03:31:37 +0000
-Received: from [192.168.205.1] (10.106.101.35) by
- EX19D003UWC002.ant.amazon.com (10.13.138.169) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Wed, 13 Nov 2024 03:31:34 +0000
-Message-ID: <96c24397-b081-4570-adb2-8d4443f3359c@amazon.com>
-Date: Tue, 12 Nov 2024 20:31:29 -0700
+        d=gmail.com; s=20230601; t=1731483168; x=1732087968; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ydt3a/CwJ8B9afYgE/yrVykOza81dEen6k3D9kqyuHM=;
+        b=VETkn3RptQCfWGeWzz6TzgiJ0xmafCgDuqqYofNODFIW3KSw4SMRqCYyQ+c1BN65/I
+         64F8Fruc91+4QaDqbdHGVkmcco0ZJT0yJTYEQjX9Q/jTyvyMGFBy3akP0R0/RudjnRLO
+         JnZPU1lMA+p2h+10AsPFoJ3jShHWQGMkwMwcESUtqM3sPL6b/7rfwJn6ZXBo1fGqySbS
+         rRk7hzu7EtPfkFNCOnnuheoK646I8AHzSLu0kTCzN5rFXiw6g25JKJS9KkVv4lg76w/R
+         Xbf5kDSPXAuK2FUfmwR/PPogx3kl97RyxxdNCl84C+FccVdbu1HqSsew1XWKe8Qyv6I+
+         SMJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731483168; x=1732087968;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ydt3a/CwJ8B9afYgE/yrVykOza81dEen6k3D9kqyuHM=;
+        b=d3ylRecQOVrRtikX2fIuSG84vmraLijdfX6tuge5oP2SAs7J63vK31CD8DpK5A8SHm
+         qmrqNENFsBLvTOOVHllC6a0/FddwMpsnDKRotrbAai9EEGzyovJl/P0nZOedmbUph8rQ
+         x9lVEUbf5CkTgWRQ8dhRaPj7190LqbpU5JPg0qomKcw4GhumJdagLSsNvYNT4jJndmBN
+         mzbWgN9xOc7IXrVLpDm5VLVQjUkZ9Li7zBfErbvVfBeXp0AXxt1RmjL2jw85+vmo5ecL
+         W6IXi0pDqfqb3q1KIA1/MA8hpQDdoMpdzCdKB7JPsekX8Aa1jW1pBUNucjaH0NL27qZ0
+         cWzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlePrd/EFLQEBCPsUTRqnuFgoGBw4pwqU2bBgL7kKBBDAl56kD6YMVz5GgXqj8NML1y2U7K/nolaL10r8=@vger.kernel.org, AJvYcCW5qHFkrpVGdUdpn3wZPiubZHlZlLLX7fK2GEsbO5jDtGyPvQcMI62fTGdeGI/0H3hK6JAl9IluElKP7CryAA==@vger.kernel.org, AJvYcCXvFHcXcUdcAuH/TqZF/rzkaabczShcKDMp0r0U/7jQJidrfVSaD5wcOLqrOJIm97vGoGcGADzoYPmYL7JL5BKO+Qtj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3f23SPs1VqPHGRr48iOrzbDEE10/S86IS7A2LnQM3H87dwvfF
+	AUbk3XYfKwiB/W6oqWUEvQ4plDoUxtVlFcv3Vf34J8jZo1FMp6Dt
+X-Google-Smtp-Source: AGHT+IGo17+0CiznxgzXvqz3+t8QWlsqph7jxFNRIn4nmCDEyVatBOR0uDeUb8AhZ6CKTeHN6RZgNQ==
+X-Received: by 2002:a05:6a20:9191:b0:1d9:25d4:e8b1 with SMTP id adf61e73a8af0-1dc703de37dmr2643692637.25.1731483168541;
+        Tue, 12 Nov 2024 23:32:48 -0800 (PST)
+Received: from [192.168.68.56] ([122.161.49.182])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72407862826sm12543777b3a.15.2024.11.12.23.32.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Nov 2024 23:32:47 -0800 (PST)
+Message-ID: <8acdd32a-1702-4434-8d79-2e73ded36d2a@gmail.com>
+Date: Wed, 13 Nov 2024 13:02:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,78 +61,35 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: <elena.reshetova@intel.com>
-CC: <ackerleytng@google.com>, <agordeev@linux.ibm.com>,
-	<aou@eecs.berkeley.edu>, <borntraeger@linux.ibm.com>, <bp@alien8.de>,
-	<canellac@amazon.at>, <catalin.marinas@arm.com>, <chenhuacai@kernel.org>,
-	<corbet@lwn.net>, <dave.hansen@intel.com>, <dave.hansen@linux.intel.com>,
-	<david@redhat.com>, <derekmn@amazon.com>, <gerald.schaefer@linux.ibm.com>,
-	<gor@linux.ibm.com>, <graf@amazon.com>, <hca@linux.ibm.com>, <hpa@zytor.com>,
-	<jgowans@amazon.com>, <jthoughton@google.com>, <kalyazin@amazon.com>,
-	<kernel@xen0n.name>, <kvm@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
-	<linux-s390@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <luto@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>, <mingo@redhat.com>,
-	<mlipp@amazon.at>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
-	<pbonzini@redhat.com>, <peterz@infradead.org>, <quic_eberman@quicinc.com>,
-	<rostedt@goodmis.org>, <roypat@amazon.co.uk>, <rppt@kernel.org>,
-	<seanjc@google.com>, <shuah@kernel.org>, <svens@linux.ibm.com>,
-	<tabba@google.com>, <tglx@linutronix.de>, <vannapurve@google.com>,
-	<will@kernel.org>, <x86@kernel.org>, <xmarcalx@amazon.com>
-References: <DM8PR11MB57505F62D149EF153F89B8BAE75D2@DM8PR11MB5750.namprd11.prod.outlook.com>
-Subject: RE: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+To: zhengyejian1@huawei.com
+Cc: bpf@vger.kernel.org, jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mcgrof@kernel.org,
+ mhiramat@kernel.org, peterz@infradead.org, rostedt@goodmis.org
+References: <20240607115211.734845-1-zhengyejian1@huawei.com>
+Subject: Re: [RFC PATCH] ftrace: Skip __fentry__ location of overridden weak
+ functions
 Content-Language: en-US
-From: "Manwaring, Derek" <derekmn@amazon.com>
-In-Reply-To: <DM8PR11MB57505F62D149EF153F89B8BAE75D2@DM8PR11MB5750.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Dropify <d.dropify@gmail.com>
+In-Reply-To: <20240607115211.734845-1-zhengyejian1@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D038UWB003.ant.amazon.com (10.13.139.157) To
- EX19D003UWC002.ant.amazon.com (10.13.138.169)
 
-On 2024-11-08 at 10:36, Elena Reshetova wrote:
-> On 2024-11-06 at 17:04, Derek Manwaring wrote:
-> > On 2024-11-04 at 08:33+0000, Elena Reshetova wrote:
-> > > This statement *is* for integrity section. We have a separate TDX guidance
-> > > on side-channels (including speculative) [3] and some speculative attacks
-> > > that affect confidentiality (for example spectre v1) are listed as not covered
-> > > by TDX but remaining SW responsibility (as they are now).
-> >
-> > Thanks for the additional info, Elena. Given that clarification, I
-> > definitely see direct map removal and TDX as complementary.
->
-> Jus to clarify to make sure my comment is not misunderstood.
-> What I meant is that we cannot generally assume that confidentiality
-> leaks from CoCo guests to host/VMM via speculative channels
-> are completely impossible. Spectre V1 is a prime example of such a
-> possible leak. Dave also elaborated on other potential vectors earlier.
->
-> The usefulness of direct map removal for CoCo guests as a concrete
-> mitigation for certain types of memory attacks must be precisely
-> evaluated per each attack vector, attack vector direction (host -> guest,
-> guest ->host, etc) and per each countermeasure that CoCo vendors
-> provide for each such case. I don't know if there is any existing study
-> that examines this for major CoCo vendors. I think this is what must
-> be done for this work in order to have a strong reasoning for its usefulness.
+Wondering where are we with this issue?
 
-Thanks, that makes sense. I'm a little hyperfocused on guest->host which
-is the opposite direction of what is generally used for the CoCo threat
-model. I think what both cases care about though is guest->guest. For
-me, guest->host matters because it's a route for guest->guest (at least
-in the non-CoCo world). There's some good discussion on this in David's
-series on attack vector controls [1].
+I am experiencing an issue where in a fentry/kfunc bpf probe attached to 
+a function doesn't fire. I have only experienced this behavior on Debian 
+kernels with `CONFIG_X86_KERNEL_IBT` enabled.
 
-Like you mention, beyond direction it matters which CoCo countermeasures
-are at play and how far they go during transient execution. That part is
-not clear to me for the host->guest direction involving the direct map,
-but agree any countermeasures like direct map removal should be
-evaluated based on a better understanding of what those existing
-countermeasures already cover and what attack is intended to be
-mitigated.
+Because of weak symbols being removed from kallsyms, 
+kallsyms_lookup_size_offset() returns the symbol offset for the function 
+"acct_process()" more than the actual size. And the function body now 
+contains two __fentry__ locations.
 
-Derek
+Depending on where binary search lands up first, correct (acct_process + 
+4) or incorrect (acct_process + 260) location is returned.
 
+Thanks,
 
-[1] https://lore.kernel.org/lkml/LV3PR12MB92658EA6CCF18F90DAAA168394532@LV3PR12MB9265.namprd12.prod.outlook.com/
+Dropify
+
