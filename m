@@ -1,79 +1,189 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B013049E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Nov 2024 17:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA4F7081D;
+	Wed, 13 Nov 2024 22:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731518526; cv=none; b=J1+zkT1gYFV+cBdzbmFVD/8IAbhbyFevKzshdAvVvz/TWNFKujud3aWS2hdi7QKBeka+qTXo9FpCYDyLwGNA/nq32+urwY10S89Z8tM2qPf6ueHM6fqj69lRmMru7f7qTd+EYc5Wj3oAXXcQ0eMBPc8vr5N+tP+89MRME1bjDMM=
+	t=1731536461; cv=none; b=KuDKEx7rMiEMTLZxswdGhvVziw46KjzGfADkizFBgyKt2QY6TyGws674Y4LmCSNMpmLCl43VJCYeePZrqbFqNQAAjN1/OiXDdN6vU0LvF0hNMHoqzhT3LRyVxdGecUOYIOroj0mIGUMTFy8LpVE40ft0vtVaJVEqVnmgiysGa68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731518526; c=relaxed/simple;
-	bh=Z2yvubv1C3jHp6QXvOC/+j9/4t0h3OAD2jGZoHdUtJo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lVJhBQdk/oA1FP0sOZig/7oPoV85sgkUCwKyT2+ugvZdhXu0+4k5CDAi3UdIvHmrURKwb6/lxzZfygwZ2gmo+73/rXhR0XTPEfXgjl1Np6OPF938WjVCXu7A7TqEYxIJV9wJ2IQJW78blSW4pfVJMi2jeYzwyN+QoWGjsBXkIVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-83ab4cadf05so795597739f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Nov 2024 09:22:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731518524; x=1732123324;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JnOf36aP94RKBx0LKLDwa8vZa06z4Rk+yvwFlv0FEFc=;
-        b=LXIfRZIGtDnte9m9yfUdXrxaptiDfZTdRrhSv0XkL66ssMXohHUpikAXZhDESvLyzN
-         FZXHT7iEKlabp1N707sdMYC+uQYZuKULfU5c/CYL75Ncj6D1BZRFLyankG9wWX5q42Nx
-         jzxnhx6yom9UPWiSfKZ4275UIbEfmnZLxYnbzx6eCdk96qQiB0Z/Oqcxj+d+30x4E9TM
-         mSf1NLoY/BbffMMthKHO65oh07ykai5UnerzLvyZlnmGfQgQ2ctnbFJ5olW4r5kA23/l
-         /ENkq5FnrRQ/afXv61jYlN5BVmSz7HMAsCt9m2okDL+ZYo466l0iAdlnEdlo7lcVUR7U
-         tt9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWckAdOF+2/vHORURTJBiKBQmb66QnDn60w34++qG4QveCjbusQx6FFauTsbizFAbp9tktdDQgA9+sl6um56VXOx1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHMVVenpKa+wpSCssY2/RS0HRU8FKkvrthuqWWxipnnD2wJhAJ
-	HrVl2BDfcFbxF7MTsJ+dtVBdizbeugIgGE2Mwf6mhhOeuYuOtzW4VKlC+zC9Apa+UTGMcTGII4a
-	2n7IK7zS/98bAWekU3qn5+8uDTRc7AvUErvT6Wc8QL6Bw2tTPmgR4JFI=
-X-Google-Smtp-Source: AGHT+IEgQtmLGOHg1sQ01VClhxTRs9K7Qj21K5aCs/Tm8TEIqRm/Hmmz09IzpN/8iP4SWCVdpKm4EOH9JWYpabOweVUk1mKlM+KS
+	s=arc-20240116; t=1731536461; c=relaxed/simple;
+	bh=jaCgkVrjqdFRoXcmyT5u0vZq+LcNAv9DOc0Nl7LGbn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lg7CH3AkiFLqJo3tFon7jZaneULeoJhl/phjOc4nN/R/oZSmf4QI0MDkiAi2hDEuwgLkZIo6DfEvWxvSzIFUsK67ODFKTShgLJO4wxEW8W8gYdrxidv7gqiZ0Qj+NskuSh35MG69bwC63tknGpBL5BPIRkN8TEPm0DramOqlMfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C89EC4CEC3;
+	Wed, 13 Nov 2024 22:20:58 +0000 (UTC)
+Date: Wed, 13 Nov 2024 17:21:18 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
+ <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
+Message-ID: <20241113172118.6db57c42@gandalf.local.home>
+In-Reply-To: <20241113171326.6d1ddc83@gandalf.local.home>
+References: <cover.1730150953.git.jpoimboe@kernel.org>
+	<42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
+	<1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
+	<20241113155040.6a9a1bed@gandalf.local.home>
+	<20241113211535.ghnw52wkgudkjvgv@jpoimboe>
+	<20241113171326.6d1ddc83@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3082:b0:3a7:1de2:1d9f with SMTP id
- e9e14a558f8ab-3a71de21df7mr2684235ab.13.1731518524539; Wed, 13 Nov 2024
- 09:22:04 -0800 (PST)
-Date: Wed, 13 Nov 2024 09:22:04 -0800
-In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6734e03c.050a0220.2a2fcc.0045.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
-From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, andreyknvl@gmail.com, axboe@kernel.dk, 
-	dvyukov@google.com, eadavis@qq.com, elver@google.com, glider@google.com, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, pengfei.xu@intel.com, peterz@infradead.org, 
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-syzbot suspects this issue was fixed by commit:
 
-commit ae94b263f5f69c180347e795fbefa051b65aacc3
-Author: Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue Jun 11 07:50:33 2024 +0000
+[ This reply fixes the linux-trace-kernel email :-p ]
 
-    x86: Ignore stack unwinding in KCOV
+On Wed, 13 Nov 2024 17:13:26 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=174bc1a7980000
-start commit:   7a396820222d Merge tag 'v6.8-rc-part2-smb-client' of git:/..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4059ab9bf06b6ceb
-dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14669c6fe80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d23ae3e80000
+> BTW, the following changes were needed to make it work for me:
+> 
+> -- Steve
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index 434c548f0837..64cc3c1188ca 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -842,7 +842,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  	int first_pt_load = 1;
+>  	unsigned long error;
+>  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+> -	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
+> +	struct elf_phdr *elf_property_phdata = NULL;
+> +	unsigned long sframe_vaddr = 0;
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Could not just save the pointer to the sframe phd, as it gets freed before we need it.
 
-#syz fix: x86: Ignore stack unwinding in KCOV
+>  	unsigned long elf_brk;
+>  	int retval, i;
+>  	unsigned long elf_entry;
+> @@ -951,7 +952,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  			break;
+>  
+>  		case PT_GNU_SFRAME:
+> -			sframe_phdr = elf_ppnt;
+> +			sframe_vaddr = elf_ppnt->p_vaddr;
+>  			break;
+>  
+>  		case PT_LOPROC ... PT_HIPROC:
+> @@ -1344,8 +1345,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
+>  					    task_pid_nr(current), retval);
+>  	}
+>  
+> -	if (sframe_phdr)
+> -		sframe_add_section(load_bias + sframe_phdr->p_vaddr,
+> +	if (sframe_vaddr)
+> +		sframe_add_section(load_bias + sframe_vaddr,
+>  				   start_code, end_code);
+>  
+>  	regs = current_pt_regs();
+> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+> index 933e47696e29..ca4ef0b72772 100644
+> --- a/kernel/unwind/sframe.c
+> +++ b/kernel/unwind/sframe.c
+> @@ -73,15 +73,15 @@ static int find_fde(struct sframe_section *sec, unsigned long ip,
+>  		    struct sframe_fde *fde)
+>  {
+>  	struct sframe_fde __user *first, *last, *found = NULL;
+> -	u32 ip_off, func_off_low = 0, func_off_high = -1;
+> +	s32 ip_off, func_off_low = INT_MIN, func_off_high = INT_MAX;
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+The ip_off is a signed it. I wrote a program to dump out the sframe section
+of files, and I had:
+
+	ffffed88: (1020) size:      16 off:     146 num:       2 info: 1 rep:16
+	ffffed98: (1030) size:     336 off:     154 num:       2 info:17 rep:16
+	ffffefe1: (1279) size:     113 off:       0 num:       4 info: 0 rep: 0
+	fffff052: (12ea) size:      54 off:      15 num:       3 info: 0 rep: 0
+	fffff088: (1320) size:     167 off:      26 num:       3 info: 0 rep: 0
+	fffff12f: (13c7) size:     167 off:      37 num:       4 info: 0 rep: 0
+	fffff1d6: (146e) size:     167 off:      52 num:       4 info: 0 rep: 0
+	fffff27d: (1515) size:      22 off:      67 num:       4 info: 0 rep: 0
+	fffff293: (152b) size:     141 off:      82 num:       4 info: 0 rep: 0
+	fffff320: (15b8) size:      81 off:      97 num:       4 info: 0 rep: 0
+	fffff371: (1609) size:     671 off:     112 num:       4 info: 1 rep: 0
+	fffff610: (18a8) size:     171 off:     131 num:       4 info: 0 rep: 0
+
+The above turns was created by a loop of:
+
+	fde = (void *)sframes + sizeof(*sframes) + sframes->sfh_fdeoff;
+	for (s = 0; s < sframes->sfh_num_fdes; s++, fde++) {
+		printf("\t%x: (%lx) size:%8u off:%8u num:%8u info:%2u rep:%2u\n",
+		       fde->sfde_func_start_address,
+		       fde->sfde_func_start_address + shdr->sh_offset,
+		       fde->sfde_func_size,
+		       fde->sfde_func_start_fre_off,
+		       fde->sfde_func_num_fres,
+		       fde->sfde_func_info,
+		       fde->sfde_func_rep_size);
+	}
+
+As you can see, all the ip_off are negative.
+
+>  
+>  	ip_off = ip - sec->sframe_addr;
+>  
+>  	first = (void __user *)sec->fdes_addr;
+> -	last = first + sec->fdes_nr;
+> +	last = first + sec->fdes_nr - 1;
+
+The above was mentioned before.
+
+>  	while (first <= last) {
+>  		struct sframe_fde __user *mid;
+> -		u32 func_off;
+> +		s32 func_off;
+>  
+>  		mid = first + ((last - first) / 2);
+>  
+> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+> index 11aadfade005..d9cd820150c5 100644
+> --- a/kernel/unwind/user.c
+> +++ b/kernel/unwind/user.c
+> @@ -97,7 +97,7 @@ int unwind_user_start(struct unwind_user_state *state)
+>  
+>  	if (current_has_sframe())
+>  		state->type = UNWIND_USER_TYPE_SFRAME;
+> -	else if (IS_ENABLED(CONFIG_UNWIND_USER_FP))
+> +	else if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
+
+This was mentioned too.
+
+>  		state->type = UNWIND_USER_TYPE_FP;
+>  	else
+>  		state->type = UNWIND_USER_TYPE_NONE;
+> @@ -138,7 +138,7 @@ int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries)
+>  static u64 ctx_to_cookie(u64 cpu, u64 ctx)
+>  {
+>  	BUILD_BUG_ON(NR_CPUS > 65535);
+> -	return (ctx & ((1UL << 48) - 1)) | cpu;
+> +	return (ctx & ((1UL << 48) - 1)) | (cpu << 48);
+
+And so was this.
+
+-- Steve
+
+>  }
+>  
+>  /*
+
