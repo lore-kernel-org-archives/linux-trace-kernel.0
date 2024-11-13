@@ -1,95 +1,79 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF7335885;
-	Wed, 13 Nov 2024 07:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B013049E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Nov 2024 17:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731483170; cv=none; b=DAYCZJMEJk3HmhobzAfiU3efsZ0ayyDCmUgqlPKAbUqy9VmlQIpxy3oQTevlz/5subfkl4wlZ+nHl4Pvtl353/Iw/QcPvlLQmUDisS65b5rf7CHN08KCvYggF/ik/Em1916V6LZbDi2dPLCy8X91UmXrX4TgoERha2QQmE2ZY14=
+	t=1731518526; cv=none; b=J1+zkT1gYFV+cBdzbmFVD/8IAbhbyFevKzshdAvVvz/TWNFKujud3aWS2hdi7QKBeka+qTXo9FpCYDyLwGNA/nq32+urwY10S89Z8tM2qPf6ueHM6fqj69lRmMru7f7qTd+EYc5Wj3oAXXcQ0eMBPc8vr5N+tP+89MRME1bjDMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731483170; c=relaxed/simple;
-	bh=sVsJxS9e8Feoju3z9kLVoX7oyF2LbuRtLNrwKHqDJ3E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=WWR/0yVO2K/VfHVrnxesUkC0ghH3StyAayVQpF71r9B9cqspjjfArYfYUI5Cub2OklFoaNtUmo8ANFilzNWTMw00/tqqVkRu0iViTF7Pq1RZzsOusM/W8JFeoJSrHC/c64KWKDuaBCfVtD/dYua9FYmFgnj4aBsQJCfYARohHnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VETkn3Rp; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VETkn3Rp"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7240d93fffdso5598327b3a.2;
-        Tue, 12 Nov 2024 23:32:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731483168; x=1732087968; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ydt3a/CwJ8B9afYgE/yrVykOza81dEen6k3D9kqyuHM=;
-        b=VETkn3RptQCfWGeWzz6TzgiJ0xmafCgDuqqYofNODFIW3KSw4SMRqCYyQ+c1BN65/I
-         64F8Fruc91+4QaDqbdHGVkmcco0ZJT0yJTYEQjX9Q/jTyvyMGFBy3akP0R0/RudjnRLO
-         JnZPU1lMA+p2h+10AsPFoJ3jShHWQGMkwMwcESUtqM3sPL6b/7rfwJn6ZXBo1fGqySbS
-         rRk7hzu7EtPfkFNCOnnuheoK646I8AHzSLu0kTCzN5rFXiw6g25JKJS9KkVv4lg76w/R
-         Xbf5kDSPXAuK2FUfmwR/PPogx3kl97RyxxdNCl84C+FccVdbu1HqSsew1XWKe8Qyv6I+
-         SMJA==
+	s=arc-20240116; t=1731518526; c=relaxed/simple;
+	bh=Z2yvubv1C3jHp6QXvOC/+j9/4t0h3OAD2jGZoHdUtJo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=lVJhBQdk/oA1FP0sOZig/7oPoV85sgkUCwKyT2+ugvZdhXu0+4k5CDAi3UdIvHmrURKwb6/lxzZfygwZ2gmo+73/rXhR0XTPEfXgjl1Np6OPF938WjVCXu7A7TqEYxIJV9wJ2IQJW78blSW4pfVJMi2jeYzwyN+QoWGjsBXkIVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-83ab4cadf05so795597739f.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 13 Nov 2024 09:22:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731483168; x=1732087968;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1731518524; x=1732123324;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ydt3a/CwJ8B9afYgE/yrVykOza81dEen6k3D9kqyuHM=;
-        b=d3ylRecQOVrRtikX2fIuSG84vmraLijdfX6tuge5oP2SAs7J63vK31CD8DpK5A8SHm
-         qmrqNENFsBLvTOOVHllC6a0/FddwMpsnDKRotrbAai9EEGzyovJl/P0nZOedmbUph8rQ
-         x9lVEUbf5CkTgWRQ8dhRaPj7190LqbpU5JPg0qomKcw4GhumJdagLSsNvYNT4jJndmBN
-         mzbWgN9xOc7IXrVLpDm5VLVQjUkZ9Li7zBfErbvVfBeXp0AXxt1RmjL2jw85+vmo5ecL
-         W6IXi0pDqfqb3q1KIA1/MA8hpQDdoMpdzCdKB7JPsekX8Aa1jW1pBUNucjaH0NL27qZ0
-         cWzA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlePrd/EFLQEBCPsUTRqnuFgoGBw4pwqU2bBgL7kKBBDAl56kD6YMVz5GgXqj8NML1y2U7K/nolaL10r8=@vger.kernel.org, AJvYcCW5qHFkrpVGdUdpn3wZPiubZHlZlLLX7fK2GEsbO5jDtGyPvQcMI62fTGdeGI/0H3hK6JAl9IluElKP7CryAA==@vger.kernel.org, AJvYcCXvFHcXcUdcAuH/TqZF/rzkaabczShcKDMp0r0U/7jQJidrfVSaD5wcOLqrOJIm97vGoGcGADzoYPmYL7JL5BKO+Qtj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3f23SPs1VqPHGRr48iOrzbDEE10/S86IS7A2LnQM3H87dwvfF
-	AUbk3XYfKwiB/W6oqWUEvQ4plDoUxtVlFcv3Vf34J8jZo1FMp6Dt
-X-Google-Smtp-Source: AGHT+IGo17+0CiznxgzXvqz3+t8QWlsqph7jxFNRIn4nmCDEyVatBOR0uDeUb8AhZ6CKTeHN6RZgNQ==
-X-Received: by 2002:a05:6a20:9191:b0:1d9:25d4:e8b1 with SMTP id adf61e73a8af0-1dc703de37dmr2643692637.25.1731483168541;
-        Tue, 12 Nov 2024 23:32:48 -0800 (PST)
-Received: from [192.168.68.56] ([122.161.49.182])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72407862826sm12543777b3a.15.2024.11.12.23.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 23:32:47 -0800 (PST)
-Message-ID: <8acdd32a-1702-4434-8d79-2e73ded36d2a@gmail.com>
-Date: Wed, 13 Nov 2024 13:02:43 +0530
+        bh=JnOf36aP94RKBx0LKLDwa8vZa06z4Rk+yvwFlv0FEFc=;
+        b=LXIfRZIGtDnte9m9yfUdXrxaptiDfZTdRrhSv0XkL66ssMXohHUpikAXZhDESvLyzN
+         FZXHT7iEKlabp1N707sdMYC+uQYZuKULfU5c/CYL75Ncj6D1BZRFLyankG9wWX5q42Nx
+         jzxnhx6yom9UPWiSfKZ4275UIbEfmnZLxYnbzx6eCdk96qQiB0Z/Oqcxj+d+30x4E9TM
+         mSf1NLoY/BbffMMthKHO65oh07ykai5UnerzLvyZlnmGfQgQ2ctnbFJ5olW4r5kA23/l
+         /ENkq5FnrRQ/afXv61jYlN5BVmSz7HMAsCt9m2okDL+ZYo466l0iAdlnEdlo7lcVUR7U
+         tt9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWckAdOF+2/vHORURTJBiKBQmb66QnDn60w34++qG4QveCjbusQx6FFauTsbizFAbp9tktdDQgA9+sl6um56VXOx1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHMVVenpKa+wpSCssY2/RS0HRU8FKkvrthuqWWxipnnD2wJhAJ
+	HrVl2BDfcFbxF7MTsJ+dtVBdizbeugIgGE2Mwf6mhhOeuYuOtzW4VKlC+zC9Apa+UTGMcTGII4a
+	2n7IK7zS/98bAWekU3qn5+8uDTRc7AvUErvT6Wc8QL6Bw2tTPmgR4JFI=
+X-Google-Smtp-Source: AGHT+IEgQtmLGOHg1sQ01VClhxTRs9K7Qj21K5aCs/Tm8TEIqRm/Hmmz09IzpN/8iP4SWCVdpKm4EOH9JWYpabOweVUk1mKlM+KS
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: zhengyejian1@huawei.com
-Cc: bpf@vger.kernel.org, jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mark.rutland@arm.com, mathieu.desnoyers@efficios.com, mcgrof@kernel.org,
- mhiramat@kernel.org, peterz@infradead.org, rostedt@goodmis.org
-References: <20240607115211.734845-1-zhengyejian1@huawei.com>
-Subject: Re: [RFC PATCH] ftrace: Skip __fentry__ location of overridden weak
- functions
-Content-Language: en-US
-From: Dropify <d.dropify@gmail.com>
-In-Reply-To: <20240607115211.734845-1-zhengyejian1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3082:b0:3a7:1de2:1d9f with SMTP id
+ e9e14a558f8ab-3a71de21df7mr2684235ab.13.1731518524539; Wed, 13 Nov 2024
+ 09:22:04 -0800 (PST)
+Date: Wed, 13 Nov 2024 09:22:04 -0800
+In-Reply-To: <0000000000002b1fc7060fca3adf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6734e03c.050a0220.2a2fcc.0045.GAE@google.com>
+Subject: Re: [syzbot] [block?] [trace?] INFO: task hung in blk_trace_remove (2)
+From: syzbot <syzbot+2373f6be3e6de4f92562@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, andreyknvl@gmail.com, axboe@kernel.dk, 
+	dvyukov@google.com, eadavis@qq.com, elver@google.com, glider@google.com, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, pengfei.xu@intel.com, peterz@infradead.org, 
+	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-Wondering where are we with this issue?
+syzbot suspects this issue was fixed by commit:
 
-I am experiencing an issue where in a fentry/kfunc bpf probe attached to 
-a function doesn't fire. I have only experienced this behavior on Debian 
-kernels with `CONFIG_X86_KERNEL_IBT` enabled.
+commit ae94b263f5f69c180347e795fbefa051b65aacc3
+Author: Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue Jun 11 07:50:33 2024 +0000
 
-Because of weak symbols being removed from kallsyms, 
-kallsyms_lookup_size_offset() returns the symbol offset for the function 
-"acct_process()" more than the actual size. And the function body now 
-contains two __fentry__ locations.
+    x86: Ignore stack unwinding in KCOV
 
-Depending on where binary search lands up first, correct (acct_process + 
-4) or incorrect (acct_process + 260) location is returned.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=174bc1a7980000
+start commit:   7a396820222d Merge tag 'v6.8-rc-part2-smb-client' of git:/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4059ab9bf06b6ceb
+dashboard link: https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14669c6fe80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d23ae3e80000
 
-Thanks,
+If the result looks correct, please mark the issue as fixed by replying with:
 
-Dropify
+#syz fix: x86: Ignore stack unwinding in KCOV
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
