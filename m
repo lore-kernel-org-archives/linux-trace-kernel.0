@@ -1,142 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023E6433C4;
-	Thu, 14 Nov 2024 17:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3501AF0BA;
+	Thu, 14 Nov 2024 23:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731603928; cv=none; b=dslQ1T6mk/Cko3wS+7Y23UCnvjhcKZXVxQUqRHxMSaKaLF/oiIOdby0T5CmjgLe0oNk8wZrJnY8403l4CmDpFrFk53/Hy1DOexVF/N+JbGnp/eabn1JKuVpfqPVQo6H+6k8nIm1k54akkQGZtI1CXSQJW7ddO/mHKkkgaPuJX1w=
+	t=1731627667; cv=none; b=Rj8TmA7R8HBW+nFlASwWjnXM4NGD3mJKqpFeA3JWfPnSOOAp9OdMKgRs6TzyMrzkAi+ISgaM1a5qOC/xqtCkdGLkADyO+QCZwnDbRoTWNWr9bc+vKsBm9Th3/UvBpTDnu2xkFzOzgVWoQMBZwUY57tcboGsudGqN7r3smdOAoCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731603928; c=relaxed/simple;
-	bh=w1nc7vglHECQ2k6rGtO9RzOzlB5v7HCFDwzyiruVo6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Fzm5UbHPsLR0QMzl02B8zgtPleCnfCbe4VWExJiqRnbVdFdQYbTxCgiLxDZReSkY7/34xrhoyXgS4RL1MPyGlhJQLGV/hX7Fbfm/5C69K7k8mErzLsUxx3fBx4sZlQ9WepeT1Fynf2fVcYoZn/ub+TU7sJ2o5EcPUWWU4l3NEqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A09C4CECD;
-	Thu, 14 Nov 2024 17:05:26 +0000 (UTC)
-Date: Thu, 14 Nov 2024 12:05:48 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing/ring-buffer: Clear all memory mapped CPU ring
- buffers on first recording
-Message-ID: <20241114120548.4528b4b7@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731627667; c=relaxed/simple;
+	bh=4uP6zrGR2lcgZHcCRbq5unRCPfMDCwFbgLz2/AfPC4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6N/vwoLBrQvNDNe8xQyps7vW8xjeAwEaeIM79psilGoLo/Xg0ho5JPe6Tp4/pdm2Ma/ooIwyhfazXmi5g5OriZh55nzvuANn1L2cWGEgQllxXwdohBRsnKamlfksc1borvFhlRol92wva5VVdDjIEggznH/fZS5C4E2/hPNuk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=et78cqeg; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="et78cqeg"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ea0500a300so1008711a91.0;
+        Thu, 14 Nov 2024 15:41:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731627665; x=1732232465; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RyoyMRZMBHfrh5qveItwCkAYFBpNWsrOGPr7w72p2rE=;
+        b=et78cqegvw27ioZfE/Nf/cdSTsFxGog7EUJ5nOPh5+HVlFui1fNNaATn82e1BB/Z2Q
+         xRQy9lNl5XqbGxYtgKnH0Dx0S4TgWFZ1Kvid9wu6e1CeNePpm0X03oBBAAfOIXpKSDb8
+         QuKhvy0ezI7xRgInIl15j6GyswDgp/42zuXoh68pwoNEHvK1JUqiJT+xeRmQk1YgHOk1
+         LCnUmauDZABv20sjUjbs/TpUY1Sr603ZXJ2pd6kJrThRnZ3BsvBze4sqx11fBuB05m43
+         mdEjIeI2vh/kEP3BqFJgAnTLoJ96EIGrr6b9lf0Dp4b2a+U3bZMTtAGj3N04FdZZQB6l
+         FPbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731627665; x=1732232465;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RyoyMRZMBHfrh5qveItwCkAYFBpNWsrOGPr7w72p2rE=;
+        b=SrdLpRFO+5ZvEmkSU6Xd+KDx95DWsWTzLXp3LF2eLg3mGtxY7c9iI7VxadNaS6OcBZ
+         gijM+vlXTk26cVDQaGDOkw7Akei4TsyfuHoQpS8dc0PiQxaaioiPIvCUTRB9V35iJ5TV
+         Rvj2aMyz7qaAChoOhIlD9tU3U8hxD+QuHSnoS7F9HybGqWO6vjLc00TtgHGZV3ipA6EY
+         vTSxsLub9oPQzCIGDnLtXVHG2POzEsCqVYD5sV1HAtLzZ3xzDMUJtWjNsZX41j8mzVKr
+         izyLz1zudg0ygwUzw5TSKY/SPGte3DqVVZjnv4EOUMYVeatSQUWYdfytHsfKk1Dwsfbb
+         jM/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUKvc9+23XipjiBQTUcX7yKowSR6C4w9Sn0Gch9j9gGt5Ld7tQPEmQtwgol+czx4QS7SCXcGlkjYSQckM8c@vger.kernel.org, AJvYcCUnLpLWUzyaG3KCGRWTRfIuU1NsEHY7aHwxm0+oOCKyjmwFDyVwvRsDNDHnYgj8KYqDvnU=@vger.kernel.org, AJvYcCVNT2cXrLD9zhFZZ3ewmuP2BMHb7gv5qhIWohv35zWDdu0r/4zYanvpDekAP+2TpytjBblbEyH5z+axzAY/qsv5NUzi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrhsuiJRWyxf+sMuXwhqXYMA24nkkTBem90fZZ9scbfcs5rOXG
+	00UvQd2piEj52eSuLnCDr7STRFJnBzrd+WktMo+0NlTs/XDlf1hQLUueXaHhEI/fF4js4KfVJgu
+	8WUtAT3rRrriU5ZH+25TlPkHY+Pc=
+X-Google-Smtp-Source: AGHT+IHwBk91klljYEcb+wkITQ75hVtf9U49FSWjhQ3b6vnynPC5/5r9ymQE1WiVboXvWL3Jztk4t57fU0+fwEWPDLc=
+X-Received: by 2002:a17:90a:d450:b0:2e2:9522:279e with SMTP id
+ 98e67ed59e1d1-2ea15582e0fmr861273a91.31.1731627665427; Thu, 14 Nov 2024
+ 15:41:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241105133405.2703607-1-jolsa@kernel.org> <20241105133405.2703607-10-jolsa@kernel.org>
+In-Reply-To: <20241105133405.2703607-10-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 14 Nov 2024 15:40:53 -0800
+Message-ID: <CAEf4BzaXvdXr4dyHrozWYyMHJor5GpaHnPF8=8qy0r_5Crb3wg@mail.gmail.com>
+Subject: Re: [RFC bpf-next 09/11] selftests/bpf: Add usdt trigger bench
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Nov 5, 2024 at 5:35=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding usdt trigger bench to meassure optimized usdt probes.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/testing/selftests/bpf/bench.c           |  2 +
+>  .../selftests/bpf/benchs/bench_trigger.c      | 45 +++++++++++++++++++
+>  .../selftests/bpf/progs/trigger_bench.c       | 10 ++++-
+>  3 files changed, 56 insertions(+), 1 deletion(-)
+>
 
-The events of a memory mapped ring buffer from the previous boot should
-not be mixed in with events from the current boot. There's meta data that
-is used to handle KASLR so that function names can be shown properly.
+Why not just adding uprobe-nop5 benchmark instead of going all the way
+into USDT? Seems simpler and will benchmark all the same stuff?
 
-Also, since the timestamps of the previous boot have no meaning to the
-timestamps of the current boot, having them intermingled in a buffer can
-also cause confusion because there could possibly be events in the future.
-
-When a trace is activated the meta data is reset so that the pointers of
-are now processed for the new address space. The trace buffers are reset
-when tracing starts for the first time. The problem here is that the reset
-only happens on online CPUs. If a CPU is offline, it does not get reset.
-
-To demonstrate the issue, a previous boot had tracing enabled in the boot
-mapped ring buffer on reboot. On the following boot, tracing has not been
-started yet so the function trace from the previous boot is still visible.
-
- # trace-cmd show -B boot_mapped -c 3 | tail
-          <idle>-0       [003] d.h2.   156.462395: __rcu_read_lock <-cpu_emergency_disable_virtualization
-          <idle>-0       [003] d.h2.   156.462396: vmx_emergency_disable_virtualization_cpu <-cpu_emergency_disable_virtualization
-          <idle>-0       [003] d.h2.   156.462396: __rcu_read_unlock <-__sysvec_reboot
-          <idle>-0       [003] d.h2.   156.462397: stop_this_cpu <-__sysvec_reboot
-          <idle>-0       [003] d.h2.   156.462397: set_cpu_online <-stop_this_cpu
-          <idle>-0       [003] d.h2.   156.462397: disable_local_APIC <-stop_this_cpu
-          <idle>-0       [003] d.h2.   156.462398: clear_local_APIC <-disable_local_APIC
-          <idle>-0       [003] d.h2.   156.462574: mcheck_cpu_clear <-stop_this_cpu
-          <idle>-0       [003] d.h2.   156.462575: mce_intel_feature_clear <-stop_this_cpu
-          <idle>-0       [003] d.h2.   156.462575: lmce_supported <-mce_intel_feature_clear
-
-Now, if CPU 3 is taken offline, and tracing is started on the memory
-mapped ring buffer, the events from the previous boot in the CPU 3 ring
-buffer is not reset. Now those events are using the meta data from the
-current boot and produces just hex values.
-
- # echo 0 > /sys/devices/system/cpu/cpu3/online
- # trace-cmd start -B boot_mapped -p function
- # trace-cmd show -B boot_mapped -c 3 | tail
-          <idle>-0       [003] d.h2.   156.462395: 0xffffffff9a1e3194 <-0xffffffff9a0f655e
-          <idle>-0       [003] d.h2.   156.462396: 0xffffffff9a0a1d24 <-0xffffffff9a0f656f
-          <idle>-0       [003] d.h2.   156.462396: 0xffffffff9a1e6bc4 <-0xffffffff9a0f7323
-          <idle>-0       [003] d.h2.   156.462397: 0xffffffff9a0d12b4 <-0xffffffff9a0f732a
-          <idle>-0       [003] d.h2.   156.462397: 0xffffffff9a1458d4 <-0xffffffff9a0d12e2
-          <idle>-0       [003] d.h2.   156.462397: 0xffffffff9a0faed4 <-0xffffffff9a0d12e7
-          <idle>-0       [003] d.h2.   156.462398: 0xffffffff9a0faaf4 <-0xffffffff9a0faef2
-          <idle>-0       [003] d.h2.   156.462574: 0xffffffff9a0e3444 <-0xffffffff9a0d12ef
-          <idle>-0       [003] d.h2.   156.462575: 0xffffffff9a0e4964 <-0xffffffff9a0d12ef
-          <idle>-0       [003] d.h2.   156.462575: 0xffffffff9a0e3fb0 <-0xffffffff9a0e496f
-
-Reset all CPUs when starting a boot mapped ring buffer for the first time,
-and not just the online CPUs.
-
-Fixes: 7a1d1e4b9639f ("tracing/ring-buffer: Add last_boot_info file to boot instance")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a8f52b6527ca..619e9aa62201 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2386,6 +2386,25 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
- 	ring_buffer_record_enable(buffer);
- }
- 
-+static void tracing_reset_all_cpus(struct array_buffer *buf)
-+{
-+	struct trace_buffer *buffer = buf->buffer;
-+
-+	if (!buffer)
-+		return;
-+
-+	ring_buffer_record_disable(buffer);
-+
-+	/* Make sure all commits have finished */
-+	synchronize_rcu();
-+
-+	buf->time_start = buffer_ftrace_now(buf, buf->cpu);
-+
-+	ring_buffer_reset(buffer);
-+
-+	ring_buffer_record_enable(buffer);
-+}
-+
- /* Must have trace_types_lock held */
- void tracing_reset_all_online_cpus_unlocked(void)
- {
-@@ -6141,8 +6160,13 @@ static void update_last_data(struct trace_array *tr)
- 	if (!tr->text_delta && !tr->data_delta)
- 		return;
- 
--	/* Clear old data */
--	tracing_reset_online_cpus(&tr->array_buffer);
-+	/*
-+	 * Need to clear all CPU buffers as there cannot be events
-+	 * from the previous boot mixed with events with this boot
-+	 * as that will cause a confusing trace. Need to clear all
-+	 * CPU buffers, even for those that may currently be offline.
-+	 */
-+	tracing_reset_all_cpus(&tr->array_buffer);
- 
- 	/* Using current data now */
- 	tr->text_delta = 0;
--- 
-2.45.2
-
+> diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftest=
+s/bpf/bench.c
+> index 1bd403a5ef7b..dc5121e49623 100644
+> --- a/tools/testing/selftests/bpf/bench.c
+> +++ b/tools/testing/selftests/bpf/bench.c
+> @@ -526,6 +526,7 @@ extern const struct bench bench_trig_uprobe_multi_pus=
+h;
+>  extern const struct bench bench_trig_uretprobe_multi_push;
+>  extern const struct bench bench_trig_uprobe_multi_ret;
+>  extern const struct bench bench_trig_uretprobe_multi_ret;
+> +extern const struct bench bench_trig_usdt;
+>
+>  extern const struct bench bench_rb_libbpf;
+>  extern const struct bench bench_rb_custom;
+> @@ -586,6 +587,7 @@ static const struct bench *benchs[] =3D {
+>         &bench_trig_uretprobe_multi_push,
+>         &bench_trig_uprobe_multi_ret,
+>         &bench_trig_uretprobe_multi_ret,
+> +       &bench_trig_usdt,
+>         /* ringbuf/perfbuf benchmarks */
+>         &bench_rb_libbpf,
+>         &bench_rb_custom,
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/t=
+esting/selftests/bpf/benchs/bench_trigger.c
+> index 32e9f194d449..bdee8b8362d0 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+> @@ -8,6 +8,7 @@
+>  #include "bench.h"
+>  #include "trigger_bench.skel.h"
+>  #include "trace_helpers.h"
+> +#include "../sdt.h"
+>
+>  #define MAX_TRIG_BATCH_ITERS 1000
+>
+> @@ -333,6 +334,13 @@ static void *uprobe_producer_ret(void *input)
+>         return NULL;
+>  }
+>
+> +static void *uprobe_producer_usdt(void *input)
+> +{
+> +       while (true)
+> +               STAP_PROBE(trigger, usdt);
+> +       return NULL;
+> +}
+> +
+>  static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
+>  {
+>         size_t uprobe_offset;
+> @@ -383,6 +391,37 @@ static void usetup(bool use_retprobe, bool use_multi=
+, void *target_addr)
+>         }
+>  }
+>
+> +static void __usdt_setup(const char *provider, const char *name)
+> +{
+> +       struct bpf_link *link;
+> +       int err;
+> +
+> +       setup_libbpf();
+> +
+> +       ctx.skel =3D trigger_bench__open();
+> +       if (!ctx.skel) {
+> +               fprintf(stderr, "failed to open skeleton\n");
+> +               exit(1);
+> +       }
+> +
+> +       bpf_program__set_autoload(ctx.skel->progs.bench_trigger_usdt, tru=
+e);
+> +
+> +       err =3D trigger_bench__load(ctx.skel);
+> +       if (err) {
+> +               fprintf(stderr, "failed to load skeleton\n");
+> +               exit(1);
+> +       }
+> +
+> +       link =3D bpf_program__attach_usdt(ctx.skel->progs.bench_trigger_u=
+sdt,
+> +                                       -1 /* all PIDs */, "/proc/self/ex=
+e",
+> +                                       provider, name, NULL);
+> +       if (!link) {
+> +               fprintf(stderr, "failed to attach uprobe!\n");
+> +               exit(1);
+> +       }
+> +       ctx.skel->links.bench_trigger_usdt =3D link;
+> +}
+> +
+>  static void usermode_count_setup(void)
+>  {
+>         ctx.usermode_counters =3D true;
+> @@ -448,6 +487,11 @@ static void uretprobe_multi_ret_setup(void)
+>         usetup(true, true /* use_multi */, &uprobe_target_ret);
+>  }
+>
+> +static void usdt_setup(void)
+> +{
+> +       __usdt_setup("trigger", "usdt");
+> +}
+> +
+>  const struct bench bench_trig_syscall_count =3D {
+>         .name =3D "trig-syscall-count",
+>         .validate =3D trigger_validate,
+> @@ -506,3 +550,4 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-mu=
+lti-ret");
+>  BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
+>  BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
+>  BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
+> +BENCH_TRIG_USERMODE(usdt, usdt, "usdt");
+> diff --git a/tools/testing/selftests/bpf/progs/trigger_bench.c b/tools/te=
+sting/selftests/bpf/progs/trigger_bench.c
+> index 044a6d78923e..7b7d4a71e7d4 100644
+> --- a/tools/testing/selftests/bpf/progs/trigger_bench.c
+> +++ b/tools/testing/selftests/bpf/progs/trigger_bench.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2020 Facebook
+> -#include <linux/bpf.h>
+> +#include "vmlinux.h"
+>  #include <asm/unistd.h>
+>  #include <bpf/bpf_helpers.h>
+> +#include <bpf/usdt.bpf.h>
+>  #include <bpf/bpf_tracing.h>
+>  #include "bpf_misc.h"
+>
+> @@ -138,3 +139,10 @@ int bench_trigger_rawtp(void *ctx)
+>         inc_counter();
+>         return 0;
+>  }
+> +
+> +SEC("?usdt")
+> +int bench_trigger_usdt(struct pt_regs *ctx)
+> +{
+> +       inc_counter();
+> +       return 0;
+> +}
+> --
+> 2.47.0
+>
