@@ -1,110 +1,100 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F02E573;
-	Thu, 14 Nov 2024 09:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929191D9A41;
+	Thu, 14 Nov 2024 10:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731575327; cv=none; b=UWLrmyCQI4Jevzcp8wwgqjmYH9UbeyG1NAtFz9nhTR8xcyqzhrPqjyVjL5XpeNxB75FweZNnotyhBez7Fz4mUrF+d7mUeeRNjEe9q+MYINPcL2N4wu+G7pXFRbg0lMocGPB4zM8+56heEH29u7qhwM+pRxq/4Rl5fUEA+c2Aa74=
+	t=1731578896; cv=none; b=TADaxQJPTR6M1hRK3ctjGkVw/FFDNLjEfxP5YbEqrZjX/MEApI/X2VXbhiUaS2tJuamO5NySm3wVF/r6+2A7+MFmj58u14sZVaV0xbIIvUCTpMAvFSRzI/mFIucRZGForUO+5jeog7bIqXBLQDuqVrssm6ykzaRhIp8YWJNHdDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731575327; c=relaxed/simple;
-	bh=rNSB/Gv3XTfSm3CiYEJhNy/ZDpquJUDPkzURBFBo1y0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPVX6shqIMf0jcycJKhcj3miG4T0+ka1zbeenGNGMr/mfRUjdAGAQPbO98CbyYEmHl2sPkeMsRvs6pp8Kal5ZDSIGZu0LkPLKv+YMwd9/OkEovGoz+lMATmNSOzk/QvI84BnyJ4uhMHrKAzohDJ9hFZod/siLK1CwLg98ZeZlUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6HWEDr1; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1731578896; c=relaxed/simple;
+	bh=7Q/u9mXiu4INaF1tH+EiC3ANPsGGRziBmdY8gjeuz0A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y4Q9J5rAG+TNhD/G+UzQLGyKn5QXdBHPW9eXWHBnr/+HTUItEPF2ygZr5Dr+84/8dRLCB5dKTWFHuIhZN6gR01CVrW2CvE5qwXy/zw8vhpy08EV2BLJu6Q6v2/AZTbvJiZLhQy1AqG46o8aUs/G2dw/+rEzXb6SwNHfD51y349s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=CT1SqqCm; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6HWEDr1"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5cefa22e9d5so394871a12.3;
-        Thu, 14 Nov 2024 01:08:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731575324; x=1732180124; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Xj4J1nAwgNgBUfIb69qUsHb/4NoMVPegAyL84SVWCWs=;
-        b=l6HWEDr1UHmpK1hSBGfKIouyOvJDI7ggV8dlj7IuYuKyJHOwG1p7EJ5y8NL8fCPR08
-         POt+YHmXMC8r3mArvfx8dK/fyz8b8/607Bgz16K1D+EbaQYJhwgF376jn2pn5TEit+z2
-         2h6Nh7/orI8C3zxwm8UziePakuVSSTJ7C/PAzL2uY9NM9V002IHN5oKoHWcC4GJAouhi
-         S2GZCLm0LjCqxrj+4GTF+phZcTTgg5yEpest4BkkkZFeHvzJaOiBKartV9Bi71q8SHY3
-         CvxKyQKq8QaThipyBqpiHIPEkc4yQv/0q2dpWiX3KqW5UTZ7+i0wkt4s1IQY3gZ4mGCL
-         MJzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731575324; x=1732180124;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xj4J1nAwgNgBUfIb69qUsHb/4NoMVPegAyL84SVWCWs=;
-        b=E58fJ/pL7zi+Dk4hWTmK7792zPlXy7adxzGccKXR/thF869DHBEo3gYYmTpAfUOT2E
-         Dol2ISJh/DHnCxyDOmIMKn8CkJctNoOnGAqH+GKvKyyyHwhFqJIzreJf5stkbsoDtfHc
-         c+c3d8sDQJAk+8tuuo36+o8IRc0FQ4F66T0+okbf9KxHoTq2gxBQpSfa1A7qVbpkiyht
-         6gyGWti6hmxy1ygDL2du494x7lMSlVUGpigWQ6luBWF1C6qWObBlQo3UouRemiM8oQq4
-         +unn6MlSYzYvIzWNmUfWDFsKYfD+E8MPINqeISURx8a0y1GHYug1MXwlX8bT/HgwixL1
-         2Lkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgCzVcdHE+KA9DUwuACiI+kQHFwpawPry7pinPaRVyQfZOwPRl8FbHPHSYu5p3R5xU8FG9pr0PSyOEN1kbn00SiEU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVw0yLCka+yPlcBvYMz7CM977n8Q9zv11RVaVrNha8k68OmjI1
-	KKl6XJNE00hkp6qAL5j1jzDbJy7zY+0xde3ziLrgNjQIsBy9vz8V
-X-Google-Smtp-Source: AGHT+IFVzCc4lDijDDqQfVvtFhSov9oH3a2sfIZOWTwyiICjVAEbZCz/xR0MOjGmf0MW/pU9dABojg==
-X-Received: by 2002:a17:907:96a2:b0:a9a:422:ec7 with SMTP id a640c23a62f3a-a9eeff2542emr2011844266b.32.1731575323548;
-        Thu, 14 Nov 2024 01:08:43 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e001715sm39385466b.126.2024.11.14.01.08.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2024 01:08:43 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 14 Nov 2024 10:08:41 +0100
-To: =?iso-8859-1?Q?Sebasti=E3o?= Santos Boavida Amaro <sebastiao.amaro@tecnico.ulisboa.pt>
-Cc: bpf@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: uprobe overhead when specifying a pid
-Message-ID: <ZzW-GWh7Iqp-AxGA@krava>
-References: <66ba4183c94d28f7020c118029d45650@tecnico.ulisboa.pt>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CT1SqqCm"
+X-UUID: 56546beaa27011ef99858b75a2457dd9-20241114
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=V+uTllLumsvRiNSI4QHHF2N/3sKtFUpT/a3mYpx8kfY=;
+	b=CT1SqqCmBFjNxa/EYovZ3QRcVCc81ad7SeWnToHLTC3mnSDs6Qdm+B4N+Tqx2QFAltV9R6d2HeWkr7SEScAytrdTNqcyHO5+TNrwKr+BAWHKOAd7VnIudVXMTeZ/7+4JGyaxKdxbqE5CWxpRK/sgCGp69Uwyi0hGEohXP14PCZw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.42,REQID:301ffcc9-ebce-44ca-a881-980843bb4034,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:b0fcdc3,CLOUDID:a75e0c4f-a2ae-4b53-acd4-c3dc8f449198,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0,EDM:-3,IP
+	:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
+	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 56546beaa27011ef99858b75a2457dd9-20241114
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+	(envelope-from <liju-clr.chen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1374894203; Thu, 14 Nov 2024 18:08:04 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 14 Nov 2024 18:08:02 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Thu, 14 Nov 2024 18:08:02 +0800
+From: Liju-clr Chen <liju-clr.chen@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin
+ Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Richard Cochran
+	<richardcochran@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Liju-clr Chen <Liju-clr.Chen@mediatek.com>, Yingshiuan Pan
+	<Yingshiuan.Pan@mediatek.com>, Ze-yu Wang <Ze-yu.Wang@mediatek.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, Shawn Hsiao <shawn.hsiao@mediatek.com>,
+	PeiLun Suei <PeiLun.Suei@mediatek.com>, Chi-shen Yeh
+	<Chi-shen.Yeh@mediatek.com>, Kevenny Hsieh <Kevenny.Hsieh@mediatek.com>
+Subject: [PATCH v13 01/25] virt: geniezone: enable gzvm-ko in defconfig
+Date: Thu, 14 Nov 2024 18:07:38 +0800
+Message-ID: <20241114100802.4116-2-liju-clr.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20241114100802.4116-1-liju-clr.chen@mediatek.com>
+References: <20241114100802.4116-1-liju-clr.chen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <66ba4183c94d28f7020c118029d45650@tecnico.ulisboa.pt>
+Content-Type: text/plain
+X-MTK: N
 
-On Wed, Nov 13, 2024 at 11:33:01PM +0000, Sebastião Santos Boavida Amaro wrote:
-> Hi,
-> I am using:
-> libbpf-cargo = "0.24.6"
-> libbpf-rs = "0.24.6"
-> libbpf-sys = "1.4.3"
-> On kernel 6.8.0-47-generic.
-> I contacted the libbpf-rs guys, and they told me this belonged here.
-> I am attaching 252 uprobes to a system, these symbols are not regularly
-> called (90ish times over 9 minutes), however, when I specify a pid the
-> throughput drops 3 times from 12k ops/sec to 4k ops/sec. When I do not
-> specify a PID, and simply pass -1 the throughput remains the same (as it
-> should, since 90 times is not significant to affect overhead I would say).
-> It looks as if we are switching from userspace to kernel space without
-> triggering the uprobe.
-> Do not know if this is a known issue, it does not look like an intended
-> behavior.
+From: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
 
-hi,
-thanks for the report, I cc-ed some other folks and trace list
+Add config in defconfig to enable gzvm driver by default
 
-I'm not aware about such slowdown, I think with pid filter in place
-there should be less work to do
+Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
+Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-could you please provide more details?
-  - do you know which uprobe interface you are using
-    uprobe over perf event or uprobe_multi (likely uprobe_multi,
-    because you said above you attach 250 probes)
-  - more details on the workload, like is the threads/processes,
-    how many and I guess you trigger bpf program
-  - do you filter out single pid or more
-  - could you profile the workload with perf
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index d13218d0c30f..0f63d4837b61 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1733,3 +1733,5 @@ CONFIG_CORESIGHT_STM=m
+ CONFIG_CORESIGHT_CPU_DEBUG=m
+ CONFIG_CORESIGHT_CTI=m
+ CONFIG_MEMTEST=y
++CONFIG_VIRT_DRIVERS=y
++CONFIG_MTK_GZVM=m
+-- 
+2.18.0
 
-thanks,
-jirka
