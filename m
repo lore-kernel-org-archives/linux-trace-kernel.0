@@ -1,114 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0E418A6CC;
-	Wed, 13 Nov 2024 22:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3ED1E493F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 14 Nov 2024 02:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731536719; cv=none; b=Mu5dY53AlZBtjLGSv57+X8I3n2MLJMfT3xN8BMv3kSmZdkSsByFewD90BMArhMXE0rwQWX3ytN2MunAPOJQO3+QssvMvawN+aZ9Xdyrnby51J8uxLoYekN2RsR/qScT2KPCPtjOC8JRjBfpG49iTbrd0aw+HuI4sAA2AxLZ5g88=
+	t=1731550027; cv=none; b=DRnrSGXiog25kiWtoFOIQvNgltj4lZcYDUVIwHv9I2IBlBH49LQUBTSXtMkUYiS7dG7q9/v91vU6jUnbLXGTYk6XVsbWNIcHv76QkLrpY22YdVi+LKQp8luBAq33rgIdoQstoc/Iu+5HC1RCKHDydpTJQEJK+9W2e1t4hCo9bnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731536719; c=relaxed/simple;
-	bh=1dafTU3Arp/csBfvx15CA6zVMhj2igN4Giir7HUNKdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wz+iorY1/loQ1jmCqlLRFH/J/6Sv9oQL8lyqX96b1K4tb7/HytE9y2L7bfPi5yJQ+L2Ww1q5nIrPNJmqWCA51QB9zl8lOCqA8u0ZVhCRUXg5Izayp92al5NKVqSKVTWi50uQ7ZOdA09XGBYQEt/kcCx3nVKoDO9nfq6adQjAghs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F4DC4CEC3;
-	Wed, 13 Nov 2024 22:25:15 +0000 (UTC)
-Date: Wed, 13 Nov 2024 17:25:35 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu Bhagat
- <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
- James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Florian Weimer <fweimer@redhat.com>, Andy
- Lutomirski <luto@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v3 09/19] unwind: Introduce sframe user space unwinding
-Message-ID: <20241113172535.7af07f61@gandalf.local.home>
-In-Reply-To: <20241113172118.6db57c42@gandalf.local.home>
-References: <cover.1730150953.git.jpoimboe@kernel.org>
-	<42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org>
-	<1f83be89-b816-48a3-a7ee-9b72f07b558e@linux.ibm.com>
-	<20241113155040.6a9a1bed@gandalf.local.home>
-	<20241113211535.ghnw52wkgudkjvgv@jpoimboe>
-	<20241113171326.6d1ddc83@gandalf.local.home>
-	<20241113172118.6db57c42@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731550027; c=relaxed/simple;
+	bh=vF+HQAMwPmuHmsJG7SpTncBnzDvwWyuSwhhuNX7u8XY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=DpqOBalFcH3OhJexO4X1gm0Ks/jxq9sWUCdpAJWZ/9yiaahejsuAtDk5+T+BQkqin6FEW3Toa1KoFNcXOBVqIkUb5VB8ZiQR/SMdbIADG93fbEdovgYWRsAhIGyCttqxrrTuK6jlueJT9nBF1TcE6fVe4h2Q7xscVdtRKmLjW1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Xpk5Q0gdVzQtV6;
+	Thu, 14 Nov 2024 10:05:46 +0800 (CST)
+Received: from kwepemd100024.china.huawei.com (unknown [7.221.188.41])
+	by mail.maildlp.com (Postfix) with ESMTPS id 824E51800DE;
+	Thu, 14 Nov 2024 10:07:01 +0800 (CST)
+Received: from [10.174.179.211] (10.174.179.211) by
+ kwepemd100024.china.huawei.com (7.221.188.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 14 Nov 2024 10:07:00 +0800
+Message-ID: <0a216696-9e93-49ce-9411-ee7e59b25c58@huawei.com>
+Date: Thu, 14 Nov 2024 10:06:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: "liwei (GF)" <liwei391@huawei.com>
+Subject: Re: [PATCH 5/5] tracing/hwlat: Fix deadlock in cpuhp processing
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Daniel Bristot de Oliveira
+	<bristot@redhat.com>, <linux-trace-kernel@vger.kernel.org>,
+	<xiexiuqi@huawei.com>
+References: <20240924094515.3561410-1-liwei391@huawei.com>
+ <20240924094515.3561410-6-liwei391@huawei.com>
+ <20241003161907.52eda097@gandalf.local.home>
+ <c706d18d-934a-4bd3-816c-f512fcf6b71e@huawei.com>
+ <20241112185058.5bec6fca@gandalf.local.home>
+In-Reply-To: <20241112185058.5bec6fca@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd100024.china.huawei.com (7.221.188.41)
 
-On Wed, 13 Nov 2024 17:21:18 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Steven,
 
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index 434c548f0837..64cc3c1188ca 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -842,7 +842,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  	int first_pt_load = 1;
-> >  	unsigned long error;
-> >  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
-> > -	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
-> > +	struct elf_phdr *elf_property_phdata = NULL;
-> > +	unsigned long sframe_vaddr = 0;  
+On 2024/11/13 7:50, Steven Rostedt wrote:
+>>>> Another "hung task" error was reported during the test, and i figured out
+>>>> the deadlock scenario is as follows:
+>>>>
+>>>> T1 [BP]               | T2 [AP]                     | T3 [hwlatd/1]                  | T4
+>>>> work_for_cpu_fn()     | cpuhp_thread_fun()          | kthread_fn()                   | hwlat_hotplug_workfn()
+>>>>   _cpu_down()         |   stop_cpu_kthread()        |                                |   mutex_lock(&hwlat_data.lock)
+>>>>     cpus_write_lock() |     kthread_stop(hwlatd/1)  |   mutex_lock(&hwlat_data.lock) |
+>>>>     __cpuhp_kick_ap() |       wait_for_completion() |                                |   cpus_read_lock()
 > 
-> Could not just save the pointer to the sframe phd, as it gets freed before we need it.
-                                                ^^^
-                                                phdr
-
-
-> > diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-> > index 933e47696e29..ca4ef0b72772 100644
-> > --- a/kernel/unwind/sframe.c
-> > +++ b/kernel/unwind/sframe.c
-> > @@ -73,15 +73,15 @@ static int find_fde(struct sframe_section *sec, unsigned long ip,
-> >  		    struct sframe_fde *fde)
-> >  {
-> >  	struct sframe_fde __user *first, *last, *found = NULL;
-> > -	u32 ip_off, func_off_low = 0, func_off_high = -1;
-> > +	s32 ip_off, func_off_low = INT_MIN, func_off_high = INT_MAX;  
+> So, if we can make T3 not take the mutex_lock then that should be a
+> solution, right?
 > 
-> The ip_off is a signed it. I wrote a program to dump out the sframe section
-                         ^^
-                         int
-
-
-> of files, and I had:
+>>>>
+>>>> It constitutes ABBA deadlock indirectly beAs it calls msleep_interruptible() and 'break' if signal pending below, i choosed 'break' here too.tween "cpu_hotplug_lock" and
+>>>> "hwlat_data.lock", make the mutex obtaining in kthread_fn() interruptible
+>>>> to fix this.
+>>>>
+>>>> Fixes: ba998f7d9531 ("trace/hwlat: Support hotplug operations")
+>>>> Signed-off-by: Wei Li <liwei391@huawei.com>
+>>>> ---
+>>>>  kernel/trace/trace_hwlat.c | 3 ++-
+>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+>>>> index 3bd6071441ad..4c228ccb8a38 100644
+>>>> --- a/kernel/trace/trace_hwlat.c
+>>>> +++ b/kernel/trace/trace_hwlat.c
+>>>> @@ -370,7 +370,8 @@ static int kthread_fn(void *data)
+>>>>  		get_sample();
+>>>>  		local_irq_enable();
+>>>>  
+>>>> -		mutex_lock(&hwlat_data.lock);
+>>>> +		if (mutex_lock_interruptible(&hwlat_data.lock))
+>>>> +			break;  
+>>>
+>>> So basically this requires as signal to break it out of the loop?
+>>>
+>>> But if it receives a signal for any other reason, it breaks out of the loop
+>>> too. Which is not what we want. If anything, it should be:
+>>>
+>>> 		if (mutex_lock_interruptible(&hwlat_data.lock))
+>>> 			continue;  
+>>
+>> As it calls msleep_interruptible() below and 'break' if signal pending, i
+>> choosed 'break' here too.
+>>
+>>> But I still don't really like this solution, as it will still report a
+>>> 	deadlock.
+>>>
+>>> Is it possible to switch the cpu_read_lock() to be taken before the
+>>> hwlat_data.lock?  
+>>
+>> It's a little hard to change the sequence of these two locks, we'll hold
+>> "cpu_hotplug_lock" for longer unnecessarily if we do that.
+>>
+>> But maybe we can remove the "hwlat_data.lock" in kthread_fn(), let me try
+>> another modification.
 > 
-> 	ffffed88: (1020) size:      16 off:     146 num:       2 info: 1 rep:16
-> 	ffffed98: (1030) size:     336 off:     154 num:       2 info:17 rep:16
-> 	ffffefe1: (1279) size:     113 off:       0 num:       4 info: 0 rep: 0
-> 	fffff052: (12ea) size:      54 off:      15 num:       3 info: 0 rep: 0
-> 	fffff088: (1320) size:     167 off:      26 num:       3 info: 0 rep: 0
-> 	fffff12f: (13c7) size:     167 off:      37 num:       4 info: 0 rep: 0
-> 	fffff1d6: (146e) size:     167 off:      52 num:       4 info: 0 rep: 0
-> 	fffff27d: (1515) size:      22 off:      67 num:       4 info: 0 rep: 0
-> 	fffff293: (152b) size:     141 off:      82 num:       4 info: 0 rep: 0
-> 	fffff320: (15b8) size:      81 off:      97 num:       4 info: 0 rep: 0
-> 	fffff371: (1609) size:     671 off:     112 num:       4 info: 1 rep: 0
-> 	fffff610: (18a8) size:     171 off:     131 num:       4 info: 0 rep: 0
+> Have you found something yet? Looking at the code we have:
 > 
-> The above turns was created by a loop of:
-            ^^^^^^^^^
-            items were
+> 		mutex_lock(&hwlat_data.lock);
+> 		interval = hwlat_data.sample_window - hwlat_data.sample_width;
+> 		mutex_unlock(&hwlat_data.lock);
+> 
+> Where the lock is only there to synchronize the calculation of the
+> interval. We could add a counter for when sample_window and sample_width
+> are updated, and we could simply do:
+> 
+>  again:
+> 		counter = atomic_read(&hwlat_data.counter);
+> 		smp_rmb();
+> 		if (!(counter & 1)) {
+> 			new_interval = hwlat_data.sample_window - hwlat_data.sample_width;
+> 			smp_rmb();
+> 			if (counter == atomic_read(&hwlat_data.counter))
+> 				interval = new_interval;
+> 		}
+> 
+> Then we could do something like:
+> 
+> 	atomic_inc(&hwlat_data.counter);
+> 	smp_wmb();
+> 	/* update sample_window or sample_width */
+> 	smp_wmb();
+> 	atomic_inc(&hwlat_data.counter);
+> 
+> And then the interval will only be updated if the values are not being
+> updated. Otherwise it just keeps the previous value.
+> 
 
-No idea why I typed that :-p
+Your seqlock-like solution seems to be able to solve this issue, but the difficulty is that
+the current updates of sample_window and sample_width are implemented using the framework
+of 'trace_min_max_fops'. We cannot add 'atomic_inc(&hwlat_data.counter)' into the update
+processes for sample_window and sample_width directly. If we want to remove the mutex_lock
+here, maybe we need to break the application of trace_min_max_write(). However, if we do
+that, we can add a 'hwlat_data.sample_interval' and update it at the same time as updating
+sample_window and sample_width. I didn't figure out an elegant solution yet.
 
-
-I can't blame jetlag anymore.
-
--- Steve
+Thanks,
+Wei
