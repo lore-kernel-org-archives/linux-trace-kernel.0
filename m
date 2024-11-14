@@ -1,78 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0DBECC;
-	Thu, 14 Nov 2024 04:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F02E573;
+	Thu, 14 Nov 2024 09:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731557299; cv=none; b=HIHO1GxK2uyZLmFVwJAUCWCCC8tPP3bqmm43XJL19VNoA8kYv+UoHvTAxbh7zF96tbPUHcxWnxvbaB1P5u34LIVJAll281dvS7H7cd3rNxA/A3OsSmlupUQ/fZAkSQYAF5wbbbbGuVeK1r32c6OndAwsfY4jx+mDd6Oti6zJojc=
+	t=1731575327; cv=none; b=UWLrmyCQI4Jevzcp8wwgqjmYH9UbeyG1NAtFz9nhTR8xcyqzhrPqjyVjL5XpeNxB75FweZNnotyhBez7Fz4mUrF+d7mUeeRNjEe9q+MYINPcL2N4wu+G7pXFRbg0lMocGPB4zM8+56heEH29u7qhwM+pRxq/4Rl5fUEA+c2Aa74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731557299; c=relaxed/simple;
-	bh=OvOTzO8f57FmoPKejOIMqjs+MzfgJB4W8bsZ8b/PN74=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tXGNXfuuDJQlybBQRw4JC47WaU7N09WkBhaKIR3yi84DcVIqB0eLSLwNiGBj7DtJkybGUPjVz01o2kcOr0lbnxsjFgB2DUQlKaH+jpWAurGK6zxlCjOG+JiLZM5qwLCuqQx1oyK6Vi80+DY/XUYEpVhMFw7fp7ZSjekiebu6vqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2A4C4CED0;
-	Thu, 14 Nov 2024 04:08:18 +0000 (UTC)
-Date: Wed, 13 Nov 2024 23:08:39 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] Revert: "ring-buffer: Do not have boot mapped buffers hook
- to CPU hotplug"
-Message-ID: <20241113230839.6c03640f@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731575327; c=relaxed/simple;
+	bh=rNSB/Gv3XTfSm3CiYEJhNy/ZDpquJUDPkzURBFBo1y0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPVX6shqIMf0jcycJKhcj3miG4T0+ka1zbeenGNGMr/mfRUjdAGAQPbO98CbyYEmHl2sPkeMsRvs6pp8Kal5ZDSIGZu0LkPLKv+YMwd9/OkEovGoz+lMATmNSOzk/QvI84BnyJ4uhMHrKAzohDJ9hFZod/siLK1CwLg98ZeZlUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6HWEDr1; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6HWEDr1"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5cefa22e9d5so394871a12.3;
+        Thu, 14 Nov 2024 01:08:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1731575324; x=1732180124; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Xj4J1nAwgNgBUfIb69qUsHb/4NoMVPegAyL84SVWCWs=;
+        b=l6HWEDr1UHmpK1hSBGfKIouyOvJDI7ggV8dlj7IuYuKyJHOwG1p7EJ5y8NL8fCPR08
+         POt+YHmXMC8r3mArvfx8dK/fyz8b8/607Bgz16K1D+EbaQYJhwgF376jn2pn5TEit+z2
+         2h6Nh7/orI8C3zxwm8UziePakuVSSTJ7C/PAzL2uY9NM9V002IHN5oKoHWcC4GJAouhi
+         S2GZCLm0LjCqxrj+4GTF+phZcTTgg5yEpest4BkkkZFeHvzJaOiBKartV9Bi71q8SHY3
+         CvxKyQKq8QaThipyBqpiHIPEkc4yQv/0q2dpWiX3KqW5UTZ7+i0wkt4s1IQY3gZ4mGCL
+         MJzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731575324; x=1732180124;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xj4J1nAwgNgBUfIb69qUsHb/4NoMVPegAyL84SVWCWs=;
+        b=E58fJ/pL7zi+Dk4hWTmK7792zPlXy7adxzGccKXR/thF869DHBEo3gYYmTpAfUOT2E
+         Dol2ISJh/DHnCxyDOmIMKn8CkJctNoOnGAqH+GKvKyyyHwhFqJIzreJf5stkbsoDtfHc
+         c+c3d8sDQJAk+8tuuo36+o8IRc0FQ4F66T0+okbf9KxHoTq2gxBQpSfa1A7qVbpkiyht
+         6gyGWti6hmxy1ygDL2du494x7lMSlVUGpigWQ6luBWF1C6qWObBlQo3UouRemiM8oQq4
+         +unn6MlSYzYvIzWNmUfWDFsKYfD+E8MPINqeISURx8a0y1GHYug1MXwlX8bT/HgwixL1
+         2Lkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgCzVcdHE+KA9DUwuACiI+kQHFwpawPry7pinPaRVyQfZOwPRl8FbHPHSYu5p3R5xU8FG9pr0PSyOEN1kbn00SiEU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVw0yLCka+yPlcBvYMz7CM977n8Q9zv11RVaVrNha8k68OmjI1
+	KKl6XJNE00hkp6qAL5j1jzDbJy7zY+0xde3ziLrgNjQIsBy9vz8V
+X-Google-Smtp-Source: AGHT+IFVzCc4lDijDDqQfVvtFhSov9oH3a2sfIZOWTwyiICjVAEbZCz/xR0MOjGmf0MW/pU9dABojg==
+X-Received: by 2002:a17:907:96a2:b0:a9a:422:ec7 with SMTP id a640c23a62f3a-a9eeff2542emr2011844266b.32.1731575323548;
+        Thu, 14 Nov 2024 01:08:43 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa20e001715sm39385466b.126.2024.11.14.01.08.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2024 01:08:43 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 14 Nov 2024 10:08:41 +0100
+To: =?iso-8859-1?Q?Sebasti=E3o?= Santos Boavida Amaro <sebastiao.amaro@tecnico.ulisboa.pt>
+Cc: bpf@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: uprobe overhead when specifying a pid
+Message-ID: <ZzW-GWh7Iqp-AxGA@krava>
+References: <66ba4183c94d28f7020c118029d45650@tecnico.ulisboa.pt>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <66ba4183c94d28f7020c118029d45650@tecnico.ulisboa.pt>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, Nov 13, 2024 at 11:33:01PM +0000, Sebastião Santos Boavida Amaro wrote:
+> Hi,
+> I am using:
+> libbpf-cargo = "0.24.6"
+> libbpf-rs = "0.24.6"
+> libbpf-sys = "1.4.3"
+> On kernel 6.8.0-47-generic.
+> I contacted the libbpf-rs guys, and they told me this belonged here.
+> I am attaching 252 uprobes to a system, these symbols are not regularly
+> called (90ish times over 9 minutes), however, when I specify a pid the
+> throughput drops 3 times from 12k ops/sec to 4k ops/sec. When I do not
+> specify a PID, and simply pass -1 the throughput remains the same (as it
+> should, since 90 times is not significant to affect overhead I would say).
+> It looks as if we are switching from userspace to kernel space without
+> triggering the uprobe.
+> Do not know if this is a known issue, it does not look like an intended
+> behavior.
 
-A crash happened when testing cpu hotplug with respect to the memory
-mapped ring buffers. It was assumed that the hot plug code was adding a
-per CPU buffer that was already created that caused the crash. The real
-problem was due to ref counting and was fixed by commit 2cf9733891a4
-("ring-buffer: Fix refcount setting of boot mapped buffers").
+hi,
+thanks for the report, I cc-ed some other folks and trace list
 
-When a per CPU buffer is created, it will not be created again even with
-CPU hotplug, so the fix to not use CPU hotplug was a red herring. In fact,
-it caused only the boot buffer to be created.
+I'm not aware about such slowdown, I think with pid filter in place
+there should be less work to do
 
-Revert that change as it was not the culprit of the fix it was intended to
-be.
+could you please provide more details?
+  - do you know which uprobe interface you are using
+    uprobe over perf event or uprobe_multi (likely uprobe_multi,
+    because you said above you attach 250 probes)
+  - more details on the workload, like is the threads/processes,
+    how many and I guess you trigger bpf program
+  - do you filter out single pid or more
+  - could you profile the workload with perf
 
-Fixes: 912da2c384d5 ("ring-buffer: Do not have boot mapped buffers hook to CPU hotplug")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 3ea4f7bb1837..5807116bcd0b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2337,12 +2337,9 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	if (!buffer->buffers[cpu])
- 		goto fail_free_buffers;
- 
--	/* If already mapped, do not hook to CPU hotplug */
--	if (!start) {
--		ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
--		if (ret < 0)
--			goto fail_free_buffers;
--	}
-+	ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
-+	if (ret < 0)
-+		goto fail_free_buffers;
- 
- 	mutex_init(&buffer->mutex);
- 
--- 
-2.45.2
-
+thanks,
+jirka
