@@ -1,141 +1,83 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696F2166307;
-	Fri, 15 Nov 2024 17:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989BF14A088;
+	Fri, 15 Nov 2024 18:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731691449; cv=none; b=KbG9bMmZ0ctPdjzSBJfOwZkF4htW3dVfIi1oos9zgHiXOhUf/5CZEoewVvGYwq+B8U5lQ+xuyInEFdz49CqejtzN/zHVo0n81fyD9jtiXu79hKzcFJJYvE19uqfGLh2q/pstThpf9WyLeb+0PXtfGfH1yVyLcXQzIFJ4x39fjCs=
+	t=1731694826; cv=none; b=DXHQnXZrPeOOcXTdUGAC0txw8gg4sZploO5BJxiykjJSHucmLG5kRzpsdEldtrmaqM0D1QXLVoGqPHnA3tQClFnswpGrqfAMGWpH/MtjpWXctf6+xmtk6AOvG1O9DHH6hlcTA3wI4A8GI61tDI2mFjK/9iauSXjN420YlIH/o7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731691449; c=relaxed/simple;
-	bh=lEyWvGX0JG+Yw319+gafXH1ELjZoKnONXw/B9hTbf6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NaGOdLh6HTV/hxI2GHaeQ/0rMvidvdSwV8IDUAA+fH51YmgZ0LIK7TCjfDsxOHPSMzcsp6WdMwzo3GzMtdrTg4zejFTPn6psLQWSUUUF1ihKbVbHrE+U8IeM4Qle9lZvqxO1cUx2DRJPF+gIy8j4v5qE+ACHz4h7JrWlC57mAMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=v1fzfTTl; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1731694826; c=relaxed/simple;
+	bh=QLvF9Itl9shxQblgQCJX6lFfL008SE7kFJDmbFl2xFk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mYD91xgzBYR8Zc2cxEYYu/RM36Po0iAuyTUKC0Tr5LHtWQ1ehaHsSCEMXk6mbh5nwH1T24W8H4w6TXusH4rqF9jmOUyiSO2+r6O6/qdKK0YIvOf2y47zlsGTT03J/OwtEKV/2RI5u44iC7x9UtvAuYoDuJ8YWw5I1nCS0l26j78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bH8mnw6/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="v1fzfTTl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1731691448; x=1763227448;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Bk0JymAs/OEj+UcEvmUanxee/ezdfeE24i85gdC/NwU=;
-  b=v1fzfTTlLMnu2X5WPNwFdXUd4FV7OEHW4KP4gun3bkygP8S0+6gcKbdN
-   QSD5K95IgXGpA8vvie3KAMk+oAVOQulG0xKJkitMjf2Qv8O+Ka7BoRhdu
-   gIOT2ZkR5UMhMOJwYZypYGNcxAY8A9d7nGydqluZu3GrRXKqHBHwmIUs9
-   o=;
-X-IronPort-AV: E=Sophos;i="6.12,157,1728950400"; 
-   d="scan'208";a="470536855"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 17:24:02 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:38135]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.223:2525] with esmtp (Farcaster)
- id 5ff6a4b3-184c-4e50-9e2d-e5baf28ad41c; Fri, 15 Nov 2024 17:24:01 +0000 (UTC)
-X-Farcaster-Flow-ID: 5ff6a4b3-184c-4e50-9e2d-e5baf28ad41c
-Received: from EX19D003UWB004.ant.amazon.com (10.13.138.24) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Fri, 15 Nov 2024 17:23:56 +0000
-Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
- EX19D003UWB004.ant.amazon.com (10.13.138.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Fri, 15 Nov 2024 17:23:56 +0000
-Received: from email-imr-corp-prod-pdx-all-2b-a57195ef.us-west-2.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.34 via Frontend Transport; Fri, 15 Nov 2024 17:23:56 +0000
-Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
-	by email-imr-corp-prod-pdx-all-2b-a57195ef.us-west-2.amazon.com (Postfix) with ESMTPS id AE0FAA04A5;
-	Fri, 15 Nov 2024 17:23:48 +0000 (UTC)
-Message-ID: <81d14448-29eb-4496-b876-ef6de526a840@amazon.co.uk>
-Date: Fri, 15 Nov 2024 17:23:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bH8mnw6/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028E0C4CECF;
+	Fri, 15 Nov 2024 18:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731694826;
+	bh=QLvF9Itl9shxQblgQCJX6lFfL008SE7kFJDmbFl2xFk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bH8mnw6/M5E0nJjuC15yc9XPrnq8Pf61PmV7FxetOjend/gusHFq9AyU7RG/UkHy9
+	 Xt3xottVcZbQaBxh8x0/WyEGhUtj7ACbbx3PlIO7Qj4p7sO7nEIQtN9AOkyzxNBGL4
+	 Qmntvk0T7IPneDFdOdT1rBU4Ce8FEEquUMAFlb5ABiOG2Jm1lQteci1NB5pBsyiD5T
+	 3UdvxSlzuRVaAvMeheaUJamQcjFE0N8Kze3xdXzwpk6DS4kCuiQnXqQZgYySf6sSm3
+	 +TAau+4tZpY1UrfRcYCUldvj4R9CTMqV/MiGc6QYZB55ZcXXQyyXIydRlwM5b7Dr/W
+	 fxbdjkeX76n3w==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	stable@vger.kernel.org,
+	SeongJae Park <sj@kernel.org>
+Subject: [PATCH RESEND] mm/damon: fix order of arguments in damos_before_apply tracepoint
+Date: Fri, 15 Nov 2024 10:20:23 -0800
+Message-Id: <20241115182023.43118-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
-To: David Hildenbrand <david@redhat.com>, <tabba@google.com>,
-	<quic_eberman@quicinc.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<jthoughton@google.com>, <ackerleytng@google.com>, <vannapurve@google.com>,
-	<rppt@kernel.org>
-CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
-	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
-	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
-	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
-	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
-	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<faresx@amazon.com>
-References: <20241030134912.515725-1-roypat@amazon.co.uk>
- <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
- <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
- <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
- <90c9d8c0-814e-4c86-86ef-439cb5552cb6@amazon.co.uk>
- <10e4d078-3cdb-4d1c-a1a3-80e91b247217@redhat.com>
- <02f77d32-e2a1-431b-bb67-33d36c06acd3@amazon.co.uk>
- <f4c5d0a6-a582-44e3-8949-c199cc0bfba7@redhat.com>
- <f1f34ac0-d505-4982-aad9-86a0db9f4a35@amazon.co.uk>
- <dcdce8e1-51da-42da-a892-59c6ccd9de23@redhat.com>
-From: Patrick Roy <roypat@amazon.co.uk>
-Content-Language: en-US
-Autocrypt: addr=roypat@amazon.co.uk; keydata=
- xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
- NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
- wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
- CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
- AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
- AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
- IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
- 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
- 8hlxFQM=
-In-Reply-To: <dcdce8e1-51da-42da-a892-59c6ccd9de23@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Akinobu Mita <akinobu.mita@gmail.com>
 
+Since the order of the scheme_idx and target_idx arguments in TP_ARGS is
+reversed, they are stored in the trace record in reverse.
 
-On Fri, 2024-11-15 at 17:10 +0000, David Hildenbrand wrote:
->> [...]
->>
->> I've talked to Fares internally, and it seems that generally doing
->> mm-local mappings of guest memory would work for us. We also figured out
->> what the "interrupt problem" is, namely that if we receive an interrupt
->> while executing in a context that has mm-local mappings available, those
->> mappings will continue to be available while the interrupt is being
->> handled.
-> 
-> Isn't that likely also the case with secretmem where we removed the
-> directmap, but have an effective per-mm mapping in the (user-space
-> portion) of the page table?
+Fixes: c603c630b509 ("mm/damon/core: add a tracepoint for damos apply target regions")
+Cc: <stable@vger.kernel.org>
+Cc: SeongJae Park <sj@kernel.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+Link: https://patch.msgid.link/20241112154828.40307-1-akinobu.mita@gmail.com
+---
+ include/trace/events/damon.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Mh, that's an excellent point, I never thought of that. But with
-secretmem, the memory would still be protected by SMAP (admittedly, I
-have no idea how much this is worth in the face of all these speculative
-issues), right?
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index 23200aabccac..da4bd9fd1162 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -15,7 +15,7 @@ TRACE_EVENT_CONDITION(damos_before_apply,
+ 		unsigned int target_idx, struct damon_region *r,
+ 		unsigned int nr_regions, bool do_trace),
+ 
+-	TP_ARGS(context_idx, target_idx, scheme_idx, r, nr_regions, do_trace),
++	TP_ARGS(context_idx, scheme_idx, target_idx, r, nr_regions, do_trace),
+ 
+ 	TP_CONDITION(do_trace),
+ 
+-- 
+2.39.5
 
->> I'm talking to my security folks to see how much of a concern
->> this is for the speculation hardening we're trying to achieve. Will keep
->> you in the loop there :)
-> 
-> Thanks!
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-
-Best,
-Patrick
