@@ -1,37 +1,56 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9E41D63CC;
-	Fri, 15 Nov 2024 15:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6552E1D54EE;
+	Fri, 15 Nov 2024 16:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731684792; cv=none; b=KI685f+a0ll2xGrRir8oDC5EAeC/Djh9azQANVGgJanZSmxNcxex+mJfQx5xCcnB5ca1nfUckpbq97Aj2WCOTO9WqMDyWgcyIn7MTQi8Ij/kBzaRln8egfb87Z1PTWUJqq2HcZASHwsGjNjnUE9O5biZtzy93FL+VgA900k99z4=
+	t=1731689976; cv=none; b=c3f0dQSiDuYCLIRhIEpI2UQaMUr2w5ruYy/GF5Ixx3pyg2WePPzB1AFGpeKWj0QnXL0iT7aVfkmUXj9GeYfzDG4KRhuhmAfxZ7b1GkrREdYlEfsRMU1CDJCGWu1AT14MyAfury46J0Vej2MfSyNPF0oBSl99yK4lcaYITwzxQUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731684792; c=relaxed/simple;
-	bh=jJdQO+/RBgdX9OymC9mo4MCwdFL0za3L3NE4QMlzS+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fUo9JjXIMBUCRhzVEgoDSWUsRM4Ps2gBNDba8+9Gf+91eirrszf6C5nPG1UsbjUCVuDQGsHwENC8GejasatuJjbJ3n1MY2BIvVqqgw3qOMm53jxO2j2alH3lPWMCbcWmAYO/t+06Lt9TlEmQtYooT0tEbg+te1eP0lir3tQW8s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=Z1K8KCuB; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1731689976; c=relaxed/simple;
+	bh=rCAZGrHxyMi8ZWuiy4vrVoFB/o2px9eAtNm57vvTsD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SsDVMS2flgMqeIz2wCnZ98Otmpkiqlk5pfhOtbdGTSda9DgmkTH2UkU6L6u5bW/jLq6EJwM6XYFj4d2ly7fheOcHwtNlO2v7RlusuH3y2WTFXmekCCh5ffG1ANCZgyBNMRI5xYUozWp2YYaJr7yM44OC4ZARA+tFfKi4FstE22w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=laRjnFn2; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="Z1K8KCuB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C31D6E0005;
-	Fri, 15 Nov 2024 15:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1731684788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OrA8wkbxY2YPLcSn7WT4J5s54iW03KbWLpGqQs4TrZY=;
-	b=Z1K8KCuBUG2ml/9k2jKo1QgVBkl+qYZLeMtMiv1Hnx7OCBXD/eq4rRIuOyyFw7gYYTASl6
-	nacZnD+bg6MSrkUQ7U+OoRtsgLlwZ1dJ3cqom1Lt2OstTa0xd7Gq6UsAwj+UuUhQlXLRjX
-	MGNnF8DUS9tHK8HGu4iNuYOVUBbzg+FVsB8Tf7Mqg+HMkzqie4aBJgUttE6xx0B1FXX0sU
-	zM1gznyFLmhRFtS963SgAMbOB0gxTLDiYb9bp1bl7jcmBudaFEXcPHCCB6IS8oNNpCYvVN
-	As8485jNqCfmx5z3TwTqmQFzH8EPb9ItISiVqsxfZ8152YCX7Ywul0i5JfjbyA==
-Message-ID: <cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
-Date: Fri, 15 Nov 2024 16:33:06 +0100
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="laRjnFn2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1731689975; x=1763225975;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=r+ZYPqHoQHDHwa2VIgKNI6m+YZlhrBPHGnCuiE8lbJI=;
+  b=laRjnFn27m05OXCz4NDYoKnyJotVUhNXpiqr37/6cIAgT7qM9EXC1TSv
+   YSeSukdPhRyZZADPPTv+vDu8nWQZI9Lav4tQYJdQmZCbdgN2J3X3eMCT+
+   LncSUJOoIm2prNnxDsLQgVpj8DkNV529UDntfc8qj6f07T+aWkTXvMyHb
+   o=;
+X-IronPort-AV: E=Sophos;i="6.12,157,1728950400"; 
+   d="scan'208";a="41628339"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.124.125.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2024 16:59:29 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:9599]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.61.54:2525] with esmtp (Farcaster)
+ id 2d14af0a-2929-4c9e-8d1e-34cbf239d5b8; Fri, 15 Nov 2024 16:59:28 +0000 (UTC)
+X-Farcaster-Flow-ID: 2d14af0a-2929-4c9e-8d1e-34cbf239d5b8
+Received: from EX19D003UWB004.ant.amazon.com (10.13.138.24) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Fri, 15 Nov 2024 16:59:20 +0000
+Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
+ EX19D003UWB004.ant.amazon.com (10.13.138.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Fri, 15 Nov 2024 16:59:20 +0000
+Received: from email-imr-corp-prod-iad-all-1b-85daddd1.us-east-1.amazon.com
+ (10.25.36.214) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1258.34 via Frontend Transport; Fri, 15 Nov 2024 16:59:19 +0000
+Received: from [127.0.0.1] (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
+	by email-imr-corp-prod-iad-all-1b-85daddd1.us-east-1.amazon.com (Postfix) with ESMTPS id 3F35B404E4;
+	Fri, 15 Nov 2024 16:59:14 +0000 (UTC)
+Message-ID: <f1f34ac0-d505-4982-aad9-86a0db9f4a35@amazon.co.uk>
+Date: Fri, 15 Nov 2024 16:59:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -39,64 +58,97 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
- <3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
- <20241115102554.29232d34@gandalf.local.home>
+Subject: Re: [RFC PATCH v3 0/6] Direct Map Removal for guest_memfd
+To: David Hildenbrand <david@redhat.com>, <tabba@google.com>,
+	<quic_eberman@quicinc.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<jthoughton@google.com>, <ackerleytng@google.com>, <vannapurve@google.com>,
+	<rppt@kernel.org>
+CC: <graf@amazon.com>, <jgowans@amazon.com>, <derekmn@amazon.com>,
+	<kalyazin@amazon.com>, <xmarcalx@amazon.com>, <linux-mm@kvack.org>,
+	<corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+	<chenhuacai@kernel.org>, <kernel@xen0n.name>, <paul.walmsley@sifive.com>,
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <hca@linux.ibm.com>,
+	<gor@linux.ibm.com>, <agordeev@linux.ibm.com>, <borntraeger@linux.ibm.com>,
+	<svens@linux.ibm.com>, <gerald.schaefer@linux.ibm.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <luto@kernel.org>, <peterz@infradead.org>,
+	<rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
+	<linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<faresx@amazon.com>
+References: <20241030134912.515725-1-roypat@amazon.co.uk>
+ <4aa0ccf4-ebbe-4244-bc85-8bc8dcd14e74@redhat.com>
+ <27646c08-f724-49f7-9f45-d03bad500219@amazon.co.uk>
+ <d1a69eb7-85d5-4ffa-88e2-f4841713c1d7@redhat.com>
+ <90c9d8c0-814e-4c86-86ef-439cb5552cb6@amazon.co.uk>
+ <10e4d078-3cdb-4d1c-a1a3-80e91b247217@redhat.com>
+ <02f77d32-e2a1-431b-bb67-33d36c06acd3@amazon.co.uk>
+ <f4c5d0a6-a582-44e3-8949-c199cc0bfba7@redhat.com>
+From: Patrick Roy <roypat@amazon.co.uk>
 Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20241115102554.29232d34@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=roypat@amazon.co.uk; keydata=
+ xjMEY0UgYhYJKwYBBAHaRw8BAQdA7lj+ADr5b96qBcdINFVJSOg8RGtKthL5x77F2ABMh4PN
+ NVBhdHJpY2sgUm95IChHaXRodWIga2V5IGFtYXpvbikgPHJveXBhdEBhbWF6b24uY28udWs+
+ wpMEExYKADsWIQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbAwULCQgHAgIiAgYVCgkI
+ CwIEFgIDAQIeBwIXgAAKCRBVg4tqeAbEAmQKAQC1jMl/KT9pQHEdALF7SA1iJ9tpA5ppl1J9
+ AOIP7Nr9SwD/fvIWkq0QDnq69eK7HqW14CA7AToCF6NBqZ8r7ksi+QLOOARjRSBiEgorBgEE
+ AZdVAQUBAQdAqoMhGmiXJ3DMGeXrlaDA+v/aF/ah7ARbFV4ukHyz+CkDAQgHwngEGBYKACAW
+ IQQ5DAcjaM+IvmZPLohVg4tqeAbEAgUCY0UgYgIbDAAKCRBVg4tqeAbEAtjHAQDkh5jZRIsZ
+ 7JMNkPMSCd5PuSy0/Gdx8LGgsxxPMZwePgEAn5Tnh4fVbf00esnoK588bYQgJBioXtuXhtom
+ 8hlxFQM=
+In-Reply-To: <f4c5d0a6-a582-44e3-8949-c199cc0bfba7@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Hi Steve,
 
-On 15/11/2024 16:25, Steven Rostedt wrote:
-> On Fri, 15 Nov 2024 09:26:07 +0100
-> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+
+On Tue, 2024-11-12 at 14:52 +0000, David Hildenbrand wrote:
+> On 12.11.24 15:40, Patrick Roy wrote:
+>> I remember talking to someone at some point about whether we could reuse
+>> the proc-local stuff for guest memory, but I cannot remember the outcome
+>> of that discussion... (or maybe I just wanted to have a discussion about
+>> it, but forgot to follow up on that thought?).  I guess we wouldn't use
+>> proc-local _allocations_, but rather just set up proc-local mappings of
+>> the gmem allocations that have been removed from the direct map.
 > 
->> Nevertheless it sounds like a really high latency for wake_up().
+> Yes. And likely only for memory we really access / try access, if possible.
+
+Well, if we start on-demand mm-local mapping the things we want to
+access, we're back in TLB flush hell, no? And we can't know
+ahead-of-time what needs to be mapped, so everything would need to be
+mapped (unless we do something like mm-local mapping a page on first
+access, and then just never unmapping it again, under the assumption
+that establishing the mapping won't be expensive)
+
 >>
->> I have a custom driver which basically gets an IRQ, and calls wake_up on
->> a read() call. This wake_up() on a high cpu usage can be more than 1ms !
->> Even with a fifo/99 priority for my kernel thread !
->>
->> I don't know if it rings any bell ?
->> I can obviously do more tests if it can help getting down to the issue :-).
+>> I'm wondering, where exactly would be the differences to Sean's idea
+>> about messing with the CR3 register inside KVM to temporarily install
+>> page tables that contain all the gmem stuff, conceptually? Wouldn't we
+>> run into the same interrupt problems that Sean foresaw for the CR3
+>> stuff? (which, admittedly, I still don't quite follow what these are :(
+>> ).
 > 
-> Try running timerlat.
+> I'd need some more details on that. If anything would rely on the direct
+> mapping (from IRQ context?) than ... we obviously cannot remove the
+> direct mapping :)
 
-Thanks !
-Here is what I get:
-# echo timerlat > current_tracer
-# echo 1 > events/osnoise/enable
-# echo 25 > osnoise/stop_tracing_total_us
-# tail -10 trace
-             bash-224     [000] d.h..   153.268917: #77645 context 
-irq timer_latency     45056 ns
-             bash-224     [000] dnh..   153.268987: irq_noise: timer:206 
-start 153.268879083 duration 93957 ns
-             bash-224     [000] d....   153.269056: thread_noise: 
-bash:224 start 153.268905324 duration 71045 ns
-       timerlat/0-271     [000] .....   153.269103: #77645 context 
-thread timer_latency    230656 ns
-             bash-224     [000] d.h..   153.269735: irq_noise: timer:206 
-start 153.269613847 duration 103558 ns
-             bash-224     [000] d.h..   153.269911: #77646 context 
-irq timer_latency     40640 ns
-             bash-224     [000] dnh..   153.269982: irq_noise: timer:206 
-start 153.269875367 duration 93190 ns
-             bash-224     [000] d....   153.270053: thread_noise: 
-bash:224 start 153.269900969 duration 72709 ns
-       timerlat/0-271     [000] .....   153.270100: #77646 context 
-thread timer_latency    227008 ns
-       timerlat/0-271     [000] .....   153.270155: timerlat_main: stop 
-tracing hit on cpu 0
+I've talked to Fares internally, and it seems that generally doing
+mm-local mappings of guest memory would work for us. We also figured out
+what the "interrupt problem" is, namely that if we receive an interrupt
+while executing in a context that has mm-local mappings available, those
+mappings will continue to be available while the interrupt is being
+handled. I'm talking to my security folks to see how much of a concern
+this is for the speculation hardening we're trying to achieve. Will keep
+you in the loop there :)
 
-It looks awful, right ?
-JM
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+> 
+
+Best, 
+Patrick
