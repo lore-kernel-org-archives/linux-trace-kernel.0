@@ -1,31 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A251ADFED;
-	Mon, 18 Nov 2024 17:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E9E1DFDA5;
+	Mon, 18 Nov 2024 18:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731949573; cv=none; b=eI4clUU/5qIQZtRx0XSXYdguX85q0tQimTMuD8XrcRyCcSHvW2vwpQEawSUeYehS6Tbx74B12D1ILoSgBXHqv7jziaULO00hV8y4rWjgYgfq9q7xzxsRZ6u0svEAmfM3C1zabKuC2uavW8sBcRQIiFG9EObVZgvocnm2nerG6e8=
+	t=1731954279; cv=none; b=gQfUq8IVWK2EbRx91uyRHDMpB3vq867GnQgodRsC/jdO/PrV89zIR2wMPzkxL5Sco8NJm7ObA9jOv33+xl31Qo3qw7rNZKICHihHaroVLcSxGd/zn8RVygW4giBP2ItjCVGqRxfwxPyUlw4FyNBtfxZAuQV6BiEQbfI5IbPgLr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731949573; c=relaxed/simple;
-	bh=YdB9bqEFMkrLTE3NaILf0rD6dAw1Yx1a7PE8Zen1qB8=;
+	s=arc-20240116; t=1731954279; c=relaxed/simple;
+	bh=QTNu1OGAPgNOZxJIMvW3IuS7XmGuX4ZDJPj5EOOKtxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YZn8wwX1ZeLHh1qeJNoaD11wWDAjfyNkiURaESiQ1k1Wyyqk1wDIu7nANdMb6nG9P0NGs73Qa/9cNmfmHaVh6elBqOe4+Z5bTl4hEjeeO9bzfQcgHso6NOgaDbWM12bOHcB/3Y7pNDDuadV83p97BJjn7hXckmzqzTa0kjMy5Hc=
+	 MIME-Version:Content-Type; b=TFmFNszOSjbsxDOFsE/Zc6FhpTeXtyaJk0uTJdlnoM4mnBW4LQ7ZTYaZgL1ThGYTHZcyfcW9mJd0ohmWAQWHk3Vwe0223YODAjO4hrZGbE9nS3YIWiKETr1LJIsUs9NWP2K17XHd0t4iyhsPuUBifz6VdQd9642wl/DlUubWT5I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C9BDC4CECC;
-	Mon, 18 Nov 2024 17:06:11 +0000 (UTC)
-Date: Mon, 18 Nov 2024 12:06:42 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4F3C4CECC;
+	Mon, 18 Nov 2024 18:24:30 +0000 (UTC)
+Date: Mon, 18 Nov 2024 13:25:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: jeff.xie@linux.dev
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- xiehuan09@gmail.com, dolinux.peng@gmail.com, chensong_2000@189.cn
-Subject: Re: [PATCH v5] ftrace: Get the true parent ip for function tracer
-Message-ID: <20241118120642.211fb11f@gandalf.local.home>
-In-Reply-To: <20241118114320.3ce1b022@gandalf.local.home>
-References: <20241008033159.22459-1-jeff.xie@linux.dev>
-	<991260353fbe141ffef8db7a08ed8fb2473e4ca0@linux.dev>
-	<20241118114320.3ce1b022@gandalf.local.home>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski
+ <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Brian Cain
+ <bcain@quicinc.com>, Catalin Marinas <catalin.marinas@arm.com>, Christoph
+ Hellwig <hch@infradead.org>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dinh Nguyen <dinguyen@kernel.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Guo Ren <guoren@kernel.org>, Helge Deller
+ <deller@gmx.de>, Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar
+ <mingo@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kent Overstreet
+ <kent.overstreet@linux.dev>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Matt Turner <mattst88@gmail.com>, Max Filippov
+ <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek
+ <monstr@monstr.eu>, Oleg Nesterov <oleg@redhat.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>, Richard
+ Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, Song Liu
+ <song@kernel.org>, Stafford Horne <shorne@gmail.com>, Suren Baghdasaryan
+ <surenb@google.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v7 0/8] x86/module: use large ROX pages for text
+ allocations
+Message-ID: <20241118132501.4eddb46c@gandalf.local.home>
+In-Reply-To: <20241023162711.2579610-1-rppt@kernel.org>
+References: <20241023162711.2579610-1-rppt@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,31 +66,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 18 Nov 2024 11:43:20 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 23 Oct 2024 19:27:03 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-> On Mon, 18 Nov 2024 16:15:02 +0000
-> jeff.xie@linux.dev wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> > October 8, 2024 at 11:31 AM, "Jeff Xie" <jeff.xie@linux.dev> wrote:
-> > 
-> > I'd like to know if this patch can be merged into 6.13?  
+> Hi,
 > 
-> Bah' I missed seeing this update and it was buried in patchwork on the 3rd page :-p
-> 
-> I wish you pinged me last week.
-> 
-> I just sent my pull request for the ftrace topic branch, but since the
-> merge window just opened, I can start testing this now and then push it to
-> next. Wait a few days and then send another pull request to Linus by the
-> end of the week, if nothing breaks.
+> This is an updated version of execmem ROX caches.
 > 
 
-This patch conflicts with a clean up patch I incorrectly put in my trace
-topic branch (where it should have gone in the ftrace topic branch). I
-haven't sent a pull request for the trace topic branch, so I'll just apply
-this patch on top of that (fix the conflict), test it, push it to
-linux-next, and then send it later this week.
+FYI, I booted a kernel before and after applying these patches with my
+change:
+
+  https://lore.kernel.org/20241017113105.1edfa943@gandalf.local.home
+
+Before these patches:
+
+ # cat /sys/kernel/tracing/dyn_ftrace_total_info
+57695 pages:231 groups: 9
+ftrace boot update time = 14733459 (ns)
+ftrace module total update time = 449016 (ns)
+
+After:
+
+ # cat /sys/kernel/tracing/dyn_ftrace_total_info
+57708 pages:231 groups: 9
+ftrace boot update time = 47195374 (ns)
+ftrace module total update time = 592080 (ns)
+
+Which caused boot time to slowdown by over 30ms. That may not seem like
+much, but we are very concerned about boot time and are fighting every ms
+we can get.
 
 -- Steve
-
