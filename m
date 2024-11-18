@@ -1,229 +1,337 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84280176ADE;
-	Mon, 18 Nov 2024 12:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756CB19D8A4
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Nov 2024 16:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731933685; cv=none; b=ATKSafOHG6nWZH3U9wERJlJ9AZMQ8jqHGn91zyKac+Yhis+5aYGAa6OTW45m8Fx1r0tys6+4Qfj2fR7gCMpngAXTHj5ba6nO5WA4JiYR7o1mWYOCqLxnsT90ibzUqvpHUFL5QPyP2OHVFHAmYLgG17ywiMhMTzbB4yBkF1SdFuU=
+	t=1731946518; cv=none; b=niGQNrUzG+e8/vym3OSnl1w1iUaCcmUzHtpOh8bAiCFFtMNhmbCE1PsfvV3Qjx+NA6bVbnb56MsYqtj03e4I4twKEAxLQHc/TKmGYhXpmMIZIwj3WLZCWguh9vlhIcgfzr8K3dDzdNbTpREWaZk5P+oG/JKwzz7ugBF6xQ+nnDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731933685; c=relaxed/simple;
-	bh=Gvz8uazVE8B1pvZ+y+usnmLv8rqzH5i23ETEexpJWsI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RnJpYNSab4MGxBWLkB16eJ7gyToKN2UhADDsLl3oy+pACoHEeDOrBmqYBiVMt/8OZg/uOn5/iSfcZJBwEtpcjjTj+hcK4B93D1ogQ0Zer20dMIDi3pgEhS7kvIy0L/KQogrk4ipMnCg43MRBi0NnRKUeZDaX/8N0sy5zbVlvwDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=QBMliTE2; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1731946518; c=relaxed/simple;
+	bh=PKVUoUUaO8R1rCwR7AWixHIRWM/rIktvLTj7G2SXVFM=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=BieXFfBCK4m0E7FCFebqKlD/PpeSAeQbe6P4+oGE28B0DeIZWPUs4InCzZNZTX11K8mYsKPbH8rV6wKA1pgWnstBzI1mEBgnKjM/+G51Amplv8PmMKdZnrU2UdfKWYfi0TYzAonm6a8UD8QDP2hctDbTeTloZhrhDw/SQrI07qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kxJbC3Xs; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QBMliTE2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1731933684; x=1763469684;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OnUiGqwydGwkm0msPhftvhu6OlRE3sxag6FK0PEhEvs=;
-  b=QBMliTE2TDw9KznxDNfzyuh8WEGoYIqxe0LZYUvwI55gZ9y98KlPZpNR
-   SuXMIL0ycEpOTMYoUEOIMn0pvTdoZAHH/1XO3lm/LJ3O/P98Z0ymOk48h
-   W9P3UWPCjSJDlV/DQYty07M3SBL7VyUYoRf60DcPsS2cpp+SS6cztQqjJ
-   U=;
-X-IronPort-AV: E=Sophos;i="6.12,164,1728950400"; 
-   d="scan'208";a="776563783"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2024 12:41:23 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:50740]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.2:2525] with esmtp (Farcaster)
- id 88669b73-3dba-495e-891e-bea667cdf808; Mon, 18 Nov 2024 12:41:22 +0000 (UTC)
-X-Farcaster-Flow-ID: 88669b73-3dba-495e-891e-bea667cdf808
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 18 Nov 2024 12:41:15 +0000
-Received: from EX19MTAUEB002.ant.amazon.com (10.252.135.47) by
- EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Mon, 18 Nov 2024 12:41:14 +0000
-Received: from email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com
- (10.124.125.2) by mail-relay.amazon.com (10.252.135.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.34 via Frontend Transport; Mon, 18 Nov 2024 12:41:14 +0000
-Received: from dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com (dev-dsk-kalyazin-1a-a12e27e2.eu-west-1.amazon.com [172.19.103.116])
-	by email-imr-corp-prod-iad-all-1b-a03c1db8.us-east-1.amazon.com (Postfix) with ESMTPS id 01B18815FE;
-	Mon, 18 Nov 2024 12:41:11 +0000 (UTC)
-From: Nikita Kalyazin <kalyazin@amazon.com>
-To: <pbonzini@redhat.com>, <seanjc@google.com>, <corbet@lwn.net>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <hpa@zytor.com>, <rostedt@goodmis.org>,
-	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
-	<kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
-CC: <jthoughton@google.com>, <david@redhat.com>, <peterx@redhat.com>,
-	<oleg@redhat.com>, <vkuznets@redhat.com>, <gshan@redhat.com>,
-	<graf@amazon.de>, <jgowans@amazon.com>, <roypat@amazon.co.uk>,
-	<derekmn@amazon.com>, <nsaenz@amazon.es>, <xmarcalx@amazon.com>,
-	<kalyazin@amazon.com>
-Subject: [RFC PATCH 6/6] KVM: x86: async_pf_user: hook to fault handling and add ioctl
-Date: Mon, 18 Nov 2024 12:39:48 +0000
-Message-ID: <20241118123948.4796-7-kalyazin@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20241118123948.4796-1-kalyazin@amazon.com>
-References: <20241118123948.4796-1-kalyazin@amazon.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kxJbC3Xs"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1731946510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NkiG9y2ehFnJbFL3/n23U9ZBpM4DCYOB9PkT+Tb9pS0=;
+	b=kxJbC3Xs6EhETaX6UCb/ofFUsRJlE3xksNe1gr2/PggMojh1IO3BrLqrbJISwSvpRB/h+u
+	xef5YjyRa8tQvdHZHcYExmig4ujzK4nTuBNmvYSNLg67tF32Afe9aLd3TpdGPh9a5fWeJr
+	T2eLd27ABN/K/p1LOaNhrvH8op5w1x0=
+Date: Mon, 18 Nov 2024 16:15:02 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: jeff.xie@linux.dev
+Message-ID: <991260353fbe141ffef8db7a08ed8fb2473e4ca0@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v5] ftrace: Get the true parent ip for function tracer
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, xiehuan09@gmail.com,
+ dolinux.peng@gmail.com, chensong_2000@189.cn
+In-Reply-To: <20241008033159.22459-1-jeff.xie@linux.dev>
+References: <20241008033159.22459-1-jeff.xie@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-This patch adds interception in the __kvm_faultin_pfn for handling
-faults that are causing exit to userspace asynchronously.  If the kernel
-expects for the userspace to handle the fault asynchronously (ie it can
-resume the vCPU while the fault is being processed), it sets the
-KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER flag and supplies the async PF token
-in the struct memory_fault in the VM exit info.
-The patch also adds the KVM_ASYNC_PF_USER_READY ioctl that the userspace
-should use to notify the kernel that the fault has been processed by
-using the token corresponding to the fault.
+October 8, 2024 at 11:31 AM, "Jeff Xie" <jeff.xie@linux.dev> wrote:
 
-Signed-off-by: Nikita Kalyazin <kalyazin@amazon.com>
----
- arch/x86/kvm/mmu/mmu.c   | 45 ++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/x86.c       | 16 +++++++++++++-
- arch/x86/kvm/x86.h       |  2 ++
- include/uapi/linux/kvm.h |  4 +++-
- 4 files changed, 65 insertions(+), 2 deletions(-)
+I'd like to know if this patch can be merged into 6.13?
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index adf0161af894..a2b024ccbbe1 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4282,6 +4282,22 @@ static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu,
- 				  kvm_vcpu_gfn_to_hva(vcpu, fault->gfn), &arch);
- }
- 
-+static bool kvm_arch_setup_async_pf_user(struct kvm_vcpu *vcpu,
-+					struct kvm_page_fault *fault, u32 *token)
-+{
-+        struct kvm_arch_async_pf arch;
-+
-+        arch.token = alloc_apf_token(vcpu);
-+        arch.gfn = fault->gfn;
-+        arch.error_code = fault->error_code;
-+        arch.direct_map = vcpu->arch.mmu->root_role.direct;
-+        arch.cr3 = kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu);
-+
-+        *token = arch.token;
-+
-+        return kvm_setup_async_pf_user(vcpu, 0, fault->addr, &arch);
-+}
-+
- void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
- {
- 	int r;
-@@ -4396,6 +4412,35 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- {
- 	bool async;
- 
-+	/* Pre-check for userfault and bail out early. */
-+	if (gfn_has_userfault(fault->slot->kvm, fault->gfn)) {
-+		bool report_async = false;
-+		u32 token = 0;
-+
-+		if (vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
-+			!fault->prefetch && kvm_can_do_async_pf(vcpu)) {
-+			trace_kvm_try_async_get_page(fault->addr, fault->gfn, 1);
-+			if (kvm_find_async_pf_gfn(vcpu, fault->gfn)) {
-+				trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn, 1);
-+				kvm_make_request(KVM_REQ_APF_HALT, vcpu);
-+				return RET_PF_RETRY;
-+			} else if (kvm_can_deliver_async_pf(vcpu) &&
-+				kvm_arch_setup_async_pf_user(vcpu, fault, &token)) {
-+				report_async = true;
-+			}
-+		}
-+
-+		fault->pfn = KVM_PFN_ERR_USERFAULT;
-+		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-+
-+		if (report_async) {
-+			vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER;
-+			vcpu->run->memory_fault.async_pf_user_token = token;
-+		}
-+
-+		return -EFAULT;
-+	}
-+
- 	if (fault->is_private)
- 		return kvm_faultin_pfn_private(vcpu, fault);
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 2b8cd3af326b..30b22904859f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -13372,7 +13372,7 @@ static inline bool apf_pageready_slot_free(struct kvm_vcpu *vcpu)
- 	return !val;
- }
- 
--static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
-+bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
- {
- 
- 	if (!kvm_pv_async_pf_enabled(vcpu))
-@@ -13697,6 +13697,20 @@ void kvm_arch_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end)
- long kvm_arch_vcpu_async_ioctl(struct file *filp,
- 			       unsigned int ioctl, unsigned long arg)
- {
-+	void __user *argp = (void __user *)arg;
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+
-+#ifdef CONFIG_KVM_ASYNC_PF_USER
-+	if (ioctl == KVM_ASYNC_PF_USER_READY) {
-+		struct kvm_async_pf_user_ready apf_ready;
-+
-+		if (copy_from_user(&apf_ready, argp, sizeof(apf_ready)))
-+			return -EFAULT;
-+
-+		return kvm_async_pf_user_ready(vcpu, &apf_ready);
-+	}
-+#endif
-+
- 	return -ENOIOCTLCMD;
- }
- 
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index d80a4c6b5a38..66ece51ee94b 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -325,6 +325,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 			    int emulation_type, void *insn, int insn_len);
- fastpath_t handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vcpu);
- 
-+bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu);
-+
- extern u64 host_xcr0;
- extern u64 host_xss;
- extern u64 host_arch_capabilities;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index ef3840a1c5e9..8aa5ce347bdf 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -430,12 +430,14 @@ struct kvm_run {
- 		struct {
- #define KVM_MEMORY_EXIT_FLAG_PRIVATE	(1ULL << 3)
- #define KVM_MEMORY_EXIT_FLAG_USERFAULT	(1ULL << 4)
-+#define KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER (1ULL << 5)
- 			__u64 flags;
- 			__u64 gpa;
- 			__u64 size;
-+			__u32 async_pf_user_token;
- 		} memory_fault;
- 		/* Fix the size of the union. */
--		char padding[256];
-+		char padding[252];
- 	};
- 
- 	/* 2048 is the size of the char array used to bound/pad the size
--- 
-2.40.1
-
+>=20
+>=20When using both function tracer and function graph simultaneously,
+>=20
+>=20it is found that function tracer sometimes captures a fake parent ip
+>=20
+>=20(return_to_handler) instead of the true parent ip.
+>=20
+>=20This issue is easy to reproduce. Below are my reproduction steps:
+>=20
+>=20jeff-labs:~/bin # ./trace-net.sh
+>=20
+>=20jeff-labs:~/bin # cat /sys/kernel/debug/tracing/instances/foo/trace |=
+ grep return_to_handler
+>=20
+>=20 trace-net.sh-405 [001] ...2. 31.859501: avc_has_perm+0x4/0x190 <-ret=
+urn_to_handler+0x0/0x40
+>=20
+>=20 trace-net.sh-405 [001] ...2. 31.859503: simple_setattr+0x4/0x70 <-re=
+turn_to_handler+0x0/0x40
+>=20
+>=20 trace-net.sh-405 [001] ...2. 31.859503: truncate_pagecache+0x4/0x60 =
+<-return_to_handler+0x0/0x40
+>=20
+>=20 trace-net.sh-405 [001] ...2. 31.859505: unmap_mapping_range+0x4/0x14=
+0 <-return_to_handler+0x0/0x40
+>=20
+>=20 trace-net.sh-405 [001] ...3. 31.859508: _raw_spin_unlock+0x4/0x30 <-=
+return_to_handler+0x0/0x40
+>=20
+>=20 [...]
+>=20
+>=20The following is my simple trace script:
+>=20
+>=20<snip>
+>=20
+>=20jeff-labs:~/bin # cat ./trace-net.sh
+>=20
+>=20TRACE_PATH=3D"/sys/kernel/debug/tracing"
+>=20
+>=20set_events() {
+>=20
+>=20 echo 1 > $1/events/net/enable
+>=20
+>=20 echo 1 > $1/events/tcp/enable
+>=20
+>=20 echo 1 > $1/events/sock/enable
+>=20
+>=20 echo 1 > $1/events/napi/enable
+>=20
+>=20 echo 1 > $1/events/fib/enable
+>=20
+>=20 echo 1 > $1/events/neigh/enable
+>=20
+>=20}
+>=20
+>=20set_events ${TRACE_PATH}
+>=20
+>=20echo 1 > ${TRACE_PATH}/options/sym-offset
+>=20
+>=20echo 1 > ${TRACE_PATH}/options/funcgraph-tail
+>=20
+>=20echo 1 > ${TRACE_PATH}/options/funcgraph-proc
+>=20
+>=20echo 1 > ${TRACE_PATH}/options/funcgraph-abstime
+>=20
+>=20echo 'tcp_orphan*' > ${TRACE_PATH}/set_ftrace_notrace
+>=20
+>=20echo function_graph > ${TRACE_PATH}/current_tracer
+>=20
+>=20INSTANCE_FOO=3D${TRACE_PATH}/instances/foo
+>=20
+>=20if [ ! -e $INSTANCE_FOO ]; then
+>=20
+>=20 mkdir ${INSTANCE_FOO}
+>=20
+>=20fi
+>=20
+>=20set_events ${INSTANCE_FOO}
+>=20
+>=20echo 1 > ${INSTANCE_FOO}/options/sym-offset
+>=20
+>=20echo 'tcp_orphan*' > ${INSTANCE_FOO}/set_ftrace_notrace
+>=20
+>=20echo function > ${INSTANCE_FOO}/current_tracer
+>=20
+>=20echo 1 > ${TRACE_PATH}/tracing_on
+>=20
+>=20echo 1 > ${INSTANCE_FOO}/tracing_on
+>=20
+>=20echo > ${TRACE_PATH}/trace
+>=20
+>=20echo > ${INSTANCE_FOO}/trace
+>=20
+>=20</snip>
+>=20
+>=20Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+>=20Signed-off-by: Jeff Xie <jeff.xie@linux.dev>
+>=20
+>=20---
+>=20
+>=20v5:
+>=20
+>=20 https://lore.kernel.org/linux-trace-kernel/5bc5b9b07d997e299b0480058=
+26bc6d592265c67@linux.dev/T/#me683cf5ac3858711230e54e5d5924a82e85917e6
+>=20
+>=20- Using fregs helper function to get the stack pointer=20
+>=20
+>=20=20
+>=20
+> v4:
+>=20
+>=20 https://lore.kernel.org/linux-trace-kernel/20241005101320.766c1100@r=
+orschach.local.home/
+>=20
+>=20- fixed the crash when accessing the "current" if the arch has not im=
+plemented noinstr
+>=20
+>=20 thanks steve for the testing and the detailed explanation
+>=20
+>=20v3:
+>=20
+>=20 https://lore.kernel.org/linux-trace-kernel/20240910001326.87f27e6b31=
+2f1d956cf352a2@kernel.org/
+>=20
+>=20- fixed build error when CONFIG_FUNCTION_GRAPH_TRACER=3Dn suggested b=
+y Masami
+>=20
+>=20v2:
+>=20
+>=20 https://lore.kernel.org/linux-trace-kernel/20240821095910.1888d7fa@g=
+andalf.local.home/
+>=20
+>=20- Adding __always_inline to function_get_true_parent_ip suggested by =
+Steve
+>=20
+>=20 kernel/trace/trace_functions.c | 26 ++++++++++++++++++++++++++
+>=20
+>=20 1 file changed, 26 insertions(+)
+>=20
+>=20diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_func=
+tions.c
+>=20
+>=20index 3b0cea37e029..46c79a349d8c 100644
+>=20
+>=20--- a/kernel/trace/trace_functions.c
+>=20
+>=20+++ b/kernel/trace/trace_functions.c
+>=20
+>=20@@ -176,6 +176,27 @@ static void function_trace_start(struct trace_ar=
+ray *tr)
+>=20
+>=20 tracing_reset_online_cpus(&tr->array_buffer);
+>=20
+>=20 }
+>=20
+>=20=20
+>=20
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>=20
+>=20+static __always_inline unsigned long
+>=20
+>=20+function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_r=
+egs *fregs)
+>=20
+>=20+{
+>=20
+>=20+ unsigned long true_parent_ip;
+>=20
+>=20+ int idx =3D 0;
+>=20
+>=20+
+>=20
+>=20+ true_parent_ip =3D parent_ip;
+>=20
+>=20+ if (unlikely(parent_ip =3D=3D (unsigned long)&return_to_handler) &&=
+ fregs)
+>=20
+>=20+ true_parent_ip =3D ftrace_graph_ret_addr(current, &idx, parent_ip,
+>=20
+>=20+ (unsigned long *)ftrace_regs_get_stack_pointer(fregs));
+>=20
+>=20+ return true_parent_ip;
+>=20
+>=20+}
+>=20
+>=20+#else
+>=20
+>=20+static __always_inline unsigned long
+>=20
+>=20+function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_r=
+egs *fregs)
+>=20
+>=20+{
+>=20
+>=20+ return parent_ip;
+>=20
+>=20+}
+>=20
+>=20+#endif
+>=20
+>=20+
+>=20
+>=20 static void
+>=20
+>=20 function_trace_call(unsigned long ip, unsigned long parent_ip,
+>=20
+>=20 struct ftrace_ops *op, struct ftrace_regs *fregs)
+>=20
+>=20@@ -193,6 +214,8 @@ function_trace_call(unsigned long ip, unsigned lo=
+ng parent_ip,
+>=20
+>=20 if (bit < 0)
+>=20
+>=20 return;
+>=20
+>=20=20
+>=20
+> + parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
+>=20
+>=20+
+>=20
+>=20 trace_ctx =3D tracing_gen_ctx();
+>=20
+>=20=20
+>=20
+>  cpu =3D smp_processor_id();
+>=20
+>=20@@ -241,6 +264,7 @@ function_stack_trace_call(unsigned long ip, unsig=
+ned long parent_ip,
+>=20
+>=20 * recursive protection is performed.
+>=20
+>=20 */
+>=20
+>=20 local_irq_save(flags);
+>=20
+>=20+ parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
+>=20
+>=20 cpu =3D raw_smp_processor_id();
+>=20
+>=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
+>=20
+>=20 disabled =3D atomic_inc_return(&data->disabled);
+>=20
+>=20@@ -309,6 +333,7 @@ function_no_repeats_trace_call(unsigned long ip, =
+unsigned long parent_ip,
+>=20
+>=20 if (bit < 0)
+>=20
+>=20 return;
+>=20
+>=20=20
+>=20
+> + parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
+>=20
+>  cpu =3D smp_processor_id();
+>=20
+>=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
+>=20
+>=20 if (atomic_read(&data->disabled))
+>=20
+>=20@@ -356,6 +381,7 @@ function_stack_no_repeats_trace_call(unsigned lon=
+g ip, unsigned long parent_ip,
+>=20
+>=20 * recursive protection is performed.
+>=20
+>=20 */
+>=20
+>=20 local_irq_save(flags);
+>=20
+>=20+ parent_ip =3D function_get_true_parent_ip(parent_ip, fregs);
+>=20
+>=20 cpu =3D raw_smp_processor_id();
+>=20
+>=20 data =3D per_cpu_ptr(tr->array_buffer.data, cpu);
+>=20
+>=20 disabled =3D atomic_inc_return(&data->disabled);
+>=20
+>=20--=20
+>=20
+> 2.43.0
+>
