@@ -1,165 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC371E5735;
-	Mon, 18 Nov 2024 20:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D063113E8AE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Nov 2024 20:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731961227; cv=none; b=ORGMKEk+aZM9BmFK7WSiuaIFlisxxt+d9DGEUPiKaL9txsMC+1E/w6WgrhrC3sqnLujaL3KWC5FTcgFBpfvhntQj1S68PE2M/53sjDxuBVA2DVQdtZIUQUpUz/0B31sajQIstBfye8QVnpv8L8dtnkhnZm+mLDv7aiAaZZhasfs=
+	t=1731961655; cv=none; b=c6Mf//yuKpIE/LaTs8VXLUGj1JaQOQQlLdfWa09llIZTpu+hcfh1Hhqgo2X9tNyFLQ1IQrun4JFss1+XzYJJuGZQUImt9E4vGC+Y7jx5veDpF1PyGV8k0mB8KGe+dgpLvRRXW0LNMWiGO1rT0DO46JcC8O6+5ymIX6a+uWSkBUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731961227; c=relaxed/simple;
-	bh=XAfcwv6tJTP3ilOXYBQsGFZRgAcjv5jPb3cjsgh8QZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MlcJAM3cFFYd4rRCibvLaIqqTHsXoxtu4leZJCE5bY83RGLtct6gF3Ov6On/hsO6/Y1HO7UY09q1jCiw606HgChoEZRchcvcVJ5SPysf8JMzaJreRr/jUi9LaDBfOUOpCwqZ3WfoQf+xMRJHvfqqVR888WjknKB1rVJJmE/ya+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5608CC4CECC;
-	Mon, 18 Nov 2024 20:20:26 +0000 (UTC)
-Date: Mon, 18 Nov 2024 15:20:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>, Tomas Glozar
- <tglozar@redhat.com>
-Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
-Message-ID: <20241118152057.13042840@gandalf.local.home>
-In-Reply-To: <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
-	<3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
-	<20241115102554.29232d34@gandalf.local.home>
-	<cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
-	<20241115145502.631c9a2c@gandalf.local.home>
-	<2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1731961655; c=relaxed/simple;
+	bh=mUQUbdZM2wB07Dr6dMNlFKE5OpDs/vuM8ExzU1Ox/kI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KDWbus4d03DhiSQV2I9Ow9ABmNY+GZQ6KTdl4dCfXYhFwZQICfa/gydA99TEiRaHWf1tsYhAkNjvQxvWtrzwIjb7yiDY6ReFqfLz6MprfHGnUozWuytiNp1rHwB+BOYoXQS+5WrAfJgl4513c1VnxynU/sGuUUfgtpmcVbTSx9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Umzixjt8; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Umzixjt8"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6ea258fe4b6so41742817b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 18 Nov 2024 12:27:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1731961652; x=1732566452; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RSzXbcfeBbUeVFqww01Yww7G1C9jrZS952jPysDA1Dc=;
+        b=Umzixjt8Cw9Avr+VlYZMAsoS9HT9sujcAy1BPRYc/v8ZnVTADiz5IHw2waV0u6HrTM
+         iwgnGxK59eqqdE6xzH4nlvkgYuI9yLUEWUDN255xwd2NB7pX7gisdQ8xHmjJkxfJol1g
+         Esb5QQvdO6Y7vONvrUPJWJ1z2clqz+rYGf8cgzOyArQzkpd7EgddCrcB+/AdNVUD+/sC
+         rvL4SlhsMaJynY8MSTOM5mdOmdmpy3hPIDwVwMdiNZ5GDjHVAarnFsGrd+aDcXvkHfnA
+         Z9yHwksqAv5CAwZ2B3TiTI9a+QfG7XltD6eNsjP+DMEt8tQk4pV6SK5IgkugJSqQJ3aK
+         I1fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1731961652; x=1732566452;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RSzXbcfeBbUeVFqww01Yww7G1C9jrZS952jPysDA1Dc=;
+        b=Hbb6uRYm4uVbfCXrNDQjOSpLh6KcwoyjZ08KBuaVNnQayUyK/nl71DzMQ3YMNdh+LP
+         fFYjkzSaZQjOdpaubEZzQgHCYNA1l8H61xPMD1ETfBUeGemdyRp5vuFUM9DFTLlLZW25
+         r5Cp5lRdMWHW/b5WMO+rDS626v3uT/0W/Ms53lkm5pq5gc3wSUwsEY8stZETt9rxZPB5
+         KhyL1XkViTlsh1/90dpzHMBlDzZrRQa6p1/YJ6G0h59lz0TFgcO+4bfyI9z++GfJA8a4
+         WDl2/iG9JCu6AgtljUooaAg0aEObUp4JPr91qtl2f4BhjASfK32w1qXcpjsCpDBcfvax
+         pl7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVJQWhgW23e9CQpE6dNtiltVv4xkfrgx6OyF0Y/5QdjO/joWU3ynuf3aIUPWRL5OJhXor/Iv3qvzB+0ra6Fcwr3Aok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKMMSvulWZqu8zblmxbyWtIN3rNVliqQmWk32GZYhuG0zG6pTP
+	BWLs4uXCDIVUGQ/FYBN2FE1oNg45bjRcOzeg8PQCjsLsdtFwV3aNw9ZW4YlCrKgbAzHNqds5lFU
+	2ke1SkZQKHdm4dQ==
+X-Google-Smtp-Source: AGHT+IE6GHgT+hW4JUk5Xmrgx6KYP92+Suqui+d2CTeWLEFST887tqS+GAcBTlvDTt0v4RG9AbgYe1GwYfM9ftg=
+X-Received: from aliceryhl.c.googlers.com ([fda3:e722:ac3:cc00:68:fe9:ac10:f29e])
+ (user=aliceryhl job=sendgmr) by 2002:a05:690c:4e0a:b0:6ee:613b:10c3 with SMTP
+ id 00721157ae682-6ee613b1307mr509897b3.8.1731961651857; Mon, 18 Nov 2024
+ 12:27:31 -0800 (PST)
+Date: Mon, 18 Nov 2024 20:27:26 +0000
+In-Reply-To: <202411181440.qEdcuyh6-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <202411181440.qEdcuyh6-lkp@intel.com>
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2118; i=aliceryhl@google.com;
+ h=from:subject; bh=mUQUbdZM2wB07Dr6dMNlFKE5OpDs/vuM8ExzU1Ox/kI=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnO6LxrFVPAYwYEld95H7+qqElBC3vV734EtpiP
+ fx0k+rNdreJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZzui8QAKCRAEWL7uWMY5
+ RtMiD/0eqyxfN1l7zjWtJ16eTVp6cevdvqzVnil6da8f7cxXhbPrLaU6SE2H5lAZlqhrBdpTWIn
+ hgBOIrPLdkeiq71OoRZ3Tsvm8ILFJO0XUQBqXUqDsMrMUJPogisPD25xuCzhe64cNVGFntcVZHG
+ HHCe7o5eXP0ce6/2R6vO8QgxnMWUZHIoX40xBJZRdQJbwIXO3c/Yh5Gj+pXJycPogdzbKNYTQ1r
+ 4vd0HmXeMKfJz93WgQxK+91bloc6kZTKUWFtX+fCq3792CDIquwp21DAv0769ueAk2O8EcorvDZ
+ jawc6ZX1XVI//cLepwYeQe6cBRj9IcqRoIuhaFFjo1ZIVKXvE3ueYnYJxiDnZkgzcs+XspL63bV
+ pPAYxtXnsZSEYOMqyuUlOgZv4jitZ/fHnLM4tn/CkuYMqgjN190T1Vyx8UatLfGmrDGSzpm1V8+
+ JDSxall5DpylmY8+B7Iwr8kLebfb7MIFmYC/rK432R0u8DkDXPSVqmMcpCeZWaRFba38yU4zc4E
+ VK1bfbkjepWFYHf/Iht3CqKOfoAmleUTL3pJWyoRhe/D2PkBtZevxVzTS/T5RyD4A2umDI//nh1
+ d1tpvp0jJnxCxNQbMj4GozbUxx+/clxo9IQH9tfSXAqftEgSQEQJKpA6vJWJasVtOKvVuWq6hpv bSce6v+aQ7DMoqw==
+X-Mailer: git-send-email 2.47.0.371.ga323438b13-goog
+Message-ID: <20241118202727.73646-1-aliceryhl@google.com>
+Subject: [PATCH RESEND] jump_label: rust: pass a mut ptr to `static_key_count`
+From: Alice Ryhl <aliceryhl@google.com>
+To: lkp@intel.com
+Cc: aliceryhl@google.com, boqun.feng@gmail.com, llvm@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, ojeda@kernel.org, rostedt@goodmis.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+When building the rust_print sample with CONFIG_JUMP_LABEL=n, the Rust
+static key support falls back to using static_key_count. This function
+accepts a mutable pointer to the `struct static_key`, but the Rust
+abstractions are incorrectly passing a const pointer.
 
-[ Added Tomas as he knows this code better than I do ]
+This means that builds using CONFIG_JUMP_LABEL=n and SAMPLE_RUST_PRINT=y
+fail with the following error message:
 
-On Mon, 18 Nov 2024 11:11:48 +0100
-Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+	error[E0308]: mismatched types
+	  --> <root>/samples/rust/rust_print_main.rs:87:5
+	   |
+	87 | /     kernel::declare_trace! {
+	88 | |         /// # Safety
+	89 | |         ///
+	90 | |         /// Always safe to call.
+	91 | |         unsafe fn rust_sample_loaded(magic: c_int);
+	92 | |     }
+	   | |     ^
+	   | |     |
+	   | |_____types differ in mutability
+	   |       arguments to this function are incorrect
+	   |
+	   = note: expected raw pointer `*mut kernel::bindings::static_key`
+	              found raw pointer `*const kernel::bindings::static_key`
+	note: function defined here
+	  --> <root>/rust/bindings/bindings_helpers_generated.rs:33:12
+	   |
+	33 |     pub fn static_key_count(key: *mut static_key) -> c_int;
+	   |            ^^^^^^^^^^^^^^^^
 
-> Hi Steve,
-> 
-> On 15/11/2024 20:55, Steven Rostedt wrote:
-> > On Fri, 15 Nov 2024 16:33:06 +0100
-> > Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
-> >   
-> >> Hi Steve,
-> >>
-> >> On 15/11/2024 16:25, Steven Rostedt wrote:  
-> >>> On Fri, 15 Nov 2024 09:26:07 +0100
-> >>> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
-> >>>      
-> >>>> Nevertheless it sounds like a really high latency for wake_up().
-> >>>>
-> >>>> I have a custom driver which basically gets an IRQ, and calls wake_up on
-> >>>> a read() call. This wake_up() on a high cpu usage can be more than 1ms !
-> >>>> Even with a fifo/99 priority for my kernel thread !
-> >>>>
-> >>>> I don't know if it rings any bell ?
-> >>>> I can obviously do more tests if it can help getting down to the issue :-).  
-> >>>
-> >>> Try running timerlat.  
-> >>
-> >> Thanks !
-> >> Here is what I get:
-> >> # echo timerlat > current_tracer
-> >> # echo 1 > events/osnoise/enable
-> >> # echo 25 > osnoise/stop_tracing_total_us
-> >> # tail -10 trace
-> >>               bash-224     [000] d.h..   153.268917: #77645 context  irq timer_latency     45056 ns
-> >>               bash-224     [000] dnh..   153.268987: irq_noise: timer:206  start 153.268879083 duration 93957 ns
-> >>               bash-224     [000] d....   153.269056: thread_noise:  bash:224 start 153.268905324 duration 71045 ns
-> >>         timerlat/0-271     [000] .....   153.269103: #77645 context thread timer_latency    230656 ns
-> >>               bash-224     [000] d.h..   153.269735: irq_noise: timer:206 start 153.269613847 duration 103558 ns
-> >>               bash-224     [000] d.h..   153.269911: #77646 context irq timer_latency     40640 ns
-> >>               bash-224     [000] dnh..   153.269982: irq_noise: timer:206 start 153.269875367 duration 93190 ns
-> >>               bash-224     [000] d....   153.270053: thread_noise: bash:224 start 153.269900969 duration 72709 ns
-> >>         timerlat/0-271     [000] .....   153.270100: #77646 context thread timer_latency    227008 ns
-> >>         timerlat/0-271     [000] .....   153.270155: timerlat_main: stop tracing hit on cpu 0
-> >>
-> >> It looks awful, right ?  
-> > 
-> > awful is relative ;-) If that was on x86, I would say it was bad.
-> > 
-> > Also check out rtla (in tools/trace/rtla).  
-> 
-> Thanks ! I knew it only by name, so I watched a presentation recorded 
-> during OSS summit given by Daniel Bristot de Oliveira who wrote it and 
-> it is really impressive !
-> 
-> I had to modify the source code a bit, as it does not compile with my 
-> uclibc toolchain:
-> diff --git a/tools/tracing/rtla/Makefile.rtla 
-> b/tools/tracing/rtla/Makefile.rtla
-> index cc1d6b615475..b22016a88d09 100644
-> --- a/tools/tracing/rtla/Makefile.rtla
-> +++ b/tools/tracing/rtla/Makefile.rtla
-> @@ -15,7 +15,7 @@ $(call allow-override,LD_SO_CONF_PATH,/etc/ld.so.conf.d/)
->   $(call allow-override,LDCONFIG,ldconfig)
->   export CC AR STRIP PKG_CONFIG LD_SO_CONF_PATH LDCONFIG
-> 
-> -FOPTS          := -flto=auto -ffat-lto-objects -fexceptions 
-> -fstack-protector-strong   \
-> +FOPTS          := -flto=auto -ffat-lto-objects -fexceptions \
->                  -fasynchronous-unwind-tables -fstack-clash-protection
->   WOPTS          := -O -Wall -Werror=format-security 
-> -Wp,-D_FORTIFY_SOURCE=2             \
->                  -Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
+To fix this, insert a pointer cast so that the pointer is mutable.
 
-I'm not sure what the consequence of the above would be. Perhaps Daniel
-just copied this from other code?
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202411181440.qEdcuyh6-lkp@intel.com/
+Fixes: 169484ab6677 ("rust: add arch_static_branch")
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/jump_label.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/tools/tracing/rtla/src/timerlat_u.c 
-> b/tools/tracing/rtla/src/timerlat_u.c
-> index 01dbf9a6b5a5..92ad2388b123 100644
-> --- a/tools/tracing/rtla/src/timerlat_u.c
-> +++ b/tools/tracing/rtla/src/timerlat_u.c
-> @@ -15,10 +15,16 @@
->   #include <pthread.h>
->   #include <sys/wait.h>
->   #include <sys/prctl.h>
-> +#include <sys/syscall.h>
-> 
->   #include "utils.h"
->   #include "timerlat_u.h"
-> 
-> +static inline pid_t gettid(void)
-> +{
-> +       return syscall(SYS_gettid);
-> +}
-> +
->   /*
->    * This is the user-space main for the tool timerlatu/ threads.
->    *
-> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-> index 9ac71a66840c..b754dc1016a4 100644
-> --- a/tools/tracing/rtla/src/utils.c
-> +++ b/tools/tracing/rtla/src/utils.c
-> @@ -229,6 +229,9 @@ long parse_ns_duration(char *val)
->   #elif __s390x__
->   # define __NR_sched_setattr    345
->   # define __NR_sched_getattr    346
-> +#elif __m68k__
-> +# define __NR_sched_setattr    349
-> +# define __NR_sched_getattr    350
->   #endif
-> 
->   #define SCHED_DEADLINE         6
-> 
-> But it is not enough, as executing rtla fails with a segfault.
-> I can dump a core, but I could not manage to build gdb for my board so I 
-> can't debug it (I don't know how to debug a coredump without gdb !).
+diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+index 2f2df03a3275..b5aff632ecc7 100644
+--- a/rust/kernel/jump_label.rs
++++ b/rust/kernel/jump_label.rs
+@@ -26,7 +26,7 @@ macro_rules! static_branch_unlikely {
+ 
+         #[cfg(not(CONFIG_JUMP_LABEL))]
+         {
+-            $crate::bindings::static_key_count(_key) > 0
++            $crate::bindings::static_key_count(_key.cast_mut()) > 0
+         }
+ 
+         #[cfg(CONFIG_JUMP_LABEL)]
 
-printf()!  That's how I debug things without gdb ;-)
-
--- Steve
+base-commit: 22193c586b43ee88d66954395885742a6e4a49a9
+-- 
+2.47.0.338.g60cca15819-goog
 
