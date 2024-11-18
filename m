@@ -1,59 +1,59 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91BC19067C;
-	Mon, 18 Nov 2024 09:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C3218E361;
+	Mon, 18 Nov 2024 09:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731922791; cv=none; b=fhzcV3289BybGax6218OMsQoHXPjNbgzf4h9WXAKInfYpAIxdFlSL/JVpZtU+GM8Bjn8w8vmAnsyxLiqsyrQCN4kedIs8cT4DyJ08x42qMQ8xWs3D7EH4tp1N6nLNxVGPOMp9ZpKMAZRJcN6hJK31BPoLoHJUNGHsIv5+QZmr50=
+	t=1731923576; cv=none; b=D68P+rnIrfkrOFszUGNHAGQuMHE8XrJoYairRAXGAhGxgCWuXTWsI/Qg5s0UDJSQ2j/K/pAfmVD8XaDHBiPicP7tzZWvOd9m4KaI8lUuXf/sqj7rs1T79F6bN9Clz9L0X36gWeHsZ4eSK1GqQwL8zLg3vyF8CoisqelR7fcG4X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731922791; c=relaxed/simple;
-	bh=wcjFwTi9nS9WJBtKBzT8eqmoyIq2zYhF4HyEAvJfYgE=;
+	s=arc-20240116; t=1731923576; c=relaxed/simple;
+	bh=clpEwkq7OFcEO/AkrHyvA//H6oCN2aMzRoh+nIJjAvA=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kjdmigPdnkjvTl3I7Ha44nAgV6U+3X+r4CFvvdDaR/eg7VQtvGj5JzMKLGpDNz44r2tUfMTDUJ5cM6D8Of3Q/5INZWQY3lnFGWRfzrnhuG5hg1ta06jhRbSR2JrcgAlRvfoNncqpurBoCPVI5ND6IPgkU6KOAkCAOAKT0ku9Uew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KQHNw3YR; arc=none smtp.client-ip=209.85.128.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=raxQig0tMoegmjv8KCipN8H5UxNhHsTaEpsHq1QHJEU1YJCS76Nrn0yhQrmSncilC6VCExXUl9iAVvcbNVI4HKgra0nCvLuMaGosx9DAL9catZdBB7wKK8ySLGwO7MDqu7q1Lhdne/5QDW1kR0OgrdiCbbEa7fHKe61TDt+76UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E6fAf0Jd; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQHNw3YR"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-431ac30d379so34562595e9.1;
-        Mon, 18 Nov 2024 01:39:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6fAf0Jd"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3822ec43fb0so2007755f8f.3;
+        Mon, 18 Nov 2024 01:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731922788; x=1732527588; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1731923573; x=1732528373; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O2iBCRMm8OcKK+uQt7vua/k4ESoCIm8lP2KcuL0sWNM=;
-        b=KQHNw3YRpPObSnyoZJgE4deA52tUHgc/rWmoAYPuKjPjOdYZ3h1ZLwoa7IZs0LtcLC
-         DyaKewLzU7enA34aWmJo6VkjdAAkP4cu+VLQN1D0LScW5VJoQdEl/ygOI7lvEdsEQY0O
-         vS0mfPI+BwRI/N+TpSGF2vH4ofi2x5Oejp0wN5PvdzKuA8b2sQWjKFHlCZPnxlnrI21y
-         J4AxLGIBvd3mas2rlQ7CuW3TJqz6YDbCMfIMtFmdxiw5pyKdeH3frp3nHUbyFcCnOHYD
-         kjGFK0Q7AgPvUV46IXVqZG/PD99j2+zg4Up17/vpnF3+FlDmbzJ35W/fDC9xKGVakkf5
-         f2QA==
+        bh=/ZthoNTYuoSTKsL9w3a6LFvwzeMySe7WDnpbpdlEhTo=;
+        b=E6fAf0Jd754Mk6GDXkdScT5zpCB1hCS/b01yp8F63Oc1eD3ZWivQJLn2Z1Cq0WX7X+
+         3ghOyG4UVdvdHwm6XBmrbTOyfe9mjs7X+HqTRHuqg2aflptT78iUHVXhSkMu+tDvssTf
+         Nbu+vWT1LW8k4oAibxNr9rjwCuf4VmN+saMRr0LO2DvrJIy/3OyirnO7DRSa7avKd1yk
+         Lc8Gphx9bL10Tuo9vydehze4XFt/dURd4R9VfHJArFiBe+AoioFinQYdr82MpxiGRKtT
+         3QM9YrmnehhDKIkvadD3hcXYjyqcPtFBBVnI0ChbSoCTK19U1Rb7hNqibIZPhIGxr5dC
+         X+OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731922788; x=1732527588;
+        d=1e100.net; s=20230601; t=1731923573; x=1732528373;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O2iBCRMm8OcKK+uQt7vua/k4ESoCIm8lP2KcuL0sWNM=;
-        b=BlK0pLfHRDolQ50vQp3MVkFwdA7+J4PHYar89eRqclmQSuUZfZPwi8//sEUi69mf/N
-         CQ4285NAUqiS/Xj5C1j/JEnM4wFJ9EvQ91JFWGQWt2qQBUZNXuZt2SNek8lIzxsophfB
-         oX/d+K1a+0v288bbhVstTSVmlWB4MFkPqHhJ94L6VC2ps+Ea6FyRMh8V/17k5KWXEc8C
-         IYApLt6I0S8JjnHS3dwNRqyKK22sC4Dlf+PwoZEKMf4FgxTY3VyHbe6UmGKah8OBtMDu
-         A/DyAMTTiz6pQbSvJ85mclno1XI/8QXkvRWMUcWKknPtTzvQPrK+b3JShn69m//GWUXd
-         9o4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUmBOPl67QnrXveijn7humIJHL2mtsHZlbXHumhe3I/0RwHv6yS+Iri50/PWt6nfuGQ3on1EMW/wCWSa0UR@vger.kernel.org, AJvYcCXUnEsPIbxfkWRShOQ4Tl+jCSdnu5qGlaqm1hxe0CTOHrbChx6COaSrR+su22kfxzjZZcoTRES/ufuPxSsk7iwRYwPZ@vger.kernel.org, AJvYcCXhO6Rg3i5bRaOXwelhnws3VRgCgqgZFL5ekTd58AOOD8XDKSLwW5RzdoSVN5pPfk5CAY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD4iYX8LmwmOHvLJErVgeLhr6g+H8NFIvsMArr7an3BGRn06oA
-	49DkX0mSET6+h4vt5KFZvxoovoa8q+s7oQXJ/VLHTenyk1dAYv8F
-X-Google-Smtp-Source: AGHT+IEx1uG94pHcWnn1BeSICFxkZnxhXwr+SPBiaeXhhwGCBkbPd01NG/fkT+f43kVhWDiUn0/qkA==
-X-Received: by 2002:a05:600c:468b:b0:431:5eeb:2214 with SMTP id 5b1f17b1804b1-432df7954a8mr86880085e9.33.1731922787837;
-        Mon, 18 Nov 2024 01:39:47 -0800 (PST)
+        bh=/ZthoNTYuoSTKsL9w3a6LFvwzeMySe7WDnpbpdlEhTo=;
+        b=NSykCMfHyX+bxtnkiCkTDSFIsg6TZEfTZag3YscyiYQLTXqIH+Qhi74E75nQFKDKXi
+         3NX02ZmYVCfON7NG0xSp7mU7UwWIDc8aUjems/wEGTt/X7PmgpHCdQWdyTU6uBwKOQJt
+         Ta7PE4WJUiBYUhgGtsTZEXm/kNUSuUoLJox3mDEUldeEQ96cd1shwu+LIRK4i1+FWY5w
+         6s/0X8bY3iVyKouXNuTzVm8dLgg8BALb50ZJlJTUstNmJRGBeCY56Dn3caQH3b8EjXMy
+         ODSgRQH+VxIkt75CTShxL2QozoxkVHd3HhyDRdHeD0pOBNrk6KBXUEgYW8jSoIrQYRGN
+         0KkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXdlLhEk0DsfJVY8D+EVbWj8l9AaowlQaWD9ilabYsp+DjwZvSkireXa3Seg2fjkCgaH4=@vger.kernel.org, AJvYcCWF7QAcwT5faDj7zFAouQgSGQgkJobjnt5b0/BHAIDhW935QIXE9k7G0HXbtJ7CVxx58hyBlIZusPj2ROd/5Q91Di8i@vger.kernel.org, AJvYcCWtY+2x1wKxncZKTa1yCDiGW3SvfMV088S0H4OVQeXMo0+CvlS1RQoRid8v1mbxLJazcuwofvLTzxGtXyND@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdx9eD5OYVr2AntCCRFNOvqlYe1SgwBGE7P+ygMGKE7SAJHWCk
+	4tqkboVG4r7tYxIpCAYGos8QE8Znbfq2A1xeCGR50Q0k6DCiiBxd
+X-Google-Smtp-Source: AGHT+IGAtRgXjncHwmpQFzig+ldv+Ywcn3GiRJDGkCtqiIMfQRPWxo7I2N3YEecAeerhq6KEJIZYQQ==
+X-Received: by 2002:a05:6000:1fa3:b0:37c:cbd4:ec9 with SMTP id ffacd0b85a97d-382259023f1mr9663343f8f.5.1731923572507;
+        Mon, 18 Nov 2024 01:52:52 -0800 (PST)
 Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-432dab78897sm148333635e9.16.2024.11.18.01.39.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-382398aa925sm6204490f8f.50.2024.11.18.01.52.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2024 01:39:47 -0800 (PST)
+        Mon, 18 Nov 2024 01:52:52 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 18 Nov 2024 10:39:45 +0100
+Date: Mon, 18 Nov 2024 10:52:50 +0100
 To: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
@@ -61,13 +61,13 @@ Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	John Fastabend <john.fastabend@gmail.com>,
 	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC perf/core 07/11] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <ZzsLYQiER7EXf5J0@krava>
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Beau Belgrave <beaub@linux.microsoft.com>
+Subject: Re: [RFC 00/11] uprobes: Add support to optimize usdt probes on
+ x86_64
+Message-ID: <ZzsOcgJkdnq5ywE_@krava>
 References: <20241105133405.2703607-1-jolsa@kernel.org>
- <20241105133405.2703607-8-jolsa@kernel.org>
- <20241118171808.316ae124cd57886e813cb98f@kernel.org>
+ <20241118170458.c825bf255c2fb93f2e6a3519@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,114 +76,135 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241118171808.316ae124cd57886e813cb98f@kernel.org>
+In-Reply-To: <20241118170458.c825bf255c2fb93f2e6a3519@kernel.org>
 
-On Mon, Nov 18, 2024 at 05:18:08PM +0900, Masami Hiramatsu wrote:
-> On Tue,  5 Nov 2024 14:34:01 +0100
+On Mon, Nov 18, 2024 at 05:04:58PM +0900, Masami Hiramatsu wrote:
+> Hi Jiri,
+> 
+> On Tue,  5 Nov 2024 14:33:54 +0100
 > Jiri Olsa <jolsa@kernel.org> wrote:
 > 
-> > Putting together all the previously added pieces to support optimized
-> > uprobes on top of 5-byte nop instruction.
+> > hi,
+> > this patchset adds support to optimize usdt probes on top of 5-byte
+> > nop instruction.
 > > 
-> > The current uprobe execution goes through following:
-> >   - installs breakpoint instruction over original instruction
-> >   - exception handler hit and calls related uprobe consumers
-> >   - and either simulates original instruction or does out of line single step
-> >     execution of it
-> >   - returns to user space
+> > The generic approach (optimize all uprobes) is hard due to emulating
+> > possible multiple original instructions and its related issues. The
+> > usdt case, which stores 5-byte nop seems much easier, so starting
+> > with that.
 > > 
-> > The optimized uprobe path
-> > 
-> >   - checks the original instruction is 5-byte nop (plus other checks)
-> >   - adds (or uses existing) user space trampoline and overwrites original
-> >     instruction (5-byte nop) with call to user space trampoline
-> >   - the user space trampoline executes uprobe syscall that calls related uprobe
-> >     consumers
-> >   - trampoline returns back to next instruction
-> > 
-> > This approach won't speed up all uprobes as it's limited to using nop5 as
-> > original instruction, but we could use nop5 as USDT probe instruction (which
-> > uses single byte nop ATM) and speed up the USDT probes.
-> > 
-> > This patch overloads related arch functions in uprobe_write_opcode and
-> > set_orig_insn so they can install call instruction if needed.
-> > 
-> > The arch_uprobe_optimize triggers the uprobe optimization and is called after
-> > first uprobe hit. I originally had it called on uprobe installation but then
-> > it clashed with elf loader, because the user space trampoline was added in a
-> > place where loader might need to put elf segments, so I decided to do it after
-> > first uprobe hit when loading is done.
-> > 
-> > TODO release uprobe trampoline when it's no longer needed.. we might need to
-> > stop all cpus to make sure no user space thread is in the trampoline.. or we
-> > might just keep it, because there's just one 4GB memory region?
-> > 
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/include/asm/uprobes.h |   7 ++
-> >  arch/x86/kernel/uprobes.c      | 130 +++++++++++++++++++++++++++++++++
-> >  include/linux/uprobes.h        |   1 +
-> >  kernel/events/uprobes.c        |   3 +
-> >  4 files changed, 141 insertions(+)
-> > 
-> > diff --git a/arch/x86/include/asm/uprobes.h b/arch/x86/include/asm/uprobes.h
-> > index 678fb546f0a7..84a75ed748f0 100644
-> > --- a/arch/x86/include/asm/uprobes.h
-> > +++ b/arch/x86/include/asm/uprobes.h
-> > @@ -20,6 +20,11 @@ typedef u8 uprobe_opcode_t;
-> >  #define UPROBE_SWBP_INSN		0xcc
-> >  #define UPROBE_SWBP_INSN_SIZE		   1
-> >  
-> > +enum {
-> > +	ARCH_UPROBE_FLAG_CAN_OPTIMIZE	= 0,
-> > +	ARCH_UPROBE_FLAG_OPTIMIZED	= 1,
-> > +};
-> > +
-> >  struct uprobe_xol_ops;
-> >  
-> >  struct arch_uprobe {
-> > @@ -45,6 +50,8 @@ struct arch_uprobe {
-> >  			u8	ilen;
-> >  		}			push;
-> >  	};
-> > +
-> > +	unsigned long flags;
-> >  };
-> >  
-> >  struct arch_uprobe_task {
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index 02aa4519b677..50ccf24ff42c 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -18,6 +18,7 @@
-> >  #include <asm/processor.h>
-> >  #include <asm/insn.h>
-> >  #include <asm/mmu_context.h>
-> > +#include <asm/nops.h>
-> >  
-> >  /* Post-execution fixups. */
-> >  
-> > @@ -877,6 +878,33 @@ static const struct uprobe_xol_ops push_xol_ops = {
-> >  	.emulate  = push_emulate_op,
-> >  };
-> >  
-> > +static int is_nop5_insns(uprobe_opcode_t *insn)
-> > +{
-> > +	return !memcmp(insn, x86_nops[5], 5);
+> > The basic idea is to replace breakpoint exception with syscall which
+> > is faster on x86_64. For more details please see changelog of patch 7.
 > 
-> Maybe better to use BYTES_NOP5 directly?
+> This looks like a great idea!
+> 
+> > 
+> > The first benchmark shows about 68% speed up (see below). The benchmark
+> > triggers usdt probe in a loop and counts how many of those happened
+> > per second.
+> 
+> Hmm, interesting result. I'd like to compare it with user-space event,
+> which is also use "write" syscall to write the pre-defined events
+> in the ftrace trace buffer.
+> 
+> But if uprobe trampoline can run in the comparable speed, user may
+> want to use uprobes because it is based on widely used usdt and
+> avoid accessing tracefs from application. (The user event user
+> application has to setup their events via tracefs interface)
 
-ok
+I see, will check more details on user events
 
 > 
-> > +}
-> > +
-> > +static int is_call_insns(uprobe_opcode_t *insn)
-> > +{
-> > +	return *insn == 0xe8;
+> > 
+> > It's still rfc state with some loose ends, but I'd be interested in
+> > any feedback about the direction of this.
 > 
-> 0xe8 -> CALL_INSN_OPCODE
+> So does this change the usdt macro? Or it just reuse the usdt so that
+> user applications does not need to be recompiled?
 
-right, thanks
+yes, ideally apps keeps using the current usdt macro (or switch to [1])
+which would unwind to nop5 (or whatever we will end up using)
 
+there's an issue wrt to old kernels running apps compiled with the new usdt macro,
+but it's solvable as Andrii pointed out in the other reply [2]
+
+thanks,
 jirka
+
+[1] https://github.com/libbpf/usdt
+[2] https://lore.kernel.org/bpf/20241118170458.c825bf255c2fb93f2e6a3519@kernel.org/T/#m20da8469e210880cae07f01783f4a51817ffbe4d
+
+> 
+> Thank you,
+> 
+> > 
+> > It's based on tip/perf/core with bpf-next/master merged on top of
+> > that together with uprobe session patchset.
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > current:
+> >         # ./bench -w2 -d5 -a  trig-usdt
+> >         Setting up benchmark 'trig-usdt'...
+> >         Benchmark 'trig-usdt' started.
+> >         Iter   0 ( 46.982us): hits    4.893M/s (  4.893M/prod), drops    0.000M/s, total operations    4.893M/s
+> >         Iter   1 ( -5.967us): hits    4.892M/s (  4.892M/prod), drops    0.000M/s, total operations    4.892M/s
+> >         Iter   2 ( -2.771us): hits    4.899M/s (  4.899M/prod), drops    0.000M/s, total operations    4.899M/s
+> >         Iter   3 (  1.286us): hits    4.889M/s (  4.889M/prod), drops    0.000M/s, total operations    4.889M/s
+> >         Iter   4 ( -2.871us): hits    4.881M/s (  4.881M/prod), drops    0.000M/s, total operations    4.881M/s
+> >         Iter   5 (  1.005us): hits    4.886M/s (  4.886M/prod), drops    0.000M/s, total operations    4.886M/s
+> >         Iter   6 ( 11.626us): hits    4.906M/s (  4.906M/prod), drops    0.000M/s, total operations    4.906M/s
+> >         Iter   7 ( -6.638us): hits    4.896M/s (  4.896M/prod), drops    0.000M/s, total operations    4.896M/s
+> >         Summary: hits    4.893 +- 0.009M/s (  4.893M/prod), drops    0.000 +- 0.000M/s, total operations    4.893 +- 0.009M/s
+> > 
+> > optimized:
+> >         # ./bench -w2 -d5 -a  trig-usdt
+> >         Setting up benchmark 'trig-usdt'...
+> >         Benchmark 'trig-usdt' started.
+> >         Iter   0 ( 46.073us): hits    8.258M/s (  8.258M/prod), drops    0.000M/s, total operations    8.258M/s
+> >         Iter   1 ( -5.752us): hits    8.264M/s (  8.264M/prod), drops    0.000M/s, total operations    8.264M/s
+> >         Iter   2 ( -1.333us): hits    8.263M/s (  8.263M/prod), drops    0.000M/s, total operations    8.263M/s
+> >         Iter   3 ( -2.996us): hits    8.265M/s (  8.265M/prod), drops    0.000M/s, total operations    8.265M/s
+> >         Iter   4 ( -0.620us): hits    8.264M/s (  8.264M/prod), drops    0.000M/s, total operations    8.264M/s
+> >         Iter   5 ( -2.624us): hits    8.236M/s (  8.236M/prod), drops    0.000M/s, total operations    8.236M/s
+> >         Iter   6 ( -0.840us): hits    8.232M/s (  8.232M/prod), drops    0.000M/s, total operations    8.232M/s
+> >         Iter   7 ( -1.783us): hits    8.235M/s (  8.235M/prod), drops    0.000M/s, total operations    8.235M/s
+> >         Summary: hits    8.249 +- 0.016M/s (  8.249M/prod), drops    0.000 +- 0.000M/s, total operations    8.249 +- 0.016M/s
+> > 
+> > ---
+> > Jiri Olsa (11):
+> >       uprobes: Rename arch_uretprobe_trampoline function
+> >       uprobes: Make copy_from_page global
+> >       uprobes: Add len argument to uprobe_write_opcode
+> >       uprobes: Add data argument to uprobe_write_opcode function
+> >       uprobes: Add mapping for optimized uprobe trampolines
+> >       uprobes: Add uprobe syscall to speed up uprobe
+> >       uprobes/x86: Add support to optimize uprobes
+> >       selftests/bpf: Use 5-byte nop for x86 usdt probes
+> >       selftests/bpf: Add usdt trigger bench
+> >       selftests/bpf: Add uprobe/usdt optimized test
+> >       selftests/bpf: Add hit/attach/detach race optimized uprobe test
+> > 
+> >  arch/x86/entry/syscalls/syscall_64.tbl                    |   1 +
+> >  arch/x86/include/asm/uprobes.h                            |   7 +++
+> >  arch/x86/kernel/uprobes.c                                 | 180 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> >  include/linux/syscalls.h                                  |   2 +
+> >  include/linux/uprobes.h                                   |  25 +++++++++-
+> >  kernel/events/uprobes.c                                   | 222 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+> >  kernel/fork.c                                             |   2 +
+> >  kernel/sys_ni.c                                           |   1 +
+> >  tools/testing/selftests/bpf/bench.c                       |   2 +
+> >  tools/testing/selftests/bpf/benchs/bench_trigger.c        |  45 +++++++++++++++++
+> >  tools/testing/selftests/bpf/prog_tests/uprobe_optimized.c | 252 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  tools/testing/selftests/bpf/progs/trigger_bench.c         |  10 +++-
+> >  tools/testing/selftests/bpf/progs/uprobe_optimized.c      |  29 +++++++++++
+> >  tools/testing/selftests/bpf/sdt.h                         |   9 +++-
+> >  14 files changed, 768 insertions(+), 19 deletions(-)
+> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/uprobe_optimized.c
+> >  create mode 100644 tools/testing/selftests/bpf/progs/uprobe_optimized.c
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
