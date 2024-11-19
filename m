@@ -1,58 +1,40 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445C312CDAE;
-	Tue, 19 Nov 2024 09:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE63A1A705C;
+	Tue, 19 Nov 2024 09:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732007638; cv=none; b=pb7OzwRN6ssv5GnN1/JSqVDivmKhKJ/gIF0baDkHXA/9DLYhdJMPt4ox3ShcKULEIA0SbsPWmYLuLvtP7ETyxn75yYIPUxPcQTeUUhNFwjOWnTa28trW9gOJnki9MIjB9nYMNJpprk5DwPxA0Zd/v8rQzIjR41xCLJAnqUnEQcQ=
+	t=1732007747; cv=none; b=WP9+3V+8qIDMmS5okMZTziYzyXSe91JW0lFRgcnB1K2KX2lsE2DzdCBsBJxwxbGHuNDf4QTte1ueXvn6DyTUshuL4IaVewpAMDiLLclYDN+ZqLXuUYgYlVvAzeNew/9ofbsK6st8aWei5skCb0pFCJWk2Pt+QVPFcNWfyrKe/GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732007638; c=relaxed/simple;
-	bh=ecTbzJ5AaNWfrV0C1O4VXMVfV5Sfpj63ONG+7CIujDg=;
+	s=arc-20240116; t=1732007747; c=relaxed/simple;
+	bh=oa+5Z+lKKCnT7yMebAYTxw8LIXAWKYOq1hVC+/GN+rg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOjhantewPZ0hRGL4YC1f7Fspzw/Yfh9vjmpSv0KvvAzpEbMQyc5jnfvIQ49tPoAMx7C6DbRr90J8xwBUaZ5vmSA0ABQhBhJ1CQdgzXKeaBIRQm3c2mjsRjRzKnHBUqbK/XjZExY/vjAmqUQ78QJ5JqZqTot9g6jHsED/YzUYQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NsNqJwFy; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ezoagymQ4QTJb+JcER6VkRz4mfSdrn3sJaImwMD/19KFj4e4KN1XJ2B0QMc5gbpcHp2i9pjt5hHcrXChcRNyvWgdgFIgTN5rU+fhoZ3Oe604fToYOfTp8xiW8YfbHt40+Sl6Ur+QvOgcCIAlHzPAA8JkbxequBAZ0s9rBGKbtVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjYsJbcF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NsNqJwFy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fl+NTXtpNg4Pp8q2Lsf9iJ/z+achogFWtubvIsHu1dI=; b=NsNqJwFyPpwrWTn1KZS0+oK0VW
-	HQXe0hRFdDH5zdmbQMoDS4arEhib00WDZY0CSkDBwYZh5Y4S1h3frPNXG58jLDaUsBX/jEN/XUb2M
-	aiVi2NF5h5yDj8Zk/JHTOTWS7QxlDVuJSJKt1D1GpdldlMfhKsE7cY0B9DL2dzcI487dlCcIGR4wV
-	JeEbOBX/9FizfuuAE28MoQy919qfM2wYtz9ppQyKLJjKRbKBC4V1/XCYzZLvZo2WY03hexfnA3V1G
-	s2sJgs8CtRmbcD2ZX9UTi0qTamojZfaOVrp0YD6rscnWRsVnUfAnCazeXE2vZ5NTtvMUYCuBbHW4L
-	LOF24LWA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tDKIw-00000000KUn-0y7U;
-	Tue, 19 Nov 2024 09:13:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 16C3A3006AB; Tue, 19 Nov 2024 10:13:49 +0100 (CET)
-Date: Tue, 19 Nov 2024 10:13:48 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
- trampolines
-Message-ID: <20241119091348.GE11903@noisy.programming.kicks-ass.net>
-References: <20241105133405.2703607-1-jolsa@kernel.org>
- <20241105133405.2703607-6-jolsa@kernel.org>
- <20241105142327.GF10375@noisy.programming.kicks-ass.net>
- <ZypI3n-2wbS3_w5p@krava>
- <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
- <ZzkSKQSrbffwOFvd@krava>
- <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjYsJbcF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C0AC4CECF;
+	Tue, 19 Nov 2024 09:15:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732007747;
+	bh=oa+5Z+lKKCnT7yMebAYTxw8LIXAWKYOq1hVC+/GN+rg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KjYsJbcFQTguOHpzEZCAiBNPjf3fEgjtDg6j8smxmzdxHjodF5phxaLOXf0eCGyNM
+	 U+B0NTL3MxcekUE60RiPjXafXWnBzGenN7x5b4swkPuEFsmShCli32v4Z/JFhmfK7U
+	 jswuY1Y1LHfa/HKbyvzTjgeQeuoutylE4I7KrBhgmgchkV83M/tluEhqfpi3SpPpQj
+	 mv5RRz1fVykGIZ2eKQxYS5KRR0IH74Kp1Na2UHYGUtExK9FR4J96w6Yt7iFAHmLYiQ
+	 fwSgG6U15djo9i+032g5TjH7c7cT/8QIwasDvoouuuSmyrY40Doy3PWlN/evVhA7dU
+	 PBiJz4xUTpC2A==
+Date: Tue, 19 Nov 2024 10:15:28 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Yun Zhou <yun.zhou@windriver.com>
+Cc: mcgrof@kernel.org, kees@kernel.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kernel: add pid_max to pid_namespace
+Message-ID: <izvhvfnq6jwgl7uxccls4sckykw2wjx3utaecijcya5em53h6w@lupiu7ok5mrk>
+References: <20241105031024.3866383-1-yun.zhou@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,22 +43,94 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+In-Reply-To: <20241105031024.3866383-1-yun.zhou@windriver.com>
 
-On Mon, Nov 18, 2024 at 10:06:51PM -0800, Andrii Nakryiko wrote:
-
-> > > Jiri, we could also have an option to support 64-bit call, right? We'd
-> > > need nop9 for that, but it's an option as well to future-proofing this
-> > > approach, no?
-> >
-> > hm, I don't think there's call with relative 64bit offset
+On Tue, Nov 05, 2024 at 11:10:24AM +0800, Yun Zhou wrote:
+> It is necessary to have a different pid_max in different containers.
+> For example, multiple containers are running on a host, one of which
+> is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
+> it requires the global pid_max <= 65535. This will cause configuration
+> conflicts with other containers and also limit the maximum number of
+> tasks for the entire system.
 > 
-> why do you need a relative, when you have 64 bits? ;) there is a call
-> to absolute address, no?
+> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
+> ---
+>  - Remove sentinels from ctl_table arrays.
+> v1 - https://lore.kernel.org/all/20241030052933.1041408-1-yun.zhou@windriver.com/
+> ---
+>  include/linux/pid_namespace.h     |  1 +
+>  kernel/pid.c                      | 12 +++++------
+>  kernel/pid_namespace.c            | 34 ++++++++++++++++++++++++++-----
+>  kernel/sysctl.c                   |  9 --------
+>  kernel/trace/pid_list.c           |  2 +-
+>  kernel/trace/trace.h              |  2 --
+>  kernel/trace/trace_sched_switch.c |  2 +-
+>  7 files changed, 38 insertions(+), 24 deletions(-)
 
-No, there is not :/ You get to use an indirect call, which means
-multiple instructions and all the speculation joy.
+...
 
-IFF USDT thingies have AX clobbered (I couldn't find in a hurry) then
-patching the multi instruction thing is relatively straight forward, if
-they don't, its going to be a pain.
+> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+> index d70ab49d5b4a..a5a8254825d5 100644
+> --- a/kernel/pid_namespace.c
+> +++ b/kernel/pid_namespace.c
+> @@ -111,6 +111,7 @@ static struct pid_namespace *create_pid_namespace(struct user_namespace *user_ns
+>  	ns->user_ns = get_user_ns(user_ns);
+>  	ns->ucounts = ucounts;
+>  	ns->pid_allocated = PIDNS_ADDING;
+> +	ns->pid_max = parent_pid_ns->pid_max;
+>  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+>  	ns->memfd_noexec_scope = pidns_memfd_noexec_scope(parent_pid_ns);
+>  #endif
+> @@ -280,19 +281,44 @@ static int pid_ns_ctl_handler(const struct ctl_table *table, int write,
+>  
+>  	return ret;
+>  }
+> +#endif	/* CONFIG_CHECKPOINT_RESTORE */
+> +
+> +static int pid_max_ns_ctl_handler(const struct ctl_table *table, int write,
+> +		void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	struct pid_namespace *pid_ns = task_active_pid_ns(current);
+> +	struct ctl_table tmp = *table;
+> +
+> +	if (write && !checkpoint_restore_ns_capable(pid_ns->user_ns))
+> +		return -EPERM;
+> +
+> +	tmp.data = &pid_ns->pid_max;
+> +	if (pid_ns->parent)
+> +		tmp.extra2 = &pid_ns->parent->pid_max;
+> +
+> +	return proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+> +}
+>  
+> -extern int pid_max;
+>  static struct ctl_table pid_ns_ctl_table[] = {
+> +#ifdef CONFIG_CHECKPOINT_RESTORE
+>  	{
+>  		.procname = "ns_last_pid",
+>  		.maxlen = sizeof(int),
+>  		.mode = 0666, /* permissions are checked in the handler */
+>  		.proc_handler = pid_ns_ctl_handler,
+>  		.extra1 = SYSCTL_ZERO,
+> -		.extra2 = &pid_max,
+> +		.extra2 = &init_pid_ns.pid_max,
+>  	},
+> -};
+>  #endif	/* CONFIG_CHECKPOINT_RESTORE */
+> +	{
+> +		.procname = "pid_max",
+> +		.maxlen = sizeof(int),
+> +		.mode = 0644,
+> +		.proc_handler = pid_max_ns_ctl_handler,
+> +		.extra1 = &pid_max_min,
+> +		.extra2 = &pid_max_max,
+> +	},
+> +};
+
+I see here that the sysctls are without sentinel.
+Reviewed-by: Joel Granados <joel.granados@kernel.org>
+
+
+-- 
+
+Joel Granados
