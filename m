@@ -1,63 +1,62 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CB61CFEB8;
-	Tue, 19 Nov 2024 15:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736F922067;
+	Tue, 19 Nov 2024 15:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732029256; cv=none; b=sT55zNb23II//KWJUH7DL3MOgyQ66OmvXN7sa6scM0a+7SLQhLcTEfgZlW3LWISR4wad7i2ySmsVTLKZ7G2/mMA2XT5QWY38KFeq1IF1YfYHNv843dCmwkLIn2J/36bKh68KNIVpiRIzu9mKHKy3cYmqwP252N1rXSIJ4ChLm/w=
+	t=1732029348; cv=none; b=XdyR/MQYkeKU8DWkxBlI38k/GPHQEt1t1ZSCDqi7d6pFETRfrfJO18T8FcimMtajy2v0o7pvjSiRZ1MymAWnjTakzhAuhldlgu6Wz2Lv1RGR///kIwWzAea9BbaAwJ/V7gqPgiE4ndDnapE+GtJA3O0jGNogobxBn5D2KglD4WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732029256; c=relaxed/simple;
-	bh=wsIsc65wsl1a3A8TlAEYhRoPXjHLrOqSQcfQqgioS6I=;
+	s=arc-20240116; t=1732029348; c=relaxed/simple;
+	bh=iPWDJs3HvioJCWxk5FkWG2QEGmZ5PwQQdJ9AY+MrLrw=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k9qY76VCxNfoIfiqCmmpJp33U18X60rGSZykdQgEdm0wXfxsCBfJmnD/HBOIMMUXUWvvo3BciAANAJKJwbV+cvMq7xkrZOB1tvOSudYsgwdcBhoF9G/Pbi5RVsDJKNitgloOayCiLbKfSBxke2ZPF0bbdRdMXG9x2Ly5/hMSY8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StNHHwob; arc=none smtp.client-ip=209.85.221.52
+	 Content-Type:Content-Disposition:In-Reply-To; b=k0HzpXhElrxbnQ7CvNxGkH9MJBut3s2YsecMeI/VUdlqzhmXBGxqkstCPRBgq61s9Ih29opfP+Gt4s2VOOJzgETrE0fmrWu9TBmElch94+eTeNP5iSU+PVP8C/kOwJgsKSk77K3i1wwL6TRMhbKvU6SRIlO+QFZrFyXD6sWMLHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bi/gPMnI; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StNHHwob"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-382411ea5eeso1637661f8f.0;
-        Tue, 19 Nov 2024 07:14:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bi/gPMnI"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38230ed9baeso2721714f8f.1;
+        Tue, 19 Nov 2024 07:15:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732029252; x=1732634052; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q+CAblMGwqdRkJ74YKnBF6CZP3Rv4TdMRaOiPdoI1R0=;
-        b=StNHHwobxumCf4f7km22iGnuOXPLBv6mLYjVWNz8hADg6fSqGE6TT54OU2FlFJmeYh
-         aBUZqtOyAjRFO58tfU29MZZN+HKo7+QN70JHInIkL1v377EtqxSRkHslhmGvOw+jdeQv
-         Tj6eZbVeCZad1FjEx8ivuc1v93vufr9KRhOM0rkf1YmGn4PzyipCh1Rtest1fvOCTM/E
-         x0v/AkVKMbgJsTJInXcZeAyPxAr3XiiuA6MnXYAnGkkN9vK8UdjwHbMQWFs/olfZ5DxI
-         NHnbYI5fqNaLntSeJoirZkRVa5IcePqiO+MESyXERan/syGDO07tTn65FknTWSi1Q91M
-         M3KA==
+        d=gmail.com; s=20230601; t=1732029345; x=1732634145; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5UnjguskM1CBCHwdwWLnatT26Qhvy0ZOY59Zn/zy5zQ=;
+        b=bi/gPMnIWVrHYWf5apQhbEinQZxp9DmwE+aaDB85mDPU57kA9DAsbS47UCuiz6UywM
+         0c5OXKU1jIcHhXq3rfDBF+6/ql7gT5CO2lvSK5VRHTXhB0DgSbZbtOq3vPqlG9f0rFqm
+         o2KKOvk38kX57ixECiRmJANIANEwCHQRdibLINteGltfas/VkmEE42fj67CieOrYGEy/
+         xd4HGWTWISaNO2OSmcDgtVH3Rf4uZJU29iRA14CxYA5X+cau/pBB0SyIRXl5Jt7QzSe1
+         wLMg9mKUMq481XJTZzTkzTsPNzOE8Bl5CnveflN7QigNbgfj7AAwL4+niiXxVi5oDk9T
+         Kdrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732029252; x=1732634052;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q+CAblMGwqdRkJ74YKnBF6CZP3Rv4TdMRaOiPdoI1R0=;
-        b=GBWzPJaRdnt0KIv8lENeQT8R7des+vc3hbMdOkoP8ikQngOndaoNZdnKbN6WWpyx36
-         UzGG5sDELXQgxulwxz7wNi7FwoRLVSvBZwUYeeOp39EROumw1bRSQVnLcblvZruJLhDz
-         i4s1hGCusll0TNgInrOQJMGOLMTI6CmGq2dWkqhOtjf+I3ggvjovM9ERGx6pxhzTOpGj
-         AMPtf5nhQgz/lDj3HlaHLJwzOum+wpMZtk+bLOCuBzLYg+ZLLfO6cD4zbeyAI7odSaW3
-         SaLDo9MhzoPj8ZLc7JtCyx3Cheqn+5XrE1gZHPsgEGkm1UZ37Sd5KF7RwRETbrfkayL4
-         +pUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPEuEZxE7VwKor6u0eAHmWSMTz6y4lJ8+dM1cZ/HaiaJ0M3Yyzhb7564s3YdAV0ATd04R7FyAAE0zj14EX0M820r6j@vger.kernel.org, AJvYcCW/c5K2Hzm9kfLtwGQk67iR6MmjlUpvCGadW7M48Q3atwODK/tFTMODOZNthlMR+FFj91A=@vger.kernel.org, AJvYcCWhIFo6MZMxU+Sx4P4+/rDiOOEIgOdZKwH1S5SJ1GEZCAZa8pM1/mpvwMjyO5joK7eSBu+6xQn1IJwSAs7R@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEfqsgEIC6fdh4QiRptl1RFp9aAiaQ67JEWhTUi19FcrYI1ibD
-	ataDEdmHCIVmq5H1xlAfWKbXiwTpjeG9Itg5Qp2bD3RxT0aRPLNe
-X-Google-Smtp-Source: AGHT+IGN9CrVaw83GmI4uu44gxeD6Jr0F2TRG+eGuFN6z0OiwShzW2xa+Z3B0OxykD0FrwIYu0+r4Q==
-X-Received: by 2002:adf:e185:0:b0:382:3754:38e7 with SMTP id ffacd0b85a97d-3824cd3196bmr3154851f8f.23.1732029251795;
-        Tue, 19 Nov 2024 07:14:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732029345; x=1732634145;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5UnjguskM1CBCHwdwWLnatT26Qhvy0ZOY59Zn/zy5zQ=;
+        b=YgB2p5YA3pHesLTzTp40qs1IrAN8zge78txVXmi9KRAJEchF4ypMJMruZX/CJqoLf+
+         tMSfsekpyEC0iBKEMn9mweYLLdHnAqx6hdML8icD+ScWaq7B15vxffGMf0b4EhrVu7B+
+         TeYlEnKjYe1lyrqv6ZwYXhQ/A6X8R7KaTZqdUJ167Hu1EG6vtpkKegSrGALzlQuuplIy
+         YGGQx3FC+DbbEPti/TDfTft0uk5i6BUwmSziFbKg9p04aN0Q+OtBTtMZWZFNTPWAEkpa
+         rvCpVADWrnRnhnY/X4mG89kPjNsihdKCwLgLpnmxS2CcGEFz0yrhRkLOmtPSZBRqgzkS
+         VJbg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6HmHEtcMtaXgluKNkvm93xNQP1H8CCSC3r7pm3kWlVw0tYza4yJ3At18nPxN8oRlvBuo+wvrP+QEuffBYBpyqqROB@vger.kernel.org, AJvYcCUoRoMPSGb/mIPonO2M8OC3k/PVmGJuK06/K2oa40GlV3DZ18wC9lcZU8rbNqlVyz9BOupNyynIpNAHf2BE@vger.kernel.org, AJvYcCWGKzt3GsPzOMmHBuZyqN9GqbmirwZZh4GVSCGOtZXbE/OTSifjOLLTGKKrHPw9Oe4bX9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx/x1kNnueeWaxxRiZOVWDSfja4S9swELwpPCWtESyySy5D5l0
+	SMKnxN2tZ7hwH31DI2epICbqEPAc0McpGNubZbORYbOuQv9xgNhd
+X-Google-Smtp-Source: AGHT+IE9Y7pxj33K3yA6gYgW+k/j0jo42x8TApKD/yxEDkHrWGgKpdhfKl+F/IJjX4y7KkaWTn5wfA==
+X-Received: by 2002:a05:6000:4814:b0:382:4a1b:16de with SMTP id ffacd0b85a97d-3824a1b19e2mr5228088f8f.21.1732029344459;
+        Tue, 19 Nov 2024 07:15:44 -0800 (PST)
 Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821ae161d8sm16412168f8f.78.2024.11.19.07.14.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38232ec369fsm11374271f8f.70.2024.11.19.07.15.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2024 07:14:11 -0800 (PST)
+        Tue, 19 Nov 2024 07:15:44 -0800 (PST)
 From: Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 19 Nov 2024 16:14:09 +0100
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+Date: Tue, 19 Nov 2024 16:15:42 +0100
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
 	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
 	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
@@ -67,73 +66,44 @@ Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
  trampolines
-Message-ID: <ZzyrQWLrPYzUqLGq@krava>
+Message-ID: <Zzyrnvnw1I8HfAYN@krava>
 References: <20241105133405.2703607-1-jolsa@kernel.org>
  <20241105133405.2703607-6-jolsa@kernel.org>
- <CAEf4BzYycU7_8uNgi9XrnnPSAvP7iyWwNA7cHu0aLTcAUxsBFA@mail.gmail.com>
- <ZzkSOhQIMg_lzwiT@krava>
- <CAEf4BzYBRtK-U_SLY-qYDGf2pc4YzBOeKgyjFbzv-EHXrdNANg@mail.gmail.com>
+ <20241105142327.GF10375@noisy.programming.kicks-ass.net>
+ <ZypI3n-2wbS3_w5p@krava>
+ <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
+ <ZzkSKQSrbffwOFvd@krava>
+ <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+ <20241119091348.GE11903@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYBRtK-U_SLY-qYDGf2pc4YzBOeKgyjFbzv-EHXrdNANg@mail.gmail.com>
+In-Reply-To: <20241119091348.GE11903@noisy.programming.kicks-ass.net>
 
-On Mon, Nov 18, 2024 at 10:05:41PM -0800, Andrii Nakryiko wrote:
-> On Sat, Nov 16, 2024 at 1:44 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Thu, Nov 14, 2024 at 03:44:14PM -0800, Andrii Nakryiko wrote:
-> > > On Tue, Nov 5, 2024 at 5:35 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > > Adding interface to add special mapping for user space page that will be
-> > > > used as place holder for uprobe trampoline in following changes.
-> > > >
-> > > > The get_tramp_area(vaddr) function either finds 'callable' page or create
-> > > > new one.  The 'callable' means it's reachable by call instruction (from
-> > > > vaddr argument) and is decided by each arch via new arch_uprobe_is_callable
-> > > > function.
-> > > >
-> > > > The put_tramp_area function either drops refcount or destroys the special
-> > > > mapping and all the maps are clean up when the process goes down.
-> > > >
-> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > ---
-> > > >  include/linux/uprobes.h |  12 ++++
-> > > >  kernel/events/uprobes.c | 141 ++++++++++++++++++++++++++++++++++++++++
-> > > >  kernel/fork.c           |   2 +
-> > > >  3 files changed, 155 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > > > index be306028ed59..222d8e82cee2 100644
-> > > > --- a/include/linux/uprobes.h
-> > > > +++ b/include/linux/uprobes.h
-> > > > @@ -172,6 +172,15 @@ struct xol_area;
-> > > >
-> > > >  struct uprobes_state {
-> > > >         struct xol_area         *xol_area;
-> > > > +       struct hlist_head       tramp_head;
-> > > > +       struct mutex            tramp_mutex;
-> > > > +};
-> > > > +
-> > > > +struct tramp_area {
-> > > > +       unsigned long           vaddr;
-> > > > +       struct page             *page;
-> > > > +       struct hlist_node       node;
-> > > > +       refcount_t              ref;
-> > >
-> > > nit: any reason we are unnecessarily trying to save 4 bytes on
-> > > refcount (and we don't actually, due to padding)
-> >
-> > hum, I'm not sure what you mean.. what's the alternative?
+On Tue, Nov 19, 2024 at 10:13:48AM +0100, Peter Zijlstra wrote:
+> On Mon, Nov 18, 2024 at 10:06:51PM -0800, Andrii Nakryiko wrote:
 > 
-> atomic64_t ?
+> > > > Jiri, we could also have an option to support 64-bit call, right? We'd
+> > > > need nop9 for that, but it's an option as well to future-proofing this
+> > > > approach, no?
+> > >
+> > > hm, I don't think there's call with relative 64bit offset
+> > 
+> > why do you need a relative, when you have 64 bits? ;) there is a call
+> > to absolute address, no?
+> 
+> No, there is not :/ You get to use an indirect call, which means
+> multiple instructions and all the speculation joy.
+> 
+> IFF USDT thingies have AX clobbered (I couldn't find in a hurry) then
+> patching the multi instruction thing is relatively straight forward, if
+> they don't, its going to be a pain.
 
-hum, just because we have extra 4 bytes padding? we use refcount_t
-on other places so seems like better fit to me
+I don't follow, what's the reason for that?
 
 jirka
