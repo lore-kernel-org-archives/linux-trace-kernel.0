@@ -1,221 +1,208 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3744F1C4A28
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 19 Nov 2024 13:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC301CC8A0;
+	Tue, 19 Nov 2024 14:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732024296; cv=none; b=D/S/DTG7sWoM7bdzRBIl4MuXaedA3D59VKeUt6WAY9N52Uy3z5Ujv1uCfMuWp+lKXgSEt4f9mFkD6r5G50xppcm3OwDNlfUAD/hx9PknwwAvzAcLEXVPSsotY8ug3NqH6+4AS/c2w1V3IJU6VOrTANlAxgSLne/qZhp6lCENyyE=
+	t=1732026248; cv=none; b=olqIVTw6mWvnn1piKTcoTq2hnw2+UbMRlGtLPOUop1crs9FX4HKdddLYlJr4RvU3p9F7AGig2HCdvJmKHjBEE09vSiEkR2eUjmx9tJ4iyn5TD/8+GX3EmQHARUBtAe2g/mlT+vyn7bnqCj/VlFWzHZBB1x7R7B+lZtYWgmQ/Fm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732024296; c=relaxed/simple;
-	bh=kI3fmJ8Hl/BgNHyHwVH9e+O98vAnZ5hm/7Gsg2FGx1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pald6e9Pim0QsSqmb8SEaWsUGdl4RqA1GmekDIVJ0WMilEDH1/Wktt71x9QBUx1u8ZS0CQhw24BpnMd+dSsB/GTFToRaP5dWkTDuynlS1ob8r56AYJEMqRUp/RbInmQgJQYVoI1MuNUSHpoOYb1Wgo90P+tkODNAIrWr+6zT4KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CTY4hxfQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732026248; c=relaxed/simple;
+	bh=I+RQjzCvAy5yXICFQwsvOhcvUC8jzz/PiP41uPebjxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3B1whImolRLS54HEwSStfQWHOh2pR98lY65+ICE2VluGvZIiShVX4Yb/WlU13tpYZTs75Cne5uTCN+oDRzFSoqotR0U2xZeEUwtf3itvvrqfgmGNbfHHA82/3ja4APho7lz1G3Y+S2ChRqzee/hGwJz4kiNfAUwQMgHQHiWXEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=bM7T+Jw7; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CTY4hxfQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732024293;
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="bM7T+Jw7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B3D7FF814;
+	Tue, 19 Nov 2024 14:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1732026242;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HX5YQ+0XGJLuTnrRsfXwyh3Yrgy/pyIOX3CQFLrgtQ0=;
-	b=CTY4hxfQH6Wg6NPvagUETYmmp4dWpqUJovp1xy2vFDVVKwZpSztd2epIKQ6JR5qbfEr6uN
-	5Z3/P/sXV68Pgci/MOzzlK33NKuvAJoSURPQjVgMbQYA1VczDpG+G8waXV6G2KRlGh4kJI
-	O3+WvoPZw4RjXzAqO0EXyDGezNucGVM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-UBIYx5OiOWesG-BAbothDg-1; Tue,
- 19 Nov 2024 08:51:32 -0500
-X-MC-Unique: UBIYx5OiOWesG-BAbothDg-1
-X-Mimecast-MFC-AGG-ID: UBIYx5OiOWesG-BAbothDg
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBF881956080;
-	Tue, 19 Nov 2024 13:51:30 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.129])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E67801956054;
-	Tue, 19 Nov 2024 13:51:28 +0000 (UTC)
-From: tglozar@redhat.com
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jkacur@redhat.com,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH] rtla/timerlat: Fix histogram ALL for zero samples
-Date: Tue, 19 Nov 2024 14:48:57 +0100
-Message-ID: <20241119134858.1862632-1-tglozar@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fOrBNdpqCu63uMjsBgXZUlLowF58/yilyYWntoqR9TE=;
+	b=bM7T+Jw7G5jEjq1oBNJiIIUZFcOdKVsJJ+zsYoDUFfk+tXPsdO8x+EmtkMM5nKoObR3POG
+	udpd0kMb0WbaLBsvheO8PPmlZRPtv9sNHf+Q6mv209rkY8BpHPgiy8ycs75g0gcqlIAoDG
+	BgcalUR4v1WuUtdV6GxYfDZigAuZpUTbh07Qu/3yO17+554yKWr2uyCK0whfGRbxYpjseG
+	RVpmW+d39h5bnfHXmtl6ss2qwsDgB0UZTaTJQm9it/DwXFzX2bCt5N3IgCPOKQWVoH+apT
+	sW//2uLM/kVHdxWPlxyhy+radnFLWr31HFrFil3N24LEr4ISxnXB1r1oZ4xnOg==
+Message-ID: <22856ed6-b9d0-4206-b88d-4226534c8675@yoseli.org>
+Date: Tue, 19 Nov 2024 15:24:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>,
+ Tomas Glozar <tglozar@redhat.com>
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+ <3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
+ <20241115102554.29232d34@gandalf.local.home>
+ <cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
+ <20241115145502.631c9a2c@gandalf.local.home>
+ <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
+ <20241118152057.13042840@gandalf.local.home>
+Content-Language: en-US
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+In-Reply-To: <20241118152057.13042840@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-From: Tomas Glozar <tglozar@redhat.com>
+Hi Steve !
 
-rtla timerlat hist currently computers the minimum, maximum and average
-latency even in cases when there are zero samples. This leads to
-nonsensical values being calculated for maximum and minimum, and to
-divide by zero for average.
+On 18/11/2024 21:20, Steven Rostedt wrote:
+> 
+> [ Added Tomas as he knows this code better than I do ]
 
-A similar bug is fixed by 01b05fc0e5f3 ("rtla/timerlat: Fix histogram
-report when a cpu count is 0") but the bug still remains for printing
-the sum over all CPUs in timerlat_print_stats_all.
+Thanks !
 
-The issue can be reproduced with this command:
+> 
+> On Mon, 18 Nov 2024 11:11:48 +0100
+> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+> 
+>> Hi Steve,
+>>
+>> On 15/11/2024 20:55, Steven Rostedt wrote:
+>>> On Fri, 15 Nov 2024 16:33:06 +0100
+>>> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+>>>    
+>>>> Hi Steve,
+>>>>
+>>>> On 15/11/2024 16:25, Steven Rostedt wrote:
+>>>>> On Fri, 15 Nov 2024 09:26:07 +0100
+>>>>> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
+>>>>>       
+>>>>>> Nevertheless it sounds like a really high latency for wake_up().
+>>>>>>
+>>>>>> I have a custom driver which basically gets an IRQ, and calls wake_up on
+>>>>>> a read() call. This wake_up() on a high cpu usage can be more than 1ms !
+>>>>>> Even with a fifo/99 priority for my kernel thread !
+>>>>>>
+>>>>>> I don't know if it rings any bell ?
+>>>>>> I can obviously do more tests if it can help getting down to the issue :-).
+>>>>>
+>>>>> Try running timerlat.
+>>>>
+>>>> Thanks !
+>>>> Here is what I get:
+>>>> # echo timerlat > current_tracer
+>>>> # echo 1 > events/osnoise/enable
+>>>> # echo 25 > osnoise/stop_tracing_total_us
+>>>> # tail -10 trace
+>>>>                bash-224     [000] d.h..   153.268917: #77645 context  irq timer_latency     45056 ns
+>>>>                bash-224     [000] dnh..   153.268987: irq_noise: timer:206  start 153.268879083 duration 93957 ns
+>>>>                bash-224     [000] d....   153.269056: thread_noise:  bash:224 start 153.268905324 duration 71045 ns
+>>>>          timerlat/0-271     [000] .....   153.269103: #77645 context thread timer_latency    230656 ns
+>>>>                bash-224     [000] d.h..   153.269735: irq_noise: timer:206 start 153.269613847 duration 103558 ns
+>>>>                bash-224     [000] d.h..   153.269911: #77646 context irq timer_latency     40640 ns
+>>>>                bash-224     [000] dnh..   153.269982: irq_noise: timer:206 start 153.269875367 duration 93190 ns
+>>>>                bash-224     [000] d....   153.270053: thread_noise: bash:224 start 153.269900969 duration 72709 ns
+>>>>          timerlat/0-271     [000] .....   153.270100: #77646 context thread timer_latency    227008 ns
+>>>>          timerlat/0-271     [000] .....   153.270155: timerlat_main: stop tracing hit on cpu 0
+>>>>
+>>>> It looks awful, right ?
+>>>
+>>> awful is relative ;-) If that was on x86, I would say it was bad.
+>>>
+>>> Also check out rtla (in tools/trace/rtla).
+>>
+>> Thanks ! I knew it only by name, so I watched a presentation recorded
+>> during OSS summit given by Daniel Bristot de Oliveira who wrote it and
+>> it is really impressive !
+>>
+>> I had to modify the source code a bit, as it does not compile with my
+>> uclibc toolchain:
+>> diff --git a/tools/tracing/rtla/Makefile.rtla
+>> b/tools/tracing/rtla/Makefile.rtla
+>> index cc1d6b615475..b22016a88d09 100644
+>> --- a/tools/tracing/rtla/Makefile.rtla
+>> +++ b/tools/tracing/rtla/Makefile.rtla
+>> @@ -15,7 +15,7 @@ $(call allow-override,LD_SO_CONF_PATH,/etc/ld.so.conf.d/)
+>>    $(call allow-override,LDCONFIG,ldconfig)
+>>    export CC AR STRIP PKG_CONFIG LD_SO_CONF_PATH LDCONFIG
+>>
+>> -FOPTS          := -flto=auto -ffat-lto-objects -fexceptions
+>> -fstack-protector-strong   \
+>> +FOPTS          := -flto=auto -ffat-lto-objects -fexceptions \
+>>                   -fasynchronous-unwind-tables -fstack-clash-protection
+>>    WOPTS          := -O -Wall -Werror=format-security
+>> -Wp,-D_FORTIFY_SOURCE=2             \
+>>                   -Wp,-D_GLIBCXX_ASSERTIONS -Wno-maybe-uninitialized
+> 
+> I'm not sure what the consequence of the above would be. Perhaps Daniel
+> just copied this from other code?
+> 
+>> diff --git a/tools/tracing/rtla/src/timerlat_u.c
+>> b/tools/tracing/rtla/src/timerlat_u.c
+>> index 01dbf9a6b5a5..92ad2388b123 100644
+>> --- a/tools/tracing/rtla/src/timerlat_u.c
+>> +++ b/tools/tracing/rtla/src/timerlat_u.c
+>> @@ -15,10 +15,16 @@
+>>    #include <pthread.h>
+>>    #include <sys/wait.h>
+>>    #include <sys/prctl.h>
+>> +#include <sys/syscall.h>
+>>
+>>    #include "utils.h"
+>>    #include "timerlat_u.h"
+>>
+>> +static inline pid_t gettid(void)
+>> +{
+>> +       return syscall(SYS_gettid);
+>> +}
+>> +
+>>    /*
+>>     * This is the user-space main for the tool timerlatu/ threads.
+>>     *
+>> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+>> index 9ac71a66840c..b754dc1016a4 100644
+>> --- a/tools/tracing/rtla/src/utils.c
+>> +++ b/tools/tracing/rtla/src/utils.c
+>> @@ -229,6 +229,9 @@ long parse_ns_duration(char *val)
+>>    #elif __s390x__
+>>    # define __NR_sched_setattr    345
+>>    # define __NR_sched_getattr    346
+>> +#elif __m68k__
+>> +# define __NR_sched_setattr    349
+>> +# define __NR_sched_getattr    350
+>>    #endif
+>>
+>>    #define SCHED_DEADLINE         6
+>>
+>> But it is not enough, as executing rtla fails with a segfault.
+>> I can dump a core, but I could not manage to build gdb for my board so I
+>> can't debug it (I don't know how to debug a coredump without gdb !).
+> 
+> printf()!  That's how I debug things without gdb ;-)
 
-$ rtla timerlat hist -U -k -d 1s
-Index
-over:
-count:
-min:
-avg:
-max:
-Floating point exception (core dumped)
+Indeed printf gave me clues !
+It appears to be a bug in libtracefs (v1.8.1). rtla segfaults when 
+calling tracefs_local_events() in trace_instance_init().
 
-(There are always no samples with -U unless the user workload is
-created; the -k is to work around a bug with -U.)
+Debugging libtracefs pointed me to the load_events() function, and the 
+segfault happens after tep_parse_event() is called for 
+"/sys/kernel/debug/tracing/events/vmscan/mm_vmscan_write_folio/format".
 
-Fix the bug by omitting max/min/avg when sample count is zero,
-displaying a dash instead, just like we already do for the individual
-CPUs.
+Going through the calls I get to event_read_print_args().
+I changed libtraceevent log level to get the warnings, and it says:
+libtraceevent: Resource temporarily unavailable
+   unknown op '.'
+Segmentation fault
 
-Cc: stable@vger.kernel.org
-Fixes: 1462501c7a8 ("rtla/timerlat: Add a summary for hist mode")
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/timerlat_hist.c | 93 ++++++++++++++++++--------
- 1 file changed, 66 insertions(+), 27 deletions(-)
+JM
 
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index a3907c390d67..5cbbe3e98c1d 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -504,51 +504,90 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
- 	if (!params->no_index)
- 		trace_seq_printf(trace->seq, "min:  ");
- 
--	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_irq);
-+	if (!params->no_irq) {
-+		if (sum.irq_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.min_irq);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_thread);
-+	if (!params->no_thread) {
-+		if (sum.thread_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.min_thread);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_user);
-+	if (params->user_hist) {
-+		if (sum.user_count != 0) {
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.min_user);
-+		} else {
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+		}
-+	}
- 
- 	trace_seq_printf(trace->seq, "\n");
- 
- 	if (!params->no_index)
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
--	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_irq / sum.irq_count);
-+	if (!params->no_irq) {
-+		if (sum.irq_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.sum_irq / sum.irq_count);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_thread / sum.thread_count);
-+	if (!params->no_thread) {
-+		if (sum.thread_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.sum_thread / sum.thread_count);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_user / sum.user_count);
-+	if (params->user_hist) {
-+		if (sum.user_count != 0) {
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.sum_user / sum.user_count);
-+		} else {
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+		}
-+	}
- 
- 	trace_seq_printf(trace->seq, "\n");
- 
- 	if (!params->no_index)
- 		trace_seq_printf(trace->seq, "max:  ");
- 
--	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_irq);
-+	if (!params->no_irq) {
-+		if (sum.irq_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.max_irq);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_thread);
-+	if (!params->no_thread) {
-+		if (sum.thread_count != 0)
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.max_thread);
-+		else
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+	}
- 
--	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_user);
-+	if (params->user_hist) {
-+		if (sum.user_count != 0) {
-+			trace_seq_printf(trace->seq, "%9llu ",
-+					 sum.max_user);
-+		} else {
-+			trace_seq_printf(trace->seq, "%9c ", '-');
-+		}
-+	}
- 
- 	trace_seq_printf(trace->seq, "\n");
- 	trace_seq_do_printf(trace->seq);
--- 
-2.47.0
+
+
+
 
