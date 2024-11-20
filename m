@@ -1,150 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F9D19E97F;
-	Wed, 20 Nov 2024 17:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258DA155C9E;
+	Wed, 20 Nov 2024 18:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732125579; cv=none; b=VpxLfuoE9AEpWo7cNuj4W7wX4xZwupAf8+34exGluCCTbqVh1/hBhmAgJvl6zmp7No0/wyYW3yHuenfC6ND+L5lBL1TqyaX5K8Bhq9qRl1sJBk3g3AKGv4ZBPy4pnqKOLv29jiMlRHc2pbOWSeDxcYDqRGPviqOKwNP4da7PHeU=
+	t=1732126168; cv=none; b=MbKKUJps1NYOG/Xh3kEa3dJtp4qa/UGtxk6qvbwYqAvchFucgUEW5RWY+60TiAtnNkJS67Ytbtb5ThwlTvR8F1Mxm8Xc7xDP6KeZoFUttisakOK8QmwXXvKsMLp5iVkEWNC17cREl26HrNW9+DwIVnFrVa4wLkZRgkMDJND1HpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732125579; c=relaxed/simple;
-	bh=DZ38UxyzHdOC0ZPM6AsxHCE30MP5BwfG1PST2fUMSVk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nT+9UtbJbe64XDXzywbqbwXXsTfygFkmVLHbuL+mtHeVNLKJhGCXOuHadbTbXdefV7FIEVb3+rbo3BPhHUxFGOHDJxF9mllWtP7iL+pqsyE0e0WkQseEjetXoIGgKo9jnwWjxdA+Z7vExuHZ1wpq/pCoT3fGet94trW8XXWO1qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azKfIHNd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732126168; c=relaxed/simple;
+	bh=hrt55QuxvsEKUiAA4HEO76X7BtbxVjTpwF/QOzkat+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nzSzwk4S+UlQq2X5zSQMA3guAJumOLLOuian2aoAGLtSfZp4NC8Bg6V2ruyfR9KyVDSUuzn/fBQ4cBliWnhcuzyYajIPz21Hqo3Tjcb4BrcPUJ902QMskMDIXRPt7vhKZQKwWM414a7Yu/Dlzt4bkadXpPMkGxiPot1oAXMsdLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nAGvKwFh; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azKfIHNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 553DAC4CECD;
-	Wed, 20 Nov 2024 17:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732125579;
-	bh=DZ38UxyzHdOC0ZPM6AsxHCE30MP5BwfG1PST2fUMSVk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=azKfIHNdWD1IHqTeU5C444Y1BksEFRPL8GWfOYC3o5MTdJswd7pS2bO5Ab/5r+JiP
-	 xVNIU9nxmGdj8G5oNGKbX37y9YyK2q3I9xwdA7JG4LxWqTIbIouPCbbrz7Er9Pox/X
-	 3Fg5DhKJW+s9uizw7X3SL5DcZEpftLIMbhS1Dxecr4Bu3uGuQPvQBpp4R+PdCe+Tzi
-	 VgxPyKRNO+4TMtJDFJaCh44v0gyxwT4MW5b+Fx3KrKvGiqGaoluGsMFSyADSxCnQ+7
-	 LcTW73+GxoZkMV0R+OgIdCL66aR4xwgDYbL+55zg0WHofP1A1ThPUndLkqoyzcArX5
-	 wp7jfvlkKgDvw==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH] rust: jump_label: skip formatting generated file
-Date: Wed, 20 Nov 2024 18:59:16 +0100
-Message-ID: <20241120175916.58860-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAGvKwFh"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71e4eb91228so8816b3a.2;
+        Wed, 20 Nov 2024 10:09:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732126166; x=1732730966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hrt55QuxvsEKUiAA4HEO76X7BtbxVjTpwF/QOzkat+E=;
+        b=nAGvKwFhq/Ihp7tbfAPUnMHKrnVISZtKmsYp4ma2Sb1zafeh+PC6agdeMAjGRse1Qq
+         rnFWSdU2qnb+X9tKHSJNhAlg4zcph1H2KoEYYjPRyJqmvsS9WmD+bMQCTIzlGSU4emB1
+         CVkHGHFCzzau28Kis76csdYVwO+/hbIK+/ty6/yRTPdZ+SkFCZIcvyTLZR2OrV8amZ99
+         K6KixPzkavCoMEOJNRjF2cBoTCelnni4RtychXBRys5JG5wr0LD8PyeoSbeLpOfzrr/P
+         wl9rCQ6mMuukuQWmF8wjQN5Zh3arMx72t2s5pFpfoUIifrrVQe17Dz79B90YO+oCA/Uw
+         7U1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732126166; x=1732730966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hrt55QuxvsEKUiAA4HEO76X7BtbxVjTpwF/QOzkat+E=;
+        b=fvbiEeMYMIKFujhW4KtxYi8kqX7vbmbPE6D+Vj1HiF09e/0/WBQpT8vEh6wh15nKq9
+         bkmUsGkvjY7a/MvNwxibAzk4nbBm6aSFp5g2JEV36P9tPAUyBWqcAhE1T827OUOSSEvY
+         i5F3pdImtbvX/LX8KZailh2KQTqjIA2uN4xsij1g5nDi1hIf83XlS3BsFA6eVsGKFqfl
+         M8/QKmHfhI6ZQTkXrRWAN7VeQZPoXh0rUloL/olzIrtNbmWv27nbj0JYSJr5VFG/ST1n
+         IIgSIKENntoAAXN9K660lnnIb3di8hOHmd+DVSSe1BbflHBUMw/9EsL7r78vEwwGq/Jm
+         0Ccg==
+X-Forwarded-Encrypted: i=1; AJvYcCVDpTVDTEj8zzqdrfeMljCxwsYQlwD0xBS3gy6J1mWPBubTDlZsjhhuAqED3mA5pYPRW2m1b5rRK3yAI0wV6t4=@vger.kernel.org, AJvYcCXyg0IgEH8xs2ce2Tu5RBas/19OS+5tdqu4uRWDRS45ZMioS/V1TxX+ZVgEH+kt3VqFCIClX5RpnMTMMtMtZaoYFJ5n@vger.kernel.org, AJvYcCXyspaJnWbpwMAuUUxBJV/f2Wrn/yeT5q+l4y8RwgNHMxRlWMz8WeuyfljBVaCulRjA80z2f4sFM8PC9Y8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyneMCSNTFgcgK8m07G2xpAZ6BKREoar4iQ/10l9RIWmq4ZvY9E
+	ZgWgfAvSUT8CpyeF3bajj0rWQYgyoyx5Ec/VvCtND+KjB+/xMW8XkJTXHstwd4lFAsfAkK+4DMb
+	UVH7ivRvx2IO0WEfwBWPOOewNzdA=
+X-Gm-Gg: ASbGnctrxW3eU9Uq0d+iQqRKELk7917w1LCMbcPd42cdL9E4H4X2Mvt4T0+YtVwQhPE
+	1WPgtN6GudsVnfOY3VEGm2sQy1vvQxhQ=
+X-Google-Smtp-Source: AGHT+IGGm6PRqmhlAaTH3tQW6D/vi0ZzgDVzpl6/FwqRUDcQ8DS8p+rcMu6VIr3hyk0xwtPaOfPObtumwIW9c+K3IAU=
+X-Received: by 2002:a17:90b:33cd:b0:2ea:aa69:106d with SMTP id
+ 98e67ed59e1d1-2eaca80f5f3mr1895605a91.8.1732126166357; Wed, 20 Nov 2024
+ 10:09:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241120175916.58860-1-ojeda@kernel.org>
+In-Reply-To: <20241120175916.58860-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 20 Nov 2024 19:09:13 +0100
+Message-ID: <CANiq72mOoAxA9nW+5=kJMmet7JarT7TAADejXK3XCAcVe0A-bw@mail.gmail.com>
+Subject: Re: [PATCH] rust: jump_label: skip formatting generated file
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After a source tree build of the kernel, and having used the `RSCPP`
-rule, running `rustfmt` fails with:
+On Wed, Nov 20, 2024 at 6:59=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
+>
+> Thus skip formatting it by prefixing its name with `generated_`.
+>
+> Fixes: 169484ab6677 ("rust: add arch_static_branch")
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-    error: macros that expand to items must be delimited with braces or followed by a semicolon
-     --> rust/kernel/arch_static_branch_asm.rs:1:27
-      |
-    1 | ...ls!("1: jmp " ... ".popsection \n\t")
-      |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      |
-    help: change the delimiters to curly braces
-      |
-    1 | ::kernel::concat_literals!{"1: jmp " ... ".popsection \n\t"}
-      |                           ~                                ~
-    help: add a semicolon
-      |
-    1 | ::kernel::concat_literals!("1: jmp " ... ".popsection \n\t");
-      |                                                             +
+Steven: if you could please carry this one too before you send the PR,
+that would be nice. Apologies for not noticing up earlier, I noticed
+when doing some manual merge tests for the Rust subsystem PR.
 
-This file is not meant to be formatted nor works on its own since it is
-meant to be textually included.
+If you happen to rebase for the other sample/test that you asked
+Alice, then please feel free to just fix the original directly. Same
+for the other fix you already applied -- both are really just renames.
 
-Thus skip formatting it by prefixing its name with `generated_`.
+Thanks!
 
-Fixes: 169484ab6677 ("rust: add arch_static_branch")
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- rust/Makefile                                                 | 4 ++--
- rust/kernel/.gitignore                                        | 2 +-
- ..._branch_asm.rs.S => generated_arch_static_branch_asm.rs.S} | 0
- rust/kernel/jump_label.rs                                     | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
- rename rust/kernel/{arch_static_branch_asm.rs.S => generated_arch_static_branch_asm.rs.S} (100%)
-
-diff --git a/rust/Makefile b/rust/Makefile
-index bc2a9071dd29..99db963637e6 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -36,7 +36,7 @@ always-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.c
- obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated.o
- obj-$(CONFIG_RUST_KERNEL_DOCTESTS) += doctests_kernel_generated_kunit.o
- 
--always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/arch_static_branch_asm.rs
-+always-$(subst y,$(CONFIG_RUST),$(CONFIG_JUMP_LABEL)) += kernel/generated_arch_static_branch_asm.rs
- 
- # Avoids running `$(RUSTC)` for the sysroot when it may not be available.
- ifdef CONFIG_RUST
-@@ -427,7 +427,7 @@ $(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
- 	+$(call if_changed_rule,rustc_library)
- 
- ifdef CONFIG_JUMP_LABEL
--$(obj)/kernel.o: $(obj)/kernel/arch_static_branch_asm.rs
-+$(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
- endif
- 
- endif # CONFIG_RUST
-diff --git a/rust/kernel/.gitignore b/rust/kernel/.gitignore
-index d082731007c6..6ba39a178f30 100644
---- a/rust/kernel/.gitignore
-+++ b/rust/kernel/.gitignore
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--/arch_static_branch_asm.rs
-+/generated_arch_static_branch_asm.rs
-diff --git a/rust/kernel/arch_static_branch_asm.rs.S b/rust/kernel/generated_arch_static_branch_asm.rs.S
-similarity index 100%
-rename from rust/kernel/arch_static_branch_asm.rs.S
-rename to rust/kernel/generated_arch_static_branch_asm.rs.S
-diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
-index 2f2df03a3275..8974f04737f8 100644
---- a/rust/kernel/jump_label.rs
-+++ b/rust/kernel/jump_label.rs
-@@ -39,7 +39,7 @@ macro_rules! static_branch_unlikely {
- #[cfg(CONFIG_JUMP_LABEL)]
- const _: &str = include!(concat!(
-     env!("OBJTREE"),
--    "/rust/kernel/arch_static_branch_asm.rs"
-+    "/rust/kernel/generated_arch_static_branch_asm.rs"
- ));
- 
- #[macro_export]
-@@ -48,7 +48,7 @@ macro_rules! static_branch_unlikely {
- macro_rules! arch_static_branch {
-     ($key:path, $keytyp:ty, $field:ident, $branch:expr) => {'my_label: {
-         $crate::asm!(
--            include!(concat!(env!("OBJTREE"), "/rust/kernel/arch_static_branch_asm.rs"));
-+            include!(concat!(env!("OBJTREE"), "/rust/kernel/generated_arch_static_branch_asm.rs"));
-             l_yes = label {
-                 break 'my_label true;
-             },
-
-base-commit: 22193c586b43ee88d66954395885742a6e4a49a9
--- 
-2.47.0
-
+Cheers,
+Miguel
