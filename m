@@ -1,147 +1,103 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC77F14A62A;
-	Wed, 20 Nov 2024 15:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7B413B58A;
+	Wed, 20 Nov 2024 16:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732118401; cv=none; b=rxSVob5XYxZ91yTypgXNzM5bz/iHFOn1F8PP4Khsst7VLu5VFPBVPdNIwENsXQfVM81+lQvO/NIPnOmdcGJcwjyA1sVVpgVbQvbhaO2ZbQQSFIuqLC+BGZr0BoUIYMHO8t4jR3h19BlFpwXdgqP/lgQHPkeFFELloie8oJ/v/9Q=
+	t=1732118605; cv=none; b=ARlfOLutSs6zUMqnattwFzuSR49fEUpHiAOTio0YbvIL1lXGhFQuWBBjekPv75SfL/Reoitjowr7NgVM4ign6bfg2iPjmFqiDA7kY4QkQVUps7Jyr6ohLxtFSbEADntyI1hdXdGkZ/cPidZG5RxmUqCOFDRNyUXTEcEOgKEo3ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732118401; c=relaxed/simple;
-	bh=kpr5rlsPtv+fIRvugQQcmjIq4VFtSfzxuo+49HQBURI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jmxf9RkPNszJmYgTppK+BfEy4fuD35RuDBGD8Lf6ok+DsxdNyfZFIZ2qy/KWm28L9LoUgntiryPfLjjxYG2jSFcaJiSz6GIUigoU5nXKe4tEk+v2YT81079fuDxsISOz9x6Uc+E+Zn9WiNpz+zwWvqshX3PN/PAxcmwrW/uKjfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=h3imbiw6; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1732118605; c=relaxed/simple;
+	bh=l9At4QAU1UWOdiHd0AM/zaIAhJIXZNKutllsFxhd04c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovfen8eFRUGC4ijEPOY/ufR7D838CcGe2ZXMv21Q+N7izwqpoTVahfTAuX6Tary8DltZmxA3kn3zJVJNTXIsafZoUF4u+FKQW50uoPxj11p3U+JzeX0Irkdb68IBTwLmkdTFdcXpAxgXaV6QeOpXN7jKg8ST8vhCKsZ8YsNpp7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBRUWNLH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="h3imbiw6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8914640007;
-	Wed, 20 Nov 2024 15:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1732118397;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8ryErlA0PvGQrgbyhpvPuUIdB3vNq2IYyQnN2e27c9M=;
-	b=h3imbiw63wObrQ9+AHIHBY76Lg8Tasn+VsgW4V+A//02r9vWCJL51yh2UR+jJdxFCRnn/k
-	D9fkhyTsGQwKHOq9oLzv+ydMZXgLIp0bisvYXVnE4BdUgt5BrTXbQI5ckcjbZDuA0eFapZ
-	gLIuYiI21bZP1Olq9o4OvpM7M1XClEnypXeu6mlVcjhqsfJ8+EMxIaMnc5EbjgBO0fl96k
-	3vz6v8bd8PR1t7fJYclVd0rS2BleISgmQ3Qj+CHeoy39dQL1zxM9SYChOrYLBBXpTnIhpB
-	63ccD5GeCayHwSBg/OyTed3ycfPxEpZ30hUM0YKb6XqVM8HuVqZrifzZCvwrGQ==
-Message-ID: <2dc1cdfa-d33a-48b6-ab77-d04b06a3efe8@yoseli.org>
-Date: Wed, 20 Nov 2024 16:59:55 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBRUWNLH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3DCC4CECD;
+	Wed, 20 Nov 2024 16:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732118604;
+	bh=l9At4QAU1UWOdiHd0AM/zaIAhJIXZNKutllsFxhd04c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aBRUWNLHRfZeQXMu7YAN3oI6Uslc8DdiOozdXsGOLr5vSQVyQBykU8uvU1q668mLY
+	 TMtblbKYRnL24mIoJatHJ2AZiGKghQBFG/eTgfk4sIjgVRqe8TfyJ/xk2vwnX1WnHA
+	 wLA6aGH16h/F9Bis7foCon/OkCF9RPqyCsY9TCjStwVdBSUbWembvOCPmjIF4GOvVj
+	 tvbF11Dc4XbXwkRf0KNuvjtSsjT634wGzdQ1R5MtHwraGXLVV/LWT0FSyqQ25APhJs
+	 coRzeI/IFJZzzvtDkp8ZglyDCN+ym0jqz5AWZqyiCK8smJvW+qPsrJTsUl1y8VlJI2
+	 +dPiw54jhcWWQ==
+Date: Wed, 20 Nov 2024 17:03:13 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>, vbabka@suse.cz,
+	shakeel.butt@linux.dev, hannes@cmpxchg.org, Liam.Howlett@oracle.com,
+	lorenzo.stoakes@oracle.com, david@redhat.com, arnd@arndb.de,
+	richard.weiyang@gmail.com, zhangpeng.00@bytedance.com,
+	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com,
+	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Kernel Team <kernel-team@meta.com>
+Subject: Re: [PATCH v4 tip/perf/core 0/4] uprobes,mm: speculative lockless
+ VMA-to-uprobe lookup
+Message-ID: <Zz4IQaF9CCfjS28S@gmail.com>
+References: <20241028010818.2487581-1-andrii@kernel.org>
+ <CAEf4BzYPajbgyvcvm7z1EiPgkee1D1r=a8gaqxzd7k13gh9Uzw@mail.gmail.com>
+ <CAEf4Bza=pwrZvd+3dz-a7eiAQMk9rwBDO1Kk_iwXSCM70CAARw@mail.gmail.com>
+ <CAEf4BzbiZT5mZrQp3EDY688PzAnLV5DrqGQdx6Pzo6oGZ2KCXQ@mail.gmail.com>
+ <20241120154323.GA24774@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>,
- Tomas Glozar <tglozar@redhat.com>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
- <3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
- <20241115102554.29232d34@gandalf.local.home>
- <cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
- <20241115145502.631c9a2c@gandalf.local.home>
- <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
- <20241118152057.13042840@gandalf.local.home>
- <22856ed6-b9d0-4206-b88d-4226534c8675@yoseli.org>
- <20241119102631.76363f2a@gandalf.local.home>
- <20241119112850.219834f5@gandalf.local.home>
- <e4456cb1-b1bc-453b-b3b5-3ee4f03995be@yoseli.org>
- <20241119131035.3c42a533@gandalf.local.home>
- <66e2b7cd-4a4f-4f60-9846-a14c476bd050@yoseli.org>
- <20241120103150.3442d658@gandalf.local.home>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20241120103150.3442d658@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241120154323.GA24774@noisy.programming.kicks-ass.net>
 
-Hi Steve,
 
-On 20/11/2024 16:31, Steven Rostedt wrote:
-> On Wed, 20 Nov 2024 12:47:19 +0100
-> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
-> 
->> Long story short: it fails at kbuffer_load_subbuffer() call in
->> read_cpu_pages().
->>
->> I added printf in the kbuffer helpers in libevent, and it finishes at:
->> __read_long_4: call read_4 at 0x600230c2
->> __read_4_sw: ptr=0x8044e2ac
->>
->> static unsigned int __read_4_sw(void *ptr)
->> {
->> 	printf("%s: ptr=%p, value: %08x\n", __func__, ptr, *(unsigned int *)ptr);
->> 	unsigned int data = *(unsigned int *)ptr;
->> 	printf("%s: data=%08x\n", __func__, data);
->>
->> 	return swap_4(data);
->> }
->>
->> As soon as ptr is dereferenced, the segfault appears.
->> ptr should be ok though, as the address is valid afaik...
-> 
-> But you don't know what ptr it failed on, right?
-> 
-> If dereferencing a pointer will crash, the below line:
-> 
->   	printf("%s: ptr=%p, value: %08x\n", __func__, ptr, *(unsigned int *)ptr);
-> 
-> Will crash before printing, because you are dereferencing ptr. Perhaps you
-> should change this to:
-> 
->   	printf("%s: ptr=%p\n" value: %08x\n", __func__, ptr);
-> 	printf("    value: %08x\n", *(unsigned int *)ptr);
-> 
-> And that way you will see what 'ptr' is before the crash. Or did you do
-> that already?
+* Peter Zijlstra <peterz@infradead.org> wrote:
 
-Yes, I did, sorry I thought it was in the previous dump :-(.
+> On Wed, Nov 20, 2024 at 07:40:15AM -0800, Andrii Nakryiko wrote:
+> > Linus,
+> > 
+> > I'm not sure what's going on here, this patch set seems to be in some
+> > sort of "ignore list" on Peter's side with no indication on its
+> > destiny.
+> 
+> *sigh* it is not, but my inbox is like drinking from a firehose :/
 
-kbuffer_load_subbuffer: kbuf 0x8001d520, ptr 0x8025e2a0, call read_8
-read_8
-swap_8
-kbuffer_load_subbuffer: kbuf 0x8001d520, ptr 0x8025e2a8, read_long
-read_long: call read_long at 0x60022ef4 with 0x8025e2a8
-__read_long_4: call read_4 at 0x600230de with 0x8025e2a8
-__read_4_sw with 0x8025e2a8
-__read_4_sw: ptr=0x8025e2a8, value: 00001ff0
-__read_4_sw: data=00001ff0
-swap_4 for 00001ff0
-__read_long_4: --> read_4 at 0x600230de: f01f0000
-__read_4_sw with 0x8025e2a8
-__read_4_sw: ptr=0x8025e2a8, value: 00001ff0
-__read_4_sw: data=00001ff0
-swap_4 for 00001ff0
-read_long: --> read_long at 0x60022ef4: f01f0000
-__read_long_4: call read_4 at 0x600230de with 0x8025e2a8
-__read_4_sw with 0x8025e2a8
-__read_4_sw: ptr=0x8025e2a8, value: 00001ff0
-__read_4_sw: data=00001ff0
-swap_4 for 00001ff0
-__read_long_4: --> read_4 at 0x600230de: f01f0000
-__read_4_sw with 0x8025e2a8
-__read_4_sw: ptr=0x8025e2a8, value: 00001ff0
-__read_4_sw: data=00001ff0
-swap_4 for 00001ff0
-kbuffer_load_subbuffer: --> read_long,  flags=f01f0000
-kbuffer_load_subbuffer: --> size=1f0000
-kbuffer_load_subbuffer: kbuf->data=0x8025e2ac, kbuf->size=1f0000
-kbuffer_load_subbuffer: kbuf 0x8001d520, ptr 0x8044e2ac, read_long 
-lost_events
-read_long: call read_long at 0x60022ef4 with 0x8044e2ac
-__read_long_4: call read_4 at 0x600230de with 0x8044e2ac
-__read_4_sw with 0x8044e2ac
-Segmentation fault
+And I've been considering that particular series WIP for two reasons:
 
-JM
+ 1) Oleg was still unconvinced about patch 5/5 in the v2 discussion. 
+    Upon re-reading it I think he might have come around and has agreed 
+    to the current approach - but sending a v3 & not seeing Oleg object 
+    would ascertain that.
+
+ 2) There was a build failure reported against -v2 at:
+
+       https://lore.kernel.org/all/202410050745.2Nuvusy4-lkp@intel.com/t.mbox.gz
+
+    We cannot and will not merge patches with build failures.
+
+Andrii did get some other uprobes scalability work merged in v6.13:
+
+    - Switch to RCU Tasks Trace flavor for better performance (Andrii Nakryiko)
+
+    - Massively increase uretprobe SMP scalability by SRCU-protecting
+      the uretprobe lifetime (Andrii Nakryiko)
+
+So we've certainly not been ignoring his patches, to the contrary ...
+
+Thanks,
+
+	Ingo
