@@ -1,103 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7B413B58A;
-	Wed, 20 Nov 2024 16:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DA3153BED;
+	Wed, 20 Nov 2024 16:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732118605; cv=none; b=ARlfOLutSs6zUMqnattwFzuSR49fEUpHiAOTio0YbvIL1lXGhFQuWBBjekPv75SfL/Reoitjowr7NgVM4ign6bfg2iPjmFqiDA7kY4QkQVUps7Jyr6ohLxtFSbEADntyI1hdXdGkZ/cPidZG5RxmUqCOFDRNyUXTEcEOgKEo3ig=
+	t=1732120987; cv=none; b=kKOdCi9pwLa/WMto0mThubF0StmA32zSqzQM/8qHLtTzCJrzXtoBNyqVKmmsbyc6e17ZTYIPoNNrXNUxrhtsv7gp0Lk5X94fZVj6eLT/iac/C9yw4PmgZw1x27/22Td+2/y1zRPaEO9orT9zkyCJeG+uc39ZV2aV6rd6YW5ybNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732118605; c=relaxed/simple;
-	bh=l9At4QAU1UWOdiHd0AM/zaIAhJIXZNKutllsFxhd04c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovfen8eFRUGC4ijEPOY/ufR7D838CcGe2ZXMv21Q+N7izwqpoTVahfTAuX6Tary8DltZmxA3kn3zJVJNTXIsafZoUF4u+FKQW50uoPxj11p3U+JzeX0Irkdb68IBTwLmkdTFdcXpAxgXaV6QeOpXN7jKg8ST8vhCKsZ8YsNpp7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBRUWNLH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBRUWNLH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3DCC4CECD;
-	Wed, 20 Nov 2024 16:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732118604;
-	bh=l9At4QAU1UWOdiHd0AM/zaIAhJIXZNKutllsFxhd04c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aBRUWNLHRfZeQXMu7YAN3oI6Uslc8DdiOozdXsGOLr5vSQVyQBykU8uvU1q668mLY
-	 TMtblbKYRnL24mIoJatHJ2AZiGKghQBFG/eTgfk4sIjgVRqe8TfyJ/xk2vwnX1WnHA
-	 wLA6aGH16h/F9Bis7foCon/OkCF9RPqyCsY9TCjStwVdBSUbWembvOCPmjIF4GOvVj
-	 tvbF11Dc4XbXwkRf0KNuvjtSsjT634wGzdQ1R5MtHwraGXLVV/LWT0FSyqQ25APhJs
-	 coRzeI/IFJZzzvtDkp8ZglyDCN+ym0jqz5AWZqyiCK8smJvW+qPsrJTsUl1y8VlJI2
-	 +dPiw54jhcWWQ==
-Date: Wed, 20 Nov 2024 17:03:13 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
-	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>, vbabka@suse.cz,
-	shakeel.butt@linux.dev, hannes@cmpxchg.org, Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com, david@redhat.com, arnd@arndb.de,
-	richard.weiyang@gmail.com, zhangpeng.00@bytedance.com,
-	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com,
-	Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: [PATCH v4 tip/perf/core 0/4] uprobes,mm: speculative lockless
- VMA-to-uprobe lookup
-Message-ID: <Zz4IQaF9CCfjS28S@gmail.com>
-References: <20241028010818.2487581-1-andrii@kernel.org>
- <CAEf4BzYPajbgyvcvm7z1EiPgkee1D1r=a8gaqxzd7k13gh9Uzw@mail.gmail.com>
- <CAEf4Bza=pwrZvd+3dz-a7eiAQMk9rwBDO1Kk_iwXSCM70CAARw@mail.gmail.com>
- <CAEf4BzbiZT5mZrQp3EDY688PzAnLV5DrqGQdx6Pzo6oGZ2KCXQ@mail.gmail.com>
- <20241120154323.GA24774@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1732120987; c=relaxed/simple;
+	bh=VoKLmbRrI7wCnPyJA/0lO81/9Rgx94RGC1msUcc1qss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DLNjSeIkIuxL5GUdG3gkegohwNHdt22b8f9Wtxozvdoj+OOLVo0gW3krtNPBDM0DNzF9yNU/FDFb1TpyuOcGiZEYpyjorLn8Muh6BTsxfo2suoKlL5P/XIYM6YTycv4r+nCsGxV7hBdOWsdByEGk8Q0Vjw2YBYQWtdgoUhMSwfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF736C4CECD;
+	Wed, 20 Nov 2024 16:43:05 +0000 (UTC)
+Date: Wed, 20 Nov 2024 11:43:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>, Tomas Glozar
+ <tglozar@redhat.com>
+Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
+Message-ID: <20241120114341.30ac73c6@gandalf.local.home>
+In-Reply-To: <2dc1cdfa-d33a-48b6-ab77-d04b06a3efe8@yoseli.org>
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+	<3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
+	<20241115102554.29232d34@gandalf.local.home>
+	<cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
+	<20241115145502.631c9a2c@gandalf.local.home>
+	<2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
+	<20241118152057.13042840@gandalf.local.home>
+	<22856ed6-b9d0-4206-b88d-4226534c8675@yoseli.org>
+	<20241119102631.76363f2a@gandalf.local.home>
+	<20241119112850.219834f5@gandalf.local.home>
+	<e4456cb1-b1bc-453b-b3b5-3ee4f03995be@yoseli.org>
+	<20241119131035.3c42a533@gandalf.local.home>
+	<66e2b7cd-4a4f-4f60-9846-a14c476bd050@yoseli.org>
+	<20241120103150.3442d658@gandalf.local.home>
+	<2dc1cdfa-d33a-48b6-ab77-d04b06a3efe8@yoseli.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241120154323.GA24774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 20 Nov 2024 16:59:55 +0100
+Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
 
-* Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Wed, Nov 20, 2024 at 07:40:15AM -0800, Andrii Nakryiko wrote:
-> > Linus,
-> > 
-> > I'm not sure what's going on here, this patch set seems to be in some
-> > sort of "ignore list" on Peter's side with no indication on its
-> > destiny.
+> > And that way you will see what 'ptr' is before the crash. Or did you do
+> > that already?  
 > 
-> *sigh* it is not, but my inbox is like drinking from a firehose :/
+> Yes, I did, sorry I thought it was in the previous dump :-(.
 
-And I've been considering that particular series WIP for two reasons:
+Can you see if this makes a difference?
 
- 1) Oleg was still unconvinced about patch 5/5 in the v2 discussion. 
-    Upon re-reading it I think he might have come around and has agreed 
-    to the current approach - but sending a v3 & not seeing Oleg object 
-    would ascertain that.
+Patch libtracefs:
 
- 2) There was a build failure reported against -v2 at:
+diff --git a/src/tracefs-events.c b/src/tracefs-events.c
+index 77d1ba89b038..19ea3b3f8d36 100644
+--- a/src/tracefs-events.c
++++ b/src/tracefs-events.c
+@@ -274,7 +274,7 @@ static int open_cpu_files(struct tracefs_instance *instance, cpu_set_t *cpus,
+ 		if (snapshot)
+ 			tcpu = tracefs_cpu_snapshot_open(instance, cpu, true);
+ 		else
+-			tcpu = tracefs_cpu_open_mapped(instance, cpu, true);
++			tcpu = tracefs_cpu_open(instance, cpu, true);
+ 		if (!tcpu)
+ 			goto error;
+ 
 
-       https://lore.kernel.org/all/202410050745.2Nuvusy4-lkp@intel.com/t.mbox.gz
-
-    We cannot and will not merge patches with build failures.
-
-Andrii did get some other uprobes scalability work merged in v6.13:
-
-    - Switch to RCU Tasks Trace flavor for better performance (Andrii Nakryiko)
-
-    - Massively increase uretprobe SMP scalability by SRCU-protecting
-      the uretprobe lifetime (Andrii Nakryiko)
-
-So we've certainly not been ignoring his patches, to the contrary ...
-
-Thanks,
-
-	Ingo
+-- Steve
