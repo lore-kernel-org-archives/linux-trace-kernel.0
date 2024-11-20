@@ -1,147 +1,258 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6371A08D7;
-	Wed, 20 Nov 2024 11:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16EC15853A;
+	Wed, 20 Nov 2024 12:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732103251; cv=none; b=jztL7xjq1jQQ8eUDtOblPKeyO8MDQEnhZpkg4Ar98+Kiy9Puzfcp8CfjCM9vmgci3ibdqjiv4Sf8mnjRXgEulVWTP39ta3DA4BdiotgVhA8cUK5DXFXHXIET9hArgY5mDPbR6CgKL24SqwEQoA1v7zyBP1Fz5ORe6tcB+rNikic=
+	t=1732106626; cv=none; b=pZBVJzwtzVr+2xOcOZBDk3hq+rJaE3WbqfNCoc39rd60dNHlVuVdGt2TBE8CzLvIaAxJAmQ9qzcdhgV4rOYsXyTkFkZ4m7p5PeG8OYCeplI1dtECBSGXieKekwnshdotkH1hMXAHDjSirprIALqXfbGf5mCdGNhILYGL0M4yYGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732103251; c=relaxed/simple;
-	bh=XkEffpyIqiEsba7l9Vf6CNWXjkxxfYCKnu1NCVW/Z7A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=icRuxS7HxQKAwxfySNkUYMTn6qROmmhXuazijhEyoX8vir/1QutIRHDSsP/iAeICFBuufNeEUOJSU/Dy7wjCZzExBKWjD3LAtjKkCZ/+WvUxh4mOUhi1nNIPGOBZj2jHdYtE+aLLk1xE9ht356B/M1hmYe2kB/0fuT5y5jAXml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=ns0pgN0l; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1732106626; c=relaxed/simple;
+	bh=Sy/24vCtalzBy9cewhxqpDBJTPMyuTbSN2ylAJAZPoY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xk8bRh4sNtRn9EYi6zykxZIa0WZHPMW/GS6wG0WLunGU8myRnJBiiUGQD7NvI/e4+GXr/HMygbgLO+WoEb0c+90ryWYoT0Cq/5PWs1Wl5fP5Xtcb7kEI42+9QaYHw8bn6XuDXsLMH20jPaHwAsMiojpmA1FEbtcf2iLKLrlOcp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wSpFX51F; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="ns0pgN0l"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5844DE0004;
-	Wed, 20 Nov 2024 11:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1732103241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UFUtohqITXGudof2VJAlVLHl8l/Ydbd2GzYsCg1X3UM=;
-	b=ns0pgN0lI6nONYq3+O5ZeUIDeerQHw+aKmBsEXYZpve99uHnIzKXdwVzAxvyfnxF/uuZV9
-	jD1a8tSwZDJ5mj9CTisrRC2Yp6Ym6RwqqyF+TJvTw0ssRl28PvDaeu1P/baTsin1qGz6o0
-	H9TNVLD6vXN/mLEXLs3V230dp71PpNOVsbdyb3s+D+JSywYVlR3CSxbgSLfXTsd7M3j2tQ
-	Fno2aZPRcT9Ul7auBsm1daCM1d7fgW0fkch5/teA/7ZQ8uhtDZL6ZANLzQZyB8kjp97Apn
-	jOtffHutE1eBFnwwmsetOqO6X03/GH8wbxXNRMMhctlvPQKJ2+xRqh3LxMp9kg==
-Message-ID: <66e2b7cd-4a4f-4f60-9846-a14c476bd050@yoseli.org>
-Date: Wed, 20 Nov 2024 12:47:19 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wSpFX51F"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1732106620; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=gLT40FZ+81v0Eqhr0GbgNNBehD1MtVLP6/eTiVEMBUc=;
+	b=wSpFX51FT6jyZllSzn++qrhUeydFzxRLiWytzBo2nbeHcOXndixin2tL9FWlS0JZL4qfneN9tzxAxDP6BcM8R6S0ZnNzVtbHRhBPGOQo7qfgg2AFpL+upiO4DJp2z4xUua4FxsOa2Y6kGjG7e3PGgPUBFoVXryVvcio8bPUPFZA=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJsTPTF_1732106617 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 20 Nov 2024 20:43:38 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: lukas@wunner.de,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: bhelgaas@google.com,
+	tony.luck@intel.com,
+	bp@alien8.de,
+	xueshuai@linux.alibaba.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	oleg@redhat.com,
+	naveen@kernel.org,
+	davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com,
+	peterz@infradead.org
+Subject: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
+Date: Wed, 20 Nov 2024 20:43:28 +0800
+Message-ID: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Geert Uytterhoeven
- <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>,
- Tomas Glozar <tglozar@redhat.com>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
- <3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org>
- <20241115102554.29232d34@gandalf.local.home>
- <cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org>
- <20241115145502.631c9a2c@gandalf.local.home>
- <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
- <20241118152057.13042840@gandalf.local.home>
- <22856ed6-b9d0-4206-b88d-4226534c8675@yoseli.org>
- <20241119102631.76363f2a@gandalf.local.home>
- <20241119112850.219834f5@gandalf.local.home>
- <e4456cb1-b1bc-453b-b3b5-3ee4f03995be@yoseli.org>
- <20241119131035.3c42a533@gandalf.local.home>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20241119131035.3c42a533@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Transfer-Encoding: 8bit
 
-Hi Steve,
+Hotplug events are critical indicators for analyzing hardware health,
+particularly in AI supercomputers where surprise link downs can
+significantly impact system performance and reliability. The failure
+characterization analysis illustrates the significance of failures
+caused by the Infiniband link errors. Meta observes that 2% in a machine
+learning cluster and 6% in a vision application cluster of Infiniband
+failures co-occur with GPU failures, such as falling off the bus, which
+may indicate a correlation with PCIe.[1]
 
-On 19/11/2024 19:10, Steven Rostedt wrote:
-> On Tue, 19 Nov 2024 19:06:45 +0100
-> Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org> wrote:
->>>
->>> It shouldn't crash, but it also found a bug in your code ;-)
->>
->> In my code is a really big assumption :-).
-> 
-> Well, not your personally, but I meant "your" as in m68k code.
-> 
->>
->>> You reference two variables that are not part of the event:
->>>
->>>    "mem_map" and "m68k_memory[0].addr"
->>>
->>> Do these variables ever change? Because the TP_printk() part of the
->>> TRACE_EVENT() macro is called a long time after the event is recorded. It
->>> could be seconds, minutes, days or even months (and unlikely possibly
->>> years) later.
->>
->> I am really not the best placed to answer.
->> AFAIK, it sounds like those are never changing.
-> 
-> That would mean they are OK and will not corrupt the trace, but it will be
-> meaningless for tools like perf and trace-cmd.
-> 
->>
->>>
->>> The event takes place and runs the TP_fast_assign() to record the event in
->>> the ring buffer. Then some time later, when you read the "trace" file, the
->>> TP_printk() portion gets run. If you wait months before reading that, it is
->>> executed months later.
->>>
->>> Now you have "mem_map" and "m68k_memory[0].addr" in that output that gets
->>> run months after the fact. Are they constant throughout the boot?
->>
->> I don't know.
->>
->>> Now another issue is that user space has no idea what those values are. Now
->>> user space can not print the values. Currently the code crashes because you
->>> are the first one to reference a global value from a trace event print fmt.
->>> That should probably be fixed to simply fail to parse the event and ignore
->>> the print format logic (which defaults to just printing the raw fields).
->>
->> The patch you sent works...
->> But, it fails a bit later:
->> Dispatching timerlat u procs
->> starting loop
->> User-space timerlat pid 230 on cpu 0
->> Segmentation fault
->>
-> 
-> More printk? ;-)
+To enhance hardware health monitoring and diagnostics, introduces a generic
+tracepoint for hotplug events. Additionally, specific tracepoints for PCIe
+hotplug events are generated. To enable userspace monitoring of these
+tracepoints, for instance using tools like rasdaemon, the
+`pci_hotplug_event` is included in the UAPI (User API) header.
 
-Indeed, but the result is not straightforward this time :-(.
+$ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
+$ cat /sys/kernel/debug/tracing/trace_pipe
+           <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
 
-Long story short: it fails at kbuffer_load_subbuffer() call in
-read_cpu_pages().
+           <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
 
-I added printf in the kbuffer helpers in libevent, and it finishes at:
-__read_long_4: call read_4 at 0x600230c2
-__read_4_sw: ptr=0x8044e2ac
+[1]https://arxiv.org/abs/2410.21680
 
-static unsigned int __read_4_sw(void *ptr)
-{
-	printf("%s: ptr=%p, value: %08x\n", __func__, ptr, *(unsigned int *)ptr);
-	unsigned int data = *(unsigned int *)ptr;
-	printf("%s: data=%08x\n", __func__, data);
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+---
+changes since v2 per Lukas:
+- rewrite commit log to note why add pci_hotplug_event in the UAPI header.
+- define TRACE_SYSTEM as pci_hotplug to avoid conflict with other
+- squash previous two commits into one.
+- rename _TRANS_STATE as _EVENT
+- rename PCI_HOTPLUG_CARD_NO_PRESENT as PCI_HOTPLUG_CARD_NOT_PRESENT
+---
+ drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+ drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+ include/uapi/linux/pci.h          |  7 ++++
+ 3 files changed, 102 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pci/hotplug/trace.h
 
-	return swap_4(data);
-}
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index dcdbfcf404dd..c836462ff067 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -21,6 +21,9 @@
+ #include <linux/pci.h>
+ #include "pciehp.h"
+ 
++#define CREATE_TRACE_POINTS
++#include "trace.h"
++
+ /* The following routines constitute the bulk of the
+    hotplug controller logic
+  */
+@@ -239,12 +242,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case ON_STATE:
+ 		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (events & PCI_EXP_SLTSTA_DLLSC)
++		if (events & PCI_EXP_SLTSTA_DLLSC) {
+ 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+ 				  slot_name(ctrl));
+-		if (events & PCI_EXP_SLTSTA_PDC)
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_DOWN);
++		}
++		if (events & PCI_EXP_SLTSTA_PDC) {
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
++		}
+ 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+ 		break;
+ 	default:
+@@ -264,6 +275,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 					      INDICATOR_NOOP);
+ 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+ 				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+ 		}
+ 		mutex_unlock(&ctrl->state_lock);
+ 		return;
+@@ -276,12 +290,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	case OFF_STATE:
+ 		ctrl->state = POWERON_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+-		if (present)
++		if (present) {
+ 			ctrl_info(ctrl, "Slot(%s): Card present\n",
+ 				  slot_name(ctrl));
+-		if (link_active)
+-			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+-				  slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_CARD_PRESENT);
++		}
++		if (link_active) {
++			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
++			trace_pci_hp_event(pci_name(ctrl->pcie->port),
++					   slot_name(ctrl),
++					   PCI_HOTPLUG_LINK_UP);
++		}
+ 		ctrl->request_result = pciehp_enable_slot(ctrl);
+ 		break;
+ 	default:
+diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+new file mode 100644
+index 000000000000..45e4ca8b83c4
+--- /dev/null
++++ b/drivers/pci/hotplug/trace.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_HW_EVENT_PCI_HP_H
++
++#include <linux/tracepoint.h>
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM pci_hotplug
++
++#define PCI_HOTPLUG_EVENT					\
++	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
++	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
++	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
++	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
++
++/* Enums require being exported to userspace, for user tool parsing */
++#undef EM
++#undef EMe
++#define EM(a, b)	TRACE_DEFINE_ENUM(a);
++#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++PCI_HOTPLUG_EVENT
++
++/*
++ * Now redefine the EM() and EMe() macros to map the enums to the strings
++ * that will be printed in the output.
++ */
++#undef EM
++#undef EMe
++#define EM(a, b)	{a, b},
++#define EMe(a, b)	{a, b}
++
++TRACE_EVENT(pci_hp_event,
++
++	TP_PROTO(const char *port_name,
++		 const char *slot,
++		 const int event),
++
++	TP_ARGS(port_name, slot, event),
++
++	TP_STRUCT__entry(
++		__string(	port_name,	port_name	)
++		__string(	slot,		slot		)
++		__field(	int,		event	)
++	),
++
++	TP_fast_assign(
++		__assign_str(port_name);
++		__assign_str(slot);
++		__entry->event = event;
++	),
++
++	TP_printk("%s slot:%s, event:%s\n",
++		__get_str(port_name),
++		__get_str(slot),
++		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
++	)
++);
++
++#endif /* _TRACE_HW_EVENT_PCI_HP_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE trace
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+index a769eefc5139..4f150028965d 100644
+--- a/include/uapi/linux/pci.h
++++ b/include/uapi/linux/pci.h
+@@ -39,4 +39,11 @@
+ #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+ #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+ 
++enum pci_hotplug_event {
++	PCI_HOTPLUG_LINK_UP,
++	PCI_HOTPLUG_LINK_DOWN,
++	PCI_HOTPLUG_CARD_PRESENT,
++	PCI_HOTPLUG_CARD_NOT_PRESENT,
++};
++
+ #endif /* _UAPILINUX_PCI_H */
+-- 
+2.39.3
 
-As soon as ptr is dereferenced, the segfault appears.
-ptr should be ok though, as the address is valid afaik...
-
-I must say that now I am stuck :-(.
-
-Thanks,
-JM
