@@ -1,43 +1,51 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8B751A08A3;
-	Thu, 21 Nov 2024 18:18:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9691143ACB;
+	Thu, 21 Nov 2024 19:39:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732213135; cv=none; b=lZo/tq5KrXCvDZ/It4dLCIQqXUCxidIYGNqDfQHyLU63AfLqJlRRN0RrP+8+AHEDn0MRq/TvBqHZ1ofJCJHAaXPu9qTS5hPTyhPF35PSLfYhkbmM7VJI6U7KNpF18j/xTr7PBNR0RdIIQCSAmemlpWi4jpJ/SJgUcwl8mJkFvBs=
+	t=1732217964; cv=none; b=Us4QAJTGEyzOSqc3Fv3kDOBuNEZ637qo/B+FNrIQ1PlEZg+lA5gf0BqIHDRXqN8P72sZb54LUqUqYWMBYZl14KFfOlVXQLvkkNOuq2wILwK2HzjRCnBr6JIANDQsxakSluGm9rNWXkYbf2jAu3EKTstZZiPGiZtfB8hqlFpkAOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732213135; c=relaxed/simple;
-	bh=boJtVvo70ZEiAShf8Jnaat3ZvuPdjt2n4zPdgQ22XIw=;
+	s=arc-20240116; t=1732217964; c=relaxed/simple;
+	bh=Nyzjvz4KYFaiD67hHwcz3LhDNHxN1WB5SGIxMXQszWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+2MHXVIe9AyK5yXfJXtXSa4rBruNDbzUMHqpZU//wfpKR3EdjqwTQ2Yzle4/UWsztCBOP1sb4qHdy9onc7XsIwT/IRqwPA03l0SlswHImDIaEOIq1/HW5gJ2mlpdo0zjj5aUbvbsdi5aeX2EYx8khFHRt+jFu3V8Ym40FLaOlo=
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdNTNW0X8A0XdVsYEv8as4IumAaztNE5XRART+Uf2wTCZSVIZ8KDPLseuhcIXe/3x1ZIIHvQqHw0sXSRTdmiu9Gf3W1QazpRVpPaeh4wv2T3HOcNJPG5iLRIAkh/lfLDznrRyy2aphH0UT1O1IORS6Z1KZqCt9Z/E6ywN0XZFnQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD45712FC;
-	Thu, 21 Nov 2024 10:19:21 -0800 (PST)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F359A3F5A1;
-	Thu, 21 Nov 2024 10:18:48 -0800 (PST)
-Date: Thu, 21 Nov 2024 18:18:41 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AD0112FC;
+	Thu, 21 Nov 2024 11:39:50 -0800 (PST)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3AF13F5A1;
+	Thu, 21 Nov 2024 11:39:17 -0800 (PST)
+Date: Thu, 21 Nov 2024 19:38:58 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
 	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
 	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Will Deacon <will@kernel.org>
-Subject: Re: [RFC 00/11] uprobes: Add support to optimize usdt probes on
- x86_64
-Message-ID: <Zz95aiWM5cN6MDED@J2N7QTR9R3.cambridge.arm.com>
-References: <20241105133405.2703607-1-jolsa@kernel.org>
- <20241117114946.GD27667@noisy.programming.kicks-ass.net>
- <ZzsRfhGSYXVK0mst@J2N7QTR9R3>
- <CAEf4BzbXYrZLF+WGBvkSmKDCvVLuos-Ywx1xKqksdaYKySB-OQ@mail.gmail.com>
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
+ trampolines
+Message-ID: <Zz-MI1J1FpvqItdq@J2N7QTR9R3>
+References: <ZypI3n-2wbS3_w5p@krava>
+ <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
+ <ZzkSKQSrbffwOFvd@krava>
+ <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+ <20241119091348.GE11903@noisy.programming.kicks-ass.net>
+ <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
+ <20241121115353.GJ24774@noisy.programming.kicks-ass.net>
+ <CAADnVQJJ0WS=Y1EudjiFD8fn4zHCz6x1auaEEHaYHsP15Vks2Q@mail.gmail.com>
+ <20241121163450.GN24774@noisy.programming.kicks-ass.net>
+ <CAADnVQ+3VA-SW2FKVv7iSPps00gZRkOb9L7NiKFZ5Jc5NwDedQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,42 +55,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbXYrZLF+WGBvkSmKDCvVLuos-Ywx1xKqksdaYKySB-OQ@mail.gmail.com>
+In-Reply-To: <CAADnVQ+3VA-SW2FKVv7iSPps00gZRkOb9L7NiKFZ5Jc5NwDedQ@mail.gmail.com>
 
-On Mon, Nov 18, 2024 at 10:13:04PM -0800, Andrii Nakryiko wrote:
-> On Mon, Nov 18, 2024 at 2:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > Yep, on arm64 we definitely can't patch in branches reliably; using BRK
-> > (as we do today) is the only reliable option, and it *shouldn't* be
-> > slower than a syscall.
-> >
-> > Looking around, we have a different latent issue with uprobes on arm64
-> > in that only certain instructions can be modified while being
-> > concurrently executed (in addition to the atomictiy of updating the
+[resending as I somehow messed up the 'From' header and got a tonne of
+bounces]
+
+On Thu, Nov 21, 2024 at 08:47:56AM -0800, Alexei Starovoitov wrote:
+> On Thu, Nov 21, 2024 at 8:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > Elsewhere in the thread Mark Rutland already noted that arm64 really
+> > doesn't need or want this.
 > 
-> What does this mean for the application in practical terms? Will it
-> crash? Or will there be some corruption? Just curious how this can
-> manifest.
+> Doesn't look like you've read what you quoted above.
+> On arm64 the _HW_ cost may be the same.
+> The _SW_ difference in handling trap vs syscall is real.
+> I bet once uprobe syscall is benchmarked on arm64 there will
+> be a delta.
 
-It can result in a variety of effects including crashes, corruption of
-memory, registers, issuing random syscalls, etc.
+I already pointed out in [1] that on arm64 we can make the trap case
+*faster* than the syscall. If that's not already the case, there's only
+a small amount of rework needed, (pulling BRK handling into
+entry-common.c), which we want to do for other reasons anyway.
 
-The ARM ARM (ARM DDI 0487K.a [1]) says in section B2.2.5:
+On arm64 I do not want the syscall; the trap is faster and simpler to
+maintain.
 
-  Concurrent modification and execution of instructions can lead to the
-  resulting instruction performing any behavior that can be achieved by
-  executing any sequence of instructions that can be executed from the
-  same Exception level [...]
+Mark
 
-Which is to say basically anything might happen, except that this can't
-corrupt any state userspace cannot access, and cannot provide a
-mechanism to escalate privilege to a higher exception level.
-
-So that's potentially *very bad*, and we're just getting lucky that most
-implementations don't happen to do that for most instructions, though
-I'm fairly certain there are implementations out there which do exhibit
-this behaviour (and it gets more likely as implementations get more
-aggressive).
-
-Mark.
-
-[1] https://developer.arm.com/documentation/ddi0487/ka/?lang=en
+[1] https://lore.kernel.org/lkml/ZzsRfhGSYXVK0mst@J2N7QTR9R3/
