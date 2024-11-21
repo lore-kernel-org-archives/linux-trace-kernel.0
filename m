@@ -1,84 +1,88 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9691143ACB;
-	Thu, 21 Nov 2024 19:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7032C23098E;
+	Thu, 21 Nov 2024 23:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732217964; cv=none; b=Us4QAJTGEyzOSqc3Fv3kDOBuNEZ637qo/B+FNrIQ1PlEZg+lA5gf0BqIHDRXqN8P72sZb54LUqUqYWMBYZl14KFfOlVXQLvkkNOuq2wILwK2HzjRCnBr6JIANDQsxakSluGm9rNWXkYbf2jAu3EKTstZZiPGiZtfB8hqlFpkAOQ=
+	t=1732230604; cv=none; b=RMpN++g/wF2j/5YRpPB9sy62F2zGrJaAqvtC90enRcaYR6qnhZNaZ2hv8WrSrAotXZMJv8U6eX14Mzvl92WxjRqww5BIlQdwihY9yp5Bi01Yw75ebBc34EE43koTF4Jc3Oa+xLFdqZXUjsmYQSVDTyuZ4N8QK1jhONDoUOxWUkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732217964; c=relaxed/simple;
-	bh=Nyzjvz4KYFaiD67hHwcz3LhDNHxN1WB5SGIxMXQszWE=;
+	s=arc-20240116; t=1732230604; c=relaxed/simple;
+	bh=6tTZz3sao9WY5s+VJbUEW5RMKf+iTRCr9kuCxAehess=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QdNTNW0X8A0XdVsYEv8as4IumAaztNE5XRART+Uf2wTCZSVIZ8KDPLseuhcIXe/3x1ZIIHvQqHw0sXSRTdmiu9Gf3W1QazpRVpPaeh4wv2T3HOcNJPG5iLRIAkh/lfLDznrRyy2aphH0UT1O1IORS6Z1KZqCt9Z/E6ywN0XZFnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AD0112FC;
-	Thu, 21 Nov 2024 11:39:50 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3AF13F5A1;
-	Thu, 21 Nov 2024 11:39:17 -0800 (PST)
-Date: Thu, 21 Nov 2024 19:38:58 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
- trampolines
-Message-ID: <Zz-MI1J1FpvqItdq@J2N7QTR9R3>
-References: <ZypI3n-2wbS3_w5p@krava>
- <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
- <ZzkSKQSrbffwOFvd@krava>
- <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
- <20241119091348.GE11903@noisy.programming.kicks-ass.net>
- <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
- <20241121115353.GJ24774@noisy.programming.kicks-ass.net>
- <CAADnVQJJ0WS=Y1EudjiFD8fn4zHCz6x1auaEEHaYHsP15Vks2Q@mail.gmail.com>
- <20241121163450.GN24774@noisy.programming.kicks-ass.net>
- <CAADnVQ+3VA-SW2FKVv7iSPps00gZRkOb9L7NiKFZ5Jc5NwDedQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqyGia3aGY2ubXtWg//hhiNMFs5j2CdhD+4dJdC3hsuXtw13RguTwiKDjdotFzz0833xK43yQarYE8JTdap/TDF1EnU1RF6+e3PUAgGoG8nW6waQo5yCawdZNbUgSdTp4vA/WqLergHwl2/+DCYt9+VM/2YhxYXVSRhXALbVHq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 33ECA102CB650;
+	Fri, 22 Nov 2024 00:09:51 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 075F04F1110; Fri, 22 Nov 2024 00:09:51 +0100 (CET)
+Date: Fri, 22 Nov 2024 00:09:50 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
+	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <Zz-9vviSWP8oRPUx@wunner.de>
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+ <Zz786zZljAy2J5i7@wunner.de>
+ <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+ <20241121084354.4a554829@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQ+3VA-SW2FKVv7iSPps00gZRkOb9L7NiKFZ5Jc5NwDedQ@mail.gmail.com>
+In-Reply-To: <20241121084354.4a554829@gandalf.local.home>
 
-[resending as I somehow messed up the 'From' header and got a tonne of
-bounces]
+On Thu, Nov 21, 2024 at 08:43:54AM -0500, Steven Rostedt wrote:
+> On Thu, 21 Nov 2024 19:34:31 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> > Sure, I can reorganize the directory. You have two optional proposals:
+> > 
+> > 1. /sys/kernel/debug/tracing/events/pci_hp_event
+> > 2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
+> > 
+> > I personally prefer the second approach.
+[...]
+> That said, is all these events going to be related to hotplug? If so, you
+> probably want "hotplug" or "hp" in the system name. If you make it just
+> "pci", then it will be expected that all the events will be related to PCI
+> in general.
 
-On Thu, Nov 21, 2024 at 08:47:56AM -0800, Alexei Starovoitov wrote:
-> On Thu, Nov 21, 2024 at 8:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > Elsewhere in the thread Mark Rutland already noted that arm64 really
-> > doesn't need or want this.
-> 
-> Doesn't look like you've read what you quoted above.
-> On arm64 the _HW_ cost may be the same.
-> The _SW_ difference in handling trap vs syscall is real.
-> I bet once uprobe syscall is benchmarked on arm64 there will
-> be a delta.
+Grouping them under "pci" probably makes more sense than grouping them
+under "hotplug".  A lot can be hotplugged (cpu, memory, PCI, USB, ...)
+but it's mostly unrelated hardware and enabling all their events at once
+doesn't seem to make much sense.  Whereas I can imagine people want to
+enable all PCI trace events.  We currently only have tracepoints for AER
+in the PCI core, but perhaps people will want to add new ones for
+power faults, DPC recovery, bandwidth control etc.
 
-I already pointed out in [1] that on arm64 we can make the trap case
-*faster* than the syscall. If that's not already the case, there's only
-a small amount of rework needed, (pulling BRK handling into
-entry-common.c), which we want to do for other reasons anyway.
+Would something like
 
-On arm64 I do not want the syscall; the trap is faster and simpler to
-maintain.
+  /sys/kernel/debug/tracing/events/pci/hotplug_event
 
-Mark
+be possible?  It would seem more elegant than
 
-[1] https://lore.kernel.org/lkml/ZzsRfhGSYXVK0mst@J2N7QTR9R3/
+  /sys/kernel/debug/tracing/events/pci/pci_hp_event
+
+because it avoids the duplication of "pci" in the path.
+
+Thanks,
+
+Lukas
