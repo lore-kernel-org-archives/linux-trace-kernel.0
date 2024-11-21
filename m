@@ -1,88 +1,77 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07401C578C;
-	Thu, 21 Nov 2024 11:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE281CD1EE;
+	Thu, 21 Nov 2024 11:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732188889; cv=none; b=DN8aqKEtNOgVn0MlgL2KaH2uH1Y9hoBHshXp/F0b4sApsWQvlV+MdLncZcCDJh1tjW+QzvhCNErBVySR/iWTteCqdMR2i0UI1j6NKdMpg5ecLE/t9IA0PCGd6C6/uLMxAntDVTXnGDxhVucQ+lfhOSF2/0FozAK8hTBuqjJ9nGY=
+	t=1732190043; cv=none; b=H2NP316dOD7wA7LXcuxknWAHt1pyg2soV415FlwodjZ8VJtV6C4BoNFpBhKYhAzptlbySg7ascDrNK3GTNdnCIVcco8ktR2cueCCQ4o4cjNgWzgW1Zuy5424Slzll7BT64FApJxS4ReZsXxMSpc8ewdlZET2kxHik4HUS4WtcxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732188889; c=relaxed/simple;
-	bh=vucmF/xedC4wjhdZeZ8wYdcTFDxnTsuYOSrTji52vVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V3bTVbZAifKBBDCIXoSK9LyjQtMf5yvmsIgtLBvBFxLMSSEyrjXZeTkeStPrshhUskt7VdxiOHSwhvhkimeUMWMcQ8+LmZWEgT8W+N/dd9RNJ6igWoYp0RfG0gcVrTX/cMIjyXQOXjG4EiLevzTJMEJDwYq1YdBfBuPJiSb8ouA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZSycXVH6; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1732190043; c=relaxed/simple;
+	bh=AmK0AI1qoNjZ0cH1lAwLtt6sWfdkbtQrIoeS241Raec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhMJxmPS5rCTPZ731euklN91BZWZLnBYogRBq8/ILXmogwEuvZEH+PBdrnE5Amncl5nFdN2Ef978yB/ggwwyXMUA9Gp0DCo3jW15oxnR2UzKAKUOrMJpSM15khfOIMjNQVBKmCGL4H8Ev0dbUVfm1+CaouSYaqi8kFwjsUvPSjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i8kPc53J; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZSycXVH6"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732188876; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=tInUvV9amHF6Ghq811sNVWZAtZ7ilPNUqZfPT4F1Dh4=;
-	b=ZSycXVH6C0oe/M1Ber23hbbme6aVdaeiYyIHOuwTqYI/qMM8VQtEN2m12MajUAkG/5LKZHIMuwcbzExoY0qM61YZffEK5cXtMtOsABvfLGeA/SVCTwV6SQTZ81sQEm5Hx6eAExmzRu8Ek6uMWiz7EOJFHKNum2MMK9HM4n0eybE=
-Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJwtBb2_1732188873 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 21 Nov 2024 19:34:35 +0800
-Message-ID: <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
-Date: Thu, 21 Nov 2024 19:34:31 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i8kPc53J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AmK0AI1qoNjZ0cH1lAwLtt6sWfdkbtQrIoeS241Raec=; b=i8kPc53JEweieYf82/XNWs+MyZ
+	y4TdePE7L5rOgPuxlWUHzcVG6gzltYkmMsaE/ZzgBBynjqMwGiE+6yFLxQvITJvcH7YGqUYLkNaUo
+	Qn0lvht+b2fv6Uq8UKqIZHgHfoTNAYjqbeJ1capS9O1WbedziHKV9DK7xsXuaA3Ta90tiAThMD8Ow
+	IDMPeF/uK4/iX1VS8IQTC9idKd0O0yp9Co4xmqi+FU1LZtLHXRySZh8HVH6PkynqdkebIAQiuVifM
+	ENg5RvdtXFb6WZIRurvGvEZHCyzs2oZ8tLHTrN29ItXiy8FUmXg9AVXM5eSe1PV5ZjVj9O4DrBFVX
+	nIlPDXLw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tE5ku-00000006LDa-2iuE;
+	Thu, 21 Nov 2024 11:53:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 83C1B30068B; Thu, 21 Nov 2024 12:53:53 +0100 (CET)
+Date: Thu, 21 Nov 2024 12:53:53 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
+ trampolines
+Message-ID: <20241121115353.GJ24774@noisy.programming.kicks-ass.net>
+References: <20241105133405.2703607-1-jolsa@kernel.org>
+ <20241105133405.2703607-6-jolsa@kernel.org>
+ <20241105142327.GF10375@noisy.programming.kicks-ass.net>
+ <ZypI3n-2wbS3_w5p@krava>
+ <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
+ <ZzkSKQSrbffwOFvd@krava>
+ <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+ <20241119091348.GE11903@noisy.programming.kicks-ass.net>
+ <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org
-References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
- <Zz786zZljAy2J5i7@wunner.de>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <Zz786zZljAy2J5i7@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
 
+On Wed, Nov 20, 2024 at 04:07:38PM -0800, Andrii Nakryiko wrote:
 
+> USDTs are meant to be "transparent" to the surrounding code and they
+> don't mark any clobbered registers. Technically it could be added, but
+> I'm not a fan of this.
 
-在 2024/11/21 17:27, Lukas Wunner 写道:
-> On Wed, Nov 20, 2024 at 08:43:28PM +0800, Shuai Xue wrote:
->> $ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
->                                                ^^^^^^^
-> I think this should now be "pci_hotplug" because you've renamed the
-> TRACE_SYSTEM in v3.
-
-Yes, you are right. Will fix it.
-
-> 
-> I'm wondering if we'll have other categories besides "pci_hp_event"
-> below "pci_hotplug".  Maybe not.  Is it possible to omit the "pci_hotplug"
-> and make "pci_hp_event" top level?  Or should this be grouped below "pci"
-> instead of "pci_hotplug"?  I'm somewhat at a loss here as I'm not
-> familiar with the conventions used in the tracing subsystem.
-
-Sure, I can reorganize the directory. You have two optional proposals:
-
-1. /sys/kernel/debug/tracing/events/pci_hp_event
-2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
-
-I personally prefer the second approach. However, I'll defer the final decision
-to the tracing subsystem maintainer, considering their expertise and
-familiarity with the existing conventions.
-
-> 
->  From a PCI hotplug perspective, this patch LGTM, so:
-> 
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-
-
-Thank you.
-
-Best Regards,
-Shuai
+Sure. Anyway, another thing to consider is FRED, will all of this still
+matter once that lands? If FRED gets us INT3 performance close to what
+SYSCALL has, then all this work will go unused.
