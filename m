@@ -1,150 +1,103 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C75D156883
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 16:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A990487A7;
+	Thu, 21 Nov 2024 16:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732206750; cv=none; b=bIYi5skpjIe0Y28FHa8tfGFTF/oFuWA2+kucKAXbiae7TlmjuGQ9z0lvxRa580zUeSxNkKTwJfDEVnznhcLrk93g0hxXDXIPzPI7n7cKaVLllDG3mCTpZZ2qq538s5BkeNeIpTrejoIB2oylQ11AVHPn5xB8l4G1SOnmcHepY6I=
+	t=1732206900; cv=none; b=GedPvzlad8/S8N7s48rsxxZz71Eyriz66D5TiLiGs65RsfIJdt4W84BBsnPntSjesiCmcBiaiSac64x8nxTRX0V96/gsFy9kpJyxOvwsw4bl0IS1ecW/bCkiKiET/EpCk37gjGMMuJe9SPE+Ze9CSlUmSrWddU56F5pYLnf8zWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732206750; c=relaxed/simple;
-	bh=0071SProcnj54azKnrgs9O4CTcBQWiKx7fiDtH0v6QI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DNB53skL7xVpZ7zRA+Tmxib8gVdSsRTrqz087JDv/o0981PyTQUtm9X6BqDqBP/7SwglTD0zi1YOeS8RK53ark5p42NkQGioQp8YsgXVVcl+pE/VYbRY6n8MFz7xnN5xYArxCrwd+X5Y6dWtxrWLQ4FZTZSwk+jE40pSsIkiMN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UyoFesxE; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1732206900; c=relaxed/simple;
+	bh=UCOCpuDtGiAEoDpRAQ4MiCxmyCkKJJWoXhkjNR9iSxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ao7IXLbyROj1Sj1FiZRvXrD9I/h5Hom0CYdMDdndWqqF2mcJMd3yifXjqsyc30wKj+WH3CB4JbQVSPL13W6D08b0Fwc1VeLFHIVh0sA55G8XEvHJys+xkP6Nz9ldUSJKzgLPJdzR9MZ9jXpD9jSQPFqHRJG6F3wGW8QKqyvDIfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G9ZhCyxt; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UyoFesxE"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-460969c49f2so331591cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 08:32:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732206748; x=1732811548; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KinxbNGywfMnxHwtq/MrCSYbQ52bStWS5PDW/rvFKDU=;
-        b=UyoFesxE9cDB7mn3kizkXDUJUgVZl4iK/Ehl0kua6JRvLUfsVTibYxJKpa+KEjKRme
-         b6OKsHSb2We7Ewtih4a5V5KHHX3gzuIlDEPPwdPYe29lfcJHR1MGijV+DSuMWqLeXQTt
-         VfN38AyAOUdsidX08ezXwa+UV1FnQAqtyuw1QjBo5XalOg9NpB7CjkFD4fZL/N/bzztm
-         KJ5k0toPx5p7VBnCvysRqeUgdAaW+uO3jUgCaDj9fDcGbNOYvMh1IoNKK0FKVYFQOdJB
-         yw33w9TyTOtwVQfy5hv3xuMs0KtGHunY1PeIgJ1Cs5El4uNcAuzMh9FLbbBG105VONPI
-         gvSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732206748; x=1732811548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KinxbNGywfMnxHwtq/MrCSYbQ52bStWS5PDW/rvFKDU=;
-        b=SQ80l8iSmwO+8edGEC1zxVfaE0m2XA/4LBSHOc9t/tNHWPqRnOpAMr4mlzcoFcW7do
-         oMfwQskeu0TEbWF4BTXJadZFGAQi64XuXeUBkdAv3QITKST4c/EZ+SlEatn8tnLmHqJl
-         og1JdmEelczAWNqeZJdhXqkKdRK2is/rZ28ya9FeFp5+hZLg/I+FZUr6XdGS+14kIfaA
-         f5a+8LtGIWXqqwmpG/xRfNnOvIGnEQGnO7cKY7i92S9A/8nI+O/oZSHK/xJHj6GND3hq
-         XLr8Q73vIosMH4NEzKsl9SCzlaJn0y52vbPB17mXpjIJ4664TmrsTebs+372+JngVCj5
-         hgLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVf1vTto85pvJ3PNHYfkPilUTJFY4wufBUlIUMma/3VRR8n3FDqV9Diq3XtsCWB0O4j82IjlbjfoZrmCFHlHas9SbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMRGy233jLB23zhOKVzMwpsbyXN0Qv6qOFo1kbtnKnep/JZBZm
-	mBNN3vvveKzI75TD4KE8MAD+xQwVRSK7lhB+D5sMYI5Or+QbR5zTefnvO17KV01htbE5fuP51Ti
-	XgiR+ha/tj4/mKSxeta9fGfUAU81RuHpsQeB/
-X-Gm-Gg: ASbGncsy6r0NtzCRIDeJVQHVxHiAFp2SX2ESW7kyW+LHyQBrgkzGBPJkFZGRJiwlGGI
-	ifsxyDo+d9zUK8Qtv/LW9IWFa0Q6vQkx91k+I8DlCeVR5U4A3SG+RsqsQSPMh
-X-Google-Smtp-Source: AGHT+IEAnK3ZNayNZX1MZKPWNaHHSfD9Gcs0HsfhavIX8PgOJ4JyzfKBkGAXcCXM+vNSiBpmS2gA+HMqANSVxnOf0r0=
-X-Received: by 2002:a05:622a:1aaa:b0:465:31d8:6f1a with SMTP id
- d75a77b69052e-4653bd85a6emr194851cf.23.1732206747600; Thu, 21 Nov 2024
- 08:32:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G9ZhCyxt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=Zn6glNQ9LqdNXzaYMvjZZWLeqs4VnleVv7K8w5ByJZk=; b=G9ZhCyxtW2R/eG6hqwC636fYs2
+	iMdk+VVjGlVqsCydFZSz5iEmRFufGCLSpzSl+JGbwp1sO9c+oQtkOW061NUUZS/CeoG+nT2XgRkU8
+	pnj/LThaekMcXCtH2KuVidU5ouOAVytIR8MCoZsXNOM9Jq6MFiMs8uvDRRGCM5w3U4HB3gEO2pENR
+	fEV6S6tKr3UwQ2K5/oFOG0gb5Gb+7NlnhWEQcVjoehRYjks4BKRdwemSFm5cx2ZBPERRFjA7KUixu
+	RuT5rQleR9WhQRZMlOzYDBcP4bHRk+P6PS/LLtr5TE1sC07t4aYAQhvEGlnYL7LizyTXxBXX7AFlI
+	9SN509bw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tEA8p-00000000bEy-0hpH;
+	Thu, 21 Nov 2024 16:34:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4D12730068B; Thu, 21 Nov 2024 17:34:50 +0100 (CET)
+Date: Thu, 21 Nov 2024 17:34:50 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
+ trampolines
+Message-ID: <20241121163450.GN24774@noisy.programming.kicks-ass.net>
+References: <20241105133405.2703607-6-jolsa@kernel.org>
+ <20241105142327.GF10375@noisy.programming.kicks-ass.net>
+ <ZypI3n-2wbS3_w5p@krava>
+ <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
+ <ZzkSKQSrbffwOFvd@krava>
+ <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
+ <20241119091348.GE11903@noisy.programming.kicks-ass.net>
+ <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
+ <20241121115353.GJ24774@noisy.programming.kicks-ass.net>
+ <CAADnVQJJ0WS=Y1EudjiFD8fn4zHCz6x1auaEEHaYHsP15Vks2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241028010818.2487581-1-andrii@kernel.org> <20241028010818.2487581-3-andrii@kernel.org>
- <20241121144442.GL24774@noisy.programming.kicks-ass.net> <20241121152257.GN38972@noisy.programming.kicks-ass.net>
- <CAJuCfpE04MtnmRR+JYpYqC07-u9yXRUF0FB2mSaQatzwSkNNdw@mail.gmail.com>
-In-Reply-To: <CAJuCfpE04MtnmRR+JYpYqC07-u9yXRUF0FB2mSaQatzwSkNNdw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 21 Nov 2024 08:32:16 -0800
-Message-ID: <CAJuCfpHpDtis0+KwcUCb5oAbjNmgCtJB=K18Jr=MMRRE=Mkaig@mail.gmail.com>
-Subject: Re: [PATCH v4 tip/perf/core 2/4] mm: Introduce mmap_lock_speculation_{begin|end}
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, oleg@redhat.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org, 
-	willy@infradead.org, mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, 
-	mhocko@kernel.org, vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org, 
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
-	arnd@arndb.de, richard.weiyang@gmail.com, zhangpeng.00@bytedance.com, 
-	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJJ0WS=Y1EudjiFD8fn4zHCz6x1auaEEHaYHsP15Vks2Q@mail.gmail.com>
 
-On Thu, Nov 21, 2024 at 7:36=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Thu, Nov 21, 2024 at 7:23=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
-org> wrote:
+On Thu, Nov 21, 2024 at 08:02:12AM -0800, Alexei Starovoitov wrote:
+> On Thu, Nov 21, 2024 at 4:17 AM Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > On Thu, Nov 21, 2024 at 03:44:42PM +0100, Peter Zijlstra wrote:
+> > On Wed, Nov 20, 2024 at 04:07:38PM -0800, Andrii Nakryiko wrote:
 > >
-> > > But perhaps it makes even more sense to add this functionality to
-> > > seqcount itself. The same argument can be made for seqcount_mutex and
-> > > seqcount_rwlock users.
+> > > USDTs are meant to be "transparent" to the surrounding code and they
+> > > don't mark any clobbered registers. Technically it could be added, but
+> > > I'm not a fan of this.
 > >
-> > Something like so I suppose.
->
-> Ok, let me put this all together. Thanks!
+> > Sure. Anyway, another thing to consider is FRED, will all of this still
+> > matter once that lands? If FRED gets us INT3 performance close to what
+> > SYSCALL has, then all this work will go unused.
+> 
+> afaik not a single cpu in the datacenter supports FRED while
+> uprobe overhead is real.
+> imo it's worth improving performance today for existing cpus.
 
-I posted the new version at
-https://lore.kernel.org/all/20241121162826.987947-1-surenb@google.com/
-The changes are minimal, only those requested by Peter, so hopefully
-they can be accepted quickly.
+I understand, but OTOH adding a syscall now, that we'll have to maintain
+for years and years, even through we know it'll not be used much is a
+bit annoying.
 
->
-> >
-> > ---
-> > diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-> > index 5298765d6ca4..102afdf8c7db 100644
-> > --- a/include/linux/seqlock.h
-> > +++ b/include/linux/seqlock.h
-> > @@ -318,6 +318,28 @@ SEQCOUNT_LOCKNAME(mutex,        struct mutex,    t=
-rue,     mutex)
-> >         __seq;                                                         =
- \
-> >  })
-> >
-> > +/**
-> > + * raw_seqcount_try_begin() - begin a seqcount_t read critical section
-> > + *                            w/o lockdep and w/o counter stabilizatio=
-n
-> > + * @s: Pointer to seqcount_t or any of the seqcount_LOCKNAME_t variant=
-s
-> > + *
-> > + * Very like raw_seqcount_begin(), except it enables eliding the criti=
-cal
-> > + * section entirely if odd, instead of doing the speculation knowing i=
-t will
-> > + * fail.
-> > + *
-> > + * Useful when counter stabilization is more or less equivalent to tak=
-ing
-> > + * the lock and there is a slowpath that does that.
-> > + *
-> > + * If true, start will be set to the (even) sequence count read.
-> > + *
-> > + * Return: true when a read critical section is started.
-> > + */
-> > +#define raw_seqcount_try_begin(s, start)                              =
- \
-> > +({                                                                    =
- \
-> > +       start =3D raw_read_seqcount(s);                                =
-   \
-> > +       !(start & 1);                                                  =
- \
-> > +})
-> > +
-> >  /**
-> >   * raw_seqcount_begin() - begin a seqcount_t read critical section w/o
-> >   *                        lockdep and w/o counter stabilization
+> I suspect arm64 might benefit too. Even if arm hw does the same
+> amount of work for trap vs syscall the sw overhead of handling
+> trap is different.
+
+Well, the RISC CPUs have a much harder time using this, their immediate
+range is typically puny and they end up needing multiple instructions
+and some register in order to set up a call.
+
+Elsewhere in the thread Mark Rutland already noted that arm64 really
+doesn't need or want this.
