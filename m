@@ -1,88 +1,99 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A280C1D12E0;
-	Thu, 21 Nov 2024 12:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FBA1D5CCD;
+	Thu, 21 Nov 2024 13:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732192838; cv=none; b=eDIUH5bHda6QTj4/d7zLsl+5lckYh1F/Et+s4uQqgWAJwb7nJJPDHKzANj9vawzDHvbdA0AAxIVcHm5Q6ac1oka+f0om9XoPQLgZJqxgtTaiWdB3kbhuWOEmmARpsBKpG2RWl5hf0/akhqaj3iXOU1VS6PCbWky3ZpC17/ENY84=
+	t=1732196600; cv=none; b=mSwCIKD4ZdZ357bh1x6Kj76sML/3+2YNXVoHiTEPh9aLO10HN3LVF7uRjcG1AzO75um6Dr7jzBg47Dm5MZ5jZegSVvFiWDLgHnkUz5Q/cXdtrQI2L/nn55TWgYKOTzzcCkGWk4uOJlMJxyKjSz/2rF1I2dPlKa7nPDQ7j1W/ChI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732192838; c=relaxed/simple;
-	bh=yIq/EMeFPW5kEsCkl9Aphuk7NiHKWxE+K7aOyaxDZzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SfMPrFY8fE9Y2HHUu3xyYA8D9q85E3vbZtuX0zyxKAdnTkptC/0XDUBsoKtDmkVdKXCteAdo7d26VA8hoL3IR35oTGsmeTtlSQ/Hg2XleKxWKSX3gCDUjp5d8PBnrL6vTQczwyjf6uXQZYZ7XLX4Kjge3MWgsPB6j340JIASUJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AQZ2dw3G; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQZ2dw3G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ikpAnH13gbp0BHe1sYaGxmFI2nIUUInCIR7xIHSqhjw=; b=AQZ2dw3G7cIbip5y5YOVoD0RtD
-	927AGxDlm/cKkwl8CrIw8V7+iEJgbmopNa0dPo0Zsp4AdtEUj7FQ508lfvuTUhEWDud29AnRJB5vn
-	iar09XeXACJREwkkIsnq9KmIXBafd4P1n0hlrwfjuHR4+akH2DOXJ++kkHlk16vSgjLp49hS5LXqD
-	KMwdWMXDVPDFpTZj0kT1gOlOtYuEkZVfqf/S85vBqsjk2coQuXtvV7aoM+DsXkzB24IcAy0qq6qnT
-	D++kovSxCKKB1EY2C2p9m2vSTrshUuugrr4x7V0UbTyYu9VslMnyzX3OTCjww98AVVQHX2ScvJiyD
-	Yp9aWmuw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tE6Tk-00000000a0U-1YEf;
-	Thu, 21 Nov 2024 12:40:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8FDC730068B; Thu, 21 Nov 2024 13:40:11 +0100 (CET)
-Date: Thu, 21 Nov 2024 13:40:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
-	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
-	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org,
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
-	david@redhat.com, arnd@arndb.de, richard.weiyang@gmail.com,
-	zhangpeng.00@bytedance.com, linmiaohe@huawei.com,
-	viro@zeniv.linux.org.uk, hca@linux.ibm.com
-Subject: Re: [PATCH v4 tip/perf/core 1/4] mm: Convert mm_lock_seq to a proper
- seqcount
-Message-ID: <20241121124011.GK24774@noisy.programming.kicks-ass.net>
-References: <20241028010818.2487581-1-andrii@kernel.org>
- <20241028010818.2487581-2-andrii@kernel.org>
+	s=arc-20240116; t=1732196600; c=relaxed/simple;
+	bh=t1xS6VPnNXhFDtO31L5INNt/+JTUA64GJsQLsWahz44=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AG7pvr9N1KTYlytyRbvcNwWa8Hb/of5vsl+hwkBSfx0+ndekZidf+qEhUqf62ZDA7Na8Hn53OtAqUEngaJ6+ZboGPt3nGILM24VYwMXt8ylmlxxB4j4mUHASffDxTc4We7rZgVKWIjQiLPN1Rujy24ScM8JQrfkEBj4D8yqOeH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07634C4CECC;
+	Thu, 21 Nov 2024 13:43:17 +0000 (UTC)
+Date: Thu, 21 Nov 2024 08:43:54 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20241121084354.4a554829@gandalf.local.home>
+In-Reply-To: <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+	<Zz786zZljAy2J5i7@wunner.de>
+	<7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241028010818.2487581-2-andrii@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Oct 27, 2024 at 06:08:15PM -0700, Andrii Nakryiko wrote:
-> +/*
-> + * Drop all currently-held per-VMA locks.
-> + * This is called from the mmap_lock implementation directly before releasing
-> + * a write-locked mmap_lock (or downgrading it to read-locked).
-> + * This should normally NOT be called manually from other places.
-> + * If you want to call this manually anyway, keep in mind that this will release
-> + * *all* VMA write locks, including ones from further up the stack.
-> + */
-> +static inline void vma_end_write_all(struct mm_struct *mm)
-> +{
-> +	mmap_assert_write_locked(mm);
-> +	/*
-> +	 * Nobody can concurrently modify mm->mm_lock_seq due to exclusive
-> +	 * mmap_lock being held.
-> +	 */
+On Thu, 21 Nov 2024 19:34:31 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-You can write:
+> Sure, I can reorganize the directory. You have two optional proposals:
+> 
+> 1. /sys/kernel/debug/tracing/events/pci_hp_event
 
-	ASSERT_EXCLUSIVE_WRITER(mm->mm_lock_seq);
+I'm guessing the above has TRACING_SYSTEM = pci_hp_event ? That is, the
+above is a system and not an event.
 
-instead of that comment. Then KCSAN will validate the claim.
+> 2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
 
-> +	mm_lock_seqcount_end(mm);
-> +}
+Whereas here, it's an event.
+
+> 
+> I personally prefer the second approach. However, I'll defer the final decision
+> to the tracing subsystem maintainer, considering their expertise and
+> familiarity with the existing conventions.
+
+Normally the system is determined by the users of the tracing
+infrastructure and not the tracing maintainers. But I can give you some
+guidelines.
+
+The "system" level:
+
+  /sys/kernel/tracing/events/<system>
+
+is just a way to group like events making it easier to enable them all at once:
+
+ echo 1 > /sys/kernel/tracing/events/<system>/enable
+
+or
+
+  trace-cmd start -e <system>
+
+The name of the "system" should be something that all the events underneath
+represent. Note, although events in two different systems can have the same
+name, it's best to try to keep them all unique. That's because if you have:
+
+
+ systemA/foo  and systemB/foo
+
+If you add to the kernel command line: trace_event=foo
+it will enable both events. Although that could be fixed with: trace_event=systemA:foo
+
+Note: trace_event=systemA  would enable all systemA events at boot.
+
+That said, is all these events going to be related to hotplug? If so, you
+probably want "hotplug" or "hp" in the system name. If you make it just
+"pci", then it will be expected that all the events will be related to PCI
+in general.
+
+Does that help?
+
+-- Steve
+
