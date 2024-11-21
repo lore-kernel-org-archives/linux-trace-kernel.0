@@ -1,123 +1,241 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77F24A02;
-	Thu, 21 Nov 2024 14:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F061D4144;
+	Thu, 21 Nov 2024 14:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732199645; cv=none; b=FqzHEPlBmvbp0/ov1CgKg91YMZbKt0cIR1iRjoxjQstvr7EsqROl4PMY0qp48SgR8/Jod7bGr2gRHMWtkacL6QJcrdit707BXVpLDyQcRhLq9CnuY1HX2212Ok8iltuK+O/7HX846U5M4jNjL5wAIkECxHXQlNT/qLf2BqtXO8c=
+	t=1732200223; cv=none; b=JsmJW68ZyniDBjXb/FoqaqCYPwTjekNcBKnsGVw+aqBiuQn+XquiJQ9mDTtMeaEUjukpmCjJ8GyWP7BKddspsqpT1VKyWgVcWLHIo7rPyZQ81Q0SVnW8T2mRWKP2ctQMLvxOhr4yXlO6EdfoUmNN3BYgYdRRacR/07uwFpDX85M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732199645; c=relaxed/simple;
-	bh=pIKV3HP1VFzMsK7qp0/RzOA25Z/QTyzJnYYwGtbCSAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hW85rKpX8jOV7R9VxKoJ9acFWswdC3I4K3kmdxLwATfmdeaulsyKnHyhQCpxtu7hWt6hX28Kx1Ra0WVRHq4Z5dVDxoBFAHWe1nkxscgMUwpXcTl0ToHJqN9E39lidXgEPJJ4ro0Wb+6v+sWW12cFCdQB2KRmYiwhLGojLb+ECn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza; spf=pass smtp.mailfrom=tycho.pizza; dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b=SHteVPhf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QFyjiVtr; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tycho.pizza
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tycho.pizza
+	s=arc-20240116; t=1732200223; c=relaxed/simple;
+	bh=OMopyxZ8WApl9FNvWZD2Hy4emeof9zOeC4OOp8WlqqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fLhrsNdtA5b/OqjqitSvzmibCJOnaSRbZLrvFtyRkfeV7yd9pxCWleeXG8lEMjY7ly36kgwMY2zIwuQ96eYzy8kY0JEg98Z7aIpLBW5Mzef+YBRFuz64+PNFdbd2AVUgoFghmovYWy2uryU32ZM3tt5vwADbqrRhylgZrZM+Zns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IloqTSSz; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="SHteVPhf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QFyjiVtr"
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 1370225401A1;
-	Thu, 21 Nov 2024 09:34:01 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Thu, 21 Nov 2024 09:34:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1732199640; x=1732286040; bh=0BYnMeJRRg
-	a6HCEMYOl8JHeH/RdBznWhgGPzkdFC558=; b=SHteVPhfBZHF+oVkqiqfXHCdQM
-	0BauPYR14ct0FS7w+RoxJLyX463jk8SyPch19crb/4eWT65MJyhitNCwGQaPR4+J
-	vLKst/yW2vHlDClQUGN8eKAcMN1OgMO0jxCHDZ4WqdIP/HfOSW8kD5sszcxBSn0e
-	MrenqfA51fhFAWLcmNQq/8zpJTqBIt46/Ioab2vA0/luy+w5ICKS1kGPq4VoHCvx
-	scXfWyu44QWyPwkVSvT7YPLaAOlZuKx+pDNnhowjxRV3/hxe/fKMFQjJqa+mEzZ8
-	BWOvodjEI3QdpqRKLh3lBFBFKCI14UvM9iuBW4kIVl0zhNh3a7cHqXHIvTQg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1732199640; x=1732286040; bh=0BYnMeJRRga6HCEMYOl8JHeH/RdBznWhgGP
-	zkdFC558=; b=QFyjiVtrEpuRhZSbpi7uTbm+Ve10QDiebnYaC+AVoBk18OSOL0y
-	XaKNDoSwOTJzWhNT5Tcsq9vvXvWUkLGICYm4lfjYQ5iRmFnK0ax9fAv0k+UCVvgQ
-	PzszfOjpZtoJhYc2we0aGyQcigslSH+3BwrVD1fIlkZysPRg1dxk7wQQ+peVLmvl
-	OF+30YNoJxDq28J4l9rXgMqoyZE4prRCw8i0HPcmgduBZkV5bcuUWA7/ndrVGIjy
-	L60Su+5GlNT5wjvKbgLz82XjFT2S355RLVltfivOMQxuwzn8nhXmdfCDqQFcMMjP
-	5wdWOjpNngt32p1mxy6qTl8KinIDEG3Dt8Q==
-X-ME-Sender: <xms:2EQ_Z43G0HHV3dgjtkCFFhFemyIqoetbakXQ1BpMKzw0X4vmbYSqKg>
-    <xme:2EQ_ZzFUOaDMU7YemgNprVEBh-aJgD0Q7PXaEtPxt2Dujimgsvfi_KNNbaTsXvcR7
-    KjvVCRD15H6n0vjDWw>
-X-ME-Received: <xmr:2EQ_Zw43mcxookhNFM_lV-Ar0KDQeuBfsuupnkspydWsPd60KYfQQhtRA4A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrfeeigdeigecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpefvhigthhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpih
-    iiiigrqeenucggtffrrghtthgvrhhnpeelveduteeghfehkeeukefhudfftefhheetfedt
-    hfevgfetleevvdduveetueefheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepthihtghhohes
-    thihtghhohdrphhiiiiirgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    peihuhhnrdiihhhouhesfihinhgurhhivhgvrhdrtghomhdprhgtphhtthhopehsthhgrh
-    grsggvrhesshhtghhrrggsvghrrdhorhhgpdhrtghpthhtoheptgihphhhrghrsegthihp
-    hhgrrhdrtghomhdprhgtphhtthhopegrlhgvkhhsrghnughrrdhmihhkhhgrlhhithhshi
-    hnsegtrghnohhnihgtrghlrdgtohhmpdhrtghpthhtohepmhgtghhrohhfsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    epjhhovghlrdhgrhgrnhgrughosheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhh
-    ihhrrghmrghtsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:2EQ_Zx1xfu7bMFHuXpLNy3GvdU3EO31teX2VFaQ5lc4q-xnQo2R9sg>
-    <xmx:2EQ_Z7H7dc6esBAh0rSchQKiz0paeVTxebweZQeun_P7dtICZdD4wg>
-    <xmx:2EQ_Z6_Mb-658p7Cg3fNEFcakxCVBA2PEEDMoc1FZ6xfZ3STPQQrAQ>
-    <xmx:2EQ_ZwnycN2vaNYgYmfVyb9Fao4NoXiXVbZ5FHh79KyT8a1vlPK6Ig>
-    <xmx:2EQ_Z7HaBXadyn7xvkK1GVw-C7V0eRnnZgAhf3aGWJnWomVCmv_iUoVg>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 21 Nov 2024 09:33:58 -0500 (EST)
-Date: Thu, 21 Nov 2024 07:33:54 -0700
-From: Tycho Andersen <tycho@tycho.pizza>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Yun Zhou <yun.zhou@windriver.com>, stgraber@stgraber.org,
-	cyphar@cyphar.com,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	mcgrof@kernel.org, kees@kernel.org, joel.granados@kernel.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kernel: add pid_max to pid_namespace
-Message-ID: <Zz9E0pGTioTcH32m@tycho.pizza>
-References: <20241105031024.3866383-1-yun.zhou@windriver.com>
- <20241120-entgiften-geldhahn-a9d2922ec3e0@brauner>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IloqTSSz"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ea68cd5780so855368a91.3;
+        Thu, 21 Nov 2024 06:43:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732200221; x=1732805021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lKfc6WK70Ujcv4qyYOGzHtW3+I+/alF7xv4s8D+Od9A=;
+        b=IloqTSSzvpqalKDWUPuOeiIdlvixyNDUGolryEulyNCMh1o82LjJfx3dhD46yZ1cyw
+         3COWqfpdoXxPENYOhvGzeXlWmQGXSZvNywE8beHxu51f7FCzLrVxc8RRhvK74lQis3+z
+         EL6ymI6V74fgd1JHde6VCAeUQIas1C5VHFOKSnu1zQHthbrnoagOJW6URTP3SZr+Q+Vj
+         LrAkeWj2iRZ3YN/nUttukOf7I0kK7kpuRP2A1zu6s+gog5rU8DDHRKDtNlZTrj04nUf0
+         ivmQO+4NJxvBBbxnmU8st4bcilFaGEJyTBF3GT3+25go7B871I8LQgTONP2y2cYxLTgL
+         yoEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732200221; x=1732805021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lKfc6WK70Ujcv4qyYOGzHtW3+I+/alF7xv4s8D+Od9A=;
+        b=RnEJ8T1MzliV8GfcGYFZWEPMeEke3t4tpp+1bm9OMyD0xlyZQvm4N7Zx6P7SMuWz01
+         seBY6i0WAIQ+0e3Z2BoIlASVUVb4m6L9HpnTRJWEgg2o1wr5x98jqO9Y4Omn/UCpFOGd
+         5oH9g+Itl5tK/TFNoirSf0q8pdMSfEmZzYXg2PKtw1IW66HgM7Ugt7YLEhr1KtHxVSGW
+         +c7nrNaSkkDsMtjxmcSeiCnE61HR48M076Heg7NBNUFneNK/wzAOxV6bOcWXGNM41+VT
+         vlyV9B2H7cZ/iuBvKmIxBq2I17ykhf3OKbAIDUAUKX4Y1PCiZ9/wAj6UL7gwncbDEN/I
+         EQ0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU9WvKgCngi/qCuy8knaJwI988jDjA9VxfGZ2Y3LH08+dCVNzC4GoPAOOAf6/kMdb6pECnMWZT3WDs7kYmNtNmJeZXk@vger.kernel.org, AJvYcCUWJwdhUqw1ocem0zpC4D0LTlEsuL0Z+SjS3aUrWpCRIg2Q3e/fdHyAhYAyCz6n6ZPGh0xWAMswyow0nDC7@vger.kernel.org, AJvYcCWZ05oSuorz9RZLgvOYOmW1W9nUaeLn0/cWpLgk6m10/Wto7Wvj6AY/6viBzdPWQUglm6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm/KbK/9uxu5YB7YXQPl1Uva1iiWJoV8Edd6WQxDoP/PQzRKNQ
+	01guJucQ8QKbPLkDHJTCzrIInZAArK7dI9ot3lvQxuRLOQHjV4cKi2gA6OhM9VFrUapk44yq/Lq
+	HeB3g9y0acaJAk7v/fhVZX32BiNI=
+X-Gm-Gg: ASbGncvthh/e6zzeVTJg9aKT3rRt4yJt0siAI+zlQQ/JkFAaOWNTi5Rmy8ZwBaWvAzk
+	bpO4EP2UZinePAJtQuJ/dBqEndzsEugPfo90d/sPDFMHCrSc=
+X-Google-Smtp-Source: AGHT+IHI1sNYh8TGwsXDad2aw7zBPtwV39Yiz8NDiu1l/E1ipvCw/26XGQRMk0sEM8UETmQ5TWxeG9UsU+oCg/GqQQg=
+X-Received: by 2002:a17:90b:4a51:b0:2ea:525e:14a7 with SMTP id
+ 98e67ed59e1d1-2eaca7c675bmr8652406a91.29.1732200220751; Thu, 21 Nov 2024
+ 06:43:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241120-entgiften-geldhahn-a9d2922ec3e0@brauner>
+References: <20241028010818.2487581-1-andrii@kernel.org> <CAEf4BzYPajbgyvcvm7z1EiPgkee1D1r=a8gaqxzd7k13gh9Uzw@mail.gmail.com>
+ <CAEf4Bza=pwrZvd+3dz-a7eiAQMk9rwBDO1Kk_iwXSCM70CAARw@mail.gmail.com>
+ <CAEf4BzbiZT5mZrQp3EDY688PzAnLV5DrqGQdx6Pzo6oGZ2KCXQ@mail.gmail.com>
+ <20241120154323.GA24774@noisy.programming.kicks-ass.net> <Zz4IQaF9CCfjS28S@gmail.com>
+ <CAEf4BzYR44BgfAjKAvppmyG_hjojBL7XZe75C0qBTPoE7WXzHg@mail.gmail.com> <Zz7-bXrFsC8zJwu3@gmail.com>
+In-Reply-To: <Zz7-bXrFsC8zJwu3@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 21 Nov 2024 06:43:28 -0800
+Message-ID: <CAEf4BzYV109EfUupJ_DaUrLSkng=pevdd+67Y=ifw-ZjsG2nJg@mail.gmail.com>
+Subject: Re: [PATCH v4 tip/perf/core 0/4] uprobes,mm: speculative lockless
+ VMA-to-uprobe lookup
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, surenb@google.com, 
+	mjguzik@gmail.com, brauner@kernel.org, jannh@google.com, mhocko@kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, vbabka@suse.cz, shakeel.butt@linux.dev, 
+	hannes@cmpxchg.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	david@redhat.com, arnd@arndb.de, richard.weiyang@gmail.com, 
+	zhangpeng.00@bytedance.com, linmiaohe@huawei.com, viro@zeniv.linux.org.uk, 
+	hca@linux.ibm.com, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Kernel Team <kernel-team@meta.com>, 
+	Liao Chang <liaochang1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 20, 2024 at 10:06:27AM +0100, Christian Brauner wrote:
-> On Tue, Nov 05, 2024 at 11:10:24AM +0800, Yun Zhou wrote:
-> > It is necessary to have a different pid_max in different containers.
-> > For example, multiple containers are running on a host, one of which
-> > is Android, and its 32 bit bionic libc only accepts pid <= 65535. So
-> > it requires the global pid_max <= 65535. This will cause configuration
-> > conflicts with other containers and also limit the maximum number of
-> > tasks for the entire system.
-> > 
-> > Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
-> > ---
-> 
-> Fwiw, I've done a patch like this years ago and then Alex revived it in
-> [1] including selftests! There's downsides to consider:
-> 
-> [1]: https://lore.kernel.org/lkml/20240222160915.315255-1-aleksandr.mikhalitsyn@canonical.com
+cc'ing Liao for awareness (should have done it earlier, sorry)
 
-Thanks, looks like this patch has the same oddity.
+On Thu, Nov 21, 2024 at 1:33=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
+e:
+>
+>
+> * Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > Is this about Liao's siglock patch set? We are at v4 (!) already (see
+> > [0]) with Oleg's Acked-by added.
+>
+> AFAICS you didn't Cc: me to -v3 and -v4 - and while I'll generally see
+> those patches too, eventually, there's a delay.
 
-For me it's enough to just walk up the tree when changing pid_max. It
-seems unlikely that applications will create a sub pidns and then lower
-the max in their own pid_max. Famous last words and all that.
+Ok, I think we are now switching to my patch set here ([0]), because
+Liao's v4 ([1]) does have mingo@redhat.com in CC. So, on Liao's
+behalf, there wasn't really anything specific pointed out that would
+explain a month's delay.
 
-Tycho
+But let's switch to my patch set. Yes, my bad, I didn't CC you
+directly, that wasn't in any way intentional, and that's my bad and I
+will make sure to CC you on every patch for uprobes subsystem, even
+though you are not explicitly listed in UPROBES section of MAINTAINERS
+([2]), and Peter was the one who was handling all the uprobe-related
+stuff since before this summer.
+
+But let's please not randomly jump between discussing two separate
+patch sets here, it's confusing.
+
+>
+> > > Andrii did get some other uprobes scalability work merged in v6.13:
+> > >
+> > >     - Switch to RCU Tasks Trace flavor for better performance
+> > >     (Andrii Nakryiko)
+> > >
+> > >     - Massively increase uretprobe SMP scalability by
+> > >       SRCU-protecting the uretprobe lifetime (Andrii Nakryiko)
+> > >
+> > > So we've certainly not been ignoring his patches, to the contrary
+> > > ...
+> >
+> > Yes, and as I mentioned, this one is a) ready, reviewed, tested and
+> > b) complements the other work you mention.
+>
+> Sorry, but patchsets that didn't even build a few weeks before the
+> development window closed are generally pushed further down the
+> backlog. Think of this as rate-limiting the risk of potentially broken
+> code entering the kernel. You can avoid this problem by doing more
+> testing, or by accepting that sometimes one more cycle is needed to get
+> your patchsets merged.
+
+Those build failures were happening in stub implementations, which
+were used only on !CONFIG_PER_VMA_LOCK configuration, which I'm not
+even sure if possible to get on x86-64. When I tried to reproduce this
+locally I couldn't even get such configuration. Thankfully we have a
+kernel test robot that would test multiple architectures and
+configurations and it did catch it on i386 and loongarch64. And was
+fixed quickly.
+
+It doesn't seem fair or reasonable to penalize patch sets for *weeks*,
+silently and without any notice just for this, IMO.
+
+The patch set was very thoroughly tested, actually. Not just building,
+but also running various unit tests (BPF selftests in particular). But
+even more so, I built an entire uprobe stress-testing tool just to
+test all my uprobe-related. I deployed custom kernels and ran these
+stress tests on all uprobe patch sets and their revisions, over many
+hours.
+
+Sure, my main platform is x86-64, so that's where all the testing was
+done. But you can't accuse me of negligence.
+
+>
+> > [...] It removes mmap_lock which limits scalability of the rest of
+> > the work. Is there some rule that I get to land only two patch sets
+> > in a single release?
+>
+> Your facetous question and the hostile tone of your emails is not
+> appreciated.
+
+I'm sticking to the facts in these emails. And when I get a response
+in the style of "you got two patch sets in, why are you complaining",
+that's not exactly friendly and fair. I put a lot of effort and time
+not just into producing and testing all those patches, but also into
+the logistics of it, coordinating with other people working within
+uprobes subsystem.
+
+And instead of accusations, I'd like to get an understanding of
+expectations I can have in terms of handling patches. Being ignored
+for many weeks is not OK. If you don't like something about what I do
+or how, procedurally or technically, please call it out and I'll try
+to fix whatever the problem might be. Silent treatment is not
+productive.
+
+But while on the topic. Those two patch sets you mentioned didn't go
+in smoothly and quickly either. "Switch to RCU Tasks Trace flavor for
+better performance" in particular should have gone in with the
+original patch set one release earlier. But instead that patch was
+dropped from the tree after applying it. Silently. I was not notified
+at all (5 days that passed before I asked would be plenty of time to
+mention this, IMO). It's good I noticed this, inquired with an email
+reply (after making sure it's not some transient patch handling
+issue), and only after that I got a reply that there was a build
+failure I had to fix. You can see the thread at [4].
+
+>
+> Me pointing out that two other patchsets of yours got integrated simply
+> demonstrates how your original complaint of an 'ignore list' is not
+> just unprofessional on its face, but also demonstrably unfair:
+>
+> > > > > I'm not sure what's going on here, this patch set seems to be
+> > > > > in some sort of "ignore list" on Peter's side with no
+> > > > > indication on its destiny.
+
+My "ignore list" complaint is specifically about this patch set, which
+I explicitly stated above in the quote you provided. So yes, it's a
+professional, and demonstrably fair statement, and I provided the
+timeline and supporting links.
+
+>
+> Trying to pressure maintainers over a patchset that recently had build
+> failures isn't going to get your patches applied faster.
+>
+
+I'm not asking to apply my patches blindly without critical review or
+anything like that. I'm not expecting reviews or even just email
+replies within a few days of posting. I *do* expect some sort of
+reaction, though, and not after many weeks of inactivity and pinging
+from my side, yes. And note, I got replies only after sending an email
+straight to Linus.
+
+I'm not pressuring anyone into anything. But as a maintainer myself, I
+do think that being a maintainer is not just about having rights, it's
+also about responsibilities.
+
+Let's please stop with the excuses and instead discuss constructive solutio=
+ns.
+
+> Thanks,
+>
+>         Ingo
+
+[0] https://lore.kernel.org/linux-trace-kernel/20241028010818.2487581-1-and=
+rii@kernel.org/
+[1] https://lore.kernel.org/linux-trace-kernel/20241022073141.3291245-1-lia=
+ochang1@huawei.com/
+[2] https://lore.kernel.org/all/172074397710.247544.17045299807723238107.st=
+git@devnote2/
+[3] https://github.com/libbpf/libbpf-bootstrap/commit/2f88cef90f9728ec8c7be=
+e7bd48fdbcf197806c3
+[4] https://lore.kernel.org/all/CAEf4BzZihPPiReE3anhrVOzjoZW5v4vFVouK_Arm8v=
+JexCTT4g@mail.gmail.com/
