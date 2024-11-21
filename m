@@ -1,117 +1,89 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833DF1DE2B9;
-	Thu, 21 Nov 2024 14:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352C827447
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 15:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732200310; cv=none; b=uoTYpm4TcHT4g9LBm4JZ5NFBhb/yaDKkum59SSNNBivKBfXDYgL4Rmy97l105CafJ2uZHuU7mSA/Z5rZTB+ISqzknj57cYjsrXlRShhzpvq5dHTbBgmLt4az5R1ejFd5gA4/vnoiJry97/eyM/WtfprN6BeMEVsL/yvZAwakx2E=
+	t=1732201252; cv=none; b=PjEPox/VVZ8eRMFuFCOdkL228yw+FzwrzMRC97kE8r/SEaTe/hXS/1DO8NUgpEHinqaFm525BLYkS7xQPGFJy+dRTb0Q4vfKBa4uV0hBgO5fKCWR/q7xIEHmSyVDrD98JcXjYHW9Xi135GpAE8ueh9eOyR+r+EcmaAIUIymlBYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732200310; c=relaxed/simple;
-	bh=k13+Z0iAE1ZBIopnXQJo5gb4V8hodmEWGpkEvyHUPjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgpYiYuVjf5daA5gxr8ywEtIkk8pCGzuF8ARKXS6ofK19wxRbPJs7ZmdgtMR4dR/cJgK3V20ah8fJlq3frASMgECqcW4JfszX7SihJ4rfwQozsKSr5LVUrmqjjmtQcfRLBUpFDUxq18D1z1fKiV0e01zsWICSEfIZ2FSsSdNVnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pWFH7iTO; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1732201252; c=relaxed/simple;
+	bh=vWAVyZ1Qpd2TF3q7Kuf52puyFtCUmA2bpiXLbuZLfpQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ImmUsYc0H+A+ZShp9Og/nNLGbWB6u95NEZeESPoGpbGzv4Yed6zO2+rhy0G+cxM3YJ4QyOrPIlMnCkSrmJaA5ZBHFHOVLwLY7XFbsD3QXR0hCs6DpH6/P0xVJHuqj+ddQ3plbOvMv1T6kcBZZ8FO+BFNvNmYEXpI/aPY8g2cx/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O6vFewH3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pWFH7iTO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NoTVJMzmSr+7GvpbI9xoC6QlTWnogCWjAb08P6x+C6c=; b=pWFH7iTOkfeuTaDn9qkuWCzJg0
-	XHTPtIPgIv0NKPfBaiNcQgjx5VeG+qplbW+uqkMCzsO8WUVMNh0LM3s0NflbTCaHkU8XxSyIWmz0M
-	3knavxb0cxSgry9QZ9SeEcMZ6B4emjFgND5d2XsHTJ0UwXVHWb0CregP8xfqENcW1Xm4ATIKJ06jo
-	16mG4ix63zcI4GNLP7f6r5S1r23mylfs7kVa9pxONSuSTYOR+wxkz9U7QF4/tBf9GMMuMMJoKhqW0
-	F86eLEdxmxj8YbSHHSmXDGComlwB2Kntw/gWjyUe8f05ua8DU/E/WbVswICDD1zbtuafZiptNJ/pW
-	FTx6bEag==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tE8QF-00000000ahp-2TBZ;
-	Thu, 21 Nov 2024 14:44:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 902C730068B; Thu, 21 Nov 2024 15:44:42 +0100 (CET)
-Date: Thu, 21 Nov 2024 15:44:42 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
-	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
-	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
-	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org,
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
-	david@redhat.com, arnd@arndb.de, richard.weiyang@gmail.com,
-	zhangpeng.00@bytedance.com, linmiaohe@huawei.com,
-	viro@zeniv.linux.org.uk, hca@linux.ibm.com
-Subject: Re: [PATCH v4 tip/perf/core 2/4] mm: Introduce
- mmap_lock_speculation_{begin|end}
-Message-ID: <20241121144442.GL24774@noisy.programming.kicks-ass.net>
-References: <20241028010818.2487581-1-andrii@kernel.org>
- <20241028010818.2487581-3-andrii@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O6vFewH3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732201250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=luuZg0mNRVeYLGmqIko3blyVtSbkzA3a9WF2cYc+YUY=;
+	b=O6vFewH3ov9m+ARKsvRe5FEaxiF7YSlXuGK4TZrfpjNKVRf+9GNTQIDgCLq+bp4jNGssl8
+	y4hQZe4J4ahl9tqOHut31r/A3A5v8CLGT0EtLpzcZ7+cGu+uoIekEtNCdqxsOdDNOneI1b
+	BnC/ybHXETCOInuDG0vWfB7DGUQzySg=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-74-z4xeZ0ekNHC4Q0j4caQYCg-1; Thu,
+ 21 Nov 2024 10:00:48 -0500
+X-MC-Unique: z4xeZ0ekNHC4Q0j4caQYCg-1
+X-Mimecast-MFC-AGG-ID: z4xeZ0ekNHC4Q0j4caQYCg
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 769211955F77;
+	Thu, 21 Nov 2024 15:00:47 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.194.245])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4576B30000DF;
+	Thu, 21 Nov 2024 15:00:43 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH 0/4] verification/dot2k: Improve template management
+Date: Thu, 21 Nov 2024 15:59:53 +0100
+Message-ID: <20241121145957.145700-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241028010818.2487581-3-andrii@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sun, Oct 27, 2024 at 06:08:16PM -0700, Andrii Nakryiko wrote:
-> From: Suren Baghdasaryan <surenb@google.com>
-> 
-> Add helper functions to speculatively perform operations without
-> read-locking mmap_lock, expecting that mmap_lock will not be
-> write-locked and mm is not modified from under us.
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  include/linux/mmap_lock.h | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
-> 
+This patchset implements a couple of options in the dot2k command and
+makes the templates a little more robust.
 
-> @@ -86,11 +87,35 @@ static inline void mm_lock_seqcount_end(struct mm_struct *mm)
->  	do_raw_write_seqcount_end(&mm->mm_lock_seq);
->  }
->  
-> -#else
-> +static inline bool mmap_lock_speculation_begin(struct mm_struct *mm, unsigned int *seq)
-> +{
-> +	*seq = raw_read_seqcount(&mm->mm_lock_seq);
-> +	/* Allow speculation if mmap_lock is not write-locked */
-> +	return (*seq & 1) == 0;
-> +}
+The base is linux-next.
 
-At the very least this should have more comment; I don't think it
-adequately explains the reason for being weird. Perhaps:
+Gabriele Monaco (4):
+  verification/dot2k: Fix template directory if not installed
+  verification/dot2k: Unify main.c templates
+  verification/dot2k: More robust template variables
+  verification/dot2k: Add support for name and description options
 
-	/*
-	 * Since mmap_lock is a sleeping lock, and waiting for it to
-	 * become unlocked is more or less equivalent with taking it
-	 * ourselves, don't bother with the speculative path and take
-	 * the slow path, which takes the lock.
-	 */
-	*seq = raw_read_seqcount(&mm->mm_lock_seq);
-	return !(*seq & 1);
+ tools/verification/dot2/automata.py           |  4 +-
+ tools/verification/dot2/dot2c.py              |  4 +-
+ tools/verification/dot2/dot2k                 |  6 +-
+ tools/verification/dot2/dot2k.py              | 41 +++++----
+ .../dot2k_templates/{main_global.c => main.c} | 50 +++++-----
+ .../dot2/dot2k_templates/main_per_cpu.c       | 91 -------------------
+ .../dot2/dot2k_templates/main_per_task.c      | 91 -------------------
+ 7 files changed, 54 insertions(+), 233 deletions(-)
+ rename tools/verification/dot2/dot2k_templates/{main_global.c => main.c} (50%)
+ delete mode 100644 tools/verification/dot2/dot2k_templates/main_per_cpu.c
+ delete mode 100644 tools/verification/dot2/dot2k_templates/main_per_task.c
 
-But perhaps it makes even more sense to add this functionality to
-seqcount itself. The same argument can be made for seqcount_mutex and
-seqcount_rwlock users.
 
-> +static inline bool mmap_lock_speculation_end(struct mm_struct *mm, unsigned int seq)
-> +{
-> +	return !do_read_seqcount_retry(&mm->mm_lock_seq, seq);
-> +}
-
-This naming is somewhare weird, begin/end do not typically imply boolean
-return values.
-
-Perhaps something like? can_speculate, or speculate_try_begin, paired
-with speculated_success or speculate_retry ?
+base-commit: ac24e26aa08fe026804f678599f805eb13374a5d
+-- 
+2.47.0
 
