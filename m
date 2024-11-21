@@ -1,70 +1,70 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223AA84D2B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 15:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1743641A8F
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 15:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732203327; cv=none; b=HdpMS2hKwEUWhjCgsET7bltIqDXFcbmBNNq9Y2Q3+eXm7/lcJmbTYOwO5umB3ngvKOisPUW2VmU1FzALyQqXUL5tQTE/b0QLQiFJhLBZLY2/8naLPtz2+51Autg9XRCDXtAr6D2iuaJhzKnkYAbKQk8WYPMEqQ8Q3ZgrIHuA2Go=
+	t=1732203418; cv=none; b=RdxynvcYk9cqseK8lQxLfdBOY/XPnJbHsanNptORU2SDED1Gamu8Tq02zwOmK5LR1B8TG32C5RYU43DCHk+/Y8xVvrphGpI5/WBruh2apkWd1GZoJKkcpdnwtHVYZYOPTMKKvKK/dK+xvsfhXk5/8xg0p8ZMouo6/cmWOO/Yu+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732203327; c=relaxed/simple;
-	bh=SsArjD+1glKC3LFuUTU1qcWsOXBbI35QwXJjYvQPPgA=;
+	s=arc-20240116; t=1732203418; c=relaxed/simple;
+	bh=f+5eu3i1biuvPB++1VXhnk1wXT/1aJPH0TLJr3C9z00=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TvHLQ77PS2ZzBhmBTRqN7l9LO52fp+sASE0+Ra/b1RKIRlnTBBSEAOo5VYygtQnIjQzAlxMaq8mh3kzr8XDq4B7GDNHoFW6ebGmPSPAkyOARvfDbCeC0t1D8pUIalmR1zgX7SF5cxwxrnqKtLsEidg3zl36gP9mlqkem8eXqjLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LrA0ehL6; arc=none smtp.client-ip=209.85.160.172
+	 To:Cc:Content-Type; b=uNGVxeNg/Oqsv0Ps4Uy2lWIEnL9ocf48HgCfqkfSZasu82NGk3c08gvcMJ5wgGWU4QqD2lE7fh8hC3Xxd1mQfj4BfN7s9ECNLPpJKCACGSjUo6h5AqGONAV0ahonysZx3yticrqWNHXKbmqmlWVtKtIbOa0ZzpgJ5yyAK02iXjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jj58eW6D; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LrA0ehL6"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-460a8d1a9b7so248671cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 07:35:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jj58eW6D"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-460969c49f2so310831cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 07:36:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732203325; x=1732808125; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1732203415; x=1732808215; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=547IccmQdfQpz/uAg3RPtdIl621CchRTsFZX3/wSte0=;
-        b=LrA0ehL6FTKR5tjVH6H7Sz1LsI2UZxFCr7xYy40jxgryu6zR+aFZvSqmA9N9f5WCz2
-         DJLxu053DEtZRDaNl3XQFC7VO8uV78F7xuNwvJXBz0OJsw5PgxKS0poXzu94reKRWxfm
-         ry/pGpd8aAvjCW83om3onFTfX9EqavzbXADID/DMmfphL3zwBF6UULv0/Jdp/cKpR3MW
-         Unw2X0eleCHKBGMQS17yQncoihX8fdf2SHUGXXew/rnzGuAAxpPkZl93Xs8ujHAsDPWX
-         4IY4tUCljB511KYHE4agp51sowqB4Oo9+rg1GOtWhccOc5KlpMYh7Gy0GS95nk/l1ENx
-         mW2Q==
+        bh=n4nPPmITE0cgPNHF19a0j6DIt0zlAK0qCukXxXNbX+I=;
+        b=Jj58eW6DXiSgkZ1HKgXxEUul2yHOdoD/lUMOybrQcS/lbBOxid0LiSeM6cOsyOjmum
+         R7DYH8mXdicq4TyTpKVioIyoQHB4TEY7ahRuq5NeomnOIwFTIQBH4FXO0hEU6Ixb/kdx
+         x3EcMo6TRXveMVp5VMeFPv1JDvHOHOlgomwQp36lr9wK0AeqEwX/bEU0oxQb4rFYS8bz
+         2VeDIZuC0kc+jBFPAr3xuS+lOXp4KOggO9+7gxKaIVJnkXRb65aTTMAJk+cjvw5cCYbt
+         1Es3AeHAvz+/HVQbN5oEyOXzjO6nDKDLZhjQzUNxcZzOQ6f9C/6ktzaGGFp0hWjjxTZU
+         4dHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732203325; x=1732808125;
+        d=1e100.net; s=20230601; t=1732203415; x=1732808215;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=547IccmQdfQpz/uAg3RPtdIl621CchRTsFZX3/wSte0=;
-        b=IgUQgh6iAG6vsN0P7HCtiersv9W4JHaBM3g4W3MCjhm77+Eg8F/yXmFrZ7IeYKRhIR
-         IV/tfQVclZnOz3SfUwqkfOgPJbwfMdsKbow5hQnCIf4K0qPq/twSH2KSTKMgsrQufGBk
-         W07mhAL18b3xSROwM+pu53aJNA9ZajUbciLSaMpvBvIibPWLLXOCtIEiLAfnDVccMFTE
-         WhkyiszJw0c7zTDgQ/HB4RtULPLgdzRSddQY8Xc5ZsvHgZ7PqRpENPkbiIowYlQoh1Sj
-         AvklJ5X0eas9z4r/OR3iTn1sseYUwPzY3CBsCQU9IrJ2At8TXtczShxnKXXKXo0FBP+0
-         W+CA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3kYrUds2kDFKwyEKEO9+d36/O0ySpIA9BbHMhYDPzxrGwLh42KkRrT2aoypAf775LScg4CuxFTOrvURkyF3ZwIh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6lQOk9DEIzNjsWjJid2K+R8N7tDXUkdfNyvXaanNw8U9UtUWv
-	lEbP9PhP1UPNXuapC+ISwahQofbOGpmSzG5jJg6enEI+hgcoGzvTsczNRBuVY4JvVMg2EJOxd9m
-	MKdtTNsR1gUPfojxPHvoUU38ocTfmk0jXcmTkHuo9a4hh9lD8oPW3F1M=
-X-Gm-Gg: ASbGncvZCtFy8UXil3NcRs5HER+g+4AxkFs6Klm+XiD8CYcTsnLzoLl4yE/tCay4qs+
-	15YgIDmumxJZbjatJu2vWkjlLoXhUa804nAuBPY5sTD6IO6QcJC2Bb+PCgvSt
-X-Google-Smtp-Source: AGHT+IFADvU4IPxoEGDBvsiWv2fnt3CEBsmaslZcEQXF5z8gP7iOsIe3UKpqtmvlizSwxHzRxnFWvsa1H0vOdEmntPk=
-X-Received: by 2002:ac8:59ca:0:b0:461:6e0a:6a27 with SMTP id
- d75a77b69052e-4653bd848d4mr96191cf.20.1732203323364; Thu, 21 Nov 2024
- 07:35:23 -0800 (PST)
+        bh=n4nPPmITE0cgPNHF19a0j6DIt0zlAK0qCukXxXNbX+I=;
+        b=LQwTngHk4myKEoekE5WEAvU00hh+9x5Ym3jomcdGozaoZyJFEAkVmoRjY87cbffwK1
+         QQDC7a4YGOjQHXHxGTaU6FJOoXrUJhn6zD4t6TP8yFLfkvcL+LbBPT/so8BP/VSt8sHK
+         U+DDXa9/FXWcTPVfXMCl/MN4QOgVzdGIZYBTl65cYPRbxoq0kH2ZY86AlHbmb4Slx5Gj
+         n2phu82R4C73BHo54ESIvLJQpX26NbFrKPCIBHDDBOfOU0c/FkqtLf6FtEtN3+CiC5MT
+         JzRSSyQpsbkrat9V6syjN1rxlGI09B4GzUdCtrtbdgWGAvsbkmPg2nOpPOtledq9nyoC
+         tVjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWBnRnnrXCa/X57/vYF8DUOR9C7s75Y7MYS7/y6EFtxIBFQt9dBFmImyb6XrIDRcmcmnS79U9uvyE5wAkWB+LZr/xE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6lRHw4/AVPIMgEGzog205iRZri6dHRxv3nX7jkOW1Ahijw4SW
+	+EB/upgeodx45mgdStvyNCJYkaF2kJnihb2Cd5a2MZFrAO8rPB+p+Zze3ARYpxayodwbISpIHWN
+	xrtrrYrFEKrtZgUPz1Ee0cVhSw+uz0MNxbbec
+X-Gm-Gg: ASbGnct31D7DumL90DuheYVaWGkP4/aWz/hPOxw8rwd5gawklLtMCpIT6RJ7t8IUUgo
+	P1A7KKzVx0xIDPnJaQ6ayxIkoOiKW/wddXJv/I9AM0ayT7ST8vr0vdUl4eW5D
+X-Google-Smtp-Source: AGHT+IH1SWogEGFZbng5bmadf/PzQLLTFdgdPJQJD536g3mvOBUR/1NIEP5wbiUXW212c2x/5zIIe+RImYF2DYJPRZE=
+X-Received: by 2002:a05:622a:19a3:b0:463:6f64:7ee4 with SMTP id
+ d75a77b69052e-4653bcc2063mr148291cf.3.1732203414816; Thu, 21 Nov 2024
+ 07:36:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241028010818.2487581-1-andrii@kernel.org> <20241028010818.2487581-2-andrii@kernel.org>
- <20241121124011.GK24774@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241121124011.GK24774@noisy.programming.kicks-ass.net>
+References: <20241028010818.2487581-1-andrii@kernel.org> <20241028010818.2487581-3-andrii@kernel.org>
+ <20241121144442.GL24774@noisy.programming.kicks-ass.net> <20241121152257.GN38972@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241121152257.GN38972@noisy.programming.kicks-ass.net>
 From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 21 Nov 2024 07:35:12 -0800
-Message-ID: <CAJuCfpEBJsR803Ac-cwN0MWadzWW_WKZchaexdJauYETaww40w@mail.gmail.com>
-Subject: Re: [PATCH v4 tip/perf/core 1/4] mm: Convert mm_lock_seq to a proper seqcount
+Date: Thu, 21 Nov 2024 07:36:43 -0800
+Message-ID: <CAJuCfpE04MtnmRR+JYpYqC07-u9yXRUF0FB2mSaQatzwSkNNdw@mail.gmail.com>
+Subject: Re: [PATCH v4 tip/perf/core 2/4] mm: Introduce mmap_lock_speculation_{begin|end}
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, akpm@linux-foundation.org, oleg@redhat.com, 
@@ -74,43 +74,61 @@ Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
 	mhocko@kernel.org, vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org, 
 	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, david@redhat.com, 
 	arnd@arndb.de, richard.weiyang@gmail.com, zhangpeng.00@bytedance.com, 
-	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com
+	linmiaohe@huawei.com, viro@zeniv.linux.org.uk, hca@linux.ibm.com, 
+	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 21, 2024 at 4:40=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+On Thu, Nov 21, 2024 at 7:23=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
 g> wrote:
 >
-> On Sun, Oct 27, 2024 at 06:08:15PM -0700, Andrii Nakryiko wrote:
-> > +/*
-> > + * Drop all currently-held per-VMA locks.
-> > + * This is called from the mmap_lock implementation directly before re=
-leasing
-> > + * a write-locked mmap_lock (or downgrading it to read-locked).
-> > + * This should normally NOT be called manually from other places.
-> > + * If you want to call this manually anyway, keep in mind that this wi=
-ll release
-> > + * *all* VMA write locks, including ones from further up the stack.
-> > + */
-> > +static inline void vma_end_write_all(struct mm_struct *mm)
-> > +{
-> > +     mmap_assert_write_locked(mm);
-> > +     /*
-> > +      * Nobody can concurrently modify mm->mm_lock_seq due to exclusiv=
-e
-> > +      * mmap_lock being held.
-> > +      */
+> On Thu, Nov 21, 2024 at 03:44:42PM +0100, Peter Zijlstra wrote:
 >
-> You can write:
+> > But perhaps it makes even more sense to add this functionality to
+> > seqcount itself. The same argument can be made for seqcount_mutex and
+> > seqcount_rwlock users.
 >
->         ASSERT_EXCLUSIVE_WRITER(mm->mm_lock_seq);
->
-> instead of that comment. Then KCSAN will validate the claim.
+> Something like so I suppose.
 
-Thanks for the tip! This one looks not critical but I see there are
-more important comments in "mm: Introduce
-mmap_lock_speculation_{begin|end}". I'll send a new version shortly.
+Ok, let me put this all together. Thanks!
 
 >
-> > +     mm_lock_seqcount_end(mm);
-> > +}
+> ---
+> diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+> index 5298765d6ca4..102afdf8c7db 100644
+> --- a/include/linux/seqlock.h
+> +++ b/include/linux/seqlock.h
+> @@ -318,6 +318,28 @@ SEQCOUNT_LOCKNAME(mutex,        struct mutex,    tru=
+e,     mutex)
+>         __seq;                                                          \
+>  })
+>
+> +/**
+> + * raw_seqcount_try_begin() - begin a seqcount_t read critical section
+> + *                            w/o lockdep and w/o counter stabilization
+> + * @s: Pointer to seqcount_t or any of the seqcount_LOCKNAME_t variants
+> + *
+> + * Very like raw_seqcount_begin(), except it enables eliding the critica=
+l
+> + * section entirely if odd, instead of doing the speculation knowing it =
+will
+> + * fail.
+> + *
+> + * Useful when counter stabilization is more or less equivalent to takin=
+g
+> + * the lock and there is a slowpath that does that.
+> + *
+> + * If true, start will be set to the (even) sequence count read.
+> + *
+> + * Return: true when a read critical section is started.
+> + */
+> +#define raw_seqcount_try_begin(s, start)                               \
+> +({                                                                     \
+> +       start =3D raw_read_seqcount(s);                                  =
+ \
+> +       !(start & 1);                                                   \
+> +})
+> +
+>  /**
+>   * raw_seqcount_begin() - begin a seqcount_t read critical section w/o
+>   *                        lockdep and w/o counter stabilization
