@@ -1,89 +1,64 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA881B86EF;
-	Thu, 21 Nov 2024 08:04:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0712AAD2C;
+	Thu, 21 Nov 2024 09:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732176278; cv=none; b=Ug4yOa7qXJ0fEEeDXE6cl0DQuF1HPn+OC1Tr3YC9rECU6SZBR9upbpCXG8vIQ49H6Upfnr+dvV/FrtbkMJsMBL+pGF9LpWdzJ72sf6V/i7o+V/liEHgzmEPZIUb12EXM3ZQDLILPY4hyS0PNOIJzUxdTHxZ2slBX47RMFACQbh4=
+	t=1732181240; cv=none; b=L+NnK7pdNdUkpIyFzPSMlpmq3XcFWyxSL/xg0piM/usq51S09TedxHfXCpU9ukQMSO68QhUIn6ea3rAVZsWqBWEwVdZYqZnoyeZs9MfmGBWtV31mdewl5CjVoBEVCXC5cDPeOTcSkUqTAZsrAaqbQt1X+ALG/u69bncAAvh5ABA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732176278; c=relaxed/simple;
-	bh=USTqCWO3YIEQxhLLxJVkk4vT8yPUjZmhJHDUHgKS+kA=;
+	s=arc-20240116; t=1732181240; c=relaxed/simple;
+	bh=itz1z2Kf6Or5Wz88cu8QAKzATnozXj4IcRuUexJj8Is=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k+J029Q/BGZTdqRlIRd0RRxhY8rQCSFl9xFRY8jH0K0BmHWXQDFZpa0OR8VNf/YpBRH5jdJpVDQWogbS5S3QRjojWNkXOEJPNJ8rokZyAHQyb46sEviVv5FAuz8wWa5JvMuFX1ozDNSYEr7y/2QB+yoJdj13FctcXTJYuPXCQug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NyG6Nk1o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=00SL+6PT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NyG6Nk1o";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="00SL+6PT"
-Date: Thu, 21 Nov 2024 09:04:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1732176274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AM0Cf5LQhpvPLhru80W8Ev3cAE7kvo8JvDnLy5hKLhA=;
-	b=NyG6Nk1oyouXgy7nM6wGiy/pLQYU7Q4pVhnjhHRbQ3kgaWe7h0y/2sGYO4grLhBl/8FYjo
-	6Xl7T+qPP3aWOSDHe7WseILPzOh3QEQNDgF96YXOfbZWVYcXCQXowOL7NCb+4ScBrbJGdB
-	PWuGhMK662NDpuvjtGZQuFukced1cxOKOPMI5tsiDUH35osmqmUdy6ouroKZhOMByYrs5K
-	GnYiidrvzUZ+qf9tx8n89KPkQLblPtctg1lJ2gjs440Uhv/H3dcrb+Df4Q2Z8bAVExxY2f
-	Zc6qhvjJLgdVn9jQ3na1H3nGidjgvXiA0rzMydeEuY/EE0Dg5ty3wzuK9YjOeg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1732176274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AM0Cf5LQhpvPLhru80W8Ev3cAE7kvo8JvDnLy5hKLhA=;
-	b=00SL+6PT7X4ghP00+uZcoC7LUHmHWg5XNG4o2UIF9p9egU6ul3km3TOrK00IVyYNlE9waa
-	Lhb/blG/ofm+NiAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Naveen N Rao <naveen@kernel.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH] kprobes: Reduce preempt disable scope in
- check_kprobe_access_safe()
-Message-ID: <20241121080432.ysLlZsSP@linutronix.de>
-References: <20241121-kprobes-preempt-v1-1-fd581ee7fcbb@linutronix.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=I7STbnmeRNu47k+mm2R/+ytNRaWpDtIh7PrC0+vbbIFH59aXR+obfcpcOQi4C9HYZGgREgO8JdjWwGzp8XI1C0+jGZos4M4gnTbU5fGFyHbo8OURRvEVbJq6s8VzpP27mATt0WVk1qfkNlQJtn8RiKdmfiqy9VPh9I9hbQsNBaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 17D3C300097C8;
+	Thu, 21 Nov 2024 10:27:08 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id ECF6944680; Thu, 21 Nov 2024 10:27:07 +0100 (CET)
+Date: Thu, 21 Nov 2024 10:27:07 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <Zz786zZljAy2J5i7@wunner.de>
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20241121-kprobes-preempt-v1-1-fd581ee7fcbb@linutronix.de>
+In-Reply-To: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
 
-On 2024-11-21 08:38:08 [+0100], Thomas Wei=C3=9Fschuh wrote:
-=E2=80=A6
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+On Wed, Nov 20, 2024 at 08:43:28PM +0800, Shuai Xue wrote:
+> $ echo 1 > /sys/kernel/debug/tracing/events/hotplug/pci_hp_event/enable
+                                              ^^^^^^^
+I think this should now be "pci_hotplug" because you've renamed the
+TRACE_SYSTEM in v3.
 
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+I'm wondering if we'll have other categories besides "pci_hp_event"
+below "pci_hotplug".  Maybe not.  Is it possible to omit the "pci_hotplug"
+and make "pci_hp_event" top level?  Or should this be grouped below "pci"
+instead of "pci_hotplug"?  I'm somewhat at a loss here as I'm not
+familiar with the conventions used in the tracing subsystem.
 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index da59c68df8412c4662d39d3e286d516e8cee9a69..369020170e832a34ea9c05eda=
-6693bded02ec505 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -39,6 +39,7 @@
->  #include <linux/static_call.h>
->  #include <linux/perf_event.h>
->  #include <linux/execmem.h>
-> +#include <linux/cleanup.h>
+From a PCI hotplug perspective, this patch LGTM, so:
 
-This hunk can be dropped. The definition for guard(preempt)() comes from
-preempt.h.
-
->  #include <asm/sections.h>
->  #include <asm/cacheflush.h>
-
-Sebastian
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
