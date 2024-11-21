@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356CD1DB349
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 15:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058E41DDA34
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 21 Nov 2024 15:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732201267; cv=none; b=YcAe1aFOa3LWXj/DP6ZZ9n4hs+a7vv4GviaaYhi0I5vsV9YCxTaiJRCxZXvK/CvEK4zyPtlkAU9BWMi9baRTsU/gVuL+MmkYMWeYZFLcjjdBgtGnAiR9gg43qKBs5CKAwTqQLrrZp+ITB4vfqauTQpY15HYo5x1lfcKfPaoNR3E=
+	t=1732201269; cv=none; b=p5244sHQNbrPmD5aWVt2CkVRtyng9waHfR45De1OJFE0ya/7SXjbPGlGHkRtLIi7wBR6mUbrmV8oAVOMwaxCIna22vU0NqgPW9+lrWE/sbzqOs288aT//IKKpXOwz/P2tpwMt7xkVuiNKCQQ+RpbZbwioFiZFXPvvRi4kXpXfm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732201267; c=relaxed/simple;
-	bh=bCCoj9HpNs7DIrglTatp/QGtkbe2RnayL82gl5i+lwU=;
+	s=arc-20240116; t=1732201269; c=relaxed/simple;
+	bh=GoIkzV1HQdu4YTQBoUTjSsJry8DO6+XYtboy5jkoXC8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N2C9DPTqPxIs/0aMlqLPQe8j2RCBSeMESDPtaW9qpJc+A6OoBDSB6DaI5BiSzNmVxu0ATN8YburSM+ObcNETvPljB5VnCopHkBtcy+61bE2kEd3K9SK8W5WmDBZwWU/NUtoEs/cP8jhFA7SMsoE9NP5QsBw/wad0DOGfm71KSiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J2N2w5eQ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=iDXUL97blBB6Ef4sNbemfLartHc5Hb+VgeIPOtWiUYHmn4cXeR6RaUUNPSBL1jH8vqKRMKI/cpWBP20302yFBMDsjwJufc5Lu+jtZEAdkmp9K1aLIgndZ3RsreyDmg+2npNboqOy3avNYDf35AYvPSG28thM3luiXGbS/k4kzxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WKuzcKHh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J2N2w5eQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKuzcKHh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732201264;
+	s=mimecast20190719; t=1732201266;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LD4X0OQB8y8IQ9VbB0WvQsZxXCBPkNmPUv1WsVYigSE=;
-	b=J2N2w5eQ4xRlnkzSVpPnAAmeoKB1iK5Mnl4VVGV7IPhsJo5Q9wkZG3qWzTBpP1xd+kfxhG
-	DSvemyi1HZZgAayfQUJoMlTSsE4Ul+m52nKt3/+O73r0hG5py4P8ug8bag+Oc0pIjeLA6U
-	HhWAdMuDpP4fHKghUYcNJ3/QWfTpxfM=
+	bh=zmSOa1gha37XEdXQeZkg9qPr6YBy9XqW4kBMi409+VM=;
+	b=WKuzcKHh8btuBHZNRqPSWF4CXNH2oO5df5MDwm+FaFOXJNZedXk1BBZfC9X1n15mvoAU7P
+	e3aDSGhhL8KxKXgU/vWiV0ZViB4rW9oMBmueda8LWi759AyLIjAyPGHfxsPVn4q5p9cY/q
+	mvFUC+ZqIBYEsvcNQys3IsAyFr4d0cs=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-CLgKzTzdPo2UxEiCqExREQ-1; Thu,
- 21 Nov 2024 10:01:00 -0500
-X-MC-Unique: CLgKzTzdPo2UxEiCqExREQ-1
-X-Mimecast-MFC-AGG-ID: CLgKzTzdPo2UxEiCqExREQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-633-OXhpDoppP8eh9Oqdb55_6Q-1; Thu,
+ 21 Nov 2024 10:01:03 -0500
+X-MC-Unique: OXhpDoppP8eh9Oqdb55_6Q-1
+X-Mimecast-MFC-AGG-ID: OXhpDoppP8eh9Oqdb55_6Q
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C968619560A2;
-	Thu, 21 Nov 2024 15:00:59 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BEFBF1956048;
+	Thu, 21 Nov 2024 15:01:02 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.194.245])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 77FDD30000DF;
-	Thu, 21 Nov 2024 15:00:57 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73E7A30000DF;
+	Thu, 21 Nov 2024 15:01:00 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -49,9 +49,9 @@ To: linux-trace-kernel@vger.kernel.org,
 Cc: Tomas Glozar <tglozar@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 2/4] verification/dot2k: Unify main.c templates
-Date: Thu, 21 Nov 2024 15:59:55 +0100
-Message-ID: <20241121145957.145700-3-gmonaco@redhat.com>
+Subject: [PATCH 3/4] verification/dot2k: More robust template variables
+Date: Thu, 21 Nov 2024 15:59:56 +0100
+Message-ID: <20241121145957.145700-4-gmonaco@redhat.com>
 In-Reply-To: <20241121145957.145700-1-gmonaco@redhat.com>
 References: <20241121145957.145700-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -63,272 +63,151 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-This patch removes the 3 dot2k templates and replaces them with a more
-general one. The only difference among the 3 templates was the
-`DECLARE_DA_MON_*` call, which can be adjusted by the python code.
-
-This change eases changing the templates, which will be done in
-following patches.
+This patch switches the variables in the template that are automatically
+filled by the python script from the VARIABLE notation to the
+%%VARIABLE%% one.
+This makes the pattern substitution more robust.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/dot2/dot2k.py              |  7 +-
- .../dot2k_templates/{main_global.c => main.c} |  2 +-
- .../dot2/dot2k_templates/main_per_cpu.c       | 91 -------------------
- .../dot2/dot2k_templates/main_per_task.c      | 91 -------------------
- 4 files changed, 7 insertions(+), 184 deletions(-)
- rename tools/verification/dot2/dot2k_templates/{main_global.c => main.c} (97%)
- delete mode 100644 tools/verification/dot2/dot2k_templates/main_per_cpu.c
- delete mode 100644 tools/verification/dot2/dot2k_templates/main_per_task.c
+ tools/verification/dot2/dot2k.py              | 14 +++---
+ .../verification/dot2/dot2k_templates/main.c  | 50 +++++++++----------
+ 2 files changed, 32 insertions(+), 32 deletions(-)
 
 diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot2k.py
-index f6d02e3406a3..15d6f7048f8d 100644
+index 15d6f7048f8d..c88b3c011706 100644
 --- a/tools/verification/dot2/dot2k.py
 +++ b/tools/verification/dot2/dot2k.py
-@@ -26,7 +26,7 @@ class dot2k(Dot2c):
- 
-         self.monitor_type = MonitorType
-         self.__fill_rv_templates_dir()
--        self.main_c = self.__open_file(self.monitor_templates_dir + "main_" + MonitorType + ".c")
-+        self.main_c = self.__open_file(self.monitor_templates_dir + "main.c")
-         self.enum_suffix = "_%s" % self.name
- 
-     def __fill_rv_templates_dir(self):
-@@ -69,6 +69,9 @@ class dot2k(Dot2c):
-         # cut off the last \n
-         return string[:-1]
- 
-+    def fill_monitor_type(self):
-+        return self.monitor_type.upper()
-+
-     def fill_tracepoint_handlers_skel(self):
-         buff = []
-         for event in self.events:
-@@ -97,12 +100,14 @@ class dot2k(Dot2c):
- 
-     def fill_main_c(self):
-         main_c = self.main_c
-+        monitor_type = self.fill_monitor_type()
-         min_type = self.get_minimun_type()
-         nr_events = len(self.events)
-         tracepoint_handlers = self.fill_tracepoint_handlers_skel()
+@@ -107,13 +107,13 @@ class dot2k(Dot2c):
          tracepoint_attach = self.fill_tracepoint_attach_probe()
          tracepoint_detach = self.fill_tracepoint_detach_helper()
  
-+        main_c = main_c.replace("MONITOR_TYPE", monitor_type)
-         main_c = main_c.replace("MIN_TYPE", min_type)
-         main_c = main_c.replace("MODEL_NAME", self.name)
-         main_c = main_c.replace("NR_EVENTS", str(nr_events))
-diff --git a/tools/verification/dot2/dot2k_templates/main_global.c b/tools/verification/dot2/dot2k_templates/main.c
-similarity index 97%
-rename from tools/verification/dot2/dot2k_templates/main_global.c
-rename to tools/verification/dot2/dot2k_templates/main.c
-index a5658bfb9044..2419a6f89cd8 100644
---- a/tools/verification/dot2/dot2k_templates/main_global.c
+-        main_c = main_c.replace("MONITOR_TYPE", monitor_type)
+-        main_c = main_c.replace("MIN_TYPE", min_type)
+-        main_c = main_c.replace("MODEL_NAME", self.name)
+-        main_c = main_c.replace("NR_EVENTS", str(nr_events))
+-        main_c = main_c.replace("TRACEPOINT_HANDLERS_SKEL", tracepoint_handlers)
+-        main_c = main_c.replace("TRACEPOINT_ATTACH", tracepoint_attach)
+-        main_c = main_c.replace("TRACEPOINT_DETACH", tracepoint_detach)
++        main_c = main_c.replace("%%MONITOR_TYPE%%", monitor_type)
++        main_c = main_c.replace("%%MIN_TYPE%%", min_type)
++        main_c = main_c.replace("%%MODEL_NAME%%", self.name)
++        main_c = main_c.replace("%%NR_EVENTS%%", str(nr_events))
++        main_c = main_c.replace("%%TRACEPOINT_HANDLERS_SKEL%%", tracepoint_handlers)
++        main_c = main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_attach)
++        main_c = main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_detach)
+ 
+         return main_c
+ 
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verification/dot2/dot2k_templates/main.c
+index 2419a6f89cd8..4a05fef7f3c7 100644
+--- a/tools/verification/dot2/dot2k_templates/main.c
 +++ b/tools/verification/dot2/dot2k_templates/main.c
-@@ -28,7 +28,7 @@
+@@ -8,7 +8,7 @@
+ #include <rv/instrumentation.h>
+ #include <rv/da_monitor.h>
+ 
+-#define MODULE_NAME "MODEL_NAME"
++#define MODULE_NAME "%%MODEL_NAME%%"
+ 
+ /*
+  * XXX: include required tracepoint headers, e.g.,
+@@ -20,15 +20,15 @@
+  * This is the self-generated part of the monitor. Generally, there is no need
+  * to touch this section.
+  */
+-#include "MODEL_NAME.h"
++#include "%%MODEL_NAME%%.h"
+ 
+ /*
+  * Declare the deterministic automata monitor.
+  *
   * The rv monitor reference is needed for the monitor declaration.
   */
- static struct rv_monitor rv_MODEL_NAME;
--DECLARE_DA_MON_GLOBAL(MODEL_NAME, MIN_TYPE);
-+DECLARE_DA_MON_MONITOR_TYPE(MODEL_NAME, MIN_TYPE);
+-static struct rv_monitor rv_MODEL_NAME;
+-DECLARE_DA_MON_MONITOR_TYPE(MODEL_NAME, MIN_TYPE);
++static struct rv_monitor rv_%%MODEL_NAME%%;
++DECLARE_DA_MON_%%MONITOR_TYPE%%(%%MODEL_NAME%%, %%MIN_TYPE%%);
  
  /*
   * This is the instrumentation part of the monitor.
-diff --git a/tools/verification/dot2/dot2k_templates/main_per_cpu.c b/tools/verification/dot2/dot2k_templates/main_per_cpu.c
-deleted file mode 100644
-index 03539a97633f..000000000000
---- a/tools/verification/dot2/dot2k_templates/main_per_cpu.c
-+++ /dev/null
-@@ -1,91 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/ftrace.h>
--#include <linux/tracepoint.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/init.h>
--#include <linux/rv.h>
--#include <rv/instrumentation.h>
--#include <rv/da_monitor.h>
--
--#define MODULE_NAME "MODEL_NAME"
--
--/*
-- * XXX: include required tracepoint headers, e.g.,
-- * #include <linux/trace/events/sched.h>
-- */
--#include <trace/events/rv.h>
--
--/*
-- * This is the self-generated part of the monitor. Generally, there is no need
-- * to touch this section.
-- */
--#include "MODEL_NAME.h"
--
--/*
-- * Declare the deterministic automata monitor.
-- *
-- * The rv monitor reference is needed for the monitor declaration.
-- */
--static struct rv_monitor rv_MODEL_NAME;
--DECLARE_DA_MON_PER_CPU(MODEL_NAME, MIN_TYPE);
--
--/*
-- * This is the instrumentation part of the monitor.
-- *
-- * This is the section where manual work is required. Here the kernel events
-- * are translated into model's event.
-- *
-- */
+@@ -37,55 +37,55 @@ DECLARE_DA_MON_MONITOR_TYPE(MODEL_NAME, MIN_TYPE);
+  * are translated into model's event.
+  *
+  */
 -TRACEPOINT_HANDLERS_SKEL
 -static int enable_MODEL_NAME(void)
--{
--	int retval;
--
++%%TRACEPOINT_HANDLERS_SKEL%%
++static int enable_%%MODEL_NAME%%(void)
+ {
+ 	int retval;
+ 
 -	retval = da_monitor_init_MODEL_NAME();
--	if (retval)
--		return retval;
--
++	retval = da_monitor_init_%%MODEL_NAME%%();
+ 	if (retval)
+ 		return retval;
+ 
 -TRACEPOINT_ATTACH
--
--	return 0;
--}
--
++%%TRACEPOINT_ATTACH%%
+ 
+ 	return 0;
+ }
+ 
 -static void disable_MODEL_NAME(void)
--{
++static void disable_%%MODEL_NAME%%(void)
+ {
 -	rv_MODEL_NAME.enabled = 0;
--
++	rv_%%MODEL_NAME%%.enabled = 0;
+ 
 -TRACEPOINT_DETACH
--
++%%TRACEPOINT_DETACH%%
+ 
 -	da_monitor_destroy_MODEL_NAME();
--}
--
--/*
-- * This is the monitor register section.
-- */
++	da_monitor_destroy_%%MODEL_NAME%%();
+ }
+ 
+ /*
+  * This is the monitor register section.
+  */
 -static struct rv_monitor rv_MODEL_NAME = {
 -	.name = "MODEL_NAME",
 -	.description = "auto-generated MODEL_NAME",
 -	.enable = enable_MODEL_NAME,
 -	.disable = disable_MODEL_NAME,
 -	.reset = da_monitor_reset_all_MODEL_NAME,
--	.enabled = 0,
--};
--
++static struct rv_monitor rv_%%MODEL_NAME%% = {
++	.name = "%%MODEL_NAME%%",
++	.description = "auto-generated %%MODEL_NAME%%",
++	.enable = enable_%%MODEL_NAME%%,
++	.disable = disable_%%MODEL_NAME%%,
++	.reset = da_monitor_reset_all_%%MODEL_NAME%%,
+ 	.enabled = 0,
+ };
+ 
 -static int __init register_MODEL_NAME(void)
--{
++static int __init register_%%MODEL_NAME%%(void)
+ {
 -	rv_register_monitor(&rv_MODEL_NAME);
--	return 0;
--}
--
++	rv_register_monitor(&rv_%%MODEL_NAME%%);
+ 	return 0;
+ }
+ 
 -static void __exit unregister_MODEL_NAME(void)
--{
++static void __exit unregister_%%MODEL_NAME%%(void)
+ {
 -	rv_unregister_monitor(&rv_MODEL_NAME);
--}
--
++	rv_unregister_monitor(&rv_%%MODEL_NAME%%);
+ }
+ 
 -module_init(register_MODEL_NAME);
 -module_exit(unregister_MODEL_NAME);
--
--MODULE_LICENSE("GPL");
--MODULE_AUTHOR("dot2k: auto-generated");
++module_init(register_%%MODEL_NAME%%);
++module_exit(unregister_%%MODEL_NAME%%);
+ 
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("dot2k: auto-generated");
 -MODULE_DESCRIPTION("MODEL_NAME");
-diff --git a/tools/verification/dot2/dot2k_templates/main_per_task.c b/tools/verification/dot2/dot2k_templates/main_per_task.c
-deleted file mode 100644
-index ffd92af87a86..000000000000
---- a/tools/verification/dot2/dot2k_templates/main_per_task.c
-+++ /dev/null
-@@ -1,91 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/ftrace.h>
--#include <linux/tracepoint.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/init.h>
--#include <linux/rv.h>
--#include <rv/instrumentation.h>
--#include <rv/da_monitor.h>
--
--#define MODULE_NAME "MODEL_NAME"
--
--/*
-- * XXX: include required tracepoint headers, e.g.,
-- * #include <linux/trace/events/sched.h>
-- */
--#include <trace/events/rv.h>
--
--/*
-- * This is the self-generated part of the monitor. Generally, there is no need
-- * to touch this section.
-- */
--#include "MODEL_NAME.h"
--
--/*
-- * Declare the deterministic automata monitor.
-- *
-- * The rv monitor reference is needed for the monitor declaration.
-- */
--static struct rv_monitor rv_MODEL_NAME;
--DECLARE_DA_MON_PER_TASK(MODEL_NAME, MIN_TYPE);
--
--/*
-- * This is the instrumentation part of the monitor.
-- *
-- * This is the section where manual work is required. Here the kernel events
-- * are translated into model's event.
-- *
-- */
--TRACEPOINT_HANDLERS_SKEL
--static int enable_MODEL_NAME(void)
--{
--	int retval;
--
--	retval = da_monitor_init_MODEL_NAME();
--	if (retval)
--		return retval;
--
--TRACEPOINT_ATTACH
--
--	return 0;
--}
--
--static void disable_MODEL_NAME(void)
--{
--	rv_MODEL_NAME.enabled = 0;
--
--TRACEPOINT_DETACH
--
--	da_monitor_destroy_MODEL_NAME();
--}
--
--/*
-- * This is the monitor register section.
-- */
--static struct rv_monitor rv_MODEL_NAME = {
--	.name = "MODEL_NAME",
--	.description = "auto-generated MODEL_NAME",
--	.enable = enable_MODEL_NAME,
--	.disable = disable_MODEL_NAME,
--	.reset = da_monitor_reset_all_MODEL_NAME,
--	.enabled = 0,
--};
--
--static int __init register_MODEL_NAME(void)
--{
--	rv_register_monitor(&rv_MODEL_NAME);
--	return 0;
--}
--
--static void __exit unregister_MODEL_NAME(void)
--{
--	rv_unregister_monitor(&rv_MODEL_NAME);
--}
--
--module_init(register_MODEL_NAME);
--module_exit(unregister_MODEL_NAME);
--
--MODULE_LICENSE("GPL");
--MODULE_AUTHOR("dot2k: auto-generated");
--MODULE_DESCRIPTION("MODEL_NAME");
++MODULE_DESCRIPTION("%%MODEL_NAME%%");
 -- 
 2.47.0
 
