@@ -1,61 +1,56 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE281CD1EE;
-	Thu, 21 Nov 2024 11:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A280C1D12E0;
+	Thu, 21 Nov 2024 12:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732190043; cv=none; b=H2NP316dOD7wA7LXcuxknWAHt1pyg2soV415FlwodjZ8VJtV6C4BoNFpBhKYhAzptlbySg7ascDrNK3GTNdnCIVcco8ktR2cueCCQ4o4cjNgWzgW1Zuy5424Slzll7BT64FApJxS4ReZsXxMSpc8ewdlZET2kxHik4HUS4WtcxM=
+	t=1732192838; cv=none; b=eDIUH5bHda6QTj4/d7zLsl+5lckYh1F/Et+s4uQqgWAJwb7nJJPDHKzANj9vawzDHvbdA0AAxIVcHm5Q6ac1oka+f0om9XoPQLgZJqxgtTaiWdB3kbhuWOEmmARpsBKpG2RWl5hf0/akhqaj3iXOU1VS6PCbWky3ZpC17/ENY84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732190043; c=relaxed/simple;
-	bh=AmK0AI1qoNjZ0cH1lAwLtt6sWfdkbtQrIoeS241Raec=;
+	s=arc-20240116; t=1732192838; c=relaxed/simple;
+	bh=yIq/EMeFPW5kEsCkl9Aphuk7NiHKWxE+K7aOyaxDZzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhMJxmPS5rCTPZ731euklN91BZWZLnBYogRBq8/ILXmogwEuvZEH+PBdrnE5Amncl5nFdN2Ef978yB/ggwwyXMUA9Gp0DCo3jW15oxnR2UzKAKUOrMJpSM15khfOIMjNQVBKmCGL4H8Ev0dbUVfm1+CaouSYaqi8kFwjsUvPSjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i8kPc53J; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=SfMPrFY8fE9Y2HHUu3xyYA8D9q85E3vbZtuX0zyxKAdnTkptC/0XDUBsoKtDmkVdKXCteAdo7d26VA8hoL3IR35oTGsmeTtlSQ/Hg2XleKxWKSX3gCDUjp5d8PBnrL6vTQczwyjf6uXQZYZ7XLX4Kjge3MWgsPB6j340JIASUJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AQZ2dw3G; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i8kPc53J"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQZ2dw3G"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=AmK0AI1qoNjZ0cH1lAwLtt6sWfdkbtQrIoeS241Raec=; b=i8kPc53JEweieYf82/XNWs+MyZ
-	y4TdePE7L5rOgPuxlWUHzcVG6gzltYkmMsaE/ZzgBBynjqMwGiE+6yFLxQvITJvcH7YGqUYLkNaUo
-	Qn0lvht+b2fv6Uq8UKqIZHgHfoTNAYjqbeJ1capS9O1WbedziHKV9DK7xsXuaA3Ta90tiAThMD8Ow
-	IDMPeF/uK4/iX1VS8IQTC9idKd0O0yp9Co4xmqi+FU1LZtLHXRySZh8HVH6PkynqdkebIAQiuVifM
-	ENg5RvdtXFb6WZIRurvGvEZHCyzs2oZ8tLHTrN29ItXiy8FUmXg9AVXM5eSe1PV5ZjVj9O4DrBFVX
-	nIlPDXLw==;
+	bh=ikpAnH13gbp0BHe1sYaGxmFI2nIUUInCIR7xIHSqhjw=; b=AQZ2dw3G7cIbip5y5YOVoD0RtD
+	927AGxDlm/cKkwl8CrIw8V7+iEJgbmopNa0dPo0Zsp4AdtEUj7FQ508lfvuTUhEWDud29AnRJB5vn
+	iar09XeXACJREwkkIsnq9KmIXBafd4P1n0hlrwfjuHR4+akH2DOXJ++kkHlk16vSgjLp49hS5LXqD
+	KMwdWMXDVPDFpTZj0kT1gOlOtYuEkZVfqf/S85vBqsjk2coQuXtvV7aoM+DsXkzB24IcAy0qq6qnT
+	D++kovSxCKKB1EY2C2p9m2vSTrshUuugrr4x7V0UbTyYu9VslMnyzX3OTCjww98AVVQHX2ScvJiyD
+	Yp9aWmuw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tE5ku-00000006LDa-2iuE;
-	Thu, 21 Nov 2024 11:53:54 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tE6Tk-00000000a0U-1YEf;
+	Thu, 21 Nov 2024 12:40:12 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 83C1B30068B; Thu, 21 Nov 2024 12:53:53 +0100 (CET)
-Date: Thu, 21 Nov 2024 12:53:53 +0100
+	id 8FDC730068B; Thu, 21 Nov 2024 13:40:11 +0100 (CET)
+Date: Thu, 21 Nov 2024 13:40:11 +0100
 From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [RFC perf/core 05/11] uprobes: Add mapping for optimized uprobe
- trampolines
-Message-ID: <20241121115353.GJ24774@noisy.programming.kicks-ass.net>
-References: <20241105133405.2703607-1-jolsa@kernel.org>
- <20241105133405.2703607-6-jolsa@kernel.org>
- <20241105142327.GF10375@noisy.programming.kicks-ass.net>
- <ZypI3n-2wbS3_w5p@krava>
- <CAEf4BzZ4XgSOHz0T5nXPyd+keo=rQvH5jc0Jghw1db0a7qR9GQ@mail.gmail.com>
- <ZzkSKQSrbffwOFvd@krava>
- <CAEf4BzbSrtJWUZUcq-RouwwRxK1GOAwO++aSgjbyQf26cQMfow@mail.gmail.com>
- <20241119091348.GE11903@noisy.programming.kicks-ass.net>
- <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
+	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org,
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+	david@redhat.com, arnd@arndb.de, richard.weiyang@gmail.com,
+	zhangpeng.00@bytedance.com, linmiaohe@huawei.com,
+	viro@zeniv.linux.org.uk, hca@linux.ibm.com
+Subject: Re: [PATCH v4 tip/perf/core 1/4] mm: Convert mm_lock_seq to a proper
+ seqcount
+Message-ID: <20241121124011.GK24774@noisy.programming.kicks-ass.net>
+References: <20241028010818.2487581-1-andrii@kernel.org>
+ <20241028010818.2487581-2-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,14 +59,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzbhDE2B41pULQuTfx0f_-1fn5ugJEdPpweKWZVJetCxrQ@mail.gmail.com>
+In-Reply-To: <20241028010818.2487581-2-andrii@kernel.org>
 
-On Wed, Nov 20, 2024 at 04:07:38PM -0800, Andrii Nakryiko wrote:
+On Sun, Oct 27, 2024 at 06:08:15PM -0700, Andrii Nakryiko wrote:
+> +/*
+> + * Drop all currently-held per-VMA locks.
+> + * This is called from the mmap_lock implementation directly before releasing
+> + * a write-locked mmap_lock (or downgrading it to read-locked).
+> + * This should normally NOT be called manually from other places.
+> + * If you want to call this manually anyway, keep in mind that this will release
+> + * *all* VMA write locks, including ones from further up the stack.
+> + */
+> +static inline void vma_end_write_all(struct mm_struct *mm)
+> +{
+> +	mmap_assert_write_locked(mm);
+> +	/*
+> +	 * Nobody can concurrently modify mm->mm_lock_seq due to exclusive
+> +	 * mmap_lock being held.
+> +	 */
 
-> USDTs are meant to be "transparent" to the surrounding code and they
-> don't mark any clobbered registers. Technically it could be added, but
-> I'm not a fan of this.
+You can write:
 
-Sure. Anyway, another thing to consider is FRED, will all of this still
-matter once that lands? If FRED gets us INT3 performance close to what
-SYSCALL has, then all this work will go unused.
+	ASSERT_EXCLUSIVE_WRITER(mm->mm_lock_seq);
+
+instead of that comment. Then KCSAN will validate the claim.
+
+> +	mm_lock_seqcount_end(mm);
+> +}
