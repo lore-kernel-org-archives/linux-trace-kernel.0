@@ -1,48 +1,55 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43926171088;
-	Fri, 22 Nov 2024 10:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D9714A84;
+	Fri, 22 Nov 2024 11:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732271363; cv=none; b=JsSxvQCxd38UWarm8KZFqpKauKcU9MMkI8CocYfowxSJIz4dagj0B0Y+n8onAatXr91XDVY2MoffMjF5ProBd0NIEGQfs3/nvtwASK9Lh60kXYmPJY/CdT3+r76R0ZmLHsS4ykkt9rNkVIpjgfkmun8T532QI2LKoUFnR5eJ4lA=
+	t=1732273668; cv=none; b=iP2oW5XKpNle6h5Y3Ti6iwxM4YFyZVCQYpm0eYHexBp2rTouyRPXjZosZieKtxiKddctvsGskJJiPyWcRLFQRREHkz4zuD23q0CyXdztatMd66wVnBM8/gmRY+i1mQVtK6Gksv5YDYjNOftim6mwjTYenCX8qqCjsS3/0kCA6N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732271363; c=relaxed/simple;
-	bh=KY6cZV4aUfFBErHosWRZzSawkaV7LS7+XJEKWzxNyRU=;
+	s=arc-20240116; t=1732273668; c=relaxed/simple;
+	bh=CI1lIANsrzEeHGjqXoJmc6I7iBCghDKQ8XngPTMVJ7k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOP9c0Fn+PTMCQmEPcuRf5v50VVZ55QeXL8M4CzkYURxpgATep1/iu5F9ZJtttbdQFzQqAc0HvoGOMZNqRN309PrOXzMl8BSeXBjupW0lK4jiF/y1PPoGO6BaA7TnmYzb8doTCkK+eropdUnRNnB/cFPf5zQSmKYpiOc2R+Z/T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8A3C5102BE4DD;
-	Fri, 22 Nov 2024 11:29:16 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 57C351B9BCF; Fri, 22 Nov 2024 11:29:16 +0100 (CET)
-Date: Fri, 22 Nov 2024 11:29:16 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
-	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com, peterz@infradead.org
-Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <Z0Bc_Mws5mD03TMI@wunner.de>
-References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
- <Zz786zZljAy2J5i7@wunner.de>
- <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
- <20241121084354.4a554829@gandalf.local.home>
- <Zz-9vviSWP8oRPUx@wunner.de>
- <20241121190826.78506b40@gandalf.local.home>
- <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qyOG0ngmfBMCQcbbAMVUMHKgfLSpMtR7tclhIKIBtwKRe4uJsAVyCbTLcwAjv/6YAeerERnXsZf4DIAKJAtcCAkrTbA7GpiPz7QOiuyYXZY1hgOSe1Ge2wYUI7c1uu9cLGmefLYKfLe53yf0+ZieSzcuPDDpKvRLC8lK0eD8/wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FxGSQpdO; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FxGSQpdO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=jji/7XRHcaGMBULxQ6QXItOGJLcPdj5UvUmIxK4X7tw=; b=FxGSQpdO9Gg4KSR0Myh6q/JWhz
+	tD8ewDhyuKBh+Fzfgyv+hQN1PTeNExqJkHHXIjVWoNtIm8+JNXPiDVIYufft6wqhvozBi2pYB7GPx
+	fpYtIieaVy9PBujdu+sowJEA3eVs4zAX0mWIy5HfQli6E4JUWDTI+mqjerbQOUiIBTyQ0DVg/zhXS
+	cBa9FoZJdjCn5RJCZSoYNGvUeC9Ux3N5ywK23efFob/IPmtj2JzDqSoFHqMox0rnPadU1EMh6CJRi
+	xav8wsvMt7Tju/KBN8NRlvTImYnLrFIGz6Ez+yhDxkp5+6MWGYy3GTSk5eB2NmecNRtpVUM4rEYD6
+	C3mNiXOw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tERVh-00000000hHe-2Eox;
+	Fri, 22 Nov 2024 11:07:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3086D30066A; Fri, 22 Nov 2024 12:07:37 +0100 (CET)
+Date: Fri, 22 Nov 2024 12:07:37 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, mingo@kernel.org,
+	torvalds@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org,
+	willy@infradead.org, surenb@google.com, mjguzik@gmail.com,
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org,
+	vbabka@suse.cz, shakeel.butt@linux.dev, hannes@cmpxchg.org,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	david@redhat.com, arnd@arndb.de, viro@zeniv.linux.org.uk,
+	hca@linux.ibm.com
+Subject: Re: [PATCH v5 tip/perf/core 0/2] uprobes: speculative lockless
+ VMA-to-uprobe lookup
+Message-ID: <20241122110737.GP24774@noisy.programming.kicks-ass.net>
+References: <20241122035922.3321100-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -51,16 +58,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
+In-Reply-To: <20241122035922.3321100-1-andrii@kernel.org>
 
-On Fri, Nov 22, 2024 at 02:25:33PM +0800, Shuai Xue wrote:
-> Agreed. pci_hp_event is more reasonable. Than is:
-> 
-> - system: pci
-> - event: pci_hp_event
-> 
-> /sys/kernel/debug/tracing/events/pci/pci_hp_event
-> 
-> @Lukas, if you have any other concerns, please let me know.
+On Thu, Nov 21, 2024 at 07:59:20PM -0800, Andrii Nakryiko wrote:
 
-This LGTM, thank you.
+> Andrii Nakryiko (2):
+>   uprobes: simplify find_active_uprobe_rcu() VMA checks
+>   uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
+
+Thanks, assuming Suren is okay with me carrying his patches through tip,
+I'll make this land in tip/perf/core after -rc1.
