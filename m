@@ -1,94 +1,66 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC3222081;
-	Fri, 22 Nov 2024 06:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43926171088;
+	Fri, 22 Nov 2024 10:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732256750; cv=none; b=VtRvCnMsnCxV1mtM4uxjn0aiTPzHa85Y86LQjrXMOQwtVu8A+UP+veK14Q47CfMIMwNSEMxmmsGuUis+Pn8l46F5kj7aFRjt3aPkWiWrEFodnrBxaoXm5+Ywm++Gc6LWyvKtl5y1vu86LYEpcryoNwoxBLg7aQNqWFmzN9gtTcE=
+	t=1732271363; cv=none; b=JsSxvQCxd38UWarm8KZFqpKauKcU9MMkI8CocYfowxSJIz4dagj0B0Y+n8onAatXr91XDVY2MoffMjF5ProBd0NIEGQfs3/nvtwASK9Lh60kXYmPJY/CdT3+r76R0ZmLHsS4ykkt9rNkVIpjgfkmun8T532QI2LKoUFnR5eJ4lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732256750; c=relaxed/simple;
-	bh=JLGGC2upSRBy4NpebIatpx8yC3XQt7hVH/2hVqksfPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bmqN1L90Uf6BIUSbg+wlX1Ql9vpIkK/ZbFWpmAIi5vHOolfz9W3xiGzjFelrNmscLhwdMMYt+khc7TA7mRNO/uIG4EYaqcCcGJDBQJg3kIUB8qrUFTtfWeaQBsGqZ5SmXvhdUwtzvSS4LaP4OcjF8Al8KENRXeIrztdGNZ5F7yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ElM9F3yH; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ElM9F3yH"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1732256737; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=nnbly2k9u+G1ysjd0T5docpjLl2DZDHcRC0xrhPVEsM=;
-	b=ElM9F3yHEeeqzbXFv4SnhcMYfFdYim22+rYUk5qraM3YZlPOKSegJizE4r41oCYzyPGjzv9cgrASxtKJhPQCSZj0YmyKmKFb/NG9zCCkccyDtYGe3q6hyMBi7AF7gSZwgPun3jm8yuIVjhHFP3d/3ssZM1XQTtMkYFD5e7RU6BI=
-Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJzY5u4_1732256734 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 22 Nov 2024 14:25:35 +0800
-Message-ID: <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
-Date: Fri, 22 Nov 2024 14:25:33 +0800
+	s=arc-20240116; t=1732271363; c=relaxed/simple;
+	bh=KY6cZV4aUfFBErHosWRZzSawkaV7LS7+XJEKWzxNyRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oOP9c0Fn+PTMCQmEPcuRf5v50VVZ55QeXL8M4CzkYURxpgATep1/iu5F9ZJtttbdQFzQqAc0HvoGOMZNqRN309PrOXzMl8BSeXBjupW0lK4jiF/y1PPoGO6BaA7TnmYzb8doTCkK+eropdUnRNnB/cFPf5zQSmKYpiOc2R+Z/T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8A3C5102BE4DD;
+	Fri, 22 Nov 2024 11:29:16 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 57C351B9BCF; Fri, 22 Nov 2024 11:29:16 +0100 (CET)
+Date: Fri, 22 Nov 2024 11:29:16 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
+	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+	mark.rutland@arm.com, peterz@infradead.org
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <Z0Bc_Mws5mD03TMI@wunner.de>
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+ <Zz786zZljAy2J5i7@wunner.de>
+ <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+ <20241121084354.4a554829@gandalf.local.home>
+ <Zz-9vviSWP8oRPUx@wunner.de>
+ <20241121190826.78506b40@gandalf.local.home>
+ <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>, Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org
-References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
- <Zz786zZljAy2J5i7@wunner.de>
- <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
- <20241121084354.4a554829@gandalf.local.home> <Zz-9vviSWP8oRPUx@wunner.de>
- <20241121190826.78506b40@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20241121190826.78506b40@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e96ed0ee-01c8-4429-a903-17bc7813d78a@linux.alibaba.com>
 
-
-
-在 2024/11/22 08:08, Steven Rostedt 写道:
-> On Fri, 22 Nov 2024 00:09:50 +0100
-> Lukas Wunner <lukas@wunner.de> wrote:
+On Fri, Nov 22, 2024 at 02:25:33PM +0800, Shuai Xue wrote:
+> Agreed. pci_hp_event is more reasonable. Than is:
 > 
->> Would something like
->>
->>    /sys/kernel/debug/tracing/events/pci/hotplug_event
->>
->> be possible?  It would seem more elegant than
->>
->>    /sys/kernel/debug/tracing/events/pci/pci_hp_event
->>
->> because it avoids the duplication of "pci" in the path.
+> - system: pci
+> - event: pci_hp_event
 > 
-> Most events have the name of the system in it (see the sched events).
-> That's to prevent the duplicates in other places. Also, in the trace
-> output, only the event name is shown and not the system. That is, if you
-> have more than one "hotplug_event" enabled, the trace will not
-> differentiate them.
+> /sys/kernel/debug/tracing/events/pci/pci_hp_event
 > 
-> My suggestion is the "pci_hp_event" as it will be more obvious in the trace
-> output.
-> 
-> -- Steve
+> @Lukas, if you have any other concerns, please let me know.
 
-Agreed. pci_hp_event is more reasonable. Than is:
-
-- system: pci
-- event: pci_hp_event
-
-/sys/kernel/debug/tracing/events/pci/pci_hp_event
-
-@Lukas, if you have any other concerns, please let me know.
-
-
-Thank you.
-Best Regards,
-Shuai
+This LGTM, thank you.
