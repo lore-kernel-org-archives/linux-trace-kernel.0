@@ -1,87 +1,123 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589E66FB9;
-	Fri, 22 Nov 2024 00:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BBB16BE14;
+	Fri, 22 Nov 2024 01:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732236186; cv=none; b=eAKqhN5TnIG+cDnnflo20PwGHehe9n2IwkRe7kFH5gEBnBleFUANJ8UWgoMRKVEcYzt4tCmYHILP89l8I0CDI2nT9KdqN4w5Z5Ik8+AscSLlwopT8osqpkzpVqI4Z1zo33ySrt0z4vQBWTGnv6ApoQdmQlXPzd62Fp9EZuUKAEE=
+	t=1732240405; cv=none; b=PVh/xaJWaCfYHYq9W8IFoNXQ0Hx6jLvwnAayM4vE1r0yxwaeyg4Dj9lFBqXrv1KeQDRjk+605iQJ46WvtOeixpd6PYAhz3WUsf80lNJ3GULe5OqjPqJV5b6IyPfIjXMaHddfhBPmYivNwRTtjQP2m0ZPUGJzU7ZDU9bJS/f+I+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732236186; c=relaxed/simple;
-	bh=Rqb15WRPH5MG9UzXeqMKOHd/CMRaXCuz63iXSghhFw0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QxFa3YvOgDQrnV1SeXlUtvnigeRBuvvAfYW1qNPDg8KKnSyAhfhceX+rrnCx8x9VHO47YNfyf0W/skDsGA5++B92VNZc2TfaC+g9IgrYvRrt62SsFtbEebAno6ATYUA5NBTV+86e398yzZoINWtl4W/JetggwH5HpQlWJYA4zj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXn344qU; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732240405; c=relaxed/simple;
+	bh=mLlfRtBu8W4YXdufHsN+Hh7aEi5K5STCPwNPOH+/4ZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UyA6Bn5GV/5XHwvyd/uMfDue91RQSaZf6IqR7z0qdIADv/vH7JK1gIZY81YWu3MTIyC2iL9wT/TTszBG2LegyhAhb4vluXXCub6BNXaIizmB7GEA7suxOHdTDyd+qXhEqiPbNwksyFhKSSBAN+4Lf5xz5aOgmVHk1MUTUXAKR/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s2VpgaRV; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXn344qU"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a850270e2so288212966b.0;
-        Thu, 21 Nov 2024 16:43:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732236183; x=1732840983; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CO1sqiSTxqURH9+vvZf8fU5qNWSGbysLDKpYNcP0JjI=;
-        b=EXn344qUYZMcJrYA1MGfL1WSEBPQXawO3on6qjnyju8/paAsH7zzNkmMrTfzQLY03K
-         7EaSPiXaE9m+6msUreKRwp9QTbDbm7mNpu7lAS8Kmp7aCDSmOGk5lS+UL1R9+DEYRtlA
-         nBM1SuezKiX9Dzaxlkk/KPK7cuD55DcIEvElIbhJDSc5dnYLyChZED37n98nxW1LrwRO
-         nOTUeaEZHJ7WPf+I8Ag5gi7KfBQz2vVVdd9jOox25T3KAoPesdIpKLCmsy2LDH7PHCEq
-         c43T2R2bQNFMLMxpGD2Ms/HnwZktmptG/UYs6tXWVgW44HWuZ68bjp81bgEfLeusik39
-         DIkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732236183; x=1732840983;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CO1sqiSTxqURH9+vvZf8fU5qNWSGbysLDKpYNcP0JjI=;
-        b=mJ8kL4l3h5YjKEUbVlkmuPkjEqwSsVWgDVAjZp/dNyuiHj0e1P7itPoQPSK/QDFid7
-         +fb9j037eAYdBiAwqaMyvF/ZsVv2EDnlvbJjPw2Uvuwqmq9/1RzdASmPEEe9S5G8qyJZ
-         a526GxYIoaMOFPWXXRQsdm5KF/FCY8fEWV2SyeCFFLRUhpbNvIPZOi6SLaZ22K+ffuJ3
-         2cPi1EhBj89Eb+TPPHcnw4aRaanJxriCtt83iF3qSOTKXdnCPSP/NysHLwoxMAYsz6T6
-         qCvwRxEaBjKbmEjptr3Q/E21qLXYMauyJp38HxPuP/mxgAAOP5UkPnOWNOD0tMUCVjiJ
-         GNew==
-X-Forwarded-Encrypted: i=1; AJvYcCVZtw4Wz+FIZy41wrhwebESa0fxj5EEtp/7un85vjRWA3zT3NJwiQIWpTI0XmcEs8k7j+a1CHnpHKrzB+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYv5Eoovaftgc4uw17iQdK0BTlV5o7Jp1qryHqbvPQ70/2Ovr4
-	vuUrsKa+fnLsWHE8Lr0zoJeeODdndg0nj3AyFJiJWNxwHEeUSoM935CMpd0hDPvqHx/T6R51e50
-	6zPDsQpOJVIFUfT7aj3s5ee4dIfy023XWVY4=
-X-Gm-Gg: ASbGnctnYUoqxvtwAEnIbIw5qL0/DtkjNQEa7t/4Fup4GWVF9iKZn4S++VcdVmKG7OR
-	ykUzhwKOEcUrN9CpBU5hdXKhZKjSWH7JCYRNQTbAq3Pwwgg==
-X-Google-Smtp-Source: AGHT+IEUgcc2KaNRc86MIW3jqTKtK+v9yxm/Ui2WTerCR0xgcXQ0TPlNtN9Jgg0JaWSEbBiZeZPNT6wc+cpnQ0ql7dA=
-X-Received: by 2002:a17:906:311b:b0:aa1:e04f:e339 with SMTP id
- a640c23a62f3a-aa50990b1dbmr72118366b.7.1732236183057; Thu, 21 Nov 2024
- 16:43:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s2VpgaRV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1732240394; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=0w7XvBE2P7BNoXQjEnWX/nWFWyUO7hkvrfRZsmxX9RM=;
+	b=s2VpgaRVQVXUwEqTy1NmuNoSe6VOJV5XqnBOqjANnqAyJJnzFzwaw82hQkIZOLCKkHjOmHgMmWFmhft6rrdtNYlz9aCq4BtvEcGHJ89oEWvPMEA12t6fp4KsqeUWupjzePABqENjGgZ1X0Iu4v3SFmHGZMZiSGDm3PYfWL+WjIc=
+Received: from 30.246.161.197(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WJyg7UH_1732240390 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 22 Nov 2024 09:53:12 +0800
+Message-ID: <3f9b87c0-ff22-433f-adca-80716502c28f@linux.alibaba.com>
+Date: Fri, 22 Nov 2024 09:53:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Yuxuan Shui <yshuiv7@gmail.com>
-Date: Fri, 22 Nov 2024 00:42:51 +0000
-Message-ID: <CAGqt0zxtKboY1PWRN4kCF3uTeiH9ZJtj280ARvGWeNtR_ik0eQ@mail.gmail.com>
-Subject: uprobe_events can't accept paths that contain spaces
-To: linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Steven Rostedt <rostedt@goodmis.org>, Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org
+References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
+ <Zz786zZljAy2J5i7@wunner.de>
+ <7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
+ <20241121084354.4a554829@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20241121084354.4a554829@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
 
-I hit this problem accidentally when one of the shared libraries I was
-looking at is located in a directory with spaces in its name. `perf
-probe` reported "Failed to write event: Invalid argument".
 
-If I understand the code correctly, strings written into uprobe_events
-are strictly splitted at whitespaces (by `argv_split`). This seems
-like an unfortunate restriction. If I submit a patch to introduce
-support for either quotes (") or escapes (\), will that be considered?
+在 2024/11/21 21:43, Steven Rostedt 写道:
+> On Thu, 21 Nov 2024 19:34:31 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> Sure, I can reorganize the directory. You have two optional proposals:
+>>
+>> 1. /sys/kernel/debug/tracing/events/pci_hp_event
+> 
+> I'm guessing the above has TRACING_SYSTEM = pci_hp_event ? That is, the
+> above is a system and not an event.
+> 
+>> 2. /sys/kernel/debug/tracing/events/pci/pci_hp_event
+> 
+> Whereas here, it's an event.
+> 
+>>
+>> I personally prefer the second approach. However, I'll defer the final decision
+>> to the tracing subsystem maintainer, considering their expertise and
+>> familiarity with the existing conventions.
+> 
+> Normally the system is determined by the users of the tracing
+> infrastructure and not the tracing maintainers. But I can give you some
+> guidelines.
+> 
+> The "system" level:
+> 
+>    /sys/kernel/tracing/events/<system>
+> 
+> is just a way to group like events making it easier to enable them all at once:
+> 
+>   echo 1 > /sys/kernel/tracing/events/<system>/enable
+> 
+> or
+> 
+>    trace-cmd start -e <system>
+> 
+> The name of the "system" should be something that all the events underneath
+> represent. Note, although events in two different systems can have the same
+> name, it's best to try to keep them all unique. That's because if you have:
+> 
+> 
+>   systemA/foo  and systemB/foo
+> 
+> If you add to the kernel command line: trace_event=foo
+> it will enable both events. Although that could be fixed with: trace_event=systemA:foo
+> 
+> Note: trace_event=systemA  would enable all systemA events at boot.
+> 
+> That said, is all these events going to be related to hotplug? If so, you
+> probably want "hotplug" or "hp" in the system name. If you make it just
+> "pci", then it will be expected that all the events will be related to PCI
+> in general.
 
-(For context I am running something that expects its libraries to be
-located at fixed paths, so moving them to a different path would be
-awkward at best.)
+I think Lukas is asking for a system for pci related tracepoint.
 
-Thanks.
+> 
+> Does that help?
 
--- 
+Yes, it really does.
 
-Regards
-Yuxuan Shui
+> 
+> -- Steve
+
+Thanks a lot.
+
+Best Regards,
+Shuai
+
