@@ -1,171 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB6C2D638;
-	Fri, 22 Nov 2024 17:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D70D13B58C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Nov 2024 17:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732296726; cv=none; b=H3OdcY2SLVBxSQnvLHRveuaSTCtvdsm5FETZjUhXtFwISYER4aWSiF0Oqw+RRSrobvH6mujTeRYfCE5u8fvCzMM/dVAm43ptZn8opw3o9RT4MWuohxDy6svSpdhXgp3/LNv4T5tsffYxZ0LGQXX8pc8fzfkqEIbUgkjV2wYk7Qo=
+	t=1732297705; cv=none; b=O1kqJfCkTG1d2LG+SLOxqaerY8E7m3RcKosrS37Ts9u+K6Kpid58thLlsGtf5fB/vdxNRE3esYa9Wh57liAW6kidldU8lwxn6/PGb+01SjzuMDWhV2AoRmSvMzCCiLaFF/okp0upZ6Z1Ah6E9vSMUeyLayovSHRb8sNj7zOUW7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732296726; c=relaxed/simple;
-	bh=DTgcuZZK+mVPnIdMa/DUKbH25Ek8gr3gW8S01DVua+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TqYzxAx2mLutHP9Oz6c4oU47FG2xdlPn2TOqoaLCHgCMjsuFZQuxOblKXUcRtG7zuB7JRUAFJy5fm774+vn/xgcd7eQrstQU/cOqQg/Ql77psKBgw7o9ulCcls3BbmfA+X366DzU1dscvqYwr+QZCjHa6DVCua8xtH7dpsoRGvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OV6yMgt9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kh8AFfjr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1732297705; c=relaxed/simple;
+	bh=ohzwp247UbmMP1I+eZkVrW621hY8ktchQarpuk3HIHs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SMrR+1HwY/6HZzzP6JeBtE7Ek4TWKa6sb3y1vGHYEYyzkhRZXcX2Qa/Hg2cGnQxNWtja5E6vyUknA36MFvH22l36DfsuyNSXjiNn8U05pVNgr8zi1g9tHSU88ECXO1xLu2veM0yuywDVkAJmbCSXGJ9PAvylKZhrrZXkQ6vI818=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qlHBvNLW; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OV6yMgt9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kh8AFfjr"
-Date: Fri, 22 Nov 2024 18:32:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1732296722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7vOgU3NocPHUUkohMIpqePO+43urjVeU+r5yhU/I7Dk=;
-	b=OV6yMgt9tSgzOngAtZ/p/BlCkpm+Db/Bzo/7jjg6VpXJAcJJzVDvmThXO2Djb+AP2rpP+X
-	jkFXlR/QVqBpwUyDUrZQ1ObzbUEaoKWoZ0V119zB11yy8tsPd9i9dYxDFLyJcRer/XHt/6
-	Da1IwHkN1oSK/EwEGPMIXyQ5VC+728NFT2eOql6lT6cvR4HugMIwHsiSKv1GV/3In0K7/2
-	bKbUYC93vkrD4gbV+m4LJ6TwzjFZL+96EyYQVv9j7oHbasPl5/uz2D3QZKo82DL6dZ7en1
-	TB2SeR5zIFN5SkkEjzsxd+OGRqHbR3zDg/M1FVGWbNJDk6MP8/693QoY+ixdEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1732296722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7vOgU3NocPHUUkohMIpqePO+43urjVeU+r5yhU/I7Dk=;
-	b=Kh8AFfjr5ix+qzOJoTTr9by+FQIo/fqn6d1pHhD8PDis6IwoCCV5eghn5zaJiqTpTcnvyH
-	YTTRG8tfwnEw6RAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-	mingo@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, ankur.a.arora@oracle.com,
-	efault@gmx.de, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v3] tracing: Record task flag NEED_RESCHED_LAZY.
-Message-ID: <20241122173201.tsqK0eeD@linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlHBvNLW"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-460969c49f2so741cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 22 Nov 2024 09:48:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732297703; x=1732902503; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Dzn4IjnMnv34FVgwu/dFGi7pggQRg26ttbIci8IYCo=;
+        b=qlHBvNLWBKpD3z6jf3YEGnrLlVNppSrOZqccnrw3ZYj5Uu2CBHjRXfmiHj0v40a/8p
+         t40pcGfsG4xKT4HHsyg27g2HhrmE5xuZsKLUvk3fSQW4WoMGfuJiAkFWBlQ7NRwNyk8Y
+         CDhr4a3PEooY5zHb5OWOD1eVE1Cjq+YSePr+SE+1aZv13sLKkiMgHpuKEfdR8PN32NDd
+         65sKu2i2sfBLvSPjYegazSURbIWYM9+ueFLMEWi2kzOaJ8lTd4ejYNyjEGSDT9v6DnHC
+         9YNh18UgR6hDhaIx2yq1VDC+lzNaWT89sqPhDugMZBEnxfH/aJq1w720ykxoFcOLGs5v
+         6POQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732297703; x=1732902503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5Dzn4IjnMnv34FVgwu/dFGi7pggQRg26ttbIci8IYCo=;
+        b=jyEPgf94Z85HmTsw0FTBz23DxFswI4j3qRUbLrklQ+ese+5h8s1X29vb2J04YEXD7B
+         bMDlHsaUduNZ/o2/MLg2HNTvj2JCBt468ODFjaP3/Jj/Ui1sgsBTjuHpSLD7haPZiJLB
+         939dN0cZRyiVYPjiE7k5Es4ziZ5zUlIvfTL1spqysbWrAOoepTA+fmugwhkfq8o6bP0t
+         MrUiZNxY+2sdJUI3d1EhZ6tmGPF31j47l5LwLclf6mY9khLvDVzu0Npe7JtF/62QVeM4
+         E68008+ktXpsQt6eBNnLd5IVrq5v5yrY18GEiom1Di4M6kW1EdTkjcMtLObvMKw8TqIO
+         TCdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzcEE/Xl9oaEBbGIsJn0kAojia2dZ1y9OBG1jlO5EZMHolXYojRrWijmYW+HR/QVfl2EXsSPBFJ6bW2+duuSGWEfs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkZZHTKuSnuUdr5EfQEjeXMtnPM/8shDXdRHP5G5WD/rH4nCyg
+	drzKwJIbKPafCXhdsuXuOpFBASQK/1CMzuPfCzt7UIuYPtGLB9Lxz0o6/bt4vUrN8gEjI6dd5xN
+	ILuFlXS22FJKY9EBoXwYywrdIXMC0Fj+4BMNf
+X-Gm-Gg: ASbGncvXWQ+u1N8Aa6W7cB6zmfUD9gaOlqvfCSeBG9CI2xdzc0hLhNs2KgrkgXif5ag
+	jaERC/gz8AOT3tfVZmbAcw/ZaNfhQ7YdPXe74NucY9VE5eqYZ1utpQLTdXi4EDg==
+X-Google-Smtp-Source: AGHT+IHJYPuhBB5R2EsaOfV9PwicTxBNUev5vJnJ3t9Qj6dppnojbsdSrU/Uvzq+90nbzwcB66IiT6EpdiNZHyKRfKc=
+X-Received: by 2002:a05:622a:607:b0:465:3d28:8af2 with SMTP id
+ d75a77b69052e-4653d5d72b4mr4301521cf.22.1732297702894; Fri, 22 Nov 2024
+ 09:48:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20241122035922.3321100-1-andrii@kernel.org> <20241122110737.GP24774@noisy.programming.kicks-ass.net>
+ <CAJuCfpFvHwjMDdFGjCfg+fta2=Ccif7XReTH6TpC+V+PZ1JmAQ@mail.gmail.com>
+In-Reply-To: <CAJuCfpFvHwjMDdFGjCfg+fta2=Ccif7XReTH6TpC+V+PZ1JmAQ@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 22 Nov 2024 09:48:11 -0800
+Message-ID: <CAJuCfpFy27B3B=4QvATTzaM44Ferf1scbt0JCdrCdj2gzo52+A@mail.gmail.com>
+Subject: Re: [PATCH v5 tip/perf/core 0/2] uprobes: speculative lockless
+ VMA-to-uprobe lookup
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, mingo@kernel.org, 
+	torvalds@linux-foundation.org, oleg@redhat.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jolsa@kernel.org, paulmck@kernel.org, willy@infradead.org, mjguzik@gmail.com, 
+	brauner@kernel.org, jannh@google.com, mhocko@kernel.org, vbabka@suse.cz, 
+	shakeel.butt@linux.dev, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, david@redhat.com, arnd@arndb.de, 
+	viro@zeniv.linux.org.uk, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-=46rom: Thomas Gleixner <tglx@linutronix.de>
+On Fri, Nov 22, 2024 at 7:04=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Fri, Nov 22, 2024 at 3:07=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
+org> wrote:
+> >
+> > On Thu, Nov 21, 2024 at 07:59:20PM -0800, Andrii Nakryiko wrote:
+> >
+> > > Andrii Nakryiko (2):
+> > >   uprobes: simplify find_active_uprobe_rcu() VMA checks
+> > >   uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution
+> >
+> > Thanks, assuming Suren is okay with me carrying his patches through tip=
+,
+> > I'll make this land in tip/perf/core after -rc1.
+>
+> No objections from me. Thanks!
 
-The scheduler added NEED_RESCHED_LAZY scheduling. Record this state as
-part of trace flags and expose it in the need_resched field.
-
-Record and expose NEED_RESCHED_LAZY.
-
-[bigeasy: Commit description, documentation bits.]
-
-Reviewed-by: Ankur Arora <ankur.a.arora@oracle.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-v2=E2=80=A6v3:
-  - Use 0x02 for TRACE_FLAG_NEED_RESCHED_LAZY which is the freshly
-    created gap.
-
- Documentation/trace/ftrace.rst |  4 ++++
- include/linux/trace_events.h   |  1 +
- kernel/trace/trace.c           |  2 ++
- kernel/trace/trace_output.c    | 14 +++++++++++++-
- 4 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 74d5bd801b1a8..16892b844108c 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1033,9 +1033,13 @@ explains which is which.
-   irqs-off: 'd' interrupts are disabled. '.' otherwise.
-=20
-   need-resched:
-+	- 'B' all, TIF_NEED_RESCHED, PREEMPT_NEED_RESCHED and TIF_RESCHED_LAZY is=
- set,
- 	- 'N' both TIF_NEED_RESCHED and PREEMPT_NEED_RESCHED is set,
- 	- 'n' only TIF_NEED_RESCHED is set,
- 	- 'p' only PREEMPT_NEED_RESCHED is set,
-+	- 'L' borg PREEMPT_NEED_RESCHED and TIF_RESCHED_LAZY is set,
-+	- 'b' borg TIF_NEED_RESCHED and TIF_RESCHED_LAZY is set,
-+	- 'l' only TIF_RESCHED_LAZY is set
- 	- '.' otherwise.
-=20
-   hardirq/softirq:
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 016b29a56c875..2a5df5b62cfc7 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -184,6 +184,7 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int irqs=
-_status);
-=20
- enum trace_flag_type {
- 	TRACE_FLAG_IRQS_OFF		=3D 0x01,
-+	TRACE_FLAG_NEED_RESCHED_LAZY	=3D 0x02,
- 	TRACE_FLAG_NEED_RESCHED		=3D 0x04,
- 	TRACE_FLAG_HARDIRQ		=3D 0x08,
- 	TRACE_FLAG_SOFTIRQ		=3D 0x10,
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 3ef047ed97055..be62f0ea1814d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2552,6 +2552,8 @@ unsigned int tracing_gen_ctx_irq_test(unsigned int ir=
-qs_status)
- 		trace_flags |=3D TRACE_FLAG_NEED_RESCHED;
- 	if (test_preempt_need_resched())
- 		trace_flags |=3D TRACE_FLAG_PREEMPT_RESCHED;
-+	if (IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) && tif_test_bit(TIF_NEED_RES=
-CHED_LAZY))
-+		trace_flags |=3D TRACE_FLAG_NEED_RESCHED_LAZY;
- 	return (trace_flags << 16) | (min_t(unsigned int, pc & 0xff, 0xf)) |
- 		(min_t(unsigned int, migration_disable_value(), 0xf)) << 4;
- }
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index e08aee34ef63d..da748b7cbc4d5 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -462,17 +462,29 @@ int trace_print_lat_fmt(struct trace_seq *s, struct t=
-race_entry *entry)
- 		bh_off ? 'b' :
- 		'.';
-=20
--	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED |
-+	switch (entry->flags & (TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED=
-_LAZY |
- 				TRACE_FLAG_PREEMPT_RESCHED)) {
-+	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_=
-PREEMPT_RESCHED:
-+		need_resched =3D 'B';
-+		break;
- 	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_PREEMPT_RESCHED:
- 		need_resched =3D 'N';
- 		break;
-+	case TRACE_FLAG_NEED_RESCHED_LAZY | TRACE_FLAG_PREEMPT_RESCHED:
-+		need_resched =3D 'L';
-+		break;
-+	case TRACE_FLAG_NEED_RESCHED | TRACE_FLAG_NEED_RESCHED_LAZY:
-+		need_resched =3D 'b';
-+		break;
- 	case TRACE_FLAG_NEED_RESCHED:
- 		need_resched =3D 'n';
- 		break;
- 	case TRACE_FLAG_PREEMPT_RESCHED:
- 		need_resched =3D 'p';
- 		break;
-+	case TRACE_FLAG_NEED_RESCHED_LAZY:
-+		need_resched =3D 'l';
-+		break;
- 	default:
- 		need_resched =3D '.';
- 		break;
---=20
-2.45.2
-
+I just fixed a build issue in one of my patches for an odd config, so
+please use the latest version of the patchset from here:
+https://lore.kernel.org/all/20241122174416.1367052-1-surenb@google.com/
