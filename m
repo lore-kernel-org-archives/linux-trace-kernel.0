@@ -1,68 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FE717C;
-	Fri, 22 Nov 2024 00:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589E66FB9;
+	Fri, 22 Nov 2024 00:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732234070; cv=none; b=kmbIEXykijRbnDSpa6plq42I47X6Uv//9cKly2ByKT8AhQye6+kzhl62+TZc6w2k6Ly6qf/yhm0sAquvqP2ndMUBc8F85NlnYkZyPuexx6O4qCktZHmRVseoilMGtsH1YXC1mKfm2k1quzrSHHD2ucdFLDYkx0+lqPYAtmX1Oho=
+	t=1732236186; cv=none; b=eAKqhN5TnIG+cDnnflo20PwGHehe9n2IwkRe7kFH5gEBnBleFUANJ8UWgoMRKVEcYzt4tCmYHILP89l8I0CDI2nT9KdqN4w5Z5Ik8+AscSLlwopT8osqpkzpVqI4Z1zo33ySrt0z4vQBWTGnv6ApoQdmQlXPzd62Fp9EZuUKAEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732234070; c=relaxed/simple;
-	bh=2hx0YHbz0UHwnC51Hk7bSwd0mYR4Maj8ubb9Zq6tLXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B0rOYxpxv86hHwlIlXMnbZrtNMh+bzGHewwCKL3f789DHSgDh2UJ+lZqCk/Ga8GA1yqp9xw86l15BrnMHB9hZWEWlgM5q7e+VdYBDktUUD+DgK65OtKfozkaJR+RKNDGSFzjusGF0hSEi3A3bh1ypDOHsD6HcC9/+99qofbxiUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C54C4CECC;
-	Fri, 22 Nov 2024 00:07:47 +0000 (UTC)
-Date: Thu, 21 Nov 2024 19:08:26 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org
-Subject: Re: [PATCH v3] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20241121190826.78506b40@gandalf.local.home>
-In-Reply-To: <Zz-9vviSWP8oRPUx@wunner.de>
-References: <20241120124328.19111-1-xueshuai@linux.alibaba.com>
-	<Zz786zZljAy2J5i7@wunner.de>
-	<7002248c-f3af-42aa-ba42-a65cd738ae37@linux.alibaba.com>
-	<20241121084354.4a554829@gandalf.local.home>
-	<Zz-9vviSWP8oRPUx@wunner.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1732236186; c=relaxed/simple;
+	bh=Rqb15WRPH5MG9UzXeqMKOHd/CMRaXCuz63iXSghhFw0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QxFa3YvOgDQrnV1SeXlUtvnigeRBuvvAfYW1qNPDg8KKnSyAhfhceX+rrnCx8x9VHO47YNfyf0W/skDsGA5++B92VNZc2TfaC+g9IgrYvRrt62SsFtbEebAno6ATYUA5NBTV+86e398yzZoINWtl4W/JetggwH5HpQlWJYA4zj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXn344qU; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXn344qU"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a9a850270e2so288212966b.0;
+        Thu, 21 Nov 2024 16:43:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732236183; x=1732840983; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CO1sqiSTxqURH9+vvZf8fU5qNWSGbysLDKpYNcP0JjI=;
+        b=EXn344qUYZMcJrYA1MGfL1WSEBPQXawO3on6qjnyju8/paAsH7zzNkmMrTfzQLY03K
+         7EaSPiXaE9m+6msUreKRwp9QTbDbm7mNpu7lAS8Kmp7aCDSmOGk5lS+UL1R9+DEYRtlA
+         nBM1SuezKiX9Dzaxlkk/KPK7cuD55DcIEvElIbhJDSc5dnYLyChZED37n98nxW1LrwRO
+         nOTUeaEZHJ7WPf+I8Ag5gi7KfBQz2vVVdd9jOox25T3KAoPesdIpKLCmsy2LDH7PHCEq
+         c43T2R2bQNFMLMxpGD2Ms/HnwZktmptG/UYs6tXWVgW44HWuZ68bjp81bgEfLeusik39
+         DIkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732236183; x=1732840983;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CO1sqiSTxqURH9+vvZf8fU5qNWSGbysLDKpYNcP0JjI=;
+        b=mJ8kL4l3h5YjKEUbVlkmuPkjEqwSsVWgDVAjZp/dNyuiHj0e1P7itPoQPSK/QDFid7
+         +fb9j037eAYdBiAwqaMyvF/ZsVv2EDnlvbJjPw2Uvuwqmq9/1RzdASmPEEe9S5G8qyJZ
+         a526GxYIoaMOFPWXXRQsdm5KF/FCY8fEWV2SyeCFFLRUhpbNvIPZOi6SLaZ22K+ffuJ3
+         2cPi1EhBj89Eb+TPPHcnw4aRaanJxriCtt83iF3qSOTKXdnCPSP/NysHLwoxMAYsz6T6
+         qCvwRxEaBjKbmEjptr3Q/E21qLXYMauyJp38HxPuP/mxgAAOP5UkPnOWNOD0tMUCVjiJ
+         GNew==
+X-Forwarded-Encrypted: i=1; AJvYcCVZtw4Wz+FIZy41wrhwebESa0fxj5EEtp/7un85vjRWA3zT3NJwiQIWpTI0XmcEs8k7j+a1CHnpHKrzB+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYv5Eoovaftgc4uw17iQdK0BTlV5o7Jp1qryHqbvPQ70/2Ovr4
+	vuUrsKa+fnLsWHE8Lr0zoJeeODdndg0nj3AyFJiJWNxwHEeUSoM935CMpd0hDPvqHx/T6R51e50
+	6zPDsQpOJVIFUfT7aj3s5ee4dIfy023XWVY4=
+X-Gm-Gg: ASbGnctnYUoqxvtwAEnIbIw5qL0/DtkjNQEa7t/4Fup4GWVF9iKZn4S++VcdVmKG7OR
+	ykUzhwKOEcUrN9CpBU5hdXKhZKjSWH7JCYRNQTbAq3Pwwgg==
+X-Google-Smtp-Source: AGHT+IEUgcc2KaNRc86MIW3jqTKtK+v9yxm/Ui2WTerCR0xgcXQ0TPlNtN9Jgg0JaWSEbBiZeZPNT6wc+cpnQ0ql7dA=
+X-Received: by 2002:a17:906:311b:b0:aa1:e04f:e339 with SMTP id
+ a640c23a62f3a-aa50990b1dbmr72118366b.7.1732236183057; Thu, 21 Nov 2024
+ 16:43:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Yuxuan Shui <yshuiv7@gmail.com>
+Date: Fri, 22 Nov 2024 00:42:51 +0000
+Message-ID: <CAGqt0zxtKboY1PWRN4kCF3uTeiH9ZJtj280ARvGWeNtR_ik0eQ@mail.gmail.com>
+Subject: uprobe_events can't accept paths that contain spaces
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 22 Nov 2024 00:09:50 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+Hi,
 
-> Would something like
-> 
->   /sys/kernel/debug/tracing/events/pci/hotplug_event
-> 
-> be possible?  It would seem more elegant than
-> 
->   /sys/kernel/debug/tracing/events/pci/pci_hp_event
-> 
-> because it avoids the duplication of "pci" in the path.
+I hit this problem accidentally when one of the shared libraries I was
+looking at is located in a directory with spaces in its name. `perf
+probe` reported "Failed to write event: Invalid argument".
 
-Most events have the name of the system in it (see the sched events).
-That's to prevent the duplicates in other places. Also, in the trace
-output, only the event name is shown and not the system. That is, if you
-have more than one "hotplug_event" enabled, the trace will not
-differentiate them.
+If I understand the code correctly, strings written into uprobe_events
+are strictly splitted at whitespaces (by `argv_split`). This seems
+like an unfortunate restriction. If I submit a patch to introduce
+support for either quotes (") or escapes (\), will that be considered?
 
-My suggestion is the "pci_hp_event" as it will be more obvious in the trace
-output.
+(For context I am running something that expects its libraries to be
+located at fixed paths, so moving them to a different path would be
+awkward at best.)
 
--- Steve
+Thanks.
+
+-- 
+
+Regards
+Yuxuan Shui
