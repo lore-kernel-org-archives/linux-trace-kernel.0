@@ -1,126 +1,113 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BBA1804A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 17:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB5117BA6;
+	Sat, 23 Nov 2024 20:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732383534; cv=none; b=Je7AHBlTq/xN/xM+YNXljT0YO49zvunnouoJcfChtdv1K3nhZ3YimmaWciR2lyExEV8qTbKC3Fin601srLfyOId52pGVutB0eGSpQEhrerhJ/TkGVEnjQDkOxAZZP45jU7w+y9ldlMfAshB5UdJoVh0e9yUDj5TqQ7jNQ0sB5x8=
+	t=1732393680; cv=none; b=QNdg1O6pKJ7jg1YFmYu7lZgV8sKHo+sLWcZfpH2wXU3G84ZuTDPCP/s3w8cJ427ADNnxH0+7nlKYH3cg6Ei9grk3oMpIbC2KCq7ERZaMUieuE4IRqEJdM2SO/5uuEB5xP/zDzoqRZSaDQzdWfh1oUMYrXXHlvo/us6mxvbtGtxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732383534; c=relaxed/simple;
-	bh=Z2N+kTJzZXoQJzfXPyysOgIn5Wbo9WbTTSH/hpfAXyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fHGVl2zIq09AKxcRvmGyHPZyOLbbPIa/tAOGZfj1Y96kBJlGDIHVUSP/3ktYBHxP15G6UBgev1TGacZ03hG4X7JidIGrAKUzBZxYklE3nrRbJHY172QzluGLSbjL/8xO9wfx9bfv7ln0ThZnSqfYqxDxi0l1amhyQoR6TfGXUGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UMDroGWF; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1732393680; c=relaxed/simple;
+	bh=SEGoX0bHr13Xtp65WJRcTpnLvGjowmoEsWzmlpyXLhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJuhdTJvmDRjOJEZ/msAHfYZs3m/i9VNUqqO2fO01RhwfWcEPIaZ+Pni33JGRUeoPQrHwqn4bLDvF/oOW9JnH4TTt1VIhN2oIMn5clCrDrWLRsWQfq2n4vPxysxxkz2166MVQgPQil8RoSYYs2pmpeslT0PYT8QvlLY3GeC0++E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YF5uUcdX; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UMDroGWF"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aa20944ce8cso758688666b.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 09:38:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1732383531; x=1732988331; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vpM1fsZfdZBok4MSDnesEhvbM53AiXvjDwKI+kJlxP0=;
-        b=UMDroGWF1+7vELjsmAXzd2LAZEjNp880pmEcFq6eKCbmgRJZNH2uzdXNlaj+5T90L9
-         iknr/bZ82UM8jLlcWT+7cMvoDniVtGVeP2YeewGqfmf5Q/ZYVaRiFcMvIt1o/Rwnt3+b
-         NiwXL7qcOgK8k6V8k+2YaJif9xh1S0p49PNQc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732383531; x=1732988331;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vpM1fsZfdZBok4MSDnesEhvbM53AiXvjDwKI+kJlxP0=;
-        b=d+OvAEC8wrRtrs2fYtqDC8CH8uB+W5IgKaeLKje7scWFSDwOxcsrCxw0RhzkvyAAR5
-         fAS+ZnYgd9DNIy+ImZL/HKQL6iRzDChogPGlTQkpP0lVY+chPu9jU5IY4I1O8CEu3KN5
-         T8a0MmDjbbI1XFkJDWhbadVcZlLmBi9mWA7vDm+wXU7PHxXvWUY+KGi99BnLWYabD48S
-         oFXMeepOw9UihN1VJICWYkcD4KBPX6hREEGxg1WeRFnMWa1njnxZ0SEUiXCVL5P2QWV1
-         Om6EXN/MAgA6KnrH+ebHOEJbrIobDz1TmumMUxb5b9ipLQ+qd0Hzs4JFG+/9tUwd0TsZ
-         oFDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3C3qIl4pK9bRLbFxNlF8j0DAuR+9abTb15cBeLfE/5iV1r+g3zXEIwTgw2MCrDbyL8hpEeiR+8FryTBYbUyog5t0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMcAjFw3JL0+S4prWCzxUJAu109M1aKHmJaW3aXBmZea5z7j5j
-	u3flYAoQwHsp1DeuV4I9gbngnyPMuD+1FUpEibbhOubpCOpUKADw15nEE8GF65oKziEtJpPsDx3
-	2XHe+bQ==
-X-Gm-Gg: ASbGncu9t5HSLaH/Y4QVd9NTyxWZb7L4EU8akYe9mLgYhNbNHVrsGJhqNR+aAirWXPo
-	+yh9BAwoPS/Y7PazmndBS/0A0x8gqUcLD/HlhbUFCY3TP0yJ6FMsQ0V4lTgQr7BEe/C0zDyqXZ+
-	qloDBfeyrVj7UHnyy2BDlFnaiqc8TLl2mnFnEVKOT2u5KTGFIYGJasqpaih8omhLE+g2dDHXcrL
-	IEicOx58k0aw0fJvz2GuWFxLU9xD8V0SfMT94FsG7s/+ReZHd26W4rrKJoREhqrUD2LJLr65CuS
-	AmA7cn/bM7gZbm4hhNe77cNY
-X-Google-Smtp-Source: AGHT+IGIIH7sglTPtqu3BLxtagRVnbO8rB9nSS4JMTGG+8gpv0W6vB9ZsazKbnIkuJJ/W/8i0oid7Q==
-X-Received: by 2002:a17:907:3e1b:b0:a9e:df83:ba57 with SMTP id a640c23a62f3a-aa4efe2a1eamr1063137966b.22.1732383531213;
-        Sat, 23 Nov 2024 09:38:51 -0800 (PST)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b57bfbfsm249620166b.140.2024.11.23.09.38.50
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Nov 2024 09:38:50 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aa20944ce8cso758687066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 09:38:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUa5Y+dOaM5ZAW0y9/O+NVoS/LKROUxuuMPDElvuWBEeQl/LKgC0YBvuDbScyA2uLe0a6xJeFn11DSq3CwV1bLYm3A=@vger.kernel.org
-X-Received: by 2002:a17:907:7853:b0:a9a:17be:fac7 with SMTP id
- a640c23a62f3a-aa509a07836mr857912866b.14.1732383529933; Sat, 23 Nov 2024
- 09:38:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YF5uUcdX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=257ZdKH+aJHSa1dbnLRZzHvINCigQhG1AP2blIFIDRU=; b=YF5uUcdXH9jLpzmqk7mrIr+sj4
+	BGQFq7nVL90ADw+i0YnylVO4Xyslr8X1LE54duXEWUbwMWcqTRvAPMSVvVyifPAuFSSbk2syg2SLh
+	IuSBqje1fLCx6zq4rXUfu6aiS75oD5KeqbNN0u0QqOIDhw3VLxIW7KTSBlrXTJ3IjISVDGER/tDsa
+	cw58bW6gF7p6i4WezVv6mYQK9Xv35xl3RO34vX3Xg5niHLyAQ5xNIkSN35A8/40U/QrID5rbRtS4w
+	5Gg6GsqzjJcGKrBHHepFnso0PtzIBrOu9YsNKWSb1b860OludckAAFG81ytsxAdx6xpmcdCmgA6Ca
+	9cNruIZw==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tEwjH-00000009bQJ-3RPK;
+	Sat, 23 Nov 2024 20:27:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 358FE300201; Sat, 23 Nov 2024 21:27:44 +0100 (CET)
+Date: Sat, 23 Nov 2024 21:27:44 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ruan Bonan <bonan.ruan@u.nus.edu>
+Cc: "mingo@redhat.com" <mingo@redhat.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"longman@redhat.com" <longman@redhat.com>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"mattbobrowski@google.com" <mattbobrowski@google.com>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"martin.lau@linux.dev" <martin.lau@linux.dev>,
+	"eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>,
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"sdf@fomichev.me" <sdf@fomichev.me>,
+	"haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Fu Yeqi <e1374359@u.nus.edu>
+Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
+Message-ID: <20241123202744.GB20633@noisy.programming.kicks-ass.net>
+References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com> <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
-In-Reply-To: <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 23 Nov 2024 09:38:33 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
-Message-ID: <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from __DO_TRACE()
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Michael Jeanson <mjeanson@efficios.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
-	Joel Fernandes <joel@joelfernandes.org>, Jordan Rife <jrife@google.com>, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
 
-On Sat, 23 Nov 2024 at 07:31, Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
->  include/linux/tracepoint.h | 45 ++++++++++----------------------------
->  1 file changed, 12 insertions(+), 33 deletions(-)
+On Sat, Nov 23, 2024 at 03:39:45AM +0000, Ruan Bonan wrote:
 
-Thanks. This looks much more straightforward, and obviously is smaller too.
+>  </TASK>
+> FAULT_INJECTION: forcing a failure.
+> name fail_usercopy, interval 1, probability 0, space 0, times 0
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 6.12.0-rc7-00144-g66418447d27b #8 Not tainted
+> ------------------------------------------------------
+> syz-executor144/330 is trying to acquire lock:
+> ffffffffbcd2da38 ((console_sem).lock){....}-{2:2}, at: down_trylock+0x20/0xa0 kernel/locking/semaphore.c:139
+> 
+> but task is already holding lock:
+> ffff888065cbd718 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested kernel/sched/core.c:598 [inline]
+> ffff888065cbd718 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock kernel/sched/sched.h:1506 [inline]
+> ffff888065cbd718 (&rq->__lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1805 [inline]
+> ffff888065cbd718 (&rq->__lock){-.-.}-{2:2}, at: __schedule+0x140/0x1e70 kernel/sched/core.c:6592
+> 
+> which lock already depends on the new lock.
+> 
+>        _printk+0x7a/0xa0 kernel/printk/printk.c:2432
+>        fail_dump lib/fault-inject.c:46 [inline]
+>        should_fail_ex+0x3be/0x570 lib/fault-inject.c:154
+>        strncpy_from_user+0x36/0x230 lib/strncpy_from_user.c:118
+>        strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
+>        bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:215 [inline]
+>        ____bpf_probe_read_user_str kernel/trace/bpf_trace.c:224 [inline]
+>        bpf_probe_read_user_str+0x2a/0x70 kernel/trace/bpf_trace.c:221
+>        bpf_prog_bc7c5c6b9645592f+0x3e/0x40
+>        bpf_dispatcher_nop_func include/linux/bpf.h:1265 [inline]
+>        __bpf_prog_run include/linux/filter.h:701 [inline]
+>        bpf_prog_run include/linux/filter.h:708 [inline]
+>        __bpf_trace_run kernel/trace/bpf_trace.c:2316 [inline]
+>        bpf_trace_run4+0x30b/0x4d0 kernel/trace/bpf_trace.c:2359
+>        __bpf_trace_sched_switch+0x1c6/0x2c0 include/trace/events/sched.h:222
+>        trace_sched_switch+0x12a/0x190 include/trace/events/sched.h:222
 
-Side note: I realize I was the one suggesting "scoped_guard()", but
-looking at the patch I do think that just unnecessarily added another
-level of indentation. Since you already wrote the
-
-    if (cond) {
-        ..
-    }
-
-part as a block statement, there's no upside to the guard having its
-own scoped block, so instead of
-
-    if (cond) { \
-        scoped_guard(preempt_notrace)           \
-            __DO_TRACE_CALL(name, TP_ARGS(args)); \
-    }
-
-this might be simpler as just a plain "guard()" and one less indentation:
-
-    if (cond) { \
-        guard(preempt_notrace);           \
-        __DO_TRACE_CALL(name, TP_ARGS(args)); \
-    }
-
-but by now this is just an unimportant detail.
-
-I think I suggested scoped_guard() mainly because that would then just
-make the "{ }" in the if-statement superfluous, but that's such a
-random reason that it *really* doesn't matter.
-
-             Linus
+-EWONTFIX. Don't do stupid.
