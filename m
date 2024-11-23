@@ -1,118 +1,126 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BF770826;
-	Sat, 23 Nov 2024 15:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BBA1804A
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 17:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732375878; cv=none; b=rf65h1NUape1cn6XzSgBO7uWt2TZrsz76npDH7x3nIajIGjSJB2G6M9OieTqluhFwagQxbBZSHprdbi6bdwloowAwGMfa+xxulmwBa87vaq+kzlPt8vOKQiU7GZFQAMo2mwRMUQvVD6vMamU3K1F+wCYKgMzNw5a4Ew8h4+wTWs=
+	t=1732383534; cv=none; b=Je7AHBlTq/xN/xM+YNXljT0YO49zvunnouoJcfChtdv1K3nhZ3YimmaWciR2lyExEV8qTbKC3Fin601srLfyOId52pGVutB0eGSpQEhrerhJ/TkGVEnjQDkOxAZZP45jU7w+y9ldlMfAshB5UdJoVh0e9yUDj5TqQ7jNQ0sB5x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732375878; c=relaxed/simple;
-	bh=nsGIOY4b7iQFhOWQP1p8x1RRH9X+LeZzOKUnchZFZu8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t+5pl9t4MSoSO1Iowg0JIA1G02IVsi6dtZ+NaGg2Wr4a0kYQtI9xoFsVG23NOYimNqkoT6Xs+Yj2mToz2bqlYXjWEab0BuxIq+IJzm9pFSsLhx20Y83AIDBTi/DnQOZozLHtom98wIaThJE/l3MYnWcXHy1h9EDMkR5O6jkT2N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=jXlfvbmd; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1732383534; c=relaxed/simple;
+	bh=Z2N+kTJzZXoQJzfXPyysOgIn5Wbo9WbTTSH/hpfAXyE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fHGVl2zIq09AKxcRvmGyHPZyOLbbPIa/tAOGZfj1Y96kBJlGDIHVUSP/3ktYBHxP15G6UBgev1TGacZ03hG4X7JidIGrAKUzBZxYklE3nrRbJHY172QzluGLSbjL/8xO9wfx9bfv7ln0ThZnSqfYqxDxi0l1amhyQoR6TfGXUGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UMDroGWF; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jXlfvbmd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1732375870;
-	bh=nsGIOY4b7iQFhOWQP1p8x1RRH9X+LeZzOKUnchZFZu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jXlfvbmdZ5lm9p5XjdpX6T0a2SeTk8gDIyDawyPK/ewL05hmYCP+k1KS38bbTF/Do
-	 B5RntZ0LfA68mZPb3b3WpsIYmgkKHYIyTIT06YueNLmAeD4nztiLYDdB8PIUr+yZS7
-	 74JD2t63SMk9/4+2n47HHDgo+a/z0x6gNP+tUy4b0pc6OL6tLn2JnlrGPR+pWDKqqZ
-	 8uMlMothPxV8Hxbsftz09siGDpRm2jKDvlfsKyVOSKhCOOqOccuuB9DTawpvjsi4J7
-	 RuDKPGZ8RrzeLGL9l0Tb/AnBaUAAME/MM7FraZ12LfVhmvwgWBj6F5+eigsxn0LVZC
-	 5pxGvHWPgeC4Q==
-Received: from thinkos.internal.efficios.com (unknown [IPv6:2605:8d80:581:d239:b14d:eb44:5229:ce95])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4XwbXY1KKFzWdQ;
-	Sat, 23 Nov 2024 10:31:09 -0500 (EST)
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Michael Jeanson <mjeanson@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	bpf@vger.kernel.org,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jordan Rife <jrife@google.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH 3/5] rcupdate_trace: Define rcu_tasks_trace lock guard
-Date: Sat, 23 Nov 2024 10:30:29 -0500
-Message-Id: <20241123153031.2884933-4-mathieu.desnoyers@efficios.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
-References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UMDroGWF"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aa20944ce8cso758688666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 09:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1732383531; x=1732988331; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vpM1fsZfdZBok4MSDnesEhvbM53AiXvjDwKI+kJlxP0=;
+        b=UMDroGWF1+7vELjsmAXzd2LAZEjNp880pmEcFq6eKCbmgRJZNH2uzdXNlaj+5T90L9
+         iknr/bZ82UM8jLlcWT+7cMvoDniVtGVeP2YeewGqfmf5Q/ZYVaRiFcMvIt1o/Rwnt3+b
+         NiwXL7qcOgK8k6V8k+2YaJif9xh1S0p49PNQc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732383531; x=1732988331;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vpM1fsZfdZBok4MSDnesEhvbM53AiXvjDwKI+kJlxP0=;
+        b=d+OvAEC8wrRtrs2fYtqDC8CH8uB+W5IgKaeLKje7scWFSDwOxcsrCxw0RhzkvyAAR5
+         fAS+ZnYgd9DNIy+ImZL/HKQL6iRzDChogPGlTQkpP0lVY+chPu9jU5IY4I1O8CEu3KN5
+         T8a0MmDjbbI1XFkJDWhbadVcZlLmBi9mWA7vDm+wXU7PHxXvWUY+KGi99BnLWYabD48S
+         oFXMeepOw9UihN1VJICWYkcD4KBPX6hREEGxg1WeRFnMWa1njnxZ0SEUiXCVL5P2QWV1
+         Om6EXN/MAgA6KnrH+ebHOEJbrIobDz1TmumMUxb5b9ipLQ+qd0Hzs4JFG+/9tUwd0TsZ
+         oFDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3C3qIl4pK9bRLbFxNlF8j0DAuR+9abTb15cBeLfE/5iV1r+g3zXEIwTgw2MCrDbyL8hpEeiR+8FryTBYbUyog5t0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMcAjFw3JL0+S4prWCzxUJAu109M1aKHmJaW3aXBmZea5z7j5j
+	u3flYAoQwHsp1DeuV4I9gbngnyPMuD+1FUpEibbhOubpCOpUKADw15nEE8GF65oKziEtJpPsDx3
+	2XHe+bQ==
+X-Gm-Gg: ASbGncu9t5HSLaH/Y4QVd9NTyxWZb7L4EU8akYe9mLgYhNbNHVrsGJhqNR+aAirWXPo
+	+yh9BAwoPS/Y7PazmndBS/0A0x8gqUcLD/HlhbUFCY3TP0yJ6FMsQ0V4lTgQr7BEe/C0zDyqXZ+
+	qloDBfeyrVj7UHnyy2BDlFnaiqc8TLl2mnFnEVKOT2u5KTGFIYGJasqpaih8omhLE+g2dDHXcrL
+	IEicOx58k0aw0fJvz2GuWFxLU9xD8V0SfMT94FsG7s/+ReZHd26W4rrKJoREhqrUD2LJLr65CuS
+	AmA7cn/bM7gZbm4hhNe77cNY
+X-Google-Smtp-Source: AGHT+IGIIH7sglTPtqu3BLxtagRVnbO8rB9nSS4JMTGG+8gpv0W6vB9ZsazKbnIkuJJ/W/8i0oid7Q==
+X-Received: by 2002:a17:907:3e1b:b0:a9e:df83:ba57 with SMTP id a640c23a62f3a-aa4efe2a1eamr1063137966b.22.1732383531213;
+        Sat, 23 Nov 2024 09:38:51 -0800 (PST)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b57bfbfsm249620166b.140.2024.11.23.09.38.50
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Nov 2024 09:38:50 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aa20944ce8cso758687066b.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 23 Nov 2024 09:38:50 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUa5Y+dOaM5ZAW0y9/O+NVoS/LKROUxuuMPDElvuWBEeQl/LKgC0YBvuDbScyA2uLe0a6xJeFn11DSq3CwV1bLYm3A=@vger.kernel.org
+X-Received: by 2002:a17:907:7853:b0:a9a:17be:fac7 with SMTP id
+ a640c23a62f3a-aa509a07836mr857912866b.14.1732383529933; Sat, 23 Nov 2024
+ 09:38:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com> <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 23 Nov 2024 09:38:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
+Message-ID: <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from __DO_TRACE()
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Jeanson <mjeanson@efficios.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
+	Joel Fernandes <joel@joelfernandes.org>, Jordan Rife <jrife@google.com>, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Define a rcu_tasks_trace lock guard for use by the syscall enter/exit
-tracepoints.
+On Sat, 23 Nov 2024 at 07:31, Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+>  include/linux/tracepoint.h | 45 ++++++++++----------------------------
+>  1 file changed, 12 insertions(+), 33 deletions(-)
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Jeanson <mjeanson@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: bpf@vger.kernel.org
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: Jordan Rife <jrife@google.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- include/linux/rcupdate_trace.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks. This looks much more straightforward, and obviously is smaller too.
 
-diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
-index eda493200663..e6c44eb428ab 100644
---- a/include/linux/rcupdate_trace.h
-+++ b/include/linux/rcupdate_trace.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/sched.h>
- #include <linux/rcupdate.h>
-+#include <linux/cleanup.h>
- 
- extern struct lockdep_map rcu_trace_lock_map;
- 
-@@ -98,4 +99,8 @@ static inline void rcu_read_lock_trace(void) { BUG(); }
- static inline void rcu_read_unlock_trace(void) { BUG(); }
- #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
- 
-+DEFINE_LOCK_GUARD_0(rcu_tasks_trace,
-+	rcu_read_lock_trace(),
-+	rcu_read_unlock_trace())
-+
- #endif /* __LINUX_RCUPDATE_TRACE_H */
--- 
-2.39.5
+Side note: I realize I was the one suggesting "scoped_guard()", but
+looking at the patch I do think that just unnecessarily added another
+level of indentation. Since you already wrote the
 
+    if (cond) {
+        ..
+    }
+
+part as a block statement, there's no upside to the guard having its
+own scoped block, so instead of
+
+    if (cond) { \
+        scoped_guard(preempt_notrace)           \
+            __DO_TRACE_CALL(name, TP_ARGS(args)); \
+    }
+
+this might be simpler as just a plain "guard()" and one less indentation:
+
+    if (cond) { \
+        guard(preempt_notrace);           \
+        __DO_TRACE_CALL(name, TP_ARGS(args)); \
+    }
+
+but by now this is just an unimportant detail.
+
+I think I suggested scoped_guard() mainly because that would then just
+make the "{ }" in the if-statement superfluous, but that's such a
+random reason that it *really* doesn't matter.
+
+             Linus
