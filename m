@@ -1,152 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246C6154C05
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 24 Nov 2024 13:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573F818787A;
+	Sun, 24 Nov 2024 14:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732454071; cv=none; b=UW13edT8ivf3MOd81vnWoHFhPv3Z5aXNtyHjyd/n+jfGMZ5mAqUywp/f3mqqUzuE2eC1JHL+ieGgFjew3nDsaLxbLHg8nqhxu3GYgFDkwtpmbfAbJxykKkOUQeNjNIC2MseDX17vvkeKBd1+3Xgf+JQz7FLIUOG2kJg+vRUvVIQ=
+	t=1732457238; cv=none; b=QeQiUp4K7Ob+1xnsVg8mxnnPgr77Nqwyv3ODztg7qgey3OQVEQj1JGMB/CP+AUsYEbRZXnwRj33vXc7qf3t12DBvZA0O2TjNVnlWDNhZxNgm0iygYS+CofMiChNw7wm6OA+tQsQJLLpGGLukOtAQY+mlGipOkzTf05v7Ms+9Gj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732454071; c=relaxed/simple;
-	bh=aaf6mgxiFIZ4KUt3qR5b9Zp2zfPeoHch/KAwVeYdx5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AdG+ymDYVKy/8jbit8clO9Orllh/X+OjeDeWQ+jLcb1qA5QLxwfaI3qe6ZjM4vQ1li8mtLSUMkbZE1QkeCoEPSc0mV992GmRIWalok1eWck474On499+ZrAS1tNUT4nFGHSzZl52o7dwFXLOm0aOICC4zn+iQC6ECUPKXy39ZW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPMsCNqT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732457238; c=relaxed/simple;
+	bh=hEsIg8aAsdwalXsLOpm5dcCFEtD8GwTLrcsPwRmzB3w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IrBNoob4YQm5u4z47PFvfpDDNYmDd5vRnbg5g8Ys4drKH56+oNYptvl5r6goa2ypMYmPH/SKcdhbGqJ/jvLCivX20OaYArHyHrASiK7HDd831e49PloeCsH5YHdPp6Bq1hgieHthXh5P8JQ2jC/gg1S8gSL1XEm+5Q4u+Rm8HdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKlqqnRx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPMsCNqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732454068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eQYCp4g/idPG8DYRDVHAD0jqFgBNqHKqLtG7vbr7Lm8=;
-	b=aPMsCNqTEF00j2n3nq2nkDM8NXlAn4rObML0LSIut+i0AGFLJAffBNuZZDQh9B9p+50Sc9
-	A5IMz8i3G0GUBAVbrjDtBNUobTF42/P0YRH3fOTYf6jJ9XPsLwJuCOH/ldfLPpp45Av5d2
-	C6LcL86HHKeSb346h3SPU7SZqrk8HsA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-412-c-_t-oEQNh-5KC7aPSDk0Q-1; Sun,
- 24 Nov 2024 08:14:24 -0500
-X-MC-Unique: c-_t-oEQNh-5KC7aPSDk0Q-1
-X-Mimecast-MFC-AGG-ID: c-_t-oEQNh-5KC7aPSDk0Q
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 631761956089;
-	Sun, 24 Nov 2024 13:14:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.44])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 993331955F43;
-	Sun, 24 Nov 2024 13:14:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 24 Nov 2024 14:14:02 +0100 (CET)
-Date: Sun, 24 Nov 2024 14:13:57 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, mhiramat@kernel.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKlqqnRx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2987C4CED1;
+	Sun, 24 Nov 2024 14:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732457237;
+	bh=hEsIg8aAsdwalXsLOpm5dcCFEtD8GwTLrcsPwRmzB3w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sKlqqnRxgFPibjFENI175GGmn+Zw27RmsXUKJ2BZz72gXCHNh3r6bk+gJmmFqCzrj
+	 yg2/k2MQ9Bbw59Y3/cETbVRjZSYZtVXfSW3YZNYkiNMg3lm7baiEcKzA9OUbZe2nc6
+	 d1MpmMk5otREdlwFkAPfcPw1APEJelOGIyYckk65SLSJJVIHjjWcY5B7B0VLn1Ypzp
+	 fc5lT2Qr+8vY95VTZ/gsp6ynDZeSJPVcbfl9BUCkcSJKtYaehsKeH0hBZc1BoFHcxF
+	 Sif529F6ln5SYpdgnqhr50/2ABF7y1AvOhGIfEwerG93gzp1LmhsSHfyszTD2VnRoN
+	 NZrb/MlBd0VYQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.12 1/5] uprobes: sanitiize xol_free_insn_slot()
-Message-ID: <20241124131357.GA28360@redhat.com>
-References: <20241124124623.3337983-1-sashal@kernel.org>
+	x86@kernel.org
+Subject: [PATCH] x86/ftrace: fix boot time slowdown
+Date: Sun, 24 Nov 2024 16:07:05 +0200
+Message-ID: <20241124140705.2883-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241124124623.3337983-1-sashal@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
 
-Hi Sasha,
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-but why do you think it makes sense to backport these "uprobes" cleanups?
+Steven Rostedt reported slowdown by over 30ms caused by commit 9bfc4824fd48
+("x86/module: prepare module loading for ROX allocations of text")
 
-Oleg.
+  Before:
 
-On 11/24, Sasha Levin wrote:
->
-> From: Oleg Nesterov <oleg@redhat.com>
->
-> [ Upstream commit c7b4133c48445dde789ed30b19ccb0448c7593f7 ]
->
-> 1. Clear utask->xol_vaddr unconditionally, even if this addr is not valid,
->    xol_free_insn_slot() should never return with utask->xol_vaddr != NULL.
->
-> 2. Add a comment to explain why do we need to validate slot_addr.
->
-> 3. Simplify the validation above. We can simply check offset < PAGE_SIZE,
->    unsigned underflows are fine, it should work if slot_addr < area->vaddr.
->
-> 4. Kill the unnecessary "slot_nr >= UINSNS_PER_PAGE" check, slot_nr must
->    be valid if offset < PAGE_SIZE.
->
-> The next patches will cleanup this function even more.
->
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20240929144235.GA9471@redhat.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  kernel/events/uprobes.c | 21 +++++++++------------
->  1 file changed, 9 insertions(+), 12 deletions(-)
->
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4b52cb2ae6d62..cc605df73d72f 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1683,8 +1683,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
->  static void xol_free_insn_slot(struct task_struct *tsk)
->  {
->  	struct xol_area *area;
-> -	unsigned long vma_end;
->  	unsigned long slot_addr;
-> +	unsigned long offset;
->
->  	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
->  		return;
-> @@ -1693,24 +1693,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
->  	if (unlikely(!slot_addr))
->  		return;
->
-> +	tsk->utask->xol_vaddr = 0;
->  	area = tsk->mm->uprobes_state.xol_area;
-> -	vma_end = area->vaddr + PAGE_SIZE;
-> -	if (area->vaddr <= slot_addr && slot_addr < vma_end) {
-> -		unsigned long offset;
-> -		int slot_nr;
-> -
-> -		offset = slot_addr - area->vaddr;
-> -		slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
-> -		if (slot_nr >= UINSNS_PER_PAGE)
-> -			return;
-> +	offset = slot_addr - area->vaddr;
-> +	/*
-> +	 * slot_addr must fit into [area->vaddr, area->vaddr + PAGE_SIZE).
-> +	 * This check can only fail if the "[uprobes]" vma was mremap'ed.
-> +	 */
-> +	if (offset < PAGE_SIZE) {
-> +		int slot_nr = offset / UPROBE_XOL_SLOT_BYTES;
->
->  		clear_bit(slot_nr, area->bitmap);
->  		atomic_dec(&area->slot_count);
->  		smp_mb__after_atomic(); /* pairs with prepare_to_wait() */
->  		if (waitqueue_active(&area->wq))
->  			wake_up(&area->wq);
-> -
-> -		tsk->utask->xol_vaddr = 0;
->  	}
->  }
->
-> --
-> 2.43.0
->
+   # cat /sys/kernel/tracing/dyn_ftrace_total_info
+  57695 pages:231 groups: 9
+  ftrace boot update time = 14733459 (ns)
+  ftrace module total update time = 449016 (ns)
+
+  After:
+
+   # cat /sys/kernel/tracing/dyn_ftrace_total_info
+  57708 pages:231 groups: 9
+  ftrace boot update time = 47195374 (ns)
+  ftrace module total update time = 592080 (ns)
+
+The slowdown happened because initial patching of kernel code for ftrace
+was switched from text_poke_early() to text_poke() to accommodate ftrace
+updates of module text allocated as ROX.
+
+Restore the use of text_poke_early() for boot time patching of the kernel
+code.
+
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Closes: https://lore.kernel.org/all/20241118132501.4eddb46c@gandalf.local.home
+Fixes: 9bfc4824fd48 ("x86/module: prepare module loading for ROX allocations of text")
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/x86/kernel/ftrace.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 4dd0ad6c94d6..9e50288abbaa 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -111,7 +111,7 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+  */
+ static int __ref
+ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+-			  const char *new_code)
++			  const char *new_code, struct module *mod)
+ {
+ 	int ret = ftrace_verify_code(ip, old_code);
+ 	if (ret)
+@@ -120,6 +120,8 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+ 	/* replace the text with the new text */
+ 	if (ftrace_poke_late) {
+ 		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
++	} else if (!mod) {
++		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+ 	} else {
+ 		mutex_lock(&text_mutex);
+ 		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
+@@ -145,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+ 	 * just modify the code directly.
+ 	 */
+ 	if (addr == MCOUNT_ADDR)
+-		return ftrace_modify_code_direct(ip, old, new);
++		return ftrace_modify_code_direct(ip, old, new, mod);
+ 
+ 	/*
+ 	 * x86 overrides ftrace_replace_code -- this function will never be used
+@@ -164,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 	new = ftrace_call_replace(ip, addr);
+ 
+ 	/* Should only be called when module is loaded */
+-	return ftrace_modify_code_direct(rec->ip, old, new);
++	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
+ }
+ 
+ /*
+
+base-commit: 9f16d5e6f220661f73b36a4be1b21575651d8833
+-- 
+2.45.2
 
