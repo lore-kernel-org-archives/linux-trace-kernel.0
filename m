@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF131CD1FD;
-	Sun, 24 Nov 2024 12:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A091E3779;
+	Sun, 24 Nov 2024 12:47:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732452425; cv=none; b=iAdZrfLm+2twyYalP7lTraMJGRkUVdkNxlyLOgUuEVTEfq2Ap5dKFfWlK9b/yulPFHp0msnAJC5cM6lX3mayFV3bO3gO8FwtWozfOyuIKh8J/Kv8g+A4n6qHLLaC6ANnIhmQYlcC57qc7DjIKMC4CJwPgWtrMVQii3g1ztdXOYw=
+	t=1732452438; cv=none; b=sXrBeUvvcn5gxtDriwlDRmmUULTvTMmvJ2dLUZ1JVReBtzg+TbgPh7xKgJLkk7+im1INvWj6CTD6X8+l4WNpvePdcKL5pAcYphqCvh4IPFUjh9rdYAh2bWvVAl5L7a8rgjKMWIVo5702z2fSAVYR+Breg0pS7rjhL1geYhC0Blg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732452425; c=relaxed/simple;
-	bh=exgUNf/LyWxz+SMN/oI2NpM2ZuA78RSYFimIkgE9aOM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9DgU84E+MdXGnNnGeMw/ftkAcOq8KgEHWa9FS52+MnaMmVHBu4hlhFnRoDudbBBDZotUl684s3FKhsgJEHL8pUhjBMsdRfts+QnwDcpiBt+KbvUhVGO7QRjtm1xpX76tukdtOJbDy2b3KoBkGA8K3kYImYHpIIveOaLeSSlkKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVdqnDld; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732452438; c=relaxed/simple;
+	bh=kX3+v4KaNk6XgzIKb6sulW3t0ReNqNOanY4BTCLHX/4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BF8YzkYAsRXM/M1H+9hnV9LHgvsVEHGRQ5VzFB3pnG+2qvVqz2zmfrHjwgRvforyfm/lSFCrevbw2SHhCfy/39OlUA1Hs6s6Klg4JJlRE91zmK8YvWPXQYGlfJN78qiXKbmLuRu9N69ZuG5MFXOhIwC+kUsHPYYEBWj9YFZvDZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvRmMf0W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVdqnDld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 237ADC4CECC;
-	Sun, 24 Nov 2024 12:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvRmMf0W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA546C4CED1;
+	Sun, 24 Nov 2024 12:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732452425;
-	bh=exgUNf/LyWxz+SMN/oI2NpM2ZuA78RSYFimIkgE9aOM=;
+	s=k20201202; t=1732452438;
+	bh=kX3+v4KaNk6XgzIKb6sulW3t0ReNqNOanY4BTCLHX/4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=YVdqnDldaxm2SWZTrbEXmkFszlmLarcKiG/TE6tPE7TS7kUX+WhWaK42ETl7hda3C
-	 +CDeaD1VQti2I1ISqPOAhY2rVRlpyr82CAa2ZtKAjwMkmiF6LXPmbkJK42ZL9y9beT
-	 2dhfTv/bt7pTr8l6JIlR40broFmyyazSslluTa5hWThtFPshsFhORQTaKIP+7bv5iv
-	 O4UcYdlLf14Dw3PvgVZdybw8TSaKnqYDVJj/8D0xKmEwIbUz9GrzwSFfvcXFGhY+0R
-	 bqt/sY2Rkx0WP9QLPKjLLuCw+1dzzCV1vPpeeZjkw9NYBGj4/FQ81vJ8OsQZ8p+b0O
-	 ESkN7PEDobdYQ==
+	b=pvRmMf0WrIk1iezJ504uWEtmNRkS7Cp+QeMpN0v3QOo5NvXpAAEn1E7KluO5aCFSX
+	 3JTgAbsGk9GYZnnfGVG/8E6m660Mj/fVri/9k3g4GtuPKonFwrIXjxm2Aj4BW9jNCN
+	 1b5qMhcMmS2rg/vKUn+A1Ok0+ZdVy2cMjNw/C2kH/ZRsi2btSHgqujQwHebqJ3c1v/
+	 AFYQpB2KFWFyZRHA1Z/ImrU4hlR1J4rb6vbsQ3ncpZyOj4EEThVDutSIsMqgFETYOA
+	 t1imBL22mj4506viAuP80zRcOI6sKoTpBqsn/G5g/2l86t2SMT87NgnjpfLFCb/qDS
+	 g0L4mYXgQWbxA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -37,9 +37,9 @@ Cc: Oleg Nesterov <oleg@redhat.com>,
 	namhyung@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 1/4] uprobes: sanitiize xol_free_insn_slot()
-Date: Sun, 24 Nov 2024 07:46:55 -0500
-Message-ID: <20241124124702.3338309-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 1/3] uprobes: sanitiize xol_free_insn_slot()
+Date: Sun, 24 Nov 2024 07:47:11 -0500
+Message-ID: <20241124124715.3338418-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.63
+X-stable-base: Linux 6.1.119
 Content-Transfer-Encoding: 8bit
 
 From: Oleg Nesterov <oleg@redhat.com>
@@ -78,10 +78,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 6dac0b5798213..5ce3d189e33c2 100644
+index 9ee25351cecac..e3c616085137e 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -1629,8 +1629,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
+@@ -1632,8 +1632,8 @@ static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
  static void xol_free_insn_slot(struct task_struct *tsk)
  {
  	struct xol_area *area;
@@ -91,7 +91,7 @@ index 6dac0b5798213..5ce3d189e33c2 100644
  
  	if (!tsk->mm || !tsk->mm->uprobes_state.xol_area || !tsk->utask)
  		return;
-@@ -1639,24 +1639,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
+@@ -1642,24 +1642,21 @@ static void xol_free_insn_slot(struct task_struct *tsk)
  	if (unlikely(!slot_addr))
  		return;
  
