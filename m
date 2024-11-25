@@ -1,111 +1,105 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40E418C031;
-	Mon, 25 Nov 2024 09:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550DF192D91;
+	Mon, 25 Nov 2024 10:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732527880; cv=none; b=eDZI3hLf1Vy4SxtiQhAitqRyP+WmqbRAC66Fy1oXVb4wamGmCceqNYHIS2OcOD95k1Z4OiuqlyVqs7m/uHeF7J8I4nEocoWUFVYZrAMWBXCVSGv2chdF3oAWA5ay5ehQBSYIK03buXLoWGieOBPpjqMsOhyHxBDyOqZqJVGIIx4=
+	t=1732531835; cv=none; b=afoBWcW8gh0OAKvfHmC4UhvPq/avQea8ElBVpyjEdc9QPkUsvd639vnaQbCxDxcVrUhRs5BRLWMRNiYEsfYtPouDcZC59Ji3wd4r1aR59G18wsk0pq0JsPTCowoNf686goEoQyYl7490a0wqYb49H06mVIsLzhh6rM+4qE3TB78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732527880; c=relaxed/simple;
-	bh=lV2sPbbMYAQnsg3PBiGJBeLa/xFChAYA78ttDDmX/OA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MN5oxwNkzxM6GbvNB6UEBPyyNW/8vBfLw0KN95prmHhNGJh4dEgFg9XswIxqJ+4zI70Tz7FbyVXmlp2lq+9B6VZ6HlqZxDdzBhhlXohds5cuedb/fDE4t8TRZpD4N5DAeaU1ZSOLIXFYgK4JcDBxo568/vtQx1PR2juQsimuLIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V9xA4n1+; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1732531835; c=relaxed/simple;
+	bh=aUW89A+cMdYHpkt+oiZdLB+dni4vxT9wWinfiQBYBPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rZn+ufbeiEti+uUHZpomVVKiZlQwFhvkrM8OFjwgjSigXEr2RIQSqDR4YjD451y5G7x5ikO8xVzT12xkk9GQtQvvIz4EBPUch9X8KivkcwtVyeRkKfvd21E3miAxPTu3vYif+ve8OROJV7NWXLJcBIcZzmDU8XHzPzq0wlXTtdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=SavjqTM1; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V9xA4n1+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lV2sPbbMYAQnsg3PBiGJBeLa/xFChAYA78ttDDmX/OA=; b=V9xA4n1+Mz5THSJwXjhrIWhSLa
-	azE0WTQ5uBBkjNpeA4pP4AIYXh07XzCdDT9HZ48fS8wRorWmghdZmbaluZHD9QyONvtESO7B4qrdi
-	KglrzBl0BOxgbZsR8xsjoH+OIvq0tUnf3My/USKMFO6/Ff42FeNhzdGnDLDlxZTAaYn5yn0XX9C3t
-	aCbsRS5lo37BQotPB1pdYiXfDdJtiSc5FfqUATsY+jMhjiwATf6gkhMZd2sVnmHPRqd7o/b/0BjFl
-	4HypQqL+5D3p/D22yOm6KJMAltmjtCG3g6pkyhsSZCnfNsNniC/lC2owUo6GBzHoBZmm2sC7fUNfR
-	5gcYkJIQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tFVdq-000000014Vc-4B53;
-	Mon, 25 Nov 2024 09:44:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9254630026A; Mon, 25 Nov 2024 10:44:26 +0100 (CET)
-Date: Mon, 25 Nov 2024 10:44:26 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Ruan Bonan <bonan.ruan@u.nus.edu>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"longman@redhat.com" <longman@redhat.com>,
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kpsingh@kernel.org" <kpsingh@kernel.org>,
-	"mattbobrowski@google.com" <mattbobrowski@google.com>,
-	"ast@kernel.org" <ast@kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>,
-	"andrii@kernel.org" <andrii@kernel.org>,
-	"martin.lau@linux.dev" <martin.lau@linux.dev>,
-	"eddyz87@gmail.com" <eddyz87@gmail.com>,
-	"song@kernel.org" <song@kernel.org>,
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-	"sdf@fomichev.me" <sdf@fomichev.me>,
-	"haoluo@google.com" <haoluo@google.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Fu Yeqi <e1374359@u.nus.edu>
-Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
-Message-ID: <20241125094426.GO39245@noisy.programming.kicks-ass.net>
-References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
- <20241123202744.GB20633@noisy.programming.kicks-ass.net>
- <20241123180000.5e219f2e@gandalf.local.home>
- <CAADnVQLBhV_sSuH+BKu66ZsxTcsvw7RSLnjRGLwQX3TFSjs-Gg@mail.gmail.com>
- <20241124223045.4e47e8b7@rorschach.local.home>
- <20241124224441.5614c15a@rorschach.local.home>
- <5489FB30-8B09-4F74-9C2B-FF25F4654A3F@u.nus.edu>
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="SavjqTM1"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1732531832;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=dzS3rptQpBOYwpq3ixwqSK/AVNS+4t/jVRKj+6wTiiE=;
+	b=SavjqTM1fnGwsO0LH8q7sS8uuh6zvh5BCPYzfvx4b4tkBkdUZc/RBoflAVT9o0MJX+bL3D
+	wrdP5gJpVbflM24qtzzozxmVdEEFEUXY7R00xUXQsmJ4fVDn8XoQ8j9H7UAca4Bq0TTvmR
+	Sjc58f8OE6umSRjPdQlpfloYoqiqICVSlo3+3B3JJNvIq/TKCS8mmKnpj6F44v/IiSqtm1
+	i7t1ZTHk6l7NtVuWndh5Re3cu6DoIdKeMZikornUmOkW5SLxltbjPgNZjDCU3RXtOFlPqO
+	H3no0I7ukjdOZZ3178Ha53Y0MWneKlQq1z8c6S2XorSEftCqNSIcCeoPugN8ZQ==
+To: 
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] trace: constify string literal data member
+Date: Mon, 25 Nov 2024 11:50:25 +0100
+Message-ID: <20241125105028.42807-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5489FB30-8B09-4F74-9C2B-FF25F4654A3F@u.nus.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 25, 2024 at 05:24:05AM +0000, Ruan Bonan wrote:
+From: Christian Göttsche <cgzones@googlemail.com>
 
-> From the discussion, it appears that the root cause might involve
-> specific printk or BPF operations in the given context. To clarify and
-> possibly avoid similar issues in the future, are there guidelines or
-> best practices for writing BPF programs/hooks that interact with
-> tracepoints, especially those related to scheduler events, to prevent
-> such deadlocks?
+The name member of the struct trace_event_call is assigned with
+generated string literals; declare them pointer to read-only.
 
-The general guideline and recommendation for all tracepoints is to be
-wait-free. Typically all tracer code should be.
+Reported by clang:
 
-Now, BPF (users) (ab)uses tracepoints to do all sorts and takes certain
-liberties with them, but it is very much at the discretion of the BPF
-user.
+    security/landlock/syscalls.c:179:1: warning: initializing 'char *' with an expression of type 'const char[34]' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+      179 | SYSCALL_DEFINE3(landlock_create_ruleset,
+          | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      180 |                 const struct landlock_ruleset_attr __user *const, attr,
+          |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      181 |                 const size_t, size, const __u32, flags)
+          |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ./include/linux/syscalls.h:226:36: note: expanded from macro 'SYSCALL_DEFINE3'
+      226 | #define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
+          |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ./include/linux/syscalls.h:234:2: note: expanded from macro 'SYSCALL_DEFINEx'
+      234 |         SYSCALL_METADATA(sname, x, __VA_ARGS__)                 \
+          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ./include/linux/syscalls.h:184:2: note: expanded from macro 'SYSCALL_METADATA'
+      184 |         SYSCALL_TRACE_ENTER_EVENT(sname);                       \
+          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ./include/linux/syscalls.h:151:30: note: expanded from macro 'SYSCALL_TRACE_ENTER_EVENT'
+      151 |                         .name                   = "sys_enter"#sname,    \
+          |                                                   ^~~~~~~~~~~~~~~~~
 
-Slightly relaxed guideline would perhaps be to consider the context of
-the tracepoint, notably one of: NMI, IRQ, SoftIRQ or Task context -- and
-to not exceed the bounds of the given context.
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ include/linux/trace_events.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-More specifically, when the tracepoint is inside critical sections of
-any sort (as is the case here) then it very much is on the BPF user to
-not cause inversions.
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 016b29a56c87..423104db6f93 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -359,7 +359,7 @@ struct trace_event_call {
+ 	struct list_head	list;
+ 	struct trace_event_class *class;
+ 	union {
+-		char			*name;
++		const char		*name;
+ 		/* Set TRACE_EVENT_FL_TRACEPOINT flag when using "tp" */
+ 		struct tracepoint	*tp;
+ 	};
+-- 
+2.45.2
 
-At this point there really is no substitute for knowing what you're
-doing. Knowledge is key.
-
-In short; tracepoints should be wait-free, if you know what you're doing
-you can perhaps get away with a little more.
