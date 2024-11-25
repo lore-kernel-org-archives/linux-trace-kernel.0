@@ -1,90 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F2810F9;
-	Mon, 25 Nov 2024 03:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F542500C8;
+	Mon, 25 Nov 2024 03:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732506288; cv=none; b=QJJNGHQ6rJHMk7bBJEXafPaJMui9GwS7FvwWh/pNWJvlNPQp7y6hwmmYgfvX6XjS2cFq/8rrJMd8ObuXNsD+hpnzhaXfIEAfp3HTtflQOW08YLRY3MNImHc1dzgGALY7bmSWgfjpLjP21aGYDHHSeQSWQJBZFuJWwgu4/LYyDRw=
+	t=1732507126; cv=none; b=uUFoAjMY3O2p1WuGHZKKJ1u2oPP9nyK7Mlmd8HTdm0uIhHHSH3oc5vfqc28h9/40uK3mJBYHdyhrWMsIKLe3e7JTAM9E5Xk36hO6Xi4QQ3BGZJIkfgKtds79Cyuwc/7bwW8KJo5ijRcM6bMnrcNBReq/m/3tu90pbvcdO1HV8fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732506288; c=relaxed/simple;
-	bh=ZRnoajD1QdXZX6krqeoKi10PkO2r+xrRVPlVkYB7UZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QxTtAnrCdN+O36RryvTM64Y0UHlk5An2BJ1W9Mg9y5pQs5F0oLrIuVXL6RYvwul/BNiThq7B4wfd1f/stMjNcTOl+0vuAJtP/DqQ/cw/KG5Un2czE+DWkZ90bm9g1cnUhS5HIkroJz+bKVgKzPzHAS0tBU5C8MhVznYqMjW7GUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A050C4CECE;
-	Mon, 25 Nov 2024 03:44:43 +0000 (UTC)
-Date: Sun, 24 Nov 2024 22:44:41 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ruan Bonan
- <bonan.ruan@u.nus.edu>, "mingo@redhat.com" <mingo@redhat.com>,
- "will@kernel.org" <will@kernel.org>, "longman@redhat.com"
- <longman@redhat.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kpsingh@kernel.org" <kpsingh@kernel.org>, "mattbobrowski@google.com"
- <mattbobrowski@google.com>, "ast@kernel.org" <ast@kernel.org>,
- "daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org"
- <andrii@kernel.org>, "martin.lau@linux.dev" <martin.lau@linux.dev>,
- "eddyz87@gmail.com" <eddyz87@gmail.com>, "song@kernel.org"
- <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>,
- "john.fastabend@gmail.com" <john.fastabend@gmail.com>, "sdf@fomichev.me"
- <sdf@fomichev.me>, "haoluo@google.com" <haoluo@google.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>, "mhiramat@kernel.org"
- <mhiramat@kernel.org>, "mathieu.desnoyers@efficios.com"
- <mathieu.desnoyers@efficios.com>, "bpf@vger.kernel.org"
- <bpf@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Fu Yeqi <e1374359@u.nus.edu>
-Subject: Re: [BUG] possible deadlock in __schedule (with reproducer
- available)
-Message-ID: <20241124224441.5614c15a@rorschach.local.home>
-In-Reply-To: <20241124223045.4e47e8b7@rorschach.local.home>
-References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
-	<20241123202744.GB20633@noisy.programming.kicks-ass.net>
-	<20241123180000.5e219f2e@gandalf.local.home>
-	<CAADnVQLBhV_sSuH+BKu66ZsxTcsvw7RSLnjRGLwQX3TFSjs-Gg@mail.gmail.com>
-	<20241124223045.4e47e8b7@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1732507126; c=relaxed/simple;
+	bh=neQUOlOJW1u87EBBFoOioJrDEn84H5u5RrK+fg1NqW8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DKzjvH8oLLATGSsCcA/QF2IUcVIlpuO4yhOdOIU7qDERxF55w3OgGNWVrd17PI/eBtgTJc8i/xw6GIiP/R0RbLXQ+CnKPQpa5rvuMf0j9i9gu/3zAkipjGaF8Fk7UqMXXmspRh9WfXrIlgb0f1GGq6ne+sUdEyZKehFERT/N+Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuLuSzej; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuLuSzej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD360C4CECE;
+	Mon, 25 Nov 2024 03:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732507125;
+	bh=neQUOlOJW1u87EBBFoOioJrDEn84H5u5RrK+fg1NqW8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZuLuSzejZ7FLOYuaFnDZzdoRjHCcyMaJw+XbPuLMZZhKsrWhitqCyluVLWKEiu2TW
+	 1gqSLD6ZLoFqsnqOucoUB25jz93oZgakSulkzSOkMgvZWgsj2fqxMSbFtcZapJe2DG
+	 JUejI858vsAJhXHxP+gsHbpt46tvL+LOuFD5IWEBy0nZTH9uSKLyUckVNyqlR0tF3S
+	 QyH0tj1dlDRAIoKQgX0qpuRzK5d0ouJQfMI2r/gmU9pK4lsovBWXPYHza/6pKGR5cx
+	 a1uTHG9GevuGwWD3rGSzk0/IUiAtteg5SZnxBuowksj53Ry5HnVXnzG/eUY3cJZ6w5
+	 VvlsPhKvBBNbw==
+Date: Mon, 25 Nov 2024 12:58:40 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
+ <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org
+Subject: Re: [PATCH] x86/ftrace: fix boot time slowdown
+Message-Id: <20241125125840.72ff35d6ee542b2c176852af@kernel.org>
+In-Reply-To: <20241124140705.2883-1-rppt@kernel.org>
+References: <20241124140705.2883-1-rppt@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 24 Nov 2024 22:30:45 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sun, 24 Nov 2024 16:07:05 +0200
+Mike Rapoport <rppt@kernel.org> wrote:
 
-> > > Ack. BPF should not be causing deadlocks by doing code called from
-> > > tracepoints.    
-> > 
-> > I sense so much BPF love here that it diminishes the ability to read
-> > stack traces :)  
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 > 
-> You know I love BPF ;-)  I do recommend it when I feel it's the right
-> tool for the job.
+> Steven Rostedt reported slowdown by over 30ms caused by commit 9bfc4824fd48
+> ("x86/module: prepare module loading for ROX allocations of text")
+> 
+>   Before:
+> 
+>    # cat /sys/kernel/tracing/dyn_ftrace_total_info
+>   57695 pages:231 groups: 9
+>   ftrace boot update time = 14733459 (ns)
+>   ftrace module total update time = 449016 (ns)
+> 
+>   After:
+> 
+>    # cat /sys/kernel/tracing/dyn_ftrace_total_info
+>   57708 pages:231 groups: 9
+>   ftrace boot update time = 47195374 (ns)
+>   ftrace module total update time = 592080 (ns)
+> 
+> The slowdown happened because initial patching of kernel code for ftrace
+> was switched from text_poke_early() to text_poke() to accommodate ftrace
+> updates of module text allocated as ROX.
+> 
+> Restore the use of text_poke_early() for boot time patching of the kernel
+> code.
+> 
 
-BTW, I want to apologize if my email sounded like an attack on BPF.
-That wasn't my intention. It was more about Peter's response being
-so short, where the submitter may not understand his response. It's not
-up to Peter to explain himself. As I said, this isn't his problem.
+Looks good to me.
 
-I figured I would fill in the gap. As I fear with more people using BPF,
-when some bug happens when they attach a BPF program somewhere, they
-then blame the code that they attached to. If this was titled "Possible
-deadlock when attaching BPF program to scheduler" and was sent to the
-BPF folks, I would not have any issue with it. But it was sent to the
-scheduler maintainers.
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-We need to teach people that if a bug happens because they attach a BPF
-program somewhere, they first notify the BPF folks. Then if it really
-ends up being a bug where the BPF program was attached, it should be
-the BPF folks that inform that subsystem maintainers. Not the original
-submitter.
+Thank you!
 
-Cheers,
+> Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> Closes: https://lore.kernel.org/all/20241118132501.4eddb46c@gandalf.local.home
+> Fixes: 9bfc4824fd48 ("x86/module: prepare module loading for ROX allocations of text")
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/x86/kernel/ftrace.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 4dd0ad6c94d6..9e50288abbaa 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -111,7 +111,7 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+>   */
+>  static int __ref
+>  ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+> -			  const char *new_code)
+> +			  const char *new_code, struct module *mod)
+>  {
+>  	int ret = ftrace_verify_code(ip, old_code);
+>  	if (ret)
+> @@ -120,6 +120,8 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+>  	/* replace the text with the new text */
+>  	if (ftrace_poke_late) {
+>  		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
+> +	} else if (!mod) {
+> +		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+>  	} else {
+>  		mutex_lock(&text_mutex);
+>  		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
+> @@ -145,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+>  	 * just modify the code directly.
+>  	 */
+>  	if (addr == MCOUNT_ADDR)
+> -		return ftrace_modify_code_direct(ip, old, new);
+> +		return ftrace_modify_code_direct(ip, old, new, mod);
+>  
+>  	/*
+>  	 * x86 overrides ftrace_replace_code -- this function will never be used
+> @@ -164,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+>  	new = ftrace_call_replace(ip, addr);
+>  
+>  	/* Should only be called when module is loaded */
+> -	return ftrace_modify_code_direct(rec->ip, old, new);
+> +	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
+>  }
+>  
+>  /*
+> 
+> base-commit: 9f16d5e6f220661f73b36a4be1b21575651d8833
+> -- 
+> 2.45.2
+> 
 
--- Steve
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
