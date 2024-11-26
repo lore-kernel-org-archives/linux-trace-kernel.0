@@ -1,123 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB31137E;
-	Tue, 26 Nov 2024 00:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DA017BA0;
+	Tue, 26 Nov 2024 08:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732579416; cv=none; b=cUczhQfH/TEqGvawAJNiqPKLavl3df1TQ17/mAOPEqYFn5APLf6bYqRtrQF3fhoexRkluZ9/JNfzDGnJSf/8shDmyMRfAciGcmyLZ2uW9h1guZRnm00n/MnULSg5HKgI4qTFpgCqRX+yfZ08doeFIzwQUuifA0/y+faHTK7QEnI=
+	t=1732610781; cv=none; b=nATlD/asa0PcJ2svTr7vPW1619PvmY0opOKfY9TIdlHoVWRt2hhStm5dOMT/BlyXe7RK1wT+4YEhtZ+Z019ajQh/uvmHbSbxZVB72apKf7kJStr8bwll5G6JIcIr0pTmdGYynrOoSG1yTfPeBzw785c+zm+wBjXhap/TxE3bY9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732579416; c=relaxed/simple;
-	bh=BEiUsKmYO0eWOyQLroD2MlMy6oITnYJV3hPYYK2gNGQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VdBIVzeYGvJj19rKIfKnb6GM1mzaPqgpu/bOCIXHdoijtViAuZIhQThAYobYWBnOcw8uGZHmEWAN+q40o5FwpS/SxCiQoIMKQcjh95aTg573Hb+uOgiwFHezn6nNn5mV/5VsS6+UXW5EwbKUxGeygQDUAkKLbFP+hafVPp7rn8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C309C4CECE;
-	Tue, 26 Nov 2024 00:03:34 +0000 (UTC)
-Date: Mon, 25 Nov 2024 19:04:22 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
- <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/ftrace: fix boot time slowdown
-Message-ID: <20241125190422.7372fc2c@gandalf.local.home>
-In-Reply-To: <20241124140705.2883-1-rppt@kernel.org>
-References: <20241124140705.2883-1-rppt@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1732610781; c=relaxed/simple;
+	bh=P/73mi7h9ycpq8mYG3yiCW8bhPS08V1hedn0vA5rBj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMXnaQX6ptzb3X7Znxfa87Vwn43hT+0Jdfxw4EBq+TtkUuZnbphQ3Vws1fTS3HkL4jqaMvZbgq7BVkbJDQR2W8fZg/p3jrV0GR676zPwBBB0rLSPSh8wljJoBdhlzsltyc0GtVcwcc9nQnvYv1QsScaDh8STNxS/667b9FAgZU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j04hBOGa; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j04hBOGa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=bIpYVnktOJf0cyRhIrhtQQqof4u4G/r3xTrDfyfu+IU=; b=j04hBOGaxjK4CwcmeIkgiV/sUM
+	Rf+5n3/HwuCkyjGzSJEPEOoK/SFkOHMiZwhoNJh2qfMerB8qUkIeXvWHFlyneq30fsBp/AjZRWUqr
+	Z7ZU+1vBHduwa6VOiI6nPgB9z3FRiprX6G5Cr9XkSiiJpdYGch9aqQdJ6YOKvdiUFxNEJzYgZehir
+	Ewb1Z8GBuIDeQ40TaeCTqNpCuZ9GolOnYfgEzp67XsDS/FaFKzwsmCr4ucvDDV4T+qanQGnLqkvrA
+	75r6gPL6JyrQ8eAmczkOz/egr/CIxhqWmmSVNelV8Sl6IWV6Xd2MGzzJP+oMhaXnXDVck+BngiYHo
+	D1ZV9U8A==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tFrCm-0000000DJPH-0gUK;
+	Tue, 26 Nov 2024 08:45:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8B8133002A2; Tue, 26 Nov 2024 09:45:56 +0100 (CET)
+Date: Tue, 26 Nov 2024 09:45:56 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Michael Jeanson <mjeanson@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jordan Rife <jrife@google.com>, linux-trace-kernel@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from
+ __DO_TRACE()
+Message-ID: <20241126084556.GI38837@noisy.programming.kicks-ass.net>
+References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
+ <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
+ <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
+ <d36281ef-bb8f-4b87-9867-8ac1752ebc1c@efficios.com>
+ <20241125142606.GG38837@noisy.programming.kicks-ass.net>
+ <c70b4864-737b-4604-a32e-38e0b087917d@intel.com>
+ <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
 
-On Sun, 24 Nov 2024 16:07:05 +0200
-Mike Rapoport <rppt@kernel.org> wrote:
+On Mon, Nov 25, 2024 at 09:51:43AM -0800, Linus Torvalds wrote:
 
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> That said, I have a "lovely" suggestion. Instead of the "if(0)+goto"
+> games, I think you can just do this:
 > 
-> Steven Rostedt reported slowdown by over 30ms caused by commit 9bfc4824fd48
-> ("x86/module: prepare module loading for ROX allocations of text")
+>   #define scoped_guard(_name, args...)                                   \
+>          for (CLASS(_name, scope)(args), *_once = (void *)1; _once &&    \
+>               (__guard_ptr(_name)(&scope) || !__is_cond_ptr(_name));     \
+>               _once = NULL)
 > 
->   Before:
-> 
->    # cat /sys/kernel/tracing/dyn_ftrace_total_info
->   57695 pages:231 groups: 9
->   ftrace boot update time = 14733459 (ns)
->   ftrace module total update time = 449016 (ns)
-> 
->   After:
-> 
->    # cat /sys/kernel/tracing/dyn_ftrace_total_info
->   57708 pages:231 groups: 9
->   ftrace boot update time = 47195374 (ns)
->   ftrace module total update time = 592080 (ns)
-> 
-> The slowdown happened because initial patching of kernel code for ftrace
-> was switched from text_poke_early() to text_poke() to accommodate ftrace
-> updates of module text allocated as ROX.
-> 
-> Restore the use of text_poke_early() for boot time patching of the kernel
-> code.
-> 
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
 
-Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Right, so that's more or less what we used to have:
 
--- Steve
+#define scoped_guard(_name, args...)                                    \
+        for (CLASS(_name, scope)(args), *done = NULL;			\
+	     __guard_ptr(_name)(&scope) && !done; done = (void *)1)
 
-> Closes: https://lore.kernel.org/all/20241118132501.4eddb46c@gandalf.local.home
-> Fixes: 9bfc4824fd48 ("x86/module: prepare module loading for ROX allocations of text")
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> ---
->  arch/x86/kernel/ftrace.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 4dd0ad6c94d6..9e50288abbaa 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -111,7 +111,7 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
->   */
->  static int __ref
->  ftrace_modify_code_direct(unsigned long ip, const char *old_code,
-> -			  const char *new_code)
-> +			  const char *new_code, struct module *mod)
->  {
->  	int ret = ftrace_verify_code(ip, old_code);
->  	if (ret)
-> @@ -120,6 +120,8 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
->  	/* replace the text with the new text */
->  	if (ftrace_poke_late) {
->  		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
-> +	} else if (!mod) {
-> +		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
->  	} else {
->  		mutex_lock(&text_mutex);
->  		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
-> @@ -145,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
->  	 * just modify the code directly.
->  	 */
->  	if (addr == MCOUNT_ADDR)
-> -		return ftrace_modify_code_direct(ip, old, new);
-> +		return ftrace_modify_code_direct(ip, old, new, mod);
->  
->  	/*
->  	 * x86 overrides ftrace_replace_code -- this function will never be used
-> @@ -164,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  	new = ftrace_call_replace(ip, addr);
->  
->  	/* Should only be called when module is loaded */
-> -	return ftrace_modify_code_direct(rec->ip, old, new);
-> +	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
->  }
->  
->  /*
-> 
-> base-commit: 9f16d5e6f220661f73b36a4be1b21575651d8833
+But it turns out the compilers have a hard time dealing with this. From
+commit fcc22ac5baf0 ("cleanup: Adjust scoped_guard() macros to avoid
+potential warning"):	
+
+    int foo(struct my_drv *adapter)
+    {
+            scoped_guard(spinlock, &adapter->some_spinlock)
+                    return adapter->spinlock_protected_var;
+    }
+
+Using that (old) form results in:
+
+    error: control reaches end of non-void function [-Werror=return-type]
+
+
+Now obviously the above can also be written like:
+
+    int foo(struct my_drv *adapter)
+    {
+            guard(spinlock)(&adapter->some_spinlock);
+	    return adapter->spinlock_protected_var;
+    }
+
+But the point is to show the compilers get confused. Additionally Dan
+Carpenter noted that smatch has a much easier time dealing with the new
+form.
+
+And the commit notes the generated code is actually slighly smaller with
+e new form too (probably because the compiler is less confused about
+control flow).
+
+Except of course, now we get that dangling-else warning, there is no
+winning this :-/
+
+So I merged that patch because of the compilers getting less confused
+and better code-gen, but if you prefer the old one we can definitely go
+back. In which case we should go talk to compiler folks to figure out
+how to make it not so confused.
 
