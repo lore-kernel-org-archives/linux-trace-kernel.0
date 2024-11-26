@@ -1,138 +1,118 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1F31D89EF
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 16:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433DD1DC1AB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 18:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732640069; cv=none; b=VCbbR9Hm1bfECBzXEP2mnS0R3HXytWw0M4LEAy/k7mMhm2I6+uRRcfcnd+8rBC0f6qOS/efAyYb1v8GxSCLJ0vUnv1t7Oeloz84VUVZRuDQghV4Nig6ib/RGTUJckSn6vllmyC2ZDGV8DZ7ob5jGQu5jdn1fkIv39w/F2LLFVhI=
+	t=1732644847; cv=none; b=AKte0jvn0oEYHOlJKBP2AND+PejDqDhuux1mbsEcX3RT3Uf1RF5qWymHrxEjfrjdLY8s/QuyhLYcugIT8eeYZWLcQLYZ433mHwOCZ6krs1+PMMer2R7baW+mJ3LAJ+NtN118+HU1GYOdr4Rzmn6f3ihJB8WqroAUsIEGOFA79ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732640069; c=relaxed/simple;
-	bh=DIp+sKw/YUR5DOvPGmLkXi+5hSkr25LLRbjXxJw9Sww=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kdjdm6PK0FWHAmciBTnLhms2BrMuAk62r+uDwbE55PdO1UZMESsxedXRzJPOrNi5UPUwDMzHO8g4QNfo3orEpPQ1RJwPaIlCylyu+LuaEhbZVTXHVhmwhKwePeifTq14GpmaxirFm0sro4Fh27gTH9fh0MkBm32+ueT60twGw+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dzLhhl+f; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1732644847; c=relaxed/simple;
+	bh=4wpJhlYdPmaupiMAB3djRyWBKlzCNM61MqWp9mDP/DQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EHZZOpVxdtcJugIRnFTa1W2hahg7z+zcP3N+CEqKu+ro8SXAIMvBgl+tFhx6nn7wOOC6z/xoddmAmHNIpHywXiUORk3wIELX2O23e7fT78M6L8+z1yJDQ64kHcwOcKWkfXVL2SlVRcP3P4qGkOVMlI8oQrQPaGiUp9l2Y0J4+0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gXpmrlNF; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dzLhhl+f"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa516e52376so280539666b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 08:54:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gXpmrlNF"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53defd5663bso164147e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 10:14:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732640066; x=1733244866; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FVWAMpSCzHg3fGvJUBSfxRuCq7EFAuyV0JzFHGbmGlM=;
-        b=dzLhhl+fcO+4h2td232vfisI8ogmKMBrkGUcsB3l/+wydHxr23LGzaeKxsv9SGyGSI
-         T7oZjMBUPMDnsCxJjLi6nZECBIcQlL3pkJLYjHduZlNmJRg40qp6cv9OGDlFwYh+0ccU
-         Q+Cyq1CaczL3FRLgnohbwX7rwqvxOtZ5SeMOx/Bpz9hn3/itQnfTKYJGhyObQ0H2xD3G
-         NCZ4WSSB5N251y38GDYWEUTe8JZBRd+JaDX4wyvk0LCCdysYip/Pr6LTd1grv/c0ShXU
-         KcLbplBEqVbxTTrOPgOzYrTuhTplRX+xThj0TkyYDNCXf9QqGJ3rtVjfGg5lwIBMrTcK
-         +12w==
+        d=linux-foundation.org; s=google; t=1732644843; x=1733249643; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNamshPaCUTPte8AHmdb3Dr6lmIGJc8Mesv/4U+ExVM=;
+        b=gXpmrlNFkianj/fnpR1Rbp7gzfbBxwA7QjUMA79XltjeBlFMK0d9db9T8EtuBi8A4/
+         vhDg5sATpOtRpglvuN8hYEk2Pf2Qwl3YbsWY0t+F8y2YfgjIG5BxTCwJe3fY+1ie8B1f
+         FtCwIdA1rmm+id4ebuqnoQy8YpH7gvYqgQcjs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732640066; x=1733244866;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FVWAMpSCzHg3fGvJUBSfxRuCq7EFAuyV0JzFHGbmGlM=;
-        b=Fl0o4E+UCrthXLJtkkSk/01oA88K/MRN/W6CZ7MT1p9BWBJD/KhIq/lWiPOmNtI/Bu
-         dOsjZYeMcxx51U6CTrmZepSUC/DMkkm4eR0bCZScQO4XwNuIXa87qShWol9lBoWHAlGu
-         FpetVGtJc5y6PjGdPrhxF6RTRu4E2Iz3T04uD0vcnlY5XG6arZTI0WFtJDfNeFXzlS26
-         tfvIclApcCKLBnz012qceWhVTKMfS8qvNkDir1b2an/OZnGyd8W+SB8Q8I7ixiO7zwjr
-         aA51SAAqHxCRvUG5GbZHj7X5ilLE7xO++k/sdkaf6R0w4Y89LvgW5F4qG0grARC3ssgD
-         7XVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVroEtzsCJl1LDV60pCEfJ8G6/ql+msHH5u9SkRnSd/Vbelwh/z2ijVW/H0r0yIZd0p8sxJbnvTBrUUGakm8T3/fnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKox3iXs4XTa/YiNsXuoiBhxqActIdb9wnyCtKx0iFrtjblEc5
-	fHPFIIQNEq9KRxeSdUTMyLG3GDeLMfm7EjS6XJEkugQKcocb43XugHpI9rK9hKDQnc3YMo5jhw=
-	=
-X-Google-Smtp-Source: AGHT+IGnQ1RVPZpYNr4V2vsGwSrr1TfgOgeHTUES9Lyk5V8C/M8niDnuj/9jgzaUoqUes4SWLxjdrGEpAg==
-X-Received: from ejkk23.prod.google.com ([2002:a17:906:32d7:b0:aa5:1a39:9444])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:30c9:b0:a9a:1739:91e9
- with SMTP id a640c23a62f3a-aa521fdce0emr1032268766b.24.1732640065788; Tue, 26
- Nov 2024 08:54:25 -0800 (PST)
-Date: Tue, 26 Nov 2024 17:52:33 +0100
+        d=1e100.net; s=20230601; t=1732644843; x=1733249643;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dNamshPaCUTPte8AHmdb3Dr6lmIGJc8Mesv/4U+ExVM=;
+        b=B6gvunD8tQtX+HTUp0wLXgcAf6LiYfMWaKNmMhaNlKWB4V3ApiMe8DjlZeKLu5wZsg
+         8WLjh9LD8H20gm3mHIpP2yyW+qheaQKkP4NInSjMcnupfyMfu81jBo0xK/53HGhEolEO
+         p6+w0ekWdmWnPnbjzIIS+Rr1nhqZ4PjxYTY/FcWPAGpxjxm3AJczbZDXoe3F3D2SybrI
+         bD30f8bo3m2jqgL4zBpi8xqTUjGeyapqL31U4/kfxB8K1+sCLjAZAWW+FdYV0i7WGpCB
+         wnqlnBi1wBhtkF0G8bQLLVYOFUIegGcBGjDlfsNCEgWgowI3yeW1MObTypEqchM1I5xY
+         2whA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRQFAdBAG+YCkNdRJtHTCDfpDZArvml9u8sMpJDYtiMVUADfM2Cq/6J4SJXtGTNA/S+6OB4FPO97DFBWhOHwhmNFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAWAL+00DrMhbT0fkwjEz6ZA2tYztwqF1m3elRV12oukm/i4lF
+	rLjS3LaLsNdPaFS1PUb8+1DRmbWdp41uoDW1CutrnO9FibfzqmSSV+fNmigcLT5o0bOzhE9BJ2q
+	7Sq4=
+X-Gm-Gg: ASbGnctjGxqYikPF9wH4WK1kP3wOAsXM1bb8pf0GLxmJC7KnfGKNy+QtI+kw6NxWBsg
+	ltff37Ivjvq2LdmoSNBN/FbjrOk116yLrTvDjc094+n8ym7NGQVOOmL4EooBHLujJN+WrClkKLF
+	kgNPWxJ7mAyRGwLFhUMUEMpzmNi4+PGvy/9fgsr26M1jGyKYtYRJ2UD8V/e5+jiVYQbNYSbTOOe
+	u8Rh+zBBjkpDbotzx42RDMnUkOIuOsJ5LVBW7MKjJ7xIqdSK4gTqBeYJTzYyn4io0znKg1HIV3C
+	sgDYPdl+HTmB4OI7jBUD/sYB
+X-Google-Smtp-Source: AGHT+IG7yjjJiyFkMHzfwRN2gdZzMXE/+NKtFTNZUlYVG373/V8Bk2lCt9578O887QdFPycOiTKWpg==
+X-Received: by 2002:a05:6512:20cb:b0:53d:eef6:bb6a with SMTP id 2adb3069b0e04-53df01148a9mr6978e87.54.1732644843160;
+        Tue, 26 Nov 2024 10:14:03 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53dd24456b2sm2043169e87.56.2024.11.26.10.14.00
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 Nov 2024 10:14:01 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-53defd5663bso164067e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 10:14:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ+B4oqTSTmLjt1RWFvR3qc9Glr+OOwN5IbZEK8wa8sVzz/HnpqUuI8SVDdS9sR680AQOF4ibeeDmsNz0T05uVMAk=@vger.kernel.org
+X-Received: by 2002:a05:6512:baa:b0:53d:a95d:982f with SMTP id
+ 2adb3069b0e04-53df00c78a9mr44040e87.5.1732644840155; Tue, 26 Nov 2024
+ 10:14:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241126165414.1378338-1-elver@google.com>
-Subject: [PATCH bpf-next] bpf: Improve bpf_probe_write_user() warning message
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nikola Grcevski <nikola.grcevski@grafana.com>
+MIME-Version: 1.0
+References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
+ <20241123153031.2884933-5-mathieu.desnoyers@efficios.com> <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
+ <d36281ef-bb8f-4b87-9867-8ac1752ebc1c@efficios.com> <20241125142606.GG38837@noisy.programming.kicks-ass.net>
+ <c70b4864-737b-4604-a32e-38e0b087917d@intel.com> <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
+ <20241126084556.GI38837@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241126084556.GI38837@noisy.programming.kicks-ass.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 26 Nov 2024 10:13:43 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg9yCQeGK+1MdSd3RydYApkPuVnoXa0TOGiaO388Nhg0g@mail.gmail.com>
+Message-ID: <CAHk-=wg9yCQeGK+1MdSd3RydYApkPuVnoXa0TOGiaO388Nhg0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from __DO_TRACE()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Michael Jeanson <mjeanson@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
+	Joel Fernandes <joel@joelfernandes.org>, Jordan Rife <jrife@google.com>, 
+	linux-trace-kernel@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The warning message for bpf_probe_write_user() was introduced in
-96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
-tracers"), with the following in the commit message:
+On Tue, 26 Nov 2024 at 00:46, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> Using that (old) form results in:
+>
+>     error: control reaches end of non-void function [-Werror=return-type]
 
-    Given this feature is meant for experiments, and it has a risk of
-    crashing the system, and running programs, we print a warning on
-    when a proglet that attempts to use this helper is installed,
-    along with the pid and process name.
+Ahh. Annoying, but yeah.
 
-After 8 years since 96ae52279594, bpf_probe_write_user() has found
-successful applications beyond experiments [1, 2], with no other good
-alternatives. Despite its intended purpose for "experiments", that
-doesn't stop Hyrum's law, and there are likely many more users depending
-on this helper: "[..] it does not matter what you promise [..] all
-observable behaviors of your system will be depended on by somebody."
+> Except of course, now we get that dangling-else warning, there is no
+> winning this :-/
 
-As such, the warning message can be improved:
+Well, was there any actual problem with the "jump backwards" version?
+Przemek implied some problem, but ..
 
-1. The ominous "helper that may corrupt user memory!" offers no real
-   benefit, and has been found to lead to confusion where the system
-   administrator is loading programs with valid use cases.  Remove it.
-   No information is lost, and administrators who know their system
-   should not load eBPF programs that use bpf_probe_write_user() know
-   what they are looking for.
+> So I merged that patch because of the compilers getting less confused
+> and better code-gen, but if you prefer the old one we can definitely go
+> back.
 
-2. If multiple programs with bpf_probe_write_user() are loaded by the
-   same task/PID consecutively, only print the message once. If another
-   task loads a program with the helper, the message is printed once
-   more, and so on. This also makes the need for rate limiting
-   redundant.
+Oh, I'm not in any way trying to force that "_once" variable kind of
+pattern. I didn't realize it had had that other compiler confusion
+issue.
 
-3. Every printk line needs to be concluded with "\n" to be flushed. With
-   the old version the warning message only appeared after any following
-   printk. Fix this.
-
-Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@google.com/ [1]
-Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2VaekdL4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/trace/bpf_trace.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 630b763e5240..0ead3d66f8db 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -359,11 +359,16 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
- 
- static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
- {
-+	static pid_t last_warn_pid = -1;
-+
- 	if (!capable(CAP_SYS_ADMIN))
- 		return NULL;
- 
--	pr_warn_ratelimited("%s[%d] is installing a program with bpf_probe_write_user helper that may corrupt user memory!",
--			    current->comm, task_pid_nr(current));
-+	if (READ_ONCE(last_warn_pid) != task_pid_nr(current)) {
-+		pr_warn("%s[%d] is installing a program with bpf_probe_write_user\n",
-+			current->comm, task_pid_nr(current));
-+		WRITE_ONCE(last_warn_pid, task_pid_nr(current));
-+	}
- 
- 	return &bpf_probe_write_user_proto;
- }
--- 
-2.47.0.338.g60cca15819-goog
-
+         Linus
