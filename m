@@ -1,146 +1,164 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7680C2500D5;
-	Tue, 26 Nov 2024 21:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ACA2500D5;
+	Tue, 26 Nov 2024 21:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732655762; cv=none; b=krdBXjnaduZuxjQagJtxat6/2mDymmGg7wO2ObkK/wzazdc9isRU8dKD4BZQQSwrXn+PUi1C/IrympilywHgVDfb7maMMYVLYB/Y960AIVMYb12xy3c5FrA5WrbqbyG469A37VP9xTlPN8eQ9JMcn9tk3CaT1EDoGw3bqzccDoM=
+	t=1732656767; cv=none; b=HRXz2Iz1WpF8Xw4CYRlbAVrIwWxGk+F/CucnTu2QLe0pR5HGOE+piqDoj5879ae8l3aEfqKXrZXvAjYzb7TrhZHKBqDWP2poe9povzXIF0MNcXkGh2+t+IsUGu1hvbLxjy1L22/oAn6LKac3MN4AnZJNzXcf9RnJSsh341Parz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732655762; c=relaxed/simple;
-	bh=8zBIAsY7KhKfrx093oiz+bgPbdi4AqBYllyRBnwEjcA=;
+	s=arc-20240116; t=1732656767; c=relaxed/simple;
+	bh=0wCsuxITPEB/qQiSToxKrpFwqxBfdJEEDl5cKo3lIJ4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kvv+9vjC9UoH2/QKjCPngt2RyzBIfSt3ayZGaiVL1BLL+xViZaTz+a44eUReC2JRAlNfOqTF8NSrmT7x9KzOVY6b/VR2dgkYO3WZAnj5zzn2hwRbdp52HMSfeIoL56gQNGUfq0sCFoHDqgZTdEy6IKVpxgMyRsdYZZFrNMBm3CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eCG7IZec; arc=none smtp.client-ip=209.85.215.172
+	 To:Cc:Content-Type; b=WIfATQ2I7ArDYC3Nln7D1NOZjMLSg/ZzuaIKodZ3eyT0ezn0HTONAg/SghYxV8ryiVtZnf/uDWodpMa6EafU+KrFbElKlDv9Jzhec9CkXqxU49TjI+A1Nv4bTvAyKLiMPogsLaAakN+uc48nV/hTX6jh9qHzdelwL8q95joNIZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iNe2S8sh; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCG7IZec"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-7e6cbf6cd1dso4182879a12.3;
-        Tue, 26 Nov 2024 13:16:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNe2S8sh"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-724ffe64923so3419859b3a.2;
+        Tue, 26 Nov 2024 13:32:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732655761; x=1733260561; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732656765; x=1733261565; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DCYkoe4/s2sGIo+e9CICa6BBY2Gz1FRZ8QT5IIMcEsI=;
-        b=eCG7IZecg05HBJfx3sRuOm3tBFo6h0eY1QA8jDM/sFEPTgYaCgcXXf7LEgUsHwFpZH
-         uzI6KJF9ZeSKJPD7mumqhRw/yvt6sRMoFTVeKpahPbyEeZWMfGJOww+aUFtzqR7QZ+B/
-         zQ3JPKPvsRPsvI92z6vZxOKE8MCcoOnn3oHMYZeWXLfye4yJNUaCUoB6y1xpvvF09sbN
-         l5cvoRsW0MWaGG07RVmVhXW8oEsEVT0GPnQd6YyGIm+XG9vx6YDqEQBOTsjx7xAtlBIN
-         KDDUVD6KLEV/puFwDqfXuS5++odaCNAi4sKydqxbq3ZLH634m4OLfA/maDEnwqVx/zo/
-         ZRdg==
+        bh=99ARIrKJg/Feo5MQX4mvPQCETiaQdyVKXCsh0VDpwNM=;
+        b=iNe2S8shgbHVmu2iezVNumRMAb49/yCMGa4s5s2Alde0t35+89j/NpgBMbE/vr1427
+         /26u5u5LF9s4ZPgfa2rjbdQ7zKdnbXXXOoEMKgVhbvR1tMMDtGSJCAcA58/zUxHFV42k
+         wqAhR/Iq0MluxLRY6hReBVAEE2dhEdznXi4399ewYZ6RHQd+yNGeLLQdUI/uMP+6ogR7
+         2vUmPvDEqgErXIO/lpY/VprHK+10oM19fkpeWsygkP/AZTs+oVP3/7DpId9ZsszxxqCe
+         iV1Hj/ANSGM1V7+vUa8wmKApw0XHbd+rk3YPRV6ItqcAltv9XRhcYpm1xmG8KYctuoC7
+         LIgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732655761; x=1733260561;
+        d=1e100.net; s=20230601; t=1732656765; x=1733261565;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DCYkoe4/s2sGIo+e9CICa6BBY2Gz1FRZ8QT5IIMcEsI=;
-        b=Z2gblATwqERe5JvwKZ7FsIIoirXUYj1MAmqzMA/IVqfg7joUxphCW/J35IriVVmkDe
-         T11cqHBx5pRW8ND4Sbr4MZAKstWbAqDwPbbpPyPNukzpfLpgDnIX8qyW0168sOGM74oJ
-         wOHhq/qN8OWrILPHlrU+8fSwxrB61eE/u5mYbBrrGQ7cz28GxNLgS47/r02JlFcOlXB6
-         HXJC5SwVlDu+vTGLyob1NMwm/TSDhquw1g9Q+e08l8sGqWteMZ3iY6xfzf326PZ8YmkL
-         1xUKN/3tbMtLI1pJvqlwghwbbn5l0eQ0cliWKLWem9LUWegCE9WiQ/TpagVA2Tkdew6o
-         +PZg==
-X-Forwarded-Encrypted: i=1; AJvYcCULE4KZXbq5QWMbNidn9UvyaIqtcRJQmUZPbeS4nzKrIQ4paKBdnJ5BIbX51jx0J9JpcGm7dHE7@vger.kernel.org, AJvYcCUqiyL9Q2FxKR85SsN0V1uAcjuS51q4HApvQEInmRw3yKAiFN47vA6JS49cqVbNpyAbQNQ=@vger.kernel.org, AJvYcCVv8z5RLjtFL4SvwbqnrKpcSB4HNfiCESjE26sLXKc1QhrPUF+8VpY+XYMTrkVIXt21nJOE2zwRGFfpkgVaVuEXXJkG@vger.kernel.org, AJvYcCWjg2MoPL5PkMhbS48QRbFSv1GxHjy+Q/M3TfoSxl6Ulx7Er+Y6uhjTwuGB3J1QyvwylWhaI1m1QS5b4P86@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcdscQ+Lb9fiA4lcvunebeZ4LjLKuvzKhBEM0rgjF3zAt+nJI6
-	YWt4vWi5sk/jjnzYxX/E+fw5nKpFgbLt2gePMQ70uUDlgU6C6FXq9eLcDr68bpZV6x6U523fnNW
-	EzR5w1z9RPdSAGYRNMJAp5O5bc+Q=
-X-Gm-Gg: ASbGncv9n322ak12PFV+PyncB/rNhCcZ8wzZA/w/sGDBDtKZxcdrFy6tghRq7uRRV0v
-	8HECVIbWO7r/5UDcDWDGkLHYjo9q7AXY72MVPorMAOl2U/J8=
-X-Google-Smtp-Source: AGHT+IFZpSUfgo8UkY5MOU8q7SMXyP0VRD2sfkfUurm23P4frAw83y0qvmOzmOSggFzJcXEkU6unnV9i2uU1VYlwjco=
-X-Received: by 2002:a17:90b:4b8d:b0:2ea:94a1:f63f with SMTP id
- 98e67ed59e1d1-2ee097e5f5cmr1129433a91.33.1732655760621; Tue, 26 Nov 2024
- 13:16:00 -0800 (PST)
+        bh=99ARIrKJg/Feo5MQX4mvPQCETiaQdyVKXCsh0VDpwNM=;
+        b=MdldPhmPys4KFxee6RcZ4G4HAVmGZQtvS4RvlOjMWj497R5NLmbY/mh2zfLk9Q24/N
+         NOI9bOsaumQ3nB6tkkW42S7rqtyqiegu2jUdCZqc/JquakxJD4J7EHUdapfOtcYRvJeE
+         S24P/caPJsi49L35HECHGmLoUdj861YSaoATWHeVHoj/XhEqJoprI2AtNR1xUH6BJh0g
+         6ZJhuyDYJq4gp3icdRakB32PghK9fEsr65a87eVoh5tFqli+TbYxMurzWUZiYScguwwI
+         /U8wQk/oGg7LS+s4IvQZaaZslswYHagfUXFzNdZfZr85uNqnydRfKd2/CXts323Lt/eK
+         8k1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUvbciUDLLe0yt5+iYZ3bMqCHRSl9t2R6HPJL2DUtGKTuD9N08DuCQ1DRgdc7c2DwrW8n8=@vger.kernel.org, AJvYcCWkV5AV0RH5hYaDgKKCxh1qMfUzbRV25cQMaUkWEGYsXFR6y2v10qvZ4uMihZ+sHxCoHd8wC0ODRvk4xWVS@vger.kernel.org, AJvYcCXXqnraZbL6d7qZAflXsRs7FPQ21/0FueZvJur7XJEPyhZ+CG4nGPINHy6UV+0sqjMT/bGzdn6XYVsS4eSGdVOug0Z3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxC4SLprY++pVdGMx9ZW65lkDr/kFbjoKqKbR2LSgnHibaVy4W
+	cGpy7QY6vW0CiqQYqmU+2vwl1+GnSr2jZQtc0bz2QKZ5P2Oniggu5vdke1Ct5n6SnJtN00tnGOy
+	OFaoTl1C8rWcWCFdCoXyvNd74aFQ=
+X-Gm-Gg: ASbGncu8rHa1Hmte15+ytWknlTlL8uV5iM+S+GJv+o8MC9sPi3bE/CAuxWYlYjVHvq6
+	BFvz20io55HL5jMVAVzD8Ar1QJIEc8VNucro5DxbD9/lGK1w=
+X-Google-Smtp-Source: AGHT+IHaLhaRzDezR3Iq4R/Qrg75a0wqOx9j6VCE2ogEU0qqsQKF0wZ8QjqQ/Pq6Itqd+6UgXwypwGhJ+idl65Kz0N8=
+X-Received: by 2002:a17:90b:1e11:b0:2ea:9ccb:d1f4 with SMTP id
+ 98e67ed59e1d1-2ee08dae675mr1156944a91.0.1732656765167; Tue, 26 Nov 2024
+ 13:32:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
- <20241123202744.GB20633@noisy.programming.kicks-ass.net> <20241123180000.5e219f2e@gandalf.local.home>
- <CAADnVQLBhV_sSuH+BKu66ZsxTcsvw7RSLnjRGLwQX3TFSjs-Gg@mail.gmail.com>
- <20241124223045.4e47e8b7@rorschach.local.home> <20241124224441.5614c15a@rorschach.local.home>
- <5489FB30-8B09-4F74-9C2B-FF25F4654A3F@u.nus.edu> <20241125094426.GO39245@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241125094426.GO39245@noisy.programming.kicks-ass.net>
+References: <20241126165414.1378338-1-elver@google.com>
+In-Reply-To: <20241126165414.1378338-1-elver@google.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 26 Nov 2024 13:15:48 -0800
-Message-ID: <CAEf4BzYHeh_=iHOYL88pXXdHGZuAmQNM0jM+9iPUou+7+YLjjQ@mail.gmail.com>
-Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ruan Bonan <bonan.ruan@u.nus.edu>, Steven Rostedt <rostedt@goodmis.org>, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"will@kernel.org" <will@kernel.org>, "longman@redhat.com" <longman@redhat.com>, 
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"mattbobrowski@google.com" <mattbobrowski@google.com>, "ast@kernel.org" <ast@kernel.org>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>, 
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "sdf@fomichev.me" <sdf@fomichev.me>, 
-	"haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"mhiramat@kernel.org" <mhiramat@kernel.org>, 
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Fu Yeqi <e1374359@u.nus.edu>
+Date: Tue, 26 Nov 2024 13:32:33 -0800
+Message-ID: <CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Improve bpf_probe_write_user() warning message
+To: Marco Elver <elver@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nikola Grcevski <nikola.grcevski@grafana.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 25, 2024 at 1:44=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Tue, Nov 26, 2024 at 8:54=E2=80=AFAM Marco Elver <elver@google.com> wrot=
+e:
 >
-> On Mon, Nov 25, 2024 at 05:24:05AM +0000, Ruan Bonan wrote:
+> The warning message for bpf_probe_write_user() was introduced in
+> 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
+> tracers"), with the following in the commit message:
 >
-> > From the discussion, it appears that the root cause might involve
-> > specific printk or BPF operations in the given context. To clarify and
-> > possibly avoid similar issues in the future, are there guidelines or
-> > best practices for writing BPF programs/hooks that interact with
-> > tracepoints, especially those related to scheduler events, to prevent
-> > such deadlocks?
+>     Given this feature is meant for experiments, and it has a risk of
+>     crashing the system, and running programs, we print a warning on
+>     when a proglet that attempts to use this helper is installed,
+>     along with the pid and process name.
 >
-> The general guideline and recommendation for all tracepoints is to be
-> wait-free. Typically all tracer code should be.
+> After 8 years since 96ae52279594, bpf_probe_write_user() has found
+> successful applications beyond experiments [1, 2], with no other good
+> alternatives. Despite its intended purpose for "experiments", that
+> doesn't stop Hyrum's law, and there are likely many more users depending
+> on this helper: "[..] it does not matter what you promise [..] all
+> observable behaviors of your system will be depended on by somebody."
 >
-> Now, BPF (users) (ab)uses tracepoints to do all sorts and takes certain
-> liberties with them, but it is very much at the discretion of the BPF
-> user.
+> As such, the warning message can be improved:
+>
+> 1. The ominous "helper that may corrupt user memory!" offers no real
+>    benefit, and has been found to lead to confusion where the system
+>    administrator is loading programs with valid use cases.  Remove it.
+>    No information is lost, and administrators who know their system
+>    should not load eBPF programs that use bpf_probe_write_user() know
+>    what they are looking for.
+>
+> 2. If multiple programs with bpf_probe_write_user() are loaded by the
+>    same task/PID consecutively, only print the message once. If another
+>    task loads a program with the helper, the message is printed once
+>    more, and so on. This also makes the need for rate limiting
+>    redundant.
+>
+> 3. Every printk line needs to be concluded with "\n" to be flushed. With
+>    the old version the warning message only appeared after any following
+>    printk. Fix this.
+>
+> Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@google.=
+com/ [1]
+> Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2Vaekd=
+L4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+>  kernel/trace/bpf_trace.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 630b763e5240..0ead3d66f8db 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -359,11 +359,16 @@ static const struct bpf_func_proto bpf_probe_write_=
+user_proto =3D {
+>
+>  static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+>  {
+> +       static pid_t last_warn_pid =3D -1;
+> +
+>         if (!capable(CAP_SYS_ADMIN))
+>                 return NULL;
+>
+> -       pr_warn_ratelimited("%s[%d] is installing a program with bpf_prob=
+e_write_user helper that may corrupt user memory!",
+> -                           current->comm, task_pid_nr(current));
+> +       if (READ_ONCE(last_warn_pid) !=3D task_pid_nr(current)) {
+> +               pr_warn("%s[%d] is installing a program with bpf_probe_wr=
+ite_user\n",
+> +                       current->comm, task_pid_nr(current));
+> +               WRITE_ONCE(last_warn_pid, task_pid_nr(current));
+> +       }
 
-We do assume that tracepoints are just like kprobes and can run in
-NMI. And in this case BPF is just a vehicle to trigger a
-promised-to-be-wait-free strncpy_from_user_nofault(). That's as far as
-BPF involvement goes, we should stop discussing BPF in this context,
-it's misleading.
-
-As Alexei mentioned, this is the problem with printk code, not in BPF.
-I'll just copy-paste the relevant parts of stack trace to make this
-clear:
-
-       console_trylock_spinning kernel/printk/printk.c:1990 [inline]
-       vprintk_emit+0x414/0xb90 kernel/printk/printk.c:2406
-       _printk+0x7a/0xa0 kernel/printk/printk.c:2432
-       fail_dump lib/fault-inject.c:46 [inline]
-       should_fail_ex+0x3be/0x570 lib/fault-inject.c:154
-       strncpy_from_user+0x36/0x230 lib/strncpy_from_user.c:118
-       strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
-       bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:215 [inline]
+should we just drop this warning altogether? After all, we can call
+crash_kexec() without any warnings, if we have the right capabilities.
+bpf_probe_write_user() is much less destructive and at worst will
+cause memory corruption within a single process (assuming
+CAP_SYS_ADMIN, of course). If yes, I think we should drop
+bpf_get_probe_write_proto() function altogether and refactor
+bpf_tracing_func_proto() to have
+bpf_token_capable(CAP_SYS_ADMIN)-guarded section, just like
+bpf_base_func_proto() has.
 
 >
-> Slightly relaxed guideline would perhaps be to consider the context of
-> the tracepoint, notably one of: NMI, IRQ, SoftIRQ or Task context -- and
-> to not exceed the bounds of the given context.
+>         return &bpf_probe_write_user_proto;
+>  }
+> --
+> 2.47.0.338.g60cca15819-goog
 >
-> More specifically, when the tracepoint is inside critical sections of
-> any sort (as is the case here) then it very much is on the BPF user to
-> not cause inversions.
->
-> At this point there really is no substitute for knowing what you're
-> doing. Knowledge is key.
->
-> In short; tracepoints should be wait-free, if you know what you're doing
-> you can perhaps get away with a little more.
-
-From BPF perspective tracepoints are wait-free and we don't allow any
-sleepable code to be called (until sleepable tracepoints are properly
-supported, which is a separate "blessed" case of tracepoints).
