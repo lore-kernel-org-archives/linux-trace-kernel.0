@@ -1,124 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922961DDC05;
-	Tue, 26 Nov 2024 18:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264D11DAC8A;
+	Tue, 26 Nov 2024 19:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732645790; cv=none; b=NomFU4u1hPsrfzXTo9i3+uZLdeZGjtD6lZABJ2lNM5MCIuw8yC2g1kNcR4bJjgNOdudn8TwJwCOirLTafjz2qMyn9u3OuE6PtJYCiQ7OJx/TKim0pTQxKjszAjXii08JtosoivKUL2b3h369RRfzsBj50diPeIeDAa8uEuoywjQ=
+	t=1732648417; cv=none; b=uGh6Ur+cMrlaK65yFWMFJmN1n9Q2yFL/O5Ex5ZIuR8SJGmnhMxtbEy+B7RcF/WSk03L/FLn/0sTtuXK5WeziSG4mduc0Sg1J9f8l1afklGOv+Hxl/m8ou2cSCNcyLx8+3nKeOqS/xuJlAXyYqdyBlzKlARkupldWqWw/BCy7x3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732645790; c=relaxed/simple;
-	bh=iohwLySxzBUL3SHrHutQ/bJn3BNIDjL9Rfaikvvg65s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4UwQDqWg0h/wmtlJGsKv0q5ZlzzFLEENNU8pgRQz7wEh7lsOeElq9KgU7BX4HJOx8sk/0/3JHjqvRRhZMiEgVK1WggbaM5fkCJaVqChYye6UiBFOw3nFc2MDeodNpaWqY5cN4AWn/pznJEbfqCr2d3moPKgX3Frg6Yc3aFek/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VpDxYPfc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732648417; c=relaxed/simple;
+	bh=QCR/Vp+Xml9sdSSp1Q61LSN07q3Va3I/wbUhG9WAoZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p3zU/U2jqIWlWO07AskNWYvO6JGpp0IZg+INniNkmlAcxrXSuKOZ+OmaNA5pL4LLtvJqPy+dPWVPmnubGFtY09uYTF1laIB9z5md9Fiv2yzoMd9exwku2lFAFcerDg38uN4qmwDFxyiwQBTDnw32g+gF2hzul6kNT0zzfSvxN3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxItrClj; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VpDxYPfc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AA42C4CECF;
-	Tue, 26 Nov 2024 18:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732645790;
-	bh=iohwLySxzBUL3SHrHutQ/bJn3BNIDjL9Rfaikvvg65s=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=VpDxYPfcaGkbEahFxItT6WIbWqLnne8BVmW8rybYDAoFWfuKhaJjWBpFfsCJVDent
-	 GdD1PPvC4pvXERY1NuVt68g4B56AVIiEFw4pVZ0cSUvI+B91+idNcv8jcpeK2+RvrV
-	 Dk9/bsshxQI3ax37Q8gKNdgBtQuQjkSidNm4e0qP1Jbrex3lQLWSwzsRv24VojO0bR
-	 ChgtEwxve5K6RaYB17wIU/53Kx4yNp4x63teJZdxZhFGpGReDJayCiseQK1oXzDLG6
-	 uMC0KjDPY0gWGHiZmo8Wg1WFHFu6Z9pq/pzPdWpeZRbsyNdI0pUItrDmn6Dj6MAg6+
-	 +E/cw7WxywJRw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A7C18CE0EA5; Tue, 26 Nov 2024 10:29:49 -0800 (PST)
-Date: Tue, 26 Nov 2024 10:29:49 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Michael Jeanson <mjeanson@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jordan Rife <jrife@google.com>, linux-trace-kernel@vger.kernel.org
-Subject: Re: [for-next][PATCH 4/6] rcupdate_trace: Define rcu_tasks_trace
- lock guard
-Message-ID: <95a1c581-0107-4d6d-a751-565add025b91@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20241124234940.017394686@goodmis.org>
- <20241124235019.106333158@goodmis.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxItrClj"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-212a3067b11so51269875ad.3;
+        Tue, 26 Nov 2024 11:13:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732648415; x=1733253215; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+DVAOLhrbGi8jum3karNef7IcoBGxiL98ArEHqKf4PM=;
+        b=KxItrCljDYSF15ZVeXlApSeij8tbaFsswj/A2fN3VwAKteEf6QwyZyHsS8V9z2STdr
+         W1EBIf/6UqgNRUfd6hnctTtLAH0HTg8LbXqvkPw2t8qt6JIeKsxekrRA8ZOXTgQ87qRt
+         R0yzoxA0d7qWptfHx64ml7Ca78JU4IGFt8Gr40Znequn2K8NcdaSG/cnB9DrsmBsaBfA
+         jL44Vm4yKAMqfqph1G6H1Me4WFk2fbxHB7QX20uz8/BwdB/J/ym0L296eiuBzEeh2QDm
+         gkO4ojdRRpYFuOlZ9zOUEOzVSndyw7wbeLkMh5bn+L8UcVfgNVXSpF62xiS7IL7q2Yol
+         TMfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732648415; x=1733253215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+DVAOLhrbGi8jum3karNef7IcoBGxiL98ArEHqKf4PM=;
+        b=tPfWz1mEAYaGC9OM3nGKX005ZW58EoA5LWu88i5Ygny+eiGo1Njc8LuDBQxd6HkVyO
+         g4d09cVZrN3NmmlnvaIf6oWHewblPXJONJD7Z6xC29vR8aBb6/TiU26kr61uit3UJujM
+         1+OcX1S7QcizHHZqVVzJz2mMU68Rm8vJjzOE7xbFkQm+uyLRIVzdVDp9mI9+UNrWyV5Z
+         STHd5QMyMvmngTa+6ryynZj0cRLBIcF7p3ui4k5e3Ra7BWWsi5KqYHI/pcVIRCtU/tUJ
+         W4ky5EuIyNKnq0t934HMjg6MF0u/bRgRXRetvW/GoJMaBEJTwupvfWWIRT+ok9gNKTm+
+         ofqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhMz4aubBjHxKVOBAtfTtEYAr0O+rk3Rdyq7yY0gvBNH3A9ApQh88UQu+QJGQxcJYS+gc=@vger.kernel.org, AJvYcCW06lZOmOpO1Esg4ofS7luA7ud0vfedKqwI7JIIpMgd8e2Hc4uaIY0DHFmqNhQzf9u9BXB3Nq1pF8RioGGA@vger.kernel.org, AJvYcCWeZqEQI2IjA7bHNodZSHbPSNzX44Xd3pmY1fleBHPluyGrh/RUu3UrQ7/TUMb8EITJMPgiKCFVmFcM93/hkXEt7fgt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyz+PQwQwkz5U95blknxsJTzuCrHuMpFe3cCqYsbbKlp/vgvDaq
+	BBPWUNWdVv4m5Z3sfuyuYPBu7IOvEF1PqCmvrtE/wrL3RBPb5UC2g1QFjZ77JP/36SQyJdtzTjE
+	Qf2YS0lPOqBUoFsIyxYgyGLKW21ThfA==
+X-Gm-Gg: ASbGncvalYZDNozb4XLUIzBnZxcgzQj+HB3fdJiDE2viVw/XhUkxwiH+4ATm261Mmpz
+	LjC52h2wzvEcPkNrEFD/nvoGL0XxKvpFq2UOB4FaG74C0Mkw=
+X-Google-Smtp-Source: AGHT+IHfu+fT5zfF3DAnsl3ePjUgszCAqr2LVqByX7g1cOz4bYKIk1DFvz9urAi7eP5+0pFn014qIVRK/I1V0X28dj8=
+X-Received: by 2002:a17:90b:4a11:b0:2ea:61de:3903 with SMTP id
+ 98e67ed59e1d1-2ee097bf2cfmr451311a91.27.1732648415376; Tue, 26 Nov 2024
+ 11:13:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241124235019.106333158@goodmis.org>
+References: <20241105133405.2703607-1-jolsa@kernel.org> <20241117114946.GD27667@noisy.programming.kicks-ass.net>
+ <ZzsRfhGSYXVK0mst@J2N7QTR9R3> <CAEf4BzbXYrZLF+WGBvkSmKDCvVLuos-Ywx1xKqksdaYKySB-OQ@mail.gmail.com>
+ <Zz95aiWM5cN6MDED@J2N7QTR9R3.cambridge.arm.com>
+In-Reply-To: <Zz95aiWM5cN6MDED@J2N7QTR9R3.cambridge.arm.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 26 Nov 2024 11:13:22 -0800
+Message-ID: <CAEf4BzZS_2w42Vxy6Cj89OXQqAOYdm+kbTX_VEjF-zL0HrZU9Q@mail.gmail.com>
+Subject: Re: [RFC 00/11] uprobes: Add support to optimize usdt probes on x86_64
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 24, 2024 at 06:49:44PM -0500, Steven Rostedt wrote:
-> From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> 
-> Define a rcu_tasks_trace lock guard for use by the syscall enter/exit
-> tracepoints.
-> 
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Michael Jeanson <mjeanson@efficios.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: bpf@vger.kernel.org
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: Jordan Rife <jrife@google.com>
-> Cc: linux-trace-kernel@vger.kernel.org
-> Link: https://lore.kernel.org/20241123153031.2884933-4-mathieu.desnoyers@efficios.com
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Thu, Nov 21, 2024 at 10:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com=
+> wrote:
+>
+> On Mon, Nov 18, 2024 at 10:13:04PM -0800, Andrii Nakryiko wrote:
+> > On Mon, Nov 18, 2024 at 2:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.=
+com> wrote:
+> > > Yep, on arm64 we definitely can't patch in branches reliably; using B=
+RK
+> > > (as we do today) is the only reliable option, and it *shouldn't* be
+> > > slower than a syscall.
+> > >
+> > > Looking around, we have a different latent issue with uprobes on arm6=
+4
+> > > in that only certain instructions can be modified while being
+> > > concurrently executed (in addition to the atomictiy of updating the
+> >
+> > What does this mean for the application in practical terms? Will it
+> > crash? Or will there be some corruption? Just curious how this can
+> > manifest.
+>
+> It can result in a variety of effects including crashes, corruption of
+> memory, registers, issuing random syscalls, etc.
+>
+> The ARM ARM (ARM DDI 0487K.a [1]) says in section B2.2.5:
+>
+>   Concurrent modification and execution of instructions can lead to the
+>   resulting instruction performing any behavior that can be achieved by
+>   executing any sequence of instructions that can be executed from the
+>   same Exception level [...]
+>
+> Which is to say basically anything might happen, except that this can't
+> corrupt any state userspace cannot access, and cannot provide a
+> mechanism to escalate privilege to a higher exception level.
+>
+> So that's potentially *very bad*, and we're just getting lucky that most
+> implementations don't happen to do that for most instructions, though
+> I'm fairly certain there are implementations out there which do exhibit
+> this behaviour (and it gets more likely as implementations get more
+> aggressive).
+>
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+I see. I wonder if the fact that we do __replace_page() saves us here?
+Either way, if that's a problem, it would be good for someone familiar
+with ARM64 to try to address it. Ideally in a way that won't ruin the
+multi-uprobe attachment speeds (i.e., not doing stop-the-world for
+each of many uprobe locations to be attached, but rather do that once
+for all uprobes).
 
-> ---
->  include/linux/rcupdate_trace.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/rcupdate_trace.h b/include/linux/rcupdate_trace.h
-> index eda493200663..e6c44eb428ab 100644
-> --- a/include/linux/rcupdate_trace.h
-> +++ b/include/linux/rcupdate_trace.h
-> @@ -10,6 +10,7 @@
->  
->  #include <linux/sched.h>
->  #include <linux/rcupdate.h>
-> +#include <linux/cleanup.h>
->  
->  extern struct lockdep_map rcu_trace_lock_map;
->  
-> @@ -98,4 +99,8 @@ static inline void rcu_read_lock_trace(void) { BUG(); }
->  static inline void rcu_read_unlock_trace(void) { BUG(); }
->  #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
->  
-> +DEFINE_LOCK_GUARD_0(rcu_tasks_trace,
-> +	rcu_read_lock_trace(),
-> +	rcu_read_unlock_trace())
-> +
->  #endif /* __LINUX_RCUPDATE_TRACE_H */
-> -- 
-> 2.45.2
-> 
-> 
+> Mark.
+>
+> [1] https://developer.arm.com/documentation/ddi0487/ka/?lang=3Den
