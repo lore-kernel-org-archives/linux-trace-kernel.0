@@ -1,130 +1,122 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264D11DAC8A;
-	Tue, 26 Nov 2024 19:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 728B3946C;
+	Tue, 26 Nov 2024 20:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732648417; cv=none; b=uGh6Ur+cMrlaK65yFWMFJmN1n9Q2yFL/O5Ex5ZIuR8SJGmnhMxtbEy+B7RcF/WSk03L/FLn/0sTtuXK5WeziSG4mduc0Sg1J9f8l1afklGOv+Hxl/m8ou2cSCNcyLx8+3nKeOqS/xuJlAXyYqdyBlzKlARkupldWqWw/BCy7x3o=
+	t=1732654065; cv=none; b=guLlJsutemi31AERSxd6ligIe++tXMsTAG3I5osGE2/ow6RZQuDoybst82OCphGN7WEgsUFTntqOgBt/g0QI1PCNBDKLRzpOrYjfWI7UNd5Fk8fCrXASYQyZ3fArR36WnIHZx947lfVIPo/fgpKgNLbh69KePp6n9fgeePtQmaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732648417; c=relaxed/simple;
-	bh=QCR/Vp+Xml9sdSSp1Q61LSN07q3Va3I/wbUhG9WAoZY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p3zU/U2jqIWlWO07AskNWYvO6JGpp0IZg+INniNkmlAcxrXSuKOZ+OmaNA5pL4LLtvJqPy+dPWVPmnubGFtY09uYTF1laIB9z5md9Fiv2yzoMd9exwku2lFAFcerDg38uN4qmwDFxyiwQBTDnw32g+gF2hzul6kNT0zzfSvxN3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxItrClj; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1732654065; c=relaxed/simple;
+	bh=faBfcmymGPSFibu9nkUfQwNarQQpruvPOzB3wGv4z0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwZ1RGSWnYMPVsKONy79csuDmqmZqNrVgtdMO7ty/3hxAKjkvWZYjJtXaB0Z6A0drEvSnRw6IU1BoNKKd2djCl6xlg9D9ZWVuZiVowNdH3DBKuPXd//3+sr2VMGFg6TT2GaLQbUET8AsAa+AGFC7olWAVTksHFJKFk0jBbBNjaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P1tZ6HHP; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxItrClj"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-212a3067b11so51269875ad.3;
-        Tue, 26 Nov 2024 11:13:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1tZ6HHP"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7ee020ec76dso5222753a12.3;
+        Tue, 26 Nov 2024 12:47:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732648415; x=1733253215; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+DVAOLhrbGi8jum3karNef7IcoBGxiL98ArEHqKf4PM=;
-        b=KxItrCljDYSF15ZVeXlApSeij8tbaFsswj/A2fN3VwAKteEf6QwyZyHsS8V9z2STdr
-         W1EBIf/6UqgNRUfd6hnctTtLAH0HTg8LbXqvkPw2t8qt6JIeKsxekrRA8ZOXTgQ87qRt
-         R0yzoxA0d7qWptfHx64ml7Ca78JU4IGFt8Gr40Znequn2K8NcdaSG/cnB9DrsmBsaBfA
-         jL44Vm4yKAMqfqph1G6H1Me4WFk2fbxHB7QX20uz8/BwdB/J/ym0L296eiuBzEeh2QDm
-         gkO4ojdRRpYFuOlZ9zOUEOzVSndyw7wbeLkMh5bn+L8UcVfgNVXSpF62xiS7IL7q2Yol
-         TMfQ==
+        d=gmail.com; s=20230601; t=1732654064; x=1733258864; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BrfGITBt+MpPudeTvWz/BGOrTPxjx+M/EOPqV0lY91c=;
+        b=P1tZ6HHPc9pZS2/sbMYn0rQf6XNuaskRE1jCzy4sx9SEMcwkGeiInFAeV07GEQOLNr
+         FQyD3xABBH49QTxTzhJ5I7fWP5nxkHXAATyP6tXnS0jdBrb+0SRLPt6mDBrPA64YxRBn
+         6y0lbb6nDIoUGFQnnJNBfDixY4XTSFmq2bBpu2DpaSS+Z7M21Is+RHZmWovfPKkV3zpx
+         qrzxOi9cbcPEv/fvfUauloi6mI751CRB4IRe6ghthFxWiI587TPTBNTqV6JNYE1LukHP
+         5a+aTbKC1V8UZ7+b8GiorkZcp1ZFQOjKa0vaPqF4QFsjW0B/pWlooc8uvcLtK9DURgjD
+         Mtsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732648415; x=1733253215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+DVAOLhrbGi8jum3karNef7IcoBGxiL98ArEHqKf4PM=;
-        b=tPfWz1mEAYaGC9OM3nGKX005ZW58EoA5LWu88i5Ygny+eiGo1Njc8LuDBQxd6HkVyO
-         g4d09cVZrN3NmmlnvaIf6oWHewblPXJONJD7Z6xC29vR8aBb6/TiU26kr61uit3UJujM
-         1+OcX1S7QcizHHZqVVzJz2mMU68Rm8vJjzOE7xbFkQm+uyLRIVzdVDp9mI9+UNrWyV5Z
-         STHd5QMyMvmngTa+6ryynZj0cRLBIcF7p3ui4k5e3Ra7BWWsi5KqYHI/pcVIRCtU/tUJ
-         W4ky5EuIyNKnq0t934HMjg6MF0u/bRgRXRetvW/GoJMaBEJTwupvfWWIRT+ok9gNKTm+
-         ofqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhMz4aubBjHxKVOBAtfTtEYAr0O+rk3Rdyq7yY0gvBNH3A9ApQh88UQu+QJGQxcJYS+gc=@vger.kernel.org, AJvYcCW06lZOmOpO1Esg4ofS7luA7ud0vfedKqwI7JIIpMgd8e2Hc4uaIY0DHFmqNhQzf9u9BXB3Nq1pF8RioGGA@vger.kernel.org, AJvYcCWeZqEQI2IjA7bHNodZSHbPSNzX44Xd3pmY1fleBHPluyGrh/RUu3UrQ7/TUMb8EITJMPgiKCFVmFcM93/hkXEt7fgt@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyz+PQwQwkz5U95blknxsJTzuCrHuMpFe3cCqYsbbKlp/vgvDaq
-	BBPWUNWdVv4m5Z3sfuyuYPBu7IOvEF1PqCmvrtE/wrL3RBPb5UC2g1QFjZ77JP/36SQyJdtzTjE
-	Qf2YS0lPOqBUoFsIyxYgyGLKW21ThfA==
-X-Gm-Gg: ASbGncvalYZDNozb4XLUIzBnZxcgzQj+HB3fdJiDE2viVw/XhUkxwiH+4ATm261Mmpz
-	LjC52h2wzvEcPkNrEFD/nvoGL0XxKvpFq2UOB4FaG74C0Mkw=
-X-Google-Smtp-Source: AGHT+IHfu+fT5zfF3DAnsl3ePjUgszCAqr2LVqByX7g1cOz4bYKIk1DFvz9urAi7eP5+0pFn014qIVRK/I1V0X28dj8=
-X-Received: by 2002:a17:90b:4a11:b0:2ea:61de:3903 with SMTP id
- 98e67ed59e1d1-2ee097bf2cfmr451311a91.27.1732648415376; Tue, 26 Nov 2024
- 11:13:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732654064; x=1733258864;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BrfGITBt+MpPudeTvWz/BGOrTPxjx+M/EOPqV0lY91c=;
+        b=wOAu4gyxj2LYbZmpYjvG65UWoy2tftwcChtNoke18eHMzQBhFS/QgX2TDyrj5vf3Tc
+         P6o8BbYUlM15RZ9x6xmjpHXYFakXXUqOz8a6FgdllICo376t54RQ4k2xZgkti+eCs+IG
+         BQ54ZHDa26zJF8bi9N9vGJxIknLfy617KRGjjSsjBjwStDay+blz1gqZsMcOA8AbzjGb
+         sqE/GDJgKOpBtzLrCfV0+N31RS+BqPwcnKcB2r/IENbDsjmK3MbsgYQEmC5SznLbDEDQ
+         b/RhcWSKmxsIskyUS/mGjZ8jnSTbJKkfbXYjDXWz74n7cQw6CBu5981K/imLPCNHTS1Q
+         wseg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm1xK2nl9jd++1csBOEG+0e8SUOpek1Q29HmtVEvJK1GyQgpO23GoQQVAxOO/mHUGHZ9dh9U50OA0BklK4vH51F4MK@vger.kernel.org, AJvYcCVYCsngNxz8IFlaL/XWG663LH2eFP9cEAg8r8FBQI/35bN/8KjlR3x1VV2TINeB5MTaff4=@vger.kernel.org, AJvYcCWgt1dK2v2G9yhYzE268JOh8lo2W07D2OaNo7DPuSHR8T48oUUwZyDQ/EQGTmoUa2d/kbrRLGShA8A+nwBu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu2be70I3FEkI2kyRiGJ16awWImOSXUlJteNVH4LWIeN0/LqjH
+	phpUqqvl1pJqb4JfBNxTlOyHYOulL7/8OEZhAf8FYhTpcY1qE1ts
+X-Gm-Gg: ASbGncuei2z+SfyYUqDkVIeZWEWJci6MDLWHrwbqHlqEg8Zjl/d+Xs9rL0Qq3ezs5s7
+	qym7L1viU7ALebve1E6F1DBK0Ga//EFkzd1lIaIox/K/yR8u8M+8CNtGttydu71pPb6g/sBhxJu
+	/7fg5/AuYm2jf2ne84PAWvwQROWM3n+n3pb0dKeFzwp1z6PfPDAwGjGZ9Dv4O1QDr3nf/zn20+Q
+	anc4aJ0ixCHuLxi8kyIqLDwQBEK5FpEx0rAwmvLQk7Bm7RvA2k=
+X-Google-Smtp-Source: AGHT+IHZkU5tXESbsQSufn4K2TA1C1VRT8pQfJ+DevuvUAtbNf2cvrlWnN7YFd0lhrglkU4YceNZQg==
+X-Received: by 2002:a05:6a21:78b:b0:1e0:df27:10b9 with SMTP id adf61e73a8af0-1e0e0b004c3mr1123625637.18.1732654063605;
+        Tue, 26 Nov 2024 12:47:43 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:5155:e4b9:67db:7078])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-724de47e941sm8824806b3a.78.2024.11.26.12.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Nov 2024 12:47:43 -0800 (PST)
+Date: Tue, 26 Nov 2024 12:47:39 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Michael Jeanson <mjeanson@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jordan Rife <jrife@google.com>, linux-trace-kernel@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from
+ __DO_TRACE()
+Message-ID: <Z0Yz6xffDjL6m_KZ@google.com>
+References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
+ <20241123153031.2884933-5-mathieu.desnoyers@efficios.com>
+ <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
+ <d36281ef-bb8f-4b87-9867-8ac1752ebc1c@efficios.com>
+ <20241125142606.GG38837@noisy.programming.kicks-ass.net>
+ <c70b4864-737b-4604-a32e-38e0b087917d@intel.com>
+ <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
+ <20241126084556.GI38837@noisy.programming.kicks-ass.net>
+ <CAHk-=wg9yCQeGK+1MdSd3RydYApkPuVnoXa0TOGiaO388Nhg0g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241105133405.2703607-1-jolsa@kernel.org> <20241117114946.GD27667@noisy.programming.kicks-ass.net>
- <ZzsRfhGSYXVK0mst@J2N7QTR9R3> <CAEf4BzbXYrZLF+WGBvkSmKDCvVLuos-Ywx1xKqksdaYKySB-OQ@mail.gmail.com>
- <Zz95aiWM5cN6MDED@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <Zz95aiWM5cN6MDED@J2N7QTR9R3.cambridge.arm.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 26 Nov 2024 11:13:22 -0800
-Message-ID: <CAEf4BzZS_2w42Vxy6Cj89OXQqAOYdm+kbTX_VEjF-zL0HrZU9Q@mail.gmail.com>
-Subject: Re: [RFC 00/11] uprobes: Add support to optimize usdt probes on x86_64
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg9yCQeGK+1MdSd3RydYApkPuVnoXa0TOGiaO388Nhg0g@mail.gmail.com>
 
-On Thu, Nov 21, 2024 at 10:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com=
-> wrote:
->
-> On Mon, Nov 18, 2024 at 10:13:04PM -0800, Andrii Nakryiko wrote:
-> > On Mon, Nov 18, 2024 at 2:06=E2=80=AFAM Mark Rutland <mark.rutland@arm.=
-com> wrote:
-> > > Yep, on arm64 we definitely can't patch in branches reliably; using B=
-RK
-> > > (as we do today) is the only reliable option, and it *shouldn't* be
-> > > slower than a syscall.
-> > >
-> > > Looking around, we have a different latent issue with uprobes on arm6=
-4
-> > > in that only certain instructions can be modified while being
-> > > concurrently executed (in addition to the atomictiy of updating the
+On Tue, Nov 26, 2024 at 10:13:43AM -0800, Linus Torvalds wrote:
+> On Tue, 26 Nov 2024 at 00:46, Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > What does this mean for the application in practical terms? Will it
-> > crash? Or will there be some corruption? Just curious how this can
-> > manifest.
->
-> It can result in a variety of effects including crashes, corruption of
-> memory, registers, issuing random syscalls, etc.
->
-> The ARM ARM (ARM DDI 0487K.a [1]) says in section B2.2.5:
->
->   Concurrent modification and execution of instructions can lead to the
->   resulting instruction performing any behavior that can be achieved by
->   executing any sequence of instructions that can be executed from the
->   same Exception level [...]
->
-> Which is to say basically anything might happen, except that this can't
-> corrupt any state userspace cannot access, and cannot provide a
-> mechanism to escalate privilege to a higher exception level.
->
-> So that's potentially *very bad*, and we're just getting lucky that most
-> implementations don't happen to do that for most instructions, though
-> I'm fairly certain there are implementations out there which do exhibit
-> this behaviour (and it gets more likely as implementations get more
-> aggressive).
->
+> > Using that (old) form results in:
+> >
+> >     error: control reaches end of non-void function [-Werror=return-type]
+> 
+> Ahh. Annoying, but yeah.
+> 
+> > Except of course, now we get that dangling-else warning, there is no
+> > winning this :-/
+> 
+> Well, was there any actual problem with the "jump backwards" version?
+> Przemek implied some problem, but ..
 
-I see. I wonder if the fact that we do __replace_page() saves us here?
-Either way, if that's a problem, it would be good for someone familiar
-with ARM64 to try to address it. Ideally in a way that won't ruin the
-multi-uprobe attachment speeds (i.e., not doing stop-the-world for
-each of many uprobe locations to be attached, but rather do that once
-for all uprobes).
+No, it was based on my feedback with "jump backwards" looking confusing
+to me.  But if it gets rid of a warning then we should use it instead.
 
-> Mark.
->
-> [1] https://developer.arm.com/documentation/ddi0487/ka/?lang=3Den
+Thanks.
+
+-- 
+Dmitry
