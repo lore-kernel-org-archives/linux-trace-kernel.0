@@ -1,138 +1,123 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11492188591
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Nov 2024 17:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB31137E;
+	Tue, 26 Nov 2024 00:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732557124; cv=none; b=jutUE0kOap6qKAM9ecdD+Co4+1EOKyFAghuHJVEg+ZwO0h/mfCLBEwH9uvzpTMQfnm6JrCXTQl5F5ote8q4LMndTE5FeHCdN6pVY5WZJUKCjonTPo95Ro56P9n4iFEurQ6Tout/cQDhAGPtzfFOLWwJ/ANBHgn07Wo7+QqUmR3g=
+	t=1732579416; cv=none; b=cUczhQfH/TEqGvawAJNiqPKLavl3df1TQ17/mAOPEqYFn5APLf6bYqRtrQF3fhoexRkluZ9/JNfzDGnJSf/8shDmyMRfAciGcmyLZ2uW9h1guZRnm00n/MnULSg5HKgI4qTFpgCqRX+yfZ08doeFIzwQUuifA0/y+faHTK7QEnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732557124; c=relaxed/simple;
-	bh=iqPKUKL9ELh3ItkoROVJPLFbP84xRrkUj8+Scx+N17c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQGYwFWwL3CD3yEm2rf9YqHGUEgfizcoegLFWA+kCa54Ui/m4BQncmDkvdQj3QfjubaJXfJx0OKKwjk5f1lP7UQEy2t1HlWwvcj0s4fCOSW11n5BsjX5USeyn8bAfWL8I++isyt7f/U0zOMqoT+tsAsa5G1TlvGOsFM7/kaEXyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Lo37MXTH; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Lo37MXTH"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa549d9dffdso233456366b.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Nov 2024 09:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1732557120; x=1733161920; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xXLqvBkzwwQHV9WjuiXet8nTMU/3s9BgOxGDDiZ4odc=;
-        b=Lo37MXTHjOhsCyohUqIcZdBQzvrgMO6437c8Iwiit8DyWSVQThL/aMBuE+s2QxNA3n
-         yScV/Ash5CP8VOw0t3FNafYcTgWa2urJsxrmq+d0RFCLiHa/e69ojL78pUQm6x7y8Wfk
-         Af4VqgNOyHw53Nbh0nMO2kNrglV7334NwQwPU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732557120; x=1733161920;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xXLqvBkzwwQHV9WjuiXet8nTMU/3s9BgOxGDDiZ4odc=;
-        b=oatYxzv/k7DKSH7VrY1btrt5ii6MgLVQee/ka4/BdtmErpgKhp6b6A4mpgZuAuOs+O
-         Y513wE7D6W4u0+UoWB9lVxUjzqYyNVesHv/PAgmpqK0+WHXCUhskAubqQqPrUCDB6AKt
-         DmFxzlXuvVBILeKNqo76GAAGtjhjlR+Vt/ZsX1N6uRRnHWyx8SdtMaPut578kUq4siAP
-         xOLGEEEbxig/qj6hP62th56LQqyyEcfvOyOyD/rvKbx7PsWycp3yAVWLWzB9a/Rwrkry
-         Lt3UbnofrZnQLoMNqSh76Kt30Z5ZUCEskpHh7qavMniXJU+iQPCBLNWvSjXaXoMh0m2r
-         xxsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXe9pGc94DOZ8F+4GgF/WmNYub/G/hNso5GjrExsG5lsVJiVIn0A/d7VVVWqURISg9hkuxoTk5jEa3xuRWHkH4yHBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwucPO85S0xF+dT07GtpY8Vy+kTralpAhOCcIp9R6BSj61XOUhy
-	FmtECQGItaT3w3quoGWGZUXSBkjtOFhjnDQxarRHxrGcoK2fRkyvdJ3cw66j9mK3YTseFtlFG8e
-	rGxRJxg==
-X-Gm-Gg: ASbGncs9WvpADzZ9VYg7ktIvRQPHXlDGeeZ/x1OBr2qhDMCNhLE71eiKaSKjQQa7GoW
-	lwY+C+Q+S7QQ/H74BNYeYBpBmMc4D5Zq6mCBAn1l+HB5nTOOFelO50Xa4KQxqwSqMI1a84+yY4S
-	TXeLxX8v5PbpBBoPsth1v/GHdPJCnJw5pBEJdKUPYdqgommUw/6YshtlYzvuZ7Akkg9LDQu14bv
-	V1A13ev6ITZndT7A3rFi9fcGdEWhkWIJlZGjagKQh3H/aRVZjwYFT4OONiAhEdSXyooFBk0w1NQ
-	LsQUQUH15UhLs6BB2e7cKus4
-X-Google-Smtp-Source: AGHT+IGzvmQrd3wHX7Wpg1i+dO27tjFG341NKBB70GRMMNTW9ez9J+W89a/zWlltPhD1aGPb3UDEyQ==
-X-Received: by 2002:a17:906:31d4:b0:aa5:2a57:1779 with SMTP id a640c23a62f3a-aa52a57182cmr1053625166b.59.1732557120367;
-        Mon, 25 Nov 2024 09:52:00 -0800 (PST)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa50b29b38csm490766866b.34.2024.11.25.09.52.00
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Nov 2024 09:52:00 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5cffb4ff85eso6503197a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 25 Nov 2024 09:52:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUkEB+oPxunF6UWnqYiYZ1EPhM9qu1frwAok5psqXrS8YONA12+d8KIAb/n9+qa8DEjE+F0IjoHB94svLC5IfGEsOc=@vger.kernel.org
-X-Received: by 2002:a17:906:18a2:b0:aa5:3b5c:f640 with SMTP id
- a640c23a62f3a-aa53b5cffafmr703474466b.54.1732557119666; Mon, 25 Nov 2024
- 09:51:59 -0800 (PST)
+	s=arc-20240116; t=1732579416; c=relaxed/simple;
+	bh=BEiUsKmYO0eWOyQLroD2MlMy6oITnYJV3hPYYK2gNGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VdBIVzeYGvJj19rKIfKnb6GM1mzaPqgpu/bOCIXHdoijtViAuZIhQThAYobYWBnOcw8uGZHmEWAN+q40o5FwpS/SxCiQoIMKQcjh95aTg573Hb+uOgiwFHezn6nNn5mV/5VsS6+UXW5EwbKUxGeygQDUAkKLbFP+hafVPp7rn8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C309C4CECE;
+	Tue, 26 Nov 2024 00:03:34 +0000 (UTC)
+Date: Mon, 25 Nov 2024 19:04:22 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
+ <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/ftrace: fix boot time slowdown
+Message-ID: <20241125190422.7372fc2c@gandalf.local.home>
+In-Reply-To: <20241124140705.2883-1-rppt@kernel.org>
+References: <20241124140705.2883-1-rppt@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
- <20241123153031.2884933-5-mathieu.desnoyers@efficios.com> <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
- <d36281ef-bb8f-4b87-9867-8ac1752ebc1c@efficios.com> <20241125142606.GG38837@noisy.programming.kicks-ass.net>
- <c70b4864-737b-4604-a32e-38e0b087917d@intel.com>
-In-Reply-To: <c70b4864-737b-4604-a32e-38e0b087917d@intel.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 25 Nov 2024 09:51:43 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
-Message-ID: <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from __DO_TRACE()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Michael Jeanson <mjeanson@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
-	Joel Fernandes <joel@joelfernandes.org>, Jordan Rife <jrife@google.com>, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 25 Nov 2024 at 07:35, Przemek Kitszel
-<przemyslaw.kitszel@intel.com> wrote:
->
-> At one point I had a version that did:
->         if (0)
-> label: ;
->         else
->                 for (....)
+On Sun, 24 Nov 2024 16:07:05 +0200
+Mike Rapoport <rppt@kernel.org> wrote:
 
-Well, that is impressively ugly.
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Steven Rostedt reported slowdown by over 30ms caused by commit 9bfc4824fd48
+> ("x86/module: prepare module loading for ROX allocations of text")
+> 
+>   Before:
+> 
+>    # cat /sys/kernel/tracing/dyn_ftrace_total_info
+>   57695 pages:231 groups: 9
+>   ftrace boot update time = 14733459 (ns)
+>   ftrace module total update time = 449016 (ns)
+> 
+>   After:
+> 
+>    # cat /sys/kernel/tracing/dyn_ftrace_total_info
+>   57708 pages:231 groups: 9
+>   ftrace boot update time = 47195374 (ns)
+>   ftrace module total update time = 592080 (ns)
+> 
+> The slowdown happened because initial patching of kernel code for ftrace
+> was switched from text_poke_early() to text_poke() to accommodate ftrace
+> updates of module text allocated as ROX.
+> 
+> Restore the use of text_poke_early() for boot time patching of the kernel
+> code.
+> 
+> Reported-by: Steven Rostedt <rostedt@goodmis.org>
 
-> but it is goto-jumping back in the code
+Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-I'm not sure why you think *that* is a problem. It does look like it
-avoids the dangling else issue, which seems to be the more immediate
-problem.
+-- Steve
 
-(Of course, "immediate" is all very relative - the use-case that
-triggered this is going away anyway and being replaced by a regular
-'guard()').
+> Closes: https://lore.kernel.org/all/20241118132501.4eddb46c@gandalf.local.home
+> Fixes: 9bfc4824fd48 ("x86/module: prepare module loading for ROX allocations of text")
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/x86/kernel/ftrace.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 4dd0ad6c94d6..9e50288abbaa 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -111,7 +111,7 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
+>   */
+>  static int __ref
+>  ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+> -			  const char *new_code)
+> +			  const char *new_code, struct module *mod)
+>  {
+>  	int ret = ftrace_verify_code(ip, old_code);
+>  	if (ret)
+> @@ -120,6 +120,8 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
+>  	/* replace the text with the new text */
+>  	if (ftrace_poke_late) {
+>  		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
+> +	} else if (!mod) {
+> +		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
+>  	} else {
+>  		mutex_lock(&text_mutex);
+>  		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
+> @@ -145,7 +147,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
+>  	 * just modify the code directly.
+>  	 */
+>  	if (addr == MCOUNT_ADDR)
+> -		return ftrace_modify_code_direct(ip, old, new);
+> +		return ftrace_modify_code_direct(ip, old, new, mod);
+>  
+>  	/*
+>  	 * x86 overrides ftrace_replace_code -- this function will never be used
+> @@ -164,7 +166,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+>  	new = ftrace_call_replace(ip, addr);
+>  
+>  	/* Should only be called when module is loaded */
+> -	return ftrace_modify_code_direct(rec->ip, old, new);
+> +	return ftrace_modify_code_direct(rec->ip, old, new, NULL);
+>  }
+>  
+>  /*
+> 
+> base-commit: 9f16d5e6f220661f73b36a4be1b21575651d8833
 
-That said, I have a "lovely" suggestion. Instead of the "if(0)+goto"
-games, I think you can just do this:
-
-  #define scoped_guard(_name, args...)                                   \
-         for (CLASS(_name, scope)(args), *_once = (void *)1; _once &&    \
-              (__guard_ptr(_name)(&scope) || !__is_cond_ptr(_name));     \
-              _once = NULL)
-
-which avoids the whole UNIQUE_NAME on the label too.
-
-Yeah, yeah, if somebody has nested uses of scoped_guard(), they will
-have shadowing of the "_once" variable and extrawarn enables -Wshadow.
-
-But dammit, that isn't actually an error, and I think -Wshadow is bad
-for these situations. Nested temporary variables in macros shouldn't
-warn. Oh well.
-
-Is there a way to shut up -Wshadow on a per-variable basis? My
-google-fu is too weak.
-
-Did I test the above macro? Don't be silly. All my code works on first
-try. Except when it doesn't.
-
-          Linus
