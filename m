@@ -1,103 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B51DFDE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 13:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAC61E51D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 14:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732715449; cv=none; b=ZXS0QPTUA6KTNsEVQV9TfuvXAV+VE1PWnbJ6W9ZyQvV4MzfNtpzndyeKLgGU8osdG7xlEbVSpfI4uKpdOvpX1nUpja4YCWq0EWReutDkEhMRA1ljYqBU2IkCAnTZPPmyFakQuT0GH6AQO1S2AG4XKzpMR1pw26NZKvtt9koErig=
+	t=1732716614; cv=none; b=tmlueDhg5oV7yz45tLGZP90OEtbrrWzx+9AUIheQgT6EY/GSAJd3JaoWOFhuBtB/85L57y4wQGBMhJTNsCOt4Y/byJy7nfQDZHtfndt0zX/bm/Md/vpgWqKS76gyzEpC9PA+DzeFocREtSY44m3cyUvzPKZZ8ekRHl118QgZaA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732715449; c=relaxed/simple;
-	bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9iFe+nK65OmNqSCdeLNKsj7iDZRN2P1nRKEoN8+v5GjcGFaRZOB8fdgi18BdQWlNjCKO1uysqGwQ5lGL9jodrfn2oC8PKlNKcxnHMrx5MKR4afpa3TU8xBZxuHTkBzX31FiQ5tJwu2s/A1ilhbm0K0XZdVwFt0CZCyRfpvR3m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HOh4NQxS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732716614; c=relaxed/simple;
+	bh=kFR9PUIfM5ND9o1WW+w41Hok+j3QIJY6jvBaATu8WzY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=rI8UdlFeECxH6dwzKPV9ZkBIpFWaLl7pu9M0WeaVxWyNLsSsZtaFfa7FVrLxbU+ieBh+wGbIGZb8d1W8Q5flfjuwGxClz7A4m7bgcd0nE47jSjFG7/NT/akQ3qxe86RQh5v43WUh2WQYWj6DlBCRPG0PajDVivdhrR+TQBp3gs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obfBiBlc; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HOh4NQxS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732715446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
-	b=HOh4NQxSZ2oEquxoJkhOw9gA8hGtmXQztCQszPuCaDM93x/z0zn5Z/Eod/fWQVlnsqXWT9
-	dCSqPsD9/zzmbd+LR87PoHzKk6w9yQjyTkCegkEhFrFiwrSyXeeHJAJo82PkW74dPya4Vp
-	4LjK24vPBdQpXSRzTOrnxaX+NdZJc0c=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-46-WxgFVh1BPxetStxb7N2Fhg-1; Wed, 27 Nov 2024 08:50:45 -0500
-X-MC-Unique: WxgFVh1BPxetStxb7N2Fhg-1
-X-Mimecast-MFC-AGG-ID: WxgFVh1BPxetStxb7N2Fhg
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa5438c6b13so233068066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 05:50:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obfBiBlc"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5cfd15ff42cso907455a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 06:10:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1732716611; x=1733321411; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3jMhxXVf1QUdWvEy2vp558o5guO3soGdUIj9ntlxOTI=;
+        b=obfBiBlcaPrODzdJqxRzRNZUGivowy1jFQM/HquQr9ROS98NN9ZAnEbizq7HuVnaiO
+         iklIk726bsWEzv/DSKHN9gylbPz/saWcEkFPRy+J/YGGw7Nmq15QBMamYSFJLbL/ucUM
+         +n5RBwwzLJcJdhKIk30BC8Ul7HanQQcnNpEuTPp0mEXoAE53LAJWfwbaOQWHQTTSP2SR
+         HXTrgAMOvA68Lxxs4TWFV6UK3grUhwY9eEWrV5yl/UvYIS9hILIWT61s+zSKqfcDG3sl
+         vTMHIvhATQdGtcMSngR+0RXj9VjpzeY2f0yu5dVd9NHr92437SP7lt1QwXyJg2iv8SqF
+         T8PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732715444; x=1733320244;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
-        b=Lyt6RaNBHPGjprMIcHC6k5/53EFQI4tK+hXOq7cCea6GrMYjOddKXEDqTqgVXfUs/8
-         7z5lpc+0O/Ylb7Nm2JtzgBPsao/wv5z9wgP8h4Ug1YP9MOA+8svKAnTZApbkt27DUVVj
-         nAKxdQ6Pgj+QEm48T9u3qKczlFJT/pQNhSBxRVoUsMoeJQ8jSi5CkEmeehIsYhVLVMix
-         zbkf9CXOinAaTLRIK7yvxAUzHj397ubYMCx7CA31MlKJqvzKLs3+QHuryARs9/JAZqbf
-         ztxxr4WoeQ2b75yBySQ3l+kl0QV98JoXrF5vSWbTZMUO4sDpVT2lGKcq6mAZX/H8d3A8
-         ++sw==
-X-Gm-Message-State: AOJu0YwfEo+40j8s1RRX9o8tjq5cnikHdi5WeSWqf+X7lmKq/ZSTL/IJ
-	XZUQ07XYiypOs8P70od7uXzxHZN5XeLkcZKT8XbiyaKM81a8jpJ2AjYHKIVGroRqHwpUg7Ivh6p
-	Eniy2p/7SfKUiTNGqgSarqgKxDoSqgOJf3aF/em5Zk934NGo8rKzSs3T+r19ea/Uwu8Dg1Zi1Qg
-	61pgU8gxyqTcfVrZw+nf/B7jvj7uteHJdPL72AMoZ/ZGC4
-X-Gm-Gg: ASbGnctBMuVff9GMTD3vzLChXr7tJN3VTkFpTfPgrTJGzlCRsiI3B8aBCJsysa+G2QQ
-	ArNnt2s3tTc1S2aTaumwi1Dvl7yWFQyA90WrwQ5XzZYsxyJBUf2B+iapb9qE8SSM=
-X-Received: by 2002:a17:907:77c8:b0:aa5:2858:addc with SMTP id a640c23a62f3a-aa580f25c5cmr214945466b.18.1732715444295;
-        Wed, 27 Nov 2024 05:50:44 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFjazrSJpXT3WQtUAce0m6TM358Mro/Sud5IZtPknd3QLTCf4Ede75aPwnsEYPw7KrosjIDGoPFoPt2ry9Xwrs=
-X-Received: by 2002:a17:907:77c8:b0:aa5:2858:addc with SMTP id
- a640c23a62f3a-aa580f25c5cmr214944366b.18.1732715443979; Wed, 27 Nov 2024
- 05:50:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732716611; x=1733321411;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3jMhxXVf1QUdWvEy2vp558o5guO3soGdUIj9ntlxOTI=;
+        b=YzkwmucwNueM/SWdgRDj8j9kL6gDvtzNd5Pp4Nzi/M+6TMD5y503LgxDbrTgDEAcKd
+         dynAT8ArN/65EnlvJxkXxunlGMYlI4p4Q2lUutfp6AGoKd77wmeClWTf9pRTxz+KC34v
+         TPosL/gmNAK2bs8FURCjsmakZvS9kvz0PLKDeT91fXPh+Hw3crQAB64i7/rHQnd+I3x5
+         fKI/NuRSyqEE8MKL0dDuWID40GCM5hevQnZRRZlUS4wyReOPiwfZmQ1creX2HXuJihOH
+         pmt43NTuOrDbVZwYyjK0RUN0GcnMTS6rsm0DaYRvJxzTDhDg0hbzGTxaoQXK5HM5sSXY
+         66GA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPFGsweNAar14kLC9iwtzR1XwwFqBkqzO0MzrSM5qeP502IqzEK2N5HRDXHK47Ea2xJ7uK3s1uqips5MPrQkEVXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7CTJT6JweMjc1pazp/zhImufkUOgFzwp1n5Hv2PbmT4ItuEzx
+	6sVbvATJ7pd1eNImQl5rQlChSypnphY5ekzYasi/NCE7mHrMrVUc+rQnEpyrs/OtS2f3R/Eejw=
+	=
+X-Google-Smtp-Source: AGHT+IFwlhr766qLc1hn4ldFnhIVaefGNadp5e+TUp8EreJ0cfnmr57nrisQx2lW5b/EFk+oKdUqLhIavA==
+X-Received: from edb5.prod.google.com ([2002:a05:6402:2385:b0:5cf:e3b0:4e89])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:5309:b0:5d0:ada:e44b
+ with SMTP id 4fb4d7f45d1cf-5d080c6dcc1mr3352422a12.16.1732716611041; Wed, 27
+ Nov 2024 06:10:11 -0800 (PST)
+Date: Wed, 27 Nov 2024 15:09:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241127134130.51171-1-tglozar@redhat.com>
-In-Reply-To: <20241127134130.51171-1-tglozar@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 27 Nov 2024 14:50:33 +0100
-Message-ID: <CAP4=nvS0RuUH+RLWHBEQuFh=2-s43vxUw632-i_Lxd6h4+Gd7Q@mail.gmail.com>
-Subject: Re: [PATCH v2] rtla/timerlat: Fix histogram ALL for zero samples
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	jkacur@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3NONpyi9sV_K6dMfWEcpbs2CpEC8rjwfcJqhRG1tr6U_1732715444
-X-Mimecast-Originator: redhat.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Message-ID: <20241127140958.1828012-1-elver@google.com>
+Subject: [PATCH bpf-next v3 1/2] bpf: Remove bpf_probe_write_user() warning message
+From: Marco Elver <elver@google.com>
+To: elver@google.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Nikola Grcevski <nikola.grcevski@grafana.com>, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-st 27. 11. 2024 v 14:42 odes=C3=ADlatel <tglozar@redhat.com> napsal:
->
-> Fix the bug by omitting max/min/avg when sample count is zero,
-> displaying a dash instead, just like we already do for the individual
-> CPUs. The logic is moved into a new function called
-> format_summary_value, which is used for both the individual CPUs
-> and for the overall summary.
->
+The warning message for bpf_probe_write_user() was introduced in
+96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
+tracers"), with the following in the commit message:
 
-Note that the code is still repeated 18 times =3D 3 latencies (user,
-thread, irq) times 3 summaries (max, min, avg) * 2 kinds (per-cpu,
-overall). Due to the way the storing of the values and the printing is
-implemented, it is not straightforward to reduce this code duplicity.
-There are 9 different fields: (max, min, avg) * (user, thread, irq) -
-of timerlat_hist_cpu, and min/max/avg are grouped together per-CPU.
+    Given this feature is meant for experiments, and it has a risk of
+    crashing the system, and running programs, we print a warning on
+    when a proglet that attempts to use this helper is installed,
+    along with the pid and process name.
 
-I will send another patch to remove the duplicity if I get an idea how
-to deal with it. The duplicity was there also before and is thus not
-in the scope of this fix.
+After 8 years since 96ae52279594, bpf_probe_write_user() has found
+successful applications beyond experiments [1, 2], with no other good
+alternatives. Despite its intended purpose for "experiments", that
+doesn't stop Hyrum's law, and there are likely many more users depending
+on this helper: "[..] it does not matter what you promise [..] all
+observable behaviors of your system will be depended on by somebody."
 
-Tomas
+The ominous "helper that may corrupt user memory!" has offered no real
+benefit, and has been found to lead to confusion where the system
+administrator is loading programs with valid use cases.
+
+As such, remove the warning message.
+
+Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@google.com/ [1]
+Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2VaekdL4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
+Link: https://lore.kernel.org/all/CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com/
+Signed-off-by: Marco Elver <elver@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+---
+v3:
+* Collect Ack from Jiri.
+
+v2:
+* Just delete the message entirely (suggested by Andrii Nakryiko)
+---
+ kernel/trace/bpf_trace.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 630b763e5240..0ab56af2e298 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -362,9 +362,6 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return NULL;
+ 
+-	pr_warn_ratelimited("%s[%d] is installing a program with bpf_probe_write_user helper that may corrupt user memory!",
+-			    current->comm, task_pid_nr(current));
+-
+ 	return &bpf_probe_write_user_proto;
+ }
+ 
+-- 
+2.47.0.338.g60cca15819-goog
 
