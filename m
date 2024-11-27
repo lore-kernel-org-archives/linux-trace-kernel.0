@@ -1,349 +1,103 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC699463
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 13:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B51DFDE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 13:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732714968; cv=none; b=aIC5mmr6Enwk4fqF17jWIFT1FmYdmdxcf5vBJfpz8X4P4pCaxI3eGkow8vRXEjyc+dXkFji2w0aXR62MhL5ppBw5K83iDr0R3eDMwlNfHz+Yt3MJtEzLErXIWnA/2FssDXvC3c6TsDlXeErs96K2DdFtqZ9BgKEk4HBR83uG4CU=
+	t=1732715449; cv=none; b=ZXS0QPTUA6KTNsEVQV9TfuvXAV+VE1PWnbJ6W9ZyQvV4MzfNtpzndyeKLgGU8osdG7xlEbVSpfI4uKpdOvpX1nUpja4YCWq0EWReutDkEhMRA1ljYqBU2IkCAnTZPPmyFakQuT0GH6AQO1S2AG4XKzpMR1pw26NZKvtt9koErig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732714968; c=relaxed/simple;
-	bh=RTCrqjRzuZyB+6SaGVRbNBwxLFJ80VrTdPYE5BQetHE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jnGIDmpPZQp2Trs2K650fyZItFILThLfkYfAhgoca8fpdmd51kE9TkM0ZcVC60RA68tsC7q3XoPAuJ/8WmI9+AB2zf5KM5Ujt89WZzEZkVq4Emwk8yEFQcEdjk4NPqP1FSiA+6ULGgNMHeYVXXAtOcw0/UFzH85jIMlPvAloG8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Uxe7EUZr; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1732715449; c=relaxed/simple;
+	bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R9iFe+nK65OmNqSCdeLNKsj7iDZRN2P1nRKEoN8+v5GjcGFaRZOB8fdgi18BdQWlNjCKO1uysqGwQ5lGL9jodrfn2oC8PKlNKcxnHMrx5MKR4afpa3TU8xBZxuHTkBzX31FiQ5tJwu2s/A1ilhbm0K0XZdVwFt0CZCyRfpvR3m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HOh4NQxS; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uxe7EUZr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HOh4NQxS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732714963;
+	s=mimecast20190719; t=1732715446;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DrqEyN1VIkRW+8Dy1kjHg1io3m7CiBN0LwYlK4a0uE4=;
-	b=Uxe7EUZrQWlu8th2gL7faCOJtkBaM3xVpZXhwf3O1Hyw+WD6PU/KGe4Ya4SDwYiYoAEGtp
-	54dzEwltW9HZKEoooXTalUvYb6K7vdFb/HbHarxOyRt/60di5HikqChv4X3ftegOvpmBVh
-	3EIFUWZ37GyYvyd20BsfUqm58iE3yNw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-422--71aCkMMNDq79fYvTqV5PQ-1; Wed,
- 27 Nov 2024 08:42:42 -0500
-X-MC-Unique: -71aCkMMNDq79fYvTqV5PQ-1
-X-Mimecast-MFC-AGG-ID: -71aCkMMNDq79fYvTqV5PQ
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A5D01955F77;
-	Wed, 27 Nov 2024 13:42:41 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.132])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E0A2A1956054;
-	Wed, 27 Nov 2024 13:42:38 +0000 (UTC)
-From: tglozar@redhat.com
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jkacur@redhat.com,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v2] rtla/timerlat: Fix histogram ALL for zero samples
-Date: Wed, 27 Nov 2024 14:41:30 +0100
-Message-ID: <20241127134130.51171-1-tglozar@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
+	b=HOh4NQxSZ2oEquxoJkhOw9gA8hGtmXQztCQszPuCaDM93x/z0zn5Z/Eod/fWQVlnsqXWT9
+	dCSqPsD9/zzmbd+LR87PoHzKk6w9yQjyTkCegkEhFrFiwrSyXeeHJAJo82PkW74dPya4Vp
+	4LjK24vPBdQpXSRzTOrnxaX+NdZJc0c=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-46-WxgFVh1BPxetStxb7N2Fhg-1; Wed, 27 Nov 2024 08:50:45 -0500
+X-MC-Unique: WxgFVh1BPxetStxb7N2Fhg-1
+X-Mimecast-MFC-AGG-ID: WxgFVh1BPxetStxb7N2Fhg
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa5438c6b13so233068066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 05:50:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732715444; x=1733320244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VmLOvKtpz8Fi6Pwt/icSJ05BvKLbLbH9FVoytCdF9F0=;
+        b=Lyt6RaNBHPGjprMIcHC6k5/53EFQI4tK+hXOq7cCea6GrMYjOddKXEDqTqgVXfUs/8
+         7z5lpc+0O/Ylb7Nm2JtzgBPsao/wv5z9wgP8h4Ug1YP9MOA+8svKAnTZApbkt27DUVVj
+         nAKxdQ6Pgj+QEm48T9u3qKczlFJT/pQNhSBxRVoUsMoeJQ8jSi5CkEmeehIsYhVLVMix
+         zbkf9CXOinAaTLRIK7yvxAUzHj397ubYMCx7CA31MlKJqvzKLs3+QHuryARs9/JAZqbf
+         ztxxr4WoeQ2b75yBySQ3l+kl0QV98JoXrF5vSWbTZMUO4sDpVT2lGKcq6mAZX/H8d3A8
+         ++sw==
+X-Gm-Message-State: AOJu0YwfEo+40j8s1RRX9o8tjq5cnikHdi5WeSWqf+X7lmKq/ZSTL/IJ
+	XZUQ07XYiypOs8P70od7uXzxHZN5XeLkcZKT8XbiyaKM81a8jpJ2AjYHKIVGroRqHwpUg7Ivh6p
+	Eniy2p/7SfKUiTNGqgSarqgKxDoSqgOJf3aF/em5Zk934NGo8rKzSs3T+r19ea/Uwu8Dg1Zi1Qg
+	61pgU8gxyqTcfVrZw+nf/B7jvj7uteHJdPL72AMoZ/ZGC4
+X-Gm-Gg: ASbGnctBMuVff9GMTD3vzLChXr7tJN3VTkFpTfPgrTJGzlCRsiI3B8aBCJsysa+G2QQ
+	ArNnt2s3tTc1S2aTaumwi1Dvl7yWFQyA90WrwQ5XzZYsxyJBUf2B+iapb9qE8SSM=
+X-Received: by 2002:a17:907:77c8:b0:aa5:2858:addc with SMTP id a640c23a62f3a-aa580f25c5cmr214945466b.18.1732715444295;
+        Wed, 27 Nov 2024 05:50:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFjazrSJpXT3WQtUAce0m6TM358Mro/Sud5IZtPknd3QLTCf4Ede75aPwnsEYPw7KrosjIDGoPFoPt2ry9Xwrs=
+X-Received: by 2002:a17:907:77c8:b0:aa5:2858:addc with SMTP id
+ a640c23a62f3a-aa580f25c5cmr214944366b.18.1732715443979; Wed, 27 Nov 2024
+ 05:50:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-
+References: <20241127134130.51171-1-tglozar@redhat.com>
+In-Reply-To: <20241127134130.51171-1-tglozar@redhat.com>
 From: Tomas Glozar <tglozar@redhat.com>
+Date: Wed, 27 Nov 2024 14:50:33 +0100
+Message-ID: <CAP4=nvS0RuUH+RLWHBEQuFh=2-s43vxUw632-i_Lxd6h4+Gd7Q@mail.gmail.com>
+Subject: Re: [PATCH v2] rtla/timerlat: Fix histogram ALL for zero samples
+To: rostedt@goodmis.org
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jkacur@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3NONpyi9sV_K6dMfWEcpbs2CpEC8rjwfcJqhRG1tr6U_1732715444
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-rtla timerlat hist currently computers the minimum, maximum and average
-latency even in cases when there are zero samples. This leads to
-nonsensical values being calculated for maximum and minimum, and to
-divide by zero for average.
+st 27. 11. 2024 v 14:42 odes=C3=ADlatel <tglozar@redhat.com> napsal:
+>
+> Fix the bug by omitting max/min/avg when sample count is zero,
+> displaying a dash instead, just like we already do for the individual
+> CPUs. The logic is moved into a new function called
+> format_summary_value, which is used for both the individual CPUs
+> and for the overall summary.
+>
 
-A similar bug is fixed by 01b05fc0e5f3 ("rtla/timerlat: Fix histogram
-report when a cpu count is 0") but the bug still remains for printing
-the sum over all CPUs in timerlat_print_stats_all.
+Note that the code is still repeated 18 times =3D 3 latencies (user,
+thread, irq) times 3 summaries (max, min, avg) * 2 kinds (per-cpu,
+overall). Due to the way the storing of the values and the printing is
+implemented, it is not straightforward to reduce this code duplicity.
+There are 9 different fields: (max, min, avg) * (user, thread, irq) -
+of timerlat_hist_cpu, and min/max/avg are grouped together per-CPU.
 
-The issue can be reproduced with this command:
+I will send another patch to remove the duplicity if I get an idea how
+to deal with it. The duplicity was there also before and is thus not
+in the scope of this fix.
 
-$ rtla timerlat hist -U -d 1s
-Index
-over:
-count:
-min:
-avg:
-max:
-Floating point exception (core dumped)
-
-(There are always no samples with -U unless the user workload is
-created.)
-
-Fix the bug by omitting max/min/avg when sample count is zero,
-displaying a dash instead, just like we already do for the individual
-CPUs. The logic is moved into a new function called
-format_summary_value, which is used for both the individual CPUs
-and for the overall summary.
-
-Cc: stable@vger.kernel.org
-Fixes: 1462501c7a8 ("rtla/timerlat: Add a summary for hist mode")
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/timerlat_hist.c | 177 ++++++++++++++-----------
- 1 file changed, 96 insertions(+), 81 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 8b66387e5f35..4403cc4eba30 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -281,6 +281,21 @@ static void timerlat_hist_header(struct osnoise_tool *tool)
- 	trace_seq_reset(s);
- }
- 
-+/*
-+ * format_summary_value - format a line of summary value (min, max or avg)
-+ * of hist data
-+ */
-+static void format_summary_value(struct trace_seq *seq,
-+				 int count,
-+				 unsigned long long val,
-+				 bool avg)
-+{
-+	if (count)
-+		trace_seq_printf(seq, "%9llu ", avg ? val / count : val);
-+	else
-+		trace_seq_printf(seq, "%9c ", '-');
-+}
-+
- /*
-  * timerlat_print_summary - print the summary of the hist data to the output
-  */
-@@ -328,29 +343,23 @@ timerlat_print_summary(struct timerlat_hist_params *params,
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
- 
--		if (!params->no_irq) {
--			if (data->hist[cpu].irq_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						data->hist[cpu].min_irq);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_irq)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].irq_count,
-+					     data->hist[cpu].min_irq,
-+					     false);
- 
--		if (!params->no_thread) {
--			if (data->hist[cpu].thread_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						data->hist[cpu].min_thread);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_thread)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].thread_count,
-+					     data->hist[cpu].min_thread,
-+					     false);
- 
--		if (params->user_hist) {
--			if (data->hist[cpu].user_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						data->hist[cpu].min_user);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (params->user_hist)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].user_count,
-+					     data->hist[cpu].min_user,
-+					     false);
- 	}
- 	trace_seq_printf(trace->seq, "\n");
- 
-@@ -364,29 +373,23 @@ timerlat_print_summary(struct timerlat_hist_params *params,
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
- 
--		if (!params->no_irq) {
--			if (data->hist[cpu].irq_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						 data->hist[cpu].sum_irq / data->hist[cpu].irq_count);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_irq)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].irq_count,
-+					     data->hist[cpu].sum_irq,
-+					     true);
- 
--		if (!params->no_thread) {
--			if (data->hist[cpu].thread_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						 data->hist[cpu].sum_thread / data->hist[cpu].thread_count);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_thread)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].thread_count,
-+					     data->hist[cpu].sum_thread,
-+					     true);
- 
--		if (params->user_hist) {
--			if (data->hist[cpu].user_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						 data->hist[cpu].sum_user / data->hist[cpu].user_count);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (params->user_hist)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].user_count,
-+					     data->hist[cpu].sum_user,
-+					     true);
- 	}
- 	trace_seq_printf(trace->seq, "\n");
- 
-@@ -400,29 +403,23 @@ timerlat_print_summary(struct timerlat_hist_params *params,
- 		if (!data->hist[cpu].irq_count && !data->hist[cpu].thread_count)
- 			continue;
- 
--		if (!params->no_irq) {
--			if (data->hist[cpu].irq_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						 data->hist[cpu].max_irq);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_irq)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].irq_count,
-+					     data->hist[cpu].max_irq,
-+					     false);
- 
--		if (!params->no_thread) {
--			if (data->hist[cpu].thread_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						data->hist[cpu].max_thread);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (!params->no_thread)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].thread_count,
-+					     data->hist[cpu].max_thread,
-+					     false);
- 
--		if (params->user_hist) {
--			if (data->hist[cpu].user_count)
--				trace_seq_printf(trace->seq, "%9llu ",
--						data->hist[cpu].max_user);
--			else
--				trace_seq_printf(trace->seq, "        - ");
--		}
-+		if (params->user_hist)
-+			format_summary_value(trace->seq,
-+					     data->hist[cpu].user_count,
-+					     data->hist[cpu].max_user,
-+					     false);
- 	}
- 	trace_seq_printf(trace->seq, "\n");
- 	trace_seq_do_printf(trace->seq);
-@@ -506,16 +503,22 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
- 		trace_seq_printf(trace->seq, "min:  ");
- 
- 	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_irq);
-+		format_summary_value(trace->seq,
-+				     sum.irq_count,
-+				     sum.min_irq,
-+				     false);
- 
- 	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_thread);
-+		format_summary_value(trace->seq,
-+				     sum.thread_count,
-+				     sum.min_thread,
-+				     false);
- 
- 	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.min_user);
-+		format_summary_value(trace->seq,
-+				     sum.user_count,
-+				     sum.min_user,
-+				     false);
- 
- 	trace_seq_printf(trace->seq, "\n");
- 
-@@ -523,16 +526,22 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
- 		trace_seq_printf(trace->seq, "avg:  ");
- 
- 	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_irq / sum.irq_count);
-+		format_summary_value(trace->seq,
-+				     sum.irq_count,
-+				     sum.sum_irq,
-+				     true);
- 
- 	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_thread / sum.thread_count);
-+		format_summary_value(trace->seq,
-+				     sum.thread_count,
-+				     sum.sum_thread,
-+				     true);
- 
- 	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.sum_user / sum.user_count);
-+		format_summary_value(trace->seq,
-+				     sum.user_count,
-+				     sum.sum_user,
-+				     true);
- 
- 	trace_seq_printf(trace->seq, "\n");
- 
-@@ -540,16 +549,22 @@ timerlat_print_stats_all(struct timerlat_hist_params *params,
- 		trace_seq_printf(trace->seq, "max:  ");
- 
- 	if (!params->no_irq)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_irq);
-+		format_summary_value(trace->seq,
-+				     sum.irq_count,
-+				     sum.max_irq,
-+				     false);
- 
- 	if (!params->no_thread)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_thread);
-+		format_summary_value(trace->seq,
-+				     sum.thread_count,
-+				     sum.max_thread,
-+				     false);
- 
- 	if (params->user_hist)
--		trace_seq_printf(trace->seq, "%9llu ",
--				 sum.max_user);
-+		format_summary_value(trace->seq,
-+				     sum.user_count,
-+				     sum.max_user,
-+				     false);
- 
- 	trace_seq_printf(trace->seq, "\n");
- 	trace_seq_do_printf(trace->seq);
--- 
-2.47.0
+Tomas
 
