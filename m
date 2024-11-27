@@ -1,154 +1,192 @@
-Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BC71FCFF5
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 14:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1C020103A;
+	Wed, 27 Nov 2024 17:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732716617; cv=none; b=AsRhhFJwlOi2UIUOlZtKXf0hIPjhcMY+6nY6OUmDOtUQqYCj5LjcrVDqVcFpcoKaLraJUfhpDgLxRuCDozYmhjDfXmRN/4bfhNhKLz9Icrrl09HXtTL/NgW/s0gYWUlA2yyk34LpcsStP6aZKJ43rA/SQb/5GJfbZ0VDnjlOmj0=
+	t=1732728596; cv=none; b=iKmP2FoX2avIqOWUE2+OXdUyUq0JXh/bAozFbN69rAWkzVM79hIgj5uF7uqqyjILWfib7ggNJtXyLKCiAcQww5d+5O6mbaVR2+JLfc6FfC0oobgzH0kYpQaIEqGgcMY3P7yGiNLiUWDOdLjB+gzb04QVjCNQuAE3ywPXYIl4YgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732716617; c=relaxed/simple;
-	bh=sGujSkfOje6q3rhHE4tIYkiqfs33OKNxgBeAjusNinA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LVo/MA9J/Df071AXhmuVQXxkeF89tUtk5vM6vOqkRp0iyy0AW/sGj3F8OOA2FFauMiJ61zFAEDcYndLxRj66KCQ7YkYV1FiT9IMGMo2XhtEQKZNEQW6fAZJ8Ck+OIUeGPPz8vsSjzBBcOSuEAwppBkGaw8iBGkH1/ZvbBtIqatw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVgvVJYB; arc=none smtp.client-ip=209.85.167.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1732728596; c=relaxed/simple;
+	bh=bpMqPVQ3HsfWe+bk5gds1iHBJEE9VMgZp3CPDFR8+go=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KjlYuXVtdnzT8neAczl5XtWXXemLXrtgbXmvDmuE+bqVLdm7WW9sBMaUrXNQt30Zr/Xu9oPy5tsvMeGjr0zh0L6aqp8hvs7bK/G7ahcF+4o7L9nrL3p0lO5XGiMTI7dIjn9Xz9DhK3JqEQhNiHiuXxZGOYtJyKBj8SmHaPP2AB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnHNZHz2; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVgvVJYB"
-Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-53de49ccfaeso2417236e87.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 06:10:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnHNZHz2"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7251331e756so16749b3a.3;
+        Wed, 27 Nov 2024 09:29:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732716613; x=1733321413; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HKz8SHPsTiWdyPzN3tC8YsJEJ+U8IfvZzPBvdLUPXY=;
-        b=dVgvVJYBbOx51B6a4HyhfdUr2qtY5X6V3UeSxbQVc4ay9cUplxdeefruqBV3aLSdzj
-         z8H5eowlyhNwPzYr2IgoLNtMd3+vb8/qjHPwJaRZRaYCaeG5Ksi9MNamY2Ng7HVMt/h2
-         i7xi09YskBXaesyZFvbWx30h4+8WPmrySue1G235wGop43oXNiQmf1zklLtq1kEhriEy
-         V40OIFbqhminsf7IKB8clkbQskseupY0ZQhxhItmzAbzoLaaHAz8SJ1h5lvi9pfE6qQv
-         Au0znA8+6oaGMKKwZw5+sFVFgk2JVEmKhVeNP9MlTmoAVatgWk774IHrlKYiTJgpKXJe
-         +42g==
+        d=gmail.com; s=20230601; t=1732728594; x=1733333394; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VhqF3E4/w+YtOL58NNfG2rcUNmjyen3grJ9NA1x6juQ=;
+        b=dnHNZHz2Ak6h4F+UgCuK1b26TtEdgxyo92ke2v/2SFjvcdhkW1Lu3GXJxygApSMVKW
+         OQnrF1nn/CFe+zLrDy8vsqA0RIgHxvCEosAsG+B8UUVP3KxFnze37KBlCP1vhqaHjB/B
+         prSjGdp3ghZ9nj9VUzoYckFoua0HKInV849NCxh22ntFUSRiauAiva+arAuRJMfMgrme
+         /sKZD2CsX+EPDSI+setBN8wTR6t+nrXaHSJRFtZbqypJaMgq8IFeOtXJWtXgb8SkfVu/
+         i8m1rwnuUy8hk04DdgkUW88BwaIejhA1XrLCxUuSlsJh8syyorltRf3MuZEN0TA5OabW
+         C83A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732716613; x=1733321413;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HKz8SHPsTiWdyPzN3tC8YsJEJ+U8IfvZzPBvdLUPXY=;
-        b=sRHxD9D4Siprey4TnJO6iC4XGbZRj3P9hEExnHZzuan+6b/Q253y88bm7iX2nPkWEg
-         xaHkmkbz3V1hhciPYFbLNLU/oJk7ebPdbpAAt0ExgsHXHLOA1tNuBhk3jnqiy5M8Rh6D
-         jILtnnFpjVVLNEcBMqOugRC1ys2N/arRZOA80zSAuE/A8qj2n/UHJDKGmz8Pg/+iimH2
-         +fObx0bq3YP0BO+ZAZ3bguOFs7EofYNqJ1J6WefPEC1C0X7v+i8CUPZqcqL7/9hyqsdW
-         6obGr2WubN2W9yvJ5F656+oOJSjOctpL3h85yN98SU/RXm7vK3Ak+9uIAUfzNXMG7wvl
-         JOOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdOdmlY0LIWZUEUZLbiPgVM04RmurrwF1B/cmpn52ZMn7GFbUtQk+K41f12f0UV5aZ+OmDmoF6wqytb+TRBKqzJM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGuc0rOUvFx16vAYxlSPcwBatdiHGwKwkW1Qs2IcUEYEBzxBZd
-	BAKY2KGZqLKjcy2a9D73caWb+ntJl2iYIS6wjNpeF8izeeeQatVWtltE7Lxyu/PPLPn1+KK9rg=
-	=
-X-Google-Smtp-Source: AGHT+IGi/7aTXmyQZ5xDW/bdnyQbVTiKVhfU9+rw9t4S3CgNTD13Tt0NOWPvtx8xXNuCQvdoJx73CMyzmQ==
-X-Received: from edsf19.prod.google.com ([2002:aa7:d853:0:b0:5d0:36d0:ad4a])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6512:124a:b0:53d:e568:ac95
- with SMTP id 2adb3069b0e04-53df00de101mr1532948e87.25.1732716613445; Wed, 27
- Nov 2024 06:10:13 -0800 (PST)
-Date: Wed, 27 Nov 2024 15:09:36 +0100
-In-Reply-To: <20241127140958.1828012-1-elver@google.com>
+        d=1e100.net; s=20230601; t=1732728594; x=1733333394;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VhqF3E4/w+YtOL58NNfG2rcUNmjyen3grJ9NA1x6juQ=;
+        b=n8hMrqCrLoRW9L/kC90J2uowKA3T22hMN4cZrQuWuTh85yRczZWlOfJAFMsfmsW8O0
+         1eusmFTMuBlQ77icCbjJAzEoPjVHDnDtshXN/+dN9Pa4AOXlAiXr6ywrXPzffGt2qmLr
+         w3EMhMNVmUDi6F6qpM6H/0WURafnu5StzF5avqPSpKl4APqMBwRplzfNTnis31eXhiXb
+         9eB8iZ37sCK4qoP4dhh5Rk1jdS1HFLA0zEV4p9/ZXMTkMoTJrZPnoz7+Z947NGyKFBdR
+         nkWg+D+Uhu2U8EjPRVqtAnfSqUX7A7YauGQFrBel9rLmEZrtaUsDDicy30QoXedH6rC0
+         ad+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUsR40oLdfCmqRuMVpwe7fPWJn/pmuTdxAzC48cqvh4nsrneejKct72MZFNEDfLhmuKAaBhIf+8OOqxNZkWaVl7ntc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeTJduwr3HWQdel1BolJrVG1cE3W+G91Vpf3y3GMfMa7njyb5Z
+	fvfJp5JWjw7t27BwWZWA57rV4NIJU3rANWPAvBhlYU7KrZLbK0UC
+X-Gm-Gg: ASbGncuWasBTcoi3lWu/yX0+2oEVNCmI5A52rwjEBVn9nuZ3ZeMYnCZn7mz/uwA0yuJ
+	eDE3XRBVt3La/je2m80f6J8B9xBWJS1wYCluzvIVj6Jm2/hxP42KSHvE3xqPu/Lfv7MXk84d+7p
+	QUT4ymbgj11p3Ru0dh1nkOFZlqjHFoWsEkK3Ob+58z9uhNgaAEB9oaural3jPpM8eMTB7mETzJF
+	8CZakyKEfNQDXCzrxhZIwAG2aYt7nL7Zm6Lfch5e3Y+UiTYf5LwDzjxHYCpbqymnlhBNccVKioT
+	spEHgs1GWBJYPkpjcb51DZDNu7WY
+X-Google-Smtp-Source: AGHT+IHe4vfUFn689BzH733Y3azaB4OQQfGNQ2U5d2DUk6y3aLJvqA63KG7l5W6jxcEPLUbmlo8oFg==
+X-Received: by 2002:a05:6a00:3c89:b0:724:eac3:576a with SMTP id d2e1a72fcca58-725301a5b92mr5270747b3a.25.1732728594123;
+        Wed, 27 Nov 2024 09:29:54 -0800 (PST)
+Received: from localhost.localdomain (1-171-29-17.dynamic-ip.hinet.net. [1.171.29.17])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc1e3fdbsm9359582a12.30.2024.11.27.09.29.50
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 27 Nov 2024 09:29:53 -0800 (PST)
+From: Andy Chiu <andybnac@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	llvm@lists.linux.dev,
+	bjorn@rivosinc.com,
+	puranjay12@gmail.com,
+	alexghiti@rivosinc.com,
+	yongxuan.wang@sifive.com,
+	greentime.hu@sifive.com,
+	nick.hu@sifive.com,
+	nylon.chen@sifive.com,
+	tommy.wu@sifive.com,
+	eric.lin@sifive.com,
+	viccent.chen@sifive.com,
+	zong.li@sifive.com,
+	samuel.holland@sifive.com
+Subject: [PATCH v3 1/7] riscv: ftrace: support fastcc in Clang for WITH_ARGS
+Date: Thu, 28 Nov 2024 01:29:02 +0800
+Message-Id: <20241127172908.17149-2-andybnac@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+In-Reply-To: <20241127172908.17149-1-andybnac@gmail.com>
+References: <20241127172908.17149-1-andybnac@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241127140958.1828012-1-elver@google.com>
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241127140958.1828012-2-elver@google.com>
-Subject: [PATCH bpf-next v3 2/2] bpf: Refactor bpf_tracing_func_proto() and
- remove bpf_get_probe_write_proto()
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Nikola Grcevski <nikola.grcevski@grafana.com>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-With bpf_get_probe_write_proto() no longer printing a message, we can
-avoid it being a special case with its own permission check.
+From: Andy Chiu <andy.chiu@sifive.com>
 
-Refactor bpf_tracing_func_proto() similar to bpf_base_func_proto() to
-have a section conditional on bpf_token_capable(CAP_SYS_ADMIN), where
-the proto for bpf_probe_write_user() is returned. Finally, remove the
-unnecessary bpf_get_probe_write_proto().
+Some caller-saved registers which are not defined as function arguments
+in the ABI can still be passed as arguments when the kernel is compiled
+with Clang. As a result, we must save and restore those registers to
+prevent ftrace from clobbering them.
 
-This simplifies the code, and adding additional CAP_SYS_ADMIN-only
-helpers in future avoids duplicating the same CAP_SYS_ADMIN check.
+- [1]: https://reviews.llvm.org/D68559
 
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
+Closes: https://lore.kernel.org/linux-riscv/7e7c7914-445d-426d-89a0-59a9199c45b1@yadro.com/
+Acked-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
 ---
-v3:
-* Fix where bpf_base_func_proto() is called - it needs to be last,
-  because we may override protos (as is e.g. done for
-  BPF_FUNC_get_smp_processor_id).
+ arch/riscv/include/asm/ftrace.h |  7 +++++++
+ arch/riscv/kernel/asm-offsets.c |  7 +++++++
+ arch/riscv/kernel/mcount-dyn.S  | 16 ++++++++++++++--
+ 3 files changed, 28 insertions(+), 2 deletions(-)
 
-v2:
-* New patch.
----
- kernel/trace/bpf_trace.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0ab56af2e298..9b1d1fa4c06c 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -357,14 +357,6 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
- 	.arg3_type	= ARG_CONST_SIZE,
+diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+index 2cddd79ff21b..4ca7ce7f34d7 100644
+--- a/arch/riscv/include/asm/ftrace.h
++++ b/arch/riscv/include/asm/ftrace.h
+@@ -143,6 +143,13 @@ struct ftrace_regs {
+ 			unsigned long a5;
+ 			unsigned long a6;
+ 			unsigned long a7;
++#ifdef CONFIG_CC_IS_CLANG
++			unsigned long t2;
++			unsigned long t3;
++			unsigned long t4;
++			unsigned long t5;
++			unsigned long t6;
++#endif
+ 		};
+ 	};
  };
- 
--static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
--{
--	if (!capable(CAP_SYS_ADMIN))
--		return NULL;
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index e94180ba432f..59789dfb2d5d 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -504,6 +504,13 @@ void asm_offsets(void)
+ 	DEFINE(FREGS_SP,	    offsetof(struct ftrace_regs, sp));
+ 	DEFINE(FREGS_S0,	    offsetof(struct ftrace_regs, s0));
+ 	DEFINE(FREGS_T1,	    offsetof(struct ftrace_regs, t1));
++#ifdef CONFIG_CC_IS_CLANG
++	DEFINE(FREGS_T2,	    offsetof(struct ftrace_regs, t2));
++	DEFINE(FREGS_T3,	    offsetof(struct ftrace_regs, t3));
++	DEFINE(FREGS_T4,	    offsetof(struct ftrace_regs, t4));
++	DEFINE(FREGS_T5,	    offsetof(struct ftrace_regs, t5));
++	DEFINE(FREGS_T6,	    offsetof(struct ftrace_regs, t6));
++#endif
+ 	DEFINE(FREGS_A0,	    offsetof(struct ftrace_regs, a0));
+ 	DEFINE(FREGS_A1,	    offsetof(struct ftrace_regs, a1));
+ 	DEFINE(FREGS_A2,	    offsetof(struct ftrace_regs, a2));
+diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+index 745dd4c4a69c..e988bd26b28b 100644
+--- a/arch/riscv/kernel/mcount-dyn.S
++++ b/arch/riscv/kernel/mcount-dyn.S
+@@ -96,7 +96,13 @@
+ 	REG_S	x8,  FREGS_S0(sp)
+ #endif
+ 	REG_S	x6,  FREGS_T1(sp)
 -
--	return &bpf_probe_write_user_proto;
--}
++#ifdef CONFIG_CC_IS_CLANG
++	REG_S	x7,  FREGS_T2(sp)
++	REG_S	x28, FREGS_T3(sp)
++	REG_S	x29, FREGS_T4(sp)
++	REG_S	x30, FREGS_T5(sp)
++	REG_S	x31, FREGS_T6(sp)
++#endif
+ 	// save the arguments
+ 	REG_S	x10, FREGS_A0(sp)
+ 	REG_S	x11, FREGS_A1(sp)
+@@ -115,7 +121,13 @@
+ 	REG_L	x8, FREGS_S0(sp)
+ #endif
+ 	REG_L	x6,  FREGS_T1(sp)
 -
- #define MAX_TRACE_PRINTK_VARARGS	3
- #define BPF_TRACE_PRINTK_SIZE		1024
- 
-@@ -1458,9 +1450,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_perf_event_read_proto;
- 	case BPF_FUNC_get_prandom_u32:
- 		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_write_user:
--		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
--		       NULL : bpf_get_probe_write_proto();
- 	case BPF_FUNC_probe_read_user:
- 		return &bpf_probe_read_user_proto;
- 	case BPF_FUNC_probe_read_kernel:
-@@ -1539,8 +1528,20 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_trace_vprintk:
- 		return bpf_get_trace_vprintk_proto();
- 	default:
--		return bpf_base_func_proto(func_id, prog);
-+		break;
- 	}
-+
-+	if (bpf_token_capable(prog->aux->token, CAP_SYS_ADMIN)) {
-+		switch (func_id) {
-+		case BPF_FUNC_probe_write_user:
-+			return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
-+			       NULL : &bpf_probe_write_user_proto;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return bpf_base_func_proto(func_id, prog);
- }
- 
- static bool is_kprobe_multi(const struct bpf_prog *prog)
++#ifdef CONFIG_CC_IS_CLANG
++	REG_L	x7,  FREGS_T2(sp)
++	REG_L	x28, FREGS_T3(sp)
++	REG_L	x29, FREGS_T4(sp)
++	REG_L	x30, FREGS_T5(sp)
++	REG_L	x31, FREGS_T6(sp)
++#endif
+ 	// restore the arguments
+ 	REG_L	x10, FREGS_A0(sp)
+ 	REG_L	x11, FREGS_A1(sp)
 -- 
-2.47.0.338.g60cca15819-goog
+2.39.3 (Apple Git-145)
 
