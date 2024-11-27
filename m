@@ -1,232 +1,179 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA6E1F7544;
-	Wed, 27 Nov 2024 11:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6531917F1;
+	Wed, 27 Nov 2024 11:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732706815; cv=none; b=tud7YF7Ta3c1cu8S56fftYn+GBA4N3aZ7WS4zLdXC0EW/q81dgAeN35U/tNCHeM4PRLqmrJyzP0KEUk6bECm1SUuaoXodqVK072ys71G6liESHaouVBX8OrjciTPJ7OQxbfOCgd9u6Nqee/Pb2FHTxL9yiNaWy/Zx10hP66nfZI=
+	t=1732708174; cv=none; b=ZF2wxtKS3rSHQ72qgpotuCWQ8kKsQCRIrKGsqIqxKbcbtc4XamK+8gKnSg0FTPkRn1CkUI8w4+9Fk3TgsWMCRcHdAuTrMjlOq9XOrJahc5ru4fR6cBbAYNDMO76RiZh+FuM3bAw0YvSgTgi7y13yZN9ZTrRucANUTebc9bhsWb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732706815; c=relaxed/simple;
-	bh=28dQTrG3He6iFEKXXDoA7pxzEaS5Xh5bp7DgOEMy9QI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QWKdlm3sO2x/rCrxnxIZO7nJA8XXpHh+VQuKI8HaJVc7kU2smrP7uDCI42Zkj1GjYKr9XUb9qS7KGQNA/ysJ7pvr/7kFJkpX/wTKe6uoubbmuqB0BTT7kAUtp4dt1OQAzvM8H2waFscSDUHzY9d4m8v5jZKOYAqClzAyti2XWtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=ZTdRLNIW; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1732708174; c=relaxed/simple;
+	bh=8UByTi9O0eUrokO20BPe2tCop1WK6r2tySiCZSUd08U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSlgvDRqmPoeGbG9k6Fi4++oQsyy5QNUBVWMWY+jkVFtZtkpJyxD/mzh5QEJQlyrExeqeKxGpFwOZWyrBzWATZqirmHyq5T97Tpu0w8b3ozsF0+R99MNMGwYMXl+pivzUBlh55NXkF66pGvK+oxNq5HKfQo9qKRJ41nI17XMDrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIiDiutT; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="ZTdRLNIW"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C266324000B;
-	Wed, 27 Nov 2024 11:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1732706804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lwU4mXYYTdimQrB6vSMf2Y5tX570CcargndAnexCjxE=;
-	b=ZTdRLNIWRKx+BEau5xXr5cOhELhrhLPO7QwX8nOxq5xJ0We9L4Un05XWBcumeHRc0huJ93
-	jGKe9CI7ifTLyy7PHDpmDuSgAxr4wbWcWnUzYv1gDQmBqaudE7IThZuH18Sc37Cx52Zpdi
-	97gzRYLVrmYiqYnpAdhf3xKeKx0Xzx3GWSOa8m/ZqOEAhvRJ89TEV+s1nn/kW3X7BYLjTG
-	RaXz/eC6oOIHwv4WzZWIz9eKKNcpnxpW2b/0GrwH9inxtVewdOLTOh3EdzdygG7shwkIhc
-	T4I4o7Er3cuNHbVCpc9phdjjJEvJL2aTWm+WSCjCKY9cBMm8Xh9zmaXuy77UtQ==
-Message-ID: <501c04d7-1a7d-4000-a948-e9effb281a05@yoseli.org>
-Date: Wed, 27 Nov 2024 12:26:43 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIiDiutT"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-53de8ecafeeso2087953e87.1;
+        Wed, 27 Nov 2024 03:49:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732708170; x=1733312970; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhM5k6V9GFL2Pc6HBmI3l+duYh7dw9XHt8yRGSBrdY0=;
+        b=aIiDiutTLXOE+0R/17EfEOqFoHpBF73bdpTvN72zJRYelX1U9UO82ZJ8/BWpQciGq5
+         xxKvFV6c6bKo2f+BNPJwaydoDJTLymwN+4FoM1fSNA9bJKI6/3y+zdXhX8yeyK8wdldv
+         FjhX62muTxR4ZaPtHOYqeE07JNJKOqbwhyZb/WJL43CKUlG5ra6obwybhctCxZsspack
+         z6WDGsyK4ycd7xsZGCHA6O1CeUDaq2fxIkssqAuJDIgKtZnnzqQl3CzWi9JjHiA65aAe
+         mW1LPx9shlmEvK8sjS+lObtBOKMrGQmn0o4XXnswXkvMfbwGCb6KF2GrcE4h+T4oW242
+         Iz1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732708170; x=1733312970;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qhM5k6V9GFL2Pc6HBmI3l+duYh7dw9XHt8yRGSBrdY0=;
+        b=IZqdANWq1Txzase1uN2WnSA4dIHYXIUXj1XwotegFHBRX9v/nbigIjf1/h+SqzQvft
+         VIEGTtsG1LgqyIKIkX0Qi56f/o/abKmXdyECRnRVC/JOVP18q+nu+mEmiugnwxiASLim
+         cr87mUdsKs1ivAnEVbEMCKZ2kp8jN/huoNj/qrLKXox4nOql9V7l2oC8SLFfl2inBO9x
+         zc1+0cdthKLodMCycD26Y5ihm3S7v4xO/677t8I15EqI4mOEFgDfNMk1tYLKeqcJBLyt
+         M2TY4PSFv7nNyy4Td9Jjzvpn7uKangVs2bPir6oeFtwPqF3E1Bl91f72bZDACNHM4ULu
+         76RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/YnHTAjtwepWXeJFNNeha9b5yImVNlIDWr/QAS8HSJfY00in5F2vXGsOmVqtL55dVnhWGN8AkzfIbfhcelWE+Cpv3@vger.kernel.org, AJvYcCW7Ph63E1I+FZPQ5naqZps3vVevG/FWe7/bLPi8+9tctAhrvCq8ARGf50a/oZUHw++DLOpq9ot4XfE+jan+@vger.kernel.org, AJvYcCWXH2yzfSa57a1Dq9LvngDoC9q8SmJAhyqQB73RLeadomY7kB/KR5HAXjGIYPrhL+tQA5A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTQK3jJt7UL7jwnk3dc3VwSrLcorqZtreFR3oYhCbRoQfokPgQ
+	ehRa0Z0Qw9Q7j5JcwaHarFFEaFi00PAh91RWyyOkKyolqulGsiLd1Wx3IQ==
+X-Gm-Gg: ASbGncvFoJmWM20uuAN681TGZ9eTIhVq/iaXqMp8+DoVQnr2umhsefe4ur6joYoOmDt
+	J4YyncuQo7P8Uj4RWphXIqchWLoSEsiGDvA1oEsEMcX1QJ0TibwDSn8v3HvlNZA7bWF/Iim+bLW
+	O4ZTYT+v37EIj6hZUi/CyQf6LHzFYdn7XFi31PqAwakUT1RNm+MbKYtsqf0hQE4MQQ6n27lBLI9
+	fznlcws/RYzFdt4MQQWifY6jxE3bWVq6ENT9M+9QVlz/7FTDmOx7QSPQHkPyRPM6gpV1GJy6QYg
+	f5zjS904qXN8Whh44bidoPI=
+X-Google-Smtp-Source: AGHT+IECGFrwM5m5TNZXo5pYG5pnOKYvkhiO8omVyK57Iv+f/4G4vSINdGNMG3b3likCc/8Jx83lcA==
+X-Received: by 2002:a05:6512:124f:b0:53a:bb9:b54a with SMTP id 2adb3069b0e04-53df010e386mr1540541e87.48.1732708169914;
+        Wed, 27 Nov 2024 03:49:29 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d01d3b0fc1sm6105834a12.28.2024.11.27.03.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Nov 2024 03:49:29 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 27 Nov 2024 12:49:27 +0100
+To: Marco Elver <elver@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Nikola Grcevski <nikola.grcevski@grafana.com>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2 2/2] bpf: Refactor bpf_tracing_func_proto()
+ and remove bpf_get_probe_write_proto()
+Message-ID: <Z0cHRzM3NDwhLPTE@krava>
+References: <20241127111020.1738105-1-elver@google.com>
+ <20241127111020.1738105-2-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 2/2] arch: m68k: Add STACKTRACE support
-To: linux-m68k@lists.linux-m68k.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- rostedt@goodmis.org, Greg Ungerer <gerg@linux-m68k.org>,
- Michael Schmitz <schmitzmic@gmail.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
- <20241021-add-m68k-tracing-support-v1-2-0883d704525b@yoseli.org>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <20241021-add-m68k-tracing-support-v1-2-0883d704525b@yoseli.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241127111020.1738105-2-elver@google.com>
 
-Hi there,
-
-On 21/10/2024 11:44, Jean-Michel Hautbois wrote:
-> In order to use tracing, implement a basic arch_stack_walk() based on
-> the one in PowerPC.
-> Tested on a M54418 coldfire.
-
-Well, I said it was tested, but it was only compile tested basically.
-AFAICT now, I think it is not working as when I use wakeup_rt as a 
-tracer, I don't have the stack trace:
-
-# wakeup_rt latency trace v1.1.5 on 6.12.0-10380-gb66f06337b66-dirty
-# --------------------------------------------------------------------
-# latency: 2000 us, #18/18, CPU#0 | (M:preempt VP:0, KP:0, SP:0 HP:0)
-#    -----------------
-#    | task: irq/100-enet-fe-118 (uid:0 nice:0 policy:1 rt_prio:50)
-#    -----------------
-#
-#                    _------=> CPU#
-#                   / _-----=> irqs-off/BH-disabled
-#                  | / _----=> need-resched
-#                  || / _---=> hardirq/softirq
-#                  ||| / _--=> preempt-depth
-#                  |||| / _-=> migrate-disable
-#                  ||||| /     delay
-#  cmd     pid     |||||| time  |   caller
-#     \   /        ||||||  \    |    /
-kworker/-11        0dnh5.    0us :       11:120:R   + [000]      22: 
-98:R irq_work/0
-kworker/-11        0dnh5.    0us : <stack trace>
-kworker/-11        0dnh5.    0us : 0
-kworker/-11        0d..3.    0us : __schedule
-kworker/-11        0d..3.    0us :       11:120:R ==> [000]      22: 
-98:R irq_work/0
-kworker/-11        0d..3.    0us : <stack trace>
-  telnetd-229       0Dnh4.    0us :      229:120:R   + [000]     118: 
-49:R irq/100-enet-fe
-  telnetd-229       0Dnh4.    0us : <stack trace>
-  telnetd-229       0Dnh4.    0us : 0
-  telnetd-229       0D..3.    0us : __schedule
-  telnetd-229       0D..3.    0us :      229:120:R ==> [000]     118: 
-49:R irq/100-enet-fe
-  telnetd-229       0D..3.    0us : <stack trace>
-  telnetd-229       0dn.5.    0us :      229:120:R   + [000]     118: 
-49:R irq/100-enet-fe
-  telnetd-229       0dn.5.    0us : <stack trace>
-  telnetd-229       0dn.5.    0us#: 0
-  telnetd-229       0d..3. 2000us : __schedule
-  telnetd-229       0d..3. 2000us :      229:120:R ==> [000]     118: 
-49:R irq/100-enet-fe
-  telnetd-229       0d..3. 2000us : <stack trace>
-
-Geert, Greg, and maybe other highly skilled m68k people, could you 
-please help me with this particular function :-) ?
-
-Thanks !
-JM
-
+On Wed, Nov 27, 2024 at 12:10:01PM +0100, Marco Elver wrote:
+> With bpf_get_probe_write_proto() no longer printing a message, we can
+> avoid it being a special case with its own permission check.
 > 
-> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+> Refactor bpf_tracing_func_proto() similar to bpf_base_func_proto() to
+> have a section conditional on bpf_token_capable(CAP_SYS_ADMIN), where
+> the proto for bpf_probe_write_user() is returned. Finally, remove the
+> unnecessary bpf_get_probe_write_proto().
+> 
+> This simplifies the code, and adding additional CAP_SYS_ADMIN-only
+> helpers in future avoids duplicating the same CAP_SYS_ADMIN check.
+> 
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Marco Elver <elver@google.com>
 > ---
->   arch/m68k/Kconfig             |  5 ++++
->   arch/m68k/kernel/Makefile     |  1 +
->   arch/m68k/kernel/stacktrace.c | 70 +++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 76 insertions(+)
-> 
-> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-> index ab3375475721fa63418c40d4ba6ac76679ebc77d..7142f9759181a90269ae1ba9e682d331ee2ddbf6 100644
-> --- a/arch/m68k/Kconfig
-> +++ b/arch/m68k/Kconfig
-> @@ -40,6 +40,7 @@ config M68K
->   	select UACCESS_MEMCPY if !MMU
->   	select ZONE_DMA
->   	select TRACE_IRQFLAGS_SUPPORT
-> +	select ARCH_STACKWALK
->   
->   config CPU_BIG_ENDIAN
->   	def_bool y
-> @@ -107,6 +108,10 @@ config BOOTINFO_PROC
->   	  Say Y to export the bootinfo used to boot the kernel in a
->   	  "bootinfo" file in procfs.  This is useful with kexec.
->   
-> +config STACKTRACE_SUPPORT
-> +	bool
-> +	default y
-> +
->   menu "Platform setup"
->   
->   source "arch/m68k/Kconfig.cpu"
-> diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
-> index f335bf3268a108a45bab079fbf0a1c8ead9beb71..4efe92af0b711b19cb1d5129f74e67a739e289b1 100644
-> --- a/arch/m68k/kernel/Makefile
-> +++ b/arch/m68k/kernel/Makefile
-> @@ -31,3 +31,4 @@ obj-$(CONFIG_UBOOT)		+= uboot.o
->   
->   obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
->   
-> +obj-y	+= stacktrace.o
-> diff --git a/arch/m68k/kernel/stacktrace.c b/arch/m68k/kernel/stacktrace.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..06c7459373bd25b3bb3540cfe2a909259c1db3ce
-> --- /dev/null
-> +++ b/arch/m68k/kernel/stacktrace.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Stack trace utility functions etc.
-> + *
-> + * Copyright 2024 Jean-Michel Hautbois, Yoseli SAS.
-> + */
-> +
-> +#include <asm/current.h>
-> +#include <asm/ptrace.h>
-> +#include <linux/sched.h>
-> +#include <linux/sched/task_stack.h>
-> +#include <linux/stacktrace.h>
-> +
-> +static inline unsigned long current_stack_frame(void)
-> +{
-> +	unsigned long sp;
-> +
-> +	asm volatile("movl %%sp, %0" : "=r"(sp));
-> +	return sp;
-> +}
-> +
-> +static inline int validate_sp(unsigned long sp, struct task_struct *task)
-> +{
-> +	unsigned long stack_start, stack_end;
-> +
-> +	if (task == current)
-> +		stack_start = (unsigned long)task_stack_page(task);
-> +	else
-> +		stack_start = (unsigned long)task->thread.esp0;
-> +
-> +	stack_end = stack_start + THREAD_SIZE;
-> +
-> +	if (sp < stack_start || sp >= stack_end)
-> +		return 0;
-> +
-> +	return 1;
-> +}
-> +
-> +void __no_sanitize_address arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-> +					   struct task_struct *task, struct pt_regs *regs)
-> +{
-> +	unsigned long sp;
-> +
-> +	if (regs && !consume_entry(cookie, regs->pc))
-> +		return;
-> +
-> +	if (regs)
-> +		sp = (unsigned long) regs;
-> +	else if (task == current)
-> +		sp = current_stack_frame();
-> +	else
-> +		sp = task->thread.ksp;
-> +
-> +	for (;;) {
-> +		unsigned long *stack = (unsigned long *) sp;
-> +		unsigned long newsp, ip;
-> +
-> +		if (!validate_sp(sp, task))
-> +			return;
-> +
-> +		newsp = stack[0];
-> +		ip = stack[1];
-> +
-> +		if (!consume_entry(cookie, ip))
-> +			return;
-> +
-> +		sp = newsp;
-> +	}
-> +}
-> 
+> v2:
+> * New patch.
 
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+jirka
+
+> ---
+>  kernel/trace/bpf_trace.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 0ab56af2e298..d312b77993dc 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -357,14 +357,6 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
+>  	.arg3_type	= ARG_CONST_SIZE,
+>  };
+>  
+> -static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+> -{
+> -	if (!capable(CAP_SYS_ADMIN))
+> -		return NULL;
+> -
+> -	return &bpf_probe_write_user_proto;
+> -}
+> -
+>  #define MAX_TRACE_PRINTK_VARARGS	3
+>  #define BPF_TRACE_PRINTK_SIZE		1024
+>  
+> @@ -1417,6 +1409,12 @@ late_initcall(bpf_key_sig_kfuncs_init);
+>  static const struct bpf_func_proto *
+>  bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  {
+> +	const struct bpf_func_proto *func_proto;
+> +
+> +	func_proto = bpf_base_func_proto(func_id, prog);
+> +	if (func_proto)
+> +		return func_proto;
+> +
+>  	switch (func_id) {
+>  	case BPF_FUNC_map_lookup_elem:
+>  		return &bpf_map_lookup_elem_proto;
+> @@ -1458,9 +1456,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  		return &bpf_perf_event_read_proto;
+>  	case BPF_FUNC_get_prandom_u32:
+>  		return &bpf_get_prandom_u32_proto;
+> -	case BPF_FUNC_probe_write_user:
+> -		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
+> -		       NULL : bpf_get_probe_write_proto();
+>  	case BPF_FUNC_probe_read_user:
+>  		return &bpf_probe_read_user_proto;
+>  	case BPF_FUNC_probe_read_kernel:
+> @@ -1539,7 +1534,18 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+>  	case BPF_FUNC_trace_vprintk:
+>  		return bpf_get_trace_vprintk_proto();
+>  	default:
+> -		return bpf_base_func_proto(func_id, prog);
+> +		break;
+> +	}
+> +
+> +	if (!bpf_token_capable(prog->aux->token, CAP_SYS_ADMIN))
+> +		return NULL;
+> +
+> +	switch (func_id) {
+> +	case BPF_FUNC_probe_write_user:
+> +		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
+> +		       NULL : &bpf_probe_write_user_proto;
+> +	default:
+> +		return NULL;
+>  	}
+>  }
+>  
+> -- 
+> 2.47.0.338.g60cca15819-goog
+> 
