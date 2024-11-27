@@ -1,63 +1,67 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E961E2617
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78BF1EE00D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 11:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732705829; cv=none; b=WCu2e0VrASKmcOU39lV7RqHfzKXNn6eAaslxRfyWRRBk6hXQ7dOg9Sww8xCuL9B+UByCrSo7Hfy2gVcky1gLb74M3ELsVNVK6bCUHK2UrfxGas6Nd88DU6rJY/4vxizHfNdHeb5X3+gsUsakq2udCz/HiFFmMUIhO0/I2NzF/vU=
+	t=1732705833; cv=none; b=supjDq1OibfiTS60WpU5z481pJNZSd3t8dXOTPp/3xb6YlkIo787MhvWGH6x7aAoDJewxt6FlBIK8jf2mFirn7GPqJOS4rIkiPIJRs5eqTh0ozdd6Azk4SFSdN6QCRETE4BSQWrpW7s26temXw+1ltAZ2hUGfyiBMy17vytyZAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732705829; c=relaxed/simple;
-	bh=IJhveSX3KT5NJJHEyEvzzpFxslyvOV2q8+XBWhlpYOw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=u3yoBCVhq0yVz+VZtNBrvl1h30LIIuOH3IqCffh8QGfKErhnddYGrTONjebu1i1AHuMsQ7xin5hi4nRXoH4it82pw8JxIwngRxyJlJVyeSVYfg1M/sq5Ac+tuo2K/j+MkdsZfUem3D6fEFNLMlRGTBChlAPlxqlv2KP8UGFfExU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e/FVq7pw; arc=none smtp.client-ip=209.85.218.73
+	s=arc-20240116; t=1732705833; c=relaxed/simple;
+	bh=n6SFQlgQ89x+UN3cScyPqDrPZQIK8ftr0Y2vU2LxfCE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cxyKxCul8h+z2vt7v7bAKwCB1DxWXTwrInO2JLgrEPStD3623O1hfPU3OnYSQp1OzXhve57MjqzLrsq2o7wtZsRA/O82PnufaETGdPwi90XK8aRTrkfIklv/hF5XJLvLUBCAqv1dhwWLl+iD0pkL4YSeDeGMU47uolUGV9Z9PHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qM4RhDWO; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/FVq7pw"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa529e35844so71202266b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 03:10:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qM4RhDWO"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5cfcf4d994bso2031520a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 27 Nov 2024 03:10:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732705826; x=1733310626; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=szUe4MlEoUScFGYRDGXKxGMjDAz2rhZoxsy6RiA0irg=;
-        b=e/FVq7pwIriSau7yNAn21JGILV5et6I7tB1q93cewETI6/nX6xs7MDJxTz/+4G06CN
-         J45HpG5pW1BUsjPyO0Q/Se2PT9f/DZ1k002Kn2wkS+gdgcp/mT8/suyYhLM/eDkrQlU9
-         PCd61B+AIJc/CefY1lClYHFqRcyuBvaGjLHyJ/4PyAWTEMCbltQ/S/wbd4RijC0Vf7xG
-         CN1BwvUa01UgLe0CEe6it+GgZMhB7WhxeiaApvg1UrZhZP+guO8xIsy2ouskb9lA13w6
-         6L8qz+XmapFyKyfSsh4MDrtnh/9NBsnXiO5SXD9NK9+ZjZzXFKu8ELFWLW1vrQXPvXZ+
-         tEMA==
+        d=google.com; s=20230601; t=1732705829; x=1733310629; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R16rjOQpVflGeOoJdXs8xt/CprClomxX6VQzmlYl7Q8=;
+        b=qM4RhDWOt44e4KZ9HnAFNjGT5OvWBDGwksE6v/6n4UxpfwoEQDw32WlimyAQF77g3U
+         mu/k5RBsNcBRbPy3Q7mZHrWUahbhduwTZ92/daKd8dFO58wZscvSsyWvmCjcuRURcjdy
+         GtY+Qv6a10mv9kf7nKvWOoOHI0kn5Xm//prxWzemIi1CbNHa5M0TVbwW/NjMVCeN59sf
+         +VyDAzu3X2+4AU054Fxi4G+6tafTAAanYBV0PufcBunBIoG2VcGrRc5iLqtJrcOMZFWd
+         wWAOjJgtaHuuuE5t/TxIRwb25yEjon3ugADOLOMu99A8P693tXfft8NRLMdJ0DQiDQbI
+         p2VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732705826; x=1733310626;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=szUe4MlEoUScFGYRDGXKxGMjDAz2rhZoxsy6RiA0irg=;
-        b=V80K+3fv8pr8PG4bfvOKuza7zjNsmy6Wrl1AKYjEt807+xE8Toxbo/FEFOV4Nsu7P2
-         yBR2RQW1NQeH24tKyWJzCFHbtHkLmEZlziXVPzd+fsyYGIGaryJq5ugXxHlLmBGDP5IW
-         OHnNTENJTZwY5l0JQl/0mc3YY9zIMw4jYO0a8Zt4QDUzvkvESnGGEg4LMed31MKNe78v
-         GbXV9nxpRHd70M/cW1y0Q5Ofm4KqXU7uhvJd+F6zBywCeCEsaR4zhNxlHWUqBCbeXh7Y
-         P64/GP0AgvoCO3/2cr34RDhr04qWnxINbv0vdbCeN8L7Zq16iqWODGZC2xg1QQmSQWA3
-         4VWA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+ZcNrg2Yd5l3shE1zwF0k/EvdBTCM9elMitufG6b7Bh8noiV5aGW5ttTIQb17Qx9t7kzzWlZtu4dKybO1FoGc0AI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYutxRe+RuFDu9plD9qoUc8FCnH3GsjvEaJJnIHxNDzHkGUlUZ
-	+H3iSXlz1lJzmgbZnp1S2Gqae4S73NTJikEJL71hkWaYZnyx3q23r+1+eAhggX606awnKJevgQ=
+        d=1e100.net; s=20230601; t=1732705829; x=1733310629;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R16rjOQpVflGeOoJdXs8xt/CprClomxX6VQzmlYl7Q8=;
+        b=dPi/+Cjehe89mePkUm9UfZmQMPoCn9Boa6MC7WO9GBzfG4dskOG1y94JODZhnux33Y
+         dc36nicWH9VPjlyEIHPbpScmoHZmEfmvnpQyrOeh5nzpSm8wI34+JYlKMlI1ZHuw/Cvc
+         I92MlpV13exTJdUSnz3dSvVcWPdU5HlLAWmVzu8wK5p2J0XNw00sBv0UeIbqAnEPBxaZ
+         EelpcwXgZ4UxEEKPYjBqCXuMdGQclO4CkddnW4Ja88stoUK4zcN6kHkPdS2u3vfsoIOu
+         t9OS6zTDFmbXSuD8x4jv10yXb5484vi2NDZItzGOmSXu0LAyWPQwTzKNhPt9WogYPh/D
+         f8gg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0LILpJL9efM9RizxZFC2d2U8wrMQPONrEilTWpAszRKkyGUawFvEK8JQEqWup9mtA0W7GMhA+peGryhpdLw147pA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZTxFHrbj3OVMMWZQaEqgcj47AB4Z5v/DLi0BXDDkxe0Jhi7sJ
+	5LwK0wHBcF5zfw/Z9EMYQ0ST5xOaXoKonc7V4uvBRMn3Dam9NxQB12WR16ijyQJFCHhUQm3WRw=
 	=
-X-Google-Smtp-Source: AGHT+IHzvGLk0LstKl05NLYC6GFUNC2AmNlbWn6ck5NvXCTaNVLUbddTm1eBObZRbskWLgCarifJzxdcdA==
-X-Received: from ejbz19.prod.google.com ([2002:a17:906:753:b0:aa5:47f8:b930])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:7312:b0:a99:5587:2a1f
- with SMTP id a640c23a62f3a-aa5648a69c1mr719583666b.15.1732705826679; Wed, 27
- Nov 2024 03:10:26 -0800 (PST)
-Date: Wed, 27 Nov 2024 12:10:00 +0100
+X-Google-Smtp-Source: AGHT+IFuVotXYt+hPl929kqPNZTpS9LM+/Eywv9tUfBdOkJB00QlrJaxyYKFUm0tMShw5iE3GwobJcrbhw==
+X-Received: from edbio6.prod.google.com ([2002:a05:6402:2186:b0:5cf:db39:7001])
+ (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:5108:b0:5ce:d435:c26d
+ with SMTP id 4fb4d7f45d1cf-5d080be7cafmr2296169a12.19.1732705829149; Wed, 27
+ Nov 2024 03:10:29 -0800 (PST)
+Date: Wed, 27 Nov 2024 12:10:01 +0100
+In-Reply-To: <20241127111020.1738105-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20241127111020.1738105-1-elver@google.com>
 X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241127111020.1738105-1-elver@google.com>
-Subject: [PATCH bpf-next v2 1/2] bpf: Remove bpf_probe_write_user() warning message
+Message-ID: <20241127111020.1738105-2-elver@google.com>
+Subject: [PATCH bpf-next v2 2/2] bpf: Refactor bpf_tracing_func_proto() and
+ remove bpf_get_probe_write_proto()
 From: Marco Elver <elver@google.com>
 To: elver@google.com, Alexei Starovoitov <ast@kernel.org>, 
 	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
@@ -68,51 +72,86 @@ Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com
 	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The warning message for bpf_probe_write_user() was introduced in
-96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
-tracers"), with the following in the commit message:
+With bpf_get_probe_write_proto() no longer printing a message, we can
+avoid it being a special case with its own permission check.
 
-    Given this feature is meant for experiments, and it has a risk of
-    crashing the system, and running programs, we print a warning on
-    when a proglet that attempts to use this helper is installed,
-    along with the pid and process name.
+Refactor bpf_tracing_func_proto() similar to bpf_base_func_proto() to
+have a section conditional on bpf_token_capable(CAP_SYS_ADMIN), where
+the proto for bpf_probe_write_user() is returned. Finally, remove the
+unnecessary bpf_get_probe_write_proto().
 
-After 8 years since 96ae52279594, bpf_probe_write_user() has found
-successful applications beyond experiments [1, 2], with no other good
-alternatives. Despite its intended purpose for "experiments", that
-doesn't stop Hyrum's law, and there are likely many more users depending
-on this helper: "[..] it does not matter what you promise [..] all
-observable behaviors of your system will be depended on by somebody."
+This simplifies the code, and adding additional CAP_SYS_ADMIN-only
+helpers in future avoids duplicating the same CAP_SYS_ADMIN check.
 
-The ominous "helper that may corrupt user memory!" has offered no real
-benefit, and has been found to lead to confusion where the system
-administrator is loading programs with valid use cases.
-
-As such, remove the warning message.
-
-Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@google.com/ [1]
-Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2VaekdL4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
-Link: https://lore.kernel.org/all/CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com/
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
 Signed-off-by: Marco Elver <elver@google.com>
 ---
 v2:
-* Just delete the message entirely (suggested by Andrii Nakryiko)
+* New patch.
 ---
- kernel/trace/bpf_trace.c | 3 ---
- 1 file changed, 3 deletions(-)
+ kernel/trace/bpf_trace.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 630b763e5240..0ab56af2e298 100644
+index 0ab56af2e298..d312b77993dc 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
-@@ -362,9 +362,6 @@ static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return NULL;
+@@ -357,14 +357,6 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
+ 	.arg3_type	= ARG_CONST_SIZE,
+ };
  
--	pr_warn_ratelimited("%s[%d] is installing a program with bpf_probe_write_user helper that may corrupt user memory!",
--			    current->comm, task_pid_nr(current));
+-static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+-{
+-	if (!capable(CAP_SYS_ADMIN))
+-		return NULL;
 -
- 	return &bpf_probe_write_user_proto;
+-	return &bpf_probe_write_user_proto;
+-}
+-
+ #define MAX_TRACE_PRINTK_VARARGS	3
+ #define BPF_TRACE_PRINTK_SIZE		1024
+ 
+@@ -1417,6 +1409,12 @@ late_initcall(bpf_key_sig_kfuncs_init);
+ static const struct bpf_func_proto *
+ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
++	const struct bpf_func_proto *func_proto;
++
++	func_proto = bpf_base_func_proto(func_id, prog);
++	if (func_proto)
++		return func_proto;
++
+ 	switch (func_id) {
+ 	case BPF_FUNC_map_lookup_elem:
+ 		return &bpf_map_lookup_elem_proto;
+@@ -1458,9 +1456,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_perf_event_read_proto;
+ 	case BPF_FUNC_get_prandom_u32:
+ 		return &bpf_get_prandom_u32_proto;
+-	case BPF_FUNC_probe_write_user:
+-		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
+-		       NULL : bpf_get_probe_write_proto();
+ 	case BPF_FUNC_probe_read_user:
+ 		return &bpf_probe_read_user_proto;
+ 	case BPF_FUNC_probe_read_kernel:
+@@ -1539,7 +1534,18 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_trace_vprintk:
+ 		return bpf_get_trace_vprintk_proto();
+ 	default:
+-		return bpf_base_func_proto(func_id, prog);
++		break;
++	}
++
++	if (!bpf_token_capable(prog->aux->token, CAP_SYS_ADMIN))
++		return NULL;
++
++	switch (func_id) {
++	case BPF_FUNC_probe_write_user:
++		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
++		       NULL : &bpf_probe_write_user_proto;
++	default:
++		return NULL;
+ 	}
  }
  
 -- 
