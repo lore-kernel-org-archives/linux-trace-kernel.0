@@ -1,77 +1,72 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1C020103A;
-	Wed, 27 Nov 2024 17:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8360113D899;
+	Wed, 27 Nov 2024 17:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732728596; cv=none; b=iKmP2FoX2avIqOWUE2+OXdUyUq0JXh/bAozFbN69rAWkzVM79hIgj5uF7uqqyjILWfib7ggNJtXyLKCiAcQww5d+5O6mbaVR2+JLfc6FfC0oobgzH0kYpQaIEqGgcMY3P7yGiNLiUWDOdLjB+gzb04QVjCNQuAE3ywPXYIl4YgI=
+	t=1732728606; cv=none; b=K0MzDOLrdNw1Yn8Sj9/8x82YuVN1/e0BGFa7Qz+gKzfkzqmD2LpqWv5kgoxXMWXkxbEOBPmDFJ7yiLO42E+54NvKegSNd4Wfvi/W+hErHb9FyIQo5kI3yeZbY5wZloSBf+soTbqVFBtyXy15ZW7+9qkeOStHjILR/qdaGYxCvV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732728596; c=relaxed/simple;
-	bh=bpMqPVQ3HsfWe+bk5gds1iHBJEE9VMgZp3CPDFR8+go=;
+	s=arc-20240116; t=1732728606; c=relaxed/simple;
+	bh=ycDrQrX8gZHEUT0jV8doyx6zCNX6hRoiZ/fYCbDs2vo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KjlYuXVtdnzT8neAczl5XtWXXemLXrtgbXmvDmuE+bqVLdm7WW9sBMaUrXNQt30Zr/Xu9oPy5tsvMeGjr0zh0L6aqp8hvs7bK/G7ahcF+4o7L9nrL3p0lO5XGiMTI7dIjn9Xz9DhK3JqEQhNiHiuXxZGOYtJyKBj8SmHaPP2AB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnHNZHz2; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=TOEuEw7Cs7VqH5rFBQN70kZSEgE50kYiyXVyZq7PZ9XOV9luUAI1esVn6+bwUoU0I/Z0p7WBlAkZExFdym6vB0D9eAu0LorkBUqE/JUBDRiYO6QZHUimSOpay/vSIHkrIpuEYkuQS0MdDpwgDjo6n0VpHxNSN9+kYIkcCERnMAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CkCamA2m; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnHNZHz2"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7251331e756so16749b3a.3;
-        Wed, 27 Nov 2024 09:29:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CkCamA2m"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71d4fceec9aso1651668a34.3;
+        Wed, 27 Nov 2024 09:30:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732728594; x=1733333394; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732728603; x=1733333403; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VhqF3E4/w+YtOL58NNfG2rcUNmjyen3grJ9NA1x6juQ=;
-        b=dnHNZHz2Ak6h4F+UgCuK1b26TtEdgxyo92ke2v/2SFjvcdhkW1Lu3GXJxygApSMVKW
-         OQnrF1nn/CFe+zLrDy8vsqA0RIgHxvCEosAsG+B8UUVP3KxFnze37KBlCP1vhqaHjB/B
-         prSjGdp3ghZ9nj9VUzoYckFoua0HKInV849NCxh22ntFUSRiauAiva+arAuRJMfMgrme
-         /sKZD2CsX+EPDSI+setBN8wTR6t+nrXaHSJRFtZbqypJaMgq8IFeOtXJWtXgb8SkfVu/
-         i8m1rwnuUy8hk04DdgkUW88BwaIejhA1XrLCxUuSlsJh8syyorltRf3MuZEN0TA5OabW
-         C83A==
+        bh=1IR7fJnOIGqt6b1nWAQZJYrqcHCadpu+itzDI+rPODg=;
+        b=CkCamA2mA7cVEDeWY7M7kty9ev1sHPUGKUqEOBSLPPaiAEFnM3FGHtT5sWvi6+weMv
+         y9IdfvqmRISNq71d6ObmZb4UTke0pIMHuCAIzxHCsTIcJ4aKu4auViFhEUPOCWkf0bVv
+         WyNrbNBqsIbW4WIdii6KbkFAZc2lTpiPASEPKXr6QaLjH97yX1AG099f45PzTRFVtBDw
+         3SgAcRxBA/au+eU/Pnvt89S5/A8SQSpnreRHqwZVsJrrFb3MHIVwmyPsmeIj079FhfeY
+         W3mSknNYWA56JY8wdqlJx0WQZE/+S1OmyiQU0qh4xzyfzgKJ8XVYBmr4e0ybm8Rna9NI
+         ueLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732728594; x=1733333394;
+        d=1e100.net; s=20230601; t=1732728603; x=1733333403;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VhqF3E4/w+YtOL58NNfG2rcUNmjyen3grJ9NA1x6juQ=;
-        b=n8hMrqCrLoRW9L/kC90J2uowKA3T22hMN4cZrQuWuTh85yRczZWlOfJAFMsfmsW8O0
-         1eusmFTMuBlQ77icCbjJAzEoPjVHDnDtshXN/+dN9Pa4AOXlAiXr6ywrXPzffGt2qmLr
-         w3EMhMNVmUDi6F6qpM6H/0WURafnu5StzF5avqPSpKl4APqMBwRplzfNTnis31eXhiXb
-         9eB8iZ37sCK4qoP4dhh5Rk1jdS1HFLA0zEV4p9/ZXMTkMoTJrZPnoz7+Z947NGyKFBdR
-         nkWg+D+Uhu2U8EjPRVqtAnfSqUX7A7YauGQFrBel9rLmEZrtaUsDDicy30QoXedH6rC0
-         ad+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUsR40oLdfCmqRuMVpwe7fPWJn/pmuTdxAzC48cqvh4nsrneejKct72MZFNEDfLhmuKAaBhIf+8OOqxNZkWaVl7ntc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeTJduwr3HWQdel1BolJrVG1cE3W+G91Vpf3y3GMfMa7njyb5Z
-	fvfJp5JWjw7t27BwWZWA57rV4NIJU3rANWPAvBhlYU7KrZLbK0UC
-X-Gm-Gg: ASbGncuWasBTcoi3lWu/yX0+2oEVNCmI5A52rwjEBVn9nuZ3ZeMYnCZn7mz/uwA0yuJ
-	eDE3XRBVt3La/je2m80f6J8B9xBWJS1wYCluzvIVj6Jm2/hxP42KSHvE3xqPu/Lfv7MXk84d+7p
-	QUT4ymbgj11p3Ru0dh1nkOFZlqjHFoWsEkK3Ob+58z9uhNgaAEB9oaural3jPpM8eMTB7mETzJF
-	8CZakyKEfNQDXCzrxhZIwAG2aYt7nL7Zm6Lfch5e3Y+UiTYf5LwDzjxHYCpbqymnlhBNccVKioT
-	spEHgs1GWBJYPkpjcb51DZDNu7WY
-X-Google-Smtp-Source: AGHT+IHe4vfUFn689BzH733Y3azaB4OQQfGNQ2U5d2DUk6y3aLJvqA63KG7l5W6jxcEPLUbmlo8oFg==
-X-Received: by 2002:a05:6a00:3c89:b0:724:eac3:576a with SMTP id d2e1a72fcca58-725301a5b92mr5270747b3a.25.1732728594123;
-        Wed, 27 Nov 2024 09:29:54 -0800 (PST)
+        bh=1IR7fJnOIGqt6b1nWAQZJYrqcHCadpu+itzDI+rPODg=;
+        b=XCQYuYPDv6cXt+Cuj1Us9A9y0yPgLzKHNZwR0fLL7B4fueS+xbCwiYE5sCraoDPNjd
+         2wWVNnp7ZNDkHhR3JegvaXRXOFPoelmk8DGiUWx/GA82qQupsbZK6qx1YhcvLrbe08IQ
+         JYTS8z2UCfcmPx2MnC50JXXcKxnED6/YpNd11kitVQYvZL60osxmPTuUzpMl4MRekfDo
+         0tNc0SF7i5GkmWh0WE0cOJYedeo27qnVXba9p/Jd+dhKshQ9gwOeAM+RIu6bfxdhuUuR
+         uBCSmvpyG8bJrydbiQXlvsJKZIHp3aNnzpb9jLYSjoyt3SiYLGgimasTCoWZVfT0Qngb
+         YpKA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzFaAhokSWAtILxyt9Meh5mVLYhy9kLHpWj2IyS7kvZixNjN4g+hmtKzguxbIz78NxBM0tJUfPg72GT3yUABZdjug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+yLH3BQhOlMFEHUmpRv1bGYzGOkEtbgEeqwiSKfTyx6CSL5Uu
+	bCbdAP67eMWVbWnDYFJ1R7Cb3CILLOEmlCexfPdBC62FGuLefmNCTVgChbyD
+X-Gm-Gg: ASbGncsQhCU7wSPpASqX7g+QbJYw3ozUr7c4QCaj8oF4kNETAH/Jt4AL81UdQnNggEq
+	kz8yo7afHBKnrHG2u65uHmguk+4eBczfr0HNtOpZcOrnnK0dJO2FweA2yAwbaHdFbl6UU2F3DVP
+	hR7bzLmYyO0MA2dwFsrg6OturtmE7zZ5a8y3SWSOXeoAfFeQX853bc8uRGepiQzIjKwk5tEFWxX
+	X1hoJGs9TZXtCvmmU7MFN3jvyaO0TGXul9y9Kx1wdONhaMBrRo1gPqxlIUpDHInOmFOEd7sXegY
+	XuUDzjvyhsaqlHQ+ImaGS2k+PlnE
+X-Google-Smtp-Source: AGHT+IHruXTFUTfiaojyTMlhAizY2Drw8OyNcxeu1vFbTUarM1m1Pec3RyTRvOVVRoAzScO0flWjxQ==
+X-Received: by 2002:a05:6830:6e90:b0:71d:4bd9:8b98 with SMTP id 46e09a7af769-71d65d07e94mr4292715a34.25.1732728603299;
+        Wed, 27 Nov 2024 09:30:03 -0800 (PST)
 Received: from localhost.localdomain (1-171-29-17.dynamic-ip.hinet.net. [1.171.29.17])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc1e3fdbsm9359582a12.30.2024.11.27.09.29.50
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7fbcc1e3fdbsm9359582a12.30.2024.11.27.09.29.59
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 27 Nov 2024 09:29:53 -0800 (PST)
+        Wed, 27 Nov 2024 09:30:02 -0800 (PST)
 From: Andy Chiu <andybnac@gmail.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
+	Albert Ou <aou@eecs.berkeley.edu>
 Cc: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
-	llvm@lists.linux.dev,
 	bjorn@rivosinc.com,
 	puranjay12@gmail.com,
 	alexghiti@rivosinc.com,
@@ -84,9 +79,9 @@ Cc: linux-kernel@vger.kernel.org,
 	viccent.chen@sifive.com,
 	zong.li@sifive.com,
 	samuel.holland@sifive.com
-Subject: [PATCH v3 1/7] riscv: ftrace: support fastcc in Clang for WITH_ARGS
-Date: Thu, 28 Nov 2024 01:29:02 +0800
-Message-Id: <20241127172908.17149-2-andybnac@gmail.com>
+Subject: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code patching
+Date: Thu, 28 Nov 2024 01:29:04 +0800
+Message-Id: <20241127172908.17149-4-andybnac@gmail.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 In-Reply-To: <20241127172908.17149-1-andybnac@gmail.com>
 References: <20241127172908.17149-1-andybnac@gmail.com>
@@ -100,93 +95,232 @@ Content-Transfer-Encoding: 8bit
 
 From: Andy Chiu <andy.chiu@sifive.com>
 
-Some caller-saved registers which are not defined as function arguments
-in the ABI can still be passed as arguments when the kernel is compiled
-with Clang. As a result, we must save and restore those registers to
-prevent ftrace from clobbering them.
+We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
+instruction fetch can break down to 4 byte at a time, it is impossible
+to update two instructions without a race. In order to mitigate it, we
+initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
+patching can change NOP4 to JALR to eable/disable ftrcae from a
+function. This limits the reach of each ftrace entry to +-2KB displacing
+from ftrace_caller.
 
-- [1]: https://reviews.llvm.org/D68559
+Starting from the trampoline, we add a level of indirection for it to
+reach ftrace caller target. Now, it loads the target address from a
+memory location, then perform the jump. This enable the kernel to update
+the target atomically.
 
-Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
-Closes: https://lore.kernel.org/linux-riscv/7e7c7914-445d-426d-89a0-59a9199c45b1@yadro.com/
-Acked-by: Nathan Chancellor <nathan@kernel.org>
+The ordering of reading/updating the targert address should be guarded
+by generic ftrace code, where it sends smp_rmb ipi.
+
 Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
 ---
- arch/riscv/include/asm/ftrace.h |  7 +++++++
- arch/riscv/kernel/asm-offsets.c |  7 +++++++
- arch/riscv/kernel/mcount-dyn.S  | 16 ++++++++++++++--
- 3 files changed, 28 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/ftrace.h |  4 ++
+ arch/riscv/kernel/ftrace.c      | 80 +++++++++++++++++++++------------
+ arch/riscv/kernel/mcount-dyn.S  |  9 ++--
+ 3 files changed, 62 insertions(+), 31 deletions(-)
 
 diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index 2cddd79ff21b..4ca7ce7f34d7 100644
+index 4ca7ce7f34d7..36734d285aad 100644
 --- a/arch/riscv/include/asm/ftrace.h
 +++ b/arch/riscv/include/asm/ftrace.h
-@@ -143,6 +143,13 @@ struct ftrace_regs {
- 			unsigned long a5;
- 			unsigned long a6;
- 			unsigned long a7;
-+#ifdef CONFIG_CC_IS_CLANG
-+			unsigned long t2;
-+			unsigned long t3;
-+			unsigned long t4;
-+			unsigned long t5;
-+			unsigned long t6;
-+#endif
- 		};
- 	};
- };
-diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
-index e94180ba432f..59789dfb2d5d 100644
---- a/arch/riscv/kernel/asm-offsets.c
-+++ b/arch/riscv/kernel/asm-offsets.c
-@@ -504,6 +504,13 @@ void asm_offsets(void)
- 	DEFINE(FREGS_SP,	    offsetof(struct ftrace_regs, sp));
- 	DEFINE(FREGS_S0,	    offsetof(struct ftrace_regs, s0));
- 	DEFINE(FREGS_T1,	    offsetof(struct ftrace_regs, t1));
-+#ifdef CONFIG_CC_IS_CLANG
-+	DEFINE(FREGS_T2,	    offsetof(struct ftrace_regs, t2));
-+	DEFINE(FREGS_T3,	    offsetof(struct ftrace_regs, t3));
-+	DEFINE(FREGS_T4,	    offsetof(struct ftrace_regs, t4));
-+	DEFINE(FREGS_T5,	    offsetof(struct ftrace_regs, t5));
-+	DEFINE(FREGS_T6,	    offsetof(struct ftrace_regs, t6));
-+#endif
- 	DEFINE(FREGS_A0,	    offsetof(struct ftrace_regs, a0));
- 	DEFINE(FREGS_A1,	    offsetof(struct ftrace_regs, a1));
- 	DEFINE(FREGS_A2,	    offsetof(struct ftrace_regs, a2));
+@@ -80,6 +80,7 @@ struct dyn_arch_ftrace {
+ #define JALR_T0			(0x000282e7)
+ #define AUIPC_T0		(0x00000297)
+ #define NOP4			(0x00000013)
++#define JALR_RANGE		(JALR_SIGN_MASK - 1)
+ 
+ #define to_jalr_t0(offset)						\
+ 	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+@@ -117,6 +118,9 @@ do {									\
+  * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
+  */
+ #define MCOUNT_INSN_SIZE 8
++#define MCOUNT_AUIPC_SIZE	4
++#define MCOUNT_JALR_SIZE	4
++#define MCOUNT_NOP4_SIZE	4
+ 
+ #ifndef __ASSEMBLY__
+ struct dyn_ftrace;
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index 4b95c574fd04..5ebe412280ef 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long hook_pos,
+ 	return 0;
+ }
+ 
+-static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+-				bool enable, bool ra)
++static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target, bool validate)
+ {
+ 	unsigned int call[2];
+-	unsigned int nops[2] = {NOP4, NOP4};
++	unsigned int replaced[2];
++
++	make_call_t0(hook_pos, target, call);
+ 
+-	if (ra)
+-		make_call_ra(hook_pos, target, call);
+-	else
+-		make_call_t0(hook_pos, target, call);
++	if (validate) {
++		/*
++		 * Read the text we want to modify;
++		 * return must be -EFAULT on read error
++		 */
++		if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
++					     MCOUNT_INSN_SIZE))
++			return -EFAULT;
++
++		if (replaced[0] != call[0]) {
++			pr_err("%p: expected (%08x) but got (%08x)\n",
++			       (void *)hook_pos, call[0], replaced[0]);
++			return -EINVAL;
++		}
++	}
+ 
+-	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
+-	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
++	/* Replace the jalr at once. Return -EPERM on write error. */
++	if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), call + 1, MCOUNT_JALR_SIZE))
+ 		return -EPERM;
+ 
+ 	return 0;
+ }
+ 
+-int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
++static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, ftrace_func_t target, bool enable)
+ {
+-	unsigned int call[2];
++	ftrace_func_t call = target;
++	ftrace_func_t nops = &ftrace_stub;
+ 
+-	make_call_t0(rec->ip, addr, call);
+-
+-	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
+-		return -EPERM;
++	WRITE_ONCE(*hook_pos, enable ? call : nops);
+ 
+ 	return 0;
+ }
+ 
++int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
++{
++	unsigned long distance, orig_addr;
++
++	orig_addr = (unsigned long)&ftrace_caller;
++	distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
++	if (distance > JALR_RANGE)
++		return -EINVAL;
++
++	return __ftrace_modify_call(rec->ip, addr, false);
++}
++
+ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+ 		    unsigned long addr)
+ {
+-	unsigned int nops[2] = {NOP4, NOP4};
++	unsigned int nops[1] = {NOP4};
+ 
+-	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
++	if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), nops, MCOUNT_NOP4_SIZE))
+ 		return -EPERM;
+ 
+ 	return 0;
+@@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+  */
+ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+ {
++	unsigned int nops[2];
+ 	int out;
+ 
++	make_call_t0(rec->ip, &ftrace_caller, nops);
++	nops[1] = NOP4;
++
+ 	mutex_lock(&text_mutex);
+-	out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
++	out = patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
+ 	mutex_unlock(&text_mutex);
+ 
+ 	return out;
+ }
+ 
++ftrace_func_t ftrace_call_dest = ftrace_stub;
+ int ftrace_update_ftrace_func(ftrace_func_t func)
+ {
+-	int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
+-				       (unsigned long)func, true, true);
+-
+-	return ret;
++	return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
+ }
+ 
+ struct ftrace_modify_param {
+@@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+ 	if (ret)
+ 		return ret;
+ 
+-	return __ftrace_modify_call(caller, addr, true, false);
++	return __ftrace_modify_call(caller, addr, true);
+ }
+ #endif
+ 
+@@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+ 	prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
+ }
+ #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+-extern void ftrace_graph_call(void);
++ftrace_func_t ftrace_graph_call_dest = ftrace_stub;
+ int ftrace_enable_ftrace_graph_caller(void)
+ {
+-	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+-				    (unsigned long)&prepare_ftrace_return, true, true);
++	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
++					 &prepare_ftrace_return, true);
+ }
+ 
+ int ftrace_disable_ftrace_graph_caller(void)
+ {
+-	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+-				    (unsigned long)&prepare_ftrace_return, false, true);
++	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
++					 &prepare_ftrace_return, false);
+ }
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+ #endif /* CONFIG_DYNAMIC_FTRACE */
 diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 745dd4c4a69c..e988bd26b28b 100644
+index e988bd26b28b..bc06e8ab81cf 100644
 --- a/arch/riscv/kernel/mcount-dyn.S
 +++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -96,7 +96,13 @@
- 	REG_S	x8,  FREGS_S0(sp)
+@@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
+ 	mv	a3, sp
+ 
+ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+-	call	ftrace_stub
++	REG_L	ra, ftrace_call_dest
++	jalr	0(ra)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	addi	a0, sp, ABI_RA
+@@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+ 	mv	a2, s0
  #endif
- 	REG_S	x6,  FREGS_T1(sp)
--
-+#ifdef CONFIG_CC_IS_CLANG
-+	REG_S	x7,  FREGS_T2(sp)
-+	REG_S	x28, FREGS_T3(sp)
-+	REG_S	x29, FREGS_T4(sp)
-+	REG_S	x30, FREGS_T5(sp)
-+	REG_S	x31, FREGS_T6(sp)
-+#endif
- 	// save the arguments
- 	REG_S	x10, FREGS_A0(sp)
- 	REG_S	x11, FREGS_A1(sp)
-@@ -115,7 +121,13 @@
- 	REG_L	x8, FREGS_S0(sp)
+ SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+-	call	ftrace_stub
++	REG_L	ra, ftrace_graph_call_dest
++	jalr	0(ra)
  #endif
- 	REG_L	x6,  FREGS_T1(sp)
--
-+#ifdef CONFIG_CC_IS_CLANG
-+	REG_L	x7,  FREGS_T2(sp)
-+	REG_L	x28, FREGS_T3(sp)
-+	REG_L	x29, FREGS_T4(sp)
-+	REG_L	x30, FREGS_T5(sp)
-+	REG_L	x31, FREGS_T6(sp)
-+#endif
- 	// restore the arguments
- 	REG_L	x10, FREGS_A0(sp)
- 	REG_L	x11, FREGS_A1(sp)
+ 	RESTORE_ABI
+ 	jr	t0
+@@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
+ 	PREPARE_ARGS
+ 
+ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+-	call	ftrace_stub
++	REG_L	ra, ftrace_call_dest
++	jalr	0(ra)
+ 
+ 	RESTORE_ABI_REGS
+ 	bnez	t1, .Ldirect
 -- 
 2.39.3 (Apple Git-145)
 
