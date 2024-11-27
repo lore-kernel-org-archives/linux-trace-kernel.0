@@ -1,111 +1,167 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13901DF973
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 22:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4908F49;
+	Wed, 27 Nov 2024 00:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732660865; cv=none; b=OtH0YDqvqqrCysph42OIWeS8tBXrG5vQ0b9ULln8HcaQEG1Xd7vUMg0bFZ82QMXfNKWTl+HRlyt0MiqcVe7JOae65FmJC6waxbONk1luuff7AHOIYMsZYDa1bizH7rCrNhXz8J4lf+mvJS7HpioRiWr8uj2xab+AYrAxzjyTZGw=
+	t=1732668759; cv=none; b=Cg2clysKT5l58nKCpAqnzKhcsFGXug89eecUk1JK2TImIIMqj+PUPtmMEM5ukfSaNFags28SSb3mAjhnKca/PhhPacxmVHn9nSvfx/E0169MglH8pvs1XfuA3ZCd1g/Nmq4Ls5VXkOx3hxHWbU5pLsxo3YWGzHNwAVsOhqn7/68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732660865; c=relaxed/simple;
-	bh=51rqWKa/9fOh6GQVlexs1p8suWSnLeJOxOeaHETGV10=;
+	s=arc-20240116; t=1732668759; c=relaxed/simple;
+	bh=4PsApXP8sXU7gF8b0yzHPzWru0EeL0tGYpYvBWNvyzQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GwBJ65Lw+LewDeJklxGNxTH6ceL4Xye4gIhCPqj2bXdhzvLUtGBDuZ+UpFELlQPB5DjlXX91CvjMS4wqbZ0CTUCtO3XbCfY+ywvxYNus0cZeYCQQ3rK/gqqklSrLKtO5b0ufE3GaNAbrlkqH8oq677pPuuO0jtX0bdfHnKbK28Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SgAqWW2M; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=oW/AV3nIFAwuFYjFOIM8SDFrBM9IOc2XrdSrQW3wtAwDZctpqwFMtsbH/+R//R08Y8CkWVT5cNGBLUhfIBB9rsmIpQ33Y8KAlsX8kqIZY4t6XubE5UpveexjiXLpIis6lYh2Qp4LAJDV/+ssPp3omb2TDWbA79mEDiUN+utOlBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PnIY1usE; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SgAqWW2M"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa53ebdf3caso531623566b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 14:41:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnIY1usE"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3825a721ae5so170652f8f.1;
+        Tue, 26 Nov 2024 16:52:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1732660861; x=1733265661; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7pbYi8XVvPynSRXkVpkfjziZ+aTH3WZhoGNDgr1HVmU=;
-        b=SgAqWW2MmjSb5YvTAgl14bBpDrJsxoxbkc5YEuc2D8z0GdbJXyuBaVLgQXrNTuZQMR
-         XYEXF/rSSpcidB8xVBFi15ENOpszrCxE+fKwr66XOeCslAIxKpVtYc41ibQyMdOKVAV/
-         cMjNf4ybIKEXvTiwBiwgiWZD+d1jThuP9YSRI=
+        d=gmail.com; s=20230601; t=1732668756; x=1733273556; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xjRRCxwGmW1KZp8fE5HVHe1CX+qRVInoZebEpE8YP/k=;
+        b=PnIY1usEWw4WsAZiQWF5yLfiO5ThGBkYQ8KEqsx0KMU1EperXC5bdUyI5R9IBu4xvm
+         5hQSRoB+MEaAa2xPMDxf/4CnGNJE0iNIVBnscYBzFqJY/HS0m2AHCnFrPBt5W1m/xgAg
+         NU1HqeGztmGE2iFUqHYORuXKGdzBWR+5chmr+pWZ5d7g0DVdbltfFO4YWqqWvQwjT0xl
+         1EDpJ3MoHb8HNTPZLhY0PQ0Znf7zPWZbxGwmqunEdCvSRA1FH9W4fAUpjtvoBwaRf9pp
+         m0TKNN+33bJHZLPOpLea8o8SOOZvg0y1YoXaM5ANHK3IJA+138Nt1W0mEF1NXqTf9+yb
+         /Qmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732660861; x=1733265661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7pbYi8XVvPynSRXkVpkfjziZ+aTH3WZhoGNDgr1HVmU=;
-        b=nFkW3kgcLiPMgPBg9DdzyTLCbVJNWvCuAzteGCBRqphj4l+LpFFSnAHlC6QmR71Xrs
-         6R+72kZvQRwz8BPGMR8PmSKzLmDcw/36Rf+eHuoZUjhgbsm+mJPkbr3OJGvcG3B8KIeX
-         dt3vFYWB7AhNGSBwkkqjvQNbw2DpAn3zsbYdDbNJEzUhrJoq/xv5DqHHK9Pfw7oFqNul
-         46DcgO4lO7ls7W74NnM9YgOa6boW963vP5kuOxC/2B5WH6+5KTdz5eEosE+oohN74k/X
-         Aw7Y++4h9KHyBfwxUJD+Co93CHvsQFnWIALff7M7/qJumfZ3yIHzuSWIh8XLvssmqAHJ
-         rwEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwlGvUlaX8AVTcSS/OoEJqQYKa2rfYLAjQD8sPN9/ZJPg33g0bUyh7CaLvuX+rJFSr09m1WgSnm1GozXWwIyWHbOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycmgOHH/ecxG6BlXvxTrtZvUCNXXuIe0uNaylck3IqDnhIQ8Bq
-	qRc+tTNmdMHWqPZJda6MO55w77Ydp5Z3XkLrCwcNcJHZ+K6fenoFQgI5pCBBHsymAmcTkrlJkvD
-	ZEigk4w==
-X-Gm-Gg: ASbGncvP70ZPZmMsinRrWAhWyPo4g/E63s1RN9IB3V5AhkTeOR27gdkKDG5shdcvoxe
-	UG8/MBnCSTtUjo/VZTcfWKeJnSTyQ869J18eujErJN5zfPHf3jRJCjQkfTep/kQPESRspILSWcK
-	1saUWphzNNuQdpfRE3RoPERpeTPPsDLvaWdu4m0eJOsQJ0f3BA8zoH8xJ6oJ+4akmGFe4bdWROA
-	Rfv5cKw2yOlFO9aDBfUYcRYspE7+gukeLA+Pz7o8YF7bF04IpQc2reTlJAOGjCUuGtLlBLA5Eju
-	yEyRAT75cAeed7y4zP++gHNf
-X-Google-Smtp-Source: AGHT+IFF6WYkMRTOChCBJMpNJnfzo99yM0A7wtWjWzrkfpwvvyWrHt+mTeT90IzT0HB2iZ9lMct1RQ==
-X-Received: by 2002:a17:907:7802:b0:a9e:441c:f729 with SMTP id a640c23a62f3a-aa580b2e09dmr68370666b.0.1732660861319;
-        Tue, 26 Nov 2024 14:41:01 -0800 (PST)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aa5208fd7bdsm585458166b.180.2024.11.26.14.40.59
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Nov 2024 14:41:00 -0800 (PST)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a9f1d76dab1so998814866b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 26 Nov 2024 14:40:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXUG/al618Rpb8DLpKdxnLeCpnM9a5nSlp2ol3rbNUFeMMMcialAip5Jy86NHnXpYrmi1reSYMQMZ8PXl/8+64RsJc=@vger.kernel.org
-X-Received: by 2002:a17:906:3090:b0:aa5:1ce8:e4e0 with SMTP id
- a640c23a62f3a-aa580edfc21mr68092966b.10.1732660859315; Tue, 26 Nov 2024
- 14:40:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732668756; x=1733273556;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xjRRCxwGmW1KZp8fE5HVHe1CX+qRVInoZebEpE8YP/k=;
+        b=cLkBqezqwDR2P4J4OY5GhcgD3LdNDAbSvMu8Zi50cY13DALxAKXiALrLiyDg3Td3GO
+         iiQXNpOR7ATr+OHEC/nhKhnXOgkK3rjSlpCRR7tiXa6ymfdZes+rilUhjFAL4Gi1G42X
+         QMEwYdyHEqtdHV7dcuuqIALgI0JlvkSwHyd6RBE5y0DVwuPyw8TClg0Z+W6smULq7/Gi
+         IOaObh89XwfQpFvaFRkfgiNTs7yrxsTaB+bDXHVmIoai6XNUsi8CC1XmYbvqVlv0gjFW
+         mMV6H8SRS6mcKQe7x5OZP0vjHMY4fFiVz4ETF4RsSIANluKV7/gObX65PogpsBQn5ufv
+         AINw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxvJoDbkg/1Ug3ZB8PXlGmF8OKzXWPWsvi72yIJQQBQitLF4uGk2Wk5mRMoCz5+9UcrUI=@vger.kernel.org, AJvYcCWarC2A8c+gRtc1CF9r1Q4n7tRi0+kzVjHSRS0jCnA7Iols+/40Qx4YvrfzSWVQAeM76HLjamgaosJCFcYZ@vger.kernel.org, AJvYcCXWTzTUzY5r+3vcy2KTkSUNkezSNpUC2N0SHz5OCSjVSYqzE9nfUJXOdMoSvngKJL2JSIIy7JUlsfDl8avAiOrGB/Rx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSddwrmYOfBCk3mNELNsmzazI1ckkxxIu2OZT7iX/u4cjSMbUO
+	MlzggapFDPwaSxozuMDGLfbWR5NTWsOpPFA3COoogPx5OE3WIJOypYhaKj4Hf1c54pjkA7/+cP+
+	JEXJO3lPUxGsbAUEMev3l2kowDAM=
+X-Gm-Gg: ASbGncskCcuww7NbLLFU9HE4k8tetaVWFMMOlJn5O38B5o8jvA3T2wfrFY8j5gnypUo
+	aRwKVrkYsqBwP43uzcw9vq1niNw+HDQ3iG2ZlfLNUEh3bflI=
+X-Google-Smtp-Source: AGHT+IEFnl7xbWyoK0kDCJ0s5pAWZKU6d9diZFfAyXhbRqgI/Td34XdMrFu68OmDsdJi/cvzUi8DIMI4Nb6vJc/O/O8=
+X-Received: by 2002:a5d:64c7:0:b0:382:4a92:7943 with SMTP id
+ ffacd0b85a97d-385bfb14b71mr4837851f8f.20.1732668755332; Tue, 26 Nov 2024
+ 16:52:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241123153031.2884933-1-mathieu.desnoyers@efficios.com>
- <20241123153031.2884933-5-mathieu.desnoyers@efficios.com> <CAHk-=whTjKsV5jYyq5yAxn7msQuyFdr9LB1vXcF6dOw2tubkWA@mail.gmail.com>
- <d36281ef-bb8f-4b87-9867-8ac1752ebc1c@efficios.com> <20241125142606.GG38837@noisy.programming.kicks-ass.net>
- <c70b4864-737b-4604-a32e-38e0b087917d@intel.com> <CAHk-=wjcCQ4-0f68bWMLuFnj9r9Hwg4YnXDBg8-K7z6ygq=iEQ@mail.gmail.com>
- <20241126084556.GI38837@noisy.programming.kicks-ass.net> <CAHk-=wg9yCQeGK+1MdSd3RydYApkPuVnoXa0TOGiaO388Nhg0g@mail.gmail.com>
- <Z0Yz6xffDjL6m_KZ@google.com> <42ef4bd2-0436-4a1c-b88c-73101dbbf77a@intel.com>
-In-Reply-To: <42ef4bd2-0436-4a1c-b88c-73101dbbf77a@intel.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 26 Nov 2024 14:40:43 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgAesttDd8qj6m9Ns-Xz6+44N4MsOnyROw5YzzhV74W7A@mail.gmail.com>
-Message-ID: <CAHk-=wgAesttDd8qj6m9Ns-Xz6+44N4MsOnyROw5YzzhV74W7A@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/5] tracing: Remove conditional locking from __DO_TRACE()
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Michael Jeanson <mjeanson@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, 
-	Joel Fernandes <joel@joelfernandes.org>, Jordan Rife <jrife@google.com>, 
-	linux-trace-kernel@vger.kernel.org, 
-	Nick Desaulniers <ndesaulniers@google.com>
+References: <20241126165414.1378338-1-elver@google.com> <CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com>
+In-Reply-To: <CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 26 Nov 2024 16:52:24 -0800
+Message-ID: <CAADnVQLv+iDgH9bAFrEMUCxVBnRGJq1si0W7xsjrd6DZmNkxxA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Improve bpf_probe_write_user() warning message
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Marco Elver <elver@google.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Nikola Grcevski <nikola.grcevski@grafana.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 26 Nov 2024 at 14:32, Przemek Kitszel
-<przemyslaw.kitszel@intel.com> wrote:
+On Tue, Nov 26, 2024 at 1:32=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> BTW shadowing of the goto-label is not a -Wshadow but a -Wfckoff level
-> of complain; I have spend a few days to think of something better,
-> including abusing of switch and more ugly things, -ENOIDEA
+> On Tue, Nov 26, 2024 at 8:54=E2=80=AFAM Marco Elver <elver@google.com> wr=
+ote:
+> >
+> > The warning message for bpf_probe_write_user() was introduced in
+> > 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
+> > tracers"), with the following in the commit message:
+> >
+> >     Given this feature is meant for experiments, and it has a risk of
+> >     crashing the system, and running programs, we print a warning on
+> >     when a proglet that attempts to use this helper is installed,
+> >     along with the pid and process name.
+> >
+> > After 8 years since 96ae52279594, bpf_probe_write_user() has found
+> > successful applications beyond experiments [1, 2], with no other good
+> > alternatives. Despite its intended purpose for "experiments", that
+> > doesn't stop Hyrum's law, and there are likely many more users dependin=
+g
+> > on this helper: "[..] it does not matter what you promise [..] all
+> > observable behaviors of your system will be depended on by somebody."
+> >
+> > As such, the warning message can be improved:
+> >
+> > 1. The ominous "helper that may corrupt user memory!" offers no real
+> >    benefit, and has been found to lead to confusion where the system
+> >    administrator is loading programs with valid use cases.  Remove it.
+> >    No information is lost, and administrators who know their system
+> >    should not load eBPF programs that use bpf_probe_write_user() know
+> >    what they are looking for.
+> >
+> > 2. If multiple programs with bpf_probe_write_user() are loaded by the
+> >    same task/PID consecutively, only print the message once. If another
+> >    task loads a program with the helper, the message is printed once
+> >    more, and so on. This also makes the need for rate limiting
+> >    redundant.
+> >
+> > 3. Every printk line needs to be concluded with "\n" to be flushed. Wit=
+h
+> >    the old version the warning message only appeared after any followin=
+g
+> >    printk. Fix this.
+> >
+> > Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@googl=
+e.com/ [1]
+> > Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2Vae=
+kdL4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > ---
+> >  kernel/trace/bpf_trace.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 630b763e5240..0ead3d66f8db 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -359,11 +359,16 @@ static const struct bpf_func_proto bpf_probe_writ=
+e_user_proto =3D {
+> >
+> >  static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
+> >  {
+> > +       static pid_t last_warn_pid =3D -1;
+> > +
+> >         if (!capable(CAP_SYS_ADMIN))
+> >                 return NULL;
+> >
+> > -       pr_warn_ratelimited("%s[%d] is installing a program with bpf_pr=
+obe_write_user helper that may corrupt user memory!",
+> > -                           current->comm, task_pid_nr(current));
+> > +       if (READ_ONCE(last_warn_pid) !=3D task_pid_nr(current)) {
+> > +               pr_warn("%s[%d] is installing a program with bpf_probe_=
+write_user\n",
+> > +                       current->comm, task_pid_nr(current));
+> > +               WRITE_ONCE(last_warn_pid, task_pid_nr(current));
+> > +       }
+>
+> should we just drop this warning altogether? After all, we can call
+> crash_kexec() without any warnings, if we have the right capabilities.
+> bpf_probe_write_user() is much less destructive and at worst will
+> cause memory corruption within a single process (assuming
+> CAP_SYS_ADMIN, of course). If yes, I think we should drop
+> bpf_get_probe_write_proto() function altogether and refactor
+> bpf_tracing_func_proto() to have
+> bpf_token_capable(CAP_SYS_ADMIN)-guarded section, just like
+> bpf_base_func_proto() has.
 
-Yeah, I think you need to do that __UNIQUE_ID() thing for labels,
-because while you can introduce local labels (see "__label__" use in
-the wait macros and a few other places, where we do it) you need to
-have a block scope to do that and the goto needs to be inside that
-scope, of course.
-
-Which I don't see how to do in this situation.
-
-        Linus
++1
+Let's just remove this warn. It didn't stop anyone from using it so far.
