@@ -1,106 +1,290 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9262CAB;
-	Thu, 28 Nov 2024 19:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8CE15250F;
+	Thu, 28 Nov 2024 22:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732820727; cv=none; b=R59iTxXAegltICiH9VwzdW4GJRCyzqvYOdF4mMq0eIzDfhd+PEokVMD9pzarJacEPZv3kN8H8kVTDx4RHuokK2n1i7D2hNvYl+dNWyJagTAJaxw9gqOl6JT+VvQx82DXB7UQ+38AsyoJnS0Q/jml4mW+yh+ndTLO9Ecbush4EX8=
+	t=1732834179; cv=none; b=eNMBOXnP0266iV+UkbqIFPvvwvzX3POFJecjClezoqpcVKpGG6gEwpnS3skFZHAOnCgyziVt+qdTNcB4GADBnm++JMRG/Hj21QLOj3aXW1gaCvfPER3/uS+O1yxFoHE4HSfrzXkUh8C73BprUlYNdrKBayby6esCNbxtSBWoU0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732820727; c=relaxed/simple;
-	bh=TGz/gRp6g/hAX+W8VpDqafS+O5d3xzNQzd0Hcui57FY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ly6Rc7lrriFIzH/fxMnR6l3v2CTKBBs4ET2ITTW1NnRSddBuOLmWo5qdfXYLdfXy9fHHRkgdqfGVBtfwlcu30UqxzXlIjiJYd1dBZPWUgZPVldrsCSFK/LO53m2SJ0TAcimjxKX03piekDSz2usbmDn+3/rwpwn47oZnlRHs/u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLTiLmCC; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732834179; c=relaxed/simple;
+	bh=2CLq5AvTfa+uLsdmJdFRiMOmi9FGNuFypfi6aWel7DQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TSyW5TcZJrNXTo2YIFlSXnKt7AwANOmLD0Fwh8CNZizrtpilg6Rk8eWpgFhNC1kGfLR+1kSQ0t4B071hyOYVFUT5ukXCejfEAXXKvsv4hVD7MnbUbs/TK37UmC7agfFSe05MG+y0WrTgzs6rhx3JbWehkgle1cUD/DMKonCIZRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=jordanrome.com; dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b=KCHtb+de; arc=none smtp.client-ip=74.208.4.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jordanrome.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLTiLmCC"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-434a099ba95so10304355e9.0;
-        Thu, 28 Nov 2024 11:05:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732820723; x=1733425523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x030wcXN3XejZGrsIlbUm8x1eM2wwwHskSKWwVcxZj0=;
-        b=hLTiLmCCP0H1gVVcLbJy3njRed63kGceF7fdo7VOyQadv/nOozBW/L12oa7dS33dua
-         itpC58wHzZMcPX4dz7qtVrmn/8vpZVeeHOPK0DVWlKm+bWQk0ew4Kk9XEFu+sX+uPBF1
-         M11wztaUqVN2lS2Lwv8+TQNjIbdqKPOiiL4Jmx9hkfb0KxqzBSmToQ+OqU+AbsKJ6cgj
-         opkc2GW5GGKsKic+qpzGvgeBEFfa6ElZFv682Q839FO2tMSInpg0ulik+ipRbZJSTE8C
-         f0Zo1PQ4ODPvkc7vvQZuBMd4aolN7l0FoXt4qh6MHGF5YBxrrMHzmtvoCQDw/bhfM1Zh
-         TWKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732820723; x=1733425523;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x030wcXN3XejZGrsIlbUm8x1eM2wwwHskSKWwVcxZj0=;
-        b=UY4yWCIUk4SDnYmZ1Qc2GTl52DGKrTa3L+IvXuO442WArFN++6Dz7CB2HCn052jWQp
-         UVQ/fGkOyyoaBa7uIqMJzMPuidP9MQHSr1EjSFBB7Us7hD21UNuK/epGFjZh+whn0NF4
-         Iph5rkG8EmUAuvK2Jd1VL86w7y9q/BA1EW+TBAvd0YK40WRTRprPQ6JEK1TMlLxNj4Bs
-         oXNMomLk1DhlYqVIkY6Y/uR+rONWP3bqhj22M1sm1n3eXsSN9tnhkZ4EfwLStSbft/aB
-         mXTDz4kUin5lUdv25mwyjhBcpickGxKBylgaNBVSHzcOTAWFFtWIyLSoTkk4KODVqUz2
-         FZWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmzDxfo0G+f4m5a1qubxBzYungsvbTwUFTkKzFHR6H/QYPBTc5YHyTuH6zWriGAqIveYw=@vger.kernel.org, AJvYcCVn6beULSkbe9EH5mVkdPKhzIc82OeushOMOpMO/srNCzCtEUFS/MAjhQhvE9SNivWeYFu+nU9LTqOPe6gOn4BQaLVI@vger.kernel.org, AJvYcCW4oImqA33TvprS6vyO4JIOBgNlplN/0VSgQhKZfSLoLJQ+ptBZ1viFWT/Pi0iirP11n9mIM3F6X0CD2k1i@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyar2wBeNMjx0dLTs0+4KxVmkxlRi1jvgdEu+3AfnL6eY9nIbiv
-	/Od0WpZ5oj4HkAgIUIVUWlXQb2jqzGXb0m91vLACrbD5IKPQ2Wt/dd8WsTz3c7NpG/YoPyBBdla
-	uLqHlWkZPy2WP2UTmygw3anQ2Ikw=
-X-Gm-Gg: ASbGnctKrOvr+d/UN6Csdwop0VVhX7cj8+NS/B0XRG7ZD293E6gVUjbkxDTP+oixR26
-	aLgK1QbAo5D5c6xdG0FPk6UJshnPCkA==
-X-Google-Smtp-Source: AGHT+IH3fCX0e0rFd+HZh7RVQbxnXMzu7+VAlZVC6COpEQrXCJNtNJZ/3frl9kz/JjCu3qKF3LVnN61Q6eq9MFXzQ04=
-X-Received: by 2002:a05:600c:4f85:b0:426:647b:1bfc with SMTP id
- 5b1f17b1804b1-434a9df22c0mr88230425e9.30.1732820723418; Thu, 28 Nov 2024
- 11:05:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b="KCHtb+de"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jordanrome.com;
+	s=s1-ionos; t=1732834138; x=1733438938; i=linux@jordanrome.com;
+	bh=zlLtIl9pEgeclkx+VQzLAlgQP/261yb+11wdt+sU1g4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KCHtb+deIvj7P/JR4ynLug2JEcVixcBXANyHYf2qyQqR3UPsq+U3H5sDpwZX7jCj
+	 D0LZfdJ86muEqTW6z4nnWPTQIXPENYY4UpI+mFmDC0MP4YsPA3bfIxubkSyAWzRTc
+	 oJn/eB1qt5qnZQ8YNyUyjbOHoHK6AnqbXbRgS9NQCBOc/jdA+65jnkj4Tjs3UGoS5
+	 GIGHfpgvcAzdRsfDrarssuzR923xMyALKjVtHNuS9JHpIN1akKxadu1krGAZxkL0s
+	 fK3rfL5z8hXCjJxX3ic22287xBhufvy1bG+5/xYmbrFw5ipaZp+8Ti2Li1K/Lq71a
+	 gdwq7ZmFLDqsTtngCQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([69.171.251.11]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0M91Zb-1tOkLP1eu5-00Ab5u; Thu, 28 Nov
+ 2024 23:48:58 +0100
+From: Jordan Rome <linux@jordanrome.com>
+To: linux-security-module@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Kernel Team <kernel-team@fb.com>,
+	Serge Hallyn <sergeh@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [v8] security: add trace event for cap_capable
+Date: Thu, 28 Nov 2024 14:48:49 -0800
+Message-ID: <20241128224849.3774367-1-linux@jordanrome.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241127140958.1828012-1-elver@google.com> <20241127140958.1828012-2-elver@google.com>
- <CAADnVQL6yyRRUc1Xee4HOQ0QXEiqQ7M-xJ109w9aztYH4ZWHmA@mail.gmail.com> <Z0i4DFnqRxTPOUfJ@elver.google.com>
-In-Reply-To: <Z0i4DFnqRxTPOUfJ@elver.google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 28 Nov 2024 11:05:12 -0800
-Message-ID: <CAADnVQK0y_moywsFDsHLPsNZXnZQVJig7dN7J9khVv2gNq414g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 2/2] bpf: Refactor bpf_tracing_func_proto()
- and remove bpf_get_probe_write_proto()
-To: Marco Elver <elver@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Nikola Grcevski <nikola.grcevski@grafana.com>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RMwbQ4Ilj/NG4zsrO3K8nDIDa3RL8Ok6sTNpPFQuiDUbpsh+cx0
+ s7+UkdF9KhW9HADc+WdZx+y25Wkzi0euHo9/5Y93RQmjhsh/jl4A/1xWQtaaODcl5VTCKUw
+ askxX7JympRA9Ev64vthNE8h6WndkCDHQ4lG1zd7fdNpSQqfqn4VdygvZgWM9cTkyvCFFew
+ BajdAgGYnJEwNurbL8t4Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:MdVQKAfc10w=;b4R7deXdLj9SOLu30u/QTf5Fy28
+ uPItoWLyHzr5oshDElIMP/Td6sU8hTLdtB726SJC80a25cpZ51/lWRDdnye096nZTrmTuucIY
+ xGLsH+Pwjc8g6xN3GbfFIMgMXaRBk5ALy//9H2ZiFMPI4H4zznUx+iKRVvW8+ElQhP+4eC0pc
+ yl2ZcDldVF8iIDfvE8UdAVSN/TytzjRYxVRg/ouizrInt0+dwAU/+OXyRmWXSFFP8U9XmS5r0
+ JTTj0A8dArdKlzEmL6vo52LLnOVmza6CQ+yOOrG90PP7RpQGQ+j2RPQOv9BqiCKN6X3hA6XWZ
+ 3vp4QOVI/Z8uWkIVak/HIKxufKuwSrfaSUb9diRS2VF3jFemCH4Hc3hAse7vS6/EwgZimUUrK
+ MdidEfcDCxhj6On9pGsfoRHq2rSXbBDqJDH51DzmTJ7PWQFdfRt3iCAGfyZ9DgShkGDOdjdbw
+ QE7YV1BOjuZELP/N5ugmxQniDSxdXGs0zDzXMYTCtFgqZfJX9xJwfycM8mpnmaRd4pmjj2A0b
+ myk/ujLtOc/Z485kYWig2nxyrjhe1JglYLqcTyZhwmK5e53kstyJm1NFjKzRKExr6L74TC7il
+ sit9MEDUB/RCDWx9+CYNmhh5R9lTdtSNbph92lsUJ1S6zGizzHujav6J3fG8FfkbLUZgubjXG
+ SwhqDAD1MBVv10w/PWKEctVaF020CNbZpd3M9azRe1O15sHK9Lnk4lHnxV3lgnonYLIyCl3GL
+ 4yVffnrphhr6v19oTFmSBEIeFlvIGgbfNoxE7zbTPwWgzBs6r5TtdQVl7H10ETyxCDVlbHhQW
+ D2J8ZxZlVa7fnF2Y3Koi9xvbwfcbdCw0S84Kmdm4wM0cHCAm8+IFuIA2sE8S+J3Sl1N5PByPI
+ x0oxRZtLzdKn1L+sSSLHieHTyFjTixGqQ2rn9lOYrXbOVQKzDeymMxRMoQakkJMF4OrcrvgO3
+ dvln/H/6oDVfz8sQrJiKmuyjozxH7xqbftfd58OOy/i13n0e20dx3pOj8IEEUs6tVttxHs2GH
+ +BrwDFV3kLdNuzLPVrtjOS9ljVqcmaXQbYXhb+E
 
-On Thu, Nov 28, 2024 at 10:36=E2=80=AFAM Marco Elver <elver@google.com> wro=
-te:
->
-> On Thu, Nov 28, 2024 at 10:22AM -0800, Alexei Starovoitov wrote:
-> [..]
-> > Moving bpf_base_func_proto() all the way to the top was incorrect,
-> > but here we can move it just above this bpf_token_capable() check
-> > and remove extra indent like:
-> >
-> > func_proto =3D bpf_base_func_proto();
-> > if (func_proto)
-> >    return func_proto;
-> > if (!bpf_token_capable(prog->aux->token, CAP_SYS_ADMIN))
-> >    return NULL;
-> > switch (func_id) {
-> > case BPF_FUNC_probe_write_user:
-> >
-> > that will align it with the style of bpf_base_func_proto().
-> >
-> > pw-bot: cr
->
-> Ack, let me change that.
->
-> Below is preview of v4 for this bit.
+In cases where we want a stable way to observe/trace
+cap_capable (e.g. protection from inlining and API updates)
+add a tracepoint that passes:
+- The credentials used
+- The user namespace of the resource being accessed
+- The user namespace in which the credential provides the
+capability to access the targeted resource
+- The capability to check for
+- The return value of the check
 
-lgtm
+Signed-off-by: Jordan Rome <linux@jordanrome.com>
+=2D--
+ MAINTAINERS                       |  1 +
+ include/trace/events/capability.h | 57 +++++++++++++++++++++++++++++++
+ security/commoncap.c              | 57 +++++++++++++++++++++----------
+ 3 files changed, 97 insertions(+), 18 deletions(-)
+ create mode 100644 include/trace/events/capability.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f870842fad9c..b90df58f6030 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5103,6 +5103,7 @@ M:	Serge Hallyn <serge@hallyn.com>
+ L:	linux-security-module@vger.kernel.org
+ S:	Supported
+ F:	include/linux/capability.h
++F:	include/trace/events/capability.h
+ F:	include/uapi/linux/capability.h
+ F:	kernel/capability.c
+ F:	security/commoncap.c
+diff --git a/include/trace/events/capability.h b/include/trace/events/capa=
+bility.h
+new file mode 100644
+index 000000000000..17340257946c
+=2D-- /dev/null
++++ b/include/trace/events/capability.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM capability
++
++#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_CAPABILITY_H
++
++#include <linux/cred.h>
++#include <linux/tracepoint.h>
++#include <linux/user_namespace.h>
++
++/**
++ * cap_capable - called after it's determined if a task has a particular
++ * effective capability
++ *
++ * @cred: The credentials used
++ * @target_ns: The user namespace of the resource being accessed
++ * @capable_ns: The user namespace in which the credential provides the
++ *              capability to access the targeted resource.
++ *              This will be NULL if ret is not 0.
++ * @cap: The capability to check for
++ * @ret: The return value of the check: 0 if it does, -ve if it does not
++ *
++ * Allows to trace calls to cap_capable in commoncap.c
++ */
++TRACE_EVENT(cap_capable,
++
++	TP_PROTO(const struct cred *cred, struct user_namespace *target_ns,
++		const struct user_namespace *capable_ns, int cap, int ret),
++
++	TP_ARGS(cred, target_ns, capable_ns, cap, ret),
++
++	TP_STRUCT__entry(
++		__field(const struct cred *, cred)
++		__field(struct user_namespace *, target_ns)
++		__field(const struct user_namespace *, capable_ns)
++		__field(int, cap)
++		__field(int, ret)
++	),
++
++	TP_fast_assign(
++		__entry->cred       =3D cred;
++		__entry->target_ns    =3D target_ns;
++		__entry->capable_ns =3D ret =3D=3D 0 ? capable_ns : NULL;
++		__entry->cap        =3D cap;
++		__entry->ret        =3D ret;
++	),
++
++	TP_printk("cred %p, target_ns %p, capable_ns %p, cap %d, ret %d",
++		__entry->cred, __entry->target_ns, __entry->capable_ns, __entry->cap,
++		__entry->ret)
++);
++
++#endif /* _TRACE_CAPABILITY_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/commoncap.c b/security/commoncap.c
+index cefad323a0b1..6b40f12bda18 100644
+=2D-- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -27,6 +27,9 @@
+ #include <linux/mnt_idmapping.h>
+ #include <uapi/linux/lsm.h>
+
++#define CREATE_TRACE_POINTS
++#include <trace/events/capability.h>
++
+ /*
+  * If a non-root user executes a setuid-root binary in
+  * !secure(SECURE_NOROOT) mode, then we raise capabilities.
+@@ -50,24 +53,17 @@ static void warn_setuid_and_fcaps_mixed(const char *fn=
+ame)
+ }
+
+ /**
+- * cap_capable - Determine whether a task has a particular effective capa=
+bility
+- * @cred: The credentials to use
+- * @targ_ns:  The user namespace in which we need the capability
+- * @cap: The capability to check for
+- * @opts: Bitmask of options defined in include/linux/security.h
++ * cap_capable_helper - Determine whether a task has a particular effecti=
+ve
++ * capability.
+  *
+- * Determine whether the nominated task has the specified capability amon=
+gst
+- * its effective set, returning 0 if it does, -ve if it does not.
+- *
+- * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
+le()
+- * and has_capability() functions.  That is, it has the reverse semantics=
+:
+- * cap_has_capability() returns 0 when a task has a capability, but the
+- * kernel's capable() and has_capability() returns 1 for this case.
++ * See cap_capable for more details.
+  */
+-int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
+-		int cap, unsigned int opts)
++static inline int cap_capable_helper(const struct cred *cred,
++				     struct user_namespace *target_ns,
++				     const struct user_namespace *cred_ns,
++				     int cap)
+ {
+-	struct user_namespace *ns =3D targ_ns;
++	struct user_namespace *ns =3D target_ns;
+
+ 	/* See if cred has the capability in the target user namespace
+ 	 * by examining the target user namespace and all of the target
+@@ -75,21 +71,21 @@ int cap_capable(const struct cred *cred, struct user_n=
+amespace *targ_ns,
+ 	 */
+ 	for (;;) {
+ 		/* Do we have the necessary capabilities? */
+-		if (ns =3D=3D cred->user_ns)
++		if (likely(ns =3D=3D cred_ns))
+ 			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+
+ 		/*
+ 		 * If we're already at a lower level than we're looking for,
+ 		 * we're done searching.
+ 		 */
+-		if (ns->level <=3D cred->user_ns->level)
++		if (ns->level <=3D cred_ns->level)
+ 			return -EPERM;
+
+ 		/*
+ 		 * The owner of the user namespace in the parent of the
+ 		 * user namespace has all caps.
+ 		 */
+-		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))
++		if ((ns->parent =3D=3D cred_ns) && uid_eq(ns->owner, cred->euid))
+ 			return 0;
+
+ 		/*
+@@ -102,6 +98,31 @@ int cap_capable(const struct cred *cred, struct user_n=
+amespace *targ_ns,
+ 	/* We never get here */
+ }
+
++/**
++ * cap_capable - Determine whether a task has a particular effective capa=
+bility
++ * @cred: The credentials to use
++ * @target_ns:  The user namespace of the resource being accessed
++ * @cap: The capability to check for
++ * @opts: Bitmask of options defined in include/linux/security.h (unused)
++ *
++ * Determine whether the nominated task has the specified capability amon=
+gst
++ * its effective set, returning 0 if it does, -ve if it does not.
++ *
++ * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
+le()
++ * and has_capability() functions.  That is, it has the reverse semantics=
+:
++ * cap_has_capability() returns 0 when a task has a capability, but the
++ * kernel's capable() and has_capability() returns 1 for this case.
++ */
++int cap_capable(const struct cred *cred, struct user_namespace *target_ns=
+,
++		int cap, unsigned int opts)
++{
++	const struct user_namespace *cred_ns =3D cred->user_ns;
++	int ret =3D cap_capable_helper(cred, target_ns, cred_ns, cap);
++
++	trace_cap_capable(cred, target_ns, cred_ns, cap, ret);
++	return ret;
++}
++
+ /**
+  * cap_settime - Determine whether the current process may set the system=
+ clock
+  * @ts: The time to set
+=2D-
+2.43.5
+
