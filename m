@@ -1,156 +1,105 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E1019F41A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Nov 2024 13:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C646583CD2;
+	Thu, 28 Nov 2024 13:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732799243; cv=none; b=HeaP/fpd07k+wCUuwvIIApWqKSmIKRcfFXLLL6aWnVKrmLNgbMHzKTIpc/bVTkEjLMfPmNh/aBEifHj4bCMH+XPwG0kyZ4SDxYz94UYSBMJgDZtExD7o8Ok1/PSL7AyDgrdZtEqNOEWJ07H5XJEuiWVEDKzwbCN++jgz3lpR5Wg=
+	t=1732799772; cv=none; b=ENlWejEUxzJd3IRd5dufp4TBRav0/X0ih5Cxh5gq9ig1VThTKi0t7Jdq4K0J9XiGfWnmLBIgge6TbtXzdqwK5I9jRRxuwhZp52QLCqiD1Ofww+6vw0ZEw+HpnDk1FrpDSJuDA5BtJhrLjCZn8KTgsE/8Gp/5u23GKBBIU12w2u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732799243; c=relaxed/simple;
-	bh=Z+0gHjvzJ3dl2ea6C2iegoeEOUv/a9CQDviIEh+O+X0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OZr1bPJQyGwN4yQHBmKtkxhy/4BiS3XFsjvDBVxmStFi3yPpOMjyp2ydLa8U/v/Fy/irPpR/jk5v4Rvcp0HBqF8t+jiSc0RU6NpqpM/euztjDugFh3TXUILUWCCR9CH/nvUz0cKtk2hUlwi4KOXSzyWm+F68uiSPof7pcsnDJN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a7932544c4so7937585ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Nov 2024 05:07:21 -0800 (PST)
+	s=arc-20240116; t=1732799772; c=relaxed/simple;
+	bh=AHbe3ONgT0iXahqOuCrLNzCJiHyzjS930w/ljbnUOgY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y21noc9VgGiRVEF0/x0XkF1EQ8au2q3IIbXf9bSDQyTmbHy1IVbf6s69gCCt4vNHbr1/jfdpgRld8Akg3qWphpiY4uqoe8Vty80U81WY5uuKZLoYjzIbLy8xS6cCTC9CdOzs5AoDSy9PFeN0ge0pFeRUgkFjomH1AOoQBLzbsCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gT3jAWMx; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gT3jAWMx"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7248c1849bdso805201b3a.3;
+        Thu, 28 Nov 2024 05:16:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732799770; x=1733404570; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DI1pCwJkAn6t4ZfEbkZqeKTjuje/rHQi5jRrfZ4wz7c=;
+        b=gT3jAWMxFa+iS0i7gawIjIOs+qB8/ZSHO0tREyRvj4HDmp50fdPreDm8Vv2WUtizOq
+         gl6I9VM96+FG743g70yvsi2XdxwshE1zb9kyxatFtbKVjY+C+nyoC/qskvVH/NL8F8Pc
+         8lV661m6QJEfGxYvfCqNk7Msr9LoAtNNbqb7jCTypiMA8vySQ3KCWO6lANVmkMXUScq7
+         Ndj6OirwTkI3iEmBtoF7SVPj3i0MdoHK9ihjjL44DxckdADs0TSy37mb8OqfwXg4Ema3
+         y5m1jkRvoDpeQGMWmFZ0IBeEamrbBl8nCrbQbwvF/Emj0uW1i+PFDkJg5KA+ri8if40y
+         tluw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732799241; x=1733404041;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vq2tEXQ5ienCGL9iI0S9D6d7ede264gKxSALu6sMAe8=;
-        b=BvbdaCIlSwexvATeaWOdR2nEIOmKmXZCIBU6AUM4TSvJ+MveMYt95RTepg9vrTNqv0
-         7xxBQ4yrNPy5v6Twah4mxuT2WjGuPkpW8oU/32Cq/UPBkaksFARcKliY84eU1kiily93
-         Xoad8nQgH/tSgcfFVng4AMwEGdMNWWig0oJ3/6oji4KxLnENTNGVi7oKnwi9HRa5lYJA
-         dccTsqOOOsAqVH7QHYLrtd7ZwKRhbsheWt1YrmeWj95BGS6WhcSgsWjWmvtsgesfhdmN
-         Fs55R4RzzozqXmyoYWbj/x6A6S49dUVJtx9GzopEW6LWxhDZYNiyYiSRefuajxY2TXV1
-         CkuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIHecpdb+Za+iMAIOq0aH6nBM3pusexN2yUXi6BpClLPTviGntnm7/PzC3tPN+wyjitM77pe5JYTT0BP4iRK6sFVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW2hTm5d+EONhBFNRamnMKZx/y3f3WWvvDwUrhwHCKKyjQnX1o
-	3Wjr72mLMLOyMvBEBQyT1of8vAqMLizfAMtSOWPjUK4LE0ar5FyZsWmGkoXt14+4/uf3aTvIrMy
-	KduaobIzpjZrAlWYvcip+Lk7lK27QviThMuXrC5mlHfB/LHA1LNQfbeY=
-X-Google-Smtp-Source: AGHT+IH/nKALHn2UUI6EUY6gTueQeLXHdM0CIIDPH4WSpGAome3DjsFyrqDaXUTD1n6w+TdOK7o00MG72BADVlTGmcnsnsF7zR8Q
+        d=1e100.net; s=20230601; t=1732799770; x=1733404570;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DI1pCwJkAn6t4ZfEbkZqeKTjuje/rHQi5jRrfZ4wz7c=;
+        b=Pk+N2Ffvx5wRSuqSnXI670vOar97ooaK0+RJstONF9OeYkSBcePtBDA+2fAZwbwcsQ
+         L5eIPfy438i2rdbb9Lv55mO9fpMsuYDDvmmoes4v+M9AAxyzUlFv2i88bLUK1+BYkGaG
+         9MIl00RtbIIOVmoYZmkkfa8vPRmzVc+7k0D0lIb2wyfvgvdgU1N/8FM59yqqJagcM4xi
+         Ve7BWszq8yORBTTBn0YTaqXS3lRJ/FhvKQBia+coxcsbLbK05u4x7g/7U871HdkiskLx
+         AZ5fQhYMVVp/niumiUnNjrmd8Gr8nGpUSitBdspURt+Ki4mehLWHfZqtrnjfZZJolcGp
+         WtwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKSGnS+jY4beEHGpLKZVwedp5kVImOjVhjcM1dJXHKTMZaGJGojTQLDZkZiW0UD0VEl0npBIs2QbG2mHpUj0tQc7z7@vger.kernel.org, AJvYcCW7He8iSg0h5R64fQAIR4kwjfkogB8B5sen6nnHUi2aYar61o/i+noRnckNBsBMkSmhImEym6hVEIHuD3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG//XB6Nh2zr0VQ+67jDOSOBLjyc3KIAMNSEyneXL4xRQHbRRG
+	JM+1loezYBmSLlDEUFT52ltMpYFMz0wkFWpjP++VqAkNhk84K02x
+X-Gm-Gg: ASbGncvXI7842sSSJcvGImgaDJPsNqvb41vvKcM15RVH3jPiGCP0fB6B/APnvUuVu4c
+	CdP9dnZp2JiP0twYpDVJ670y5EJh1nl0k4Df9voM8zBq3MEQIK+5NOkpb0NjiNKcmnAb3jEoDei
+	xOFxx7NNAG8kev7+5qc0gcLJu8UDC+umddyddw0ogF0ImSrHbb2ZA0cfjmx6MBZ3/SNZZfKDemE
+	/Fi6xWTPIdXM1jZmJpowtW1DhWI7Li35FWvuOi/ati72IaBUS3KNiTsuzEbNVI5kQ==
+X-Google-Smtp-Source: AGHT+IFXaQUF/tUU/5tzXgZy0o6O6p53ZAx8FFFPC/UpXtecSQNiB0AEgGrqag8SYV5qJHTxHG9RmQ==
+X-Received: by 2002:aa7:88c3:0:b0:71e:db72:3c87 with SMTP id d2e1a72fcca58-72530103f57mr10252530b3a.20.1732799769748;
+        Thu, 28 Nov 2024 05:16:09 -0800 (PST)
+Received: from [172.23.149.93] ([221.12.5.181])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-725417fbacdsm1464372b3a.95.2024.11.28.05.15.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2024 05:16:09 -0800 (PST)
+Message-ID: <8d4796dc-ef5b-43d8-8ec0-3891b7994428@gmail.com>
+Date: Thu, 28 Nov 2024 21:15:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:221e:b0:3a7:6c6a:e2a2 with SMTP id
- e9e14a558f8ab-3a7c555ec8amr65272785ab.9.1732799241418; Thu, 28 Nov 2024
- 05:07:21 -0800 (PST)
-Date: Thu, 28 Nov 2024 05:07:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67486b09.050a0220.253251.0084.GAE@google.com>
-Subject: [syzbot] [bpf?] [trace?] WARNING: locking bug in __lock_task_sighand
-From: syzbot <syzbot+97da3d7e0112d59971de@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Add WARN_ON_ONCE for syscall_nr check
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20241128115319.305523-1-chen.dylane@gmail.com>
+ <20241128074623.063bf253@rorschach.local.home>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <20241128074623.063bf253@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
+在 2024/11/28 20:46, Steven Rostedt 写道:
+> On Thu, 28 Nov 2024 19:53:19 +0800
+> Tao Chen <chen.dylane@gmail.com> wrote:
+> 
+>> Now, x86_64 kernel not support to trace syscall for ia32 syscall.
+>> As a result, there is no any trace output when tracing a ia32 task.
+>> Like unreg_event_syscall_enter, add a WARN_ON_ONCE judgment for
+>> syscall_nr in perf_syscall_enter and ftrace_syscall_enter to give
+>> some message.
+> 
+> So on a system that has "panic_on_warn" set and they trace a 32 bit
+> system call, it will cause their system to crash. Is that the intended
+> behavior?
+> 
+> WARN*() is for self testing the kernel to detect real bugs, not to
+> inform users that something isn't supported.
+> 
+> BIG NAK!
+> 
+> -- Steve
 
-syzbot found the following issue on:
+Hi, Steve, thank you for your reply, as you say, so what about 
+pr_warn_once api just to print something ?
 
-HEAD commit:    2c22dc1ee3a1 Merge tag 'mailbox-v6.13' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f2bee8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8df9bf3383f5970
-dashboard link: https://syzkaller.appspot.com/bug?extid=97da3d7e0112d59971de
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9137c3e19e21/disk-2c22dc1e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1aad80837d89/vmlinux-2c22dc1e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d7979d71d6d2/bzImage-2c22dc1e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+97da3d7e0112d59971de@syzkaller.appspotmail.com
-
-=============================
-[ BUG: Invalid wait context ]
-6.12.0-syzkaller-09435-g2c22dc1ee3a1 #0 Not tainted
------------------------------
-iou-wrk-9958/9967 is trying to lock:
-ffff88802744ae58 (&sighand->siglock){-.-.}-{3:3}, at: __lock_task_sighand+0x149/0x2d0 kernel/signal.c:1379
-other info that might help us debug this:
-context-{5:5}
-3 locks held by iou-wrk-9958/9967:
- #0: ffff88814d2870c0 (&acct->lock){+.+.}-{2:2}, at: io_acct_run_queue io_uring/io-wq.c:260 [inline]
- #0: ffff88814d2870c0 (&acct->lock){+.+.}-{2:2}, at: io_wq_worker+0x44b/0xed0 io_uring/io-wq.c:654
- #1: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #1: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #1: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: __bpf_trace_run kernel/trace/bpf_trace.c:2350 [inline]
- #1: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: bpf_trace_run2+0x1fc/0x540 kernel/trace/bpf_trace.c:2392
- #2: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #2: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #2: ffffffff8e93c520 (rcu_read_lock){....}-{1:3}, at: __lock_task_sighand+0x29/0x2d0 kernel/signal.c:1362
-stack backtrace:
-CPU: 1 UID: 0 PID: 9967 Comm: iou-wrk-9958 Not tainted 6.12.0-syzkaller-09435-g2c22dc1ee3a1 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_lock_invalid_wait_context kernel/locking/lockdep.c:4826 [inline]
- check_wait_context kernel/locking/lockdep.c:4898 [inline]
- __lock_acquire+0x15a8/0x2100 kernel/locking/lockdep.c:5176
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5849
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0xd5/0x120 kernel/locking/spinlock.c:162
- __lock_task_sighand+0x149/0x2d0 kernel/signal.c:1379
- lock_task_sighand include/linux/sched/signal.h:743 [inline]
- do_send_sig_info kernel/signal.c:1267 [inline]
- group_send_sig_info+0x274/0x310 kernel/signal.c:1418
- bpf_send_signal_common+0x3c4/0x630 kernel/trace/bpf_trace.c:881
- ____bpf_send_signal kernel/trace/bpf_trace.c:886 [inline]
- bpf_send_signal+0x1d/0x30 kernel/trace/bpf_trace.c:884
- bpf_prog_631417f49dd64198+0x25/0x48
- bpf_dispatcher_nop_func include/linux/bpf.h:1290 [inline]
- __bpf_prog_run include/linux/filter.h:701 [inline]
- bpf_prog_run include/linux/filter.h:708 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2351 [inline]
- bpf_trace_run2+0x2ec/0x540 kernel/trace/bpf_trace.c:2392
- trace_contention_end+0x114/0x140 include/trace/events/lock.h:122
- __pv_queued_spin_lock_slowpath+0xb7e/0xdb0 kernel/locking/qspinlock.c:557
- pv_queued_spin_lock_slowpath arch/x86/include/asm/paravirt.h:584 [inline]
- queued_spin_lock_slowpath+0x42/0x50 arch/x86/include/asm/qspinlock.h:51
- queued_spin_lock include/asm-generic/qspinlock.h:114 [inline]
- do_raw_spin_lock+0x272/0x370 kernel/locking/spinlock_debug.c:116
- io_acct_run_queue io_uring/io-wq.c:260 [inline]
- io_wq_worker+0x44b/0xed0 io_uring/io-wq.c:654
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Best Regards
+Dylane Chen
