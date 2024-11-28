@@ -1,32 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB2219923C;
-	Thu, 28 Nov 2024 16:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AE31917F1;
+	Thu, 28 Nov 2024 16:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732812749; cv=none; b=U4TUgDFcHkItZpY8ADcAC4BY2Whh4TtwrGSOg6oX0mfzUfFxYBnm9dXBkECiJK6vYZPCAVxUFlSeSJH8Y22JsZWeFQY7PqLIrfOVauaXV1pvhv/kjvWL382mg5PG6OIRTVjGiKCTYhgQj9N6dX7FgEPd0W7aEcAQfPPbG5aE7vM=
+	t=1732813081; cv=none; b=GK9ipPCjHNK6/BhiIwigxKCayC9e4LEe4Dt8WkdvKQwc94cVe32/EipKScc4hJ1Cb7qV+Rkq6Zgo+Z//fhbSZWAYOA3vwyDzAo7Ox7u1Q4sL7NKHRo4lYxBGNzTN2DZQAwvakAEmYf2YmwTROD+q1WFaccYcQWaoBIDspkWMykg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732812749; c=relaxed/simple;
-	bh=0A6BERd5DzHd7gVbQWNnQ5BgLD5rAxu2Y/abYO2wfcc=;
+	s=arc-20240116; t=1732813081; c=relaxed/simple;
+	bh=AvnVFKOQ2ode79ZkWEmlcOXmVo9cdari5/YRXRbg7Tk=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kx3Oy5M5+GPGTfFkQJqdIMRCAftFr01KpaMRoUEkkbtRF+7gBZvp9GxQKg26nCnU5B/SliA/A4crUK+fm0xFDl9oryaqQI/8YYFmdSWuVfooykC9wgyGz+Fvs984f/uAFD+2T7Q7QzdNGZKYCG6CdMhyun8EtA0BjNWSvTxUbxA=
+	 MIME-Version:Content-Type; b=qC7h3KzV97FpQJ1MvbsClSmTnMEHj0ajqBbPd64vrpfo5fZfPgLteNDOhqCwdi5jeVfWbahndwHsXnppJqTLjAWBll0qND6m2OXkC4Ctlc5k6ModHXHAi/YHptBo8pNloAMmmLynQuqgadE/UQtDjK9E26DYZRlEWQtTWesBgFA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21ECC4CECE;
-	Thu, 28 Nov 2024 16:52:27 +0000 (UTC)
-Date: Thu, 28 Nov 2024 11:52:26 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F696C4CECE;
+	Thu, 28 Nov 2024 16:57:58 +0000 (UTC)
+Date: Thu, 28 Nov 2024 11:57:56 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Tao Chen <chen.dylane@gmail.com>, mhiramat@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Add WARN_ON_ONCE for syscall_nr check
-Message-ID: <20241128115226.504e7563@rorschach.local.home>
-In-Reply-To: <67b5a0d7-95a2-46d2-bb4a-69a4368abe3d@efficios.com>
-References: <20241128115319.305523-1-chen.dylane@gmail.com>
-	<20241128074623.063bf253@rorschach.local.home>
-	<8d4796dc-ef5b-43d8-8ec0-3891b7994428@gmail.com>
-	<20241128100324.05bc4c32@gandalf.local.home>
-	<67b5a0d7-95a2-46d2-bb4a-69a4368abe3d@efficios.com>
+To: kernel test robot <lkp@intel.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Naveen N Rao
+ <naveen@kernel.org>, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller"
+ <davem@davemloft.net>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Oleg Nesterov <oleg@redhat.com>, Tzvetomir Stoyanov
+ <tz.stoyanov@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] tracing/dynevent: Adopt guard() and scoped_guard()
+Message-ID: <20241128115756.24ab7b89@rorschach.local.home>
+In-Reply-To: <202411281612.F29skJjy-lkp@intel.com>
+References: <173262943230.8323.4595317585229847937.stgit@devnote2>
+	<202411281612.F29skJjy-lkp@intel.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,27 +39,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Nov 2024 11:02:31 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Thu, 28 Nov 2024 16:42:47 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> > A better solution is for there to be a return code or something where the
-> > tracers (perf or ftrace) can record in the trace that the system call is
-> > not supported.  
-> 
-> Just be careful not to spam the traces uselessly. E.g. if only the
-> openat syscall is enabled, you'd only want to be made aware of the
-> ia32 openat, not all ia32 syscalls.
+> 5448d44c38557f Masami Hiramatsu          2018-11-05   97  	p = strchr(event, '/');
+> 5448d44c38557f Masami Hiramatsu          2018-11-05   98  	if (p) {
+> 5448d44c38557f Masami Hiramatsu          2018-11-05   99  		system = event;
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  100  		event = p + 1;
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  101  		*p = '\0';
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  102  	}
+> 95c104c378dc7d Linyu Yuan                2022-06-27  103  	if (!system && event[0] == '\0') {
+> 8db403b9631331 Christophe JAILLET        2021-04-11  104  		ret = -EINVAL;
+> 8db403b9631331 Christophe JAILLET        2021-04-11 @105  		goto out;
 
-Why not? If you ask to trace something that isn't able to be traced,
-add something in the buffer. It's not totally useless information. If
-anything, you know that a task is making ia32 system calls, and how
-many and when they are doing so.
-
-Why make it more complex than it has to be. To do it only once, you
-need to add the accounting logic to make sure each trace gets notified
-about it. Not to mention if the event gets dropped.
-
-If the user doesn't want this in their buffer, then they should filter
-it out.
+This is a legitimate bug. The "goto out" can't jump over a guard().
 
 -- Steve
+
+
+> 8db403b9631331 Christophe JAILLET        2021-04-11  106  	}
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  107  
+> 79cc5c1710963f Masami Hiramatsu (Google  2024-11-26  108) 	guard(mutex)(&event_mutex);
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  109  	for_each_dyn_event_safe(pos, n) {
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  110  		if (type && type != pos->ops)
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  111  			continue;
+> 30199137c899d7 Masami Hiramatsu          2019-06-20  112  		if (!pos->ops->match(system, event,
+> d262271d04830e Masami Hiramatsu          2021-02-01  113  				argc - 1, (const char **)argv + 1, pos))
+> cb8e7a8d55e052 Masami Hiramatsu          2019-06-20  114  			continue;
+> cb8e7a8d55e052 Masami Hiramatsu          2019-06-20  115  
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  116  		ret = pos->ops->free(pos);
+> cb8e7a8d55e052 Masami Hiramatsu          2019-06-20  117  		if (ret)
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  118  			break;
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  119  	}
+> 4313e5a613049d Steven Rostedt (Google    2022-11-23  120) 	tracing_reset_all_online_cpus();
+> d262271d04830e Masami Hiramatsu          2021-02-01  121  out:
+> d262271d04830e Masami Hiramatsu          2021-02-01  122  	argv_free(argv);
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  123  	return ret;
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  124  }
+> 5448d44c38557f Masami Hiramatsu          2018-11-05  125  
