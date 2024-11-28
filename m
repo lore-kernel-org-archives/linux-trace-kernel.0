@@ -1,295 +1,124 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15AC1BD9F9;
-	Thu, 28 Nov 2024 15:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA921B85D3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Nov 2024 15:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732806592; cv=none; b=MpwM7g95HhZge2vDJ1PFlzhGwrU9wR+LpD5UZfyfxEXJb2Uh6C2zreGpm4JTdJSEd/RG8KvSUQhrcVlIF/BbCkAzM5+iLPgjATXGRlub3xD63x1dfOPEQWFbJOVsKoQyx0xTOEIoUS0xmdn/qBllPdxeSoxvKE+XYPRu7qTPNno=
+	t=1732807563; cv=none; b=t/3gU16Nmh9RdXR54OIB6YWPqt5qnkPs++2ognjUjnlg8ozhD8SOZZWwqsL4qWoQwx3KQ6ho0FPsWJfS3uYkaMZsBtFr/OEyZGdXRPbtgFxZeWj/SqTgl8qqvHyy9CemXNrQoyXjrIYmAgonFrKuUyO6sRVTJqvVgcYdkUXMCU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732806592; c=relaxed/simple;
-	bh=OFDNZ4CArynOCJUfVDL4KBORWd/87vPtRmOrJ0iMz80=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CS7JN2eKHC4osK3eQOWNuujXVEWudJeBCaDZ52uDLLerhaWKXYx8gI9vAHza76F+njG/AN7BkM5GnP2GksRiOjc3sYA3vwYPtsKPgqf44340R3P06AVbQ0im1BjbHTFDc9IgAzWYD6ZdorbVfPJNZl7eP8Y9Z0WTTTpxNLanl6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=jordanrome.com; dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b=kwBshZX7; arc=none smtp.client-ip=74.208.4.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jordanrome.com
+	s=arc-20240116; t=1732807563; c=relaxed/simple;
+	bh=MXd4l6+iQmQnfD3BLnMGFSdnuuNa/etFN+OYpi5oBN0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mwz5Q74rGO2xN21appkuu2PmPI+9RsqYwMfDLj/VugJqFqOdloQIQoAyR8GkdF81L64HMDE1ce/hLJIQf0IHlcPpnPZr6sK4UDZO7cCMjPRCjij2NWOCsYSJh2WMo0cz4y3+pjEKa1+WGNXO2tRrP2I7LfbSgK9slYOk3AC7toE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PzvNaw2w; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b="kwBshZX7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jordanrome.com;
-	s=s1-ionos; t=1732806580; x=1733411380; i=linux@jordanrome.com;
-	bh=L4O6Pb3fNrhg8NReFkddqBQXhY9hvdlnI3baYJeIYP8=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=kwBshZX7iTI0s1VFJD7ZL5q3UWPr7HODZmIrDUpgziAq3fBfe4ncBayG6A+l6u+G
-	 TbpZWU+AVn8lS18UYJDA78qQ7GJIHCvjzDls01yOPIu3ViEiMj6atHtV+5ZO8W8Gg
-	 6GE1JcJau+4JAk8pl+gWIOeSibt6r9cU0y7Z2dHyGM8bQCg4UP68r/qbKwykRB0LO
-	 5aWE4R50F9CR0tMtdxd++aQ6KSI9XGZqo8s0hK8HAoApiTPoHswer9RyebrPhRBF5
-	 Iok7W+nfZ+VkkOwzv7f3ajAqyXes0ZEEMgLs5s2VDuoyoHk0YVGQlheCQ0BQZWwrR
-	 bGXyJ97h40PVx4A+yA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([69.171.251.116]) by mrelay.perfora.net (mreueus004
- [74.208.5.2]) with ESMTPSA (Nemesis) id 1MqJRf-1u3oKV1qGB-00pB3P; Thu, 28 Nov
- 2024 16:09:40 +0100
-From: Jordan Rome <linux@jordanrome.com>
-To: linux-security-module@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [v6] security: add trace event for cap_capable
-Date: Thu, 28 Nov 2024 07:09:33 -0800
-Message-ID: <20241128150933.1414388-1-linux@jordanrome.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PzvNaw2w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1732807560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MXd4l6+iQmQnfD3BLnMGFSdnuuNa/etFN+OYpi5oBN0=;
+	b=PzvNaw2wxerQFT4zymu6f75BtWf1ttnZjnnKzVem3OkBRRHZbF3uZ8zMXZbNuLC45brrZ3
+	NKRB9I0RiFGnJixkstcTimPJ8wuCkjWR3YDHvAzbgjVKONwhK0bD7jSiFWCJilOlB2d0Kp
+	PhFxeE17O1m8GL3PxxjwRKHYJX/8iYQ=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-330-TFTSqVr0P-GbBi8JbpsTGA-1; Thu, 28 Nov 2024 10:25:58 -0500
+X-MC-Unique: TFTSqVr0P-GbBi8JbpsTGA-1
+X-Mimecast-MFC-AGG-ID: TFTSqVr0P-GbBi8JbpsTGA
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-53de1800c06so746350e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 28 Nov 2024 07:25:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732807556; x=1733412356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MXd4l6+iQmQnfD3BLnMGFSdnuuNa/etFN+OYpi5oBN0=;
+        b=CiE/kW/+2TKO4AHTfKXG/UiHEEXcJg29dKw0N4Q5wyKn/HTTt2KjplmQnybxUJZKHO
+         yQ03OF6cEhy17OM3f2Sgxrf1dBJwO/3xJW5ktJzBBrFeE2U5tSt/Qzsr14WXyFtPYwqT
+         zhutUVlV+g3o3CwguVG3kL3un/mzKlAcz/vSFoNOovL6tbM4hHF4On/GqZgxYA7TW0tN
+         LNa1t0Y1/8kLv61U+JH8VsBZGtAmlFZdgGIvgeWH83nXfrC+6GUusuKy0FBIcCxnudCK
+         d6Hu7NzWrtAVGZImLA8tMzklqfqEsaoYpzPIu5uP1IhpvsiAbLgalUvCTUL0nGIfDX7l
+         bLUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyxxHJu3IcTNWvjpk4F+t2MyFgBihDs4el14qcuXYbzppP2M/RgrePljk7XkWEnOT68vjvYeDUiw9qGb3L/p1T2Js=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMvDz8l83+5gY7xeHA8htLLZXKYGCEQsV57bpUilGGZ1rjL7xQ
+	zSbEvus6ZAEyKAIolkH2jz7f2kl8hBCaKELlVYCgptGZ5ZY6TdsFKsOMtheVXrKQe26UdACy2hZ
+	ZvPbK//wIArgEgK1Vx60jtDNnKHec7noZUvsBtDjIGiJu5OhmDqF2ny2ifFiqBULwBAu0Xp/x+r
+	qXdBejFQbColl6Wk3fGxeHF3DpadsF6eveIwCF8p9PdJYUPbb9ldqHOi/2/A==
+X-Gm-Gg: ASbGncsThjmfY1S52cDP1Yi/aTIEcFtp/1v67LnrnHtW/nrdtvRGs3TSxJ47gKwBZhx
+	WtCuWUYpomNwFz0Nl4nJKvHuPPnu1Sl4=
+X-Received: by 2002:a05:6512:32c9:b0:53d:eef7:a017 with SMTP id 2adb3069b0e04-53df00cf65emr5725107e87.15.1732807556120;
+        Thu, 28 Nov 2024 07:25:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGUDRgJvQYM+JdFcJ++bS15Z0GZU2YBr+5bjatsFWQinG+yirtbrqloo2N19HWJZBdciblzJX3Lg8Gg/26Guhk=
+X-Received: by 2002:a05:6512:32c9:b0:53d:eef7:a017 with SMTP id
+ 2adb3069b0e04-53df00cf65emr5725087e87.15.1732807555727; Thu, 28 Nov 2024
+ 07:25:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+ <3a8f6faa-62c6-4d32-b544-3fb7c00730d7@yoseli.org> <20241115102554.29232d34@gandalf.local.home>
+ <cbb67ee2-8b37-4a4d-b542-f89ddae90e94@yoseli.org> <20241115145502.631c9a2c@gandalf.local.home>
+ <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
+In-Reply-To: <2c43288a-517d-4220-ad31-f84dda8c1805@yoseli.org>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 28 Nov 2024 16:25:45 +0100
+Message-ID: <CAP4=nvTjdZRfWtpvM+gThPv6SghW96i9YykA88vAFH5x39GZqw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/2] Add basic tracing support for m68k
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-m68k@lists.linux-m68k.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Greg Ungerer <gerg@linux-m68k.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: x2bIU8yoVR-s6o-Bo5T9Yhh0YBTX9yNZ2YpQ99rcbIc_1732807557
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KSvFNfChFec7Tv5gEdXtHhxyrPeGS74m4LZAqN5cM+pzajviI5A
- 1i5XHaPTHgGKgBmIg6agrocKSUagmx9a9zfivIcbdjFWHxW76eIBDYPeMWCTBaAJTUlVKc5
- Z69NrKpCYHp05Q0FISYJmTmC7cQEHVGVuq3DtCDcmCej5iApqc92GbVporuL+yNYocRYVhN
- eJmxsjzrPaSeFewTq+QHQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:fMqZOZzU/rM=;QJcmNwNwOy9X0UDeRSUoRt8/PmU
- V3qQfGdoUKxqJNlIV3JPhPo4JJ3kXOOxLB5bBHfthLgSOFZZby+Wk2gdc4rCs/LuDGTskqq1E
- gB8k+87XYYNOjFvu8OfGrZL7whkLa5MLxsrOWZJ2WIcAWYT+OFKZiVAfpj3Qqye969YB/FNV7
- be16kX8uDt/A4soixDfm3lRDe+hZIp9z/tUiqUrKCEy8gacrE+RaQad/YO3Hynr3BQjG5I+x7
- /Tpk2x/NbYvDTG6diK5gI62LuU+/eV6IC0ppB5mjNmIUaC1g+B8OGVlIWpyCwLMhT4sj2KNoc
- JqzjbnclQGa2S8H3t+C9RD3EnS5fM1OO/bLMAyWdh+aHdGMR2Cj9j7TCI7AodbEbNH594iOrP
- XGTHJwTTa1Wu7pon4h39kqCnG1dZtjHy9rUjLsMkn3ts/bixLkMN8s8OAj7ulLZMur5buAgdP
- yM7JRV+3T3RLc96mGBj9Ld3Wz0op1wAAiRknwTqLQxnyS5/uo/NqlFEQogxoTiM7XocIrNhPb
- oGS4w3CVEzftqqnMTRNQhnoFMp29wKiGo6M1y2NNFyychiukLsONYv5NW+B1XyobF813M2W0i
- xe5xbz5CpfyO3sxNsebd/FBu17TgIwL9vSEe/51E/68OoJM+PPgfB2BnW1R9is4kPMT794Qgi
- r2mKoBF+cUWqz+bMwJtMsG27b/Mhai0y8JBbgz/SqAnRmZU5p9C+JwUBSk4deFVsSEMctFycV
- KRE50IUReLleHQngJEq+/8UHMciMAJc5N7O+2rrbnGeECSBiCySZ7WojmG2nk9LcVIMdZnl29
- 7TpDxOuKPMUyUGGzTWnMwSXi+CNMa7vL4Prun6EHKsNHhZbKw6owqnRZhFktbOjSDowq3wbKm
- hms3WwbvW2JMuYMrx9j/qStvPsUeMLOi+c+s5O3cVIAird6uCHo5/6lBETC2Bq+6qtcjV2BmT
- G+NjNmuAHr29xpndDjAc/2ncBt9bQU0XcJS7p9iFeuuw9Z6zvWq072hPT5o0oh+iUz9tz1gRm
- qitPGGgfIhswlkQEtmIcyucvpWOehzzF4Cvs/CS
 
-In cases where we want a stable way to observe/trace
-cap_capable (e.g. protection from inlining and API updates)
-add a tracepoint that passes:
-- The credentials used
-- The user namespace of the resource being accessed
-- The user namespace in which the credential provides the
-capability to access the targeted resource
-- The capability to check for
-- Bitmask of options defined in include/linux/security.h
-- The return value of the check
+po 18. 11. 2024 v 11:13 odes=C3=ADlatel Jean-Michel Hautbois
+<jeanmichel.hautbois@yoseli.org> napsal:
+>
+> I had to modify the source code a bit, as it does not compile with my
+> uclibc toolchain:
+> ...
 
-Signed-off-by: Jordan Rome <linux@jordanrome.com>
-=2D--
- MAINTAINERS                       |  1 +
- include/trace/events/capability.h | 60 +++++++++++++++++++++++++++++++
- security/commoncap.c              | 57 +++++++++++++++++++----------
- 3 files changed, 100 insertions(+), 18 deletions(-)
- create mode 100644 include/trace/events/capability.h
+glibc added a gettid() wrapper with version 2.30; earlier glibc and
+uclibc do not have it. That can be fixed by conditionally including
+the inline function if on glibc lower than 2.30 or another libc; for
+reference on how to detect that, see how kernel self tests do it [1].
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f870842fad9c..b90df58f6030 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5103,6 +5103,7 @@ M:	Serge Hallyn <serge@hallyn.com>
- L:	linux-security-module@vger.kernel.org
- S:	Supported
- F:	include/linux/capability.h
-+F:	include/trace/events/capability.h
- F:	include/uapi/linux/capability.h
- F:	kernel/capability.c
- F:	security/commoncap.c
-diff --git a/include/trace/events/capability.h b/include/trace/events/capa=
-bility.h
-new file mode 100644
-index 000000000000..65311c2652f7
-=2D-- /dev/null
-+++ b/include/trace/events/capability.h
-@@ -0,0 +1,60 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM capability
-+
-+#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_CAPABILITY_H
-+
-+#include <linux/cred.h>
-+#include <linux/tracepoint.h>
-+#include <linux/user_namespace.h>
-+
-+/**
-+ * cap_capable - called after it's determined if a task has a particular
-+ * effective capability
-+ *
-+ * @cred: The credentials used
-+ * @target_ns: The user namespace of the resource being accessed
-+ * @capable_ns: The user namespace in which the credential provides the
-+ *              capability to access the targeted resource.
-+ *              This will be NULL if ret is not 0.
-+ * @cap: The capability to check for
-+ * @opts: Bitmask of options defined in include/linux/security.h
-+ * @ret: The return value of the check: 0 if it does, -ve if it does not
-+ *
-+ * Allows to trace calls to cap_capable in commoncap.c
-+ */
-+TRACE_EVENT(cap_capable,
-+
-+	TP_PROTO(const struct cred *cred, struct user_namespace *target_ns,
-+		const struct user_namespace *capable_ns, int cap, unsigned int opts, in=
-t ret),
-+
-+	TP_ARGS(cred, target_ns, capable_ns, cap, opts, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(const struct cred *, cred)
-+		__field(struct user_namespace *, target_ns)
-+		__field(const struct user_namespace *, capable_ns)
-+		__field(int, cap)
-+		__field(unsigned int, opts)
-+		__field(int, ret)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cred       =3D cred;
-+		__entry->target_ns    =3D target_ns;
-+		__entry->capable_ns =3D ret =3D=3D 0 ? capable_ns : NULL;
-+		__entry->cap        =3D cap;
-+		__entry->opts       =3D opts;
-+		__entry->ret        =3D ret;
-+	),
-+
-+	TP_printk("cred %p, target_ns %p, capable_ns %p, cap %d, opts %u, ret %d=
-",
-+		__entry->cred, __entry->target_ns, __entry->capable_ns, __entry->cap,
-+		__entry->opts, __entry->ret)
-+);
-+
-+#endif /* _TRACE_CAPABILITY_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/security/commoncap.c b/security/commoncap.c
-index cefad323a0b1..28096831a2b2 100644
-=2D-- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -27,6 +27,9 @@
- #include <linux/mnt_idmapping.h>
- #include <uapi/linux/lsm.h>
+As of the FOPTS changes: are those necessary for rtla to build, or
+were you just using them for easier debugging? AFAIK rtla shouldn't
+depend on unwind tables or stack protection for functionality.
 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/capability.h>
-+
- /*
-  * If a non-root user executes a setuid-root binary in
-  * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-@@ -50,24 +53,17 @@ static void warn_setuid_and_fcaps_mixed(const char *fn=
-ame)
- }
+>
+> But it is not enough, as executing rtla fails with a segfault.
+> I can dump a core, but I could not manage to build gdb for my board so I
+> can't debug it (I don't know how to debug a coredump without gdb !).
+>
+> JM
+>
 
- /**
-- * cap_capable - Determine whether a task has a particular effective capa=
-bility
-- * @cred: The credentials to use
-- * @targ_ns:  The user namespace in which we need the capability
-- * @cap: The capability to check for
-- * @opts: Bitmask of options defined in include/linux/security.h
-+ * cap_capable_helper - Determine whether a task has a particular effecti=
-ve
-+ * capability.
-  *
-- * Determine whether the nominated task has the specified capability amon=
-gst
-- * its effective set, returning 0 if it does, -ve if it does not.
-- *
-- * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
-le()
-- * and has_capability() functions.  That is, it has the reverse semantics=
-:
-- * cap_has_capability() returns 0 when a task has a capability, but the
-- * kernel's capable() and has_capability() returns 1 for this case.
-+ * See cap_capable for more details.
-  */
--int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
--		int cap, unsigned int opts)
-+static inline int cap_capable_helper(const struct cred *cred,
-+							struct user_namespace *target_ns,
-+							const struct user_namespace *cred_ns,
-+							int cap)
- {
--	struct user_namespace *ns =3D targ_ns;
-+	struct user_namespace *ns =3D target_ns;
+I have seen a similar libtraceevent-related rtla segfault recently on
+ARM64, which was fixed by updating libtraceevent to a version that
+includes the fix. Such issues are caused by the files for kernel
+tracepoint tracefs having different contents on different
+architectures, exposing bugs. I see Steven has already fixed one of
+the issues on m68k [2].
 
- 	/* See if cred has the capability in the target user namespace
- 	 * by examining the target user namespace and all of the target
-@@ -75,21 +71,21 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
- 	 */
- 	for (;;) {
- 		/* Do we have the necessary capabilities? */
--		if (ns =3D=3D cred->user_ns)
-+		if (likely(ns =3D=3D cred_ns))
- 			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/tools/testing/selftests/nolibc/nolibc-test.c#n1008
+[2] https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/commit/?=
+id=3D45a9b0647c904b7bf1240da5a11fe3a1ffd1006d
 
- 		/*
- 		 * If we're already at a lower level than we're looking for,
- 		 * we're done searching.
- 		 */
--		if (ns->level <=3D cred->user_ns->level)
-+		if (ns->level <=3D cred_ns->level)
- 			return -EPERM;
-
- 		/*
- 		 * The owner of the user namespace in the parent of the
- 		 * user namespace has all caps.
- 		 */
--		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))
-+		if ((ns->parent =3D=3D cred_ns) && uid_eq(ns->owner, cred->euid))
- 			return 0;
-
- 		/*
-@@ -102,6 +98,31 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
- 	/* We never get here */
- }
-
-+/**
-+ * cap_capable - Determine whether a task has a particular effective capa=
-bility
-+ * @cred: The credentials to use
-+ * @target_ns:  The user namespace of the resource being accessed
-+ * @cap: The capability to check for
-+ * @opts: Bitmask of options defined in include/linux/security.h
-+ *
-+ * Determine whether the nominated task has the specified capability amon=
-gst
-+ * its effective set, returning 0 if it does, -ve if it does not.
-+ *
-+ * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
-le()
-+ * and has_capability() functions.  That is, it has the reverse semantics=
-:
-+ * cap_has_capability() returns 0 when a task has a capability, but the
-+ * kernel's capable() and has_capability() returns 1 for this case.
-+ */
-+int cap_capable(const struct cred *cred, struct user_namespace *target_ns=
-,
-+		int cap, unsigned int opts)
-+{
-+	const struct user_namespace *cred_ns =3D cred->user_ns;
-+	int ret =3D cap_capable_helper(cred, target_ns, cred_ns, cap);
-+
-+	trace_cap_capable(cred, target_ns, cred_ns, cap, opts, ret);
-+	return ret;
-+}
-+
- /**
-  * cap_settime - Determine whether the current process may set the system=
- clock
-  * @ts: The time to set
-=2D-
-2.43.5
+Tomas
 
