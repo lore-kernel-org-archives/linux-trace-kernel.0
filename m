@@ -1,247 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B917B1547FF
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Nov 2024 16:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81CF1474A7;
+	Fri, 29 Nov 2024 16:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732897214; cv=none; b=MvxdDOkTsrRViqo1QAoGVe7a7Eyg+foHhjdceAiTTZDt6QMWylLtJGozWmgDlH4DWRaWg03tDyTNINSfVHZVmElmSGLQ/uRmCH84HPYoDE83fYZ10A728MwHNeye5B7SpaP9Xsr5nbkgOofwwj5zPX92eV8MRMMp22cFLO0JlYY=
+	t=1732898169; cv=none; b=tA+wGvzfcyRECtBeAKRthYGF4oViuILSL4njqoGmnie7yK5ZjaamJWTDTxspbpSgL8ZUpvMikLp2Uv32JeeX8GnN6Sb2J3Ts2LbIHngRK5/qYQ/pQ0z99NwiFXGBdEB8ug4TVcBRUlofOvcPoB8TBi5tKAIoQOj83AGwYmdYSHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732897214; c=relaxed/simple;
-	bh=VLIEVNL9LBNDEDmtL3P5+Dw+zfGuvDucK94TvHOCz8o=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Kk3qNi/q2YLtytpbnxOXI9blxnYVjRhvKcTGBYJhVdnBJV5GvjtljSuAuLBkHkiOYf1LQ9NZZqcrDQZgnTbhgFOiv0LbqEbH47QgYfli3+qpBbmdXVnSXmEug8dxPCoCzUYqOiAJOKXXOOaWGOXKa5FNFlqjUJIhQMVWs5abx1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WMXvO+Sn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732898169; c=relaxed/simple;
+	bh=St5I1KCUJ1mKkVweJS5J5SS0UjlUqUbGxRaIBGK0WEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eIO+O/eKIIc5TzpuHXyygXqAiRsmWLs9facPGJhuZ1vazZByO5XG3+X2QFRZ2OwCBdy6FI3NZdoyhNjfRsvLAuY02ol7jh3iRaaAIno0B4hh0OXIc++7I8rC3JCGXYhrnYN1kTyaBUn+8Zdg2p3+bctnltUfMTxtyaxWXVIA//Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=STL2h9AV; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMXvO+Sn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732897211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b5o8km8xnhEeZ9EFzhJ7F1HLgoKQ4zXXkjzA/RaAN1c=;
-	b=WMXvO+SnO8I4yXzy7UXCcO4a3tPn/dYG/bjIpyvKgyNtoCElkiJqyfmpmc4/y+avkys/32
-	smPW0i+TEGYks6CJ2w/ZlYs0wTFcf+qqIiybPPnxW3HETdALYfkzHuEqDIXj+WY2Ra8QLB
-	3aCqi24I1U2ZlHWDlrrPcUiF8WWZ/QA=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-TkIfTi1AOgyUXVT740yygA-1; Fri,
- 29 Nov 2024 11:20:07 -0500
-X-MC-Unique: TkIfTi1AOgyUXVT740yygA-1
-X-Mimecast-MFC-AGG-ID: TkIfTi1AOgyUXVT740yygA
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 706971953952;
-	Fri, 29 Nov 2024 16:20:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E45931955D47;
-	Fri, 29 Nov 2024 16:19:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <67478d91.050a0220.253251.0061.GAE@google.com>
-References: <67478d91.050a0220.253251.0061.GAE@google.com>
-To: syzbot <syzbot+8965fea6a159ab9aa32d@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, asmadeus@codewreck.org, bharathsm@microsoft.com,
-    brauner@kernel.org, ericvh@kernel.org, jlayton@kernel.org,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-    linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com,
-    lucho@ionkov.net, marc.dionne@auristor.com,
-    mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-    netfs@lists.linux.dev, pc@manguebit.com, ronniesahlberg@gmail.com,
-    rostedt@goodmis.org, samba-technical@lists.samba.org,
-    sfrench@samba.org, sprasad@microsoft.com,
-    syzkaller-bugs@googlegroups.com, tom@talpey.com,
-    v9fs@lists.linux.dev
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_read_iter
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="STL2h9AV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=4W8Rqmae+GoUrIIxVWQgBlsh4/eEYJ7BEkZbzOEfoe0=; b=STL2h9AVW5w8fxtXk+D3f8rGqZ
+	IFV2a2gnGl0GCIBGf2F1iXFkfUGhluEr8ORItiHz2IXKqw09wQNhWxP4FItKVKEwZjl5/i+nhuwS3
+	xvyhOdy+CqYFHDc60NxDWxC4+Za5as/g0BlFH6mmQc/7FEkl5l3klufbWvo6IpFOKBGXz033QUYxS
+	j5bzLfu3l/vIkNCjbn+YplekwEeA5xeVSnqGku5PrJgGlTmI6JvpdJvSyaJryscj6IiUk473AzHKV
+	EImvBM3InjByigLfJ4A6C6fGbH6oZCNjCUE5Vwfs5gQbpF+XRr0LbdhEteeLVj54uU2oVoPtBtD6F
+	bUlGfH2A==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1tH3yI-0007RJ-TK; Fri, 29 Nov 2024 17:35:58 +0100
+Received: from [178.197.249.40] (helo=[192.168.1.114])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1tH3yH-000Jf4-2G;
+	Fri, 29 Nov 2024 17:35:58 +0100
+Message-ID: <89424046-1142-447e-8a63-d8492ccd9abc@iogearbox.net>
+Date: Fri, 29 Nov 2024 17:35:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4020303.1732897192.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 29 Nov 2024 16:19:52 +0000
-Message-ID: <4020304.1732897192@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 1/2] bpf: Remove bpf_probe_write_user()
+ warning message
+To: Marco Elver <elver@google.com>, Alexei Starovoitov <ast@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Nikola Grcevski <nikola.grcevski@grafana.com>,
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20241129090040.2690691-1-elver@google.com>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20241129090040.2690691-1-elver@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27472/Fri Nov 29 10:38:16 2024)
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
-.git netfs-writeback
+On 11/29/24 9:59 AM, Marco Elver wrote:
+> The warning message for bpf_probe_write_user() was introduced in
+> 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
+> tracers"), with the following in the commit message:
+> 
+>      Given this feature is meant for experiments, and it has a risk of
+>      crashing the system, and running programs, we print a warning on
+>      when a proglet that attempts to use this helper is installed,
+>      along with the pid and process name.
+> 
+> After 8 years since 96ae52279594, bpf_probe_write_user() has found
+> successful applications beyond experiments [1, 2], with no other good
+> alternatives. Despite its intended purpose for "experiments", that
+> doesn't stop Hyrum's law, and there are likely many more users depending
+> on this helper: "[..] it does not matter what you promise [..] all
+> observable behaviors of your system will be depended on by somebody."
+> 
+> The ominous "helper that may corrupt user memory!" has offered no real
+> benefit, and has been found to lead to confusion where the system
+> administrator is loading programs with valid use cases.
+> 
+> As such, remove the warning message.
+> 
+> Link: https://lore.kernel.org/lkml/20240404190146.1898103-1-elver@google.com/ [1]
+> Link: https://lore.kernel.org/r/lkml/CAAn3qOUMD81-vxLLfep0H6rRd74ho2VaekdL4HjKq+Y1t9KdXQ@mail.gmail.com/ [2]
+> Link: https://lore.kernel.org/all/CAEf4Bzb4D_=zuJrg3PawMOW3KqF8JvJm9SwF81_XHR2+u5hkUg@mail.gmail.com/
+> Signed-off-by: Marco Elver <elver@google.com>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-commit 1daca71a815b0d8cfe3db81a31b6dd3fc0da4b50
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Nov 29 16:19:03 2024 +0000
-
-    netfs: Fix hang in synchronous read due to failed subreq
-    =
-
-    When netfs is performing a synchronous read, it doesn't offload the
-    collection of results off to a workqueue, but rather does the collecti=
-on in
-    the app thread - thereby avoiding the overhead of using a work queue.
-    =
-
-    However, if a failure occurs and we might want to retry or if it wants=
- to
-    throttle the production of new subreqs, netfs can throw a pause on the
-    producer by setting NETFS_RREQ_PAUSE.  This is fine if collection is d=
-one
-    by workqueue, but in synchronous mode, the collection and retry is don=
-e
-    after the producer loop completes - thereby deadlocking the two parts.
-    =
-
-    Fix this by making the synchronous read producer loop, when it sees th=
-e
-    PAUSE flag, go and wait for the flag to be cleared or the op to comple=
-te
-    whilst running the collector to process results.
-    =
-
-    This fixes "netfs: Change the read result collector to only use one wo=
-rk
-    item" - but there's no stable commit ID yet.
-    =
-
-    Reported-by: syzbot+8965fea6a159ab9aa32d@syzkaller.appspotmail.com
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: Jeff Layton <jlayton@kernel.org>
-    cc: netfs@lists.linux.dev
-    cc: linux-fsdevel@vger.kernel.org
-
-diff --git a/fs/netfs/direct_read.c b/fs/netfs/direct_read.c
-index dedcfc2bab2d..0bf3c2f5a710 100644
---- a/fs/netfs/direct_read.c
-+++ b/fs/netfs/direct_read.c
-@@ -102,10 +102,8 @@ static int netfs_dispatch_unbuffered_reads(struct net=
-fs_io_request *rreq)
- =
-
- 		rreq->netfs_ops->issue_read(subreq);
- =
-
--		if (test_bit(NETFS_RREQ_PAUSE, &rreq->flags)) {
--			trace_netfs_rreq(rreq, netfs_rreq_trace_wait_pause);
--			wait_on_bit(&rreq->flags, NETFS_RREQ_PAUSE, TASK_UNINTERRUPTIBLE);
--		}
-+		if (test_bit(NETFS_RREQ_PAUSE, &rreq->flags))
-+			netfs_wait_for_pause(rreq);
- 		if (test_bit(NETFS_RREQ_FAILED, &rreq->flags))
- 			break;
- 		if (test_bit(NETFS_RREQ_BLOCKED, &rreq->flags) &&
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index 334bf9f6e6f2..db59ed8880e3 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -96,6 +96,7 @@ void netfs_read_collection_worker(struct work_struct *wo=
-rk);
- void netfs_wake_read_collector(struct netfs_io_request *rreq);
- void netfs_cache_read_terminated(void *priv, ssize_t transferred_or_error=
-, bool was_async);
- ssize_t netfs_wait_for_read(struct netfs_io_request *rreq);
-+void netfs_wait_for_pause(struct netfs_io_request *rreq);
- =
-
- /*
-  * read_pgpriv2.c
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index f1b15c20b6f8..3803ef5894c8 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -312,7 +312,7 @@ static void netfs_collect_read_results(struct netfs_io=
-_request *rreq)
- 	if ((notes & MADE_PROGRESS) && test_bit(NETFS_RREQ_PAUSE, &rreq->flags))=
- {
- 		trace_netfs_rreq(rreq, netfs_rreq_trace_unpause);
- 		clear_bit_unlock(NETFS_RREQ_PAUSE, &rreq->flags);
--		wake_up_bit(&rreq->flags, NETFS_RREQ_PAUSE);
-+		wake_up(&rreq->waitq);
- 	}
- =
-
- 	if (notes & MADE_PROGRESS) {
-@@ -659,3 +659,39 @@ ssize_t netfs_wait_for_read(struct netfs_io_request *=
-rreq)
- =
-
- 	return ret;
- }
-+
-+/*
-+ * Wait for a paused read operation to unpause or complete in some manner=
-.
-+ */
-+void netfs_wait_for_pause(struct netfs_io_request *rreq)
-+{
-+	struct netfs_io_subrequest *subreq;
-+	struct netfs_io_stream *stream =3D &rreq->io_streams[0];
-+	DEFINE_WAIT(myself);
-+
-+	trace_netfs_rreq(rreq, netfs_rreq_trace_wait_pause);
-+
-+	for (;;) {
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_queue);
-+		prepare_to_wait(&rreq->waitq, &myself, TASK_UNINTERRUPTIBLE);
-+
-+		subreq =3D list_first_entry_or_null(&stream->subrequests,
-+						  struct netfs_io_subrequest, rreq_link);
-+		if (subreq &&
-+		    (!test_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags) ||
-+		     test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags))) {
-+			__set_current_state(TASK_RUNNING);
-+			netfs_read_collection(rreq);
-+			continue;
-+		}
-+
-+		if (!test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags) ||
-+		    !test_bit(NETFS_RREQ_PAUSE, &rreq->flags))
-+			break;
-+
-+		schedule();
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_woke_queue);
-+	}
-+
-+	finish_wait(&rreq->waitq, &myself);
-+}
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 4a1499167770..bb74f30a4216 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -324,7 +324,7 @@ static void netfs_collect_write_results(struct netfs_i=
-o_request *wreq)
- 	if ((notes & MADE_PROGRESS) && test_bit(NETFS_RREQ_PAUSE, &wreq->flags))=
- {
- 		trace_netfs_rreq(wreq, netfs_rreq_trace_unpause);
- 		clear_bit_unlock(NETFS_RREQ_PAUSE, &wreq->flags);
--		wake_up_bit(&wreq->flags, NETFS_RREQ_PAUSE);
-+		wake_up(&wreq->waitq);
- 	}
- =
-
- 	if (notes & NEED_REASSESS) {
-diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
-index cd2b349243b3..6506bf1d970e 100644
---- a/fs/netfs/write_issue.c
-+++ b/fs/netfs/write_issue.c
-@@ -721,7 +721,7 @@ int netfs_unbuffered_write(struct netfs_io_request *wr=
-eq, bool may_wait, size_t
- 		rolling_buffer_advance(&wreq->buffer, part);
- 		if (test_bit(NETFS_RREQ_PAUSE, &wreq->flags)) {
- 			trace_netfs_rreq(wreq, netfs_rreq_trace_wait_pause);
--			wait_on_bit(&wreq->flags, NETFS_RREQ_PAUSE, TASK_UNINTERRUPTIBLE);
-+			wait_event(wreq->waitq, !test_bit(NETFS_RREQ_PAUSE, &wreq->flags));
- 		}
- 		if (test_bit(NETFS_RREQ_FAILED, &wreq->flags))
- 			break;
-
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
