@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E25915AF6;
-	Fri, 29 Nov 2024 16:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72ED8146D76;
+	Fri, 29 Nov 2024 16:47:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732898863; cv=none; b=U2a1yiAfHlKvy8PYzy4C5mFclJxdpUrUUlVAhecQH4SGqoO4NGSAw5SR0/sS0JFoENF0OKemxpR7bvSKcFOd5fVxyv8sfUnWTpDLHwJyamOoIVb4M55xp/kyXzkgaVDPOzoBFa0nFFbTvy6abVZADDz0L6XA/JrbSDrWghxp4/8=
+	t=1732898873; cv=none; b=EONIU05T0GfABKaE5ZABMGZifdkWPXh1mFUeiGhpt8WYSwEGkZfPO4ST5WSbBwDkWSrfKSw55xv4fu+/V3wXKyGiGw6cCrqYRgZ8DYUBDNblAOX4T093GxaVp83XvELm0BZ9H9beKmoV2iLmR75mjwlTfIs55RnpX5pLeBHapeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732898863; c=relaxed/simple;
-	bh=1VzCoTLC0Pz31/d/Qw7tNE40swBkiAq4aNmyuonnwVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oAyP1EQDM58K1ZcgNE1OdXqVJ5ncANHakgaSZPeEF9x9b6sYok7wbGOlHXWMj6GJ1YD1SD3PkN0DlqEd+Ch+GdqDSoOHI8kkj/eC7Kfv+joeYC7AYjBmSgbbGrZAjRREhK+1YxDElGox7SvrriHovTlQMPO1vOyGHr7jdMJCMjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nM6AOiJs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732898873; c=relaxed/simple;
+	bh=OUbH2yDyiXtr4xG2OF1k8+O5wk66wGWYCe1qQImrZI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JP4tnRrSi4SbGJPd4PMZDau4k6/1T+v+ug/jmKUsRTT4LuBqOanO7V7FO1MmbtmrA9kDRt9zbxhBnVRXFLMldJklS+nxFbmjRBt77cOnrSq/0PS2vuK0YdH5FkwIFJVmOT9vLg4aWMchnEbqMVEwi4GYF6v4UFX7VjaMBqchWtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rodo0E3u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nM6AOiJs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CDDC4CECF;
-	Fri, 29 Nov 2024 16:47:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rodo0E3u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77342C4CECF;
+	Fri, 29 Nov 2024 16:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732898861;
-	bh=1VzCoTLC0Pz31/d/Qw7tNE40swBkiAq4aNmyuonnwVM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nM6AOiJsayv4Oir4nGjvpAvOuvEM+rwwVtPG+/lxCQHvJBLQpyVOgYKi9aiw895cA
-	 E82jNg6Bl5crwerMUhRLqPS066a5375QuDyBT383L3iYSKAAeOXce4fcZawXhpyH6O
-	 LTh0W5OopTVWblzSzEH7BOlNpBB/Poc/8oYWxF5ImPktYbvs+d2ZD80G6brbEFfKVT
-	 l/rUuxc32pCeNn3zbKbnibLcF1kThgXwe2mh/FCHZ4RpR8HkAq4GFAvNkpVSo76Iz1
-	 mEFeggTT8UAAHGfNdTm1IqTfF++RshMeVI8ZPSp4J+QN9ULw0oRsH/PV8/TK1auwfF
-	 VxKKfNdEaiBFA==
+	s=k20201202; t=1732898873;
+	bh=OUbH2yDyiXtr4xG2OF1k8+O5wk66wGWYCe1qQImrZI0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rodo0E3ucGOXZtm+E9Nh9EYunpwfCGafZ568xD4A5Z+93CVl46qgPTfdXBLLO9oIU
+	 CBuVMiTD/9gIMq8UX3koBHxmXggg3GcOJgFA3BiSX1JZT74C8E3o1x3Z1Nld+77LsU
+	 jeZm9znsWXg9Kvap+JKtlueu0FmRafVoFilnQnSRd6NgU9oSBX8s2YRTfX2j/f/tKy
+	 pAggNK5t/Vk2aVUNTGzpOsxA+GNz2hyzJrlIKWJj6vh1lBo+nkgY2+F+rxsCkeBQaR
+	 u6Xe+Znbs3SWJ1O0nvRHw+M72Bc04wl/t1hZi9hOjHtsuP6L1MCZ4uTlWWGSMzOQEl
+	 u7Ux8ZX6255Wg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Naveen N Rao <naveen@kernel.org>
@@ -36,10 +37,12 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] kprobes: tracing/probes: Fix and cleanup to use guard
-Date: Sat, 30 Nov 2024 01:47:36 +0900
-Message-ID: <173289885627.73724.13632317993038475335.stgit@devnote2>
+Subject: [PATCH v2 1/6] tracing/eprobe: Fix to release eprobe when failed to add dyn_event
+Date: Sat, 30 Nov 2024 01:47:47 +0900
+Message-ID: <173289886698.73724.1959899350183686006.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <173289885627.73724.13632317993038475335.stgit@devnote2>
+References: <173289885627.73724.13632317993038475335.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,35 +53,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This is the v2 of the series to fix eprobes and cleanup kprobes and probe
-events in ftrace to use guard() and scoped_guard() instead of pairs of mutex
-locks.
-In this version I fixed mixing of gurad and goto in the same function by
-using scoped_guard.
+Fix eprobe event to unregister event call and release eprobe when it fails
+to add dynamic event correctly.
 
-Some locks are still not using guard(). We need some more work to complete.
-
-Thanks,
-
+Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ kernel/trace/trace_eprobe.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Masami Hiramatsu (Google) (6):
-      tracing/eprobe: Fix to release eprobe when failed to add dyn_event
-      kprobes: Adopt guard() and scoped_guard()
-      tracing/kprobe: Adopt guard() and scoped_guard()
-      tracing/uprobe: Adopt guard() and scoped_guard()
-      tracing/eprobe: Adopt guard() and scoped_guard()
-      tracing/dynevent: Adopt guard() and scoped_guard()
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index ebda68ee9abf..be8be0c1aaf0 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -963,6 +963,11 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 		goto error;
+ 	}
+ 	ret = dyn_event_add(&ep->devent, &ep->tp.event->call);
++	if (ret < 0) {
++		trace_probe_unregister_event_call(&ep->tp);
++		mutex_unlock(&event_mutex);
++		goto error;
++	}
+ 	mutex_unlock(&event_mutex);
+ 	return ret;
+ parse_error:
 
-
- kernel/kprobes.c              |  205 ++++++++++++++++++-----------------------
- kernel/trace/trace_dynevent.c |   35 +++----
- kernel/trace/trace_eprobe.c   |   31 +++---
- kernel/trace/trace_kprobe.c   |   18 +---
- kernel/trace/trace_uprobe.c   |   15 +--
- 5 files changed, 133 insertions(+), 171 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
