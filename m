@@ -1,35 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F8C2C18C;
-	Fri, 29 Nov 2024 19:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062CE154C04;
+	Fri, 29 Nov 2024 20:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732908619; cv=none; b=llKjpX0StUQPH9gq2HguTHjx1rtgoFlqHMBIRcHO639dd6EH7mnfwDIcZZ8pGp/TJ6LrgUBKI/KpZGbwNs3KMvYoWuh5XDWydHSmjgCLXNtm+utXtahA1t9ECTG/IHWP5v9wBAwAPieS5YUGJRGzNqVcqN0Pw0gZoZ0Ipf0Ow58=
+	t=1732912024; cv=none; b=X2YbWgvPHQF4aQPoEVL75jhY3MshHDw5eW0iBGPYfNVAOWU0p88iti3SJvih9mrxiBVc0vLCfpkmVbbHN5wpIjx0KkztVuBT8DUu+jos9j+vWsmTDMkqpwoxiyjiX55Un4nR/34AHwyF8yFvelbRJPLs5hRUJ8i8DViN0RR4JsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732908619; c=relaxed/simple;
-	bh=GesLReKmG/lbnI9/AeCxcZlM2HY6mKQ9eV48XapF0hI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TZ05LXLEBH5jNUVLnRHT8XWYE4NLXgchAn1E5HO5I/Bhv5QHtpZPWDY/YVZyKa0ubxTcBxpvcuSUscIiS1RK006W4vU0q9y0rnpn64HyPIz+ff8v1vWERZVMzAy/dayNBi9s23+1G3ZNjiY6+yEzh8xk/9Dy1RlZFzDiFcOYsUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P75pgmhw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732912024; c=relaxed/simple;
+	bh=NYIbTf7tmHYdVhLCzQLXCTQ/QK0YYqNw9srpQmRe1QA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CcjFgN67aY/JFUzvJ+eHtRqpYE5CtQMeoyokKVz7PXdc+iMJTikkCiIEEv2QUyyhC5wvtSdJ914u5xRD4aUyulXoM+/MXJIl2th5ldhG/haPcdujncRy+IpWN6z6S95TjJ6r2ilgaMTPDO1/xL3tW0Z0drw0ETso/Bm1rsgaoLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KC1ieI8n; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P75pgmhw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C643FC4CECF;
-	Fri, 29 Nov 2024 19:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732908618;
-	bh=GesLReKmG/lbnI9/AeCxcZlM2HY6mKQ9eV48XapF0hI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=P75pgmhwNY0q9EMFDstp15rZUsK8a3Flb+UtR+YaeDRTSY4Tv3lWXAmovjSFHpK6w
-	 a5Cp3pV/l37Uu0TTXTG/EqtFXA13tkQU0VeLxdQ/mQyJ2vvOiYPn6FyyK2Ino8YwPi
-	 D716d09ABO0MuywEBys+iER/an5NuowMP2Rk3bZaGApDYVwcHg3/6IzGnXRRZSAUFG
-	 8+XBAp2ITWlqaTm4sZCoJ7T5HVsFGovmpbZuzNggxgwYLFpDUOhMfhsl8lLkZ07VtA
-	 sNMuIaYhBMTVlJhKzPRxrwIx+m6mRg0EfRApkTXWKi8GqO2Zs7pDegXTcktIfGy46h
-	 9hNqQWrXY1Fng==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71473380A944;
-	Fri, 29 Nov 2024 19:30:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KC1ieI8n"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4ATAFP73027337;
+	Fri, 29 Nov 2024 20:26:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=NY6l9TYMOSUhgOxd/kH4qvMmvUhFE+n2M671enH/a
+	3s=; b=KC1ieI8nr6gpPgHCkzJFKFANERFqyfzvTkR77QJS1+qCBR5gasGJqaZLl
+	n+rzlAzrz5WvUbTfpHSqYVbfmodWag9eHGeUTaDREkc0A6CsreA/ZsJ86rMpRuWD
+	iZEohF9wxs16aPD9c58Tmwakc8jf5T9V+gKXrD8rv7TFleH6ia5n/hgC7sfSzLoL
+	OPHTxHjm/4mGYnlss2y32VVjfFoBQq9d+oBFsM6c+7tqBsCCei5x/eg9E2AbTEkd
+	hffJRX5df7g9kSepDuEZemnV1faT0HUXAcuU4CFSbKJA+rCmRhI61HN4iVrNKKoR
+	WAIJvAFYEYPE6Zvp5MKpuPlrkKLrQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 436ym5dja3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Nov 2024 20:26:27 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4ATArMIu002585;
+	Fri, 29 Nov 2024 20:26:26 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 43672gmghn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 29 Nov 2024 20:26:26 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4ATKQPMO29294904
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 Nov 2024 20:26:25 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0773F20040;
+	Fri, 29 Nov 2024 20:26:25 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7274620043;
+	Fri, 29 Nov 2024 20:26:22 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.27.30])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 29 Nov 2024 20:26:22 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] selftests/ftrace: adjust offset for kprobe syntax error test
+Date: Sat, 30 Nov 2024 01:56:21 +0530
+Message-ID: <20241129202621.721159-1-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,48 +71,52 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 1/2] bpf: Remove bpf_probe_write_user() warning
- message
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173290863205.2157309.298524188267518158.git-patchwork-notify@kernel.org>
-Date: Fri, 29 Nov 2024 19:30:32 +0000
-References: <20241129090040.2690691-1-elver@google.com>
-In-Reply-To: <20241129090040.2690691-1-elver@google.com>
-To: Marco Elver <elver@google.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- nikola.grcevski@grafana.com, bpf@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: C_LDRTXyuQyNz_z28Lbw92rC3hQBsEWN
+X-Proofpoint-ORIG-GUID: C_LDRTXyuQyNz_z28Lbw92rC3hQBsEWN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 spamscore=0 suspectscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2411290160
 
-Hello:
+In 'NOFENTRY_ARGS' test case for syntax check, any offset X of
+`vfs_read+X` except function entry offset (0) fits the criterion,
+even if that offset is not at instruction boundary, as the parser
+comes before probing. But with "ENDBR64" instruction on x86, offset
+4 is treated as function entry. So, X can't be 4 as well. Thus, 8
+was used as offset for the test case. On 64-bit powerpc though, any
+offset <= 16 can be considered function entry depending on build
+configuration (see arch_kprobe_on_func_entry() for implementation
+details). So, use `vfs_read+20` to accommodate that scenario too.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
 
-On Fri, 29 Nov 2024 09:59:33 +0100 you wrote:
-> The warning message for bpf_probe_write_user() was introduced in
-> 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
-> tracers"), with the following in the commit message:
-> 
->     Given this feature is meant for experiments, and it has a risk of
->     crashing the system, and running programs, we print a warning on
->     when a proglet that attempts to use this helper is installed,
->     along with the pid and process name.
-> 
-> [...]
+Changes in v2:
+* Use 20 as offset for all arches.
 
-Here is the summary with links:
-  - [bpf-next,v4,1/2] bpf: Remove bpf_probe_write_user() warning message
-    https://git.kernel.org/bpf/bpf-next/c/3389f8243a90
-  - [bpf-next,v4,2/2] bpf: Refactor bpf_tracing_func_proto() and remove bpf_get_probe_write_proto()
-    https://git.kernel.org/bpf/bpf-next/c/45e04eb4d9d8
 
-You are awesome, thank you!
+ .../selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+index a16c6a6f6055..8f1c58f0c239 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+@@ -111,7 +111,7 @@ check_error 'p vfs_read $arg* ^$arg*'		# DOUBLE_ARGS
+ if !grep -q 'kernel return probes support:' README; then
+ check_error 'r vfs_read ^$arg*'			# NOFENTRY_ARGS
+ fi
+-check_error 'p vfs_read+8 ^$arg*'		# NOFENTRY_ARGS
++check_error 'p vfs_read+20 ^$arg*'		# NOFENTRY_ARGS
+ check_error 'p vfs_read ^hoge'			# NO_BTFARG
+ check_error 'p kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
+ check_error 'r kfree ^$retval'			# NO_RETVAL
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.0
 
