@@ -1,290 +1,153 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8CE15250F;
-	Thu, 28 Nov 2024 22:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77C88F5A;
+	Fri, 29 Nov 2024 02:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732834179; cv=none; b=eNMBOXnP0266iV+UkbqIFPvvwvzX3POFJecjClezoqpcVKpGG6gEwpnS3skFZHAOnCgyziVt+qdTNcB4GADBnm++JMRG/Hj21QLOj3aXW1gaCvfPER3/uS+O1yxFoHE4HSfrzXkUh8C73BprUlYNdrKBayby6esCNbxtSBWoU0c=
+	t=1732848543; cv=none; b=YyiN+XrF2Y3PDiZl4m+xwnzM6KzeP2dHQM9t7+JtBfOChh9zfSQYH5jJwokQ6YsqOgArugGAWW24Pr3gn/4XEZczluO6ugRfnia0dsoHRjNsp9za2Fhgjkk3txcbXh2KAeZcaLg+vya/dx3U4EGNf8hBeNH4D0PGdPgPShItEeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732834179; c=relaxed/simple;
-	bh=2CLq5AvTfa+uLsdmJdFRiMOmi9FGNuFypfi6aWel7DQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TSyW5TcZJrNXTo2YIFlSXnKt7AwANOmLD0Fwh8CNZizrtpilg6Rk8eWpgFhNC1kGfLR+1kSQ0t4B071hyOYVFUT5ukXCejfEAXXKvsv4hVD7MnbUbs/TK37UmC7agfFSe05MG+y0WrTgzs6rhx3JbWehkgle1cUD/DMKonCIZRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com; spf=pass smtp.mailfrom=jordanrome.com; dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b=KCHtb+de; arc=none smtp.client-ip=74.208.4.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jordanrome.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jordanrome.com
+	s=arc-20240116; t=1732848543; c=relaxed/simple;
+	bh=QLUjTtoDE9S97ZLbymgjtwtKTxN2cC3KIoEYtZwoy1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EEkTSHa2onZH6U6Jdtc2UM8rVPpBuYjZ4SATTob/evTeLZSpFbg277JWAkak8gMPrm5bbgAwTkqD7foRZ9JrumQ2Ax+IHMZ9jrOptdd6j+kFJzrqHdstJzXgiY47VwTCCa+tOW1HYqP3MV8e+oxujjA/F7drE8byz/kndumNkdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmdpjdfO; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jordanrome.com header.i=linux@jordanrome.com header.b="KCHtb+de"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jordanrome.com;
-	s=s1-ionos; t=1732834138; x=1733438938; i=linux@jordanrome.com;
-	bh=zlLtIl9pEgeclkx+VQzLAlgQP/261yb+11wdt+sU1g4=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=KCHtb+deIvj7P/JR4ynLug2JEcVixcBXANyHYf2qyQqR3UPsq+U3H5sDpwZX7jCj
-	 D0LZfdJ86muEqTW6z4nnWPTQIXPENYY4UpI+mFmDC0MP4YsPA3bfIxubkSyAWzRTc
-	 oJn/eB1qt5qnZQ8YNyUyjbOHoHK6AnqbXbRgS9NQCBOc/jdA+65jnkj4Tjs3UGoS5
-	 GIGHfpgvcAzdRsfDrarssuzR923xMyALKjVtHNuS9JHpIN1akKxadu1krGAZxkL0s
-	 fK3rfL5z8hXCjJxX3ic22287xBhufvy1bG+5/xYmbrFw5ipaZp+8Ti2Li1K/Lq71a
-	 gdwq7ZmFLDqsTtngCQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([69.171.251.11]) by mrelay.perfora.net (mreueus002
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0M91Zb-1tOkLP1eu5-00Ab5u; Thu, 28 Nov
- 2024 23:48:58 +0100
-From: Jordan Rome <linux@jordanrome.com>
-To: linux-security-module@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>,
-	Serge Hallyn <sergeh@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [v8] security: add trace event for cap_capable
-Date: Thu, 28 Nov 2024 14:48:49 -0800
-Message-ID: <20241128224849.3774367-1-linux@jordanrome.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmdpjdfO"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ee345c1bbdso737802a91.1;
+        Thu, 28 Nov 2024 18:49:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1732848541; x=1733453341; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PICE+Q3/N0kMzg+O9wYNTMGH6EgupurTrcjA/6N0QTE=;
+        b=PmdpjdfOh/rto/8Ds16tg9hXV577WEPaWheRIVcraWt20ULb0zxAF6v8xN7uR4A5pw
+         WaIx88dJVCNSn4AXIXPVfIP0acJOUgZEXuoDG/S/61+cejZiEscNZTgUA/zoddhnHokX
+         NJqch8DjSpNeyOyCk5wbiNDLW9esxBKm1Rh7JoXI4lOYiJwXaBrHyWaOKEEiS8yA+gzp
+         3dcjIC3XNEse5gnWZzbAmFbi6z4lhB2wm650YqlxA2jwN2OjrfAcrvX60sPi1xi+4hwP
+         VSPhfc+hT0V9iez6XalzdYf4d3ujd4Aw1jn7SUOUS3LywVCYr/b+z41j/7kRU06SKcpr
+         6rKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1732848541; x=1733453341;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PICE+Q3/N0kMzg+O9wYNTMGH6EgupurTrcjA/6N0QTE=;
+        b=ZxXyGalyvQ/HiN6oVBeJp4dG9VZTW6wI5DsuP/dsX41ucTtdMmI46kdcHKjIg+fFcD
+         1aPZB9OUqJFU5oK+fe11KntxKJMYAbxGPpLUL6mOSxClM62C5Q86lDB4b/m0vUTqh4pB
+         a/HRGwZ+9PWkdc44MzjmoOW2kE3tt9CyGSkdLrCassQG9uzZivuQaspsh2UwLtgjzXZD
+         oQfE2brV01SdaJeMFwzeZhww5HXg4YSDTCSapgUqUB6JCfracwLBJBsqgnImF/qIvjV7
+         VGQjLSR8JHu337iE/DMTwYKlWfnWKw+l63Qz4sKUcV4QZk4F1H2bwaF3oon1a8yUyTSa
+         ZF0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW6xTl80z50l96NDcTUhh8PcWCjuGfdUK6iE7fV/8FZ0CS/Xmp89dp9pQOvauDeOj9IcMckaULzUmSW9tY=@vger.kernel.org, AJvYcCX3W2kM90dXoV3BUXDiHTtIwtfqe/tF4jt04moFBe29Un/FVDsHRgUkx1ihHLajKYYmxY7FGd5O//t5dTtzs+vBAMbb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyapGjvb0eMkDKLbtzCrtzJf0aLPR3uRh5zs/0LZ5DsJAoieaDQ
+	NXANVWKe1xzu2LZdKUT2y1a8EJuay9GGRxqLZRqbIEL2xX+tIF9W
+X-Gm-Gg: ASbGnctUTlp8iYEvZhDL0JcM34skHfdHfAA4w7wp17xSmRrzu1suU0yP6qzbXYROF96
+	O1xeRvcBwB33/7bsdApf0ixKdap/ASdnv1LU/yX158rYbYLT+Q/abfsy0nLFluUDYeaygxT/yeW
+	RdefR/fyqr5Qy4C2AuElKRxljcsnqSeabECtGITQtQSk0VnQnJ3N14KnYoCESsGQVITdgxG4lP7
+	eav9TJ1Rh0boZb4umtnS+/vArNJbWCHah1DpTeT/+ORIjDWM34wotTJ/FPXKv18defXVw==
+X-Google-Smtp-Source: AGHT+IFQJh/q5177Fe9nAAwLwJNPGnI2B4eWUEGS3BPZiqzd0QFAP1AoF3G4Y+IoCWKDqCDmMC+x4Q==
+X-Received: by 2002:a17:90b:1812:b0:2ea:8aac:6ab9 with SMTP id 98e67ed59e1d1-2ee08e9d54bmr12161768a91.8.1732848541028;
+        Thu, 28 Nov 2024 18:49:01 -0800 (PST)
+Received: from [172.23.161.188] ([183.134.211.52])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee4b1b2c1csm904931a91.9.2024.11.28.18.48.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Nov 2024 18:49:00 -0800 (PST)
+Message-ID: <f27c1cf8-4c00-44dc-80f2-a499cf83ea81@gmail.com>
+Date: Fri, 29 Nov 2024 10:48:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RMwbQ4Ilj/NG4zsrO3K8nDIDa3RL8Ok6sTNpPFQuiDUbpsh+cx0
- s7+UkdF9KhW9HADc+WdZx+y25Wkzi0euHo9/5Y93RQmjhsh/jl4A/1xWQtaaODcl5VTCKUw
- askxX7JympRA9Ev64vthNE8h6WndkCDHQ4lG1zd7fdNpSQqfqn4VdygvZgWM9cTkyvCFFew
- BajdAgGYnJEwNurbL8t4Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MdVQKAfc10w=;b4R7deXdLj9SOLu30u/QTf5Fy28
- uPItoWLyHzr5oshDElIMP/Td6sU8hTLdtB726SJC80a25cpZ51/lWRDdnye096nZTrmTuucIY
- xGLsH+Pwjc8g6xN3GbfFIMgMXaRBk5ALy//9H2ZiFMPI4H4zznUx+iKRVvW8+ElQhP+4eC0pc
- yl2ZcDldVF8iIDfvE8UdAVSN/TytzjRYxVRg/ouizrInt0+dwAU/+OXyRmWXSFFP8U9XmS5r0
- JTTj0A8dArdKlzEmL6vo52LLnOVmza6CQ+yOOrG90PP7RpQGQ+j2RPQOv9BqiCKN6X3hA6XWZ
- 3vp4QOVI/Z8uWkIVak/HIKxufKuwSrfaSUb9diRS2VF3jFemCH4Hc3hAse7vS6/EwgZimUUrK
- MdidEfcDCxhj6On9pGsfoRHq2rSXbBDqJDH51DzmTJ7PWQFdfRt3iCAGfyZ9DgShkGDOdjdbw
- QE7YV1BOjuZELP/N5ugmxQniDSxdXGs0zDzXMYTCtFgqZfJX9xJwfycM8mpnmaRd4pmjj2A0b
- myk/ujLtOc/Z485kYWig2nxyrjhe1JglYLqcTyZhwmK5e53kstyJm1NFjKzRKExr6L74TC7il
- sit9MEDUB/RCDWx9+CYNmhh5R9lTdtSNbph92lsUJ1S6zGizzHujav6J3fG8FfkbLUZgubjXG
- SwhqDAD1MBVv10w/PWKEctVaF020CNbZpd3M9azRe1O15sHK9Lnk4lHnxV3lgnonYLIyCl3GL
- 4yVffnrphhr6v19oTFmSBEIeFlvIGgbfNoxE7zbTPwWgzBs6r5TtdQVl7H10ETyxCDVlbHhQW
- D2J8ZxZlVa7fnF2Y3Koi9xvbwfcbdCw0S84Kmdm4wM0cHCAm8+IFuIA2sE8S+J3Sl1N5PByPI
- x0oxRZtLzdKn1L+sSSLHieHTyFjTixGqQ2rn9lOYrXbOVQKzDeymMxRMoQakkJMF4OrcrvgO3
- dvln/H/6oDVfz8sQrJiKmuyjozxH7xqbftfd58OOy/i13n0e20dx3pOj8IEEUs6tVttxHs2GH
- +BrwDFV3kLdNuzLPVrtjOS9ljVqcmaXQbYXhb+E
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Add WARN_ON_ONCE for syscall_nr check
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20241128115319.305523-1-chen.dylane@gmail.com>
+ <20241128074623.063bf253@rorschach.local.home>
+ <8d4796dc-ef5b-43d8-8ec0-3891b7994428@gmail.com>
+ <62cb12cb-d3b6-4ad1-b9e6-c49b642eaeb4@efficios.com>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <62cb12cb-d3b6-4ad1-b9e6-c49b642eaeb4@efficios.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-In cases where we want a stable way to observe/trace
-cap_capable (e.g. protection from inlining and API updates)
-add a tracepoint that passes:
-- The credentials used
-- The user namespace of the resource being accessed
-- The user namespace in which the credential provides the
-capability to access the targeted resource
-- The capability to check for
-- The return value of the check
+在 2024/11/28 22:27, Mathieu Desnoyers 写道:
+> On 2024-11-28 08:15, Tao Chen wrote:
+>> 在 2024/11/28 20:46, Steven Rostedt 写道:
+>>> On Thu, 28 Nov 2024 19:53:19 +0800
+>>> Tao Chen <chen.dylane@gmail.com> wrote:
+>>>
+>>>> Now, x86_64 kernel not support to trace syscall for ia32 syscall.
+>>>> As a result, there is no any trace output when tracing a ia32 task.
+>>>> Like unreg_event_syscall_enter, add a WARN_ON_ONCE judgment for
+>>>> syscall_nr in perf_syscall_enter and ftrace_syscall_enter to give
+>>>> some message.
+>>>
+>>> So on a system that has "panic_on_warn" set and they trace a 32 bit
+>>> system call, it will cause their system to crash. Is that the intended
+>>> behavior?
+>>>
+>>> WARN*() is for self testing the kernel to detect real bugs, not to
+>>> inform users that something isn't supported.
+>>>
+>>> BIG NAK!
+>>>
+>>> -- Steve
+>>
+>> Hi, Steve, thank you for your reply, as you say, so what about 
+>> pr_warn_once api just to print something ?
+>>
+> 
+> I understand that explicitly enabling a system call and observing
+> that ia32 system calls are just not traced by ftrace and perf can
+> be surprising for end users. But printing a warning on the tracing
+> path for an unimplemented tracing feature is just wrong.
+> 
 
-Signed-off-by: Jordan Rome <linux@jordanrome.com>
-=2D--
- MAINTAINERS                       |  1 +
- include/trace/events/capability.h | 57 +++++++++++++++++++++++++++++++
- security/commoncap.c              | 57 +++++++++++++++++++++----------
- 3 files changed, 97 insertions(+), 18 deletions(-)
- create mode 100644 include/trace/events/capability.h
+The initial problem was that I used eBPF 
+SEC("tp/syscalls/sys_enter_sendto") to capture system calls and found no 
+results for i32 programs. So here, i just wanted to remind users that on 
+a 64-bit system, i32 system calls are not supported, to avoid confusion.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f870842fad9c..b90df58f6030 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5103,6 +5103,7 @@ M:	Serge Hallyn <serge@hallyn.com>
- L:	linux-security-module@vger.kernel.org
- S:	Supported
- F:	include/linux/capability.h
-+F:	include/trace/events/capability.h
- F:	include/uapi/linux/capability.h
- F:	kernel/capability.c
- F:	security/commoncap.c
-diff --git a/include/trace/events/capability.h b/include/trace/events/capa=
-bility.h
-new file mode 100644
-index 000000000000..17340257946c
-=2D-- /dev/null
-+++ b/include/trace/events/capability.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM capability
-+
-+#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_CAPABILITY_H
-+
-+#include <linux/cred.h>
-+#include <linux/tracepoint.h>
-+#include <linux/user_namespace.h>
-+
-+/**
-+ * cap_capable - called after it's determined if a task has a particular
-+ * effective capability
-+ *
-+ * @cred: The credentials used
-+ * @target_ns: The user namespace of the resource being accessed
-+ * @capable_ns: The user namespace in which the credential provides the
-+ *              capability to access the targeted resource.
-+ *              This will be NULL if ret is not 0.
-+ * @cap: The capability to check for
-+ * @ret: The return value of the check: 0 if it does, -ve if it does not
-+ *
-+ * Allows to trace calls to cap_capable in commoncap.c
-+ */
-+TRACE_EVENT(cap_capable,
-+
-+	TP_PROTO(const struct cred *cred, struct user_namespace *target_ns,
-+		const struct user_namespace *capable_ns, int cap, int ret),
-+
-+	TP_ARGS(cred, target_ns, capable_ns, cap, ret),
-+
-+	TP_STRUCT__entry(
-+		__field(const struct cred *, cred)
-+		__field(struct user_namespace *, target_ns)
-+		__field(const struct user_namespace *, capable_ns)
-+		__field(int, cap)
-+		__field(int, ret)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cred       =3D cred;
-+		__entry->target_ns    =3D target_ns;
-+		__entry->capable_ns =3D ret =3D=3D 0 ? capable_ns : NULL;
-+		__entry->cap        =3D cap;
-+		__entry->ret        =3D ret;
-+	),
-+
-+	TP_printk("cred %p, target_ns %p, capable_ns %p, cap %d, ret %d",
-+		__entry->cred, __entry->target_ns, __entry->capable_ns, __entry->cap,
-+		__entry->ret)
-+);
-+
-+#endif /* _TRACE_CAPABILITY_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/security/commoncap.c b/security/commoncap.c
-index cefad323a0b1..6b40f12bda18 100644
-=2D-- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -27,6 +27,9 @@
- #include <linux/mnt_idmapping.h>
- #include <uapi/linux/lsm.h>
+> Also, AFAIU the warning will trigger if an ia32 program issues any
+> system call when any unrelated system call tracing is enabled,
+> including non-compat syscalls.
+> 
+> If you want to check something and return an error, it would
+> be in tracefs where the users interact with files that represent
+> ia32 system calls to try to list/enable them. However, given the
+> exposed files have nothing that mention whether they apply to
+> non-compat or compat system calls, it's understandable that an
+> end user would think all system calls are traced, including
+> compat system calls. So I'm not sure how to solve that in ftrace/perf
+> without actually implementing the missing feature the way the
+> tracefs ABI is exposed.
+> 
+> If your end goal is to trace ia32 system call, you may want to try the
+> lttng-modules kernel tracer [1], which has supported compat system call
+> tracing for the past 12 years (at least since lttng-modules 2.0).
 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/capability.h>
-+
- /*
-  * If a non-root user executes a setuid-root binary in
-  * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-@@ -50,24 +53,17 @@ static void warn_setuid_and_fcaps_mixed(const char *fn=
-ame)
- }
+Thank you for your recommendation. I'll take a look at how lttng 
+implements it. Actually, SEC("tp/raw_syscall/sys_enter") can also
+capure it.
 
- /**
-- * cap_capable - Determine whether a task has a particular effective capa=
-bility
-- * @cred: The credentials to use
-- * @targ_ns:  The user namespace in which we need the capability
-- * @cap: The capability to check for
-- * @opts: Bitmask of options defined in include/linux/security.h
-+ * cap_capable_helper - Determine whether a task has a particular effecti=
-ve
-+ * capability.
-  *
-- * Determine whether the nominated task has the specified capability amon=
-gst
-- * its effective set, returning 0 if it does, -ve if it does not.
-- *
-- * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
-le()
-- * and has_capability() functions.  That is, it has the reverse semantics=
-:
-- * cap_has_capability() returns 0 when a task has a capability, but the
-- * kernel's capable() and has_capability() returns 1 for this case.
-+ * See cap_capable for more details.
-  */
--int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
--		int cap, unsigned int opts)
-+static inline int cap_capable_helper(const struct cred *cred,
-+				     struct user_namespace *target_ns,
-+				     const struct user_namespace *cred_ns,
-+				     int cap)
- {
--	struct user_namespace *ns =3D targ_ns;
-+	struct user_namespace *ns =3D target_ns;
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> [1] https://lttng.org/
+> 
 
- 	/* See if cred has the capability in the target user namespace
- 	 * by examining the target user namespace and all of the target
-@@ -75,21 +71,21 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
- 	 */
- 	for (;;) {
- 		/* Do we have the necessary capabilities? */
--		if (ns =3D=3D cred->user_ns)
-+		if (likely(ns =3D=3D cred_ns))
- 			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
 
- 		/*
- 		 * If we're already at a lower level than we're looking for,
- 		 * we're done searching.
- 		 */
--		if (ns->level <=3D cred->user_ns->level)
-+		if (ns->level <=3D cred_ns->level)
- 			return -EPERM;
-
- 		/*
- 		 * The owner of the user namespace in the parent of the
- 		 * user namespace has all caps.
- 		 */
--		if ((ns->parent =3D=3D cred->user_ns) && uid_eq(ns->owner, cred->euid))
-+		if ((ns->parent =3D=3D cred_ns) && uid_eq(ns->owner, cred->euid))
- 			return 0;
-
- 		/*
-@@ -102,6 +98,31 @@ int cap_capable(const struct cred *cred, struct user_n=
-amespace *targ_ns,
- 	/* We never get here */
- }
-
-+/**
-+ * cap_capable - Determine whether a task has a particular effective capa=
-bility
-+ * @cred: The credentials to use
-+ * @target_ns:  The user namespace of the resource being accessed
-+ * @cap: The capability to check for
-+ * @opts: Bitmask of options defined in include/linux/security.h (unused)
-+ *
-+ * Determine whether the nominated task has the specified capability amon=
-gst
-+ * its effective set, returning 0 if it does, -ve if it does not.
-+ *
-+ * NOTE WELL: cap_has_capability() cannot be used like the kernel's capab=
-le()
-+ * and has_capability() functions.  That is, it has the reverse semantics=
-:
-+ * cap_has_capability() returns 0 when a task has a capability, but the
-+ * kernel's capable() and has_capability() returns 1 for this case.
-+ */
-+int cap_capable(const struct cred *cred, struct user_namespace *target_ns=
-,
-+		int cap, unsigned int opts)
-+{
-+	const struct user_namespace *cred_ns =3D cred->user_ns;
-+	int ret =3D cap_capable_helper(cred, target_ns, cred_ns, cap);
-+
-+	trace_cap_capable(cred, target_ns, cred_ns, cap, ret);
-+	return ret;
-+}
-+
- /**
-  * cap_settime - Determine whether the current process may set the system=
- clock
-  * @ts: The time to set
-=2D-
-2.43.5
-
+-- 
+Best Regards
+Dylane Chen
