@@ -1,170 +1,137 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666F616EC19
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Nov 2024 09:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D8F19CD0B;
+	Fri, 29 Nov 2024 12:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732870852; cv=none; b=acLwFtSIFLXm3OsJAnOmGvtbP+pxlJw0AER/M/RR7Hz601HsoyznnLG7OK1u7uFgPPo9NT0SlumuvA8szV7Ln55lsd8xH7A5ChJrYcxQ8AKyGuvHx/HkhzGn4mvyonzjDUnO8E9UxrB8pJpsAQy+XrCqYAMDjH3QVBcdGLfCPok=
+	t=1732882196; cv=none; b=kAwG+rqz7p1d5XWvJV4+aykLFDyC3+scy6KQfK2Dr0cAi1KlIo02KFwVky+eKOFIsUjqPPtBLXg087Cfkg8OvQW9vRnpJ6E5bSfRAxMJTG2DY3JlQ8R/Kq/8d4z7xkl1331++x1DDwCgdndpu2tRD/1UKV9oXV407Mnw4bdqPQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732870852; c=relaxed/simple;
-	bh=xEslxxsKiLFjjUwGtii3ivKf92ut0unGtMTc00chBhg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AiQ0Fsv9AxJZB9SCFN1wLL1NtVPGAo3ZafMrtlP1Mz30qgnNUe13XWa9LqPUkCGn3Ay104FboA4nknb933cQW3X/05DrFiutgeD5ddlRS6ejpV3qltKTYRKFXHoiKe2UouIetOd4BHEYOXeJyCpwveL9SCxA1iQDiCfBOOU+sYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--elver.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VCHhrI4j; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--elver.bounces.google.com
+	s=arc-20240116; t=1732882196; c=relaxed/simple;
+	bh=jAJdSp15+3ttSJ3dw0H0gS0lYJCcfjp4txGBVJvg2VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JEm7619t9u4mvs9uQewQDP+lmpTghNUJeW/NfyhoOj1se+UNo8lLZxO68GGIu7yABdbCidkQxfH5wYD8whFkEOoqOqkyGedFP1mHeKuLsCViUFlSfU4ZY4K6gHrcwTcCSNaSHpS3y+ZMowMuCs4emai7l3AVMw7cppdWixnBkZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LIC54FVV; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VCHhrI4j"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-aa52d371666so191737866b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Nov 2024 01:00:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1732870849; x=1733475649; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AM59VOGYG3wMVgUo99G/iJLAIksKG+8729FKlv13tNI=;
-        b=VCHhrI4jQUAULt0SFnU/cQeuVGY/zn4FwyQ9RUX/F7+XerRIszkBul6k7NDETe1ojE
-         if9Ya0A3Ezt6QDuRLf2iZ25VomwVKZJ7tKkIAfsBZss86ue3786MvLpNndMM5gw3LKQ2
-         8XOUn36Lgy5u86L9EGD+iBiWi4PuYUiCFH88BByf0UY9OQ2aGObMX7iRTwftuq7Pzw46
-         9cy5TUtrSnv6V+82DkEPPWJgcvpAdjC8tZsy/Oogw9RGqGhOHfMLFziv1fJst1I+1J1v
-         nU5KUF0qd/gAWUUfMdhLDnI/OJFa4l81AvETdG+t9n8ihdcMeJqRysZb2rdVQws0ceKu
-         lgTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732870849; x=1733475649;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AM59VOGYG3wMVgUo99G/iJLAIksKG+8729FKlv13tNI=;
-        b=N04HqkMpQsZIIde2LxG1gvhWc6IedXz1YD695O65NybYmUeY6cHocYv/lG7cXhKTZC
-         HTZu+yO85l82vnXM1HVmajjSUEheEmEu/Z9Pehlf5apcqFL7jvUPL8JsqoY5crQGjoYq
-         B84aUYJ+1gY9vMbZKJxf/1DgYembeTZIqrE7s45GRx3OPlf9j+UwB00A853lA2oRNt3B
-         zFSbqTXylKWONWmsTYacRO6PjKmPA3420qGhPbGnONC9MwA9/SoPXcbE6Cm1qN6rIUuW
-         xbF+hHGya+sDeiJxLsAfmMInsTF0v54eoUEWvUykfmIjMvonji/ZVovA6kNzVZCQgz+u
-         CdpA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7iu6XufOBbL2Wegr/Xj2PSO0LUUBZpeV4Zv1xwL/96ADzt9eAIgQMGLXlukFKt0knq3RTx7HpSr5viAzhlBYAcp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqXAMear/ddA1a5ncR8id7R/C0G1NILpLNufgGk1iRkfIN6BYy
-	hoCSC6w54DHgWJ2J7t5ZOaHEHrr9uedsbUD4ogih7ZW01veqMbkj1UmVgmlMJ8cKUgWOKObipw=
-	=
-X-Google-Smtp-Source: AGHT+IGHXhcpcjgkHjA0k7hYdLh0VcYJ721uO/6wKXB9uB8gEZqYP0S/2HCU0HVINTTx/wAZ9JlKx76g5w==
-X-Received: from ejca24.prod.google.com ([2002:a17:906:3698:b0:aa5:2ede:53bf])
- (user=elver job=prod-delivery.src-stubby-dispatcher) by 2002:a17:906:d513:b0:aa5:199f:2bf2
- with SMTP id a640c23a62f3a-aa580f56baamr1006472966b.29.1732870848742; Fri, 29
- Nov 2024 01:00:48 -0800 (PST)
-Date: Fri, 29 Nov 2024 09:59:34 +0100
-In-Reply-To: <20241129090040.2690691-1-elver@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LIC54FVV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=bcF2+uKv+THIH1HdaMT8XOaR+gAw7l3df+j7RVgj46g=; b=LIC54FVVsAQLuUlBTptoz80eFn
+	MSRfSt+dFjzI6lE0IxP4+eO3AfNIPWaPx+KRxNT8QxQRrAANmNBj2pxnj3lVxl+Hg8Dr3tFldMqx2
+	9j8BZBF5GI6L+9YcDR3YSJxRbPfyTzaIksLpIJ3b7TykGXFGuwaT6Cyo+8lMBhezwpj0E5htokGpA
+	QtrEVISprtDXxdtjyG+h4BIoYdQv5mbPn0RqVVm1NdVIfOhJH+Nt9uL6McT3OIXeRjrkjndUappFX
+	4NAC7yxUvnKePBDWqfOX/o6IAy+0So6n+Us+PCVkbbYU1hAvuhQ9jxZVXRHX5WsOZtNkLrg99Bypj
+	RXXlSLPA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tGzoa-00000001je5-2qlb;
+	Fri, 29 Nov 2024 12:09:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id DBAC830026A; Fri, 29 Nov 2024 13:09:39 +0100 (CET)
+Date: Fri, 29 Nov 2024 13:09:39 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ruan Bonan <bonan.ruan@u.nus.edu>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"longman@redhat.com" <longman@redhat.com>,
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kpsingh@kernel.org" <kpsingh@kernel.org>,
+	"mattbobrowski@google.com" <mattbobrowski@google.com>,
+	"ast@kernel.org" <ast@kernel.org>,
+	"daniel@iogearbox.net" <daniel@iogearbox.net>,
+	"andrii@kernel.org" <andrii@kernel.org>,
+	"martin.lau@linux.dev" <martin.lau@linux.dev>,
+	"eddyz87@gmail.com" <eddyz87@gmail.com>,
+	"song@kernel.org" <song@kernel.org>,
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>,
+	"sdf@fomichev.me" <sdf@fomichev.me>,
+	"haoluo@google.com" <haoluo@google.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Fu Yeqi <e1374359@u.nus.edu>, akinobu.mita@gmail.com, tytso@mit.edu,
+	Jason@zx2c4.com
+Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
+Message-ID: <20241129120939.GG35539@noisy.programming.kicks-ass.net>
+References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
+ <20241129173554.11e3b2b2f5126c2b72c6a78e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20241129090040.2690691-1-elver@google.com>
-X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
-Message-ID: <20241129090040.2690691-2-elver@google.com>
-Subject: [PATCH bpf-next v4 2/2] bpf: Refactor bpf_tracing_func_proto() and
- remove bpf_get_probe_write_proto()
-From: Marco Elver <elver@google.com>
-To: elver@google.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Nikola Grcevski <nikola.grcevski@grafana.com>, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241129173554.11e3b2b2f5126c2b72c6a78e@kernel.org>
 
-With bpf_get_probe_write_proto() no longer printing a message, we can
-avoid it being a special case with its own permission check.
+On Fri, Nov 29, 2024 at 05:35:54PM +0900, Masami Hiramatsu wrote:
+> On Sat, 23 Nov 2024 03:39:45 +0000
+> Ruan Bonan <bonan.ruan@u.nus.edu> wrote:
+> 
+> > 
+> >        vprintk_emit+0x414/0xb90 kernel/printk/printk.c:2406
+> >        _printk+0x7a/0xa0 kernel/printk/printk.c:2432
+> >        fail_dump lib/fault-inject.c:46 [inline]
+> >        should_fail_ex+0x3be/0x570 lib/fault-inject.c:154
+> >        strncpy_from_user+0x36/0x230 lib/strncpy_from_user.c:118
+> >        strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
+> >        bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:215 [inline]
+> >        ____bpf_probe_read_user_str kernel/trace/bpf_trace.c:224 [inline]
+> 
+> Hmm, this is a combination issue of BPF and fault injection.
+> 
+> static void fail_dump(struct fault_attr *attr)
+> {
+>         if (attr->verbose > 0 && __ratelimit(&attr->ratelimit_state)) {
+>                 printk(KERN_NOTICE "FAULT_INJECTION: forcing a failure.\n"
+>                        "name %pd, interval %lu, probability %lu, "
+>                        "space %d, times %d\n", attr->dname,
+>                        attr->interval, attr->probability,
+>                        atomic_read(&attr->space),
+>                        atomic_read(&attr->times));
+> 
+> This printk() acquires console lock under rq->lock has been acquired.
+> 
+> This can happen if we use fault injection and trace event too because
+> the fault injection caused printk warning.
 
-Refactor bpf_tracing_func_proto() similar to bpf_base_func_proto() to
-have a section conditional on bpf_token_capable(CAP_SYS_ADMIN), where
-the proto for bpf_probe_write_user() is returned. Finally, remove the
-unnecessary bpf_get_probe_write_proto().
+Ah indeed. Same difference though, if you don't know the context, most
+things are unsafe to do.
 
-This simplifies the code, and adding additional CAP_SYS_ADMIN-only
-helpers in future avoids duplicating the same CAP_SYS_ADMIN check.
+> I think this should be a bug of the fault injection, not tracing/BPF.
+> And to solve this issue, we may be able to check the context and if
+> it is tracing/NMI etc, fault injection should NOT make it failure.
 
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
----
-v4:
-* Call bpf_base_func_proto() before bpf_token_capable() (no protos after
-  should override bpf_base_func_proto() protos), so we can avoid
-  indenting the switch-block after bpf_token_capable() (suggested by Alexei).
+Well, it should be okay to cause the failure, but it must be very
+careful how it goes about doing that. Tripping printk() definitely is
+out.
 
-v3:
-* Fix where bpf_base_func_proto() is called - it needs to be last,
-  because we may override protos (as is e.g. done for
-  BPF_FUNC_get_smp_processor_id).
+But there's a much bigger problem there, get_random*() is not wait-free,
+in fact it takes a spinlock_t which makes that it is unusable from most
+context, and it's definitely out for tracing.
 
-v2:
-* New patch.
----
- kernel/trace/bpf_trace.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+Notably, this spinlock_t makes that it is unsafe to use from anything
+that holds a raw_spinlock_t or is from hardirq context, or has
+preempt_disable() -- which is a TON of code.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0ab56af2e298..b07d8067aa6e 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -357,14 +357,6 @@ static const struct bpf_func_proto bpf_probe_write_user_proto = {
- 	.arg3_type	= ARG_CONST_SIZE,
- };
- 
--static const struct bpf_func_proto *bpf_get_probe_write_proto(void)
--{
--	if (!capable(CAP_SYS_ADMIN))
--		return NULL;
--
--	return &bpf_probe_write_user_proto;
--}
--
- #define MAX_TRACE_PRINTK_VARARGS	3
- #define BPF_TRACE_PRINTK_SIZE		1024
- 
-@@ -1417,6 +1409,8 @@ late_initcall(bpf_key_sig_kfuncs_init);
- static const struct bpf_func_proto *
- bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-+	const struct bpf_func_proto *func_proto;
-+
- 	switch (func_id) {
- 	case BPF_FUNC_map_lookup_elem:
- 		return &bpf_map_lookup_elem_proto;
-@@ -1458,9 +1452,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_perf_event_read_proto;
- 	case BPF_FUNC_get_prandom_u32:
- 		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_write_user:
--		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
--		       NULL : bpf_get_probe_write_proto();
- 	case BPF_FUNC_probe_read_user:
- 		return &bpf_probe_read_user_proto;
- 	case BPF_FUNC_probe_read_kernel:
-@@ -1539,7 +1530,22 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_trace_vprintk:
- 		return bpf_get_trace_vprintk_proto();
- 	default:
--		return bpf_base_func_proto(func_id, prog);
-+		break;
-+	}
-+
-+	func_proto = bpf_base_func_proto(func_id, prog);
-+	if (func_proto)
-+		return func_proto;
-+
-+	if (!bpf_token_capable(prog->aux->token, CAP_SYS_ADMIN))
-+		return NULL;
-+
-+	switch (func_id) {
-+	case BPF_FUNC_probe_write_user:
-+		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
-+		       NULL : &bpf_probe_write_user_proto;
-+	default:
-+		return NULL;
- 	}
- }
- 
--- 
-2.47.0.338.g60cca15819-goog
+On this alone I would currently label the whole of fault-injection
+broken. The should_fail() call itself is unsafe where many of its
+callsites are otherwise perfectly fine -- eg. usercopy per the above.
 
+Perhaps it should use a simple PRNG, a simple LFSR should be plenty good
+enough to provide failure conditions.
+
+And yeah, I would just completely rip out the printk. Trying to figure
+out where and when it's safe to call printk() is non-trivial and just
+not worth the effort imo.
