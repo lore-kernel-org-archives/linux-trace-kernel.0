@@ -1,80 +1,84 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78A319E99A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Nov 2024 17:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F8C2C18C;
+	Fri, 29 Nov 2024 19:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732900507; cv=none; b=kHGSKlw4XPdWeXEITbVANOxw4UCEoHw7Kt4uv4l9UbZzdEofoNpE0t4Bb3U9TcSGRsc9xoEfIACtJ4KpcHlcimJ4XjjHAG2pVA1BFBE0f4yQRpZ+E2sfnuIxnPYCTj7tTI2iBZzAZJRYdIpYbLsy94MAx5jYV6on4uANmmMN72c=
+	t=1732908619; cv=none; b=llKjpX0StUQPH9gq2HguTHjx1rtgoFlqHMBIRcHO639dd6EH7mnfwDIcZZ8pGp/TJ6LrgUBKI/KpZGbwNs3KMvYoWuh5XDWydHSmjgCLXNtm+utXtahA1t9ECTG/IHWP5v9wBAwAPieS5YUGJRGzNqVcqN0Pw0gZoZ0Ipf0Ow58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732900507; c=relaxed/simple;
-	bh=GnhFjpEQk2QTU3xMRMxYSIU7Dc+xnhMFHvUYOX0FzPs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=oKzUsqGZ+ynBSJJvEIeewL3nfqrnlJEgA6aatNwH23QMPTt5oNlfrqDBPbxHFedx2hxqlJlkOTBpj7/uzqlvg7h0ebTvv4OTy7fFefsuAM70fat4cE6cQJkcgruv6ugD/FSsdwA3urQNf1rmTmzYRHmgyMuTQimOzEaKyLhMPX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a794990ef3so25707795ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 29 Nov 2024 09:15:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732900505; x=1733505305;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cabndGigWtS979m0rIc0e06+sfnwrdqk4oGx1hUPQVw=;
-        b=emKZFPasn/HlixKFrD/5xEK89GWuJ4UWumbY3mZtUnN1LgShx840pu3kpJowpI5iAb
-         ISwqSRMGU8wRawmvVfux/+QcAlal7ndPOMHqLguIUFsHH/VMArZoHw2eADjriZmX5XZd
-         t42+sPlM1p0FBJWHUEtUHSXYLpkNCJdEldROpsSt10EOklrfKjNytyvuQ0/asJ+HY7F7
-         +LZpelJ8qctmGfXmJZ6Gk1yos2l8z4R5VgCaYa6CoadVI2iGlfnr8DlBnyeVII0t41RM
-         olLASu00lFAuSy5SUvSkgP9kr0gT8d4Jgh70O+K7TjK/Fr8+tg0RN46pryLiJUXA/980
-         fjQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhKxrRHmMVAoWfX+mzLAGHZ6wRVdJR6BCnEcnTLk1Hd6M6ogYi2NjQXDhdCDT1Rad8/EfuJQADv2vIS74lRII/80A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz05HmHbjsJBEfvv2q/7wOuT2yIC9nkMmid892rTQXbJmE2P4p/
-	DNFcuKHl7apvuN/VLGR865E4p781K7Sfj/UEG17ghKScPBHJy8jFgWxdAtpXYmdP/rvrmsuXzFt
-	Wm5vLyiwc+/hhHXLH3WyPWidbz+3G92HsknFtKCJCSYsX5q8UkWidyBk=
-X-Google-Smtp-Source: AGHT+IHe8uD7Va/t9RghiydunC7nRHm/GXM4J1aMUOaYHKIypML+ORhOP4P4xsuLh0/azcIVXHk232/8no/NPRjgk/tTxHq54l6N
+	s=arc-20240116; t=1732908619; c=relaxed/simple;
+	bh=GesLReKmG/lbnI9/AeCxcZlM2HY6mKQ9eV48XapF0hI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=TZ05LXLEBH5jNUVLnRHT8XWYE4NLXgchAn1E5HO5I/Bhv5QHtpZPWDY/YVZyKa0ubxTcBxpvcuSUscIiS1RK006W4vU0q9y0rnpn64HyPIz+ff8v1vWERZVMzAy/dayNBi9s23+1G3ZNjiY6+yEzh8xk/9Dy1RlZFzDiFcOYsUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P75pgmhw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P75pgmhw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C643FC4CECF;
+	Fri, 29 Nov 2024 19:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732908618;
+	bh=GesLReKmG/lbnI9/AeCxcZlM2HY6mKQ9eV48XapF0hI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=P75pgmhwNY0q9EMFDstp15rZUsK8a3Flb+UtR+YaeDRTSY4Tv3lWXAmovjSFHpK6w
+	 a5Cp3pV/l37Uu0TTXTG/EqtFXA13tkQU0VeLxdQ/mQyJ2vvOiYPn6FyyK2Ino8YwPi
+	 D716d09ABO0MuywEBys+iER/an5NuowMP2Rk3bZaGApDYVwcHg3/6IzGnXRRZSAUFG
+	 8+XBAp2ITWlqaTm4sZCoJ7T5HVsFGovmpbZuzNggxgwYLFpDUOhMfhsl8lLkZ07VtA
+	 sNMuIaYhBMTVlJhKzPRxrwIx+m6mRg0EfRApkTXWKi8GqO2Zs7pDegXTcktIfGy46h
+	 9hNqQWrXY1Fng==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71473380A944;
+	Fri, 29 Nov 2024 19:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a46:b0:3a7:c81e:825f with SMTP id
- e9e14a558f8ab-3a7cbd23d37mr83760205ab.9.1732900504111; Fri, 29 Nov 2024
- 09:15:04 -0800 (PST)
-Date: Fri, 29 Nov 2024 09:15:04 -0800
-In-Reply-To: <4020304.1732897192@warthog.procyon.org.uk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6749f698.050a0220.253251.00bd.GAE@google.com>
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_read_iter
-From: syzbot <syzbot+8965fea6a159ab9aa32d@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, bharathsm@microsoft.com, brauner@kernel.org, 
-	dhowells@redhat.com, ericvh@kernel.org, jlayton@kernel.org, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
-	marc.dionne@auristor.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	netfs@lists.linux.dev, pc@manguebit.com, ronniesahlberg@gmail.com, 
-	rostedt@goodmis.org, samba-technical@lists.samba.org, sfrench@samba.org, 
-	sprasad@microsoft.com, syzkaller-bugs@googlegroups.com, tom@talpey.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v4 1/2] bpf: Remove bpf_probe_write_user() warning
+ message
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173290863205.2157309.298524188267518158.git-patchwork-notify@kernel.org>
+Date: Fri, 29 Nov 2024 19:30:32 +0000
+References: <20241129090040.2690691-1-elver@google.com>
+In-Reply-To: <20241129090040.2690691-1-elver@google.com>
+To: Marco Elver <elver@google.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ nikola.grcevski@grafana.com, bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello,
+Hello:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Reported-by: syzbot+8965fea6a159ab9aa32d@syzkaller.appspotmail.com
-Tested-by: syzbot+8965fea6a159ab9aa32d@syzkaller.appspotmail.com
+On Fri, 29 Nov 2024 09:59:33 +0100 you wrote:
+> The warning message for bpf_probe_write_user() was introduced in
+> 96ae52279594 ("bpf: Add bpf_probe_write_user BPF helper to be called in
+> tracers"), with the following in the commit message:
+> 
+>     Given this feature is meant for experiments, and it has a risk of
+>     crashing the system, and running programs, we print a warning on
+>     when a proglet that attempts to use this helper is installed,
+>     along with the pid and process name.
+> 
+> [...]
 
-Tested on:
+Here is the summary with links:
+  - [bpf-next,v4,1/2] bpf: Remove bpf_probe_write_user() warning message
+    https://git.kernel.org/bpf/bpf-next/c/3389f8243a90
+  - [bpf-next,v4,2/2] bpf: Refactor bpf_tracing_func_proto() and remove bpf_get_probe_write_proto()
+    https://git.kernel.org/bpf/bpf-next/c/45e04eb4d9d8
 
-commit:         2aece382 netfs: Report on NULL folioq in netfs_writeba..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git netfs-writeback
-console output: https://syzkaller.appspot.com/x/log.txt?x=159cf3c0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=225053d900535838
-dashboard link: https://syzkaller.appspot.com/bug?extid=8965fea6a159ab9aa32d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1328f3c0580000
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Note: testing is done by a robot and is best-effort only.
+
