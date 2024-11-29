@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2D19C54D;
-	Fri, 29 Nov 2024 16:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C9819D084;
+	Fri, 29 Nov 2024 16:48:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732898905; cv=none; b=MEG/QiKprpylwVnFXD+Ld3z/z207BR32lurZDEypADu2N00w+o65e0IeWaZiIwt1TPOZSiThfFSIMhrJy5qftgUwlQLGa95MfBfWYIyaimiX5YZZlzQyMb4mqtI6ITlx9XUgh8ltcmFpqydB+jy4CsnDLExu4mQH5eIaoQimj/0=
+	t=1732898914; cv=none; b=r+eJygqowudkHDW2jrqIfqwYIgcgDJg0/M3YFC5XImwbrqLRqe4Ti2gyj+rIf3UW3KbVoo61JiMkeAb1qrJvELNuv4vfRWorQDsdEp4wsQ98Q4/E/DeDTefbdk9I2WsD+UcnmObS0sBaE8gqL2iDvFzPP/WDNRKG9OaMAnc8AM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732898905; c=relaxed/simple;
-	bh=Pn9iO5fb1Uyq2JUaftRQXEt+EqpdYbktQYXQ1bfxaiA=;
+	s=arc-20240116; t=1732898914; c=relaxed/simple;
+	bh=WFkIPpXulUXbAywnDNU8HT3l+4sMs3bGc3TO2sEeTkY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bxO6xjeYqbPYHJmG0oGx8WAI4NMuyB9kTiKlpCXF0WJ4qZhKF6Vd0OtSTAPAblMdOIjCI0Y09yJ1ghtcLmrz+x3DSLbEkXP4sp8kKMey2g+NaYZRKO7xeIVk3yBAkD+PLrHj2Q14QAE3SdG/+HeTi8R/c2WJUTz78AgldAWsOSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0UDwCI9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=BbdgR6lE1ctGBA2uSy0BOG+udVMtzL/Z9LfIb/TnGdfTtbDf5vFHbJaGv5ejgcNhBkaxBq+LHTBzBDOMjTTYhIHpeXcw2PgzjItx9xxH6OhQ8ld0SNItfVbEGXT7PQ3qSzBOdASQzG/9dZh0RfGt4lx8puwfTwS0zSDmyBLZmZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qi4/eRSy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0UDwCI9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D55DC4CECF;
-	Fri, 29 Nov 2024 16:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qi4/eRSy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F022AC4CECF;
+	Fri, 29 Nov 2024 16:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732898904;
-	bh=Pn9iO5fb1Uyq2JUaftRQXEt+EqpdYbktQYXQ1bfxaiA=;
+	s=k20201202; t=1732898914;
+	bh=WFkIPpXulUXbAywnDNU8HT3l+4sMs3bGc3TO2sEeTkY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o0UDwCI9VqCr+CNIHvT6qT0Un3AUy7No8wzmF+b4fRipRYCEoKYG8jLxBKwke52Hu
-	 0MPzdteR2npBaN0zdKjXAnCr8xRwPCT6ryO6W6HpIcPnEfNjgW1WSuAclkke7rMIaw
-	 cIpA1a8tE1Tf+/NHCWobJC0hfStyur/g7OSxMeMoZMFLfI9Zw/hojrLM6hOexgm5pp
-	 nBnC945fowFfK19moYbVIV5mmaOPtBxq4/owXYLK7H0+Ql2dfcWumEPECnjb3o3ekw
-	 bPZyc0B1DPAhxXO5RJXv3vK9DMekw47+CGwe8mslPWFPz8DcXvWQ0BIEP1saAowS/y
-	 r8D/vqbWeFUOA==
+	b=qi4/eRSy/UFINbJk3GZv08ieXTkR4Z7ysx1ZF5yGNSTdhtwH3mrzzDp7PLtLM6KEn
+	 vmt7/VfYHa1Kx3YjbO8sCRApT9HaG/6uZd4YtuW6o0UKPkKL7m//e3sTSubfwYZFgl
+	 5O9bHvC8L1lgJ/Gcc1E0mmfYSWHX0Ev64v+lDE0KAYA8jY2gWS1mXDhnMbuoin+IXk
+	 tc+CRWcJz2kYoz0VVxFZWDKNXYlqjBo2rhJVEDNtotkajtwdIXcT5Dvblfe0rg3rIK
+	 Hed/YC41bSIM3/nNh+qq5/kVlSQFNXV/5GlRvs6qEO0DtZQsIHt/0jRCf5a7zWIL51
+	 jaYgj41tGIZ1g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Naveen N Rao <naveen@kernel.org>
@@ -37,9 +37,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] tracing/uprobe: Adopt guard() and scoped_guard()
-Date: Sat, 30 Nov 2024 01:48:19 +0900
-Message-ID: <173289889911.73724.12457932738419630525.stgit@devnote2>
+Subject: [PATCH v2 5/6] tracing/eprobe: Adopt guard() and scoped_guard()
+Date: Sat, 30 Nov 2024 01:48:30 +0900
+Message-ID: <173289890996.73724.17421347964110362029.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173289885627.73724.13632317993038475335.stgit@devnote2>
 References: <173289885627.73724.13632317993038475335.stgit@devnote2>
@@ -55,60 +55,68 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use guard() or scoped_guard() in uprobe events for critical sections
+Use guard() or scoped_guard() in eprobe events for critical sections
 rather than discrete lock/unlock pairs.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_uprobe.c |   15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ kernel/trace/trace_eprobe.c |   36 +++++++++++++++++-------------------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index b30fc8fcd095..4150ab1d835e 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -496,11 +496,11 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
- 	struct trace_uprobe *old_tu;
- 	int ret;
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index be8be0c1aaf0..82fd637cfc19 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -917,10 +917,10 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 		goto error;
+ 	}
  
 -	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
- 
- 	ret = validate_ref_ctr_offset(tu);
- 	if (ret)
--		goto end;
-+		return ret;
- 
- 	/* register as an event */
- 	old_tu = find_probe_event(trace_probe_name(&tu->tp),
-@@ -509,11 +509,9 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
- 		if (is_ret_probe(tu) != is_ret_probe(old_tu)) {
- 			trace_probe_log_set_index(0);
- 			trace_probe_log_err(0, DIFF_PROBE_TYPE);
--			ret = -EEXIST;
--		} else {
--			ret = append_trace_uprobe(tu, old_tu);
-+			return -EEXIST;
- 		}
--		goto end;
-+		return append_trace_uprobe(tu, old_tu);
- 	}
- 
- 	ret = register_uprobe_event(tu);
-@@ -523,14 +521,11 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
- 			trace_probe_log_err(0, EVENT_EXIST);
- 		} else
- 			pr_warn("Failed to register probe event(%d)\n", ret);
--		goto end;
-+		return ret;
- 	}
- 
- 	dyn_event_add(&tu->devent, trace_probe_event_call(&tu->tp));
- 
--end:
+-	event_call = find_and_get_event(sys_name, sys_event);
+-	ep = alloc_event_probe(group, event, event_call, argc - 2);
 -	mutex_unlock(&event_mutex);
--
- 	return ret;
- }
++	scoped_guard(mutex, &event_mutex) {
++		event_call = find_and_get_event(sys_name, sys_event);
++		ep = alloc_event_probe(group, event, event_call, argc - 2);
++	}
  
+ 	if (IS_ERR(ep)) {
+ 		ret = PTR_ERR(ep);
+@@ -952,23 +952,21 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+ 	if (ret < 0)
+ 		goto error;
+ 	init_trace_eprobe_call(ep);
+-	mutex_lock(&event_mutex);
+-	ret = trace_probe_register_event_call(&ep->tp);
+-	if (ret) {
+-		if (ret == -EEXIST) {
+-			trace_probe_log_set_index(0);
+-			trace_probe_log_err(0, EVENT_EXIST);
++	scoped_guard(mutex, &event_mutex) {
++		ret = trace_probe_register_event_call(&ep->tp);
++		if (ret) {
++			if (ret == -EEXIST) {
++				trace_probe_log_set_index(0);
++				trace_probe_log_err(0, EVENT_EXIST);
++			}
++			goto error;
++		}
++		ret = dyn_event_add(&ep->devent, &ep->tp.event->call);
++		if (ret < 0) {
++			trace_probe_unregister_event_call(&ep->tp);
++			goto error;
+ 		}
+-		mutex_unlock(&event_mutex);
+-		goto error;
+-	}
+-	ret = dyn_event_add(&ep->devent, &ep->tp.event->call);
+-	if (ret < 0) {
+-		trace_probe_unregister_event_call(&ep->tp);
+-		mutex_unlock(&event_mutex);
+-		goto error;
+ 	}
+-	mutex_unlock(&event_mutex);
+ 	return ret;
+ parse_error:
+ 	ret = -EINVAL;
 
