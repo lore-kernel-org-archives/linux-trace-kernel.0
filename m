@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262DD14C5B3;
-	Fri, 29 Nov 2024 16:48:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2D19C54D;
+	Fri, 29 Nov 2024 16:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732898894; cv=none; b=bzTv4O+tceVnnGfIZ/DiN7AntpSs/0L9BjOvPTWblXVtP8CVmNHH1On7hPO2UmuROcd6W2NuorVrj9bvWm6dRrsYGwQZnDfP70o9AhsQ6r4ez7tkvZnR9ixQLJvQcJyyx2v07nYLFkaTypWWO07BlA2SecFt/Alf8I+hj+OQwuM=
+	t=1732898905; cv=none; b=MEG/QiKprpylwVnFXD+Ld3z/z207BR32lurZDEypADu2N00w+o65e0IeWaZiIwt1TPOZSiThfFSIMhrJy5qftgUwlQLGa95MfBfWYIyaimiX5YZZlzQyMb4mqtI6ITlx9XUgh8ltcmFpqydB+jy4CsnDLExu4mQH5eIaoQimj/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732898894; c=relaxed/simple;
-	bh=lKW+UN1gtrpdcRVL8HfEsiSm3Hrt7GReKZv5w97QAsk=;
+	s=arc-20240116; t=1732898905; c=relaxed/simple;
+	bh=Pn9iO5fb1Uyq2JUaftRQXEt+EqpdYbktQYXQ1bfxaiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kJuQhZGc+uqej9fAb76h9P++zg82DeqBctRenU7vcsdaN1BghhmYGjvYj04hU2Rh3RKXLMMUnf5zxqdGU3eUyoPs9/Zgufk6x46KpDsBmEnIflUfo9ZzDLH5Wuw0kyPlLThvL2xcrgpApzXA3kBXSdjFBNGgtspzNwBZn+5aQ0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqkQQdPA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=bxO6xjeYqbPYHJmG0oGx8WAI4NMuyB9kTiKlpCXF0WJ4qZhKF6Vd0OtSTAPAblMdOIjCI0Y09yJ1ghtcLmrz+x3DSLbEkXP4sp8kKMey2g+NaYZRKO7xeIVk3yBAkD+PLrHj2Q14QAE3SdG/+HeTi8R/c2WJUTz78AgldAWsOSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0UDwCI9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqkQQdPA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 497F6C4CECF;
-	Fri, 29 Nov 2024 16:48:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0UDwCI9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D55DC4CECF;
+	Fri, 29 Nov 2024 16:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732898893;
-	bh=lKW+UN1gtrpdcRVL8HfEsiSm3Hrt7GReKZv5w97QAsk=;
+	s=k20201202; t=1732898904;
+	bh=Pn9iO5fb1Uyq2JUaftRQXEt+EqpdYbktQYXQ1bfxaiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BqkQQdPAEfiFQPKT1bwY1lfQ5e2sTpoxwx+o/H1iZsD3anJjG3Y4vmq6gm20HDqFO
-	 F3g7RPe6A1D5yOfahRxPnvkTZk7e5ngR6nZyRLT340Lq9FsvggPFULH5azz76jhf9t
-	 6GUxQq2+W/dW+a2YRjINDQHIFVMCBecxFpi7CRLyHw/1qknPDeFysAmTV/bXoDRoyd
-	 lo4/Wl4iB4epy6aPiFo46s+cE0S8B9YtteZDo15rTD2hCIyhflnVtjMnro8C2ZUTUN
-	 4KR8Ifv/W3e9/gYLVwTlORUNorBE9kfTrk0LI0yPKIDOQzGeZwcZeOg4bbJbc5a0rq
-	 OCqB1WoVlhgLQ==
+	b=o0UDwCI9VqCr+CNIHvT6qT0Un3AUy7No8wzmF+b4fRipRYCEoKYG8jLxBKwke52Hu
+	 0MPzdteR2npBaN0zdKjXAnCr8xRwPCT6ryO6W6HpIcPnEfNjgW1WSuAclkke7rMIaw
+	 cIpA1a8tE1Tf+/NHCWobJC0hfStyur/g7OSxMeMoZMFLfI9Zw/hojrLM6hOexgm5pp
+	 nBnC945fowFfK19moYbVIV5mmaOPtBxq4/owXYLK7H0+Ql2dfcWumEPECnjb3o3ekw
+	 bPZyc0B1DPAhxXO5RJXv3vK9DMekw47+CGwe8mslPWFPz8DcXvWQ0BIEP1saAowS/y
+	 r8D/vqbWeFUOA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Naveen N Rao <naveen@kernel.org>
@@ -37,9 +37,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] tracing/kprobe: Adopt guard() and scoped_guard()
-Date: Sat, 30 Nov 2024 01:48:08 +0900
-Message-ID: <173289888883.73724.6586200652276577583.stgit@devnote2>
+Subject: [PATCH v2 4/6] tracing/uprobe: Adopt guard() and scoped_guard()
+Date: Sat, 30 Nov 2024 01:48:19 +0900
+Message-ID: <173289889911.73724.12457932738419630525.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173289885627.73724.13632317993038475335.stgit@devnote2>
 References: <173289885627.73724.13632317993038475335.stgit@devnote2>
@@ -55,42 +55,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use guard() or scoped_guard() in kprobe events for critical sections
+Use guard() or scoped_guard() in uprobe events for critical sections
 rather than discrete lock/unlock pairs.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_kprobe.c |   18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ kernel/trace/trace_uprobe.c |   15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 263fac44d3ca..bae26eb14449 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -634,7 +634,7 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
- 	struct trace_kprobe *old_tk;
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index b30fc8fcd095..4150ab1d835e 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -496,11 +496,11 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
+ 	struct trace_uprobe *old_tu;
  	int ret;
  
 -	mutex_lock(&event_mutex);
 +	guard(mutex)(&event_mutex);
  
- 	old_tk = find_trace_kprobe(trace_probe_name(&tk->tp),
- 				   trace_probe_group_name(&tk->tp));
-@@ -642,11 +642,9 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
- 		if (trace_kprobe_is_return(tk) != trace_kprobe_is_return(old_tk)) {
+ 	ret = validate_ref_ctr_offset(tu);
+ 	if (ret)
+-		goto end;
++		return ret;
+ 
+ 	/* register as an event */
+ 	old_tu = find_probe_event(trace_probe_name(&tu->tp),
+@@ -509,11 +509,9 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
+ 		if (is_ret_probe(tu) != is_ret_probe(old_tu)) {
  			trace_probe_log_set_index(0);
  			trace_probe_log_err(0, DIFF_PROBE_TYPE);
 -			ret = -EEXIST;
 -		} else {
--			ret = append_trace_kprobe(tk, old_tk);
+-			ret = append_trace_uprobe(tu, old_tu);
 +			return -EEXIST;
  		}
 -		goto end;
-+		return append_trace_kprobe(tk, old_tk);
++		return append_trace_uprobe(tu, old_tu);
  	}
  
- 	/* Register new event */
-@@ -657,7 +655,7 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
+ 	ret = register_uprobe_event(tu);
+@@ -523,14 +521,11 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
  			trace_probe_log_err(0, EVENT_EXIST);
  		} else
  			pr_warn("Failed to register probe event(%d)\n", ret);
@@ -98,46 +103,12 @@ index 263fac44d3ca..bae26eb14449 100644
 +		return ret;
  	}
  
- 	/* Register k*probe */
-@@ -672,8 +670,6 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
- 	else
- 		dyn_event_add(&tk->devent, trace_probe_event_call(&tk->tp));
+ 	dyn_event_add(&tu->devent, trace_probe_event_call(&tu->tp));
  
 -end:
 -	mutex_unlock(&event_mutex);
+-
  	return ret;
  }
  
-@@ -706,7 +702,7 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
- 		return NOTIFY_DONE;
- 
- 	/* Update probes on coming module */
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
- 	for_each_trace_kprobe(tk, pos) {
- 		if (trace_kprobe_within_module(tk, mod)) {
- 			/* Don't need to check busy - this should have gone. */
-@@ -718,7 +714,6 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
- 					module_name(mod), ret);
- 		}
- 	}
--	mutex_unlock(&event_mutex);
- 
- 	return NOTIFY_DONE;
- }
-@@ -1968,13 +1963,12 @@ static __init void enable_boot_kprobe_events(void)
- 	struct trace_kprobe *tk;
- 	struct dyn_event *pos;
- 
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
- 	for_each_trace_kprobe(tk, pos) {
- 		list_for_each_entry(file, &tr->events, list)
- 			if (file->event_call == trace_probe_event_call(&tk->tp))
- 				trace_event_enable_disable(file, 1, 0);
- 	}
--	mutex_unlock(&event_mutex);
- }
- 
- static __init void setup_boot_kprobe_events(void)
 
