@@ -1,63 +1,63 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77C88F5A;
-	Fri, 29 Nov 2024 02:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815781537C3;
+	Fri, 29 Nov 2024 02:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732848543; cv=none; b=YyiN+XrF2Y3PDiZl4m+xwnzM6KzeP2dHQM9t7+JtBfOChh9zfSQYH5jJwokQ6YsqOgArugGAWW24Pr3gn/4XEZczluO6ugRfnia0dsoHRjNsp9za2Fhgjkk3txcbXh2KAeZcaLg+vya/dx3U4EGNf8hBeNH4D0PGdPgPShItEeE=
+	t=1732848684; cv=none; b=TBHp6QI2t0lMDm6a+dcyvGOjKgt55ihiA6CAKNWH0bAYjsfdeDKMIJXwacD5706xG6RyxyybfxqTZgarGjRs1Luoocw+3dIL+SVUDeLsY/wMPS57ugYL5avOYUWLwssiNG6iCzrPBxg8xIWJp9nL2b6bbka5eR2R42Thv7n6XcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732848543; c=relaxed/simple;
-	bh=QLUjTtoDE9S97ZLbymgjtwtKTxN2cC3KIoEYtZwoy1w=;
+	s=arc-20240116; t=1732848684; c=relaxed/simple;
+	bh=HqjvvaETLV7NmYB5t4n5WnLo9kOO0Dl92NZK2+Gd/jQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EEkTSHa2onZH6U6Jdtc2UM8rVPpBuYjZ4SATTob/evTeLZSpFbg277JWAkak8gMPrm5bbgAwTkqD7foRZ9JrumQ2Ax+IHMZ9jrOptdd6j+kFJzrqHdstJzXgiY47VwTCCa+tOW1HYqP3MV8e+oxujjA/F7drE8byz/kndumNkdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmdpjdfO; arc=none smtp.client-ip=209.85.216.42
+	 In-Reply-To:Content-Type; b=M0N0Yc6DD1d2v7OpKhmmByhLdt1VjZyw3JUy3WWJZMK9vsDVr3i7E/F8aCxhVV7H9jVGEAiuHETr5ZsmTOk1C+FK/Cu+rP+GDmCpQPpTfGZ4FBNN00/qJxltb82bCO4p0E0Bb7JlNapzLDfTlg1jRQC9/o5djhs3T6SiCRooz+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ip5/7ChZ; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmdpjdfO"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ee345c1bbdso737802a91.1;
-        Thu, 28 Nov 2024 18:49:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ip5/7ChZ"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee397a82f6so679148a91.2;
+        Thu, 28 Nov 2024 18:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732848541; x=1733453341; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1732848683; x=1733453483; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PICE+Q3/N0kMzg+O9wYNTMGH6EgupurTrcjA/6N0QTE=;
-        b=PmdpjdfOh/rto/8Ds16tg9hXV577WEPaWheRIVcraWt20ULb0zxAF6v8xN7uR4A5pw
-         WaIx88dJVCNSn4AXIXPVfIP0acJOUgZEXuoDG/S/61+cejZiEscNZTgUA/zoddhnHokX
-         NJqch8DjSpNeyOyCk5wbiNDLW9esxBKm1Rh7JoXI4lOYiJwXaBrHyWaOKEEiS8yA+gzp
-         3dcjIC3XNEse5gnWZzbAmFbi6z4lhB2wm650YqlxA2jwN2OjrfAcrvX60sPi1xi+4hwP
-         VSPhfc+hT0V9iez6XalzdYf4d3ujd4Aw1jn7SUOUS3LywVCYr/b+z41j/7kRU06SKcpr
-         6rKA==
+        bh=4L2VxERU3TBj2Pof5ovdbNiNUOjLf2XnYjt3cV2YeRg=;
+        b=Ip5/7ChZEKY7krCiO/UVYrLixp8rDKmnkvVG5YWGrjIizQ+N8Jdsn8dNo8XgAZ96jG
+         +6QpUmFC9QsBgK0E1/i4nwuVSWEGnGk8HdOCt8RHWvMW+QA80LdaveaRwnjr/BQ9NjNy
+         z4kKfZX00NJ79K/yNLFtXqJdM0QNX5BW2aliwdyTLPRHrsEwGuS8+SfmzWSotRL2rGYu
+         c88AiooWJMtoDMdm18oFVWyGoRAh9VkatP90Hm7JCdZgQsk2mqlTurp9YNNN3MYtK3nW
+         kzaF0J3P3SzkAQpM7p0Aoz0LvJxTkFUanGzLB3RIsmeYxJoXK3MvqAVOdKMVewqld7fy
+         bvrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732848541; x=1733453341;
+        d=1e100.net; s=20230601; t=1732848683; x=1733453483;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=PICE+Q3/N0kMzg+O9wYNTMGH6EgupurTrcjA/6N0QTE=;
-        b=ZxXyGalyvQ/HiN6oVBeJp4dG9VZTW6wI5DsuP/dsX41ucTtdMmI46kdcHKjIg+fFcD
-         1aPZB9OUqJFU5oK+fe11KntxKJMYAbxGPpLUL6mOSxClM62C5Q86lDB4b/m0vUTqh4pB
-         a/HRGwZ+9PWkdc44MzjmoOW2kE3tt9CyGSkdLrCassQG9uzZivuQaspsh2UwLtgjzXZD
-         oQfE2brV01SdaJeMFwzeZhww5HXg4YSDTCSapgUqUB6JCfracwLBJBsqgnImF/qIvjV7
-         VGQjLSR8JHu337iE/DMTwYKlWfnWKw+l63Qz4sKUcV4QZk4F1H2bwaF3oon1a8yUyTSa
-         ZF0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6xTl80z50l96NDcTUhh8PcWCjuGfdUK6iE7fV/8FZ0CS/Xmp89dp9pQOvauDeOj9IcMckaULzUmSW9tY=@vger.kernel.org, AJvYcCX3W2kM90dXoV3BUXDiHTtIwtfqe/tF4jt04moFBe29Un/FVDsHRgUkx1ihHLajKYYmxY7FGd5O//t5dTtzs+vBAMbb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyapGjvb0eMkDKLbtzCrtzJf0aLPR3uRh5zs/0LZ5DsJAoieaDQ
-	NXANVWKe1xzu2LZdKUT2y1a8EJuay9GGRxqLZRqbIEL2xX+tIF9W
-X-Gm-Gg: ASbGnctUTlp8iYEvZhDL0JcM34skHfdHfAA4w7wp17xSmRrzu1suU0yP6qzbXYROF96
-	O1xeRvcBwB33/7bsdApf0ixKdap/ASdnv1LU/yX158rYbYLT+Q/abfsy0nLFluUDYeaygxT/yeW
-	RdefR/fyqr5Qy4C2AuElKRxljcsnqSeabECtGITQtQSk0VnQnJ3N14KnYoCESsGQVITdgxG4lP7
-	eav9TJ1Rh0boZb4umtnS+/vArNJbWCHah1DpTeT/+ORIjDWM34wotTJ/FPXKv18defXVw==
-X-Google-Smtp-Source: AGHT+IFQJh/q5177Fe9nAAwLwJNPGnI2B4eWUEGS3BPZiqzd0QFAP1AoF3G4Y+IoCWKDqCDmMC+x4Q==
-X-Received: by 2002:a17:90b:1812:b0:2ea:8aac:6ab9 with SMTP id 98e67ed59e1d1-2ee08e9d54bmr12161768a91.8.1732848541028;
-        Thu, 28 Nov 2024 18:49:01 -0800 (PST)
+        bh=4L2VxERU3TBj2Pof5ovdbNiNUOjLf2XnYjt3cV2YeRg=;
+        b=c1EqB7abrDF+gaVrdrCW0ytkBIgOJERPDFXlmMyMAzhQFXmh7ttmtNlEHRe0sOcupx
+         6Lu5i9gx7o8bST+PuP66Tow2IEvboRAwnEpdTu0T3DGdoGQDdn4CWEYU5EFZGz953av/
+         bU0VpQFtGnzUCxQX0PfnIL+DtibV7OZegCkwNCkLt7mH3SLmR/O3LJt2b0Mr6PDeEJTq
+         wUUqPAF1+VSH/IWHX/3nUs3jmHZlyxmQ/fya4ipnHXnJnNIGdXUzRZDi3PbX4zDnArTD
+         tvrH3TzXCzCBSCEvk/iMgcG+YE23cpD04DuZeWV6TNEhj8SNNKM0UeInDH5/nKHQDaaG
+         X2mA==
+X-Forwarded-Encrypted: i=1; AJvYcCUY5w5fMfRmpGBPOzZfFZfw3iLlDzLvRTaE77XcIJ/9AZGTC/wqxTgm11VyXeVvm7wB5UDQCgAIA/uRiJGGJjCwNLcQ@vger.kernel.org, AJvYcCVFL9Ftq734qGWBqROEJUVe2OMXApEobkYEyRj4gAhl64Gt0/BNQ9b5Z4DRh2QTLVR3X3Zdxb0ucUAMlsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2wEUGEkj1V3LWzg0EbLBjzLJ6WGa5X2pocmcnetBOMQIeye6N
+	9Jb1pahIZqLVqGW5c9EBvXu7WwivqVhrVUtraSjV+/Zkl9L91Y9X
+X-Gm-Gg: ASbGncvzyJ5vxvDfA6q7cLkias6mwS4t+Ar1Roap9H8q4bGDoZXQwrSlM4X6PxABBel
+	RYSvX0OPwZGmw0OOp1TCW1nETncyhVKFBMb7b/H5cGH72dhHyv+NNgPGWsNSbvxzE+MUTna0uWD
+	JfAyeIooKdd76rsFJc/ilGlJK0900RpXIBfbRC/dHxUElJ+VV7i2d1m98R12wemON1Yz/Qtg/00
+	E0bCDgksxIc4tUqFIU5P6Dt9AjpHsFGHF42T5sdZHyzncFjbf6Rv6PZeon0u7txlIxtaA==
+X-Google-Smtp-Source: AGHT+IHQzh62rT5i/Zv9To3noz+LUqqllCXEBXNVDp+GddGcKUnzSK+XxcOycuIx/R+AHiY/0hGtcA==
+X-Received: by 2002:a17:90b:3b41:b0:2ea:3777:7730 with SMTP id 98e67ed59e1d1-2ee08e9fdb9mr12039591a91.10.1732848682543;
+        Thu, 28 Nov 2024 18:51:22 -0800 (PST)
 Received: from [172.23.161.188] ([183.134.211.52])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee4b1b2c1csm904931a91.9.2024.11.28.18.48.58
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ee46f19e4csm1073690a91.16.2024.11.28.18.51.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Nov 2024 18:49:00 -0800 (PST)
-Message-ID: <f27c1cf8-4c00-44dc-80f2-a499cf83ea81@gmail.com>
-Date: Fri, 29 Nov 2024 10:48:55 +0800
+        Thu, 28 Nov 2024 18:51:22 -0800 (PST)
+Message-ID: <2bc6b1e4-6d39-4bae-85cf-0d0eca077667@gmail.com>
+Date: Fri, 29 Nov 2024 10:51:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,87 +66,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] tracing: Add WARN_ON_ONCE for syscall_nr check
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 References: <20241128115319.305523-1-chen.dylane@gmail.com>
  <20241128074623.063bf253@rorschach.local.home>
  <8d4796dc-ef5b-43d8-8ec0-3891b7994428@gmail.com>
- <62cb12cb-d3b6-4ad1-b9e6-c49b642eaeb4@efficios.com>
+ <20241128100324.05bc4c32@gandalf.local.home>
 From: Tao Chen <chen.dylane@gmail.com>
-In-Reply-To: <62cb12cb-d3b6-4ad1-b9e6-c49b642eaeb4@efficios.com>
+In-Reply-To: <20241128100324.05bc4c32@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-在 2024/11/28 22:27, Mathieu Desnoyers 写道:
-> On 2024-11-28 08:15, Tao Chen wrote:
->> 在 2024/11/28 20:46, Steven Rostedt 写道:
->>> On Thu, 28 Nov 2024 19:53:19 +0800
->>> Tao Chen <chen.dylane@gmail.com> wrote:
->>>
->>>> Now, x86_64 kernel not support to trace syscall for ia32 syscall.
->>>> As a result, there is no any trace output when tracing a ia32 task.
->>>> Like unreg_event_syscall_enter, add a WARN_ON_ONCE judgment for
->>>> syscall_nr in perf_syscall_enter and ftrace_syscall_enter to give
->>>> some message.
->>>
->>> So on a system that has "panic_on_warn" set and they trace a 32 bit
->>> system call, it will cause their system to crash. Is that the intended
->>> behavior?
->>>
->>> WARN*() is for self testing the kernel to detect real bugs, not to
->>> inform users that something isn't supported.
->>>
->>> BIG NAK!
->>>
->>> -- Steve
->>
->> Hi, Steve, thank you for your reply, as you say, so what about 
+在 2024/11/28 23:03, Steven Rostedt 写道:
+> On Thu, 28 Nov 2024 21:15:31 +0800
+> Tao Chen <chen.dylane@gmail.com> wrote:
+> 
+>> Hi, Steve, thank you for your reply, as you say, so what about
 >> pr_warn_once api just to print something ?
->>
 > 
-> I understand that explicitly enabling a system call and observing
-> that ia32 system calls are just not traced by ftrace and perf can
-> be surprising for end users. But printing a warning on the tracing
-> path for an unimplemented tracing feature is just wrong.
+> A better solution is for there to be a return code or something where the
+> tracers (perf or ftrace) can record in the trace that the system call is
+> not supported.
 > 
+> -- Steve
 
-The initial problem was that I used eBPF 
-SEC("tp/syscalls/sys_enter_sendto") to capture system calls and found no 
-results for i32 programs. So here, i just wanted to remind users that on 
-a 64-bit system, i32 system calls are not supported, to avoid confusion.
-
-> Also, AFAIU the warning will trigger if an ia32 program issues any
-> system call when any unrelated system call tracing is enabled,
-> including non-compat syscalls.
-> 
-> If you want to check something and return an error, it would
-> be in tracefs where the users interact with files that represent
-> ia32 system calls to try to list/enable them. However, given the
-> exposed files have nothing that mention whether they apply to
-> non-compat or compat system calls, it's understandable that an
-> end user would think all system calls are traced, including
-> compat system calls. So I'm not sure how to solve that in ftrace/perf
-> without actually implementing the missing feature the way the
-> tracefs ABI is exposed.
-> 
-> If your end goal is to trace ia32 system call, you may want to try the
-> lttng-modules kernel tracer [1], which has supported compat system call
-> tracing for the past 12 years (at least since lttng-modules 2.0).
-
-Thank you for your recommendation. I'll take a look at how lttng 
-implements it. Actually, SEC("tp/raw_syscall/sys_enter") can also
-capure it.
-
-> 
-> Thanks,
-> 
-> Mathieu
-> 
-> [1] https://lttng.org/
-> 
-
+Hi，Steve，thank you for your suggestion. I'll see if it can be implemented.
 
 -- 
 Best Regards
