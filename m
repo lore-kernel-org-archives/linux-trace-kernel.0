@@ -1,167 +1,208 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F26433BC
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 15:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079B014AD17
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 16:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732982369; cv=none; b=oHSsVkPXtP21jZE5ChvCwDgffWTYAi5zo+AWKsbJhQcAMXBgVsaVdmbdacUXi27NHHPg++Xb3XV7CW8yZ4+touTAsGj0MiUtMJzoMrvabBnd4tbl6PcMTBs1DO5woTrFeqMEMLZtWnMHC5BdLhyxh45sBab/VYUNCdDqJpQK7uw=
+	t=1732982697; cv=none; b=AjJwP2LOXV1k65jOP2OptRwuC3pyhcr1EIceLGH1DzXiwA7H44rUo9SsyIgSBY+I7dfHnXPPpA8G4KxJ0J68hWs9bEPS+ctlnjr4Urfst3DaaZVrvXTj827F3YhVmY4HERt6Cr93rrKzkqVBhuwPCGCXXoy2u9Sp2JUTc3+EKO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732982369; c=relaxed/simple;
-	bh=bcdNDokqH+OiVRw+A8jIObIH06ox30nu+WY3/5jH7Ok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dQvKQ41aCQY3pbm9sKd3qo7UCyuhMXb4e7QrKWGjWp/gHyNHyrtfm4JvLHlDzOxMhoILhJOpIP78hF3iog4QtrgI6imw6b42WRX6iCFQTGO7ZmWYtiHg+kd2mxDM777TxiYBLNCDxQf7uxmB4zjUTTPJ3/6vW8LboX3dMa4bhjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DSy2boF6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1732982697; c=relaxed/simple;
+	bh=Ib0eMIHq4Tud5T3QYMT+FKlg8p3RZjvIuyuFfrCD4Yg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eGL+5LF5f/1Afc2PuB+1F6Kx8dv88EXdSvBapmgt8ZNwKOZWsXiA2ZuwSD9a/TgvRa87a0dnl+gl97QlZj8RnYsyCRudsDw+dqZGmyKxivi6E4ofXGDLa5STBhenHRUqWtkfVGmxEwMOsmzzxetQyK8epPTjr6JNVIcIlr+W/K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=EUuWDkGn; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSy2boF6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1732982366;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L3sp9ITqS00f1w2cVwkTebqJbheBN3iCrob7vB6Qx7c=;
-	b=DSy2boF6qCclhEM9xruSnundzawP1XHeH8im2rubYOF5fF1ggIzC555AB76sBn9y/V1ynK
-	TiDS5UndU7Lv6etgHhb8KIXrMWNb6OSfuz7vsOdHfNHY3L5yxTxo97Lv8jEa4p3YYiduMf
-	ITTmdTzoGeVxyo4LtbodAbEOrQ+nij0=
-Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com
- [209.85.217.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-43-CPrZ41v2OoOdnClxBzIE8g-1; Sat, 30 Nov 2024 10:59:24 -0500
-X-MC-Unique: CPrZ41v2OoOdnClxBzIE8g-1
-X-Mimecast-MFC-AGG-ID: CPrZ41v2OoOdnClxBzIE8g
-Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-4af3f0c91efso529590137.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 07:59:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="EUuWDkGn"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53de771c5ebso3180413e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 08:04:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1732982694; x=1733587494; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CU8Ha8lvwzrUL3wklZxNnby9TbqM0AQPddb/sVDz+Hg=;
+        b=EUuWDkGnkYH+zjeVXwJu30Jx69vHNSu8mOpdyl9FqGq5g/IpMJTbZ5lzq0OwsZdaaF
+         bNEn28D+bhIV/b+bkbcHbLjnAPWia3WSLUe5t3QjkBe2P8wXoITaZAOtvtIfHbUXbf8m
+         2fi/w+tsq0S7YQtF8flHHWuE3u33YDrL80oBGqTOmoIHmJXPSxSs5ubNFkIvRtul8Fy1
+         2mI0F0E40qWKB9qIQTj9nXMU0Z/MKA8pUvHFnHdkZeHGJBNX+Kip2u1IdKcPemkhkeUh
+         UbpALvPU2EjvXBB7NojclL5iHvAvvYO6HKRT+H0i8ZenzOd6/fHtbPA4avNKx9jdR5Lq
+         k2rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732982364; x=1733587164;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L3sp9ITqS00f1w2cVwkTebqJbheBN3iCrob7vB6Qx7c=;
-        b=UD7wnV1Pm3htJ/0KhGmNUknbJgKtX7pyhXe8EvJ06Xof7bA42TlKZOgA2ZsnMT6ofE
-         sEgSLv9SUZimDBOaR9eWs+4NniwPIcDzkj29eL+4NKtuoRxKJydAsl0W/5NHoVpny1GC
-         kShVPyYXeFOfjNPlAH/baiwQw0rFhlJY7epMHe+QaSgb4By4xSYAtGLpyB6N0+befOxn
-         oAZaRGoc/eOzuA2zAoErKnE5tXkl+gSxpfnGcfKw99jn391jBQI6VhK75MKpZrO3D6W2
-         SzmvG0XrCLObb9MAnFT0qx+9nzg0wBWuhpqnzjMV3A2P1SOa88XziWG93DFwCX4njZuJ
-         lyvw==
-X-Forwarded-Encrypted: i=1; AJvYcCViAxhN6Y9ypri8oJRY3zYmL89zD+73RUjczWpmCNIlQsP6M9XFPPpX7+3c8L257KPXTxlpwC54Ax8v9KbK79Wmdls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzabnbJrGjtwtqKRokuOEmCoGaEGolrJyMMgzODV5kUXqq1XtSs
-	zq6yHwa/fw6EkZbkbut15Z7NjKZZuN/cofiJ923yufhiTSo60kgb5SXMjY5M2LlqcWmmRBIO2Zu
-	6tvgM5mpIh3BCt1l+SuqWKhXL1FzWPXoL0SXnZJMdzOrgl6LfuvLkeVKIrzqcMxuTvN5QB5JnPW
-	YFMyP1zPM7XrAJF3X9QGkzX+7ZIuZxuEj0OtsglC2O9vkD
-X-Gm-Gg: ASbGncvjkOpDxPBE719QBEdaDrQVd164UXyUOG6osiBVSKq3U8Htf43naa0wydVOpiD
-	upGtn0yLxvqHLP0NgIlVZqPqpIi8fMbtb
-X-Received: by 2002:a05:6102:32c1:b0:4af:4a71:e35 with SMTP id ada2fe7eead31-4af4a710f6emr17947650137.27.1732982364203;
-        Sat, 30 Nov 2024 07:59:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF4oaFHosIDKY7f3WBekgHYIqS0EOw6XcWkfbPmScRohRzmYmfm2E+p3FDCVbGkVV/07+rt3W9NEuZzOIH+9Ac=
-X-Received: by 2002:a05:6102:32c1:b0:4af:4a71:e35 with SMTP id
- ada2fe7eead31-4af4a710f6emr17947628137.27.1732982362448; Sat, 30 Nov 2024
- 07:59:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1732982694; x=1733587494;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CU8Ha8lvwzrUL3wklZxNnby9TbqM0AQPddb/sVDz+Hg=;
+        b=HypvbcD5K0tBO7bVf8BJuqKIQvhmlHqZhq7WVTsU0ZD0GsHFFcRNJI4A9+VLm8Z1Ut
+         /XYg5d/NpafTP+RLlTAVjzRb2WN+OseQsHvOwrVE4C01gIWTXiihKG0n3RgqadqFMye3
+         kaB07O4pDYDGVcLM+knalTtfYWzwAHckzYFORIlnaRMrBCgvCYKb3q6MZhcbMGpCAz9p
+         /Ho5dcTHneDWx+78tX7pb2sQNWhLwv8fYTwET81sui5OSNYx88teUZbDd98yUhunrBkD
+         OmshqqoIyE51EmPphJf0LcqAWtPMDd7NuuPrFVq6K6hf/sT3LQ+180LKEFKqzsrcy5cM
+         4vVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPmbhjnxOOeoJ/3r7mqbKMcZmhSs7u9CiIDlKm+m8h42I0O/vfjymjinvwrx2p9MloVTy1WmBtOmxvlgWHD+UPqU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQQ5FaN5KcyGAr6ZiIeG5s/o4bkmJ4KQSgJ+MbrZC4FWO/bDkT
+	qWdKYWLkn647cD4+o9eL9YZ8H/KLzKLsiGatMbpWxWdC/UB/vFI2LjmzKlvfMFs=
+X-Gm-Gg: ASbGncs7t/hii7xhQJkoQF5iz9RMRZzcLVvFWnQWesoYkSexfop/p7TlHAXAkUP85ru
+	st5wy8LjhFtP1jlUFdC+MhsIO1kx8NKx2BGHx1P3PiiYPtegCl1HYr/49gWPgHkwE84Qv8+EI8h
+	yt1wRdEOg8TSuYN+7q5KHe0ZgPq1OSueimn983Mhg1QIGFca1Xk7Niq7bs5FfjBlz5ZRyOzAujD
+	QOGeXu1DeCUcWiV9wsZ+qPKgozTuke6m4tkRMPthmDNVJg=
+X-Google-Smtp-Source: AGHT+IHL4oeMU03kLmQ2L0BR3qVJKTiAVIsSPE3HICpdb/3DuaV9c9TIe/hHbGxSndbZ9+FTqZL6rQ==
+X-Received: by 2002:a05:6512:3990:b0:53d:eefc:2b48 with SMTP id 2adb3069b0e04-53df00dc9bamr8384254e87.33.1732982694015;
+        Sat, 30 Nov 2024 08:04:54 -0800 (PST)
+Received: from localhost ([217.199.122.82])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53df646f2adsm808857e87.114.2024.11.30.08.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Nov 2024 08:04:53 -0800 (PST)
+Date: Sat, 30 Nov 2024 18:04:52 +0200
+From: Nikolay Aleksandrov <razor@blackwall.org>
+To: Andy Strohman <andrew@andrewstrohman.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Shahed Shaikh <shshaikh@marvell.com>,
+	Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+	Simon Horman <horms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Roopa Prabhu <roopa@nvidia.com>, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bridge@lists.linux.dev
+Subject: Re: [PATCH net-next] bridge: Make the FDB consider inner tag for
+ Q-in-Q
+Message-ID: <Z0s3pDGGE0zXq0UE@penguin>
+References: <20241130000802.2822146-1-andrew@andrewstrohman.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <674adfe5.050a0220.253251.00da.GAE@google.com>
-In-Reply-To: <674adfe5.050a0220.253251.00da.GAE@google.com>
-From: Ming Lei <ming.lei@redhat.com>
-Date: Sat, 30 Nov 2024 23:59:11 +0800
-Message-ID: <CAFj5m9L0f8QVtevytwmgua8ZP4qjLLpm6DnKmP3gHZ+0evA0mg@mail.gmail.com>
-Subject: Re: [syzbot] [block?] [trace?] possible deadlock in do_page_mkwrite (2)
-To: syzbot <syzbot+1682a0f52e34640bb386@syzkaller.appspotmail.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
-X-Mimecast-Spam-Score: 1
-X-Mimecast-MFC-PROC-ID: 3u8k2ijd6Jw0rX3q_ynjA2X59xPvRvU3k-Aa1zoAp_Q_1732982364
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241130000802.2822146-1-andrew@andrewstrohman.com>
 
-On Sat, Nov 30, 2024 at 5:50=E2=80=AFPM syzbot
-<syzbot+1682a0f52e34640bb386@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    7eef7e306d3c Merge tag 'for-6.13/dm-changes' of git://git=
-...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11da21e858000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dba7de3ed028e6=
-710
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D1682a0f52e34640=
-bb386
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
-ebian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/450015008b3e/dis=
-k-7eef7e30.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/9bea6e0ac594/vmlinu=
-x-7eef7e30.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/e1b46c65494c/b=
-zImage-7eef7e30.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+1682a0f52e34640bb386@syzkaller.appspotmail.com
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> WARNING: possible circular locking dependency detected
-> 6.12.0-syzkaller-09567-g7eef7e306d3c #0 Not tainted
-> ------------------------------------------------------
-> syz.5.3623/19452 is trying to acquire lock:
-> ffff88805e392518 (sb_pagefaults){++++}-{0:0}, at: do_page_mkwrite+0x17a/0=
-x380 mm/memory.c:3176
->
-> but task is already holding lock:
-> ffff888035510ba0 (&mm->mmap_lock){++++}-{4:4}, at: mmap_read_trylock incl=
-ude/linux/mmap_lock.h:163 [inline]
-> ffff888035510ba0 (&mm->mmap_lock){++++}-{4:4}, at: get_mmap_lock_carefull=
-y mm/memory.c:6149 [inline]
-> ffff888035510ba0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0=
-x35/0x6a0 mm/memory.c:6209
->
-> which lock already depends on the new lock.
->
->
-> the existing dependency chain (in reverse order) is:
->
-> -> #6 (&mm->mmap_lock){++++}-{4:4}:
->        __might_fault mm/memory.c:6751 [inline]
->        __might_fault+0x11b/0x190 mm/memory.c:6744
->        _inline_copy_from_user include/linux/uaccess.h:162 [inline]
->        _copy_from_user+0x29/0xd0 lib/usercopy.c:18
->        copy_from_user include/linux/uaccess.h:212 [inline]
->        __blk_trace_setup+0xa8/0x180 kernel/trace/blktrace.c:626
->        blk_trace_setup+0x47/0x70 kernel/trace/blktrace.c:648
->        sg_ioctl_common drivers/scsi/sg.c:1114 [inline]
->        sg_ioctl+0x65e/0x2750 drivers/scsi/sg.c:1156
->        vfs_ioctl fs/ioctl.c:51 [inline]
->        __do_sys_ioctl fs/ioctl.c:906 [inline]
->        __se_sys_ioctl fs/ioctl.c:892 [inline]
->        __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:892
->        do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->        do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
->
-> -> #5 (&q->debugfs_mutex){+.+.}-{4:4}:
+On Sat, Nov 30, 2024 at 12:07:57AM +0000, Andy Strohman wrote:
+> 802.1q networks with IVL (independent VLAN learning) can
+> tolerate duplicate MACs as long as the duplicates
+> reside in different VLANs. Similarly, IVL networks
+> allow for L2 hairpining where different VLANs are
+> used for each side of the hairpin in order to not
+> confuse the intermediate bridge's FDBs.
+> 
+> When these types of networks are inter-connected
+> using 802.1ad or Q-in-Q, only the outer VLAN tag is
+> considered by the 802.1ad bridge during FDB lookup.
+> 
+> While traffic segregation by inner and outer VID works as
+> expected, the inner VLAN's independent VLAN learning can
+> be defeated.
+> 
+> The following example describes the issue in terms of
+> duplicate MACS in different VLANs. But, the same concept
+> described in this example also applies L2 hairpining via
+> different VLANs.
+> 
+>                  _______________________
+>                 |  .1ad bridge          |
+> 	        |_______________________|
+>            PVID3|      PVID3|      PVID3|
+>                 |           |           |
+> TAGGED:        7|          8|          8|
+>             ____|____  _____|___   _____|___
+>            | .1q br 1| |.1q br 2|  |.1q br 3|
+>            |_________| |________|  |________|
+>          PVID7 |      PVID8 |      PVID8|
+>              HOST A       HOST B      HOST C
+> 
+> The above diagram depicts a .1ad bridge that has "pvid 3
+> untagged" configured for every member port. These member ports are
+> connected to .1q bridges, named 1, 2 and 3. .1q br 1 allows VID 7 tagged
+> on its port facing the .1ad bridge. .1q bridge 2 and 3 allow
+> VID 8 tagged on their ports that face the .1ad bridge. Host A
+> is connected to .1q br 1 via a port that is configured as "pvid 7
+> untagged". Host B and C are connected to bridges via ports
+> configured as "pvid 8 untagged".
+> 
+> Prior to this change, if host A has the same (duplicate) MAC
+> address as host B, this can disrupt communication between
+> host B and host C. This happens because the .1ad bridge
+> will see the duplicate MAC behind two of its ports
+> within the same VID (3). It's not examining the inner VLAN to
+> know that the hosts are actually reside within in different
+> L2 segments.
+> 
+> With this change, the .1ad bridge uses both the inner and outer VID
+> when looking up the FDB. With this technique, host B and C are
+> able to communicate without disruptions due to the duplicate MAC
+> assigned to host A.
+> 
+> Here is an example FDB dump on a .1ad bridge that is configured like
+> the above diagram:
+> 
+> root@OpenWrt:~# bridge fdb show dynamic
+> f4:a4:54:80:93:2f dev lan3 vlan 3 inner vlan 8 master br-lan
+> f4:a4:54:81:7a:90 dev lan1 vlan 3 inner vlan 7 master br-lan
+> f4:a4:54:81:7a:90 dev lan2 vlan 3 inner vlan 8 master br-lan
+> 
+> Note how duplicate MAC f4:a4:54:81:7a:90 is behind both lan1 and
+> lan2. This FDB dump shows two entries with the same MAC and
+> the same 802.1ad VLAN, 3. Prior to this change, only one fdb entry
+> per MAC/VID would be possible. As such, the bridge would have
+> issues forwarding. After this change, these entries are understood
+> to be distinct as they pertain to different inner vlans, and
+> therefore separate L2 segments.
+> 
+> Signed-off-by: Andy Strohman <andrew@andrewstrohman.com>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_main.c   |   4 +-
+>  drivers/net/ethernet/intel/ice/ice_main.c     |   6 +-
+>  drivers/net/ethernet/intel/igb/igb_main.c     |   4 +-
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |   4 +-
+>  .../ethernet/mellanox/mlxsw/spectrum_router.c |   4 +-
+>  .../ethernet/mellanox/mlxsw/spectrum_span.c   |   4 +-
+>  .../mellanox/mlxsw/spectrum_switchdev.c       |   2 +-
+>  drivers/net/ethernet/mscc/ocelot_net.c        |   4 +-
+>  .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |   8 +-
+>  drivers/net/macvlan.c                         |   4 +-
+>  drivers/net/vxlan/vxlan_core.c                |   6 +-
+>  include/linux/if_bridge.h                     |   4 +-
+>  include/linux/netdevice.h                     |   6 +-
+>  include/linux/rtnetlink.h                     |   4 +-
+>  include/trace/events/bridge.h                 |  20 ++--
+>  include/uapi/linux/if_link.h                  |   1 +
+>  include/uapi/linux/neighbour.h                |   1 +
+>  net/bridge/br_arp_nd_proxy.c                  |   8 +-
+>  net/bridge/br_device.c                        |  11 +-
+>  net/bridge/br_fdb.c                           | 107 ++++++++++--------
+>  net/bridge/br_input.c                         |  22 ++--
+>  net/bridge/br_netlink.c                       |  18 ++-
+>  net/bridge/br_private.h                       |  25 ++--
+>  net/bridge/br_vlan.c                          |  34 +++++-
+>  net/core/neighbour.c                          |   1 +
+>  net/core/rtnetlink.c                          |  58 ++++++----
+>  26 files changed, 227 insertions(+), 143 deletions(-)
+> 
 
-It should be fixed in:
+Hi,
+This patch makes fdb lookups slower for everybody, ruins the nice key alignment,
+increases the key memory usage and adds more complexity for a corner case, especially
+having 2 different hosts with identical macs sounds weird. Fdb matching on both tags
+isn't a feature I've heard of, I don't know if there are switches that support it.
+Could you point to anywhere in the specs that such support is mentioned?
+Also could you please give more details about the use case? Maybe we can help you solve
+your problem without impacting everyone. Perhaps we can mix vlan-aware bridge and tc
+to solve it. As it stands I'm against adding such matching, but I'd love to hear what
+other people think.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git
-for-6.14/block
-
-https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/log/?=
-h=3Dfor-6.14/block
-
+Cheers,
+ Nik
