@@ -1,77 +1,77 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439AB1AA79A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 22:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEED15956C
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 23:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733005727; cv=none; b=JvZ6EPiWXEjjRSBb226Ea3fhbc6pf4BpZTliF2TCb2JI8KFzhOeqOIm3tLlJnEB6vLbI/F1n7h6oDPZRZAi+tXR9H2MTIhdN57vdtAPJBYZtC9r/64v9nA8ZJALLpd5CduiVMpqjKG/9fS0Ac2yJVNqnq2MGcWMkmJXJ0Un+jeo=
+	t=1733007816; cv=none; b=kj28dTHnceY4nT1DafiI/aHl9UH/ZAcfIJ2serbOCvEXDHxCdi6k/B7ucPPbzWT2gWYifUBc39LpRGbQWlUdnzYKQ8tyAU8K9mvpRTRlhwH8I1U6IBA5znq0cPda6kVsessQgWjRi/+go1ynPMzC7p6A3Vj7NL4k9kIdNhKQpro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733005727; c=relaxed/simple;
-	bh=7Wdetpt4bdjb03TKiWu74j2GUFJllbRsXuM68hzws7A=;
+	s=arc-20240116; t=1733007816; c=relaxed/simple;
+	bh=Oj23kvXML5YxbzImIPjLr7bu4A1f9m4DYN95To+LWn4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lU2bP41UrfgodMlsi52ORRbszA3t4JgUgtH5GEWJSsMWyQQqHWEo/K30g120CMgs/MRf3B7w6MEhI14WJT+Qfe0znlLLlvGsvgJWE0Gd27zrhmN+a7lcG0A06pbGpEt9Ian48z29q6Bh4QI5B0XT2BfgmkSgrkJkFSKq8/TSR+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com; spf=none smtp.mailfrom=andrewstrohman.com; dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b=AvEk8YTc; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=eez+xYfYUpOIfDlpJm38m5/Lxumds87wNXPmjwbfoc3MMFiQxIXbvO3TNgM4Pmpms6JsbaEF4vvdS1Nud2q6/yE66gzdswMWnXupYR46Qpg6msA7bBs6BSw9Ug3pta+MiBK/ebiuC+g6uw1d8OxKf7V0XE49UR+PKr8dTIAw1WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com; spf=none smtp.mailfrom=andrewstrohman.com; dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b=lq6Fg0Am; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=andrewstrohman.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b="AvEk8YTc"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e398dc7864dso1344799276.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 14:28:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b="lq6Fg0Am"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e3985aabf43so1551513276.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 15:03:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=andrewstrohman-com.20230601.gappssmtp.com; s=20230601; t=1733005725; x=1733610525; darn=vger.kernel.org;
+        d=andrewstrohman-com.20230601.gappssmtp.com; s=20230601; t=1733007814; x=1733612614; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Wdetpt4bdjb03TKiWu74j2GUFJllbRsXuM68hzws7A=;
-        b=AvEk8YTcxL92nFNLf8S634lS8kVKEUu2yw5DY+uLKrjucSHCam+YcVr1m+TTdj9D5b
-         jxunNoSlMlvmUOuExEelfdKFivCGa+7s45TLFdnyfsP+6gzelXLR+omGCCDgAF7O+JN8
-         FMSTQAHfyxXQLmFAIHdzS6LijF3H4KaHkxC8gDnxnstXmhu0pJsCTmj5yhzg3iChUbTr
-         NIVOLCvOdnRHWFWmfqjCZgcRTXqtOm8UfUiSl9eUBUaFG8IrMS3IMMWcgW7a+WBPWhU1
-         wi1tD3bUm0pAEdvZE08kgWrfu4lBfP2qXSZPcWG47Rk8rTpwPxe0wLA/kMRqAwqPcpNW
-         CkTg==
+        bh=+lZDk59n4UHv5yZ4bNmxMnAKZtUzjiM3soOA0zJRIR8=;
+        b=lq6Fg0AmWbnv+5LSzi3KTFh3YXayo9bVjWEHegEzKD1fG4lRyPrktXM0BJ5EBwwrDi
+         x11i/bcgfKN9gtiehuyNFu4aW/2EIZtjSM7DdP6Sqq/ePAuPqEUJNYAgL2u70ynu9ODH
+         5CSz4iNHck3I8W+aQIeQ6+2PufnhycaH4xWxeQfUCLVlqt1uQ1JK0zizTHUqv4lO3RRF
+         Qtfz1EfapPUrA2/VYIilB+3jDzSPO1Bq2kFLciSsnDQwLx9gXuMFP5+ifGsLGwQnA+vH
+         8Cwj6X4mzQyOc2S7Jl3/XeW9xwLpzhP7d/t6cvZJP22pzRZUFqYFDNt8ExlMuAiWVD3D
+         x0Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733005725; x=1733610525;
+        d=1e100.net; s=20230601; t=1733007814; x=1733612614;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7Wdetpt4bdjb03TKiWu74j2GUFJllbRsXuM68hzws7A=;
-        b=g/moGQtBEI1vmLSjDvFxnefxe7p4RjxhH9COIQgZoYUPZ3PF5eAZ+BCoP/aX65XfpX
-         sIO2tzRyliQ/xs+Gj9wmuWpt8EVLN4YL4zL0E11YWkmkft9kvBnTqrQwQKtjaAxrM6Zw
-         ctYaCSlA14V2siXT56b30ZDdiOkeQjXFj991RnVZYlMZe5YjwTU2N2Teu9ObXqh/HPNm
-         wqmCMnTFRNx7Y/BJ2pEesok0qBoEO+NpJkZ1u8791RwG13+3gEx80YTUGXEtPdoCv+av
-         SNUNcp8n0I7DUCv9L+f7Al/upOnC5raEUmqaIGxMa7fyeDnGnFZ6MqaHk8D86G2fihsl
-         V2IA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfyS6V8VztuMHBSeGGeboaV+5F/Ig9EEYAkctxaHtbn5jMgS5DAf10gNvr0R9srxQePO5y9jcLwe3/kO3M/8LSIDs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRm0s/OL5iRR3QMDU4QCAqJlmeIOxsew62GCtsEzTj1HX3InN6
-	A6Rd+lKzca5hWx8Afxc+duWI4hml9k/Z/b402OBCDmwsjjVISDaQpJqUMNcNH+NlQQCB3ewXdki
-	EGN2z+2JfZ5jvNxyvZbK42raQ9WaGKFOXHJ3dYg==
-X-Gm-Gg: ASbGncso0BvO+4Pj4S8Ev5MalA1TjkROSKOFGWfWk3O5nGy2/pxJhVR13RH1b6RMmu8
-	1HLFEIJV+oXGJ+4N8/m6Nhk6u54h+HPQ=
-X-Google-Smtp-Source: AGHT+IHfnTZT06dr55uMoGVVPSi3LB207JWWsC6/9JeXc0W+4fBNcHyu/kAuUK9CXwsbr7aiFeRwXRPIXc7R/5ScSg4=
-X-Received: by 2002:a05:6902:2087:b0:e39:84c6:3041 with SMTP id
- 3f1490d57ef6-e3984c633afmr9172615276.22.1733005725180; Sat, 30 Nov 2024
- 14:28:45 -0800 (PST)
+        bh=+lZDk59n4UHv5yZ4bNmxMnAKZtUzjiM3soOA0zJRIR8=;
+        b=F1V352MwQDwQyge7Rp2cuqrJ1en8UuOJVgZSm86hhC88aiEhrDcikctVCtXi/s5MZ5
+         irWDSDY0QtHbcVRuugHDdVnOs1Fx/NiGfqryf2FAJHOQhEShVYjLnkn8bwvujP/NAwfO
+         j02KUBbH5juNMrUJaxFcFw4zzk2irqCSceKL6GG1vY0sdzMXlO2o//s5cPf+/tRmbEIB
+         8P/B1RJu3MjuNQDmM2isFclDjtTgLpPsnSfAQ9AA4sXZXfJfIfh4dDVbIkM55Z2B+vIA
+         8E5KRYrlVV0F5LzvfpfYaRE1ww04wBAp4OegrTTBYFL9L3DfEsboueVj1aEF0BGohugq
+         nTaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWEsvMhXE3Pp5uta4+qEDF7ksAJMzX18z4Bb1/YQ/MKNfoQdCZ2yP6oMapJ4nKUtUaMLJ2h2a5swYACr3/9PeYc2ys=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpV0+2m35kLwttNl9hsCmXhLMDiAAnjalh6plPv6TXgCg5Xmmm
+	Nq0YAgG7BxCm4XvuCrBG5Qy6O2eZf1PJ2BwK4Me5uB8OmOdMTfjwCd6j5xEhHzVgqWmcnyEOo0B
+	IgT2lSuQ+nj9o7eitNAHJQ8SVKULD4rO5TqGVSg==
+X-Gm-Gg: ASbGncsB+Ni2P6W5Atbj9vF4VWCCfslx5gcF0KGLq1fZMOQ51WK2aM2Ms0DaineCliG
+	b3LCEMophM9SW3/ZxQwscW94A0OADXmM=
+X-Google-Smtp-Source: AGHT+IH81R4XFg2CPj0gwX0HCIBF9TK4lO6eQU9i9Eh6UvUy1XLoSg/49272JtHDhspwSlHmAL7DhLTLqjgun/Hp2yM=
+X-Received: by 2002:a05:6902:1549:b0:e38:c692:14a4 with SMTP id
+ 3f1490d57ef6-e395b93b17dmr15727852276.36.1733007813990; Sat, 30 Nov 2024
+ 15:03:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241130000802.2822146-1-andrew@andrewstrohman.com> <Z0s3pDGGE0zXq0UE@penguin>
-In-Reply-To: <Z0s3pDGGE0zXq0UE@penguin>
+References: <20241130000802.2822146-1-andrew@andrewstrohman.com>
+ <Z0s3pDGGE0zXq0UE@penguin> <20241130160815.4n5hnr44v6ea3m44@skbuf>
+In-Reply-To: <20241130160815.4n5hnr44v6ea3m44@skbuf>
 From: Andrew Strohman <andrew@andrewstrohman.com>
-Date: Sat, 30 Nov 2024 14:28:34 -0800
-Message-ID: <CAA8ajJmn-jWTweDMO48y7Dtk3XPEhnH0QbFj5J5RH4KgXog4ZQ@mail.gmail.com>
+Date: Sat, 30 Nov 2024 15:03:23 -0800
+Message-ID: <CAA8ajJ=Grm47nKZ+Yp-TEXAFfyoDOkJ9Kbc+NnUOx6ehg0o=vg@mail.gmail.com>
 Subject: Re: [PATCH net-next] bridge: Make the FDB consider inner tag for Q-in-Q
-To: Nikolay Aleksandrov <razor@blackwall.org>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, 
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, 
-	Petr Machata <petrm@nvidia.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, 
-	Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	UNGLinuxDriver@microchip.com, Shahed Shaikh <shshaikh@marvell.com>, 
-	Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
+	Petr Machata <petrm@nvidia.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, UNGLinuxDriver@microchip.com, 
+	Shahed Shaikh <shshaikh@marvell.com>, Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
 	Simon Horman <horms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
 	Roopa Prabhu <roopa@nvidia.com>, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
@@ -79,76 +79,34 @@ Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	bridge@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Nik,
+Hi Vladimir,
 
-Thanks for the review.
+ Thanks for the review.
 
-> This patch makes fdb lookups slower for everybody, ruins the nice key alignment,
-> increases the key memory usage
+> I was also going to plan asking Andy what is his plan on making
+> switchdev digest this.
 
-I could make the additional, inner_vid, fdb member variable's existence
-depend on a compile time flag, so that these penalties would only affect
-the users that want the feature.
+Since switchdev switches don't seem to support this, I wasn't planning on
+making switchdev digest this. I was thinking that it should just
+be disabled for those hardware switches.
 
-> and adds more complexity for a corner case, especially
-> having 2 different hosts with identical macs sounds weird.
 
-I admit that the use case is rare. In this commit message,
-I focused on the duplicate MAC scenario, because I thought that would
-be the easiest way to describe it. If the problem is hosts with duplicate
-MACs, that's probably best remedied by just assigning a different MAC, or
-translating that MAC before it reaches the 802.1d bridge.
+>The switch ASICs I'm most familiar with can learn
+> on inner VID or outer VID, but not both.
 
-There might be a potential DoS opportunity, if an attacker knows
-the MAC addresses on a different VLAN. Consider someone on a "guest" VLAN
-transmitting a frame sourced with the MAC of a server on the "production"
-VLAN.
+I don't know of a switch ASIC that supports this.
 
-My personal use case is about simulating ethernet connections and VLAN aware
-bridges, so that I can test networking equipment that provides VLAN
-functionality with IVL.
-https://github.com/andrewstrohman/topology-sim/raw/refs/heads/main/docs/Topology%20Simulation%20for%20Mesh%20Testing.pdf?download=
-describes it, if you're interested in more information about it.
+Is that a problem? I thought that it would be OK to add features to
+a software bridge that don't exist in any hardware bridge.
 
-https://docs.google.com/drawings/d/1FybJP3UyCPxVQRGxAqGztO4Qc5mgXclV4m-QEyfUFQ8
-is a diagram that shows what I'm thinking about. This case is not about
-duplicate macs, but rather a frame being bridged in a way, such that it passes
-through the same bridge twice via different ports depending on the inner
-VLAN. In the commit message, this is what I meant by the poorly worded:
-"L2 hairpining where different VLANs are used for each side of the hairpin".
+I've tried to see if anyone else was facing this same problem.
+All I found were concerns about the fact that the provider bridge
+needed to learn all the customer's MACs.  As a result, it looks
+like 802.1Qay was created.
 
-The diagram depicts a network where a layer 2 segment is partitioned by a
-L2 (bridging) firewall. I admit that this is contrived and not a typical
-way of constructing networks.
-
-In this case, my testing system would use a 802.1ad bridge to simulate a
-VLAN aware bridge between .1q #1 and .1q #2. The problem is that the .1ad
-bridge would get confused about which ports hosts A and B are behind.
-The bridge would see them behind different ports depending on whether the
-packet was heading to, or returning from the bridge mode firewall.
-
-If these nodes were connected with an IVL .1q bridge instead of the .1ad
-bridge, this topology would work. So it's a scenario where connectivity
-failure would be due to my testing system (topology-sim) instead of the
-networking equipment being tested.
-
-> Fdb matching on both tags isn't a feature I've heard of, I don't know if there are switches that support it.
-> Could you point to anywhere in the specs that such support is mentioned?
-
-I've never heard of this either. It's just an idea that I had. I don't
-know of any
-switches that support it.
-
-> Also could you please give more details about the use case? Maybe we can help you solve
-> your problem without impacting everyone. Perhaps we can mix vlan-aware bridge and tc
-> to solve it.
-
-Thanks. I tried to give the relevant details of my use case above. I think
-that using tunnels instead of VLANs would fix this for me, because the
-switches would not learn the inner MAC. But, the tunnel header has more
-overhead compared to adding a tag.
-
-> As it stands I'm against adding such matching
-
-Fair enough. I also have concerns about complexity vs value, myself. I
-just thought that I would give this a try in case others found it useful.
+It seems that 802.1Qay is primarily addressing a concern about TCAM
+limitations, and decoupling the provider and customer networks.
+I think it's possible that 802.1Qay has inadvertently
+fixed this issue for provider backbone bridges. But for my use case,
+I'm not concerned about TCAM usage. I just want isolation between
+the inner vlans.
