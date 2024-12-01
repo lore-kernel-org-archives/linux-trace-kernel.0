@@ -1,112 +1,160 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEED15956C
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 23:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0011C1F32;
+	Sun,  1 Dec 2024 12:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733007816; cv=none; b=kj28dTHnceY4nT1DafiI/aHl9UH/ZAcfIJ2serbOCvEXDHxCdi6k/B7ucPPbzWT2gWYifUBc39LpRGbQWlUdnzYKQ8tyAU8K9mvpRTRlhwH8I1U6IBA5znq0cPda6kVsessQgWjRi/+go1ynPMzC7p6A3Vj7NL4k9kIdNhKQpro=
+	t=1733057628; cv=none; b=aaW0fnZC2fpwUzFnhVExLcZYjUfc/kKhrdlBYBp71+A1Za7QrPFJSVMB/3CoIzyHuGxAyQTfJGllTwkRx4UWANgaK/qiFE7g4eRWlOr5+w6I6a0ibQKXXPSrR7bPrH/e4FAZK+ldGP+rs500ctqCII9xinHzelSKwy+nYVLH7bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733007816; c=relaxed/simple;
-	bh=Oj23kvXML5YxbzImIPjLr7bu4A1f9m4DYN95To+LWn4=;
+	s=arc-20240116; t=1733057628; c=relaxed/simple;
+	bh=swYWVztl7R/XV5vyzXdHShiqPYgMrpHNocMOXVqEngI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eez+xYfYUpOIfDlpJm38m5/Lxumds87wNXPmjwbfoc3MMFiQxIXbvO3TNgM4Pmpms6JsbaEF4vvdS1Nud2q6/yE66gzdswMWnXupYR46Qpg6msA7bBs6BSw9Ug3pta+MiBK/ebiuC+g6uw1d8OxKf7V0XE49UR+PKr8dTIAw1WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com; spf=none smtp.mailfrom=andrewstrohman.com; dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b=lq6Fg0Am; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=andrewstrohman.com
+	 To:Cc:Content-Type; b=HpDecCcrsEi8hY8j0bxUez3PDpJVKMQ9RxJzaon/UZ+ZczPaSPhxwEQxffQCksTwVrO9rFbWiGkWqOVyZchPVgMZmsJslxMlBdMhX/SsCyt9NR/DfLyiFZ8orTgEGdu4U19SpBLGWqwBfPRPpVemlf6RJCUjjbZEynqO274mjgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NtpV4EV7; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b="lq6Fg0Am"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e3985aabf43so1551513276.3
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 30 Nov 2024 15:03:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtpV4EV7"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d87e0082b8so21274556d6.2;
+        Sun, 01 Dec 2024 04:53:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=andrewstrohman-com.20230601.gappssmtp.com; s=20230601; t=1733007814; x=1733612614; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+lZDk59n4UHv5yZ4bNmxMnAKZtUzjiM3soOA0zJRIR8=;
-        b=lq6Fg0AmWbnv+5LSzi3KTFh3YXayo9bVjWEHegEzKD1fG4lRyPrktXM0BJ5EBwwrDi
-         x11i/bcgfKN9gtiehuyNFu4aW/2EIZtjSM7DdP6Sqq/ePAuPqEUJNYAgL2u70ynu9ODH
-         5CSz4iNHck3I8W+aQIeQ6+2PufnhycaH4xWxeQfUCLVlqt1uQ1JK0zizTHUqv4lO3RRF
-         Qtfz1EfapPUrA2/VYIilB+3jDzSPO1Bq2kFLciSsnDQwLx9gXuMFP5+ifGsLGwQnA+vH
-         8Cwj6X4mzQyOc2S7Jl3/XeW9xwLpzhP7d/t6cvZJP22pzRZUFqYFDNt8ExlMuAiWVD3D
-         x0Fw==
+        d=gmail.com; s=20230601; t=1733057626; x=1733662426; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+GVWtIbIAnpeYXqJoSnTz1UiTRNCVUNdZXjZbPFhtMg=;
+        b=NtpV4EV7UqZYjkAXlT8Hm+LGh0+e1Adf0CNlhjuahZXhU1+VXv5sZyl+VmQur2YuRi
+         iMTRjY+DMHgoXUEjATI1np1LYb30Og4sCPBrY0HiINkut7zMdFXzlcR+SO8yjJ2cwnhg
+         yNSYK4dk9zYS1DGdqHX0Be1DiKSndUbOkOWe3ma7gFdOQxvTucwwhmZOceUDryfrHmlV
+         ojuprmEJMs4SV+EFz53d1him3muJ3Vc5AdAniTBJA1EPWdW2XIK6NHfxDeJpDdHGtpOW
+         U9FqUoX6vF0EihE/JgT3ysfX10gFEthluBZt8oTd6xCyT/VCygr5E61nv5Sa0lXRn+94
+         p8Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733007814; x=1733612614;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+lZDk59n4UHv5yZ4bNmxMnAKZtUzjiM3soOA0zJRIR8=;
-        b=F1V352MwQDwQyge7Rp2cuqrJ1en8UuOJVgZSm86hhC88aiEhrDcikctVCtXi/s5MZ5
-         irWDSDY0QtHbcVRuugHDdVnOs1Fx/NiGfqryf2FAJHOQhEShVYjLnkn8bwvujP/NAwfO
-         j02KUBbH5juNMrUJaxFcFw4zzk2irqCSceKL6GG1vY0sdzMXlO2o//s5cPf+/tRmbEIB
-         8P/B1RJu3MjuNQDmM2isFclDjtTgLpPsnSfAQ9AA4sXZXfJfIfh4dDVbIkM55Z2B+vIA
-         8E5KRYrlVV0F5LzvfpfYaRE1ww04wBAp4OegrTTBYFL9L3DfEsboueVj1aEF0BGohugq
-         nTaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEsvMhXE3Pp5uta4+qEDF7ksAJMzX18z4Bb1/YQ/MKNfoQdCZ2yP6oMapJ4nKUtUaMLJ2h2a5swYACr3/9PeYc2ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpV0+2m35kLwttNl9hsCmXhLMDiAAnjalh6plPv6TXgCg5Xmmm
-	Nq0YAgG7BxCm4XvuCrBG5Qy6O2eZf1PJ2BwK4Me5uB8OmOdMTfjwCd6j5xEhHzVgqWmcnyEOo0B
-	IgT2lSuQ+nj9o7eitNAHJQ8SVKULD4rO5TqGVSg==
-X-Gm-Gg: ASbGncsB+Ni2P6W5Atbj9vF4VWCCfslx5gcF0KGLq1fZMOQ51WK2aM2Ms0DaineCliG
-	b3LCEMophM9SW3/ZxQwscW94A0OADXmM=
-X-Google-Smtp-Source: AGHT+IH81R4XFg2CPj0gwX0HCIBF9TK4lO6eQU9i9Eh6UvUy1XLoSg/49272JtHDhspwSlHmAL7DhLTLqjgun/Hp2yM=
-X-Received: by 2002:a05:6902:1549:b0:e38:c692:14a4 with SMTP id
- 3f1490d57ef6-e395b93b17dmr15727852276.36.1733007813990; Sat, 30 Nov 2024
- 15:03:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733057626; x=1733662426;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+GVWtIbIAnpeYXqJoSnTz1UiTRNCVUNdZXjZbPFhtMg=;
+        b=i3bfBCPO/eRP3FAwscwXlk1Uynl6LuFG1CGTw4AstDwPRUbn9Ic+WpZojGrDLaBeoP
+         Ng78k7FxzxcXA835mKzo/GfS020jWBLZmou4Iw+vbVmzUdxd7xaKScYYB8uC4WHjl0qF
+         QtlzV5y4Txw/OVY4Bhg14S6Vzhksmeq7qal7vO3bJpjX2gu+K0xbIhAkaHs+b5n6yldP
+         NNMo0CD/zNKc54RnfeDNT5erePGu/97+UbH7rr6Duj4+A+cHygWUTcmqsd9UmBVwnne4
+         5W+8/vIENJRVzoqsZlyGiBjh/o5wxKteXPkWExAwBHPr+LZXIoAr1Oi+Eh6KzjOHQ4vk
+         T7wA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKGYE6KsI0Siqx/cH1LS3Lgr8y7bcnUAso9cv8Dsf2iqaK5mm/TkRpkvVmQvhSNeoZYB6g8rWl@vger.kernel.org, AJvYcCVze4+m6MQhHZkn70F2HXQpbktsW+W8h8xDrDmVK2RgW+FqU2QadC81wRWCbdmE2ZyksC3ldEpkLEKUf5ir2kfjtOk9@vger.kernel.org, AJvYcCWs2A0JI08UQn6sOP8iniAOA1d0FyeP64AyF0+P3dR4CVrg0wAR83oTYVbwnv9eP1JYSTq7u3yx/4SlhVg6@vger.kernel.org, AJvYcCXj25gsphJ3sez9tfawtbIp7qrtGkaNfrHnWrqqSI886ZvlDCb8wgDD8/3P/E+/SntnHGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyoYzR64IzDma4WRs2h91jKWjhkQsrGS3oPkG364GbPpmHrnwr
+	Pbqws2qkaDXvUgX7y4+NlttlYL+ro8JSaCCbGuO56WPPU2flcYmy3RNc3OxwIJY6GE+JZc/rQFk
+	uv0pRp2h/SjxfKpH+e2Azo8BCVr4=
+X-Gm-Gg: ASbGncuRUzt9KUQwGtT9GcFinJZmto0R94i4EqxT2CReCKeMH9pyx4MeBptoHLRdkx3
+	abUk0GqYrQ1gNX0SKEcfRFZSdti+jEygoBIz7F41s3ER+MJ+1YWBpVJGAXQ==
+X-Google-Smtp-Source: AGHT+IGgwtwOP6tqXQqLQyPFg+9HwWnvlYrKm6Wd3xlS9AEmYhzmzUm0uqeInm+oHP92XrlHvZzF0UtwHtdZBi62qTQ=
+X-Received: by 2002:a05:6214:21e8:b0:6d4:1fbc:2f88 with SMTP id
+ 6a1803df08f44-6d864dac355mr310468856d6.39.1733057625664; Sun, 01 Dec 2024
+ 04:53:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241130000802.2822146-1-andrew@andrewstrohman.com>
- <Z0s3pDGGE0zXq0UE@penguin> <20241130160815.4n5hnr44v6ea3m44@skbuf>
-In-Reply-To: <20241130160815.4n5hnr44v6ea3m44@skbuf>
-From: Andrew Strohman <andrew@andrewstrohman.com>
-Date: Sat, 30 Nov 2024 15:03:23 -0800
-Message-ID: <CAA8ajJ=Grm47nKZ+Yp-TEXAFfyoDOkJ9Kbc+NnUOx6ehg0o=vg@mail.gmail.com>
-Subject: Re: [PATCH net-next] bridge: Make the FDB consider inner tag for Q-in-Q
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Nikolay Aleksandrov <razor@blackwall.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, 
-	Petr Machata <petrm@nvidia.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, UNGLinuxDriver@microchip.com, 
-	Shahed Shaikh <shshaikh@marvell.com>, Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
-	Simon Horman <horms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Roopa Prabhu <roopa@nvidia.com>, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bridge@lists.linux.dev
+References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
+ <20241129173554.11e3b2b2f5126c2b72c6a78e@kernel.org> <20241129120939.GG35539@noisy.programming.kicks-ass.net>
+In-Reply-To: <20241129120939.GG35539@noisy.programming.kicks-ass.net>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Date: Sun, 1 Dec 2024 21:53:34 +0900
+Message-ID: <CAC5umyh49maikh0E4pUB_28=rqG1k9rvtQ70XOJNDMxNsu03sg@mail.gmail.com>
+Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ruan Bonan <bonan.ruan@u.nus.edu>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "will@kernel.org" <will@kernel.org>, 
+	"longman@redhat.com" <longman@redhat.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
+	"mattbobrowski@google.com" <mattbobrowski@google.com>, "ast@kernel.org" <ast@kernel.org>, 
+	"daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>, 
+	"martin.lau@linux.dev" <martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
+	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
+	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "sdf@fomichev.me" <sdf@fomichev.me>, 
+	"haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, 
+	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, 
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Fu Yeqi <e1374359@u.nus.edu>, tytso@mit.edu, 
+	Jason@zx2c4.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vladimir,
+2024=E5=B9=B411=E6=9C=8829=E6=97=A5(=E9=87=91) 21:09 Peter Zijlstra <peterz=
+@infradead.org>:
+>
+> On Fri, Nov 29, 2024 at 05:35:54PM +0900, Masami Hiramatsu wrote:
+> > On Sat, 23 Nov 2024 03:39:45 +0000
+> > Ruan Bonan <bonan.ruan@u.nus.edu> wrote:
+> >
+> > >
+> > >        vprintk_emit+0x414/0xb90 kernel/printk/printk.c:2406
+> > >        _printk+0x7a/0xa0 kernel/printk/printk.c:2432
+> > >        fail_dump lib/fault-inject.c:46 [inline]
+> > >        should_fail_ex+0x3be/0x570 lib/fault-inject.c:154
+> > >        strncpy_from_user+0x36/0x230 lib/strncpy_from_user.c:118
+> > >        strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
+> > >        bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:215 [i=
+nline]
+> > >        ____bpf_probe_read_user_str kernel/trace/bpf_trace.c:224 [inli=
+ne]
+> >
+> > Hmm, this is a combination issue of BPF and fault injection.
+> >
+> > static void fail_dump(struct fault_attr *attr)
+> > {
+> >         if (attr->verbose > 0 && __ratelimit(&attr->ratelimit_state)) {
+> >                 printk(KERN_NOTICE "FAULT_INJECTION: forcing a failure.=
+\n"
+> >                        "name %pd, interval %lu, probability %lu, "
+> >                        "space %d, times %d\n", attr->dname,
+> >                        attr->interval, attr->probability,
+> >                        atomic_read(&attr->space),
+> >                        atomic_read(&attr->times));
+> >
+> > This printk() acquires console lock under rq->lock has been acquired.
+> >
+> > This can happen if we use fault injection and trace event too because
+> > the fault injection caused printk warning.
+>
+> Ah indeed. Same difference though, if you don't know the context, most
+> things are unsafe to do.
+>
+> > I think this should be a bug of the fault injection, not tracing/BPF.
+> > And to solve this issue, we may be able to check the context and if
+> > it is tracing/NMI etc, fault injection should NOT make it failure.
+>
+> Well, it should be okay to cause the failure, but it must be very
+> careful how it goes about doing that. Tripping printk() definitely is
+> out.
+>
+> But there's a much bigger problem there, get_random*() is not wait-free,
+> in fact it takes a spinlock_t which makes that it is unusable from most
+> context, and it's definitely out for tracing.
+>
+> Notably, this spinlock_t makes that it is unsafe to use from anything
+> that holds a raw_spinlock_t or is from hardirq context, or has
+> preempt_disable() -- which is a TON of code.
+>
+> On this alone I would currently label the whole of fault-injection
+> broken. The should_fail() call itself is unsafe where many of its
+> callsites are otherwise perfectly fine -- eg. usercopy per the above.
+>
+> Perhaps it should use a simple PRNG, a simple LFSR should be plenty good
+> enough to provide failure conditions.
 
- Thanks for the review.
+Sounds good.
 
-> I was also going to plan asking Andy what is his plan on making
-> switchdev digest this.
+> And yeah, I would just completely rip out the printk. Trying to figure
+> out where and when it's safe to call printk() is non-trivial and just
+> not worth the effort imo.
 
-Since switchdev switches don't seem to support this, I wasn't planning on
-making switchdev digest this. I was thinking that it should just
-be disabled for those hardware switches.
-
-
->The switch ASICs I'm most familiar with can learn
-> on inner VID or outer VID, but not both.
-
-I don't know of a switch ASIC that supports this.
-
-Is that a problem? I thought that it would be OK to add features to
-a software bridge that don't exist in any hardware bridge.
-
-I've tried to see if anyone else was facing this same problem.
-All I found were concerns about the fact that the provider bridge
-needed to learn all the customer's MACs.  As a result, it looks
-like 802.1Qay was created.
-
-It seems that 802.1Qay is primarily addressing a concern about TCAM
-limitations, and decoupling the provider and customer networks.
-I think it's possible that 802.1Qay has inadvertently
-fixed this issue for provider backbone bridges. But for my use case,
-I'm not concerned about TCAM usage. I just want isolation between
-the inner vlans.
+Instead of removing the printk completely, How about setting the default va=
+lue
+of the verbose option to zero so it doesn't call printk and gives a loud
+warning when changing the verbose option?
