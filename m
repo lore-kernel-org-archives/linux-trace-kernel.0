@@ -1,160 +1,331 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0011C1F32;
-	Sun,  1 Dec 2024 12:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B215AD5A;
+	Sun,  1 Dec 2024 15:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733057628; cv=none; b=aaW0fnZC2fpwUzFnhVExLcZYjUfc/kKhrdlBYBp71+A1Za7QrPFJSVMB/3CoIzyHuGxAyQTfJGllTwkRx4UWANgaK/qiFE7g4eRWlOr5+w6I6a0ibQKXXPSrR7bPrH/e4FAZK+ldGP+rs500ctqCII9xinHzelSKwy+nYVLH7bM=
+	t=1733067078; cv=none; b=UFzrOY4ayaDpgrqR5ZZ5g2I1e9TXoko8M1QaEBqMn1n1qezeoWiQCWOr41npJnBhwsVGQZkIF6zcnptpYEkzopSZSGpwn1bhS6CbYvEUrnE3YHpb+9Eib9IIBZ/cXXit6urY+cH/56Z+vqxUl6DUBi8wgjsWncv8EzSHxGoWNJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733057628; c=relaxed/simple;
-	bh=swYWVztl7R/XV5vyzXdHShiqPYgMrpHNocMOXVqEngI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HpDecCcrsEi8hY8j0bxUez3PDpJVKMQ9RxJzaon/UZ+ZczPaSPhxwEQxffQCksTwVrO9rFbWiGkWqOVyZchPVgMZmsJslxMlBdMhX/SsCyt9NR/DfLyiFZ8orTgEGdu4U19SpBLGWqwBfPRPpVemlf6RJCUjjbZEynqO274mjgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NtpV4EV7; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733067078; c=relaxed/simple;
+	bh=RROm/nbaf//OLrCpmxxop9lguMk2k4nmWVA7Ur7yues=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UGvl0d1Zji8XGc0NxB/5ickNbsiGx/S9YROOGC/C2UPYkqMi5BIOxQfwmy6cvywsCQ7N69Mb5qc5vU4dpHSsPIrHM6nkw0JDDf68AcqMUy2CIKE1vdRjdurF7aP8xryKwQUJdV8nDyAQoFP6n5QqzCVbvGTQMx4nd7shVHuGw4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=MgkYVtSN; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=vSInmEBQ; arc=none smtp.client-ip=89.207.88.253
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtpV4EV7"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d87e0082b8so21274556d6.2;
-        Sun, 01 Dec 2024 04:53:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733057626; x=1733662426; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+GVWtIbIAnpeYXqJoSnTz1UiTRNCVUNdZXjZbPFhtMg=;
-        b=NtpV4EV7UqZYjkAXlT8Hm+LGh0+e1Adf0CNlhjuahZXhU1+VXv5sZyl+VmQur2YuRi
-         iMTRjY+DMHgoXUEjATI1np1LYb30Og4sCPBrY0HiINkut7zMdFXzlcR+SO8yjJ2cwnhg
-         yNSYK4dk9zYS1DGdqHX0Be1DiKSndUbOkOWe3ma7gFdOQxvTucwwhmZOceUDryfrHmlV
-         ojuprmEJMs4SV+EFz53d1him3muJ3Vc5AdAniTBJA1EPWdW2XIK6NHfxDeJpDdHGtpOW
-         U9FqUoX6vF0EihE/JgT3ysfX10gFEthluBZt8oTd6xCyT/VCygr5E61nv5Sa0lXRn+94
-         p8Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733057626; x=1733662426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+GVWtIbIAnpeYXqJoSnTz1UiTRNCVUNdZXjZbPFhtMg=;
-        b=i3bfBCPO/eRP3FAwscwXlk1Uynl6LuFG1CGTw4AstDwPRUbn9Ic+WpZojGrDLaBeoP
-         Ng78k7FxzxcXA835mKzo/GfS020jWBLZmou4Iw+vbVmzUdxd7xaKScYYB8uC4WHjl0qF
-         QtlzV5y4Txw/OVY4Bhg14S6Vzhksmeq7qal7vO3bJpjX2gu+K0xbIhAkaHs+b5n6yldP
-         NNMo0CD/zNKc54RnfeDNT5erePGu/97+UbH7rr6Duj4+A+cHygWUTcmqsd9UmBVwnne4
-         5W+8/vIENJRVzoqsZlyGiBjh/o5wxKteXPkWExAwBHPr+LZXIoAr1Oi+Eh6KzjOHQ4vk
-         T7wA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKGYE6KsI0Siqx/cH1LS3Lgr8y7bcnUAso9cv8Dsf2iqaK5mm/TkRpkvVmQvhSNeoZYB6g8rWl@vger.kernel.org, AJvYcCVze4+m6MQhHZkn70F2HXQpbktsW+W8h8xDrDmVK2RgW+FqU2QadC81wRWCbdmE2ZyksC3ldEpkLEKUf5ir2kfjtOk9@vger.kernel.org, AJvYcCWs2A0JI08UQn6sOP8iniAOA1d0FyeP64AyF0+P3dR4CVrg0wAR83oTYVbwnv9eP1JYSTq7u3yx/4SlhVg6@vger.kernel.org, AJvYcCXj25gsphJ3sez9tfawtbIp7qrtGkaNfrHnWrqqSI886ZvlDCb8wgDD8/3P/E+/SntnHGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyoYzR64IzDma4WRs2h91jKWjhkQsrGS3oPkG364GbPpmHrnwr
-	Pbqws2qkaDXvUgX7y4+NlttlYL+ro8JSaCCbGuO56WPPU2flcYmy3RNc3OxwIJY6GE+JZc/rQFk
-	uv0pRp2h/SjxfKpH+e2Azo8BCVr4=
-X-Gm-Gg: ASbGncuRUzt9KUQwGtT9GcFinJZmto0R94i4EqxT2CReCKeMH9pyx4MeBptoHLRdkx3
-	abUk0GqYrQ1gNX0SKEcfRFZSdti+jEygoBIz7F41s3ER+MJ+1YWBpVJGAXQ==
-X-Google-Smtp-Source: AGHT+IGgwtwOP6tqXQqLQyPFg+9HwWnvlYrKm6Wd3xlS9AEmYhzmzUm0uqeInm+oHP92XrlHvZzF0UtwHtdZBi62qTQ=
-X-Received: by 2002:a05:6214:21e8:b0:6d4:1fbc:2f88 with SMTP id
- 6a1803df08f44-6d864dac355mr310468856d6.39.1733057625664; Sun, 01 Dec 2024
- 04:53:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="MgkYVtSN";
+	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="vSInmEBQ"
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com 29222E0008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
+	t=1733067065; bh=Rk4mscyhtODXOoZtND+S+9aETGqegjWDO/UcHkuTmgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=MgkYVtSN293oTUIjbbJqxqONNowdN4QqN1FqM3nHbYZpy25m7/Y97lRFP2bHuFHb5
+	 WifpssSe/McUAgkMlMh0hQocqRe9/6UK2pcTRcYDc8uH46uzjkxWqJspAp9Bnc33yj
+	 zIiwCTq9SFMU9T+aTpgg4gG+QfiwZRrDwkg0YBh8ETbesLiGoDQdbtSOAVkZNOY5ws
+	 QR5cgm58Rt140uJx3dg5ypfRZs6Med79F+FS3ZuwOp4X0ohaTRd8KDfR5uS+4OJhxs
+	 zk+kpC0sk7X86VGa7UQSIaCJbM3Q7bs2qpLs/DfLnCG29R3AAvtBmN556duRLgPY7w
+	 88Wl52Wyr7Egw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
+	t=1733067065; bh=Rk4mscyhtODXOoZtND+S+9aETGqegjWDO/UcHkuTmgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=vSInmEBQjOunc3kSw9zLl0Nikb4nl+yFmWBYBH6N1RoEZDagW3Ny+ZIQHtkdEAFEt
+	 3gkJhKWynUwsO+2s36AeKzOXFCmAGVl7NnqwGPCr86PKbp64NHRp8zWTv4CF4NCMVS
+	 xpP8BrV+0uKfDDaOOh2WGrFCZQUBuDt1w+SR71PsOqZBHrzU4W6bgAHnOpWkJymFbz
+	 wqNlzp8+vTTlU7cj8f4UctP90CgT/NBoZSYSrpQ4wQdYZO98W7MNKCUe1B+Cj+bL7K
+	 jWDESxagqYFHqyxA1GFv3JlW/2cwn4mBQ3H/FiQ/xeDlv4kQ0YbW4Umu0YdA0bRm4L
+	 K6T2iIct021oQ==
+Message-ID: <12e8b66b-5a6e-435e-b927-18a3ce2216e3@yadro.com>
+Date: Sun, 1 Dec 2024 18:31:03 +0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <24481522-69BF-4CE7-A05D-1E7398400D80@u.nus.edu>
- <20241129173554.11e3b2b2f5126c2b72c6a78e@kernel.org> <20241129120939.GG35539@noisy.programming.kicks-ass.net>
-In-Reply-To: <20241129120939.GG35539@noisy.programming.kicks-ass.net>
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Date: Sun, 1 Dec 2024 21:53:34 +0900
-Message-ID: <CAC5umyh49maikh0E4pUB_28=rqG1k9rvtQ70XOJNDMxNsu03sg@mail.gmail.com>
-Subject: Re: [BUG] possible deadlock in __schedule (with reproducer available)
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Ruan Bonan <bonan.ruan@u.nus.edu>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "will@kernel.org" <will@kernel.org>, 
-	"longman@redhat.com" <longman@redhat.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kpsingh@kernel.org" <kpsingh@kernel.org>, 
-	"mattbobrowski@google.com" <mattbobrowski@google.com>, "ast@kernel.org" <ast@kernel.org>, 
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "andrii@kernel.org" <andrii@kernel.org>, 
-	"martin.lau@linux.dev" <martin.lau@linux.dev>, "eddyz87@gmail.com" <eddyz87@gmail.com>, 
-	"song@kernel.org" <song@kernel.org>, "yonghong.song@linux.dev" <yonghong.song@linux.dev>, 
-	"john.fastabend@gmail.com" <john.fastabend@gmail.com>, "sdf@fomichev.me" <sdf@fomichev.me>, 
-	"haoluo@google.com" <haoluo@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, 
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, 
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, 
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Fu Yeqi <e1374359@u.nus.edu>, tytso@mit.edu, 
-	Jason@zx2c4.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code
+ patching
+To: Andy Chiu <andybnac@gmail.com>
+CC: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>, Mark Rutland
+	<mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Steven
+ Rostedt <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<bjorn@rivosinc.com>, <puranjay12@gmail.com>, <alexghiti@rivosinc.com>,
+	<yongxuan.wang@sifive.com>, <greentime.hu@sifive.com>, <nick.hu@sifive.com>,
+	<nylon.chen@sifive.com>, <tommy.wu@sifive.com>, <eric.lin@sifive.com>,
+	<viccent.chen@sifive.com>, <zong.li@sifive.com>, <samuel.holland@sifive.com>,
+	<linux@yadro.com>
+References: <20241127172908.17149-1-andybnac@gmail.com>
+ <20241127172908.17149-4-andybnac@gmail.com>
+Content-Language: en-US
+From: Evgenii Shatokhin <e.shatokhin@yadro.com>
+In-Reply-To: <20241127172908.17149-4-andybnac@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: T-EXCH-10.corp.yadro.com (172.17.11.60) To
+ T-EXCH-10.corp.yadro.com (172.17.11.60)
 
-2024=E5=B9=B411=E6=9C=8829=E6=97=A5(=E9=87=91) 21:09 Peter Zijlstra <peterz=
-@infradead.org>:
->
-> On Fri, Nov 29, 2024 at 05:35:54PM +0900, Masami Hiramatsu wrote:
-> > On Sat, 23 Nov 2024 03:39:45 +0000
-> > Ruan Bonan <bonan.ruan@u.nus.edu> wrote:
-> >
-> > >
-> > >        vprintk_emit+0x414/0xb90 kernel/printk/printk.c:2406
-> > >        _printk+0x7a/0xa0 kernel/printk/printk.c:2432
-> > >        fail_dump lib/fault-inject.c:46 [inline]
-> > >        should_fail_ex+0x3be/0x570 lib/fault-inject.c:154
-> > >        strncpy_from_user+0x36/0x230 lib/strncpy_from_user.c:118
-> > >        strncpy_from_user_nofault+0x71/0x140 mm/maccess.c:186
-> > >        bpf_probe_read_user_str_common kernel/trace/bpf_trace.c:215 [i=
-nline]
-> > >        ____bpf_probe_read_user_str kernel/trace/bpf_trace.c:224 [inli=
-ne]
-> >
-> > Hmm, this is a combination issue of BPF and fault injection.
-> >
-> > static void fail_dump(struct fault_attr *attr)
-> > {
-> >         if (attr->verbose > 0 && __ratelimit(&attr->ratelimit_state)) {
-> >                 printk(KERN_NOTICE "FAULT_INJECTION: forcing a failure.=
-\n"
-> >                        "name %pd, interval %lu, probability %lu, "
-> >                        "space %d, times %d\n", attr->dname,
-> >                        attr->interval, attr->probability,
-> >                        atomic_read(&attr->space),
-> >                        atomic_read(&attr->times));
-> >
-> > This printk() acquires console lock under rq->lock has been acquired.
-> >
-> > This can happen if we use fault injection and trace event too because
-> > the fault injection caused printk warning.
->
-> Ah indeed. Same difference though, if you don't know the context, most
-> things are unsafe to do.
->
-> > I think this should be a bug of the fault injection, not tracing/BPF.
-> > And to solve this issue, we may be able to check the context and if
-> > it is tracing/NMI etc, fault injection should NOT make it failure.
->
-> Well, it should be okay to cause the failure, but it must be very
-> careful how it goes about doing that. Tripping printk() definitely is
-> out.
->
-> But there's a much bigger problem there, get_random*() is not wait-free,
-> in fact it takes a spinlock_t which makes that it is unusable from most
-> context, and it's definitely out for tracing.
->
-> Notably, this spinlock_t makes that it is unsafe to use from anything
-> that holds a raw_spinlock_t or is from hardirq context, or has
-> preempt_disable() -- which is a TON of code.
->
-> On this alone I would currently label the whole of fault-injection
-> broken. The should_fail() call itself is unsafe where many of its
-> callsites are otherwise perfectly fine -- eg. usercopy per the above.
->
-> Perhaps it should use a simple PRNG, a simple LFSR should be plenty good
-> enough to provide failure conditions.
+Hi Andy,
 
-Sounds good.
+First of all, thank you for working on this series.
 
-> And yeah, I would just completely rip out the printk. Trying to figure
-> out where and when it's safe to call printk() is non-trivial and just
-> not worth the effort imo.
+On 27.11.2024 20:29, Andy Chiu wrote:
+> From: Andy Chiu <andy.chiu@sifive.com>
+> 
+> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
+> instruction fetch can break down to 4 byte at a time, it is impossible
+> to update two instructions without a race. In order to mitigate it, we
+> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
+> patching can change NOP4 to JALR to eable/disable ftrcae from a
+> function. This limits the reach of each ftrace entry to +-2KB displacing
+> from ftrace_caller.
+> 
+> Starting from the trampoline, we add a level of indirection for it to
+> reach ftrace caller target. Now, it loads the target address from a
+> memory location, then perform the jump. This enable the kernel to update
+> the target atomically.
+> 
+> The ordering of reading/updating the targert address should be guarded
+> by generic ftrace code, where it sends smp_rmb ipi.
+> 
+> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> ---
+>   arch/riscv/include/asm/ftrace.h |  4 ++
+>   arch/riscv/kernel/ftrace.c      | 80 +++++++++++++++++++++------------
+>   arch/riscv/kernel/mcount-dyn.S  |  9 ++--
+>   3 files changed, 62 insertions(+), 31 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> index 4ca7ce7f34d7..36734d285aad 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -80,6 +80,7 @@ struct dyn_arch_ftrace {
+>   #define JALR_T0                        (0x000282e7)
+>   #define AUIPC_T0               (0x00000297)
+>   #define NOP4                   (0x00000013)
+> +#define JALR_RANGE             (JALR_SIGN_MASK - 1)
+> 
+>   #define to_jalr_t0(offset)                                             \
+>          (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+> @@ -117,6 +118,9 @@ do {                                                                        \
+>    * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
+>    */
+>   #define MCOUNT_INSN_SIZE 8
+> +#define MCOUNT_AUIPC_SIZE      4
+> +#define MCOUNT_JALR_SIZE       4
+> +#define MCOUNT_NOP4_SIZE       4
+> 
+>   #ifndef __ASSEMBLY__
+>   struct dyn_ftrace;
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4b95c574fd04..5ebe412280ef 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long hook_pos,
+>          return 0;
+>   }
+> 
+> -static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+> -                               bool enable, bool ra)
+> +static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target, bool validate)
+>   {
+>          unsigned int call[2];
+> -       unsigned int nops[2] = {NOP4, NOP4};
+> +       unsigned int replaced[2];
+> +
+> +       make_call_t0(hook_pos, target, call);
+> 
+> -       if (ra)
+> -               make_call_ra(hook_pos, target, call);
+> -       else
+> -               make_call_t0(hook_pos, target, call);
+> +       if (validate) {
+> +               /*
+> +                * Read the text we want to modify;
+> +                * return must be -EFAULT on read error
+> +                */
+> +               if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
+> +                                            MCOUNT_INSN_SIZE))
+> +                       return -EFAULT;
+> +
+> +               if (replaced[0] != call[0]) {
+> +                       pr_err("%p: expected (%08x) but got (%08x)\n",
+> +                              (void *)hook_pos, call[0], replaced[0]);
+> +                       return -EINVAL;
+> +               }
+> +       }
+> 
+> -       /* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
+> -       if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
+> +       /* Replace the jalr at once. Return -EPERM on write error. */
+> +       if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), call + 1, MCOUNT_JALR_SIZE))
+>                  return -EPERM;
+> 
+>          return 0;
+>   }
+> 
+> -int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+> +static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, ftrace_func_t target, bool enable)
+>   {
+> -       unsigned int call[2];
+> +       ftrace_func_t call = target;
+> +       ftrace_func_t nops = &ftrace_stub;
+> 
+> -       make_call_t0(rec->ip, addr, call);
+> -
+> -       if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
+> -               return -EPERM;
+> +       WRITE_ONCE(*hook_pos, enable ? call : nops);
+> 
+>          return 0;
+>   }
+> 
+> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+> +{
+> +       unsigned long distance, orig_addr;
+> +
+> +       orig_addr = (unsigned long)&ftrace_caller;
+> +       distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
+> +       if (distance > JALR_RANGE)
+> +               return -EINVAL;
 
-Instead of removing the printk completely, How about setting the default va=
-lue
-of the verbose option to zero so it doesn't call printk and gives a loud
-warning when changing the verbose option?
+If I understand it correctly, it is not the range itself that matters 
+here, but rather, that AUIPC instruction remains the same for the 
+address of ftrace_caller and for the new addr.
+
+For the displacements like 0xfabcd000 and 0xfabccf00, for example, the 
+distance is 0x100, which is within JALR range. However, the higher 20 
+bits differ, so the AUIPC instructions will differ too. 
+__ftrace_modify_call() would catch this though ("if (replaced[0] != 
+call[0]) ...").
+
+I'd suggest checking the higher 20 bits explicitly instead, something 
+like this:
+
+if ((orig_addr & AUIPC_OFFSET_MASK) != (addr & AUIPC_OFFSET_MASK))
+         return -EINVAL;
+
+What do you think?
+
+> +
+> +       return __ftrace_modify_call(rec->ip, addr, false);
+> +}
+> +
+>   int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+>                      unsigned long addr)
+>   {
+> -       unsigned int nops[2] = {NOP4, NOP4};
+> +       unsigned int nops[1] = {NOP4};
+> 
+> -       if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+> +       if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), nops, MCOUNT_NOP4_SIZE))
+>                  return -EPERM;
+> 
+>          return 0;
+> @@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+>    */
+>   int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+>   {
+> +       unsigned int nops[2];
+>          int out;
+> 
+> +       make_call_t0(rec->ip, &ftrace_caller, nops);
+> +       nops[1] = NOP4;
+> +
+>          mutex_lock(&text_mutex);
+> -       out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+> +       out = patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
+>          mutex_unlock(&text_mutex);
+> 
+>          return out;
+>   }
+> 
+> +ftrace_func_t ftrace_call_dest = ftrace_stub;
+>   int ftrace_update_ftrace_func(ftrace_func_t func)
+>   {
+> -       int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
+> -                                      (unsigned long)func, true, true);
+> -
+> -       return ret;
+> +       return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
+>   }
+> 
+>   struct ftrace_modify_param {
+> @@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+>          if (ret)
+>                  return ret;
+> 
+> -       return __ftrace_modify_call(caller, addr, true, false);
+> +       return __ftrace_modify_call(caller, addr, true);
+>   }
+>   #endif
+> 
+> @@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>          prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
+>   }
+>   #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+> -extern void ftrace_graph_call(void);
+> +ftrace_func_t ftrace_graph_call_dest = ftrace_stub;
+>   int ftrace_enable_ftrace_graph_caller(void)
+>   {
+> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+> -                                   (unsigned long)&prepare_ftrace_return, true, true);
+> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
+> +                                        &prepare_ftrace_return, true);
+>   }
+> 
+>   int ftrace_disable_ftrace_graph_caller(void)
+>   {
+> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
+> -                                   (unsigned long)&prepare_ftrace_return, false, true);
+> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
+> +                                        &prepare_ftrace_return, false);
+>   }
+>   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
+>   #endif /* CONFIG_DYNAMIC_FTRACE */
+> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+> index e988bd26b28b..bc06e8ab81cf 100644
+> --- a/arch/riscv/kernel/mcount-dyn.S
+> +++ b/arch/riscv/kernel/mcount-dyn.S
+> @@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
+>          mv      a3, sp
+> 
+>   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+> -       call    ftrace_stub
+> +       REG_L   ra, ftrace_call_dest
+> +       jalr    0(ra)
+> 
+>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>          addi    a0, sp, ABI_RA
+> @@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+>          mv      a2, s0
+>   #endif
+>   SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
+> -       call    ftrace_stub
+> +       REG_L   ra, ftrace_graph_call_dest
+> +       jalr    0(ra)
+>   #endif
+>          RESTORE_ABI
+>          jr      t0
+> @@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
+>          PREPARE_ARGS
+> 
+>   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+> -       call    ftrace_stub
+> +       REG_L   ra, ftrace_call_dest
+> +       jalr    0(ra)
+> 
+>          RESTORE_ABI_REGS
+>          bnez    t1, .Ldirect
+> --
+> 2.39.3 (Apple Git-145)
+> 
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
