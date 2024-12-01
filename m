@@ -1,331 +1,305 @@
-Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B215AD5A;
-	Sun,  1 Dec 2024 15:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733067078; cv=none; b=UFzrOY4ayaDpgrqR5ZZ5g2I1e9TXoko8M1QaEBqMn1n1qezeoWiQCWOr41npJnBhwsVGQZkIF6zcnptpYEkzopSZSGpwn1bhS6CbYvEUrnE3YHpb+9Eib9IIBZ/cXXit6urY+cH/56Z+vqxUl6DUBi8wgjsWncv8EzSHxGoWNJY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733067078; c=relaxed/simple;
-	bh=RROm/nbaf//OLrCpmxxop9lguMk2k4nmWVA7Ur7yues=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UGvl0d1Zji8XGc0NxB/5ickNbsiGx/S9YROOGC/C2UPYkqMi5BIOxQfwmy6cvywsCQ7N69Mb5qc5vU4dpHSsPIrHM6nkw0JDDf68AcqMUy2CIKE1vdRjdurF7aP8xryKwQUJdV8nDyAQoFP6n5QqzCVbvGTQMx4nd7shVHuGw4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=MgkYVtSN; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=vSInmEBQ; arc=none smtp.client-ip=89.207.88.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF75B1D14F8;
+	Sun,  1 Dec 2024 15:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733067598; cv=fail; b=fPOowkckeCwyODisCB1Mk2njGFNZq4EHUCJlUSGPaJRPNJWTUwVVYfTVmucrsjtyQc+DTsdUdspaU0rHLCrba58yn2A5o8Jz4h7I5S5ZxaoSi7/lBBWAWVSlqbXt37LKQCWnFMhY+XjN6/MO1VwtemGmjAqnpSnXDlZJcHwKOt8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733067598; c=relaxed/simple;
+	bh=YwcOx3T4/8+NAeC2q7ZMYcYRWS5D9+R0Dl4TsSBTe6Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WBA2Vrg2JvJViw9s7lh5LKZ3rSNxoQ2zFqenll4xPpO7ApU9TvGnSEdaPv/RYnWiYdOBnUah8fWKnUMjQpoQ470V/jffZMnSEEila6y7njLb8w67Qwb/79vY6XGL7iTj3kgib9aQsP6OWhUf9V2cIJmBGpgrrzSQjGZRM80kt+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oqfYKGdo; arc=fail smtp.client-ip=40.107.243.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="MgkYVtSN";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="vSInmEBQ"
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com 29222E0008
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1733067065; bh=Rk4mscyhtODXOoZtND+S+9aETGqegjWDO/UcHkuTmgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=MgkYVtSN293oTUIjbbJqxqONNowdN4QqN1FqM3nHbYZpy25m7/Y97lRFP2bHuFHb5
-	 WifpssSe/McUAgkMlMh0hQocqRe9/6UK2pcTRcYDc8uH46uzjkxWqJspAp9Bnc33yj
-	 zIiwCTq9SFMU9T+aTpgg4gG+QfiwZRrDwkg0YBh8ETbesLiGoDQdbtSOAVkZNOY5ws
-	 QR5cgm58Rt140uJx3dg5ypfRZs6Med79F+FS3ZuwOp4X0ohaTRd8KDfR5uS+4OJhxs
-	 zk+kpC0sk7X86VGa7UQSIaCJbM3Q7bs2qpLs/DfLnCG29R3AAvtBmN556duRLgPY7w
-	 88Wl52Wyr7Egw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1733067065; bh=Rk4mscyhtODXOoZtND+S+9aETGqegjWDO/UcHkuTmgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=vSInmEBQjOunc3kSw9zLl0Nikb4nl+yFmWBYBH6N1RoEZDagW3Ny+ZIQHtkdEAFEt
-	 3gkJhKWynUwsO+2s36AeKzOXFCmAGVl7NnqwGPCr86PKbp64NHRp8zWTv4CF4NCMVS
-	 xpP8BrV+0uKfDDaOOh2WGrFCZQUBuDt1w+SR71PsOqZBHrzU4W6bgAHnOpWkJymFbz
-	 wqNlzp8+vTTlU7cj8f4UctP90CgT/NBoZSYSrpQ4wQdYZO98W7MNKCUe1B+Cj+bL7K
-	 jWDESxagqYFHqyxA1GFv3JlW/2cwn4mBQ3H/FiQ/xeDlv4kQ0YbW4Umu0YdA0bRm4L
-	 K6T2iIct021oQ==
-Message-ID: <12e8b66b-5a6e-435e-b927-18a3ce2216e3@yadro.com>
-Date: Sun, 1 Dec 2024 18:31:03 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oqfYKGdo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gs3A/GjIq+t/gBe+rLFC452vxst1bSaalYMr+nLu76FAWcZcYkzPuPxNzUldfO81J7tBXm+I9G2PHd8F4EthS8TgiHDS3qyy6AhxlKD2oLap+ZWsh9JM2H5mCsCXrhIJ3/JSSwckfwb/up8PriShdmGDh4hCeCFaWA8wojPTWHIcerjhfoYlgREIDz5N0lGRYzRj3qWpQgEGb2kSpYnhG7RlnRle3BN/liHKKPaWFdAuGrjD5JTEIvMt40aSHx7DHpa7Gv5rzEyUtOWRzF7Ss1XkghJ8b/N7GR+FMDdgYN2F11Fap6Txjecf33jJ1yRzxAlyBq5kP0sXTFB6tb0gSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+rBTqNeMywA3YqEk7Nh/vZKAp1YDQTBwl5ueiIClenY=;
+ b=FJgBb0B0HKeaxKwrumhX8e+x8nMIEC3/zlb+cffXj25sr7/IbOcD15eskBZYoCWGz8ze8e+y0mnPjCNbRg4/3qJEBaMR2+JZd6SIsLKOX4+yxzRsaeTDcEJ2WnOhsXudcR0xqnhjtHawMJCBBK1gbVcH8ojjfFC/C3fgy19jJGwcIUZ1txI/HeXMuKlW8kGX6oTEzt/+YJQs7veCblYX8KE9D/Xb3JP7HIgJiWCL7EogYPansw9eLhxXDZLEXUy8vQO1R+oki2qdI3/hj5oJkoNY8ruFgxtzrVnA+RuYXeu2qiQF3ark+y8zDsAHJJUuFd9Dd9iKfX5RNdqV7tE7YA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kvack.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+rBTqNeMywA3YqEk7Nh/vZKAp1YDQTBwl5ueiIClenY=;
+ b=oqfYKGdoZGnakZH5ik3/RuuVhWyIo8vAj6DnrGbzR3XFevAFv1TXtylOc4NuP3T6wUHidQBk6ZTmp7Qv4PSf+/XCzTVyqKkBs+s2Otc7HrHyElxFinBYt0szqE13TikYjmWM186VAdFuEV2gSIooxEiZl6eFyAqYmMBNbdvzrwk=
+Received: from CH2PR11CA0017.namprd11.prod.outlook.com (2603:10b6:610:54::27)
+ by PH0PR12MB8821.namprd12.prod.outlook.com (2603:10b6:510:28d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.16; Sun, 1 Dec
+ 2024 15:39:49 +0000
+Received: from CH2PEPF00000145.namprd02.prod.outlook.com
+ (2603:10b6:610:54:cafe::19) by CH2PR11CA0017.outlook.office365.com
+ (2603:10b6:610:54::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8207.17 via Frontend Transport; Sun,
+ 1 Dec 2024 15:39:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF00000145.mail.protection.outlook.com (10.167.244.102) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8230.7 via Frontend Transport; Sun, 1 Dec 2024 15:39:49 +0000
+Received: from tunga.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 1 Dec
+ 2024 09:39:41 -0600
+From: Raghavendra K T <raghavendra.kt@amd.com>
+To: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <gourry@gourry.net>,
+	<nehagholkar@meta.com>, <abhishekd@meta.com>, <david@redhat.com>,
+	<ying.huang@intel.com>, <nphamcs@gmail.com>, <akpm@linux-foundation.org>,
+	<hannes@cmpxchg.org>, <feng.tang@intel.com>, <kbusch@meta.com>,
+	<bharata@amd.com>, <Hasan.Maruf@amd.com>, <sj@kernel.org>
+CC: <willy@infradead.org>, <kirill.shutemov@linux.intel.com>,
+	<mgorman@techsingularity.net>, <vbabka@suse.cz>, <hughd@google.com>,
+	<rientjes@google.com>, <shy828301@gmail.com>, <Liam.Howlett@Oracle.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, Raghavendra K T
+	<raghavendra.kt@amd.com>, Steven Rostedt <rostedt@goodmis.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: [RFC PATCH V0 09/10] trace/kmmscand: Add tracing of scanning and migration
+Date: Sun, 1 Dec 2024 15:38:17 +0000
+Message-ID: <20241201153818.2633616-10-raghavendra.kt@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241201153818.2633616-1-raghavendra.kt@amd.com>
+References: <20241201153818.2633616-1-raghavendra.kt@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code
- patching
-To: Andy Chiu <andybnac@gmail.com>
-CC: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, Mark Rutland
-	<mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<bjorn@rivosinc.com>, <puranjay12@gmail.com>, <alexghiti@rivosinc.com>,
-	<yongxuan.wang@sifive.com>, <greentime.hu@sifive.com>, <nick.hu@sifive.com>,
-	<nylon.chen@sifive.com>, <tommy.wu@sifive.com>, <eric.lin@sifive.com>,
-	<viccent.chen@sifive.com>, <zong.li@sifive.com>, <samuel.holland@sifive.com>,
-	<linux@yadro.com>
-References: <20241127172908.17149-1-andybnac@gmail.com>
- <20241127172908.17149-4-andybnac@gmail.com>
-Content-Language: en-US
-From: Evgenii Shatokhin <e.shatokhin@yadro.com>
-In-Reply-To: <20241127172908.17149-4-andybnac@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: T-EXCH-10.corp.yadro.com (172.17.11.60) To
- T-EXCH-10.corp.yadro.com (172.17.11.60)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000145:EE_|PH0PR12MB8821:EE_
+X-MS-Office365-Filtering-Correlation-Id: c18a81a7-b413-4120-3fb7-08dd121e63f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+S4vgTk4HYFyPkj3jl3MLxi3ijH2yDRrLPPvtmCALRco9zr0x7ISsDI7V6uV?=
+ =?us-ascii?Q?Mcfz1+BLMZtNE+J+xRg/P/oTU2Wmks0q995FiWOBLy/KQJcXEAEXXmfZ5GIn?=
+ =?us-ascii?Q?YtKTJ3Lz3sxW3OM0qGtRAu8Wjyzvkjw8YFKrfrD2tu82ZD4jfC8e3Cv+bhwo?=
+ =?us-ascii?Q?jJDgahPPVtzFYzQKg8r8XsBVf+7HPweTZC+qm4/GmCevoNGE2iWMq7oficJ0?=
+ =?us-ascii?Q?tZX8fh6eQGU1FzAXa6WFknI65peVW5nA1byj8H8nLAWni//Iyuk9HWSWBpdC?=
+ =?us-ascii?Q?e1LWzajAXv0NhJ/Vm3JQxGb3G4vS8MUpWKf9VUgcAkTrJXZt0CFRBPc6Bval?=
+ =?us-ascii?Q?iYjxq7/gd5hnzObMmfK9Z54ZAc5nOQB3SKBO/B4owgVZ0w9QVMNnOzo373Lg?=
+ =?us-ascii?Q?3OzM0Tr0Y1FoHx7w0pGuiRLTeX1Joo9II4cniBzA/OdEV7Be5332oTmyn/ak?=
+ =?us-ascii?Q?mEM0DWH0feAW/NnArCfUCdpI2cxfFCpauk5eZI9j2b+MJZ2n4+EIiMDjdZVD?=
+ =?us-ascii?Q?rr2OX8vPds95axd6Q5fdNudecNJCWAxTb8lbnaq4oAb3pVAOzs33YyIVYdFp?=
+ =?us-ascii?Q?AgP4g154l2hXml7IVxsQ8iwGyGdbNnRayWyqa+SPr29nm5lzW3MjNFQXC5VS?=
+ =?us-ascii?Q?m6Rwb3/fZblU+x9J7gdulB2tCyaxhQRgf5hCdQNGRhpYX3PfuCZ5gQUE8DIV?=
+ =?us-ascii?Q?3S3k5HlsRwe+zHvaSmwFmk7PZi1CZDW05yXKTqU969hdMebQmM6tCH62PGJr?=
+ =?us-ascii?Q?+BNtlazISEhadjZYoDSNVpXJFHu7sqMerkelTf4ZXtjwxlZcDSVl3+Xtnony?=
+ =?us-ascii?Q?ozjxJ6iuWwJHirXeLjTppZTcjDxZS2y7VbaNw5rSmbzSrpAIQCQgbDxm5t5P?=
+ =?us-ascii?Q?VTCXf6kqS+8hzEkRpI3/QHnev6+OryrDsubtdZTa0dza+5vbLfrB9H2dEfmn?=
+ =?us-ascii?Q?U2tBfIVIKsveYedT9X80rfbWOXf3MnUpnWIT7TRtaWma1ncRiis+JwZtOODX?=
+ =?us-ascii?Q?SoR1sSdkxPqIuX55N8Whp17jrafFsGSJDIXhz9cBwTqC/Bc0U7oau+Qr2Wg8?=
+ =?us-ascii?Q?J44pVZvCcc+Gnvqj1jf7xnxnIFSnF4c3KWUctaOExxhgakTlBkG79FlF8LIk?=
+ =?us-ascii?Q?9vSKtopL7aeEDvn+4ZKVJmrJmr9fLpmNChIsWSyA77zidD6jhUE16r0Vj+Wc?=
+ =?us-ascii?Q?CNUigX7p4Mf56MMs4SX9/wmw8ffqV8GqOQgtOFTGiCOi/8V0vd3BAENIdDDo?=
+ =?us-ascii?Q?vN4uSiuzekeMDyr+x5p5Hk/K/mb2YU5qBH9JPF19QFt+qF+18GCqdT/ReDXg?=
+ =?us-ascii?Q?6Cev3Te36ujI3bD8uVVWX4kHXHWvvEJBbfkgFHPRjdtywBwrUTK4g4dpsQQV?=
+ =?us-ascii?Q?hWB4OXBMLafgfr1gAEbo7IPy1EijSEEo0TB06Mc1Y96sch+0haEFBXiBrPiC?=
+ =?us-ascii?Q?qqbMk49ROYOJbfXskLzdx9gD4r8R6Ju7Xd0u64murEVMkuVHzmeiWg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2024 15:39:49.1542
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c18a81a7-b413-4120-3fb7-08dd121e63f8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF00000145.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8821
 
-Hi Andy,
+Add tracing support to track
+ - start and end of scanning.
+ - migration.
 
-First of all, thank you for working on this series.
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Masami Hiramatsu <mhiramat@kernel.org>
+CC: linux-trace-kernel@vger.kernel.org
 
-On 27.11.2024 20:29, Andy Chiu wrote:
-> From: Andy Chiu <andy.chiu@sifive.com>
-> 
-> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
-> instruction fetch can break down to 4 byte at a time, it is impossible
-> to update two instructions without a race. In order to mitigate it, we
-> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
-> patching can change NOP4 to JALR to eable/disable ftrcae from a
-> function. This limits the reach of each ftrace entry to +-2KB displacing
-> from ftrace_caller.
-> 
-> Starting from the trampoline, we add a level of indirection for it to
-> reach ftrace caller target. Now, it loads the target address from a
-> memory location, then perform the jump. This enable the kernel to update
-> the target atomically.
-> 
-> The ordering of reading/updating the targert address should be guarded
-> by generic ftrace code, where it sends smp_rmb ipi.
-> 
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-> ---
->   arch/riscv/include/asm/ftrace.h |  4 ++
->   arch/riscv/kernel/ftrace.c      | 80 +++++++++++++++++++++------------
->   arch/riscv/kernel/mcount-dyn.S  |  9 ++--
->   3 files changed, 62 insertions(+), 31 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> index 4ca7ce7f34d7..36734d285aad 100644
-> --- a/arch/riscv/include/asm/ftrace.h
-> +++ b/arch/riscv/include/asm/ftrace.h
-> @@ -80,6 +80,7 @@ struct dyn_arch_ftrace {
->   #define JALR_T0                        (0x000282e7)
->   #define AUIPC_T0               (0x00000297)
->   #define NOP4                   (0x00000013)
-> +#define JALR_RANGE             (JALR_SIGN_MASK - 1)
-> 
->   #define to_jalr_t0(offset)                                             \
->          (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
-> @@ -117,6 +118,9 @@ do {                                                                        \
->    * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
->    */
->   #define MCOUNT_INSN_SIZE 8
-> +#define MCOUNT_AUIPC_SIZE      4
-> +#define MCOUNT_JALR_SIZE       4
-> +#define MCOUNT_NOP4_SIZE       4
-> 
->   #ifndef __ASSEMBLY__
->   struct dyn_ftrace;
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 4b95c574fd04..5ebe412280ef 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long hook_pos,
->          return 0;
->   }
-> 
-> -static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
-> -                               bool enable, bool ra)
-> +static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target, bool validate)
->   {
->          unsigned int call[2];
-> -       unsigned int nops[2] = {NOP4, NOP4};
-> +       unsigned int replaced[2];
-> +
-> +       make_call_t0(hook_pos, target, call);
-> 
-> -       if (ra)
-> -               make_call_ra(hook_pos, target, call);
-> -       else
-> -               make_call_t0(hook_pos, target, call);
-> +       if (validate) {
-> +               /*
-> +                * Read the text we want to modify;
-> +                * return must be -EFAULT on read error
-> +                */
-> +               if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
-> +                                            MCOUNT_INSN_SIZE))
-> +                       return -EFAULT;
-> +
-> +               if (replaced[0] != call[0]) {
-> +                       pr_err("%p: expected (%08x) but got (%08x)\n",
-> +                              (void *)hook_pos, call[0], replaced[0]);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> 
-> -       /* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
-> -       if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INSN_SIZE))
-> +       /* Replace the jalr at once. Return -EPERM on write error. */
-> +       if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), call + 1, MCOUNT_JALR_SIZE))
->                  return -EPERM;
-> 
->          return 0;
->   }
-> 
-> -int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> +static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, ftrace_func_t target, bool enable)
->   {
-> -       unsigned int call[2];
-> +       ftrace_func_t call = target;
-> +       ftrace_func_t nops = &ftrace_stub;
-> 
-> -       make_call_t0(rec->ip, addr, call);
-> -
-> -       if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-> -               return -EPERM;
-> +       WRITE_ONCE(*hook_pos, enable ? call : nops);
-> 
->          return 0;
->   }
-> 
-> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> +{
-> +       unsigned long distance, orig_addr;
-> +
-> +       orig_addr = (unsigned long)&ftrace_caller;
-> +       distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
-> +       if (distance > JALR_RANGE)
-> +               return -EINVAL;
+Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
+---
+ include/trace/events/kmem.h | 99 +++++++++++++++++++++++++++++++++++++
+ mm/kmmscand.c               | 12 ++++-
+ 2 files changed, 110 insertions(+), 1 deletion(-)
 
-If I understand it correctly, it is not the range itself that matters 
-here, but rather, that AUIPC instruction remains the same for the 
-address of ftrace_caller and for the new addr.
-
-For the displacements like 0xfabcd000 and 0xfabccf00, for example, the 
-distance is 0x100, which is within JALR range. However, the higher 20 
-bits differ, so the AUIPC instructions will differ too. 
-__ftrace_modify_call() would catch this though ("if (replaced[0] != 
-call[0]) ...").
-
-I'd suggest checking the higher 20 bits explicitly instead, something 
-like this:
-
-if ((orig_addr & AUIPC_OFFSET_MASK) != (addr & AUIPC_OFFSET_MASK))
-         return -EINVAL;
-
-What do you think?
-
-> +
-> +       return __ftrace_modify_call(rec->ip, addr, false);
-> +}
-> +
->   int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->                      unsigned long addr)
->   {
-> -       unsigned int nops[2] = {NOP4, NOP4};
-> +       unsigned int nops[1] = {NOP4};
-> 
-> -       if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> +       if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), nops, MCOUNT_NOP4_SIZE))
->                  return -EPERM;
-> 
->          return 0;
-> @@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->    */
->   int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->   {
-> +       unsigned int nops[2];
->          int out;
-> 
-> +       make_call_t0(rec->ip, &ftrace_caller, nops);
-> +       nops[1] = NOP4;
-> +
->          mutex_lock(&text_mutex);
-> -       out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +       out = patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
->          mutex_unlock(&text_mutex);
-> 
->          return out;
->   }
-> 
-> +ftrace_func_t ftrace_call_dest = ftrace_stub;
->   int ftrace_update_ftrace_func(ftrace_func_t func)
->   {
-> -       int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
-> -                                      (unsigned long)func, true, true);
-> -
-> -       return ret;
-> +       return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
->   }
-> 
->   struct ftrace_modify_param {
-> @@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
->          if (ret)
->                  return ret;
-> 
-> -       return __ftrace_modify_call(caller, addr, true, false);
-> +       return __ftrace_modify_call(caller, addr, true);
->   }
->   #endif
-> 
-> @@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->          prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
->   }
->   #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
-> -extern void ftrace_graph_call(void);
-> +ftrace_func_t ftrace_graph_call_dest = ftrace_stub;
->   int ftrace_enable_ftrace_graph_caller(void)
->   {
-> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
-> -                                   (unsigned long)&prepare_ftrace_return, true, true);
-> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-> +                                        &prepare_ftrace_return, true);
->   }
-> 
->   int ftrace_disable_ftrace_graph_caller(void)
->   {
-> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
-> -                                   (unsigned long)&prepare_ftrace_return, false, true);
-> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-> +                                        &prepare_ftrace_return, false);
->   }
->   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
->   #endif /* CONFIG_DYNAMIC_FTRACE */
-> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-> index e988bd26b28b..bc06e8ab81cf 100644
-> --- a/arch/riscv/kernel/mcount-dyn.S
-> +++ b/arch/riscv/kernel/mcount-dyn.S
-> @@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
->          mv      a3, sp
-> 
->   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-> -       call    ftrace_stub
-> +       REG_L   ra, ftrace_call_dest
-> +       jalr    0(ra)
-> 
->   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->          addi    a0, sp, ABI_RA
-> @@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->          mv      a2, s0
->   #endif
->   SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
-> -       call    ftrace_stub
-> +       REG_L   ra, ftrace_graph_call_dest
-> +       jalr    0(ra)
->   #endif
->          RESTORE_ABI
->          jr      t0
-> @@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
->          PREPARE_ARGS
-> 
->   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-> -       call    ftrace_stub
-> +       REG_L   ra, ftrace_call_dest
-> +       jalr    0(ra)
-> 
->          RESTORE_ABI_REGS
->          bnez    t1, .Ldirect
-> --
-> 2.39.3 (Apple Git-145)
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index b37eb0a7060f..80978d85300d 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -9,6 +9,105 @@
+ #include <linux/tracepoint.h>
+ #include <trace/events/mmflags.h>
+ 
++TRACE_EVENT(kmem_mm_enter,
++
++	TP_PROTO(struct task_struct *t,
++		 struct mm_struct *mm),
++
++	TP_ARGS(t, mm),
++
++	TP_STRUCT__entry(
++		__array(	char, comm, TASK_COMM_LEN	)
++		__field(	struct mm_struct *, mm		)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
++		__entry->mm = mm;
++	),
++
++	TP_printk("kmmscand: mm_enter comm =%s mm=%p", __entry->comm, __entry->mm)
++);
++
++TRACE_EVENT(kmem_scan_mm_start,
++
++	TP_PROTO(struct task_struct *t,
++		 struct mm_struct *mm),
++
++	TP_ARGS(t, mm),
++
++	TP_STRUCT__entry(
++		__array(	char, comm, TASK_COMM_LEN	)
++		__field(	struct mm_struct *, mm		)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
++		__entry->mm = mm;
++	),
++
++	TP_printk("kmmscand: scan_mm_start comm =%s mm=%p", __entry->comm, __entry->mm)
++);
++
++TRACE_EVENT(kmem_scan_mm_end,
++
++	TP_PROTO(struct task_struct *t,
++		 struct mm_struct *mm,
++		 unsigned long start,
++		 unsigned long total,
++		 unsigned long scan_size,
++		 unsigned long scan_period),
++
++	TP_ARGS(t, mm, start, total, scan_period, scan_size),
++
++	TP_STRUCT__entry(
++		__array(	char, comm, TASK_COMM_LEN	)
++		__field(	struct mm_struct *, mm		)
++		__field(	unsigned long,   start		)
++		__field(	unsigned long,   total		)
++		__field(	unsigned long,   scan_period	)
++		__field(	unsigned long,   scan_size	)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
++		__entry->mm = mm;
++		__entry->start = start;
++		__entry->total = total;
++		__entry->scan_period = scan_period;
++		__entry->scan_size = scan_size;
++	),
++
++	TP_printk("kmmscand: scan_mm_end comm =%s mm=%p, start = %ld, total = %ld, scan_period = %ld, scan_size = %ld",
++			__entry->comm, __entry->mm, __entry->start,
++			__entry->total, __entry->scan_period, __entry->scan_size)
++);
++
++TRACE_EVENT(kmem_scan_mm_migrate,
++
++	TP_PROTO(struct task_struct *t,
++		 struct mm_struct *mm,
++		 int rc),
++
++	TP_ARGS(t, mm, rc),
++
++	TP_STRUCT__entry(
++		__array(	char, comm, TASK_COMM_LEN	)
++		__field(	struct mm_struct *, mm		)
++		__field(	int,   rc			)
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
++		__entry->mm = mm;
++		__entry->rc = rc;
++	),
++
++	TP_printk("kmmscand: scan_mm_migrate comm =%s mm=%p rc=%d", __entry->comm,
++			__entry->mm, __entry->rc)
++);
++
++
+ TRACE_EVENT(kmem_cache_alloc,
+ 
+ 	TP_PROTO(unsigned long call_site,
+diff --git a/mm/kmmscand.c b/mm/kmmscand.c
+index 682c0523c0b4..70f588a210dd 100644
+--- a/mm/kmmscand.c
++++ b/mm/kmmscand.c
+@@ -668,8 +668,10 @@ static void kmmscand_migrate_folio(void)
+ 			WRITE_ONCE(kmmscand_cur_migrate_mm, info->mm);
+ 			spin_unlock(&kmmscand_migrate_lock);
+ 
+-			if (info->mm)
++			if (info->mm) {
+ 				ret = kmmscand_promote_folio(info);
++				trace_kmem_scan_mm_migrate(info->mm->owner, info->mm, ret);
++			}
+ 
+ 			/* TBD: encode migrated count here, currently assume folio_nr_pages */
+ 			if (!ret)
+@@ -828,6 +830,9 @@ static unsigned long kmmscand_scan_mm_slot(void)
+ 		goto outerloop;
+ 	}
+ 
++	if (mm->owner)
++		trace_kmem_scan_mm_start(mm->owner, mm);
++
+ 	now = jiffies;
+ 	/*
+ 	 * Dont scan if :
+@@ -868,6 +873,10 @@ static unsigned long kmmscand_scan_mm_slot(void)
+ 
+ 	update_mmslot_info = true;
+ 
++	if (mm->owner)
++		trace_kmem_scan_mm_end(mm->owner, mm, address, total,
++					mm_slot_scan_period, mm_slot_scan_size);
++
+ 	count_kmmscand_mm_scans();
+ 
+ outerloop:
+@@ -1020,6 +1029,7 @@ void __kmmscand_enter(struct mm_struct *mm)
+ 	spin_unlock(&kmmscand_mm_lock);
+ 
+ 	mmgrab(mm);
++	trace_kmem_mm_enter(mm->owner, mm);
+ 	if (wakeup)
+ 		wake_up_interruptible(&kmmscand_wait);
+ }
+-- 
+2.39.3
 
