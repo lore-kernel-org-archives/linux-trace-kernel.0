@@ -1,37 +1,37 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5185C207A2D;
-	Mon,  2 Dec 2024 14:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448E9208983;
+	Mon,  2 Dec 2024 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733151095; cv=none; b=deSrUmzwlJVKy7g8eNl3lQiy/hn8QEO1ZKEuKcQwO7hrjpN4XNPU+WUHKaejBOUdh4116WWonIWA3XE+SvEcOGKUN24vXnKMCfEv95nqLWmVMM5nBAyjb24BLc1PV/2Fa2dKK84gN+96ny+eoFHLbeya/9NdU+2PmLk8Sl6mSJw=
+	t=1733151175; cv=none; b=cLCJsOK2BZG+0U9ZAkyLss05h63FUbAFUH842xSc5bxrNCjjeTNaDqJifQ47b9tKgu+qhVwbQbJdNnwRaA23DN4LYeqNW264lh/+DeHq9VeAS5eiK+42NHp1SQ/w/TsOmZYh1YEorG2ZXLe7XtMLRxVAWMIbBWTfz/m+1QdFR4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733151095; c=relaxed/simple;
-	bh=fYVA75+QIWZ9avuk8cg5K4ABDRdncf1y9HWL9Cd47jA=;
+	s=arc-20240116; t=1733151175; c=relaxed/simple;
+	bh=JNAutYvvRsU3z28k3MKoS0K4sWzEbVp3JENNeTXHgD8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u/3laXUFwteKFfhm1BK3wNvSmg+EbuL83FgL2m0KYMyrg+y9IZD1+EHWTUDwema39Cgf2mnDG0HYmm90XH2qnRLAXrI5agMyQwuC7GJKouwJLidKJC35i3eNsBOMew0Bn81WGi2+o3CRT4/yYLlBybep5V8gQP3t5iO2/yAcqoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=HtKgSdgl; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:Content-Type; b=cpJATuHMp2KAot71l+D7e+FdearbS4PD2/ENF5GqaRuYFOESxKm+U49iQjHioBr3aFBzSoHXUfAY7DwbP21y5Fw2xoZTZOlSFoQSjNqPasydW0vILip7snKcavgpHIovHTgL2io5kGysqmBaQqJmMClvv8s+vREUN3PByDVnzT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=YfUqlpug; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="HtKgSdgl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E0A1C240004;
-	Mon,  2 Dec 2024 14:51:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="YfUqlpug"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9DA0B1C000C;
+	Mon,  2 Dec 2024 14:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1733151090;
+	t=1733151171;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PFsFZ/LC1ywDQQ48I+F5Vf/kI0MXA9IAqdb786Sr6sg=;
-	b=HtKgSdgld/sMAU0TMWUVxXmACiP7N9GfW0Of1BRbGbzSS34g7jK7v3IRmCtuyNJee1/5HZ
-	gss0bFi710U8ue5UMMbMVH9oTlIPtwa+D2lwSLa/iUnMvj7COzb/aHgMzgTBn9musCQYwB
-	IqigDcYsGj4ZSkMSDijic+gT4Lv1CYvOCnDi9J58b5Qbu+RPsvO+W09ygTXq/tzVEL8go1
-	FC9jk5pS2G2q1RBN8FrdW7F0+yowMY0U53HJwT8P3Qu+v2oYZPv4e2BY79PBw91WMQrBJS
-	+991f5x2FfBDHgCvlKbSvj9Z1TlSkWgNEY2VT0Bu6aNLP9uHGQ47T3ntEhlcvQ==
-Message-ID: <9dc5b470-fd98-4ce0-9196-089635c8852a@yoseli.org>
-Date: Mon, 2 Dec 2024 15:51:29 +0100
+	bh=llabfjTSfzGZra+dtmKNVF6kqf6OUjNm/Zx+/J9c3Zk=;
+	b=YfUqlpugAtwT9fBiRC2CV9fHNqM7XRuNuSGb68HGkHrVPhLd5QIF95w0oDCyCu2nqd0pcK
+	1GJwUhpWnp9U9/BwbmIId3kblsVRKAa4LZKualY1B0kA8J13nVdu93cjgmTiXxlVzb3ZIa
+	+kgKVTuNEu6rzb5TOitdLDTuBLgGIBCx+xW7yrFIQgFOy/Egvh2d2SzJVGqtqgtbRl9hmH
+	NJ3u4okEQyrMY/hWQqfRBNnCjSDHPR5pMHIvUAIhA4SadT1/EJ1Y3K6LZLnFF7ak+VBe1K
+	PxP6Z+OOHh/cWW9g09kABXW3Nr0FIQGQZs38UxyMm0PyNrDbm8mlvUe65utqDw==
+Message-ID: <7fef0321-5a24-4d8d-9717-8fe02f80b8c2@yoseli.org>
+Date: Mon, 2 Dec 2024 15:52:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Hi Greg,
+Re-hi !
 
 On 02/12/2024 15:41, Greg Ungerer wrote:
 > Hi JM,
@@ -201,8 +201,23 @@ On 02/12/2024 15:41, Greg Ungerer wrote:
 > chain of frame pointers to follow like the code is trying to do below in
 > arch_stack_walk().
 
-Thanks, I added the frame pointers support (select 
-ARCH_WANT_FRAME_POINTERS) but this is not better.
+Sorry for my preceding mail, it *is* better:
+# tail -10 trace
+#                  |||| / _-=> migrate-disable
+#                  ||||| /     delay
+#  cmd     pid     |||||| time  |   caller
+#     \   /        ||||||  \    |    /
+   <idle>-0         0dnh5.   11us+:        0:120:R   + [000]     119: 
+49:R irq/104-enet-fe
+   <idle>-0         0dnh5.   42us+: <stack trace>
+   <idle>-0         0dnh5.   57us!: wake_up_process 
+<-__handle_irq_event_percpu
+   <idle>-0         0d..3.  282us+: __schedule <-schedule_idle
+   <idle>-0         0d..3.  302us+:        0:120:R ==> [000]     119: 
+49:R irq/104-enet-fe
+   <idle>-0         0d..3.  325us : <stack trace>
+
+JM
 
 > Regards
 > Greg
