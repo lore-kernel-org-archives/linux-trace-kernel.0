@@ -1,385 +1,193 @@
-Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010057.outbound.protection.outlook.com [52.101.69.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C660C1F9A83;
-	Mon,  2 Dec 2024 07:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733124554; cv=none; b=tAZnX9z9GpjJs1AUKpj7fkod+EqXSDpyBjFK05aggI3MLzZCEGxCcY/NJ3mL9cmAj7HxmG9A2sqO6z2a5Og6nl+wOMsy2WtwNDbLGyVMKkxsCU0PpVDAp+/R3DrTiGEap9ez71koyfCllvrafl4vi5UTkqyQ72Z1LJzCgCHeoRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733124554; c=relaxed/simple;
-	bh=FGigei7xPvpitJqcKNT9dcENN7Xe7lNvTCffjbLVMH0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=MwRBM7lKRdicbobpC7IJv+4tPLpkqszuqzRX9SB1OTo8TfP/o+20GuO3VhddUGCzSExMCPUUBYbBKiorBnSm4XJFdlSAfv8DvquDdIK2gcmZW//4SrzCLBzYeuTQT8H8OiK7OG5PfyMcSUmBB6O0HUvPexinVAoD3fATDj3iF1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=PBxwuXBq; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=i3NMdLwO; arc=none smtp.client-ip=89.207.88.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489521FC0F8;
+	Mon,  2 Dec 2024 10:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733134006; cv=fail; b=S01V0lEoCHEABCCEhkeC0PUwSxbV/MXv6TW4J2CF6ELw3CGAPc2aS5E9G2vt7ghEKtnOZOkSMkXdZqI/fjBnjPGfW8LwCPzt95iKa+FX/aoPrLChvDJYGR3u4Wb2auYYBFjiHyAaSlRxfMQdWpxsIPy+MR9NOyr+o06Fn3x7Ijk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733134006; c=relaxed/simple;
+	bh=qQyrxbPlCzNkq479kIgOBKWmMz8++2RHjkK7nJEgMz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZezzPGo+TYtVvwOZA7WIlAJBH12X532QxPSbEROthPH4C9PrteGKnKMtLQxxncT2pJODYgKJhTN63anZz8we+HLDnvlvxrwgI11fvLjzUgVcQNEK7zRVkTX7cJGvfkUhaMYCZa/q0YqPYd1+mV32hT2U6Zfnsr4O4LB6wFMOIPs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=k9jur4wj; arc=fail smtp.client-ip=52.101.69.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="PBxwuXBq";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="i3NMdLwO"
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com 79D54E000A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1733124545; bh=dtVeFlMnCRKjHahvM0jVKAvWEky5vsGWH71BQYr3Fsw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type:From;
-	b=PBxwuXBqn+VoAr6jrSwoEf4tktilYaGwQ7imbXzlAkkc+6l/xk9TEV5X0SmwPosZv
-	 faTaDgKz6Z5QN/z+XF7WB1g3jpXdkjlzQZ9DPQlcshmp4v9UWxOsQLGM9m8/NXm2R9
-	 Mr0/cJg45EqUv6foyMcJlKelkBSbxQw2j8EM90WpxA59B6aww/bTbC+6jtOVooyG/d
-	 aaMJXalpwuBxxIG0jDmjuprTx6ogICWXtjKmu6rK3bRHeoO23++YBHgdikA/uEea06
-	 SbDONwp792K0ZCLjfFH43p/FEfRUcHQXTaf43dcLieXg9JDnaOFrEKhyYbGB43rPGM
-	 /H3s9qVaG31Kg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1733124545; bh=dtVeFlMnCRKjHahvM0jVKAvWEky5vsGWH71BQYr3Fsw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type:From;
-	b=i3NMdLwONjnVDYp0MZUoX6wLjKp659lR6eG7fReDtnyTadfabBPSo9TbA8Ewlu7Wq
-	 l3AshjWtdx/Gv6VGkgULagdkdO9iVGnw18+PQl3lsaBThjltXI1J6jzaPgLzsmjhjj
-	 cpT4tZHo9n+l2EtvaUuw4ypPjVvx88aY7J4yRvhKUpkxnUjDdq16cUV2ERCKtnTGvU
-	 egbVdOqByaikezHdRJsWdGhUaXQmWk2BIt832yRGfInHyTUi7rfJyX1Ctz3maUCbjU
-	 enRn1PnR+nQvGttjRY1dj0mK3LYjASa51qbczTm5X0z+hH4CB6Htvjdf24qtDfZWtj
-	 gjr5UDD/xetjA==
-Message-ID: <8f5c2ba6-26e7-48fd-ad85-29499e64965f@yadro.com>
-Date: Mon, 2 Dec 2024 10:29:03 +0300
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="k9jur4wj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RDDrnEMar6+VkIc805+0iLzKtbxmbg6nAk0mV+oZKWNDDyzREtM+ajc0kXEgu5Y28TG8qvCZ0q7ZcwuAqQvtI80WB7de8o/KTCZZS6uwEWSqWx00Fe47urqUY+ZBnvw+Xs05YmiufPcNtC6Dg6afyvjls8FfkGUBcBCNitBGDV+m8rv/E3MdQMNF47/bIYNTLoYCYWIlVXKRn4/EfFW24eA8Q68hFboKjI16sXMg1vvY3p01UPfGXuPIWPh1DgJvcEjNM6IiUFSuKs1Cu2sZPrQkF6+aLqOPt76sKNT+KU2N+JLmdWBcXjArd/g/Avv9pabX7a+e0u9CNGVMZseIMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XerKtsjpv3BUWp8nrtkgV8pD8cTS2vNxa7jomy2zy7I=;
+ b=rXefeSCBONNxCjJfOIuT2IjDhmla0c6YkLHluEVlNeFYcRCYB3rcqh33bKIH/EF1eacXEXCJtrmxhOjALaYfrbGF1iApU+QUW5lwEs8AH5rBiwRmBXxJLDSDDT6oa4Q8r6fHtMwIb4QtiQGn4rvpfvaP5vIQwkf8a1fh6+jn7nC4VhAnODaEZjCxsZF3Gx715/P0e+eX0spwgwEXfN7tHQr6ssLybIewhmqxw+Nsqkl+gYBD9BZgpVaJJHfPEjO3mg5cdKullBw16aq6NAthXBKS6mK4WtkpaJmxq29pEqnN6DYbXuZ1UKIVlYY94qfE2urYwSDfxYHD+ArPwggjwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XerKtsjpv3BUWp8nrtkgV8pD8cTS2vNxa7jomy2zy7I=;
+ b=k9jur4wjtSBGzxlEcqW1DJQK54gZB38hbQ3NoLVwMjanCg51OlbOogxlSZi1WdKKuHHdpmIsR03nGBgRPkXCmygnT5r21BK7EcoxRM4n4sw4mar8zkPRX3mw7jkPAoRSYOLh3w54zDQe8qJuyDEv625VqogGoXdzlOiNMphqoak8W2R0+3tCrmdcEm5BhNgTclb2eUiaNRZlKpbCv4b+8vwPIMuVOaZQLqsoB0pXecfW5oJiaNw4c1MrRLFBWrFjbCK0TjOWtsZztT0L9cqPXv2NJaqDrNGDaQZ3l4WoljBFQsWDir22+dWZvCGp8eepm23UPfQvDkG3ADYdnT9YMw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by PR3PR04MB7402.eurprd04.prod.outlook.com (2603:10a6:102:89::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8207.19; Mon, 2 Dec
+ 2024 10:06:39 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%6]) with mapi id 15.20.8207.017; Mon, 2 Dec 2024
+ 10:06:39 +0000
+Date: Mon, 2 Dec 2024 12:06:35 +0200
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+To: Andrew Strohman <andrew@andrewstrohman.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Shahed Shaikh <shshaikh@marvell.com>,
+	Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+	Simon Horman <horms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Roopa Prabhu <roopa@nvidia.com>, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bridge@lists.linux.dev
+Subject: Re: [PATCH net-next] bridge: Make the FDB consider inner tag for
+ Q-in-Q
+Message-ID: <20241202100635.hkowskequgsrqqkf@skbuf>
+References: <20241130000802.2822146-1-andrew@andrewstrohman.com>
+ <Z0s3pDGGE0zXq0UE@penguin>
+ <CAA8ajJmn-jWTweDMO48y7Dtk3XPEhnH0QbFj5J5RH4KgXog4ZQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8ajJmn-jWTweDMO48y7Dtk3XPEhnH0QbFj5J5RH4KgXog4ZQ@mail.gmail.com>
+X-ClientProxiedBy: VI1PR02CA0043.eurprd02.prod.outlook.com
+ (2603:10a6:802:14::14) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code
- patching
-From: Evgenii Shatokhin <e.shatokhin@yadro.com>
-To: Andy Chiu <andybnac@gmail.com>
-CC: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, Mark Rutland
-	<mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<bjorn@rivosinc.com>, <puranjay12@gmail.com>, <alexghiti@rivosinc.com>,
-	<yongxuan.wang@sifive.com>, <greentime.hu@sifive.com>, <nick.hu@sifive.com>,
-	<nylon.chen@sifive.com>, <tommy.wu@sifive.com>, <eric.lin@sifive.com>,
-	<viccent.chen@sifive.com>, <zong.li@sifive.com>, <samuel.holland@sifive.com>,
-	<linux@yadro.com>
-References: <20241127172908.17149-1-andybnac@gmail.com>
- <20241127172908.17149-4-andybnac@gmail.com>
- <12e8b66b-5a6e-435e-b927-18a3ce2216e3@yadro.com>
-Content-Language: en-US
-In-Reply-To: <12e8b66b-5a6e-435e-b927-18a3ce2216e3@yadro.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: T-Exch-05.corp.yadro.com (172.17.10.109) To
- T-EXCH-10.corp.yadro.com (172.17.11.60)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM8PR04MB7779:EE_|PR3PR04MB7402:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ff05c0b-fdd9-4852-442c-08dd12b9039b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?RIOXEroDTsZyN23B0cQv2bhqIfOy2Sf6VhGLYUY6UdAbERML/FmW4+aZciih?=
+ =?us-ascii?Q?fb/ZWs2QHC7tSiSgEjMcqshHHLviGPzAMRuU59ki6LtN8jHyh+U0rjUJtv4s?=
+ =?us-ascii?Q?KD4wmZuoc65m+EorY6Tds/+ZHgBmkBtKue2s/tsFcHQt2edTe9V1PaMjKbsL?=
+ =?us-ascii?Q?aw621Zh4VF/AOyR1VrWk9ROv03V15aKoS8Si8KLt3K+1oU2dOBTpEAIBRGdt?=
+ =?us-ascii?Q?eKEQVNg5MtXWBg3uQfkS+bAnM+bW3eCr7p4i45/EoSrCmz6TPpeGFkgxpera?=
+ =?us-ascii?Q?QQmPOgfB0EsEQ2kulBmlwRQy5T1dqqyaPgn5qk+l21LLSErqOdcht2RlLsZ3?=
+ =?us-ascii?Q?Nze/rey4k4p8wPp3LiLnUcuIZsKVX16wPidnoCm4Uby9N1VZGjiwxuFUUBql?=
+ =?us-ascii?Q?zq2jGhqIa9LfJ/jWiwzwYjFn6cp6fixaSeLWeORuCkhqsGIRAJ7JmXflqLXJ?=
+ =?us-ascii?Q?XG4yJd9Ie99ZSXEu/aGiqBCYqe28kDdVLmewMfLezsncAjPQAJmcZdf5yNAm?=
+ =?us-ascii?Q?pc2kw20EDeqpI87hoQVi0y4WZNeMUkxoJ6E5GFlq3TgJzi92jmWqcNaFaP3q?=
+ =?us-ascii?Q?LwCNuD1GXU5X074RzHoYN7gLXvJeNTs3rKNwU6tGaoo6jFFYFr+a7Zx4jCbI?=
+ =?us-ascii?Q?2oaqsP1VU8drmWFEI5Jw4TXU8NEQRKKHlVM2HPe0qDHYc41fC6U3En2Fhp5c?=
+ =?us-ascii?Q?puOf9fLAX7VDXyXtyUKuXmtCJsRNZGJcYCpaSQoZ1W03QnKaXdjaTzNpNFg6?=
+ =?us-ascii?Q?N04kYRqfxvjLVRMGK3odVqawb3qWRfII1wamH/i+H2zZwRwahI/nc9V6jcGI?=
+ =?us-ascii?Q?wjCcIPgMrynnFEJDQv5k1p6n2WgoqRvuq35+MUMzKJJ7lLKlCXyzoABy9/Eh?=
+ =?us-ascii?Q?Nv0VN+uxS7xbsMszS1tzVTlaJl3c+MS8j+p57eq3i5HWVi/saEsydYQw/Kiu?=
+ =?us-ascii?Q?Mp4JmzunaTzb94gICZI3X9LqA7sLOwpTi2Po4pxPNgPuMK4XDCfoc/7kQ08D?=
+ =?us-ascii?Q?m1EboVC/E+llM0xl0ymSghxsokJWK9kIh3j19JTuSvNPyUpaUk3blOBhMKdm?=
+ =?us-ascii?Q?kQeuGUh72ep35uSa13kOn8tt+djbLvPcO40bnjlKii5+NCGc41faQTyIrK0s?=
+ =?us-ascii?Q?t9Gz4RzrvIwRESk/mxnZ4kwJ1uSQLO8ecP9cNFwtcFsBgUo4Qjcnqa9V716m?=
+ =?us-ascii?Q?Io9/WyvdWl0+K088micWc0HkXsRETMvYxdNmD5cptXqK/9+JY03vdG/GdHSS?=
+ =?us-ascii?Q?tX+6c0ork1MUMcU1B6vsYT0+FcGtbPTnT/5naKAO2ca//lgljXGifbFXJJz3?=
+ =?us-ascii?Q?1Tk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4LxuaHrEq8bjJpbRCOEgquyJ0rB7eCjLXP1z0J7JVJPzHlbVLN1wP7qHGME2?=
+ =?us-ascii?Q?F/pP1w2I0g4BjQ/oGDSzfWeS4qyaAzkRtosFumOIiSugIVUV5We/9y8+YqRG?=
+ =?us-ascii?Q?8me5Rpe9FjcEDqVb6j/OgKScUx2xt0wgGHsAOtjbYxXkDxImUGrLGOhOwm4v?=
+ =?us-ascii?Q?ykO421FF+ZspiIGLMZzUP+cZtsnLKNWKg4lovRFrWf5BbAUGFyyBdtFHINjU?=
+ =?us-ascii?Q?3zFfJ65WfKCDiK+z2gH6Ou9jl0R0Ihu5VPXnDTTlx4R39me2U8U2d+Fzti7F?=
+ =?us-ascii?Q?RxU9Lq6m4qKQEpJTBREt+E3Gpzuba3tWbLLliANIxRFZu8579Dm5UoBEQKGf?=
+ =?us-ascii?Q?/+OY/JcRb0AoeZG1HN+Q0qGqaMLv2hBIuBMCUwE4muPMQZcE47DwysweFgoD?=
+ =?us-ascii?Q?XsOz9xTqDZxIbSPPDkUm0XdQrTLbMVgsfx26eMZ97ruyrPCRi1UWUxZfhFC0?=
+ =?us-ascii?Q?5yyOnq44tyaog8S+t8ygUko/HWFGtAsB707mhOREXrFLfhwkc2z/AqfCHgDv?=
+ =?us-ascii?Q?Q/h8QOKTc57P/y/S4xA5i9ukDoKNT+aHOycDeICi5rScD1X0/K7a0WuCqhgq?=
+ =?us-ascii?Q?lfZhDXP/2bhEd9D12qDeiQqmCsBPpXIjJC251PjnizJrvxMW5UT77Uk0B75y?=
+ =?us-ascii?Q?8Klsy97dr8o/9FxR5dJQSev/fa5ZA4ClJwri/UZl7VkUhq8xAgYqQt6wWo9v?=
+ =?us-ascii?Q?p7cum6+jF7jNVpr0/6Skf6LiZlpcwNQ5xYo1dfqHa6nYdP5ETx/7wBY7S1VX?=
+ =?us-ascii?Q?Co1UivBBZI3wFPDgyzeMGCsK9vGQkC0fZnPk09/il9XV+hnCUN5pQhSlqYye?=
+ =?us-ascii?Q?uFROb2AZO+I0xRpQDyYJXhegGAjn+u1R61/u5EhUha9isy4uk67FPeT5Db5k?=
+ =?us-ascii?Q?XXJV+q0jECqt5lysaBVFBS9uV+lIHksWChqLj0DU3oaGXm5HFH5pWvL/fUbY?=
+ =?us-ascii?Q?iLDpMVRVm0RS7Z/FlhnHvVEmOydna4LALc2Xu6oWKfy0QUfJ/85YzUEaV8OX?=
+ =?us-ascii?Q?VK0PckHu6xZpcJgoS20B3f3/O9DQph4iKHSabYvJtQprbf9fIQY8mbYDFcg/?=
+ =?us-ascii?Q?kcL5JBZEji/lZJx5xkyixdtjRkYyt72+YmmImOeTis8OEwG65eEsCSXz3MFy?=
+ =?us-ascii?Q?9bP/XUuYGm3g4MxNfXqHRx2qZGZu0wj2E6wFndjR9mbl8oHHuysZbWlXhnvh?=
+ =?us-ascii?Q?YjPcmSXuqolYk0IcOZQ+okXvMfyPQrWOWZs/TVdrARZ760k4Qz04xNCirpfV?=
+ =?us-ascii?Q?h5qldm3HgBlhoceLHK8/T+/CHOLPnF0tTpkHxTzcKUdrWhjCw8U1LLiNYQxy?=
+ =?us-ascii?Q?kDn+PBHL+5P/+4wXcs4cOZuya26DUfjGyaIeJdmD+IKxr1zE72AgwenMdWYf?=
+ =?us-ascii?Q?mb5ihl/UOkLTlO4UL+hIzhA8/fgoVKOiDhSTqUfhs2sBBuwR8wDldiesZXJn?=
+ =?us-ascii?Q?aduOCzzVHurgmsFvaKHRxkA0ZA/4xzvW0nZpo7bzOvSepGH4PW4ANYQ2jX+P?=
+ =?us-ascii?Q?tE6cPg2rVu/LdwvfP9OppIvg7Nd6vyXPbyj+joXU1IkwYv5UicSEslSlLaGj?=
+ =?us-ascii?Q?hKSdGKCtl0jncI3Qi707EIZFYvCdFQzDOdE4cPiNhB+TPbdddo8+HA6AvaWZ?=
+ =?us-ascii?Q?Pg=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ff05c0b-fdd9-4852-442c-08dd12b9039b
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7779.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Dec 2024 10:06:39.7141
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VZnn7qyaMDSdXpOEs8ty2qPaftd6Nz2LjoVBEK6VUesk4utYJPpXk1ZxnLl36wKucqdEbctpY+PXcaHBi48wjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7402
 
-On 01.12.2024 18:31, Evgenii Shatokhin wrote:
-> Hi Andy,
+On Sat, Nov 30, 2024 at 02:28:34PM -0800, Andrew Strohman wrote:
+> My personal use case is about simulating ethernet connections and VLAN aware
+> bridges, so that I can test networking equipment that provides VLAN
+> functionality with IVL.
+> https://github.com/andrewstrohman/topology-sim/raw/refs/heads/main/docs/Topology%20Simulation%20for%20Mesh%20Testing.pdf?download=
+> describes it, if you're interested in more information about it.
 > 
-> First of all, thank you for working on this series.
+> https://docs.google.com/drawings/d/1FybJP3UyCPxVQRGxAqGztO4Qc5mgXclV4m-QEyfUFQ8
+> is a diagram that shows what I'm thinking about. This case is not about
+> duplicate macs, but rather a frame being bridged in a way, such that it passes
+> through the same bridge twice via different ports depending on the inner
+> VLAN. In the commit message, this is what I meant by the poorly worded:
+> "L2 hairpining where different VLANs are used for each side of the hairpin".
 > 
-> On 27.11.2024 20:29, Andy Chiu wrote:
->> From: Andy Chiu <andy.chiu@sifive.com>
->>
->> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
->> instruction fetch can break down to 4 byte at a time, it is impossible
->> to update two instructions without a race. In order to mitigate it, we
->> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
->> patching can change NOP4 to JALR to eable/disable ftrcae from a
->> function. This limits the reach of each ftrace entry to +-2KB displacing
->> from ftrace_caller.
->>
->> Starting from the trampoline, we add a level of indirection for it to
->> reach ftrace caller target. Now, it loads the target address from a
->> memory location, then perform the jump. This enable the kernel to update
->> the target atomically.
->>
->> The ordering of reading/updating the targert address should be guarded
->> by generic ftrace code, where it sends smp_rmb ipi.
->>
->> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
->> ---
->>   arch/riscv/include/asm/ftrace.h |  4 ++
->>   arch/riscv/kernel/ftrace.c      | 80 +++++++++++++++++++++------------
->>   arch/riscv/kernel/mcount-dyn.S  |  9 ++--
->>   3 files changed, 62 insertions(+), 31 deletions(-)
->>
->> diff --git a/arch/riscv/include/asm/ftrace.h 
->> b/arch/riscv/include/asm/ftrace.h
->> index 4ca7ce7f34d7..36734d285aad 100644
->> --- a/arch/riscv/include/asm/ftrace.h
->> +++ b/arch/riscv/include/asm/ftrace.h
->> @@ -80,6 +80,7 @@ struct dyn_arch_ftrace {
->>   #define JALR_T0                        (0x000282e7)
->>   #define AUIPC_T0               (0x00000297)
->>   #define NOP4                   (0x00000013)
->> +#define JALR_RANGE             (JALR_SIGN_MASK - 1)
->>
->>   #define 
->> to_jalr_t0(offset)                                             \
->>          (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
->> @@ -117,6 +118,9 @@ do 
->> {                                                                        \
->>    * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes 
->> here.
->>    */
->>   #define MCOUNT_INSN_SIZE 8
->> +#define MCOUNT_AUIPC_SIZE      4
->> +#define MCOUNT_JALR_SIZE       4
->> +#define MCOUNT_NOP4_SIZE       4
->>
->>   #ifndef __ASSEMBLY__
->>   struct dyn_ftrace;
->> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
->> index 4b95c574fd04..5ebe412280ef 100644
->> --- a/arch/riscv/kernel/ftrace.c
->> +++ b/arch/riscv/kernel/ftrace.c
->> @@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long 
->> hook_pos,
->>          return 0;
->>   }
->>
->> -static int __ftrace_modify_call(unsigned long hook_pos, unsigned long 
->> target,
->> -                               bool enable, bool ra)
->> +static int __ftrace_modify_call(unsigned long hook_pos, unsigned long 
->> target, bool validate)
->>   {
->>          unsigned int call[2];
->> -       unsigned int nops[2] = {NOP4, NOP4};
->> +       unsigned int replaced[2];
->> +
->> +       make_call_t0(hook_pos, target, call);
->>
->> -       if (ra)
->> -               make_call_ra(hook_pos, target, call);
->> -       else
->> -               make_call_t0(hook_pos, target, call);
->> +       if (validate) {
->> +               /*
->> +                * Read the text we want to modify;
->> +                * return must be -EFAULT on read error
->> +                */
->> +               if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
->> +                                            MCOUNT_INSN_SIZE))
->> +                       return -EFAULT;
->> +
->> +               if (replaced[0] != call[0]) {
->> +                       pr_err("%p: expected (%08x) but got (%08x)\n",
->> +                              (void *)hook_pos, call[0], replaced[0]);
->> +                       return -EINVAL;
->> +               }
->> +       }
->>
->> -       /* Replace the auipc-jalr pair at once. Return -EPERM on write 
->> error. */
->> -       if (patch_insn_write((void *)hook_pos, enable ? call : nops, 
->> MCOUNT_INSN_SIZE))
->> +       /* Replace the jalr at once. Return -EPERM on write error. */
->> +       if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), 
->> call + 1, MCOUNT_JALR_SIZE))
->>                  return -EPERM;
->>
->>          return 0;
->>   }
->>
->> -int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->> +static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, 
->> ftrace_func_t target, bool enable)
->>   {
->> -       unsigned int call[2];
->> +       ftrace_func_t call = target;
->> +       ftrace_func_t nops = &ftrace_stub;
->>
->> -       make_call_t0(rec->ip, addr, call);
->> -
->> -       if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
->> -               return -EPERM;
->> +       WRITE_ONCE(*hook_pos, enable ? call : nops);
->>
->>          return 0;
->>   }
->>
->> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->> +{
->> +       unsigned long distance, orig_addr;
->> +
->> +       orig_addr = (unsigned long)&ftrace_caller;
->> +       distance = addr > orig_addr ? addr - orig_addr : orig_addr - 
->> addr;
->> +       if (distance > JALR_RANGE)
->> +               return -EINVAL;
+> The diagram depicts a network where a layer 2 segment is partitioned by a
+> L2 (bridging) firewall. I admit that this is contrived and not a typical
+> way of constructing networks.
 > 
-> If I understand it correctly, it is not the range itself that matters 
-> here, but rather, that AUIPC instruction remains the same for the 
-> address of ftrace_caller and for the new addr.
+> In this case, my testing system would use a 802.1ad bridge to simulate a
+> VLAN aware bridge between .1q #1 and .1q #2. The problem is that the .1ad
+> bridge would get confused about which ports hosts A and B are behind.
+> The bridge would see them behind different ports depending on whether the
+> packet was heading to, or returning from the bridge mode firewall.
 > 
-> For the displacements like 0xfabcd000 and 0xfabccf00, for example, the 
-> distance is 0x100, which is within JALR range. However, the higher 20 
-> bits differ, so the AUIPC instructions will differ too. 
-> __ftrace_modify_call() would catch this though ("if (replaced[0] != 
-> call[0]) ...").
-> 
-> I'd suggest checking the higher 20 bits explicitly instead, something 
-> like this:
-> 
-> if ((orig_addr & AUIPC_OFFSET_MASK) != (addr & AUIPC_OFFSET_MASK))
->          return -EINVAL;
-> 
-> What do you think?
+> If these nodes were connected with an IVL .1q bridge instead of the .1ad
+> bridge, this topology would work. So it's a scenario where connectivity
+> failure would be due to my testing system (topology-sim) instead of the
+> networking equipment being tested.
 
-My bad, the offsets rather than the addresses should be checked. 
-Something like this:
+What stops you from changing the 802.1ad bridge port pvids to unique
+values, like 3, 4, 5... instead of 3, 3, 3, and making each other
+j != i bridge port be a non-pvid member of port i's pvid?
 
------------
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 57a6558e212e..a619b8607738 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -96,11 +96,13 @@ static int __ftrace_modify_call_site(ftrace_func_t 
-*hook_pos, ftrace_func_t targ
-
-  int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-  {
--	unsigned long distance, orig_addr;
-+	unsigned long orig_addr, orig_offset_upper, new_offset_upper;
-
-  	orig_addr = (unsigned long)&ftrace_caller;
--	distance = addr > orig_addr ? addr - orig_addr : orig_addr - addr;
--	if (distance > JALR_RANGE)
-+	orig_offset_upper = (orig_addr - rec->ip) & AUIPC_OFFSET_MASK;
-+	new_offset_upper = (addr - rec->ip) & AUIPC_OFFSET_MASK;
-+
-+	if (orig_offset_upper != new_offset_upper)
-  		return -EINVAL;
-
-  	return __ftrace_modify_call(rec->ip, addr, false);
------------
-
-> 
->> +
->> +       return __ftrace_modify_call(rec->ip, addr, false);
->> +}
->> +
->>   int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->>                      unsigned long addr)
->>   {
->> -       unsigned int nops[2] = {NOP4, NOP4};
->> +       unsigned int nops[1] = {NOP4};
->>
->> -       if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
->> +       if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), 
->> nops, MCOUNT_NOP4_SIZE))
->>                  return -EPERM;
->>
->>          return 0;
->> @@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct 
->> dyn_ftrace *rec,
->>    */
->>   int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->>   {
->> +       unsigned int nops[2];
->>          int out;
->>
->> +       make_call_t0(rec->ip, &ftrace_caller, nops);
->> +       nops[1] = NOP4;
->> +
->>          mutex_lock(&text_mutex);
->> -       out = ftrace_make_nop(mod, rec, MCOUNT_ADDR);
->> +       out = patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
->>          mutex_unlock(&text_mutex);
->>
->>          return out;
->>   }
->>
->> +ftrace_func_t ftrace_call_dest = ftrace_stub;
->>   int ftrace_update_ftrace_func(ftrace_func_t func)
->>   {
->> -       int ret = __ftrace_modify_call((unsigned long)&ftrace_call,
->> -                                      (unsigned long)func, true, true);
->> -
->> -       return ret;
->> +       return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
->>   }
->>
->>   struct ftrace_modify_param {
->> @@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, 
->> unsigned long old_addr,
->>          if (ret)
->>                  return ret;
->>
->> -       return __ftrace_modify_call(caller, addr, true, false);
->> +       return __ftrace_modify_call(caller, addr, true);
->>   }
->>   #endif
->>
->> @@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, 
->> unsigned long parent_ip,
->>          prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
->>   }
->>   #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
->> -extern void ftrace_graph_call(void);
->> +ftrace_func_t ftrace_graph_call_dest = ftrace_stub;
->>   int ftrace_enable_ftrace_graph_caller(void)
->>   {
->> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
->> -                                   (unsigned 
->> long)&prepare_ftrace_return, true, true);
->> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
->> +                                        &prepare_ftrace_return, true);
->>   }
->>
->>   int ftrace_disable_ftrace_graph_caller(void)
->>   {
->> -       return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
->> -                                   (unsigned 
->> long)&prepare_ftrace_return, false, true);
->> +       return __ftrace_modify_call_site(&ftrace_graph_call_dest,
->> +                                        &prepare_ftrace_return, false);
->>   }
->>   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
->>   #endif /* CONFIG_DYNAMIC_FTRACE */
->> diff --git a/arch/riscv/kernel/mcount-dyn.S 
->> b/arch/riscv/kernel/mcount-dyn.S
->> index e988bd26b28b..bc06e8ab81cf 100644
->> --- a/arch/riscv/kernel/mcount-dyn.S
->> +++ b/arch/riscv/kernel/mcount-dyn.S
->> @@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
->>          mv      a3, sp
->>
->>   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->> -       call    ftrace_stub
->> +       REG_L   ra, ftrace_call_dest
->> +       jalr    0(ra)
->>
->>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->>          addi    a0, sp, ABI_RA
->> @@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->>          mv      a2, s0
->>   #endif
->>   SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
->> -       call    ftrace_stub
->> +       REG_L   ra, ftrace_graph_call_dest
->> +       jalr    0(ra)
->>   #endif
->>          RESTORE_ABI
->>          jr      t0
->> @@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
->>          PREPARE_ARGS
->>
->>   SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->> -       call    ftrace_stub
->> +       REG_L   ra, ftrace_call_dest
->> +       jalr    0(ra)
->>
->>          RESTORE_ABI_REGS
->>          bnez    t1, .Ldirect
->> -- 
->> 2.39.3 (Apple Git-145)
->>
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-
-Regards,
-Evgenii
-
+That would keep the MAC address isolation per 802.1ad bridge port, and
+would offer the same level of communication using 100% standard and
+available tools.
