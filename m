@@ -1,179 +1,261 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3A1DACBE
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  2 Dec 2024 17:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523FC1DB940;
+	Mon,  2 Dec 2024 17:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733160205; cv=none; b=AVT+o6aNo0+0A9XEZBeSNF9t7Hxtr0gP3Azc8S/dPIqqyosPSb6FpUwfku/FklzAFOouPxNDGhzR313N66VmUqvfAVGeTt53gG9e8gkn3sDCQlu4cyFzfJTsUyz6o3+CbDEyPo9XOXqsR07o+8PRwW/dQTQ4/v/Eyxi7lnd8IIw=
+	t=1733162011; cv=none; b=qigAh9rpHpNnhDUCrmr6oDogcLCXkVFNfqhVYbNcl0aBpIq991NjdRUtVztSIoqUt3vdhVh3fdbX4Ja5dw/spPKV4O6mWYfGZllCA0nrcobUfV0HjLg/YWMSqmBwEzjLvUhOUkWTaw9b9pTFGw/1rjY92pIiwfzSUpHWc8Xu4ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733160205; c=relaxed/simple;
-	bh=niYey3A2BI1zHc9oE/V9wTEb2AngGjaDi9xTB6eXJp0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MFzVJKTGACbm/Hfs+2525nqLfotcZXVzMoRWd7Yj01Dx9O7rdNpSDJTeeZTrD/Hxq4omjxVy/FCWDFkGhReUkYqN4C8sUJGSQNMf4ZkswsDy8sgC8kwoN6PnTonb6Uzdo69/PGJ0dArNZ0g38L98np4Z5FbE+/BQ2ySVGrCV5FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3a7e4bfae54so27646345ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 02 Dec 2024 09:23:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733160203; x=1733765003;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cWtCFCl9BH6B1/hrLDgMJbyasTsGi0yL5kBQrDwE6xQ=;
-        b=iNSTrkYWAJzOEtnxibqAQmrhxezZLTvcLKjZSAycrBdSjdEytpYIsHVx485Uun7gvi
-         qYyOfNWGup/fqP8pRczslvNhk12FvrLdSdWUOYYEjgfT+HrjkTM6vR+TsqDjKtL80grU
-         eqScydtYLJ3Y+hgsy7Wx2Qjrvc3cMUSMAyt3Qbg0W+6cRJTpTQsgFDR1T2/LfyFogXBs
-         WaPqpxqj4PkqUHiucRxKfqcVaFPAj5JMtTBHtz+srh2N0yVepheK7jSRbQ15yhCtzX0I
-         AErIbhYXTt+oTYjDIbSUa/O8HY47B7Qm/vqEa3sWwL/w+eZpqmrUIbpA9W33s9ZynZxp
-         nORQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEx5UzVmHyz6gRTPOSHJAuzoMDjqFVdBBY4yODUuun1rOzNQE/rXmrsUkqTwBZYg8Sxzk+jIm7tTigTP0++vlTn2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCICUICJQzwXLKAuINpWVgHz+LqaO8uonPr2R1cm/vmOVLpooA
-	BbYAW5LuQbPSHkj36xWAromRCGA1ciZOAXbHbpsJUqvaMZBaKl8GM66CwsovZuF91X3kitDKp0c
-	j1kqRThOAicGc7YybcycFpUnJJ3kTo3MLifeA5F1edUPmxnSp3XozUTk=
-X-Google-Smtp-Source: AGHT+IFGrYLgVMCkuWthz1BRGHleiw9U22O8SugwE5SIOQ51OAgdGsPOdMZVjiB1rIUZC23Pv25Kpzsr+8zM3B/WjzigFSvEFPLm
+	s=arc-20240116; t=1733162011; c=relaxed/simple;
+	bh=lc6WgeExQ+hWB9ZfwfnAcabToLH2FzedHtL2FERcLRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UVbOxrtrDHtM+rhb85dK4ZCdFh5A/YhrQAaRgTHzQ9xnjTzSslbV362rXi+jovJqwbSjMcpt1Dkmm7LC1rBXmX2Jaclh8GHmT7f1dLSkU2uHn1dbKgR3c9g09qOvXnoyrRv2jK9Yg9E/IZyVnZuZnxDi+WtOFUf/dLMn89FO4no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=VCeTD+rZ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="VCeTD+rZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9EC65C0009;
+	Mon,  2 Dec 2024 17:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
+	t=1733162006;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SOG1NlpvLRlcxi8vGnjnlAA8v4MMzXA9kbAwPiLSGD4=;
+	b=VCeTD+rZ2aeUuLZ6X32xzZE9GFd+kn19pWlOzX4NBEKnWEAFGIz0Qipvrigs+lb8/QbNKD
+	C7X1nogQWqF8GDZL6Is7S+zwD9C6A0XkZFIMOAjC1HOoysr6fVeYNg3NK3mmLluI7Gh6SV
+	nVZSXJE3Yv9sL5B1Ty+AzaEVt+ddNy0BG1A94VMSfhWFQc8SvICjuVAIg+l7FKTdv6701J
+	Zm8k5McyXj+EbWeSH95Ub9O05QLihd9RNKPXHiGP7MitK5RBRv8dBNPFPXN6mMoR0IRHR/
+	IgTJO5hs55wO+DnR7LRZY3yo6yX0F2wUox7mkSyJAHeqZ1V6B1O12+a4/W/ifA==
+Message-ID: <1d0e141c-1afe-4646-8e6f-584e2a0706e2@yoseli.org>
+Date: Mon, 2 Dec 2024 18:53:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a02:b0:3a7:9347:5465 with SMTP id
- e9e14a558f8ab-3a7c5523826mr268135525ab.3.1733160203172; Mon, 02 Dec 2024
- 09:23:23 -0800 (PST)
-Date: Mon, 02 Dec 2024 09:23:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <674ded0b.050a0220.48a03.0027.GAE@google.com>
-Subject: [syzbot] [netfs?] WARNING in netfs_retry_reads (2)
-From: syzbot <syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, bharathsm@microsoft.com, brauner@kernel.org, 
-	dhowells@redhat.com, ericvh@kernel.org, jlayton@kernel.org, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
-	marc.dionne@auristor.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	netfs@lists.linux.dev, pc@manguebit.com, ronniesahlberg@gmail.com, 
-	rostedt@goodmis.org, samba-technical@lists.samba.org, sfrench@samba.org, 
-	sprasad@microsoft.com, syzkaller-bugs@googlegroups.com, tom@talpey.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 2/2] arch: m68k: Add STACKTRACE support
+To: Greg Ungerer <gerg@linux-m68k.org>, linux-m68k@lists.linux-m68k.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rostedt@goodmis.org, Michael Schmitz <schmitzmic@gmail.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+References: <20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org>
+ <20241021-add-m68k-tracing-support-v1-2-0883d704525b@yoseli.org>
+ <501c04d7-1a7d-4000-a948-e9effb281a05@yoseli.org>
+ <a2efe6f7-4bfe-468b-9512-c60f646281b1@linux-m68k.org>
+Content-Language: en-US
+From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+In-Reply-To: <a2efe6f7-4bfe-468b-9512-c60f646281b1@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-Hello,
+Hi Greg,
 
-syzbot found the following issue on:
+On 02/12/2024 15:41, Greg Ungerer wrote:
+> Hi JM,
+> 
+> On 27/11/24 21:26, Jean-Michel Hautbois wrote:
+>> Hi there,
+>>
+>> On 21/10/2024 11:44, Jean-Michel Hautbois wrote:
+>>> In order to use tracing, implement a basic arch_stack_walk() based on
+>>> the one in PowerPC.
+>>> Tested on a M54418 coldfire.
+>>
+>> Well, I said it was tested, but it was only compile tested basically.
+>> AFAICT now, I think it is not working as when I use wakeup_rt as a 
+>> tracer, I don't have the stack trace:
+>>
+>> # wakeup_rt latency trace v1.1.5 on 6.12.0-10380-gb66f06337b66-dirty
+>> # --------------------------------------------------------------------
+>> # latency: 2000 us, #18/18, CPU#0 | (M:preempt VP:0, KP:0, SP:0 HP:0)
+>> #    -----------------
+>> #    | task: irq/100-enet-fe-118 (uid:0 nice:0 policy:1 rt_prio:50)
+>> #    -----------------
+>> #
+>> #                    _------=> CPU#
+>> #                   / _-----=> irqs-off/BH-disabled
+>> #                  | / _----=> need-resched
+>> #                  || / _---=> hardirq/softirq
+>> #                  ||| / _--=> preempt-depth
+>> #                  |||| / _-=> migrate-disable
+>> #                  ||||| /     delay
+>> #  cmd     pid     |||||| time  |   caller
+>> #     \   /        ||||||  \    |    /
+>> kworker/-11        0dnh5.    0us :       11:120:R   + [000]      22: 
+>> 98:R irq_work/0
+>> kworker/-11        0dnh5.    0us : <stack trace>
+>> kworker/-11        0dnh5.    0us : 0
+>> kworker/-11        0d..3.    0us : __schedule
+>> kworker/-11        0d..3.    0us :       11:120:R ==> [000]      22: 
+>> 98:R irq_work/0
+>> kworker/-11        0d..3.    0us : <stack trace>
+>>   telnetd-229       0Dnh4.    0us :      229:120:R   + [000]     118: 
+>> 49:R irq/100-enet-fe
+>>   telnetd-229       0Dnh4.    0us : <stack trace>
+>>   telnetd-229       0Dnh4.    0us : 0
+>>   telnetd-229       0D..3.    0us : __schedule
+>>   telnetd-229       0D..3.    0us :      229:120:R ==> [000]     118: 
+>> 49:R irq/100-enet-fe
+>>   telnetd-229       0D..3.    0us : <stack trace>
+>>   telnetd-229       0dn.5.    0us :      229:120:R   + [000]     118: 
+>> 49:R irq/100-enet-fe
+>>   telnetd-229       0dn.5.    0us : <stack trace>
+>>   telnetd-229       0dn.5.    0us#: 0
+>>   telnetd-229       0d..3. 2000us : __schedule
+>>   telnetd-229       0d..3. 2000us :      229:120:R ==> [000]     118: 
+>> 49:R irq/100-enet-fe
+>>   telnetd-229       0d..3. 2000us : <stack trace>
+>>
+>> Geert, Greg, and maybe other highly skilled m68k people, could you 
+>> please help me with this particular function :-) ?
+>>
+>> Thanks !
+>> JM
+>>
+>>>
+>>> Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+>>> ---
+>>>   arch/m68k/Kconfig             |  5 ++++
+>>>   arch/m68k/kernel/Makefile     |  1 +
+>>>   arch/m68k/kernel/stacktrace.c | 70 ++++++++++++++++++++++++++++++++ 
+>>> +++++++++++
+>>>   3 files changed, 76 insertions(+)
+>>>
+>>> diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+>>> index 
+>>> ab3375475721fa63418c40d4ba6ac76679ebc77d..7142f9759181a90269ae1ba9e682d331ee2ddbf6 100644
+>>> --- a/arch/m68k/Kconfig
+>>> +++ b/arch/m68k/Kconfig
+>>> @@ -40,6 +40,7 @@ config M68K
+>>>       select UACCESS_MEMCPY if !MMU
+>>>       select ZONE_DMA
+>>>       select TRACE_IRQFLAGS_SUPPORT
+>>> +    select ARCH_STACKWALK
+>>>   config CPU_BIG_ENDIAN
+>>>       def_bool y
+>>> @@ -107,6 +108,10 @@ config BOOTINFO_PROC
+>>>         Say Y to export the bootinfo used to boot the kernel in a
+>>>         "bootinfo" file in procfs.  This is useful with kexec.
+>>> +config STACKTRACE_SUPPORT
+>>> +    bool
+>>> +    default y
+>>> +
+>>>   menu "Platform setup"
+>>>   source "arch/m68k/Kconfig.cpu"
+>>> diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
+>>> index 
+>>> f335bf3268a108a45bab079fbf0a1c8ead9beb71..4efe92af0b711b19cb1d5129f74e67a739e289b1 100644
+>>> --- a/arch/m68k/kernel/Makefile
+>>> +++ b/arch/m68k/kernel/Makefile
+>>> @@ -31,3 +31,4 @@ obj-$(CONFIG_UBOOT)        += uboot.o
+>>>   obj-$(CONFIG_EARLY_PRINTK)    += early_printk.o
+>>> +obj-y    += stacktrace.o
+>>> diff --git a/arch/m68k/kernel/stacktrace.c b/arch/m68k/kernel/ 
+>>> stacktrace.c
+>>> new file mode 100644
+>>> index 
+>>> 0000000000000000000000000000000000000000..06c7459373bd25b3bb3540cfe2a909259c1db3ce
+>>> --- /dev/null
+>>> +++ b/arch/m68k/kernel/stacktrace.c
+>>> @@ -0,0 +1,70 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +/*
+>>> + * Stack trace utility functions etc.
+>>> + *
+>>> + * Copyright 2024 Jean-Michel Hautbois, Yoseli SAS.
+>>> + */
+>>> +
+>>> +#include <asm/current.h>
+>>> +#include <asm/ptrace.h>
+>>> +#include <linux/sched.h>
+>>> +#include <linux/sched/task_stack.h>
+>>> +#include <linux/stacktrace.h>
+>>> +
+>>> +static inline unsigned long current_stack_frame(void)
+>>> +{
+>>> +    unsigned long sp;
+>>> +
+>>> +    asm volatile("movl %%sp, %0" : "=r"(sp));
+>>> +    return sp;
+>>> +}
+> 
+> If I am understanding what this is intended to do then this is probably 
+> not right.
+> This will be returning the current stack pointer, which will almost 
+> certainly not
+> be the current stack frame pointer. This will be the top of stack at the 
+> call site,
+> which will be after the pushed locals and saved registers at the very 
+> least for m68k.
+> 
+> Does your kernel config have CONFIG_FRAME_POINTER enabled?
+> The default for m68k is usually disabled. Without this there won't be a
+> chain of frame pointers to follow like the code is trying to do below in
+> arch_stack_walk().
+> 
 
-HEAD commit:    f486c8aa16b8 Add linux-next specific files for 20241128
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1236a0df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e348a4873516af92
-dashboard link: https://syzkaller.appspot.com/bug?extid=5621e2baf492be382fa9
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17da7f78580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=138f3d30580000
+It gives me a few things when I use wakeup_rt but timerlat is not giving 
+me any stack:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/beb58ebb63cf/disk-f486c8aa.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b241b5609e64/vmlinux-f486c8aa.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/c9d817f665f2/bzImage-f486c8aa.xz
+# cd /sys/kernel/debug/tracing/
+# echo 500 > osnoise/stop_tracing_total_us
+# echo 500 > osnoise/print_stack
+# echo timerlat > current_tracer
+# echo 1 > tracing_on
+# tail -21 trace
+# tail -21 trace
+       timerlat/0-299     [000] .....   635.167643: #59035 context 
+thread timer_latency    202352 ns
+     kworker/u5:1-242     [000] d.h1.   635.168494: #59036 context 
+irq timer_latency     51504 ns
+       timerlat/0-299     [000] .....   635.168714: #59036 context 
+thread timer_latency    272032 ns
+             bash-230     [000] d.h..   635.169496: #59037 context 
+irq timer_latency     54592 ns
+       timerlat/0-299     [000] .....   635.169693: #59037 context 
+thread timer_latency    250448 ns
+             bash-230     [000] d.h..   635.170491: #59038 context 
+irq timer_latency     48784 ns
+       timerlat/0-299     [000] .....   635.170717: #59038 context 
+thread timer_latency    275960 ns
+             bash-230     [000] d.h..   635.171497: #59039 context 
+irq timer_latency     54472 ns
+       timerlat/0-299     [000] .....   635.171695: #59039 context 
+thread timer_latency    252936 ns
+             bash-230     [000] d.h1.   635.172495: #59040 context 
+irq timer_latency     53064 ns
+       timerlat/0-299     [000] .....   635.172696: #59040 context 
+thread timer_latency    253144 ns
+             bash-230     [000] d.h1.   635.173491: #59041 context 
+irq timer_latency     49864 ns
+       timerlat/0-299     [000] .....   635.173683: #59041 context 
+thread timer_latency    241248 ns
+             bash-230     [000] d.h1.   635.174495: #59042 context 
+irq timer_latency     52648 ns
+       timerlat/0-299     [000] .....   635.174691: #59042 context 
+thread timer_latency    249216 ns
+             bash-230     [000] d.h..   635.175536: #59043 context 
+irq timer_latency     94496 ns
+       timerlat/0-299     [000] .....   635.175762: #59043 context 
+thread timer_latency    321592 ns
+             bash-324     [000] d.h..   635.176825: #59044 context 
+irq timer_latency    383560 ns
+       timerlat/0-299     [000] .....   635.177044: #59044 context 
+thread timer_latency    603280 ns
+       timerlat/0-299     [000] ...1.   635.177091: <stack trace>
+       timerlat/0-299     [000] .....   635.177141: timerlat_main: stop 
+tracing hit on cpu 0
 
-The issue was bisected to:
+As you can see, stack_trace appears, but nothing is displayed so I 
+suppose it does not walk at all...
 
-commit 1bd9011ee163e11f186b72705978fd6b21bdc07b
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Nov 8 17:32:29 2024 +0000
-
-    netfs: Change the read result collector to only use one work item
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144ccfc0580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=164ccfc0580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=124ccfc0580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com
-Fixes: 1bd9011ee163 ("netfs: Change the read result collector to only use one work item")
-
-------------[ cut here ]------------
-do not call blocking ops when !TASK_RUNNING; state=2 set at [<ffffffff8177c166>] prepare_to_wait+0x186/0x210 kernel/sched/wait.c:237
-WARNING: CPU: 0 PID: 5828 at kernel/sched/core.c:8685 __might_sleep+0xb9/0xe0 kernel/sched/core.c:8681
-Modules linked in:
-CPU: 0 UID: 0 PID: 5828 Comm: syz-executor222 Not tainted 6.12.0-next-20241128-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-RIP: 0010:__might_sleep+0xb9/0xe0 kernel/sched/core.c:8681
-Code: 94 0e 01 90 42 80 3c 23 00 74 08 48 89 ef e8 ae 30 9b 00 48 8b 4d 00 48 c7 c7 e0 2d 0a 8c 44 89 ee 48 89 ca e8 08 e6 f0 ff 90 <0f> 0b 90 90 eb b5 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 70 ff ff ff
-RSP: 0018:ffffc900039765a8 EFLAGS: 00010246
-RAX: b7d7501871149800 RBX: 1ffff1100ff252ed RCX: ffff88807f928000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88807f929768 R08: ffffffff81601ea2 R09: fffffbfff1cfa220
-R10: dffffc0000000000 R11: fffffbfff1cfa220 R12: dffffc0000000000
-R13: 0000000000000002 R14: 000000000000004a R15: ffffffff8c1ca1a0
-FS:  0000555593050480(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055bb6dfcc068 CR3: 000000002f04e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- wait_on_bit include/linux/wait_bit.h:74 [inline]
- netfs_retry_reads+0xde/0x1e10 fs/netfs/read_retry.c:263
- netfs_collect_read_results fs/netfs/read_collect.c:333 [inline]
- netfs_read_collection+0x334e/0x4020 fs/netfs/read_collect.c:414
- netfs_wait_for_read+0x2ba/0x4e0 fs/netfs/read_collect.c:629
- netfs_unbuffered_read fs/netfs/direct_read.c:156 [inline]
- netfs_unbuffered_read_iter_locked+0x11fc/0x1540 fs/netfs/direct_read.c:231
- netfs_unbuffered_read_iter+0xbf/0xe0 fs/netfs/direct_read.c:266
- __kernel_read+0x513/0x9d0 fs/read_write.c:523
- integrity_kernel_read+0xb0/0x100 security/integrity/iint.c:28
- ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
- ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
- ima_calc_file_hash+0xae6/0x1b30 security/integrity/ima/ima_crypto.c:568
- ima_collect_measurement+0x520/0xb10 security/integrity/ima/ima_api.c:293
- process_measurement+0x1351/0x1fb0 security/integrity/ima/ima_main.c:372
- ima_file_check+0xd9/0x120 security/integrity/ima/ima_main.c:572
- security_file_post_open+0xb9/0x280 security/security.c:3121
- do_open fs/namei.c:3830 [inline]
- path_openat+0x2ccd/0x3590 fs/namei.c:3987
- do_filp_open+0x27f/0x4e0 fs/namei.c:4014
- do_sys_openat2+0x13e/0x1d0 fs/open.c:1402
- do_sys_open fs/open.c:1417 [inline]
- __do_sys_open fs/open.c:1425 [inline]
- __se_sys_open fs/open.c:1421 [inline]
- __x64_sys_open+0x225/0x270 fs/open.c:1421
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fdf86d213b9
-Code: d8 5b c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdb23978f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffdb2397940 RCX: 00007fdf86d213b9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000340
-RBP: 00007ffdb2397948 R08: aaaaaaaaaaaa0102 R09: aaaaaaaaaaaa0102
-R10: aaaaaaaaaaaa0102 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 000000000000001d R15: 00007fdf86d983a0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+JM
