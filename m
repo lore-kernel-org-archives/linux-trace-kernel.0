@@ -1,79 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A502646;
-	Tue,  3 Dec 2024 15:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67C31F8ADD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Dec 2024 16:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733239072; cv=none; b=eAh8p/x3urVxX0SxvfRb/NBuydtxW+Sv5hbyCCEcew/9G5Q/sxUuAihndR8mVgvs7QW0Uky/PEuPdm+6VR6jR8l+8l2kqNB9ba1kZ5799C38j1ZHX3k8X6Jl1AFg+NXQwg/t997eK/0Ly1im7OQk4qRzoZdQq70qPqsfaBLDFPM=
+	t=1733244016; cv=none; b=VgW5Fekn0vosuBVZciLgld5sBR1AfrXmBsjAXXOtQ2nbaIHRahHwg9FWB3HKh9deGnl4VF1n5LJDyHpkMf8AJ2fpr616agun+FxQ9w899K0fgWnxVfpH/wxE8ug9+V+ROcanBDBWkNivT3fA0nNYFEE9fke1QOc4VqxcKroQTLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733239072; c=relaxed/simple;
-	bh=UngUAn5lnqytfDePhPf8C7jw42gbkWziclwCMR3F/eU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QXHjpigto/QTT8w9IAK2K9uPPcH4wYkCcR6FBIoZHOmgVBU54/Nr2CXoIfbsv+qSv7PupLHJhXd+LDv1/mqeIAWIgry7e3GWXhxdMQsl6bfEAcySH8f+EyHBhSJccXpfp7k69NnaeFgCR21lQhc4WlyAUyw/UiuFM1ct3Y0uV6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BEEC4CED8;
-	Tue,  3 Dec 2024 15:17:50 +0000 (UTC)
-Date: Tue, 3 Dec 2024 10:17:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: Show timings of how long nop patching took
-Message-ID: <20241203101750.62a85ca2@gandalf.local.home>
-In-Reply-To: <37824159-8f7b-49ca-80d7-99c6d76e3f9a@csgroup.eu>
-References: <20241017113105.1edfa943@gandalf.local.home>
-	<6fb1e232-3bc3-4d5d-bff9-9f1a8c784782@csgroup.eu>
-	<20241201150406.17f10247@rorschach.local.home>
-	<Z01Vn8yZv-AlB-Z4@kernel.org>
-	<20241202150516.3cf52584@gandalf.local.home>
-	<37824159-8f7b-49ca-80d7-99c6d76e3f9a@csgroup.eu>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1733244016; c=relaxed/simple;
+	bh=iers8YwQihT5WN+yXYzlgjChPlB3E49WUvV+hZjKU+8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GaETOwU13TPN2RRuPZLRs1QHv+aovFuOZv4SRRfLabqMxuRWo3O8sky5+vKrPsIRziWCZNjY5x2UcqDGDfsUR+SgqujpRQRk8cUEFmMTL1DnGjCOLAX1xTscodKHm/IruUiU/xZ4VUoxQNFlB+4HkIf9HSgaFowxust8wDUyYRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:829d:a1e7:5b32:5d8e])
+	by andre.telenet-ops.be with cmsmtp
+	id kGgB2D00M3sLyzB01GgB42; Tue, 03 Dec 2024 17:40:12 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tIVwZ-000DZC-M8;
+	Tue, 03 Dec 2024 17:40:11 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tIVwZ-00Aj1O-JM;
+	Tue, 03 Dec 2024 17:40:11 +0100
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-bcachefs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH resend] bcachefs: BCACHEFS_PATH_TRACEPOINTS should depend on TRACING
+Date: Tue,  3 Dec 2024 17:40:10 +0100
+Message-Id: <2d26d15c39b72c815f14593b8cc916d47e82402d.1733243875.git.geert@linux-m68k.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 3 Dec 2024 08:21:49 +0100
-Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
+When tracing is disabled, there is no point in asking the user about
+enabling extra btree_path tracepoints in bcachefs.
 
-> > Which should turn the above to:
-> > 
-> >    25850 pages:14 groups: 3
-> >    ftrace boot update time = [Unavailable]
-> >    ftrace module total update time = 0 (ns)
-> > 
-> > Which should at least make it not confusing.  
-> 
-> Well. Maybe, but at the end what we need is the measured value, if it 
-> only works on x86 it is just pointless, isn't it ?
-> 
-> trace_clock_local() calls sched_clock()
-> 
-> I don't know about other architectures, but on powerpc sched_clock() is:
-> 
-> 	notrace unsigned long long sched_clock(void)
-> 	{
-> 		return mulhdu(get_tb() - boot_tb, tb_to_ns_scale) << tb_to_ns_shift;
-> 	}
-> 
-> boot_tb, tb_to_ns_scale and tb_to_ns_shift are not known before 
-> time_init() is called.
-> 
-> But get_tb() returns a valid value already so it is possible to get the 
-> ticks and do the calculation later with tb_to_ns()
+Fixes: 32ed4a620c5405be ("bcachefs: Btree path tracepoints")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ fs/bcachefs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We could add code to make that work for all archs via arch_xxx() functions.
+diff --git a/fs/bcachefs/Kconfig b/fs/bcachefs/Kconfig
+index ab6c95b895b33591..464b927e4fffd1f2 100644
+--- a/fs/bcachefs/Kconfig
++++ b/fs/bcachefs/Kconfig
+@@ -90,7 +90,7 @@ config BCACHEFS_SIX_OPTIMISTIC_SPIN
+ 
+ config BCACHEFS_PATH_TRACEPOINTS
+ 	bool "Extra btree_path tracepoints"
+-	depends on BCACHEFS_FS
++	depends on BCACHEFS_FS && TRACING
+ 	help
+ 	Enable extra tracepoints for debugging btree_path operations; we don't
+ 	normally want these enabled because they happen at very high rates.
+-- 
+2.34.1
 
-But as the merge window is already closed, I'll just submit a
-"[Unavailable]" patch to Linus as a "fix" and then for the next merge
-window we can have code that will allow architectures to print real timings.
-
--- Steve
