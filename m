@@ -1,38 +1,37 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179A1FA241;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3F71FA166;
 	Tue,  3 Dec 2024 17:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733246513; cv=none; b=TG+HHVVBf0iy/HE97c28OhsiaLwCB2CS2BGsaDlQCOvfG7mBIR/bGB6sq46p1jTmogq2f3kzemgQET6GDgkXg3GvlAhkqreZeoG5ksmbLxgIZduD5oY2OkhYMSSURwdB7O3vAZv8iK5vTRfN4MGFRF8WdRpbcWiqQ7VPSA0oYsE=
+	t=1733246514; cv=none; b=rGXsEILsATssCHgxuJ7RpdDiQA0qwq1NrJw++U+alPJ4W5GbBC+qcKyJ3bz4ENisKqIb8xR9v8Dmg6+5+815MLwEPufFXaihhK4nyibX4QzAB8Ni6lpYHUTa2MJT5qrwDdOcy1szqOT9cs74IhMAYOI/RC8LzTt52qALIHbFu+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733246513; c=relaxed/simple;
-	bh=dPtvInl3dZDE6YJyE2VQcjQt7kOABVSw6IKmdkRd2Gc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S7ZbxB6UiM+4lR9dZvgYbwqDr9wfi3eWX8Z4Ub/cd9ckCLUQ+iiETJX1Q/XHlFFzjCcRPblVee6mZVI4VZ2tasO5zBA4NEgos9hk9skKDR7ZVetfwrjML4xg32Yps5zLSTykKVQ0MYOriMxCRsmsQxODaPQWtqEGxfPgMysooEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=eK0uEHuu; arc=none smtp.client-ip=217.70.183.193
+	s=arc-20240116; t=1733246514; c=relaxed/simple;
+	bh=xy6Tvlpd9L1+hVrAsSZEgFC+sDEa9jTQGFW09O89aIM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pNhZQ4HUC/D1oLFivQLXi1Hma21RVJ8QgS8JSq5JvgjKcvSvWCyfHhYfTGUnhhrS4D9lapPH3mUwxNgQV2yaIZBKSCUg3ktiG96OlL1hZtjKX0vkXkv2UDlG+/Jb0qzyOvhOXn06FcbCPHLYd4u3F9t8Z5wxc4MB/5oyhXof0Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=dO2woW4y; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="eK0uEHuu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 16EFB24000A;
-	Tue,  3 Dec 2024 17:21:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="dO2woW4y"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 75265240006;
+	Tue,  3 Dec 2024 17:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1733246504;
+	t=1733246503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jPbF7+/TQfjwapydYgnIMDSNN4XoQOjgaOnk1RL58gs=;
-	b=eK0uEHuuHKcCOYs2wZGnJ6cTEanr6NDSHGOgiRgXFMq7S1nvva5RJlSZhH5kWB1rWEtt9l
-	Aw/GIJ7k/pkxNwvAvaqNKiIC0//Y2E+afnrMFMe/ANuh2BNDS5TsL9ZP3hjClrsJBhrS/N
-	rWoMqkhtOLuwIFl8jIwFKwshRglSqLT/EcHg5H52SC6dXJEFKekmCuSZzTlf8BTSdSyqeZ
-	+x2ta3PRyQCyl0ATvTLUhce6oXm5NfOaY6KOeffPuEpQuPMp3PncFQTSrMXv3RUuPGg+SA
-	wu+sK3DSaUZz8GHIMuM+dvRzcoy51iGboGujadGLmrIsU4juw2zEYBlmmGaURA==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WtJeg2U2iP69o6t1Gwg7RiKNYXTEb2gTKKysOkdqUKs=;
+	b=dO2woW4y1AZj9r8gNdbG0r4WuQPaj15d/6RpcSOsYWZgDJujwiOIVh7rc3DsvKNj3R3411
+	EJU4uV0zWuDQvQj9REHt/zWuS1YtKbycLy9Uk6nuTPT9g+Qw0Zlx2L/Ex1dk2dXGVmjX+Y
+	75BWr8YMPXfVtTcITgMmxYQo8S2iFfnqi8gWD0ukeK+Jghx3C19q/yc3I1tCgAY9KzUOIk
+	Aha6z0JU3G1qkNaoDs8EezOAHWtulk5jnEhP/KrwAe34B2wXjzPbdGiClKO+HpRJmVZE2m
+	uZnFkBuMoiYAm9X0fK1rF6oYRRy4pnJ8wv+LQdMuc8xxUyYU7d1dX2B0k7/7Ug==
 From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Date: Tue, 03 Dec 2024 18:21:38 +0100
-Subject: [PATCH v2 1/2] m68k: Add tracirqs
+Subject: [PATCH v2 0/2] Add basic tracing support for m68k
+Date: Tue, 03 Dec 2024 18:21:37 +0100
+Message-Id: <20241203-add-m68k-tracing-support-v2-0-77302097a9f4@yoseli.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,63 +40,134 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241203-add-m68k-tracing-support-v2-1-77302097a9f4@yoseli.org>
-References: <20241203-add-m68k-tracing-support-v2-0-77302097a9f4@yoseli.org>
-In-Reply-To: <20241203-add-m68k-tracing-support-v2-0-77302097a9f4@yoseli.org>
+X-B4-Tracking: v=1; b=H4sIACE+T2cC/42NQQ6CMBBFr0Jm7Zh2Cti48h6GBdIKE5U2UyQSw
+ t2tnMDle8l/f4XkhX2Cc7GC+JkThzEDHQrohnbsPbLLDKSo1Io0ts7hq7YPnKTteOwxvWMMMqG
+ pO20dkTHOQp5H8Xf+7Olrk3ngNAVZ9qdZ/+wf0VmjQmWtcSdVVlTdLktI/snHID0027Z9AZKyN
+ xHBAAAA
+X-Change-ID: 20241021-add-m68k-tracing-support-36c18d2233d8
 To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
  Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733246503; l=1262;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733246503; l=3859;
  i=jeanmichel.hautbois@yoseli.org; s=20240925; h=from:subject:message-id;
- bh=dPtvInl3dZDE6YJyE2VQcjQt7kOABVSw6IKmdkRd2Gc=;
- b=3HuE4HetkiuJhDi3mvX8t/0M2vN1pEGxIiIWEuitmya+htpSQbNCeB7Jh4jJbRRyC9+zkOlTN
- jLtM8UQv+Q4CWyT1Qb2K0eTOWvWgVcElHhps5MCcPQGSp7MXHu2sszJ
+ bh=xy6Tvlpd9L1+hVrAsSZEgFC+sDEa9jTQGFW09O89aIM=;
+ b=N/j2K5z9l5huXlI9GzLXNeT2fsNS8bKC2jRHQXhWrmIrfFPtpNVWDSCOiVGau995daaKnQbk4
+ BscNATXkn/8CGVGBhjfGslCMqGyD9nNp5fw1qiUyHpihJZ9OaX1yNJX
 X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
  pk=MsMTVmoV69wLIlSkHlFoACIMVNQFyvJzvsJSQsn/kq4=
 X-GND-Sasl: jeanmichel.hautbois@yoseli.org
 
-The TRACE_IRQFLAGS_SUPPORT requires the architecture to call
-trace_hardirqs_off() when interrupts are disabled and
-trace_hardirqs_on() when they are enabled.
-Add those calls to do_IRQ function.
+In order to debug latency issues, I wanted to use ftrace on my M54418
+coldfire. Sadly, it is not supported yet.
+Thanks to Steven [1] it does not sound too difficult.
+
+This small series adds basic functions to make it work, and for the few
+tests I could do, it seems to be working well.
+
+Here is a simple output I get:
+
+```
+
+            bash-232     [000] d..3.   947.629000: thread_noise:     bash:232 start 947.629000000 duration 0 ns
+      timerlat/0-274     [000] .....   947.629000: #51598 context thread timer_latency    409280 ns
+            bash-232     [000] d.h..   947.630000: #51599 context    irq timer_latency    110720 ns
+            bash-232     [000] dnh1.   947.630000: irq_noise: timer:206 start 947.629000000 duration 1000000 ns
+            bash-232     [000] d..3.   947.630000: thread_noise:     bash:232 start 947.630000000 duration 0 ns
+      timerlat/0-274     [000] .....   947.630000: #51599 context thread timer_latency    407168 ns
+            bash-232     [000] d.h..   947.631000: #51600 context    irq timer_latency    108608 ns
+            bash-232     [000] dnh1.   947.631000: irq_noise: timer:206 start 947.630000000 duration 1000000 ns
+            bash-232     [000] d..3.   947.631000: thread_noise:     bash:232 start 947.631000000 duration 0 ns
+      timerlat/0-274     [000] .....   947.631000: #51600 context thread timer_latency    401472 ns
+```
+
+I used this on my board and afaik, it works quite well.
+
+```
+
+ telnetd-229       0Dnh4.   13us+:      229:120:R   + [000]     118: 49:R irq/100-enet-fe
+ telnetd-229       0Dnh4.   53us+: <stack trace>
+ => __trace_stack
+ => probe_wakeup
+ => try_to_wake_up
+ => wake_up_process
+ => __handle_irq_event_percpu
+ => handle_irq_event
+ => handle_level_irq
+ => generic_handle_irq
+ => do_IRQ
+ => inthandler
+ => ip_finish_output2
+ => __ip_finish_output
+ => ip_output
+ => __ip_queue_xmit
+ => ip_queue_xmit
+ => __tcp_transmit_skb
+ => tcp_write_xmit
+ => __tcp_push_pending_frames
+ => tcp_push
+ => tcp_sendmsg_locked
+ => tcp_sendmsg
+ => inet_sendmsg
+ => sock_write_iter
+ => vfs_write
+ => ksys_write
+ => sys_write
+ => system_call
+ telnetd-229       0Dnh4.   68us!: wake_up_process <-__handle_irq_event_percpu
+ telnetd-229       0D..3.  348us+: __schedule <-preempt_schedule_irq
+ telnetd-229       0D..3.  368us+:      229:120:R ==> [000]     118: 49:R irq/100-enet-fe
+ telnetd-229       0D..3.  395us : <stack trace>
+ => __trace_stack
+ => probe_wakeup_sched_switch
+ => __schedule
+ => preempt_schedule_irq
+ => Lkernel_return
+ => ip_finish_output2
+ => __ip_finish_output
+ => ip_output
+ => __ip_queue_xmit
+ => ip_queue_xmit
+ => __tcp_transmit_skb
+ => tcp_write_xmit
+ => __tcp_push_pending_frames
+ => tcp_push
+ => tcp_sendmsg_locked
+ => tcp_sendmsg
+ => inet_sendmsg
+ => sock_write_iter
+ => vfs_write
+ => ksys_write
+ => sys_write
+ => system_call
+```
+
+[1]: https://lore.kernel.org/linux-m68k/20241018124511.70d29198@gandalf.local.home
 
 Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 ---
- arch/m68k/Kconfig      | 1 +
- arch/m68k/kernel/irq.c | 2 ++
- 2 files changed, 3 insertions(+)
+Changes in v2:
+- Use the frame pointer and declare it
+- Comments on trace_irq have been tested, but adding the trace_on/off in
+  entry.S fails badly
+- Link to v1: https://lore.kernel.org/r/20241021-add-m68k-tracing-support-v1-0-0883d704525b@yoseli.org
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index 7c4f7bcc89d76326b9d7280a3bcba79412ead7d2..793ab1e2762609725bbf793f6dffecfa3ecfff0f 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -39,6 +39,7 @@ config M68K
- 	select OLD_SIGSUSPEND3
- 	select UACCESS_MEMCPY if !MMU
- 	select ZONE_DMA
-+	select TRACE_IRQFLAGS_SUPPORT
- 
- config CPU_BIG_ENDIAN
- 	def_bool y
-diff --git a/arch/m68k/kernel/irq.c b/arch/m68k/kernel/irq.c
-index 9ab4f550342e5de11c528f55781432675ffd66bf..74cf60ebbc4bca51f3caa4046dbd2bdb02355711 100644
---- a/arch/m68k/kernel/irq.c
-+++ b/arch/m68k/kernel/irq.c
-@@ -21,9 +21,11 @@ asmlinkage void do_IRQ(int irq, struct pt_regs *regs)
- {
- 	struct pt_regs *oldregs = set_irq_regs(regs);
- 
-+	trace_hardirqs_off();
- 	irq_enter();
- 	generic_handle_irq(irq);
- 	irq_exit();
-+	trace_hardirqs_on();
- 
- 	set_irq_regs(oldregs);
- }
+---
+Jean-Michel Hautbois (2):
+      m68k: Add tracirqs
+      arch: m68k: Add STACKTRACE support
 
+ arch/m68k/Kconfig             |  7 +++++
+ arch/m68k/kernel/Makefile     |  1 +
+ arch/m68k/kernel/irq.c        |  2 ++
+ arch/m68k/kernel/stacktrace.c | 70 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 80 insertions(+)
+---
+base-commit: e70140ba0d2b1a30467d4af6bcfe761327b9ec95
+change-id: 20241021-add-m68k-tracing-support-36c18d2233d8
+
+Best regards,
 -- 
-2.39.5
+Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
 
