@@ -1,176 +1,126 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D601C20408E;
-	Tue,  3 Dec 2024 19:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155A92036E9;
+	Tue,  3 Dec 2024 20:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733255797; cv=none; b=p0l6c9mIcRMF1rctso+RyvP6RQgef9hQu2t/YrnTyHuAYyO2DUU2SFzUqcKCzvgm1uxzvkJil91MY0TRnekHjuXMrozfdwD8vGsA1kIRTf0Lq2AICgKEFynw1yVnc7cAf8Gty8GwEqZXd5ksLkyPShggyYypGOykVnBjC73FtVE=
+	t=1733257357; cv=none; b=Qm+Faabd/UvU7Phc97Adsh+18leLwgPM3MSa6PfKjQFo74j7V0GDf5BsMZH7rwu+ihQZQxBXbcRBuvTg2VKXqKMjGyKm4KV0Jz8ms7fl32qJQQ/bOpAO7H43l0dpO3TBsfWZg0A5PNrEPYWsGfYPInxvUSYWEVbGakhkg+ZCZkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733255797; c=relaxed/simple;
-	bh=lATQn35Lh/b3dk+WEOeuwOuK+UJNMeapYBTnIVg3ZVs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pdS2CoSydHFY2+pkKfvdfXZCkbgbrwLu2f+nxsZj9cV10P/YU37Np8Lro9+gJS95mwFeTS1FU5Iv9kfEqI8uboecnQCFr4nqP1Ogw7L56rLjIBSlUAdK3aYMRLoy8TPN81XOBNJbKJfJ5MUJuwjwFnDO14+vEI8312xxHVd0itU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=c+eKq+x+; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1733257357; c=relaxed/simple;
+	bh=QiWkntmOJIvlsVWh59ai+NTGuXRE2SklCh/xIy+OmcA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K6Dp84jpeBw6g/L/6FbZmWrNjyDzAEN9NfGbJohdpsOoy32sgtwLhLnzlTSO4ZM2nIHwag6vFR3c6p/6sUmf0MlqHx2CaSoHd+oeQlMYjpXxt279NVNrcnB35ZStviumIvmDRaCCnos2Qa7L/YsSXJl3MGuVgiwr3x7Mj997m8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CnfwY67F; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="c+eKq+x+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A793520009;
-	Tue,  3 Dec 2024 19:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1733255788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BFmvl4A54RbX2d0A+Hcc5Q1dzADd/mmBQrsMzEB+NMM=;
-	b=c+eKq+x+X9OvrvZj5PDoGvQDtXxjnEjEn8fxyrItuVaL2YkC3DABbPB+9GbD2ZJ5vN/YVR
-	epcemcrQ0vkk1r4CdopI4tbIdVzEFOweAO2PdExBl3Xlv5CHxGSHcETVW/eUad0JXc89HR
-	MoRC4r1rfU3hWXGD8o473ujeRTo6NOVKCQpdoZx7OWn6yKlRoNZBM7drDSXDO1p0wcKAz7
-	cQyWP2SrYKqBBF1ZCgfs4RGM6/7NuDFqwxgRih/fSRnBwX87AIVkGA9mZwFwqesM90iliG
-	Ll0zS6Sxd0iRYzXI0yb1nNzDr5TcnWDDT4H10gacSGVYrjfVDgQtx2xWR5CmTA==
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-Date: Tue, 03 Dec 2024 20:56:26 +0100
-Subject: [PATCH v3 2/2] arch: m68k: Add STACKTRACE support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnfwY67F"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fcfac22a30so34235a12.3;
+        Tue, 03 Dec 2024 12:22:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733257355; x=1733862155; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sx+K5ZIsPFwXOV/2/aw93G/c9jTtlI69qmbVhfNKVyw=;
+        b=CnfwY67F/JtF9/c45DcpCuKLOmq2mcbny6L5kuvd429swwFCyGe6jFLY3pmYcYiur2
+         /AeW3Ir1/YBD7YSmtNSq86q1nLLHH7/O/JWTxXFfEk0FI+4+FKEGzOYz5LyU+769/DJ/
+         SUju6LUa2xKQxsJGXvdSUigpwLlq195bnBwiCwT1UU46S8dQJ74T07k833tfR8ro4av2
+         rrVTPJwsY36jqbKbIQfPoEEApa4UpQ10/m4nDxkBP0wRMswTLDrQK4462JAiEWv3nWaS
+         k1jvCu2ZKxUHGkDpQwcLHGNSPjBYKN0tM00GkGg2Be3msnGC//NfCj/1SrUyMFveckiY
+         TdeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733257355; x=1733862155;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sx+K5ZIsPFwXOV/2/aw93G/c9jTtlI69qmbVhfNKVyw=;
+        b=T/ZCYTZ+iQy4idxEIBITgH+KrZRO+XnSdZwmC+YEnLQi9U8rC85adNJ2lm6FuSM9Pk
+         ki7UFmzGCubAKALjSyPJWwwVaJmc76lcPSeWvk9zpXKF/nxWlOJW7jEwuq5bqAXrd6YT
+         lIFBwPO7tru/nhtvpLCKYI6gMKB+ecnANIVPoK0YuIuqU4LTCqkfCIM34lCM7ylfTrYN
+         z+B+mBEugFptlPuJFnGnpD2624O4kdYqa43QsqPY+z2VfrIofgUhwT8yfN5vBGKyGLLc
+         ojTbFrzqEks9rv7iDxL2KXG/RzWUa2LUoPMOtC6d2lYcuTca9fpl3jfhc8batGYH5h1B
+         rz8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUf0FPciAWEL+VY6ygJROh6k/DEILv9Z5Au3bCu4K4Jtg7cBw4yXU0NvoXKxr0UNNEmraOl9rCQvx6sqXiFlbWCqYcL@vger.kernel.org, AJvYcCW8jVdISuPdAMrk7YN+00pmrRe9msXzUQqjLI/EKPT7JoJgmlMHofG0UXzSBBGqy47g8IMOcVVhX14OlKo=@vger.kernel.org, AJvYcCXc+dUIs3SoaR36932AxIPLwSCoxn/mPA2R0/HQbpES/77B7iGr9wfoKtNkAGgnUB7r1JS4cZLK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxprcXCRWjFv9HypsT8lLOSFtBwJC4yftrTlUvJJFizQ6hd95Er
+	PLVH4fMHY1/PwuAEXpyZk8Zda+ZLKKyKyTQoaQiDLeVvknXUQYbg
+X-Gm-Gg: ASbGncvhOUr1KPa+Zvvs59ue000Jx5zT8P7h1js97rRRet2iTU4BCMJjXAVXO2g6paB
+	mElOOXrTWyaSZ/9986boYArh55O9mVN4RkGDx1hDOaK1HwSNsrvea6sb26CQVOqmoRvdjfcS5P0
+	m2FMAduPNFRidfKsjOtZLR8TZ0VtDNWdb8rkL8yBlarohAFa5kgZLB93vDUnUZNS4N+CPjkEtU/
+	cLmY1MdqyeCQ5yvLzcCOZVTjFr7etBQBDNLhRm4iv7htnbiHnT5I9TJszDD0Y6NTY+aJ8LEonO1
+	QjnZ
+X-Google-Smtp-Source: AGHT+IEhucJIXU6X6nxM9tWt+IyPP2iefp9deL7jOUsCQer7ucEciAnibvV+t/ktJrMsruq2H0m9pQ==
+X-Received: by 2002:a05:6a21:789a:b0:1db:e40d:5f89 with SMTP id adf61e73a8af0-1e1653f6b9amr6450875637.28.1733257355253;
+        Tue, 03 Dec 2024 12:22:35 -0800 (PST)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254182bd1esm10907799b3a.165.2024.12.03.12.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Dec 2024 12:22:34 -0800 (PST)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	namhyung@kernel.org,
+	tom.zanussi@linux.intel.com,
+	jserv@ccns.ncku.edu.tw,
+	chuang@cs.nycu.edu.tw,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] tracing: Fix cmp_entries_dup() to respect sort() comparison rules
+Date: Wed,  4 Dec 2024 04:22:28 +0800
+Message-Id: <20241203202228.1274403-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241203-add-m68k-tracing-support-v3-2-4de93f6cae55@yoseli.org>
-References: <20241203-add-m68k-tracing-support-v3-0-4de93f6cae55@yoseli.org>
-In-Reply-To: <20241203-add-m68k-tracing-support-v3-0-4de93f6cae55@yoseli.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, 
- Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733255785; l=3079;
- i=jeanmichel.hautbois@yoseli.org; s=20240925; h=from:subject:message-id;
- bh=lATQn35Lh/b3dk+WEOeuwOuK+UJNMeapYBTnIVg3ZVs=;
- b=9b9w2q+XntKKeFdrnDRrBYXPVk/GWwlEks9sY5+TE+l6RufrJe1Fs9xBQj9EwN0QZv703mV6x
- /PvmWMehrkpBBlfFVbIO2n4RMLoxJ5S7/kv3Q9Xe5+6VWIXbuzo+kP/
-X-Developer-Key: i=jeanmichel.hautbois@yoseli.org; a=ed25519;
- pk=MsMTVmoV69wLIlSkHlFoACIMVNQFyvJzvsJSQsn/kq4=
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Transfer-Encoding: 8bit
 
-In order to use tracing, implement a basic arch_stack_walk() based on
-the one in PowerPC.
-Tested on a M54418 coldfire.
+The cmp_entries_dup() function used as the comparator for sort()
+violated the symmetry and transitivity properties required by the
+sorting algorithm. Specifically, it returned 1 whenever memcmp() was
+non-zero, which broke the following expectations:
 
-Signed-off-by: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
+* Symmetry: If x < y, then y > x.
+* Transitivity: If x < y and y < z, then x < z.
+
+These violations could lead to incorrect sorting and failure to
+correctly identify duplicate elements.
+
+Fix the issue by directly returning the result of memcmp(), which
+adheres to the required comparison properties.
+
+Fixes: 08d43a5fa063 ("tracing: Add lock-free tracing_map")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 ---
- arch/m68k/Kconfig             |  5 ++++
- arch/m68k/kernel/Makefile     |  1 +
- arch/m68k/kernel/stacktrace.c | 70 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
+ kernel/trace/tracing_map.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index 793ab1e2762609725bbf793f6dffecfa3ecfff0f..3ad8596aab71190807f8c11dd5876aa1198760f3 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -106,6 +106,11 @@ config BOOTINFO_PROC
- 	  Say Y to export the bootinfo used to boot the kernel in a
- 	  "bootinfo" file in procfs.  This is useful with kexec.
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index 3a56e7c8aa4f..1921ade45be3 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -845,15 +845,11 @@ int tracing_map_init(struct tracing_map *map)
+ static int cmp_entries_dup(const void *A, const void *B)
+ {
+ 	const struct tracing_map_sort_entry *a, *b;
+-	int ret = 0;
  
-+config STACKTRACE_SUPPORT
-+	def_bool MMU_COLDFIRE
-+	select ARCH_STACKWALK
-+	select ARCH_WANT_FRAME_POINTERS
-+
- menu "Platform setup"
+ 	a = *(const struct tracing_map_sort_entry **)A;
+ 	b = *(const struct tracing_map_sort_entry **)B;
  
- source "arch/m68k/Kconfig.cpu"
-diff --git a/arch/m68k/kernel/Makefile b/arch/m68k/kernel/Makefile
-index 6c732ed3998b714a4842ee29c977550a61979779..cb02bcfe04c6b265fa97db9237395a262e649989 100644
---- a/arch/m68k/kernel/Makefile
-+++ b/arch/m68k/kernel/Makefile
-@@ -23,3 +23,4 @@ obj-$(CONFIG_UBOOT)		+= uboot.o
+-	if (memcmp(a->key, b->key, a->elt->map->key_size))
+-		ret = 1;
+-
+-	return ret;
++	return memcmp(a->key, b->key, a->elt->map->key_size);
+ }
  
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
- 
-+obj-y	+= stacktrace.o
-diff --git a/arch/m68k/kernel/stacktrace.c b/arch/m68k/kernel/stacktrace.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..4c2fb6b0cf675ee5a3a21393a50603fea98a1b03
---- /dev/null
-+++ b/arch/m68k/kernel/stacktrace.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Stack trace utility functions etc.
-+ *
-+ * Copyright 2024 Jean-Michel Hautbois, Yoseli SAS.
-+ */
-+
-+#include <asm/current.h>
-+#include <asm/ptrace.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/stacktrace.h>
-+
-+static inline unsigned long current_stack_frame(void)
-+{
-+	unsigned long sp;
-+
-+	asm volatile("movl %%fp, %0" : "=r"(sp));
-+	return sp;
-+}
-+
-+static inline int validate_sp(unsigned long sp, struct task_struct *task)
-+{
-+	unsigned long stack_start, stack_end;
-+
-+	if (task == current)
-+		stack_start = (unsigned long)task_stack_page(task);
-+	else
-+		stack_start = (unsigned long)task->thread.esp0;
-+
-+	stack_end = stack_start + THREAD_SIZE;
-+
-+	if (sp < stack_start || sp >= stack_end)
-+		return 0;
-+
-+	return 1;
-+}
-+
-+void __no_sanitize_address arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+					   struct task_struct *task, struct pt_regs *regs)
-+{
-+	unsigned long sp;
-+
-+	if (regs && !consume_entry(cookie, regs->pc))
-+		return;
-+
-+	if (regs)
-+		sp = (unsigned long) regs;
-+	else if (task == current)
-+		sp = current_stack_frame();
-+	else
-+		sp = task->thread.ksp;
-+
-+	for (;;) {
-+		unsigned long *stack = (unsigned long *) sp;
-+		unsigned long newsp, ip;
-+
-+		if (!validate_sp(sp, task))
-+			return;
-+
-+		newsp = stack[0];
-+		ip = stack[1];
-+
-+		if (!consume_entry(cookie, ip))
-+			return;
-+
-+		sp = newsp;
-+	}
-+}
-
+ static int cmp_entries_sum(const void *A, const void *B)
 -- 
-2.39.5
+2.34.1
 
