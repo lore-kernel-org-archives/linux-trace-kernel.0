@@ -1,73 +1,81 @@
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67C31F8ADD
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Dec 2024 16:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D701F8927
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  3 Dec 2024 16:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733244016; cv=none; b=VgW5Fekn0vosuBVZciLgld5sBR1AfrXmBsjAXXOtQ2nbaIHRahHwg9FWB3HKh9deGnl4VF1n5LJDyHpkMf8AJ2fpr616agun+FxQ9w899K0fgWnxVfpH/wxE8ug9+V+ROcanBDBWkNivT3fA0nNYFEE9fke1QOc4VqxcKroQTLg=
+	t=1733244643; cv=none; b=b44X4O7fU2Ko76F+4lJU6qKcI7X2vHWdAfI5KgZiaZABMpd99S3vegOqrPRd78izCb62rKNRiRbWEWmLbHyiW+bke4UwldrHCY625svcrxUPLjzShbgtrcTngsxUwuQjROcyhB96C+gMpzaTPEmfhWSuPse45QNS4o0FgUDJ7pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733244016; c=relaxed/simple;
-	bh=iers8YwQihT5WN+yXYzlgjChPlB3E49WUvV+hZjKU+8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GaETOwU13TPN2RRuPZLRs1QHv+aovFuOZv4SRRfLabqMxuRWo3O8sky5+vKrPsIRziWCZNjY5x2UcqDGDfsUR+SgqujpRQRk8cUEFmMTL1DnGjCOLAX1xTscodKHm/IruUiU/xZ4VUoxQNFlB+4HkIf9HSgaFowxust8wDUyYRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:829d:a1e7:5b32:5d8e])
-	by andre.telenet-ops.be with cmsmtp
-	id kGgB2D00M3sLyzB01GgB42; Tue, 03 Dec 2024 17:40:12 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tIVwZ-000DZC-M8;
-	Tue, 03 Dec 2024 17:40:11 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tIVwZ-00Aj1O-JM;
-	Tue, 03 Dec 2024 17:40:11 +0100
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH resend] bcachefs: BCACHEFS_PATH_TRACEPOINTS should depend on TRACING
-Date: Tue,  3 Dec 2024 17:40:10 +0100
-Message-Id: <2d26d15c39b72c815f14593b8cc916d47e82402d.1733243875.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1733244643; c=relaxed/simple;
+	bh=U/kZg6wRRAGFaUyq3MwugoqyLVhimU1xugPQde6x/+U=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=iy8VD4xutHcu3FRTx9YL9Z3Byh3bXq/5Gw0VLfMTmgAq/Lpg+IwRHz1Z6MGN/tc9rZSKFvkd763R6W0u4ZLBede/BPM+AuOtD++ZkUiOO7Iuo0uSJdde4ZlmDWBfjKG23FX+5I3ksmW0EfaKzOuYUQUjUcKJ0b7NLlV9ITK4cN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O5+afBoA; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5+afBoA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733244638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U/kZg6wRRAGFaUyq3MwugoqyLVhimU1xugPQde6x/+U=;
+	b=O5+afBoASlO4l4S0+Q7vvIu253V1oU1iBO6y/A7IaSTMWrUcNR8u9CeFZ0QDgiNj9PxR6J
+	P5Ifv0F0P2Ar4gP3DIOBTbkxKZm3bBJLqggJVXky2GO0JQrHCVpvHUwytZo06obZrxvJGp
+	7zPcqjVtbq+YKLAhHfbg2mgtwx3HtGk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-ZaPuXlSMM0KYIhsLt3rKvg-1; Tue,
+ 03 Dec 2024 11:50:36 -0500
+X-MC-Unique: ZaPuXlSMM0KYIhsLt3rKvg-1
+X-Mimecast-MFC-AGG-ID: ZaPuXlSMM0KYIhsLt3rKvg
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0BF71944DDF;
+	Tue,  3 Dec 2024 16:50:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.48])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DA9A030000DF;
+	Tue,  3 Dec 2024 16:50:23 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <674ded0b.050a0220.48a03.0027.GAE@google.com>
+References: <674ded0b.050a0220.48a03.0027.GAE@google.com>
+To: syzbot <syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com>
+Cc: dhowells@redhat.com, asmadeus@codewreck.org, bharathsm@microsoft.com,
+    brauner@kernel.org, ericvh@kernel.org, jlayton@kernel.org,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com,
+    lucho@ionkov.net, marc.dionne@auristor.com,
+    mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+    netfs@lists.linux.dev, pc@manguebit.com, ronniesahlberg@gmail.com,
+    rostedt@goodmis.org, samba-technical@lists.samba.org,
+    sfrench@samba.org, sprasad@microsoft.com,
+    syzkaller-bugs@googlegroups.com, tom@talpey.com,
+    v9fs@lists.linux.dev
+Subject: Re: [syzbot] [netfs?] WARNING in netfs_retry_reads (2)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <589148.1733244622.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Dec 2024 16:50:22 +0000
+Message-ID: <589149.1733244622@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-When tracing is disabled, there is no point in asking the user about
-enabling extra btree_path tracepoints in bcachefs.
-
-Fixes: 32ed4a620c5405be ("bcachefs: Btree path tracepoints")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- fs/bcachefs/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/bcachefs/Kconfig b/fs/bcachefs/Kconfig
-index ab6c95b895b33591..464b927e4fffd1f2 100644
---- a/fs/bcachefs/Kconfig
-+++ b/fs/bcachefs/Kconfig
-@@ -90,7 +90,7 @@ config BCACHEFS_SIX_OPTIMISTIC_SPIN
- 
- config BCACHEFS_PATH_TRACEPOINTS
- 	bool "Extra btree_path tracepoints"
--	depends on BCACHEFS_FS
-+	depends on BCACHEFS_FS && TRACING
- 	help
- 	Enable extra tracepoints for debugging btree_path operations; we don't
- 	normally want these enabled because they happen at very high rates.
--- 
-2.34.1
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
+.git netfs-writeback
 
