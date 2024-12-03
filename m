@@ -1,114 +1,79 @@
-Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CFB1F707A;
-	Tue,  3 Dec 2024 14:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A502646;
+	Tue,  3 Dec 2024 15:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733237079; cv=none; b=DPIQqETwQhsdo2pzce9AwUNwEKlYLCLu4u5lbKT84KLkBGpkL063EwsVxDt8FgqVQ/fW8dPDZS5580E+pBibILkEP+DlcpCvQOwqYTDgeVi0Uya9T0NBFV8D1ISohTcWeSdA14IBPDVvGhuCPWX9CUSP4lEtlDJpVp/IVbH0AFs=
+	t=1733239072; cv=none; b=eAh8p/x3urVxX0SxvfRb/NBuydtxW+Sv5hbyCCEcew/9G5Q/sxUuAihndR8mVgvs7QW0Uky/PEuPdm+6VR6jR8l+8l2kqNB9ba1kZ5799C38j1ZHX3k8X6Jl1AFg+NXQwg/t997eK/0Ly1im7OQk4qRzoZdQq70qPqsfaBLDFPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733237079; c=relaxed/simple;
-	bh=j+1Z523yN4c3k35sEz8WLWeR9a0Tote+0vlm4AhrGg4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=a+MxjVCVf7JauTTt3grRcKyo8NCfxoNZGdxdhySlyS1fz/t1ftQgty1jicW8BoKM4dUGrJBN1Zkz/THTf9NPx8Qz1hSe6JLW/8m4KrVqmUZVmKqmNmslYc6Sl7oQBW9QWXOC70Jwm/im5HtSIrbx4pSv4TCa+q4zUMLqynUx7M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=F/xs/DWx; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=fWTohsPr; arc=none smtp.client-ip=89.207.88.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="F/xs/DWx";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="fWTohsPr"
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com 47C23E0002
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1733237067; bh=yZe/rHto/yJINXzpM0VYaXBnEXiTAtPyuKao0ifLMUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=F/xs/DWxB9Q2xFJTiRE+BRDiKHj8Xg2JNDNpNKatEFAPn6Sq07CSqnIlkmho4PfwY
-	 i4n8ckL5a3UEcYTNOdpkqLXDKZBfkd7+wWE0mfifon8WjKC8MyRJDp03drsPHit5qs
-	 YQ9JnPohpFjFSsvMm/cRC4ssbK1H5e16wHHOhNFvdjZdWNGq1Um3S0RFtcZhc9MLLx
-	 JI6jMOpobs78O2XmE6kLtD4ZuLeOTprjTa1H/Bj57GLN36L35e6RvCsN1uEfiK+MmH
-	 xw0PDm5poqRVGxc5JxpvzQd/rZMdMmLU2C+NBl1lHNHgIe0+HD+RrzjY70tqcVWiiQ
-	 4I9yvZTO/OnBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1733237067; bh=yZe/rHto/yJINXzpM0VYaXBnEXiTAtPyuKao0ifLMUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=fWTohsPr10f9KWPbfxCVvIwt69HevffSbsXqEZwu0WmT/iJSr6Wx4XOMh6Tw4Ad+T
-	 q5eZ4Qizq7Ej1Yh2GCmzHd3vuVmhdLUhUkUpFEGb1BNl1+/gC7sjTpWuMv1FRKZXEk
-	 lvtHtuet3zGS8CLJjXx3dc/4KJ1DhZTBy7XOFhii3mdZNcrDl+JORThtZRey7sxPIa
-	 ElFPQLxavdFMRreKNyLlsIV+jRBOXPYHkmHEGB2PyhLbKxMQihpOo+SnmtNBOSg7a3
-	 SjEGQJVx/l1YViUNgBV2f9s43som2T4UPePX0ueYyz1oFITpw/l1a2GcyHg2MwNnAg
-	 Cx9inGVCixcLg==
-Message-ID: <7e5ce1ce-e30a-46c5-80fb-eb52e59e4dc2@yadro.com>
-Date: Tue, 3 Dec 2024 17:44:25 +0300
+	s=arc-20240116; t=1733239072; c=relaxed/simple;
+	bh=UngUAn5lnqytfDePhPf8C7jw42gbkWziclwCMR3F/eU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QXHjpigto/QTT8w9IAK2K9uPPcH4wYkCcR6FBIoZHOmgVBU54/Nr2CXoIfbsv+qSv7PupLHJhXd+LDv1/mqeIAWIgry7e3GWXhxdMQsl6bfEAcySH8f+EyHBhSJccXpfp7k69NnaeFgCR21lQhc4WlyAUyw/UiuFM1ct3Y0uV6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BEEC4CED8;
+	Tue,  3 Dec 2024 15:17:50 +0000 (UTC)
+Date: Tue, 3 Dec 2024 10:17:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
+ LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: Show timings of how long nop patching took
+Message-ID: <20241203101750.62a85ca2@gandalf.local.home>
+In-Reply-To: <37824159-8f7b-49ca-80d7-99c6d76e3f9a@csgroup.eu>
+References: <20241017113105.1edfa943@gandalf.local.home>
+	<6fb1e232-3bc3-4d5d-bff9-9f1a8c784782@csgroup.eu>
+	<20241201150406.17f10247@rorschach.local.home>
+	<Z01Vn8yZv-AlB-Z4@kernel.org>
+	<20241202150516.3cf52584@gandalf.local.home>
+	<37824159-8f7b-49ca-80d7-99c6d76e3f9a@csgroup.eu>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH v3 1/7] riscv: ftrace: support fastcc in Clang for
- WITH_ARGS
-To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-CC: Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	Nick Desaulniers <ndesaulniers@google.com>, Nathan Chancellor
-	<nathan@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Mark Rutland
-	<mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Andy Chiu <andybnac@gmail.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-riscv@lists.infradead.org>, <llvm@lists.linux.dev>,
-	<bjorn@rivosinc.com>, <puranjay12@gmail.com>, <alexghiti@rivosinc.com>,
-	<yongxuan.wang@sifive.com>, <greentime.hu@sifive.com>, <nick.hu@sifive.com>,
-	<nylon.chen@sifive.com>, <tommy.wu@sifive.com>, <eric.lin@sifive.com>,
-	<viccent.chen@sifive.com>, <zong.li@sifive.com>, <samuel.holland@sifive.com>
-References: <20241127172908.17149-1-andybnac@gmail.com>
- <20241127172908.17149-2-andybnac@gmail.com>
- <87wmghotth.fsf@all.your.base.are.belong.to.us>
-Content-Language: en-US
-From: Evgenii Shatokhin <e.shatokhin@yadro.com>
-In-Reply-To: <87wmghotth.fsf@all.your.base.are.belong.to.us>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: T-Exch-05.corp.yadro.com (172.17.10.109) To
- T-EXCH-10.corp.yadro.com (172.17.11.60)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, 3 Dec 2024 08:21:49 +0100
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-On 03.12.2024 15:05, Björn Töpel wrote:
+> > Which should turn the above to:
+> > 
+> >    25850 pages:14 groups: 3
+> >    ftrace boot update time = [Unavailable]
+> >    ftrace module total update time = 0 (ns)
+> > 
+> > Which should at least make it not confusing.  
 > 
-> Andy Chiu <andybnac@gmail.com> writes:
+> Well. Maybe, but at the end what we need is the measured value, if it 
+> only works on x86 it is just pointless, isn't it ?
 > 
->> From: Andy Chiu <andy.chiu@sifive.com>
->>
->> Some caller-saved registers which are not defined as function arguments
->> in the ABI can still be passed as arguments when the kernel is compiled
->> with Clang. As a result, we must save and restore those registers to
->> prevent ftrace from clobbering them.
->>
->> - [1]: https://reviews.llvm.org/D68559
->>
->> Reported-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
->> Closes: https://lore.kernel.org/linux-riscv/7e7c7914-445d-426d-89a0-59a9199c45b1@yadro.com/
->> Acked-by: Nathan Chancellor <nathan@kernel.org>
->> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
+> trace_clock_local() calls sched_clock()
 > 
-> Fixes tag?
-
-As far as I understand it, Ftrace for RISC-V has had this problem since 
-support for FTRACE_WITH_REGS was added. FTRACE_WITH_ARGS inherited it.
-
-So, it should probably be as follows:
-
-Fixes: aea4c671fb98 ("riscv/ftrace: Add DYNAMIC_FTRACE_WITH_REGS support")
-
-It is more of a workaround rather than a fix though, because it is still 
-undecided where the problem is, in the kernel or in LLVM/clang. That 
-discussion went nowhere, unfortunately, so it is better to use a 
-workaround and move on, IMO.
-
+> I don't know about other architectures, but on powerpc sched_clock() is:
 > 
-> Reviewed-by: Björn Töpel <bjorn@rivosinc.com>
+> 	notrace unsigned long long sched_clock(void)
+> 	{
+> 		return mulhdu(get_tb() - boot_tb, tb_to_ns_scale) << tb_to_ns_shift;
+> 	}
 > 
+> boot_tb, tb_to_ns_scale and tb_to_ns_shift are not known before 
+> time_init() is called.
+> 
+> But get_tb() returns a valid value already so it is possible to get the 
+> ticks and do the calculation later with tb_to_ns()
 
-Regards,
-Evgenii
+We could add code to make that work for all archs via arch_xxx() functions.
 
+But as the merge window is already closed, I'll just submit a
+"[Unavailable]" patch to Linus as a "fix" and then for the next merge
+window we can have code that will allow architectures to print real timings.
+
+-- Steve
