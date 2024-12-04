@@ -1,238 +1,103 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0336119992C;
-	Wed,  4 Dec 2024 07:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CB1953B0
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Dec 2024 08:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733298626; cv=none; b=WbyMs6+uBE1wgIGv8xxdAMFHC4/VvrpQnUE6j2O22EPd1IzTWk+v4iy012UCwQvhYs6DbpS/u0+Jt7Az4i8pZ63lBhqm+Xe6Uk5NgrHsoVosH5v67Sxw8rNUu1eysNYXOSFeoApSU0kuJ5r1X2q56IWISBQbc5jC+j6oGWwUeUs=
+	t=1733301458; cv=none; b=iRwoVx3xR8eSQX7FAB9S1l4s7FFPV8ehkufT5ACwHsnGJ5k29CVcpUtnGCpAXEVE0Sq35a2FZY2NaN9UADR3OcH8bi4ihBuDuCo4M7p3TlmnGXk7GLTzmGasCg3BJO7yu2Dn5iDa6eSgWReIH2OzvHRnESWCVAP7cv4dwlrfFXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733298626; c=relaxed/simple;
-	bh=24BPxbAHaOsdPbN2q/MSLmquC0QCEOYzuCN5qeAyt4k=;
+	s=arc-20240116; t=1733301458; c=relaxed/simple;
+	bh=EoVke9SqFUpCaQKo+qnhyQ0iycqkcohJkC/+ji9nimc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dELiPgMkHJEMk/NfXCJcvCckpBN27rrcr/la/6wduy45e37Ufml7jTAZSxs4NvT8ZUveuRRnORI6PbgWgLMw5eOWmcLZvFP3kqwcSqzJ7MYrsMV183ZI+yOyTywXPgWJaMokV/deQ/whpMr15ZqrfkeIpkfjEEPRUZI0YXi1Yn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-85ba9c6eecdso637011241.3;
-        Tue, 03 Dec 2024 23:50:24 -0800 (PST)
+	 To:Cc:Content-Type; b=TqDPHDiZuC4qXqm1z99VSZxR74Yew8AKvjEU4xASCtQNPhBOWUIfU81Qd3Xy4q20sl8RSw+rhNySVdCOuO6VzK3oudUdWN/cg5FPJVXRJPzFNN5qkre4SFw/pdhHF/F0bKE0WjmVraiyiiSl7cjmI1+ytrxcSCeOstr4g5p9IHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com; spf=none smtp.mailfrom=andrewstrohman.com; dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b=ytvZW3X3; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=andrewstrohman.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=andrewstrohman.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=andrewstrohman-com.20230601.gappssmtp.com header.i=@andrewstrohman-com.20230601.gappssmtp.com header.b="ytvZW3X3"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e3997835700so3347576276.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Dec 2024 00:37:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=andrewstrohman-com.20230601.gappssmtp.com; s=20230601; t=1733301455; x=1733906255; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EoVke9SqFUpCaQKo+qnhyQ0iycqkcohJkC/+ji9nimc=;
+        b=ytvZW3X3oQHrPd7ygT0R8/0HSkVFbHIAiODywwp2E5FlD7hmU5U+E/ZYl4dJYT2vr1
+         T/4ESlFZbanOn+Ip/n3bBHXOhM99SUIEMQ5Y2oidmeYModjTpEH5tMjUDvPnAygNJvOp
+         eBtVi2ZYiZI4TH2yK2lrqrFbhxt5kpydRTXuiXdbh9D4/LzNMCP6ebRlaH+wIfabItRz
+         WFlc01suVPmv1uvj134eGowQWoesCT6ekqETucRKsEEZ2StmJXwyrMtfYuzOLAUtEWFy
+         FQvTD8hzoeAlyIwiykeTjVobuvzzICfaYJw2/SDfZI/QItHWuvUggariM/43StsYaWn2
+         0wiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733298622; x=1733903422;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GAc/Z0g+Y8N+a3vrMkKX5hyw1r5JDjIVFxXD5SaEmo8=;
-        b=c1H4hwrgn/YwkXcrRA2pakSCpcCyjS8+uTn5Lm1IWdi3N/TWm2apzc8PCAwC8zz6L5
-         lmXIOoPKoAhtNJt36FVzvmYPZMNUEAgGBgsl+5WzFai6QbkSuKJT53h9JefAW8DkDf2f
-         S8Q96PChscnvFqG4EQNERJJOknYxbz63I5B4X9D/2p/I2nHmjAbxYM8d2+y3l8KyC4Mv
-         q1VCSCJiwMQE18Eszl+D59pDq6xC9Rcomyf14z5vN23uM1HBw7/gM3fLZruzqEY/3WeP
-         YFsfGFxxTvyo0EpbGys1EH3W6E8gSTE4YJMuA5TrRf/CH2eVjwdnEjPmIGDbjxKwFNPi
-         ZRkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0N7cpoyMDoYrcX3UgjTSGc7bJW69pPtmRyEsZm0CQACjf8m7ReihTEVWlHX70jpY0TQHQjfcWsIp3Oe8=@vger.kernel.org, AJvYcCUdFh0towYT2UE2yw6CXmOHxqY42J4COsirf/4n3h6W+awZ4JZ0E77akM6PQhnIWBRJwzYamJOLJpmk9A==@vger.kernel.org, AJvYcCWE2jws1uZd3q1kZFhuVuk6tNowCbkkAFTxOKiZbyD5er1o7K4P8OktEZOj09kUZyHrqm4ribkIKQILRdIx26LoHUcA@vger.kernel.org, AJvYcCWXpU/jaPhI5/Pj4Dl+m2xy/randV3tfa5KPrvIc1TqglylMn50dLV19LP3IUZfQ1yah+4B2wEf4klUCp2ZEvj/j2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD7NnrcEXcCrnpmC7XfFQa6O1msMQqFoEj+BjVYuWTeqQfIcOC
-	6csU7KlbXwgOfU6JPzcSSda9HzvtN1NWkjSlQQjaNBmwqyOQY1GmFmoWXEft
-X-Gm-Gg: ASbGnctQiGbx84CNYO3TA9bKkQ9YapgmlmBpQHoohOawt4dOuPZsHyHrWMcz8uZttP3
-	jJr6O7a+GCoGvej963Q9WM0I5YkNjU3duCDmG42NnI3rwFJ0f9NCiaskbkrR+kqenYgANChyFf9
-	qDhZNo/NvZ941UmCTa7Mxo4QdD8fzlMMeL/SvN0NDz0jUTBwF1u1QMPEJcGveriZ4cL9aZuciB+
-	NLX1RwGX6FAReTyXzUMzs8e5D/ok+ot0ZA8DDjwlI9l0PBN4LQHjGZkragK29vCnY0FMbCQ9TWB
-	VmL/o4Ui+BSW
-X-Google-Smtp-Source: AGHT+IGvXZN6NZ6DCUjVgSjGgOwL6hxcoN/Isc5o4V5nvCkZpRIPRAw8CcCX7KNSIMX6GFZ9E0YgGQ==
-X-Received: by 2002:a05:6102:943:b0:4af:605:ebc0 with SMTP id ada2fe7eead31-4af973acbcfmr7961248137.22.1733298622414;
-        Tue, 03 Dec 2024 23:50:22 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4af590e5540sm2351844137.8.2024.12.03.23.50.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Dec 2024 23:50:21 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-85ba9c6eecdso636996241.3;
-        Tue, 03 Dec 2024 23:50:21 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX5BhlOH3sGy2gK+Bu0gVSvUVa8LyCtOdyOJW2jntI1T+aN+f4Zjz/ispKh8B+sOPs6t1+IQwVUjxrtKT63iqvIapq/@vger.kernel.org, AJvYcCXJIUiLR16bT/TasVUVP3LqHAxY4QAsLbL2WYVfKRHoXm/fMUfriCoja9UkKfJ8NjtzpfWQUhjxTbOV2uY=@vger.kernel.org, AJvYcCXgloqvl8W6cIt8yUHT8XwL/jkcJSi8+ZDbIpqyB5P3VKupbMPaFzkc8ScUHC8WWdorLzBCN34l8BsFtoOXnJMSQ8I=@vger.kernel.org, AJvYcCXvg2phjjO8+U2l+w1mUgB1MX7Adoc3AB9S7gMguz3zMUYGQ8nc3877FvqEBVsbVu3WaclawURlJLKc0g==@vger.kernel.org
-X-Received: by 2002:a05:6102:358b:b0:4af:5eb5:843f with SMTP id
- ada2fe7eead31-4af9726c842mr6165984137.15.1733298621087; Tue, 03 Dec 2024
- 23:50:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733301455; x=1733906255;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EoVke9SqFUpCaQKo+qnhyQ0iycqkcohJkC/+ji9nimc=;
+        b=MO6GOA9s7HE+PlZpcmWllhPdg4d385RW044nZgPKB2ELlvO0hesTaorQYWy/CFxQoQ
+         0Mj3aFNCRg/ZDRl9M5Q5C7eN1ArYUSAZeg58aK4Wfd4Whx9tB3xikOzW+f1dVaUEjhZq
+         NY9hJ2+joQYy5cRN+ae+HOnJWikaLgR1b+xE2bBuC6kYLJJFN4Iyz2k4H6trCkKpSyh4
+         gQo+O2vqmRwRIJXMkkuRmGGhJs5ATovrovvbR+2ePW/T7Pbv89O+98s7qtqUdTZkeCzS
+         /vgNG7LZyqzgAgQDdTFy03IavTd3gbbcxDP2HRdpr8aDmrxa8LuyuDIC2NN4dJIB6nhV
+         oMCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ0UC7B72TLJIQKfF9Sd9bpbsO+CnYSFSdWz0CsS7HAfgaxag02Q4d+p2jMJLXKglsDaC3zQV2AaSQhyw6SqlyacM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6pKmqm5X21pMG96+AcK1LCnYhZqW6w2rkbI0xaY++QeznP1zA
+	65GzL57JPoGvlSCKwLhJIC5cRaeunbGyoGqLWALSBaFJWvk926lDY1LQu8qqqRB0I2dRFexO0No
+	96V7Flh2ErAazqeRv+3C4vKbG46/AxFGU9VMBmA==
+X-Gm-Gg: ASbGncsrgTJQh3qMlv1kAiGIhwDPmcxn5Wo7foR9vXVHg5MNnMkEB7RD08B4hVDU4pf
+	QDFnwjmv9Saeo+t/CmBJWeBuTjvUCmi8=
+X-Google-Smtp-Source: AGHT+IHrKkSgA4hGlK8jn7mrWKSIy07H4RXZ4L/gvYx86xaKYNomvgbtV66jTpE9OVKxPCEslG9WFAbqVeHjvw6aGX0=
+X-Received: by 2002:a05:6902:150a:b0:e39:9032:122 with SMTP id
+ 3f1490d57ef6-e39d4389535mr7493688276.44.1733301455300; Wed, 04 Dec 2024
+ 00:37:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241003181629.36209057@gandalf.local.home> <bddb02de-957a-4df5-8e77-829f55728ea2@roeck-us.net>
- <20241203155542.462b1b21@gandalf.local.home> <ee401848-f7a1-4877-b896-36bec32ca985@roeck-us.net>
- <20241203220153.3f81f12b@gandalf.local.home>
-In-Reply-To: <20241203220153.3f81f12b@gandalf.local.home>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 4 Dec 2024 08:50:09 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWKDbBwUg=YcAPX-ES3+GWpm2ZmFZMczOhEFepfWdB0UQ@mail.gmail.com>
-Message-ID: <CAMuHMdWKDbBwUg=YcAPX-ES3+GWpm2ZmFZMczOhEFepfWdB0UQ@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing: Remove definition of trace_*_rcuidle()
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
-	Paul Burton <paulburton@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20241130000802.2822146-1-andrew@andrewstrohman.com>
+ <Z0s3pDGGE0zXq0UE@penguin> <CAA8ajJmn-jWTweDMO48y7Dtk3XPEhnH0QbFj5J5RH4KgXog4ZQ@mail.gmail.com>
+ <20241202100635.hkowskequgsrqqkf@skbuf>
+In-Reply-To: <20241202100635.hkowskequgsrqqkf@skbuf>
+From: Andrew Strohman <andrew@andrewstrohman.com>
+Date: Wed, 4 Dec 2024 00:37:24 -0800
+Message-ID: <CAA8ajJkPzpGRXO6tX5CkgX7DjGwR6bPyT4AXjZ0z8kXBk8Vr_g@mail.gmail.com>
+Subject: Re: [PATCH net-next] bridge: Make the FDB consider inner tag for Q-in-Q
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Nikolay Aleksandrov <razor@blackwall.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Ido Schimmel <idosch@nvidia.com>, 
+	Petr Machata <petrm@nvidia.com>, Claudiu Manoil <claudiu.manoil@nxp.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, UNGLinuxDriver@microchip.com, 
+	Shahed Shaikh <shshaikh@marvell.com>, Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com, 
+	Simon Horman <horms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Roopa Prabhu <roopa@nvidia.com>, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bridge@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+> What stops you from changing the 802.1ad bridge port pvids to unique
+> values, like 3, 4, 5... instead of 3, 3, 3, and making each other
+> j != i bridge port be a non-pvid member of port i's pvid?
 
-On Wed, Dec 4, 2024 at 4:31=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
-> On Tue, 3 Dec 2024 17:48:33 -0800
-> Guenter Roeck <linux@roeck-us.net> wrote:
->
-> > Hmm. If you say so. Note that powerpc has the same or a similar problem=
-.
-> >
-> > [    0.142039][    T0] RCU not watching for tracepoint
-> > [    0.142488][    T0]
-> > [    0.142659][    T0] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [    0.142755][    T0] WARNING: suspicious RCU usage
-> > [    0.142914][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
-> > [    0.143082][    T0] -----------------------------
-> > [    0.143178][    T0] kernel/notifier.c:586 notify_die called but RCU =
-thinks we're quiescent!
-> >
-> >
-> > [    0.152733][    T0] RCU not watching for tracepoint
-> > [    0.152770][    T0]
-> > [    0.152995][    T0] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [    0.153092][    T0] WARNING: suspicious RCU usage
-> > [    0.153187][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
-> > [    0.153301][    T0] -----------------------------
-> > [    0.153394][    T0] include/linux/rcupdate.h:850 rcu_read_lock() use=
-d illegally while idle!
-> >
-> > [    0.165396][    T0] RCU not watching for tracepoint
-> > [    0.165540][    T0]
-> > [    0.165712][    T0] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [    0.165811][    T0] WARNING: suspicious RCU usage
-> > [    0.165909][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
-> > [    0.166026][    T0] -----------------------------
-> > [    0.166122][    T0] include/linux/rcupdate.h:878 rcu_read_unlock() u=
-sed illegally while idle!
-> >
-> > and many more.
->
-> Grumble. It's just that one file. I wonder if we could just do a hack lik=
-e
-> this?
+I'm not sure if I understand this suggestion.
 
-Thanks, this fixes the issue during ARM s2ram, so
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I tried to draw out what you described here:
+https://docs.google.com/drawings/d/1UcOpENFgr-s6p8Ypwo-l4yTvtUZFM6vSLxLiX2FOMLU
 
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -10,11 +10,42 @@
->  #include <linux/module.h>
->  #include <linux/ftrace.h>
->  #include <linux/kprobes.h>
-> +#include <linux/hardirq.h>
->  #include "trace.h"
->
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/preemptirq.h>
->
-> +/*
-> + * Use regular trace points on architectures that implement noinstr
-> + * tooling: these calls will only happen with RCU enabled, which can
-> + * use a regular tracepoint.
-> + *
-> + * On older architectures, RCU may not be watching in idle. In that
-> + * case, wake up RCU to watch while calling the tracepoint. These
-> + * aren't NMI-safe - so exclude NMI contexts:
-> + */
-> +#ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> +#define trace(point, args)     trace_##point(args)
-> +#else
-> +#define trace(point, args)                                     \
-> +       do {                                                    \
-> +               if (trace_##point##_enabled()) {                \
-> +                       bool exit_rcu =3D false;                  \
-> +                       if (in_nmi())                           \
-> +                               break;                          \
-> +                       if (!IS_ENABLED(CONFIG_TINY_RCU) &&     \
-> +                           is_idle_task(current)) {            \
-> +                               ct_irq_enter();                 \
-> +                               exit_rcu =3D true;                \
-> +                       }                                       \
-> +                       trace_##point(args);                    \
-> +                       if (exit_rcu)                           \
-> +                               ct_irq_exit();                  \
-> +               }                                               \
-> +       } while (0)
-> +#endif
-> +
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  /* Per-cpu variable to prevent redundant calls when IRQs already off */
->  static DEFINE_PER_CPU(int, tracing_irq_cpu);
-> @@ -28,7 +59,7 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
->  void trace_hardirqs_on_prepare(void)
->  {
->         if (this_cpu_read(tracing_irq_cpu)) {
-> -               trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-> +               trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->                 tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->                 this_cpu_write(tracing_irq_cpu, 0);
->         }
-> @@ -39,7 +70,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_prepare);
->  void trace_hardirqs_on(void)
->  {
->         if (this_cpu_read(tracing_irq_cpu)) {
-> -               trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-> +               trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->                 tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->                 this_cpu_write(tracing_irq_cpu, 0);
->         }
-> @@ -61,7 +92,7 @@ void trace_hardirqs_off_finish(void)
->         if (!this_cpu_read(tracing_irq_cpu)) {
->                 this_cpu_write(tracing_irq_cpu, 1);
->                 tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-> -               trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-> +               trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->         }
->
->  }
-> @@ -75,7 +106,7 @@ void trace_hardirqs_off(void)
->         if (!this_cpu_read(tracing_irq_cpu)) {
->                 this_cpu_write(tracing_irq_cpu, 1);
->                 tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-> -               trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-> +               trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->         }
->  }
->  EXPORT_SYMBOL(trace_hardirqs_off);
-> @@ -86,13 +117,13 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
->
->  void trace_preempt_on(unsigned long a0, unsigned long a1)
->  {
-> -       trace_preempt_enable(a0, a1);
-> +       trace(preempt_enable, TP_ARGS(a0, a1));
->         tracer_preempt_on(a0, a1);
->  }
->
->  void trace_preempt_off(unsigned long a0, unsigned long a1)
->  {
-> -       trace_preempt_disable(a0, a1);
-> +       trace(preempt_disable, TP_ARGS(a0, a1));
->         tracer_preempt_off(a0, a1);
->  }
->  #endif
+I'm not sure how host A can communicate with B with this configuration.
 
-Gr{oetje,eeting}s,
+Consider host A transmitting towards host B. When the frame leaves
+".1q bridge 3",
+it will be tagged with .1q tag vid 7. When the frame leaves the .1ad bridge
+heading toward ".1q bridge 2", it will be tagged again with an outer
+.1ad tag vid 3.
 
-                        Geert
+So ".1q bridge 2" will see the frame as having an outer tag of .1ad vid 3 and
+inner tag of .1q vid 7.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Is that what you are thinking, or something else?
