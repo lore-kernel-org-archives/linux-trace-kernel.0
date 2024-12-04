@@ -1,103 +1,96 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E131F1316
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Dec 2024 16:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFC820D4E9;
+	Wed,  4 Dec 2024 16:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733330008; cv=none; b=cE/bNOipGLiker6BhYmli8DEm6pJSEuicwHj/c4jypeQIc4c9PN/D0np1h1t6orITi6D3PIjGD5NSwCnN49BhAbh5+j+3+UwKi5T+N5vxlLi56CdoKM1HyV1S8iuRtpxaCk+4koLOM/3eMmrZW7ZCKp4a1k0jd/qB17GEc6/pI4=
+	t=1733331469; cv=none; b=nCXN6Z8nH2/zfvU1UJdm89gN2OtDUsGbySKATxJoLLUFSHb5K1ns5ft5r8OMpnggg0AROHAWd5ibkFOkBDlsEHAYTq81kdNyma0nIn48uge6AFSD+UH2yJYZhBCzRm/579rm6D9wv1o6NVokXfBvbk7C6HZ/0InHfLYMEXHWOTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733330008; c=relaxed/simple;
-	bh=YLqX/28N5thdvuWAhBCT6xbYIfwdHgRjjlYUHnZfPww=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rgFoNNQUhaWXZgKOga//jyE7GXSsju8uthkdXR5hdv9jFhEgxiYXexZARCVywmh3aSWPpmVZO30/Kfdvx5sc0ZHHDS8ihgw8TPhSRi56GAtGJPfU0omgLY11/A/DeqtAdzuWboib52g45Fekkn7UnZLR/oNRaQw2d8JtMXD6CTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=cbOP1qWm; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1733331469; c=relaxed/simple;
+	bh=06pVRQZvF7Hv8LSrodVzxmE+a9EeBGCKKwPeWagF/ac=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MI+dKw0yLGuu6kaB7kDkKL0GtShfsU/USZvuSawc+2TQng89xpGpLsM2u98g8OKwl1n47NSK1RtlrgEvH39tNiLjdBWBomFCkqjcQJbf6M3BCZiToAbP1ILvBxALDekx5s/k5aaTuiURc2zVoFqMBniXLgzNoZmtRoqbq16C/WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZa4LS1p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="cbOP1qWm"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7251d20e7f2so36845b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 04 Dec 2024 08:33:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1733330006; x=1733934806; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8HFpbZOKpkO7AeS8bDe3st3+sWFuj7iai+TcTZhQd9c=;
-        b=cbOP1qWmavkAFYTjIGGtxmICesXawjm7Tw0HYbCU1e44Cjsq1mwqI9RYGBfu4ZdzCK
-         etKRraOqeFHs+Ev7wG0NXqYDvsRggihA2pOCYbBGpiJviaXUzVZmna5PzJxDURJv+Cm7
-         5Xvk9nJxjTGRomDor9qKlDvik1uEDVH1o8ZsiaeKN5p8J/oyplIlNkbF5iX7vdlw2FOF
-         DxeKZo2qOalyVhtPNcerN3p9rSaWa517MC2NdiNs5wmvWOoIjmX8enlrB2XluUmce7PB
-         zjdgkdN25dDPEYQ9iH4uN90fOFkmqKuhbeTqYDPD/tT5+20PN3jNwbfzMa/vZs79YmSa
-         6epQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733330006; x=1733934806;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8HFpbZOKpkO7AeS8bDe3st3+sWFuj7iai+TcTZhQd9c=;
-        b=DwB+wUYf4mk/iGyLRpIVhoyV/ctK6Nmmr0GoukuzAmbVo3jGTUq5B7hT2ZTGTckxe3
-         cYvu+81Qjch0pFSq2zbyfb0Gc0pmUP7qUM3M1M71gdrlbA7o90Y2hw5Yu8otWDYDAS/H
-         ldhQGwTqlbQg8QxQqDyFLzgzTitZtZhrfAAFDfW9qEEUbrYDMIHgPMhJjgpmMz4LQkiG
-         dWNMmKep+uyzHvwWwWZ1tPlc23PVKpHCTjJZLdxcGPiRqpYWFjFuXurdD5fD6rrcxsiC
-         U8zndiXOVYfMf0ggnG2zkbiJ3+8mZ7XpP36y11Nn055rh3RTkZhuUAQjtbcAVC5nKmJZ
-         r98w==
-X-Forwarded-Encrypted: i=1; AJvYcCUUEEwwEggldtBGlCpDXecKDwi5FcqaH1WW/saN6GiShzxJesZJCyFtHLC75FUdOU0ohDABCXQOWrlmGpQV0vzKig8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuqcEdL/I14KbobzRr5eBPEfWEQ2Qr3G1NCOMUzG6T1ElPi6Rx
-	n/sOMjQHe7c61C0TX1GYWM17gGUWbW+FuF/ijhYOgcLx4iD/VUGY43iH2OEHuFE=
-X-Gm-Gg: ASbGnctQw/uP9DbluE8ZjZr5oo/RXFHKDBRR6+BRekJRUnLEg75jcdpnN2WBC7+Wcr8
-	aDr0FNILC+Gds+8MKD4q8TVErg8uO2VWJdpkEs3P51noQFjuwI86Jm1YPwEgwhZiuQeO/3y7lue
-	6DV66VGYBuVrWM68V+MvrLFyQ26sRwzB5w+6pfjVvsgF/V9UnAEGUbfnYoknV7slSNIsMTxBr3r
-	4vBRynMRV2O4olJAjT0heL1jNbIAQ==
-X-Google-Smtp-Source: AGHT+IHGetUSTLBEO7g1Mr54/8uXPJm1zbpOiVPZj2JidglSRGFFA2sX/e54bN5zcvRXs+5U75O04g==
-X-Received: by 2002:a05:6a00:995:b0:725:2b93:3583 with SMTP id d2e1a72fcca58-7257fcbc006mr8373190b3a.21.1733330005713;
-        Wed, 04 Dec 2024 08:33:25 -0800 (PST)
-Received: from [127.0.0.1] ([2620:10d:c090:600::1:a7a9])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7254184952csm12955492b3a.185.2024.12.04.08.33.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Dec 2024 08:33:25 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241204150450.399005-1-colin.i.king@gmail.com>
-References: <20241204150450.399005-1-colin.i.king@gmail.com>
-Subject: Re: [PATCH][next] blktrace: remove redundant return at end of
- function
-Message-Id: <173333000444.511414.17569005007152720429.b4-ty@kernel.dk>
-Date: Wed, 04 Dec 2024 09:33:24 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZa4LS1p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F3D4C4CECD;
+	Wed,  4 Dec 2024 16:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733331469;
+	bh=06pVRQZvF7Hv8LSrodVzxmE+a9EeBGCKKwPeWagF/ac=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UZa4LS1pYpOPXocCCKDkFa/95MeXhtTnLR0/jtU/SKhrHBQXdhYXzMW2YsrqWDbHT
+	 0N8Pl6VQAhKqiMJc0gtKD/0BwvKOG6s7IeMjCqcHXsQ0AN8Y2Hd+Yrl9I3o6lC+GTe
+	 cASPfiOf7Qr9HMvmumKxgOJMG4q9po73rvGkWgBgwMQrJTjGAE4COszD25/E+d1JD5
+	 qHqOxFGB+3Zj5z9W0VSMbETv8Xkw5x2yu6kzSEn6rBT7O0v2x8n9d8qjDJ1liEXF/m
+	 nF79FwUsrWWcTO0K2UiJT4a94+qXBjzmdHEP9YmHiAuFXCH4HQDwe9Z26WxqRKMFtH
+	 xCK6k1QujtFhQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	bristot@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 02/36] rtla: Fix consistency in getopt_long for timerlat_hist
+Date: Wed,  4 Dec 2024 10:45:18 -0500
+Message-ID: <20241204154626.2211476-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20241204154626.2211476-1-sashal@kernel.org>
+References: <20241204154626.2211476-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-86319
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.12.1
+Content-Transfer-Encoding: 8bit
 
+From: Gabriele Monaco <gmonaco@redhat.com>
 
-On Wed, 04 Dec 2024 15:04:50 +0000, Colin Ian King wrote:
-> A recent change added return 0 before an existing return statement
-> at the end of function blk_trace_setup. The final return is now
-> redundant, so remove it.
-> 
-> Fixes: 64d124798244 ("blktrace: move copy_[to|from]_user() out of ->debugfs_lock")
-> 
-> 
-> [...]
+[ Upstream commit cfb1ea216c1656a4112becbc4bf757891933b902 ]
 
-Applied, thanks!
+Commit e9a4062e1527 ("rtla: Add --trace-buffer-size option") adds a new
+long option to rtla utilities, but among all affected files,
+timerlat_hist misses a trailing `:` in the corresponding short option
+inside the getopt string (e.g. `\3:`). This patch propagates the `:`.
 
-[1/1] blktrace: remove redundant return at end of function
-      commit: 62047e8946da6269cf9bcec578298dd194ee4b7f
+Although this change is not functionally required, it improves
+consistency and slightly reduces the likelihood a future change would
+introduce a problem.
 
-Best regards,
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Luis Goncalves <lgoncalv@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Link: https://lore.kernel.org/20240926143417.54039-1-gmonaco@redhat.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/tracing/rtla/src/timerlat_hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index a3907c390d67a..1f9137c592f45 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -778,7 +778,7 @@ static struct timerlat_hist_params
+ 		/* getopt_long stores the option index here. */
+ 		int option_index = 0;
+ 
+-		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3",
++		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:knp:P:s:t::T:uU0123456:7:8:9\1\2:\3:",
+ 				 long_options, &option_index);
+ 
+ 		/* detect the end of the options. */
 -- 
-Jens Axboe
-
-
+2.43.0
 
