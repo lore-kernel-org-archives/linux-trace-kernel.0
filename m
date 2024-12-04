@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287742144DD;
-	Wed,  4 Dec 2024 17:01:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49BF215F42;
+	Wed,  4 Dec 2024 17:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331695; cv=none; b=mXP9us9/ZdCMdKTF9uAIxh/c0y7WgdGTnbYCzUsbQ2kN5w4yt9OSkr7S3Rwcpt3deD4tH0l4nKPC+RkQrqp0pXgiPvUfTYDZiebVpBWisHcj/nebDaL7i5NNCET/qtrC1NMB3ycJccPhmwIqCyZlI9RSx0Hn5iUVpbaAi4a8+sE=
+	t=1733331700; cv=none; b=osrp/JcAX7fpAhvunDp64WzA0ax7vwsE4u8Bs0SNjtJNP5m7hyXiNNyASmtZT7e5fKzx3n0uLnfePrhhFXv/e7kf+ADVgdlMJbf3UAlpev1ETt3JMVzRYe8+BMZ0IaFmAVfYCT587hiTVf/yZ07FeHN/S0ATUPTCZYG0weu+LHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331695; c=relaxed/simple;
-	bh=eEfkJhH6FdP+1Is7PmzyO0G+qQ0szLVAi1152B2Um/U=;
+	s=arc-20240116; t=1733331700; c=relaxed/simple;
+	bh=olZtGMj07hIJB7bATrwj+QKD0jmXNHAEJ3cJcKCYOPA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dq47qlpLdR/jILv9Snt2KqpAef41iBgdOiGImyLzHFU6D4Xe5pZMoOkWCtIptrRwGbVV5dBukXPpAhqi05TwoA2p0hnFk2ogV3hEOnrnRXc3FZAslikIl4AZeJ7YZWYLRWQL13XLg5Q/4hQy+bGvnkFWmLbpzCXQVLJCpX5f7Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mj8zBi6p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mk3DrlGi3bcqhPk1ne6TfVV+iGtyK3ZfQEVUPs/Vpw/vYSQi1TN06OLriFiYOb1h0YlCuPCUlzPncdis64NNAIbCMca+VXJBvJkmNo1MgExecDnHiz4bjGLwXorjfex2qkChL6Nd27VTDfVlMgXuZ0rDsJ2Lu4FSbUAFaiUqaBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pS4/aG6K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mj8zBi6p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4DFC4CED1;
-	Wed,  4 Dec 2024 17:01:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pS4/aG6K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B68C4CECD;
+	Wed,  4 Dec 2024 17:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331695;
-	bh=eEfkJhH6FdP+1Is7PmzyO0G+qQ0szLVAi1152B2Um/U=;
+	s=k20201202; t=1733331700;
+	bh=olZtGMj07hIJB7bATrwj+QKD0jmXNHAEJ3cJcKCYOPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mj8zBi6p2r5/ov6+vctXMUKiReJW3g+2zqRo/q/Hrt4S183Tpq9olEvYBi8mrRMSv
-	 4oPcPqHBsShfa0uUiWc/DeOkNUjV+8k9QmyhMRCAxWNkanCuka8VXio4hkIBEEL3vx
-	 t+RwveE500So82fmGiUiNm/0DjoydKzdv0vYIr8Twq9E8BHWlAWMYA8Jeh1b4LkMpT
-	 n64WwHychWx1Mqx/0IzY2hhsQETPuEf2Fm5kWHM2GMjXMsCIxbwrHu4/afr75qweCq
-	 E99fH29xkHf3urNm7Qf/zMZdt7TBR7h/Kw6K9NzINuy2oJnIPguj3icIgUYSLT3zF+
-	 zOgVf81b4TW9Q==
+	b=pS4/aG6KjExdHiHrF6j8lhh8KtvwGgTAfs9JnpQTIPpMvMMldUAJ8bLHtyvFzw1nn
+	 HjYKUy3BKrJAIcrsjkW33GDVZTSHCrbhDM7NYMN1czsgbrcds+mjgYQPisZDTFisyx
+	 TJie0uSW4x5LeZ3SV5dbI18h1fWER7AkKPRhlkT1x+Cn0slatDbQcX1Xz7O7Znip/L
+	 MtVoVEja6yk1lbSUBwM5hxI6RCR19JX56XMH+aRdM26gsdUyAy1lAW+As9qs0HA1Sd
+	 eFDDhSrxzdnlEwXWK2ByWRGWmMfeOUGTTMg/zg7yhVT4ZntkWjDNqHu1FPCViWZtzb
+	 123fhxTX9FVcg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Tomas Glozar <tglozar@redhat.com>,
-	Attila Fazekas <afazekas@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
 	bristot@kernel.org,
-	jkacur@redhat.com,
-	ezulian@redhat.com,
+	jstancek@redhat.com,
+	limingming890315@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 05/24] rtla/timerlat: Make timerlat_top_cpu->*_count unsigned long long
-Date: Wed,  4 Dec 2024 10:49:25 -0500
-Message-ID: <20241204155003.2213733-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 07/24] rtla/utils: Add idle state disabling via libcpupower
+Date: Wed,  4 Dec 2024 10:49:27 -0500
+Message-ID: <20241204155003.2213733-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204155003.2213733-1-sashal@kernel.org>
 References: <20241204155003.2213733-1-sashal@kernel.org>
@@ -56,68 +55,213 @@ Content-Transfer-Encoding: 8bit
 
 From: Tomas Glozar <tglozar@redhat.com>
 
-[ Upstream commit 4eba4723c5254ba8251ecb7094a5078d5c300646 ]
+[ Upstream commit 083d29d3784319e9e9fab3ac02683a7b26ae3480 ]
 
-Most fields of struct timerlat_top_cpu are unsigned long long, but the
-fields {irq,thread,user}_count are int (32-bit signed).
+Add functions to utils.c to disable idle states through functions of
+libcpupower. This will serve as the basis for disabling idle states
+per cpu when running timerlat.
 
-This leads to overflow when tracing on a large number of CPUs for a long
-enough time:
-$ rtla timerlat top -a20 -c 1-127 -d 12h
-...
-  0 12:00:00   |          IRQ Timer Latency (us)        |         Thread Timer Latency (us)
-CPU COUNT      |      cur       min       avg       max |      cur       min       avg       max
- 1 #43200096  |        0         0         1         2 |        3         2         6        12
-...
-127 #43200096  |        0         0         1         2 |        3         2         5        11
-ALL #119144 e4 |                  0         5         4 |                  2        28        16
-
-The average latency should be 0-1 for IRQ and 5-6 for thread, but is
-reported as 5 and 28, about 4 to 5 times more, due to the count
-overflowing when summed over all CPUs: 43200096 * 127 = 5486412192,
-however, 1191444898 (= 5486412192 mod MAX_INT) is reported instead, as
-seen on the last line of the output, and the averages are thus ~4.6
-times higher than they should be (5486412192 / 1191444898 = ~4.6).
-
-Fix the issue by changing {irq,thread,user}_count fields to unsigned
-long long, similarly to other fields in struct timerlat_top_cpu and to
-the count variable in timerlat_top_print_sum.
-
-Link: https://lore.kernel.org/20241011121015.2868751-1-tglozar@redhat.com
-Reported-by: Attila Fazekas <afazekas@redhat.com>
+Link: https://lore.kernel.org/20241017140914.3200454-4-tglozar@redhat.com
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/tracing/rtla/src/timerlat_top.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/tracing/rtla/src/utils.c | 150 +++++++++++++++++++++++++++++++++
+ tools/tracing/rtla/src/utils.h |  13 +++
+ 2 files changed, 163 insertions(+)
 
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index a84f43857de14..0915092057f85 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -49,9 +49,9 @@ struct timerlat_top_params {
- };
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 0735fcb827ed7..230f9fc7502dd 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -4,6 +4,9 @@
+  */
  
- struct timerlat_top_cpu {
--	int			irq_count;
--	int			thread_count;
--	int			user_count;
-+	unsigned long long	irq_count;
-+	unsigned long long	thread_count;
-+	unsigned long long	user_count;
+ #define _GNU_SOURCE
++#ifdef HAVE_LIBCPUPOWER_SUPPORT
++#include <cpuidle.h>
++#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+ #include <dirent.h>
+ #include <stdarg.h>
+ #include <stdlib.h>
+@@ -519,6 +522,153 @@ int set_cpu_dma_latency(int32_t latency)
+ 	return fd;
+ }
  
- 	unsigned long long	cur_irq;
- 	unsigned long long	min_irq;
-@@ -237,7 +237,7 @@ static void timerlat_top_print(struct osnoise_tool *top, int cpu)
- 	/*
- 	 * Unless trace is being lost, IRQ counter is always the max.
- 	 */
--	trace_seq_printf(s, "%3d #%-9d |", cpu, cpu_data->irq_count);
-+	trace_seq_printf(s, "%3d #%-9llu |", cpu, cpu_data->irq_count);
++#ifdef HAVE_LIBCPUPOWER_SUPPORT
++static unsigned int **saved_cpu_idle_disable_state;
++static size_t saved_cpu_idle_disable_state_alloc_ctr;
++
++/*
++ * save_cpu_idle_state_disable - save disable for all idle states of a cpu
++ *
++ * Saves the current disable of all idle states of a cpu, to be subsequently
++ * restored via restore_cpu_idle_disable_state.
++ *
++ * Return: idle state count on success, negative on error
++ */
++int save_cpu_idle_disable_state(unsigned int cpu)
++{
++	unsigned int nr_states;
++	unsigned int state;
++	int disabled;
++	int nr_cpus;
++
++	nr_states = cpuidle_state_count(cpu);
++
++	if (nr_states == 0)
++		return 0;
++
++	if (saved_cpu_idle_disable_state == NULL) {
++		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
++		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
++		if (!saved_cpu_idle_disable_state)
++			return -1;
++	}
++
++	saved_cpu_idle_disable_state[cpu] = calloc(nr_states, sizeof(unsigned int));
++	if (!saved_cpu_idle_disable_state[cpu])
++		return -1;
++	saved_cpu_idle_disable_state_alloc_ctr++;
++
++	for (state = 0; state < nr_states; state++) {
++		disabled = cpuidle_is_state_disabled(cpu, state);
++		if (disabled < 0)
++			return disabled;
++		saved_cpu_idle_disable_state[cpu][state] = disabled;
++	}
++
++	return nr_states;
++}
++
++/*
++ * restore_cpu_idle_disable_state - restore disable for all idle states of a cpu
++ *
++ * Restores the current disable state of all idle states of a cpu that was
++ * previously saved by save_cpu_idle_disable_state.
++ *
++ * Return: idle state count on success, negative on error
++ */
++int restore_cpu_idle_disable_state(unsigned int cpu)
++{
++	unsigned int nr_states;
++	unsigned int state;
++	int disabled;
++	int result;
++
++	nr_states = cpuidle_state_count(cpu);
++
++	if (nr_states == 0)
++		return 0;
++
++	if (!saved_cpu_idle_disable_state)
++		return -1;
++
++	for (state = 0; state < nr_states; state++) {
++		if (!saved_cpu_idle_disable_state[cpu])
++			return -1;
++		disabled = saved_cpu_idle_disable_state[cpu][state];
++		result = cpuidle_state_disable(cpu, state, disabled);
++		if (result < 0)
++			return result;
++	}
++
++	free(saved_cpu_idle_disable_state[cpu]);
++	saved_cpu_idle_disable_state[cpu] = NULL;
++	saved_cpu_idle_disable_state_alloc_ctr--;
++	if (saved_cpu_idle_disable_state_alloc_ctr == 0) {
++		free(saved_cpu_idle_disable_state);
++		saved_cpu_idle_disable_state = NULL;
++	}
++
++	return nr_states;
++}
++
++/*
++ * free_cpu_idle_disable_states - free saved idle state disable for all cpus
++ *
++ * Frees the memory used for storing cpu idle state disable for all cpus
++ * and states.
++ *
++ * Normally, the memory is freed automatically in
++ * restore_cpu_idle_disable_state; this is mostly for cleaning up after an
++ * error.
++ */
++void free_cpu_idle_disable_states(void)
++{
++	int cpu;
++	int nr_cpus;
++
++	if (!saved_cpu_idle_disable_state)
++		return;
++
++	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
++
++	for (cpu = 0; cpu < nr_cpus; cpu++) {
++		free(saved_cpu_idle_disable_state[cpu]);
++		saved_cpu_idle_disable_state[cpu] = NULL;
++	}
++
++	free(saved_cpu_idle_disable_state);
++	saved_cpu_idle_disable_state = NULL;
++}
++
++/*
++ * set_deepest_cpu_idle_state - limit idle state of cpu
++ *
++ * Disables all idle states deeper than the one given in
++ * deepest_state (assuming states with higher number are deeper).
++ *
++ * This is used to reduce the exit from idle latency. Unlike
++ * set_cpu_dma_latency, it can disable idle states per cpu.
++ *
++ * Return: idle state count on success, negative on error
++ */
++int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int deepest_state)
++{
++	unsigned int nr_states;
++	unsigned int state;
++	int result;
++
++	nr_states = cpuidle_state_count(cpu);
++
++	for (state = deepest_state + 1; state < nr_states; state++) {
++		result = cpuidle_state_disable(cpu, state, 1);
++		if (result < 0)
++			return result;
++	}
++
++	return nr_states;
++}
++#endif /* HAVE_LIBCPUPOWER_SUPPORT */
++
+ #define _STR(x) #x
+ #define STR(x) _STR(x)
  
- 	if (!cpu_data->irq_count) {
- 		trace_seq_printf(s, "%s %s %s %s |", no_value, no_value, no_value, no_value);
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 99c9cf81bcd02..101d4799a0090 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -66,6 +66,19 @@ int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
+ int set_comm_cgroup(const char *comm_prefix, const char *cgroup);
+ int set_pid_cgroup(pid_t pid, const char *cgroup);
+ int set_cpu_dma_latency(int32_t latency);
++#ifdef HAVE_LIBCPUPOWER_SUPPORT
++int save_cpu_idle_disable_state(unsigned int cpu);
++int restore_cpu_idle_disable_state(unsigned int cpu);
++void free_cpu_idle_disable_states(void);
++int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
++static inline int have_libcpupower_support(void) { return 1; }
++#else
++static inline int save_cpu_idle_disable_state(unsigned int cpu) { return -1; }
++static inline int restore_cpu_idle_disable_state(unsigned int cpu) { return -1; }
++static inline void free_cpu_idle_disable_states(void) { }
++static inline int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state) { return -1; }
++static inline int have_libcpupower_support(void) { return 0; }
++#endif /* HAVE_LIBCPUPOWER_SUPPORT */
+ int auto_house_keeping(cpu_set_t *monitored_cpus);
+ 
+ #define ns_to_usf(x) (((double)x/1000))
 -- 
 2.43.0
 
