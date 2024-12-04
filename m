@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9D7217678;
-	Wed,  4 Dec 2024 17:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F412225761;
+	Wed,  4 Dec 2024 17:02:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331754; cv=none; b=qCW35NzZWVTv2ucUX1Qgt/ZYKI5Q1ubLcg1l1eoNokNlzbv8SBsQZ05v7cmCyPLN8xm8LaNLt5/1BXa0IOyo8KuZU7AMooAmdunu4pVHdi80xoC2i7YyXF/hG5iC3VDo93iVv6pTySrRjoifTv+ayGMqME9+SEoBpdh3a+H7R4c=
+	t=1733331776; cv=none; b=e34/kthtXKZDN9R1kcaC9reTcCUmGBvAePMP0OUt3+l712/mq/oUT5BbXy1v8r9vADFRt1crH2Lmz4eUiTx8DXFaQQ1ZIQiN7AerTAkJq1SEDPzUGJ4KXDZPsP7g3LxIEnVZ8DwzPj5qSPnl72SNRCSalPOMxAJwXugLC7EgCs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331754; c=relaxed/simple;
-	bh=Lj7Qtnd7u4uC1BrsHmDuqRPGLzeBmH4Gfg7x0/Qk/eU=;
+	s=arc-20240116; t=1733331776; c=relaxed/simple;
+	bh=oDKrhmkhEDIgHaXI1MH3VxbvBxyG9qAbuFJiKqPcUpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BShafnLgyziTv5Wq00Tw3lTZBU487OFSAOQwOTElJOSxJA6u+zvD3BAZE4p3TIv12GNT7I+S+wSp5kA8QOGyjtJLIreT4DniXxQa2bu/De0jq5PD7qSj/wzYlrPP+xD+14yxfiUpjLDlT5mA7c9G7KCA1h8TaQSGTthY6jk99D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt3KhjW7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bvaqNtHz6AJiypjgRU+J3n+3uOBnMV4LQIgFZaJXqbbCQ7szuSYiaqBCa3VH2CHhqSObMZRadlF2XrTYEOtb4O3zj3MkPntwUHiYg3SB05a0QOFNQNzWW1SscZ0JZyGx4Ss3EJuew0DnS30Zf78re6srv7G5yrcbMsMCPvgH56s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KndTVd65; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt3KhjW7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAFB9C4CED6;
-	Wed,  4 Dec 2024 17:02:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KndTVd65"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13C5C4CECD;
+	Wed,  4 Dec 2024 17:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331754;
-	bh=Lj7Qtnd7u4uC1BrsHmDuqRPGLzeBmH4Gfg7x0/Qk/eU=;
+	s=k20201202; t=1733331776;
+	bh=oDKrhmkhEDIgHaXI1MH3VxbvBxyG9qAbuFJiKqPcUpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gt3KhjW7qdo+isPVFgEx04/KuzbKcv5/1PTxE+2m0DJdPx4dZ+MBN5pxz4+6eJiOx
-	 SvHrdvMoqHaVXnJfhHDINa+QGmrFNcEf5lPjsnRhW8RYzTEyGRtT8NNS8egtBJYIES
-	 +JMKHfKz9kkFCio7FwQQWAMQdfe7+5T6eYVJ4b619uV+LMB4lBIG2gLtKH45jjjHzZ
-	 eX3gcVG5T+YVRIf7atia/5EYtaJKZOKvMnIZmInPWlze4cTVhhnEHXkumErrRxPX1N
-	 MNic9whjk1nMgpvBu3NWukYu/45TDb1Now95tsR+Cf9e2MsAepceRxeRlbQtx8jQR+
-	 VRayzvyOHB7Dg==
+	b=KndTVd65RhjB6f6f9T/McUINRIIeW2GBGFWyEN6rIwxBJj2p9oD4eBYF5TiMhAfce
+	 JNGgz8ZDl5H9hYwpxcdVsX9zXxm68BmwDTpWEULWibzwcIR00YE1+2t8ord71+I6f7
+	 8LiXga5V85CSvcWCWUxtwG6sbAohE691T4XenCUBxuxuGGPkCtdmRr7nEJBxvVoRGR
+	 WFphtTBMBpV1BSRWWaj0Gb4g6KQjxMKBP8/pcsfRGT+ols6CY6erpea3wpSvS3NwC9
+	 wjrso3GfxAx7djaOCgjJ1aLlNrMJRXu4hkWgSO3Sz7pMvm+uscKLxg2+hM108FwRaK
+	 C+NQuxYvZwLYA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Jan Stancek <jstancek@redhat.com>,
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
-	bristot@kernel.org,
-	tglozar@redhat.com,
-	limingming890315@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 04/15] tools/rtla: fix collision with glibc sched_attr/sched_set_attr
-Date: Wed,  4 Dec 2024 10:50:43 -0500
-Message-ID: <20241204155105.2214350-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 15/15] verification/dot2: Improve dot parser robustness
+Date: Wed,  4 Dec 2024 10:50:54 -0500
+Message-ID: <20241204155105.2214350-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204155105.2214350-1-sashal@kernel.org>
 References: <20241204155105.2214350-1-sashal@kernel.org>
@@ -48,87 +45,102 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.119
 Content-Transfer-Encoding: 8bit
 
-From: Jan Stancek <jstancek@redhat.com>
+From: Gabriele Monaco <gmonaco@redhat.com>
 
-[ Upstream commit 0eecee340672c4b512f6f4a8c6add26df05d130c ]
+[ Upstream commit 571f8b3f866a6d990a50fe5c89fe0ea78784d70b ]
 
-glibc commit 21571ca0d703 ("Linux: Add the sched_setattr
-and sched_getattr functions") now also provides 'struct sched_attr'
-and sched_setattr() which collide with the ones from rtla.
+This patch makes the dot parser used by dot2c and dot2k slightly more
+robust, namely:
+* allows parsing files with the gv extension (GraphViz)
+* correctly parses edges with any indentation
+    * used to work only with a single character (e.g. '\t')
+Additionally it fixes a couple of warnings reported by pylint such as
+wrong indentation and comparison to False instead of `not ...`
 
-  In file included from src/trace.c:11:
-  src/utils.h:49:8: error: redefinition of ‘struct sched_attr’
-     49 | struct sched_attr {
-        |        ^~~~~~~~~~
-  In file included from /usr/include/bits/sched.h:60,
-                   from /usr/include/sched.h:43,
-                   from /usr/include/tracefs/tracefs.h:10,
-                   from src/trace.c:4:
-  /usr/include/linux/sched/types.h:98:8: note: originally defined here
-     98 | struct sched_attr {
-        |        ^~~~~~~~~~
-
-Define 'struct sched_attr' conditionally, similar to what strace did:
-  https://lore.kernel.org/all/20240930222913.3981407-1-raj.khem@gmail.com/
-and rename rtla's version of sched_setattr() to avoid collision.
-
-Link: https://lore.kernel.org/8088f66a7a57c1b209cd8ae0ae7c336a7f8c930d.1728572865.git.jstancek@redhat.com
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Link: https://lore.kernel.org/20241017064238.41394-2-gmonaco@redhat.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/tracing/rtla/src/utils.c | 4 ++--
- tools/tracing/rtla/src/utils.h | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/verification/dot2/automata.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 8c8d63c7196cf..02194773ef12d 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -238,7 +238,7 @@ long parse_ns_duration(char *val)
+diff --git a/tools/verification/dot2/automata.py b/tools/verification/dot2/automata.py
+index baffeb960ff0b..bdeb98baa8b06 100644
+--- a/tools/verification/dot2/automata.py
++++ b/tools/verification/dot2/automata.py
+@@ -29,11 +29,11 @@ class Automata:
  
- #define SCHED_DEADLINE		6
+     def __get_model_name(self):
+         basename = ntpath.basename(self.__dot_path)
+-        if basename.endswith(".dot") == False:
++        if not basename.endswith(".dot") and not basename.endswith(".gv"):
+             print("not a dot file")
+             raise Exception("not a dot file: %s" % self.__dot_path)
  
--static inline int sched_setattr(pid_t pid, const struct sched_attr *attr,
-+static inline int syscall_sched_setattr(pid_t pid, const struct sched_attr *attr,
- 				unsigned int flags) {
- 	return syscall(__NR_sched_setattr, pid, attr, flags);
- }
-@@ -248,7 +248,7 @@ int __set_sched_attr(int pid, struct sched_attr *attr)
- 	int flags = 0;
- 	int retval;
+-        model_name = basename[0:-4]
++        model_name = ntpath.splitext(basename)[0]
+         if model_name.__len__() == 0:
+             raise Exception("not a dot file: %s" % self.__dot_path)
  
--	retval = sched_setattr(pid, attr, flags);
-+	retval = syscall_sched_setattr(pid, attr, flags);
- 	if (retval < 0) {
- 		err_msg("Failed to set sched attributes to the pid %d: %s\n",
- 			pid, strerror(errno));
-diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-index 92da41aaf4c4c..e445ccf15e701 100644
---- a/tools/tracing/rtla/src/utils.h
-+++ b/tools/tracing/rtla/src/utils.h
-@@ -44,6 +44,7 @@ update_sum(unsigned long long *a, unsigned long long *b)
- 	*a += *b;
- }
+@@ -68,9 +68,9 @@ class Automata:
+     def __get_cursor_begin_events(self):
+         cursor = 0
+         while self.__dot_lines[cursor].split()[0] != "{node":
+-           cursor += 1
++            cursor += 1
+         while self.__dot_lines[cursor].split()[0] == "{node":
+-           cursor += 1
++            cursor += 1
+         # skip initial state transition
+         cursor += 1
+         return cursor
+@@ -94,11 +94,11 @@ class Automata:
+                 initial_state = state[7:]
+             else:
+                 states.append(state)
+-                if self.__dot_lines[cursor].__contains__("doublecircle") == True:
++                if "doublecircle" in self.__dot_lines[cursor]:
+                     final_states.append(state)
+                     has_final_states = True
  
-+#ifndef SCHED_ATTR_SIZE_VER0
- struct sched_attr {
- 	uint32_t size;
- 	uint32_t sched_policy;
-@@ -54,6 +55,7 @@ struct sched_attr {
- 	uint64_t sched_deadline;
- 	uint64_t sched_period;
- };
-+#endif /* SCHED_ATTR_SIZE_VER0 */
+-                if self.__dot_lines[cursor].__contains__("ellipse") == True:
++                if "ellipse" in self.__dot_lines[cursor]:
+                     final_states.append(state)
+                     has_final_states = True
  
- int parse_prio(char *arg, struct sched_attr *sched_param);
- int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
+@@ -110,7 +110,7 @@ class Automata:
+         # Insert the initial state at the bein og the states
+         states.insert(0, initial_state)
+ 
+-        if has_final_states == False:
++        if not has_final_states:
+             final_states.append(initial_state)
+ 
+         return states, initial_state, final_states
+@@ -120,7 +120,7 @@ class Automata:
+         cursor = self.__get_cursor_begin_events()
+ 
+         events = []
+-        while self.__dot_lines[cursor][1] == '"':
++        while self.__dot_lines[cursor].lstrip()[0] == '"':
+             # transitions have the format:
+             # "all_fired" -> "both_fired" [ label = "disable_irq" ];
+             #  ------------ event is here ------------^^^^^
+@@ -161,7 +161,7 @@ class Automata:
+         # and we are back! Let's fill the matrix
+         cursor = self.__get_cursor_begin_events()
+ 
+-        while self.__dot_lines[cursor][1] == '"':
++        while self.__dot_lines[cursor].lstrip()[0] == '"':
+             if self.__dot_lines[cursor].split()[1] == "->":
+                 line = self.__dot_lines[cursor].split()
+                 origin_state = line[0].replace('"','').replace(',','_')
 -- 
 2.43.0
 
