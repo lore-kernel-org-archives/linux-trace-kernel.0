@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D7322A55D;
-	Wed,  4 Dec 2024 17:03:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979AF218DC6;
+	Wed,  4 Dec 2024 17:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331815; cv=none; b=ROk0TvVOgc/wMli81aEymQcN2vTNFjpIne6VSPn0tn5CcXYNUWjp3str8dUDpYR+2WvMiqdHR77K9tPXdscP3GCZNIy99w6iPp6YzHvm1N8ikn4M2RqGe65yRin5I2WKxCup+zYbsYBWHpqc9e7VXF/q5Qzan1/sduLFdYfuzFQ=
+	t=1733331826; cv=none; b=OD01RDaduPWTjpUgUziGUJICwbe/mzod3Egqw8PMmhpJ3Dfud7IIUXy2bf5mgkQJ7Mi8n/6xQrCnLQ1KV1XI2om0oJ6/S/kqGgMuc+ab91nsPjAhAXYtJ+5ZRiWcd4N+m5S7VPgDXsyfOCr2NUEWl0NH6GdREEPJ5q0NCZrb8XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331815; c=relaxed/simple;
+	s=arc-20240116; t=1733331826; c=relaxed/simple;
 	bh=2GzttSpa/kaeonSAGg1jQW/Lt5L31GNe3I0m2S2UGNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N4LUUQW0qbjEoafq7ZjZXSa6XBWRHIERIu9aY9tnIu8oy+5cUNoO9mEjCWeo+q+C7HGg5x/kIogRsC6oBN62P2wzXo4cZYyLyvFQSr5n5epff6f5vlZ/YltWskqvr5DgnZho8FDhCrqrumbbym5nmVjA+3BS7raf7en8W+9kR7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REm8gMVC; arc=none smtp.client-ip=10.30.226.201
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iaaggmyoM3s675xrcC9hPvhpHMMXIto/IDJ8lQOltjM8HkOzpxlPwgN5xMyfwfIeGGxL/f7r7Q+fOVqE2ZGS0auuU+o9ShZETjkcYoSSaBPX2IZZqjPWAx4XWHZdSl+DGHLJI2XSM/1NmNHv2UN4BBzBxZrpxt3EM9COaLTs7q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRj/lHdA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REm8gMVC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1BA6C4CECD;
-	Wed,  4 Dec 2024 17:03:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRj/lHdA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D441C4CECD;
+	Wed,  4 Dec 2024 17:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331813;
+	s=k20201202; t=1733331826;
 	bh=2GzttSpa/kaeonSAGg1jQW/Lt5L31GNe3I0m2S2UGNA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=REm8gMVCdLvT7ZP9Tq79ee+iBAicD+ebEr+BpQCaSkVwJWkx7ejmClhTl4kME/g/k
-	 noR2946xNAf8nyR8sRG6pfmRl7cBEhvgpLrOXORExD/rLUTVxRL8rjELhfbJHolnPn
-	 ORR8vY1GyybdkGieYJqxdCOh6ts06Lhd2GNC4nHKOKbQSYZPX1F1ka9Txt/AcdiYjB
-	 w3s4B6RpzMrmh69De4z3t/MVVBA+sliyqRByv0h0tdICHOUUNFR6C7QA6HSLSMObNW
-	 PPC/6uGNGLuyIhGnrJBJmYe1Th7SgzyuQDmTpewXt+aYqPOnRpAmi8tg2TrzPtHJEc
-	 z+6bJijQuQueQ==
+	b=kRj/lHdA1mrREEWGHbI0GZDPO3A8k9yqDVUHHc9w5n1X+8p/f0M4mlblEyU9wy1zB
+	 LIG5UOzaN6o/RWHvY1dxrrhZwFAG3PNIiUNIMe6Q67QvLsT+goF+BCmLmsgF08Axst
+	 OzCopt4Z6YIaKLkNmps/7UBj4Qt9i+BozxIHDZ/RDSKbJWcIDJl+zyoAOwCA8JX3Zx
+	 3TDzasH7rDdc17FEyHhwS0Hk3vvOLxHOdnuwJk7BGlUalWlZppBgOzHc1zFtDKiUtg
+	 XCgma1icATPiZqgTGzbwVoaW6aqqCz4n4QLg8ihMmD866EZ8pM2Ci0+A+oxemRWVyu
+	 GrsPxaJWSv2Jg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,9 +34,9 @@ Cc: Uros Bizjak <ubizjak@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 1/7] tracing: Use atomic64_inc_return() in trace_clock_counter()
-Date: Wed,  4 Dec 2024 10:52:06 -0500
-Message-ID: <20241204155213.2215170-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 1/6] tracing: Use atomic64_inc_return() in trace_clock_counter()
+Date: Wed,  4 Dec 2024 10:52:20 -0500
+Message-ID: <20241204155226.2215336-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,7 +46,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.286
+X-stable-base: Linux 4.19.324
 Content-Transfer-Encoding: 8bit
 
 From: Uros Bizjak <ubizjak@gmail.com>
