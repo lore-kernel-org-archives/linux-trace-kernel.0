@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49BF215F42;
-	Wed,  4 Dec 2024 17:01:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3A821770A;
+	Wed,  4 Dec 2024 17:02:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331700; cv=none; b=osrp/JcAX7fpAhvunDp64WzA0ax7vwsE4u8Bs0SNjtJNP5m7hyXiNNyASmtZT7e5fKzx3n0uLnfePrhhFXv/e7kf+ADVgdlMJbf3UAlpev1ETt3JMVzRYe8+BMZ0IaFmAVfYCT587hiTVf/yZ07FeHN/S0ATUPTCZYG0weu+LHc=
+	t=1733331732; cv=none; b=HTd+ZYEH6Ozx7ZCe5Q+UEA4uifncszTtwleJiaJ2LauMyO1f+DSPd/yc6G0kwJimeo2l2zMtWROMAy0FRn+FuJwUxt8tSm3ABvxDLV6r1F7UqQPBVq966zv0m7T6WFDyzbgiWNo3LMnfEAdQ1UxtiGt1uXJ/S0jlGw0XvQh6xRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331700; c=relaxed/simple;
-	bh=olZtGMj07hIJB7bATrwj+QKD0jmXNHAEJ3cJcKCYOPA=;
+	s=arc-20240116; t=1733331732; c=relaxed/simple;
+	bh=oDKrhmkhEDIgHaXI1MH3VxbvBxyG9qAbuFJiKqPcUpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mk3DrlGi3bcqhPk1ne6TfVV+iGtyK3ZfQEVUPs/Vpw/vYSQi1TN06OLriFiYOb1h0YlCuPCUlzPncdis64NNAIbCMca+VXJBvJkmNo1MgExecDnHiz4bjGLwXorjfex2qkChL6Nd27VTDfVlMgXuZ0rDsJ2Lu4FSbUAFaiUqaBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pS4/aG6K; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MSQhAoElsNoEt2NdjIEp226U07zDNOIXxa7BEltX2XRxKMCjWTggJA/5pI1XEethotYFl2TljYiWF0r7DP9ownh0AfV9FvcrAZ7p1K7DWXERVXnmYWYnmmI24c9oPA/Vdd7M2386W8bmJECtY64b/qxwcpZoEMHz2OBvgDfPeR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lj+KjApx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pS4/aG6K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B68C4CECD;
-	Wed,  4 Dec 2024 17:01:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lj+KjApx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB7EC4CECD;
+	Wed,  4 Dec 2024 17:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331700;
-	bh=olZtGMj07hIJB7bATrwj+QKD0jmXNHAEJ3cJcKCYOPA=;
+	s=k20201202; t=1733331732;
+	bh=oDKrhmkhEDIgHaXI1MH3VxbvBxyG9qAbuFJiKqPcUpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pS4/aG6KjExdHiHrF6j8lhh8KtvwGgTAfs9JnpQTIPpMvMMldUAJ8bLHtyvFzw1nn
-	 HjYKUy3BKrJAIcrsjkW33GDVZTSHCrbhDM7NYMN1czsgbrcds+mjgYQPisZDTFisyx
-	 TJie0uSW4x5LeZ3SV5dbI18h1fWER7AkKPRhlkT1x+Cn0slatDbQcX1Xz7O7Znip/L
-	 MtVoVEja6yk1lbSUBwM5hxI6RCR19JX56XMH+aRdM26gsdUyAy1lAW+As9qs0HA1Sd
-	 eFDDhSrxzdnlEwXWK2ByWRGWmMfeOUGTTMg/zg7yhVT4ZntkWjDNqHu1FPCViWZtzb
-	 123fhxTX9FVcg==
+	b=Lj+KjApxz+VmcCkHjD4lZPJ6160IDTc9MDUULlQAV5lEVjxF6nG5h+n8ph5cxsSyk
+	 DbtdJDL7MziQZ/aUa3XIoxneEOGppmEKI2tGlbAA+BZTZe2aVpOe8YIk4pUlXnj5wN
+	 JGhiQXVwcWAeSEkTymcNFNKEDvunmi5+hBUNA6FRej6koxlz06TYwZBSY678Owc4FS
+	 53EYxyYMEBAS+TY3fntTVHEHz8YFbF1/c129B/N4JkVA5oZpnJ8VEmn1cFTViU7EHj
+	 uEb5/UDL9US2t/3JX0twMvE0lCMiIwmZ+3R8UyHAucjQql2wWOFOcYK4Y6NcIvFVXA
+	 OSQPZSfnCFh9g==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Tomas Glozar <tglozar@redhat.com>,
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
-	bristot@kernel.org,
-	jstancek@redhat.com,
-	limingming890315@gmail.com,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 07/24] rtla/utils: Add idle state disabling via libcpupower
-Date: Wed,  4 Dec 2024 10:49:27 -0500
-Message-ID: <20241204155003.2213733-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 24/24] verification/dot2: Improve dot parser robustness
+Date: Wed,  4 Dec 2024 10:49:44 -0500
+Message-ID: <20241204155003.2213733-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204155003.2213733-1-sashal@kernel.org>
 References: <20241204155003.2213733-1-sashal@kernel.org>
@@ -53,215 +50,97 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.63
 Content-Transfer-Encoding: 8bit
 
-From: Tomas Glozar <tglozar@redhat.com>
+From: Gabriele Monaco <gmonaco@redhat.com>
 
-[ Upstream commit 083d29d3784319e9e9fab3ac02683a7b26ae3480 ]
+[ Upstream commit 571f8b3f866a6d990a50fe5c89fe0ea78784d70b ]
 
-Add functions to utils.c to disable idle states through functions of
-libcpupower. This will serve as the basis for disabling idle states
-per cpu when running timerlat.
+This patch makes the dot parser used by dot2c and dot2k slightly more
+robust, namely:
+* allows parsing files with the gv extension (GraphViz)
+* correctly parses edges with any indentation
+    * used to work only with a single character (e.g. '\t')
+Additionally it fixes a couple of warnings reported by pylint such as
+wrong indentation and comparison to False instead of `not ...`
 
-Link: https://lore.kernel.org/20241017140914.3200454-4-tglozar@redhat.com
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+Link: https://lore.kernel.org/20241017064238.41394-2-gmonaco@redhat.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/tracing/rtla/src/utils.c | 150 +++++++++++++++++++++++++++++++++
- tools/tracing/rtla/src/utils.h |  13 +++
- 2 files changed, 163 insertions(+)
+ tools/verification/dot2/automata.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 0735fcb827ed7..230f9fc7502dd 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -4,6 +4,9 @@
-  */
+diff --git a/tools/verification/dot2/automata.py b/tools/verification/dot2/automata.py
+index baffeb960ff0b..bdeb98baa8b06 100644
+--- a/tools/verification/dot2/automata.py
++++ b/tools/verification/dot2/automata.py
+@@ -29,11 +29,11 @@ class Automata:
  
- #define _GNU_SOURCE
-+#ifdef HAVE_LIBCPUPOWER_SUPPORT
-+#include <cpuidle.h>
-+#endif /* HAVE_LIBCPUPOWER_SUPPORT */
- #include <dirent.h>
- #include <stdarg.h>
- #include <stdlib.h>
-@@ -519,6 +522,153 @@ int set_cpu_dma_latency(int32_t latency)
- 	return fd;
- }
+     def __get_model_name(self):
+         basename = ntpath.basename(self.__dot_path)
+-        if basename.endswith(".dot") == False:
++        if not basename.endswith(".dot") and not basename.endswith(".gv"):
+             print("not a dot file")
+             raise Exception("not a dot file: %s" % self.__dot_path)
  
-+#ifdef HAVE_LIBCPUPOWER_SUPPORT
-+static unsigned int **saved_cpu_idle_disable_state;
-+static size_t saved_cpu_idle_disable_state_alloc_ctr;
-+
-+/*
-+ * save_cpu_idle_state_disable - save disable for all idle states of a cpu
-+ *
-+ * Saves the current disable of all idle states of a cpu, to be subsequently
-+ * restored via restore_cpu_idle_disable_state.
-+ *
-+ * Return: idle state count on success, negative on error
-+ */
-+int save_cpu_idle_disable_state(unsigned int cpu)
-+{
-+	unsigned int nr_states;
-+	unsigned int state;
-+	int disabled;
-+	int nr_cpus;
-+
-+	nr_states = cpuidle_state_count(cpu);
-+
-+	if (nr_states == 0)
-+		return 0;
-+
-+	if (saved_cpu_idle_disable_state == NULL) {
-+		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-+		saved_cpu_idle_disable_state = calloc(nr_cpus, sizeof(unsigned int *));
-+		if (!saved_cpu_idle_disable_state)
-+			return -1;
-+	}
-+
-+	saved_cpu_idle_disable_state[cpu] = calloc(nr_states, sizeof(unsigned int));
-+	if (!saved_cpu_idle_disable_state[cpu])
-+		return -1;
-+	saved_cpu_idle_disable_state_alloc_ctr++;
-+
-+	for (state = 0; state < nr_states; state++) {
-+		disabled = cpuidle_is_state_disabled(cpu, state);
-+		if (disabled < 0)
-+			return disabled;
-+		saved_cpu_idle_disable_state[cpu][state] = disabled;
-+	}
-+
-+	return nr_states;
-+}
-+
-+/*
-+ * restore_cpu_idle_disable_state - restore disable for all idle states of a cpu
-+ *
-+ * Restores the current disable state of all idle states of a cpu that was
-+ * previously saved by save_cpu_idle_disable_state.
-+ *
-+ * Return: idle state count on success, negative on error
-+ */
-+int restore_cpu_idle_disable_state(unsigned int cpu)
-+{
-+	unsigned int nr_states;
-+	unsigned int state;
-+	int disabled;
-+	int result;
-+
-+	nr_states = cpuidle_state_count(cpu);
-+
-+	if (nr_states == 0)
-+		return 0;
-+
-+	if (!saved_cpu_idle_disable_state)
-+		return -1;
-+
-+	for (state = 0; state < nr_states; state++) {
-+		if (!saved_cpu_idle_disable_state[cpu])
-+			return -1;
-+		disabled = saved_cpu_idle_disable_state[cpu][state];
-+		result = cpuidle_state_disable(cpu, state, disabled);
-+		if (result < 0)
-+			return result;
-+	}
-+
-+	free(saved_cpu_idle_disable_state[cpu]);
-+	saved_cpu_idle_disable_state[cpu] = NULL;
-+	saved_cpu_idle_disable_state_alloc_ctr--;
-+	if (saved_cpu_idle_disable_state_alloc_ctr == 0) {
-+		free(saved_cpu_idle_disable_state);
-+		saved_cpu_idle_disable_state = NULL;
-+	}
-+
-+	return nr_states;
-+}
-+
-+/*
-+ * free_cpu_idle_disable_states - free saved idle state disable for all cpus
-+ *
-+ * Frees the memory used for storing cpu idle state disable for all cpus
-+ * and states.
-+ *
-+ * Normally, the memory is freed automatically in
-+ * restore_cpu_idle_disable_state; this is mostly for cleaning up after an
-+ * error.
-+ */
-+void free_cpu_idle_disable_states(void)
-+{
-+	int cpu;
-+	int nr_cpus;
-+
-+	if (!saved_cpu_idle_disable_state)
-+		return;
-+
-+	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-+
-+	for (cpu = 0; cpu < nr_cpus; cpu++) {
-+		free(saved_cpu_idle_disable_state[cpu]);
-+		saved_cpu_idle_disable_state[cpu] = NULL;
-+	}
-+
-+	free(saved_cpu_idle_disable_state);
-+	saved_cpu_idle_disable_state = NULL;
-+}
-+
-+/*
-+ * set_deepest_cpu_idle_state - limit idle state of cpu
-+ *
-+ * Disables all idle states deeper than the one given in
-+ * deepest_state (assuming states with higher number are deeper).
-+ *
-+ * This is used to reduce the exit from idle latency. Unlike
-+ * set_cpu_dma_latency, it can disable idle states per cpu.
-+ *
-+ * Return: idle state count on success, negative on error
-+ */
-+int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int deepest_state)
-+{
-+	unsigned int nr_states;
-+	unsigned int state;
-+	int result;
-+
-+	nr_states = cpuidle_state_count(cpu);
-+
-+	for (state = deepest_state + 1; state < nr_states; state++) {
-+		result = cpuidle_state_disable(cpu, state, 1);
-+		if (result < 0)
-+			return result;
-+	}
-+
-+	return nr_states;
-+}
-+#endif /* HAVE_LIBCPUPOWER_SUPPORT */
-+
- #define _STR(x) #x
- #define STR(x) _STR(x)
+-        model_name = basename[0:-4]
++        model_name = ntpath.splitext(basename)[0]
+         if model_name.__len__() == 0:
+             raise Exception("not a dot file: %s" % self.__dot_path)
  
-diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-index 99c9cf81bcd02..101d4799a0090 100644
---- a/tools/tracing/rtla/src/utils.h
-+++ b/tools/tracing/rtla/src/utils.h
-@@ -66,6 +66,19 @@ int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
- int set_comm_cgroup(const char *comm_prefix, const char *cgroup);
- int set_pid_cgroup(pid_t pid, const char *cgroup);
- int set_cpu_dma_latency(int32_t latency);
-+#ifdef HAVE_LIBCPUPOWER_SUPPORT
-+int save_cpu_idle_disable_state(unsigned int cpu);
-+int restore_cpu_idle_disable_state(unsigned int cpu);
-+void free_cpu_idle_disable_states(void);
-+int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state);
-+static inline int have_libcpupower_support(void) { return 1; }
-+#else
-+static inline int save_cpu_idle_disable_state(unsigned int cpu) { return -1; }
-+static inline int restore_cpu_idle_disable_state(unsigned int cpu) { return -1; }
-+static inline void free_cpu_idle_disable_states(void) { }
-+static inline int set_deepest_cpu_idle_state(unsigned int cpu, unsigned int state) { return -1; }
-+static inline int have_libcpupower_support(void) { return 0; }
-+#endif /* HAVE_LIBCPUPOWER_SUPPORT */
- int auto_house_keeping(cpu_set_t *monitored_cpus);
+@@ -68,9 +68,9 @@ class Automata:
+     def __get_cursor_begin_events(self):
+         cursor = 0
+         while self.__dot_lines[cursor].split()[0] != "{node":
+-           cursor += 1
++            cursor += 1
+         while self.__dot_lines[cursor].split()[0] == "{node":
+-           cursor += 1
++            cursor += 1
+         # skip initial state transition
+         cursor += 1
+         return cursor
+@@ -94,11 +94,11 @@ class Automata:
+                 initial_state = state[7:]
+             else:
+                 states.append(state)
+-                if self.__dot_lines[cursor].__contains__("doublecircle") == True:
++                if "doublecircle" in self.__dot_lines[cursor]:
+                     final_states.append(state)
+                     has_final_states = True
  
- #define ns_to_usf(x) (((double)x/1000))
+-                if self.__dot_lines[cursor].__contains__("ellipse") == True:
++                if "ellipse" in self.__dot_lines[cursor]:
+                     final_states.append(state)
+                     has_final_states = True
+ 
+@@ -110,7 +110,7 @@ class Automata:
+         # Insert the initial state at the bein og the states
+         states.insert(0, initial_state)
+ 
+-        if has_final_states == False:
++        if not has_final_states:
+             final_states.append(initial_state)
+ 
+         return states, initial_state, final_states
+@@ -120,7 +120,7 @@ class Automata:
+         cursor = self.__get_cursor_begin_events()
+ 
+         events = []
+-        while self.__dot_lines[cursor][1] == '"':
++        while self.__dot_lines[cursor].lstrip()[0] == '"':
+             # transitions have the format:
+             # "all_fired" -> "both_fired" [ label = "disable_irq" ];
+             #  ------------ event is here ------------^^^^^
+@@ -161,7 +161,7 @@ class Automata:
+         # and we are back! Let's fill the matrix
+         cursor = self.__get_cursor_begin_events()
+ 
+-        while self.__dot_lines[cursor][1] == '"':
++        while self.__dot_lines[cursor].lstrip()[0] == '"':
+             if self.__dot_lines[cursor].split()[1] == "->":
+                 line = self.__dot_lines[cursor].split()
+                 origin_state = line[0].replace('"','').replace(',','_')
 -- 
 2.43.0
 
