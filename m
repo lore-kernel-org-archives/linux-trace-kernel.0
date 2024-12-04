@@ -1,80 +1,78 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADFFEEB5
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Dec 2024 01:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8906429415
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  4 Dec 2024 02:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733277065; cv=none; b=k4zNb93EZlL1LCopZDa9xy0b7toZ5tL2J9qvidOksqLqppwuqqsb3xI2NlLBHam+rQ646+A+YoSmXO+R7mN3I0e+7NpIXor8A6gsfBaXBeh19+Gv79sAjejmg5kv8U9Ux+CJsLwyI61bYHBoh2hMv/Fdg3SQLuAsuv74We4v8Ec=
+	t=1733279040; cv=none; b=eIu0DIpiQI1Pf2ISSIxn5Yq91Kz+H9ec5vjPMTSSX9RN0npw3YEplYMfdgWPQKYsdmsZuTOGkhg0PRylWgDszBP0p9HCxPLM95QoUPZgEoo/6KRWINWOgixo9DkMZg/Lo92RAZxiKFXQRbcdpldivTfDa0u2ljeMpEe0umST3ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733277065; c=relaxed/simple;
-	bh=rWtZF8Dus1RjbJZaZTLBXSr66OIKeFm9TueYUIt7Zoc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=kTQ6+qpk39IJ7NuIrHvJg1ZLYBMH5AprVMBtywekOBERulEjgp59xOYWXtpHA1o5iA5Ro4F59yCYycWcUP3psGU4w9saJtLV55Uxdf13GpMU7I47NWsdXU3T+GrPJMTLjh6l1HDfBhcjlesrbx12O6rS/t1baGf+qV66NLnYzzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a7e0d5899bso95117165ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 03 Dec 2024 17:51:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733277062; x=1733881862;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ojyRDzOs4L5r1zvt5rLALFwRhgSLoRI+YAka9dryW2U=;
-        b=mUoo4N72dl5zybPIJ4/dQZ2cRlpjIETSan/rj34nZENJtM9i080epz21Dr5ejUVzXt
-         ISRY+ME7EaWI8ywh3jXDjVWsyQJSn9dPIFd/7FgXS+te/IWN04JprglA3e7NDNJiH7hN
-         sdPlOgX2UgXsRZzo8itckX9fUMV+YKN9XTunI0Q7DGl2CjmsOe0EGFUVpqk45o057hfV
-         Iez6qMyVudGYO5CBr569dSKCK6IaT2AAl0qMiEhQeI8Qfvmj1pARF/WtVedB3y1pOXmT
-         SbqE9/mD96WtFt5PoDZke4ZWoDOA8JclnfSGDTckyLeJxZBdy0kwH1v+idcbv9XX9zb9
-         CotA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX/zOmPNtIyp3mNi1zAEJHudzL8Q9PzfWm/e6bAxeAYIk3OTEOILpUW1kQg8WK5e0Optyy071gqcjHivfCmHrEi5E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNxfMbP18r6mQG6JllxL2fjb9Gce/fd0z8CF7T5YL6RI6IeM79
-	Lw2NcmE90xqUkh8Lq5IEON6riMb7Jfc12m5KGNg3NFQvG0G+hecfBC+yBohAS1U5T6jPxIQGN3H
-	YFZIumDIiKMEUasdr9wj7x90H3C/NGW8gwI6/yfzao9OhqxyI21mhTn4=
-X-Google-Smtp-Source: AGHT+IGmDky9ubXMdmWEyJvsqWfLs/KF8vdb5UnF3UfBT6VPtkSCq7Mi1MPMv2mpAS+sZb0fM/xrpgyQuWJKEeTuR3Zk+AqaSlPn
+	s=arc-20240116; t=1733279040; c=relaxed/simple;
+	bh=6kj4sx7kUK6/t0DyEjE1u2rA1e/k19OPIQkCxRDBG2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c2OQ3lWRilXOLD2vTu8AolDd2+HkCItFTKfmi4dMpwbyddvfjhLEkpWX027q3OSEYkIdUufRPjKiuO+a1ocC0avxmx1RsBbAP43IOq8fmxd2qJyqXGTlwgV1YMRm1sSHi87u0SNffEY3zrlgQIkMWnyrSk1kX9ooJ5sdaGn08gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NL1G7SVL; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NL1G7SVL"
+Date: Tue, 3 Dec 2024 21:23:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1733279034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Erq8KHqMTiHk2SkHdDw3umySOz3AJFP/y3LhXC2ABUg=;
+	b=NL1G7SVLrn4G82Se+3iwOIxOvlFDv471C3bN/t56vcZhoyWexvqSmebD2Ol/Qh5okSRjG8
+	kMiBoIvr82besJESsC931Z49QhxWymZc9ePSSIAux1h5ZpZkF0jChFN5eGwmR144w0qgyz
+	FKyhn04lQngC8hllFiLNfyVc9LsIMIQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	linux-bcachefs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend] bcachefs: BCACHEFS_PATH_TRACEPOINTS should depend
+ on TRACING
+Message-ID: <jdp4jdy7cj266m5xhrbodosfbj2lxoeykhkcugnbare5dbgkfw@xkpknsymnapl>
+References: <2d26d15c39b72c815f14593b8cc916d47e82402d.1733243875.git.geert@linux-m68k.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fce:b0:3a7:21ad:72a9 with SMTP id
- e9e14a558f8ab-3a7fed5f51amr26749215ab.17.1733277062597; Tue, 03 Dec 2024
- 17:51:02 -0800 (PST)
-Date: Tue, 03 Dec 2024 17:51:02 -0800
-In-Reply-To: <589149.1733244622@warthog.procyon.org.uk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <674fb586.050a0220.17bd51.0057.GAE@google.com>
-Subject: Re: [syzbot] [netfs?] WARNING in netfs_retry_reads (2)
-From: syzbot <syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, bharathsm@microsoft.com, brauner@kernel.org, 
-	dhowells@redhat.com, ericvh@kernel.org, jlayton@kernel.org, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux_oss@crudebyte.com, lucho@ionkov.net, 
-	marc.dionne@auristor.com, mathieu.desnoyers@efficios.com, mhiramat@kernel.org, 
-	netfs@lists.linux.dev, pc@manguebit.com, ronniesahlberg@gmail.com, 
-	rostedt@goodmis.org, samba-technical@lists.samba.org, sfrench@samba.org, 
-	sprasad@microsoft.com, syzkaller-bugs@googlegroups.com, tom@talpey.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2d26d15c39b72c815f14593b8cc916d47e82402d.1733243875.git.geert@linux-m68k.org>
+X-Migadu-Flow: FLOW_OUT
 
-Hello,
+On Tue, Dec 03, 2024 at 05:40:10PM +0100, Geert Uytterhoeven wrote:
+> When tracing is disabled, there is no point in asking the user about
+> enabling extra btree_path tracepoints in bcachefs.
+> 
+> Fixes: 32ed4a620c5405be ("bcachefs: Btree path tracepoints")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Thanks, applied
 
-Reported-by: syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com
-Tested-by: syzbot+5621e2baf492be382fa9@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         12588c3f netfs: Fix hang in synchronous read due to fa..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git netfs-writeback
-console output: https://syzkaller.appspot.com/x/log.txt?x=135e1fc0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=50c7a61469ce77e7
-dashboard link: https://syzkaller.appspot.com/bug?extid=5621e2baf492be382fa9
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+> ---
+>  fs/bcachefs/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/bcachefs/Kconfig b/fs/bcachefs/Kconfig
+> index ab6c95b895b33591..464b927e4fffd1f2 100644
+> --- a/fs/bcachefs/Kconfig
+> +++ b/fs/bcachefs/Kconfig
+> @@ -90,7 +90,7 @@ config BCACHEFS_SIX_OPTIMISTIC_SPIN
+>  
+>  config BCACHEFS_PATH_TRACEPOINTS
+>  	bool "Extra btree_path tracepoints"
+> -	depends on BCACHEFS_FS
+> +	depends on BCACHEFS_FS && TRACING
+>  	help
+>  	Enable extra tracepoints for debugging btree_path operations; we don't
+>  	normally want these enabled because they happen at very high rates.
+> -- 
+> 2.34.1
+> 
