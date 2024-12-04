@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C5B2139B2;
-	Wed,  4 Dec 2024 16:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8174920E037;
+	Wed,  4 Dec 2024 16:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733331494; cv=none; b=bIVSN9Wz1ZlDuef/qT5ZVsOfvCzvBNCNlX38sICta+zZ2Fyf3ofy0aPK1a5l0BfT2GSypB+6A9WO/M23VGYXAr+jI6EX63D0fi2rPlQvaUt364p74Y3ApxeHo/0NhRZcDo261h55pOfXE4RpFTZ7s4j7yeQGZmVR/q+gpA/b+cA=
+	t=1733331533; cv=none; b=iMCwXYHAhk6DB1SeLFq0MQs6SFyvqBmiTGPkWKqnK9vfX9elWkIOybSiNioK6g5M8yzK73EklBk9c4aChYIihld+K6UBe+LsEvsX+n6uHAkh46iqaKzf8b12hnB/F/zKnF1OaXLWfQaOibjKZnefu3QSqLp2uS95PzDXoI3puH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733331494; c=relaxed/simple;
-	bh=tWocmDwQ7dA4/KynPTdBWbKzp8Sjj1C34cjzodJbX9U=;
+	s=arc-20240116; t=1733331533; c=relaxed/simple;
+	bh=Y+M6Ju5s92/n8wJKiY38brJg0HJKpvXZeYRvtorhhNA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UMCEtDxSBekEgXSkDBtniy3a2xrI3S/7BEUNZisc5XnrWXZjt0ipXieLhUO/jbiGEc50kgJUI1OVmZnpv38XCs7q2wWzYjk7SRojZuIBUytzuSi5JaYJUn7K4W82wnJny8Y4Be6IGfXSlELPcVF76NlQv/nZAnaZJrVx4MsAubY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HO+IHh5e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kVQg9v+YS8iQtSFZ/jMMj5AE3yPZnU5tOjV6JVaCNl7Vf3Icpey+KRqgXocH/mtPnC5q1/tG2fRMgRixSNQfDeHGDRhatfQbJkhBvpoy28/ds5rP6Pnzvd0hVQw7tl25WZb+7xMB64G6jTncuoiwAHkfbZzWZvxmhe6gk9gd+KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jTu7d3a1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HO+IHh5e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E537C4CECD;
-	Wed,  4 Dec 2024 16:58:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jTu7d3a1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F66CC4CECD;
+	Wed,  4 Dec 2024 16:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733331493;
-	bh=tWocmDwQ7dA4/KynPTdBWbKzp8Sjj1C34cjzodJbX9U=;
+	s=k20201202; t=1733331533;
+	bh=Y+M6Ju5s92/n8wJKiY38brJg0HJKpvXZeYRvtorhhNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HO+IHh5eW1RBEQyzM2orm1ORBUnmcycy3O/mTZ22yjtmGENXApzTf//Rl8QFjocLO
-	 sh5qfPZtahp5iwg9yBP9tc0j5OJbjTIFhOhPQN/+pyPLvR4fZ6Tny4OzTytOAkrTXN
-	 J1poxRwdP+Y1rtxb9jaVHL6PhrQlOdf/FaXwNipceWKNT9/uz0xFykMKFnOaMl5vHu
-	 /STiOqeUZN57EhpYd+vz+yGhMj36Do2aSrMWhcSrqGzMyONFs+oeD8nTfqcE0aWUlk
-	 rJtSsrxx2oyVTRB4C7OUTLNKFI5CkanAafWnwYlDiZAlnyk723XQRXh1mhcdePOMeP
-	 VezV4VkPP8jLw==
+	b=jTu7d3a1+f2ukvnGPW5YlUaOi7rzXKVIlkkUlk0oW3ILozldlNzKjg4Lf3b6moygY
+	 CfIpYn+97wyrJRMdmDptFVoJQjlKKS0gwrLMibhlEmTvZ6V88w/00Kw9bNhM5SRRGG
+	 wx3scLrF9f9vAab2m1+4bK6OVbqq7/fZBPbNYeT675IQ6kF6an+ubztsOGqiTjy0lj
+	 /G+PQmB21kmB/3tXqg8kjCRk6Ds0IYi1nrADXI1tbW7dbU8E1V4l9eDLnyPgsoYOOT
+	 wV9Y3VlpXs9jQ//zFoWyUuD7VdWm6IEw8lrdLZ8gbUIW7FCH1dPo+CIRBxQHbyjSsD
+	 3hX4dH/tF9UCw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petr Pavlu <petr.pavlu@suse.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+Cc: Tatsuya S <tatsuya.s2862@gmail.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
-	bigeasy@linutronix.de,
-	clrkwllms@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 11/36] ring-buffer: Limit time with disabled interrupts in rb_check_pages()
-Date: Wed,  4 Dec 2024 10:45:27 -0500
-Message-ID: <20241204154626.2211476-11-sashal@kernel.org>
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.12 33/36] tracing: Fix function name for trampoline
+Date: Wed,  4 Dec 2024 10:45:49 -0500
+Message-ID: <20241204154626.2211476-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20241204154626.2211476-1-sashal@kernel.org>
 References: <20241204154626.2211476-1-sashal@kernel.org>
@@ -55,219 +52,161 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.1
 Content-Transfer-Encoding: 8bit
 
-From: Petr Pavlu <petr.pavlu@suse.com>
+From: Tatsuya S <tatsuya.s2862@gmail.com>
 
-[ Upstream commit b237e1f7d2273fdcffac20100b72c002bdd770dd ]
+[ Upstream commit 6ce5a6f0a07d37cc377df08a8d8a9c283420f323 ]
 
-The function rb_check_pages() validates the integrity of a specified
-per-CPU tracing ring buffer. It does so by traversing the underlying
-linked list and checking its next and prev links.
+The issue that unrelated function name is shown on stack trace like
+following even though it should be trampoline code address is caused by
+the creation of trampoline code in the area where .init.text section
+of module was freed after module is loaded.
 
-To guarantee that the list isn't modified during the check, a caller
-typically needs to take cpu_buffer->reader_lock. This prevents the check
-from running concurrently, for example, with a potential reader which
-can make the list temporarily inconsistent when swapping its old reader
-page into the buffer.
+bash-1344    [002] .....    43.644608: <stack trace>
+=> (MODULE INIT FUNCTION)
+=> vfs_write
+=> ksys_write
+=> do_syscall_64
+=> entry_SYSCALL_64_after_hwframe
 
-A problem with this approach is that the time when interrupts are
-disabled is non-deterministic, dependent on the ring buffer size. This
-particularly affects PREEMPT_RT because the reader_lock is a raw
-spinlock which doesn't become sleepable on PREEMPT_RT kernels.
+To resolve this, when function address of stack trace entry is in
+trampoline, output without looking up symbol name.
 
-Modify the check so it still attempts to traverse the entire list, but
-gives up the reader_lock between checking individual pages. Introduce
-for this purpose a new variable ring_buffer_per_cpu.cnt which is bumped
-any time the list is modified. The value is used by rb_check_pages() to
-detect such a change and restart the check.
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20241015112810.27203-1-petr.pavlu@suse.com
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+Link: https://lore.kernel.org/20241021071454.34610-2-tatsuya.s2862@gmail.com
+Signed-off-by: Tatsuya S <tatsuya.s2862@gmail.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ring_buffer.c | 98 ++++++++++++++++++++++++++++----------
- 1 file changed, 72 insertions(+), 26 deletions(-)
+ kernel/trace/trace.c        | 33 +++++++++++++++++++++++++--------
+ kernel/trace/trace.h        |  7 +++++++
+ kernel/trace/trace_output.c |  4 ++++
+ 3 files changed, 36 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 5807116bcd0bf..366eb4c4f28e5 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -482,6 +482,8 @@ struct ring_buffer_per_cpu {
- 	unsigned long			nr_pages;
- 	unsigned int			current_context;
- 	struct list_head		*pages;
-+	/* pages generation counter, incremented when the list changes */
-+	unsigned long			cnt;
- 	struct buffer_page		*head_page;	/* read from head */
- 	struct buffer_page		*tail_page;	/* write to tail */
- 	struct buffer_page		*commit_page;	/* committed pages */
-@@ -1475,40 +1477,87 @@ static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
- 	RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK);
- }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a891e00aa7f4..17d2ffde0bb60 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -988,7 +988,8 @@ static inline void trace_access_lock_init(void)
+ #endif
  
-+static bool rb_check_links(struct ring_buffer_per_cpu *cpu_buffer,
-+			   struct list_head *list)
-+{
-+	if (RB_WARN_ON(cpu_buffer,
-+		       rb_list_head(rb_list_head(list->next)->prev) != list))
-+		return false;
-+
-+	if (RB_WARN_ON(cpu_buffer,
-+		       rb_list_head(rb_list_head(list->prev)->next) != list))
-+		return false;
-+
-+	return true;
-+}
-+
- /**
-  * rb_check_pages - integrity check of buffer pages
-  * @cpu_buffer: CPU buffer with pages to test
-  *
-  * As a safety measure we check to make sure the data pages have not
-  * been corrupted.
-- *
-- * Callers of this function need to guarantee that the list of pages doesn't get
-- * modified during the check. In particular, if it's possible that the function
-- * is invoked with concurrent readers which can swap in a new reader page then
-- * the caller should take cpu_buffer->reader_lock.
-  */
- static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+ #ifdef CONFIG_STACKTRACE
+-static void __ftrace_trace_stack(struct trace_buffer *buffer,
++static void __ftrace_trace_stack(struct trace_array *tr,
++				 struct trace_buffer *buffer,
+ 				 unsigned int trace_ctx,
+ 				 int skip, struct pt_regs *regs);
+ static inline void ftrace_trace_stack(struct trace_array *tr,
+@@ -997,7 +998,8 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
+ 				      int skip, struct pt_regs *regs);
+ 
+ #else
+-static inline void __ftrace_trace_stack(struct trace_buffer *buffer,
++static inline void __ftrace_trace_stack(struct trace_array *tr,
++					struct trace_buffer *buffer,
+ 					unsigned int trace_ctx,
+ 					int skip, struct pt_regs *regs)
  {
--	struct list_head *head = rb_list_head(cpu_buffer->pages);
--	struct list_head *tmp;
-+	struct list_head *head, *tmp;
-+	unsigned long buffer_cnt;
-+	unsigned long flags;
-+	int nr_loops = 0;
+@@ -2947,7 +2949,8 @@ struct ftrace_stacks {
+ static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
+ static DEFINE_PER_CPU(int, ftrace_stack_reserve);
  
--	if (RB_WARN_ON(cpu_buffer,
--			rb_list_head(rb_list_head(head->next)->prev) != head))
-+	/*
-+	 * Walk the linked list underpinning the ring buffer and validate all
-+	 * its next and prev links.
-+	 *
-+	 * The check acquires the reader_lock to avoid concurrent processing
-+	 * with code that could be modifying the list. However, the lock cannot
-+	 * be held for the entire duration of the walk, as this would make the
-+	 * time when interrupts are disabled non-deterministic, dependent on the
-+	 * ring buffer size. Therefore, the code releases and re-acquires the
-+	 * lock after checking each page. The ring_buffer_per_cpu.cnt variable
-+	 * is then used to detect if the list was modified while the lock was
-+	 * not held, in which case the check needs to be restarted.
-+	 *
-+	 * The code attempts to perform the check at most three times before
-+	 * giving up. This is acceptable because this is only a self-validation
-+	 * to detect problems early on. In practice, the list modification
-+	 * operations are fairly spaced, and so this check typically succeeds at
-+	 * most on the second try.
-+	 */
-+again:
-+	if (++nr_loops > 3)
+-static void __ftrace_trace_stack(struct trace_buffer *buffer,
++static void __ftrace_trace_stack(struct trace_array *tr,
++				 struct trace_buffer *buffer,
+ 				 unsigned int trace_ctx,
+ 				 int skip, struct pt_regs *regs)
+ {
+@@ -2994,6 +2997,20 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 		nr_entries = stack_trace_save(fstack->calls, size, skip);
+ 	}
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE
++	/* Mark entry of stack trace as trampoline code */
++	if (tr->ops && tr->ops->trampoline) {
++		unsigned long tramp_start = tr->ops->trampoline;
++		unsigned long tramp_end = tramp_start + tr->ops->trampoline_size;
++		unsigned long *calls = fstack->calls;
++
++		for (int i = 0; i < nr_entries; i++) {
++			if (calls[i] >= tramp_start && calls[i] < tramp_end)
++				calls[i] = FTRACE_TRAMPOLINE_MARKER;
++		}
++	}
++#endif
++
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
+ 				    struct_size(entry, caller, nr_entries),
+ 				    trace_ctx);
+@@ -3024,7 +3041,7 @@ static inline void ftrace_trace_stack(struct trace_array *tr,
+ 	if (!(tr->trace_flags & TRACE_ITER_STACKTRACE))
  		return;
  
--	if (RB_WARN_ON(cpu_buffer,
--			rb_list_head(rb_list_head(head->prev)->next) != head))
--		return;
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	head = rb_list_head(cpu_buffer->pages);
-+	if (!rb_check_links(cpu_buffer, head))
-+		goto out_locked;
-+	buffer_cnt = cpu_buffer->cnt;
-+	tmp = head;
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
--	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
--		if (RB_WARN_ON(cpu_buffer,
--				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
--			return;
-+	while (true) {
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 
--		if (RB_WARN_ON(cpu_buffer,
--				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
--			return;
-+		if (buffer_cnt != cpu_buffer->cnt) {
-+			/* The list was updated, try again. */
-+			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+			goto again;
-+		}
-+
-+		tmp = rb_list_head(tmp->next);
-+		if (tmp == head)
-+			/* The iteration circled back, all is done. */
-+			goto out_locked;
-+
-+		if (!rb_check_links(cpu_buffer, tmp))
-+			goto out_locked;
-+
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 	}
-+
-+out_locked:
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+-	__ftrace_trace_stack(buffer, trace_ctx, skip, regs);
++	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, regs);
  }
  
- /*
-@@ -2532,6 +2581,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
+@@ -3033,7 +3050,7 @@ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
+ 	struct trace_buffer *buffer = tr->array_buffer.buffer;
  
- 	/* make sure pages points to a valid page in the ring buffer */
- 	cpu_buffer->pages = next_page;
-+	cpu_buffer->cnt++;
- 
- 	/* update head page */
- 	if (head_bit)
-@@ -2638,6 +2688,7 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
- 			 * pointer to point to end of list
- 			 */
- 			head_page->prev = last_page;
-+			cpu_buffer->cnt++;
- 			success = true;
- 			break;
- 		}
-@@ -2873,12 +2924,8 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		 */
- 		synchronize_rcu();
- 		for_each_buffer_cpu(buffer, cpu) {
--			unsigned long flags;
--
- 			cpu_buffer = buffer->buffers[cpu];
--			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 			rb_check_pages(cpu_buffer);
--			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 		}
- 		atomic_dec(&buffer->record_disabled);
+ 	if (rcu_is_watching()) {
+-		__ftrace_trace_stack(buffer, trace_ctx, skip, NULL);
++		__ftrace_trace_stack(tr, buffer, trace_ctx, skip, NULL);
+ 		return;
  	}
-@@ -5296,6 +5343,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	rb_list_head(reader->list.next)->prev = &cpu_buffer->reader_page->list;
- 	rb_inc_page(&cpu_buffer->head_page);
  
-+	cpu_buffer->cnt++;
- 	local_inc(&cpu_buffer->pages_read);
+@@ -3050,7 +3067,7 @@ void __trace_stack(struct trace_array *tr, unsigned int trace_ctx,
+ 		return;
  
- 	/* Finally update the reader page to the new head */
-@@ -5835,12 +5883,9 @@ void
- ring_buffer_read_finish(struct ring_buffer_iter *iter)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
--	unsigned long flags;
+ 	ct_irq_enter_irqson();
+-	__ftrace_trace_stack(buffer, trace_ctx, skip, NULL);
++	__ftrace_trace_stack(tr, buffer, trace_ctx, skip, NULL);
+ 	ct_irq_exit_irqson();
+ }
  
- 	/* Use this opportunity to check the integrity of the ring buffer. */
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 	rb_check_pages(cpu_buffer);
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+@@ -3067,8 +3084,8 @@ void trace_dump_stack(int skip)
+ 	/* Skip 1 to skip this function. */
+ 	skip++;
+ #endif
+-	__ftrace_trace_stack(printk_trace->array_buffer.buffer,
+-			     tracing_gen_ctx(), skip, NULL);
++	__ftrace_trace_stack(printk_trace, printk_trace->array_buffer.buffer,
++				tracing_gen_ctx(), skip, NULL);
+ }
+ EXPORT_SYMBOL_GPL(trace_dump_stack);
  
- 	atomic_dec(&cpu_buffer->resize_disabled);
- 	kfree(iter->event);
-@@ -6757,6 +6802,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 		/* Install the new pages, remove the head from the list */
- 		cpu_buffer->pages = cpu_buffer->new_pages.next;
- 		list_del_init(&cpu_buffer->new_pages);
-+		cpu_buffer->cnt++;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index c866991b9c78b..30d6675c78cfe 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -2176,4 +2176,11 @@ static inline int rv_init_interface(void)
+ }
+ #endif
  
- 		cpu_buffer->head_page
- 			= list_entry(cpu_buffer->pages, struct buffer_page, list);
++/*
++ * This is used only to distinguish
++ * function address from trampoline code.
++ * So this value has no meaning.
++ */
++#define FTRACE_TRAMPOLINE_MARKER  ((unsigned long) INT_MAX)
++
+ #endif /* _LINUX_KERNEL_TRACE_H */
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 868f2f912f280..c14573e5a9033 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1246,6 +1246,10 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
+ 			break;
+ 
+ 		trace_seq_puts(s, " => ");
++		if ((*p) == FTRACE_TRAMPOLINE_MARKER) {
++			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
++			continue;
++		}
+ 		seq_print_ip_sym(s, (*p) + delta, flags);
+ 		trace_seq_putc(s, '\n');
+ 	}
 -- 
 2.43.0
 
