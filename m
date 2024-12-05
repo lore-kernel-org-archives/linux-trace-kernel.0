@@ -1,60 +1,60 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD2C2391A4;
-	Thu,  5 Dec 2024 09:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE341CD2B
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Dec 2024 16:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733391166; cv=none; b=gBGUywnWWuhZ4L3c6Qb+TgEXm8qmovbRvgy5TwEQKBR2d6aaBGCI3kTJ3BlUBTJJEsNyKfxjrQFfEGfRBRPn/EHMQqS+1KEwRHwct4cnM+2Om1N34tRX3wH5wKm7OjPOyt29zPvgmZ0Fne97dWL3btErP4JInOTZv4PZet9P9a4=
+	t=1733414807; cv=none; b=hht/SNZd2u8sHiYsHRAYFrDfWQxe8+CnjmnXu8XRkQSfRIrSqUG8CC/W3xpgLb7BAdXdyNuX45jOSLERGwTZ6L41KomP0siEl7fabvL5zw8HrI0ANF5/jji9WD42ilcFw7gZn2zSDkp30CEEp8Mg6L38jx0ZLma0tTirQf92JVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733391166; c=relaxed/simple;
-	bh=ykpGI7/7XbRD3iJhq8FhOIZ6PUAW5EEEMoBDU5tKsV0=;
+	s=arc-20240116; t=1733414807; c=relaxed/simple;
+	bh=A2DnTOze90pmj6g5vc3azSV/Ln9IgzLkSP0Xv7QklXw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AErPvsI9yrxe3fO7YVA+Gcti0aeJPhxrCeprAE16urODXGBaavIC/ZM6DNyD1azA0vgNJvj2UGT5+27dycETJ4OI2ajWX77tpNErhxiNOAHMx21H/lgj2bw6WDa1niiitt6QtnZN1T7gTYj2hHOMMENpzfye/uWcmBlpqW5Oy3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i/UaASKS; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=T9QO1IQNN26R4RbpA0dXRvMbygbJJxefzSgqBu/6V0Q33Ksc75wwGZBDpLnPamhdtJ6OIQFN+4cBxgiIK7F53ojOlRvdzyNUwo2peliQC9p73b6P+P7M//yFxFQdOLxC/8OKMesWIXv3gXPKZEvmOdU+hOpw3vUxjKSDIt9PXDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NK4OrzcX; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i/UaASKS"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B56pThl001983;
-	Thu, 5 Dec 2024 09:32:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=60RIvD
-	UpT9S2Rm4TbMmqWTeMBYTo514g8EBdwknaRXA=; b=i/UaASKSeAMDruDOSS5qhp
-	W41mCMoqA6naB8gl2w/btSJK0wqsufpTqrnp9qugqIPogqZxKjTFoqZQT5M8PKbz
-	QNIMbzrLgAH3mll8DEvgamnKRyw/Z5+diz08H+x14sKO4IMqHa13cGm4P4jv2L4U
-	qh+JIVNnfgytosKqIxfRXfgTNUzDYl8JIj+xy3JPd81FIbgtOAYFCVD24pnro11k
-	ptRPhaNYX8oIVFq8kcIz6AlNRA/rC336x/0qrGOSCsIdszTwTLpngosg819GCBBF
-	A49gzbrxsVxWodOvrQYlgVXLohxZfy48Mlq/OIUl4BbTWBmrGv8jFkSA7tjTo1Fg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437r4pvrft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 09:32:09 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B556ReB005235;
-	Thu, 5 Dec 2024 09:32:08 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43a2kxqw0j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Dec 2024 09:32:08 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B59W8fv29753932
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 5 Dec 2024 09:32:08 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4E0765804E;
-	Thu,  5 Dec 2024 09:32:08 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EF3655803F;
-	Thu,  5 Dec 2024 09:32:00 +0000 (GMT)
-Received: from [9.43.63.110] (unknown [9.43.63.110])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  5 Dec 2024 09:32:00 +0000 (GMT)
-Message-ID: <eb8d6fbc-4c87-44cc-b69a-4a397ebc2e67@linux.ibm.com>
-Date: Thu, 5 Dec 2024 15:01:58 +0530
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NK4OrzcX"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-84194e90c0fso65763839f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Dec 2024 08:06:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1733414804; x=1734019604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G7E/0K/5K1BjOut5mLlzCa+24O07aK8RA1Bdk2pEJFM=;
+        b=NK4OrzcXhegQ2guYPm8vkhfQ6ZnqrEEGeafEDW0Hy5rqNhvnm4ENDTIF9HkKheblf5
+         apjMe7CkhN4zFNg6BNlV1ACwu+vcqFMlThTNSlpN85rKe6R8q6232ni6jciOfFK6Vytt
+         Dee7afaB97MHYXC3qJkTlgg74pkp0rKZ9DIRA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733414804; x=1734019604;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G7E/0K/5K1BjOut5mLlzCa+24O07aK8RA1Bdk2pEJFM=;
+        b=nyZCNDg1FE6QDdADZRKXBbbuaHMO4z+mIxQDmUmAnP6QNJLWdkrowXwUtFhApu+QqT
+         vKuZqi81mAOIxT1dVJuF5GLgzmj2R0/MUemftfo9LeQLf+/gwFepPWhE+zc80+3Wdirv
+         UIGfHFMfW4vTIM1hgmFWc/jstTLvf7nSSvMEigNLppZsAcMiTZSVPlGIKCe+ssd6X4N/
+         4df6FF1foMv1dkk6KkgQSyMac3j18GPrVas/w2VK08n9Z2rnscev/+fAzs+8Hfu1/WAl
+         PsZA0NFo3rb7XluEoN7S2CC1M67WAfKQ6IgFXJ6tqsYYzfNtwN4zxyEw22TpaSYdDHpS
+         pkkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW51/qVzl7DH/dz84cg+hxCqb00j3Ozyz5iXGzz7653ADaYumRglhGfsw3+pWw2SRMfSO88Zc71H3pbhek2alUK9l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV78J+cX0iSCzZsZP7AkAf6LFnuEc+gMsgHDJ2T9PqnjDV6Jvb
+	Ec7EDxqfmPUdUf2QzkDJPENoAgC+90Yfkf2AH/eRavCmXsvI7jQUGxoeP3Pza0w=
+X-Gm-Gg: ASbGncsI2KZ+M8Xnfhcl/0z9b9iB3vT+soXpZNW0785dqpa8uRn+DIciakLfypW2CJi
+	qnEaxJ1kRBjHQr0RowzMGBym1fr85xB/m9uicNheLVxd8tGA2v24e/2dTSlVBzEW5OdeUwFa1Rr
+	b3F/hBBtsrlnwQ17pwFukFwVu5322x5uf4AnomWCucWXQ0C5nfCeO8rYsCpHHsqjfDSctu2IvvM
+	afdCACAHhL3wle9MdYyxQrFSW0v+7D6+B+ELp2uuYw2lUzmICvwtVJkLw5jqQ==
+X-Google-Smtp-Source: AGHT+IECQoo3AU1H3Cux4NWyUqkEkqx386V5pN6kVl0r6Wn3PSuY9bnBffRQmWJX+QbbsEJHmnHHEA==
+X-Received: by 2002:a92:c56a:0:b0:3a7:dfe4:bd33 with SMTP id e9e14a558f8ab-3a7fecc82b3mr114487405ab.6.1733414804406;
+        Thu, 05 Dec 2024 08:06:44 -0800 (PST)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4e286224210sm337614173.161.2024.12.05.08.06.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Dec 2024 08:06:43 -0800 (PST)
+Message-ID: <d9467ba5-ec01-4683-8078-d85574b2506c@linuxfoundation.org>
+Date: Thu, 5 Dec 2024 09:06:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,193 +62,69 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] tracing: Remove definition of trace_*_rcuidle()
+Subject: Re: [PATCH v2] selftests/ftrace: adjust offset for kprobe syntax
+ error test
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        "Paul E. McKenney"
- <paulmck@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20241003181629.36209057@gandalf.local.home>
- <bddb02de-957a-4df5-8e77-829f55728ea2@roeck-us.net>
- <20241203155542.462b1b21@gandalf.local.home>
- <ee401848-f7a1-4877-b896-36bec32ca985@roeck-us.net>
- <20241203220153.3f81f12b@gandalf.local.home>
+Cc: Hari Bathini <hbathini@linux.ibm.com>, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, "Naveen N. Rao"
+ <naveen@kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20241129202621.721159-1-hbathini@linux.ibm.com>
+ <20241202144111.75d1bb3b@gandalf.local.home>
+ <fa1e747f-1823-4d20-86c0-b85a3b959952@linuxfoundation.org>
+ <20241203202008.1f30a266@gandalf.local.home>
 Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <20241203220153.3f81f12b@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20241203202008.1f30a266@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: o04zhgZjbHsTW8kusHOZJFA4pxD-_NVG
-X-Proofpoint-ORIG-GUID: o04zhgZjbHsTW8kusHOZJFA4pxD-_NVG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 clxscore=1011 phishscore=0 malwarescore=0
- suspectscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2412050066
 
-
-
-On 12/4/24 8:31 AM, Steven Rostedt wrote:
-> On Tue, 3 Dec 2024 17:48:33 -0800
-> Guenter Roeck <linux@roeck-us.net> wrote:
+On 12/3/24 18:20, Steven Rostedt wrote:
+> On Tue, 3 Dec 2024 18:01:06 -0700
+> Shuah Khan <skhan@linuxfoundation.org> wrote:
 > 
->> Hmm. If you say so. Note that powerpc has the same or a similar problem.
+>> On 12/2/24 12:41, Steven Rostedt wrote:
+>>> On Sat, 30 Nov 2024 01:56:21 +0530
+>>> Hari Bathini <hbathini@linux.ibm.com> wrote:
+>>>    
+>>>> In 'NOFENTRY_ARGS' test case for syntax check, any offset X of
+>>>> `vfs_read+X` except function entry offset (0) fits the criterion,
+>>>> even if that offset is not at instruction boundary, as the parser
+>>>> comes before probing. But with "ENDBR64" instruction on x86, offset
+>>>> 4 is treated as function entry. So, X can't be 4 as well. Thus, 8
+>>>> was used as offset for the test case. On 64-bit powerpc though, any
+>>>> offset <= 16 can be considered function entry depending on build
+>>>> configuration (see arch_kprobe_on_func_entry() for implementation
+>>>> details). So, use `vfs_read+20` to accommodate that scenario too.
+>>>>
+>>>> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
+>>>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>>>
+>>> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>>
+>>> Shuah,
+>>>
+>>> Can you take this through your tree?
 >>
->> [    0.142039][    T0] RCU not watching for tracepoint
->> [    0.142488][    T0]
->> [    0.142659][    T0] =============================
->> [    0.142755][    T0] WARNING: suspicious RCU usage
->> [    0.142914][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
->> [    0.143082][    T0] -----------------------------
->> [    0.143178][    T0] kernel/notifier.c:586 notify_die called but RCU thinks we're quiescent!
+>> Yes I can take it. I do have question about whether this is
+>> a fix - sounds like it is from the change log.
 >>
->>
->> [    0.152733][    T0] RCU not watching for tracepoint
->> [    0.152770][    T0]
->> [    0.152995][    T0] =============================
->> [    0.153092][    T0] WARNING: suspicious RCU usage
->> [    0.153187][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
->> [    0.153301][    T0] -----------------------------
->> [    0.153394][    T0] include/linux/rcupdate.h:850 rcu_read_lock() used illegally while idle!
->>
->> [    0.165396][    T0] RCU not watching for tracepoint
->> [    0.165540][    T0]
->> [    0.165712][    T0] =============================
->> [    0.165811][    T0] WARNING: suspicious RCU usage
->> [    0.165909][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
->> [    0.166026][    T0] -----------------------------
->> [    0.166122][    T0] include/linux/rcupdate.h:878 rcu_read_unlock() used illegally while idle!
->>
->> and many more.
+>> Clearly stating that it is a fix will help so it can be picked
+>> up for stables.
 > 
-> Grumble. It's just that one file. I wonder if we could just do a hack like
-> this?
+> I would say it's a fix, as the test currently fails in certain scenarios
+> for powerpc.
+> 
+> You can add:
+> 
+> Fixes: 4231f30fcc34a ("selftests/ftrace: Add BTF arguments test cases")
 > 
 
-Below patch fixes the issue in powerpc
-Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+I applied this to linux-kselftest fixes - will send it up for rc2 or rc3
 
-Thanks
-maddy
-
-> Paul?
-> 
-> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
-> index 5c03633316a6..58098873efa9 100644
-> --- a/kernel/trace/trace_preemptirq.c
-> +++ b/kernel/trace/trace_preemptirq.c
-> @@ -10,11 +10,42 @@
->  #include <linux/module.h>
->  #include <linux/ftrace.h>
->  #include <linux/kprobes.h>
-> +#include <linux/hardirq.h>
->  #include "trace.h"
->  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/preemptirq.h>
->  
-> +/*
-> + * Use regular trace points on architectures that implement noinstr
-> + * tooling: these calls will only happen with RCU enabled, which can
-> + * use a regular tracepoint.
-> + *
-> + * On older architectures, RCU may not be watching in idle. In that
-> + * case, wake up RCU to watch while calling the tracepoint. These
-> + * aren't NMI-safe - so exclude NMI contexts:
-> + */
-> +#ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> +#define trace(point, args)	trace_##point(args)
-> +#else
-> +#define trace(point, args)					\
-> +	do {							\
-> +		if (trace_##point##_enabled()) {		\
-> +			bool exit_rcu = false;			\
-> +			if (in_nmi())				\
-> +				break;				\
-> +			if (!IS_ENABLED(CONFIG_TINY_RCU) &&	\
-> +			    is_idle_task(current)) {		\
-> +				ct_irq_enter();			\
-> +				exit_rcu = true;		\
-> +			}					\
-> +			trace_##point(args);			\
-> +			if (exit_rcu)				\
-> +				ct_irq_exit();			\
-> +		}						\
-> +	} while (0)
-> +#endif
-> +
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  /* Per-cpu variable to prevent redundant calls when IRQs already off */
->  static DEFINE_PER_CPU(int, tracing_irq_cpu);
-> @@ -28,7 +59,7 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
->  void trace_hardirqs_on_prepare(void)
->  {
->  	if (this_cpu_read(tracing_irq_cpu)) {
-> -		trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-> +		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->  		this_cpu_write(tracing_irq_cpu, 0);
->  	}
-> @@ -39,7 +70,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_prepare);
->  void trace_hardirqs_on(void)
->  {
->  	if (this_cpu_read(tracing_irq_cpu)) {
-> -		trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
-> +		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
->  		this_cpu_write(tracing_irq_cpu, 0);
->  	}
-> @@ -61,7 +92,7 @@ void trace_hardirqs_off_finish(void)
->  	if (!this_cpu_read(tracing_irq_cpu)) {
->  		this_cpu_write(tracing_irq_cpu, 1);
->  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-> -		trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-> +		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  	}
->  
->  }
-> @@ -75,7 +106,7 @@ void trace_hardirqs_off(void)
->  	if (!this_cpu_read(tracing_irq_cpu)) {
->  		this_cpu_write(tracing_irq_cpu, 1);
->  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
-> -		trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
-> +		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
->  	}
->  }
->  EXPORT_SYMBOL(trace_hardirqs_off);
-> @@ -86,13 +117,13 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
->  
->  void trace_preempt_on(unsigned long a0, unsigned long a1)
->  {
-> -	trace_preempt_enable(a0, a1);
-> +	trace(preempt_enable, TP_ARGS(a0, a1));
->  	tracer_preempt_on(a0, a1);
->  }
->  
->  void trace_preempt_off(unsigned long a0, unsigned long a1)
->  {
-> -	trace_preempt_disable(a0, a1);
-> +	trace(preempt_disable, TP_ARGS(a0, a1));
->  	tracer_preempt_off(a0, a1);
->  }
->  #endif
-> 
-> 
-> I tested this by forcing x86 to use this code, and it appeared to work.
-> 
-> -- Steve
-> 
-> 
+thanks,
+-- Shuah
 
