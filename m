@@ -1,245 +1,254 @@
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740A12F22;
-	Thu,  5 Dec 2024 03:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD2C2391A4;
+	Thu,  5 Dec 2024 09:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733367864; cv=none; b=J0W1Dx8KN3gAM8RPV1FoakQXCTLQ+J1HAn5SBzZQhe+NS02EH0NmAMSg35KP5JETcG42H7xg2YjIiSYd81RqEjtuiFkyCNTAhvSE0zj4LFlQdtg9/MWiO8jvBrTij0+A+nhjkl7jAVR6eMuZssVb19/u8IVmUrcDdOFwqJK7Unw=
+	t=1733391166; cv=none; b=gBGUywnWWuhZ4L3c6Qb+TgEXm8qmovbRvgy5TwEQKBR2d6aaBGCI3kTJ3BlUBTJJEsNyKfxjrQFfEGfRBRPn/EHMQqS+1KEwRHwct4cnM+2Om1N34tRX3wH5wKm7OjPOyt29zPvgmZ0Fne97dWL3btErP4JInOTZv4PZet9P9a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733367864; c=relaxed/simple;
-	bh=Sqjb9l3KmzFgthpQAVVIAFvtXmiJ79sbwKi7PSjj4mk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CcewdAhCQDSRBUHz5YyJzSGSiwTYsmrFmzYzpS7ATEE+fbahzcc9o/+4VnLKVF14wu3zZf3sqWnLg2FFitELV9YsbKOI5ybEephF3uZyTRPXwKhTZBldBXLwy4IS2iYz2UvQuxcVEb64NV55PHlVA5l+vNM5sWEbrf6WftgusOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id A9D2E8CC; Wed,  4 Dec 2024 21:04:13 -0600 (CST)
-Date: Wed, 4 Dec 2024 21:04:13 -0600
-From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Jordan Rome <linux@jordanrome.com>
-Cc: linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Kernel Team <kernel-team@fb.com>, Serge Hallyn <sergeh@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [v9] security: add trace event for cap_capable
-Message-ID: <20241205030413.GA150761@mail.hallyn.com>
-References: <20241204155911.1817092-1-linux@jordanrome.com>
+	s=arc-20240116; t=1733391166; c=relaxed/simple;
+	bh=ykpGI7/7XbRD3iJhq8FhOIZ6PUAW5EEEMoBDU5tKsV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AErPvsI9yrxe3fO7YVA+Gcti0aeJPhxrCeprAE16urODXGBaavIC/ZM6DNyD1azA0vgNJvj2UGT5+27dycETJ4OI2ajWX77tpNErhxiNOAHMx21H/lgj2bw6WDa1niiitt6QtnZN1T7gTYj2hHOMMENpzfye/uWcmBlpqW5Oy3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i/UaASKS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i/UaASKS"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4B56pThl001983;
+	Thu, 5 Dec 2024 09:32:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=60RIvD
+	UpT9S2Rm4TbMmqWTeMBYTo514g8EBdwknaRXA=; b=i/UaASKSeAMDruDOSS5qhp
+	W41mCMoqA6naB8gl2w/btSJK0wqsufpTqrnp9qugqIPogqZxKjTFoqZQT5M8PKbz
+	QNIMbzrLgAH3mll8DEvgamnKRyw/Z5+diz08H+x14sKO4IMqHa13cGm4P4jv2L4U
+	qh+JIVNnfgytosKqIxfRXfgTNUzDYl8JIj+xy3JPd81FIbgtOAYFCVD24pnro11k
+	ptRPhaNYX8oIVFq8kcIz6AlNRA/rC336x/0qrGOSCsIdszTwTLpngosg819GCBBF
+	A49gzbrxsVxWodOvrQYlgVXLohxZfy48Mlq/OIUl4BbTWBmrGv8jFkSA7tjTo1Fg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 437r4pvrft-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Dec 2024 09:32:09 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4B556ReB005235;
+	Thu, 5 Dec 2024 09:32:08 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 43a2kxqw0j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Dec 2024 09:32:08 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4B59W8fv29753932
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 5 Dec 2024 09:32:08 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E0765804E;
+	Thu,  5 Dec 2024 09:32:08 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EF3655803F;
+	Thu,  5 Dec 2024 09:32:00 +0000 (GMT)
+Received: from [9.43.63.110] (unknown [9.43.63.110])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  5 Dec 2024 09:32:00 +0000 (GMT)
+Message-ID: <eb8d6fbc-4c87-44cc-b69a-4a397ebc2e67@linux.ibm.com>
+Date: Thu, 5 Dec 2024 15:01:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241204155911.1817092-1-linux@jordanrome.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] tracing: Remove definition of trace_*_rcuidle()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        "Paul E. McKenney"
+ <paulmck@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+References: <20241003181629.36209057@gandalf.local.home>
+ <bddb02de-957a-4df5-8e77-829f55728ea2@roeck-us.net>
+ <20241203155542.462b1b21@gandalf.local.home>
+ <ee401848-f7a1-4877-b896-36bec32ca985@roeck-us.net>
+ <20241203220153.3f81f12b@gandalf.local.home>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <20241203220153.3f81f12b@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: o04zhgZjbHsTW8kusHOZJFA4pxD-_NVG
+X-Proofpoint-ORIG-GUID: o04zhgZjbHsTW8kusHOZJFA4pxD-_NVG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 clxscore=1011 phishscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2412050066
 
-On Wed, Dec 04, 2024 at 07:59:11AM -0800, Jordan Rome wrote:
-> In cases where we want a stable way to observe/trace
-> cap_capable (e.g. protection from inlining and API updates)
-> add a tracepoint that passes:
-> - The credentials used
-> - The user namespace of the resource being accessed
-> - The user namespace in which the credential provides the
-> capability to access the targeted resource
-> - The capability to check for
-> - The return value of the check
+
+
+On 12/4/24 8:31 AM, Steven Rostedt wrote:
+> On Tue, 3 Dec 2024 17:48:33 -0800
+> Guenter Roeck <linux@roeck-us.net> wrote:
 > 
-> Signed-off-by: Jordan Rome <linux@jordanrome.com>
-
-Thanks, applied to caps-next.
-
-> ---
->  MAINTAINERS                       |  1 +
->  include/trace/events/capability.h | 57 +++++++++++++++++++++++++++++++
->  security/commoncap.c              | 54 ++++++++++++++++++++++-------
->  3 files changed, 99 insertions(+), 13 deletions(-)
->  create mode 100644 include/trace/events/capability.h
+>> Hmm. If you say so. Note that powerpc has the same or a similar problem.
+>>
+>> [    0.142039][    T0] RCU not watching for tracepoint
+>> [    0.142488][    T0]
+>> [    0.142659][    T0] =============================
+>> [    0.142755][    T0] WARNING: suspicious RCU usage
+>> [    0.142914][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
+>> [    0.143082][    T0] -----------------------------
+>> [    0.143178][    T0] kernel/notifier.c:586 notify_die called but RCU thinks we're quiescent!
+>>
+>>
+>> [    0.152733][    T0] RCU not watching for tracepoint
+>> [    0.152770][    T0]
+>> [    0.152995][    T0] =============================
+>> [    0.153092][    T0] WARNING: suspicious RCU usage
+>> [    0.153187][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
+>> [    0.153301][    T0] -----------------------------
+>> [    0.153394][    T0] include/linux/rcupdate.h:850 rcu_read_lock() used illegally while idle!
+>>
+>> [    0.165396][    T0] RCU not watching for tracepoint
+>> [    0.165540][    T0]
+>> [    0.165712][    T0] =============================
+>> [    0.165811][    T0] WARNING: suspicious RCU usage
+>> [    0.165909][    T0] 6.13.0-rc1-00058-ge75ce84aa5d3 #1 Not tainted
+>> [    0.166026][    T0] -----------------------------
+>> [    0.166122][    T0] include/linux/rcupdate.h:878 rcu_read_unlock() used illegally while idle!
+>>
+>> and many more.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 1e930c7a58b1..33fde7f660d0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5147,6 +5147,7 @@ M:	Serge Hallyn <serge@hallyn.com>
->  L:	linux-security-module@vger.kernel.org
->  S:	Supported
->  F:	include/linux/capability.h
-> +F:	include/trace/events/capability.h
->  F:	include/uapi/linux/capability.h
->  F:	kernel/capability.c
->  F:	security/commoncap.c
-> diff --git a/include/trace/events/capability.h b/include/trace/events/capability.h
-> new file mode 100644
-> index 000000000000..17340257946c
-> --- /dev/null
-> +++ b/include/trace/events/capability.h
-> @@ -0,0 +1,57 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM capability
-> +
-> +#if !defined(_TRACE_CAPABILITY_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_CAPABILITY_H
-> +
-> +#include <linux/cred.h>
-> +#include <linux/tracepoint.h>
-> +#include <linux/user_namespace.h>
-> +
-> +/**
-> + * cap_capable - called after it's determined if a task has a particular
-> + * effective capability
+> Grumble. It's just that one file. I wonder if we could just do a hack like
+> this?
+> 
+
+Below patch fixes the issue in powerpc
+Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+
+Thanks
+maddy
+
+> Paul?
+> 
+> diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+> index 5c03633316a6..58098873efa9 100644
+> --- a/kernel/trace/trace_preemptirq.c
+> +++ b/kernel/trace/trace_preemptirq.c
+> @@ -10,11 +10,42 @@
+>  #include <linux/module.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/kprobes.h>
+> +#include <linux/hardirq.h>
+>  #include "trace.h"
+>  
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/preemptirq.h>
+>  
+> +/*
+> + * Use regular trace points on architectures that implement noinstr
+> + * tooling: these calls will only happen with RCU enabled, which can
+> + * use a regular tracepoint.
 > + *
-> + * @cred: The credentials used
-> + * @target_ns: The user namespace of the resource being accessed
-> + * @capable_ns: The user namespace in which the credential provides the
-> + *              capability to access the targeted resource.
-> + *              This will be NULL if ret is not 0.
-> + * @cap: The capability to check for
-> + * @ret: The return value of the check: 0 if it does, -ve if it does not
-> + *
-> + * Allows to trace calls to cap_capable in commoncap.c
+> + * On older architectures, RCU may not be watching in idle. In that
+> + * case, wake up RCU to watch while calling the tracepoint. These
+> + * aren't NMI-safe - so exclude NMI contexts:
 > + */
-> +TRACE_EVENT(cap_capable,
+> +#ifdef CONFIG_ARCH_WANTS_NO_INSTR
+> +#define trace(point, args)	trace_##point(args)
+> +#else
+> +#define trace(point, args)					\
+> +	do {							\
+> +		if (trace_##point##_enabled()) {		\
+> +			bool exit_rcu = false;			\
+> +			if (in_nmi())				\
+> +				break;				\
+> +			if (!IS_ENABLED(CONFIG_TINY_RCU) &&	\
+> +			    is_idle_task(current)) {		\
+> +				ct_irq_enter();			\
+> +				exit_rcu = true;		\
+> +			}					\
+> +			trace_##point(args);			\
+> +			if (exit_rcu)				\
+> +				ct_irq_exit();			\
+> +		}						\
+> +	} while (0)
+> +#endif
 > +
-> +	TP_PROTO(const struct cred *cred, struct user_namespace *target_ns,
-> +		const struct user_namespace *capable_ns, int cap, int ret),
-> +
-> +	TP_ARGS(cred, target_ns, capable_ns, cap, ret),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(const struct cred *, cred)
-> +		__field(struct user_namespace *, target_ns)
-> +		__field(const struct user_namespace *, capable_ns)
-> +		__field(int, cap)
-> +		__field(int, ret)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->cred       = cred;
-> +		__entry->target_ns    = target_ns;
-> +		__entry->capable_ns = ret == 0 ? capable_ns : NULL;
-> +		__entry->cap        = cap;
-> +		__entry->ret        = ret;
-> +	),
-> +
-> +	TP_printk("cred %p, target_ns %p, capable_ns %p, cap %d, ret %d",
-> +		__entry->cred, __entry->target_ns, __entry->capable_ns, __entry->cap,
-> +		__entry->ret)
-> +);
-> +
-> +#endif /* _TRACE_CAPABILITY_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/security/commoncap.c b/security/commoncap.c
-> index cefad323a0b1..7b6984b27127 100644
-> --- a/security/commoncap.c
-> +++ b/security/commoncap.c
-> @@ -27,6 +27,9 @@
->  #include <linux/mnt_idmapping.h>
->  #include <uapi/linux/lsm.h>
-> 
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/capability.h>
-> +
->  /*
->   * If a non-root user executes a setuid-root binary in
->   * !secure(SECURE_NOROOT) mode, then we raise capabilities.
-> @@ -50,24 +53,24 @@ static void warn_setuid_and_fcaps_mixed(const char *fname)
->  }
-> 
->  /**
-> - * cap_capable - Determine whether a task has a particular effective capability
-> + * cap_capable_helper - Determine whether a task has a particular effective
-> + * capability.
->   * @cred: The credentials to use
-> - * @targ_ns:  The user namespace in which we need the capability
-> + * @target_ns:  The user namespace of the resource being accessed
-> + * @cred_ns:  The user namespace of the credentials
->   * @cap: The capability to check for
-> - * @opts: Bitmask of options defined in include/linux/security.h
->   *
->   * Determine whether the nominated task has the specified capability amongst
->   * its effective set, returning 0 if it does, -ve if it does not.
->   *
-> - * NOTE WELL: cap_has_capability() cannot be used like the kernel's capable()
-> - * and has_capability() functions.  That is, it has the reverse semantics:
-> - * cap_has_capability() returns 0 when a task has a capability, but the
-> - * kernel's capable() and has_capability() returns 1 for this case.
-> + * See cap_capable for more details.
->   */
-> -int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
-> -		int cap, unsigned int opts)
-> +static inline int cap_capable_helper(const struct cred *cred,
-> +				     struct user_namespace *target_ns,
-> +				     const struct user_namespace *cred_ns,
-> +				     int cap)
+>  #ifdef CONFIG_TRACE_IRQFLAGS
+>  /* Per-cpu variable to prevent redundant calls when IRQs already off */
+>  static DEFINE_PER_CPU(int, tracing_irq_cpu);
+> @@ -28,7 +59,7 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
+>  void trace_hardirqs_on_prepare(void)
 >  {
-> -	struct user_namespace *ns = targ_ns;
-> +	struct user_namespace *ns = target_ns;
-> 
->  	/* See if cred has the capability in the target user namespace
->  	 * by examining the target user namespace and all of the target
-> @@ -75,21 +78,21 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
->  	 */
->  	for (;;) {
->  		/* Do we have the necessary capabilities? */
-> -		if (ns == cred->user_ns)
-> +		if (likely(ns == cred_ns))
->  			return cap_raised(cred->cap_effective, cap) ? 0 : -EPERM;
-> 
->  		/*
->  		 * If we're already at a lower level than we're looking for,
->  		 * we're done searching.
->  		 */
-> -		if (ns->level <= cred->user_ns->level)
-> +		if (ns->level <= cred_ns->level)
->  			return -EPERM;
-> 
->  		/*
->  		 * The owner of the user namespace in the parent of the
->  		 * user namespace has all caps.
->  		 */
-> -		if ((ns->parent == cred->user_ns) && uid_eq(ns->owner, cred->euid))
-> +		if ((ns->parent == cred_ns) && uid_eq(ns->owner, cred->euid))
->  			return 0;
-> 
->  		/*
-> @@ -102,6 +105,31 @@ int cap_capable(const struct cred *cred, struct user_namespace *targ_ns,
->  	/* We never get here */
+>  	if (this_cpu_read(tracing_irq_cpu)) {
+> -		trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+>  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+>  		this_cpu_write(tracing_irq_cpu, 0);
+>  	}
+> @@ -39,7 +70,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_prepare);
+>  void trace_hardirqs_on(void)
+>  {
+>  	if (this_cpu_read(tracing_irq_cpu)) {
+> -		trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+>  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+>  		this_cpu_write(tracing_irq_cpu, 0);
+>  	}
+> @@ -61,7 +92,7 @@ void trace_hardirqs_off_finish(void)
+>  	if (!this_cpu_read(tracing_irq_cpu)) {
+>  		this_cpu_write(tracing_irq_cpu, 1);
+>  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+> -		trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+>  	}
+>  
 >  }
+> @@ -75,7 +106,7 @@ void trace_hardirqs_off(void)
+>  	if (!this_cpu_read(tracing_irq_cpu)) {
+>  		this_cpu_write(tracing_irq_cpu, 1);
+>  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+> -		trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+>  	}
+>  }
+>  EXPORT_SYMBOL(trace_hardirqs_off);
+> @@ -86,13 +117,13 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+>  
+>  void trace_preempt_on(unsigned long a0, unsigned long a1)
+>  {
+> -	trace_preempt_enable(a0, a1);
+> +	trace(preempt_enable, TP_ARGS(a0, a1));
+>  	tracer_preempt_on(a0, a1);
+>  }
+>  
+>  void trace_preempt_off(unsigned long a0, unsigned long a1)
+>  {
+> -	trace_preempt_disable(a0, a1);
+> +	trace(preempt_disable, TP_ARGS(a0, a1));
+>  	tracer_preempt_off(a0, a1);
+>  }
+>  #endif
 > 
-> +/**
-> + * cap_capable - Determine whether a task has a particular effective capability
-> + * @cred: The credentials to use
-> + * @target_ns:  The user namespace of the resource being accessed
-> + * @cap: The capability to check for
-> + * @opts: Bitmask of options defined in include/linux/security.h (unused)
-> + *
-> + * Determine whether the nominated task has the specified capability amongst
-> + * its effective set, returning 0 if it does, -ve if it does not.
-> + *
-> + * NOTE WELL: cap_has_capability() cannot be used like the kernel's capable()
-> + * and has_capability() functions.  That is, it has the reverse semantics:
-> + * cap_has_capability() returns 0 when a task has a capability, but the
-> + * kernel's capable() and has_capability() returns 1 for this case.
-> + */
-> +int cap_capable(const struct cred *cred, struct user_namespace *target_ns,
-> +		int cap, unsigned int opts)
-> +{
-> +	const struct user_namespace *cred_ns = cred->user_ns;
-> +	int ret = cap_capable_helper(cred, target_ns, cred_ns, cap);
-> +
-> +	trace_cap_capable(cred, target_ns, cred_ns, cap, ret);
-> +	return ret;
-> +}
-> +
->  /**
->   * cap_settime - Determine whether the current process may set the system clock
->   * @ts: The time to set
-> --
-> 2.43.5
+> 
+> I tested this by forcing x86 to use this code, and it appeared to work.
+> 
+> -- Steve
+> 
+> 
+
