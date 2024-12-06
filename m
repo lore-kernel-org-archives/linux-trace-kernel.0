@@ -1,355 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2044.outbound.protection.outlook.com [40.107.92.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3568126C04;
-	Fri,  6 Dec 2024 00:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733444675; cv=none; b=JCOIJYTfQpr6idnIAhK2A92XuuWJwjbQuBvNCAgPJVO/fL6sAVRwRkFhYr+lZDWJpKtLJgJ7HwyZ8MsFdQRqwUW/STSSF3rtFvacTgp/0ccri9fordB2wadIqxCHUr+XWHIu23od38ldK8WakCnC8D6NSUUKKIVZpbIGhu4UjlM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733444675; c=relaxed/simple;
-	bh=2NHAC/ucuHOP+dlhjMOWq5m414F5Fa63pCr8kcoZANw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ApMCF5uUgc8YMg0HUjmnQKNGH7xV06ka7VYFqMqONN/ObNxxwdXqiqpJ/Fem5DttIsvoiUTt7uIGLDxgx1gNSA4ltPy8kUAlJS7Gvl1JYb7yo71ElSzLrchgaMNYJhtQoDqCOUo7LVrSyHCQNHJ5hYgIvnSf7J+OGjdoKQcy2QQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMJNYpA4; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964EC8FE;
+	Fri,  6 Dec 2024 06:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1733466828; cv=fail; b=R/hhM+BL6GWzZkLkN7JnaJYbd+wyASo3iCfOywq/I3KtCOozasVAo7WC+Fu6n0Gc6lsCXT9szxbLFPKBkD/JiZ/lL9NIYNePO28yxCK3DwJcysLnZmafJT7aHcLfrRnL/qwW2sKATGCOgE8+3CryKH5O0HLia81HqA6Rq0XYn74=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1733466828; c=relaxed/simple;
+	bh=MZ9KLE3U7kXcKipt5Csq7Bz02bnWclySQ7xgHJUjQVQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tD/B3RZppXfK/3DeX6PnY3N2ANMT6nyNbfAHwJZKzEyYlhWZ6MDLQFhDoTEWr4g5xXiXD4GBk5Fqw8vKI+UlbImgeOeKIsreEzYQ2M5tmVkwBxvF/PUfd8GaobO3M0gFNMJmvUe80FyNm82rkF+kCrNCXwJk7LYKXYgKjRPI39k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vqYeM6F/; arc=fail smtp.client-ip=40.107.92.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMJNYpA4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5D1C4CEDE;
-	Fri,  6 Dec 2024 00:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733444675;
-	bh=2NHAC/ucuHOP+dlhjMOWq5m414F5Fa63pCr8kcoZANw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TMJNYpA4TY1sa/yhPNmOTItnOBduRdjmQn1Z539woQX3k+TyNkP1nGqZ8s8vdzUHP
-	 TZrhBS/0XZprMR3u0/AeRfD6FbDciXQZaai26J4OvEdGbp8baa3ZRaoJThNy7ntgnH
-	 1USoJA9pDHeYCZKhkmfXVNVEP8n+fXou3+reJatRwAtd+y7tFSeSDwRqOpw8Sh4FaT
-	 7pZpqrpcJV3JwaCaDLORFxSxMelgvoLpHF4BOQBPQilymqUxLXeFiMAJvGwkO5PJPr
-	 bh06hxn4bkjGRScpVfVwNAdc9xpi0z9ERW1zpm4D4Ab0HUI4KUfdHhQz3JmbiOQodg
-	 s8RH9I0mAQb6g==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	mingo@kernel.org
-Cc: oleg@redhat.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	liaochang1@huawei.com,
-	kernel-team@meta.com,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH perf/core 4/4] uprobes: reuse return_instances between multiple uretprobes within task
-Date: Thu,  5 Dec 2024 16:24:17 -0800
-Message-ID: <20241206002417.3295533-5-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20241206002417.3295533-1-andrii@kernel.org>
-References: <20241206002417.3295533-1-andrii@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vqYeM6F/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PgRaVMWCnabtUg0w6BL1YroedmSLM5J4OO7sDZqHtJcSPiqw5GnOGo8rhx5tcc3KhqXZ7kpW8BdvrkiidyztNdayyXQjfDkgL5zcChXeVQueUTQmcmOavDzuE4rEK2cegk0j5cNgdf3tl7Vjo04fLhV896vYFt3up2F+YkJyizs6+aI3BYoNGtSumja7W70Pp6Wd1ZpUHYwxu0FBztNC7++ER8VEhVdpv28WYzfpI/hkqUpk+Yc4rjOkgy9INPOpFqeZbTIvqku9+ncjKhiWgOUpMShJBS36rK9ZkjG6ciCjJ8knQr2J15MGYYclfEp4mlCdIF4T50Qm2NLjJ/JpxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p/XlRJ5XVO6I3D+iFohX2z//GOiSgnWmkXrqIoZMZHc=;
+ b=dSu1y3uzJ9H+oF5nleNT342mVx0mt4GTdf/Rj5KExWQFm/CMPub+x4nkHSESBbUapfalqXjB7iLr67njLCd0f3ffXGttx/dJGDUgkVmgm6tz7Cog1Qziv1Z1D9nEc5yBrwnTn/CLaJD5MdtbLGNXi867BckrypQbRktUMj0WDOguaI48VNGKgnkI3247phwY5J0238QpXOzdRNWZOhkZ1VTuhbgxBBbA/zHwxEimkZuofpGChMY+MwnX+c3hRch2qBswqS93tqBiPTqMXZnpsRMPx2WKYKzTo8IRgJr/BOwkWchs63o3AR49z0/ixR3PbYQpQRS2fKz149H4Wha6xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p/XlRJ5XVO6I3D+iFohX2z//GOiSgnWmkXrqIoZMZHc=;
+ b=vqYeM6F/91pMgU/ZiIPwAf0OguKti0DgcZNsHrJDFdCStsdnd1Ji1zgV5BGbJ7ZxSI7z6LQqN3ZTsMdPppvAAKzKX5TI2Q1ui9KnxMLfxmFFfxk9F3AFfHfdbosaAozy1ld+mBde4aAAZG1eQ8jfmKNBoVnNvu3JX9lBfxdzV28=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
+ by CYXPR12MB9441.namprd12.prod.outlook.com (2603:10b6:930:dc::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8230.11; Fri, 6 Dec
+ 2024 06:33:42 +0000
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3%4]) with mapi id 15.20.8230.010; Fri, 6 Dec 2024
+ 06:33:42 +0000
+Message-ID: <86d39d52-fcc0-4215-8b68-ea6e526c0a01@amd.com>
+Date: Fri, 6 Dec 2024 12:03:29 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V0 09/10] trace/kmmscand: Add tracing of scanning and
+ migration
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, gourry@gourry.net,
+ nehagholkar@meta.com, abhishekd@meta.com, david@redhat.com,
+ ying.huang@intel.com, nphamcs@gmail.com, akpm@linux-foundation.org,
+ hannes@cmpxchg.org, feng.tang@intel.com, kbusch@meta.com, bharata@amd.com,
+ Hasan.Maruf@amd.com, sj@kernel.org, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, mgorman@techsingularity.net,
+ vbabka@suse.cz, hughd@google.com, rientjes@google.com, shy828301@gmail.com,
+ Liam.Howlett@Oracle.com, peterz@infradead.org, mingo@redhat.com,
+ Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org
+References: <20241201153818.2633616-1-raghavendra.kt@amd.com>
+ <20241201153818.2633616-10-raghavendra.kt@amd.com>
+ <20241205124645.0d56ea57@gandalf.local.home>
+Content-Language: en-US
+From: Raghavendra K T <raghavendra.kt@amd.com>
+In-Reply-To: <20241205124645.0d56ea57@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1P287CA0009.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::17) To PH7PR12MB5805.namprd12.prod.outlook.com
+ (2603:10b6:510:1d1::13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|CYXPR12MB9441:EE_
+X-MS-Office365-Filtering-Correlation-Id: a74f5557-48c8-4596-196d-08dd15bfed62
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dHFJaTZaVlhqSzFUTmZEYmI1Y2NGayszd2kzN2VISUJLSTBJd3ZOY1hodkVE?=
+ =?utf-8?B?eC82VmgzN25qcXRKaStQbDdxcjE4NjdQRWhVMVUraDBEVFZyS1NGbVE0MkNr?=
+ =?utf-8?B?TDcwZHBFUjY4ZjA3MlN6RkIyQk00KzZadDB6bFdzWmNPU0lLV0NWeVJFMmNs?=
+ =?utf-8?B?dW1hSDVnUitKOHp6ZER6WXM3ZWhTYnNyRkFFcU04dDdzOXNGQ0w1akk2ZWtB?=
+ =?utf-8?B?R1FNUC9JWlg4NnE2NlhnKzhHZ3dtNFRHNEh6WEJJdXp0OTluUktEZUJoL1k0?=
+ =?utf-8?B?R3hCSlVtcVdueVdEZnI4UzRYWDFXcGtIeU4xalJDSHRoUTNJSitwOHhNUUZC?=
+ =?utf-8?B?OEhJUXBlOFI4SVdzbUVIZG16eXRpaGpTUDRYWEh6M2dGeVhQVVU1Q0lGaW9Q?=
+ =?utf-8?B?NXRCYVkvZ0VjaDdVei9Zb214ZzUwZmpaczEzLzZ5THMvYVAyTnpscnM4ai8v?=
+ =?utf-8?B?MVZucnc5RlM2NU91ZEtuenJoZVBLMGhOQ2xxSVhXaE9SUVVwTjUvbEIzVk9V?=
+ =?utf-8?B?OTVWNEowdTQ1ZWhmdGpoWVhLclQ1MEdhUEJreXBVYjljeDV1bVBTZE5wT0Ez?=
+ =?utf-8?B?VmNtKzJnak1IKzVxQ3lPRDNMRzdDV1hta1R0ZzF6YlJSVUI2S3pzUXJrU1ZL?=
+ =?utf-8?B?VlgxY0dJY21Ya0ZXeEhIMDZOdmhDdEdlVyt1Tm83SEQ3ZzA5elpHUW12TG5z?=
+ =?utf-8?B?ZWFkS1NVdXVSK0Q4MTNwQWk1cGxhYzIvQ3FQVkdUZmovcXMrWHIxc2xEdmxm?=
+ =?utf-8?B?bnpuU0h6d1lKZ2NmVlh2RDRVSG9KamwwUGJpck5IUS83ZzEydGxzZlNFM1pQ?=
+ =?utf-8?B?eE9pZDcxVUNKTUsvRmJQcWJCTDE5YzBRZHc5V2dzWmlUdVdWT00wNE9ibFps?=
+ =?utf-8?B?SVZ5NUdkK3gzd3V6d3ZwWmh4QnFlRm9iV0ZTTGQ4a0d2MTBtOFF5cjVuSFBy?=
+ =?utf-8?B?dFdQVnN5MnRCbUZJQ2lDbThHSWpEYkozay83VVFrd0x0K2lDVnNadVNmNHdp?=
+ =?utf-8?B?bWdRb3JPZFAyZ2xqYXdTOGp6cHRmTEJHTUZ6bHhURHJxNmlVSXVidGVTajl5?=
+ =?utf-8?B?b3VTaXk5OGtoekxQUlFodFVYTG04VkMwQTRobVVzVExKQWNTb2tpRm9Idll4?=
+ =?utf-8?B?MzVVbE5hUUw0NkZiM2toZFFjNzRNSDFTRkRRM0o1b0lkeS90cXMzbUdwMWhp?=
+ =?utf-8?B?NGlVZ0U1dTJ5Y2lURnM2UWtvVXlhVWRhN2hUa1R3RUhMenRpVzY3Skh1VXJ2?=
+ =?utf-8?B?OHhEMGtzdFJUd3ZXVms1NHQwenR3ZHVYdXhmdzNnRDR2NktoM2FrWG5BQTVX?=
+ =?utf-8?B?UUtpNHgzczdScGRaYUtOenJrbDdTVHhoRDdveUFkTVhHaFhKYytCM09POXpW?=
+ =?utf-8?B?K0dMNzZDOEZkQXRkbG1FaDZ1bW9lK01IUVpYYzdtRjh3VWNyNU8vQyt0YTd5?=
+ =?utf-8?B?aVlUNnJ3a0xxdlduUW5mOXB0dUJaTllQakVncmQyQ2JCd0QyakozR2xYZWgx?=
+ =?utf-8?B?M0V4RmU1UGh6bTNRNG0yMlhtRkFkTEhGNWJ6TDhhKy9yMGdSczZhY2ZsTkgz?=
+ =?utf-8?B?Y0lxT1lGNHNld0k5emtGdTl6SDU0MGt6MFJIQWduMUFjNzJsVmdocGNJaU5S?=
+ =?utf-8?B?RDJ5NU9rcy83a3dIZkdXTzRtQVhjSHBhaUNvOEVGOTR2TEl3NE9mUFNKeTli?=
+ =?utf-8?B?N3JvREtPRnBrYVdDbi9RZ2pPNWlGNGdkUFp6bC9DS3V6bUJDT21EUkZlekth?=
+ =?utf-8?B?anFaMnh2VHJzWTd2Yk5lWGZnNjRrWm5qNVI1aUMwUVEwTC8xMFl3Wi9sdDh2?=
+ =?utf-8?B?UlJlTFkwbXFmWG1Mc2VXZz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VFdrOVoxd05PNGNZUFpBbXZRSFRmU0tRd0JLTnlxa0Y5VWV4WEZBdzllZGhp?=
+ =?utf-8?B?S3BPMUZ0TnJ2WXlQQTYxbFBCN25RSU90SytnZ2h2T1JHU0kyRGV3czZYNUdi?=
+ =?utf-8?B?OExocDJuOUYzM1hDZVdBdi9DUFZWZk1CSUgxekZBMVB3dUZvVEdqb1dvV2ZZ?=
+ =?utf-8?B?UjBteDFrczZURHp1VzlGa2hJR24vcHR5RkxBUm9DeTNoVTQ5TVFZV1ZYdHZ5?=
+ =?utf-8?B?RUtFQUJ2UHdLaDd3WExxVVQ4ZmxhNTgxRkxPbTNMUzMranJRM2E2QnhDZzlN?=
+ =?utf-8?B?R09DbEwrd2RMRjNjbFMrWmVaTGZHbG16R0FGcWhacmx1QkRCc3VubzQrNitj?=
+ =?utf-8?B?bHYreWw5dWxpcjI3T29YVEkwVnBPaXBPT29JVXZvbkY3cjhNTGxhSUNmK2E3?=
+ =?utf-8?B?MTNteUQxMGZNZWRMVEVOQ0ViZGlsQ0VBTXVWWmtUZy9ONWhkME1XYUVVZ0Nx?=
+ =?utf-8?B?M2pCbFE3eE9vUmVkNldiRW9hS2h5cVB2cDAwWStWcEJ3S21GQVlXNklyM2h0?=
+ =?utf-8?B?YjhlcThtR2RXTXRFV0FhMzJ6RERsUUNOTHlINGRCYkowUzBVOGJxQ1oyRkZr?=
+ =?utf-8?B?MzFPQk9IL2t4Vk9NMmY1ejBVaHVFQ3pWS3RFYWNwV3hXb1pEQ0orL3RLMGcx?=
+ =?utf-8?B?QkNLcWoxTjBPYzgyaXA3UlgvOFZGZlJYenU2UFZoVGNIN2VqcjdkSHkzVTFB?=
+ =?utf-8?B?WmJBa05VNFZTNElGNDlyTEI5RjZxams4VllyK1NrWGtBendNTjZyUVdDK09B?=
+ =?utf-8?B?OUh3Q2laQjBiZGloQ2lIVjJVUmgvazJaM0diOGg2NnVnbVdYZ1BMRUgrNlBq?=
+ =?utf-8?B?cUZvYzUzWWNpSUJXSzlHNkVzQzdQVEI5Y09nSVBmRW5vSHZ6bzBUQStIdUZw?=
+ =?utf-8?B?dlhwRHp2ZTQ4cFRvSnM5VisxZWFMMmxmTDJJbXNPOEEvQVZjM0xMNk5FRlp0?=
+ =?utf-8?B?SWJwamJ2dzMxa1JSZ29PbUZDZW8vQjQvZWNoU2xZOWx4VnFVVjBjRXVnUlBt?=
+ =?utf-8?B?b3pyczArQ21pQlJwcE0xWGlaNHZEQ0YrcjhoOWM2N1NKdzd4dDVVSzk2anh5?=
+ =?utf-8?B?WHFCOVFpOWlBcWQ0TnRyTDl6cTdwQkF0QzM2d0NYT2xiakZwSTVQTVhQNi83?=
+ =?utf-8?B?d0duU2N2Mkp4enduSEw1czZsVURPZmh0NXFiY2hwMTlMeGJFbHVCdjIzVVFN?=
+ =?utf-8?B?bzMzMGt4eXJ0TzR1SUg5cGdsSWdMOFdoSzRvSkdTdFBjOXYvMHNsVjU0a0dE?=
+ =?utf-8?B?aysxb2tBT2Jub3hma1VhMnlobTdLZXJHL0o5Wm53TlB0T1lsUG1yTHVKTndH?=
+ =?utf-8?B?NXphZnpOa0IwVUl4cmhicE9ndDB4Tm1kaDZzVlVPUFNRRFVqVEpoZmtCdjJv?=
+ =?utf-8?B?R0E1VEhSYld3aVphMnMxcFo0Uk5RRGtWR3BhVyt6a1BVMXIxNkhrUDhsbWpI?=
+ =?utf-8?B?cDIrYm14TVBGNEdpNkFiUml2eXFkRjYwTlNHRzBIVStvSkFFS2JEMXBxUkNk?=
+ =?utf-8?B?QWhkWnpoZEIyTE1iM3pISUtCeFFyeGdoU3RDSFN6cWVvVEQrN2V4Y3Zaakxa?=
+ =?utf-8?B?WGk1N1A0MXdYRmM0N3orZTJZbFFjTXIzYkN6WUJlUnBra2hPRDRnYVpRK2tI?=
+ =?utf-8?B?c0VZQll2TStlMm40S2lwVkt2RzVQdSt6Nm5IZlNqcG1MbDZKZnBuRWd4L0Zz?=
+ =?utf-8?B?dnplSVFibnZpT1g0bkFQSVBVMzlLdXRqVXYyNzhyd3pyTC9DVEk5ZDlUU0Nx?=
+ =?utf-8?B?MUE1ZGZlM1M1YUhiWkpmeC9DSnFPd0hlbDNRTTc0Mjk0Y01KUjVuQXJNNWVk?=
+ =?utf-8?B?dkM0eEFJSVpmbnJTWmlCVjYxVmJpaWZDTDNMeWFjRHZydjI1TERVS1R6RmNE?=
+ =?utf-8?B?akJHMDVjM0RtMWVRTitkYVBIdnZJTU13Qm1ZMkVWaEtyMy9ReWpqVzlUZERq?=
+ =?utf-8?B?Q2N3Z3NUb3NuTFpnU0tlVXJXV1ZDRHRvUk9kL3o5cXRDYU9jSjNEK2VLYXVq?=
+ =?utf-8?B?M2NLeVZtTHRWdEwwRFl6MXpPNXJJS3p2WjRLWEp1RmRrdStLaGRCRE82VkI2?=
+ =?utf-8?B?c1hJaHkxUldvaTNXZzhxSW1rTVZXaXgrNkpZR0x5NGNwTW1DVlJHb3c5SFdC?=
+ =?utf-8?Q?bmyFaKETI2nqVprYx8bevMGap?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a74f5557-48c8-4596-196d-08dd15bfed62
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2024 06:33:42.5698
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J/e9VaO4Glm1+6AXSjRldSIlrF81wejS9ahF3wgiZyGrTdO0cDy3NM3e6vraSDGVpGvvpb732+l3OS8q1tvQ+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9441
 
-Instead of constantly allocating and freeing very short-lived
-struct return_instance, reuse it as much as possible within current
-task. For that, store a linked list of reusable return_instances within
-current->utask.
 
-The only complication is that ri_timer() might be still processing such
-return_instance. And so while the main uretprobe processing logic might
-be already done with return_instance and would be OK to immediately
-reuse it for the next uretprobe instance, it's not correct to
-unconditionally reuse it just like that.
 
-Instead we make sure that ri_timer() can't possibly be processing it by
-using seqcount_t, with ri_timer() being "a writer", while
-free_ret_instance() being "a reader". If, after we unlink return
-instance from utask->return_instances list, we know that ri_timer()
-hasn't gotten to processing utask->return_instances yet, then we can be
-sure that immediate return_instance reuse is OK, and so we put it
-onto utask->ri_pool for future (potentially, almost immediate) reuse.
+On 12/5/2024 11:16 PM, Steven Rostedt wrote:
+> On Sun, 1 Dec 2024 15:38:17 +0000
+> Raghavendra K T <raghavendra.kt@amd.com> wrote:
+> 
+>> Add tracing support to track
+>>   - start and end of scanning.
+>>   - migration.
+>>
+>> CC: Steven Rostedt <rostedt@goodmis.org>
+>> CC: Masami Hiramatsu <mhiramat@kernel.org>
+>> CC: linux-trace-kernel@vger.kernel.org
+>>
 
-This change shows improvements both in single CPU performance (by
-avoiding relatively expensive kmalloc/free combon) and in terms of
-multi-CPU scalability, where you can see that per-CPU throughput doesn't
-decline as steeply with increased number of CPUs (which were previously
-attributed to kmalloc()/free() through profiling):
+[...]
 
-BASELINE (latest perf/core)
-===========================
-uretprobe-nop         ( 1 cpus):    1.898 ± 0.002M/s  (  1.898M/s/cpu)
-uretprobe-nop         ( 2 cpus):    3.574 ± 0.011M/s  (  1.787M/s/cpu)
-uretprobe-nop         ( 3 cpus):    5.279 ± 0.066M/s  (  1.760M/s/cpu)
-uretprobe-nop         ( 4 cpus):    6.824 ± 0.047M/s  (  1.706M/s/cpu)
-uretprobe-nop         ( 5 cpus):    8.339 ± 0.060M/s  (  1.668M/s/cpu)
-uretprobe-nop         ( 6 cpus):    9.812 ± 0.047M/s  (  1.635M/s/cpu)
-uretprobe-nop         ( 7 cpus):   11.030 ± 0.048M/s  (  1.576M/s/cpu)
-uretprobe-nop         ( 8 cpus):   12.453 ± 0.126M/s  (  1.557M/s/cpu)
-uretprobe-nop         (10 cpus):   14.838 ± 0.044M/s  (  1.484M/s/cpu)
-uretprobe-nop         (12 cpus):   17.092 ± 0.115M/s  (  1.424M/s/cpu)
-uretprobe-nop         (14 cpus):   19.576 ± 0.022M/s  (  1.398M/s/cpu)
-uretprobe-nop         (16 cpus):   22.264 ± 0.015M/s  (  1.391M/s/cpu)
-uretprobe-nop         (24 cpus):   33.534 ± 0.078M/s  (  1.397M/s/cpu)
-uretprobe-nop         (32 cpus):   43.262 ± 0.127M/s  (  1.352M/s/cpu)
-uretprobe-nop         (40 cpus):   53.252 ± 0.080M/s  (  1.331M/s/cpu)
-uretprobe-nop         (48 cpus):   55.778 ± 0.045M/s  (  1.162M/s/cpu)
-uretprobe-nop         (56 cpus):   56.850 ± 0.227M/s  (  1.015M/s/cpu)
-uretprobe-nop         (64 cpus):   62.005 ± 0.077M/s  (  0.969M/s/cpu)
-uretprobe-nop         (72 cpus):   66.445 ± 0.236M/s  (  0.923M/s/cpu)
-uretprobe-nop         (80 cpus):   68.353 ± 0.180M/s  (  0.854M/s/cpu)
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__array(	char, comm, TASK_COMM_LEN	)
+> 
+> Is there a reason to record "comm"? There's other ways to retrieve it than
+> to always write it to the ring buffer.
+> 
 
-THIS PATCHSET (on top of latest perf/core)
-==========================================
-uretprobe-nop         ( 1 cpus):    2.253 ± 0.004M/s  (  2.253M/s/cpu)
-uretprobe-nop         ( 2 cpus):    4.281 ± 0.003M/s  (  2.140M/s/cpu)
-uretprobe-nop         ( 3 cpus):    6.389 ± 0.027M/s  (  2.130M/s/cpu)
-uretprobe-nop         ( 4 cpus):    8.328 ± 0.005M/s  (  2.082M/s/cpu)
-uretprobe-nop         ( 5 cpus):   10.353 ± 0.001M/s  (  2.071M/s/cpu)
-uretprobe-nop         ( 6 cpus):   12.513 ± 0.010M/s  (  2.086M/s/cpu)
-uretprobe-nop         ( 7 cpus):   14.525 ± 0.017M/s  (  2.075M/s/cpu)
-uretprobe-nop         ( 8 cpus):   15.633 ± 0.013M/s  (  1.954M/s/cpu)
-uretprobe-nop         (10 cpus):   19.532 ± 0.011M/s  (  1.953M/s/cpu)
-uretprobe-nop         (12 cpus):   21.405 ± 0.009M/s  (  1.784M/s/cpu)
-uretprobe-nop         (14 cpus):   24.857 ± 0.020M/s  (  1.776M/s/cpu)
-uretprobe-nop         (16 cpus):   26.466 ± 0.018M/s  (  1.654M/s/cpu)
-uretprobe-nop         (24 cpus):   40.513 ± 0.222M/s  (  1.688M/s/cpu)
-uretprobe-nop         (32 cpus):   54.180 ± 0.074M/s  (  1.693M/s/cpu)
-uretprobe-nop         (40 cpus):   66.100 ± 0.082M/s  (  1.652M/s/cpu)
-uretprobe-nop         (48 cpus):   70.544 ± 0.068M/s  (  1.470M/s/cpu)
-uretprobe-nop         (56 cpus):   74.494 ± 0.055M/s  (  1.330M/s/cpu)
-uretprobe-nop         (64 cpus):   79.317 ± 0.029M/s  (  1.239M/s/cpu)
-uretprobe-nop         (72 cpus):   84.875 ± 0.020M/s  (  1.179M/s/cpu)
-uretprobe-nop         (80 cpus):   92.318 ± 0.224M/s  (  1.154M/s/cpu)
+Thank you for the review Steve. The motivation was to filter benchmark
+in the trace to understand the behavior.
+I will explore regarding other ways of retrieving comm.
+(or may be even PID is enough..)
 
-For reference, with uprobe-nop we hit the following throughput:
+[...]
 
-uprobe-nop            (80 cpus):  143.485 ± 0.035M/s  (  1.794M/s/cpu)
+>> +
+>> +	TP_printk("kmmscand: scan_mm_start comm =%s mm=%p", __entry->comm, __entry->mm)
+> 
+> No need to write the event name into the TP_printk(). That's redundant.
+> 
+> Also, the above two events are pretty much identical. Please use
+> DECLARE_EVENT_CLASS().
 
-So now uretprobe stays a bit closer to that performance.
+Sure. will do.
 
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
- include/linux/uprobes.h |  6 ++-
- kernel/events/uprobes.c | 83 ++++++++++++++++++++++++++++++++++-------
- 2 files changed, 75 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index 1d449978558d..b1df7d792fa1 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -16,6 +16,7 @@
- #include <linux/types.h>
- #include <linux/wait.h>
- #include <linux/timer.h>
-+#include <linux/seqlock.h>
- 
- struct uprobe;
- struct vm_area_struct;
-@@ -124,6 +125,10 @@ struct uprobe_task {
- 	unsigned int			depth;
- 	struct return_instance		*return_instances;
- 
-+	struct return_instance		*ri_pool;
-+	struct timer_list		ri_timer;
-+	seqcount_t			ri_seqcount;
-+
- 	union {
- 		struct {
- 			struct arch_uprobe_task	autask;
-@@ -137,7 +142,6 @@ struct uprobe_task {
- 	};
- 
- 	struct uprobe			*active_uprobe;
--	struct timer_list		ri_timer;
- 	unsigned long			xol_vaddr;
- 
- 	struct arch_uprobe              *auprobe;
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2345aeb63d3b..1af950208c2b 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1888,8 +1888,34 @@ unsigned long uprobe_get_trap_addr(struct pt_regs *regs)
- 	return instruction_pointer(regs);
- }
- 
--static void free_ret_instance(struct return_instance *ri, bool cleanup_hprobe)
-+static void ri_pool_push(struct uprobe_task *utask, struct return_instance *ri)
- {
-+	ri->cons_cnt = 0;
-+	ri->next = utask->ri_pool;
-+	utask->ri_pool = ri;
-+}
-+
-+static struct return_instance *ri_pool_pop(struct uprobe_task *utask)
-+{
-+	struct return_instance *ri = utask->ri_pool;
-+
-+	if (likely(ri))
-+		utask->ri_pool = ri->next;
-+
-+	return ri;
-+}
-+
-+static void ri_free(struct return_instance *ri)
-+{
-+	kfree(ri->extra_consumers);
-+	kfree_rcu(ri, rcu);
-+}
-+
-+static void free_ret_instance(struct uprobe_task *utask,
-+			      struct return_instance *ri, bool cleanup_hprobe)
-+{
-+	unsigned seq;
-+
- 	if (cleanup_hprobe) {
- 		enum hprobe_state hstate;
- 
-@@ -1897,8 +1923,22 @@ static void free_ret_instance(struct return_instance *ri, bool cleanup_hprobe)
- 		hprobe_finalize(&ri->hprobe, hstate);
- 	}
- 
--	kfree(ri->extra_consumers);
--	kfree_rcu(ri, rcu);
-+	/*
-+	 * At this point return_instance is unlinked from utask's
-+	 * return_instances list and this has become visible to ri_timer().
-+	 * If seqcount now indicates that ri_timer's return instance
-+	 * processing loop isn't active, we can return ri into the pool of
-+	 * to-be-reused return instances for future uretprobes. If ri_timer()
-+	 * happens to be running right now, though, we fallback to safety and
-+	 * just perform RCU-delated freeing of ri.
-+	 */
-+	if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
-+		/* immediate reuse of ri without RCU GP is OK */
-+		ri_pool_push(utask, ri);
-+	} else {
-+		/* we might be racing with ri_timer(), so play it safe */
-+		ri_free(ri);
-+	}
- }
- 
- /*
-@@ -1920,7 +1960,15 @@ void uprobe_free_utask(struct task_struct *t)
- 	ri = utask->return_instances;
- 	while (ri) {
- 		ri_next = ri->next;
--		free_ret_instance(ri, true /* cleanup_hprobe */);
-+		free_ret_instance(utask, ri, true /* cleanup_hprobe */);
-+		ri = ri_next;
-+	}
-+
-+	/* free_ret_instance() above might add to ri_pool, so this loop should come last */
-+	ri = utask->ri_pool;
-+	while (ri) {
-+		ri_next = ri->next;
-+		ri_free(ri);
- 		ri = ri_next;
- 	}
- 
-@@ -1943,8 +1991,12 @@ static void ri_timer(struct timer_list *timer)
- 	/* RCU protects return_instance from freeing. */
- 	guard(rcu)();
- 
-+	write_seqcount_begin(&utask->ri_seqcount);
-+
- 	for_each_ret_instance_rcu(ri, utask->return_instances)
- 		hprobe_expire(&ri->hprobe, false);
-+
-+	write_seqcount_end(&utask->ri_seqcount);
- }
- 
- static struct uprobe_task *alloc_utask(void)
-@@ -1956,6 +2008,7 @@ static struct uprobe_task *alloc_utask(void)
- 		return NULL;
- 
- 	timer_setup(&utask->ri_timer, ri_timer, 0);
-+	seqcount_init(&utask->ri_seqcount);
- 
- 	return utask;
- }
-@@ -1975,10 +2028,14 @@ static struct uprobe_task *get_utask(void)
- 	return current->utask;
- }
- 
--static struct return_instance *alloc_return_instance(void)
-+static struct return_instance *alloc_return_instance(struct uprobe_task *utask)
- {
- 	struct return_instance *ri;
- 
-+	ri = ri_pool_pop(utask);
-+	if (ri)
-+		return ri;
-+
- 	ri = kzalloc(sizeof(*ri), GFP_KERNEL);
- 	if (!ri)
- 		return ZERO_SIZE_PTR;
-@@ -2119,7 +2176,7 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
- 		rcu_assign_pointer(utask->return_instances, ri_next);
- 		utask->depth--;
- 
--		free_ret_instance(ri, true /* cleanup_hprobe */);
-+		free_ret_instance(utask, ri, true /* cleanup_hprobe */);
- 		ri = ri_next;
- 	}
- }
-@@ -2186,7 +2243,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
- 
- 	return;
- free:
--	kfree(ri);
-+	ri_free(ri);
- }
- 
- /* Prepare to single-step probed instruction out of line. */
-@@ -2385,8 +2442,7 @@ static struct return_instance *push_consumer(struct return_instance *ri, __u64 i
- 	if (unlikely(ri->cons_cnt > 0)) {
- 		ric = krealloc(ri->extra_consumers, sizeof(*ric) * ri->cons_cnt, GFP_KERNEL);
- 		if (!ric) {
--			kfree(ri->extra_consumers);
--			kfree_rcu(ri, rcu);
-+			ri_free(ri);
- 			return ZERO_SIZE_PTR;
- 		}
- 		ri->extra_consumers = ric;
-@@ -2428,8 +2484,9 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 	struct uprobe_consumer *uc;
- 	bool has_consumers = false, remove = true;
- 	struct return_instance *ri = NULL;
-+	struct uprobe_task *utask = current->utask;
- 
--	current->utask->auprobe = &uprobe->arch;
-+	utask->auprobe = &uprobe->arch;
- 
- 	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
- 		bool session = uc->handler && uc->ret_handler;
-@@ -2449,12 +2506,12 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
- 			continue;
- 
- 		if (!ri)
--			ri = alloc_return_instance();
-+			ri = alloc_return_instance(utask);
- 
- 		if (session)
- 			ri = push_consumer(ri, uc->id, cookie);
- 	}
--	current->utask->auprobe = NULL;
-+	utask->auprobe = NULL;
- 
- 	if (!ZERO_OR_NULL_PTR(ri))
- 		prepare_uretprobe(uprobe, regs, ri);
-@@ -2554,7 +2611,7 @@ void uprobe_handle_trampoline(struct pt_regs *regs)
- 			hprobe_finalize(&ri->hprobe, hstate);
- 
- 			/* We already took care of hprobe, no need to waste more time on that. */
--			free_ret_instance(ri, false /* !cleanup_hprobe */);
-+			free_ret_instance(utask, ri, false /* !cleanup_hprobe */);
- 			ri = ri_next;
- 		} while (ri != next_chain);
- 	} while (!valid);
--- 
-2.43.5
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__array(	char, comm, TASK_COMM_LEN	)
+> 
+> Again, why comm?
+> 
+
+Will do same change here too.
+
+[...]
+
+>> +	if (mm->owner)
+>> +		trace_kmem_scan_mm_end(mm->owner, mm, address, total,
+>> +					mm_slot_scan_period, mm_slot_scan_size);
+> 
+> Please do not add conditions that is used just for calling a tracepoint.
+> That takes away the "nop" of the function. You can either use
+> TRACE_EVENT_CONDITION() or DEFINE_EVENT_CONDITION(), or you can hard code
+> it here:
+> 
+> 	if (trace_kmem_scan_mm_end_enabled()) {
+> 		if (mm->owner)
+> 			trace_kmem_scan_mm_end(mm->owner, mm, address, total,
+> 						mm_slot_scan_period, mm_slot_scan_size);
+> 	}
+> 
+> But since it is a single condition, I would prefer the *_CONDITION() macros
+> above.
+> 
+
+Very helpful suggestion.
+
+Thanks again.. I will keep these points in mind for next version.
+
+- Raghu
+
 
