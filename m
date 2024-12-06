@@ -1,288 +1,160 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E45D22C6CD;
-	Fri,  6 Dec 2024 23:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C685D19ABC6;
+	Fri,  6 Dec 2024 23:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733526949; cv=none; b=rKkx77LjYrzbf5OUrfTpzdi8Z83ctNWPoR7scUpZc9F7X5Mao80vTqHSSY3wWOCEYjvqIqKlkx8TnrNqsnxdHezoNk3V1uOR3OkWmg/aBS19aAYncRmCQfr+YBNzagvvJHHt9JDzzpXp8+ZPPhUr16Nful2M1n9+caPEzt4TaVw=
+	t=1733528135; cv=none; b=XcantiH2Z9ZQlDdCSqHFHWKeObp55t8RWFDEt8/E5e1eVlvicpIDHcQLAVP5cFxOthkA1EiaDGohaMf5D9CjWLTfZgV5Z/jcZOPtGpGui9IVzffurlzkaBByVXO2R2PiXL51u3NRmu6xEd6PQwnVSsDW2Cn+OtDnWnozg7lcfhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733526949; c=relaxed/simple;
-	bh=9F/F4giPpP32A6A7C04HQNAFQyYWRCkBKV9sbUu8lvE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AWQJuksR1re2xacNZnIJmFDtqfjBymI6XfLKYHnBSOvFeHDSXSd4akXJYsv5zWo8xL/sJD5+QXAVebXl88jJY6GkqpzdwHC8vjD3vHJ4obZO4hEbIZmNAYx9dyy5iEkipwQsKrah7H4Om23A0ydEHeJMVdN60eLy967sq5JI9zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KbWCjxFC; arc=none smtp.client-ip=209.85.216.52
+	s=arc-20240116; t=1733528135; c=relaxed/simple;
+	bh=myjc/BUk3duYfzf2BuKRpvv3wzCuNob9sVPNA5NrNwk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfMMozy2eRkTM1s0GrXOUQQKGa9/l7+lCFkRYWdrjx5m1qypwDpKkKG1wORlj1JUdDVaku5K4ugNRmd1gkkw9fCNa1icv/PoS7HCSEw7q+oGRVpiA0tnq+/UZc3cQKVwFL0ijdkE38vzLbLsW/5Nb9FdO79dr883JdKhakQUO4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mcrVkshd; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KbWCjxFC"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ef70c7efa5so777040a91.2;
-        Fri, 06 Dec 2024 15:15:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcrVkshd"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2161eb95317so9321325ad.1;
+        Fri, 06 Dec 2024 15:35:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733526947; x=1734131747; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=no0juUaCcALGUIqEv5DeGtCGbkiGhdc8yZUM3kdyKWE=;
-        b=KbWCjxFCUmmXebmzDel3g9AKg5V9Cb/9501vY/hJ4Z3WcyUCvVDP8Awj2Xxu+cSlyx
-         jXbutWFoScUQ0N/3AMor4VIvnsIhY9H30vmwOjsHjBNQ7eJszn1p6RYIxNxt36EfP0PF
-         jHWe5FC7HTXAadN0IHvcflKyEEtjE9DcVCdrxo6P/fO2xke9yZoYQYNUJ8FNVKayiSu8
-         T2fvrnEGUAxzE0VNjDTDdgp+qtFUQZq8Gj2r2m0DlerpELC8cLG0EFLFMAlGEvhuKoOX
-         W1XwRwq+7/W66XT8Z8yEgSGFxuMeAWTuWXyqxHn0qs2CK7qkUe9CZkyOg/O2e/KOOFep
-         OdbA==
+        d=gmail.com; s=20230601; t=1733528133; x=1734132933; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=126Ubm7PaeWZ4ZTzd+fTI4aIf3M9NdpROOmAVqkxosw=;
+        b=mcrVkshdY4GQj0ItBjNdElwYzEMphnpd9IJ2Az2eglUiMnWdnmiFStkb6XNROoiCut
+         y6VFm+l5pWT+f6d+LSOUApotZsk9jWB86HucSfHizC2ZkRXYTZz/v7rkcjykjsGSasTL
+         uC/mnHzoPszw2uZHbO6A7uGpIMaWWGG66NvONbhGmNwi4PTaeByovhvegSXvdZuNpdgt
+         6SCuIIW32gxSJvR/IYwmWKj0Ab0fe2qqyS/YtNjLURtJvAgCcgdptspg5wj/YlBIqXkO
+         XKgJksXy6f99hYSww8EOsgJJfPEReR9EiLpbZc5ZWcDMrgoa4ahFr7ytyrb4tLXb7gdb
+         KHJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733526947; x=1734131747;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=no0juUaCcALGUIqEv5DeGtCGbkiGhdc8yZUM3kdyKWE=;
-        b=Z2rTCYcm7BdkTESV87nrQ2j1I3ATIbGZsvp8jHjj+T6XWyuPlLJ05WEzgrormsAfDT
-         IZ/Ps4jCLISWSwsZ3vdSHsB48Bkr4J/72oE8ktI/0N8zh4U2zr6HtlETA9/OAdNqXl7T
-         jusYf8VlPeoe6c0MV9OON80AFdoo0SbUvmK1mUApzWIYmnRwGlhHQ1w035ze781ob5UZ
-         KcpdXlmMY7K8Q2CHqKONYlPmILMJscNsIb3p8uE9KhTj/HaVSwdfxa7Y4yKJ8FF6wL3J
-         zaGzOjr4BTm53agMIZDb58Ijhxq0hSMNDTVDhYcHnHrQ1JaokyS1kHEGobUEnLt2HRRn
-         l+Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWOrirYprLykKmBWYlST1ZjfEte4NM00Td94a8BoS70yxBwdYbJQrXHniWWAqz0xMT79E=@vger.kernel.org, AJvYcCWxbLvp+3Vo6KU8z7lQQN/N4qQALrfzlZBNjFd2+uZMIzXJSyvO5OwLJPzd1dUQJWqak+uHheKo@vger.kernel.org, AJvYcCXfakCtKdTxk2B5lb3QOOL9pJ+nauKyzr9m+koHIKqzdToLFN+hzcfl/vdKDkmKt/SezUyCom9f1ILwWe++@vger.kernel.org, AJvYcCXn9EriNyR43NbdI7KrxHKaqNAZKUNqYU5SqkDoT+N0tPpQopyxmQAlOQszlhBh3wDX2mzGJdGhM6E2m2f1nWFO/Nnk@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Wdb/RxGvJLUDZBpMdhb1MjquGaHqbRfNr3mRaspFLU9xawRI
-	32EsNvGadHFf7XSA/tJO8HlZOeHWz81LookhibsGqX4g8zsTbPM3PRJCUeE2VZcTEcOIAXplNpi
-	Mh0luJJskHe3t5GENqsvoflbyHaI=
-X-Gm-Gg: ASbGncv5iCVNaVlGDUkobE0pnjwx6X+xCsPy/AahbzdsyChsue//UBF/9ESfRZg7mji
-	qpPcX0oGjQ9bY5yIGN0SmDw9E6UeBSzg/1JBueZoKN6H40dY=
-X-Google-Smtp-Source: AGHT+IHaVRP4A0F8o2pG6f+77//trBtX2VvbMDQFUG59vltVgyGY7gieh5pJ0J45NZI241N9YVcWSSJcD/7/v7Yld4M=
-X-Received: by 2002:a17:90b:2e0c:b0:2ee:5111:a54b with SMTP id
- 98e67ed59e1d1-2ef6aaf3360mr6469939a91.31.1733526946096; Fri, 06 Dec 2024
- 15:15:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733528133; x=1734132933;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=126Ubm7PaeWZ4ZTzd+fTI4aIf3M9NdpROOmAVqkxosw=;
+        b=NyVALZYNlJOj4+geZzeOz6yrLcDt3oGEhUflMAvAzYZWF/DeVBoQHblAKXHKYtiOcr
+         LnmF7XMqX6zbRwMScJ204i8YKltZDMN1o33PeoQ0s/PXcsdsRp/0+qYb6sm1TftlM4Gd
+         fNCrmsMhoTLXyBytXyv844ppz0+BrCRSRnlw3ooNy6/pqlQreEPBCuPRrBvuCC+AvtDX
+         w/slagyIvCW8nW6Yolb55i+Pklk51uy6GGEhs6IC8V4OEHLTP5SkIn4awFTQUS3pjPUk
+         8+qmBXxM+1Z8AULtD2oMbO9VHpfatS5i8Zl0tm83sZ+aKJkMpyWLpxKP1k9zuSdZeMIa
+         lfDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeuMsE43gxY8G6bxl5xtyJ6jD7OnywCthJv3+pOnF7DsWT09drduan9N8PLtHQyt36S0gUTnwkfv5OBL5UVRubJao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7tGsycGGhZPYOTtbnOeR9qZ4VekUFiuM7qWQKCj0elHY27BLN
+	/fr8zp6IAWTnuAacsxG6NYOJS2r0m1dtwgbp5CLR4FGjMRMcBPPy
+X-Gm-Gg: ASbGncuMrquFPtHZv4B0+YosqWDnfEMbMcnuvwmz1tCHp1M/3vz8lGBc/FAlM+6+1VV
+	DQ1D6TzAygEF8b8P1/Ar0baSCn4MCGD21SkjA+po6svn2V+zmIrMbBNWqLUyzbtXAqif/E8+GC8
+	bh6l8xKnRymbQI6QCMYC9/+AV3P43skmwC6xjObfbcwsxbijcqO++M57prbz7ySKca+TiG1PuYu
+	7zSws6/jLsKEUVUtMBdwDIL3hZ+r0OZ4IxgTGat3R5OF6mmsA==
+X-Google-Smtp-Source: AGHT+IGCyNnkcXUzTJfpaaB0JuvpkQlDsGaivHj5Ru3IRnBxIZ67ik/FVm+00VqFGVdNnEtFStzg4A==
+X-Received: by 2002:a17:903:11c8:b0:215:4a31:47d8 with SMTP id d9443c01a7336-21614d1ef5emr71074785ad.9.1733528132717;
+        Fri, 06 Dec 2024 15:35:32 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8e5f265sm33841085ad.70.2024.12.06.15.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 15:35:31 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 5B40542806FA; Sat, 07 Dec 2024 06:35:27 +0700 (WIB)
+Date: Sat, 7 Dec 2024 06:35:27 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Andy Chiu <andybnac@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Robbin Ehn <rehn@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, bjorn@rivosinc.com,
+	puranjay12@gmail.com, alexghiti@rivosinc.com,
+	yongxuan.wang@sifive.com, greentime.hu@sifive.com,
+	nick.hu@sifive.com, nylon.chen@sifive.com, tommy.wu@sifive.com,
+	eric.lin@sifive.com, viccent.chen@sifive.com, zong.li@sifive.com,
+	samuel.holland@sifive.com
+Subject: Re: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code
+ patching
+Message-ID: <Z1OKPxHBJ0kV5TbA@archie.me>
+References: <20241127172908.17149-1-andybnac@gmail.com>
+ <20241127172908.17149-4-andybnac@gmail.com>
+ <87v7vxf7t6.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206-bpf-fix-uprobe-uaf-v2-1-4c75c54fe424@google.com>
- <CAEf4BzYxaKd8Gv5g8PBY6zaQukYKSjjtaSgYMjJxL-PZ0dLrbQ@mail.gmail.com>
- <CAG48ez3i5haHCc8EQMVNjKnd9xYwMcp4sbW_Y8DRpJCidJotjw@mail.gmail.com>
- <CAEf4BzYkGQ0sw9JEeAMLAfcQbzxwg46c487kBD_LcbZSaTKD5Q@mail.gmail.com>
- <CAG48ez1LRsuew4y_KQxPHNipA68hhm+iJohHbk6=1cwv5QPCxQ@mail.gmail.com> <CAG48ez2+3TTbWNNO4aqxFAX8Cd4COaayRxoy1V2xvM9oS2_ygQ@mail.gmail.com>
-In-Reply-To: <CAG48ez2+3TTbWNNO4aqxFAX8Cd4COaayRxoy1V2xvM9oS2_ygQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 6 Dec 2024 15:15:34 -0800
-Message-ID: <CAEf4BzbhDkFq9DB2VKxsHmffynQBvbD_RVKTUm3zCqvO_e1dug@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] bpf: Fix prog_array UAF in __uprobe_perf_func()
-To: Jann Horn <jannh@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Delyan Kratunov <delyank@fb.com>, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fdN/cFbE4b73Mn/0"
+Content-Disposition: inline
+In-Reply-To: <87v7vxf7t6.fsf@all.your.base.are.belong.to.us>
+
+
+--fdN/cFbE4b73Mn/0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 6, 2024 at 3:14=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
->
-> On Fri, Dec 6, 2024 at 11:43=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
-e:
-> > On Fri, Dec 6, 2024 at 11:30=E2=80=AFPM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > > On Fri, Dec 6, 2024 at 2:25=E2=80=AFPM Jann Horn <jannh@google.com> w=
-rote:
-> > > >
-> > > > On Fri, Dec 6, 2024 at 11:15=E2=80=AFPM Andrii Nakryiko
-> > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > > On Fri, Dec 6, 2024 at 12:45=E2=80=AFPM Jann Horn <jannh@google.c=
-om> wrote:
-> > > > > >
-> > > > > > Currently, the pointer stored in call->prog_array is loaded in
-> > > > > > __uprobe_perf_func(), with no RCU annotation and no RCU protect=
-ion, so the
-> > > > > > loaded pointer can immediately be dangling. Later,
-> > > > > > bpf_prog_run_array_uprobe() starts a RCU-trace read-side critic=
-al section,
-> > > > > > but this is too late. It then uses rcu_dereference_check(), but=
- this use of
-> > > > > > rcu_dereference_check() does not actually dereference anything.
-> > > > > >
-> > > > > > It looks like the intention was to pass a pointer to the member
-> > > > > > call->prog_array into bpf_prog_run_array_uprobe() and actually =
-dereference
-> > > > > > the pointer in there. Fix the issue by actually doing that.
-> > > > > >
-> > > > > > Fixes: 8c7dcb84e3b7 ("bpf: implement sleepable uprobes by chain=
-ing gps")
-> > > > > > Cc: stable@vger.kernel.org
-> > > > > > Signed-off-by: Jann Horn <jannh@google.com>
-> > > > > > ---
-> > > > > > To reproduce, in include/linux/bpf.h, patch in a mdelay(10000) =
-directly
-> > > > > > before the might_fault() in bpf_prog_run_array_uprobe() and add=
- an
-> > > > > > include of linux/delay.h.
-> > > > > >
-> > > > > > Build this userspace program:
-> > > > > >
-> > > > > > ```
-> > > > > > $ cat dummy.c
-> > > > > > #include <stdio.h>
-> > > > > > int main(void) {
-> > > > > >   printf("hello world\n");
-> > > > > > }
-> > > > > > $ gcc -o dummy dummy.c
-> > > > > > ```
-> > > > > >
-> > > > > > Then build this BPF program and load it (change the path to poi=
-nt to
-> > > > > > the "dummy" binary you built):
-> > > > > >
-> > > > > > ```
-> > > > > > $ cat bpf-uprobe-kern.c
-> > > > > > #include <linux/bpf.h>
-> > > > > > #include <bpf/bpf_helpers.h>
-> > > > > > #include <bpf/bpf_tracing.h>
-> > > > > > char _license[] SEC("license") =3D "GPL";
-> > > > > >
-> > > > > > SEC("uprobe//home/user/bpf-uprobe-uaf/dummy:main")
-> > > > > > int BPF_UPROBE(main_uprobe) {
-> > > > > >   bpf_printk("main uprobe triggered\n");
-> > > > > >   return 0;
-> > > > > > }
-> > > > > > $ clang -O2 -g -target bpf -c -o bpf-uprobe-kern.o bpf-uprobe-k=
-ern.c
-> > > > > > $ sudo bpftool prog loadall bpf-uprobe-kern.o uprobe-test autoa=
-ttach
-> > > > > > ```
-> > > > > >
-> > > > > > Then run ./dummy in one terminal, and after launching it, run
-> > > > > > `sudo umount uprobe-test` in another terminal. Once the 10-seco=
-nd
-> > > > > > mdelay() is over, a use-after-free should occur, which may or m=
-ay
-> > > > > > not crash your kernel at the `prog->sleepable` check in
-> > > > > > bpf_prog_run_array_uprobe() depending on your luck.
-> > > > > > ---
-> > > > > > Changes in v2:
-> > > > > > - remove diff chunk in patch notes that confuses git
-> > > > > > - Link to v1: https://lore.kernel.org/r/20241206-bpf-fix-uprobe=
--uaf-v1-1-6869c8a17258@google.com
-> > > > > > ---
-> > > > > >  include/linux/bpf.h         | 4 ++--
-> > > > > >  kernel/trace/trace_uprobe.c | 2 +-
-> > > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > > > > >
-> > > > >
-> > > > > Looking at how similar in spirit bpf_prog_run_array() is meant to=
- be
-> > > > > used, it seems like it is the caller's responsibility to
-> > > > > RCU-dereference array and keep RCU critical section before callin=
-g
-> > > > > into bpf_prog_run_array(). So I wonder if it's best to do this in=
-stead
-> > > > > (Gmail will butcher the diff, but it's about the idea):
-> > > >
-> > > > Yeah, that's the other option I was considering. That would be more
-> > > > consistent with the existing bpf_prog_run_array(), but has the
-> > > > downside of unnecessarily pushing responsibility up to the caller..=
-.
-> > > > I'm fine with either.
-> > >
-> > > there is really just one caller ("legacy" singular uprobe handler), s=
-o
-> > > I think this should be fine. Unless someone objects I'd keep it
-> > > consistent with other "prog_array_run" helpers
-> >
-> > Ack, I will make it consistent.
-> >
-> > > > > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > > > > index eaee2a819f4c..4b8a9edd3727 100644
-> > > > > --- a/include/linux/bpf.h
-> > > > > +++ b/include/linux/bpf.h
-> > > > > @@ -2193,26 +2193,25 @@ bpf_prog_run_array(const struct bpf_prog_=
-array *array,
-> > > > >   * rcu-protected dynamically sized maps.
-> > > > >   */
-> > > > >  static __always_inline u32
-> > > > > -bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *arr=
-ay_rcu,
-> > > > > +bpf_prog_run_array_uprobe(const struct bpf_prog_array *array,
-> > > > >                           const void *ctx, bpf_prog_run_fn run_pr=
-og)
-> > > > >  {
-> > > > >         const struct bpf_prog_array_item *item;
-> > > > >         const struct bpf_prog *prog;
-> > > > > -       const struct bpf_prog_array *array;
-> > > > >         struct bpf_run_ctx *old_run_ctx;
-> > > > >         struct bpf_trace_run_ctx run_ctx;
-> > > > >         u32 ret =3D 1;
-> > > > >
-> > > > >         might_fault();
-> > > > > +       RCU_LOCKDEP_WARN(!rcu_read_lock_trace_held(), "no rcu loc=
-k held");
-> > > > > +
-> > > > > +       if (unlikely(!array))
-> > > > > +               goto out;
-> > > > >
-> > > > > -       rcu_read_lock_trace();
-> > > > >         migrate_disable();
-> > > > >
-> > > > >         run_ctx.is_uprobe =3D true;
-> > > > >
-> > > > > -       array =3D rcu_dereference_check(array_rcu, rcu_read_lock_=
-trace_held());
-> > > > > -       if (unlikely(!array))
-> > > > > -               goto out;
-> > > > >         old_run_ctx =3D bpf_set_run_ctx(&run_ctx.run_ctx);
-> > > > >         item =3D &array->items[0];
-> > > > >         while ((prog =3D READ_ONCE(item->prog))) {
-> > > > > @@ -2229,7 +2228,6 @@ bpf_prog_run_array_uprobe(const struct
-> > > > > bpf_prog_array __rcu *array_rcu,
-> > > > >         bpf_reset_run_ctx(old_run_ctx);
-> > > > >  out:
-> > > > >         migrate_enable();
-> > > > > -       rcu_read_unlock_trace();
-> > > > >         return ret;
-> > > > >  }
-> > > > >
-> > > > > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_upr=
-obe.c
-> > > > > index fed382b7881b..87a2b8fefa90 100644
-> > > > > --- a/kernel/trace/trace_uprobe.c
-> > > > > +++ b/kernel/trace/trace_uprobe.c
-> > > > > @@ -1404,7 +1404,9 @@ static void __uprobe_perf_func(struct trace=
-_uprobe *tu,
-> > > > >         if (bpf_prog_array_valid(call)) {
-> > > > >                 u32 ret;
-> > > > >
-> > > > > +               rcu_read_lock_trace();
-> > > > >                 ret =3D bpf_prog_run_array_uprobe(call->prog_arra=
-y,
-> > > > > regs, bpf_prog_run);
-> > > >
-> > > > But then this should be something like this (possibly split across
-> > > > multiple lines with a helper variable or such):
-> > > >
-> > > > ret =3D bpf_prog_run_array_uprobe(rcu_dereference_check(call->prog_=
-array,
-> > > > rcu_read_lock_trace_held()), regs, bpf_prog_run);
-> > >
-> > > Yeah, absolutely, forgot to move the RCU dereference part, good catch=
-!
-> > > But I wouldn't do the _check() variant here, literally the previous
-> > > line does rcu_read_trace_lock(), so this check part seems like just
-> > > unnecessary verboseness, I'd go with a simple rcu_dereference().
-> >
-> > rcu_dereference() is not legal there - that asserts that we are in a
-> > normal RCU read-side critical section, which we are not.
-> > rcu_dereference_raw() would be, but I think it is nice to document the
-> > semantics to make it explicit under which lock we're operating.
+On Fri, Dec 06, 2024 at 11:02:29AM +0100, Bj=C3=B6rn T=C3=B6pel wrote:
+> Adding Robbin for input, who's doing much more crazy text patching in
+> JVM, than what we do in the kernel. ;-)
+>=20
+> Let's say we're tracing "f". Previously w/ stop_machine() it was
+> something like:
+>=20
+> f:
+> 1: nop
+>    nop
+>    ...
+>    ...
+>=20
+> ftrace_caller:
+>    ...
+>    auipc	a2, function_trace_op
+>    ld		a2, function_trace_op(a2)
+>    ...
+> 2: auipc    ra, ftrace_stub
+>    jalr     ftrace_stub(ra)
+>=20
+> The text was patched by ftrace in 1 and 2.
+>=20
+> ...and now:
+> f:
+>    auipc    t0, ftrace_caller
+> A: nop
+>    ...
+>    ...
+>=20
+> ftrace_caller:
+>    ...
+>    auipc    a2, function_trace_op
+>    ld       a2, function_trace_op(a2)
+>    ...
+>    auipc    ra, ftrace_call_dest
+>    ld       ra, ftrace_call_dest(ra)
+>    jalr     ra=20
+>=20
+> The text is only patched in A, and the tracer func is loaded via
+> ftrace_call_dest.
 
-sure, I don't mind
+Previously the operation was no-op, right?
 
-> >
-> > I'll send a v3 in a bit after testing it.
->
-> Actually, now I'm still hitting a page fault with my WIP v3 fix
-> applied... I'll probably poke at this some more next week.
+Confused...
 
-OK, that's interesting, keep us posted!
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--fdN/cFbE4b73Mn/0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ1OKOgAKCRD2uYlJVVFO
+o6Y+AQCiT8k5GCk4aLvmXeShXl/pfnz5HC+PJM+m4E8quF6IJQD+My2mpICqvpg/
+Bn0rGqOqUEb+abAgVYRVjE8IIuPdPwE=
+=ruu5
+-----END PGP SIGNATURE-----
+
+--fdN/cFbE4b73Mn/0--
