@@ -1,70 +1,71 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726A822068F;
-	Fri,  6 Dec 2024 17:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DF62206A5;
+	Fri,  6 Dec 2024 18:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733507453; cv=none; b=EECBOPC+g4JC0SEZjD2FdRxxvP9lNFOPuGhCSp5BuOPxsFXR51fjDR2VXJ23nAPsF1jbelE9H61hw9uBfivJ+hgArMGmw+xXlKZWACRnROBA1L07+x3e4ToRnI6IItNuZJqZTQrimwzv6pq8W2cE+Ey4t5spYwPXgIPYhJE2t/Y=
+	t=1733508031; cv=none; b=KEwNXUSb5gxnISRuSNIxbTWDCTp1kbLkXA5uaT8qaWKfwyBFQh/CA0Ul2v7nL9s6K4wjFudOPhKSRWR3yyH7kg2lLM7cBNf2tykfnHTwjaHxfLDoq3vaFYPgqKP703QMks6UtpyA3CxwdbIvjStD1cvRJ2JmPzFvb7fltcDnUd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733507453; c=relaxed/simple;
-	bh=sxQpi/Re+o+nVehAG5Ly1Pzk9TSKI91Uafdr+ryfMM4=;
+	s=arc-20240116; t=1733508031; c=relaxed/simple;
+	bh=H8+ijCMiA6ukFvtvHgi/sIc/1ThgkN6eZOLvjTyrHao=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sqxGBV3xkTp57iH2K8t+Q7h6vMDEWpuLOW3l9Ubnl1f2PbFbiJGdbgt39dNPcMFjWqaC8ceV2lgyWDRJ+1NAyAtbhowoU0fxyM9pBvMz9NbhWnw0iHj9HmxJEDGSsg+2/2LkfS+22l/eUjzZ/lK7T+af2Plk6ipLOGfVQWCRdbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jzDukZsC; arc=none smtp.client-ip=209.85.215.169
+	 To:Cc:Content-Type; b=eExobWL5w5ohCPgvsZCo2+6RY7I5ZlsThmskO5i6BhfTh1Tkc9+cOGgt2ao+FPjx3BQm/ElIcEJlqiTwTpTHY0pNw+rFk2z+RtB1hILiBihXeE7YGRkZFQy/TSYlh5kPzr2sbG3Ozz5/e4W9cxkVG8BYVDYmvgdpx7hdC+9wk8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TveFug1/; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzDukZsC"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7fc8f0598cdso2783336a12.1;
-        Fri, 06 Dec 2024 09:50:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TveFug1/"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2ef6c56032eso846175a91.2;
+        Fri, 06 Dec 2024 10:00:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733507452; x=1734112252; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1733508029; x=1734112829; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/1pwg93Dh2Ekw2uQWZ/BkEp+u1+s0Tq7PSxXVKH5GFo=;
-        b=jzDukZsCfc6fzSid4mtzUusRPb51nUQU0nrDa5n1OcSxi7jjwhAPXOm7M16nGvterR
-         dc2xsm4tRnxti0FICkPe+hca9/WjlcsdfTA+EZOXtQob+/LAIEOagX3h7F7NMWakG/Js
-         saYwumYD0GjTCXxu8jx9d1zNmEIj7ogQa022VZ4DsTzr1yIBuLEI0quszDqg4vAfUa5O
-         YmMCocLf1KtyW5f3SJp6KBbbLmA9g9SDc2RT2AOBUXAOi7CkXZmB/Kw5VyeTFFAnCjo/
-         P7R3rYrKyU6qCJcqUpjGJiW39cIZaDb8c/WXUJ8TX+IdpKvX7qkrfssRogL3eJGwPCs1
-         UD2g==
+        bh=34RpqiH9mb1FjMoXjg/XFvDnF3uQltArdmOLNrd2+ic=;
+        b=TveFug1/KLRCFee/7Jl8qNP2dXRD3IZiudPRz9OwvHkgDp6eANBqp1wwy3ZcsvI6c3
+         cR+BLDdAjtFlNsPp/Zu9FNEjLYQCxRdnOt0fyMpYQ1FRZN03PlDeALwbLna7rPOVhhW5
+         vgOV0wsttPPal/3acF89kDG5NqItTnTpgOo0lcxaNfvqaEtlIzZzcY61UZRSZy1ZGZB0
+         lB/1p4bUoPjQVPdYSqEl+r22IIfQmBecDPjku7fqU3eZtPxdnkx2c75D5R1fBggA4n9a
+         5nK5xxcjfS9YSIq0PgwQjdNbj3mijpBlNr84RjQLWoPxowrarfu7GuI40TY61qktk40f
+         cToQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733507452; x=1734112252;
+        d=1e100.net; s=20230601; t=1733508029; x=1734112829;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/1pwg93Dh2Ekw2uQWZ/BkEp+u1+s0Tq7PSxXVKH5GFo=;
-        b=g/34DPGgh/gnZ8/1KEWmBkta+3IEDoOnreZayunVcZIC45DPFgJPr6mpstjebsHz/X
-         o3B7XRKvPGaKyTCkjR3lUVKKZXiBh0fQG2UzDLul5c2iW7dnNzZ+wZvTIvPeelZR7m3f
-         Kt6wj88psNWuNaVL/KP2bFcJj+McXYSgVudavL5umD/jQFnhRKSWdeMyLmbaG+7wXYKy
-         WM+ZJaYt69XL6hhLcsbvbrmKlRA2KuWsEnLC6yUZOcTE5QhBFNpnxypzcL4QRaGHSzj7
-         ARAIVFq0HZAYiZTfidR0kJPOfYH0N4xjKZ8wKdIRkCUuLZtvCm7sJGNVq2Ratbc7+3Cd
-         YKaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVb+8Q9oe259A/kM8dpG2aYRsPnD4Xa8y9E6Z7rhULN6tlFKy5Caagztqhcr9sRq31rzb/0CqlMBVv1POp1xiOZMz3g@vger.kernel.org, AJvYcCVoieXXCEfMiVv5A8Fd+5WPzI3jepJhxEwWtuV99+eNnwwf9qxQmtA/koLpbkRILcn2SjwF3KT+pS7FT+hp@vger.kernel.org, AJvYcCXMnfv1VSCKPojCYXBmh/nO3JpOKwnJKPErKgLhYUQpDG2KB1s/Yk6Lx0nzCQuDeVKSxMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgrYc9hqqs4/ze73kWkzHEMMpYXo9IIvAg+E8MSc7xLOfe6KWG
-	1dhqLsamvAzgUM6udLlzGgfOwMA/tb4hpWPPtb3rOkUln6k1fmXSJ/uM3C1wChX3R4E+0wuRb4R
-	ER9WyPv37VlrgBLOHbc37mDRkcmM=
-X-Gm-Gg: ASbGncuIxtRcD8hcOXJuqKtOHTMNQedBaW2pMR+aHfdZUCXedVsLuqmLYCdRhr3PoWR
-	SEQP+ZDwfcMHmaSJZvzDnrKKL7+Q+yXMCNMOgU3tRNY03iWI=
-X-Google-Smtp-Source: AGHT+IEQ2CJYqmyLFQiiRLnsPVzwFmjTsExzZT6jDDhMyx3aUJzvpb7k00ZncHKoximJN2TBdSUjJlqrwM/t51JbWV0=
-X-Received: by 2002:a17:90b:1890:b0:2ea:61c4:a443 with SMTP id
- 98e67ed59e1d1-2ef41bbac79mr12705184a91.4.1733507451799; Fri, 06 Dec 2024
- 09:50:51 -0800 (PST)
+        bh=34RpqiH9mb1FjMoXjg/XFvDnF3uQltArdmOLNrd2+ic=;
+        b=VajDTg681XMf9hQyerteA0qaBPnbZCNMQ8OhqBup7ILuawhpiHkRddxZBFDQzRQzKE
+         Cju/Jq1SvXYFxq/e6r/d/p3W7WLQY4yGikhzTwizR4QUZNmqOhohJ1G8JscwjI1tGCfo
+         54QK8sTqzNfJXNoRG3kuVBQ9JgZwxCpNnOcHZRIT3Iq9FJdfVLg0WIp0tQCRDaMiXQFA
+         KaRgl93qfpnWX12qs/JYrTHT2TWg0vN5YVEVatGvxWl8AFMP0GkbYU+UxqTyMleQ7OTf
+         j8RTxmQmR6u8s8EFJiUQMv+onzbsq4fLILjTCm9qWfJId3iBPmpa4xOM1u5H2LLl5w8E
+         k7kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlfgUq5bGpXu08gpn341iO0PQlh2BUg2oH6YiuG2hv3zyKECokzBrNg1dM7r0UAONgq2zt5rzDK8o+x5p1@vger.kernel.org, AJvYcCW5mT9N0jE887QXxinDjMl5xQwB1MjcK5J4L2R2GolHY4/z/JTIpQPZ3RbKM8D1GdY3ilw=@vger.kernel.org, AJvYcCXwr3qrjqIHdc6YeYKdpUcVkLF4PW70jp2Ju5sMatrDqfVwRlUpD/tFaopWlYx1rlwklKK4BfouDf7fteYtev8p1EyD@vger.kernel.org
+X-Gm-Message-State: AOJu0YyROJ1zekL9r4zsG+7ybejfVEUMZEj8UrZKDQoSgQQnDaVFJtya
+	flZTIfb/HmGd2i34sZZrqQnu+P2q92b3U+/60+zFlk+OviSjeYR1rouTGtMWlsjGzPy6IT4lMGF
+	K4K6dJDt9sr9JhlwTNwE6rG478AU=
+X-Gm-Gg: ASbGncsl0Kis83BuStPeoXWoPCaj2mUeVXD4w1PgUrVk36v0qgFJv8RThmPiLbVoUhA
+	eVg2tfXa/ZU2lEsca8AXQeoKFa9dA8+ydyxCWIZAyOAH755E=
+X-Google-Smtp-Source: AGHT+IHCNWhxq7so09pbzCCKHYLOVnFH/73MSxeGbWicpEb+f1NdFQzOJpUKEvhEDi5mDeEJAuKV7y0BazV2xTlwol0=
+X-Received: by 2002:a17:90b:3dcb:b0:2ef:114d:7bf8 with SMTP id
+ 98e67ed59e1d1-2ef6965464amr5173915a91.6.1733508028565; Fri, 06 Dec 2024
+ 10:00:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241206002417.3295533-1-andrii@kernel.org> <20241206002417.3295533-2-andrii@kernel.org>
- <Z1MFHg3fd_BMQtve@krava>
-In-Reply-To: <Z1MFHg3fd_BMQtve@krava>
+References: <20241206002417.3295533-1-andrii@kernel.org> <20241206002417.3295533-5-andrii@kernel.org>
+ <Z1MFBVRuUnuYKo8c@krava>
+In-Reply-To: <Z1MFBVRuUnuYKo8c@krava>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 6 Dec 2024 09:50:39 -0800
-Message-ID: <CAEf4Bzad08Xy3RhcKq=vk_HaZwHXnCxRHp-hC60EY5B7iWkgDg@mail.gmail.com>
-Subject: Re: [PATCH perf/core 1/4] uprobes: simplify session consumer tracking
+Date: Fri, 6 Dec 2024 10:00:16 -0800
+Message-ID: <CAEf4BzaESrHfAXZrN0VbjQvxLJ0ij0ujKpsp2T6iQtbisYPa=A@mail.gmail.com>
+Subject: Re: [PATCH perf/core 4/4] uprobes: reuse return_instances between
+ multiple uretprobes within task
 To: Jiri Olsa <olsajiri@gmail.com>
 Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
 	peterz@infradead.org, mingo@kernel.org, oleg@redhat.com, rostedt@goodmis.org, 
@@ -76,61 +77,92 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Dec 6, 2024 at 6:07=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrote=
 :
 >
-> On Thu, Dec 05, 2024 at 04:24:14PM -0800, Andrii Nakryiko wrote:
+> On Thu, Dec 05, 2024 at 04:24:17PM -0800, Andrii Nakryiko wrote:
 >
 > SNIP
 >
-> >  static struct return_instance *alloc_return_instance(void)
-> >  {
-> >       struct return_instance *ri;
-> >
-> > -     ri =3D kzalloc(ri_size(DEF_CNT), GFP_KERNEL);
-> > +     ri =3D kzalloc(sizeof(*ri), GFP_KERNEL);
-> >       if (!ri)
-> >               return ZERO_SIZE_PTR;
-> >
-> > -     ri->consumers_cnt =3D DEF_CNT;
-> >       return ri;
-> >  }
-> >
-> >  static struct return_instance *dup_return_instance(struct return_insta=
-nce *old)
-> >  {
-> > -     size_t size =3D ri_size(old->consumers_cnt);
-> > +     struct return_instance *ri;
+> > +static void free_ret_instance(struct uprobe_task *utask,
+> > +                           struct return_instance *ri, bool cleanup_hp=
+robe)
+> > +{
+> > +     unsigned seq;
 > > +
-> > +     ri =3D kmemdup(old, sizeof(*ri), GFP_KERNEL);
+> >       if (cleanup_hprobe) {
+> >               enum hprobe_state hstate;
+> >
+> > @@ -1897,8 +1923,22 @@ static void free_ret_instance(struct return_inst=
+ance *ri, bool cleanup_hprobe)
+> >               hprobe_finalize(&ri->hprobe, hstate);
+> >       }
+> >
+> > -     kfree(ri->extra_consumers);
+> > -     kfree_rcu(ri, rcu);
+> > +     /*
+> > +      * At this point return_instance is unlinked from utask's
+> > +      * return_instances list and this has become visible to ri_timer(=
+).
+> > +      * If seqcount now indicates that ri_timer's return instance
+> > +      * processing loop isn't active, we can return ri into the pool o=
+f
+> > +      * to-be-reused return instances for future uretprobes. If ri_tim=
+er()
+> > +      * happens to be running right now, though, we fallback to safety=
+ and
+> > +      * just perform RCU-delated freeing of ri.
+> > +      */
+> > +     if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
+> > +             /* immediate reuse of ri without RCU GP is OK */
+> > +             ri_pool_push(utask, ri);
 >
-> missing ri =3D=3D NULL check
+> should the push be limitted somehow? I wonder you could make uprobes/cons=
+umers
+> setup that would allocate/push many of ri instances that would not be fre=
+ed
+> until the process exits?
+
+So I'm just relying on the existing MAX_URETPROBE_DEPTH limit that is
+enforced by prepare_uretprobe anyways. But yes, we can have up to 64
+instances in ri_pool.
+
+I did consider cleaning this up from ri_timer() (that would be a nice
+properly, because ri_timer fires after 100ms of inactivity), and my
+initial version did use lockless llist for that, but there is a bit of
+a problem: llist doesn't support popping single iter from the list
+(you can only atomically take *all* of the items) in lockless way. So
+my implementation had to swap the entire list, take one element out of
+it, and then put N - 1 items back. Which, when there are deep chains
+of uretprobes, would be quite an unnecessary CPU overhead. And I
+clearly didn't want to add locking anywhere in this hot path, of
+course.
+
+So I figured that at the absolute worst case we'll just keep
+MAX_URETPROBE_DEPTH items in ri_pool until the task dies. That's not
+that much memory for a small subset of tasks on the system.
+
+One more idea I explored and rejected was to limit the size of ri_pool
+to something smaller than MAX_URETPROBE_DEPTH, say just 16. But then
+there is a corner case of high-frequency long chain of uretprobes up
+to 64 depth, then returning through all of them, and then going into
+the same set of functions again, up to 64. So depth oscillates between
+0 and full 64. In this case this ri_pool will be causing allocation
+for the majority of those invocations, completely defeating the
+purpose.
+
+So, in the end, it felt like 64 cached instances (worst case, if we
+actually ever reached such a deep chain) would be acceptable.
+Especially that commonly I wouldn't expect more than 3-4, actually.
+
+WDYT?
+
 >
-
-Doh, of course, sorry, my stupid mistake. I'll send a follow up fix.
-
 > jirka
 >
-> > +
-> > +     if (unlikely(old->cons_cnt > 1)) {
-> > +             ri->extra_consumers =3D kmemdup(old->extra_consumers,
-> > +                                           sizeof(ri->extra_consumers[=
-0]) * (old->cons_cnt - 1),
-> > +                                           GFP_KERNEL);
-> > +             if (!ri->extra_consumers) {
-> > +                     kfree(ri);
-> > +                     return NULL;
-> > +             }
+> > +     } else {
+> > +             /* we might be racing with ri_timer(), so play it safe */
+> > +             ri_free(ri);
 > > +     }
-> >
-> > -     return kmemdup(old, size, GFP_KERNEL);
-> > +     return ri;
 > >  }
 > >
-> >  static int dup_utask(struct task_struct *t, struct uprobe_task *o_utas=
-k)
-> > @@ -2369,25 +2372,28 @@ static struct uprobe *find_active_uprobe_rcu(un=
-signed long bp_vaddr, int *is_swb
-> >       return uprobe;
-> >  }
-> >
-> > -static struct return_instance*
->
-> SNIP
+> >  /*
+
+[...]
