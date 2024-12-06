@@ -1,77 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BF3198837;
-	Fri,  6 Dec 2024 18:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CDC1D222B
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Dec 2024 20:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733510082; cv=none; b=dGhuvK6PHai6dhsYdl2qRkwn7Dg4cuLaDe9k4cwiqRZNE2pEbBH8vwzh4hOGrrVB9qtSUbxLT3gKqZc2FIy2///dEVgOE04K7YX5IgJ5K0o+bKQI6Z7NsWTXAyZ5WchnNqXpUYcArSF+HHlsEmSXqEAgr7l2E4V7p8K589KZxoc=
+	t=1733517439; cv=none; b=MOVjtVdVuE0TTG1w7X1PxjHCMQ6qs07iFCjbVHrGVZjrXtBQ4i0GoFycnf4FJCv4CgoB9YSCunez3m8QUKfhOImWS10wvRUsnG2KqmRP+0buEFisJU+qtERBfIwbsXGn7DLRGuPys0ENdM8e2Ww1dNoDoB57ExvGAg/RorI/Yj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733510082; c=relaxed/simple;
-	bh=RdAsnLVIig3dm1jYfbZcIv11UEGNzQia7i4gxWQKQfU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ldE4CW2zmculxenlofLrCAc4SpoOgIBYHgfazIRASPJi8F9uNcjTQPwSTeEw2snzqoqmV7LJqZ6+9itRI/Bb8HGaCJKyo/4f6eivc0qUToGv8HdtrPe4CfNiqZEsYVmI33sA0YxDJWYdgrE8QR5/wXDXjRDde8fJW21XHdYyKBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8lx7xbP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733517439; c=relaxed/simple;
+	bh=I8QH9yYP8JFwTKjCJAr/bedB4BBTOAmbOlClo2ps5zc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CmxJ/ETROiELiZJPD2ao75u+Uu5jhG++pFYvxPyYJ7UTKsxyAmssy2Dn3lrPx8vTZn28WuYTT41jQBxfNZA8+1TLS0n3Op7K9m4HWcoWvv8K7qXUD0g16tQO6j6NBgtyKdUllrBcJt5gjm14mXOJIsj5rKV2CZrirOozTlkEVKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FPQa01H8; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8lx7xbP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60500C4CED1;
-	Fri,  6 Dec 2024 18:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733510081;
-	bh=RdAsnLVIig3dm1jYfbZcIv11UEGNzQia7i4gxWQKQfU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J8lx7xbPeATj2Sp7CbgiJscBm5nDmqv+ag494JFHmOKsNVPGbb0IhzD9M7ZMhzS6i
-	 sZfJBLz9ekLA4+F1iuoQbWrNBuVaJbUAl/8E9GmzIvmijImseDoRORJ55QaT3NEFwE
-	 keXTQ8mDJHeDSvmUPGsUcn2k8we7G/JEyacEIi4cwlBBsNdJD8jil7HFf0Drpoz9c2
-	 8bdAtmlphb56m5jILlnfdBwPUbQboGwo5wT6caI4MtaQdsvpAQVYAF3YBwJ9iQIhAh
-	 uLT1v4p20pGw3xdcI8+b4vO9o4S0I6Sixr/CLKop4FCYqMMGBJP/uz4cUJXN3QBKDr
-	 0VuCjgJlkzPFw==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	mingo@kernel.org
-Cc: oleg@redhat.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	liaochang1@huawei.com,
-	kernel-team@meta.com,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH perf/core] uprobes: guard against kmemdup() failing in dup_return_instance()
-Date: Fri,  6 Dec 2024 10:34:36 -0800
-Message-ID: <20241206183436.968068-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FPQa01H8"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4349338add3so10585e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Dec 2024 12:37:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733517436; x=1734122236; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iEYwwDGCTP7P7yGnkaQ5Z1LyGhjk0N+7h2F/y5Qegaw=;
+        b=FPQa01H8OHPwePNjHuEboEhEbv4ruc050ykX2v8YnmSvk5fW4ZDHN+ijBiwu530ZCf
+         w9uyO9IlMZrLaWcUWoX4MeM+UxbXXMJqr4euu4tUzI9ioTGrO6UhtX4zm7ldfW/dtpzq
+         6y50HtnAOIfzBPfqoEHFbXxb7g6PbETGo2jaZb+ybswKny5M0fIGwJ1L48BRGeYSPQ1l
+         NvtIQGDqM2gkwUOFnxhTwM6h7VveqVaYsi7zK+OJjm4mTsslJyPLDJQ7u5fq0VkxH/M+
+         w631IJEq35ISpz+QkHfR9hfOeVVjYx2JvPjLbdKWzvrFIz8isxU+oG9/PF84QmeHUKfv
+         olKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733517436; x=1734122236;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iEYwwDGCTP7P7yGnkaQ5Z1LyGhjk0N+7h2F/y5Qegaw=;
+        b=bOuNMFKAchI2uNNJdQlpFqvA1nfrIDClzdTrgCzgzvKoOjtrxtwe5zz3oNQ4fVsMZD
+         R0rVKOyYnjYc4zk/+BBW5O/lh7xlQTpO7SEBMI7VuZoRpoq8WQ1X9zntmnNA79W94BRc
+         XYErdtv2eBv33gEByl8i8aCOVVWCkMmcvrX0sj796kcyOhRKg4FAL2X22AFwG5rbodI9
+         hQugOdcfCDVNWSaMfq0DNe31eXdwpPbuwjihVjuvkpZj5F7IkCujQVpdJDYRy8e8dyBZ
+         Iob9ophyxeS4QRXvWSzd1Mi24pqjJmu8Z+btbFuXner7RjOhCecBZ5RWqocEsfRvIaph
+         Ffew==
+X-Forwarded-Encrypted: i=1; AJvYcCUjgtlM0s9UAVScRHwYm8bEL3kc8Wpy0U4z92VP02ZPtmF1z7/27LkGPH6nnUDI5JDPedA+oOVg0errje3TTPhAAFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXiK2SUqoP15y4fYQYusaQNRofpjOjTaAP5+HDp0uCflyU5+tG
+	g1CvboqrEnKYUo2iZ/wEzHO9TWg84n78K8a/+rNYLMZte3URtHbq9Ca+ir/ROQ==
+X-Gm-Gg: ASbGncsAwoJ21RZ0ACU+OCSV0eT1XBjeqe2muaPVnujCQY4Yeh2dKTP7koiGn66zRUH
+	ObEKpIYhaHGc4lIUflsL5/ij7Zzwpp4qhFsr3iA4HZYzskra8CG3RwOER3ZJpp4+pbzySiKZoUf
+	7P++kq0ZTGzQsu4UaKlPc338gBD+oCOxlzlD3TBn5zA2XyY7d8EwEQMv2xbIzWXHAW4mtbjAK9W
+	CApnp5nnqY/JI0CnjbJKKuWy6/RM8QZYflaS8U=
+X-Google-Smtp-Source: AGHT+IEyLEFRclI3pX1kv8//WWxlldusvhF+y5ETQFdRD1G0Bahr4xzoR/JRq0Rin2Hu5ZO57k//6w==
+X-Received: by 2002:a05:600c:584b:b0:434:c967:e4b5 with SMTP id 5b1f17b1804b1-434e83df45cmr159425e9.1.1733517435663;
+        Fri, 06 Dec 2024 12:37:15 -0800 (PST)
+Received: from localhost ([2a00:79e0:9d:4:a1dd:6aeb:389c:7fd7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da113580sm68044935e9.29.2024.12.06.12.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 12:37:15 -0800 (PST)
+From: Jann Horn <jannh@google.com>
+Date: Fri, 06 Dec 2024 21:37:03 +0100
+Subject: [PATCH bpf] bpf: Fix prog_array UAF in __uprobe_perf_func()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241206-bpf-fix-uprobe-uaf-v1-1-6869c8a17258@google.com>
+X-B4-Tracking: v=1; b=H4sIAG5gU2cC/x2MywqAIBAAfyX23ILZg+pXooPmWnsxUYpA+veWj
+ gMzUyBTYsowVwUS3Zz5DAJNXcF2mLATshMGrXTXaDWgjR49P3jFdFrCy3jsWzfp0RrbOgUSxkR
+ i/NMFxIf1fT/C+iYdaQAAAA==
+X-Change-ID: 20241206-bpf-fix-uprobe-uaf-53d928bab3d0
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Delyan Kratunov <delyank@fb.com>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Jann Horn <jannh@google.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733517431; l=4088;
+ i=jannh@google.com; s=20240730; h=from:subject:message-id;
+ bh=I8QH9yYP8JFwTKjCJAr/bedB4BBTOAmbOlClo2ps5zc=;
+ b=ZuTXS1DTUtz9mwoP4jNWFIU2COR0aiA3HNcppch70BVqp7JPyDymwr8qZ82Qsf93jBM00n2VV
+ xYabNIwirl+Bjfjh+gZiz1qDfsWSixzTsMnVf/p0fpHYxxcAVSaIGJi
+X-Developer-Key: i=jannh@google.com; a=ed25519;
+ pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-If kmemdup() failed to alloc memory, don't proceed with extra_consumers
-copy.
+Currently, the pointer stored in call->prog_array is loaded in
+__uprobe_perf_func(), with no RCU annotation and no RCU protection, so the
+loaded pointer can immediately be dangling. Later,
+bpf_prog_run_array_uprobe() starts a RCU-trace read-side critical section,
+but this is too late. It then uses rcu_dereference_check(), but this use of
+rcu_dereference_check() does not actually dereference anything.
 
-Fixes: e62f2d492728 ("uprobes: Simplify session consumer tracking")
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+It looks like the intention was to pass a pointer to the member
+call->prog_array into bpf_prog_run_array_uprobe() and actually dereference
+the pointer in there. Fix the issue by actually doing that.
+
+Fixes: 8c7dcb84e3b7 ("bpf: implement sleepable uprobes by chaining gps")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
 ---
- kernel/events/uprobes.c | 2 ++
- 1 file changed, 2 insertions(+)
+To reproduce, patch include/linux/bpf.h like this:
+```
+@@ -30,6 +30,7 @@
+ #include <linux/static_call.h>
+ #include <linux/memcontrol.h>
+ #include <linux/cfi.h>
++#include <linux/delay.h>
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 1af950208c2b..1f75a2f91206 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2048,6 +2048,8 @@ static struct return_instance *dup_return_instance(struct return_instance *old)
- 	struct return_instance *ri;
+ struct bpf_verifier_env;
+ struct bpf_verifier_log;
+@@ -2203,6 +2204,7 @@ bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *array_rcu,
+        struct bpf_trace_run_ctx run_ctx;
+        u32 ret = 1;
+
++       mdelay(10000);
+        might_fault();
+
+        rcu_read_lock_trace();
+```
+
+Build this userspace program:
+
+```
+$ cat dummy.c
+#include <stdio.h>
+int main(void) {
+  printf("hello world\n");
+}
+$ gcc -o dummy dummy.c
+```
+
+Then build this BPF program and load it (change the path to point to
+the "dummy" binary you built):
+
+```
+$ cat bpf-uprobe-kern.c
+#include <linux/bpf.h>
+#include <bpf/bpf_helpers.h>
+#include <bpf/bpf_tracing.h>
+char _license[] SEC("license") = "GPL";
+
+SEC("uprobe//home/user/bpf-uprobe-uaf/dummy:main")
+int BPF_UPROBE(main_uprobe) {
+  bpf_printk("main uprobe triggered\n");
+  return 0;
+}
+$ clang -O2 -g -target bpf -c -o bpf-uprobe-kern.o bpf-uprobe-kern.c
+$ sudo bpftool prog loadall bpf-uprobe-kern.o uprobe-test autoattach
+```
+
+Then run ./dummy in one terminal, and after launching it, run
+`sudo umount uprobe-test` in another terminal. Once the 10-second
+mdelay() is over, a use-after-free should occur, which may or may
+not crash your kernel at the `prog->sleepable` check in
+bpf_prog_run_array_uprobe() depending on your luck.
+---
+ include/linux/bpf.h         | 4 ++--
+ kernel/trace/trace_uprobe.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index eaee2a819f4c150a34a7b1075584711609682e4c..00b3c5b197df75a0386233b9885b480b2ce72f5f 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2193,7 +2193,7 @@ bpf_prog_run_array(const struct bpf_prog_array *array,
+  * rcu-protected dynamically sized maps.
+  */
+ static __always_inline u32
+-bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *array_rcu,
++bpf_prog_run_array_uprobe(struct bpf_prog_array __rcu **array_rcu,
+ 			  const void *ctx, bpf_prog_run_fn run_prog)
+ {
+ 	const struct bpf_prog_array_item *item;
+@@ -2210,7 +2210,7 @@ bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *array_rcu,
  
- 	ri = kmemdup(old, sizeof(*ri), GFP_KERNEL);
-+	if (!ri)
-+		return NULL;
+ 	run_ctx.is_uprobe = true;
  
- 	if (unlikely(old->cons_cnt > 1)) {
- 		ri->extra_consumers = kmemdup(old->extra_consumers,
+-	array = rcu_dereference_check(array_rcu, rcu_read_lock_trace_held());
++	array = rcu_dereference_check(*array_rcu, rcu_read_lock_trace_held());
+ 	if (unlikely(!array))
+ 		goto out;
+ 	old_run_ctx = bpf_set_run_ctx(&run_ctx.run_ctx);
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index fed382b7881b82ee3c334ea77860cce77581a74d..c4eef1eb5ddb3c65205aa9d64af1c72d62fab87f 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1404,7 +1404,7 @@ static void __uprobe_perf_func(struct trace_uprobe *tu,
+ 	if (bpf_prog_array_valid(call)) {
+ 		u32 ret;
+ 
+-		ret = bpf_prog_run_array_uprobe(call->prog_array, regs, bpf_prog_run);
++		ret = bpf_prog_run_array_uprobe(&call->prog_array, regs, bpf_prog_run);
+ 		if (!ret)
+ 			return;
+ 	}
+
+---
+base-commit: 509df676c2d79c985ec2eaa3e3a3bbe557645861
+change-id: 20241206-bpf-fix-uprobe-uaf-53d928bab3d0
+
 -- 
-2.43.5
+Jann Horn <jannh@google.com>
 
