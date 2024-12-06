@@ -1,62 +1,62 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7CDC1D222B
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Dec 2024 20:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA0D1953BA
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Dec 2024 20:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733517439; cv=none; b=MOVjtVdVuE0TTG1w7X1PxjHCMQ6qs07iFCjbVHrGVZjrXtBQ4i0GoFycnf4FJCv4CgoB9YSCunez3m8QUKfhOImWS10wvRUsnG2KqmRP+0buEFisJU+qtERBfIwbsXGn7DLRGuPys0ENdM8e2Ww1dNoDoB57ExvGAg/RorI/Yj4=
+	t=1733517935; cv=none; b=Y917uLY8UKFd00ynwcC4nkhAKaZFHc9mkc+0B39E7QYCRbirPXGSUS2jy1vAsYWvUxmmCjZ5V9KpRnyyVFkPihu6zl+QE0SyU5saOR2nKyXJc5xmwKEIvrc/0Y+aP0bB91Tlst7r3mWxdrfTaZCXmMdd5EIdnh5H06oot2pt1ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733517439; c=relaxed/simple;
-	bh=I8QH9yYP8JFwTKjCJAr/bedB4BBTOAmbOlClo2ps5zc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CmxJ/ETROiELiZJPD2ao75u+Uu5jhG++pFYvxPyYJ7UTKsxyAmssy2Dn3lrPx8vTZn28WuYTT41jQBxfNZA8+1TLS0n3Op7K9m4HWcoWvv8K7qXUD0g16tQO6j6NBgtyKdUllrBcJt5gjm14mXOJIsj5rKV2CZrirOozTlkEVKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FPQa01H8; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1733517935; c=relaxed/simple;
+	bh=m3PTfQDVngxMCgrvufrkVbQNh5egy7ThODyjfj2kRGY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jHm9q24uZdpm87Ihrx3nan+vErkMLAwbNpCb+EWaByoqz4ECtv5ZF58mHva7uUMnxSJfynmsOu6gF0AikrYdBSJvqM4zn6GEAT9Nrm9Be9c7xVOtiJ1s34MzFr6p/N5gAavnttY7IO2ktPKdnoOd3C2Vo37RSqVjMTNNZjT0f8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K8Ctvefl; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FPQa01H8"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4349338add3so10585e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Dec 2024 12:37:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8Ctvefl"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-434a9f9a225so9565e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 06 Dec 2024 12:45:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733517436; x=1734122236; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1733517932; x=1734122732; darn=vger.kernel.org;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEYwwDGCTP7P7yGnkaQ5Z1LyGhjk0N+7h2F/y5Qegaw=;
-        b=FPQa01H8OHPwePNjHuEboEhEbv4ruc050ykX2v8YnmSvk5fW4ZDHN+ijBiwu530ZCf
-         w9uyO9IlMZrLaWcUWoX4MeM+UxbXXMJqr4euu4tUzI9ioTGrO6UhtX4zm7ldfW/dtpzq
-         6y50HtnAOIfzBPfqoEHFbXxb7g6PbETGo2jaZb+ybswKny5M0fIGwJ1L48BRGeYSPQ1l
-         NvtIQGDqM2gkwUOFnxhTwM6h7VveqVaYsi7zK+OJjm4mTsslJyPLDJQ7u5fq0VkxH/M+
-         w631IJEq35ISpz+QkHfR9hfOeVVjYx2JvPjLbdKWzvrFIz8isxU+oG9/PF84QmeHUKfv
-         olKA==
+        bh=vL/yjtQtoNZ0gBIy+DxtflUlVpr5YddZzBAjmwp/MkA=;
+        b=K8CtveflPC8OOm58XgIJ0BHPYME804LEdiQy115Bz22B2vq5IA3DG9Tnoec4xTzbVX
+         D5Ed4kgfuzTbLdwoCGIF2qNo4Gh1BXKksECOIi9qm3rwOBY4EN/+r9ALMmgUz3Lytjkq
+         I30ObXVJh3/mOLI8/ms8FDoHCyWGoMYnLjj1wiW3dgG0Tbp/kURNyhHLtXAyOuBwHk4o
+         Ii00KKyXd7LAfb+SYMRPNmq5zlIcFJlekTVoGZdAOoWkCmbzBhsVtnvyfw33cFwJSGPc
+         J41GW3ROrtZIinEBBwWa9XkzzuP7TWFMFEKDFK5eZqtjOfgnuuHWMXg6+VMtUhF3AcW9
+         i2+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733517436; x=1734122236;
+        d=1e100.net; s=20230601; t=1733517932; x=1734122732;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iEYwwDGCTP7P7yGnkaQ5Z1LyGhjk0N+7h2F/y5Qegaw=;
-        b=bOuNMFKAchI2uNNJdQlpFqvA1nfrIDClzdTrgCzgzvKoOjtrxtwe5zz3oNQ4fVsMZD
-         R0rVKOyYnjYc4zk/+BBW5O/lh7xlQTpO7SEBMI7VuZoRpoq8WQ1X9zntmnNA79W94BRc
-         XYErdtv2eBv33gEByl8i8aCOVVWCkMmcvrX0sj796kcyOhRKg4FAL2X22AFwG5rbodI9
-         hQugOdcfCDVNWSaMfq0DNe31eXdwpPbuwjihVjuvkpZj5F7IkCujQVpdJDYRy8e8dyBZ
-         Iob9ophyxeS4QRXvWSzd1Mi24pqjJmu8Z+btbFuXner7RjOhCecBZ5RWqocEsfRvIaph
-         Ffew==
-X-Forwarded-Encrypted: i=1; AJvYcCUjgtlM0s9UAVScRHwYm8bEL3kc8Wpy0U4z92VP02ZPtmF1z7/27LkGPH6nnUDI5JDPedA+oOVg0errje3TTPhAAFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXiK2SUqoP15y4fYQYusaQNRofpjOjTaAP5+HDp0uCflyU5+tG
-	g1CvboqrEnKYUo2iZ/wEzHO9TWg84n78K8a/+rNYLMZte3URtHbq9Ca+ir/ROQ==
-X-Gm-Gg: ASbGncsAwoJ21RZ0ACU+OCSV0eT1XBjeqe2muaPVnujCQY4Yeh2dKTP7koiGn66zRUH
-	ObEKpIYhaHGc4lIUflsL5/ij7Zzwpp4qhFsr3iA4HZYzskra8CG3RwOER3ZJpp4+pbzySiKZoUf
-	7P++kq0ZTGzQsu4UaKlPc338gBD+oCOxlzlD3TBn5zA2XyY7d8EwEQMv2xbIzWXHAW4mtbjAK9W
-	CApnp5nnqY/JI0CnjbJKKuWy6/RM8QZYflaS8U=
-X-Google-Smtp-Source: AGHT+IEyLEFRclI3pX1kv8//WWxlldusvhF+y5ETQFdRD1G0Bahr4xzoR/JRq0Rin2Hu5ZO57k//6w==
-X-Received: by 2002:a05:600c:584b:b0:434:c967:e4b5 with SMTP id 5b1f17b1804b1-434e83df45cmr159425e9.1.1733517435663;
-        Fri, 06 Dec 2024 12:37:15 -0800 (PST)
+        bh=vL/yjtQtoNZ0gBIy+DxtflUlVpr5YddZzBAjmwp/MkA=;
+        b=SXYnh+0E7y5juFRCkdWEHi5RMLhPxRom3j+OrjfwE5LXdRaT2LwmyF9gYpfOSlND/u
+         Ta2X1wnEn58pPfxqyH08s6iy6CFPgKoagW5EBza98ZPrN1KHnQcrptvHIk3kUgf6OJPc
+         YXxVAALocDpB7gGkn5O47Wi6Ft1vUGqXNPDmZRWj4WGhGhvqxCOL2QMEcQcQfGl95jRB
+         4yph3tY6QX0israiosZnr+kuG0Qb3wkH/PjPwvwdXx7uzQ808xRK51j2iHRKY6Q/tGZj
+         QJ0ps/qpScvenEnXpUzq8IKGA0AMt1Okr+NXkP381FIRCgvHH0URNYK+ebkwZ0RfH0ua
+         PM+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWDvesR1Omi3rwLhZQxvrDdH1MFcfwFrm2uzZfwW8kaKbYMLQfSIjLDDev3Yf+2rBtDkB2YarlM2ueQnHnXFnJ2XdM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVxkl2UC8bAmcps+mmaGMuSqU/o7tFQAaJs9HpzaapHOFwSdXW
+	YlpiiUGCmoprmcaRD1daDiFYz/hxFo0OO7vd1acxIpokkWh3zdQ6pV5sk9ximQ==
+X-Gm-Gg: ASbGncu9J/JQljPoir0Wy7w7My41LxgxIvYFqKxiD+vSEnFg4Z6AEOmcykY+X2S2GS7
+	HUEH0RUuiGIEq9cLELvWvLICqiCs59IYWP2+U7Xsv6Pv34WEaxBiQff72Ji+G00/kzPQEdk+TNA
+	zOJ2R64XFfjfmuPbD9KlzyVUntNTi9ktucW9MGpIJnSsbHNwH7r/R7EQDq6L+/tgbLI+4Mhkdoa
+	Wqhwb1J6QMXbdknbs50jjBd6RE2gTACsIoOIQ==
+X-Google-Smtp-Source: AGHT+IHfoEVwi7Atv6ROI6m52UQqMOVS5/908bxTefMRLKhkIJdwocTFIYOTCUKX87jLbZyKeTgo8Q==
+X-Received: by 2002:a05:600c:34cf:b0:42b:8ff7:bee2 with SMTP id 5b1f17b1804b1-434e844cb4emr143245e9.5.1733517931771;
+        Fri, 06 Dec 2024 12:45:31 -0800 (PST)
 Received: from localhost ([2a00:79e0:9d:4:a1dd:6aeb:389c:7fd7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434da113580sm68044935e9.29.2024.12.06.12.37.14
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3861f59cd35sm5327236f8f.31.2024.12.06.12.45.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 12:37:15 -0800 (PST)
+        Fri, 06 Dec 2024 12:45:30 -0800 (PST)
 From: Jann Horn <jannh@google.com>
-Date: Fri, 06 Dec 2024 21:37:03 +0100
-Subject: [PATCH bpf] bpf: Fix prog_array UAF in __uprobe_perf_func()
+Date: Fri, 06 Dec 2024 21:45:28 +0100
+Subject: [PATCH bpf v2] bpf: Fix prog_array UAF in __uprobe_perf_func()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -65,10 +65,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241206-bpf-fix-uprobe-uaf-v1-1-6869c8a17258@google.com>
-X-B4-Tracking: v=1; b=H4sIAG5gU2cC/x2MywqAIBAAfyX23ILZg+pXooPmWnsxUYpA+veWj
- gMzUyBTYsowVwUS3Zz5DAJNXcF2mLATshMGrXTXaDWgjR49P3jFdFrCy3jsWzfp0RrbOgUSxkR
- i/NMFxIf1fT/C+iYdaQAAAA==
+Message-Id: <20241206-bpf-fix-uprobe-uaf-v2-1-4c75c54fe424@google.com>
+X-B4-Tracking: v=1; b=H4sIAGdiU2cC/32NTQ7CIBSEr9K8tc8Uait15T1MF/w8WhItBCzRN
+ L27hAO4nJlvZnZIFB0luDU7RMouOb8WwU8N6EWuM6EzRQNv+YXxdkAVLFr3wS1Erwg3abHvzMi
+ FkqozLZRiiFSIOvqAwsNUzMWlt4/fepRZjf5tZoYMBzGMWkh25b24z97PTzpr/4LpOI4fERo6S
+ boAAAA=
 X-Change-ID: 20241206-bpf-fix-uprobe-uaf-53d928bab3d0
 To: Alexei Starovoitov <ast@kernel.org>, 
  Daniel Borkmann <daniel@iogearbox.net>, 
@@ -86,11 +87,11 @@ Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org, 
  Jann Horn <jannh@google.com>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733517431; l=4088;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1733517930; l=3931;
  i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=I8QH9yYP8JFwTKjCJAr/bedB4BBTOAmbOlClo2ps5zc=;
- b=ZuTXS1DTUtz9mwoP4jNWFIU2COR0aiA3HNcppch70BVqp7JPyDymwr8qZ82Qsf93jBM00n2VV
- xYabNIwirl+Bjfjh+gZiz1qDfsWSixzTsMnVf/p0fpHYxxcAVSaIGJi
+ bh=m3PTfQDVngxMCgrvufrkVbQNh5egy7ThODyjfj2kRGY=;
+ b=gEZFzYLUA38vwsxc9tx3/JTv+8w0KjkGxS3pFSw0YcKqr/X+g226yWRb+R6bSEY+mvghll05g
+ ioee4912xDxBkNE7zUGmZ64jnuMahywBXep9yxgm/swPydEtiLfNfue
 X-Developer-Key: i=jannh@google.com; a=ed25519;
  pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
@@ -109,25 +110,9 @@ Fixes: 8c7dcb84e3b7 ("bpf: implement sleepable uprobes by chaining gps")
 Cc: stable@vger.kernel.org
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
-To reproduce, patch include/linux/bpf.h like this:
-```
-@@ -30,6 +30,7 @@
- #include <linux/static_call.h>
- #include <linux/memcontrol.h>
- #include <linux/cfi.h>
-+#include <linux/delay.h>
-
- struct bpf_verifier_env;
- struct bpf_verifier_log;
-@@ -2203,6 +2204,7 @@ bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *array_rcu,
-        struct bpf_trace_run_ctx run_ctx;
-        u32 ret = 1;
-
-+       mdelay(10000);
-        might_fault();
-
-        rcu_read_lock_trace();
-```
+To reproduce, in include/linux/bpf.h, patch in a mdelay(10000) directly
+before the might_fault() in bpf_prog_run_array_uprobe() and add an
+include of linux/delay.h.
 
 Build this userspace program:
 
@@ -164,6 +149,10 @@ Then run ./dummy in one terminal, and after launching it, run
 mdelay() is over, a use-after-free should occur, which may or may
 not crash your kernel at the `prog->sleepable` check in
 bpf_prog_run_array_uprobe() depending on your luck.
+---
+Changes in v2:
+- remove diff chunk in patch notes that confuses git
+- Link to v1: https://lore.kernel.org/r/20241206-bpf-fix-uprobe-uaf-v1-1-6869c8a17258@google.com
 ---
  include/linux/bpf.h         | 4 ++--
  kernel/trace/trace_uprobe.c | 2 +-
