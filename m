@@ -1,400 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB03B28684;
-	Fri,  6 Dec 2024 10:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5722E859;
+	Fri,  6 Dec 2024 14:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733479352; cv=none; b=iRVVETNibzGLJnuDjTfsByDsSVXZovd3FK85kmKnd3cLYVlP/sJetu0vHRAdRnShZvNvA78i4lK9l7RNmkJOCAD40IwiVWWHIUBgqFdn7a6doE8rLgmkgjabLTghfvAHdxguebw9SiMY0FEDKcefii9DreP2T3aXtH70uAROoTg=
+	t=1733494027; cv=none; b=czkriDslhnhIbzNoXZbeSxkyQdP1Ns8fucQymIjfaj7BDgquVfFfmRzTbP7XFkZf2lK43I62ceMJx6nVoE2UsIUsj8SS6ZG5D6vcwsh1Z5EoWl+tZVCnIRpf7d8F4eGYufCEgWxF5aFa8/+0h/F5Rp/8R0PIKkqTDIfyUsjZztI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733479352; c=relaxed/simple;
-	bh=dRdjztA9b+bUdj65UIY2rf3m8UrhDjme/2VdkbsCfRo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dww6Wz0rRU8hQ1gOGwjKhtxmdw1xsRZIqEr0Pb+0G0GlGf81w2ePae3CUAeQplkdDCiUQ8Lt3FF1wLhVr3l8ylGkuHTP3vrA201o9C/FAbSoQTyVJ7wQHJeU1T7Vv+ROMFF0Ilvv1PELD4ULKspcG+f/5CAgxiE8RzjApGeEPy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2eLXQQW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733494027; c=relaxed/simple;
+	bh=/T9n9l8yPptrZ8rQNOWy7/kjAYWgocwtitvgqsY4m14=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bF3bTl90AT4NgEzCkInexhhmCY3cY1n59of68zI+jEVsXmn2P9Mv/1eIdjTJtFz8owItrMOunDSOi9giJZxDnolRl6minzvakabgFFD3fV3E5gstCwu6BFvdQUbiKGjh5wIiiS73ymxvuVLNFdQZtAmJkAW86NkUiKlQp4Wzt+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HrR8dMCx; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2eLXQQW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F359BC4CED1;
-	Fri,  6 Dec 2024 10:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733479352;
-	bh=dRdjztA9b+bUdj65UIY2rf3m8UrhDjme/2VdkbsCfRo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=K2eLXQQWebgTZ/SIkRJ4EGhpkJTyYomTgm8MQD5McbW/kNgYqLw4yvEQfuGKmryVI
-	 aCZfqL+9i9aZkFtAG4JPRJ4YEXrcUiuOa+fcqHQPSfTQVlU3DDRQbp2ZL90cD8oUzq
-	 rTxb3mG8YphpWJf8+3B92FEJKeVdbhZSvRCyN7xjDb3lKwXgKPfi109sYpLnl7vIrn
-	 QwYJ5sc7ZBWOdjqNBi81eE3rM4MQk2bdYhkYyIBgzZ+LTZz2swyAYAYdmQiUkpWsT/
-	 qVkHSwuN7/YURYYsxKO1nMIm8fy6DN32c5FdGTuicEMzfrghbjxmzZ+62iLLb/3GUp
-	 IvOvhg+glSQLg==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Andy Chiu <andybnac@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Steven
- Rostedt <rostedt@goodmis.org>, Robbin Ehn <rehn@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, bjorn@rivosinc.com, puranjay12@gmail.com,
- alexghiti@rivosinc.com, yongxuan.wang@sifive.com, greentime.hu@sifive.com,
- nick.hu@sifive.com, nylon.chen@sifive.com, tommy.wu@sifive.com,
- eric.lin@sifive.com, viccent.chen@sifive.com, zong.li@sifive.com,
- samuel.holland@sifive.com
-Subject: Re: [PATCH v3 3/7] riscv: ftrace: prepare ftrace for atomic code
- patching
-In-Reply-To: <20241127172908.17149-4-andybnac@gmail.com>
-References: <20241127172908.17149-1-andybnac@gmail.com>
- <20241127172908.17149-4-andybnac@gmail.com>
-Date: Fri, 06 Dec 2024 11:02:29 +0100
-Message-ID: <87v7vxf7t6.fsf@all.your.base.are.belong.to.us>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrR8dMCx"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-434a099ba95so21403665e9.0;
+        Fri, 06 Dec 2024 06:07:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733494024; x=1734098824; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z1NqJIFUc2rfcnKJ/ZOj3FWC+O+PqLGFEM848kkhk2U=;
+        b=HrR8dMCxbbbDqCp9hmhqxW8nNUJQ1Vj5h9fxJgKUkLsxNxBUyjrG/Zg88xVvL5pIxg
+         zYLg40yLNCFAbFjkY2a2/zrBMh1ZNa5AsKir6pquHA1TZTNG29xsx8HICIsnw3OhBI3w
+         KUt+AuSGo6vldg5HrFaL86MNlMCw+852Tqt87E0WmSZjs6+IMywTTv3fPYiqF3k8G+de
+         1nFgPO+5+G8eNT3+cGIcWtGhgCPqrbzW1T0Ou7JNZ4Ad9VZHdmZeMgJKDlAwtDk5SWjn
+         kYuZIwVj/hRTd12woCq6Li1EzkIpn1dvAcfG8id/y6iiPIfkLkhgiSp1RZU0BI8q6B9+
+         fQEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733494024; x=1734098824;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z1NqJIFUc2rfcnKJ/ZOj3FWC+O+PqLGFEM848kkhk2U=;
+        b=pAxVFYt/TsPFCHCQdFdE9mVah3wguXXGwdyedv6XKKfSljZy51NZIGZ+J+8HefVBp1
+         hnk8NAVlz1VTbAjIhA63tAuc+UwlDCMc7Sg76Vfl4+LaoW5sEGeAvXz+6/rSNkYCkloW
+         9rZXuP0W4pdemubPDypFmNP6T1HDOZsJ/WtVSLEoPIFrGknFSpTxoKyXkOy6C6lZ68cq
+         J29O/HgO+wCgm30E8rCqN49yp7V0WSqcREJwzCxQHMs22fLJEyfxXALPmoX3HUxEu3kk
+         wsNdHCNjBhqC8SsigJ1OyHTutZbyYOOtVLRbftQ1/DvpQcqJjfn9N0XbZ5GBnhpXt5Fw
+         vekA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS3y4BMNXJhqbfaHuEYBd2d3+BpRkitCgchLvjDT+biQFO46KH0BLZIxerZ1jeWdC2UCRt4yShLK7J2tPK@vger.kernel.org, AJvYcCWZIk3AIjmmBkeaq/Anh40qPbdOH+jkDE37UlyEEH+Tx3sEid8Z/+bevKRlzuqNiMGfdfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNsquVVR4aLighHRUhQ1FY6w4xxLOHvAOfY3g9nGEBXXGzVOP1
+	BlDoxCAlQ574bb8ERScE9iixMxoPgbcHwzq31A3988dFBsntf887el9bLw==
+X-Gm-Gg: ASbGncv7C1uiI85nOr/Q7VfMp6+Kfrh5192iAkiyj10YZdIxheiMTI7pTKBKTAGV+Zk
+	lyY8LQ5ajmySqKbtuhoKrR1MbFQV2uMcH7TwDtUc8xBuzAhrsOX0WxCGard4slzblJDGtTx5HvU
+	fJvg2IWY3VhtmMwHTvXXQD9ZdJkIPkrbck/IP9SDK15+K9HWhj3W5LGk1WEFKaIFNarthl/i8ZG
+	J8NBWS+D23/fKpckU10Go7f9NV6ikcz4cVNqaqlD6VW98Fqf3iEdpfR7nHQNWYUnSWJjftSrSVM
+	QUw8OxwtRqKskUoI6ZKb3z0=
+X-Google-Smtp-Source: AGHT+IGw4IMPWXq1GrzcXg2SDSvRxwj1VocovuEZuiK4iMC8QvR2HIXwgj55cindn7/QdDi3ipSdew==
+X-Received: by 2002:a05:600c:1911:b0:434:a923:9313 with SMTP id 5b1f17b1804b1-434ddecac75mr25534475e9.25.1733494023668;
+        Fri, 06 Dec 2024 06:07:03 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-434d52cb6e1sm93071595e9.37.2024.12.06.06.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 06:07:03 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 6 Dec 2024 15:07:01 +0100
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, oleg@redhat.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, liaochang1@huawei.com,
+	kernel-team@meta.com
+Subject: Re: [PATCH perf/core 4/4] uprobes: reuse return_instances between
+ multiple uretprobes within task
+Message-ID: <Z1MFBVRuUnuYKo8c@krava>
+References: <20241206002417.3295533-1-andrii@kernel.org>
+ <20241206002417.3295533-5-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241206002417.3295533-5-andrii@kernel.org>
 
-Adding Robbin for input, who's doing much more crazy text patching in
-JVM, than what we do in the kernel. ;-)
+On Thu, Dec 05, 2024 at 04:24:17PM -0800, Andrii Nakryiko wrote:
 
-Andy Chiu <andybnac@gmail.com> writes:
+SNIP
 
-> From: Andy Chiu <andy.chiu@sifive.com>
->
-> We use an AUIPC+JALR pair to jump into a ftrace trampoline. Since
-> instruction fetch can break down to 4 byte at a time, it is impossible
-> to update two instructions without a race. In order to mitigate it, we
-> initialize the patchable entry to AUIPC + NOP4. Then, the run-time code
-> patching can change NOP4 to JALR to eable/disable ftrcae from a
-> function. This limits the reach of each ftrace entry to +-2KB displacing
-> from ftrace_caller.
->
-> Starting from the trampoline, we add a level of indirection for it to
-> reach ftrace caller target. Now, it loads the target address from a
-> memory location, then perform the jump. This enable the kernel to update
-> the target atomically.
->
-> The ordering of reading/updating the targert address should be guarded
-> by generic ftrace code, where it sends smp_rmb ipi.
-
-Let's say we're tracing "f". Previously w/ stop_machine() it was
-something like:
-
-f:
-1: nop
-   nop
-   ...
-   ...
-
-ftrace_caller:
-   ...
-   auipc	a2, function_trace_op
-   ld		a2, function_trace_op(a2)
-   ...
-2: auipc    ra, ftrace_stub
-   jalr     ftrace_stub(ra)
-
-The text was patched by ftrace in 1 and 2.
-
-...and now:
-f:
-   auipc    t0, ftrace_caller
-A: nop
-   ...
-   ...
-
-ftrace_caller:
-   ...
-   auipc    a2, function_trace_op
-   ld       a2, function_trace_op(a2)
-   ...
-   auipc    ra, ftrace_call_dest
-   ld       ra, ftrace_call_dest(ra)
-   jalr     ra=20
-
-The text is only patched in A, and the tracer func is loaded via
-ftrace_call_dest.
-
-Today, when we enable trace "f" the following is done by ftrace:
-  Text patch 2: call ftrace_stub -> call arch_ftrace_ops_list_func
-  Text patch 1: nop,nop -> call ftrace_caller
-  store function_trace_op
-  smp_wmb()
-  IPI: smp_rmb()
-  Text patch 2: call arch_ftrace_ops_list_func -> call function_trace_call
-
-Disable, would be something like:
-  Text patch 2: call function_trace_call -> call arch_ftrace_ops_list_func
-  Text patch 1: call ftrace_caller -> nop,nop
-  store function_trace_op
-  smp_wmb()
-  IPI: smp_rmb()
-  Text patch 2: call arch_ftrace_ops_list_func -> call ftrace_stub
-
-Now with this change, enable would be:
-  store ftrace_call_dest (was: Text patch 2: call ftrace_stub -> call arch_=
-ftrace_ops_list_func)
-  <<ORDERING>>
-  Text patch A: nop -> jalr ftrace_caller(t0)
-  store function_trace_op
-  smp_wmb()
-  IPI: smp_rmb()
-  store ftrace_call_dest (was: Text patch 2: call arch_ftrace_ops_list_func=
- -> call function_trace_call)
-
-Seems like we're missing some data ordering in "<<ORDERING>>", wrt to
-the text patching A (The arch specific ftrace_update_ftrace_func())? Or
-are we OK with reordering there? Maybe add what's done for
-function_trace_op?
-
-[...]
-
-> Signed-off-by: Andy Chiu <andy.chiu@sifive.com>
-> ---
->  arch/riscv/include/asm/ftrace.h |  4 ++
->  arch/riscv/kernel/ftrace.c      | 80 +++++++++++++++++++++------------
->  arch/riscv/kernel/mcount-dyn.S  |  9 ++--
->  3 files changed, 62 insertions(+), 31 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftr=
-ace.h
-> index 4ca7ce7f34d7..36734d285aad 100644
-> --- a/arch/riscv/include/asm/ftrace.h
-> +++ b/arch/riscv/include/asm/ftrace.h
-> @@ -80,6 +80,7 @@ struct dyn_arch_ftrace {
->  #define JALR_T0			(0x000282e7)
->  #define AUIPC_T0		(0x00000297)
->  #define NOP4			(0x00000013)
-> +#define JALR_RANGE		(JALR_SIGN_MASK - 1)
->=20=20
->  #define to_jalr_t0(offset)						\
->  	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
-> @@ -117,6 +118,9 @@ do {									\
->   * Let auipc+jalr be the basic *mcount unit*, so we make it 8 bytes here.
->   */
->  #define MCOUNT_INSN_SIZE 8
-> +#define MCOUNT_AUIPC_SIZE	4
-> +#define MCOUNT_JALR_SIZE	4
-> +#define MCOUNT_NOP4_SIZE	4
-
-Align please.
-
->=20=20
->  #ifndef __ASSEMBLY__
->  struct dyn_ftrace;
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 4b95c574fd04..5ebe412280ef 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -64,42 +64,64 @@ static int ftrace_check_current_call(unsigned long ho=
-ok_pos,
->  	return 0;
->  }
->=20=20
-> -static int __ftrace_modify_call(unsigned long hook_pos, unsigned long ta=
-rget,
-> -				bool enable, bool ra)
-> +static int __ftrace_modify_call(unsigned long hook_pos, unsigned long ta=
-rget, bool validate)
-
-While we're updating this function; Can we rename hook_pos to something
-that makes sense from an ftrace perspective?
-
->  {
->  	unsigned int call[2];
-> -	unsigned int nops[2] =3D {NOP4, NOP4};
-> +	unsigned int replaced[2];
-> +
-> +	make_call_t0(hook_pos, target, call);
->=20=20
-> -	if (ra)
-> -		make_call_ra(hook_pos, target, call);
-> -	else
-> -		make_call_t0(hook_pos, target, call);
-> +	if (validate) {
-> +		/*
-> +		 * Read the text we want to modify;
-> +		 * return must be -EFAULT on read error
-> +		 */
-> +		if (copy_from_kernel_nofault(replaced, (void *)hook_pos,
-> +					     MCOUNT_INSN_SIZE))
-
-Don't wrap this line.
-
-> +			return -EFAULT;
-> +
-> +		if (replaced[0] !=3D call[0]) {
-> +			pr_err("%p: expected (%08x) but got (%08x)\n",
-> +			       (void *)hook_pos, call[0], replaced[0]);
-> +			return -EINVAL;
-> +		}
-> +	}
->=20=20
-> -	/* Replace the auipc-jalr pair at once. Return -EPERM on write error. */
-> -	if (patch_insn_write((void *)hook_pos, enable ? call : nops, MCOUNT_INS=
-N_SIZE))
-> +	/* Replace the jalr at once. Return -EPERM on write error. */
-> +	if (patch_insn_write((void *)(hook_pos + MCOUNT_AUIPC_SIZE), call + 1, =
-MCOUNT_JALR_SIZE))
->  		return -EPERM;
->=20=20
->  	return 0;
->  }
->=20=20
-> -int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> +static int __ftrace_modify_call_site(ftrace_func_t *hook_pos, ftrace_fun=
-c_t target, bool enable)
->  {
-> -	unsigned int call[2];
-> +	ftrace_func_t call =3D target;
-> +	ftrace_func_t nops =3D &ftrace_stub;
-
-Confusing to call nops. This is not nops. This is the ftrace_stub. Also
-the __ftrace_modify_call_site is not super clear to me. Maybe just ditch
-the enable flag, and have two functions? Or just or inline it?
-
->=20=20
-> -	make_call_t0(rec->ip, addr, call);
-> -
-> -	if (patch_insn_write((void *)rec->ip, call, MCOUNT_INSN_SIZE))
-> -		return -EPERM;
-> +	WRITE_ONCE(*hook_pos, enable ? call : nops);
->=20=20
->  	return 0;
->  }
->=20=20
-> +int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+> +static void free_ret_instance(struct uprobe_task *utask,
+> +			      struct return_instance *ri, bool cleanup_hprobe)
 > +{
-> +	unsigned long distance, orig_addr;
+> +	unsigned seq;
 > +
-> +	orig_addr =3D (unsigned long)&ftrace_caller;
-> +	distance =3D addr > orig_addr ? addr - orig_addr : orig_addr - addr;
-> +	if (distance > JALR_RANGE)
-> +		return -EINVAL;
+>  	if (cleanup_hprobe) {
+>  		enum hprobe_state hstate;
+>  
+> @@ -1897,8 +1923,22 @@ static void free_ret_instance(struct return_instance *ri, bool cleanup_hprobe)
+>  		hprobe_finalize(&ri->hprobe, hstate);
+>  	}
+>  
+> -	kfree(ri->extra_consumers);
+> -	kfree_rcu(ri, rcu);
+> +	/*
+> +	 * At this point return_instance is unlinked from utask's
+> +	 * return_instances list and this has become visible to ri_timer().
+> +	 * If seqcount now indicates that ri_timer's return instance
+> +	 * processing loop isn't active, we can return ri into the pool of
+> +	 * to-be-reused return instances for future uretprobes. If ri_timer()
+> +	 * happens to be running right now, though, we fallback to safety and
+> +	 * just perform RCU-delated freeing of ri.
+> +	 */
+> +	if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
+> +		/* immediate reuse of ri without RCU GP is OK */
+> +		ri_pool_push(utask, ri);
+
+should the push be limitted somehow? I wonder you could make uprobes/consumers
+setup that would allocate/push many of ri instances that would not be freed
+until the process exits?
+
+jirka
+
+> +	} else {
+> +		/* we might be racing with ri_timer(), so play it safe */
+> +		ri_free(ri);
+> +	}
+>  }
+>  
+>  /*
+> @@ -1920,7 +1960,15 @@ void uprobe_free_utask(struct task_struct *t)
+>  	ri = utask->return_instances;
+>  	while (ri) {
+>  		ri_next = ri->next;
+> -		free_ret_instance(ri, true /* cleanup_hprobe */);
+> +		free_ret_instance(utask, ri, true /* cleanup_hprobe */);
+> +		ri = ri_next;
+> +	}
 > +
-> +	return __ftrace_modify_call(rec->ip, addr, false);
-> +}
+> +	/* free_ret_instance() above might add to ri_pool, so this loop should come last */
+> +	ri = utask->ri_pool;
+> +	while (ri) {
+> +		ri_next = ri->next;
+> +		ri_free(ri);
+>  		ri = ri_next;
+>  	}
+>  
+> @@ -1943,8 +1991,12 @@ static void ri_timer(struct timer_list *timer)
+>  	/* RCU protects return_instance from freeing. */
+>  	guard(rcu)();
+>  
+> +	write_seqcount_begin(&utask->ri_seqcount);
 > +
->  int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->  		    unsigned long addr)
->  {
-> -	unsigned int nops[2] =3D {NOP4, NOP4};
-> +	unsigned int nops[1] =3D {NOP4};
-
-It's just one nop, not nops. No biggie, but why array?
-
->=20=20
-> -	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> +	if (patch_insn_write((void *)(rec->ip + MCOUNT_AUIPC_SIZE), nops, MCOUN=
-T_NOP4_SIZE))
->  		return -EPERM;
->=20=20
->  	return 0;
-> @@ -114,21 +136,23 @@ int ftrace_make_nop(struct module *mod, struct dyn_=
-ftrace *rec,
->   */
->  int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
->  {
-> +	unsigned int nops[2];
->  	int out;
->=20=20
-> +	make_call_t0(rec->ip, &ftrace_caller, nops);
-> +	nops[1] =3D NOP4;
+>  	for_each_ret_instance_rcu(ri, utask->return_instances)
+>  		hprobe_expire(&ri->hprobe, false);
 > +
->  	mutex_lock(&text_mutex);
-> -	out =3D ftrace_make_nop(mod, rec, MCOUNT_ADDR);
-> +	out =3D patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE);
->  	mutex_unlock(&text_mutex);
->=20=20
->  	return out;
+> +	write_seqcount_end(&utask->ri_seqcount);
 >  }
->=20=20
-> +ftrace_func_t ftrace_call_dest =3D ftrace_stub;
->  int ftrace_update_ftrace_func(ftrace_func_t func)
+>  
+>  static struct uprobe_task *alloc_utask(void)
+> @@ -1956,6 +2008,7 @@ static struct uprobe_task *alloc_utask(void)
+>  		return NULL;
+>  
+>  	timer_setup(&utask->ri_timer, ri_timer, 0);
+> +	seqcount_init(&utask->ri_seqcount);
+>  
+>  	return utask;
+>  }
+> @@ -1975,10 +2028,14 @@ static struct uprobe_task *get_utask(void)
+>  	return current->utask;
+>  }
+>  
+> -static struct return_instance *alloc_return_instance(void)
+> +static struct return_instance *alloc_return_instance(struct uprobe_task *utask)
 >  {
-> -	int ret =3D __ftrace_modify_call((unsigned long)&ftrace_call,
-> -				       (unsigned long)func, true, true);
-> -
-> -	return ret;
-> +	return __ftrace_modify_call_site(&ftrace_call_dest, func, true);
+>  	struct return_instance *ri;
+>  
+> +	ri = ri_pool_pop(utask);
+> +	if (ri)
+> +		return ri;
+> +
+>  	ri = kzalloc(sizeof(*ri), GFP_KERNEL);
+>  	if (!ri)
+>  		return ZERO_SIZE_PTR;
+> @@ -2119,7 +2176,7 @@ static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
+>  		rcu_assign_pointer(utask->return_instances, ri_next);
+>  		utask->depth--;
+>  
+> -		free_ret_instance(ri, true /* cleanup_hprobe */);
+> +		free_ret_instance(utask, ri, true /* cleanup_hprobe */);
+>  		ri = ri_next;
+>  	}
 >  }
->=20=20
->  struct ftrace_modify_param {
-> @@ -182,7 +206,7 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsign=
-ed long old_addr,
->  	if (ret)
->  		return ret;
->=20=20
-> -	return __ftrace_modify_call(caller, addr, true, false);
-> +	return __ftrace_modify_call(caller, addr, true);
+> @@ -2186,7 +2243,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs,
+>  
+>  	return;
+>  free:
+> -	kfree(ri);
+> +	ri_free(ri);
 >  }
->  #endif
->=20=20
-> @@ -217,17 +241,17 @@ void ftrace_graph_func(unsigned long ip, unsigned l=
-ong parent_ip,
->  	prepare_ftrace_return(&fregs->ra, ip, fregs->s0);
->  }
->  #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
-> -extern void ftrace_graph_call(void);
-> +ftrace_func_t ftrace_graph_call_dest =3D ftrace_stub;
->  int ftrace_enable_ftrace_graph_caller(void)
->  {
-> -	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
-> -				    (unsigned long)&prepare_ftrace_return, true, true);
-> +	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-> +					 &prepare_ftrace_return, true);
->  }
->=20=20
->  int ftrace_disable_ftrace_graph_caller(void)
->  {
-> -	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
-> -				    (unsigned long)&prepare_ftrace_return, false, true);
-> +	return __ftrace_modify_call_site(&ftrace_graph_call_dest,
-> +					 &prepare_ftrace_return, false);
->  }
->  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
->  #endif /* CONFIG_DYNAMIC_FTRACE */
-> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dy=
-n.S
-> index e988bd26b28b..bc06e8ab81cf 100644
-> --- a/arch/riscv/kernel/mcount-dyn.S
-> +++ b/arch/riscv/kernel/mcount-dyn.S
-> @@ -162,7 +162,8 @@ SYM_FUNC_START(ftrace_caller)
->  	mv	a3, sp
->=20=20
->  SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-> -	call	ftrace_stub
-> +	REG_L	ra, ftrace_call_dest
-> +	jalr	0(ra)
->=20=20
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->  	addi	a0, sp, ABI_RA
-> @@ -172,7 +173,8 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
->  	mv	a2, s0
->  #endif
->  SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
-> -	call	ftrace_stub
-> +	REG_L	ra, ftrace_graph_call_dest
-> +	jalr	0(ra)
->  #endif
->  	RESTORE_ABI
->  	jr	t0
-> @@ -185,7 +187,8 @@ SYM_FUNC_START(ftrace_caller)
->  	PREPARE_ARGS
->=20=20
->  SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
-
-Not used, please remove.
-
-> -	call	ftrace_stub
-> +	REG_L	ra, ftrace_call_dest
-> +	jalr	0(ra)
->=20=20
->  	RESTORE_ABI_REGS
->  	bnez	t1, .Ldirect
-> --=20
-> 2.39.3 (Apple Git-145)
-
-
-
-Bj=C3=B6rn
+>  
+>  /* Prepare to single-step probed instruction out of line. */
+> @@ -2385,8 +2442,7 @@ static struct return_instance *push_consumer(struct return_instance *ri, __u64 i
+>  	if (unlikely(ri->cons_cnt > 0)) {
+>  		ric = krealloc(ri->extra_consumers, sizeof(*ric) * ri->cons_cnt, GFP_KERNEL);
+>  		if (!ric) {
+> -			kfree(ri->extra_consumers);
+> -			kfree_rcu(ri, rcu);
+> +			ri_free(ri);
+>  			return ZERO_SIZE_PTR;
+>  		}
+>  		ri->extra_consumers = ric;
+> @@ -2428,8 +2484,9 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  	struct uprobe_consumer *uc;
+>  	bool has_consumers = false, remove = true;
+>  	struct return_instance *ri = NULL;
+> +	struct uprobe_task *utask = current->utask;
+>  
+> -	current->utask->auprobe = &uprobe->arch;
+> +	utask->auprobe = &uprobe->arch;
+>  
+>  	list_for_each_entry_rcu(uc, &uprobe->consumers, cons_node, rcu_read_lock_trace_held()) {
+>  		bool session = uc->handler && uc->ret_handler;
+> @@ -2449,12 +2506,12 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+>  			continue;
+>  
+>  		if (!ri)
+> -			ri = alloc_return_instance();
+> +			ri = alloc_return_instance(utask);
+>  
+>  		if (session)
+>  			ri = push_consumer(ri, uc->id, cookie);
+>  	}
+> -	current->utask->auprobe = NULL;
+> +	utask->auprobe = NULL;
+>  
+>  	if (!ZERO_OR_NULL_PTR(ri))
+>  		prepare_uretprobe(uprobe, regs, ri);
+> @@ -2554,7 +2611,7 @@ void uprobe_handle_trampoline(struct pt_regs *regs)
+>  			hprobe_finalize(&ri->hprobe, hstate);
+>  
+>  			/* We already took care of hprobe, no need to waste more time on that. */
+> -			free_ret_instance(ri, false /* !cleanup_hprobe */);
+> +			free_ret_instance(utask, ri, false /* !cleanup_hprobe */);
+>  			ri = ri_next;
+>  		} while (ri != next_chain);
+>  	} while (!valid);
+> -- 
+> 2.43.5
+> 
