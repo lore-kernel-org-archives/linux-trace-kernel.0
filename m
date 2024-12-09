@@ -1,91 +1,89 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D972221661A;
-	Mon,  9 Dec 2024 11:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA79339A0;
+	Mon,  9 Dec 2024 11:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733742264; cv=none; b=Zk6U14GQJsSjjtfKQvoi6SMzueYuACFIQAzU9li9egfOwvr/qIl1qj7eLEaRj+JQnPy9rE/9urkr6ZpulFSMGyXC8Usg+msujvGTrsGbkm6qQGwf4bOaoX/7fUtlJHIgNvNrABkDcBuDopGl2aSE8ezjPTCc1yfICWqBw/NlRNw=
+	t=1733742813; cv=none; b=DTxyH0VAX74PO72UHN2QGix0WNoTFjqgddj0HUfIU7w/Wyl6QCN1kzJVIJm7OL/X8jpuwrOmnQPtU1+oi+NM/Hil+KSv85J5+f+anAT7WnNXmaMftIAEEHDQveFezsMGPfyUgZykvanC4ed/19+yW74lPVfoonaBUCM58anajPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733742264; c=relaxed/simple;
-	bh=9Sd0lsx/TwXCrq5YbYdHmcrDqJ/fm1yXbjwIQSfj+NE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+/OB6CMIMb/Ib1aMa/rvHmW6HwpH53R0YCMmjUPiy9OKsf440DURdYY3AuiLP1arg6b9wAhMhR2m1Q3S41XzjanVwlmy/8zwb5Qnyy9JfLUXWroZQ87ScbCokfIDrMz4BFIjZHjBxRCcCn5MDIgK5GhltXerIWW7IPUDpXW3Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YtM46qlP; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1733742813; c=relaxed/simple;
+	bh=KxWIoyveVJ4t4HYEke15CRbHdAOALVRp0qmm+qvDtUA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=scm0+2ZnJ8SiCaE4tKk6RBkiW8nnzOuNistSHnU3IeO7r6FY++j7PyGU4K5UZZ8hi97af31pLmSYbiif8ZVEFYk85lKLFIhZly+aJXkt7ycu8hbitmm8fPjcLSEHClnCGNAhFjzNjPdBQXajXuF0ktQw3MWPnNW0pDWxPgDRzSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlWPDsg5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YtM46qlP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=z6w7NbYaS12zZFu/dPccmWnN6xSZUjRxRHiwMzPEdYw=; b=YtM46qlPP7s8AumUkd/xWcZBQk
-	9QtL9eCAU/aIqfuecGiefB7kellX2CX7Gvo/7O31RQgr/NB1/7fZhRtk48E93TKMeXdlV/TVO8hHy
-	jrpi8+0VXdayWHAzEA/3oMsQTWJhMYbA0IY7J/Ti2PIGDCqUbdrGQOO66wf5opD4QNgKVadWXCJF2
-	+3o+cbS508nXUTRPusjEZACo84CBXrcYaJ2EbXU1fPlWLdbFC7oBjR/3QYoHt9tbWxUK3lCOvk1/1
-	ViBanbReQNqUaCBdiru4iD9gsMoFSz0kb7oF5uj0jvQXgMIC3Okq4qZijA1iuQZqW7ui0K0Bhkq0V
-	4SWz9uYw==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tKbYh-00000001Tsj-3H2Y;
-	Mon, 09 Dec 2024 11:04:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0F70A3003FF; Mon,  9 Dec 2024 12:04:11 +0100 (CET)
-Date: Mon, 9 Dec 2024 12:04:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] kprobes: Use guard() for external locks
-Message-ID: <20241209110411.GL21636@noisy.programming.kicks-ass.net>
-References: <173371205755.480397.7893311565254712194.stgit@devnote2>
- <173371208663.480397.7535769878667655223.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlWPDsg5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C2AC4CEE0;
+	Mon,  9 Dec 2024 11:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733742812;
+	bh=KxWIoyveVJ4t4HYEke15CRbHdAOALVRp0qmm+qvDtUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FlWPDsg56PG1IWrMPjovQhQ3mnxxws7oba/EP71fLyGYbwHt9lSvamrvOmqQi8SZY
+	 24CauVTKQPtQMhYukNe2I1x3M5MUlppWqlRHZr8q8EgLVEepnC/lgCncd67twIm4CX
+	 nDEulmS+MwmiHM9NNW8T0x9xQrziBOIyDe0eumPXKHof5dx5FpmiAqUIY1FCmiki6T
+	 Eg9G6h1yOAG/KNcA2YgYx3IiPihKjv3AIladXxHB6/OwgO2k5IW1kHAaCZFnY75VZR
+	 gLWh1cLIkA7eZuS0Do2uC24K146c8gE8zUZ4kpy1EJUbNpGBppmOMmjK0vYqLzWfdt
+	 ngTGlaKy9+tqA==
+Date: Mon, 9 Dec 2024 20:13:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+ mingo@kernel.org, oleg@redhat.com, rostedt@goodmis.org,
+ mhiramat@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jolsa@kernel.org, liaochang1@huawei.com, kernel-team@meta.com
+Subject: Re: [PATCH perf/core] uprobes: guard against kmemdup() failing in
+ dup_return_instance()
+Message-Id: <20241209201326.31f5e339f70302f80c641c88@kernel.org>
+In-Reply-To: <20241206183436.968068-1-andrii@kernel.org>
+References: <20241206183436.968068-1-andrii@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173371208663.480397.7535769878667655223.stgit@devnote2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Dec 09, 2024 at 11:41:26AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri,  6 Dec 2024 10:34:36 -0800
+Andrii Nakryiko <andrii@kernel.org> wrote:
+
+> If kmemdup() failed to alloc memory, don't proceed with extra_consumers
+> copy.
 > 
-> Use guard() for text_mutex, cpu_read_lock, and jump_label_lock in
-> the kprobes.
+> Fixes: e62f2d492728 ("uprobes: Simplify session consumer tracking")
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-> @@ -853,29 +850,24 @@ static void try_to_optimize_kprobe(struct kprobe *p)
->  		return;
->  
->  	/* For preparing optimization, jump_label_text_reserved() is called. */
-> -	cpus_read_lock();
-> -	jump_label_lock();
-> -	mutex_lock(&text_mutex);
-> +	guard(cpus_read_lock)();
-> +	guard(jump_label_lock)();
-> +	guard(mutex)(&text_mutex);
->  
+Looks good to me.
 
-> @@ -1294,62 +1280,55 @@ static int register_aggr_kprobe(struct kprobe *orig_p, struct kprobe *p)
->  	int ret = 0;
->  	struct kprobe *ap = orig_p;
->  
-> -	cpus_read_lock();
-> -
-> -	/* For preparing optimization, jump_label_text_reserved() is called */
-> -	jump_label_lock();
-> -	mutex_lock(&text_mutex);
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Why does kprobe need jump_label_lock and how does it then not also need
-static_call_lock ?
+Thanks!
+
+> ---
+>  kernel/events/uprobes.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 1af950208c2b..1f75a2f91206 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2048,6 +2048,8 @@ static struct return_instance *dup_return_instance(struct return_instance *old)
+>  	struct return_instance *ri;
+>  
+>  	ri = kmemdup(old, sizeof(*ri), GFP_KERNEL);
+> +	if (!ri)
+> +		return NULL;
+>  
+>  	if (unlikely(old->cons_cnt > 1)) {
+>  		ri->extra_consumers = kmemdup(old->extra_consumers,
+> -- 
+> 2.43.5
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
