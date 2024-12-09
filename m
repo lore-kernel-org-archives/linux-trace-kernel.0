@@ -1,116 +1,330 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EE51B423A;
-	Mon,  9 Dec 2024 15:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10343143C5D
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Dec 2024 18:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733758734; cv=none; b=FWJgpc5HKnBd7N9WvlstaK22O9BX6Rr417jwaZyoosyDLSduopsUIPy1HRPWadD0KMwC8QcEUYq52XaMbQUsy+ZJtqcsFHca+BKRxYgK+gE/XErMbjpLqCvgwMoAyCZWwgXNac8vJknY0Bs479eNYiyRbtkAn24N9V9Vgeyv4KI=
+	t=1733768545; cv=none; b=C3HanjIupZN5AggiGNc/aztTbTggeiTt1RpVA2M7kyVNebfw5yQ+dB12A4JAzyJPhfnQnlH7Pj4pAQlKiUmmtWFrfrmRqMQpp9674ZMp9l70nVsipeIN1jsIX/uC/7qWznLEufIKIcrflOe0F2jVRJia/0lqTHZN6LL2XQnsh9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733758734; c=relaxed/simple;
-	bh=2fBphBX0TIcxS5iblaNI0FgWUtDA5yJMmXfTTZieBRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kJXG/WtgMyJ7U2UDucjYHQTZdLYl/UKdX3YYuiZkxkmsx47YrNWEOT48PVpNUCWxwY8bZR/wBwtVetxCwXTImJofzdluyeaSG5uFnIo63ZTBzSKlWukixY0clwo+p8ZcHKP4rk/MBCrF00ecj/VM6iFoE/+Kvcaots5B/ujsiz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=G9SZiWJQ; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1733768545; c=relaxed/simple;
+	bh=obrA7lID1gFWYDKJMm2TeVpt8h7Ddp8SM5ETW0ucnNE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e+NyD0zVHHhdcdraOx3xNuNjvfnqcJpEI+SImJA/Q4EZtA2QagpvWKQBgDCmnawp4tqboOLAHrRqMC6rAOXLIrCA+/2TRuyZOv7UWwe2wNANdmK3u8DA4GIapcifvrAQ2kHnj6dgVRAuOOwXCpVq8RP4UCjczZUVji+CnU+T9Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u84lBngR; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="G9SZiWJQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1733758722;
-	bh=iAOAkMiO4SRacaa2x+Nj6OP1bJtTb5Hn1Km48pUkT7E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=G9SZiWJQSn0/jMJZ8NaV9MP/o0uZPM3cXDXROn/4IhD/9CwF3YocS8MakbshIGRzX
-	 eEflr/J6uvNMKBRi60sKRg7MElmAlx9nFtMl+uQelhy5ICIeeq0FLe2dE+j5PLR1eN
-	 aQ7lIQrPCJn4p11gusg0ycL90IOsd3Uin+Qh2NL4=
-X-QQ-mid: bizesmtpip4t1733758689teobikr
-X-QQ-Originating-IP: gyn7voqvIKIcZ1WypjoRdeOxF75stvQWjBdsUS2ifvU=
-Received: from avenger-OMEN-by-HP-Gaming-Lapto ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 09 Dec 2024 23:38:06 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15283495430922043025
-From: WangYuli <wangyuli@uniontech.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	tsbogend@alpha.franken.de
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	xzhong86@163.com,
-	wuzhangjin@gmail.com,
-	srostedt@redhat.com,
-	linux-mips@linux-mips.org,
-	ralf@duck.linux-mips.net,
-	jeffbai@aosc.io,
-	zhanjun@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] MIPS: ftrace: Declare ftrace_get_parent_ra_addr() as static
-Date: Mon,  9 Dec 2024 23:37:58 +0800
-Message-ID: <6BF18D3A13FA470E+20241209153758.118977-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u84lBngR"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5d0c939ab78so12829a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Dec 2024 10:22:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733768541; x=1734373341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6tUQKE2UAVAgxJSPVinR+cC1NkFiAgMKLM+zQJilRu8=;
+        b=u84lBngRDXgDXtGBtkPLmJZamJaSbox/jnObkvjKb1ROS75WJXSuCkbkYHrFwGmym3
+         3S1hGym1u44XSA72QRFNHocaC6f/+IR1EziwJ52hw6giefX3NpZf/V07LaSTDSE8l2bM
+         5CQmAU8xvy6Y0PRGTUOgYufTgRcu9EFSzm+LTTOlx1otmtAe1b0UEerJr+23TlS5CDAe
+         VjwcrUhvupY9GYbFWcoCLgeNA03ZbHA3pJ3zu/LGIYGvAlE7eCB7zhHaI2OjU2COC2b0
+         ghxRNx2k1xnIcV4H2cz0GOjzCfpA8KeH1tmIKdrr7Qi5bhCYrOOdHKlAuv+bKxMtJqtk
+         kQZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733768541; x=1734373341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6tUQKE2UAVAgxJSPVinR+cC1NkFiAgMKLM+zQJilRu8=;
+        b=rTSd/6Sf70LFcOfXof5TY1dNkxs3I+/AN4o8TbT7M3+XFjBPWfAFJXsHRNFA9doGaJ
+         eXn1pNbuq2P+Yz0r0lSTEwRgUWtxyI9ozpzVGYu9HcZkr0x6xfffqxNMiLBdvvNMOt5u
+         inYIntgjJ8fswulsrGU+/GvBsDqYUqyNpeILr9Ryspqyb55RYBTZGcnykNKKWJucSp7t
+         7VsDGmBpr63Q/UjILlJB3+O/HInkEzf0Y2SFK2P2/mrL79bBSP8qDODAQX97EDSAE37G
+         S8mSBqbHXEGZdbmq+bMnlp78eD1GM4SBJTBOl+vg8idTGg5ykTBTuFe4JUn51WiCCgxm
+         FnSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXc0JkPnoBK2vUMT0J/vtgw6yM1FsKfO4tCkxZFgy1ybckihKTV2qAWrwMmRJSaLpNGtiHbu+1gpotnV0UPP8Z2MP0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMCqEO9NDlcmLtiWTN/wMAsXpWZjxxXxoKZYgogBD1+05gvJIj
+	2MGtCCpJN+rat8IIPDTzJ5Ph61DT5klDx195wowpw3J1WJwtDB97LzccznX7e9khrnO9t8poCe6
+	o2KZr4f5GNdi52c0wB08wIJWDF9H+8aUkq7/5qVqSX2rfbwAUvQKQ
+X-Gm-Gg: ASbGncuo51jA5cPTyKTItWsTPqEQDiazGAgt4jqHvyqx8aYFfPbEyRTzO4/Qg/+wuq6
+	UKr7SLtvY+JhgyiwEZhVnROx+hzpXv4KjwAiB342vJztXVNYZ5LmU/e76/jY=
+X-Google-Smtp-Source: AGHT+IGmPKN0EpLP38yrJia+weZldXt3F33PYP8oxMA6FR4C09SQ3gxfPRS4f6CLIqzIE+ydJh1lCkLqvNmJfG/o4BE=
+X-Received: by 2002:aa7:d905:0:b0:5d0:dfe4:488a with SMTP id
+ 4fb4d7f45d1cf-5d3dabe79bemr172129a12.2.1733768541030; Mon, 09 Dec 2024
+ 10:22:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MDqtQ4jGWXAGrekepqUwqDTXYkoXWUmg5a/e6oB79Rb/HbIhPXab8JE2
-	cQpN9YuUUU4ELSre1kVtsqPKpvDXBm9FAKyV046xZeRONZQbFIqp/sKyMCSY+OEr/aF+Th4
-	f5xDGfPr7dmYyqvi1BLyJ/kh5/xDUBnlJR9G+XoJ694xdmH58c9kxsXNQeoc1V+tePEG/My
-	LZoLe17pm0QXOOuZVV820qoIsm0P0SLjSboo/E63G249OhKxpPnMzTqCKefKeYJZ0Dsu9+m
-	PRgTGDdF3yST8Xfge3IXywtI72Q464DYX8M5QWz/axpLzSLOHYOFE+J5doakeyUKGYye3cB
-	ctQ6neVYiRqPkCh+DFj0wSUYiwDvDwmG3IIcrQEpLM6hMZ5ilZx0DnrS8Hryl9lCYdvqSkk
-	3YGfAzYrNDWxDa73jm7Vjmi6SzMBR9Ooy171/mwfX4lojvpBpWFPQuQc0/HIQbgFHZFXunH
-	q2gA1EsF9UUrJSjz17SZ+yXcJhX51pZS/tSGp4MrK/205f6um+V1kQ+pQnNvGjvBjfH14nu
-	1cpDRe5Wx0vlcDzI5zFMz1CKeToRMd7pMYvIf2JyV/HAQOmz9u2kBK8qIAXiWHnu8BG8sao
-	rnvMZ0v3iAILKF6gkCiTBMGeVTXrItNH7DgYAqyej2aF/vmliewcX5A2B/Ic3DSfRgcN6aF
-	4CUFlWWCyt7oJghPGC9WiYEKINKup9cCgndq3gbBMVkV7kiBX8Rf55vWm13vAssWK9yqR9z
-	FRfq50D2neVyCPqRZ69oJ57u3D6I2EadXnM/IW+Y/Zl59ifLJ9BxP6miSS33OQxK3d+Ukpf
-	zgPVFrjfILEWjjSLIWAA9guxyS6Z2384LffCNhAFrHmeW/tIZIR4AGmrNaM9ySQsclYiJte
-	ZjuRXw8HrUBA+wQrcH1Uv1p4S+TL+ZGil7VSfY1VCczlUqJuJI/HEoIGqk1WA/xuN0hpup+
-	1weaKRkWDTwYf5iBLb3WVRXP4s/S4jNIPHePKWdCI68pt+8HUh/8++duCbNH8mFyHPzg=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
+References: <20241206-bpf-fix-uprobe-uaf-v2-1-4c75c54fe424@google.com>
+ <CAEf4BzYxaKd8Gv5g8PBY6zaQukYKSjjtaSgYMjJxL-PZ0dLrbQ@mail.gmail.com>
+ <CAG48ez3i5haHCc8EQMVNjKnd9xYwMcp4sbW_Y8DRpJCidJotjw@mail.gmail.com>
+ <CAEf4BzYkGQ0sw9JEeAMLAfcQbzxwg46c487kBD_LcbZSaTKD5Q@mail.gmail.com>
+ <CAG48ez1LRsuew4y_KQxPHNipA68hhm+iJohHbk6=1cwv5QPCxQ@mail.gmail.com>
+ <CAG48ez2+3TTbWNNO4aqxFAX8Cd4COaayRxoy1V2xvM9oS2_ygQ@mail.gmail.com> <CAEf4BzbhDkFq9DB2VKxsHmffynQBvbD_RVKTUm3zCqvO_e1dug@mail.gmail.com>
+In-Reply-To: <CAEf4BzbhDkFq9DB2VKxsHmffynQBvbD_RVKTUm3zCqvO_e1dug@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 9 Dec 2024 19:21:45 +0100
+Message-ID: <CAG48ez2LW9zyiptNq8jApD3zeS05wvNPs-jj2zOeaCDQbZnD4g@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf: Fix prog_array UAF in __uprobe_perf_func()
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Delyan Kratunov <delyank@fb.com>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Declare ftrace_get_parent_ra_addr() as static to suppress clang
-compiler warning that 'no previous prototype'. This function is
-not intended to be called from other parts.
+On Sat, Dec 7, 2024 at 12:15=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> On Fri, Dec 6, 2024 at 3:14=E2=80=AFPM Jann Horn <jannh@google.com> wrote=
+:
+> > On Fri, Dec 6, 2024 at 11:43=E2=80=AFPM Jann Horn <jannh@google.com> wr=
+ote:
+> > > On Fri, Dec 6, 2024 at 11:30=E2=80=AFPM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > > On Fri, Dec 6, 2024 at 2:25=E2=80=AFPM Jann Horn <jannh@google.com>=
+ wrote:
+> > > > >
+> > > > > On Fri, Dec 6, 2024 at 11:15=E2=80=AFPM Andrii Nakryiko
+> > > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > > > On Fri, Dec 6, 2024 at 12:45=E2=80=AFPM Jann Horn <jannh@google=
+.com> wrote:
+> > > > > > >
+> > > > > > > Currently, the pointer stored in call->prog_array is loaded i=
+n
+> > > > > > > __uprobe_perf_func(), with no RCU annotation and no RCU prote=
+ction, so the
+> > > > > > > loaded pointer can immediately be dangling. Later,
+> > > > > > > bpf_prog_run_array_uprobe() starts a RCU-trace read-side crit=
+ical section,
+> > > > > > > but this is too late. It then uses rcu_dereference_check(), b=
+ut this use of
+> > > > > > > rcu_dereference_check() does not actually dereference anythin=
+g.
+> > > > > > >
+> > > > > > > It looks like the intention was to pass a pointer to the memb=
+er
+> > > > > > > call->prog_array into bpf_prog_run_array_uprobe() and actuall=
+y dereference
+> > > > > > > the pointer in there. Fix the issue by actually doing that.
+> > > > > > >
+> > > > > > > Fixes: 8c7dcb84e3b7 ("bpf: implement sleepable uprobes by cha=
+ining gps")
+> > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > Signed-off-by: Jann Horn <jannh@google.com>
+> > > > > > > ---
+> > > > > > > To reproduce, in include/linux/bpf.h, patch in a mdelay(10000=
+) directly
+> > > > > > > before the might_fault() in bpf_prog_run_array_uprobe() and a=
+dd an
+> > > > > > > include of linux/delay.h.
+> > > > > > >
+> > > > > > > Build this userspace program:
+> > > > > > >
+> > > > > > > ```
+> > > > > > > $ cat dummy.c
+> > > > > > > #include <stdio.h>
+> > > > > > > int main(void) {
+> > > > > > >   printf("hello world\n");
+> > > > > > > }
+> > > > > > > $ gcc -o dummy dummy.c
+> > > > > > > ```
+> > > > > > >
+> > > > > > > Then build this BPF program and load it (change the path to p=
+oint to
+> > > > > > > the "dummy" binary you built):
+> > > > > > >
+> > > > > > > ```
+> > > > > > > $ cat bpf-uprobe-kern.c
+> > > > > > > #include <linux/bpf.h>
+> > > > > > > #include <bpf/bpf_helpers.h>
+> > > > > > > #include <bpf/bpf_tracing.h>
+> > > > > > > char _license[] SEC("license") =3D "GPL";
+> > > > > > >
+> > > > > > > SEC("uprobe//home/user/bpf-uprobe-uaf/dummy:main")
+> > > > > > > int BPF_UPROBE(main_uprobe) {
+> > > > > > >   bpf_printk("main uprobe triggered\n");
+> > > > > > >   return 0;
+> > > > > > > }
+> > > > > > > $ clang -O2 -g -target bpf -c -o bpf-uprobe-kern.o bpf-uprobe=
+-kern.c
+> > > > > > > $ sudo bpftool prog loadall bpf-uprobe-kern.o uprobe-test aut=
+oattach
+> > > > > > > ```
+> > > > > > >
+> > > > > > > Then run ./dummy in one terminal, and after launching it, run
+> > > > > > > `sudo umount uprobe-test` in another terminal. Once the 10-se=
+cond
+> > > > > > > mdelay() is over, a use-after-free should occur, which may or=
+ may
+> > > > > > > not crash your kernel at the `prog->sleepable` check in
+> > > > > > > bpf_prog_run_array_uprobe() depending on your luck.
+> > > > > > > ---
+> > > > > > > Changes in v2:
+> > > > > > > - remove diff chunk in patch notes that confuses git
+> > > > > > > - Link to v1: https://lore.kernel.org/r/20241206-bpf-fix-upro=
+be-uaf-v1-1-6869c8a17258@google.com
+> > > > > > > ---
+> > > > > > >  include/linux/bpf.h         | 4 ++--
+> > > > > > >  kernel/trace/trace_uprobe.c | 2 +-
+> > > > > > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > > > > > >
+> > > > > >
+> > > > > > Looking at how similar in spirit bpf_prog_run_array() is meant =
+to be
+> > > > > > used, it seems like it is the caller's responsibility to
+> > > > > > RCU-dereference array and keep RCU critical section before call=
+ing
+> > > > > > into bpf_prog_run_array(). So I wonder if it's best to do this =
+instead
+> > > > > > (Gmail will butcher the diff, but it's about the idea):
+> > > > >
+> > > > > Yeah, that's the other option I was considering. That would be mo=
+re
+> > > > > consistent with the existing bpf_prog_run_array(), but has the
+> > > > > downside of unnecessarily pushing responsibility up to the caller=
+...
+> > > > > I'm fine with either.
+> > > >
+> > > > there is really just one caller ("legacy" singular uprobe handler),=
+ so
+> > > > I think this should be fine. Unless someone objects I'd keep it
+> > > > consistent with other "prog_array_run" helpers
+> > >
+> > > Ack, I will make it consistent.
+> > >
+> > > > > > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > > > > > index eaee2a819f4c..4b8a9edd3727 100644
+> > > > > > --- a/include/linux/bpf.h
+> > > > > > +++ b/include/linux/bpf.h
+> > > > > > @@ -2193,26 +2193,25 @@ bpf_prog_run_array(const struct bpf_pro=
+g_array *array,
+> > > > > >   * rcu-protected dynamically sized maps.
+> > > > > >   */
+> > > > > >  static __always_inline u32
+> > > > > > -bpf_prog_run_array_uprobe(const struct bpf_prog_array __rcu *a=
+rray_rcu,
+> > > > > > +bpf_prog_run_array_uprobe(const struct bpf_prog_array *array,
+> > > > > >                           const void *ctx, bpf_prog_run_fn run_=
+prog)
+> > > > > >  {
+> > > > > >         const struct bpf_prog_array_item *item;
+> > > > > >         const struct bpf_prog *prog;
+> > > > > > -       const struct bpf_prog_array *array;
+> > > > > >         struct bpf_run_ctx *old_run_ctx;
+> > > > > >         struct bpf_trace_run_ctx run_ctx;
+> > > > > >         u32 ret =3D 1;
+> > > > > >
+> > > > > >         might_fault();
+> > > > > > +       RCU_LOCKDEP_WARN(!rcu_read_lock_trace_held(), "no rcu l=
+ock held");
+> > > > > > +
+> > > > > > +       if (unlikely(!array))
+> > > > > > +               goto out;
+> > > > > >
+> > > > > > -       rcu_read_lock_trace();
+> > > > > >         migrate_disable();
+> > > > > >
+> > > > > >         run_ctx.is_uprobe =3D true;
+> > > > > >
+> > > > > > -       array =3D rcu_dereference_check(array_rcu, rcu_read_loc=
+k_trace_held());
+> > > > > > -       if (unlikely(!array))
+> > > > > > -               goto out;
+> > > > > >         old_run_ctx =3D bpf_set_run_ctx(&run_ctx.run_ctx);
+> > > > > >         item =3D &array->items[0];
+> > > > > >         while ((prog =3D READ_ONCE(item->prog))) {
+> > > > > > @@ -2229,7 +2228,6 @@ bpf_prog_run_array_uprobe(const struct
+> > > > > > bpf_prog_array __rcu *array_rcu,
+> > > > > >         bpf_reset_run_ctx(old_run_ctx);
+> > > > > >  out:
+> > > > > >         migrate_enable();
+> > > > > > -       rcu_read_unlock_trace();
+> > > > > >         return ret;
+> > > > > >  }
+> > > > > >
+> > > > > > diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_u=
+probe.c
+> > > > > > index fed382b7881b..87a2b8fefa90 100644
+> > > > > > --- a/kernel/trace/trace_uprobe.c
+> > > > > > +++ b/kernel/trace/trace_uprobe.c
+> > > > > > @@ -1404,7 +1404,9 @@ static void __uprobe_perf_func(struct tra=
+ce_uprobe *tu,
+> > > > > >         if (bpf_prog_array_valid(call)) {
+> > > > > >                 u32 ret;
+> > > > > >
+> > > > > > +               rcu_read_lock_trace();
+> > > > > >                 ret =3D bpf_prog_run_array_uprobe(call->prog_ar=
+ray,
+> > > > > > regs, bpf_prog_run);
+> > > > >
+> > > > > But then this should be something like this (possibly split acros=
+s
+> > > > > multiple lines with a helper variable or such):
+> > > > >
+> > > > > ret =3D bpf_prog_run_array_uprobe(rcu_dereference_check(call->pro=
+g_array,
+> > > > > rcu_read_lock_trace_held()), regs, bpf_prog_run);
+> > > >
+> > > > Yeah, absolutely, forgot to move the RCU dereference part, good cat=
+ch!
+> > > > But I wouldn't do the _check() variant here, literally the previous
+> > > > line does rcu_read_trace_lock(), so this check part seems like just
+> > > > unnecessary verboseness, I'd go with a simple rcu_dereference().
+> > >
+> > > rcu_dereference() is not legal there - that asserts that we are in a
+> > > normal RCU read-side critical section, which we are not.
+> > > rcu_dereference_raw() would be, but I think it is nice to document th=
+e
+> > > semantics to make it explicit under which lock we're operating.
+>
+> sure, I don't mind
+>
+> > >
+> > > I'll send a v3 in a bit after testing it.
+> >
+> > Actually, now I'm still hitting a page fault with my WIP v3 fix
+> > applied... I'll probably poke at this some more next week.
+>
+> OK, that's interesting, keep us posted!
 
-Fix follow error with clang-19:
+If I replace the "uprobe/" in my reproducer with "uprobe.s/", the
+reproducer stops crashing even on bpf/master without this fix -
+because it happens that handle_swbp() is already holding a
+rcu_read_lock_trace() lock way up the stack. So I think this fix
+should still be applied, but it probably doesn't need to go into
+stable unless there is another path to the buggy code that doesn't
+come from handle_swbp(). I guess I probably should resend my patch
+with an updated commit message pointing out this caveat?
 
-arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
-  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-      |               ^
-arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-      | ^
-      | static
-1 error generated.
+The problem I'm actually hitting seems to be a use-after-free of a
+"struct bpf_prog" because of mismatching RCU flavors. Uprobes always
+use bpf_prog_run_array_uprobe() under tasks-trace-RCU protection. But
+it is possible to attach a non-sleepable BPF program to a uprobe, and
+non-sleepable BPF programs are freed via normal RCU (see
+__bpf_prog_put_noref()). And that is what happens with the reproducer
+from my initial post
+(https://lore.kernel.org/all/20241206-bpf-fix-uprobe-uaf-v1-1-6869c8a17258@=
+google.com/)
+- I can see that __bpf_prog_put_noref runs with prog->sleepable=3D=3D0.
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- arch/mips/kernel/ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
-index 8c401e42301c..f39e85fd58fa 100644
---- a/arch/mips/kernel/ftrace.c
-+++ b/arch/mips/kernel/ftrace.c
-@@ -248,7 +248,7 @@ int ftrace_disable_ftrace_graph_caller(void)
- #define S_R_SP	(0xafb0 << 16)	/* s{d,w} R, offset(sp) */
- #define OFFSET_MASK	0xffff	/* stack offset range: 0 ~ PT_SIZE */
- 
--unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
-+static unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
- 		old_parent_ra, unsigned long parent_ra_addr, unsigned long fp)
- {
- 	unsigned long sp, ip, tmp;
--- 
-2.45.2
-
+So I think that while I am delaying execution in
+bpf_prog_run_array_uprobe(), perf_event_detach_bpf_prog() NULLs out
+the event->tp_event->prog_array pointer and does
+bpf_prog_array_free_sleepable() followed by bpf_prog_put(), and then
+the BPF program can be freed since the reader doesn't hold an RCU read
+lock. This seems a bit annoying to fix - there could legitimately be
+several versions of the bpf_prog_array that are still used by
+tasks-trace-RCU readers, so I think we can't just NULL out the array
+entry and use RCU for the bpf_prog_array access on the reader side. I
+guess we could add another flag on BPF programs that answers "should
+this program be freed via tasks-trace-RCU" (separately from whether
+the program is sleepable)?
