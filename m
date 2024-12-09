@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA75970802;
-	Mon,  9 Dec 2024 02:41:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1608446A1;
+	Mon,  9 Dec 2024 02:42:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733712119; cv=none; b=U69P0+nwKFYbx+IR2P5V2QFytfsEjhK0lPNYbePE401klNpjV37xhvAw5hqQdFm3/m9XItJB9JlBEotUrrp4waIHWuzZU5sR+I+ARUhLb4O3CpAQdfLbM/HyqewmeeP3HH0T5L7hQvkxgwQC7O0WRNCwzniEfE7aMdk0zQZUjaI=
+	t=1733712131; cv=none; b=i8Vg+2Gz/W9snZqZvtpS5G/UK4wXRiX+MCrGj8XIR7SP/fIdE8noi7bu3oemtxD/LhVIBs/59yGp8g2JVFlef4MdrsWkG7VDSkvaiPFTE7yalqtb5mm1l7GSYDGeCuXOdZysvDETz9ZaDb44y0WJ5WFN+xLxcv4xHzma7Thottk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733712119; c=relaxed/simple;
-	bh=/l67opR2BkVN0689/PXyBVzSNMlXdLM5Dtq0u70RTd4=;
+	s=arc-20240116; t=1733712131; c=relaxed/simple;
+	bh=IuZ2XQ5La6w2CIYPeJ7tRxYaceO2siijVzc5McVgygI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Thxe9L6HrCQNJ+7X0+qq0GSlmOLVPjog4o7hgY9dU3kmoOS7d1/U7bFa20QWprdz2giGP1dFdxnQB094Aqu+O3BD9wFqEkpZgulzPbgOAx0rtMVSRSjNkVtbm8+cJgUClnOj3tKrTppCOKvinBZSBjwoIepvueqHs8yXbJVrNvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PP6tQ+br; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=aaVYMieAAstb7drfREPcaec+LBofJkXkmrs8Dp93FSCt+ToIMILfSn2L+GQ08RSaA0Bv9Lq8yzYf47DYXlzKeVHKRx2yw6t2CH+RA+t//t8/cD8fjW/k9RWUDF/Wtgc6ucNunK817ctQ7NkpzLglPwZG2ZLSBT88LO3Rd9e4UIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrHEIhcS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PP6tQ+br"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6222C4CED2;
-	Mon,  9 Dec 2024 02:41:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrHEIhcS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B399C4CED2;
+	Mon,  9 Dec 2024 02:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733712119;
-	bh=/l67opR2BkVN0689/PXyBVzSNMlXdLM5Dtq0u70RTd4=;
+	s=k20201202; t=1733712130;
+	bh=IuZ2XQ5La6w2CIYPeJ7tRxYaceO2siijVzc5McVgygI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PP6tQ+brmzfR5Ioop/FGGQs5znx5rCa9Aen+TbRGFx94H2hLQRYVcbQ9OsLCL6RA2
-	 8cf2MEb2c8H+8N6a6K3Cv4Mz1qBENeHaEtRw2YGH9ZdjDN20jLM/ADyKLAFpgqPhWI
-	 Ld75HmWU0r3QPeynhgoxRrYiauziOrbLRQDj2kgz7F5mSu9OiaDA/IYBgXpQc0jqY2
-	 gQk8Q3Qmsx2DGcqFAB129kym6yAD6h5MOZTOsgGgiXFDpLmhF8G1XvpAODgRCA2pzX
-	 qePnutfNyes2GYp51GO9sy3jSycB3SVVzvfkOenBmU8d8henLVR7bSAB9Nuz7G2XGH
-	 3FaVr/b+X/5bg==
+	b=OrHEIhcSoaQxFNZbjtOj/W3JjvLbjtMZmKY/DOEdJzgIGKfX0OfMMTpmM30qe3VGM
+	 V0o6LI7YV9NhBn+b3BULFIFlzP+vuiYg5QVYmEoV+8TZIjBV8L+gIB/tpARl0CpOHs
+	 OwKeA+EzWwBwCkk2FV43YlKUIWqEPT+VNOtyEKaozntboiPfXBGXqwSv+g6Rudteoa
+	 36KiZPeJbYeAzBYU75PmM/PsVQQ83tVfNtxG/veYhIv8E1FDvCjvAM/r1LTpIbnvtA
+	 NleMc7s+9fSXBsECqkpNC+oDTNZG9bokI7a1a6zsdWAt2mAqRi1aVaDSGNcH6SDWX/
+	 bITnwsZhPbnNQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -41,9 +41,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 4/5] kprobes: Remove unneeded goto
-Date: Mon,  9 Dec 2024 11:41:52 +0900
-Message-ID: <173371211203.480397.13988907319659165160.stgit@devnote2>
+Subject: [PATCH 5/5] kprobes: Remove remaining gotos
+Date: Mon,  9 Dec 2024 11:42:04 +0900
+Message-ID: <173371212474.480397.5684523564137819115.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173371205755.480397.7893311565254712194.stgit@devnote2>
 References: <173371205755.480397.7893311565254712194.stgit@devnote2>
@@ -59,95 +59,103 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Remove unneeded gotos. Since the labels referred by these gotos have
-only one reference for each, we can replace those gotos with the
-referred code.
+Remove remaining gotos from kprobes.c to clean up the code.
+This does not use cleanup macros, but changes code flow for avoiding
+gotos.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/kprobes.c |   45 +++++++++++++++++++++------------------------
- 1 file changed, 21 insertions(+), 24 deletions(-)
+ kernel/kprobes.c |   63 +++++++++++++++++++++++++++---------------------------
+ 1 file changed, 31 insertions(+), 32 deletions(-)
 
 diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index a24587e8f91a..34cbbb2206f4 100644
+index 34cbbb2206f4..030569210670 100644
 --- a/kernel/kprobes.c
 +++ b/kernel/kprobes.c
-@@ -1071,20 +1071,18 @@ static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+@@ -1730,29 +1730,31 @@ static int __unregister_kprobe_top(struct kprobe *p)
+ 	if (IS_ERR(ap))
+ 		return PTR_ERR(ap);
  
- 	if (*cnt == 0) {
- 		ret = register_ftrace_function(ops);
--		if (WARN(ret < 0, "Failed to register kprobe-ftrace (error %d)\n", ret))
--			goto err_ftrace;
-+		if (WARN(ret < 0, "Failed to register kprobe-ftrace (error %d)\n", ret)) {
-+			/*
-+			 * At this point, sinec ops is not registered, we should be sefe from
-+			 * registering empty filter.
-+			 */
-+			ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
-+			return ret;
-+		}
- 	}
- 
- 	(*cnt)++;
- 	return ret;
+-	if (ap == p)
+-		/*
+-		 * This probe is an independent(and non-optimized) kprobe
+-		 * (not an aggrprobe). Remove from the hash list.
+-		 */
+-		goto disarmed;
 -
--err_ftrace:
--	/*
--	 * At this point, sinec ops is not registered, we should be sefe from
--	 * registering empty filter.
--	 */
--	ftrace_set_filter_ip(ops, (unsigned long)p->addr, 1, 0);
--	return ret;
- }
+-	/* Following process expects this probe is an aggrprobe */
+-	WARN_ON(!kprobe_aggrprobe(ap));
++	WARN_ON(ap != p && !kprobe_aggrprobe(ap));
  
- static int arm_kprobe_ftrace(struct kprobe *p)
-@@ -1428,7 +1426,7 @@ _kprobe_addr(kprobe_opcode_t *addr, const char *symbol_name,
- 	     unsigned long offset, bool *on_func_entry)
- {
- 	if ((symbol_name && addr) || (!symbol_name && !addr))
--		goto invalid;
-+		return ERR_PTR(-EINVAL);
- 
- 	if (symbol_name) {
+-	if (list_is_singular(&ap->list) && kprobe_disarmed(ap))
++	/*
++	 * If the probe is an independent(and non-optimized) kprobe
++	 * (not an aggrprobe), the last kprobe on the aggrprobe, or
++	 * kprobe is already disarmed, just remove from the hash list.
++	 */
++	if (ap == p ||
++		(list_is_singular(&ap->list) && kprobe_disarmed(ap))) {
  		/*
-@@ -1458,11 +1456,10 @@ _kprobe_addr(kprobe_opcode_t *addr, const char *symbol_name,
- 	 * at the start of the function.
- 	 */
- 	addr = arch_adjust_kprobe_addr((unsigned long)addr, offset, on_func_entry);
--	if (addr)
--		return addr;
-+	if (!addr)
-+		return ERR_PTR(-EINVAL);
- 
--invalid:
--	return ERR_PTR(-EINVAL);
-+	return addr;
- }
- 
- static kprobe_opcode_t *kprobe_addr(struct kprobe *p)
-@@ -1486,15 +1483,15 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
- 	if (unlikely(!ap))
- 		return NULL;
- 
--	if (p != ap) {
--		list_for_each_entry(list_p, &ap->list, list)
--			if (list_p == p)
--			/* kprobe p is a valid probe */
--				goto valid;
--		return NULL;
+ 		 * !disarmed could be happen if the probe is under delayed
+ 		 * unoptimizing.
+ 		 */
+-		goto disarmed;
+-	else {
+-		/* If disabling probe has special handlers, update aggrprobe */
+-		if (p->post_handler && !kprobe_gone(p)) {
+-			list_for_each_entry(list_p, &ap->list, list) {
+-				if ((list_p != p) && (list_p->post_handler))
+-					goto noclean;
+-			}
++		hlist_del_rcu(&ap->hlist);
++		return 0;
++	}
++
++	/* If disabling probe has special handlers, update aggrprobe */
++	if (p->post_handler && !kprobe_gone(p)) {
++		list_for_each_entry(list_p, &ap->list, list) {
++			if ((list_p != p) && (list_p->post_handler))
++				break;
++		}
++		/* No other probe has post_handler */
++		if (list_entry_is_head(list_p, &ap->list, list)) {
+ 			/*
+ 			 * For the kprobe-on-ftrace case, we keep the
+ 			 * post_handler setting to identify this aggrprobe
+@@ -1761,24 +1763,21 @@ static int __unregister_kprobe_top(struct kprobe *p)
+ 			if (!kprobe_ftrace(ap))
+ 				ap->post_handler = NULL;
+ 		}
+-noclean:
++	}
++
++	/*
++	 * Remove from the aggrprobe: this path will do nothing in
++	 * __unregister_kprobe_bottom().
++	 */
++	list_del_rcu(&p->list);
++	if (!kprobe_disabled(ap) && !kprobes_all_disarmed)
+ 		/*
+-		 * Remove from the aggrprobe: this path will do nothing in
+-		 * __unregister_kprobe_bottom().
++		 * Try to optimize this probe again, because post
++		 * handler may have been changed.
+ 		 */
+-		list_del_rcu(&p->list);
+-		if (!kprobe_disabled(ap) && !kprobes_all_disarmed)
+-			/*
+-			 * Try to optimize this probe again, because post
+-			 * handler may have been changed.
+-			 */
+-			optimize_kprobe(ap);
 -	}
--valid:
--	return ap;
-+	if (p == ap)
-+		return ap;
-+
-+	list_for_each_entry(list_p, &ap->list, list)
-+		if (list_p == p)
-+		/* kprobe p is a valid probe */
-+			return ap;
-+
-+	return NULL;
++		optimize_kprobe(ap);
+ 	return 0;
+ 
+-disarmed:
+-	hlist_del_rcu(&ap->hlist);
+-	return 0;
  }
  
- /*
+ static void __unregister_kprobe_bottom(struct kprobe *p)
 
