@@ -1,141 +1,192 @@
-Received: from mx0a-00206402.pphosted.com (mx0a-00206402.pphosted.com [148.163.148.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E8D1BC9E2;
-	Tue, 10 Dec 2024 19:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43C086342
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Dec 2024 19:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733858256; cv=none; b=tqn1S5aHJ4gbyKEVB2qm0anNEq7itXammtGxbkbq79F1SCRC7FEadzuINVZ6tE/3UcJc3v11eUeUPFq6p8kt1nCopJYQlNzLwOAAX9rJNcXBEoHsTZ9hLVvK57gxu7J8txuNkVzJZztRaKAPjjzeSak+i7OR306+V4ozipgNW+M=
+	t=1733859339; cv=none; b=ZH9PI4gSG3w6NgPvUtFsBzzQsrr9tR7Gd6Mdq4YHzCPKBaU1DCpQXpZDzgu3E3muxBETnecTq9ZgWYrKK7bsaLtMUtE8x7WFZhagHtr22fHINXXYdKX8uy3Pxzn7SBu6UMwx3VjsNtT50kRoKB+q4PtEJ2GRAbuzUw3cfwfsTPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733858256; c=relaxed/simple;
-	bh=B1adUjR1VE80f1PTstNu785YA4jDE4rVDXmLSCYT2aI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dTjXL6YtlcBzVdPq3dFpahLcUlE4PLJEgZYm85rQhNx+szyxUaUdczonyr4yjyej+h97BCYGiZObXlXKOZKKkx/NGcCZ4iNfhQOWwpMwZEftYVKzlYVHFv+ao5fOl32Uq+VP45q6ds0H41tyjVVuV5tSg/U5LaCMzPYCFUZKU4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=Q5WLWETe; arc=none smtp.client-ip=148.163.148.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1733859339; c=relaxed/simple;
+	bh=D4Tzn9/NmXEN0TXG1AxK8mUxfuuCZ+u36vl8FHG0j5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gpl4r87UYcdTLyij6tbfxd40Efx2FItoJR7WOZq0sbxsa1kB0+VhO0qAnqzmpseisaekXGhny9GtLwUrRMqmgNJwT2mOzpKHMEg21c1M0yBP9IsrLsoOxXybtR123P7xer4JW66aVb5AEZIpAo5ZiqHAyhDVDufHtVzmbHsm5ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g9lhr7Jq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="Q5WLWETe"
-Received: from pps.filterd (m0354652.ppops.net [127.0.0.1])
-	by mx0a-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BAGAf2t018432;
-	Tue, 10 Dec 2024 19:15:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-id:content-transfer-encoding:content-type:date
-	:from:in-reply-to:message-id:mime-version:references:subject:to;
-	 s=default; bh=B1adUjR1VE80f1PTstNu785YA4jDE4rVDXmLSCYT2aI=; b=Q
-	5WLWETej/0uKO6cQ1WldX4CJ3IaLH90EjGr1lkk0cGOEJj9n5PVIBgjR9chPXsbh
-	WXfczIGo4DVHR8tSYL60ElqL20UzdQeCSsvKfZtraVBvxMfQNWA7GJ/+SG0UnDNz
-	aKyYPDoWR4XmnBmuqNDUlpXmXzhsu7tfSKi8/HI7jvRVcAEOEgNbqvgw9dFh+4zI
-	mwo5kSulGhKEyf1/Qm32CpBkx88bzZXpktbqg7i1aCI4I3PP2pU9IC1qmoqodYQA
-	abjRiSXTTPxt3IO7dNESBuZUu7pikklfjV20zIHwzNeudEq0BlTJggjPmdZvr173
-	tg/P8MaftEbtGDXHPrYtg==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0a-00206402.pphosted.com (PPS) with ESMTPS id 43erxfgjqw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 10 Dec 2024 19:15:15 +0000 (GMT)
-Received: from 04wpexch06.crowdstrike.sys (10.100.11.99) by
- 04wpexch05.crowdstrike.sys (10.100.11.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 10 Dec 2024 19:15:13 +0000
-Received: from 04wpexch06.crowdstrike.sys ([fe80::9386:41e4:ec25:9fd5]) by
- 04wpexch06.crowdstrike.sys ([fe80::9386:41e4:ec25:9fd5%9]) with mapi id
- 15.02.1544.009; Tue, 10 Dec 2024 19:15:13 +0000
-From: Martin Kelly <martin.kelly@crowdstrike.com>
-To: "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "ojeda@kernel.org"
-	<ojeda@kernel.org>,
-        "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-        "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>,
-        "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "nathan@kernel.org"
-	<nathan@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-        "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
-        "surenb@google.com"
-	<surenb@google.com>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "hpa@zytor.com"
-	<hpa@zytor.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "zhengyejian@huaweicloud.com" <zhengyejian@huaweicloud.com>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "bp@alien8.de"
-	<bp@alien8.de>,
-        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>
-CC: Amit Dang <amit.dang@crowdstrike.com>,
-        "linux-modules@vger.kernel.org"
-	<linux-modules@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org"
-	<linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
- weak function issue
-Thread-Topic: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
- weak function issue
-Thread-Index: AQHbSzfWIbF4ko3yU0yIDGnRxekZ5w==
-Date: Tue, 10 Dec 2024 19:15:13 +0000
-Message-ID: <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
-References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
-In-Reply-To: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <894EEA24DDE3DA4C924E664F311AA9D3@crowdstrike.sys>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g9lhr7Jq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733859336;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=KDnAKXJwYVbACBYDkjpxdvLPwteH3j/a2Tcuj6fTOwc=;
+	b=g9lhr7JqGSSSu1YidPQlr9209o/kqHGP6cR2fIhEbxMtplKw1rTiAqJ6ontzbIKiFzXoNR
+	rr2qBMYQjcUpa/7fkgdzkpPihCcBfZR8gtsyTFtEd7ZpeduWYnqBCb0B/kTdEr/Wj8YU7l
+	IN1tzqfdbklDREhT+5G+QcUwhZzXYcU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-623-o11XvzKsOjizwij_ZWdxAQ-1; Tue, 10 Dec 2024 14:35:35 -0500
+X-MC-Unique: o11XvzKsOjizwij_ZWdxAQ-1
+X-Mimecast-MFC-AGG-ID: o11XvzKsOjizwij_ZWdxAQ
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-434fe2b605eso13019735e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Dec 2024 11:35:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733859334; x=1734464134;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KDnAKXJwYVbACBYDkjpxdvLPwteH3j/a2Tcuj6fTOwc=;
+        b=bvJvUWlhBapUD+Ey1Xd9WpPg5ZTb2kVyoDPme+qjeOIqPcbf6yM87S8UIBbZf0WU5y
+         4J3iZDSjy7InFSHZ579SW/ln9mGr1JY0nBSH7MXH09LAR5XRxI9CpevXNrsSkTb5kwMP
+         +vEz7UA1S09m3XMW+l0RLxAgZy94JZdgN9I1uFHliWV9d2OwlV8KZJXbpa/O5b8hAXGw
+         dN3CKfjtLbRAXjInDBdUguWcukQcqeYUOlDFer2PZJx5AyG/0nTJ8nSgkrWt4c6K/VcZ
+         W7IaLmWelSGE0GtYIvhDUtF9EYlut0JFS3PH4kFHb1u8PACPZrBSPaBkMTXtgm5lH0yt
+         Fj3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVvNj1IcrQJjOmx5GLR7D911EyXukGYxkQc7JF61hPuupwBffBK8U+s9f32HF9VDulLAIl7MrrCQq3MaWoEc9wWc/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyby386ETH+gva/pbZWMeK1v5KVHAOv+L0Q1pIyNrmHnj3xmWJv
+	452zNJo1OSK3m4RrQAdhy9ofz+ybcHGYBoCrlB3PQXbiGCdUdlygi2scZ5Ug0UFIz7izWHui5UD
+	6mT2zcwZcdzSTIerYYAf9YUbGF6rH87c/1huGj/hMjmyB7re+b8/mMoyaYjjrw+JvquxFfA==
+X-Gm-Gg: ASbGncuJqVfMbB3Lfd4Za+dflaiKtkFnS8KKdnTTsMW5+sT8aDGKMpHTGKpoPiLTmPJ
+	aFIRMOvyN3H5FXNzk8FvOEBKvZq9Nbre18Jocxok6FUW4s46EM5yHi2TldbMgOLVwcFT7Wt1reK
+	W2DYdD3nX1EDNdYFgUaIUIv6o7KJs0I+u5ysmZJRKTn6r/TN5B4fbO8w2DcpRYPkDauheBRSKyB
+	V332TNpV6xuNubGOYZE0tjKqxN/+u5+RCZSehDZEzEDbzcvmcqaMP0I0DKJ+8hTzHGcMPrjcZ+u
+	qyykKU8=
+X-Received: by 2002:a05:600c:b86:b0:436:1c04:aa9a with SMTP id 5b1f17b1804b1-4361c374ac1mr630765e9.14.1733859334473;
+        Tue, 10 Dec 2024 11:35:34 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHBUXHjhtlw8/1QueJHpMGcjVCrJT3F2y9hBP2xWGRVmtvdEvEWnAe3y7oVbtr0ovUSi9vGUA==
+X-Received: by 2002:a05:600c:b86:b0:436:1c04:aa9a with SMTP id 5b1f17b1804b1-4361c374ac1mr630555e9.14.1733859334123;
+        Tue, 10 Dec 2024 11:35:34 -0800 (PST)
+Received: from [192.168.3.141] (p5b0c61ad.dip0.t-ipconnect.de. [91.12.97.173])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-435aab63baesm27114775e9.38.2024.12.10.11.35.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Dec 2024 11:35:32 -0800 (PST)
+Message-ID: <3bd43f87-571a-4bc6-b068-69056ec18d85@redhat.com>
+Date: Tue, 10 Dec 2024 20:35:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authority-Analysis: v=2.4 cv=Td5stQQh c=1 sm=1 tr=0 ts=67589343 cx=c_pps a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=RZcAm9yDv7YA:10 a=VwQbUJbxAAAA:8 a=i0EeH86SAAAA:8
- a=pl6vuDidAAAA:8 a=eHuGQ7gFT_7OOu_YEIIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: mM4J9j6hWFAPRFjVNI4NhQBKWaTtiq1Z
-X-Proofpoint-GUID: mM4J9j6hWFAPRFjVNI4NhQBKWaTtiq1Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 suspectscore=0
- spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=658
- adultscore=0 clxscore=1011 classifier=spam authscore=0 adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2411120000 definitions=main-2412100140
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] fork: avoid inappropriate uprobe access to invalid mm
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ linux-mm@kvack.org, Peng Zhang <zhangpeng.00@bytedance.com>,
+ syzbot+2d788f4f7cb660dac4b7@syzkaller.appspotmail.com
+References: <20241210172412.52995-1-lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20241210172412.52995-1-lorenzo.stoakes@oracle.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: T1CvTNL_2dWthBWN30ZCccVcJuqvcuaQs51vBOdMMlc_1733859334
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVHVlLCAyMDI0LTA3LTIzIGF0IDE0OjMyICswODAwLCBaaGVuZyBZZWppYW4gd3JvdGU6DQo+
-IEJhY2tncm91bmQgb2YgdGhpcyBwYXRjaCBzZXQgY2FuIGJlIGZvdW5kIGluIHYxOg0KPiANCj4g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjQwNjEzMTMzNzExLjI4Njc3NDUtMS16aGVu
-Z3llamlhbjFAaHVhd2VpLmNvbS8NCj4gwqANCj4gDQo+IEhlcmUgYWRkIGEgcmVwcm9kdWN0aW9u
-IHRvIHNob3cgdGhlIGltcGFjdCB0byBsaXZlcGF0Y2g6DQo+IDEuIEFkZCBmb2xsb3dpbmcgaGFj
-ayB0byBtYWtlIGxpdmVwYXRjaC1zYW1wbGUua28gZG8gcGF0Y2ggb24NCj4gZG9fb25lX2luaXRj
-YWxsKCkNCj4gwqDCoCB3aGljaCBoYXMgYW4gb3ZlcnJpZGVuIHdlYWsgZnVuY3Rpb24gYmVoaW5k
-IGluIHZtbGludXgsIHRoZW4gcHJpbnQNCj4gdGhlDQo+IMKgwqAgYWN0dWFsbHkgdXNlZCBfX2Zl
-bnRyeV9fIGxvY2F0aW9uOg0KPiANCg0KSGkgYWxsLCB3aGF0IGlzIHRoZSBzdGF0dXMgb2YgdGhp
-cyBwYXRjaCBzZXJpZXM/IEknZCByZWFsbHkgbGlrZSB0byBzZWUNCml0IG9yIHNvbWUgb3RoZXIg
-Zml4IHRvIHRoaXMgaXNzdWUgbWVyZ2VkLiBUaGUgdW5kZXJseWluZyBidWcgaXMgYQ0Kc2lnbmlm
-aWNhbnQgb25lIHRoYXQgY2FuIGNhdXNlIGZ0cmFjZS9saXZlcGF0Y2gvQlBGIGZlbnRyeSB0byBm
-YWlsDQpzaWxlbnRseS4gSSd2ZSBub3RpY2VkIHRoaXMgYnVnIGluIGFub3RoZXIgY29udGV4dFsx
-XSBhbmQgcmVhbGl6ZWQNCnRoZXkncmUgdGhlIHNhbWUgaXNzdWUuDQoNCkknbSBoYXBweSB0byBo
-ZWxwIHdpdGggdGhpcyBwYXRjaCBzZXJpZXMgdG8gYWRkcmVzcyBhbnkgaXNzdWVzIGFzDQpuZWVk
-ZWQuDQoNClsxXQ0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYnBmLzcxMzY2MDVkMjRkZTliMWZj
-NjJkMDJhMzU1ZWYxMWM5NTBhOTQxNTMuY2FtZWxAY3Jvd2RzdHJpa2UuY29tL1QvI21iN2U2Zjg0
-YWM5MGZhNzg5ODllOWUyYzNjZDhkMjlmNjVhNzg4NDViDQo=
+On 10.12.24 18:24, Lorenzo Stoakes wrote:
+> If dup_mmap() encounters an issue, currently uprobe is able to access the
+> relevant mm via the reverse mapping (in build_map_info()), and if we are
+> very unlucky with a race window, observe invalid XA_ZERO_ENTRY state which
+> we establish as part of the fork error path.
+> 
+> This occurs because uprobe_write_opcode() invokes anon_vma_prepare() which
+> in turn invokes find_mergeable_anon_vma() that uses a VMA iterator,
+> invoking vma_iter_load() which uses the advanced maple tree API and thus is
+> able to observe XA_ZERO_ENTRY entries added to dup_mmap() in commit
+> d24062914837 ("fork: use __mt_dup() to duplicate maple tree in
+> dup_mmap()").
+> 
+> This change was made on the assumption that only process tear-down code
+> would actually observe (and make use of) these values. However this very
+> unlikely but still possible edge case with uprobes exists and unfortunately
+> does make these observable.
+> 
+> The uprobe operation prevents races against the dup_mmap() operation via
+> the dup_mmap_sem semaphore, which is acquired via uprobe_start_dup_mmap()
+> and dropped via uprobe_end_dup_mmap(), and held across
+> register_for_each_vma() prior to invoking build_map_info() which does the
+> reverse mapping lookup.
+> 
+> Currently these are acquired and dropped within dup_mmap(), which exposes
+> the race window prior to error handling in the invoking dup_mm() which
+> tears down the mm.
+> 
+> We can avoid all this by just moving the invocation of
+> uprobe_start_dup_mmap() and uprobe_end_dup_mmap() up a level to dup_mm()
+> and only release this lock once the dup_mmap() operation succeeds or clean
+> up is done.
+
+What I understand is: we need to perform the uprobe_end_dup_mmap() after 
+the mmput().
+
+I assume/hope that we cannot see another mmget() before we return here. 
+In that case, this LGTM.
+
+-- 
+Cheers,
+
+David / dhildenb
+
