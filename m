@@ -1,142 +1,107 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E41C2080C0
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Dec 2024 16:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6102343A6
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Dec 2024 16:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733848344; cv=none; b=LAYH8rqByCM0/Nv2vL7dOC/QUZ4X9abosclgEY2j3BPP59yu65eyXmP3396fyGpoPLbJR/Vy47eAmuAA+34B+RwdK6XPjEQE1PgL/FlRYKvVx1A1YrNiPSTn+/iYtTJOdFYGNawJQgnB6QTTh7xiIGhs6APU1yEonoGpdxqCHu0=
+	t=1733849656; cv=none; b=L4rmc62nPCZkNOm/xuki1Osvfe/LkqoKXx1C9+AXDu/88zHrenygaDSIrMAYhkwQ7eMw2N/ptOqtiGoyAj9bEaIA96bdSej0UnCOum1cccGBJd/F9BxV7aaOIP7A5QPS4OX5NsalCsrPuh9PRriDc/XFOmG6WAfLrL15UfluQbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733848344; c=relaxed/simple;
-	bh=+b7M+jY9PJIO36eSkDLJJ9VE98VsbGgXtmTuW7php98=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f+3yPNSRRgIX2A0Gz+DtknmQDoAgGsqV6DuTfgRDv+J9UmGxvC8FV2jsnUL1avCLeMmXyYYLXyQ6KOwtrhQTKIketpvcQZ5VDk9+4SEIc9vqUbMGapnO8WkbMUaeeDXfvFLty745vOLi9+1tcp4Cw1YVHRqDrSWn8Xgq62Jq5Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fiI5NHGE; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1733849656; c=relaxed/simple;
+	bh=3sn7QlcYPVrIalne+GpOHpJwfF0reHhkLV2yJqlqG7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GN6PzlSLQPbZgI+AMimL8CMF3xv039nheF1LIEa1Oy5JTcpyFKreYvWhx9KDwx0aUcHAgiwuTyRiKmHMdcR9Ukhd3XX4qP1jsLbCYYKP5d5DEWhVIKXvo7/mLQOcjbtdE7no1w6KspW3wUkw3kksOVsE2kSx/3m1ddBhoa/WxCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F4fDl9bZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fiI5NHGE"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-434fa6bf6e4so50825e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Dec 2024 08:32:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733848340; x=1734453140; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/gn1UbKj9vnFhh2xTSV92DWl+lvkKwbOmPeVeHbAqw=;
-        b=fiI5NHGEiO4n+b2sdi8Gn5lluoVlBt0EYv+8yAQM51ewD7whipEJyqx8pTBNBo/N5b
-         5dCPeJ8AlvrcAUq/l72VDUAhn5IpOgVbY4G4dGCUoDjRrE8B2AP7e76QylL/zzkzKV+3
-         /wLk3YJGwSX6ehJXvVSz/uECkydhpeL06lV4jz1cpVZNTje8/nVcAtgF7+NuKU7ISBhD
-         oVVw8yhFp9j1sPw8W5Qf64DJ3w5GfFvi6vugCrdy+ZxpG/m3JnL2TpAr32YRNgu+3n1P
-         +tcmzbMmsUUx2PUjl44EP8mdPcMdt+9dsem4+E/NbQWWnTVe47BN2k0WBGFhGptV8tby
-         95KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733848340; x=1734453140;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z/gn1UbKj9vnFhh2xTSV92DWl+lvkKwbOmPeVeHbAqw=;
-        b=qVPpVdXOYVilPb5HmPGTzOOdP7IlTv4EGtBkIngLq1jIX81SqcI5jpyxpEgbS2HLqq
-         n8EM+U89ENkGymfWBWeJQQRRVqUmR4mpg18JXLrRWlG+tW+5iB9hxkjRTgdzUGkwpGbu
-         SSrErV9+4CE7EFkgsHDDpQxomk+TBV/eEk1dWQqePVvkCodjhL4CHL1pLjz0hzCj05RG
-         jhLdF9s31wucjM9FXOQ6Fo7TYLh7/5HtKmR0rkSccXwDy0r8JYU5KLP7ZLK0tKauLpYe
-         GH7Y0M65/ZSrT4pVUeUCyd9XGpgCmwdIAzW1TsH7gXtyajYY3lkeePcX9LRT3n5GDBdo
-         yEwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUB/YUN1IkRG/ZWRuSklzHcUnsJ7aMBliDXVmpyo3hewuET8+XO+M35Dffjoq5R5+injSIOqT4Mwn19N2aTbwA3zQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfX6OfWn8SL31fSlNpR7sK1b3EIkZxAggjLu3pf578Y9xVWfM/
-	/Pr9X8E2EMEXWEvkajNI22MU90Tjpiij1KQ7AHhVK1n4NQUsW+jwBOoQ6pHpcA==
-X-Gm-Gg: ASbGncuEBcAZZ+5fDUCtrD8b+N3/FhxrbnHbI8DbNJcf5WTuK+eZGPUCi8xrGttXyfZ
-	PV6sVGQcNcQC0FS6ccTqAZHn0U1kIv0/b5WywFj2WW59sJGQeidvCnFkvZBznHjnTTCUd2Y7OR1
-	m82nyO6/vu8zWYUDUuHfP7QHu+GxgODhT7eeT90Qa89CVZNNysZ7KLCeuuB4hdDvs9rBRf6a1aY
-	YqZyhPkUk0AB8B53wRayt6DTiTCm7RY8wtRA+A2d0s=
-X-Google-Smtp-Source: AGHT+IGJX8Z20qexK7oymokLsdpvHPHCKMTUzEu5sEKq663Uu0XauOt9N9AnILN+AinqcJUc7xO6fg==
-X-Received: by 2002:a05:600c:6b06:b0:434:9e1d:44ef with SMTP id 5b1f17b1804b1-43539dd9773mr1346455e9.7.1733848340098;
-        Tue, 10 Dec 2024 08:32:20 -0800 (PST)
-Received: from localhost ([2a00:79e0:9d:4:deb9:87dc:18b2:3f1c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3862b923419sm13837305f8f.2.2024.12.10.08.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2024 08:32:19 -0800 (PST)
-From: Jann Horn <jannh@google.com>
-Date: Tue, 10 Dec 2024 17:32:13 +0100
-Subject: [PATCH] bpf: Fix UAF via mismatching bpf_prog/attachment RCU
- flavors
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F4fDl9bZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733849654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uYgy4fScGjSMekKKz7zapMxNc5WYY7jYizVCi92CPVg=;
+	b=F4fDl9bZ9GGvdvZgE8GwrWTX+zpkAEnYI58qZfnM9lpN/E2j8vwzID8XFTS67mQe3uMgXw
+	zpl9uR/nqnQTHEp4oFgun+K+NqdqxIFThJcqF5s1ReJTJYzq2B0TK6K3QIKpWaQWD8Ypb+
+	USgE5bApLAaohNVhfA5OqYIRERc17ag=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-5-Pcjwg3CCMr-5zOAySgSt3g-1; Tue,
+ 10 Dec 2024 11:54:10 -0500
+X-MC-Unique: Pcjwg3CCMr-5zOAySgSt3g-1
+X-Mimecast-MFC-AGG-ID: Pcjwg3CCMr-5zOAySgSt3g
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3AE11955BF9;
+	Tue, 10 Dec 2024 16:54:06 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.4])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id F15341956089;
+	Tue, 10 Dec 2024 16:53:58 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 10 Dec 2024 17:53:43 +0100 (CET)
+Date: Tue, 10 Dec 2024 17:53:34 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	linux-mm@kvack.org, Peng Zhang <zhangpeng.00@bytedance.com>
+Subject: Re: [PATCH] fork: avoid inappropriate uprobe access to invalid mm
+Message-ID: <20241210165334.GB31266@redhat.com>
+References: <20241210163104.55181-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241210-bpf-fix-actual-uprobe-uaf-v1-1-19439849dd44@google.com>
-X-B4-Tracking: v=1; b=H4sIAAxtWGcC/x2MQQqAMAzAviI9W+imXvyKeKiz04Lo2JwI4t8dH
- gNJHkgSVRL01QNRLk167AVMXYFbeV8EdS4MlmxrrCGcgkevN7I7M2+YQzwmwcweidk2rSMh6qD
- 0IUoR//cwvu8Hz4c2zGsAAAA=
-X-Change-ID: 20241210-bpf-fix-actual-uprobe-uaf-0aa234c0e005
-To: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Delyan Kratunov <delyank@fb.com>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1733848336; l=1632;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=+b7M+jY9PJIO36eSkDLJJ9VE98VsbGgXtmTuW7php98=;
- b=OzxHpe5WGAO/ha2AVHzpagLfEW5ShM/GDQZc0Eov17h+nQF4RLseZnL3X4yU25WPDp3u+C/Un
- iCw9wAHXoqEBDTg0qeyo6DphEylK0ulrKHqxr3W7mYDWvGNPJ1aRthX
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241210163104.55181-1-lorenzo.stoakes@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Uprobes always use bpf_prog_run_array_uprobe() under tasks-trace-RCU
-protection. But it is possible to attach a non-sleepable BPF program to a
-uprobe, and non-sleepable BPF programs are freed via normal RCU (see
-__bpf_prog_put_noref()). This leads to UAF of the bpf_prog because a normal
-RCU grace period does not imply a tasks-trace-RCU grace period.
+I must have missed something, but...
 
-Fix it by explicitly waiting for a tasks-trace-RCU grace period after
-removing the attachment of a bpf_prog to a perf_event.
+On 12/10, Lorenzo Stoakes wrote:
+>
+> @@ -1746,9 +1741,11 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+>  	if (!mm_init(mm, tsk, mm->user_ns))
+>  		goto fail_nomem;
+> 
+> +	uprobe_start_dup_mmap();
+>  	err = dup_mmap(mm, oldmm);
+>  	if (err)
+> -		goto free_pt;
+> +		goto free_pt_end_uprobe;
+> +	uprobe_end_dup_mmap();
+> 
+>  	mm->hiwater_rss = get_mm_rss(mm);
+>  	mm->hiwater_vm = mm->total_vm;
+> @@ -1758,6 +1755,8 @@ static struct mm_struct *dup_mm(struct task_struct *tsk,
+> 
+>  	return mm;
+> 
+> +free_pt_end_uprobe:
+> +	uprobe_end_dup_mmap();
 
-Cc: stable@vger.kernel.org
-Fixes: 8c7dcb84e3b7 ("bpf: implement sleepable uprobes by chaining gps")
-Suggested-by: Andrii Nakryiko <andrii@kernel.org>
-Suggested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Jann Horn <jannh@google.com>
----
- kernel/trace/bpf_trace.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+if dup_mmap() fails and "mm" is incomplete, then with this version dup_mmap_sem
+is dropped before __mmput/exit_mmap/etc. How can this help?
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 949a3870946c381820e8fa7194851b84593d17d9..a403b05a7091384fb08e8c47ed02fad79c1a4874 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2258,6 +2258,13 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
- 		bpf_prog_array_free_sleepable(old_array);
- 	}
- 
-+	/*
-+	 * It could be that the bpf_prog is not sleepable (and will be freed
-+	 * via normal RCU), but is called from a point that supports sleepable
-+	 * programs and uses tasks-trace-RCU.
-+	 */
-+	synchronize_rcu_tasks_trace();
-+
- 	bpf_prog_put(event->prog);
- 	event->prog = NULL;
- 
-
----
-base-commit: 509df676c2d79c985ec2eaa3e3a3bbe557645861
-change-id: 20241210-bpf-fix-actual-uprobe-uaf-0aa234c0e005
-
--- 
-Jann Horn <jannh@google.com>
+Oleg.
 
