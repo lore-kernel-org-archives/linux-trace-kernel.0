@@ -1,74 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2502451C0;
-	Wed, 11 Dec 2024 04:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6E33F6;
+	Wed, 11 Dec 2024 08:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733890141; cv=none; b=V3xGWgp+PO4EuHHeXHIXuFw9t9xb+BfMvP7l2IWhYxC0gSZeo7GWNj4ojn7x+fyQoVZvrSJgMwg7qWbhvxiNVSJFNkK0Qz+AmZ1SqOMVxJo/u0q39QmLNQ56vbPIMBgR/HcmMIjUXmujCkQ0PGAwDxqrOk4m0ORCXWosr7Zgt1s=
+	t=1733906344; cv=none; b=pU3Z87virwaVxjZ01PcGJP5NeWHIObD9gowL606t/JPH1AxptyFoYFIhBalLIsLu/LrUZnCDCrIlTgfIcdA/qr5e4BcFM0usozYzR5cxhEmQS7RNHpiBh7owyNIOwWynWbklEIjZWAP3bXunypV84ZZqyBB51gr326th4R5dshA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733890141; c=relaxed/simple;
-	bh=QiMaimw4aRsQbi6cS1aDUySjZuQu274e7bOktDP5CCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c/X3Ewe27OwaQbXq+XdcQS9u3OSgG128e9LG6YwHMJVDxlsG9t6htacDX618cdrbP5hsz8kIiO+2ei7JERUkzCHL3JQ4joPAB51uNqzVmdjRaZIChwQp0s02udtciEVdFbYCnGdrvigpKFLwB+bBC58/NtYpy+GwJVhwJEfjasg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7405AC4CED2;
-	Wed, 11 Dec 2024 04:09:00 +0000 (UTC)
-Date: Tue, 10 Dec 2024 23:08:59 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrew Kreimer <algonell@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] Documentation/rv: Fix typos
-Message-ID: <20241210230859.6b0d93b2@batman.local.home>
-In-Reply-To: <20241209130640.10954-1-algonell@gmail.com>
-References: <20241209130640.10954-1-algonell@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1733906344; c=relaxed/simple;
+	bh=9/wdAYu8m8NQcYmRnB+o16mQ4ZhC8zf6dEc+9ZBWrqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i+VNla2/L7onElzreyVa1JcgM6YkFRG07/qYN1PqrvFPNPlbrbZDxipR5/cgkqoGNB3e25QrTEbJDZMrN+IzhvE3Ug+tlrbHg+JkB8p2QPxlv4W30qSlc8JOf3/RGIxL1ykyDn8DFJS9NWwkmUKFBgFvsRjAcmc602CgDDbYhD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNfr05fu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNfr05fu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37644C4CEE0;
+	Wed, 11 Dec 2024 08:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733906343;
+	bh=9/wdAYu8m8NQcYmRnB+o16mQ4ZhC8zf6dEc+9ZBWrqo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DNfr05fuEpdiArm2BBifYadSg+UE4XuMp/Cu1CqQkBlUvamsLO4r4R8ZIDZW4kYSe
+	 wnDB922Ix1weO1kbQH4DaLcbfNVQrv3cdfzV7L9+lCJ/YhMx5/ncVhNJnwQiKSyzss
+	 qdvp3clzcW1a4ElQ/qPdD66E2b83h5I7Tg/5xud/NUNpJDSah2wCxcMMwriDRvXedX
+	 ix4GMszTPpU4XDsA0VRaJVSMfAFDAvvHgze56efgJkuV0Ryt3eXcVTvhD2EKLPKTMj
+	 f4selDix7kT+twnDGl3qOt5RXH5qUbh/PNZZVODSo3ZBzRsW1qeiq/NTso6V3II4Hn
+	 8pKXEk2gPloHQ==
+Message-ID: <1ecf2e8c-86cd-4ba2-832b-014a05a80d26@kernel.org>
+Date: Wed, 11 Dec 2024 09:38:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 01/25] virt: geniezone: enable gzvm-ko in defconfig
+To: Liju-clr Chen <liju-clr.chen@mediatek.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Yingshiuan Pan <Yingshiuan.Pan@mediatek.com>,
+ Ze-yu Wang <Ze-yu.Wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, Shawn Hsiao <shawn.hsiao@mediatek.com>,
+ PeiLun Suei <PeiLun.Suei@mediatek.com>,
+ Chi-shen Yeh <Chi-shen.Yeh@mediatek.com>,
+ Kevenny Hsieh <Kevenny.Hsieh@mediatek.com>
+References: <20241114100802.4116-1-liju-clr.chen@mediatek.com>
+ <20241114100802.4116-2-liju-clr.chen@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20241114100802.4116-2-liju-clr.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon,  9 Dec 2024 15:06:00 +0200
-Andrew Kreimer <algonell@gmail.com> wrote:
-
-> There are some typos in the documentation: 'a' -> 'at', missing 'to'.
-> Fix them.
+On 14/11/2024 11:07, Liju-clr Chen wrote:
+> From: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
 > 
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching.
 
--- Steve
 
-> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
+> Add config in defconfig to enable gzvm driver by default
+
+This we see from the diff. You must explain why we want it.
+
+> 
+> Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
+> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
+> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
 > ---
->  Documentation/trace/rv/runtime-verification.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/trace/rv/runtime-verification.rst b/Documentation/trace/rv/runtime-verification.rst
-> index dae78dfa7cdc..c700dde9259c 100644
-> --- a/Documentation/trace/rv/runtime-verification.rst
-> +++ b/Documentation/trace/rv/runtime-verification.rst
-> @@ -8,14 +8,14 @@ checking* and *theorem proving*) with a more practical approach for complex
->  systems.
->  
->  Instead of relying on a fine-grained model of a system (e.g., a
-> -re-implementation a instruction level), RV works by analyzing the trace of the
-> +re-implementation at instruction level), RV works by analyzing the trace of the
->  system's actual execution, comparing it against a formal specification of
->  the system behavior.
->  
->  The main advantage is that RV can give precise information on the runtime
->  behavior of the monitored system, without the pitfalls of developing models
->  that require a re-implementation of the entire system in a modeling language.
-> -Moreover, given an efficient monitoring method, it is possible execute an
-> +Moreover, given an efficient monitoring method, it is possible to execute an
->  *online* verification of a system, enabling the *reaction* for unexpected
->  events, avoiding, for example, the propagation of a failure on safety-critical
->  systems.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index d13218d0c30f..0f63d4837b61 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1733,3 +1733,5 @@ CONFIG_CORESIGHT_STM=m
+>  CONFIG_CORESIGHT_CPU_DEBUG=m
+>  CONFIG_CORESIGHT_CTI=m
+>  CONFIG_MEMTEST=y
+> +CONFIG_VIRT_DRIVERS=y
+> +CONFIG_MTK_GZVM=m
 
+Does not look like placed correctly, according to savedefconfig.
+
+I still do not see any reason to have it enabled.
+
+Your patches have weird order or this is just wrong. There is no such
+thing as "MTK_GZVM". Use git grep, if you do not believe me.
+
+
+Best regards,
+Krzysztof
