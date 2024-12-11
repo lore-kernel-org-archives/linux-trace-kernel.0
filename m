@@ -1,96 +1,130 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3041B23A19E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Dec 2024 14:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7737246322
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Dec 2024 14:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733926185; cv=none; b=UlFJq9H7UYWfL1KZg9H2GGT6q72GyRa1xs8BEvNZcnqSXBZrIhpL51u6YOuXbNUaIa5U0xv1E+9sjdX76gJaT5Hu4xc8PCL8VhnSGTTyvUMj+AAxGZ3w1MmKOayvKo/zZ5U5GhO5pIY+aldnTRidNxYQ5kVrQgOAdGLHUqukyBU=
+	t=1733927000; cv=none; b=Z3E1125TBiEwgg6/rVIMTbCzSM/+zw3zBKOO3nbzwf50At8juIfe7oLTL6Zf8Vc/qKIhaN8MBPH7mk1z5r8Lm9AGy+GYhfhFl5nYhiETCVllMQOybMiGbrlekxev9AuTQiHb8y/FgwKHMpox67tQbUQOhq9kOwqwPbdMoT8RteQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733926185; c=relaxed/simple;
-	bh=yGF/cctnrxaftIwc3nmoT+49gK30u6v6P+AQjfZtHW8=;
+	s=arc-20240116; t=1733927000; c=relaxed/simple;
+	bh=sbh7AWaShd2GfI0imEetw26zJRmTeK0wkuB3XXGUF6k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P7wL54ZCOkAsXZD7OfADOlNIIsF6T71puPmUS/YcS9csDWROMf3ZasNJi9v2rlrP/bCVhh3ocnbuQU0HKVcJXApi898At1FK0wlorVv3VLocqdBCJh2AXpA57RLaRf9OLL5avHlQ8EE6lsj3+FUf0Qmg3eBMMb4CVMc4Rot/xec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lESLlR6L; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JSsPMl6dsnyOUqnV7yTfh6A1eYiska1DovD/2Fw6QqJXJCzSRc6RqBiPTinBSNwNzhzd5fz4p32zc/ZGaQf1ojDcejtHezQOt6TdAoYVf35DvSJqftEIbnA+cq5FrPn17iC0XvTLzrExSxRVekv6XJCu7FmVlbvkHGPKoKv0zoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g9apzlzy; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lESLlR6L"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21619108a6bso40928585ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Dec 2024 06:09:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g9apzlzy"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-53e28cf55cdso5211218e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Dec 2024 06:23:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733926183; x=1734530983; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGF/cctnrxaftIwc3nmoT+49gK30u6v6P+AQjfZtHW8=;
-        b=lESLlR6Lfp9O6QX+wHpf1LMwwz3N/Sw0juG/0Rm16EYttmhcxIZQm2tXG0YGRjB1ov
-         FmqKvUJfmi9yODOTBFdeV1AxuXVYJcXqyvCuje5Ajt3Hiz4fsnv6RIn40vzhN6QeM4xy
-         MK/u8ZF3b0WDbdI1KFtU4qH2UbR5d4ZHgRAbaRQrdeuWebfBde2SCOBUJ20QiVhm/DAO
-         NIYdUJMob/0UP9zI+wEYQaLKZO9GKFKt8whid6zpEEjJMTmBYbVmWk/qIz3YosS+zMhd
-         Z2lXHIgMWaLmAw19Eww4B0a2mAldFxz3mAznybd5iSkhf5sr75uL3BrG+lYdxPTJOQcP
-         31Jw==
+        d=linaro.org; s=google; t=1733926997; x=1734531797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sbh7AWaShd2GfI0imEetw26zJRmTeK0wkuB3XXGUF6k=;
+        b=g9apzlzydgJ4Q6ULFHgnRbTsqlj5aB0C5meVMSK/UNmDqyc/uQbfs5PQAtaCz7K7ja
+         FslTws/n3vsJ1uTp8N4P8ryGEvGlNOn32LK1NjPHQp1YTN37naNtQtJO74iy+/9XeGKW
+         Bz31Qx5DQjQUYfoJqhGsuPaJJy+4sF0WqZZpxgar/5vPUfDfwAQeE3Ox3rpxRcofCqHY
+         fd1j2dxIQV56PQq8Z5wmeHtasKMFRG0STSNmaink+s3SLcKCwZmJkIrSwXI3LFO+NJ3r
+         VDmhohhZR9mSRoPR25jxYQjV9fbwdwZZmGNYJi9rP/3yMYDZNqc+UibLYZrQSiCurd5e
+         UK3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733926183; x=1734530983;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yGF/cctnrxaftIwc3nmoT+49gK30u6v6P+AQjfZtHW8=;
-        b=sD5Z8ZVLE8X6tgqx5JdbbuIH/pEuVB4PdYVACH3+9XEoA9+ucg+7R6cLO4ktDA7/xG
-         AlirEpW+f83lhLGrkGhIeUJRvm7f3n8fLwfcd+HCuiHGC0lyddSSQ4HuwycoAgto4+ej
-         LFBITrTCyRbDxgYKFRaaqLtHhPkeCVQL9/N12uKV0Bcq4msf0pYN9WPjhpvOutcdv2jv
-         EYSUqC4z6QYohk88/5J/qNMxXnp6XWqLObjDvh6hlEinf6kmtOx4qyjONmJkHamHu+wZ
-         DPSpt4CEzQGpSxxLCA9o0CYGit51JXIPg1tkciTSHCvZr0zvv/yKbJ7RQB04fzZlGkD1
-         miQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzAajzqy5dcj2AJ5e2W+y7mZWCq0P0U4EvvSvTGYkN2rh7V+tYudvaFAcFvoXPeppReH1wXgKSmD/1rJxDwGkMyYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ1LcG49P4ZDmyig2rgJI7WUz/yw/KvjU/naPtXaiN79fBqd6O
-	IwUjcSL++i3WF79Dim10t+cDMCVZM8G13lGFw0uoLdrDUSvfk5igL9eSy0LTU4gO9B2zNz2XxfZ
-	hggjMNQPk+CTTZpQB1sP/X735mCBXvPULU3++
-X-Gm-Gg: ASbGnct0nykOxG94AM1xGQ69dCF0vVmm+bRo8N3XU+eo9aw599xMIif9hs3UosGqoWG
-	+zoL+cgHpjQ3aWXWQc1cZirFcxXU7YAle2mNoh/Ij88jTZA/aleDahasF6vZebWj+
-X-Google-Smtp-Source: AGHT+IHqS1OA57lW5N9YWoHW0GGY0qd5ee2DbHypK0H+lRuShOCs4xM28yOMM64UdafTscYxQpAedve0D9ZOGO/euDE=
-X-Received: by 2002:a17:902:f60e:b0:216:2bd7:1c49 with SMTP id
- d9443c01a7336-21778535677mr56186705ad.29.1733926181789; Wed, 11 Dec 2024
- 06:09:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1733926997; x=1734531797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sbh7AWaShd2GfI0imEetw26zJRmTeK0wkuB3XXGUF6k=;
+        b=LOk+9+vmAxZiH9l71o2LW/UOK2FTBGrrfP0ocUpu+W9Sy17uJDSKcFofPiF4Tp8kq9
+         Hf3vk9y9mZOZk5XpTPjwzetbx0v7hvTsuf/sGroi1jh4nWx60BCjqHnjPfRY+hI337mh
+         yCJJ1ht6a5MMQbGl4tKk2qNqc8jowrP/befPZwvGt4vlqtP86OOfoOWu9h52+gYb+Nwo
+         3InHLTHVIcdxJHI+A5CWO3mw0x3LJUWR7XMeBLLRS5+Cl2KHPdoN9P68w9zfZd32VkLS
+         d4f4od5kPMwgPz0elElaRXJvKQdHuzUCelrdypm3sEFSdVRdM9bY97aTNfpMchrce1Bj
+         UdYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWI7wFp7N3isYILE4hj0JN4Gh55HHgLafCTsF7IR2LZ8uw7Sqfi8UFC53lhVlrQ2Kcd+HNJ5E5BpoD5u8ZFq8YWSwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxgm2lWN4aWtRHFhhJUwPHJSSGOtOehjPu45T7pu/OF3yZxVQqP
+	X3oG9cI8dDi/tQz5PdNM/8ZwvlckVriOrro3Gdf/YipC3+mXkQULfVTuZzYgDejLaIxLpmIRFNq
+	XvnLoSFxS03QtOrx3PL8o0PCggnQGA8GhuytPY6Dql/sDTll7
+X-Gm-Gg: ASbGnct2KBniHO+MnyaGC/8booSLDivGR/jR1MuAuYHvkoxBs7i2tUtHxBVgQ9a5JrG
+	fhifxBtPrfGg4Ek1EUHf4+b0h5AOXU1k5VA==
+X-Google-Smtp-Source: AGHT+IFwc3R4PMoFIypjPPrlyu+bP54qbrkqb6SdTFcVtmAjqvNQet3Sk08y9AmHyRfPr3eq0SXHvcppFqWjVobZmrI=
+X-Received: by 2002:a05:6512:6cc:b0:540:2292:50b2 with SMTP id
+ 2adb3069b0e04-5402a60af0emr966019e87.52.1733926996913; Wed, 11 Dec 2024
+ 06:23:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108113455.2924361-1-elver@google.com> <CANpmjNPuXxa3=SDZ_0uQ+ez2Tis96C2B-nE4NJSvCs4LBjjQgA@mail.gmail.com>
- <20241115082737.5f23e491@gandalf.local.home> <CANpmjNM_94fmQ025diHd9_vKtRxtDbSYaOpfBbshNQYEPQmHZw@mail.gmail.com>
-In-Reply-To: <CANpmjNM_94fmQ025diHd9_vKtRxtDbSYaOpfBbshNQYEPQmHZw@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Wed, 11 Dec 2024 15:09:05 +0100
-Message-ID: <CANpmjNMmUTuim5PYgQ-=Fk_bjz5tbxm+xbenzsnjXWmqu_04MA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] tracing: Add task_prctl_unknown tracepoint
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
-	kasan-dev@googlegroups.com
+References: <20241018214300.6df82178@rorschach> <CACRpkdaTBrHwRbbrphVy-=SeDz6MSsXhTKypOtLrTQ+DgGAOcQ@mail.gmail.com>
+ <20241211082427.01208632d3dd5486abb3e090@kernel.org>
+In-Reply-To: <20241211082427.01208632d3dd5486abb3e090@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 11 Dec 2024 15:23:05 +0100
+Message-ID: <CACRpkdaEXUxSuVzztcVOh2VMzPHr+6jsrEC1w6ecWEd0qzgU4w@mail.gmail.com>
+Subject: Re: [PATCH] fgraph: Use CPU hotplug mechanism to initialize idle
+ shadow stacks
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 15 Nov 2024 at 16:06, Marco Elver <elver@google.com> wrote:
->
-> On Fri, 15 Nov 2024 at 14:27, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Fri, 15 Nov 2024 13:00:00 +0100
-> > Marco Elver <elver@google.com> wrote:
-> >
-> > > Steven, unless there are any further objections, would you be able to
-> > > take this through the tracing tree?
-> > >
-> > > Many thanks!
-> >
-> > This isn't my file. Trace events usually belong to the subsystems that
-> > use them. As this adds an event to kernel/sys.c which doesn't really have
-> > an owner, then I would ask Andrew Morton to take it.
->
-> Got it.
->
-> Andrew, can you pick this up?
+On Wed, Dec 11, 2024 at 12:24=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.=
+org> wrote:
 
-Gentle ping - many thanks,
--- Marco
+> > cd /sys/kernel/debug/tracing
+> > cat trace
+> >
+> > Gives an empty trace :(
+> >
+> > And:
+> >
+> > cat current_tracer
+> > function_graph
+> > cat set_graph_function
+> > do_idle
+> > cat tracing_on
+> > 1
+> >
+> > So all *is* set up, just not performing
+> >
+> > I tried to figure out why this happens but I'm not good with tracing
+> > internals. Any ideas?
+>
+> Interesting. Does this happen only on boot-time tracing or after boot too=
+?
+> If it does not work only for boot-time, cpuhp_setup_state() may not work
+> before starting boot-time function graph tracing.
+
+If I boot without any tracing enabled from the cmdline and:
+
+echo 0 > tracing_on
+echo function_graph > current_tracer
+echo do_idle > set_graph_function
+echo 1 > tracing_on
+
+I don't get any output either.
+
+It works for other functions, such as
+
+echo ktime_get > set_graph_function
+
+It seems it's the set_graph_function thing that isn't working
+with do_idle at all after this patch. Why just this function...
+The function is clearly there:
+
+cat available_filter_functions | grep do_idle
+do_idle
+
+I can also verify that this function is indeed getting invoked
+by adding prints to it (it's invoked all the time on any normal
+system). Does this have something to do with the context
+where do_idle is called? It's all really confusing...
+
+Yours,
+Linus Walleij
