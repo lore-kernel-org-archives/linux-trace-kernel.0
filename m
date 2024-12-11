@@ -1,86 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5032E2288C3;
-	Wed, 11 Dec 2024 20:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B79C1F0E50;
+	Wed, 11 Dec 2024 22:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733950455; cv=none; b=PTxsU6BRVq7DFj9u0XS8ZwsoVMyxuuQSslme7/NewY8SFHwYlI8Mac1oxfnI86+uKQcgX7G0VvQnHqR6R1aa6lWQVomXMwF5RWFOPFw9XK8rciJudFZHmfbxPE6fL01sJYbN3FrLis28fjI0aqeanGPPC9xqBts/goS67wmTFnw=
+	t=1733956333; cv=none; b=o8mSu+BqJPxJD9NVYXcP15AKTpz5f5G4iG+d35yaCpsz9zNJGqU1+nhpMIuS/BykDL2uGrbh46dVjk4Al7tiFavpnCbnRz7eowgp7crw0H4neAnA1G/9yd6gQw8UqbJ6CLewIQdrYvpXVIqZWfAqi7LFZY0XthS1pBsyxRIZRSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733950455; c=relaxed/simple;
-	bh=qP+jw3reK6oo4+Arv7+zjxhygcwR7XDDrmzN/M1EP2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lryjx3BkWr1o4f5gpuB4SK6izJluy2KqdcY2O3eFWNYiLefRGh/30tKUn/uoX9IptjsjsU42ReJFSo1zcPI6QoyLsNFcwltA5Anv0bjBh5g39K2rRMotZeKfAFvtNooTYchDTBY/wnKAdwsPAJAJohj9awguX5MLyZwgkeGCCj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE61FC4CED2;
-	Wed, 11 Dec 2024 20:54:12 +0000 (UTC)
-Date: Wed, 11 Dec 2024 15:54:11 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Al Viro <viro@ZenIV.linux.org.uk>, Michal
- Simek <monstr@monstr.eu>, Jeff Xie <jeff.xie@linux.dev>
-Subject: Re: [PATCH] ftrace/microblaze: Do not find "true_parent" for return
- address
-Message-ID: <20241211155411.46643bb9@batman.local.home>
-In-Reply-To: <20241211153634.69c75afa@batman.local.home>
-References: <20241211153634.69c75afa@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1733956333; c=relaxed/simple;
+	bh=SEo/hZdGOI1Q/CSoVxc2NHBSSqNSaH3b4tjYopKGg5Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=orDytnAGeb/8fM9FyJKi/DGo+pVosASWts2g5UXuDykr0MPL37bs56LG8b7OsZcuJQ91xLfto/AyO1CW6F6Mb0b1XwA1hXOqLpTYG952i7+0YQ1PyR/v0GuiRimJvKF5JlJs8cw3dU7kM7wPZ8K7sygSAlEDwdcU1b177R+5HKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=taXi5zli; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="taXi5zli"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3484BC4CED3;
+	Wed, 11 Dec 2024 22:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733956333;
+	bh=SEo/hZdGOI1Q/CSoVxc2NHBSSqNSaH3b4tjYopKGg5Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=taXi5zliiFN3KW6tUo9STN8RrcaQwTguLWUw7vOA+mWtVIl/lOqyfp7tYIS/4F3zV
+	 SrlDbBAQw0pq/i+m3XA8S2V5RKELeBAQDrM9ZlzmC5W2t3P2/1WtHs4/RSCdUgq8dQ
+	 mlxsg6YPQmJkBgFPWopn0EvLsIRByEfTZmh5jsblEZTrZHF1YBr1gHB4u8SC/ZnwYc
+	 JJmrOPumN6Bq+UlMa1Yy/gqSPnI2DNXR7U5+yK9MuW0ITZJZ/qhOwGYGwKr3anAyP3
+	 KUBLzQdsNExdAOK6/2U41j0zEPH/NAHyaJyJUiYyz7Ml3I0TkGmyIhQT3WGrG4Z/r4
+	 v9nQIb5qf2Bkg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D1D380A965;
+	Wed, 11 Dec 2024 22:32:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v12 0/5] Tracepoints and static branch in Rust
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <173395634899.1729195.7492083712432982213.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Dec 2024 22:32:28 +0000
+References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+In-Reply-To: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: linux-riscv@lists.infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, peterz@infradead.org, jpoimboe@kernel.org,
+ jbaron@akamai.com, ardb@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+ wedsonaf@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+ bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ seanjc@google.com, ubizjak@gmail.com, catalin.marinas@arm.com,
+ will@kernel.org, maz@kernel.org, oliver.upton@linux.dev,
+ mark.rutland@arm.com, ryan.roberts@arm.com, tabba@google.com,
+ linux-arm-kernel@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, apatel@ventanamicro.com,
+ ajones@ventanamicro.com, alexghiti@rivosinc.com, conor.dooley@microchip.com,
+ samuel.holland@sifive.com, chenhuacai@kernel.org, kernel@xen0n.name,
+ maobibo@loongson.cn, yangtiezhu@loongson.cn, akpm@linux-foundation.org,
+ zhaotianrui@loongson.cn, loongarch@lists.linux.dev, cmllamas@google.com,
+ palmer@rivosinc.com
 
+Hello:
 
-[ Added Jeff ]
+This series was applied to riscv/linux.git (fixes)
+by Steven Rostedt (Google) <rostedt@goodmis.org>:
 
--- Steve
+On Wed, 30 Oct 2024 16:04:23 +0000 you wrote:
+> An important part of a production ready Linux kernel driver is
+> tracepoints. So to write production ready Linux kernel drivers in Rust,
+> we must be able to call tracepoints from Rust code. This patch series
+> adds support for calling tracepoints declared in C from Rust.
+> 
+> This series includes a patch that adds a user of tracepoints to the
+> rust_print sample. Please see that sample for details on what is needed
+> to use this feature in Rust code.
+> 
+> [...]
 
-On Wed, 11 Dec 2024 15:36:34 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Here is the summary with links:
+  - [v12,1/5] rust: add static_branch_unlikely for static_key_false
+    https://git.kernel.org/riscv/c/6e59bcc9c8ad
+  - [v12,2/5] rust: add tracepoint support
+    https://git.kernel.org/riscv/c/ad37bcd965fd
+  - [v12,3/5] rust: samples: add tracepoint to Rust sample
+    https://git.kernel.org/riscv/c/91d39024e1b0
+  - [v12,4/5] jump_label: adjust inline asm to be consistent
+    https://git.kernel.org/riscv/c/aecaf181651c
+  - [v12,5/5] rust: add arch_static_branch
+    https://git.kernel.org/riscv/c/169484ab6677
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When function tracing and function graph tracing are both enabled (in
-> different instances) the "parent" of some of the function tracing events
-> is "return_to_handler" which is the trampoline used by function graph
-> tracing. To fix this, ftrace_get_true_parent_ip() was introduced that
-> returns the "true" parent ip instead of the trampoline.
-> 
-> To do this, the ftrace_regs_get_stack_pointer() is used, which uses
-> kernel_stack_pointer(). The problem is that microblaze does not implement
-> kerenl_stack_pointer() so when function graph tracing is enabled, the
-> build fails.
-> 
-> Modify the #ifdef check to the code around ftrace_get_true_parent_ip() to
-> include !defined(CONFIG_MICROBLAZE) which will default it to just return
-> the parent ip passed in, which may still be the ip of the function garph
-> trampoline.
-> 
-> Fixes: 60b1f578b578 ("ftrace: Get the true parent ip for function tracer")
-> Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_functions.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-> index 74c353164ca1..a75d107a45f8 100644
-> --- a/kernel/trace/trace_functions.c
-> +++ b/kernel/trace/trace_functions.c
-> @@ -176,7 +176,8 @@ static void function_trace_start(struct trace_array *tr)
->  	tracing_reset_online_cpus(&tr->array_buffer);
->  }
->  
-> -#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +/* Microblaze currently doesn't implement kernel_stack_pointer() */
-> +#if defined(CONFIG_FUNCTION_GRAPH_TRACER) && !defined(CONFIG_MICROBLAZE)
->  static __always_inline unsigned long
->  function_get_true_parent_ip(unsigned long parent_ip, struct ftrace_regs *fregs)
->  {
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
