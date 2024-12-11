@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6E33F6;
-	Wed, 11 Dec 2024 08:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4F01DC9B0;
+	Wed, 11 Dec 2024 08:44:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733906344; cv=none; b=pU3Z87virwaVxjZ01PcGJP5NeWHIObD9gowL606t/JPH1AxptyFoYFIhBalLIsLu/LrUZnCDCrIlTgfIcdA/qr5e4BcFM0usozYzR5cxhEmQS7RNHpiBh7owyNIOwWynWbklEIjZWAP3bXunypV84ZZqyBB51gr326th4R5dshA=
+	t=1733906664; cv=none; b=ZNgwRlUPfQDuuFO3eVbV7m0VzkVoaC7yEP3gBteRJn4y9uA3dxQKk/EBdzVE2qi7wicUjrYx13d6aPZCQlr4lLh7ren/3P2/MKTukKtBjBM1TyiXwg/pEbA8yR/ucmqkv1HiRAXrI5mRvYath97/Od3Q5f71xlgnNl43FfEioXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733906344; c=relaxed/simple;
-	bh=9/wdAYu8m8NQcYmRnB+o16mQ4ZhC8zf6dEc+9ZBWrqo=;
+	s=arc-20240116; t=1733906664; c=relaxed/simple;
+	bh=GLkOt75fCIRCWsQeYD1HBKrYQgxn/OmeXMZSEtLUtNg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i+VNla2/L7onElzreyVa1JcgM6YkFRG07/qYN1PqrvFPNPlbrbZDxipR5/cgkqoGNB3e25QrTEbJDZMrN+IzhvE3Ug+tlrbHg+JkB8p2QPxlv4W30qSlc8JOf3/RGIxL1ykyDn8DFJS9NWwkmUKFBgFvsRjAcmc602CgDDbYhD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNfr05fu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AEoEQ0rjlb+WYMfvjY+Fqq2EpRNx/nOX4fS6RSdZ5YSqHwOI1hyAReJH2mbnX517kNlJdTl38Gt+jyJoxhKIaOk3YjLNMaLBaA8RN+88ZaxbdmPL8/zoWM+8MReuOdGYTUaTw+Uv4Zr2kodXLd8cgGeZTn5BufOlAkg/ukR31YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EX7ODOA6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNfr05fu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37644C4CEE0;
-	Wed, 11 Dec 2024 08:38:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EX7ODOA6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F15C4CEE0;
+	Wed, 11 Dec 2024 08:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733906343;
-	bh=9/wdAYu8m8NQcYmRnB+o16mQ4ZhC8zf6dEc+9ZBWrqo=;
+	s=k20201202; t=1733906663;
+	bh=GLkOt75fCIRCWsQeYD1HBKrYQgxn/OmeXMZSEtLUtNg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DNfr05fuEpdiArm2BBifYadSg+UE4XuMp/Cu1CqQkBlUvamsLO4r4R8ZIDZW4kYSe
-	 wnDB922Ix1weO1kbQH4DaLcbfNVQrv3cdfzV7L9+lCJ/YhMx5/ncVhNJnwQiKSyzss
-	 qdvp3clzcW1a4ElQ/qPdD66E2b83h5I7Tg/5xud/NUNpJDSah2wCxcMMwriDRvXedX
-	 ix4GMszTPpU4XDsA0VRaJVSMfAFDAvvHgze56efgJkuV0Ryt3eXcVTvhD2EKLPKTMj
-	 f4selDix7kT+twnDGl3qOt5RXH5qUbh/PNZZVODSo3ZBzRsW1qeiq/NTso6V3II4Hn
-	 8pKXEk2gPloHQ==
-Message-ID: <1ecf2e8c-86cd-4ba2-832b-014a05a80d26@kernel.org>
-Date: Wed, 11 Dec 2024 09:38:54 +0100
+	b=EX7ODOA6EHdMYUAO3zSqgP2+U0X6TOA1o++8ZjZZ+wA0YKm5Nd5gOazjmkxIHt/YH
+	 0mkDb5Zy6zwhW3FOaarjyPqlHYtMw9BTCHzIt7S/r8BznKpFObzvLuX8WdpVk6rulm
+	 ZBZP9KRNPkrG6CeJ4dG6DNr7KKZtli1VXkx1+2Czy5LL1DfrGrEgZYs+7brCwfItky
+	 QVpkJKStgHZ7rCCkeV1CrI2OHWIBVLSxXSFUEMWeyt92UneJAWY+UMsJsWGUnKz1i1
+	 8FuuU8C8+yb5he1IUY+CfwkCjlgEWNAA4SqQQPxE8RlgkrZcdcYY+S7JtdS8Eix59U
+	 3ONoJAGGJHUfg==
+Message-ID: <7b79d4b5-ba91-41a0-90d1-c64bcab53cec@kernel.org>
+Date: Wed, 11 Dec 2024 09:44:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 01/25] virt: geniezone: enable gzvm-ko in defconfig
+Subject: Re: [PATCH v13 04/25] virt: geniezone: Add GenieZone hypervisor
+ driver
 To: Liju-clr Chen <liju-clr.chen@mediatek.com>, Rob Herring
  <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
@@ -55,7 +56,7 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Chi-shen Yeh <Chi-shen.Yeh@mediatek.com>,
  Kevenny Hsieh <Kevenny.Hsieh@mediatek.com>
 References: <20241114100802.4116-1-liju-clr.chen@mediatek.com>
- <20241114100802.4116-2-liju-clr.chen@mediatek.com>
+ <20241114100802.4116-5-liju-clr.chen@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -101,49 +102,92 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20241114100802.4116-2-liju-clr.chen@mediatek.com>
+In-Reply-To: <20241114100802.4116-5-liju-clr.chen@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 14/11/2024 11:07, Liju-clr Chen wrote:
-> From: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-> 
+> +
+> +static int gzvm_dev_open(struct inode *inode, struct file *file)
+> +{
+> +	/*
+> +	 * Reference count to prevent this module is unload without destroying
+> +	 * VM
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching.
+So you re-implemented suppress-bind attrs... no, drop.
+
+> +	 */
+> +	try_module_get(THIS_MODULE);
+> +	return 0;
+> +}
+> +
+> +static int gzvm_dev_release(struct inode *inode, struct file *file)
+> +{
+> +	module_put(THIS_MODULE);
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations gzvm_chardev_ops = {
+> +	.llseek		= noop_llseek,
+> +	.open		= gzvm_dev_open,
+> +	.release	= gzvm_dev_release,
+> +};
+> +
+> +static struct miscdevice gzvm_dev = {
+> +	.minor = MISC_DYNAMIC_MINOR,
+> +	.name = KBUILD_MODNAME,
+> +	.fops = &gzvm_chardev_ops,
+> +};
+> +
+> +static int gzvm_drv_probe(struct platform_device *pdev)
+> +{
+> +	if (gzvm_arch_probe(gzvm_drv.drv_version, &gzvm_drv.hyp_version) != 0) {
+> +		dev_err(&pdev->dev, "Not found available conduit\n");
+
+So you can autodetect your hypervisor? Why your soc info drivers cannot
+instantiate this device thus removing any need for fake DT node (fake
+because no resources and used only to satisfy Linux driver instantiation)?
 
 
-> Add config in defconfig to enable gzvm driver by default
+> +		return -ENODEV;
+> +	}
+> +
+> +	pr_debug("Found GenieZone hypervisor version %u.%u.%llu\n",
+> +		 gzvm_drv.hyp_version.major, gzvm_drv.hyp_version.minor,
+> +		 gzvm_drv.hyp_version.sub);
+> +
+> +	return misc_register(&gzvm_dev);
+> +}
+> +
+> +static void gzvm_drv_remove(struct platform_device *pdev)
+> +{
+> +	misc_deregister(&gzvm_dev);
+> +}
+> +
+> +static const struct of_device_id gzvm_of_match[] = {
+> +	{ .compatible = "mediatek,geniezone" },
+> +	{/* sentinel */},
+> +};
+> +
+> +static struct platform_driver gzvm_driver = {
+> +	.probe = gzvm_drv_probe,
+> +	.remove = gzvm_drv_remove,
+> +	.driver = {
+> +		.name = KBUILD_MODNAME,
+> +		.of_match_table = gzvm_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(gzvm_driver);
+> +
+> +MODULE_DEVICE_TABLE(of, gzvm_of_match);
 
-This we see from the diff. You must explain why we want it.
+This is immediately after next to ID table. Never in different place, so
+I wonder from which obscure code did you copy it and what other issues
+like that we can find...
 
-> 
-> Signed-off-by: Yingshiuan Pan <yingshiuan.pan@mediatek.com>
-> Signed-off-by: Yi-De Wu <yi-de.wu@mediatek.com>
-> Signed-off-by: Liju Chen <liju-clr.chen@mediatek.com>
-> ---
->  arch/arm64/configs/defconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index d13218d0c30f..0f63d4837b61 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -1733,3 +1733,5 @@ CONFIG_CORESIGHT_STM=m
->  CONFIG_CORESIGHT_CPU_DEBUG=m
->  CONFIG_CORESIGHT_CTI=m
->  CONFIG_MEMTEST=y
-> +CONFIG_VIRT_DRIVERS=y
-> +CONFIG_MTK_GZVM=m
-
-Does not look like placed correctly, according to savedefconfig.
-
-I still do not see any reason to have it enabled.
-
-Your patches have weird order or this is just wrong. There is no such
-thing as "MTK_GZVM". Use git grep, if you do not believe me.
-
-
+> +MODULE_AUTHOR("MediaTek");
+> +MODULE_DESCRIPTION("GenieZone interface for VMM");
+> +MODULE_LICENSE("GPL");
 Best regards,
 Krzysztof
