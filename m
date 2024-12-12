@@ -1,113 +1,100 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7052E20FA8A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Dec 2024 10:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEDD2080D8;
+	Thu, 12 Dec 2024 12:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733997985; cv=none; b=VQ7ELuMRftmxzSHJyRIEES9kynklTjMYmZyOwYKHqbVcM336d5pSROF571lhll0JaIrx7mYcw0jVaU44e37uQj052+7fESJQcbX7i4RhEjkG58iuuVJkROt63529MP/xWWchLYPmp5RXEk9i/q+zSmJmUJdKCYO06fbE+yHYYfI=
+	t=1734007230; cv=none; b=iVshOwETsZhu8pn/P28+FZA8YYmHBDSnhUhkVnVqwJHnn5kS7qHpebyxJFs+pB3rQnfFlS/frx9KkZcaHueGAfzX7wTAgQCE5U2gcOymM57YDvIu/BGprQv7Rts6xP+sO7fg5o2AtEdrxgW47w8q2lge+UK7r1Yk5M0YjX0KovE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733997985; c=relaxed/simple;
-	bh=u2lqw8UUeZ+pB1gxUrdc+rJ/PnMeN4apvADmtF38BGU=;
+	s=arc-20240116; t=1734007230; c=relaxed/simple;
+	bh=r1wFQ2XEw4h3NqlPy/Ig8PdgIYeLmggghPp5vpM+aTg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kkn3aQXdj0Dp0xxv4AFOX3/XPDfzXz4xadN9fs7XDMv19VxiJcKfEFJ2ODQclhM3p7iDD370Mh2d0gIuNJPdE4wQr7zZIArdYJscUn7hiqFJIeeG5uLq3ghoIwS26UdbTMtb3qDnLxrF14PWQGr3Z6GSjOXj7AXOrvqIBFNVTu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BNpeZ0Os; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=u6aILJeHbwT5JxI+Z0VxwqS1C79Gfc+Z2gs2xv2PaFYuoUIHrpmkcM7RS/ZInwDs2WOkUegQ8+a6abN889f+5YPQGtWDhzL4N1lJ1HR1hIKxyHplaqHM2XoUXiFdt7WZCbJpekO8G77k/Aj/UXFcR/GiGwwCZKnzEL6V3QxXr7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrLrmx1N; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BNpeZ0Os"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6d87ab49423so4408946d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Dec 2024 02:06:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrLrmx1N"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ef718cb473so76879a91.1;
+        Thu, 12 Dec 2024 04:40:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1733997982; x=1734602782; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1734007227; x=1734612027; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Of1BFeg2KON1xNm3jFNunekzp1UDOQsJoCnNxyLjjW4=;
-        b=BNpeZ0Osd1eOOMbedsNNvbi6Kh0Rqnj8d3bJPj8qZXZ4QSwHAGfRAgZhaPZybRH4ne
-         noT4fnFNN9czijbAFZxC1MkAlmO7N9bPiGL+quQ7DQ+mxt5/+Q3xyVuSys0roqBe/XlM
-         OcLiCIcvx3Ra55HFM5c7dTRfcAKdItQIa9du3TQDj6fq5V6qLo0kl5FQnhnsI8UFK0RU
-         fy4F/4OdU6qE9UteJzcP6Cm6AyPhECDFJ0Kqd/3kqNz8gl1xDhsEWaIBiEMnqC6oCSoP
-         MBJ7gihWpeUEsKKZloTB3Qbor9ktEqM3w8e4It3VYAUnLqnmwZMbwVnLyB3YmLOY60YX
-         FOFA==
+        bh=r1wFQ2XEw4h3NqlPy/Ig8PdgIYeLmggghPp5vpM+aTg=;
+        b=YrLrmx1Nl9HgF4rHw8ojYJ7uBKTZ6+UIrreGLX3+FP/601cVHoAnJ6FXwkNWgO7yuv
+         hhrk7WizxUbLR3hkV9vbj6MUKZY/gWk0SfwiUE2QaGw6aqNNZ3ltdualyQIbm2RyOFaq
+         Pzx/zSJKtj9IPrTSSrsCxs2Yr4790e2/NraElW+7UEDeiWlxxkRnq711G9Yr06DYZYrz
+         kVPb8NTA8pt6V0rnVqRT+40+sHl+c8THeRyQLA8x2c8gwPvFEmN1nUtDheaYls7mszXU
+         cw0InI17MT2DKqOnLYjwkVCgJ5fx5tC8efmTK3ZeqcWsKj7ChFuTEnF45sg1E0IfEVjF
+         roOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733997982; x=1734602782;
+        d=1e100.net; s=20230601; t=1734007227; x=1734612027;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Of1BFeg2KON1xNm3jFNunekzp1UDOQsJoCnNxyLjjW4=;
-        b=YgN1YA4ipvJXsvWIotAV6yHUrUeGOUMjKvsK+/WC1NpYPZCmXPlJnV8sNEO/gRZzuK
-         VcwuaiJUcd6a+E4ayhbKd01CPELwp724kFcjXcONnEO0QQJFLoCWpVTkz8yygabsB3d3
-         kmfhhn0pjYJIhW477zcPUJ30Vvr0uYZJT+aUqmhpXvZPYjRnNsVqTfxeGI43FiCGcXXR
-         y8e5lii4CkjQUeMs6CymT8SiwCwy41TU6rsQszokR7zPuNR2bC208GeTKJQplm9yjVeo
-         gW57uO4Ake5nirupJPe1hR6ycSlyIoPo1d6sd2Lx6xx35tKuvdsL4Ip5IPUcFpc4HlLd
-         dHhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWy5J7f9hIrjWoJIZswYLpVbo5XWALK5HLVgn7eDKfl8wBlPQGd2WjIm8g+rAUx1SItlj5wCIulQ6gXpjS38e9mYZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN0t8O1ohln+yNORC6+hzLbguFlrR+ANpPVVUhHKL7WrV32igq
-	sC+3f1N+lJ7TxbEKzQL6e66zmBZtZ2Y6jg4Z74OJwlBPTW9mkHEJlUOVisHeG3YBqXa7ak7Cddu
-	nYhPx+mHhWzNrmzA1lgjQaeylDrikfVof/ic9
-X-Gm-Gg: ASbGncsReFP3QhWIuZ00/Ldwbm3sC2XE3dRiUEdJp0akTC1DPzgdtjlu8yJiApj7TFN
-	fCbew9HwV1bdFC3GVOo26EBsmkFGUDVzyCSS9j46EevbmqK5GsuCMSPG7eV5r5vgLF3E=
-X-Google-Smtp-Source: AGHT+IHUvvVABps1uuPMxjIXuv4cTLRDFnTx/UHIKWDoA76gNJlFIEgBNsM3HWFBYgN6SlATfLNLOarEKRNTza20ijc=
-X-Received: by 2002:a05:6214:21a6:b0:6d8:99cf:d2e3 with SMTP id
- 6a1803df08f44-6dae3913ff2mr41578706d6.22.1733997982309; Thu, 12 Dec 2024
- 02:06:22 -0800 (PST)
+        bh=r1wFQ2XEw4h3NqlPy/Ig8PdgIYeLmggghPp5vpM+aTg=;
+        b=GU0q2ORZc+y3L0pt0DfCx8UYyIj4Nn8FbdwOhGkLEzTgVmp7yY2+WsqNNSLdK4zB2d
+         Ur5WGRSz84vV3OfgQvDvy4UkFQ84gapSh0wpDAGPsYMI2BV6k+CHvKVApod/aAqxBkXa
+         vCgDKzc1e9smkK3+0VR+0mVkbHnP6/08eXwwNRyf7G16fbg3R9ibktvYpw3Ir4A0YEFy
+         Hm/n0nGafSxuyYaomRuPPwmQwAdpEuP4HpGQ6Uu7KZ5ByJAes1bdP0W1Yzxql6EOGKMZ
+         GYJp3/K2lCT67wJJY2AzOEPa6Se/4vX3Ipe2XUDTD8zlaX/3RxAn+mEHaeIXyVG9WwkR
+         wzbA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFb2PC4mIWh3GM/6ED3oMWzQiW321PKtxPlNYGUuPiaamC40HV+htXeSODs/DrfPDPI4izjHPLeO20lm69@vger.kernel.org, AJvYcCW5NKhBVpbq987xL4M9nA/KCRzlEZ3nWPq0Y9vZcl/4ptGQyVSGj7YG4z2Pul8nNh6U+iGbO8iXtC9T@vger.kernel.org, AJvYcCWshMxfdc1IcnN8grUk5dngzj1AE5ULpsJWGyBfikeBxEvDxko8LkYv+wW24MsJKyMkUEdJMDzkgWHx2e3dnbynWQz5@vger.kernel.org, AJvYcCXz/WfFquriyPulsI4/c8cOVTrKrr9m3eEh9kwkwHrkuRd3+draZSkZLlYvKqkxdMwBxfm2FTuotzvJG3mXT0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxryXLDazyHIPrVjDcv9KunsiQK/nOkKH/yRoZxU5mZta+/xpYq
+	xKgRE0YrcfVjOcagWWyo1qSxodg4s2sfHpeGmrT546/PMm5v8PX+X1F3a5mc418zVStd949rH44
+	SQBvghrrFDleRtYmIN+Esn3XJh/8=
+X-Gm-Gg: ASbGncuSbUiw5UJnWRLpYpUCypk937dyvrvZ9dgqko1IC0b9R4nQy/FAEBuBqwsOxcs
+	M5MyRudfhvTHDGe3tG5cN8I/Euw7KRNlvSwOc/g==
+X-Google-Smtp-Source: AGHT+IGFpqHYpP+ryhHdXHcJSw/i/CLG0LKsPNa9VsJsTDjRyGichTiBKLOQwEEn9jpAx0lNH3xQvXBViE9Iz/QqtPc=
+X-Received: by 2002:a17:90b:3b87:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-2f127e2416fmr3955460a91.0.1734007227479; Thu, 12 Dec 2024
+ 04:40:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241108113455.2924361-1-elver@google.com>
-In-Reply-To: <20241108113455.2924361-1-elver@google.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Thu, 12 Dec 2024 11:05:45 +0100
-Message-ID: <CAG_fn=VyvPfJnPcXOOAeFqNakKKYzjuUdDqW5Z4rVQMgQA=AGw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] tracing: Add task_prctl_unknown tracepoint
-To: Marco Elver <elver@google.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@chromium.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
+References: <20241030-tracepoint-v12-0-eec7f0f8ad22@google.com> <173395634899.1729195.7492083712432982213.git-patchwork-notify@kernel.org>
+In-Reply-To: <173395634899.1729195.7492083712432982213.git-patchwork-notify@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 12 Dec 2024 13:40:13 +0100
+Message-ID: <CANiq72mmO5SswxmdcLc0i_rY+ZVo4zY8AsmHPPBKb_Vmzk8+aw@mail.gmail.com>
+Subject: Re: [PATCH v12 0/5] Tracepoints and static branch in Rust
+To: patchwork-bot+linux-riscv@kernel.org
+Cc: Alice Ryhl <aliceryhl@google.com>, linux-riscv@lists.infradead.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	peterz@infradead.org, jpoimboe@kernel.org, jbaron@akamai.com, ardb@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, seanjc@google.com, 
+	ubizjak@gmail.com, catalin.marinas@arm.com, will@kernel.org, maz@kernel.org, 
+	oliver.upton@linux.dev, mark.rutland@arm.com, ryan.roberts@arm.com, 
+	tabba@google.com, linux-arm-kernel@lists.infradead.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	apatel@ventanamicro.com, ajones@ventanamicro.com, alexghiti@rivosinc.com, 
+	conor.dooley@microchip.com, samuel.holland@sifive.com, chenhuacai@kernel.org, 
+	kernel@xen0n.name, maobibo@loongson.cn, yangtiezhu@loongson.cn, 
+	akpm@linux-foundation.org, zhaotianrui@loongson.cn, loongarch@lists.linux.dev, 
+	cmllamas@google.com, palmer@rivosinc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 8, 2024 at 12:35=E2=80=AFPM 'Marco Elver' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
+On Wed, Dec 11, 2024 at 11:32=E2=80=AFPM <patchwork-bot+linux-riscv@kernel.=
+org> wrote:
 >
-> prctl() is a complex syscall which multiplexes its functionality based
-> on a large set of PR_* options. Currently we count 64 such options. The
-> return value of unknown options is -EINVAL, and doesn't distinguish from
-> known options that were passed invalid args that also return -EINVAL.
->
-> To understand if programs are attempting to use prctl() options not yet
-> available on the running kernel, provide the task_prctl_unknown
-> tracepoint.
->
-> Note, this tracepoint is in an unlikely cold path, and would therefore
-> be suitable for continuous monitoring (e.g. via perf_event_open).
->
-> While the above is likely the simplest usecase, additionally this
-> tracepoint can help unlock some testing scenarios (where probing
-> sys_enter or sys_exit causes undesirable performance overheads):
->
->   a. unprivileged triggering of a test module: test modules may register =
-a
->      probe to be called back on task_prctl_unknown, and pick a very large
->      unknown prctl() option upon which they perform a test function for a=
-n
->      unprivileged user;
->
->   b. unprivileged triggering of an eBPF program function: similar
->      as idea (a).
->
-> Example trace_pipe output:
->
->   test-380     [001] .....    78.142904: task_prctl_unknown: option=3D123=
-4 arg2=3D101 arg3=3D102 arg4=3D103 arg5=3D104
+> This series was applied to riscv/linux.git (fixes)
+> by Steven Rostedt (Google) <rostedt@goodmis.org>:
 
-For what it's worth:
+Hmm... This is already in mainline, and I don't see it in
+riscv/linux.git (fixes) -- I guess it was a mistake?
 
-> Signed-off-by: Marco Elver <elver@google.com>
-Reviewed-by: Alexander Potapenko <glider@google.com>
+Cheers,
+Miguel
