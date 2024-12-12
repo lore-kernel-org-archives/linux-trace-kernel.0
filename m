@@ -1,139 +1,113 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3622213CF9C;
-	Thu, 12 Dec 2024 09:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7052E20FA8A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Dec 2024 10:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733997136; cv=none; b=NHB5O3+ueMnYAOVGv7TU/YBbYVU6VvQYtx6Kjlgh+fkRHaIEvr+E366dgTEmFcb2FxRwqIs6JKoFr8rEHRYoaMP6NeEN+FtcRVAszhug6AQ2Si7c1DOGjcWD8EhiVLo4YpMA5j12//Y0WswCDh+3NOZqN1S9NFHp4smfR3nFWVY=
+	t=1733997985; cv=none; b=VQ7ELuMRftmxzSHJyRIEES9kynklTjMYmZyOwYKHqbVcM336d5pSROF571lhll0JaIrx7mYcw0jVaU44e37uQj052+7fESJQcbX7i4RhEjkG58iuuVJkROt63529MP/xWWchLYPmp5RXEk9i/q+zSmJmUJdKCYO06fbE+yHYYfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733997136; c=relaxed/simple;
-	bh=+8uKDmRN4MfGNUlWvlfKZ1BxyRgnmiW8rTEDTQe+kkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pW4yHRhHqTBucXTKvVJyov8Kg7AvV3CE/JlzuvkTEZHNyygAOujYKT9eO83H6ubtKVWv2xLzwmzx3C42NpgvX9cr2v67r/JFtfAHWcjmdWU7aLa3/FzDcqsyUJEUbhlIBO5GAjlnKefEYctpxWpSIa02ujyB8kVNna87SlyBIAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Y876M1Z5jz4f3jqx;
-	Thu, 12 Dec 2024 17:51:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7A6091A06D7;
-	Thu, 12 Dec 2024 17:52:09 +0800 (CST)
-Received: from [10.67.111.172] (unknown [10.67.111.172])
-	by APP4 (Coremail) with SMTP id gCh0CgCXcYVDslpnkZaEEQ--.63144S3;
-	Thu, 12 Dec 2024 17:52:04 +0800 (CST)
-Message-ID: <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
-Date: Thu, 12 Dec 2024 17:52:03 +0800
+	s=arc-20240116; t=1733997985; c=relaxed/simple;
+	bh=u2lqw8UUeZ+pB1gxUrdc+rJ/PnMeN4apvADmtF38BGU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kkn3aQXdj0Dp0xxv4AFOX3/XPDfzXz4xadN9fs7XDMv19VxiJcKfEFJ2ODQclhM3p7iDD370Mh2d0gIuNJPdE4wQr7zZIArdYJscUn7hiqFJIeeG5uLq3ghoIwS26UdbTMtb3qDnLxrF14PWQGr3Z6GSjOXj7AXOrvqIBFNVTu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BNpeZ0Os; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BNpeZ0Os"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6d87ab49423so4408946d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Dec 2024 02:06:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733997982; x=1734602782; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Of1BFeg2KON1xNm3jFNunekzp1UDOQsJoCnNxyLjjW4=;
+        b=BNpeZ0Osd1eOOMbedsNNvbi6Kh0Rqnj8d3bJPj8qZXZ4QSwHAGfRAgZhaPZybRH4ne
+         noT4fnFNN9czijbAFZxC1MkAlmO7N9bPiGL+quQ7DQ+mxt5/+Q3xyVuSys0roqBe/XlM
+         OcLiCIcvx3Ra55HFM5c7dTRfcAKdItQIa9du3TQDj6fq5V6qLo0kl5FQnhnsI8UFK0RU
+         fy4F/4OdU6qE9UteJzcP6Cm6AyPhECDFJ0Kqd/3kqNz8gl1xDhsEWaIBiEMnqC6oCSoP
+         MBJ7gihWpeUEsKKZloTB3Qbor9ktEqM3w8e4It3VYAUnLqnmwZMbwVnLyB3YmLOY60YX
+         FOFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733997982; x=1734602782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Of1BFeg2KON1xNm3jFNunekzp1UDOQsJoCnNxyLjjW4=;
+        b=YgN1YA4ipvJXsvWIotAV6yHUrUeGOUMjKvsK+/WC1NpYPZCmXPlJnV8sNEO/gRZzuK
+         VcwuaiJUcd6a+E4ayhbKd01CPELwp724kFcjXcONnEO0QQJFLoCWpVTkz8yygabsB3d3
+         kmfhhn0pjYJIhW477zcPUJ30Vvr0uYZJT+aUqmhpXvZPYjRnNsVqTfxeGI43FiCGcXXR
+         y8e5lii4CkjQUeMs6CymT8SiwCwy41TU6rsQszokR7zPuNR2bC208GeTKJQplm9yjVeo
+         gW57uO4Ake5nirupJPe1hR6ycSlyIoPo1d6sd2Lx6xx35tKuvdsL4Ip5IPUcFpc4HlLd
+         dHhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWy5J7f9hIrjWoJIZswYLpVbo5XWALK5HLVgn7eDKfl8wBlPQGd2WjIm8g+rAUx1SItlj5wCIulQ6gXpjS38e9mYZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN0t8O1ohln+yNORC6+hzLbguFlrR+ANpPVVUhHKL7WrV32igq
+	sC+3f1N+lJ7TxbEKzQL6e66zmBZtZ2Y6jg4Z74OJwlBPTW9mkHEJlUOVisHeG3YBqXa7ak7Cddu
+	nYhPx+mHhWzNrmzA1lgjQaeylDrikfVof/ic9
+X-Gm-Gg: ASbGncsReFP3QhWIuZ00/Ldwbm3sC2XE3dRiUEdJp0akTC1DPzgdtjlu8yJiApj7TFN
+	fCbew9HwV1bdFC3GVOo26EBsmkFGUDVzyCSS9j46EevbmqK5GsuCMSPG7eV5r5vgLF3E=
+X-Google-Smtp-Source: AGHT+IHUvvVABps1uuPMxjIXuv4cTLRDFnTx/UHIKWDoA76gNJlFIEgBNsM3HWFBYgN6SlATfLNLOarEKRNTza20ijc=
+X-Received: by 2002:a05:6214:21a6:b0:6d8:99cf:d2e3 with SMTP id
+ 6a1803df08f44-6dae3913ff2mr41578706d6.22.1733997982309; Thu, 12 Dec 2024
+ 02:06:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
- weak function issue
-Content-Language: en-US
-To: Martin Kelly <martin.kelly@crowdstrike.com>,
- "masahiroy@kernel.org" <masahiroy@kernel.org>,
- "ojeda@kernel.org" <ojeda@kernel.org>,
- "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
- "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "james.clark@arm.com" <james.clark@arm.com>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "nathan@kernel.org" <nathan@kernel.org>,
- "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
- "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
- "npiggin@gmail.com" <npiggin@gmail.com>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>, "hpa@zytor.com"
- <hpa@zytor.com>, "surenb@google.com" <surenb@google.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
- "bp@alien8.de" <bp@alien8.de>, "mcgrof@kernel.org" <mcgrof@kernel.org>,
- Ye Weihua <yeweihua4@huawei.com>
-Cc: Amit Dang <amit.dang@crowdstrike.com>,
- "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
- "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
- <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
- <364aaf7c-cdc4-4e57-bb4c-f62e57c23279@csgroup.eu>
- <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
-From: Zheng Yejian <zhengyejian@huaweicloud.com>
-In-Reply-To: <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCXcYVDslpnkZaEEQ--.63144S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48WrWrXF4DKF4ftr43Wrg_yoW8XrWrpF
-	WfKFW5CF4DCF48J3Z2krs7ZF1Yyws3W3y7Wwn8Jw1UurZ8JFy3Ar4Sqr4jgrWDZF93Ww4U
-	ZF17tF95X34kZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Wrv_ZF1l42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7IU0EksDUUUUU==
-X-CM-SenderInfo: x2kh0w51hmxt3q6k3tpzhluzxrxghudrp/
+References: <20241108113455.2924361-1-elver@google.com>
+In-Reply-To: <20241108113455.2924361-1-elver@google.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 12 Dec 2024 11:05:45 +0100
+Message-ID: <CAG_fn=VyvPfJnPcXOOAeFqNakKKYzjuUdDqW5Z4rVQMgQA=AGw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] tracing: Add task_prctl_unknown tracepoint
+To: Marco Elver <elver@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@chromium.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/12/11 04:49, Martin Kelly wrote:
-> On Tue, 2024-12-10 at 21:01 +0100, Christophe Leroy wrote:
->>>
->>> Hi all, what is the status of this patch series? I'd really like to
->>> see
->>> it or some other fix to this issue merged. The underlying bug is a
->>> significant one that can cause ftrace/livepatch/BPF fentry to fail
->>> silently. I've noticed this bug in another context[1] and realized
->>> they're the same issue.
->>>
->>> I'm happy to help with this patch series to address any issues as
->>> needed.
->>
->> As far as I can see there are problems on build with patch 1, see
->> https://patchwork.kernel.org/project/linux-modules/patch/20240723063258.2240610-2-zhengyejian@huaweicloud.com/
->>   
->>
->>
-> 
-> Yeah, I see those. Additionally, this patch no longer applies cleanly
-> to current master, though fixing it up to do so is pretty easy. Having
-> done that, this series appears to resolve the issues I saw in the other
-> linked thread.
-> 
-> Zheng, do you plan to send a v3? I'd be happy to help out with this
-> patch series if you'd like, as I'm hoping to get this issue resolved
-> (though I am not an ftrace expert).
+On Fri, Nov 8, 2024 at 12:35=E2=80=AFPM 'Marco Elver' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> prctl() is a complex syscall which multiplexes its functionality based
+> on a large set of PR_* options. Currently we count 64 such options. The
+> return value of unknown options is -EINVAL, and doesn't distinguish from
+> known options that were passed invalid args that also return -EINVAL.
+>
+> To understand if programs are attempting to use prctl() options not yet
+> available on the running kernel, provide the task_prctl_unknown
+> tracepoint.
+>
+> Note, this tracepoint is in an unlikely cold path, and would therefore
+> be suitable for continuous monitoring (e.g. via perf_event_open).
+>
+> While the above is likely the simplest usecase, additionally this
+> tracepoint can help unlock some testing scenarios (where probing
+> sys_enter or sys_exit causes undesirable performance overheads):
+>
+>   a. unprivileged triggering of a test module: test modules may register =
+a
+>      probe to be called back on task_prctl_unknown, and pick a very large
+>      unknown prctl() option upon which they perform a test function for a=
+n
+>      unprivileged user;
+>
+>   b. unprivileged triggering of an eBPF program function: similar
+>      as idea (a).
+>
+> Example trace_pipe output:
+>
+>   test-380     [001] .....    78.142904: task_prctl_unknown: option=3D123=
+4 arg2=3D101 arg3=3D102 arg4=3D103 arg5=3D104
 
-Sorry to rely so late. Thanks for your feedback!
+For what it's worth:
 
-Steve recently started a discussion of the issue in:
-https://lore.kernel.org/all/20241014210841.5a4764de@gandalf.local.home/
-but there's no conclusion.
-  
-I can rebase this patch series and send a new version first, and
-I'm also hoping to get more feedbacks and help to resolve the issue.
-
--- 
-Thanks,
-Zheng Yejian
-
+> Signed-off-by: Marco Elver <elver@google.com>
+Reviewed-by: Alexander Potapenko <glider@google.com>
