@@ -1,92 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19082080C5;
-	Wed, 11 Dec 2024 22:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3622213CF9C;
+	Thu, 12 Dec 2024 09:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733956381; cv=none; b=Lz9FFVnz6SMN/zLQecwibFgSyb1j1c7eY60Tp+uK2112Nv+JelSZcAEjW1kXdCFGUIhHha7hp8eKEjObXSBY+fDMwQf//j8MGBv922RiqkN9HMnglnERTSkEJWpfvXlhflnuQ9DIeZYUD/JE3YP+yklfPtIXG1ZmYCfoVWr82o0=
+	t=1733997136; cv=none; b=NHB5O3+ueMnYAOVGv7TU/YBbYVU6VvQYtx6Kjlgh+fkRHaIEvr+E366dgTEmFcb2FxRwqIs6JKoFr8rEHRYoaMP6NeEN+FtcRVAszhug6AQ2Si7c1DOGjcWD8EhiVLo4YpMA5j12//Y0WswCDh+3NOZqN1S9NFHp4smfR3nFWVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733956381; c=relaxed/simple;
-	bh=22J+gOpjU9cUBjJTCfbYoXOQOQ02vFL/kmDAmitv0Oc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=fY5UEvozfHIZAp5lC8zqbdNd9Vi7etQCzkBM7Q6R7GDGZEUHp/xl+xBF3oyQ1IiHb3I91JaCbFsbaGQ84Xmgi0+7D0YYuV8w7mxbhQLb+vCVpAVuOt27xXKYeKoSoNbV3pk4Lj6btq/TplbIxhFRNDOuF3FxCGJLGkU1yc1J0qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWKDnM8z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWKDnM8z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A92BFC4CED2;
-	Wed, 11 Dec 2024 22:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733956381;
-	bh=22J+gOpjU9cUBjJTCfbYoXOQOQ02vFL/kmDAmitv0Oc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nWKDnM8zbcIF2djxC8fiOIOI3aUWr7TPAJCWU7ymE3mh5w2HYnJyAIXKcD5Z/72Ik
-	 RXR4O9F/aU40PoBXvJ7XQXthLV2s4bsqOgfr50SDKFPRdnN9Us4sRkg4wVPA1v1sWs
-	 kmuwkRDqP/9t5kMphxqk619d2ax7wRCqOpRNHKzjgvwJVCBNZYsBwGByJZh6bRNViD
-	 yrqc1wHdhtHkBz1Bsd0sAtAVRFHXuN3A8nyxlLFqzm4TGzLspNaCqc2nuGjGhk5Ngr
-	 pRCorRCtj+x28DI2Z1vxcZ2g3p4dEWd2sTvDRfb/s5xPU/4+C8mw0GfDgU2OE3HHnZ
-	 3Ww2yKRibpabg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EACB2380A965;
-	Wed, 11 Dec 2024 22:33:18 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1733997136; c=relaxed/simple;
+	bh=+8uKDmRN4MfGNUlWvlfKZ1BxyRgnmiW8rTEDTQe+kkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pW4yHRhHqTBucXTKvVJyov8Kg7AvV3CE/JlzuvkTEZHNyygAOujYKT9eO83H6ubtKVWv2xLzwmzx3C42NpgvX9cr2v67r/JFtfAHWcjmdWU7aLa3/FzDcqsyUJEUbhlIBO5GAjlnKefEYctpxWpSIa02ujyB8kVNna87SlyBIAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Y876M1Z5jz4f3jqx;
+	Thu, 12 Dec 2024 17:51:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7A6091A06D7;
+	Thu, 12 Dec 2024 17:52:09 +0800 (CST)
+Received: from [10.67.111.172] (unknown [10.67.111.172])
+	by APP4 (Coremail) with SMTP id gCh0CgCXcYVDslpnkZaEEQ--.63144S3;
+	Thu, 12 Dec 2024 17:52:04 +0800 (CST)
+Message-ID: <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
+Date: Thu, 12 Dec 2024 17:52:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/2] ftrace: Make ftrace_regs abstract and consolidate code
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <173395639774.1729195.5975449690225774291.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Dec 2024 22:33:17 +0000
-References: <20241008230527.674939311@goodmis.org>
-In-Reply-To: <20241008230527.674939311@goodmis.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, x86@kernel.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, mark.rutland@arm.com,
- catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
- kernel@xen0n.name, mpe@ellerman.id.au, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, naveen@kernel.org, maddy@linux.ibm.com,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, tglx@linutronix.de,
- mingo@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
+ weak function issue
+Content-Language: en-US
+To: Martin Kelly <martin.kelly@crowdstrike.com>,
+ "masahiroy@kernel.org" <masahiroy@kernel.org>,
+ "ojeda@kernel.org" <ojeda@kernel.org>,
+ "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+ "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "james.clark@arm.com" <james.clark@arm.com>,
+ "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "nathan@kernel.org" <nathan@kernel.org>,
+ "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
+ "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "npiggin@gmail.com" <npiggin@gmail.com>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>, "hpa@zytor.com"
+ <hpa@zytor.com>, "surenb@google.com" <surenb@google.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+ "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+ "bp@alien8.de" <bp@alien8.de>, "mcgrof@kernel.org" <mcgrof@kernel.org>,
+ Ye Weihua <yeweihua4@huawei.com>
+Cc: Amit Dang <amit.dang@crowdstrike.com>,
+ "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+ "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
+ <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
+ <364aaf7c-cdc4-4e57-bb4c-f62e57c23279@csgroup.eu>
+ <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
+From: Zheng Yejian <zhengyejian@huaweicloud.com>
+In-Reply-To: <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCXcYVDslpnkZaEEQ--.63144S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48WrWrXF4DKF4ftr43Wrg_yoW8XrWrpF
+	WfKFW5CF4DCF48J3Z2krs7ZF1Yyws3W3y7Wwn8Jw1UurZ8JFy3Ar4Sqr4jgrWDZF93Ww4U
+	ZF17tF95X34kZ37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Wrv_ZF1l42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IU0EksDUUUUU==
+X-CM-SenderInfo: x2kh0w51hmxt3q6k3tpzhluzxrxghudrp/
 
-Hello:
-
-This series was applied to riscv/linux.git (fixes)
-by Steven Rostedt (Google) <rostedt@goodmis.org>:
-
-On Tue, 08 Oct 2024 19:05:27 -0400 you wrote:
-> This is based on:
+On 2024/12/11 04:49, Martin Kelly wrote:
+> On Tue, 2024-12-10 at 21:01 +0100, Christophe Leroy wrote:
+>>>
+>>> Hi all, what is the status of this patch series? I'd really like to
+>>> see
+>>> it or some other fix to this issue merged. The underlying bug is a
+>>> significant one that can cause ftrace/livepatch/BPF fentry to fail
+>>> silently. I've noticed this bug in another context[1] and realized
+>>> they're the same issue.
+>>>
+>>> I'm happy to help with this patch series to address any issues as
+>>> needed.
+>>
+>> As far as I can see there are problems on build with patch 1, see
+>> https://patchwork.kernel.org/project/linux-modules/patch/20240723063258.2240610-2-zhengyejian@huaweicloud.com/
+>>   
+>>
+>>
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/
->      ftrace/for-next
+> Yeah, I see those. Additionally, this patch no longer applies cleanly
+> to current master, though fixing it up to do so is pretty easy. Having
+> done that, this series appears to resolve the issues I saw in the other
+> linked thread.
 > 
-> ftrace_regs was created to hold registers that store information to save
-> function parameters, return value and stack. Since it is a subset of
-> pt_regs, it should only be used by its accessor functions. But because
-> pt_regs can easily be taken from ftrace_regs (on most archs), it is
-> tempting to use it directly. But when running on other architectures, it
-> may fail to build or worse, build but crash the kernel!
-> 
-> [...]
+> Zheng, do you plan to send a v3? I'd be happy to help out with this
+> patch series if you'd like, as I'm hoping to get this issue resolved
+> (though I am not an ftrace expert).
 
-Here is the summary with links:
-  - [v2,1/2] ftrace: Make ftrace_regs abstract from direct use
-    https://git.kernel.org/riscv/c/7888af4166d4
-  - [v2,2/2] ftrace: Consolidate ftrace_regs accessor functions for archs using pt_regs
-    (no matching commit)
+Sorry to rely so late. Thanks for your feedback!
 
-You are awesome, thank you!
+Steve recently started a discussion of the issue in:
+https://lore.kernel.org/all/20241014210841.5a4764de@gandalf.local.home/
+but there's no conclusion.
+  
+I can rebase this patch series and send a new version first, and
+I'm also hoping to get more feedbacks and help to resolve the issue.
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Thanks,
+Zheng Yejian
 
