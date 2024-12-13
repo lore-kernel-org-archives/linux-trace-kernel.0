@@ -1,65 +1,104 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D5F1E00BF;
-	Fri, 13 Dec 2024 15:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE3D1DA5F;
+	Fri, 13 Dec 2024 18:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734104557; cv=none; b=SC3KOV5fgP5v/IyeB0jTITaQxBJZRAG+QQ4g9A5kUbWD9DKgvGLjz7gznO0eVDtO5JZIKbr8qi1ZyaHDfwYNoSrnTRLSAf2okwzWDgU831dKB225Rxu2P4pwJZGJQcmFoVCw4CXwVFUaJ01uRpw+6FEpRkBIwP8BX2RgVW3dXTQ=
+	t=1734115206; cv=none; b=rNLddm1ZIF6xp6057eQ0901ISbElgNcHATI34ULchXNHoaWjzBNPHFTX5mRt2nn13Yh4kig7yIMfQuU6pimBdcDgCbby+DA5545bL0RgXoCBS33h8KD+qBTLBtb/+7292NWFj0bNaqGajz7GeacBhLSpr1uqmX8wn6v/SzuCW8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734104557; c=relaxed/simple;
-	bh=mHPjmC7P4em87lEeFXsGwkdx50OfzTIj2tWZhcbmIOM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Wt/R88f1I3TAzky2TMlOtjwCkqj7Hkez2126J2JmOp9Exg3xghSCBoo980mBad+precnKfj/HAut9sYH/YlPpfQdaKUdzz/jzdDI5piEZqERE5UvZ6C8kbKRLfWnpfPfhLwGKpwIPDI2iR/A85NY1emJWcDkcL+S/OkiqYEddF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Jic/8Vx7; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1734115206; c=relaxed/simple;
+	bh=xMNsAPFvZuA+NrJu83NQGrP2O8/ufm+BzVZ+3vFgscM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Au0MQmBXDkzTTYT0WdxnXtMyYoa/nKJDFDMbndkhjPzlFFtg3nRrmTwand12/p+KhX4kWJNPwViPxlAYwYna0jw/hQw7nNe+U/w3/M9HVcYEVB6F0epKhoTUDhfWh9RQG8V/tLnAfHVCXSTvHaqEoS6rnxiVXLCmQd39WWVY4ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c/UPhDQS; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Jic/8Vx7"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net D28C8403FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1734104556; bh=OOLljGu0Oy3XVE2q4ev/95uAqhKdgd1eLTSa/WzIIa0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Jic/8Vx79k1lz4YOF+N9sQURrEB6Rhd9+AvKkC9CQ1H4wTzjBYUJhuu8eWjLewDeP
-	 ryG0cs5Eaaba5FJu5wYV0V0ng/tUVI8BycMVd9y+pvgqPoUeA7Oip9DwmI4mbdp1em
-	 VrRYJiyEAhzURtZogPQiZoRaueoLGp7G4qaL4kQoCYF1fs7t3m40hkHvGLUG/BPkaE
-	 Nj+VX5Q+YvwhN8Z9/HsLQfh/aHXZiqXpI1KTzJQ4PXTXeP/fhQNn3nOgIc8SksnBiE
-	 PW+x2vjMq1fwuq0/f4JFrwdM2121IfVT8YuWKLfM9ibUl8iy885ZqzIBMrCD1HGJbw
-	 OifD96PsCPFmQ==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id D28C8403FA;
-	Fri, 13 Dec 2024 15:42:35 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Andrew Kreimer <algonell@gmail.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, Andrew
- Kreimer <algonell@gmail.com>
-Subject: Re: [PATCH] Documentation/rv: Fix typos
-In-Reply-To: <20241209130640.10954-1-algonell@gmail.com>
-References: <20241209130640.10954-1-algonell@gmail.com>
-Date: Fri, 13 Dec 2024 08:42:35 -0700
-Message-ID: <878qsjy4gk.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c/UPhDQS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=eN/bpRlJXvU90UpuFFSXEIh3EXCbcD08E2hHzMuc9qQ=; b=c/UPhDQS1aoQ6mVjzuP9w3rKZR
+	3xC6b4tRSP/TapmbKPbCewvDTNeX0jjRu84FHZSmkLiYXSu4578F5Kb+xE/t/m4qOyc1v8Tjpv5NP
+	5RbdscgGRMNe+phbGTcJ5fRaJWJax1e3bHIIGKt6LYwD1Yo9AXBTME3usYeIqSjKsGHP3N3wx0wih
+	Jpz+giszGsb7C/93KW9qbTkZesz979hwff+x+lf3wrG/ZT0/yoq4yoGX3/YaubW6U92kvVqz71MYD
+	7u0FDPKdEI9F46sI1mpM2I77L8ONZ6LDWun0d1wbqb03VASVTbbJWwF2aUr1olJYfWDgvWQk4C0ZA
+	BFdlmgIg==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tMAZx-0000000Ezhy-1nr2;
+	Fri, 13 Dec 2024 18:39:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D03EB30049D; Fri, 13 Dec 2024 19:39:54 +0100 (CET)
+Date: Fri, 13 Dec 2024 19:39:54 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 00/13] uprobes: Add support to optimize usdt
+ probes on x86_64
+Message-ID: <20241213183954.GC12338@noisy.programming.kicks-ass.net>
+References: <20241211133403.208920-1-jolsa@kernel.org>
+ <20241213105105.GB35539@noisy.programming.kicks-ass.net>
+ <Z1wxqhwHbDbA2UHc@krava>
+ <20241213135433.GD35539@noisy.programming.kicks-ass.net>
+ <Z1w_Qi_Wya56YDO_@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z1w_Qi_Wya56YDO_@krava>
 
-Andrew Kreimer <algonell@gmail.com> writes:
+On Fri, Dec 13, 2024 at 03:05:54PM +0100, Jiri Olsa wrote:
+> On Fri, Dec 13, 2024 at 02:54:33PM +0100, Peter Zijlstra wrote:
+> > On Fri, Dec 13, 2024 at 02:07:54PM +0100, Jiri Olsa wrote:
+> > > On Fri, Dec 13, 2024 at 11:51:05AM +0100, Peter Zijlstra wrote:
+> > > > On Wed, Dec 11, 2024 at 02:33:49PM +0100, Jiri Olsa wrote:
+> > > > > hi,
+> > > > > this patchset adds support to optimize usdt probes on top of 5-byte
+> > > > > nop instruction.
+> > > > > 
+> > > > > The generic approach (optimize all uprobes) is hard due to emulating
+> > > > > possible multiple original instructions and its related issues. The
+> > > > > usdt case, which stores 5-byte nop seems much easier, so starting
+> > > > > with that.
+> > > > > 
+> > > > > The basic idea is to replace breakpoint exception with syscall which
+> > > > > is faster on x86_64. For more details please see changelog of patch 8.
+> > > > 
+> > > > So ideally we'd put a check in the syscall, which verifies it comes from
+> > > > one of our trampolines and reject any and all other usage.
+> > > > 
+> > > > The reason to do this is that we can then delete all this code the
+> > > > moment it becomes irrelevant without having to worry userspace might be
+> > > > 'creative' somewhere.
+> > > 
+> > > yes, we do that already in SYSCALL_DEFINE0(uprobe):
+> > > 
+> > >         /* Allow execution only from uprobe trampolines. */
+> > >         vma = vma_lookup(current->mm, regs->ip);
+> > >         if (!vma || vma->vm_private_data != (void *) &tramp_mapping) {
+> > >                 force_sig(SIGILL);
+> > >                 return -1;
+> > >         }
+> > 
+> > Ah, right I missed that. Doesn't that need more locking through? The
+> > moment vma_lookup() returns that vma can go bad.
+> 
+> ugh yes.. I guess mmap_read_lock(current->mm) should do, will check
 
-> There are some typos in the documentation: 'a' -> 'at', missing 'to'.
-> Fix them.
->
-> Signed-off-by: Andrew Kreimer <algonell@gmail.com>
-> ---
->  Documentation/trace/rv/runtime-verification.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-
-Applied, thanks.
-
-jon
+If you check
+tip/perf/core:kernel/events/uprobe.c:find_active_uprobe_speculative()
+you'll find means of doing it locklessly using RCU.
