@@ -1,151 +1,198 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB051E8826;
-	Fri, 13 Dec 2024 19:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B80188704;
+	Fri, 13 Dec 2024 21:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734118380; cv=none; b=ClHdVB41D5aQRtbg2bRZsWzhcvMwQwLlflawSnAfvKCo7Vdz+rG3YHnIT60hyyXkzHw0zk5lmVAKLYe4miTwXvItFxh9t9Mvdd3x56z2czfvOQp/rIRmE/F4ZCUFgKENAJGv9DL8nHs0z38wUmbZUr4FCmBY7EcaC4aK/b8mQqQ=
+	t=1734124305; cv=none; b=OkVlR4rLg+frhSrHh8XMqvEqPXm3jcmFDMmeMenAGLkdpOHMIzcSnTojU5TzUXIp3zowZ8Gb5Da6DChDnz4RLuNSwpXwUblblsoZtPKPB5vlCfrZiqIVs6XvU1YpBu1EbiZNOawty15Lo47I5BiBYnc8WzxwsogF0q54sHVRiRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734118380; c=relaxed/simple;
-	bh=tPoDDdKr7gE1BldzHLPMcwm+vKnfJGCLwyb1r5quvMs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HGlosFbWiqJNV6537xhAL0yWgOkd15wM6DBqGJ8ofZRVwde3Zt+rM4U82bOWTyLD6V7SJxK7YPRMhPX4xKXS/wQ6DjgWV6NRWZYJvsiIZLfegQ7u+KYH7WJQ6QB/5CFIULt/rdpEar3QOCn52ryU+FShGXdT+DG+YPpWLRNedMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=uI8Jhstn; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1734124305; c=relaxed/simple;
+	bh=y97Fks8kEdq1LSzRrSJtzGk58JlmQt104eWxGCLhLzk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e6igtvGlb9EK36kL1NH0o5+FBz+rcewePYYF5TMWI2e6gq3QxLq2jDFs7Lt/v/ql1XwxXcz8hrj9wIMFIlpVtOfYgL5ruEHDi/B4Vujff0KTc+ZRpO4+BRncd5eS2qycELuW15oQ/rKC2dQkG+6GvzmRrQ56MqVM38shtKwQ3Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWNoLYkK; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="uI8Jhstn"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BDJ1keI032102;
-	Fri, 13 Dec 2024 19:31:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-id:content-transfer-encoding:content-type:date
-	:from:in-reply-to:message-id:mime-version:references:subject:to;
-	 s=default; bh=tPoDDdKr7gE1BldzHLPMcwm+vKnfJGCLwyb1r5quvMs=; b=u
-	I8JhstnPB00WefGtmHgPsqDI0fGArtSLljcKNaqbHCFXYfnqJ1PFbK/niLBCe95q
-	HnRcyTLSZbxWAcGKcvDx+HG+YNpVJxjCs3UJCgMPkpQTaGNGjaXTGaPNvjXM16a7
-	Q31fMlvUzOnJ6VFUmpooiFW5Ekjs+WKtTvZYszJvUlb1g2oBcq/RclhfKv2U7Q3c
-	wZm2wudNzHojQt90PJYv7nj8Uq2VPY9hCvZEEvLiXWn4TOEf1HfZyYE3zomqXKCD
-	rPUQyOoTkC6R9X63XyGL+EnpADAWEPDl8AqCA8HOv34aigK1isSnBnFus9L/KBxa
-	IhIYUDKAD1xMz4KsSYvqg==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 43gtqk81xr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 13 Dec 2024 19:31:16 +0000 (GMT)
-Received: from 04WPEXCH005.crowdstrike.sys (10.100.11.69) by
- 04wpexch15.crowdstrike.sys (10.100.11.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 13 Dec 2024 19:31:14 +0000
-Received: from 04WPEXCH006.crowdstrike.sys (10.100.11.70) by
- 04WPEXCH005.crowdstrike.sys (10.100.11.69) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 13 Dec 2024 19:31:13 +0000
-Received: from 04WPEXCH006.crowdstrike.sys ([fe80::f686:3950:aa30:445a]) by
- 04WPEXCH006.crowdstrike.sys ([fe80::f686:3950:aa30:445a%11]) with mapi id
- 15.02.1544.009; Fri, 13 Dec 2024 19:31:13 +0000
-From: Martin Kelly <martin.kelly@crowdstrike.com>
-To: "masahiroy@kernel.org" <masahiroy@kernel.org>,
-        "ojeda@kernel.org"
-	<ojeda@kernel.org>,
-        "jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-        "pasha.tatashin@soleen.com" <pasha.tatashin@soleen.com>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "nicolas@fjasle.eu"
-	<nicolas@fjasle.eu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
-        "nathan@kernel.org" <nathan@kernel.org>,
-        "npiggin@gmail.com"
-	<npiggin@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "surenb@google.com" <surenb@google.com>,
-        "zhengyejian@huaweicloud.com" <zhengyejian@huaweicloud.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "naveen.n.rao@linux.ibm.com"
-	<naveen.n.rao@linux.ibm.com>,
-        "kent.overstreet@linux.dev"
-	<kent.overstreet@linux.dev>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "yeweihua4@huawei.com" <yeweihua4@huawei.com>,
-        "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>
-CC: Amit Dang <amit.dang@crowdstrike.com>,
-        "linux-modules@vger.kernel.org"
-	<linux-modules@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org"
-	<linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and
- fix weak function issue
-Thread-Topic: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and
- fix weak function issue
-Thread-Index: AQHbTZWS+4Gf5OP880OTR/pO30cltA==
-Date: Fri, 13 Dec 2024 19:31:13 +0000
-Message-ID: <30ee9989044dad1a7083a85316d77b35f838e622.camel@crowdstrike.com>
-References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
-	 <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
-	 <364aaf7c-cdc4-4e57-bb4c-f62e57c23279@csgroup.eu>
-	 <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
-	 <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
-In-Reply-To: <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DCF0AA386CCD2A498936894F8CF5CF09@crowdstrike.sys>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWNoLYkK"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ef72924e53so1912934a91.3;
+        Fri, 13 Dec 2024 13:11:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734124303; x=1734729103; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p6VPBJyV+Owj/Rwn3WXs70TtPuWHSr1THRUnh6czWrE=;
+        b=gWNoLYkKaWbVSqDFEMCzz3/quHvwoVEnxeWAyH97n7ljJf/eZRxPoDKMMW6KIxYjLd
+         QyYryQmI4XG+pzORaPn1JIxeEX1MAXKWG90hQ8TSSg/xmNqKg5E4dUefB3Bts5yAlUcm
+         8k4E4TAJ2HMzXjAbCrvD6FwIHa8uH0VzEeEqf9IX0BibmL+3U4P+jJtNJa8Ia2JI+lnM
+         ZosYom5exrEFqtS8EWrAILY8sh7LvUj3FgaH682bXEE9ZhNLefm8h72d6wfdnAZXLZ2m
+         at3vQKQawttMhaafB/uE2eEnI6b7ovb9tvyqwg0gmAbStNAwCxGLNRr2/YesGe+/2ctF
+         E5Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734124303; x=1734729103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p6VPBJyV+Owj/Rwn3WXs70TtPuWHSr1THRUnh6czWrE=;
+        b=n92MJmHCaMshPnLILquhCQOtWv5s4TD5BaZ2Zm/+vaxqiB7qgeGM1jJ/6YrQJwUFpW
+         y6N9yqjwT+5Aku0slgPr6U0WpHt7x3VpxbwKVZ0untAKSlLF/zhsnlav355IKlEPuN70
+         OIfITjUZD5w0GDNYnDFVXa6qe/vbomKSZhc5gYEoeY0hINXgq49w3IaWTSLIom6y7X+w
+         pxVZ8WPwi0W1Tjsd3le09FpSKpPmoTEmng/YrZDn4lM8IUH3StIiJSTD47VBvQJHhXAu
+         vnD+lICkQIx0VKvACWXwVkYRXkFwxh8d6XWDu9y5HStMzrQIFfqWD0hNyNc8xpAHWBDv
+         jwFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+CXvYCtjOQd/cRSugcCHyepgoOKwJxq36uuJxP68zSMm+7X9/4plGmQdCOQrjPjE4dnRzkskd/Bh1cxxL@vger.kernel.org, AJvYcCV9EyKRjvV/4YeTSvPKtyktnzZDVlzkFtMSm47YUkKEOICczXrdqmYDCjrlFMGmTtxOoDE=@vger.kernel.org, AJvYcCWbgvaKbQpyOymhPWubnKgVWY4NounDaTUhw6W64BXmhoMVN8baQQ3xXh9bkbA8oT3yRfb+s3pkOiggsWLle6dYC9aO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPoJ6rZhua8C/yecD7cI9W1wx5CfhQEUzjHf+BNFHHwuvqRx8T
+	8RJW5aDZcUibwk4jERZWmK0d9+8919ZUOF5EgI9SxaoS8E/aWJ2OyXFtcmtn7oLLX20zJ1GpAC4
+	29qDyKijDvM9I7uQrui0f6cZunaolfg==
+X-Gm-Gg: ASbGnctc5GbVqpaJlCfrRARNsXW2GwMwuYcCWYXp198oFu8ZyhXyPGFKPX6Cuy7SqZl
+	s8nymEa36Pcljn9pkEbCHH/69IrgAUF/9dDElZKvx3s8leGywWymadQ==
+X-Google-Smtp-Source: AGHT+IE4I6FX9eL+J0ZbDZaGKY7e3qXFxo9fK/76I8fjZvq8aCKbsGP+/8NinL+B99w6xPi9TEDieFTIArby7boWOw8=
+X-Received: by 2002:a17:90b:3c8a:b0:2ee:d193:f3d5 with SMTP id
+ 98e67ed59e1d1-2f28fa5b800mr7207214a91.7.1734124303462; Fri, 13 Dec 2024
+ 13:11:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authority-Analysis: v=2.4 cv=K9PYHzWI c=1 sm=1 tr=0 ts=675c8b84 cx=c_pps a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=RZcAm9yDv7YA:10 a=VwQbUJbxAAAA:8 a=IycRoiFrBpt9NGDnbAcA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: HhB3chrMN4blfYrmAfJ7pHz4lEANNyfd
-X-Proofpoint-GUID: HhB3chrMN4blfYrmAfJ7pHz4lEANNyfd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
- definitions=2024-09-06_09,2024-09-06_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 suspectscore=0 mlxlogscore=925 clxscore=1011 malwarescore=0
- classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2412130139
+References: <20241211133403.208920-1-jolsa@kernel.org> <20241211133403.208920-5-jolsa@kernel.org>
+ <CAEf4BzZ2g6PwY+Ah-39F7Dw2AFZUE7AxEqOuNbs5LouHtKMZbQ@mail.gmail.com> <Z1w0z2KSgFGggAVD@krava>
+In-Reply-To: <Z1w0z2KSgFGggAVD@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 13 Dec 2024 13:11:30 -0800
+Message-ID: <CAEf4BzZ+nkvZFADq9HzLUUcDGNa44G+hPfzOhUexKW7WqBxS6A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 04/13] uprobes: Add arch_uprobe_verify_opcode function
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVGh1LCAyMDI0LTEyLTEyIGF0IDE3OjUyICswODAwLCBaaGVuZyBZZWppYW4gd3JvdGU6DQo+
-IE9uIDIwMjQvMTIvMTEgMDQ6NDksIE1hcnRpbiBLZWxseSB3cm90ZToNCj4gPiANCj4gPiANCj4g
-PiBaaGVuZywgZG8geW91IHBsYW4gdG8gc2VuZCBhIHYzPyBJJ2QgYmUgaGFwcHkgdG8gaGVscCBv
-dXQgd2l0aCB0aGlzDQo+ID4gcGF0Y2ggc2VyaWVzIGlmIHlvdSdkIGxpa2UsIGFzIEknbSBob3Bp
-bmcgdG8gZ2V0IHRoaXMgaXNzdWUNCj4gPiByZXNvbHZlZA0KPiA+ICh0aG91Z2ggSSBhbSBub3Qg
-YW4gZnRyYWNlIGV4cGVydCkuDQo+IA0KPiBTb3JyeSB0byByZWx5IHNvIGxhdGUuIFRoYW5rcyBm
-b3IgeW91ciBmZWVkYmFjayENCj4gDQo+IFN0ZXZlIHJlY2VudGx5IHN0YXJ0ZWQgYSBkaXNjdXNz
-aW9uIG9mIHRoZSBpc3N1ZSBpbjoNCj4gDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8y
-MDI0MTAxNTEwMDExMS4zN2FkZmIyOEBnYW5kYWxmLmxvY2FsLmhvbWUvDQo+IGJ1dCB0aGVyZSdz
-IG5vIGNvbmNsdXNpb24uDQo+IMKgIA0KPiBJIGNhbiByZWJhc2UgdGhpcyBwYXRjaCBzZXJpZXMg
-YW5kIHNlbmQgYSBuZXcgdmVyc2lvbiBmaXJzdCwgYW5kDQo+IEknbSBhbHNvIGhvcGluZyB0byBn
-ZXQgbW9yZSBmZWVkYmFja3MgYW5kIGhlbHAgdG8gcmVzb2x2ZSB0aGUgaXNzdWUuDQo+IA0KDQpI
-aSBaaGVuZywNCg0KSSBtYXkgaGF2ZSBtaXN1bmRlcnN0b29kLCBidXQgYmFzZWQgb24gdGhlIGZp
-bmFsIG1lc3NhZ2UgZnJvbSBTdGV2ZW4sIEkNCmdvdCB0aGUgc2Vuc2UgdGhhdCB0aGUgaWRlYSBs
-aXN0ZWQgaW4gdGhhdCB0aHJlYWQgZGlkbid0IHdvcmsgb3V0IGFuZA0Kd2Ugc2hvdWxkIHByb2Nl
-ZWQgd2l0aCB5b3VyIGN1cnJlbnQgYXBwcm9hY2guDQoNClBsZWFzZSBjb25zaWRlciBtZSBhbiBp
-bnRlcmVzdGVkIHBhcnR5IGZvciB0aGlzIHBhdGNoIHNlcmllcywgYW5kIGxldA0KbWUga25vdyBp
-ZiB0aGVyZSdzIGFueXRoaW5nIEkgY2FuIGRvIHRvIGhlbHAgc3BlZWQgaXQgYWxvbmcgKGNvLQ0K
-ZGV2ZWxvcCwgdGVzdCwgYW55dGhpbmcgZWxzZSkuIEFuZCBvZiBjb3Vyc2UsIHRoYW5rcyB2ZXJ5
-IG11Y2ggZm9yIHlvdXINCndvcmsgdGh1cyBmYXIhDQo=
+On Fri, Dec 13, 2024 at 5:21=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Thu, Dec 12, 2024 at 04:48:05PM -0800, Andrii Nakryiko wrote:
+> > On Wed, Dec 11, 2024 at 5:34=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wr=
+ote:
+> > >
+> > > Adding arch_uprobe_verify_opcode function, so we can overload
+> > > verification for each architecture in following changes.
+> > >
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  include/linux/uprobes.h |  5 +++++
+> > >  kernel/events/uprobes.c | 19 ++++++++++++++++---
+> > >  2 files changed, 21 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > index cc723bc48c1d..8843b7f99ed0 100644
+> > > --- a/include/linux/uprobes.h
+> > > +++ b/include/linux/uprobes.h
+> > > @@ -215,6 +215,11 @@ extern void uprobe_handle_trampoline(struct pt_r=
+egs *regs);
+> > >  extern void *arch_uretprobe_trampoline(unsigned long *psize);
+> > >  extern unsigned long uprobe_get_trampoline_vaddr(void);
+> > >  extern void uprobe_copy_from_page(struct page *page, unsigned long v=
+addr, void *dst, int len);
+> > > +extern int uprobe_verify_opcode(struct page *page, unsigned long vad=
+dr, uprobe_opcode_t *new_opcode);
+> > > +extern int arch_uprobe_verify_opcode(struct arch_uprobe *auprobe, st=
+ruct page *page,
+> > > +                                    unsigned long vaddr, uprobe_opco=
+de_t *new_opcode,
+> > > +                                    int nbytes);
+> > > +extern bool arch_uprobe_is_register(uprobe_opcode_t *insn, int nbyte=
+s);
+> > >  #else /* !CONFIG_UPROBES */
+> > >  struct uprobes_state {
+> > >  };
+> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > index 7c2ecf11a573..8068f91de9e3 100644
+> > > --- a/kernel/events/uprobes.c
+> > > +++ b/kernel/events/uprobes.c
+> > > @@ -263,7 +263,13 @@ static void uprobe_copy_to_page(struct page *pag=
+e, unsigned long vaddr, const vo
+> > >         kunmap_atomic(kaddr);
+> > >  }
+> > >
+> > > -static int verify_opcode(struct page *page, unsigned long vaddr, upr=
+obe_opcode_t *new_opcode)
+> > > +__weak bool arch_uprobe_is_register(uprobe_opcode_t *insn, int nbyte=
+s)
+> > > +{
+> > > +       return is_swbp_insn(insn);
+> >
+> > a bit weird that we ignore nbytes here... should we have nbytes =3D=3D
+> > UPROBE_SWBP_INSN_SIZE check somewhere here or inside is_swbp_insn()?
+>
+> the original is_swbp_insn function does not need that and we need
+> nbytes in the overloaded arch_uprobe_is_register to distinguish
+> between 1 byte and 5 byte update..
+>
+
+and that's my point, if some architecture forgot to override it for
+nop5 (or similar stuff), this default implementation should reject
+instruction that's not an original nop, no?
+
+
+> jirka
+>
+> >
+> > > +}
+> > > +
+> > > +int uprobe_verify_opcode(struct page *page, unsigned long vaddr,
+> > > +                        uprobe_opcode_t *new_opcode)
+> > >  {
+> > >         uprobe_opcode_t old_opcode;
+> > >         bool is_swbp;
+> > > @@ -291,6 +297,13 @@ static int verify_opcode(struct page *page, unsi=
+gned long vaddr, uprobe_opcode_t
+> > >         return 1;
+> > >  }
+> > >
+> > > +__weak int arch_uprobe_verify_opcode(struct arch_uprobe *auprobe, st=
+ruct page *page,
+> > > +                                    unsigned long vaddr, uprobe_opco=
+de_t *new_opcode,
+> > > +                                    int nbytes)
+> > > +{
+> > > +       return uprobe_verify_opcode(page, vaddr, new_opcode);
+> >
+> > again, dropping nbytes on the floor here
+> >
+> > > +}
+> > > +
+> > >  static struct delayed_uprobe *
+> > >  delayed_uprobe_check(struct uprobe *uprobe, struct mm_struct *mm)
+> > >  {
+> > > @@ -479,7 +492,7 @@ int uprobe_write_opcode(struct arch_uprobe *aupro=
+be, struct mm_struct *mm,
+> > >         bool orig_page_huge =3D false;
+> > >         unsigned int gup_flags =3D FOLL_FORCE;
+> > >
+> > > -       is_register =3D is_swbp_insn(insn);
+> > > +       is_register =3D arch_uprobe_is_register(insn, nbytes);
+> > >         uprobe =3D container_of(auprobe, struct uprobe, arch);
+> > >
+> > >  retry:
+> > > @@ -490,7 +503,7 @@ int uprobe_write_opcode(struct arch_uprobe *aupro=
+be, struct mm_struct *mm,
+> > >         if (IS_ERR(old_page))
+> > >                 return PTR_ERR(old_page);
+> > >
+> > > -       ret =3D verify_opcode(old_page, vaddr, insn);
+> > > +       ret =3D arch_uprobe_verify_opcode(auprobe, old_page, vaddr, i=
+nsn, nbytes);
+> > >         if (ret <=3D 0)
+> > >                 goto put_old;
+> > >
+> > > --
+> > > 2.47.0
+> > >
