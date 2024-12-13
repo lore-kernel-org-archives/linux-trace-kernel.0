@@ -1,40 +1,66 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDBF1C3BE7;
-	Fri, 13 Dec 2024 10:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0EE1B6D14;
+	Fri, 13 Dec 2024 13:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734087074; cv=none; b=r39gzaMTVeRxyvHQOrLN1NYypL4jUaiailAWdaAhEDlchATBSKc4GME/msKhwZT7TAC13LubUKvxhYS7ZYG7TON2j5fS/U1zx5C9YIkChFVFlghMHrSyluBvRgyFyjaYKcGFTNqLnCaFPadDKKcj9bIWJG9WCCxz9QiHDGzP95U=
+	t=1734094983; cv=none; b=N7YgRIrj1BmVQBl/vSWtxmhgyHNl8Lo+jCU4qIapa1qg7WMJPJKuTXHl8B81zAfasvP4QtLlmAJtEI38rXgdzKTAVNSVQaw8rf+Ge5XDcXkkeE/9qSHi1hXhziPlpuyYOeYwDvoCb6yyFhP1dbnB6/EpU/IoBrkOSEWdp4Go8bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734087074; c=relaxed/simple;
-	bh=9jal2VahLy96XPiDIJleSTCKELmmzCYfJN6BnY0gfB8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WiMC2ms17RxcLVZoI7B9nw0PBFX0CNlnpNHXeitvUnJBv5eXfziWEd/vC67E3gG6lifrtEThFhKkxX+oO+hXd8ggvW6sPYF9MnaCsF6galKWFCMNQ1jpa/CI8aqkVl7QM2O7cnnUVFdnsesUWJ+wByOOY1HymL20lH6soGaEMik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YzVoyTUM; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1734094983; c=relaxed/simple;
+	bh=eOHv9bgSptLqDXcvvlILRpCCRGBprfHIR9LeZ6+5n9w=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1OgdOBDgfI/BozlbDzC+FgkHWuy+aEoorduh12L4g2k3XVd5yNM/9wLLW1rV9GhfYz77m+owzqBcKiicutpVoBj8sJsAWH0LRFqx0sCh4kWLVfkFIqcFHTUgint0HixeWgFVlVLk4mFRcQ8hBe8lxOQuKs0NDPe63mRvzDwVlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aCxdUq1Z; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YzVoyTUM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wM7zL4wH+om2tKa4NMCs9jdln8VzYmbtWynNFpbCW3Y=; b=YzVoyTUMK0ufsh7yJ3E1aqZvyq
-	RkzqnX5dPVyBSjzBSNd6lLVyXxCBCAID+b3eJBV7anMzNS2sp/b8+dMecDSOa8ay+BRW6ahtW0In+
-	mvBC7qAK1H7mAU0DwwXqjAog0YvEXYFbiORAEkT5GnhNPjMMCuFHRuyRwm3Hpo/TT5dWsNDTXOfVQ
-	FPsM4BJDVJcTXu6W8RlqpdOk1beKirgNMYfbek38vY01yTZylAOTVvLsn2O8r5XlLwedMC7eg3T3F
-	ovlQl/LtRF3iPFp8cxvMSJab5UoIkTQT7vCwueSO0KhtkTszUQqcbR/6q9H8rRuccAmuZqV8jIZFA
-	xzLzFMlg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tM3GE-0000000CJrr-1VHY;
-	Fri, 13 Dec 2024 10:51:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D5CBA30049D; Fri, 13 Dec 2024 11:51:05 +0100 (CET)
-Date: Fri, 13 Dec 2024 11:51:05 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Jiri Olsa <jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCxdUq1Z"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4361f664af5so18152265e9.1;
+        Fri, 13 Dec 2024 05:03:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734094979; x=1734699779; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cVqA3EWWaY9TRkvPct1HGfcQOD/FwItMYVggUcSmkOw=;
+        b=aCxdUq1ZTFVD4YFSXO7NediauPKUqX48h7bTdFGwHSZc7OvMgnnFDGxwYXH4Hws18n
+         q9MITL5kLHIC1p/CHDxRZ6oUAaJJt2xVMBh2ROxOyBjmnECTF6hf7qjFdhbN6abp2Vnm
+         nCEFRgJom3RkEG19bxsXYqaOYUFurJQ6VHcyZQ6Y2as0u+xTxu3R4TBGHLhN0C1eutBr
+         kUKa9OYl1JOCzlsv6CVX2C5/QVszjj+Fa4A0D0d4Vwg4cuELGE/cVhhPOUkaP9Mz7y8/
+         MErc6HbcT5cJmF/Zbsdi2dtIqqv2IPsDHmCVP+qoceRyWPMC1hq4lC8kkiMImhtCYYZd
+         voVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734094979; x=1734699779;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cVqA3EWWaY9TRkvPct1HGfcQOD/FwItMYVggUcSmkOw=;
+        b=hfziDn8BW+andfHI+DLNYSrv+zF23D5UWPZRMDMtq7hL49Sm3tlN5Nk5MYvxgdP//6
+         2Her4L0vKwORdpM5sHXDQ1HfaLBRpq+D8y0AvN5FB0FXY7MfHuU5+P2sOHxZHl0P70WU
+         DsT8633FZwq8Pt4RxVDWEQVgBEJFiADWFdl2++STQCEQp6oMLBCSmuA99AuR7EoXzntz
+         hMv6ksCloVgTCmCFsB+pez30H0UKt3636157UqM80J8WdZJknP/fok3ye/MQ3MxOqyPt
+         7IYVOe4MPYx8oVij7PBKHN5IcDBNh59iTvW/DNBbFIfq1tovrUe+wIUNVN4niohHlxdE
+         +kEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV671GVp/wKT8PueR8oyO1ZJWVWKnYU9FZXdvdy8GzjgGE8fYv/iQwPa6d4j3XtOFRe2ZA=@vger.kernel.org, AJvYcCWIe++o9tAMlV1THEdCDXRIJNmpXxO9tjan7ofG+TwsafyOcZbzKTpXZ7JWGc5+HUdT5UmYSYe4ROQK5fz0fuZHxD7Q@vger.kernel.org, AJvYcCXo4JE4YboL1bRrJtrINJwolTVZVmkqrZJTTR4feHajrUKPP9QexUCUVjc8F1ApH1cT1lUapvmSpdAI6+F6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ1IAdCOJ/eWu4DZta9Hyr6ziE4WaRA+/unkppILusThFXiTTN
+	xLNG0InD76OQNq+neeLZNF3ZnhHKfvjdjmfr4/w2sFT7KL9FzNoN
+X-Gm-Gg: ASbGncsIJ/X4ij6Ik3TbwbpYwMuwaWYbOfmrIhdh0tnmyI8RqttTtWpsJq8nZt/xOPr
+	pE7Kkl0Dk8Po2xH1tGMqu8eRrUre8cnjel7AEc3DDK9naXkyGywcxBokH5LvRKfkxy5/NQAm7P2
+	DqZT0oLwozFetWW/dXvUMUnu6TuNKqFP6u9xP+tUW6588fQCBUSSB+E4K5AlepH3aMGXiK0Pu/w
+	WBYwvdqXnJn2u1bXY2oz7/HGM/Hk9xx7AhbNFoBVndNgsJkvLdFSnued9YHMyiioy5cjkYSlqMa
+	C1nfyTRK0UI5UG4cy1zj/GgMzqXU6Q==
+X-Google-Smtp-Source: AGHT+IG4B3IGdjHz7hPYBV8Vxy3CuZvgFizI2WTe2k4yzRL5aPRIszxm1lA/KfX+nRZknTRPM6OBvQ==
+X-Received: by 2002:a05:600c:511a:b0:434:f804:a992 with SMTP id 5b1f17b1804b1-4362aa9fe0amr18821835e9.32.1734094979206;
+        Fri, 13 Dec 2024 05:02:59 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4362559ea75sm48750535e9.19.2024.12.13.05.02.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Dec 2024 05:02:58 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 13 Dec 2024 14:02:56 +0100
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
 	bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
 	Yonghong Song <yhs@fb.com>,
@@ -43,36 +69,98 @@ Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Alan Maguire <alan.maguire@oracle.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 00/13] uprobes: Add support to optimize usdt
- probes on x86_64
-Message-ID: <20241213105105.GB35539@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH bpf-next 07/13] uprobes/x86: Add support to emulate nop5
+ instruction
+Message-ID: <Z1wwgIPh7dieKSPV@krava>
 References: <20241211133403.208920-1-jolsa@kernel.org>
+ <20241211133403.208920-8-jolsa@kernel.org>
+ <20241213104536.GZ35539@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20241211133403.208920-1-jolsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241213104536.GZ35539@noisy.programming.kicks-ass.net>
 
-On Wed, Dec 11, 2024 at 02:33:49PM +0100, Jiri Olsa wrote:
-> hi,
-> this patchset adds support to optimize usdt probes on top of 5-byte
-> nop instruction.
+On Fri, Dec 13, 2024 at 11:45:36AM +0100, Peter Zijlstra wrote:
+> On Wed, Dec 11, 2024 at 02:33:56PM +0100, Jiri Olsa wrote:
+> > Adding support to emulate nop5 as the original uprobe instruction.
+> > 
+> > This speeds up uprobes on top of nop5 instructions:
+> > (results from benchs/run_bench_uprobes.sh)
+> > 
+> > current:
+> > 
+> >      uprobe-nop     :    3.252 ± 0.019M/s
+> >      uprobe-push    :    3.097 ± 0.002M/s
+> >      uprobe-ret     :    1.116 ± 0.001M/s
+> >  --> uprobe-nop5    :    1.115 ± 0.001M/s
+> >      uretprobe-nop  :    1.731 ± 0.016M/s
+> >      uretprobe-push :    1.673 ± 0.023M/s
+> >      uretprobe-ret  :    0.843 ± 0.009M/s
+> >  --> uretprobe-nop5 :    1.124 ± 0.001M/s
+> > 
+> > after the change:
+> > 
+> >      uprobe-nop     :    3.281 ± 0.003M/s
+> >      uprobe-push    :    3.085 ± 0.003M/s
+> >      uprobe-ret     :    1.130 ± 0.000M/s
+> >  --> uprobe-nop5    :    3.276 ± 0.007M/s
+> >      uretprobe-nop  :    1.716 ± 0.016M/s
+> >      uretprobe-push :    1.651 ± 0.017M/s
+> >      uretprobe-ret  :    0.846 ± 0.006M/s
+> >  --> uretprobe-nop5 :    3.279 ± 0.002M/s
+> > 
+> > Strangely I can see uretprobe-nop5 is now much faster compared to
+> > uretprobe-nop, while perf profiles for both are almost identical.
+> > I'm still checking on that.
+> > 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  arch/x86/kernel/uprobes.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> > index 23e4f2821cff..cdea97f8cd39 100644
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -909,6 +909,11 @@ static const struct uprobe_xol_ops push_xol_ops = {
+> >  	.emulate  = push_emulate_op,
+> >  };
+> >  
+> > +static int is_nop5_insn(uprobe_opcode_t *insn)
+> > +{
+> > +	return !memcmp(insn, x86_nops[5], 5);
+> > +}
+> > +
+> >  /* Returns -ENOSYS if branch_xol_ops doesn't handle this insn */
+> >  static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> >  {
+> > @@ -928,6 +933,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> >  		break;
+> >  
+> >  	case 0x0f:
+> > +		if (is_nop5_insn((uprobe_opcode_t *) &auprobe->insn))
+> > +			goto setup;
 > 
-> The generic approach (optimize all uprobes) is hard due to emulating
-> possible multiple original instructions and its related issues. The
-> usdt case, which stores 5-byte nop seems much easier, so starting
-> with that.
+> This isn't right, this is not x86_64 specific code, and there's a bunch
+> of 32bit 5 byte nops that do not start with 0f.
 > 
-> The basic idea is to replace breakpoint exception with syscall which
-> is faster on x86_64. For more details please see changelog of patch 8.
+> Also, since you already have the insn decoded, I would suggest you
+> simply check OPCODE2(insn) == 0x1f /* NOPL */ and length == 5.
 
-So ideally we'd put a check in the syscall, which verifies it comes from
-one of our trampolines and reject any and all other usage.
+ah right.. ok will change, thanks
 
-The reason to do this is that we can then delete all this code the
-moment it becomes irrelevant without having to worry userspace might be
-'creative' somewhere.
+jirka
+
+> 
+> >  		if (insn->opcode.nbytes != 2)
+> >  			return -ENOSYS;
+> >  		/*
+> > -- 
+> > 2.47.0
+> > 
