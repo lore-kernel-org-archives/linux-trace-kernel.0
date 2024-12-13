@@ -1,95 +1,147 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A2A13FD72;
-	Thu, 12 Dec 2024 21:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96C4523A;
+	Fri, 13 Dec 2024 00:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734038091; cv=none; b=spv0ayJXlp3wyeyHHYItf241YgCV/4QN3BcOJEHJHZaSAxs8mIq08iLKNJ7prVBbftQRJQZyOjUvCXYztShewpvmEr7dQinFj7OPKBARRXOIIhtjIoAGbvMGarhu7snqvRJfyxl/htAMf+5L2DJJBraU9tOVMw1z14mK4Lc+qnk=
+	t=1734050592; cv=none; b=BXifMsyWq/wxwf04WKUIPmVSZ2zKQDYegu3Onmyw0KBDxHs2FifVKB7m88ZDLcIE+Gs8IWsF7xTnFqw0ncRTlQX0RRRB1Htjyz2f2ckVhLDvCtVW1PnGMfDg/7996l0mTepV8uP/iTibSbZbd3FaQyUAqZ4/NURzZEOFOHMsj00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734038091; c=relaxed/simple;
-	bh=T4urowiJ2qizH6LDk0ZS8i32It4fsmj9/7Poghekv1o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=G7zU+Lfv1sNAyFWmz+heiKTV8b1UMf81MqGtAXS8yfamaBCBRLzlkF8UzXigLGLZ0DfDRuF4yIekSx3jFgJcYQ5ESPMpnqC7OL1LX1EPrdxkW3AHrALtaCD3d1QlPSWJ4MdlLS9N5R3hNhzj8+EVAT6JLuFx0Pm0p6/0BtNOkFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id EB6B1A09A2;
-	Thu, 12 Dec 2024 20:56:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id C69626000E;
-	Thu, 12 Dec 2024 20:56:18 +0000 (UTC)
-Date: Thu, 12 Dec 2024 15:56:34 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] fgraph: Still initialize idle shadow stacks when starting
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CACRpkdbrJ6ERLeMxBPXykCk+mgUkiYGVYqVSnTCKzu=9DBgy6w@mail.gmail.com>
-References: <20241211135335.094ba282@batman.local.home> <CACRpkdbrJ6ERLeMxBPXykCk+mgUkiYGVYqVSnTCKzu=9DBgy6w@mail.gmail.com>
-Message-ID: <81D30FDF-BC8A-4189-A1D1-25BB66C19172@goodmis.org>
+	s=arc-20240116; t=1734050592; c=relaxed/simple;
+	bh=BCdglMHLexZMkCD6JqQlyBWW59OVFpvm4T+m7wx8Ceg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LqB+x/4YA0aEXVCLmD57wKqKzSlSKRLvr4JyLZGzSdnd7bL1zb9frStyI9hstikbcMwMXxj7RSNZ0w7swKrhRNoXsG/pXqirnsNU4+avELKjp6Txp6wsXLgYd3UXFUIFqCUXfRrHttFdqOE8Anh3BGjuZpFigcA2RpnlhzkF6RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YTrd1rOh; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTrd1rOh"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-7fd526d4d9eso1069928a12.2;
+        Thu, 12 Dec 2024 16:43:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734050590; x=1734655390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QsJbGvzSa9/QB/jMdXB7TBTgWOMJ+LEfE/O1tMVjAS4=;
+        b=YTrd1rOh10VaCSuE9aZXVEdahEX1LRJTrBwjpaSkWiFijfrhQyJ4YPx4Y5+muahGxU
+         3wwDyKwHLJpReeMAGxZFhccZO46J8q8AhBwX3XbEGXMountTXlunri4uBbCZRUHqF2GZ
+         b/6d3uzyftG/WaYtnjgaOa49x57Mf8ot0lt0P8cak8tQ91CToDfZFMZjkNbWeAe6Ab/X
+         mkWQWDSuCDTE0nAFgAQQvlbf0wMEWtu4/i9I50phIRwjrjeOX+zKaeHQnnenTf/vbc1Q
+         3POLhfl9VvGq7f8uKgjYwgWARkRX8NGdm3hEyEDvzaT9CFyGv2A2W0rnUB5/BGTUWdt8
+         LPQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734050590; x=1734655390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QsJbGvzSa9/QB/jMdXB7TBTgWOMJ+LEfE/O1tMVjAS4=;
+        b=qVCkzv86myXcbN0g7fwNLmK7IbmtPYPFnipsZJ/qKm8LUol3lfedZfifHMVmYD0IVU
+         GOqWFIZjVu9p4KJ78Q1S146POJZlnsJEMD03DhuXnNqaPSxYhPDlS55TYw3eytGcS99a
+         evugRjTNS1iNd/BcVQLgOhN9GlL8Zj7u3FXOxuu2jcyewNc6JYTS2FwioAXo8QUuGRGX
+         7KhasYbGPv/Qzp5XGSxHzEJCO1gkZzNYLuwRpWGWm96X/SpDy15EGx6ZFcs8t7ADF4xV
+         DvAjCT8idfj7EKrb5gM8Ljg+NdeOJJ33rrVuxIHd7jAUWTtCFOIt8/cEBdaJzoMqfxNs
+         8S/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVaS21fX3dg96c+hhgMN8yYXvDXKpL5Hs9snCWZ0dz3Du+0VdJ9S6HHyhVnpl9QIUyIVqInY+YkWMh8NLNZ@vger.kernel.org, AJvYcCWaXH2WCD0siqIt5+POl5qtjf4DcpiB71+4izqat/MdXR7amKrVTEWyUYKT40zFHi1sLIo=@vger.kernel.org, AJvYcCXmC07X62z2CBILi/pvwweA5Oul7KKT4vasAzBvIGimjPqEUmHgXCwkf89s2gAGhxX368RJQICa4yEQrBHK8pYysTf4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZh7IWiNfRQxWx1toHRSSjcq0i5Ueq+omUUmxsfQnkrlcig59+
+	a9KzhSqDhakFOFXhYAUyRtGxY3jmz/2j/QwrfH1gjGTX3alf29TWCgGXy0E0c8aPO0+zk7AowzY
+	Uv+/z5hkoCFOKaqQh3WTaxMDyXCR2rTuy
+X-Gm-Gg: ASbGncvd05stjHotDVAzJ7Aq3QzKIOANAdlqtJRvakCbQpWvG5Ojur/CgSZZn7HhXDy
+	0k4EV368LkKRoOXA2qcYJk035ls0fmRLzzcefP7yW1D0JKV1eFb10fg==
+X-Google-Smtp-Source: AGHT+IHj/RiYry3pOBJ4XoEf5qEomrF3K4uWEhSaBQ8g6DrZc/Hk/YNBE3Kaadg4kicioH9UXb5SFVbdQs3bOSc+EM0=
+X-Received: by 2002:a17:90b:5105:b0:2ee:cd83:8fe6 with SMTP id
+ 98e67ed59e1d1-2f2901b80dcmr1301883a91.35.1734050590152; Thu, 12 Dec 2024
+ 16:43:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20241211133403.208920-1-jolsa@kernel.org> <20241211133403.208920-2-jolsa@kernel.org>
+In-Reply-To: <20241211133403.208920-2-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Dec 2024 16:42:57 -0800
+Message-ID: <CAEf4BzZEbUpc0CnsJXWvbpSEvhF7hpnScCR7GdmpvMMkSm0W9w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 01/13] uprobes: Rename arch_uretprobe_trampoline function
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: C69626000E
-X-Rspamd-Server: rspamout03
-X-Stat-Signature: hd7xhry7uz1a5famsq1f1z6kgdxtnjzf
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/HttJSC/SNhmg9CSbz18q9TbTnZTYLSVE=
-X-HE-Tag: 1734036978-984619
-X-HE-Meta: U2FsdGVkX180CCpS5Wz+zFpi3eIDVcaZpBq4w+SwBPKQKA2Df7xHQ0t1lOLXuUjcd4Fc8RRuVBshMriDhkGCK7MRjkl3qZTKzmNLYDUJlWnGQULV9DH9CeGh06BOkhP8l9exna5kBYSiUCfTLTuLvRascvdXiwpPfg5IvZDqhh/2xJtVLlL/6qQGzQGlwy+PfelElAzh3za0b/A6HQJnO5QZZBtk6Cx8rrmvdo2v7g8bCnCMfBvvEycu0f29I7d87cfHCLJ0YrhAChQM92QxhN/2dlyKuDakPV1tV0atzG6AgwdadPW85DYl3rIDPVYcnSTuv69tG0YODSgpGuumZSAslxWhFRgDxMDlYLXelaJrxlDlae/RJza4eiTXWrrSxi+vvCp1N6Ex0evLxEx4bPaa3tWpP/JBDujfTY72UdncKnuzJvZ2PlqrHdDC81FOmJ3qd+eRJIKDlyYkknCTvIxOERxsyYFg7xF1CoVR88tOnYmKQ8pijW76J7pV14eh
 
-
-
-On December 12, 2024 3:49:37 PM EST, Linus Walleij <linus=2Ewalleij@linaro=
-=2Eorg> wrote:
->On Wed, Dec 11, 2024 at 7:53=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
-=2Eorg> wrote:
+On Wed, Dec 11, 2024 at 5:34=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
 >
->> From: Steven Rostedt <rostedt@goodmis=2Eorg>
->>
->> A bug was discovered where the idle shadow stacks were not initialized
->> for offline CPUs when starting function graph tracer, and when they cam=
-e
->> online they were not traced due to the missing shadow stack=2E To fix
->> this, the idle task shadow stack initialization was moved to using the
->> CPU hotplug callbacks=2E But it removed the initialization when the
->> function graph was enabled=2E The problem here is that the hotplug
->> callbacks are called when the CPUs come online, but the idle shadow
->> stack initialization only happens if function graph is currently
->> active=2E This caused the online CPUs to not get their shadow stack
->> initialized=2E
->>
->> The idle shadow stack initialization still needs to be done when the
->> function graph is registered, as they will not be allocated if function
->> graph is not registered=2E
->>
->> Cc: stable@vger=2Ekernel=2Eorg
->> Fixes: 2c02f7375e65 ("fgraph: Use CPU hotplug mechanism to initialize i=
-dle shadow stacks")
->> Reported-by: Linus Walleij <linus=2Ewalleij@linaro=2Eorg>
->> Closes: https://lore=2Ekernel=2Eorg/all/CACRpkdaTBrHwRbbrphVy-=3DSeDz6M=
-SsXhTKypOtLrTQ+DgGAOcQ@mail=2Egmail=2Ecom/
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis=2Eorg>
+> We are about to add uprobe trampoline, so cleaning up the namespace.
 >
->Yep that solves my issue and I can go on debugging my boot!
->Tested-by: Linus Walleij <linus=2Ewalleij@linaro=2Eorg>
->
->Thanks for patching this up so quickly Stephen, you're the best=2E
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/x86/kernel/uprobes.c | 2 +-
+>  include/linux/uprobes.h   | 2 +-
+>  kernel/events/uprobes.c   | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 >
 
-No problem, but I don't know who this "Stephen" is? ;-)
+LGTM
 
--- Steve
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
->Yours,
->Linus Walleij
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 5a952c5ea66b..22a17c149a55 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -338,7 +338,7 @@ extern u8 uretprobe_trampoline_entry[];
+>  extern u8 uretprobe_trampoline_end[];
+>  extern u8 uretprobe_syscall_check[];
+>
+> -void *arch_uprobe_trampoline(unsigned long *psize)
+> +void *arch_uretprobe_trampoline(unsigned long *psize)
+>  {
+>         static uprobe_opcode_t insn =3D UPROBE_SWBP_INSN;
+>         struct pt_regs *regs =3D task_pt_regs(current);
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index e0a4c2082245..09a298e416a8 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -211,7 +211,7 @@ extern bool arch_uprobe_ignore(struct arch_uprobe *au=
+p, struct pt_regs *regs);
+>  extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr=
+,
+>                                          void *src, unsigned long len);
+>  extern void uprobe_handle_trampoline(struct pt_regs *regs);
+> -extern void *arch_uprobe_trampoline(unsigned long *psize);
+> +extern void *arch_uretprobe_trampoline(unsigned long *psize);
+>  extern unsigned long uprobe_get_trampoline_vaddr(void);
+>  #else /* !CONFIG_UPROBES */
+>  struct uprobes_state {
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index fa04b14a7d72..e0e3ebb4c0a1 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1695,7 +1695,7 @@ static int xol_add_vma(struct mm_struct *mm, struct=
+ xol_area *area)
+>         return ret;
+>  }
+>
+> -void * __weak arch_uprobe_trampoline(unsigned long *psize)
+> +void * __weak arch_uretprobe_trampoline(unsigned long *psize)
+>  {
+>         static uprobe_opcode_t insn =3D UPROBE_SWBP_INSN;
+>
+> @@ -1727,7 +1727,7 @@ static struct xol_area *__create_xol_area(unsigned =
+long vaddr)
+>         init_waitqueue_head(&area->wq);
+>         /* Reserve the 1st slot for get_trampoline_vaddr() */
+>         set_bit(0, area->bitmap);
+> -       insns =3D arch_uprobe_trampoline(&insns_size);
+> +       insns =3D arch_uretprobe_trampoline(&insns_size);
+>         arch_uprobe_copy_ixol(area->page, 0, insns, insns_size);
+>
+>         if (!xol_add_vma(mm, area))
+> --
+> 2.47.0
+>
