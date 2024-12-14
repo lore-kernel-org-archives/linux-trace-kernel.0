@@ -1,145 +1,149 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0598191F6C;
-	Fri, 13 Dec 2024 22:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B2D383;
+	Sat, 14 Dec 2024 08:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734127204; cv=none; b=jH2/Eqwcj1WKcJBZ0zEScBSf7grQO80OTeT9waTTviOUfu90avhRp+YEJAWFZdNjafj+uz38LjZgzGiGERjoFor7HAtghqe5q5orGmnz29uEy05mBLBQ5mYzOCQcoflU2+Y/Z4jgXE5tOfsQrBM3JNvOTsOE/niDHHTCGZtk3i0=
+	t=1734165510; cv=none; b=oS4DUd0x+Rz3nMzIQlcyztk1kuChfmdjoU3h+tmSZZGI0w6fqmCtV8qF1SeokQJrSh4ijIzRlwcM138WrjZjiQnux0Tqy569eTXiBJdRFqIJvTgImYiBlT25fn/aG+N8r/QjOb6E8SWrUpeLJVJKEJPzIbz2M2GMkGS/gpr1pHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734127204; c=relaxed/simple;
-	bh=9I7jc1DX3DaIFFopBSZ4wu1k+NPSlYdd9tFsgLMkvGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UWBkFNwBko6EalNaXXFukRlh3SN0C3rDI4ughprf0P1zHuAxyZuoOMJj2qb2keqDmthziue/vDEUNTyq0GexQAapb/y4X6b2ZVB0xfA18i4b6UqLJ7qeIaNI07AJy8J845m1aY+3KruFfOiuIDGSSmDPvgcMnscKkxy6qdn13cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cN8oLFL+; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cN8oLFL+"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21628b3fe7dso19061415ad.3;
-        Fri, 13 Dec 2024 14:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734127202; x=1734732002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ewD8EgJf55IsD5hRUbEqPM4ENcw2eA3d/FI7PPWYuQ=;
-        b=cN8oLFL+zBWN7vYa8UH+op9mEt5iOSNx1ZeyYRqKe7d2FdNYG5ulqjqUiMb33x7Y75
-         upYuX4lgabU62bckMvJ+6rkHMtBArb5L6PrYWv9gAUoppn5nB0sNeVFm5tg/aNi8FeAS
-         3OhAs4qsDAMwSJBKsv6xuRFdWZRrpoNlI1szDttvTXoWyaO3iXlH01Wz/UEB61x151/L
-         7khG1fAj5Np0hKA9ypMsDqmq5Li3h+X/cjyoS3xHPmdvRhPZV7GLT6tFRRmGHSTIchEV
-         1ODE6KfDG0mKa2YMd64xHMXvcwybIW+n9eARbpBYlkFsSC/5OY8EXYJKtDLLh2vgXCHt
-         BVcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734127202; x=1734732002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ewD8EgJf55IsD5hRUbEqPM4ENcw2eA3d/FI7PPWYuQ=;
-        b=TAfuooerhy2/26f6KnPPTKPJF1B8KCC8Yru/ZQmj4n//SX824Zo2ngclHQJ5pyFW9Y
-         XEBOAwUK3h8L5kcgAuJG/Gcd5vRxypYlmPVSpzdn+YA9mJF3broyIg6UWIZIZuUVM8Al
-         CWjLoxN7myM86/G9ydK7yQj25+rPtOfqqgsT6m2l21g+qo19TpoPDFOMA4/hoqU5NLb+
-         yH1CPkYKEZcnfcUYNz/QoEB5QYaK0kDefFouHSOhRLUV7tyD+2EioMUtEXfN+/Wdtoim
-         b2p6XFLhQMAfH0KP9wT0wdZzMB8s+Px5qtI1wZP4viP3zzqoeR5iNA70tmZ9aIxiORTN
-         TO7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWAitbXB2jN6bDJgLJKJQn0TlWrNRVzl5ESMY7weH62mTDyBYeKYQf+RK4hKDtjPZsw6pM=@vger.kernel.org, AJvYcCWgtsdW5HgjZwsQTg1yVdUIyS/lPFiCbL+LY/DpL0CyzeJY9YurLgKIGaYDpWnRQaV0GrRiklngUdTe/vO6@vger.kernel.org, AJvYcCX0epVAfSDG4OZDhBjyCZ8bks9jcPFmU68k/unn6UwLbA0FMNMj+BfQSfYtFgGlpcMmDDqLPbNXy3w3aOREnnbGrext@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHZQOFXW+Ppwg7zi2HWUuZTJX4ijL6SaDtzQjFK2cY1F28NAty
-	mx36DRyP/TlBpsdteriMewBhcMXews29X/c95runm2/fooXo/FZWY9LVu1FMOEfOrbJnekdrlq2
-	TTQSBRIxNUE1bTD9+H09oxKUxaLA=
-X-Gm-Gg: ASbGnctaLzvAoDhR3CrM3a908marTqAEq0gn/MOqOVtRZ7WmSw98yPLGd9oz2VmRkED
-	5eWtFAXJ/bP40cCt/iVFlIz0b7AOBBBOF6R+DklXIKOeKDHy3WkCiDA==
-X-Google-Smtp-Source: AGHT+IFZpl12YmemAcyWgQMb0bUsiVqzKLSjYNMZRG50kZGLjKtv2W6IyGN4k/haaBN7zt8pDvcRrd7omTL+yPNHh9I=
-X-Received: by 2002:a17:90b:3b52:b0:2ef:2d9f:8e55 with SMTP id
- 98e67ed59e1d1-2f28fd66b3dmr7300719a91.17.1734127202257; Fri, 13 Dec 2024
- 14:00:02 -0800 (PST)
+	s=arc-20240116; t=1734165510; c=relaxed/simple;
+	bh=1/yIy1SrlcaNV2kPAIqau8laoWMKllp8+UijVCDcJAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d3ITfWZ21vvrTNiqsgZIpxMBKUDlPUoNK9Ph1btsbkQntTqtRvjHRKQ9IECC1HXdv1A7DbBhF+Hn7oD2iY7YJeSjkmF8TVVs5PKf9wGn/43eK8y2W7OmYn7IAYZr53y3Zgp2QCAzcL8zbUcGhZJNe3Emx7VvhAbkgjwEhJ5qJZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Y9KNp5ZCgz20lpM;
+	Sat, 14 Dec 2024 16:38:34 +0800 (CST)
+Received: from kwepemo500008.china.huawei.com (unknown [7.202.195.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 33C09180044;
+	Sat, 14 Dec 2024 16:38:17 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ kwepemo500008.china.huawei.com (7.202.195.163) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Sat, 14 Dec 2024 16:38:15 +0800
+Message-ID: <7266ee61-3085-74fc-2560-c62fc34c2148@huawei.com>
+Date: Sat, 14 Dec 2024 16:37:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241211133403.208920-1-jolsa@kernel.org> <20241213105105.GB35539@noisy.programming.kicks-ass.net>
- <Z1wxqhwHbDbA2UHc@krava> <20241213135433.GD35539@noisy.programming.kicks-ass.net>
- <Z1w_Qi_Wya56YDO_@krava> <20241213183954.GC12338@noisy.programming.kicks-ass.net>
- <Z1yslwyX0yYzS_sb@krava>
-In-Reply-To: <Z1yslwyX0yYzS_sb@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 13 Dec 2024 13:59:49 -0800
-Message-ID: <CAEf4BzaOSAW6cQ3DYK-WJCFs-cW8+ayt5Qk9cBJ=VRXzi81htg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 00/13] uprobes: Add support to optimize usdt
- probes on x86_64
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
+ weak function issue
+Content-Language: en-US
+To: Martin Kelly <martin.kelly@crowdstrike.com>, "masahiroy@kernel.org"
+	<masahiroy@kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "pasha.tatashin@soleen.com"
+	<pasha.tatashin@soleen.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"james.clark@arm.com" <james.clark@arm.com>, "mpe@ellerman.id.au"
+	<mpe@ellerman.id.au>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, "nicolas@fjasle.eu"
+	<nicolas@fjasle.eu>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+	"nathan@kernel.org" <nathan@kernel.org>, "npiggin@gmail.com"
+	<npiggin@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"hpa@zytor.com" <hpa@zytor.com>, "surenb@google.com" <surenb@google.com>,
+	"peterz@infradead.org" <peterz@infradead.org>, "naveen.n.rao@linux.ibm.com"
+	<naveen.n.rao@linux.ibm.com>, "kent.overstreet@linux.dev"
+	<kent.overstreet@linux.dev>, "bp@alien8.de" <bp@alien8.de>,
+	"yeweihua4@huawei.com" <yeweihua4@huawei.com>,
+	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>
+CC: Amit Dang <amit.dang@crowdstrike.com>, "linux-modules@vger.kernel.org"
+	<linux-modules@vger.kernel.org>, "linux-kbuild@vger.kernel.org"
+	<linux-kbuild@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
+ <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
+ <364aaf7c-cdc4-4e57-bb4c-f62e57c23279@csgroup.eu>
+ <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
+ <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
+ <30ee9989044dad1a7083a85316d77b35f838e622.camel@crowdstrike.com>
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <30ee9989044dad1a7083a85316d77b35f838e622.camel@crowdstrike.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemo500008.china.huawei.com (7.202.195.163)
 
-On Fri, Dec 13, 2024 at 1:52=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Fri, Dec 13, 2024 at 07:39:54PM +0100, Peter Zijlstra wrote:
-> > On Fri, Dec 13, 2024 at 03:05:54PM +0100, Jiri Olsa wrote:
-> > > On Fri, Dec 13, 2024 at 02:54:33PM +0100, Peter Zijlstra wrote:
-> > > > On Fri, Dec 13, 2024 at 02:07:54PM +0100, Jiri Olsa wrote:
-> > > > > On Fri, Dec 13, 2024 at 11:51:05AM +0100, Peter Zijlstra wrote:
-> > > > > > On Wed, Dec 11, 2024 at 02:33:49PM +0100, Jiri Olsa wrote:
-> > > > > > > hi,
-> > > > > > > this patchset adds support to optimize usdt probes on top of =
-5-byte
-> > > > > > > nop instruction.
-> > > > > > >
-> > > > > > > The generic approach (optimize all uprobes) is hard due to em=
-ulating
-> > > > > > > possible multiple original instructions and its related issue=
-s. The
-> > > > > > > usdt case, which stores 5-byte nop seems much easier, so star=
-ting
-> > > > > > > with that.
-> > > > > > >
-> > > > > > > The basic idea is to replace breakpoint exception with syscal=
-l which
-> > > > > > > is faster on x86_64. For more details please see changelog of=
- patch 8.
-> > > > > >
-> > > > > > So ideally we'd put a check in the syscall, which verifies it c=
-omes from
-> > > > > > one of our trampolines and reject any and all other usage.
-> > > > > >
-> > > > > > The reason to do this is that we can then delete all this code =
-the
-> > > > > > moment it becomes irrelevant without having to worry userspace =
-might be
-> > > > > > 'creative' somewhere.
-> > > > >
-> > > > > yes, we do that already in SYSCALL_DEFINE0(uprobe):
-> > > > >
-> > > > >         /* Allow execution only from uprobe trampolines. */
-> > > > >         vma =3D vma_lookup(current->mm, regs->ip);
-> > > > >         if (!vma || vma->vm_private_data !=3D (void *) &tramp_map=
-ping) {
-> > > > >                 force_sig(SIGILL);
-> > > > >                 return -1;
-> > > > >         }
-> > > >
-> > > > Ah, right I missed that. Doesn't that need more locking through? Th=
-e
-> > > > moment vma_lookup() returns that vma can go bad.
-> > >
-> > > ugh yes.. I guess mmap_read_lock(current->mm) should do, will check
-> >
-> > If you check
-> > tip/perf/core:kernel/events/uprobe.c:find_active_uprobe_speculative()
-> > you'll find means of doing it locklessly using RCU.
->
-> right, will use that
+On 2024/12/14 03:31, Martin Kelly wrote:
+> On Thu, 2024-12-12 at 17:52 +0800, Zheng Yejian wrote:
+>> On 2024/12/11 04:49, Martin Kelly wrote:
+>>>
+>>>
+>>> Zheng, do you plan to send a v3? I'd be happy to help out with this
+>>> patch series if you'd like, as I'm hoping to get this issue
+>>> resolved
+>>> (though I am not an ftrace expert).
+>>
+>> Sorry to rely so late. Thanks for your feedback!
+>>
+>> Steve recently started a discussion of the issue in:
+>>
+>> https://lore.kernel.org/all/20241015100111.37adfb28@gandalf.local.home/
+>> but there's no conclusion.
+>>    
+>> I can rebase this patch series and send a new version first, and
+>> I'm also hoping to get more feedbacks and help to resolve the issue.
+>>
+> 
+> Hi Zheng,
+> 
+> I may have misunderstood, but based on the final message from Steven, I
+> got the sense that the idea listed in that thread didn't work out and
+> we should proceed with your current approach.
 
-phew, yep, came here to ask not to add mmap_read_lock() into the hot
-path again :)
+This patch set attempts to add length information of symbols to kallsyms,
+which can then ensure that there is only one valid fentry within the range
+of function length.
 
->
-> thanks,
-> jirka
+However, I think this patch set actually has some performance implications,
+including：
+   1. Adding hole symbols may cause the symbol table to grow significantly;
+   2. When parsing fentry tables, excluding invalid fentries through kallsyms lookups
+      may also increase boot or module load times slightly.
+
+The direct cause of this issue is the wrong fentry being founded by ftrace_location(),
+following the approach of "FTRACE_MCOUNT_MAX_OFFSET", narrowing down the search range
+and re-finding may also solve this problem, demo patch like below (not
+fully tested):
+
+     diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+     index 9b17efb1a87d..7d34320ca9d1 100644
+     --- a/kernel/trace/ftrace.c
+     +++ b/kernel/trace/ftrace.c
+     @@ -1678,8 +1678,11 @@ unsigned long ftrace_location(unsigned long ip)
+                             goto out;
+     
+                     /* map sym+0 to __fentry__ */
+     -               if (!offset)
+     +               if (!offset) {
+                             loc = ftrace_location_range(ip, ip + size - 1);
+     +                       while (loc > ip && loc - ip > FTRACE_MCOUNT_MAX_OFFSET)
+     +                               loc = ftrace_location_range(ip, loc - 1);
+     +               }
+             }
+
+Steve, Peter, what do you think?
+
+> 
+> Please consider me an interested party for this patch series, and let
+> me know if there's anything I can do to help speed it along (co-
+> develop, test, anything else). And of course, thanks very much for your
+> work thus far!
+
+-- 
+Thanks,
+Zheng Yejian
+
