@@ -1,100 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B0718FC75
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Dec 2024 14:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D45192B76;
+	Sun, 15 Dec 2024 19:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734272093; cv=none; b=Wb1+RG4k19ZGxj9/o2CfCRbU16Tm9TE4FbTKQnK1Kj2P7fjOUPt3Ocj2/f07Je67e3gonjH7LBmhNp52X+/v55DJV1kMM0826tiLoyjd4jf7/olA/U++g7apHeFav6TYeomiCXLk2NrZ+yA8v86BtPLSMb/1fvg+4quW4fWhRlU=
+	t=1734291312; cv=none; b=mEyg3vCuQY8ZQbWPehhqBTRsrQQh2H/yn/rhD0Leu7yb8eOEafN3cfh3WrCQNzxino2+ktZ9WAHHoIXzNVnaXAwG6Z/p02/oiwipFP1sMLuvabgdmo0KlC0Cdwz1UQbn8997pq3GZGUtA4Uf2owYQpvL3uBkJJi92lsUK7kv0C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734272093; c=relaxed/simple;
-	bh=a53vNz4PUMmhwfydX5urPkZUSvWv4tcg1WmTFyd1Bk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZR2FQ+vxyFkiA2TI6MACEvcvBygid/6T45Kv2fbR+vk5urk3kY3TLJUIkPHapYI9zCayr6RC6/xZTcKgypZ82mPlnYVN2lQAad6MRMVKweuHSnr3ym72YNynSO37b4Qlf1dxK2iaNpPKxA3Lp+aWyFomZyVGOzLDG+Z2Stj0OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ahDAvOwx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ahDAvOwx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734272091;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W3bWsES4HYFomsBdw8ix9WcXokymLmLN9+uEpumIVv4=;
-	b=ahDAvOwxTWmBDOmDRYC/xsWFOjTRU5ng6ETmU4EVynvNfrRVyTHUnumU5HVq35F2unJkEW
-	9g+SfljyEOICaXR/IL/a59hSSvAH3NQRN5UKHMIj9Hsp/16uu9E5acEwzP+BS47PFZu+o3
-	v+4+83NuOVkOomktDDrme6BEV8GE5Ow=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-370-Ls14WX__PYqYc-D7LfhNYw-1; Sun,
- 15 Dec 2024 09:14:45 -0500
-X-MC-Unique: Ls14WX__PYqYc-D7LfhNYw-1
-X-Mimecast-MFC-AGG-ID: Ls14WX__PYqYc-D7LfhNYw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 933201956089;
-	Sun, 15 Dec 2024 14:14:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.41])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 295B630044C1;
-	Sun, 15 Dec 2024 14:14:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 15 Dec 2024 15:14:19 +0100 (CET)
-Date: Sun, 15 Dec 2024 15:14:13 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Laight <David.Laight@ACULAB.COM>
-Cc: 'Jiri Olsa' <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1734291312; c=relaxed/simple;
+	bh=87K9r6v8CggY8AXvxKnWlvLGmM8yqRM96IkXyTCynEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XAGA5JI7M8WUgtxeN1FPCMcIjWqlYzGHVHS1m47/QHTGJdcTdf//cEzx0pvxNgQbD1STHPDNm8VU0pJsX3h5Xx1ld6303WbIJ7Hhy51GsmZ5KuqrxSvw1KdcCbNcVZJStr8ZwFuIklbgXcrpzDwTGN3aQ9VmeOxq4hAocGRk3RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 701B71424;
+	Sun, 15 Dec 2024 11:35:36 -0800 (PST)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 731A43F528;
+	Sun, 15 Dec 2024 11:35:04 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
 	Andrii Nakryiko <andrii@kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next 08/13] uprobes/x86: Add support to optimize
- uprobes
-Message-ID: <20241215141412.GA13580@redhat.com>
-References: <20241211133403.208920-1-jolsa@kernel.org>
- <20241211133403.208920-9-jolsa@kernel.org>
- <1521ff93bc0649b0aade9cfc444929ca@AcuMS.aculab.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v1 0/7] perf auxtrace: Support AUX pause with BPF backend
+Date: Sun, 15 Dec 2024 19:34:29 +0000
+Message-Id: <20241215193436.275278-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1521ff93bc0649b0aade9cfc444929ca@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
 
-On 12/15, David Laight wrote:
->
-> From: Jiri Olsa
-> > The optimized uprobe path
-> >
-> >   - checks the original instruction is 5-byte nop (plus other checks)
-> >   - adds (or uses existing) user space trampoline and overwrites original
-> >     instruction (5-byte nop) with call to user space trampoline
-> >   - the user space trampoline executes uprobe syscall that calls related uprobe
-> >     consumers
-> >   - trampoline returns back to next instruction
-> ...
->
-> How on earth can you safely overwrite a randomly aligned 5 byte instruction
-> that might be being prefetched and executed by another thread of the
-> same process.
+This series extends Perf's ability for fine-grained tracing by attaching
+specific trace events to eBPF programs. As the first step, this series
+supports kprobe, kretprobe, and tracepoints for dynamically pausing and
+resuming AUX trace.
 
-uprobe_write_opcode() doesn't overwrite the instruction in place.
+The first two patches expose a BPF API from kernel so the AUX pause and
+resume can be invoked from a BPF kernel program.
 
-It creates the new page with the same content, overwrites the probed insn in
-that page, then calls __replace_page().
+Syncing UAPI headers between kernel and tools is finished in patch 03.
 
-Oleg.
+The main changes in the Perf tool for implementing eBPF skeleton
+program, hooking BPF program in a perf record session, and attaching
+trace events with BPF programs are finished in patches 04 ~ 06.
+
+The patch 07 updates documentation for usage of the new introduced
+option '--bpf-aux-pause'.
+
+This series has been tested on TC platform with ETE / TRBE with
+commands:
+
+  perf record -e cs_etm/aux-action=start-paused/ \
+  --bpf-aux-pause="kretprobe:__arm64_sys_openat:p,kprobe:__arm64_sys_openat:r,tp:sched:sched_switch:r" -a -- ls
+
+  perf record -e cs_etm/aux-action=start-paused/ \
+  --bpf-aux-pause="kretprobe:__arm64_sys_openat:p,kprobe:__arm64_sys_openat:r,tp:sched:sched_switch:r" -i -- ls
+
+Note, as the AUX pause operation cannot be inherited by child tasks, it
+requires to specify the '-i' option for default trace mode and
+per-thread mode.
+
+
+Leo Yan (7):
+  perf/core: Make perf_event_aux_pause() as external function
+  bpf: Add bpf_perf_event_aux_pause kfunc
+  bpf: Sync bpf_perf_event_aux_pause in tools UAPI bpf.h
+  perf: auxtrace: Introduce eBPF program for AUX pause
+  perf: auxtrace: Support BPF backend for AUX pause
+  perf record: Support AUX pause with BPF
+  perf docs: Document AUX pause with BPF
+
+ include/linux/perf_event.h                    |   1 +
+ include/uapi/linux/bpf.h                      |  21 +
+ kernel/bpf/verifier.c                         |   2 +
+ kernel/events/core.c                          |   2 +-
+ kernel/trace/bpf_trace.c                      |  52 +++
+ tools/include/uapi/linux/bpf.h                |  21 +
+ tools/perf/Documentation/perf-record.txt      |  40 ++
+ tools/perf/Makefile.perf                      |   1 +
+ tools/perf/builtin-record.c                   |  18 +-
+ tools/perf/util/Build                         |   4 +
+ tools/perf/util/auxtrace.h                    |  43 ++
+ tools/perf/util/bpf_auxtrace_pause.c          | 385 ++++++++++++++++++
+ tools/perf/util/bpf_skel/auxtrace_pause.bpf.c | 135 ++++++
+ tools/perf/util/evsel.c                       |   6 +
+ tools/perf/util/record.h                      |   1 +
+ 15 files changed, 730 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/util/bpf_auxtrace_pause.c
+ create mode 100644 tools/perf/util/bpf_skel/auxtrace_pause.bpf.c
+
+-- 
+2.34.1
 
