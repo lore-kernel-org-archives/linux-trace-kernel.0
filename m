@@ -1,92 +1,152 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54201C4A13;
-	Mon, 16 Dec 2024 07:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7071FF7D0;
+	Mon, 16 Dec 2024 07:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734334412; cv=none; b=hq2Pf6cIqIL4oaTMUOt/RLDEES7teO19lgqhqo3kS9qJX2m9oqMowFVzWhHHV1WxS0dIOjaMbdaB+3eqq4js4QCSCXaReOsGoRBF9U89PPeP17GoSodJGzORVwTFICxMWg9IjcQ/bY6Q+/D+btIrWNXmWsgIu4cChhw1ewgQjD4=
+	t=1734335786; cv=none; b=R3/AoexMEWPluJ3lzJVRx6un3KlfyToW+WOqjuTWBXU2QuIq81jdykMbaJSLUgxGCEZvkHHyJ0IDlXHPWIMigrwYEiBQ/BlOwGSwDjaHsBxmuzKEn2UH8aUoKNDXT9JTBAUuwr7v/ttioPK52j/pkKwtx19UNYe24JuFce/4MXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734334412; c=relaxed/simple;
-	bh=LunzrpmbejVkiQrfRXYT+k2sd24HYVljLsHBAxGqlL0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tKvfEm6Eu5++oVR0j7cGThGAPBDRPh2nxgvGYnKrvtLR/og9E/rlOWf/d1PDaFP26B/lo0aQioQtNBVV7BrudMEupDTKSHSahSMzwwLUF4k0xr6HZw+w1v0SxXZ13S2xAzHBXUw2rbu7mEeWZeAOrjl1YfYutsfL8SEVNDd63SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4BG5l4qi013864;
-	Sun, 15 Dec 2024 23:32:42 -0800
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 43hadq19h1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Sun, 15 Dec 2024 23:32:41 -0800 (PST)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Sun, 15 Dec 2024 23:32:41 -0800
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Sun, 15 Dec 2024 23:32:39 -0800
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <syzbot+0aecfd34fb878546f3fd@syzkaller.appspotmail.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
-        <rostedt@goodmis.org>, <syzkaller-bugs@googlegroups.com>
-Subject: [PATCH V2] tracing: Prevent bad count for tracing_cpumask_write
-Date: Mon, 16 Dec 2024 15:32:38 +0800
-Message-ID: <20241216073238.2573704-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <675f60b1.050a0220.37aaf.0107.GAE@google.com>
-References: <675f60b1.050a0220.37aaf.0107.GAE@google.com>
+	s=arc-20240116; t=1734335786; c=relaxed/simple;
+	bh=bSlERmMYSl7dopPQbjdQD2d1oHPFGiVS0aVu0lv4m5c=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEsRueOEkK6f6ftEVnpWobKiPyirQa8W5/Jqp5KzCpqZJcouARXwZUnfZqw6qhaiQrTqrhCfIZ0je/G2+3z5eQO2n4p2DtWasvWvD3x/ReGMh4Uf+RJuUxgWdHE73Mk+4Zks6/SowFca8hMq0qg0tGQXaTI5rTBKIKyhxRwPEbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PbknvN8I; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbknvN8I"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5d647d5df90so3569233a12.2;
+        Sun, 15 Dec 2024 23:56:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734335783; x=1734940583; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/vTcaQKwd8FYs5ftOR4sAUTa6EBjrQidDcX0mFSVSMA=;
+        b=PbknvN8ICA7TldBCN8erjJCPPwNKtIpclusnuWKU6pzJ0CIB1VB2agRBC8uaX8bF9c
+         H9EVUs98VO0quZiyU2AYF3gXa0i4fBrzjag1MLQvpKRR8aktqywwvAqchcF+FZ1WurSS
+         QWah3BzluIhfyr1CdyyTwuZnrRhiyRnVacRGq2AeZ3CjXGV494vp+6qid7w8ozpkDke2
+         OFQWhWw5DsdhEcEGet56Maiz/A6ZEzU6ceod5daDYyFfyPcHn7/atRndnZeTD+ck5mv2
+         soEOpRGz97u9EtXrIx+6qGyJk1M5HziMDsMFMyoRBOVPIFJubjf7AzoE/nG6AM8hbbfI
+         kCvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734335783; x=1734940583;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/vTcaQKwd8FYs5ftOR4sAUTa6EBjrQidDcX0mFSVSMA=;
+        b=eGGdL+iHxuslkQQVtFJMxzgTjiNn7ivgl0G9XatApkMlapvdKvQE6VFUWrMTnXvDG1
+         7r/fUOpUPtm9dwL7iEvg8dgDybDCkbitCeVG86YvjEV6j+HD9fwrLRAV2Q8Di1AAezXj
+         kLKfjSIvHOvoM+ZJvye7h+hrD1wxewXbPfY2zyVu5dR3eDj7Ink19TxTcp+KExhXSDsP
+         c8v7NFGbwNDwa0bZwE6Wzz8pXEWl0n3QB/X1VqMPk5WFb9kxduZ4EtMvhrT+MiiRBArv
+         6qhaBE6rk/kn5KrQ8KCuZBZY6UT4MGlLHf+2gKMv5SKzgpUtPfQp6+96HltnDipqCHrZ
+         khgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlZ1SAOaxPQEi3ZCYWCyJYKx1EV/T7/rF1wsIeGNMkmCGUi/YjEpp99OWsQxJtjZy1ErZ1F960pbn2N8JS@vger.kernel.org, AJvYcCVRxOZZZk5rJ+m9AU8m1a2wNHmTxNyGGbz10/fhMRlxu39Gk3YrEN+jf+02MFLI89y18OG/aJiqTCtLqV2iAA5vtyVF@vger.kernel.org, AJvYcCX2B+Y/J2iIcJlp+qAHsWej8+vsm/kdfgtE5k6g+sxHH7jLObVmGMOpLU9FHNZLDIbJ5OM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0q8Mscdida5p6DkysCadwn4hiEkt5yyJtjsEpQxOhwimtjlqy
+	vJStHAi7NYiRbuUOWady6BfsMT7F8L4c+iApGh3VyxxdL7hDiSa2
+X-Gm-Gg: ASbGncupZcXtLAfGm6cYhPR5BaXLZsagiES+OdApLLcYwsMc8+wRuGze4nMzX+Bz1Ax
+	74puNgC6MTxf1PGXRNo9Z4W7XRu9DfJx0roMiL7tfsIpolwXYd9Xl3WVYJ7sXGoh0Xb3IwCXZ/M
+	zwzh16OKB+3OnBu8U6I/zney6bseiIEdiWO7m+9vHd4FkD5s4nScrEmfx98fbxZF4ky73CXvsG0
+	tiScIQyrMR6u5ihDI1tDyNCBhTEIRUM3ZIe6sdODLrCfBDi5ATs9ciaX7m1vNueRYlQLgqEdxJR
+	ukPFPl2WZbALnc1fOx8hwtvvDL+8ng==
+X-Google-Smtp-Source: AGHT+IEo5XlTc7xrSCK3CcJK+pHVJ3ufXsaL/ChLZ1HGl/lNJOhPv044YxeiUr1vNFlFw1ZMURHFdA==
+X-Received: by 2002:a17:907:7204:b0:aa6:3de7:f258 with SMTP id a640c23a62f3a-aab77e9d1e3mr1081031366b.37.1734335782598;
+        Sun, 15 Dec 2024 23:56:22 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab96006c3asm300376266b.19.2024.12.15.23.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Dec 2024 23:56:22 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 16 Dec 2024 08:56:19 +0100
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 13/13] selftests/bpf: Add 5-byte nop uprobe
+ trigger bench
+Message-ID: <Z1_dIwRiqbsuWgvF@krava>
+References: <20241211133403.208920-1-jolsa@kernel.org>
+ <20241211133403.208920-14-jolsa@kernel.org>
+ <CAEf4BzZPCdRPyXH1xDed2m3VvNkzzpY33Gbd_vWxivxLZQCdLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 6qO6Brv-bjy_kDgcp5vYHbP6zBz_C5VO
-X-Authority-Analysis: v=2.4 cv=INT4ChvG c=1 sm=1 tr=0 ts=675fd799 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=RZcAm9yDv7YA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=ifPpds2xWHkUFzapTN4A:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: 6qO6Brv-bjy_kDgcp5vYHbP6zBz_C5VO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2024-12-16_02,2024-12-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 malwarescore=0 mlxscore=0
- spamscore=0 phishscore=0 mlxlogscore=694 adultscore=0 suspectscore=0
- bulkscore=0 classifier=spam authscore=0 adjust=0 reason=mlx scancount=1
- engine=8.21.0-2411120000 definitions=main-2412160060
+In-Reply-To: <CAEf4BzZPCdRPyXH1xDed2m3VvNkzzpY33Gbd_vWxivxLZQCdLQ@mail.gmail.com>
 
-If a large count is provided, it will triger a warning in bitmap_parse_user.
-Also check zero for it.
+On Fri, Dec 13, 2024 at 01:57:56PM -0800, Andrii Nakryiko wrote:
+> On Wed, Dec 11, 2024 at 5:36 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
+> > uprobes/uretprobes on top of nop5 instruction.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/testing/selftests/bpf/bench.c           | 12 ++++++
+> >  .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
+> >  .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
+> >  3 files changed, 55 insertions(+), 1 deletion(-)
+> >
+> 
+> [...]
+> 
+> >  static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
+> >  {
+> >         size_t uprobe_offset;
+> > @@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
+> >         usetup(true, true /* use_multi */, &uprobe_target_ret);
+> >  }
+> >
+> > +#ifdef __x86_64__
+> > +static void uprobe_nop5_setup(void)
+> > +{
+> > +       usetup(false, false /* !use_multi */, &uprobe_target_nop5);
+> > +}
+> > +
+> > +static void uretprobe_nop5_setup(void)
+> > +{
+> > +       usetup(false, false /* !use_multi */, &uprobe_target_nop5);
+> > +}
+> 
+> true /* use_retprobe */
+> 
+> that's the problem with bench setup, right?
 
-Reported-by: syzbot+0aecfd34fb878546f3fd@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=0aecfd34fb878546f3fd
-Tested-by: syzbot+0aecfd34fb878546f3fd@syzkaller.appspotmail.com
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
----
-V1 -> V2: use KMALLOC_MAX_SIZE
+yes, but there's more ;-)
 
- kernel/trace/trace.c | 3 +++
- 1 file changed, 3 insertions(+)
+we also need change in arch_uretprobe_hijack_return_addr to skip
+the extra 3 values (pushed on stack by the uprobe trampoline) when
+hijacking the returm value, I'll send new version
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index be62f0ea1814..109f301549b8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5225,6 +5225,9 @@ tracing_cpumask_write(struct file *filp, const char __user *ubuf,
- 	cpumask_var_t tracing_cpumask_new;
- 	int err;
- 
-+	if (count == 0 || count > KMALLOC_MAX_SIZE)
-+		return -EINVAL;
-+
- 	if (!zalloc_cpumask_var(&tracing_cpumask_new, GFP_KERNEL))
- 		return -ENOMEM;
- 
--- 
-2.43.0
+jirka
 
+> 
+> > +
+> > +static void uprobe_multi_nop5_setup(void)
+> > +{
+> > +       usetup(false, true /* use_multi */, &uprobe_target_nop5);
+> > +}
+> > +
+> > +static void uretprobe_multi_nop5_setup(void)
+> > +{
+> > +       usetup(false, true /* use_multi */, &uprobe_target_nop5);
+> > +}
+> > +#endif
+> > +
+> >  const struct bench bench_trig_syscall_count = {
+> >         .name = "trig-syscall-count",
+> >         .validate = trigger_validate,
+> 
+> [...]
