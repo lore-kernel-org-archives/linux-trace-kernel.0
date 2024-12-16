@@ -1,129 +1,195 @@
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3C9205E3B;
-	Mon, 16 Dec 2024 14:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46801428F1
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Dec 2024 15:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734358453; cv=none; b=PyCL1Hht5JXIBx6Ea3SK589/+K+uuyaqP4KDwkSmJnUiFGWBAIWUVYun2xFm7DU8XC7trVq11mlMi7ud51FlLEdAHehofyO9A6yx5rRR0L+3r0iOSkvXQDSSA4kGH60NnZ67veT/kY1tJ0B5poEY8XE6tkJHqli+dU6JYszkr3Y=
+	t=1734361765; cv=none; b=keEELn8oVyKCDt/3Z9NINEGH+UmAZk4j/d8Te2mAsCYZ1NZCcxretuFNwG+MZAcZdYgb1vWIkvhWNCuPeqHB9M4fJvh4EhLMeiEQSBbbTk/b9ccU1iCo+E79e9c7Oxs1RtfSzFUJ1mY82Vg0YBiLewfUlVJ8iDMAbJ87uTgkkT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734358453; c=relaxed/simple;
-	bh=Lab8uBkoiiDISVjxkdymFR9/9sEdfGxnbo81pkp2ecA=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=qqBl86OizOL7OUqkvbqTUjqL+XxpucqJxGgvmAVmTAObKAALMd2e8/B9+XqVSdKtqwywDCb2PceVqFWNxH28HDFDPJChXHGigF1JrvXySIKjvLMlnBFi+rh7Q7fazgA/PuxHsEpyvfWo4ext1hHs9S5IJj/ENXb8jdAXPSWQhmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=dFywmTWX; arc=none smtp.client-ip=203.205.221.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="dFywmTWX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1734358447; bh=IORjVDWw9PVe8SQPp6GdmklSQwTD9Lex2dxUowqavTY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dFywmTWXuxBhOKyAEmLFTZus9m4bfrsWlh3bV5SAGEoZrDIOxum0ISqozZLSYuqqb
-	 Yn4SLcinuioRIKEP74ofQBRIli/9MPKfEBDTa96Ve4ghRKqBDyDE/mqHxfqF1hHqwo
-	 tvcdwzaEEeFflmW9rT4ONDsIkx45YpUr0rFmgPJk=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.34])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 1F82E847; Mon, 16 Dec 2024 22:07:56 +0800
-X-QQ-mid: xmsmtpt1734358076t4cw6z6sy
-Message-ID: <tencent_E036A29600368E4A2075A7774D67023CFD09@qq.com>
-X-QQ-XMAILINFO: Mw5V7KuSxHjfshEbLKBaYpHNs9f8PO4duBsWltGCidOguOVaYfh6cm6CMRRR0Q
-	 XHC8WXjVLgmWKoWRcNm3xli7h0s0tPapEIYCRH7eWgV1tkkGubkVywRj4bmrP06gk3YY3HtipO4r
-	 FWLnUbHSujKBlhB9Nf2OYoC9kOcAUC/CDZpYjg8iRguWuZPSZ5sJBJKXKRFzdduZzGzpw8YRtDe3
-	 fd63UoFfbhW3tajNxr/QrAzlPc1KH7tXywfJZXeSNor8k9n1rklMd07VtKQdmwunM9G+j5eDSy4t
-	 0+kPJ7tQIEZYbwSj5cYpe5fT3X/Be1Aob4CZC7eYJVAMLhQyaeo+Rk8L5R53ViEpCjavyneFatNg
-	 aakW8G/bt1oMSOmeZJ4iL6Flp9vttWMQsC9xTQUC3hf1zm/O4NE9Qg8HnTBhjiPuPUDtNSAda8m3
-	 jyI1WP0sRGYPmJJq5muHZnPg0GwGEADV/7zCj37UCbz9n4FVLEkGqAQ3yyoEFL2VkbR3GizK0Wcy
-	 q+mnUm1gvyg31Hmw9UpzmuVV0RKjJqzIATp6IXnpYsCm+K3pW6VwTPrB9UegX4Q2nF/k/QK1eyP6
-	 dw0q050HtJ9LiuB5PkVv0IW9j+DT0lEl78mwpwc0HuSNYQztqhoJhBWjrOMXIBnO8LRWdfLiprAH
-	 rx8zxIAgp8e9MXa/RDyv27vdB38gYaUV2L2gXgDmMHkOJNAVQv2gyLeDXAv+GJjbeM975PjW/db5
-	 iOFxGfTK+eKRFW+qWEkX+LQTe8w+sEKDOWCGw+d7SJ+ku6ctTxfOFxC6PvjPVFPyxdpj5vZ97atE
-	 Ylqs7eknhHhvWnYjoznJKEtDW9/Tuk3U0lO/zZSra7BqfDwJiJFox3LcKAIcTlqHSc+FQIdkmVVS
-	 MFuiTADFX8esAIHG58ysROX0OUK9N8hg==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] ring-buffer: Fix a oob in __rb_map_vma
-Date: Mon, 16 Dec 2024 22:07:57 +0800
-X-OQ-MSGID: <20241216140756.2403238-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <675fe376.050a0220.37aaf.011e.GAE@google.com>
-References: <675fe376.050a0220.37aaf.011e.GAE@google.com>
+	s=arc-20240116; t=1734361765; c=relaxed/simple;
+	bh=+EZvaRtod53RfYhLjTwH55bjpToAZ++4brtIjAyL2/k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=Mm0JIxMUNPxKjhMqwEq+T0+N93NpD7lrhXDqRW1U66IfYsu5KKzkQ4XEv3Vo5AZcFpLfZWu7C4KsP1pJ+Xq/PtjYLWwsI7EAgrNn1iLFCrTzN0fvuXpe0ibdLlyZXSOwLv1bB6vsOh0eSaNIvnVseKgbGXABIsiTqXT2MfMS0r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-186-zBF_QFIGN8iskqJS4NvIGg-1; Mon, 16 Dec 2024 15:09:19 +0000
+X-MC-Unique: zBF_QFIGN8iskqJS4NvIGg-1
+X-Mimecast-MFC-AGG-ID: zBF_QFIGN8iskqJS4NvIGg
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 16 Dec
+ 2024 15:08:14 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Mon, 16 Dec 2024 15:08:14 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Jiri Olsa' <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>
+CC: "linux-mm@kvack.org" <linux-mm@kvack.org>, Peter Zijlstra
+	<peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>, Song Liu
+	<songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
+	<john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire
+	<alan.maguire@oracle.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+	<linux-trace-kernel@vger.kernel.org>
+Subject: RE: [PATCH bpf-next 08/13] uprobes/x86: Add support to optimize
+ uprobes
+Thread-Topic: [PATCH bpf-next 08/13] uprobes/x86: Add support to optimize
+ uprobes
+Thread-Index: AQHbS9GTSF5rwnXysUaDsufIVqYKlLLnNYvQgAFWD+SAAA72QIAAE/UAgAAKdkCAACFInYAAIoEw
+Date: Mon, 16 Dec 2024 15:08:14 +0000
+Message-ID: <e206df95d98d4cbab77824cf7a32a80f@AcuMS.aculab.com>
+References: <20241211133403.208920-1-jolsa@kernel.org>
+ <20241211133403.208920-9-jolsa@kernel.org>
+ <1521ff93bc0649b0aade9cfc444929ca@AcuMS.aculab.com>
+ <20241215141412.GA13580@redhat.com> <Z1_gFymfO3sAwhiY@krava>
+ <c5fb22629d3f42798def5b63ce834801@AcuMS.aculab.com>
+ <20241216101258.GA374@redhat.com>
+ <0916e24539ba4bae9fb729198b033bd7@AcuMS.aculab.com>
+ <20241216122204.GB374@redhat.com> <Z2AiFdDsrSjZ_-3-@krava>
+In-Reply-To: <Z2AiFdDsrSjZ_-3-@krava>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _8oxH0e_rQMyMKYKT8ErMWuu36olySu61q9LuaWIPhM_1734361758
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-syzbot report a slab-out-of-bounds in __rb_map_vma. [1]
+From: Jiri Olsa
+> Sent: 16 December 2024 12:50
+>=20
+> On Mon, Dec 16, 2024 at 01:22:05PM +0100, Oleg Nesterov wrote:
+> > OK, thanks, I am starting to share your concerns...
+> >
+> > Oleg.
+> >
+> > On 12/16, David Laight wrote:
+> > >
+> > > From: Oleg Nesterov
+> > > > Sent: 16 December 2024 10:13
+> > > >
+> > > > David,
+> > > >
+> > > > let me say first that my understanding of this magic is very limite=
+d,
+> > > > please correct me.
+> > >
+> > > I only (half) understand what the 'magic' has to accomplish and
+> > > some of the pitfalls.
+> > >
+> > > I've copied linux-mm - someone there might know more.
+> > >
+> > > > On 12/16, David Laight wrote:
+> > > > >
+> > > > > It all depends on how hard __replace_page() tries to be atomic.
+> > > > > The page has to change from one backed by the executable to a pri=
+vate
+> > > > > one backed by swap - otherwise you can't write to it.
+> > > >
+> > > > This is what uprobe_write_opcode() does,
+> > >
+> > > And will be enough for single byte changes - they'll be picked up
+> > > at some point after the change.
+> > >
+> > > > > But the problems arise when the instruction prefetch unit has rea=
+d
+> > > > > part of the 5-byte instruction (it might even only read half a ca=
+che
+> > > > > line at a time).
+> > > > > I'm not sure how long the pipeline can sit in that state - but I
+> > > > > can do a memory read of a PCIe address that takes ~3000 clocks.
+> > > > > (And a misaligned AVX-512 read is probably eight 8-byte transfers=
+.)
+> > > > >
+> > > > > So I think you need to force an interrupt while the PTE is invali=
+d.
+> > > > > And that need to be simultaneous on all cpu running that process.
+> > > >
+> > > > __replace_page() does ptep_get_and_clear(old_pte) + flush_tlb_page(=
+).
+> > > >
+> > > > That's not enough?
+> > >
+> > > I doubt it. As I understand it.
+> > > The hardware page tables will be shared by all the threads of a proce=
+ss.
+> > > So unless you hard synchronise all the cpu (and flush the TLB) while =
+the
+> > > PTE is being changed there is always the possibility of a cpu picking=
+ up
+> > > the new PTE before the IPI that (I presume) flush_tlb_page() generate=
+s
+> > > is processed.
+> > > If that happens when the instruction you are patching is part-read in=
+to
+> > > the instruction decode buffer then you'll execute a mismatch of the t=
+wo
+> > > instructions.
+>=20
+> if 5 byte update would be a problem, I guess we could workaround that thr=
+ough
+> partial updates using int3 like we do in text_poke_bp_batch?
+>=20
+>   - changing nop5 instruction to 'call xxx'
+>   - write int3 to first byte of nop5 instruction
+>   - have poke_int3_handler to emulate nop5 if int3 is triggered
+>   - write rest of the call instruction to nop5 last 4 bytes
+>   - overwrite first byte of nop5 with call opcode
 
-Overflow occurred when performing the following calculation:
-nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
+That might work provided there are IPI (to flush the decode pipeline)
+after the write of the 'int3' and one before the write of the 'call'.
+You'll need to ensure the I-cache gets invalidated as well.
 
-Add a check before the calculation to avoid this problem.
+And if the sequence crosses a page boundary....
 
-[1]
-BUG: KASAN: slab-out-of-bounds in __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
-Read of size 8 at addr ffff8880767dd2b8 by task syz-executor187/5836
+=09David
 
-CPU: 0 UID: 0 PID: 5836 Comm: syz-executor187 Not tainted 6.13.0-rc2-syzkaller-00159-gf932fb9b4074 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xc3/0x620 mm/kasan/report.c:489
- kasan_report+0xd9/0x110 mm/kasan/report.c:602
- __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
- ring_buffer_map+0x56e/0x9b0 kernel/trace/ring_buffer.c:7138
- tracing_buffers_mmap+0xa6/0x120 kernel/trace/trace.c:8482
- call_mmap include/linux/fs.h:2183 [inline]
- mmap_file mm/internal.h:124 [inline]
- __mmap_new_file_vma mm/vma.c:2291 [inline]
- __mmap_new_vma mm/vma.c:2355 [inline]
- __mmap_region+0x1786/0x2670 mm/vma.c:2456
- mmap_region+0x127/0x320 mm/mmap.c:1348
- do_mmap+0xc00/0xfc0 mm/mmap.c:496
- vm_mmap_pgoff+0x1ba/0x360 mm/util.c:580
- ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:542
- __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
- __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
- __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>=20
+> similar update from 'call xxx' -> 'nop5'
+>=20
+> thanks,
+> jirka
+>=20
+> > >
+> > > I can't remember the outcome of discussions about live-patching kerne=
+l
+> > > code - and I'm sure that was aligned 32bit writes.
+> > >
+> > > >
+> > > > > Stopping the process using ptrace would do it.
+> > > >
+> > > > Not an option :/
+> > >
+> > > Thought you'd say that.
+> > >
+> > > =09David
+> > >
+> > > >
+> > > > Oleg.
+> > >
+> > > -
+> > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,=
+ MK1 1PT, UK
+> > > Registration No: 1397386 (Wales)
+> > >
+> >
 
-Reported-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=345e4443a21200874b18
-Tested-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- kernel/trace/ring_buffer.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7e257e855dd1..15c43d7415d5 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7019,6 +7019,9 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
-+	if (((nr_subbufs + 1) << subbuf_order) < pgoff)
-+		return -EINVAL;
-+
- 	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
- 
- 	nr_vma_pages = vma_pages(vma);
--- 
-2.47.0
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
