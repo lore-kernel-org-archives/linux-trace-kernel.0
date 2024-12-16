@@ -1,137 +1,89 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF0B20409A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Dec 2024 11:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E72D2040BC;
+	Mon, 16 Dec 2024 11:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734347491; cv=none; b=FYfgIWDyKBjgiq+gE/bV03TMKzPI9DDV6XUZBUSdpYETR/TV/qKjhLYrcKylaRyXkKNPEdGSvYPQz+xvofcoVoiqUSavAJH4oqXt7AgL0fk5Cq0SpY3X6qsJn7RafpOIRe8RNTweChHbDPie/TAMzJyH/mOjG8bHENKNxKRU8Nk=
+	t=1734348192; cv=none; b=LwfD2KhglmZvtlkrb/k0AFSbGJ1kfZpgpwl6JATy+kxiMVETaaQvnxRvK40wPM39N0OnzqSMvCn6hmPy8WWXb1TyyR1bQB0N7+llVusUJa0XGoaVTOdnzoB1ABsZbr/zOZPoYAIiMcpCPUUMxZIFIC7VvYdOzS1wcVG0G7kC5Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734347491; c=relaxed/simple;
-	bh=N2vdhFMCwt7nl3aR3OnWzK7YbPyMRZ+JlQNLQWrzIEU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=FCx6rRgHk0bdT9L/c39D3lOdigrGqtr+shPxWm7Gkb4Nq0E7cBOgC+XG6gz9sDBaiCrXkHWPFJhEAsEWbrhq2+cb5e+KOvqTV+bIyxMhIyNmAlIkAWKppx8YYOHmXQ6EhzAfzXmsJZGHi/6f4x+YBaHrc7O2EHwnEDAB9k4D1GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-78-kvkqQzWQOWCezDNdN5gTxA-1; Mon, 16 Dec 2024 11:11:27 +0000
-X-MC-Unique: kvkqQzWQOWCezDNdN5gTxA-1
-X-Mimecast-MFC-AGG-ID: kvkqQzWQOWCezDNdN5gTxA
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 16 Dec
- 2024 11:10:23 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 16 Dec 2024 11:10:23 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Oleg Nesterov' <oleg@redhat.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>
-CC: 'Jiri Olsa' <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, "bpf@vger.kernel.org"
-	<bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>, Yonghong Song
-	<yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
-	<haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>
-Subject: RE: [PATCH bpf-next 08/13] uprobes/x86: Add support to optimize
- uprobes
-Thread-Topic: [PATCH bpf-next 08/13] uprobes/x86: Add support to optimize
- uprobes
-Thread-Index: AQHbS9GTSF5rwnXysUaDsufIVqYKlLLnNYvQgAFWD+SAAA72QIAAE/UAgAAKdkA=
-Date: Mon, 16 Dec 2024 11:10:23 +0000
-Message-ID: <0916e24539ba4bae9fb729198b033bd7@AcuMS.aculab.com>
-References: <20241211133403.208920-1-jolsa@kernel.org>
- <20241211133403.208920-9-jolsa@kernel.org>
- <1521ff93bc0649b0aade9cfc444929ca@AcuMS.aculab.com>
- <20241215141412.GA13580@redhat.com> <Z1_gFymfO3sAwhiY@krava>
- <c5fb22629d3f42798def5b63ce834801@AcuMS.aculab.com>
- <20241216101258.GA374@redhat.com>
-In-Reply-To: <20241216101258.GA374@redhat.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1734348192; c=relaxed/simple;
+	bh=v9MlYDCK36PZWcjvhUzQxWG/G5vDOUuxFMmWx9TYNdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y4TC3bNEg/acm9TgLGuIs1Ct8fCYiRSFOTa7V5TFV/HqpTzQqfObQm7Ik6LvNgN/Iy2bf9X3Y/yv4koCtpMOxxMsu4aOY9s3NgcP5wgRZzVuH2VFM4PgKrcCvlHzKKMX5Wj15gsolaPRTovFwDwuMAbpCiEb9G051XtHVd2Rzh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=dLEThSlc; arc=none smtp.client-ip=178.154.239.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="dLEThSlc"
+Received: from mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:a1f:0:640:ba2e:0])
+	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id A762960C03;
+	Mon, 16 Dec 2024 14:20:56 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:b593::1:0])
+	by mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id IKN1R70IdeA0-8ZrX9k8l;
+	Mon, 16 Dec 2024 14:20:55 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1734348055;
+	bh=/nS9+hHfVlqu+TKOoeIEOJA+wyrVifg4eoRYjE3EpB0=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=dLEThSlcgquloVYaUJqdgxw+4QGWBkC9ro/fzH2XiXPxkN7sWWeKC5z4LrfuSb0I1
+	 mLQh9adZ2AUKyG8yNXK35vUBeoqyhtMVGdAVyVjSaC0efOoQ23p2qbtt2LiRo5aeKa
+	 arIhA4vFyu5A7s9QFZ2g0xazBcEHPCGPIDgTdIeA=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Francis Laniel <flaniel@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Nikolay Kuratov <kniv@yandex-team.ru>
+Subject: [PATCH v2 5.4 5.15 6.6] tracing/kprobes: Skip symbol counting logic for module symbols in create_local_trace_kprobe()
+Date: Mon, 16 Dec 2024 14:19:23 +0300
+Message-Id: <20241216111923.2547104-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ayO4ziRGov43zUCCod3MKcMFL-FPzKCoRdM_18SMTPA_1734347486
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From: Oleg Nesterov
-> Sent: 16 December 2024 10:13
->=20
-> David,
->=20
-> let me say first that my understanding of this magic is very limited,
-> please correct me.
+commit b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+avoids checking number_of_same_symbols() for module symbol in
+__trace_kprobe_create(), but create_local_trace_kprobe() should avoid this
+check too. Doing this check leads to ENOENT for module_name:symbol_name
+constructions passed over perf_event_open.
 
-I only (half) understand what the 'magic' has to accomplish and
-some of the pitfalls.
+No bug in newer kernels as it was fixed more generally by
+commit 9d8616034f16 ("tracing/kprobes: Add symbol counting check when module loads")
 
-I've copied linux-mm - someone there might know more.
+Link: https://lore.kernel.org/linux-trace-kernel/20240705161030.b3ddb33a8167013b9b1da202@kernel.org
+Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+---
+v1 -> v2:
+ * Reword commit title and message
+ * Send for stable instead of mainline
 
-> On 12/16, David Laight wrote:
-> >
-> > It all depends on how hard __replace_page() tries to be atomic.
-> > The page has to change from one backed by the executable to a private
-> > one backed by swap - otherwise you can't write to it.
->=20
-> This is what uprobe_write_opcode() does,
+ kernel/trace/trace_kprobe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And will be enough for single byte changes - they'll be picked up
-at some point after the change.
-
-> > But the problems arise when the instruction prefetch unit has read
-> > part of the 5-byte instruction (it might even only read half a cache
-> > line at a time).
-> > I'm not sure how long the pipeline can sit in that state - but I
-> > can do a memory read of a PCIe address that takes ~3000 clocks.
-> > (And a misaligned AVX-512 read is probably eight 8-byte transfers.)
-> >
-> > So I think you need to force an interrupt while the PTE is invalid.
-> > And that need to be simultaneous on all cpu running that process.
->=20
-> __replace_page() does ptep_get_and_clear(old_pte) + flush_tlb_page().
->=20
-> That's not enough?
-
-I doubt it. As I understand it.
-The hardware page tables will be shared by all the threads of a process.
-So unless you hard synchronise all the cpu (and flush the TLB) while the
-PTE is being changed there is always the possibility of a cpu picking up
-the new PTE before the IPI that (I presume) flush_tlb_page() generates
-is processed.
-If that happens when the instruction you are patching is part-read into
-the instruction decode buffer then you'll execute a mismatch of the two
-instructions.
-
-I can't remember the outcome of discussions about live-patching kernel
-code - and I'm sure that was aligned 32bit writes.
-
->=20
-> > Stopping the process using ptrace would do it.
->=20
-> Not an option :/
-
-Thought you'd say that.
-
-=09David
-
->=20
-> Oleg.
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 12d997bb3e78..94cb09d44115 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1814,7 +1814,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+ 	int ret;
+ 	char *event;
+ 
+-	if (func) {
++	if (func && !strchr(func, ':')) {
+ 		unsigned int count;
+ 
+ 		count = number_of_same_symbols(func);
+-- 
+2.34.1
 
