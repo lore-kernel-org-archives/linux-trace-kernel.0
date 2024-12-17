@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348E78F49;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490F18035;
 	Tue, 17 Dec 2024 02:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734403606; cv=none; b=PQ94boDy0p545i6m/70HdPRCvMecxqXHft9Rg6erC3ZB043Krk1GK7iDDx1GcojpzjBCVCmPjQO3E0ItSfs4EPnxuMnenCmJVdUMscKOq8lJ3Lcy6NKVVZGJoAu72uvgOKRhlBe5p3QZF6xxv0yRt5mR1yux96JxqJ2SjHn8tEo=
+	t=1734403606; cv=none; b=K9KpCV8BdBy5evLDCKyLtzmA9DO15kQVC65vBzmqgGwv0WAZ/4pqScYXSdWilKwEU7jqNSqpK+suhd6I6eG/cpf9W8h02HizS5U7SxDRlsm9c8O/AMOtFMiJ+ig8IsaMvUOKXH/MRF+SUN9yJabWMGl90Rca+s4462y0O7VY3oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734403606; c=relaxed/simple;
-	bh=+meYEWCHHgJpgYBqdWW8S/7CO2A7qz1tONeLBxp9h18=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=jbV4QZuwZfuI9pOCEOQzD07w0BaBMR6mZE13r2tFOEecwjbObjsDcDJiNXwTDSKpNj43hhdUPk7QOkTDzMluDg2vadeCwNzw9bjvaiyJ/p/wgSShH6mYT5TV4B+R4zU4nsGu8rH/Yv+saKs5bXd/3fgA/hxFxy1vGHLTPGLnWS8=
+	bh=OyU1FNQYFda3q1ZApYV9F4W8wK01VXp83Vev22+RFcQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=KXNVQh930NSCJlhJ5KvxZuOEJgBnp5PFQwltXVyCmWBCrCi7rybnUHWYj/cJA06+wRySy5Pb/lH1dCs9KkI5y1onryY7m3X5Yrk8aA/oqhb1f/MkrfZ/KhWlGM7Kugmcbyz5sBI33bNUAUgJBnmShznFs/gFWPJt+Eb8a7TUPUM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9832C4CED0;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5836C4CED7;
 	Tue, 17 Dec 2024 02:46:45 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tNNcG-000000087UV-1P2r;
+	id 1tNNcG-000000087VK-26Gk;
 	Mon, 16 Dec 2024 21:47:20 -0500
-Message-ID: <20241217024118.587584221@goodmis.org>
+Message-ID: <20241217024720.362271189@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 16 Dec 2024 21:41:18 -0500
+Date: Mon, 16 Dec 2024 21:41:19 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,78 +29,190 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Al Viro <viro@ZenIV.linux.org.uk>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 0/4] tracing: Replace trace_check_printf() with ignore_event()
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ stable@vger.kernel.org
+Subject: [PATCH 1/4] tracing: Fix test_event_printk() to process entire print argument
+References: <20241217024118.587584221@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Steven Rostedt <rostedt@goodmis.org>
+
+The test_event_printk() analyzes print formats of trace events looking for
+cases where it may dereference a pointer that is not in the ring buffer
+which can possibly be a bug when the trace event is read from the ring
+buffer and the content of that pointer no longer exists.
+
+The function needs to accurately go from one print format argument to the
+next. It handles quotes and parenthesis that may be included in an
+argument. When it finds the start of the next argument, it uses a simple
+"c = strstr(fmt + i, ',')" to find the end of that argument!
+
+In order to include "%s" dereferencing, it needs to process the entire
+content of the print format argument and not just the content of the first
+',' it finds. As there may be content like:
+
+ ({ const char *saved_ptr = trace_seq_buffer_ptr(p); static const char
+   *access_str[] = { "---", "--x", "w--", "w-x", "-u-", "-ux", "wu-", "wux"
+   }; union kvm_mmu_page_role role; role.word = REC->role;
+   trace_seq_printf(p, "sp gen %u gfn %llx l%u %u-byte q%u%s %s%s" " %snxe
+   %sad root %u %s%c", REC->mmu_valid_gen, REC->gfn, role.level,
+   role.has_4_byte_gpte ? 4 : 8, role.quadrant, role.direct ? " direct" : "",
+   access_str[role.access], role.invalid ? " invalid" : "", role.efer_nx ? ""
+   : "!", role.ad_disabled ? "!" : "", REC->root_count, REC->unsync ?
+   "unsync" : "sync", 0); saved_ptr; })
+
+Which is an example of a full argument of an existing event. As the code
+already handles finding the next print format argument, process the
+argument at the end of it and not the start of it. This way it has both
+the start of the argument as well as the end of it.
+
+Add a helper function "process_pointer()" that will do the processing during
+the loop as well as at the end. It also makes the code cleaner and easier
+to read.
+
+Cc: stable@vger.kernel.org
+Fixes: 5013f454a352c ("tracing: Add check of trace event print fmts for dereferencing pointers")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 82 ++++++++++++++++++++++++-------------
+ 1 file changed, 53 insertions(+), 29 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 77e68efbd43e..14e160a5b905 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -265,8 +265,7 @@ static bool test_field(const char *fmt, struct trace_event_call *call)
+ 	len = p - fmt;
+ 
+ 	for (; field->type; field++) {
+-		if (strncmp(field->name, fmt, len) ||
+-		    field->name[len])
++		if (strncmp(field->name, fmt, len) || field->name[len])
+ 			continue;
+ 		array_descriptor = strchr(field->type, '[');
+ 		/* This is an array and is OK to dereference. */
+@@ -275,6 +274,32 @@ static bool test_field(const char *fmt, struct trace_event_call *call)
+ 	return false;
+ }
+ 
++/* Return true if the argument pointer is safe */
++static bool process_pointer(const char *fmt, int len, struct trace_event_call *call)
++{
++	const char *r, *e, *a;
++
++	e = fmt + len;
++
++	/* Find the REC-> in the argument */
++	r = strstr(fmt, "REC->");
++	if (r && r < e) {
++		/*
++		 * Addresses of events on the buffer, or an array on the buffer is
++		 * OK to dereference. There's ways to fool this, but
++		 * this is to catch common mistakes, not malicious code.
++		 */
++		a = strchr(fmt, '&');
++		if ((a && (a < r)) || test_field(r, call))
++			return true;
++	} else if ((r = strstr(fmt, "__get_dynamic_array(")) && r < e) {
++		return true;
++	} else if ((r = strstr(fmt, "__get_sockaddr(")) && r < e) {
++		return true;
++	}
++	return false;
++}
++
+ /*
+  * Examine the print fmt of the event looking for unsafe dereference
+  * pointers using %p* that could be recorded in the trace event and
+@@ -285,12 +310,12 @@ static void test_event_printk(struct trace_event_call *call)
+ {
+ 	u64 dereference_flags = 0;
+ 	bool first = true;
+-	const char *fmt, *c, *r, *a;
++	const char *fmt;
+ 	int parens = 0;
+ 	char in_quote = 0;
+ 	int start_arg = 0;
+ 	int arg = 0;
+-	int i;
++	int i, e;
+ 
+ 	fmt = call->print_fmt;
+ 
+@@ -403,42 +428,41 @@ static void test_event_printk(struct trace_event_call *call)
+ 		case ',':
+ 			if (in_quote || parens)
+ 				continue;
++			e = i;
+ 			i++;
+ 			while (isspace(fmt[i]))
+ 				i++;
+-			start_arg = i;
+-			if (!(dereference_flags & (1ULL << arg)))
+-				goto next_arg;
+ 
+-			/* Find the REC-> in the argument */
+-			c = strchr(fmt + i, ',');
+-			r = strstr(fmt + i, "REC->");
+-			if (r && (!c || r < c)) {
+-				/*
+-				 * Addresses of events on the buffer,
+-				 * or an array on the buffer is
+-				 * OK to dereference.
+-				 * There's ways to fool this, but
+-				 * this is to catch common mistakes,
+-				 * not malicious code.
+-				 */
+-				a = strchr(fmt + i, '&');
+-				if ((a && (a < r)) || test_field(r, call))
++			/*
++			 * If start_arg is zero, then this is the start of the
++			 * first argument. The processing of the argument happens
++			 * when the end of the argument is found, as it needs to
++			 * handle paranthesis and such.
++			 */
++			if (!start_arg) {
++				start_arg = i;
++				/* Balance out the i++ in the for loop */
++				i--;
++				continue;
++			}
++
++			if (dereference_flags & (1ULL << arg)) {
++				if (process_pointer(fmt + start_arg, e - start_arg, call))
+ 					dereference_flags &= ~(1ULL << arg);
+-			} else if ((r = strstr(fmt + i, "__get_dynamic_array(")) &&
+-				   (!c || r < c)) {
+-				dereference_flags &= ~(1ULL << arg);
+-			} else if ((r = strstr(fmt + i, "__get_sockaddr(")) &&
+-				   (!c || r < c)) {
+-				dereference_flags &= ~(1ULL << arg);
+ 			}
+ 
+-		next_arg:
+-			i--;
++			start_arg = i;
+ 			arg++;
++			/* Balance out the i++ in the for loop */
++			i--;
+ 		}
+ 	}
+ 
++	if (dereference_flags & (1ULL << arg)) {
++		if (process_pointer(fmt + start_arg, i - start_arg, call))
++			dereference_flags &= ~(1ULL << arg);
++	}
++
+ 	/*
+ 	 * If you triggered the below warning, the trace event reported
+ 	 * uses an unsafe dereference pointer %p*. As the data stored
+-- 
+2.45.2
 
 
-A bug was found where if the hash-ptr option was disabled, it would
-pass the iter->fmt temp buffer to the trace_check_vprintf() function
-that tests to make sure the "%s" strings do not point to non static
-strings or strings in the ring buffer. The problem with that was
-the trace_check_vprintf() used the iter->fmt as a temp buffer itself
-and would overwrite the content of what it was processing.
-
-On the git pull request[1], Linus did not take too kindly for the
-way trace_check_vprintf() was using va_list. It relied on implementation
-details of the compiler and would not even work if the compiler used
-a copy to pass the va_list and not by reference.
-
-I didn't like that code myself when I first wrote it, but I was tired
-of fixing the "%s" bugs that were constantly reported as a bug in
-the tracing sub system. Using the va_list was the only method I knew
-at the time.
-
-As Linus stated he wanted that removed regardless, I thought hard on
-another approach, which leads to this solution. The test_event_printk()
-works when the event is registered and it reads the print format as
-well as the arguments that are passed to it (what's printed in the
-format files), and can mostly figure out if the dereferenced pointers
-in the print format are safe or not. Most "%s" in the trace events
-use helper macros like __get_str() which can also be verified at boot.
-The only ones that can not be, are a few events (which includes the
-RCU events, some IPI events, and some others). In this case, we can
-tag the event with a new flag TRACE_EVENT_FL_TEST_STR, and also the
-fields that contain the pointers that we do not trust with a new
-"needs_test" flag.
-
-Now, instead of parsing the print format via vsnprintf() va_list hacks
-at runtime, before printing the event, it calls a new function
-ignore_event() that checks if the event has the TEST_STR flag set. If so, it
-then iterates the event's field structures and for every field that has a
-"needs_test" flag set, it will read the event buffer, getting the pointer
-from the field structure's offset field, and then checks if that pointer is
-"safe". If all the fields marked with "needs_test" are safe, the
-ignore_event() function returns false, but if it finds anything that is
-not safe, it returns true, triggers a WARN_ON() and writes into the
-ring buffer that the event's field points to non-safe memory. In this case
-the event's print format is never used.
-
-The ignore_event() makes the trace_check_printf() obsolete and that function
-is removed.
-
-This passed various tests, but I'm going to run it through more tests
-as well as my standard tests before pushing. I'll create an event that
-uses a bad pointer to make sure it triggers (I hacked it up to make
-the pointer it calculates from the field to be off by 4 and it did
-trigger. But I still want to test it on a real "bad" event).
-
-[1] https://lore.kernel.org/all/20241214182138.4e7984a2@batman.local.home/
-
-Steven Rostedt (4):
-      tracing: Fix test_event_printk() to process entire print argument
-      tracing: Add missing helper functions in event pointer dereference check
-      tracing: Add "%s" check in test_event_printk()
-      tracing: Check "%s" dereference via the field and not the TP_printk format
-
-----
- include/linux/trace_events.h |   6 +-
- kernel/trace/trace.c         | 255 +++++++++----------------------------------
- kernel/trace/trace.h         |   6 +-
- kernel/trace/trace_events.c  | 225 +++++++++++++++++++++++++++++---------
- kernel/trace/trace_output.c  |   6 +-
- 5 files changed, 242 insertions(+), 256 deletions(-)
