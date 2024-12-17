@@ -1,112 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D544D1F8680;
-	Tue, 17 Dec 2024 17:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0B51F8666
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 17:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734457528; cv=none; b=aenmFtNTBdXCeNXolA/gI04o3jltgRi5SXBPrOpdxWloA28baOLTSQGna4hd7794YOUOQ8PD83bMlZdtK2J5efld6HgGtkZUgBXfyoYCw91UtnJf8zVSQKOhipGtA8eRA4eq6MzmOklgYyLGpIinopKq5uxET+KE8fn36iSjH0Y=
+	t=1734457611; cv=none; b=Fo5YkMO3nLGx1Jeic6Yu96jBJ1JCucW66U9zIY7QUHozZcdWABZ2LPy1mbkr4Hrquz5MH1mi86T+zbZymV1WgvOwrCbCFhpsAfGsQKgtdra7DNirFVN2cSbISVNaGLCYzNJcLWDT7rurYrtcA/REJ/+foaaZfb/JtoLbjWGPsow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734457528; c=relaxed/simple;
-	bh=qnQRxzaxQCdy4sbeoonIrpEuwrhmpepXTvIte9AAxn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RkOmmu21XD4SRIjLX0Rw0ZavN+lXgXCSqv2ELfrh0ydaFmdJk8hUI6NELuuXdeFo3VLvnuuuesn5aCCuWAiyGsG0dt0CEmWy/PRYUmV2xDFUOciKYnOhCwJEN3Eq0XN4ZoCJNjwl+iFh3da8HfxShL8EJ9vK/1fvkbCDokHsS/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 517ECC4CED3;
-	Tue, 17 Dec 2024 17:45:27 +0000 (UTC)
-Date: Tue, 17 Dec 2024 12:46:02 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] ring-buffer: Fix a oob in __rb_map_vma
-Message-ID: <20241217124602.2d498c3f@gandalf.local.home>
-In-Reply-To: <tencent_E036A29600368E4A2075A7774D67023CFD09@qq.com>
-References: <675fe376.050a0220.37aaf.011e.GAE@google.com>
-	<tencent_E036A29600368E4A2075A7774D67023CFD09@qq.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734457611; c=relaxed/simple;
+	bh=0XdEASmtmfz9ugCuznpyGWkBxXlxScjrZhwK9HX/gI8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WfdcV02EgG3lQTgsSTnOft9ragLxfjmujVbmf5tmWVMd6md6DyeIcEt3HOwoh8t4B529mRwL2WHWYRhZb1jTDfFETCo8M9ZrLejCmjMhuDjjM+dFkyKCSpLNdZOfqIuZG+DJuIWi+3FiQMtmrBGGU1Dgyq6Z4C0a5XZZudqjrp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h8D+aXGv; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h8D+aXGv"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aa6aee68a57so819553066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 09:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1734457608; x=1735062408; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oNjkq2KN6DEBaEhuyWIj4iGu8iK40oTJn7fFygqcUbo=;
+        b=h8D+aXGv/l1hkacfTj1q8+LfAiUXTKcVt7GFAKNdfQ/fDNux/9jJ3xi3M5PyYBnBmM
+         XtWI2A/ykiWmljz39CqCW2pc8zhn1e3DadJ4tKDowAkwI7hoaa+2cwGbHm7kbbzyhHpl
+         SXtZWkHE3KXOqU2qPQ4FRi03mXWInXTmuSLFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734457608; x=1735062408;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oNjkq2KN6DEBaEhuyWIj4iGu8iK40oTJn7fFygqcUbo=;
+        b=cua5gBgCcObo4669eig8+gbrb5vnHOxaKxzHWJfDiDqoko1iBNt3wyZIt/v9b/G1EZ
+         qBtpPbF7EwV1CaZFxQeKRXY8zvzT8+z8oTVuIX+qyrDQXm9KTkyOAoTcR/JpAMgAWab7
+         RUfCvZCX0j3nA0Fo9y6g9h+o7sW41KsJkkenF5r5iZTI/DIG7ds4u8XtA9hSr02etAxQ
+         TCpfdGmdpUZ8PjMcyDcysZPMDtH0A5rHM2GU/NbPIMLcfSN3RWF7aNIv5sOjMtScKPEr
+         /q6Ftb/e3ex/i4lqTBAWsfemhebmm876nPFzHImsT/RqwtCAkCDri4I5pMJGfV8dqi7l
+         Dj5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV42Cj6vL5QJDNZyxz4T8zgD7+5OHL97cWtYcXOwgMCFgAgp3HK2yD8wWBW26otZi1AltaxN3T/eX89N0VK3Qn5Yuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLdeERmKQCqzGj+W1qSfD7W1AqhDY3RaHjUbIcm08Uy5Ipj4Fo
+	6QNT13kvFdKUXeo3emDVp0z1MySnHBNxSM3xi/a/rNYSoDOBIOP+mrAoqVWNZLAq0lknpnBE6EK
+	X1p8=
+X-Gm-Gg: ASbGncvnV5UjcvdV87pZsxbomkmtzWxDVuPwXoqYWJSTM3fzVMysDMbEV8MOGkRoTFI
+	8sgjzUcubCh0RBJmhd1MuGG3D0BkVzdW0n99x5VC6CJSTUA7BxtZBdKBZFLOdJxhTDUqj6KUzAp
+	ZAYdAayHyOD8d0Rpt8KY8h67uG+irhUy77oIlqtD1eM19P1ImRNDf8mVsk5m/3cx4xcv8+s52ye
+	HIU1yVHi5JJYrukKLMUwlcR10vH7Q+6hgmFoacadxPZcqwFYTBjeKHp+NgomJms0rY1zO2wxW0H
+	NrjFppi31noSvy2WlkEYB6MwWY74J30=
+X-Google-Smtp-Source: AGHT+IEFk03Q+LdBMwIOy1jg6FS44UvjYsLeQ2YRlsUM2Wntqs5kwHr/W5YWH1tnUDxFmCFr16FeDg==
+X-Received: by 2002:a17:907:9712:b0:aa6:90a8:f5ff with SMTP id a640c23a62f3a-aab77ee5b69mr1579277166b.50.1734457607654;
+        Tue, 17 Dec 2024 09:46:47 -0800 (PST)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab9635960esm472818266b.123.2024.12.17.09.46.46
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2024 09:46:47 -0800 (PST)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aa67ac42819so903761566b.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 09:46:46 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXbvPv7JNN1adge3HxEv/QpcO9iv7JurvR5lz+TdWqF9auiW04C4D/0qHX45VT8m4d7XS+ndz0Q+sSEdlAicjROkG0=@vger.kernel.org
+X-Received: by 2002:a17:906:c102:b0:a9e:d4a9:2c28 with SMTP id
+ a640c23a62f3a-aab77ee6592mr1643616666b.53.1734457606608; Tue, 17 Dec 2024
+ 09:46:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20241217173237.836878448@goodmis.org> <20241217173520.314190793@goodmis.org>
+In-Reply-To: <20241217173520.314190793@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 17 Dec 2024 09:46:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wg5Kcr=sBuZcWs90CSGbJuKy0QsLaCC5oD15gS+Hk8j1A@mail.gmail.com>
+Message-ID: <CAHk-=wg5Kcr=sBuZcWs90CSGbJuKy0QsLaCC5oD15gS+Hk8j1A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ring-buffer: Add uname to match criteria for
+ persistent ring buffer
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 16 Dec 2024 22:07:57 +0800
-Edward Adam Davis <eadavis@qq.com> wrote:
+On Tue, 17 Dec 2024 at 09:34, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Add uname into the meta data and if the uname in the meta data from the
+> previous boot does not match the uname of the current boot, then clear the
+> buffer and re-initialize it.
 
-> syzbot report a slab-out-of-bounds in __rb_map_vma. [1]
-> 
-> Overflow occurred when performing the following calculation:
-> nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
-> 
-> Add a check before the calculation to avoid this problem.
-> 
-> [1]
-> BUG: KASAN: slab-out-of-bounds in __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
-> Read of size 8 at addr ffff8880767dd2b8 by task syz-executor187/5836
-> 
-> CPU: 0 UID: 0 PID: 5836 Comm: syz-executor187 Not tainted 6.13.0-rc2-syzkaller-00159-gf932fb9b4074 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->  print_address_description mm/kasan/report.c:378 [inline]
->  print_report+0xc3/0x620 mm/kasan/report.c:489
->  kasan_report+0xd9/0x110 mm/kasan/report.c:602
->  __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
->  ring_buffer_map+0x56e/0x9b0 kernel/trace/ring_buffer.c:7138
->  tracing_buffers_mmap+0xa6/0x120 kernel/trace/trace.c:8482
->  call_mmap include/linux/fs.h:2183 [inline]
->  mmap_file mm/internal.h:124 [inline]
->  __mmap_new_file_vma mm/vma.c:2291 [inline]
->  __mmap_new_vma mm/vma.c:2355 [inline]
->  __mmap_region+0x1786/0x2670 mm/vma.c:2456
->  mmap_region+0x127/0x320 mm/mmap.c:1348
->  do_mmap+0xc00/0xfc0 mm/mmap.c:496
->  vm_mmap_pgoff+0x1ba/0x360 mm/util.c:580
->  ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:542
->  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
->  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
->  __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Reported-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=345e4443a21200874b18
-> Tested-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->  kernel/trace/ring_buffer.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 7e257e855dd1..15c43d7415d5 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7019,6 +7019,9 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->  	lockdep_assert_held(&cpu_buffer->mapping_lock);
->  
->  	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
-> +	if (((nr_subbufs + 1) << subbuf_order) < pgoff)
-> +		return -EINVAL;
-> +
+This seems broken.
 
-A proper fix is being discussed here:
+The problem is not that the previous boot data is wrong.
 
-https://lore.kernel.org/linux-trace-kernel/20241216164931.57323-1-aha310510@gmail.com/
+The problem is that you printed it *out* wrong by trying to interpret
+pointers in it.
 
-Thank you,
+Now you basically hide that, and make it harder to see any data from a
+bad kernel (since you presumably need to boot into a good kernel to do
+analysis).
 
--- Steve
+The real fix seems to have been your 3/3, which still prints out the
+data, but stops trying to interpret the pointers in it.
 
->  	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
->  
->  	nr_vma_pages = vma_pages(vma);
+Except you should also remove the last_text_delta / last_data_delta
+stuff. That's all about exactly that "trying to interpret bogus
+pointers". Instead you seem to have actually just *added* a case of
+that in your 3/3.
 
+           Linus
