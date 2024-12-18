@@ -1,98 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DD11FA828;
-	Wed, 18 Dec 2024 19:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D4A14D283
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 21:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734549270; cv=none; b=UtYPHz2Y86bWAfZu75kPuk83ikLvKJuSV98Ny4eDbg3J1AYLIjvi21/HDLI7ekXzNASuGSGFAI/TnzjTHixnvo8mBz9EeBDWqPIoWmXbtv5x/TlZBi+KrBATS84//ZPUF9yMLYanj8LQ/FSAaQNqzwRp2US8fHPyKOYZvo3Vxc0=
+	t=1734555929; cv=none; b=KNG1/Il8JsTDGt7fIxAVMhoua6jXMMVOZ9hVvm9rS1VkVV5qQYIbbIOmBocFMvN6WVBGLSxA6GGfBo4Ccfvn06Gvnzp/1EYsuvH365WGmqhoBdMTkjfdGwLYYG+RtDfFnc8Pw6XHqvLGKvHFjl2W+xsdPgP0E/8HGUN/laYLq8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734549270; c=relaxed/simple;
-	bh=ZMyhXHK2aZiodnkf6+XIvqdd4GWxatTVdFuOcGTUzRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XHTrtpEZCZKZs2vHucuhPOoUXYvboj2wmAGCQ6iE3q7wqiMg1yKmTGtAMBfgBE9FVLttYCZuFy42sImd9KVvmI6SrviLBew1i/fkmT8ooa6qvnfuOFulG3RE1wq5Grotb3C9VQvukCb7Yk/gscwRg2Au3PuXKLXMk2OYSgNicQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000B7C4CED7;
-	Wed, 18 Dec 2024 19:14:29 +0000 (UTC)
-Date: Wed, 18 Dec 2024 14:15:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: [PATCH v2] trace/ring-buffer: Do not use TP_printk() formatting for
- boot mapped buffers
-Message-ID: <20241218141507.28389a1d@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734555929; c=relaxed/simple;
+	bh=6Xco6atdYO2X+voymAVLVXb0q0JYthfVNd0GAAhn5oI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EeviTjNy3QWe6/2WlJUYcpHTMBCVSL044RXiqSNfoDWSJFNse1Wq51metLBTBM9xlayRV9NIIen0GmwfneaSkP83pNdbrWsW79uhoQ0ERMHY94cFIslVBXYHc3NmxtiSJUtBAuewNm5cKUaQkjr9/APGXjYYq4eNT4GxkK+VG/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=EqpdXK7i; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="EqpdXK7i"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4YD5md1bkCz1GxMn;
+	Wed, 18 Dec 2024 22:05:21 +0100 (CET)
+Received: from [10.10.15.7] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4YD5mc6jfDz1GxMg;
+	Wed, 18 Dec 2024 22:05:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=unoeuro; t=1734555921;
+	bh=0KsRNfK1ckGHFYbMU8+kbSARz8JOnZLgnc9Zme9lN5Y=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To;
+	b=EqpdXK7ir/QDE/O5kyNJPE9q63WU+mG+XP7+WStEPuA1F/NPyVQur13eJhMfaZDp4
+	 mS2CZjuIDrGT8tWYyUBZonCGLiIwkTNa2IqcjohuwejPJ7uMVXkss2cJwuhZjcGxUj
+	 k7YO4jF4a4qCe9Ec0/tpa2giA88FdMo5KrOjlHN4=
+Message-ID: <bb8485bf-d720-4803-aa3c-037ea1169f8a@gaisler.com>
+Date: Wed, 18 Dec 2024 22:05:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
+Subject: Re: [BUG] spinlock recursion when enabling function tracer on 32-bit
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, Andreas Larsson <andreas@gaisler.com>
+References: <86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com>
+ <20241218110115.29d4cc77@gandalf.local.home>
+Content-Language: en-US
+In-Reply-To: <20241218110115.29d4cc77@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 2024-12-18 17:01, Steven Rostedt wrote:
 
-The TP_printk() of a TRACE_EVENT() is a generic printf format that any
-developer can create for their event. It may include pointers to strings
-and such. A boot mapped buffer may contain data from a previous kernel
-where the strings addresses are different.
+> Hmm, we do have recursion protection, but it allows one loop to handle
+> transitions between normal and interrupt context. If we stop that
+> transition for archs that use the generic atomic64, I wonder if that would
+> fix things.
+> 
+> Can you try this patch?
 
-One solution is to copy the event content and update the pointers by the
-recorded delta, but a simpler solution (for now) is to just use the
-print_fields() function to print these events. The print_fields() function
-just iterates the fields and prints them according to what type they are,
-and ignores the TP_printk() format from the event itself.
+Thanks!
 
-To understand the difference, when printing via TP_printk() the output
-looks like this:
+I applied the patch and did some testing and the initial issue I reported
+seems to have been fixed but unfortunately I'm still able to trigger
+a spinlock recursion.
 
-  4582.696626: kmem_cache_alloc: call_site=getname_flags+0x47/0x1f0 ptr=00000000e70e10e0 bytes_req=4096 bytes_alloc=4096 gfp_flags=GFP_KERNEL node=-1 accounted=false
-  4582.696629: kmem_cache_alloc: call_site=alloc_empty_file+0x6b/0x110 ptr=0000000095808002 bytes_req=360 bytes_alloc=384 gfp_flags=GFP_KERNEL node=-1 accounted=false
-  4582.696630: kmem_cache_alloc: call_site=security_file_alloc+0x24/0x100 ptr=00000000576339c3 bytes_req=16 bytes_alloc=16 gfp_flags=GFP_KERNEL|__GFP_ZERO node=-1 accounted=false
-  4582.696653: kmem_cache_free: call_site=do_sys_openat2+0xa7/0xd0 ptr=00000000e70e10e0 name=names_cache
+The following sequence works fine with the patch applied:
+# echo function > current_tracer
+# echo 1 > tracing_on
+# usleep 1
+# echo 0 > tracing_on
+# cat trace
+# ...
 
-But when printing via print_fields() (echo 1 > /sys/kernel/tracing/options/fields)
-the same event output looks like this:
+But this triggers a spinlock recursion:
+# echo 1 > tracing_on
+# find /
 
-  4582.696626: kmem_cache_alloc: call_site=0xffffffff92d10d97 (-1831793257) ptr=0xffff9e0e8571e000 (-107689771147264) bytes_req=0x1000 (4096) bytes_alloc=0x1000 (4096) gfp_flags=0xcc0 (3264) node=0xffffffff (-1) accounted=(0)
-  4582.696629: kmem_cache_alloc: call_site=0xffffffff92d0250b (-1831852789) ptr=0xffff9e0e8577f800 (-107689770747904) bytes_req=0x168 (360) bytes_alloc=0x180 (384) gfp_flags=0xcc0 (3264) node=0xffffffff (-1) accounted=(0)
-  4582.696630: kmem_cache_alloc: call_site=0xffffffff92efca74 (-1829778828) ptr=0xffff9e0e8d35d3b0 (-107689640864848) bytes_req=0x10 (16) bytes_alloc=0x10 (16) gfp_flags=0xdc0 (3520) node=0xffffffff (-1) accounted=(0)
-  4582.696653: kmem_cache_free: call_site=0xffffffff92cfbea7 (-1831879001) ptr=0xffff9e0e8571e000 (-107689771147264) name=names_cache
+[   61.276675] BUG: spinlock recursion on CPU#0, find/119
+[   61.277571]  lock: 0xc1c076c0, .magic: dead4ead, .owner: find/119, .owner_cpu: 0
+[   61.278365] CPU: 0 UID: 0 PID: 119 Comm: find Not tainted 6.13.0-rc3 #5
+[   61.278724] Hardware name: riscv-virtio,qemu (DT)
+[   61.278994] Call Trace:
+[   61.279351] dump_backtrace (arch/riscv/kernel/stacktrace.c:131)
+[   61.279848] show_stack (arch/riscv/kernel/stacktrace.c:137)
+[   61.280022] dump_stack_lvl (lib/dump_stack.c:122)
+[   61.280202] dump_stack (lib/dump_stack.c:130)
+[   61.280372] spin_dump (kernel/locking/spinlock_debug.c:71)
+[   61.280534] do_raw_spin_lock (kernel/locking/spinlock_debug.c:78 kernel/locking/spinlock_debug.c:87 kernel/locking/spinlock_debug.c:115)
+[   61.280714] _raw_spin_lock_irqsave (kernel/locking/spinlock.c:163)
+[   61.280905] generic_atomic64_read (lib/atomic64.c:51)
+[   61.281091] __rb_reserve_next.constprop.0 (kernel/trace/ring_buffer.c:608 kernel/trace/ring_buffer.c:4265)
+[   61.281299] ring_buffer_lock_reserve (kernel/trace/ring_buffer.c:4457 (discriminator 2) kernel/trace/ring_buffer.c:4514 (discriminator 2))
+[   61.281496] trace_function (kernel/trace/trace.c:1021 kernel/trace/trace.c:2906)
+[   61.281672] function_trace_call (kernel/trace/trace_functions.c:222)
+[   61.281859] ftrace_call (arch/riscv/kernel/mcount-dyn.S:178)
+[   61.282030] inode_query_iversion (fs/libfs.c:2050)
+[   61.282217] ext4_readdir (fs/ext4/dir.c:597 fs/ext4/dir.c:143)
+[   61.282393] iterate_dir (fs/readdir.c:109)
+[   61.282562] __se_sys_getdents64 (fs/readdir.c:403 fs/readdir.c:389)
+[   61.282758] __riscv_sys_getdents64 (fs/readdir.c:389)
+[   61.282945] do_trap_ecall_u (./arch/riscv/include/asm/syscall.h:90 (discriminator 1) arch/riscv/kernel/traps.c:331 (discriminator 1))
+[   61.283121] handle_exception (arch/riscv/kernel/entry.S:198)
 
-Cc: stable@vger.kernel.org
-Fixes: 07714b4bb3f98 ("tracing: Handle old buffer mappings for event strings and functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/all/20241217173520.658174695@goodmis.org/
-
-- Do not update print_field() with text_delta offset.
-
- kernel/trace/trace.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index be62f0ea1814..6581cb2bc67f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4353,6 +4353,15 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
- 	if (event) {
- 		if (tr->trace_flags & TRACE_ITER_FIELDS)
- 			return print_event_fields(iter, event);
-+		/*
-+		 * For TRACE_EVENT() events, the print_fmt is not
-+		 * safe to use if the array has delta offsets
-+		 * Force printing via the fields.
-+		 */
-+		if ((tr->text_delta || tr->data_delta) &&
-+		    event->type > __TRACE_LAST_TYPE)
-+			return print_event_fields(iter, event);
-+
- 		return event->funcs->trace(iter, sym_flags, event);
- 	}
- 
--- 
-2.45.2
-
+// Ludwig
