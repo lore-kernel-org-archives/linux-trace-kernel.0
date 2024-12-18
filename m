@@ -1,66 +1,66 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566733398A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 01:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB0B3594D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 01:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734485241; cv=none; b=syO9F10PyktmNfXM4lJZKHD00+1EemL04J3jzX2+i4mXo0il/eVc9YK1P5nR4XNwjJlw1kFHHbCpk1XgfmlTm5elROuUDFaiIYoJ/gfdPRJE10wKqmwao99/IIzmPQJ1BkyiROsbjSwDxXP6SniLKw9rl0AwAHT8w5gKTTxtVyA=
+	t=1734485970; cv=none; b=djQDkPNloB2jhLDZkZ+DlJHTShPKtwKLhUUA9ZXFgfbPNFCUl/6jTdY3scLBBcxBGKqVmUwCH1/h57j2RVPbadtUelkgHJRaPOVRzax15otj7t3dW2xxA9rVnghSk8Jeod+/2RBFQiTr75rcoIR6/7S/lsC5WM7WenGSu5+hzpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734485241; c=relaxed/simple;
-	bh=7dftcd3gpORal5tdW4nSoIicKcvSkaRlFW4x371Uyik=;
+	s=arc-20240116; t=1734485970; c=relaxed/simple;
+	bh=NBXngBXuXUS1CuveS8CMCH5HMn+Pd3wVJYjajc/z6d0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iGfBPG9iPYAjHWu+ina82IXpOL/en61Q454O9A/weCPnXcC545wtYTQiC+5xEs4XuwpOSmD8GLYcVf92ZJBGAN1NH1izn4Obh6y3E6hyjfuhufZVQuonQVSaPpGq9YUbkp15LEMs4SZ44QYes0Y12q/IdDrJtdcb/Ruik9d9NPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Sr0nvYj1; arc=none smtp.client-ip=209.85.218.51
+	 To:Cc:Content-Type; b=G3OLjotfryviLKZwFtJBFOsCz+XXJddyXWdw35J97LRgsj5GnPFZjug+2pLUrJy3WfjRcS9O4F7ubjb9leucXCokeAe1Gb9vSORo/W4jrPNHxNl+qov42mhh7e2v+YvMn+wZZT0TH1ezc+00D3AzSXwV7YVCWus2wq+dXCiNph0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QBcfiSKy; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Sr0nvYj1"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aa679ad4265so46716066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 17:27:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QBcfiSKy"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5ceb03aadb1so8193944a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 17:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1734485237; x=1735090037; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1734485966; x=1735090766; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wmDTFUak1a2VAaHb5TpBHcRdGXQyEP1xmQEFDjAyPq8=;
-        b=Sr0nvYj1euECSxJjv162PBpyBpGnNW3VvpTNDQqbELAcP84xhog+k6nynnvkqluakh
-         sDc2kuHhM26GKHY0aqRWOhjCrKzpu/hZvbkzcZHfTxlzwfuSRlOX9ZDPCshKG+1CMk9M
-         oq95TTjtIIfJHoSPuRrSK6DHLhgBLaTbi5HzU=
+        bh=iFUmBfvuCYiisihQ0MMHqMUfI983Sn9UGFbT49q6EUw=;
+        b=QBcfiSKyIwQvTDJOSPx/j3TREN9zPHCPRzXN++/miIo7VTMNO9P+pfANZ6XsKSxpRT
+         1xtBXJQ3xZhbAsmf+iJ+T1j4IHF7wiB3VDfzmwyi8F3H6CeukQ4zul5FSVg49JwwWRbc
+         OTBEXx94zwfAatxYFsputJUWu08gzkK0bJe4g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734485237; x=1735090037;
+        d=1e100.net; s=20230601; t=1734485966; x=1735090766;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wmDTFUak1a2VAaHb5TpBHcRdGXQyEP1xmQEFDjAyPq8=;
-        b=HVQm15V4/g100Y2mhtf4lOS29mRxhyymsh8yv313aaJh+GaZ+oQJp8fKOZwkeBrOBw
-         BMWv8gBUUuUQLATJ/SeZk8RZMy/x4yZax6tYBIpCnrnO6ji4GjYKvts50qBE/xC00mx9
-         VqsCj6PRZIzEkz5aA/AWAkRdi8pryczUb7cWUjnGPg45jqJ+ht7yUIrfoNn6EJq/ZJeP
-         qQx2SyDZ04ThyxOrqIVjqe/qOyghmvDXFed5w44w1hXTLrn5Bny4pYQj3YpVbr/9LCHe
-         /eYJvuKwENE7wmPmkeRjh3fD7bnyovWrXn549wl9iuhj0rVl6RSE2iwUW6V3gr/Tr+M6
-         YSXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHnnKnjxTERQjKPF9WIB6gHkCFeIpUPfXdhcCT9zbrOHTiBNl6adMg80cCWKnZdDA77MGgC5tEoilF/WYa59RY954=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/KnqM63ViSYkuIWOgPTKcp/0ELYFZvMxi0/INGVAfzWNUckhu
-	JvjdkZqIQiPCG8jyzHxAP+k/8cgRLK3f3gG50vbMR1Qs9dzFaCRi0mD2bQg+Zpa3nFB9msnZHJ3
-	1PL8=
-X-Gm-Gg: ASbGncskLhBdozbsBn/ilePLffOjV0nrDnjqkmbiZa9JoGQjXVstNegRuYO4tr+z2Xm
-	OMzVsRkLVj0SDMUKlm2vI6bnpmzMr/YBnElM5oMdEa/dH7v/fkvVOm2x1dhopa15OVcVDRDfFvI
-	nETwn5H+JQQ5rRX/AkuagYc9/tnFPlBLDiVN2np1os4MmOYCDyflyQoLMW811eDNaj+ibEIVnSb
-	GFhLIpbQZ7BNjoBeSQqt7HL9RdS3RR+qqE8vB7wiMBFdmebjbJWtUIIAblPbqg8P9Uvr2204Q9N
-	Y53fz2rYi1Wg2qs6pyTGrIHDWZ/nE+4=
-X-Google-Smtp-Source: AGHT+IFhCd/x048IRzpBtTKo0AkeQuS3nkHUl2V4iNFvOJhZ+f9Y9LmWcw1nsC7iNMeQLXRslJXvjQ==
-X-Received: by 2002:a17:906:794c:b0:a9a:e0b8:5bac with SMTP id a640c23a62f3a-aabdcba2655mr361570566b.23.1734485237569;
-        Tue, 17 Dec 2024 17:27:17 -0800 (PST)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652f35365sm5039601a12.80.2024.12.17.17.27.14
+        bh=iFUmBfvuCYiisihQ0MMHqMUfI983Sn9UGFbT49q6EUw=;
+        b=r1SQPWnHw5hO69ZVfFO9CHQQhWrZp1qHgI0se/IYWZYfySDmW/jQ+2RBLVtbSzh46R
+         71fwRx+oPCQkebTolAW3u5w+3zUP2FJ9TvGFt9RRPegSz5eT66vA2UjCovOJXK4HJqpr
+         R6CCNEtoKDH4kqBHZkkXnggDQWsPjuwAKZIwWmxoSRITAiPMz5hJJli0L1vjsZQLzgFQ
+         y8gIbFbXRDbVC0p6nKXY8PehGNuNl1ENPG+W9LQ2/lnvDw0d/SSB0H45Mkmuc0HXArLC
+         9w4YwvpLo9l1CyDBW8B4s9fdfMu9czovO/W5Snb9SatN1R3Tenvy6JSm5k4s17qL2cGT
+         lshw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Qd4peZRCE2IkdOPyJQ+u/g+n91RM8YeYQ4Fz6RI3UIYqpeBLp86nNP+vAvcouL5MFKkVH9uB+51mAl/4U3WLbdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSfPwQfb0OY5br+5g0/VkDrvWgq+jlfi0rykSv5s/TAfxLnxaj
+	UzrOqFcNaQzbGbm1BguZq9t4QbMtjYPcJp4FmcqNQo8j5wV01RW8Dh34uK7bR4t2zfCL/Yktnen
+	MXKk=
+X-Gm-Gg: ASbGncuTDP7ZU93UVU6cM9nHTVOOcxd3Wf/G2sdwraSIMmqtQTKkNY46jZXy7LjVk9f
+	9+3dv3GT7U3SDwP1MN0HN1INKh5AVEA8KLaJnATTBKRfWA8t9+FOb7Fk/0G22lHbsycfxFR6Aa9
+	GN8CDE6xdbWoVbM+stugOPZvi1udY4DPHLQwTps++/jsLxyxtU/03sDtUm1gUfyul/AEBNAj4vT
+	is9po94RZ6XYDogL5S2lwR3ZDLMuDOkCKmKKhYCC/Be7jqRBy2FbMgLahDnI0cV/Ce8Nz41Ff2M
+	wRp/QQrN1XaxnLok4wNAQVmz2ectt1c=
+X-Google-Smtp-Source: AGHT+IFZeM4OstopU2TW/BcxXAS1L5NJK7yLGbZ+2N6JEGx6hUdk/c6UM+MTudGfaVvi16Th35BNnQ==
+X-Received: by 2002:a05:6402:354b:b0:5d4:4143:c06c with SMTP id 4fb4d7f45d1cf-5d7ee406095mr938957a12.23.1734485966590;
+        Tue, 17 Dec 2024 17:39:26 -0800 (PST)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652ab523esm5067594a12.11.2024.12.17.17.39.23
         for <linux-trace-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Dec 2024 17:27:15 -0800 (PST)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aa692211331so52185966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 17:27:14 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV8+DrZW6n3eRWdx11DIhHjtjArBA9YxWPYitNl1iGxIyaZeGHqkrmZlvq8LWIVvOldfDiG2wuxXLeD93NsQtzgg2A=@vger.kernel.org
-X-Received: by 2002:a17:907:2cc5:b0:a9a:662f:ff4a with SMTP id
- a640c23a62f3a-aabdc67c3bamr505528766b.0.1734485234499; Tue, 17 Dec 2024
- 17:27:14 -0800 (PST)
+        Tue, 17 Dec 2024 17:39:24 -0800 (PST)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a9e44654ae3so919747366b.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 17:39:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVhIKVh7qFnJ25eiPLUW/o3SPEeMbygNZr+US3bYMz46Xa2gut6+qVkTXoq27FinX5gs+6xshNfwASr9fximKEKqdg=@vger.kernel.org
+X-Received: by 2002:a17:906:3119:b0:aa6:894c:84b7 with SMTP id
+ a640c23a62f3a-aabf470d31dmr63561966b.12.1734485963656; Tue, 17 Dec 2024
+ 17:39:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,12 +74,12 @@ References: <20241217173237.836878448@goodmis.org> <20241217173520.314190793@goo
  <20241217140153.22ac28b0@gandalf.local.home> <CAHk-=wgpjLhSv9_rnAGS1adekEHMHbjVFvmZEuEmVftuo2sJBw@mail.gmail.com>
  <20241217144411.2165f73b@gandalf.local.home> <CAHk-=whWfmZbwRmySSpOyYEZJgcKG3d-qheYidnwu+b+rk6THg@mail.gmail.com>
  <20241217175301.03d25799@gandalf.local.home> <CAHk-=wg9x1Xt2cmiBbCz5XTppDQ=RNkjkmegwaF6=QghG6kBtA@mail.gmail.com>
- <CAADnVQJy65oOubjxM-378O3wDfhuwg8TGa9hc-cTv6NmmUSykQ@mail.gmail.com>
-In-Reply-To: <CAADnVQJy65oOubjxM-378O3wDfhuwg8TGa9hc-cTv6NmmUSykQ@mail.gmail.com>
+ <CAADnVQJy65oOubjxM-378O3wDfhuwg8TGa9hc-cTv6NmmUSykQ@mail.gmail.com> <CAHk-=whOM+D1D4wb5M_SGQeiDSQbmUTrpjghy2+ivo6s1aXwFQ@mail.gmail.com>
+In-Reply-To: <CAHk-=whOM+D1D4wb5M_SGQeiDSQbmUTrpjghy2+ivo6s1aXwFQ@mail.gmail.com>
 From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 17 Dec 2024 17:26:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whOM+D1D4wb5M_SGQeiDSQbmUTrpjghy2+ivo6s1aXwFQ@mail.gmail.com>
-Message-ID: <CAHk-=whOM+D1D4wb5M_SGQeiDSQbmUTrpjghy2+ivo6s1aXwFQ@mail.gmail.com>
+Date: Tue, 17 Dec 2024 17:39:07 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjOr6tJ2TsZg-gZkmNTLrDPcWWb1h-WsAo45AmV5KkJaw@mail.gmail.com>
+Message-ID: <CAHk-=wjOr6tJ2TsZg-gZkmNTLrDPcWWb1h-WsAo45AmV5KkJaw@mail.gmail.com>
 Subject: Re: [PATCH 1/3] ring-buffer: Add uname to match criteria for
  persistent ring buffer
 To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
@@ -91,42 +91,18 @@ Cc: Florent Revest <revest@google.com>, Daniel Borkmann <daniel@iogearbox.net>, 
 	Andrew Morton <akpm@linux-foundation.org>, stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 17 Dec 2024 at 16:47, Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On Tue, 17 Dec 2024 at 17:26, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Since we're on this topic, Daniel is looking to reuse format_decode()
-> in bpf_bprintf_prepare() to get rid of our manual format validation.
+> Let me go separate that part out and maybe people can point out where
+> I've done something silly.
 
-That was literally why I started looking into this - the many separate
-type formats actually end up causing format_decode() (and the callers)
-to have to generate multiple different cases, which then in turn
-either cause a jump table, or - more commonly due to the CPU indirect
-branch mitigations - a chain of conditionals that are fairly ugly.
+Ok, that part I had actually already locally separated out better than
+some of my later patches in the series, so I sent it out as
 
-Compressing the state table for the types from 11 down to 4 types
-helps a bit, but then also dealing with the "smaller than int" things
-as just 'int' (with the formatting flags that are separate) also ends
-up avoiding some unnecessary and extra cases.
+  https://lore.kernel.org/all/20241218013620.1679088-1-torvalds@linux-foundation.org/
 
-Because in the end, 'size_t' and 'long' are the same thing, even on
-architectures like 32-bit x86 where 'size_t' really is 'unsigned int'
-- simply because the only thing that matters for fetching the value is
-the size, which is 32-bit.
+but I'm not guaranteeing it's right. Consider it a WIP thing, and only
+a first step.
 
-(The whole "is it signed" and the truncation to smaller-than-int etc
-is then something we have to handle anyway in by the 'printf_spec'
-thing).
-
-So I have a patch series to clean some of this up and avoid the extra
-states. I'm not entirely happy with it, though, and I've been going
-back and forth on some of the code, so I'm not ready to post it or
-have anybody use it as a basis for some "real" cleanups.
-
-I guess I could at least post the "turn 11 different types into 4"
-part. I have other things in there, but that part seems fairly
-unambiguously good.
-
-Let me go separate that part out and maybe people can point out where
-I've done something silly.
-
-               Linus
+           Linus
