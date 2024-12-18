@@ -1,34 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EB8155CA5;
-	Wed, 18 Dec 2024 13:19:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108219CC17;
+	Wed, 18 Dec 2024 13:23:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734527963; cv=none; b=W9JGDRQU3b+Cd56B0lfoVYMVs9rjG1B2FgMVYCEY5Ys7WaMJ2Bdi534wBM3RuHU4s4aF0QzF0WjGuSejZCokTZ4QRYrprz/B0H4LQhQb67UdpfctKLG2BVSNzwmgE0sFjldqdoBbAw0CcsRX5YmlnoI3ROFu0+II+FX0cgjn4N0=
+	t=1734528222; cv=none; b=rHc9SmVAK4PoGLkX/7tUQKEBB2uKzTfrbQQoHjYMZhayqZ8l/oRClB/VXUDbdvWo41ihp0nHjJYRjtwPXYPyC9Dr1165edNLq1/cG/952nnskRuqdfqhevXa8Pg+XsdVStWYHRXZdXvoAYxZ2mBBVR1gjVqxey2ur/VQYUX+fcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734527963; c=relaxed/simple;
-	bh=cyZle3E1CfpNiVdCRhzgkvMciODeZ0pVP4sR4LfVGRY=;
+	s=arc-20240116; t=1734528222; c=relaxed/simple;
+	bh=5afv2XqzWhd0ZmoSGSXYsTBjch9PCJh4gwkmDITdj/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qyYTbYiBeZdXR8GWtKLciw38EweIR4JPRNJ6vqDTpfwrDRuWMAdatYY10zd4+pGcpFtVTdd9cMU7/8zsnfu2S/z+5wg+pntyj5LahlNscJoWCTu7DUlCKBHlNfbhDKCsra1q4FyXPEvEgX54kWDVKM2jdMwN5kua9pjcidGFjBM=
+	 MIME-Version:Content-Type; b=VHNH4U1uy0iqGIArrDs+ZUIxWTF32XDniTS2bBAnh8O1qVU3hkl7eXIjc6JWspwaNmv8p++XnuKblgpCsL8VcSqPjgNbno3Pf3HzrON+0KgzF5gM9YFV+7bwy3TV2mycTRkh4REnbxPPWbyGJPCfE2fRAc3QiN//YJ+iG2b1m9U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F4BC4CECE;
-	Wed, 18 Dec 2024 13:19:21 +0000 (UTC)
-Date: Wed, 18 Dec 2024 08:19:58 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FDEC4CECE;
+	Wed, 18 Dec 2024 13:23:39 +0000 (UTC)
+Date: Wed, 18 Dec 2024 08:24:17 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: Edward Adam Davis <eadavis@qq.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- mhiramat@kernel.org, syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com, Jeongjun Park <aha310510@gmail.com>,
- david@redhat.com
-Subject: Re: [PATCH] ring-buffer: Fix a oob in __rb_map_vma
-Message-ID: <20241218081958.55204fb3@gandalf.local.home>
-In-Reply-To: <Z2KSR5QrAWYDEBVh@google.com>
-References: <20241217124602.2d498c3f@gandalf.local.home>
-	<tencent_4F9EBF1BA54B1A1B74257CBA08BB49334F08@qq.com>
-	<20241217194015.7a4f0dc8@gandalf.local.home>
-	<Z2KSR5QrAWYDEBVh@google.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: vdonnefort@google.com, aha310510@gmail.com, david@redhat.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
+ syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH V2] ring-buffer: fix overflow in __rb_map_vma
+Message-ID: <20241218082417.701399ad@gandalf.local.home>
+In-Reply-To: <tencent_11A0A5D80DEC925EDDA2DDB8990F4FC88D07@qq.com>
+References: <Z2KSR5QrAWYDEBVh@google.com>
+	<tencent_11A0A5D80DEC925EDDA2DDB8990F4FC88D07@qq.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,16 +37,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Dec 2024 09:13:43 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Wed, 18 Dec 2024 19:42:22 +0800
+Edward Adam Davis <eadavis@qq.com> wrote:
 
-> And probably also 
+> Reported-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=345e4443a21200874b18
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> ---
+> V1 -> V2: updated according to Vincent Donnefort's suggestion, to avoid repeating the (nr_subbufs + 1) << subbuf_order
 > 
-> Fixes: 117c39200d9d ("ring-buffer: Introducing ring-buffer mapping functions")
+>  kernel/trace/ring_buffer.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-I don't require patch submitters to add Fixes tags. It's more the
-responsibility of the maintainer to do that. I still have to validate it as
-there's been several times someone adds a Fixes tag which wasn't the right
-commit that it fixed.
+
+Also, when sending a new version of a patch, do not reply to the previous
+version as that hides the new patch. It should start a new thread.
+Otherwise it screws up tooling and also hides patches. I've missed patches
+because they were replied to the previous patch. It makes it much harder on
+the maintainer when someone does that.
+
+What I usually do to maintain a history chain is have:
+
+Signed-off-by: ...
+---
+Changes since v1: https://lore.kernel.org/all/tencent_E036A29600368E4A2075A7774D67023CFD09@qq.com/
+
+- Updated according to Vincent Donnefort's suggestion, to avoid repeating
+  the (nr_subbufs + 1) << subbuf_order
+
 
 -- Steve
