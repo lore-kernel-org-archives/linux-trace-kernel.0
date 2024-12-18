@@ -1,147 +1,110 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBC21F8AE6;
-	Tue, 17 Dec 2024 23:55:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AD01E495
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 00:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734479718; cv=none; b=nu20bhESk94AXOu2QsJghz6D675QiCIroD+B7ODSHFgUWCEng7BXua0HJANljNXfHrLPIZ77pLKigOLXpAUKvtbFKHQzyQevHX9/XuEhfN/WC6eQ0okaetwdFsiuyc8wp0jh2CO90Pr7wsFgU4RdjA1iZcPwwpPN2qTozvX2gNc=
+	t=1734480179; cv=none; b=GKDF+OCeUhKmvAQ9vyX2E9hnYye8JWmukLtY9NC8ehBhNnubbwId9lL/7X8vdhjIdI2KBMUxlbMgiatkbs5HRFwlF0X20kAcT+GgQvR4PvAT8D1TWbiUV0TSt6Ux+PFQGYc3vJfHqz0Dy6rd3+gvkW/mnNCvVJLS1/kKkbzi6wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734479718; c=relaxed/simple;
-	bh=JZi0lXHH71pplPBzLHxkjKKqNjDovCutW8ah8i70QKQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=KnaQgn+xsPO+K47suU4TS8rHFluvSQ3mSt9k9+lKTMLL9hX57PAAcV7ijoUY0qLq6t80OjTkOnjfMmLs6zd5CFfxvLzHS0uXoXm64+nxgzJczbAKHLiO7gquhmyUgFLqYxPIbp/9kZXcfVqAX/QRnIUEI04jBZ3J2eDFqIX6lW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=K4l6jUG1; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1734480179; c=relaxed/simple;
+	bh=TzqYrtdHi6eNGmGGNshxzQLbW6aEixLNXnqSldxiIL8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMNhvMjFh1b2NPBZj/gh5r9LZ3xOHB3EwNjLCHBuCmtppdcQkPDsn9foH3nSA6Dkd/0ukaigbh15dr3KgclbwPsr8tnU5ypF1gIudQweVQVbFi0VIoC5uDlI1RClfeO1phI+Sr82aTsCFiQPuBmrMzhn77qsX+kOjZqU+xALsWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SHouGuIQ; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="K4l6jUG1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1734479409; bh=gxbNWNi8Fzzn3gs986CDR4lB07xEV86uZdr1Rqf+YKo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=K4l6jUG11d80PfmnkBq+t48gbgi+k5R3uehH7FKHnU9aJ3L4j2zGS0QEV16DspD/2
-	 HNam1pr92YOv6n7QeJ8TZ/i+XL9URaF7vsVptF6GE7fDiQUYAWbG9vj2p/WolUg6cg
-	 tC2tO23wzAMQTnnnD7lM9wQQyy8nvxovTXICdeIs=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.34])
-	by newxmesmtplogicsvrszgpua5-0.qq.com (NewEsmtp) with SMTP
-	id AEF1FA80; Wed, 18 Dec 2024 07:43:47 +0800
-X-QQ-mid: xmsmtpt1734479027tmcd9ys5y
-Message-ID: <tencent_4F9EBF1BA54B1A1B74257CBA08BB49334F08@qq.com>
-X-QQ-XMAILINFO: MyIXMys/8kCt24nDxpEgLXe7G1pXxSNp2PKXxKaCd+z+2bhFFbRCTam2zKAyEv
-	 7tOGLF1vLsZLkB/JwW1UQc711G/mX4VhRWXa0dY+G7AubEpSSaPveGeo4KVeUbNNu2kePL+206gQ
-	 JG4xUVAjfuagebKIQo9v5YQuhg4j0u0ykFI7gPuQOxng2YujLXOfU+PngnZKbmAkbF/rEXo0rqgf
-	 PQtGK38Udsouuw6X3kmmcauqmlPQRAPWEs0COzdFTchCnJlKl7zgAVHKzmuRQDeJlN454tWB24uo
-	 tREMIiFYrrZg9QR+876gJqgz+UR+PMRHuG4Yl4BSHrdbj2ySi29F7bXlOzrn0gIhj9la/SGwZQEI
-	 fmjbNh0VfgIUqHiQZ0W61RRHMtj6IvFTNKnSTYaJ4u/YN3hvfyl8lFaScAy8pTXo3fD22ovvXuZe
-	 pKpRH5smHPX4tcO0kfPY3kYa/YXsI5GF4qpjHyiTLjP65AKgveZjDVOg3Ms8ZzW/k0ko0i/DmYoS
-	 sM4IFd/jinMHIOd52SmvqjVXE8KU+Xd71WRNq3wBv+sKqXB8TElINCkkURtetv7kdshxQaAwa2xk
-	 51U1GTlhEBoXme4f68qsmDC9o8TExXPNrJu4jsnFX4HaqgRc7MvpPrSGgl4gDDH68g6HxmnT5SFg
-	 /0IRW9bPK6QObA02E00idTTPw31mtbFlGJwhip1x4LNjt7fFQzzPyyBGA4QOgEpOLIcGWhoWUYQ8
-	 galL1BHlxkB2Gx5nWctPZypQ1n8OnZHHbSJG68Q3b6mJ2BsIxpTqSvA0mWl4cFUkv4tg5dr5AeU+
-	 4vqrosCuit7POLmVXtFW6R06bEnR9KH+n25XJP02ZU3WVnOMnmdeexXhscpinK1qO/NulqggNbVg
-	 uM2N+x890o+KMzS10QiI3yZtAfKuoyHRhBqEgawxPV
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: rostedt@goodmis.org
-Cc: eadavis@qq.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] ring-buffer: Fix a oob in __rb_map_vma
-Date: Wed, 18 Dec 2024 07:43:46 +0800
-X-OQ-MSGID: <20241217234345.3254530-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241217124602.2d498c3f@gandalf.local.home>
-References: <20241217124602.2d498c3f@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SHouGuIQ"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8dd1so9887305a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 16:02:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1734480175; x=1735084975; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JV+w9s52Xx8eRNhj+xW1leokp3ZTDX6dKUvSrTDSBw8=;
+        b=SHouGuIQTyYQJFjj2oQBBa3NlfX8puViBRwhxPx4SgSB9gPt0QxNMbakTae/B/5b+W
+         KrvXw8PeOxKWZBn9Wq7KsFh//8vTaC3Z2iNVIGkMkhDXqBcHwMgdZeW24OaT/5cbnaOf
+         Og+iZ/EzdhfBBeDKUyV0guJCJe25VYwZds5cE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734480175; x=1735084975;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JV+w9s52Xx8eRNhj+xW1leokp3ZTDX6dKUvSrTDSBw8=;
+        b=PzLPRikVho3lwTcedYQLAmZqtRf/Pj5uPswgIR30uKCoxHHcy7OF2HmnRtXov4vnkH
+         qnOZgIT2HzBEzewG9W26CBz9aOMU6GeclYZ7mjcX+0+1KATMXrYE8bLsxpUvU8KuBaxf
+         yfIDfx/Q0dHl5HHViT89NqxnoHFRhslRFmAfizcyONMy5ATcsLVP6xgjskL+A37NY+OF
+         5/6D8IEWhqVmvyMtj1LO3up4xHirfemy4MoWx6cBQzllIWN6XKUhb3TCxq7ewL1CAkPI
+         GHk6oPopy0dKQRiasNNrPQXUMS8Hl8Vfv58xg0D9KHtWOIbyKaN20Tkic4vOHEA0PuEa
+         L0SA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVsk3XwuLkL1bjXr9XT+VoU8tGUumEtI6LwMUNbLX+/X1pWpBy50t4RZsN/T8RwXKvNXvhAOKTO55NN4+FtPwiXl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw51f05CQhAawT2+VgUFsCP/QmO9x4y+AocGyQDv7RgO/+rA6Ok
+	1VnV0I1dR4trOcsF8c4YG9xtaegb4RMU12KAX8ee7Gxcke0e3s2+4QWpIJ7pbtMKloJEh32semD
+	eudQ=
+X-Gm-Gg: ASbGncsruXt9+uaUY36XCi+WnBvz8oYd8T0tGqEnBKLHnRGD9u8UdxavwAbIsbrLWTx
+	b0bHChmbZt07kJ2gc7Rfc1aBDkY9NBSDkUR6WdiwHW6xVbVk5JUaKZG89K0qMmn3P7CdrLh1JP5
+	LLWu4a9wGeGcD5BlwHHcfLSuNghvX2X2NEMhVudoA3zBLrJYEdCQkvmv4NXgszD9Kcf3ZgHH+n/
+	sYl49z6N9gXbyaxleAVY1bkuLczaEN3RHUYWu5IXSnn/dbPlXl2c02EhHPXurz6V2NCJ18cr753
+	U/OoI96oL7bAZtv3sCP+ijdLXM3sWK0=
+X-Google-Smtp-Source: AGHT+IE2nx8FwweFmvovFl+TmsAkcs0W+QtHkDpFjHRIPjoO4Fgg1wm4P9AmfvRJ36QxdlSjKrwn+w==
+X-Received: by 2002:a17:906:31cc:b0:aa6:800a:128c with SMTP id a640c23a62f3a-aabf4719dafmr51942166b.11.1734480173750;
+        Tue, 17 Dec 2024 16:02:53 -0800 (PST)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aab96006303sm491115866b.7.2024.12.17.16.02.52
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2024 16:02:52 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d122cf8dd1so9887227a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Dec 2024 16:02:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXGWVlNoJPdh8a+B5kLWH1dMd0OuYM67vAoCrqbXMoRxiO4cvjGuyuPZEr03PN1ChaI2XGckPmxhXFxhvbEukCK4oU=@vger.kernel.org
+X-Received: by 2002:a17:907:3e8c:b0:aa6:650f:cf35 with SMTP id
+ a640c23a62f3a-aabf48d50ecmr51073266b.47.1734480171482; Tue, 17 Dec 2024
+ 16:02:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241217173237.836878448@goodmis.org> <20241217173520.314190793@goodmis.org>
+ <CAHk-=wg5Kcr=sBuZcWs90CSGbJuKy0QsLaCC5oD15gS+Hk8j1A@mail.gmail.com>
+ <20241217130454.5bb593e8@gandalf.local.home> <CAHk-=whLJW1SWvJTHYmdVAL2yL=dh4RzMuxgT7rnksSpkfUVaA@mail.gmail.com>
+ <20241217133318.06f849c9@gandalf.local.home> <CAHk-=wgi1z85Cs4VmxTqFiG75qzoS_h_nszg6qP1ennEpdokkw@mail.gmail.com>
+ <20241217140153.22ac28b0@gandalf.local.home> <CAHk-=wgpjLhSv9_rnAGS1adekEHMHbjVFvmZEuEmVftuo2sJBw@mail.gmail.com>
+ <20241217144411.2165f73b@gandalf.local.home> <CAHk-=whWfmZbwRmySSpOyYEZJgcKG3d-qheYidnwu+b+rk6THg@mail.gmail.com>
+ <20241217175301.03d25799@gandalf.local.home> <CAHk-=wg9x1Xt2cmiBbCz5XTppDQ=RNkjkmegwaF6=QghG6kBtA@mail.gmail.com>
+In-Reply-To: <CAHk-=wg9x1Xt2cmiBbCz5XTppDQ=RNkjkmegwaF6=QghG6kBtA@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 17 Dec 2024 16:02:34 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgdFnwBD9odfSBz2zjedw1oWKKO3F46YAC_puE4b9J6JQ@mail.gmail.com>
+Message-ID: <CAHk-=wgdFnwBD9odfSBz2zjedw1oWKKO3F46YAC_puE4b9J6JQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ring-buffer: Add uname to match criteria for
+ persistent ring buffer
+To: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 17 Dec 2024 12:46:02 -0500, Steven Rostedt wrote:
-> On Mon, 16 Dec 2024 22:07:57 +0800
-> Edward Adam Davis <eadavis@qq.com> wrote:
-> 
-> > syzbot report a slab-out-of-bounds in __rb_map_vma. [1]
-> > 
-> > Overflow occurred when performing the following calculation:
-> > nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
-> > 
-> > Add a check before the calculation to avoid this problem.
-> > 
-> > [1]
-> > BUG: KASAN: slab-out-of-bounds in __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
-> > Read of size 8 at addr ffff8880767dd2b8 by task syz-executor187/5836
-> > 
-> > CPU: 0 UID: 0 PID: 5836 Comm: syz-executor187 Not tainted 6.13.0-rc2-syzkaller-00159-gf932fb9b4074 #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:94 [inline]
-> >  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
-> >  print_address_description mm/kasan/report.c:378 [inline]
-> >  print_report+0xc3/0x620 mm/kasan/report.c:489
-> >  kasan_report+0xd9/0x110 mm/kasan/report.c:602
-> >  __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
-> >  ring_buffer_map+0x56e/0x9b0 kernel/trace/ring_buffer.c:7138
-> >  tracing_buffers_mmap+0xa6/0x120 kernel/trace/trace.c:8482
-> >  call_mmap include/linux/fs.h:2183 [inline]
-> >  mmap_file mm/internal.h:124 [inline]
-> >  __mmap_new_file_vma mm/vma.c:2291 [inline]
-> >  __mmap_new_vma mm/vma.c:2355 [inline]
-> >  __mmap_region+0x1786/0x2670 mm/vma.c:2456
-> >  mmap_region+0x127/0x320 mm/mmap.c:1348
-> >  do_mmap+0xc00/0xfc0 mm/mmap.c:496
-> >  vm_mmap_pgoff+0x1ba/0x360 mm/util.c:580
-> >  ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:542
-> >  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
-> >  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
-> >  __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
-> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> >  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > 
-> > Reported-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=345e4443a21200874b18
-> > Tested-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  kernel/trace/ring_buffer.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 7e257e855dd1..15c43d7415d5 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -7019,6 +7019,9 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
-> >  	lockdep_assert_held(&cpu_buffer->mapping_lock);
-> >  
-> >  	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
-> > +	if (((nr_subbufs + 1) << subbuf_order) < pgoff)
-> > +		return -EINVAL;
-> > +
-> 
-> A proper fix is being discussed here:
-First, my fix is the first one.
-Second, the root cause of the problem is an overflow when calculating nr_pages.
-> 
-> https://lore.kernel.org/linux-trace-kernel/20241216164931.57323-1-aha310510@gmail.com/
-> 
-> Thank you,
-> 
-> -- Steve
-> 
-The calculation of nr_pages below overflows because the pgoff value is 8,
-the nr_subbufs value is 3, and the subbuf_order value is 0.
-> >  	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
-> >  
-> >  	nr_vma_pages = vma_pages(vma);
-BR,
-Edward
+On Tue, 17 Dec 2024 at 15:32, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> But if you look more closely, you'll see that the way the buffer is
+> managed is actually not as a word array at all, but using
+>
+>         char *str, *end;
+>
+> instead of word pointers.
 
+Oh, and in addition to the smaller-than-int types ('%c' and '%hd'
+etc), pointers that get dereferenced also get written as a byte string
+to that word array. There might be other cases too.
+
+So it's really a fairly odd kind of "sometimes words, sometimes not"
+array, with the size of the array given in words.
+
+That binary printf is very strange.
+
+               Linus
