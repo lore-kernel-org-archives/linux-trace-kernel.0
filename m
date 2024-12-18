@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C424D1B0422;
-	Wed, 18 Dec 2024 16:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318D91F869D;
+	Wed, 18 Dec 2024 16:59:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734538685; cv=none; b=ehA1n6Rqa3VnnwnyRMtVcPH59UyGr6Dh8jsUvJwyoEoMPVH3wNdFRA4+i5JYnOVmilQvFlbhjCW06Pb7SKbPGzWviV2imFicYrBQLGJJIX9LMh35Jx/SbM4VeBkzEaLt+gvTrYKin94OT3nE6yCdZwNYmPnFHWh3DeUJy2bKT4Y=
+	t=1734541173; cv=none; b=cMyFtz2o36z6kWIHVi81NCzPjSPJ6gy4zimi8/hwRmm8hoHy3VglIGedZienuH79BPCDCSb44SgYIQ3U/PAA0kgOOWGdWnlX2iYVyI6kolODyUIWKl3aAX6TbYVR/eJDphLvQjVwi9TPZGS/IujYtS6akG+UOL7mbL0GvBQKHJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734538685; c=relaxed/simple;
-	bh=xuZ5A+juYgpNeF9zTIRa6/8VnE0VAkGa9P01mslxBwk=;
+	s=arc-20240116; t=1734541173; c=relaxed/simple;
+	bh=daCTuccUA7Hn4WVrOd6TsCBLKO5p4HZUUrr6bDi8JrM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KiAFT+7jaGPTiAoMd5vn1dk45aUTzauMDR3ZpfLcMJ3ZZD6oAUqJcyN3VT6a/l9r8TPwRlIny4/Vo9Y1YpBPqjArXKewfATwyYCDec6nkuGwwx8DXTr2FvkdJHuxRouFwPxRU1zfTUjXqqm1NJgKmgWGQ/DRtKTFg+8IVAeun/k=
+	 MIME-Version:Content-Type; b=M177O5yE45JEjOykS8S7pyoKTUc7C+H4Q+uYgS+wc4xYK9l6w6c4a1bf31bSfBJGyTMKuyfIuRgOM+kb04cHx8eER5hJYqbfO0tpDJQp8vQ4tw262n3zk/+WlvkWdRVMi8I5nvlkFbJHwmdq2K8t/MrEuIMbiZvJKTYWhlVgtu0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68952C4CECD;
-	Wed, 18 Dec 2024 16:18:04 +0000 (UTC)
-Date: Wed, 18 Dec 2024 11:18:42 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D12C4CED0;
+	Wed, 18 Dec 2024 16:59:31 +0000 (UTC)
+Date: Wed, 18 Dec 2024 12:00:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: syzbot <syzbot+a1d25e53cd4a10f7f2d3@syzkaller.appspotmail.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [trace?] WARNING in tracepoint_probe_unregister (3)
-Message-ID: <20241218111842.0261dfdb@gandalf.local.home>
-In-Reply-To: <CACT4Y+YrQR5HQWZuWb9OrupPR0C=mvLyWcJN3ofuUyf7j-nGRA@mail.gmail.com>
-References: <6761e9b5.050a0220.29fcd0.007b.GAE@google.com>
-	<20241217164810.2a9bcb57@gandalf.local.home>
-	<CACT4Y+YrQR5HQWZuWb9OrupPR0C=mvLyWcJN3ofuUyf7j-nGRA@mail.gmail.com>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, david@redhat.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: fix array bounds checking
+Message-ID: <20241218120009.47b76bba@gandalf.local.home>
+In-Reply-To: <CAO9qdTGwQJvVZt2HtnBUdJGLti0ZWuPeqVFginJYcwY2xLnwRg@mail.gmail.com>
+References: <Z2BpY5LimG7E3LpC@google.com>
+	<24508411-0980-43EE-8224-C3B81E456AFF@gmail.com>
+	<Z2E4cWMkzGqAafFQ@google.com>
+	<CAO9qdTGwQJvVZt2HtnBUdJGLti0ZWuPeqVFginJYcwY2xLnwRg@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,14 +37,50 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Dec 2024 11:09:31 +0100
-Dmitry Vyukov <dvyukov@google.com> wrote:
+On Tue, 17 Dec 2024 22:42:53 +0900
+Jeongjun Park <aha310510@gmail.com> wrote:
 
-> Hi Steve,
+> > Could you share that reproducer? Or at least the steps. As this situation should
+> > never happen a, follow-up fix will be necessary.  
 > 
-> I've filed https://github.com/google/syzkaller/issues/5621 to not lose
-> this request. Thanks for the feedback.
+> [1] When tested with a reproducer, pgoff was 8, subbuf_order was 0, and
+> subbuf_pages was 1. However, nr_subbufs was 3, so oob-read or uaf occurred.
+> 
+> [1] : https://syzkaller.appspot.com/text?tag=ReproC&x=14514730580000
 
-Thanks for requesting this feature.
+This was fixed by Edwards patch.
+
+> Okay. In that case, I will just remove the variable declaration related patches
+> and send you the v2 patch right away.
+> 
+
+I'm not sure this is needed nor is it a bug.
+
+	while (p < nr_pages) {
+		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+		int off = 0;
+
+		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+			err = -EINVAL;
+			goto out;
+		}
+
+The WARN_ON_ONCE() suggests that this should never happen. And I believe it shouldn't.
+
+I'm fine if you want to make the change to:
+
+	while (p < nr_pages) {
+		struct page *page;
+		int off = 0;
+
+		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+			err = -EINVAL;
+			goto out;
+		}
+
+		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+
+But it's not a bug fix. It's simply a cleanup that can wait till the next
+merge window.
 
 -- Steve
