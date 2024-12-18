@@ -1,124 +1,162 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4B72572;
-	Wed, 18 Dec 2024 00:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258A62F2A;
+	Wed, 18 Dec 2024 01:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734482875; cv=none; b=VK81JG3+khTuYs820d99XhtU4HqaodFTktjVgX+VY0j69H4zWvuQw7tYCy8nSbdJhrDLJ2lJgYodZwk+CVbC6CKfKr/KJqclSsYkWHAWtyyq6r6dyhMt9bWr1/Thfbh/HNQzaJYOXBaVrS1ojV7g25jK1Ulc0ggLZIWqXruSaok=
+	t=1734485027; cv=none; b=BncNiOpZhneVfA+PaygPpcgESXGbIXyGbBkCB8XK4l/0f0fvA30m09Rq26V53jnp5cE2oaXTRcUi9WDoJK5ej2HsKEkj5Y7L6UBAINpFWJEoCoehAXxWnahQ96Dcn91J/NFAcpUdme9wq22UbtCFd4HbKIV7qYMyuWnUoWRhAD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734482875; c=relaxed/simple;
-	bh=KQ+HBAGERRr/yp9OBPyiFOJec3Xp4ePEwJ2LYGf/aHg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=twwm1rBJf/OjZbgROrJY3oKkb9GaxrHpcUdMPurHb9lqVT6lo1cKetiI+CHDzTUaxIfxP7m9O/vYb60KD6IH2utXr0zqW7FG2AKjSmieVf805dxnW5hMFch7mxL5bVygfX2xIN5xn9mtw/XRYisTgEgFmbr5XtqweiYK7wsZ05E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aKdeyfPr; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1734485027; c=relaxed/simple;
+	bh=7laKOPZj0IQHqYOeccnBJKyND9MK6DQ6bc9rXvWrC14=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=Td7+Iwb06XPOhnBaGvXUfxBRrfykx9M9sAcgY3LzUt0SHIWrs8AZSEJBDGDVbojw9uaTBvWbkTL/0Mtj5bkL4lRwRVIyliwrJu5+MeR+88oY+MFXDJskNVj8LAl5gVPwFccphmvyH6xrM5AWkwFRkdwecfB4UsE/m1dJEAkhe7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HOLHrPu7; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKdeyfPr"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4364a37a1d7so14092505e9.3;
-        Tue, 17 Dec 2024 16:47:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HOLHrPu7"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-725abf74334so5212442b3a.3;
+        Tue, 17 Dec 2024 17:23:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734482872; x=1735087672; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ASOdFS0cu/fXgaUOX6iTEniwsKliNWJnjKj8jwFHdkM=;
-        b=aKdeyfPrkPx+z4D8LWbsfWZVtZTzENLa4R78wUlFekoka3o1V1ezDitJ43BPve5mG+
-         B42y8Hs4InHoHnfsn+QOusnU0lCMEuRggfM+R9+DJl74Km2QsFn1o5qbUinoR+y74DJq
-         QUdD5tTL9/xqrJOOsxuz0BoNbRV4kmfwkVAmLV3wHomCpV+9RpnA8OxFE7WjW5Sf5s07
-         dVqlmkqiYW2naDhHt3JUPmdUmlzJ4O4yJ0eKUx/otxHoS3PIP+iJIcS2RxNnUFgXcZgt
-         7NdFt5B11/L2jOifi0zqLJr4g79vmEi2/z39oysDreAbo9yyrLUx7aHAZANeUDRSWtz+
-         /Okw==
+        d=gmail.com; s=20230601; t=1734485025; x=1735089825; darn=vger.kernel.org;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k48iIXY2iSS1mUc4KsRrRVhc/2Tp+/ee/9u64+YqyQw=;
+        b=HOLHrPu7R3rbu0aeC6H3ttZY5aRBAq+/Q/7MONfBXWicy9y2jwnXGsrF4xv7kUmylK
+         hSEk+VdulvHktgzzmSB2wKhwHuHl4ZhyhNwfTKBP+YdGaQeM4nTrz3BzQHij03DbR9Vv
+         /3QN9UzQK89tXinIoW5v47uCDazRQW4lQJCWOdr3jIl6fKN2Xr39MKQX6BbmzxIGbj3p
+         e9BkxN9vH5+6y5Zv4M5Hn2XO4BRp1kj639G4IqQqs/xcX18jK/NJBuq1gwOSWfCS5P3Z
+         fbGeQyw7qHiR1PJ9hVgGgO6v539F5At0nTK0pt609Gep/9jS/9L0ZGSTOxMWFYfV3mxm
+         6+rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734482872; x=1735087672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1734485025; x=1735089825;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ASOdFS0cu/fXgaUOX6iTEniwsKliNWJnjKj8jwFHdkM=;
-        b=T/s9z5bPITFP/h7TpB3nI42jnvdG0QUDqehkyz+Nh93wq/GdaZ1stDi27RaRkkE13F
-         JplGdfIb+0uJM3PtCxgXF92SVon1E/GiMdz3ThKF6+ynbR1CwsdNYv+DzJaFfDuf6+uX
-         oAJGLKLl4ElsgexTzdpIuQX5GJl/WRVzQIWJCV5/9mCRRGtSSPGynLACW09CiEMY2lni
-         m1ShMWsOnMxL2rIemQWEo01DpCRED+kIUapoex+iImQ2fRxc9Cha3P3DkMXzXT9x2j22
-         eS3//ntNeeYpT/j0cEfPR/rDoCZkZNzdGZmc+5YWUcKVFhtWZdj3RMD6rhsbXXr/hnja
-         Vq6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUBeqvoKd3ddOaIJinB163XfJa7L/preSYGX0aj4ined/hfEKgqww9CrkhYYVbPnng3lrJM04Rm@vger.kernel.org, AJvYcCVyXWFF8TqcGfSLgFig0xnH8GwC317tLPn9j1E+QXKs4JOsYDZVFP/A/W7vzbXPriaSoo6LJuKjpiyvdTky@vger.kernel.org, AJvYcCWsi8kRajz+CXiSiEE98qfv7CFtq48WaJ1KEjO1nrdMLqv5FhnZ0JWIr7lrgeev8e3SBOQ=@vger.kernel.org, AJvYcCXIxUrRNcjb1Nmg+XejwaT0jYe7szNG0rW335EKCa2VK4W3pT8i7FwDZWmwrJgVv082Hp0PRijXbXOcbmoIyKDqm9gR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2FpoZaxwii7lmWaV/gBtnsGVN7FVB8W+cvGVcRPOWMX8er/95
-	L55Qn2IrpnZdzZwNTsqLcdLcxFoCr0rnEYnZKr7hqWXAo21OMSdJznWWLtvzjLeG/3aEB6SLQvx
-	/qHYa+2p8frvOHmbyZTrAwEX1BJ4=
-X-Gm-Gg: ASbGncslnZMxgbCpRIE28+oMfJh+HYGtaUHTRqADmXlEhKML+EMJASZujhqW3HCfXEY
-	Z0d5dIiXLhPykdNEU7Hft71uIh7RRXEIfI1glNSvIe7aSDlwLnWgliA==
-X-Google-Smtp-Source: AGHT+IHJDqFahN/Bu5F0MoDExKrwJ4OswuvdxiA3Bb0fdGQ/+sKuZObznFi3CtsnRFTbe/QjjqG5tHF/QC4+1CnYnSI=
-X-Received: by 2002:a05:600c:474d:b0:436:51bb:7a53 with SMTP id
- 5b1f17b1804b1-4365535eb12mr5328575e9.12.1734482871993; Tue, 17 Dec 2024
- 16:47:51 -0800 (PST)
+        bh=k48iIXY2iSS1mUc4KsRrRVhc/2Tp+/ee/9u64+YqyQw=;
+        b=Fr7jfbDqgWP1NMnTH5ekdD+9weH8oVRlyApJugbCZyrmMKhaeau9IfDcRHrzeSxCcM
+         qd8SpNeKeSf6eIc+Ex29AZ5zuz1ruKQNS1UxKF1YScLIfxr7j94nkYI+dFjTAlNL6u2y
+         Zs3JGVJROJzvV51noSfQkWOopN2Cv4b2wmhFYoKZcEBkH7q8KvEBo1/+S0pRoNY0MQCv
+         osyEZVdOciP5cSsTOrZh5GHZ0uvduQzDXfarjemCJ/jogao9eBS7AoCLpt5eAMiZbkfd
+         yxbTsNs/qpkouqcL+MVGR2k0gAWdUTP14M3HdkYyWOd3FX2/HJ8fooHMl531AU+tL/BX
+         ZRYg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoNl55WmtBAcE4GwpIw544JJ3tw33CMrG67DIoaWD2bHuuQIYg2e1NTbGGaMZ/BCg2MvW0azKPwY87OQ4=@vger.kernel.org, AJvYcCVPBLwtbPAIUNKxr1LeFM/NL1WoglrWg4QoQ7KgCPTGtIDWZlLB1jyG7tGSyNFe5Q56PyOekUX3YLWguyVO9TWqRsW/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDMi52ZKXGHciZmGydsKJK9jM6n86avWnKhHfOhTJ4h6c75O2r
+	aTttf3fXRjJfIM9KCy6dXLtFlNf42aP6Anu4Hv02Qq5cEE3y7zhPz+gZo2HD
+X-Gm-Gg: ASbGncs26vFhyKtMFFW6lA1nGfebi69O6FB8Krp0T+JU1Hhd7lYwpOHMAAazT8EXMJZ
+	mJ/0zLPZtX7M7e4fFDbos27HWTH8AVxNjdwIpRcXU8sdbgJhg4sXXuu3C93m7Q63bfRRsmlHGVc
+	hSSOjrJUvG3KWwjc+/Xw9UkfhnSQ3R7LJAcAjwq8y3wVDGcLFSoPdvw16bYmstCaH0mPspBgwvh
+	jiCG01bpt9B33KqYZeyXrTKZ8FYKKWpNPB8Pykd/BAC5t+ibx8gDcIQD4FoPdUHbVUtAKzw7rZO
+	Xa/9ZDM=
+X-Google-Smtp-Source: AGHT+IGuXmyLUE4JkexSSyZbDf6APGVME8IiVLJnL//3EUHfgrUDECdb5crOG+AmrGCfn4ya/Ou5nQ==
+X-Received: by 2002:a05:6a00:4087:b0:72a:8461:d179 with SMTP id d2e1a72fcca58-72a8d12803emr1747421b3a.1.1734485025016;
+        Tue, 17 Dec 2024 17:23:45 -0800 (PST)
+Received: from smtpclient.apple ([2001:e60:a815:8bfd:c052:e525:edea:f77d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918ac84f3sm7617011b3a.24.2024.12.17.17.23.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Dec 2024 17:23:44 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Jeongjun Park <aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241217173237.836878448@goodmis.org> <20241217173520.314190793@goodmis.org>
- <CAHk-=wg5Kcr=sBuZcWs90CSGbJuKy0QsLaCC5oD15gS+Hk8j1A@mail.gmail.com>
- <20241217130454.5bb593e8@gandalf.local.home> <CAHk-=whLJW1SWvJTHYmdVAL2yL=dh4RzMuxgT7rnksSpkfUVaA@mail.gmail.com>
- <20241217133318.06f849c9@gandalf.local.home> <CAHk-=wgi1z85Cs4VmxTqFiG75qzoS_h_nszg6qP1ennEpdokkw@mail.gmail.com>
- <20241217140153.22ac28b0@gandalf.local.home> <CAHk-=wgpjLhSv9_rnAGS1adekEHMHbjVFvmZEuEmVftuo2sJBw@mail.gmail.com>
- <20241217144411.2165f73b@gandalf.local.home> <CAHk-=whWfmZbwRmySSpOyYEZJgcKG3d-qheYidnwu+b+rk6THg@mail.gmail.com>
- <20241217175301.03d25799@gandalf.local.home> <CAHk-=wg9x1Xt2cmiBbCz5XTppDQ=RNkjkmegwaF6=QghG6kBtA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg9x1Xt2cmiBbCz5XTppDQ=RNkjkmegwaF6=QghG6kBtA@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 17 Dec 2024 16:47:40 -0800
-Message-ID: <CAADnVQJy65oOubjxM-378O3wDfhuwg8TGa9hc-cTv6NmmUSykQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ring-buffer: Add uname to match criteria for
- persistent ring buffer
-To: Linus Torvalds <torvalds@linux-foundation.org>, Florent Revest <revest@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] ring-buffer: Fix a oob in __rb_map_vma
+Date: Wed, 18 Dec 2024 10:23:32 +0900
+Message-Id: <3D642609-2738-41BB-AB0D-A14F58469A78@gmail.com>
+References: <20241217194015.7a4f0dc8@gandalf.local.home>
+Cc: Edward Adam Davis <eadavis@qq.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ mhiramat@kernel.org, syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com, Vincent Donnefort <vdonnefort@google.com>,
+ david@redhat.com
+In-Reply-To: <20241217194015.7a4f0dc8@gandalf.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+X-Mailer: iPhone Mail (22B91)
 
-On Tue, Dec 17, 2024 at 3:32=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->
-> If the *only* thing that accesses that word array is vbin_printf and
-> bstr_printf, then I could just change the packing to act like va_list
-> does (ie the word array would *actually* be a word array, and char and
-> short values would get individual words).
->
-> But at least the bpf cde seems to know about the crazy packing, and
-> also does that
->
->         tmp_buf =3D PTR_ALIGN(tmp_buf, sizeof(u32));
->
-> in bpf_bprintf_prepare() because it knows that it's not *actually* an
-> array of words despite it being documented as such.
->
-> Of course, the bpf code only does the packed access thing for '%c',
-> and doesn't seem to know that the same is true of '%hd' and '%hhd',
-> presumably because nobody actually uses that.
->
-> Let's add Alexei to the participants. I think bpf too would actually
-> prefer that the odd char/short packing *not* be done, if only because
-> it clearly does the wrong thing as-is for non-%c argument (ie those
-> %hd/%hhd cases).
 
-We reject %hd case as EINVAL and do byte copy for %c.
-All that was done as part of
-commit 48cac3f4a96d ("bpf: Implement formatted output helpers with bstr_pri=
-ntf")
-that cleaned things up greatly.
-The byte copy for %c wasn't deliberate to save space.
-Just happen to work with bstr_printf().
-We can totally switch to u32 if that's the direction for bstr_printf.
-To handle %s we use bpf_trace_copy_string(tmp_buf, )
-which does _nofault() underneath.
-Since the tmp_buf is byte packed because of strings the %c case
-just adds a byte too. Strings and %c can be made u32 aligned.
 
-Since we're on this topic, Daniel is looking to reuse format_decode()
-in bpf_bprintf_prepare() to get rid of our manual format validation.
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+>=20
+> =EF=BB=BFOn Wed, 18 Dec 2024 07:43:46 +0800
+> Edward Adam Davis <eadavis@qq.com> wrote:
+>=20
+>>>=20
+>>> A proper fix is being discussed here: =20
+>> First, my fix is the first one.
+>=20
+> Yes I saw that.
+>=20
+>> Second, the root cause of the problem is an overflow when calculating nr_=
+pages.
+>>>=20
+>>> https://lore.kernel.org/linux-trace-kernel/20241216164931.57323-1-aha310=
+510@gmail.com/
+>>>=20
+>>> Thank you,
+>>>=20
+>>> -- Steve
+>>>=20
+
+Oh, I did not propose a patch that fixes the root cause of this oob. My patc=
+h=20
+is a separate patch that fixes the wrong order, such as reading the array=20=
+
+before checking the variable s with the WARN function in the loop. So I thin=
+k=20
+both of these patches should be applied.
+
+Regards,
+
+Jeongjun Park
+
+>> The calculation of nr_pages below overflows because the pgoff value is 8,=
+
+>> the nr_subbufs value is 3, and the subbuf_order value is 0.
+>=20
+> So basically you are saying that passing in the the mmap with the pgoff is=
+
+> what's causing it.
+>=20
+>>>>    nr_pages =3D ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-p=
+age */
+>>>>=20
+>>>>    nr_vma_pages =3D vma_pages(vma); =20
+>=20
+>=20
+> Thanks, I believe I now have a reproducer. And yes, I'll take your patch.
+> (If Vincent is OK with it).
+>=20
+> Here's the reproducer:
+>=20
+> ------------------------8<-------------------------
+> #include <fcntl.h>
+> #include <stdlib.h>
+> #include <unistd.h>
+> #include <asm/types.h>
+> #include <sys/mman.h>
+>=20
+> int main(int argc, char **argv)
+> {
+>    int page_size =3D getpagesize();
+>    int fd;
+>    void *meta;
+>=20
+>    system("echo 1 > /sys/kernel/tracing/buffer_size_kb");
+>    fd =3D open("/sys/kernel/tracing/per_cpu/cpu0/trace_pipe_raw", O_RDONLY=
+);
+>=20
+>    meta =3D mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, page_size * 5=
+);
+> }
+> ------------------------>8-------------------------
+>=20
+> Thanks,
+>=20
+>=20
+> -- Steve
