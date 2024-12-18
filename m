@@ -1,138 +1,160 @@
-Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D78158853;
-	Wed, 18 Dec 2024 13:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FF31BEF68
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 14:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734529721; cv=none; b=R3kSGgeU41ICxmcJuWweBeSnaXfKTT7wcBfmCmGDUYKbg97m3zjPkr6eOSmdKPK8gOV0wNcAe1P4F2aLXWl5POyt98pvyQyD6gy9EReLb52U9ZC+JoCkJaXjFdf+sM57vrMiCgwHU7lkvgn8pRseiFsHv7xWdszngh3pr2ISbc0=
+	t=1734531859; cv=none; b=ZRpJQ9+HypHXerL0dfBgeANdu979oo7v73jxQS78n0HpqdV2H69tzImFVvpZsRdYoWshyt15Lh9bNWi/9BH0RQP8YGdeuOJAv4qXIrZrriiQzqUUIriUxQ6JoHg2C76V2LkEMrFKxJ86fY7fFblrhosNmXoBxHr0HeTPgE0krKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734529721; c=relaxed/simple;
-	bh=lZsa+9GNVO3XNV47LxcjF4WFZ6CE9M58qYSZZ5MI8CQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=N0tEL+Y/rKtzBrl2ernl5uNeGRIF9qTOeGpEBVnRR8Qk76eJew7bvghZjukhOEGkpx5XNX+QNUItT6CjvCxsp3cAQ3j7RTRvxi4MzTDDU2gr+1MjS08DlaULNXwplZvZfS4EeI+ytsV19gGXAOQtxmBM3WEdXVPesfBfMnL3nVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=LZpCTfpH; arc=none smtp.client-ip=162.62.57.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1734531859; c=relaxed/simple;
+	bh=fxq5WPhXvFyAK+buBZe3FD3w5xOl2nrTCisD3TZj8AA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HShbcehljcozRXCils8OyjgjyDlQDGkUmKD3z90Qrg00iOr69oEHcw2u/DeM6sldswbSQEssMMB3Ty+AQIh+EEwTxqya50RIgAfRRBTWOgZvFhozR6ehdONeFAVRel7uJIKDylGXtvEZ7RTtbu9hDZz0K8Q9i1fKYsDXmo/5/YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U0HTxed+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="LZpCTfpH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1734529404; bh=HqhRBQLkd4Zst9F6bxsYyOJApsFfBzpwqkAN/8E069Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LZpCTfpHFsHpZJ7T08px3KaJfmzhDdmhVhL12sgRZfpzyGzEx/0pF4wE8yND70Cm8
-	 uj2vT+LZjaWbinyKAh1W+5+Y0wYEMcOnFuKF/vqwxUvCuP74FjVFSxYne7phAgn5Fu
-	 ouBFn7cnb2bXPe1t77Z/3fWW/+sX/FNMfibPJ+wA=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.34])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 936A9433; Wed, 18 Dec 2024 21:36:54 +0800
-X-QQ-mid: xmsmtpt1734529014t71c8hezj
-Message-ID: <tencent_06924B6674ED771167C23CC336C097223609@qq.com>
-X-QQ-XMAILINFO: OB07sFyS3L6pDfQi6qXZC0lcJcyQErbm9KXI/+T2whMv7sxCrZ738ot5FettPy
-	 wEQiwF9xEjAT9/e0/rSxYh/xuM3UDcqHSq8wXpF33ti5y/q2prTgyS94wUwqYR9oldsPUiHjMaj+
-	 I5Nrk6bZIoYUckQOLZcR9HmzQtrDWPRBhobgx9SSFF8MkCbwpx/1RlFwVbMacWAL8rluDYtt98qL
-	 DzWics5xqJsy8Z9/2ZU8fMXnNS34o8jATk3BVV+2GJh1ufxjRVk6q0vuC6LtX5R3dIal92ujeUGc
-	 JK2iKuFSjhdidUfi++oR/DOoMD/K0P8KhRc/Jd8RQmyX+Qu1o4cARXeidiJ9QR2OKZFNlj52r/vc
-	 KXxYsu9QjbIfuMqD5woAF4ukzKhuBwcqMnst6mFqoteIT8GqeK8xqsXkFsK8PqtzXqF+Q9Pb7JKW
-	 g1IlMk749aZZVRQk7Zoe2Z1WvtfjI4OCezykAsRmHyBpfrFrPsM7+Xo6D28P8mLkhlUT/1llhem/
-	 Nf/l4G04tvpRRu8I4eQK//71pLUdPuoWZBs+6+lLraxUZLaQZSRPyhcX1CE5Jjw1VLf5ihIpgPri
-	 jABNJyzn8nGnNcdWBf1AgL5VLi1stjREwGDYpKII+8+YJVVoER9EopWjWerfo+AhAXttKXvkSz+n
-	 f/3Z7CDpeoElkA1WzTx9DkQrH64gUgBLC9qd1yUqFT/811g6S7/1y2gQb58yXu8SqCqF5UoCP4gx
-	 vzUsrTL/0LcDT5mSZcPOdmhSgriO0BlzACap5J82x/Db1f17/uNJcgUtQ0JtqlAdk3VYKpuqRiRZ
-	 t2UkEODfiRx9cUddNvhqLVdyDRhd8qp3pVFXi+epnGALudgLCLJZvCrzxu8U9P4uzcThTenw1c6v
-	 PArxwRtCRWDPZnow47SPqSmVJ21H8izGxGzvv1WVWXMGXxwXFBcQqaFyJJt7mGpA==
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: rostedt@goodmis.org
-Cc: aha310510@gmail.com,
-	david@redhat.com,
-	eadavis@qq.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	syzbot+345e4443a21200874b18@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com,
-	vdonnefort@google.com
-Subject: [PATCH V3] ring-buffer: fix overflow in __rb_map_vma
-Date: Wed, 18 Dec 2024 21:36:55 +0800
-X-OQ-MSGID: <20241218133654.4010342-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20241218081800.05d81fe4@gandalf.local.home>
-References: <20241218081800.05d81fe4@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0HTxed+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734531857;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wYDfdm4rHVwC2HrRooT1qxFxAJepkEO0lOVD/zIJr0U=;
+	b=U0HTxed+WSF9L1T/KL3v3LZdMsCOxTZTa3wBWyqBXA8TWQwUo+XHDQVEwCTiPnPx5T6o64
+	g6y7RoXExisv/j4qZ2vK2a3PinX7+MTU4ZMWK2Sep2uw3T/WYp2m148Dnv8SPTd4utu/Ci
+	ZJhVvngvoIgvYv1F05mSY4E/1jOV398=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-539-ux3glI4BO7CUhXr284-PPg-1; Wed, 18 Dec 2024 09:24:13 -0500
+X-MC-Unique: ux3glI4BO7CUhXr284-PPg-1
+X-Mimecast-MFC-AGG-ID: ux3glI4BO7CUhXr284-PPg
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5d3d9d6293fso3949496a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 06:24:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734531853; x=1735136653;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wYDfdm4rHVwC2HrRooT1qxFxAJepkEO0lOVD/zIJr0U=;
+        b=IsCsUmQbuqpsU6GwZkywDSBirolhrb7bWgPvFz3bVQi0DJEMTeQRXoJID8ly9vUOMX
+         6lr8vHWG8RI2+KmpBupT4fpzOYJm/q2CZgLN7cytyO2ovBVVK/DykFmhXRb7np3fJ4jW
+         5kqOEbvyHktxcdxBLk+DfVjJMv+rWyXu7ObOSSGwzsBQTkAKFavNJFx9G14CsDVgapkc
+         FlOfpW33+GbguoFyyJSdmeE4sbq4uZ18EZrbZsYu+j6623FXEQxqJzAynmUrrcUaJ1FP
+         vgkRe/db4cC+Q7soAQeHY5RIKzSFY6JqpkfBQ4I6DdEu+aP7sDW4Cs4e/c2AQCfDZHPA
+         br2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVw+7Da4eHq/4Nkv2nFXA0cOmFWggQKo7oCMwD5/GP6Bdb0zGRfC1VyaV6bAxYRLSFbddRY/ZKhLLuJuvnN2qEBl+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyemIbhhqp9yXtM5iabb37yaeuW4RtaH3CfItPeEjtf6vM/Bmsq
+	tPIybTqIBYTWAju9gJnbUiexFan2+yDukJpvLsPSlwp+3HdpVgLlkaodXeiA9CRr7buVT7qundj
+	hr0P2NumdHYyrb5IwIP+GSRif50nA5JmdrgZkISBGenaRLBxOjkTGVU+X1szwoqvK3SxiVA==
+X-Gm-Gg: ASbGncumAtyXacYr7gCY4JhvjUphICRYAZp3RATV2wD8VYGo8vTlhwLcVSax/5hByeN
+	XM/QrqtnMJhfo4eRRb28VcjCMpXvzGhKpEq8gDCxcRzrJ7ofQ5qmQvkEISYXCywSInGl4P5aVHj
+	7FkTRf6prbRATqxeu/laxM5jS7FYBWh17LZP4+B1X3fLyxkWIy03tzgZ87nuWDxUbG38LF/Cw7X
+	8r6w/6JBh3TIUwxh21adVeHyV/rXibAvYjC0ZpZc9XxM+Z6rE2ymfj/6FBfMz4WHQyc005CLbQh
+	L1Ok+IQQuqIzCahTQBKC/iHZDDV4vQ02/iMtbuZuINtlhVItD6dy273VsetlO8/SHuVsytfUN0z
+	9LbkEwmNGMb4wtZo5NUdJwxUym5OXy3Q=
+X-Received: by 2002:a05:6402:34cb:b0:5d0:e826:f0da with SMTP id 4fb4d7f45d1cf-5d7ee3b4ce0mr2712543a12.16.1734531852727;
+        Wed, 18 Dec 2024 06:24:12 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHFtRdU6T9fjczyDU36xPulMKDITuG4yX5oo84uMCHGFDo5XudrAQybG+dnV4bd1kStWZRLnQ==
+X-Received: by 2002:a05:6402:34cb:b0:5d0:e826:f0da with SMTP id 4fb4d7f45d1cf-5d7ee3b4ce0mr2712521a12.16.1734531852288;
+        Wed, 18 Dec 2024 06:24:12 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d652ab5109sm5407494a12.16.2024.12.18.06.24.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Dec 2024 06:24:11 -0800 (PST)
+Message-ID: <6d2e175f-0a84-4a6f-9484-c2c299bcc3c5@redhat.com>
+Date: Wed, 18 Dec 2024 15:24:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] platform/x86: samsung-galaxybook: Add
+ samsung-galaxybook driver
+To: Armin Wolf <W_Armin@gmx.de>, Joshua Grisham <josh@joshuagrisham.com>,
+ ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20241216103855.18457-1-josh@joshuagrisham.com>
+ <c23c4c88-786a-4662-a448-deb006b7a03c@gmx.de>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <c23c4c88-786a-4662-a448-deb006b7a03c@gmx.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HffOKa4qq6Slc-XSo30gYNpZtN_QYJDH44ujSGezWFM_1734531853
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-syzbot report a slab-out-of-bounds in __rb_map_vma. [1]
+Hi Armin,
 
-Overflow occurred when performing the following calculation:
-nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
+Thank you for reviewing this new driver.
 
-Add a check before the calculation to avoid this problem.
+On 17-Dec-24 10:31 PM, Armin Wolf wrote:
+> Am 16.12.24 um 11:38 schrieb Joshua Grisham:
 
-[1]
-BUG: KASAN: slab-out-of-bounds in __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
-Read of size 8 at addr ffff8880767dd2b8 by task syz-executor187/5836
+<snip>
 
-CPU: 0 UID: 0 PID: 5836 Comm: syz-executor187 Not tainted 6.13.0-rc2-syzkaller-00159-gf932fb9b4074 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xc3/0x620 mm/kasan/report.c:489
- kasan_report+0xd9/0x110 mm/kasan/report.c:602
- __rb_map_vma+0x9ab/0xae0 kernel/trace/ring_buffer.c:7058
- ring_buffer_map+0x56e/0x9b0 kernel/trace/ring_buffer.c:7138
- tracing_buffers_mmap+0xa6/0x120 kernel/trace/trace.c:8482
- call_mmap include/linux/fs.h:2183 [inline]
- mmap_file mm/internal.h:124 [inline]
- __mmap_new_file_vma mm/vma.c:2291 [inline]
- __mmap_new_vma mm/vma.c:2355 [inline]
- __mmap_region+0x1786/0x2670 mm/vma.c:2456
- mmap_region+0x127/0x320 mm/mmap.c:1348
- do_mmap+0xc00/0xfc0 mm/mmap.c:496
- vm_mmap_pgoff+0x1ba/0x360 mm/util.c:580
- ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:542
- __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
- __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
- __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>> +/*
+>> + * Hotkey work and filters
+>> + */
+>> +
+>> +static void galaxybook_kbd_backlight_hotkey_work(struct work_struct *work)
+>> +{
+>> +    struct samsung_galaxybook *galaxybook =
+>> +        container_of(work, struct samsung_galaxybook, kbd_backlight_hotkey_work);
+>> +
+>> +    if (galaxybook->kbd_backlight.brightness < galaxybook->kbd_backlight.max_brightness)
+>> +        kbd_backlight_acpi_set(galaxybook, galaxybook->kbd_backlight.brightness + 1);
+>> +    else
+>> +        kbd_backlight_acpi_set(galaxybook, 0);
+>> +
+>> +    led_classdev_notify_brightness_hw_changed(
+>> +        &galaxybook->kbd_backlight,
+>> +        galaxybook->kbd_backlight.brightness);
+> 
+> This is the exact reason why i think this should be done in userspace. You can replace this code
+> with a simple input event submission using the KBDILLUM* key codes. This would also allow you to
+> avoid any special locking in this case.
+> 
+> This would also allow userspace to configure the step with of the brightness changes.
 
-Reported-by: syzbot+345e4443a21200874b18@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=345e4443a21200874b18
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
-V1 -> V2: updated according to Vincent Donnefort's suggestion, to avoid repeating the (nr_subbufs + 1) << subbuf_order
-V2 -> V3: Add equal condition judgment
+As discussed in an earlier thread, there is really no good way to let
+userspace handle this atm. KEY_KBDILLUMTOGGLE gets mapped to XF86KbdLightOnOff
+while we really want Cycle, as we have in e.g. XF86MonBrightnessCycle.
 
- kernel/trace/ring_buffer.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+I just checked gnome-settings-daemon and it does handle XF86KbdLightOnOff
+but it only toggles on/off. In most laptops the cycle key is handled by
+the embedded controller and this simply emulates that common setup to
+match what userspace currently expects.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7e257e855dd1..20f0e01b7a50 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7019,7 +7019,11 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 	lockdep_assert_held(&cpu_buffer->mapping_lock);
- 
- 	nr_subbufs = cpu_buffer->nr_pages + 1; /* + reader-subbuf */
--	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff; /* + meta-page */
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order); /* + meta-page */
-+	if (nr_pages <= pgoff)
-+		return -EINVAL;
-+
-+	nr_pages -= pgoff;
- 
- 	nr_vma_pages = vma_pages(vma);
- 	if (!nr_vma_pages || nr_vma_pages > nr_pages)
--- 
-2.47.0
+Handling this in userspace would require adding a new KEY_KBDILLUMCYCLE
+and then adding support for that to xkb and maybe also upower and
+gnome-settings-daemon and KDE and then wait for that all to land before
+things start to work.
+
+As for your argument about allowing to set the percentage to step,
+note that this in kernel handling only increaeses the level by 1 on
+the hotkey press that make sense because typically these kbds backlights
+only have 2 - 4 levels.
+
+So IMHO handling this in the kernel is an acceptable compromise,
+(yes I do realize that this is a compromise).
+
+If some need arises later to do move this to userspace we can always
+add a module parameter to completely disable the in kernel handling and
+instead send out a new KEY_KBDILLUMCYCLE key-code when this now
+module parameter is set.
+
+Regards,
+
+Hans
+
+
 
