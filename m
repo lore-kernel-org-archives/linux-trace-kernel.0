@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFFE1D417B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89C41D79B8;
 	Thu, 19 Dec 2024 20:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734639185; cv=none; b=BTDphn0F9DTGAT5k1DKy1320sFqubmmfe919fxdrGivEeOJ6+YZzSfB6wmoqAvIFvW3ATd3FbMl8JP9LpOu26IOCtdJiZovaIusbeH+JQuvtCG1lZ81qicZhMvNsgUgf8WCzBuDP/g3gcR/aSW17XjGaICVsNja8B2Hifo/+c70=
+	t=1734639185; cv=none; b=pH5C+/S9lghDAgwvcSrZgHAnn3cM070+WHk7p1q5LX2Ydd9dYjno8/X7bxyl1xRXZTYsC9cXZP3+LJpl8eln+ikFH/I7Hkbv++7He+/WtqXGrHs3mWslVeulg9P5oL618wblddIuJqXV+xLd29zwr/B57BJyps/7RzUMVn6ncM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734639185; c=relaxed/simple;
-	bh=P2FbeD6seuoCUmuzI54xDLabJBUB6VKTSG7K74qIQA4=;
+	bh=ESOYR1Qzbg00EG7EwDSgN9QMFrTfsKOxEZnk3eqUmM4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=tyPS/YfEU0YbLJlMxXD+1Gsh9ryAch51rded0m6OunpZtxShZMRo0XToAGGjOo7TWkL+g0DtKOLgfpATGp/8/+H5AgNipLkGI6ITL4un/57VpSfF1qS084bHT8AH5bKUbXd+Bye2lXVuGtg5bcQJOcPCnc6Clq2xBIW/6YOKs+E=
+	 Content-Type; b=SZ+S+rNJbJLIPmclyA6CocSCvQrAsk4QADGBmeUDAlYQ1dC/St/40e/F8P90eYEqQ/NaEamkw8d6NE7EzSASFq67HwqM/J0WHYx84heR5cjm7k6NQ5+rAZ8tPIHN0AZKFESxOVmcyj+KASmfcE3lIWRX2QMcgEUrvmTZLDfLoLk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E448AC4CED6;
-	Thu, 19 Dec 2024 20:13:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FAB9C4CEE0;
+	Thu, 19 Dec 2024 20:13:05 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tOMu2-0000000AOMS-2qH5;
-	Thu, 19 Dec 2024 15:13:46 -0500
-Message-ID: <20241219201346.533876847@goodmis.org>
+	id 1tOMu3-0000000AONT-05IU;
+	Thu, 19 Dec 2024 15:13:47 -0500
+Message-ID: <20241219201346.870318466@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 19 Dec 2024 15:12:10 -0500
+Date: Thu, 19 Dec 2024 15:12:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 12/14] tracing: Switch trace_osnoise.c code over to use guard() and __free()
+Subject: [PATCH 14/14] tracing: Switch trace_stat.c code over to use guard()
 References: <20241219201158.193821672@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,94 +41,111 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The osnoise_hotplug_workfn() grabs two mutexes and cpu_read_lock(). It has
-various gotos to handle unlocking them. Switch them over to guard() and
-let the compiler worry about it.
+There are a couple functions in trace_stat.c that have "goto out" or
+equivalent on error in order to release locks that were taken. This can be
+error prone or just simply make the code more complex.
 
-The osnoise_cpus_read() has a temporary mask_str allocated and there's
-some gotos to make sure it gets freed on error paths. Switch that over to
-__free() to let the compiler worry about it.
+Switch every location that ends with unlocking a mutex on error over to
+using the guard(mutex)() infrastructure to let the compiler worry about
+releasing locks. This makes the code easier to read and understand.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_osnoise.c | 38 ++++++++++++------------------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+ kernel/trace/trace_stat.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index b9f96c77527d..b8626892c66d 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2083,26 +2083,21 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
- {
- 	unsigned int cpu = smp_processor_id();
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index bb247beec447..b3b5586f104d 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -128,7 +128,7 @@ static int stat_seq_init(struct stat_session *session)
+ 	int ret = 0;
+ 	int i;
  
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
+-	mutex_lock(&session->stat_mutex);
++	guard(mutex)(&session->stat_mutex);
+ 	__reset_stat_session(session);
  
- 	if (!osnoise_has_registered_instances())
- 		goto out_unlock_trace;
+ 	if (!ts->stat_cmp)
+@@ -136,11 +136,11 @@ static int stat_seq_init(struct stat_session *session)
  
--	mutex_lock(&interface_lock);
--	cpus_read_lock();
-+	guard(mutex)(&interface_lock);
-+	guard(cpus_read_lock)();
+ 	stat = ts->stat_start(ts);
+ 	if (!stat)
+-		goto exit;
++		return 0;
  
- 	if (!cpu_online(cpu))
--		goto out_unlock;
-+		return;
-+
- 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
--		goto out_unlock;
-+		return;
+ 	ret = insert_stat(root, stat, ts->stat_cmp);
+ 	if (ret)
+-		goto exit;
++		return ret;
  
- 	start_kthread(cpu);
--
--out_unlock:
--	cpus_read_unlock();
--	mutex_unlock(&interface_lock);
--out_unlock_trace:
--	mutex_unlock(&trace_types_lock);
+ 	/*
+ 	 * Iterate over the tracer stat entries and store them in an rbtree.
+@@ -157,13 +157,10 @@ static int stat_seq_init(struct stat_session *session)
+ 			goto exit_free_rbtree;
+ 	}
+ 
+-exit:
+-	mutex_unlock(&session->stat_mutex);
+ 	return ret;
+ 
+ exit_free_rbtree:
+ 	__reset_stat_session(session);
+-	mutex_unlock(&session->stat_mutex);
+ 	return ret;
  }
  
- static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
-@@ -2300,31 +2295,22 @@ static ssize_t
- osnoise_cpus_read(struct file *filp, char __user *ubuf, size_t count,
- 		  loff_t *ppos)
+@@ -308,7 +305,7 @@ static int init_stat_file(struct stat_session *session)
+ int register_stat_tracer(struct tracer_stat *trace)
  {
--	char *mask_str;
-+	char *mask_str __free(kfree) = NULL;
- 	int len;
+ 	struct stat_session *session, *node;
+-	int ret = -EINVAL;
++	int ret;
  
--	mutex_lock(&interface_lock);
-+	guard(mutex)(&interface_lock);
+ 	if (!trace)
+ 		return -EINVAL;
+@@ -316,18 +313,18 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	if (!trace->stat_start || !trace->stat_next || !trace->stat_show)
+ 		return -EINVAL;
  
- 	len = snprintf(NULL, 0, "%*pbl\n", cpumask_pr_args(&osnoise_cpumask)) + 1;
- 	mask_str = kmalloc(len, GFP_KERNEL);
--	if (!mask_str) {
--		count = -ENOMEM;
--		goto out_unlock;
--	}
-+	if (!mask_str)
++	guard(mutex)(&all_stat_sessions_mutex);
++
+ 	/* Already registered? */
+-	mutex_lock(&all_stat_sessions_mutex);
+ 	list_for_each_entry(node, &all_stat_sessions, session_list) {
+ 		if (node->ts == trace)
+-			goto out;
++			return -EINVAL;
+ 	}
+ 
+-	ret = -ENOMEM;
+ 	/* Init the session */
+ 	session = kzalloc(sizeof(*session), GFP_KERNEL);
+ 	if (!session)
+-		goto out;
 +		return -ENOMEM;
  
- 	len = snprintf(mask_str, len, "%*pbl\n", cpumask_pr_args(&osnoise_cpumask));
--	if (len >= count) {
--		count = -EINVAL;
--		goto out_free;
--	}
-+	if (len >= count)
-+		return -EINVAL;
+ 	session->ts = trace;
+ 	INIT_LIST_HEAD(&session->session_list);
+@@ -336,16 +333,13 @@ int register_stat_tracer(struct tracer_stat *trace)
+ 	ret = init_stat_file(session);
+ 	if (ret) {
+ 		destroy_session(session);
+-		goto out;
++		return ret;
+ 	}
  
- 	count = simple_read_from_buffer(ubuf, count, ppos, mask_str, len);
+-	ret = 0;
+ 	/* Register */
+ 	list_add_tail(&session->session_list, &all_stat_sessions);
+- out:
+-	mutex_unlock(&all_stat_sessions_mutex);
  
--out_free:
--	kfree(mask_str);
--out_unlock:
--	mutex_unlock(&interface_lock);
--
- 	return count;
+-	return ret;
++	return 0;
  }
  
+ void unregister_stat_tracer(struct tracer_stat *trace)
 -- 
 2.45.2
 
