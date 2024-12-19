@@ -1,102 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF1A64A8F;
-	Thu, 19 Dec 2024 01:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D998B3D3B8;
+	Thu, 19 Dec 2024 16:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734571062; cv=none; b=Jdf6ID2ZXNfMz0LMsLM0mIOcvoDV+76WoOR/YbsBcwezSJ0sCNbIeRuwjmFZ3/4124vH6g54lhyu4xz9I9eYeLSUo/oIHO+KlR8gxtvNCfToeD2Ipxvx3KcLEMf2r6GZqAOOhxQRbKG1thzKfi15Ao1alg6zwoZR0uCDzhGkfoU=
+	t=1734624235; cv=none; b=Bam8xu56QJtyaYfeKNLhDadrj1Dwxa3FfkI9KHzNGR4NTM/TNrv5YPB5LdzApF5TLDlD5L9eL9RuGzo9f0KwwnHt/5IVK1jSX5krJDepPHS1nFJgT7hzcQj+kc/8wOIACZfyRVaYijwd7ib1Cz4bszwmx+B4e9J5My1d/3xxPYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734571062; c=relaxed/simple;
-	bh=0NE9oPCfItxPii9OcgTm9DuGBcfrld1PP3bgzRwFNTs=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=twz6wYCVXTVjlkcYnCIGlZyAXXEy0qe+GWufpaUI28/3pyrtS9W+mH+TYPZy0Fn3TpARFEOyTB2kt38DzRQ9K/BD6p/JNJn+RmGIj5sKxgYA6Ns+j1pCMVJx3lpQ+xRji4Q+nQRrq1oNAbmay6yUXwFk643juGSIIbFhbfQJo4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hx6NQoqN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hx6NQoqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7D5C4CECD;
-	Thu, 19 Dec 2024 01:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734571061;
-	bh=0NE9oPCfItxPii9OcgTm9DuGBcfrld1PP3bgzRwFNTs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Hx6NQoqN39o0iwQ31ryvkwgwkCMmVJD//lwJX6EYzxIP/gBeRI95y1WNCnMQ3yweJ
-	 MRgdq1tz8N11vtjdAjyQMb/xaaLyZxC8sE0tYPgnEiHOri7McYg/smky2pU8KLI/tW
-	 Emu2ZhMnUSw5xaIWCf86yVspDJKCAqwcnIspRhmp2FOAkKEUYQQtI0eW5WtmQ2+lil
-	 QqVwpV1EBeYle6Yq6YU9c9rxmuVHfbPpjrhl2JVAI4eFAKggsw5RL8e0uJIvgie5l0
-	 zk9wNRp09OvNWH8lebRldb7BZQX0Z0GPGPIGYWwC6+YherancHp8R6u9piUdqnW5xz
-	 5poiOvQMsN1og==
-Date: Thu, 19 Dec 2024 10:17:37 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Nikolay Kuratov <kniv@yandex-team.ru>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Francis Laniel <flaniel@linux.microsoft.com>, Steven Rostedt
- <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v3] tracing/kprobes: Skip symbol counting logic for
- module symbols in create_local_trace_kprobe()
-Message-Id: <20241219101737.83e3be23bd85c1f9810194c0@kernel.org>
-In-Reply-To: <20241216161145.2584246-1-kniv@yandex-team.ru>
-References: <20241216161145.2584246-1-kniv@yandex-team.ru>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734624235; c=relaxed/simple;
+	bh=fG/Z+aIDZ0+fikN2xWhzPiuy1wtyxIQR8qfElqPEICs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d/CmcvtbctZsVvojB15sfzkf5KtMmkzI9Gtu04xFdv1jejrTVXlEaQiZj1LIN6UQNZz3Sylbdg4eMFmFTaE7bYL/YbsNhEnnCXtZIoZiWFcBL+oJkq7UbVLfjmPm5oaAB5JGOmVY+QxtlF64x2mDqeUminKGiwarYMh1sfNCKsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81643C4CECE;
+	Thu, 19 Dec 2024 16:03:54 +0000 (UTC)
+Date: Thu, 19 Dec 2024 11:04:34 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Tom Zanussi <zanussi@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] selftests/tracing: Add hist poll() support test
+Message-ID: <20241219110434.3cb3f47c@gandalf.local.home>
+In-Reply-To: <172907578159.470540.12276069200453397317.stgit@mhiramat.roam.corp.google.com>
+References: <172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com>
+	<172907578159.470540.12276069200453397317.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 16 Dec 2024 19:11:45 +0300
-Nikolay Kuratov <kniv@yandex-team.ru> wrote:
+On Wed, 16 Oct 2024 19:49:41 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> commit b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-> avoids checking number_of_same_symbols() for module symbol in
-> __trace_kprobe_create(), but create_local_trace_kprobe() should avoid this
-> check too. Doing this check leads to ENOENT for module_name:symbol_name
-> constructions passed over perf_event_open.
-> 
-> No bug in mainline and 6.12 as those contain more general fix
-> commit 9d8616034f16 ("tracing/kprobes: Add symbol counting check when module loads")
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+> @@ -0,0 +1,74 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: event trigger - test poll wait on histogram
+> +# requires: set_event events/sched/sched_process_free/trigger events/sched/sched_process_free/hist
+> +# flags: instance
+> +
+> +POLL=${FTRACETEST_ROOT}/poll
+> +
+> +if [ ! -x ${POLL} ]; then
+> +  echo "poll program is not compiled!"
+> +  exit_unresolved
+> +fi
+> +
+> +EVENT=events/sched/sched_process_free/
+> +
+> +# Check poll ops is supported. Before implementing poll on hist file, it
+> +# returns soon with POLLIN | POLLOUT, but not POLLPRI.
+> +
+> +# This must wait >1 sec and return 1 (timeout).
+> +set +e
+> +${POLL} -I -t 1000 ${EVENT}/hist
+> +ret=$?
+> +set -e
+> +if [ ${ret} != 1 ]; then
+> +  echo "poll on hist file is not supported"
+> +  exit_unsupported
+> +fi
+> +
+> +# Test POLLIN
+> +echo > trace
+> +echo "hist:key=comm" > ${EVENT}/trigger
+> +echo 1 > ${EVENT}/enable
+> +
+> +# This sleep command will exit after 2 seconds.
+> +sleep 2 &
+> +BGPID=$!
+> +# if timeout happens, poll returns 1.
+> +${POLL} -I -t 4000 ${EVENT}/hist
+> +echo 0 > tracing_on
+> +
+> +if [ -d /proc/${BGPID} ]; then
+> +  echo "poll exits too soon"
+> +  kill -KILL ${BGPID} ||:
+> +  exit_fail
+> +fi
+> +
+> +if ! grep -qw "sleep" trace; then
+> +  echo "poll exits before event happens"
 
-Thanks! It seems Greg already queued v2 for stable kernels, and
-it seems no theoletical change in this version.
+I ran this and it failed here. But it wasn't because the poll failed, it's
+because the test is wrong. If something else exits during the test, then
+the poll function will exit early.
 
-Thank you,
+What the check should do is simply read the hist file, get the hist count,
+and make sure it's updated after the poll is run, or at least put a filter
+on it:
 
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20240705161030.b3ddb33a8167013b9b1da202@kernel.org
-> Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
-> Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
-> ---
-> v1 -> v2:
->  * Reword commit title and message
->  * Send for stable instead of mainline
-> v2 -> v3:
->  * Specify first good LTS version in commit message
->  * Remove explicit versions from the subject since 6.1 and 5.10 need fix too
-> 
->  kernel/trace/trace_kprobe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 12d997bb3e78..94cb09d44115 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1814,7 +1814,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
->  	int ret;
->  	char *event;
->  
-> -	if (func) {
-> +	if (func && !strchr(func, ':')) {
->  		unsigned int count;
->  
->  		count = number_of_same_symbols(func);
-> -- 
-> 2.34.1
-> 
+  echo 'hist:keys=comm if comm =="sleep"' > /sys/kernel/tracing/events/sched/sched_process_free/trigger
 
+Which would work as long as no other "sleep" exits during the test.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
+
+> +  exit_fail
+> +fi
+> +
+> +# Test POLLPRI
+> +echo > trace
+> +echo 1 > tracing_on
+> +
+> +# This sleep command will exit after 2 seconds.
+> +sleep 2 &
+> +BGPID=$!
+> +# if timeout happens, poll returns 1.
+> +${POLL} -P -t 4000 ${EVENT}/hist
+> +echo 0 > tracing_on
+> +
+> +if [ -d /proc/${BGPID} ]; then
+> +  echo "poll exits too soon"
+> +  kill -KILL ${BGPID} ||:
+> +  exit_fail
+> +fi
+> +
+> +if ! grep -qw "sleep" trace; then
+> +  echo "poll exits before event happens"
+> +  exit_fail
+> +fi
+> +
+> +exit_pass
+
