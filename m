@@ -1,269 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FA916CD1D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Dec 2024 21:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF1A64A8F;
+	Thu, 19 Dec 2024 01:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734557689; cv=none; b=kQu/iqZ4GHdqDsTdErhBTAKFgvBqrYvq/APOwWeYvgGtj3nAfWsVYunLo9IddyV+klwVSUAAyrkm9XyJdpcWfzV60EzEgJMK+11/LrndTT4mywyrPTen4pyxs2GaWqBNtvvi6yTehxhhkeNYlyd1CckrjwGpUf8KgIZ64mcGr3E=
+	t=1734571062; cv=none; b=Jdf6ID2ZXNfMz0LMsLM0mIOcvoDV+76WoOR/YbsBcwezSJ0sCNbIeRuwjmFZ3/4124vH6g54lhyu4xz9I9eYeLSUo/oIHO+KlR8gxtvNCfToeD2Ipxvx3KcLEMf2r6GZqAOOhxQRbKG1thzKfi15Ao1alg6zwoZR0uCDzhGkfoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734557689; c=relaxed/simple;
-	bh=92kdn9FW2RL8vQcug2RW23wrELDQ6M2BpPMld9dYtCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CGj5vvJTtqwkwYAee8Yj2IaSP0ILgA8c0t98FU6XNfyIbaX3JQmA/hc+iAqTWb6fsZuLbbf3VStGcwvJYGwsJa5XQKFTfWrk6Bbk3ETM1fHzH1EPONnHdemPKa7ikqiz8qyv5K+MULHQ76lmxMD7/KIFpXwgs6BWxLvGpucCnJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E58D8C4CECD;
-	Wed, 18 Dec 2024 21:34:47 +0000 (UTC)
-Date: Wed, 18 Dec 2024 16:35:26 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
-Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [BUG] spinlock recursion when enabling function tracer on
- 32-bit
-Message-ID: <20241218163526.2569917f@gandalf.local.home>
-In-Reply-To: <bb8485bf-d720-4803-aa3c-037ea1169f8a@gaisler.com>
-References: <86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com>
-	<20241218110115.29d4cc77@gandalf.local.home>
-	<bb8485bf-d720-4803-aa3c-037ea1169f8a@gaisler.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1734571062; c=relaxed/simple;
+	bh=0NE9oPCfItxPii9OcgTm9DuGBcfrld1PP3bgzRwFNTs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=twz6wYCVXTVjlkcYnCIGlZyAXXEy0qe+GWufpaUI28/3pyrtS9W+mH+TYPZy0Fn3TpARFEOyTB2kt38DzRQ9K/BD6p/JNJn+RmGIj5sKxgYA6Ns+j1pCMVJx3lpQ+xRji4Q+nQRrq1oNAbmay6yUXwFk643juGSIIbFhbfQJo4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hx6NQoqN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hx6NQoqN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7D5C4CECD;
+	Thu, 19 Dec 2024 01:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734571061;
+	bh=0NE9oPCfItxPii9OcgTm9DuGBcfrld1PP3bgzRwFNTs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Hx6NQoqN39o0iwQ31ryvkwgwkCMmVJD//lwJX6EYzxIP/gBeRI95y1WNCnMQ3yweJ
+	 MRgdq1tz8N11vtjdAjyQMb/xaaLyZxC8sE0tYPgnEiHOri7McYg/smky2pU8KLI/tW
+	 Emu2ZhMnUSw5xaIWCf86yVspDJKCAqwcnIspRhmp2FOAkKEUYQQtI0eW5WtmQ2+lil
+	 QqVwpV1EBeYle6Yq6YU9c9rxmuVHfbPpjrhl2JVAI4eFAKggsw5RL8e0uJIvgie5l0
+	 zk9wNRp09OvNWH8lebRldb7BZQX0Z0GPGPIGYWwC6+YherancHp8R6u9piUdqnW5xz
+	 5poiOvQMsN1og==
+Date: Thu, 19 Dec 2024 10:17:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Nikolay Kuratov <kniv@yandex-team.ru>
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Francis Laniel <flaniel@linux.microsoft.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v3] tracing/kprobes: Skip symbol counting logic for
+ module symbols in create_local_trace_kprobe()
+Message-Id: <20241219101737.83e3be23bd85c1f9810194c0@kernel.org>
+In-Reply-To: <20241216161145.2584246-1-kniv@yandex-team.ru>
+References: <20241216161145.2584246-1-kniv@yandex-team.ru>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Dec 2024 22:05:20 +0100
-Ludwig Rydberg <ludwig.rydberg@gaisler.com> wrote:
+On Mon, 16 Dec 2024 19:11:45 +0300
+Nikolay Kuratov <kniv@yandex-team.ru> wrote:
 
-> I applied the patch and did some testing and the initial issue I reported
-> seems to have been fixed but unfortunately I'm still able to trigger
-> a spinlock recursion.
+> commit b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> avoids checking number_of_same_symbols() for module symbol in
+> __trace_kprobe_create(), but create_local_trace_kprobe() should avoid this
+> check too. Doing this check leads to ENOENT for module_name:symbol_name
+> constructions passed over perf_event_open.
 > 
-> The following sequence works fine with the patch applied:
-> # echo function > current_tracer
-> # echo 1 > tracing_on
-> # usleep 1
-> # echo 0 > tracing_on
-> # cat trace
-> # ...
+> No bug in mainline and 6.12 as those contain more general fix
+> commit 9d8616034f16 ("tracing/kprobes: Add symbol counting check when module loads")
+
+Thanks! It seems Greg already queued v2 for stable kernels, and
+it seems no theoletical change in this version.
+
+Thank you,
+
 > 
-> But this triggers a spinlock recursion:
-> # echo 1 > tracing_on
-> # find /
+> Link: https://lore.kernel.org/linux-trace-kernel/20240705161030.b3ddb33a8167013b9b1da202@kernel.org
+> Fixes: b022f0c7e404 ("tracing/kprobes: Return EADDRNOTAVAIL when func matches several symbols")
+> Signed-off-by: Nikolay Kuratov <kniv@yandex-team.ru>
+> ---
+> v1 -> v2:
+>  * Reword commit title and message
+>  * Send for stable instead of mainline
+> v2 -> v3:
+>  * Specify first good LTS version in commit message
+>  * Remove explicit versions from the subject since 6.1 and 5.10 need fix too
 > 
-> [   61.276675] BUG: spinlock recursion on CPU#0, find/119
-> [   61.277571]  lock: 0xc1c076c0, .magic: dead4ead, .owner: find/119, .owner_cpu: 0
-> [   61.278365] CPU: 0 UID: 0 PID: 119 Comm: find Not tainted 6.13.0-rc3 #5
-> [   61.278724] Hardware name: riscv-virtio,qemu (DT)
-> [   61.278994] Call Trace:
+>  kernel/trace/trace_kprobe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 12d997bb3e78..94cb09d44115 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -1814,7 +1814,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  	int ret;
+>  	char *event;
+>  
+> -	if (func) {
+> +	if (func && !strchr(func, ':')) {
+>  		unsigned int count;
+>  
+>  		count = number_of_same_symbols(func);
+> -- 
+> 2.34.1
+> 
 
-OK, let's forget that then. Since these locks are really architecture
-specific just to implement 64bit atomics on 32bit systems, they really
-should be arch_spin_lock() and not raw_spin_lock(). raw_spin_lock() gets
-traced (and there's a lot of debugging that can happen when they are
-traced).
 
-But arch_spin_lock() does not get traced, and is used in the tracing
-and lockdep infrastructure. As these locks are never generic (archs that
-have 64 bit atomics don't need them), lets switch them over to
-arch_spin_lock().
-
-Can you test this patch?
-
--- Steve
-
-diff --git a/lib/atomic64.c b/lib/atomic64.c
-index caf895789a1e..1a72bba36d24 100644
---- a/lib/atomic64.c
-+++ b/lib/atomic64.c
-@@ -25,15 +25,15 @@
-  * Ensure each lock is in a separate cacheline.
-  */
- static union {
--	raw_spinlock_t lock;
-+	arch_spinlock_t lock;
- 	char pad[L1_CACHE_BYTES];
- } atomic64_lock[NR_LOCKS] __cacheline_aligned_in_smp = {
- 	[0 ... (NR_LOCKS - 1)] = {
--		.lock =  __RAW_SPIN_LOCK_UNLOCKED(atomic64_lock.lock),
-+		.lock =  __ARCH_SPIN_LOCK_UNLOCKED,
- 	},
- };
- 
--static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
-+static inline arch_spinlock_t *lock_addr(const atomic64_t *v)
- {
- 	unsigned long addr = (unsigned long) v;
- 
-@@ -45,12 +45,14 @@ static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
- s64 generic_atomic64_read(const atomic64_t *v)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_read);
-@@ -58,11 +60,13 @@ EXPORT_SYMBOL(generic_atomic64_read);
- void generic_atomic64_set(atomic64_t *v, s64 i)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	v->counter = i;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- }
- EXPORT_SYMBOL(generic_atomic64_set);
- 
-@@ -70,11 +74,13 @@ EXPORT_SYMBOL(generic_atomic64_set);
- void generic_atomic64_##op(s64 a, atomic64_t *v)			\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	v->counter c_op a;						\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- }									\
- EXPORT_SYMBOL(generic_atomic64_##op);
- 
-@@ -82,12 +88,14 @@ EXPORT_SYMBOL(generic_atomic64_##op);
- s64 generic_atomic64_##op##_return(s64 a, atomic64_t *v)		\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 	s64 val;							\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	val = (v->counter c_op a);					\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- 	return val;							\
- }									\
- EXPORT_SYMBOL(generic_atomic64_##op##_return);
-@@ -96,13 +104,15 @@ EXPORT_SYMBOL(generic_atomic64_##op##_return);
- s64 generic_atomic64_fetch_##op(s64 a, atomic64_t *v)			\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 	s64 val;							\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	val = v->counter;						\
- 	v->counter c_op a;						\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- 	return val;							\
- }									\
- EXPORT_SYMBOL(generic_atomic64_fetch_##op);
-@@ -131,14 +141,16 @@ ATOMIC64_OPS(xor, ^=)
- s64 generic_atomic64_dec_if_positive(atomic64_t *v)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter - 1;
- 	if (val >= 0)
- 		v->counter = val;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
-@@ -146,14 +158,16 @@ EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
- s64 generic_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	if (val == o)
- 		v->counter = n;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_cmpxchg);
-@@ -161,13 +175,15 @@ EXPORT_SYMBOL(generic_atomic64_cmpxchg);
- s64 generic_atomic64_xchg(atomic64_t *v, s64 new)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	v->counter = new;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_xchg);
-@@ -175,14 +191,16 @@ EXPORT_SYMBOL(generic_atomic64_xchg);
- s64 generic_atomic64_fetch_add_unless(atomic64_t *v, s64 a, s64 u)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	if (val != u)
- 		v->counter += a;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 
- 	return val;
- }
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
