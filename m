@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6AC61B86E9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A5D1B86DC;
 	Thu, 19 Dec 2024 20:13:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734639183; cv=none; b=tN5vVULJ1N9D6nIttYE4egPqOEIFbCOukN/Y8ZqlFOs9tlyHulUxKojat7TZNoeoyw1NktUZYkI4XgqZ21R0pQkyDvgwD7wi7PCoJJwEAIs/S+AoHrI3gQBQd0+/og9d0z3xYacg391hAORUrrDCe6Ls7X0piVFGurXp/PGlPTE=
+	t=1734639183; cv=none; b=P6e5KILN7i11noCRQSrWy8neMtHfAJSuOF0y0THzwcAYF8CpNGbCMJDIKW7HDti6SQJHUFZU8So/IGKztnZftW9/i//+kz4EKIBF4JgBs9CjvD9SwFbgU+WIfopj5lFaZaWWlhxti0YM9C6UeMAXBNNyONh0pHwtd7mKVIk4h24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734639183; c=relaxed/simple;
-	bh=gnK8OaB4/+UYeDkhNemmc5kgL3lyFNoGNyInAzUw5zM=;
+	bh=14SYhqDLJEDxoYJMlw8Vl8cHyPtJkl/4Oi0vpbPbZIg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ju8P/dyi9rqE7QnczBEpcr4Hhc0WwvE4TNt5JvK9q4/RjgdxA5tqni3VURfsGJhI9vytaGDm1gH+GmeDQjd6WNDakCK7Ub/8zEy5UCxa0DsGYKbOyeE0S+eiV0jWIP18ZB6ymFfW5gkU2ufOBn8T2nEJ/QYTXTr4lY8C5S8wlAE=
+	 Content-Type; b=q0OKm/mnhnZmAOlNyogbjQPv0dnnepiF849aRSOsH33bpIt3p8Aim0xZnsgpEefds1CYWTnen4+ILS9wmLxu7zUoVkbf1JnzPqbkbWRo9fC/bIZzrb328mFi9lIB35FxHnVqX6N7kXZ51P3PRf/PqwPUtSZAOmHCuQ6E+SpcwwE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3F4C4CEDE;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986FBC4CED7;
 	Thu, 19 Dec 2024 20:13:03 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tOMu1-0000000AOHx-0iRy;
+	id 1tOMu1-0000000AOIS-1Ovf;
 	Thu, 19 Dec 2024 15:13:45 -0500
-Message-ID: <20241219201345.025284170@goodmis.org>
+Message-ID: <20241219201345.190820140@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 19 Dec 2024 15:12:01 -0500
+Date: Thu, 19 Dec 2024 15:12:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 03/14] tracing: Have event_enable_write() just return error on error
+Subject: [PATCH 04/14] tracing: Simplify event_enable_func() goto out_free logic
 References: <20241219201158.193821672@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,54 +41,105 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The event_enable_write() function is inconsistent in how it returns
-errors. Sometimes it updates the ppos parameter and sometimes it doesn't.
-Simplify the code to just return an error or the count if there isn't an
-error.
+The event_enable_func() function allocates the data descriptor early in
+the function just to assign its data->count value via:
+
+  kstrtoul(number, 0, &data->count);
+
+This makes the code more complex as there are several error paths before
+the data descriptor is actually used. This means there needs to be a
+goto out_free; to clean it up.
+
+Use a local variable "count" to do the update and move the data allocation
+just before it is used. This removes the "out_free" label as the data can
+be freed on the failure path of where it is used.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/trace/trace_events.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 1545cc8b49d0..f4eff49faef6 100644
+index f4eff49faef6..43e9545b5cf3 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -1549,18 +1549,18 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	switch (val) {
- 	case 0:
- 	case 1:
--		ret = -ENODEV;
- 		mutex_lock(&event_mutex);
- 		file = event_file_file(filp);
- 		if (likely(file)) {
- 			ret = tracing_update_buffers(file->tr);
--			if (ret < 0) {
--				mutex_unlock(&event_mutex);
--				return ret;
--			}
--			ret = ftrace_event_enable_disable(file, val);
-+			if (ret >= 0)
-+				ret = ftrace_event_enable_disable(file, val);
-+		} else {
-+			ret = -ENODEV;
- 		}
- 		mutex_unlock(&event_mutex);
-+		if (ret < 0)
-+			return ret;
- 		break;
+@@ -3758,6 +3758,7 @@ event_enable_func(struct trace_array *tr, struct ftrace_hash *hash,
+ 	struct trace_event_file *file;
+ 	struct ftrace_probe_ops *ops;
+ 	struct event_probe_data *data;
++	unsigned long count = -1;
+ 	const char *system;
+ 	const char *event;
+ 	char *number;
+@@ -3798,14 +3799,6 @@ event_enable_func(struct trace_array *tr, struct ftrace_hash *hash,
  
- 	default:
-@@ -1569,7 +1569,7 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	ret = -ENOMEM;
  
- 	*ppos += cnt;
+-	data = kzalloc(sizeof(*data), GFP_KERNEL);
+-	if (!data)
+-		goto out;
+-
+-	data->enable = enable;
+-	data->count = -1;
+-	data->file = file;
+-
+ 	if (!param)
+ 		goto out_reg;
  
--	return ret ? ret : cnt;
-+	return cnt;
+@@ -3813,28 +3806,36 @@ event_enable_func(struct trace_array *tr, struct ftrace_hash *hash,
+ 
+ 	ret = -EINVAL;
+ 	if (!strlen(number))
+-		goto out_free;
++		goto out;
+ 
+ 	/*
+ 	 * We use the callback data field (which is a pointer)
+ 	 * as our counter.
+ 	 */
+-	ret = kstrtoul(number, 0, &data->count);
++	ret = kstrtoul(number, 0, &count);
+ 	if (ret)
+-		goto out_free;
++		goto out;
+ 
+  out_reg:
+ 	/* Don't let event modules unload while probe registered */
+ 	ret = trace_event_try_get_ref(file->event_call);
+ 	if (!ret) {
+ 		ret = -EBUSY;
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	ret = __ftrace_event_enable_disable(file, 1, 1);
+ 	if (ret < 0)
+ 		goto out_put;
+ 
++	data = kzalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		goto out_put;
++
++	data->enable = enable;
++	data->count = count;
++	data->file = file;
++
+ 	ret = register_ftrace_function_probe(glob, tr, ops, data);
+ 	/*
+ 	 * The above returns on success the # of functions enabled,
+@@ -3853,11 +3854,10 @@ event_enable_func(struct trace_array *tr, struct ftrace_hash *hash,
+ 	return ret;
+ 
+  out_disable:
++	kfree(data);
+ 	__ftrace_event_enable_disable(file, 0, 1);
+  out_put:
+ 	trace_event_put_ref(file->event_call);
+- out_free:
+-	kfree(data);
+ 	goto out;
  }
  
- static ssize_t
 -- 
 2.45.2
 
