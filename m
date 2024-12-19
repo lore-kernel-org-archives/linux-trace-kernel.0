@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B357E1C2439;
-	Thu, 19 Dec 2024 20:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2601D1724;
+	Thu, 19 Dec 2024 20:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734639184; cv=none; b=UZZqHMThkGrFRYbWlbqjlJ6aYuIr5cet44xEr+Jhb6+f2tGQkMUrKXEznHgMB+yNctWhvlPc67ey2Xkir8Axx3HA24Xur8ulGQCNShfkZEZCr60f6L0Gby/9I0K5DX8F8+6YNaRGEbGhy416lGXN+jyCHR5jPr88b5bHU4QGafA=
+	t=1734639185; cv=none; b=oW/pSYRkSqR3LsACCfZoORu9mt/iNJZqjzJai98IxRoHVJCEPyQvvBxJWHbUAn0ycRQ0NsQn85hm8B88lEAdKK0PR3hVMpnb0WBCC3AVEi2o2vq6Krau8B/4Md3mLGBX7q3CfyStypvf8aopbwPQw6jC/QgvT9eIce2hGhjNbjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734639184; c=relaxed/simple;
-	bh=Cw1FsvoYGdtheburEOwZ/bypqkYPYKSx4oXX0Q8tAuk=;
+	s=arc-20240116; t=1734639185; c=relaxed/simple;
+	bh=mLbIMqzsYRPegXerOyfPjieV7rPOQUb8hQN+DoVBMgM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=JX/QLB9Pmt0yhpsTJYJJhhoYZVnZstseCoDSysmaC1tf5sTzVAxK/sqfydsqEYYkb6O7hNNcs/w1CBm+YzQWcc8m6Hl235qCZWalaIFqHH+xyaQd03O5GQWVgfGXZ0i0ARbVdWCOGtrs1d0L2FEFafu1jcOMK3+aqh76LdbGbys=
+	 Content-Type; b=VVJOdPwzFWXMlWSySLUxkRmCHu0cTZdk5w0JCcAQdIlcRxYGUp7ZZzhdNnHAiafCjP9X5GRhf21+eKmhiaCdg68xUJ92rwIzDdCQWZpq2pPP8cYWLGMh5AhF/2JW/t4qAIt36pgKjyibRWKfnPT5lKySrOFMZc8WBmDIyPDp3k0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A6E4C4CEE9;
-	Thu, 19 Dec 2024 20:13:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207DCC4CEE2;
+	Thu, 19 Dec 2024 20:13:05 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tOMu2-0000000AOLT-1T9g;
+	id 1tOMu2-0000000AOMy-3You;
 	Thu, 19 Dec 2024 15:13:46 -0500
-Message-ID: <20241219201346.200737679@goodmis.org>
+Message-ID: <20241219201346.698598387@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 19 Dec 2024 15:12:08 -0500
+Date: Thu, 19 Dec 2024 15:12:11 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -29,7 +29,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 10/14] tracing: Switch trace_events_filter.c code over to use guard()
+Subject: [PATCH 13/14] tracing: Switch trace_stack.c code over to use guard()
 References: <20241219201158.193821672@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,87 +41,54 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-There are a couple functions in trace_events_filter.c that have "goto out"
-or equivalent on error in order to release locks that were taken. This can
-be error prone or just simply make the code more complex.
-
-Switch every location that ends with unlocking a mutex on error over to
-using the guard(mutex)() infrastructure to let the compiler worry about
-releasing locks. This makes the code easier to read and understand.
+The function stack_trace_sysctl() uses a goto on the error path to jump to
+the mutex_unlock() code. Replace the logic to use guard() and let the
+compiler worry about it.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_filter.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ kernel/trace/trace_osnoise.c | 2 +-
+ kernel/trace/trace_stack.c   | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 78051de581e7..0993dfc1c5c1 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -2405,13 +2405,11 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 	struct event_filter *filter = NULL;
- 	int err = 0;
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index b8626892c66d..b25c30b05dd0 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2086,7 +2086,7 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
+ 	guard(mutex)(&trace_types_lock);
  
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
+ 	if (!osnoise_has_registered_instances())
+-		goto out_unlock_trace;
++		return;
  
- 	/* Make sure the system still has events */
--	if (!dir->nr_events) {
--		err = -ENODEV;
--		goto out_unlock;
--	}
-+	if (!dir->nr_events)
-+		return -ENODEV;
+ 	guard(mutex)(&interface_lock);
+ 	guard(cpus_read_lock)();
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 7f9572a37333..14c6f272c4d8 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -520,20 +520,18 @@ stack_trace_sysctl(const struct ctl_table *table, int write, void *buffer,
+ 	int was_enabled;
+ 	int ret;
  
- 	if (!strcmp(strstrip(filter_string), "0")) {
- 		filter_free_subsystem_preds(dir, tr);
-@@ -2422,7 +2420,7 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 		tracepoint_synchronize_unregister();
- 		filter_free_subsystem_filters(dir, tr);
- 		__free_filter(filter);
--		goto out_unlock;
-+		return 0;
- 	}
+-	mutex_lock(&stack_sysctl_mutex);
++	guard(mutex)(&stack_sysctl_mutex);
+ 	was_enabled = !!stack_tracer_enabled;
  
- 	err = create_system_filter(dir, filter_string, &filter);
-@@ -2434,8 +2432,6 @@ int apply_subsystem_event_filter(struct trace_subsystem_dir *dir,
- 		__free_filter(system->filter);
- 		system->filter = filter;
- 	}
--out_unlock:
--	mutex_unlock(&event_mutex);
+ 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
  
- 	return err;
- }
-@@ -2612,17 +2608,15 @@ int ftrace_profile_set_filter(struct perf_event *event, int event_id,
- 	struct event_filter *filter = NULL;
- 	struct trace_event_call *call;
+ 	if (ret || !write || (was_enabled == !!stack_tracer_enabled))
+-		goto out;
++		return ret;
  
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
- 
- 	call = event->tp_event;
- 
--	err = -EINVAL;
- 	if (!call)
--		goto out_unlock;
-+		return -EINVAL;
- 
--	err = -EEXIST;
- 	if (event->filter)
--		goto out_unlock;
-+		return -EEXIST;
- 
- 	err = create_filter(NULL, call, filter_str, false, &filter);
- 	if (err)
-@@ -2637,9 +2631,6 @@ int ftrace_profile_set_filter(struct perf_event *event, int event_id,
- 	if (err || ftrace_event_is_function(call))
- 		__free_filter(filter);
- 
--out_unlock:
--	mutex_unlock(&event_mutex);
--
- 	return err;
+ 	if (stack_tracer_enabled)
+ 		register_ftrace_function(&trace_ops);
+ 	else
+ 		unregister_ftrace_function(&trace_ops);
+- out:
+-	mutex_unlock(&stack_sysctl_mutex);
+ 	return ret;
  }
  
 -- 
