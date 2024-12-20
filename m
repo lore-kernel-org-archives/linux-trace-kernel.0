@@ -1,33 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDA63B791
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Dec 2024 15:05:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4373B791;
+	Fri, 20 Dec 2024 15:08:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734707118; cv=none; b=IxWvN/mAbR6gCOw5hv7BQGp5A4efXkVJ+BRZoDOgzT/21dZ+vPC7rBBwDqPW4UI3zoocBAdj9+gGkt47JoB9HgwGXIPIET9Ov7ars8pCeT0/EO+pq/pfYf5FV2axQonqxWMBwMT95Yrr0ya1FOTNYy7AJall27tbwD/ie5ujWp4=
+	t=1734707298; cv=none; b=FFhIvivfD8x9Q9c4YU6YrBKTl5ToLCXEeHeswcLhL+xKe/IIzsBUixnqd5rsthaqIvmIhichULO75MYCVb9Z19AXakp1zx4VAuQa41g6rpBMy0VdVJoMkgwEfcjLQhOFP/8PLnAw28+US0k1x0NnqwlNlExYBN26xShoH/TvDk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734707118; c=relaxed/simple;
-	bh=Hq27cTk+WIA+qmH+p2nx5m6QcmAqoYPQ5zoBPaG/8Es=;
+	s=arc-20240116; t=1734707298; c=relaxed/simple;
+	bh=tELedgPU/p+PB7SMxOQXyZszI7vj7VOGC/D7C6tBVYc=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KZBHUbHBtLKzP1SLCDyCQhZq2QqcnqoASWV2ISL5ItNftNH2DOgDZaNxoTMFr7j4oXXKYO4b4U8v45+1s1hUvlsXxw4ujkLk08+VA/AP7luMnst8mw6rG1/FbHfrkeuIhBaka2QYvptKJXiGHbrOC90CQz812cPK9aXipcsO5X4=
+	 MIME-Version:Content-Type; b=eovNAGWc8T/sRDRmQbGOCoFxLJcTwutgcIy7n5EbsAMD7h9yU2a2aAfRR8ayrLHsUQ1O7ILzGrEISkObsC1MRguHrD7uTah41clQsreKPsODNAEI70KsEUgSt4O6WSmjScnTqhrX0bJoM93zBp8jzt9OZehuNFsKjXFnd4XSiXc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13EBC4CECD;
-	Fri, 20 Dec 2024 15:05:15 +0000 (UTC)
-Date: Fri, 20 Dec 2024 10:05:58 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7278BC4CECD;
+	Fri, 20 Dec 2024 15:08:13 +0000 (UTC)
+Date: Fri, 20 Dec 2024 10:08:56 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
-Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [BUG] spinlock recursion when enabling function tracer on
- 32-bit
-Message-ID: <20241220100558.10b48f0f@gandalf.local.home>
-In-Reply-To: <2d634c54-d8d9-4f33-bfda-9236b6a2ea06@gaisler.com>
-References: <86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com>
-	<20241218110115.29d4cc77@gandalf.local.home>
-	<bb8485bf-d720-4803-aa3c-037ea1169f8a@gaisler.com>
-	<20241218163526.2569917f@gandalf.local.home>
-	<2d634c54-d8d9-4f33-bfda-9236b6a2ea06@gaisler.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
+ <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
+ <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v21 03/20] fgraph: Replace fgraph_ret_regs with
+ ftrace_regs
+Message-ID: <20241220100856.1a436ad3@gandalf.local.home>
+In-Reply-To: <20241220145156.12646-B-hca@linux.ibm.com>
+References: <173379652547.973433.2311391879173461183.stgit@devnote2>
+	<173379656618.973433.13429645373226409113.stgit@devnote2>
+	<20241219163448.7fe08f79@gandalf.local.home>
+	<20241220145156.12646-B-hca@linux.ibm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,44 +51,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Dec 2024 14:55:27 +0100
-Ludwig Rydberg <ludwig.rydberg@gaisler.com> wrote:
+On Fri, 20 Dec 2024 15:51:56 +0100
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-> On 2024-12-18 22:35, Steven Rostedt wrote:
-> 
-> > 
-> > Can you test this patch?
+> On Thu, Dec 19, 2024 at 04:34:48PM -0500, Steven Rostedt wrote:
+> > On Tue, 10 Dec 2024 11:09:26 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > >   
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Use ftrace_regs instead of fgraph_ret_regs for tracing return value
+> > > on function_graph tracer because of simplifying the callback interface.
+> > > 
+> > > The CONFIG_HAVE_FUNCTION_GRAPH_RETVAL is also replaced by
+> > > CONFIG_HAVE_FUNCTION_GRAPH_FREGS.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Acked-by: Heiko Carstens <hca@linux.ibm.com>  
+> > 
+> > Did Heiko ack this? I don't see it in my inbox.  
 > 
-> I have tested the patch on both riscv32 (qemu) & sparc32 (leon) and it seems
-> to be working fine.
-> 
-> But I can mention that I ran into a deadlock situation on sparc32.
-> I had to remove CC_FLAGS_FTRACE for the code that is responsible for
-> flushing TLBs (SMP). It uses an NMI to signal other CPUs which triggered
-> the deadlock if tracing was enabled on that path.
+> Yes, I did:
+> https://lore.kernel.org/lkml/20240916121656.20933-B-hca@linux.ibm.com/
 
-Can you try this patch on top of the last one?
+Oh OK. I didn't go back that far as it appeared you questioned this patch
+in v16:
+
+  https://lore.kernel.org/all/20241016083323.16801-A-hca@linux.ibm.com/
+
+
+> 
+> > Heiko,
+> > 
+> > Does the above look OK to you?  
+> 
+> Looks still good to me.
+
+Thanks, I'll likely pull in the series after rc4 and get it ready for
+linux-next.
 
 -- Steve
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 7e257e855dd1..a9fe54b79ce5 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4398,8 +4398,13 @@ rb_reserve_next_event(struct trace_buffer *buffer,
- 	int nr_loops = 0;
- 	int add_ts_default;
- 
--	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
--	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
-+	/*
-+	 * ring buffer does cmpxchg as well as atomic64 operations
-+	 * (which some archs use locking for atomic64), make sure this
-+	 * is safe in NMI context
-+	 */
-+	if ((!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) ||
-+	     IS_ENABLED(CONFIG_GENERIC_ATOMIC64)) &&
- 	    (unlikely(in_nmi()))) {
- 		return NULL;
- 	}
