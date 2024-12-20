@@ -1,122 +1,116 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37CE22A1C2
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Dec 2024 17:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E675E21D5A8;
+	Fri, 20 Dec 2024 17:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734715662; cv=none; b=aOCykpsf3pTZR5j/6mGTK0vGvSb9jmzSgsdpxwK1ldxOoAEuoG1GYHYyedeg7HRLpLP+ivKtrZ0yvoynojmsuxK2mKVVP1QR2G+YB0KDYMEDdKvSUC5u0ISg/WRFuKrRN22Zq1FARLSEe/IE8EyO+gBW650ynPLLLmsE6pVmMoE=
+	t=1734715855; cv=none; b=aC7u1gMxjqoOpcvlIZkatxLxEC6HPT/fvc/WNlrTVAJffVOt/P2JGPZYNLEfZDtuyDILp+ibxDVDtaePHkz2+Owu/41zbfx9aaILCZEd23CpMkMWb/k14McP/LPJAXgitKoIbZc43SCNkhqmZ3VIxZjG1aPZ4UugVCUMwvTT49w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734715662; c=relaxed/simple;
-	bh=ftFlFL8Hf6gjCPdcRFrVx2YclVhyvU0X+h6fy2EfzIQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=UQNi0igPsXwM9qFnnts2dgxnSTwO895Kv9hBT0k9jb188JulY7HsTRvSl4q40QWY22n1qAL1+oKs5nVI9Q3O/tNo42c1MSG0BwHOWRHBBeG+yTvqORK5lai/Pm/d/J3Xx1A+1AkFVpyoDT++dKi8sLJR136v3Q5GGrvStnz2W4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sux4smDW; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1734715855; c=relaxed/simple;
+	bh=NN200lURRhYPC7rka0Y2j208pGeTsvwM7b8QG/SfXv4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PKz1ozvLJxiAayLiV0S4waORqdzdTFm9cdeglv3EWMvW3oiozrDWbJR5aW9ciPOHtEq454oLyOtYWCyBjRyS0zYZFLdU/wYUNOU1oIbuxCLXIf/yNlKs/1Dx3tP/1KTGo833ApAzTwLMol5A9OR+lSWwXXLNOmXHm8YUV6Ofrbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Udq2h3wk; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sux4smDW"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so1519566f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Dec 2024 09:27:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Udq2h3wk"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361a50e337so15311395e9.0;
+        Fri, 20 Dec 2024 09:30:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1734715658; x=1735320458; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1734715852; x=1735320652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rl2GUGW1SKIB73yuGvAyVPoBfBy5XbBiVj4hV5yN+VI=;
-        b=Sux4smDWvhRYVAocCLrB8sH5Gn4iglVnvLOtYXjw2SwmbrW98B6c98IdTir+VF+VQJ
-         W10BWI4R3GFC1zT/iJoBlxuzYK0hnggsfABamHJxaKShxH8tLAyw6SYs1kiT5Zpq5DY/
-         y8F5G+SxDNISHMSnfr/J8ZC+W2oNrTFwJ0KMsYltX1nRmRejzvK8hykx9rw4E4PSCPjK
-         hBR+wlIXLMxbiloh7lXnf5z8TBJg0j3ePqZ9LWqb7cYYzpaMr36BzlgWIDpW6dDQHpe5
-         znRcS8BpCe/go3BIeiuQzZZSpEoYEyOJCj8IeINw++6FJJgIOUIPFK+PvAzsigdqsUly
-         aZ0A==
+        bh=Wcd5p2PmG3eB0cJIFL5HcNsDmqfOUuQDLffSjTK4uDA=;
+        b=Udq2h3wk+9gGhkcTuZOlMyBrHgejdpLur/zH2/mB2q8sc9LEO+QLsvDvCBc+FcX3cE
+         raiGgbEBcFHKnJbb+Ts1f6RWZWoPmHw85CBJSEBJaewpWQ7PQXAaUm+2HigsA7CSjt7R
+         ZtQ5xRYStqe+joBVfKiqwhIlfK8Xepgc/1JYg/bPPHbp8KpK0m5d3STOBk+9CeyxglKj
+         EOjKNsVTalyt44mUMadyh8HtZ82CKw1KPh5K9TumyMIb+cHXohuR5umrTgRS8Ma0tzAn
+         /AGbIzq2L+ZEJKLNyYtJCOH2UbrEhH6mVgl5hWjZcBz0Fqi68h7iatvicViW+RCfFS1E
+         PkcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734715658; x=1735320458;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1734715852; x=1735320652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rl2GUGW1SKIB73yuGvAyVPoBfBy5XbBiVj4hV5yN+VI=;
-        b=s/3lYcjPFzspGk0WIG2Me9vphpUfgnJy+yuI6wa9wxh0yCl2AH0OrxCutxPXgGh2iz
-         ltJsJtVjLQLZD85B4Sgi74vrhQleJYOiwPVV6Fk+gCB0hw6cKCA+UUA+ULyG3x9nyKf/
-         dtJ9jYk8/44JpYPoCg9XCVGXmAB4QAD8k/+iKZxDX+Hc/+U+kvdahkqyoAmorm3J9uif
-         4sfFzqy2etyFf1zBz90Idy06xZNzoiYdALpF+2N8cVpSpDR2W+eAp984SbR4ua2FU/Ab
-         frgC5cRj1JAjVZR0bPTKRXRcxyAGGNv38miE87ZZGnnaAABhDv9AtJnZC+3X8PAklnO7
-         7CPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbsOK+6EHKQUBfVCOckcsDYfKPGct5VRj3iTgEUCab/6VV9XlH1cUjeJAlgZsQSp1HblAXCmq0soMS6xtfHo+S8KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQfc8hTBx+zyhG1LTXP442TaOK63Bcfgw4tvbXpznTCNFaE3q6
-	cn6Q63ke0yif6L+fpdQsZ34by2Di9slX1s1XhSR3OTWlnNIFS1MuTUEfqC0bQHk=
-X-Gm-Gg: ASbGnctAOpkmFt6iAwtMCkkQg4k2gq7ooAvoE0bhtoDVrjgpUeA3wpp0S6uYlGqF9u/
-	GXlDtxn+9xTAEd8aQSQdhkNWr7OjuIAUwkMFt+va1Ryz9kC1KNAedtYNg+wRGPUsMfaTLYGD9fC
-	lBP4GlBR0dkG+9VV+bnUNE3utNUz5j01hHhiuVhdId4kds0q+MgKBgAOa3kCzmrty4/O8GzHadO
-	1toVsDlmGzgvmZQP94IQbO74rG6lFVZB9soVzAElARMAhx1vNtAZS/uLpZktSo3CiRxNYWbFqM=
-X-Google-Smtp-Source: AGHT+IHQofl14bIpVpiQqz6qAEwAjKsEmWVjRCOjis6wH9jKfvKMjWLHCbYlsDgmYPDOjR7ci+Y7xw==
-X-Received: by 2002:a5d:47c3:0:b0:388:cacf:24b0 with SMTP id ffacd0b85a97d-38a1a1f7253mr6745803f8f.2.1734715658179;
-        Fri, 20 Dec 2024 09:27:38 -0800 (PST)
-Received: from [192.168.68.114] ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c89e357sm4642915f8f.72.2024.12.20.09.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2024 09:27:37 -0800 (PST)
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To: linux-gpio@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
-Cc: kernel-janitors@vger.kernel.org, audit@vger.kernel.org, 
- linux-mtd@lists.infradead.org, Zhihao Cheng <chengzhihao1@huawei.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, linux-arm-msm@vger.kernel.org, 
- linux-pci@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-usb@vger.kernel.org, linux-mm@kvack.org, 
- maple-tree@lists.infradead.org, alsa-devel@alsa-project.org, 
- Sanyog Kale <sanyog.r.kale@intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, dccp@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>, 
- drbd-dev@lists.linbit.com, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
- nvdimm@lists.linux.dev, linux-leds@vger.kernel.org, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
- linuxppc-dev@lists.ozlabs.org, tipc-discussion@lists.sourceforge.net, 
- Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- linux-trace-kernel@vger.kernel.org, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, 
- amd-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org, 
- intel-wired-lan@lists.osuosl.org
-In-Reply-To: <20240930112121.95324-1-Julia.Lawall@inria.fr>
-References: <20240930112121.95324-1-Julia.Lawall@inria.fr>
-Subject: Re: (subset) [PATCH 00/35] Reorganize kerneldoc parameter names
-Message-Id: <173471565665.227782.7244101246430956449.b4-ty@linaro.org>
-Date: Fri, 20 Dec 2024 17:27:36 +0000
+        bh=Wcd5p2PmG3eB0cJIFL5HcNsDmqfOUuQDLffSjTK4uDA=;
+        b=HhYzAD/61hpNrDFq/6wYWVWlAuxQhPovINM0OLIjIh/NlzoqIwj8a3XsQGjwUBM2RY
+         BSVOwN3yu2Y5bPXo3LWpYnW5TRq0+3i/Axjh0GEwVDFHpJzr27lSJYMxiJGNQn6aqVZS
+         xHCw/8deuv0yH4XZwqALYx8wFCxOsKgDFiYAcMynlBZZdt+fFNnFWFyrqIn+22K2Pkqy
+         G2Lo6BYwPVqMa1OLWGvOVt/MJs4Ymh2+A8kbIuGccXN8RiUFAt0zRcvf4l4sbM9EMkER
+         aaOIBq3nMzd3awZwKZOcpzYlBf80kv9uurAnOLCKSS+LAbXgaG9fy44GJtppLKPpoEHU
+         zauQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4u9FY9XjUdwLvwOmaO4xfU09g/SqSzyoaOsqAP5HajMuG6th55mXyM6fLQMEI3FxX9ns=@vger.kernel.org, AJvYcCV6Vmo30UvNVM5GgAdfP4wc8u4N8dtKBeo3uNw3m4loTcTm1znXFzLuKOvgXqATN+7ZwBp3FbiQcRxb2wa+@vger.kernel.org, AJvYcCVLadigAqzYCifdH1KA8bcUtDiQoLkawAHs+pBqF/LpYXqZ17WRiSJeoIY1xJ4piiYYXXKm9sKBh4meZZn2/BnMbKVg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEUFL3xuU/WmaiC5M8/Ztu9OjypaY1BS3uje7hzpOcAC1ujgLu
+	OHyzqfPMrsrptT/qwEVqmO7NpR3rbv+LxT2/ATsxvgnmNdn8QUFa4e4/IQPIieQTYwbH4sl4IHL
+	EWgS6P+VG0QE0tUJMSfkvo7DPgtM=
+X-Gm-Gg: ASbGncs9JONe8UJrHhcOQ2tJUS0a8cE8uv9hhXy9cGmdDgoAExUaaVSnhwn8AnexQrH
+	T8z79CxwFDsGmVsHDr5wGug8HMIYNtCplwVTv+g==
+X-Google-Smtp-Source: AGHT+IE3bXiqh8lJ6aIUKGCc2P1PBYU+ot7zRyuzP1NngmZMYUqHu/qNwE67Wj0vEOkFRiYDXBwD7l5jaZbDCt6TzyA=
+X-Received: by 2002:a05:6000:1446:b0:385:fae4:424e with SMTP id
+ ffacd0b85a97d-38a22408624mr3278945f8f.52.1734715851945; Fri, 20 Dec 2024
+ 09:30:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.2
+References: <67486b09.050a0220.253251.0084.GAE@google.com> <CAADnVQKdRWA1zG6X4XNwOWtKiUHN-SRREYN_DCNU59LsK8S5LA@mail.gmail.com>
+ <mb61p8qsymf3i.fsf@kernel.org> <CAADnVQ+_TUjJ6Ytn96QqtHnBB--muefbbOoAsRw4z=40Pf1+tA@mail.gmail.com>
+In-Reply-To: <CAADnVQ+_TUjJ6Ytn96QqtHnBB--muefbbOoAsRw4z=40Pf1+tA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 20 Dec 2024 09:30:40 -0800
+Message-ID: <CAADnVQL=_6n+yJfs+TPxtBEVcpYV6nPEgjfRmacCdm7qLCSj0g@mail.gmail.com>
+Subject: Re: [syzbot] [bpf?] [trace?] WARNING: locking bug in __lock_task_sighand
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: syzbot <syzbot+97da3d7e0112d59971de@syzkaller.appspotmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Eddy Z <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
+	KP Singh <kpsingh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Stanislav Fomichev <sdf@fomichev.me>, Song Liu <song@kernel.org>, 
+	syzkaller-bugs <syzkaller-bugs@googlegroups.com>, Yonghong Song <yonghong.song@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Dec 17, 2024 at 3:49=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Mon, Dec 2, 2024 at 4:42=E2=80=AFAM Puranjay Mohan <puranjay@kernel.or=
+g> wrote:
+> >
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> >
+> > > Puranjay, Andrii and All,
+> > >
+> > > looks like if (irqs_disabled()) is not enough.
+> > > Should we change it to preemptible() ?
+> > >
+> > > It will likely make it async all the time,
+> > > but in this it's an ok trade off?
+> > >
+> >
+> > Yes, as BPF programs can run in all kinds of contexts.
+> >
+> > We should replace 'if (irqs_disabled())' with 'if (!preemptible())'
+> >
+> > because the definition is:
+> >
+> > #define preemptible()   (preempt_count() =3D=3D 0 && !irqs_disabled())
+> >
+> > and we need if ((preempt_count() !=3D 0) || irqs_disabled()), in both
+> > these cases we want to make it async.
+> >
+> > I will try to test the fix as Syzbot has now found a reproducer.
+>
+> Puranjay,
+>
+> Any progress on a patch ?
 
-On Mon, 30 Sep 2024 13:20:46 +0200, Julia Lawall wrote:
-> Reorganize kerneldoc parameter names to match the parameter
-> order in the function header.
-> 
-> The misordered cases were identified using the following
-> Coccinelle semantic patch:
-> 
-> // <smpl>
-> @initialize:ocaml@
-> @@
-> 
-> [...]
-
-Applied, thanks!
-
-[31/35] slimbus: messaging: Reorganize kerneldoc parameter names
-        commit: 52d3d7f7a77ee9afc6a846b415790e13e1434847
-
-Best regards,
--- 
-Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
+ping.
