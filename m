@@ -1,29 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6181B2156EC;
-	Fri, 20 Dec 2024 15:32:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2225F249EB;
+	Fri, 20 Dec 2024 16:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734708752; cv=none; b=TEzwzbEweI3TMPmbIW6XZMTHgMw7ARlsLkEzfkNrt5UmNjRCIg1wsept1DAxnIJ1+ziAcOjvJT2Pz2nkK1rH4RcOGeeF87oto2UVMyGatuuVCQeW9B6I3FygcBZoQPkl4kxCwXqvWI67ADX/yrbEgf6IKJ4nbR4r0VSmIjlHZjI=
+	t=1734710740; cv=none; b=ZbOPSp91nOsjq8IpGbxftUOjbUoC727j4Hr2Hj4va0b/X4GGkXp7KCOe1TmCMgMyMN1mOcoj4aFMSPo31VdV4InRmBnABQ9gDZmdFG29/LbwFIsM6CfBQZ+o2nXV5cd9gOhaP2CcBHnsPv7HGUqINa4aEEN47PqHTwBl4ULnAnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734708752; c=relaxed/simple;
-	bh=8wywkdRWworUBNcYyAaj0Iz13WAXwwVWHDmsKj9i3zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iXMbHbmeiROC8+5FcFDIqtcvqMD+LnYkWibLKyDAD2z0PRDTG2J2k2QCNLZRq6NNRkTWEUqsLLiRvcf+dZq3aqB5ioeyKCgIPw/njp2/ZKH7JBg4pKZgjQ8U4IkVrLVqANySDQZP3KIpmGoGio1mBvPcOGI5F70N6+WmFXe5D2k=
+	s=arc-20240116; t=1734710740; c=relaxed/simple;
+	bh=alqQ1w07sUqMnAtW5s7FXfLsCCFItKmt7jp9g0bK2fM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ol0Tx+ZgatmKhekE5sPTbQYSPYUR+Cg1y6fJtoKCmsKIKuaC2qwmxS9qRKKVFjod/sBtxLMThE4OaqMsOYYWG/NPnC+zjj9/LATEudZRaC7qpRtnKAStqbGTUopqSAKH4jokxO4j/ZZd6XZ/TI7HX8J/Iuw9Ppxrq2PY4PzfdNk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD535C4CED3;
-	Fri, 20 Dec 2024 15:32:30 +0000 (UTC)
-Date: Fri, 20 Dec 2024 10:33:13 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05383C4CECD;
+	Fri, 20 Dec 2024 16:05:38 +0000 (UTC)
+Date: Fri, 20 Dec 2024 11:06:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>,
- linux-hardening@vger.kernel.org
-Subject: [PATCH v2] tracing/string: Create and use __free(argv_free) in
- trace_dynevent.c
-Message-ID: <20241220103313.4a74ec8e@gandalf.local.home>
+ <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2] tracing: Switch trace_events_trigger.c code over to use
+ guard()
+Message-ID: <20241220110621.639d3bc8@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,104 +34,176 @@ Content-Transfer-Encoding: 7bit
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The function dyn_event_release() uses argv_split() which must be freed via
-argv_free(). It contains several error paths that do a goto out to call
-argv_free() for cleanup. This makes the code complex and error prone.
+There are a few functions in trace_events_trigger.c that have "goto out" or
+equivalent on error in order to release locks that were taken. This can be
+error prone or just simply make the code more complex.
 
-Create a new __free() directive __free(argv_free) that will call
-argv_free() for data allocated with argv_split(), and use it in the
-dyn_event_release() function.
+Switch every location that ends with unlocking a mutex on error over to
+using the guard(mutex)() infrastructure to let the compiler worry about
+releasing locks. This makes the code easier to read and understand.
 
-Cc: Kees Cook <kees@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
+Also use __free() for free a temporary buffer in event_trigger_regex_write().
+
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v1: https://lore.kernel.org/all/20241219201346.029319524@goodmis.org/
+Changes since v1: https://lore.kernel.org/all/20241219201345.860391310@goodmis.org/
 
-- Moved include of cleanup.h up to be more alphabetically ordered
+- Removed the no_free_ptr() around buf on IS_ERR(buf) being true as
+  the __free() can handle that case.
 
- include/linux/string.h        |  3 +++
- kernel/trace/trace_dynevent.c | 23 +++++++----------------
- 2 files changed, 10 insertions(+), 16 deletions(-)
+ kernel/trace/trace_events_trigger.c | 67 ++++++++++-------------------
+ 1 file changed, 23 insertions(+), 44 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 493ac4862c77..86d5d352068b 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -4,6 +4,7 @@
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index a5e3d6acf1e1..d45448947094 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -211,12 +211,10 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+ 	if (ret)
+ 		return ret;
  
- #include <linux/args.h>
- #include <linux/array_size.h>
-+#include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
-@@ -312,6 +313,8 @@ extern void *kmemdup_array(const void *src, size_t count, size_t element_size, g
- extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
- extern void argv_free(char **argv);
+-	mutex_lock(&event_mutex);
++	guard(mutex)(&event_mutex);
  
-+DEFINE_FREE(argv_free, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
-+
- /* lib/cmdline.c */
- extern int get_option(char **str, int *pint);
- extern char *get_options(const char *str, int nints, int *ints);
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 4376887e0d8a..a322e4f249a5 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -74,24 +74,19 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 	struct dyn_event *pos, *n;
- 	char *system = NULL, *event, *p;
- 	int argc, ret = -ENOENT;
--	char **argv;
-+	char **argv __free(argv_free) = argv_split(GFP_KERNEL, raw_command, &argc);
- 
--	argv = argv_split(GFP_KERNEL, raw_command, &argc);
- 	if (!argv)
- 		return -ENOMEM;
- 
- 	if (argv[0][0] == '-') {
--		if (argv[0][1] != ':') {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (argv[0][1] != ':')
-+			return -EINVAL;
- 		event = &argv[0][2];
- 	} else {
- 		event = strchr(argv[0], ':');
--		if (!event) {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (!event)
-+			return -EINVAL;
- 		event++;
- 	}
- 
-@@ -101,10 +96,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 		event = p + 1;
- 		*p = '\0';
- 	}
--	if (!system && event[0] == '\0') {
--		ret = -EINVAL;
--		goto out;
+-	if (unlikely(!event_file_file(file))) {
+-		mutex_unlock(&event_mutex);
++	if (unlikely(!event_file_file(file)))
+ 		return -ENODEV;
 -	}
-+	if (!system && event[0] == '\0')
-+		return -EINVAL;
  
- 	mutex_lock(&event_mutex);
- 	for_each_dyn_event_safe(pos, n) {
-@@ -120,8 +113,6 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	if ((file->f_mode & FMODE_WRITE) &&
+ 	    (file->f_flags & O_TRUNC)) {
+@@ -239,8 +237,6 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+ 		}
  	}
- 	tracing_reset_all_online_cpus();
- 	mutex_unlock(&event_mutex);
--out:
--	argv_free(argv);
+ 
+-	mutex_unlock(&event_mutex);
+-
  	return ret;
  }
  
+@@ -248,7 +244,6 @@ int trigger_process_regex(struct trace_event_file *file, char *buff)
+ {
+ 	char *command, *next;
+ 	struct event_command *p;
+-	int ret = -EINVAL;
+ 
+ 	next = buff = skip_spaces(buff);
+ 	command = strsep(&next, ": \t");
+@@ -259,17 +254,14 @@ int trigger_process_regex(struct trace_event_file *file, char *buff)
+ 	}
+ 	command = (command[0] != '!') ? command : command + 1;
+ 
+-	mutex_lock(&trigger_cmd_mutex);
++	guard(mutex)(&trigger_cmd_mutex);
++
+ 	list_for_each_entry(p, &trigger_commands, list) {
+-		if (strcmp(p->name, command) == 0) {
+-			ret = p->parse(p, file, buff, command, next);
+-			goto out_unlock;
+-		}
++		if (strcmp(p->name, command) == 0)
++			return p->parse(p, file, buff, command, next);
+ 	}
+- out_unlock:
+-	mutex_unlock(&trigger_cmd_mutex);
+ 
+-	return ret;
++	return -EINVAL;
+ }
+ 
+ static ssize_t event_trigger_regex_write(struct file *file,
+@@ -278,7 +270,7 @@ static ssize_t event_trigger_regex_write(struct file *file,
+ {
+ 	struct trace_event_file *event_file;
+ 	ssize_t ret;
+-	char *buf;
++	char *buf __free(kfree) = NULL;
+ 
+ 	if (!cnt)
+ 		return 0;
+@@ -292,24 +284,18 @@ static ssize_t event_trigger_regex_write(struct file *file,
+ 
+ 	strim(buf);
+ 
+-	mutex_lock(&event_mutex);
++	guard(mutex)(&event_mutex);
++
+ 	event_file = event_file_file(file);
+-	if (unlikely(!event_file)) {
+-		mutex_unlock(&event_mutex);
+-		kfree(buf);
++	if (unlikely(!event_file))
+ 		return -ENODEV;
+-	}
+-	ret = trigger_process_regex(event_file, buf);
+-	mutex_unlock(&event_mutex);
+ 
+-	kfree(buf);
++	ret = trigger_process_regex(event_file, buf);
+ 	if (ret < 0)
+-		goto out;
++		return ret;
+ 
+ 	*ppos += cnt;
+-	ret = cnt;
+- out:
+-	return ret;
++	return cnt;
+ }
+ 
+ static int event_trigger_regex_release(struct inode *inode, struct file *file)
+@@ -359,20 +345,16 @@ const struct file_operations event_trigger_fops = {
+ __init int register_event_command(struct event_command *cmd)
+ {
+ 	struct event_command *p;
+-	int ret = 0;
+ 
+-	mutex_lock(&trigger_cmd_mutex);
++	guard(mutex)(&trigger_cmd_mutex);
++
+ 	list_for_each_entry(p, &trigger_commands, list) {
+-		if (strcmp(cmd->name, p->name) == 0) {
+-			ret = -EBUSY;
+-			goto out_unlock;
+-		}
++		if (strcmp(cmd->name, p->name) == 0)
++			return -EBUSY;
+ 	}
+ 	list_add(&cmd->list, &trigger_commands);
+- out_unlock:
+-	mutex_unlock(&trigger_cmd_mutex);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ /*
+@@ -382,20 +364,17 @@ __init int register_event_command(struct event_command *cmd)
+ __init int unregister_event_command(struct event_command *cmd)
+ {
+ 	struct event_command *p, *n;
+-	int ret = -ENODEV;
+ 
+-	mutex_lock(&trigger_cmd_mutex);
++	guard(mutex)(&trigger_cmd_mutex);
++
+ 	list_for_each_entry_safe(p, n, &trigger_commands, list) {
+ 		if (strcmp(cmd->name, p->name) == 0) {
+-			ret = 0;
+ 			list_del_init(&p->list);
+-			goto out_unlock;
++			return 0;
+ 		}
+ 	}
+- out_unlock:
+-	mutex_unlock(&trigger_cmd_mutex);
+ 
+-	return ret;
++	return -ENODEV;
+ }
+ 
+ /**
 -- 
 2.45.2
 
