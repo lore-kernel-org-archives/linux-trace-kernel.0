@@ -1,46 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4373B791;
-	Fri, 20 Dec 2024 15:08:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCE0218AD9;
+	Fri, 20 Dec 2024 15:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734707298; cv=none; b=FFhIvivfD8x9Q9c4YU6YrBKTl5ToLCXEeHeswcLhL+xKe/IIzsBUixnqd5rsthaqIvmIhichULO75MYCVb9Z19AXakp1zx4VAuQa41g6rpBMy0VdVJoMkgwEfcjLQhOFP/8PLnAw28+US0k1x0NnqwlNlExYBN26xShoH/TvDk0=
+	t=1734708453; cv=none; b=B0hYPkMBDa8fpEZZGq3qjuZR/pIWRodzR4CWjTnI/2Z0bjtdjlMeEjwQIpEF5orGJFMRzQ56jo/kDpI8KyELy/kub9d/jXLIKEwb3a4enYIi4rSiR5r7lBDEyWHiRz2hIAc0/on3GLsnum3vayTci6OXW/gybiNl/F1lKeSRHJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734707298; c=relaxed/simple;
-	bh=tELedgPU/p+PB7SMxOQXyZszI7vj7VOGC/D7C6tBVYc=;
+	s=arc-20240116; t=1734708453; c=relaxed/simple;
+	bh=ml6FTdPY+nDcLE4nyVGh7cRyXLtDysf3URM5nGVhl6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eovNAGWc8T/sRDRmQbGOCoFxLJcTwutgcIy7n5EbsAMD7h9yU2a2aAfRR8ayrLHsUQ1O7ILzGrEISkObsC1MRguHrD7uTah41clQsreKPsODNAEI70KsEUgSt4O6WSmjScnTqhrX0bJoM93zBp8jzt9OZehuNFsKjXFnd4XSiXc=
+	 MIME-Version:Content-Type; b=TrpGwZ3zyznHC2puMa01XIgTs7qFytREy+9/MgzLHqfHOCG2cTT1VdZLZC2guIjGhjgKMrz0Q462SmGBsOLU+Ne8IlP749iazDKiEK9/nIocOZw97s8Y5YEwNlFgJClklo3v4Iplexpp+Fhv50V5ZIQj/xBd0+YrnsY/B3gWclI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7278BC4CECD;
-	Fri, 20 Dec 2024 15:08:13 +0000 (UTC)
-Date: Fri, 20 Dec 2024 10:08:56 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A49C4CECD;
+	Fri, 20 Dec 2024 15:27:31 +0000 (UTC)
+Date: Fri, 20 Dec 2024 10:28:14 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
- <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Vasily
- Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle
- <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v21 03/20] fgraph: Replace fgraph_ret_regs with
- ftrace_regs
-Message-ID: <20241220100856.1a436ad3@gandalf.local.home>
-In-Reply-To: <20241220145156.12646-B-hca@linux.ibm.com>
-References: <173379652547.973433.2311391879173461183.stgit@devnote2>
-	<173379656618.973433.13429645373226409113.stgit@devnote2>
-	<20241219163448.7fe08f79@gandalf.local.home>
-	<20241220145156.12646-B-hca@linux.ibm.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+ <peterz@infradead.org>, Kees Cook <kees@kernel.org>, Andy Shevchenko
+ <andy@kernel.org>, "linux-hardening@vger.kernel.org"
+ <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 09/14] tracing/string: Create and use __free(argv_free)
+ in trace_dynevent.c
+Message-ID: <20241220102814.13e12e4c@gandalf.local.home>
+In-Reply-To: <CAHp75VeWpS8ZUct5MJBbCkpPGmg0=9_t_-RhV5DD4-L4wRnvxQ@mail.gmail.com>
+References: <20241219201158.193821672@goodmis.org>
+	<20241219201346.029319524@goodmis.org>
+	<CAHp75Vc2t_yppC85dnYrzDEEkFBF=NnoCna_PA=8fFFtusg7Ow@mail.gmail.com>
+	<20241220083104.563c1ca2@gandalf.local.home>
+	<CAHp75VeWpS8ZUct5MJBbCkpPGmg0=9_t_-RhV5DD4-L4wRnvxQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,46 +41,70 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 20 Dec 2024 15:51:56 +0100
-Heiko Carstens <hca@linux.ibm.com> wrote:
+On Fri, 20 Dec 2024 15:48:44 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Thu, Dec 19, 2024 at 04:34:48PM -0500, Steven Rostedt wrote:
-> > On Tue, 10 Dec 2024 11:09:26 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> >   
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Use ftrace_regs instead of fgraph_ret_regs for tracing return value
-> > > on function_graph tracer because of simplifying the callback interface.
-> > > 
-> > > The CONFIG_HAVE_FUNCTION_GRAPH_RETVAL is also replaced by
-> > > CONFIG_HAVE_FUNCTION_GRAPH_FREGS.
-> > > 
-> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > Acked-by: Heiko Carstens <hca@linux.ibm.com>  
-> > 
-> > Did Heiko ack this? I don't see it in my inbox.  
-> 
-> Yes, I did:
-> https://lore.kernel.org/lkml/20240916121656.20933-B-hca@linux.ibm.com/
+> =D0=BF=CA=BC=D1=8F=D1=82=D0=BD=D0=B8=D1=86=D1=8F, 20 =D0=B3=D1=80=D1=83=
+=D0=B4=D0=BD=D1=8F 2024=E2=80=AF=D1=80. Steven Rostedt <rostedt@goodmis.org=
+> =D0=BF=D0=B8=D1=88=D0=B5:
+>=20
+> > On Fri, 20 Dec 2024 08:56:44 +0200
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > =20
+> > > > diff --git a/include/linux/string.h b/include/linux/string.h
+> > > > index 493ac4862c77..c995f973a59a 100644
+> > > > --- a/include/linux/string.h
+> > > > +++ b/include/linux/string.h
+> > > > @@ -10,6 +10,7 @@
+> > > >  #include <linux/err.h>         /* for ERR_PTR() */
+> > > >  #include <linux/errno.h>       /* for E2BIG */
+> > > >  #include <linux/overflow.h>    /* for check_mul_overflow() */
+> > > > +#include <linux/cleanup.h>     /* for DEFINE_FREE() */ =20
+> > >
+> > >
+> > >
+> > > Can you keep it ordered? =20
+> >
+> > Not sure what order you want to keep?
+> > =20
+> > >
+> > > =20
+> > > >  #include <linux/stdarg.h>
+> > > >  #include <uapi/linux/string.h>
+> > > > =20
+> >
+> >
+> > #include <linux/args.h>
+> > #include <linux/array_size.h> =20
+>=20
+>=20
+>=20
+> If you put it here it would make more like alphabetical order with only f=
+ew
+> exceptions
 
-Oh OK. I didn't go back that far as it appeared you questioned this patch
-in v16:
+Sure, I'll send out a v2. Thanks for the review.
 
-  https://lore.kernel.org/all/20241016083323.16801-A-hca@linux.ibm.com/
+--Steve
 
+>=20
+> #include <linux/compiler.h>     /* for inline */
+> > #include <linux/types.h>        /* for size_t */
+> > #include <linux/stddef.h>       /* for NULL */
+> > #include <linux/err.h>          /* for ERR_PTR() */
+> > #include <linux/errno.h>        /* for E2BIG */
+> > #include <linux/overflow.h>     /* for check_mul_overflow() */
+> > #include <linux/cleanup.h>      /* for DEFINE_FREE() */
+> > #include <linux/stdarg.h>
+> > #include <uapi/linux/string.h>
+> >
+> > It's not alphabetical, nor in x-mas tree order. I was never good at the=
+se
+> > "find the pattern" puzzles ;-)
+> >
+> > -- Steve
+> > =20
 
-> 
-> > Heiko,
-> > 
-> > Does the above look OK to you?  
-> 
-> Looks still good to me.
-
-Thanks, I'll likely pull in the series after rc4 and get it ready for
-linux-next.
-
--- Steve
