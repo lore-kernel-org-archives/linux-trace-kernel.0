@@ -1,40 +1,40 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE17621C169;
-	Fri, 20 Dec 2024 16:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147B41993B9;
+	Fri, 20 Dec 2024 17:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734713781; cv=none; b=HNpzoUplvjXnhoeSeub7yzkhvBMVqhCi/T4TrnW2W7U1q/GS/vbnsoFGmUfNKFMia6B6CbBuu8KQ9CfqHGNSJL7DqGaVB1WvMcH5WNI702CzoacPJdw14VaBMSbJJ0dQrm9xtcmGPShx973rP5sOnNA6ETDjynZHIALh0nPkW0E=
+	t=1734714511; cv=none; b=SuVPst4kQz9SCrYhq5g2BIurA5rh6sh/UGIkDXE9N+P930w0H414aI15R3wmC9U36klcjU7IXaVLZnmbXmAwrVbXJMsyBEhX7x+URjjXWfNiXIH4fySYVbEKqvXQ7crb9hdrR7pLfYItN7/2k3HVF6PZ69V44KxLimIzrefber8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734713781; c=relaxed/simple;
-	bh=gTYfuTkKcQgWqJzyTQkXUaLNY4/gTGVq5GOLK/6khNE=;
+	s=arc-20240116; t=1734714511; c=relaxed/simple;
+	bh=uIly6CkNCkoIAWgOBa6M4w05XfXnqJB+csbPujooBoo=;
 	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=BMfoEvVOp100B/K7tyyTZyvHFTE3Bu0qb26ajfXRU0JzdOW9UMByIPnfiA6arhf5FW4FWp/wfAyjSCTzXVnuhzkSeEbWI9HazMJgvXTdbBVa3f6UIWKP8D94kVJXw7gmZfg8dCDBT2wF0umhWDdGwmSKZnpMsQ+3TymWRcjyEaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=tA4AP7Bv; arc=none smtp.client-ip=212.227.15.3
+	 In-Reply-To:Content-Type; b=oh/2Bf9jpP+BoF9cugY0mUlEDg4Kf7whj1AN0kn+B5o7/oOAgvRj/IM+1OLlUpkCl4nXsJS13X4IKGCTj4O3OYxoquTeeXhsnH9bAkhG8b25zpLk134bxja3KaiwZU7IPsnzOONcDCJEIH6PcffmsY41Z9XI7G5mEFktl2lxVrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=F9HOFlCG; arc=none smtp.client-ip=212.227.15.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="tA4AP7Bv"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="F9HOFlCG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1734713766; x=1735318566; i=markus.elfring@web.de;
-	bh=gTYfuTkKcQgWqJzyTQkXUaLNY4/gTGVq5GOLK/6khNE=;
+	s=s29768273; t=1734714489; x=1735319289; i=markus.elfring@web.de;
+	bh=uIly6CkNCkoIAWgOBa6M4w05XfXnqJB+csbPujooBoo=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
 	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
 	 cc:content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=tA4AP7BvI9Yc5XIKyYhjBz9ZZJclQYzdwBKRypwgIyxc5hplEBa1s4lJKEZy+Iw4
-	 kQbuXk3y+IfGUk960RlDW1y6Jc2x/owbVjqRcEjWqQa3MUoAruyG/Pk7q21ZU7eZd
-	 hQqARzS72aoXLTorNd+9cQ3JSe5+FBIALArNTYs2RLTMV+r7DiltncN7zAzNISehe
-	 nA9tZPWL4tfNdtUmc7BeJHomFwjdRR+0HNBqkD43SHO/fQiUdV+92WRWtkyzWf7Oe
-	 2NgaQqEHUqV/tbuE+FUszO1XeMlLewK4NrmbdQK1z4lDkFeA9p04HFgmEnxB2leOH
-	 R7XDN4ytYCN+8i1FXw==
+	b=F9HOFlCGJWhZ9YbMt9jiGtG2bpnzf/UWFgRiByrZBmmKdrKCEy4E0EQhBSusdQE2
+	 Izo8tOIORw+IonmhwWTHdt/0yYK45YY33q7/mQzqP2WYzPSJnfX7oxO79k/KwCfHb
+	 c8jotU3gisFtvYFDXlYSp1DTG5S5JJgq6a6F7TmRamaySf4d90P/pPYm4DNPnII1t
+	 IWfFMow2Y8R2BvNYD3fTRvgKs0MaMtoT67fWVAL+KeyPRPZCiMNm9xVbEp1l7kTem
+	 9J6FXO1wxm3N02/4NSf6HBx1MArzGP9YSwafkkh5V9t3OgJcUUkZGUuTL0nCzGS6m
+	 mocU0vVKZMV8CIi2Zg==
 X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.93.21]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJFdP-1t9dU51hNL-00NL3k; Fri, 20
- Dec 2024 17:56:06 +0100
-Message-ID: <1157a6c9-0039-4077-9161-91aea6ab4213@web.de>
-Date: Fri, 20 Dec 2024 17:56:05 +0100
+Received: from [192.168.178.21] ([94.31.93.21]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N14pS-1ta8od1PVC-00zepZ; Fri, 20
+ Dec 2024 18:08:09 +0100
+Message-ID: <c10682a7-b0a3-47be-ad61-ff94027f2cb0@web.de>
+Date: Fri, 20 Dec 2024 18:08:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -48,47 +48,49 @@ Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
  Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Peter Zijlstra <peterz@infradead.org>
-References: <20241219201345.860391310@goodmis.org>
-Subject: Re: [PATCH 08/14] tracing: Switch trace_events_trigger.c code over to
- use guard()
+References: <20241219201346.533876847@goodmis.org>
+Subject: Re: [PATCH 12/14] tracing: Switch trace_osnoise.c code over to use
+ guard() and __free()
 Content-Language: en-GB
 From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20241219201345.860391310@goodmis.org>
+In-Reply-To: <20241219201346.533876847@goodmis.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IDFSxyeClDU+XPUBtouliiAypw92ZJz1iC/j3aeBKaYjutGDYVe
- eg8MP/+tRzhx5HRXbds4UlS9WUWlL5lzXwA59Tsx3hWl3tu445Wi+32ZQzbxW/swle48EHU
- FVsyq+sUjpATE240EBfyDjq+fmjJLNgRdOIBgqDgBnFivNcd2uRsp8T7PYWDov3Er916ecr
- NZT0bLPAzvFnBObwy1SNg==
+X-Provags-ID: V03:K1:/TfpFRNCKrCLwkflpMKMkXTejehk0FwrpPuUyFPZL4+Pcth9sHt
+ klfDdp9RuDn/VKNL0K9lxGZ8RNvPYd6y2qGwph2+YFCyU3lvdCVqFpFwxG4uQl4MQM/ohIN
+ HjAHHfU9xMk8y4uuvgEc1dFxvz1QLy3KJFC0amSGpueUVNE/LsKo+R4BvzvDSCH85B842tq
+ 3GvQEydtD/Q+ndYnWITOQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:NpYzXubct1k=;OKJdRbwQiRf7hkjhhlR9zmGsyVW
- WywmuOS8GEknQwLlT3MV2ICta4xSDigo1YqBir4dUKXwmFca7CvhF4lb55MQjW7p3JK8husfV
- WUNswiJn//QcIL1k5LdjMlCmQzreJSxOz1rm33GQp9HJXzv4eQKyoMKwItjHYUVObe1abMd/+
- g+k/g1VggYRlRbYT1ggpjEm/7d1yNq7r2MlzHqhOM2jc3sUbVrtwlj/Y8p34HRmIO+C5NKKsO
- vVkDWRlXXDbS91aBWbI2eHHM8inL9Fry176tkNNw0mxD/WW4tqIiPgOI6OxmDN1uRiAcoPK6u
- p1GN0snxjbiyZHWPmHnDvsi0P9y/ZZAjqsuQW8TOwI3zP87qAPqy+7FnYSxiLivHpZCsC+q85
- hpczMo3JREUtaPxeU9Sh0xp7SzZXtzgBeuleXj63zBdRkvj8nePRPT9Hf/tZ2imk7v6szmOFb
- u9w5K8rl6TUJByJKjlZ/prx5rhS10tDgFwbJeqwdyTK3db8fXeGBagLFEt0XTQEMcyV7x3416
- O20DkxO/wtCDBwDZYbUxW4AJqgS19/ObzwCXhm76bwaF4B7BmwzJTUbtgmy4V+gnkFkRX/amV
- PZsoqFv0R44wYhhBdsiXqEMj0xbbje1vinbjzb1rfVKvTtEoAOTmi79PMjOhOfVgkcWfV8Tmw
- 5BdjVsdWbx9stzA0+fH3+7AQ5W/04I2xaTr1lYPLbJhGKfpYICXDAokVNoz3Uk4oYspAq9Lw4
- Gv2nddUbxw/ORofGAdhys/dQShcUvc9y9d619e+8fjpNtc6jfhs9ndl4uwK8Y16MBnjExNEDD
- +rbKPHEUKxGQqi0tvQu7qUn88qmg953fnL7ALWzpQykJGWQ3fA+JWILVLfqUwL7D+1+Urt+Tr
- BiGdjnqEpeNpNHOLEogBjwvCJ1v3DwMjkdp2GVMmdFEGeGBa/3Uef8ODZkqCCe2kcXW6mkPa3
- WV51ZD8/Ev4fqeVjLg+HmlEFDn5o0N69UVRjN2ACEOpRtxldBfZ9uu4DbFwqNkZ8JdEotsWWT
- fJ93qasaZ8OMoby5ZtjF1UH8QOXRbYkRc/uQ4KV/A3J/P52AgauudpnCipazDqnWJhRh1rdC1
- JPN5meFh4=
+UI-OutboundReport: notjunk:1;M01:P0:N0uGar0QZzQ=;eBcbpg4M1Rf6ZZzV59IDj67bMfR
+ dhusFXLHUwQ0hPGgVlMOLi+r26iebPPWmWonsSEBZye2iFWAEqZD9PLrbSjWUN+tkJF2zJ5Da
+ ISlzd6iPEafGdojuvPb413pUSUBs1a28AkudYZSjj8fsbx8UeXYahGxwf01rdOGOxxgihbA4w
+ q8eC77NLIGA/I1mXbf/6Ru8PWZAefiOqj69qckERMlZqFB7IUsBi3doQ0MCXWXA4bKMFURe05
+ LIV/feIoms/eW0DP8b/FsPTFwIlRvSO5ABRK8CZvt3SSI29rKZnkD/9C1MSQI46/Ij0L0kRHS
+ Dt2IukkHH0Z5ksyuxIFc1165C4ZhJ787ClkzIa4R4pO7CcHLEIHRPfAFfzCpgZZk/ww8DP9vn
+ 4NKCJs9Skko+olh7rNS632YCUFart2s1XfNx/0i/QktgCinizAvT/1tjK1VEi9nxwziEyKMFs
+ 1JZ9EJLLQ7vNdg2uJQ0sDVHOyavg3Ul9xCcXD3585vpZG7jkwKGKEjhFQPkvDacbWW+CMHYwU
+ +xHXZnZgSek7IY6MTzVO9CjXWDtfVH1y7Zjwldb//rmpbX96o2iqn/spz7XRN8bvp6QByNIgp
+ KCTa26k4APaNpkZ5pmIkrktVb/QyU1gfzdcNtJrLWLRUOmhW66StncoLy6fkLuRtcVWANot15
+ AUUyNTjNR903zqC9N2e0mk9N5BgJNVUzxMA334u8UvEThNuJ+WqkMtbxhm7M+FBWr1WdmpKRO
+ L2Q913iiS/JESbfNeimzDCNJNA7yMSdySgYUJGixYufY1W328tC9TkLNv8YjZsmNzlYYLo04s
+ RyVH7/lti1VgR6p80p4wPF89C1h59FVQzr9tTqAEpbJFoZSKocSUgXg4PyMv3SM2W8gyIpW3L
+ SeEo1TDP0gZrEZ20yAG9ZO6pfxI8JrDx0uUjM+iMPaoooEwVq2m+GUxerCmTurM9Msy6ogx8X
+ n/+Ed12kSSVUIkPXlxjvzADukDPjMIXcBm7lZNNYobHrAQqf6E875oiLwAsOTaoTYki/TnkBg
+ QOnz6ojky3clmaMd0gyNhVrvWj+UycRWKdR9ztDl1VOC/oMDq86srnjfuuamQ4dD1OEe4k+B9
+ vA+X5msTE=
 
-=E2=80=A6
-> Switch every location that ends with unlocking a mutex on error over to
-> using the guard(mutex)() infrastructure to let the compiler worry about
-> releasing locks. This makes the code easier to read and understand.
+> The osnoise_hotplug_workfn() grabs two mutexes and cpu_read_lock(). It h=
+as
+> various gotos to handle unlocking them. Switch them over to guard() and
+> let the compiler worry about it.
 >
-> Also use __free() for free a temporary buffer in event_trigger_regex_wri=
-te().
+> The osnoise_cpus_read() has a temporary mask_str allocated and there's
+> some gotos to make sure it gets freed on error paths. Switch that over t=
+o
+> __free() to let the compiler worry about it.
 
-Can it be safer and cleaner to split adjustments for these programming int=
-erfaces?
+I would find it safer and cleaner to separate adjustments for these progra=
+mming interfaces.
 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
 cumentation/process/submitting-patches.rst?h=3Dv6.13-rc3#n81
 
