@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DBE1CCEE9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9EE1D4610;
 	Mon, 23 Dec 2024 20:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734984890; cv=none; b=DNVt7xvEW5gg1GEQjISoZhqeZSWdJhM8/ZvvT2CGFwGyYd1Xh1WwW/79nZhEuMLmhwuga0DIH9U/FbQQX2yGxxz4XGr7kn7tOoSVZC70X/emwCGjPvcSEzsKOIMJppogNCl2gxc/l9gBifc9N9plJc7EfQwmMGKxYcnb72BCvX8=
+	t=1734984890; cv=none; b=lQeNO/5mg7EO2cKvt1cagqHgjtmondlcIlLlIHlqU/xFQZ15QJV2PyZxcoVF9fBDUzQHswW7yvRIusLfM/9+aPHI/BJT+RyUOdzigy+hM4Kk19xomjxEFM64oaI2vqjbum1PYNk9wzGFlFi2n40C9qleul9v66fzlKs9emawCL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1734984890; c=relaxed/simple;
-	bh=Y/OVOGLj/U7XpM5vt6i89G1/XYPs/UUvpfRYJtJdfKI=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=TMFafTZBbH8IcERW3RV7uM7Ag8QOFkvEbs9TdUJAhEboCyTYmz43GZjon8ug7q0XOu/LUYMrqCQ4KmscETEO7Fm3eIzYjv+RDBdxc7r9uFP9icyVf5bh+Jk7w8EswkrFKUhMecL1RLo7/pEzWpfdNpGwM4dc4C8v++Cmis5NcTU=
+	bh=aioXTzNoufIGKq8lGq2O+Xy3xmBkovxOiAm5ccPP91s=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=gcNpaW0nAT58Qjf/Z2N0i2QVzkkse9S7FZhXoyVRsLrR2loP33zvS4qwiToESKpJ12nKkfT0+DDp1ys6WOgR/JPSv4K+vNUw0uoQO0npowEVW3bLhi/CXuVWgggJvgEb9FFAKwnVdNTDivv28qGwLnhMlnOONLjA0V5/xeIVkbI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D44C4CED3;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2EAC4CEE2;
 	Mon, 23 Dec 2024 20:14:50 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tPoq5-0000000Dg85-3eSC;
-	Mon, 23 Dec 2024 15:15:41 -0500
-Message-ID: <20241223201347.609298489@goodmis.org>
+	id 1tPoq6-0000000Dg9p-1fXj;
+	Mon, 23 Dec 2024 15:15:42 -0500
+Message-ID: <20241223201542.240760965@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 23 Dec 2024 15:13:47 -0500
+Date: Mon, 23 Dec 2024 15:13:50 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -35,118 +36,84 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Donglin Peng <dolinux.peng@gmail.com>,
  Zheng Yejian <zhengyejian@huaweicloud.com>,
  bpf@vger.kernel.org
-Subject: [PATCH v2 0/4] ftrace: Add function arguments to function tracers
+Subject: [PATCH v2 3/4] ftrace: Have funcgraph-args take affect during tracing
+References: <20241223201347.609298489@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Steven Rostedt <rostedt@goodmis.org>
+
+Currently, when function_graph is started, it looks at the option
+funcgraph-args, and if it is set, it will enable tracing of the arguments.
+
+But if tracing is already running, and the user enables funcgraph-args, it
+will have no effect. Instead, it should enable argument tracing when it is
+enabled, even if it means disabling the function graph tracing for a short
+time in order to do the transition.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_functions_graph.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index c8eda9bebdf4..d1ee001f5a8e 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -469,7 +469,7 @@ static int graph_trace_init(struct trace_array *tr)
+ 	else
+ 		tr->gops->retfunc = trace_graph_return;
+ 
+-	/* Make gops functions are visible before we start tracing */
++	/* Make gops functions visible before we start tracing */
+ 	smp_mb();
+ 
+ 	ret = register_ftrace_graph(tr->gops);
+@@ -480,6 +480,28 @@ static int graph_trace_init(struct trace_array *tr)
+ 	return 0;
+ }
+ 
++static int ftrace_graph_trace_args(struct trace_array *tr, int set)
++{
++	trace_func_graph_ent_t entry;
++
++	if (set)
++		entry = trace_graph_entry_args;
++	else
++		entry = trace_graph_entry;
++
++	/* See if there's any changes */
++	if (tr->gops->entryfunc == entry)
++		return 0;
++
++	unregister_ftrace_graph(tr->gops);
++
++	tr->gops->entryfunc = entry;
++
++	/* Make gops functions visible before we start tracing */
++	smp_mb();
++	return register_ftrace_graph(tr->gops);
++}
++
+ static void graph_trace_reset(struct trace_array *tr)
+ {
+ 	tracing_stop_cmdline_record();
+@@ -1609,6 +1631,9 @@ func_graph_set_flag(struct trace_array *tr, u32 old_flags, u32 bit, int set)
+ 	if (bit == TRACE_GRAPH_GRAPH_TIME)
+ 		ftrace_graph_graph_time_control(set);
+ 
++	if (bit == TRACE_GRAPH_ARGS)
++		return ftrace_graph_trace_args(tr, set);
++
+ 	return 0;
+ }
+ 
+-- 
+2.45.2
 
 
-These patches add support for printing function arguments in ftrace.
-
-Example usage:
-
-function tracer:
-
- ~# cd /sys/kernel/tracing/
- ~# echo icmp_rcv >set_ftrace_filter
- ~# echo function >current_tracer
- ~# echo 1 >options/func-args
- ~# ping -c 10 127.0.0.1
-[..]
- ~# cat trace
-[..]
-            ping-1277    [030] ..s1.    39.120939: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    39.120946: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    40.179724: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    40.179730: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    41.219700: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    41.219706: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    42.259717: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    42.259725: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    43.299735: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    43.299742: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-
-function graph:
-
- ~# cd /sys/kernel/tracing
- ~# echo icmp_rcv >set_graph_function
- ~# echo function_graph >current_tracer
- ~# echo 1 >options/funcgraph-args
-
- ~# ping -c 1 127.0.0.1
-
- ~# cat trace
-
- 30)               |  icmp_rcv(skb=0xa0ecab00) {
- 30)               |    __skb_checksum_complete(skb=0xa0ecab00) {
- 30)               |      skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0) {
- 30)               |        __skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0, ops=0x232e0327a88) {
- 30)   0.418 us    |          csum_partial(buff=0xa0d20924, len=64, sum=0)
- 30)   0.985 us    |        }
- 30)   1.463 us    |      }
- 30)   2.039 us    |    }
-[..]
-
-This was last posted by Sven Schnelle here:
-
-  https://lore.kernel.org/all/20240904065908.1009086-1-svens@linux.ibm.com/
-
-As Sven hasn't worked on it since, I decided to continue to push it
-through. I'm keeping Sven as original author and added myself as
-"Co-developed-by".
-
-The main changes are:
-
-- Made the kconfig option unconditional if all the dependencies are set.
-
-- Not save ftrace_regs in the ring buffer, as that is an abstract
-  descriptor defined by the architectures and should remain opaque from
-  generic code. Instead, the args are read at the time they are recorded
-  (with the ftrace_regs passed to the callback function), and saved into
-  the ring buffer. Then the print function only takes an array of elements.
-
-  This could allow archs to retrieve arguments that are on the stack where
-  as, post processing ftrace_regs could cause undesirable results.
-
-- Made the function and function graph entry events dynamically sized
-  to allow the arguments to be appended to the event in the ring buffer.
-  The print function only looks to see if the event saved in the ring
-  buffer is big enough to hold all the arguments defined by the new
-  FTRACE_REGS_MAX_ARGS macro and if so, it will assume there are arguments
-  there and print them. This also means user space will not break on
-  reading these events as arguments will simply be ignored.
-
-- The printing of the arguments has some more data when things are not
-  processed by BPF. Any unsupported argument will have the type printed
-  out in the ring buffer. 
-
-- Also removed the spaces around the '=' as that's more in line to how
-  trace events show their fields.
-
-- One new patch I added to convert function graph tracing over to using
-  args as soon as the user sets the option even if function graph tracing
-  is enabled. Function tracer did this already by default.
-
-Steven Rostedt (1):
-      ftrace: Have funcgraph-args take affect during tracing
-
-Sven Schnelle (3):
-      ftrace: Add print_function_args()
-      ftrace: Add support for function argument to graph tracer
-      ftrace: Add arguments to function tracer
-
-----
- include/linux/ftrace_regs.h          |   5 +
- kernel/trace/Kconfig                 |  12 +++
- kernel/trace/trace.c                 |  12 ++-
- kernel/trace/trace.h                 |   4 +-
- kernel/trace/trace_entries.h         |  12 ++-
- kernel/trace/trace_functions.c       |  46 ++++++++-
- kernel/trace/trace_functions_graph.c | 174 ++++++++++++++++++++++++++++-------
- kernel/trace/trace_irqsoff.c         |   4 +-
- kernel/trace/trace_output.c          |  96 ++++++++++++++++++-
- kernel/trace/trace_output.h          |   9 ++
- kernel/trace/trace_sched_wakeup.c    |   4 +-
- 11 files changed, 324 insertions(+), 54 deletions(-)
