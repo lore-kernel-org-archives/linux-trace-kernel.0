@@ -1,35 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3EC1C3BE4;
-	Mon, 23 Dec 2024 18:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E271CDA05;
+	Mon, 23 Dec 2024 20:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734979730; cv=none; b=aTLz1+Uziul0MX/6mFHW7yeBmrSMBsZuIQ2AC/PKnDkeZd4s6uWcIdYBqTZwi/5Hha3xiaRd5/ufLlMDAchmVm0TZiFcdYearPP17o8iwwEk2Fk7ct/1PDWSole6SUrOHII4o7um3M/AqoSpN8MlYaIigT5TcBIh0Hjd/9TMdAo=
+	t=1734984890; cv=none; b=iMDJa85hbF3bhR9oPCS7nOEm8Qd1gZQPn/ZdWkJuifsPhEBI23d7xQCWjZZx5oj5+BniVUOC7+WYoNltCzMLss1k+2/V8Sa/riJ68v6bq8sRK3/S0aWZAQJWtHLg9b2/eiYMzZ23Dk/i9qeRJ+cvfOZvhCOoEam+XpUzh73llbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734979730; c=relaxed/simple;
-	bh=P9L4tLMSuzxiMz49e8tAq+/2m8DzE2Lk7uR6qWpeI88=;
+	s=arc-20240116; t=1734984890; c=relaxed/simple;
+	bh=KoYSwSCFYv4fDZF7WNZTJdGOQR7hwoCI4nFLaSQ1Pjw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=TasMdWjEWJL0XXqiz0Dvl8a2pGwshEJAo+tmxm6QqNfGib6/s1KHooUowFK05yedEJ509amkl7umRRKbcV7lhItSLywdpXZpVFtoczQWC4hgv9BOesk7pQzEc9KkgxC3sShs1QieLc0OiaqaIjxXeG8pJmar0KBGTbzT5LuIEqs=
+	 Content-Type; b=ES0C9Vr2S5A22Z9KIv9FQQnMuPRSshqH3O6spQIlaiEtDYi5aD8flV9in29jIB9iTGorzTblnNi1DBYJ/pJKyhokO5dv3Tpbbg7T3rsXc5P34NTqnSFWVPuYQusJ7SYtvSFZnPDEP2rc951Udca6SPt4i0i0eZrHX+PJSBfCa8s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB26C4CEE2;
-	Mon, 23 Dec 2024 18:48:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B3A7C4CED6;
+	Mon, 23 Dec 2024 20:14:50 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tPnUr-0000000Dcnm-3eis;
-	Mon, 23 Dec 2024 13:49:41 -0500
-Message-ID: <20241223184941.718001540@goodmis.org>
+	id 1tPoq6-0000000Dg8m-0CCL;
+	Mon, 23 Dec 2024 15:15:42 -0500
+Message-ID: <20241223201541.898496620@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 23 Dec 2024 13:46:22 -0500
+Date: Mon, 23 Dec 2024 15:13:48 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/4] ftrace: Switch ftrace.c code over to use guard()
-References: <20241223184618.176607694@goodmis.org>
+ Andrew Morton <akpm@linux-foundation.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>,
+ Donglin Peng <dolinux.peng@gmail.com>,
+ Zheng Yejian <zhengyejian@huaweicloud.com>,
+ bpf@vger.kernel.org
+Subject: [PATCH v2 1/4] ftrace: Add print_function_args()
+References: <20241223201347.609298489@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -38,265 +46,197 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Steven Rostedt <rostedt@goodmis.org>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-There are a few functions in ftrace.c that have "goto out" or equivalent
-on error in order to release locks that were taken. This can be error
-prone or just simply make the code more complex.
+Add a function to decode argument types with the help of BTF. Will
+be used to display arguments in the function and function graph
+tracer.
 
-Switch every location that ends with unlocking a mutex on error over to
-using the guard(mutex)() infrastructure to let the compiler worry about
-releasing locks. This makes the code easier to read and understand.
+It can only handle simply arguments and up to FTRACE_REGS_MAX_ARGS number
+of arguments. When it hits a max, it will print ", ...":
 
+   page_to_skb(vi=0xffff8d53842dc980, rq=0xffff8d53843a0800, page=0xfffffc2e04337c00, offset=6160, len=64, truesize=1536, ...)
+
+And if it hits an argument that is not recognized, it will print the raw
+value and the type of argument it is:
+
+   make_vfsuid(idmap=0xffffffff87f99db8, fs_userns=0xffffffff87e543c0, kuid=0x0 (STRUCT))
+   __pti_set_user_pgtbl(pgdp=0xffff8d5384ab47f8, pgd=0x110e74067 (STRUCT))
+
+Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 97 +++++++++++++++----------------------------
- 1 file changed, 34 insertions(+), 63 deletions(-)
+Changes since v1: https://lore.kernel.org/20240904065908.1009086-5-svens@linux.ibm.com
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 2c1691aa1d2f..6ebc76bafd38 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -536,24 +536,21 @@ static int function_stat_show(struct seq_file *m, void *v)
- {
- 	struct ftrace_profile *rec = v;
- 	char str[KSYM_SYMBOL_LEN];
--	int ret = 0;
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	static struct trace_seq s;
- 	unsigned long long avg;
- 	unsigned long long stddev;
- #endif
--	mutex_lock(&ftrace_profile_lock);
-+	guard(mutex)(&ftrace_profile_lock);
+ - Added Config option FUNCTION_TRACE_ARGS to this patch
+  (unconditional if dependencies are met)
+
+ - Changed the print_function_args() function to take an array of
+   unsigned long args and not the ftrace_regs pointer. The ftrace_regs
+   should be opaque from generic code.
+
+ - Have the function print the name of an BTF type that is not supported.
+
+ - Added FTRACE_REGS_MAX_ARGS as the number of arguments saved in
+   the event and printed out.
+
+ - Print "...," if the number of arguments goes past FTRACE_REGS_MAX_ARGS.
+
+ include/linux/ftrace_regs.h |  5 +++
+ kernel/trace/Kconfig        |  6 +++
+ kernel/trace/trace_output.c | 78 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_output.h |  9 +++++
+ 4 files changed, 98 insertions(+)
+
+diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
+index bbc1873ca6b8..15627ceea9bc 100644
+--- a/include/linux/ftrace_regs.h
++++ b/include/linux/ftrace_regs.h
+@@ -35,4 +35,9 @@ struct ftrace_regs;
  
- 	/* we raced with function_profile_reset() */
--	if (unlikely(rec->counter == 0)) {
--		ret = -EBUSY;
--		goto out;
--	}
-+	if (unlikely(rec->counter == 0))
-+		return -EBUSY;
+ #endif /* HAVE_ARCH_FTRACE_REGS */
  
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	avg = div64_ul(rec->time, rec->counter);
- 	if (tracing_thresh && (avg < tracing_thresh))
--		goto out;
-+		return 0;
- #endif
- 
- 	kallsyms_lookup(rec->ip, NULL, NULL, NULL, str);
-@@ -590,10 +587,8 @@ static int function_stat_show(struct seq_file *m, void *v)
- 	trace_print_seq(m, &s);
- #endif
- 	seq_putc(m, '\n');
--out:
--	mutex_unlock(&ftrace_profile_lock);
- 
--	return ret;
-+	return 0;
- }
- 
- static void ftrace_profile_reset(struct ftrace_profile_stat *stat)
-@@ -944,20 +939,16 @@ ftrace_profile_write(struct file *filp, const char __user *ubuf,
- 
- 	val = !!val;
- 
--	mutex_lock(&ftrace_profile_lock);
-+	guard(mutex)(&ftrace_profile_lock);
- 	if (ftrace_profile_enabled ^ val) {
- 		if (val) {
- 			ret = ftrace_profile_init();
--			if (ret < 0) {
--				cnt = ret;
--				goto out;
--			}
-+			if (ret < 0)
-+				return ret;
- 
- 			ret = register_ftrace_profiler();
--			if (ret < 0) {
--				cnt = ret;
--				goto out;
--			}
-+			if (ret < 0)
-+				return ret;
- 			ftrace_profile_enabled = 1;
- 		} else {
- 			ftrace_profile_enabled = 0;
-@@ -968,8 +959,6 @@ ftrace_profile_write(struct file *filp, const char __user *ubuf,
- 			unregister_ftrace_profiler();
- 		}
- 	}
-- out:
--	mutex_unlock(&ftrace_profile_lock);
- 
- 	*ppos += cnt;
- 
-@@ -5610,20 +5599,15 @@ static DEFINE_MUTEX(ftrace_cmd_mutex);
- __init int register_ftrace_command(struct ftrace_func_command *cmd)
- {
- 	struct ftrace_func_command *p;
--	int ret = 0;
- 
--	mutex_lock(&ftrace_cmd_mutex);
-+	guard(mutex)(&ftrace_cmd_mutex);
- 	list_for_each_entry(p, &ftrace_commands, list) {
--		if (strcmp(cmd->name, p->name) == 0) {
--			ret = -EBUSY;
--			goto out_unlock;
--		}
-+		if (strcmp(cmd->name, p->name) == 0)
-+			return -EBUSY;
- 	}
- 	list_add(&cmd->list, &ftrace_commands);
-- out_unlock:
--	mutex_unlock(&ftrace_cmd_mutex);
- 
--	return ret;
-+	return 0;
- }
- 
- /*
-@@ -5633,20 +5617,17 @@ __init int register_ftrace_command(struct ftrace_func_command *cmd)
- __init int unregister_ftrace_command(struct ftrace_func_command *cmd)
- {
- 	struct ftrace_func_command *p, *n;
--	int ret = -ENODEV;
- 
--	mutex_lock(&ftrace_cmd_mutex);
-+	guard(mutex)(&ftrace_cmd_mutex);
++/* This can be overridden by the architectures */
++#ifndef FTRACE_REGS_MAX_ARGS
++# define FTRACE_REGS_MAX_ARGS	6
++#endif
 +
- 	list_for_each_entry_safe(p, n, &ftrace_commands, list) {
- 		if (strcmp(cmd->name, p->name) == 0) {
--			ret = 0;
- 			list_del_init(&p->list);
--			goto out_unlock;
-+			return 0;
- 		}
- 	}
-- out_unlock:
--	mutex_unlock(&ftrace_cmd_mutex);
+ #endif /* _LINUX_FTRACE_REGS_H */
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index d570b8b9c0a9..60412c1012ef 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -263,6 +263,12 @@ config FUNCTION_GRAPH_RETADDR
+ 	  the function is called. This feature is off by default, and you can
+ 	  enable it via the trace option funcgraph-retaddr.
  
--	return ret;
-+	return -ENODEV;
- }
- 
- static int ftrace_process_regex(struct ftrace_iterator *iter,
-@@ -5656,7 +5637,7 @@ static int ftrace_process_regex(struct ftrace_iterator *iter,
- 	struct trace_array *tr = iter->ops->private;
- 	char *func, *command, *next = buff;
- 	struct ftrace_func_command *p;
--	int ret = -EINVAL;
-+	int ret;
- 
- 	func = strsep(&next, ":");
- 
-@@ -5673,17 +5654,14 @@ static int ftrace_process_regex(struct ftrace_iterator *iter,
- 
- 	command = strsep(&next, ":");
- 
--	mutex_lock(&ftrace_cmd_mutex);
-+	guard(mutex)(&ftrace_cmd_mutex);
++config FUNCTION_TRACE_ARGS
++       bool
++	depends on HAVE_FUNCTION_ARG_ACCESS_API
++	depends on DEBUG_INFO_BTF
++	default y
 +
- 	list_for_each_entry(p, &ftrace_commands, list) {
--		if (strcmp(p->name, command) == 0) {
--			ret = p->func(tr, hash, func, command, next, enable);
--			goto out_unlock;
--		}
-+		if (strcmp(p->name, command) == 0)
-+			return p->func(tr, hash, func, command, next, enable);
- 	}
-- out_unlock:
--	mutex_unlock(&ftrace_cmd_mutex);
+ config DYNAMIC_FTRACE
+ 	bool "enable/disable function tracing dynamically"
+ 	depends on FUNCTION_TRACER
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index da748b7cbc4d..40d6c7a9e0c4 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -12,8 +12,11 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/mm.h>
+ #include <linux/idr.h>
++#include <linux/btf.h>
++#include <linux/bpf.h>
  
--	return ret;
-+	return -EINVAL;
+ #include "trace_output.h"
++#include "trace_btf.h"
+ 
+ /* must be a power of 2 */
+ #define EVENT_HASHSIZE	128
+@@ -680,6 +683,81 @@ int trace_print_lat_context(struct trace_iterator *iter)
+ 	return !trace_seq_has_overflowed(s);
  }
  
- static ssize_t
-@@ -8280,7 +8258,7 @@ pid_write(struct file *filp, const char __user *ubuf,
- 	if (!cnt)
- 		return 0;
++#ifdef CONFIG_FUNCTION_TRACE_ARGS
++void print_function_args(struct trace_seq *s, unsigned long *args,
++			 unsigned long func)
++{
++	const struct btf_param *param;
++	const struct btf_type *t;
++	const char *param_name;
++	char name[KSYM_NAME_LEN];
++	unsigned long arg;
++	struct btf *btf;
++	s32 tid, nr = 0;
++	int i;
++
++	trace_seq_printf(s, "(");
++
++	if (!args)
++		goto out;
++	if (lookup_symbol_name(func, name))
++		goto out;
++
++	btf = bpf_get_btf_vmlinux();
++	if (IS_ERR_OR_NULL(btf))
++		goto out;
++
++	t = btf_find_func_proto(name, &btf);
++	if (IS_ERR_OR_NULL(t))
++		goto out;
++
++	param = btf_get_func_param(t, &nr);
++	if (!param)
++		goto out_put;
++
++	for (i = 0; i < nr; i++) {
++		/* This only prints what the arch allows (6 args by default) */
++		if (i == FTRACE_REGS_MAX_ARGS) {
++			trace_seq_puts(s, "...");
++			break;
++		}
++
++		arg = args[i];
++
++		param_name = btf_name_by_offset(btf, param[i].name_off);
++		if (param_name)
++			trace_seq_printf(s, "%s=", param_name);
++		t = btf_type_skip_modifiers(btf, param[i].type, &tid);
++
++		switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
++		case BTF_KIND_UNKN:
++			trace_seq_putc(s, '?');
++			/* Still print unknown type values */
++			fallthrough;
++		case BTF_KIND_PTR:
++			trace_seq_printf(s, "0x%lx", arg);
++			break;
++		case BTF_KIND_INT:
++			trace_seq_printf(s, "%ld", arg);
++			break;
++		case BTF_KIND_ENUM:
++			trace_seq_printf(s, "%ld", arg);
++			break;
++		default:
++			/* This does not handle complex arguments */
++			trace_seq_printf(s, "0x%lx (%s)", arg, btf_type_str(t));
++			break;
++		}
++		if (i < nr - 1)
++			trace_seq_printf(s, ", ");
++	}
++out_put:
++	btf_put(btf);
++out:
++	trace_seq_printf(s, ")");
++}
++#endif
++
+ /**
+  * ftrace_find_event - find a registered event
+  * @type: the type of event to look for
+diff --git a/kernel/trace/trace_output.h b/kernel/trace/trace_output.h
+index dca40f1f1da4..2e305364f2a9 100644
+--- a/kernel/trace/trace_output.h
++++ b/kernel/trace/trace_output.h
+@@ -41,5 +41,14 @@ extern struct rw_semaphore trace_event_sem;
+ #define SEQ_PUT_HEX_FIELD(s, x)				\
+ 	trace_seq_putmem_hex(s, &(x), sizeof(x))
  
--	mutex_lock(&ftrace_lock);
-+	guard(mutex)(&ftrace_lock);
++#ifdef CONFIG_FUNCTION_TRACE_ARGS
++void print_function_args(struct trace_seq *s, unsigned long *args,
++			 unsigned long func);
++#else
++static inline void print_function_args(struct trace_seq *s, unsigned long *args,
++				       unsigned long func) {
++	trace_seq_puts(s, "()");
++}
++#endif
+ #endif
  
- 	switch (type) {
- 	case TRACE_PIDS:
-@@ -8296,14 +8274,13 @@ pid_write(struct file *filp, const char __user *ubuf,
- 					     lockdep_is_held(&ftrace_lock));
- 		break;
- 	default:
--		ret = -EINVAL;
- 		WARN_ON_ONCE(1);
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	ret = trace_pid_write(filtered_pids, &pid_list, ubuf, cnt);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	switch (type) {
- 	case TRACE_PIDS:
-@@ -8332,11 +8309,8 @@ pid_write(struct file *filp, const char __user *ubuf,
- 
- 	ftrace_update_pid_func();
- 	ftrace_startup_all(0);
-- out:
--	mutex_unlock(&ftrace_lock);
- 
--	if (ret > 0)
--		*ppos += ret;
-+	*ppos += ret;
- 
- 	return ret;
- }
-@@ -8739,17 +8713,17 @@ static int
- ftrace_enable_sysctl(const struct ctl_table *table, int write,
- 		     void *buffer, size_t *lenp, loff_t *ppos)
- {
--	int ret = -ENODEV;
-+	int ret;
- 
--	mutex_lock(&ftrace_lock);
-+	guard(mutex)(&ftrace_lock);
- 
- 	if (unlikely(ftrace_disabled))
--		goto out;
-+		return -ENODEV;
- 
- 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
- 
- 	if (ret || !write || (last_ftrace_enabled == !!ftrace_enabled))
--		goto out;
-+		return ret;
- 
- 	if (ftrace_enabled) {
- 
-@@ -8763,8 +8737,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
- 	} else {
- 		if (is_permanent_ops_registered()) {
- 			ftrace_enabled = true;
--			ret = -EBUSY;
--			goto out;
-+			return -EBUSY;
- 		}
- 
- 		/* stopping ftrace calls (just send to ftrace_stub) */
-@@ -8774,9 +8747,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
- 	}
- 
- 	last_ftrace_enabled = !!ftrace_enabled;
-- out:
--	mutex_unlock(&ftrace_lock);
--	return ret;
-+	return 0;
- }
- 
- static struct ctl_table ftrace_sysctls[] = {
 -- 
 2.45.2
 
