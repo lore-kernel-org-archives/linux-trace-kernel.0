@@ -1,115 +1,185 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E552519006B;
-	Mon, 23 Dec 2024 06:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBE7185924;
+	Mon, 23 Dec 2024 18:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734937075; cv=none; b=jZUcDW94Vl0V3nhwcqHH7+2JbhXvjhlswwXYtsVMKzzGW4h9vl94rQWtqqspUNWq6fw4+X0zmddOvfAuxt5jiL2qnKwk503znHdeD1DNFrTJhJZJvP04Gq/QxaSJwbkG6LSP76KTqjON3MZxGCmniXEi0LcpG/CK+R49eBE/ea0=
+	t=1734979730; cv=none; b=WxILBwY9rB1c29prtgb8SFk8GXOrMTNDROV9u7jvqFDmgshOMj4n3VagQRQzbVEbbSSjTvcCFgWLG1IOX5+rBjVT9SBCkN4nY74sC0n1k1pVYmH/Vr7mfPAdCHU1qRcYDnPirYVU5Q76YYhcI/5yxTxK8V+QFAOAZt/x2QUPpnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734937075; c=relaxed/simple;
-	bh=iM223PkQZDqo/Te4I4lOt5OkAiDiGHc6wnKJ/ZHtVE0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mu6mjKu71jcXdUBSJ/kgkdi6MGnIQrr6iCeMJA8L0+t4f5njmKXs1Zpc2lOj7NU4IASa+lKgxqhLHRqzl9Ew6/EiNuyujAww6m7X8ExWB/Bm4lJ61PnGmZ/YQiABrhQwFs7gk41U6lfI36b7E1+8eQXNqrBOO70dzyfYgWjpdSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YGpjx4Fn2z4f3kFj;
-	Mon, 23 Dec 2024 14:57:25 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 392441A018C;
-	Mon, 23 Dec 2024 14:57:45 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgC33oLoCWlnoBWSFQ--.8658S6;
-	Mon, 23 Dec 2024 14:57:44 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	will@kernel.org,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	stephen.smalley.work@gmail.com,
-	omosnace@redhat.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	selinux@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH linux-next 2/2] perf: Return EACCESS when need perfmon capability
-Date: Mon, 23 Dec 2024 07:06:50 +0000
-Message-Id: <20241223070650.2810747-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
-References: <20241223070650.2810747-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1734979730; c=relaxed/simple;
+	bh=YR6klxmOahfJtSWPr/93KtC/U9V99pYu7l3PSjNL69A=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=svN/lknRaHocvs4qaJKgwrtAYfYtuX1J4hw4yLOiyk/r2OctCwlgKoInSAVIb9KHw1ATN9Ek5kAhZZfShoY2FOj992ryAh5nB8r8DMLCsaIzASVH1ZLa6WSzsIxnR058mn6qrucUDHAe86J+3+lg/pzhNHMNAozC6iIZdyaFEJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EB1C4CED4;
+	Mon, 23 Dec 2024 18:48:49 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tPnUr-0000000Dcmm-2CNu;
+	Mon, 23 Dec 2024 13:49:41 -0500
+Message-ID: <20241223184941.373853944@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 23 Dec 2024 13:46:20 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 2/4] ftrace: Do not disable interrupts in profiler
+References: <20241223184618.176607694@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC33oLoCWlnoBWSFQ--.8658S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF13ZFy5ur43urW3Jr4UXFb_yoW3trg_u3
-	WxJrn2vr1kWF12q3y7Jw1xtr15Ww1rG3WFvrn5G347Cr90gws5A34rJryDtrW7CFs7ursr
-	Kw18Wr97Zr1Y9jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbkAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
-	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
-	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE
-	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjTRNrcTDUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=UTF-8
 
-For perf_allow_kernel and perf_allow_cpu, both return EACCES when require
-CAP_PERFMON or CAP_SYS_ADMIN permissions, so update perf_allow_tracepoint
-to keep them the same.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+The function profiler disables interrupts before processing. This was
+there since the profiler was introduced back in 2009 when there were
+recursion issues to deal with. The function tracer is much more robust
+today and has its own internal recursion protection. There's no reason to
+disable interrupts in the function profiler.
+
+Instead, just disable preemption and use the guard() infrastructure while
+at it.
+
+Before this change:
+
+~# echo 1 > /sys/kernel/tracing/function_profile_enabled
+~# perf stat -r 10 ./hackbench 10
+Time: 3.099
+Time: 2.556
+Time: 2.500
+Time: 2.705
+Time: 2.985
+Time: 2.959
+Time: 2.859
+Time: 2.621
+Time: 2.742
+Time: 2.631
+
+ Performance counter stats for '/work/c/hackbench 10' (10 runs):
+
+         23,156.77 msec task-clock                       #    6.951 CPUs utilized               ( +-  2.36% )
+            18,306      context-switches                 #  790.525 /sec                        ( +-  5.95% )
+               495      cpu-migrations                   #   21.376 /sec                        ( +-  8.61% )
+            11,522      page-faults                      #  497.565 /sec                        ( +-  1.80% )
+    47,967,124,606      cycles                           #    2.071 GHz                         ( +-  0.41% )
+    80,009,078,371      instructions                     #    1.67  insn per cycle              ( +-  0.34% )
+    16,389,249,798      branches                         #  707.752 M/sec                       ( +-  0.36% )
+       139,943,109      branch-misses                    #    0.85% of all branches             ( +-  0.61% )
+
+             3.332 +- 0.101 seconds time elapsed  ( +-  3.04% )
+
+After this change:
+
+~# echo 1 > /sys/kernel/tracing/function_profile_enabled
+~# perf stat -r 10 ./hackbench 10
+Time: 1.869
+Time: 1.428
+Time: 1.575
+Time: 1.569
+Time: 1.685
+Time: 1.511
+Time: 1.611
+Time: 1.672
+Time: 1.724
+Time: 1.715
+
+ Performance counter stats for '/work/c/hackbench 10' (10 runs):
+
+         13,578.21 msec task-clock                       #    6.931 CPUs utilized               ( +-  2.23% )
+            12,736      context-switches                 #  937.973 /sec                        ( +-  3.86% )
+               341      cpu-migrations                   #   25.114 /sec                        ( +-  5.27% )
+            11,378      page-faults                      #  837.960 /sec                        ( +-  1.74% )
+    27,638,039,036      cycles                           #    2.035 GHz                         ( +-  0.27% )
+    45,107,762,498      instructions                     #    1.63  insn per cycle              ( +-  0.23% )
+     8,623,868,018      branches                         #  635.125 M/sec                       ( +-  0.27% )
+       125,738,443      branch-misses                    #    1.46% of all branches             ( +-  0.32% )
+
+            1.9590 +- 0.0484 seconds time elapsed  ( +-  2.47% )
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 5d2ec4283ebf..c1bc0d7a275b 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1685,7 +1685,7 @@ static inline int perf_allow_cpu(void)
- static inline int perf_allow_tracepoint(void)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 9b17efb1a87d..63a9ffa65e17 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -789,27 +789,24 @@ function_profile_call(unsigned long ip, unsigned long parent_ip,
  {
- 	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
--		return -EPERM;
-+		return -EACCES;
+ 	struct ftrace_profile_stat *stat;
+ 	struct ftrace_profile *rec;
+-	unsigned long flags;
  
- 	return security_perf_event_open(PERF_SECURITY_TRACEPOINT);
+ 	if (!ftrace_profile_enabled)
+ 		return;
+ 
+-	local_irq_save(flags);
++	guard(preempt_notrace)();
+ 
+ 	stat = this_cpu_ptr(&ftrace_profile_stats);
+ 	if (!stat->hash || !ftrace_profile_enabled)
+-		goto out;
++		return;
+ 
+ 	rec = ftrace_find_profiled_func(stat, ip);
+ 	if (!rec) {
+ 		rec = ftrace_profile_alloc(stat, ip);
+ 		if (!rec)
+-			goto out;
++			return;
+ 	}
+ 
+ 	rec->counter++;
+- out:
+-	local_irq_restore(flags);
  }
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+@@ -856,19 +853,19 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 	unsigned long long calltime;
+ 	unsigned long long rettime = trace_clock_local();
+ 	struct ftrace_profile *rec;
+-	unsigned long flags;
+ 	int size;
+ 
+-	local_irq_save(flags);
++	guard(preempt_notrace)();
++
+ 	stat = this_cpu_ptr(&ftrace_profile_stats);
+ 	if (!stat->hash || !ftrace_profile_enabled)
+-		goto out;
++		return;
+ 
+ 	profile_data = fgraph_retrieve_data(gops->idx, &size);
+ 
+ 	/* If the calltime was zero'd ignore it */
+ 	if (!profile_data || !profile_data->calltime)
+-		goto out;
++		return;
+ 
+ 	calltime = rettime - profile_data->calltime;
+ 
+@@ -896,9 +893,6 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 		rec->time += calltime;
+ 		rec->time_squared += calltime * calltime;
+ 	}
+-
+- out:
+-	local_irq_restore(flags);
+ }
+ 
+ static struct fgraph_ops fprofiler_ops = {
 -- 
-2.34.1
+2.45.2
+
 
