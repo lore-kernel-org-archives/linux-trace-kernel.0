@@ -1,91 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9498F2AD2C;
-	Wed, 25 Dec 2024 22:02:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F307822615;
+	Wed, 25 Dec 2024 22:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735164147; cv=none; b=MyuXS63UymgM+qfYiVDwlOREslSm7dzO93Ru4r5N1m1PJ2xM6B4w556nBVYBYDVY8unX/jnLi7rJcJ9OJoP/694w4ni7KkcuNfViAnOKSdBa/neM939CsyMjvtoVsMKYjkhbHYKCG6OaR3PdtFt2vbiBErr4YR7y+4G2vjbPbg8=
+	t=1735165715; cv=none; b=ANfV5lerMrTRBdaZuccG/c60mHnt/5wGiyFBamdIeVNKvY0T27I9iQaRagNyZxhFLo9uemgOmqhtW8pkyuztEyxLTk5YpvChacbdvzAFuo0plZHx5yQFZVzAuF0a+qWNiKca/DXXQlbEVg5s/AouZdKwP2XJOoRol6tqgGIRPtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735164147; c=relaxed/simple;
-	bh=aDCKVfMHE4Ad0UO21uNXy+FiRlLW5HlGhJo+XbOuAHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=amztMxWhcdJuCfiYHeQpC7/YCmvfxfIIPErlLe34sZQ+72uWdjAtPQB9HVZNyeI5dozwsTpvVY4a0jgqLjvKNDOWCOKupxZvY7GRbGclVXVJR+0VCKOgmURhi470pYardSpizywQwPMH1HFxL+zfU0TgingNGp87NWF9yRygusk=
+	s=arc-20240116; t=1735165715; c=relaxed/simple;
+	bh=7W3KMQlMh0Xp3Rl3oPzyLp6r3hMybuNffTjtsRGePb8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=jlOtNnIoxgXleQEMz/U1lz/VST7/1hYzRfeZaxtE2vgNt7I7BNpOwtYxaSkC3IiNZJbDiL5zy5RlMdVJFoQ/6fn2eIUfy7PZBts2S/0ELC82lLU5XUn2EWbv5LD/pH3Tf8gNgASvtFPdU6H+8SNuHxm5zOS2EkCd1zET3Rb4Gjo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E042C4CECD;
-	Wed, 25 Dec 2024 22:02:25 +0000 (UTC)
-Date: Wed, 25 Dec 2024 17:02:25 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE28C4CECD;
+	Wed, 25 Dec 2024 22:28:34 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tQZsh-0000000FS1m-24Fq;
+	Wed, 25 Dec 2024 17:29:31 -0500
+Message-ID: <20241225222540.685602520@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 25 Dec 2024 17:25:40 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
- Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
- bpf@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20241225170225.0e1ac99e@batman.local.home>
-In-Reply-To: <20241226004152.0bddb524aed8bb0de4eeb43c@kernel.org>
-References: <20241223201347.609298489@goodmis.org>
-	<20241223201542.067076254@goodmis.org>
-	<20241226004152.0bddb524aed8bb0de4eeb43c@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v2 0/2] tracing: Fix patches with goto out
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 26 Dec 2024 00:41:52 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> > index d0e4f412c298..c8eda9bebdf4 100644
-> > --- a/kernel/trace/trace_functions_graph.c
-> > +++ b/kernel/trace/trace_functions_graph.c
-> > @@ -12,6 +12,8 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/fs.h>
-> > +#include <linux/btf.h>
-> > +#include <linux/bpf.h>  
-> 
-> Do we need these headers? I think it is wrapped by print_function_args().
+In my patch series:
 
-Oh, probably not. This is just leftovers from the original patch.
+  https://lore.kernel.org/linux-trace-kernel/20241219201158.193821672@goodmis.org/
 
-> > @@ -814,7 +853,14 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
-> >  		if (entry->ent.type != TRACE_GRAPH_RETADDR_ENT)
-> >  			print_retaddr = false;
-> >  
-> > -		trace_seq_printf(s, "%ps();", func);
-> > +		trace_seq_printf(s, "%ps", func);
-> > +
-> > +		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
-> > +			print_function_args(s, entry->args, (unsigned long)func);
-> > +			trace_seq_putc(s, ';');
-> > +		} else
-> > +			trace_seq_puts(s, "();");
-> > +
-> >  		if (print_retval || print_retaddr)
-> >  			trace_seq_puts(s, " /*");
-> >  		else
-> > @@ -836,12 +882,13 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
-> >  	}
-> >  
-> >  	if (!entry || print_retval || print_retaddr)
-> > -		trace_seq_puts(s, " */\n");
-> > +		trace_seq_puts(s, " */");  
-> 
-> Do we need this change?
+Of switching over to the guard logic. I missed a removal of a goto out in
+the osnoise, but fixed it in the stack trace patch.
 
-Hmm, maybe not. It may have been caused by added (and removed) debugging.
+Since the patches are supposed to be agnostic from each other, fix the
+osnoise patch, and remove the fix from the stack trace patch.
 
-Thanks for the review.
 
--- Steve
+
