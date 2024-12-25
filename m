@@ -1,736 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66E3101E6;
-	Wed, 25 Dec 2024 03:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9BD75809
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Dec 2024 06:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735096455; cv=none; b=ofz6E9rKria55B0kX+q6QbZunMiPDbFZ+kx4nEP44qUU+VCGcdU0s1yWV97ywdK368bajRwS4e8CDaktp0ut82kyeEKfgILsHAkHBepLSsavWtTzXbIkRvI3k7dGO8U6bzmYHrZaF7QM69Ffx+slydEp/Z6xP4LincHKf9lR4Fw=
+	t=1735109705; cv=none; b=O4PqFWp0Ky9o5Q+LLOLlZPL85t6rJGzFAiSl1/E4ZSt1qW3vHamzWAVhNrFK1fT5NbeZ7fPp2f/iohV+YF4HvqS8Kmk0pVvF6WcE4sGzVZQ/UPpQStW0dZ06s+vw01uydYJm+tJZWsGxapeF6/rZVX9dk+QGe/aJZXwKo7iCsvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735096455; c=relaxed/simple;
-	bh=RQdfFXJ7RaasDqsMPaqc9qKwA9s2AS+/nqMU89Ct6fk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uKGH0Wp98U1cJ8ibzNHLqcnpvzZjauOAynSBPSN3VDtpjDUarLd/o/McDSLFRpis93jfGjglBbvaW7iLOKPfApA96ebXHB16F/BMMHfvl8jdi97NGoFFuB757Rff3ohN4+Wx2XiT04SH2g/MfpCcSjx8NupfBb8L3o/TaRRUgMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51452C4CED0;
-	Wed, 25 Dec 2024 03:14:14 +0000 (UTC)
-Date: Tue, 24 Dec 2024 22:14:13 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: [PATCH v2] tracing: Switch trace.c code over to use guard()
-Message-ID: <20241224221413.7b8c68c3@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1735109705; c=relaxed/simple;
+	bh=vCtH0xKpkMLyYyOdDBDic+pLd6WKYQiYK6ZqajPoAa4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=QawNQszNzSBfL9TR81d7fEjX8ARZ22oC0OWFdgxgQ8GUmx7l/SqPGmGBGSMtOS9NnKFi6iZpNBds41+8tiLGNBTYb6iZ8OHsROTr4PTgVs8hRRNwPjFki7A44t4RkxMEjoRKPY4tyIjRiazGjChbBkhfNDXZVkkdx9zp813lsEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a9c9b37244so109662615ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Dec 2024 22:55:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735109703; x=1735714503;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ta082uJJhcNZbV4mjW5xLMJwbMmb81o4pqVkiCohDVw=;
+        b=PIkAgm3XnwxoDRG7kFKyMPAn2mpYb4qy87A4eE/p6nA63rE3wGLV8MIVKCUKgepDp0
+         XdaFfMzBv9us9gXzNdeqJ8pxRp93wdqXyg3Ful7l8WB3odUZs6tIjiAW0iIijb+auUwv
+         UXuT1GL6VSPDUHxquns1swXmhzrwFyTUKZ9OtZPf+aj9pDnmglzNUetedoTJAi0CeHUa
+         +wtA/jWeozdnuF1MTfFlucnm3bWdjTOl5393Shiz90w2zoDzdiKSbfOaKc71bXV207F8
+         7wNQUS2XJH7mjVE/TdLXSdk/P4KZJ64y1RoOQkWanXh8uf4b7mkNDzzissV1DwktstcO
+         fKwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrf8EDPuRjLS3HiKSGsV+rKA/B9gM0p7N0nk5LjY8gQc60mk3QKrw+AbpzcNVk4/gIakLK7w/ncXCL0jxzdwwlr6A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziXS+O7/K0FHPspVt77gRdS0wypuPZZfb55wr0rfCLSWmWOm9h
+	tJQx9VR4Cc60k+5viawu/C1H2jQOmO8genbyGDchYvY4GTjgwcaMq08WVgplcoYwkoRANeoT5ip
+	TZJ9uj8rkE97BrnwYsmCFSuXtrIZ2ykK9tZ8P2Pc5hITpEZ4Gz9hAsRU=
+X-Google-Smtp-Source: AGHT+IGo/mB++g9H0Iiix3YzJTvrTK6q3jZQ68x3nvhK+kwg0PaPNtGL6q+kyKROY1b4wvaDfpyggNUdRK7wtTg93xxG8D6obP0W
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:20e9:b0:3a3:4175:79da with SMTP id
+ e9e14a558f8ab-3c2d2d5164bmr159902725ab.13.1735109702902; Tue, 24 Dec 2024
+ 22:55:02 -0800 (PST)
+Date: Tue, 24 Dec 2024 22:55:02 -0800
+In-Reply-To: <000000000000e7765006072e9591@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <676bac46.050a0220.2f3838.02c0.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] [trace?] possible deadlock in task_fork_fair
+From: syzbot <syzbot+1a93ee5d329e97cfbaff@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, brauner@kernel.org, 
+	daniel@iogearbox.net, elic@nvidia.com, haoluo@google.com, 
+	jakub@cloudflare.com, jasowang@redhat.com, john.fastabend@gmail.com, 
+	jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, mst@redhat.com, 
+	netdev@vger.kernel.org, parav@nvidia.com, rostedt@goodmis.org, sdf@google.com, 
+	song@kernel.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-From: Steven Rostedt <rostedt@goodmis.org>
+syzbot suspects this issue was fixed by commit:
 
-There are several functions in trace.c that have "goto out;" or
-equivalent on error in order to release locks or free values that were
-allocated. This can be error prone or just simply make the code more
-complex.
+commit ff91059932401894e6c86341915615c5eb0eca48
+Author: Jakub Sitnicki <jakub@cloudflare.com>
+Date:   Tue Apr 2 10:46:21 2024 +0000
 
-Switch every location that ends with unlocking a mutex or freeing on error
-over to using the guard(mutex)() and __free() infrastructure to let the
-compiler worry about releasing locks. This makes the code easier to read
-and understand.
+    bpf, sockmap: Prevent lock inversion deadlock in map delete elem
 
-There's one place that should probably return an error but instead return
-0. This does not change the return as the only changes are to do the
-conversion without changing the logic. Fixing that location will have to
-come later.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e922f8580000
+start commit:   fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aef2a55903e5791c
+dashboard link: https://syzkaller.appspot.com/bug?extid=1a93ee5d329e97cfbaff
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128b2d33180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10fe01eb180000
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20241219201344.687105470@goodmis.org
+If the result looks correct, please mark the issue as fixed by replying with:
 
-- Had a typo "guaurd" ? I think I screwed it up when sending out the patches.
-  It worked fine in my repo, but when I pulled them from patchwork,
-  it was broken. I sent these out with quilt, and manually review them
-  before sending. I think I must have added the typo in my review :-p
+#syz fix: bpf, sockmap: Prevent lock inversion deadlock in map delete elem
 
- kernel/trace/trace.c | 266 +++++++++++++++----------------------------
- 1 file changed, 94 insertions(+), 172 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 957f941a08e7..e6e1de69af01 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -26,6 +26,7 @@
- #include <linux/hardirq.h>
- #include <linux/linkage.h>
- #include <linux/uaccess.h>
-+#include <linux/cleanup.h>
- #include <linux/vmalloc.h>
- #include <linux/ftrace.h>
- #include <linux/module.h>
-@@ -535,19 +536,16 @@ LIST_HEAD(ftrace_trace_arrays);
- int trace_array_get(struct trace_array *this_tr)
- {
- 	struct trace_array *tr;
--	int ret = -ENODEV;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		if (tr == this_tr) {
- 			tr->ref++;
--			ret = 0;
--			break;
-+			return 0;
- 		}
- 	}
--	mutex_unlock(&trace_types_lock);
- 
--	return ret;
-+	return -ENODEV;
- }
- 
- static void __trace_array_put(struct trace_array *this_tr)
-@@ -1443,22 +1441,20 @@ EXPORT_SYMBOL_GPL(tracing_snapshot_alloc);
- int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data,
- 				 cond_update_fn_t update)
- {
--	struct cond_snapshot *cond_snapshot;
--	int ret = 0;
-+	struct cond_snapshot *cond_snapshot __free(kfree) =
-+		kzalloc(sizeof(*cond_snapshot), GFP_KERNEL);
-+	int ret;
- 
--	cond_snapshot = kzalloc(sizeof(*cond_snapshot), GFP_KERNEL);
- 	if (!cond_snapshot)
- 		return -ENOMEM;
- 
- 	cond_snapshot->cond_data = cond_data;
- 	cond_snapshot->update = update;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
--	if (tr->current_trace->use_max_tr) {
--		ret = -EBUSY;
--		goto fail_unlock;
--	}
-+	if (tr->current_trace->use_max_tr)
-+		return -EBUSY;
- 
- 	/*
- 	 * The cond_snapshot can only change to NULL without the
-@@ -1468,29 +1464,20 @@ int tracing_snapshot_cond_enable(struct trace_array *tr, void *cond_data,
- 	 * do safely with only holding the trace_types_lock and not
- 	 * having to take the max_lock.
- 	 */
--	if (tr->cond_snapshot) {
--		ret = -EBUSY;
--		goto fail_unlock;
--	}
-+	if (tr->cond_snapshot)
-+		return -EBUSY;
- 
- 	ret = tracing_arm_snapshot_locked(tr);
- 	if (ret)
--		goto fail_unlock;
-+		return ret;
- 
- 	local_irq_disable();
- 	arch_spin_lock(&tr->max_lock);
--	tr->cond_snapshot = cond_snapshot;
-+	tr->cond_snapshot = no_free_ptr(cond_snapshot);
- 	arch_spin_unlock(&tr->max_lock);
- 	local_irq_enable();
- 
--	mutex_unlock(&trace_types_lock);
--
--	return ret;
--
-- fail_unlock:
--	mutex_unlock(&trace_types_lock);
--	kfree(cond_snapshot);
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(tracing_snapshot_cond_enable);
- 
-@@ -2203,10 +2190,10 @@ static __init int init_trace_selftests(void)
- 
- 	selftests_can_run = true;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	if (list_empty(&postponed_selftests))
--		goto out;
-+		return 0;
- 
- 	pr_info("Running postponed tracer tests:\n");
- 
-@@ -2235,9 +2222,6 @@ static __init int init_trace_selftests(void)
- 	}
- 	tracing_selftest_running = false;
- 
-- out:
--	mutex_unlock(&trace_types_lock);
--
- 	return 0;
- }
- core_initcall(init_trace_selftests);
-@@ -2807,7 +2791,7 @@ int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
- 	int save_tracepoint_printk;
- 	int ret;
- 
--	mutex_lock(&tracepoint_printk_mutex);
-+	guard(mutex)(&tracepoint_printk_mutex);
- 	save_tracepoint_printk = tracepoint_printk;
- 
- 	ret = proc_dointvec(table, write, buffer, lenp, ppos);
-@@ -2820,16 +2804,13 @@ int tracepoint_printk_sysctl(const struct ctl_table *table, int write,
- 		tracepoint_printk = 0;
- 
- 	if (save_tracepoint_printk == tracepoint_printk)
--		goto out;
-+		return ret;
- 
- 	if (tracepoint_printk)
- 		static_key_enable(&tracepoint_printk_key.key);
- 	else
- 		static_key_disable(&tracepoint_printk_key.key);
- 
-- out:
--	mutex_unlock(&tracepoint_printk_mutex);
--
- 	return ret;
- }
- 
-@@ -5123,7 +5104,8 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 	u32 tracer_flags;
- 	int i;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
-+
- 	tracer_flags = tr->current_trace->flags->val;
- 	trace_opts = tr->current_trace->flags->opts;
- 
-@@ -5140,7 +5122,6 @@ static int tracing_trace_options_show(struct seq_file *m, void *v)
- 		else
- 			seq_printf(m, "no%s\n", trace_opts[i].name);
- 	}
--	mutex_unlock(&trace_types_lock);
- 
- 	return 0;
- }
-@@ -5805,7 +5786,7 @@ trace_insert_eval_map_file(struct module *mod, struct trace_eval_map **start,
- 		return;
- 	}
- 
--	mutex_lock(&trace_eval_mutex);
-+	guard(mutex)(&trace_eval_mutex);
- 
- 	if (!trace_eval_maps)
- 		trace_eval_maps = map_array;
-@@ -5829,8 +5810,6 @@ trace_insert_eval_map_file(struct module *mod, struct trace_eval_map **start,
- 		map_array++;
- 	}
- 	memset(map_array, 0, sizeof(*map_array));
--
--	mutex_unlock(&trace_eval_mutex);
- }
- 
- static void trace_create_eval_file(struct dentry *d_tracer)
-@@ -5994,23 +5973,18 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- {
- 	int ret;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	if (cpu_id != RING_BUFFER_ALL_CPUS) {
- 		/* make sure, this cpu is enabled in the mask */
--		if (!cpumask_test_cpu(cpu_id, tracing_buffer_mask)) {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (!cpumask_test_cpu(cpu_id, tracing_buffer_mask))
-+			return -EINVAL;
- 	}
- 
- 	ret = __tracing_resize_ring_buffer(tr, size, cpu_id);
- 	if (ret < 0)
- 		ret = -ENOMEM;
- 
--out:
--	mutex_unlock(&trace_types_lock);
--
- 	return ret;
- }
- 
-@@ -6102,9 +6076,9 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	bool had_max_tr;
- #endif
--	int ret = 0;
-+	int ret;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	update_last_data(tr);
- 
-@@ -6112,7 +6086,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 		ret = __tracing_resize_ring_buffer(tr, trace_buf_size,
- 						RING_BUFFER_ALL_CPUS);
- 		if (ret < 0)
--			goto out;
-+			return ret;
- 		ret = 0;
- 	}
- 
-@@ -6120,12 +6094,11 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 		if (strcmp(t->name, buf) == 0)
- 			break;
- 	}
--	if (!t) {
--		ret = -EINVAL;
--		goto out;
--	}
-+	if (!t)
-+		return -EINVAL;
-+
- 	if (t == tr->current_trace)
--		goto out;
-+		return 0;
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
- 	if (t->use_max_tr) {
-@@ -6136,27 +6109,23 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 		arch_spin_unlock(&tr->max_lock);
- 		local_irq_enable();
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
- #endif
- 	/* Some tracers won't work on kernel command line */
- 	if (system_state < SYSTEM_RUNNING && t->noboot) {
- 		pr_warn("Tracer '%s' is not allowed on command line, ignored\n",
- 			t->name);
--		goto out;
-+		return 0;
- 	}
- 
- 	/* Some tracers are only allowed for the top level buffer */
--	if (!trace_ok_for_array(t, tr)) {
--		ret = -EINVAL;
--		goto out;
--	}
-+	if (!trace_ok_for_array(t, tr))
-+		return -EINVAL;
- 
- 	/* If trace pipe files are being read, we can't change the tracer */
--	if (tr->trace_ref) {
--		ret = -EBUSY;
--		goto out;
--	}
-+	if (tr->trace_ref)
-+		return -EBUSY;
- 
- 	trace_branch_disable();
- 
-@@ -6187,7 +6156,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 	if (!had_max_tr && t->use_max_tr) {
- 		ret = tracing_arm_snapshot_locked(tr);
- 		if (ret)
--			goto out;
-+			return ret;
- 	}
- #else
- 	tr->current_trace = &nop_trace;
-@@ -6200,17 +6169,15 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- 			if (t->use_max_tr)
- 				tracing_disarm_snapshot(tr);
- #endif
--			goto out;
-+			return ret;
- 		}
- 	}
- 
- 	tr->current_trace = t;
- 	tr->current_trace->enabled++;
- 	trace_branch_enable(tr);
-- out:
--	mutex_unlock(&trace_types_lock);
- 
--	return ret;
-+	return 0;
- }
- 
- static ssize_t
-@@ -6288,22 +6255,18 @@ tracing_thresh_write(struct file *filp, const char __user *ubuf,
- 	struct trace_array *tr = filp->private_data;
- 	int ret;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 	ret = tracing_nsecs_write(&tracing_thresh, ubuf, cnt, ppos);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	if (tr->current_trace->update_thresh) {
- 		ret = tr->current_trace->update_thresh(tr);
- 		if (ret < 0)
--			goto out;
-+			return ret;
- 	}
- 
--	ret = cnt;
--out:
--	mutex_unlock(&trace_types_lock);
--
--	return ret;
-+	return cnt;
- }
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
-@@ -6522,31 +6485,29 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	 * This is just a matter of traces coherency, the ring buffer itself
- 	 * is protected.
- 	 */
--	mutex_lock(&iter->mutex);
-+	guard(mutex)(&iter->mutex);
- 
- 	/* return any leftover data */
- 	sret = trace_seq_to_user(&iter->seq, ubuf, cnt);
- 	if (sret != -EBUSY)
--		goto out;
-+		return sret;
- 
- 	trace_seq_init(&iter->seq);
- 
- 	if (iter->trace->read) {
- 		sret = iter->trace->read(iter, filp, ubuf, cnt, ppos);
- 		if (sret)
--			goto out;
-+			return sret;
- 	}
- 
- waitagain:
- 	sret = tracing_wait_pipe(filp);
- 	if (sret <= 0)
--		goto out;
-+		return sret;
- 
- 	/* stop when tracing is finished */
--	if (trace_empty(iter)) {
--		sret = 0;
--		goto out;
--	}
-+	if (trace_empty(iter))
-+		return 0;
- 
- 	if (cnt >= TRACE_SEQ_BUFFER_SIZE)
- 		cnt = TRACE_SEQ_BUFFER_SIZE - 1;
-@@ -6610,9 +6571,6 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	if (sret == -EBUSY)
- 		goto waitagain;
- 
--out:
--	mutex_unlock(&iter->mutex);
--
- 	return sret;
- }
- 
-@@ -7204,25 +7162,19 @@ u64 tracing_event_time_stamp(struct trace_buffer *buffer, struct ring_buffer_eve
-  */
- int tracing_set_filter_buffering(struct trace_array *tr, bool set)
- {
--	int ret = 0;
--
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	if (set && tr->no_filter_buffering_ref++)
--		goto out;
-+		return 0;
- 
- 	if (!set) {
--		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref)) {
--			ret = -EINVAL;
--			goto out;
--		}
-+		if (WARN_ON_ONCE(!tr->no_filter_buffering_ref))
-+			return -EINVAL;
- 
- 		--tr->no_filter_buffering_ref;
- 	}
-- out:
--	mutex_unlock(&trace_types_lock);
- 
--	return ret;
-+	return 0;
- }
- 
- struct ftrace_buffer_info {
-@@ -7298,12 +7250,10 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	if (ret)
- 		return ret;
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
--	if (tr->current_trace->use_max_tr) {
--		ret = -EBUSY;
--		goto out;
--	}
-+	if (tr->current_trace->use_max_tr)
-+		return -EBUSY;
- 
- 	local_irq_disable();
- 	arch_spin_lock(&tr->max_lock);
-@@ -7312,24 +7262,20 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	arch_spin_unlock(&tr->max_lock);
- 	local_irq_enable();
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	switch (val) {
- 	case 0:
--		if (iter->cpu_file != RING_BUFFER_ALL_CPUS) {
--			ret = -EINVAL;
--			break;
--		}
-+		if (iter->cpu_file != RING_BUFFER_ALL_CPUS)
-+			return -EINVAL;
- 		if (tr->allocated_snapshot)
- 			free_snapshot(tr);
- 		break;
- 	case 1:
- /* Only allow per-cpu swap if the ring buffer supports it */
- #ifndef CONFIG_RING_BUFFER_ALLOW_SWAP
--		if (iter->cpu_file != RING_BUFFER_ALL_CPUS) {
--			ret = -EINVAL;
--			break;
--		}
-+		if (iter->cpu_file != RING_BUFFER_ALL_CPUS)
-+			return -EINVAL;
- #endif
- 		if (tr->allocated_snapshot)
- 			ret = resize_buffer_duplicate_size(&tr->max_buffer,
-@@ -7337,7 +7283,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 
- 		ret = tracing_arm_snapshot_locked(tr);
- 		if (ret)
--			break;
-+			return ret;
- 
- 		/* Now, we're going to swap */
- 		if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
-@@ -7364,8 +7310,7 @@ tracing_snapshot_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 		*ppos += cnt;
- 		ret = cnt;
- 	}
--out:
--	mutex_unlock(&trace_types_lock);
-+
- 	return ret;
- }
- 
-@@ -7751,12 +7696,11 @@ void tracing_log_err(struct trace_array *tr,
- 
- 	len += sizeof(CMD_PREFIX) + 2 * sizeof("\n") + strlen(cmd) + 1;
- 
--	mutex_lock(&tracing_err_log_lock);
-+	guard(mutex)(&tracing_err_log_lock);
-+
- 	err = get_tracing_log_err(tr, len);
--	if (PTR_ERR(err) == -ENOMEM) {
--		mutex_unlock(&tracing_err_log_lock);
-+	if (PTR_ERR(err) == -ENOMEM)
- 		return;
--	}
- 
- 	snprintf(err->loc, TRACING_LOG_LOC_MAX, "%s: error: ", loc);
- 	snprintf(err->cmd, len, "\n" CMD_PREFIX "%s\n", cmd);
-@@ -7767,7 +7711,6 @@ void tracing_log_err(struct trace_array *tr,
- 	err->info.ts = local_clock();
- 
- 	list_add_tail(&err->list, &tr->err_log);
--	mutex_unlock(&tracing_err_log_lock);
- }
- 
- static void clear_tracing_err_log(struct trace_array *tr)
-@@ -9511,20 +9454,17 @@ static int instance_mkdir(const char *name)
- 	struct trace_array *tr;
- 	int ret;
- 
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
- 	ret = -EEXIST;
- 	if (trace_array_find(name))
--		goto out_unlock;
-+		return -EEXIST;
- 
- 	tr = trace_array_create(name);
- 
- 	ret = PTR_ERR_OR_ZERO(tr);
- 
--out_unlock:
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
- 	return ret;
- }
- 
-@@ -9574,24 +9514,23 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
- {
- 	struct trace_array *tr;
- 
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0)
--			goto out_unlock;
-+		if (tr->name && strcmp(tr->name, name) == 0) {
-+			tr->ref++;
-+			return tr;
-+		}
- 	}
- 
- 	tr = trace_array_create_systems(name, systems, 0, 0);
- 
- 	if (IS_ERR(tr))
- 		tr = NULL;
--out_unlock:
--	if (tr)
-+	else
- 		tr->ref++;
- 
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
- 	return tr;
- }
- EXPORT_SYMBOL_GPL(trace_array_get_by_name);
-@@ -9642,48 +9581,36 @@ static int __remove_instance(struct trace_array *tr)
- int trace_array_destroy(struct trace_array *this_tr)
- {
- 	struct trace_array *tr;
--	int ret;
- 
- 	if (!this_tr)
- 		return -EINVAL;
- 
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
--	ret = -ENODEV;
- 
- 	/* Making sure trace array exists before destroying it. */
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr == this_tr) {
--			ret = __remove_instance(tr);
--			break;
--		}
-+		if (tr == this_tr)
-+			return __remove_instance(tr);
- 	}
- 
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
--
--	return ret;
-+	return -ENODEV;
- }
- EXPORT_SYMBOL_GPL(trace_array_destroy);
- 
- static int instance_rmdir(const char *name)
- {
- 	struct trace_array *tr;
--	int ret;
- 
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
--	ret = -ENODEV;
- 	tr = trace_array_find(name);
--	if (tr)
--		ret = __remove_instance(tr);
--
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
-+	if (!tr)
-+		return -ENODEV;
- 
--	return ret;
-+	return __remove_instance(tr);
- }
- 
- static __init void create_trace_instances(struct dentry *d_tracer)
-@@ -9696,19 +9623,16 @@ static __init void create_trace_instances(struct dentry *d_tracer)
- 	if (MEM_FAIL(!trace_instance_dir, "Failed to create instances directory\n"))
- 		return;
- 
--	mutex_lock(&event_mutex);
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&event_mutex);
-+	guard(mutex)(&trace_types_lock);
- 
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		if (!tr->name)
- 			continue;
- 		if (MEM_FAIL(trace_array_create_dir(tr) < 0,
- 			     "Failed to create instance directory\n"))
--			break;
-+			return;
- 	}
--
--	mutex_unlock(&trace_types_lock);
--	mutex_unlock(&event_mutex);
- }
- 
- static void
-@@ -9922,7 +9846,7 @@ static void trace_module_remove_evals(struct module *mod)
- 	if (!mod->num_trace_evals)
- 		return;
- 
--	mutex_lock(&trace_eval_mutex);
-+	guard(mutex)(&trace_eval_mutex);
- 
- 	map = trace_eval_maps;
- 
-@@ -9934,12 +9858,10 @@ static void trace_module_remove_evals(struct module *mod)
- 		map = map->tail.next;
- 	}
- 	if (!map)
--		goto out;
-+		return;
- 
- 	*last = trace_eval_jmp_to_tail(map)->tail.next;
- 	kfree(map);
-- out:
--	mutex_unlock(&trace_eval_mutex);
- }
- #else
- static inline void trace_module_remove_evals(struct module *mod) { }
--- 
-2.45.2
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
