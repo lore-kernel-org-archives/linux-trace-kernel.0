@@ -1,139 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8C61509A0;
-	Wed, 25 Dec 2024 22:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91981876;
+	Thu, 26 Dec 2024 02:08:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735165715; cv=none; b=owO3jAP8/VCtgq/g908PndUKyxY6YpEb9mQSk032vSxsov9wCv+beTVbvood6+KH/3Z4CiqKk6xIqmg8Fg6sUEB0xOfZ8CBkNRKLCwDAYrwchh7bN0/63vHrXfFwwHJGmKslaXF57asiBertmdkCddg82JOSZqgy67/YDlAfEN4=
+	t=1735178935; cv=none; b=mE+FDIvX8ppj4JQ/6vNVBMMb1QXMYawJzna8X+I6fM0Sat45xQAKXQqVBGvYyGuEKgr4X6+ILNXmuA8RqFA62SP+F2ttfOr4xnkAGZVY5N3/SyVE8uO0KRQsrP4RMNMOxOdrTDIxIiLfOp/rI/Po7cjFj98y8SucPkuK2ISuKtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735165715; c=relaxed/simple;
-	bh=Vp0vw3+uS0pmRp3t6ZMRayMXF07XyawfMXjfAmU+fcM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kAQbKAU1D8yL4Ge2XP01HZ1RqmfFTKJaroSmieqJuii/hDylSI03eb87hudOSbQP40XH7iefDf2vzkpPnONEXVlhrZeJaLde1QD7bgAUyOMq0YCZhPVzan05XCO+Fq4XlC6rwuK8z6ejbi5Vozvi2+tKusQdXEU0ugL6cx/PDLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D49C4CED6;
-	Wed, 25 Dec 2024 22:28:34 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tQZsh-0000000FS2b-2n0n;
-	Wed, 25 Dec 2024 17:29:31 -0500
-Message-ID: <20241225222931.517329690@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 25 Dec 2024 17:25:41 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 1/2] [PATCH] tracing: Switch trace_osnoise.c code over to use guard() and
- __free()
-References: <20241225222540.685602520@goodmis.org>
+	s=arc-20240116; t=1735178935; c=relaxed/simple;
+	bh=PRuTsFJRADKSM13AwD8rEHVpYPpipqUot0rJtU+snww=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=XlrjvHljjPUmOk53MW1VVFhtJO2ZZyyGmkvvw6CgYYfuntuz71g6tNQY6noiCxQczJx4Uqu7mJdvof9y29u58LFAmlsjLeZLD19Xr++095J+ptfvZEBN2D+zk53ugtqXpTAZW11hhg2UntASG8KaaREY5TcWPqxXC9d6tbSt36M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRQ+KqvG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRQ+KqvG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F25DC4CECD;
+	Thu, 26 Dec 2024 02:08:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735178934;
+	bh=PRuTsFJRADKSM13AwD8rEHVpYPpipqUot0rJtU+snww=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IRQ+KqvG8o2ztbt7BRryBYnPaAZxhLGTaZExBcXDh7k8LGqnOdQj7JfBy11Sk8+LC
+	 kGVeriw34HkpUU41g1uvqx0bMjo90Nuajul6AI2X43zLt/kEAt5+RD3ykkbc07WjVQ
+	 5mfH6Q4+W/iL/mGitEGKh2aveyyFXVeXNJELDZPYcXGG7vSYt7ohLqzNges7ShI9CT
+	 lB2fS2LK0UY2CwGVDt0hmMR8RHKZNIGj0snNMKMwlnN24wiffQC70xsZPmDaDr+ov5
+	 js0lc/N2Yc7t30W7/fE9JuFkysdJNQuyhLtU3p42RaFrcnAxxUFQsAH8pxgKCkpgqx
+	 Hk6+KKUORcO8Q==
+Date: Thu, 26 Dec 2024 11:08:48 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Florent Revest
+ <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark Rutland
+ <mark.rutland@arm.com>, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v21 05/20] fprobe: Use ftrace_regs in fprobe entry
+ handler
+Message-Id: <20241226110848.3d95040586e4f5c71ec65a3d@kernel.org>
+In-Reply-To: <20241223164238.4d2b9a50@gandalf.local.home>
+References: <173379652547.973433.2311391879173461183.stgit@devnote2>
+	<173379659280.973433.14242629573844824837.stgit@devnote2>
+	<20241223164238.4d2b9a50@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The osnoise_hotplug_workfn() grabs two mutexes and cpu_read_lock(). It has
-various gotos to handle unlocking them. Switch them over to guard() and
-let the compiler worry about it.
+On Mon, 23 Dec 2024 16:42:38 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The osnoise_cpus_read() has a temporary mask_str allocated and there's
-some gotos to make sure it gets freed on error paths. Switch that over to
-__free() to let the compiler worry about it.
+> On Tue, 10 Dec 2024 11:09:52 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > This allows fprobes to be available with CONFIG_DYNAMIC_FTRACE_WITH_ARGS
+> > instead of CONFIG_DYNAMIC_FTRACE_WITH_REGS, then we can enable fprobe
+> > on arm64.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Hmm, my build failed on this patch. Perhaps I screwed up the rebase to v6.13-rc4?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20241219201346.533876847@goodmis.org
+Oops, no. That is a bug, which is fixed in [9/20]. Let me fix it.
 
-- Fix the goto out error that was fixed in a later patch
+Thanks!
 
- kernel/trace/trace_osnoise.c | 40 ++++++++++++------------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+> 
+> Config attached:
+> 
+> [3 seconds] SUCCESS
+> make O=/work/build/nobackup/tracetest -j50 ... make[1]: Entering directory '/work/build/nobackup/tracetest'
+>   SYNC    include/config/auto.conf.cmd
+>   GEN     Makefile
+>   GEN     Makefile
+> mkdir -p /work/build/nobackup/tracetest/tools/objtool && make O=/work/build/nobackup/tracetest subdir=tools/objtool --no-print-directory -C objtool
+>   UPD     include/config/kernel.release
+>   UPD     include/generated/utsrelease.h
+>   INSTALL libsubcmd_headers
+>   CALL    /work/build/trace/nobackup/linux-test.git/scripts/checksyscalls.sh
+>   CC      init/version.o
+>   CC      net/sched/sch_generic.o
+>   CC      drivers/base/firmware_loader/main.o
+>   CC      security/integrity/ima/ima_init.o
+>   CC      kernel/sys.o
+>   CC      kernel/module/main.o
+>   CC      drivers/gpu/drm/drm_vblank.o
+>   CC      kernel/time/time.o
+>   AR      init/built-in.a
+>   CC      drivers/gpu/drm/ttm/ttm_bo.o
+>   CC      drivers/gpu/drm/ttm/ttm_bo_util.o
+>   CC      drivers/gpu/drm/qxl/qxl_ttm.o
+>   CC      kernel/trace/bpf_trace.o
+>   CC      kernel/trace/fprobe.o
+>   CC      kernel/trace/trace_fprobe.o
+>   AR      security/integrity/ima/built-in.a
+>   AR      security/integrity/built-in.a
+>   AR      security/built-in.a
+> /work/build/trace/nobackup/linux-test.git/kernel/trace/trace_fprobe.c: In function ‘__trace_fprobe_create’:
+> /work/build/trace/nobackup/linux-test.git/kernel/trace/trace_fprobe.c:1223:38: error: assignment to ‘fprobe_entry_cb’ {aka ‘int (*)(struct fprobe *, long unsigned int,  long unsigned int,  struct ftrace_regs *, void *)’} from incompatible pointer type ‘int (*)(struct fpro
+> be *, long unsigned int,  long unsigned int,  struct pt_regs *, void *)’ [-Wincompatible-pointer-types]
+>  1223 |                 tf->fp.entry_handler = trace_fprobe_entry_handler;
+>       |                                      ^
+> make[5]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.build:194: kernel/trace/trace_fprobe.o] Error 1
+> make[5]: *** Waiting for unfinished jobs....
+>   AR      drivers/gpu/drm/qxl/built-in.a
+>   AR      drivers/base/firmware_loader/built-in.a
+>   AR      drivers/base/built-in.a
+>   AR      kernel/time/built-in.a
+>   AR      drivers/gpu/drm/ttm/built-in.a
+>   AR      drivers/gpu/drm/built-in.a
+>   AR      drivers/gpu/built-in.a
+>   AR      drivers/built-in.a
+>   AR      net/sched/built-in.a
+>   AR      net/built-in.a
+>   AR      kernel/module/built-in.a
+> make[4]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.build:440: kernel/trace] Error 2
+> make[3]: *** [/work/build/trace/nobackup/linux-test.git/scripts/Makefile.build:440: kernel] Error 2
+> make[2]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:1989: .] Error 2
+> make[1]: *** [/work/build/trace/nobackup/linux-test.git/Makefile:251: __sub-make] Error 2
+> make[1]: Leaving directory '/work/build/nobackup/tracetest'
+> make: *** [Makefile:251: __sub-make] Error 2
+> [10 seconds] FAILED!
+> make O=/work/build/nobackup/tracetest kernelrelease ... 6.13.0-rc4-test-00005-g21a983830d78-dirty
+> ssh -t root@tracetest 'rm -rf /lib/modules/*-test*'; git reset --hard ... HEAD is now at 21a983830d78 fprobe: Use ftrace_regs in fprobe entry handler
+> [1 second] SUCCESS
+> CRITICAL FAILURE... [TEST 3] failed build
+> 
+> -- Steve
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index b9f96c77527d..b25c30b05dd0 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2083,26 +2083,21 @@ static void osnoise_hotplug_workfn(struct work_struct *dummy)
- {
- 	unsigned int cpu = smp_processor_id();
- 
--	mutex_lock(&trace_types_lock);
-+	guard(mutex)(&trace_types_lock);
- 
- 	if (!osnoise_has_registered_instances())
--		goto out_unlock_trace;
-+		return;
- 
--	mutex_lock(&interface_lock);
--	cpus_read_lock();
-+	guard(mutex)(&interface_lock);
-+	guard(cpus_read_lock)();
- 
- 	if (!cpu_online(cpu))
--		goto out_unlock;
-+		return;
-+
- 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
--		goto out_unlock;
-+		return;
- 
- 	start_kthread(cpu);
--
--out_unlock:
--	cpus_read_unlock();
--	mutex_unlock(&interface_lock);
--out_unlock_trace:
--	mutex_unlock(&trace_types_lock);
- }
- 
- static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
-@@ -2300,31 +2295,22 @@ static ssize_t
- osnoise_cpus_read(struct file *filp, char __user *ubuf, size_t count,
- 		  loff_t *ppos)
- {
--	char *mask_str;
-+	char *mask_str __free(kfree) = NULL;
- 	int len;
- 
--	mutex_lock(&interface_lock);
-+	guard(mutex)(&interface_lock);
- 
- 	len = snprintf(NULL, 0, "%*pbl\n", cpumask_pr_args(&osnoise_cpumask)) + 1;
- 	mask_str = kmalloc(len, GFP_KERNEL);
--	if (!mask_str) {
--		count = -ENOMEM;
--		goto out_unlock;
--	}
-+	if (!mask_str)
-+		return -ENOMEM;
- 
- 	len = snprintf(mask_str, len, "%*pbl\n", cpumask_pr_args(&osnoise_cpumask));
--	if (len >= count) {
--		count = -EINVAL;
--		goto out_free;
--	}
-+	if (len >= count)
-+		return -EINVAL;
- 
- 	count = simple_read_from_buffer(ubuf, count, ppos, mask_str, len);
- 
--out_free:
--	kfree(mask_str);
--out_unlock:
--	mutex_unlock(&interface_lock);
--
- 	return count;
- }
- 
+
 -- 
-2.45.2
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
