@@ -1,304 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5522C9A;
-	Fri, 27 Dec 2024 03:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AC535954
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Dec 2024 03:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735268650; cv=none; b=oj8IXG0z4GHxtY1TpiGEbgXNoyKnlBX0QX262Cfv4mkxaYzs//GLSjAACs3vvuTstQWTuvio9ScR9tyQMbY+UloRJ2Ltup0ur8ejtneYBt+0qVY3jhOJFy96lIuo/cmW4DBamm263REQFF7gh6F/6V6rOV7mHAYklDTLKqtyr2Y=
+	t=1735268659; cv=none; b=FYHcoKzRbEop8tkxvHX5EQ+QFEmnyouelq3TFjPoHkGwJQDn/6GLE+/uzsLYUardNOU/76JleIkETes+RmMKS9R/pdSMwgE97ExBMEoNFIArkW1bTeiU012AHHEAWMrCYQqnQOgGLHUExwAxASpthd68dRb00eCw61taSA9FmaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735268650; c=relaxed/simple;
-	bh=B69eNruwPIu8bwTp4UeXWzlF2vd767ho2DyQHaPh+KI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AN8OzM4H66GAZ1jdfnM/L7oybbnDeE3F4qUElvN/8Yzku3Yy/uLno4W0Z8AhgVTZ8NNri0tV639PztVsz6E4NO8qZMZcBKo2+OIbDrb0ohqx/kNFoIpPIPnzCRi1dFZHhmndX/5vvCzTZQwyRCodGvtAxthM/pINKahXsS0iq80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/QvvN0M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735268659; c=relaxed/simple;
+	bh=ThQ9KV6K3n5aFJXUeKhastYFmKYHErpU1Qq4XCFqwn8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gRhDIbRcI4Xq7bW8HST+gkr8aWqNRPeguhfVwcDW5PnFHZDOppRVCemEndUbpiaOh65cgOydO3UfKDjPbg0ClWUnpjBUCDa9QSf5LsfdZxhKSpAwdl0FuxYDuRzY6fhxmP8CtqEgfFBT5AgUFuCN73IyxJ2/dE6Rm1f+Ug4jwX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=atp/A42Z; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/QvvN0M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB25C4CED1;
-	Fri, 27 Dec 2024 03:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735268650;
-	bh=B69eNruwPIu8bwTp4UeXWzlF2vd767ho2DyQHaPh+KI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s/QvvN0MTymd2QCBEcpo447Vxl9odkycXmFVTe3pT4Em+jYTuMPIGAJYoRx1Woxh2
-	 /VHWrF6MUcrmB4Grima7YvQN1D18Iqdt5q4cQkE8RipXZEd6krv/2rX5Xh9TrHJYVo
-	 0fQM9SCf/CaeYa4hYQGafNK4QYJN3MjOGT4AbyU1/+1NQ7Yb/CnGoCRyQkNr1okrv8
-	 A5BMI4tKRAeh9NnZHblOXZckQfa8ZIgfnyaWEVCZnpZpSz3ClLfQS95yOPcSgvvSh3
-	 8Xftkd7KIb3lW7yOlHC8VMKgR8oXpN+fmOx7G0a+37dCunrK97Gx9qqxsji3MXdZKB
-	 w7Wkpw3z9tC8g==
-Date: Fri, 27 Dec 2024 12:04:06 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Shuah Khan <shuah@kernel.org>, Tom Zanussi <zanussi@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] tracing/hist: Add poll(POLLIN) support on hist
- file
-Message-Id: <20241227120406.48efd9faf4ef187493a52f64@kernel.org>
-In-Reply-To: <20241219112352.5750dc80@gandalf.local.home>
-References: <172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com>
-	<172907576461.470540.1954983717302445787.stgit@mhiramat.roam.corp.google.com>
-	<20241219112352.5750dc80@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="atp/A42Z"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d647d5df90so11546858a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 19:04:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1735268656; x=1735873456; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qIvsaxrrzusHG3DGldZGLiyb0altyr/HFAubLTJu3hY=;
+        b=atp/A42ZJw7VdhrZpfFrbwtvMkGQbspCwpf18Kw3sXWasDEQ1aVNP/701s3RylDtiL
+         UtYpgsS20D1Xhz50ANioUYlz+aXZ+H8q0ZMl8k0f5XYKI95CelGq7o/9f7B+3aKH02GF
+         gCeXcnJ4YN3SknjeS0u7Tyvqpz75wBRWSUPJM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735268656; x=1735873456;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qIvsaxrrzusHG3DGldZGLiyb0altyr/HFAubLTJu3hY=;
+        b=Q6OAIEBlqN+4LWvenHg6FpYmgQGTGAqg0XOCiIcKLHKeeYw09vw22QbwULI5gB0z7k
+         1iLAA2iebHyTWPcgNIuo8gM8LkEsfDwImfduH6LKCze1Cnqh3ZXNTXAK7bIize+dWce8
+         zMtXXrE+Q1DSiUE1YxXJ/ccKcqHYM1p3hGOJFjOZc8U59yuYKnNhYGQBdhwpZonB2tBG
+         Kh2Zw86VFI8dLxiAZPpbQFVONzRWLTff0xW3HI4VpU4RGrRGUwJenLO5wPMEth+l/4sm
+         sJFbaSlKgYL+dzjxIKoM4Je7SZqKwiEiDZ3Z2T89+dJ6h11n7O6azMZVjDseFtIMVajg
+         ABog==
+X-Forwarded-Encrypted: i=1; AJvYcCWyrpCa9b45Jlop8wS5lmPGSt+UjBKIcKLZ/6UM+4f8+3Va609rQT5KOEWx+wIvctP+8hriyEE43XYQJDGCRGErZec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWzj0kiCOzm1K0rT/NRQW0jILyOdc5he3I24sdfKCvjj3UWAG7
+	MOV/qfpqYsZ9o43YXY6dV7g57vOdmskUcB9Z0RYjl5sDrMPPAl5bo6B1l1M9Hp1ezNFoLxttbnb
+	ONqXr7Q==
+X-Gm-Gg: ASbGncv2RFgr9QSL98x3mrmR76UTB0A8HLCMrf98jhKckO6oqHm83WrY25Bnzh+n0jz
+	l10DMhxway9KBxdTN+u4rirDp8V5UNgTo1SOkTXcQ/BqiacuWA9i7L+f9C+tuMzeqlSqOKnayCz
+	SzjF1i5w6DcSIGgl2HkSx7AQKCPqbF6cmUm3Q8k1ID56EzOj9vhSOQY9ck1d8Z3Ztordgnq+8lq
+	YrMdnh+uX8sqTH9yoy4z+e4VrStvrMDQayWfjyP9HHFBXpQ1zDa1QECiPMsjIywFHWrXNqkIQ9j
+	v65Y69ouVmCl9wE6Mnmq95qFhkVw2Os=
+X-Google-Smtp-Source: AGHT+IFWyln9+cZ7LiOYexdm1ekiy29FhMI9hQ8oGFxGOu5YxN0NZBhGjQRN+TC39LuY64oSqxsBww==
+X-Received: by 2002:a05:6402:5189:b0:5d2:7396:b0ca with SMTP id 4fb4d7f45d1cf-5d81dd8ea7dmr20992356a12.12.1735268655914;
+        Thu, 26 Dec 2024 19:04:15 -0800 (PST)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d80675a71fsm10052449a12.18.2024.12.26.19.04.13
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2024 19:04:14 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a9e44654ae3so1117647466b.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 19:04:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXsKax1EY6yfGNngOyRiCOGbg1Fdc3yeDrEr0IVBZzSUJuUcnxzTuIGef3OdOnoJPO/A6228zgAnHEo5lBUOdxaecE=@vger.kernel.org
+X-Received: by 2002:a17:907:7f24:b0:aa5:44a8:9ae7 with SMTP id
+ a640c23a62f3a-aac334f1984mr1642418266b.47.1735268653379; Thu, 26 Dec 2024
+ 19:04:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20241226164957.5cab9f2d@gandalf.local.home> <CAHk-=wgTFSqiMvbGYqFLQaERoeXR5nK1Y=-L3SN7rB3UtzG0PQ@mail.gmail.com>
+ <20241226211935.02d34076@batman.local.home> <CAK7LNARUCpzr+1ey0MKmyCdTbaVOq8o7_42t4x5BW=4dyy4wPQ@mail.gmail.com>
+In-Reply-To: <CAK7LNARUCpzr+1ey0MKmyCdTbaVOq8o7_42t4x5BW=4dyy4wPQ@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 26 Dec 2024 19:03:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi5JZ62=FFZQi2=doEOwTf4sa=cO+iAFEvnwBr0o7687w@mail.gmail.com>
+Message-ID: <CAHk-=wi5JZ62=FFZQi2=doEOwTf4sa=cO+iAFEvnwBr0o7687w@mail.gmail.com>
+Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in kallsyms
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Zheng Yejian <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 19 Dec 2024 11:23:52 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 26 Dec 2024 at 18:52, Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> So, does the kallsyms patch set from Zheng Yejian fix the issues?
 
-> On Wed, 16 Oct 2024 19:49:24 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add poll syscall support on the `hist` file. The Waiter will be waken
-> > up when the histogram is updated with POLLIN.
-> > 
-> > Currently, there is no way to wait for a specific event in userspace.
-> > So user needs to peek the `trace` periodicaly, or wait on `trace_pipe`.
-> 
-> 
-> > But that is not good idea to peek the `trace` for the event randomely
-> > happens. And `trace_pipe` is not coming back until a page is filled
-> > with events.
-> 
-> I would reword the above to:
-> 
->     But it is not a good idea to peek at the `trace` for an event that
->     randomly happens. And `trace_pipe` is not coming back until a page is
->     filled with events.
-> 
-> > 
-> > This allows user to wait for a specific events on `hist` file. User
-> > can set a histogram trigger on the event which they want to monitor.
-> > And poll() on its `hist` file. Since this poll() returns POLLIN,
-> > the next poll() will return soon unless you do read() on hist file.
-> 
-> And that to:
-> 
->     This allows a user to wait for a specific event on the `hist` file. User
->     can set a histogram trigger on the event which they want to monitor
->     and poll() on its `hist` file. Since this poll() returns POLLIN, the next
->     poll() will return soon unless a read() happens on that hist file.
+[ Me goes searching ]
 
-OK, I will update the description.
+Oh. Instead of adding size information, it seems to add fake "hole"
+entries to the kallsyms.
 
-Thank you!
+And I guess that works too. It does feel a bit hacky, but at least
+it's integrated with the kallsyms logic.
 
-> 
-> > 
-> > NOTE: To read the hist file again, you must set the file offset to 0,
-> > but just for monitoring the event, you may not need to read the
-> > histogram.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-> > ---
-> >  Changes in v6:
-> >    - Use a global poll irq_work and wait_queue.
-> > ---
-> >  include/linux/trace_events.h     |   14 +++++++
-> >  kernel/trace/trace_events.c      |   14 +++++++
-> >  kernel/trace/trace_events_hist.c |   75 ++++++++++++++++++++++++++++++++++++--
-> >  3 files changed, 100 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> > index 42bedcddd511..46c771a61f2a 100644
-> > --- a/include/linux/trace_events.h
-> > +++ b/include/linux/trace_events.h
-> > @@ -685,6 +685,20 @@ struct trace_event_file {
-> >  	atomic_t		tm_ref;	/* trigger-mode reference counter */
-> >  };
-> >  
-> > +#ifdef CONFIG_HIST_TRIGGERS
-> > +extern struct irq_work hist_poll_work;
-> > +extern wait_queue_head_t hist_poll_wq;
-> > +
-> > +static inline void hist_poll_wakeup(void)
-> > +{
-> > +	if (wq_has_sleeper(&hist_poll_wq))
-> > +		irq_work_queue(&hist_poll_work);
-> > +}
-> > +
-> > +#define hist_poll_wait(file, wait)	\
-> > +	poll_wait(file, &hist_poll_wq, wait)
-> > +#endif
-> > +
-> >  #define __TRACE_EVENT_FLAGS(name, value)				\
-> >  	static int __init trace_init_flags_##name(void)			\
-> >  	{								\
-> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > index 7266ec2a4eea..0a7cb30043ef 100644
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -2972,6 +2972,20 @@ static bool event_in_systems(struct trace_event_call *call,
-> >  	return !*p || isspace(*p) || *p == ',';
-> >  }
-> >  
-> > +#ifdef CONFIG_HIST_TRIGGERS
-> > +/*
-> > + * Wake up waiter on the hist_poll_wq from irq_work because the hist trigger
-> > + * may happen in any context.
-> > + */
-> > +static void hist_poll_event_irq_work(struct irq_work *work)
-> > +{
-> > +	wake_up_all(&hist_poll_wq);
-> > +}
-> > +
-> > +DEFINE_IRQ_WORK(hist_poll_work, hist_poll_event_irq_work);
-> > +DECLARE_WAIT_QUEUE_HEAD(hist_poll_wq);
-> > +#endif
-> > +
-> >  static struct trace_event_file *
-> >  trace_create_new_event(struct trace_event_call *call,
-> >  		       struct trace_array *tr)
-> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> > index 5f9119eb7c67..107eaa0f40f1 100644
-> > --- a/kernel/trace/trace_events_hist.c
-> > +++ b/kernel/trace/trace_events_hist.c
-> > @@ -5314,6 +5314,8 @@ static void event_hist_trigger(struct event_trigger_data *data,
-> >  
-> >  	if (resolve_var_refs(hist_data, key, var_ref_vals, true))
-> >  		hist_trigger_actions(hist_data, elt, buffer, rec, rbe, key, var_ref_vals);
-> > +
-> > +	hist_poll_wakeup();
-> >  }
-> >  
-> >  static void hist_trigger_stacktrace_print(struct seq_file *m,
-> > @@ -5593,15 +5595,36 @@ static void hist_trigger_show(struct seq_file *m,
-> >  		   n_entries, (u64)atomic64_read(&hist_data->map->drops));
-> >  }
-> >  
-> > +struct hist_file_data {
-> > +	struct file *file;
-> > +	u64 last_read;
-> > +};
-> > +
-> > +static u64 get_hist_hit_count(struct trace_event_file *event_file)
-> > +{
-> > +	struct hist_trigger_data *hist_data;
-> > +	struct event_trigger_data *data;
-> > +	u64 ret = 0;
-> > +
-> > +	list_for_each_entry(data, &event_file->triggers, list) {
-> > +		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST) {
-> > +			hist_data = data->private_data;
-> > +			ret += atomic64_read(&hist_data->map->hits);
-> > +		}
-> > +	}
-> > +	return ret;
-> > +}
-> > +
-> >  static int hist_show(struct seq_file *m, void *v)
-> >  {
-> > +	struct hist_file_data *hist_file = m->private;
-> >  	struct event_trigger_data *data;
-> >  	struct trace_event_file *event_file;
-> >  	int n = 0, ret = 0;
-> >  
-> >  	mutex_lock(&event_mutex);
-> >  
-> > -	event_file = event_file_file(m->private);
-> > +	event_file = event_file_file(hist_file->file);
-> >  	if (unlikely(!event_file)) {
-> >  		ret = -ENODEV;
-> >  		goto out_unlock;
-> > @@ -5611,6 +5634,7 @@ static int hist_show(struct seq_file *m, void *v)
-> >  		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
-> >  			hist_trigger_show(m, data, n++);
-> >  	}
-> > +	hist_file->last_read = get_hist_hit_count(event_file);
-> >  
-> >   out_unlock:
-> >  	mutex_unlock(&event_mutex);
-> > @@ -5618,24 +5642,69 @@ static int hist_show(struct seq_file *m, void *v)
-> >  	return ret;
-> >  }
-> >  
-> > +static __poll_t event_hist_poll(struct file *file, struct poll_table_struct *wait)
-> > +{
-> > +	struct trace_event_file *event_file;
-> > +	struct seq_file *m = file->private_data;
-> > +	struct hist_file_data *hist_file = m->private;
-> > +	__poll_t ret = 0;
-> > +
-> > +	mutex_lock(&event_mutex);
-> 
-> Let's start using guard(mutex)(&event_mutex);
-> 
-> I'm working on changing the other locations in this file with a separate
-> patch. I don't want to add new ones.
-> 
-> -- Steve
-> 
-> > +
-> > +	event_file = event_file_data(file);
-> > +	if (!event_file) {
-> > +		ret = EPOLLERR;
-> > +		goto out_unlock;
-> > +	}
-> > +
-> > +	hist_poll_wait(file, wait);
-> > +
-> > +	if (hist_file->last_read != get_hist_hit_count(event_file))
-> > +		ret = EPOLLIN | EPOLLRDNORM;
-> > +
-> > +out_unlock:
-> > +	mutex_unlock(&event_mutex);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int event_hist_release(struct inode *inode, struct file *file)
-> > +{
-> > +	struct seq_file *m = file->private_data;
-> > +	struct hist_file_data *hist_file = m->private;
-> > +
-> > +	kfree(hist_file);
-> > +	return tracing_single_release_file_tr(inode, file);
-> > +}
-> > +
-> >  static int event_hist_open(struct inode *inode, struct file *file)
-> >  {
-> > +	struct hist_file_data *hist_file;
-> >  	int ret;
-> >  
-> >  	ret = tracing_open_file_tr(inode, file);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > +	hist_file = kzalloc(sizeof(*hist_file), GFP_KERNEL);
-> > +	if (!hist_file)
-> > +		return -ENOMEM;
-> > +	hist_file->file = file;
-> > +
-> >  	/* Clear private_data to avoid warning in single_open() */
-> >  	file->private_data = NULL;
-> > -	return single_open(file, hist_show, file);
-> > +	ret = single_open(file, hist_show, hist_file);
-> > +	if (ret)
-> > +		kfree(hist_file);
-> > +	return ret;
-> >  }
-> >  
-> >  const struct file_operations event_hist_fops = {
-> >  	.open = event_hist_open,
-> >  	.read = seq_read,
-> >  	.llseek = seq_lseek,
-> > -	.release = tracing_single_release_file_tr,
-> > +	.release = event_hist_release,
-> > +	.poll = event_hist_poll,
-> >  };
-> >  
-> >  #ifdef CONFIG_HIST_TRIGGERS_DEBUG
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+                Linus
