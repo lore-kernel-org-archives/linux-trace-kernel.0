@@ -1,143 +1,304 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C24A1D
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Dec 2024 02:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5522C9A;
+	Fri, 27 Dec 2024 03:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735268327; cv=none; b=A+aWT492PC87HqoIDXhghuVZMt+HGIzLVHvMhu+Mqhpe9SN4uUJ49nwXTBjPBOBk4t2isBepnZkfJE/5pTR6en1XDZTRmyfuNpxaxlzb8CwKP0YT2mt6YvRG20JLjPqieywOeuV0tO/hQMjojgBijs44nY4JUe84TvRXfu0u21w=
+	t=1735268650; cv=none; b=oj8IXG0z4GHxtY1TpiGEbgXNoyKnlBX0QX262Cfv4mkxaYzs//GLSjAACs3vvuTstQWTuvio9ScR9tyQMbY+UloRJ2Ltup0ur8ejtneYBt+0qVY3jhOJFy96lIuo/cmW4DBamm263REQFF7gh6F/6V6rOV7mHAYklDTLKqtyr2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735268327; c=relaxed/simple;
-	bh=FLl3QcbQ6gl5PtwWermYbCj21YqJX5D0JrVgwIktLPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ibdV0UED11DDc522LK9Rd70ktOlgW3UfosZe3s8hII2RkGM/ql7IK2eNrmMcE9pY/AHomhIdY1R/hHwzuhrEF2iZPG1zt0a6LCmchQs3NMpLWyQgymw4fEtriCj/Ax9U4tdA1VE7cOQalHyjEngzoraL0tqaoLgYIKRODMjIWTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fB/xXnds; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1735268650; c=relaxed/simple;
+	bh=B69eNruwPIu8bwTp4UeXWzlF2vd767ho2DyQHaPh+KI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AN8OzM4H66GAZ1jdfnM/L7oybbnDeE3F4qUElvN/8Yzku3Yy/uLno4W0Z8AhgVTZ8NNri0tV639PztVsz6E4NO8qZMZcBKo2+OIbDrb0ohqx/kNFoIpPIPnzCRi1dFZHhmndX/5vvCzTZQwyRCodGvtAxthM/pINKahXsS0iq80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/QvvN0M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fB/xXnds"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aa67333f7d2so1019079766b.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 18:58:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1735268323; x=1735873123; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XvIAPNYP54LEnLyIp5Ezwqoks125tVudSg9dAYgT6rM=;
-        b=fB/xXnds3hsGR/5oZ7kLn4K92ibILGZ5D9YgR2NJbJ6+0spRVw8KlVXWwEchOec9VT
-         AqILd8lJOW5C+0CUDNyi+Sqkueaodu+CLdLBNj2dPLmjrjduLZNyjHehfGk/FbSx5WH4
-         jxSBqW9PuPG/43S1O5aF0N6lKwjgVR8cHvGXs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735268323; x=1735873123;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XvIAPNYP54LEnLyIp5Ezwqoks125tVudSg9dAYgT6rM=;
-        b=km6eTh5NuV4DX8PYGGSZr8P0LYSm0C+u6rVFQ8h/n7vrzPtQbAPjWXeP8CphU2DRTp
-         AQPDREl8/4PXNUbYHGaCZm2nxfVAtspxtiKpvqJK6/34VmTr9mOqllOT4V+8gFb2TqrX
-         qCaAXs/87gegwY+RNBYgdcR1Ii6LThOvB+u+q/J4H4gRPg/96i+6wdfHTOx3EKhZwGlR
-         3L3K6MLHAPfLvlPaCq+l0IBCiJPQqIFi/sUr08ckoIp0hHp4TNOuMN2YRWnzWX8I6xy5
-         2zbdGzjICXPajIlQaKS4+/al8Z4P9RVyNR26yVKnGzDL2rcfSP3J1jp8tqy2TP+3yD4C
-         NCmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAh79BLsFHNKt3WQnpYDZhTetDfsuUsgua6rc1VYL/wpU6xaeZssGdyXIqPyH9C5mPVmum1C79QmPsCy6WJyCsGFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGW/0e4+nDhptZolOHUC8lxVzjFS16/kICFDoxRED5yAjFlUvf
-	su7QhcXZDgf5Hhgis75a5/9VBDz4d+Dv37G8zOZhI59QGXow65qKhS5VD6Abq1wHO7grLYueDmL
-	MXduwBQ==
-X-Gm-Gg: ASbGncvZ0oGC4yVp5bS5oUWYuuDlrvmSC5m1DUCcB/InpCoIYyUq4ZMfF+hVdMZ4M55
-	D8p0gGBtUbN9/c10HlHAAkxzZpTvd4wARgA0VeBAaBXYwF2LRT4/fT6nT+CSwwbIPZEA9//42mc
-	QgSg8Vf43qHe/23tRq9jS+tUnVSN7Hlh9/Lqqpf4MHc3Uy9Z3CPQUd3RlN7Ep14IdCHTY0LtXBa
-	21txccDDxJPoZMVbJYnQDoQG3k30xA/ytNI6Tz+qvgDjESt+MlfvgTQZaYFr8jt5rFR/Y3ksefq
-	cqTpsH1GVk/V+OqpAuw+aIlHlRxEGF0=
-X-Google-Smtp-Source: AGHT+IFz1a5Ke1JAANsqnVOTwfxDgYf6DBSoH6AuW9GDAmwnr8Bluw+LIiCmTSBe61CA0PlTDB8kJQ==
-X-Received: by 2002:a17:907:3e1c:b0:aa5:2575:e75d with SMTP id a640c23a62f3a-aac270369b4mr2294459466b.2.1735268322646;
-        Thu, 26 Dec 2024 18:58:42 -0800 (PST)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e898689sm1043915666b.78.2024.12.26.18.58.40
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Dec 2024 18:58:41 -0800 (PST)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a9e44654ae3so1117225666b.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 18:58:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXQBd+vKQwt+SY/6qX7DCv2QUCdggcBVSlyUoO2hV6nBMTSKu6y+zoVVN1JBdWFrY7bPoLuknZn4rAGJ6Y+hKCfVZs=@vger.kernel.org
-X-Received: by 2002:a17:907:3e8d:b0:aa5:1a1c:d0a2 with SMTP id
- a640c23a62f3a-aac2d0478bemr2183880666b.34.1735268320564; Thu, 26 Dec 2024
- 18:58:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/QvvN0M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FB25C4CED1;
+	Fri, 27 Dec 2024 03:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735268650;
+	bh=B69eNruwPIu8bwTp4UeXWzlF2vd767ho2DyQHaPh+KI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s/QvvN0MTymd2QCBEcpo447Vxl9odkycXmFVTe3pT4Em+jYTuMPIGAJYoRx1Woxh2
+	 /VHWrF6MUcrmB4Grima7YvQN1D18Iqdt5q4cQkE8RipXZEd6krv/2rX5Xh9TrHJYVo
+	 0fQM9SCf/CaeYa4hYQGafNK4QYJN3MjOGT4AbyU1/+1NQ7Yb/CnGoCRyQkNr1okrv8
+	 A5BMI4tKRAeh9NnZHblOXZckQfa8ZIgfnyaWEVCZnpZpSz3ClLfQS95yOPcSgvvSh3
+	 8Xftkd7KIb3lW7yOlHC8VMKgR8oXpN+fmOx7G0a+37dCunrK97Gx9qqxsji3MXdZKB
+	 w7Wkpw3z9tC8g==
+Date: Fri, 27 Dec 2024 12:04:06 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Shuah Khan <shuah@kernel.org>, Tom Zanussi <zanussi@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] tracing/hist: Add poll(POLLIN) support on hist
+ file
+Message-Id: <20241227120406.48efd9faf4ef187493a52f64@kernel.org>
+In-Reply-To: <20241219112352.5750dc80@gandalf.local.home>
+References: <172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com>
+	<172907576461.470540.1954983717302445787.stgit@mhiramat.roam.corp.google.com>
+	<20241219112352.5750dc80@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241226164957.5cab9f2d@gandalf.local.home> <CAHk-=wgTFSqiMvbGYqFLQaERoeXR5nK1Y=-L3SN7rB3UtzG0PQ@mail.gmail.com>
- <20241226211935.02d34076@batman.local.home>
-In-Reply-To: <20241226211935.02d34076@batman.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 26 Dec 2024 18:58:24 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wii_nN1X4O9=nztJy3rexKp9w5Gsp=J5kZ43Hekja+Omg@mail.gmail.com>
-Message-ID: <CAHk-=wii_nN1X4O9=nztJy3rexKp9w5Gsp=J5kZ43Hekja+Omg@mail.gmail.com>
-Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in kallsyms
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian <zhengyejian1@huawei.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 26 Dec 2024 at 18:19, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> So basically the real solution is to fix kallsyms to know about the end
-> of functions. Peter Zijlstra mentioned that before, but it would take a
-> bit more work and understanding of kallsyms to fix it properly.
+On Thu, 19 Dec 2024 11:23:52 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Yeah. The kallsyms code *used* to be pretty simple - really just a
-list of symbols and addresses.
+> On Wed, 16 Oct 2024 19:49:24 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add poll syscall support on the `hist` file. The Waiter will be waken
+> > up when the histogram is updated with POLLIN.
+> > 
+> > Currently, there is no way to wait for a specific event in userspace.
+> > So user needs to peek the `trace` periodicaly, or wait on `trace_pipe`.
+> 
+> 
+> > But that is not good idea to peek the `trace` for the event randomely
+> > happens. And `trace_pipe` is not coming back until a page is filled
+> > with events.
+> 
+> I would reword the above to:
+> 
+>     But it is not a good idea to peek at the `trace` for an event that
+>     randomly happens. And `trace_pipe` is not coming back until a page is
+>     filled with events.
+> 
+> > 
+> > This allows user to wait for a specific events on `hist` file. User
+> > can set a histogram trigger on the event which they want to monitor.
+> > And poll() on its `hist` file. Since this poll() returns POLLIN,
+> > the next poll() will return soon unless you do read() on hist file.
+> 
+> And that to:
+> 
+>     This allows a user to wait for a specific event on the `hist` file. User
+>     can set a histogram trigger on the event which they want to monitor
+>     and poll() on its `hist` file. Since this poll() returns POLLIN, the next
+>     poll() will return soon unless a read() happens on that hist file.
 
-But it took up a lot of memory, so back in the day (two decades ago by
-now) it started growing some name compression code, and then some
-serious speedups for lookup.
+OK, I will update the description.
 
-See
+Thank you!
 
-    https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=e10392112d315c45f054c22c862e3a7ae27d17d4
+> 
+> > 
+> > NOTE: To read the hist file again, you must set the file offset to 0,
+> > but just for monitoring the event, you may not need to read the
+> > histogram.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+> > ---
+> >  Changes in v6:
+> >    - Use a global poll irq_work and wait_queue.
+> > ---
+> >  include/linux/trace_events.h     |   14 +++++++
+> >  kernel/trace/trace_events.c      |   14 +++++++
+> >  kernel/trace/trace_events_hist.c |   75 ++++++++++++++++++++++++++++++++++++--
+> >  3 files changed, 100 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> > index 42bedcddd511..46c771a61f2a 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -685,6 +685,20 @@ struct trace_event_file {
+> >  	atomic_t		tm_ref;	/* trigger-mode reference counter */
+> >  };
+> >  
+> > +#ifdef CONFIG_HIST_TRIGGERS
+> > +extern struct irq_work hist_poll_work;
+> > +extern wait_queue_head_t hist_poll_wq;
+> > +
+> > +static inline void hist_poll_wakeup(void)
+> > +{
+> > +	if (wq_has_sleeper(&hist_poll_wq))
+> > +		irq_work_queue(&hist_poll_work);
+> > +}
+> > +
+> > +#define hist_poll_wait(file, wait)	\
+> > +	poll_wait(file, &hist_poll_wq, wait)
+> > +#endif
+> > +
+> >  #define __TRACE_EVENT_FLAGS(name, value)				\
+> >  	static int __init trace_init_flags_##name(void)			\
+> >  	{								\
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 7266ec2a4eea..0a7cb30043ef 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -2972,6 +2972,20 @@ static bool event_in_systems(struct trace_event_call *call,
+> >  	return !*p || isspace(*p) || *p == ',';
+> >  }
+> >  
+> > +#ifdef CONFIG_HIST_TRIGGERS
+> > +/*
+> > + * Wake up waiter on the hist_poll_wq from irq_work because the hist trigger
+> > + * may happen in any context.
+> > + */
+> > +static void hist_poll_event_irq_work(struct irq_work *work)
+> > +{
+> > +	wake_up_all(&hist_poll_wq);
+> > +}
+> > +
+> > +DEFINE_IRQ_WORK(hist_poll_work, hist_poll_event_irq_work);
+> > +DECLARE_WAIT_QUEUE_HEAD(hist_poll_wq);
+> > +#endif
+> > +
+> >  static struct trace_event_file *
+> >  trace_create_new_event(struct trace_event_call *call,
+> >  		       struct trace_array *tr)
+> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> > index 5f9119eb7c67..107eaa0f40f1 100644
+> > --- a/kernel/trace/trace_events_hist.c
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -5314,6 +5314,8 @@ static void event_hist_trigger(struct event_trigger_data *data,
+> >  
+> >  	if (resolve_var_refs(hist_data, key, var_ref_vals, true))
+> >  		hist_trigger_actions(hist_data, elt, buffer, rec, rbe, key, var_ref_vals);
+> > +
+> > +	hist_poll_wakeup();
+> >  }
+> >  
+> >  static void hist_trigger_stacktrace_print(struct seq_file *m,
+> > @@ -5593,15 +5595,36 @@ static void hist_trigger_show(struct seq_file *m,
+> >  		   n_entries, (u64)atomic64_read(&hist_data->map->drops));
+> >  }
+> >  
+> > +struct hist_file_data {
+> > +	struct file *file;
+> > +	u64 last_read;
+> > +};
+> > +
+> > +static u64 get_hist_hit_count(struct trace_event_file *event_file)
+> > +{
+> > +	struct hist_trigger_data *hist_data;
+> > +	struct event_trigger_data *data;
+> > +	u64 ret = 0;
+> > +
+> > +	list_for_each_entry(data, &event_file->triggers, list) {
+> > +		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST) {
+> > +			hist_data = data->private_data;
+> > +			ret += atomic64_read(&hist_data->map->hits);
+> > +		}
+> > +	}
+> > +	return ret;
+> > +}
+> > +
+> >  static int hist_show(struct seq_file *m, void *v)
+> >  {
+> > +	struct hist_file_data *hist_file = m->private;
+> >  	struct event_trigger_data *data;
+> >  	struct trace_event_file *event_file;
+> >  	int n = 0, ret = 0;
+> >  
+> >  	mutex_lock(&event_mutex);
+> >  
+> > -	event_file = event_file_file(m->private);
+> > +	event_file = event_file_file(hist_file->file);
+> >  	if (unlikely(!event_file)) {
+> >  		ret = -ENODEV;
+> >  		goto out_unlock;
+> > @@ -5611,6 +5634,7 @@ static int hist_show(struct seq_file *m, void *v)
+> >  		if (data->cmd_ops->trigger_type == ETT_EVENT_HIST)
+> >  			hist_trigger_show(m, data, n++);
+> >  	}
+> > +	hist_file->last_read = get_hist_hit_count(event_file);
+> >  
+> >   out_unlock:
+> >  	mutex_unlock(&event_mutex);
+> > @@ -5618,24 +5642,69 @@ static int hist_show(struct seq_file *m, void *v)
+> >  	return ret;
+> >  }
+> >  
+> > +static __poll_t event_hist_poll(struct file *file, struct poll_table_struct *wait)
+> > +{
+> > +	struct trace_event_file *event_file;
+> > +	struct seq_file *m = file->private_data;
+> > +	struct hist_file_data *hist_file = m->private;
+> > +	__poll_t ret = 0;
+> > +
+> > +	mutex_lock(&event_mutex);
+> 
+> Let's start using guard(mutex)(&event_mutex);
+> 
+> I'm working on changing the other locations in this file with a separate
+> patch. I don't want to add new ones.
+> 
+> -- Steve
+> 
+> > +
+> > +	event_file = event_file_data(file);
+> > +	if (!event_file) {
+> > +		ret = EPOLLERR;
+> > +		goto out_unlock;
+> > +	}
+> > +
+> > +	hist_poll_wait(file, wait);
+> > +
+> > +	if (hist_file->last_read != get_hist_hit_count(event_file))
+> > +		ret = EPOLLIN | EPOLLRDNORM;
+> > +
+> > +out_unlock:
+> > +	mutex_unlock(&event_mutex);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int event_hist_release(struct inode *inode, struct file *file)
+> > +{
+> > +	struct seq_file *m = file->private_data;
+> > +	struct hist_file_data *hist_file = m->private;
+> > +
+> > +	kfree(hist_file);
+> > +	return tracing_single_release_file_tr(inode, file);
+> > +}
+> > +
+> >  static int event_hist_open(struct inode *inode, struct file *file)
+> >  {
+> > +	struct hist_file_data *hist_file;
+> >  	int ret;
+> >  
+> >  	ret = tracing_open_file_tr(inode, file);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	hist_file = kzalloc(sizeof(*hist_file), GFP_KERNEL);
+> > +	if (!hist_file)
+> > +		return -ENOMEM;
+> > +	hist_file->file = file;
+> > +
+> >  	/* Clear private_data to avoid warning in single_open() */
+> >  	file->private_data = NULL;
+> > -	return single_open(file, hist_show, file);
+> > +	ret = single_open(file, hist_show, hist_file);
+> > +	if (ret)
+> > +		kfree(hist_file);
+> > +	return ret;
+> >  }
+> >  
+> >  const struct file_operations event_hist_fops = {
+> >  	.open = event_hist_open,
+> >  	.read = seq_read,
+> >  	.llseek = seq_lseek,
+> > -	.release = tracing_single_release_file_tr,
+> > +	.release = event_hist_release,
+> > +	.poll = event_hist_poll,
+> >  };
+> >  
+> >  #ifdef CONFIG_HIST_TRIGGERS_DEBUG
+> 
 
-for when it went from basically a very simple array of names to be a
-lot less obvious with that table lookup name compression (but it had
-_some_ name compression even before that).
 
-That said, I think it's really mainly just the name compression that
-is a bit obscure and looks odd, and it's only used for the builtin
-kernel symbols (module symbols are still just a per-module array of
-"const Elf_Sym *").
-
-And you can actually largely ignore the odd name compression - because
-the *rest* is fairly straightforward.
-
-For example, the actual offset of the symbol is simply a plain array
-still: kallsyms_offsets[]. It's slightly oddly encoded (see
-kallsyms_sym_address() if you care), but that's because it's an array
-of 32-bit values used to encode kernel symbol offsets that can
-obviously be 64-bit.
-
-Encoding the size of the symbols should be trivial: just add another
-array: "kallsyms_sizes[]", and it wouldn't even need that odd
-encoding.
-
-So I actually think it *should* be fairly straightforward to do for
-anybnody who knows the kallsyms code at all.
-
-The main pain-point would be *if* we want to actually expose the sizes
-in /proc/kallsyms. That would be a file format change. Which we can't
-do, so we'd have to do it as some kind of strange ioctl setting (or
-just add a new file under a new name).
-
-But maybe we don't even need that. If all the uses are in-kernel, just
-adding the kallsyms_sizes[] (and accessor helper functions) should be
-fairly straightforward.
-
-Of course, I say that without having done it. I might be overlooking something.
-
-           Linus
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
