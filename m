@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6A21F5434
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Dec 2024 14:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81DA1F6672
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Dec 2024 14:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735310966; cv=none; b=LylRjFRZzJdaG136Yi7U65P6L8FQ1ivO8TrGw/9G0VOj59BbTH/NarTBdT5jGLcBxjiUnfXvHPg8ibFs0YlCrMjZ9uVdyhFhCcB1YElLwHVltkps78N4ujgeJvipwMIKvuMTOpOeAPZUt7SxtBLhUkDqchtvbvCtj70qYCxeQ+Q=
+	t=1735310967; cv=none; b=BAWobkq+l4K2/T18HmDzynY5OX7bobasWxn5xhuPNpLLwKOKzcl7rJB6E1wo1/V6iC5Abo36y7rsTKlc5afRPz6xnjdjynd0bGbZw6ZqSBhHbFwJAIN0DwnBpL+cXckuf/zXA30s6TscwOOSNo6FiIF0dChy3Mh5tinuSMROxUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735310966; c=relaxed/simple;
-	bh=PJjpXQ5I5OKRCBaYa/xfQaEFJvnGwUqw3slRbQYQxFg=;
+	s=arc-20240116; t=1735310967; c=relaxed/simple;
+	bh=nZeeiG7L5QGy5lLykNbaShKGq8r/M0TegmzZpAQPl/A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fgUlSxDh5w20a3yxKQ09mCIBaCL1OfsDzCQJ3yjxkd5LoqL11nhscXUT0Ev/SAp44nqeBx0xNTGWOt4ISQfgiWatdCDdlty8vkfMVWowr2NcnAiqeurrgBay8md4JB1Or8zAcf70rFgHGWHkRBYIctMfjzFnRYlPUIhM9cyC9+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kha16AWx; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=oczC13fag3IaXwrSlO+nwft36CRMwoYw9bsJ49nGSmv6iMZxQ+mU6fuOx+zDdbp/Azi5hUt168ky0eLRagQ5ldz+N46zEtRBghNEjXWbz7tKJpyzhputcRN9xvIka5gD8bmyczMXpaGdX8h/US/hFGtUhh1Dw4x7sUyungMCv2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hZlRMnwe; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kha16AWx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hZlRMnwe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735310963;
+	s=mimecast20190719; t=1735310964;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7JdudEOhC1aXDvOiHDkTbGQ89vWCqVqQJ79tEh5M+qM=;
-	b=Kha16AWx/4hpd7eIaZqdhfFcR/Kvt/c0WP9ASSs+V4z2cIHWTcLVHi4/3jUHn0lGGC8qam
-	jklvjxeAttF9nX+x1X/864oWhWUsvntxd7nnfpvwAPmqkrHj7qF5iIplcBSA3t30sOD8Xm
-	CKeuBclMcqRNrVn9+RpCgqNRBHB11qM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=GA5G4LhCp4KGqKO83Qyv1wygIy92Vx41OeUsijEYtBI=;
+	b=hZlRMnweyk8D4IVJNgl2qXsKAUXzgU9FpOSMrCOMF+0WVp4C9uTEcz0bkb3wQl8IaxefRJ
+	H2q4sIkQHVWXzAaSE4vbyUgGOEyIdPWwmSVAYkq8K96RyE7V73KlNi6o+4GQ7jTo3wLPXZ
+	dQ9eKj1opkJ6Ea+YSkpVMAFHZDzJI8o=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-u3b6mG88PEy17m_Fpqdofg-1; Fri,
- 27 Dec 2024 09:49:19 -0500
-X-MC-Unique: u3b6mG88PEy17m_Fpqdofg-1
-X-Mimecast-MFC-AGG-ID: u3b6mG88PEy17m_Fpqdofg
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-256-wHGEnpooOLCP8CHFJLS8DQ-1; Fri,
+ 27 Dec 2024 09:49:21 -0500
+X-MC-Unique: wHGEnpooOLCP8CHFJLS8DQ-1
+X-Mimecast-MFC-AGG-ID: wHGEnpooOLCP8CHFJLS8DQ
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10C3E1955F45;
-	Fri, 27 Dec 2024 14:49:17 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65AA019560BD;
+	Fri, 27 Dec 2024 14:49:20 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.192.164])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9F1E73000197;
-	Fri, 27 Dec 2024 14:49:14 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A53683000197;
+	Fri, 27 Dec 2024 14:49:17 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc: Juri Lelli <juri.lelli@redhat.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	John Kacur <jkacur@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH 4/8] verification/dot2k: Add support for name and description options
-Date: Fri, 27 Dec 2024 15:47:48 +0100
-Message-ID: <20241227144752.362911-5-gmonaco@redhat.com>
+Subject: [PATCH 5/8] rv: Simplify manual steps in monitor creation
+Date: Fri, 27 Dec 2024 15:47:49 +0100
+Message-ID: <20241227144752.362911-6-gmonaco@redhat.com>
 In-Reply-To: <20241227144752.362911-1-gmonaco@redhat.com>
 References: <20241227144752.362911-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,128 +64,259 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-The dot2k command includes options to set a model name with -n and a
-description with -D, however those are not used in practice.
+While creating a new monitor in RV, besides generating code from dot2k,
+there are a few manual steps which can be tedious and error prone, like
+adding the tracepoints, makefile lines and kconfig.
 
-This patch allows to specify a custom model name (by default the name of
-the dot file without extension) and a description which overrides the
-one in the C file.
+This patch restructures the existing monitors to keep some files in the
+monitor's folder itself, which can be automatically generated by future
+versions of dot2k.
+
+Monitors have now their own Kconfig and tracepoint snippets. For
+simplicity, the main tracepoint definition, is moved to the RV
+directory, it defines only the tracepoint classes and includes the
+monitor-specific tracepoints, which reside in the monitor directory.
+
+Tracepoints and Kconfig no longer need to be copied and adapted from
+existing ones but only need to be included in the main files.
+The Makefile remains untouched since there's little advantage in having
+a separated Makefile for each monitor with a single line and including
+it in the main RV Makefile.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/dot2/automata.py            | 4 ++--
- tools/verification/dot2/dot2c.py               | 4 ++--
- tools/verification/dot2/dot2k                  | 6 +-----
- tools/verification/dot2/dot2k.py               | 8 +++++---
- tools/verification/dot2/dot2k_templates/main.c | 4 ++--
- 5 files changed, 12 insertions(+), 14 deletions(-)
+ kernel/trace/rv/Kconfig                       | 25 ++-----------------
+ kernel/trace/rv/Makefile                      |  2 ++
+ kernel/trace/rv/monitors/wip/Kconfig          | 12 +++++++++
+ kernel/trace/rv/monitors/wip/wip.c            |  2 +-
+ kernel/trace/rv/monitors/wip/wip_trace.h      | 15 +++++++++++
+ kernel/trace/rv/monitors/wwnr/Kconfig         | 11 ++++++++
+ kernel/trace/rv/monitors/wwnr/wwnr.c          |  2 +-
+ kernel/trace/rv/monitors/wwnr/wwnr_trace.h    | 16 ++++++++++++
+ kernel/trace/rv/rv.c                          |  2 +-
+ .../events/rv.h => kernel/trace/rv/rv_trace.h | 24 ++++--------------
+ 10 files changed, 66 insertions(+), 45 deletions(-)
+ create mode 100644 kernel/trace/rv/monitors/wip/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/wip/wip_trace.h
+ create mode 100644 kernel/trace/rv/monitors/wwnr/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/wwnr/wwnr_trace.h
+ rename include/trace/events/rv.h => kernel/trace/rv/rv_trace.h (79%)
 
-diff --git a/tools/verification/dot2/automata.py b/tools/verification/dot2/automata.py
-index bdeb98baa8b06..f6921cf3c9143 100644
---- a/tools/verification/dot2/automata.py
-+++ b/tools/verification/dot2/automata.py
-@@ -19,9 +19,9 @@ class Automata:
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 831779607e849..1cca47531f006 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -25,30 +25,9 @@ menuconfig RV
+ 	  For further information, see:
+ 	    Documentation/trace/rv/runtime-verification.rst
  
-     invalid_state_str = "INVALID_STATE"
- 
--    def __init__(self, file_path):
-+    def __init__(self, file_path, model_name=None):
-         self.__dot_path = file_path
--        self.name = self.__get_model_name()
-+        self.name = model_name or self.__get_model_name()
-         self.__dot_lines = self.__open_dot()
-         self.states, self.initial_state, self.final_states = self.__get_state_variables()
-         self.events = self.__get_event_variables()
-diff --git a/tools/verification/dot2/dot2c.py b/tools/verification/dot2/dot2c.py
-index 87d8a1e1470c6..fa2816ac7b61a 100644
---- a/tools/verification/dot2/dot2c.py
-+++ b/tools/verification/dot2/dot2c.py
-@@ -22,8 +22,8 @@ class Dot2c(Automata):
-     struct_automaton_def = "automaton"
-     var_automaton_def = "aut"
- 
--    def __init__(self, file_path):
--        super().__init__(file_path)
-+    def __init__(self, file_path, model_name=None):
-+        super().__init__(file_path, model_name)
-         self.line_length = 100
- 
-     def __buff_to_string(self, buff):
-diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
-index d4d7e52d549e8..827b62b8d5e16 100644
---- a/tools/verification/dot2/dot2k
-+++ b/tools/verification/dot2/dot2k
-@@ -25,16 +25,12 @@ if __name__ == '__main__':
- 
-     print("Opening and parsing the dot file %s" % params.dot_file)
-     try:
--        monitor=dot2k(params.dot_file, params.monitor_type)
-+        monitor=dot2k(params.dot_file, params.monitor_type, vars(params))
-     except Exception as e:
-         print('Error: '+ str(e))
-         print("Sorry : :-(")
-         sys.exit(1)
- 
--    # easier than using argparse action.
--    if params.model_name != None:
--        print(params.model_name)
+-config RV_MON_WIP
+-	depends on RV
+-	depends on PREEMPT_TRACER
+-	select DA_MON_EVENTS_IMPLICIT
+-	bool "wip monitor"
+-	help
+-	  Enable wip (wakeup in preemptive) sample monitor that illustrates
+-	  the usage of per-cpu monitors, and one limitation of the
+-	  preempt_disable/enable events.
 -
-     print("Writing the monitor into the directory %s" % monitor.name)
-     monitor.print_files()
-     print("Almost done, checklist")
-diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot2k.py
-index c88b3c0117061..d48ad86a035a7 100644
---- a/tools/verification/dot2/dot2k.py
-+++ b/tools/verification/dot2/dot2k.py
-@@ -17,17 +17,18 @@ class dot2k(Dot2c):
-     monitor_templates_dir = "dot2/dot2k_templates/"
-     monitor_type = "per_cpu"
+-	  For further information, see:
+-	    Documentation/trace/rv/monitor_wip.rst
++source "kernel/trace/rv/monitors/wip/Kconfig"
  
--    def __init__(self, file_path, MonitorType):
--        super().__init__(file_path)
-+    def __init__(self, file_path, MonitorType, extra_params={}):
-+        super().__init__(file_path, extra_params.get("model_name"))
+-config RV_MON_WWNR
+-	depends on RV
+-	select DA_MON_EVENTS_ID
+-	bool "wwnr monitor"
+-	help
+-	  Enable wwnr (wakeup while not running) sample monitor, this is a
+-	  sample monitor that illustrates the usage of per-task monitor.
+-	  The model is borken on purpose: it serves to test reactors.
+-
+-	  For further information, see:
+-	    Documentation/trace/rv/monitor_wwnr.rst
++source "kernel/trace/rv/monitors/wwnr/Kconfig"
  
-         self.monitor_type = self.monitor_types.get(MonitorType)
-         if self.monitor_type is None:
--            raise Exception("Unknown monitor type: %s" % MonitorType)
-+            raise ValueError("Unknown monitor type: %s" % MonitorType)
+ config RV_REACTORS
+ 	bool "Runtime verification reactors"
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index 963d14875b454..645434146a88a 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -1,5 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
  
-         self.monitor_type = MonitorType
-         self.__fill_rv_templates_dir()
-         self.main_c = self.__open_file(self.monitor_templates_dir + "main.c")
-         self.enum_suffix = "_%s" % self.name
-+        self.description = extra_params.get("description", self.name) or "auto-generated"
++ccflags-y += -I $(src)		# needed for trace events
++
+ obj-$(CONFIG_RV) += rv.o
+ obj-$(CONFIG_RV_MON_WIP) += monitors/wip/wip.o
+ obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
+diff --git a/kernel/trace/rv/monitors/wip/Kconfig b/kernel/trace/rv/monitors/wip/Kconfig
+new file mode 100644
+index 0000000000000..3ef664b5cd903
+--- /dev/null
++++ b/kernel/trace/rv/monitors/wip/Kconfig
+@@ -0,0 +1,12 @@
++config RV_MON_WIP
++	depends on RV
++	depends on PREEMPT_TRACER
++	select DA_MON_EVENTS_IMPLICIT
++	bool "wip monitor"
++	help
++	  Enable wip (wakeup in preemptive) sample monitor that illustrates
++	  the usage of per-cpu monitors, and one limitation of the
++	  preempt_disable/enable events.
++
++	  For further information, see:
++	    Documentation/trace/rv/monitor_wip.rst
+diff --git a/kernel/trace/rv/monitors/wip/wip.c b/kernel/trace/rv/monitors/wip/wip.c
+index b2b49a27e8863..db7389157c87e 100644
+--- a/kernel/trace/rv/monitors/wip/wip.c
++++ b/kernel/trace/rv/monitors/wip/wip.c
+@@ -10,7 +10,7 @@
  
-     def __fill_rv_templates_dir(self):
+ #define MODULE_NAME "wip"
  
-@@ -114,6 +115,7 @@ class dot2k(Dot2c):
-         main_c = main_c.replace("%%TRACEPOINT_HANDLERS_SKEL%%", tracepoint_handlers)
-         main_c = main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_attach)
-         main_c = main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_detach)
-+        main_c = main_c.replace("%%DESCRIPTION%%", self.description)
+-#include <trace/events/rv.h>
++#include <rv_trace.h>
+ #include <trace/events/sched.h>
+ #include <trace/events/preemptirq.h>
  
-         return main_c
+diff --git a/kernel/trace/rv/monitors/wip/wip_trace.h b/kernel/trace/rv/monitors/wip/wip_trace.h
+new file mode 100644
+index 0000000000000..aa2162f47a4c3
+--- /dev/null
++++ b/kernel/trace/rv/monitors/wip/wip_trace.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_WIP
++DEFINE_EVENT(event_da_monitor, event_wip,
++	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(state, event, next_state, final_state));
++
++DEFINE_EVENT(error_da_monitor, error_wip,
++	     TP_PROTO(char *state, char *event),
++	     TP_ARGS(state, event));
++#endif /* CONFIG_RV_MON_WIP */
+diff --git a/kernel/trace/rv/monitors/wwnr/Kconfig b/kernel/trace/rv/monitors/wwnr/Kconfig
+new file mode 100644
+index 0000000000000..ee741aa6d6b89
+--- /dev/null
++++ b/kernel/trace/rv/monitors/wwnr/Kconfig
+@@ -0,0 +1,11 @@
++config RV_MON_WWNR
++	depends on RV
++	select DA_MON_EVENTS_ID
++	bool "wwnr monitor"
++	help
++	  Enable wwnr (wakeup while not running) sample monitor, this is a
++	  sample monitor that illustrates the usage of per-task monitor.
++	  The model is borken on purpose: it serves to test reactors.
++
++	  For further information, see:
++	    Documentation/trace/rv/monitor_wwnr.rst
+diff --git a/kernel/trace/rv/monitors/wwnr/wwnr.c b/kernel/trace/rv/monitors/wwnr/wwnr.c
+index 0e43dd2db685d..3b16994a99845 100644
+--- a/kernel/trace/rv/monitors/wwnr/wwnr.c
++++ b/kernel/trace/rv/monitors/wwnr/wwnr.c
+@@ -10,7 +10,7 @@
  
-diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verification/dot2/dot2k_templates/main.c
-index 4a05fef7f3c7f..7046171685788 100644
---- a/tools/verification/dot2/dot2k_templates/main.c
-+++ b/tools/verification/dot2/dot2k_templates/main.c
-@@ -65,7 +65,7 @@ static void disable_%%MODEL_NAME%%(void)
-  */
- static struct rv_monitor rv_%%MODEL_NAME%% = {
- 	.name = "%%MODEL_NAME%%",
--	.description = "auto-generated %%MODEL_NAME%%",
-+	.description = "%%DESCRIPTION%%",
- 	.enable = enable_%%MODEL_NAME%%,
- 	.disable = disable_%%MODEL_NAME%%,
- 	.reset = da_monitor_reset_all_%%MODEL_NAME%%,
-@@ -88,4 +88,4 @@ module_exit(unregister_%%MODEL_NAME%%);
+ #define MODULE_NAME "wwnr"
  
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("dot2k: auto-generated");
--MODULE_DESCRIPTION("%%MODEL_NAME%%");
-+MODULE_DESCRIPTION("%%MODEL_NAME%%: %%DESCRIPTION%%");
+-#include <trace/events/rv.h>
++#include <rv_trace.h>
+ #include <trace/events/sched.h>
+ 
+ #include "wwnr.h"
+diff --git a/kernel/trace/rv/monitors/wwnr/wwnr_trace.h b/kernel/trace/rv/monitors/wwnr/wwnr_trace.h
+new file mode 100644
+index 0000000000000..fc97ec7476ad1
+--- /dev/null
++++ b/kernel/trace/rv/monitors/wwnr/wwnr_trace.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_WWNR
++/* id is the pid of the task */
++DEFINE_EVENT(event_da_monitor_id, event_wwnr,
++	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(id, state, event, next_state, final_state));
++
++DEFINE_EVENT(error_da_monitor_id, error_wwnr,
++	     TP_PROTO(int id, char *state, char *event),
++	     TP_ARGS(id, state, event));
++#endif /* CONFIG_RV_MON_WWNR */
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 279c70e1bd745..8657fc8806e7c 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -145,7 +145,7 @@
+ 
+ #ifdef CONFIG_DA_MON_EVENTS
+ #define CREATE_TRACE_POINTS
+-#include <trace/events/rv.h>
++#include <rv_trace.h>
+ #endif
+ 
+ #include "rv.h"
+diff --git a/include/trace/events/rv.h b/kernel/trace/rv/rv_trace.h
+similarity index 79%
+rename from include/trace/events/rv.h
+rename to kernel/trace/rv/rv_trace.h
+index 56592da9301c0..3442dc59490fe 100644
+--- a/include/trace/events/rv.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -57,15 +57,8 @@ DECLARE_EVENT_CLASS(error_da_monitor,
+ 		__entry->state)
+ );
+ 
+-#ifdef CONFIG_RV_MON_WIP
+-DEFINE_EVENT(event_da_monitor, event_wip,
+-	    TP_PROTO(char *state, char *event, char *next_state, bool final_state),
+-	    TP_ARGS(state, event, next_state, final_state));
+-
+-DEFINE_EVENT(error_da_monitor, error_wip,
+-	     TP_PROTO(char *state, char *event),
+-	     TP_ARGS(state, event));
+-#endif /* CONFIG_RV_MON_WIP */
++#include <monitors/wip/wip_trace.h>
++
+ #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
+ 
+ #ifdef CONFIG_DA_MON_EVENTS_ID
+@@ -123,20 +116,13 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
+ 		__entry->state)
+ );
+ 
+-#ifdef CONFIG_RV_MON_WWNR
+-/* id is the pid of the task */
+-DEFINE_EVENT(event_da_monitor_id, event_wwnr,
+-	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
+-	     TP_ARGS(id, state, event, next_state, final_state));
+-
+-DEFINE_EVENT(error_da_monitor_id, error_wwnr,
+-	     TP_PROTO(int id, char *state, char *event),
+-	     TP_ARGS(id, state, event));
+-#endif /* CONFIG_RV_MON_WWNR */
++#include <monitors/wwnr/wwnr_trace.h>
+ 
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+ 
+ /* This part ust be outside protection */
+ #undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++#define TRACE_INCLUDE_FILE rv_trace
+ #include <trace/define_trace.h>
 -- 
 2.47.1
 
