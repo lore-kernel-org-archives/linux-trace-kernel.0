@@ -1,40 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8962B433D9;
-	Fri, 27 Dec 2024 19:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2305C482F2;
+	Fri, 27 Dec 2024 19:43:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735327103; cv=none; b=HnmceHchBJj8VnkC/IBtn66jUK/nQ4WFw4eD5oHCjfht3ByQEUOKclEcFhxeoeL2NP9oii8S0pjiL6XTGIYj5XHasyTY299k/OXGkrplcFU4s3DEPyk89qepoEqHn7bBrigzgXdGZ9bpoeuEd7BjSnTCFpIvZjiynD19EpdQbP8=
+	t=1735328620; cv=none; b=nu+qf7MFntkHgZ+4nxBqHEPix36O/ECUw9tZONZGow+pE8gDrQipfis0XR+GsYlCy97YjX1IIJMtFRQw37hODhlkwHFgs7bZGGhxzPc05kWEDh8Ww68Q4TAkRw5DeqlQrdyqAqIMV364S43gk5bC5k8hn4TK70T0lXbFSy9Oc5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735327103; c=relaxed/simple;
-	bh=MNC59m0llm1QZEZpGU6HmaiknNf/Ngd+RoAoSzDsUqI=;
+	s=arc-20240116; t=1735328620; c=relaxed/simple;
+	bh=YusDc6QgxVoSerecYv+RrbR3Eyv+vQXqyRcZAGJkO5U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rhLpwAupfwi1rVtxKlJdlR6r+Wz1VJMJA7pOOfKoiMJWJojCvuN87+DJ7PRKBP2TtgHM1sZAnfXD3RxL6ejuxc2VXfLnCVRcWgoXMEP/1q+Sih4t0GIDF3Ze2ERcZn0FGcHEU83e6yCZGBSEFrHang17StQYU8YpbCpHWx3viXU=
+	 MIME-Version:Content-Type; b=liciilPBQTy4N1DzcdLRPp0W8a6BLQT7SFN420krRcIhCf1zRlz3IqzJiLxX3ZoQOfic6Jzjx/4h3M1rHhJqCGAo/LgGoj2WESJOdYOmd9tDsUlgRu/hSArrFOzdBUYDyR1UcGa/sDY7FJtOBz83AAaiAQV+HdWnRHst4nibIDE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B5DFC4CED0;
-	Fri, 27 Dec 2024 19:18:21 +0000 (UTC)
-Date: Fri, 27 Dec 2024 14:19:22 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E93ADC4CED0;
+	Fri, 27 Dec 2024 19:43:38 +0000 (UTC)
+Date: Fri, 27 Dec 2024 14:44:40 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng
- Yejian <zhengyejian1@huawei.com>, Martin Kelly
- <martin.kelly@crowdstrike.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, Mark
- Rutland <mark.rutland@arm.com>
-Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in
- kallsyms
-Message-ID: <20241227141922.56f44e82@gandalf.local.home>
-In-Reply-To: <CAHk-=wgoORBJ6OkOA1g2MNHW4oEMRSkCbnyf7Ab+CL8pCQ0-ag@mail.gmail.com>
-References: <20241226164957.5cab9f2d@gandalf.local.home>
-	<CAHk-=wiL8B2=fPaRwDPGgQhVs=3G=8Gy=QyR59L85L0GF67Gbg@mail.gmail.com>
-	<20241226224521.2d159a02@batman.local.home>
-	<CAHk-=wgoORBJ6OkOA1g2MNHW4oEMRSkCbnyf7Ab+CL8pCQ0-ag@mail.gmail.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Juri
+ Lelli <juri.lelli@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, John
+ Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH 7/8] verification/dot2k: Auto patch current kernel
+ source
+Message-ID: <20241227144440.17171185@gandalf.local.home>
+In-Reply-To: <20241227144752.362911-8-gmonaco@redhat.com>
+References: <20241227144752.362911-1-gmonaco@redhat.com>
+	<20241227144752.362911-8-gmonaco@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,98 +36,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 27 Dec 2024 10:09:40 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Fri, 27 Dec 2024 15:47:51 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-> On Thu, 26 Dec 2024 at 19:45, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >  
-> > >
-> > > Btw, does this actually happen when the compiler does the mcount thing for us?  
-> >
-> > Yes.  
+> dot2k suggests a list of changes to the kernel tree while adding a
+> monitor: edit tracepoints header, Makefile, Kconfig and moving the
+> monitor folder. Those changes can be easily run automatically.
 > 
-> Ok, that's actually good.
-> 
-> I'm not really worried about the "unused symbols aren't in kallsyms"
-> issue, even if it confuses the mcount logic. THAT confusion is easy to
-> deal with by either adding symbol size information (which I think
-> would be a good thing in general, although perhaps not worth it).
-> 
-> Even without the symbol size, the mcount issue can be dealt with by
-> just knowing that the mcount location has to be at the very beginning
-> of the function and just taking the offset - that we already do have -
-> into account.
+> This patch adds a flag to dot2k to alter the kernel source.
 
-This is actually what we do today. A check is made against the location of
-the fentry/mcount, and if it's too far away from the function entry, it is
-considered a weak function. The distance is architecture dependent, as well
-as options (adding ENDBR and such needs to be accounted for).
+I'll pull in these patches for linux-next, but the above should be written
+as:
 
-Now we still need to list them in the available_filter_functions, as the
-order of what's in mcount_loc is used by the set_filter_function, and if we
-"hide" any, it can screw up the accounting, because you can enable
-functions via the index into that file. Using an index is an O(1)
-operation, where as by name it needs to search all addresses and call
-kallsyms for a name look up and then compare to what was passed in. Tooling
-uses the index, as it's much faster to enable several functions (which by
-name turns into an O(n^2) operation). Enabling a thousand functions by name
-can take over a minute to complete, whereas by index takes less than a
-second.
+  Add a flag to dot2k to alter the kernel source.
 
-For now, we have in available_filter_functions:
+I made the update. This is for future reference. Never use "This patch" or
+"This commit" in a change log.
 
-  trace_initcall_finish_cb
-  initcall_blacklisted
-  do_one_initcall
-  __ftrace_invalid_address___708
-  rootfs_init_fs_context
-  wait_for_initramfs
-  __ftrace_invalid_address___68
-  calibration_delay_done
-  calibrate_delay
-
-Where those "__ftrace_invalid_address_*" is detected as a weak function.
-This is ugly and a hack, but we still need a place holder for them :-(
-I would love to find a better way to handle this.
-
-Now, the .mcount_loc is sorted at build time. If there's a way to find
-which addresses are no longer visible, then that code could possibly remove
-them from the mcount_loc. Perhaps, it could do a 'nm -S' and check to make
-sure that all addresses are within a listed size, and if not, remove it.
-That way, we could get rid of those place holders.
-
-> 
-> I was more worried that there might also be some much deeper confusion
-> with the linker actually garbage collecting the unused weak function
-> code away, and now an unused symbol that kallsyms doesn't know about
-> wouldn't just have an unexpected mcount pointer to it, but the mcount
-> pointer would actually be stale and point to some unrelated code.
-> 
-> So as long as *that* isn't what is happening, this all seems fairly benign.
-
-For now, the mcount_loc is just an annoyance as we have those ugly place
-holders. The real bug is with live kernel patching, where there's a
-mismatch in the function size. IIUC, the building of the module for the
-live patching finds the size of the function it's patching with 'nm'. And
-then before patching, asks kallsyms for the size of the function. Because
-kallsyms uses the next function to determine the size, it returns the size
-of the function plus the size of the weak function. There's a mismatch and
-live kernel patching refuses to patch the function.
-
-By adding the actual size of the function to kallsyms, that would fix the
-problem. The size doesn't need to be exported to /proc/kallsyms, as you
-mentioned before, all users happen to be in-kernel.
-
-The one downsize of storing the numbers, is that we will need to store a
-size for every function, and that can add up.
-
- $ wc -l /proc/kallsyms 
- 208784 /proc/kallsyms
-
-That's 208 thousand numbers to store!
-
-Perhaps this is the one advantage of having a weak placeholder in kallsyms
-as well. It may save memory.
+Thanks,
 
 -- Steve
 
+
+> 
+> The kernel source directory can be either assumed from the PWD, or from
+> the running kernel, if installed.
+> This feature works best if the kernel tree is a git repository, so that
+> its easier to make sure there are no unintended changes.
+> 
+> The main RV files (e.g. Makefile) have now a comment placeholder that
+> can be useful for manual editing (e.g. to know where to add new
+> monitors) and it is used by the script to append the required lines.
+> 
+> We also slightly adapt the file handling functions in dot2k: __open_file
+> is now called __read_file and also closes the file before returning the
+> content; __create_file is now a more general __write_file, we no longer
+> return on FileExistsError (not thrown while opening), a new
+> __create_file simply calls __write_file specifying the monitor folder in
+> the path.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
