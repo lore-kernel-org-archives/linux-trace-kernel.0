@@ -1,41 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416C52C9A;
-	Fri, 27 Dec 2024 02:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C24A1D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Dec 2024 02:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735267975; cv=none; b=K4ZoCTva3DDa+3mvO4lnDejP2ufPLrRVdav0CR+TFP/EDu8m6uwIpobmfIj2IynPjqzWIH+k5LrdKuTu58JClzW9VWoXEmU483TsAZK81QX4mBYNKMH4Y/spW1y4xDbXlz6Yn3DlL4xzWrdHPScx/BOi2tLQ7nPV+OPRmoZ+FPc=
+	t=1735268327; cv=none; b=A+aWT492PC87HqoIDXhghuVZMt+HGIzLVHvMhu+Mqhpe9SN4uUJ49nwXTBjPBOBk4t2isBepnZkfJE/5pTR6en1XDZTRmyfuNpxaxlzb8CwKP0YT2mt6YvRG20JLjPqieywOeuV0tO/hQMjojgBijs44nY4JUe84TvRXfu0u21w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735267975; c=relaxed/simple;
-	bh=BtdX5xxb6mmrKi8dmG57x1JKlBg4u7JmhWgV16rWmjE=;
+	s=arc-20240116; t=1735268327; c=relaxed/simple;
+	bh=FLl3QcbQ6gl5PtwWermYbCj21YqJX5D0JrVgwIktLPg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iViiY8O4DYwkZaMsXo9GbNqgG+8Ho9uj41nMcDQt7HzDH8zItjvUyCqpQdtA/4lZO9joogLbeKF/kg7iwDE+WdVPNy2gZlCpQSlhV9JwoC4exgDDNuCPk9PbaePDN8i/a3e/LuNdqTpJg2uJiG2FH/kkUhAD3xzCBe5t0gvdFm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q00A0dpW; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ibdV0UED11DDc522LK9Rd70ktOlgW3UfosZe3s8hII2RkGM/ql7IK2eNrmMcE9pY/AHomhIdY1R/hHwzuhrEF2iZPG1zt0a6LCmchQs3NMpLWyQgymw4fEtriCj/Ax9U4tdA1VE7cOQalHyjEngzoraL0tqaoLgYIKRODMjIWTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fB/xXnds; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q00A0dpW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42E5C4CEDD;
-	Fri, 27 Dec 2024 02:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735267974;
-	bh=BtdX5xxb6mmrKi8dmG57x1JKlBg4u7JmhWgV16rWmjE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q00A0dpW+a3yjbiiyBnlDlNxa3QKfsTSDUQV0TI7P9vVpM5R3kjKuzmTe+gKS6QsG
-	 3ke3I15t4OZxKck3ya7EMY0V7DWD6wzlWj46sBsDF5c0R/+unp3y5HyF9eK0lZCXYx
-	 /aKyZdmmUN4pHvpdf2+7+6luIVrpTvFRmhiA7NQWzDK69r8+UTBPMMwWRoIwLQNbzg
-	 sS5BbrRl9OHl+KYCCpNqrwgQ5D8rg285hmREn8W2XY2aOIEz/Sb71wPFOBk6iuo4o8
-	 /Lkk/m+2S1tmtT/ymLvKL5BgK9X7UPlOEVAAcBaNx9v65bR2DwEkERrvg4i+7manAg
-	 ZVMIMbLTdh1Vw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-53f22fd6887so6652866e87.2;
-        Thu, 26 Dec 2024 18:52:54 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV4W36Ath7NvJcCt8ZsWgjJMy3Kzi/3XHkOBKoaTYxmtMoijGXA3lE6UL2P/bdohg+DsYp+d+VWfyrMW9NV@vger.kernel.org, AJvYcCVZ4FVC/TwT/9kxE8GFEZbJlFkmNPFmfeGMH8AecR27OYPTbWE7Z9wAqgZRq43kPRB3J04=@vger.kernel.org, AJvYcCVpou8Ps1P9Ovx1NiwM2VK5fHkagS7gdersK1PFhv96lZ5hqUr7mj8tukKxhxOk86ZEt9gDzB6/K5MZlIKommiREpx/@vger.kernel.org, AJvYcCXp7nx6YU5qfwllDPKs+vfnvZTDICOz6wOKtQKv5B7kUTJ5C4XZQ6NuPRtu1hwrZ55/zh84r3hI+vFPn7Jj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDkld762zESGe8ic0m1zWh7mZH3xqtQ0A/XVxVmA1DKQe3QWEc
-	dnqH6YgQygGUavwzPasPcHqJOKDjPvo4P1a92M/zZ7E6vIVuQCNWph5bIpNaJAdpy4Pf6OGBKd4
-	4jASZDrubHx37xVlppxjeXLFR+1I=
-X-Google-Smtp-Source: AGHT+IHRvxi6b/ALonIF1SSHMmgivh+GQCcn5JF34YPmhg1FuebNOsOKQTBGGAC57roqIgusUFr6THIwgAgd8muH2VY=
-X-Received: by 2002:a05:6512:6d3:b0:542:1137:611a with SMTP id
- 2adb3069b0e04-54229533db1mr9378740e87.17.1735267973360; Thu, 26 Dec 2024
- 18:52:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fB/xXnds"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aa67333f7d2so1019079766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 18:58:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1735268323; x=1735873123; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XvIAPNYP54LEnLyIp5Ezwqoks125tVudSg9dAYgT6rM=;
+        b=fB/xXnds3hsGR/5oZ7kLn4K92ibILGZ5D9YgR2NJbJ6+0spRVw8KlVXWwEchOec9VT
+         AqILd8lJOW5C+0CUDNyi+Sqkueaodu+CLdLBNj2dPLmjrjduLZNyjHehfGk/FbSx5WH4
+         jxSBqW9PuPG/43S1O5aF0N6lKwjgVR8cHvGXs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735268323; x=1735873123;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XvIAPNYP54LEnLyIp5Ezwqoks125tVudSg9dAYgT6rM=;
+        b=km6eTh5NuV4DX8PYGGSZr8P0LYSm0C+u6rVFQ8h/n7vrzPtQbAPjWXeP8CphU2DRTp
+         AQPDREl8/4PXNUbYHGaCZm2nxfVAtspxtiKpvqJK6/34VmTr9mOqllOT4V+8gFb2TqrX
+         qCaAXs/87gegwY+RNBYgdcR1Ii6LThOvB+u+q/J4H4gRPg/96i+6wdfHTOx3EKhZwGlR
+         3L3K6MLHAPfLvlPaCq+l0IBCiJPQqIFi/sUr08ckoIp0hHp4TNOuMN2YRWnzWX8I6xy5
+         2zbdGzjICXPajIlQaKS4+/al8Z4P9RVyNR26yVKnGzDL2rcfSP3J1jp8tqy2TP+3yD4C
+         NCmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAh79BLsFHNKt3WQnpYDZhTetDfsuUsgua6rc1VYL/wpU6xaeZssGdyXIqPyH9C5mPVmum1C79QmPsCy6WJyCsGFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGW/0e4+nDhptZolOHUC8lxVzjFS16/kICFDoxRED5yAjFlUvf
+	su7QhcXZDgf5Hhgis75a5/9VBDz4d+Dv37G8zOZhI59QGXow65qKhS5VD6Abq1wHO7grLYueDmL
+	MXduwBQ==
+X-Gm-Gg: ASbGncvZ0oGC4yVp5bS5oUWYuuDlrvmSC5m1DUCcB/InpCoIYyUq4ZMfF+hVdMZ4M55
+	D8p0gGBtUbN9/c10HlHAAkxzZpTvd4wARgA0VeBAaBXYwF2LRT4/fT6nT+CSwwbIPZEA9//42mc
+	QgSg8Vf43qHe/23tRq9jS+tUnVSN7Hlh9/Lqqpf4MHc3Uy9Z3CPQUd3RlN7Ep14IdCHTY0LtXBa
+	21txccDDxJPoZMVbJYnQDoQG3k30xA/ytNI6Tz+qvgDjESt+MlfvgTQZaYFr8jt5rFR/Y3ksefq
+	cqTpsH1GVk/V+OqpAuw+aIlHlRxEGF0=
+X-Google-Smtp-Source: AGHT+IFz1a5Ke1JAANsqnVOTwfxDgYf6DBSoH6AuW9GDAmwnr8Bluw+LIiCmTSBe61CA0PlTDB8kJQ==
+X-Received: by 2002:a17:907:3e1c:b0:aa5:2575:e75d with SMTP id a640c23a62f3a-aac270369b4mr2294459466b.2.1735268322646;
+        Thu, 26 Dec 2024 18:58:42 -0800 (PST)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aac0e898689sm1043915666b.78.2024.12.26.18.58.40
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Dec 2024 18:58:41 -0800 (PST)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a9e44654ae3so1117225666b.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Dec 2024 18:58:40 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXQBd+vKQwt+SY/6qX7DCv2QUCdggcBVSlyUoO2hV6nBMTSKu6y+zoVVN1JBdWFrY7bPoLuknZn4rAGJ6Y+hKCfVZs=@vger.kernel.org
+X-Received: by 2002:a17:907:3e8d:b0:aa5:1a1c:d0a2 with SMTP id
+ a640c23a62f3a-aac2d0478bemr2183880666b.34.1735268320564; Thu, 26 Dec 2024
+ 18:58:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,85 +70,74 @@ MIME-Version: 1.0
 References: <20241226164957.5cab9f2d@gandalf.local.home> <CAHk-=wgTFSqiMvbGYqFLQaERoeXR5nK1Y=-L3SN7rB3UtzG0PQ@mail.gmail.com>
  <20241226211935.02d34076@batman.local.home>
 In-Reply-To: <20241226211935.02d34076@batman.local.home>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 27 Dec 2024 11:52:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARUCpzr+1ey0MKmyCdTbaVOq8o7_42t4x5BW=4dyy4wPQ@mail.gmail.com>
-Message-ID: <CAK7LNARUCpzr+1ey0MKmyCdTbaVOq8o7_42t4x5BW=4dyy4wPQ@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 26 Dec 2024 18:58:24 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wii_nN1X4O9=nztJy3rexKp9w5Gsp=J5kZ43Hekja+Omg@mail.gmail.com>
+Message-ID: <CAHk-=wii_nN1X4O9=nztJy3rexKp9w5Gsp=J5kZ43Hekja+Omg@mail.gmail.com>
 Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in kallsyms
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, 
+Cc: LKML <linux-kernel@vger.kernel.org>, 
 	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
 	linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Zheng Yejian <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian <zhengyejian1@huawei.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, 
 	Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, 
 	Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 27, 2024 at 11:19=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 26 Dec 2024 15:01:07 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > On Thu, 26 Dec 2024 at 13:49, Steven Rostedt <rostedt@goodmis.org> wrot=
-e:
-> > >
-> > > But then, when the linker removes these functions because they were
-> > > overridden, the code does not disappear, leaving the pointers in the
-> > > __mcount_loc locations.
-> >
-> > This seems entirely unrelated to weak functions, and will be true for
-> > any other "linker removed it" (which can happen for other reasons
-> > too).
-> >
-> > So your "fix" seems to be hacking around a symptom.
->
-> Yeah, that's why this was just a POC.
->
-> >
-> > And honestly, the kallsyms argument seems bogus too. The problem with
-> > kallsyms is that it looks up the size the wrong way. Making up new
-> > function names doesn't fix the problem, it - once again - just hacks
-> > around the symptom of doing something wrong.
-> >
-> > Christ, kallsyms looking at nm output and going by "next symbol" was
-> > always bogus, but I think that's how the old a.out format worked
-> > originally.
-> >
-> > But "nm" literally takes a "-S" argument. We just don't use it.
-> >
-> > So I think the fix is literally to just make kallsysms have the size
-> > data. Of course, very annoyingly out /proc/kallsyms file format also
-> > tracks the (legacy) nm output that doesn't have size information.
-> >
-> > But I do think that if you hit real problems, you need to fix the
-> > *source* of the issue, not add another ugly hack around things.
+On Thu, 26 Dec 2024 at 18:19, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
 > So basically the real solution is to fix kallsyms to know about the end
 > of functions. Peter Zijlstra mentioned that before, but it would take a
 > bit more work and understanding of kallsyms to fix it properly.
->
-> I'm fine not doing the hack and hopefully one day someone will have the
-> time to fix kallsyms. This was just something I could do quickly,
-> knowing it is mostly keeping with the status quo and not actually
-> fixing the root of the issue. I also needed to refresh my ELF parsing
-> abilities ;-)
->
-> I may take a look at kallsyms internals. I have some spare time before
-> the new year to try and work on things I don't normally get time to
-> work on.
->
-> -- Steve
 
+Yeah. The kallsyms code *used* to be pretty simple - really just a
+list of symbols and addresses.
 
-So, does the kallsyms patch set from Zheng Yejian fix the issues?
+But it took up a lot of memory, so back in the day (two decades ago by
+now) it started growing some name compression code, and then some
+serious speedups for lookup.
 
-It was a long time ago that I reviewed his v1.
-I need to take a look if we decide to go with that approach.
+See
 
---=20
-Best Regards
-Masahiro Yamada
+    https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=e10392112d315c45f054c22c862e3a7ae27d17d4
+
+for when it went from basically a very simple array of names to be a
+lot less obvious with that table lookup name compression (but it had
+_some_ name compression even before that).
+
+That said, I think it's really mainly just the name compression that
+is a bit obscure and looks odd, and it's only used for the builtin
+kernel symbols (module symbols are still just a per-module array of
+"const Elf_Sym *").
+
+And you can actually largely ignore the odd name compression - because
+the *rest* is fairly straightforward.
+
+For example, the actual offset of the symbol is simply a plain array
+still: kallsyms_offsets[]. It's slightly oddly encoded (see
+kallsyms_sym_address() if you care), but that's because it's an array
+of 32-bit values used to encode kernel symbol offsets that can
+obviously be 64-bit.
+
+Encoding the size of the symbols should be trivial: just add another
+array: "kallsyms_sizes[]", and it wouldn't even need that odd
+encoding.
+
+So I actually think it *should* be fairly straightforward to do for
+anybnody who knows the kallsyms code at all.
+
+The main pain-point would be *if* we want to actually expose the sizes
+in /proc/kallsyms. That would be a file format change. Which we can't
+do, so we'd have to do it as some kind of strange ioctl setting (or
+just add a new file under a new name).
+
+But maybe we don't even need that. If all the uses are in-kernel, just
+adding the kallsyms_sizes[] (and accessor helper functions) should be
+fairly straightforward.
+
+Of course, I say that without having done it. I might be overlooking something.
+
+           Linus
