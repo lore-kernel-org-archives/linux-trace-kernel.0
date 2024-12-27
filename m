@@ -1,70 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822CCF4F1;
-	Fri, 27 Dec 2024 03:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71866026A;
+	Fri, 27 Dec 2024 04:07:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735271125; cv=none; b=F4L8wYGmUhPvvlp2hbLsT3ZudcMK769vjAlihoDovjLwWV1wQEW8QKGuXeGyo3yl/5McLq++DNstbb5D7OIdSb4zwgYJ5HOaUIZRj1Dgpswk2tFiY62v++YghBVbUv3G1ccl7jKQB9uF0LhgWfaiKbRKcNMBp5Su7s5QMo8LR1o=
+	t=1735272472; cv=none; b=dmKkMKoal6wuIjZrUylAvWw8ifsKlpAIYOt+gbJfFZHBITC0EcgKglRGemnNzpeVBTa8RnbI40l2iawv8YI7DMKTSmve3LJap1+KCCwo8/NYwXEUhMDZ4G3CUUKmX29kG/OxUql3EANOyymX1xlnjBtULkiY3n7ZV092Vg5vbrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735271125; c=relaxed/simple;
-	bh=BHFNRIy84ix+cmpRswqeg1N+pU50oo8r026fuQsgnl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IO/x142/lw89LS1qaaSZBjHiKSHt4yMa5nVqRAeW9Fnf6InQkoGQAy/2dZr+pSctqcjOGOWUziY0ILWeac97KmLWvsJDchmvZTlBlQCoL6GQCBqAyNFBV8GZB1gnnItLjxPVVa8QGdClz9/GjtzGmouDq9esTQbW6/22ngm1Xg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D65C4CED0;
-	Fri, 27 Dec 2024 03:45:23 +0000 (UTC)
-Date: Thu, 26 Dec 2024 22:45:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
- <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng
- Yejian <zhengyejian1@huawei.com>, Martin Kelly
- <martin.kelly@crowdstrike.com>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, Mark
- Rutland <mark.rutland@arm.com>
-Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in
- kallsyms
-Message-ID: <20241226224521.2d159a02@batman.local.home>
-In-Reply-To: <CAHk-=wiL8B2=fPaRwDPGgQhVs=3G=8Gy=QyR59L85L0GF67Gbg@mail.gmail.com>
-References: <20241226164957.5cab9f2d@gandalf.local.home>
-	<CAHk-=wiL8B2=fPaRwDPGgQhVs=3G=8Gy=QyR59L85L0GF67Gbg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1735272472; c=relaxed/simple;
+	bh=OYKeOVG/8ng0u2qtD8y4blnF/hgvgfRvgO9s1QzojPU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X2tJ5S+1WqX7Kn1P2gwSyXTbvAVQozWFOJgBpSLZYXvHrL0Ifhh7Q7Goz/C+ujApYWfqh8YVXx4a4zFPRlv/UBFBMH5Ep3FvTz0kIkjBn/0Zhw7sLPTcg1cBKtDdFPLWoxsD0K7fHOeD9A7cm41tRWDp2UYBwUnggki2Q3Nguwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrycUOut; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrycUOut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B02C4CED0;
+	Fri, 27 Dec 2024 04:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735272472;
+	bh=OYKeOVG/8ng0u2qtD8y4blnF/hgvgfRvgO9s1QzojPU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OrycUOuttTS7zt2Wt012CnosSTyHZS+Fdm8y/YVK+DpY7cpTSjql3DYZQb3ZlBOBN
+	 KMlehKY4dcq5RpzMyIVO5W5RhnAh63vid9VRszRgv1Pm62dFdoJ4rh51IP6wsB2noS
+	 Waipm7avKjWtZVpTYxpnFxRiA8R3s2lmvJVWJuJv4CGu6ziYoGvLNk+Ha/v/g/h67+
+	 RBjvIv1enle367WVlDM6jdvUjWvYGDaHvm83omrtuSmZaONhwaXYSjUzG73vnQm+5V
+	 EBKFWlXT0dJz7RP7BjB5VwciaAWhbEu7w0U9Lb/Sv4XYdeUUyjsKeGOo/OWlSy+Pk4
+	 ePtgRaFwz5ctw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Tom Zanussi <zanussi@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v7 0/3] tracing: Support poll on event hist file
+Date: Fri, 27 Dec 2024 13:07:47 +0900
+Message-ID: <173527246726.464571.11533527581374142406.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 26 Dec 2024 19:35:18 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Hi,
 
-> On Thu, 26 Dec 2024 at 13:49, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > But then, when the linker removes these functions because they were
-> > overridden, the code does not disappear, leaving the pointers in the
-> > __mcount_loc locations.  
-> 
-> Btw, does this actually happen when the compiler does the mcount thing for us?
+Here is the 7th version of the series to support polling on event 'hist' file.
+The previous version is here;
 
-Yes.
+https://lore.kernel.org/all/172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com/
 
-I believe the issue is that the mcount_loc is created during the
-compile phase, and it just points to the call to fentry/mcount. The
-linker phase doesn't remove the code, just the symbols that are
-overridden. That means the pointer to the fentry/mcount calls still
-point to the same locations, as the code is still there.
+This version updates descriptions, use guard() for mutex and fixes
+selftest problem.
 
-I even sent an email about this to the gcc folks, and Peter responded
-basically explaining the above.
+Background
+----------
+There has been interest in allowing user programs to monitor kernel
+events in real time. Ftrace provides `trace_pipe` interface to wait
+on events in the ring buffer, but it is needed to wait until filling
+up a page with events in the ring buffer. We can also peek the
+`trace` file periodically, but that is inefficient way to monitor
+a randomely happening event.
 
-  https://lore.kernel.org/all/20241014210841.5a4764de@gandalf.local.home/
+Overview
+--------
+This patch set allows user to `poll`(or `select`, `epoll`) on event
+histogram interface. As you know each event has its own `hist` file
+which shows histograms generated by trigger action. So user can set
+a new hist trigger on any event you want to monitor, and poll on the
+`hist` file until it is updated.
 
--- Steve
+There are 2 poll events are supported, POLLIN and POLLPRI. POLLIN
+means that there are any readable update on `hist` file and this
+event will be flashed only when you call read(). So, this is
+useful if you want to read the histogram periodically.
+The other POLLPRI event is for monitoring trace event. Like the
+POLLIN, this will be returned when the histogram is updated, but
+you don't need to read() the file and use poll() again.
+
+Note that this waits for histogram update (not event arrival), thus
+you must set a histogram on the event at first.
+
+Usage
+-----
+Here is an example usage:
+
+----
+TRACEFS=/sys/kernel/tracing
+EVENT=$TRACEFS/events/sched/sched_process_free
+
+# setup histogram trigger and enable event
+echo "hist:key=comm" >> $EVENT/trigger
+echo 1 > $EVENT/enable
+
+# Wait for update
+poll pri $EVENT/hist
+
+# Event arrived.
+echo "process free event is comming"
+tail $TRACEFS/trace
+----
+
+The 'poll' command is in the selftest patch.
+
+You can take this series also from here;
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/event-hist-poll
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing/hist: Add poll(POLLIN) support on hist file
+      tracing/hist: Support POLLPRI event for poll on histogram
+      selftests/tracing: Add hist poll() support test
+
+
+ include/linux/trace_events.h                       |   14 +++
+ kernel/trace/trace_events.c                        |   14 +++
+ kernel/trace/trace_events_hist.c                   |   92 +++++++++++++++++++-
+ tools/testing/selftests/ftrace/Makefile            |    2 
+ tools/testing/selftests/ftrace/poll.c              |   74 ++++++++++++++++
+ .../ftrace/test.d/trigger/trigger-hist-poll.tc     |   74 ++++++++++++++++
+ 6 files changed, 267 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/poll.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
