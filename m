@@ -1,163 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE872F28;
-	Fri, 27 Dec 2024 01:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD4B1FB3;
+	Fri, 27 Dec 2024 02:19:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735263019; cv=none; b=itvvy+EuQE+lX1zxeyeLNsEThxUTmP6sRqesTCJcRKMQFco8TjB/qbvIifuMiFCy3X3TN6HNHSLDC0ERDsNWLffuNsxcKqPY/KO5jaI/Cd3FErWlIgbkM9ixvkcHr8gKBeHPpfXFTDlEpmFSXbaa0ZKKQtF/qkZH54t3lLRyNV0=
+	t=1735265979; cv=none; b=ks/TkSf1dZooKtcwIQ7riWULvjqIDrznGRijYrINsuM6CGUeyqKqw0k+YAbdf/Opi0BR4sYbp07aM9NK4ypK+rIC/f7mBMWf99uR7lOUl9hUN42tW5Cu0HUbHYl6ztJzJqkC+sZWz0fZGcLZ7U7y1FZNuS/lYGt+PObqCYsnMMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735263019; c=relaxed/simple;
-	bh=bL7mFjSQiSMajR8ODJjm4NG1hBy2Xt2yRNQr3SGvySg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=n3637hxW9NsxsllYyGPeuGPgnEgX5spv8M718skokpAGu5f66QFgppjQ8/wfiXsSUKjCQ+b27StYnijUkdU7NiTLRh44/I9f2PkEaquWcaMOUQNjhwZ5SbXA/CQ/Wthh9NE3Bw1ps9tLW/F1mEBKeGQQ3FVoVPWFDl7qgPAoGL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YI9dHQoZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YI9dHQoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B103C4CED1;
-	Fri, 27 Dec 2024 01:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735263019;
-	bh=bL7mFjSQiSMajR8ODJjm4NG1hBy2Xt2yRNQr3SGvySg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YI9dHQoZotb0MpOXZ73KXiUDXiBlOMBcWKFwgXaNnpVX10ZrFtkUonlMzE6x1Ok1R
-	 yZEP+vRh7tHnnPrDFuaNDCPPYMcvfy9ZL+Y/C/TYsyWYJJFfNnJuyQL4Qt5oM6dNKI
-	 5iJarl4ksMd5/6fLtkB+16Z+9CXuNuS/xHN2kzapxz1AKtsSIRDSKM6nVZPd3rmS+O
-	 P+aGQ1vg7QR0VZN1afvX3vI0CHZWqiMn5F0mYo2GRKXo2/G3q84+ol/53bwrw4AvYS
-	 9qIKENGuEnmCspAUa0yrOpbwdEA6cA3qnl9lMdMmtsUcd0rnWaZV/qBYcohvfop9ah
-	 7LckEZBNd5EoA==
-Date: Fri, 27 Dec 2024 10:30:15 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Shuah Khan <shuah@kernel.org>, Tom Zanussi <zanussi@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] selftests/tracing: Add hist poll() support test
-Message-Id: <20241227103015.eabeef287a1af23c0810ea51@kernel.org>
-In-Reply-To: <20241219110434.3cb3f47c@gandalf.local.home>
-References: <172907575534.470540.12941248697563459082.stgit@mhiramat.roam.corp.google.com>
-	<172907578159.470540.12276069200453397317.stgit@mhiramat.roam.corp.google.com>
-	<20241219110434.3cb3f47c@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1735265979; c=relaxed/simple;
+	bh=imNOJJS3npxrdjdZNZPydQET7iUEAWqyOwtg9L36I7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OXIjXSA8eBZUwivUEtbKTT2XKui/t3+TqqgApgEwqczvMmWwWpy33lqP7o+9udD0XXgNAMn+uE9KeozRjfsNGycajS7OfRoAk7xK/F78Ctu+eJzPV3MWAqE3Q5dS7H1BjZXJC1bQ5TMBVcSLh6P/YCz8VGmaG+3AnNNhW2GBctg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B28C4CED1;
+	Fri, 27 Dec 2024 02:19:36 +0000 (UTC)
+Date: Thu, 26 Dec 2024 21:19:35 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ linux-kbuild@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra
+ <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng
+ Yejian <zhengyejian1@huawei.com>, Martin Kelly
+ <martin.kelly@crowdstrike.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, Mark
+ Rutland <mark.rutland@arm.com>
+Subject: Re: [POC][RFC][PATCH] build: Make weak functions visible in
+ kallsyms
+Message-ID: <20241226211935.02d34076@batman.local.home>
+In-Reply-To: <CAHk-=wgTFSqiMvbGYqFLQaERoeXR5nK1Y=-L3SN7rB3UtzG0PQ@mail.gmail.com>
+References: <20241226164957.5cab9f2d@gandalf.local.home>
+	<CAHk-=wgTFSqiMvbGYqFLQaERoeXR5nK1Y=-L3SN7rB3UtzG0PQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
+On Thu, 26 Dec 2024 15:01:07 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Thu, 19 Dec 2024 11:04:34 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 16 Oct 2024 19:49:41 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> On Thu, 26 Dec 2024 at 13:49, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > But then, when the linker removes these functions because they were
+> > overridden, the code does not disappear, leaving the pointers in the
+> > __mcount_loc locations.  
 > 
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-hist-poll.tc
-> > @@ -0,0 +1,74 @@
-> > +#!/bin/sh
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# description: event trigger - test poll wait on histogram
-> > +# requires: set_event events/sched/sched_process_free/trigger events/sched/sched_process_free/hist
-> > +# flags: instance
-> > +
-> > +POLL=${FTRACETEST_ROOT}/poll
-> > +
-> > +if [ ! -x ${POLL} ]; then
-> > +  echo "poll program is not compiled!"
-> > +  exit_unresolved
-> > +fi
-> > +
-> > +EVENT=events/sched/sched_process_free/
-> > +
-> > +# Check poll ops is supported. Before implementing poll on hist file, it
-> > +# returns soon with POLLIN | POLLOUT, but not POLLPRI.
-> > +
-> > +# This must wait >1 sec and return 1 (timeout).
-> > +set +e
-> > +${POLL} -I -t 1000 ${EVENT}/hist
-> > +ret=$?
-> > +set -e
-> > +if [ ${ret} != 1 ]; then
-> > +  echo "poll on hist file is not supported"
-> > +  exit_unsupported
-> > +fi
-> > +
-> > +# Test POLLIN
-> > +echo > trace
-> > +echo "hist:key=comm" > ${EVENT}/trigger
-> > +echo 1 > ${EVENT}/enable
-> > +
-> > +# This sleep command will exit after 2 seconds.
-> > +sleep 2 &
-> > +BGPID=$!
-> > +# if timeout happens, poll returns 1.
-> > +${POLL} -I -t 4000 ${EVENT}/hist
-> > +echo 0 > tracing_on
-> > +
-> > +if [ -d /proc/${BGPID} ]; then
-> > +  echo "poll exits too soon"
-> > +  kill -KILL ${BGPID} ||:
-> > +  exit_fail
-> > +fi
-> > +
-> > +if ! grep -qw "sleep" trace; then
-> > +  echo "poll exits before event happens"
+> This seems entirely unrelated to weak functions, and will be true for
+> any other "linker removed it" (which can happen for other reasons
+> too).
 > 
-> I ran this and it failed here. But it wasn't because the poll failed, it's
-> because the test is wrong. If something else exits during the test, then
-> the poll function will exit early.
+> So your "fix" seems to be hacking around a symptom.
 
-Hmm, so another process exits before sleep exits, it fails, yes.
+Yeah, that's why this was just a POC.
 
 > 
-> What the check should do is simply read the hist file, get the hist count,
-> and make sure it's updated after the poll is run, or at least put a filter
-> on it:
+> And honestly, the kallsyms argument seems bogus too. The problem with
+> kallsyms is that it looks up the size the wrong way. Making up new
+> function names doesn't fix the problem, it - once again - just hacks
+> around the symptom of doing something wrong.
 > 
->   echo 'hist:keys=comm if comm =="sleep"' > /sys/kernel/tracing/events/sched/sched_process_free/trigger
+> Christ, kallsyms looking at nm output and going by "next symbol" was
+> always bogus, but I think that's how the old a.out format worked
+> originally.
 > 
-> Which would work as long as no other "sleep" exits during the test.
-
-OK, let me update the series.
-
-Thanks!
-
+> But "nm" literally takes a "-S" argument. We just don't use it.
 > 
-> -- Steve
+> So I think the fix is literally to just make kallsysms have the size
+> data. Of course, very annoyingly out /proc/kallsyms file format also
+> tracks the (legacy) nm output that doesn't have size information.
 > 
-> > +  exit_fail
-> > +fi
-> > +
-> > +# Test POLLPRI
-> > +echo > trace
-> > +echo 1 > tracing_on
-> > +
-> > +# This sleep command will exit after 2 seconds.
-> > +sleep 2 &
-> > +BGPID=$!
-> > +# if timeout happens, poll returns 1.
-> > +${POLL} -P -t 4000 ${EVENT}/hist
-> > +echo 0 > tracing_on
-> > +
-> > +if [ -d /proc/${BGPID} ]; then
-> > +  echo "poll exits too soon"
-> > +  kill -KILL ${BGPID} ||:
-> > +  exit_fail
-> > +fi
-> > +
-> > +if ! grep -qw "sleep" trace; then
-> > +  echo "poll exits before event happens"
-> > +  exit_fail
-> > +fi
-> > +
-> > +exit_pass
-> 
+> But I do think that if you hit real problems, you need to fix the
+> *source* of the issue, not add another ugly hack around things.
 
+So basically the real solution is to fix kallsyms to know about the end
+of functions. Peter Zijlstra mentioned that before, but it would take a
+bit more work and understanding of kallsyms to fix it properly.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I'm fine not doing the hack and hopefully one day someone will have the
+time to fix kallsyms. This was just something I could do quickly,
+knowing it is mostly keeping with the status quo and not actually
+fixing the root of the issue. I also needed to refresh my ELF parsing
+abilities ;-)
+
+I may take a look at kallsyms internals. I have some spare time before
+the new year to try and work on things I don't normally get time to
+work on.
+
+-- Steve
