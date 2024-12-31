@@ -1,88 +1,125 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C64195;
-	Tue, 31 Dec 2024 11:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E8F2C181;
+	Tue, 31 Dec 2024 15:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735645371; cv=none; b=XjRc6iZr5toGCiJXVuNihm+yBmU7hJgAQR5jnOH3lK9oWPWU6UH4kQKr35FmQJ0WR+qTLoeL6o87eD9kT9l/fk+K18c0rWUv0ZriP/xcd2gTF2YTRuZK4rtRgqEDsvBCEIUe6V7HLg0/UsVN2VPEty4gg+JynQwwj1PpUA1odVw=
+	t=1735659971; cv=none; b=YSPgVDo3+tYOuqF4LaQaj8L4hLpouFX2Tttb77KFgtPmNa72eIuyi3WTF9bu93mIbNdyAvJyPAP9KnOFcXspbxGfTYCvzIjpiKKGF8pU5GHncH6JwNqERqCf2AfYcgsgeuMxYovlLNqvIP7qLptwy2qtIOi2JBhFl1nmTmz7t1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735645371; c=relaxed/simple;
-	bh=QNAsIH9AftPR2ALNeY0MPiMVOLsvYgKLZG/mCKYz9ok=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f1aGI2LQc4LLCQ0RGsw9i+QbXQiLRGOYvWlqLTouSUhgcSbFJTRaPmaCg0EhQoxdp9mW6zlOGMDd0dNAYB5pBjYyHZ2ttbtr7DW89K9B4zM70bk7hdstyxI13ZI/LzBqEN+Nv5qeEMWtmSdlTLXtGWnEIOUYWAj2L726YjMhkpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn; spf=pass smtp.mailfrom=seu.edu.cn; dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b=YMZtc2pm; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=seu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seu.edu.cn
+	s=arc-20240116; t=1735659971; c=relaxed/simple;
+	bh=hxxhfWM8ZAqoudfVE8I59DFXAhEIOUN87uOxxHsqLpI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BVHEFbL/no5n9bqEx8xuVfUOf3nPXoXNofJttXAoy05FfdqqATO24Ytp9VFaey1P1AdSQ+mVhgwuxbI7Ch9jui88fdEdgKPO4Tel59G6Lp3mnIIM2Drxi1wvpQIwToMJwS+jJg5eDdCTILcHhdUleJLGevzH3hwH4fC600ELgzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8T9DwRC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=seu.edu.cn header.i=@seu.edu.cn header.b="YMZtc2pm"
-Received: from localhost.localdomain (unknown [202.119.23.198])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 754d3d8f;
-	Tue, 31 Dec 2024 19:37:34 +0800 (GMT+08:00)
-From: Zilin Guan <zilin@seu.edu.cn>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	jianhao.xu@seu.edu.cn,
-	Zilin Guan <zilin@seu.edu.cn>
-Subject: [PATCH] kernel/trace: Add READ_ONCE() when accessing fgraph_array[]
-Date: Tue, 31 Dec 2024 11:37:31 +0000
-Message-Id: <20241231113731.277668-1-zilin@seu.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8T9DwRC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49B29C4CED2;
+	Tue, 31 Dec 2024 15:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735659971;
+	bh=hxxhfWM8ZAqoudfVE8I59DFXAhEIOUN87uOxxHsqLpI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i8T9DwRCjjvkUgDbaxkuVhuBt6v2lQFwzq5GhCNyBAn31lKcgB10+2EeBcY8aS5u6
+	 N2Jys426jlLN2fQIZHBbMZHxFzZ7oVXO6SmRP/lOEQBXdMpVqy8Ulfkp55FmrD85zr
+	 liP84CvsDgUnQPsyBNb3lOHPw4FWQLnynNJaj04fxIk2jdYIW0X3z/fj0kZwAZwsz0
+	 8zflq8FpPGQbsga86RLCnr/xNbxnDO8pXkaKUKfvxDZDnovRbLEp+85VYc86kQ2Tdl
+	 L0BV0pev/kAhIx8p2qyrJw7RSIIFF9jv4JFdYONEOezf2dxIOJFJv6eSoPdG6iKDD3
+	 4q0/vig4HVIKA==
+Date: Wed, 1 Jan 2025 00:46:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Genes Lists <lists@sapience.com>, Gene C <arch@sapience.com>
+Subject: Re: [PATCH] tracing: Have process_string() also allow arrays
+Message-Id: <20250101004607.d20559613bdde9b349c420c5@kernel.org>
+In-Reply-To: <20241231000646.324fb5f7@gandalf.local.home>
+References: <20241231000646.324fb5f7@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGU5CVkxPGEpMHk5IQx0YSFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJS0lVSkpCVUlIVUpCQ1lXWRYaDxIVHRRZQVlPS0hVSktISk9ITFVKS0tVSk
-	JLS1kG
-X-HM-Tid: 0a941c81c5d403a1kunm754d3d8f
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBg6Gio6GDIRKTUwCTcIEgEB
-	AhwKCiJVSlVKTEhOTU9OS05OSEJCVTMWGhIXVQESFxIVOwgeDlUeHw5VGBVFWVdZEgtZQVlJS0lV
-	SkpCVUlIVUpCQ1lXWQgBWUFKSE9MNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=YMZtc2pmb6r6SkrOndQ+lqcJt0Wa7Jo0slu0lFgVqBINCgqUEn0NWLx+WaEIIhOWOUeBAIJFeYuXdH5xhQHSX73L77qzsNeCipowF61XObavke9RYlaeCZ8xZW48u5ZOvc19jhhrlSLXyItdeZzlMEkwCYm7XC0OdEYZvYtubzA=; c=relaxed/relaxed; s=default; d=seu.edu.cn; v=1;
-	bh=yqC6Ryy5mRt2AOFqgXZi0SSFvpHkE+C08AlwMiIhc94=;
-	h=date:mime-version:subject:message-id:from;
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In __ftrace_return_to_handler(), a loop iterates over the fgraph_array[]
-elements, which are fgraph_ops. The loop checks if an element is a
-fgraph_stub to prevent using a fgraph_stub afterward.
+On Tue, 31 Dec 2024 00:06:46 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-However, if the compiler reloads fgraph_array[] after this check, it might
-race with an update to fgraph_array[] that introduces a fgraph_stub. This
-could result in the stub being processed, but the stub contains a null
-"func_hash" field, leading to a NULL pointer dereference.
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> In order to catch a common bug where a TRACE_EVENT() TP_fast_assign()
+> assigns an address of an allocated string to the ring buffer and then
+> references it in TP_printk(), which can be executed hours later when the
+> string is free, the function test_event_printk() runs on all events as
+> they are registered to make sure there's no unwanted dereferencing.
+> 
+> It calls process_string() to handle cases in TP_printk() format that has
+> "%s". It returns whether or not the string is safe. But it can have some
+> false positives.
+> 
+> For instance, xe_bo_move() has:
+> 
+>  TP_printk("move_lacks_source:%s, migrate object %p [size %zu] from %s to %s device_id:%s",
+>             __entry->move_lacks_source ? "yes" : "no", __entry->bo, __entry->size,
+>             xe_mem_type_to_name[__entry->old_placement],
+>             xe_mem_type_to_name[__entry->new_placement], __get_str(device_id))
+> 
+> Where the "%s" references into xe_mem_type_to_name[]. This is an array of
+> pointers that should be safe for the event to access. Instead of flagging
+> this as a bad reference, if a reference points to an array, where the
+> record field is the index, consider it safe.
 
-To ensure that the gops compared against the fgraph_stub matches the gops
-processed later, add a READ_ONCE(). A similar patch appears in commit
-63a8dfb ("function_graph: Add READ_ONCE() when accessing fgraph_array[]").
+OK, at least if foo[] is accessible in TP_printk, it should be a global
+array. So I think the below works.
 
-Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
----
- kernel/trace/fgraph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index ddedcb509..30e3ddc8a 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -833,7 +833,7 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
- #endif
- 	{
- 		for_each_set_bit(i, &bitmap, sizeof(bitmap) * BITS_PER_BYTE) {
--			struct fgraph_ops *gops = fgraph_array[i];
-+			struct fgraph_ops *gops = READ_ONCE(fgraph_array[i]);
- 
- 			if (gops == &fgraph_stub)
- 				continue;
+Thanks,
+
+> 
+> Link: https://lore.kernel.org/all/9dee19b6185d325d0e6fa5f7cbba81d007d99166.camel@sapience.com/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 65a25d9f7ac02 ("tracing: Add "%s" check in test_event_printk()")
+> Reported-by: Genes Lists <lists@sapience.com>
+> Tested-by: Gene C <arch@sapience.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 1545cc8b49d0..770e7ed91716 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -364,6 +364,18 @@ static bool process_string(const char *fmt, int len, struct trace_event_call *ca
+>  		s = r + 1;
+>  	} while (s < e);
+>  
+> +	/*
+> +	 * Check for arrays. If the argument has: foo[REC->val]
+> +	 * then it is very likely that foo is an array of strings
+> +	 * that are safe to use.
+> +	 */
+> +	r = strstr(s, "[");
+> +	if (r && r < e) {
+> +		r = strstr(r, "REC->");
+> +		if (r && r < e)
+> +			return true;
+> +	}
+> +
+>  	/*
+>  	 * If there's any strings in the argument consider this arg OK as it
+>  	 * could be: REC->field ? "foo" : "bar" and we don't want to get into
+> -- 
+> 2.45.2
+> 
+
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
