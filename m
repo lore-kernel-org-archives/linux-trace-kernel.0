@@ -1,116 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1035217C68;
-	Tue, 31 Dec 2024 16:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CBA79E1;
+	Wed,  1 Jan 2025 19:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735660820; cv=none; b=auvyeYi99IbGGV1rJiFxBvJWu/c1ocGvIhdM3cwUvp9JzN2bgnexuZa0r0ejBLFFKzB7/WXlGX4xuxbhQq3HYjK/cSG4np5tOwI1CZ2MOtiQiwhHRWNvfoVUqLqLkpGVDFq1XvqUiyekh3RPhUJRHlLTU4/5sIMp6hQpwX13d7E=
+	t=1735758521; cv=none; b=YMHCzZuMqvHMDbIsgxeYBByDqmlvUAe6AlXKug9NfNFr4l93tFbd/5IzAgIfzqZpTzXU9I1HyCX5FnzVnw6kNYhuy0iFfsTUoscl4fOTbmLe1uGD7bM+5R8L2Rlej9BRWPjvZByN9fX2n2jk9QP1pJiu6wXMy60+DiduN971awY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735660820; c=relaxed/simple;
-	bh=wVISiyeMkK4FOBrgMThtXTKECr0EnjQ6TVL1e6ur+9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HTwHcGlnMS8ltja1dIgnS4ZDSEuzlW6sJSSVc519mvCbAudFNoT2mi2qDCu9wIAiEkGm16WPTaOf6ZRFtAvFLQ8b81d1Uz5kHRv2UQoqe6FcG34aA2Kfvn4z//OObsPAaTyqFPPHe7mBYCBt2OUuEmnk3c7wmeaqDvtI70qRrlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6HoD8YX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735758521; c=relaxed/simple;
+	bh=P+0y2TLmRO7pqjgmJI9L5h/PJXPqqryVP8ryiPG+PgI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UQvPXVzo6rOUaZ2SuMTJ1n66i+e5MDr4H5TxzFAdU/mEudJ5Hw6fuDk0YQODDERSb1BMe0mgV31POVQVpk0zmyskBEdIuqZS5bNLwLV+tBhXa93qcfsgh7WpGW0r5wrmDuDXcFGy8bkUyCdG8CSpAn959F7KnI/m68kC5Se+Y8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Xzgqp3A+; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6HoD8YX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4FB2C4CED2;
-	Tue, 31 Dec 2024 16:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735660819;
-	bh=wVISiyeMkK4FOBrgMThtXTKECr0EnjQ6TVL1e6ur+9Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u6HoD8YXdUSfugWyJ6LzwHVghHNxaK/pgxrz1BYqRyrf/taoGfZspKgSPwnRSb7VV
-	 eJCOaleQUtIgQyoVBAa32hsLZDwXH+JXmq69IRKW3xOScFCFfLcAgMLuS9O9eILVwA
-	 /IqtpNSjJAq9qdf2fGuQb/+ko6MTXKmHDk7WQf+GzzwdzrUBMxJnJ9XkpTnowXEPrI
-	 VsLckaE7E68l3B/e0zBBuWiDNVPioJAp1SgdXgp2tkZXy4cK4wcASiKaTu3I7VaPnn
-	 2xWjr5Sz7G/Rjt3NCby0CkNiNINGpFCQ5AHTEnAiTespd1Cu4jOqqusB+tP3u6exXK
-	 3GpRRceBdAx7g==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Florent Revest <revest@chromium.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arch@vger.kernel.org
-Subject: [PATCH v23] bpf: Use ftrace_get_symaddr() for kprobe_multi probes
-Date: Wed,  1 Jan 2025 01:00:14 +0900
-Message-ID: <173566081414.878879.10631096557346094362.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241227102452.14a1c2d9@gandalf.local.home>
-References: <20241227102452.14a1c2d9@gandalf.local.home>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Xzgqp3A+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1735758372; x=1767294372;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Vl3J2ymtj17hTfc7xIB9ScQElhna+/JXnRmbV+pz1jU=;
+  b=Xzgqp3A+BRYkdBcaOHI0727EEZBBnhZ+xYvIUrMiZMuo93++dOvvwCcq
+   mVFgg1zocasCS7WQ1AuBsdjsL96ZuKK+HxHkCBQSuJqE/RA7SsLlyoO0+
+   HRCmz7vkl5aFC6rj9xdn3/s++bRxZN+YDRjAPVG8gH8NQfQJcFaA10g0J
+   0=;
+X-IronPort-AV: E=Sophos;i="6.12,283,1728950400"; 
+   d="scan'208,223";a="11201301"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jan 2025 19:06:10 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:53390]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.25.144:2525] with esmtp (Farcaster)
+ id 3a57c88d-f93b-4f57-8de0-6a8e3ae283ee; Wed, 1 Jan 2025 19:08:38 +0000 (UTC)
+X-Farcaster-Flow-ID: 3a57c88d-f93b-4f57-8de0-6a8e3ae283ee
+Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Wed, 1 Jan 2025 19:08:37 +0000
+Received: from b0be8375a521.amazon.com (10.119.15.26) by
+ EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Wed, 1 Jan 2025 19:08:34 +0000
+From: Kohei Enju <enjuk@amazon.com>
+To: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+CC: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuniyuki Iwashima
+	<kuniyu@amazon.com>, Takamitsu Iwai <takamitz@amazon.co.jp>, Kohei Enju
+	<enjuk@amazon.com>, <stable@vger.kernel.org>
+Subject: [PATCH v1] ftrace: Fix function profiler's filtering functionality
+Date: Thu, 2 Jan 2025 04:08:20 +0900
+Message-ID: <20250101190820.72534-1-enjuk@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWA001.ant.amazon.com (10.13.139.112) To
+ EX19D003ANC003.ant.amazon.com (10.37.240.197)
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From commit c132be2c4fcc ("function_graph: Have the instances use their own
+ ftrace_ops for filtering"), function profiler (enabled via function_profil
+e_enabled) has been showing statistics for all functions, ignoring set_ftra
+ce_filter settings.
 
-Add ftrace_get_entry_ip() which is only for ftrace based probes, and use
-it for kprobe multi probes because they are based on fprobe which uses
-ftrace instead of kprobes.
+While tracers are instantiated, the function profiler is not. Therefore, it
+ should use the global set_ftrace_filter for consistency.
+This patch modifies the function profiler to use the global filter, fixing
+the filtering functionality.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Before (filtering not working):
+```
+root@localhost:~# echo 'vfs*' > /sys/kernel/tracing/set_ftrace_filter
+root@localhost:~# echo 1 > /sys/kernel/tracing/function_profile_enabled
+root@localhost:~# sleep 1
+root@localhost:~# echo 0 > /sys/kernel/tracing/function_profile_enabled
+root@localhost:~# head /sys/kernel/tracing/trace_stat/*
+  Function                               Hit    Time            Avg
+     s^2
+  --------                               ---    ----            ---
+     ---
+  schedule                               314    22290594 us     70989.15 us
+     40372231 us
+  x64_sys_call                          1527    8762510 us      5738.382 us
+     3414354 us
+  schedule_hrtimeout_range               176    8665356 us      49234.98 us
+     405618876 us
+  __x64_sys_ppoll                        324    5656635 us      17458.75 us
+     19203976 us
+  do_sys_poll                            324    5653747 us      17449.83 us
+     19214945 us
+  schedule_timeout                        67    5531396 us      82558.15 us
+     2136740827 us
+  __x64_sys_pselect6                      12    3029540 us      252461.7 us
+     63296940171 us
+  do_pselect.constprop.0                  12    3029532 us      252461.0 us
+     63296952931 us
+```
+
+After (filtering working):
+```
+root@localhost:~# echo 'vfs*' > /sys/kernel/tracing/set_ftrace_filter
+root@localhost:~# echo 1 > /sys/kernel/tracing/function_profile_enabled
+root@localhost:~# sleep 1
+root@localhost:~# echo 0 > /sys/kernel/tracing/function_profile_enabled
+root@localhost:~# head /sys/kernel/tracing/trace_stat/*
+  Function                               Hit    Time            Avg
+     s^2
+  --------                               ---    ----            ---
+     ---
+  vfs_write                              462    68476.43 us     148.217 us
+     25874.48 us
+  vfs_read                               641    9611.356 us     14.994 us
+     28868.07 us
+  vfs_fstat                              890    878.094 us      0.986 us
+     1.667 us
+  vfs_fstatat                            227    757.176 us      3.335 us
+     18.928 us
+  vfs_statx                              226    610.610 us      2.701 us
+     17.749 us
+  vfs_getattr_nosec                     1187    460.919 us      0.388 us
+     0.326 us
+  vfs_statx_path                         297    343.287 us      1.155 us
+     11.116 us
+  vfs_rename                               6    291.575 us      48.595 us
+     9889.236 us
+```
+
+Cc: stable@vger.kernel.org
+Fixes: c132be2c4fcc ("function_graph: Have the instances use their own ftrace_ops for filtering")
+Signed-off-by: Kohei Enju <enjuk@amazon.com>
 ---
- Changes in v23:
-  - Move ftrace_get_symaddr() in CONFIG_FPROBE ifdef block.
- Changes in v21:
-  - Use new ftreace_get_symaddr() only for kprobe multi probes.
- Changes in v19:
-  - Use ftrace_get_symaddr() instead of introducing new arch dependent code.
-  - Also, replace x86 code with ftrace_get_symaddr(), which does the same
-   thing.
----
- kernel/trace/bpf_trace.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ kernel/trace/ftrace.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 863351559334..9bfd52913a5b 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2591,6 +2591,13 @@ static DEFINE_PER_CPU(struct pt_regs, bpf_kprobe_multi_pt_regs);
- #define bpf_kprobe_multi_pt_regs_ptr()	(NULL)
- #endif
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 9b17efb1a87d..2e113f8b13a2 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -902,16 +902,13 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ }
  
-+static unsigned long ftrace_get_entry_ip(unsigned long fentry_ip)
-+{
-+	unsigned long ip = ftrace_get_symaddr(fentry_ip);
-+
-+	return ip ? : fentry_ip;
-+}
-+
- static int copy_user_syms(struct user_syms *us, unsigned long __user *usyms, u32 cnt)
+ static struct fgraph_ops fprofiler_ops = {
+-	.ops = {
+-		.flags = FTRACE_OPS_FL_INITIALIZED,
+-		INIT_OPS_HASH(fprofiler_ops.ops)
+-	},
+ 	.entryfunc = &profile_graph_entry,
+ 	.retfunc = &profile_graph_return,
+ };
+ 
+ static int register_ftrace_profiler(void)
  {
- 	unsigned long __user usymbol;
-@@ -2829,7 +2836,8 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
- 	int err;
- 
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
--	err = kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs, false, data);
-+	err = kprobe_multi_link_prog_run(link, ftrace_get_entry_ip(fentry_ip),
-+					 fregs, false, data);
- 	return is_kprobe_session(link->link.prog) ? err : 0;
++	ftrace_ops_set_global_filter(&fprofiler_ops.ops);
+ 	return register_ftrace_graph(&fprofiler_ops);
  }
  
-@@ -2841,7 +2849,8 @@ kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
- 	struct bpf_kprobe_multi_link *link;
+@@ -922,12 +919,11 @@ static void unregister_ftrace_profiler(void)
+ #else
+ static struct ftrace_ops ftrace_profile_ops __read_mostly = {
+ 	.func		= function_profile_call,
+-	.flags		= FTRACE_OPS_FL_INITIALIZED,
+-	INIT_OPS_HASH(ftrace_profile_ops)
+ };
  
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
--	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), fregs, true, data);
-+	kprobe_multi_link_prog_run(link, ftrace_get_entry_ip(fentry_ip),
-+				   fregs, true, data);
+ static int register_ftrace_profiler(void)
+ {
++	ftrace_ops_set_global_filter(&ftrace_profile_ops);
+ 	return register_ftrace_function(&ftrace_profile_ops);
  }
  
- static int symbols_cmp_r(const void *a, const void *b, const void *priv)
+-- 
+2.39.5 (Apple Git-154)
 
