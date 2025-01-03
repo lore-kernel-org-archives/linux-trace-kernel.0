@@ -1,81 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085671B4233;
-	Fri,  3 Jan 2025 23:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE971C07ED;
+	Fri,  3 Jan 2025 23:01:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735945288; cv=none; b=rMEAbNE4YPp9r7y2/HHhzZZ6yO4Gy+q7W+CXn8zIKF2dvdSK1uRl7q1OYsTSiktfNEMoBUSb78Ly3LRZnA8BXOozpChy7YkJqNi6g3P6W1drZMwZ06dzOOKqPoczVWBEu/Ae0AMJKRsxE0t1Kp1WiynXU5VuWwUG0kalzr6f5/4=
+	t=1735945291; cv=none; b=bQCp5LZhHvDYBTQfhdFWQt7nqRKvBu08/5mD9bD/NFI7sfYQuXbqOUl0Ftz8ep+pYk5mMLyhQLKmp4phF85cOuN0PWtID4HHBL0mUx+Y9Vtd/l3u/V5I14TIrg8u+JrPIY7K5C3RAdeCXBdYvqmBjBMLFGSM21EmiwOU9ZLjl5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735945288; c=relaxed/simple;
-	bh=ygKZEWWLkAua1jdISLtrBfJeTUhY4u4X3AGmkp9dDto=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MTMTy2+Yk8N6usYqV3+19p9zajlUBvb534TaMVBEAVclUq4R2hO1od2gLzraJV+TH6o51E2jwts3Yq0Nj194M8M1wSfb686pUWheOZMz3uaMyag4f7NonU7eTfwXbtF640CCR7FEQalFH0xe6nIrmDAn48HrFcyDXQzTQrS8vTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A609FC4CEDF;
-	Fri,  3 Jan 2025 23:01:24 +0000 (UTC)
-Date: Fri, 3 Jan 2025 18:02:43 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian
- <zhengyejian1@huawei.com>, Martin  Kelly <martin.kelly@crowdstrike.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf
- <jpoimboe@redhat.com>
-Subject: Re: [PATCH v2 13/16] scripts/sorttable: Move code from sorttable.h
- into sorttable.c
-Message-ID: <20250103180243.53cc9e98@gandalf.local.home>
-In-Reply-To: <20250102232650.834242633@goodmis.org>
-References: <20250102232609.529842248@goodmis.org>
-	<20250102232650.834242633@goodmis.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1735945291; c=relaxed/simple;
+	bh=H7DFl9atQy/zuX7UnU3bVDtlzCsl98Lp7nyF8oIMqUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=grQWDlKbGOkMp5fFwxVMtI9XZoKAEszc7tiAKR+d2CM21rm/G+xQ5BqzkSKQAlzWUbXIvvpjy81iGGOdjZxD+z9uC6aoocW5hX5WyvLZ99Z9fWSS3fAsbUISsZUXRAhRvti87thEOI8VRv+m4hoERPFIp6hIhvnj9rhNg7tTkP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTtPA+Fg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTtPA+Fg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 219DEC4CEDD;
+	Fri,  3 Jan 2025 23:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735945291;
+	bh=H7DFl9atQy/zuX7UnU3bVDtlzCsl98Lp7nyF8oIMqUQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RTtPA+Fg+N4XdrbAAhuMAo76O9VrcnGwlA/a/SynyRLnaB3C7ZL3+JY/+ynvDt24V
+	 AlwblCyVMMPu9oXKg6VeOmKhBuIbCDQZPvoaeYyWV+FflkrtZ3wnfJlYpUQqrCPtcK
+	 dC27NJiyoIn1tfFk6Q0mNr1tcR9IrpJ5ntxCkIlO2io4yPcVEsinFjWkR3tweLEX8V
+	 4CxZ+jMcQ4bbpvdyu/xC52AuWDPXi2xvFEbAdd+8UrHHVp9GbV7AjODK+HvV6hIu3Q
+	 X1kwXMr0seVjvhK3qoZmWub2lautxBzmaTu5F8rx5qzvZz9izpwb7fOl3TazPG2qgW
+	 Q2vyqlq8/JwJw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/6] kprobes: jump label: Cleanup with guard and __free
+Date: Sat,  4 Jan 2025 08:01:25 +0900
+Message-ID: <173594528527.1055889.2175884987203674189.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 02 Jan 2025 18:26:22 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-> index 20615de18276..da9e1a82e886 100644
-> --- a/scripts/sorttable.c
-> +++ b/scripts/sorttable.c
-> @@ -327,10 +327,420 @@ static inline void *get_index(void *start, int entsize, int index)
->  	return start + (entsize * index);
->  }
->  
-> -/* 32 bit and 64 bit are very similar */
-> -#include "sorttable.h"
-> -#define SORTTABLE_64
-> -#include "sorttable.h"
-> +
+Here is a series of patches to fix and cleanup probe events in ftrace with __free().
 
-[..]
+Thanks,
 
-> +
-> +#if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+---
 
-My tests started to fail after this patch. It was the stack tracing tests
-on x86_64. This patch removed the define of SORTTABLE_64, which stopped the
-orc unwinder section from being sorted. :-p
-
-Oops! When I post the stand-a-lone patches, this will be fixed.
-
--- Steve
+Masami Hiramatsu (Google) (6):
+      tracing/kprobes: Fix to free objects when failed to copy a symbol
+      Provide __free(argv) for argv_split() users
+      tracing: Use __free() for argv in dynevent
+      tracing: Use __free() in trace_probe for cleanup
+      tracing: Use __free() for kprobe events to cleanup
+      tracing/kprobes: Simplify __trace_kprobe_create() by removing gotos
 
 
-> +/* ORC unwinder only support X86_64 */
-> +#include <asm/orc_types.h>
-> +
-> +#define ERRSTR_MAXSZ	256
-> +
+ include/linux/string.h        |    2 +
+ kernel/trace/trace_dynevent.c |   47 ++++++----------
+ kernel/trace/trace_kprobe.c   |  123 +++++++++++++++++++----------------------
+ kernel/trace/trace_probe.c    |   52 ++++++-----------
+ 4 files changed, 97 insertions(+), 127 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
