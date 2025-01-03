@@ -1,255 +1,110 @@
-Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E99F1B6D0F
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Jan 2025 06:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D7E148832;
+	Fri,  3 Jan 2025 09:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735887500; cv=none; b=ZSzvferHo4eZ+atDI8bYmi7uasvZDzRW5be8vsmDZgFudDx+lALfOGG7YHPLMj26TMTs2zGS6tjYf5+Ccl/Ja40bQzsY07kB2iet11L1RLWfIpTHlx2uK7YYHe8ReAR6g70OiogSptFMoMmppn1Y9mH3pI26gOcTHhzidwW1Ts0=
+	t=1735897043; cv=none; b=FOJ2YPxXhaFDJfKPHXVXr5BBi1oMtObzm3wmVhUk4WNVz0k4J0hCWyTT0aENw1aqtvfRudifZx2lggmSFCQ2ikX1mO3mlkn/Syp9KH4sy1ZxlpWrSRg1YldS7E1mcwWYVNR/e/kFBCcrJzIK6XcZpEtdicHVSHqONjdMS1fGmYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735887500; c=relaxed/simple;
-	bh=uZvmFNXraGxVUvTGYtVZ/ME0RVp73Xzv7aLP6o5YXhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uycm5a9FN9PMG3kZds6cdKQHgDQHbVHJ/a4qcbDieHpJHv39HsnLV9v5qXIPKP32dT3S2zsbzKLpcQuWj456Z0pGrsvvIdfH/+nhP1TIqddDjsKGw8WOvyhxjBLpK81rbvSoyLIzuktoBNc42+lPNyF5YcWZ7vIsloiM1UgbAJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fv3QmmTB; arc=none smtp.client-ip=209.85.221.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1735897043; c=relaxed/simple;
+	bh=SaAQ9+CP1WXbg/Tv07CdjFRATWRPeasDDkQQk4soTLE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a3HkyQF9ZDNrMU3aUNDh9PjdW7vWbtVUYHokyIhe2ERrXLDkz1YCPXIJJEYcYErB2cy7GMdhxJ0mL6Xztv9C0n86z6dXn/L5oOs3B6mVaL/cM/qRImqUmX0xfRX/JVS/Kh0Q1gGqMuAMaP9KZlWkFSnM4q0cxOw3hWxkmHry/yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F3Gp7JK8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fv3QmmTB"
-Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3863703258fso7589323f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Jan 2025 22:58:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1735887496; x=1736492296; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uZvmFNXraGxVUvTGYtVZ/ME0RVp73Xzv7aLP6o5YXhc=;
-        b=fv3QmmTBlD7xvvE/GGchQPWnfhzKrUhqj66OtzmuQOn4gn6E1t7DLZSEblLdIKQ0EB
-         yQbUje9Z7qCxxV4n2g15ST2H1elW7XVOobPZnz2WhJk2X2FJdgmW6vOKSjN+mH/fOl04
-         yM/eCO0Q2E8j5mdXIp+36LyTowi492so/VAxMZbS+FtA4kXcF5k4yXE5YeglfLYPYq6n
-         cb63T0+0/lS2+TBurO4PQ1hzw+y0ZF1pxJd+tH2UlGqjxECbQHNIggJQODV2FM786kFo
-         slOW+Wb0ZY2CKPHJ1PFiRt1GMV9XdjjVSthhWzaITLlGJkkT8GrY3Rj6BQnUqlGmaKet
-         tEwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735887496; x=1736492296;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uZvmFNXraGxVUvTGYtVZ/ME0RVp73Xzv7aLP6o5YXhc=;
-        b=siFPCN/v3O38GqzDzVAbY5T6zYN+rfpj4N5Mxvdq1zu5DJN+Djh73bthUSQvdiMwRW
-         b/1m3DAlcKnaMcaM35gCRb6uwtxylbT5GywVBVvSciOYIZGjPMiHvJ3Hv+LGgIy35YQF
-         fmaU+bNm/m1fZnkedmJ4GjawV0mai9wpKK70Mt7HvF3TBG6iCXFrQRDP8Tx0Ls1jpEV4
-         ngOjK52np7Kx2Zn69RjMdlRA57wFqGnZRfI8rNko93xEF8yvEX2I6XVOc7S8dRZ2hACt
-         GOLL/e5mzhMdMr8eQuLoSs8pNGtwQvPSr7z9zL80L4wzOUz7LbNawd/sSt/wmJeX0EAa
-         iHUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS76NDxn3FbcW77UW4LuumN1qqLuN34EdzCVobG7i93fXuAu9opuvqCJrfp01gQmg+kdWWRB/rPozrdIXS9wKpCSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxCamloQOa0E/CVk9khcn8vKteRGI95frTP5BOBqps4hFoadye
-	e5EPksjGPH9McrxVFc2YPW8IDIhRIolAiLRBFQ45g+yqszK31Yb/lArUSNUqHxc=
-X-Gm-Gg: ASbGncunEYH7QXhidAjM9w7QUG9iwWx008OGraAgbSFb+cjMJqWab2YjCX0cehN6mjC
-	OyaJMLFH01Q+8/lz5Y8BRHRb1TJNcki2+DaZlPpHGbpU6TtKWP6R8AZiyyzi/kn0JPj6Ug8nN0p
-	J/TNW88yCmHk72SaNO2YBc2C8B5s8nvf9jI8uFqfIGUiNwCrB+m5ZDd95VXCTVOUauRsdgz4Gsg
-	hjm4So0WuKI4RGdo/fxcLZau1b+TXFcL/fvTDB94FZNFx/s4z0O3yVfUM8lVlK+kItfkTQb9uMb
-	ShbUnuiXVLTdg89rWXp0Scz8Z/B4Jtp0yEE0LzW6DQ4r1TZ11Y8F+DCB834ACtFkUvJuD/nKRt6
-	0pu3IlA==
-X-Google-Smtp-Source: AGHT+IH0GAtrEtOzyc8yCFlj/GI2tQ+enhDK8ABHkVTraKDu3aontF3mFgvrkrxtUKrD1XyGNRWMNw==
-X-Received: by 2002:a5d:64a4:0:b0:386:374b:e8bc with SMTP id ffacd0b85a97d-38a1a221d7amr44309704f8f.15.1735887496434;
-        Thu, 02 Jan 2025 22:58:16 -0800 (PST)
-Received: from ?IPV6:2003:e5:8731:2800:842d:42a0:5992:3595? (p200300e587312800842d42a059923595.dip0.t-ipconnect.de. [2003:e5:8731:2800:842d:42a0:5992:3595])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a1c89e219sm40466083f8f.84.2025.01.02.22.58.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2025 22:58:16 -0800 (PST)
-Message-ID: <9878d90f-faf3-4853-9a79-a21b4f58ab4c@suse.com>
-Date: Fri, 3 Jan 2025 07:58:13 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F3Gp7JK8"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 502Nvxw6012268;
+	Fri, 3 Jan 2025 09:37:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=rlXdp+XmeCZl0WscPjfF63mX3Z6CUNT9vGwS3I24j
+	bQ=; b=F3Gp7JK8yWdlXonPxAaHvl8Dgoc2Yxl5f52cb132ZZxcBkr59LvmSoEFJ
+	OSJ+ZzN8kSOIpe6BxAPsJ1cliA7C9QjA3jbV7XISsKlThdQNqTskXAk8x5IfqqQR
+	fyR5W0XN10gCrMZhsBEzwWvLSw7vTVa5LQMa1L9sf5MYgYIj06EYVzskUYKiULSL
+	+Kqt4Du1E6Y/SRTm0YqNk3RR3zeKfdLr2S3S32nVP7yuUrZwCCM/puv9K3A9Kf5S
+	JQQrSze7smqftWscfczu0/5DpAF7uUOJpcnb+rc9D5VeH3aCI7ZyD1vGtfWIjv6E
+	ADu48qra/BHmdZ5yMVqWK8ZC8pXRQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43x4xh1pfh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jan 2025 09:37:09 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 503779Ea027024;
+	Fri, 3 Jan 2025 09:37:09 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 43txc25ekt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 03 Jan 2025 09:37:08 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5039b7v548693608
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 3 Jan 2025 09:37:07 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5751420043;
+	Fri,  3 Jan 2025 09:37:07 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AF7F820040;
+	Fri,  3 Jan 2025 09:37:05 +0000 (GMT)
+Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.124.222.25])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  3 Jan 2025 09:37:05 +0000 (GMT)
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: rostedt@goodmis.org, mhiramat@kernel.org
+Cc: sshegde@linux.ibm.com, mark.rutland@arm.com,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ftrace: print lazy preemption model
+Date: Fri,  3 Jan 2025 15:06:47 +0530
+Message-ID: <20250103093647.575919-1-sshegde@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] modules: switch to execmem API for remapping as RW
- and restoring ROX
-To: Andrew Cooper <andrew.cooper3@citrix.com>, lorenzo.stoakes@oracle.com
-Cc: akpm@linux-foundation.org, anton.ivanov@cambridgegreys.com, bp@alien8.de,
- brendan.higgins@linux.dev, da.gomez@samsung.com, danielt@kernel.org,
- dave.hansen@linux.intel.com, davidgow@google.com, dianders@chromium.org,
- hpa@zytor.com, jason.wessel@windriver.com, jikos@kernel.org,
- joe.lawrence@redhat.com, johannes@sipsolutions.net, jpoimboe@kernel.org,
- kgdb-bugreport@lists.sourceforge.net, kirill.shutemov@linux.intel.com,
- kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-um@lists.infradead.org, live-patching@vger.kernel.org,
- luto@kernel.org, mark.rutland@arm.com, mbenes@suse.cz, mcgrof@kernel.org,
- mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
- petr.pavlu@suse.com, pmladek@suse.com, richard@nod.at, rmoar@google.com,
- rostedt@goodmis.org, rppt@kernel.org, samitolvanen@google.com,
- shuah@kernel.org, song@kernel.org, tglx@linutronix.de, x86@kernel.org,
- =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-References: <86eba318-464b-4b9b-a79e-64039b17be34@lucifer.local>
- <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AdhG8ToVhAfNI4L0hQ66iNcN"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TT2dA042V90G3pjG59wmdNWjwnlav1kJ
+X-Proofpoint-GUID: TT2dA042V90G3pjG59wmdNWjwnlav1kJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 phishscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=555 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2501030082
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AdhG8ToVhAfNI4L0hQ66iNcN
-Content-Type: multipart/mixed; boundary="------------3WUDo4UJMp9BYldWFyaC18GU";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>, lorenzo.stoakes@oracle.com
-Cc: akpm@linux-foundation.org, anton.ivanov@cambridgegreys.com, bp@alien8.de,
- brendan.higgins@linux.dev, da.gomez@samsung.com, danielt@kernel.org,
- dave.hansen@linux.intel.com, davidgow@google.com, dianders@chromium.org,
- hpa@zytor.com, jason.wessel@windriver.com, jikos@kernel.org,
- joe.lawrence@redhat.com, johannes@sipsolutions.net, jpoimboe@kernel.org,
- kgdb-bugreport@lists.sourceforge.net, kirill.shutemov@linux.intel.com,
- kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-um@lists.infradead.org, live-patching@vger.kernel.org,
- luto@kernel.org, mark.rutland@arm.com, mbenes@suse.cz, mcgrof@kernel.org,
- mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
- petr.pavlu@suse.com, pmladek@suse.com, richard@nod.at, rmoar@google.com,
- rostedt@goodmis.org, rppt@kernel.org, samitolvanen@google.com,
- shuah@kernel.org, song@kernel.org, tglx@linutronix.de, x86@kernel.org,
- =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Message-ID: <9878d90f-faf3-4853-9a79-a21b4f58ab4c@suse.com>
-Subject: Re: [PATCH 6/8] modules: switch to execmem API for remapping as RW
- and restoring ROX
-References: <86eba318-464b-4b9b-a79e-64039b17be34@lucifer.local>
- <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
-In-Reply-To: <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
+Print lazy preemption model in ftrace header when latency-format=1.
 
---------------3WUDo4UJMp9BYldWFyaC18GU
-Content-Type: multipart/mixed; boundary="------------63xrDYqOCLn00LODgHDKUWxX"
+cat /sys/kernel/debug/sched/preempt 
+none voluntary full (lazy)
 
---------------63xrDYqOCLn00LODgHDKUWxX
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Without patch:
+latency: 0 us, #232946/232946, CPU#40 | (M:unknown VP:0, KP:0, SP:0 HP:0 #P:80)
+With Patch:
+latency: 0 us, #1897938/25566788, CPU#16 | (M:lazy VP:0, KP:0, SP:0 HP:0 #P:80)
 
-T24gMDMuMDEuMjUgMDM6MDYsIEFuZHJldyBDb29wZXIgd3JvdGU6DQo+PiBIaSBNaWtlLA0K
-Pj4NCj4+IFRoaXMgY29tbWl0IGlzIG1ha2luZyBteSBpbnRlbCBib3ggbm90IGJvb3QgaW4g
-bW0tdW5zdGFibGUgOj4pIEkgYmlzZWN0ZWQgaXQgdG8NCj4+IHRoaXMgY29tbWl0Lg0KPiAN
-Cj4gRm9yIHdoYXQgaXQncyB3b3J0aCwgd2UndmUgZm91bmQgdGhlIHNhbWUgdW5kZXIgWGVu
-IHRvby4NCj4gDQo+IFRoZXJlJ3Mgb25lIGNvbmNyZXRlIGJ1ZyBpbiB0aGUgc2VyaWVzLCBm
-YWlsaW5nIHRvIGNvcGUgd2l0aCB0aGUgYWJzZW5jZQ0KPiBvZiBzdXBlcnBhZ2VzIChmaXgg
-aW4NCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcveGVuLWRldmVsLzZiYjAzMzMzLTc0Y2Et
-NGMyYy04NWE4LTcyNTQ5Yjg1YTViNEBzdXNlLmNvbS8NCj4gYnV0IG5vdCBmb3JtYWxseSBw
-b3N0ZWQgeWV0IEFGQUlDVCkuDQoNCk5vdyBzZW50IG91dDoNCg0KaHR0cHM6Ly9sb3JlLmtl
-cm5lbC5vcmcvbGttbC8yMDI1MDEwMzA2NTYzMS4yNjQ1OS0xLWpncm9zc0BzdXNlLmNvbS9U
-LyN1DQoNCg0KSnVlcmdlbg0K
---------------63xrDYqOCLn00LODgHDKUWxX
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+---
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index f8aebcb01e62..b6e40e8791fa 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4122,6 +4122,7 @@ print_trace_header(struct seq_file *m, struct trace_iterator *iter)
+ 		   preempt_model_none()      ? "server" :
+ 		   preempt_model_voluntary() ? "desktop" :
+ 		   preempt_model_full()      ? "preempt" :
++		   preempt_model_lazy()	     ? "lazy"    :
+ 		   preempt_model_rt()        ? "preempt_rt" :
+ 		   "unknown",
+ 		   /* These are reserved for later use */
+-- 
+2.39.3
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------63xrDYqOCLn00LODgHDKUWxX--
-
---------------3WUDo4UJMp9BYldWFyaC18GU--
-
---------------AdhG8ToVhAfNI4L0hQ66iNcN
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmd3ioYFAwAAAAAACgkQsN6d1ii/Ey+c
-fgf/UYpXMGX7CcsGrANTtlW7HBt7eur3Q96rFTVnTBejNHfIm/TemXv9C9/w5NhEcq9sqmeIDxOe
-8DTdPK/EM5qfS06x4EFYjxdJgORMczX4P0IvRZHJY6T7hojulK2dyumKZNaCPY1ceUV3nERaBWKl
-csa1KbWcBMA7uMBCl1w8M8aL3+0T0UBDu3oV2jUGR4dKJdaHqRqGJCZKE2pztzSGmiboOTfmOnr2
-CxpyEu6JVMTl782cRiOS/KfVmVWY8jfA0D14iopSM0cKYF0W9Bo2XbTiD8Vp/pCCDBDOWlllYtlC
-c63hcFoml+h9kNfEU4Yl4H4kAWki0dCgwk3RbXj3rA==
-=xSk+
------END PGP SIGNATURE-----
-
---------------AdhG8ToVhAfNI4L0hQ66iNcN--
