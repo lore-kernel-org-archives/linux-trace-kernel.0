@@ -1,110 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D7E148832;
-	Fri,  3 Jan 2025 09:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD081885B8;
+	Fri,  3 Jan 2025 10:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735897043; cv=none; b=FOJ2YPxXhaFDJfKPHXVXr5BBi1oMtObzm3wmVhUk4WNVz0k4J0hCWyTT0aENw1aqtvfRudifZx2lggmSFCQ2ikX1mO3mlkn/Syp9KH4sy1ZxlpWrSRg1YldS7E1mcwWYVNR/e/kFBCcrJzIK6XcZpEtdicHVSHqONjdMS1fGmYM=
+	t=1735901860; cv=none; b=FFTVRw6AnGT1/l9RMx5gUV7MehAhUre1c2F5yryKoXQE7p9Ms5QB8bdzeACQzIp9VI45StWQiw9M6Ap9MJzCHJhkpsdPkp+4WYE2GVjhO/00/AhGATHK3cdpf+LwOGlCAq1NIE3Xp1z/IJDvVyh5ION8ZxjNVcGRVjMu2XffyPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735897043; c=relaxed/simple;
-	bh=SaAQ9+CP1WXbg/Tv07CdjFRATWRPeasDDkQQk4soTLE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a3HkyQF9ZDNrMU3aUNDh9PjdW7vWbtVUYHokyIhe2ERrXLDkz1YCPXIJJEYcYErB2cy7GMdhxJ0mL6Xztv9C0n86z6dXn/L5oOs3B6mVaL/cM/qRImqUmX0xfRX/JVS/Kh0Q1gGqMuAMaP9KZlWkFSnM4q0cxOw3hWxkmHry/yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F3Gp7JK8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1735901860; c=relaxed/simple;
+	bh=tjJndhs7c7VoSdQ6xue+WdqiQcB0hWTPgYm6AKFajI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To; b=l2NAJ6bBWVhnjWWEkNsDHTenGQ+GdCB58+sJCmHmKLBnc8GaQgL0F5zOE3kp7kRa85A19qfcWnz19eCr1qt9/AyyGGyl9MLyoYOyBzuB9U0Hqi+V4rHwY/jAK2hIptscgE1b+QuvcTDyrX0jAjGGzKcDbOXI1Uj0KAgyHZLIpTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=JuerdEJ1; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GcajOF2v; arc=none smtp.client-ip=202.12.124.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F3Gp7JK8"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 502Nvxw6012268;
-	Fri, 3 Jan 2025 09:37:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=rlXdp+XmeCZl0WscPjfF63mX3Z6CUNT9vGwS3I24j
-	bQ=; b=F3Gp7JK8yWdlXonPxAaHvl8Dgoc2Yxl5f52cb132ZZxcBkr59LvmSoEFJ
-	OSJ+ZzN8kSOIpe6BxAPsJ1cliA7C9QjA3jbV7XISsKlThdQNqTskXAk8x5IfqqQR
-	fyR5W0XN10gCrMZhsBEzwWvLSw7vTVa5LQMa1L9sf5MYgYIj06EYVzskUYKiULSL
-	+Kqt4Du1E6Y/SRTm0YqNk3RR3zeKfdLr2S3S32nVP7yuUrZwCCM/puv9K3A9Kf5S
-	JQQrSze7smqftWscfczu0/5DpAF7uUOJpcnb+rc9D5VeH3aCI7ZyD1vGtfWIjv6E
-	ADu48qra/BHmdZ5yMVqWK8ZC8pXRQ==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 43x4xh1pfh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Jan 2025 09:37:09 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 503779Ea027024;
-	Fri, 3 Jan 2025 09:37:09 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 43txc25ekt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 03 Jan 2025 09:37:08 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5039b7v548693608
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 3 Jan 2025 09:37:07 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5751420043;
-	Fri,  3 Jan 2025 09:37:07 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AF7F820040;
-	Fri,  3 Jan 2025 09:37:05 +0000 (GMT)
-Received: from li-7bb28a4c-2dab-11b2-a85c-887b5c60d769.ibm.com.com (unknown [9.124.222.25])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  3 Jan 2025 09:37:05 +0000 (GMT)
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org
-Cc: sshegde@linux.ibm.com, mark.rutland@arm.com,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ftrace: print lazy preemption model
-Date: Fri,  3 Jan 2025 15:06:47 +0530
-Message-ID: <20250103093647.575919-1-sshegde@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="JuerdEJ1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GcajOF2v"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailflow.stl.internal (Postfix) with ESMTP id E13981D40AB0;
+	Fri,  3 Jan 2025 05:57:35 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Fri, 03 Jan 2025 05:57:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1735901855; x=1735909055; bh=423Vj5fZsG
+	V5eJGSXq4heFmx7126IRBdG9xAKxYQ7SM=; b=JuerdEJ1tAgll50QlC4YxQajBf
+	DkgtwccDxlugt0VAiPqTYmOx3GXlMhMKhInAHOhPHtCUJNVjyBIs8RCY6PmlgpPd
+	xjLcTrvjispwERy/WyDFaFCq44v2e9hYfmST5JDKKoCtNQAdDxPM7g2pWmcNIY8l
+	u+d1SFw9C0Oj8nBwS58aWGssWJC174PqAvBZ++Jl35N2Rp2ST42JS/1xPQuCWGuB
+	uzNHPEZbLVOj3JElOSs4/va2bTWToNKvpCgV1oXlORCOrAs+PBSaquoBLoELmm6k
+	qrzyAnzURUQhidmjBnTvvLUKfN6MZru2w/B99p4zUHA0t9IyaG3GOmEd0mMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1735901855; x=
+	1735909055; bh=423Vj5fZsGV5eJGSXq4heFmx7126IRBdG9xAKxYQ7SM=; b=G
+	cajOF2vlD6eM2BhItchNYObDe20cSKdE7QdHWS3S4zXB201VqahnXDUkhhCiI/Oa
+	7boz+JhhU+xUc3f9Q61PUJi6PCNy6gHu5Vy2AE8TMXwUJepQ7OTHmO6nHbXzqhXP
+	5wZKIRsd8h43f2+M6Aa0K5COGyPslerP3NPAAvnLWzj418SzIl/c4Cn02vLT/6t9
+	MH8LJjiuaiadIx1iLE1XEKOPBtX76ZhMcmqtgzG18nTj7HPNwkKJKR8uTQvLV5pj
+	dnUeUPcA3zIoiLlzyomyZAG/83zl83w6LcvXKdit3G8TtXQReL8yXf7vFJaeKZqa
+	vDZZtBKg6qDqRt+mQBlPw==
+X-ME-Sender: <xms:ncJ3Z6CXVWyExCYlgmBZdOs6uG3V0GYZ8GxhhWzgeULLUuScarTgMw>
+    <xme:ncJ3Z0hrIdZeHDl9chKR8qX0FAfe0xnC3zbnBZ_BynCHY7kuWJTtSbb--5j1pW28u
+    XAOmloVnrT0Ig>
+X-ME-Received: <xmr:ncJ3Z9m1XYDfuQmpOwos3HoM0I0-2Se522cNPFJ64z61BySOCJsFCJqnGXKgktMJqPuZQuYkJaArSpfl_gEKUjXrvRlAkRFMwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudefgedgvddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtgfgjgesthekredttddtjeen
+    ucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomh
+    grrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggft
+    rfgrthhtvghrnhepveeuheffhedtffeivdffudehieekkeelleehhfevgefggffgjeejtd
+    ffheejgfegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhi
+    iigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhish
+    hisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopeegiedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtih
+    honhdrohhrghdprhgtphhtthhopegrnhgurhgvfidrtghoohhpvghrfeestghithhrihig
+    rdgtohhmpdhrtghpthhtoheplhhorhgvnhiiohdrshhtohgrkhgvshesohhrrggtlhgvrd
+    gtohhmpdhrtghpthhtoheprghnthhonhdrihhvrghnohhvsegtrghmsghrihgughgvghhr
+    vgihshdrtghomhdprhgtphhtthhopegsphesrghlihgvnhekrdguvgdprhgtphhtthhope
+    gsrhgvnhgurghnrdhhihhgghhinhhssehlihhnuhigrdguvghvpdhrtghpthhtohepuggr
+    rdhgohhmvgiisehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepuggrnhhivghltheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvhgvrdhhrghnshgvnheslhhinhhugidr
+    ihhnthgvlhdrtghomh
+X-ME-Proxy: <xmx:ncJ3Z4zPNvCOjmc1oKkrAYZ9xaG0fyawlsfb_9ujyU1cR20qR2SiHQ>
+    <xmx:ncJ3Z_TqIX8N6jwrirsSXns9bdjWEmxb5qLaSpMfRfKmd7zOLSLvpw>
+    <xmx:ncJ3ZzbeXkzGZLYn9eDgxNT7PS59Rmxit9htXHx6_ndO8uaxw3OOgQ>
+    <xmx:ncJ3Z4SybuD-tbCQ01TzhidgZIEhKMy9QHnKqhApQ2nSmKbYzzUrHw>
+    <xmx:n8J3Z28oyn0Vw20TlJT55P_RAeGNO_Dj-NJTH4vhK9jKgcdUPujFBW6n>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 Jan 2025 05:57:27 -0500 (EST)
+Date: Fri, 3 Jan 2025 11:57:25 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, lorenzo.stoakes@oracle.com,
+	anton.ivanov@cambridgegreys.com, bp@alien8.de,	brendan.higgins@linux.dev,
+ da.gomez@samsung.com, danielt@kernel.org,	dave.hansen@linux.intel.com,
+ davidgow@google.com,	dianders@chromium.org, hpa@zytor.com,
+ jason.wessel@windriver.com,	jikos@kernel.org, joe.lawrence@redhat.com,
+	johannes@sipsolutions.net, jpoimboe@kernel.org,
+	kgdb-bugreport@lists.sourceforge.net,	kirill.shutemov@linux.intel.com,
+ kunit-dev@googlegroups.com,	linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org,	linux-mm@kvack.org,
+ linux-modules@vger.kernel.org,	linux-trace-kernel@vger.kernel.org,
+ linux-um@lists.infradead.org,	live-patching@vger.kernel.org,
+ luto@kernel.org,	mark.rutland@arm.com, mbenes@suse.cz, mcgrof@kernel.org,
+	mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	petr.pavlu@suse.com, pmladek@suse.com, richard@nod.at,	rmoar@google.com,
+ rostedt@goodmis.org, rppt@kernel.org,	samitolvanen@google.com,
+ shuah@kernel.org, song@kernel.org,	tglx@linutronix.de, x86@kernel.org,
+ Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH 6/8] modules: switch to execmem API for remapping as RW
+ and restoring ROX
+Message-ID: <Z3fClUqJ_sMp1HL9@mail-itl>
+References: <86eba318-464b-4b9b-a79e-64039b17be34@lucifer.local>
+ <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
+ <20250102215714.a37e828cf073ea6a14d30559@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; x-action=pgp-signed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: TT2dA042V90G3pjG59wmdNWjwnlav1kJ
-X-Proofpoint-GUID: TT2dA042V90G3pjG59wmdNWjwnlav1kJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 adultscore=0 phishscore=0
- impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=555 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501030082
+In-Reply-To: <20250102215714.a37e828cf073ea6a14d30559@linux-foundation.org>
 
-Print lazy preemption model in ftrace header when latency-format=1.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-cat /sys/kernel/debug/sched/preempt 
-none voluntary full (lazy)
+On Thu, Jan 02, 2025 at 09:57:14PM -0800, Andrew Morton wrote:
+> On Fri, 3 Jan 2025 02:06:10 +0000 Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+> 
+> > > Hi Mike,
+> > >
+> > > This commit is making my intel box not boot in mm-unstable :>) I bisected it to
+> > > this commit.
+> > 
+> > For what it's worth, we've found the same under Xen too.
+> > 
+> > There's one concrete bug in the series, failing to cope with the absence
+> > of superpages (fix in
+> > https://lore.kernel.org/xen-devel/6bb03333-74ca-4c2c-85a8-72549b85a5b4@suse.com/
+> > but not formally posted yet AFAICT).
+> > 
+> > The rest of the thread then found a crash looking to be the same as
+> > reported here, but you've made better progress narrowing it down than we
+> > have.
+> > 
+> 
+> Thanks.  I removed this series from mm.git while this is worked on.
 
-Without patch:
-latency: 0 us, #232946/232946, CPU#40 | (M:unknown VP:0, KP:0, SP:0 HP:0 #P:80)
-With Patch:
-latency: 0 us, #1897938/25566788, CPU#16 | (M:lazy VP:0, KP:0, SP:0 HP:0 #P:80)
+The issue under Xen that Andrew linked happens on 6.13-rc5 which AFAICT
+doesn't this series yet. So, it's probably a different issue.
 
-Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
----
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
+- -- 
+Best Regards,
+Marek Marczykowski-Górecki
+Invisible Things Lab
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f8aebcb01e62..b6e40e8791fa 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4122,6 +4122,7 @@ print_trace_header(struct seq_file *m, struct trace_iterator *iter)
- 		   preempt_model_none()      ? "server" :
- 		   preempt_model_voluntary() ? "desktop" :
- 		   preempt_model_full()      ? "preempt" :
-+		   preempt_model_lazy()	     ? "lazy"    :
- 		   preempt_model_rt()        ? "preempt_rt" :
- 		   "unknown",
- 		   /* These are reserved for later use */
--- 
-2.39.3
-
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmd3wpUACgkQ24/THMrX
+1yzmigf/XurIB/pN9J44SKwSeCWCQMVu3ZjFfeQ7XiAl3IpiALExuGFtEiAX8sY/
+BqA3MWs9AKpBz7qfUQGU3+tRUbEVQz/rHh8FBo3OBwZQJuxntlT291E4/FzIHUzN
+JZ0b6AAgU9MaSdOC0A0XGwFDbhTPbbqbHanyaVyCf+2QVCEW4OFcgnlUVBdIs6sW
+tXzKWNr70Jkq/XguvrWVBHgg5C3E/SfXZzoRIFCKfMuXfpqVVpa35X/Zf3+V8my/
+n0Di7xZXQaXMSv72tQayI+/y2dT4PbLqTE+lhLf2UCXDn15WBHpmyppX9Nn3huEG
+L0NRHVLneeo25kRQuzGj04vWFem6MQ==
+=0Iqv
+-----END PGP SIGNATURE-----
