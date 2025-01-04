@@ -1,295 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25D51BDAA1;
-	Fri,  3 Jan 2025 23:02:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794722914;
+	Sat,  4 Jan 2025 01:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735945358; cv=none; b=hGj1vQSCPImeGByoQsZInoF+lNtjioQBpm7RsUxh6mty1vChLIxbN6hybR/DrsWaqZja7rBonbqgGIQfxSFweNv4C20nOLExaFO/75D+LeHkcUViImPO41j7hfxK3O27OtPZr4r1Fy3cvS8nXmkydJqhOsHHG0myFROTU+0ZuJo=
+	t=1735953287; cv=none; b=qSm8/oLtF/yBJs+Hrvyaf4FAy+wgn4w5g831Wfr1WsjKf3J3qQCErtCe/vZJc7WLCdXpK9MQymXzh5hom4wIvZTHtts/emwOCyMH8X/8DesYKFmgVRw9iSBo673qxiIGOBZ861vOE22uw7oyowgJSYtPdvm+obmYJnsVSodgxmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735945358; c=relaxed/simple;
-	bh=yatn9LqYlxyIt0C+8FL70xDnDIAqvZMf9OHh0ydXtIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fwi600HL7mnQPyaeydx8lulZH4Zf4J4hqnCvb6KS4NR23I25elbeBviUFdN1gCzMLYmGev3U4TmtfkGc/UQt6jB7xniMIMn7xYcAJWuLcOX9on6mRmux+vJSoK+PqAYGhkV9AudRXnatF9aDcf6qtSFhF0Yu0mnmmmuy60UfVZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msVm3LWG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735953287; c=relaxed/simple;
+	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyweEh6v00QCRbtaZRoItRjrUnrDVhHsWS0wm6NW3OgRB732v2A1Rcx4dRXRTpPJYfPSRdNv7cheTMmPlt8iUSicG1n9L4GGk8lucU0m6hdXPJYn05bmV4fZGRUOvqRKpKic7j4NCkjvnGj6sj5iVmm7YvcUVGmJPsxB5NNhBo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIuP2oMS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msVm3LWG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC5DC4CEDD;
-	Fri,  3 Jan 2025 23:02:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIuP2oMS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE168C4CED6;
+	Sat,  4 Jan 2025 01:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735945357;
-	bh=yatn9LqYlxyIt0C+8FL70xDnDIAqvZMf9OHh0ydXtIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=msVm3LWGfsDrYAfEDDoPjhxcdahQYigUoi38TO6ZQXzjx7+gXIHiOtLbhDFaB194l
-	 +ld1jx8Wl44WyeI07lA5hnWVX9kIuG3G5UQTQLOoltdfso/4AjtevfniUXADe2cGOz
-	 ihHksw2HFlGLUlNeoF6uBnAZjbEyWcbP4OJMrrz99dxRIYxZlYIqzAmmBWzMNyOr9Z
-	 Ow0HJzE8lG553lg7tZJ0VTWciyzWEUKoOaXvr0aPiPMRl4IeUYP7vjo92nOdmHXhqu
-	 ERPJuDMLZ2DX4fuYjLaHtKjaM9RpJYiWYrjuNdIqZjQO0jxO1iQAHL6an7j+ZZh6yE
-	 r2RDnmKx7ekjg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 6/6] tracing/kprobes: Simplify __trace_kprobe_create() by removing gotos
-Date: Sat,  4 Jan 2025 08:02:31 +0900
-Message-ID: <173594535136.1055889.14214708219941378205.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173594528527.1055889.2175884987203674189.stgit@devnote2>
-References: <173594528527.1055889.2175884987203674189.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=k20201202; t=1735953287;
+	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=XIuP2oMSsVWXiLxYzNoQGMuC4qMCRshpF6qTi2JJ3qACIOb2IKTQjNQrbwb8wMdtS
+	 sGFAeSm16WOJtwB549GgpdbzMaa4r/mUQ45zD20TXqYeWP8EhZlVeQX9EppQvkhfBi
+	 WNIWMBHDwqFqTZAR82KIqXSlu1oS7+4q8uJ3jLx8PWQ7z9gnhjslsK57Xazs2fbTsZ
+	 olGL7hzBZWo0uv9uYyAhQTtDJTnTma5RhRtj4zDUVv+5f0prHHLJLqIOxiafsC+4jL
+	 teBdItwI+wivDTsqZ+HpGNJ3YwAPXu0X0cdAxmSnkV2N2wU960sndQJjauveFtttc4
+	 QdNhqS1Y+TXZA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 9767CCE3844; Fri,  3 Jan 2025 17:14:46 -0800 (PST)
+Date: Fri, 3 Jan 2025 17:14:46 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: syzbot <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com>,
+	acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+	oleg@redhat.com, peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com, RCU <rcu@vger.kernel.org>
+Subject: Re: [syzbot] [perf?] [trace?] KCSAN: assert: race in
+ srcu_gp_start_if_needed
+Message-ID: <77c8887d-e69c-4554-9c9f-c9d755c7aff5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
+ <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sun, Nov 24, 2024 at 11:48:46PM +0100, Marco Elver wrote:
+> +Cc RCU
+> 
+> On Sun, 24 Nov 2024 at 23:47, syzbot
+> <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    42d9e8b7ccdd Merge tag 'powerpc-6.13-1' of git://git.kerne..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10a00778580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7fd5be0e73b8b
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=16a19b06125a2963eaee
+> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> >
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> >
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/ef231513adc7/disk-42d9e8b7.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/54caaac5960b/vmlinux-42d9e8b7.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/85b5a6566143/bzImage-42d9e8b7.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KCSAN: assert: race in srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
+> > BUG: KCSAN: assert: race in srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
+> > BUG: KCSAN: assert: race in srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
 
-Simplify __trace_kprobe_create() by removing gotos.
+Hmmm...  All of those are from slow paths, so locking looks to be the
+best approach.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_kprobe.c |   82 ++++++++++++++++++++++---------------------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+A very lightly tested prototype patch is shown below (for which feedback
+is most welcome), and thank you all for your testing efforts!
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index c5fd4471c137..604eea2ed2fa 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -835,7 +835,8 @@ static int validate_probe_symbol(char *symbol)
- static int trace_kprobe_entry_handler(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs);
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit a955c6a7168f7b204784e4ef7e4db9d017043f73
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Fri Jan 3 17:04:49 2025 -0800
+
+    srcu: Force synchronization for srcu_get_delay()
+    
+    Currently, srcu_get_delay() can be called concurrently, for example,
+    by a CPU that is the first to request a new grace period and the CPU
+    processing the current grace period.  Although concurrent access is
+    harmless, it unnecessarily expands the state space.  Additionally,
+    all calls to srcu_get_delay() are from slow paths.
+    
+    This commit therefore protects all calls to srcu_get_delay() with
+    ssp->srcu_sup->lock, which is already held on the invocation from the
+    srcu_funnel_gp_start() function.  While in the area, this commit also
+    adds a lockdep_assert_held() to srcu_get_delay() itself.
+    
+    Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index 7c7304dee6457..a60acc9cf2f32 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -648,6 +648,7 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
+ 	unsigned long jbase = SRCU_INTERVAL;
+ 	struct srcu_usage *sup = ssp->srcu_sup;
  
--static int __trace_kprobe_create(int argc, const char *argv[])
-+static int ___trace_kprobe_create(int argc, const char *argv[],
-+				  struct traceprobe_parse_context *ctx)
++	lockdep_assert_held(&ACCESS_PRIVATE(ssp->srcu_sup, lock));
+ 	if (srcu_gp_is_expedited(ssp))
+ 		jbase = 0;
+ 	if (rcu_seq_state(READ_ONCE(sup->srcu_gp_seq))) {
+@@ -675,9 +676,13 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
+ void cleanup_srcu_struct(struct srcu_struct *ssp)
  {
- 	/*
- 	 * Argument syntax:
-@@ -876,7 +877,6 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	char gbuf[MAX_EVENT_NAME_LEN];
- 	char abuf[MAX_BTF_ARGS_LEN];
- 	char *dbuf __free(kfree) = NULL;
--	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
+ 	int cpu;
++	unsigned long delay;
+ 	struct srcu_usage *sup = ssp->srcu_sup;
  
- 	switch (argv[0][0]) {
- 	case 'r':
-@@ -890,8 +890,6 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	if (argc < 2)
- 		return -ECANCELED;
+-	if (WARN_ON(!srcu_get_delay(ssp)))
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
++	delay = srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
++	if (WARN_ON(!delay))
+ 		return; /* Just leak it! */
+ 	if (WARN_ON(srcu_readers_active(ssp)))
+ 		return; /* Just leak it! */
+@@ -1100,7 +1105,9 @@ static bool try_check_zero(struct srcu_struct *ssp, int idx, int trycount)
+ {
+ 	unsigned long curdelay;
  
--	trace_probe_log_init("trace_kprobe", argc, argv);
--
- 	event = strchr(&argv[0][1], ':');
- 	if (event)
- 		event++;
-@@ -899,7 +897,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	if (isdigit(argv[0][1])) {
- 		if (!is_return) {
- 			trace_probe_log_err(1, BAD_MAXACT_TYPE);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		if (event)
- 			len = event - &argv[0][1] - 1;
-@@ -907,21 +905,21 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 			len = strlen(&argv[0][1]);
- 		if (len > MAX_EVENT_NAME_LEN - 1) {
- 			trace_probe_log_err(1, BAD_MAXACT);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		memcpy(buf, &argv[0][1], len);
- 		buf[len] = '\0';
- 		ret = kstrtouint(buf, 0, &maxactive);
- 		if (ret || !maxactive) {
- 			trace_probe_log_err(1, BAD_MAXACT);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		/* kretprobes instances are iterated over via a list. The
- 		 * maximum should stay reasonable.
- 		 */
- 		if (maxactive > KRETPROBE_MAXACTIVE_MAX) {
- 			trace_probe_log_err(1, MAXACT_TOO_BIG);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 	}
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
+ 	curdelay = !srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
  
-@@ -930,16 +928,13 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	if (kstrtoul(argv[1], 0, (unsigned long *)&addr)) {
- 		trace_probe_log_set_index(1);
- 		/* Check whether uprobe event specified */
--		if (strchr(argv[1], '/') && strchr(argv[1], ':')) {
--			ret = -ECANCELED;
--			goto out;
--		}
-+		if (strchr(argv[1], '/') && strchr(argv[1], ':'))
-+			return -ECANCELED;
-+
- 		/* a symbol specified */
- 		symbol = kstrdup(argv[1], GFP_KERNEL);
--		if (!symbol) {
--			ret = -ENOMEM;
--			goto error;
--		}
-+		if (!symbol)
-+			return -ENOMEM;
+ 	for (;;) {
+ 		if (srcu_readers_active_idx_check(ssp, idx))
+@@ -1849,7 +1856,9 @@ static void process_srcu(struct work_struct *work)
+ 	ssp = sup->srcu_ssp;
  
- 		tmp = strchr(symbol, '%');
- 		if (tmp) {
-@@ -948,7 +943,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 				is_return = true;
- 			} else {
- 				trace_probe_log_err(tmp - symbol, BAD_ADDR_SUFFIX);
--				goto parse_error;
-+				return -EINVAL;
- 			}
- 		}
- 
-@@ -956,7 +951,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		ret = traceprobe_split_symbol_offset(symbol, &offset);
- 		if (ret || offset < 0 || offset > UINT_MAX) {
- 			trace_probe_log_err(0, BAD_PROBE_ADDR);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		ret = validate_probe_symbol(symbol);
- 		if (ret) {
-@@ -964,17 +959,17 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 				trace_probe_log_err(0, NON_UNIQ_SYMBOL);
- 			else
- 				trace_probe_log_err(0, BAD_PROBE_ADDR);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		if (is_return)
--			ctx.flags |= TPARG_FL_RETURN;
-+			ctx->flags |= TPARG_FL_RETURN;
- 		ret = kprobe_on_func_entry(NULL, symbol, offset);
- 		if (ret == 0 && !is_return)
--			ctx.flags |= TPARG_FL_FENTRY;
-+			ctx->flags |= TPARG_FL_FENTRY;
- 		/* Defer the ENOENT case until register kprobe */
- 		if (ret == -EINVAL && is_return) {
- 			trace_probe_log_err(0, BAD_RETPROBE);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 	}
- 
-@@ -983,7 +978,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
- 						  event - argv[0]);
- 		if (ret)
--			goto parse_error;
-+			return ret;
- 	}
- 
- 	if (!event) {
-@@ -999,26 +994,24 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	}
- 
- 	argc -= 2; argv += 2;
--	ctx.funcname = symbol;
-+	ctx->funcname = symbol;
- 	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
--					       abuf, MAX_BTF_ARGS_LEN, &ctx);
-+					       abuf, MAX_BTF_ARGS_LEN, ctx);
- 	if (IS_ERR(new_argv)) {
- 		ret = PTR_ERR(new_argv);
- 		new_argv = NULL;
--		goto out;
-+		return ret;
- 	}
- 	if (new_argv) {
- 		argc = new_argc;
- 		argv = new_argv;
- 	}
--	if (argc > MAX_TRACE_ARGS) {
--		ret = -E2BIG;
--		goto out;
--	}
-+	if (argc > MAX_TRACE_ARGS)
-+		return -E2BIG;
- 
- 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	/* setup a probe */
- 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
-@@ -1027,16 +1020,16 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		ret = PTR_ERR(tk);
- 		/* This must return -ENOMEM, else there is a bug */
- 		WARN_ON_ONCE(ret != -ENOMEM);
--		goto out;	/* We know tk is not allocated */
-+		return ret;	/* We know tk is not allocated */
- 	}
- 
- 	/* parse arguments */
- 	for (i = 0; i < argc; i++) {
- 		trace_probe_log_set_index(i + 2);
--		ctx.offset = 0;
--		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
-+		ctx->offset = 0;
-+		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], ctx);
- 		if (ret)
--			goto out;	/* This can be -ENOMEM */
-+			return ret;	/* This can be -ENOMEM */
- 	}
- 	/* entry handler for kretprobe */
- 	if (is_return && tk->tp.entry_arg) {
-@@ -1047,7 +1040,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	ptype = is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL;
- 	ret = traceprobe_set_print_fmt(&tk->tp, ptype);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	ret = register_trace_kprobe(tk);
- 	if (ret) {
-@@ -1061,14 +1054,21 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	} else
- 		no_free_ptr(tk);
- 
--out:
-+	return ret;
-+}
-+
-+static int __trace_kprobe_create(int argc, const char *argv[])
-+{
-+	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
-+	int ret;
-+
-+	trace_probe_log_init("trace_kprobe", argc, argv);
-+
-+	ret = ___trace_kprobe_create(argc, argv, &ctx);
-+
- 	traceprobe_finish_parse(&ctx);
- 	trace_probe_log_clear();
- 	return ret;
--
--parse_error:
--	ret = -EINVAL;
--	goto out;
- }
- 
- static int trace_kprobe_create(const char *raw_command)
-
+ 	srcu_advance_state(ssp);
++	spin_lock_irq_rcu_node(ssp->srcu_sup);
+ 	curdelay = srcu_get_delay(ssp);
++	spin_unlock_irq_rcu_node(ssp->srcu_sup);
+ 	if (curdelay) {
+ 		WRITE_ONCE(sup->reschedule_count, 0);
+ 	} else {
