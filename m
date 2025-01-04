@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C261487F4;
-	Sat,  4 Jan 2025 06:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67D7137742;
+	Sat,  4 Jan 2025 06:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735972813; cv=none; b=LOXbVZLXBXbXBCoUtTkYc9eUKAE4wQZtVqE6bElYBgdAxD343tC6bk7sV0pkkot/IiIey9XcgcC6z9Q4Y9WBbhjS8VtvavRMDsfCZdTJ88vhqfI/HZJi4dypB8q6p7QliIL/Subh3/2A9O8eJUZYNx/XC5TbjyEE+coKc+aQxHA=
+	t=1735973535; cv=none; b=doW8JZbogeJ7iqKJ0WNZvC9a3cYuOpUIg4ihyU8uPKjbQlO92E22Hwu3uH+4TvH84VHYRAM9Jzaqs6Lpqngk2Majaq50W2KyXt8mJaFyiMcmdGu8F7AoQKWf1GO5DXzUXptGX+gX8XURi+a6dcRWvb8dc7C7zRmJ61uGJWlxmL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735972813; c=relaxed/simple;
-	bh=QqdBhDk5Y1H58lobFVJK1A0lZ67bgL7UTTPHbLOUb0E=;
+	s=arc-20240116; t=1735973535; c=relaxed/simple;
+	bh=6l8RMlcLcA4FQZMn5PsKIYFZzTojoZI33nFpPc9Vhx4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gcl4hCpK61QU6XCLby6+tq8JvJyYL38nCCRdjPL7dl6/je4qzSPcMsQZP8vyK9wa21Z42mlDCECIrhsiLFPKIcrQWhWGQNUl3ZuLVcqeHHD+8a/bb/KLUg90s0aWCZZ6Yp7ID/d6XAIJh8JWaHzJOBHy3zbzR9+9uL78dkAX39A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=izjJES6S; arc=none smtp.client-ip=192.198.163.8
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4/atpZbMDVL/Lj6foWZda0+KjZXsRl2ssHJMsv7nIDhoTXOzKJ9OByvFg+XJHQ6lirmcdlg4k/BIyhK8CAPgW2xW/w9m84ZcLi0b+9OVZxiuTdpZI2ZqeNkLO9pnsU5q6mtXzr3hjazJQRzPCM5zyKKfZVYGbglcT29b4hm9YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZA8J7G0R; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="izjJES6S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZA8J7G0R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1735972811; x=1767508811;
+  t=1735973533; x=1767509533;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=QqdBhDk5Y1H58lobFVJK1A0lZ67bgL7UTTPHbLOUb0E=;
-  b=izjJES6S4Uc3beOblOeNABnz1L4i5B9vNrszVNaYR9SS5opuDiDrGsk5
-   WQHdygdalTmpG4avQpfRYzoiSff4oyPO7s/gv0G9UXdKAa2hc7W3HBHZE
-   qeM+xzMEoUeQyn3s+9Z9gn76Z6QlSjGpmbrOuLjefuyQrKB8GccwNtwtb
-   1xfCMdZvGvd1tRwOUafAlQoLR5B4jG0pqkUQ8mUgIWaSpqa3ZOEa3Kksr
-   udX/2nvpZuD7nvBGKV12MdmAdSMRSiWXwzRLiS14q+MTAeQIRBPm8JQr3
-   DqPp9VD7kyg6UlgqqXJ+Ze5RpL0OJLfj1ZoEmFrBJ47R1OlQsxq/ry2ng
+  bh=6l8RMlcLcA4FQZMn5PsKIYFZzTojoZI33nFpPc9Vhx4=;
+  b=ZA8J7G0Rp7OXVJ6QnpEO/R2xYXuwHF1BLb5mzhkuZWZDAOPAEbdQT98D
+   rXwBp9/I5XRVYPSjm3ME7woj3Ww+c5vYtMbEJPIxnH4naX2t/1c897/oN
+   +ohg0JNYTMfkPcObIpI6gOeWy6Q8wc2ovg9Sa8RCA6kyXcjBD27GUMyik
+   SGrG9pNj6ZyKfIHBYm1lj1z74WGPLLrlsOjyAk2uTuQrTzTv7V1KYIJk0
+   gorxM6QrN9KdJZaZiMlZ2xmHpI1kQdQJfPdc8gCqAodJE0d9vFDHbCUhZ
+   fyb7+t+B795KLyxfx6byMk3xZEjX7XkAprIk3UBwFtG57QQr6BTjN1PUZ
    Q==;
-X-CSE-ConnectionGUID: iaOg1N/4T+KdBwhQWlxltA==
-X-CSE-MsgGUID: fWKS5auWRQi+ZHML4rd5CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="53749886"
+X-CSE-ConnectionGUID: 2Xt7JIgBS5qmO7F0RlPB5w==
+X-CSE-MsgGUID: Y+m47Mi9QWWz73jznLnACg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11304"; a="35906178"
 X-IronPort-AV: E=Sophos;i="6.12,288,1728975600"; 
-   d="scan'208";a="53749886"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 22:40:11 -0800
-X-CSE-ConnectionGUID: K0EqHNEPR4Wgi5JORBRm5g==
-X-CSE-MsgGUID: H/O8ru6qT9yLXugQF10nVQ==
+   d="scan'208";a="35906178"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2025 22:52:12 -0800
+X-CSE-ConnectionGUID: QWbCuNnHR9uti7bT3CiKOg==
+X-CSE-MsgGUID: SWFbocZ6QBae1Lkqdkowzw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106003981"
+X-IronPort-AV: E=Sophos;i="6.12,288,1728975600"; 
+   d="scan'208";a="102147906"
 Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 03 Jan 2025 22:40:07 -0800
+  by fmviesa008.fm.intel.com with ESMTP; 03 Jan 2025 22:52:08 -0800
 Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tTxpN-000AhP-0k;
-	Sat, 04 Jan 2025 06:40:05 +0000
-Date: Sat, 4 Jan 2025 14:39:11 +0800
+	id 1tTy10-000AiN-1g;
+	Sat, 04 Jan 2025 06:52:06 +0000
+Date: Sat, 4 Jan 2025 14:51:12 +0800
 From: kernel test robot <lkp@intel.com>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Cc: oe-kbuild-all@lists.linux.dev,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	"David S . Miller" <davem@davemloft.net>,
@@ -64,7 +64,7 @@ Cc: oe-kbuild-all@lists.linux.dev,
 	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 2/6] Provide __free(argv) for argv_split() users
-Message-ID: <202501041433.GkehPwga-lkp@intel.com>
+Message-ID: <202501041451.yG7LhbEv-lkp@intel.com>
 References: <173594530753.1055889.17844868397124331132.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -91,31 +91,43 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/t
 base:   next-20241220
 patch link:    https://lore.kernel.org/r/173594530753.1055889.17844868397124331132.stgit%40devnote2
 patch subject: [PATCH 2/6] Provide __free(argv) for argv_split() users
-config: i386-buildonly-randconfig-002-20250104 (https://download.01.org/0day-ci/archive/20250104/202501041433.GkehPwga-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250104/202501041433.GkehPwga-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-001-20250104 (https://download.01.org/0day-ci/archive/20250104/202501041451.yG7LhbEv-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250104/202501041451.yG7LhbEv-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202501041433.GkehPwga-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501041451.yG7LhbEv-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from include/linux/uuid.h:11,
-                    from include/linux/mod_devicetable.h:14,
-                    from scripts/mod/devicetable-offsets.c:3:
->> include/linux/string.h:315:18: error: expected ')' before 'char'
+   In file included from scripts/mod/devicetable-offsets.c:3:
+   In file included from include/linux/mod_devicetable.h:14:
+   In file included from include/linux/uuid.h:11:
+>> include/linux/string.h:315:19: error: expected identifier
      315 | DEFINE_FREE(argv, char **, argv_free(_T))
-         |                  ^~~~~
-         |                  )
-   make[3]: *** [scripts/Makefile.build:102: scripts/mod/devicetable-offsets.s] Error 1 shuffle=943069964
+         |                   ^
+>> include/linux/string.h:315:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+     315 | DEFINE_FREE(argv, char **, argv_free(_T))
+         | ^
+         | int
+>> include/linux/string.h:315:12: error: a function declaration without a prototype is deprecated in all versions of C [-Werror,-Wstrict-prototypes]
+     315 | DEFINE_FREE(argv, char **, argv_free(_T))
+         |            ^                            
+         |                                         void
+>> include/linux/string.h:315:42: error: expected ';' after top level declarator
+     315 | DEFINE_FREE(argv, char **, argv_free(_T))
+         |                                          ^
+         |                                          ;
+   4 errors generated.
+   make[3]: *** [scripts/Makefile.build:102: scripts/mod/devicetable-offsets.s] Error 1 shuffle=808271366
    make[3]: Target 'scripts/mod/' not remade because of errors.
-   make[2]: *** [Makefile:1262: prepare0] Error 2 shuffle=943069964
+   make[2]: *** [Makefile:1262: prepare0] Error 2 shuffle=808271366
    make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=943069964
+   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=808271366
    make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:251: __sub-make] Error 2 shuffle=943069964
+   make: *** [Makefile:251: __sub-make] Error 2 shuffle=808271366
    make: Target 'prepare' not remade because of errors.
 
 
