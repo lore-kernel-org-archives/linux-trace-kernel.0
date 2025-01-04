@@ -1,167 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794722914;
-	Sat,  4 Jan 2025 01:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B57035280;
+	Sat,  4 Jan 2025 02:07:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735953287; cv=none; b=qSm8/oLtF/yBJs+Hrvyaf4FAy+wgn4w5g831Wfr1WsjKf3J3qQCErtCe/vZJc7WLCdXpK9MQymXzh5hom4wIvZTHtts/emwOCyMH8X/8DesYKFmgVRw9iSBo673qxiIGOBZ861vOE22uw7oyowgJSYtPdvm+obmYJnsVSodgxmM=
+	t=1735956446; cv=none; b=Hb9DidHAdgz16eeqc5annIYFn48Zqa0pLHfrOE4BjbMGed4YszkTjqLeIrS9vjyQF3pNX5w7io1x2quJfVX0GX3yKhoGzcRqOaqik834mn7U1H/hw2R0em+RJoj5NLrDqgZR/hofku4kyw0P+aAcuVpfw/jRed4pwmLRycuSmxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735953287; c=relaxed/simple;
-	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
+	s=arc-20240116; t=1735956446; c=relaxed/simple;
+	bh=5+k5XIDfmklKhyQNZnytCq6Wbtr3vAtBCZfKfKHl6CA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oyweEh6v00QCRbtaZRoItRjrUnrDVhHsWS0wm6NW3OgRB732v2A1Rcx4dRXRTpPJYfPSRdNv7cheTMmPlt8iUSicG1n9L4GGk8lucU0m6hdXPJYn05bmV4fZGRUOvqRKpKic7j4NCkjvnGj6sj5iVmm7YvcUVGmJPsxB5NNhBo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIuP2oMS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5hL11w7Xod8pldHAPy55U10eS9edtfP+HEbTG9YH8knh29nCHebnVgO/pShEJPimq17w3mueHowuyLwz3DB5Ql7dDS1R/Lo7LMpHQrou9hcBmNo2h78hip12bxd+8sKHazBtbhgIhQy+SbT80PdI8Bu4g04vJMUhHgaaL37VW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joD0NAbR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIuP2oMS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE168C4CED6;
-	Sat,  4 Jan 2025 01:14:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joD0NAbR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E24C4CED6;
+	Sat,  4 Jan 2025 02:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735953287;
-	bh=HqMXK1wC2oDxS29DmLcwJV6pK6bB08okpn9m9iDlouU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=XIuP2oMSsVWXiLxYzNoQGMuC4qMCRshpF6qTi2JJ3qACIOb2IKTQjNQrbwb8wMdtS
-	 sGFAeSm16WOJtwB549GgpdbzMaa4r/mUQ45zD20TXqYeWP8EhZlVeQX9EppQvkhfBi
-	 WNIWMBHDwqFqTZAR82KIqXSlu1oS7+4q8uJ3jLx8PWQ7z9gnhjslsK57Xazs2fbTsZ
-	 olGL7hzBZWo0uv9uYyAhQTtDJTnTma5RhRtj4zDUVv+5f0prHHLJLqIOxiafsC+4jL
-	 teBdItwI+wivDTsqZ+HpGNJ3YwAPXu0X0cdAxmSnkV2N2wU960sndQJjauveFtttc4
-	 QdNhqS1Y+TXZA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 9767CCE3844; Fri,  3 Jan 2025 17:14:46 -0800 (PST)
-Date: Fri, 3 Jan 2025 17:14:46 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Marco Elver <elver@google.com>
-Cc: syzbot <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com>,
-	acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	jolsa@kernel.org, kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-	oleg@redhat.com, peterz@infradead.org,
-	syzkaller-bugs@googlegroups.com, RCU <rcu@vger.kernel.org>
-Subject: Re: [syzbot] [perf?] [trace?] KCSAN: assert: race in
- srcu_gp_start_if_needed
-Message-ID: <77c8887d-e69c-4554-9c9f-c9d755c7aff5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <6743acf4.050a0220.1cc393.004d.GAE@google.com>
- <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
+	s=k20201202; t=1735956445;
+	bh=5+k5XIDfmklKhyQNZnytCq6Wbtr3vAtBCZfKfKHl6CA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=joD0NAbRBPE0lezKTTDP1O/kr2E6iJf9COWb+q26eFjVoffuI5L/uXxAbsoYlryoQ
+	 fYP/yaVyXmntFcDd1a3Fy5BzamjHbURSTyP3IdaXyhV79hmDEblPiZtS6iVgzwGlo3
+	 Kx4vTa/nHoqIBT7WaRKz0y7zXQ0mNg/SZWWNqb701SX3cdNH0ZRCTN14xhyhSGJ8Pg
+	 cXiLSChUUEnHpXT+4yMfzWCREm/wGuuwBvwu0rahfPZ8BSGvXEuUhX3QReboXWGoBI
+	 95VoZXg6cVJmIgpcGSWX14DR8XQkeIf/4vXIKDW+eMgmO5cxqmChke6AdKsiTp7rM/
+	 m8eDNhFD+TAEA==
+Date: Fri, 3 Jan 2025 18:07:22 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	Marek =?utf-8?B?TWHFm2xhbmth?= <mmaslanka@google.com>,
+	Adam Williamson <awilliam@redhat.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, lorenzo.stoakes@oracle.com,
+	akpm@linux-foundation.org, anton.ivanov@cambridgegreys.com,
+	bp@alien8.de, brendan.higgins@linux.dev, da.gomez@samsung.com,
+	danielt@kernel.org, dave.hansen@linux.intel.com,
+	davidgow@google.com, dianders@chromium.org, hpa@zytor.com,
+	jason.wessel@windriver.com, jikos@kernel.org,
+	joe.lawrence@redhat.com, johannes@sipsolutions.net,
+	jpoimboe@kernel.org, kgdb-bugreport@lists.sourceforge.net,
+	kirill.shutemov@linux.intel.com, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	live-patching@vger.kernel.org, luto@kernel.org,
+	mark.rutland@arm.com, mbenes@suse.cz, mhiramat@kernel.org,
+	mingo@redhat.com, peterz@infradead.org, petr.pavlu@suse.com,
+	pmladek@suse.com, richard@nod.at, rmoar@google.com,
+	rostedt@goodmis.org, rppt@kernel.org, samitolvanen@google.com,
+	shuah@kernel.org, song@kernel.org, tglx@linutronix.de,
+	x86@kernel.org,
+	Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
+Subject: Re: [PATCH 6/8] modules: switch to execmem API for remapping as RW
+ and restoring ROX
+Message-ID: <Z3iX2mNtqSYrvYPT@bombadil.infradead.org>
+References: <86eba318-464b-4b9b-a79e-64039b17be34@lucifer.local>
+ <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com>
+ <9878d90f-faf3-4853-9a79-a21b4f58ab4c@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CANpmjNMQ7ZVG0i9j1K7J0yKrtfrFfHi6kXaA7FLKmX5T4yWXTw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9878d90f-faf3-4853-9a79-a21b4f58ab4c@suse.com>
 
-On Sun, Nov 24, 2024 at 11:48:46PM +0100, Marco Elver wrote:
-> +Cc RCU
-> 
-> On Sun, 24 Nov 2024 at 23:47, syzbot
-> <syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    42d9e8b7ccdd Merge tag 'powerpc-6.13-1' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10a00778580000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d7fd5be0e73b8b
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=16a19b06125a2963eaee
-> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image: https://storage.googleapis.com/syzbot-assets/ef231513adc7/disk-42d9e8b7.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/54caaac5960b/vmlinux-42d9e8b7.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/85b5a6566143/bzImage-42d9e8b7.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: assert: race in srcu_get_delay kernel/rcu/srcutree.c:658 [inline]
-> > BUG: KCSAN: assert: race in srcu_funnel_gp_start kernel/rcu/srcutree.c:1089 [inline]
-> > BUG: KCSAN: assert: race in srcu_gp_start_if_needed+0x808/0x9f0 kernel/rcu/srcutree.c:1339
+On Fri, Jan 03, 2025 at 07:58:13AM +0100, J=FCrgen Gro=DF wrote:
+> On 03.01.25 03:06, Andrew Cooper wrote:
+> > > Hi Mike,
+> > >=20
+> > > This commit is making my intel box not boot in mm-unstable :>) I bise=
+cted it to
+> > > this commit.
+> >=20
+> > For what it's worth, we've found the same under Xen too.
+> >=20
+> > There's one concrete bug in the series, failing to cope with the absence
+> > of superpages (fix in
+> > https://lore.kernel.org/xen-devel/6bb03333-74ca-4c2c-85a8-72549b85a5b4@=
+suse.com/
+> > but not formally posted yet AFAICT).
+>=20
+> Now sent out:
+>=20
+> https://lore.kernel.org/lkml/20250103065631.26459-1-jgross@suse.com/T/#u
 
-Hmmm...  All of those are from slow paths, so locking looks to be the
-best approach.
+Thanks,=20
 
-A very lightly tested prototype patch is shown below (for which feedback
-is most welcome), and thank you all for your testing efforts!
+Marek, Adam, can you try this patch? Although the reply here is for
+another future series being worked on the fix is for commit
+2e45474ab14f ("execmem: add support for cache of large ROX pages").
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit a955c6a7168f7b204784e4ef7e4db9d017043f73
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Fri Jan 3 17:04:49 2025 -0800
-
-    srcu: Force synchronization for srcu_get_delay()
-    
-    Currently, srcu_get_delay() can be called concurrently, for example,
-    by a CPU that is the first to request a new grace period and the CPU
-    processing the current grace period.  Although concurrent access is
-    harmless, it unnecessarily expands the state space.  Additionally,
-    all calls to srcu_get_delay() are from slow paths.
-    
-    This commit therefore protects all calls to srcu_get_delay() with
-    ssp->srcu_sup->lock, which is already held on the invocation from the
-    srcu_funnel_gp_start() function.  While in the area, this commit also
-    adds a lockdep_assert_held() to srcu_get_delay() itself.
-    
-    Reported-by: syzbot+16a19b06125a2963eaee@syzkaller.appspotmail.com
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index 7c7304dee6457..a60acc9cf2f32 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -648,6 +648,7 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
- 	unsigned long jbase = SRCU_INTERVAL;
- 	struct srcu_usage *sup = ssp->srcu_sup;
- 
-+	lockdep_assert_held(&ACCESS_PRIVATE(ssp->srcu_sup, lock));
- 	if (srcu_gp_is_expedited(ssp))
- 		jbase = 0;
- 	if (rcu_seq_state(READ_ONCE(sup->srcu_gp_seq))) {
-@@ -675,9 +676,13 @@ static unsigned long srcu_get_delay(struct srcu_struct *ssp)
- void cleanup_srcu_struct(struct srcu_struct *ssp)
- {
- 	int cpu;
-+	unsigned long delay;
- 	struct srcu_usage *sup = ssp->srcu_sup;
- 
--	if (WARN_ON(!srcu_get_delay(ssp)))
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
-+	delay = srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
-+	if (WARN_ON(!delay))
- 		return; /* Just leak it! */
- 	if (WARN_ON(srcu_readers_active(ssp)))
- 		return; /* Just leak it! */
-@@ -1100,7 +1105,9 @@ static bool try_check_zero(struct srcu_struct *ssp, int idx, int trycount)
- {
- 	unsigned long curdelay;
- 
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
- 	curdelay = !srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
- 
- 	for (;;) {
- 		if (srcu_readers_active_idx_check(ssp, idx))
-@@ -1849,7 +1856,9 @@ static void process_srcu(struct work_struct *work)
- 	ssp = sup->srcu_ssp;
- 
- 	srcu_advance_state(ssp);
-+	spin_lock_irq_rcu_node(ssp->srcu_sup);
- 	curdelay = srcu_get_delay(ssp);
-+	spin_unlock_irq_rcu_node(ssp->srcu_sup);
- 	if (curdelay) {
- 		WRITE_ONCE(sup->reschedule_count, 0);
- 	} else {
+  Luis
