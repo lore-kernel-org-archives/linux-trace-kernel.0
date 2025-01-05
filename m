@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249F34C6D;
-	Sun,  5 Jan 2025 12:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BDC1369BB;
+	Sun,  5 Jan 2025 12:47:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736081260; cv=none; b=ZwOkExwYOTJuIybwFdaz3dncO7uQN8bS2hVpG0h5QD4QsC3iP0MjPn5iTpdx/zbBlFeadcVJNjckAXLB/qKXLFuT1BDux6CoU0hs2fg0cOosw2+tLQFje1IhmI+qb/MrQjX3KfbRTxYipDZ3qu92duHBR7nSUO40Y/HR5gV3CDA=
+	t=1736081271; cv=none; b=c4nJSydfNekk0Z+XI9W0HcjXcD/GD/hkR0QRBHxKKDaGCydMMpw8iE1gMS64Ot+L8lA09Krq86nOC+DM9cLXX27az9tIbhyTa5BwU06/et+4NPlZ9A6djHFiLuowNv4gVSImy2Cbjj7c/CU1evM9QvEMIGVguMs6IDuzY0KDlXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736081260; c=relaxed/simple;
-	bh=6SjFHT7wLgYWKrEYKB6+0UEGH59z5STEqAQg05x2hN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UihG0erdgQRtoluPT9koI3Pi1+MqHfxEMrRWFeP1Jb1jKA2mueE6Au8echCUx0wxwmmHgQzMdQVE0BJz6OQIBz0VQuMx2uF96NzzgrQ4lm83/437IU/vMn/7iGfkaPoxffwih9rgVATI1r9xRemzhdw6IOrjeQarPnGl7zmnZAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiL59fUf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736081271; c=relaxed/simple;
+	bh=SUhZ7GEHZtJZaDdirrowKcn0d6YjA73MGwSKIo7qoU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gt7DcaNYlm6WwcQey080r8DNYW8WCtGlvSYzrm4DtwoqPuli4Ajn/g6dMl4YpHrdgkaX7UFhYP5nnIm+cycAEz7FMOiaLvZ1iKHcyI4dt9VjSI6nQX8l54d/FNerPqn8iiX/xqSYfBvyU3dyFKUKiXlvke1e0jY82zdGatF47P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ijc/UoKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiL59fUf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B84C4CED0;
-	Sun,  5 Jan 2025 12:47:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ijc/UoKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A360BC4CED0;
+	Sun,  5 Jan 2025 12:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736081259;
-	bh=6SjFHT7wLgYWKrEYKB6+0UEGH59z5STEqAQg05x2hN4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=OiL59fUftYktft0PRSFSQgO9gqLUnLHuh0VFDPIm+m0dNiOaNNNIq8iwkp+qIHpr3
-	 8Cl//4Tt2XSX2qwy1P1H4SyuOgZmVi1sGlVprb5YROrzLJD7jesxiQ6MXQO0urmFkW
-	 Q9g/fgk1gNz7mcAqvRgKb6z7iGUrhZoSMsTe5N3mtr0cEDoYbBsYSCSSa/ojhEmp7x
-	 9vr8YZhfYWawKwgzIOEp6064DoVxODJImyfrSaCTqN5lmvPccOL9UWvqslLpx0+9lC
-	 0OM+9QO3SYUzEhjacBwoi8JBvv3c5KFbI9IoN7Fx+6dgaz/FKl7hpxa+ofKAxcoQlO
-	 jUgK+Xgls7Ewg==
+	s=k20201202; t=1736081270;
+	bh=SUhZ7GEHZtJZaDdirrowKcn0d6YjA73MGwSKIo7qoU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ijc/UoKPIQd6vzvLxb1a5qXjwaNqvV/JLAsZ/svhfgISqlSxVLkfD39CH4RfS9T2K
+	 IHmX5/tUhWC49hzPzPvE18lr0UO+p1LwEcXnZFnlfdIa2KCCSejEpimv2puKXoNURt
+	 BDR6n7P0D0rcIYT7JLAXguargpVDsR2YFCcjoQh9M9LJTB2YWm/hDTcweJylRYi52P
+	 LRSLMsolO8gARTogF9+dzOhwoM8WFqEC9nJv6Y45hG53+i95be1TmFUTmrAsu266rS
+	 VPvou5ie+C64xpWen9bUFjUgZ8fiqSgLexAxtTSWAa93I2ubGvI3igZLu0JSBwbOTD
+	 WjBsymFCg+R3Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -40,10 +41,12 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] tracing/kprobes: Cleanup with guard and __free
-Date: Sun,  5 Jan 2025 21:47:34 +0900
-Message-ID: <173608125422.1253657.3732758016133408588.stgit@devnote2>
+Subject: [PATCH v2 1/6] tracing/kprobes: Fix to free objects when failed to copy a symbol
+Date: Sun,  5 Jan 2025 21:47:45 +0900
+Message-ID: <173608126490.1253657.340741438044767488.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <173608125422.1253657.3732758016133408588.stgit@devnote2>
+References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,33 +57,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 2nd version of the series to fix and cleanup probe events in
-ftrace with __free().
-Fix [2/6] according to Oleg's comment to check the argument and add
-cleanup.h, update [3/6] to apply it cleanly on probes/for-next, and fix 
-[5/6] to assign NULL to 'tk' instead of using no_free_ptr() after
-registering it successfully to avoid __must_check_fn warning.
+In __trace_kprobe_create(), if something fails it must goto error block
+to free objects. But when strdup() a symbol, it returns without that.
+Fix it to goto the error block to free objects correctly.
 
-Thanks,
-
+Fixes: 6212dd29683e ("tracing/kprobes: Use dyn_event framework for kprobe events")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ kernel/trace/trace_kprobe.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Masami Hiramatsu (Google) (6):
-      tracing/kprobes: Fix to free objects when failed to copy a symbol
-      Provide __free(argv) for argv_split() users
-      tracing: Use __free() for argv in dynevent
-      tracing: Use __free() in trace_probe for cleanup
-      tracing: Use __free() for kprobe events to cleanup
-      tracing/kprobes: Simplify __trace_kprobe_create() by removing gotos
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index bae26eb14449..4c3e316454a0 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -935,8 +935,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 		}
+ 		/* a symbol specified */
+ 		symbol = kstrdup(argv[1], GFP_KERNEL);
+-		if (!symbol)
+-			return -ENOMEM;
++		if (!symbol) {
++			ret = -ENOMEM;
++			goto error;
++		}
+ 
+ 		tmp = strchr(symbol, '%');
+ 		if (tmp) {
 
-
- include/linux/string.h        |    3 +
- kernel/trace/trace_dynevent.c |   23 +++----
- kernel/trace/trace_kprobe.c   |  127 ++++++++++++++++++++---------------------
- kernel/trace/trace_probe.c    |   52 ++++++-----------
- 4 files changed, 91 insertions(+), 114 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
