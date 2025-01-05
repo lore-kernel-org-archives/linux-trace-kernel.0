@@ -1,136 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07915532A
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  5 Jan 2025 14:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8092184F;
+	Sun,  5 Jan 2025 16:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736086507; cv=none; b=ueYNYqmlbLcU8/t9EFt2R0JJZ4tXTFbwfUmGzdfycBQ0J0ywjg5Dhee0xX+wiK7dj3Eey5cvEu5ivZcLgmPFcaZj50qoAD1BQUtd3mO2/xdIIXBzG8aWutvtJcFoHg/+aum3yuCSIOujPCa7LQ2v2qcjqJjOKJfkIM7eFFVP64g=
+	t=1736094140; cv=none; b=mo+kDNxmgWYrB21SbfVbCawAMNztqciKaTzCCcjdNJ3fF8Ktsu01cqw2Uv1czowpoTVsV68TPUIctlXbXgCjGM4UHDRbRfs/rzwBz6mCF4wX9eKB7xU68ZMRIDjbJe77B+rFy8oT4ykxk5ZYqjtNiSA7YJ802wtfpq9eLsCEePU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736086507; c=relaxed/simple;
-	bh=Cwt6zGhswuXHFT5MPd3pyLuUFvOSQGnXnMN3X3ndu4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2d8gq6Flq/tSvXluLxd3Os2Lc3m4De82pehK39ckIH9SSiBUUmKdbdTVFf9ZVge9XuC3BBt9ON5S2atAYOsGzR229R86de0QxFwPUyk+4TrqVy9q25JYPRrgQObe5mC5MWa1JUXTvDqaXF5hFz397EEyNclHeLnPHeFcDc8keM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICe/qEKn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICe/qEKn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736086504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tSzj3x9fbDLRI8TQLtBSw5QmDyqxUUxjf968LhVajBU=;
-	b=ICe/qEKnqD36eKydZgUAJ6P71EKRF/yaORDAmN4sW7FFKTSXIKaa/w785FEdTFuHB1KbwZ
-	jXqwjfenkrHfXwawCTOWrADYmalutapIJG0W4OHqiESgSQAjshEeoPWBcdKFkhcS+5yAT8
-	IVbkeWh2DZM2v6XMCH5Pw15dc1+FXJQ=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-p8NXdqQ4OJiVL07gzL3o-w-1; Sun,
- 05 Jan 2025 09:14:56 -0500
-X-MC-Unique: p8NXdqQ4OJiVL07gzL3o-w-1
-X-Mimecast-MFC-AGG-ID: p8NXdqQ4OJiVL07gzL3o-w
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 992E119560A2;
-	Sun,  5 Jan 2025 14:14:53 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.48])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DA22D300F9B7;
-	Sun,  5 Jan 2025 14:14:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  5 Jan 2025 15:14:28 +0100 (CET)
-Date: Sun, 5 Jan 2025 15:14:22 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: DEFINE_FREE/CLASS && code readability (Was: [PATCH v2 2/6] Provide
- __free(argv) for argv_split() users)
-Message-ID: <20250105141422.GB23059@redhat.com>
-References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
- <173608127627.1253657.12054758575695672674.stgit@devnote2>
+	s=arc-20240116; t=1736094140; c=relaxed/simple;
+	bh=0PiWUTn4HS2+6Hqtdbt7AAKDTj3gjdoEBm3Jr4CL3Cs=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=GbC/LRMpHGl867d48rsPzIG4EvJITAcwMvi545C1P1t4gc2unvwvIF5NQIDsa/OnEcNs8tedkPXtXLK6ozLBJfM8GxLyGpDCZBOq87oMWCE18AOuxw4Tqmr2P5+ebOdMBusxnl6cJJd1LNut8z9wOAin1hVdRL5TsZzMW0XCAEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A63C4CEE0;
+	Sun,  5 Jan 2025 16:22:20 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tUTPk-00000008Er2-1AeE;
+	Sun, 05 Jan 2025 11:23:44 -0500
+Message-ID: <20250105162344.128870118@goodmis.org>
+User-Agent: quilt/0.68
+Date: Sun, 05 Jan 2025 11:22:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas@fjasle.eu>,
+ Zheng Yejian <zhengyejian1@huawei.com>,
+ Martin  Kelly <martin.kelly@crowdstrike.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 01/14] scripts/sorttable: Remove unused macro defines
+References: <20250105162211.971039541@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173608127627.1253657.12054758575695672674.stgit@devnote2>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=UTF-8
 
-Masami,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Sorry for abusing this thread. Your patches look fine to me, it is not
-that I suggest to change them. I will use your patch as an example for
-off-topic discussion.
+The code of sorttable.h was copied from the recordmcount.h  which defined
+a bunch of Elf MACROs so that they could be used between 32bit and 64bit
+functions. But there's several MACROs that sorttable.h does not use but
+was copied over. Remove them to clean up the code.
 
-On 01/05, Masami Hiramatsu (Google) wrote:
->
-> +DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ scripts/sorttable.h | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
-(IS_ERR looks unneeded but this is cosmetic).
+diff --git a/scripts/sorttable.h b/scripts/sorttable.h
+index 7bd0184380d3..2a9ec5046e9a 100644
+--- a/scripts/sorttable.h
++++ b/scripts/sorttable.h
+@@ -27,19 +27,10 @@
+ #undef Elf_Ehdr
+ #undef Elf_Shdr
+ #undef Elf_Rel
+-#undef Elf_Rela
+ #undef Elf_Sym
+-#undef ELF_R_SYM
+-#undef Elf_r_sym
+-#undef ELF_R_INFO
+-#undef Elf_r_info
+-#undef ELF_ST_BIND
+ #undef ELF_ST_TYPE
+-#undef fn_ELF_R_SYM
+-#undef fn_ELF_R_INFO
+ #undef uint_t
+ #undef _r
+-#undef _w
+ 
+ #ifdef SORTTABLE_64
+ # define extable_ent_size	16
+@@ -52,19 +43,10 @@
+ # define Elf_Ehdr		Elf64_Ehdr
+ # define Elf_Shdr		Elf64_Shdr
+ # define Elf_Rel		Elf64_Rel
+-# define Elf_Rela		Elf64_Rela
+ # define Elf_Sym		Elf64_Sym
+-# define ELF_R_SYM		ELF64_R_SYM
+-# define Elf_r_sym		Elf64_r_sym
+-# define ELF_R_INFO		ELF64_R_INFO
+-# define Elf_r_info		Elf64_r_info
+-# define ELF_ST_BIND		ELF64_ST_BIND
+ # define ELF_ST_TYPE		ELF64_ST_TYPE
+-# define fn_ELF_R_SYM		fn_ELF64_R_SYM
+-# define fn_ELF_R_INFO		fn_ELF64_R_INFO
+ # define uint_t			uint64_t
+ # define _r			r8
+-# define _w			w8
+ #else
+ # define extable_ent_size	8
+ # define compare_extable	compare_extable_32
+@@ -76,19 +58,10 @@
+ # define Elf_Ehdr		Elf32_Ehdr
+ # define Elf_Shdr		Elf32_Shdr
+ # define Elf_Rel		Elf32_Rel
+-# define Elf_Rela		Elf32_Rela
+ # define Elf_Sym		Elf32_Sym
+-# define ELF_R_SYM		ELF32_R_SYM
+-# define Elf_r_sym		Elf32_r_sym
+-# define ELF_R_INFO		ELF32_R_INFO
+-# define Elf_r_info		Elf32_r_info
+-# define ELF_ST_BIND		ELF32_ST_BIND
+ # define ELF_ST_TYPE		ELF32_ST_TYPE
+-# define fn_ELF_R_SYM		fn_ELF32_R_SYM
+-# define fn_ELF_R_INFO		fn_ELF32_R_INFO
+ # define uint_t			uint32_t
+ # define _r			r
+-# define _w			w
+ #endif
+ 
+ #if defined(SORTTABLE_64) && defined(UNWINDER_ORC_ENABLED)
+-- 
+2.45.2
 
-OK, so it can be used as
-
-	void func(void)
-	{
-		char **argv __free(argv) = argv_split(...);
-		do_something(argv);
-		return;
-	}
-
-And I cry every time when I read the code like this ;)
-
-Because, to understand this code, I need to do the "nontrivial" grep to find
-"DEFINE_FREE(argv,".
-
-Perhaps we can establish a simple rule that every DEFINE_FREE() or DEFINE_CLASS()
-should add another #define? I mean something like
-
-
-	DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
-	#define __FREE_ARGV	__free(argv)
-	
-	void func(void)
-	{
-		char **argv __FREE_ARGV = argv_split(...);
-		do_something(argv);
-		return;
-	}
-
-This way I can press Ctrl-] and see what the cleanup code actually does.
-Can save a second or two. Important when you try to read the code you are
-not familiar with.
-
-Same for DEFINE_CLASS. For example,
-
-	int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
-	{
-		CLASS(fd, f)(fd);
-
-		if (fd_empty(f))
-			return -EBADF;
-
-		return vfs_fchown(fd_file(f), user, group);
-	}
-
-If you are not familiar with this code, it looks mysterious until you find
-DEFINE_CLASS(fd, ...) in include/linux/file.h.
-
-Oleg.
 
