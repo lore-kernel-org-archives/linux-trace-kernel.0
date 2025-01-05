@@ -1,134 +1,136 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57131369BB
-	for <linux-trace-kernel@vger.kernel.org>; Sun,  5 Jan 2025 12:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07915532A
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  5 Jan 2025 14:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736081576; cv=none; b=JMMrBeJuvWriAr2ejGVGtKZDIcxwJ+zWT2OdIn4lhXARH5uhclrdO9I43LnHvPIaLLPNt3/RIBe7BLUmGTfSGlS64mJ++ITtsTMaALFlUH9Tz10VnvccDq/v6Fei17GLKfu+Em2D8fzGMBuNQxtAkKIFizC3HGZPjGbXSu7vR7k=
+	t=1736086507; cv=none; b=ueYNYqmlbLcU8/t9EFt2R0JJZ4tXTFbwfUmGzdfycBQ0J0ywjg5Dhee0xX+wiK7dj3Eey5cvEu5ivZcLgmPFcaZj50qoAD1BQUtd3mO2/xdIIXBzG8aWutvtJcFoHg/+aum3yuCSIOujPCa7LQ2v2qcjqJjOKJfkIM7eFFVP64g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736081576; c=relaxed/simple;
-	bh=5UfF6jzmGPHI0cPnrn6XRUmUTB4P+KEml3GX6b/5tzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jLB+qLQKSNTEPcUar7sYSHQvf2KLLK6beSs63b3iu03Z2y3oaOHSDFUIW5d/Ko14abkBB55jj58MPjhNkoy9ydt2ISVP/DpzLfaSh06lCMYY+GswtftbvFc1ZYuuVC3QM/d/jjDIOQrVhi5FljdxjJVMNARgSsQqjeXMVx23VKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p0fvjz8G; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736086507; c=relaxed/simple;
+	bh=Cwt6zGhswuXHFT5MPd3pyLuUFvOSQGnXnMN3X3ndu4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2d8gq6Flq/tSvXluLxd3Os2Lc3m4De82pehK39ckIH9SSiBUUmKdbdTVFf9ZVge9XuC3BBt9ON5S2atAYOsGzR229R86de0QxFwPUyk+4TrqVy9q25JYPRrgQObe5mC5MWa1JUXTvDqaXF5hFz397EEyNclHeLnPHeFcDc8keM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICe/qEKn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p0fvjz8G"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21625b4f978so106575ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 05 Jan 2025 04:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736081574; x=1736686374; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9CZd9YA/vxsfF1o+1S6lXa7zVfnq9bHCryfS5okIqnQ=;
-        b=p0fvjz8G8GHDKm7wNZ5uN4aXtc0sbHW3ZH83tqC8wj/Dm9I/MK6sjE5i8VUWtFMygv
-         ntdIAUOl4O+aoZ360zxFewIUNbfPjEENqig0/Eu0Z9Y9+lsXijGphyOTbvl65VzYvsmM
-         9m8ej/YJYljPXtcDR/sdl8i3WA/IkIu2vTwKp6A11qFAfFGgA130wn2bhVOs4/spko/C
-         z49U0XnrMo7cC8K4ns+z/bdjPl86MT/u/T+tf4lzrlj7VNs/G5i/gac/DdvAYTkXZnOz
-         BtUnzYNh7fF15HJQdPonD5TZXqntIACLneIvdWiSU0DmdtGSdTMp0cIZP8X7HsldCXSc
-         Y/VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736081574; x=1736686374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9CZd9YA/vxsfF1o+1S6lXa7zVfnq9bHCryfS5okIqnQ=;
-        b=iHu4d2od/P2OZTGV9RWL5vTiOAVQmMFVvK2RBlD90h4eNz0cmcybLPNyDGA6aDnAdx
-         K8Lrw2a0hrWCBjEucVR76Du3FsDVxkGiHz3UKJ2oJ49wTfT8tOBgQPtG4Ex88fzda6BE
-         Zohs4XFxEiuy22DRc5Sb/EYCcrm7jJL8/8MvXNGZsvpdtBLNYsyUoXM9ZyGwAjI+Rp0V
-         SOA7YlN4CntphFISWZIiIBFguNkyCShoJVol4nrETUW5qkBIBDvJiS41ZtGi5TFBAl7x
-         5ewsxmozr89HOFG7nljtq6ONM+yPqBOSHwXqRw7RwwCRStJxT1q40AZv/kKumb01I3Au
-         M8ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUBqsgOdCWfvq+Qv2UbH5unB+xxPOUMuhWEgRIaBSz3xy3tWCHEYJiMtQJC41bDrOU/ojCNb7TV92QfxmkV6RiqJAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqhRyAhDDl/BRniSi6tXQeeUPRfeJfATSL3iUxywAzxjabh8yi
-	YtfUYde+ji/W6U53mwGvB4rKUqzB9ihtTnsc0ouQPpSciL0O8GBpb/I5E7TpRL9aDTPNkSepCIq
-	GwbeXJyV7cOwqq2VOaej6bAj2/Peaaw70uQ5k
-X-Gm-Gg: ASbGncsH4TGseKYXmi/giFVF4RmBUm19IoEpFMW18ZEvumyWwhwW+ddNb+8GKRgGwWT
-	zsZZpL70B04ckmPDsyQimywup3K73K1LynvPd
-X-Google-Smtp-Source: AGHT+IEHA5ba+jpkkdNpDLtsolTeg8E9FnKLL/jtGaf6DdgcjgXXRiauZ5nf4OWT8s7tM+6ZsYXlno3RjzvbYUw9zeI=
-X-Received: by 2002:a17:903:120d:b0:216:6dab:8042 with SMTP id
- d9443c01a7336-21a62b6ffb8mr1842805ad.12.1736081573755; Sun, 05 Jan 2025
- 04:52:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICe/qEKn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736086504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tSzj3x9fbDLRI8TQLtBSw5QmDyqxUUxjf968LhVajBU=;
+	b=ICe/qEKnqD36eKydZgUAJ6P71EKRF/yaORDAmN4sW7FFKTSXIKaa/w785FEdTFuHB1KbwZ
+	jXqwjfenkrHfXwawCTOWrADYmalutapIJG0W4OHqiESgSQAjshEeoPWBcdKFkhcS+5yAT8
+	IVbkeWh2DZM2v6XMCH5Pw15dc1+FXJQ=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-p8NXdqQ4OJiVL07gzL3o-w-1; Sun,
+ 05 Jan 2025 09:14:56 -0500
+X-MC-Unique: p8NXdqQ4OJiVL07gzL3o-w-1
+X-Mimecast-MFC-AGG-ID: p8NXdqQ4OJiVL07gzL3o-w
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 992E119560A2;
+	Sun,  5 Jan 2025 14:14:53 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.48])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DA22D300F9B7;
+	Sun,  5 Jan 2025 14:14:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  5 Jan 2025 15:14:28 +0100 (CET)
+Date: Sun, 5 Jan 2025 15:14:22 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: DEFINE_FREE/CLASS && code readability (Was: [PATCH v2 2/6] Provide
+ __free(argv) for argv_split() users)
+Message-ID: <20250105141422.GB23059@redhat.com>
+References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
+ <173608127627.1253657.12054758575695672674.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <86eba318-464b-4b9b-a79e-64039b17be34@lucifer.local>
- <d48193a3-65fe-4aa9-98f6-dd5869bd9127@citrix.com> <9878d90f-faf3-4853-9a79-a21b4f58ab4c@suse.com>
- <Z3iX2mNtqSYrvYPT@bombadil.infradead.org>
-In-Reply-To: <Z3iX2mNtqSYrvYPT@bombadil.infradead.org>
-From: =?UTF-8?Q?Marek_Ma=C5=9Blanka?= <mmaslanka@google.com>
-Date: Sun, 5 Jan 2025 13:52:27 +0100
-Message-ID: <CAGcaFA2Htgu8w6S_Zuz2zn3FwpaetZRbY8n0CWEdh07YfMO==A@mail.gmail.com>
-Subject: Re: [PATCH 6/8] modules: switch to execmem API for remapping as RW
- and restoring ROX
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	Adam Williamson <awilliam@redhat.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	lorenzo.stoakes@oracle.com, akpm@linux-foundation.org, 
-	anton.ivanov@cambridgegreys.com, bp@alien8.de, brendan.higgins@linux.dev, 
-	da.gomez@samsung.com, danielt@kernel.org, dave.hansen@linux.intel.com, 
-	davidgow@google.com, dianders@chromium.org, hpa@zytor.com, 
-	jason.wessel@windriver.com, jikos@kernel.org, joe.lawrence@redhat.com, 
-	johannes@sipsolutions.net, jpoimboe@kernel.org, 
-	kgdb-bugreport@lists.sourceforge.net, kirill.shutemov@linux.intel.com, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, live-patching@vger.kernel.org, luto@kernel.org, 
-	mark.rutland@arm.com, mbenes@suse.cz, mhiramat@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, petr.pavlu@suse.com, pmladek@suse.com, richard@nod.at, 
-	rmoar@google.com, rostedt@goodmis.org, rppt@kernel.org, 
-	samitolvanen@google.com, shuah@kernel.org, song@kernel.org, 
-	tglx@linutronix.de, x86@kernel.org, 
-	=?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <173608127627.1253657.12054758575695672674.stgit@devnote2>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Sat, Jan 4, 2025 at 3:07=E2=80=AFAM Luis Chamberlain <mcgrof@kernel.org>=
- wrote:
->
-> On Fri, Jan 03, 2025 at 07:58:13AM +0100, J=C3=BCrgen Gro=C3=9F wrote:
-> > On 03.01.25 03:06, Andrew Cooper wrote:
-> > > > Hi Mike,
-> > > >
-> > > > This commit is making my intel box not boot in mm-unstable :>) I bi=
-sected it to
-> > > > this commit.
-> > >
-> > > For what it's worth, we've found the same under Xen too.
-> > >
-> > > There's one concrete bug in the series, failing to cope with the abse=
-nce
-> > > of superpages (fix in
-> > > https://lore.kernel.org/xen-devel/6bb03333-74ca-4c2c-85a8-72549b85a5b=
-4@suse.com/
-> > > but not formally posted yet AFAICT).
-> >
-> > Now sent out:
-> >
-> > https://lore.kernel.org/lkml/20250103065631.26459-1-jgross@suse.com/T/#=
-u
->
-> Thanks,
->
-> Marek, Adam, can you try this patch? Although the reply here is for
-> another future series being worked on the fix is for commit
-> 2e45474ab14f ("execmem: add support for cache of large ROX pages").
->
->   Luis
+Masami,
 
-Hi Luis,
+Sorry for abusing this thread. Your patches look fine to me, it is not
+that I suggest to change them. I will use your patch as an example for
+off-topic discussion.
 
-I suppose you're referring to the issue described here
-https://lore.kernel.org/linux-mm/CAGcaFA2hdThQV6mjD_1_U+GNHThv84+MQvMWLgEuX=
-+LVbAyDxg@mail.gmail.com/T/
-Unfortnuetly this patch didn't help.
+On 01/05, Masami Hiramatsu (Google) wrote:
+>
+> +DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
 
-Best,
-Marek
+(IS_ERR looks unneeded but this is cosmetic).
+
+OK, so it can be used as
+
+	void func(void)
+	{
+		char **argv __free(argv) = argv_split(...);
+		do_something(argv);
+		return;
+	}
+
+And I cry every time when I read the code like this ;)
+
+Because, to understand this code, I need to do the "nontrivial" grep to find
+"DEFINE_FREE(argv,".
+
+Perhaps we can establish a simple rule that every DEFINE_FREE() or DEFINE_CLASS()
+should add another #define? I mean something like
+
+
+	DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+	#define __FREE_ARGV	__free(argv)
+	
+	void func(void)
+	{
+		char **argv __FREE_ARGV = argv_split(...);
+		do_something(argv);
+		return;
+	}
+
+This way I can press Ctrl-] and see what the cleanup code actually does.
+Can save a second or two. Important when you try to read the code you are
+not familiar with.
+
+Same for DEFINE_CLASS. For example,
+
+	int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
+	{
+		CLASS(fd, f)(fd);
+
+		if (fd_empty(f))
+			return -EBADF;
+
+		return vfs_fchown(fd_file(f), user, group);
+	}
+
+If you are not familiar with this code, it looks mysterious until you find
+DEFINE_CLASS(fd, ...) in include/linux/file.h.
+
+Oleg.
+
