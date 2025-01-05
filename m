@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEC64C6D;
-	Sun,  5 Jan 2025 12:48:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AF736C;
+	Sun,  5 Jan 2025 12:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736081282; cv=none; b=D40wmJhntaGZxYJ0/LQh5sJGEN693/3JMKXEpQcVoCL08nvgM+ld32gV8YtT76heZt9fVycot11aiaqi7WgZKaUDR7uO11kuFGp/qkCEQVnh0O1H+tKaTYozjlHBufvv5D0ZDghCdpz9OdIZJZ5c9cHn+E+IAlOWg0ZFMvuYy8E=
+	t=1736081293; cv=none; b=cIzHhYx0iPclIz7Fk2F9xEPO9qmpYqjaoXdQYbKbuhztzG6VbAJVrmVjy5Mhh7mg4XzUYuBUdRPWc/PQODS0pDay9tg++lygTdLtheIZf8soTK1jpM1332q49kPa5J/JPagbpe6JKaCdL6hkGva6TGpNWiadchtg9zuQOn8YKFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736081282; c=relaxed/simple;
-	bh=Ygf+iCbx7dZy/D639P/x2vHGiaFTI7wGxpffxyQB5zQ=;
+	s=arc-20240116; t=1736081293; c=relaxed/simple;
+	bh=+pxLLLe29dzlgSbN6WDsHwCIQvOgeEupwWyEX6Or1L4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rnAj54/CjysYOLMQUj8feuK473+0DT7BwZ5lqNKCw+RrQBQXG4mClkaYhMLAFlYSlQaSRJmHCaxUSOK/2HlDZmK8RDpZ0VC1/NQVFv9QB9jrnPSHR6Q1rEsb5CX7Gj4DG+raxyJm6a9w/Du0f2QmJ749GGUrB3z5F/QSiiSuQ40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOEYRM+i; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Wa3C/2yW+JAKambfCSRyrLzukfKY+imVrJxjO6SAoz2evgY5cDnQWaL0glIyi7aXhnYFHbUoMeTVyH0WBVdXhVlN1yS+NXahWm8610wIeaXrKJbYNRca96jhDJbnJ3lfgLcNirWB3smOuuHZlbQXGiBftoP/3Gq4dzPTRKroVPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uKnVP1rW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOEYRM+i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8289C4CED0;
-	Sun,  5 Jan 2025 12:47:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uKnVP1rW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64A4C4CED0;
+	Sun,  5 Jan 2025 12:48:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736081282;
-	bh=Ygf+iCbx7dZy/D639P/x2vHGiaFTI7wGxpffxyQB5zQ=;
+	s=k20201202; t=1736081293;
+	bh=+pxLLLe29dzlgSbN6WDsHwCIQvOgeEupwWyEX6Or1L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sOEYRM+iM9kN2pRmgjurk3VFjj8I3iRxuq90TT3fWbIYDQ/zDOQZtsZ4BL5ChQAk8
-	 CtNE0QxGRN31W77kngnsgDKWK09rxJre8EbZbsHZ2Q2V/VAzD+wddAGzPBxUnmmQZ6
-	 4ZEoklm8+Png2Q/hN1qmkGkqBfutsyTFqIj0pMqsb9IdCsWStEyIRTFMkwa0PyB2Zp
-	 /1LDBt0WFgKOEXA/5wtgKhkiT23wFNohEWcYAgaG2Yb6mzZsJ5i6EGJnTASFrPaMCp
-	 b/7LFmb2YnNbVHOYMqbhuUBiivU2DqkV69zOPUKzL2rQaU03jMHEU2uLg56QxE0j/F
-	 VMw1gkSG/5K4Q==
+	b=uKnVP1rWgV8GRmTLHV+ayljgggD7L77b+U5IoOTlyZ1PiGmOAOiXW4KyHGZr/EKtt
+	 WfVwXhmKCLuigI5PwHvwRLYoCZB68FhHf+2XrWoug3lWTaU7Nb5M2o6Rcr19K/WZH6
+	 9G2F+7dnnindL7voIt3MJSgfyFNJb6xFBtXs9ZEsV9s4z0KIZ5glbMHbNQhqxDEdWt
+	 Gundn53DLvJAsZX/ZYHQOcUytUk9/bvjIFqd8lJNJqgJNrJ9CVwIp67PcZA1+z6GMM
+	 YHk3TV5NGvUSli32DhfYZNGcDZkt0MWfNQq/DXQIB34jSkoaI2Pep4KfDACAFxU8Lv
+	 wna+QB84jT0Bw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -41,9 +41,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] Provide __free(argv) for argv_split() users
-Date: Sun,  5 Jan 2025 21:47:56 +0900
-Message-ID: <173608127627.1253657.12054758575695672674.stgit@devnote2>
+Subject: [PATCH v2 3/6] tracing: Use __free() for argv in dynevent
+Date: Sun,  5 Jan 2025 21:48:07 +0900
+Message-ID: <173608128743.1253657.14202571481200245375.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173608125422.1253657.3732758016133408588.stgit@devnote2>
 References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
@@ -59,37 +59,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Provide __free(argv) macro for argv_split() users so that they can
-avoid gotos.
+Use __free() for the args allocated by argv_split() in dynevent.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v2:
-  - Fix to call argv_free() only if the argument is !IS_ERR_OR_NULL().
-  - Add including cleanup.h.
+  - Rebased on probes/for-next, which reverts previous dynevent guard patch.
 ---
- include/linux/string.h |    3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace_dynevent.c |   23 ++++++++---------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 493ac4862c77..07f2a90d5d9c 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -4,6 +4,7 @@
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index 4376887e0d8a..630d9695b2df 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -74,24 +74,20 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	struct dyn_event *pos, *n;
+ 	char *system = NULL, *event, *p;
+ 	int argc, ret = -ENOENT;
+-	char **argv;
++	char **argv __free(argv) = NULL;
  
- #include <linux/args.h>
- #include <linux/array_size.h>
-+#include <linux/cleanup.h>	/* for DEFINE_FREE() */
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
-@@ -312,6 +313,8 @@ extern void *kmemdup_array(const void *src, size_t count, size_t element_size, g
- extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
- extern void argv_free(char **argv);
+ 	argv = argv_split(GFP_KERNEL, raw_command, &argc);
+ 	if (!argv)
+ 		return -ENOMEM;
  
-+DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+ 	if (argv[0][0] == '-') {
+-		if (argv[0][1] != ':') {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (argv[0][1] != ':')
++			return -EINVAL;
+ 		event = &argv[0][2];
+ 	} else {
+ 		event = strchr(argv[0], ':');
+-		if (!event) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (!event)
++			return -EINVAL;
+ 		event++;
+ 	}
+ 
+@@ -101,10 +97,8 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 		event = p + 1;
+ 		*p = '\0';
+ 	}
+-	if (!system && event[0] == '\0') {
+-		ret = -EINVAL;
+-		goto out;
+-	}
++	if (!system && event[0] == '\0')
++		return -EINVAL;
+ 
+ 	mutex_lock(&event_mutex);
+ 	for_each_dyn_event_safe(pos, n) {
+@@ -120,8 +114,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 	}
+ 	tracing_reset_all_online_cpus();
+ 	mutex_unlock(&event_mutex);
+-out:
+-	argv_free(argv);
 +
- /* lib/cmdline.c */
- extern int get_option(char **str, int *pint);
- extern char *get_options(const char *str, int nints, int *ints);
+ 	return ret;
+ }
+ 
 
