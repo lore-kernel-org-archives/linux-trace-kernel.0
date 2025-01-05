@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BDC1369BB;
-	Sun,  5 Jan 2025 12:47:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEC64C6D;
+	Sun,  5 Jan 2025 12:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736081271; cv=none; b=c4nJSydfNekk0Z+XI9W0HcjXcD/GD/hkR0QRBHxKKDaGCydMMpw8iE1gMS64Ot+L8lA09Krq86nOC+DM9cLXX27az9tIbhyTa5BwU06/et+4NPlZ9A6djHFiLuowNv4gVSImy2Cbjj7c/CU1evM9QvEMIGVguMs6IDuzY0KDlXI=
+	t=1736081282; cv=none; b=D40wmJhntaGZxYJ0/LQh5sJGEN693/3JMKXEpQcVoCL08nvgM+ld32gV8YtT76heZt9fVycot11aiaqi7WgZKaUDR7uO11kuFGp/qkCEQVnh0O1H+tKaTYozjlHBufvv5D0ZDghCdpz9OdIZJZ5c9cHn+E+IAlOWg0ZFMvuYy8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736081271; c=relaxed/simple;
-	bh=SUhZ7GEHZtJZaDdirrowKcn0d6YjA73MGwSKIo7qoU4=;
+	s=arc-20240116; t=1736081282; c=relaxed/simple;
+	bh=Ygf+iCbx7dZy/D639P/x2vHGiaFTI7wGxpffxyQB5zQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gt7DcaNYlm6WwcQey080r8DNYW8WCtGlvSYzrm4DtwoqPuli4Ajn/g6dMl4YpHrdgkaX7UFhYP5nnIm+cycAEz7FMOiaLvZ1iKHcyI4dt9VjSI6nQX8l54d/FNerPqn8iiX/xqSYfBvyU3dyFKUKiXlvke1e0jY82zdGatF47P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ijc/UoKP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rnAj54/CjysYOLMQUj8feuK473+0DT7BwZ5lqNKCw+RrQBQXG4mClkaYhMLAFlYSlQaSRJmHCaxUSOK/2HlDZmK8RDpZ0VC1/NQVFv9QB9jrnPSHR6Q1rEsb5CX7Gj4DG+raxyJm6a9w/Du0f2QmJ749GGUrB3z5F/QSiiSuQ40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOEYRM+i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ijc/UoKP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A360BC4CED0;
-	Sun,  5 Jan 2025 12:47:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOEYRM+i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8289C4CED0;
+	Sun,  5 Jan 2025 12:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736081270;
-	bh=SUhZ7GEHZtJZaDdirrowKcn0d6YjA73MGwSKIo7qoU4=;
+	s=k20201202; t=1736081282;
+	bh=Ygf+iCbx7dZy/D639P/x2vHGiaFTI7wGxpffxyQB5zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ijc/UoKPIQd6vzvLxb1a5qXjwaNqvV/JLAsZ/svhfgISqlSxVLkfD39CH4RfS9T2K
-	 IHmX5/tUhWC49hzPzPvE18lr0UO+p1LwEcXnZFnlfdIa2KCCSejEpimv2puKXoNURt
-	 BDR6n7P0D0rcIYT7JLAXguargpVDsR2YFCcjoQh9M9LJTB2YWm/hDTcweJylRYi52P
-	 LRSLMsolO8gARTogF9+dzOhwoM8WFqEC9nJv6Y45hG53+i95be1TmFUTmrAsu266rS
-	 VPvou5ie+C64xpWen9bUFjUgZ8fiqSgLexAxtTSWAa93I2ubGvI3igZLu0JSBwbOTD
-	 WjBsymFCg+R3Q==
+	b=sOEYRM+iM9kN2pRmgjurk3VFjj8I3iRxuq90TT3fWbIYDQ/zDOQZtsZ4BL5ChQAk8
+	 CtNE0QxGRN31W77kngnsgDKWK09rxJre8EbZbsHZ2Q2V/VAzD+wddAGzPBxUnmmQZ6
+	 4ZEoklm8+Png2Q/hN1qmkGkqBfutsyTFqIj0pMqsb9IdCsWStEyIRTFMkwa0PyB2Zp
+	 /1LDBt0WFgKOEXA/5wtgKhkiT23wFNohEWcYAgaG2Yb6mzZsJ5i6EGJnTASFrPaMCp
+	 b/7LFmb2YnNbVHOYMqbhuUBiivU2DqkV69zOPUKzL2rQaU03jMHEU2uLg56QxE0j/F
+	 VMw1gkSG/5K4Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -41,9 +41,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] tracing/kprobes: Fix to free objects when failed to copy a symbol
-Date: Sun,  5 Jan 2025 21:47:45 +0900
-Message-ID: <173608126490.1253657.340741438044767488.stgit@devnote2>
+Subject: [PATCH v2 2/6] Provide __free(argv) for argv_split() users
+Date: Sun,  5 Jan 2025 21:47:56 +0900
+Message-ID: <173608127627.1253657.12054758575695672674.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173608125422.1253657.3732758016133408588.stgit@devnote2>
 References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
@@ -59,31 +59,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In __trace_kprobe_create(), if something fails it must goto error block
-to free objects. But when strdup() a symbol, it returns without that.
-Fix it to goto the error block to free objects correctly.
+Provide __free(argv) macro for argv_split() users so that they can
+avoid gotos.
 
-Fixes: 6212dd29683e ("tracing/kprobes: Use dyn_event framework for kprobe events")
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_kprobe.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Changes in v2:
+  - Fix to call argv_free() only if the argument is !IS_ERR_OR_NULL().
+  - Add including cleanup.h.
+---
+ include/linux/string.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index bae26eb14449..4c3e316454a0 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -935,8 +935,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		}
- 		/* a symbol specified */
- 		symbol = kstrdup(argv[1], GFP_KERNEL);
--		if (!symbol)
--			return -ENOMEM;
-+		if (!symbol) {
-+			ret = -ENOMEM;
-+			goto error;
-+		}
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 493ac4862c77..07f2a90d5d9c 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -4,6 +4,7 @@
  
- 		tmp = strchr(symbol, '%');
- 		if (tmp) {
+ #include <linux/args.h>
+ #include <linux/array_size.h>
++#include <linux/cleanup.h>	/* for DEFINE_FREE() */
+ #include <linux/compiler.h>	/* for inline */
+ #include <linux/types.h>	/* for size_t */
+ #include <linux/stddef.h>	/* for NULL */
+@@ -312,6 +313,8 @@ extern void *kmemdup_array(const void *src, size_t count, size_t element_size, g
+ extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
+ extern void argv_free(char **argv);
+ 
++DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
++
+ /* lib/cmdline.c */
+ extern int get_option(char **str, int *pint);
+ extern char *get_options(const char *str, int nints, int *ints);
 
