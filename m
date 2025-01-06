@@ -1,49 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0473F12E4A;
-	Mon,  6 Jan 2025 12:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C84A1DDA2E;
+	Mon,  6 Jan 2025 13:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736165993; cv=none; b=Gna2ZGTtTsMtrX7bbbYWytffIZvsI73vcpLkyp3jy7HlZ++STTlmyQrYGdgZ54ElNbq/AMhQ4CdmD6obzqbh3RHMwdHQ02HxE/li7ccRFg4Z8mK9ZkdZTExXN2H+KQ2fFWp+fb+L9OHXnlca+QCQmt6qi0OYugtV/86o2nfReRs=
+	t=1736169888; cv=none; b=BmE01uThYGLj82UdbJfT8bWWuEznPXKs30+QUw4AsrE581he4BYmB80W6elkO26vtM25ozFo9/eziLmsCuFkwOWeTzCMwAT8TgOGl/r/RaU6JaaTOTdpb7i5TyJrdFvd8OS1Qas5Pc9VM5/G0wvlV+v0Lj2r+iyQ6lPyzCOoVNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736165993; c=relaxed/simple;
-	bh=ryNIPPEpcmt+2C9PMrU7ng1DbOvtyouc6tlGwl43Fn0=;
+	s=arc-20240116; t=1736169888; c=relaxed/simple;
+	bh=ExWqDD7WEFcCsYzyUGTWC1ki7ltdi+y3LVg5hPlWiuE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qJeCfmGrOKdSR1qzF3FZeHvv8dSjzAiy2mQ/E3VvGCXKgNG4GxrFGwuPul2TsxS8XC0HHSo6PriczjtsJATJS5nGd/nEl7EdoYttB1CGugSiuYCP3uQWNgntkmVLeP4buHN7JJWUO6FCr0Ne7Ueq6kcQRbixf32PoQEW/TMYKjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzV6MdqX; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=a+7FhsUOsbLUX34DwZQNveUl+KX2cLPkn75heUiHi567iCORsbrcvZQT4g7vYikYFhnDGvf804FjVytiADllRvCja198wm5/E4Q7dhEyBXXiypQDKxwhp4Uj5MWz6cSEYTwlUGn7nPDp8VnudRwS+UjF0g0rm3bxWQMjUKrhe90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qM33E4OM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzV6MdqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46859C4CED2;
-	Mon,  6 Jan 2025 12:19:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qM33E4OM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90669C4CED2;
+	Mon,  6 Jan 2025 13:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736165992;
-	bh=ryNIPPEpcmt+2C9PMrU7ng1DbOvtyouc6tlGwl43Fn0=;
+	s=k20201202; t=1736169888;
+	bh=ExWqDD7WEFcCsYzyUGTWC1ki7ltdi+y3LVg5hPlWiuE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZzV6MdqXjPwZJVDq6eF8Z9BATAnLpxm9U3hGYRZS42wq4sNdhDVh0Xgme8IOUVBx7
-	 A+4geFUcxAGt5Es+cXqfNgfgVJF+9j/w9aroEpvM6K86+vfnaCyDn5+i6cvBy4VyUf
-	 5m9vx9ElgNrRmz8TFNEYwaorUagkPFH7NA3rEw1r30GC9GK8Z0TGGvby2805Frl1Wb
-	 ndm0M3+LewIJ4wPrf6S8nrbkI6uFJBhysC9hxUKReTHJ4Ww/BdEEsEQI4xfx1M68Jm
-	 9AuOzQKWmWvPwp/f1i74W4WPevSs0bstvJG9KHXuS9v0pkRziO3QyogCLXMbrGeWaC
-	 eKspXtNXbAFtg==
-Date: Mon, 6 Jan 2025 21:19:46 +0900
+	b=qM33E4OM4XuzFr5dK36wdItkSgx9Libym6en3yLSGK25xTziEvA6J1UFmbfXRCAhk
+	 Y/LjWk3QjylAEz1x8s5Mx+f5LfHzVeR9v8L9kC7tLFiUHTPcV1HqaEIc4W+Ixm1J3g
+	 Y0S4pb9M1tvSDoWstMLIulB4USMxER/hfCSexYI/GHwCCbaW3a//gQPQQKGFQI49NF
+	 xblCvc9V4f8MKmwTLh+DzsurT+rq0kyDmzr+1529jK98slJ02y6Rq0h+HqXWoRuyZ9
+	 SAjmCK3P74A5b7BzmVvFN5WHMVWVlILO6pkAojNPiRcQ3lpPvaCem8/zsNU//Y/l1d
+	 mRqnMRDRDbz/A==
+Date: Mon, 6 Jan 2025 22:24:44 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
- <rostedt@goodmis.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tzvetomir Stoyanov
- <tz.stoyanov@gmail.com>, Naveen N Rao <naveen@kernel.org>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, Ard Biesheuvel
- <ardb@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: DEFINE_FREE/CLASS && code readability (Was: [PATCH v2 2/6]
- Provide __free(argv) for argv_split() users)
-Message-Id: <20250106211946.2a1b1351421298150ca8c6bb@kernel.org>
-In-Reply-To: <20250105141422.GB23059@redhat.com>
-References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
-	<173608127627.1253657.12054758575695672674.stgit@devnote2>
-	<20250105141422.GB23059@redhat.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: rostedt@goodmis.org, mark.rutland@arm.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: print lazy preemption model
+Message-Id: <20250106222444.28141b2b05cb4c7906f5e91e@kernel.org>
+In-Reply-To: <20250103093647.575919-1-sshegde@linux.ibm.com>
+References: <20250103093647.575919-1-sshegde@linux.ibm.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,86 +45,48 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 5 Jan 2025 15:14:22 +0100
-Oleg Nesterov <oleg@redhat.com> wrote:
+On Fri,  3 Jan 2025 15:06:47 +0530
+Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
 
-> Masami,
+> Print lazy preemption model in ftrace header when latency-format=1.
 > 
-> Sorry for abusing this thread. Your patches look fine to me, it is not
-> that I suggest to change them. I will use your patch as an example for
-> off-topic discussion.
+> cat /sys/kernel/debug/sched/preempt 
+> none voluntary full (lazy)
 > 
-> On 01/05, Masami Hiramatsu (Google) wrote:
-> >
-> > +DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
+> Without patch:
+> latency: 0 us, #232946/232946, CPU#40 | (M:unknown VP:0, KP:0, SP:0 HP:0 #P:80)
+> With Patch:
+> latency: 0 us, #1897938/25566788, CPU#16 | (M:lazy VP:0, KP:0, SP:0 HP:0 #P:80)
 > 
-> (IS_ERR looks unneeded but this is cosmetic).
-> 
-> OK, so it can be used as
-> 
-> 	void func(void)
-> 	{
-> 		char **argv __free(argv) = argv_split(...);
-> 		do_something(argv);
-> 		return;
-> 	}
-> 
-> And I cry every time when I read the code like this ;)
-> 
-> Because, to understand this code, I need to do the "nontrivial" grep to find
-> "DEFINE_FREE(argv,".
-> 
-> Perhaps we can establish a simple rule that every DEFINE_FREE() or DEFINE_CLASS()
-> should add another #define? I mean something like
-> 
-> 
-> 	DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
-> 	#define __FREE_ARGV	__free(argv)
-> 	
-> 	void func(void)
-> 	{
-> 		char **argv __FREE_ARGV = argv_split(...);
-> 		do_something(argv);
-> 		return;
-> 	}
-> 
-> This way I can press Ctrl-] and see what the cleanup code actually does.
-> Can save a second or two. Important when you try to read the code you are
-> not familiar with.
 
-That sounds lile a problem of your tool. Do you really need to find the
-DEFINE_FREE() or do you think "__free(argv)" is too generic name?
-If it is latter, we can make it "__free(argv_free) so that it is more
-obvious to call argv_free()?
+Looks good to me.
 
-> 
-> Same for DEFINE_CLASS. For example,
-> 
-> 	int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
-> 	{
-> 		CLASS(fd, f)(fd);
-> 
-> 		if (fd_empty(f))
-> 			return -EBADF;
-> 
-> 		return vfs_fchown(fd_file(f), user, group);
-> 	}
-> 
-> If you are not familiar with this code, it looks mysterious until you find
-> DEFINE_CLASS(fd, ...) in include/linux/file.h.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-DEFINE_CLASS() is somewhat mysterious to me too :) But if I understand
-correctly, it is for intermediate macro for implementing guard().
+Thanks,
 
-Whether we like it or not, cleanup.h has been introduced, and it will be
-more popular. What we need is a document about cleanup.h which includes
-better naming conventions for its label.
 
-BTW, I agree that 'argv' was too simple. Basically the label name of
-DEFINE_FREE() is better to be a function name for free.
-Let me fix that.
+> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> ---
+>  kernel/trace/trace.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index f8aebcb01e62..b6e40e8791fa 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4122,6 +4122,7 @@ print_trace_header(struct seq_file *m, struct trace_iterator *iter)
+>  		   preempt_model_none()      ? "server" :
+>  		   preempt_model_voluntary() ? "desktop" :
+>  		   preempt_model_full()      ? "preempt" :
+> +		   preempt_model_lazy()	     ? "lazy"    :
+>  		   preempt_model_rt()        ? "preempt_rt" :
+>  		   "unknown",
+>  		   /* These are reserved for later use */
+> -- 
+> 2.39.3
+> 
 
-Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
