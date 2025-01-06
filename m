@@ -1,222 +1,254 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2C31D54C0;
-	Sun,  5 Jan 2025 16:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CBD12F59C;
+	Mon,  6 Jan 2025 10:09:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736094143; cv=none; b=I7Sh9bD0JN17Yk8L0JIufbSnwiWJlqaTk5bGgJmq97hp03f5tH+ll0S0xTo/MUPz38sVKk/BANcxTVuLqG7R1oPdHzrup8NhfkswoTwSC3fiZq2SapRUDJqNGoLc7z30+LJItLfHuryngbLawJ43slJEthk4PNXTSL4T63Y14U4=
+	t=1736158193; cv=none; b=SdtVPvR9TRPrde83h9SsoAQ6bZu7nIQSlxSuZFPkp7CCXxkznzXIHZZGdgyMbo+gHmwFrhYqh3+pTK35g4I5J9qlSuxC2gFgBNBT5shcmWxLY48iJJnsABycpA0DNCTdJ+Rk/2YINQq+SfTCjNOiDtYXmKth89XLjpotqNkGIQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736094143; c=relaxed/simple;
-	bh=4XDYGnaJqZyZf9GsCD6m7euu79M2meSX1buewOLfQ90=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=hJk3hrx+txexwEpsCG4SeEjx0QLvsSTgE5rsbwnxp/yU3ayYmX1R4JzR1J6P3OKvuJaJb7JbRw1DvnUsLXlwVAqLHTPZNT7KYC/mCESiZfKVyzwoiqxeSjaDhgkRBYT4nrnkVmSqgZnTOU+ZAp039qgxOxAiM8KLINCjlBfebIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC43FC4CED0;
-	Sun,  5 Jan 2025 16:22:22 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tUTPm-00000008Exb-48zt;
-	Sun, 05 Jan 2025 11:23:46 -0500
-Message-ID: <20250105162346.817157047@goodmis.org>
-User-Agent: quilt/0.68
-Date: Sun, 05 Jan 2025 11:22:25 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org,
- bpf <bpf@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>,
- Zheng Yejian <zhengyejian1@huawei.com>,
- Martin  Kelly <martin.kelly@crowdstrike.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 14/14] scripts/sorttable: Get start/stop_mcount_loc from ELF file directly
-References: <20250105162211.971039541@goodmis.org>
+	s=arc-20240116; t=1736158193; c=relaxed/simple;
+	bh=qagxCc9O31VtXEeDlJp0Hl8WPJ/PL35/Y8aUapgUUls=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bVB/hI8g7/k748J2GwnkehCrA/eTbg3TDAC9QG2q+CFprBzZpubNy7HVe+8p19loum+Z/yIrHSC1ofkKohvUkOt3F9Uk+0qVb6cHlqdrnnbvy/ZEDK8ovfovzsxH9LQRHs+42X4Eq8Fb0Q3HcUluRkvTmUCCnYDFCFzuVyREHuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNUzP7Vs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNUzP7Vs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D8CC4CED2;
+	Mon,  6 Jan 2025 10:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736158192;
+	bh=qagxCc9O31VtXEeDlJp0Hl8WPJ/PL35/Y8aUapgUUls=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dNUzP7Vsc80QEYSQJvAncfotUnUgWMb8S6VPkveAAefsgm1nSXioMBS+xr+1eo8zp
+	 HI6Ume5akwQyfkR1vnDwO/8Neb0D8ywRs9X/9ynzFw1REnN2pdrm2MOYpMAOG7stGk
+	 zjfi88ueChi85MiGVl3rQOPraftKJnPpfIB0SY4zGULpIOZ8mgegGA+ucJs9xSRtSH
+	 k8zX+Iz1HKvhVNBkOZOIPDvDJ5yC+6I2r9RfHcBUSvU7HuPZyyTOrJvEYgYMTe26+4
+	 RyFKzvammaCDgo/afSH11MBfBdQ5wWJnkZaPstsLGIlNsmR4/6tTq1Z5x2tajkNoYQ
+	 QrltLZmySo7gQ==
+Date: Mon, 6 Jan 2025 19:09:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
+ <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] tracing: Use __free() for kprobe events to
+ cleanup
+Message-Id: <20250106190947.12f64f10d32290aad7ab0cea@kernel.org>
+In-Reply-To: <173608130975.1253657.5725356281406948364.stgit@devnote2>
+References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
+	<173608130975.1253657.5725356281406948364.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Sun,  5 Jan 2025 21:48:29 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-The get_mcount_loc() does a cheesy trick to find the start_mcount_loc and
-stop_mcount_loc values. That trick is:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Use __free() in trace_kprobe.c to cleanup code.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v2:
+>   - Instead of using no_free_ptr(), just assign NULL to the registered pointer.
+> ---
+>  kernel/trace/trace_kprobe.c |   57 ++++++++++++++++++++-----------------------
+>  1 file changed, 26 insertions(+), 31 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 4c3e316454a0..e1ae65f57bf9 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -8,6 +8,7 @@
+>  #define pr_fmt(fmt)	"trace_kprobe: " fmt
+>  
+>  #include <linux/bpf-cgroup.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/security.h>
+>  #include <linux/module.h>
+>  #include <linux/uaccess.h>
+> @@ -257,6 +258,8 @@ static void free_trace_kprobe(struct trace_kprobe *tk)
+>  	}
+>  }
+>  
+> +DEFINE_FREE(trace_kprobe, struct trace_kprobe *, free_trace_kprobe(_T))
 
- file_start = popen(" grep start_mcount System.map | awk '{print $1}' ", "r");
+Oops, this also need to check !IS_ERR_OR_NULL(_T) since free_trace_kprobe()
+only checks the pointer != NULL.
 
-and
+Thanks,
 
- file_stop = popen(" grep stop_mcount System.map | awk '{print $1}' ", "r");
+> +
+>  /*
+>   * Allocate new trace_probe and initialize it (including kprobes).
+>   */
+> @@ -268,7 +271,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+>  					     int maxactive,
+>  					     int nargs, bool is_return)
+>  {
+> -	struct trace_kprobe *tk;
+> +	struct trace_kprobe *tk __free(trace_kprobe) = NULL;
+>  	int ret = -ENOMEM;
+>  
+>  	tk = kzalloc(struct_size(tk, tp.args, nargs), GFP_KERNEL);
+> @@ -277,12 +280,12 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+>  
+>  	tk->nhit = alloc_percpu(unsigned long);
+>  	if (!tk->nhit)
+> -		goto error;
+> +		return ERR_PTR(ret);
+>  
+>  	if (symbol) {
+>  		tk->symbol = kstrdup(symbol, GFP_KERNEL);
+>  		if (!tk->symbol)
+> -			goto error;
+> +			return ERR_PTR(ret);
+>  		tk->rp.kp.symbol_name = tk->symbol;
+>  		tk->rp.kp.offset = offs;
+>  	} else
+> @@ -299,13 +302,10 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+>  
+>  	ret = trace_probe_init(&tk->tp, event, group, false, nargs);
+>  	if (ret < 0)
+> -		goto error;
+> +		return ERR_PTR(ret);
+>  
+>  	dyn_event_init(&tk->devent, &trace_kprobe_ops);
+> -	return tk;
+> -error:
+> -	free_trace_kprobe(tk);
+> -	return ERR_PTR(ret);
+> +	return_ptr(tk);
+>  }
+>  
+>  static struct trace_kprobe *find_trace_kprobe(const char *event,
+> @@ -861,11 +861,12 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  	 * Type of args:
+>  	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+>  	 */
+> -	struct trace_kprobe *tk = NULL;
+> +	struct trace_kprobe *tk __free(trace_kprobe) = NULL;
+>  	int i, len, new_argc = 0, ret = 0;
+>  	bool is_return = false;
+> -	char *symbol = NULL, *tmp = NULL;
+> -	const char **new_argv = NULL;
+> +	char *symbol __free(kfree) = NULL;
+> +	char *tmp = NULL;
+> +	const char **new_argv __free(kfree) = NULL;
+>  	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
+>  	enum probe_print_type ptype;
+>  	int maxactive = 0;
+> @@ -874,7 +875,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  	char buf[MAX_EVENT_NAME_LEN];
+>  	char gbuf[MAX_EVENT_NAME_LEN];
+>  	char abuf[MAX_BTF_ARGS_LEN];
+> -	char *dbuf = NULL;
+> +	char *dbuf __free(kfree) = NULL;
+>  	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
+>  
+>  	switch (argv[0][0]) {
+> @@ -931,7 +932,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  		/* Check whether uprobe event specified */
+>  		if (strchr(argv[1], '/') && strchr(argv[1], ':')) {
+>  			ret = -ECANCELED;
+> -			goto error;
+> +			goto out;
+>  		}
+>  		/* a symbol specified */
+>  		symbol = kstrdup(argv[1], GFP_KERNEL);
+> @@ -1035,7 +1036,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  		ctx.offset = 0;
+>  		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
+>  		if (ret)
+> -			goto error;	/* This can be -ENOMEM */
+> +			goto out;	/* This can be -ENOMEM */
+>  	}
+>  	/* entry handler for kretprobe */
+>  	if (is_return && tk->tp.entry_arg) {
+> @@ -1046,7 +1047,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  	ptype = is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL;
+>  	ret = traceprobe_set_print_fmt(&tk->tp, ptype);
+>  	if (ret < 0)
+> -		goto error;
+> +		goto out;
+>  
+>  	ret = register_trace_kprobe(tk);
+>  	if (ret) {
+> @@ -1057,21 +1058,20 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  			trace_probe_log_err(0, BAD_PROBE_ADDR);
+>  		else if (ret != -ENOMEM && ret != -EEXIST)
+>  			trace_probe_log_err(0, FAIL_REG_PROBE);
+> -		goto error;
+> -	}
+> +	} else
+> +		/*
+> +		 * Here, 'tk' has been registered to the list successfully,
+> +		 * so we don't need to free it.
+> +		 */
+> +		tk = NULL;
+>  
+>  out:
+>  	traceprobe_finish_parse(&ctx);
+>  	trace_probe_log_clear();
+> -	kfree(new_argv);
+> -	kfree(symbol);
+> -	kfree(dbuf);
+>  	return ret;
+>  
+>  parse_error:
+>  	ret = -EINVAL;
+> -error:
+> -	free_trace_kprobe(tk);
+>  	goto out;
+>  }
+>  
+> @@ -1893,7 +1893,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  			  bool is_return)
+>  {
+>  	enum probe_print_type ptype;
+> -	struct trace_kprobe *tk;
+> +	struct trace_kprobe *tk __free(trace_kprobe) = NULL;
+>  	int ret;
+>  	char *event;
+>  
+> @@ -1924,19 +1924,14 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+>  
+>  	ptype = trace_kprobe_is_return(tk) ?
+>  		PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL;
+> -	if (traceprobe_set_print_fmt(&tk->tp, ptype) < 0) {
+> -		ret = -ENOMEM;
+> -		goto error;
+> -	}
+> +	if (traceprobe_set_print_fmt(&tk->tp, ptype) < 0)
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	ret = __register_trace_kprobe(tk);
+>  	if (ret < 0)
+> -		goto error;
+> +		return ERR_PTR(ret);
+>  
+>  	return trace_probe_event_call(&tk->tp);
+> -error:
+> -	free_trace_kprobe(tk);
+> -	return ERR_PTR(ret);
+>  }
+>  
+>  void destroy_local_trace_kprobe(struct trace_event_call *event_call)
+> 
 
-Those values are stored in the Elf symbol table. Use that to capture those
-values. Using the symbol table is more efficient and more robust. The
-above could fail if another variable had "start_mcount" or "stop_mcount"
-as part of its name.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- scripts/sorttable.c | 95 +++++++++++++++++++++------------------------
- 1 file changed, 45 insertions(+), 50 deletions(-)
-
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index b9d9eb6f01f1..cd3b2145a827 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -469,42 +469,41 @@ static void *sort_mcount_loc(void *arg)
- }
- 
- /* Get the address of __start_mcount_loc and __stop_mcount_loc in System.map */
--static void get_mcount_loc(uint64_t *_start, uint64_t *_stop)
-+static void get_mcount_loc(struct elf_mcount_loc *emloc, Elf_Shdr *symtab_sec,
-+			   const char *strtab)
- {
--	FILE *file_start, *file_stop;
--	char start_buff[20];
--	char stop_buff[20];
--	int len = 0;
-+	Elf_Sym *sym, *end_sym;
-+	int symentsize = shdr_entsize(symtab_sec);
-+	int found = 0;
-+
-+	sym = (void *)emloc->ehdr + shdr_offset(symtab_sec);
-+	end_sym = (void *)sym + shdr_size(symtab_sec);
-+
-+	while (sym < end_sym) {
-+		if (!strcmp(strtab + sym_name(sym), "__start_mcount_loc")) {
-+			emloc->start_mcount_loc = sym_value(sym);
-+			if (++found == 2)
-+				break;
-+		} else if (!strcmp(strtab + sym_name(sym), "__stop_mcount_loc")) {
-+			emloc->stop_mcount_loc = sym_value(sym);
-+			if (++found == 2)
-+				break;
-+		}
-+		sym = (void *)sym + symentsize;
-+	}
- 
--	file_start = popen(" grep start_mcount System.map | awk '{print $1}' ", "r");
--	if (!file_start) {
-+	if (!emloc->start_mcount_loc) {
- 		fprintf(stderr, "get start_mcount_loc error!");
- 		return;
- 	}
- 
--	file_stop = popen(" grep stop_mcount System.map | awk '{print $1}' ", "r");
--	if (!file_stop) {
-+	if (!emloc->stop_mcount_loc) {
- 		fprintf(stderr, "get stop_mcount_loc error!");
--		pclose(file_start);
- 		return;
- 	}
--
--	while (fgets(start_buff, sizeof(start_buff), file_start) != NULL) {
--		len = strlen(start_buff);
--		start_buff[len - 1] = '\0';
--	}
--	*_start = strtoul(start_buff, NULL, 16);
--
--	while (fgets(stop_buff, sizeof(stop_buff), file_stop) != NULL) {
--		len = strlen(stop_buff);
--		stop_buff[len - 1] = '\0';
--	}
--	*_stop = strtoul(stop_buff, NULL, 16);
--
--	pclose(file_start);
--	pclose(file_stop);
- }
- #endif
-+
- static int do_sort(Elf_Ehdr *ehdr,
- 		   char const *const fname,
- 		   table_sort_t custom_sort)
-@@ -535,8 +534,6 @@ static int do_sort(Elf_Ehdr *ehdr,
- 	unsigned int shstrndx;
- #ifdef MCOUNT_SORT_ENABLED
- 	struct elf_mcount_loc mstruct = {0};
--	uint64_t _start_mcount_loc = 0;
--	uint64_t _stop_mcount_loc = 0;
- #endif
- #ifdef UNWINDER_ORC_ENABLED
- 	unsigned int orc_ip_size = 0;
-@@ -574,13 +571,8 @@ static int do_sort(Elf_Ehdr *ehdr,
- 
- #ifdef MCOUNT_SORT_ENABLED
- 		/* locate the .init.data section in vmlinux */
--		if (!strcmp(secstrings + idx, ".init.data")) {
--			get_mcount_loc(&_start_mcount_loc, &_stop_mcount_loc);
--			mstruct.ehdr = ehdr;
-+		if (!strcmp(secstrings + idx, ".init.data"))
- 			mstruct.init_data_sec = shdr;
--			mstruct.start_mcount_loc = _start_mcount_loc;
--			mstruct.stop_mcount_loc = _stop_mcount_loc;
--		}
- #endif
- 
- #ifdef UNWINDER_ORC_ENABLED
-@@ -624,23 +616,6 @@ static int do_sort(Elf_Ehdr *ehdr,
- 		goto out;
- 	}
- #endif
--
--#ifdef MCOUNT_SORT_ENABLED
--	if (!mstruct.init_data_sec || !_start_mcount_loc || !_stop_mcount_loc) {
--		fprintf(stderr,
--			"incomplete mcount's sort in file: %s\n",
--			fname);
--		goto out;
--	}
--
--	/* create thread to sort mcount_loc concurrently */
--	if (pthread_create(&mcount_sort_thread, NULL, &sort_mcount_loc, &mstruct)) {
--		fprintf(stderr,
--			"pthread_create mcount_sort_thread failed '%s': %s\n",
--			strerror(errno), fname);
--		goto out;
--	}
--#endif
- 	if (!extab_sec) {
- 		fprintf(stderr,	"no __ex_table in file: %s\n", fname);
- 		goto out;
-@@ -660,6 +635,26 @@ static int do_sort(Elf_Ehdr *ehdr,
- 	strtab = (const char *)ehdr + shdr_offset(strtab_sec);
- 	symtab = (const Elf_Sym *)((const char *)ehdr + shdr_offset(symtab_sec));
- 
-+#ifdef MCOUNT_SORT_ENABLED
-+	mstruct.ehdr = ehdr;
-+	get_mcount_loc(&mstruct, symtab_sec, strtab);
-+
-+	if (!mstruct.init_data_sec || !mstruct.start_mcount_loc || !mstruct.stop_mcount_loc) {
-+		fprintf(stderr,
-+			"incomplete mcount's sort in file: %s\n",
-+			fname);
-+		goto out;
-+	}
-+
-+	/* create thread to sort mcount_loc concurrently */
-+	if (pthread_create(&mcount_sort_thread, NULL, &sort_mcount_loc, &mstruct)) {
-+		fprintf(stderr,
-+			"pthread_create mcount_sort_thread failed '%s': %s\n",
-+			strerror(errno), fname);
-+		goto out;
-+	}
-+#endif
-+
- 	if (custom_sort) {
- 		custom_sort(extab_image, shdr_size(extab_sec));
- 	} else {
 -- 
-2.45.2
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
