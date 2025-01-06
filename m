@@ -1,52 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085B21DC99C
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Jan 2025 14:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C0E23A6
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Jan 2025 14:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736174075; cv=none; b=jlhYwwsUXUGHnPBNmoHGYBxgd+Hw8RL9QsoJ77mvF2yrtJeBF5GO+BeUUtNApgol1Q0megUbse39Uy5LVXty33zfiqbU/mdGqpgRzq2DD35gjleCufdikmI3K9eaKF6jqMDAe9TOrkyMPPXqcY8TJMWfh3wsmvcj4MM5b8IECvA=
+	t=1736174697; cv=none; b=b0d50HLUnHD3EPwwk92Qc23P2NpG+ko/mlUqgr68ppLCQVkMRkb5WoXV4ovn7xINpsdLr9ZSakc/u96KlLuG1HoihT5jHmyDV/DLzx8J8+QkNM6B8HxSEseDBmvoC/aIHgMTjDF7AJ9gfRVID0RR9EGbuymTrK8yWbdYYevzG34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736174075; c=relaxed/simple;
-	bh=UddgXHeNXrTdAWQwdkvd8e74yT9U7yR5EFPjHeFx/nQ=;
+	s=arc-20240116; t=1736174697; c=relaxed/simple;
+	bh=qYP3pm8CQ5/S3pjftC25OcQ0oTDOQfwiIcKpcMw1SD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JPcnzqyxecQjH/St0sgxdLl60taKblC6MsJ/joR5uZvL8i9B8K9FiMbLaTuCyg3IAXmUrKBO9DoxBjETruEu7UmSSn3WsWCcaQOU0fAX4Aq/YGsLiXG230j1NisnP5JISSJOhyasYpyO2T3Zhp67Kls1LLqmaRaeORA4VXAY7qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F02VCGg5; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=dez9JN8LijvTM+WI5epjZQdfwzB7yUoGJFrlQEYuvOtK9PvYMFArTmFeKRmGHtW+jTPRTAcJULdK6ayTJsuooBpX62GQSjJPPcFXeKA9NBcc0GbuRfROWtKPmdyIn4iEAxG4CUjX5HHtwhOOK2gOkF16ZhKFWMAvWHtXkHxXSpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U9n8wu2O; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F02VCGg5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U9n8wu2O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736174072;
+	s=mimecast20190719; t=1736174692;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wvkgs5qtUulkp9Uj7lTJhOX9N0/Ly3x5DYBBQu8bINU=;
-	b=F02VCGg5k5vgNKyAFoJwUv/rx/wuXRNWZVc39jRkZBGeiakvy8iWnMjSxJ7mSOzKrcfkJq
-	74cGL+XOHWuvxrc1VDZr5vhgaf/EDxRAlojipcypgEkBCdnGoMlp/KiiOCkRIXWrFtAQpK
-	exH3nelIamHznWdNzzISUMmDmc7+HkI=
+	bh=o2o3yiaohQZ2N++6HjYdKi1hunz1pVF3VvnpUJk9wCc=;
+	b=U9n8wu2OZEZQTzVuFkH9vOhArlJU4AslHuk8oyshnVvWYv3xk/QhEe4hB2zvvS+7qMBIy0
+	7NsuEEG3DuUOlw2svaRi95rxTvUw6MUWXmJXM8cS/V/uMOZvs9IsGG2lzcdhDyvjzK1Yej
+	wVwM8BmfM0OPHIp/Wjn7g8F464gnfJ8=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-297-KQVnzx1bPfu8wRuEEy8J0A-1; Mon,
- 06 Jan 2025 09:34:24 -0500
-X-MC-Unique: KQVnzx1bPfu8wRuEEy8J0A-1
-X-Mimecast-MFC-AGG-ID: KQVnzx1bPfu8wRuEEy8J0A
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-438-LfKVbnWwOXKwjpirVS1iew-1; Mon,
+ 06 Jan 2025 09:44:48 -0500
+X-MC-Unique: LfKVbnWwOXKwjpirVS1iew-1
+X-Mimecast-MFC-AGG-ID: LfKVbnWwOXKwjpirVS1iew
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D9C471956088;
-	Mon,  6 Jan 2025 14:34:21 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9317B1955F2C;
+	Mon,  6 Jan 2025 14:44:38 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.102])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6083D19560A2;
-	Mon,  6 Jan 2025 14:34:17 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B9AD3195605F;
+	Mon,  6 Jan 2025 14:44:33 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  6 Jan 2025 15:33:56 +0100 (CET)
-Date: Mon, 6 Jan 2025 15:33:51 +0100
+	oleg@redhat.com; Mon,  6 Jan 2025 15:44:13 +0100 (CET)
+Date: Mon, 6 Jan 2025 15:44:07 +0100
 From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	"David S . Miller" <davem@davemloft.net>,
@@ -58,11 +58,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: DEFINE_FREE/CLASS && code readability (Was: [PATCH v2 2/6]
  Provide __free(argv) for argv_split() users)
-Message-ID: <20250106143350.GC7233@redhat.com>
+Message-ID: <20250106144406.GD7233@redhat.com>
 References: <173608125422.1253657.3732758016133408588.stgit@devnote2>
  <173608127627.1253657.12054758575695672674.stgit@devnote2>
  <20250105141422.GB23059@redhat.com>
- <20250106211946.2a1b1351421298150ca8c6bb@kernel.org>
+ <20250106102647.GB20870@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,18 +71,16 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250106211946.2a1b1351421298150ca8c6bb@kernel.org>
+In-Reply-To: <20250106102647.GB20870@noisy.programming.kicks-ass.net>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 01/06, Masami Hiramatsu wrote:
+On 01/06, Peter Zijlstra wrote:
 >
-> On Sun, 5 Jan 2025 15:14:22 +0100
-> Oleg Nesterov <oleg@redhat.com> wrote:
+> On Sun, Jan 05, 2025 at 03:14:22PM +0100, Oleg Nesterov wrote:
 >
 > > Perhaps we can establish a simple rule that every DEFINE_FREE() or DEFINE_CLASS()
 > > should add another #define? I mean something like
-> >
 > >
 > > 	DEFINE_FREE(argv, char **, if (!IS_ERR_OR_NULL(_T)) argv_free(_T))
 > > 	#define __FREE_ARGV	__free(argv)
@@ -98,41 +96,27 @@ On 01/06, Masami Hiramatsu wrote:
 > > Can save a second or two. Important when you try to read the code you are
 > > not familiar with.
 >
-> That sounds lile a problem of your tool. Do you really need to find the
-> DEFINE_FREE()
-
-Yes, ":tag __free_argv" wont work. it is defined by DEFINE_FREE(argv) above.
-I need to find this DEFINE_FREE(argv) to see what __free_argv() actually does.
-
-> > Same for DEFINE_CLASS. For example,
-> >
-> > 	int ksys_fchown(unsigned int fd, uid_t user, gid_t group)
-> > 	{
-> > 		CLASS(fd, f)(fd);
-> >
-> > 		if (fd_empty(f))
-> > 			return -EBADF;
-> >
-> > 		return vfs_fchown(fd_file(f), user, group);
-> > 	}
-> >
-> > If you are not familiar with this code, it looks mysterious until you find
-> > DEFINE_CLASS(fd, ...) in include/linux/file.h.
+> Right, so I've been playing with neovim and clangd (lsp), and I'm very
+> disappointed to have to tell you that that also doesn't get it :-(
 >
-> DEFINE_CLASS() is somewhat mysterious to me too :) But if I understand
-> correctly, it is for intermediate macro for implementing guard().
+> One thing we can and should do is something like:
+>
+> diff --git a/scripts/tags.sh b/scripts/tags.sh
+> index b21236377998..f01d694abe65 100755
+> --- a/scripts/tags.sh
+> +++ b/scripts/tags.sh
+> @@ -212,6 +212,8 @@ regex_c=(
+>  	'/^SEQCOUNT_LOCKTYPE(\([^,]*\),[[:space:]]*\([^,]*\),[^)]*)/seqcount_\2_init/'
+>  	'/^\<DECLARE_IDTENTRY[[:alnum:]_]*([^,)]*,[[:space:]]*\([[:alnum:]_]\+\)/\1/'
+>  	'/^\<DEFINE_IDTENTRY[[:alnum:]_]*([[:space:]]*\([[:alnum:]_]\+\)/\1/'
+> +	'/^\<DEFINE_FREE(\([[:alnum:]_]\+\)/cleanup_\1/'
+> +	'/^\<DEFINE_CLASS(\([[:alnum:]_]\+\)/class_\1/'
 
-Well, in this case you just need to find
+Yes, thanks ;)
 
-	DEFINE_CLASS(fd, struct fd, fdput(_T), fdget(fd), int fd)
+Ctrl-] still won't work, but at least ":ta cleanup_argv" will do.
 
-in include/linux/file.h, after that the code is clear.
-
-> BTW, I agree that 'argv' was too simple. Basically the label name of
-> DEFINE_FREE() is better to be a function name for free.
-> Let me fix that.
-
-Up to you, but __free(argv) looks good to me.
+Thanks,
 
 Oleg.
 
