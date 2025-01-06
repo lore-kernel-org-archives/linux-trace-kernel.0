@@ -1,387 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54D613698E;
-	Mon,  6 Jan 2025 16:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9D150285;
+	Mon,  6 Jan 2025 16:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736179458; cv=none; b=ECHy7qHMCEVvetqKrwEsPLczZVC9B7YpJiHzLDYpkM911OD0mteggwEOfjwfY3s+XSrJGc63aOOo4bpqAabd4dsJgMvJ0gZ3Z7+iW9csOYgkkj0PQ/GtemZBgdJUvAhq5zls71oUbrKi1QtvXjHmtuBQLDUMHuCckEmx5uMB1ME=
+	t=1736179821; cv=none; b=lXfUkNDqTfKd7dbHe9pkQfv0H3+toJea93y4/TrfQdOoJrp4BeFrLfagUA/1EXZjze5vq5ztrcHWJ4wGcmFwHtfR65cHvghGHHXwNmeavRStSx+NuMLH/m7Xz3fDHmref1jBl1uCXkSAzemOWqLahGpYLz8hX6S7gqKWNZQwuvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736179458; c=relaxed/simple;
-	bh=cWfM7pDjpnXkX6rzKo3buzt3QtdFFTEv3P6Y91fHmqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nXAhNHbFRPWkuJwVQsijvBZIgfSEw8KfVVVczSwnTR4FJdMDHJVIgQ3TYcDTg0i4xAyRG4rWR8EuwM3t+vD7nEFwW4o5H5TfJHInOThhLdA0Rhq7Cb0Y2qxz1CxggWGh54VjPuoJ8ROnuCDgo75FDKSc8AZLqbVCUl3tyoi4uP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kw31yYOq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kw31yYOq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290F5C4CED2;
-	Mon,  6 Jan 2025 16:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736179457;
-	bh=cWfM7pDjpnXkX6rzKo3buzt3QtdFFTEv3P6Y91fHmqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kw31yYOq7C7cGeauFLFSf9YJyXEURy2nW2Hbui+oEAsdx/j2koOoQM9rEZrLuJGNg
-	 yS+DivSdWtVvgO6bMBgr0n5H+Lw7W1co7czLCh59LampPIWM+n+AYlIZsImbGxkPN/
-	 dd73fQO37ugYqkVowVILe98rDmqxET5ithykmwtjhixfKCpUM0ziqVAAFUi7xbbttM
-	 7k4buoIVZXTJW5ZnjgO93YPWqQAVIBlFadDJ0TbYAbrvKLu37U+69TiCfqjbkiiVlC
-	 KETu/GvTqqdm4OaBRFQvwZhXBVYU63CUYkxyVsNQFPoQjZocpK4cC/TOjBs10ozuyF
-	 V0gljqq3d1R8w==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] tracing: Adopt __free() and guard() for trace_fprobe.c
-Date: Tue,  7 Jan 2025 01:04:11 +0900
-Message-ID: <173617945160.1366315.940619476234148156.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173617937395.1366315.17590944219163017504.stgit@devnote2>
-References: <173617937395.1366315.17590944219163017504.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1736179821; c=relaxed/simple;
+	bh=ZnV/QI7uCAl1pTFvSwYepwR49im6iPkx6dmzE/lKbeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=a9TlSdmt6t0WKpwFrv6Njrj5JfCYGc32xGoo/Mac5oD55qm34JXiJcq4BMD7QSAXaEY9VLxUe326zCaW1dzYh8MN11SFA0ffBOJrItJ3Tz0kczTTlc4DCF0YJITpGLqt0c1TuNOAyLWlfK1MuNXM4quk+9YWYoYhRCz+OYpR5U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C43CC4CED2;
+	Mon,  6 Jan 2025 16:10:17 +0000 (UTC)
+Date: Mon, 6 Jan 2025 11:11:43 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] tracing: Fix using ret variable in tracing_set_tracer()
+Message-ID: <20250106111143.2f90ff65@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Adopt __free() and guard() for trace_fprobe.c to remove gotos.
+When the function tracing_set_tracer() switched over to using the guard()
+infrastructure, it did not need to save the 'ret' variable and would just
+return the value when an error arised, instead of setting ret and jumping
+to an out label.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+When CONFIG_TRACER_SNAPSHOT is enabled, it had code that expected the
+"ret" variable to be initialized to zero and had set 'ret' while holding
+an arch_spin_lock() (not used by guard), and then upon releasing the lock
+it would check 'ret' and exit if set. But because ret was only set when an
+error occurred while holding the locks, 'ret' would be used uninitialized
+if there was no error. The code in the CONFIG_TRACER_SNAPSHOT block should
+be self contain. Make sure 'ret' is also set when no error occurred.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202412271654.nJVBuwmF-lkp@intel.com/
+Fixes: d33b10c0c73ad ("tracing: Switch trace.c code over to use guard()")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_fprobe.c |  129 ++++++++++++++++++++-----------------------
- 1 file changed, 60 insertions(+), 69 deletions(-)
+ kernel/trace/trace.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index c62d1629cffe..6d339c426b5d 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -379,6 +379,9 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
- 	}
- }
- 
-+/* Since alloc_trace_fprobe() can return error, check the pointer is ERR too. */
-+DEFINE_FREE(trace_fprobe, struct trace_fprobe *, if (!IS_ERR_OR_NULL(_T)) free_trace_fprobe(_T))
-+
- /*
-  * Allocate new trace_probe and initialize it (including fprobe).
-  */
-@@ -390,7 +393,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
- 					       int maxactive,
- 					       int nargs, bool is_return)
- {
--	struct trace_fprobe *tf;
-+	struct trace_fprobe *tf __free(trace_fprobe) = NULL;
- 	int ret = -ENOMEM;
- 
- 	tf = kzalloc(struct_size(tf, tp.args, nargs), GFP_KERNEL);
-@@ -399,7 +402,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
- 
- 	tf->symbol = kstrdup(symbol, GFP_KERNEL);
- 	if (!tf->symbol)
--		goto error;
-+		return ERR_PTR(-ENOMEM);
- 
- 	if (is_return)
- 		tf->fp.exit_handler = fexit_dispatcher;
-@@ -412,13 +415,10 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
- 
- 	ret = trace_probe_init(&tf->tp, event, group, false, nargs);
- 	if (ret < 0)
--		goto error;
-+		return ERR_PTR(ret);
- 
- 	dyn_event_init(&tf->devent, &trace_fprobe_ops);
--	return tf;
--error:
--	free_trace_fprobe(tf);
--	return ERR_PTR(ret);
-+	return_ptr(tf);
- }
- 
- static struct trace_fprobe *find_trace_fprobe(const char *event,
-@@ -845,14 +845,12 @@ static int register_trace_fprobe(struct trace_fprobe *tf)
- 	struct trace_fprobe *old_tf;
- 	int ret;
- 
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
- 
- 	old_tf = find_trace_fprobe(trace_probe_name(&tf->tp),
- 				   trace_probe_group_name(&tf->tp));
--	if (old_tf) {
--		ret = append_trace_fprobe(tf, old_tf);
--		goto end;
--	}
-+	if (old_tf)
-+		return append_trace_fprobe(tf, old_tf);
- 
- 	/* Register new event */
- 	ret = register_fprobe_event(tf);
-@@ -862,7 +860,7 @@ static int register_trace_fprobe(struct trace_fprobe *tf)
- 			trace_probe_log_err(0, EVENT_EXIST);
- 		} else
- 			pr_warn("Failed to register probe event(%d)\n", ret);
--		goto end;
-+		return ret;
- 	}
- 
- 	/* Register fprobe */
-@@ -872,8 +870,6 @@ static int register_trace_fprobe(struct trace_fprobe *tf)
- 	else
- 		dyn_event_add(&tf->devent, trace_probe_event_call(&tf->tp));
- 
--end:
--	mutex_unlock(&event_mutex);
- 	return ret;
- }
- 
-@@ -1034,7 +1030,10 @@ static int parse_symbol_and_return(int argc, const char *argv[],
- 	return 0;
- }
- 
--static int __trace_fprobe_create(int argc, const char *argv[])
-+DEFINE_FREE(module_put, struct module *, if (_T) module_put(_T))
-+
-+static int ___trace_fprobe_create(int argc, const char *argv[],
-+				  struct traceprobe_parse_context *ctx)
- {
- 	/*
- 	 * Argument syntax:
-@@ -1060,24 +1059,21 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	 * Type of args:
- 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
- 	 */
--	struct trace_fprobe *tf = NULL;
-+	struct trace_fprobe *tf __free(trace_fprobe) = NULL;
- 	int i, len, new_argc = 0, ret = 0;
- 	bool is_return = false;
--	char *symbol = NULL;
-+	char *symbol __free(kfree) = NULL;
- 	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
--	const char **new_argv = NULL;
-+	const char **new_argv __free(kfree) = NULL;
- 	int maxactive = 0;
- 	char buf[MAX_EVENT_NAME_LEN];
- 	char gbuf[MAX_EVENT_NAME_LEN];
- 	char sbuf[KSYM_NAME_LEN];
- 	char abuf[MAX_BTF_ARGS_LEN];
--	char *dbuf = NULL;
-+	char *dbuf __free(kfree) = NULL;
- 	bool is_tracepoint = false;
--	struct module *tp_mod = NULL;
-+	struct module *tp_mod __free(module_put) = NULL;
- 	struct tracepoint *tpoint = NULL;
--	struct traceprobe_parse_context ctx = {
--		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
--	};
- 
- 	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
- 		return -ECANCELED;
-@@ -1087,8 +1083,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		group = TRACEPOINT_EVENT_SYSTEM;
- 	}
- 
--	trace_probe_log_init("trace_fprobe", argc, argv);
--
- 	event = strchr(&argv[0][1], ':');
- 	if (event)
- 		event++;
-@@ -1100,21 +1094,21 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 			len = strlen(&argv[0][1]);
- 		if (len > MAX_EVENT_NAME_LEN - 1) {
- 			trace_probe_log_err(1, BAD_MAXACT);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		memcpy(buf, &argv[0][1], len);
- 		buf[len] = '\0';
- 		ret = kstrtouint(buf, 0, &maxactive);
- 		if (ret || !maxactive) {
- 			trace_probe_log_err(1, BAD_MAXACT);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 		/* fprobe rethook instances are iterated over via a list. The
- 		 * maximum should stay reasonable.
- 		 */
- 		if (maxactive > RETHOOK_MAXACTIVE_MAX) {
- 			trace_probe_log_err(1, MAXACT_TOO_BIG);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 	}
- 
-@@ -1123,12 +1117,12 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	/* a symbol(or tracepoint) must be specified */
- 	ret = parse_symbol_and_return(argc, argv, &symbol, &is_return, is_tracepoint);
- 	if (ret < 0)
--		goto parse_error;
-+		return -EINVAL;
- 
- 	if (!is_return && maxactive) {
- 		trace_probe_log_set_index(0);
- 		trace_probe_log_err(1, BAD_MAXACT_TYPE);
--		goto parse_error;
-+		return -EINVAL;
- 	}
- 
- 	trace_probe_log_set_index(0);
-@@ -1136,7 +1130,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
- 						  event - argv[0]);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0aaf442271e9..5aeb898054e7 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6104,8 +6104,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
+ 	if (t->use_max_tr) {
+ 		local_irq_disable();
+ 		arch_spin_lock(&tr->max_lock);
+-		if (tr->cond_snapshot)
+-			ret = -EBUSY;
++		ret = tr->cond_snapshot ? -EBUSY : 0;
+ 		arch_spin_unlock(&tr->max_lock);
+ 		local_irq_enable();
  		if (ret)
--			goto parse_error;
-+			return -EINVAL;
- 	}
- 
- 	if (!event) {
-@@ -1152,49 +1146,44 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	}
- 
- 	if (is_return)
--		ctx.flags |= TPARG_FL_RETURN;
-+		ctx->flags |= TPARG_FL_RETURN;
- 	else
--		ctx.flags |= TPARG_FL_FENTRY;
-+		ctx->flags |= TPARG_FL_FENTRY;
- 
- 	if (is_tracepoint) {
--		ctx.flags |= TPARG_FL_TPOINT;
-+		ctx->flags |= TPARG_FL_TPOINT;
- 		tpoint = find_tracepoint(symbol, &tp_mod);
- 		if (tpoint) {
--			ctx.funcname = kallsyms_lookup(
-+			ctx->funcname = kallsyms_lookup(
- 				(unsigned long)tpoint->probestub,
- 				NULL, NULL, NULL, sbuf);
- 		} else if (IS_ENABLED(CONFIG_MODULES)) {
- 				/* This *may* be loaded afterwards */
- 				tpoint = TRACEPOINT_STUB;
--				ctx.funcname = symbol;
-+				ctx->funcname = symbol;
- 		} else {
- 			trace_probe_log_set_index(1);
- 			trace_probe_log_err(0, NO_TRACEPOINT);
--			goto parse_error;
-+			return -EINVAL;
- 		}
- 	} else
--		ctx.funcname = symbol;
-+		ctx->funcname = symbol;
- 
- 	argc -= 2; argv += 2;
- 	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
--					       abuf, MAX_BTF_ARGS_LEN, &ctx);
--	if (IS_ERR(new_argv)) {
--		ret = PTR_ERR(new_argv);
--		new_argv = NULL;
--		goto out;
--	}
-+					       abuf, MAX_BTF_ARGS_LEN, ctx);
-+	if (IS_ERR(new_argv))
-+		return PTR_ERR(new_argv);
- 	if (new_argv) {
- 		argc = new_argc;
- 		argv = new_argv;
- 	}
--	if (argc > MAX_TRACE_ARGS) {
--		ret = -E2BIG;
--		goto out;
--	}
-+	if (argc > MAX_TRACE_ARGS)
-+		return -E2BIG;
- 
- 	ret = traceprobe_expand_dentry_args(argc, argv, &dbuf);
- 	if (ret)
--		goto out;
-+		return ret;
- 
- 	/* setup a probe */
- 	tf = alloc_trace_fprobe(group, event, symbol, tpoint, tp_mod,
-@@ -1203,16 +1192,16 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		ret = PTR_ERR(tf);
- 		/* This must return -ENOMEM, else there is a bug */
- 		WARN_ON_ONCE(ret != -ENOMEM);
--		goto out;	/* We know tf is not allocated */
-+		return ret;
- 	}
- 
- 	/* parse arguments */
- 	for (i = 0; i < argc; i++) {
- 		trace_probe_log_set_index(i + 2);
--		ctx.offset = 0;
--		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], &ctx);
-+		ctx->offset = 0;
-+		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], ctx);
- 		if (ret)
--			goto error;	/* This can be -ENOMEM */
-+			return ret;	/* This can be -ENOMEM */
- 	}
- 
- 	if (is_return && tf->tp.entry_arg) {
-@@ -1223,7 +1212,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	ret = traceprobe_set_print_fmt(&tf->tp,
- 			is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL);
- 	if (ret < 0)
--		goto error;
-+		return ret;
- 
- 	ret = register_trace_fprobe(tf);
- 	if (ret) {
-@@ -1234,24 +1223,26 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 			trace_probe_log_err(0, BAD_PROBE_ADDR);
- 		else if (ret != -ENOMEM && ret != -EEXIST)
- 			trace_probe_log_err(0, FAIL_REG_PROBE);
--		goto error;
--	}
-+		ret = -EINVAL;
-+	} else
-+		/* 'tf' is successfully registered. To avoid freeing, assign NULL. */
-+		tf = NULL;
- 
--out:
--	if (tp_mod)
--		module_put(tp_mod);
-+	return ret;
-+}
-+
-+static int __trace_fprobe_create(int argc, const char *argv[])
-+{
-+	struct traceprobe_parse_context ctx = {
-+		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
-+	};
-+	int ret;
-+
-+	trace_probe_log_init("trace_fprobe", argc, argv);
-+	ret = ___trace_fprobe_create(argc, argv, &ctx);
- 	traceprobe_finish_parse(&ctx);
- 	trace_probe_log_clear();
--	kfree(new_argv);
--	kfree(symbol);
--	kfree(dbuf);
- 	return ret;
--
--parse_error:
--	ret = -EINVAL;
--error:
--	free_trace_fprobe(tf);
--	goto out;
- }
- 
- static int trace_fprobe_create(const char *raw_command)
+-- 
+2.45.2
 
