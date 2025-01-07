@@ -1,103 +1,356 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F441EE7AA;
-	Tue,  7 Jan 2025 12:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBD41F12E0;
+	Tue,  7 Jan 2025 13:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736254768; cv=none; b=sGrn7sMRSUOvC57ZslciBjaMT/5XYjldPQRDyjf00r7EBfGjPtVnyU2q9NsMsdQ3D9icZr0Q26R9Wo+A5vMkAQkwwT8pj7CoeUCLbw7URNQwxkX1LmJXOnctJK8D+a0gvLwrgrDY1OlLQh43XtkYZnvAxSbbzQD1W95aV1QJ48w=
+	t=1736256649; cv=none; b=FZNJcfKX/TCOpexQZNFztcYk8ddNERCGuCQYpvGcYLFMAFr+Ly6sfzUB1fQ2WkwgSuUPQvdZuKdYV8WIBWa3kBthdckrEniICXWn6chlvnm5GasLOIWaweEBdXX24W6LXbGcHN0pnAIsfi5c7RkyJc4ZBmDaBjnBWpmAAe4Cd4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736254768; c=relaxed/simple;
-	bh=g/MTHpnEtGFuCAGLnLp3qY6LbuJhYqc5Q2c+vrs4+I8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IMLz1228w8N5WO3dVSTzhcXYxrZEXhdabgo+sHlnCI50Ye0705LCMnd1qPeaBesYAn6GJK8Byz6bESCtaJe6Pt/REKS9pcNGlTwC18Lpvpb+75TDGhRhy4fZnYgam0k4k84m01Zsk4iJLS7R70tvq+/jb5IE/pqkOCBaO/lOLoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xl6r8d+D; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xl6r8d+D"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2efe25558ddso17379365a91.2;
-        Tue, 07 Jan 2025 04:59:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736254765; x=1736859565; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KeaCcnQubfhf4GY5/MzvFuvb0cmeBzdNrnqwjMx3/cU=;
-        b=Xl6r8d+D0+7VITU8RNeBXU03nqCppblE8Z0auklN0wkkPb+2joR9/RsqRD4FUhT0w6
-         Qb+YLk8JPhbRlIoE4u4yAf+PmAUlSFX9FFDUnYugsGXmT/bcI9IQIwUXd+10cPi32psg
-         9me6R/7+QkBanxTmRI5UBkeQVsQ5VR07JTFw/mSm+wxgRDHFWDgiUMnThCWw2FaQVccq
-         s376PWUQLPdSnZGDAVSYKpHAxP/7Y0F0eRLDKY3nsyQXzpFRHYAxiXsMKdMowxdL36Rl
-         b/q9Y7sUnJRR6meQndnMB/epyFVw7vA5E/6BKvRF1I8CssLMTiIHvLZEC1aoHWauJw1I
-         qtSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736254765; x=1736859565;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KeaCcnQubfhf4GY5/MzvFuvb0cmeBzdNrnqwjMx3/cU=;
-        b=vVS4QsTcKqo334KMvoGmZwHMg2ejMzEuV1qSNZ2dlRJNf5qLI6D+49wFyDtG2pQ92q
-         DBxUkA14RxgVuuh+gNkDVT8wSFpqIdgeklIi2od3VIJmdSMgDAddD8NQ8+aLG95FeAm+
-         tANi4/KAzsmdBn4c2hrSBJ3rP6q7AnOU+iLktLIIJ6Lpg3hoFps16BttyRCRsp/5Nf7n
-         u4OghkJwRcp/FRckS7/xNmy9A0n5q5gufd2bDctSFi37e/Io+evIadrdgDomliTkzD+N
-         WnGcApT0eoEtSDq4BdPINXNDciJeMwGL14rLvmG7BbkTGV/PNwoWuY3xRrPpPTMdLR6d
-         9ZLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2XOT8Dh0yjkDXfmKUp5QXq9uOTWLWiVShJtV7hdg0A+LJmalQNGspRhTeehu3zMJbUHxzDGTDsoN4fSE=@vger.kernel.org, AJvYcCXxRI2YJSuNbTgzsfxUJQ88+eIRBk2aOnw9Qf3aKkcOWJJPhbZyiQIVS3ZrlR85jzw+FHQwbXTAMwayzkWsX5R5BE66@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOJdNUsVsd9a+lV8UaX77Qczgru4Y10zWJQTyRrILfxIfaNXeX
-	M82a5MlvcyhLrg5S2ntFYS7rJCw5nN6iZpREQxiujcI+XfJbm0wM
-X-Gm-Gg: ASbGnctygVnV7a/tNpSodd00lwkJoMpcz74gUQXF8jYVgOxt7LHqrFEczGb5rUQORAH
-	FFEltKTVBffhoMXW1XQV61G2hwoO9M2lKdycN1an8PRa8U7zUfDlWt+bWkXBYahG5pBARXRhJTn
-	Ky1E+50ZmmBDX3hc/fq/tLTlOGuouFXYmkF7aucRINUGDo8KPgOteSjWPYoUKFMyJupHsIsC3r/
-	dr3mYXmjuH57/vVJInN0nfLa32vmr3yadJu4QEjWNBfhwj7sOp9qmEIcR6d
-X-Google-Smtp-Source: AGHT+IEbe8Cub/lLjAyyLR9+MXyjS/4nmt8tvAodb8qI2COkRBa1nKk3jL2UDfncCpyh9QUvqNSiVA==
-X-Received: by 2002:a17:90a:e18f:b0:2f2:a664:df19 with SMTP id 98e67ed59e1d1-2f452dea8e1mr93569392a91.7.1736254764900;
-        Tue, 07 Jan 2025 04:59:24 -0800 (PST)
-Received: from HOME-PC ([223.185.133.12])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f447798934sm35989490a91.3.2025.01.07.04.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2025 04:59:24 -0800 (PST)
-From: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
-Subject: [PATCH kernel-next] tracing: Fix uninitialized variable in tracing_set_tracer()
-Date: Tue,  7 Jan 2025 18:29:20 +0530
-Message-Id: <20250107125920.45855-1-dheeraj.linuxdev@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1736256649; c=relaxed/simple;
+	bh=2II28rDnm/JjA1uReOOKsrlbl9iJobUJwyfrFihf/nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Gy6lMGE561l10jGjukBVYWgIaCuNsGJWCUhq14by2Mw5VYGcgY7Nv7+2aRmt0emY7uSbidqBNrTHjZlYHc4jadH5oy+cQam7o5lf9iziA3INzbGuzStnj7Eh59t68WDKxDm/RGGp/8AlGbwC49H5LE8Cobvy0eCnu/kvUnzA/X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1938C4CEDD;
+	Tue,  7 Jan 2025 13:30:46 +0000 (UTC)
+Date: Tue, 7 Jan 2025 08:32:14 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: [RFC][PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc
+ at build for arm64
+Message-ID: <20250107083214.5a29d429@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Fix an issue in the tracing_set_tracer() where the variable ret could
-be used uninitialized under certain conditions. Specifically, when
-t->use_max_tr is true but tr->cond_snapshot is false, the code would
-check the value of ret without first initializing it.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Fixes: a35873a0993b ("tracing: Add conditional snapshot")
-Closes: https://scan7.scan.coverity.com/#/project-view/52337/11354?selectedIssue=1602786
-Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+The mcount_loc section holds the addresses of the functions that get
+patched by ftrace when enabling function callbacks. It can contain tens of
+thousands of entries. These addresses must be sorted. If they are not
+sorted at compile time, they are sorted at boot. Sorting at boot does take
+some time and does have a small impact on boot overhead.
+
+x86 and arm32 have the addresses in the mcount_loc section of the ELF
+file. But for arm64, the section just contains zeros. The .rela.dyn
+Elf_Rela section holds the addresses and they get patched at boot during
+the relocation phase.
+
+In order to sort these addresses, the Elf_Rela needs to be updated instead
+of the location in the binary that holds the mcount_loc section. Have the
+sorttable code, allocate an array to hold the function addresses, load the
+addresses from the Elf_Rela entries, sort them, then put them back in
+order into the Elf_rela entries so that they will be sorted at boot up
+without having to sort them during boot up.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a04348ab7ccc..28f111c5b3a5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6079,7 +6079,7 @@ int tracing_set_tracer(struct trace_array *tr, const char *buf)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	bool had_max_tr;
- #endif
--	int ret;
-+	int ret = 0;
+Note, this is based on top of my sorttable clean up code:
+
+  https://lore.kernel.org/linux-trace-kernel/20250105162211.971039541@goodmis.org/
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git sorttable/for-next
+
+I tested this on a arm64 VM (running on x86 host), with
+CONFIG_FTRACE_SORT_STARTUP_TEST enabled, which verifies the mcount entries
+are sorted at boot up.
+
+I wonder if this will also work for s390? But I do not know s390 Elf layout.
+
+ arch/arm64/Kconfig  |   1 +
+ scripts/sorttable.c | 157 +++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 155 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 100570a048c5..e922622a9571 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -214,6 +214,7 @@ config ARM64
+ 		if DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
++	select HAVE_BUILDTIME_MCOUNT_SORT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index cd3b2145a827..bb1cf94b942f 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -28,6 +28,7 @@
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+@@ -79,10 +80,16 @@ typedef union {
+ 	Elf64_Sym	e64;
+ } Elf_Sym;
  
- 	guard(mutex)(&trace_types_lock);
++typedef union {
++	Elf32_Rela	e32;
++	Elf64_Rela	e64;
++} Elf_Rela;
++
+ static uint32_t (*r)(const uint32_t *);
+ static uint16_t (*r2)(const uint16_t *);
+ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
++static void (*w8)(uint64_t, uint64_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+@@ -199,6 +206,31 @@ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+ 
++#define RELA_ADDR(fn_name)				\
++static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r8((uint64_t *)&rela->e64.r_##fn_name);	\
++}							\
++							\
++static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r((uint32_t *)&rela->e32.r_##fn_name);	\
++}
++
++RELA_ADDR(offset)
++RELA_ADDR(info)
++RELA_ADDR(addend)
++
++static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w8(val, (uint64_t *)&rela->e64.r_addend);
++}
++
++static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w(val, (uint32_t *)&rela->e32.r_addend);
++}
++
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+@@ -278,6 +310,16 @@ static void wle(uint32_t val, uint32_t *x)
+ 	put_unaligned_le32(val, x);
+ }
+ 
++static void w8be(uint64_t val, uint64_t *x)
++{
++	put_unaligned_be64(val, x);
++}
++
++static void w8le(uint64_t val, uint64_t *x)
++{
++	put_unaligned_le64(val, x);
++}
++
+ /*
+  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
+  * the way to -256..-1, to avoid conflicting with real section
+@@ -344,17 +386,20 @@ static uint8_t (*sym_type)(Elf_Sym *sym);
+ static uint32_t (*sym_name)(Elf_Sym *sym);
+ static uint64_t (*sym_value)(Elf_Sym *sym);
+ static uint16_t (*sym_shndx)(Elf_Sym *sym);
++static uint64_t (*rela_offset)(Elf_Rela *rela);
++static uint64_t (*rela_info)(Elf_Rela *rela);
++static uint64_t (*rela_addend)(Elf_Rela *rela);
++static void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
+ 
+ static int extable_ent_size;
+ static int long_size;
+ 
++#define ERRSTR_MAXSZ	256
+ 
+ #ifdef UNWINDER_ORC_ENABLED
+ /* ORC unwinder only support X86_64 */
+ #include <asm/orc_types.h>
+ 
+-#define ERRSTR_MAXSZ	256
+-
+ static char g_err[ERRSTR_MAXSZ];
+ static int *g_orc_ip_table;
+ static struct orc_entry *g_orc_table;
+@@ -447,6 +492,9 @@ static void *sort_orctable(void *arg)
+ 
+ #ifdef MCOUNT_SORT_ENABLED
+ static pthread_t mcount_sort_thread;
++static bool sort_reloc;
++
++static char m_err[ERRSTR_MAXSZ];
+ 
+ struct elf_mcount_loc {
+ 	Elf_Ehdr *ehdr;
+@@ -455,6 +503,92 @@ struct elf_mcount_loc {
+ 	uint64_t stop_mcount_loc;
+ };
+ 
++/* Sort the relocations not the address itself */
++static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
++{
++	Elf_Shdr *shdr_start;
++	Elf_Rela *rel;
++	unsigned int shnum;
++	unsigned int count;
++	int shentsize;
++	void *vals;
++	void *ptr;
++
++	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
++	shentsize = ehdr_shentsize(ehdr);
++
++	vals = malloc(long_size * size);
++	if (!vals) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
++		pthread_exit(m_err);
++		return NULL;
++	}
++
++	ptr = vals;
++
++	shnum = ehdr_shnum(ehdr);
++	if (shnum == SHN_UNDEF)
++		shnum = shdr_size(shdr_start);
++
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (ptr + long_size > vals + size) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						 "Too many relocations");
++					pthread_exit(m_err);
++					return NULL;
++				}
++				if (long_size == 4)
++					*(uint32_t *)ptr = rela_addend(rel);
++				else
++					*(uint64_t *)ptr = rela_addend(rel);
++				ptr += long_size;
++			}
++		}
++	}
++	count = ptr - vals;
++	qsort(vals, count / long_size, long_size, compare_extable);
++
++	ptr = vals;
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (long_size == 4)
++					rela_write_addend(rel, *(uint32_t *)ptr);
++				else
++					rela_write_addend(rel, *(uint64_t *)ptr);
++				ptr += long_size;
++			}
++		}
++	}
++	free(vals);
++	return NULL;
++}
++
+ /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
+ static void *sort_mcount_loc(void *arg)
+ {
+@@ -464,6 +598,9 @@ static void *sort_mcount_loc(void *arg)
+ 	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
+ 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
+ 
++	if (sort_reloc)
++		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
++
+ 	qsort(start_loc, count/long_size, long_size, compare_extable);
+ 	return NULL;
+ }
+@@ -813,12 +950,14 @@ static int do_file(char const *const fname, void *addr)
+ 		r2	= r2le;
+ 		r8	= r8le;
+ 		w	= wle;
++		w8	= w8le;
+ 		break;
+ 	case ELFDATA2MSB:
+ 		r	= rbe;
+ 		r2	= r2be;
+ 		r8	= r8be;
+ 		w	= wbe;
++		w8	= w8be;
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+@@ -834,8 +973,12 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (r2(&ehdr->e32.e_machine)) {
+-	case EM_386:
+ 	case EM_AARCH64:
++#ifdef MCOUNT_SORT_ENABLED
++		sort_reloc = true;
++#endif
++		/* fallthrough */
++	case EM_386:
+ 	case EM_LOONGARCH:
+ 	case EM_RISCV:
+ 	case EM_S390:
+@@ -885,6 +1028,10 @@ static int do_file(char const *const fname, void *addr)
+ 		sym_name		= sym32_name;
+ 		sym_value		= sym32_value;
+ 		sym_shndx		= sym32_shndx;
++		rela_offset		= rela32_offset;
++		rela_info		= rela32_info;
++		rela_addend		= rela32_addend;
++		rela_write_addend	= rela32_write_addend;
+ 		long_size		= 4;
+ 		extable_ent_size	= 8;
+ 		break;
+@@ -913,6 +1060,10 @@ static int do_file(char const *const fname, void *addr)
+ 		sym_name		= sym64_name;
+ 		sym_value		= sym64_value;
+ 		sym_shndx		= sym64_shndx;
++		rela_offset		= rela64_offset;
++		rela_info		= rela64_info;
++		rela_addend		= rela64_addend;
++		rela_write_addend	= rela64_write_addend;
+ 		long_size		= 8;
+ 		extable_ent_size	= 16;
  
 -- 
-2.34.1
+2.45.2
 
