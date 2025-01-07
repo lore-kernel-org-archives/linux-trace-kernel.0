@@ -1,82 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A2C1DF756;
-	Tue,  7 Jan 2025 12:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B5828E37;
+	Tue,  7 Jan 2025 12:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736251880; cv=none; b=GV975GyDpkJtrfLmfCaPG/RmpCBs0AhFWGs5xA+1LzWiukW5JSiLBwBisYTJqCdYEFAIr2TdPCAbmO1VV1zkkVBNWJpDX7d78NdrAK5lbPh7ccMDfNO16CGLw1rXBAWvpa6kf2IXjqx8xKfihSar9Reblp2jo4OErVIzMEDXx8k=
+	t=1736254418; cv=none; b=majj2ikaios/XdXlNq+N6VQE2MpZD3pU70U5BDPvfxus1uCmFENe/sOWNGTtJpMnEdIwlJ2MilOeoabmhsTj4Hm5IsyBk1xJ4K3bIL0QK4o0JYhtYf+/Djw0ArJCG/4z8ekjeOHH8NB0uoVDHvii3NnYAq1VrtzBNKFC+qjBDCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736251880; c=relaxed/simple;
-	bh=ttXlZYbcu4cUdbyQCrfr2kVGW2kymYPcsMSHBJkkeC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TaWrvcwUl6MlPbfR3x7ovf6D+g4u2FQk3kHvAGvhMsG4WHv63aTop3KEsvKj9Cy+gZRMAUIeVoMYBvGNF6wrGflJnN18IhyUph3qmS5MTl5cg7WzsuENE2LPozsRbTUoIjgNWc/O2uq04N3oJVAD8JXyUT+AC7CqwqMamzjYQyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=urnK4yTw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urnK4yTw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D343FC4CED6;
-	Tue,  7 Jan 2025 12:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736251880;
-	bh=ttXlZYbcu4cUdbyQCrfr2kVGW2kymYPcsMSHBJkkeC4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=urnK4yTwSzoFUTtqQemH2ZW+560oyeAbM9+93TtKoU9/2bSYsCau+JydwgPJOnTON
-	 fWBhbTworCgtk8yjbmtcZ0NXe4TAfwD94zQhq3H04eOZUvZnoCfHZnfKTp4CIDrdDJ
-	 HUlhrZhcuEtUG0wY/YzLDKMrISx4Y2nSbs1H/hI5l6yA1hQMxBZ3WxXeVoRyKgKOBm
-	 DBLK/Jh45ewANXE6UlI7/t1L+I36FlEt8KtXSN/79Ok2AJQbK9BJd0WZMbGqNgY68r
-	 xrZ8NorxHZ1jyTNZ2nZqrjflyATU3NKOtt/YtX3TqGGXOVNeCeytJkQuAV5P+Z20Xl
-	 gdxY8UkgJR6cg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	mhiramat@kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/2] selftests/ftrace: Make uprobe test more robust against binary name
-Date: Tue,  7 Jan 2025 21:11:16 +0900
-Message-ID: <173625187633.1383744.2840679071525852811.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173625185823.1383744.4020760882101555349.stgit@devnote2>
-References: <173625185823.1383744.4020760882101555349.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1736254418; c=relaxed/simple;
+	bh=BDTvApfGbAxj+ppZtAF2VY2l6m6QqvN1N5lRRGacslc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=APenw02VB730vn6ZFivZZREB11jPSzFCm0zlY1PsCqe6VfoghMqZWfkoJ6hIOCoOFVXag1Jo2IkJa9meqvKA1CWAcjSbpflKlY4C4QZtSDD5TeOnJ+INbNZbBrT3FohaQyudKUBMCg21DnWl03KcrEdlXqkoAR+lYbaq8kH6XHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 2D88D30008F1A;
+	Tue,  7 Jan 2025 13:53:26 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 168D0558D1A; Tue,  7 Jan 2025 13:53:26 +0100 (CET)
+Date: Tue, 7 Jan 2025 13:53:26 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <Z30jxlgo63Js6G74@wunner.de>
+References: <20241123113108.29722-1-xueshuai@linux.alibaba.com>
+ <f77669b5-c174-48c7-8f0f-187d1f54ea91@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f77669b5-c174-48c7-8f0f-187d1f54ea91@linux.alibaba.com>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Jan 07, 2025 at 07:30:28PM +0800, Shuai Xue wrote:
+> 2024/11/23 19:31, Shuai Xue:
+> > To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+> > tracepoint for hotplug event to help healthy check, and generate
+> > tracepoints for pcie hotplug event. To monitor these tracepoints in
+> > userspace, e.g. with rasdaemon, put `enum pci_hotplug_event` in uapi
+> > header.
+[...]
+> I would like to inquire that if there are any further actions required
+> from my end to proceed for this patch?
+> 
+> Additionally, I would appreciate if you could inform me about who will be
+> pick up this patch.
 
-Make add_remove_uprobe test case more robust against various real
-binary name.
-Current add_remove_uprobe.tc test expects the real binary of /bin/sh
-is '*/bin/*sh', but it does not work on busybox environment.
-Instead of using fixed pattern, use readlink to identify real binary
-name.
+I'm fine with this patch, as indicated by the Reviewed-by,
+so no actions required from you for now.  This will be
+picked up by Bjorn once he gets to it (assuming he's happy with it).
+A lot of folks were on holidays and are catching up on e-mails,
+so please be patient.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../ftrace/test.d/dynevent/add_remove_uprobe.tc    |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-index a275decdc880..86c76679c56e 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-@@ -6,8 +6,10 @@
- echo 0 > events/enable
- echo > dynamic_events
- 
-+REALBIN=`readlink -f /bin/sh`
-+
- echo 'cat /proc/$$/maps' | /bin/sh | \
--	grep "r-xp .*/bin/.*sh$" | \
-+	grep "r-xp .*${REALBIN}$" | \
- 	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events
- 
- grep -q myevent uprobe_events
-
+Lukas
