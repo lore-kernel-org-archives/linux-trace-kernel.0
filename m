@@ -1,99 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAB9273F9;
-	Tue,  7 Jan 2025 23:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963925949F;
+	Wed,  8 Jan 2025 00:38:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736291987; cv=none; b=ndR99Uz84rB6eDNSoidcLH8BTHdD8VSO7Z2NLRZ98OPWse2IKiOfgc1mEd+DecanF42XzsI6WSXKN96ZSqESj//6DClYlf/GGUvK7VB5EyxKdPEfyVEUXEAipBMcPxfaElgnAGOUAG58B42bwzHsItRr3emqtut1kf84jDNBjcA=
+	t=1736296729; cv=none; b=U9Tz/LHXIBvL/TYGhwH9XXBZ/wn3c/WrKaUqejnXFr1Tekh5CslXeaf+dFqjGUUUVF+u1raMhHn50Nu9FSsqrInffV3zELEkGEtJZtZFvBbZWK8GpeuLAHJT69m517wvsIKFBLjwAcPS5o+j4ov5AGPq1IUb3ikhBKq2Uuzc/y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736291987; c=relaxed/simple;
-	bh=uLe1aQ1N0NaquwCKd57H9kZ0jKwjEuy0gX6CElECvDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=h1q/tdNMUoDvr//69iHtu6DOSAx3ow0LlaB5oXEFpVypnfuFN7pEgYiRcwB/HwmfsTC5xTS1eyh26/L/eTEIs3Es1FemYNnc7zWZLdReTAuRhTnkLn/Z9PjxNSDElKSyHN9+sg6++ErIEk4yLhDAR6MXkBa59W9WUeCiZ0hp7m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4nz+26N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736296729; c=relaxed/simple;
+	bh=Jb6+xUcAlme8rTe7N/fLaQdqGDKpjgvklGOWAq8cQPg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MnD3Mr8PbJqVSC2RuRy1xRbkDCkgS8h+5c5hTnqGJz1jb7zplgeh4m8O+EprB3cQBGJ7SKGDtJ7QeaM1fJdOjmao7KtpMxf3WNMT1WI2LPvUxYDP+hedEJl2Nsua3RXR3GjJs4CUajvndEQr/5uAHwDPqSBhbrQIGN68fQMX6Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHU9umiq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4nz+26N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99746C4CED6;
-	Tue,  7 Jan 2025 23:19:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHU9umiq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00789C4CED6;
+	Wed,  8 Jan 2025 00:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736291986;
-	bh=uLe1aQ1N0NaquwCKd57H9kZ0jKwjEuy0gX6CElECvDU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=P4nz+26N0LayYSPeauwv2Shgsz8JIenh60zoDjW9eZzMLxQd9rLfMpK39gq2odvh/
-	 b8O13xVsX7n1M4XsBZH6xci8gcxq8iX+ZX2plA28eWU6WWm2HGPS1XKn7thb2egtln
-	 pgldReXdxuu5CnUKVXsq4C8Ez414+xNRGPKXlJZzH21BHeOPJYWdVdG8LmHucmXoOe
-	 v62QXVCmwoIvXZVqHHK8n+kqK2PCXznPW89oYW2Iq50ZNYIQ6suCMvvk72PA60tovv
-	 1fQfcZ3crKsjA8AfMshSBd8EkiMP8aRo7+TXgQwztEw/++ps66M5VCeMzCd+cfNCtU
-	 eNO9E5cQoN2AA==
-Date: Tue, 7 Jan 2025 17:19:43 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
-	tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
-	davem@davemloft.net, anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com, peterz@infradead.org
-Subject: Re: [PATCH v4] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250107231943.GA189869@bhelgaas>
+	s=k20201202; t=1736296729;
+	bh=Jb6+xUcAlme8rTe7N/fLaQdqGDKpjgvklGOWAq8cQPg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jHU9umiqdCcYoU10czweUD2am2ftiEMrQCdKkeiO6LBXbBU+81RYmRqsEwRlseJz8
+	 JUXuERgtBKtv6XDC9OpFGuJmDDmvnq/BvPxjJUGNEfG+ClM2YkB+zX8wSmUV7bQAbN
+	 Ra0s7yciFqBIWwkWWP+V2WslvTbGMgBxNdoPWt0yJFeEi9k0nepm9SyCER1aIF+gQo
+	 JsKiNFMYIBYVlf5qNezc9nJjRyx/d7TT6Qh6j7pXE5ok5L0OiS9pavjx4zHYcaEfuU
+	 7Ljel9y6VGnRkCB+Ugvrv6TAbHr5RMbkulNTJjRqWywL5EiGUQZEvoyL0lujndk7Ew
+	 tYSQTzshDFhLg==
+Date: Wed, 8 Jan 2025 09:38:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
+ <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] tracing: Use __free() in trace_probe for cleanup
+Message-Id: <20250108093843.dc5ea69f297a9fd99cf4c396@kernel.org>
+In-Reply-To: <20250107103643.37a3b002@gandalf.local.home>
+References: <173625060316.1375434.11048027439794595989.stgit@devnote2>
+	<173625062518.1375434.10516553019799245668.stgit@devnote2>
+	<20250107103643.37a3b002@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241123113108.29722-1-xueshuai@linux.alibaba.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Nov 23, 2024 at 07:31:08PM +0800, Shuai Xue wrote:
-> Hotplug events are critical indicators for analyzing hardware health,
-> particularly in AI supercomputers where surprise link downs can
-> significantly impact system performance and reliability. The failure
-> characterization analysis illustrates the significance of failures
-> caused by the Infiniband link errors. Meta observes that 2% in a machine
-> learning cluster and 6% in a vision application cluster of Infiniband
-> failures co-occur with GPU failures, such as falling off the bus, which
-> may indicate a correlation with PCIe.[1]
+On Tue, 7 Jan 2025 10:36:43 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue,  7 Jan 2025 20:50:25 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-> tracepoint for hotplug event to help healthy check, and generate
-> tracepoints for pcie hotplug event. To monitor these tracepoints in
-> userspace, e.g. with rasdaemon, put `enum pci_hotplug_event` in uapi
-> header.
+> > @@ -1790,18 +1777,15 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
+> >  				       offsetof(struct file, f_path.dentry),
+> >  				       equal ? equal + 1 : tmp);
+> >  
+> > -		kfree(tmp);
+> > +		kfree(no_free_ptr(tmp));
 > 
-> The output like below:
-> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> $ cat /sys/kernel/debug/tracing/trace_pipe
->            <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+> I don't get this? You are telling the compiler not to free tmp, because you
+> decided to free it yourself? Why not just remove the kfree() here altogether?
+
+In the for-loop block, the __free() work only when we exit the loop, not
+each iteration. In each iteration, kstrdup() is assigned to the 'tmp',
+so we need to kfree() each time.
+
+Hmm, maybe this is a sign that I should not use __free() for the 'tmp',
+or I should call kfree(tmp) right before kstrdup(), like below.
+
+ 	for (i = 0; i < argc; i++) {
+		char *tmp __free(kfree) = NULL;
+		...
+		kfree(tmp);
+		tmp = kstrdup(argv[i], GFP_KERNEL);
+	}
+
+Does this make sense?
+
 > 
->            <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+> -- Steve
 > 
-> [1]https://arxiv.org/abs/2410.21680
+> 
+> >  		if (ret >= bufsize - used)
+> > -			goto nomem;
+> > +			return -ENOMEM;
+> >  		argv[i] = tmpbuf + used;
+> >  		used += ret + 1;
+> >  	}
+> >  
+> > -	*buf = tmpbuf;
+> > +	*buf = no_free_ptr(tmpbuf);
+> >  	return 0;
+> > -nomem:
+> > -	kfree(tmpbuf);
+> > -	return -ENOMEM;
+> >  }
 
-Doesn't apply on pci/main (v6.13-rc1); can you rebase it?
 
-s/pcie/PCIe/ in English text.
-
-Probably more detail than necessary about AI supercomputers,
-Infiniband, vision applications, etc.  This is a very generic issue.
-
-"Falling off the bus" doesn't really mean anything to me.  I suppose
-it's another way to describe a "link down" event that leads to UR
-errors when trying to access the device?
-
-I'm guessing that monitoring these via rasdaemon requires more than
-just adding "enum pci_hotplug_event"?  Or does rasdaemon read
-include/uapi/linux/pci.h and automagically incorporate new events?
-Maybe there's at least a rebuild involved?
-
-Anything in the arxiv link that is specifically relevant to this patch
-needs to be in the commit log itself.  But I think there's already
-enough information here to motivate this change, and whatever is in
-the arxiv link may be of general interest, but is probably not
-required to justify, understand, or debug this useful functionality.
-
-Bjorn
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
