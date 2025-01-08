@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C72A1F76D7;
-	Wed,  8 Jan 2025 09:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730D01F8900;
+	Wed,  8 Jan 2025 09:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736327124; cv=none; b=pIIC48rWaFmNTHY1VYrXkfcsEpXcuAxL5T1DXLBbxXP1GQeZRn59sXKYO2mzmHdMKIs54lP+jBh5WitCbP0YhUvPrN+8WQkqG7nVi3GArt+90RbqKeW3K3vSCrwePLDuoT7skzrgsFrksrrHRCBLe34ouOtnpAoiyUEPhGnHgro=
+	t=1736327125; cv=none; b=BfCV/+1vj/5O2IFUQ7S0SKYt5xHXC/cJPwC8zFFzKrzMGYAh54z0yZw08LiVIr+Rpcp4XEQtEsBHyYwbuTge3fC4IBu8Y278+GQZ2e5L18RRQrnbJr7aQeD7k8HxrFIMR0nMOLm/7fDwlaWeaMcCTQR7ZddBjCKVrKtdv6lyR1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736327124; c=relaxed/simple;
-	bh=xNkHK5skl0w0C9lJamZwTCTHZMhBReuD0NcedcOei+I=;
+	s=arc-20240116; t=1736327125; c=relaxed/simple;
+	bh=JMLSIq4XCqh7X46oF8dvRjupa8G10AN+Bi4dbH6ayzs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mj5POqZflDGbKm4gSILhemyMgtjlHZXM4iipaKSNPFj91yg0hVXzubNVNTAw2+LCAiowphN5a4YjSmY24D+km60TiauhU7EaGh7FgDsBz/6er9/9TPegeedeNyqItFZnVjpKCXHYDc8uNi47/LqUrBvno5S1MJi1QtbKgz0yg9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qZGqUNiL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JhnK0Yu4; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=GljypC4TMdKHbQUTy+Ymfk1eWANd3ShyWh8TYQFMPojM1h/uB7i/a5nizrvj+rZDz+xNV6x0TunaOIDv6Ho+y7KP7sN1CF3aumtxra0DIeUk88UXRLH84g8q2nzQg2bDFg/WaDROYQryErDbOfNPCJ4mAurOyNk4w+IYEqX6wII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zeq82ZZt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o9rVqG6g; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qZGqUNiL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JhnK0Yu4"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zeq82ZZt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o9rVqG6g"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1736327120;
+	s=2020; t=1736327121;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=luYbbdZNCAXl/IP2EISod9yvpOfM235A0wCO9dfQi8c=;
-	b=qZGqUNiLevk3ULvmOAgodsKpMRTtpdv6zZ5qUtcVO8ZwmriORfqt+BAiiwnzpFb4pj7wGJ
-	qqIrEs42Lod/4DpYI4l0IL434kVxZV3x+XaZ3TbpdcrNBYRR4lP0VEUHk8ZUzgfPd+3/MO
-	a+FI63LXtZjf0rHQ5aK2L0M0T1UZOb4GeqtD3Y5HvX3pJKhuimEoUeA/AhEZjRj0pYyfL5
-	+amDJ/rpmcycJ3/zeQNMje5n0Xnql5aGiTx6ld96PiO6RPYSW/AGgTbzc8k2h7yTa2mj4E
-	k9ofqTkV3//mwiIDmmTC20MOYsAaVNPdrp5VNOXL6tRR872cXmzwLhnKHPnm7Q==
+	bh=dKkEa1oBjIwyFreZFvtbWG1WNxqNuZKzuLQp9IQamCY=;
+	b=Zeq82ZZtfycF+dEkhvnQG4m5Gm/Dg336iRPpNCa0jIIynUDK44CLaWcEHM91iLvvyVeDwf
+	NRZdcAl0pca++p4iXsTy1ATeNGWQ0/ttOEarFzUqIaQLSXgLGkLjRtrObC8AUsP16pSHl4
+	A93Z/xemaCJmcGKVUSTlDyAxp1RGB7VdiBSnn73ZwFXLJl+ggc+UB38zEeybmelfsR82Oh
+	lBe0gsu3NkVEDGFh4ak12MI1+L1bJg2JybDwqVktkHEJnrLbMEebPLUZRv7A1tv5z9QURT
+	rDyhVxLNQiChLewieqy0QvpLZv1OhExoOvlkAfkAIZqeAI6F196664v7KmzUdA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1736327120;
+	s=2020e; t=1736327121;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=luYbbdZNCAXl/IP2EISod9yvpOfM235A0wCO9dfQi8c=;
-	b=JhnK0Yu4bXTsTOoq/2QpxdG2IUFKpBcbjrCKe3W7xFQhlFCjP6V59gChgnIT16k/VUPy28
-	I8OAkeg4E0fvk/Cw==
+	bh=dKkEa1oBjIwyFreZFvtbWG1WNxqNuZKzuLQp9IQamCY=;
+	b=o9rVqG6g7PSN1elXM/7opz1M1ZZG8+lypfGps76VIls8huRnp2KWGJw/AyhZ6XhIyzGHkr
+	7w4eXU89djJIcTAg==
 To: linux-modules@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Daniel Gomez <da.gomez@samsung.com>,
@@ -49,16 +49,16 @@ Cc: Daniel Gomez <da.gomez@samsung.com>,
 	Sami Tolvanen <samitolvanen@google.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3 17/28] arm64: module: Use RCU in all users of __module_text_address().
-Date: Wed,  8 Jan 2025 10:04:46 +0100
-Message-ID: <20250108090457.512198-18-bigeasy@linutronix.de>
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-trace-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev
+Subject: [PATCH v3 19/28] LoongArch: ftrace: Use RCU in all users of __module_text_address().
+Date: Wed,  8 Jan 2025 10:04:48 +0100
+Message-ID: <20250108090457.512198-20-bigeasy@linutronix.de>
 In-Reply-To: <20250108090457.512198-1-bigeasy@linutronix.de>
 References: <20250108090457.512198-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -75,25 +75,26 @@ requirement to have preemption disabled.
 Replace the preempt_disable() section around __module_text_address()
 with RCU.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: WANG Xuerui <kernel@xen0n.name>
 Cc: linux-trace-kernel@vger.kernel.org
+Cc: loongarch@lists.linux.dev
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/arm64/kernel/ftrace.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/loongarch/kernel/ftrace_dyn.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-index 245cb419ca24d..2b76939b6304f 100644
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -257,14 +257,13 @@ static bool ftrace_find_callable_addr(struct dyn_ftra=
-ce *rec,
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftr=
+ace_dyn.c
+index 18056229e22e4..5b7b8ac13e350 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -85,14 +85,13 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace=
+ *rec, struct module *mod
  	 * dealing with an out-of-range condition, we can assume it
  	 * is due to a module being loaded far away from the kernel.
  	 *
@@ -105,9 +106,10 @@ ce *rec,
  	 */
  	if (!mod) {
 -		preempt_disable();
-+		guard(rcu)();
- 		mod =3D __module_text_address(pc);
+-		mod =3D __module_text_address(pc);
 -		preempt_enable();
++		scoped_guard(rcu)
++			mod =3D __module_text_address(pc);
  	}
 =20
  	if (WARN_ON(!mod))
