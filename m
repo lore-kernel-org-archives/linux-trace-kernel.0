@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0769156C71;
-	Wed,  8 Jan 2025 02:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968661A238F;
+	Wed,  8 Jan 2025 02:11:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736302262; cv=none; b=U49Xd9gdWsF2KwfwSJe29jH83kJVFbnM9MCn5NPZoexFKySlcZOyL7md2aHwCReFg3U3K5WWTBk62rGXAbUpqCJG+nLflc/E/UHkz0pEvLtBP2tC6Xjk6R32PAU6BXj6EWimVaLKBJ+PrTRfEK9e2MvXXfwERzkAfeIjBziCmK4=
+	t=1736302273; cv=none; b=evKgHaropMXZ4u++9uiQ3/DoAC2kJbC3OJ1OQ6gQXykvr13y/uRnj3enPKlAo0SV9jeW/NL8lYKXXKGKfiW5gWezjkcC1ZHiIeTne3XpPKKQZEHxHPDeu8KqGjV9EDs38qfqISjDxtyqGkXL6QjuZMrF4+Ra1qegQ9GLLZKn1DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736302262; c=relaxed/simple;
-	bh=OIyk4lt7u6YQUvsVvH0+O4JS0/TGuaSftK095ruVNjQ=;
+	s=arc-20240116; t=1736302273; c=relaxed/simple;
+	bh=kxJngtFykS1ifJC7zJK0EVWjdRdHTT/wqMbrfB+dqQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n50ONXa4k2Uo61Gt9sl2bGz+6ADNqJi2czpKRbEToh7sfiNMGlWO/+LvlWZHxnzIJlCRX3ytat+sHptaQgFjoDOrE1grwTOV0tB3xtbD56Me4OiekG/Ks3RrMaCsmDVjftcWQev8YhGi+nVmv23rCl7KXwRws6kkYP5FWakyyHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGJinHhd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=sqn45457b/6Fa0Dc+Cl1Am9vNJuWieuo2bJVzB1GMoEfWnw2p6arh+l38pIiCtXYmi0l1yocDzN70RyxMj4v4ZZTA9jI7EFKLBBf6Fvb4y5mn8qxZ7gUt+FR0mWSKJN9sPyEJDECh+kHfPGm0fhAroIrEZnwDPrblZoWP2kFuuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meWEADUH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGJinHhd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65644C4CEE0;
-	Wed,  8 Jan 2025 02:10:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meWEADUH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293D2C4CED6;
+	Wed,  8 Jan 2025 02:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736302262;
-	bh=OIyk4lt7u6YQUvsVvH0+O4JS0/TGuaSftK095ruVNjQ=;
+	s=k20201202; t=1736302273;
+	bh=kxJngtFykS1ifJC7zJK0EVWjdRdHTT/wqMbrfB+dqQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hGJinHhdmDr9aLv3U7geJnxHKQodt9UQlAaeSMiiGpFy3TzP3FpkjL/ayx6+lNAjG
-	 jZgSTJD1i3Fkv+R8VBgd2slck+vSvbj62Qud/uZABP3OwUqcxy25asutnQcbxEhsbe
-	 eI0mU+itrhtcbb9Fm9oUHk9cRMA5z5nf0tB7x6oJ/jY7EzM5CNZBo/zFLtRY4hiotK
-	 /f1jjXgwq9uzIMHAX0soHQ0LUhuF9+JU+t6aFLD0FrHUOJqyK4OCV6ZWcfB9+nF6x9
-	 j+I1tvzui8W3IBrCc3HE7k+hwCDTftG322j/34tmEmK5ND+Fic3I2qMiwIBpY8lNwL
-	 cACpCbQLQLtlw==
+	b=meWEADUHlzAVH+L9sjxMm6fkzBjc428H/JFYzbIs4ZZTQD1D6cvvqBkAD/PorU2nc
+	 XH6FHZyrfIh5eZBRRB+jsEZtFyUL4VN8dXoRikpyYFWcxdyp6qQ9NzgH3Slx8iQQN9
+	 CoprvHHDoqbMmm6HNDpnctx67IazQ9CzTC/T/jq0cVHkv4Ibs/w/cKtH6Yx3r1q/F+
+	 6oqoB8onADNWoDV0aFHKtpffeZbXDp3yKeSagKuq38Qgk/ghG0WMHu1oTbb/ej5n+U
+	 MWt23d/FcHMYkNEH+7sH7zNc4ilSv4fvFM3/yXN+ZyoNuge7P7aqxEvvBbe5E5omDC
+	 mT/QdnUB2vpdA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -41,9 +41,9 @@ Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 2/5] tracing: Use __free() in trace_probe for cleanup
-Date: Wed,  8 Jan 2025 11:10:57 +0900
-Message-ID: <173630225708.1453474.16752527154293973755.stgit@devnote2>
+Subject: [PATCH v5 3/5] tracing: Use __free() for kprobe events to cleanup
+Date: Wed,  8 Jan 2025 11:11:07 +0900
+Message-ID: <173630226782.1453474.10077691519522198018.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173630223453.1453474.6442447279377996686.stgit@devnote2>
 References: <173630223453.1453474.6442447279377996686.stgit@devnote2>
@@ -59,160 +59,202 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Use __free() in trace_probe to cleanup some gotos.
+Use __free() in trace_kprobe.c to cleanup code.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v5:
-  - Fix to remove kfree() in for loop. Since I confirmed __free(kfree) is
-    called in each iteration.
+ Changes in v4:
+  - Use no_free_ptr(tk)->tp instead of assiging NULL to tk.
+ Changes in v3:
+  - Rename to __free(free_trace_kprobe) to clarify what function will be called.
+  - Add !IS_ERR_OR_NULL() check because alloc_trace_kprobe() returns an error code.
+  - Prevent freeing 'tk' in create_local_trace_kprobe() when succeeded to register.
+ Changes in v2:
+  - Instead of using no_free_ptr(), just assign NULL to the registered pointer.
 ---
- kernel/trace/trace_probe.c |   51 +++++++++++++++-----------------------------
- 1 file changed, 17 insertions(+), 34 deletions(-)
+ kernel/trace/trace_kprobe.c |   62 ++++++++++++++++++++-----------------------
+ 1 file changed, 29 insertions(+), 33 deletions(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 16a5e368e7b7..8f58ee1e8858 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1409,7 +1409,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 					   struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code, *tmp = NULL;
--	char *type, *arg;
-+	char *type, *arg __free(kfree) = NULL;
- 	int ret, len;
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index fb9d4dffa66e..2d86ef88d36a 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -8,6 +8,7 @@
+ #define pr_fmt(fmt)	"trace_kprobe: " fmt
  
- 	len = strlen(argv);
-@@ -1426,22 +1426,16 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		return -ENOMEM;
- 
- 	parg->comm = kstrdup(arg, GFP_KERNEL);
--	if (!parg->comm) {
--		ret = -ENOMEM;
--		goto out;
--	}
-+	if (!parg->comm)
-+		return -ENOMEM;
- 
- 	type = parse_probe_arg_type(arg, parg, ctx);
--	if (IS_ERR(type)) {
--		ret = PTR_ERR(type);
--		goto out;
--	}
-+	if (IS_ERR(type))
-+		return PTR_ERR(type);
- 
- 	code = tmp = kcalloc(FETCH_INSN_MAX, sizeof(*code), GFP_KERNEL);
--	if (!code) {
--		ret = -ENOMEM;
--		goto out;
--	}
-+	if (!code)
-+		return -ENOMEM;
- 	code[FETCH_INSN_MAX - 1].op = FETCH_OP_END;
- 
- 	ctx->last_type = NULL;
-@@ -1497,8 +1491,6 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 				kfree(code->data);
+ #include <linux/bpf-cgroup.h>
++#include <linux/cleanup.h>
+ #include <linux/security.h>
+ #include <linux/module.h>
+ #include <linux/uaccess.h>
+@@ -257,6 +258,9 @@ static void free_trace_kprobe(struct trace_kprobe *tk)
  	}
- 	kfree(tmp);
--out:
--	kfree(arg);
- 
- 	return ret;
  }
-@@ -1668,7 +1660,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- {
- 	const struct btf_param *params = NULL;
- 	int i, j, n, used, ret, args_idx = -1;
--	const char **new_argv = NULL;
-+	const char **new_argv __free(kfree) = NULL;
  
- 	ret = argv_has_var_arg(argc, argv, &args_idx, ctx);
++DEFINE_FREE(free_trace_kprobe, struct trace_kprobe *,
++	if (!IS_ERR_OR_NULL(_T)) free_trace_kprobe(_T))
++
+ /*
+  * Allocate new trace_probe and initialize it (including kprobes).
+  */
+@@ -268,7 +272,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+ 					     int maxactive,
+ 					     int nargs, bool is_return)
+ {
+-	struct trace_kprobe *tk;
++	struct trace_kprobe *tk __free(free_trace_kprobe) = NULL;
+ 	int ret = -ENOMEM;
+ 
+ 	tk = kzalloc(struct_size(tk, tp.args, nargs), GFP_KERNEL);
+@@ -277,12 +281,12 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+ 
+ 	tk->nhit = alloc_percpu(unsigned long);
+ 	if (!tk->nhit)
+-		goto error;
++		return ERR_PTR(ret);
+ 
+ 	if (symbol) {
+ 		tk->symbol = kstrdup(symbol, GFP_KERNEL);
+ 		if (!tk->symbol)
+-			goto error;
++			return ERR_PTR(ret);
+ 		tk->rp.kp.symbol_name = tk->symbol;
+ 		tk->rp.kp.offset = offs;
+ 	} else
+@@ -299,13 +303,10 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
+ 
+ 	ret = trace_probe_init(&tk->tp, event, group, false, nargs);
  	if (ret < 0)
-@@ -1707,7 +1699,7 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 				ret = sprint_nth_btf_arg(n, "", buf + used,
- 							 bufsize - used, ctx);
- 				if (ret < 0)
--					goto error;
-+					return ERR_PTR(ret);
+-		goto error;
++		return ERR_PTR(ret);
  
- 				new_argv[j++] = buf + used;
- 				used += ret + 1;
-@@ -1721,25 +1713,20 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 			n = simple_strtoul(argv[i] + 4, &type, 10);
- 			if (type && !(*type == ':' || *type == '\0')) {
- 				trace_probe_log_err(0, BAD_VAR);
--				ret = -ENOENT;
--				goto error;
-+				return ERR_PTR(-ENOENT);
- 			}
- 			/* Note: $argN starts from $arg1 */
- 			ret = sprint_nth_btf_arg(n - 1, type, buf + used,
- 						 bufsize - used, ctx);
- 			if (ret < 0)
--				goto error;
-+				return ERR_PTR(ret);
- 			new_argv[j++] = buf + used;
- 			used += ret + 1;
- 		} else
- 			new_argv[j++] = argv[i];
- 	}
- 
--	return new_argv;
--
+ 	dyn_event_init(&tk->devent, &trace_kprobe_ops);
+-	return tk;
 -error:
--	kfree(new_argv);
+-	free_trace_kprobe(tk);
 -	return ERR_PTR(ret);
-+	return_ptr(new_argv);
++	return_ptr(tk);
  }
  
- /* @buf: *buf must be equal to NULL. Caller must to free *buf */
-@@ -1747,14 +1734,14 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
- {
- 	int i, used, ret;
- 	const int bufsize = MAX_DENTRY_ARGS_LEN;
--	char *tmpbuf = NULL;
-+	char *tmpbuf __free(kfree) = NULL;
+ static struct trace_kprobe *find_trace_kprobe(const char *event,
+@@ -866,11 +867,12 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	 * Type of args:
+ 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+ 	 */
+-	struct trace_kprobe *tk = NULL;
++	struct trace_kprobe *tk __free(free_trace_kprobe) = NULL;
+ 	int i, len, new_argc = 0, ret = 0;
+ 	bool is_return = false;
+-	char *symbol = NULL, *tmp = NULL;
+-	const char **new_argv = NULL;
++	char *symbol __free(kfree) = NULL;
++	char *tmp = NULL;
++	const char **new_argv __free(kfree) = NULL;
+ 	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
+ 	enum probe_print_type ptype;
+ 	int maxactive = 0;
+@@ -879,7 +881,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	char buf[MAX_EVENT_NAME_LEN];
+ 	char gbuf[MAX_EVENT_NAME_LEN];
+ 	char abuf[MAX_BTF_ARGS_LEN];
+-	char *dbuf = NULL;
++	char *dbuf __free(kfree) = NULL;
+ 	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
  
- 	if (*buf)
- 		return -EINVAL;
+ 	switch (argv[0][0]) {
+@@ -936,13 +938,13 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 		/* Check whether uprobe event specified */
+ 		if (strchr(argv[1], '/') && strchr(argv[1], ':')) {
+ 			ret = -ECANCELED;
+-			goto error;
++			goto out;
+ 		}
+ 		/* a symbol specified */
+ 		symbol = kstrdup(argv[1], GFP_KERNEL);
+ 		if (!symbol) {
+ 			ret = -ENOMEM;
+-			goto error;
++			goto out;
+ 		}
  
- 	used = 0;
- 	for (i = 0; i < argc; i++) {
--		char *tmp;
-+		char *tmp __free(kfree) = NULL;
- 		char *equal;
- 		size_t arg_len;
- 
-@@ -1769,7 +1756,7 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
- 
- 		tmp = kstrdup(argv[i], GFP_KERNEL);
- 		if (!tmp)
--			goto nomem;
-+			return -ENOMEM;
- 
- 		equal = strchr(tmp, '=');
- 		if (equal)
-@@ -1790,18 +1777,14 @@ int traceprobe_expand_dentry_args(int argc, const char *argv[], char **buf)
- 				       offsetof(struct file, f_path.dentry),
- 				       equal ? equal + 1 : tmp);
- 
--		kfree(tmp);
- 		if (ret >= bufsize - used)
--			goto nomem;
-+			return -ENOMEM;
- 		argv[i] = tmpbuf + used;
- 		used += ret + 1;
+ 		tmp = strchr(symbol, '%');
+@@ -1040,7 +1042,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 		ctx.offset = 0;
+ 		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
+ 		if (ret)
+-			goto error;	/* This can be -ENOMEM */
++			goto out;	/* This can be -ENOMEM */
  	}
+ 	/* entry handler for kretprobe */
+ 	if (is_return && tk->tp.entry_arg) {
+@@ -1051,7 +1053,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	ptype = is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL;
+ 	ret = traceprobe_set_print_fmt(&tk->tp, ptype);
+ 	if (ret < 0)
+-		goto error;
++		goto out;
  
--	*buf = tmpbuf;
-+	*buf = no_free_ptr(tmpbuf);
- 	return 0;
--nomem:
--	kfree(tmpbuf);
--	return -ENOMEM;
+ 	ret = register_trace_kprobe(tk);
+ 	if (ret) {
+@@ -1062,21 +1064,20 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 			trace_probe_log_err(0, BAD_PROBE_ADDR);
+ 		else if (ret != -ENOMEM && ret != -EEXIST)
+ 			trace_probe_log_err(0, FAIL_REG_PROBE);
+-		goto error;
+-	}
++	} else
++		/*
++		 * Here, 'tk' has been registered to the list successfully,
++		 * so we don't need to free it.
++		 */
++		tk = NULL;
+ 
+ out:
+ 	traceprobe_finish_parse(&ctx);
+ 	trace_probe_log_clear();
+-	kfree(new_argv);
+-	kfree(symbol);
+-	kfree(dbuf);
+ 	return ret;
+ 
+ parse_error:
+ 	ret = -EINVAL;
+-error:
+-	free_trace_kprobe(tk);
+ 	goto out;
  }
  
- void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
+@@ -1898,7 +1899,7 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+ 			  bool is_return)
+ {
+ 	enum probe_print_type ptype;
+-	struct trace_kprobe *tk;
++	struct trace_kprobe *tk __free(free_trace_kprobe) = NULL;
+ 	int ret;
+ 	char *event;
+ 
+@@ -1929,19 +1930,14 @@ create_local_trace_kprobe(char *func, void *addr, unsigned long offs,
+ 
+ 	ptype = trace_kprobe_is_return(tk) ?
+ 		PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL;
+-	if (traceprobe_set_print_fmt(&tk->tp, ptype) < 0) {
+-		ret = -ENOMEM;
+-		goto error;
+-	}
++	if (traceprobe_set_print_fmt(&tk->tp, ptype) < 0)
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ret = __register_trace_kprobe(tk);
+ 	if (ret < 0)
+-		goto error;
++		return ERR_PTR(ret);
+ 
+-	return trace_probe_event_call(&tk->tp);
+-error:
+-	free_trace_kprobe(tk);
+-	return ERR_PTR(ret);
++	return trace_probe_event_call(&(no_free_ptr(tk)->tp));
+ }
+ 
+ void destroy_local_trace_kprobe(struct trace_event_call *event_call)
 
