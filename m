@@ -1,35 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31472B644;
-	Wed,  8 Jan 2025 15:09:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D488719F133;
+	Wed,  8 Jan 2025 15:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736348983; cv=none; b=AezMeOSOEuALflenbxZ8Z8JBI9epHIrLvAhadnA6vdCQgq8GEGfhaQZLb89LaKQZoAbEeuT3F69YCWeQMFqabEQ8CFRvd2fi4zGxTwYg4T15MI6Zldsid3oKew5X4kQ8P5CAcGyW9VO/EcIjIgKaRVT7zuHLf7cnL/kWc9bccac=
+	t=1736349794; cv=none; b=bMuKMyZbuMK6BcXEPdFTaEjSfgN0s3uHbjrAbTDoOnUpxkzcxlqUy9YKK+/ulb+ozNnZXHJV08rauM4VjOU5z44me2OL620TywuThcy8P/S/vY46gXjVatDkvyA9NRT/6SzXTAjZ55+V7Nmvoxok6rNTzN8MJHKWDelWb+l5lOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736348983; c=relaxed/simple;
-	bh=JF9aBYWtgNuf75U7Sms3WeXUkbwwyY+q+ykgzxQ6VcM=;
+	s=arc-20240116; t=1736349794; c=relaxed/simple;
+	bh=TyRrmQgxzQK/2vkObaTIrS0YJV7Wp8WpknOHDtGHQ94=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m+GUSnb1iKYDOmhjyV2w64Kh1gO1FmZs6sMt4E/zkgbDeGOkRPHXZULe5ZhoWm49/EGcuzld80FFUvAYsQ0qvt/hlZgCsHpicTVtBH77jAJNvgnzoFn6MIk4lyMnxH1Qn7JfdOj4IQ4Vw+m7kAQzKs+jwqhAGoqEr4jJaP/1H0w=
+	 MIME-Version:Content-Type; b=srZ7WbfWjwSHumQyyNXtl0R7ULVwwJTq1WD/LapdOc/QlM+ecr7eH4GWQMIj+bM5j0jvc8DJFU6oFFWBkqyL2iJN8ol/UmbwitB3i7XAx1noMBx1EIgXdmhZY+r3wvU+IWCEJhXr68SdEPJxdJwmvpM4xc5ESaybJP5I9+ZazJw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04E1C4CEDD;
-	Wed,  8 Jan 2025 15:09:40 +0000 (UTC)
-Date: Wed, 8 Jan 2025 10:11:11 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBC0C4CED3;
+	Wed,  8 Jan 2025 15:23:12 +0000 (UTC)
+Date: Wed, 8 Jan 2025 10:24:43 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
- <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
- <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] tracing/kprobes: Simplify
- __trace_kprobe_create() by removing gotos
-Message-ID: <20250108101111.11dd98d8@gandalf.local.home>
-In-Reply-To: <173630227845.1453474.6513848165385480817.stgit@devnote2>
-References: <173630223453.1453474.6442447279377996686.stgit@devnote2>
-	<173630227845.1453474.6513848165385480817.stgit@devnote2>
+To: Alan Maguire <alan.maguire@oracle.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Donglin Peng
+ <dolinux.peng@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Zheng
+ Yejian <zhengyejian@huaweicloud.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] ftrace: Add print_function_args()
+Message-ID: <20250108102443.415495e1@gandalf.local.home>
+In-Reply-To: <41a44111-fa49-460a-afa3-2bad7758c60e@oracle.com>
+References: <20241223201347.609298489@goodmis.org>
+	<20241223201541.898496620@goodmis.org>
+	<CAErzpms4g8=3486Uv-PPxiA0GSkNQQm1Ez67eo-H3LtAhTAJCA@mail.gmail.com>
+	<20250108135217.9db8d131835acfb6ce4baa88@kernel.org>
+	<41a44111-fa49-460a-afa3-2bad7758c60e@oracle.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,20 +43,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  8 Jan 2025 11:11:18 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Wed, 8 Jan 2025 11:19:11 +0000
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-> -static int __trace_kprobe_create(int argc, const char *argv[])
-> +static int ___trace_kprobe_create(int argc, const char *argv[],
-> +				  struct traceprobe_parse_context *ctx)
->  {
+> >>> +       trace_seq_printf(s, "(");
+> >>> +
+> >>> +       if (!args)
+> >>> +               goto out;
+> >>> +       if (lookup_symbol_name(func, name))
+> >>> +               goto out;
+> >>> +
+> >>> +       btf = bpf_get_btf_vmlinux();
+> >>> +       if (IS_ERR_OR_NULL(btf))
+> >>> +               goto out;  
+> >>
+> >>
+> >> There is no need to the retrieve the BTF of vmlinux, as btf_find_func_proto
+> >> will return the correct BTF via its second parameter.  
+> > 
+> > Good catch! The second parameter of btf_find_func_proto() is output.
+> >  
+> 
+> One thought here - with btf_find_func_proto(), we will try kernel BTF
+> and then proceed to module BTF, iterating over all modules to find the
+> function prototype. So where we are tracing module functions this could
+> get expensive if such a function is frequently encountered, and it also
+> opens up the risk that we end up using the wrong function prototype from
+> the wrong module that just happens to match on function name.
+> 
+> So I wonder if we could use the function address to do a more guided
+> lookup. Perhaps we could use kallsyms_lookup(), retrieving the
+> (potential) module name. Then maybe modify the signature of
+> btf_find_func_proto() to take an optional module name parameter to avoid
+> iteration? None of this is strictly needed, but it may speed things up a
+> bit and give us more accurate parameter info for those few cases with
+> name clashes, so could be done as a follow-up if needed. Thanks!
 
-I'm not sure I care about all the underscores. It just adds to confusion.
-
-Maybe just:
-
-static int __create_trace_kprobe(..)
-
-?
+Well, every place this is called, we first get the function name from
+kallsyms. Perhaps I can modify the code to get the module name as well, and
+if it exists, we can pass that too?
 
 -- Steve
