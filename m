@@ -1,156 +1,503 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2658B13B2B8;
-	Thu,  9 Jan 2025 18:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45B2B677;
+	Thu,  9 Jan 2025 20:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736447897; cv=none; b=ihV6pzkhqTAjOrOjoSPjgQZC9BtNHeUx1KinuWnwJ7x8RFvEJXmt8q6Lp0clBKNjhWRpE9w/6v1OPVHFs0S01UOEr9E7isMGsnNhj7h0WLguhYfzMSKN0P8SXSAXbrqSRoZEaqopG31JUeF1P5oCZ0R/Ly2qv2HMJZ9KV8hA99c=
+	t=1736453099; cv=none; b=c3XOmONBFqDiRe6vSB/zUvajg1nGtu76vBeq6rk5d7R9at1Q3eTdZUokSbqBEvnsvGaxXs2xygu/s7qH3cpplYFD0L6xOJrLQ0xzTUWtmfsNZHHB4OFzlbiVYZ0Ex0JtCEWRdPfcGhox/WYjhVJKcRW/rsj56sx52fBuIGsbfKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736447897; c=relaxed/simple;
-	bh=zSP6D6bjK2tbK6WK5ilsvQlKdrXHFXX4Us2855EXq/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uIlqSMg5owb3IPulwqwXshr9+Tj7XFOvFhnU6jlXDVNrvEJyZz1zHxCT7Ve6QvV6YzD4JeR/0K9PjHMqNXSvywHsHa+zU9wXOe6z8K97wmB2lrnRP/p1wv2jT76Tm4sYRKsor3Fi93P7pQzMPC2ydYvQUc33vjSMZA/SuwkDy/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bdvuiuTQ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdvuiuTQ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-436a03197b2so9791155e9.2;
-        Thu, 09 Jan 2025 10:38:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736447894; x=1737052694; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKXcwekm1hFAL30tllZAc39TUJQj/M0LGLE+F7vRRWE=;
-        b=bdvuiuTQDhbO6ahJN2OhBEstQw+qfjqGSs3rxDIvf7LsLT8S/SZkbU7+eE70QA61c/
-         2xqDXXiI4/MxliF12Gjbpe4lNfQt5OS/qwwHjdLs+EdrmP+h19nbE1rsGyx3A1A7Pa3m
-         vGbdY1aC89lD0rvKOluqyL4rKy4ZTviBt79FvzpgOX2ucgrLK7scBUNi1W/49YC24eTo
-         sTg6L6bY3SWRXjtQXCSYNwdhD5RT7juk1prsLnafGRSjh2KJrmmyd+gqSWtyqFeDQFik
-         th+moVTLGOv6mdf50XA2uz4i1IQMwjoXr5VROy7KjXXFsNt+WxHURMMo8R4QHjzHdWSj
-         gwsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736447894; x=1737052694;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rKXcwekm1hFAL30tllZAc39TUJQj/M0LGLE+F7vRRWE=;
-        b=wkmTk/V53iIa2Nmt6G8RHlmaQAjSFIyP2pzmTIANoc5RXSLzaYSI+qsRU1PSIf1nHK
-         KMbdLhrhdG1MBa6Etd4Rp+wdLTq5uW0xz+qrPYntHXCwegk9dDh51FKUz/3/RmdNsrqb
-         OKhqldl4d0DmPe+xQKgQr5u1TfFvmtuyIOsaN3j2h4jTylbGkQsulbc3JhDIkV7zFIW2
-         z8LmkYzH2dW5m4y36/Ym5t3QmRnfYmWhPbeX+gY4FRDBOCph596YTmnDqp5j+ODpknFv
-         phacarUawmH9WuDh4+E+GAn6g1oZiAMbepjS84opCeRQ4WrlrwVnVmwJMtpsgBxdzBdX
-         /phw==
-X-Forwarded-Encrypted: i=1; AJvYcCWVPFrkNQMlcAxvwrexMGnrPkB3XwPjCJp45Z0mVfdkpVzAFKLLH0N6XXPZQ94+QWS0yOdrZ15oueZmOuLdGUIA4muP@vger.kernel.org, AJvYcCWfwJFrsHh6aXwcUaESyrU4M1BJwN7Pz3YYaxg8Pd5HVzhWpLg+H2z7I6Pk15AX+WO8eLQ=@vger.kernel.org, AJvYcCXlpppM08CO5sV8lF0SArHlEExX6wms70wGbZEXxPYexrE+mhJ1Weh58vjDRmBzRob36/WOxg4k/HC0dvC5@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxDRQ2034EJNSFsskkuLBKuQme+69R+TilUqaY2HLfOM7FjjT6
-	z2OywHWV7jsRG8G8c0UeiZSLbzRvjBb4tcwfWYhJA3U0fSoRTV+fx+VjR6d19gLYPGq/ZRf/c2n
-	tBr3NILhBZ+7MfAz1RZd6Oe3JWSBWZA==
-X-Gm-Gg: ASbGncsGFRlliO4A3qHk9q1I/0yAeGgkm4iFNb1TfqISaWzlb2VhHB7We5oXdoBFz85
-	0RfCsbhZhSBgzrziEhruWTvOoCG39KmrNPjeQMaULkSXYO9bHnblSLQ==
-X-Google-Smtp-Source: AGHT+IHNdPWO9416jtnYF4JAaCASYeZuXClMWM+NgvCxvJiTYZRatdC0zXIHlWdCLDcjt7Rat1YLDu57xNoo+7Gjz/I=
-X-Received: by 2002:a05:600c:35c1:b0:434:a468:4a57 with SMTP id
- 5b1f17b1804b1-436e26efb22mr65409535e9.26.1736447894204; Thu, 09 Jan 2025
- 10:38:14 -0800 (PST)
+	s=arc-20240116; t=1736453099; c=relaxed/simple;
+	bh=T1358xyOlHjIOsDTrjSjveI8N7SNjbDfhRNUNLFFILc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=by+tFaFQ99ZjdO8U5xuN7tSCcS/C4uyTWW9ZWCDgWgtI+01k7DnRzXVRjdarb4tc1R3Am/vXGIF4PA2/OwzP01sELOJG4f+B5sEUtCtVK4jvondfdn6PdaklJDxREsl5xEBGkLc2DesCsitjWuNIGlUIOkFFFv3J2t9etnGGSEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AFE9C4CED2;
+	Thu,  9 Jan 2025 20:04:57 +0000 (UTC)
+Date: Thu, 9 Jan 2025 15:06:31 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian
+ <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf
+ <jpoimboe@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2] scripts/sorttable: Move code from sorttable.h into
+ sorttable.c
+Message-ID: <20250109150631.2feaa55e@gandalf.local.home>
+In-Reply-To: <CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
+References: <20250107223217.6f7f96a5@gandalf.local.home>
+	<CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250108090457.512198-1-bigeasy@linutronix.de> <20250108090457.512198-26-bigeasy@linutronix.de>
-In-Reply-To: <20250108090457.512198-26-bigeasy@linutronix.de>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 9 Jan 2025 10:38:03 -0800
-X-Gm-Features: AbW1kvbUfmHxU6Z5lFSwhi7BVYtas4mPxgWrYnt2TsYliMKpE-tykRSfk6GtH8U
-Message-ID: <CAADnVQJPf9N1THd4DXbOC=UthYvaPmOm5xQD2rcFunGXp6h5_g@mail.gmail.com>
-Subject: Re: [PATCH v3 25/28] bpf: Use RCU in all users of __module_text_address().
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-modules@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Song Liu <song@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Steven Rostedt <rostedt@goodmis.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 8, 2025 at 1:05=E2=80=AFAM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> __module_address() can be invoked within a RCU section, there is no
-> requirement to have preemption disabled.
->
-> Replace the preempt_disable() section around __module_address() with
-> RCU.
->
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Eduard Zingerman <eddyz87@gmail.com>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Matt Bobrowski <mattbobrowski@google.com>
-> Cc: Song Liu <song@kernel.org>
-> Cc: Stanislav Fomichev <sdf@fomichev.me>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Yonghong Song <yonghong.song@linux.dev>
-> Cc: bpf@vger.kernel.org
-> Cc: linux-trace-kernel@vger.kernel.org
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/trace/bpf_trace.c | 19 ++++++++-----------
->  1 file changed, 8 insertions(+), 11 deletions(-)
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 1b8db5aee9d38..020df7b6ff90c 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -2336,10 +2336,9 @@ void bpf_put_raw_tracepoint(struct bpf_raw_event_m=
-ap *btp)
->  {
->         struct module *mod;
->
-> -       preempt_disable();
-> +       guard(rcu)();
->         mod =3D __module_address((unsigned long)btp);
->         module_put(mod);
-> -       preempt_enable();
->  }
->
->  static __always_inline
-> @@ -2907,16 +2906,14 @@ static int get_modules_for_addrs(struct module **=
-*mods, unsigned long *addrs, u3
->         for (i =3D 0; i < addrs_cnt; i++) {
->                 struct module *mod;
->
-> -               preempt_disable();
-> -               mod =3D __module_address(addrs[i]);
-> -               /* Either no module or we it's already stored  */
-> -               if (!mod || has_module(&arr, mod)) {
-> -                       preempt_enable();
-> -                       continue;
-> +               scoped_guard(rcu) {
-> +                       mod =3D __module_address(addrs[i]);
-> +                       /* Either no module or we it's already stored  */
-> +                       if (!mod || has_module(&arr, mod))
-> +                               continue;
-> +                       if (!try_module_get(mod))
-> +                               err =3D -EINVAL;
+On Thu, 9 Jan 2025 10:24:05 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-lgtm.
-Should we take into bpf-next or the whole set is handled together
-somewhere?
+> On Tue, 7 Jan 2025 at 19:30, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > +
+> > +static int (*compare_extable)(const void *a, const void *b);
+> > +static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+> > +static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);  
+> ...
+> 
+> Side note - and independently of the pure code movement - wouldn't it
+> be nice to just make this a structure of function pointers, and then
+> instead of this:
+
+I do that in some of my personal code, but then all the calls to the
+functions tend to be:
+
+	e.ehdr_shoff(..); or e->ehdr_shoff(..);
+
+instead of simply having:
+
+	ehdr_shoff(..);
+
+Hmm, if the structure is global, I guess then we could just have the helper
+functions use the global variable. But then, instead of having:
+
+static int (*compare_extable)(const void *a, const void *b);
+static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
+static uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
+static uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
+static uint64_t (*shdr_addr)(Elf_Shdr *shdr);
+static uint64_t (*shdr_offset)(Elf_Shdr *shdr);
+static uint64_t (*shdr_size)(Elf_Shdr *shdr);
+static uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
+static uint32_t (*shdr_link)(Elf_Shdr *shdr);
+static uint32_t (*shdr_name)(Elf_Shdr *shdr);
+static uint32_t (*shdr_type)(Elf_Shdr *shdr);
+static uint8_t (*sym_type)(Elf_Sym *sym);
+static uint32_t (*sym_name)(Elf_Sym *sym);
+static uint64_t (*sym_value)(Elf_Sym *sym);
+static uint16_t (*sym_shndx)(Elf_Sym *sym);
+static uint64_t (*rela_offset)(Elf_Rela *rela);
+static uint64_t (*rela_info)(Elf_Rela *rela);
+static uint64_t (*rela_addend)(Elf_Rela *rela);
+static void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
+
+	case ELFCLASS32:
+		compare_extable		= compare_extable_32;
+		ehdr_shoff		= ehdr32_shoff;
+		ehdr_shentsize		= ehdr32_shentsize;
+		ehdr_shstrndx		= ehdr32_shstrndx;
+		ehdr_shnum		= ehdr32_shnum;
+		shdr_addr		= shdr32_addr;
+		shdr_offset		= shdr32_offset;
+		shdr_link		= shdr32_link;
+		shdr_size		= shdr32_size;
+		shdr_name		= shdr32_name;
+		shdr_type		= shdr32_type;
+		shdr_entsize		= shdr32_entsize;
+		sym_type		= sym32_type;
+		sym_name		= sym32_name;
+		sym_value		= sym32_value;
+		sym_shndx		= sym32_shndx;
+		rela_offset		= rela32_offset;
+		rela_info		= rela32_info;
+		rela_addend		= rela32_addend;
+		rela_write_addend	= rela32_write_addend;
+		long_size		= 4;
+		extable_ent_size	= 8;
+		break;
+	case ELFCLASS64:
+		compare_extable		= compare_extable_64;
+		ehdr_shoff		= ehdr64_shoff;
+		ehdr_shentsize		= ehdr64_shentsize;
+		ehdr_shstrndx		= ehdr64_shstrndx;
+		ehdr_shnum		= ehdr64_shnum;
+		shdr_addr		= shdr64_addr;
+		shdr_offset		= shdr64_offset;
+		shdr_link		= shdr64_link;
+		shdr_size		= shdr64_size;
+		shdr_name		= shdr64_name;
+		shdr_type		= shdr64_type;
+		shdr_entsize		= shdr64_entsize;
+		sym_type		= sym64_type;
+		sym_name		= sym64_name;
+		sym_value		= sym64_value;
+		sym_shndx		= sym64_shndx;
+		rela_offset		= rela64_offset;
+		rela_info		= rela64_info;
+		rela_addend		= rela64_addend;
+		rela_write_addend	= rela64_write_addend;
+		long_size		= 8;
+		extable_ent_size	= 16;
+
+		break;
+
+
+We would have:
+
+static struct elf_funcs {
+	int (*compare_extable)(const void *a, const void *b);
+	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+	uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
+	uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
+	uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
+	uint64_t (*shdr_addr)(Elf_Shdr *shdr);
+	uint64_t (*shdr_offset)(Elf_Shdr *shdr);
+	uint64_t (*shdr_size)(Elf_Shdr *shdr);
+	uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
+	uint32_t (*shdr_link)(Elf_Shdr *shdr);
+	uint32_t (*shdr_name)(Elf_Shdr *shdr);
+	uint32_t (*shdr_type)(Elf_Shdr *shdr);
+	uint8_t (*sym_type)(Elf_Sym *sym);
+	uint32_t (*sym_name)(Elf_Sym *sym);
+	uint64_t (*sym_value)(Elf_Sym *sym);
+	uint16_t (*sym_shndx)(Elf_Sym *sym);
+} e;
+
+// Hmm, I could add the helper function into the macros:
+
+#define EHDR_HALF(fn_name)				\
+static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
+{							\
+	return r2(&ehdr->e64.e_##fn_name);		\
+}							\
+							\
+static uint16_t ehdr32_##fn_name(Elf_Ehdr *ehdr)	\
+{							\
+	return r2(&ehdr->e32.e_##fn_name);		\
+}							\
+							\
+static uint16 ehdr_##fn_name(Elf_Ehdr *ehdr)		\
+{							\
+	return e.ehdr_##fn_name(ehdr);			\
+}
+
+[..]
+
+	case ELFCLASS32: {
+		struct elf_funcs efuncs = {
+			.compare_extable	= compare_extable_32,
+			.ehdr_shoff		= ehdr32_shoff,
+			.ehdr_shentsize		= ehdr32_shentsize,
+			[..]
+		};
+
+		e = efuncs;
+		long_size		= 4;
+		extable_ent_size	= 8;
+		}
+		break;
+	case ELFCLASS64: {
+		struct elf_funcs efuncs = {
+			.compare_extable	= compare_extable_64,
+			.ehdr_shoff		= ehdr64_shoff,
+			.ehdr_shentsize		= ehdr64_shentsize,
+			[..]
+		};
+
+		e = efuncs;
+		long_size		= 8;
+		extable_ent_size	= 16;
+		}
+		break;
+
+
+Which would give me this patch on top of this:
+
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 656c1e9b5ad9..9f41575afd7a 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -85,6 +85,25 @@ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
++static struct elf_funcs {
++	int (*compare_extable)(const void *a, const void *b);
++	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
++	uint64_t (*shdr_addr)(Elf_Shdr *shdr);
++	uint64_t (*shdr_offset)(Elf_Shdr *shdr);
++	uint64_t (*shdr_size)(Elf_Shdr *shdr);
++	uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
++	uint32_t (*shdr_link)(Elf_Shdr *shdr);
++	uint32_t (*shdr_name)(Elf_Shdr *shdr);
++	uint32_t (*shdr_type)(Elf_Shdr *shdr);
++	uint8_t (*sym_type)(Elf_Sym *sym);
++	uint32_t (*sym_name)(Elf_Sym *sym);
++	uint64_t (*sym_value)(Elf_Sym *sym);
++	uint16_t (*sym_shndx)(Elf_Sym *sym);
++} e;
++
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+ {
+ 	return r8(&ehdr->e64.e_shoff);
+@@ -95,6 +114,11 @@ static uint64_t ehdr32_shoff(Elf_Ehdr *ehdr)
+ 	return r(&ehdr->e32.e_shoff);
+ }
+ 
++static uint64_t ehdr_shoff(Elf_Ehdr *ehdr)
++{
++	return e.ehdr_shoff(ehdr);
++}
++
+ #define EHDR_HALF(fn_name)				\
+ static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
+ {							\
+@@ -104,6 +128,11 @@ static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
+ static uint16_t ehdr32_##fn_name(Elf_Ehdr *ehdr)	\
+ {							\
+ 	return r2(&ehdr->e32.e_##fn_name);		\
++}							\
++							\
++static uint16_t ehdr_##fn_name(Elf_Ehdr *ehdr)		\
++{							\
++	return e.ehdr_##fn_name(ehdr);			\
+ }
+ 
+ EHDR_HALF(shentsize)
+@@ -119,6 +148,11 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++							\
++static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ #define SHDR_ADDR(fn_name)				\
+@@ -130,6 +164,11 @@ static uint64_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint64_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++							\
++static uint64_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ #define SHDR_WORD(fn_name)				\
+@@ -141,6 +180,10 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ SHDR_ADDR(addr)
+@@ -161,6 +204,11 @@ static uint64_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint64_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint64_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ #define SYM_WORD(fn_name)			\
+@@ -172,6 +220,11 @@ static uint32_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint32_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint32_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ #define SYM_HALF(fn_name)			\
+@@ -183,6 +236,11 @@ static uint16_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint16_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r2(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint16_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ static uint8_t sym64_type(Elf_Sym *sym)
+@@ -195,6 +253,11 @@ static uint8_t sym32_type(Elf_Sym *sym)
+ 	return ELF32_ST_TYPE(sym->e32.st_info);
+ }
+ 
++static uint8_t sym_type(Elf_Sym *sym)
++{
++	return e.sym_type(sym);
++}
++
+ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+@@ -322,29 +385,16 @@ static int compare_extable_64(const void *a, const void *b)
+ 	return av > bv;
+ }
+ 
++static int compare_extable(const void *a, const void *b)
++{
++	return e.compare_extable(a, b);
++}
++
+ static inline void *get_index(void *start, int entsize, int index)
+ {
+ 	return start + (entsize * index);
+ }
+ 
+-
+-static int (*compare_extable)(const void *a, const void *b);
+-static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
+-static uint64_t (*shdr_addr)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_offset)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_size)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_link)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_name)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_type)(Elf_Shdr *shdr);
+-static uint8_t (*sym_type)(Elf_Sym *sym);
+-static uint32_t (*sym_name)(Elf_Sym *sym);
+-static uint64_t (*sym_value)(Elf_Sym *sym);
+-static uint16_t (*sym_shndx)(Elf_Sym *sym);
+-
+ static int extable_ent_size;
+ static int long_size;
+ 
+@@ -864,7 +914,30 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (ehdr->e32.e_ident[EI_CLASS]) {
+-	case ELFCLASS32:
++	case ELFCLASS32: {
++		struct elf_funcs efuncs = {
++			.compare_extable	= compare_extable_32,
++			.ehdr_shoff		= ehdr32_shoff,
++			.ehdr_shentsize		= ehdr32_shentsize,
++			.ehdr_shstrndx		= ehdr32_shstrndx,
++			.ehdr_shnum		= ehdr32_shnum,
++			.shdr_addr		= shdr32_addr,
++			.shdr_offset		= shdr32_offset,
++			.shdr_link		= shdr32_link,
++			.shdr_size		= shdr32_size,
++			.shdr_name		= shdr32_name,
++			.shdr_type		= shdr32_type,
++			.shdr_entsize		= shdr32_entsize,
++			.sym_type		= sym32_type,
++			.sym_name		= sym32_name,
++			.sym_value		= sym32_value,
++			.sym_shndx		= sym32_shndx,
++		};
++
++		e = efuncs;
++		long_size		= 4;
++		extable_ent_size	= 8;
++
+ 		if (r2(&ehdr->e32.e_ehsize) != sizeof(Elf32_Ehdr) ||
+ 		    r2(&ehdr->e32.e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+@@ -872,26 +945,32 @@ static int do_file(char const *const fname, void *addr)
+ 			return -1;
+ 		}
+ 
+-		compare_extable		= compare_extable_32;
+-		ehdr_shoff		= ehdr32_shoff;
+-		ehdr_shentsize		= ehdr32_shentsize;
+-		ehdr_shstrndx		= ehdr32_shstrndx;
+-		ehdr_shnum		= ehdr32_shnum;
+-		shdr_addr		= shdr32_addr;
+-		shdr_offset		= shdr32_offset;
+-		shdr_link		= shdr32_link;
+-		shdr_size		= shdr32_size;
+-		shdr_name		= shdr32_name;
+-		shdr_type		= shdr32_type;
+-		shdr_entsize		= shdr32_entsize;
+-		sym_type		= sym32_type;
+-		sym_name		= sym32_name;
+-		sym_value		= sym32_value;
+-		sym_shndx		= sym32_shndx;
+-		long_size		= 4;
+-		extable_ent_size	= 8;
++		}
+ 		break;
+-	case ELFCLASS64:
++	case ELFCLASS64: {
++		struct elf_funcs efuncs = {
++			.compare_extable	= compare_extable_64,
++			.ehdr_shoff		= ehdr64_shoff,
++			.ehdr_shentsize		= ehdr64_shentsize,
++			.ehdr_shstrndx		= ehdr64_shstrndx,
++			.ehdr_shnum		= ehdr64_shnum,
++			.shdr_addr		= shdr64_addr,
++			.shdr_offset		= shdr64_offset,
++			.shdr_link		= shdr64_link,
++			.shdr_size		= shdr64_size,
++			.shdr_name		= shdr64_name,
++			.shdr_type		= shdr64_type,
++			.shdr_entsize		= shdr64_entsize,
++			.sym_type		= sym64_type,
++			.sym_name		= sym64_name,
++			.sym_value		= sym64_value,
++			.sym_shndx		= sym64_shndx,
++		};
++
++		e = efuncs;
++		long_size		= 8;
++		extable_ent_size	= 16;
++
+ 		if (r2(&ehdr->e64.e_ehsize) != sizeof(Elf64_Ehdr) ||
+ 		    r2(&ehdr->e64.e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+@@ -900,25 +979,7 @@ static int do_file(char const *const fname, void *addr)
+ 			return -1;
+ 		}
+ 
+-		compare_extable		= compare_extable_64;
+-		ehdr_shoff		= ehdr64_shoff;
+-		ehdr_shentsize		= ehdr64_shentsize;
+-		ehdr_shstrndx		= ehdr64_shstrndx;
+-		ehdr_shnum		= ehdr64_shnum;
+-		shdr_addr		= shdr64_addr;
+-		shdr_offset		= shdr64_offset;
+-		shdr_link		= shdr64_link;
+-		shdr_size		= shdr64_size;
+-		shdr_name		= shdr64_name;
+-		shdr_type		= shdr64_type;
+-		shdr_entsize		= shdr64_entsize;
+-		sym_type		= sym64_type;
+-		sym_name		= sym64_name;
+-		sym_value		= sym64_value;
+-		sym_shndx		= sym64_shndx;
+-		long_size		= 8;
+-		extable_ent_size	= 16;
+-
++		}
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
+
+
+Is that what you are thinking?
+
+-- Steve
