@@ -1,158 +1,241 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AE42054E7;
-	Thu,  9 Jan 2025 22:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BCB205E01;
+	Thu,  9 Jan 2025 22:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736460824; cv=none; b=MNdjmpgbfwDvA9F0dvssULD92YgaDQ98ZU6ABV9M8E3Fez7Yx8PI37Xnqj3irI6FMsxb4WpMTh0UQak7kQz2Qt+9ncWMzbTDtcKtthY7YY6wJr9O3TIkVJASYZrgW0i8XiYwx6fPsmpKR3Q+Xs41btiVLYWD400TkEqnv6VWSJg=
+	t=1736462706; cv=none; b=dj+oydjkoex7G5ePVW9Ml+YfzhgRwelRUG8l2DQwG8O95JUV5Mo6m6EURsbXFF14anTQPzImQRGz+SRZsC5iy5wbyaOApWUMaTFL8RjGlc0R92VhQp/I2yKGc7oGktMVxsyXhJUMVl7PdHr3jAoBbR0jj3z8s+a5W9BeKKJApZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736460824; c=relaxed/simple;
-	bh=n+jQUC9Jm2XnIGTjzYqamZTlEyrbvfx8+RyyaO4UvBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uyHVMlU0hh8YpyrFGCPKiCMm1vJjtnB6lv6to3ifh4yIWUN+tuLMzNPvXMTVOgfpu4QS/3zfrFFefyxMcsfo5zOWNzbL/Ph13H0HGkhDN0EEVJX8x24nHMOYlBH6++j5kHAh1kRQTGwaolrbGJoVGhJoDDwq6jkTrKPe+8JdTJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HbBHBXUy; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbBHBXUy"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ef6c56032eso1873708a91.2;
-        Thu, 09 Jan 2025 14:13:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736460822; x=1737065622; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=THyr0bFENuRK/x7hMtFBy9YWHezz9iNPAjNEHK4Wt68=;
-        b=HbBHBXUy25+pbwGT2kEN+cYcvXETJ7JtTl+18BK/BQWhYC+OcohNVhq2BQrAWfg8RW
-         VeqOhy9YykmBIUehWT2zuy57FJjKwYZb7GpujdTwHEiom99sT870oD+QdHDjLMMGFDt7
-         iw3Z/0W+2hemdw4LQ9D2HtzYUaiTwlJYYucJtGDIcxPEatfUC8Um3RnmlZsJnH0mRpxH
-         Kll+GSOP/bhQsi6Z67Nwy35yCls382VHW2SEZIb/1F5o8ndg51tu+fh3D2id0/M0EFmp
-         MVYsdjHBXXXeRodBleP5ZTneHc4ctilsjK2wllcEi2dGlBJ0uiov4hhCwkrY1i0lH3bf
-         NaeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736460822; x=1737065622;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=THyr0bFENuRK/x7hMtFBy9YWHezz9iNPAjNEHK4Wt68=;
-        b=WWhqXdU8szQF1Qz9QVSUAHDXJUE+IFsIHvGbmeJlx7z35ex70TEYzmW4L+O4GFLv4M
-         oQPsd9Noo1kFhyM+KEJzTHZTkQHJ63JbXVL580qH1Sk5dvGEgQ+CTrxEteZZgRDqdibR
-         RlVp3wnzoxGHedMPELlWHQEh8AzeEvAcKj78LPDlUBpimdjR8S456ZoFThYOLllxlULH
-         vAwO2mVYgAVjH2JhkocVu8UtTSs7TAvfCMAkO99a+2Cn84LLg/0ozwN0bY23e27MrZg1
-         EWujD4veTMku9STruhODQc22K4E6pbzdtRiCmq7PifR6yFjhyffzswqltTZPSGYFwfc/
-         0r3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ6mtGX/hbbW8h8kkJJEDpN1yfzG+nF/oMRcrxpM8nTixGOgC0s0dBuoRxusLc4C8i7AwKojmHkvmaVwlg@vger.kernel.org, AJvYcCUryjUB5ZJDSjftruZ4O25u9PdtmsiGv95zH2CbuAl1OntMA4E/MyeJ3LusKyvTjGjkqo8=@vger.kernel.org, AJvYcCVoLkhC8dJCrU2rJpfx+5NbM9txln2xpVVZB9sjrFsT1R9IgY4bsqBzSzkJXHGF/8SmMjmY+TdWLopATI3M1FtlpG0R@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ2367HvM8SuCdhJw2aU/IkcOjq8AqF+cLEDvIB78yzPN86utc
-	94lVXuTjCf6WXyiuqcCmeM7T3xwrZrPFniLO1jREIcIr2kT5gd39uaFrCumR570r+D104VLjTk3
-	rWpgv/ReQf9yUOUuaMCc3BIINm7amxnRd
-X-Gm-Gg: ASbGncsLGPeKxPr8QTwhoNU2D3J3GtcrkVZ5KRnDqNzG/4tESb2skiQdkBR9qnJTkjO
-	j23/vMEFw44oyCK6U1ivYMNkycJMNzxIj6TxHR4ANilPxtV5JgK4F4w==
-X-Google-Smtp-Source: AGHT+IGB4idtyCwBlsDTPAqYT6JY5/HUe6ULdeSVhwHPLZym9wE9lNRCRBpIz/KIDpDvEyH+bhApWHQkk4SvDW+O8mI=
-X-Received: by 2002:a17:90b:270d:b0:2ef:31a9:95c6 with SMTP id
- 98e67ed59e1d1-2f548ebf526mr13236642a91.14.1736460822034; Thu, 09 Jan 2025
- 14:13:42 -0800 (PST)
+	s=arc-20240116; t=1736462706; c=relaxed/simple;
+	bh=oY0L2X7kpoHNhmMwdl6T3RGBaQGssS/wKbmeWvkU05A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EOgvpCBC/PVAPz+wK0KCjvyF+2nQ/FO066kkSsOcga7h54xpgCkNdPtOWftmgCci1W4nYyCy5sjkem489GicwtKGt+B9lvhqbOiQWuab+P0yIvd2FUXyd2DIJEJ3p61FZ4vBGRpCiA0dvhKBMoEBT6Sb5+Au65WJVuJD9YUSqWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87347C4CED2;
+	Thu,  9 Jan 2025 22:45:05 +0000 (UTC)
+Date: Thu, 9 Jan 2025 17:46:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ jochensp@jochen.sprickerhof.de
+Subject: [PATCH] ftrace: Implement :mod: cache filtering on kernel command
+ line
+Message-ID: <20250109174639.32e6f43a@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109141440.2692173-1-jolsa@kernel.org>
-In-Reply-To: <20250109141440.2692173-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 9 Jan 2025 14:13:28 -0800
-X-Gm-Features: AbW1kvYFr51BqGuo-AxCk5g8kARhcXpQia9ZKMl5TtQ4vgYss-dMmKL2OzraUfY
-Message-ID: <CAEf4BzZ2vYmZ9DNy7iaxoaC6imszBnwA-1OCJpuoKcBUGgb_oQ@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Fix race in uprobe_free_utask
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Max Makarov <maxpain@linux.com>, bpf@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 9, 2025 at 6:14=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Max Makarov reported kernel panic [1] in perf user callchain code.
->
-> The reason for that is the race between uprobe_free_utask and bpf
-> profiler code doing the perf user stack unwind and is triggered
-> within uprobe_free_utask function:
->   - after current->utask is freed and
->   - before current->utask is set to NULL
->
->  general protection fault, probably for non-canonical address 0x9e759c37e=
-e555c76: 0000 [#1] SMP PTI
->  RIP: 0010:is_uprobe_at_func_entry+0x28/0x80
->  ...
->   ? die_addr+0x36/0x90
->   ? exc_general_protection+0x217/0x420
->   ? asm_exc_general_protection+0x26/0x30
->   ? is_uprobe_at_func_entry+0x28/0x80
->   perf_callchain_user+0x20a/0x360
->   get_perf_callchain+0x147/0x1d0
->   bpf_get_stackid+0x60/0x90
->   bpf_prog_9aac297fb833e2f5_do_perf_event+0x434/0x53b
->   ? __smp_call_single_queue+0xad/0x120
->   bpf_overflow_handler+0x75/0x110
->   ...
->   asm_sysvec_apic_timer_interrupt+0x1a/0x20
->  RIP: 0010:__kmem_cache_free+0x1cb/0x350
->  ...
->   ? uprobe_free_utask+0x62/0x80
->   ? acct_collect+0x4c/0x220
->   uprobe_free_utask+0x62/0x80
->   mm_release+0x12/0xb0
->   do_exit+0x26b/0xaa0
->   __x64_sys_exit+0x1b/0x20
->   do_syscall_64+0x5a/0x80
->
-> It can be easily reproduced by running following commands in
-> separate terminals:
->
->   # while :; do bpftrace -e 'uprobe:/bin/ls:_start  { printf("hit\n"); }'=
- -c ls; done
->   # bpftrace -e 'profile:hz:100000 { @[ustack()] =3D count(); }'
->
-> Fixing this by making sure current->utask pointer is set to NULL
-> before we start to release the utask object.
->
-> [1] https://github.com/grafana/pyroscope/issues/3673
-> Reported-by: Max Makarov <maxpain@linux.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  kernel/events/uprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
+From: Steven Rostedt <rostedt@goodmis.org>
 
-ah, it's interrupt/NMI checking current->utask, makes total sense,
-thanks for the fix!
+Module functions can be set to set_ftrace_filter before the module is
+loaded.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+  # echo :mod:snd_hda_intel > set_ftrace_filter
 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index fa04b14a7d72..5d71ef85420c 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1915,6 +1915,7 @@ void uprobe_free_utask(struct task_struct *t)
->         if (!utask)
->                 return;
->
-> +       t->utask =3D NULL;
->         WARN_ON_ONCE(utask->active_uprobe || utask->xol_vaddr);
->
->         timer_delete_sync(&utask->ri_timer);
-> @@ -1924,7 +1925,6 @@ void uprobe_free_utask(struct task_struct *t)
->                 ri =3D free_ret_instance(ri, true /* cleanup_hprobe */);
->
->         kfree(utask);
-> -       t->utask =3D NULL;
->  }
->
->  #define RI_TIMER_PERIOD (HZ / 10) /* 100 ms */
-> --
-> 2.47.0
->
+This will enable all the functions for the module snd_hda_intel. If that
+module is not loaded, it is "cached" in the trace array for when the
+module is loaded, its functions will be traced.
+
+But this is not implemented in the kernel command line. That's because the
+kernel command line filtering is added very early in boot up as it is
+needed to be done before boot time function tracing can start, which is
+also available very early in boot up. The code used by the
+"set_ftrace_filter" file can not be used that early as it depends on some
+other initialization to occur first. But some of the functions can.
+
+Implement the ":mod:" feature of "set_ftrace_filter" in the kernel command
+line parsing. Now function tracing on just a single module that is loaded
+at boot up can be done.
+
+Adding:
+
+ ftrace=function ftrace_filter=:mod:sna_hda_intel
+
+To the kernel command line will only enable the sna_hda_intel module
+functions when the module is loaded, and it will start tracing.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 67 +++++++++++++++++++++++++++++++++++++------
+ kernel/trace/trace.c  |  6 ++++
+ kernel/trace/trace.h  |  2 ++
+ 3 files changed, 66 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 2e113f8b13a2..5f6b169e3358 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4982,10 +4982,6 @@ static int cache_mod(struct trace_array *tr,
+ 	return ftrace_add_mod(tr, func, module, enable);
+ }
+ 
+-static int
+-ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
+-		 int reset, int enable);
+-
+ #ifdef CONFIG_MODULES
+ static void process_mod_list(struct list_head *head, struct ftrace_ops *ops,
+ 			     char *mod, bool enable)
+@@ -5788,7 +5784,7 @@ ftrace_match_addr(struct ftrace_hash *hash, unsigned long *ips,
+ static int
+ ftrace_set_hash(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 		unsigned long *ips, unsigned int cnt,
+-		int remove, int reset, int enable)
++		int remove, int reset, int enable, char *mod)
+ {
+ 	struct ftrace_hash **orig_hash;
+ 	struct ftrace_hash *hash;
+@@ -5814,7 +5810,15 @@ ftrace_set_hash(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 		goto out_regex_unlock;
+ 	}
+ 
+-	if (buf && !ftrace_match_records(hash, buf, len)) {
++	if (buf && !match_records(hash, buf, len, mod)) {
++		/* If this was for a module and nothing was enabled, flag it */
++		if (mod)
++			(*orig_hash)->flags |= FTRACE_HASH_FL_MOD;
++
++		/*
++		 * Even if it is a mod, return error to let caller know
++		 * nothing was added
++		 */
+ 		ret = -EINVAL;
+ 		goto out_regex_unlock;
+ 	}
+@@ -5839,7 +5843,7 @@ static int
+ ftrace_set_addr(struct ftrace_ops *ops, unsigned long *ips, unsigned int cnt,
+ 		int remove, int reset, int enable)
+ {
+-	return ftrace_set_hash(ops, NULL, 0, ips, cnt, remove, reset, enable);
++	return ftrace_set_hash(ops, NULL, 0, ips, cnt, remove, reset, enable, NULL);
+ }
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+@@ -6217,7 +6221,38 @@ static int
+ ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
+ 		 int reset, int enable)
+ {
+-	return ftrace_set_hash(ops, buf, len, NULL, 0, 0, reset, enable);
++	char *mod, *func, *command, *next = buf;
++	char *tmp __free(kfree) = NULL;
++	struct trace_array *tr = ops->private;
++	int ret;
++
++	func = strsep(&next, ":");
++
++	/* This can also handle :mod: parsing */
++	if (next) {
++		if (!tr)
++			return -EINVAL;
++
++		command = strsep(&next, ":");
++		if (strcmp(command, "mod") != 0)
++			return -EINVAL;
++
++		mod = next;
++		len = command - func;
++		/* Save the original func as ftrace_set_hash() can modify it */
++		tmp = kstrdup(func, GFP_KERNEL);
++	}
++
++	ret = ftrace_set_hash(ops, func, len, NULL, 0, 0, reset, enable, mod);
++
++	if (tr && mod && ret < 0) {
++		/* Did tmp fail to allocate? */
++		if (!tmp)
++			return -ENOMEM;
++		ret = cache_mod(tr, tmp, mod, enable);
++	}
++
++	return ret;
+ }
+ 
+ /**
+@@ -6381,6 +6416,14 @@ ftrace_set_early_filter(struct ftrace_ops *ops, char *buf, int enable)
+ 
+ 	ftrace_ops_init(ops);
+ 
++	/* The trace_array is needed for caching module function filters */
++	if (!ops->private) {
++		struct trace_array *tr = trace_get_global_array();
++
++		ops->private = tr;
++		ftrace_init_trace_array(tr);
++	}
++
+ 	while (buf) {
+ 		func = strsep(&buf, ",");
+ 		ftrace_set_regex(ops, func, strlen(func), 0, enable);
+@@ -7814,9 +7857,14 @@ static void ftrace_update_trampoline(struct ftrace_ops *ops)
+ 
+ void ftrace_init_trace_array(struct trace_array *tr)
+ {
++	if (tr->flags & TRACE_ARRAY_FL_MOD_INIT)
++		return;
++
+ 	INIT_LIST_HEAD(&tr->func_probes);
+ 	INIT_LIST_HEAD(&tr->mod_trace);
+ 	INIT_LIST_HEAD(&tr->mod_notrace);
++
++	tr->flags |= TRACE_ARRAY_FL_MOD_INIT;
+ }
+ #else
+ 
+@@ -7845,7 +7893,8 @@ static void ftrace_update_trampoline(struct ftrace_ops *ops)
+ __init void ftrace_init_global_array_ops(struct trace_array *tr)
+ {
+ 	tr->ops = &global_ops;
+-	tr->ops->private = tr;
++	if (!global_ops.private)
++		global_ops.private = tr;
+ 	ftrace_init_trace_array(tr);
+ 	init_array_fgraph_ops(tr, tr->ops);
+ }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index f8aebcb01e62..5451f3e2e17b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -10660,6 +10660,12 @@ __init static int tracer_alloc_buffers(void)
+ 	return ret;
+ }
+ 
++/* Used to set module cached ftrace filtering at boot up */
++__init struct trace_array *trace_get_global_array(void)
++{
++	return &global_trace;
++}
++
+ void __init ftrace_boot_snapshot(void)
+ {
+ #ifdef CONFIG_TRACER_MAX_TRACE
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 9691b47b5f3d..b6e60013ce0f 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -432,6 +432,7 @@ struct trace_array {
+ enum {
+ 	TRACE_ARRAY_FL_GLOBAL	= BIT(0),
+ 	TRACE_ARRAY_FL_BOOT	= BIT(1),
++	TRACE_ARRAY_FL_MOD_INIT	= BIT(2),
+ };
+ 
+ extern struct list_head ftrace_trace_arrays;
+@@ -1114,6 +1115,7 @@ void ftrace_destroy_function_files(struct trace_array *tr);
+ int ftrace_allocate_ftrace_ops(struct trace_array *tr);
+ void ftrace_free_ftrace_ops(struct trace_array *tr);
+ void ftrace_init_global_array_ops(struct trace_array *tr);
++struct trace_array *trace_get_global_array(void);
+ void ftrace_init_array_ops(struct trace_array *tr, ftrace_func_t func);
+ void ftrace_reset_array_ops(struct trace_array *tr);
+ void ftrace_init_tracefs(struct trace_array *tr, struct dentry *d_tracer);
+-- 
+2.45.2
+
