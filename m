@@ -1,98 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353901891A8;
-	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8CC18873E
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jan 2025 18:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736445964; cv=none; b=VvHEyCfUg876uGgrEmYxXy8UlEdiwWGoaWWMkr5oFovrJb2FwTebjDin5EpnoVGYN28ukq2myVh045svMJRL8JsE63HRfqjdXQUl0H7gIUF9MzCVFKBKpnJjQbHKPxKz4Cwf4idIawEkLnve+ppo6OhZbiIIU0jjqIZfLC+2X38=
+	t=1736447068; cv=none; b=ASmJb0t0kKyIc4ySpVe4RpWkH/JjP/6fvC5wNaogLZioFZX0eDHoM1In4ovVPZPNQAUkQz2lzeMlKLjJStN/sy2gOmC+E3sDUY9I2DDE3ET+CkM+IwYK9DjPkwFd1co0dwAYkkxobMLjpOATNoMevMan7EBPv0rglJ9f0taOPEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736445964; c=relaxed/simple;
-	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
+	s=arc-20240116; t=1736447068; c=relaxed/simple;
+	bh=+vLgqIeCzolaIxQPxdz01oEdjsD8WPzfx1aPdgzHvxQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VZDfMAbOVoBTLRuPumm/61F/h2i1GJZRnbEgzMhnss0baXDo1f0XYOpYBi4tzja4LFrqQzafYP5JJv1S7AdbWgoNz5EGEy4gUerg2ncDitCupUAfGFl3lErZBMARDgI5diRRJnipAROC50bHeFT1zHg9fSZZr/jK+qNPqzMkH2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXJVC9TE; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=FTDiDsKLi9BSjvfnXpN0rE848HJMRCX8YHen3cd/08g0czn0BdUbix87oNRGuS2rcStbh/n6SXIQHrcT/V9BHI5TSkGhbusO67gvKrNiAffY+TzBlvTLL1gKANzNJbH7PzWGVbzDPc2ESuY20rSAnxjT2gaGWhmetVVJvg/Vhb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QkzusyPU; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXJVC9TE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C334DC4CEE4;
-	Thu,  9 Jan 2025 18:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736445963;
-	bh=rp9xKD+8m1msQ0xxbCs9oZzFyU1GURrqUZhq3NbpvyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hXJVC9TEna9TWYKbS9F02aIUvOHalq4E7m1+cvMk0ArDdbnyNkOQeESQ7Ur7QTEYq
-	 oV3fJnNHiU6ugTU9/tuOjHdJ9qaR831jsML8BcJ2B2+uzRQfA4kpmr3AmZ+XqRvw70
-	 BTN8HX8ggLtR2WOIhN2X2Ipa4OKa5qs1wwTNGfy1p+9su4jHqsiWIAwGFmgaxU7Nfw
-	 H9Abn1fQ/2SPP2QU6lVw0EYHITfjtwSWp9wIQJbaVZRVNv4TDYE1jWwRNuescPEqI8
-	 vYK392uOFALwuMqP1HoC1bERclFcBuYV7fmAeGJqkaXECHPwUoHQw9LVho0fFgK9tk
-	 fJ+fXn+JQWXLQ==
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-844e61f3902so84636339f.0;
-        Thu, 09 Jan 2025 10:06:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU7vJw0Yhmq1HoAJE/OsvsfkQbIo3Qpr1D+sW06TxmQ5b/DqPayTYNKisT6YlckhoJ/IfnE5UGOvIbJrutD@vger.kernel.org, AJvYcCUKdmxyZjBp3BN7k7bDpN4N42WSL1faJzx46lngDyuVmFlNTI2wAZ/leYEmL86hu//fxZPWQhEABSYGBg==@vger.kernel.org, AJvYcCULY3K6q3eLHaJUinkOdCYzYWWRKDGEXIaMe8mEfRkN7N0K8Ln5LelCSICnWBP+PVw21khAYRY0I/yXGM34ex8875Lt@vger.kernel.org, AJvYcCVCk/MjPKokyvIFdvJp7RsCvf++XNAKuITebk7mFTLuT4l7VFi6vfvJas82zOGLosM7pdOUakoKNiRPAVV1L9BY@vger.kernel.org, AJvYcCVFFZUa45jD1kY7O9eFU5SsUOqiXanSiyk6iItfL/7JIGCYDwQAnECEOmbGSW/J+JeHcB6lQHM7lC43jd5b@vger.kernel.org, AJvYcCVKb72VeDQU6u4ACgTVz6YEQ9f7JtoFU9ctAvBDnt3aKvFaKQ54WshcK/7b9jpNv5D7FWre/NxGxAk=@vger.kernel.org, AJvYcCWSrc8M6fjpLnYyFHGOEb0RYL+mB/Fgxv1FV7zmoLzsAJ/Wtn0fIkCarRXTIngSvrano0x6/jdeyxsYuYEC@vger.kernel.org, AJvYcCWtgvWJyxsKGbn8X+vDuQqN1WrpeWmOWctnx7Ti3HzLu15h1v1usBlf1r3HeMsvDVagzn8TvL7uzPxfkw==@vger.kernel.org, AJvYcCX1Empd1OmdV4QaxGiw76Wp2zNEdc/H8iMRZeDlhlVKhz+vvxL6oJW0ZpjcVO3ki6VJyF8ALxZck6AoB/K1dw==@vger.kernel.org, AJvYcCXCdgnNYyUlkiKT78jlZjfznht9f2JVWR1FljjRzn/hSF7yDBGVSj/joJqZdFNNQVpgo7plN3gnyhdWbQ==@vger.kernel.org, AJvYcCXFAQPNv8JtV7Wufe/McLhaGMCOYYMEUuHAmDXIIawBAvL4rUEOqJWikiBGT1GQ0wOeS3/g9CdYIF2h@vger.kernel.org, AJvYcCXGtnrLPWgALgr4QfzQA/NmEN6VmXmCX3wvTuErCHMi7SS8EiHmFcpyctKEJjF0V//QHSPsdom+rrFL3VKS@vger.kernel.org, AJvYcCXIzeaTKwsRbHvTyT2sT4J+p6Lh7htnXdaRITEsFqjlkKr7xu+q6+m2LKFK5/i2uR/Qu6E=@vger.kernel.org, AJvYcCXTsx3jAkPtqX7iahsPp8jY9cpP/DM984HqW5e5UUcTmN4TWdk2KDFO+cbAx2jA6Ae3+lm91tc+D1yVGg==@vger.kernel.org, AJvYcCXZ70fEeI70dxqfxPZVy8gOKyomd4lrw3DiPAmwp8fv74mTYEvvhCkSKuLewpzIZgciA3MiXVGc2Ys=@vger.kernel.org, AJvYcCXkhvwjOgsaIzBVYWxnjX61N5K2at4QUYgwmwKHhktkaridkUeBV6OMnzfq0vd6TMRwa9M/P7iyAql4@vger.kernel.org, AJvYcCXrcdxhbTsLKpwI1RIN5zp6raljAefAN4PXOQoTv2fBw5HAHfCD7FvZy5vJWBmhGWDqwVNFKpR8Co/lYKYTnT8acJP5/X5U@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAA8huuUN4T/BErSHEBklOz+LJ/qJkbUPu2hkdEypz5WdiISEO
-	+iw2r5548Ec7U0VJ51OVdV81QeQasNe8w7IkhP5T2gqDd/c925a0zD8/6rhvfa+CwPjO/nxhtxn
-	OkxDxrMGctxtZtN+RNCllTsC25ns=
-X-Google-Smtp-Source: AGHT+IHw82IqZn0L3vIWI2GRAE2/Fu1vkOzFuTOkK3ccul7HxPp7E2ac95iMCNTUN8mztI4YyZ2Kf9FZUsicSlonzfg=
-X-Received: by 2002:a05:6e02:3048:b0:3a7:6a98:3fdf with SMTP id
- e9e14a558f8ab-3ce3a9da817mr60484875ab.14.1736445963152; Thu, 09 Jan 2025
- 10:06:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QkzusyPU"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so259435066b.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jan 2025 10:24:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1736447064; x=1737051864; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cUcTIvdqWsHncGSnTDzqP6lVvkAKHUvwz4H9h8Ij3CM=;
+        b=QkzusyPULuNegBalTYmpY9eiFWfLn029zhUixhXSTBT+PJEvI+LztM3O6IbJygvl0t
+         m9SVvfOweTeQxBhL9w1t9d1upMUNi7Fw6nmdVyLfc7Q9JF623GXqzU2VS1fO/NdcRwsG
+         a8do5BGv7dxvHEmlsgV8zzgV8VSxremCeRojA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736447064; x=1737051864;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cUcTIvdqWsHncGSnTDzqP6lVvkAKHUvwz4H9h8Ij3CM=;
+        b=oVIuWS14fZrb8qrEXm9GhkA3DvEKEIWSFOvidNE+1s19WgHk1h+O+/QcFKdlA5yzKH
+         mKJ6W72ZQ2EjvBNQ9A8SLj2wPFpsqMQGk5aNQGcTO3YSFKix0mHfnp9uay8PcdlTCJmv
+         kwpuRK2L648NyPCrc/jinAaudIVp23xXZOGUX5MOrpJ0nEky2OGCblcR/NG4Z5CtdxQ9
+         iGfYggE/pzeSsMb62G78W40X/OafNyH05jbjh3wJhyMzWkAxH/GToqAieaKQoES6NDwY
+         58ZHEjM7QW+c+Q/hUP4IIpQwkZtPaQL9N8MMXt1TZP+KCddpqpA2gK4WDWvX374f7BXu
+         Agvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ2hQpyTQiivAQl8KWh0TrmWlm2ALOmLgtdPJZHGsdAn1Nvu+Ii9wmSNqJKeOFCiGGW0zDPgKVYRkKiYyZ6+EgM9w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5KQLgIVpUisEYCgVn7phUXX05ar6TjuvAO7O5AaKvRgi08hWY
+	qU8FAstaLlBE6/eo8lTi2zjgvgUUyHu/VpP50WXowqNyF6ANcj4UMV0sIqVS56x8PFQ6lVjrdk4
+	R0UA=
+X-Gm-Gg: ASbGnct/+NE7mwYbsE7o2G2wTnd02CY/BlB5KD6BmvGexoTsMC2u4a7roiHeR+KRvkR
+	dWlDW2mR8PgkYOI1SvYlHoe4IA5kKZiaDm0LcSug1JoOq1Wae3Gc+Zpf6k4G8vbi+N+qjHMA+c+
+	Rw2rIaa9Blh2r6RQXMWJsvSZ0sCvgO1VrBsRImotMS/JSv99z0RpP64yGb3308FPfeZLT5drAvP
+	5cnDple31OvsPAzEfHFkhrcegVV8YZ/LsukDVOjkuB2tvuoHC+MNqxmkKJ6KMSLbtwQct/KXXuu
+	+MMLRE91gpgrxdSvX2SEDl/Wn8QAIeE=
+X-Google-Smtp-Source: AGHT+IGWr6UOyeqjXVSTrg5KheeRw8MtQI0jzuXCyGENPOhWL6whxFtB/ZvAKaL46/ZSl7y4HYYy2Q==
+X-Received: by 2002:a17:907:1998:b0:ab2:c9b8:aaa7 with SMTP id a640c23a62f3a-ab2c9b8ad19mr314299866b.44.1736447064181;
+        Thu, 09 Jan 2025 10:24:24 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c905f0b3sm95307566b.21.2025.01.09.10.24.22
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2025 10:24:22 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aa68b513abcso230520766b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jan 2025 10:24:22 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW3QWNtqEhFneKYNaorqGLADfKbeDv9VDitAfnwEVLbosIF6EjU+Sd7j7EIUT7V2CMIT6Ukzz43FOS7XJ63DR4I9RU=@vger.kernel.org
+X-Received: by 2002:a17:907:9691:b0:aaf:ab71:67b6 with SMTP id
+ a640c23a62f3a-ab2ab73c487mr689359966b.31.1736447061714; Thu, 09 Jan 2025
+ 10:24:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-From: Song Liu <song@kernel.org>
-Date: Thu, 9 Jan 2025 10:05:51 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-X-Gm-Features: AbW1kvZZD8oqcdTZ9DXv7tEUC7bpyqeBsuw6nnhXboAE2kNg_1eTiibnv93HXj8
-Message-ID: <CAPhsuW5zpA28gkBQYMMuYCUbnDzdeq4pHsd0Mx=PBnDPiHKqHw@mail.gmail.com>
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-To: Joel Granados <joel.granados@kernel.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
-	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
-	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+References: <20250107223217.6f7f96a5@gandalf.local.home>
+In-Reply-To: <20250107223217.6f7f96a5@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 9 Jan 2025 10:24:05 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
+X-Gm-Features: AbW1kvYdQlWHwGkmwwAN8JZw7YnlZKyVkSwXwOwVP1gd8FGuLMeyZPa3VRecA5o
+Message-ID: <CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
+Subject: Re: [PATCH v2] scripts/sorttable: Move code from sorttable.h into sorttable.c
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Zheng Yejian <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 9, 2025 at 5:16=E2=80=AFAM Joel Granados <joel.granados@kernel.=
-org> wrote:
+On Tue, 7 Jan 2025 at 19:30, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-[...]
->  drivers/base/firmware_loader/fallback_table.c | 2 +-
->  drivers/cdrom/cdrom.c                         | 2 +-
->  drivers/char/hpet.c                           | 2 +-
->  drivers/char/ipmi/ipmi_poweroff.c             | 2 +-
->  drivers/char/random.c                         | 2 +-
->  drivers/gpu/drm/i915/i915_perf.c              | 2 +-
->  drivers/gpu/drm/xe/xe_observation.c           | 2 +-
->  drivers/hv/hv_common.c                        | 2 +-
->  drivers/infiniband/core/iwcm.c                | 2 +-
->  drivers/infiniband/core/ucma.c                | 2 +-
->  drivers/macintosh/mac_hid.c                   | 2 +-
->  drivers/md/md.c                               | 2 +-
+> +
+> +static int (*compare_extable)(const void *a, const void *b);
+> +static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+> +static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
+...
 
-For md bits:
+Side note - and independently of the pure code movement - wouldn't it
+be nice to just make this a structure of function pointers, and then
+instead of this:
 
-Reviewed-by: Song Liu <song@kernel.org>
+>         case ELFCLASS32:
+> +               compare_extable         = compare_extable_32;
+> +               ehdr_shoff              = ehdr32_shoff;
+> +               ehdr_shentsize          = ehdr32_shentsize;
+> +               ehdr_shstrndx           = ehdr32_shstrndx;
+> +               ehdr_shnum              = ehdr32_shnum;
+...
 
-Thanks,
-Song
+>         case ELFCLASS64:
+> -               {
+> +               compare_extable         = compare_extable_64;
+> +               ehdr_shoff              = ehdr64_shoff;
+> +               ehdr_shentsize          = ehdr64_shentsize;
+> +               ehdr_shstrndx           = ehdr64_shstrndx;
+> +               ehdr_shnum              = ehdr64_shnum;
+...
 
-[...]
+just pick one of two static structure pointers with these things.
+
+            Linus
