@@ -1,503 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45B2B677;
-	Thu,  9 Jan 2025 20:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B3384039;
+	Thu,  9 Jan 2025 20:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736453099; cv=none; b=c3XOmONBFqDiRe6vSB/zUvajg1nGtu76vBeq6rk5d7R9at1Q3eTdZUokSbqBEvnsvGaxXs2xygu/s7qH3cpplYFD0L6xOJrLQ0xzTUWtmfsNZHHB4OFzlbiVYZ0Ex0JtCEWRdPfcGhox/WYjhVJKcRW/rsj56sx52fBuIGsbfKc=
+	t=1736455790; cv=none; b=XOwPF9m0jZJ8vfvpK68ozC8SWIoduYKbAc9kuA8OhxcnhjNgk/qkHIehKFDMvUIoLbuNcG+f3/hDrLbGiifEn3ACGbt/IVrKeLMWATN47sYE0tYIDHjKWtldWAN5tB+xYK2HKT/gSVByxY57e3mIqKRPNYvarH8287k9pEkvKYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736453099; c=relaxed/simple;
-	bh=T1358xyOlHjIOsDTrjSjveI8N7SNjbDfhRNUNLFFILc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=by+tFaFQ99ZjdO8U5xuN7tSCcS/C4uyTWW9ZWCDgWgtI+01k7DnRzXVRjdarb4tc1R3Am/vXGIF4PA2/OwzP01sELOJG4f+B5sEUtCtVK4jvondfdn6PdaklJDxREsl5xEBGkLc2DesCsitjWuNIGlUIOkFFFv3J2t9etnGGSEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AFE9C4CED2;
-	Thu,  9 Jan 2025 20:04:57 +0000 (UTC)
-Date: Thu, 9 Jan 2025 15:06:31 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian
- <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf
- <jpoimboe@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v2] scripts/sorttable: Move code from sorttable.h into
- sorttable.c
-Message-ID: <20250109150631.2feaa55e@gandalf.local.home>
-In-Reply-To: <CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
-References: <20250107223217.6f7f96a5@gandalf.local.home>
-	<CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736455790; c=relaxed/simple;
+	bh=FH/4qGR5kPhsF4u+Mmf9/LojodSTnp7PLu0zvxD40uY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JmfBa9zj1T9CWHVYZ3Rs7DQB9rcIaXxZ8K32EaA2qbi7D0O6Uo95JDbaWNTvKDZf5D3gsf2xlZcqb29FXG3OFjphnbSw+aSsCLvuDyBTE7d+KMRsqsR4N2E8OQd6sSmWxLbArOn47yKC+ig0ataQBs9zU/NSthqBxAXzAuLI1qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q/oLLoA7; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/oLLoA7"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5d3e9a88793so2070961a12.1;
+        Thu, 09 Jan 2025 12:49:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736455787; x=1737060587; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XrGAnASATrAJyxyB4lmwfQ0d2tF2OIGq2TmbshecCws=;
+        b=Q/oLLoA7cqY1j0++U5fyVoRjfpL4ItVK7qjSK85ucmMXUQIAJ/Yndjg9Fj5hSCQ/iD
+         pwxg/W+5sriX62OwooZXMMgWVVdV48U401TPdxSX9mNTXsmd9OOb6M7EgWwdzBFy5sHp
+         jMhIQNJccbEWVEl4IR9K+EN9qMQ7eBSqmeWRIzIHOaY00FzUdgsuqfP/LAJy0z7OE+hh
+         vOKPRQg2z960HzobdKhH02wvyyXL+AnrWKy81X6iGRWDA3oSSSv8tEvReOmq0WNJSCsz
+         uZpC3U3LY8c+WaqypxXAxOSl+aI4RbYve0iebaAiQjYJ2xmZDHJrKyFmIZPTW4H/ijgR
+         7EqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736455787; x=1737060587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XrGAnASATrAJyxyB4lmwfQ0d2tF2OIGq2TmbshecCws=;
+        b=NIlp1NJYYIvinn/kajnhV7dFfxyogSvKIbySQWJhrX88+k4NH1AR5NFcZOz1my0PVt
+         ZIgI70m7qYsMglzTi6n/bruMKUMMqu5tV+1AkYPIp0qb9kO9uVhYqSuTuAC3I1QsfVyb
+         NVdYjBbpaUz4xXS1XVbLIwUwEJ8x1P6dMmeBWLcPycGUvHn8SZ2PQ7nMc5+7ZftCbLA2
+         rJPJEqpd64vZUWdAhHDDRvGopXc1yBA4yY27fqKCziNePKJEZSz2WvF5yKUXaP3TIpx3
+         QHm/+hcKtHU1CDQ4js0nDb8aMTVO9IaUCBwGIlkM7hX4vcWXADadh+jQ8+l8ijsj1G0Q
+         bVKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUURzlABuRZap6UIN742SKakb5vEVry8E3CEXvhPeaviqHVPqtYlRBbS4HX0SFD15wuGas=@vger.kernel.org, AJvYcCVGRJww9XfjFoLRgmSY39Fy+YussNM/gRTMK0uGuVtz2Dw+e8TfH7tv51eqH6EYqdjlroZjDt1G7cHE3CVd@vger.kernel.org, AJvYcCVPaT+JrHR7UmM1A+iZqmryi8CPm9GmGXiKsAOj/M+I4US7DhcVsm0Jz1l5dcoomfltqZSIhts712f0/u4mEwECQOv4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5QOyUqREa1kKX3VZoPd4kLteZujfdq0Vbcj0n7/t/Fkp+opA2
+	3lKgz9sNGVddrPUjkx2PyuovfyCLwke3ZQm/MH/Qx1HOzFJuHQT6
+X-Gm-Gg: ASbGncvZj2fjSh7X6iYYsSIuB0nnNdogpikH3ODN8Ez7uCQdfAZ2N88Kr3b/12alhob
+	Yy/5nTcfV0fxi+kyD3diDfpaK3JzSVNA9apTv1eO6nw1cK8F3wbcdZovKsOHYAp+Ltdtpdi7kLx
+	CSvBq8Gg4nmkclsnh4E7N36ue2MwNcezkcamsIGOrcLiCgxlifW2VBXWq+MEwBch2CzTx4/1Tm3
+	AIGwfXOJe7z1VV8/mv/Y1145unrWRvn4NHdG5p9WTB39p8eSBPGTdHSjKcg2dk=
+X-Google-Smtp-Source: AGHT+IGjzr9iM4gWdAjiTc/gBNY9Iyz3JIGALO+iLXbe3zas7tr+roEftRw0LWZGQNOnL7CaHWj1gA==
+X-Received: by 2002:a05:6402:2711:b0:5d3:e4eb:8d1f with SMTP id 4fb4d7f45d1cf-5d972e06d96mr7618391a12.12.1736455786416;
+        Thu, 09 Jan 2025 12:49:46 -0800 (PST)
+Received: from krava (85-193-35-24.rib.o2.cz. [85.193.35.24])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d9904a4127sm948195a12.77.2025.01.09.12.49.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2025 12:49:46 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 9 Jan 2025 21:49:43 +0100
+To: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Max Makarov <maxpain@linux.com>, bpf@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Fix race in uprobe_free_utask
+Message-ID: <Z4A2Z6wzwXLePriB@krava>
+References: <20250109141440.2692173-1-jolsa@kernel.org>
+ <af5b64ae-3917-4083-930b-b8e41d3a98d7@iogearbox.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af5b64ae-3917-4083-930b-b8e41d3a98d7@iogearbox.net>
 
-On Thu, 9 Jan 2025 10:24:05 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Tue, 7 Jan 2025 at 19:30, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > +
-> > +static int (*compare_extable)(const void *a, const void *b);
-> > +static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
-> > +static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);  
-> ...
+On Thu, Jan 09, 2025 at 03:41:26PM +0100, Daniel Borkmann wrote:
+> On 1/9/25 3:14 PM, Jiri Olsa wrote:
+> > Max Makarov reported kernel panic [1] in perf user callchain code.
+> > 
+> > The reason for that is the race between uprobe_free_utask and bpf
+> > profiler code doing the perf user stack unwind and is triggered
+> > within uprobe_free_utask function:
+> >    - after current->utask is freed and
+> >    - before current->utask is set to NULL
+> > 
+> >   general protection fault, probably for non-canonical address 0x9e759c37ee555c76: 0000 [#1] SMP PTI
+> >   RIP: 0010:is_uprobe_at_func_entry+0x28/0x80
+> >   ...
+> >    ? die_addr+0x36/0x90
+> >    ? exc_general_protection+0x217/0x420
+> >    ? asm_exc_general_protection+0x26/0x30
+> >    ? is_uprobe_at_func_entry+0x28/0x80
+> >    perf_callchain_user+0x20a/0x360
+> >    get_perf_callchain+0x147/0x1d0
+> >    bpf_get_stackid+0x60/0x90
+> >    bpf_prog_9aac297fb833e2f5_do_perf_event+0x434/0x53b
+> >    ? __smp_call_single_queue+0xad/0x120
+> >    bpf_overflow_handler+0x75/0x110
+> >    ...
+> >    asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> >   RIP: 0010:__kmem_cache_free+0x1cb/0x350
+> >   ...
+> >    ? uprobe_free_utask+0x62/0x80
+> >    ? acct_collect+0x4c/0x220
+> >    uprobe_free_utask+0x62/0x80
+> >    mm_release+0x12/0xb0
+> >    do_exit+0x26b/0xaa0
+> >    __x64_sys_exit+0x1b/0x20
+> >    do_syscall_64+0x5a/0x80
+> > 
+> > It can be easily reproduced by running following commands in
+> > separate terminals:
+> > 
+> >    # while :; do bpftrace -e 'uprobe:/bin/ls:_start  { printf("hit\n"); }' -c ls; done
+> >    # bpftrace -e 'profile:hz:100000 { @[ustack()] = count(); }'
+> > 
+> > Fixing this by making sure current->utask pointer is set to NULL
+> > before we start to release the utask object.
 > 
-> Side note - and independently of the pure code movement - wouldn't it
-> be nice to just make this a structure of function pointers, and then
-> instead of this:
+> Lets add Fixes tag for stable team:
+> 
+> Fixes: cfa7f3d2c526 ("perf,x86: avoid missing caller address in stack traces captured in uprobe")
 
-I do that in some of my personal code, but then all the calls to the
-functions tend to be:
+ugh right, thanks for finding that
 
-	e.ehdr_shoff(..); or e->ehdr_shoff(..);
+jirka
 
-instead of simply having:
-
-	ehdr_shoff(..);
-
-Hmm, if the structure is global, I guess then we could just have the helper
-functions use the global variable. But then, instead of having:
-
-static int (*compare_extable)(const void *a, const void *b);
-static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
-static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
-static uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
-static uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
-static uint64_t (*shdr_addr)(Elf_Shdr *shdr);
-static uint64_t (*shdr_offset)(Elf_Shdr *shdr);
-static uint64_t (*shdr_size)(Elf_Shdr *shdr);
-static uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
-static uint32_t (*shdr_link)(Elf_Shdr *shdr);
-static uint32_t (*shdr_name)(Elf_Shdr *shdr);
-static uint32_t (*shdr_type)(Elf_Shdr *shdr);
-static uint8_t (*sym_type)(Elf_Sym *sym);
-static uint32_t (*sym_name)(Elf_Sym *sym);
-static uint64_t (*sym_value)(Elf_Sym *sym);
-static uint16_t (*sym_shndx)(Elf_Sym *sym);
-static uint64_t (*rela_offset)(Elf_Rela *rela);
-static uint64_t (*rela_info)(Elf_Rela *rela);
-static uint64_t (*rela_addend)(Elf_Rela *rela);
-static void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
-
-	case ELFCLASS32:
-		compare_extable		= compare_extable_32;
-		ehdr_shoff		= ehdr32_shoff;
-		ehdr_shentsize		= ehdr32_shentsize;
-		ehdr_shstrndx		= ehdr32_shstrndx;
-		ehdr_shnum		= ehdr32_shnum;
-		shdr_addr		= shdr32_addr;
-		shdr_offset		= shdr32_offset;
-		shdr_link		= shdr32_link;
-		shdr_size		= shdr32_size;
-		shdr_name		= shdr32_name;
-		shdr_type		= shdr32_type;
-		shdr_entsize		= shdr32_entsize;
-		sym_type		= sym32_type;
-		sym_name		= sym32_name;
-		sym_value		= sym32_value;
-		sym_shndx		= sym32_shndx;
-		rela_offset		= rela32_offset;
-		rela_info		= rela32_info;
-		rela_addend		= rela32_addend;
-		rela_write_addend	= rela32_write_addend;
-		long_size		= 4;
-		extable_ent_size	= 8;
-		break;
-	case ELFCLASS64:
-		compare_extable		= compare_extable_64;
-		ehdr_shoff		= ehdr64_shoff;
-		ehdr_shentsize		= ehdr64_shentsize;
-		ehdr_shstrndx		= ehdr64_shstrndx;
-		ehdr_shnum		= ehdr64_shnum;
-		shdr_addr		= shdr64_addr;
-		shdr_offset		= shdr64_offset;
-		shdr_link		= shdr64_link;
-		shdr_size		= shdr64_size;
-		shdr_name		= shdr64_name;
-		shdr_type		= shdr64_type;
-		shdr_entsize		= shdr64_entsize;
-		sym_type		= sym64_type;
-		sym_name		= sym64_name;
-		sym_value		= sym64_value;
-		sym_shndx		= sym64_shndx;
-		rela_offset		= rela64_offset;
-		rela_info		= rela64_info;
-		rela_addend		= rela64_addend;
-		rela_write_addend	= rela64_write_addend;
-		long_size		= 8;
-		extable_ent_size	= 16;
-
-		break;
-
-
-We would have:
-
-static struct elf_funcs {
-	int (*compare_extable)(const void *a, const void *b);
-	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
-	uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
-	uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
-	uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
-	uint64_t (*shdr_addr)(Elf_Shdr *shdr);
-	uint64_t (*shdr_offset)(Elf_Shdr *shdr);
-	uint64_t (*shdr_size)(Elf_Shdr *shdr);
-	uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
-	uint32_t (*shdr_link)(Elf_Shdr *shdr);
-	uint32_t (*shdr_name)(Elf_Shdr *shdr);
-	uint32_t (*shdr_type)(Elf_Shdr *shdr);
-	uint8_t (*sym_type)(Elf_Sym *sym);
-	uint32_t (*sym_name)(Elf_Sym *sym);
-	uint64_t (*sym_value)(Elf_Sym *sym);
-	uint16_t (*sym_shndx)(Elf_Sym *sym);
-} e;
-
-// Hmm, I could add the helper function into the macros:
-
-#define EHDR_HALF(fn_name)				\
-static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
-{							\
-	return r2(&ehdr->e64.e_##fn_name);		\
-}							\
-							\
-static uint16_t ehdr32_##fn_name(Elf_Ehdr *ehdr)	\
-{							\
-	return r2(&ehdr->e32.e_##fn_name);		\
-}							\
-							\
-static uint16 ehdr_##fn_name(Elf_Ehdr *ehdr)		\
-{							\
-	return e.ehdr_##fn_name(ehdr);			\
-}
-
-[..]
-
-	case ELFCLASS32: {
-		struct elf_funcs efuncs = {
-			.compare_extable	= compare_extable_32,
-			.ehdr_shoff		= ehdr32_shoff,
-			.ehdr_shentsize		= ehdr32_shentsize,
-			[..]
-		};
-
-		e = efuncs;
-		long_size		= 4;
-		extable_ent_size	= 8;
-		}
-		break;
-	case ELFCLASS64: {
-		struct elf_funcs efuncs = {
-			.compare_extable	= compare_extable_64,
-			.ehdr_shoff		= ehdr64_shoff,
-			.ehdr_shentsize		= ehdr64_shentsize,
-			[..]
-		};
-
-		e = efuncs;
-		long_size		= 8;
-		extable_ent_size	= 16;
-		}
-		break;
-
-
-Which would give me this patch on top of this:
-
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 656c1e9b5ad9..9f41575afd7a 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -85,6 +85,25 @@ static uint64_t (*r8)(const uint64_t *);
- static void (*w)(uint32_t, uint32_t *);
- typedef void (*table_sort_t)(char *, int);
- 
-+static struct elf_funcs {
-+	int (*compare_extable)(const void *a, const void *b);
-+	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
-+	uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
-+	uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
-+	uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
-+	uint64_t (*shdr_addr)(Elf_Shdr *shdr);
-+	uint64_t (*shdr_offset)(Elf_Shdr *shdr);
-+	uint64_t (*shdr_size)(Elf_Shdr *shdr);
-+	uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
-+	uint32_t (*shdr_link)(Elf_Shdr *shdr);
-+	uint32_t (*shdr_name)(Elf_Shdr *shdr);
-+	uint32_t (*shdr_type)(Elf_Shdr *shdr);
-+	uint8_t (*sym_type)(Elf_Sym *sym);
-+	uint32_t (*sym_name)(Elf_Sym *sym);
-+	uint64_t (*sym_value)(Elf_Sym *sym);
-+	uint16_t (*sym_shndx)(Elf_Sym *sym);
-+} e;
-+
- static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
- {
- 	return r8(&ehdr->e64.e_shoff);
-@@ -95,6 +114,11 @@ static uint64_t ehdr32_shoff(Elf_Ehdr *ehdr)
- 	return r(&ehdr->e32.e_shoff);
- }
- 
-+static uint64_t ehdr_shoff(Elf_Ehdr *ehdr)
-+{
-+	return e.ehdr_shoff(ehdr);
-+}
-+
- #define EHDR_HALF(fn_name)				\
- static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
- {							\
-@@ -104,6 +128,11 @@ static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
- static uint16_t ehdr32_##fn_name(Elf_Ehdr *ehdr)	\
- {							\
- 	return r2(&ehdr->e32.e_##fn_name);		\
-+}							\
-+							\
-+static uint16_t ehdr_##fn_name(Elf_Ehdr *ehdr)		\
-+{							\
-+	return e.ehdr_##fn_name(ehdr);			\
- }
- 
- EHDR_HALF(shentsize)
-@@ -119,6 +148,11 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
- static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
- {							\
- 	return r(&shdr->e32.sh_##fn_name);		\
-+}							\
-+							\
-+static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
-+{							\
-+	return e.shdr_##fn_name(shdr);			\
- }
- 
- #define SHDR_ADDR(fn_name)				\
-@@ -130,6 +164,11 @@ static uint64_t shdr64_##fn_name(Elf_Shdr *shdr)	\
- static uint64_t shdr32_##fn_name(Elf_Shdr *shdr)	\
- {							\
- 	return r(&shdr->e32.sh_##fn_name);		\
-+}							\
-+							\
-+static uint64_t shdr_##fn_name(Elf_Shdr *shdr)		\
-+{							\
-+	return e.shdr_##fn_name(shdr);			\
- }
- 
- #define SHDR_WORD(fn_name)				\
-@@ -141,6 +180,10 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
- static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
- {							\
- 	return r(&shdr->e32.sh_##fn_name);		\
-+}							\
-+static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
-+{							\
-+	return e.shdr_##fn_name(shdr);			\
- }
- 
- SHDR_ADDR(addr)
-@@ -161,6 +204,11 @@ static uint64_t sym64_##fn_name(Elf_Sym *sym)	\
- static uint64_t sym32_##fn_name(Elf_Sym *sym)	\
- {						\
- 	return r(&sym->e32.st_##fn_name);	\
-+}						\
-+						\
-+static uint64_t sym_##fn_name(Elf_Sym *sym)	\
-+{						\
-+	return e.sym_##fn_name(sym);		\
- }
- 
- #define SYM_WORD(fn_name)			\
-@@ -172,6 +220,11 @@ static uint32_t sym64_##fn_name(Elf_Sym *sym)	\
- static uint32_t sym32_##fn_name(Elf_Sym *sym)	\
- {						\
- 	return r(&sym->e32.st_##fn_name);	\
-+}						\
-+						\
-+static uint32_t sym_##fn_name(Elf_Sym *sym)	\
-+{						\
-+	return e.sym_##fn_name(sym);		\
- }
- 
- #define SYM_HALF(fn_name)			\
-@@ -183,6 +236,11 @@ static uint16_t sym64_##fn_name(Elf_Sym *sym)	\
- static uint16_t sym32_##fn_name(Elf_Sym *sym)	\
- {						\
- 	return r2(&sym->e32.st_##fn_name);	\
-+}						\
-+						\
-+static uint16_t sym_##fn_name(Elf_Sym *sym)	\
-+{						\
-+	return e.sym_##fn_name(sym);		\
- }
- 
- static uint8_t sym64_type(Elf_Sym *sym)
-@@ -195,6 +253,11 @@ static uint8_t sym32_type(Elf_Sym *sym)
- 	return ELF32_ST_TYPE(sym->e32.st_info);
- }
- 
-+static uint8_t sym_type(Elf_Sym *sym)
-+{
-+	return e.sym_type(sym);
-+}
-+
- SYM_ADDR(value)
- SYM_WORD(name)
- SYM_HALF(shndx)
-@@ -322,29 +385,16 @@ static int compare_extable_64(const void *a, const void *b)
- 	return av > bv;
- }
- 
-+static int compare_extable(const void *a, const void *b)
-+{
-+	return e.compare_extable(a, b);
-+}
-+
- static inline void *get_index(void *start, int entsize, int index)
- {
- 	return start + (entsize * index);
- }
- 
--
--static int (*compare_extable)(const void *a, const void *b);
--static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
--static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
--static uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
--static uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
--static uint64_t (*shdr_addr)(Elf_Shdr *shdr);
--static uint64_t (*shdr_offset)(Elf_Shdr *shdr);
--static uint64_t (*shdr_size)(Elf_Shdr *shdr);
--static uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
--static uint32_t (*shdr_link)(Elf_Shdr *shdr);
--static uint32_t (*shdr_name)(Elf_Shdr *shdr);
--static uint32_t (*shdr_type)(Elf_Shdr *shdr);
--static uint8_t (*sym_type)(Elf_Sym *sym);
--static uint32_t (*sym_name)(Elf_Sym *sym);
--static uint64_t (*sym_value)(Elf_Sym *sym);
--static uint16_t (*sym_shndx)(Elf_Sym *sym);
--
- static int extable_ent_size;
- static int long_size;
- 
-@@ -864,7 +914,30 @@ static int do_file(char const *const fname, void *addr)
- 	}
- 
- 	switch (ehdr->e32.e_ident[EI_CLASS]) {
--	case ELFCLASS32:
-+	case ELFCLASS32: {
-+		struct elf_funcs efuncs = {
-+			.compare_extable	= compare_extable_32,
-+			.ehdr_shoff		= ehdr32_shoff,
-+			.ehdr_shentsize		= ehdr32_shentsize,
-+			.ehdr_shstrndx		= ehdr32_shstrndx,
-+			.ehdr_shnum		= ehdr32_shnum,
-+			.shdr_addr		= shdr32_addr,
-+			.shdr_offset		= shdr32_offset,
-+			.shdr_link		= shdr32_link,
-+			.shdr_size		= shdr32_size,
-+			.shdr_name		= shdr32_name,
-+			.shdr_type		= shdr32_type,
-+			.shdr_entsize		= shdr32_entsize,
-+			.sym_type		= sym32_type,
-+			.sym_name		= sym32_name,
-+			.sym_value		= sym32_value,
-+			.sym_shndx		= sym32_shndx,
-+		};
-+
-+		e = efuncs;
-+		long_size		= 4;
-+		extable_ent_size	= 8;
-+
- 		if (r2(&ehdr->e32.e_ehsize) != sizeof(Elf32_Ehdr) ||
- 		    r2(&ehdr->e32.e_shentsize) != sizeof(Elf32_Shdr)) {
- 			fprintf(stderr,
-@@ -872,26 +945,32 @@ static int do_file(char const *const fname, void *addr)
- 			return -1;
- 		}
- 
--		compare_extable		= compare_extable_32;
--		ehdr_shoff		= ehdr32_shoff;
--		ehdr_shentsize		= ehdr32_shentsize;
--		ehdr_shstrndx		= ehdr32_shstrndx;
--		ehdr_shnum		= ehdr32_shnum;
--		shdr_addr		= shdr32_addr;
--		shdr_offset		= shdr32_offset;
--		shdr_link		= shdr32_link;
--		shdr_size		= shdr32_size;
--		shdr_name		= shdr32_name;
--		shdr_type		= shdr32_type;
--		shdr_entsize		= shdr32_entsize;
--		sym_type		= sym32_type;
--		sym_name		= sym32_name;
--		sym_value		= sym32_value;
--		sym_shndx		= sym32_shndx;
--		long_size		= 4;
--		extable_ent_size	= 8;
-+		}
- 		break;
--	case ELFCLASS64:
-+	case ELFCLASS64: {
-+		struct elf_funcs efuncs = {
-+			.compare_extable	= compare_extable_64,
-+			.ehdr_shoff		= ehdr64_shoff,
-+			.ehdr_shentsize		= ehdr64_shentsize,
-+			.ehdr_shstrndx		= ehdr64_shstrndx,
-+			.ehdr_shnum		= ehdr64_shnum,
-+			.shdr_addr		= shdr64_addr,
-+			.shdr_offset		= shdr64_offset,
-+			.shdr_link		= shdr64_link,
-+			.shdr_size		= shdr64_size,
-+			.shdr_name		= shdr64_name,
-+			.shdr_type		= shdr64_type,
-+			.shdr_entsize		= shdr64_entsize,
-+			.sym_type		= sym64_type,
-+			.sym_name		= sym64_name,
-+			.sym_value		= sym64_value,
-+			.sym_shndx		= sym64_shndx,
-+		};
-+
-+		e = efuncs;
-+		long_size		= 8;
-+		extable_ent_size	= 16;
-+
- 		if (r2(&ehdr->e64.e_ehsize) != sizeof(Elf64_Ehdr) ||
- 		    r2(&ehdr->e64.e_shentsize) != sizeof(Elf64_Shdr)) {
- 			fprintf(stderr,
-@@ -900,25 +979,7 @@ static int do_file(char const *const fname, void *addr)
- 			return -1;
- 		}
- 
--		compare_extable		= compare_extable_64;
--		ehdr_shoff		= ehdr64_shoff;
--		ehdr_shentsize		= ehdr64_shentsize;
--		ehdr_shstrndx		= ehdr64_shstrndx;
--		ehdr_shnum		= ehdr64_shnum;
--		shdr_addr		= shdr64_addr;
--		shdr_offset		= shdr64_offset;
--		shdr_link		= shdr64_link;
--		shdr_size		= shdr64_size;
--		shdr_name		= shdr64_name;
--		shdr_type		= shdr64_type;
--		shdr_entsize		= shdr64_entsize;
--		sym_type		= sym64_type;
--		sym_name		= sym64_name;
--		sym_value		= sym64_value;
--		sym_shndx		= sym64_shndx;
--		long_size		= 8;
--		extable_ent_size	= 16;
--
-+		}
- 		break;
- 	default:
- 		fprintf(stderr, "unrecognized ELF class %d %s\n",
-
-
-Is that what you are thinking?
-
--- Steve
+> 
+> > [1] https://github.com/grafana/pyroscope/issues/3673
+> > Reported-by: Max Makarov <maxpain@linux.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> fwiw, the other version we were potentially thinking of was below, but
+> just moving the t->utask NULL assignment seemed better.
+> 
+> Thanks,
+> Daniel
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index c75c482d4c52..05f9cedf2691 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2835,6 +2835,8 @@ static bool is_uprobe_at_func_entry(struct pt_regs *regs)
+> 
+>         if (!current->utask)
+>                 return false;
+> +       if (!current->utask->active_uprobe)
+> +               return false;
+> 
+>         auprobe = current->utask->auprobe;
+>         if (!auprobe)
