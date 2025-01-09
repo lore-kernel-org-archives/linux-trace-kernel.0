@@ -1,144 +1,90 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D437D29A9;
-	Thu,  9 Jan 2025 01:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C564BFC0B;
+	Thu,  9 Jan 2025 01:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736386839; cv=none; b=lTSl9pfnk94Tcsz/5wlX5gGZcwNSjdTBYZ+jeKZjTIgRTWCMnCmeZHqK5iJR/kDb34HB4077fvU/xJNLtwbZvoYXI0g9fx9+26QH6OOm6oEhRM4+3crGY2CWkhqgHT5Sn4dC2tFfp8jIDcVeHynGFR0jK/waQOkMqBZxxxjCtF8=
+	t=1736386891; cv=none; b=Tz3/GxNMFghFCO+nhSk7Pa7mccW6JvGThQry3TIbWf+vHeZTCoAUlF3To6x3FG4jCq4F/3fztBg+2tMTPod94v3NS+wcy3jX9My5IT3Oi9E9PAVKiA6ghIjFQCf0vzYAlkdPKib5bxL7WEOipCOTVBRc3b2CBI6sKzp8FS7PBTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736386839; c=relaxed/simple;
-	bh=lkKvvPWj4gV68xsk82FPzrUglcSJ+bXLwU8nTgKKnsc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DY4qg7kDv02oEQaP4FVi3VYBE1j86Hy/wNnLOZKihtfL2BRHKx/9rsaHvqf6RMYVYeiqbq7oauFfpv5F8zl5UHbLgcqRXRywfiph1O9+7t7cO9kSl0fV8hozcWyDqLEhfycVu4dpU4d2Tss4GG7XvH6vseFe6Faep7swe9HnytE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wBv31Tm5; arc=none smtp.client-ip=115.124.30.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1736386891; c=relaxed/simple;
+	bh=LoD5F/hZAi1B2r64jO8j55ST+we/iZgiOfHeGxoqtdM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DaeWArzSsTUhI5WXOSqLPph7bFxMNo/Lv+4qBzN9GErw6BSkjCSmgKm7p6MEdR9BxOPvyWvRM9ELkFxirVXS4SiYYwnjdQw/V3KT5sKevzK/Vd8R2CsVMrkldWCipt2nqzSxEiQZ+n9z2H7/eyKeUDLr2BevLn8oKKcx1O5KjV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ho6muxm7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wBv31Tm5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736386828; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=7MEf/mEwctvG2yXt+5bH15F/zvi2AQxq2uLpYMY1fVk=;
-	b=wBv31Tm5xJIZSVOCM9sNEe/lqGh5hLE8R3w9cNv8/PEyT01BdboLOq/Uvb5UW4xHFNJW7GPYPhUVVgcXQ5Uq3bOLiE2Chs2Q983t9DF7R9BcFJuOgpb/FpeumKU3YAX7EEuuuwVWpJn08oY5w4yTlMJM8mZrUZQDqyreIo/eyds=
-Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNFQTCi_1736386825 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Jan 2025 09:40:27 +0800
-Message-ID: <94b8fe33-26f3-4ec3-b9c1-3478d68cf709@linux.alibaba.com>
-Date: Thu, 9 Jan 2025 09:40:25 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ho6muxm7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696CEC4CED3;
+	Thu,  9 Jan 2025 01:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736386891;
+	bh=LoD5F/hZAi1B2r64jO8j55ST+we/iZgiOfHeGxoqtdM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ho6muxm7Z7C1JQFtNITUZ1urot0Iwf/KmvwHjQMAuv50qdhTIQCK7IOkzhNR2x8Vy
+	 cKcMSJTFzxxYr38ex8tASt6/Z5LPPDOMpBUiZZhh1pTG5FW6MbXJCEE39ixJu35S4D
+	 zpRvrtKHaR5H5L3fiaD+te8527ZK0DmvcXZ+FoyL0OtUimrOffcMYqdY1TLJGfHEQe
+	 W5ngL/OOHCuw3og6hQ+c5iU4TBDbc2/EeueXui/8uGPhVV17sFilEbH6MAolhe1OAy
+	 cJkR60yDjv4Cml6bLGGl7SrbqYy/1+eJOAHPGPKjDfxowlWR07hi7u5gZV8DgF0JJ9
+	 xxVvVUqEHYmDg==
+Date: Thu, 9 Jan 2025 10:41:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
+ <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] tracing/kprobes: Simplify
+ __trace_kprobe_create() by removing gotos
+Message-Id: <20250109104127.f8ee0879730a47f5988de7e4@kernel.org>
+In-Reply-To: <20250108101111.11dd98d8@gandalf.local.home>
+References: <173630223453.1453474.6442447279377996686.stgit@devnote2>
+	<173630227845.1453474.6513848165385480817.stgit@devnote2>
+	<20250108101111.11dd98d8@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bhelgaas@google.com,
- tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
- davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
- peterz@infradead.org
-References: <20250108175906.GA219807@bhelgaas>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250108175906.GA219807@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 8 Jan 2025 10:11:11 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-在 2025/1/9 01:59, Bjorn Helgaas 写道:
-> On Wed, Jan 08, 2025 at 05:04:25PM +0800, Shuai Xue wrote:
->> 在 2025/1/8 07:19, Bjorn Helgaas 写道:
->>> On Sat, Nov 23, 2024 at 07:31:08PM +0800, Shuai Xue wrote:
->>>> Hotplug events are critical indicators for analyzing hardware health,
->>>> particularly in AI supercomputers where surprise link downs can
->>>> significantly impact system performance and reliability. The failure
->>>> characterization analysis illustrates the significance of failures
->>>> caused by the Infiniband link errors. Meta observes that 2% in a machine
->>>> learning cluster and 6% in a vision application cluster of Infiniband
->>>> failures co-occur with GPU failures, such as falling off the bus, which
->>>> may indicate a correlation with PCIe.[1]
->>>>
->>>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
->>>> tracepoint for hotplug event to help healthy check, and generate
->>>> tracepoints for pcie hotplug event. To monitor these tracepoints in
->>>> userspace, e.g. with rasdaemon, put `enum pci_hotplug_event` in uapi
->>>> header.
->>>>
->>>> The output like below:
->>>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
->>>> $ cat /sys/kernel/debug/tracing/trace_pipe
->>>>              <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
->>>>
->>>>              <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
->>>>
->>>> [1]https://arxiv.org/abs/2410.21680
->>>
->>> Doesn't apply on pci/main (v6.13-rc1); can you rebase it?
->>
->> Sure. Do you mean Git repository at:
->>
->>    git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
->>    branch main
+> On Wed,  8 Jan 2025 11:11:18 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> Yes.  The most recent -rc1 is generally a safe bet for basing patches.
+> > -static int __trace_kprobe_create(int argc, const char *argv[])
+> > +static int ___trace_kprobe_create(int argc, const char *argv[],
+> > +				  struct traceprobe_parse_context *ctx)
+> >  {
+> 
+> I'm not sure I care about all the underscores. It just adds to confusion.
+> 
+> Maybe just:
+> 
+> static int __create_trace_kprobe(..)
 
-Got it. Will send a new version later.
+Ok. Or __trace_kprobe_create_internal()?
+
+Then it will be
+
+trace_kprobe_create()
+ -> __trace_kprobe_create()
+   -> __trace_kprobe_create_internal()
+
+Thanks,
 
 > 
->>> Probably more detail than necessary about AI supercomputers,
->>> Infiniband, vision applications, etc.  This is a very generic issue.
->>
->> Agreed. It is generic. Are you asking for the first background paragraph to be
->> deleted?
+> ?
 > 
-> I think the important part is that hotplug and link down events are
-> critical indicators of hardware health.  That's enough to motivate
-> this patch.
+> -- Steve
 
-OK, I'd like to rewrite with a generic motivation.
 
-> 
->>> "Falling off the bus" doesn't really mean anything to me.  I suppose
->>> it's another way to describe a "link down" event that leads to UR
->>> errors when trying to access the device?
->>
->> Sorry for the confusion. "Falling off the bus" is a common error for
->> NVIDIA GPU observed in production. The GPU driver will log a such
->> message when GPU is not accessible.
-> 
-> Yep, I see those too, and I wish the message weren't phrased so
-> casually.  IIRC this is typically logged when an MMIO read returns ~0,
-> which happens when a UR or similar error occurs.
-> 
->>> I'm guessing that monitoring these via rasdaemon requires more than
->>> just adding "enum pci_hotplug_event"?  Or does rasdaemon read
->>> include/uapi/linux/pci.h and automagically incorporate new events?
->>> Maybe there's at least a rebuild involved?
->>
->> Yes, a rebuild is needed. Rasdaemon has a basic infrastructure to manually
->> register a tracepoint event handler. For example, for this new event, we can
->> register to handle pci_hp_event:
->>
->>      rc = add_event_handler(ras, pevent, page_size, "pci", "pci_hp_event",
->> 			   ras_pci_hp_event_handler, NULL, PCI_HOTPLUG_EVENT);
-> 
-> I would say something like "Add enum pci_hotplug_event in
-> include/uapi/linux/pci.h so applications like rasdaemon can register
-> tracepoint event handlers for it."
-
-Will rewrite it.
-
-> 
-> Bjorn
-
-Thank you for valuable comments.
-
-Best Regards,
-Shuai
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
