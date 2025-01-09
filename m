@@ -1,43 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BF33FBB3;
-	Thu,  9 Jan 2025 14:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7061921B8FE;
+	Thu,  9 Jan 2025 14:51:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736434148; cv=none; b=k0rU2qCSk1sacKNAwDkbIDfoixc1IxmQFLV4hJQFRZpq6H6kYi1F6M6QMzxbawenf0GFZ6suD6xVY/FBinaEny72eCL8jexOj5iUtRcoFAf8W7KhT3rwgfrfw5aRb80+b0cecTUTCuSw1g7/MkTSFdzBBcGcBQARYaVYROLKlU0=
+	t=1736434314; cv=none; b=IneA/+oEaazR3qNT6h/iIzudivmpRUY/J0MwMsEA6k/cr8A/tdgJesjK0COVmW9ZNWNV2IaKul05BBguqEWforKoRp64gW4+6tA3PmoRWgCasCK/1M4vcyxhH9y1fQqzzaqmCdQ46G/QYR/xUtAM9prnIWAZ/Tr8RR2kaFMJUK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736434148; c=relaxed/simple;
-	bh=46OfJedDFsal/84XtGkdidDlykadwg95odP8kEBZssY=;
+	s=arc-20240116; t=1736434314; c=relaxed/simple;
+	bh=ponN+B62d9IIgYsIG4N9sql6FIYxl0Ij8LkP3EUKfTw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uoHQkJ1uNH96+Nx59w/vQTLSR+n3d0MLE3Oyv95Kpd4XF2eMKkCcOnSA4lsYfklJJ6c447yx2AiQRrLEZQXzmtsPigGOnzVaRLn9ZYF9fX66IU0RhsQnWZckf5v3jqM0lOLADlh6yezWjp/vNMyGxKcZzn6jIb8FAFJFEAyTh/g=
+	 MIME-Version:Content-Type; b=f98egwLMIui45eLLId5+9FjmFbfGA7B2HsgiFL/ZFFpWB74uXO3wC8lspoHUUJbf6Xo8UjM6XYFfzICA9y7zm8r7grxiCt9jiT3zQ2VGa994x9CVIoM6qaEZ0wz9kbqzuqHFHyY9ghEdhCmsYtq4ArLrdv4NSYvEz0dn3ZXewlM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F4DC4CED2;
-	Thu,  9 Jan 2025 14:49:04 +0000 (UTC)
-Date: Thu, 9 Jan 2025 09:50:37 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81B06C4CED3;
+	Thu,  9 Jan 2025 14:51:52 +0000 (UTC)
+Date: Thu, 9 Jan 2025 09:53:25 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Kees Cook
- <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
- openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org,
- linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
- codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
- ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev,
- linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org,
- kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
- linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-Message-ID: <20250109095037.0ac3fe09@gandalf.local.home>
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
+ <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/5] tracing/kprobes: Simplify
+ __trace_kprobe_create() by removing gotos
+Message-ID: <20250109095325.2f2d2f3a@gandalf.local.home>
+In-Reply-To: <173643301102.1514810.6149004416601259466.stgit@devnote2>
+References: <173643296599.1514810.1580554610685712071.stgit@devnote2>
+	<173643301102.1514810.6149004416601259466.stgit@devnote2>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,36 +40,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 09 Jan 2025 14:16:39 +0100
-Joel Granados <joel.granados@kernel.org> wrote:
+On Thu,  9 Jan 2025 23:30:11 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 2e113f8b13a2..489cbab3d64c 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -8786,7 +8786,7 @@ ftrace_enable_sysctl(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table ftrace_sysctls[] = {
-> +static const struct ctl_table ftrace_sysctls[] = {
->  	{
->  		.procname       = "ftrace_enabled",
->  		.data           = &ftrace_enabled,
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 17bcad8f79de..97325fbd6283 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -2899,7 +2899,7 @@ static int set_max_user_events_sysctl(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> -static struct ctl_table user_event_sysctls[] = {
-> +static const struct ctl_table user_event_sysctls[] = {
->  	{
->  		.procname	= "user_events_max",
->  		.data		= &max_user_events,
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Simplify __trace_kprobe_create() by removing gotos.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v6:
+>   - Rename trace_kprobe_create* functions.
+>   - Simplify the end of trace_kprobe_create_internal() a bit.
+> ---
+>  kernel/trace/trace_kprobe.c |   97 ++++++++++++++++++++++---------------------
+>  1 file changed, 49 insertions(+), 48 deletions(-)
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org> # for kernel/trace/
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
