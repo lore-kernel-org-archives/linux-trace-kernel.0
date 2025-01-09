@@ -1,62 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685A621B1BF;
-	Thu,  9 Jan 2025 14:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED1221B8E7;
+	Thu,  9 Jan 2025 14:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736434476; cv=none; b=Yx32XzUx2v2FITOlQ0aRdi++RG6qkQbg9syMLrgjq0ngfTtuUyaZWnlR7WfljKNwCL80hgGTQB2A5Soi8n/wITI1Q9r++tjsotGahDd6GBlvOzpqHtznRPHawmcy0JPjOeyRnGQYUvgcXHj8gJLkf3PtXkP98iBO1HcvvIlgOTI=
+	t=1736434698; cv=none; b=a6bmjRG8ZJpRXWjEvksAyNb3P3gfiX6Pm22lZlnpG/QY0l0vwcpBt2hCE2Mx9i/oAcOHFahbnmqSqoRpyQ0yeL4vNdjuRU7t+vjeljUaNQwVE5SvC82Aq84O0B4B9nyHcJyToNtgekWh65RVSk6VmgBMKrHrC37+EGDAmROEagk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736434476; c=relaxed/simple;
-	bh=sDuqwztHozr5x42lXPU5OPKJkwldFz/PRkzHrrmKF2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wk+cs2lWzgvVQuc3dnixBgibLgD42SOKUleYMyBAIovXj1HcQOGePfzaGmKgThmCrIXGFhNJxynlG+dzln14pYJpEUS1ckKwsjtBBP3G8qkdGxrtXsTRt0z79IbFaTOKdsu7ktWO3437GTMY3c//X6sH9c0Sv2GeTCKSq5fiQ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF82C4CED2;
-	Thu,  9 Jan 2025 14:54:34 +0000 (UTC)
-Date: Thu, 9 Jan 2025 09:56:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
- <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
- <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/5] tracing: Adopt __free() and guard() for
- trace_fprobe.c
-Message-ID: <20250109095607.15bfb6aa@gandalf.local.home>
-In-Reply-To: <173643302228.1514810.2053430844068447947.stgit@devnote2>
-References: <173643296599.1514810.1580554610685712071.stgit@devnote2>
-	<173643302228.1514810.2053430844068447947.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736434698; c=relaxed/simple;
+	bh=vefbR+WxUsl6W1mxf4BqpYTUFUuz57yEjCw3Nj1MESk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jOcBy774W4WFzP9OjxIkPzrczwSLEJGl4CQqQ5yDUmf41+OVMvyzocJ0eKi80/R7nTSxRfWdsyiwtcMLjW2KkIXwu8gXbOLeTuIFFVE1EU9zrkW/qJ7JP3AhewtVXBbkAtbXCuZl5FWZvfKozaIM17nEziJ4GXqoTuT9bw3IyuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0S/GfAC; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0S/GfAC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736434696; x=1767970696;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vefbR+WxUsl6W1mxf4BqpYTUFUuz57yEjCw3Nj1MESk=;
+  b=O0S/GfACkzTzfNWxJdZV/RDMLKAc9QTiO1ADlXLVE3R8aVQztjZpLXES
+   5l3F2mn0eVSjdHAWpZObipNk1T6L8A/hfcH38AAdDhayHMryokusuQSrN
+   zLJZshzx+NKdjNs4grPe8khjD1x0DoX0bV6V8MaMQly1r0v4djgeK7xbI
+   KuOR9H3mQX+wdyiFSZfIYun85ZUY9Cxh8jLe9TN/EZ9fkqKUOz7ZhtbjO
+   Sxmg45pHRaC2XRbiaZOGU+vmKMAC5FP8aZC65dcRKocGXWf0K7+f1EgBn
+   S2t2N7ZvbUPwfnU6eyRrZOVIoBtSsXcrHps1xntpuUx6l/6YJbCElzyhM
+   g==;
+X-CSE-ConnectionGUID: gAf6/7nOR6Wyah7oBzjV+g==
+X-CSE-MsgGUID: +v+ygk6vQG2uZwIh2QiiBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11310"; a="48110945"
+X-IronPort-AV: E=Sophos;i="6.12,301,1728975600"; 
+   d="scan'208";a="48110945"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 06:58:14 -0800
+X-CSE-ConnectionGUID: aAxGFyBISeOF2fi1TGSFDw==
+X-CSE-MsgGUID: hUbAKolZSWC8NTenKubm+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="108527826"
+Received: from unknown (HELO localhost) ([10.237.66.160])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2025 06:58:04 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Joel Granados <joel.granados@kernel.org>, Thomas =?utf-8?Q?Wei=C3=9Fsc?=
+ =?utf-8?Q?huh?=
+ <linux@weissschuh.net>, Kees Cook <kees@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
+ codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev,
+ linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org,
+ kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, Joel
+ Granados <joel.granados@kernel.org>
+Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
+In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
+Date: Thu, 09 Jan 2025 16:58:01 +0200
+Message-ID: <87frlsjapy.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Thu,  9 Jan 2025 23:30:22 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, 09 Jan 2025, Joel Granados <joel.granados@kernel.org> wrote:
+> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> index 2406cda75b7b..5384d1bb4923 100644
+> --- a/drivers/gpu/drm/i915/i915_perf.c
+> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> @@ -4802,7 +4802,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+>  	return ret;
+>  }
+>  
+> -static struct ctl_table oa_table[] = {
+> +static const struct ctl_table oa_table[] = {
+>  	{
+>  	 .procname = "perf_stream_paranoid",
+>  	 .data = &i915_perf_stream_paranoid,
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Adopt __free() and guard() for trace_fprobe.c to remove gotos.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v6:
->   - Rename trace_fprobe_create* functions.
->   - Rename __free label for trace_fprobe.
->   - Simplify the last part of trace_fprobe_create_internal().
-> ---
->  kernel/trace/trace_fprobe.c |  130 ++++++++++++++++++++-----------------------
->  1 file changed, 61 insertions(+), 69 deletions(-)
+For i915,
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
--- Steve
+
+-- 
+Jani Nikula, Intel
