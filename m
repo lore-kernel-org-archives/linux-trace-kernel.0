@@ -1,255 +1,106 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B080CBE5E;
-	Thu,  9 Jan 2025 02:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706EA217F40
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jan 2025 09:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736391370; cv=none; b=A4DbrNOH47MIWnfUgo+jNt6aGdKCBVL1uMnkpJiO43lI2e263KvyddYGYrhZ527WkAxuryiZr3zr9669QCXo9Q2hlKJM32l3oLttdoxyvhKK2uMO1fJR4JBXTnru7OxIoHAnWslY+R7+XJIgSzm7kleKG63LGaUdiL8qqpToUgI=
+	t=1736416250; cv=none; b=J1Km1ZXAN4VKx5T8BBRew9lPBmvkXEpmogdnIzM+k8mIsgk22W+N9CQ+sHyGUszHkP1rfOmG4p06RLP++ZawTuTy7iGdp9I17H0lVKSMhiMs06fKfUtc8TTWGlziUGwSrf7UMqwLmdyDKcz3JJh7+i1CDhBb57jbrwvYfNCOlsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736391370; c=relaxed/simple;
-	bh=DY0igs/dhdaHbbehV+HhtDvFbjt4thTtUud7ttxtbiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DJ9LR3uqVAz4jEAeYN1KS+Y7ZEscQNYeXilwg2RrbMdF9Xa4CQ4SxbuuJ7T4U7MkIbED6bC5MWYwgok5ONwjFNbCu0ozRz69mgNGD8hZr5FxmB8Ut+IeQ1PXaMXglb2tYKZoHZPg/lNLl2kD4NRuoWK6FEJMmNDQ2tXi6OpfU1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XPaQAJ4O; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1736416250; c=relaxed/simple;
+	bh=vD/OIJah7fJrKQATARyY66obbiZXWKJJJFBgCbg0WJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PEJhy1Vnw00/ugVjaOWHpFj4qAdG84B0jMjURzC/chqnvpjJxVkPLqFlEW4/gg1o/eA7prRjVcVX/UIQd1PbyE7PDXeR2cGbR3hAgLvKJLHtLsMRSgx2JakJKRF7R665gfj/UAkfD29BVvCq2WtNJDQxr+UtnM6vIXVV6vIUTFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gWZVBhDT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XPaQAJ4O"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1736391358; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=nj1+miAktKQTpu/dk3YJ7CMYPibZJ96Wttc63fN35eE=;
-	b=XPaQAJ4OafBUJFDtC8Y2UHktKPaj37UrButzPlz4AcpJeYgkCJrjhHzL/oGWjqzN2BLzAdhig/6+JKERRRzb7dVcPDqPtuBNJcOSxOqUR0LqT3mafv9DFtS3nETetJl9AblUqecLffOA82CIhoUMtPRiFbqJEbiFtJj6sDML0KI=
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNFgyoE_1736391344 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 09 Jan 2025 10:55:56 +0800
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: rostedt@goodmis.org,
-	lukas@wunner.de,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	xueshuai@linux.alibaba.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	oleg@redhat.com,
-	naveen@kernel.org,
-	davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	tianruidong@linux.alibaba.com
-Subject: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug event
-Date: Thu,  9 Jan 2025 10:55:43 +0800
-Message-ID: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWZVBhDT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736416247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vD/OIJah7fJrKQATARyY66obbiZXWKJJJFBgCbg0WJs=;
+	b=gWZVBhDTMp3tqWG4KMDEaIbDGri31xJ4K8+68Bq5Gdd2mXEY/I6fSulBOBY0PxvrW6DkIg
+	H6syiOnQks0MAn2EclrZiTCBoiv6FBsvq5BWOmjOpOT63Erzl7BNWbOTRRUVpGffpvyKUg
+	c8hYeoHQ2Ve14TqD42tN+kBTa4kDDoY=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-JQ92iJOxPxi6v12F-54E4A-1; Thu, 09 Jan 2025 04:50:46 -0500
+X-MC-Unique: JQ92iJOxPxi6v12F-54E4A-1
+X-Mimecast-MFC-AGG-ID: JQ92iJOxPxi6v12F-54E4A
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aa63b02c69cso169729866b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jan 2025 01:50:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736416244; x=1737021044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vD/OIJah7fJrKQATARyY66obbiZXWKJJJFBgCbg0WJs=;
+        b=CW119U80bYX5/mrHxBu2MHEa4UZnWsTMQbuxWJk8hdKmVVYbBa3YZ2uu1OU9fzLXSG
+         56YVWn/O86JCy7IHu7cCWxCERY/sxhaJxuU+trx5lX9T2mmgdd+1R6h9C4q/zTE3xdv3
+         20xzP9aniMYMkI2M8qO8/RLqo0EsdEYG9DV8zaYMucj85gnDRmGThKtU+OlLF/trT1R+
+         qjTpZ87aRaa5QopKjp7xV5iU7wyVbbQyLhkmajp7PlwnQxOgjXUgfQfS1HyZrhUHX5Q2
+         +yYxUyHbQ7II2U5bDnmLaUVBPtvBfVOgMOca/dXh4LoDDctjx3eP3SKhFNP/YPZSvHso
+         c32g==
+X-Gm-Message-State: AOJu0YwlhxYgwUB4n48QNEen4eyRzmlhSBZzDmt/jTy2/DCH5j9kQU6w
+	57+Gzf8nh6G/YF95pcGAZ2SjwEywFr5RpVUpIj3+IccCOLhm/ldRZBJ0sZICYrLnHe4YWZkNSt+
+	an1JcrivYZYu7KXKEAbgaa2V3SkfbUcYrGwKlgQiT36nrU9wxZwt0Mz5X+c1xzb0r5EEAeRnShc
+	A9FeWVOOFQMQg9OOSXwiiiAtmCu3JK4wY4DPOg8cAQ1B9IAwFEOrIRp1s=
+X-Gm-Gg: ASbGncvyrMtkV4X/8udMIUscdGLfAk1B7xNK3HRTnAp6d0+4KoOwR3LVpgkmIKkU1e1
+	bwgaUqIWzMQdH7VZonrM1qBpSQ+zS7iqojND1iw==
+X-Received: by 2002:a17:907:7b86:b0:aa6:8dcb:365b with SMTP id a640c23a62f3a-ab2c3c5c979mr188172966b.5.1736416244378;
+        Thu, 09 Jan 2025 01:50:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHUt637cJ8ppsQkkNxsJKMjnqy1zlfTMRZ//LBFVaTULYxUmxM/AeLQJty/L8yieQSpRPVL6Py3H2VCwdaBlH4=
+X-Received: by 2002:a17:907:7b86:b0:aa6:8dcb:365b with SMTP id
+ a640c23a62f3a-ab2c3c5c979mr188171566b.5.1736416244042; Thu, 09 Jan 2025
+ 01:50:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250107144823.239782-1-tglozar@redhat.com> <20250107164450.75f0adb0@gandalf.local.home>
+In-Reply-To: <20250107164450.75f0adb0@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 9 Jan 2025 10:50:33 +0100
+X-Gm-Features: AbW1kvb28nM9l91BL91fDWM7QulbCDkcVQkAVcBNMoGwvGuFnNTXywozGcgV0dY
+Message-ID: <CAP4=nvRCw_2hKPUyd7obZv2Xho_mjdSC7EmozFsoeS0OZC9xaA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] rtla/timerlat: Set OSNOISE_WORKLOAD for kernel threads
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: AR4-XVkz6kKBsMx2YOi3czBKJfiAGEFuSaCFB2jUOKk_1736416245
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hotplug events are critical indicators for analyzing hardware health,
-particularly in AI supercomputers where surprise link downs can
-significantly impact system performance and reliability.
+=C3=BAt 7. 1. 2025 v 22:43 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.=
+org> napsal:
+>
+> BTW, are you going to be implementing any selftests for rtla so that it i=
+s
+> easy to test these changes and check for regressions?
 
-To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-tracepoint for hotplug event to help healthy check, and generate
-tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
-include/uapi/linux/pci.h so applications like rasdaemon can register
-tracepoint event handlers for it.
+Ah right, I promised that some time ago. I have a simple test suite
+adapted from CKI tests [1] that is close to being ready, I was having
+some doubts about the implementation, but I will send it after adding
+a few comments into the code so it can be discussed.
 
-The output like below:
+I have discovered already through the tests that this OSNOISE_WORKLOAD
+issue also affects rtla-osnoise, not only rtla-timerlat, so it is
+definitely at least somehow useful.
 
-$ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-$ cat /sys/kernel/debug/tracing/trace_pipe
-    <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+[1] - https://gitlab.com/redhat/centos-stream/tests/kernel/kernel-tests/-/b=
+lob/main/rt-tests/us/rtla/
 
-    <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+> -- Steve
+>
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
----
-change log since v4:
-- rebase to pci/main (v6.13-rc1) (per Bjorn)
-- rewrite commit log with generic motivation (per Bjorn)
----
- drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
- drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
- include/uapi/linux/pci.h          |  7 ++++
- 3 files changed, 102 insertions(+), 6 deletions(-)
- create mode 100644 drivers/pci/hotplug/trace.h
-
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index d603a7aa7483..f9beb4d3a9b8 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -23,6 +23,9 @@
- #include "../pci.h"
- #include "pciehp.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
- /* The following routines constitute the bulk of the
-    hotplug controller logic
-  */
-@@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case ON_STATE:
- 		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (events & PCI_EXP_SLTSTA_DLLSC)
-+		if (events & PCI_EXP_SLTSTA_DLLSC) {
- 			ctrl_info(ctrl, "Slot(%s): Link Down\n",
- 				  slot_name(ctrl));
--		if (events & PCI_EXP_SLTSTA_PDC)
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_DOWN);
-+		}
-+		if (events & PCI_EXP_SLTSTA_PDC) {
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
-+		}
- 		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		break;
- 	default:
-@@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 					      INDICATOR_NOOP);
- 			ctrl_info(ctrl, "Slot(%s): Card not present\n",
- 				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_NOT_PRESENT);
- 		}
- 		mutex_unlock(&ctrl->state_lock);
- 		return;
-@@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	case OFF_STATE:
- 		ctrl->state = POWERON_STATE;
- 		mutex_unlock(&ctrl->state_lock);
--		if (present)
-+		if (present) {
- 			ctrl_info(ctrl, "Slot(%s): Card present\n",
- 				  slot_name(ctrl));
--		if (link_active)
--			ctrl_info(ctrl, "Slot(%s): Link Up\n",
--				  slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_CARD_PRESENT);
-+		}
-+		if (link_active) {
-+			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
-+			trace_pci_hp_event(pci_name(ctrl->pcie->port),
-+					   slot_name(ctrl),
-+					   PCI_HOTPLUG_LINK_UP);
-+		}
- 		ctrl->request_result = pciehp_enable_slot(ctrl);
- 		break;
- 	default:
-diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-new file mode 100644
-index 000000000000..5b60cd7bcffb
---- /dev/null
-+++ b/drivers/pci/hotplug/trace.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_HW_EVENT_PCI_HP_H
-+
-+#include <linux/tracepoint.h>
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM pci
-+
-+#define PCI_HOTPLUG_EVENT					\
-+	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-+	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-+	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-+
-+/* Enums require being exported to userspace, for user tool parsing */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+PCI_HOTPLUG_EVENT
-+
-+/*
-+ * Now redefine the EM() and EMe() macros to map the enums to the strings
-+ * that will be printed in the output.
-+ */
-+#undef EM
-+#undef EMe
-+#define EM(a, b)	{a, b},
-+#define EMe(a, b)	{a, b}
-+
-+TRACE_EVENT(pci_hp_event,
-+
-+	TP_PROTO(const char *port_name,
-+		 const char *slot,
-+		 const int event),
-+
-+	TP_ARGS(port_name, slot, event),
-+
-+	TP_STRUCT__entry(
-+		__string(	port_name,	port_name	)
-+		__string(	slot,		slot		)
-+		__field(	int,		event	)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(port_name);
-+		__assign_str(slot);
-+		__entry->event = event;
-+	),
-+
-+	TP_printk("%s slot:%s, event:%s\n",
-+		__get_str(port_name),
-+		__get_str(slot),
-+		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-+	)
-+);
-+
-+#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE trace
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-index a769eefc5139..4f150028965d 100644
---- a/include/uapi/linux/pci.h
-+++ b/include/uapi/linux/pci.h
-@@ -39,4 +39,11 @@
- #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
- #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
- 
-+enum pci_hotplug_event {
-+	PCI_HOTPLUG_LINK_UP,
-+	PCI_HOTPLUG_LINK_DOWN,
-+	PCI_HOTPLUG_CARD_PRESENT,
-+	PCI_HOTPLUG_CARD_NOT_PRESENT,
-+};
-+
- #endif /* _UAPILINUX_PCI_H */
--- 
-2.39.3
+Tomas
 
