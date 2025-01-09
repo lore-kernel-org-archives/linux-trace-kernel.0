@@ -1,90 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791A6218585
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  9 Jan 2025 14:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6340A290F;
+	Thu,  9 Jan 2025 14:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736432713; cv=none; b=MMMeWqBU1A45wjV9sxCg8GZJ6iZI8UnNAvlbYmBtOSJQk17f/+h+2uJB5UUpMg2wl7O2i96w8wpKlK0mVtOKZmdEEGzaT43XTtJgYctbjtLd8nEa2laUq4Dt3zeX85qoEJP6XRLoQLxFJ2iewJV01bGkrxEmci3WqanSO1UWoaM=
+	t=1736432972; cv=none; b=kl5c+KZanWnPLZcZMmYH1g5ai4FaWMdyCc2l7rpSH+krCY0YxX7t7PPLDbe1waUWB8jOHQHYXEDHfKh1mKnawjOVoB/UwZMFTbKySUB6w/AmE9VvfTuJEkql6RXFQPXJBXBlxfJC6zfm9YetIdB1tJdQCV+kuZwwDJD4WO+Sd18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736432713; c=relaxed/simple;
-	bh=toDOfdT/dLLxxneMaOhjxbgIjQyaRYqQq8Kg/40SKto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Df1exo3+OyrTZrR+5a7Im9X7cdQ/nA9lSEzz6EP5a2eqxJhF+0oTn3m/8jdYat87Um/lyMJLYogdTPDauN0uEdRpw/GcHGlc4My6WldCnn4jvBdwrO/FjMs6flU2SaPPXfvqT1WA8XWTJbcfBtisMZj1+0Fq3C+4YthxpUIe51Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GA+HHG1e; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736432972; c=relaxed/simple;
+	bh=+M+c6PdW4ZrwzQSozMqxukP7yabHhgSkHk2iGR/FR5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vji3Fdh+XMHJ5p76NVB8ihOLbyVJhSdCjHPx/rcxT4DMEVQ9JKjnkb71XLxm6kycMXDFU1IDblDYYuR70pStldmWIvsy/Pb5ZQ76rMk4OAobSzG4d7ZLubIMzXO2AhGfia7rJz1b4Kr0RCknhJg/9E09IitYdJ+gxeoj9sJEwcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=od2I0vIk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GA+HHG1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736432710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6TQ+MRlGX4zoVa4E9hEX0jIlbvnXvUvfeYr2R+u5ruo=;
-	b=GA+HHG1eF964nkbEmGTbYRgEZEAyIhmpGG6owl4SMzA5olHxLsas+Bp0q2txZP9FUrXPF8
-	DqGTrX54mpWJJueRykFew/EBdYq0i0z+W4CDQQNGWPfremz8QQWvLDDrpAyS0dke3oD9JM
-	OnYdIgCMy7a1D8+xQ8P1D9gE1BfmCDo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-_xap2Xl0OAKARNgrQ8yOhg-1; Thu,
- 09 Jan 2025 09:25:07 -0500
-X-MC-Unique: _xap2Xl0OAKARNgrQ8yOhg-1
-X-Mimecast-MFC-AGG-ID: _xap2Xl0OAKARNgrQ8yOhg
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 483C619560B8;
-	Thu,  9 Jan 2025 14:25:05 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.245])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 44721195E3D9;
-	Thu,  9 Jan 2025 14:25:00 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  9 Jan 2025 15:24:40 +0100 (CET)
-Date: Thu, 9 Jan 2025 15:24:35 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="od2I0vIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8FFCC4CED2;
+	Thu,  9 Jan 2025 14:29:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736432971;
+	bh=+M+c6PdW4ZrwzQSozMqxukP7yabHhgSkHk2iGR/FR5k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=od2I0vIkVyrrB5g4swq/Fp7r3cv/ApYrb4ghMzjduJUt8WW3YuHSj1QmCOPcYShJL
+	 hr2uhuXzLRMqP0oQKxTDY23yHx90pQoPTTpAzs+akYCZuAicPsCy4eW2TlLcb6cuhF
+	 j+We9+3v7Log4C7dgMpa1GRCFnP+iZXgcGPbADWqlTP9WJeSAqwRowND35wmbH8ydd
+	 UlvMJHHzDHYZUtlMuiwWu2Eg29hgp+ETFyfNqzaJeXxcLeql4n4XcMfeFEd80CdVSM
+	 TzgVSmxw7STE24HNBbUICxcgO3eijW/1IczpX80aV3XbXnlmHKMlKBXW+AtkWXu91m
+	 kDRS8aLQDkXEg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Max Makarov <maxpain@linux.com>, bpf@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Fix race in uprobe_free_utask
-Message-ID: <20250109142434.GD26424@redhat.com>
-References: <20250109141440.2692173-1-jolsa@kernel.org>
+Subject: [PATCH v6 0/5] tracing/probes: Cleanup with guard and __free for kprobe and fprobe
+Date: Thu,  9 Jan 2025 23:29:26 +0900
+Message-ID: <173643296599.1514810.1580554610685712071.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109141440.2692173-1-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 01/09, Jiri Olsa wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1915,6 +1915,7 @@ void uprobe_free_utask(struct task_struct *t)
->  	if (!utask)
->  		return;
->
-> +	t->utask = NULL;
->  	WARN_ON_ONCE(utask->active_uprobe || utask->xol_vaddr);
->
->  	timer_delete_sync(&utask->ri_timer);
-> @@ -1924,7 +1925,6 @@ void uprobe_free_utask(struct task_struct *t)
->  		ri = free_ret_instance(ri, true /* cleanup_hprobe */);
->
->  	kfree(utask);
-> -	t->utask = NULL;
+Hi,
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+Here is the 6th version of the series to fix and cleanup probe events in
+ftrace with __free(). The previous series is here;
 
+https://lore.kernel.org/all/173630223453.1453474.6442447279377996686.stgit@devnote2/
+
+In this version, I updated [4/5] and [5/5] according to the comment from Steve.
+
+Thanks,
+
+---
+
+Masami Hiramatsu (Google) (5):
+      tracing/kprobes: Fix to free objects when failed to copy a symbol
+      tracing: Use __free() in trace_probe for cleanup
+      tracing: Use __free() for kprobe events to cleanup
+      tracing/kprobes: Simplify __trace_kprobe_create() by removing gotos
+      tracing: Adopt __free() and guard() for trace_fprobe.c
+
+
+ kernel/trace/trace_fprobe.c |  130 ++++++++++++++++++++-----------------------
+ kernel/trace/trace_kprobe.c |  131 +++++++++++++++++++++----------------------
+ kernel/trace/trace_probe.c  |   51 ++++++-----------
+ 3 files changed, 143 insertions(+), 169 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
