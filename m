@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01E4224895
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 18:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F9F218E92
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 18:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534503; cv=none; b=hcvvPC8z6SnmU2tPY2iCKAZrpIwuiUMAsvWbRWeG1Wj4+nFlRJerh4N+7Iec/70R13j9t+SyhoWox5eq3CZOr0V0Oj23DrH3dtN/z5xvgT3KK1zIOeUyegaiu1a637j+HaT+TKdmdBRmGt5kJkp/uY5Q8J5/vVp3PUAb6Z6/kqw=
+	t=1736534511; cv=none; b=O3HU90AaIZtxIumsKDoUwVKiJUdfx7nOWk02gXfYLa+mFSWVXhSZFK6euY5a22ICiW0Gve6hYLqOnUaA/XgIf7gXO4V6DeGKpCptFitHHvQ+hkB19vWq7MdYyPVl5OKZixyik28WlRm5upbo6GVrv4meg3BKFOI5J5zfk5hYP9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534503; c=relaxed/simple;
-	bh=ZTZcWQBF8tUo+J/JUKmX7ofVEYD/oEfP//Lw5p3vMVE=;
+	s=arc-20240116; t=1736534511; c=relaxed/simple;
+	bh=kGzuSX53lHwpbQyPS7sz1yo/F9Y/VcabtEWf2Y1h4vY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oxiAR+uzz/rKCqO9USgA5eKj4dAE115kq/5meF8qTwtVvx0ZhN0mGR/ABn/oK3Ox+Le1i2eBL5LdESnh3vrVOFRVrtgvpJJ3X/tBUQccQJ6733JOxY2ZwDvDEDyTOvwn4h9PSHGXmfsnwMGVB2yf01HBBPfXCxwoOTmO0aIbxJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rN5YQ4Qg; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=hVI6+fCzdbdG4Ks1DVYyCu5ZZ5stomrij2n3VIgYUdVwMZUfvU1A5m+gII3mKT3Ij40wxYNwXwcfu4xFF7L3tmIvfpy33DgUa5rfkGIZfrpxIKpVandIlNdbsxsJ1JUDk5ph3SFnk2CIPr3G/7Qys9kUPVgPEjmrIUQbtOfSnRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CYy/My5o; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rN5YQ4Qg"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43582d49dacso16414195e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 10:41:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CYy/My5o"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-38a9118c486so1465746f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 10:41:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534475; x=1737139275; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736534491; x=1737139291; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqQy0/uo7rp5xt5hxwNN280PfwFL6RX7EFGPCdWY0es=;
-        b=rN5YQ4Qgxne0RHdvEWxSnVWuekoLjrSgQpBMyjzlbrZYm1LmGg03rDRNufoGUgrqm1
-         fRjnJsRo1w7eHCzSXj/ofLjpXz7q/v85GiJkPwg3IvDMvefS2fIGQzD5bW6VBiKviLbO
-         87+Wrmprat2mQXyZjSWVadja9OF6qD1bXpO4ip73dKrL+K3EAHnaA+XbztJKV8wDoLON
-         kcfkxi0KRxH81TX31k3jtBEx+ylXA2d/tEqiEY55nTCW+7RKk5wNZbT1mqLmIsaWEQgn
-         GECj3ff34jj4uN41yAzH+erWgR/dDYYb5GbUFspw5BeL/Ys7QkcazE3NWX4+YNgn+7Cl
-         M3ig==
+        bh=z5b6fu2IPJ4vMWdeJyvKaXZwCsIFdjwPZGonrVH8VuY=;
+        b=CYy/My5odBGanUx9mJU448Z1FppXeL+BCJYcZBer9Hi3Ylw9Y3F31R6YtnmO/CvnJr
+         YIlR3o2jdCU2FFCKXcJlsCKlT+NH163A8E1XnR6zQsRSAsWcYQHXgnD+oCR5pbrhH2FL
+         uwolnqS5smZbHt4uLtRCyHgCjVnljI8Oo85sv/Kn+g0Zkm31xTSV4ajxMqZvPgRORD3+
+         mxzHiZjq8FUBv71L72jBXhJ1CQt+r9iLMpFUP0Sw/Mo+Ic2VxYNLanMom0NlPpHQf4su
+         luM10YHPmsYXcGhc4e3RKmpY7tpw/RKXVqZkS80gOOVVaS4eqbviVv96Wf7/ybSyeTQe
+         bZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534475; x=1737139275;
+        d=1e100.net; s=20230601; t=1736534491; x=1737139291;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqQy0/uo7rp5xt5hxwNN280PfwFL6RX7EFGPCdWY0es=;
-        b=S2DCgrUw5yHqjVEmo3/V9QGU7k7PXbvkZiRbhWmwCYr80qGYxoH0B083gthLFU9x6e
-         jnZEzWLcQug7twwobKSqf7jpc+eCGfqnbCU3vgnPJRjJJDRAKi28EpQfY4UPla4im9D1
-         ZPILrUpoPlSI3ABU6GsmNlKyHuslUOWjY44qdBLGRkrOQqFlSHlX77yBwZhFd+r6yH3j
-         E8z/txnnZhpBH7TkZPYJsgxEXxSJl9bA6fGcd9pL59KDTPwl2utxdlBU3ad3M7nMx/P4
-         Y1plX8sH1ei/Ol7mgUe9uQYZzgK5dyjRaGA1hgaZJykcYy2yt1dD4lrDeNKMbUa0WPpp
-         trxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlVCwUUfTAX1JdM3PtyqnIHo0bNZV6vVHU2MiP1C2Ovt1GJis5K+X5XvCrDSruuHuIAauyb87hFjtuzN6+a4z9a1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrive/a13piDAhAbwvo+xrrMDO92SAyNgTIBMN97Z8vIRzKZgv
-	7+9MaL+g3SN6E0GVloPK14pBx8QizE669+gEvOR442OXtSxoUtFeInIwiBsZT3cOXfb1moiO85L
-	eYt9dAcCKqQ==
-X-Google-Smtp-Source: AGHT+IEHMyjAf4Ii6uANDaoYyo5ZkF+D1/fwKOgm4kaaSXfegc+L5vVxTYn6WIEloGlJDmt93RFbSdb2jTZqKA==
-X-Received: from wmbjt19.prod.google.com ([2002:a05:600c:5693:b0:435:4bd2:1dcd])
+        bh=z5b6fu2IPJ4vMWdeJyvKaXZwCsIFdjwPZGonrVH8VuY=;
+        b=lJK3BYl1RItqwUivfbj0ZLkl6F7oJNKGf5xzdfWCuvx47L5ogNzZ8/QGqjGvsXayT2
+         0V0+vb0GXrcSRhZohHYoHPS6vQN4OnSYkAjSrPNVFVpcXBukIjNJ1ygjUpDPEESAkq7E
+         frJiT1htsdIPhlrZZkLLaFBorMjNcmfDoye3AX/Gv4KSE48oeBuJyf6uD5r8If6/P4tr
+         A8RQ53SnWFViRp3eDmbbrY04/ayQojwNXNSCPOzp2SHbqADf5NQCByGnAnePyqx76Rxu
+         Z+P3mzUKdMsN3ZNov3aFNh6b468su66WFVePsZa+DsDg1OZlpm9pBp7nnm3nuzJ35rIk
+         uKmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtufEWDrGIxI8vMbjVV2GFOZEzvQSxfqCXSKwB2PGjct7zPuRRg46NS458lsg2K8vOd+481YKm1FSqvxnjDH1+tVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycTNagRCkt20QnxwOfw6XdbinqmPS7LMvoriRFGlgQQghWUNoq
+	CU2yFMJL1dAFxEGslVk6JFIT6RO2rsB0xxROwnmnAVjlfZJkAa7iVb29t8JAndFwVNFil0fMO3e
+	KYzdm1HbZbA==
+X-Google-Smtp-Source: AGHT+IEE74PFwgraC6zRNOcME3rOW4swKtJd/bKE4AIl8MRowFtdpWNq19ZBTTKPz5sLGPxmEc1GHABVlwipiQ==
+X-Received: from wmjv9.prod.google.com ([2002:a7b:cb49:0:b0:434:f173:a51])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4e44:b0:434:e9ee:c3d with SMTP id 5b1f17b1804b1-436e27070b1mr106983675e9.20.1736534474969;
- Fri, 10 Jan 2025 10:41:14 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:39 +0000
+ 2002:a05:6000:1a85:b0:38a:4184:1520 with SMTP id ffacd0b85a97d-38a872eb1eamr9947778f8f.27.1736534490587;
+ Fri, 10 Jan 2025 10:41:30 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:46 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-13-8419288bc805@google.com>
-Subject: [PATCH RFC v2 13/29] mm: Add __PAGEFLAG_FALSE
+Message-ID: <20250110-asi-rfc-v2-v2-20-8419288bc805@google.com>
+Subject: [PATCH RFC v2 20/29] mm: asi: Make TLB flushing correct under ASI
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -114,39 +114,107 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-__PAGEFLAG_FALSE is a non-atomic equivalent of PAGEFLAG_FALSE.
+This is the absolute minimum change for TLB flushing to be correct under
+ASI. There are two arguably orthogonal changes in here but they feel
+small enough for a single commit.
 
-Checkpatch-args: --ignore=COMPLEX_MACRO
+.:: CR3 stabilization
+
+As noted in the comment ASI can destabilize CR3, but we can stabilize it
+again by calling asi_exit, this makes it safe to read CR3 and write it
+back.
+
+This is enough to be correct - we don't have to worry about invalidating
+the other ASI address space (i.e. we don't need to invalidate the
+restricted address space if we are currently unrestricted / vice versa)
+because we currently never set the noflush bit in CR3 for ASI
+transitions.
+
+Even without using CR3's noflush bit there are trivial optimizations
+still on the table here: on where invpcid_flush_single_context is
+available (i.e. with the INVPCID_SINGLE feature) we can use that in lieu
+of the CR3 read/write, and avoid the extremely costly asi_exit.
+
+.:: Invalidating kernel mappings
+
+Before ASI, with KPTI off we always either disable PCID or use global
+mappings for kernel memory. However ASI disables global kernel mappings
+regardless of factors. So we need to invalidate other address spaces to
+trigger a flush when we switch into them.
+
+Note that there is currently a pointless write of
+cpu_tlbstate.invalidate_other in the case of KPTI and !PCID. We've added
+another case of that (ASI, !KPTI and !PCID). I think that's preferable
+to expanding the conditional in flush_tlb_one_kernel.
+
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- include/linux/page-flags.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/mm/tlb.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index cc839e4365c18223e68c35efd0f67e7650708e8b..7ee9a0edc6d21708fc93dfa8913dc1ae9478dee3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -484,6 +484,10 @@ static inline int Page##uname(const struct page *page) { return 0; }
- FOLIO_SET_FLAG_NOOP(lname)						\
- static inline void SetPage##uname(struct page *page) {  }
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index ce5598f96ea7a84dc0e8623022ab5bfbba401b48..07b1657bee8e4cf17452ea57c838823e76f482c0 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -231,7 +231,7 @@ static void clear_asid_other(void)
+ 	 * This is only expected to be set if we have disabled
+ 	 * kernel _PAGE_GLOBAL pages.
+ 	 */
+-	if (!static_cpu_has(X86_FEATURE_PTI)) {
++	if (!static_cpu_has(X86_FEATURE_PTI) && !static_asi_enabled()) {
+ 		WARN_ON_ONCE(1);
+ 		return;
+ 	}
+@@ -1040,7 +1040,6 @@ static void put_flush_tlb_info(void)
+ noinstr u16 asi_pcid(struct asi *asi, u16 asid)
+ {
+ 	return kern_pcid(asid) | ((asi->class_id + 1) << X86_CR3_ASI_PCID_BITS_SHIFT);
+-	// return kern_pcid(asid) | ((asi->index + 1) << X86_CR3_ASI_PCID_BITS_SHIFT);
+ }
  
-+#define __SETPAGEFLAG_NOOP(uname, lname)					\
-+static inline void __folio_set_##lname(struct folio *folio) { }		\
-+static inline void __SetPage##uname(struct page *page) {  }
-+
- #define CLEARPAGEFLAG_NOOP(uname, lname)				\
- FOLIO_CLEAR_FLAG_NOOP(lname)						\
- static inline void ClearPage##uname(struct page *page) {  }
-@@ -506,6 +510,9 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
- #define TESTSCFLAG_FALSE(uname, lname)					\
- 	TESTSETFLAG_FALSE(uname, lname) TESTCLEARFLAG_FALSE(uname, lname)
+ void asi_flush_tlb_range(struct asi *asi, void *addr, size_t len)
+@@ -1192,15 +1191,19 @@ void flush_tlb_one_kernel(unsigned long addr)
+ 	 * use PCID if we also use global PTEs for the kernel mapping, and
+ 	 * INVLPG flushes global translations across all address spaces.
+ 	 *
+-	 * If PTI is on, then the kernel is mapped with non-global PTEs, and
+-	 * __flush_tlb_one_user() will flush the given address for the current
+-	 * kernel address space and for its usermode counterpart, but it does
+-	 * not flush it for other address spaces.
++	 * If PTI or ASI is on, then the kernel is mapped with non-global PTEs,
++	 * and __flush_tlb_one_user() will flush the given address for the
++	 * current kernel address space and, if PTI is on, for its usermode
++	 * counterpart, but it does not flush it for other address spaces.
+ 	 */
+ 	flush_tlb_one_user(addr);
  
-+#define __PAGEFLAG_FALSE(uname, lname) TESTPAGEFLAG_FALSE(uname, lname)		\
-+	__SETPAGEFLAG_NOOP(uname, lname) __CLEARPAGEFLAG_NOOP(uname, lname)
+-	if (!static_cpu_has(X86_FEATURE_PTI))
++	/* Nothing more to do if PTI and ASI are completely off. */
++	if (!static_cpu_has(X86_FEATURE_PTI) && !static_asi_enabled()) {
++		VM_WARN_ON_ONCE(static_cpu_has(X86_FEATURE_PCID) &&
++				!(__default_kernel_pte_mask & _PAGE_GLOBAL));
+ 		return;
++	}
+ 
+ 	/*
+ 	 * See above.  We need to propagate the flush to all other address
+@@ -1289,6 +1292,16 @@ STATIC_NOPV void native_flush_tlb_local(void)
+ 
+ 	invalidate_user_asid(this_cpu_read(cpu_tlbstate.loaded_mm_asid));
+ 
++	/*
++	 * Restricted ASI CR3 is unstable outside of critical section, so we
++	 * couldn't flush via a CR3 read/write. asi_exit() stabilizes it.
++	 * We don't expect any flushes in a critical section.
++	 */
++	if (WARN_ON(asi_in_critical_section()))
++		native_flush_tlb_global();
++	else
++		asi_exit();
 +
- __PAGEFLAG(Locked, locked, PF_NO_TAIL)
- FOLIO_FLAG(waiters, FOLIO_HEAD_PAGE)
- FOLIO_FLAG(referenced, FOLIO_HEAD_PAGE)
+ 	/* If current->mm == NULL then the read_cr3() "borrows" an mm */
+ 	native_write_cr3(__native_read_cr3());
+ }
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
