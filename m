@@ -1,178 +1,113 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF77A2116E6;
-	Fri, 10 Jan 2025 15:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D7AF207E1A;
+	Fri, 10 Jan 2025 16:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736522769; cv=none; b=Qwe5rFcJKp2BzDIls6YwodwrHMLc8VFYMqta5NgBMmXPhOh8rtEUL3SI20dT2vey3l03MrnM7cdNsRDORoExZHlXtHU8OdmT8dY1PZ8+YCGWSR4ZMlbgLsDDx5uFpL6IlrakPIiaLoE+rJrc507GbhYAUvsOxlJCpAkPw4D7FhQ=
+	t=1736526396; cv=none; b=uFNZU+0hn9mkFihLrV4TYOFrqyMpLqYIVgCctp+3T9Cr7SIflxq15BAz4DGrFoqPb8PqC8adZwGzPA9UcR7732zk+4VmwhYUTaKtgzAYr8JYYu1eSic14Dg8DbhU4OllcXqPBpUouoG8t8d/R0hVBccG8qwLj5i21xVtAa+aQtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736522769; c=relaxed/simple;
-	bh=XQf8PNqFl72fr0M/6yjt5LFRxL77jNP53tuENbACcPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JG+n/PH+44QjJv2cgarfiYG2/rFE/BOViFNtT+b1exqz56BHMygdFvOVoRb/MPed3GD4uazoRKOTUSLLljQe69fsexqTNdBgz7bQiBvO/4bFqGgfXyD5E2GTkpjE+PwIQtPilQKsfcnnHjzXSoEhlYFPil1mPGME5Ip6TATrI0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=Y05vyJIC; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	s=arc-20240116; t=1736526396; c=relaxed/simple;
+	bh=XpBp2/0Iuvi7Z2yROnUeT1g5tqYkFkZ3byg5NjdS4DA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MRssx1Ml6NX++dPH9JDdfq1HNRaMm0b3ZbEYhn3BU9pT4/FI49ZUN4dkkQXiTBZ1RjPwCk5HK4aOMQk5HzgbcavDnMZD+KIMHHX1Ivi3OXdWJZYZE71b7qB02Gls60sre0UuQbkP6sfNqDMOUWxlOuFk4jHikWGY/SL6z5DsmI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YECD3b5U; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="Y05vyJIC"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4YV58M3WQ7z9tnh;
-	Fri, 10 Jan 2025 16:25:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1736522755;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gShcPC8qXPqwrtPaApGkI9pbmctxLebCdkupikjGhDY=;
-	b=Y05vyJIC9MvB/Dh7M+iZIVLBNfWh/i54JP4e9vBZEjGg5SmIqcQ4z/YaoWXNYR6ZA18f2F
-	TJpoE5jN5LeBxYkRIYTTBuYrgdcncDXaDPawkPVpjf2rEZhwP7piOHWFhPdVMZ3PL3VrKP
-	EezK4Rg/sj54dKxEG3qYM8334UZ+6VvsldCcFFnCEyO15Qmvkrriv4TrZuv+Qzlh1GA6IF
-	Ze9i7JQJo51oULIq9IR2I2FZAauzTF9dE9oqZxslBkR4VLspIs3KztVo+0PrNMJDh4Izoi
-	E/eLb3++3CRdYxttCZlsoBI496ZNWUFObfaxpI8fBhRLIfupQuBwgwPQaA5stA==
-Date: Sat, 11 Jan 2025 02:25:37 +1100
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, olsajiri@gmail.com, mhiramat@kernel.org, 
-	oleg@redhat.com, linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, BPF-dev-list <bpf@vger.kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, 
-	x86@kernel.org, linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io, 
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-Message-ID: <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
-References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YECD3b5U"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21649a7bcdcso36965545ad.1;
+        Fri, 10 Jan 2025 08:26:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736526395; x=1737131195; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZOf7ixy3JqjNxFEObWlD6WqsrmDvaYekiBQC1vlej8=;
+        b=YECD3b5UAMOoK8nUVezqK/ySNBnJiJei54tdBF0uHkQB9yNkEHJXqKI5KAH2xj+txE
+         Upr8iGlRWO7YFazD1J/1fqHdT9hR5r8NYqelfMTMyMkYvQFUYRRkHy0eGI1+zgJbIXJH
+         L/MzUVEzjFbKc+3Fwjg67LtNZKxaAK17Eh7krP+ypfI5oAfd7EqWuK/PQ/Qh1FgzTrGb
+         4P3PM1gdAiitMwm7kkWvMzzmm2PJTPnEsVtVD4r5ChvHRIcZxVlqf0ayS4cMeQcAJw+n
+         cRzIqZnIovEsY442il8IPQlVzc8swE+UachiGLSM+mDRlTq1myr0JwVy6nGuDT1AJarD
+         phOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736526395; x=1737131195;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bZOf7ixy3JqjNxFEObWlD6WqsrmDvaYekiBQC1vlej8=;
+        b=Tf2kbzP2phh66Ypa1exfGqViZBgxPBn/TSGT0N+R4M2w/D5ZFDPKCKYOGB4R3/Q7gH
+         sHpV7srwMx6xEPp+Sj+P0wAmaiGkmMz3csi/B/mopZlLjgPDk1Xe1R0dCxoooq/lJTR1
+         /7ZK1zibXMjdmjtY4YdRnUx1B9bwADomXt2/wjjaLBPpjKA0z/xHROsIl6j7ge7T7rb0
+         8Ib3V9n+wRs6su0BmL/vo55E4/yFS97uQAU8L2oFOxL1LbZwhXsuFvuVMwbo5yxYOUuh
+         oPrx41FrfhASfHprARb48GtPFc4hGbA1V6Ac012feVgq/3XHkXpuCH5t6VvE5FbKlSLX
+         ocjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWApCyvpwFCunIVxLbSzmKxkur56l5IJxXlkvVCIfQgduIFRaop15ZKFJaxyv8MYC9kYcgzXl7gDABL6Nbamrlpy6cY@vger.kernel.org, AJvYcCXRNkaLcDi6jy0L49vai3Y6b9vSMYZEnjKAnymxL6VRgD/tPEQTidJgz4cqri0qYBgYToKOc7G+4ggiP9s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhI25hz+W8h8ntF0ooh30mNLZaaEboLz39a8T1i+U1ac7jzjSd
+	uvk6InjpmS4krnJTKze0QMmBwLjV2WlXaMym8DsjZIC4wB8WF3ZG
+X-Gm-Gg: ASbGnct2asaYDViJIsJbqwlCXRud+9ktPa5SUEzgHF7O5lNzOWxmpgquSYZ1XmBCUzw
+	KHvcTZzlcigjv4dhGNOkuWHNyi1GN+ZmLl6fIPSpJQekf2viACKfkHkC15KS+YNQ+I6Hzb58nau
+	jMppjgriLs2EmFpldIi3rVdRBLqhisXhfhmzG3RG373oDQi4GS2qM+1bV1cSKmjQOjWy9A04y3d
+	i34SHfoVFt0FVCE1pepVdhVU488ttcfTTbahzyFU6f/owunG572np2KnmmAulvqjOYaxPdy7FuT
+	HnC15A==
+X-Google-Smtp-Source: AGHT+IECmPuuEtIyj7WdP4+P4kUDmWEHmExqcGiA8ON6BT/1JldtSRZwDII9vaFGWkItoYX8PXZyTg==
+X-Received: by 2002:a05:6a00:2c8d:b0:72d:3c4d:c1ea with SMTP id d2e1a72fcca58-72d3c4dc254mr5381670b3a.7.1736526394728;
+        Fri, 10 Jan 2025 08:26:34 -0800 (PST)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72d40681bd0sm1721558b3a.150.2025.01.10.08.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2025 08:26:34 -0800 (PST)
+From: Jeongjun Park <aha310510@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: david@redhat.com,
+	vdonnefort@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH] ring-buffer: fix incorrect boundary check order
+Date: Sat, 11 Jan 2025 01:26:12 +0900
+Message-ID: <20250110162612.13983-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="awkkmoqmn5u34xu6"
-Content-Disposition: inline
-In-Reply-To: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
-X-Rspamd-Queue-Id: 4YV58M3WQ7z9tnh
+Content-Transfer-Encoding: 8bit
 
+If there is a case where the variable s is greater than or equal to nr_subbufs
+before entering the loop, oob read or use-after-free will occur. This problem
+occurs because the variable s is used as an index to dereference the
+struct page before the variable value range check. This logic prevents the
+wrong address value from being copied to the pages array through the subsequent
+range check, but oob read still occurs, so the code needs to be modified.
 
---awkkmoqmn5u34xu6
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-MIME-Version: 1.0
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+ kernel/trace/ring_buffer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On 2025-01-10, Eyal Birger <eyal.birger@gmail.com> wrote:
-> Hi,
->=20
-> When attaching uretprobes to processes running inside docker, the attached
-> process is segfaulted when encountering the retprobe. The offending commit
-> is:
->=20
-> ff474a78cef5 ("uprobe: Add uretprobe syscall to speed up return probe")
->=20
-> To my understanding, the reason is that now that uretprobe is a system ca=
-ll,
-> the default seccomp filters in docker block it as they only allow a speci=
-fic
-> set of known syscalls.
-
-FWIW, the default seccomp profile of Docker _should_ return -ENOSYS for
-uretprobe (runc has a bunch of ugly logic to try to guarantee this if
-Docker hasn't updated their profile to include it). Though I guess that
-isn't sufficient for the magic that uretprobe(2) does...
-
-> This behavior can be reproduced by the below bash script, which works bef=
-ore
-> this commit.
->=20
-> Reported-by: Rafael Buchbinder <rafi@rbk.io>
->=20
-> Eyal.
->=20
-> --- CODE ---
-> #!/bin/bash
->=20
-> cat > /tmp/x.c << EOF
-> #include <stdio.h>
-> #include <seccomp.h>
->=20
-> char *syscalls[] =3D {
-> "write",
-> "exit_group",
-> };
->=20
-> __attribute__((noinline)) int probed(void)
-> {
-> printf("Probed\n");
-> return 1;
-> }
->=20
-> void apply_seccomp_filter(char **syscalls, int num_syscalls)
-> {
-> scmp_filter_ctx ctx;
->=20
-> ctx =3D seccomp_init(SCMP_ACT_ERRNO(1));
-> for (int i =3D 0; i < num_syscalls; i++) {
-> seccomp_rule_add(ctx, SCMP_ACT_ALLOW,
-> seccomp_syscall_resolve_name(syscalls[i]), 0);
-> }
-> seccomp_load(ctx);
-> seccomp_release(ctx);
-> }
->=20
-> int main(int argc, char *argv[])
-> {
-> int num_syscalls =3D sizeof(syscalls) / sizeof(syscalls[0]);
->=20
-> apply_seccomp_filter(syscalls, num_syscalls);
->=20
-> probed();
->=20
-> return 0;
-> }
-> EOF
->=20
-> cat > /tmp/trace.bt << EOF
-> uretprobe:/tmp/x:probed
-> {
->     printf("ret=3D%d\n", retval);
-> }
-> EOF
->=20
-> gcc -o /tmp/x /tmp/x.c -lseccomp
->=20
-> /usr/bin/bpftrace /tmp/trace.bt &
->=20
-> sleep 5 # wait for uretprobe attach
-> /tmp/x
->=20
-> pkill bpftrace
->=20
-> rm /tmp/x /tmp/x.c /tmp/trace.bt
->=20
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-https://www.cyphar.com/
-
---awkkmoqmn5u34xu6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZ4E78QAKCRAol/rSt+lE
-bxuQAP9L5u1uqwbKwQwyDYN3169phWr/xY/2p7TaDBMRcmPWKAEAzKBzmJ01ajsw
-paYb+ERj7Lm51eMipaxJyxUrHPgtrAE=
-=fDTV
------END PGP SIGNATURE-----
-
---awkkmoqmn5u34xu6--
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 60210fb5b211..6804ab126802 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7059,7 +7059,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	}
+ 
+ 	while (p < nr_pages) {
+-		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		struct page *page;
+ 		int off = 0;
+ 
+ 		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+@@ -7067,6 +7067,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			goto out;
+ 		}
+ 
++		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+ 				break;
+--
