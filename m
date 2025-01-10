@@ -1,112 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998202135CD;
-	Fri, 10 Jan 2025 17:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39FF213E6F;
+	Fri, 10 Jan 2025 17:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736529242; cv=none; b=YHA6WPjai2AXfv8OxCgDNDW8FylN1NKdGUqRSC6O90OLumH01NHdj+tExkim4UrVuEpaBrxeWW0ai5/asBXa+KLeTLSlafDwEeWsl0l1YfvFTA4OtmWaTR8GkMDHj6MlmRNRch3FGSU6NMqpvnx9EzlQs2pxJYVBC7vEqR5Jwe8=
+	t=1736529933; cv=none; b=TPzaM4wg9+cia78NHiBZihgjB8OfnLT7kurEJHdcPs1J5jgHcyU72U7OCVY+1+RglU3cVJ9BZH8zcCPIBZWTDQB5mDaBSqvulVvU6PRdDHqwpoOzWHW1XElWepQxS9GTrIg6v3kv9zIbSzxjkyXYvblsMdGAjUWtiaUDtj6FeuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736529242; c=relaxed/simple;
-	bh=zCD9wMt7oj+kJBhlIcsVVTGT43QE2wPIyfO0mHZuo3E=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AAjN4aD1+LG9tm4CDTT98hANfLwZOwpT1esfVG5PUP6rD7p7JWcTczqfDiExaoNz3ll+vgd7jPhqO5SOXaqsiL0jBTIJg7zQs17Fy/X+gzZ7qpj2jCYmpz0HK+OUtxEG5+vAlk3BL/j4o23sXW2dz9yvHfZw2tUEfPpwytLLdGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hWvPm9S9; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hWvPm9S9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736529240; x=1768065240;
-  h=date:message-id:from:to:cc:subject:in-reply-to:
-   references:mime-version;
-  bh=zCD9wMt7oj+kJBhlIcsVVTGT43QE2wPIyfO0mHZuo3E=;
-  b=hWvPm9S9gyyWflhxezAJQ0/Zw5EZKsCuAkNL9pt9ibrxvKhfx8igBLau
-   BqAxt/w+4WkhB7JJeGhd2XKu7BTEUI/u+ZCjJZLax3klENzioM0Ogu8lV
-   PfZO/Ur9FgiISKQAktuwXDv+fKDWBBLhsHE3nTEvd7HEfk5ILPMEy+C+i
-   v7E/Bn3dcZExGuv+WXwcKSpdB8KGwD5qn3eKJp4zYHR+m82wlFlpFSVej
-   Zj+F+2HJbkF1YqnKygWuQDJ/VUu15h2UnCLWYzcjwzwNjZ/0bri7MxpqP
-   ws6x4YtpsaSIYSiiMKXJNlfXHbNtrSTP7okJPY7QFGY+mFzAY/yI1B5Pm
-   Q==;
-X-CSE-ConnectionGUID: eETlnapHTZaJYZoWsWncOQ==
-X-CSE-MsgGUID: kcx024AdTVSnnR8CHTt/pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="36712482"
-X-IronPort-AV: E=Sophos;i="6.12,303,1728975600"; 
-   d="scan'208";a="36712482"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 09:13:58 -0800
-X-CSE-ConnectionGUID: d+N1H3FPQryemumCSoERgQ==
-X-CSE-MsgGUID: skCK+1HISZSgobnkHZdoJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="127073384"
-Received: from orsosgc001.jf.intel.com (HELO orsosgc001.intel.com) ([10.165.21.142])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 09:13:57 -0800
-Date: Fri, 10 Jan 2025 09:13:56 -0800
-Message-ID: <8534hqvbfv.wl-ashutosh.dixit@intel.com>
-From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,	Kees Cook
- <kees@kernel.org>,	Luis Chamberlain <mcgrof@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,	linux-crypto@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,	intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,	intel-xe@lists.freedesktop.org,
-	linux-hyperv@vger.kernel.org,	linux-rdma@vger.kernel.org,
-	linux-raid@vger.kernel.org,	linux-scsi@vger.kernel.org,
-	linux-serial@vger.kernel.org,	xen-devel@lists.xenproject.org,
-	linux-aio@kvack.org,	linux-fsdevel@vger.kernel.org,	netfs@lists.linux.dev,
-	codalist@coda.cs.cmu.edu,	linux-mm@kvack.org,	linux-nfs@vger.kernel.org,
-	ocfs2-devel@lists.linux.dev,	fsverity@lists.linux.dev,
-	linux-xfs@vger.kernel.org,	io-uring@vger.kernel.org,	bpf@vger.kernel.org,
-	kexec@lists.infradead.org,	linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,	apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org,	keyrings@vger.kernel.org
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-In-Reply-To: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/28.2 (x86_64-redhat-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1736529933; c=relaxed/simple;
+	bh=g9XJdaMNTbG7yWk8MTUa1vhNm5DPDzlxoFFVasn9ikQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q9/ApDoneB9xr7duMWNwWYP28VbbU/2Do9nzSo3bigCKIwE1zqrdCsIyCu5bQSDuby99s3IE9Up2syCkAESKMfJh++yIB8EwHn07hPE6XgGunlaO3Enz59oTY6H5sNEdUjSIhJa63KiuJwrxhndq+FTOoamhemJ1lC1Rcw+3bAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4EAFC4CEE2;
+	Fri, 10 Jan 2025 17:25:31 +0000 (UTC)
+Date: Fri, 10 Jan 2025 12:27:07 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jeongjun Park <aha310510@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ vdonnefort@google.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: fix incorrect boundary check order
+Message-ID: <20250110122707.119c6f41@gandalf.local.home>
+In-Reply-To: <20250110162612.13983-1-aha310510@gmail.com>
+References: <20250110162612.13983-1-aha310510@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 09 Jan 2025 05:16:39 -0800, Joel Granados wrote:
->
-> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-> index 2406cda75b7b..5384d1bb4923 100644
-> --- a/drivers/gpu/drm/i915/i915_perf.c
-> +++ b/drivers/gpu/drm/i915/i915_perf.c
-> @@ -4802,7 +4802,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
->	return ret;
->  }
->
-> -static struct ctl_table oa_table[] = {
-> +static const struct ctl_table oa_table[] = {
->	{
->	 .procname = "perf_stream_paranoid",
->	 .data = &i915_perf_stream_paranoid,
-> diff --git a/drivers/gpu/drm/xe/xe_observation.c b/drivers/gpu/drm/xe/xe_observation.c
-> index 8ec1b84cbb9e..57cf01efc07f 100644
-> --- a/drivers/gpu/drm/xe/xe_observation.c
-> +++ b/drivers/gpu/drm/xe/xe_observation.c
-> @@ -56,7 +56,7 @@ int xe_observation_ioctl(struct drm_device *dev, void *data, struct drm_file *fi
->	}
->  }
->
-> -static struct ctl_table observation_ctl_table[] = {
-> +static const struct ctl_table observation_ctl_table[] = {
->	{
->	 .procname = "observation_paranoid",
->	 .data = &xe_observation_paranoid,
+On Sat, 11 Jan 2025 01:26:12 +0900
+Jeongjun Park <aha310510@gmail.com> wrote:
 
-For i915 and xe:
+> If there is a case where the variable s is greater than or equal to nr_subbufs
+> before entering the loop, oob read or use-after-free will occur. This problem
+> occurs because the variable s is used as an index to dereference the
+> struct page before the variable value range check. This logic prevents the
+> wrong address value from being copied to the pages array through the subsequent
+> range check, but oob read still occurs, so the code needs to be modified.
 
-Acked-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
+This is *not* a fix!
+
+As this should never happen. The logic before it prevents it from happening.
+The s is calculated from the same logic that calculates nr_pages. If s were
+to be greater than nr_subbufs it is a bug!
+
+> 
+> Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+> ---
+>  kernel/trace/ring_buffer.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 60210fb5b211..6804ab126802 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -7059,7 +7059,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+>  	}
+>  
+>  	while (p < nr_pages) {
+> -		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+> +		struct page *page;
+>  		int off = 0;
+>  
+>  		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+
+Notice that there's a WARN_ON_ONCE() here. That means if this is true, the
+code is buggy. User space should never be able to trigger this either.
+
+That said, I'm not against the patch and will add it for the next merge
+window. But I will modify the subject and change log to state that this
+should never happen and if it does the code is buggy and needs to be fixed.
+That this is just a clean up in case the code is buggy we can trigger the
+WARN_ON() and not worry about an out of bounds hit. Something like:
+
+ ring-buffer: Make reading page consistent with the code logic
+
+ In the loop of __rb_map_vma(), the 's' variable is calculated from the
+ same logic that nr_pages is and they both come from nr_subbufs. But the
+ relationship is not obvious and there's a WARN_ON_ONCE() around the 's'
+ variable to make sure it never becomes equal to nr_subbufs within the
+ loop. If that happens, then the code is buggy and needs to be fixed.
+
+ The 'page' variable is calculated from cpu_buffer->subbuf_ids[s] which is
+ an array of 'nr_subbufs' entries. If the code becomes buggy and 's'
+ becomes equal to or greater than 'nr_subbufs' then this will be an out of
+ bounds hit before the WARN_ON() is triggered and the code exiting safely.
+
+ Make the 'page' initialization consistent with the code logic and assign
+ it after the out of bounds check.
+
+-- Steve
+
+
+> @@ -7067,6 +7067,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+>  			goto out;
+>  		}
+>  
+> +		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+> +
+>  		for (; off < (1 << (subbuf_order)); off++, page++) {
+>  			if (p >= nr_pages)
+>  				break;
+> --
+
