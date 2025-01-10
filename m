@@ -1,175 +1,342 @@
-Received: from flow-a1-smtp.messagingengine.com (flow-a1-smtp.messagingengine.com [103.168.172.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36EB20A5F2;
-	Fri, 10 Jan 2025 10:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E63EDF78;
+	Fri, 10 Jan 2025 12:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736505441; cv=none; b=igxpbWAD4FF1jSKKLB6Z4Qrfa3tLo4QbFZE8TRfe8cxezfRqSCQ3lQ6Z7V2aEwuDOBlPy1M019UvBuHbaaFCWj1QFBA7yud5/1lTxQZLNm4BPXvLgK61y8jGRdwlXFyWUpkcbvYNTF7aW7DN7g4vm2AT1TQTh4Xywe7Bv3mlB9g=
+	t=1736513606; cv=none; b=li5JMY/GLRI14UUrfVeNvemjLLPM1yfRqDbjo+C9IN5gAYS5vmRfII/L+oi1Bc7NmgcM9V/5w6wxzQDduS5KxfTL85RrOnhsaMDpqhhxjvR/nuXLgO6f5wnunGPy+QTlgMG+Y/vf7wBZq5HGYrCobyIN/NdBeJwnlWZYujbSBBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736505441; c=relaxed/simple;
-	bh=I1oVtbaOlFFHu0DmV8zdRMs9cNx4ils+QPsuoigo9rI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRMKgE2lREn7KtrSz7ie9gu5bdCswunhVPZ/ZmV+ttpFmqNgKwtARNTRuI2S+vPL7C5SaWLWKcbaK33n0jaAXgpA1qswLDQWFbFz8X2BTIwPc+J47dchTDdmhTkZIgSijxZaK67dXD5Lx4rP1W26k6QgfeRm5P6ROm/6efPf60s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=lF9l1Oxg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=rD9VT4L+; arc=none smtp.client-ip=103.168.172.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="lF9l1Oxg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rD9VT4L+"
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailflow.phl.internal (Postfix) with ESMTP id D91B32010D6;
-	Fri, 10 Jan 2025 05:37:17 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Fri, 10 Jan 2025 05:37:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1736505437; x=
-	1736512637; bh=Km4XzsnzHBTNNJzmGN8m2TrMMSFreEGVyXvVDroQ2DY=; b=l
-	F9l1OxgwNCSVpVzHNp2jvRIgcZtfmBz/E4/CO27dbRnPpywlZHXNuQhSufjq09iR
-	0Q1ceb1IRZSS/fN6814PVfVlDFZc/EVLYl2vi58mWFhJp18o89cYZreU1XtVLRmD
-	19T4xnFzlXyyyMJOMNOqGvLHe6C60LN2xggK+JESVtgZPwAH5HJRI5xPshZSfrlZ
-	GcMXvirGEd1tDeBMy5m8L171rno7Opv+KWlrx+H6cbu757OIulT2KyrYFRI4HfHI
-	IeQFsKKAHooUKWsb04Ck1WkK+W3OgtdvrKfxU53JSObu8cpzKureitBsWxKiHuto
-	y3zwRAmHw1P1k+RSkV1RQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1736505437; x=1736512637; bh=Km4XzsnzHBTNNJzmGN8m2TrMMSFreEGVyXv
-	VDroQ2DY=; b=rD9VT4L+x6wScm0MmUZeIMvpHgMx8qAL83gowQ/aifn4QOfo3nw
-	18acnJdLdQvErdaVPbYP4SqjyKSQJGLB3E5eZzuJ9Dtxvp3QeH2dP/hfVmiAoRmf
-	GWim3pv96frkdHzWOHix2M5qmmBHHkE2E9qlP4U6LV/Ha5ZxKqk10JuNAvA27n30
-	qdxMfQmD+i4hm5mNMNftbXsWI4fysYE9pymAWInDaeeeVJifSUXB3JzOL2PwBEE2
-	azJQJpPCW1nC9N+YVplzgJm6rVTgPozOzsC1XEmejWeWoA3KkM4A98S8XvWF96jp
-	o69S196+kqgvwK+y07aXY0dqMcuZxp6uqiQ==
-X-ME-Sender: <xms:W_iAZ00nxgJw64svIet4IdZP3JkbK1OhjQjIlVOQzlhHOwiSX9jkow>
-    <xme:W_iAZ_EFoH6iwh3lMqZ8MhM0WyE1LksqHeyql6hCcSzFXriLt6zgQj9KcqBOVeqFR
-    14FSvtmUagZUhrYj1g>
-X-ME-Received: <xmr:W_iAZ85lBR8fS3KVrpwwP-tcfcdKyK7KrEupA9vygKO6KEH9a87CckaGqhGuGKt21qAemA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrudegkedgudejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddtvden
-    ucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlse
-    hshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeeltedugedtgfehuddu
-    hfetleeiuedvtdehieejjedufeejfeegteetuddtgefgudenucffohhmrghinhepkhgvrh
-    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtthhope
-    egfedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhpphhtsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorh
-    hgpdhrtghpthhtoheplhhuthhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhht
-    ohhnrdhivhgrnhhovhestggrmhgsrhhiughgvghgrhgvhihsrdgtohhmpdhrtghpthhtoh
-    epsghpsegrlhhivghnkedruggvpdhrtghpthhtohepsghrvghnuggrnhdrhhhighhgihhn
-    sheslhhinhhugidruggvvhdprhgtphhtthhopegurgdrghhomhgviiesshgrmhhsuhhngh
-    drtghomhdprhgtphhtthhopegurghnihgvlhhtsehkvghrnhgvlhdrohhrghdprhgtphht
-    thhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:W_iAZ93YjtGqyQ_KhyMe78rNVusaOBrYpJoPXwMLehTvKhN1WUbxyg>
-    <xmx:W_iAZ3GoqF6B8L2mTflFziY9ijfyGAomHfUPxnFZQ_ui45RQ_ik4tw>
-    <xmx:W_iAZ2_aN5wdvfhDfYaCp4mM9S-7Ff2DFoYQYHii7uiepbjsstVyLA>
-    <xmx:W_iAZ8lM-cSB7BXqi74IqSxpaazEX5g3lCuiI9gwh0GEiOvb_BC0bg>
-    <xmx:XfiAZ17mYS2-77H8F-lcSSO9soujJP_-GYVn8onu-R3c3sOdSsV828s5>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 10 Jan 2025 05:37:03 -0500 (EST)
-Date: Fri, 10 Jan 2025 12:36:59 +0200
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- 	Andy Lutomirski <luto@kernel.org>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- 	Borislav Petkov <bp@alien8.de>,
- Brendan Higgins <brendan.higgins@linux.dev>,
- 	Daniel Gomez <da.gomez@samsung.com>,
- Daniel Thompson <danielt@kernel.org>,
- 	Dave Hansen <dave.hansen@linux.intel.com>,
- David Gow <davidgow@google.com>,
- 	Douglas Anderson <dianders@chromium.org>,
- Ingo Molnar <mingo@redhat.com>,
- 	Jason Wessel <jason.wessel@windriver.com>,
- Jiri Kosina <jikos@kernel.org>, 	Joe Lawrence <joe.lawrence@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- 	Josh Poimboeuf <jpoimboe@kernel.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- 	Luis Chamberlain <mcgrof@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- 	Masami Hiramatsu <mhiramat@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
- 	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- 	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
- Rae Moar <rmoar@google.com>, 	Richard Weinberger <richard@nod.at>,
- Sami Tolvanen <samitolvanen@google.com>, 	Shuah Khan <shuah@kernel.org>,
- Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- 	Thomas Gleixner <tglx@linutronix.de>,
- kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
- 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, 	linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
- 	live-patching@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] x86/mm/pat: Restore large pages after fragmentation
-Message-ID: <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
-References: <20241227072825.1288491-1-rppt@kernel.org>
- <20241227072825.1288491-4-rppt@kernel.org>
+	s=arc-20240116; t=1736513606; c=relaxed/simple;
+	bh=SJ3TBMOoDJ40inNQuVGmFuMyCXGKQlxuna+FW+lCKEk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IyfpltZI4pW47nYQHP7DOSgAYmBFpl8x/o/gW6fhPwkh/wMCt7/I5E9euqvaWAw0+KA85SO92oGag2uyfIaO9f5y9z02yyHY9fiaDNAX3iWzN2yeakmkh6E6X9aoD5vJFzHnB72GT7/WlZqs+uI/vvapGVUJUPUXS26miubRhsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2FFDC4CED6;
+	Fri, 10 Jan 2025 12:53:23 +0000 (UTC)
+Date: Fri, 10 Jan 2025 07:54:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Zheng Yejian
+ <zhengyejian1@huawei.com>, Martin Kelly <martin.kelly@crowdstrike.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Josh Poimboeuf
+ <jpoimboe@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] scripts/sorttable: Use a structure of function pointers for
+ elf helpers
+Message-ID: <20250110075459.13d4b94c@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241227072825.1288491-4-rppt@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 27, 2024 at 09:28:20AM +0200, Mike Rapoport wrote:
-> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> 
-> Change of attributes of the pages may lead to fragmentation of direct
-> mapping over time and performance degradation as result.
-> 
-> With current code it's one way road: kernel tries to avoid splitting
-> large pages, but it doesn't restore them back even if page attributes
-> got compatible again.
-> 
-> Any change to the mapping may potentially allow to restore large page.
-> 
-> Hook up into cpa_flush() path to check if there's any pages to be
-> recovered in PUD_SIZE range around pages we've just touched.
-> 
-> CPUs don't like[1] to have to have TLB entries of different size for the
-> same memory, but looks like it's okay as long as these entries have
-> matching attributes[2]. Therefore it's critical to flush TLB before any
-> following changes to the mapping.
-> 
-> Note that we already allow for multiple TLB entries of different sizes
-> for the same memory now in split_large_page() path. It's not a new
-> situation.
-> 
-> set_memory_4k() provides a way to use 4k pages on purpose. Kernel must
-> not remap such pages as large. Re-use one of software PTE bits to
-> indicate such pages.
-> 
-> [1] See Erratum 383 of AMD Family 10h Processors
-> [2] https://lore.kernel.org/linux-mm/1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com/
-> 
-> [rppt@kernel.org:
->  * s/restore/collapse/
->  * update formatting per peterz
->  * use 'struct ptdesc' instead of 'struct page' for list of page tables to
->    be freed
->  * try to collapse PMD first and if it succeeds move on to PUD as peterz
->    suggested
->  * flush TLB twice: for changes done in the original CPA call and after
->    collapsing of large pages
-> ]
-> 
-> Link: https://lore.kernel.org/all/20200416213229.19174-1-kirill.shutemov@linux.intel.com
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-When I originally attempted this, the patch was dropped because of
-performance regressions. Was it addressed somehow?
+Instead of having a series of function pointers that gets assigned to the
+Elf64 or Elf32 versions, put them all into a single structure and use
+that. Add the helper function that chooses the structure into the macros
+that build the different versions of the elf functions.
 
+Link: https://lore.kernel.org/all/CAHk-=wiafEyX7UgOeZgvd6fvuByE5WXUPh9599kwOc_d-pdeug@mail.gmail.com/
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ scripts/sorttable.c | 175 +++++++++++++++++++++++++++++---------------
+ 1 file changed, 118 insertions(+), 57 deletions(-)
+
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 656c1e9b5ad9..9f41575afd7a 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -85,6 +85,25 @@ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
++static struct elf_funcs {
++	int (*compare_extable)(const void *a, const void *b);
++	uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
++	uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
++	uint64_t (*shdr_addr)(Elf_Shdr *shdr);
++	uint64_t (*shdr_offset)(Elf_Shdr *shdr);
++	uint64_t (*shdr_size)(Elf_Shdr *shdr);
++	uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
++	uint32_t (*shdr_link)(Elf_Shdr *shdr);
++	uint32_t (*shdr_name)(Elf_Shdr *shdr);
++	uint32_t (*shdr_type)(Elf_Shdr *shdr);
++	uint8_t (*sym_type)(Elf_Sym *sym);
++	uint32_t (*sym_name)(Elf_Sym *sym);
++	uint64_t (*sym_value)(Elf_Sym *sym);
++	uint16_t (*sym_shndx)(Elf_Sym *sym);
++} e;
++
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+ {
+ 	return r8(&ehdr->e64.e_shoff);
+@@ -95,6 +114,11 @@ static uint64_t ehdr32_shoff(Elf_Ehdr *ehdr)
+ 	return r(&ehdr->e32.e_shoff);
+ }
+ 
++static uint64_t ehdr_shoff(Elf_Ehdr *ehdr)
++{
++	return e.ehdr_shoff(ehdr);
++}
++
+ #define EHDR_HALF(fn_name)				\
+ static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
+ {							\
+@@ -104,6 +128,11 @@ static uint16_t ehdr64_##fn_name(Elf_Ehdr *ehdr)	\
+ static uint16_t ehdr32_##fn_name(Elf_Ehdr *ehdr)	\
+ {							\
+ 	return r2(&ehdr->e32.e_##fn_name);		\
++}							\
++							\
++static uint16_t ehdr_##fn_name(Elf_Ehdr *ehdr)		\
++{							\
++	return e.ehdr_##fn_name(ehdr);			\
+ }
+ 
+ EHDR_HALF(shentsize)
+@@ -119,6 +148,11 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++							\
++static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ #define SHDR_ADDR(fn_name)				\
+@@ -130,6 +164,11 @@ static uint64_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint64_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++							\
++static uint64_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ #define SHDR_WORD(fn_name)				\
+@@ -141,6 +180,10 @@ static uint32_t shdr64_##fn_name(Elf_Shdr *shdr)	\
+ static uint32_t shdr32_##fn_name(Elf_Shdr *shdr)	\
+ {							\
+ 	return r(&shdr->e32.sh_##fn_name);		\
++}							\
++static uint32_t shdr_##fn_name(Elf_Shdr *shdr)		\
++{							\
++	return e.shdr_##fn_name(shdr);			\
+ }
+ 
+ SHDR_ADDR(addr)
+@@ -161,6 +204,11 @@ static uint64_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint64_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint64_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ #define SYM_WORD(fn_name)			\
+@@ -172,6 +220,11 @@ static uint32_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint32_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint32_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ #define SYM_HALF(fn_name)			\
+@@ -183,6 +236,11 @@ static uint16_t sym64_##fn_name(Elf_Sym *sym)	\
+ static uint16_t sym32_##fn_name(Elf_Sym *sym)	\
+ {						\
+ 	return r2(&sym->e32.st_##fn_name);	\
++}						\
++						\
++static uint16_t sym_##fn_name(Elf_Sym *sym)	\
++{						\
++	return e.sym_##fn_name(sym);		\
+ }
+ 
+ static uint8_t sym64_type(Elf_Sym *sym)
+@@ -195,6 +253,11 @@ static uint8_t sym32_type(Elf_Sym *sym)
+ 	return ELF32_ST_TYPE(sym->e32.st_info);
+ }
+ 
++static uint8_t sym_type(Elf_Sym *sym)
++{
++	return e.sym_type(sym);
++}
++
+ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+@@ -322,29 +385,16 @@ static int compare_extable_64(const void *a, const void *b)
+ 	return av > bv;
+ }
+ 
++static int compare_extable(const void *a, const void *b)
++{
++	return e.compare_extable(a, b);
++}
++
+ static inline void *get_index(void *start, int entsize, int index)
+ {
+ 	return start + (entsize * index);
+ }
+ 
+-
+-static int (*compare_extable)(const void *a, const void *b);
+-static uint64_t (*ehdr_shoff)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shstrndx)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shentsize)(Elf_Ehdr *ehdr);
+-static uint16_t (*ehdr_shnum)(Elf_Ehdr *ehdr);
+-static uint64_t (*shdr_addr)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_offset)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_size)(Elf_Shdr *shdr);
+-static uint64_t (*shdr_entsize)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_link)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_name)(Elf_Shdr *shdr);
+-static uint32_t (*shdr_type)(Elf_Shdr *shdr);
+-static uint8_t (*sym_type)(Elf_Sym *sym);
+-static uint32_t (*sym_name)(Elf_Sym *sym);
+-static uint64_t (*sym_value)(Elf_Sym *sym);
+-static uint16_t (*sym_shndx)(Elf_Sym *sym);
+-
+ static int extable_ent_size;
+ static int long_size;
+ 
+@@ -864,7 +914,30 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (ehdr->e32.e_ident[EI_CLASS]) {
+-	case ELFCLASS32:
++	case ELFCLASS32: {
++		struct elf_funcs efuncs = {
++			.compare_extable	= compare_extable_32,
++			.ehdr_shoff		= ehdr32_shoff,
++			.ehdr_shentsize		= ehdr32_shentsize,
++			.ehdr_shstrndx		= ehdr32_shstrndx,
++			.ehdr_shnum		= ehdr32_shnum,
++			.shdr_addr		= shdr32_addr,
++			.shdr_offset		= shdr32_offset,
++			.shdr_link		= shdr32_link,
++			.shdr_size		= shdr32_size,
++			.shdr_name		= shdr32_name,
++			.shdr_type		= shdr32_type,
++			.shdr_entsize		= shdr32_entsize,
++			.sym_type		= sym32_type,
++			.sym_name		= sym32_name,
++			.sym_value		= sym32_value,
++			.sym_shndx		= sym32_shndx,
++		};
++
++		e = efuncs;
++		long_size		= 4;
++		extable_ent_size	= 8;
++
+ 		if (r2(&ehdr->e32.e_ehsize) != sizeof(Elf32_Ehdr) ||
+ 		    r2(&ehdr->e32.e_shentsize) != sizeof(Elf32_Shdr)) {
+ 			fprintf(stderr,
+@@ -872,26 +945,32 @@ static int do_file(char const *const fname, void *addr)
+ 			return -1;
+ 		}
+ 
+-		compare_extable		= compare_extable_32;
+-		ehdr_shoff		= ehdr32_shoff;
+-		ehdr_shentsize		= ehdr32_shentsize;
+-		ehdr_shstrndx		= ehdr32_shstrndx;
+-		ehdr_shnum		= ehdr32_shnum;
+-		shdr_addr		= shdr32_addr;
+-		shdr_offset		= shdr32_offset;
+-		shdr_link		= shdr32_link;
+-		shdr_size		= shdr32_size;
+-		shdr_name		= shdr32_name;
+-		shdr_type		= shdr32_type;
+-		shdr_entsize		= shdr32_entsize;
+-		sym_type		= sym32_type;
+-		sym_name		= sym32_name;
+-		sym_value		= sym32_value;
+-		sym_shndx		= sym32_shndx;
+-		long_size		= 4;
+-		extable_ent_size	= 8;
++		}
+ 		break;
+-	case ELFCLASS64:
++	case ELFCLASS64: {
++		struct elf_funcs efuncs = {
++			.compare_extable	= compare_extable_64,
++			.ehdr_shoff		= ehdr64_shoff,
++			.ehdr_shentsize		= ehdr64_shentsize,
++			.ehdr_shstrndx		= ehdr64_shstrndx,
++			.ehdr_shnum		= ehdr64_shnum,
++			.shdr_addr		= shdr64_addr,
++			.shdr_offset		= shdr64_offset,
++			.shdr_link		= shdr64_link,
++			.shdr_size		= shdr64_size,
++			.shdr_name		= shdr64_name,
++			.shdr_type		= shdr64_type,
++			.shdr_entsize		= shdr64_entsize,
++			.sym_type		= sym64_type,
++			.sym_name		= sym64_name,
++			.sym_value		= sym64_value,
++			.sym_shndx		= sym64_shndx,
++		};
++
++		e = efuncs;
++		long_size		= 8;
++		extable_ent_size	= 16;
++
+ 		if (r2(&ehdr->e64.e_ehsize) != sizeof(Elf64_Ehdr) ||
+ 		    r2(&ehdr->e64.e_shentsize) != sizeof(Elf64_Shdr)) {
+ 			fprintf(stderr,
+@@ -900,25 +979,7 @@ static int do_file(char const *const fname, void *addr)
+ 			return -1;
+ 		}
+ 
+-		compare_extable		= compare_extable_64;
+-		ehdr_shoff		= ehdr64_shoff;
+-		ehdr_shentsize		= ehdr64_shentsize;
+-		ehdr_shstrndx		= ehdr64_shstrndx;
+-		ehdr_shnum		= ehdr64_shnum;
+-		shdr_addr		= shdr64_addr;
+-		shdr_offset		= shdr64_offset;
+-		shdr_link		= shdr64_link;
+-		shdr_size		= shdr64_size;
+-		shdr_name		= shdr64_name;
+-		shdr_type		= shdr64_type;
+-		shdr_entsize		= shdr64_entsize;
+-		sym_type		= sym64_type;
+-		sym_name		= sym64_name;
+-		sym_value		= sym64_value;
+-		sym_shndx		= sym64_shndx;
+-		long_size		= 8;
+-		extable_ent_size	= 16;
+-
++		}
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF class %d %s\n",
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.45.2
+
