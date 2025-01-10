@@ -1,72 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2AA24B248;
-	Fri, 10 Jan 2025 19:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F48213E77;
+	Fri, 10 Jan 2025 19:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736536715; cv=none; b=CtK0z6iKeVRdQVCFrA7wQeWIEphwWEFLAbkSTvTEwBPqqmwukLQjHI3lYudgrVWvquAqjc9Eu8yjPPJnPlkAUqroKj9N5l759VZT29uq2ie7cgR0eupNsqeH7R21a1EmpmUwNPRm3LxqYkSYSt3ZHszNxhIMT7ewFGChCzGJJG8=
+	t=1736537759; cv=none; b=pv/tCfB6vqOilz9GFev7Jf5qThJ+sTQ1+SsdMxngTjIm9IFU0648SkZOL8JVATA9pgT+gswp1o0Mu+iBT2PKZwpjjuOeJx1NfGWvAacRL87zXdsZMirnuLqwL6QqERDXAPz8kPqWSS5KD/1UR0uLsjub19MEXH9XEtmh/vWfKs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736536715; c=relaxed/simple;
-	bh=2qtn/yN8KGnvKM4Be6ymIMRepfChNk260BsIzmavFNU=;
+	s=arc-20240116; t=1736537759; c=relaxed/simple;
+	bh=PIpsMswTdT020iPzqG5ntp7t7JspQE2rc/trtkI3nIo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BcOx9WM7MED90MDfxMUQ/dAwQs8WXGn23K5YOIhd3gQPtA3x1TlfMPguVxVqdgdc9GF2d//U2dbZI+YrTb6Wqk8cYxFTico3veMUares8+ZcZMMDz2GoHv0GWopwOirMNijPAAjxhX837+s4OpU8HtgqKG5A5LZ9wegR3WNb9AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVSbNBfB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwRYLyB5miDrJmiu37J24Yyocz9tcdxCHqAIxctABMTZ6IBYKwklGMQyaH8tyb1ztPz8PgjpW6gTDI2y+mVmhhuDJxwIMR8RyfnA4+VQeaNeflYf6huJms55eD3pnkktG8KZtlXs+wzf/bbbwGxJ4JjHtWnuQ844MUmI6jx8Ptk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gPWvZE4G; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVSbNBfB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2BDC4CED6;
-	Fri, 10 Jan 2025 19:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736536714;
-	bh=2qtn/yN8KGnvKM4Be6ymIMRepfChNk260BsIzmavFNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lVSbNBfBgiPxfs3j9J4+Q/Mm+va0HnyJJvJ511BIZPHoPIheFgi517TCooWsbBMUd
-	 WSTmKdJWe1UfTSlATsW95ACeJ+2Ll0h4BtuuaSFwVIFk0Wv0zZu3LZGeJRFeQJn0qe
-	 lg2p9xQs3O5V2HOaVWmRlOJx02Yzw7s7vpvz4fokLmZ7ey61g0GQZuRvribH6nHyqr
-	 xDH3Wpe0L5t74rdpA5UINqI4Hxxsp6lB+b5KVRB/rten4cAybUcKdl/88Oc2pCe2TE
-	 6b7kfjQEJbS5HJyWvsAtyyHoKwfXfP3N4KXgVgUwkJm645MDTdxDa3wPAeEVyf6U26
-	 meOgl0uiogQDw==
-Date: Fri, 10 Jan 2025 11:18:32 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Gow <davidgow@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gPWvZE4G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1736537758; x=1768073758;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PIpsMswTdT020iPzqG5ntp7t7JspQE2rc/trtkI3nIo=;
+  b=gPWvZE4GoHFQrVsuUpmsj0XHCxaEqwpWOQi/T1Li+LT9yJQSKieJckyG
+   wjWzg9+TNDP75V+oRbVvZhgUU1gAmTHuJRRsnpmZTDep/cQfzPcchNcZF
+   Q/tZTy0UdfaanATLeOmT+2I85M0MabvL+Ua4xF//HCiZjNYaq8vvTJQOx
+   OJjN4OQfvbRdigbHnnlP1P9HVASt17Yt/VR4IyZl0/RwcVNwcnERKXv2U
+   d292bvZBGWSZt6O2ZLstzsO9KbgSoB+ywGe2b5V/2lCbMGvthoosBmU8R
+   yD+oMJfj0jfeG7TsxUyNna9hv+LXP1c+h0pvZVVTyIICEJAsoJkDxssly
+   A==;
+X-CSE-ConnectionGUID: 4faG/HeOSX6opdaPGI4JnA==
+X-CSE-MsgGUID: lSA7tWLJSI2ZWJLq8k4jZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11311"; a="48256980"
+X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
+   d="scan'208";a="48256980"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2025 11:35:57 -0800
+X-CSE-ConnectionGUID: 3gzyvtpoTHqJZFLPYsbUZQ==
+X-CSE-MsgGUID: nyw5/AI0QoG2DQtlKXk2zw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,305,1728975600"; 
+   d="scan'208";a="134653766"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 10 Jan 2025 11:35:54 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tWKnQ-000Jfz-12;
+	Fri, 10 Jan 2025 19:35:52 +0000
+Date: Sat, 11 Jan 2025 03:35:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
-	Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	live-patching@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] x86/mm/pat: Restore large pages after fragmentation
-Message-ID: <Z4FyiALKwX-AIWtF@bombadil.infradead.org>
-References: <20241227072825.1288491-1-rppt@kernel.org>
- <20241227072825.1288491-4-rppt@kernel.org>
- <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	jochensp@jochen.sprickerhof.de
+Subject: Re: [PATCH] ftrace: Implement :mod: cache filtering on kernel
+ command line
+Message-ID: <202501110319.xY9ltUxL-lkp@intel.com>
+References: <20250109174639.32e6f43a@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,68 +69,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
+In-Reply-To: <20250109174639.32e6f43a@gandalf.local.home>
 
-On Fri, Jan 10, 2025 at 12:36:59PM +0200, Kirill A. Shutemov wrote:
-> On Fri, Dec 27, 2024 at 09:28:20AM +0200, Mike Rapoport wrote:
-> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > 
-> > Change of attributes of the pages may lead to fragmentation of direct
-> > mapping over time and performance degradation as result.
-> > 
-> > With current code it's one way road: kernel tries to avoid splitting
-> > large pages, but it doesn't restore them back even if page attributes
-> > got compatible again.
-> > 
-> > Any change to the mapping may potentially allow to restore large page.
-> > 
-> > Hook up into cpa_flush() path to check if there's any pages to be
-> > recovered in PUD_SIZE range around pages we've just touched.
-> > 
-> > CPUs don't like[1] to have to have TLB entries of different size for the
-> > same memory, but looks like it's okay as long as these entries have
-> > matching attributes[2]. Therefore it's critical to flush TLB before any
-> > following changes to the mapping.
-> > 
-> > Note that we already allow for multiple TLB entries of different sizes
-> > for the same memory now in split_large_page() path. It's not a new
-> > situation.
-> > 
-> > set_memory_4k() provides a way to use 4k pages on purpose. Kernel must
-> > not remap such pages as large. Re-use one of software PTE bits to
-> > indicate such pages.
-> > 
-> > [1] See Erratum 383 of AMD Family 10h Processors
-> > [2] https://lore.kernel.org/linux-mm/1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com/
-> > 
-> > [rppt@kernel.org:
-> >  * s/restore/collapse/
-> >  * update formatting per peterz
-> >  * use 'struct ptdesc' instead of 'struct page' for list of page tables to
-> >    be freed
-> >  * try to collapse PMD first and if it succeeds move on to PUD as peterz
-> >    suggested
-> >  * flush TLB twice: for changes done in the original CPA call and after
-> >    collapsing of large pages
-> > ]
-> > 
-> > Link: https://lore.kernel.org/all/20200416213229.19174-1-kirill.shutemov@linux.intel.com
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> 
-> When I originally attempted this, the patch was dropped because of
-> performance regressions. Was it addressed somehow?
-> 
+Hi Steven,
 
-Also, the statement:
+kernel test robot noticed the following build warnings:
 
-"Change of attributes of the pages may lead to fragmentation of
-direct mapping over time and performance degradation as result.  "
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.13-rc6 next-20250110]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Seems to contradict the findings reported at LSFMM by Mike before
-that direct map fragmentation does not incur performance penalty,
-so I don't see a point in contradicing those findings and confusing
-people further.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Implement-mod-cache-filtering-on-kernel-command-line/20250110-064649
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250109174639.32e6f43a%40gandalf.local.home
+patch subject: [PATCH] ftrace: Implement :mod: cache filtering on kernel command line
+config: i386-randconfig-012-20250111 (https://download.01.org/0day-ci/archive/20250111/202501110319.xY9ltUxL-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250111/202501110319.xY9ltUxL-lkp@intel.com/reproduce)
 
-  Luis
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202501110319.xY9ltUxL-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/trace.c:10664:28: warning: no previous prototype for function 'trace_get_global_array' [-Wmissing-prototypes]
+    10664 | __init struct trace_array *trace_get_global_array(void)
+          |                            ^
+   kernel/trace/trace.c:10664:8: note: declare 'static' if the function is not intended to be used outside of this translation unit
+    10664 | __init struct trace_array *trace_get_global_array(void)
+          |        ^
+          |        static 
+   1 warning generated.
+
+
+vim +/trace_get_global_array +10664 kernel/trace/trace.c
+
+ 10662	
+ 10663	/* Used to set module cached ftrace filtering at boot up */
+ 10664	__init struct trace_array *trace_get_global_array(void)
+ 10665	{
+ 10666		return &global_trace;
+ 10667	}
+ 10668	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
