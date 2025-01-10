@@ -1,118 +1,112 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CF1290F
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 05:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C352066E1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 08:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736487523; cv=none; b=LDb+CG00P+eR0CQktdGZR/fzQwT23CaJHT0J8hI+fJtw9GLruAt4spUxhNNqGDyPsVY0Gc8o9yS5cylZQovlD5/Waf5aKo1vwCAwlUAd5uEnvuzGbP1lnPcvVXrwBUeW6fHjiotarNJvBPdm/1Hf0aeZEeJ/anjkWyLso0z9tc0=
+	t=1736496821; cv=none; b=h+FEis+gn8NvUwLWwE6dGUfcaTP2GXfXhA8LdeaGp+txPWCxL/pCCCWQO5nWA+w/E1K+5turZPT42+sif2FmyOmFQ41fJA9pn1l5A3WOtA1SPYb3f3nMI+YEmySYYnBsJRfVicwlTC7uOlFHB7JCSoPcKCPDQbJI3xlkz+gn9sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736487523; c=relaxed/simple;
-	bh=QTPUfbx6R77a/GvDZefKLFi+rweGMBAPjWz6xN4cIsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2dstnJsPcJe34xIuXq9y0Uom8GM6Jlg/WqMU+NKv1HzgcfDHr61FHnMqNEUMC9oIW7mXGr8qj2opHqrwpLGbq9ngxRcaCBQDeqx7oZprduU7NWPfMf+CvDc4ak9wnCLzAlZEIDedNBMS7wKIZxCK3hEmI9EsKdsKBOXJwYbcS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FPSq1yZC; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1736496821; c=relaxed/simple;
+	bh=lLjOkjf1wXpzYZ4sT4TWPRX6MLmiW6g8LMJeKNMGu00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G1V82F0mMGVlMO9FsXcsN0EX3pxzINp7eM57LbLJeBWhhh+m74WOhE85N862c2xMZNu1zz5U6FOACuxhK5H6IUg9pxtYr/uNvdfr9uFe4b3K/ZWtNtj2xfKG1vvc84lP2ttkQfpKfRFL3al2MoQKSc/OInVZzNddbA9H+nc36Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+Upftb4; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPSq1yZC"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3862a921123so1062267f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 09 Jan 2025 21:38:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+Upftb4"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4368a293339so20506715e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 00:13:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736487520; x=1737092320; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uVCnMYGVorPnWCZXIo6ZjHAAwok8CMs3XjG+q+NlDo=;
-        b=FPSq1yZCqdLaXTEFbf/50YWHXaQH+RhEOPsY6BfLprK9t/DRH13GKhXFL9IQOfxJJu
-         /2z6O+T+UQT2YER6ISNgKkzrvbPr+TiwZ8p0r445sLpTCZEceqXrAnMHC1yN+O7AIJAe
-         8dv6YP3xPKzztV5SFQ8ID5v9QQPp8jR+doyojwyVuhoER7KEOMQhlGsbT74ailuRdGMQ
-         R2eaXq7UuI5R4h0d521qPERmv6c04wLMgUmH0T/JROKS3M4VeNb+VyfIW3wRoqb2DfPm
-         cg6V1bxf/yXIUN5s4VCyvpf3suSQJ8lr7GrSm+bOE34nQ4tFjUTgvYte6MBKXOLgFHWo
-         QCkA==
+        d=linaro.org; s=google; t=1736496818; x=1737101618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q0EV045k8CG4Yg/GfxO4KvlU6Rqe6kFmO58kVT3kSXY=;
+        b=C+Upftb4+fldE5YMFoduCKTGwcGd6lGvAC4RqKSY7t7YkanJNZ30TprlPFbtYvNcQB
+         mg+Wb7Hn2xbkkBUSuldr7tDWbEiKkNh8WVpsEeaILlQG46fYv9oAag8KICsMqkyaWr9e
+         u+BG11MB7T43Ue9+htQZfyiiaXaM1F/M0xL7kq9jdizkOkdFnYCGr0UKAZtX3SFkUyKl
+         0gYwVTyltbJt+iZEgIUe7t0P4I4yhPebGk8AT07IaFmd3jczBym2NYpmUMXc9fkxgQGA
+         YtT4zizuJIaGjhw59fokeUH+cVIzQKq9tJMGadf4ZYvbHnQcpJNn9by9yZo1AE/90lRj
+         KNQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736487520; x=1737092320;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3uVCnMYGVorPnWCZXIo6ZjHAAwok8CMs3XjG+q+NlDo=;
-        b=iXkx42lul0wwUqBn7nx2zcTHXDPoJkZFj382gsgqXgn86gBhAUOMlr+AKL/U+3jtWg
-         /R9GSiNY42V9wBgntJKMju2aVLtzKfpW0voVW1PCH/LfcLojdpxK2b3SobFTE6SkLkFZ
-         zN6L0S7mMx++xL1UyFhWYNDKRi33SP+LoYtrHXcPE/a/YXqsXEiH1DfvSOf3hRKCMLq4
-         ytknj+ILkJ+WWuWROn1LeawHkmRbwYZoqbyodFJCYbe8BiPoHAJ9XDqHj6XwME3e/s1e
-         EI4D019K5dGiVIGOh8L+02uux1sZ/4n9kC5+JiQIlmVWVO7sM5CROLL/xj8xIC6kar8u
-         V2zg==
-X-Forwarded-Encrypted: i=1; AJvYcCV91ut0eVFRafmb7nL1gGVgfsizzQ0A1YVl5ik3HypYNzaWjnV0/Dnj7DuUxgbidd79cTHj10K13gHkSaThMfRaOGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJkcD28Xke7yGdtr/oQTf3fKlHSY4nxsPJiCdV6UKIjEhEmAN9
-	s5KByvqJ7t8hTOOyNkYGRbMdS7JWlZm1iBX9lCKLnti5wDTR4HvgDssmbbJ356o=
-X-Gm-Gg: ASbGnctP+tp/jMMcPt1+ojHWoRcNZRCvHmX7xsDeacFExIQ/tqXK/HZuEuvGLK3CL4F
-	fkWk/QndzlqXTdNtPfcgipJo/UEDpK2ugHvAXIIzyLT0M8C87fiW1hbxn4Ik5QWhe2UWnC6QaXA
-	mvOZ9NImmaNtoNtfpluoW3HFreu9POySRrT9TXxGmnMuFgAKL49zN6n/NxT+tUwLQfVzWwudT9s
-	STaob/ncZDMFHqb8WF9FEtyDGKX/qKl+OKviWFNjfrSf12lqWVOKIYoiOsAoA==
-X-Google-Smtp-Source: AGHT+IGhGi4KgPhrmUw0YIvfY6S58SuiyhRszWUA9YtRmO/fw4AOAqGbt5FVpwm8S8bEzz5woqZjDw==
-X-Received: by 2002:a05:6000:1884:b0:385:e1e8:40db with SMTP id ffacd0b85a97d-38a8730a618mr7312117f8f.24.1736487519643;
-        Thu, 09 Jan 2025 21:38:39 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4b81b1sm3581323f8f.66.2025.01.09.21.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2025 21:38:39 -0800 (PST)
-Date: Fri, 10 Jan 2025 08:38:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Eder Zulian <ezulian@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] rtla: Fix implicit NULL dereference
-Message-ID: <16990bcc-c328-457b-a789-0f318d8eaf3f@stanley.mountain>
-References: <20250109211358.2619367-1-costa.shul@redhat.com>
+        d=1e100.net; s=20230601; t=1736496818; x=1737101618;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q0EV045k8CG4Yg/GfxO4KvlU6Rqe6kFmO58kVT3kSXY=;
+        b=oIDVbWAj3hdT41wTr7Vd++pmCHR8d1enycsymPj2P8OXAHr+bNfZH/06rVt48+KF0u
+         QY1vM1cNQqMPCVVaWasFruAQ5vNGf9ERB+Vg/NuLmzt511QuUBm+W4C2jxpA6WR7XsHX
+         2EB4IS6vCmsCtEiJNeYrHwwshR50g5oO/8aK5yI7esubVS57lZ+/C3KnYA3nrJrZqR32
+         DTKhY1WT91Omy1GPujP6fOqtg/syT4DtBciiK6xZ41PJxVeKyDfc8QhtECUiQp8IFpJX
+         dsnK5UQ+VQS8W5GE8GuPros89xYLALKS4weyRgmsoVYNEhe7KHFzmR53PC7DPkfoTg03
+         /o+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDpYsGlJaZ/rDSzXu1N4tnXy6tlKRuZBpAPaRxxzbUqNq9P39nYm48MbawOE89s/gxb1ZW05Z5q/9TWIIgQ5htCJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb7cxX2YblzSU5kdoqQOO2gePUyQFAILB++qneBJYpYmYQcDwv
+	smKvxBI9EC8M1Us4ImmcPe3x5owxtRcVB4g7mlc0TVbqaw9b8UuKZjDBh7wyyIY=
+X-Gm-Gg: ASbGncsybDpAmRwkGBdaea3gJkaV2mLnBkMk/81O0reUGZRauWrOrUBpaU8I8n5aDnp
+	aXpXpKqDs5UXH4fiFp6eEP8rliZc7Yi/1HzjNSePqXa+CK+A6t41VHxxFrBnC2ju9+BaIr5ctxn
+	R+1enUakFYR4seZF6N1sulY7AT/dml8uYz3VrnCHq88jlOOADqDP2nqEo1UPsPmq/lUqxxH7y3W
+	vlDmNHnqY1e9NaTuslgiTdgp04os9nXngcoRCuo+k7n++W9fI9tHBjmnUMr4/k0xF6t+T+ImA1y
+	MSnXLj7TvSd2pVr/HcxrSM41Aq0=
+X-Google-Smtp-Source: AGHT+IFpjInhd33mWgPk1P2BS4pHVpZXIpbSheFxrXN+9gDHs3qr5/NnCurtOhyxygGxHMuzuxoe9w==
+X-Received: by 2002:a05:600c:46ce:b0:436:6ddf:7a27 with SMTP id 5b1f17b1804b1-436e27072a7mr80662725e9.23.1736496818143;
+        Fri, 10 Jan 2025 00:13:38 -0800 (PST)
+Received: from [192.168.1.74] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e9e6249csm43923755e9.38.2025.01.10.00.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2025 00:13:37 -0800 (PST)
+Message-ID: <d4d4c1f6-84d8-4168-991e-dbd36091d520@linaro.org>
+Date: Fri, 10 Jan 2025 09:13:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250109211358.2619367-1-costa.shul@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH] MIPS: ftrace: Declare ftrace_get_parent_ra_addr()
+ as static
+To: WangYuli <wangyuli@uniontech.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mark.rutland@arm.com, tsbogend@alpha.franken.de
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mips@vger.kernel.org, xzhong86@163.com, wuzhangjin@gmail.com,
+ srostedt@redhat.com, linux-mips@linux-mips.org, ralf@duck.linux-mips.net,
+ jeffbai@aosc.io, zhanjun@uniontech.com, guanwentao@uniontech.com,
+ jiaxun.yang@flygoat.com, gregory.clement@bootlin.com, tglx@linutronix.de,
+ rppt@kernel.org
+References: <527F9AFF0430AB45+20250104144708.18438-1-wangyuli@uniontech.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <527F9AFF0430AB45+20250104144708.18438-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The subject is bad because it says "Fix" when this is a clean up
-and it says "NULL dereference" when there isn't any NULL dereference.
+On 4/1/25 15:47, WangYuli wrote:
+> Declare ftrace_get_parent_ra_addr() as static to suppress clang
+> compiler warning that 'no previous prototype'. This function is
+> not intended to be called from other parts.
 
-On Thu, Jan 09, 2025 at 11:13:26PM +0200, Costa Shulyupin wrote:
-> The `record` variable is NULL when tracing is not requested:
-> 
-> struct osnoise_tool *record = NULL;
-> 
-> if (params->trace_output) {
->         record = osnoise_init_trace_tool("osnoise");
-> ....
-> 
-> Value of `&record->trace` in this case is NULL just because
-> the `trace` member is the first member `struct osnoise_tool` with offset 0.
-> `&record->trace` just returns the offset.
-> 
-> Explicit dereference `record->trace' would cause segmentation fault.
-> 
-> Add explicit check for zero `record`.
-> 
+Since 2009 in commit 29c5d3462f7c ("MIPS: Tracing: Add function
+graph tracer support for MIPS") eh :)
 
-This commit message is very confusing.  I would normally not send a
-patch like this, but if I did send it the commit message would say
-something like:
+> 
+> Fix follow error with clang-19:
+> 
+> arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
+>    251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+>        |               ^
+> arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+>    251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+>        | ^
+>        | static
+> 1 error generated.
+> 
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>   arch/mips/kernel/ftrace.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 
-  The "record" pointer can be NULL in this code.  When we're calling
-  trace_is_off(&tool->trace, &record->trace) and "record" is NULL then
-  it kind of looks like a NULL dereference.  It turns out that it's
-  fine when you look at it more closely, but at first glance it looks
-  sketchy.  Add an explicit NULL check to make the code more clear.
-
-Tracing code is generally fast path code so maybe we don't want to add
-a NULL check?  If we were really bothered by the existing code then a
-better fix would be to add an inline function to do it.
-
-regards,
-dan carpenter
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
