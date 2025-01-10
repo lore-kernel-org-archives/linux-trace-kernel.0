@@ -1,55 +1,55 @@
-Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
+Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F1C28EC83
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 18:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A53628EC9E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 18:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736534850; cv=none; b=sgpQqMsvaUs5/uoNkwVsUuPQiIwxIXUfY3oOEBDQmr+tNh6AJqGiDmuYXosDtWGPoIVIx2I5hqkaM9ig35CZFRTClDB97GnLHrXS7/twAvoljzZXKEhpoH0yTyKTkhlV7P9EqWQKKlP8Z4crmZcfm8TH/VMAmg7PF4hoiAwkJ8A=
+	t=1736534882; cv=none; b=Hw1tB0MskY3lFp7Hnj40hrpCxAUbbq/hxmQJFJJiOEG9J2k8rYr+qZY52/oPc2yGE3NwkDScOPntzqBZynf2rrblttLu+g2FpAUvbho+0h6bPAx7obdfNv2gO712X8Pkhq9kfJq8kB5zbrOwlvbRb4wXOohPv3cBK98R79VVlPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736534850; c=relaxed/simple;
-	bh=Ua0Eznh6vBIqJokkBKNt1xiE4aA9cS4fZDm05XjqWbo=;
+	s=arc-20240116; t=1736534882; c=relaxed/simple;
+	bh=qC2aC8eAp33KA8O+Z6LlsHyIL/uhbg4PRbpKGbN5hWc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DjeC29wEyMWvDuUBjqcNcAYz9VJupnU93KWUKYfXNlNGlMn/uWHBdKnd6xmpt2Jx3coLWo0DQ2xsZBsnnfxxGefeCAMoxuEQ5wm4iOTiowppNVDeChkyzvX4elLoATNrihkHwuSckQmfwU29MjC4GS3lS/kWqQoeB72AultQDcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sCJ8nZFv; arc=none smtp.client-ip=209.85.208.202
+	 To:Cc:Content-Type; b=K+UCEv2TCeOFwJNSTOtHxImnSZC/OzQ6gCkOzZ5BSCz0T0D6YVvCtKxBAYb22SjIDLM8m3cs+C5u2Pa4b0WHLFqjGeII/3BEIMgE5lnfpxJcoI5uaLFxsDFJww+wW9vQ8uPA8t4Log2WQ5Agp6nrgMNvQ6myd3feRvRONJ3hi5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jF6i+W3r; arc=none smtp.client-ip=209.85.167.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCJ8nZFv"
-Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-3023936c474so11309721fa.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 10:47:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jF6i+W3r"
+Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-53e1ee761d7so1527749e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Jan 2025 10:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736534847; x=1737139647; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736534878; x=1737139678; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGrdWVEeU4Ptbj/O5LlMCmxq+nbCGI8+4U1HKBQ0dew=;
-        b=sCJ8nZFvnoVb3pX4tRM6x2E8beCiGyLCzZczYvpvH3gsX9blS6IufBbW22EKy0G+Be
-         iHYWjGegctK+hOOS2Ezf7uwma16CjfokNBmaosbJ3Jjhigmsp8z6GBm5Ibcdzfd85rwT
-         uxbCOFZCfiRRKjwzY4ICIwlYdUAgbKiVWFTr9MaXOilTxJ4fP7HE5RoyD4NQWiSaGnd7
-         TEYPN3N1j1ysQn23szRypaZruAjhqHSldx4alfcQpiyBTnaQE6iriTqd7K0jovdWSUD2
-         jmUMS1crLh2VLr0kfQxPl2Z5vjXf/ibLNNUJe3jc91ARL3wPEHyCxmJXfunors9BeRNE
-         op3g==
+        bh=HFKS9He99X0lK3xnnbI99ZyULyVP6qmX2/a79HHV3Mw=;
+        b=jF6i+W3rzG75gAzKDiv8G9gvqww8cL8rZt4PGdBYWkrU2BSM0N8uLcooSdiMBDZhVl
+         4cO5j+untVsfbCQOdLzLDdro0jU2MNoQd8BUFdimhbTAkr2E1XV+E709cFuY+xwlI/30
+         VkirLEIJhz8uTVKJcv1mhvJtQaJT2H1dRFO+0ynF8++KJ2gUp6q0gGxlKMZH+SH366ED
+         DDAA/9tEBn+GsXR3ysxTAo1pwIgxWY0lMT7ngl1EqJhAHXPBEI6rGi/mnoXaOs2jgfmB
+         i1OYzbtB6HE4DGmSB1exdfWi3PAy6WzbWIvCDRefyY9/PKo68lXo1dpCw7jMJi5RsP7G
+         nxEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736534847; x=1737139647;
+        d=1e100.net; s=20230601; t=1736534878; x=1737139678;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGrdWVEeU4Ptbj/O5LlMCmxq+nbCGI8+4U1HKBQ0dew=;
-        b=U8kBP7HgB8KBGx4s3fnErsCxhv7NSD2L5qslgGn+jHRH0UOaN5YXpBtul1ZXAxE6Wt
-         s4lu96N3ydI+TyjrifCdXX1Pq9RjctjtmpDL71PHVMP3+lnRaA0/70XnhBGWPsEMYdzv
-         0UQUozFap4EiOCdgsE7nJgg82SWN8OORkoOWEGhSgOx5siKSoEpPYwzxfyKzHVqQ0G8o
-         852v6cpLBT2q4x4wIwrGaJmzFTcDZoydEi8o6Pn/R+7XhVHev2AsZUKUCRXFiJH6GVOm
-         skyzkFAtD8LxB8z2rVgZ9qhSp8G/RGzsaKmrQfCilduRa518Q912H4d/w2ErxuDBTmfW
-         4Jew==
-X-Forwarded-Encrypted: i=1; AJvYcCVWfClyYzZScn21njgnCDHU677dv/BMkjQleoWETMwNJvLfMmc8O3RBVUQFX8GisPj30LJq0yl4N2hpFC8JPzGGWM8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyzTOn/4QlPDpJnN2ZGAuYyHNMRDli9hG04hB4q31EWAKbKqim
-	kxo0UwLWLkA8z0+diQ1+B/sHiczT15US+6cAyV6vaMUVgGiPvVw0eOWIKM7qPNcY2Axm/NIMbwN
-	wtEbNiU93eg==
-X-Google-Smtp-Source: AGHT+IEgsXbDoolH8oLFMalWBy0djT9uJM60zMy+Lo0ErgHawFZLEGOSZUiE5P0d6bxzOZZfpK4Vh92Jd6K16A==
-X-Received: from wmrn43.prod.google.com ([2002:a05:600c:502b:b0:434:a9bd:e68c])
+        bh=HFKS9He99X0lK3xnnbI99ZyULyVP6qmX2/a79HHV3Mw=;
+        b=syvbEQFGf67oKjqmy1ZSDySvEajm+gtKV+uLyvBnksU6ldspCfnBO6TuVPBWEN3WlV
+         3BEi6QIYblFLqnSZjyE8ifDUmO2SZ6Gv6i6R3z0CTEXDUxA7Sl9KxwWZyUuGr3SwUuv3
+         VPGirpiXor+EpopLsQ2ZpsQKTt3Yo63SsU4OXFe2iJZQZOUZZ12xkgCgt7hRvzBOFzJ6
+         L0oDlIF+p1dtVOmoXO/6kg+AmA2N2AxK/06MfIdp77ztT/yTXuKzXkg2BQFAyciBm9iV
+         XgQHpLJa6S5preZ9hmQAUXtAYeR//oEIEn6JpmOA9H130+IIFud+WEDOJSR/co9V05hr
+         eWcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVa23ovNtgIYFTiWzGQAZolhp2hzfWWNFigSaXNWc9ZJu8u88C62sWst7iQK+DXcKr2RZe1joIf02JN7BoRua6Pyyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLcrf3xpFkX6tLntdb3EDCGtZZFYjMU70tDZClH39onR8bU678
+	HZBYZudsFLdMmi1vsoFa5mi0dK36HV3M7Td59Tvy6o4hAi4iaOO63NwQ2tfprHTHNAl4dVf9vuD
+	OQA5rvvgfNw==
+X-Google-Smtp-Source: AGHT+IHb2tLJeEj/nhEIcvCueP11HP0tzz903p60s9RvGJF27LFwQlQKr5YD0ey6aPDR1IvAD0AJ740K8RZlJQ==
+X-Received: from wmbbh20.prod.google.com ([2002:a05:600c:3d14:b0:434:fd4d:ffad])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4f81:b0:434:f1d5:1453 with SMTP id 5b1f17b1804b1-436e2531ec8mr120237105e9.0.1736534506703;
- Fri, 10 Jan 2025 10:41:46 -0800 (PST)
-Date: Fri, 10 Jan 2025 18:40:53 +0000
+ 2002:a05:600c:3c85:b0:436:18d0:aa6e with SMTP id 5b1f17b1804b1-436e2679a7cmr125832515e9.5.1736534484149;
+ Fri, 10 Jan 2025 10:41:24 -0800 (PST)
+Date: Fri, 10 Jan 2025 18:40:43 +0000
 In-Reply-To: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250110-asi-rfc-v2-v2-27-8419288bc805@google.com>
-Subject: [PATCH RFC v2 27/29] mm: asi: Add some mitigations on address space transitions
+Message-ID: <20250110-asi-rfc-v2-v2-17-8419288bc805@google.com>
+Subject: [PATCH RFC v2 17/29] mm: asi: Map vmalloc/vmap data as nonsensitive
 From: Brendan Jackman <jackmanb@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
@@ -114,153 +114,113 @@ Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
 	Brendan Jackman <jackmanb@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Here we ASI actually starts becoming a real exploit mitigation,
+We add new VM flags for sensitive and global-nonsensitive, parallel to
+the corresponding GFP flags.
 
-On CPUs with L1TF, flush L1D when the ASI data taints say so.
+__get_vm_area_node and friends will default to creating
+global-nonsensitive VM areas, and vmap then calls asi_map as necessary.
 
-On all CPUs, do some general branch predictor clearing
-whenever the control taints say so.
+__vmalloc_node_range has additional logic to check and set defaults for
+the sensitivity of the underlying page allocation. It does this via an
+initial __set_asi_flags call - note that it then calls
+__get_vm_area_node which also calls __set_asi_flags. This second call
+is a NOP.
 
-This policy is very much just a starting point for discussion.
-Primarily it's a vague gesture at the fact that there is leeway
-in how ASI is used: it can be used to target CPU-specific issues (as
-is the case for L1TF here), or it can be used as a fairly broad
-mitigation (asi_maybe_flush_control() mitigates several known
-Spectre-style attacks and very likely also some unknown ones).
+By default, we mark the underlying page allocation as sensitive, even
+if the VM area is global-nonsensitive. This is just an optimization to
+avoid unnecessary asi_map etc, since presumably most code has no reason
+to access vmalloc'd data through the direct map.
+
+There are some details of the GFP-flag/VM-flag interaction that are not
+really obvious, for example: what should happen when callers of
+__vmalloc explicitly set GFP sensitivity flags? (That function has no VM
+flags argument). For the moment let's just not block on that and focus
+on adding the infrastructure, though.
+
+At the moment, the high-level vmalloc APIs doesn't actually provide a
+way to configure sensitivity, this commit just adds the infrastructure.
+We'll have to decide how to expose this to allocation sites as we
+implement more denylist logic. vmap does already allow configuring vm
+flags.
 
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/x86/include/asm/nospec-branch.h |  2 ++
- arch/x86/kvm/vmx/vmx.c               |  1 +
- arch/x86/lib/l1tf.c                  |  2 ++
- arch/x86/lib/retpoline.S             | 10 ++++++++++
- arch/x86/mm/asi.c                    | 29 +++++++++++++++++++++--------
- 5 files changed, 36 insertions(+), 8 deletions(-)
+ mm/vmalloc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index 96b410b1d4e841eb02f53a4691ee794ceee4ad2c..4582fb1fb42f6fd226534012d969ed13085e943a 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -614,6 +614,8 @@ static __always_inline void mds_idle_clear_cpu_buffers(void)
- 		mds_clear_cpu_buffers();
- }
- 
-+extern void fill_return_buffer(void);
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_X86_NOSPEC_BRANCH_H_ */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index b1a02f27b3abce0ef6ac448b66bef2c653a52eef..a532783caaea97291cd92a2e2cac617f74f76c7e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6635,6 +6635,7 @@ int vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
- 	return ret;
- }
- 
-+/* Must be reentrant, for use by vmx_post_asi_enter. */
- static noinstr void vmx_l1d_flush(struct kvm_vcpu *vcpu)
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 8d260f2174fe664b54dcda054cb9759ae282bf03..00745edf0b2c5f4c769a46bdcf0872223de5299d 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -3210,6 +3210,7 @@ struct vm_struct *remove_vm_area(const void *addr)
  {
- 	/*
-diff --git a/arch/x86/lib/l1tf.c b/arch/x86/lib/l1tf.c
-index c474f18ae331c8dfa7a029c457dd3cf75bebf808..ffe1c3d0ef43ff8f1781f2e446aed041f4ce3179 100644
---- a/arch/x86/lib/l1tf.c
-+++ b/arch/x86/lib/l1tf.c
-@@ -46,6 +46,8 @@ EXPORT_SYMBOL(l1tf_flush_setup);
-  *  - may or may not work on other CPUs.
-  *
-  * Don't call unless l1tf_flush_setup() has returned successfully.
-+ *
-+ * Must be reentrant, for use by ASI.
-  */
- noinstr void l1tf_flush(void)
- {
-diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
-index 391059b2c6fbc4a571f0582c7c4654147a930cef..6d126fff6bf839889086fe21464d8af07316d7e5 100644
---- a/arch/x86/lib/retpoline.S
-+++ b/arch/x86/lib/retpoline.S
-@@ -396,3 +396,13 @@ SYM_CODE_END(__x86_return_thunk)
- EXPORT_SYMBOL(__x86_return_thunk)
+ 	struct vmap_area *va;
+ 	struct vm_struct *vm;
++	unsigned long vm_addr;
  
- #endif /* CONFIG_MITIGATION_RETHUNK */
-+
-+.pushsection .noinstr.text, "ax"
-+SYM_CODE_START(fill_return_buffer)
-+	UNWIND_HINT_FUNC
-+	ENDBR
-+	__FILL_RETURN_BUFFER(%_ASM_AX,RSB_CLEAR_LOOPS)
-+	RET
-+SYM_CODE_END(fill_return_buffer)
-+__EXPORT_THUNK(fill_return_buffer)
-+.popsection
-diff --git a/arch/x86/mm/asi.c b/arch/x86/mm/asi.c
-index 1e9dc568e79e8686a4dbf47f765f2c2535d025ec..f10f6614b26148e5ba423d8a44f640674573ee40 100644
---- a/arch/x86/mm/asi.c
-+++ b/arch/x86/mm/asi.c
-@@ -10,6 +10,7 @@
+ 	might_sleep();
  
- #include <asm/cmdline.h>
- #include <asm/cpufeature.h>
-+#include <asm/l1tf.h>
- #include <asm/page.h>
- #include <asm/pgalloc.h>
- #include <asm/mmu_context.h>
-@@ -38,6 +39,8 @@ struct asi __asi_global_nonsensitive = {
- 	.mm = &init_mm,
- };
+@@ -3221,6 +3222,7 @@ struct vm_struct *remove_vm_area(const void *addr)
+ 	if (!va || !va->vm)
+ 		return NULL;
+ 	vm = va->vm;
++	vm_addr = (unsigned long) READ_ONCE(vm->addr);
  
-+static bool do_l1tf_flush __ro_after_init;
-+
- static inline bool asi_class_id_valid(enum asi_class_id class_id)
- {
- 	return class_id >= 0 && class_id < ASI_MAX_NUM_CLASSES;
-@@ -361,6 +364,15 @@ static int __init asi_global_init(void)
- 	asi_clone_pgd(asi_global_nonsensitive_pgd, init_mm.pgd,
- 		      VMEMMAP_START + (1UL << PGDIR_SHIFT));
- 
-+	if (boot_cpu_has_bug(X86_BUG_L1TF)) {
-+		int err = l1tf_flush_setup();
-+
-+		if (err)
-+			pr_warn("Failed to setup L1TF flushing for ASI (%pe)", ERR_PTR(err));
-+		else
-+			do_l1tf_flush = true;
-+	}
-+
- #ifdef CONFIG_PM_SLEEP
- 	register_syscore_ops(&asi_syscore_ops);
- #endif
-@@ -512,10 +524,12 @@ static __always_inline void maybe_flush_control(struct asi *next_asi)
- 	if (!taints)
+ 	debug_check_no_locks_freed(vm->addr, get_vm_area_size(vm));
+ 	debug_check_no_obj_freed(vm->addr, get_vm_area_size(vm));
+@@ -3352,6 +3354,7 @@ void vfree(const void *addr)
+ 				addr);
  		return;
+ 	}
++	asi_unmap(ASI_GLOBAL_NONSENSITIVE, vm->addr, get_vm_area_size(vm));
  
--	/*
--	 * This is where we'll do the actual dirty work of clearing uarch state.
--	 * For now we just pretend, clear the taints.
--	 */
-+	/* Clear normal indirect branch predictions, if we haven't */
-+	if (cpu_feature_enabled(X86_FEATURE_IBPB))
-+		__wrmsr(MSR_IA32_PRED_CMD, PRED_CMD_IBPB, 0);
-+
-+	fill_return_buffer();
-+
- 	this_cpu_and(asi_taints, ~ASI_TAINTS_CONTROL_MASK);
- }
- 
-@@ -536,10 +550,9 @@ static __always_inline void maybe_flush_data(struct asi *next_asi)
- 	if (!taints)
+ 	if (unlikely(vm->flags & VM_FLUSH_RESET_PERMS))
+ 		vm_reset_perms(vm);
+@@ -3397,6 +3400,7 @@ void vunmap(const void *addr)
+ 				addr);
  		return;
- 
--	/*
--	 * This is where we'll do the actual dirty work of clearing uarch state.
--	 * For now we just pretend, clear the taints.
--	 */
-+	if (do_l1tf_flush)
-+		l1tf_flush();
-+
- 	this_cpu_and(asi_taints, ~ASI_TAINTS_DATA_MASK);
+ 	}
++	asi_unmap(ASI_GLOBAL_NONSENSITIVE, vm->addr, get_vm_area_size(vm));
+ 	kfree(vm);
  }
+ EXPORT_SYMBOL(vunmap);
+@@ -3445,16 +3449,21 @@ void *vmap(struct page **pages, unsigned int count,
  
+ 	addr = (unsigned long)area->addr;
+ 	if (vmap_pages_range(addr, addr + size, pgprot_nx(prot),
+-				pages, PAGE_SHIFT) < 0) {
+-		vunmap(area->addr);
+-		return NULL;
+-	}
++				pages, PAGE_SHIFT) < 0)
++		goto err;
++
++	if (asi_map(ASI_GLOBAL_NONSENSITIVE, area->addr,
++		    get_vm_area_size(area)))
++		goto err; /* The necessary asi_unmap() is in vunmap. */
+ 
+ 	if (flags & VM_MAP_PUT_PAGES) {
+ 		area->pages = pages;
+ 		area->nr_pages = count;
+ 	}
+ 	return area->addr;
++err:
++	vunmap(area->addr);
++	return NULL;
+ }
+ EXPORT_SYMBOL(vmap);
+ 
+@@ -3711,6 +3720,10 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
+ 		goto fail;
+ 	}
+ 
++	if (asi_map(ASI_GLOBAL_NONSENSITIVE, area->addr,
++		    get_vm_area_size(area)))
++		goto fail; /* The necessary asi_unmap() is in vfree. */
++
+ 	return area->addr;
+ 
+ fail:
 
 -- 
 2.47.1.613.gc27f4b7a9f-goog
