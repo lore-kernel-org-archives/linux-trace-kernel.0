@@ -1,109 +1,87 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463CA43166;
-	Sat, 11 Jan 2025 06:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B278B19DF98;
+	Sat, 11 Jan 2025 12:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736577133; cv=none; b=YuuZHPawu+mvBkb6o/LK2zdq+yE4Ejk85D/nRrFvC9BfoIw256fcG5GlqEeHHZQ1qo7ps8HyqLmUsnGfHEUywdJbn8/qYi9mmNYV8F333D2hvMyscOuGfVpYT4Q0Vtp5FCeJPlg9PrbKF/8KAo2jJfi/AjtxVt6p62+/ivli74k=
+	t=1736597925; cv=none; b=W4fyGShQshCc+LE0XOKgA+OGWazf/vjiTSfnYnTO4/7a04obcysrNGm8K5MNGBs6768ohEudecjDMq1yzCtEI+E316IPGXogKx0ZQmE6yWp5Tdx2wCJ0W0UTyIb5+7W9OwiLj7i1Bx0H3HqC31bE1FvvC/Y1MIpfNfi35lK1pBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736577133; c=relaxed/simple;
-	bh=WlW5wzVMtiCxmCyYY4AQnRLrTwEq6CUwkUmbhIO6pQ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l70kkw/ZEO7csGItMPlfqAsp2m45W4bD+50VYtWdK9nD6hutYe7kPF/zAZZY/WGTOGvPQKv0oFcrTcfjMTMeU+Lsr8vtsnxPGADbsmQbSPOGlaoKjtIw0CVIwt63xzC0qyOd97WuW1zPKlAYSkwxffTIgbeAfmyWAu89GadRzbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=htHeZbAO; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="htHeZbAO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=JiAWufxqkVzPBh0xWUrDhwqwo+seeZMaBCVPXILNB6Q=; b=htHeZbAOG9CXeDrATfs+VjXtNe
-	LC/w2Ev/Z2tppzH6b2mrRamyIOkWJEx4igtqzhuk0yjbu0YD1jGuzMNQ9A5pL4IWcN6nEVpahhiax
-	gIX6q6CYE16XnSLM0Z4VhKeZD4HYZvEn82uyi/91OPV2G05iaxTQ763IW94hXhLss+tYfWb8CQK0A
-	c/fLHV3NKp0sdq70BJ7p9iM7FbTsr2M9hCB0payiFWNZPurK25vfKvZfzxjK05qKqR9uma3iUhcP9
-	Qe3JJbaJx9AZGAgmwGz7J4tT2yhHa4Dkbm38l4xkF3j3spkQ5PgreaISrFz0g7WuykxhyAuutAE18
-	ZqTO/hSA==;
-Received: from [50.53.2.24] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tWV2Y-00000000HmV-48wO;
-	Sat, 11 Jan 2025 06:32:11 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fix trace.h kernel-doc func/struct/enum members
-Date: Fri, 10 Jan 2025 22:32:10 -0800
-Message-ID: <20250111063210.910922-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1736597925; c=relaxed/simple;
+	bh=G0j+rxfkOVl3z9RAPt9oe6aH0XqdmyhM1QLNxNwzeqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4iVgN9BSAbq7d3GW8jvMaHYTxZBpeRxCJ/du1n+KoFO3TyQdDPqst5VzmxTIwo6aX0Kuepu9+w+pxMjiWEUHLiauddfG8z0RCcV60IEH9s5Nn9qrpVuKl9X0rbnscL4obqTDlsZuI9e9B0gEgkxIGpkr5VCBpOOfNder7szoVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tWaRL-0006NS-00; Sat, 11 Jan 2025 13:18:07 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 19C70C06B0; Sat, 11 Jan 2025 13:02:25 +0100 (CET)
+Date: Sat, 11 Jan 2025 13:02:25 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, xzhong86@163.com, wuzhangjin@gmail.com,
+	srostedt@redhat.com, linux-mips@linux-mips.org,
+	ralf@duck.linux-mips.net, jeffbai@aosc.io, zhanjun@uniontech.com,
+	guanwentao@uniontech.com, jiaxun.yang@flygoat.com,
+	gregory.clement@bootlin.com, philmd@linaro.org, tglx@linutronix.de,
+	rppt@kernel.org
+Subject: Re: [RESEND PATCH] MIPS: ftrace: Declare ftrace_get_parent_ra_addr()
+ as static
+Message-ID: <Z4Jd0aiLQY2KYRmS@alpha.franken.de>
+References: <527F9AFF0430AB45+20250104144708.18438-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <527F9AFF0430AB45+20250104144708.18438-1-wangyuli@uniontech.com>
 
-Add missing kernel-doc for function or struct members.
-Use the correct enum names for enum members to prevent kernel-doc
-warnings.
+On Sat, Jan 04, 2025 at 10:47:08PM +0800, WangYuli wrote:
+> Declare ftrace_get_parent_ra_addr() as static to suppress clang
+> compiler warning that 'no previous prototype'. This function is
+> not intended to be called from other parts.
+> 
+> Fix follow error with clang-19:
+> 
+> arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
+>   251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+>       |               ^
+> arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+>   251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+>       | ^
+>       | static
+> 1 error generated.
+> 
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  arch/mips/kernel/ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+> index 8c401e42301c..f39e85fd58fa 100644
+> --- a/arch/mips/kernel/ftrace.c
+> +++ b/arch/mips/kernel/ftrace.c
+> @@ -248,7 +248,7 @@ int ftrace_disable_ftrace_graph_caller(void)
+>  #define S_R_SP	(0xafb0 << 16)	/* s{d,w} R, offset(sp) */
+>  #define OFFSET_MASK	0xffff	/* stack offset range: 0 ~ PT_SIZE */
+>  
+> -unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+> +static unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+>  		old_parent_ra, unsigned long parent_ra_addr, unsigned long fp)
+>  {
+>  	unsigned long sp, ip, tmp;
+> -- 
+> 2.45.2
 
-trace.h:302: warning: Function parameter or struct member 'cond_data' not described in 'cond_snapshot'
-trace.h:618: warning: Excess struct member 'print_headers' description in 'tracer'
+applied to mips-next.
 
-trace.h:1978: warning: Enum value 'EVENT_CMD_FL_POST_TRIGGER' not described in enum 'event_command_flags'
-trace.h:1978: warning: Enum value 'EVENT_CMD_FL_NEEDS_REC' not described in enum 'event_command_flags'
-trace.h:1978: warning: Excess enum value 'NEEDS_REC' description in 'event_command_flags'
-trace.h:1978: warning: Excess enum value 'POST_TRIGGER' description in 'event_command_flags'
+Thomas.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-trace-kernel@vger.kernel.org
----
- kernel/trace/trace.h |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
---- linux-next-20250108.orig/kernel/trace/trace.h
-+++ linux-next-20250108/kernel/trace/trace.h
-@@ -285,6 +285,8 @@ typedef bool (*cond_update_fn_t)(struct
-  * associated with the trace instance by
-  * tracing_cond_snapshot_disable().
-  *
-+ * @cond_data: the conditional snapshot's associated data
-+ *
-  * The method below is required.
-  *
-  * @update: When a conditional snapshot is invoked, the update()
-@@ -568,7 +570,7 @@ struct trace_option_dentry {
-  * @read: override the default read callback on trace_pipe
-  * @splice_read: override the default splice_read callback on trace_pipe
-  * @selftest: selftest to run on boot (see trace_selftest.c)
-- * @print_headers: override the first lines that describe your columns
-+ * @print_header: override the first lines that describe your columns
-  * @print_line: callback that prints a trace
-  * @set_flag: signals one of your private flags changed (trace_options file)
-  * @flags: your private flags
-@@ -1947,7 +1949,7 @@ struct event_command {
- /**
-  * enum event_command_flags - flags for struct event_command
-  *
-- * @POST_TRIGGER: A flag that says whether or not this command needs
-+ * @EVENT_CMD_FL_POST_TRIGGER: Indicates whether or not this command needs
-  *	to have its action delayed until after the current event has
-  *	been closed.  Some triggers need to avoid being invoked while
-  *	an event is currently in the process of being logged, since
-@@ -1966,7 +1968,7 @@ struct event_command {
-  *	itself logs to the trace buffer, this flag should be set,
-  *	otherwise it can be left unspecified.
-  *
-- * @NEEDS_REC: A flag that says whether or not this command needs
-+ * @EVENT_CMD_FL_NEEDS_REC: Indicates whether or not this command needs
-  *	access to the trace record in order to perform its function,
-  *	regardless of whether or not it has a filter associated with
-  *	it (filters make a trigger require access to the trace record
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
