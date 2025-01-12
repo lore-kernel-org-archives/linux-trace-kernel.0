@@ -1,137 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BDF632;
-	Sun, 12 Jan 2025 05:26:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74747BA3F;
+	Sun, 12 Jan 2025 08:55:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736659602; cv=none; b=ujP2o+yi+C/troUlX7fmlj6MF+bBay7a1JV7qbiXrEwcM61h7LbsCwm8yY0ZJwsZZ4B2I0NUCI6ORxBnwW2jW/xpi58KQRx7O+WaG1/LjaUdod4ZoP5olxd+O236RjwZuSzYTmDLpCsEkblMPRUwTpjEuzQpT2bCy51QxJQZeTA=
+	t=1736672110; cv=none; b=EQDY3X1LxpfaUK/A8JEC10M7mS2YoOtTSavQ6/z2PJvpOZ+lnrBUyuu+wxbHpqHW5/sBRzYmhbLwOvo8cTkESajyXAlVAms4/pfIbFo7+lMJWqofQetqWGTjp3qnduv0lodX3cqnJ5W9/as8j7qyhfbzI4jKQNzcaZ0LCqoyukE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736659602; c=relaxed/simple;
-	bh=WEuTKqsqdUyEs81BC4WOvmVz9HYQKyyQ9xf+QyvZH1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qv6fgDRct6r9EteVsfxKD3CDzfwAJ1F9Zuh43MeygK4mcAaW5DHtJ2oZbDQvPOJCFDkC7MSz5qIN3fXQrlabuFFEmXmEeSR6AF1ZnVKh1vY6+VqrZoPbqBZX5LLLrCLOSRhAVFjgLZJdcWAaAIPZuxOIM1DKvol1Uy49RUllksU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVz9rd+H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736672110; c=relaxed/simple;
+	bh=2OdLtNhpOzwVLBuyjT4Pmrh9g+J++anxIOyBzX8oFRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HkjMZhR5L/feVFOhkqcEWoMNuSUZHG6EJsS0e7X7AxoycWZKSWsWpbs24+P9syEXDhHdSYcDDIEyw4Oc7OpUqPYcizKrsD7VIgBeZxKTl9SnTxdz72uN5zbJYCvZ0Xc3gLAc+aP/R0sTvhcItM3ROoxAdZDRYpSHq1wzzfzmqhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bt//TFsj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVz9rd+H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CE9BC4CEE0;
-	Sun, 12 Jan 2025 05:26:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bt//TFsj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78674C4CEDF;
+	Sun, 12 Jan 2025 08:54:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736659600;
-	bh=WEuTKqsqdUyEs81BC4WOvmVz9HYQKyyQ9xf+QyvZH1s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FVz9rd+HP/ZfGeJ7amyLZFnacEoymLHIxjT7g5Ns16yCMb5niLWPWaLxzB3t4/qpB
-	 9kcpbfEkWO5JOfgdbfjSiTxxrF3thsmvxQLIYiKbKLKUpEpCHCso/fM4QdBHp7BIkB
-	 T1QYfOmnhYUupubPrlA1zoY+jJOVs2bBNHSrCQ7F0YHZUKbxjO5cokcjtA5gHZ8oHE
-	 tJzbN3qnvHK/a9TXyXiKfif2w8Qqq2Tdy1CSUh3F7Pf+omyWsDqKVsz5C0er9owYhq
-	 RJfMMC7/H8uSiYKUSJdBB1eVT1Q4zxA1WhYAB+Jtke4JwQzq2RN2gFFPC2R0fXyMrp
-	 fmyLN9NKEm1Zg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Florent Revest <revest@chromium.org>,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	bpf <bpf@vger.kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
+	s=k20201202; t=1736672109;
+	bh=2OdLtNhpOzwVLBuyjT4Pmrh9g+J++anxIOyBzX8oFRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bt//TFsjp7oBP/+mYKotPM1CCH/pvCViP9lReiFZD2VikywkhE1q0XvAzRMYgR9w/
+	 rDXqF5aM9MujwGkgmdrwVN+U9S/HNKSeUhH0oeUj1JklV0TXx4lQhSwaKnFu9xce32
+	 ftWG7NtXr9D1Marf2RroYue+KEiHc08VUhcxsxtgtvH/1RuSspxTlk/8FfWRwTUUWL
+	 GQrOHNuzVf53wyl/rIxgHT4G9jfVuY7AOydTBH62p6BSjVcKmEwo1PW/k1dMtwfkJE
+	 pWwQqokKV7JcLsi4Ix+zyeqNEodjirjOo+JMvLDH6LUhiX+SLLVYTId1lNsII6yjXH
+	 ekVDGfSuma34Q==
+Date: Sun, 12 Jan 2025 10:54:46 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Gow <davidgow@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] fgraph: Move trace_clock_local() for return time to function_graph tracer
-Date: Sun, 12 Jan 2025 14:26:35 +0900
-Message-ID: <173665959558.1629214.16724136597211810729.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z3aSuql3fnXMVMoM@krava>
-References: <Z3aSuql3fnXMVMoM@krava>
-User-Agent: StGit/0.19
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
+	Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	live-patching@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 3/8] x86/mm/pat: Restore large pages after fragmentation
+Message-ID: <Z4ODVmnC4fDnIUSN@kernel.org>
+References: <20241227072825.1288491-1-rppt@kernel.org>
+ <20241227072825.1288491-4-rppt@kernel.org>
+ <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi Kirill,
 
-Since the ftrace_graph_ret::rettime is only referred in the function_graph
-tracer, the trace_clock_local() call in fgraph is just an overhead for
-other fgraph users.
+On Fri, Jan 10, 2025 at 12:36:59PM +0200, Kirill A. Shutemov wrote:
+> On Fri, Dec 27, 2024 at 09:28:20AM +0200, Mike Rapoport wrote:
+> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > 
+> > Change of attributes of the pages may lead to fragmentation of direct
+> > mapping over time and performance degradation as result.
+> > 
+> > With current code it's one way road: kernel tries to avoid splitting
+> > large pages, but it doesn't restore them back even if page attributes
+> > got compatible again.
+> > 
+> > Any change to the mapping may potentially allow to restore large page.
+> > 
+> > Hook up into cpa_flush() path to check if there's any pages to be
+> > recovered in PUD_SIZE range around pages we've just touched.
+> > 
+> > CPUs don't like[1] to have to have TLB entries of different size for the
+> > same memory, but looks like it's okay as long as these entries have
+> > matching attributes[2]. Therefore it's critical to flush TLB before any
+> > following changes to the mapping.
+> > 
+> > Note that we already allow for multiple TLB entries of different sizes
+> > for the same memory now in split_large_page() path. It's not a new
+> > situation.
+> > 
+> > set_memory_4k() provides a way to use 4k pages on purpose. Kernel must
+> > not remap such pages as large. Re-use one of software PTE bits to
+> > indicate such pages.
+> > 
+> > [1] See Erratum 383 of AMD Family 10h Processors
+> > [2] https://lore.kernel.org/linux-mm/1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com/
+> > 
+> > [rppt@kernel.org:
+> >  * s/restore/collapse/
+> >  * update formatting per peterz
+> >  * use 'struct ptdesc' instead of 'struct page' for list of page tables to
+> >    be freed
+> >  * try to collapse PMD first and if it succeeds move on to PUD as peterz
+> >    suggested
+> >  * flush TLB twice: for changes done in the original CPA call and after
+> >    collapsing of large pages
+> > ]
+> > 
+> > Link: https://lore.kernel.org/all/20200416213229.19174-1-kirill.shutemov@linux.intel.com
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
+> When I originally attempted this, the patch was dropped because of
+> performance regressions. Was it addressed somehow?
 
-Move the trace_clock_local() for recording return time to function_graph
-tracer and the rettime field is just zeroed in the fgraph side.
-That rettime field is updated by one of the function_graph tracer and
-cached for other function_graph tracer instances.
+I didn't realize the patch was dropped because of performance regressions,
+so I didn't address it.
 
-According to Jiri's report[1], removing this function will gain fprobe
-performance ~27%.
+Do you remember where did the regressions show up?
+ 
+> -- 
+>   Kiryl Shutsemau / Kirill A. Shutemov
+> 
 
-[1] https://lore.kernel.org/all/Z3aSuql3fnXMVMoM@krava/
-
-Reported-by: Jiri Olsa <olsajiri@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/linux/ftrace.h               |   11 +++++++++++
- kernel/trace/fgraph.c                |    2 +-
- kernel/trace/trace_functions_graph.c |    2 ++
- 3 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 07092dfb21a4..a2fb7360d6e2 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1155,6 +1155,17 @@ struct ftrace_graph_ret {
- 	unsigned long long rettime;
- } __packed;
- 
-+static inline void ftrace_graph_ret_record_time(struct ftrace_graph_ret *trace)
-+{
-+	if (!trace->rettime)
-+		trace->rettime = trace_clock_local();
-+}
-+
-+static inline void ftrace_graph_ret_init_time(struct ftrace_graph_ret *trace)
-+{
-+	trace->rettime = 0;
-+}
-+
- struct fgraph_ops;
- 
- /* Type of the callback handlers for tracing function graph*/
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index c928527251e3..bc1e5f0493b6 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -826,7 +826,7 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
-+	ftrace_graph_ret_init_time(&trace);
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index d0e4f412c298..7e4d91d42d8e 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -327,6 +327,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	int size;
- 	int cpu;
- 
-+	ftrace_graph_ret_record_time(trace);
- 	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (*task_var & TRACE_GRAPH_NOTRACE) {
-@@ -361,6 +362,7 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 	struct fgraph_times *ftimes;
- 	int size;
- 
-+	ftrace_graph_ret_record_time(trace);
- 	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
-
+-- 
+Sincerely yours,
+Mike.
