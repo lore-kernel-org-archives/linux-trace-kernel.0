@@ -1,68 +1,74 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CC44D8CE;
-	Mon, 13 Jan 2025 15:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC8E29D19;
+	Mon, 13 Jan 2025 15:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736782143; cv=none; b=maAdcA0UB+dCXHyvpwA/qosXtD6QFaokoSNR+U6mne89LnBU1kfF2q4k7hiHFL56IgWbx6cFfLgJbRE6fpZcUGQuID4YOYvPnjzF1vpLeFeaRqhPmK2Gjw6nhTVllc9Oti4R5QeFEbXo3tHeWQSM24bheZO6YHGag5j+m97ryPU=
+	t=1736782927; cv=none; b=AUGFv/QJFOnVxgyTL7mIpuQe0g1NICMt6p+VelygtNWhm6Khn2mPmR6Wo17cMNIo1ECZQQ1VEhvvMyP4dhtNIBjwl43qSxd4sjR7O771UrcTSPEsjCz+JWe7CfMuDD5BCoR7G1lbNZkFgNYUkirEteEcCfkPhmL9wY0S4zneeso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736782143; c=relaxed/simple;
-	bh=L7hV/X2qpfcKhObUVS1SQQq2WwBVl4N9jZeRy8RDvDQ=;
+	s=arc-20240116; t=1736782927; c=relaxed/simple;
+	bh=ezdGV1GvsLDMkgG6vD/PLW6Gg9qJx+DHYsoBas5WR/s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cWp7ZeCUU2fBrs+hTDRlrnevVPhfa4RCR6RPvZ9bBgcCTirARNnCXxbJoFxEceifXy4KGvHpjem2udLMPBghNi8s27cxFOpNVCFSPPvcElk/RoLkuChM5LOVvK6sgcwaPm3Hn7DyklAuBELDhs4BxNMTC7Bc3NkQF1Ss9zPUG0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CdjcRBsR; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbZZFKL2svH4VIv1YU3upLUmG4sGptjSE2XqCHxIGzoFPMur3pPtgGPIvWYHq+mLGlLC0SK9arsLFiDDkWOHOKL4XH+R6al15ID5Q7rlzywSd1noNpXh8BqBgIJp+ZUwraDr+DKUaEhXLsroiJZtXkn10nHH6BDlYfFndN88pHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VvDqV5Jk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CdjcRBsR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9VqsxP5RvX30QYR7yuJXPx1d9hNGDEzEGpTQhe2nivM=; b=CdjcRBsRqWXwULJgsV1wbho1ct
-	7bTBs6L7iQzmzycFuSKc3xawEIdDX6neDB+BsFao8dw/hNdqvsbqz16LmPfb6KE9Mcb0Dpn99jDPU
-	SEpzMg53tgwVFDsj8XeyPgFhGYX9YNh13TaZrHq+5FGvlZ6odcMzl7yyIGXswughRIwhc83j7oaUm
-	6IDxxbc+Slmv5umkq69QkuB1Ij7g/qM4xeV06Wx5aT2zsL98dSTqjDZ3AqlWb0KCHznpS4kBEbclG
-	n2e52Je5nmDYIbBQFg9qHHQKjP/1tcEMkuoo013fhgQH3BPgsPjDBRHZ1jUqeZ060nyxQygSxdZG3
-	mRr0GgSg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXMMt-00000000snb-2w4K;
-	Mon, 13 Jan 2025 15:28:43 +0000
-Date: Mon, 13 Jan 2025 15:28:43 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Christian Brauner <brauner@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] mm: Remove PG_reclaim
-Message-ID: <Z4UxK_bsFD7TtL1l@casper.infradead.org>
-References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
- <20250113093453.1932083-9-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VvDqV5Jk"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50DE6HEv018414;
+	Mon, 13 Jan 2025 15:41:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=xMOmJUfZwM8up3CrPy5oYax53wSUkJ
+	w0YSM9enl3yiw=; b=VvDqV5JkCneG9RHqiPSkA//pyH9r+ZZTEeWs6yeGPncs1F
+	DQ0LGTIg004AsdW0334Ciw+Wi0T8Fz9s1XuQmNXzDaDzwTaJxAlB2t0a9mfBzSyx
+	sNWRRwI67waTYlZgHehOA12A7/RpNLbpZbFOjE/TRJOUAvF9TwEUFm8vxDvNrGnd
+	jDU8NdUXqmWgwmwMi40PFRZeAEbKwAEZsGu9rBsfSyjbTmsGrjBdLntCyX4iBQ6D
+	48RdhdJpeQbtxD1FNN+OsG3JIv/zSwCIVH/1q4cQEds7uAD1+8vUA39lSLSc6YR4
+	SjgFZuENWmht9VLwbK7+CGjnN3L+R6XmjpgQLTsQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4454a58e5b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jan 2025 15:41:46 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50DCNZ9v002663;
+	Mon, 13 Jan 2025 15:41:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4443bxxy4j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jan 2025 15:41:46 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50DFfidX28246616
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Jan 2025 15:41:44 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1BB8220043;
+	Mon, 13 Jan 2025 15:41:44 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 67A8420040;
+	Mon, 13 Jan 2025 15:41:43 +0000 (GMT)
+Received: from osiris (unknown [9.171.45.96])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 13 Jan 2025 15:41:43 +0000 (GMT)
+Date: Mon, 13 Jan 2025 16:41:41 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [RFC][PATCH] arm64: scripts/sorttable: Implement sorting
+ mcount_loc at build for arm64
+Message-ID: <20250113154141.42646-N-hca@linux.ibm.com>
+References: <20250107083214.5a29d429@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,49 +77,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250113093453.1932083-9-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250107083214.5a29d429@gandalf.local.home>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: iQ8PN44jIslB0CyVZKKQ4eWaU-hf9tMS
+X-Proofpoint-ORIG-GUID: iQ8PN44jIslB0CyVZKKQ4eWaU-hf9tMS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ clxscore=1011 lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501130129
 
-On Mon, Jan 13, 2025 at 11:34:53AM +0200, Kirill A. Shutemov wrote:
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index caadbe393aa2..beba72da5e33 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -686,6 +686,8 @@ void folio_migrate_flags(struct folio *newfolio, struct folio *folio)
->  		folio_set_young(newfolio);
->  	if (folio_test_idle(folio))
->  		folio_set_idle(newfolio);
-> +	if (folio_test_readahead(folio))
-> +		folio_set_readahead(newfolio);
->  
->  	folio_migrate_refs(newfolio, folio);
->  	/*
+Hi Steven,
 
-Not a problem with this patch ... but aren't we missing a
-test_dropbehind / set_dropbehind pair in this function?  Or are we
-prohibited from migrating a folio with the dropbehind flag set
-somewhere?
+On Tue, Jan 07, 2025 at 08:32:14AM -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The mcount_loc section holds the addresses of the functions that get
+> patched by ftrace when enabling function callbacks. It can contain tens of
+> thousands of entries. These addresses must be sorted. If they are not
+> sorted at compile time, they are sorted at boot. Sorting at boot does take
+> some time and does have a small impact on boot overhead.
+> 
+> x86 and arm32 have the addresses in the mcount_loc section of the ELF
+> file. But for arm64, the section just contains zeros. The .rela.dyn
+> Elf_Rela section holds the addresses and they get patched at boot during
+> the relocation phase.
+> 
+> In order to sort these addresses, the Elf_Rela needs to be updated instead
+> of the location in the binary that holds the mcount_loc section. Have the
+> sorttable code, allocate an array to hold the function addresses, load the
+> addresses from the Elf_Rela entries, sort them, then put them back in
+> order into the Elf_rela entries so that they will be sorted at boot up
+> without having to sort them during boot up.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> 
+> Note, this is based on top of my sorttable clean up code:
+> 
+>   https://lore.kernel.org/linux-trace-kernel/20250105162211.971039541@goodmis.org/
+>   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git sorttable/for-next
+> 
+> I tested this on a arm64 VM (running on x86 host), with
+> CONFIG_FTRACE_SORT_STARTUP_TEST enabled, which verifies the mcount entries
+> are sorted at boot up.
+> 
+> I wonder if this will also work for s390? But I do not know s390 Elf layout.
 
-> +++ b/mm/swap.c
-> @@ -221,22 +221,6 @@ static void lru_move_tail(struct lruvec *lruvec, struct folio *folio)
->  	__count_vm_events(PGROTATED, folio_nr_pages(folio));
->  }
->  
-> -/*
-> - * Writeback is about to end against a folio which has been marked for
-> - * immediate reclaim.  If it still appears to be reclaimable, move it
-> - * to the tail of the inactive list.
-> - *
-> - * folio_rotate_reclaimable() must disable IRQs, to prevent nasty races.
-> - */
-> -void folio_rotate_reclaimable(struct folio *folio)
-> -{
-> -	if (folio_test_locked(folio) || folio_test_dirty(folio) ||
-> -	    folio_test_unevictable(folio))
-> -		return;
-> -
-> -	folio_batch_add_and_move(folio, lru_move_tail, true);
-> -}
-
-I think this is the last caller of lru_move_tail(), which means we can
-get rid of fbatches->lru_move_tail and the local_lock that protects it.
-Or did I miss something?
+Thanks for the hint! We look into this, but it might take some time.
