@@ -1,73 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C922323ED46;
-	Mon, 13 Jan 2025 14:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CC44D8CE;
+	Mon, 13 Jan 2025 15:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736777266; cv=none; b=E9Fl/y02giKxnUbjie1BC9PPgPUCz1DUVULyoxNeBVh1YU8iAbGgoeCj7WAnK4sAtuI0JO3AiA3BvlWitzKyuwKWsC4v8C5KaY6H9zTDbsmvKM0pgbc/ee2not51K6q6sP7wJEhnmXprogPgVs6Q6UOgEswBPLE7UrrGr5ZFQLY=
+	t=1736782143; cv=none; b=maAdcA0UB+dCXHyvpwA/qosXtD6QFaokoSNR+U6mne89LnBU1kfF2q4k7hiHFL56IgWbx6cFfLgJbRE6fpZcUGQuID4YOYvPnjzF1vpLeFeaRqhPmK2Gjw6nhTVllc9Oti4R5QeFEbXo3tHeWQSM24bheZO6YHGag5j+m97ryPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736777266; c=relaxed/simple;
-	bh=Daub8vm06w8IcRjMHeGOmiLMe3eJdiQxwNfwcfeWF2w=;
+	s=arc-20240116; t=1736782143; c=relaxed/simple;
+	bh=L7hV/X2qpfcKhObUVS1SQQq2WwBVl4N9jZeRy8RDvDQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZ4l2xwi3JLfM2nrmlWK5kDZz5mdy19lveCDbTVztgOy5wRSaWYHz24EN4GcPvCTvGSiqsEdykOsyw2BH9j5ZsrPHDcqZFdt2pk6PK56RzCE+2DX9/7dTSjk5EkyrzSvCtPJZhkB+AwFOOk2iS17UZYS2x9WIWuooERCdk69uuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjXWoaR/; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cWp7ZeCUU2fBrs+hTDRlrnevVPhfa4RCR6RPvZ9bBgcCTirARNnCXxbJoFxEceifXy4KGvHpjem2udLMPBghNi8s27cxFOpNVCFSPPvcElk/RoLkuChM5LOVvK6sgcwaPm3Hn7DyklAuBELDhs4BxNMTC7Bc3NkQF1Ss9zPUG0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CdjcRBsR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjXWoaR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736777265; x=1768313265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Daub8vm06w8IcRjMHeGOmiLMe3eJdiQxwNfwcfeWF2w=;
-  b=YjXWoaR/IaixGY0iaFhHTb0olwgMbN0/nslSs80kZL9j8wpB2niYmHWA
-   eznc/NIZGof8U+axe0vzUrPfT6l1j9FbYzqyd2fQ3uj1byJ51nmZcCgXZ
-   7tFqC/qpRhEjFOx9veu3pMIDTpx+IjVibP0A5dSehnW4zZZa6eU/1CAGM
-   /67oOP2kut3ht3iUVgqMibT+1LaeWgfU9m9iGbl1rSAprwk3ftJNhcIVK
-   8u+U8FejDDh+5UyWXGbIr5kkrjdk0RKcQu5mobuFBFi4JcF77LUC2k4OK
-   wf/XrX2Nko+6muHWMMa93xlS8B5hiUI+Ngk/conpsoRTxwdnsB/k28CuW
-   g==;
-X-CSE-ConnectionGUID: T9QudyzLRRSQSFmYRUawmQ==
-X-CSE-MsgGUID: pe66AlJoQ/q5JtaGQG0BUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40980047"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40980047"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 06:07:37 -0800
-X-CSE-ConnectionGUID: ubPh+2y6SDe1z80joJq8Kg==
-X-CSE-MsgGUID: asJbCXYfTLCwN1vcFS+m3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="104448520"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 13 Jan 2025 06:07:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id DA7883B7; Mon, 13 Jan 2025 16:07:28 +0200 (EET)
-Date: Mon, 13 Jan 2025 16:07:28 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Andi Shyti <andi.shyti@linux.intel.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Christian Brauner <brauner@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, David Airlie <airlied@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] mm: Remove PG_reclaim
-Message-ID: <v7on5acvkgseggdrhgicq3slzecnnfdknvm3s4ohblaazhfdui@y2pdupkfe2cw>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CdjcRBsR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9VqsxP5RvX30QYR7yuJXPx1d9hNGDEzEGpTQhe2nivM=; b=CdjcRBsRqWXwULJgsV1wbho1ct
+	7bTBs6L7iQzmzycFuSKc3xawEIdDX6neDB+BsFao8dw/hNdqvsbqz16LmPfb6KE9Mcb0Dpn99jDPU
+	SEpzMg53tgwVFDsj8XeyPgFhGYX9YNh13TaZrHq+5FGvlZ6odcMzl7yyIGXswughRIwhc83j7oaUm
+	6IDxxbc+Slmv5umkq69QkuB1Ij7g/qM4xeV06Wx5aT2zsL98dSTqjDZ3AqlWb0KCHznpS4kBEbclG
+	n2e52Je5nmDYIbBQFg9qHHQKjP/1tcEMkuoo013fhgQH3BPgsPjDBRHZ1jUqeZ060nyxQygSxdZG3
+	mRr0GgSg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tXMMt-00000000snb-2w4K;
+	Mon, 13 Jan 2025 15:28:43 +0000
+Date: Mon, 13 Jan 2025 15:28:43 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Christian Brauner <brauner@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	David Airlie <airlied@gmail.com>,
+	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/8] mm: Remove PG_reclaim
+Message-ID: <Z4UxK_bsFD7TtL1l@casper.infradead.org>
 References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
- <Z4UZDAWj_8Ez-vN-@casper.infradead.org>
+ <20250113093453.1932083-9-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,20 +71,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z4UZDAWj_8Ez-vN-@casper.infradead.org>
+In-Reply-To: <20250113093453.1932083-9-kirill.shutemov@linux.intel.com>
 
-On Mon, Jan 13, 2025 at 01:45:48PM +0000, Matthew Wilcox wrote:
-> On Mon, Jan 13, 2025 at 11:34:45AM +0200, Kirill A. Shutemov wrote:
-> > Use PG_dropbehind instead of PG_reclaim and remove PG_reclaim.
-> 
-> I was hoping we'd end up with the name PG_reclaim instead of the name
-> PG_dropbehind.  PG_reclaim is a better name for this functionality.
+On Mon, Jan 13, 2025 at 11:34:53AM +0200, Kirill A. Shutemov wrote:
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index caadbe393aa2..beba72da5e33 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -686,6 +686,8 @@ void folio_migrate_flags(struct folio *newfolio, struct folio *folio)
+>  		folio_set_young(newfolio);
+>  	if (folio_test_idle(folio))
+>  		folio_set_idle(newfolio);
+> +	if (folio_test_readahead(folio))
+> +		folio_set_readahead(newfolio);
+>  
+>  	folio_migrate_refs(newfolio, folio);
+>  	/*
 
-I got burned by re-using the name with MAX_ORDER redefinition.
-I guess it is less risky as it is less used, but still...
+Not a problem with this patch ... but aren't we missing a
+test_dropbehind / set_dropbehind pair in this function?  Or are we
+prohibited from migrating a folio with the dropbehind flag set
+somewhere?
 
-Anyway, it can be done with a patch on top of the patchset. We must get
-rid of current PG_reclaim first.
+> +++ b/mm/swap.c
+> @@ -221,22 +221,6 @@ static void lru_move_tail(struct lruvec *lruvec, struct folio *folio)
+>  	__count_vm_events(PGROTATED, folio_nr_pages(folio));
+>  }
+>  
+> -/*
+> - * Writeback is about to end against a folio which has been marked for
+> - * immediate reclaim.  If it still appears to be reclaimable, move it
+> - * to the tail of the inactive list.
+> - *
+> - * folio_rotate_reclaimable() must disable IRQs, to prevent nasty races.
+> - */
+> -void folio_rotate_reclaimable(struct folio *folio)
+> -{
+> -	if (folio_test_locked(folio) || folio_test_dirty(folio) ||
+> -	    folio_test_unevictable(folio))
+> -		return;
+> -
+> -	folio_batch_add_and_move(folio, lru_move_tail, true);
+> -}
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+I think this is the last caller of lru_move_tail(), which means we can
+get rid of fbatches->lru_move_tail and the local_lock that protects it.
+Or did I miss something?
