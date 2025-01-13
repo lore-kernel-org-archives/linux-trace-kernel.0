@@ -1,130 +1,126 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC8E29D19;
-	Mon, 13 Jan 2025 15:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFA620AF87
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 16:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736782927; cv=none; b=AUGFv/QJFOnVxgyTL7mIpuQe0g1NICMt6p+VelygtNWhm6Khn2mPmR6Wo17cMNIo1ECZQQ1VEhvvMyP4dhtNIBjwl43qSxd4sjR7O771UrcTSPEsjCz+JWe7CfMuDD5BCoR7G1lbNZkFgNYUkirEteEcCfkPhmL9wY0S4zneeso=
+	t=1736784684; cv=none; b=iswcQxpBPmjWcQEXCEWaAp9wobt6526yr9OCJSQXmV1G6fxFV5itsMMms5uRgrdCOqtjJSg/51kAgiuuHg4ZqGxWGp8wqb/ljDx/JxjU1zs45pYwAFAXnQ2Wnm1imXCxJI3OKXe1IxlTu9wsRQhYo5wNmgsN6diclHhZG6gDKyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736782927; c=relaxed/simple;
-	bh=ezdGV1GvsLDMkgG6vD/PLW6Gg9qJx+DHYsoBas5WR/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qbZZFKL2svH4VIv1YU3upLUmG4sGptjSE2XqCHxIGzoFPMur3pPtgGPIvWYHq+mLGlLC0SK9arsLFiDDkWOHOKL4XH+R6al15ID5Q7rlzywSd1noNpXh8BqBgIJp+ZUwraDr+DKUaEhXLsroiJZtXkn10nHH6BDlYfFndN88pHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VvDqV5Jk; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1736784684; c=relaxed/simple;
+	bh=psxJGpeVFsbrFufxwmUIDo351AmSH3mNDvNXtHO2nq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=abzYksavqShVzZ/27eWmqgSqCn0Hnjsj1Igz16I5tcOfSBd2xpAgkEggYIC9WZSwQocBKbGhjm/R90i3qKXEqHh8wTj4d/Xri0qUdbek9OneyWan6Kry3AkRr3fILVxwQLPJ9pcCsvRpwIVQv6YW3VxM5Bm9pGNQ45DakmriFpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XIXQHB73; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VvDqV5Jk"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50DE6HEv018414;
-	Mon, 13 Jan 2025 15:41:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=xMOmJUfZwM8up3CrPy5oYax53wSUkJ
-	w0YSM9enl3yiw=; b=VvDqV5JkCneG9RHqiPSkA//pyH9r+ZZTEeWs6yeGPncs1F
-	DQ0LGTIg004AsdW0334Ciw+Wi0T8Fz9s1XuQmNXzDaDzwTaJxAlB2t0a9mfBzSyx
-	sNWRRwI67waTYlZgHehOA12A7/RpNLbpZbFOjE/TRJOUAvF9TwEUFm8vxDvNrGnd
-	jDU8NdUXqmWgwmwMi40PFRZeAEbKwAEZsGu9rBsfSyjbTmsGrjBdLntCyX4iBQ6D
-	48RdhdJpeQbtxD1FNN+OsG3JIv/zSwCIVH/1q4cQEds7uAD1+8vUA39lSLSc6YR4
-	SjgFZuENWmht9VLwbK7+CGjnN3L+R6XmjpgQLTsQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4454a58e5b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Jan 2025 15:41:46 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50DCNZ9v002663;
-	Mon, 13 Jan 2025 15:41:46 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4443bxxy4j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 Jan 2025 15:41:46 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50DFfidX28246616
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 Jan 2025 15:41:44 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1BB8220043;
-	Mon, 13 Jan 2025 15:41:44 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 67A8420040;
-	Mon, 13 Jan 2025 15:41:43 +0000 (GMT)
-Received: from osiris (unknown [9.171.45.96])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 13 Jan 2025 15:41:43 +0000 (GMT)
-Date: Mon, 13 Jan 2025 16:41:41 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [RFC][PATCH] arm64: scripts/sorttable: Implement sorting
- mcount_loc at build for arm64
-Message-ID: <20250113154141.42646-N-hca@linux.ibm.com>
-References: <20250107083214.5a29d429@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XIXQHB73"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6dd0d09215aso35864766d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 08:11:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1736784682; x=1737389482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0nln6xuSTTaoMOsjO/bzAdYR40fjFobKxVXqk79yIRg=;
+        b=XIXQHB73/bEY5a04oXp0dZ2wYzZySyXsuDRQdnh10kK/CJIr0IPEzK2YiJ8mvOwVfT
+         EwycpepZyRm3Askly8S6VpfQGsvf3y5EIqidaM5T5MggyC/S4rAaMm7+zCZm/a1rfFhm
+         rHSqF3z3BEA7/hWcc8cMFAr37yMV3oF86wPF4M5Rs+1Tml+nhlkgvHhbxDGQV0EoS+uZ
+         iybLcpugozsx1kZ8IsEl1ddrHTZxqVKq+rA2poIzC3lcxQo9uuBg9iRbg8JVqav2gHwj
+         EyHNWzQfFyXbQtwP/dFABvHufqL8SEe0MDApGbC3UU8KvRs3dmZiRGrqEfnWNda7O/B6
+         AA/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736784682; x=1737389482;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0nln6xuSTTaoMOsjO/bzAdYR40fjFobKxVXqk79yIRg=;
+        b=Qn6uvU7AB+MiHvOeQ1ZfHuTZPIlkPEcD0SaEpKuiQA7B5Tid9nRAojAFkaRQLcL9io
+         rO6sGdgyragZrZJbOuo4am/Vou1vr7U51MRw6N3/yh3sLO2vg0jcaehuoyXAGjULU7+Z
+         QMbX6S1+/xAQlIoBQ7pIStkNFS0dzQuDYJCsneRltVzSImCBpNdHXa1A+x0rg1m81Kwj
+         AA1xB3+q+tCA1EqXdZUo2ERgx/4MHETFB83lZCJXikCVgkQTBfo0WOdwyf95z/VAFG9L
+         cCjzWbplDuVro5I58d8VeG70g0xTL2jhWeEFz95mxE0xSrt3nmjThf9P8weQ7q3/4Zmm
+         dCvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+85LIzkzG6bWL2jxkIjru9UY6zYRmRtePqeTFF48xSaUUCLbVThdzn5is0yj91nWalMvdPwlWnrOhAiEWaO2b7IA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZo7rWNi7alwRhOSylC+dClNZ0lEvuK8BVKxRsoEnxVy7ymz7Y
+	xtkdPVIvGuqMAPZPKunNdzZOQ5XDt2zYc3oL9s3p7zuaapYLZyJIcxuRucrr+1/XwpejZHWV174
+	Rbg/A4w6GkoIAGwHEoQKZQ/J7NCIPT0Fbx2S5
+X-Gm-Gg: ASbGncsNgiwW+H11WmPm8gHXcZcuI6rWWoJEfuV4NL5VG68BrURMAhsZJIkHIQLRMs8
+	jzxaOkL6BrAlCmdXObmyFMUDQ5CdL2dbcHKA=
+X-Google-Smtp-Source: AGHT+IEZHimf0erqHl9P9hdsVm///MN8stQzn+Oj7UFKcLM1rFbaFHquGnXMlUQnxJqTuDGwgck+ox3NI5bhvjgf1ZE=
+X-Received: by 2002:ad4:5ca5:0:b0:6d4:25c4:e77d with SMTP id
+ 6a1803df08f44-6df9b2ddad5mr358474696d6.34.1736784681463; Mon, 13 Jan 2025
+ 08:11:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107083214.5a29d429@gandalf.local.home>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: iQ8PN44jIslB0CyVZKKQ4eWaU-hf9tMS
-X-Proofpoint-ORIG-GUID: iQ8PN44jIslB0CyVZKKQ4eWaU-hf9tMS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
- definitions=2024-10-15_01,2024-10-11_01,2024-09-30_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- clxscore=1011 lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501130129
+References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com> <20250113093453.1932083-4-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250113093453.1932083-4-kirill.shutemov@linux.intel.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 13 Jan 2025 08:10:45 -0800
+X-Gm-Features: AbW1kvYVFjw-APVc_AtsFocTeHs3A7WI3FQm934n3hdXUG8p6Ploc_paz3DXv-A
+Message-ID: <CAJD7tkYfh=K1FV2NPFD5P0+Td66PtoMRHAkAcwUJcRwYDKLZjQ@mail.gmail.com>
+Subject: Re: [PATCH 3/8] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yu Zhao <yuzhao@google.com>, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steven,
+On Mon, Jan 13, 2025 at 1:35=E2=80=AFAM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
+>
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> zswap_writeback_entry().
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-On Tue, Jan 07, 2025 at 08:32:14AM -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The mcount_loc section holds the addresses of the functions that get
-> patched by ftrace when enabling function callbacks. It can contain tens of
-> thousands of entries. These addresses must be sorted. If they are not
-> sorted at compile time, they are sorted at boot. Sorting at boot does take
-> some time and does have a small impact on boot overhead.
-> 
-> x86 and arm32 have the addresses in the mcount_loc section of the ELF
-> file. But for arm64, the section just contains zeros. The .rela.dyn
-> Elf_Rela section holds the addresses and they get patched at boot during
-> the relocation phase.
-> 
-> In order to sort these addresses, the Elf_Rela needs to be updated instead
-> of the location in the binary that holds the mcount_loc section. Have the
-> sorttable code, allocate an array to hold the function addresses, load the
-> addresses from the Elf_Rela entries, sort them, then put them back in
-> order into the Elf_rela entries so that they will be sorted at boot up
-> without having to sort them during boot up.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
+
 > ---
-> 
-> Note, this is based on top of my sorttable clean up code:
-> 
->   https://lore.kernel.org/linux-trace-kernel/20250105162211.971039541@goodmis.org/
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git sorttable/for-next
-> 
-> I tested this on a arm64 VM (running on x86 host), with
-> CONFIG_FTRACE_SORT_STARTUP_TEST enabled, which verifies the mcount entries
-> are sorted at boot up.
-> 
-> I wonder if this will also work for s390? But I do not know s390 Elf layout.
-
-Thanks for the hint! We look into this, but it might take some time.
+>  mm/zswap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/zswap.c b/mm/zswap.c
+> index 167ae641379f..c20bad0b0978 100644
+> --- a/mm/zswap.c
+> +++ b/mm/zswap.c
+> @@ -1096,8 +1096,8 @@ static int zswap_writeback_entry(struct zswap_entry=
+ *entry,
+>         /* folio is up to date */
+>         folio_mark_uptodate(folio);
+>
+> -       /* move it to the tail of the inactive list after end_writeback *=
+/
+> -       folio_set_reclaim(folio);
+> +       /* free the folio after writeback */
+> +       folio_set_dropbehind(folio);
+>
+>         /* start writeback */
+>         __swap_writepage(folio, &wbc);
+> --
+> 2.45.2
+>
