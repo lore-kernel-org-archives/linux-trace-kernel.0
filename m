@@ -1,133 +1,163 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEFB26AC3
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 16:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCEB1C3038;
+	Mon, 13 Jan 2025 20:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736785080; cv=none; b=uwG0bdv2kYraEeRkmgpchZtCw9t30+R5hWJC0hTn3JAOFyGAtASWNmzs7Lwd2lyjqJt5c97OIBff1nLfET3S0qcjGkhkoWrg7PjtfvglliYLXD6DHJz8BSEaP8NBeD8UVz7hGid13VZx6ZjNlc+cpsXsGxtnSgmWCegfgZdjRwo=
+	t=1736801707; cv=none; b=CPISBkXK30ak+SzGFl22Hk2YrOLaNEFiznWTTyRqKfEynI646TXnWqpVmDxwYoSxIQMxhzFg6FViQh20rTHloSV9gyKOI0OFS1zCK2RNsMQlUi5yrD4N11KEFOERK5SZj1UTrBfLc33Ym1axx8c8BV99HcwcluHWqZsIoBUoT/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736785080; c=relaxed/simple;
-	bh=i2OnbU868jbLpAGxnv33ZbXsXzgl95GrwT6kamytYyY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DKv+QytKqEgsV3/iIS03MI/oVpwOTWlDvTtyLgEq8lgL77o50LuNqpvaW51xX7pG+VDHE1eYRDxNSZWpjJM97/KfII+Wg/fsYpheBpSjNpy8/0FH7jfX/wIuDlteFGQ/DHSDJIdOmm65lmFuE1Idq7lFF0Kd4oGWG9XLYEd3B+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A5bU8zcc; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A5bU8zcc"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6dce7263beaso40563766d6.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 08:17:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736785077; x=1737389877; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jfzu8LVinRmTffQRsvj5JwYAQma905XvC7kwPgp95yk=;
-        b=A5bU8zccZdIrbPB/gL9qVoRCUJuVKehRJp7YbzaMmcqt0/JQxjrUGjmUwk2Fx96+b3
-         pae0RnZHmuubM64TjLK50sPeuS/15cmwCU4PFt6bkripzdi1JEhZW3iyl/AbkK1uv4G6
-         fCFSQwKRGT20V4zBOVbc9NJ6BkuVR3BvQKM1YD6EFd3ApoopyrTZpizI6Eh9Oqn+tkJt
-         jXUzujH4Eyhd6EYB5WvU/pPuPOwpgdJ8aCvs0AV35Y584V0cfeytjDHFJGY6xzR+MTfT
-         sCV1BdcntTBAEHM+4kAnbe1jxajE+dcX670fBJmbelbndz4V0d8E7aO6r37yT4XQ00JM
-         rYAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736785077; x=1737389877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jfzu8LVinRmTffQRsvj5JwYAQma905XvC7kwPgp95yk=;
-        b=e9PrmLU6sTpqmwMmMHxtR1XjRTF3ajYIgRM+hvyEXVAdH1oxSC6oQpTNVOzfY1qNKj
-         8Kydo/bkDU0Si6d0Wf9GCrOiNec7bmEqW/dmDieJkY36IwrG/PQYc+vf6W9Rv73M7hYT
-         1pHQLKri9s5dHz7m3tICaMXFmAivvhCHiec0yzg0D2yifW1+7PtG9Lo0YDmLyRZpmFHt
-         EuYiM2BAKBEIjpESR5nqqasCvlvbBPzetLVmpW0GWVBK7wsQ5DgOgW/iUHjocWaHQPrW
-         uzDqpRyqC8WJRRvB+ccIrBD1CvQbXhsSJndWjr00KDrXm5H9mujJIohdQGz3PzdV8VUU
-         qJHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUjDTiE3hpJFxSrsrF1o6mpsirrh9L9aHiPCtbTcWBMCWb6dne9acZ09pSpjMMcLjRDi2Hl9knKuyhFRBAxN+4edw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQIWW/cRAKp5Okm1c+76rVUA6fOpdKWooFpEdZ8trUaKgL9gEd
-	wGJIeuJxXBEz9D/p5tVT9dbawEoPYxU/l9/QukWsP4KFrbCcP+YOnGwGOaq8wGvi9icGeN2/Kem
-	H149LHWsT5b35wsNfF1A3M/H6x3cUASvW8Ii5
-X-Gm-Gg: ASbGncuThXM7BP2RjkogUPemeZxYJP6O9F13pQVi0+xyv7jv9kREIOD4J11Cu7jQgh8
-	XGoqIIg7iKF1CsJoJdalD7IzC5k+qaAmNB4M=
-X-Google-Smtp-Source: AGHT+IFDY+ySlB1nZMJq9PlTNDL8qUtu0AiaG+WzwFjnrE/ylu2IG3nFGi1mN1AYrMM9NBOj0s/u+5iNgQWpIVWK82E=
-X-Received: by 2002:a05:6214:20ce:b0:6d8:812e:1fd0 with SMTP id
- 6a1803df08f44-6df9b1da95amr320133376d6.15.1736785077170; Mon, 13 Jan 2025
- 08:17:57 -0800 (PST)
+	s=arc-20240116; t=1736801707; c=relaxed/simple;
+	bh=6bMWu777N3S6Mqw6qsW3g6f/h0LX2c+kc+7vAg5rOD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EtpD2I27O7i/Ye+mOAiED6HYLQymwmoLG5loCduIuuV0RjrzzN/xpH3W6PxR+KSfBcjqfm35A9Tgyx4lrnlUyuAj3aC8lceFFDiRoh/GCvIzWo479szlkwc03lWdTkBQkU9LMfA+YOwtRStO61oaHZO6OqY+tnAJfJtMqSBPzKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BFCC4CEDD;
+	Mon, 13 Jan 2025 20:55:04 +0000 (UTC)
+Date: Mon, 13 Jan 2025 15:55:03 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250113155503.71467082@gandalf.local.home>
+In-Reply-To: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com> <20250113093453.1932083-5-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20250113093453.1932083-5-kirill.shutemov@linux.intel.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 13 Jan 2025 08:17:20 -0800
-X-Gm-Features: AbW1kvZz7xe4mjGEEdN13LDK63_d9mSHRFPhCcbgv5eQRi5YXclVXjASqcr-k6E
-Message-ID: <CAJD7tkYH8KO8NLJY564PRAmW-mtMfDCMTECGKyYyVAf+JtTcRA@mail.gmail.com>
-Subject: Re: [PATCH 4/8] mm/swap: Use PG_dropbehind instead of PG_reclaim
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yu Zhao <yuzhao@google.com>, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 13, 2025 at 1:35=E2=80=AFAM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> The recently introduced PG_dropbehind allows for freeing folios
-> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> to be involved to get the folio freed.
->
-> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> lru_deactivate_file().
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  mm/swap.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/mm/swap.c b/mm/swap.c
-> index fc8281ef4241..4eb33b4804a8 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -562,14 +562,8 @@ static void lru_deactivate_file(struct lruvec *lruve=
-c, struct folio *folio)
->         folio_clear_referenced(folio);
->
->         if (folio_test_writeback(folio) || folio_test_dirty(folio)) {
-> -               /*
-> -                * Setting the reclaim flag could race with
-> -                * folio_end_writeback() and confuse readahead.  But the
-> -                * race window is _really_ small and  it's not a critical
-> -                * problem.
-> -                */
->                 lruvec_add_folio(lruvec, folio);
-> -               folio_set_reclaim(folio);
-> +               folio_set_dropbehind(folio);
->         } else {
->                 /*
->                  * The folio's writeback ended while it was in the batch.
+On Thu,  9 Jan 2025 10:55:43 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-Now there's a difference in behavior here depending on whether or not
-the folio is under writeback (or will be written back soon). If it is,
-we set PG_dropbehind to get it freed right after, but if writeback has
-already ended we put it on the tail of the LRU to be freed later.
+> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+> new file mode 100644
+> index 000000000000..5b60cd7bcffb
+> --- /dev/null
+> +++ b/drivers/pci/hotplug/trace.h
+> @@ -0,0 +1,68 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_HW_EVENT_PCI_HP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM pci
+> +
+> +#define PCI_HOTPLUG_EVENT					\
+> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 
-It's a bit counterintuitive to me that folios with pending writeback
-get freed faster than folios that completed their writeback already.
-Am I missing something?
+Since you are creating these enums in this patch, you can also do a
+shortcut here too. Instead of doing the define here, move it to
+include/uapi/linux/pci.h:
+
+> +
+> +/* Enums require being exported to userspace, for user tool parsing */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+> +
+> +PCI_HOTPLUG_EVENT
+> +
+> +/*
+> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+> + * that will be printed in the output.
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	{a, b},
+> +#define EMe(a, b)	{a, b}
+> +
+> +TRACE_EVENT(pci_hp_event,
+> +
+> +	TP_PROTO(const char *port_name,
+> +		 const char *slot,
+> +		 const int event),
+> +
+> +	TP_ARGS(port_name, slot, event),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	port_name,	port_name	)
+> +		__string(	slot,		slot		)
+> +		__field(	int,		event	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(port_name);
+> +		__assign_str(slot);
+> +		__entry->event = event;
+> +	),
+> +
+> +	TP_printk("%s slot:%s, event:%s\n",
+> +		__get_str(port_name),
+> +		__get_str(slot),
+> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
+> +	)
+> +);
+> +
+> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+> index a769eefc5139..4f150028965d 100644
+> --- a/include/uapi/linux/pci.h
+> +++ b/include/uapi/linux/pci.h
+> @@ -39,4 +39,11 @@
+>  #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+>  #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+>  
+> +enum pci_hotplug_event {
+> +	PCI_HOTPLUG_LINK_UP,
+> +	PCI_HOTPLUG_LINK_DOWN,
+> +	PCI_HOTPLUG_CARD_PRESENT,
+> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
+> +};
+
+Instead of defining the enum as you did above, if you have the define of
+the enums here, you could do:
+
+#define PCI_HOTPLUG_EVENT					\
+	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+
+#undef EM
+#undef EMe
+#define EM(a, b)	a,
+#define EMe(a, b)	a,
+
+enum pci_hotplug_event {
+	PCI_HOTPLUG_EVENT
+};
+
+Then you only have one place to worry about adding new enums ;-)
+
+-- Steve
+
+> +
+>  #endif /* _UAPILINUX_PCI_H */
+
