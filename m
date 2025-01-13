@@ -1,34 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCEB1C3038;
-	Mon, 13 Jan 2025 20:55:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117BF1D14FF;
+	Mon, 13 Jan 2025 21:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736801707; cv=none; b=CPISBkXK30ak+SzGFl22Hk2YrOLaNEFiznWTTyRqKfEynI646TXnWqpVmDxwYoSxIQMxhzFg6FViQh20rTHloSV9gyKOI0OFS1zCK2RNsMQlUi5yrD4N11KEFOERK5SZj1UTrBfLc33Ym1axx8c8BV99HcwcluHWqZsIoBUoT/E=
+	t=1736803009; cv=none; b=HpUMbnerMV/Ii5u1lgoM80TdlZJAwTEv/ExRpFVzqP65WnNbaw3R1dL4//vC8h/nyFs6olCANf0NeiOOSDvA4qrukYzCsqqzyZDlNoQ8G0EDonRZoCuOFHdUV8laRU5jN3lqCC/FYbjbfDXfuNVieqFY7VWlyCq01UqGwNmWMfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736801707; c=relaxed/simple;
-	bh=6bMWu777N3S6Mqw6qsW3g6f/h0LX2c+kc+7vAg5rOD4=;
+	s=arc-20240116; t=1736803009; c=relaxed/simple;
+	bh=wVWBI3y/Cw1H07zqeAt1JIIaSLKxqRtw5Zhg36eNv+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EtpD2I27O7i/Ye+mOAiED6HYLQymwmoLG5loCduIuuV0RjrzzN/xpH3W6PxR+KSfBcjqfm35A9Tgyx4lrnlUyuAj3aC8lceFFDiRoh/GCvIzWo479szlkwc03lWdTkBQkU9LMfA+YOwtRStO61oaHZO6OqY+tnAJfJtMqSBPzKk=
+	 MIME-Version:Content-Type; b=Zvytf0hzUujFH9Dt5OTHnmeDwasd8I4rZMajzuNfevk3wTu1sm5uHXwMot02NYL5rmgUA6xaDR1W5pBdV2BTdN95ESj6Q6mblEaw60eXRj93bi6bUdwOEWW6b6xJqmbFe80/c0kjiLyrPgDKvfod1uFR4aGfdygQCneswhgYND4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BFCC4CEDD;
-	Mon, 13 Jan 2025 20:55:04 +0000 (UTC)
-Date: Mon, 13 Jan 2025 15:55:03 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA3E4C4CED6;
+	Mon, 13 Jan 2025 21:16:47 +0000 (UTC)
+Date: Mon, 13 Jan 2025 16:16:46 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250113155503.71467082@gandalf.local.home>
-In-Reply-To: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: fix trace.h kernel-doc func/struct/enum
+ members
+Message-ID: <20250113161646.6889e310@gandalf.local.home>
+In-Reply-To: <20250111063210.910922-1-rdunlap@infradead.org>
+References: <20250111063210.910922-1-rdunlap@infradead.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,125 +35,106 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  9 Jan 2025 10:55:43 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+On Fri, 10 Jan 2025 22:32:10 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
-> new file mode 100644
-> index 000000000000..5b60cd7bcffb
-> --- /dev/null
-> +++ b/drivers/pci/hotplug/trace.h
-> @@ -0,0 +1,68 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_HW_EVENT_PCI_HP_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM pci
-> +
-> +#define PCI_HOTPLUG_EVENT					\
-> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+> @@ -1947,7 +1949,7 @@ struct event_command {
+>  /**
+>   * enum event_command_flags - flags for struct event_command
+>   *
+> - * @POST_TRIGGER: A flag that says whether or not this command needs
+> + * @EVENT_CMD_FL_POST_TRIGGER: Indicates whether or not this command needs
+>   *	to have its action delayed until after the current event has
+>   *	been closed.  Some triggers need to avoid being invoked while
+>   *	an event is currently in the process of being logged, since
+> @@ -1966,7 +1968,7 @@ struct event_command {
+>   *	itself logs to the trace buffer, this flag should be set,
+>   *	otherwise it can be left unspecified.
+>   *
+> - * @NEEDS_REC: A flag that says whether or not this command needs
+> + * @EVENT_CMD_FL_NEEDS_REC: Indicates whether or not this command needs
+>   *	access to the trace record in order to perform its function,
+>   *	regardless of whether or not it has a filter associated with
+>   *	it (filters make a trigger require access to the trace record
 
-Since you are creating these enums in this patch, you can also do a
-shortcut here too. Instead of doing the define here, move it to
-include/uapi/linux/pci.h:
+I really wish tools would handle the above and accept it as is. I hate
+adding duplication as it makes it harder to see the difference between
+events.
 
-> +
-> +/* Enums require being exported to userspace, for user tool parsing */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
-> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
-> +
-> +PCI_HOTPLUG_EVENT
-> +
-> +/*
-> + * Now redefine the EM() and EMe() macros to map the enums to the strings
-> + * that will be printed in the output.
-> + */
-> +#undef EM
-> +#undef EMe
-> +#define EM(a, b)	{a, b},
-> +#define EMe(a, b)	{a, b}
-> +
-> +TRACE_EVENT(pci_hp_event,
-> +
-> +	TP_PROTO(const char *port_name,
-> +		 const char *slot,
-> +		 const int event),
-> +
-> +	TP_ARGS(port_name, slot, event),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(	port_name,	port_name	)
-> +		__string(	slot,		slot		)
-> +		__field(	int,		event	)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(port_name);
-> +		__assign_str(slot);
-> +		__entry->event = event;
-> +	),
-> +
-> +	TP_printk("%s slot:%s, event:%s\n",
-> +		__get_str(port_name),
-> +		__get_str(slot),
-> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
-> +	)
-> +);
-> +
-> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-> index a769eefc5139..4f150028965d 100644
-> --- a/include/uapi/linux/pci.h
-> +++ b/include/uapi/linux/pci.h
-> @@ -39,4 +39,11 @@
->  #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
->  #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
->  
-> +enum pci_hotplug_event {
-> +	PCI_HOTPLUG_LINK_UP,
-> +	PCI_HOTPLUG_LINK_DOWN,
-> +	PCI_HOTPLUG_CARD_PRESENT,
-> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
-> +};
-
-Instead of defining the enum as you did above, if you have the define of
-the enums here, you could do:
-
-#define PCI_HOTPLUG_EVENT					\
-	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-
-#undef EM
-#undef EMe
-#define EM(a, b)	a,
-#define EMe(a, b)	a,
-
-enum pci_hotplug_event {
-	PCI_HOTPLUG_EVENT
+/**
+ * enum event_command_flags - flags for struct event_command
+ *
+ * @POST_TRIGGER: A flag that says whether or not this command needs
+ *	to have its action delayed until after the current event has
+ *	been closed.  Some triggers need to avoid being invoked while
+ *	an event is currently in the process of being logged, since
+ *	the trigger may itself log data into the trace buffer.  Thus
+ *	we make sure the current event is committed before invoking
+ *	those triggers.  To do that, the trigger invocation is split
+ *	in two - the first part checks the filter using the current
+ *	trace record; if a command has the @post_trigger flag set, it
+ *	sets a bit for itself in the return value, otherwise it
+ *	directly invokes the trigger.  Once all commands have been
+ *	either invoked or set their return flag, the current record is
+ *	either committed or discarded.  At that point, if any commands
+ *	have deferred their triggers, those commands are finally
+ *	invoked following the close of the current event.  In other
+ *	words, if the event_trigger_ops @func() probe implementation
+ *	itself logs to the trace buffer, this flag should be set,
+ *	otherwise it can be left unspecified.
+ *
+ * @NEEDS_REC: A flag that says whether or not this command needs
+ *	access to the trace record in order to perform its function,
+ *	regardless of whether or not it has a filter associated with
+ *	it (filters make a trigger require access to the trace record
+ *	but are not always present).
+ */
+enum event_command_flags {
+	EVENT_CMD_FL_POST_TRIGGER	= 1,
+	EVENT_CMD_FL_NEEDS_REC		= 2,
 };
 
-Then you only have one place to worry about adding new enums ;-)
+Looks much easier to see what is what than:
+
+/**
+ * enum event_command_flags - flags for struct event_command
+ *
+ * @EVENT_CMD_FL_POST_TRIGGER: A flag that says whether or not this command needs
+ *	to have its action delayed until after the current event has
+ *	been closed.  Some triggers need to avoid being invoked while
+ *	an event is currently in the process of being logged, since
+ *	the trigger may itself log data into the trace buffer.  Thus
+ *	we make sure the current event is committed before invoking
+ *	those triggers.  To do that, the trigger invocation is split
+ *	in two - the first part checks the filter using the current
+ *	trace record; if a command has the @post_trigger flag set, it
+ *	sets a bit for itself in the return value, otherwise it
+ *	directly invokes the trigger.  Once all commands have been
+ *	either invoked or set their return flag, the current record is
+ *	either committed or discarded.  At that point, if any commands
+ *	have deferred their triggers, those commands are finally
+ *	invoked following the close of the current event.  In other
+ *	words, if the event_trigger_ops @func() probe implementation
+ *	itself logs to the trace buffer, this flag should be set,
+ *	otherwise it can be left unspecified.
+ *
+ * @EVENT_CMD_FL_NEEDS_REC: A flag that says whether or not this command needs
+ *	access to the trace record in order to perform its function,
+ *	regardless of whether or not it has a filter associated with
+ *	it (filters make a trigger require access to the trace record
+ *	but are not always present).
+ */
+enum event_command_flags {
+	EVENT_CMD_FL_POST_TRIGGER	= 1,
+	EVENT_CMD_FL_NEEDS_REC		= 2,
+};
+
+
+If tooling can't handle it, I'd rather replace the /** with /* as I find
+the above much harder to read than the original.
+
+It shouldn't be too hard. The tooling should accept the kerneldoc if all
+the enums start with the same text, then the descriptions only need to show
+the part that is different.
 
 -- Steve
-
-> +
->  #endif /* _UAPILINUX_PCI_H */
-
