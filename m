@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A9523ED6A;
-	Mon, 13 Jan 2025 09:35:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CD71FDA67;
+	Mon, 13 Jan 2025 09:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736760915; cv=none; b=XNVjueOw7NljiDaWUXl8uGMqcdyY1CVFdvcHftHKqjmWW2bGxrxGw1ceKjEwC3+y0n01smdTBADTG5WXhCwjNQ4mZSDQNUkh0BPPKwGBVyN4d68bLd79a74NRLBEPlfWDkJEAitzPOAFdQPTVa4oO9r9JrKwf5uXQ1K/a/A/6JY=
+	t=1736760917; cv=none; b=oehvo7ucbRWyJCZiJYmuk/NVd7kCNBD4GdS1qZmkmT0tCOcGFwlbGSgO5RACJVDVbCvRiP+0jxSI/eAdSPCnDWaRCjzos9P2iAiXPSpOSb0M5M2o1sFIR0gftmUOh7CWd6zkN+M83L290zXyPd4pFdlfDguMTUM1hFot2BRPJds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736760915; c=relaxed/simple;
-	bh=KROqC9a9RBT0tRKvqTEojI0FO2hQo9eIFMH92Ay8miY=;
+	s=arc-20240116; t=1736760917; c=relaxed/simple;
+	bh=IgjaNFBWhujQnq/c6yPPss+dBuUf4OdsPTNtQqXJnW4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p/jiXGgcsZ8MfXcGuhJ2s/zyLDYIwka9nhqDZN9SMXYSwzTYuvI0FTCR4BVoBZpKFGgM0R9A8kZ3qHSAxyaRpXkJu5XBPtPvJCe4BFkndg0TlFXonf4DcRMnVS4kumzJieQIeyZskm7FrZO41yb4aa9tEsUvnUn0LB68Gg3nC+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPNwuoTf; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=WqbeQNCdOk22JDOqAJ2HOQDXoVvz39vOAbGDvQi5L3xawDKPmtwFcDgazNksJwd71T20sExTyjF8kiGzkU1axhWEFxO6l/W/fbGMqmjnB480sWbNhuNzq91HZUJNXxUk+1TD4Y6SM3UcNda2y7P+FQ+K3ad5GwLUxKTt9be+/u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IIntNe6t; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPNwuoTf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IIntNe6t"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1736760914; x=1768296914;
+  t=1736760915; x=1768296915;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KROqC9a9RBT0tRKvqTEojI0FO2hQo9eIFMH92Ay8miY=;
-  b=cPNwuoTf78Eq3VUJYyp9+NGlFBOa3AWye/eURFw+y2B2d6DQqae3ICiC
-   7ZY5bsvrjFKxfSiUanmOaERly8C7Yi7v7+/sDkjufI9TQdQuP+soJeK/f
-   yzMgZXJ1wZsEBRZV8/lNvVThOjfVp3donSEJIc7g8JCYOw0KuyHrppBWp
-   jPFzHH2A4dor9WmyTZLR0HNuV6X9qA+JvbMtvDSgWE6jWJu8CC5Ux1dgx
-   mRDVmtop/zuOIo/5UqqNnqQztNyrS4L9wHx4hhFeBWP2hQ44SszHzH6mf
-   2i+blXeEn/TA/RymNcPtynkKvN6dfLLYY2XeBysd70Jpl+mELS7oBQDCx
-   w==;
-X-CSE-ConnectionGUID: /CyT16yxSr682KiMRAYAWQ==
-X-CSE-MsgGUID: LBAYi8NaS9aR0shScsHIFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11313"; a="40948930"
+  bh=IgjaNFBWhujQnq/c6yPPss+dBuUf4OdsPTNtQqXJnW4=;
+  b=IIntNe6tzj0ggH+8Wz21nD0oCVtXfxNGZPT1nmbWoL94u8Oc6Wc6KV2/
+   OjIEewrD3cDXuapZB/vCfl61n8rMAHQqJXZbQO6OCQcPtUAVYyzdtfKt4
+   NwesXv7K8h9De+M0qeJvpOPXB1+xCxUMqPGbyaWtEO/E3bfSzcKt1uEij
+   4BF96n6DLW1jYky3haJ/JgjMSzqlWuWfeJ63bhrS8Pjww/kj760rE0y8Y
+   QEfhnphq1Rp8S0ot3fJi3wKM4Qmu1Mif6x5TnAC2tzNSkhlhMOVbJp8V1
+   xNtta5zt2nPIry/stWQ6tvAutqLRpU7HmAKSChHItorPrcKhenkJSdKSc
+   A==;
+X-CSE-ConnectionGUID: l5y25PlHTgqO2vBSgUzZ4w==
+X-CSE-MsgGUID: pg2dYjX7T2qZpCPaZmQVtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11313"; a="40948956"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40948930"
+   d="scan'208";a="40948956"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 01:35:12 -0800
-X-CSE-ConnectionGUID: hqmEiuR7TbCAMrvg4TzodQ==
-X-CSE-MsgGUID: TTYeZiVeTT668CUnK8hRKw==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2025 01:35:13 -0800
+X-CSE-ConnectionGUID: FvOhar42Sdu5F/xuFj0UkQ==
+X-CSE-MsgGUID: 2hPQLD4bQZOgY3uq4G9MfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="104586344"
+   d="scan'208";a="104586348"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmviesa008.fm.intel.com with ESMTP; 13 Jan 2025 01:35:05 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 05BF5329; Mon, 13 Jan 2025 11:35:03 +0200 (EET)
+	id 24E5A478; Mon, 13 Jan 2025 11:35:04 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -82,9 +82,9 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 1/8] drm/i915/gem: Convert __shmem_writeback() to folios
-Date: Mon, 13 Jan 2025 11:34:46 +0200
-Message-ID: <20250113093453.1932083-2-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 3/8] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+Date: Mon, 13 Jan 2025 11:34:48 +0200
+Message-ID: <20250113093453.1932083-4-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
 References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
@@ -96,54 +96,33 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use folios instead of pages.
+The recently introduced PG_dropbehind allows for freeing folios
+immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+to be involved to get the folio freed.
 
-This is preparation for removing PG_reclaim.
+Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+zswap_writeback_entry().
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ mm/zswap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-index fe69f2c8527d..9016832b20fc 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-@@ -320,25 +320,25 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 167ae641379f..c20bad0b0978 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -1096,8 +1096,8 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
+ 	/* folio is up to date */
+ 	folio_mark_uptodate(folio);
  
- 	/* Begin writeback on each dirty page */
- 	for (i = 0; i < size >> PAGE_SHIFT; i++) {
--		struct page *page;
-+		struct folio *folio;
+-	/* move it to the tail of the inactive list after end_writeback */
+-	folio_set_reclaim(folio);
++	/* free the folio after writeback */
++	folio_set_dropbehind(folio);
  
--		page = find_lock_page(mapping, i);
--		if (!page)
-+		folio = filemap_lock_folio(mapping, i);
-+		if (!folio)
- 			continue;
- 
--		if (!page_mapped(page) && clear_page_dirty_for_io(page)) {
-+		if (!folio_mapped(folio) && folio_clear_dirty_for_io(folio)) {
- 			int ret;
- 
--			SetPageReclaim(page);
--			ret = mapping->a_ops->writepage(page, &wbc);
-+			folio_set_reclaim(folio);
-+			ret = mapping->a_ops->writepage(&folio->page, &wbc);
- 			if (!PageWriteback(page))
--				ClearPageReclaim(page);
-+				folio_clear_reclaim(folio);
- 			if (!ret)
- 				goto put;
- 		}
--		unlock_page(page);
-+		folio_unlock(folio);
- put:
--		put_page(page);
-+		folio_put(folio);
- 	}
- }
- 
+ 	/* start writeback */
+ 	__swap_writepage(folio, &wbc);
 -- 
 2.45.2
 
