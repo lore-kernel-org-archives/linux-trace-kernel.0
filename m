@@ -1,106 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DBB13BAE3
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Jan 2025 10:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EE885947;
+	Mon, 13 Jan 2025 03:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736678210; cv=none; b=YUedG0EtayC0bWv01qB0PgT9teB4aDMtlqF+bI17WaIRMxpW3q/W965WAfJqTicUFHXgvP62jU1XPkQide0qDTJq2OcvldvIBAbIhf+aisNI9TGsOzo2Y12qO2EhFlAv8APEKb6YWrbHaoSgk4T1Wj6CA2t7G8quQQlRve7q/zs=
+	t=1736737633; cv=none; b=g/OoxZZZHOiREEm0TZyLbE5n2J3FtaPYigGBEQF1qGkJNCjG9lUgflRDkjciTDHLwMB9fCtjWSKvsGEKW+4MhOG32FkUl9qu9VZAGzObkDZLOcUuDFsKivibsRKmKvise8td0W4pMl4bDUjqU7nkEIQA701vzm7hCNIoZAccM1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736678210; c=relaxed/simple;
-	bh=REgFctRGG2i+aWyJ1ZRxJ6TwTZBV1cOPjFQdvPEnzK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mziqdLOPSk3ZIutYqPi8wSUsNG3+Y1Ke5RNj9Oc/wFu1GeF95x6yIAfq9nWO56VFBu1ODpBhUjRhaaZJmn/7tXCm9e5a6eMnHHyEtlk8DWi5URUFHRMXssLoOr9roN+PKVb0y4guqJXm418bMQmniOiiGnqVokPhlhyfEg/PtLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=goh6LFI0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736737633; c=relaxed/simple;
+	bh=D+ljmoBHFykd9plpdqvd09noH8HGVoQ5bj3mzOnaCMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fhKpb/W6Atind5ChOCQnMBQ7bVGEPMrsKeztG1To27SQG1DXMzXcNJLEMM/UQsV5H37wUCqC//p1OYG0cxueRXphk3316GSIOwoVu4Viikw+2GpuVxvedykxUvdEWskwBzySbZdSMQtMBgyPOGRai9SAXxEre7C/HhjYY2dC0tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAFN2PWA; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goh6LFI0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736678207;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sjZIf+MqzlX40O8hdTacUc+jXg2UIC0x4trWd6422To=;
-	b=goh6LFI0BorCJNDiSrzjPNHTJPbuCbid6WOTNGhx7jU99Bm5zzdEvIo168uYZTDDpGuBp7
-	UnSKNw3LiOYAUyn9/jY+Hj8q5VKzPF7uEs6j9R1lDkNz92IQ3905eGmtInMMCNrgQLCm/E
-	LGMY9P8MDhWMPusJynLhGLHCy3iH3k8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-543-0DSN8VPiNBSr_DA-YHIeIA-1; Sun,
- 12 Jan 2025 05:36:43 -0500
-X-MC-Unique: 0DSN8VPiNBSr_DA-YHIeIA-1
-X-Mimecast-MFC-AGG-ID: 0DSN8VPiNBSr_DA-YHIeIA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2F3A19560BB;
-	Sun, 12 Jan 2025 10:36:36 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.4])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5808B195608A;
-	Sun, 12 Jan 2025 10:36:31 +0000 (UTC)
-Date: Sun, 12 Jan 2025 18:36:27 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	io-uring@vger.kernel.org, bpf@vger.kernel.org,
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
-Message-ID: <Z4ObK5hkQ7qjWgbf@MiWiFi-R3L-srv>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAFN2PWA"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21644b473ddso7316725ad.0;
+        Sun, 12 Jan 2025 19:07:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736737632; x=1737342432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPXC9M6H1WCUFlmMOfkbZqE3JGlgWI1hOtqPKw92q2o=;
+        b=aAFN2PWA001ZpTvlT5IFZtTkJi0EDKlfEewsnnolq+FpXhchj/r9kzbjoyTpem6AWz
+         eae0hvR0UQ4CHmGEcPLav85JVnTcFwqbJC5moQ/JnLvJ4AQqExW0LdrNXqGqd+LdA75B
+         92o7GvGNQcXpFdm5x9KToSE4n5Q3bSE4QLTtJ4buSWhH+c6sedu8Dlh3/4dHWb7+qdAR
+         5IztEgrCkGzXGAIOVwvtdSFH+VtVYl67HjP/IsO/jL0ndTekubkvWey361RQbVKiaWPO
+         1eBXrrGHORXHNw9U677+Drhi4zY2csUoYVuCV7Kf+TEgfZsz0MmZt/l+sQ7zKEQBVHjE
+         DxSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736737632; x=1737342432;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rPXC9M6H1WCUFlmMOfkbZqE3JGlgWI1hOtqPKw92q2o=;
+        b=F9nzLFTGNFXsIbZNPuL7wflRnuJXIqlB/qPZGnrM8hFwV6KfhhVq3/P2vsc0HJCoRv
+         l64x8d6upCgVHmUnYHCNPC+SifjFlbovtNUJu+ThYw3XOB6ow3xo3nNiyWlbgIHXNO/K
+         zCILn/lAARevn3oABXP4NaPLIffC9h2A9ufNDVlMC8q+buFcgAx21nU3IjAlfBcDLQI2
+         MSHow0TA2yunYL7IGaAA9rHXvkEiW74+kw0qLLLiVeGGOteTP69okWHwoZvTUAz34R2L
+         x4317dfTO0MmX9UykYRfW1Ei2tIeAd/lAPrjIByhIu5GB2NOnp6AiWYBRMbOcsHOMF/5
+         XZvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFP4KeqorUVIe6WNc3wDGrYkmyqYgBfC0TXbxbxabkh4C37j1oAgNJK8jH3EFOC3QhzuvUuuzxaJEBpEFexY/SqHso@vger.kernel.org, AJvYcCXE8V8pqwfNq/a7PBE7LG8JUYgB1F6rS63TSIhfPbZbhSDQXkztSdfAxs5mi/AJ6Pr2MezBZ1QpbLhXy2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3QUKBLI1/LEqkJKyQaLNIS6LMZZ8aRXeWHXYrtiX98JvnCXAl
+	jgaM5Bbn7vMF3JK9egjAzBQw73qrHrWYOd1/tBLOmQlGgdX38BL/
+X-Gm-Gg: ASbGncvw8H9zwVRHblJLgy08go+fn5++PNa//YlAWBJ4WNoYuwUXfR4BERKw1KEmXV3
+	Rl/9razUUqZGf+WX/+9OwdQ921D/5aYPF7TOW/qEv0xkIXv18hOVv0AIZOHTQSLGRc3WqKL25dH
+	3OE8qcuxI0qIq1nFx3Ia5wiGeXoBQG9i7qKIX5H7sKQEOOUzKedOV9C+FyKvQS7qhRZGS9uYv9u
+	HZHZxydGMyUApjnbs9RzFp8bp4t/3KkqA0GdAw+QzM0CCXDztUeyR0oRcmc2ZjgcI7l/Hd/Kiq+
+	RBpseFimqijiM9SYdM1MRILgH+6HIEJBFzulG4c=
+X-Google-Smtp-Source: AGHT+IG5b6OhLzdHbJdJXEwxQ6DouYarrAWGsXZCvbCGviVG00oWuF3S2JAES2dB4BG/Cj7GxeW8og==
+X-Received: by 2002:a17:902:c951:b0:215:a3e3:c857 with SMTP id d9443c01a7336-21a83f32d5emr110983345ad.3.1736737631637;
+        Sun, 12 Jan 2025 19:07:11 -0800 (PST)
+Received: from localhost.localdomain ([61.213.176.57])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21bb2a5b2afsm16304635ad.28.2025.01.12.19.07.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2025 19:07:11 -0800 (PST)
+From: zhuxiaohui <zhuxiaohui400@gmail.com>
+X-Google-Original-From: zhuxiaohui <zhuxiaohui.400@bytedance.com>
+To: muchun.song@linux.dev,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: lihongbo22@huawei.com,
+	Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
+Subject: [PATCH] hugetlbfs: check dir in trace_hugetlbfs_alloc_inode
+Date: Mon, 13 Jan 2025 11:07:02 +0800
+Message-ID: <20250113030702.58502-1-zhuxiaohui.400@bytedance.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-On 01/10/25 at 03:16pm, Joel Granados wrote:
-...snip...
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index c0caa14880c3..71b0809e06d6 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -925,7 +925,7 @@ static int kexec_limit_handler(const struct ctl_table *table, int write,
->  	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
->  }
->  
-> -static struct ctl_table kexec_core_sysctls[] = {
-> +static const struct ctl_table kexec_core_sysctls[] = {
->  	{
->  		.procname	= "kexec_load_disabled",
->  		.data		= &kexec_load_disabled,
+From: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
 
-For the kexec/kdump part,
+Anonymous huge page has no corresponding directory inode,
+which cause a null pointer crash when access dir with the stack
 
-Acked-by: Baoquan He <bhe@redhat.com>
-......
+  trace_hugetlbfs_alloc_inode
+  hugetlbfs_get_inode
+  hugetlb_file_setup
+  ksys_mmap_pgoff
+
+Signed-off-by: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
+---
+ include/trace/events/hugetlbfs.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/trace/events/hugetlbfs.h b/include/trace/events/hugetlbfs.h
+index 8331c904a9ba..5daa52053edc 100644
+--- a/include/trace/events/hugetlbfs.h
++++ b/include/trace/events/hugetlbfs.h
+@@ -23,7 +23,9 @@ TRACE_EVENT(hugetlbfs_alloc_inode,
+ 	TP_fast_assign(
+ 		__entry->dev		= inode->i_sb->s_dev;
+ 		__entry->ino		= inode->i_ino;
+-		__entry->dir		= dir->i_ino;
++		__entry->dir		= 0;
++		if (dir)
++			__entry->dir	= dir->i_ino;
+ 		__entry->mode		= mode;
+ 	),
+ 
+-- 
+2.41.0
 
