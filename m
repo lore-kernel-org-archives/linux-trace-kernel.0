@@ -1,101 +1,209 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C61CAA9F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 22:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D81F9A83;
+	Mon, 13 Jan 2025 23:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736808909; cv=none; b=h7zmKcd4Jgn6IaDnBmqdwytNrOhNAABfS3x5FMhLUv+DBA+5s/XKdHCp1piMJ1ioVlU13LLZa6ULI47jVC75gK8eLIMDVlsruLrjoeJQKj9h0wayTp0HmtpFfBrj61IJ+XG6tw8LN22UvXTrU4sHglpT6fmv8jOTTa9lbiULdtk=
+	t=1736811088; cv=none; b=AwgzIoNb2YmdPEhK3kaWbhpbitzBiaA0k+VPEKZmTiA2lFioWueR264HA6CbzBNDFEdwhFjluqI/ytDBQuiNj9/ORfkiKgcEAj30wkZH6qGwH9J56siZlEf4z9rcxXdec2UOqJICOjsfLDcSJkmm/6CqvRdoscvHtDA44OolaP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736808909; c=relaxed/simple;
-	bh=vkipq98eiuOQy7kWpyrNKFUnOaO4Hf/hTSg9Tud/Wo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=niqvzmCDvdyRPfq1MbwnWRgbkYAON1XD5mFXILv3DCGUkuh0rRTsDDZdrD3BHp+yE8LWxffu4k+o9pMIKXhrBQKU4BmUcc28FVy+/B+6YQIE3rcnvfg1ClVr85Y4T9cqGE0ggwSFkg4uC3lJGgWPyKzcUGEJZTSwBGnxtCiAEEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E/umheod; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E/umheod"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3a9cdcec53fso35348365ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 14:55:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1736808906; x=1737413706; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ACh5EO2+ycjbq2FN4kF3D56JbKZG03WJC6qrYAkuDJQ=;
-        b=E/umheodbrXJthE8cr/GhrDCEPH8F+csiBB341oPyiGAJKeZUd1RChJicsRpFdfHd5
-         lTFRKGEPhjfST6rB3HX72qto74WAqhjNGYqFfEIZPY8dCA9BLQCE4H8XJ715atj+gfHB
-         x0aaiz9uyeJnqQJi8Q0hGrTkQ2hQgrcrxuV00=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736808906; x=1737413706;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACh5EO2+ycjbq2FN4kF3D56JbKZG03WJC6qrYAkuDJQ=;
-        b=NvD6PHYoAgWcAZXfXK/TbZuY5s79nTtO3K0NvN0KKlaZeKDT5WQgZNqdjQ3R20h7LB
-         29FYBMGK6rVtRkgFBIxT6TEloP+LBVhlEuO1cVsL4EagzkJaTEbflkNTlFS95VKtj2bI
-         gCbT35vD2pgJs/zCeWFSvlD/HcKGjFHmLySyYXxlIYn4gXxL9IojPX7TcnzPv5gufJRL
-         YoOgqe/qq1lvMjvuYN8Q4ZCCpFoRtrIPDIZd+GcnKpHMDnJfbw8STsK97uxgkvtMV/QZ
-         lTSXKHryPlZwxETFyqnfKwEauV0qumpDfFs7Igwmd5rQ9cpfJ07f2UjIbKrp+pmRbnkh
-         bVtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUje58AJtwe62NuWRHrSUeEd8bYvMgcrDsgPTk1CIzzKuL1o+vowFFf7pXOtxDIrvPQZZ+ay2z0krJGNa/ajVH4OXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUz/wni10FpKf9k6aP0lP25NXyCHP4uy7ZISpvajdpLBP78Si4
-	RvQWEXy/jVDu3+hgPn7SbUgSw10dtL5l9CpTotDuSCbwPxuzZOwmw7+KDYCLTbU=
-X-Gm-Gg: ASbGncsMa83FHtKnAMEMh0sKP6F7QBKvjxFqAbt5dOZIRPugP9qWRv+Fh9fKLPO8Una
-	VcilSuwNxK2IuLwC/p/iCkKvNferUhILQO18ozba/lK+/HIdVP0Yfw/b66iVlp6ng2K0GJag4Ps
-	dEGvulHpOUng984/mT/GUqTz3Mna1656+rlfobSLfk5+Px7C94Hh+CZ9lST8oqK5cjK2eVluPhm
-	fi/VYGnxy1B5xHHkFa+dGIS7LrTBRvfPgflgTQmeO32kop/MtsQOJzpYHHXiO98h2U=
-X-Google-Smtp-Source: AGHT+IGCGX3p/H8zPoC4bzSxi3Glhut+QAz2DFVy5lIgY0UGNwRfbSr5gyfb3+A3zfW9W+Bc+ehgng==
-X-Received: by 2002:a05:6e02:1f02:b0:3a7:c5b1:a55e with SMTP id e9e14a558f8ab-3ce3a7a8aa1mr181433625ab.0.1736808906566;
-        Mon, 13 Jan 2025 14:55:06 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4ea1b613391sm3036239173.47.2025.01.13.14.55.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2025 14:55:05 -0800 (PST)
-Message-ID: <bea75a31-2778-4065-ac50-1a9e75cde2da@linuxfoundation.org>
-Date: Mon, 13 Jan 2025 15:55:05 -0700
+	s=arc-20240116; t=1736811088; c=relaxed/simple;
+	bh=gg+u9fEeYoOlnTIiVbQrorHG/QsEM7+hl22d6Z6uX50=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lckXAVB9F9tyGOYApPiyTIiXSoXsGVHguQdXb1YVhIb+zUkvD0QLSJ1FEeWmustGngUUjWUrWrOb3bkpYtTUcEzcC6hnPoCAMLqFV3cJ54Z2Kr46eju0xXmF6PsF8wmlETzaUM53Y3/jF7ZUZi8yAHypshjqbi99M0d0D+55Rwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE3A9C4CEE2;
+	Mon, 13 Jan 2025 23:31:25 +0000 (UTC)
+Date: Mon, 13 Jan 2025 18:31:24 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] tracing: Fix irqsoff and wakeup latency tracers when using
+ function graph
+Message-ID: <20250113183124.61767419@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] selftests/ftrace: Fix ftracetest test cases
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <173625185823.1383744.4020760882101555349.stgit@devnote2>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <173625185823.1383744.4020760882101555349.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 1/7/25 05:10, Masami Hiramatsu (Google) wrote:
-> Here is a couple of patches to fix issues. I think mount_options.tc's one
-> is a real bug(I'm not sure how it worked), but another one is an enhancement
-> for (my) execution environment.
-> Anyway, those should go through kselftests tree.
-> 
-> Thank you,
-> ---
-> 
-> Masami Hiramatsu (Google) (2):
->        selftests/ftrace: Fix to use remount when testing mount GID option
->        selftests/ftrace: Make uprobe test more robust against binary name
-> 
-> 
->   .../ftrace/test.d/00basic/mount_options.tc         |    8 ++++----
->   .../ftrace/test.d/dynevent/add_remove_uprobe.tc    |    4 +++-
->   2 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I applied these two patches to linux-kselftest next fro Linux 6.14-rc1
+The function graph tracer is becoming a generic so that kretprobes and BPF
+can use it along with function graph tracing itself. Some of the
+infrastructure was specific for function graph tracing such as recording
+the calltime and return time of the functions. Calling the clock code on
+a high volume function does add overhead. The calltime was removed from
+the generic code and placed into the function graph tracer itself so that
+the other users did not incur this overhead as they did not need that
+timestamp.
 
-thanks,
--- Shuah
+But this broke both irqsoff and wakeup latency tracer as they still
+depended on the trace structure containing the calltime when the option
+display-graph is set.
+
+ # cd /sys/kernel/tracing
+ # echo 1 > options/display-graph
+ # echo irqsoff > current_tracer
+
+The tracers went from:
+
+ #   REL TIME      CPU  TASK/PID       ||||     DURATION                  FUNCTION CALLS
+ #      |          |     |    |        ||||      |   |                     |   |   |   |
+        0 us |   4)    <idle>-0    |  d..1. |   0.000 us    |  irqentry_enter();
+        3 us |   4)    <idle>-0    |  d..2. |               |  irq_enter_rcu() {
+        4 us |   4)    <idle>-0    |  d..2. |   0.431 us    |    preempt_count_add();
+        5 us |   4)    <idle>-0    |  d.h2. |               |    tick_irq_enter() {
+        5 us |   4)    <idle>-0    |  d.h2. |   0.433 us    |      tick_check_oneshot_broadcast_this_cpu();
+        6 us |   4)    <idle>-0    |  d.h2. |   2.426 us    |      ktime_get();
+        9 us |   4)    <idle>-0    |  d.h2. |               |      tick_nohz_stop_idle() {
+       10 us |   4)    <idle>-0    |  d.h2. |   0.398 us    |        nr_iowait_cpu();
+       11 us |   4)    <idle>-0    |  d.h1. |   1.903 us    |      }
+       11 us |   4)    <idle>-0    |  d.h2. |               |      tick_do_update_jiffies64() {
+       12 us |   4)    <idle>-0    |  d.h2. |               |        _raw_spin_lock() {
+       12 us |   4)    <idle>-0    |  d.h2. |   0.360 us    |          preempt_count_add();
+       13 us |   4)    <idle>-0    |  d.h3. |   0.354 us    |          do_raw_spin_lock();
+       14 us |   4)    <idle>-0    |  d.h2. |   2.207 us    |        }
+       15 us |   4)    <idle>-0    |  d.h3. |   0.428 us    |        calc_global_load();
+       16 us |   4)    <idle>-0    |  d.h3. |               |        _raw_spin_unlock() {
+       16 us |   4)    <idle>-0    |  d.h3. |   0.380 us    |          do_raw_spin_unlock();
+       17 us |   4)    <idle>-0    |  d.h3. |   0.334 us    |          preempt_count_sub();
+       18 us |   4)    <idle>-0    |  d.h1. |   1.768 us    |        }
+       18 us |   4)    <idle>-0    |  d.h2. |               |        update_wall_time() {
+      [..]
+
+To:
+
+ #   REL TIME      CPU  TASK/PID       ||||     DURATION                  FUNCTION CALLS
+ #      |          |     |    |        ||||      |   |                     |   |   |   |
+        0 us |   5)    <idle>-0    |  d.s2. |   0.000 us    |  _raw_spin_lock_irqsave();
+        0 us |   5)    <idle>-0    |  d.s3. |   312159583 us |      preempt_count_add();
+        2 us |   5)    <idle>-0    |  d.s4. |   312159585 us |      do_raw_spin_lock();
+        3 us |   5)    <idle>-0    |  d.s4. |               |      _raw_spin_unlock() {
+        3 us |   5)    <idle>-0    |  d.s4. |   312159586 us |        do_raw_spin_unlock();
+        4 us |   5)    <idle>-0    |  d.s4. |   312159587 us |        preempt_count_sub();
+        4 us |   5)    <idle>-0    |  d.s2. |   312159587 us |      }
+        5 us |   5)    <idle>-0    |  d.s3. |               |      _raw_spin_lock() {
+        5 us |   5)    <idle>-0    |  d.s3. |   312159588 us |        preempt_count_add();
+        6 us |   5)    <idle>-0    |  d.s4. |   312159589 us |        do_raw_spin_lock();
+        7 us |   5)    <idle>-0    |  d.s3. |   312159590 us |      }
+        8 us |   5)    <idle>-0    |  d.s4. |   312159591 us |      calc_wheel_index();
+        9 us |   5)    <idle>-0    |  d.s4. |               |      enqueue_timer() {
+        9 us |   5)    <idle>-0    |  d.s4. |               |        wake_up_nohz_cpu() {
+       11 us |   5)    <idle>-0    |  d.s4. |               |          native_smp_send_reschedule() {
+       11 us |   5)    <idle>-0    |  d.s4. |   312171987 us |            default_send_IPI_single_phys();
+    12408 us |   5)    <idle>-0    |  d.s3. |   312171990 us |          }
+    12408 us |   5)    <idle>-0    |  d.s3. |   312171991 us |        }
+    12409 us |   5)    <idle>-0    |  d.s3. |   312171991 us |      }
+
+Where the calculation of the time for each function was the return time
+minus zero and not the time it the function started at.
+
+Have these tracers also save the calltime in the fgraph data section and
+retrieve it again on the return to get the correct timings again.
+
+Fixes: f1f36e22bee9 ("ftrace: Have calltime be saved in the fgraph storage")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_irqsoff.c      | 14 ++++++++++++++
+ kernel/trace/trace_sched_wakeup.c | 14 ++++++++++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index fce064e20570..a4e799c1e767 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -182,6 +182,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
+ 	struct trace_array_cpu *data;
+ 	unsigned long flags;
+ 	unsigned int trace_ctx;
++	u64 *calltime;
+ 	int ret;
+ 
+ 	if (ftrace_graph_ignore_func(gops, trace))
+@@ -199,6 +200,12 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
+ 	if (!func_prolog_dec(tr, &data, &flags))
+ 		return 0;
+ 
++	calltime = fgraph_reserve_data(gops->idx, sizeof(*calltime));
++	if (!calltime)
++		return 0;
++
++	*calltime = trace_clock_local();
++
+ 	trace_ctx = tracing_gen_ctx_flags(flags);
+ 	ret = __trace_graph_entry(tr, trace, trace_ctx);
+ 	atomic_dec(&data->disabled);
+@@ -213,12 +220,19 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
+ 	struct trace_array_cpu *data;
+ 	unsigned long flags;
+ 	unsigned int trace_ctx;
++	u64 *calltime;
++	int size;
+ 
+ 	ftrace_graph_addr_finish(gops, trace);
+ 
+ 	if (!func_prolog_dec(tr, &data, &flags))
+ 		return;
+ 
++	calltime = fgraph_retrieve_data(gops->idx, &size);
++	if (!calltime)
++		return;
++	trace->calltime = *calltime;
++
+ 	trace_ctx = tracing_gen_ctx_flags(flags);
+ 	__trace_graph_return(tr, trace, trace_ctx);
+ 	atomic_dec(&data->disabled);
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index d6c7f18daa15..c58292e424d5 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -118,6 +118,7 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+ 	struct trace_array *tr = wakeup_trace;
+ 	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
++	u64 *calltime;
+ 	int ret = 0;
+ 
+ 	if (ftrace_graph_ignore_func(gops, trace))
+@@ -135,6 +136,12 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
+ 	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
+ 		return 0;
+ 
++	calltime = fgraph_reserve_data(gops->idx, sizeof(*calltime));
++	if (!calltime)
++		return 0;
++
++	*calltime = trace_clock_local();
++
+ 	ret = __trace_graph_entry(tr, trace, trace_ctx);
+ 	atomic_dec(&data->disabled);
+ 	preempt_enable_notrace();
+@@ -148,12 +155,19 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
+ 	struct trace_array *tr = wakeup_trace;
+ 	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
++	u64 *calltime;
++	int size;
+ 
+ 	ftrace_graph_addr_finish(gops, trace);
+ 
+ 	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
+ 		return;
+ 
++	calltime = fgraph_retrieve_data(gops->idx, &size);
++	if (!calltime)
++		return;
++	trace->calltime = *calltime;
++
+ 	__trace_graph_return(tr, trace, trace_ctx);
+ 	atomic_dec(&data->disabled);
+ 
+-- 
+2.45.2
+
