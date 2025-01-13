@@ -1,72 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8F31FDA77
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 10:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DA51FDA77
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 10:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736762873; cv=none; b=m8aHu4teUNklDYy+0KB3kS7NUtUbcPLIWoeNiS8xGNhV4PuDVWo2ZpaCs4oJltejCfo2KPYhI4K8XtOTvZpQ9JTsoI8Q6RLSxLUsUEN34A3Zb8D/hEXbJyTynT+zmM3um1QmiKNpwAjfI73ZsveqsVwYEA8Mp9dvzhOh6sgBheo=
+	t=1736762913; cv=none; b=smAnZAkWoH+FtPl0D5nlao0N8HnjjDiI9FRh0IQwpIDfhEEjEbnCsVsedctg5XsdOqV795C4Vq7c4jYNoPWlp6FsJrk5slf0IeWU/kGxOGukDXT0r3RQWDVWdE0JD1VuhC+1+pnNz4A4rOd8r9DvU5AQso5QqZHEbDs+y4XPye8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736762873; c=relaxed/simple;
-	bh=eznSJ+jpe+nHeDpA5bgYVx1BJUfi+kI7I1v3a1QPjmI=;
+	s=arc-20240116; t=1736762913; c=relaxed/simple;
+	bh=UY2x7lfphtbFL2jTlUUfVdt6pXxH98Yr7thjLaQaAQ4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L//9z/Y6uijsyemc1wdEswCZXjRxKKHQDAYQrLI5hI2AsXTCFHu3qWVmO/fQNHtXwxTuHjhwjpvIZv3UCaQJ1uPSJsUkYQZUD2z8ocKU9EusXFc6Qv9rjsbrkjzuUaax4f6nsA1Zehm7wYyaWWZnfFpz9gaZu6ro675ttYFlsa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UK85j1Zj; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=SeGw0bUWbluyToR/LIAZlnsDS6H8tDC8v5zEqH5uG5yKeXLSVzOwiyijPoRTFq4MgC7oOvXLswFI4L0MnDx1K1aCtyVFmI5KqyienmGFOpb/Z0m3rryUs2kbQu9q5kxU1bBfLw7U9MQub7HLeVm+9xlAHOUI/o10Ykri79Os+74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I1m50Btb; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UK85j1Zj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I1m50Btb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736762870;
+	s=mimecast20190719; t=1736762911;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7rNTD193vSMTXyhHZ9NkXUwKUZO7hlen2I95MxpzwQI=;
-	b=UK85j1Zj+GH5IlXrY5fRKy/SV2O6+8FrlaV9uPPV/dYfLKjzCC7hhMg0RWxaQI7ljMcC51
-	5OCqYTrKrITfOnkq5RRGjOvKAONmn7iNTdm+ROIiR0BVsC9fjrIpNQdzcEUqaaJU2nTevi
-	0JusjhU0t1R9HObxb2QgNjRwBavfY/s=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=w9g1LslBk3KnkNcF/p4M2vlNVEzNEkixwrIJc+UAHcc=;
+	b=I1m50BtbnHJ6lW0fiz9TdQNYA2nNklMFwW/M0cB7kkqqzJF12cNV5K8L1+V3jO8HFFlFAC
+	dJpP1+HXDJ9OxZYjZ7rxkjapadayVbXGW2mWk6QWsNaPwTHcQ1BdR0qcAxGm1vgQUuK8Oa
+	s0SySFaxODheEKqe5pZFEGIdknP0CO0=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-UE9UL4pUOu25IwhdJeRrmw-1; Mon, 13 Jan 2025 05:07:49 -0500
-X-MC-Unique: UE9UL4pUOu25IwhdJeRrmw-1
-X-Mimecast-MFC-AGG-ID: UE9UL4pUOu25IwhdJeRrmw
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38a9118c486so2505026f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 02:07:49 -0800 (PST)
+ us-mta-694-CLGd0GXoMHyC_g2yiezIfg-1; Mon, 13 Jan 2025 05:08:30 -0500
+X-MC-Unique: CLGd0GXoMHyC_g2yiezIfg-1
+X-Mimecast-MFC-AGG-ID: CLGd0GXoMHyC_g2yiezIfg
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38a684a0971so1643296f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Jan 2025 02:08:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736762868; x=1737367668;
+        d=1e100.net; s=20230601; t=1736762909; x=1737367709;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=7rNTD193vSMTXyhHZ9NkXUwKUZO7hlen2I95MxpzwQI=;
-        b=dzLCEzcaae0OC/m7EkzgASTacgsXQekSBAfwe3fSMnkaoQwG2y28/Y8M/OFMo1rKK1
-         vzRMWEHwB6raOAO3+c/dE/ZTZb3zCYjM5TNdOdeE/hXHeXrmMzsECPeSQsP4agNNb6yP
-         Xw0NmEupVSWEzPM3Aof+6j14E3pqtfSbLZiwzGODwCHUw89qlB/l3Agl88ZhuCKUfvor
-         pm/YrJLg3BaoaFK1DJcJPyIcwf5e0VVwJydbzjPHSK7KetwjcmJwYo4Stjh3U8cHLMQ3
-         Ric3OQ2h1llA8XrFYK3kvfAzrLBJhlnvSwNMQ/dpQDgqQ6CPCdJA7xOUY1mc9y7L//aF
-         ri6A==
-X-Forwarded-Encrypted: i=1; AJvYcCU5z7lwsj7mGvuesFSPVJJ1dFfXPyudYhTFBtFmHSNdWmMNbyfgtN0IHsk7CpkMbKchELAngrkcN1n1k6gtzywNaA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQlBuEP9tCdvqzzhuR3rfkC3cGUfFjT3vJCFKEAYBzVos+OxpC
-	qfaEBdg33ttVOFC0L7jqmzE/KRdTyaHohcnq1vsFHdCQwV8A0dgBUjkLkCy6Z2qUZzEhb/4rSSX
-	K16pOSBinak7NjhVitygRczRi5OaLPQPo2bcp2L3f63tUs2m6LhR3XGBj1JI/cTXd3lea7A==
-X-Gm-Gg: ASbGnct6sk9cwvQBj+BNvM8BKDj+zx6Yp3AdmkGXfZC748nAlvJvuLEyTJF/sIM7Tj8
-	IiQDOQulfwmgeXID2pV3uqP2s4FGNuHXZfwDo+twUdhnOMBRVjEFPik9AAaqfZ5pdOOejqKVMtU
-	IHQ6ijNy9tjqmFlQO+9s0IiNvYWQgqoi3lZfI8s2tbL1m+qJUQc3++gpfLbQAXqwAU9vWtlHn75
-	MiWoSB53L6vRVkylTm+nv6kvEk55RnHpcI/y3qTkMDlyKq4wMNlCWTqQgkOUym3e8SvAPQFGTN6
-	BuVQFh38Q/Qx6us=
-X-Received: by 2002:a05:6000:1a8c:b0:382:4ab4:b428 with SMTP id ffacd0b85a97d-38a872d071cmr16565941f8f.8.1736762868191;
-        Mon, 13 Jan 2025 02:07:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFJTLbl+/pB0wum17vS/yuTvKnH/YKlZ6n4UVMWStkQVhvf7Kl5evkXclZ+YVPK5imx38HFEw==
-X-Received: by 2002:a05:6000:1a8c:b0:382:4ab4:b428 with SMTP id ffacd0b85a97d-38a872d071cmr16565909f8f.8.1736762867827;
-        Mon, 13 Jan 2025 02:07:47 -0800 (PST)
+        bh=w9g1LslBk3KnkNcF/p4M2vlNVEzNEkixwrIJc+UAHcc=;
+        b=lxbdKQrByGQ+zjAnN5mMmGb0HcdOnXcvEFJ0PqgelPbwn+Q1Hh2F27KI2KKKZ6ZM1e
+         1IZmSH3dMQa9URupFN7PUHNF86MK+nia3QtB0BWt86Dq4T5EYGtvF46Cxp5BPiC8ixH0
+         ugBX3DNwo5ezI/O6AOVZ4Y1VVAVEszJu3nNufGAq9ekqMv50Vf1717a20YQaB9hInVtA
+         qz6UDkYTJXnIVh9yg/RVc097LuEXvJ1oUVaKEWMTouXeLv1qIE0xAdSCHfz8wFVsVtvL
+         ud1IkzGCkdWUrx54Qmn3iL+0ymhBDoTKCyOL0QkljwbUQQHQfCasgGE7xJUfQVYUgXKu
+         WZBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWng3Vhw2r73P4xupBoTuzqvoDln192+jAnkNIL0+Yku6hg3Dl/gXMImnaaQKt0tJs4w74A38nXpGMHJ+R/MFrHgg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKviPyYihALlhq7cR2z02gTn7M4KMd5/1vhYGZDAksYYO1z5nf
+	1rjUG7LmcnYlTyRjEz4XBOCxJcXBanX4Tn8k2QlH8tJxDz7OI3e2/kzQ2qaYBdZpkMylC/wEHTA
+	PUJ3c39AkxqdriCI6ivPegvXUgNxLJCzKndbQSmBQU2p6bbjtrL6fsnBz8sXm8/G2RRpS1g==
+X-Gm-Gg: ASbGncteIepy/ssXH4OhA82X80pert9xCQcNREK48tvkElfHqHrVCEUrR7G5M1/tswo
+	MM1RFk/z2q5IaBmMaXYxTVX/3oVsj6tSrtcY0Fkhca56ey8SLuhV/GiuwRNi98lGsNW9vJGlmQv
+	7wdDKtxVD63+fY/49ZTcfu1YWu9/7NhSz/wwaCrmqL72iSZxoreQJhObnGU+KAxF5IMSYvy8MJ5
+	WZR5itM7D9C6+/yYwyWNxQotlzAeZt+hBQOK5ena2ng4oTVxwJjLrn+b6vpo58Jo7Z0neqMVgr3
+	odNcrhXMM9GhZco=
+X-Received: by 2002:adf:ab0c:0:b0:38a:8888:c0ef with SMTP id ffacd0b85a97d-38a8888c2eemr11512931f8f.52.1736762908846;
+        Mon, 13 Jan 2025 02:08:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGZaJWGDGSA+V3h2fBword2TX3it3Iw21VUBChJlSgVAPvtBC3cixWVuRKOu8C8idzCDyAMpQ==
+X-Received: by 2002:adf:ab0c:0:b0:38a:8888:c0ef with SMTP id ffacd0b85a97d-38a8888c2eemr11512915f8f.52.1736762908489;
+        Mon, 13 Jan 2025 02:08:28 -0800 (PST)
 Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bdc0d8e4bsm2730484f8f.42.2025.01.13.02.07.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-436e2da6271sm172066975e9.9.2025.01.13.02.08.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2025 02:07:46 -0800 (PST)
-Message-ID: <7b0e384b-6d42-48b7-ade0-f5a699bc369d@redhat.com>
-Date: Mon, 13 Jan 2025 11:07:44 +0100
+        Mon, 13 Jan 2025 02:08:27 -0800 (PST)
+Message-ID: <1ba00ad0-bb75-476d-a0cc-e3e6029774be@redhat.com>
+Date: Mon, 13 Jan 2025 11:08:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,7 +74,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] mm/vmscan: Use PG_dropbehind instead of PG_reclaim
+Subject: Re: [PATCH 6/8] mm/vmscan: Use PG_dropbehind instead of PG_reclaim in
+ shrink_folio_list()
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>
@@ -99,7 +100,7 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
  linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
  linux-trace-kernel@vger.kernel.org
 References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
- <20250113093453.1932083-6-kirill.shutemov@linux.intel.com>
+ <20250113093453.1932083-7-kirill.shutemov@linux.intel.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -146,9 +147,9 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250113093453.1932083-6-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250113093453.1932083-7-kirill.shutemov@linux.intel.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: qmiay6KJv409Nl1-IOHA6_7SXMGbThax9X76Fyl4L_4_1736762868
+X-Mimecast-MFC-PROC-ID: AUzkd7jpzVdVLzaq4BDd-ogWVTJt7g9jTEshadJ0Aow_1736762909
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
@@ -160,45 +161,17 @@ On 13.01.25 10:34, Kirill A. Shutemov wrote:
 > to be involved to get the folio freed.
 > 
 > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> pageout().
+> shrink_folio_list().
 > 
 > It is safe to leave PG_dropbehind on the folio if, for some reason
 > (bug?), the folio is not in a writeback state after ->writepage().
 > In these cases, the kernel had to clear PG_reclaim as it shared a page
 > flag bit with PG_readahead.
 > 
+> Also use PG_dropbehind instead PG_reclaim to detect I/O congestion.
+> 
 > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > ---
->   mm/vmscan.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index a099876fa029..d15f80333d6b 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
->   		if (shmem_mapping(mapping) && folio_test_large(folio))
->   			wbc.list = folio_list;
->   
-> -		folio_set_reclaim(folio);
-> +		folio_set_dropbehind(folio);
-> +
->   		res = mapping->a_ops->writepage(&folio->page, &wbc);
->   		if (res < 0)
->   			handle_write_error(mapping, folio, res);
->   		if (res == AOP_WRITEPAGE_ACTIVATE) {
-> -			folio_clear_reclaim(folio);
-> +			folio_clear_dropbehind(folio);
->   			return PAGE_ACTIVATE;
->   		}
->   
-> -		if (!folio_test_writeback(folio)) {
-> -			/* synchronous write or broken a_ops? */
-> -			folio_clear_reclaim(folio);
-> -		}
->   		trace_mm_vmscan_write_folio(folio);
->   		node_stat_add_folio(folio, NR_VMSCAN_WRITE);
->   		return PAGE_SUCCESS;
 
 Acked-by: David Hildenbrand <david@redhat.com>
 
