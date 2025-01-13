@@ -1,112 +1,88 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EE885947;
-	Mon, 13 Jan 2025 03:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0077B136351;
+	Mon, 13 Jan 2025 03:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736737633; cv=none; b=g/OoxZZZHOiREEm0TZyLbE5n2J3FtaPYigGBEQF1qGkJNCjG9lUgflRDkjciTDHLwMB9fCtjWSKvsGEKW+4MhOG32FkUl9qu9VZAGzObkDZLOcUuDFsKivibsRKmKvise8td0W4pMl4bDUjqU7nkEIQA701vzm7hCNIoZAccM1M=
+	t=1736738972; cv=none; b=sGeiva0SszCdCYvOHhZ+I4NobFn+8AunsFH3OF0QVLl/bEzNjy6qQZg3KF2U8/s3Mlj6cBn8lqZjxZ5a2DnMeO3pVv5sFbsc5UOfOgkMtVWSXu6MvSg0Vd8WXreuaB5JbzxFwLC58eLKOjQcfhn9O+gpEv5XZ6IgDkoDF46CCcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736737633; c=relaxed/simple;
-	bh=D+ljmoBHFykd9plpdqvd09noH8HGVoQ5bj3mzOnaCMA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fhKpb/W6Atind5ChOCQnMBQ7bVGEPMrsKeztG1To27SQG1DXMzXcNJLEMM/UQsV5H37wUCqC//p1OYG0cxueRXphk3316GSIOwoVu4Viikw+2GpuVxvedykxUvdEWskwBzySbZdSMQtMBgyPOGRai9SAXxEre7C/HhjYY2dC0tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAFN2PWA; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAFN2PWA"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21644b473ddso7316725ad.0;
-        Sun, 12 Jan 2025 19:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736737632; x=1737342432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rPXC9M6H1WCUFlmMOfkbZqE3JGlgWI1hOtqPKw92q2o=;
-        b=aAFN2PWA001ZpTvlT5IFZtTkJi0EDKlfEewsnnolq+FpXhchj/r9kzbjoyTpem6AWz
-         eae0hvR0UQ4CHmGEcPLav85JVnTcFwqbJC5moQ/JnLvJ4AQqExW0LdrNXqGqd+LdA75B
-         92o7GvGNQcXpFdm5x9KToSE4n5Q3bSE4QLTtJ4buSWhH+c6sedu8Dlh3/4dHWb7+qdAR
-         5IztEgrCkGzXGAIOVwvtdSFH+VtVYl67HjP/IsO/jL0ndTekubkvWey361RQbVKiaWPO
-         1eBXrrGHORXHNw9U677+Drhi4zY2csUoYVuCV7Kf+TEgfZsz0MmZt/l+sQ7zKEQBVHjE
-         DxSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736737632; x=1737342432;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rPXC9M6H1WCUFlmMOfkbZqE3JGlgWI1hOtqPKw92q2o=;
-        b=F9nzLFTGNFXsIbZNPuL7wflRnuJXIqlB/qPZGnrM8hFwV6KfhhVq3/P2vsc0HJCoRv
-         l64x8d6upCgVHmUnYHCNPC+SifjFlbovtNUJu+ThYw3XOB6ow3xo3nNiyWlbgIHXNO/K
-         zCILn/lAARevn3oABXP4NaPLIffC9h2A9ufNDVlMC8q+buFcgAx21nU3IjAlfBcDLQI2
-         MSHow0TA2yunYL7IGaAA9rHXvkEiW74+kw0qLLLiVeGGOteTP69okWHwoZvTUAz34R2L
-         x4317dfTO0MmX9UykYRfW1Ei2tIeAd/lAPrjIByhIu5GB2NOnp6AiWYBRMbOcsHOMF/5
-         XZvw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFP4KeqorUVIe6WNc3wDGrYkmyqYgBfC0TXbxbxabkh4C37j1oAgNJK8jH3EFOC3QhzuvUuuzxaJEBpEFexY/SqHso@vger.kernel.org, AJvYcCXE8V8pqwfNq/a7PBE7LG8JUYgB1F6rS63TSIhfPbZbhSDQXkztSdfAxs5mi/AJ6Pr2MezBZ1QpbLhXy2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3QUKBLI1/LEqkJKyQaLNIS6LMZZ8aRXeWHXYrtiX98JvnCXAl
-	jgaM5Bbn7vMF3JK9egjAzBQw73qrHrWYOd1/tBLOmQlGgdX38BL/
-X-Gm-Gg: ASbGncvw8H9zwVRHblJLgy08go+fn5++PNa//YlAWBJ4WNoYuwUXfR4BERKw1KEmXV3
-	Rl/9razUUqZGf+WX/+9OwdQ921D/5aYPF7TOW/qEv0xkIXv18hOVv0AIZOHTQSLGRc3WqKL25dH
-	3OE8qcuxI0qIq1nFx3Ia5wiGeXoBQG9i7qKIX5H7sKQEOOUzKedOV9C+FyKvQS7qhRZGS9uYv9u
-	HZHZxydGMyUApjnbs9RzFp8bp4t/3KkqA0GdAw+QzM0CCXDztUeyR0oRcmc2ZjgcI7l/Hd/Kiq+
-	RBpseFimqijiM9SYdM1MRILgH+6HIEJBFzulG4c=
-X-Google-Smtp-Source: AGHT+IG5b6OhLzdHbJdJXEwxQ6DouYarrAWGsXZCvbCGviVG00oWuF3S2JAES2dB4BG/Cj7GxeW8og==
-X-Received: by 2002:a17:902:c951:b0:215:a3e3:c857 with SMTP id d9443c01a7336-21a83f32d5emr110983345ad.3.1736737631637;
-        Sun, 12 Jan 2025 19:07:11 -0800 (PST)
-Received: from localhost.localdomain ([61.213.176.57])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21bb2a5b2afsm16304635ad.28.2025.01.12.19.07.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2025 19:07:11 -0800 (PST)
-From: zhuxiaohui <zhuxiaohui400@gmail.com>
-X-Google-Original-From: zhuxiaohui <zhuxiaohui.400@bytedance.com>
-To: muchun.song@linux.dev,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: lihongbo22@huawei.com,
-	Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
-Subject: [PATCH] hugetlbfs: check dir in trace_hugetlbfs_alloc_inode
-Date: Mon, 13 Jan 2025 11:07:02 +0800
-Message-ID: <20250113030702.58502-1-zhuxiaohui.400@bytedance.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1736738972; c=relaxed/simple;
+	bh=hY7ztXHLiizNckQ3rP6H9P3/p7bmZv2bbJOtRO+NEDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kBZ34aVOtMV0eiC6VWvSJAp3B2csH1X7Qhdc3FwOwax+UiQvU5r/7ULnKkxV0X1MSljE0sVAREIJjQzLpQPNjkD/1FqKBrxhqq5Ao2BxS0tSmjO87quyw6dhcQemIx4wUw57qhosr8BlP7EqCPn4C+Ywnse4BYlHUBLHaahx7GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4YWd1p07gjz1W44j;
+	Mon, 13 Jan 2025 11:25:34 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id D7951180087;
+	Mon, 13 Jan 2025 11:29:21 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 13 Jan 2025 11:29:18 +0800
+Message-ID: <b5c16ffd-d70f-48b1-b026-79dc5ff4ffaf@huawei.com>
+Date: Mon, 13 Jan 2025 11:29:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hugetlbfs: check dir in trace_hugetlbfs_alloc_inode
+To: zhuxiaohui <zhuxiaohui400@gmail.com>, <muchun.song@linux.dev>,
+	<rostedt@goodmis.org>, <mhiramat@kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+CC: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
+References: <20250113030702.58502-1-zhuxiaohui.400@bytedance.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20250113030702.58502-1-zhuxiaohui.400@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-From: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
 
-Anonymous huge page has no corresponding directory inode,
-which cause a null pointer crash when access dir with the stack
 
-  trace_hugetlbfs_alloc_inode
-  hugetlbfs_get_inode
-  hugetlb_file_setup
-  ksys_mmap_pgoff
+On 2025/1/13 11:07, zhuxiaohui wrote:
+> From: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
+> 
+> Anonymous huge page has no corresponding directory inode,
+> which cause a null pointer crash when access dir with the stack
+> 
+>    trace_hugetlbfs_alloc_inode
+>    hugetlbfs_get_inode
+>    hugetlb_file_setup
+>    ksys_mmap_pgoff
+> 
+> Signed-off-by: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
+> ---
+>   include/trace/events/hugetlbfs.h | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/hugetlbfs.h b/include/trace/events/hugetlbfs.h
+> index 8331c904a9ba..5daa52053edc 100644
+> --- a/include/trace/events/hugetlbfs.h
+> +++ b/include/trace/events/hugetlbfs.h
+> @@ -23,7 +23,9 @@ TRACE_EVENT(hugetlbfs_alloc_inode,
+>   	TP_fast_assign(
+>   		__entry->dev		= inode->i_sb->s_dev;
+>   		__entry->ino		= inode->i_ino;
+> -		__entry->dir		= dir->i_ino;
+> +		__entry->dir		= 0;
+> +		if (dir)
+> +			__entry->dir	= dir->i_ino;
+It has been fixed in [1] by Muchun.
+Thanks,
+Hongbo
 
-Signed-off-by: Xiaohui Zhu <zhuxiaohui.400@bytedance.com>
----
- include/trace/events/hugetlbfs.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/include/trace/events/hugetlbfs.h b/include/trace/events/hugetlbfs.h
-index 8331c904a9ba..5daa52053edc 100644
---- a/include/trace/events/hugetlbfs.h
-+++ b/include/trace/events/hugetlbfs.h
-@@ -23,7 +23,9 @@ TRACE_EVENT(hugetlbfs_alloc_inode,
- 	TP_fast_assign(
- 		__entry->dev		= inode->i_sb->s_dev;
- 		__entry->ino		= inode->i_ino;
--		__entry->dir		= dir->i_ino;
-+		__entry->dir		= 0;
-+		if (dir)
-+			__entry->dir	= dir->i_ino;
- 		__entry->mode		= mode;
- 	),
- 
--- 
-2.41.0
-
+[1] 
+https://lore.kernel.org/lkml/20250106033118.4640-1-songmuchun@bytedance.com/T/
+>   		__entry->mode		= mode;
+>   	),
+>   
