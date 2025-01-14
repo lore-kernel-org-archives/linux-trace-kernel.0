@@ -1,74 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9035720F96B;
-	Tue, 14 Jan 2025 11:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA831ADC93
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 11:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736852492; cv=none; b=p+3cOoz7ClVfVDD9kS7x67aA6u1Usif06li0tVjrlFRStwT89Bc/xRKbViy5G/atDBOavFFjdpLtddNNsR2hoM0sTvFGcksCXhJP8d6iaPUxHSPKHH6CGlnt5PKIcTVmypKNhl+Qz/EdbWqXetLSoejka6bTBSgglZnkefPpkHM=
+	t=1736852555; cv=none; b=T9dYendmaDDd/ooo0UqncXWIe6uMmt67zPy3jqJYgalERhHa+EyS8Dx5CMvGJ/IirApobpAfnRToYeGGKkREcdoUfcTWP0aAU8u1uOJAPbKkZir/v367Yf981IFtrLzioXHjRXPN9B5K2w9/Z7zxDXq6emyOySu2iOTJM4JYQ5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736852492; c=relaxed/simple;
-	bh=mbHS99/jEJpIbZomuQgs7L8z3N8P/BZq6eKT12MfMQ4=;
+	s=arc-20240116; t=1736852555; c=relaxed/simple;
+	bh=Ovo/VNfzR+CoK/PJl5X0EEHPgpzOZZFY8SPWGupSzYw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2LQQEwKtgq8Pee2KopNVvgd/DKY+X19GqmZEKcRAlTI1LMkENYU1T+CvM9ay8dGrD3qz0nxlbXCjoRVyOqNSc7oFKqdLTStsWBsvRCU/TdPblimoYHlmzjWsqjazmKuqXOTDZEBwp2Tgmg+H8TBSFLGsHZ48E6gvEJ+jslKIDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI/Onrdp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYs+aqGtSQhijW1uwZY6qTLgUwISlAT44KnMkcWTvAUhYhMbjvIGv5c+3erWK0AjG/wNcQxe7fegR8BLSIPYoSBff3IFqwrBrxWq0T5T3m/zSpHyGPE/yDQUa2AXqvQkxuAZhm84VBmbhb3SKpgj9Ijuc9gyNklUlRGZPHc7Srg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hsowcEDV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI/Onrdp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165CBC4CEDD;
-	Tue, 14 Jan 2025 11:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736852491;
-	bh=mbHS99/jEJpIbZomuQgs7L8z3N8P/BZq6eKT12MfMQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MI/OnrdpyPjreb29TH1K7V92pcHREffE7EWvZPPD/CQnZx1Z2V//mN5/XO4rnjbEe
-	 woLKU+r4vDndmePFt/UZIgxmh04ThYr+z9+zfQj21ZNN0sl7KCp2Vl8WVb5SvZllou
-	 4etv5w5vUXrxnghs9U7tvjY3Mc+wDwzBs1zXG7Rvuizz8c5KbCSfqZS819UY64k+/Q
-	 H31n0Pp7yvSpueyJuMPlw2CrvcLTpEOUxOjLbaOuXtftRTndUinQPNSWPDgB+/nHR9
-	 1M3LhDFViqSxB+C7+9/3HG8tin4pDD8Gja9UlC/e1cGrVOu9nP1kn14oZvA5k7neLT
-	 OIf9MZ4k/uWTA==
-Date: Tue, 14 Jan 2025 13:01:09 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Gow <davidgow@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
-	Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	live-patching@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] x86/mm/pat: Restore large pages after fragmentation
-Message-ID: <Z4ZD9exBt-JQiuS6@kernel.org>
-References: <20241227072825.1288491-1-rppt@kernel.org>
- <20241227072825.1288491-4-rppt@kernel.org>
- <jut35igb2kstpz24apqdeubv5rvyl3vmp2s43xtivpz54uiedj@wmd2onulv4xw>
- <Z4ODVmnC4fDnIUSN@kernel.org>
- <sivhweds7p5sst2jpxanrj6qc7wlonqkod64nsr5cgttma7ntp@bhqespo3jdqz>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hsowcEDV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736852552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ovo/VNfzR+CoK/PJl5X0EEHPgpzOZZFY8SPWGupSzYw=;
+	b=hsowcEDV2Dm/ZeT1QrcZXXLI9cyk22C2GdevL3zP9CPVwXELjAJUc3IUyUVlbbXeQ2DLgK
+	qLirPAgwW0yLE/qI3MmC4pnIn4T984CDPVAwVADmJNERyusywc0vyiFDaBAJ2hi3t3V8sy
+	ax33M+VJ3aPAoOCM6+qDA2tfb9q3Qjk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-315-D0WvGm4gNfqO2dO07wT6UQ-1; Tue,
+ 14 Jan 2025 06:02:27 -0500
+X-MC-Unique: D0WvGm4gNfqO2dO07wT6UQ-1
+X-Mimecast-MFC-AGG-ID: D0WvGm4gNfqO2dO07wT6UQ
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 49A4219560A2;
+	Tue, 14 Jan 2025 11:02:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.88])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6FF3519560A3;
+	Tue, 14 Jan 2025 11:02:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 14 Jan 2025 12:01:59 +0100 (CET)
+Date: Tue, 14 Jan 2025 12:01:50 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
+	Eyal Birger <eyal.birger@gmail.com>, mhiramat@kernel.org,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	BPF-dev-list <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>, tglx@linutronix.de,
+	bp@alien8.de, x86@kernel.org, linux-api@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
+	Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-ID: <20250114110149.GB19816@redhat.com>
+References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
+ <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
+ <Z4K7D10rjuVeRCKq@krava>
+ <Z4YszJfOvFEAaKjF@krava>
+ <20250114104215.GD8362@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,86 +75,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <sivhweds7p5sst2jpxanrj6qc7wlonqkod64nsr5cgttma7ntp@bhqespo3jdqz>
+In-Reply-To: <20250114104215.GD8362@noisy.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon, Jan 13, 2025 at 10:01:13AM +0200, Kirill A. Shutemov wrote:
-> On Sun, Jan 12, 2025 at 10:54:46AM +0200, Mike Rapoport wrote:
-> > Hi Kirill,
-> > 
-> > On Fri, Jan 10, 2025 at 12:36:59PM +0200, Kirill A. Shutemov wrote:
-> > > On Fri, Dec 27, 2024 at 09:28:20AM +0200, Mike Rapoport wrote:
-> > > > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> > > > 
-> > > > Change of attributes of the pages may lead to fragmentation of direct
-> > > > mapping over time and performance degradation as result.
-> > > > 
-> > > > With current code it's one way road: kernel tries to avoid splitting
-> > > > large pages, but it doesn't restore them back even if page attributes
-> > > > got compatible again.
-> > > > 
-> > > > Any change to the mapping may potentially allow to restore large page.
-> > > > 
-> > > > Hook up into cpa_flush() path to check if there's any pages to be
-> > > > recovered in PUD_SIZE range around pages we've just touched.
-> > > > 
-> > > > CPUs don't like[1] to have to have TLB entries of different size for the
-> > > > same memory, but looks like it's okay as long as these entries have
-> > > > matching attributes[2]. Therefore it's critical to flush TLB before any
-> > > > following changes to the mapping.
-> > > > 
-> > > > Note that we already allow for multiple TLB entries of different sizes
-> > > > for the same memory now in split_large_page() path. It's not a new
-> > > > situation.
-> > > > 
-> > > > set_memory_4k() provides a way to use 4k pages on purpose. Kernel must
-> > > > not remap such pages as large. Re-use one of software PTE bits to
-> > > > indicate such pages.
-> > > > 
-> > > > [1] See Erratum 383 of AMD Family 10h Processors
-> > > > [2] https://lore.kernel.org/linux-mm/1da1b025-cabc-6f04-bde5-e50830d1ecf0@amd.com/
-> > > > 
-> > > > [rppt@kernel.org:
-> > > >  * s/restore/collapse/
-> > > >  * update formatting per peterz
-> > > >  * use 'struct ptdesc' instead of 'struct page' for list of page tables to
-> > > >    be freed
-> > > >  * try to collapse PMD first and if it succeeds move on to PUD as peterz
-> > > >    suggested
-> > > >  * flush TLB twice: for changes done in the original CPA call and after
-> > > >    collapsing of large pages
-> > > > ]
-> > > > 
-> > > > Link: https://lore.kernel.org/all/20200416213229.19174-1-kirill.shutemov@linux.intel.com
-> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > > 
-> > > When I originally attempted this, the patch was dropped because of
-> > > performance regressions. Was it addressed somehow?
-> > 
-> > I didn't realize the patch was dropped because of performance regressions,
-> > so I didn't address it.
-> > 
-> > Do you remember where did the regressions show up?
-> 
-> https://github.com/zen-kernel/zen-kernel/issues/169
-> 
-> My understanding is if userspace somewhat frequently triggers set_memory_*
-> codepath we will get a performance hit.
+On 01/14, Peter Zijlstra wrote:
+>
+> On Tue, Jan 14, 2025 at 10:22:20AM +0100, Jiri Olsa wrote:
+> >
+> > hack below seems to fix the issue, it's using rbx to signal that uretprobe
+> > syscall got executed, if not, trampoline does int3 and executes uretprobe
+> > handler in the old way
+> >
+> > unfortunately now the uretprobe trampoline size crosses the xol slot limit so
+> > will need to come up with some generic/arch code solution for that, code below
+> > is neglecting that for now
+>
+> Can't you detect the filter earlier and simply not install the
+> trampoline?
 
-This version of the patch will cause smaller performance hit because it
-does not scan an entire PUD every time collapse_large_pages() is called.
+Did you mean detect the filter in prepare_uretprobe() ?
 
-Still, when I tweaked cpa-test to take some time measurements I see about
-60% increase in the time it takes to perform set_memory operations.
+The probed function can install the filter before return...
 
-Since we only really care about restoring large pages for ROX mapping, I'm
-going to update the patch so that we'll try to collapse large pages only
-from set_memory_rox().
- 
-> -- 
->   Kiryl Shutsemau / Kirill A. Shutemov
+Oleg.
 
--- 
-Sincerely yours,
-Mike.
