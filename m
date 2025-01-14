@@ -1,36 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A21157485;
-	Tue, 14 Jan 2025 15:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA9F23244D;
+	Tue, 14 Jan 2025 15:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736867154; cv=none; b=V2azyBfv6dkH7bM0POdLVyXtsw7jOV3hrJ2WjUQXLwhF5MWWMI1pPcTmdzzKsLT94cwv3OyBZ0d2+DTkp4135WcgOrp05AZK44owXB0FoSQTq8znUkZBN8CGteR3QbQTEijBPckFCgTI60yP7iIzHiytuffbcopFeZPved05VK0=
+	t=1736867522; cv=none; b=Dy0SjL5Xv5vJGzCCG8kKXKeDG61TCt+JOmB+e/MT8TyGga+ZHHVK5YOUgqMSDWjQXOWT7/fJdMQvTU46DMv0VhsmFGC9N6ZJdi6+EGGnujrYRof1i8fGyf27oZmEXiF9DUW9JqwessrBj/W/tHPX/wQpjXyOVL5DucccxHmLTYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736867154; c=relaxed/simple;
-	bh=+jqnW9djanRisFz6+BHjrC/L/SpcxdAgs3fjocY/Vjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lhh3Ix1nhHWYQ2P16BScR33MLRTIJOYoWvlOanVe8qfJWikK/S7XrmafTueEhqaBtonbceA0o+pZMFrXgXF6jMwpJbag9wydMy/dtdZDU9daZ0Ox94nJ87fvIE3nabMGbz7AQck3tKVGkrZnj/NRG6ZVN2qsl6/4svztS/RKMyU=
+	s=arc-20240116; t=1736867522; c=relaxed/simple;
+	bh=Mkq/wrIpBvm3Er3I1jFH3skSpiNdl/i/q5lpy9JU6uM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ggefm4H9BhYwhF96hxIS2swbldU5j772pCgVLdApW4CJEIWycOleqkUS3/LCpW/sooNY/X0/rZuJJLkKB/ETToXnX8wdL7lGTwmVIYipMvAQC951exdZBhjHarFjsgFOiDO73+HExnhbLxf+Y2+KeUMtoxp88/wVFP7vdIjmxyQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578B9C4CEE3;
-	Tue, 14 Jan 2025 15:05:52 +0000 (UTC)
-Date: Tue, 14 Jan 2025 10:05:52 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7E7C4CEDD;
+	Tue, 14 Jan 2025 15:12:01 +0000 (UTC)
+Date: Tue, 14 Jan 2025 10:12:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] fgraph: Move trace_clock_local() for return time to
- function_graph tracer
-Message-ID: <20250114100552.21b28c99@gandalf.local.home>
-In-Reply-To: <20250114101806.b2778cb01f34f5be9d23ad98@kernel.org>
-References: <Z3aSuql3fnXMVMoM@krava>
-	<173665959558.1629214.16724136597211810729.stgit@devnote2>
-	<20250113195449.72ab5d81@gandalf.local.home>
-	<20250114101806.b2778cb01f34f5be9d23ad98@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ftrace: Document that multiple function_graph tracing may
+ have different times
+Message-ID: <20250114101202.02e7bc68@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,18 +32,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 14 Jan 2025 10:18:06 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> > I'd rather just nuke the calltime and rettime from struct ftrace_graph_ret.  
-> 
-> Yeah, this one is good to me. But this will make a slightly different time
-> for the same function when we enable multiple function graph tracer on
-> different instances (mine records it once and reuse it but this will record
-> on each instance). We may need to notice it on the document. :)
+The function graph tracer now calculates the calltime internally and for
+each instance. If there are two instances that are running function graph
+tracer and are tracing the same functions, the timings of the length of
+those functions may be slightly different:
 
-And I believe it's separate for each instance now anyway, so I was going to
-send this to Linus as well:
+ # trace-cmd record -B foo -p function_graph -B bar -p function_graph sleep 5
+ # trace-cmd report
+[..]
+bar:            sleep-981   [000] ...1.  1101.109027: funcgraph_entry:        0.764 us   |          mutex_unlock(); (ret=0xffff8abcc256c300)
+foo:            sleep-981   [000] ...1.  1101.109028: funcgraph_entry:        0.748 us   |          mutex_unlock(); (ret=0xffff8abcc256c300)
+bar:            sleep-981   [000] .....  1101.109029: funcgraph_exit:         2.456 us   |        } (ret=0xffff8abcc256c300)
+foo:            sleep-981   [000] .....  1101.109029: funcgraph_exit:         2.403 us   |        } (ret=0xffff8abcc256c300)
+bar:            sleep-981   [000] d..1.  1101.109031: funcgraph_entry:        0.844 us   |  fpregs_assert_state_consistent(); (ret=0x0)
+foo:            sleep-981   [000] d..1.  1101.109032: funcgraph_entry:        0.803 us   |  fpregs_assert_state_consistent(); (ret=0x0)
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/ftrace.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
 index 272464bb7c60..2b74f96d09d5 100644
@@ -71,12 +71,6 @@ index 272464bb7c60..2b74f96d09d5 100644
    "blk"
  
  	The block tracer. The tracer used by the blktrace user
-
-
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
--- Steve
+-- 
+2.45.2
 
