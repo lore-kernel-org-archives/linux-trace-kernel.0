@@ -1,180 +1,183 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DE1225775
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 18:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44811B85FA;
+	Tue, 14 Jan 2025 19:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736877819; cv=none; b=oy1O99/C1NHHf14fprtHkajSGVms1GjfXwAkoWizeeRRjyb+4IJ23GAT72BHqvzU+3OkI4gKBYh3fj/Ckb8h7qb6SOjuAdvBxC9ee9Pe/sCe0TAK2cCZWXOuqkW7hwPW+TS2q+LeoNaYtUr9KVhegWTx8pk2yAAIEyYKe0dOkMs=
+	t=1736881489; cv=none; b=NCRYX7nwvIWTNMotZaV6UrAnpImx8SHX4+YmLmoJXJghGENr/dpfV4DmJnWs26QlknQzEGPboMwZv1ahksk0wpWAwaMwqhwNmHVKenGu3JsxrUHxQC/AxK/1DPSc7FemBLgyq9/r6Xb8oaA6/EinddxCrJLCKT3lRP9on7G8rNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736877819; c=relaxed/simple;
-	bh=Xis4m9NUF4RvqFT2ixotNDRdla/lGDQAY24VlW1v4t4=;
+	s=arc-20240116; t=1736881489; c=relaxed/simple;
+	bh=OqGK6Z8tSyIVe/r/lJjFfsY83wr55JwqJyKsp3yVWF0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GJ5QRZw7ioXRkLu6zuoPHvbHwAYP5eG7YVbCslJtF2izWX/t4jI3ckbLibfVX5es/e1Hu3T7WiwE9t1WR9DLnNCJPpUVYeHlophPCo6WzGXLVug8wQY8TC8o5TZAvGLRUAgwHEjPKXqUgIJbsnT/51c0E5icj5Gf90uTWTlailE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qmv3qgFC; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=HJXNYkYwk55Z5bpG95ssKcuJRM5vXx0s1QK8CBu0K6WokSqA1hD3TPby+10xErfbg9flePH3xJCFDNUM9mfmrh9mfevJm6w27nmp83crX7D+IvVFZuHZjWryzcWlSERRlE4Sky1xc3Thoda3Em3iclWqip9WmQ8kVdc/Pep5WVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRvrKmYX; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qmv3qgFC"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6dfbc45355bso36680366d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 10:03:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRvrKmYX"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2eec9b3a1bbso7829974a91.3;
+        Tue, 14 Jan 2025 11:04:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736877816; x=1737482616; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736881487; x=1737486287; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jCDM3nH5nsddwHhx2RaJOUmEIWUcGJSFM1b2iKFUASA=;
-        b=Qmv3qgFCrok4EhoU5dVtp8PLHedKBSkwLKRVPiNH5Qrfnqtgdeb06Jd2kRoU6LRyWe
-         /f3VCi1amaUZyPNBcmnWONma+vjA2wIyKc4Y6UdJGIr26WbZhgBbLqOR2VgMriFNcJyd
-         SqSSHDagcu1vipo8xfTogmt46OArW3cNJT0OK1Rvf7wMPA9rjKbUxsFr6M5cphr+LD5d
-         o3i1uf6tZ59gKvUyjnVkVLlxt45w32GotPOLOnJ0TNJR1tUCAwtG8EwyUVLEgTgHV2ha
-         cfdlDwAJP6eL4x5H4id8Lgsn3Tm3MIXbizOHlAC4Bsv6uJX5BBqqEjMByRFBouszMCgP
-         0VtA==
+        bh=UEe097M6IZ1c6/MJ6EbTxRLtSdho/vi92Dh1E1/kKsQ=;
+        b=DRvrKmYXTsJgj2bNz07kKPEsWwkgYx3DLmd36Yjt6Krhdris/IjxQgJgsDsReCpWQZ
+         nvhP0RMjmrInIAHf3653GeHuRAkrbnCU4er8GNCaV3jGtfLgl2m6L48JfYLVzaZsnDWL
+         HbhJnuPg3w/uCYAB4UUeoyY2tNAp4MxEL5DhTSHR4GY0/i3wxubkrjxBPQ5oKEg/EztP
+         Xw1KxhiOHdRR3mXo5RQ4mBqb49CtFye1AHMXXg0GwYT0/Mg+x5WCFzP3BOmveIIgVsY7
+         ZJBZlQYuRi1gr/+5C/D/ZWCIao1kXibVCnBaeqw0jnafBk7gpSFVqPLoc8oHjJ78VyVu
+         Scxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736877816; x=1737482616;
+        d=1e100.net; s=20230601; t=1736881487; x=1737486287;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jCDM3nH5nsddwHhx2RaJOUmEIWUcGJSFM1b2iKFUASA=;
-        b=M0CKy7YOuUWtx6Qi3vKs9ZK9TOeepDoqH5bTlPxQEsFddWAEyJWMblrJoLv3DzmOTy
-         IBAr/mZXG9zIF8bYaTW8xfh9A6oZNSg0IJPdj58FKZmUvZW/FrPmiU2uKxA3QHkSzX5S
-         OoVWm5Y+qzEE3IrafERLg1G3dYrVPdiFWBslfcS/ggbEfPYY4RKoZiatViE4P5C01p94
-         qY9vitDc9fN044Sl/wpCFEu8JhCLmF3lTAisNzgfjVs+Rxi/tMfKfu8JP0HK86n5Erhr
-         OWTzL7b0t/5X1x7Ten9EqIW8rDsrfmMfhNkbRz4unfR6BZU+rs8BCC8WpmAlIJzz3VNK
-         UYLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMjPgstsiuXuCYlIzVmBbNcDPocoWTLBFjpL5Mt97BrVuHYOOxJGPwbcg+ntw6flNOVPyzG3DDA7vK4KJWIMLNW8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCnyEfutON6uXZr9XYB27JgPlUmht+4tt4NXp8NAuz0fwRQ9m0
-	kUUqEoRinr2q/FlhcTOg6cDBZwLJHv0IEgksACdfkpXIXwToZTO1a4JIA98gaji4m5LmnZwvA1A
-	wSYudwQrw98STCf48m+82kdeYk4fKXYzloCdV
-X-Gm-Gg: ASbGncv8aw4MndHaxtAn15wbJgBw/g+ysJun9rw4BvGTdSIJCG896/NcE/ebwr+sXG5
-	9rIIKcc2No4WOsD+DB7y3+iNlp2EWt3ypkP872LCtpuLNYnIFN6YU9a6WLZ3U8Vrias1j
-X-Google-Smtp-Source: AGHT+IFGbuWEbA/VXL6JtTCiH5khxzq5smFlxJG6dJ+DoVw7dHdiOta9Wy11BiH/OhRxCrhzSnn1aPsUJ6zkleOgF28=
-X-Received: by 2002:a05:6214:4002:b0:6d8:b3a7:75ba with SMTP id
- 6a1803df08f44-6df9b333a5bmr404226066d6.45.1736877814969; Tue, 14 Jan 2025
- 10:03:34 -0800 (PST)
+        bh=UEe097M6IZ1c6/MJ6EbTxRLtSdho/vi92Dh1E1/kKsQ=;
+        b=RU0n0a+GAbZeiXNXgt/K4ZSb3ENLg1Q1xcMbF40BG/MbWQn3yzBTSvP8GFoqCLwwPC
+         wN4tbZyUV9fb9nAeTDc1oN/57MxV6/siB/kKQ1nfeRucYIPeSBrWklVuhKR0SyrxVXTx
+         5EPr4THKbWqYHdtUYYnIPUWBbEX2MkeoCxwD7+EX3/Ik0PpDBhE7SvMnK4MkqrjwmFnI
+         cZ4VetAtmlTnDhiqJRN80H5dPLUJuodETjXPWxr6V0fa+RZElwTVo/VXR1GtSxOrK3sB
+         0jzhP4664l3z/pRszEvtgzDh6NcUAo6H7GQApn14nDzLwB/pBy4Xo5cWYv1vKTbhGqfb
+         lkXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2o3pkTSEisO4BSO4C9UNPGmN/PF1F64W/Ir3oEyQtb+KXMfc84uG6ElY/Pw6EnN2x9y7G5hPDsSha1bO/yhsdNbj1@vger.kernel.org, AJvYcCU8kEEeVKNNmcJms1atLk0LxnNla3Hi8zVfnpgbLs7ki6kPDrSpZ8DsD35w42Zr10tEG5Y=@vger.kernel.org, AJvYcCV6KE88UFx6VhjobCDwi0Co23emtd4RDrcVGE7QASVfZVXVWXrxzzdYVO1nSYgT1eWxvvSsHzjL5gyETg==@vger.kernel.org, AJvYcCWasxaJAeAwkyqfG8bRxLvtl0Dy3GcQPiy/9zBRLa0Fna5Ft4iqwF7EMRCp9OS9KFhnWhDAIjkaABYsikqi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNS5nwx4B12biXNfozwy6j7/wJb6gk2OcR1qVeMZoZBLvNLxMc
+	nBeO9/U6/2wdAM3dSDAQzF6SRHkVH3y5t/UsVpejRUZMnLPCThviVkC0nsbHjDwYqbF7Uee63vx
+	namVAPrAMiglj78Z9E//VhC7xJSE=
+X-Gm-Gg: ASbGncsUWg0QYkAKXKxY+5jL30C4jk8bCRNPYnbc68YRzT3tQ+ofEUzKX4VcKL5sN17
+	pnlEB9XSAsHTYCCG24gA9AFtFYzR/yXYN0gV2
+X-Google-Smtp-Source: AGHT+IGPhIcGO+TQXrPWOO1ZPVU0z+5sWXrqDm55mqIBD3SrGU5BTvsIyI5REMrOuVa7A4fXcTnsa5fozQnQr150wfg=
+X-Received: by 2002:a17:90b:540e:b0:2ee:a76a:830 with SMTP id
+ 98e67ed59e1d1-2f548f1b2bfmr40980565a91.24.1736881486958; Tue, 14 Jan 2025
+ 11:04:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
- <20250113093453.1932083-5-kirill.shutemov@linux.intel.com>
- <CAJD7tkYH8KO8NLJY564PRAmW-mtMfDCMTECGKyYyVAf+JtTcRA@mail.gmail.com> <sct6vvupd4cp6xt66nn6sfs7w3srpx6zcxxsn6rz5qo4tz3la6@btdqsbicmrto>
-In-Reply-To: <sct6vvupd4cp6xt66nn6sfs7w3srpx6zcxxsn6rz5qo4tz3la6@btdqsbicmrto>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 14 Jan 2025 10:02:58 -0800
-X-Gm-Features: AbW1kva-gyu4zE6Wcq68qpyyzNdu3annXYt-FkuQBdGnmZoPJXjoi47oGp9e6C0
-Message-ID: <CAJD7tkZwgKRc2kbY9WutC8meOV+CpQSpxKSpkUorEneJJuX9og@mail.gmail.com>
-Subject: Re: [PATCH 4/8] mm/swap: Use PG_dropbehind instead of PG_reclaim
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yu Zhao <yuzhao@google.com>, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <173518987627.391279.3307342580035322889.stgit@devnote2>
+ <Z3aSuql3fnXMVMoM@krava> <CAEf4BzZqpHcqRJscQtAJJ7tLMpdq4_Dr_j7APj=X2g-pnkELVg@mail.gmail.com>
+ <Z4Z-yC_mBTa6Ws70@krava>
+In-Reply-To: <Z4Z-yC_mBTa6Ws70@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 14 Jan 2025 11:04:35 -0800
+X-Gm-Features: AbW1kva_e4D6M60XyDxQhwRiED82CFE6DG9gGIZh1M2JAQrmjpyscMamojYYM6U
+Message-ID: <CAEf4BzbuQxEWfTNRq9163Gi=SMDi3wCpfp+NEMVtz_BRYJxOdg@mail.gmail.com>
+Subject: Re: [PATCH v22 00/20] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Alexei Starovoitov <alexei.starovoitov@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>, 
+	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-arch@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2025 at 12:12=E2=80=AFAM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
+On Tue, Jan 14, 2025 at 7:12=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
 >
-> On Mon, Jan 13, 2025 at 08:17:20AM -0800, Yosry Ahmed wrote:
-> > On Mon, Jan 13, 2025 at 1:35=E2=80=AFAM Kirill A. Shutemov
-> > <kirill.shutemov@linux.intel.com> wrote:
+> On Fri, Jan 10, 2025 at 04:04:37PM -0800, Andrii Nakryiko wrote:
+> > On Thu, Jan 2, 2025 at 5:21=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> w=
+rote:
 > > >
-> > > The recently introduced PG_dropbehind allows for freeing folios
-> > > immediately after writeback. Unlike PG_reclaim, it does not need vmsc=
-an
-> > > to be involved to get the folio freed.
+> > > On Thu, Dec 26, 2024 at 02:11:16PM +0900, Masami Hiramatsu (Google) w=
+rote:
+> > > > Hi,
+> > > >
+> > > > Here is the 22nd version of the series to re-implement the fprobe o=
+n
+> > > > function-graph tracer. The previous version is;
+> > > >
+> > > > https://lore.kernel.org/all/173379652547.973433.2311391879173461183=
+.stgit@devnote2/
+> > > >
+> > > > This version is rebased on v6.13-rc4 with fixes on [3/20] for x86-3=
+2 and
+> > > > [5/20] for build error.
 > > >
-> > > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> > > lru_deactivate_file().
 > > >
-> > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > ---
-> > >  mm/swap.c | 8 +-------
-> > >  1 file changed, 1 insertion(+), 7 deletions(-)
+> > > hi,
+> > > I ran the bench and I'm seeing native_sched_clock being used
+> > > again kretprobe_multi bench:
 > > >
-> > > diff --git a/mm/swap.c b/mm/swap.c
-> > > index fc8281ef4241..4eb33b4804a8 100644
-> > > --- a/mm/swap.c
-> > > +++ b/mm/swap.c
-> > > @@ -562,14 +562,8 @@ static void lru_deactivate_file(struct lruvec *l=
-ruvec, struct folio *folio)
-> > >         folio_clear_referenced(folio);
-> > >
-> > >         if (folio_test_writeback(folio) || folio_test_dirty(folio)) {
-> > > -               /*
-> > > -                * Setting the reclaim flag could race with
-> > > -                * folio_end_writeback() and confuse readahead.  But =
-the
-> > > -                * race window is _really_ small and  it's not a crit=
-ical
-> > > -                * problem.
-> > > -                */
-> > >                 lruvec_add_folio(lruvec, folio);
-> > > -               folio_set_reclaim(folio);
-> > > +               folio_set_dropbehind(folio);
-> > >         } else {
-> > >                 /*
-> > >                  * The folio's writeback ended while it was in the ba=
-tch.
+> > >      5.85%  bench            [kernel.kallsyms]                       =
+                 [k] native_sched_clock
+> > >             |
+> > >             ---native_sched_clock
+> > >                sched_clock
+> > >                |
+> > >                 --5.83%--trace_clock_local
+> > >                           ftrace_return_to_handler
+> > >                           return_to_handler
+> > >                           syscall
+> > >                           bpf_prog_test_run_opts
 > >
-> > Now there's a difference in behavior here depending on whether or not
-> > the folio is under writeback (or will be written back soon). If it is,
-> > we set PG_dropbehind to get it freed right after, but if writeback has
-> > already ended we put it on the tail of the LRU to be freed later.
+> > completely unrelated, Jiri, but we should stop using
+> > bpf_prog_test_run_opts() for benchmarking. It goes through FD
+> > refcounting, which is unnecessary tiny overhead, but more importantly
+> > it causes cache line bouncing between multiple CPUs (when doing
+> > multi-threaded benchmarks), which skews and limits results.
+>
+> so you mean to switch directly to attaching/hitting kernel functions
+> or perhaps better have kernel module for that?
+>
+
+yes, cheap syscall (getpgid or something). Not a kernel module, that's
+logistical hassle.
+
+> jirka
+>
 > >
-> > It's a bit counterintuitive to me that folios with pending writeback
-> > get freed faster than folios that completed their writeback already.
-> > Am I missing something?
->
-> Yeah, it is strange.
->
-> I think we can drop the writeback/dirty check. Set PG_dropbehind and put
-> the page on the tail of LRU unconditionally. The check was required to
-> avoid confusion with PG_readahead.
->
-> Comment above the function is not valid anymore.
-
-My read is that we don't put dirty/writeback folios at the tail of the
-LRU because they cannot be freed immediately and we want to give them
-time to be written back before reclaim reaches them. So I don't think
-we want to change that and always put the pages at the tail.
-
->
-> But the folio that is still dirty under writeback will be freed faster as
-> we get rid of the folio just after writeback is done while clean page can
-> dangle on LRU for a while.
-
-Yeah if we reuse PG_dropbehind then we cannot avoid
-folio_end_writeback() freeing the folio faster than clean ones.
-
->
-> I don't think we have any convenient place to free clean dropbehind page
-> other than shrink_folio_list(). Or do we?
-
-Not sure tbh. FWIW I am not saying it's necessarily a bad thing to
-free dirty/writeback folios before clean ones when deactivated, it's
-just strange and a behavioral change from today that I wanted to point
-out. Perhaps that's the best we can do for now.
-
->
-> Looking at shrink_folio_list(), I think we need to bypass page demotion
-> for PG_dropbehind pages.
->
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+> > >                           trigger_producer_batch
+> > >                           start_thread
+> > >                           __GI___clone3
+> > >
+> > > I recall we tried to fix that before with [1] change, but that replac=
+ed
+> > > later with [2] changes
+> > >
+> > > When I remove the trace_clock_local call in __ftrace_return_to_handle=
+r
+> > > than the kretprobe-multi gets much faster (see last block below), so =
+it
+> > > seems worth to make it optional
+> > >
+> > > there's some decrease in kprobe_multi benchmark compared to base numb=
+ers,
+> > > which I'm not sure yet why, but other than that it seems ok
+> > >
+> > > base:
+> > >         kprobe         :   12.873 =C2=B1 0.011M/s
+> > >         kprobe-multi   :   13.088 =C2=B1 0.052M/s
+> > >         kretprobe      :    6.339 =C2=B1 0.003M/s
+> > >         kretprobe-multi:    7.240 =C2=B1 0.002M/s
+> > >
+> > > fprobe_on_fgraph:
+> > >         kprobe         :   12.816 =C2=B1 0.002M/s
+> > >         kprobe-multi   :   12.126 =C2=B1 0.004M/s
+> > >         kretprobe      :    6.305 =C2=B1 0.018M/s
+> > >         kretprobe-multi:    7.740 =C2=B1 0.003M/s
+> > >
+> > > removed native_sched_clock call:
+> > >         kprobe         :   12.850 =C2=B1 0.006M/s
+> > >         kprobe-multi   :   12.115 =C2=B1 0.006M/s
+> > >         kretprobe      :    6.270 =C2=B1 0.017M/s
+> > >         kretprobe-multi:    9.190 =C2=B1 0.005M/s
+> > >
+> > >
+> > > happy new year ;-) thanks,
+> > >
+> > > jirka
+> > >
+> > >
+> > > [1] https://lore.kernel.org/bpf/172615389864.133222.14452329708227900=
+626.stgit@devnote2/
+> > > [2] https://lore.kernel.org/all/20240914214805.779822616@goodmis.org/
+> > >
+> >
+> > [...]
