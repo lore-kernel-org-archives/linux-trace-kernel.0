@@ -1,105 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCA7284A44
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 11:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707E9234CE0;
+	Tue, 14 Jan 2025 11:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736853714; cv=none; b=IBuTm6bNmfL3DG/2KswDHjzcrT8nAztzWB+TrjC8eC3CzsTOI5s3eZd68db+d7LoG0fuTw3wIo80bMfGjq5rbRk1fe892CkXD1D2TcXTr+wd30Yy7bB0CCgLdIBK+tJ1XM1ySunX07nlBL9UYuDqJZ1A388Ku6/XuLTEStloooU=
+	t=1736855265; cv=none; b=dvS+ofN+u/UNpEPQStdPfbjB+D8iyCb6y5JS6MgjAayFeCUt3979BzDpCqKe48RwmqzcicSyyQ/SOYE8R5P8dJ6TECBjquaC1TB8c5fHcJlYG4vq5qCv1pD4xPr49QM4NL2nDTRM7OsMfYRsEaqxajltJVMF94+eGfj7LnKbw2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736853714; c=relaxed/simple;
-	bh=5JFAfkPR+Ike3FMmbmMZs5Ka5jUJg7zx9lp5Nr+ajQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EscD9cbvEwh2MXJYaD8pxHh29S29UYPZO5XhvjDojZh/cUdyaABlKCX9zg0merohptbx/XeJJPL3LRolcAq0MIXUyoWfhGDL6dC1GwODKi5ZblvPmJ0+xWKtrZHAjEQ923l5XyeTh0p+85XjqoygH6woenUjOVuok7fj94WXYKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A081zaFj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736855265; c=relaxed/simple;
+	bh=4tAwsFeqnGlo7hrHXLcMASY1gmPfNgzKJ7nzcdo4WQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=etILWN0MDBNwpggrz8ss/wpislsf0dX7hDhoBocGRS0bfS58dJU5GabpEgyxOidvrMj1NPT5Qo7OTlA/LUO57x+pbJaJdlbMxcuk5SOgLW/dmuYbBlUWfX0UoO7CGpw1mp49hRIzqATnfvD8SXQU1m/oqwTeOfpVdYDpnl0G+y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fJ6C6Gjd; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A081zaFj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736853712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gKIV4YzdGrCw0FjbYvth1lwU1z2n2sZ8xFygOnMWM/Q=;
-	b=A081zaFj5nZ0+tEMGOyTtB3BXqq7beBGXefsbVdgYF7LlgpHErUcYU4hRZ4d2TYn/xJ5tP
-	eRYTm3dtDT7vQItEacGdK/6eLA6SNwm1QfIdmHjohtnYvpbr558Th8mD76RqjxHtaTl0Of
-	3+2MfZ0HUSRV/CT5Pu9DSbzN9XzTP9I=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-68-MOulm-YXPBixk34LJI9Atw-1; Tue,
- 14 Jan 2025 06:21:44 -0500
-X-MC-Unique: MOulm-YXPBixk34LJI9Atw-1
-X-Mimecast-MFC-AGG-ID: MOulm-YXPBixk34LJI9Atw
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3656D195605E;
-	Tue, 14 Jan 2025 11:21:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.88])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C67BB3003FD1;
-	Tue, 14 Jan 2025 11:21:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 14 Jan 2025 12:21:16 +0100 (CET)
-Date: Tue, 14 Jan 2025 12:21:07 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
-	Eyal Birger <eyal.birger@gmail.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	BPF-dev-list <bpf@vger.kernel.org>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
-	tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-	linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-Message-ID: <20250114112106.GC19816@redhat.com>
-References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
- <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
- <Z4K7D10rjuVeRCKq@krava>
- <Z4YszJfOvFEAaKjF@krava>
- <20250114190521.0b69a1af64cac41106101154@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fJ6C6Gjd"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1736855253; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Rbo5LYY+2tH8hjW2dw93X1Z+DEEm32sPT0fjtGGAcWw=;
+	b=fJ6C6GjdUkBvYhUN3Qb6hYHDvgirOryrENLEq0ClDjZ8poWFRE+z6/kdJj6LYc8mptw903W4jKxe3/ovJ3iJqUdyq3Ejq3QxecJ1V0kIIQyMQzmxnS54VFY8MjADf/hCis/1LKqcPA376JEXfA2HgiR9YV1GU939/w4I0Qol6Gw=
+Received: from 30.246.161.230(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WNfDxEn_1736855182 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 14 Jan 2025 19:47:32 +0800
+Message-ID: <fbee3b88-3a7c-48a6-9d79-570251237a9c@linux.alibaba.com>
+Date: Tue, 14 Jan 2025 19:47:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250114190521.0b69a1af64cac41106101154@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+ <20250113155503.71467082@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250113155503.71467082@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 01/14, Masami Hiramatsu wrote:
->
-> On Tue, 14 Jan 2025 10:22:20 +0100
-> Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> > @@ -418,6 +439,9 @@ SYSCALL_DEFINE0(uretprobe)
-> >  	regs->r11 = regs->flags;
-> >  	regs->cx  = regs->ip;
-> >
-> > +	/* zero rbx to signal trampoline that uretprobe syscall was executed */
-> > +	regs->bx  = 0;
->
-> Can we just return -ENOSYS as like as other syscall instead of
-> using rbx as a side channel?
-> We can carefully check the return address is not -ERRNO when set up
-> and reserve the -ENOSYS for this use case.
 
-Not sure I understand...
 
-But please not that the uretprobed function can return any value
-including -ENOSYS, and this is what sys_uretprobe() has to return.
+在 2025/1/14 04:55, Steven Rostedt 写道:
+> On Thu,  9 Jan 2025 10:55:43 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>> new file mode 100644
+>> index 000000000000..5b60cd7bcffb
+>> --- /dev/null
+>> +++ b/drivers/pci/hotplug/trace.h
+>> @@ -0,0 +1,68 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_HW_EVENT_PCI_HP_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM pci
+>> +
+>> +#define PCI_HOTPLUG_EVENT					\
+>> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+> 
+> Since you are creating these enums in this patch, you can also do a
+> shortcut here too. Instead of doing the define here, move it to
+> include/uapi/linux/pci.h:
+> 
+>> +
+>> +/* Enums require being exported to userspace, for user tool parsing */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+>> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+>> +
+>> +PCI_HOTPLUG_EVENT
+>> +
+>> +/*
+>> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+>> + * that will be printed in the output.
+>> + */
+>> +#undef EM
+>> +#undef EMe
+>> +#define EM(a, b)	{a, b},
+>> +#define EMe(a, b)	{a, b}
+>> +
+>> +TRACE_EVENT(pci_hp_event,
+>> +
+>> +	TP_PROTO(const char *port_name,
+>> +		 const char *slot,
+>> +		 const int event),
+>> +
+>> +	TP_ARGS(port_name, slot, event),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__string(	port_name,	port_name	)
+>> +		__string(	slot,		slot		)
+>> +		__field(	int,		event	)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__assign_str(port_name);
+>> +		__assign_str(slot);
+>> +		__entry->event = event;
+>> +	),
+>> +
+>> +	TP_printk("%s slot:%s, event:%s\n",
+>> +		__get_str(port_name),
+>> +		__get_str(slot),
+>> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
+>> +	)
+>> +);
+>> +
+>> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
+>> +
+>> +#undef TRACE_INCLUDE_PATH
+>> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
+>> +#undef TRACE_INCLUDE_FILE
+>> +#define TRACE_INCLUDE_FILE trace
+>> +
+>> +/* This part must be outside protection */
+>> +#include <trace/define_trace.h>
+>> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+>> index a769eefc5139..4f150028965d 100644
+>> --- a/include/uapi/linux/pci.h
+>> +++ b/include/uapi/linux/pci.h
+>> @@ -39,4 +39,11 @@
+>>   #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+>>   #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+>>   
+>> +enum pci_hotplug_event {
+>> +	PCI_HOTPLUG_LINK_UP,
+>> +	PCI_HOTPLUG_LINK_DOWN,
+>> +	PCI_HOTPLUG_CARD_PRESENT,
+>> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
+>> +};
+> 
+> Instead of defining the enum as you did above, if you have the define of
+> the enums here, you could do:
+> 
+> #define PCI_HOTPLUG_EVENT					\
+> 	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+> 	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+> 
+> #undef EM
+> #undef EMe
+> #define EM(a, b)	a,
+> #define EMe(a, b)	a,
+> 
+> enum pci_hotplug_event {
+> 	PCI_HOTPLUG_EVENT
+> };
+> 
+> Then you only have one place to worry about adding new enums ;-)
 
-Oleg.
+Will do.
+
+
+> 
+> -- Steve
+> 
+
+Thanks for valuable comments.
+
+Best Regards,
+Shuai
 
