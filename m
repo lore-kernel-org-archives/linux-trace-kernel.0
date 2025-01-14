@@ -1,128 +1,178 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431A1234D0F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 12:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF566132C38;
+	Tue, 14 Jan 2025 14:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736858022; cv=none; b=sw2NzAK65vmY6TGLCIumPwlFFDBv9mvQQsPOpNgPR7yd9R9sFombjTaq5r2IK1mTHZFvStFuVdPGdE8FuW0r4ZWT5WZfZREpLeN7Yj+A1mSpaFEurpteJL5FPHwRB5+nB3rCFG+zhWziQw25zTvraL/R+OsqtC2nv506VW1qrME=
+	t=1736863362; cv=none; b=lFn/TsAa5PgmwVNz6SlTI0bCXSVsoiW+H9u4mGf0/jwy3ME2o0HOP4PyYGtvGGuOoT15A16M3XWm9jgnUTiH/xLUw91ic5ffylsSoQQQiH4xpLbBEFYtpPljHSZOBMUcp/WIx+TgdVGstdRK7oC7yE4jofOLbJlqQpBu0Fbn5hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736858022; c=relaxed/simple;
-	bh=5Lm5kB0+iK6wFItSmhLHgK/BDyvkiOdFqPcvI0Aablk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4QVmaKf47jqLdn7rnML0ZqQpao4ffwKEPrVJJNeKDh29MmV+mTV1vLkJUva0EN+HZK4D3ldf0XhY/zFI3XSBPLZ4jiQrb6d7Y60VHzDVLNu2QZw7jF5X6lc8AS29VdJFk6yYdmao8cYAMcZJ2K0PTMbWNxnmoFMr3i4ng3AzW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+DswNmC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1736863362; c=relaxed/simple;
+	bh=qSiSyz0nz58Pw8DcYBJ6s3CMd++11JYIbNRxyePh+KA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O69C62GHtE+1rk3uNGvoD1Gr/KYgmPz+RB0DF+YG+WYPryGiCY/gN2XqVixIh/gpjjHG9QfezaKpoYFDTWX1sUs0VGePbE2FIB8H6ibSGloh3LJKj1wD6dWU3/YVQmFHKXS8Wv07Idz9ob+UxYYMRxY3nqunuSBL71gmDiZ58I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8LsWrLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+DswNmC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736858019;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tlfbHWekWk1By060j3CLqJiaSA0VtIW2bq5QccDzkHI=;
-	b=E+DswNmCBJlSiq2jiB9PQp7kReB82fdmzHKeIH4s/+e+MoGcMT0kMR/0Ek7xLk5goWPbAP
-	PFqHhjwlyJMNk2O4SrRohwHVMqeT1DdwFh6r8gsDvlfV4tHwBIKXwrKSguSnfiC/1eklgF
-	JR7oDDDVBmvQFUYLI70YcfVa3Wy5WTM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-160-wYWgucfDMnefcq1Cd22vhw-1; Tue,
- 14 Jan 2025 07:33:35 -0500
-X-MC-Unique: wYWgucfDMnefcq1Cd22vhw-1
-X-Mimecast-MFC-AGG-ID: wYWgucfDMnefcq1Cd22vhw
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 77DE61956050;
-	Tue, 14 Jan 2025 12:33:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.88])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A34F2195608E;
-	Tue, 14 Jan 2025 12:33:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 14 Jan 2025 13:33:07 +0100 (CET)
-Date: Tue, 14 Jan 2025 13:32:58 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
-	Eyal Birger <eyal.birger@gmail.com>, mhiramat@kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8LsWrLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38AACC4CEE1;
+	Tue, 14 Jan 2025 14:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736863361;
+	bh=qSiSyz0nz58Pw8DcYBJ6s3CMd++11JYIbNRxyePh+KA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=B8LsWrLK7da58elU8aMXNmfT7+w85czlSzHAPLoBS9Qoj0iT4FpPh4thdlvZpq5C/
+	 5VXb32LdAkoOX03OeL4lAeu6PIZO2qj+vdIiZmYecMi7nzX34ulrcygP3jvE8XbB/K
+	 hV5rANh4Z1K55nhf8BUNbWDTS5sQe7kxfehuW446zDfoQmSAvlYWQaaBXR0kukuwyE
+	 PrbH/3WhTwKjbD2bfdhMRtBKXNdUaeOsIbt7z//F4e6naPFvjopHyVcyxFeU5Y5M2S
+	 ao5WbS86T/pWn0+sLxBuu0IMsDcd9Jqxle8JJCHpbPNT2TRuP7xCVUDCxta6MQ+H+r
+	 9Vplh/kxTImrQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: lkml <linux-kernel@vger.kernel.org>,
 	linux-trace-kernel@vger.kernel.org,
-	BPF-dev-list <bpf@vger.kernel.org>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>, tglx@linutronix.de,
-	bp@alien8.de, x86@kernel.org, linux-api@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-Message-ID: <20250114123257.GD19816@redhat.com>
-References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
- <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
- <Z4K7D10rjuVeRCKq@krava>
- <Z4YszJfOvFEAaKjF@krava>
- <20250114104215.GD8362@noisy.programming.kicks-ass.net>
- <20250114110149.GB19816@redhat.com>
- <20250114120235.GP5388@noisy.programming.kicks-ass.net>
+	bpf@vger.kernel.org,
+	x86@kernel.org
+Subject: [RFC] x86/alternatives: Merge first and second step in text_poke_bp_batch
+Date: Tue, 14 Jan 2025 15:02:37 +0100
+Message-ID: <20250114140237.3506624-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250114120235.GP5388@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
 
-On 01/14, Peter Zijlstra wrote:
->
-> On Tue, Jan 14, 2025 at 12:01:50PM +0100, Oleg Nesterov wrote:
-> > On 01/14, Peter Zijlstra wrote:
-> > >
-> > > On Tue, Jan 14, 2025 at 10:22:20AM +0100, Jiri Olsa wrote:
-> > > >
-> > > > hack below seems to fix the issue, it's using rbx to signal that uretprobe
-> > > > syscall got executed, if not, trampoline does int3 and executes uretprobe
-> > > > handler in the old way
-> > > >
-> > > > unfortunately now the uretprobe trampoline size crosses the xol slot limit so
-> > > > will need to come up with some generic/arch code solution for that, code below
-> > > > is neglecting that for now
-> > >
-> > > Can't you detect the filter earlier and simply not install the
-> > > trampoline?
-> >
-> > Did you mean detect the filter in prepare_uretprobe() ?
->
-> Yep. Aren't syscall filters static for the duration of the task?
->
-> > The probed function can install the filter before return...
->
-> If you're running a task with dynamic syscall filtering, you get to keep
-> the pieces no?
+hi,
+while checking on similar code for uprobes I was wondering if we
+can merge first 2 steps of instruction update in text_poke_bp_batch
+function.
 
-Sorry, I don't understand... Perhaps because I am enjoying my state after
-dentist appointment ;)
+Basically the first step now would be to write int3 byte together
+with the rest of the bytes of the new instruction instead of doing
+that separately. And the second step would be to overwrite int3
+byte with first byte of the new instruction.
 
-OK, suppose we have
+Would that work or do I miss some x86 detail that could lead to crash?
 
-	void start_SECCOMP_MODE_STRICT(void)
-	{
-		// in particular nacks __NR_uretprobe
-		seccomp(SECCOMP_MODE_STRICT, ...);
-	}
+I tried to hack it together in attached patch and it speeds up a bit
+text_poke_bp_batch as shown below.
 
-and we want to add uretprobe to this function.
+thoughts? thanks,
+jirka
 
-In this case prepare_uretprobe() can't know that sys_uretprobe() won't
-work when this function returns?
 
-Oleg.
+---
+  # cat ~/test.sh
+  for i in `seq 1 50`; do echo function > current_tracer ; echo nop > current_tracer ; done
+
+current code:
+
+  # perf stat -e cycles:k,instructions:k -a --  ~jolsa/test.sh
+
+   Performance counter stats for 'system wide':
+
+     158,872,470,494      cycles:k
+      61,529,351,096      instructions:k                   #    0.39  insn per cycle
+
+        12.847083584 seconds time elapsed
+
+with the change below:
+
+  # perf stat -e cycles:k,instructions:k -a --  ~jolsa/test.sh
+
+   Performance counter stats for 'system wide':
+
+     105,687,644,963      cycles:k
+      45,981,957,996      instructions:k                   #    0.44  insn per cycle
+
+        10.011825294 seconds time elapsed
+---
+ arch/x86/kernel/alternative.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 243843e44e89..99830e9cd641 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2125,9 +2125,9 @@ struct text_poke_loc {
+ 	s32 disp;
+ 	u8 len;
+ 	u8 opcode;
+-	const u8 text[POKE_MAX_OPCODE_SIZE];
++	u8 text[POKE_MAX_OPCODE_SIZE];
+ 	/* see text_poke_bp_batch() */
+-	u8 old;
++	u8 first;
+ };
+ 
+ struct bp_patching_desc {
+@@ -2282,7 +2282,6 @@ static int tp_vec_nr;
+  */
+ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+ {
+-	unsigned char int3 = INT3_INSN_OPCODE;
+ 	unsigned int i;
+ 	int do_sync;
+ 
+@@ -2313,29 +2312,20 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	 */
+ 	smp_wmb();
+ 
+-	/*
+-	 * First step: add a int3 trap to the address that will be patched.
+-	 */
+-	for (i = 0; i < nr_entries; i++) {
+-		tp[i].old = *(u8 *)text_poke_addr(&tp[i]);
+-		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
+-	}
+-
+-	text_poke_sync();
+-
+ 	/*
+ 	 * Second step: update all but the first byte of the patched range.
+ 	 */
+ 	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+-		u8 old[POKE_MAX_OPCODE_SIZE+1] = { tp[i].old, };
++		u8 old[POKE_MAX_OPCODE_SIZE+1];
+ 		u8 _new[POKE_MAX_OPCODE_SIZE+1];
+ 		const u8 *new = tp[i].text;
+ 		int len = tp[i].len;
+ 
++		tp[i].first = tp[i].text[0];
++		tp[i].text[0] = (u8) INT3_INSN_OPCODE;
++
+ 		if (len - INT3_INSN_SIZE > 0) {
+-			memcpy(old + INT3_INSN_SIZE,
+-			       text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
+-			       len - INT3_INSN_SIZE);
++			memcpy(old, text_poke_addr(&tp[i]), len);
+ 
+ 			if (len == 6) {
+ 				_new[0] = 0x0f;
+@@ -2343,9 +2333,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 				new = _new;
+ 			}
+ 
+-			text_poke(text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
+-				  new + INT3_INSN_SIZE,
+-				  len - INT3_INSN_SIZE);
++			text_poke(text_poke_addr(&tp[i]), new, len);
+ 
+ 			do_sync++;
+ 		}
+@@ -2391,7 +2379,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	 * replacing opcode.
+ 	 */
+ 	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+-		u8 byte = tp[i].text[0];
++		u8 byte = tp[i].first;
+ 
+ 		if (tp[i].len == 6)
+ 			byte = 0x0f;
+-- 
+2.47.0
 
