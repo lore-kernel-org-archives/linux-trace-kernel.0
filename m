@@ -1,91 +1,112 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A126F19F41D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 18:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012FC19F41D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 18:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736966447; cv=none; b=WPec117JCJC+81QWBqsG0YJuW2N/DSqMAXMQ7GFuSljAVmXnQ86KdBehIBxEthLnEPanybUvQ8x5vgL2QTJ8ilZNR8nT0QSeK95eh3fLB3lDIyYzD/poPbQfo4Au5NtS0T/ETU2FtuJhlI5+pL9ThOfxs67u59ft5csWbFNh3w0=
+	t=1736966455; cv=none; b=IFSlRKj9/r7584fRrcNj9X6qoUBH9gnZJMeTM3UhW768jO7cyT0p4OUD1kqfDjRcP5pDGuHw4B2kV1teqVUfFoHhwBDrP7J5743nIL8rvj5zyt3ntGl73BeCVSLpV79TmOIAkgwADJujiMKTcP4ETGv2PUpaQrPMuEiTeLgsUY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736966447; c=relaxed/simple;
-	bh=rkCYpA5/6HyvgCk0Q1kSIaS7X4hbRhHrd+naSGckOAc=;
+	s=arc-20240116; t=1736966455; c=relaxed/simple;
+	bh=ULYV6vPS38W6ety7Kx46JofgK8h7cFKQee0mLC8CXaw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DXZR7VIJG4NVvh2JLQ/9AwVVEIiHJzSMS+cVYmeDy8Nsyh4RzxnKhhr1wUu2XVwRG6e9Zsut+PNYl9inuRB8+YT+Ua09TNFto+AmORSkTwOZh2BXWRHMa/UHycbsLXmTLuXVEXjeEGdx0MUimjYRhRs4ShBR1rbg0WUmNM1DBc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XmRrfdbN; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+maMyCkcePPVe7YhbuDeHflxgAN2B0C4w3BDu1FAj2JNjeoEJ5yp2B1G1oS+AANMPjle/1g4UGIhVCJG9/2PrXtrzApgwuxcrzOpD3Nzt77YjYNbF0FN5EwbrmFiVp6Q+wdJTLLrZEzG5CQzwhnSVuWguJDIoodXpcxIBql+P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QIB2V4Mf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XmRrfdbN"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d3d143376dso77576a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 10:40:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736966444; x=1737571244; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/bMntqLLbRnNm+8V16Mvxg5kR3zMbyGJQK/UUP2AtJg=;
-        b=XmRrfdbNE5JpyoeJLZbVs6QeNAiiYmBan+LQutvHNQeIW0OoNckhEglXfA8uQAsuLL
-         liyc02k40smhsh4/6xFzxHj5vw0MCnAXko+C41uthM8UWJtknmexTFbNL3Pprz7IlBCZ
-         2ztnbf4ipy9ky8LrdgRnUCXEo9t9EJdQu/BIZKfAoZYGaUV8dvJE4AlkwptT3GBM3oxL
-         JHJb0eFwWWyE8TrhX6e0cWLnMBN2g59LB4Dm4hvqXVU5qvrNMvr4Ua8JAYpsLNK1GbBJ
-         8WAO2dqcE7mevgHvMkzQxdc17BiclrV6IyEc9HwtWXgfat7Y8Z2klwYJ5lIFawKj1sPV
-         XucA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736966444; x=1737571244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/bMntqLLbRnNm+8V16Mvxg5kR3zMbyGJQK/UUP2AtJg=;
-        b=OxHZHLVPnbtiVyEaCA0whsqUY5+w7pn8oD6WmwwYAp3o9tOVe38TL853Aja7SRy1/b
-         WA4Dxx3YPWjjy0STkBNahsL3/PD8OosX3zNVOQkKmJ5O7esolm3iYG2GxQMK/w7y803R
-         CMd2oX8iKMKgWx4JIrHbNawWvTZbMyKgVe1E1wWQM5BZpoJeZX3XkaecX6qi2UQCG3c0
-         DD6gyEPgUrBB5JiCIZgkLVvDxMQeNnGm+OlTDKz4DTHZDCLMVlRlJqwIfoFYRP+qH1Q2
-         gl60NC/jK3q4LBB922E9b57mZliyGiHP7EABEMOKm1vCuwH9LbEYPnBDj1Aj1x2chECS
-         apHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXllMFXIWbccVOhtCAv17eo6T3HyYILH0Nvyhlm19zKlz5+TmWDAPg6EbidjW/RWqu0lJJYqWy3fbo3ATHnNu8vv/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3k4owfu5mE7RtrqTE7J7AV5MCfZ/IFMy95qbqKILgGt7hQ2R+
-	yMYpQMGQx7sr2ZpI3PT+v9Cf/OsoM8KTQME1aDL40pHqVk9he+Y+UcJTHMGRH5A=
-X-Gm-Gg: ASbGncuDZTbT+FALygXYXt5fEQKrIRRMDr0yBqhmwtvS/radN4YAbxNK8/fkoiG2J/t
-	2a476lnMq9+Vug5+5H1xbir8NWiOr8hj09hzINAxkThAGrhcmxHfuJTjc8QPKj8V9pn3MssRCmm
-	vf7Iw+7m3Bp011bvSPQpp8MwmQCjzwFEXv1pzr42a6Sw8QVIX+id2AzXgZE/+BkVOS2i6f27uvI
-	y6We8k0j6AyvuwpIYC8dFwwBe3rLUzH6Xf+TrzSOCjHOpiiJI0V/vQHzmeTxQ==
-X-Google-Smtp-Source: AGHT+IFEhu1Ze7Q3nWToOqZkmLGT5dglBO8lGamc5A7N+ohPNWaVdIrUEnpC//b/4VgLC1z7cN4e6g==
-X-Received: by 2002:a05:6402:270d:b0:5d3:d4cf:fea0 with SMTP id 4fb4d7f45d1cf-5d972e4c62emr25697586a12.21.1736966443924;
-        Wed, 15 Jan 2025 10:40:43 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d990469e5asm7805305a12.55.2025.01.15.10.40.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 10:40:43 -0800 (PST)
-Date: Wed, 15 Jan 2025 21:40:40 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Eder Zulian <ezulian@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tools/rtla: Add osnoise_trace_is_off()
-Message-ID: <099e9ae9-5d36-46bb-8790-1b6a33dc1448@stanley.mountain>
-References: <20250115180055.2136815-1-costa.shul@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QIB2V4Mf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736966453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ULYV6vPS38W6ety7Kx46JofgK8h7cFKQee0mLC8CXaw=;
+	b=QIB2V4MfC/hPNSU+crEKrzok/qt1Tw/4Px24uGZZ2ABawytsp9wwVh3J+xvEtOaNxavq3t
+	SmwxuvwkoGV201R2VWoWDtkKWxpA5j53MLtiS3XvlQk6Y4wlLeCErF750GDQmyBGZbnP1k
+	xinFWdHO5mF/X9lwLjateUAGke+1GS0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-J7KBZUA8N2WRE87S8xnsbQ-1; Wed,
+ 15 Jan 2025 13:40:49 -0500
+X-MC-Unique: J7KBZUA8N2WRE87S8xnsbQ-1
+X-Mimecast-MFC-AGG-ID: J7KBZUA8N2WRE87S8xnsbQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F23961956083;
+	Wed, 15 Jan 2025 18:40:45 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.35])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 23A7A19560AA;
+	Wed, 15 Jan 2025 18:40:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 15 Jan 2025 19:40:20 +0100 (CET)
+Date: Wed, 15 Jan 2025 19:40:11 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Eyal Birger <eyal.birger@gmail.com>,
+	Aleksa Sarai <cyphar@cyphar.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	BPF-dev-list <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+	Linux API <linux-api@vger.kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
+	Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-ID: <20250115184011.GA21801@redhat.com>
+References: <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
+ <Z4K7D10rjuVeRCKq@krava>
+ <Z4YszJfOvFEAaKjF@krava>
+ <CAHsH6Gst+UGCtiCaNq2ikaknZGghpTq2SFZX7S0A8=uDsXt=Zw@mail.gmail.com>
+ <20250114143313.GA29305@redhat.com>
+ <Z4Z7OkrtXBauaLcm@krava>
+ <20250114172519.GB29305@redhat.com>
+ <Z4eBs0-kJ3iVZjXL@krava>
+ <20250115150607.GA11980@redhat.com>
+ <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250115180055.2136815-1-costa.shul@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Jan 15, 2025 at 07:58:30PM +0200, Costa Shulyupin wrote:
-> The original code accidentally works because offset of
-> `record->trace` is zero.
+On 01/15, Alexei Starovoitov wrote:
+>
+> On Wed, Jan 15, 2025 at 7:06 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > Or we can change __secure_computing() to do nothing if
+> > this_syscall == __NR_uretprobe.
+>
+> I think that's the best way forward.
+> seccomp already allowlists sigreturn syscall.
 
-It doesn't "accidentally work".  The people who write this kind of
-code 100% understand what they are doing.  They don't see it as
-anything complicated.
+Only if SECCOMP_MODE_STRICT. But it won't help if we add __NR_uretprobe
+into into mode1_syscalls/mode1_syscalls_32.
 
-regards,
-dan carpenter
+SECCOMP_MODE_FILTER can do anything. Just I guess nobody tries to offend
+sigreturn for obvious reasons.
+
+But yes, perhaps we do not have a better solution.
+
+Oleg.
 
