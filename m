@@ -1,116 +1,139 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDA51DBB3A;
-	Wed, 15 Jan 2025 21:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3E5156F57;
+	Wed, 15 Jan 2025 21:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736975675; cv=none; b=nlva9mJc0ZiUaVH+L8WxYtFAV5/xDt2eZtZpxzQtqKIajco+/NqZx8PU1zDstsCbhkEOKlghbFuI7ZYj4uFOZc8+SgUevUyKDQsiz+rg3Ne17FutNl78nYSdcRoii5ZrbwhCHgerJ1xWAcnJZw0bYox59fYmEJirP9hPB37Iqbs=
+	t=1736976962; cv=none; b=X8XFKSgsQKzoUcspr04GNv+galD0hVFZnqG810k394TR1vYztkLa+4tCGt9a3lisSVLyq30assSknwVvu8xxL4WRBo0QkU4Wh2BgL114UEhHnaNFu/jE3+8/0lQjXQmvZlaUm1kDP0nd8TMwKQ+yoBZTpJpwN9pm6vWtcPkzSWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736975675; c=relaxed/simple;
-	bh=T7t3MR/ZRqchZRVbBHbHFECeBBmUTVf2COwP5KKdpd0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3BdUYbjhGGa5W1M/jHhBh2Cr5oMYLfDkRuHQN7gmhd01Ls8HQSdMaZt0fbtt3JSNQnBlbXJDVyUwav8rJSnu40zVkNoiXb5QQcUXg1N83Y2cWZT/9rezrYJHyNJBBqMEOU7FhCOBmJwJ4S3Kg2dhnVmDvEtjDm2SOwyUEtifpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SA1/Jgdg; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736976962; c=relaxed/simple;
+	bh=uexnwH3WY1Eo3zHvsjBwlvsQXyN0iY45WLMUVpn5ihU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+joh2kb0F7rJBq9td5sPSwsCBB6hCKTej4nvIKb6c9DiFMUw1nT+UooQxWomWDpLfVDDgDuFcqZbK6wcXnC1A8TNhxJGQCDO9vnhoca9EZPwUZxWZ57rkr3wMCtrdQtRtzBThCYK3dFZmGQ1AlbVjXuPboycva8d+3C2F6pD98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ToVkVfF9; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SA1/Jgdg"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5f2d5b3c094so53077eaf.1;
-        Wed, 15 Jan 2025 13:14:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736975673; x=1737580473; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yKljeJVT6hglv8S1VM7AkT8q/pMP1H6RrwDcNwQEUZk=;
-        b=SA1/JgdgCI6Hi36F+x+fRRbyc+2TCrbT6YTvdgUtHTlFRnYUvW9xEMA2F5MD2KBBuS
-         /ms6yYkxHoIc2aStfrX0HrYimHLOiE24xGWK8pjPcJw9JCMQSVVfoy0ag4UBizgRhCeD
-         Z+yfPjXkwgwm6v5qVAHd0RUYy1RdZyVpT41zu/h0E7DWWJTcW2KxjhFFcW6ALEYVwBSa
-         oCMs9g4cShRhv11FM8/Rn78pO+bOTxjcDP8+8056cGcKK58c+Gudnp6a4LnVGZ+mNDHd
-         NFS/4ZntVumCjXdl7UMMjRTNAA7pfOFDV/1thHYAP7ivb/5SyJXgK3SaOcqakYDF3gO3
-         eIkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736975673; x=1737580473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yKljeJVT6hglv8S1VM7AkT8q/pMP1H6RrwDcNwQEUZk=;
-        b=as02bLC2dwJH4J+Qs0Nb/9aXbQKn9SBqTNv0xb3foZomVqgKBl460/gmpHDDPLaT54
-         a0we97OUuvC9eImXY6j8Gm6RRlhsitt2PUEsFj3zSZkO69UQy6ZYBv65VQ9XyaM8wPmK
-         58XOr6r71ihnJm6KIfYmzSdFEk3IVp/hAbTd1zb1dBj30+9MgKZlxTdwj2yAjIdl2jlI
-         cqapLThE3qII1a0SUM55ZIdE6vwax3cU1nanExHDNFg79n+8yQ4djUNnixjFodAejcXm
-         lUW7P/BFK9dRKp1X1z1OlzTjKbB4RJR55t65unnUtdkFc6QFnuyblaLxL+a03AbUiGhC
-         xqbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU79Cp9YOUUdl91oNpgmpHVwZhHMS3BNpHIeHH9misr+opRDHNy/PPiahBJCYA04OEKdpnBa8xfGT6ZZ6Yf@vger.kernel.org, AJvYcCV186/8ypwPKypAGOoJsqxzUHiLmvIR66ZVigiAUEX1QAVXItegkTCyaCk8w9ZZ0iERI0I=@vger.kernel.org, AJvYcCWW41V8OClUPZcjEfQ3migQvcjOMPRmEIRUUhI3I2Wqm1MeLBc+//u4FsK44ZxDybgNUq9zHMC35dD/@vger.kernel.org, AJvYcCXMakdW0WQeoSexW1cKJl0Zmbs0vZQKK5UBmBAN+hbTmXHPM95AkCxWgpHaLYF0WNQQKurllyTmN1OmYCfryH3U+Gn5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn6zOMIMnwy59pJHb3i4gD0k7fSaopvuH66ObAtItVPaPoeblo
-	Lw++m5AWzyLHotKP74nTeiWuQOtlhLzeSnFaVQCEKhUhDrDme2ISjEmyhMxv4vgAQiI3jjZTsvR
-	UD0nF90ULPtd0L33AdDVIljTNt1c8CZbs1UkbVA==
-X-Gm-Gg: ASbGnctyLcI5BR7ojEOgLMLQjOyeeLLXRrnQKsrRYNBQ6y/pdyj3T4KgjZ6Kidd+p0Z
-	Ea3qghougTV3+d+HbJEKxznS+2HLjYGzEJLr/KA==
-X-Google-Smtp-Source: AGHT+IE0varc4lyMUOKjAL7/Pos0lkoQgDTdClT8ML+yEWa49gsE+myrp0OLIVY1N6p1Uu5TxAKR6zP+iG9JHmJ2OpM=
-X-Received: by 2002:a05:6870:7e8c:b0:29e:49b3:c50e with SMTP id
- 586e51a60fabf-2aa066c71eemr15917950fac.13.1736975673361; Wed, 15 Jan 2025
- 13:14:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ToVkVfF9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0OijV5p7C7RviN2UZr1cmsa6u4crmEp6ronCk1lgptI=; b=ToVkVfF9/LpCeHgqRA5mEb2Asr
+	5IiQa1pSVMQ6mQ6jaE+0AsazgzqSxYkpPEmBGojEh8PatZnK/5QthRSP/VYH6rh70nn6Ke/EJPSqR
+	pQvIeA+gO9O286BzuBzwiq2/nIhxNeuYTGDoy1KPurQxuR3srMkbURdzu+yYH6lHGZbedKnufVhtr
+	S9bwMcCETcS5GTTW5WKl/k/od94Vb1K4FfaL3nYNNeJ4VYYUz82ygpQr3Bbz68Mw9tcQMJoi4Lsda
+	Ph6zvEZ4kSPPfC4N68dEshZ6RHmhrllQtU2V+OMl8wsC0eInunxvmZ41WLChbyJSb3Mcunp/jP/Ca
+	pMZOl1QA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tYB30-00000002AHj-3YDk;
+	Wed, 15 Jan 2025 21:35:34 +0000
+Date: Wed, 15 Jan 2025 21:35:34 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Christian Brauner <brauner@kernel.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	David Airlie <airlied@gmail.com>,
+	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 05/11] mm/truncate: Use folio_set_dropbehind() instead
+ of deactivate_file_folio()
+Message-ID: <Z4gqJqcO8wau0sgN@casper.infradead.org>
+References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com>
+ <20250115093135.3288234-6-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z4YszJfOvFEAaKjF@krava> <CAHsH6Gst+UGCtiCaNq2ikaknZGghpTq2SFZX7S0A8=uDsXt=Zw@mail.gmail.com>
- <20250114143313.GA29305@redhat.com> <Z4Z7OkrtXBauaLcm@krava>
- <20250114172519.GB29305@redhat.com> <Z4eBs0-kJ3iVZjXL@krava>
- <20250115150607.GA11980@redhat.com> <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
- <20250115184011.GA21801@redhat.com> <CAHsH6Gu1kXZ=m3eoTeZcZ9n=n2scxw7z074PnY5oTsXfTqZ=vQ@mail.gmail.com>
- <20250115190304.GB21801@redhat.com>
-In-Reply-To: <20250115190304.GB21801@redhat.com>
-From: Eyal Birger <eyal.birger@gmail.com>
-Date: Wed, 15 Jan 2025 13:14:22 -0800
-X-Gm-Features: AbW1kvaz-Q0fRIgCZTjOMTFK2ww7SHO5PAEedC4Ees9Ik9taYh09rHGNbM1UVRM
-Message-ID: <CAHsH6Gtd5kYPife3hK+uKafjBMx=-23UzvQgnOnqNDzSZgHyqw@mail.gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, BPF-dev-list <bpf@vger.kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>, 
-	Linux API <linux-api@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io, 
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250115093135.3288234-6-kirill.shutemov@linux.intel.com>
 
-On Wed, Jan 15, 2025 at 11:03=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wr=
-ote:
->
-> On 01/15, Eyal Birger wrote:
-> >
-> > --- a/kernel/seccomp.c
-> > +++ b/kernel/seccomp.c
-> > @@ -1359,6 +1359,9 @@ int __secure_computing(const struct seccomp_data =
-*sd)
-> >         this_syscall =3D sd ? sd->nr :
-> >                 syscall_get_nr(current, current_pt_regs());
-> >
-> > +       if (this_syscall =3D=3D __NR_uretprobe)
-> > +               return 0;
-> > +
->
-> Yes, this is what I meant. But we need the new arch-dependent helper.
+On Wed, Jan 15, 2025 at 11:31:29AM +0200, Kirill A. Shutemov wrote:
+> -static void lru_deactivate_file(struct lruvec *lruvec, struct folio *folio)
+> -{
+> -	bool active = folio_test_active(folio) || lru_gen_enabled();
+> -	long nr_pages = folio_nr_pages(folio);
+> -
+> -	if (folio_test_unevictable(folio))
+> -		return;
+> -
+> -	/* Some processes are using the folio */
+> -	if (folio_mapped(folio))
+> -		return;
+> -
+> -	lruvec_del_folio(lruvec, folio);
+> -	folio_clear_active(folio);
+> -	folio_clear_referenced(folio);
+> -
+> -	if (folio_test_writeback(folio) || folio_test_dirty(folio)) {
+> -		/*
+> -		 * Setting the reclaim flag could race with
+> -		 * folio_end_writeback() and confuse readahead.  But the
+> -		 * race window is _really_ small and  it's not a critical
+> -		 * problem.
+> -		 */
+> -		lruvec_add_folio(lruvec, folio);
+> -		folio_set_reclaim(folio);
+> -	} else {
+> -		/*
+> -		 * The folio's writeback ended while it was in the batch.
+> -		 * We move that folio to the tail of the inactive list.
+> -		 */
+> -		lruvec_add_folio_tail(lruvec, folio);
+> -		__count_vm_events(PGROTATED, nr_pages);
+> -	}
+> -
+> -	if (active) {
+> -		__count_vm_events(PGDEACTIVATE, nr_pages);
+> -		__count_memcg_events(lruvec_memcg(lruvec), PGDEACTIVATE,
+> -				     nr_pages);
+> -	}
+> -}
 
-Do you mean because __NR_uretprobe is not defined for other architectures?
-Is there an existing helper? I wasn't able to find one...
+> +++ b/mm/truncate.c
+> @@ -486,7 +486,7 @@ unsigned long mapping_try_invalidate(struct address_space *mapping,
+>  			 * of interest and try to speed up its reclaim.
+>  			 */
+>  			if (!ret) {
+> -				deactivate_file_folio(folio);
+> +				folio_set_dropbehind(folio);
 
-If not, would it just make sense to just wrap this check in
-#ifdef __NR_uretprobe ?
+brr.
 
-Eyal.
+This is a fairly substantial change in semantics, and maybe it's fine.
 
->
-> Oleg.
->
+At a high level, we're trying to remove pages from an inode that aren't
+in use.  But we might find that some of them are in use (eg they're
+mapped or under writeback).  If they are mapped, we don't currently
+try to accelerate their reclaim, but now we're going to mark them
+as dropbehind.  I think that's wrong.
+
+If they're dirty or under writeback, then yes, mark them as dropbehind, but
+I think we need to be a little more surgical here.  Maybe preserve the
+unevictable check too.
