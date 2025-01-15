@@ -1,140 +1,321 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C583D22F3A0;
-	Wed, 15 Jan 2025 05:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F7622F830;
+	Wed, 15 Jan 2025 08:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736919944; cv=none; b=FIMU3alspwjEVuEjmTvPW9BQMHpkuBtVyLWcnKXYBMM04j9pTTBgGsbK9jGnFmc88FqYSzJpg5lzWEeHvm6MFD23OTtoN2dXogkA0G8EKdYLtg1McCfg/7ycTQxKtBnMO0YGlrgqd4p0DZZa9L4As6A3UAThxER0j2QdxDchnyw=
+	t=1736928803; cv=none; b=UFD00h2Cp6ms48guMXTdZXxCj3x7yzBTqleAdO2u/FdiwD+jI6UczahJlz2uUx0LzJe6aHLm9F6+ODXYvklh7N26OyyNUHdmLX0RvgJntdaKRE9EupjE3U1iRB95eSDxORSHDu+XVZthzvaF5fRjDIzV2dlteji1djA4iVsVuVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736919944; c=relaxed/simple;
-	bh=XKENOgIBOcFJ1Ixn11DwRC+1OO9t+dwhEIs0TG0ausA=;
-	h=Message-ID:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GGfW0UHy9CA4XKPmX2RFvzqvxI1gyKnEtj7qTEYotX5os3bWHEgI1C4s3RZYnDw6b5Wq2lzB37eTpgoPq9G6vSsO5sAh5ySVSQoQsBr0J7new6fhIuB0Zu9f7ludBb8FSNYfJGB+h7173+MeaQI78Fowhx/RVlTr3kpjTN9O1hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LY+PiwCZ; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1736928803; c=relaxed/simple;
+	bh=D/y9zuH2Rlmq6apjo2bQ5wrcWbs8JsxQDr8xYOtaoxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eGrvNr8PX+gePKA7C+zKDu334jeQVf3uUF+xV8Fj4D46IKV8r2j339z6IdwnzjQE1GBp0T7BOOKluSlNxAYa/wLCeovK/c1VfnWIW/Z8NjbcUc5Y0/pMis69i/HDrFelF9OeIueietPV/9rv/tmIcWl+YSio2POZnXD0HPU6+n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LY+PiwCZ"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b35e168so265777f8f.1;
-        Tue, 14 Jan 2025 21:45:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736919941; x=1737524741; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :subject:cc:to:from:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bn1csCT/GVnGPTaPaSCG8wldp2T9Q83b/lBJN/si5VA=;
-        b=LY+PiwCZR/pnvToxhyHBhjeYvr3qrDpG+FJg+pIxQaauPcgh1zagrKLBoS2Yeq3Op5
-         FJRGvkKZqvLT54Wqkky6iJQZBW18NNcRYBxecnzqYON8Qck2FLlSWFROg/Tbg5M7I1FJ
-         49wRpwD5YypqJaXVByKv+eUnJ95jB6I6ck7wwrlMjcbncHkRAUlYQbTtiDWQ1SQEHmUd
-         6IM29ZDIJJlfF0SBYglvHSIv7O41gIHiMd2AqS+jaWdtCRhLYces7T3XVPBF9hmvlov9
-         32+cF6G870RlGgUIpLqJcP9Gh7tSL1eekT0YrW1rHp6Hs0S4zry9z8l9BjfqHiLMteit
-         1WRw==
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-436202dd7f6so72702695e9.0;
+        Wed, 15 Jan 2025 00:13:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736919941; x=1737524741;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :subject:cc:to:from:date:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bn1csCT/GVnGPTaPaSCG8wldp2T9Q83b/lBJN/si5VA=;
-        b=mVu9PYu9X4wydg8SBmWVlVOMvRFQl57Kplz7i1q90oyUoVFkXgYFV4dulwC7B91Gon
-         Y6A1E3tfbFt2kpF1tB3Wwm7EthDwACObtweW+EQPjv+O8u2g1KUsvd+ldjx95uhX+NwK
-         IVduejuiFOAbeMB6IBlhgtnu2eEsl84Sb6fnJ4S8m17uDai+5OBlSWJ0MoWLwW4z5gmw
-         uAs1wyH5YtNDRw0zSbiSO40y8jcJr7Jt9NQI4qwXP4/z2QgfgRIqJK8nTfQqFeBybPlx
-         dch8lQjFyW4UTro8CusvR0HCMsw+p/Q0zZZFuEQ/s6Y4sWDVC66ywrceKlrQkVhhgWFX
-         1A+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJEJLfJb8Uxgo8h66p5PJmNnZw+2UmBjdP3HNYALpwiubQDvYQ8P7bmFue65KjaSBN6eq6ipd21d/JP3cvuxpqOUwz@vger.kernel.org, AJvYcCWd0wTPTOReZ6hDIbzLxFugRFPBirKRP8lrjWU3exWmayORHib8VcxyAr/cW6hv1On5kgkytGBBP+4k6Kez@vger.kernel.org, AJvYcCX/rueNdGLCSqPGuY4Fmw4puxS8mfw957Y+QcYP/3WZz5c8/44aY6WjZ/C7bLlCMZ7BuxTREseGvj2S@vger.kernel.org, AJvYcCX3gVkvoXDwBr8FrzDReRlQo+DQ7Ahug7PNWBUqmIxQst4lRPl5UKQacyPzw5s8Y09kW8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxtanvxhc8u+7sXog0ze6Zy3WNtqCxyTdmDYW9Qgl8L9SVSDAmV
-	JDml5bQfVFGrz7O8Gg+JjjwzkkCipJWloiXDgvwuyYMgFAq7M1rc
-X-Gm-Gg: ASbGncsZ+BknMFtFonQIIRj8Uz3vqdzzr9QzYgQPvIykjgZvNbqCO4+rIHfPNn2lKB2
-	d8Pe06n4v8HOYCNDtNo1PFFFkcHggHTB7S0odWDDfEfVmdt+MYdrAlOK/PX2YNc7pMBsYl4qBt1
-	KeScKS1lR2MhEIE9slMHIcnOQMzz8BiEm/lW0iyhm8eoRopMKpyvXslzEaQpQ0u+qKlel/CjqQJ
-	oI2zymWR+dHT1HTeacT2ODSOKVU0SnxUbQx0VxeHu6ZZf7qJpF5ryJ1pRG6cNg=
-X-Google-Smtp-Source: AGHT+IEp2uMXDIkOxShSAYjUBrAlKxhF4uX0JMMlo/sAFC+3wKNjBf0sJpCC3d++DiPXOy4W2WS6iw==
-X-Received: by 2002:a05:6000:1445:b0:386:4a16:dadb with SMTP id ffacd0b85a97d-38a8b0c712fmr18653518f8f.11.1736919940759;
-        Tue, 14 Jan 2025 21:45:40 -0800 (PST)
-Received: from titan. ([5.29.15.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c753ca42sm10098225e9.35.2025.01.14.21.45.38
+        d=1e100.net; s=20230601; t=1736928800; x=1737533600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6Li7vWmsT6qrjS3sZ/pi3QQmGYu2x89PKo+IEtGpH5g=;
+        b=evWNDj6ThnCciNHs/0tOAfnzkPwczwSYH6qYKym+qorFlsIkIHaFwrbouV18ipxrHz
+         ISELEgeYyzWing68IymKQPGRHBlW7FV6IYQFhVaMDr/fEefpyNd181z76uvC6URwwUUU
+         s90iibd5ydcs76VulU/1TeGuzXw+tGBLYdH3fGaTAXA6VfO6dMbr2jArtXJgLAKc5M+t
+         MA9D+AAfOSQIRcY+bbg6AEEVPpE2v3l3wbJBMLVlpEol00qqCrhfMRdhHStwyVxVVKoS
+         aSGx1hH4W3zQDGpf3jNoomBnNPI3LOYSIakxGIG0fB1bLvcbOjkPnooUDTgZRDMc8nYk
+         15IA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnQocEd4gJD0/ez6/tvZ0y7hsXjRjjCLobO/BkrFWOL3nZkxHCdI7umznchRNQtac5nnqBJiAf79etXGA=@vger.kernel.org, AJvYcCXSn2ubOvqJQRN753xvQYyinps5L619Op9Ot/NWyUTTzd2flkfV//OVcQ48doJbCq2KeTFIIP8IONS5GgtUmo9lgAv+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw72kHROcLZT+aPUDu9HwGAUwgtdQX1Dgsd0Zx+y1jCXBHcBUwQ
+	6/TAZU3q9767XjWwfSoCiLymSMhpq3EurSuUHUo8JL1tnmsDZpGN
+X-Gm-Gg: ASbGnctJgT46Txo/+eO2nsk9cl0sN++BGkQJghVaIL0KvqLE2n7F/cpAhMuwAo0NTg7
+	EE3mQ9LrnLPrFLA8gEKoUf0LTC0n/KvwncX8u5qay3j9sBebyh6nR19GCicqtUYQvpwf32aoc65
+	GwXF6HY0ZCWInFMSQ7uJ0me0nLFucV4kBQSDE+6hPdq4MGyI0z04JtfrNh9iZ78MjpnjCfDIoyO
+	SkPvwn+Tabd89O7POcHJKqo+LT2qy8hrrTSfuYjp54ChqC/gD+nbg25g18yFXujKy5maSC/DQ==
+X-Google-Smtp-Source: AGHT+IH+VHf6Cc5OLPR2j9MaQyECIUsSd6XIJ3Y/+AY50ntccKHJ0q3hoaAn6dB7yVIFPCqW17bWPQ==
+X-Received: by 2002:a05:600c:3ba0:b0:434:a802:43d with SMTP id 5b1f17b1804b1-436e27170c7mr228003455e9.27.1736928799490;
+        Wed, 15 Jan 2025 00:13:19 -0800 (PST)
+Received: from costa-tp.redhat.com ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c74c4f85sm14477905e9.18.2025.01.15.00.13.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2025 21:45:40 -0800 (PST)
-Message-ID: <67874b84.7b0a0220.3935f4.1f48@mx.google.com>
-X-Google-Original-Message-ID: <20250115074538.02f1ce02@titan.>
-Date: Wed, 15 Jan 2025 07:45:38 +0200
-From: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Eyal Birger <eyal.birger@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, Sarai Aleksa
- <cyphar@cyphar.com>, mhiramat@kernel.org, linux-kernel
- <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
- BPF-dev-list <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
- Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
- peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
- linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
- rostedt@goodmis.org, rafi@rbk.io
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-In-Reply-To: <20250115005012.GA10946@redhat.com>
-References: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
-	<EBE7D529-5418-4BD6-B9B5-64BE0FBE8569@gmail.com>
-	<20250115005012.GA10946@redhat.com>
+        Wed, 15 Jan 2025 00:13:18 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Costa Shulyupin <costa.shul@redhat.com>
+Subject: [PATCH v2] Fix bug and add osnoise_trace_is_off()
+Date: Wed, 15 Jan 2025 10:09:56 +0200
+Message-ID: <20250115081157.1274398-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, 15 Jan 2025 01:50:13 +0100 Oleg Nesterov <oleg@redhat.com>
-wrote:
+The usage of trace_is_off() contains a small and elusive
+bug that requires a detailed explanation.
 
-> On 01/14, Eyal Birger wrote:
-> >
-> > Its software, that=E2=80=99s working fine in previous kernel versions a=
-nd
-> > upon upgrade starts creating crashes in other processes.
-> >
-> > IMHO demanding that other software (e.g docker) be upgraded in
-> > order to run on a newer kernel is not what Linux formerly
-> > guaranteed. =20
->=20
-> Agreed.
+To expose the bug, let's modify the source code by moving the first member,
+`trace`, of the `osnoise_tool` structure to the second position:
 
-IMO There are 2 problematic aspects with ff474a78cef5
-("uprobe: Add uretprobe syscall to speed up return probe").
+ struct osnoise_tool {
+-       struct trace_instance           trace;
+        struct osnoise_context          *context;
++       struct trace_instance           trace;
 
-The first, as Eyal mentioned, is the kernel regression: There are
-endless systems out there (iaas and paas) that have both
-telementry/instrumentation/tracing software (utilizing uprobes) and
-container environments (duch as docker) that enforce syscall
-restrictions on their workloads.
-These systems worked so far, and with kernels having ff474a78cef5 the
-workloads processes fault.
+A correct program would work properly after this change,
+but this one does not.
 
-The second, is the fact that ff474a78cef5 (which adds a new syscall
-invocation to the uretprobe trampoline) *exposes an internal kernel
-implementation* to the userspace system:
+Then, run the program under gdb to observe the behavior.
 
-There are millions of binaries/libraries out there that *never issue*
-the new syscall: they simply do not have that call in their
-instructions. Take for example hello-world.
+gdb -q --args ./rtla osnoise -D -d 2 -T 10000 -q
 
-However, once hello-world is traced (with software utilizing
-uprobes) hello-world *unknowingly* DO issue the new syscall, just
-because the kernel decided to implement its uretprobe trampoline using
-a new syscall - a mechanism that should be completely transparent and
-seamless to the user program.
+Program received signal SIGSEGV, Segmentation fault.
+0x000000000040298f in trace_is_off (tool=tool@entry=0x418458, trace=trace@entry=0x8) at src/trace.c:538
+538             if (trace && !tracefs_trace_is_on(trace->inst))
+...
+#1  0x0000000000407db4 in osnoise_top_main (argc=argc@entry=7, argv=argv@entry=0x7fffffffe350) at src/osnoise_top.c:804
+...
 
-This is totally unexpected, and to ask a system admin to "guess" whether
-hello-world is "going to issue the syscall despite the fact that
-such invocation does not exist in its own code at all" (and set seccomp
-permissions accordingly) is asking for the admin to know the exact
-*internal mechanisms* that the kernel use for implemeting the
-trampolines.
 
-Just like we won't add a div-by-zero fault to the trampoline, we
-shoudn't add any instruction (such as a syscall) that isn't *completely
-transparent* to the userspace program.
+The program checks if trace, which has a value of 8, is not null,
+and then crashes when it attempts to dereference trace->inst.
 
-Best,
-    Shmulik
+It happens because osnoise_top_main() calls trace_is_off() as:
+	trace_is_off(&tool->trace, &record->trace)
+
+Where `record` is NULL. Expression `&record->trace` returns offset of
+member `trace`, which is 8. The original code accidentally works because
+offset of `record->trace` is zero.
+
+Expanded wrong instructions are:
+	record = NULL;
+	if (&record->trace && !tracefs_trace_is_on(record->trace.inst))
+		return 1;
+
+The correct instructions are:
+	record = NULL;
+	if (record && !tracefs_trace_is_on(record->trace.inst))
+		return 1;
+
+Refactor `trace_is_off` and fix to `osnoise_trace_is_off` and move it to
+osnoise.c because it instead of `struct trace_instance` accesses `struct
+osnoise_tool`, which is out of the scope of trace.c.
+
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+
+---
+
+v2:
+- Refactor trace_is_off() to osnoise_trace_is_off()
+- Write detailed explanation
+
+v1:
+- https://lore.kernel.org/lkml/20250109211358.2619367-1-costa.shul@redhat.com/
+
+---
+ tools/tracing/rtla/src/osnoise.c       | 19 +++++++++++++++++++
+ tools/tracing/rtla/src/osnoise.h       |  1 +
+ tools/tracing/rtla/src/osnoise_hist.c  |  4 ++--
+ tools/tracing/rtla/src/osnoise_top.c   |  4 ++--
+ tools/tracing/rtla/src/timerlat_hist.c |  4 ++--
+ tools/tracing/rtla/src/timerlat_top.c  |  6 +++---
+ tools/tracing/rtla/src/trace.c         | 19 -------------------
+ tools/tracing/rtla/src/trace.h         |  1 -
+ 8 files changed, 29 insertions(+), 29 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
+index 245e9344932bc..20275642a74cd 100644
+--- a/tools/tracing/rtla/src/osnoise.c
++++ b/tools/tracing/rtla/src/osnoise.c
+@@ -1079,6 +1079,25 @@ struct osnoise_tool *osnoise_init_trace_tool(char *tracer)
+ 	return NULL;
+ }
+ 
++int osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record)
++{
++	/*
++	 * The tool instance is always present, it is the one used to collect
++	 * data.
++	 */
++	if (!tracefs_trace_is_on(tool->trace.inst))
++		return 1;
++
++	/*
++	 * The trace record instance is only enabled when -t is set. IOW, when the system
++	 * is tracing.
++	 */
++	if (record && !tracefs_trace_is_on(record->trace.inst))
++		return 1;
++
++	return 0;
++}
++
+ static void osnoise_usage(int err)
+ {
+ 	int i;
+diff --git a/tools/tracing/rtla/src/osnoise.h b/tools/tracing/rtla/src/osnoise.h
+index 555f4f4903cc2..646ee314dbaef 100644
+--- a/tools/tracing/rtla/src/osnoise.h
++++ b/tools/tracing/rtla/src/osnoise.h
+@@ -104,6 +104,7 @@ struct osnoise_tool {
+ void osnoise_destroy_tool(struct osnoise_tool *top);
+ struct osnoise_tool *osnoise_init_tool(char *tool_name);
+ struct osnoise_tool *osnoise_init_trace_tool(char *tracer);
++int osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record);
+ 
+ int osnoise_hist_main(int argc, char *argv[]);
+ int osnoise_top_main(int argc, char **argv);
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index 214e2c93fde01..f250f999a4eee 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -970,7 +970,7 @@ int osnoise_hist_main(int argc, char *argv[])
+ 			goto out_hist;
+ 		}
+ 
+-		if (trace_is_off(&tool->trace, &record->trace))
++		if (osnoise_trace_is_off(tool, record))
+ 			break;
+ 	}
+ 
+@@ -980,7 +980,7 @@ int osnoise_hist_main(int argc, char *argv[])
+ 
+ 	return_value = 0;
+ 
+-	if (trace_is_off(&tool->trace, &record->trace)) {
++	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("rtla osnoise hit stop tracing\n");
+ 		if (params->trace_output) {
+ 			printf("  Saving trace to %s\n", params->trace_output);
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 45647495ce3bd..6d50653ae224c 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -801,7 +801,7 @@ int osnoise_top_main(int argc, char **argv)
+ 		if (!params->quiet)
+ 			osnoise_print_stats(params, tool);
+ 
+-		if (trace_is_off(&tool->trace, &record->trace))
++		if (osnoise_trace_is_off(tool, record))
+ 			break;
+ 
+ 	}
+@@ -810,7 +810,7 @@ int osnoise_top_main(int argc, char **argv)
+ 
+ 	return_value = 0;
+ 
+-	if (trace_is_off(&tool->trace, &record->trace)) {
++	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("osnoise hit stop tracing\n");
+ 		if (params->trace_output) {
+ 			printf("  Saving trace to %s\n", params->trace_output);
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 4403cc4eba302..ddb833ce89d01 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -1342,7 +1342,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 			goto out_hist;
+ 		}
+ 
+-		if (trace_is_off(&tool->trace, &record->trace))
++		if (osnoise_trace_is_off(tool, record))
+ 			break;
+ 
+ 		/* is there still any user-threads ? */
+@@ -1363,7 +1363,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 	return_value = 0;
+ 
+-	if (trace_is_off(&tool->trace, &record->trace)) {
++	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("rtla timerlat hit stop tracing\n");
+ 
+ 		if (!params->no_aa)
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 059b468981e4d..9a707c42bb1ac 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -1093,7 +1093,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 	while (!stop_tracing) {
+ 		sleep(params->sleep_time);
+ 
+-		if (params->aa_only && !trace_is_off(&top->trace, &record->trace))
++		if (params->aa_only && !osnoise_trace_is_off(top, record))
+ 			continue;
+ 
+ 		retval = tracefs_iterate_raw_events(trace->tep,
+@@ -1110,7 +1110,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 		if (!params->quiet)
+ 			timerlat_print_stats(params, top);
+ 
+-		if (trace_is_off(&top->trace, &record->trace))
++		if (osnoise_trace_is_off(top, record))
+ 			break;
+ 
+ 		/* is there still any user-threads ? */
+@@ -1131,7 +1131,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 	return_value = 0;
+ 
+-	if (trace_is_off(&top->trace, &record->trace)) {
++	if (osnoise_trace_is_off(top, record)) {
+ 		printf("rtla timerlat hit stop tracing\n");
+ 
+ 		if (!params->no_aa)
+diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trace.c
+index 170a706248abf..6e24649857dd8 100644
+--- a/tools/tracing/rtla/src/trace.c
++++ b/tools/tracing/rtla/src/trace.c
+@@ -522,25 +522,6 @@ void trace_events_destroy(struct trace_instance *instance,
+ 	trace_events_free(events);
+ }
+ 
+-int trace_is_off(struct trace_instance *tool, struct trace_instance *trace)
+-{
+-	/*
+-	 * The tool instance is always present, it is the one used to collect
+-	 * data.
+-	 */
+-	if (!tracefs_trace_is_on(tool->inst))
+-		return 1;
+-
+-	/*
+-	 * The trace instance is only enabled when -t is set. IOW, when the system
+-	 * is tracing.
+-	 */
+-	if (trace && !tracefs_trace_is_on(trace->inst))
+-		return 1;
+-
+-	return 0;
+-}
+-
+ /*
+  * trace_set_buffer_size - set the per-cpu tracing buffer size.
+  */
+diff --git a/tools/tracing/rtla/src/trace.h b/tools/tracing/rtla/src/trace.h
+index c7c92dc9a18a6..1ddb51cdaf97c 100644
+--- a/tools/tracing/rtla/src/trace.h
++++ b/tools/tracing/rtla/src/trace.h
+@@ -47,5 +47,4 @@ int trace_events_enable(struct trace_instance *instance,
+ 
+ int trace_event_add_filter(struct trace_events *event, char *filter);
+ int trace_event_add_trigger(struct trace_events *event, char *trigger);
+-int trace_is_off(struct trace_instance *tool, struct trace_instance *trace);
+ int trace_set_buffer_size(struct trace_instance *trace, int size);
+-- 
+2.47.0
+
