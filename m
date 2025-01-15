@@ -1,70 +1,70 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08631DA11B
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 20:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACFC1D8DEE
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 20:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736974327; cv=none; b=Zob4V/J+5R9RkX8GxCowjgjGEOvVoDE3lJ0CpadsgaWbRvVaGGWP8/4PqaE53iUcD7ywHVHVMyvA4+NmFIynd2tiG8wiXBP4TEmumsEz26nhpiHdkFenCipeOfVZ+5dchLNVtoyw6yd/3/PV5ILTaetV+57iiOxE4eh/YX0uTPw=
+	t=1736974396; cv=none; b=DCs9HGuYhsqv7CBSU0T2b3nEJyNKUgj59HKBMtEtr0zV0chkZMLpRWjE1yvfahNQc6k3P7W2c8wQmpD2KQI2Q2gFRQ9gXlnPN3T49D3u2ZMrVMYT5D22fZyb7N8OucMbqS63kFRRlTzuyL9AxqzEWDhcS1lyfmFecT95Z/jF7RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736974327; c=relaxed/simple;
-	bh=wpDHiR0bXsDBwMbTlH1GqxYsn52KOd85vJTdbko6Ftk=;
+	s=arc-20240116; t=1736974396; c=relaxed/simple;
+	bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tIhE5WtG8JoiU+Y2tzsj6BgLPALH+iFbYLlAcKM5OKMVkQmas7fvCQnUajz1qvUNbIf9Swy6OCMEXecG4sH60E6x7fYymEnJKwZSKJJ3F9tP8VYoboB2va7AiXqCqzYL82NAQb46oLPlGRKfDUy6T/2SdMlQnJkCQ9ChmFGMaOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rl0PiRgm; arc=none smtp.client-ip=209.85.217.51
+	 To:Cc:Content-Type; b=RD81O0Gv5lxmg83vRgYyyF4i030dGijO7CNYS9h63anEkDxiwY4gTy2lhlDbArv4w9fpBVPyfcx8dsqj81o2bSXQjVt029xpT4ZtfpcqnzUQhM1puDxhA8CjgYha9Og2GduAfqxKJ3OPQGziKWlnTKWDYwXKny/JRK3VRtvWQdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UDFgmcnJ; arc=none smtp.client-ip=209.85.222.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rl0PiRgm"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4aff620b232so38535137.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 12:52:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UDFgmcnJ"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85bafa89d73so25313241.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 12:53:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736974324; x=1737579124; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1736974393; x=1737579193; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wpDHiR0bXsDBwMbTlH1GqxYsn52KOd85vJTdbko6Ftk=;
-        b=Rl0PiRgmJ2aa9WknDv1tB9zUSs5cTfTRokme8z9m2ePJjTN+yYWyKWpqyISrZTydEC
-         Sc4iz1b1MIJg34/L/s3LYPzyJLSewZ3d28GyB5/xjh+p3yvFj169qBDwwVskHk7qRuSF
-         jjkJx9YzZNVJssWH1palOuwn5MXZ5EAJPfRH6LEy1RjRl+B9EeKJJ4jPjzE/H5yDAZP4
-         yFosU9zdCIBuRTUVmh9DPjUgOsADN+lzw9zIr/LufrbnM/qXRpWytU261LGkwD/MgCO/
-         A6LNjjD95o5cPfRKo5KCvwejW+YJ8MfdVbRToZQId/i+TZD57jSpY5lC6E/36SqpXjcJ
-         CNow==
+        bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
+        b=UDFgmcnJ09TDFATDfWJzibjN4HOKnt7F0JjQCJligN2bGgmU4dyHkYtckWD/oh+qyH
+         TKKrmH1QExYvFdZIAm9E36DTDj1HW3sY/3PYYN+Vu6oOrcWUEluabbWaJCTlgGyeSNke
+         KFkUiGQRl1YN00CCg/ns/mkM4r9JgG5Q0yXZeDedJWdzfvcz8HB1Ke/FbE5AbGYV9dMf
+         q2cx79dp3lmFlIbtiDRHs4ZQG9dE8AGlJGO4+tLLW5wE9t3hBSDibGIs/Rs5fbtMrRJZ
+         QN7D7LGrqxA9uw+xcXfpJELOE2WBugB61rfjVQR5/GoDAbQBlkO/8mNdVHScHQFRDZts
+         iFvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736974324; x=1737579124;
+        d=1e100.net; s=20230601; t=1736974393; x=1737579193;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wpDHiR0bXsDBwMbTlH1GqxYsn52KOd85vJTdbko6Ftk=;
-        b=vn5iyi2wHQvxT4fI/nEoqtd0d4jxMVhWrZnBwpedWiMjyeW51cOMqQlcDQxA8LhxJu
-         8bvXdZrd4rKnDvr3OUw0WwlECxzygy+PL5gwEy3QJy0lGaBRUs3/ESBzAkk5Z65X7dxH
-         +mEe2YD1wYHOnqFHY1L5sjWU+qQ3IxQc/svd83noMDMrVfjLjvdUPBqbm/UeQ84v3weg
-         Z8fpjwzYyzlzTmsuqbvlRrPxUTlyb0yoHMePw07SgMWRpFHO//6GJm7LQYM+vH9Lb1Jn
-         AlzATSCjeagGMxKVr26qsArhqvK8obGNPmvgOHCbqmZQGu0vnMap8XMXiROnCCM/9cI5
-         fX+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUslNcw1DfYfLg+TAlRZcSrq6Nr9uchNtQtMIJXkB8UBfpqNucfLqbdiuBaruf5xoC7iJ1j+RbtHTRH7Psa6lUWb0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPeFwqdIbK35hs7F1LUe4StLjoOMvQPxAIWhSVaVF9kMxq/Jas
-	ouwZUN1+4G1X2b+/Qb0K+n0s0ZKArLMvh4jqA2+2OW18Evq0Vb5cDPNpibr7LDugm92ICcN8FTa
-	tWeH5z0a8bdk4U9YHytGbEZ7710WGXdfa13kE
-X-Gm-Gg: ASbGncuR7fMewJvv4aOUoLPzeBpHkuDTQerXESJvJMdiNIgr895IVPMSxVVd/pIXPrw
-	QHLT7+gFgIN1PQuprnpn9B6xTpJIqJyTCZANJUn0+BLocLPDtRgJqmuj5QRl1lShRQY8R
-X-Google-Smtp-Source: AGHT+IHGJFSTuM3b37+opctt2tHn7VfsuBf4+beVaoaeJuq2++z1RLzVhsDuXLrd9Ee3ASMK9Iz4XTd2JqH50R6dmnc=
-X-Received: by 2002:a05:6102:b06:b0:4af:adf8:523f with SMTP id
- ada2fe7eead31-4b3d0f97294mr22811598137.9.1736974323734; Wed, 15 Jan 2025
- 12:52:03 -0800 (PST)
+        bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
+        b=kWQVwIK5wVPEIHXpIh+ykMOHgCp1KXPm6JFuayhSoDhlp+rHjBcms64PCP9V/JYYVR
+         Y2SUQAnGDsZT1EjOBEF7UD6lCic4AjHoS9O2dubovkB2X9XNQQOebgpSxoTTGPqYzBVk
+         kX25IfbXvA4sSpbyJRI7tr6JstU2coIsB/E19RqYOTJiQYeQCyMSGQ43Tfnd9SkONX+1
+         JMSrF2n1oZlG8+b6oK6HHZF2x0dhblapWpeGlmBL9ies26J2SSePnQEusQb6y61vf6GD
+         DHJA2LJqWDAWPEp4XzE6xaWl8NQh4TpEIERqEfHSWN4AQgPPcKJtLWeczh+TA3nHfUV9
+         Cz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXV0lFYWWgQ+5j3cbEGIlD3sEhE41qJUVyOWkIHXB4V8lkFzTRcHxdHWWpoVJkSUtPzJVvSYs5HEMyD3asoHrYMfcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBs9IoaTqFDQHdc8nfgWvTYWB0SfMScBzCyx/dubFAnDsfPq9Y
+	sJd2BByIl0iMQ+7CnvEs+nc4XJCveAcNCd8LEM6VhmscmaM6OCYfo0lUosWIAJPqosIXcHcLrfD
+	Xp6IubRx2xx2ruB+V1GQPRBmMTrE/3r5f/M+5
+X-Gm-Gg: ASbGncuzenpeYPuzaF8HOC/nZoHPfTppQamdI0lHypjYCIiQuOzWOLIK0zE5YX9DVz3
+	SwddjkdpbRYhJkHyKnUJM8b7hP2q52S3rgfY2aWCU2AZB4TYNvs5dkXiy2VaeWXWKM+Qq
+X-Google-Smtp-Source: AGHT+IE7UsauDDLDB3PU6I85iW+57wTMyoC2RI6ZhjsNUrio1gBO9Rw8foY1mGOBbUURNkj3/A70Nc+YgN9e75p3kqQ=
+X-Received: by 2002:a05:6102:ccb:b0:4b6:20a5:776 with SMTP id
+ ada2fe7eead31-4b620a50949mr21061479137.17.1736974392789; Wed, 15 Jan 2025
+ 12:53:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com> <20250115093135.3288234-10-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20250115093135.3288234-10-kirill.shutemov@linux.intel.com>
+References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com> <20250115093135.3288234-12-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250115093135.3288234-12-kirill.shutemov@linux.intel.com>
 From: Yu Zhao <yuzhao@google.com>
-Date: Wed, 15 Jan 2025 13:51:27 -0700
-X-Gm-Features: AbW1kvYv76oC6MvIVQyrimg9-wYM-36QWhw54pvoHz-UApVxWVH0m4ZuWq7_GXQ
-Message-ID: <CAOUHufbet0=S=9e06jMeoSPef3GzoFm2V-k_NJYbdq2yJe6LRA@mail.gmail.com>
-Subject: Re: [PATCHv2 09/11] mm: Remove PG_reclaim
+Date: Wed, 15 Jan 2025 13:52:36 -0700
+X-Gm-Features: AbW1kvZLvuakft1NqA0r5gmvnmIH6WfLrEQ0-PFFagHKXbdONcPPwciIY5N5R1w
+Message-ID: <CAOUHufa8FZY0tQ8Camv7mHN9tWPYLxcpjt5rFTDLg+NwYULOQQ@mail.gmail.com>
+Subject: Re: [PATCHv2 11/11] mm: Rename PG_dropbehind to PG_reclaim
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
@@ -89,10 +89,10 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jan 15, 2025 at 2:32=E2=80=AFAM Kirill A. Shutemov
 <kirill.shutemov@linux.intel.com> wrote:
 >
-> Nobody sets the flag anymore.
+> Now as PG_reclaim is gone, its name can be reclaimed for better
+> use :)
 >
-> Remove the PG_reclaim, making PG_readhead exclusive user of the page
-> flag bit.
+> Rename PG_dropbehind to PG_reclaim and rename all helpers around it.
 >
 > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
