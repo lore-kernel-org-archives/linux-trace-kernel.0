@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33A41798F;
-	Wed, 15 Jan 2025 02:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF96022DFBD;
+	Wed, 15 Jan 2025 02:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736908142; cv=none; b=R6zbah40p6rvkf2xofGekm9XXPD3HJN9ocSUMxHwt5suFcgfkw1MzwZQsU/SreDOx2XVlCES37us7JXP+mQIumZDlRqo51iREg8fTC91ZXgFZinkyVlQR9kCivZP7i9Q2Zw+UdOdYYXvyrn0NaxR9O6xON5t4h293XFfDjO3Ci0=
+	t=1736908865; cv=none; b=enQjb7VPGl76UVtZKb5NCBJGT4yZbU0IboweevHLVFcq8XvBJYc9wwD2Rsz5Bs4Kn5HxRqorOOzQJNdfAzmN5FacBK/5gYBvo4GLkF3aoIUhYU236Wx0e1tCCjya9ICllHvsbztuqmJqKpNQrrdF/dWlW5ZYIll/jtjNA6vmwbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736908142; c=relaxed/simple;
-	bh=yFBzBINzJ0gWZwOodEJITf+EipeBLhft8x13zrSXOBo=;
+	s=arc-20240116; t=1736908865; c=relaxed/simple;
+	bh=0i4i5AR6EKnFcI8ynzDn8NozpqizG1CnJGcPxIm9I9E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NO6x1IPWtbOO8oZuK5U5eQ7y6DkF1pO+vLVdnqPFLMnZfPCNcYyWEtBwH/ZO9JcBwHThgl0DDEpE6OZ5qTUm/gvs6e8aJ5AMBexaQ8nd2DcnHZ1Auw5fkmKUsehqYlzOui/xDT3x9sM1Gwk8w4CBTdGoVB5vMeup/7jOmfiyW4k=
+	 MIME-Version:Content-Type; b=CSjHxneB/cpcQRP9eCqCAopHnLmx72w0Mbl9sHdw4FIrIcwiqzZQBHtP41FZfBSXeC/M1zFP16CGaXsGknK9NQxfYQ5dnFK5nRyhiAY1TvyADZWfNJPG/biJUHgbI8wGB3Klf2tkaF8PSgboljLbJELelIgcvLXRH6CMsN0TEEM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C223C4CEE3;
-	Wed, 15 Jan 2025 02:29:01 +0000 (UTC)
-Date: Tue, 14 Jan 2025 21:29:02 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68205C4CEDD;
+	Wed, 15 Jan 2025 02:41:02 +0000 (UTC)
+Date: Tue, 14 Jan 2025 21:41:03 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Oleg Nesterov
- <oleg@redhat.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Naveen N Rao
- <naveen@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/5] tracing: Adopt __free() and guard() for
- trace_fprobe.c
-Message-ID: <20250114212902.2bb6381e@gandalf.local.home>
-In-Reply-To: <173643302228.1514810.2053430844068447947.stgit@devnote2>
-References: <173643296599.1514810.1580554610685712071.stgit@devnote2>
-	<173643302228.1514810.2053430844068447947.stgit@devnote2>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250114214103.6b45d30d@gandalf.local.home>
+In-Reply-To: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
+References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,26 +39,134 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  9 Jan 2025 23:30:22 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Wed, 15 Jan 2025 09:37:53 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Adopt __free() and guard() for trace_fprobe.c to remove gotos.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  Changes in v6:
->   - Rename trace_fprobe_create* functions.
->   - Rename __free label for trace_fprobe.
->   - Simplify the last part of trace_fprobe_create_internal().
-> ---
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> +
+>  /* The following routines constitute the bulk of the
+>     hotplug controller logic
+>   */
+> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case ON_STATE:
+>  		ctrl->state = POWEROFF_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>  			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>  				  slot_name(ctrl));
+> -		if (events & PCI_EXP_SLTSTA_PDC)
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_LINK_DOWN);
 
-This conflicts with the changes in my tree. The ones that I pulled in from
-you that makes fprobes use function graph.
+Hmm, can't you just pass in the ctrl pointer to the tracepoint?
 
-Care to rebase this patch on top of my ftrace/for-next branch?
+			trace_pci_hp_event(ctrl, PCI_HOTPLUG_LINK_DOWN);
 
-Then we don't need to worry about the conflicts.
+> +		}
+> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>  				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+> +		}
+>  		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>  		break;
+>  	default:
+> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  					      INDICATOR_NOOP);
+>  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>  				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>  		}
+>  		mutex_unlock(&ctrl->state_lock);
+>  		return;
+> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case OFF_STATE:
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (present)
+> +		if (present) {
+>  			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>  				  slot_name(ctrl));
+> -		if (link_active)
+> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+> -				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_PRESENT);
+> +		}
+> +		if (link_active) {
+> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_LINK_UP);
+> +		}
+>  		ctrl->request_result = pciehp_enable_slot(ctrl);
+>  		break;
+>  	default:
+> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+> new file mode 100644
+> index 000000000000..1415ac505cb5
+> --- /dev/null
+> +++ b/drivers/pci/hotplug/trace.h
+> @@ -0,0 +1,45 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_HW_EVENT_PCI_HP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM pci
+> +
+> +TRACE_EVENT(pci_hp_event,
+> +
+> +	TP_PROTO(const char *port_name,
+> +		 const char *slot,
+> +		 const int event),
+> +
+> +	TP_ARGS(port_name, slot, event),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	port_name,	port_name	)
+> +		__string(	slot,		slot		)
+> +		__field(	int,		event	)
+
+Then the above would be:
+
+	TP_PROTO(struct controller *ctrl, int event),
+
+// don't really need a const int there
+
+	TP_ARGS(ctrl, event),
+
+	TP_STRUCT__entry(
+		__string(	port_name,	pci_name(ctrl->pcie->port)	)
+		__string(	slot,		slot_name(ctrl)			)
+		__field(	int,		event				)
+
+and everything else could be the same.
 
 -- Steve
+
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(port_name);
+> +		__assign_str(slot);
+> +		__entry->event = event;
+> +	),
+> +
+> +	TP_printk("%s slot:%s, event:%s\n",
+> +		__get_str(port_name),
+> +		__get_str(slot),
+> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
+> +	)
+> +);
