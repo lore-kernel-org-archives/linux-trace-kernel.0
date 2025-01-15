@@ -1,110 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755E012B169
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425C214900B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954233; cv=none; b=GfwYEch8kUgBoi5bg27OYw+OMZIPSiV/iK0wUcOYe6ejv1eBTBNe9z6nBXWZeGzcXv81D+J9rkLgkTH31A3jHVINQ3UhgHFaiX55tEzwIaAUY+TzwSb5NIym6ckoYqfLSd4hdBbIDHBw6+z8AFBEsWi7iYaMsXRLknx1dqb+lLQ=
+	t=1736954296; cv=none; b=AZyqw2ESWIxJxPc4WZgT7H1LUtSJK3b/tRfrSRRnvQ3s+pBpgCtBmJc4VrF91LaTL+cU19v4exSGYBSamLEKuOvVI6ZQgnoEiOmDNd4MHQVSn5/ipOb1RwifoKHqdR6raWr87Iavs4W7LfRj7p2sMFGw78pfc4Ald2lVuK/XXQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954233; c=relaxed/simple;
-	bh=9votbjZYGnsoOfXCKKEgAXV4fJLfUAG+L0lY3CPcsJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nBwnuTpjbeX5VJ40OqwIKsgz4bmoLvzDl3H5KaLC7xfvsdjG9cKVMKl9QGh8hsMaVJLqCIz/nmLFmbHdURNX0lrGCcXRDfCwfnaKL+NtN6Z7NVIZOcztQSzpnzDdQDQKWcqJ8ajkySQkyxKr3p1TB4ULlRd+onTWLR9Y9hDLaQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C119C4CEE4;
-	Wed, 15 Jan 2025 15:17:12 +0000 (UTC)
-Date: Wed, 15 Jan 2025 10:17:15 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>
-Subject: Re: kprobe not always triggering
-Message-ID: <20250115101715.12c6cce3@gandalf.local.home>
-In-Reply-To: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
-References: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736954296; c=relaxed/simple;
+	bh=Hx+GSE1YhBPiTEmzXZ6l8LyNYJt3oX2w0Kk98Xa8eKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KpzHwkIsBxAAla8a7eaQ2VazvKPze0h7UlU8OaA2LXTWTdoodUJ09N6Mm5+qPSKRRQzzYRNjj1jju0tXYkmO7WfGUFGRe5Y1ZO1SEA/fAeIXmjai9kMgwnwI8voNgtw+qHvvuOljCEq+TBFHFLhbk7IiKAFBmG4pc3ppCgVIuS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vn1/uXdX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vn1/uXdX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736954293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2wNFKSknnYOPyvxfGQXm1S/4X4bJmY/fnO3/cA6JIRA=;
+	b=Vn1/uXdXAbZEUKlYqrQKHahxyZS5lciWkwV96IXjaa61YRARXSdwbyBuIU7fk6PY4nT3qB
+	Nb/GitRF21qJuNzHniGTCHQ9f2H2xCvpWa8azg4jjoYTjLsEG5PiVg9qy2Yy/fdglu4KAN
+	HqsSp56SQnwhrJMp1+Ec3YL7ACBBci8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-slpS7huyOmCXSI4azvfxIg-1; Wed,
+ 15 Jan 2025 10:18:09 -0500
+X-MC-Unique: slpS7huyOmCXSI4azvfxIg-1
+X-Mimecast-MFC-AGG-ID: slpS7huyOmCXSI4azvfxIg
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65B0F1955DDA;
+	Wed, 15 Jan 2025 15:18:08 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.193.88])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1B6E019560BC;
+	Wed, 15 Jan 2025 15:18:04 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	John Kacur <jkacur@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH] rv: Reset per-task monitors also for idle tasks
+Date: Wed, 15 Jan 2025 16:15:48 +0100
+Message-ID: <20250115151547.605750-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-[ Adding Masami ]
+RV per-task monitors are implemented through a monitor structure
+available for each task_struct. This structure is reset every time the
+monitor is (re-)started, to avoid inconsistencies if the monitor was
+activated previously.
+To do so, we reset the monitor on all threads using the macro
+for_each_process_thread. However, this macro excludes the idle tasks on
+each CPU. Idle tasks could be considered tasks on their own right and it
+should be up to the model whether to ignore them or not.
 
-On Wed, 15 Jan 2025 09:26:36 +0100
-Daniel Wagner <dwagner@suse.de> wrote:
+Reset monitors also on the idle tasks for each present CPU whenever we
+reset all per-task monitors.
 
-> Hi,
-> 
-> it's likely a layer 8 problem but I can't figure out what I am doing
-> wrong.
-> 
-> I am debugging the nvme state machine with a nvme-tcp setup. I attached
-> a kprobe to nvme_change_ctrl_state to trace all the state changes, but
-> not all of them are logged. It's consistent behavior and I tried
-> different things with the same result.
+Fixes: 792575348ff7 ("rv/include: Add deterministic automata monitor definition via C macros")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ include/rv/da_monitor.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Is it consistently the same locations being dropped?
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index 9705b2a98e49e..510c88bfabd43 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -14,6 +14,7 @@
+ #include <rv/automata.h>
+ #include <linux/rv.h>
+ #include <linux/bug.h>
++#include <linux/sched.h>
+ 
+ #ifdef CONFIG_RV_REACTORS
+ 
+@@ -324,10 +325,13 @@ static inline struct da_monitor *da_get_monitor_##name(struct task_struct *tsk)
+ static void da_monitor_reset_all_##name(void)							\
+ {												\
+ 	struct task_struct *g, *p;								\
++	int cpu;										\
+ 												\
+ 	read_lock(&tasklist_lock);								\
+ 	for_each_process_thread(g, p)								\
+ 		da_monitor_reset_##name(da_get_monitor_##name(p));				\
++	for_each_present_cpu(cpu)								\
++		da_monitor_reset_##name(da_get_monitor_##name(idle_task(cpu)));			\
+ 	read_unlock(&tasklist_lock);								\
+ }												\
+ 												\
 
-There's been cases of a compiler inlining some functions for the code
-called in the same file. If that happened, then those will likely be
-dropped. That can be tested by adding:
-
-bool noinline nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
-                enum nvme_ctrl_state new_state) 
-
-You would think it shouldn't inline it, but there's nothing in the spec
-that says it can't do so.
-
-> 
-> The state transition I'd like to see is
-> 
->   LIVE (1) -> RESETTING (2) -> CONNECTING (3) -> LIVE (1)
-> 
-> Though the 1 -> 2 transition is always missing, though a printk says it
-> is happening.
-> 
-> cd /sys/kernel/debug/tracing
-> echo "r:nvme_change_ctrl_state nvme_change_ctrl_state new_state=\$arg2:x32" > kprobe_events
-> echo 1 > events/kprobes/enable
-> echo 1 > tracing_on
-> cat trace_pipe
-> 
->             nvme-570     [004] .....    97.559620: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
->            <...>-65      [000] .....   143.540287: nvme_change_ctrl_state: (nvme_reset_ctrl_work+0x76/0xc0 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x3
->    kworker/u34:3-76      [001] .....   170.236138: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
-> 
-> 
-> [   97.548827] nvme_change_ctrl_state:566 3 -> 1
-> [   97.550547] nvme nvme1: new ctrl: NQN "nqn.io-1", addr 192.168.154.25:4420, hostnqn: nqn.2014-08.org.nvmexpress:uuid:befdec4c-2234-11b2-a85c-ca77c773af36
-> [  133.273552] nvme nvme1: I/O tag 1 (e001) type 4 opcode 0x18 (Keep Alive) QID 0 timeout
-> [  133.274359] nvme nvme1: long keepalive RTT (5056 ms)
-> [  133.274684] nvme nvme1: failed nvme_keep_alive_end_io error=10
-> [  143.514090] nvme_change_ctrl_state:566 1 -> 2
-> [  143.529185] nvme_change_ctrl_state:566 2 -> 3
-> [  146.584904] nvme nvme1: failed to connect socket: -110
-> [  146.585553] nvme nvme1: Reconnecting in 10 seconds...
-> [  159.897184] nvme nvme1: failed to connect socket: -110
-> [  159.897633] nvme nvme1: Failed reconnect attempt 2/60
-> [  159.898006] nvme nvme1: Reconnecting in 10 seconds...
-> [  170.153915] nvme nvme1: creating 8 I/O queues.
-> 
-> The system is idle, so I hope it's not just a dropped event. Any ideas
-> what I am doing wrong?
-
-I don't think it's a dropped event. It's not busy enough. But the compiler
-making a copy of the function (by inlining or what not) can cause something
-like this to happen.
-
--- Steve
-
-> 
-> Linux 6.13.0-rc3+, clang compiler.
-> 
-> Thanks,
-> Daniel
+base-commit: 619f0b6fad524f08d493a98d55bac9ab8895e3a6
+-- 
+2.47.1
 
