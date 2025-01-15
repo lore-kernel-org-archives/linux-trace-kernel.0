@@ -1,99 +1,116 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACFC1D8DEE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 20:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDA51DBB3A;
+	Wed, 15 Jan 2025 21:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736974396; cv=none; b=DCs9HGuYhsqv7CBSU0T2b3nEJyNKUgj59HKBMtEtr0zV0chkZMLpRWjE1yvfahNQc6k3P7W2c8wQmpD2KQI2Q2gFRQ9gXlnPN3T49D3u2ZMrVMYT5D22fZyb7N8OucMbqS63kFRRlTzuyL9AxqzEWDhcS1lyfmFecT95Z/jF7RY=
+	t=1736975675; cv=none; b=nlva9mJc0ZiUaVH+L8WxYtFAV5/xDt2eZtZpxzQtqKIajco+/NqZx8PU1zDstsCbhkEOKlghbFuI7ZYj4uFOZc8+SgUevUyKDQsiz+rg3Ne17FutNl78nYSdcRoii5ZrbwhCHgerJ1xWAcnJZw0bYox59fYmEJirP9hPB37Iqbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736974396; c=relaxed/simple;
-	bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
+	s=arc-20240116; t=1736975675; c=relaxed/simple;
+	bh=T7t3MR/ZRqchZRVbBHbHFECeBBmUTVf2COwP5KKdpd0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RD81O0Gv5lxmg83vRgYyyF4i030dGijO7CNYS9h63anEkDxiwY4gTy2lhlDbArv4w9fpBVPyfcx8dsqj81o2bSXQjVt029xpT4ZtfpcqnzUQhM1puDxhA8CjgYha9Og2GduAfqxKJ3OPQGziKWlnTKWDYwXKny/JRK3VRtvWQdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UDFgmcnJ; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=n3BdUYbjhGGa5W1M/jHhBh2Cr5oMYLfDkRuHQN7gmhd01Ls8HQSdMaZt0fbtt3JSNQnBlbXJDVyUwav8rJSnu40zVkNoiXb5QQcUXg1N83Y2cWZT/9rezrYJHyNJBBqMEOU7FhCOBmJwJ4S3Kg2dhnVmDvEtjDm2SOwyUEtifpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SA1/Jgdg; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UDFgmcnJ"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-85bafa89d73so25313241.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 12:53:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SA1/Jgdg"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5f2d5b3c094so53077eaf.1;
+        Wed, 15 Jan 2025 13:14:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736974393; x=1737579193; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1736975673; x=1737580473; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
-        b=UDFgmcnJ09TDFATDfWJzibjN4HOKnt7F0JjQCJligN2bGgmU4dyHkYtckWD/oh+qyH
-         TKKrmH1QExYvFdZIAm9E36DTDj1HW3sY/3PYYN+Vu6oOrcWUEluabbWaJCTlgGyeSNke
-         KFkUiGQRl1YN00CCg/ns/mkM4r9JgG5Q0yXZeDedJWdzfvcz8HB1Ke/FbE5AbGYV9dMf
-         q2cx79dp3lmFlIbtiDRHs4ZQG9dE8AGlJGO4+tLLW5wE9t3hBSDibGIs/Rs5fbtMrRJZ
-         QN7D7LGrqxA9uw+xcXfpJELOE2WBugB61rfjVQR5/GoDAbQBlkO/8mNdVHScHQFRDZts
-         iFvw==
+        bh=yKljeJVT6hglv8S1VM7AkT8q/pMP1H6RrwDcNwQEUZk=;
+        b=SA1/JgdgCI6Hi36F+x+fRRbyc+2TCrbT6YTvdgUtHTlFRnYUvW9xEMA2F5MD2KBBuS
+         /ms6yYkxHoIc2aStfrX0HrYimHLOiE24xGWK8pjPcJw9JCMQSVVfoy0ag4UBizgRhCeD
+         Z+yfPjXkwgwm6v5qVAHd0RUYy1RdZyVpT41zu/h0E7DWWJTcW2KxjhFFcW6ALEYVwBSa
+         oCMs9g4cShRhv11FM8/Rn78pO+bOTxjcDP8+8056cGcKK58c+Gudnp6a4LnVGZ+mNDHd
+         NFS/4ZntVumCjXdl7UMMjRTNAA7pfOFDV/1thHYAP7ivb/5SyJXgK3SaOcqakYDF3gO3
+         eIkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736974393; x=1737579193;
+        d=1e100.net; s=20230601; t=1736975673; x=1737580473;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VdXo8lbXht5SZgkZQ04ipp/CMqgcMbj1MEn0xWqPJMs=;
-        b=kWQVwIK5wVPEIHXpIh+ykMOHgCp1KXPm6JFuayhSoDhlp+rHjBcms64PCP9V/JYYVR
-         Y2SUQAnGDsZT1EjOBEF7UD6lCic4AjHoS9O2dubovkB2X9XNQQOebgpSxoTTGPqYzBVk
-         kX25IfbXvA4sSpbyJRI7tr6JstU2coIsB/E19RqYOTJiQYeQCyMSGQ43Tfnd9SkONX+1
-         JMSrF2n1oZlG8+b6oK6HHZF2x0dhblapWpeGlmBL9ies26J2SSePnQEusQb6y61vf6GD
-         DHJA2LJqWDAWPEp4XzE6xaWl8NQh4TpEIERqEfHSWN4AQgPPcKJtLWeczh+TA3nHfUV9
-         Cz2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXV0lFYWWgQ+5j3cbEGIlD3sEhE41qJUVyOWkIHXB4V8lkFzTRcHxdHWWpoVJkSUtPzJVvSYs5HEMyD3asoHrYMfcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBs9IoaTqFDQHdc8nfgWvTYWB0SfMScBzCyx/dubFAnDsfPq9Y
-	sJd2BByIl0iMQ+7CnvEs+nc4XJCveAcNCd8LEM6VhmscmaM6OCYfo0lUosWIAJPqosIXcHcLrfD
-	Xp6IubRx2xx2ruB+V1GQPRBmMTrE/3r5f/M+5
-X-Gm-Gg: ASbGncuzenpeYPuzaF8HOC/nZoHPfTppQamdI0lHypjYCIiQuOzWOLIK0zE5YX9DVz3
-	SwddjkdpbRYhJkHyKnUJM8b7hP2q52S3rgfY2aWCU2AZB4TYNvs5dkXiy2VaeWXWKM+Qq
-X-Google-Smtp-Source: AGHT+IE7UsauDDLDB3PU6I85iW+57wTMyoC2RI6ZhjsNUrio1gBO9Rw8foY1mGOBbUURNkj3/A70Nc+YgN9e75p3kqQ=
-X-Received: by 2002:a05:6102:ccb:b0:4b6:20a5:776 with SMTP id
- ada2fe7eead31-4b620a50949mr21061479137.17.1736974392789; Wed, 15 Jan 2025
- 12:53:12 -0800 (PST)
+        bh=yKljeJVT6hglv8S1VM7AkT8q/pMP1H6RrwDcNwQEUZk=;
+        b=as02bLC2dwJH4J+Qs0Nb/9aXbQKn9SBqTNv0xb3foZomVqgKBl460/gmpHDDPLaT54
+         a0we97OUuvC9eImXY6j8Gm6RRlhsitt2PUEsFj3zSZkO69UQy6ZYBv65VQ9XyaM8wPmK
+         58XOr6r71ihnJm6KIfYmzSdFEk3IVp/hAbTd1zb1dBj30+9MgKZlxTdwj2yAjIdl2jlI
+         cqapLThE3qII1a0SUM55ZIdE6vwax3cU1nanExHDNFg79n+8yQ4djUNnixjFodAejcXm
+         lUW7P/BFK9dRKp1X1z1OlzTjKbB4RJR55t65unnUtdkFc6QFnuyblaLxL+a03AbUiGhC
+         xqbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU79Cp9YOUUdl91oNpgmpHVwZhHMS3BNpHIeHH9misr+opRDHNy/PPiahBJCYA04OEKdpnBa8xfGT6ZZ6Yf@vger.kernel.org, AJvYcCV186/8ypwPKypAGOoJsqxzUHiLmvIR66ZVigiAUEX1QAVXItegkTCyaCk8w9ZZ0iERI0I=@vger.kernel.org, AJvYcCWW41V8OClUPZcjEfQ3migQvcjOMPRmEIRUUhI3I2Wqm1MeLBc+//u4FsK44ZxDybgNUq9zHMC35dD/@vger.kernel.org, AJvYcCXMakdW0WQeoSexW1cKJl0Zmbs0vZQKK5UBmBAN+hbTmXHPM95AkCxWgpHaLYF0WNQQKurllyTmN1OmYCfryH3U+Gn5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn6zOMIMnwy59pJHb3i4gD0k7fSaopvuH66ObAtItVPaPoeblo
+	Lw++m5AWzyLHotKP74nTeiWuQOtlhLzeSnFaVQCEKhUhDrDme2ISjEmyhMxv4vgAQiI3jjZTsvR
+	UD0nF90ULPtd0L33AdDVIljTNt1c8CZbs1UkbVA==
+X-Gm-Gg: ASbGnctyLcI5BR7ojEOgLMLQjOyeeLLXRrnQKsrRYNBQ6y/pdyj3T4KgjZ6Kidd+p0Z
+	Ea3qghougTV3+d+HbJEKxznS+2HLjYGzEJLr/KA==
+X-Google-Smtp-Source: AGHT+IE0varc4lyMUOKjAL7/Pos0lkoQgDTdClT8ML+yEWa49gsE+myrp0OLIVY1N6p1Uu5TxAKR6zP+iG9JHmJ2OpM=
+X-Received: by 2002:a05:6870:7e8c:b0:29e:49b3:c50e with SMTP id
+ 586e51a60fabf-2aa066c71eemr15917950fac.13.1736975673361; Wed, 15 Jan 2025
+ 13:14:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com> <20250115093135.3288234-12-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20250115093135.3288234-12-kirill.shutemov@linux.intel.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Wed, 15 Jan 2025 13:52:36 -0700
-X-Gm-Features: AbW1kvZLvuakft1NqA0r5gmvnmIH6WfLrEQ0-PFFagHKXbdONcPPwciIY5N5R1w
-Message-ID: <CAOUHufa8FZY0tQ8Camv7mHN9tWPYLxcpjt5rFTDLg+NwYULOQQ@mail.gmail.com>
-Subject: Re: [PATCHv2 11/11] mm: Rename PG_dropbehind to PG_reclaim
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
+References: <Z4YszJfOvFEAaKjF@krava> <CAHsH6Gst+UGCtiCaNq2ikaknZGghpTq2SFZX7S0A8=uDsXt=Zw@mail.gmail.com>
+ <20250114143313.GA29305@redhat.com> <Z4Z7OkrtXBauaLcm@krava>
+ <20250114172519.GB29305@redhat.com> <Z4eBs0-kJ3iVZjXL@krava>
+ <20250115150607.GA11980@redhat.com> <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
+ <20250115184011.GA21801@redhat.com> <CAHsH6Gu1kXZ=m3eoTeZcZ9n=n2scxw7z074PnY5oTsXfTqZ=vQ@mail.gmail.com>
+ <20250115190304.GB21801@redhat.com>
+In-Reply-To: <20250115190304.GB21801@redhat.com>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Wed, 15 Jan 2025 13:14:22 -0800
+X-Gm-Features: AbW1kvaz-Q0fRIgCZTjOMTFK2ww7SHO5PAEedC4Ees9Ik9taYh09rHGNbM1UVRM
+Message-ID: <CAHsH6Gtd5kYPife3hK+uKafjBMx=-23UzvQgnOnqNDzSZgHyqw@mail.gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Aleksa Sarai <cyphar@cyphar.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, BPF-dev-list <bpf@vger.kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>, 
+	Linux API <linux-api@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io, 
+	Shmulik Ladkani <shmulik.ladkani@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 15, 2025 at 2:32=E2=80=AFAM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
+On Wed, Jan 15, 2025 at 11:03=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wr=
+ote:
 >
-> Now as PG_reclaim is gone, its name can be reclaimed for better
-> use :)
+> On 01/15, Eyal Birger wrote:
+> >
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -1359,6 +1359,9 @@ int __secure_computing(const struct seccomp_data =
+*sd)
+> >         this_syscall =3D sd ? sd->nr :
+> >                 syscall_get_nr(current, current_pt_regs());
+> >
+> > +       if (this_syscall =3D=3D __NR_uretprobe)
+> > +               return 0;
+> > +
 >
-> Rename PG_dropbehind to PG_reclaim and rename all helpers around it.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Yes, this is what I meant. But we need the new arch-dependent helper.
 
-Acked-by: Yu Zhao <yuzhao@google.com>
+Do you mean because __NR_uretprobe is not defined for other architectures?
+Is there an existing helper? I wasn't able to find one...
+
+If not, would it just make sense to just wrap this check in
+#ifdef __NR_uretprobe ?
+
+Eyal.
+
+>
+> Oleg.
+>
