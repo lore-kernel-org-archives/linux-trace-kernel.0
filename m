@@ -1,76 +1,74 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4334328EC73
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 08:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E270246A2D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 09:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736929604; cv=none; b=THOsBNrkeuLKt1iWbAu7ChYRL45qU5n5PwFdK6dTzzVXLdBVNKbjAF5UvVaaeXLDmodivZsYO/Tox1l3ezBAaUnjmDJSi78yYzlpwqYySuiWKH7kGMF7f9nig447dHjpKA+vmkQ6kXq62WnxtnXcRGMmrfT3rRXqVT+ydufEgWk=
+	t=1736931728; cv=none; b=JeLbR8EWjz15yP8+JR0WNXqxnKe9bB7TBXjGwu8JBZeEOwi1opiVEt6C/qNcnlT8LDek4P9Gcvq6rAHHvGhqbE3Nsbmm0DT7wnQP9R/NJ7sAgKDqkTFbeelCF/+vi/xoSnpgzCO02TQjSOfdG647kjfM3nWTt2pKEWnE6/XYHmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736929604; c=relaxed/simple;
-	bh=0fnkuiZcLThQ7xxfx06KeUwb1ipRkNNan6FlC2wm84o=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hZ32Vvo73RUmC1IflIXUNY484b7xBNsNDQ0Z8E2rDk0vpWkACE7s8og8XgU7cfUbXuAb1ru1r/ao/d+/bLFLxKOQ4dpHtTr2NI1dr8d3PdCnkDoJ6hknbn20aDXE+t2XQq86fQ8oeWvsetOesbAkGa2i475uROdv/0JdZsuR5vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z3na06kl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Izg1DWDO; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z3na06kl; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Izg1DWDO; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1736931728; c=relaxed/simple;
+	bh=hwi2zCPDCBAEE3NRQVgUJNWTcABgkhV/xlx8OBAUBxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NMx8Wk/hZCZdkj9OnY4BDLgdBUD8W3f0WFonh6JQiMLwTIpC7fPkoITIjIOeyKU2+s/EDratp1Pw0lK3upmfCSiMnobIlXwzZr9RJCzaQlK6S3BA+64I9cT9wPwwIjq9qngGBqrm4m9rsGhRm4nok0disXUPn+or26t4QEoq/X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TwU/NuG3; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z3na06kl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Izg1DWDO";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z3na06kl";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Izg1DWDO"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A1E101F44E
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 08:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736929601; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=XRxO1DfGMA7Dy09LsCb7iaH3UpVOxD6l2PiG9MaPIvM=;
-	b=Z3na06klQTbwTszHKehsTavFiw9+cM9groE0aupNu5pIdkewTH853hIQ4z2AZHisecc7Lf
-	J+yAPvbF8k4pvrRscd3preEvP22eUW4FvZYb/jdJeOi8RmaT6C4R7R/aU2feKcXGvLBqGV
-	jvC44fH0/r+QrXKJiazl3rWQci8pud8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736929601;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=XRxO1DfGMA7Dy09LsCb7iaH3UpVOxD6l2PiG9MaPIvM=;
-	b=Izg1DWDOwMuF1bIHejIYRjIbYCSTAV7X3sNpDbABSPTLgG7tMLlmOle+quJyY1nJIgGrdA
-	ADnD8/2r89l84BCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1736929601; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=XRxO1DfGMA7Dy09LsCb7iaH3UpVOxD6l2PiG9MaPIvM=;
-	b=Z3na06klQTbwTszHKehsTavFiw9+cM9groE0aupNu5pIdkewTH853hIQ4z2AZHisecc7Lf
-	J+yAPvbF8k4pvrRscd3preEvP22eUW4FvZYb/jdJeOi8RmaT6C4R7R/aU2feKcXGvLBqGV
-	jvC44fH0/r+QrXKJiazl3rWQci8pud8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1736929601;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=XRxO1DfGMA7Dy09LsCb7iaH3UpVOxD6l2PiG9MaPIvM=;
-	b=Izg1DWDOwMuF1bIHejIYRjIbYCSTAV7X3sNpDbABSPTLgG7tMLlmOle+quJyY1nJIgGrdA
-	ADnD8/2r89l84BCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 90CAE139CB
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 08:26:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id p1x9IkFxh2f+eAAAD6G6ig
-	(envelope-from <dwagner@suse.de>)
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 08:26:41 +0000
-Date: Wed, 15 Jan 2025 09:26:36 +0100
-From: Daniel Wagner <dwagner@suse.de>
-To: linux-trace-kernel@vger.kernel.org
-Subject: kprobe not always triggering
-Message-ID: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TwU/NuG3"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5d4e2aa7ea9so12818042a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 01:02:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1736931725; x=1737536525; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A/IqV5HMf2LJ1m+KlJasEf4xUZjqCRJ6n2XncWlOs+Y=;
+        b=TwU/NuG3AeXY8gUIKVvloOeWqvRFBmR0/TxJEy1XMRofVmYTY3OVeeb8TJE4luSONn
+         IEAFD92W8hes6ZTV+Q2XhWMN89uXMhifnZjQ8Dhv0mpwQtRBbMPIIOLlZc3kwxTG+EHM
+         4HKghfcEaQ1iDE7laZoSqiqv3V0x7/56EoeMB+7XWmZgQ3GMBy4N2++hrQY0oZrD+mJ4
+         N6eORiMsUlpBsOz3m5Bjv8iIV6rHRjeQ5FiscipS01H+mAWVLsid+8PkXB71OI1H0FMe
+         vr7qs/X+PCz3TaIrBoBWLQJORtBm6c3yv/hBMMojF5ksJdVhvA1t5+0jYZu5WqggZQgE
+         xkpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736931725; x=1737536525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A/IqV5HMf2LJ1m+KlJasEf4xUZjqCRJ6n2XncWlOs+Y=;
+        b=s6AQ9ZaKwfWHXehXjPnRzZ8EMNfA+KSDRfQr07k2ENdsIp33CBKe/7tC8Jtk8keraJ
+         ffNf4l84DNye0ZZjiCZ+56wMRoCuCXEZHCpLDHgniE1xcmG8T4L6879Xh0dGTReF9zWu
+         eirmqxqUyoc2ttpB059quE/9GxK/Y4DD+Gqtu2j618xJt8DOeoYi+nL7TuEzprvjJn/u
+         VPvkOiC43VfBAZCD/CwReRioFj3DYnS5b90jsX7qY8Y7M72hn7364ND2AW5i3ZdrHTlf
+         5ob1tl3vGniLyT1edd8YNbC+AeJhGewnZC5mKb8mcjK8W2azh73yRM/s3L0C5jCXhKl0
+         XuQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUncbnK0sHEFK+7/FjDlWYOb4zFv6/RX1EgB7/kmYTvY8vj/aJbxUQ8q+e6+ItTIPdRdRDPpJAjgOqjhwY4tJZJxwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtjJHrA/HDvD2YXiYBXpNCYcYuYRoz0h0KnM2t9JfQtWtXJ04G
+	uiIfXeleFLMNRZm6IiFkORyzVm0yJIRly03QqmR7lJVeYxPvt/60vQyiuBEtIxH/ByjU9Yes/0L
+	3
+X-Gm-Gg: ASbGnct5qgdcaSDgRKl+79r3HiIK2kYnN7ioVhXF+3rATs5yHnvYObiLgEZHrmBevzL
+	wezhSRu/2HIKA0V39caHH5LEpoggamgLXDDKEAPF6kE0f+ZV0XXWCCM+YtmbXJ/aQF4SkJuzGy0
+	YjqinP7sbgB75KJojimdvX/88TXkZIEzeplQ4g3Gt2QagI/1F416EqmkKECDgRpYaQIo8hcd+0Z
+	VDeGUwLtlkDRw33zR1oCUlNAYIKfcF9mvz8ikVlCS/o8SGNFsez4SwHSLgLsA==
+X-Google-Smtp-Source: AGHT+IE0YV+TAux3fWGWtKczFKfzUF095AoW6fu7kND8UVHo3qyg1cjMHFlOUS8u8HrrEgdbSzZcvQ==
+X-Received: by 2002:a17:906:fd42:b0:aa6:8bb4:503b with SMTP id a640c23a62f3a-ab2abca0603mr1923718966b.55.1736931724700;
+        Wed, 15 Jan 2025 01:02:04 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9563b1csm738053666b.98.2025.01.15.01.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 01:02:04 -0800 (PST)
+Date: Wed, 15 Jan 2025 12:02:00 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Fix bug and add osnoise_trace_is_off()
+Message-ID: <4ee1e1a7-f0b3-4062-97d9-45a342d0ca21@stanley.mountain>
+References: <20250115081157.1274398-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,76 +77,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	PREVIOUSLY_DELIVERED(0.00)[linux-trace-kernel@vger.kernel.org];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250115081157.1274398-1-costa.shul@redhat.com>
 
-Hi,
+You need an "rtla: " subsystem prefix in the subject.  You're going to
+need to remove the words "fix" and "bug" from the subject because this
+is just a cleanup.
 
-it's likely a layer 8 problem but I can't figure out what I am doing
-wrong.
+On Wed, Jan 15, 2025 at 10:09:56AM +0200, Costa Shulyupin wrote:
+> The usage of trace_is_off() contains a small and elusive
+> bug that requires a detailed explanation.
+> 
+> To expose the bug, let's modify the source code by moving the first member,
+> `trace`, of the `osnoise_tool` structure to the second position:
+> 
+>  struct osnoise_tool {
+> -       struct trace_instance           trace;
+>         struct osnoise_context          *context;
+> +       struct trace_instance           trace;
+> 
+> A correct program would work properly after this change,
+> but this one does not.
 
-I am debugging the nvme state machine with a nvme-tcp setup. I attached
-a kprobe to nvme_change_ctrl_state to trace all the state changes, but
-not all of them are logged. It's consistent behavior and I tried
-different things with the same result.
+No...
 
-The state transition I'd like to see is
+You introduced a bug by changing the order.
 
-  LIVE (1) -> RESETTING (2) -> CONNECTING (3) -> LIVE (1)
+You have to undestand that to the original authors this stuff was really
+easy and they knew the order of the struct members because they chose it
+deliberately.  In the end, they get so used to the code that
+"&record->trace" just becomes an idiom for casting "record" and they
+forget how it looks to a newcomer.
 
-Though the 1 -> 2 transition is always missing, though a printk says it
-is happening.
+I *personally* am not a fan of code which assumes we know the order of
+the struct members so I don't have a problem with you re-writing the
+code.  But the commit message must say that it is just a cleanup and not
+a fix.
 
-cd /sys/kernel/debug/tracing
-echo "r:nvme_change_ctrl_state nvme_change_ctrl_state new_state=\$arg2:x32" > kprobe_events
-echo 1 > events/kprobes/enable
-echo 1 > tracing_on
-cat trace_pipe
+Which reminds me that I had intended to create a container_of_first()
+for code like this which assumes that container_of() is just a cast.
+There is lots of code like this:
 
-            nvme-570     [004] .....    97.559620: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
-           <...>-65      [000] .....   143.540287: nvme_change_ctrl_state: (nvme_reset_ctrl_work+0x76/0xc0 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x3
-   kworker/u34:3-76      [001] .....   170.236138: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
+	struct something *member = container_of(p, struct foo, first_member);
 
+	if (IS_ERR(member)) {
 
-[   97.548827] nvme_change_ctrl_state:566 3 -> 1
-[   97.550547] nvme nvme1: new ctrl: NQN "nqn.io-1", addr 192.168.154.25:4420, hostnqn: nqn.2014-08.org.nvmexpress:uuid:befdec4c-2234-11b2-a85c-ca77c773af36
-[  133.273552] nvme nvme1: I/O tag 1 (e001) type 4 opcode 0x18 (Keep Alive) QID 0 timeout
-[  133.274359] nvme nvme1: long keepalive RTT (5056 ms)
-[  133.274684] nvme nvme1: failed nvme_keep_alive_end_io error=10
-[  143.514090] nvme_change_ctrl_state:566 1 -> 2
-[  143.529185] nvme_change_ctrl_state:566 2 -> 3
-[  146.584904] nvme nvme1: failed to connect socket: -110
-[  146.585553] nvme nvme1: Reconnecting in 10 seconds...
-[  159.897184] nvme nvme1: failed to connect socket: -110
-[  159.897633] nvme nvme1: Failed reconnect attempt 2/60
-[  159.898006] nvme nvme1: Reconnecting in 10 seconds...
-[  170.153915] nvme nvme1: creating 8 I/O queues.
+Which relies on the face that "first_member" is the first member of
+foo struct.  It's a quite common thing.
 
-The system is idle, so I hope it's not just a dropped event. Any ideas
-what I am doing wrong?
+regards,
+dan carpenter
 
-Linux 6.13.0-rc3+, clang compiler.
-
-Thanks,
-Daniel
