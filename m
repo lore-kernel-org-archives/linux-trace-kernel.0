@@ -1,114 +1,77 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E7C248BDF
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 11:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F301F9A81
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 11:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736939541; cv=none; b=L/ecbbQkTycoLmDDTcUe9J8A6mTfbevPFT1IdQCxy6DUDJf+1HftZ89zzUriMWlK4GDT6ofCKfNhNYmt4c2L1nIONHyEOzcc8bpdpXGZxPblZT+sHSzNGvMV/JAsnAALSWi5KSz1MIF8HpQ1vRK6+h3w7RqXgpHeUPtSwDxsiu0=
+	t=1736941624; cv=none; b=Yo+3BtRyiLVNpcvNtK9tof4JQTZofBKGF8YeDJZXx4zxkoaiHmxqtukxLq0uwQ6u/IMQDu8dEWZxP4d6b1OanPt/T2MQBAM5b3qz+N0DaOe/1H7e+gGtW8sqBeM/MdA6eq/30SmP9vKZDUUHarJCG+xrKCaDydxG1OLVstljcgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736939541; c=relaxed/simple;
-	bh=ncN/6GUyiJWBB7eCcc51tg1zrUiwdh2XnxAt6ZN4BoM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHCmqkEPVd26gW2t0toDIxpvlwjhngsOEaen0bUOzzUEJsJMu1Chu8AZ8pSLj8AJBLvq6VfI1zlfsbdDS+/FxYKct5Wxyxs+7zZy3uq72KODQAGBbXO4K1KpZXNtGG/CnwkrAaJV+7doKBuTjlW1SYa4zVSUHVK7CyK0K4nFa3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pr0dqjLH; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pr0dqjLH"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab2c9b8aecaso908940966b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 03:12:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1736939537; x=1737544337; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgaAOweQb71OwFhtIsVZvOPhjn8Kd9vaQDqquf4yuhE=;
-        b=pr0dqjLHHrOnVOr/6cV4n4509CnF4cCVUNh6CvC/sanxWWa3g9859/IdYYzWwaT5TP
-         BGq5kaGQiFzghkUQHatNI3NZQ7Uyd23X7bbQXeaGxRvSJut8XSsAWan/kkMr3sUOdGnt
-         Ljs3P9aPFfG+7Ba76+iVHmQZduorlS+EVl9+T75WtT9dF4wU84F/OvcK/RlmQILy1Gld
-         zxzxgNfktawiPewy4QE7C54O7pyzfJJSOGjrhc6+0wXSW/PRJH5fSL6w3DOI8fZXgp3J
-         T06Fw+7eV4ktRRLU/4qJnaCwrqPb/A+Lf6BK/It9pIgyZ9c3SshorrSHEZobTQ/D1ceI
-         5reQ==
+	s=arc-20240116; t=1736941624; c=relaxed/simple;
+	bh=/1uFD+772lAt1hJfYVdZ7oeg/thMmcYi5G7yE5q11iU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=mivCPZ+Y6TUXgueMI6wP7VBIKGNG4ViQ4lplnDe/7RzlbH/Y084QC7PDP57JDafD9dlEr/bmzHFa++8FUt/fUXGFw1R12UyJvZgq05vrCQhb+ueO+ffwES3oIw7z/jLLKDOgLACG++bFcujVmYAwdSkZJjF2KQGqWKS59eYhrvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce7c75cae9so6650795ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 03:47:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736939537; x=1737544337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zgaAOweQb71OwFhtIsVZvOPhjn8Kd9vaQDqquf4yuhE=;
-        b=djSWrx5anBYo670BIfcx2woqz7SPfQR6Ov00g+6cD74CgIjnlcwmamFUNvHU8/wVLn
-         wvXZMnrviRCnZNZ84TFosX8tcCyjyUQJRVbCuw4/ESADtnuzZwpEJzgPJpJfugmI/HzR
-         UfJ1LEbnYMcGwr7s1kx+5YB+ijm62QuH/eJfkNTJtYqz5xcxn2IJiQreBJZXUBTebgzq
-         6pSH9m+MvCR3pcG64u2JrCueaK0rY5PSOCz44OKYHP57Wm6Te5+vlkKqoP35s9d5iHWI
-         CbiOD2dWF1ANJBJ15RcNy8o5kTkw97bnixY3kDqYvdcGNaj5CNWsiYUoM8NWK+HW3PNN
-         yyVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3D2okaI4ce0kZEBwnlJypSWwV2evn8s/jQXjxiAmKslgdp/HVQ/UurqjvqiGVmWlLSUvnQdt8SeoMFoTu4KxwyeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaN8VM495o/9RZUI2N3/yu9IECbXtLWpvB3FBVjUq9zFUOROC2
-	3aHuUHRhm+02BMOS6RHXXemLrS4IlWZMI2rrSwCeI6H7c7O0wLgmQpLe7gboAe8=
-X-Gm-Gg: ASbGncvANUcVxwCxLpZ6UvCU4G+cI5TQGpQvWeIEr5M+HUDG2cXrGl8aLH/zAZ5yHI7
-	3MezP+PyZPk3w/c+klJ5Bfmc1Tcyet5DbSfZ0epeUp2x2se6piz+aFAv7XLJQaoNppaNE5KaGmg
-	6MoVTFQYVmb2G+MVTQMUt+pTVVyfPS8Ja0wZOTeQ/cug6e+JO6n8KJjtqvCB2EURm2zulovqZ97
-	85awdc7zT0/HD0B6CP4rXDtahPXo7jgkZb0D9VnTmYasQr+Bg0VqY63EDtcEQ==
-X-Google-Smtp-Source: AGHT+IHJr6V+PPhdzpc+SbrFprkZ471QbDOH3WILGCE4sK4Gu0UuGCEFsPEB6d5nsHlakr+3W70JmA==
-X-Received: by 2002:a17:906:7f84:b0:ab2:d96d:6364 with SMTP id a640c23a62f3a-ab2d96d888fmr1776570766b.18.1736939536889;
-        Wed, 15 Jan 2025 03:12:16 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c90d7432sm738738966b.49.2025.01.15.03.12.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 03:12:16 -0800 (PST)
-Date: Wed, 15 Jan 2025 14:12:13 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Eder Zulian <ezulian@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Fix bug and add osnoise_trace_is_off()
-Message-ID: <d4b0cf45-67ab-47ce-9acf-1dc934dcc50e@stanley.mountain>
-References: <20250115081157.1274398-1-costa.shul@redhat.com>
+        d=1e100.net; s=20230601; t=1736941622; x=1737546422;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7CD8/bky+uBTitY/VMmrxb7nNioNYcVEol6ONXDjRus=;
+        b=bNq+vVVaLpWNx6JVFhb4aGAvUqUgxpA7jZSAEdf39tNwm66E0YxhwJzSPlBRZAsDHs
+         UCLSWgyWt1VCVtGRF4jb85Ckywrb7kcbuNfuaUBnTK4zSpcYFlqqflFtannPSS3IOHIW
+         AAaJTNLO4P8E6crWjTR0baKcJ2jsMM0ntYptZqYUWaBHU73BaqfODspo3MLSyJ4uA7C2
+         d650tsNJSk13QplG10HXdedQjrsqZ5zQBZAsYaidum6KpefzhGGlqtNwMQKMzTOt2hLF
+         vZfD9ERGtGKwamRNDkWPuqaYbgTDsFHWt4HVa8Q19FsZF1fIvoqCsvOrWbiVqpwZaYfh
+         C6QA==
+X-Forwarded-Encrypted: i=1; AJvYcCXnryzqCdN32ZRjh+mKF5CB6Uss5zQld+xNM/LYUoz/B7S+r37vqSgOTjqEcU/mteyNJiT3aULdWfC2ob1L2ou7YBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu6kXWqPJyY3S3BF5CTOap2x10kS8wRO2xdw0+SI72/fCOsta4
+	GM7b5KsJqSFsTpjCHy9hPVprmJdgNK8fIDa/bcrb+xuM8/yYeljW7K8j8Ps/FvraGjf5jdWR4RO
+	jNcQMelKKi4cK/4Zms5puSPzREZW0zReAb7Lc7KXKRyPrw1x+kV+lUfs=
+X-Google-Smtp-Source: AGHT+IESRd48rHGhudr/W5hTp4VTLrRNTk1+2Ra6errEaQt8aLT30h/PAr+bUUEcI7mPJrigCPSOnyk0dxCyxgomNR6tKHtcwEEf
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250115081157.1274398-1-costa.shul@redhat.com>
+X-Received: by 2002:a05:6e02:20e3:b0:3ce:7cc9:9f46 with SMTP id
+ e9e14a558f8ab-3ce84a25bf6mr18998895ab.9.1736941622558; Wed, 15 Jan 2025
+ 03:47:02 -0800 (PST)
+Date: Wed, 15 Jan 2025 03:47:02 -0800
+In-Reply-To: <mb61p5xmgicov.fsf@kernel.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6787a036.050a0220.20d369.0012.GAE@google.com>
+Subject: Re: [syzbot] [bpf?] [trace?] WARNING: locking bug in __lock_task_sighand
+From: syzbot <syzbot+97da3d7e0112d59971de@syzkaller.appspotmail.com>
+To: alexei.starovoitov@gmail.com, andrii@kernel.org, ast@kernel.org, 
+	bpf@vger.kernel.org, daniel@iogearbox.net, eddyz87@gmail.com, 
+	haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org, 
+	kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev, 
+	mathieu.desnoyers@efficios.com, mattbobrowski@google.com, mhiramat@kernel.org, 
+	puranjay@kernel.org, rostedt@goodmis.org, sdf@fomichev.me, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 15, 2025 at 10:09:56AM +0200, Costa Shulyupin wrote:
-> diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-> index 245e9344932bc..20275642a74cd 100644
-> --- a/tools/tracing/rtla/src/osnoise.c
-> +++ b/tools/tracing/rtla/src/osnoise.c
-> @@ -1079,6 +1079,25 @@ struct osnoise_tool *osnoise_init_trace_tool(char *tracer)
->  	return NULL;
->  }
->  
-> +int osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *record)
-> +{
-> +	/*
-> +	 * The tool instance is always present, it is the one used to collect
-> +	 * data.
-> +	 */
-> +	if (!tracefs_trace_is_on(tool->trace.inst))
-> +		return 1;
-> +
-> +	/*
-> +	 * The trace record instance is only enabled when -t is set. IOW, when the system
-> +	 * is tracing.
-> +	 */
-> +	if (record && !tracefs_trace_is_on(record->trace.inst))
-> +		return 1;
-> +
-> +	return 0;
-> +}
+Hello,
 
-Also this function should be declared as type bool and return true/false
-instead of 1/0.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+lost connection to test machine
 
-regards,
-dan carpenter
 
+
+Tested on:
+
+commit:         c547a7b6 bpf: trace: send signals asynchronously if !p..
+git tree:       https://github.com/puranjaymohan/bpf.git bpf_preemt_fix
+console output: https://syzkaller.appspot.com/x/log.txt?x=178257c4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=aadf89e2f6db86cc
+dashboard link: https://syzkaller.appspot.com/bug?extid=97da3d7e0112d59971de
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
