@@ -1,77 +1,73 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0471D61A4;
-	Wed, 15 Jan 2025 18:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A981D63FB
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 18:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736965597; cv=none; b=UnsZhG9b44yuYkNiDiI46xXFHnpInZYc5qsT+Iufs+1zs4na9DpRCQgzWdvu08BIrbGhvzA9zd+cwL8soBpklbU5lbc/7hrORZHOie2YVxsB8bi0EHs8AkPtkwiXsVSLoea2N1YUvI+YrJmitRuF7leJ8ir4TuIW/9j4CMwC07I=
+	t=1736965676; cv=none; b=H+zK+CJrPHEAZ392JxmFEtaA3ADgyC7OJigOO6A6tTfAvb8C64rv7BTcnF7+Ey4HNIWsA4OpqhClfxSJcEQlKaLN+pCA6e0C1AI5UgJ7jHf7Sa7oLhcgKXPt5gT4lsm1jmcp5tgbzQR/TYt2Mz5Y5sGEy3BjN+R8sLhzBoJj6DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736965597; c=relaxed/simple;
-	bh=dAyz89EZoEzWIPFURAivydT9YnLv35q7fBjWn5AOeXM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nf22klOEha+K8Clp+/IvSgCAWx53AwciNVUz/HV7LIkCNGiIrcFXQuoHeIec5sjlKMhUwLXsu/3Yf29bs71KFMoEMxcIRISENIbNkXELWWKBq3T+smb7NDUL8V27ff9FW636qIO9SjFUdRQLFgreSLpIwDBeGu57gtiN7GoLgcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9d9uj6q; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1736965676; c=relaxed/simple;
+	bh=b81TDoYer9uSPGtGgKgaQXhHGD9mvax9zMxqg4mP1tM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z2j46TfQc8hoOZzWn/iZlin4S5YPwYxEvmJBbOWalWxi6GwmenHcv7CKtrI/pDgq9ZcZkFrEYcewRZeXNIqCv3O5Sd9xEIlBURnne/xrly+AmCEhbypE+VTAU/zL+Ob+kBOMwHKNA3msSt8wynRcG1yZaB8bax4733qPgtTQ5js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eGuBx32L; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9d9uj6q"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a9e44654ae3so16843666b.1;
-        Wed, 15 Jan 2025 10:26:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eGuBx32L"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d3d14336f0so62000a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 10:27:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736965594; x=1737570394; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1736965673; x=1737570473; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h5XLRRKi/BnXe8mm5PslXAVqpPJMYf+9Ft4Tl+nHERA=;
-        b=T9d9uj6qodXPvpvnh0FIH2x2+uJM/4Fo0M0lTIgyMGtLw8ENcfn9zAOGpTc/6E7tBS
-         gdU1c3sG9UFgTIBmFnNxXHEshAQzm9vEZr11hJKNRJdV+C/vAxRUN/jFC2gZCOVcSQq6
-         CFYzgi3aR/a8+lDY8ouW3jiOMCiu0lV9dPE+zdhpsoDBgHUATlFzVzT2+bYsiEJOfZuD
-         0MDYML2Cbr2w+4mo3pmdctkADfEbH55+/ioRy15Da8Oc/qw+JSLfHY1rvKZkJVFRZ01S
-         UL4c+Frw0Rnl8qoyg+JIVqbRGvqc4kn6LaTGtWKuB9AnF1jRoRBVQucvPsmmn+xGDUVe
-         xPsA==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7oLEDLp95AHbo5oQtn8gEnk71S0ZQtoEW5mdd9dPbF4=;
+        b=eGuBx32Lr3x5zUDmQD8HOo/smxMVBZ0ykoCl1OFuKhFGMruiBqcKCcquUFcb5GmCo1
+         lTXYIpFmRCul8Q+Wrfi8p3EbFUyw11C42dVi3dn5ARdCrKWYnKFPwpUnvllAipS8P4Y6
+         2olX8wA2pFjwIEQj2paeHAjKQVHpJIFIdbkAtTbz56ELpHDhDUHr6x/s6dcL7JZko383
+         8zi6IM/nTngNJZrIurLSu5uXxmZxSi576b6DQQ3xRzIpKSjqD5YIeyFoAzoW+Hu1Xj5I
+         60jBMmne8HFvuE1H8FGbi7cZT7SVsYi47QWFkGAuUQQR6+pvbwFlJ5DxX8yRynJvQn/A
+         66Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736965594; x=1737570394;
+        d=1e100.net; s=20230601; t=1736965673; x=1737570473;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h5XLRRKi/BnXe8mm5PslXAVqpPJMYf+9Ft4Tl+nHERA=;
-        b=eyXqr49lK67vBQk3W9AzyAAAzige1Hnv1B8oq/ZuNo/r7XM7xKb/Ky4v5ebL+2nyIo
-         pzqYaR01Ieoo22eaj5WWb82vf9vhqoIesYilDR85WigDs638TpZ4nUmRRKuD2RsT9wpq
-         z7Dqtjd1+ss7CG6wb+4ZMqV0n4jdv6U0qNLsAmThmpRlDGPS2XqXyFIlQe+xGpEMpbXW
-         PNiiCoeQ3ew6CpCXosC5+zuWqgv1e+TOHo/SBobPGiyDA/Pz3G3aahBnim3faRQ3QRcb
-         W4XmaHrSZu1bIGO0xXpRi6pqU70l9EEGZhtBgaphrcPjIsV/NHzCKFwdpXxBt4brkonO
-         dy/g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7HEyrvR8DCMcsdd/boDjuTomVUPD7M6H1ZPg1tEdu0ybtIMbHnKM+rp1e0mbIetrWCgFjRUnBigy2QmLPDUAPGNLl@vger.kernel.org, AJvYcCWiHRzScUdVUTZZfPL42l2NA8thArbfgK6FSsq5ACC9WAhrK05y/BxU3xzjFatlEvLCOyoPa0+N2gRFlOn1@vger.kernel.org, AJvYcCXEJv4T+p5cSr8TLpiJbgHYuX0dDmqdh3w++cKEkVS7JlHRl+1MtL7qTvAOKQAmNUiRkyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+iPcbTsM9uXWd7SKl8M91y7Z4Q+RYHsPRWmheMcPTZw0W3cNo
-	/KxvLlDXoDP3FMACk7ybL/fGn7gqCdjujGVp7Mo4qMXdEnEgRs8SGMGmyQ==
-X-Gm-Gg: ASbGncsgfH54d0wOHKYUJ7eQhQpl6zj9fEThKYSr5BKC5tPI9uCTv/TrmRQcwwrNYVz
-	FSsicBXKqboTaxOuDQIee7RElSCFG+y9oq1iDS6DUGwmQ8eUsn0AgOWt0sO0P/4qLQ5tmq4NEKg
-	k2dTXtDIM89F+gVxz8yXdm5lGBK/xzXO0xIsDrq/maQyK94KbqpqUZI+fNNzpVVmbbdtH3OxDxb
-	mcdbi1aRRzGeJZfAKZGnebDXmBIm45BSA+OShKrWQ==
-X-Google-Smtp-Source: AGHT+IFvh8cjZKvBu1i/Z84VVP8RrVEC2PYJri+pYoLzmdo5Uc6hJX93IkB84KZmtQG+GcYsqBxSKA==
-X-Received: by 2002:a17:907:1c8c:b0:aa6:7cf3:c6ef with SMTP id a640c23a62f3a-ab2ab70a362mr2731381766b.15.1736965593853;
-        Wed, 15 Jan 2025 10:26:33 -0800 (PST)
-Received: from krava ([95.82.160.96])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab2c9060db6sm791648366b.8.2025.01.15.10.26.33
+        bh=7oLEDLp95AHbo5oQtn8gEnk71S0ZQtoEW5mdd9dPbF4=;
+        b=LAx/3ZXaQY+3u5DbhPdiu4En1h5XgTi1ZdNLFxKF9eT1K3IjH1iPVtyfrhRrcbCwNS
+         mi1QDwV9Rj6e/3X3tFwaMHSbkEuv0EXF0KsVO4LQ/mSa8kD6O5kuSyMK38hEx16VlEnA
+         NEjMzrKZqLI6yXSxVV1XjcRyFrfMN+n5Ar+EVbdlASawsSVbU9/qx7ZfsVbCaZQS6uCk
+         P/EIIM/cDDDjoww/K2YmrPkJ3GH0bR1kDnNY1IfmotrYUT6Ho0kP1Gk36mGIOMC5OX5K
+         2iynM1gi1QqbiOlIjbQTWvqqUvNdvnjJVdW0YA9nWR4FhcfyWLrKUu2HOD7QBljgkylp
+         9igw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXUA9a9tDB0gT9R2TqPOywB1yTsQL9KeMw65G9ahEXUArCJ1mNLrZgszoev9bh2q7O3W/HCRRhMt9YJ/Rw+qEmcfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwImYsJUBAoPHcuW/iIWf/QI7xzXNr3nD8qWr/30ic1vsslcMjW
+	5C8vMf+cje139IhX1flwjfGjAJBfhluxkfLX48PIyhLl/2ej8Quvcvdf7UyPP6c=
+X-Gm-Gg: ASbGncub+e01knRqfEeEmDofw+Xz17rG64rN2LtUMOnZsVpXzIaU0j3MlHq3rxDz08U
+	h/xgauQlseHobC3VyRklMQkaSnNcfEnrMN1TfpZ3uVAnMdi9/QI2vKWoLMTfrLckmnPAHYJ8YLt
+	dT/wDXWeFWGshqmu4z17SlhbGnayEhwBRlyO0kmBCvIY53nUmcrI+e6WRAMdVNTTWfKAzkay6/J
+	KxFIia0tuiZhlEaZLykbFwhACDoPliff8xHEg7AVu+2zpsyxfu4TXltLqhYZQ==
+X-Google-Smtp-Source: AGHT+IFnh/mf8QpCO5KOVM66CBu2aIULtQ0OwPffDYH7pNUvhK6RjWRKYXvrK24PestFeF88220XYA==
+X-Received: by 2002:a05:6402:84f:b0:5d0:d330:c965 with SMTP id 4fb4d7f45d1cf-5d972d28da9mr28448865a12.0.1736965672674;
+        Wed, 15 Jan 2025 10:27:52 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d99008c2d7sm7804452a12.3.2025.01.15.10.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2025 10:26:33 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 15 Jan 2025 19:26:29 +0100
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	David Laight <David.Laight@aculab.com>,
-	lkml <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [RFC] x86/alternatives: Merge first and second step in
- text_poke_bp_batch
-Message-ID: <Z4f91RUP8sDniss7@krava>
-References: <20250114140237.3506624-1-jolsa@kernel.org>
- <20250114141723.GS5388@noisy.programming.kicks-ass.net>
- <Z4Z1MoJV0WW-vIHp@krava>
- <20250114103604.7388352c@gandalf.local.home>
+        Wed, 15 Jan 2025 10:27:52 -0800 (PST)
+Date: Wed, 15 Jan 2025 21:27:48 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>, Tomas Glozar <tglozar@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] Add osnoise_trace_is_off()
+Message-ID: <142694b4-85de-412b-9016-4ea3c66e726b@stanley.mountain>
+References: <20250115171359.1954533-1-costa.shul@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,37 +76,84 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250114103604.7388352c@gandalf.local.home>
+In-Reply-To: <20250115171359.1954533-1-costa.shul@redhat.com>
 
-On Tue, Jan 14, 2025 at 10:36:04AM -0500, Steven Rostedt wrote:
-> On Tue, 14 Jan 2025 15:31:14 +0100
-> Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Jan 15, 2025 at 07:11:59PM +0200, Costa Shulyupin wrote:
+> The usage of trace_is_off() confusing, which requires a detailed
+> explanation.
 > 
-> > > IIRC this is the magic recipe blessed by both Intel and AMD, and
-> > > if we're going to be changing this I would want both vendors to sign off
-> > > on that.  
-> > 
-> > ok
+> Let's modify the source code by moving the first
+> member, `trace`, of the `osnoise_tool` structure to the second position:
 > 
-> Right. In fact Intel wouldn't sign off on this recipe for a few years. We
-> actually added to the kernel before they gave their full blessing. I got a
-> "wink, it should work" from them but they wouldn't officially say so ;-)
+>  struct osnoise_tool {
+> -       struct trace_instance           trace;
+>         struct osnoise_context          *context;
+> +       struct trace_instance           trace;
 > 
-> But a lot of it has to do with all the magic of the CPU. They have always
-> allowed writing the one byte int3. I figured, if I could write that one
-> byte int3 then run a sync on all CPUs where all CPUs see that change, then
-> nothing should ever care about the other 4 bytes after that int3 (a sync
-> was already done). Then change the 4 bytes and sync again.
+> A correct program would work properly after this change,
+> but this one does not.
 > 
-> I doubt the int3 plus the 4 byte change would work, as was mentioned if the
-> other 4 bytes were on another cache line, another CPU could read the first
-> set of bytes without the int3 and the second set of bytes with the update
-> and go boom!
+> Then, run the program under gdb to observe the behavior.
 > 
-> This dance was to make sure everything sees everything properly. I gave a
-> talk about this at Kernel-Recipes in 2019:
+> gdb -q --args ./rtla osnoise -D -d 2 -T 10000 -q
 > 
->   https://www.slideshare.net/slideshow/kernel-recipes-2019-ftrace-where-modifying-a-running-kernel-all-started/177509633#44
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x000000000040298f in trace_is_off (tool=tool@entry=0x418458, trace=trace@entry=0x8) at src/trace.c:538
+> 538             if (trace && !tracefs_trace_is_on(trace->inst))
+> ...
+> 
+> The program checks if trace, which has a value of 8, is not null,
+> and then crashes when it attempts to dereference trace->inst.
+> 
+> It happens because trace_is_off() is called as:
+> 	trace_is_off(&tool->trace, &record->trace)
+> 
+> Where `record` is NULL. Expression `&record->trace` returns offset of
+> member `trace`, which is 8. The original code accidentally works because
+> offset of `record->trace` is zero.
+> 
+> Expanded wrong instructions are:
+> 	record = NULL;
+> 	if (&record->trace && !tracefs_trace_is_on(record->trace.inst))
+> 		return 1;
+> 
+> The correct instructions are:
+> 	record = NULL;
+> 	if (record && !tracefs_trace_is_on(record->trace.inst))
+> 		return 1;
+> 
+> Refactor `trace_is_off` to `osnoise_trace_is_off` and move it to
+> osnoise.c because it instead of `struct trace_instance` accesses `struct
+> osnoise_tool`, which is out of the scope of trace.c.
+> 
 
-nice! thanks for all the details,
-jirka
+This commit message is so confusing.  It takes five paragraphs to
+explain how NULL + sizeof(void *) equals 8.  Everyone knows that
+already, but it's irrelevant because the actual math in the code
+is "NULL plus zero".  And then there is the crash dump which can't
+happen unless you change the math from zero to an eight.  It would
+be easy get the impression that this change is some kind of
+complicated fix to a crashing bug.
+
+Earlier I provided you with a good commit message which you could
+just copy and paste but here is an updated version:
+
+  This patch is just a clean up and does not affect the behavior.
+  Consider this code:
+
+    if (trace_is_off(&tool->trace, &record->trace))
+
+  The "record" pointer can be NULL in this code.  If you're new to the
+  code then it looks like a potential NULL dereference.  It turns
+  out it's fine because ->trace is the first element of the record
+  and the trace_is_off() function has a NULL check.  So it's fine.  But
+  it does look sketchy when you're not super familiar with the code.
+
+  Refactor the trace_is_off() function to take a record pointer instead
+  of the trace pointer and rename it to osnoise_trace_is_off().
+
+You need to add a subsystem prefix to the subject as well.
+
+regards,
+dan carpenter
+
