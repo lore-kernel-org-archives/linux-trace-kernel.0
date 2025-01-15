@@ -1,73 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B7878F51;
-	Wed, 15 Jan 2025 15:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F11D1448F2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736953547; cv=none; b=DAgaFg0S/0MFmiaYjy13DCyE0zxQs6AX6ryZkuOavM656suq9Z2HjbliQgagQNMRXKj0Y7AI1seN58ariXBlnQjkYvIryR3iZS94PYNSRnduRS9Jk15Ni0T8SJNJHaxtyPdes9sjsMr9Vaaq6ClSPEn8k/1jS6DJuptkAnUhnq0=
+	t=1736953614; cv=none; b=EK+KqAUlK3YtPaf3KfFsQp3qWWbweHuYn4pJnpnPSHRf5tlBqb/FKp3/gc9JsJF33UkgDViWPlNwTwRuKNtxyqunoYwFWTQ2tKySK2V1ionVm8zNxQKEg2FL+R4+iJVWCNz5vRzQOf17edR5qv/GDBoDXK4YGCS/euvaH3I4R2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736953547; c=relaxed/simple;
-	bh=opTS2U3tuqL1C2qtjV3d9kz7V9h5/TRmVLaoYsVjn8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gqc/rPhrowWVwFM2Be0nLZwR+1slCvWeWW0QWZNQcNEQWESL7P5HjImajcNzCF88IffYHMi1zYCmnz4L7DFse0X1jWz/fZ28nE+pWuQ7J6YcBbbqai1Gn5dWFMdGzIRcho+Ud9ffqW08+XkCyxbop4bAon6DfEplTvF5PQsp9JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DE5C4CED1;
-	Wed, 15 Jan 2025 15:05:44 +0000 (UTC)
-Date: Wed, 15 Jan 2025 10:05:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250115100547.63dec2d7@gandalf.local.home>
-In-Reply-To: <Z4eA866i9eup6os3@wunner.de>
-References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
-	<20250114214103.6b45d30d@gandalf.local.home>
-	<7b482de1-fa19-45d6-bd05-f1c3ebb77192@linux.alibaba.com>
-	<Z4eA866i9eup6os3@wunner.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736953614; c=relaxed/simple;
+	bh=ruXm3GwWSRO7cfPH2em1+ggx/3wul5ki73+B7i4Ubjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3VOJ90IkcHgJ2kOELDBLhALds7jRcsK5W21Dfpmfv7hmqUtqCiFMm1D/hzp3KM9xYqEDXJKS47OWvoZiGgtSQlAEyQqIbLKibzSJqv8wG+nA92PbbtvvRK2YDDW5OZeaQ9qFslSNI0fnr8L1Bsq7JGfkTqjzcEz6kMAyvDcuQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RWAxcduu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWAxcduu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736953611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d3r2M9S+yWLkHCYFD8BRRAu7UcanN7f8eRTtVxwZV0g=;
+	b=RWAxcduu+/HMY+8BgzxKdXcMFfxsXfzs6Mxiz5ev6UATaKdQuTJ2k7sEH9AeG6lBDpo4QK
+	V715/H5Hlj3Ng8iw/sWp/8PFaWHJnxERS9PsxagRdzwq7sAx072xb+QXRvXqf/I0dgkNvS
+	fnQvcdmW2e5iGfRO9XRoi2nRTpqxrfM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-vsNLaPoUNp2-nLJGDYdKvQ-1; Wed,
+ 15 Jan 2025 10:06:45 -0500
+X-MC-Unique: vsNLaPoUNp2-nLJGDYdKvQ-1
+X-Mimecast-MFC-AGG-ID: vsNLaPoUNp2-nLJGDYdKvQ
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 957CF19560B1;
+	Wed, 15 Jan 2025 15:06:42 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AA29319560A3;
+	Wed, 15 Jan 2025 15:06:33 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 15 Jan 2025 16:06:17 +0100 (CET)
+Date: Wed, 15 Jan 2025 16:06:07 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Eyal Birger <eyal.birger@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
+	mhiramat@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	BPF-dev-list <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
+	tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+	linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
+	Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-ID: <20250115150607.GA11980@redhat.com>
+References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
+ <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
+ <Z4K7D10rjuVeRCKq@krava>
+ <Z4YszJfOvFEAaKjF@krava>
+ <CAHsH6Gst+UGCtiCaNq2ikaknZGghpTq2SFZX7S0A8=uDsXt=Zw@mail.gmail.com>
+ <20250114143313.GA29305@redhat.com>
+ <Z4Z7OkrtXBauaLcm@krava>
+ <20250114172519.GB29305@redhat.com>
+ <Z4eBs0-kJ3iVZjXL@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z4eBs0-kJ3iVZjXL@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, 15 Jan 2025 10:33:39 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+On 01/15, Jiri Olsa wrote:
+>
+> On Tue, Jan 14, 2025 at 06:25:20PM +0100, Oleg Nesterov wrote:
+> >
+> > Sorry, I don't understand... What exactly we can do? Aside from checking
+> > IS_ENABLED(CONFIG_SECCOMP) in arch_uprobe_trampoline() ?
+>
+> I need to check more on seccomp, but I imagine we could do following:
+>   - when seccomp filter is installed we could check uprobe trampoline
+>     and if it's already installed we change it to int3 trampoline
+>   - when uprobe trampoline is getting installed we check if there's
+>     seccomp filter installed for task and we use int3 trampoline
 
-> > > 
-> > > 	TP_STRUCT__entry(
-> > > 		__string(	port_name,	pci_name(ctrl->pcie->port)	)
-> > > 		__string(	slot,		slot_name(ctrl)			)
-> > > 		__field(	int,		event				)
-> > > 
-> > > and everything else could be the same.  
-> > 
-> > Maybe it's not a good idea.
-> > 
-> > I think pci_hp_event is a generic event for pciehp, shpchp, octep_hp, etc.
-> > But each hotplug driver has different `struct controller` and slot_name().  
-> [...]
-> > So, IMHO, pass port_name and slot_name from each driver is more simple.
-> > 
-> > + @Lukas for hotplug part.  
-> 
-> You're right Shuai, there's several hotplug drivers in drivers/pci/hotplug/
-> and pciehp is just one of them.  It's quite possible that other drivers
-> besides pciehp will want to add trace points as well.  For consistency,
-> the trace event definitions need to work for all drivers.
+I still don't understand... But whatever you meant, I doubt it can work.
 
-OK, if this is a generic trace event then it does make sense sending in the
-names instead of the structure.
+> other than that I guess we will have to add sysctl to enable uretprobe
+> trampoline..
 
--- Steve
+Or we can change __secure_computing() to do nothing if
+this_syscall == __NR_uretprobe. Or even change syscall_trace_enter/exit
+to do this check.
+
+But I don't really like this idea, I don't feel this is the right solution...
+
+Oleg.
+
