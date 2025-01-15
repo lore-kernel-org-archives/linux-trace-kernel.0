@@ -1,110 +1,110 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F11D1448F2
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755E012B169
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736953614; cv=none; b=EK+KqAUlK3YtPaf3KfFsQp3qWWbweHuYn4pJnpnPSHRf5tlBqb/FKp3/gc9JsJF33UkgDViWPlNwTwRuKNtxyqunoYwFWTQ2tKySK2V1ionVm8zNxQKEg2FL+R4+iJVWCNz5vRzQOf17edR5qv/GDBoDXK4YGCS/euvaH3I4R2w=
+	t=1736954233; cv=none; b=GfwYEch8kUgBoi5bg27OYw+OMZIPSiV/iK0wUcOYe6ejv1eBTBNe9z6nBXWZeGzcXv81D+J9rkLgkTH31A3jHVINQ3UhgHFaiX55tEzwIaAUY+TzwSb5NIym6ckoYqfLSd4hdBbIDHBw6+z8AFBEsWi7iYaMsXRLknx1dqb+lLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736953614; c=relaxed/simple;
-	bh=ruXm3GwWSRO7cfPH2em1+ggx/3wul5ki73+B7i4Ubjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h3VOJ90IkcHgJ2kOELDBLhALds7jRcsK5W21Dfpmfv7hmqUtqCiFMm1D/hzp3KM9xYqEDXJKS47OWvoZiGgtSQlAEyQqIbLKibzSJqv8wG+nA92PbbtvvRK2YDDW5OZeaQ9qFslSNI0fnr8L1Bsq7JGfkTqjzcEz6kMAyvDcuQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RWAxcduu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RWAxcduu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736953611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d3r2M9S+yWLkHCYFD8BRRAu7UcanN7f8eRTtVxwZV0g=;
-	b=RWAxcduu+/HMY+8BgzxKdXcMFfxsXfzs6Mxiz5ev6UATaKdQuTJ2k7sEH9AeG6lBDpo4QK
-	V715/H5Hlj3Ng8iw/sWp/8PFaWHJnxERS9PsxagRdzwq7sAx072xb+QXRvXqf/I0dgkNvS
-	fnQvcdmW2e5iGfRO9XRoi2nRTpqxrfM=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-vsNLaPoUNp2-nLJGDYdKvQ-1; Wed,
- 15 Jan 2025 10:06:45 -0500
-X-MC-Unique: vsNLaPoUNp2-nLJGDYdKvQ-1
-X-Mimecast-MFC-AGG-ID: vsNLaPoUNp2-nLJGDYdKvQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 957CF19560B1;
-	Wed, 15 Jan 2025 15:06:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AA29319560A3;
-	Wed, 15 Jan 2025 15:06:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 15 Jan 2025 16:06:17 +0100 (CET)
-Date: Wed, 15 Jan 2025 16:06:07 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Eyal Birger <eyal.birger@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
-	mhiramat@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	BPF-dev-list <bpf@vger.kernel.org>,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
-	tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-	linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-Message-ID: <20250115150607.GA11980@redhat.com>
-References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
- <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
- <Z4K7D10rjuVeRCKq@krava>
- <Z4YszJfOvFEAaKjF@krava>
- <CAHsH6Gst+UGCtiCaNq2ikaknZGghpTq2SFZX7S0A8=uDsXt=Zw@mail.gmail.com>
- <20250114143313.GA29305@redhat.com>
- <Z4Z7OkrtXBauaLcm@krava>
- <20250114172519.GB29305@redhat.com>
- <Z4eBs0-kJ3iVZjXL@krava>
+	s=arc-20240116; t=1736954233; c=relaxed/simple;
+	bh=9votbjZYGnsoOfXCKKEgAXV4fJLfUAG+L0lY3CPcsJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nBwnuTpjbeX5VJ40OqwIKsgz4bmoLvzDl3H5KaLC7xfvsdjG9cKVMKl9QGh8hsMaVJLqCIz/nmLFmbHdURNX0lrGCcXRDfCwfnaKL+NtN6Z7NVIZOcztQSzpnzDdQDQKWcqJ8ajkySQkyxKr3p1TB4ULlRd+onTWLR9Y9hDLaQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C119C4CEE4;
+	Wed, 15 Jan 2025 15:17:12 +0000 (UTC)
+Date: Wed, 15 Jan 2025 10:17:15 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Daniel Wagner <dwagner@suse.de>
+Cc: linux-trace-kernel@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>
+Subject: Re: kprobe not always triggering
+Message-ID: <20250115101715.12c6cce3@gandalf.local.home>
+In-Reply-To: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
+References: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4eBs0-kJ3iVZjXL@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 01/15, Jiri Olsa wrote:
->
-> On Tue, Jan 14, 2025 at 06:25:20PM +0100, Oleg Nesterov wrote:
-> >
-> > Sorry, I don't understand... What exactly we can do? Aside from checking
-> > IS_ENABLED(CONFIG_SECCOMP) in arch_uprobe_trampoline() ?
->
-> I need to check more on seccomp, but I imagine we could do following:
->   - when seccomp filter is installed we could check uprobe trampoline
->     and if it's already installed we change it to int3 trampoline
->   - when uprobe trampoline is getting installed we check if there's
->     seccomp filter installed for task and we use int3 trampoline
+[ Adding Masami ]
 
-I still don't understand... But whatever you meant, I doubt it can work.
+On Wed, 15 Jan 2025 09:26:36 +0100
+Daniel Wagner <dwagner@suse.de> wrote:
 
-> other than that I guess we will have to add sysctl to enable uretprobe
-> trampoline..
+> Hi,
+> 
+> it's likely a layer 8 problem but I can't figure out what I am doing
+> wrong.
+> 
+> I am debugging the nvme state machine with a nvme-tcp setup. I attached
+> a kprobe to nvme_change_ctrl_state to trace all the state changes, but
+> not all of them are logged. It's consistent behavior and I tried
+> different things with the same result.
 
-Or we can change __secure_computing() to do nothing if
-this_syscall == __NR_uretprobe. Or even change syscall_trace_enter/exit
-to do this check.
+Is it consistently the same locations being dropped?
 
-But I don't really like this idea, I don't feel this is the right solution...
+There's been cases of a compiler inlining some functions for the code
+called in the same file. If that happened, then those will likely be
+dropped. That can be tested by adding:
 
-Oleg.
+bool noinline nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
+                enum nvme_ctrl_state new_state) 
+
+You would think it shouldn't inline it, but there's nothing in the spec
+that says it can't do so.
+
+> 
+> The state transition I'd like to see is
+> 
+>   LIVE (1) -> RESETTING (2) -> CONNECTING (3) -> LIVE (1)
+> 
+> Though the 1 -> 2 transition is always missing, though a printk says it
+> is happening.
+> 
+> cd /sys/kernel/debug/tracing
+> echo "r:nvme_change_ctrl_state nvme_change_ctrl_state new_state=\$arg2:x32" > kprobe_events
+> echo 1 > events/kprobes/enable
+> echo 1 > tracing_on
+> cat trace_pipe
+> 
+>             nvme-570     [004] .....    97.559620: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
+>            <...>-65      [000] .....   143.540287: nvme_change_ctrl_state: (nvme_reset_ctrl_work+0x76/0xc0 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x3
+>    kworker/u34:3-76      [001] .....   170.236138: nvme_change_ctrl_state: (nvme_tcp_setup_ctrl+0x324/0x720 [nvme_tcp] <- nvme_change_ctrl_state) new_state=0x1
+> 
+> 
+> [   97.548827] nvme_change_ctrl_state:566 3 -> 1
+> [   97.550547] nvme nvme1: new ctrl: NQN "nqn.io-1", addr 192.168.154.25:4420, hostnqn: nqn.2014-08.org.nvmexpress:uuid:befdec4c-2234-11b2-a85c-ca77c773af36
+> [  133.273552] nvme nvme1: I/O tag 1 (e001) type 4 opcode 0x18 (Keep Alive) QID 0 timeout
+> [  133.274359] nvme nvme1: long keepalive RTT (5056 ms)
+> [  133.274684] nvme nvme1: failed nvme_keep_alive_end_io error=10
+> [  143.514090] nvme_change_ctrl_state:566 1 -> 2
+> [  143.529185] nvme_change_ctrl_state:566 2 -> 3
+> [  146.584904] nvme nvme1: failed to connect socket: -110
+> [  146.585553] nvme nvme1: Reconnecting in 10 seconds...
+> [  159.897184] nvme nvme1: failed to connect socket: -110
+> [  159.897633] nvme nvme1: Failed reconnect attempt 2/60
+> [  159.898006] nvme nvme1: Reconnecting in 10 seconds...
+> [  170.153915] nvme nvme1: creating 8 I/O queues.
+> 
+> The system is idle, so I hope it's not just a dropped event. Any ideas
+> what I am doing wrong?
+
+I don't think it's a dropped event. It's not busy enough. But the compiler
+making a copy of the function (by inlining or what not) can cause something
+like this to happen.
+
+-- Steve
+
+> 
+> Linux 6.13.0-rc3+, clang compiler.
+> 
+> Thanks,
+> Daniel
 
