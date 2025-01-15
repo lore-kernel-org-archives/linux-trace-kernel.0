@@ -1,124 +1,140 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9942135A0;
-	Tue, 14 Jan 2025 23:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89254C6C;
+	Wed, 15 Jan 2025 00:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736898759; cv=none; b=bi4TAEzgT04XIdFDS/cM1Ho1fhBSYgBatj3mKAH6+riGOU4dYEqNyn/S+wPtxZ/HRNa1VJeewQGhh1aRfBPTgL2IzbTcmm5iHPHFoxpEz/XFmnYuxbdkkbla3NI0jETBBSUfUBoV4M7/pdQ2fQ/CbqkBbYhn08Sf2qUPApf/+SQ=
+	t=1736899763; cv=none; b=XqL/V5e3fCC9Itld8m9aOPOyRDktXmzt8Q2GAwGLaEUgNdjAANneybl0F+X5CE6iph2Cy0hC/opEtT/XFcWw3GCAU6hs6R678pz5SVGkZXt3EDhYaUVnuiqIV3+XlA2261TlQkwx2mo0pNvRef84cJzqZDn0lxKA10YBjxzc6ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736898759; c=relaxed/simple;
-	bh=1cvucDChMYk3wMwc3GU/lXASMHIz0KpwFlvJNT7FI7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kYjTnaMYq77c9MVr0xBhbMNY/2JSfzI/oFeJgK/ptmmJn4PpKD3V73z1bhzekQ6HJR8XpyNHLtporp6FWKiqno/lLXnFcxXQLvXOkemv1rEPzNjhoFRYuOKOCZ8lp5PUgT9r0QHS4RYLndRbWF+bzXw0/V4pu+jru8J4pGqTddI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHAS9WE4; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1736899763; c=relaxed/simple;
+	bh=R4LJpGVyDhVAOavNQe3ojFQUK3N4ggiDzqk2LZGYoBM=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=lnrngqPAb3UrkREDGR827h7JaNkZr/K9sj/g7Xf6w99E3DWBHlFJUu/4zKM8RyM2Mw71/XOZJzrq6X0s5yqTyfskPRUXsISOaWnvKrSL7vGwn42DrhC5c4VKsmsxZwNk8uG3D0StVNVL+DwAoFzrPoLZblZsqzrKvAAWLJjMvyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emVGXmg+; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHAS9WE4"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2164b1f05caso108586365ad.3;
-        Tue, 14 Jan 2025 15:52:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emVGXmg+"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2163bd70069so111521175ad.0;
+        Tue, 14 Jan 2025 16:09:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1736898757; x=1737503557; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1cvucDChMYk3wMwc3GU/lXASMHIz0KpwFlvJNT7FI7M=;
-        b=EHAS9WE4hNsJOW7qF0bQ+lsHlt2actt/lOKQ3Q659Tl0ZEW2v0wV4a/b7o4QUBoDOI
-         gKIigbXH7cLc2fl37Q2hBOLg8+PZu0RxgD7+rP562+uKz2Vgfdcx9efJ/GPIcb0h7dCg
-         uGwmZnvo1nALv+3wVgeikLccGVYz8/aJ3r8jZ/RTawINH3z2gXFkzcMBGUnJoXdhpJNj
-         +ZRBI1OKmD8UvGVJ2aGQIQQjnnGmyXQr2pCOSoe1mhY/BzSVmTVZp0wUkZJlrXSTGbld
-         81n5H8aA8IPIdctILtSnd2sS6tLJyCLmOkriNxv8ixL+ZPH7rDnDFqss4ExQLRdkYPKf
-         7f9A==
+        d=gmail.com; s=20230601; t=1736899760; x=1737504560; darn=vger.kernel.org;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R4LJpGVyDhVAOavNQe3ojFQUK3N4ggiDzqk2LZGYoBM=;
+        b=emVGXmg+FM4hHiNtTqcUTtoxYDVUFCqiAyTYmI5sAmC9lYUsDq2yRcemOO6E0swu7D
+         Y62l7aj5R6ldfl/wNBAYcjjtyD7MkG9zPQB7TfN+32fS6R+ogHCFR/ToTMKb1dLNJcYw
+         Shx73RZ56Wq7nf/3hKxK34phygM553qP44boidPPaRtFYVxok2geBx4U1FwyJ2UyqE2t
+         YuKPlR4xtTkkbIQ/Dr7ZfUpB2oAXJVeJ2SGJNYAw45cJcfBKWC7VFmUnWgtI+kObmXGK
+         XqoWy7a7xU/hY2wU9VdINvwXTb3INMy8MlQSwSiiwAQTsdAYeA4ptFmvcNGhXyNNrpmu
+         Fr2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736898757; x=1737503557;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1736899760; x=1737504560;
+        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
+         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1cvucDChMYk3wMwc3GU/lXASMHIz0KpwFlvJNT7FI7M=;
-        b=IxeUeSiAkJMcWTYJXBNYYrYJF6n33vjxchAMoKL+SyK0f0FNpv1HN9XPnvjvrFNdpX
-         Bl/OUxsRbsrN7VKCPZhcdYPAvmJvJHdzEdHtXrI/rW7kn1zGBaXQ2eGWaM5cECRv4Rts
-         wdqSbE+Xotf+IGAyPdOJ+Uj5ybG1IlgsdidFwqprX1c/PZSB9NwtzoIlZBA439ofVtWw
-         1wje/aUHQl1vwfWggU45UMhyQOyIQ8Bmhf05rf1KK8SANsro/1hYEkQeCvswhsjj5aRU
-         bzDbbjMylHJfb8wr/I5p8+zO8CQfPhIH3RxeC2MHMftrTW9UbepviM13nMauhhA6Bkxr
-         GvMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjCsYXbLJPu4lpbEpE3N8LYB+P/xs5tRI7cwRsUkcJaU7XaMgxD0RWTQpcqm7Y6xdNUAJQMcC/hMiDbB0T@vger.kernel.org, AJvYcCVTeZercjj6Vor0ljIFd96vRSe2LRavEaYvpXtqDzqZGEm31mEkOCmFc2IsAVVstOTRJVO9Cf6rADw0YtOOKR4FusKQ@vger.kernel.org, AJvYcCWJT7d2KmCghnETe4n7se6OLYZYHGi2Lo2/9VILq7CQfXeeDDpL+fbgZ4WeFxichAj+4ec=@vger.kernel.org, AJvYcCXZGnIzKQcguUn1XK6LHHLaZT++lZRbDPFcDx7sHaec035o3dArA7DzJD5pLywuBiGIuCBNMgjtnIRU@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiKYYCX9vA5zQ4nQSWgSHXbtxuHSTrD7V1Ff6rAj15IxLnaRsM
-	3UVhj283AJrzHh8cXbI0Y8a9VRs2+eiAd5OiCGJt9W5Ljuh9SsSqF6D+2iJ0H83vZ1JmF33FeXD
-	yl3lLIadEdZ0Hhw2FX2pbiZPcZjg=
-X-Gm-Gg: ASbGncsEKrkCHJuuUvDTSLI4aiqj2IMb1H5iN0KW8HPtD7+9LaMILiywBosBOJYbbGA
-	kxh5hRgbqjXXOFEXbcNs21AXP9BYd6MG4yGeU
-X-Google-Smtp-Source: AGHT+IF9xrZ0Fm+qK9t0KO7jgFf8WDiEIH8bHqVXht+PM6el+fFq+yNfKKY5u1HiXjh5A3WocKYKkCR6jz2kUE9lTjk=
-X-Received: by 2002:a05:6a20:3d8a:b0:1e1:b28e:a148 with SMTP id
- adf61e73a8af0-1e88cf7bfb7mr38140531637.5.1736898757299; Tue, 14 Jan 2025
- 15:52:37 -0800 (PST)
+        bh=R4LJpGVyDhVAOavNQe3ojFQUK3N4ggiDzqk2LZGYoBM=;
+        b=nYnro4vxdbIPJHDALgqepWpHZlHURN6BXsRiS7llSCEAnvmu8DH8HWHNq/WDhZQt6n
+         1vbz0gCbdKY0N6aewHKsrTtSdDLGcLncX55S220uCDVFlVU0rRqonpKc/Plz4gqjWB70
+         Tj42Rxwm5EBw38TwT/d8qhm2fvQj64KzPOYMONUtdj5tMjNgRntgvesDDMwuNO20jwFB
+         W2feV0knBxluREidUCuiHahcVEIXfbiw1tUYUQO0Q/6sMreRWfxY9NzTKq5ELONL2noT
+         LLhCUraHZJRU3Q28YZW+H0wtgtcc5WJHqfXXYOEI0/SWly+nylyDKPvKQmOSZ+IjMnwu
+         dQKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1dNI5V2o9leJyi/YDzmIBgI66yIQ+uDc2aV5AxegL+d/L7g5GMWaT0NTv0qmb9LT3zHY=@vger.kernel.org, AJvYcCUzEakUtLAiXkomzpaBCYOaCCiCqT0vs+cp7uleYqhQiGSYALus/Uh1LkAKOFRZHHXvFhkmsiqERp1sRbWUZeo36FCx@vger.kernel.org, AJvYcCVvL7bz3oKpi/1e/xK5zGTA/7PweXyF+QkhQnBXNVSmmab/LFTdiGh8eZL4FSdbbzfDMmB8sBTsqgZv@vger.kernel.org, AJvYcCW23sUGtdVsI7h+FtG6cP+k18BoRXXoTKpxSzwetZ0E6PHhY2jxN26T3oT/zuerwLyvd4fWIDPLS/ACWpyt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUAnNc9dS+yXTiaUNDFmKp0kIXy6tfIPCWuesXALbtFHvjC4Bq
+	vfWFEVj03HHUAIc41WYDwz4btFNgn+tAhWWz1M9LIO4Qcd+iUPEC
+X-Gm-Gg: ASbGncueYB+E2q7xdEO0PyTnyp1+0XEXlc1YWz3+TQJJYpD9ftLGWWeDFh57RdnisTz
+	Ue8VRrRvJ8miFOKca8LGjfaR2OcEaKqKU4cRwDOMQwuIXCnl3q6BHy1JqdDl1EKW9qQ1SjEibL/
+	XRSrg5E72TYjovvqfZgFfpbq92CyEzsVGYUalJTSHxCQzB/QfEw6k6iO7n0Fin1zk8yTIAwPtVS
+	5m+Z+4Dsx0zvTEA4WWfGF2SgppVTSNNqZAixObwU0e3DU2GNoH93DGaYwW/v8a4eqSrKiGij5s6
+	nTvCQlo5G1P0fjM=
+X-Google-Smtp-Source: AGHT+IEiqgHdxM6gYH9hhBM/uWuoIz75bcOmpXPjNtAo4BnRliFNNN0VJb3sez3eqgdEf4wR0RJc/A==
+X-Received: by 2002:a17:902:cccb:b0:216:4d1f:5c83 with SMTP id d9443c01a7336-21a84010cb0mr401177345ad.47.1736899759928;
+        Tue, 14 Jan 2025 16:09:19 -0800 (PST)
+Received: from smtpclient.apple ([2607:fb90:731b:9526:a54c:f15:5d57:d657])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21a9f10f064sm71797635ad.34.2025.01.14.16.09.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2025 16:09:19 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Eyal Birger <eyal.birger@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
- <20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
- <Z4K7D10rjuVeRCKq@krava> <Z4YszJfOvFEAaKjF@krava> <20250114105802.GA19816@redhat.com>
- <Z4ZyYudZSD92DPiF@krava> <CAEf4BzZoa6gBQzfPLeMTQu+s=GqVdmihFdb1BHkcPPQMFQp+MQ@mail.gmail.com>
- <20250114203922.GA5051@redhat.com> <CAEf4BzaRCzWMVvyGC_T52djF7q65yM8=AdBEMOPUU8edG-PLxg@mail.gmail.com>
- <20250114221002.GA10122@redhat.com>
-In-Reply-To: <20250114221002.GA10122@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 14 Jan 2025 15:52:23 -0800
-X-Gm-Features: AbW1kvaFB1PYsr93n9yEMVFW17_zPOqRsiM6abSy7Xf7yYcskYH5C-Hh6Hu8sVw
-Message-ID: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
+Mime-Version: 1.0 (1.0)
 Subject: Re: Crash when attaching uretprobes to processes running in Docker
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>, 
-	Eyal Birger <eyal.birger@gmail.com>, mhiramat@kernel.org, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	BPF-dev-list <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org, tglx@linutronix.de, 
-	bp@alien8.de, x86@kernel.org, linux-api@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Alexei Starovoitov <ast@kernel.org>, "rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io, 
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jan 2025 16:09:08 -0800
+Message-Id: <EBE7D529-5418-4BD6-B9B5-64BE0FBE8569@gmail.com>
+References: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Jiri Olsa <olsajiri@gmail.com>,
+ Sarai Aleksa <cyphar@cyphar.com>, mhiramat@kernel.org,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel@vger.kernel.org, BPF-dev-list <bpf@vger.kernel.org>,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+ John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
+ tglx@linutronix.de, bp@alien8.de, x86@kernel.org, linux-api@vger.kernel.org,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Alexei Starovoitov <ast@kernel.org>, rostedt@goodmis.org, rafi@rbk.io,
+ Shmulik Ladkani <shmulik.ladkani@gmail.com>
+In-Reply-To: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+X-Mailer: iPhone Mail (22D5040d)
 
-On Tue, Jan 14, 2025 at 2:11=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
+Hi,
+
+> On Jan 14, 2025, at 15:52, Andrii Nakryiko <andrii.nakryiko@gmail.com> wro=
 te:
->
-> On 01/14, Andrii Nakryiko wrote:
-> >
-> > On Tue, Jan 14, 2025 at 12:40=E2=80=AFPM Oleg Nesterov <oleg@redhat.com=
-> wrote:
-> > >
-> > > But, unlike sys_uretprobe(), sys_rt_sigreturn() is old, so the existi=
-ng
-> > > setups must know that sigreturn() should be respected...
-> >
-> > someday sys_uretprobe will be old as well ;) FWIW, systemd allowlisted
-> > sys_uretprobe, see [0]
->
-> And I agree! ;)
->
-> I mean, I'd personally prefer to do nothing and wait until userspace figu=
+>=20
+> =EF=BB=BFOn Tue, Jan 14, 2025 at 2:11=E2=80=AFPM Oleg Nesterov <oleg@redha=
+t.com> wrote:
+>>=20
+>>> On 01/14, Andrii Nakryiko wrote:
+>>>=20
+>>> On Tue, Jan 14, 2025 at 12:40=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+>>>>=20
+>>>> But, unlike sys_uretprobe(), sys_rt_sigreturn() is old, so the existing=
+
+>>>> setups must know that sigreturn() should be respected...
+>>>=20
+>>> someday sys_uretprobe will be old as well ;) FWIW, systemd allowlisted
+>>> sys_uretprobe, see [0]
+>>=20
+>> And I agree! ;)
+>>=20
+>> I mean, I'd personally prefer to do nothing and wait until userspace figu=
 res
-> out that we have another "special" syscall.
->
-> But can we do it? I simply do not know. Can we ignore this (valid) bug re=
+>> out that we have another "special" syscall.
+>>=20
+>> But can we do it? I simply do not know. Can we ignore this (valid) bug re=
 port?
->
+>>=20
+>=20
+> Seems wrong for kernel to try to guess whether some syscall is
+> filtered by some policy or not (though maybe I'm misunderstanding the
+> details and it's kernel-originated problem?). Seems like a recipe for
+> more problems.
+>=20
+> Nothing is really fundamentally broken. Some piece of software needs
+> an upgraded library to not disable the kernel's special syscall (just
+> like sys_rt_sigreturn, nothing "new" here, really). Users can't do
+> uprobing in such broken setups (but not in general), seems like a good
+> incentive for everyone to push for the right thing here: fixed up to
+> date software.
 
-Seems wrong for kernel to try to guess whether some syscall is
-filtered by some policy or not (though maybe I'm misunderstanding the
-details and it's kernel-originated problem?). Seems like a recipe for
-more problems.
+It=E2=80=99s not =E2=80=9Cusers=E2=80=9D doing the uprobing in this case.
+Its software, that=E2=80=99s working fine in previous kernel versions and up=
+on upgrade starts creating crashes in other processes.
 
-Nothing is really fundamentally broken. Some piece of software needs
-an upgraded library to not disable the kernel's special syscall (just
-like sys_rt_sigreturn, nothing "new" here, really). Users can't do
-uprobing in such broken setups (but not in general), seems like a good
-incentive for everyone to push for the right thing here: fixed up to
-date software.
+IMHO demanding that other software (e.g docker) be upgraded in order to run o=
+n a newer kernel is not what Linux formerly guaranteed.
 
-> Oleg.
->
+Eyal
+>=20
+>> Oleg.
+>>=20
