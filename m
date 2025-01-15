@@ -1,228 +1,140 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BEA232423
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 04:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C583D22F3A0;
+	Wed, 15 Jan 2025 05:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736915518; cv=none; b=ky/H69hvkYMUn2UPTLSjdnyjzjH+a2NgPK2JOotCMQkvQK7jF6r8z8IeQKxsz8weQIBR8kOAoPwqpo1WvDVpAw5LmG/5Xxu7JCY+RydfZFdSCEJ9nrkW0HoTHTCWICodjHERx51BbDPi1fie32432a4O7aow6i2wPO/nUTgpU0Y=
+	t=1736919944; cv=none; b=FIMU3alspwjEVuEjmTvPW9BQMHpkuBtVyLWcnKXYBMM04j9pTTBgGsbK9jGnFmc88FqYSzJpg5lzWEeHvm6MFD23OTtoN2dXogkA0G8EKdYLtg1McCfg/7ycTQxKtBnMO0YGlrgqd4p0DZZa9L4As6A3UAThxER0j2QdxDchnyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736915518; c=relaxed/simple;
-	bh=dwKZBzdRyaEFgqRkgRDjt4p4kfJfQCufOr1koGXKKbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ssSihN4v4ACNey4f+1FHvGHes8qnfQbgbiUHrJzcBMdFksiWk0ml03VvEI6t+r6tMXUYNFgARkQYkWF/4vVGML8r6IJ5W5gtdDMuObCdyzC+4q/06zIlkZiSY4J88iFVwDtW6TMw/YwUBPOG6kQnzNI0/g06U5ke2TfMftxKy8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M3PMW3fE; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736919944; c=relaxed/simple;
+	bh=XKENOgIBOcFJ1Ixn11DwRC+1OO9t+dwhEIs0TG0ausA=;
+	h=Message-ID:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GGfW0UHy9CA4XKPmX2RFvzqvxI1gyKnEtj7qTEYotX5os3bWHEgI1C4s3RZYnDw6b5Wq2lzB37eTpgoPq9G6vSsO5sAh5ySVSQoQsBr0J7new6fhIuB0Zu9f7ludBb8FSNYfJGB+h7173+MeaQI78Fowhx/RVlTr3kpjTN9O1hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LY+PiwCZ; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M3PMW3fE"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86112ab1ad4so1725593241.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Jan 2025 20:31:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LY+PiwCZ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b35e168so265777f8f.1;
+        Tue, 14 Jan 2025 21:45:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736915515; x=1737520315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1736919941; x=1737524741; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :subject:cc:to:from:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yhUEXTZfkgW4BgxI74qkWusw+s+m3LiFaZUA40ueT84=;
-        b=M3PMW3fE81cIJZesyF8wisA3vUYhWGhXEVK1ghaxkhVSFuz5RQHXGQ9FkqjlZ0Bexr
-         QNEcbHjTQLW0YBzkncQlk8xygOw/Cx06KIZpaiQsSZeGNnKxq/N/pGm9XJ9QgSar4+jO
-         QklLkt8nXZ1TKwCnlag5Ur7p+XNnKfRuoH2MezQNoNqjDva8ThoKSFKrOZjIplBBr11A
-         GVC7q85HOv+WC5UTKavtHOqT1Vrmgwzz4lZyPd3/v5nPq2dRqPAl7IySerICuqslmGjJ
-         Z19iPcb0StwWjirHWXKHEs4Who5RRbExhQ4ZLMd1GF3RzliE12EyaOMtIzrhUFdoNU1i
-         LIsA==
+        bh=bn1csCT/GVnGPTaPaSCG8wldp2T9Q83b/lBJN/si5VA=;
+        b=LY+PiwCZR/pnvToxhyHBhjeYvr3qrDpG+FJg+pIxQaauPcgh1zagrKLBoS2Yeq3Op5
+         FJRGvkKZqvLT54Wqkky6iJQZBW18NNcRYBxecnzqYON8Qck2FLlSWFROg/Tbg5M7I1FJ
+         49wRpwD5YypqJaXVByKv+eUnJ95jB6I6ck7wwrlMjcbncHkRAUlYQbTtiDWQ1SQEHmUd
+         6IM29ZDIJJlfF0SBYglvHSIv7O41gIHiMd2AqS+jaWdtCRhLYces7T3XVPBF9hmvlov9
+         32+cF6G870RlGgUIpLqJcP9Gh7tSL1eekT0YrW1rHp6Hs0S4zry9z8l9BjfqHiLMteit
+         1WRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736915515; x=1737520315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1736919941; x=1737524741;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :subject:cc:to:from:date:message-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yhUEXTZfkgW4BgxI74qkWusw+s+m3LiFaZUA40ueT84=;
-        b=UJORYTZP1Ivbh5oJ89pF8nPeb5ahor3QhJu/bkXhH6cVacE9lBUHFZQ3fq+u9vT/xI
-         Nhkx8d+WWQuG64EAnwBpkWQtY96k5/ETZQ/vzWZTzW0m+yCbJ/bzzHqS8CWUIq8dco+E
-         TPWR/WSdbiq5cq3ZAWsMEQ2mpGuien7zlSmc/1G3A5CVTWVVLBFitFRo2IinOTnBcASo
-         TAw00S0lGMFWhugtwnf1PEXaybmrpbeSLRKbmfasPPXa/mHdrZK5PhMQq/qfMVj9uOpx
-         EhbifMpzn7TYmGNwSa3jZyIWroplfBxEyzKb93vCLqcEjb7EeVj0i0gJB/kilpGYTZSo
-         atlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVREvljzYH/FOcarMZJGZ3ixpyGY2/B8NXvAhBDtH955dWP6x7gl6i7LkpVo4jti5mk1nONFxe4wiut74VdgH7gx3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP3wUBeVE5XUOraXG6v78ZR1xGmy6F3awPV/0/0n+F1FiNI7bR
-	irpEjS4i/9QZyTLLaUJguCm02tdN/Z/wS5j4BXamHJ8gRPJzDYtmmvvAxs9mooGXPrnXIfF1/bo
-	3fPO6d/an7R2nCwF/BjHeg5RiuT8UvusemsKH
-X-Gm-Gg: ASbGncus9xhMWDbeOdwkYzSOwDdmhVtarhWud8SFsWwLe5MOC8JFeOrk2CwanLIBYec
-	bAEErggSBhFogEoBlLdC79qviMgLovO/krb1fQWvpL/AgJ1713OOaNolBnJyv09P2Mgp7fIM=
-X-Google-Smtp-Source: AGHT+IGV1k0H8SbbBA6nThUP6nuirAkFi9y4HuJJgrNaw0QqQFx6vZtOqG1tcU9TKgxw9iHsMXhUfwv5G+xLWaNaSds=
-X-Received: by 2002:a05:6102:151d:b0:4af:5f65:4fd3 with SMTP id
- ada2fe7eead31-4b3d0d84e76mr22672519137.6.1736915515480; Tue, 14 Jan 2025
- 20:31:55 -0800 (PST)
+        bh=bn1csCT/GVnGPTaPaSCG8wldp2T9Q83b/lBJN/si5VA=;
+        b=mVu9PYu9X4wydg8SBmWVlVOMvRFQl57Kplz7i1q90oyUoVFkXgYFV4dulwC7B91Gon
+         Y6A1E3tfbFt2kpF1tB3Wwm7EthDwACObtweW+EQPjv+O8u2g1KUsvd+ldjx95uhX+NwK
+         IVduejuiFOAbeMB6IBlhgtnu2eEsl84Sb6fnJ4S8m17uDai+5OBlSWJ0MoWLwW4z5gmw
+         uAs1wyH5YtNDRw0zSbiSO40y8jcJr7Jt9NQI4qwXP4/z2QgfgRIqJK8nTfQqFeBybPlx
+         dch8lQjFyW4UTro8CusvR0HCMsw+p/Q0zZZFuEQ/s6Y4sWDVC66ywrceKlrQkVhhgWFX
+         1A+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJEJLfJb8Uxgo8h66p5PJmNnZw+2UmBjdP3HNYALpwiubQDvYQ8P7bmFue65KjaSBN6eq6ipd21d/JP3cvuxpqOUwz@vger.kernel.org, AJvYcCWd0wTPTOReZ6hDIbzLxFugRFPBirKRP8lrjWU3exWmayORHib8VcxyAr/cW6hv1On5kgkytGBBP+4k6Kez@vger.kernel.org, AJvYcCX/rueNdGLCSqPGuY4Fmw4puxS8mfw957Y+QcYP/3WZz5c8/44aY6WjZ/C7bLlCMZ7BuxTREseGvj2S@vger.kernel.org, AJvYcCX3gVkvoXDwBr8FrzDReRlQo+DQ7Ahug7PNWBUqmIxQst4lRPl5UKQacyPzw5s8Y09kW8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtanvxhc8u+7sXog0ze6Zy3WNtqCxyTdmDYW9Qgl8L9SVSDAmV
+	JDml5bQfVFGrz7O8Gg+JjjwzkkCipJWloiXDgvwuyYMgFAq7M1rc
+X-Gm-Gg: ASbGncsZ+BknMFtFonQIIRj8Uz3vqdzzr9QzYgQPvIykjgZvNbqCO4+rIHfPNn2lKB2
+	d8Pe06n4v8HOYCNDtNo1PFFFkcHggHTB7S0odWDDfEfVmdt+MYdrAlOK/PX2YNc7pMBsYl4qBt1
+	KeScKS1lR2MhEIE9slMHIcnOQMzz8BiEm/lW0iyhm8eoRopMKpyvXslzEaQpQ0u+qKlel/CjqQJ
+	oI2zymWR+dHT1HTeacT2ODSOKVU0SnxUbQx0VxeHu6ZZf7qJpF5ryJ1pRG6cNg=
+X-Google-Smtp-Source: AGHT+IEp2uMXDIkOxShSAYjUBrAlKxhF4uX0JMMlo/sAFC+3wKNjBf0sJpCC3d++DiPXOy4W2WS6iw==
+X-Received: by 2002:a05:6000:1445:b0:386:4a16:dadb with SMTP id ffacd0b85a97d-38a8b0c712fmr18653518f8f.11.1736919940759;
+        Tue, 14 Jan 2025 21:45:40 -0800 (PST)
+Received: from titan. ([5.29.15.236])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c753ca42sm10098225e9.35.2025.01.14.21.45.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2025 21:45:40 -0800 (PST)
+Message-ID: <67874b84.7b0a0220.3935f4.1f48@mx.google.com>
+X-Google-Original-Message-ID: <20250115074538.02f1ce02@titan.>
+Date: Wed, 15 Jan 2025 07:45:38 +0200
+From: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Eyal Birger <eyal.birger@gmail.com>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, Sarai Aleksa
+ <cyphar@cyphar.com>, mhiramat@kernel.org, linux-kernel
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+ BPF-dev-list <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+ Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>,
+ peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+ linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
+ rostedt@goodmis.org, rafi@rbk.io
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+In-Reply-To: <20250115005012.GA10946@redhat.com>
+References: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
+	<EBE7D529-5418-4BD6-B9B5-64BE0FBE8569@gmail.com>
+	<20250115005012.GA10946@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113093453.1932083-1-kirill.shutemov@linux.intel.com>
- <20250113093453.1932083-5-kirill.shutemov@linux.intel.com>
- <CAJD7tkYH8KO8NLJY564PRAmW-mtMfDCMTECGKyYyVAf+JtTcRA@mail.gmail.com>
- <sct6vvupd4cp6xt66nn6sfs7w3srpx6zcxxsn6rz5qo4tz3la6@btdqsbicmrto>
- <CAJD7tkZwgKRc2kbY9WutC8meOV+CpQSpxKSpkUorEneJJuX9og@mail.gmail.com> <CAOUHufYFKZ=agWpS3mFHyDjXs_Tq7VhM=qBayL0FtJis=W0+Tg@mail.gmail.com>
-In-Reply-To: <CAOUHufYFKZ=agWpS3mFHyDjXs_Tq7VhM=qBayL0FtJis=W0+Tg@mail.gmail.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Tue, 14 Jan 2025 21:31:18 -0700
-X-Gm-Features: AbW1kvbVhru_iw2y_QlJolSm6M0KiY7kXGkDkKwfJ4WtDVBCkcYcJVbv0C9gb3I
-Message-ID: <CAOUHufYwQ=nr08pdiwckDkfL+YVU6JcSdND2fiq6CDt_qMOQHw@mail.gmail.com>
-Subject: Re: [PATCH 4/8] mm/swap: Use PG_dropbehind instead of PG_reclaim
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Jens Axboe <axboe@kernel.dk>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	Andi Shyti <andi.shyti@linux.intel.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Christian Brauner <brauner@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, David Airlie <airlied@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 14, 2025 at 9:28=E2=80=AFPM Yu Zhao <yuzhao@google.com> wrote:
->
-> On Tue, Jan 14, 2025 at 11:03=E2=80=AFAM Yosry Ahmed <yosryahmed@google.c=
-om> wrote:
-> >
-> > On Tue, Jan 14, 2025 at 12:12=E2=80=AFAM Kirill A. Shutemov
-> > <kirill.shutemov@linux.intel.com> wrote:
-> > >
-> > > On Mon, Jan 13, 2025 at 08:17:20AM -0800, Yosry Ahmed wrote:
-> > > > On Mon, Jan 13, 2025 at 1:35=E2=80=AFAM Kirill A. Shutemov
-> > > > <kirill.shutemov@linux.intel.com> wrote:
-> > > > >
-> > > > > The recently introduced PG_dropbehind allows for freeing folios
-> > > > > immediately after writeback. Unlike PG_reclaim, it does not need =
-vmscan
-> > > > > to be involved to get the folio freed.
-> > > > >
-> > > > > Instead of using folio_set_reclaim(), use folio_set_dropbehind() =
-in
-> > > > > lru_deactivate_file().
-> > > > >
-> > > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.co=
-m>
-> > > > > ---
-> > > > >  mm/swap.c | 8 +-------
-> > > > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/mm/swap.c b/mm/swap.c
-> > > > > index fc8281ef4241..4eb33b4804a8 100644
-> > > > > --- a/mm/swap.c
-> > > > > +++ b/mm/swap.c
-> > > > > @@ -562,14 +562,8 @@ static void lru_deactivate_file(struct lruve=
-c *lruvec, struct folio *folio)
-> > > > >         folio_clear_referenced(folio);
-> > > > >
-> > > > >         if (folio_test_writeback(folio) || folio_test_dirty(folio=
-)) {
-> > > > > -               /*
-> > > > > -                * Setting the reclaim flag could race with
-> > > > > -                * folio_end_writeback() and confuse readahead.  =
-But the
-> > > > > -                * race window is _really_ small and  it's not a =
-critical
-> > > > > -                * problem.
-> > > > > -                */
-> > > > >                 lruvec_add_folio(lruvec, folio);
-> > > > > -               folio_set_reclaim(folio);
-> > > > > +               folio_set_dropbehind(folio);
-> > > > >         } else {
-> > > > >                 /*
-> > > > >                  * The folio's writeback ended while it was in th=
-e batch.
-> > > >
-> > > > Now there's a difference in behavior here depending on whether or n=
-ot
-> > > > the folio is under writeback (or will be written back soon). If it =
-is,
-> > > > we set PG_dropbehind to get it freed right after, but if writeback =
-has
-> > > > already ended we put it on the tail of the LRU to be freed later.
-> > > >
-> > > > It's a bit counterintuitive to me that folios with pending writebac=
-k
-> > > > get freed faster than folios that completed their writeback already=
-.
-> > > > Am I missing something?
-> > >
-> > > Yeah, it is strange.
-> > >
-> > > I think we can drop the writeback/dirty check. Set PG_dropbehind and =
-put
-> > > the page on the tail of LRU unconditionally. The check was required t=
-o
-> > > avoid confusion with PG_readahead.
-> > >
-> > > Comment above the function is not valid anymore.
-> >
-> > My read is that we don't put dirty/writeback folios at the tail of the
-> > LRU because they cannot be freed immediately and we want to give them
-> > time to be written back before reclaim reaches them. So I don't think
-> > we want to change that and always put the pages at the tail.
-> >
-> > >
-> > > But the folio that is still dirty under writeback will be freed faste=
-r as
-> > > we get rid of the folio just after writeback is done while clean page=
- can
-> > > dangle on LRU for a while.
-> >
-> > Yeah if we reuse PG_dropbehind then we cannot avoid
-> > folio_end_writeback() freeing the folio faster than clean ones.
-> >
-> > >
-> > > I don't think we have any convenient place to free clean dropbehind p=
-age
-> > > other than shrink_folio_list(). Or do we?
-> >
-> > Not sure tbh. FWIW I am not saying it's necessarily a bad thing to
-> > free dirty/writeback folios before clean ones when deactivated, it's
-> > just strange and a behavioral change from today that I wanted to point
-> > out. Perhaps that's the best we can do for now.
-> >
-> > >
-> > > Looking at shrink_folio_list(), I think we need to bypass page demoti=
-on
-> > > for PG_dropbehind pages.
->
-> I agree with Yosry. I don't think lru_deactivate_file() is still
-> needed -- it was needed only because when truncation fails to free a
-> dirty/writeback folio, page reclaim can do that quickly. For other
-> conditions that mapping_evict_folio() returns 0, there isn't much page
-> reclaim can do, and those conditions are not deactivate_file_folio()
-> and lru_deactivate_file()'s intentions. So the following should be
-> enough, and it's a lot cleaner :
->
-> diff --git a/mm/truncate.c b/mm/truncate.c
-> index e2e115adfbc5..12d2aa608517 100644
-> --- a/mm/truncate.c
-> +++ b/mm/truncate.c
-> @@ -486,7 +486,7 @@ unsigned long mapping_try_invalidate(struct
-> address_space *mapping,
->                          * of interest and try to speed up its reclaim.
->                          */
->                         if (!ret) {
-> -                               deactivate_file_folio(folio);
-> +                               folio_set_dropbehind(folio)
->                                 /* Likely in the lru cache of a remote CP=
-U */
->                                 if (nr_failed)
->                                         (*nr_failed)++;
->
-> Then we can drop deactivate_file_folio() and lru_deactivate_file().
+On Wed, 15 Jan 2025 01:50:13 +0100 Oleg Nesterov <oleg@redhat.com>
+wrote:
 
-And with the above and list_move_tail() removed, we can also remove
-lruvec_add_folio_tail().
+> On 01/14, Eyal Birger wrote:
+> >
+> > Its software, that=E2=80=99s working fine in previous kernel versions a=
+nd
+> > upon upgrade starts creating crashes in other processes.
+> >
+> > IMHO demanding that other software (e.g docker) be upgraded in
+> > order to run on a newer kernel is not what Linux formerly
+> > guaranteed. =20
+>=20
+> Agreed.
+
+IMO There are 2 problematic aspects with ff474a78cef5
+("uprobe: Add uretprobe syscall to speed up return probe").
+
+The first, as Eyal mentioned, is the kernel regression: There are
+endless systems out there (iaas and paas) that have both
+telementry/instrumentation/tracing software (utilizing uprobes) and
+container environments (duch as docker) that enforce syscall
+restrictions on their workloads.
+These systems worked so far, and with kernels having ff474a78cef5 the
+workloads processes fault.
+
+The second, is the fact that ff474a78cef5 (which adds a new syscall
+invocation to the uretprobe trampoline) *exposes an internal kernel
+implementation* to the userspace system:
+
+There are millions of binaries/libraries out there that *never issue*
+the new syscall: they simply do not have that call in their
+instructions. Take for example hello-world.
+
+However, once hello-world is traced (with software utilizing
+uprobes) hello-world *unknowingly* DO issue the new syscall, just
+because the kernel decided to implement its uretprobe trampoline using
+a new syscall - a mechanism that should be completely transparent and
+seamless to the user program.
+
+This is totally unexpected, and to ask a system admin to "guess" whether
+hello-world is "going to issue the syscall despite the fact that
+such invocation does not exist in its own code at all" (and set seccomp
+permissions accordingly) is asking for the admin to know the exact
+*internal mechanisms* that the kernel use for implemeting the
+trampolines.
+
+Just like we won't add a div-by-zero fault to the trampoline, we
+shoudn't add any instruction (such as a syscall) that isn't *completely
+transparent* to the userspace program.
+
+Best,
+    Shmulik
