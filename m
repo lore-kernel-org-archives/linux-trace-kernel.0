@@ -1,49 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4505D248198;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800E51E7C04;
 	Wed, 15 Jan 2025 09:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736933515; cv=none; b=YQKWOb2ESlkvdWFZ9tqS02OHOJtwsaP1kg5cNSRkDEa6Brxcnd6X2rRBLTWtbp/041ectWizdALA8v0Ws4cgY3uJUoQlcr7OxVgbIIh5jZnIH77rweqvyJ1jfrVGAWc/nV3U2h/asN+at0v4tSN0fQRWCPH92udoF2uhbFbO5dE=
+	t=1736933516; cv=none; b=OCTaXkzG6jFOxOLsB1Dx3a+taplduttbG0gD5CSTfV2jcokHVS26qlH5JfNSt/Z4DpwYXW/xJuGL3Lc1wDIyZP3Hv5tTR/BkLzarbPIkmu7VklLdbaj2IT39I7jdWi8yJSIsRy+7VqE4NIoK80DGNPrTj1sjxeOtYzYAkTqk1tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736933515; c=relaxed/simple;
-	bh=k2lsym+qDVzKv9xw6jXrzzrI1X1AkqT6RG6cr0mZKIk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GoE727Xzz4Hv4Vtt1xATf2YtQ1JJEZ60HHsDwjuYNv9nne/ajjGe42JBfC4zQBeJrLYJhmA9HMh7nAcSTvxeHf9bZmUSOV25RGO6HFHjvp7UUVdNKvJyKXhVeI/H7JzSECF3pGrS6QRhSTIZQudyz9e1psCDVvhdQy3AwNMSlmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTKEqOtL; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1736933516; c=relaxed/simple;
+	bh=a239UknTIxW2CKH5kemCn7/leZfYKcHiwL8zSp/0EiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kxENzneJcHbm5yTMZtMUdh8/E7rws4KYTXw9FL07j8CRPLOUun4wR0waGeDtRJQSOD5N4bHQTK5q8XPlAyuKNW9p8n0acrS/2HqUGTzsAeWPpToib1Gke4CnkDf4oNGOEB8sjyjGl3Nlz5Mz2cWXf3Bs5PYmeUgmt/nhbI7m4+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pnt62ecs; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTKEqOtL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pnt62ecs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1736933514; x=1768469514;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=k2lsym+qDVzKv9xw6jXrzzrI1X1AkqT6RG6cr0mZKIk=;
-  b=ZTKEqOtLgmEUUS6hhBKHZe/T/3CMiq9c2At5j0QXRV+l/rTa3qXM5bqA
-   OeE80OkciODVb8/fVJGtx+ZPI7wiL6+U+cJrEUmGgutY910TIpfnFd4N7
-   7t2c94jF3MqKirrjRXss9Rfdt6DdA0AxD3w8IVPD5QcH8YidxVisB9eIp
-   UJRDeZgfc8Sa5vICKLEw5kujIENsxB98W1h+qUQOMPDegrlq8HezgW5mE
-   d6JskQ1wnviHC1KRy7uJghw3wjjkvt89XWWhYIxyuSePJC+6qCEZY4aZR
-   tXqU4N7cOAkDkvLZSGqry3Axz2ixUJGUS+uK1Z9Kn1TYhTjHkJra5zDIt
-   A==;
-X-CSE-ConnectionGUID: dPAW5H/iSIe0XqHd5Rc0JA==
-X-CSE-MsgGUID: uiH+2vL/QNmjBZWXJM0lMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11315"; a="41195042"
-X-IronPort-AV: E=Sophos;i="6.12,316,1728975600"; 
-   d="scan'208";a="41195042"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 01:31:51 -0800
-X-CSE-ConnectionGUID: HG/PN139TYG9PTCef9M0Ww==
-X-CSE-MsgGUID: 2NCfXhHxSjamavT8r97mJQ==
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=a239UknTIxW2CKH5kemCn7/leZfYKcHiwL8zSp/0EiM=;
+  b=Pnt62ecstSYFVx4flN20SZSx3mU7J+YpZ5mgVf4Mp3mcL4x1uyQhSIkR
+   qrY61uWGvqF3xoy31iDcyFMMU4OxuucwIDGlgguB/qjcO9zTC7cfnp1u2
+   TlsxIs4UQC0gPoPDEqI9MG0v4aqeeXcRJIFbh2Kst9cdsJQWcWsIGl4q0
+   wl6RXNKpO3+MvhPHforwLFC5jrzQ7S//Akr+hf7qMycQPYEm7T6rh93jj
+   4X4u1aJq1RYAHBfsTqPbbsLlFewrFhPnrJ0cadvAPHL/mroLWkmdw6xE/
+   iDnJqef7k25ojcAhVPj4L5ec5AnMGM9bqu3Q6NAqKRnneGhSbA9hE9u1q
+   w==;
+X-CSE-ConnectionGUID: 0kQxYKsORKKuVwgcbRAItg==
+X-CSE-MsgGUID: dk33gebdTU6jzgQWgjS3eA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="37371856"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="37371856"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2025 01:31:52 -0800
+X-CSE-ConnectionGUID: ltRxBoJPQditDzSqg/CR1A==
+X-CSE-MsgGUID: ewfu1EWYS/iNJTs2vK9cyA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="109700830"
+X-IronPort-AV: E=Sophos;i="6.12,316,1728975600"; 
+   d="scan'208";a="110066758"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 15 Jan 2025 01:31:43 -0800
+  by orviesa004.jf.intel.com with ESMTP; 15 Jan 2025 01:31:43 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 22B113B7; Wed, 15 Jan 2025 11:31:42 +0200 (EET)
+	id 652314AB; Wed, 15 Jan 2025 11:31:42 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -81,10 +82,12 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv2 00/11] Get rid of PG_reclaim and rename PG_dropbehind
-Date: Wed, 15 Jan 2025 11:31:24 +0200
-Message-ID: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 04/11] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+Date: Wed, 15 Jan 2025 11:31:28 +0200
+Message-ID: <20250115093135.3288234-5-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com>
+References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -93,50 +96,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use PG_dropbehind instead of PG_reclaim and remove PG_reclaim.
+The recently introduced PG_dropbehind allows for freeing folios
+immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+to be involved to get the folio freed.
 
-After removing PG_relcaim, PG_readahead is exclusive user of the page
-flag bit.
+Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+zswap_writeback_entry().
 
-Once PG_reclaim is gone, we can rename PG_dropbehind to PG_reclaim.
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Yosry Ahmed <yosryahmed@google.com>
+---
+ mm/zswap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Kirill A. Shutemov (11):
-  mm/migrate: Transfer PG_dropbehind to the new folio
-  drm/i915/gem: Convert __shmem_writeback() to folios
-  drm/i915/gem: Use PG_dropbehind instead of PG_reclaim
-  mm/zswap: Use PG_dropbehind instead of PG_reclaim
-  mm/truncate: Use folio_set_dropbehind() instead of
-    deactivate_file_folio()
-  mm/vmscan: Use PG_dropbehind instead of PG_reclaim
-  mm/vmscan: Use PG_dropbehind instead of PG_reclaim in
-    shrink_folio_list()
-  mm/mglru: Check PG_dropbehind instead of PG_reclaim in
-    lru_gen_folio_seq()
-  mm: Remove PG_reclaim
-  mm/vmscan: Do not demote PG_dropbehind folios
-  mm: Rename PG_dropbehind to PG_reclaim
-
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  18 ++-
- fs/fuse/dev.c                             |   2 +-
- fs/proc/page.c                            |   2 +-
- include/linux/mm_inline.h                 |  18 +--
- include/linux/page-flags.h                |  23 ++--
- include/linux/pagemap.h                   |   2 +-
- include/trace/events/mmflags.h            |   4 +-
- include/uapi/linux/kernel-page-flags.h    |   2 +-
- mm/filemap.c                              |  46 +++----
- mm/internal.h                             |   1 -
- mm/migrate.c                              |  14 +-
- mm/page-writeback.c                       |  16 +--
- mm/page_io.c                              |  15 +--
- mm/readahead.c                            |   4 +-
- mm/swap.c                                 | 153 +---------------------
- mm/truncate.c                             |   2 +-
- mm/vmscan.c                               |  28 +---
- mm/zswap.c                                |   2 +-
- tools/mm/page-types.c                     |   8 +-
- 19 files changed, 65 insertions(+), 295 deletions(-)
-
+diff --git a/mm/zswap.c b/mm/zswap.c
+index 167ae641379f..c20bad0b0978 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -1096,8 +1096,8 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
+ 	/* folio is up to date */
+ 	folio_mark_uptodate(folio);
+ 
+-	/* move it to the tail of the inactive list after end_writeback */
+-	folio_set_reclaim(folio);
++	/* free the folio after writeback */
++	folio_set_dropbehind(folio);
+ 
+ 	/* start writeback */
+ 	__swap_writepage(folio, &wbc);
 -- 
 2.45.2
 
