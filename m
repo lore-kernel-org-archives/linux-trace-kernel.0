@@ -1,70 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90892146D6B;
-	Wed, 15 Jan 2025 15:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7154C158525
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Jan 2025 15:52:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736954810; cv=none; b=Ty8MAQ7fh5/tPVvPxZ7QLNJ5F+pW1VBh1Ja6vKhV2KJk0cJoup5HV5VKFO8DBazys3P1Fa8jLazNaQ6xDMl8oarhXzb60B2qzMcx/wKwHj3/FqVx1xjvgEypIDddr+uUxoLz8BBSRYoRRFRk04sm2IRalscHw1h4VyC6hz6b8uw=
+	t=1736956360; cv=none; b=LAUJoyy5IfBS+kfTeCOjRshe7/oOiBz3Ct1nN/lfXn5oYTnu/e+bMySuhMyUhj/oemcyFjAJZcnRKutVzKcGSSALsUCwT6e8C4qZlWuo0qGlkta0C6VX2A8DEB/kcNskal8hPaezVNnZIMv1r5L69Lgejdn74t3539PnOKijYaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736954810; c=relaxed/simple;
-	bh=WwSLIpyBGidJ68Rdn/b7fcukP28fqz6kKV4TBaVASOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jy+ZmVDYv6f4xY3PFmRIvRwCWxgGzLRWL5R1LURJ6hezx4lfCIHDoh8FV23sAsQhxTUuU7zj2q0PB/tLMbuCMs04VZoTs9E//AzSlhlPfkzZ6FdZhgXL7lrHRzC7kGzfprIEUxB+VNyjhtf//7uKnYlndFgRdGADxkgRmfgEBrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E841DC4CED1;
-	Wed, 15 Jan 2025 15:26:48 +0000 (UTC)
-Date: Wed, 15 Jan 2025 10:26:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Daniel Bristot de Oliveira
- <bristot@kernel.org>, John Kacur <jkacur@redhat.com>, "Luis Claudio R.
- Goncalves" <lgoncalv@redhat.com>, Eder Zulian <ezulian@redhat.com>, Tomas
- Glozar <tglozar@redhat.com>, Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Fix bug and add osnoise_trace_is_off()
-Message-ID: <20250115102651.306f3b7b@gandalf.local.home>
-In-Reply-To: <4ee1e1a7-f0b3-4062-97d9-45a342d0ca21@stanley.mountain>
-References: <20250115081157.1274398-1-costa.shul@redhat.com>
-	<4ee1e1a7-f0b3-4062-97d9-45a342d0ca21@stanley.mountain>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1736956360; c=relaxed/simple;
+	bh=OLiyJXUVPiOWpx+CfgXGe7fdVxM/3FU3rsesfzAiLhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZugHB6xWwQTIqQCwGaA/h7rQSQgha38+4Qp8MKG74kIMAknuXJQJwE6ZvfcUWB1jc0yNGMkdDrx9ztpVLevll3nRqOddTKcbdOYz6vaFxSgv9Ks/z/U20mtSaa51H6UQRKvQeq9Pj0TZUtREzgWbeuoBczSMZc/sqjRhdGanXMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PgQvm9+Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PgQvm9+Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1736956357;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OLiyJXUVPiOWpx+CfgXGe7fdVxM/3FU3rsesfzAiLhs=;
+	b=PgQvm9+QldUxHAQD8KkzeeoXDIzy1XRuOuF8WHRQYdA7EQ50j/D2XfE0lTRF2W+O0KUBB3
+	ET2m3eomNSsljJuoaSYN7qnMYN6cJZ7jYO2d9muTAFc+GdL7GhyS/lylu/w35p0Nez9heq
+	NfOJasN+SbgRITfrXnvyznGqr1NlM44=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-198-zHUsd3CiMfGI3sJwRhouBw-1; Wed,
+ 15 Jan 2025 10:52:31 -0500
+X-MC-Unique: zHUsd3CiMfGI3sJwRhouBw-1
+X-Mimecast-MFC-AGG-ID: zHUsd3CiMfGI3sJwRhouBw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 202621955DB8;
+	Wed, 15 Jan 2025 15:52:27 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B2C5819560AD;
+	Wed, 15 Jan 2025 15:52:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 15 Jan 2025 16:52:02 +0100 (CET)
+Date: Wed, 15 Jan 2025 16:51:53 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Cc: Eyal Birger <eyal.birger@gmail.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, Sarai Aleksa <cyphar@cyphar.com>,
+	mhiramat@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	BPF-dev-list <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
+	tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+	linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>, rostedt@goodmis.org,
+	rafi@rbk.io
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-ID: <20250115155153.GB11980@redhat.com>
+References: <CAEf4BzZquQBW1DuEmfhUTicoyHOeEpT6FG7VBR-kG35f7Rb5Zw@mail.gmail.com>
+ <EBE7D529-5418-4BD6-B9B5-64BE0FBE8569@gmail.com>
+ <20250115005012.GA10946@redhat.com>
+ <67874b84.7b0a0220.3935f4.1f48@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67874b84.7b0a0220.3935f4.1f48@mx.google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, 15 Jan 2025 12:02:00 +0300
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
+On 01/15, Shmulik Ladkani wrote:
+>
+> IMO There are 2 problematic aspects with ff474a78cef5
+> ("uprobe: Add uretprobe syscall to speed up return probe").
+>
+> The first, as Eyal mentioned, is the kernel regression: There are
+> endless systems out there (iaas and paas) that have both
+> telementry/instrumentation/tracing software (utilizing uprobes) and
+> container environments (duch as docker) that enforce syscall
+> restrictions on their workloads.
+> These systems worked so far, and with kernels having ff474a78cef5 the
+> workloads processes fault.
 
-> You introduced a bug by changing the order.
-> 
-> You have to undestand that to the original authors this stuff was really
-> easy and they knew the order of the struct members because they chose it
-> deliberately.  In the end, they get so used to the code that
-> "&record->trace" just becomes an idiom for casting "record" and they
-> forget how it looks to a newcomer.
-> 
-> I *personally* am not a fan of code which assumes we know the order of
-> the struct members so I don't have a problem with you re-writing the
-> code.  But the commit message must say that it is just a cleanup and not
-> a fix.
-> 
-> Which reminds me that I had intended to create a container_of_first()
-> for code like this which assumes that container_of() is just a cast.
-> There is lots of code like this:
-> 
-> 	struct something *member = container_of(p, struct foo, first_member);
-> 
-> 	if (IS_ERR(member)) {
-> 
-> Which relies on the face that "first_member" is the first member of
-> foo struct.  It's a quite common thing.
+Again, I have to agree. The kernel should not break userspace.
 
-I agree that this is not a bug, but I will happily take a clean up to make
-it more robust.
+But,
 
--- Steve
+> The second, is the fact that ff474a78cef5 (which adds a new syscall
+> invocation to the uretprobe trampoline) *exposes an internal kernel
+> implementation* to the userspace system:
+
+I disagree...
+
+> There are millions of binaries/libraries out there that *never issue*
+> the new syscall: they simply do not have that call in their
+> instructions. Take for example hello-world.
+
+And they should never use this syscall,
+
+> However, once hello-world is traced (with software utilizing
+> uprobes) hello-world *unknowingly* DO issue the new syscall, just
+> because the kernel decided to implement its uretprobe trampoline using
+> a new syscall - a mechanism that should be completely transparent and
+> seamless to the user program.
+
+IMO, sys_uretprobe() doesn't really differ from sys_sigreturn() in this
+respect.
+
+> This is totally unexpected, and to ask a system admin to "guess" whether
+> hello-world is "going to issue the syscall despite the fact that
+> such invocation does not exist in its own code at all" (and set seccomp
+> permissions accordingly) is asking for the admin to know the exact
+> *internal mechanisms* that the kernel use for implemeting the
+> trampolines.
+
+Well, man 2 uretprobe can help ;)
+
+> we
+> shoudn't add any instruction (such as a syscall) that isn't *completely
+> transparent* to the userspace program.
+
+We can't make it *completely transparent*, but it is easy to hide this
+syscall from seccomp (and/or ptrace).
+
+And this will fix the problem. But I don't feel this is the right solution.
+
+Oleg.
+
