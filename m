@@ -1,102 +1,186 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D82115442C;
-	Thu, 16 Jan 2025 17:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64379139CFF;
+	Thu, 16 Jan 2025 18:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737047532; cv=none; b=Oqhow7wPFWje7JdWFB0xcx5rfA48b3bsN7aMGeViTAtr32OqQYKZIA8YAJ55LjdTM8OKdoOK5lPIAowGYTxJy3fjNt4hRNbhYlEJzmu9BbLJ1vZ+077KSKSP86xB906YAGOQ2NzybQRiVZOmuXaSeDoinS416pJ60vuUmgBt3eM=
+	t=1737051835; cv=none; b=EFzLqh3q6tGG2qCxDcK5WiWqPC9+T6PkFNZ4c6Dx36Bku4oUkI1Zdpey9tTBRK2bnDjel9mtrzMIyWDh0NS51g/Esd4YJuCUWmfVDcKkjj8WSWM2WRxvxlT1lvBwM2H8e4WYZ4EeRcatLvLkRG1JCJt+QscyPbHS0gCMoNyeR3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737047532; c=relaxed/simple;
-	bh=1ZjDAefkkir6NuPWAVn/XE5Z9Yh9OUEFfyK1SEkrDYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NF2PSjQQ0e2CSG2omNJU1HRfixax0GcXDxd7XRo+cogUk6QTTmbDKyHWVdDb+2wLoHBE03XhsS9jn7LiB5wcJUu56UcDVvNEaHkU+ngnfDKjn7/F5TMyG1I/4hIaeNbJJjmJRPcIAJpPeRa+a66uzbul3/qKXJ+ZjKRw2qkMoVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffNYlZMp; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffNYlZMp"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-29fe83208a4so691405fac.0;
-        Thu, 16 Jan 2025 09:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737047529; x=1737652329; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ZjDAefkkir6NuPWAVn/XE5Z9Yh9OUEFfyK1SEkrDYA=;
-        b=ffNYlZMpdNu0TWuAL6fqCLoZlsBQ10QisrHG5EWKt0VwQMvA8T5ey9sfc0eoE3wdXW
-         y//6Fw7EMxbWqAhHlwpzBbBMPr4xqp9eP1MyQXf/K5eCyoPtSnDmcdLDISMeiThyv4DZ
-         Cebbnl8P5US2YenMePO2s7vxL+sVvA6Q77wy+Vmeb6hxp8JYrt0/GMaiwANJad/TXhf7
-         KAeoqFEl9Eiy2TGkJWPrUherGbHZdu0FyCZkkkwrLRvZ7OAfyvbJMC+U4hCBUOybtnKY
-         td7ZJalKiBCNVayEy6LhZs8CciuignFlrVhZ0prK5HllwhJ6oFk4ObSqhVzeQaP+3M9t
-         rt3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737047529; x=1737652329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ZjDAefkkir6NuPWAVn/XE5Z9Yh9OUEFfyK1SEkrDYA=;
-        b=XI7CN65gY41ovypd8JIQBVZiuM8xey0FRWp1nLqKdZwkMM7UJJJo5eMUWynoSF1NHO
-         rFap6ddlbxTsivj/e2pReQkMAnSOiGnWq8Kr5141jP16Ycj1aXlRz5QWEfxE0ejPWbeY
-         vu0soxUmvFDjyCHQwDKxhZNX56nJrSunKNgy/pLP3cux+fKo/XAdS2EzLCGP4pdRJgXO
-         QMDcadtJ6ZmSGQoCf015LXFKobSdJn6gUQPzCJtldYcLp9pKbXD67xh48MWpUvpyvjaF
-         fJnnXGbbRwO6D0zc70Te0y4f9v6SKSrMrlgypAewe2gJN7Nx1Z9bePVl+zW9MlrtzQZ3
-         KbjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJAa7g1V2mf+x0+cMb6ukGR7OyA8x1QuecEtZ3MhkH7cSK0GhgN0ZGh/bHQqX/Knr9Bw/CjoGDysEd@vger.kernel.org, AJvYcCW+PNCYlzwCWZg2ueMcFzQSpEpNRHPMYpSsbBp39/2e4hBFMs2z3swAhtGkzrY/Ns8AGk274eioA2VbUxp/IPPohGBN@vger.kernel.org, AJvYcCW7CttuZzwQea8HHAStYIogS9V3wlDcHdmUZhe/1ZLKbWqh0Z1Lkx9DsInQCYC8/xhKNm0=@vger.kernel.org, AJvYcCWBw4+qDpuAnvmzauoijEbmNF9fsKrNLbx3TBMrwJdq+UK7Tfm2ZlOHMc+KQtYGjtNMnK57HuLS6x/p9kOR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpgZ2C3Snvu9n4N0pv4ZhrPHZnz5vNCa/77Sl69u6xrrMbp/ps
-	7wq5/bPFnT3GD7vami0mBaI6VIk3YC28ld24aFErlPHvSrMCxBCtLr/gNcu+l4fJ2zMsBh6Lh5u
-	YMyXqAyuaYj70NVELYJu3XjCMLQU=
-X-Gm-Gg: ASbGncucjB7F/pYh12Rm13kNV7bJTbIpGNYih8kCRCx/iXArI8YJuznYhRg6Qfq/HGP
-	fQ0uC3dsvG+e+SHan8so1UhN6li3RIYqkYqBntw==
-X-Google-Smtp-Source: AGHT+IFE5YOiTCzwej2+zI3c0cxmQVw/BAMwETsC/4JHp3F3p0g2wuJSUxCQg2x7/drM7Z1WV0NDYdh2JHNE1GOSkcA=
-X-Received: by 2002:a05:6870:d14a:b0:2a7:8b78:e902 with SMTP id
- 586e51a60fabf-2b186a772c9mr5104602fac.7.1737047529676; Thu, 16 Jan 2025
- 09:12:09 -0800 (PST)
+	s=arc-20240116; t=1737051835; c=relaxed/simple;
+	bh=9jLlGWE5R6qRiPuUFWH0LyBDz6L1DSm74odLKmg/PAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LOweObqXt+iz3nLRQw10SV5bjqeVHWfC+pFVWX98+MsT0Rsz4fbQkhrXn/I+hp7r3aIYx14KKB0ipPW8dfoqHbC2kVfq8XJ+V0nIErNtpy/A7inAt7fTEWyf6B/Qa8oS+KqlNMWklbef8WFmJ2QemfpQ/iTmWmL5C1WmyIr13v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B31C4CED6;
+	Thu, 16 Jan 2025 18:23:53 +0000 (UTC)
+Date: Thu, 16 Jan 2025 13:23:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Michael Petlan <mpetlan@redhat.com>, Veronika
+ Molnarova <vmolnaro@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] tracing: gfp: Fix the GFP enum values shown for user space
+ tracing tools
+Message-ID: <20250116132359.1f20cdec@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250114172519.GB29305@redhat.com> <Z4eBs0-kJ3iVZjXL@krava>
- <20250115150607.GA11980@redhat.com> <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
- <20250115184011.GA21801@redhat.com> <CAHsH6Gu1kXZ=m3eoTeZcZ9n=n2scxw7z074PnY5oTsXfTqZ=vQ@mail.gmail.com>
- <20250115190304.GB21801@redhat.com> <CAHsH6Gtd5kYPife3hK+uKafjBMx=-23UzvQgnOnqNDzSZgHyqw@mail.gmail.com>
- <20250116143956.GD21801@redhat.com> <CAHsH6GukV+ydR+hw_-RF=0=_x6aO7xZzkCmbc53=Pk0Kv=8hUQ@mail.gmail.com>
- <20250116153044.GF21801@redhat.com>
-In-Reply-To: <20250116153044.GF21801@redhat.com>
-From: Eyal Birger <eyal.birger@gmail.com>
-Date: Thu, 16 Jan 2025 09:11:57 -0800
-X-Gm-Features: AbW1kvYwkSvS83x9824ZSnXRqsuwoFy-nzCc8TqU2Npnmap9Y_QqEQG9C9BBJnY
-Message-ID: <CAHsH6GshxQxw2euH_v+cvoCk=17GLQXgogUUWzLmo2P=gO9oLg@mail.gmail.com>
-Subject: Re: Crash when attaching uretprobes to processes running in Docker
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Aleksa Sarai <cyphar@cyphar.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, BPF-dev-list <bpf@vger.kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>, 
-	Linux API <linux-api@vger.kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>, "rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io, 
-	Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 16, 2025 at 7:31=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 01/16, Eyal Birger wrote:
-> >
-> > Ack. I agree.
-> >
-> > Do you want to send a formal patch, or should I?
->
-> Please send the patch ;)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Will do. If it's ok I'll put you in a "Suggested-by" tag (or
-co-developed - as you see fit).
+Tracing tools like perf and trace-cmd read the /sys/kernel/tracing/events/*/*/format
+files to know how to parse the data and also how to print it. For the
+"print fmt" portion of that file, if anything uses an enum that is not
+exported to the tracing system, user space will not be able to parse it.
 
-Eyal.
+The GFP flags use to be defines, and defines get translated in the print
+fmt sections. But now they are converted to use enums, which is not.
+
+The mm_page_alloc trace event format use to have:
+
+  print fmt: "page=%p pfn=0x%lx order=%d migratetype=%d gfp_flags=%s",
+    REC->pfn != -1UL ? (((struct page *)vmemmap_base) + (REC->pfn)) : ((void
+    *)0), REC->pfn != -1UL ? REC->pfn : 0, REC->order, REC->migratetype,
+    (REC->gfp_flags) ? __print_flags(REC->gfp_flags, "|", {( unsigned
+    long)(((((((( gfp_t)(0x400u|0x800u)) | (( gfp_t)0x40u) | (( gfp_t)0x80u) |
+    (( gfp_t)0x100000u)) | (( gfp_t)0x02u)) | (( gfp_t)0x08u) | (( gfp_t)0)) |
+    (( gfp_t)0x40000u) | (( gfp_t)0x80000u) | (( gfp_t)0x2000u)) & ~((
+    gfp_t)(0x400u|0x800u))) | (( gfp_t)0x400u)), "GFP_TRANSHUGE"}, {( unsigned
+    long)((((((( gfp_t)(0x400u|0x800u)) | (( gfp_t)0x40u) | (( gfp_t)0x80u) |
+    (( gfp_t)0x100000u)) | (( gfp_t)0x02u)) | (( gfp_t)0x08u) | (( gfp_t)0)) ...
+
+Where the GFP values are shown and not their names. But after the GFP
+flags were converted to use enums, it has:
+
+  print fmt: "page=%p pfn=0x%lx order=%d migratetype=%d gfp_flags=%s",
+    REC->pfn != -1UL ? (vmemmap + (REC->pfn)) : ((void *)0), REC->pfn != -1UL
+    ? REC->pfn : 0, REC->order, REC->migratetype, (REC->gfp_flags) ?
+    __print_flags(REC->gfp_flags, "|", {( unsigned long)((((((((
+    gfp_t)(((((1UL))) << (___GFP_DIRECT_RECLAIM_BIT))|((((1UL))) <<
+    (___GFP_KSWAPD_RECLAIM_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_IO_BIT)))
+    | (( gfp_t)((((1UL))) << (___GFP_FS_BIT))) | (( gfp_t)((((1UL))) <<
+    (___GFP_HARDWALL_BIT)))) | (( gfp_t)((((1UL))) << (___GFP_HIGHMEM_BIT))))
+    | (( gfp_t)((((1UL))) << (___GFP_MOVABLE_BIT))) | (( gfp_t)0)) | ((
+    gfp_t)((((1UL))) << (___GFP_COMP_BIT))) ...
+
+Where the enums names like ___GFP_KSWAPD_RECLAIM_BIT are shown and not their
+values. User space has no way to convert these names to their values and
+the output will fail to parse. What is shown is now:
+
+  mm_page_alloc:  page=0xffffffff981685f3 pfn=0x1d1ac1 order=0 migratetype=1 gfp_flags=0x140cca
+
+The TRACE_DEFINE_ENUM() macro was created to handle enums in the print fmt
+files. This causes them to be replaced at boot up with the numbers, so
+that user space tooling can parse it. By using this macro, the output is
+back to the human readable:
+
+  mm_page_alloc: page=0xffffffff981685f3 pfn=0x122233 order=0 migratetype=1 gfp_flags=GFP_HIGHUSER_MOVABLE|__GFP_COMP
+
+Cc: stable@vger.kernel.org
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Closes: https://lore.kernel.org/all/87be5f7c-1a0-dad-daa0-54e342efaea7@redhat.com/
+Fixes: 772dd0342727c ("mm: enumerate all gfp flags")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/gfp_types.h      | 47 ++++++++++++++++++++++++++++++++++
+ include/trace/events/kmem.h    |  2 ++
+ include/trace/events/mmflags.h |  2 ++
+ 3 files changed, 51 insertions(+)
+
+diff --git a/include/linux/gfp_types.h b/include/linux/gfp_types.h
+index 65db9349f905..57efa0310900 100644
+--- a/include/linux/gfp_types.h
++++ b/include/linux/gfp_types.h
+@@ -104,6 +104,53 @@ enum {
+ #define ___GFP_NO_OBJ_EXT       0
+ #endif
+ 
++/* Need to have GFP flags convert to numbers in trace event format files */
++#define TRACE_DEFINE_GFP_FLAGS_GENERAL			\
++	TRACE_DEFINE_ENUM(___GFP_DMA_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_HIGHMEM_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_DMA32_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_MOVABLE_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_RECLAIMABLE_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_HIGH_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_IO_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_FS_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_ZERO_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_UNUSED_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_DIRECT_RECLAIM_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_KSWAPD_RECLAIM_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_WRITE_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_NOWARN_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_RETRY_MAYFAIL_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_NOFAIL_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_NORETRY_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_MEMALLOC_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_COMP_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_NOMEMALLOC_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_HARDWALL_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_THISNODE_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_ACCOUNT_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_ZEROTAGS_BIT);		\
++	TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
++
++#ifdef CONFIG_KASAN_HW_TAGS
++# define TRACE_DEFINE_GFP_FLAGS_KASAN			\
++	TRACE_DEFINE_ENUM(___GFP_SKIP_ZERO_BIT);	\
++	TRACE_DEFINE_ENUM(___GFP_SKIP_KASAN_BIT);
++#else
++# define TRACE_DEFINE_GFP_FLAGS_KASAN
++#endif
++#ifdef CONFIG_LOCKDEP
++# define TRACE_DEFINE_GFP_FLAGS_LOCKDEP			\
++	TRACE_DEFINE_ENUM(___GFP_NOLOCKDEP_BIT);
++#else
++# define TRACE_DEFINE_GFP_FLAGS_LOCKDEP
++#endif
++
++#define TRACE_DEFINE_GFP_FLAGS			\
++	TRACE_DEFINE_GFP_FLAGS_GENERAL		\
++	TRACE_DEFINE_GFP_FLAGS_KASAN		\
++	TRACE_DEFINE_GFP_FLAGS_LOCKDEP
++
+ /*
+  * Physical address zone modifiers (see linux/mmzone.h - low four bits)
+  *
+diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+index b37eb0a7060f..e32098c0f187 100644
+--- a/include/trace/events/kmem.h
++++ b/include/trace/events/kmem.h
+@@ -9,6 +9,8 @@
+ #include <linux/tracepoint.h>
+ #include <trace/events/mmflags.h>
+ 
++TRACE_DEFINE_GFP_FLAGS
++
+ TRACE_EVENT(kmem_cache_alloc,
+ 
+ 	TP_PROTO(unsigned long call_site,
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index bb8a59c6caa2..522bbe3a5fe1 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -15,6 +15,8 @@
+ 
+ #define gfpflag_string(flag) {(__force unsigned long)flag, #flag}
+ 
++TRACE_DEFINE_GFP_FLAGS
++
+ #define __def_gfpflag_names			\
+ 	gfpflag_string(GFP_TRANSHUGE),		\
+ 	gfpflag_string(GFP_TRANSHUGE_LIGHT),	\
+-- 
+2.45.2
+
