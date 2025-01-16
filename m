@@ -1,76 +1,86 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39DC24A7C2;
-	Thu, 16 Jan 2025 11:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A5324A7C2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Jan 2025 12:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737028117; cv=none; b=Ni1DiR1TCzLIiOGBQY0QNUgYf2wvkbtfyOBdlOlPgSeyIZwlWMqmS93ZLmpkYdFCZRN8WUaeyHxIme849urb6C6gBIRNRlDISqHbS0yR2E+0np0McMGhI6xI+DlpgJNkeomwypV1/Rik20AuIyd0sdJTE3S7prPu/H+c39zVLnQ=
+	t=1737029066; cv=none; b=QiGY6GyzSE+mh2oDxQtL95T1soIfNvloP9n7xCIoZjPFFq7DueS8KvN0h9/6h1NH2JgPuNglaX8Z8JYM81ZjAeIxvHbLDGU++u5DyJGFryTnKsEJOpT2IMKgxY6u/pMMJZiZK+UpauwnOL0Rm4AlcRkSWq9lGwH76K1Dho+lNT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737028117; c=relaxed/simple;
-	bh=HJzh5eLYCv8EJJgmVTMsiQgqHdac+IUf/vJRGhPT/Ow=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuM6iNrNzAO+CLHlQZ4zqrV+DKH/fjKP3nbJCTtCyKqWL91WFPIX0diq7sF9bU9ji6UZ0mIxpQD5Z/piTRj2l1xoPNZUzVnU+P4lSFKKjal2x2r9wG7bN87fVCdYnUp2AFAanNfh60RblNmDFt0IKuGDJhokon+g0sJQo3Vnu9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eOeQbs4h; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737029066; c=relaxed/simple;
+	bh=7O7EvLuq/pJkk1cZRSrpAzVVVNONcdN3dan42PjaX80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZR1B5Y3+8p9DgJrhRREG8TPpbe7LPK1Lb+nFSqPUIMGx+l/tFqQi91e5nHQ5hyVoTauzQC1rJxD9dLiYwCikBTlZU5km7y87oNDI4VjOoOa27ftkEdMgIELwCOirCyr6Bf5k4I1nNtzZadLzBgyvkh1uhnmt7mdUOgsSqqVGxaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D8SuBkjG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=k6N8G9Kl; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D8SuBkjG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=k6N8G9Kl; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eOeQbs4h"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso11894295e9.0;
-        Thu, 16 Jan 2025 03:48:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737028114; x=1737632914; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EPZnBUtvS/OYO7Vs8h8x8FOhvEvG+0Oo/UW/4x38QI=;
-        b=eOeQbs4hiy3GrGXkcko1Mbor6cZOmgmxA5WEtKB7aFtJpXzj7OWxuduP/jxYYHfzRR
-         VtzfHyw4NOR/kHkImZJO5H9D5FH01O8ttBXU5yAVmyG42277V9ydHKRgexB82D03K7nJ
-         Hcn8EjCzHPr1vsNkN/HlYRy4G3XycozVzfki6IsN2VAfbsGkbLzsvQNVXxp0T0dN7Z9j
-         rcDNTmgYdjpmMt87y0pc/CA/MBhze69SpVN4AFvCFP7RYbhe2qlVaYBnPe+75XAer0jP
-         uXJ/ZJYyuGZH4JUTIiLiFG8B9X00eYEWR762f8D4aRy2p7WKIzSzYAH70MNJu++mGxpw
-         511g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737028114; x=1737632914;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8EPZnBUtvS/OYO7Vs8h8x8FOhvEvG+0Oo/UW/4x38QI=;
-        b=rc/69aRYqaF5WFIY0CTfv7n6pZvsUzvmrjGYv83hKZaEGEWAJmM4BFnWCR5Y//Y7Xm
-         T1KKB+0/Ph/fK+z+kIK1qLhSz5U76YGDQc3AsppE9unOOabRPUDRC6VyC5TNCexbZ6VH
-         LrIvCumNDO4MThRnpftDK5P+dODfld6BxCctQIzOJwDuXkMWPqJ2m2Aq+XWTg1T8B4pZ
-         DJNgraRH3NmlEs0bjvVe8AIR/CUkTGhIYlQjd4PyKHUcp2Nt351AZEYvoF5PbeQS6+Sb
-         TzR76XKAbqEjzP2qTU8Izx8DsL18rnaZr8/Ziqk37SOvDZ8UF+dODpBFdsOl03Kv+APw
-         BscQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ499TpQuxVpIlk/H0nYjlUbt4s2EVHeotTazq1lkx+X1665aFeJ49x8zbHYpyjE0JE6ur6MswYXkgsPc/Xv2+3EzN@vger.kernel.org, AJvYcCXNIgkVzInAwN2v8ha6fgNQYZQZyAD0MCRaHe/ulK+l52aLyRl0K6aJl9kw20hoZ/Su5CbypxQxBjTpmvlG@vger.kernel.org, AJvYcCXix7BpiC0Y/4JmzPk+5sq5EmOydEssXjb3jkto7W2sy1696VLE6g1oWZlsyF2rSQMKD+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0gyXcUpnYUSP6lIbBT42QIhD9N/u7wC3v9DVofI/7WMjlNZKs
-	BMvfi3jifK2mhkj11PiE3kGyGSn2tD96S+ie3S6xY3Df5Cm8dxQwFw+TYg==
-X-Gm-Gg: ASbGncv4P5puPc82U/+WHTGxnbMWWx8qXGjYfsL3MwwuqcSVRqU6lJFgUbdWN6eWepZ
-	OG5UaRBmYqRL9vt6VYwXnQQlhf301JxENwIzni+K0easHrz03J7OiMYAi0WWLNW5fwRHqW98tC1
-	4CtAdp7unyDRVdZLxQwXyj3OawJvYbzO+FsS8/81CXKF+nDGQ/GGSvVzj/2CVLzrzpDg+O+QUIX
-	5LkJMONVgUnqHqOKn0fsE7lFz6/5kjYVCwkAZI3kkY=
-X-Google-Smtp-Source: AGHT+IEkVAIA+sDM935/MFzAgL6IUhxWzJiTMKcSNJzf8RYXLXA5lacmebdk4RcP/RK9qsmIXTWdVA==
-X-Received: by 2002:a5d:648c:0:b0:38a:906e:16c3 with SMTP id ffacd0b85a97d-38bec4fbceemr2364082f8f.13.1737028113971;
-        Thu, 16 Jan 2025 03:48:33 -0800 (PST)
-Received: from krava ([213.175.46.84])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e37d154sm20691803f8f.10.2025.01.16.03.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2025 03:48:33 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 16 Jan 2025 12:48:32 +0100
-To: David Laight <David.Laight@aculab.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	lkml <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC] x86/alternatives: Merge first and second step in
- text_poke_bp_batch
-Message-ID: <Z4jyEBf5WIvygWYh@krava>
-References: <20250114140237.3506624-1-jolsa@kernel.org>
- <c88cf8951a0d4f73901ba97a81ba3a12@AcuMS.aculab.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D8SuBkjG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="k6N8G9Kl";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D8SuBkjG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="k6N8G9Kl"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AA136211D2;
+	Thu, 16 Jan 2025 12:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737029062; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E0t4udIO8JO9z9mdAn2hdq7xBoArr6PtSevIBdRTk1M=;
+	b=D8SuBkjG5x3d3h1ugtpN9sIKWLrmrRvDD1fcDrnOw+FDKe7H3NEo8QOpoA3Tk4rsdKP6m8
+	qOOwZqaoGfU2uxWO/eV3GxZpaGhwangNauoPfSUyB6Rjug/gBUXxFwDPce/ZhgM9iB11AE
+	jQWp3N5pFKz0VMgSFoGKU/vZCWZbQqo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737029062;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E0t4udIO8JO9z9mdAn2hdq7xBoArr6PtSevIBdRTk1M=;
+	b=k6N8G9KlH8XhZblYUWOdogakK8wZoFrmQmqDhmBcJgT0YMkhT+hR/rGPplOasmu1cejC33
+	z6ivNhV3iR2uPJCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=D8SuBkjG;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=k6N8G9Kl
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1737029062; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E0t4udIO8JO9z9mdAn2hdq7xBoArr6PtSevIBdRTk1M=;
+	b=D8SuBkjG5x3d3h1ugtpN9sIKWLrmrRvDD1fcDrnOw+FDKe7H3NEo8QOpoA3Tk4rsdKP6m8
+	qOOwZqaoGfU2uxWO/eV3GxZpaGhwangNauoPfSUyB6Rjug/gBUXxFwDPce/ZhgM9iB11AE
+	jQWp3N5pFKz0VMgSFoGKU/vZCWZbQqo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1737029062;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E0t4udIO8JO9z9mdAn2hdq7xBoArr6PtSevIBdRTk1M=;
+	b=k6N8G9KlH8XhZblYUWOdogakK8wZoFrmQmqDhmBcJgT0YMkhT+hR/rGPplOasmu1cejC33
+	z6ivNhV3iR2uPJCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 984BD13332;
+	Thu, 16 Jan 2025 12:04:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CYuRJMb1iGd7UgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 16 Jan 2025 12:04:22 +0000
+Date: Thu, 16 Jan 2025 13:04:18 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: kprobe not always triggering
+Message-ID: <35dbe779-e7c1-48ef-8e76-86092d77a199@flourine.local>
+References: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
+ <20250115101715.12c6cce3@gandalf.local.home>
+ <e5d64ac8-5a30-4196-a5e5-b3d2743356b1@flourine.local>
+ <20250116084818.2160d4faf29cf34c9b6e612f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -79,51 +89,83 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c88cf8951a0d4f73901ba97a81ba3a12@AcuMS.aculab.com>
+In-Reply-To: <20250116084818.2160d4faf29cf34c9b6e612f@kernel.org>
+X-Rspamd-Queue-Id: AA136211D2
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Tue, Jan 14, 2025 at 02:38:42PM +0000, David Laight wrote:
-> From: Jiri Olsa
-> > Sent: 14 January 2025 14:03
-> > 
-> > hi,
-> > while checking on similar code for uprobes I was wondering if we
-> > can merge first 2 steps of instruction update in text_poke_bp_batch
-> > function.
-> > 
-> > Basically the first step now would be to write int3 byte together
-> > with the rest of the bytes of the new instruction instead of doing
-> > that separately. And the second step would be to overwrite int3
-> > byte with first byte of the new instruction.
-> > 
-> > Would that work or do I miss some x86 detail that could lead to crash?
+On Thu, Jan 16, 2025 at 08:48:18AM +0900, Masami Hiramatsu wrote:
+> Have you tried to use `perf probe`? Even if it is inlined, you can find them
+> by
 > 
-> I suspect it will 'crash and burn'.
-> 
-> Consider what happens if there is a cache-line boundary in the
-> middle of an instruction.
-> (Actually an instruction fetch boundary will do.)
-> 
-> cpu0: reads the old instructions from the old cache line.
-> cpu0: pipeline busy (or similar) so doesn't read the next cache line.
-> cpu1: writes the new instructions.
-> cpu0: reads the second cache line.
-> 
-> cpu0 now has a mix of the old and new instruction bytes.
-> 
-> Writing the int3 is safe - provided they don't return until
-> all the patching is over.
-> 
-> But between writing the int3 (over the first opcode byte) and
-> updating anything else I suspect you need something that does
-> a complete synchronise between the cpu that discards any bytes
-> in the decode pipeline as well as flushing the I-cache (etc).
-> I suspect that requires an acked IPI.
-> 
-> Very long cpu stalls are easy to generate.
-> Any read from PCIe will be slow (I've at fpga target that takes ~1us).
-> You'd need to be unlucky to be patching an instruction while one
-> was pending, but a DMA access might just be enough to cause grief.
+>  perf probe -a nvme_change_ctrl_state new_state
 
-ok, thanks for all the details,
+I had to build my own perf, as the version from the distro didn't like
+my kernel and just crashed. Thus I added a bunch libraries to my build
+system. The resulting perf installed the probe and the missing events
+show up:
 
-jirka
+          <idle>-0       [000] ..s1.   245.406139: nvme_complete_rq: nvme1: qid=0, cmdid=36865, res=0x0, retries=0, flags=0x0, status=0x371
+          <idle>-0       [000] .Ns1.   245.407192: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x2
+   kworker/u33:0-65      [000] .N...   245.407258: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x2
+   kworker/u33:1-78      [000] .....   245.421290: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x3
+
+I double checked my previous setup with kprobes and now the missing
+events show up as well. It looks like my setup changes makes clang to
+not inline this function anymore, or there is no additional debug info
+available?
+
+> But perhaps, some of them are inlined with constant numbers (maybe you can
+> find them as nvme_change_ctrl_state.constprop.XXX in kallsyms)
+
+# cat /proc/kallsyms | grep nvme_change_ctrl_state
+ffffffffc03dc04d r __kstrtab_nvme_change_ctrl_state     [nvme_core]
+ffffffffc03dc064 r __kstrtabns_nvme_change_ctrl_state   [nvme_core]
+ffffffffc03ca130 r __ksymtab_nvme_change_ctrl_state     [nvme_core]
+ffffffffc0405de0 t __pfx_nvme_change_ctrl_state [nvme_core]
+ffffffffc0405df0 t nvme_change_ctrl_state       [nvme_core]
+
+This is with the new kernel, so after installing the libraries for the
+perf build.
+
+> If my guess is correct, it is not inlined but the constant propagation
+> optimization[1] has been done by the compiler.
+> 
+> [1] https://en.wikipedia.org/wiki/Constant_folding#Constant_propagation
+> 
+> IIRC, commit 66f69b219716 ("perf probe: Support DW_AT_const_value constant value")
+> should support this case.
+
+Okay, this commit is already in (v5.4), so it was always in.
+
+Anyway, I can't reproduce anymore.
+
+Daniel
