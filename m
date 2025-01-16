@@ -1,260 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6032622B8AB;
-	Thu, 16 Jan 2025 14:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A5435968
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Jan 2025 14:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737038128; cv=none; b=Y5OyqWOF6/EDe9QY2+uk0KH1DHi9ACc0xDEbC7jsr4i/KYOVkOf+Mb8bucLZEvyyMzwhjQTncHl8whoAbMpTwlv0etQDR0Ms741PWDeFszR6iwaGGouGPACe2xr7ObfWbl0RUzNd1jsZ30SUNR9rmjpNqBX6bImHEO9FtKw5ycg=
+	t=1737038446; cv=none; b=D3a2B08tollVkE3HDTix9Dfy5kwAh84J7i7V6MMZkdbLcCvEdJMz7YtHSWLc0WEwhqgBsqmM93gONuXBid7rU+6bgHDRBggxn3gky8PrVW2Fyrq+D32B4uqlVP0US361kXtEzCXCA1LIJ70iLyZrtIpWiY9fADhGbeOOhbHKhFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737038128; c=relaxed/simple;
-	bh=9Xk7kEPcKn4EWxPYgvqVx6KfZb68hSs13zANGFl1ZnQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=RNcP5js3q1QxVZIYTNOWSLTCfPT9K7IeuQx61x6uxiYaUaaEuuPID8gl1qYQGVII5bRZbqe6aIZxIDJHb17VYiLlep9BSkS9jqwMEArcmFFMK7azopFYBzROqoEuxVOH0flDag6JDvlZgB/vOqy0fsA6anhfxBO5b8P27VeEY7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B25C4CED6;
-	Thu, 16 Jan 2025 14:35:27 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tYQy6-00000000szE-0DfY;
-	Thu, 16 Jan 2025 09:35:34 -0500
-Message-ID: <20250116143533.819228058@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 16 Jan 2025 09:33:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- jochensp@jochen.sprickerhof.de,
- peter.griffin@linaro.org,
- Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH 3/3] selftests/ftrace: Add test that tests event :mod: commands
-References: <20250116143334.073917300@goodmis.org>
+	s=arc-20240116; t=1737038446; c=relaxed/simple;
+	bh=njqXd/uQ+QT9aanmRxZO+r+o7uxJnuiyyh1zBELECRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vDvzIVna76FY6tjtUPl8soPNPHzNpG/V7UQNppsh5X6jaSlK0PpNZ7GowUkmKyxZoVpkgYBLzA/0vAIYHMz3WP+yPVOYj/PxEAffwMmH1UvUeslR57Ct/Nd/tz1hbez5pAqHGiQAp10uuQuwsy2fMe6hNjI1aJIQn1P6J11xj8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MQykYSP7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MQykYSP7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737038443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cb/9KjaC//7ekSA5D4ZTqkLvXMQfEqyfvg4jgXEsaAk=;
+	b=MQykYSP7GqvY60OTyJmsp8pv0QsOam3/InxUPPb+eAzbkoEuTfgGNYilierPdKE9qaxi4x
+	r55I8FDrvErz8RrY2F1ojnlwfmmhu6xpF5vwl5QJ8Wse6UYa9GV64EqpjFvkHcfoO0yhRj
+	d0t13cayLhKUdbTalbG5krUPQ6lnT/0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-G7yyzW9yO2WCYMiQJsup1g-1; Thu,
+ 16 Jan 2025 09:40:37 -0500
+X-MC-Unique: G7yyzW9yO2WCYMiQJsup1g-1
+X-Mimecast-MFC-AGG-ID: G7yyzW9yO2WCYMiQJsup1g
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3DCF419560AA;
+	Thu, 16 Jan 2025 14:40:33 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.118])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 55A0619560BF;
+	Thu, 16 Jan 2025 14:40:23 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 16 Jan 2025 15:40:08 +0100 (CET)
+Date: Thu, 16 Jan 2025 15:39:57 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>, Aleksa Sarai <cyphar@cyphar.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+	BPF-dev-list <bpf@vger.kernel.org>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>,
+	Linux API <linux-api@vger.kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, rafi@rbk.io,
+	Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-ID: <20250116143956.GD21801@redhat.com>
+References: <20250114143313.GA29305@redhat.com>
+ <Z4Z7OkrtXBauaLcm@krava>
+ <20250114172519.GB29305@redhat.com>
+ <Z4eBs0-kJ3iVZjXL@krava>
+ <20250115150607.GA11980@redhat.com>
+ <CAADnVQJjroiR0SRp69f1NbomEH-riw53e_-TioqT4aEt3GSKGg@mail.gmail.com>
+ <20250115184011.GA21801@redhat.com>
+ <CAHsH6Gu1kXZ=m3eoTeZcZ9n=n2scxw7z074PnY5oTsXfTqZ=vQ@mail.gmail.com>
+ <20250115190304.GB21801@redhat.com>
+ <CAHsH6Gtd5kYPife3hK+uKafjBMx=-23UzvQgnOnqNDzSZgHyqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHsH6Gtd5kYPife3hK+uKafjBMx=-23UzvQgnOnqNDzSZgHyqw@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 01/15, Eyal Birger wrote:
+>
+> On Wed, Jan 15, 2025 at 11:03 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 01/15, Eyal Birger wrote:
+> > >
+> > > --- a/kernel/seccomp.c
+> > > +++ b/kernel/seccomp.c
+> > > @@ -1359,6 +1359,9 @@ int __secure_computing(const struct seccomp_data *sd)
+> > >         this_syscall = sd ? sd->nr :
+> > >                 syscall_get_nr(current, current_pt_regs());
+> > >
+> > > +       if (this_syscall == __NR_uretprobe)
+> > > +               return 0;
+> > > +
+> >
+> > Yes, this is what I meant. But we need the new arch-dependent helper.
+>
+> Do you mean because __NR_uretprobe is not defined for other architectures?
 
-Now that here's a :mod: command that can be sent into set_event, add a
-test that tests its use. Both setting events for a loaded module, as well
-as caching what events to set for a module that is not loaded yet.
+Yes, and see below,
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../ftrace/test.d/event/event-mod.tc          | 192 ++++++++++++++++++
- 1 file changed, 192 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/event/event-mod.tc
+> Is there an existing helper? I wasn't able to find one...
 
-diff --git a/tools/testing/selftests/ftrace/test.d/event/event-mod.tc b/tools/testing/selftests/ftrace/test.d/event/event-mod.tc
-new file mode 100644
-index 000000000000..6f7601c4b54b
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/event/event-mod.tc
-@@ -0,0 +1,192 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event tracing - enable/disable with module event
-+# requires: set_event "Can enable module events via: :mod:":README
-+# flags: instance
-+
-+rmmod trace-events-sample ||:
-+if ! modprobe trace-events-sample ; then
-+  echo "No trace-events sample module - please make CONFIG_SAMPLE_TRACE_EVENTS=m"
-+  exit_unresolved;
-+fi
-+trap "rmmod trace-events-sample" EXIT
-+
-+# Set events for the module
-+echo ":mod:trace-events-sample" > set_event
-+
-+test_all_enabled() {
-+
-+	# Check if more than one is enabled
-+	grep -q sample-trace:foo_bar set_event
-+	grep -q sample-trace:foo_bar_with_cond set_event
-+	grep -q sample-trace:foo_bar_with_fn set_event
-+
-+	# All of them should be enabled. Check via the enable file
-+	val=`cat events/sample-trace/enable`
-+	if [ $val -ne 1 ]; then
-+		exit_fail
-+	fi
-+}
-+
-+clear_events() {
-+	echo > set_event
-+	val=`cat events/enable`
-+	if [ "$val" != "0" ]; then
-+		exit_fail
-+	fi
-+	count=`cat set_event | wc -l`
-+	if [ $count -ne 0 ]; then
-+		exit_fail
-+	fi
-+}
-+
-+test_all_enabled
-+
-+echo clear all events
-+echo 0 > events/enable
-+
-+echo Confirm the events are disabled
-+val=`cat events/sample-trace/enable`
-+if [ $val -ne 0 ]; then
-+	exit_fail
-+fi
-+
-+echo And the set_event file is empty
-+
-+cnt=`wc -l set_event`
-+if [ $cnt -ne 0 ]; then
-+	exit_fail
-+fi
-+
-+echo now enable all events
-+echo 1 > events/enable
-+
-+echo Confirm the events are enabled again
-+val=`cat events/sample-trace/enable`
-+if [ $val -ne 1 ]; then
-+	exit_fail
-+fi
-+
-+echo disable just the module events
-+echo '!:mod:trace-events-sample' >> set_event
-+
-+echo Should have mix of events enabled
-+val=`cat events/enable`
-+if [ "$val" != "X" ]; then
-+	exit_fail
-+fi
-+
-+echo Confirm the module events are disabled
-+val=`cat events/sample-trace/enable`
-+if [ $val -ne 0 ]; then
-+	exit_fail
-+fi
-+
-+echo 0 > events/enable
-+
-+echo now enable the system events
-+echo 'sample-trace:mod:trace-events-sample' > set_event
-+
-+test_all_enabled
-+
-+echo clear all events
-+echo 0 > events/enable
-+
-+echo Confirm the events are disabled
-+val=`cat events/sample-trace/enable`
-+if [ $val -ne 0 ]; then
-+	exit_fail
-+fi
-+
-+echo Test enabling foo_bar only
-+echo 'foo_bar:mod:trace-events-sample' > set_event
-+
-+grep -q sample-trace:foo_bar set_event
-+
-+echo make sure nothing is found besides foo_bar
-+if grep -q -v sample-trace:foo_bar set_event ; then
-+	exit_fail
-+fi
-+
-+echo Append another using the system and event name
-+echo 'sample-trace:foo_bar_with_cond:mod:trace-events-sample' >> set_event
-+
-+grep -q sample-trace:foo_bar set_event
-+grep -q sample-trace:foo_bar_with_cond set_event
-+
-+count=`cat set_event | wc -l`
-+
-+if [ $count -ne 2 ]; then
-+	exit_fail
-+fi
-+
-+clear_events
-+
-+rmmod trace-events-sample
-+
-+echo ':mod:trace-events-sample' > set_event
-+
-+echo make sure that the module shows up, and '-' is converted to '_'
-+grep -q '\*:\*:mod:trace_events_sample' set_event
-+
-+modprobe trace-events-sample
-+
-+test_all_enabled
-+
-+clear_events
-+
-+rmmod trace-events-sample
-+
-+echo Enable just the system events
-+echo 'sample-trace:mod:trace-events-sample' > set_event
-+grep -q 'sample-trace:mod:trace_events_sample' set_event
-+
-+modprobe trace-events-sample
-+
-+test_all_enabled
-+
-+clear_events
-+
-+rmmod trace-events-sample
-+
-+echo Enable event with just event name
-+echo 'foo_bar:mod:trace-events-sample' > set_event
-+grep -q 'foo_bar:mod:trace_events_sample' set_event
-+
-+echo Enable another event with both system and event name
-+echo 'sample-trace:foo_bar_with_cond:mod:trace-events-sample' >> set_event
-+grep -q 'sample-trace:foo_bar_with_cond:mod:trace_events_sample' set_event
-+echo Make sure the other event was still there
-+grep -q 'foo_bar:mod:trace_events_sample' set_event
-+
-+modprobe trace-events-sample
-+
-+echo There should be no :mod: cached events
-+if grep -q ':mod:' set_event; then
-+	exit_fail
-+fi
-+
-+echo two events should be enabled
-+count=`cat set_event | wc -l`
-+if [ $count -ne 2 ]; then
-+	exit_fail
-+fi
-+
-+echo only two events should be enabled
-+val=`cat events/sample-trace/enable`
-+if [ "$val" != "X" ]; then
-+	exit_fail
-+fi
-+
-+val=`cat events/sample-trace/foo_bar/enable`
-+if [ "$val" != "1" ]; then
-+	exit_fail
-+fi
-+
-+val=`cat events/sample-trace/foo_bar_with_cond/enable`
-+if [ "$val" != "1" ]; then
-+	exit_fail
-+fi
-+
-+clear_trace
-+
--- 
-2.45.2
+No,
 
+> If not, would it just make sense to just wrap this check in
+> #ifdef __NR_uretprobe ?
+
+Given that we need a simple fix for -stable, I won't argue.
+Up to seccomp maintainers.
+
+But please note that this_syscall == __NR_uretprobe can be false
+positive if is_compat_task().
+
+__NR_uretprobe == __NR_ia32_rt_tgsigqueueinfo, so I guess we need
+
+	#ifdef CONFIG_X86_64
+		if (this_syscall == __NR_uretprobe && !in_ia32_syscall())
+			return 0;
+	#endif
+
+I don't think we need to worry about the X86_X32 tasks...
+
+Oleg.
 
