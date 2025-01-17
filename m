@@ -1,106 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670CE19B5A3
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 15:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6033F188A18;
+	Fri, 17 Jan 2025 17:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737129321; cv=none; b=RfMBRBv+C5wcDIZafzQe4U7UDRnA4Lu1aYUn0tLiEFw4n0xg3v09dPF9KgTubulFEj71iqyddlHMT5/359pIPvWS+qmMT0NYqDedWhjN2Du4BjbiZkUlrrktFD+++xQqhPx1d6XV6ke3u/OMxJFPW06Y04R9rgbjw8hCr2fGXW0=
+	t=1737136275; cv=none; b=IDgv8u52/jyfVYwVLOYck+0EkajYrQ6K5ckQorFaj5PGySEvQ1IPN9A+vA5CfcoPjb7QUBnErEiiHLDhOmNX5FnRPM3Tzw8VotYjUF5hzQXkJF/99rIVTe4C5ecqkC/u1Vxcrl+C8okQ0We3ChL7ee08HYPyQTpeT7LbD0pW4VU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737129321; c=relaxed/simple;
-	bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
+	s=arc-20240116; t=1737136275; c=relaxed/simple;
+	bh=59n3JanXAj4W5nJ++jbT6kBppiHPtQVhmf60NSVx+AU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I7gWax7X8WtIP+AE1IJ0/EUpLZRurYQhlvuIiT/4C2o9dNsMoq2inNNAkkQndXeTsOCpUtYRHybOouQMAdaCpIPP8jrlMBsnaJL5eAjMKljdfdAB0UPJI3qDAkE/69n2CZWOrC2T/Xtn19ji7qsMU4JzTPSow6amaHsDxsZhR5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5rpvKd0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=LXXVcaVlHBcNI4Yk6ZHRYxYC4xFp8LDzxuLJEkzIzzJ9VHJVvAD9b1w5SLwYBoZ48V9c6Z2hIsWmChubCGWTVB9fH7yZtKKLZzF95baicwmr8bUFlXFyJgAcqgkHA2GpZ90FJy3tNyi5ALgFVp1JcRJczgezI7OvMJeCDM9R1Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQ7cofwO; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5rpvKd0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737129319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
-	b=b5rpvKd0mhoIO0oXEwIhiJGN9++g4lcXUdNyV/m0tsHnc6vzxCl9OVPjXvmMj3rzT5aaY/
-	v9/Ms1dayJlM0WdLrt2RKM4v4cYnz7NtcgAsLJYcX2VR5kfdqPXgUSNickA0XsbXbOMXPp
-	ytwmdCGyjVwjMf6L0eKedtRVS8FlSoA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-347-7rLT3LudOlSCWhQlaf3HFw-1; Fri, 17 Jan 2025 10:55:18 -0500
-X-MC-Unique: 7rLT3LudOlSCWhQlaf3HFw-1
-X-Mimecast-MFC-AGG-ID: 7rLT3LudOlSCWhQlaf3HFw
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa6a831f93cso272900266b.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 07:55:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQ7cofwO"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ef6c56032eso3254792a91.2;
+        Fri, 17 Jan 2025 09:51:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737136274; x=1737741074; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HgchdpJbWAQjMLwDeSmgMjsaNK2uqn9e9RX7bZTPGiE=;
+        b=RQ7cofwOoKoEBPGUz6pFuICpr2mYXW3yUYlW6hbyPwc6AOdQ/tsC+xp4PqA07PCNuJ
+         vMWZScgvBDh7zAR9yAnkuVLAngOYESIpOG+8flX+GNd+LNiIgGRUeErAP6pyjgkX+Cao
+         GU9QnOl+fRqjK3bJsEMvF3Kei1+Bc6HjtpZDDZMJWjBxzOzg8yzc90vmOcCkasOZTdnD
+         nOoZ8YrOqUkV7qFErOUY3Hr9mHHjFYjPyrusyueyQPUY1JshxPr0bZJp68u9HjCOJkLJ
+         GkgJ3xxc8azp+p1uC4GFVVg3H9IdA7KPjrmdQ4uwP9lcF+dhoDzxc93S3OgLsmad9zJf
+         tl2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737129317; x=1737734117;
+        d=1e100.net; s=20230601; t=1737136274; x=1737741074;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
-        b=kdiv/52drMPzFOVT+0lQ1fwewiNx2R3bvSu/53t9Jp7y5QxkgSzAW9XnTJ5ftNZcqh
-         L6ax5dCpVuBvVY4DIodHLcCzOzS+bAJ+f2uhZ0o30mRBwIw1XvKmXIFhr6COT4ENjOEy
-         3FA9YwX6OfYtZEjxnqC5esCgmMHzApqPw6VdIfNA5tBI2fysJQyZ9UA4ZMAhmvDKbiMu
-         0rq193dd+xQlSN97/8Uxtg/VSsu478wH3zVNTB3QM8jRGCkSdVhN5BEu/DR1Xb2l7/iX
-         gHr8xXcQXJIXoc+ByNyHFwbMBn7DZHaiEcZ2HpWzLauQBwprsikrySpBqCoXvIdzAsgv
-         dmCQ==
-X-Gm-Message-State: AOJu0YxFH4y8ichW55VE9nFi0EZ5GWaSLis7WxAqKS16yOblopdOEflA
-	j9WoFshOqoUcoEQ3dv0iaEm6z3dSAR7Bsreua4dHKopmOXm9HT4RS2zM2Cvijmvw9E7flBROeCb
-	UIkdD45YUxsJbux5NYBEFYgKFx1ndsDjAcNPAMStuui7IbDNe4THbqXKLZLwD/d1Y6swjpUoopM
-	EwGPHM/bslnqYJtXpBJqdWqDikHM1lO03tG8kJxxdDPbi+Ri3YCA2NCC8u1A==
-X-Gm-Gg: ASbGncv3kMS7YW44Vg21ouxsxeAqiTvL7BgBV+6t6JDTD4KTbg9o9mKxslwT16Lic/O
-	2Apw7BkQnBmYjP7s6Fyp5Z+rxAZcPez5c/DkmyybjeCv0Wla7I/Y75CRKPv3bMb7lvgSdBA==
-X-Received: by 2002:a17:907:971a:b0:aa6:66eb:9c06 with SMTP id a640c23a62f3a-ab38b1e207bmr288712266b.5.1737129316728;
-        Fri, 17 Jan 2025 07:55:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFYYV2Wi77CNQb8NfEM/mbB0BDKmjLbqjnKNw/jaQf4PwBug92JFBVhT6R72SsCk279qL92Cm/MbJdrfBCAJ9U=
-X-Received: by 2002:a17:907:971a:b0:aa6:66eb:9c06 with SMTP id
- a640c23a62f3a-ab38b1e207bmr288710266b.5.1737129316401; Fri, 17 Jan 2025
- 07:55:16 -0800 (PST)
+        bh=HgchdpJbWAQjMLwDeSmgMjsaNK2uqn9e9RX7bZTPGiE=;
+        b=OKca5h8PBWg6CGh3fMjsYt6OLVrtJX2PBRp2HwC1WvesGaxdBRAcoTMqoZckkhCuEM
+         Gs+LbUd3VlXAcNLXCnDFPt2LD7bLZwM7+NyA7QKrBUfSWOt9dlMC4j4e2p2c7nbeJG+w
+         TwDMrrXq7hQyawhPEAp+h1r4bz+FFikqV9Ie37mFbbG+h3OiZoZKCxauldMsRkdUxIC5
+         91pZSBMubz9WJrIm3gNv//uSdFHlvcezvB/ckxNNyjw52ZEGECOmzW7yA6+ZQLwrcMPv
+         gaWMYLF6BbgW6/48diQON6+82aJBjYFaRRE1hS2ExdZoNMCYz/v/0FF4/ix+YBX5/RQR
+         1ChQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRnBUAiIpSAaLed0bUdPlqt8Qz2mnb8y+DjitLoylsiF8B2S86tuSXfQ71s8PzP1DlK4p1hflYDUrbjLKc@vger.kernel.org, AJvYcCVwYLyT9KxfHJuaCAU37BghEFgKDQc/9pHyEqotzvQMo6eBpVF4l97JlrRgRZdDV8F5KMY=@vger.kernel.org, AJvYcCXMO90LVkervgUHBzWd5XWaWSnl7U6n5huWBHq8BhZfA4AaZgV6B92Ux8ugxYnjkYUnmeXsav1La5p3@vger.kernel.org, AJvYcCXkfvyw3igQPcCheHb5A+blEqXDKwosYDNrqvaYcRRNh+Eqip3aMzd2IjrHC8ASFNqrfvQ77vZy@vger.kernel.org, AJvYcCXzB40WJHFmk1Yo9TktitdYyKZAvTRlEuN9d02HyQTMHsok1plnmso75xLrHxmxyM2o5gvc78UfisIvkeyl4bQ67rb5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJmUizZDZE8F8PJq+nSFi0KaK7w+0RsWLi415gU4PtacOdUQaj
+	31kQEWmtXYrY3IIZeuYUCSF7AmrKvZEqpugWQsJ+BbIZaRrQI0TgI3pNkInIGIPTq96STdK7VkD
+	HMNTfRNt6O4HJ87NKUdITtEClG+E=
+X-Gm-Gg: ASbGncv3hYImOkzrRIzHK5THaj6PeUSZrdz6XPa0C5DqIk2K5Ot3mULPmiKTdUkRym/
+	Au7PYCdC3WhenOKPH9IWN3SB/kF1vuFPL78VB
+X-Google-Smtp-Source: AGHT+IFgGZHvaVpyG9evtbseTwW84tvh+4yMJz+UPX4HsHP4aoIIOQbshqpZpl2BCKbUkGappNXJTpfv3VqWAwdsvQ0=
+X-Received: by 2002:a17:90b:3a46:b0:2ee:ab29:1a63 with SMTP id
+ 98e67ed59e1d1-2f782c519e2mr4648673a91.3.1737136273620; Fri, 17 Jan 2025
+ 09:51:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250116144931.649593-1-tglozar@redhat.com> <20250116194621.7b309aed@gandalf.local.home>
- <CAP4=nvQpS20ubNspE0PPhiyWb3-ARV=gmQzFCA7WwAT8+rxMjg@mail.gmail.com> <20250117102924.690cb7c7@gandalf.local.home>
-In-Reply-To: <20250117102924.690cb7c7@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 17 Jan 2025 16:55:04 +0100
-X-Gm-Features: AbW1kvaRXBg2PVPa6dU9bLx4cAfiEKNYL7QcMpEifxHRTeA41l3SHXPwJ2Y4C-A
-Message-ID: <CAP4=nvTfJzG=zSETao_ukAQUSVrjZeRTw1+OEMg_LNJqdW11jQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] rtla/timerlat: Stop on signal properly when overloaded
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Eqk-c29wZuvzmMKeDGpZJ7YtHH_FZjlhbjzqe8VDbJM_1737129317
-X-Mimecast-Originator: redhat.com
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <20250117013927.GB2610@redhat.com> <20250117170229.f1e1a9f03a8547d31cd875db@kernel.org>
+ <20250117140924.GA21203@redhat.com>
+In-Reply-To: <20250117140924.GA21203@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 17 Jan 2025 09:51:01 -0800
+X-Gm-Features: AbW1kvbCIlrQcqrIsewf1J2VvfFgAYtuF1bKPaVwM7uFAPqmf8E_bdQIa9-K55Q
+Message-ID: <CAEf4BzYhcG8waFMFoQS5dFWVkQGP6ed_0mwGTK4quN5+6-8XuA@mail.gmail.com>
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without filtering
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org, 
+	luto@amacapital.net, wad@chromium.org, andrii@kernel.org, jolsa@kernel.org, 
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
+	ast@kernel.org, rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com, 
+	bpf@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-p=C3=A1 17. 1. 2025 v 16:29 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
-> Hmm, the timerlat event could probably get access to a trigger to allow i=
-t
-> to do the work in the kernel like what the 'hist' triggers do. We can
-> extend on that.
+On Fri, Jan 17, 2025 at 6:10=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
+> On 01/17, Masami Hiramatsu wrote:
+> >
+> > On Fri, 17 Jan 2025 02:39:28 +0100
+> > Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > > A note for the seccomp maintainers...
+> > >
+> > > I don't know what do you think, but I agree in advance that the very =
+fact this
+> > > patch adds "#ifdef CONFIG_X86_64" into __secure_computing() doesn't l=
+ook nice.
+> > >
+> >
+> > Indeed. in_ia32_syscall() depends arch/x86 too.
+> > We can add an inline function like;
+> >
+> > ``` uprobes.h
+> > static inline bool is_uprobe_syscall(int syscall)
+> > {
+>
+> We can, and this is what I tried to suggest from the very beginning.
+> But I agree with Eyal who decided to send the most trivial fix for
+> -stable, we can add the helper later.
+>
+> I don't think it should live in uprobes.h and I'd prefer something
+> like arch_seccomp_ignored(int) but I won't insist.
 
-If we only need to count the numbers, that would be a perfect
-solution: use the hist trigger in place of the BPF program (no need to
-reinvent the wheel!). I'll have to look at exactly what we need.
+yep, I think this is the way, keeping it as a general category. Should
+we also put rt_sigreturn there explicitly as well? Also, wouldn't it
+be better to have it as a non-arch-specific function for something
+like rt_sigreturn where defining it per each arch is cumbersome, and
+have the default implementation also call into an arch-specific
+function?
 
-> The reason I haven't written a BPF program yet, is because when I feel
-> there's a useful operation that can be done, I just extend ftrace to do i=
+>
+> >       // arch_is_uprobe_syscall check can be replaced by Kconfig,
+> >       // something like CONFIG_ARCH_URETPROBE_SYSCALL.
+>
+> Or sysctl or both. This is another issue.
+>
+> > ``` arch/x86/include/asm/uprobes.h
+> > #define arch_is_uprobe_syscall(syscall) \
+> >       (IS_ENABLED(CONFIG_X86_64) && syscall =3D=3D __NR_uretprobe && !i=
+n_ia32_syscall())
+> > ```
+>
+> This won't compile if IS_ENABLED(CONFIG_X86_64) =3D=3D false, __NR_uretpr=
+obe
+> will be undefined.
+>
+> > > The problem is that we need a simple patch for -stable which fixes th=
+e real
+> > > problem. We can cleanup this logic later, I think.
+> >
+> > Hmm, at least we should make it is_uprobe_syscall() in uprobes.h so tha=
 t
-> ;-)
-
-I used to work with BPF, so I usually think of a BPF solution first,
-then I think about whether I can replace the BPF part :D
-
-Tomas
-
+> > do not pollute the seccomp subsystem with #ifdef.
+>
+> See above. But I won't insist.
+>
+> Oleg.
+>
