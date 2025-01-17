@@ -1,100 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A481F754C;
-	Fri, 17 Jan 2025 08:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218D71F754C
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 08:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737103359; cv=none; b=Ht9SgNl04Qp4nCUr0IFSHmSCNlWn2sV901apNP9yQeE8UF/ll1uVxmKzPthNNM3y4EUhwvcWcwHhAhSOFXGLpdTkYY7zOYeja+nFgPV0x1RQK0a9dDU1fnc/uSnPzo6+FlzRQCKpAg9NpJl4jxMzTEakb6VKDBQVH5V6x0oIxs4=
+	t=1737103944; cv=none; b=H4FOiYwgX2RwzLq2oHnl5DJLomQnU1Q76UeJFinRpQUlQ/sxBupDnlTTCCXfU77AVSfGQwehFuYeeR9IM1MAWaEqpYd2ar4zgeqtsk4hf55y9ykMN1JEMIItKQ+AA+DoUPgV9hPa3bK6esy25BNe59SpM11OLXIBzyDI9LYbXLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737103359; c=relaxed/simple;
-	bh=28NiPYsFXE32MP2Q2BME0MlX1uv69uodnGAvgVz5KwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJ1HNJ46HvZcojyFi9hUW3s1/Ks5Faf8pPUr+T0NfUSD/cTxn9hsgMlAR2e45KHxh4lVr42n9rN1xA7x9BYRKxdbLCeiua4dN53oyFwo8IsD1QJGgP/mS4FsDoAh7YD+jqphm5ANKpt5Oi2kbSdqQa/Lth9IQCTHs5iMErf+GPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDuxVj4e; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1737103944; c=relaxed/simple;
+	bh=pYAZbf63khUW9vSXQLaTShtcr+0PL0ShqvlGjf3Lrn8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZqGuX91jxMHnBL9Hntt3OF1/hrDJOB8NxcJ8/cS3o3L42ROqnerhW9mD697JGorE/QhnhPD8COZAQRGlZy7Tx9u/wMkBRZWnbJ4KLMtLVKh6hznf2WpLwwHnqB66+o9TZGA28Pm0VtpGaXze16P7r9jni1zFVIP92EcZmE4qL44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoGyJW5m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDuxVj4e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737103358; x=1768639358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=28NiPYsFXE32MP2Q2BME0MlX1uv69uodnGAvgVz5KwQ=;
-  b=eDuxVj4eGvM2xsFyifJXkKdwMmvqVp/17ghbc9gfsInLKpHe6plo/N/j
-   F2lX9Et73vlE18RujZL1tgSjAdbi9YP1+m3T+X30vOmDTFP3hwzpTlrEt
-   0xaqL6S2Tjo2R6o6hGEVC9H3yEZvTWLVPc1rR6Gu5WC11bc9LDaQJF+OX
-   LYhHV6Lj6OqylZoql/mS/S2CV+ZIrRUNVDA6Tdfw8RrIAPipeAz5CPvAW
-   svm3xbn3W8lMlEnntwtxeGfSVa3EDuP72uZBA12YBfbEX1JlnZmGinQP6
-   aMQwBsUce//11u7ROmcJ/SH9gnJavy6e480MnGAQVB7RJZENPMqCQYjh0
-   g==;
-X-CSE-ConnectionGUID: tgOXEpEQSi+1OqMXQI2cJQ==
-X-CSE-MsgGUID: 7HY4Se5VRlC5/h7clGQh5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11317"; a="48923415"
-X-IronPort-AV: E=Sophos;i="6.13,211,1732608000"; 
-   d="scan'208";a="48923415"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 00:42:36 -0800
-X-CSE-ConnectionGUID: e1YD5/pBSvOBI/os6GkRkA==
-X-CSE-MsgGUID: 3A6q1Mm2TpybOA1rY5fzPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="106634486"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 17 Jan 2025 00:42:27 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 7B06510F; Fri, 17 Jan 2025 10:42:26 +0200 (EET)
-Date: Fri, 17 Jan 2025 10:42:26 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 11/11] mm: Rename PG_dropbehind to PG_reclaim
-Message-ID: <w6x4k6mjv6x5kjiuxszdhl56ldrem5cfhygkjrko3u5vqufylo@krcva5mltyre>
-References: <20250115093135.3288234-1-kirill.shutemov@linux.intel.com>
- <20250115093135.3288234-12-kirill.shutemov@linux.intel.com>
- <Z4ikqJBQ-fBFM6UL@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoGyJW5m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4918C4CEDD;
+	Fri, 17 Jan 2025 08:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737103943;
+	bh=pYAZbf63khUW9vSXQLaTShtcr+0PL0ShqvlGjf3Lrn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OoGyJW5mhCt52wMkeVqNJbJbbBFj1owuLFwIpOwUBSU8f5bzftCbB/Kda1wrktHNk
+	 hkWkG/DYPM6ExOC8UZJI+hzwSKPDkNJsl+UC8RkmEd1V1nfeew5gNM1dbUj/1Stzw4
+	 n2TW1G2RNlwQkH9q7v/2GlcEpvcY++Vt3BRUBjUKqNK0HzAafwaq10qZI2hw8iic8u
+	 EUUJTdWqEY5iYf/kpw/Dn+4V3yS8ZafhmfBEktAjbWgsg2sQ51cuUnILuP8g1ZLRfZ
+	 u+JM7FB11bjbjNs/RYIekdnfkDgjFNwiwmXk45/JeVEnAUIhd8cXfc06J4nyKyq4vx
+	 Rsr6wVpBzjo6g==
+Date: Fri, 17 Jan 2025 17:52:20 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Subject: Re: kprobe not always triggering
+Message-Id: <20250117175220.38e370942045bc52db1e8b7e@kernel.org>
+In-Reply-To: <35dbe779-e7c1-48ef-8e76-86092d77a199@flourine.local>
+References: <f91a64bf-c5cb-4d36-b50b-67cdcdccdccc@flourine.local>
+	<20250115101715.12c6cce3@gandalf.local.home>
+	<e5d64ac8-5a30-4196-a5e5-b3d2743356b1@flourine.local>
+	<20250116084818.2160d4faf29cf34c9b6e612f@kernel.org>
+	<35dbe779-e7c1-48ef-8e76-86092d77a199@flourine.local>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z4ikqJBQ-fBFM6UL@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 15, 2025 at 10:18:16PM -0800, Christoph Hellwig wrote:
-> On Wed, Jan 15, 2025 at 11:31:35AM +0200, Kirill A. Shutemov wrote:
-> > Now as PG_reclaim is gone, its name can be reclaimed for better
-> > use :)
+On Thu, 16 Jan 2025 13:04:18 +0100
+Daniel Wagner <dwagner@suse.de> wrote:
+
+> On Thu, Jan 16, 2025 at 08:48:18AM +0900, Masami Hiramatsu wrote:
+> > Have you tried to use `perf probe`? Even if it is inlined, you can find them
+> > by
 > > 
-> > Rename PG_dropbehind to PG_reclaim and rename all helpers around it.
+> >  perf probe -a nvme_change_ctrl_state new_state
 > 
-> Why?  reclaim is completely generic and reclaim can mean many
-> different things.  dropbehind is much more specific.
+> I had to build my own perf, as the version from the distro didn't like
+> my kernel and just crashed. Thus I added a bunch libraries to my build
+> system. The resulting perf installed the probe and the missing events
+> show up:
+> 
+>           <idle>-0       [000] ..s1.   245.406139: nvme_complete_rq: nvme1: qid=0, cmdid=36865, res=0x0, retries=0, flags=0x0, status=0x371
+>           <idle>-0       [000] .Ns1.   245.407192: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x2
+>    kworker/u33:0-65      [000] .N...   245.407258: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x2
+>    kworker/u33:1-78      [000] .....   245.421290: nvme_change_ctrl_state: (nvme_change_ctrl_state+0x0/0x180 [nvme_core]) new_state=0x3
+> 
 
-Dropbehind is somewhat obscure name. You need fair bit of context to
-understand what it does.
+Nice.
 
-But I don't care that much. We can keep it as PG_dropbehind.
+> I double checked my previous setup with kprobes and now the missing
+> events show up as well. It looks like my setup changes makes clang to
+> not inline this function anymore, or there is no additional debug info
+> available?
 
-Anybody else has opinion on this?
+Hmm, I don't think (don't hope) the clang change the optimization
+silently if debuginfo is enabled. This is a kind of heisenbug :(
+
+> 
+> > But perhaps, some of them are inlined with constant numbers (maybe you can
+> > find them as nvme_change_ctrl_state.constprop.XXX in kallsyms)
+> 
+> # cat /proc/kallsyms | grep nvme_change_ctrl_state
+> ffffffffc03dc04d r __kstrtab_nvme_change_ctrl_state     [nvme_core]
+> ffffffffc03dc064 r __kstrtabns_nvme_change_ctrl_state   [nvme_core]
+> ffffffffc03ca130 r __ksymtab_nvme_change_ctrl_state     [nvme_core]
+> ffffffffc0405de0 t __pfx_nvme_change_ctrl_state [nvme_core]
+> ffffffffc0405df0 t nvme_change_ctrl_state       [nvme_core]
+> 
+> This is with the new kernel, so after installing the libraries for the
+> perf build.
+
+IIRC, constprop.XXX is gcc's suffix, clang has different one.
+
+> 
+> > If my guess is correct, it is not inlined but the constant propagation
+> > optimization[1] has been done by the compiler.
+> > 
+> > [1] https://en.wikipedia.org/wiki/Constant_folding#Constant_propagation
+> > 
+> > IIRC, commit 66f69b219716 ("perf probe: Support DW_AT_const_value constant value")
+> > should support this case.
+> 
+> Okay, this commit is already in (v5.4), so it was always in.
+> 
+> Anyway, I can't reproduce anymore.
+
+Feel free to notice if you see similar issue.
+
+Thank you,
+
+> 
+> Daniel
+
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
