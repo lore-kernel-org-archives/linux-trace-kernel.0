@@ -1,32 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1BD25A63B;
-	Fri, 17 Jan 2025 00:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D29B25A62E;
+	Fri, 17 Jan 2025 00:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737074068; cv=none; b=qeRWNMl5ILLMj9aA1a5dM6wmDZPbO/hK1ztRkD0N1Hxu8uZVJsMrm+JQQ5U9pb0nIODSGVy1iNgLxH7HmJUsXwqG8r1tvfRaT5md43O1nzCyNVm7S9GrIa1TpE+Fs6KQ0xxZUh9JxkRCCBPjjscUx/ZiVlZuuBWqAzYYU2H65yA=
+	t=1737074776; cv=none; b=HZdfnh9eDCP2q3+FyJAXhQqB3av7+jxyuwJPn7jy9DINFOWRprVl9K0rhtpcqbZr0WUiZA4QeP9UIhS6UCbQM0zMR9dUCgeRhkhcF35CC3OADv80Q4AOfj/84DyrzlacaExoK51IICfU1nSxkRFR8st0wdgfO7lMoRH9wURbCzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737074068; c=relaxed/simple;
-	bh=pBC6LTvwhZ9x5a5IykCIMIgDPi7WijFDF73IP1E4cr0=;
+	s=arc-20240116; t=1737074776; c=relaxed/simple;
+	bh=Ap6OpSBJvh9lDIbcEMzmbD6kkuOP9dEP42PhTAIxxVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S49e1GMfqYYrHHhYdLqOyu0qTVMQkIJG1ZOh2fKI0z7jMCVBaX7RDr7fJLAR7gJW4Mh60Rarl4lbnLdEmy41c3PSU9PTO/9B8FAAbUaRvW48CT/U6NPN9mJlX7DHT5UExgl35/BncaaPMLIPrh8FyiomjcWMdVPC6rWiLyNxUxo=
+	 MIME-Version:Content-Type; b=jpn/pIS1vEFPJlHlWCbSHKinofcmmBEojQLqO/kQhTNCa/ww2OUyucyq+zA2RzJJS9flsnkD5VRsoLIZeYS8wI0/EGB7dzet8zXDg8Jd88+iC8T0KSVZdFZlIJPepJNtoPlH0beWU6wgWNVpPKo6EQX+RnGXBcuqH9ttVPfJiIQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1322C4CED6;
-	Fri, 17 Jan 2025 00:34:26 +0000 (UTC)
-Date: Thu, 16 Jan 2025 19:34:32 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70A4C4CED6;
+	Fri, 17 Jan 2025 00:46:14 +0000 (UTC)
+Date: Thu, 16 Jan 2025 19:46:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, Daniel Bristot de Oliveira
- <bristot@kernel.org>, John Kacur <jkacur@redhat.com>, "Luis Claudio R.
- Goncalves" <lgoncalv@redhat.com>, Eder Zulian <ezulian@redhat.com>, Tomas
- Glozar <tglozar@redhat.com>, Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tools/rtla: Add osnoise_trace_is_off()
-Message-ID: <20250116193432.716db3a2@gandalf.local.home>
-In-Reply-To: <099e9ae9-5d36-46bb-8790-1b6a33dc1448@stanley.mountain>
-References: <20250115180055.2136815-1-costa.shul@redhat.com>
-	<099e9ae9-5d36-46bb-8790-1b6a33dc1448@stanley.mountain>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
+ Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Gabriele
+ Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH 0/5] rtla/timerlat: Stop on signal properly when
+ overloaded
+Message-ID: <20250116194621.7b309aed@gandalf.local.home>
+In-Reply-To: <20250116144931.649593-1-tglozar@redhat.com>
+References: <20250116144931.649593-1-tglozar@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,35 +35,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 15 Jan 2025 21:40:40 +0300
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
+On Thu, 16 Jan 2025 15:49:26 +0100
+Tomas Glozar <tglozar@redhat.com> wrote:
 
-> On Wed, Jan 15, 2025 at 07:58:30PM +0200, Costa Shulyupin wrote:
-> > The original code accidentally works because offset of
-> > `record->trace` is zero.  
-> 
-> It doesn't "accidentally work".  The people who write this kind of
-> code 100% understand what they are doing.  They don't see it as
-> anything complicated.
+> In the future, two more patchsets will be sent: one to display how many
+> events/samples were dropped (either left in tracefs buffer or by buffer
+> overflow), one to improve sample processing performance to be on par with
+> cyclictest (ideally) so that samples are not dropped in the cases mentioned
+> in the beginning of the email.
 
-I'm taking this patch but I replaced the change log with the following text:
+Hmm, I wonder if timerlat can handle per cpu data, then you could kick off
+a thread per CPU (or a set of CPUs) where the thread is responsible for
+handling the data.
 
-    tools/rtla: Add osnoise_trace_is_off()
-    
-    All of the users of trace_is_off() passes in &record->trace as the second
-    parameter, where record is a pointer to a struct osnoise_tool. This record
-    could be NULL and there is a hidden dependency that the trace field is the
-    first field to allow &record->trace to work with a NULL record pointer.
-    
-    In order to make this code a bit more robust, as record shouldn't be
-    dereferenced if it is NULL, even if the code does work, create a new
-    function called osnoise_trace_is_off() that takes the pointer to a
-    struct osnoise_tool as its second parameter. This way it can properly test
-    if it is NULL before it dereferences it.
-    
-    The old function trace_is_off() is removed and the function
-    osnoise_trace_is_off() is added into osnoise.c which is what the
-    struct osnoise_tool is associated with.
 
+		CPU_ZERO_S(cpu_size, cpusetp);
+		CPU_SET_S(cpu, cpu_size, cpusetp);
+                retval = tracefs_iterate_raw_events(trace->tep,
+                                trace->inst,
+                                cpusetp,
+                                cpu_size,
+                                collect_registered_events,
+                                                    trace);
+
+And then that iteration will only read over a subset of CPUs. Each thread
+can do a different subset and then it should be able to keep up.
 
 -- Steve
