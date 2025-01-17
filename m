@@ -1,126 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7CF1FDE3A
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 12:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9688E1FF1D5
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 12:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737115466; cv=none; b=Sl1xOzgCZYyRPKE6jv3P6yb/cLfuUuFymiZC2nAdK5vK/ujtGq2FS9iSmyCBk9jKL+ZNZnYEtsKesd0s3oUyvRmlx59t4SwOy4SkYSQKLM2LaH4/QRKXh0GnyIzX9BdBimUFYccQWRiSFQCpoXbRvqsH80p3TmLyAQxBlRS1H7g=
+	t=1737118533; cv=none; b=jSXq7kfndlhLA9tlW2UzHZHgBXHkrl3y3XjT6ZhxeqoDOU4gxVP+O7I/epnBpkh8rczBJ4gvT2w9o30lScQhQwPicVYOcDC70RhlnX4ErXw0qhkwhhs2BkHP0kC1abPzEJCKbjlrsJTj6AOD9zzjAJuV7/7aeDrI9jGv+U/MhTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737115466; c=relaxed/simple;
-	bh=um1cIuwcKYR4dDHSZ1eGNc8aj5Nh4QC/WAaJGqoEfj0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SriVJv0Zafxe83ItP6p+C3A8BIJv+niI8Icp9Hp7nyKZXnI19u8NvNYWz4Z2LO5PCKz0/RJEPGGVLPpZAlIzNeb/LHrXOcwm77CwmjkVMe8CjPRlJCdPSJEDKDUKc3riHmpGsiw3TWk6wp4pNR8KqbFKaEvQ7tpapYxhK22p3X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cIWiHiL8; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1737118533; c=relaxed/simple;
+	bh=X8anZV27FZCgXW3F5EqnL5fY9LwcbNE90sBSOU25nzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=Amgy5kR49pDWrgj5uWRAMG4eK5YBX/wS9TMV7TgdD4CATa80eO8+iE6GnPi6uqWHLbyiz5JrErh7N5yuLiyUnmfAwcVDAm3KYAEddrPaVgmZ0XwzBF9nM+PgXsWcV70ejUtb7IObRCtXOyezOCQIpygGCsLugvxZaf5jebwQK40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HzcHXJ7i; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cIWiHiL8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzcHXJ7i"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737115463;
+	s=mimecast20190719; t=1737118530;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qV1bfckSPRiKVA6q4XPglXM9sdFvWj/dMX/MI4GU2y0=;
-	b=cIWiHiL8bGcVPlk1M1XqqBwYRcH3QHQkbGR82ZuoztGMp2noI97KbdXqlfd8K5EYViQJgZ
-	T0PtMLa/HU9DqZwJhICOdvVYCAkVMSe6wyBI1d7I4Q8/EmQgFbrH9vOk8azYVkMicYd0DX
-	4p5Zaj89slkhji01+O2SFEuXXVY4qao=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=i/Ub09OUl9RsJ71owNWlOANuCEZ1Ov31/V75zShlIM0=;
+	b=HzcHXJ7ia2pFLLIZjRNnanIFkL4dplrrWj7ILU8l7PxDOlAVPF29hBaPVDt6HpjYPzfAbH
+	p/z9YJNjqhC/IXxY6CJgiaTTE4FOgASNI2nx7UbfE0c4c6wwqQjlvKb6hML2m/HGO7jzCv
+	womxmmmkUS/2SKJwbSxD4BLmJ3/+Qc4=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-102-_w8AtERQN-6NNx_V_hBSZg-1; Fri, 17 Jan 2025 07:04:20 -0500
-X-MC-Unique: _w8AtERQN-6NNx_V_hBSZg-1
-X-Mimecast-MFC-AGG-ID: _w8AtERQN-6NNx_V_hBSZg
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa66f6ce6bfso179619966b.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 04:04:20 -0800 (PST)
+ us-mta-297-QCyKolcVM7iABIUWUzO5Cw-1; Fri, 17 Jan 2025 07:55:29 -0500
+X-MC-Unique: QCyKolcVM7iABIUWUzO5Cw-1
+X-Mimecast-MFC-AGG-ID: QCyKolcVM7iABIUWUzO5Cw
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4678b42cbfeso39471301cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 04:55:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737115459; x=1737720259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qV1bfckSPRiKVA6q4XPglXM9sdFvWj/dMX/MI4GU2y0=;
-        b=skYV5WgFZypFmH0bZv7kvlfwB07Sm+oIUG07dDSI9C6N+Oh05FNcSSnqzKUC0monMT
-         6t6fGSYWAHyFxG+3ojxb6JhyITqjXwKaChZ1FlEMiXkighPpXcPjAvwr2t0OsCLZgc1t
-         TJ8bA1UrXkPCy04kQVWV6OLtQP9ZDUNi3+AB3HrZiZ6LlqnXY91T6NVilFgtTaSW9EA+
-         03jI/2tD66SjGCrDFv+6fqeYdoZe64VUkJYV7NK0gAkVgqnhkO3ue9H4BiCxbSEUPqaI
-         fj0MRXdnaD00yjzMdNTxJ25+Rl+qiiltswDWnxh/HWIxmsnbgLKheELDqxDwMuj2QtYb
-         TTHQ==
-X-Gm-Message-State: AOJu0YwSpTknNLE9K5KB6NOFpmtb8YocEqhpoJgzVlBRYZ8s0QlPEZ4r
-	Fu6kvAZH/6gczZ8C8nE9oy3c6DihxieAU7rX/B0Kt8u7+BYpXNX676Ir3j6sgtz/bSGyADv+7JU
-	AlWIk0WxuidKWnl6hKieBcz2x44BfHFWN7abSQs/Xq/MIKKRF7W1XyIDsUlAD3txeCzo0uAbYa0
-	7+c1KqKBCkGNuOzOqVoLWjq7R4zFGLvUyCTscr/AUBt5MS
-X-Gm-Gg: ASbGnctbFlQNhduBwtjr/m5u9PjIjIVRkpw+R3mELbhmGx8dlb72BV3gPk4rd9KabxM
-	PYMGeJmkOnLN8BfD3x2ar/3yJJMljpJ9GbqurKLOOVsNsBL7Yvn+AUG8/QP2sD2ijezGLnQ==
-X-Received: by 2002:a17:906:c143:b0:aa6:8cbc:8d15 with SMTP id a640c23a62f3a-ab38b10bacemr198174266b.14.1737115458970;
-        Fri, 17 Jan 2025 04:04:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFBl7ZGW9HOEjoWYa05zh018Ho2MbaM/AfkHkLAFNAuE5mjbhSBNSXFS+g5RY1IbZ3JefO51Avocs7e/XtntjM=
-X-Received: by 2002:a17:906:c143:b0:aa6:8cbc:8d15 with SMTP id
- a640c23a62f3a-ab38b10bacemr198171166b.14.1737115458576; Fri, 17 Jan 2025
- 04:04:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1737118529; x=1737723329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i/Ub09OUl9RsJ71owNWlOANuCEZ1Ov31/V75zShlIM0=;
+        b=CouMUQ0fk6UxrlMj5bSQxZBt7JkpxoZLurAt1eeH1zQ2c4GRN2obsxPCMORohR6PKF
+         qWgvBLmZDqgydMZonnBfFXPlLQG0pAHx1rCTkaLTFWmqpLWpPe5V9bymM+TUXU48gVjN
+         7PUqLHiK5uTvtCegiqXReUhqFlj9afCZHyxz3fa9gyDZKOKMQvtwnV78NnhcaVHAFvJf
+         4Vte8qkl9beXmcLM51NyhpAARis53xvVTycYguU9vSRvmvQYUFV04mTFJVQUMtume/R8
+         8FPipSfbWwLr4WAMv+IEyvQyGl4tF9wib7m4R2w3Yif/u0WPysSGHnaRRaEEg7Xpgv2q
+         PCzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsD6ey7GiwF/Rfr4s0DIpg1PrWMzE4ZQpqZA8nPS+92Uf5lHWzvNlki4Xs25/1WCv2dKj1BeyvyK/cM6aZ5ej9mBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzegDkUgu77XuyyJm/oXUoKn1/3wKxnkxVKTx8kqFI2jgzthlR+
+	KBtXu7zfCKJmKr/yPWzwPs6VcCmPF1Kw9zVtWaZhGcT2TYTBlBti0Kt5A2hHntsdy9gkBgWh0h1
+	TcIfpx5YcVb2oni/o9r82q9eA3fwF/+Qw9tAQJk7gFc70fhe+5lAZFKgLnKr2HGulotGw2w==
+X-Gm-Gg: ASbGnct53vUA2OoWEHFsidJY4IgfH9CKNwngQSt0qqa1hyN/PnpduMgug7gQiYBWqu6
+	C/4GDi6xJfRZwa4tmKlFrcnFCtB+ojDSoNFmTbs+x/Vr5LM+Y0AuO03WQ1ZCZZ1LtYiDw2xbDcH
+	E7tiaiyM0xwpZ0cp37Ra8+UcH9oOj2Uhg2lGzV/eE0s+2/ObAvQME+JbPOHRA4bQRZCrfPO+UFM
+	9kcERomhuObJysAwAedH7uvnHuQCmFWJyDCDl40ILgKo8jKutpLfyI91dfETWrseBNq6YWn1EIa
+	tzJBNT9SVYa3bXxvJAF58dk=
+X-Received: by 2002:a05:6214:3197:b0:6d8:8a01:64e2 with SMTP id 6a1803df08f44-6e1b21e2e0emr39493916d6.43.1737118528988;
+        Fri, 17 Jan 2025 04:55:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGx3VOtr4krB36MByyqD5emK2TbJbOECiK3nFAsHVkyKtYlRN7uMRhrwZIBRHacmF4EwSlKuw==
+X-Received: by 2002:a05:6214:3197:b0:6d8:8a01:64e2 with SMTP id 6a1803df08f44-6e1b21e2e0emr39493606d6.43.1737118528701;
+        Fri, 17 Jan 2025 04:55:28 -0800 (PST)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([66.187.232.65])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e1afc22d3bsm11032406d6.55.2025.01.17.04.55.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 04:55:28 -0800 (PST)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] arm64: Kconfig: Remove selecting replaced HAVE_FUNCTION_GRAPH_RETVAL
+Date: Fri, 17 Jan 2025 07:55:22 -0500
+Message-ID: <20250117125522.99071-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250116144931.649593-1-tglozar@redhat.com> <20250116194621.7b309aed@gandalf.local.home>
-In-Reply-To: <20250116194621.7b309aed@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Fri, 17 Jan 2025 13:04:07 +0100
-X-Gm-Features: AbW1kvarp1S6IEVpeDLex4QcWzYr0RxWPE2JuiSZuu4pawGu-KQYF1SHCCSApvk
-Message-ID: <CAP4=nvQpS20ubNspE0PPhiyWb3-ARV=gmQzFCA7WwAT8+rxMjg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] rtla/timerlat: Stop on signal properly when overloaded
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: jgXExDo6HRHhQY8sWsn2gTu50JvzwBB4KNjuaS6w-64_1737115459
+X-Mimecast-MFC-PROC-ID: xLwV7jHTXMB8-uGNkgbdsmYl3oT4Q_Wb5Hb_WmhbQ7U_1737118529
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-p=C3=A1 17. 1. 2025 v 1:46 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis.=
-org> napsal:
-> Hmm, I wonder if timerlat can handle per cpu data, then you could kick of=
-f
-> a thread per CPU (or a set of CPUs) where the thread is responsible for
-> handling the data.
->
->
->                 CPU_ZERO_S(cpu_size, cpusetp);
->                 CPU_SET_S(cpu, cpu_size, cpusetp);
->                 retval =3D tracefs_iterate_raw_events(trace->tep,
->                                 trace->inst,
->                                 cpusetp,
->                                 cpu_size,
->                                 collect_registered_events,
->                                                     trace);
->
-> And then that iteration will only read over a subset of CPUs. Each thread
-> can do a different subset and then it should be able to keep up.
->
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-That's a good idea, I didn't think of that. But it doesn't help much
-in a scenario where rtla is pinned to a few housekeeping CPUs with -H,
-which is used for testing isolated-CPU-based setups.
+Commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs")
+replaces the config HAVE_FUNCTION_GRAPH_RETVAL with the config
+HAVE_FUNCTION_GRAPH_FREGS, and it replaces all the select commands in the
+various architecture Kconfig files. In the arm64 architecture, the commit
+adds the 'select HAVE_FUNCTION_GRAPH_FREGS', but misses to remove the
+'select HAVE_FUNCTION_GRAPH_RETVAL', i.e., the select on the replaced
+config.
 
-I was thinking of turning timerlat_hist_handler/timerlat_top_handler
-into a BPF program and having it executed right after the sample is
-created, e.g. by using the BPF perf interface to hook it to a
-tracepoint event. The histogram/counter would be stored in BPF maps,
-which would be merely copied over in the main loop. This is
-essentially how cyclictest does it, except in userspace. I expect this
-solution to have good performance, but the obvious downside is that it
-requires BPF. This is not a problem for us, but might be for other
-rtla users and we'd likely have to keep both implementations of sample
-processing in the code.
+Remove selecting the replaced config. No functional change, just cleanup.
 
-Also, before even starting with that, it would be likely necessary to
-remove the duplicate code throughout timerlat/osnoise and test it
-properly, so we don't have to do the same code changes twice or four
-times.
+Fixes: a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ arch/arm64/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Tomas
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fcdd0ed3eca8..940343beb3d4 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -225,7 +225,6 @@ config ARM64
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+ 	select HAVE_FUNCTION_GRAPH_FREGS
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+-	select HAVE_FUNCTION_GRAPH_RETVAL
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && \
+ 		HW_PERF_EVENTS && HAVE_PERF_EVENTS_NMI
+-- 
+2.47.1
 
