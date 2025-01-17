@@ -1,136 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C7317FAC2;
-	Fri, 17 Jan 2025 15:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670CE19B5A3
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 15:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737129086; cv=none; b=WLRrCXJ94/uT5LI3cxr/LC4pD4LeZlQMXSn1g9W+ud18PhbOh38G5bq3TvIcWpYM4WCaI4HuLHgKvABlFYe8AFb8i3EiU7mV5ldew743oZhC2wdpE6ZzF2oZpNYv0wi4zvYHK8RCYHyq13s9ulwEjKc6nWxQb6+88wZE4dDPJMg=
+	t=1737129321; cv=none; b=RfMBRBv+C5wcDIZafzQe4U7UDRnA4Lu1aYUn0tLiEFw4n0xg3v09dPF9KgTubulFEj71iqyddlHMT5/359pIPvWS+qmMT0NYqDedWhjN2Du4BjbiZkUlrrktFD+++xQqhPx1d6XV6ke3u/OMxJFPW06Y04R9rgbjw8hCr2fGXW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737129086; c=relaxed/simple;
-	bh=ecR46qWk1nlZTdF4ABcjXQYtIDzHBLhkIIwyRnBugZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qSyjOY+srSy1xe/XU9jiCnjc1rbD24UBpDV2uOWfpsfp3RoxEe4ctUgirPhh+6AssftRQ/GrlsCg/yt5K8EzJM4XCLIqGh7d2v4YryGCJOmBrQf9HiGNWEAlihYVDa79SoHYb/R9ihJKZPbXCOnRyaEdq58J6RHBn2CND02xST8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC42CC4CEDD;
-	Fri, 17 Jan 2025 15:51:24 +0000 (UTC)
-Date: Fri, 17 Jan 2025 10:51:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Keita Morisaki <keyz@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
- daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, aarontian@google.com,
- yimingtseng@google.com
-Subject: Re: [PATCH] cpuidle: psci: Add trace for PSCI domain idle
-Message-ID: <20250117105132.4122940b@gandalf.local.home>
-In-Reply-To: <20250117040132.3237808-1-keyz@google.com>
-References: <20250117040132.3237808-1-keyz@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1737129321; c=relaxed/simple;
+	bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I7gWax7X8WtIP+AE1IJ0/EUpLZRurYQhlvuIiT/4C2o9dNsMoq2inNNAkkQndXeTsOCpUtYRHybOouQMAdaCpIPP8jrlMBsnaJL5eAjMKljdfdAB0UPJI3qDAkE/69n2CZWOrC2T/Xtn19ji7qsMU4JzTPSow6amaHsDxsZhR5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b5rpvKd0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b5rpvKd0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737129319;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
+	b=b5rpvKd0mhoIO0oXEwIhiJGN9++g4lcXUdNyV/m0tsHnc6vzxCl9OVPjXvmMj3rzT5aaY/
+	v9/Ms1dayJlM0WdLrt2RKM4v4cYnz7NtcgAsLJYcX2VR5kfdqPXgUSNickA0XsbXbOMXPp
+	ytwmdCGyjVwjMf6L0eKedtRVS8FlSoA=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-347-7rLT3LudOlSCWhQlaf3HFw-1; Fri, 17 Jan 2025 10:55:18 -0500
+X-MC-Unique: 7rLT3LudOlSCWhQlaf3HFw-1
+X-Mimecast-MFC-AGG-ID: 7rLT3LudOlSCWhQlaf3HFw
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aa6a831f93cso272900266b.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 07:55:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737129317; x=1737734117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZEJew8uw+VgZhSNf8bku5kGKxIcLXVGIe3fxALoW47E=;
+        b=kdiv/52drMPzFOVT+0lQ1fwewiNx2R3bvSu/53t9Jp7y5QxkgSzAW9XnTJ5ftNZcqh
+         L6ax5dCpVuBvVY4DIodHLcCzOzS+bAJ+f2uhZ0o30mRBwIw1XvKmXIFhr6COT4ENjOEy
+         3FA9YwX6OfYtZEjxnqC5esCgmMHzApqPw6VdIfNA5tBI2fysJQyZ9UA4ZMAhmvDKbiMu
+         0rq193dd+xQlSN97/8Uxtg/VSsu478wH3zVNTB3QM8jRGCkSdVhN5BEu/DR1Xb2l7/iX
+         gHr8xXcQXJIXoc+ByNyHFwbMBn7DZHaiEcZ2HpWzLauQBwprsikrySpBqCoXvIdzAsgv
+         dmCQ==
+X-Gm-Message-State: AOJu0YxFH4y8ichW55VE9nFi0EZ5GWaSLis7WxAqKS16yOblopdOEflA
+	j9WoFshOqoUcoEQ3dv0iaEm6z3dSAR7Bsreua4dHKopmOXm9HT4RS2zM2Cvijmvw9E7flBROeCb
+	UIkdD45YUxsJbux5NYBEFYgKFx1ndsDjAcNPAMStuui7IbDNe4THbqXKLZLwD/d1Y6swjpUoopM
+	EwGPHM/bslnqYJtXpBJqdWqDikHM1lO03tG8kJxxdDPbi+Ri3YCA2NCC8u1A==
+X-Gm-Gg: ASbGncv3kMS7YW44Vg21ouxsxeAqiTvL7BgBV+6t6JDTD4KTbg9o9mKxslwT16Lic/O
+	2Apw7BkQnBmYjP7s6Fyp5Z+rxAZcPez5c/DkmyybjeCv0Wla7I/Y75CRKPv3bMb7lvgSdBA==
+X-Received: by 2002:a17:907:971a:b0:aa6:66eb:9c06 with SMTP id a640c23a62f3a-ab38b1e207bmr288712266b.5.1737129316728;
+        Fri, 17 Jan 2025 07:55:16 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFYYV2Wi77CNQb8NfEM/mbB0BDKmjLbqjnKNw/jaQf4PwBug92JFBVhT6R72SsCk279qL92Cm/MbJdrfBCAJ9U=
+X-Received: by 2002:a17:907:971a:b0:aa6:66eb:9c06 with SMTP id
+ a640c23a62f3a-ab38b1e207bmr288710266b.5.1737129316401; Fri, 17 Jan 2025
+ 07:55:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250116144931.649593-1-tglozar@redhat.com> <20250116194621.7b309aed@gandalf.local.home>
+ <CAP4=nvQpS20ubNspE0PPhiyWb3-ARV=gmQzFCA7WwAT8+rxMjg@mail.gmail.com> <20250117102924.690cb7c7@gandalf.local.home>
+In-Reply-To: <20250117102924.690cb7c7@gandalf.local.home>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Fri, 17 Jan 2025 16:55:04 +0100
+X-Gm-Features: AbW1kvaRXBg2PVPa6dU9bLx4cAfiEKNYL7QcMpEifxHRTeA41l3SHXPwJ2Y4C-A
+Message-ID: <CAP4=nvTfJzG=zSETao_ukAQUSVrjZeRTw1+OEMg_LNJqdW11jQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] rtla/timerlat: Stop on signal properly when overloaded
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: Eqk-c29wZuvzmMKeDGpZJ7YtHH_FZjlhbjzqe8VDbJM_1737129317
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 17 Jan 2025 12:01:32 +0800
-Keita Morisaki <keyz@google.com> wrote:
+p=C3=A1 17. 1. 2025 v 16:29 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
+.org> napsal:
+> Hmm, the timerlat event could probably get access to a trigger to allow i=
+t
+> to do the work in the kernel like what the 'hist' triggers do. We can
+> extend on that.
+>
 
-> @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
->  	if (!state)
->  		state = states[idx];
->  
-> +	trace_psci_domain_idle(dev->cpu, state, true, s2idle);
->  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-> +	trace_psci_domain_idle(dev->cpu, state, false, s2idle);
+If we only need to count the numbers, that would be a perfect
+solution: use the hist trigger in place of the BPF program (no need to
+reinvent the wheel!). I'll have to look at exactly what we need.
 
-Why not make that into two different events:
+> The reason I haven't written a BPF program yet, is because when I feel
+> there's a useful operation that can be done, I just extend ftrace to do i=
+t
+> ;-)
 
-+	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
- 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-+	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+I used to work with BPF, so I usually think of a BPF solution first,
+then I think about whether I can replace the BPF part :D
 
->  
->  	if (s2idle)
->  		dev_pm_genpd_resume(pd_dev);
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index d2349b6b531a..82ad8bb1c477 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -62,6 +62,31 @@ TRACE_EVENT(cpu_idle_miss,
->  		(unsigned long)__entry->state, (__entry->below)?"below":"above")
->  );
->  
-> +TRACE_EVENT(psci_domain_idle,
-> +
-> +	TP_PROTO(unsigned int cpu_id, unsigned int state, bool enter, bool s2idle),
-> +
-> +	TP_ARGS(cpu_id, state, enter, s2idle),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(u32,		cpu_id)
-> +		__field(u32,		state)
-> +		__field(bool,		enter)
-> +		__field(bool,		s2idle)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->cpu_id = cpu_id;
-> +		__entry->state = state;
-> +		__entry->enter = enter;
-> +		__entry->s2idle = s2idle;
-> +	),
-> +
-> +	TP_printk("cpu_id=%lu state=0x%lx type=%s, is_s2idle=%s",
-> +		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-> +		  (__entry->enter)?"enter":"exit", (__entry->s2idle)?"yes":"no")
-> +);
-> +
+Tomas
 
-Then make the above into a DECLARE_EVENT_CLASS:
-
-DECLARE_EVENT_CLASS(psci_domain_idle_template,
-
-	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-
-	TP_ARGS(cpu_id, state, s2idle),
-
-	TP_STRUCT__entry(
-		__field(u32,		cpu_id)
-		__field(u32,		state)
-		__field(bool,		s2idle)
-	),
-
-	TP_fast_assign(
-		__entry->cpu_id = cpu_id;
-		__entry->state = state;
-		__entry->s2idle = s2idle;
-	),
-
-	TP_printk("cpu_id=%lu state=0x%lx type=%s, is_s2idle=%s",
-		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-		  (__entry->s2idle)?"yes":"no")
-);
-
-
-DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_enter,
-
-	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-
-	TP_ARGS(cpu_id, state, s2idle),
-);
-
-DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_exit,
-
-	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-
-	TP_ARGS(cpu_id, state, s2idle),
-);
-
-And then you could easily attach synthetic events to them to get the
-timings and such.
-
--- Steve
