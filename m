@@ -1,32 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D93013D897;
-	Fri, 17 Jan 2025 15:29:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C7317FAC2;
+	Fri, 17 Jan 2025 15:51:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737127758; cv=none; b=UsNjQ6+B//04KUN1hKddGjEHRtasAEXDhjr71m7UaYO4UTmJ6O6HdEinxQy76hsNG/e2Ilk/QurYY/ezpkCNctvuNDoNiHceAuUBJgMBrD6t9HVJ+uSWrthgMJ/UU/cqKCE9AckgQLD5VqcjCcleP97u06f1+3OaWWgV6u4mW4E=
+	t=1737129086; cv=none; b=WLRrCXJ94/uT5LI3cxr/LC4pD4LeZlQMXSn1g9W+ud18PhbOh38G5bq3TvIcWpYM4WCaI4HuLHgKvABlFYe8AFb8i3EiU7mV5ldew743oZhC2wdpE6ZzF2oZpNYv0wi4zvYHK8RCYHyq13s9ulwEjKc6nWxQb6+88wZE4dDPJMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737127758; c=relaxed/simple;
-	bh=SKnIJa2kDBbEyoWXSf3vebW59o/vzyAYQcyXln0eWmM=;
+	s=arc-20240116; t=1737129086; c=relaxed/simple;
+	bh=ecR46qWk1nlZTdF4ABcjXQYtIDzHBLhkIIwyRnBugZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UZ57r7quxM7wNL7gOow61ZmN4TD8aleZhTH2n7X1w9pW5XrdDisPV0MTE00u2/5Q4pWUrXx/529NussIh8XAWPNlpfsg8NLwDxHwn4Asj67PakM1oL7WA4qunMl3aiHGShCTknM2ArnFIuct9wW6Myy1RoVUqx6qvLgJB5vDGOI=
+	 MIME-Version:Content-Type; b=qSyjOY+srSy1xe/XU9jiCnjc1rbD24UBpDV2uOWfpsfp3RoxEe4ctUgirPhh+6AssftRQ/GrlsCg/yt5K8EzJM4XCLIqGh7d2v4YryGCJOmBrQf9HiGNWEAlihYVDa79SoHYb/R9ihJKZPbXCOnRyaEdq58J6RHBn2CND02xST8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E11F6C4CEDD;
-	Fri, 17 Jan 2025 15:29:16 +0000 (UTC)
-Date: Fri, 17 Jan 2025 10:29:24 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC42CC4CEDD;
+	Fri, 17 Jan 2025 15:51:24 +0000 (UTC)
+Date: Fri, 17 Jan 2025 10:51:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
- Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Gabriele
- Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH 0/5] rtla/timerlat: Stop on signal properly when
- overloaded
-Message-ID: <20250117102924.690cb7c7@gandalf.local.home>
-In-Reply-To: <CAP4=nvQpS20ubNspE0PPhiyWb3-ARV=gmQzFCA7WwAT8+rxMjg@mail.gmail.com>
-References: <20250116144931.649593-1-tglozar@redhat.com>
-	<20250116194621.7b309aed@gandalf.local.home>
-	<CAP4=nvQpS20ubNspE0PPhiyWb3-ARV=gmQzFCA7WwAT8+rxMjg@mail.gmail.com>
+To: Keita Morisaki <keyz@google.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, aarontian@google.com,
+ yimingtseng@google.com
+Subject: Re: [PATCH] cpuidle: psci: Add trace for PSCI domain idle
+Message-ID: <20250117105132.4122940b@gandalf.local.home>
+In-Reply-To: <20250117040132.3237808-1-keyz@google.com>
+References: <20250117040132.3237808-1-keyz@google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,34 +36,101 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 17 Jan 2025 13:04:07 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Fri, 17 Jan 2025 12:01:32 +0800
+Keita Morisaki <keyz@google.com> wrote:
+
+> @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>  	if (!state)
+>  		state = states[idx];
+>  
+> +	trace_psci_domain_idle(dev->cpu, state, true, s2idle);
+>  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+> +	trace_psci_domain_idle(dev->cpu, state, false, s2idle);
+
+Why not make that into two different events:
+
++	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+ 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
++	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+
+>  
+>  	if (s2idle)
+>  		dev_pm_genpd_resume(pd_dev);
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index d2349b6b531a..82ad8bb1c477 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -62,6 +62,31 @@ TRACE_EVENT(cpu_idle_miss,
+>  		(unsigned long)__entry->state, (__entry->below)?"below":"above")
+>  );
+>  
+> +TRACE_EVENT(psci_domain_idle,
+> +
+> +	TP_PROTO(unsigned int cpu_id, unsigned int state, bool enter, bool s2idle),
+> +
+> +	TP_ARGS(cpu_id, state, enter, s2idle),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(u32,		cpu_id)
+> +		__field(u32,		state)
+> +		__field(bool,		enter)
+> +		__field(bool,		s2idle)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->cpu_id = cpu_id;
+> +		__entry->state = state;
+> +		__entry->enter = enter;
+> +		__entry->s2idle = s2idle;
+> +	),
+> +
+> +	TP_printk("cpu_id=%lu state=0x%lx type=%s, is_s2idle=%s",
+> +		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
+> +		  (__entry->enter)?"enter":"exit", (__entry->s2idle)?"yes":"no")
+> +);
+> +
+
+Then make the above into a DECLARE_EVENT_CLASS:
+
+DECLARE_EVENT_CLASS(psci_domain_idle_template,
+
+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+
+	TP_ARGS(cpu_id, state, s2idle),
+
+	TP_STRUCT__entry(
+		__field(u32,		cpu_id)
+		__field(u32,		state)
+		__field(bool,		s2idle)
+	),
+
+	TP_fast_assign(
+		__entry->cpu_id = cpu_id;
+		__entry->state = state;
+		__entry->s2idle = s2idle;
+	),
+
+	TP_printk("cpu_id=%lu state=0x%lx type=%s, is_s2idle=%s",
+		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
+		  (__entry->s2idle)?"yes":"no")
+);
 
 
-> I was thinking of turning timerlat_hist_handler/timerlat_top_handler
-> into a BPF program and having it executed right after the sample is
-> created, e.g. by using the BPF perf interface to hook it to a
-> tracepoint event. The histogram/counter would be stored in BPF maps,
-> which would be merely copied over in the main loop. This is
-> essentially how cyclictest does it, except in userspace. I expect this
-> solution to have good performance, but the obvious downside is that it
-> requires BPF. This is not a problem for us, but might be for other
-> rtla users and we'd likely have to keep both implementations of sample
-> processing in the code.
-> 
-> Also, before even starting with that, it would be likely necessary to
-> remove the duplicate code throughout timerlat/osnoise and test it
-> properly, so we don't have to do the same code changes twice or four
-> times.
+DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_enter,
 
-We could also add kernel helpers to the code if it would help.
+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
 
-Hmm, the timerlat event could probably get access to a trigger to allow it
-to do the work in the kernel like what the 'hist' triggers do. We can
-extend on that.
+	TP_ARGS(cpu_id, state, s2idle),
+);
 
-The reason I haven't written a BPF program yet, is because when I feel
-there's a useful operation that can be done, I just extend ftrace to do it
-;-)
+DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_exit,
+
+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+
+	TP_ARGS(cpu_id, state, s2idle),
+);
+
+And then you could easily attach synthetic events to them to get the
+timings and such.
 
 -- Steve
