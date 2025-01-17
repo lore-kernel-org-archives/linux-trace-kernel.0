@@ -1,76 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747CA2C80;
-	Fri, 17 Jan 2025 01:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D113138DE3;
+	Fri, 17 Jan 2025 01:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737076684; cv=none; b=A5L/YXaf3f0xf6N/lNJbjZRoW+n9wv234zNXWlBdRA4yPWaHDcTosAiIVBiiDqUFNHHJXfKVakxZawgJpPjJrR1+8oGtECFhcljHbsuois7BNH5nSZGAnhs4JoN1RIIsX8sikTJuFcIAHy/HuyUCTsrHjOy6MMqPMsv+VYT9+MM=
+	t=1737076994; cv=none; b=IBr23jgdYbdOdKVGkklSEv2jmhkl5GpS0ziTnS9zKeZFkZFyvi7ocA4YfwptDMNmxoxmC8OZA22ZYOrjTM6fA9M2yFhm4wPvw01aoEEnbarIOdAHB+VzX/OkO5RPVtTWPi8cFdJqp1D2i0Lq7pcDwX/tliYyMBPPifgqSCrFj6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737076684; c=relaxed/simple;
-	bh=QOP2MhXmE6eiwtJDCGtvALdoxQ4y6vVqW7wg+bg6vtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gTsYBq2E7zkzCp8w9DYyHcMAwrYa9XNHyVNDCgnIW8fkqZCt3A5+OG1W6iMgNmwdKv724LYZRMVE1KRzbhho5/RZuUiBf+/GvOiuCvkyCgE/YoIre0a5gcxjK+M+XW9s/ysubfKk2XJ+q0pSZJQiT6+dwYNBUwBRK91/DrRDIzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18FF0C4CED6;
-	Fri, 17 Jan 2025 01:18:02 +0000 (UTC)
-Date: Thu, 16 Jan 2025 20:18:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
- Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Chang Yin
- <cyin@redhat.com>, Qiao Zhao <qzhao@redhat.com>
-Subject: Re: [PATCH] tools/rtla: Add basic test suite
-Message-ID: <20250116201808.3c8721c1@gandalf.local.home>
-In-Reply-To: <20250109133852.360122-1-tglozar@redhat.com>
-References: <20250109133852.360122-1-tglozar@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1737076994; c=relaxed/simple;
+	bh=wIT9IZfUMJtxKYEmAWkkr+Vs51mMi8q9ct0lyYCDvHM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ivk8qeRtCqCJi9w7tKBUj7FukQgjdFxML/WK/Hwv0ezEXDWFmwDsRTHGNNZHYp4d3vwLcwtoxFGspTrVfRPAdpiqAFEHERPddtRaq2Bm+Z+PFjyHGnrWVFrdL1HOlgZioLdGCNPw6uyH85e8t2VQslBTVhLuxqtJXiU6aQMwa98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bqy00K6L; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bqy00K6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E20C4CED6;
+	Fri, 17 Jan 2025 01:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737076992;
+	bh=wIT9IZfUMJtxKYEmAWkkr+Vs51mMi8q9ct0lyYCDvHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Bqy00K6LyPPhuy2uJt4sFf345HeojZCIcneZ6fg38dC+fjoOsdtRXBRckRPRJrdVo
+	 JYefeOgjfNFPSw7JRdZRqyCc2Ke5cgCL7htPX2FBawI6usbxUXXeIltvAOSpV7vvqz
+	 +m2Lbvhl3IGH/1xGLC6TtSk3wu1c6jj4MlWDpZ+qmIuoy5t/C/r7S67IzKw0LBfC19
+	 xwynJyxWDRlSkzng7lEjHbkk4CtxSH0eplm24itSCbgty7fjhqDueVh1cf6p4BOxzk
+	 aZQmTc0/B6NEhE7cA9xp6TuZSPS43QxOdEWej0pER8qn9BYdedGQA9fwyrFD9baaXT
+	 lStJC1nfAmZhg==
+Date: Fri, 17 Jan 2025 10:23:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Aleksa Sarai <cyphar@cyphar.com>, Eyal Birger <eyal.birger@gmail.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel@vger.kernel.org, BPF-dev-list <bpf@vger.kernel.org>,
+ Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John
+ Fastabend <john.fastabend@gmail.com>, peterz@infradead.org,
+ tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
+ linux-api@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, "rostedt@goodmis.org"
+ <rostedt@goodmis.org>, rafi@rbk.io, Shmulik Ladkani
+ <shmulik.ladkani@gmail.com>
+Subject: Re: Crash when attaching uretprobes to processes running in Docker
+Message-Id: <20250117102307.cf919a0e7e59e3df0ddbcd3c@kernel.org>
+In-Reply-To: <Z4Zy6W6z3ICp6SdJ@krava>
+References: <CAHsH6Gs3Eh8DFU0wq58c_LF8A4_+o6z456J7BidmcVY2AqOnHQ@mail.gmail.com>
+	<20250110.152323-sassy.torch.lavish.rent-vKX3ul5B3qyi@cyphar.com>
+	<Z4K7D10rjuVeRCKq@krava>
+	<Z4YszJfOvFEAaKjF@krava>
+	<20250114190521.0b69a1af64cac41106101154@kernel.org>
+	<20250114112106.GC19816@redhat.com>
+	<Z4Zy6W6z3ICp6SdJ@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  9 Jan 2025 14:38:52 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Tue, 14 Jan 2025 15:21:29 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> Implement a simple TAP-based test engine in bash and a few basic tests
-> using it, to be used to check for bugs and regressions.
+> On Tue, Jan 14, 2025 at 12:21:07PM +0100, Oleg Nesterov wrote:
+> > On 01/14, Masami Hiramatsu wrote:
+> > >
+> > > On Tue, 14 Jan 2025 10:22:20 +0100
+> > > Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > > @@ -418,6 +439,9 @@ SYSCALL_DEFINE0(uretprobe)
+> > > >  	regs->r11 = regs->flags;
+> > > >  	regs->cx  = regs->ip;
+> > > >
+> > > > +	/* zero rbx to signal trampoline that uretprobe syscall was executed */
+> > > > +	regs->bx  = 0;
+> > >
+> > > Can we just return -ENOSYS as like as other syscall instead of
+> > > using rbx as a side channel?
+> > > We can carefully check the return address is not -ERRNO when set up
+> > > and reserve the -ENOSYS for this use case.
+> > 
+> > Not sure I understand...
+> > 
+> > But please not that the uretprobed function can return any value
+> > including -ENOSYS, and this is what sys_uretprobe() has to return.
 > 
-> A new "check" target is added to the rtla Makefile that runs the test suite
-> using the "prove" command implemented by Test::Harness.
-> 
-> The only test format currently supported is running rtla with defined
-> command arguments per test, checking its exit code. In case the exit
-> code is non-zero, the output of rtla is displayed.
-> 
-> The test cases are adopted from rtla tests in the Continuous Kernel
-> Integration (CKI) project [1] with the authors' approval.
-> 
-> [1] https://gitlab.com/redhat/centos-stream/tests/kernel/kernel-tests/-/blob/main/rt-tests/us/rtla/
-> 
-> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> right, uretprobe syscall returns value of the uretprobed function,
+> so we can't use any reserved value
 
-I tested this out, and it failed the last test:
+We can make uretprobe (entry) fail if the return value is one of
+errno or NULL, because it *knows* what the return value here.
 
-make[1]: Leaving directory '/work/git/linux.git/tools/tracing/rtla'
-RTLA=/work/git/linux.git/tools/tracing/rtla/rtla prove -o -f tests/
-tests/hwnoise.t ... ok      
-tests/osnoise.t ... ok   
-tests/timerlat.t .. 9/9 
-not ok 9 - hist test in nanoseconds
-# 
-tests/timerlat.t .. Failed 1/9 subtests 
+Thank you,
 
-Test Summary Report
--------------------
-tests/timerlat.t (Wstat: 0 Tests: 9 Failed: 1)
-  Failed test:  9
-Files=3, Tests=20, 451 wallclock secs ( 0.07 usr  0.11 sys + 10.57 cusr 74.09 csys = 84.84 CPU)
-Result: FAIL
-make: *** [Makefile:89: check] Error 1
+> 
+> jirka
 
--- Steve
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
