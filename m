@@ -1,123 +1,114 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34445136658
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Jan 2025 07:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEF0199230
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 18 Jan 2025 15:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737185084; cv=none; b=FAgZzPz+nrvMtHycC3mU4juF+UsyYkPhDWNQnue9e9lOaZZL4ZXm6k2wJHh2g/UZv/H8L0zW6p1/+XWhoidQFPSLugQJLEmSu2pdlLo54mp/hgNcDGZLaCfD66pljYOTCmCv3aHmPak/JrAoFaRKNXIZfYHwfH9c5AJ3F1Jw5E0=
+	t=1737212751; cv=none; b=JXTkkv8Dmjqw6XXWV0+iCS322I+F0m5N5CHDHKtRKKcqnIFJnZpWlsVSbofH+UrjdAQ2X5u9I7QtoYBu3/aJ2BmdnAhD/FF2fx0avkZYRe1z7KJ9wb6jrP170erDUeJiDhdOgyr7NNdJ1dTOyj/Z4bYyEZ/kf4oVzfUlNfkWFiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737185084; c=relaxed/simple;
-	bh=KhUjOsUtKjZxVWEAfpaUIwtDFofgniDpgtWv9gaFW9k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PyQvjhYsd4yTbmy6iG0SBW+q8gXc3629EG2qcQbMDBqwddd/Q/sxnvXG1VpLhjUAZ93t3P+N3nVv57HYUgJ/KKNU/sh0LRId9LkXwKnkYbndOrwkPPtvcFOAHcNrYGHciMMg5nnxXwOYBO5jzDmDn6q0g/yXzTMPUFAV9yQ5fUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E1DgqX9V; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
+	s=arc-20240116; t=1737212751; c=relaxed/simple;
+	bh=FB5tEY/SIGgEcj+wCphizTJs+zgzCCFaTisQu4Io4D8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GWoJ/qdPnv3w+RjpOvpg2tUkHWg14kxIANakWf+EZQwxOtKhJEqxbYjSl9ixxMxdNGlkaXtiKykt5nLJdjX1VmGyMJrXspaI8aOpGcpTo6H4GE1dsCeGn/cG4Gbu577pP4IIwvmyqId1tNKpxEYpLB/VPtxO2569OEAs6Sx2by8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KsuhhWDK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E1DgqX9V"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2162f80040aso51467085ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Jan 2025 23:24:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737185082; x=1737789882; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=940iCcxpvzyGM4mZVRnuDDdVwqFoEWjVZnkzqluQF6M=;
-        b=E1DgqX9VJM+cBK61JImc+P+ytlAmeu6p1geXMRMle6+IXrt7rjhnf6XPoKkHKw5sSc
-         OGQlvBsxa0w9cC7jdSPKM0m1xc6UzzDLmiwo294/zkQzC5prsYxQQ8UD/Nu5+VuXXUoz
-         2FwcGnmDQbx3vuvQz3oIO3srbl2PU1dm3U/dDayNudZJV4tq7ur5fkilttYHdy6IPm53
-         /LvNcmgItHrr78d6sgfHyGx7oTobTvifdiuc5LqSaFpMOqaQfYKFfu8eYn7UB2aeAMCJ
-         J2rEx6/RE2ZZ+A+AU1eWSJEdzf+U0OVhzchpbUMDoug0+Uxj0qv5ovO0wteyIYkkvzEk
-         9zCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737185082; x=1737789882;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=940iCcxpvzyGM4mZVRnuDDdVwqFoEWjVZnkzqluQF6M=;
-        b=t76hwHUeudZgWgf1JuhhRm9lnYsNmHL5s9dzXJ9ve6/oxn71cx0cMghpn2ZNK0obk1
-         xAe1z8Ls0YRXkO4hX3bxLhDts4mNqxelfYC7Rir87bV181PXg8NNVsfLbRD9AgaKpAwE
-         aTMrAL4Ofhe1G8hLrf3gztxKEQ37SWF8z9944kgrdK1CtZJCqYHpcoN+Xyqc7Sdl9+mV
-         YMM3prI+vNz3WF5jgwNb5TppksutmyQYQxgl0qti1BztAmSI7CKMZwt1mKm27jXByvlN
-         Dhlmb69gxBgX+Pla4kEBp3w13PDtcG8kYrt6nHiqL+bPQvkKpkgmFA1xq468X0B07pC3
-         s4mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXt0RsQq6mBiSQd8vClbu6ZfoCkU9pHsyKkza+vhoXeWLol4ZdJi3Gatcj9UEFQs5N0IHq5+ePbKFSpc8Y1p8bTRKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS3Xz/auTpjWFNv9yRJw7vVBVmBSRiuzW85djG6ru2UZfuXGsa
-	x8tPCVvUT8Q0eszoFr5VAtsHEBqeKtN3tQZ240LqQHsk+Xlmdwq1S6duzbm0QzFgdA7JaA==
-X-Google-Smtp-Source: AGHT+IEIBAeQmO6MGQcNwnYFn8SkrDPGzn+XCE5f7u+ZLY2Fni10ILvoUB2qzb6E+YF/skiDhuyrjNMG
-X-Received: from pgbcs4.prod.google.com ([2002:a05:6a02:4184:b0:801:cdbd:2727])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:f29:b0:1e3:e77d:1431
- with SMTP id adf61e73a8af0-1eb214da830mr6276082637.23.1737185082483; Fri, 17
- Jan 2025 23:24:42 -0800 (PST)
-Date: Sat, 18 Jan 2025 15:24:38 +0800
-In-Reply-To: <20250117105132.4122940b@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KsuhhWDK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737212748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FB5tEY/SIGgEcj+wCphizTJs+zgzCCFaTisQu4Io4D8=;
+	b=KsuhhWDK95iM5PtGmDHzMUPFzqW6bxDKq59GzOh8jet3YXl4z8qKTfw4Q9wSsSnV2fcZWf
+	qvrw5ilhe25RGidFE9U4Dxi16nQ8Stxixjc4MzBLLeMYMGcMmgTtDFWUnXtBs1830uwNKz
+	415JxZkqdSNnKbKgkJOHVC/bZUmJjNg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-552-kWG6VUqGNcauERNYzyMBkQ-1; Sat,
+ 18 Jan 2025 10:05:42 -0500
+X-MC-Unique: kWG6VUqGNcauERNYzyMBkQ-1
+X-Mimecast-MFC-AGG-ID: kWG6VUqGNcauERNYzyMBkQ
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8EAA119560B1;
+	Sat, 18 Jan 2025 15:05:37 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AFEAD195608A;
+	Sat, 18 Jan 2025 15:05:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sat, 18 Jan 2025 16:05:12 +0100 (CET)
+Date: Sat, 18 Jan 2025 16:05:01 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
+	luto@amacapital.net, wad@chromium.org, andrii@kernel.org,
+	jolsa@kernel.org, alexei.starovoitov@gmail.com, olsajiri@gmail.com,
+	cyphar@cyphar.com, songliubraving@fb.com, yhs@fb.com,
+	john.fastabend@gmail.com, peterz@infradead.org, tglx@linutronix.de,
+	bp@alien8.de, daniel@iogearbox.net, ast@kernel.org,
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
+	bpf@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	"Dmitry V. Levin" <ldv@strace.io>
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
+ filtering
+Message-ID: <20250118150500.GB21464@redhat.com>
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <20250117013927.GB2610@redhat.com>
+ <20250117170229.f1e1a9f03a8547d31cd875db@kernel.org>
+ <20250117140924.GA21203@redhat.com>
+ <CAEf4BzYhcG8waFMFoQS5dFWVkQGP6ed_0mwGTK4quN5+6-8XuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250117105132.4122940b@gandalf.local.home>
-X-Mailer: git-send-email 2.48.0.rc2.279.g1de40edade-goog
-Message-ID: <20250118072438.3647805-1-keyz@google.com>
-Subject: Re: [PATCH] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: rostedt@goodmis.org
-Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
-	sudeep.holla@arm.com, yimingtseng@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYhcG8waFMFoQS5dFWVkQGP6ed_0mwGTK4quN5+6-8XuA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Thank you for the review!
+On 01/17, Andrii Nakryiko wrote:
+>
+> On Fri, Jan 17, 2025 at 6:10 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > We can, and this is what I tried to suggest from the very beginning.
+> > But I agree with Eyal who decided to send the most trivial fix for
+> > -stable, we can add the helper later.
+> >
+> > I don't think it should live in uprobes.h and I'd prefer something
+> > like arch_seccomp_ignored(int) but I won't insist.
+>
+> yep, I think this is the way, keeping it as a general category. Should
+> we also put rt_sigreturn there explicitly as well? Also, wouldn't it
+> be better to have it as a non-arch-specific function for something
+> like rt_sigreturn where defining it per each arch is cumbersome, and
+> have the default implementation also call into an arch-specific
+> function?
 
-> Why not make that into two different events:
+I personally don't think we should exclude rt_sigreturn. and I guess
+we can't do it in a arch-agnostic way, think of __NR_ia32_sigreturn.
 
-> +	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
-> 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-> +	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+However. These are all good questions that need a separate discussion.
+Plus the SECCOMP_RET_TRACE/strace issue raised by Dmitry. And probably
+even more.
 
-> Then make the above into a DECLARE_EVENT_CLASS:
+But IMO it would be better to push the trivial (and urgent) fix to
+-stable first, then discuss the possible cleanups/improvements.
 
-> DECLARE_EVENT_CLASS(psci_domain_idle_template,
+What do you think?
 
-> 	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+Oleg.
 
-> 	TP_ARGS(cpu_id, state, s2idle),
-
-> 	TP_STRUCT__entry(
-> 		__field(u32,		cpu_id)
-> 		__field(u32,		state)
-> 		__field(bool,		s2idle)
-> 	),
-
-> 	TP_fast_assign(
-> 		__entry->cpu_id = cpu_id;
-> 		__entry->state = state;
-> 		__entry->s2idle = s2idle;
-> 	),
-
-> 	TP_printk("cpu_id=%lu state=0x%lx type=%s, is_s2idle=%s",
-> 		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-> 		  (__entry->s2idle)?"yes":"no")
-> );
-
-
-> DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_enter,
-
-> 	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-
-> 	TP_ARGS(cpu_id, state, s2idle),
-> );
-
-> DEFINE_EVENT(psci_domain_idle_template, psci_domain_idle_exit,
-
-> 	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-
-> 	TP_ARGS(cpu_id, state, s2idle),
-> );
-
-Looks good. Let me apply this change in v2.
-
-Thanks,
-Keita
