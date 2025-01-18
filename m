@@ -1,99 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6DC1ACED2;
-	Fri, 17 Jan 2025 21:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC0C33C9;
+	Sat, 18 Jan 2025 01:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737147768; cv=none; b=b0SE4M/Q/ZgcJAhvU5ppCtcYYOleo8LpbdPADGZP3+HCQTZgQeazu78xxtInQKF3oDiCR3QISLfsg4F0b9aC+K44VkoiVIo+87+iCHm2R7zZ+1YapTqjMCpoQ59Dy4kKEaW4WCmNluC9VMzqQxSPhegTRcNgpeSrHPrvJvVC9Sk=
+	t=1737163454; cv=none; b=P2WwZFUNMvt/Z1WrIMfvxYoFWUa6DLRysRfyZwqS+Znj1Z60EcSRI+0cjbuE45SOhT+1/+XkUILMauxf4AyA08ifNQML1nf8+7V0IajxQtwUvns6qAf8UzyKYbFitcfPxzALw9vhC5jPR2Xr0PFWXOzdTkcwfaIRrgEXcV8fWvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737147768; c=relaxed/simple;
-	bh=s87ZaprngAbzkyDGjRFuOAMj/B4LIrGPHpa5+JFQka0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hxRa40fBIa+HhfsbZkh+x65Kx2iaeXQrNYML6WPqut24e4UFt+KILFfFetjyuUV15uqEvXD10VQDfnurh9wrwIO8A+Hf4M2AH3v32beJEZS/UNdUEPtmjiGSffwFjT1JQ2N3qMF/fkJQCO+BoIlEAG6W6jXr8SANxGw3ao1bVVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53252C4CEDF;
-	Fri, 17 Jan 2025 21:02:47 +0000 (UTC)
-Date: Fri, 17 Jan 2025 16:02:54 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
- Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Chang Yin
- <cyin@redhat.com>, Qiao Zhao <qzhao@redhat.com>
-Subject: Re: [PATCH] tools/rtla: Add basic test suite
-Message-ID: <20250117160254.4a366149@gandalf.local.home>
-In-Reply-To: <CAP4=nvRm8Sp4n0J1oWS6D-KbzQ-KeE4eW1cw9CZ8mU-Woi78+g@mail.gmail.com>
-References: <20250109133852.360122-1-tglozar@redhat.com>
-	<20250116201808.3c8721c1@gandalf.local.home>
-	<CAP4=nvRm8Sp4n0J1oWS6D-KbzQ-KeE4eW1cw9CZ8mU-Woi78+g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1737163454; c=relaxed/simple;
+	bh=yGio0A4ZgxzJ9F5pW26T0u7/d1FZn6Q1PqnU3t0vmSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pjt8AmH53UJDDa6YnXe757OtCxcUzNtZji5hCPFAUHxtMExXc3otO1uPtGF0XQ469QQjwy6X/hTRKrbCMOZPJHRjnP8CRVnZnbFFFKjFX05Py1bcHnYMBAulUeQ8r6Ssq1DdsUs+d5vhmTyK22SprSbiqFQiQ42vywxOSs5VsCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLD/Dikz; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLD/Dikz"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ef70c7efa5so3926749a91.2;
+        Fri, 17 Jan 2025 17:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737163452; x=1737768252; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mBqd+dKo/II6selhXjyJcD8heAnchcHP4Pt54qB+7BY=;
+        b=FLD/DikzFFPfAnav/k31uY+xfzZV0XCiJ3TuQmUHXF6FESWGDemuaQ4wTcxWzkLFMv
+         aV0MG5lOZ1aov38FWydv9FMXC0fqORgIaCJCJib92tyofxsQA+SxYwg+14bDEKiqP96u
+         GjyZ0tsSXfAGLU+zXgD7ubjW0aH+Xk1seePIDtEWqr1i2Gs24lVpoq4jmMIxQINVh0Iq
+         W1tfZseaXbl9GIQZFO09b+I3+sF+BFnD5YC7jfuHXL9hU9QouppbaMt0JQEzkWhUQSE4
+         83JtcYX46zrgk7pfGXDFjzLW6AF6Vf27+VYc2Ky4TmIM7Diziz1ZvIsstu9tQqvYFcgC
+         afoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737163452; x=1737768252;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mBqd+dKo/II6selhXjyJcD8heAnchcHP4Pt54qB+7BY=;
+        b=CzcUGTIBZlsbHEPf41AZvqPVLM4wl5/p84CNNwvg6UElJxjTeYm69Zy7OaYEfEW3PN
+         tNU3TwWW2HqtzUZ+XyKI3wVRqVs5MjWsYI6X6rIlxz2gqV7RDOIkQYTifVmp4wUrK+Op
+         IRua84QosLl88L+saFB5dJQVM2vDFyCR0LaeZ+6uD/GQ/NAjIhjSntMRbMacoU6OwuLR
+         rCHgJmCpYKJ3/1vBFg3YfgdR2+p5/cUy9/eBqhHVEzxtIcsqH2liJyUrOK0XUxepVAT1
+         m0cd3fDut7sdePAuhtqeupei2nr3cWbMCkUKqiQ2X9VRX0+Nbe4GuLSbC5QfrfycKKDk
+         /Uzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcVgAqd5GYv1DyRAa2Osu2V9JZeAr/u0Zz5MnRWgjXyNeBeNWr9VHMYMv4DE5p86+jRE2wYnbWAg8FLDQraIwqn4np@vger.kernel.org, AJvYcCXYcZXDQuHwel5hQL6E1yyOVedFObLbPxsAUf4c8VlH6DWkD/fre5NAv7hJz2Nib+IM1erhRBV4rLGwLZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yws9y7+9onI21Iz1M8hQxU/Z3aNLH1F0MACr8DEvoxr2jYi1eKU
+	aLP0eyNAxEt4O+OOTmdvUdR9PDcHrcdbMrf1tW14MaGB+4pIT/6E
+X-Gm-Gg: ASbGncszMaipauBZFYwi7Lb+milhHJqX3c9U29ucw35BvnIXC1Yv3WXyvigO5TZK3+b
+	yndnw/EcWBdlK3iBsC2TdJxewcJzwaAndij4jUbOHujfjmeTojmRzx9V9Q/Y0t3BYc0w8NkzVmE
+	7endr2XLukc7ZOsv8YlTlCPJJv/JKlcgJBIl2VnD5kF7EtjVSkap9QxkPej0g/ZSIHShe4Yb1Nv
+	A0DCyDYQ5PuiEgWBnKr0BOtI9tuaLBElZD3p7goDmOUyP0Dsec8FNQhhEXQi/HOBJdTav0Vv4wn
+	F8DWP4eeOU5TBalKEojyqTBCqWmFZZj9zYMojtZ1MxWcYaIc3w==
+X-Google-Smtp-Source: AGHT+IFl6YM+dJRnN9CdkkV0IU1+GyGMmvrx+IB6oZD/rI9y7+B1LiCTObyfDZPxsV9dWkBruwNWmw==
+X-Received: by 2002:a05:6a00:189a:b0:727:3ccc:25b0 with SMTP id d2e1a72fcca58-72dafa9b030mr8050406b3a.16.1737163452145;
+        Fri, 17 Jan 2025 17:24:12 -0800 (PST)
+Received: from localhost.localdomain (140-211-169-189-openstack.osuosl.org. [140.211.169.189])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72daba4956esm2560728b3a.128.2025.01.17.17.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2025 17:24:11 -0800 (PST)
+From: Zhouyi Zhou <zhouzhouyi@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Zhouyi Zhou <zhouzhouyi@gmail.com>
+Subject: [PATCH] ring-buffer: fix typo in comment about header page pointer
+Date: Sat, 18 Jan 2025 01:23:52 +0000
+Message-Id: <20250118012352.3430519-1-zhouzhouyi@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 Jan 2025 11:53:48 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+Fix typo in comment about header page pointer in function
+rb_get_reader_page.       
+    
+Signed-off-by: Zhouyi Zhou <zhouzhouyi@gmail.com>    
+---
+ kernel/trace/ring_buffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Maybe after enough time repeating the command I'm also going to hit
-> the bug you saw.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 60210fb5b211..a0b1dd654496 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5321,7 +5321,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 * moving it. The page before the header page has the
+ 	 * flag bit '1' set if it is pointing to the page we want.
+ 	 * but if the writer is in the process of moving it
+-	 * than it will be '2' or already moved '0'.
++	 * then it will be '2' or already moved '0'.
+ 	 */
+ 
+ 	ret = rb_head_page_replace(reader, cpu_buffer->reader_page);
+-- 
+2.25.1
 
-Nevermind. The divide by zero fix went into my tools/urgent branch and I
-pushed it up to Linus, but I had already started the tools/core branch for
-the next merge window that I've been adding these patches to. It does not
-include the fix.
-
-The reason for that crash was because of the divide by zero bug. After
-cherry-picking it for testing, it works.
-
-Now, what I also noticed was. When it did crash and die. The osnoise tracer
-no longer creates any osnoise threads. Can you take a look.
-
-Remove the fix, and run that test:
-
- ~# echo osnoise > /sys/kernel/tracing/current_tracer
- ~# ps aux |grep osnois
-root         942  105  0.0      0     0 ?        R    16:00   0:02 [osnoise/0]
-root         943  104  0.0      0     0 ?        R    16:00   0:02 [osnoise/1]
-root         944  105  0.0      0     0 ?        R    16:00   0:02 [osnoise/2]
-root         945  105  0.0      0     0 ?        R    16:00   0:02 [osnoise/3]
-root         946  105  0.0      0     0 ?        R    16:00   0:02 [osnoise/4]
-root         947  105  0.0      0     0 ?        R    16:00   0:02 [osnoise/5]
-root         948  104  0.0      0     0 ?        R    16:00   0:02 [osnoise/6]
-root         949  130  0.0      0     0 ?        R    16:00   0:03 [osnoise/7]
-root         953  9.0  0.0   6468  2152 pts/0    S+   16:00   0:00 grep osnois
-
- ~# echo nop > /sys/kernel/tracing/current_tracer
- ~# cd linux.git
- ~# git show cfff4d019b4c01 | patch -p1 -R
- ~# cd tools/tracing/rtla/
- ~# make
- ~# ./rtla timerlat hist -i 2 -c 0 -n -d 30s
- # RTLA timerlat histogram
- # Time unit is nanoseconds (ns)
- # Duration:   0 00:00:02
- Index   IRQ-000   Thr-000   Usr-000
- over:         1         0         0 
- count:        1         0         0 
- min:    1481365         -         - 
- avg:    1481365         -         - 
- max:    1481365         -         - 
- Floating point exception
-
- ~# rmdir /sys/kernel/tracing/instances/timerlat_aa/
- ~# rmdir /sys/kernel/tracing/instances/timerlat_hist/
-
- ~# echo osnoise > /sys/kernel/tracing/current_tracer
- ~# ps aux |grep osnois
-root         969 11.1  0.0   6468  2244 pts/0    S+   15:54   0:00 grep osnois
-
-So that failure puts the system into a state that can no longer run osnoise.
-It takes a reboot to fix it.
-
-That should be fixed where a reboot is not needed.
-
--- Steve
