@@ -1,97 +1,62 @@
-Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150021E376E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 14:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EB71E0DCD;
+	Mon, 20 Jan 2025 15:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737384121; cv=none; b=VbucgffUGcK9YO9o1SBLno/HqHmBqhppPghr2i+WitEhLns5ZeNjI2ZpEhDLOtSB6ZvIgQC+P1q5hIh4xqrlyMPm/zIpDFSG5KEF0h8NJ7T5W6RswHLr05np9ZIYxRj2Yr9040+lSM3t/wBKPQibrP3nq0fax7yEVQX3jrjYsPw=
+	t=1737385424; cv=none; b=pkaUgGY+1HoJGGiHecIt7ORkmwSAdm0viuWhOoUHGP/QohL+I2PKwGJReA0TtxARcib7LkLHXvj81uyZcFvCDk+1Bh56jnZRS1xWFeuKpE8hbNKKtgPio6w+GzQWp9HQK8gHGVfIeQjd6vIXlH/S/2NKeo+5fWBJT9kTguCyLFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737384121; c=relaxed/simple;
-	bh=nhHIoW1loicdjg/JLUt8zvhYvoYH6v5P8fUXM0nyK20=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AXaABr0DWLjGO9PijuypsdTJMgji/bdoerFCJLnEJiXXsTKNhMoZwWM3Nw6u4BcGW1gWG2jpnzOJjsSHau57g28ER9mqO2Oub0+7AyyEq+5TsjVsRov2Mf6NYu/35V8g7/8NMNiKK9SUDrT9shxnt2RxmhpFVvoFgu+fafNWDsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=rFZmTiYS; arc=none smtp.client-ip=94.231.106.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="rFZmTiYS"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp.simply.com (Simply.com) with ESMTP id 4YcChr3PBJz1DQr7;
-	Mon, 20 Jan 2025 15:41:48 +0100 (CET)
-Received: from [10.10.15.9] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp.simply.com (Simply.com) with ESMTPSA id 4YcChr0FK8z1DQrb;
-	Mon, 20 Jan 2025 15:41:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
-	s=unoeuro; t=1737384108;
-	bh=lG0+FoE6fy+Q0Krk/qbZ9O+fjw1ZgH+C5gmLeoMQA1A=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To;
-	b=rFZmTiYS/bklW/M68NBPRQBrR3FSiSHV6hw/1n4J9WkzW2dBM//d1by3qtVmJ3Boq
-	 /gREijuSpffFCbJ3Z3wqGxmz6TkmiQt0PfyfkqGSOO4D+LGcsQ5HReXaMZKoLASA0b
-	 VkZU/FMkTxfq9HWZypCH8BQHcFXsLFTemudt/weo=
-Message-ID: <150fa7ce-eec6-4452-8552-da70cba84a04@gaisler.com>
-Date: Mon, 20 Jan 2025 15:41:47 +0100
+	s=arc-20240116; t=1737385424; c=relaxed/simple;
+	bh=zJDrsnkuoWbFXC2m+uNTIrYe9ow3fcJl2J2ZXA9yydM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HUQ1N7lpkvksXGZfIgEuU+hqx3JEjetUBAnPMYdeTcSwGcVa/uHS/Cqg4YGVUGpsl8TlUESTgC0L+c6CYnGN1LjXORXn+G20gSWCCIsbQy+zXsbzLPPXYV+jdcUd1iKM5taxSunwcgnbyg0HOw+xWhLKa1KkxftZM3VtkjSaCW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 179D6C4CEDD;
+	Mon, 20 Jan 2025 15:03:41 +0000 (UTC)
+Date: Mon, 20 Jan 2025 10:03:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Jason Xing <kerneljasonxing@gmail.com>, Eric Dumazet
+ <edumazet@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
+ <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Yonghong Song
+ <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, Martin KaFai Lau
+ <martin.lau@kernel.org>
+Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
+ tcp_cwnd_reduction()
+Message-ID: <20250120100340.4129eff7@batman.local.home>
+In-Reply-To: <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
+References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
+	<CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
+	<20250120-panda-of-impressive-aptitude-2b714e@leitao>
+	<CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
+	<20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
-Subject: Re: [BUG] spinlock recursion when enabling function tracer on 32-bit
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, Andreas Larsson <andreas@gaisler.com>
-References: <86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com>
- <20241218110115.29d4cc77@gandalf.local.home>
- <bb8485bf-d720-4803-aa3c-037ea1169f8a@gaisler.com>
- <20241218163526.2569917f@gandalf.local.home>
- <2d634c54-d8d9-4f33-bfda-9236b6a2ea06@gaisler.com>
- <20241220100558.10b48f0f@gandalf.local.home>
-Content-Language: en-US
-In-Reply-To: <20241220100558.10b48f0f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2024-12-20 16:05, Steven Rostedt wrote:
+On Mon, 20 Jan 2025 05:20:05 -0800
+Breno Leitao <leitao@debian.org> wrote:
 
-> 
-> Can you try this patch on top of the last one?
-> 
+> This patch enhances the API's stability by introducing a guaranteed hook
+> point, allowing the compiler to make changes without disrupting the
+> BPF program's functionality.
 
-Hi Steven,
+Instead of using a TRACE_EVENT() macro, you can use DECLARE_TRACE()
+which will create the tracepoint in the kernel, but will not create a
+trace event that is exported to the tracefs file system. Then BPF could
+hook to it and it will still not be exposed as an user space API.
 
-I just wanted to check if you saw my last reply to this thread.
-I've tested both patches, and they work (tested on sparc32 and riscv32).
+You can see its use in include/trace/events/sched.h
 
-Let me know if you need more input.
-
-Best regards,
-// Ludwig
-
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 7e257e855dd1..a9fe54b79ce5 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -4398,8 +4398,13 @@ rb_reserve_next_event(struct trace_buffer *buffer,
->  	int nr_loops = 0;
->  	int add_ts_default;
->  
-> -	/* ring buffer does cmpxchg, make sure it is safe in NMI context */
-> -	if (!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) &&
-> +	/*
-> +	 * ring buffer does cmpxchg as well as atomic64 operations
-> +	 * (which some archs use locking for atomic64), make sure this
-> +	 * is safe in NMI context
-> +	 */
-> +	if ((!IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG) ||
-> +	     IS_ENABLED(CONFIG_GENERIC_ATOMIC64)) &&
->  	    (unlikely(in_nmi()))) {
->  		return NULL;
->  	}
-
+-- Steve
