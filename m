@@ -1,124 +1,179 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4A9188A0C
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 07:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F103398B;
+	Mon, 20 Jan 2025 10:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737358742; cv=none; b=DqmXc2aiPp2ahcoqS7FYPvV7pF5Li2+9Q2pdY+Fhhk9maiiqMR27YMyT/b0ulYwdTHaR3YrYor+dlPqBgQ0uSRc/xfMHjHLFC1mcSnkTg7kRhx9ZPLEKEb8TXwGEAvFjMFUHBepN+vMnofusTEAbBjzL5UMPHuk87ssMAyCtegA=
+	t=1737367841; cv=none; b=uy5P1yzn4X4u56ve4UWB8iJvW8FDrv8BF16ACM0aRo3j6CrVPKWjqmbCMPEmvbT6EwztELgcOgSa4xel/tqFzuBjXSDE+UKolli3ha5IG3j6ryoPXm755BfAN9v7NAJAVHHx+Fnh7SpcrTMrDyENrvUo33xOfaWyn3LlMahqD0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737358742; c=relaxed/simple;
-	bh=EAfaou/82vAiFQRlUsLznPMQu7mT5Woka4Z4uiFAYfE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a8qBUkYvOAGsD4suZRfqe+SMxq4MyCo542m+mAVlksPxXpbplwJjN7INHJzJHrCbbolZelprf1sBJZPWDcdkxZPwTsxHzkcnu0SKPasj0SnZrWV5wHegBTjJb+zZzcNeXdsYB29t5AcU58Uog9310yJvjQDwhpdB/sloM1EGsfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cff+soGg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737367841; c=relaxed/simple;
+	bh=Cjhg3UrrFp8D01VY4OoJzV8vlgfXvqulfmkjFvBAqJo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YtQoV2y2C+HkUsX8/C0OzYrlNIUrL++oOXn9TK9xmfRteclsr2UDv3UJsDfhomt7d/Aq2HnuOVVs9MGd0O4mWAyXuJ9U1puRJz1CkYp3CVoDVORxtgvvJAWia4djfV7HpfYW4GYEQBeoSlgx0YPtA65ePMxr7b5dL2PqxQ0GA2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tEccHcZ2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cff+soGg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737358739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EAfaou/82vAiFQRlUsLznPMQu7mT5Woka4Z4uiFAYfE=;
-	b=cff+soGgbkwPHzCvorgRDX+rk0o5/Z+Yx5D4ubW2zDiB6IEBtZifCxppauJv/OaSi0VT13
-	ChKNDBLwwcsZ6a1iK6GmBLb7DnILLzQBJN1ivqter6vNDfY1QGofJmuZtgw2rrWYFPat0j
-	tCFe7ghsIt+bBDZjOwnF87dd/2HXjGs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-E5Yck_pfMLmkTKn0oanihQ-1; Mon, 20 Jan 2025 02:38:57 -0500
-X-MC-Unique: E5Yck_pfMLmkTKn0oanihQ-1
-X-Mimecast-MFC-AGG-ID: E5Yck_pfMLmkTKn0oanihQ
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-aa66f6ce6bfso354464266b.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Jan 2025 23:38:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737358736; x=1737963536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EAfaou/82vAiFQRlUsLznPMQu7mT5Woka4Z4uiFAYfE=;
-        b=EcTzMFGLnRnq4AGAn1Kk55eIi4e+FgKT4rifhfXLci3nvxe0brRZ+3xVqUPcVEqWKA
-         8cVrvtUVI4BrYIJshAK9xOzNsCL0LYARb9UShFzThyHcldTky9urZVTLIMhQjR5wsOOA
-         +BaiE1XAClQtzJD1Y91KgVc9cKdYVTDx6cZn4HP5/R4aAgdJyE6VuJ6FcCcuNh/jwgDG
-         ZK86dkysNdj+HEvPXbO1+qxQj5E1c2RZdXI62s3sunLPuur0A9EvfHcikyaB13EMXDr0
-         ayQ6ZFo/YA9OLm8wBSiDpjkrWtsFrLNngyBMmrFiccIjzvx2K+CiadMTF9+4/gJuXwg8
-         vIug==
-X-Gm-Message-State: AOJu0YyCEYpl5ZiO7nHh/mje4MvZsDrXpAQ4qSNtisYBORB2uyfEp8Nr
-	LhzQRh0tXuCqFGrtu3okwrb4wL0lXdY3j28dUAZyOyRXb2+ohbDQa7CfkyLZgcf7JX8O/EWoKNW
-	xod+J4Fq9t0xsCPSeymCy3wwYt3uVl38zX11POBzyVvoEk9saupLgZME0JsaWyy6oSMP2GMuKx+
-	2cq+sTHu9oVw+skz93aaVE5jFrswMfCyWnjV9pEkFjxhlU
-X-Gm-Gg: ASbGncuJISFVV8HKuFz1aQ+B6lslU6/rs3WFCQqAsY1vfOpDOrdyLqCnARVZgVd0fbf
-	h3IHHbpFORX5VUA0q9ZWyEJPjLUtEWIyzK+Xy9yStrtxa+tJUP305wCRUSxRn12he11lFsyEIWU
-	DuZJdXsDw=
-X-Received: by 2002:a17:907:1c89:b0:aa6:96ad:f8ff with SMTP id a640c23a62f3a-ab38b3fc0f7mr1236965366b.52.1737358735861;
-        Sun, 19 Jan 2025 23:38:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE6k4MX5PQMKz6vQVUFegKVXpwAmPVrJt3JIRUT+5DpVHoF8DPeGUUxS7+Nwc+mITebGI6CVHpxEF0T1U/u8Sc=
-X-Received: by 2002:a17:907:1c89:b0:aa6:96ad:f8ff with SMTP id
- a640c23a62f3a-ab38b3fc0f7mr1236964366b.52.1737358735431; Sun, 19 Jan 2025
- 23:38:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tEccHcZ2"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50K5NlpR002996;
+	Mon, 20 Jan 2025 10:10:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9UQq6V
+	AGnHg3um68FsouhZBJ/1T15FdfUDIuKZW//7U=; b=tEccHcZ26PcZeBgjRxiYh+
+	7AZiDyVVj8cn9x23FWWwdKUAgozwR9Jgdb6Gz/2v9pS2bisAcxFJboK3j6AM37l0
+	bWKBK0PlFeB8RjEsrdDekq13Lwiyp6aVFwyc178p+OEV2HjIlUroQlWzq0QQnlms
+	ycp7eYjSoMzfpmQOJL8HNU2VljDEk0QLIb7Zp6DjgyB+Adi7LC5C0SALs7M1/2wx
+	zjsMcElUYnexjYfIcX6rC5Sr6vyVBU+CAyzi9OYDAcMiGcYHymYFht6gtfFCY3UU
+	3uv5KoqQcN0JPLdSFo0l7ZU7asMfay2XfCPCVoUeVceUlDniGKqmVMKQiKs1Jc8g
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449ga7987c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 10:10:06 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50KA3pCR021938;
+	Mon, 20 Jan 2025 10:10:05 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 449ga79875-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 10:10:05 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50K8pZcY032223;
+	Mon, 20 Jan 2025 10:10:04 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 448rujdj01-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jan 2025 10:10:04 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50KAA2dh34472338
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Jan 2025 10:10:02 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 875F92004B;
+	Mon, 20 Jan 2025 10:10:02 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E1E22004D;
+	Mon, 20 Jan 2025 10:09:59 +0000 (GMT)
+Received: from [9.109.215.252] (unknown [9.109.215.252])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Jan 2025 10:09:59 +0000 (GMT)
+Message-ID: <671a14f1-55a1-4d80-ae5c-83f20bf3037c@linux.ibm.com>
+Date: Mon, 20 Jan 2025 15:39:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109133852.360122-1-tglozar@redhat.com> <20250116201808.3c8721c1@gandalf.local.home>
- <CAP4=nvRm8Sp4n0J1oWS6D-KbzQ-KeE4eW1cw9CZ8mU-Woi78+g@mail.gmail.com> <20250117160254.4a366149@gandalf.local.home>
-In-Reply-To: <20250117160254.4a366149@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 20 Jan 2025 08:38:44 +0100
-X-Gm-Features: AbW1kvazwyOqo-sCQX_1xiGGlmJ2JDgKn8MN0NRaaJTAYFbQl4pz3JRlEzCfwn4
-Message-ID: <CAP4=nvR4an1nzBvPyYv3YBY0Cu=fNwTkEN0_q63JxNAi6799mg@mail.gmail.com>
-Subject: Re: [PATCH] tools/rtla: Add basic test suite
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Chang Yin <cyin@redhat.com>, 
-	Qiao Zhao <qzhao@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 8GPqgFWHwQlEM3XIkd_zyEokLPEGJHAYKHOpSVqEAo4_1737358736
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 20/28] powerpc/ftrace: Use RCU in all users of
+ __module_text_address().
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain
+ <mcgrof@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Pavlu <petr.pavlu@suse.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Thomas Gleixner
+ <tglx@linutronix.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Naveen N Rao <naveen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250108090457.512198-1-bigeasy@linutronix.de>
+ <20250108090457.512198-21-bigeasy@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250108090457.512198-21-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: W23kHP3fl5d9f8v3moATuooEveeLO-eN
+X-Proofpoint-GUID: qkIVtfA37V68gBFWsUiduV7x__Ekg-Wm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-20_02,2025-01-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ impostorscore=0 suspectscore=0 clxscore=1011 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2411120000 definitions=main-2501200083
 
-p=C3=A1 17. 1. 2025 v 22:02 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
->
-> Now, what I also noticed was. When it did crash and die. The osnoise trac=
-er
-> no longer creates any osnoise threads. Can you take a look.
->
 
-It's likely that you have NO_OSNOISE_WORKLOAD set. The default value
-is OSNOISE_WORKLOAD; rtla relies on it not being set, and rtla
-timerlat -u resets it to the original value after it ends, so usually,
-everything works. But it breaks either when you set
-NO_OSNOISE_WORKLOAD manually or when rtla timerlat -u crashes (and
-fails to set it back).
 
-> So that failure puts the system into a state that can no longer run osnoi=
-se.
-> It takes a reboot to fix it.
->
-> That should be fixed where a reboot is not needed.
+On 1/8/25 14:34, Sebastian Andrzej Siewior wrote:
+> __module_text_address() can be invoked within a RCU section, there is no
+> requirement to have preemption disabled.
+> 
+> Replace the preempt_disable() section around __module_text_address()
+> with RCU.
+> 
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: linux-trace-kernel@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>   arch/powerpc/kernel/trace/ftrace.c       | 6 ++----
+>   arch/powerpc/kernel/trace/ftrace_64_pg.c | 6 ++----
+>   2 files changed, 4 insertions(+), 8 deletions(-)
+> 
 
-I sent patches to fix this for timerlat [1] and as I commented in the
-thread [2], the same has to be done for osnoise, too. I just haven't
-sent that yet since I was working on the rtla hang in sample
-collection bug [3]. I also discovered that OSNOISE_WORKLOAD is not the
-only option that rtla relies on being set properly: stop_tracing_us is
-also affected and possibly other options. rtla should set all osnoise
-options properly on every run, not relying on them being set by the
-cleanup of the previous rtla run.
+Ran ftrace (function graph) on preempt=full kernel with rcutorture while doing modprobe/rmmod.
+rcutorture succeeded and didn't see any splats.
+If there is any other method to test it out, please let me know.
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250107144823.239782-1-tglo=
-zar@redhat.com/T/
-[2[ https://lore.kernel.org/linux-trace-kernel/CAP4=3DnvRCw_2hKPUyd7obZv2Xh=
-o_mjdSC7EmozFsoeS0OZC9xaA@mail.gmail.com/
-[3] https://lore.kernel.org/linux-trace-kernel/20250116144931.649593-1-tglo=
-zar@redhat.com/
+So for powerpc bits:
+Tested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
 
-Tomas
+> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
+> index 5ccd791761e8f..558d7f4e4bea6 100644
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -115,10 +115,8 @@ static unsigned long ftrace_lookup_module_stub(unsigned long ip, unsigned long a
+>   {
+>   	struct module *mod = NULL;
+>   
+> -	preempt_disable();
+> -	mod = __module_text_address(ip);
+> -	preempt_enable();
+> -
+> +	scoped_guard(rcu)
+> +		mod = __module_text_address(ip);
+>   	if (!mod)
+>   		pr_err("No module loaded at addr=%lx\n", ip);
+>   
+> diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.c b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> index 98787376eb87c..531d40f10c8a1 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> +++ b/arch/powerpc/kernel/trace/ftrace_64_pg.c
+> @@ -120,10 +120,8 @@ static struct module *ftrace_lookup_module(struct dyn_ftrace *rec)
+>   {
+>   	struct module *mod;
+>   
+> -	preempt_disable();
+> -	mod = __module_text_address(rec->ip);
+> -	preempt_enable();
+> -
+> +	scoped_guard(rcu)
+> +		mod = __module_text_address(rec->ip);
+>   	if (!mod)
+>   		pr_err("No module loaded at addr=%lx\n", rec->ip);
+>   
 
