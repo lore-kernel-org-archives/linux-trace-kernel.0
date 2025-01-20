@@ -1,41 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EB71E0DCD;
-	Mon, 20 Jan 2025 15:03:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901E14438B;
+	Mon, 20 Jan 2025 17:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737385424; cv=none; b=pkaUgGY+1HoJGGiHecIt7ORkmwSAdm0viuWhOoUHGP/QohL+I2PKwGJReA0TtxARcib7LkLHXvj81uyZcFvCDk+1Bh56jnZRS1xWFeuKpE8hbNKKtgPio6w+GzQWp9HQK8gHGVfIeQjd6vIXlH/S/2NKeo+5fWBJT9kTguCyLFc=
+	t=1737394562; cv=none; b=KljiYZTkIDzQpFIycNDw9P6DC1RlhzLcg2ixLa0EXaZ9grYc6QueY727rIaPKDHMiqjo/oDqV52Zuo7jK5tQ6G4y7koTFeZHbJSeK521bXMIkxUPe9wLC3PA9HgOrbsb7r6YMJdrcNRQuymvvSyQQeye2mYZohmsou6iFJ9FQMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737385424; c=relaxed/simple;
-	bh=zJDrsnkuoWbFXC2m+uNTIrYe9ow3fcJl2J2ZXA9yydM=;
+	s=arc-20240116; t=1737394562; c=relaxed/simple;
+	bh=FoDQ0IOChQV4Gr8f2WCznqwwtyyGJQxEIrmoPWjPRYM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HUQ1N7lpkvksXGZfIgEuU+hqx3JEjetUBAnPMYdeTcSwGcVa/uHS/Cqg4YGVUGpsl8TlUESTgC0L+c6CYnGN1LjXORXn+G20gSWCCIsbQy+zXsbzLPPXYV+jdcUd1iKM5taxSunwcgnbyg0HOw+xWhLKa1KkxftZM3VtkjSaCW0=
+	 MIME-Version:Content-Type; b=AoaCIfpnzoJkyUM+XZ6ygx1MErjzlC02twIc1JPl+qZPdOPQnb7NHCciDAWkNX9ifkN/R5v0P+bCzBF6KdCVDWji9n5fNxi++QoKQzOgUeAKE3e4x/fpwuUgYikDLn2jb6weTa6LxGdLHPuppC0hHNtvh71YPSCsM0PUYNdwPZ4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 179D6C4CEDD;
-	Mon, 20 Jan 2025 15:03:41 +0000 (UTC)
-Date: Mon, 20 Jan 2025 10:03:40 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29FA0C4CEDD;
+	Mon, 20 Jan 2025 17:36:01 +0000 (UTC)
+Date: Mon, 20 Jan 2025 12:36:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Jason Xing <kerneljasonxing@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, Yonghong Song
- <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, Martin KaFai Lau
- <martin.lau@kernel.org>
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Message-ID: <20250120100340.4129eff7@batman.local.home>
-In-Reply-To: <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
-	<CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
-	<20250120-panda-of-impressive-aptitude-2b714e@leitao>
-	<CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
-	<20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ patches@lists.linux.dev, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] tracing: Fix -Wundef around 'struct event_mod_load'
+Message-ID: <20250120123601.36aea213@gandalf.local.home>
+In-Reply-To: <20250120-trace_events-fix-wundef-v1-1-61259cbbaa75@kernel.org>
+References: <20250120-trace_events-fix-wundef-v1-1-61259cbbaa75@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -45,18 +35,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 20 Jan 2025 05:20:05 -0800
-Breno Leitao <leitao@debian.org> wrote:
+On Mon, 20 Jan 2025 05:29:24 -0700
+Nathan Chancellor <nathan@kernel.org> wrote:
 
-> This patch enhances the API's stability by introducing a guaranteed hook
-> point, allowing the compiler to make changes without disrupting the
-> BPF program's functionality.
+> When CONFIG_MODULES is disabled, clang warns:
+> 
+>   kernel/trace/trace_events.c:872:5: warning: 'CONFIG_MODULES' is not defined, evaluates to 0 [-Wundef]
+>     872 | #if CONFIG_MODULES
+>         |     ^
+> 
+> Use '#ifdef' to resolve the warning.
+> 
+> Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202501190121.E2CIJuUj-lkp@intel.com/
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
-Instead of using a TRACE_EVENT() macro, you can use DECLARE_TRACE()
-which will create the tracepoint in the kernel, but will not create a
-trace event that is exported to the tracefs file system. Then BPF could
-hook to it and it will still not be exposed as an user space API.
+Yes yes, I had this fixed locally but never tested nor pushed it out. :-p
 
-You can see its use in include/trace/events/sched.h
+Thanks,
 
 -- Steve
+
+> ---
+>  kernel/trace/trace_events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index ab04994e4510..de934332ba36 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -869,7 +869,7 @@ static int ftrace_event_enable_disable(struct trace_event_file *file,
+>  	return __ftrace_event_enable_disable(file, enable, 0);
+>  }
+>  
+> -#if CONFIG_MODULES
+> +#ifdef CONFIG_MODULES
+>  struct event_mod_load {
+>  	struct list_head	list;
+>  	char			*module;
+> 
+> ---
+> base-commit: 9f3ccaeedbe0088f1b89474bcf4187c49cfe8de2
+> change-id: 20250120-trace_events-fix-wundef-7a1153105f5f
+> 
+> Best regards,
+
