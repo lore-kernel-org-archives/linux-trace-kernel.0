@@ -1,180 +1,100 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E021B87EE;
-	Mon, 20 Jan 2025 12:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065A21DF996
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 12:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737374971; cv=none; b=sco5zGP2LRUq6I+foX04bVovA60h9VfX3Kmv5Z/zm8/34wbljssDkjGpvH1g0a/Z9WM/EzAXNUbXHRckG06IP2GsjnNZE9oCegJc7E+D7P7WWDYbgBPaj+wdAFwcz8qYulsUbSZ5IrIQxBGfHJK88PK5T+FqRrt4aAaNuwpk2io=
+	t=1737375280; cv=none; b=S7gN6zqOd4knrUiqX9jmo0SjLT50FnzWGQ6Lkj1FR/TMyxX1pjPocKo4UDyCBrRSiJPEJRqhblcG6lijj+zcXY/SK4WbrfGn9gAvLJrjIvU2Qbj3P3cR5rUWIfZ+QeCll8OhX36wODg0bVJrkTU1gUNoEEtsFdRf6ern9q/gfCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737374971; c=relaxed/simple;
-	bh=mZsA2nllxdN2Wmc6ZI9w7NmNSuiGYP5/sFpew5DSB4U=;
+	s=arc-20240116; t=1737375280; c=relaxed/simple;
+	bh=oBaJqwEucv75azJYIBargREP9bboBki1+wuF4YGKVTw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hce2C4QRsRytMBzbpExGbuSnkMcTIphrY8K6rHV1UHCGo8gn62NACKBQhD2bKW91/n7Dr6GnfV3mbAj+UpARyeHsuhQQaGHsl5E+FJg8NSg45WyVZS2VUsrFT3c1XTtyxTUnTMe6xgXV2YX1EnEFV5QJ1Z56NJPOO4Q5i+yJSIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YhV+bCv8; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=iP3rBam2KzJdeXgpPcLQDDu3IMVHzyK5pP7pTq4I35VYp9f0fbaXu7X6E4gm317IzKcmtQ49NPRTg5zPQO3uE2urLuJKBMjMHC6MnCmgzUJ+RXBy15dy/GUUlWkhMcvhPX3K21+sZ9HNIMaxkuQ1t4LWLqRGB+SuZHvjYzh29kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V5m0cCUF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhV+bCv8"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3a8160382d4so13729335ab.0;
-        Mon, 20 Jan 2025 04:09:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737374969; x=1737979769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8lG4LEJsj+ryNIVrWxDBfdXk2QUfrlY3LsmUHorPDtM=;
-        b=YhV+bCv8Ds0P4Z13OcA61npCwmy8Dlh6Zt4/aQk50UUDO3jkJaRbD1LwilGOVwwSil
-         FvBiBIGcI701PV1ISOrgpz74aUJBnBTxYqc4/l7fZ5Xs2uBhWp+9WsgCqYRiJpVGGNs4
-         G/Yk+X9gHQsqkrQYRTLzEB6aLXWMgN6qEuQ9ootXyrfq23t/ljryQtq3BKdcsOeGtPPG
-         Ouica+66XjlBp6KC3Tcc/pBOAyxzd4mVg0NcZrO3g1Lx8QHpT1XDjHlS/X49wVDNeLVr
-         LvAFmSwr7ZM3kKYhohGNmR6dvZpPoyDkQqidoEOspF4h1nQaI9ISfcwLxDXXxFVTi6P0
-         46Aw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V5m0cCUF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737375277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oBaJqwEucv75azJYIBargREP9bboBki1+wuF4YGKVTw=;
+	b=V5m0cCUFrLyQbM3UdRtSFEz1S8UI40epRFc7SFkekaB1UFN8jPD4xKKUuX0BYcF6GlzR8O
+	3i1chFKMmmHNR3oLgbUVNmDdRDlwjoI1m9jBBsve6J/EEawiEo4ljdCRQik9C+Pj51IZFS
+	9CrT1cPXZwHRPs9BIMGsWxWW4FSI+As=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-395-LSXIta4_PIiltN1n-x3pjA-1; Mon, 20 Jan 2025 07:14:36 -0500
+X-MC-Unique: LSXIta4_PIiltN1n-x3pjA-1
+X-Mimecast-MFC-AGG-ID: LSXIta4_PIiltN1n-x3pjA
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-aafba50f3a6so351710166b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 04:14:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737374969; x=1737979769;
+        d=1e100.net; s=20230601; t=1737375275; x=1737980075;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8lG4LEJsj+ryNIVrWxDBfdXk2QUfrlY3LsmUHorPDtM=;
-        b=Wp3FyNbJDtjBpv1N1hP22INguJgSJ4UD4EiGNQaqT3vbQ5ADjUo/WkciUcYEJnoLLF
-         sfivvevZ6fr3F1NTYPoNVJiZ3TdDQMi2K+6R8SwBTRfbMjoRNALvfJdy1PNVVFPZu3rn
-         LQYjmJamwdTueQeOyAoglRuxxQYacnJA5iAJmyHzC3dY6PyLN/eSPZcLncD1I+JidewO
-         ZRW7vl9ImBd/HgjyTqNWeT5fTNzjQbNb7IamFHoCDHHbtWnYvlAnRiFdyPoR4pSEe+1w
-         8gyILeSFuOTHfD1jh/yAV299BPFs2xJeyfuZXQzFkrLOQMOf43hTtTN4KlyC1pZf7ODj
-         8Aug==
-X-Forwarded-Encrypted: i=1; AJvYcCVNKShuimRJXqoPc+ZV+F7QvKY7u/Eufj/qyGiRvP97FOzcxNlNbqlGvs/UAgsdae/b/uPxbq7D@vger.kernel.org, AJvYcCVjYlQyYv6GYskoruFceW5nLI1S0+IvbaOd3qmR3kzD1QG+QZB6Dpp1HBo3sWHfar2b1jrDAOZeDG571BHIgJH0/LGw@vger.kernel.org, AJvYcCX5f4P4yFUt/2ToZd4SSXap5Exd4kIrce3vSM0VSQhg5ylTnJzGxHdVJ4YNz9Xi4UxhX7U0osNxpJplTFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIx1+DrrTkUBmvWTZaRahAwa8N8oJ6jXHcTZMet403Pb/3aTr4
-	BPHtZAB06eI3wYZuHEaN0rTfcVIFiiTr4UjiuiVpvyXArEE1xn6ch99FqlDW1OI7D0J7p+V59Yq
-	j6+rFckmkDgkRR95ElQlfZ6Ezgww=
-X-Gm-Gg: ASbGnctXyeUVUKO0uMUuIq5TCxDblCaXdMsy460y8zO/5kQLsaY1/49yrOiCJ/8x9+i
-	/T8VUjb03tJLBzlEG5Gl3iSFvKqfjSwmcBa9gchzkp5jKNk38lxI=
-X-Google-Smtp-Source: AGHT+IGxqlCWgy0Z5BMB5tL40NM1pTL5BrJcMNzCHoTIbc4ItFbN69970HII1njSJ0JEDPU4sfpy3c2SuCRf3p6S8Wo=
-X-Received: by 2002:a05:6e02:174b:b0:3ce:7d3d:7fdf with SMTP id
- e9e14a558f8ab-3cf7440376fmr107503945ab.8.1737374968978; Mon, 20 Jan 2025
- 04:09:28 -0800 (PST)
+        bh=oBaJqwEucv75azJYIBargREP9bboBki1+wuF4YGKVTw=;
+        b=KR4A4Om4bhurj5tqxGrfI6DOfjgZtXMhJ7eWMZQPP1sFq/8d3Hr1qF+nGQaECz9Y0Y
+         sY78Z1uABmh8FP1fEg+csvPP3zx1fnIeiwjbuLT/N414RE3IRLz3ponYIAiTUhYFZaS6
+         R59m2q3bhuv7Wr/irX/+iiTawUcHUuQFmeQJ/n9A1piQU8n5d4pUgY0L15knvyb6s3Xu
+         R7/y+yFmu7xqa0+845dRynsZKBTh6WsDQWybwakw85D9hQQ+H5KCSv0mATfe42ihC890
+         np3MUSzYEgNkXYX52nyMbCnkCLw4oDn6a1QCZEIQf/BPAbJy5yWcqH2UMMWtvCJF//Bl
+         l3AQ==
+X-Gm-Message-State: AOJu0YxsM73P+XgDF+aIn0aq5QaN10Mw8uLXQ5Op4NVVtqNz0X9WE9mD
+	LQxKuHnHwZOlwrjc+Q8IXVdNc8qllT+wDqfvgp3L+18gqzmpGOwROZRZu2OuFODrY0DKE41w8wO
+	43/H2GlTVsOBq2rWrolpXCiWEdoz3NbD2z22ovW8vYAaiiPWACFUhbihRoLTLBCw/4JhKqIN9AE
+	bAkr4i9Q14V6lCLSqiKDFkKqmeH9IGD8hGHBVivOhf7W6F
+X-Gm-Gg: ASbGncsfrj3IzxBybOcQZYYeM/sh+zTBdSsRL9oGtM4WHPtUpXmUC1HvpiA3sDzMlog
+	uuK9cBZZditZB8xmVPNdqvdtrrSlxpe8CDZYPoEFJ+ApmTX+8fXNTLaNfGAN9lr+CCFWcvFvg8/
+	SxfhNHwh0=
+X-Received: by 2002:a17:907:1c93:b0:ab6:3173:fd2e with SMTP id a640c23a62f3a-ab63173fdb4mr67668566b.44.1737375275500;
+        Mon, 20 Jan 2025 04:14:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHF32m1zsZM6IkAChM98QzBL4lfIP3LVrwTHKuyq0N8aZiO6ppp9rEKLR4KPwzkIEX75sDL70+aVhvvugbKz5M=
+X-Received: by 2002:a17:907:1c93:b0:ab6:3173:fd2e with SMTP id
+ a640c23a62f3a-ab63173fdb4mr67666866b.44.1737375275192; Mon, 20 Jan 2025
+ 04:14:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
-In-Reply-To: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Mon, 20 Jan 2025 20:08:52 +0800
-X-Gm-Features: AbW1kvam6T4lCjEm_Wb5IsAozI3nNahfe1qzJMZLM-_1F_xBGtdmLUQS9zO7Rkg
-Message-ID: <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
-To: Breno Leitao <leitao@debian.org>
-Cc: Eric Dumazet <edumazet@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, 
-	Martin KaFai Lau <martin.lau@kernel.org>
+References: <20250109133852.360122-1-tglozar@redhat.com> <20250116201808.3c8721c1@gandalf.local.home>
+ <CAP4=nvRm8Sp4n0J1oWS6D-KbzQ-KeE4eW1cw9CZ8mU-Woi78+g@mail.gmail.com>
+ <20250117160254.4a366149@gandalf.local.home> <CAP4=nvR4an1nzBvPyYv3YBY0Cu=fNwTkEN0_q63JxNAi6799mg@mail.gmail.com>
+In-Reply-To: <CAP4=nvR4an1nzBvPyYv3YBY0Cu=fNwTkEN0_q63JxNAi6799mg@mail.gmail.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 20 Jan 2025 13:14:23 +0100
+X-Gm-Features: AbW1kvaMvKfk-1IbBURLIs_k8IirkuKrYf51cWAd1aW3Wx01Mk4UlzN1r4WM3V4
+Message-ID: <CAP4=nvSmApcoPisThQPXXFPMsdNcvLe8oTcXrB=56XWUuGnYsA@mail.gmail.com>
+Subject: Re: [PATCH] tools/rtla: Add basic test suite
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	John Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>, Chang Yin <cyin@redhat.com>, 
+	Qiao Zhao <qzhao@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tZf1Dd1_funEkwkh2FYH6QBbi5k9xP3Al2kQVjJUcyk_1737375275
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 20, 2025 at 8:03=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
-ote:
+po 20. 1. 2025 v 8:38 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.com> nap=
+sal:
+> It's likely that you have NO_OSNOISE_WORKLOAD set. The default value
+> is OSNOISE_WORKLOAD; rtla relies on it not being set, and rtla
+> timerlat -u resets it to the original value after it ends, so usually,
+> everything works. But it breaks either when you set
+> NO_OSNOISE_WORKLOAD manually or when rtla timerlat -u crashes (and
+> fails to set it back).
 >
-> Add a tracepoint to monitor TCP congestion window adjustments through the
-> tcp_cwnd_reduction() function. This tracepoint helps track:
->   - TCP window size fluctuations
->   - Active socket behavior
->   - Congestion window reduction events
->
-> Meta has been using BPF programs to monitor this function for years. By
-> adding a proper tracepoint, we provide a stable API for all users who
-> need to monitor TCP congestion window behavior.
->
-> The tracepoint captures:
->   - Socket source and destination IPs
->   - Number of newly acknowledged packets
->   - Number of newly lost packets
->   - Packets in flight
->
-> Here is an example of a tracepoint when viewed in the trace buffer:
->
-> tcp_cwnd_reduction: src=3D[2401:db00:3021:10e1:face:0:32a:0]:45904 dest=
-=3D[2401:db00:3021:1fb:face:0:23:0]:5201 newly_lost=3D0 newly_acked_sacked=
-=3D27 in_flight=3D34
->
-> CC: Yonghong Song <yonghong.song@linux.dev>
-> CC: Song Liu <song@kernel.org>
-> CC: Martin KaFai Lau <martin.lau@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  include/trace/events/tcp.h | 34 ++++++++++++++++++++++++++++++++++
->  net/ipv4/tcp_input.c       |  2 ++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-> index a27c4b619dffd7dcc72fffa71bf0fd5e34fe6681..b3a636658b39721cca843c000=
-0eaa573cf4d09d5 100644
-> --- a/include/trace/events/tcp.h
-> +++ b/include/trace/events/tcp.h
-> @@ -259,6 +259,40 @@ TRACE_EVENT(tcp_retransmit_synack,
->                   __entry->saddr_v6, __entry->daddr_v6)
->  );
->
-> +TRACE_EVENT(tcp_cwnd_reduction,
-> +
-> +       TP_PROTO(const struct sock *sk, const int newly_acked_sacked,
-> +                const int newly_lost, const int flag),
-> +
-> +       TP_ARGS(sk, newly_acked_sacked, newly_lost, flag),
-> +
-> +       TP_STRUCT__entry(
-> +               __array(__u8, saddr, sizeof(struct sockaddr_in6))
-> +               __array(__u8, daddr, sizeof(struct sockaddr_in6))
-> +               __field(int, in_flight)
-> +
-> +               __field(int, newly_acked_sacked)
-> +               __field(int, newly_lost)
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               const struct inet_sock *inet =3D inet_sk(sk);
-> +               const struct tcp_sock *tp =3D tcp_sk(sk);
-> +
-> +               memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-> +               memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-> +
-> +               TP_STORE_ADDR_PORTS(__entry, inet, sk);
-> +               __entry->in_flight =3D tcp_packets_in_flight(tp);
-> +               __entry->newly_lost =3D newly_lost;
-> +               __entry->newly_acked_sacked =3D newly_acked_sacked;
-> +       ),
-> +
-> +       TP_printk("src=3D%pISpc dest=3D%pISpc newly_lost=3D%d newly_acked=
-_sacked=3D%d in_flight=3D%d",
-> +                 __entry->saddr, __entry->daddr, __entry->newly_lost,
-> +                 __entry->newly_acked_sacked, __entry->in_flight)
-> +);
-> +
->  #include <trace/events/net_probe_common.h>
->
->  TRACE_EVENT(tcp_probe,
-> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> index 4811727b8a02258ec6fa1fd129beecf7cbb0f90e..fc88c511e81bc12ec57e8dc3e=
-9185a920d1bd079 100644
-> --- a/net/ipv4/tcp_input.c
-> +++ b/net/ipv4/tcp_input.c
-> @@ -2710,6 +2710,8 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_=
-acked_sacked, int newly_lost,
->         if (newly_acked_sacked <=3D 0 || WARN_ON_ONCE(!tp->prior_cwnd))
->                 return;
->
-> +       trace_tcp_cwnd_reduction(sk, newly_acked_sacked, newly_lost, flag=
-);
-> +
 
-Are there any other reasons why introducing a new tracepoint here?
-AFAIK, it can be easily replaced by a bpf related program or script to
-monitor in the above position.
+I just realized that the tests are not running rtla timerlat with -k
+and upstream, it has been defaulting to user threads for a long time,
+so that's probably not it.
 
-Thanks,
-Jason
