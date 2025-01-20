@@ -1,77 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563F8186E58;
-	Mon, 20 Jan 2025 18:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C7B19048A;
+	Mon, 20 Jan 2025 21:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737396540; cv=none; b=HTZ1iQXJ70OCMtcW6/0iN9BaVWzs9UP3NjaxoNvdYBiqV6MIkmjvuHJUByeacbh+wMGAlOUnZjfyXTciWGZfg2GTafxIapKAES82dDt+keTwfXS0lCnEamgBiE+2qhwmWwy56kNipYqQ0N1n1AEfNQW+6a0lbmfSd+K6vV/Wwck=
+	t=1737408750; cv=none; b=q6+RI+zSD/2vp9viVUyhyqk0P2m8OepDNI7PXfBnriKeOUKTpPf0G1L7aqAvq/WzEd242opHgsam9sVy5xYc5uLYF/Oo4nxftl+hJ+ExtgNAOsDAoSAKa9aAUKDzsERNK83m7Luf8e09RuMrBN7n7E1rWW0LLO+ImJZvbHs9ln8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737396540; c=relaxed/simple;
-	bh=J8ixhOMyCVCQ5l8UQInx+eVnEbD3DkvBNtC4H4UZYFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QS1D1LukICb55ayEWpa38KPAkWFDYVPyGEVkhDyMgxfohmdpaU3Unu7CWbv4iit1tZXm3iYLxyF7zk9+/Iawh5mPgRrCt6H1jVLRTjvvfz7nqoERGo1xzSYIlZ4k+Xm/FYdU+MeKYS99ndqC5nsKV1Ncr5fTLr3I2JLiUAJ4lOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71246C4CEDD;
-	Mon, 20 Jan 2025 18:08:59 +0000 (UTC)
-Date: Mon, 20 Jan 2025 13:09:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] tracing: Fix #if CONFIG_MODULES to #ifdef
- CONFIG_MODULES
-Message-ID: <20250120130900.09a5ffba@gandalf.local.home>
-In-Reply-To: <20250120125745.4ac90ca6@gandalf.local.home>
-References: <20250120125745.4ac90ca6@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1737408750; c=relaxed/simple;
+	bh=B1BouRyk9Kxq6ru6W1Q0+s3KiqSsAI8th/Bk/m4e+gs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lywcqvlPpDzewJjlJA0FCZEqqU/Ozr0cll6vQQf8lvz7ghNUNN8m7CGndJzTrqrayhVcOz8htlTKtrthz552JapMkcknAiTDwL2woJsSdU2+Elmm59KysHhMiV7MLHyyFts4MWyo9RorJBxjlt8MnYS3ZWezvcQQOyhDEI9ebgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hrZHI+V+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hrZHI+V+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4048C4CEDD;
+	Mon, 20 Jan 2025 21:32:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737408749;
+	bh=B1BouRyk9Kxq6ru6W1Q0+s3KiqSsAI8th/Bk/m4e+gs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hrZHI+V+aEHdTMbfL1QIX3vqE8dyrNTpkhi9Y3GZQ5fZktEyrHK+uscwotAxXL3rq
+	 NV1XFtRCrzZQWg8v8JzswswLT4OHZ4L17wIlIVaDMzk1+YsSm8lGUnNYh07Pl5JJMy
+	 1UtPSCQbMEREuuu+T3PYvLCE8VPqUANWeSITYvpcG6HPrlVf638rEYAVdktyGRuTgE
+	 ++HgksDuLtvrbUiDUe/L6rcvXxz8tf2AchlG3lBrIpDU+JiH9HV5ku8S/JPoTHoHQf
+	 B44zrJcIWKMGpPTje+HlndKz47QEzj9h42vNo9lmypUgu+JP1ZfWhzEYewWkO4Plh5
+	 G8x8rgBw32KNA==
+Date: Mon, 20 Jan 2025 13:32:26 -0800
+From: Kees Cook <kees@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Eyal Birger <eyal.birger@gmail.com>, luto@amacapital.net,
+	wad@chromium.org, ldv@strace.io, mhiramat@kernel.org,
+	andrii@kernel.org, jolsa@kernel.org, alexei.starovoitov@gmail.com,
+	olsajiri@gmail.com, cyphar@cyphar.com, songliubraving@fb.com,
+	yhs@fb.com, john.fastabend@gmail.com, peterz@infradead.org,
+	tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net,
+	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org,
+	rafi@rbk.io, shmulik.ladkani@gmail.com, bpf@vger.kernel.org,
+	linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
+ filtering
+Message-ID: <202501201331.83DB01794@keescook>
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <202501181212.4C515DA02@keescook>
+ <20250119123955.GA5281@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250119123955.GA5281@redhat.com>
 
-On Mon, 20 Jan 2025 12:57:45 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Sun, Jan 19, 2025 at 01:40:22PM +0100, Oleg Nesterov wrote:
+> On 01/18, Kees Cook wrote:
+> >
+> > On Thu, Jan 16, 2025 at 04:55:39PM -0800, Eyal Birger wrote:
+> > > Since uretprobe is a "kernel implementation detail" system call which is
+> > > not used by userspace application code directly, it is impractical and
+> > > there's very little point in forcing all userspace applications to
+> > > explicitly allow it in order to avoid crashing tracked processes.
+> >
+> > How is this any different from sigreturn, rt_sigreturn, or
+> > restart_syscall? These are all handled explicitly by userspace filters
+> > already, and I don't see why uretprobe should be any different.
 > 
-> A typo was introduced when adding the ":mod:" command that did
-> a "#if CONFIG_MODULES" instead of a "#ifdef CONFIG_MODULES".
-> Fix it.
+> The only difference is that sys_uretprobe() is new and existing setups
+> doesn't know about it. Suppose you have
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202501110319.xY9ltUxL-lkp@intel.com/
-
-Cut and paste error. Wrong closes: Should have been:
-
-  Closes: https://lore.kernel.org/oe-kbuild-all/202501190121.E2CIJuUj-lkp@intel.com/
-
--- Steve
-
-
-> Fixes: b355247df104e ("tracing: Cache ":mod:" events for modules not loaded yet")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_events.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 	int func(void)
+> 	{
+> 		return 123;
+> 	}
 > 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index f762e554fad4..bb1406719c3f 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -857,7 +857,7 @@ static int ftrace_event_enable_disable(struct trace_event_file *file,
->  	return __ftrace_event_enable_disable(file, enable, 0);
->  }
->  
-> -#if CONFIG_MODULES
-> +#ifdef CONFIG_MODULES
->  struct event_mod_load {
->  	struct list_head	list;
->  	char			*module;
+> 	int main(void)
+> 	{
+> 		seccomp(SECCOMP_SET_MODE_STRICT, 0,0);
+> 		for (;;)
+> 			func();
+> 	}
+> 
+> and it runs with func() uretprobed.
+> 
+> If you install the new kernel, this application will crash immediately.
+> 
+> I understand your objections, but what do you think we can do instead?
+> I don't think a new "try_to_speedup_uretprobes_at_your_own_risk" sysctl
+> makes sense, it will be almost never enabled...
 
+This seems like a uretprobes design problem. If it's going to use
+syscalls, it must take things like seccomp into account.
+SECCOMP_SET_MODE_STRICT will also crash in the face of syscall_restart...
+
+-- 
+Kees Cook
