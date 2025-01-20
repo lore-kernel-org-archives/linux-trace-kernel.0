@@ -1,68 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50AC419048A;
-	Mon, 20 Jan 2025 21:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9658423A9;
+	Mon, 20 Jan 2025 22:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737408883; cv=none; b=aul3ZUGHwNzH6SuH1L9t1NZ/ILHqyfxcAs13ok28Izv7Ay6MB6atkgPPOEEONR2jKVscuoyoAXfzPONdP7BlbPbvbsmyZpZ2jw7LyhAquua7FlNSorxs9uY5gY5ZYyB0vTRl7cwByVV084eZ3RLfCUXgwURsOGKVNx95o8Qv2+o=
+	t=1737412079; cv=none; b=fkfSWsSSxTo8ImOMytX3i4t99Qa8+Tq/1F8U6MphiXYaK603VcEVdaIC/z65mN4jx67JbANxVgOP3yblMadRH+2Flq2pDKd87RgNqbgmr6JXKm0+qqvdLrA2FT8vGDzaiKsLsY0HAVJcrv7eV3w1PkLtf064gz7W+eqnYMGw24A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737408883; c=relaxed/simple;
-	bh=9ih2GpebRjJrsa6IpbPBSwb297i5yfqxVDGG6wxAQB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wdp9H3gY2qpzYXNLbnHvlGaS4nIbPU4U4G3myyS+3baiviDA2j5ASY4cvN4dPExNVMU/IOLySt2G1uQC0TWij/vDBs7gLb58lkWugC9YzM7PwZm9/wDuA+EJjGFvLuZAytBO7+Yetgl9fnTcuqUv3d3Uc3tVHx1UrJ89W4JEkQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYjBeMSv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYjBeMSv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE04C4CEE4;
-	Mon, 20 Jan 2025 21:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737408882;
-	bh=9ih2GpebRjJrsa6IpbPBSwb297i5yfqxVDGG6wxAQB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nYjBeMSvfvvQKot1mhfi8Hd5N2XuVOPqPJCdD9uQkMPL4Q8LWkmdm1RPpuMzpnykq
-	 tAP5Ud4EA/zUhLeqU5YwyMKpERSneecbkfn9conkiNRdPKaMg5f39LGVnrUGeiRTNg
-	 Wr3v6GcHmdfkS37gEXqellLirgmdRGUrfDt1pVtWbsdRe0wSOFPHqLZSMaXlXflcvY
-	 2FnQUJ7WNEhn1nE8Z0HID90c99DQAsDCLDnLTik+n0TbPzJNTocSsuAS76Ykow7A2d
-	 DLBlCAeqkEZ/0KBotpHTuGwOccl+F0W6rOV0P9/AE4Dt0zAo30fM7ytkuwyk3WnvYF
-	 e5AGL8lv5iODg==
-Date: Mon, 20 Jan 2025 13:34:39 -0800
-From: Kees Cook <kees@kernel.org>
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: luto@amacapital.net, wad@chromium.org, oleg@redhat.com, ldv@strace.io,
-	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org,
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
- filtering
-Message-ID: <202501201334.604217B7@keescook>
-References: <20250117005539.325887-1-eyal.birger@gmail.com>
- <202501181212.4C515DA02@keescook>
- <CAHsH6GuifA9nUzNR-eW5ZaXyhzebJOCjBSpfZCksoiyCuG=yYw@mail.gmail.com>
- <8B2624AC-E739-4BBE-8725-010C2344F61C@kernel.org>
- <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
+	s=arc-20240116; t=1737412079; c=relaxed/simple;
+	bh=TEyulGXhPHXtGubGRQOaNsPCr6o6NX9Iea5epgxoegw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OzsvpXaudOrT9NYcT3E2smYlJ1ptusLMfiwIIilW0Y1bBzm9AbckHaLSAZI2U1imbUKvuUV4xL29rm7SUurCngqNrJFfPHMbg6EPnkFl22hvSZCt/Jz0M91m7wAoZXmy0NMa7TI3TRsYWOQ+NuJLe1gXeQL2JQInNVUlc4qrRjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327F5C4CEDD;
+	Mon, 20 Jan 2025 22:27:58 +0000 (UTC)
+Date: Mon, 20 Jan 2025 17:27:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, kernel test robot <lkp@intel.com>
+Subject: [PATCH] tracing: Rename update_cache() to update_mod_cache()
+Message-ID: <20250120172756.4ecfb43f@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 18, 2025 at 07:39:25PM -0800, Eyal Birger wrote:
-> Alternatively, maybe this syscall implementation should be reverted?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Honestly, that seems the best choice. I don't think any thought was
-given to how it would interact with syscall interposers (including
-ptrace, strict mode seccomp, etc).
+The static function in trace_events.c called update_cache() is too generic
+and conflicts with the function defined in arch/openrisc/include/asm/pgtable.h
 
+Rename it to update_mod_cache() to make it less generic.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202501210550.Ufrj5CRn-lkp@intel.com/
+Fixes: b355247df104e ("tracing: Cache ":mod:" events for modules not loaded yet")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index bb1406719c3f..51c5014877e8 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3580,7 +3580,7 @@ EXPORT_SYMBOL_GPL(trace_remove_event_call);
+ 	     event++)
+ 
+ #ifdef CONFIG_MODULES
+-static void update_cache(struct trace_array *tr, struct module *mod)
++static void update_mod_cache(struct trace_array *tr, struct module *mod)
+ {
+ 	struct event_mod_load *event_mod, *n;
+ 
+@@ -3600,7 +3600,7 @@ static void update_cache_events(struct module *mod)
+ 	struct trace_array *tr;
+ 
+ 	list_for_each_entry(tr, &ftrace_trace_arrays, list)
+-		update_cache(tr, mod);
++		update_mod_cache(tr, mod);
+ }
+ 
+ static void trace_module_add_events(struct module *mod)
 -- 
-Kees Cook
+2.45.2
+
