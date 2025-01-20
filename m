@@ -1,111 +1,255 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2853C1DED4B;
-	Mon, 20 Jan 2025 13:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4E61E32AA
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 13:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737379212; cv=none; b=GvIiH43it9SPGSp6XQou9qzeRqr5fNzA8lYt+3VsUrQDV9TQEbmuc+sm1zeILu203NB6jZvm7PwX6/2VjgT6uV41UI7M40P+Tbe5T1wDWUK6iXOzQOS4SgnZIc91w5NwJIuH83Adz+aQJxtp/KBR5Tx0ltuhnC3+cPqaO1Xh0d0=
+	t=1737381448; cv=none; b=pQLiDi/5pD7D2Bb/XeAZhMUD1Va5IrwtBNNS+kf+Nk2Vt7+H05gSjw4MaAfJT4S89W6wkyxqxNOU0m1vGTmSnI6S+PYicNtM3m/dzBVs/AYWUhlZhdgkDENFTkj2lk++etiYl9+UCwt2EaLFTNZQhGsqEO/75Y8gtUyGUQL0PQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737379212; c=relaxed/simple;
-	bh=d9a6Dg0J1W39GmDDQnU3gGeZLq5v7YQZlKnUnXzuL/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lPyk8srhse6zdnp1XmiQeXXy67pjsxHIee7iHw50jlUfCJBlZa4Hz+DgMTAxRzGIfTNKQALSdUHQZFbljoSChibjpkS2/3Yvd2pweCeTlLcJ4K06mWlNnlWYdPh2xeEpSj8zjGGpW3GFPT9gXF83j83Ai+6us+Y91k6YWRQwfUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d3ecae02beso6296866a12.0;
-        Mon, 20 Jan 2025 05:20:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737379209; x=1737984009;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MYis6HlhGRplgWvBiMnJFZfekMZ1/jUFI1n7CycfIOE=;
-        b=qjD9KkoZxJSR6a7Q5im1ism1v+gGBAJ7R3jDe3aZFY4NiSdCJW3Xytx2bEZMQb9p90
-         OkdrC7kFcPjxb5U0qsjAkd5iMLPsRH7pDEqGvFx1uVxu4z/xM5OHEL8kWJxgiQQrnItP
-         v7OwE7vDANqu+CyNXoCpv25GOtR7Bx+G0jcar+n+GG+2N4A2pLHOE/qMgvKnim+9y9v8
-         +yrSO0NQWKiS1Pnrp8BQszQpGRg/diIdbmcXfrDf8VMtoK1s6zA8Acna+oWBaUTAm/e4
-         GJcSqzwnVVqNimYznLnPWvFGs24Vm2MmTb/0PAybOb0VzA9ED1cmqODysP0GScuXSSLW
-         oxDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYKwT7VL4wmYoPhC8hGOT0RVMkAZWFp2vLXUdsIh/0lpyKiOa3oNG1HZAt5UZHtqbR4+RaHmZYIzILIYQ=@vger.kernel.org, AJvYcCW4T8WUm5rKTidC1VsPfnNGflwVM22D8MI3FerKeaVKb9PB1IuTm1pgI+cuJPpLq/ozRxySkv5RWW1s9ijjmgeXMXV4@vger.kernel.org, AJvYcCXplHedURpt1W64OdzYTOYSk7S5lVad0FA4fxZvcs347uQk4mSGqoZRjOVA5RWWhuzYRzfno0p4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHX1CLCr6R3S7OKB+CRpPDuUuzq+8h0+MfB148Iw9oENM4ytnB
-	R9cH1c2prfANGD9BgLHxq5shmieGPptp1z7V9xvLIR37/4NhQiSD
-X-Gm-Gg: ASbGncuGaK3YoGI2TaH6+bLu9nQq99eSKqP0rIgLwWRJd0cF5fmtBprDvPeX40rKdFe
-	P+lvZdvQpgYUdu7N8cP94g3tkSyo1aY7wY2AMJOo7vYP0XnI6tEX+ENZt4NXuvlgc4fjJPH6Ou/
-	FLtdi9Tb4QB+QennqvD+KEccN1MZYBmH/zFqfz57KXvFPTxFw0Q2sI082XCNISkcECsbMH8aNld
-	ddK9/P4x28cTtkrAVtdwdF+Z4Ti5d/q2r6TabEeOq+MMaOnY+8j6eUllHl8
-X-Google-Smtp-Source: AGHT+IFy3FOxk+8eI835a5jNbNilc9gYzUh2iQOx9IPlYEyV7KZ+ksbJ5wQ7qQW5yEreKbQHYI+RnA==
-X-Received: by 2002:a05:6402:34d2:b0:5d0:bde9:2992 with SMTP id 4fb4d7f45d1cf-5db7db1459dmr10784754a12.26.1737379209072;
-        Mon, 20 Jan 2025 05:20:09 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:9::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5db73642621sm5546279a12.13.2025.01.20.05.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 05:20:07 -0800 (PST)
-Date: Mon, 20 Jan 2025 05:20:05 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: Eric Dumazet <edumazet@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
-	Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Message-ID: <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
- <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
- <20250120-panda-of-impressive-aptitude-2b714e@leitao>
- <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
+	s=arc-20240116; t=1737381448; c=relaxed/simple;
+	bh=rvCuSwGkqwn66YLxJ9JZEmuxXHsDpO3IBf4RM/+V9TI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OWpBdnIFB5Xhn2HXMR/v7y9JigsLV2AQfwAx3CSTeyJzE4h2PMAzq6nRjvS+0fjBIvqcGcW3S+skFP4Dsn9xLA+X9hrRkzaIRbo29bUncAMa8sD9IxdnAel3f2cY4mkPVgez5wkpsUlH1r/wduxY15MYU3q3L8ggSlL8Xxf3yz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTZ986eE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTZ986eE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737381446;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=xh1PThZzjoyMRmJPskfVaz0KL0DrPNnQ746UIqOEatQ=;
+	b=GTZ986eEyGwqOH7cxhzYIXwP54+LNtIxEdXNzkSTZeAieAqNYjFJNu2tiPFeDpgkHft16C
+	PtWQUXCptGGplGZRGlhrEgh+wJuP5AxyNCoW9qcQN35DmM6JriIRvo5OPGYa0hrkoega3/
+	yQZt4VShT+q1Lz9Kgd01KreQdws0L3E=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-nH9PK1p2P0iEjioAds6fbA-1; Mon,
+ 20 Jan 2025 08:57:23 -0500
+X-MC-Unique: nH9PK1p2P0iEjioAds6fbA-1
+X-Mimecast-MFC-AGG-ID: nH9PK1p2P0iEjioAds6fbA
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D3BF61955D9C;
+	Mon, 20 Jan 2025 13:57:22 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.207])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E43EA1956053;
+	Mon, 20 Jan 2025 13:57:19 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Chang Yin <cyin@redhat.com>,
+	Qiao Zhao <qzhao@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH v2] tools/rtla: Add basic test suite
+Date: Mon, 20 Jan 2025 14:56:30 +0100
+Message-ID: <20250120135630.802111-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+Implement a simple TAP-based test engine in bash and a few basic tests
+using it, to be used to check for bugs and regressions.
 
-On Mon, Jan 20, 2025 at 09:06:43PM +0800, Jason Xing wrote:
-> On Mon, Jan 20, 2025 at 9:02 PM Breno Leitao <leitao@debian.org> wrote:
-> > On Mon, Jan 20, 2025 at 08:08:52PM +0800, Jason Xing wrote:
-> > > On Mon, Jan 20, 2025 at 8:03 PM Breno Leitao <leitao@debian.org> wrote:
-> > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > > > index 4811727b8a02258ec6fa1fd129beecf7cbb0f90e..fc88c511e81bc12ec57e8dc3e9185a920d1bd079 100644
-> > > > --- a/net/ipv4/tcp_input.c
-> > > > +++ b/net/ipv4/tcp_input.c
-> > > > @@ -2710,6 +2710,8 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_acked_sacked, int newly_lost,
-> > > >         if (newly_acked_sacked <= 0 || WARN_ON_ONCE(!tp->prior_cwnd))
-> > > >                 return;
-> > > >
-> > > > +       trace_tcp_cwnd_reduction(sk, newly_acked_sacked, newly_lost, flag);
-> > > > +
-> > >
-> > > Are there any other reasons why introducing a new tracepoint here?
-> > > AFAIK, it can be easily replaced by a bpf related program or script to
-> > > monitor in the above position.
-> >
-> > In which position exactly?
-> 
-> I meant, in the position where you insert a one-line tracepoint, which
-> should be easily replaced with a bpf program (kprobe
-> tcp_cwnd_reduction with two checks like in the earlier if-statement).
-> It doesn't mean that I object to this new tracepoint, just curious if
-> you have other motivations.
+A new "check" target is added to the rtla Makefile that runs the test suite
+using the "prove" command implemented by Test::Harness.
 
-This is exactly the current implementation we have at Meta, as it relies on
-hooking into this specific function. This approach is unstable, as
-compiler optimizations like inlining can break the functionality.
+The only test format currently supported is running rtla with defined
+command arguments per test, checking its exit code. In case the exit
+code is non-zero, the output of rtla is displayed, together with the
+exit code.
 
-This patch enhances the API's stability by introducing a guaranteed hook
-point, allowing the compiler to make changes without disrupting the
-BPF program's functionality.
+The test cases are adopted from rtla tests in the Continuous Kernel
+Integration (CKI) project [1] with the authors' approval.
+
+[1] https://gitlab.com/redhat/centos-stream/tests/kernel/kernel-tests/-/blob/main/rt-tests/us/rtla/
+
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+
+Changes v2:
+- Add 2m timeout (with additional 15s kill timeout) to terminate rtla in case
+tracer or rtla gets stuck
+- Display exit code when it is non-zero together with the output
+- Use stdbuf to prevent buffering from eating rtla output if rtla crashes
+- Remove control characters from rtla output to prevent messing up of
+the terminal
+
+ tools/tracing/rtla/Makefile         |  4 ++-
+ tools/tracing/rtla/tests/engine.sh  | 48 +++++++++++++++++++++++++++++
+ tools/tracing/rtla/tests/hwnoise.t  | 21 +++++++++++++
+ tools/tracing/rtla/tests/osnoise.t  | 19 ++++++++++++
+ tools/tracing/rtla/tests/timerlat.t | 27 ++++++++++++++++
+ 5 files changed, 118 insertions(+), 1 deletion(-)
+ create mode 100644 tools/tracing/rtla/tests/engine.sh
+ create mode 100644 tools/tracing/rtla/tests/hwnoise.t
+ create mode 100644 tools/tracing/rtla/tests/osnoise.t
+ create mode 100644 tools/tracing/rtla/tests/timerlat.t
+
+diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
+index a6a7dee16622..8b5101457c70 100644
+--- a/tools/tracing/rtla/Makefile
++++ b/tools/tracing/rtla/Makefile
+@@ -85,4 +85,6 @@ clean: doc_clean fixdep-clean
+ 	$(Q)find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)rm -f rtla rtla-static fixdep FEATURE-DUMP rtla-*
+ 	$(Q)rm -rf feature
+-.PHONY: FORCE clean
++check: $(RTLA)
++	RTLA=$(RTLA) prove -o -f tests/
++.PHONY: FORCE clean check
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+new file mode 100644
+index 000000000000..64d0446dc28e
+--- /dev/null
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -0,0 +1,48 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++test_begin() {
++	# Count tests to allow the test harness to double-check if all were
++	# included correctly.
++	ctr=0
++	[ -z "$RTLA" ] && RTLA="./rtla"
++	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
++}
++
++check() {
++	# Simple check: run rtla with given arguments and test exit code.
++	# If TEST_COUNT is set, run the test. Otherwise, just count.
++	ctr=$(($ctr + 1))
++	if [ -n "$TEST_COUNT" ]
++	then
++		# Run rtla; in case of failure, include its output as comment
++		# in the test results.
++		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
++		if [ $exitcode -eq 0 ]
++		then
++			echo "ok $ctr - $1"
++		else
++			echo "not ok $ctr - $1"
++			# Add rtla output and exit code as comments in case of failure
++			echo "$result" | col -b | while read line; do echo "# $line"; done
++			printf "#\n# exit code %s\n" $exitcode
++		fi
++	fi
++}
++
++set_timeout() {
++	TIMEOUT="timeout -v -k 15s $1"
++}
++
++unset_timeout() {
++	unset TIMEOUT
++}
++
++test_end() {
++	# If running without TEST_COUNT, tests are not actually run, just
++	# counted. In that case, re-run the test with the correct count.
++	[ -z "$TEST_COUNT" ] && TEST_COUNT=$ctr exec bash $0 || true
++}
++
++# Avoid any environmental discrepancies
++export LC_ALL=C
++unset_timeout
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+new file mode 100644
+index 000000000000..bbed17580537
+--- /dev/null
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -0,0 +1,21 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source tests/engine.sh
++test_begin
++
++set_timeout 2m
++
++check "verify help page" \
++	"hwnoise --help"
++check "detect noise higher than one microsecond" \
++	"hwnoise -c 0 -T 1 -d 5s -q"
++check "set the automatic trace mode" \
++	"hwnoise -a 5 -d 30s"
++check "set scheduling param to the osnoise tracer threads" \
++	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
++check "stop the trace if a single sample is higher than 1 us" \
++	"hwnoise -s 1 -T 1 -t -d 30s"
++check "enable a trace event trigger" \
++	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
++
++test_end
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+new file mode 100644
+index 000000000000..86596e547893
+--- /dev/null
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -0,0 +1,19 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source tests/engine.sh
++test_begin
++
++set_timeout 2m
++
++check "verify help page" \
++	"osnoise --help"
++check "verify the --priority/-P param" \
++	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
++check "verify the --stop/-s param" \
++	"osnoise top -s 30 -T 1 -t"
++check "verify the  --trace param" \
++	"osnoise hist -s 30 -T 1 -t"
++check "verify the --entries/-E param" \
++	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
++
++test_end
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+new file mode 100644
+index 000000000000..e86f40e5749e
+--- /dev/null
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -0,0 +1,27 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++source tests/engine.sh
++test_begin
++
++set_timeout 2m
++
++check "verify help page" \
++	"timerlat --help"
++check "verify -s/--stack" \
++	"timerlat top -s 3 -T 10 -t"
++check "verify -P/--priority" \
++	"timerlat top -P F:1 -c 0 -d 1M -q"
++check "test in nanoseconds" \
++	"timerlat top -i 2 -c 0 -n -d 30s"
++check "set the automatic trace mode" \
++	"timerlat top -a 5 --dump-tasks"
++check "print the auto-analysis if hits the stop tracing condition" \
++	"timerlat top --aa-only 5"
++check "disable auto-analysis" \
++	"timerlat top -s 3 -T 10 -t --no-aa"
++check "verify -c/--cpus" \
++	"timerlat hist -c 0 -d 30s"
++check "hist test in nanoseconds" \
++	"timerlat hist -i 2 -c 0 -n -d 30s"
++
++test_end
+-- 
+2.48.1
+
