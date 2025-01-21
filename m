@@ -1,155 +1,129 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6117049641;
-	Tue, 21 Jan 2025 14:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268931F4285
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jan 2025 15:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737470869; cv=none; b=UjV0ohieQULgz/B0sjZ9YJLBe2LlT9iy8dX1RuBf1b+UNNHMhbqouIi34cnQivHiOcdjZ+bj4sXGvesCQaiIZFAFgjruy0oDjJaBx92ygpwY8vIpN+c9y90gr7zMhmF6DZaIZGm5l4IRQ9e6eHdh95VZRHw2ofvYRLuJAytXPyE=
+	t=1737473375; cv=none; b=WEpfJSgf3ydA5E/5Zfc9S2sVIvnu3dHrqos5ScJ0JsJeLeaNrrQTnOVyZQqn6V9JHhYHH0I6qSsa0BbKS5jv/cuRO6+HK0hnH6wVC6qFg/eqltNaxYmeCByk+/k0q7q040jlHxD5vXB8vusAILcuC1zGO5b59D5V8NP9nFIidok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737470869; c=relaxed/simple;
-	bh=Cktml07LPmg2xZ25NCIPiVqzfxD6P8TDXY7hcsNSf6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DULSEvgNVIWI4v52NsjFp3LQf9BAIbrkKd7sWvShZshs/qWnNVONOuGiPzJXwvlh59ddXZZuAu/t9axPkbxyM6gMi0wS/jJKNgh9f6yBvTXP9CGZUHb5fnnXh5ly7qLqXaU8oinG75nnS9tJO6TE7zlRrC5OCfxICUxlj28ndZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y827Eh4J; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737473375; c=relaxed/simple;
+	bh=rRdlSEuIlKqdrfnuUR/QAUCw5t4cYuBzo0hVt20kNjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7s3W1yzB6B2msSFJcEv83DPVEV8MmrHOb5y0pcps1+IqgRqwcQy5L1eJfBRZoSAj8dF80lgRWyo1MUanKp875UgTWBtoc41shbqiUF7QYWcExttpBM5MX9S42QAZFMoDsbwDYHTBGtk4+JOvOAAFl8wPyxe8vHW0dneT3GMVpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PpXutJho; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y827Eh4J"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71e181fb288so2893707a34.2;
-        Tue, 21 Jan 2025 06:47:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737470867; x=1738075667; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rAyOm3vvC9cyzYtwh1nipyUHmipDItlmipd/RY8fXQ=;
-        b=Y827Eh4JiB7zZuR6zWZl4bEpau+kai9XLkFup/ISfD5h/uoQiTmTnRjhSMfe8CvY96
-         JLqc9STOXnLjga6LjLxEsl5Mv0Go/Ue37xejEMfksWFRneFYi7ue0WtqwuAC6ciYBv9B
-         8F9bndcrHQ4/EvTsIVpIop4jln0Vy6/1ixVvyhnrg3qtelMsLHGNEegdvqjsXrkifSCe
-         6eTMt/MRtgRU5hB2WAHiUr/rf32g/SjdjZy0tzY42N6rtUZ1D1W8Gt3szKm0qfdN97Q1
-         ZXk/klG5yLM682rlgxbMMuFdP+kLlpPsrn6WeBRBXNtaGMSpATg62AO0n/iTOWN8uOLq
-         bvsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737470867; x=1738075667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rAyOm3vvC9cyzYtwh1nipyUHmipDItlmipd/RY8fXQ=;
-        b=OkhymSszyg1NsfKUu5wsmZ5GzRwIqIhJsaeNhajdOX4m4yD+X38evjLDtAVF2iPEsb
-         YSy9BKTC2nx/ebo0IG221lhsoZGFi1PPbWc6W6EebDeG5DcF3aipYZ3gCquF5mpTbOOa
-         25ZvFJQjN4zdjfWdsKBFmT1JyY997+4vBEEa7tgulprR0yYRsF1PEoeE0J0YTniLInux
-         G48NvP9EftG7EUzZAM2fzw9Z1rM1j5XFGELmU7/NtBtKq1LB/liTCOBOKo06gdO0HysJ
-         bDWUZygbT0y1aIbVEExRifAMgzukkT2qCRQf9mlnVqYxhXPixXU+13PTlfS41wtyMZaL
-         ubMw==
-X-Forwarded-Encrypted: i=1; AJvYcCUep4V1ODFe4hZdTxQqU2YhYu0qqVwyXMFiej9/d+2zmEyCeUNgVhKTzGXSpSxSvqdTHJbWb/FL@vger.kernel.org, AJvYcCWlZfyneTixHPijkG9+uXR1fnE1BiMQedtuzfcxrdWdaoHOwEDHyVxBSbDGz0mGp5ohiOE1lNTXoFoeimInp6IfkzdF@vger.kernel.org, AJvYcCWpr3Yc+Y+5YdfO26W74ZnVB3vZdcjFFy6JNTx6UZs7+X8hufNgVNQvgz541OR2PU2Baik6HRCbPOoS@vger.kernel.org, AJvYcCX9qWUC1F2g3rYpR3hHzY3OHKAppYhF5sZqnZvte0LNbGsEdxQ1shZlGINW+J5x7fXucqWUhtzRxqZDOBKM@vger.kernel.org, AJvYcCXVvCIxWXxnQQRRW7iQaW/hQ0YzVVn859LkF8MsCmgxGxwzv0iUsaAT3eBJijdtjCjMPDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzygC086BtCZ/8YHBNDjOwM8tOG6ws02CDLlYEiypTlJ/PeoNln
-	tRu5cV5A2DN82YMlniEm2kfMa5Emk7D4lIApKQTCBOermrvZVO2kRyhdc5ksvLPh5cL9gK00C/P
-	hQ4IC0AzEU1IXVk/NjWyebwTFtvY=
-X-Gm-Gg: ASbGnctixg367ty6j3cgNOTy+0uFp0GvbPAsN+Jdw581yBe0h7xBovcvLf6V2yPu9pC
-	MHKHmc4RbgyoqKm026D+9H4N9748TwcWszztJvXesoDOJyo7BO8g=
-X-Google-Smtp-Source: AGHT+IHg70+kf9daAdil3t4gCIdHjAkzcSAk4ar4AK/QnIG6lVbxav1MbIKq4eCM3GctTzC1y/vvNy0sX+8+TR1jSO8=
-X-Received: by 2002:a05:6830:628b:b0:71d:f239:c091 with SMTP id
- 46e09a7af769-7249da56cedmr10066983a34.6.1737470867304; Tue, 21 Jan 2025
- 06:47:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PpXutJho"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737473372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2nKhFItvInbGy3x2gDKCK0wEWBuvzDIeDEmci5k4cFk=;
+	b=PpXutJhoRjucH2KPv+CQZAzthHd8RO0ccpFneOeHemUIMLBd1jqMClbGPBhH4havxRAwQa
+	XXlzJRbV8dE/K7zQWZhFH5KXkvv7N4RfYpJMsby9kajJ7nS6vSFuCWnmXsOve+rJlzJSoe
+	G4dAeOh2psXZSHw4TduZSj2tbbIrnco=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-412-nzKq0IOnPwqlDunPUEV6iQ-1; Tue,
+ 21 Jan 2025 10:29:28 -0500
+X-MC-Unique: nzKq0IOnPwqlDunPUEV6iQ-1
+X-Mimecast-MFC-AGG-ID: nzKq0IOnPwqlDunPUEV6iQ
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4225619560A3;
+	Tue, 21 Jan 2025 15:29:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.31])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id D03A61956094;
+	Tue, 21 Jan 2025 15:29:10 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 21 Jan 2025 16:28:54 +0100 (CET)
+Date: Tue, 21 Jan 2025 16:28:43 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>, luto@amacapital.net,
+	wad@chromium.org, ldv@strace.io, mhiramat@kernel.org,
+	andrii@kernel.org, jolsa@kernel.org, alexei.starovoitov@gmail.com,
+	olsajiri@gmail.com, cyphar@cyphar.com, songliubraving@fb.com,
+	yhs@fb.com, john.fastabend@gmail.com, peterz@infradead.org,
+	tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net,
+	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org,
+	rafi@rbk.io, shmulik.ladkani@gmail.com, bpf@vger.kernel.org,
+	linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
+ filtering
+Message-ID: <20250121152843.GC3422@redhat.com>
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <202501181212.4C515DA02@keescook>
+ <20250119123955.GA5281@redhat.com>
+ <202501201331.83DB01794@keescook>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250117005539.325887-1-eyal.birger@gmail.com>
- <202501181212.4C515DA02@keescook> <CAHsH6GuifA9nUzNR-eW5ZaXyhzebJOCjBSpfZCksoiyCuG=yYw@mail.gmail.com>
- <8B2624AC-E739-4BBE-8725-010C2344F61C@kernel.org> <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
- <Z4-xeFH0Mgo3llga@krava>
-In-Reply-To: <Z4-xeFH0Mgo3llga@krava>
-From: Eyal Birger <eyal.birger@gmail.com>
-Date: Tue, 21 Jan 2025 06:47:35 -0800
-X-Gm-Features: AbW1kva2mCUZaFs5Ipo6EUmEB_SwjaLJCjqhvhI-g9qn-B9oSM16KZSJKWgpihY
-Message-ID: <CAHsH6GsXacPXiEz7amTcgBfWdiOJx2G3cAMdSdnkqOnJ+opqQg@mail.gmail.com>
-Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without filtering
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
-	ldv@strace.io, mhiramat@kernel.org, andrii@kernel.org, 
-	alexei.starovoitov@gmail.com, cyphar@cyphar.com, songliubraving@fb.com, 
-	yhs@fb.com, john.fastabend@gmail.com, peterz@infradead.org, 
-	tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, ast@kernel.org, 
-	andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io, 
-	shmulik.ladkani@gmail.com, bpf@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202501201331.83DB01794@keescook>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi,
-
-On Tue, Jan 21, 2025 at 6:38=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
+On 01/20, Kees Cook wrote:
 >
-> On Sat, Jan 18, 2025 at 07:39:25PM -0800, Eyal Birger wrote:
->
-> SNIP
->
-> > I think I wasn't accurate in my wording.
-> > The uretprobe syscall is added to the tracee by the kernel.
-> > The tracer itself is merely requesting to attach a uretprobe bpf
-> > function. In previous versions, this was implemented by the kernel
-> > installing an int3 instruction, and in the new implementation the kerne=
-l
-> > is installing a uretprobe syscall.
-> > The "user" in this case - the tracer program - didn't deliberately inst=
-all
-> > the syscall, but anyway this is semantics.
+> > The only difference is that sys_uretprobe() is new and existing setups
+> > doesn't know about it. Suppose you have
 > >
-> > I think I understand your point that it is regarded as "policy", only t=
-hat
-> > it creates a problem in actual deployments, where in order to be able t=
-o
-> > run the tracer software which has been working on newer kernels a new d=
-ocker
-> > has to be deployed.
+> > 	int func(void)
+> > 	{
+> > 		return 123;
+> > 	}
 > >
-> > I'm trying to find a pragmatic solution to this problem, and I understa=
-nd
-> > the motivation to avoid policy in seccomp.
+> > 	int main(void)
+> > 	{
+> > 		seccomp(SECCOMP_SET_MODE_STRICT, 0,0);
+> > 		for (;;)
+> > 			func();
+> > 	}
 > >
-> > Alternatively, maybe this syscall implementation should be reverted?
+> > and it runs with func() uretprobed.
+> >
+> > If you install the new kernel, this application will crash immediately.
+> >
+> > I understand your objections, but what do you think we can do instead?
+> > I don't think a new "try_to_speedup_uretprobes_at_your_own_risk" sysctl
+> > makes sense, it will be almost never enabled...
 >
-> you mentioned in the previous reply:
->
-> > > As far as I can tell libseccomp needs to provide support for this new
-> > >  syscall and a new docker version would need to be deployed, so It's =
-not
-> > > just a configuration change. Also the default policy which comes pack=
-ed in
-> > > docker would probably need to be changed to avoid having to explicitl=
-y
-> > > provide a seccomp configuration for each deployment.
->
-> please disregard if this is too stupid.. but could another way out be jus=
-t
-> to disable it (easy to do) and meanwhile teach libseccomp to allow uretpr=
-obe
-> (or whatever mechanism needs to be added to libseccomp) plus the needed
-> docker change ... to minimize the impact ?
+> This seems like a uretprobes design problem. If it's going to use
+> syscalls, it must take things like seccomp into account.
 
-Right. the patch I was thinking to suggest wouldn't revert the entire
-thing, but instead disable its use for now and allow a careful
-reconsideration of the available options.
+True. I reviewed that patch, and I forgot about seccomp too.
 
-If that makes sense, I'll post it.
+> SECCOMP_SET_MODE_STRICT will also crash in the face of syscall_restart...
 
->
-> or there's just too many other seccomp user space libraries
+Yes, I guess SECCOMP_SET_MODE_STRICT assumes that read/write can't return
+ERESTART_RESTARTBLOCK.
 
-I think in theory, the example of a simple binary using "restrict" mode
-makes it problematic to assume that this can be fixed solely from userspace
-i.e. for such binary, uretprobes would still work in one kernel version and
-break on another. It's hard to tell how common this is.
+But again, what can we do right now?
 
->
-> I'm still trying to come up with some other solution but wanted
-> to exhaust all the options I could think of
->
-> thanks,
-> jirka
+I do not like the idea to revert the patch which adds sys_uretprobe().
+Don't get me wrong, I do not use uprobes, so personally I don't really
+care about the performance improvements it adds. Not to mention FRED,
+although I have no idea when it will be available.
+
+Lets forget about sys_uretprobe(). Lets suppose the kernel doesn't have
+ERESTART_RESTARTBLOCK/sys_restart_syscall and we want to add this feature
+today.
+
+How do you think we can do this without breaking the existing setups which
+use seccomp ?
+
+Oleg.
+
