@@ -1,34 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C921E9B29;
-	Tue, 21 Jan 2025 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5FB7462;
+	Tue, 21 Jan 2025 12:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737453579; cv=none; b=cKOiTYkln9S4YvKprLRABVtET96S5ueNQUaDOHjF0UJH2kr5Tp2vJ49DPuJUxA70J91GQPLgTvSrFen63qWtPUymAjUnIMS/vTwkmJPqivDE1to7oQ0+9UyxRIOXIJB0GQdiuxOPMKcrfuBBTgVEWKNYBfHUeRN4BtSuNSvw9Z0=
+	t=1737463042; cv=none; b=GX2U5CGGZpT4dHpE1NlL6nFPN6zTlFE7IS5QM3nATTs3f4Dhu5BIBVcTGPknkYEq2sZrXeWV38R1Sppqt4dcPtTtyMCby6TCIqpQDCfrNTJavaFoj159lmrfZEeS9O2QN+4d6E0liqkz1Tp11gGh1EomWE0kFnC/wVqD7OkSYFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737453579; c=relaxed/simple;
-	bh=iCOJADJJ/sFPbuOid5OXzq1M+MQ1WlHyV9KAisT6QLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RWfDw3w1xLJlwKYBYbTWyJjabchKphi0qLcVq1jcjOnAmaVY/QDLWcjONlpthx75/3pVPImEwuawjTfOb9pSbOM7f7Y+vhQGk0ecICmk0IbbhcBxDzrd/b/XexUlZbxpfn7Wt/Z325Rr+AMpY9XBa68+dBNnTC9Ej1VO0dCLnbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtnsARiR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737463042; c=relaxed/simple;
+	bh=Dye0D6CZD8xIoO22fhiGdz2tOSdT7Pz1dasxwReFR64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QfL3vjy7GsgdYasBTOLH27kUuFb433sI7U5CY+uvlTremsBgMEz+qGW+rkxlf/NLM+uRNIvBzwUdhlP2ccy9cceQ8lVK7+sEZGAitSCEcrh11hUHCSP6HnNsXw9eSCwo56PTEYsdmNZA6RxJQ3WhvnNafWjAYJwJEqDiOP42eSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FiKvPMin; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtnsARiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609A5C4CEDF;
-	Tue, 21 Jan 2025 09:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737453578;
-	bh=iCOJADJJ/sFPbuOid5OXzq1M+MQ1WlHyV9KAisT6QLU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RtnsARiRHrenQWHrMnLuEAY7/eJ5WWknmOCHRtfZSkV3oFUmyozJVP5a4Shqstzg3
-	 Z3E6ToP2NZa2ayoQLxkfuTxTAcK84dX/5ut/OsAu0PZlp34UjLqKMLqfLPQxsyzPVD
-	 8QjGowjl6dMGqtqC1HEDEgE8n5NoPlzKoE6fyydZwid7WQ1Msc0Q4WXnelo39417IG
-	 eNQw19ghX0WQWwv5N6+onzWlI9S2+i3vTIwNmA5GD6H4FpAJ/uAQeDfVBpunl21d2w
-	 +3fQAgRw23aCdCr5+lQ0tXWAWIHQckUfsJaQrhRyjjuDJk+DO6cubGx+Ty6nWv9lQC
-	 1ZFmWGRBIU28g==
-From: Mike Rapoport <rppt@kernel.org>
-To: x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FiKvPMin"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+S3XXHbN/oe6xKVYGSf9YZ3CRMWHxj1l3FkfZRty5tI=; b=FiKvPMinu66/G2JHsGRgnMbT5F
+	rMCwmED4+IvlnlmUz8ASXQB1GnEDZq3CzcLFTzt/RVSSHIUCEDPvYaR/vpM6O1K7+ZPOaapQJPWi8
+	gca1sxhPAW16+uYuk22hj7LI7nu4tDIkzL3A6KLSNh1mj956fKMeGTTg9KGoF+XnjymQh81ulQrlI
+	CCL1agCm2m2GbwQWiEo5t3elu50no64PB+45UsbaAodphvLrkDFOhDpfNYqzLzLyJGT+DvKcMFIph
+	zBK8tPp+ZXFGNxDquE/xKAwVWlD5DQAw2mJsd7DgAkH4dWm3RWoF9hgpd6mq3Ji/IulJ6M7qZucvU
+	ddwVVUjg==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1taDUu-0000000AbnU-0YO0;
+	Tue, 21 Jan 2025 12:36:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0BE8E300619; Tue, 21 Jan 2025 13:36:47 +0100 (CET)
+Date: Tue, 21 Jan 2025 13:36:46 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
 	Andy Lutomirski <luto@kernel.org>,
 	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
 	Borislav Petkov <bp@alien8.de>,
@@ -49,33 +56,21 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Rae Moar <rmoar@google.com>,
-	Richard Weinberger <richard@nod.at>,
+	Miroslav Benes <mbenes@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
+	Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
 	Sami Tolvanen <samitolvanen@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Song Liu <song@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	kgdb-bugreport@lists.sourceforge.net,
-	kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
+	kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
 	live-patching@vger.kernel.org
-Subject: [PATCH v2 10/10] x86: re-enable EXECMEM_ROX support
-Date: Tue, 21 Jan 2025 11:57:39 +0200
-Message-ID: <20250121095739.986006-11-rppt@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250121095739.986006-1-rppt@kernel.org>
+Subject: Re: [PATCH v2 00/10] x86/module: rework ROX cache to avoid writable
+ copy
+Message-ID: <20250121123646.GC7145@noisy.programming.kicks-ass.net>
 References: <20250121095739.986006-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -83,29 +78,28 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250121095739.986006-1-rppt@kernel.org>
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Tue, Jan 21, 2025 at 11:57:29AM +0200, Mike Rapoport wrote:
 
-after rework of execmem ROX caches
+> Kirill A. Shutemov (1):
+>   x86/mm/pat: restore large ROX pages after fragmentation
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+The duplication between pmd and pud collapse is a bit annoying, but so
+be it.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index ef6cfea9df73..9d7bd0ae48c4 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -83,6 +83,7 @@ config X86
- 	select ARCH_HAS_DMA_OPS			if GART_IOMMU || XEN
- 	select ARCH_HAS_EARLY_DEBUG		if KGDB
- 	select ARCH_HAS_ELF_RANDOMIZE
-+	select ARCH_HAS_EXECMEM_ROX		if X86_64
- 	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
--- 
-2.45.2
+> Mike Rapoport (Microsoft) (9):
+>   x86/mm/pat: cpa-test: fix length for CPA_ARRAY test
+>   x86/mm/pat: drop duplicate variable in cpa_flush()
+>   execmem: don't remove ROX cache from the direct map
+>   execmem: add API for temporal remapping as RW and restoring ROX afterwards
+>   module: introduce MODULE_STATE_GONE
+>   module: switch to execmem API for remapping as RW and restoring ROX
+>   Revert "x86/module: prepare module loading for ROX allocations of text"
+>   module: drop unused module_writable_address()
+>   x86: re-enable EXECMEM_ROX support
 
+All these look good on a first reading, let me go build and test the
+various options.
