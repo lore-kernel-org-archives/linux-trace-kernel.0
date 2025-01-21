@@ -1,289 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABC81B0F10;
-	Tue, 21 Jan 2025 08:05:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCB21DED4F;
+	Tue, 21 Jan 2025 09:57:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737446702; cv=none; b=EJ8WhPX0zHwqM/YD4h/V2ccdTmx1foWk4OOY54F9jxA/l6Ts8nlJa7nLWR52LvUvMkLK65YAnOZoFEntRK3ZwqSkllqsEKIjyWly0wiVS4zMUsW77Q1JJGMhSLRzed1VgXlf3mFpHQ1DSB4jYQovxgx+G2Jbzt+LAyzE1/YeGWs=
+	t=1737453479; cv=none; b=i4wX1ejHcam1W0MhM5cDwGUdPinHcUAZpuHNVGYCrqpiUGbAGY6xW7vfZV5SsVdnmEStBGz/B6hXXipmq2iqcDoZnzfbqpXokYi+L+jZF+JFM7gKkiTvFO/SAp5HGRNfFORe2FH4iGWvZDwky++GkOn/wMYsRtPr8XVn1h+nLXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737446702; c=relaxed/simple;
-	bh=iuIpM3Q4ktQ1sfszFO4+hOk/QWq4tbhJZGW9CxpzYtk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=P8O7xMZRfN9fMcjvv0wQvDDMZyxhq++5vV10XOJPNjE5yrweYm7UYR39cZeBnJFZQZqaZIHJ7HZyNcuYe0UkR2niY54g1r9sZ2n7CCFk7Z9Id/f39QzNrX123e2GFwLvvCnq1VuguVWhb0Ty6+LoK6sNuEoM+j9KRzFkSFufSKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ke0wFGMQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737453479; c=relaxed/simple;
+	bh=Wme3RadWyvhvMdPRne38RcnHRR4tq7D20M16ECVXgvE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EsRU2mTUs1lXVMTY8GYVot6925NhFUprkH/+iu35La09uCiAIDQiTtfPA81wBiHEni1r4XcnWXRYYf0blk0D5YR3E2SJmBI/FNee4MLNJRDdEK9N2CBXK9tqCTNJsK7oJv21HVjzP/aWSxZ+v1aSnVK6nRxUaezs+Fte+G8fl9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rh/Hlilr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ke0wFGMQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED58C4CEE1;
-	Tue, 21 Jan 2025 08:05:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rh/Hlilr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B91C4CEDF;
+	Tue, 21 Jan 2025 09:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737446702;
-	bh=iuIpM3Q4ktQ1sfszFO4+hOk/QWq4tbhJZGW9CxpzYtk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ke0wFGMQ8CigwZ1DW+o4kKHRJmqfEKueh5b4/c+eGgwlHjV/E6Qao57/RXLqK9N3t
-	 KDLCuBM4PUX08z+hWZEwX/EhyiQa9g9dF1zXPLtoY1C4TMBwwvj9nAd4hMuj7xLLij
-	 PaH+UEJLBsmt2f2bO0PNJsRiW2zoBSVO92rzRXmU8DXhKmyQ6tqvo/5/fZlCyAsUIg
-	 PFBqmrkrB3Hnb+z5kkLhnQhLEtWOvzUDCqBq8DrYh89Q11cKUHXXsXFQrp4XO5wgP0
-	 WZhgzO3aHGuTQlWlG6G9LiF99RhQ5Tf7aZReLRsOGIz/jW9GVmcc7gFwxbZBdn3ZNu
-	 /6aiNGHnsQn2w==
-Date: Tue, 21 Jan 2025 17:04:58 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Linus Torvalds
- <torvalds@linux-foundation.org>, Ludwig Rydberg
- <ludwig.rydberg@gaisler.com>, Andreas Larsson <andreas@gaisler.com>,
- stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] atomic64: Use arch_spin_locks instead of
- raw_spin_locks
-Message-Id: <20250121170458.20ae0ba33a493d3232e7fa04@kernel.org>
-In-Reply-To: <20250120235721.574973242@goodmis.org>
-References: <20250120235655.144537620@goodmis.org>
-	<20250120235721.574973242@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1737453479;
+	bh=Wme3RadWyvhvMdPRne38RcnHRR4tq7D20M16ECVXgvE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rh/HlilriYiUfxxSoSn1Dvm4ive39BJjvEcaYkJPYDB4Bq159WaYziRMj9GttPwV4
+	 oNJSZE/CM2l9cUTU/sgeYj916s4tKhaxqflrklPGwUoUglcrt8k38IZ3mnKVmfe85Y
+	 w1gmDK9AOGg0wGUcs/4/ufhN7/imdYoNgMCLLC4f6HA8JR1YIM/ho6/94/W16wKcUh
+	 HqZ3wE417GufCR++pfx67iGYJhxnZ1tnwT6vt2+4pq4r8W3tAcMQ3/lc3PDxJbju9x
+	 5DU87NBLb7gkP2FrZ5zr5ekyyUTyizVQkPCFzaKNT9bc5g12mboVzYrIz0bs5KMlAE
+	 6HjYs6N1b8mgw==
+From: Mike Rapoport <rppt@kernel.org>
+To: x86@kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Gow <davidgow@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Rae Moar <rmoar@google.com>,
+	Richard Weinberger <richard@nod.at>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	kgdb-bugreport@lists.sourceforge.net,
+	kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	live-patching@vger.kernel.org
+Subject: [PATCH v2 00/10] x86/module: rework ROX cache to avoid writable copy
+Date: Tue, 21 Jan 2025 11:57:29 +0200
+Message-ID: <20250121095739.986006-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 20 Jan 2025 18:56:57 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> raw_spin_locks can be traced by lockdep or tracing itself. Atomic64
-> operations can be used in the tracing infrastructure. When an architecture
-> does not have true atomic64 operations it can use the generic version that
-> disables interrupts and uses spin_locks.
-> 
-> The tracing ring buffer code uses atomic64 operations for the time
-> keeping. But because some architectures use the default operations, the
-> locking inside the atomic operations can cause an infinite recursion.
-> 
-> As atomic64 is an architecture specific operation, it should not be using
-> raw_spin_locks() but instead arch_spin_locks as that is the purpose of
-> arch_spin_locks. To be used in architecture specific implementations of
-> generic infrastructure like atomic64 operations.
-> 
+Hi,
 
-Looks good to me.
+Following Peter's comments [1] these patches rework handling of ROX caches
+for module text allocations. 
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Instead of using a writable copy that really complicates alternatives
+patching, temporarily remap parts of a large ROX page as RW for the time of
+module formation and then restore it's ROX protections when the module is
+ready.
 
-Thanks,
+To keep the ROX memory mapped with large pages, make set_memory_rox()
+capable of restoring large pages (more details are in patch 3).
 
-> Cc: stable@vger.kernel.org
-> Fixes: c84897c0ff592 ("ring-buffer: Remove 32bit timestamp logic")
-> Closes: https://lore.kernel.org/all/86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com/
-> Reported-by: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  lib/atomic64.c | 78 +++++++++++++++++++++++++++++++-------------------
->  1 file changed, 48 insertions(+), 30 deletions(-)
-> 
-> diff --git a/lib/atomic64.c b/lib/atomic64.c
-> index caf895789a1e..1a72bba36d24 100644
-> --- a/lib/atomic64.c
-> +++ b/lib/atomic64.c
-> @@ -25,15 +25,15 @@
->   * Ensure each lock is in a separate cacheline.
->   */
->  static union {
-> -	raw_spinlock_t lock;
-> +	arch_spinlock_t lock;
->  	char pad[L1_CACHE_BYTES];
->  } atomic64_lock[NR_LOCKS] __cacheline_aligned_in_smp = {
->  	[0 ... (NR_LOCKS - 1)] = {
-> -		.lock =  __RAW_SPIN_LOCK_UNLOCKED(atomic64_lock.lock),
-> +		.lock =  __ARCH_SPIN_LOCK_UNLOCKED,
->  	},
->  };
->  
-> -static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
-> +static inline arch_spinlock_t *lock_addr(const atomic64_t *v)
->  {
->  	unsigned long addr = (unsigned long) v;
->  
-> @@ -45,12 +45,14 @@ static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
->  s64 generic_atomic64_read(const atomic64_t *v)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  	s64 val;
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	val = v->counter;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  	return val;
->  }
->  EXPORT_SYMBOL(generic_atomic64_read);
-> @@ -58,11 +60,13 @@ EXPORT_SYMBOL(generic_atomic64_read);
->  void generic_atomic64_set(atomic64_t *v, s64 i)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	v->counter = i;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  }
->  EXPORT_SYMBOL(generic_atomic64_set);
->  
-> @@ -70,11 +74,13 @@ EXPORT_SYMBOL(generic_atomic64_set);
->  void generic_atomic64_##op(s64 a, atomic64_t *v)			\
->  {									\
->  	unsigned long flags;						\
-> -	raw_spinlock_t *lock = lock_addr(v);				\
-> +	arch_spinlock_t *lock = lock_addr(v);				\
->  									\
-> -	raw_spin_lock_irqsave(lock, flags);				\
-> +	local_irq_save(flags);						\
-> +	arch_spin_lock(lock);						\
->  	v->counter c_op a;						\
-> -	raw_spin_unlock_irqrestore(lock, flags);			\
-> +	arch_spin_unlock(lock);						\
-> +	local_irq_restore(flags);					\
->  }									\
->  EXPORT_SYMBOL(generic_atomic64_##op);
->  
-> @@ -82,12 +88,14 @@ EXPORT_SYMBOL(generic_atomic64_##op);
->  s64 generic_atomic64_##op##_return(s64 a, atomic64_t *v)		\
->  {									\
->  	unsigned long flags;						\
-> -	raw_spinlock_t *lock = lock_addr(v);				\
-> +	arch_spinlock_t *lock = lock_addr(v);				\
->  	s64 val;							\
->  									\
-> -	raw_spin_lock_irqsave(lock, flags);				\
-> +	local_irq_save(flags);						\
-> +	arch_spin_lock(lock);						\
->  	val = (v->counter c_op a);					\
-> -	raw_spin_unlock_irqrestore(lock, flags);			\
-> +	arch_spin_unlock(lock);						\
-> +	local_irq_restore(flags);					\
->  	return val;							\
->  }									\
->  EXPORT_SYMBOL(generic_atomic64_##op##_return);
-> @@ -96,13 +104,15 @@ EXPORT_SYMBOL(generic_atomic64_##op##_return);
->  s64 generic_atomic64_fetch_##op(s64 a, atomic64_t *v)			\
->  {									\
->  	unsigned long flags;						\
-> -	raw_spinlock_t *lock = lock_addr(v);				\
-> +	arch_spinlock_t *lock = lock_addr(v);				\
->  	s64 val;							\
->  									\
-> -	raw_spin_lock_irqsave(lock, flags);				\
-> +	local_irq_save(flags);						\
-> +	arch_spin_lock(lock);						\
->  	val = v->counter;						\
->  	v->counter c_op a;						\
-> -	raw_spin_unlock_irqrestore(lock, flags);			\
-> +	arch_spin_unlock(lock);						\
-> +	local_irq_restore(flags);					\
->  	return val;							\
->  }									\
->  EXPORT_SYMBOL(generic_atomic64_fetch_##op);
-> @@ -131,14 +141,16 @@ ATOMIC64_OPS(xor, ^=)
->  s64 generic_atomic64_dec_if_positive(atomic64_t *v)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  	s64 val;
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	val = v->counter - 1;
->  	if (val >= 0)
->  		v->counter = val;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  	return val;
->  }
->  EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
-> @@ -146,14 +158,16 @@ EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
->  s64 generic_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  	s64 val;
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	val = v->counter;
->  	if (val == o)
->  		v->counter = n;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  	return val;
->  }
->  EXPORT_SYMBOL(generic_atomic64_cmpxchg);
-> @@ -161,13 +175,15 @@ EXPORT_SYMBOL(generic_atomic64_cmpxchg);
->  s64 generic_atomic64_xchg(atomic64_t *v, s64 new)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  	s64 val;
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	val = v->counter;
->  	v->counter = new;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  	return val;
->  }
->  EXPORT_SYMBOL(generic_atomic64_xchg);
-> @@ -175,14 +191,16 @@ EXPORT_SYMBOL(generic_atomic64_xchg);
->  s64 generic_atomic64_fetch_add_unless(atomic64_t *v, s64 a, s64 u)
->  {
->  	unsigned long flags;
-> -	raw_spinlock_t *lock = lock_addr(v);
-> +	arch_spinlock_t *lock = lock_addr(v);
->  	s64 val;
->  
-> -	raw_spin_lock_irqsave(lock, flags);
-> +	local_irq_save(flags);
-> +	arch_spin_lock(lock);
->  	val = v->counter;
->  	if (val != u)
->  		v->counter += a;
-> -	raw_spin_unlock_irqrestore(lock, flags);
-> +	arch_spin_unlock(lock);
-> +	local_irq_restore(flags);
->  
->  	return val;
->  }
-> -- 
-> 2.45.2
-> 
-> 
+Since this is really about x86, I believe this should go in via tip tree.
+
+The patches also available in git
+https://git.kernel.org/rppt/h/execmem/x86-rox/v9
+
+v2 changes:
+* only collapse large mappings in set_memory_rox()
+* simplify RW <-> ROX remapping
+* don't remove ROX cache pages from the direct map (patch 4)
+
+v1: https://lore.kernel.org/all/20241227072825.1288491-1-rppt@kernel.org
+
+[1] https://lore.kernel.org/all/20241209083818.GK8562@noisy.programming.kicks-ass.net
+
+Kirill A. Shutemov (1):
+  x86/mm/pat: restore large ROX pages after fragmentation
+
+Mike Rapoport (Microsoft) (9):
+  x86/mm/pat: cpa-test: fix length for CPA_ARRAY test
+  x86/mm/pat: drop duplicate variable in cpa_flush()
+  execmem: don't remove ROX cache from the direct map
+  execmem: add API for temporal remapping as RW and restoring ROX afterwards
+  module: introduce MODULE_STATE_GONE
+  module: switch to execmem API for remapping as RW and restoring ROX
+  Revert "x86/module: prepare module loading for ROX allocations of text"
+  module: drop unused module_writable_address()
+  x86: re-enable EXECMEM_ROX support
+
+ arch/um/kernel/um_arch.c                      |  11 +-
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/entry/vdso/vma.c                     |   3 +-
+ arch/x86/include/asm/alternative.h            |  14 +-
+ arch/x86/include/asm/pgtable_types.h          |   2 +
+ arch/x86/kernel/alternative.c                 | 181 ++++++--------
+ arch/x86/kernel/ftrace.c                      |  30 ++-
+ arch/x86/kernel/module.c                      |  45 ++--
+ arch/x86/mm/pat/cpa-test.c                    |   2 +-
+ arch/x86/mm/pat/set_memory.c                  | 220 +++++++++++++++++-
+ include/linux/execmem.h                       |  31 +++
+ include/linux/module.h                        |  22 +-
+ include/linux/moduleloader.h                  |   4 -
+ include/linux/vm_event_item.h                 |   2 +
+ kernel/module/kallsyms.c                      |   8 +-
+ kernel/module/kdb.c                           |   2 +-
+ kernel/module/main.c                          |  86 ++-----
+ kernel/module/procfs.c                        |   2 +-
+ kernel/module/strict_rwx.c                    |   9 +-
+ kernel/tracepoint.c                           |   2 +
+ lib/kunit/test.c                              |   2 +
+ mm/execmem.c                                  |  39 ++--
+ mm/vmstat.c                                   |   2 +
+ samples/livepatch/livepatch-callbacks-demo.c  |   1 +
+ .../test_modules/test_klp_callbacks_demo.c    |   1 +
+ .../test_modules/test_klp_callbacks_demo2.c   |   1 +
+ .../livepatch/test_modules/test_klp_state.c   |   1 +
+ .../livepatch/test_modules/test_klp_state2.c  |   1 +
+ 28 files changed, 442 insertions(+), 283 deletions(-)
 
 
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.45.2
+
