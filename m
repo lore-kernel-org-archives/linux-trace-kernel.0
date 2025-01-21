@@ -1,150 +1,114 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811BB2629F;
-	Tue, 21 Jan 2025 01:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC72A2581;
+	Tue, 21 Jan 2025 01:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737422572; cv=none; b=Eim3kv9vtY+tEyZM36FMR/UrNb5uiCv71dL39MJq2aLCplaslwRpVibCB806fyWnztC1iL3DWe7DC/6Ae29G6jNf67sJoAHWuj7XDn9oFokbER29jKOxKhsi7phW5us7dtXWbmajyksSot3GV3mCf41jtRwQQQMN6oQzOflkb50=
+	t=1737422812; cv=none; b=IIZFDueD3iFNYrl3YJdjN3Lj/JqxmHxCKgMMwBt6DEsD25tik6wxfyOTykgY5oERCDXg0MMi7FQnszEN1H6lwme9WwffVKS7uXS34yr48B5rehBWsrekRrOeSmry4UDWwO9o/xeDZ0ZIiQJKMzYtQtfU28SG2NGZI8HERrOzVHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737422572; c=relaxed/simple;
-	bh=W7eG8uJWetZv5PZx8aBcpUBR54+dfxzy4Asx7am4Sr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SLtoRRc/frVKSs/x3ONsbMmdm3b1ZMJVlK+9EOHtmcOrdYWVJxSrBsxSGLdlQysC0FQYtAPZ0+XcoUYJIg+fiqB2EozjGoFlS5dekGiLXOrl1F29TqOurQ+jDe+LSANGaE6UzJMkuJD5+5nAauW4Qk3xgyOthEfq148qcxYjdLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ARPtmqEP; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARPtmqEP"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-844e55a981dso139848039f.3;
-        Mon, 20 Jan 2025 17:22:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737422569; x=1738027369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1ktuJ/IQhIqzktUIteQKCqG3X3vISHaHjd1OBRIoQk=;
-        b=ARPtmqEPCOr7N3uUwmQccTQGPFnbCxTvE6cpwFI0qgB6dhLuREMRue3WUz+n9IPXdD
-         qiumwHCHSarGPCXnu5203lCor+Z6hgsk4kB/XN4eW/TzR1O3+xJ2QxIypchNt4dL2GG6
-         ssXJQ9d5qbOz33MULz5kz9jaDEg/XBJot6Y+zWiELF97oosGNW+MoWMRsa6dZ+8OoMVe
-         fm2wYFXorZYGGjgX6c/Hg/oI2pS5tkUF8fe4tcbEj28I+TMczSSi6D7gx4nUxlonOk9i
-         si+oDiNzeRFj/ujwdPy63DQDQGlqAwhU7M2niiactlZx7KdcHZj/KtqzCRyE99cx3zJM
-         XwWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737422569; x=1738027369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N1ktuJ/IQhIqzktUIteQKCqG3X3vISHaHjd1OBRIoQk=;
-        b=rPJz7vGpnCL4d6YeZ/QyrZlyK3bBpjlPoCGrAeACe1WdEnJMIwx8jaHH6ZZImkeQm1
-         y9QIDfT5aX0AodGocr0m6x3WXRTnknQS/9lpXShpwGYadfkXzy9ZtlwhDjG0J41KZnse
-         ZiccMaxGIgDuCTLSczVHxxtkka5XkWWHiwBXUnRuXLsSC/q1p1nwWJgD5mo4zK4aP5nO
-         wv4pd9s/8C8xDoen/8bJNq1mtkTotnbrAgHb5KPnDfO71GXNpEPpqW/7By1OTtviCpap
-         0rVUz4apDVbigyDxNDTZKxMgQ+OGPI6PFmEsmsAph5Ex1RwiMzn99FqELIemNLBWkqar
-         wKUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEdCp66WCYfRz3rs4e4/4ClHnlO7ll27svmUKS2YAc1syDvb72pXAo8+RdAVmr2y42IJvXb+W9gg5wO6w=@vger.kernel.org, AJvYcCVu3vwlmAO9mnXhIuaifgOp1iRs+HvEhHirvUwKRm5ifFtAHA8LYgJYIEbXtSg0Z/V95VNJIOdqeywTVmCMogG1JiMd@vger.kernel.org, AJvYcCVwUCK9LMTUO4jwhoDg4oq6LsAoe1fSoyNruGKlb1Pm3S/vW8v4L02TrLXOa7sdK3EM8evVmDVQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh9uhVTW884l+J47WIdeuYze5mLeP23RJWE9D4fReCEBRTpDC2
-	qY/HwsIKdZdCGHpkWYyEvui7P1C+uocYqL0H4KqTS1QbVCCJwcfxI8/wYw2zba56OFUGrqeDa6D
-	T/jc1hj8JYfPuzJaKpfRRMxy5X8XJRA==
-X-Gm-Gg: ASbGncvxjZBpJSnRq6iv93M98kUAVW5mL4RWgCnhTp6jsLbroeKaD5/HGBSxMZ8c5TD
-	6sw+IpHowlF6hwUm7Kg405BVOPCRCF4GJeqITwycH6FFXPst2F+Q=
-X-Google-Smtp-Source: AGHT+IF3eBZoLrpFN3tedFgfBPfoCHfxakJQgd04vCdcfjZ9nrE7bLBiOt5oaSy0mcKIcw7n1XYPCO30gU0lcT7GN9c=
-X-Received: by 2002:a05:6e02:17cb:b0:3ce:34b5:abf7 with SMTP id
- e9e14a558f8ab-3cf7440b2b9mr129325615ab.8.1737422569442; Mon, 20 Jan 2025
- 17:22:49 -0800 (PST)
+	s=arc-20240116; t=1737422812; c=relaxed/simple;
+	bh=Nx4jccfRDswWRZSfbDtQKeQF5DlQKprL7SnQJjpQIIo=;
+	h=Subject:To:References:From:Cc:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Ld49loJxeh0CI5Ol0xEccroyc4Bube4b+iE7aMbC9d0iDDXXMkg2UTdd+EtLyUi0/FMKMXdmYcgESuTp3knDShhdBn+NcNWOMf+uY3mP+ZbvuB9W+BkoymtEM5/Yht4KuJlNxbcY5kPSV0zOfggzEjn27IvWLu27CEbPGDftOpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YcV0Z49mTz4f3kvM;
+	Tue, 21 Jan 2025 09:26:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 689C01A0ABB;
+	Tue, 21 Jan 2025 09:26:44 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP1 (Coremail) with SMTP id cCh0CgC3GnvO945npYIVBg--.26251S2;
+	Tue, 21 Jan 2025 09:26:42 +0800 (CST)
+Subject: Re: [PATCH bpf] bpf: trace: send signals asynchronously if
+ !preemptible
+To: Puranjay Mohan <puranjay@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ bpf@vger.kernel.org
+References: <20250115103647.38487-1-puranjay@kernel.org>
+From: Hou Tao <houtao@huaweicloud.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ puranjay12@gmail.com
+Message-ID: <94fcfa71-51c1-2130-3452-ec58aaef94d0@huaweicloud.com>
+Date: Tue, 21 Jan 2025 09:26:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
- <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
- <20250120-panda-of-impressive-aptitude-2b714e@leitao> <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
- <20250120-daring-outstanding-jaguarundi-c8aaed@leitao> <CAL+tcoC+hVZU2rx6vVQO_BjAAfjLXvqCOVDHkDoBHYuykqS1dg@mail.gmail.com>
-In-Reply-To: <CAL+tcoC+hVZU2rx6vVQO_BjAAfjLXvqCOVDHkDoBHYuykqS1dg@mail.gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Tue, 21 Jan 2025 09:22:13 +0800
-X-Gm-Features: AbW1kvbkUJTvZFbUIGbPTGgEKEI94qMbEWvEfYimLKcXM48rNKp8jHvI8riteg0
-Message-ID: <CAL+tcoDXjd-C5SiJHr-0fpFaASxKS8emaOUQWXv2R_POrjmYgw@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
-To: Breno Leitao <leitao@debian.org>
-Cc: Eric Dumazet <edumazet@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, 
-	Martin KaFai Lau <martin.lau@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250115103647.38487-1-puranjay@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:cCh0CgC3GnvO945npYIVBg--.26251S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KryUKFWDtrWUZrWfXF1UWrg_yoW8XF17pF
+	ZxXrZ2krWkXFsYqa1Uta4xWryUW398J3yxGFnxJFWfXrnrZwn5Wrn29r45XF1Fvry5C397
+	XFs2vrWYqw4xu37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjxUxo7KDUUUU
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-On Tue, Jan 21, 2025 at 9:15=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
+Hi,
+
+On 1/15/2025 6:36 PM, Puranjay Mohan wrote:
+> BPF programs can execute in all kinds of contexts and when a program
+> running in a non-preemptible context uses the bpf_send_signal() kfunc,
+> it will cause issues because this kfunc can sleep.
 >
-> On Mon, Jan 20, 2025 at 9:20=E2=80=AFPM Breno Leitao <leitao@debian.org> =
-wrote:
-> >
-> >
-> > On Mon, Jan 20, 2025 at 09:06:43PM +0800, Jason Xing wrote:
-> > > On Mon, Jan 20, 2025 at 9:02=E2=80=AFPM Breno Leitao <leitao@debian.o=
-rg> wrote:
-> > > > On Mon, Jan 20, 2025 at 08:08:52PM +0800, Jason Xing wrote:
-> > > > > On Mon, Jan 20, 2025 at 8:03=E2=80=AFPM Breno Leitao <leitao@debi=
-an.org> wrote:
-> > > > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > > > > > index 4811727b8a02258ec6fa1fd129beecf7cbb0f90e..fc88c511e81bc12=
-ec57e8dc3e9185a920d1bd079 100644
-> > > > > > --- a/net/ipv4/tcp_input.c
-> > > > > > +++ b/net/ipv4/tcp_input.c
-> > > > > > @@ -2710,6 +2710,8 @@ void tcp_cwnd_reduction(struct sock *sk, =
-int newly_acked_sacked, int newly_lost,
-> > > > > >         if (newly_acked_sacked <=3D 0 || WARN_ON_ONCE(!tp->prio=
-r_cwnd))
-> > > > > >                 return;
-> > > > > >
-> > > > > > +       trace_tcp_cwnd_reduction(sk, newly_acked_sacked, newly_=
-lost, flag);
-> > > > > > +
-> > > > >
-> > > > > Are there any other reasons why introducing a new tracepoint here=
-?
-> > > > > AFAIK, it can be easily replaced by a bpf related program or scri=
-pt to
-> > > > > monitor in the above position.
-> > > >
-> > > > In which position exactly?
-> > >
-> > > I meant, in the position where you insert a one-line tracepoint, whic=
-h
-> > > should be easily replaced with a bpf program (kprobe
-> > > tcp_cwnd_reduction with two checks like in the earlier if-statement).
-> > > It doesn't mean that I object to this new tracepoint, just curious if
-> > > you have other motivations.
-> >
-> > This is exactly the current implementation we have at Meta, as it relie=
-s on
-> > hooking into this specific function. This approach is unstable, as
-> > compiler optimizations like inlining can break the functionality.
-> >
-> > This patch enhances the API's stability by introducing a guaranteed hoo=
-k
-> > point, allowing the compiler to make changes without disrupting the
-> > BPF program's functionality.
+> So change `irqs_disabled()` to `!preemptible()` that covers all edge
+> cases: preempt_count() == 0 and irqs_disabled()
 >
-> Surely it does :) The reason why I asked is that perhaps one year ago
-> I'm trying to add many tracepoints so that the user space monitor can
-> take advantage of these various stable hook points. I believe that
-> there are many other places which might be inlined because of gcc,
-> receiving a few similar reports in recent months, but there is no
-> guarantee to not touch some functions which obviously break some
-> monitor applications.
+> Reported-by: syzbot+97da3d7e0112d59971de@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/67486b09.050a0220.253251.0084.GAE@google.com/
+> Fixes: 1bc7896e9ef4 ("bpf: Fix deadlock with rq_lock in bpf_send_signal()")
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+>  kernel/trace/bpf_trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 1b8db5aee9d3..d162c87e09a8 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -853,7 +853,7 @@ static int bpf_send_signal_common(u32 sig, enum pid_type type, struct task_struc
+>  	if (unlikely(is_global_init(task)))
+>  		return -EPERM;
+>  
+> -	if (irqs_disabled()) {
+> +	if (!preemptible()) {
 
-Before BPF gets widely used, changing function names will not hurt
-applications. Things are a little bit different now, changing names or
-inlined function will lead the monitor application adjusting codes
-through versions, because they are not kabi functions.
+Should we unfold preemptible() to "preempt_count() == 0 &&
+!irqs_disabled()" instead, because when preemption is disabled,
+preemptible() will evaluate as 0 and the irq_disabled() case will be
+skipped ?
 
-Thanks,
-Jason
+
+>  		/* Do an early check on signal validity. Otherwise,
+>  		 * the error is lost in deferred irq_work.
+>  		 */
+
