@@ -1,266 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6476C1F0E3F;
-	Mon, 20 Jan 2025 23:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BDD522F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jan 2025 00:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737417440; cv=none; b=hIOYcoImddHTZs3mGcLsScHyQqPFROMNiM9pC/a9rPAvkQZI8+2u3fJrwyWEh/omuSHbN3BSTfezJDn50bmZvZd675o426HCqMpZTfY92wih1ky9ZTjFlEVx5N0sGyCPnG/7JBEl7jITAKJXtoRsR0NuN0OM5qflVU2hecgwKxg=
+	t=1737418925; cv=none; b=YpaKEUxPBgJ9XZ1Nn4CS3KO7Tf/RhhZyyaE7e5HZGlS0DsToH0Uf2I6pdW9UbfeVWo5SvMX0SqLZ4pxGY6Z38Y+UU2x+6DRgM1nUrln5O7FZIWIgXlflM/awnwNWmuRxpgtIev8YytFdfm4LAOErPGf1Bc9qSXTugYnlTfGBiN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737417440; c=relaxed/simple;
-	bh=1O9cmYwwJiOdpLdQWUvX5Zd3MRuo+T43Fgz76v+iNzU=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uTUi8/2N0u4fHS2BNp8yNbmCgKZ8GFZyW4uQSOLwiAz0BWmTzLLBHQxaflgcMg8KTRn05uV6GI+ARUb5LmbW6hjggpsbJUbgILNFcaqWq1ZxK8Hw4AF7hwugmzCLMRlz0lUKdkMYgDYEcv5ZlHvTz+iev0PilC1a+RIRJR6qMgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E16C4CEE6;
-	Mon, 20 Jan 2025 23:57:19 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1ta1dx-0000000097k-32jB;
-	Mon, 20 Jan 2025 18:57:21 -0500
-Message-ID: <20250120235721.574973242@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 20 Jan 2025 18:56:57 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Ludwig Rydberg <ludwig.rydberg@gaisler.com>,
- Andreas Larsson <andreas@gaisler.com>,
- stable@vger.kernel.org
-Subject: [PATCH 2/2] atomic64: Use arch_spin_locks instead of raw_spin_locks
-References: <20250120235655.144537620@goodmis.org>
+	s=arc-20240116; t=1737418925; c=relaxed/simple;
+	bh=WL7kVONYOnYb/d0AwrJ7ZVkNR8l5qThVKfPiGQXAwT4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Xj7FaBf+EgxeKG+HKhVvP52GjcsNK2KN8sHb2VRoHW2bGo77CxML9/KC1RVAls6gHEU1FRne8DJyJDKbnrOfW6kJYRcSPPualxdP2CawhBytlvVkZKUZRpXuUK07sBzu8/6GkNlXLpM4Z3Whc0uiAVTN7vWjQ/OvD5+v5BzPbCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce7d2781a0so36358025ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 16:22:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737418923; x=1738023723;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=36qHq6gozf7sLUVzS3bPWA3bTw43MXGseEmnjbcELI8=;
+        b=H0/228hhygE67yywFFS+i+7lxSzr0zd13dW8u7KT6j+tgqGyleyoLX3jpQ8JrbFrxY
+         q4GUaLJLTvSUP9IRnEbOitVKlm3GBhLNP6myupn1Nk1x2MkkTeoA9YsodDN5Sub5Cfo9
+         RKAPm0YkWpYhAyHYxXe0C1xBXwBZvxxQ03VwvMscXPQaOGSF/IyXNh/hcOHPMOuNyQcN
+         uWUOTWKnQdIVL8feNpVpK+1jbi3X4oRADMLQFNezITi8w24Znl7PoVQZzvig+bHX0RIJ
+         mDqIeWvXArVb5R6JEPjNGOUtHxyQjFYRFPXYhDrrgVKfIEEA/0vdTETjrhAIWjYVz33d
+         l4jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUn1jtTh0XP72LAUyGt//rzN/rz8qLCJIDYSUZZ2WW2bOKEeeHH0b1JGY42iDsqK4TiLHPR6ognjgP6Zg+K6lwwRmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiRf66QTiKrdxL88FTepeayUJ5r3TeHelkIA0yTarapOyKfMl3
+	jKSol1pkOHEDLKm2wRJi0UveagvV32R+59KgzWYPu8MCzsnwCTlWKGR366qsu5vOWvsuM0g1PL/
+	cX42hFUJ4RKbeWI7+U9ZuqMLxCkqh4njGiSXRlTcxOcfGBqG3bo7W68I=
+X-Google-Smtp-Source: AGHT+IHScxHtVEwxDPrO/GQeFULuN5IbwiJwn9SoI3wAiiRKJh80ar0G96GQHtpq5KVQ3rJG/08ttf904YCfEVaXHqjkhXX5+fUi
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-Received: by 2002:a05:6e02:17c5:b0:3ce:c87e:8d8b with SMTP id
+ e9e14a558f8ab-3cf7447c9d6mr98326465ab.16.1737418923002; Mon, 20 Jan 2025
+ 16:22:03 -0800 (PST)
+Date: Mon, 20 Jan 2025 16:22:02 -0800
+In-Reply-To: <672751ef.050a0220.35b515.0199.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <678ee8aa.050a0220.15cac.0002.GAE@google.com>
+Subject: Re: [syzbot] [block?] [trace?] possible deadlock in blk_trace_setup
+From: syzbot <syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, ming.lei@redhat.com, 
+	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Steven Rostedt <rostedt@goodmis.org>
+syzbot has bisected this issue to:
 
-raw_spin_locks can be traced by lockdep or tracing itself. Atomic64
-operations can be used in the tracing infrastructure. When an architecture
-does not have true atomic64 operations it can use the generic version that
-disables interrupts and uses spin_locks.
+commit f1be1788a32e8fa63416ad4518bbd1a85a825c9d
+Author: Ming Lei <ming.lei@redhat.com>
+Date:   Fri Oct 25 00:37:20 2024 +0000
 
-The tracing ring buffer code uses atomic64 operations for the time
-keeping. But because some architectures use the default operations, the
-locking inside the atomic operations can cause an infinite recursion.
+    block: model freeze & enter queue as lock for supporting lockdep
 
-As atomic64 is an architecture specific operation, it should not be using
-raw_spin_locks() but instead arch_spin_locks as that is the purpose of
-arch_spin_locks. To be used in architecture specific implementations of
-generic infrastructure like atomic64 operations.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1536b9df980000
+start commit:   5b913f5d7d7f Add linux-next specific files for 20241106
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1736b9df980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1336b9df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27aeebbe9ce2cea
+dashboard link: https://syzkaller.appspot.com/bug?extid=0d8542c90a512dc95185
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167b3d5f980000
 
-Cc: stable@vger.kernel.org
-Fixes: c84897c0ff592 ("ring-buffer: Remove 32bit timestamp logic")
-Closes: https://lore.kernel.org/all/86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com/
-Reported-by: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- lib/atomic64.c | 78 +++++++++++++++++++++++++++++++-------------------
- 1 file changed, 48 insertions(+), 30 deletions(-)
+Reported-by: syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com
+Fixes: f1be1788a32e ("block: model freeze & enter queue as lock for supporting lockdep")
 
-diff --git a/lib/atomic64.c b/lib/atomic64.c
-index caf895789a1e..1a72bba36d24 100644
---- a/lib/atomic64.c
-+++ b/lib/atomic64.c
-@@ -25,15 +25,15 @@
-  * Ensure each lock is in a separate cacheline.
-  */
- static union {
--	raw_spinlock_t lock;
-+	arch_spinlock_t lock;
- 	char pad[L1_CACHE_BYTES];
- } atomic64_lock[NR_LOCKS] __cacheline_aligned_in_smp = {
- 	[0 ... (NR_LOCKS - 1)] = {
--		.lock =  __RAW_SPIN_LOCK_UNLOCKED(atomic64_lock.lock),
-+		.lock =  __ARCH_SPIN_LOCK_UNLOCKED,
- 	},
- };
- 
--static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
-+static inline arch_spinlock_t *lock_addr(const atomic64_t *v)
- {
- 	unsigned long addr = (unsigned long) v;
- 
-@@ -45,12 +45,14 @@ static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
- s64 generic_atomic64_read(const atomic64_t *v)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_read);
-@@ -58,11 +60,13 @@ EXPORT_SYMBOL(generic_atomic64_read);
- void generic_atomic64_set(atomic64_t *v, s64 i)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	v->counter = i;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- }
- EXPORT_SYMBOL(generic_atomic64_set);
- 
-@@ -70,11 +74,13 @@ EXPORT_SYMBOL(generic_atomic64_set);
- void generic_atomic64_##op(s64 a, atomic64_t *v)			\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	v->counter c_op a;						\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- }									\
- EXPORT_SYMBOL(generic_atomic64_##op);
- 
-@@ -82,12 +88,14 @@ EXPORT_SYMBOL(generic_atomic64_##op);
- s64 generic_atomic64_##op##_return(s64 a, atomic64_t *v)		\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 	s64 val;							\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	val = (v->counter c_op a);					\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- 	return val;							\
- }									\
- EXPORT_SYMBOL(generic_atomic64_##op##_return);
-@@ -96,13 +104,15 @@ EXPORT_SYMBOL(generic_atomic64_##op##_return);
- s64 generic_atomic64_fetch_##op(s64 a, atomic64_t *v)			\
- {									\
- 	unsigned long flags;						\
--	raw_spinlock_t *lock = lock_addr(v);				\
-+	arch_spinlock_t *lock = lock_addr(v);				\
- 	s64 val;							\
- 									\
--	raw_spin_lock_irqsave(lock, flags);				\
-+	local_irq_save(flags);						\
-+	arch_spin_lock(lock);						\
- 	val = v->counter;						\
- 	v->counter c_op a;						\
--	raw_spin_unlock_irqrestore(lock, flags);			\
-+	arch_spin_unlock(lock);						\
-+	local_irq_restore(flags);					\
- 	return val;							\
- }									\
- EXPORT_SYMBOL(generic_atomic64_fetch_##op);
-@@ -131,14 +141,16 @@ ATOMIC64_OPS(xor, ^=)
- s64 generic_atomic64_dec_if_positive(atomic64_t *v)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter - 1;
- 	if (val >= 0)
- 		v->counter = val;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
-@@ -146,14 +158,16 @@ EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
- s64 generic_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	if (val == o)
- 		v->counter = n;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_cmpxchg);
-@@ -161,13 +175,15 @@ EXPORT_SYMBOL(generic_atomic64_cmpxchg);
- s64 generic_atomic64_xchg(atomic64_t *v, s64 new)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	v->counter = new;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 	return val;
- }
- EXPORT_SYMBOL(generic_atomic64_xchg);
-@@ -175,14 +191,16 @@ EXPORT_SYMBOL(generic_atomic64_xchg);
- s64 generic_atomic64_fetch_add_unless(atomic64_t *v, s64 a, s64 u)
- {
- 	unsigned long flags;
--	raw_spinlock_t *lock = lock_addr(v);
-+	arch_spinlock_t *lock = lock_addr(v);
- 	s64 val;
- 
--	raw_spin_lock_irqsave(lock, flags);
-+	local_irq_save(flags);
-+	arch_spin_lock(lock);
- 	val = v->counter;
- 	if (val != u)
- 		v->counter += a;
--	raw_spin_unlock_irqrestore(lock, flags);
-+	arch_spin_unlock(lock);
-+	local_irq_restore(flags);
- 
- 	return val;
- }
--- 
-2.45.2
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
