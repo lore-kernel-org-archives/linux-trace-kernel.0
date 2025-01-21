@@ -1,77 +1,144 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BDD522F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Jan 2025 00:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449E22581;
+	Tue, 21 Jan 2025 01:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737418925; cv=none; b=YpaKEUxPBgJ9XZ1Nn4CS3KO7Tf/RhhZyyaE7e5HZGlS0DsToH0Uf2I6pdW9UbfeVWo5SvMX0SqLZ4pxGY6Z38Y+UU2x+6DRgM1nUrln5O7FZIWIgXlflM/awnwNWmuRxpgtIev8YytFdfm4LAOErPGf1Bc9qSXTugYnlTfGBiN4=
+	t=1737422173; cv=none; b=nABeylFGrLsc81koVI7UcuCSw2QW+dL46p0Kh1MQ4rqcW5l1mfFPFClIo9CwBSXQZffWR29mfvQwbnKSVlWLT6MW14sikRfaSa8RDG2gpAl4XhksBlnKSwLLaM8uAk/9iE6rdqjn0OvTfYOP/0hoRmBDLX924mF/KUPcQrVkxAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737418925; c=relaxed/simple;
-	bh=WL7kVONYOnYb/d0AwrJ7ZVkNR8l5qThVKfPiGQXAwT4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Xj7FaBf+EgxeKG+HKhVvP52GjcsNK2KN8sHb2VRoHW2bGo77CxML9/KC1RVAls6gHEU1FRne8DJyJDKbnrOfW6kJYRcSPPualxdP2CawhBytlvVkZKUZRpXuUK07sBzu8/6GkNlXLpM4Z3Whc0uiAVTN7vWjQ/OvD5+v5BzPbCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce7d2781a0so36358025ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Jan 2025 16:22:03 -0800 (PST)
+	s=arc-20240116; t=1737422173; c=relaxed/simple;
+	bh=jGbgE76AT36z69skjXf/jXVQZgWZyTJT1fcneGSG91I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ePji5gEehBzDm9HNKVQHB9qF3jhq3tmezkRHllh8THJ/rDOw8zH2Md83qXSxQNe0W5IJgIC2MW1x8s1+M9eAx2J0L6bQXeaG6HtpQd3IypVq6TtiLmeH49dxgDt0U+3/ubDG4EKSjHAZiJsG0wzzHyjT7KIh/0QtiMXrtzHHHHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gku4jSlZ; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gku4jSlZ"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ce6b289e43so47735865ab.3;
+        Mon, 20 Jan 2025 17:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737422171; x=1738026971; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXs936r+LXqZsbsTHRNBZU6iqOQzXWeC+RhcvNCK3jw=;
+        b=Gku4jSlZx3jN4i5fu2Ac084eFwBfVZ+K22aTk0hECSvj9Gg66gp0a9cPIvUmiH89/+
+         V/u1imAkU/OjFgmnh2KndjD0j0D4hAk5/N0HPBg+HzFQBCyrQWnrPAcf8LWLrcnbRFEJ
+         Xlj7v0bKawTk5O8CSSjj0r+LdI/wQ2uRWxYHQD1IN51l9KO5ItaJZuUp6MmcKuqltqj+
+         1zf3YV9jTWHeMKSQ9Z+G4TCY/k5GVnxPIskczV66ZZ97T8RHzXManF1XE++dYUj++EUA
+         3dwcHWzMvq7FAFBFuUJILU3bE7NBVqVg/VVrksFbNVVukluZoPs/rtZnk4aymsx8dSb0
+         hx+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737418923; x=1738023723;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=36qHq6gozf7sLUVzS3bPWA3bTw43MXGseEmnjbcELI8=;
-        b=H0/228hhygE67yywFFS+i+7lxSzr0zd13dW8u7KT6j+tgqGyleyoLX3jpQ8JrbFrxY
-         q4GUaLJLTvSUP9IRnEbOitVKlm3GBhLNP6myupn1Nk1x2MkkTeoA9YsodDN5Sub5Cfo9
-         RKAPm0YkWpYhAyHYxXe0C1xBXwBZvxxQ03VwvMscXPQaOGSF/IyXNh/hcOHPMOuNyQcN
-         uWUOTWKnQdIVL8feNpVpK+1jbi3X4oRADMLQFNezITi8w24Znl7PoVQZzvig+bHX0RIJ
-         mDqIeWvXArVb5R6JEPjNGOUtHxyQjFYRFPXYhDrrgVKfIEEA/0vdTETjrhAIWjYVz33d
-         l4jw==
-X-Forwarded-Encrypted: i=1; AJvYcCUn1jtTh0XP72LAUyGt//rzN/rz8qLCJIDYSUZZ2WW2bOKEeeHH0b1JGY42iDsqK4TiLHPR6ognjgP6Zg+K6lwwRmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiRf66QTiKrdxL88FTepeayUJ5r3TeHelkIA0yTarapOyKfMl3
-	jKSol1pkOHEDLKm2wRJi0UveagvV32R+59KgzWYPu8MCzsnwCTlWKGR366qsu5vOWvsuM0g1PL/
-	cX42hFUJ4RKbeWI7+U9ZuqMLxCkqh4njGiSXRlTcxOcfGBqG3bo7W68I=
-X-Google-Smtp-Source: AGHT+IHScxHtVEwxDPrO/GQeFULuN5IbwiJwn9SoI3wAiiRKJh80ar0G96GQHtpq5KVQ3rJG/08ttf904YCfEVaXHqjkhXX5+fUi
+        d=1e100.net; s=20230601; t=1737422171; x=1738026971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xXs936r+LXqZsbsTHRNBZU6iqOQzXWeC+RhcvNCK3jw=;
+        b=oIGcUFU+/dBocO/eb7nketDXPHvyMlb3o6STRac1jhAR+4YxlWWUIoDpFO/Tn2XqUX
+         1sdmWLrPJJbjvQFYcn+rxgirqAecOuzmx8/3tGPDdcrUAYqa+1lsL51HsayIkL0Ve0Xp
+         HmiVkWQORLjAfxLcNxmV/foz/E1PwnHVnIKm8WOx27frTqho0g3hJSYfB++Ab7GPACrh
+         Sn35d9tBO4weIUuwUGBKmgBrbVpDeAP6+EB7bDZcGioFlqPQ/qpNtVOu3hWaH3YMkzus
+         K9Fe7GuJpmSVEPdFhdijNxxEc+wTcKoVJpKq3weQJrplfyCNKIESs5hg5qFA6RMeqzn/
+         +2xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWCB+D9jLBoLkiDkFHI0g0Br0K1Oq9J44AuEVisFgnnDmpPG7ZyC3q0fXI4IBbhyg1+T5xg5KMy36jl1DVhATL4aIc@vger.kernel.org, AJvYcCVFUVruIYOuWQMZKCgSXQRFmF3RgWywcecMJECOUrrFuj7wot74i/S6Vlkg1f12fYmTDCTx234+@vger.kernel.org, AJvYcCWgU4UMEMFq2QlM/juIJsBoN48t07AGAKG9+wJFnsBlDhieM0Y4HaRvcLy1nDdlTvjqynMsfmbaFfTwVig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ6+Ti7h6ROuWKwXPS6oeJQjI23mSrxk7w6F4DzJTlIfDURtch
+	Di69GHQCmJloh6RbLCEBEX/nIX0vbN3IZp2cEgxue5rsUsD88ZdC4uM6PK8JszpB34ljXXffR6C
+	oXwUrxoew7zmPtY6e9RBYwVbotaw=
+X-Gm-Gg: ASbGncuQrpv8llLRH0QQmSMCkH6S7KezfTpcBvRA3Bu4O1MoKfDki7aAXgMCzvsJx8s
+	16e2LBQPuZd3tSmn0ig/cKVNfhxAfY+zAVBsGiTLYrt9m8JMrfww=
+X-Google-Smtp-Source: AGHT+IHbGSYiAAZzxwQbO+7zKbK8MWVNrbmhYiIAUI9xbhjrQ1oHgEYGn17ivq7GOxXA2hWTesL1TEz2zSCGBkU5kYY=
+X-Received: by 2002:a05:6e02:23c3:b0:3a7:9347:544c with SMTP id
+ e9e14a558f8ab-3cf743ba928mr127662285ab.5.1737422171218; Mon, 20 Jan 2025
+ 17:16:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:17c5:b0:3ce:c87e:8d8b with SMTP id
- e9e14a558f8ab-3cf7447c9d6mr98326465ab.16.1737418923002; Mon, 20 Jan 2025
- 16:22:03 -0800 (PST)
-Date: Mon, 20 Jan 2025 16:22:02 -0800
-In-Reply-To: <672751ef.050a0220.35b515.0199.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <678ee8aa.050a0220.15cac.0002.GAE@google.com>
-Subject: Re: [syzbot] [block?] [trace?] possible deadlock in blk_trace_setup
-From: syzbot <syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, ming.lei@redhat.com, 
-	rostedt@goodmis.org, syzkaller-bugs@googlegroups.com
+References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
+ <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
+ <20250120-panda-of-impressive-aptitude-2b714e@leitao> <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
+ <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
+In-Reply-To: <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 21 Jan 2025 09:15:35 +0800
+X-Gm-Features: AbW1kvZZDheWMiZAlgrus7-N4_geCWlUiSBfC8zRcwFphC-AMy3m31FDSyo6ybs
+Message-ID: <CAL+tcoC+hVZU2rx6vVQO_BjAAfjLXvqCOVDHkDoBHYuykqS1dg@mail.gmail.com>
+Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
+To: Breno Leitao <leitao@debian.org>
+Cc: Eric Dumazet <edumazet@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
+	Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has bisected this issue to:
+On Mon, Jan 20, 2025 at 9:20=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+>
+> On Mon, Jan 20, 2025 at 09:06:43PM +0800, Jason Xing wrote:
+> > On Mon, Jan 20, 2025 at 9:02=E2=80=AFPM Breno Leitao <leitao@debian.org=
+> wrote:
+> > > On Mon, Jan 20, 2025 at 08:08:52PM +0800, Jason Xing wrote:
+> > > > On Mon, Jan 20, 2025 at 8:03=E2=80=AFPM Breno Leitao <leitao@debian=
+.org> wrote:
+> > > > > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> > > > > index 4811727b8a02258ec6fa1fd129beecf7cbb0f90e..fc88c511e81bc12ec=
+57e8dc3e9185a920d1bd079 100644
+> > > > > --- a/net/ipv4/tcp_input.c
+> > > > > +++ b/net/ipv4/tcp_input.c
+> > > > > @@ -2710,6 +2710,8 @@ void tcp_cwnd_reduction(struct sock *sk, in=
+t newly_acked_sacked, int newly_lost,
+> > > > >         if (newly_acked_sacked <=3D 0 || WARN_ON_ONCE(!tp->prior_=
+cwnd))
+> > > > >                 return;
+> > > > >
+> > > > > +       trace_tcp_cwnd_reduction(sk, newly_acked_sacked, newly_lo=
+st, flag);
+> > > > > +
+> > > >
+> > > > Are there any other reasons why introducing a new tracepoint here?
+> > > > AFAIK, it can be easily replaced by a bpf related program or script=
+ to
+> > > > monitor in the above position.
+> > >
+> > > In which position exactly?
+> >
+> > I meant, in the position where you insert a one-line tracepoint, which
+> > should be easily replaced with a bpf program (kprobe
+> > tcp_cwnd_reduction with two checks like in the earlier if-statement).
+> > It doesn't mean that I object to this new tracepoint, just curious if
+> > you have other motivations.
+>
+> This is exactly the current implementation we have at Meta, as it relies =
+on
+> hooking into this specific function. This approach is unstable, as
+> compiler optimizations like inlining can break the functionality.
+>
+> This patch enhances the API's stability by introducing a guaranteed hook
+> point, allowing the compiler to make changes without disrupting the
+> BPF program's functionality.
 
-commit f1be1788a32e8fa63416ad4518bbd1a85a825c9d
-Author: Ming Lei <ming.lei@redhat.com>
-Date:   Fri Oct 25 00:37:20 2024 +0000
+Surely it does :) The reason why I asked is that perhaps one year ago
+I'm trying to add many tracepoints so that the user space monitor can
+take advantage of these various stable hook points. I believe that
+there are many other places which might be inlined because of gcc,
+receiving a few similar reports in recent months, but there is no
+guarantee to not touch some functions which obviously break some
+monitor applications.
 
-    block: model freeze & enter queue as lock for supporting lockdep
+I'm wondering that except for this new transepoint, if we can design a
+common usage for the monitor program, so that people who are
+interested will work on this together? Profiling is becoming more and
+more important nowadays, from the point of my view.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1536b9df980000
-start commit:   5b913f5d7d7f Add linux-next specific files for 20241106
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1736b9df980000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1336b9df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27aeebbe9ce2cea
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d8542c90a512dc95185
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167b3d5f980000
-
-Reported-by: syzbot+0d8542c90a512dc95185@syzkaller.appspotmail.com
-Fixes: f1be1788a32e ("block: model freeze & enter queue as lock for supporting lockdep")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Thanks,
+Jason
