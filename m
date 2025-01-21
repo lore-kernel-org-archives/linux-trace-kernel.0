@@ -1,88 +1,84 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E391119A;
-	Tue, 21 Jan 2025 13:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80801F3D3C;
+	Tue, 21 Jan 2025 14:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737466858; cv=none; b=bJQoNIMjC/ZXVoJ9wiufPCSv5ONcgARl1wWqraDdni4qk1GowmVhzTHL6R998R8EqbzgTlSvgGzEZlCYymJCYngaqJ0SXqrrIhxezLxr2xByS2OncKC/RsC8VRnyt47GMNuAI5uxtioi9uIDm14kjd45oLvhwocHzVQ4q/+2rSc=
+	t=1737470341; cv=none; b=ZVrVyXGt0jWSZHGhWLFtnYC/6MC5qTf1OK/hqboZnRBsEJWVD0idKtMIJtQFda9QZbLHrvp1oJ6UB95AoLlViFJxF9CTF8paW/mdUuYVI3fextdDlJLO3CNwLQXtUER1PGZZL/ZjYi+nS7yk3txTegZm0JbV6qUborDgYlVToUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737466858; c=relaxed/simple;
-	bh=O6UDpyy68BQo7X626NvkAmSzVuRiTAwo5GjYO1FKjts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEQwzI8gOlpxKvmAG5rEfLCFl3QaHckMVAjI5Qbbgr4hNKX7uuOo8DAHBjFUMyQU0qjpKhxAxpFG5zZ9VVeS8VVvzYJwFYfVmgQyFpWy4z/+SgRVlBJvhROJWQm0JcpvL70u98TRZpKvMYUSvw0amTkvcpyZ6mIXFj1TysfDmYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XXJc1fjY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1737470341; c=relaxed/simple;
+	bh=NDb3c3rxblkJhIMSxUpUGDYxdUYnogGCKjor79k2CbI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XF9oJQcIXGdOqzDWZZbRswAsNMZ2d/hTQC5czmIMHqnmpcFUkLKOIYo4uD/Gbl7LJQAAONKwYCPtgdULWFv3gtZkwdZXEkXwLmhJa3caPFJcLhYwxss9RLQgAvMC1Y2QD2hzdkLGg/CIQ9WinNNEM2Ts8oi7tg0yfMJGN3eSaQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OvMW59qo; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XXJc1fjY"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50LBcWDl021758;
-	Tue, 21 Jan 2025 13:40:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=1XuHjAhe+6crgeyPxGiThULHkHEa/Q
-	wDtL3yiBvZqn4=; b=XXJc1fjY1LEte8uWYOHY0rVlVq4wX9PCcoXpIbn1EYs9EL
-	OD4/8pPTNQ9wGah7zwpokGzeZLvKhyS2XwyswSQynQSvx4Pq0nVXT5v0PMm1KdzN
-	F6FmU2v9zN3MF0dGtVIr8337iz/SeaELL+AkChcaIBTAfjVK9Q1TKCVQHZUYF4b8
-	lkEmavTZcGG7bcRDLLuw9HOFrKWm+iyEw+rBb1iDcR2ksQakFyzbWZB9l+0n9NZH
-	7bFXS3CXhWJ3qAfxFUQeEb9d90I2xBmDXS8qIuY9SsKjzzFL1VStL4eYIhJR/WhB
-	kacwVPn3TvuRt93neu9S0HZxZA9oxnhjkLM3qkFg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44a1n9b0sf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jan 2025 13:40:21 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50LAtOsq021012;
-	Tue, 21 Jan 2025 13:40:19 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 448sb1b14q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jan 2025 13:40:19 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50LDeIWj60031254
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Jan 2025 13:40:18 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 25C3B2004B;
-	Tue, 21 Jan 2025 13:40:18 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7FD1A20040;
-	Tue, 21 Jan 2025 13:40:17 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 21 Jan 2025 13:40:17 +0000 (GMT)
-Date: Tue, 21 Jan 2025 14:40:16 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-        codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-        io-uring@vger.kernel.org, bpf@vger.kernel.org,
-        kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        Song Liu <song@kernel.org>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
-Message-ID: <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OvMW59qo"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aae81f4fdc4so1129469766b.0;
+        Tue, 21 Jan 2025 06:38:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1737470338; x=1738075138; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PJA4KS8nHHtP6ZQfKRoHiZPqETFaft+MeGa73f89gpE=;
+        b=OvMW59qoEcUaBdNagcPx+mU2iu6miUJQXXZMUJg5asGlvlMVFahHDa9mXqu9i4Njqg
+         c/RvsjUOvPzJd2VQnCR3jrA8EA//b+7VvRw3QcjpyimXPR5QlVGQOBuRCoM9TGUgrNmi
+         gbBiCWb/sN/3e4312ZpiHJ2TC/1+PPm+6DHjjvCjDCizlZX+W7CoODRJwykVZx2Bzrlo
+         TN2HCnERWp9dM5oOPSgloEBdPW04fjX6bbTlYcAWvOn3FMh7ZauLiLFmZRcZWyczYz3g
+         xlQgvUYPoFgDL8NCmzfOBjGJTQukbaW9T3MJrb4M9jmBqrTh5N9LnozoHKAOAcaYGs+q
+         /xrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737470338; x=1738075138;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PJA4KS8nHHtP6ZQfKRoHiZPqETFaft+MeGa73f89gpE=;
+        b=BSMkiyMgkcJdBPs4D6oG2ckoueDrKHQuNu75IoIghwx1bll8lKE0EeC3Ft5R0LDXzR
+         ICNKT1rgUh0M7ZlZXObhfSBSSmR7e11twBPbuevIuYUCGcrpD6dYJ2PbOJzfkpu8fGhb
+         1XzlKtsl4GAOy+5lV/cTQ/cNb7rsyQsY//5+Pwbg7UQIu1Ch2Xf6EOS2iU+9hosJpKpe
+         NJ/WL1DBwNZPxUWiODPI8/o0b4LBfeslSXdlmln0gAIvodGnsAVFHnIM1vcGBjsXF7PK
+         iocffdBA8+ovY2/HrZZA1189GpaVfBdCPHSB9ZAh09VpAer41lGn6QAExFOT6i1JFvmZ
+         Oa1A==
+X-Forwarded-Encrypted: i=1; AJvYcCV/KJLN9J8fO5KCLia33dWdtnEQcmCs0jJ9buTBX6KFSgXSerQ5Q76a6jv+14ltQQnbfICxMeTQHB9M@vger.kernel.org, AJvYcCVARmYtO3IlnnhP7xeCG7d2njYO+bJ5P+us453QH/nMJB/QJI28U+6lDfrovRfKCtZktniGkYgz75treosT8KJXmhjM@vger.kernel.org, AJvYcCVmbae6DnH7KLB2CVEWUS/QkMsiYQFjwWZOkFxx1u9D9w07J1IXsVn/QAtKgj3UtknwdlIchMUB@vger.kernel.org, AJvYcCX69w5rcbsy4YzdXiD6nCgNUEC7zatVTQj5QgeclEiERKAEcIwAOpMXHQVvTenMkfTSgBco5GYDH2u5gc1J@vger.kernel.org, AJvYcCXxUVmaLdMp50JIsi5m44KUEjA8roJ9PvsE8NYyiXfiV6mhkOAsHYNSiT83S4PyF5Vad20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEPg+aUvB3CDqo0wnNJmjiJMlatJ4LmVGfO0FY1A3XgFLcek43
+	A6VaF+EmPsF0YFfokj5zAgTL0/qvByMlDaxGKg5JA1/HHoodP9PW
+X-Gm-Gg: ASbGncvtdgv4jFe7dRDCOuaHdWFkFDNz9+6rlNOWJ9XOlnsVSnGEo+PBbSz2fjQpbAf
+	AyONu5mkiu7OaYdQkH1LWBIbX8n/NJ9FXQjX1IKlc7xRteL1yJgy6twvMDqt9MP87jRr37Z/2fw
+	NbfAYv3EY9RwwyWdCTYUsk+dYbGF2ds6vxaAYaCd8T3JtRHGdJRkrj+8KCdyvaA7YlTtKgdaS/E
+	A9AiUDazwiGDVbdTgA/NYvIj8Nhma9imcnuvQMeQKeCq8TBg8ZkCR/2xwIf8lkp8N6Rzy0Re+MT
+	bT/2Tw==
+X-Google-Smtp-Source: AGHT+IHbt51KgaNHWYPsUJyDM3PxIHsFbWa2cwUWn0p6bD6sqDfQiHdD/IM2ZAFY8hTlRWEBkFudxA==
+X-Received: by 2002:a17:907:3f11:b0:ab2:aea7:510f with SMTP id a640c23a62f3a-ab38b320310mr1794735466b.30.1737470337728;
+        Tue, 21 Jan 2025 06:38:57 -0800 (PST)
+Received: from krava (37-188-142-170.red.o2.cz. [37.188.142.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab384d2dee0sm759550266b.78.2025.01.21.06.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jan 2025 06:38:56 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 21 Jan 2025 15:38:48 +0100
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org,
+	oleg@redhat.com, ldv@strace.io, mhiramat@kernel.org,
+	andrii@kernel.org, alexei.starovoitov@gmail.com, olsajiri@gmail.com,
+	cyphar@cyphar.com, songliubraving@fb.com, yhs@fb.com,
+	john.fastabend@gmail.com, peterz@infradead.org, tglx@linutronix.de,
+	bp@alien8.de, daniel@iogearbox.net, ast@kernel.org,
+	andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io,
+	shmulik.ladkani@gmail.com, bpf@vger.kernel.org,
+	linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
+ filtering
+Message-ID: <Z4-xeFH0Mgo3llga@krava>
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <202501181212.4C515DA02@keescook>
+ <CAHsH6GuifA9nUzNR-eW5ZaXyhzebJOCjBSpfZCksoiyCuG=yYw@mail.gmail.com>
+ <8B2624AC-E739-4BBE-8725-010C2344F61C@kernel.org>
+ <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -91,130 +87,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: mWjZL4Eizm--6YwnTI2RlL8astD0-e-i
-X-Proofpoint-GUID: mWjZL4Eizm--6YwnTI2RlL8astD0-e-i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-21_05,2025-01-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011 priorityscore=1501
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
- definitions=main-2501210112
+In-Reply-To: <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
 
-On Fri, Jan 10, 2025 at 03:16:08PM +0100, Joel Granados wrote:
+On Sat, Jan 18, 2025 at 07:39:25PM -0800, Eyal Birger wrote:
 
-Hi Joel,
+SNIP
 
-> Add the const qualifier to all the ctl_tables in the tree except for
-> watchdog_hardlockup_sysctl, memory_allocation_profiling_sysctls,
-> loadpin_sysctl_table and the ones calling register_net_sysctl (./net,
-> drivers/inifiniband dirs). These are special cases as they use a
-> registration function with a non-const qualified ctl_table argument or
-> modify the arrays before passing them on to the registration function.
+> I think I wasn't accurate in my wording.
+> The uretprobe syscall is added to the tracee by the kernel.
+> The tracer itself is merely requesting to attach a uretprobe bpf
+> function. In previous versions, this was implemented by the kernel
+> installing an int3 instruction, and in the new implementation the kernel
+> is installing a uretprobe syscall.
+> The "user" in this case - the tracer program - didn't deliberately install
+> the syscall, but anyway this is semantics.
 > 
-> Constifying ctl_table structs will prevent the modification of
-> proc_handler function pointers as the arrays would reside in .rodata.
-> This is made possible after commit 78eb4ea25cd5 ("sysctl: treewide:
-> constify the ctl_table argument of proc_handlers") constified all the
-> proc_handlers.
+> I think I understand your point that it is regarded as "policy", only that
+> it creates a problem in actual deployments, where in order to be able to
+> run the tracer software which has been working on newer kernels a new docker
+> has to be deployed.
+> 
+> I'm trying to find a pragmatic solution to this problem, and I understand
+> the motivation to avoid policy in seccomp.
+> 
+> Alternatively, maybe this syscall implementation should be reverted?
 
-I could identify at least these occurences in s390 code as well:
+you mentioned in the previous reply:
 
-diff --git a/arch/s390/appldata/appldata_base.c b/arch/s390/appldata/appldata_base.c
-index dd7ba7587dd5..9b83c318f919 100644
---- a/arch/s390/appldata/appldata_base.c
-+++ b/arch/s390/appldata/appldata_base.c
-@@ -204,7 +204,7 @@ appldata_timer_handler(const struct ctl_table *ctl, int write,
- {
- 	int timer_active = appldata_timer_active;
- 	int rc;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &timer_active,
- 		.maxlen		= sizeof(int),
-@@ -237,7 +237,7 @@ appldata_interval_handler(const struct ctl_table *ctl, int write,
- {
- 	int interval = appldata_interval;
- 	int rc;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &interval,
- 		.maxlen		= sizeof(int),
-@@ -269,7 +269,7 @@ appldata_generic_handler(const struct ctl_table *ctl, int write,
- 	struct list_head *lh;
- 	int rc, found;
- 	int active;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.data		= &active,
- 		.maxlen		= sizeof(int),
- 		.extra1		= SYSCTL_ZERO,
-diff --git a/arch/s390/kernel/hiperdispatch.c b/arch/s390/kernel/hiperdispatch.c
-index 7857a7e8e56c..7d0ba16085c1 100644
---- a/arch/s390/kernel/hiperdispatch.c
-+++ b/arch/s390/kernel/hiperdispatch.c
-@@ -273,7 +273,7 @@ static int hiperdispatch_ctl_handler(const struct ctl_table *ctl, int write,
- {
- 	int hiperdispatch;
- 	int rc;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &hiperdispatch,
- 		.maxlen		= sizeof(int),
-diff --git a/arch/s390/kernel/topology.c b/arch/s390/kernel/topology.c
-index 6691808bf50a..26e50de83d80 100644
---- a/arch/s390/kernel/topology.c
-+++ b/arch/s390/kernel/topology.c
-@@ -629,7 +629,7 @@ static int topology_ctl_handler(const struct ctl_table *ctl, int write,
- 	int enabled = topology_is_enabled();
- 	int new_mode;
- 	int rc;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &enabled,
- 		.maxlen		= sizeof(int),
-@@ -658,7 +658,7 @@ static int polarization_ctl_handler(const struct ctl_table *ctl, int write,
- {
- 	int polarization;
- 	int rc;
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &polarization,
- 		.maxlen		= sizeof(int),
-diff --git a/arch/s390/mm/cmm.c b/arch/s390/mm/cmm.c
-index 939e3bec2db7..8e354c90a3dd 100644
---- a/arch/s390/mm/cmm.c
-+++ b/arch/s390/mm/cmm.c
-@@ -263,7 +263,7 @@ static int cmm_pages_handler(const struct ctl_table *ctl, int write,
- 			     void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	long nr = cmm_get_pages();
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &nr,
- 		.maxlen		= sizeof(long),
-@@ -283,7 +283,7 @@ static int cmm_timed_pages_handler(const struct ctl_table *ctl, int write,
- 				   loff_t *ppos)
- {
- 	long nr = cmm_get_timed_pages();
--	struct ctl_table ctl_entry = {
-+	const struct ctl_table ctl_entry = {
- 		.procname	= ctl->procname,
- 		.data		= &nr,
- 		.maxlen		= sizeof(long),
+> > As far as I can tell libseccomp needs to provide support for this new
+> >  syscall and a new docker version would need to be deployed, so It's not
+> > just a configuration change. Also the default policy which comes packed in
+> > docker would probably need to be changed to avoid having to explicitly
+> > provide a seccomp configuration for each deployment.
 
+please disregard if this is too stupid.. but could another way out be just
+to disable it (easy to do) and meanwhile teach libseccomp to allow uretprobe
+(or whatever mechanism needs to be added to libseccomp) plus the needed
+docker change ... to minimize the impact ? 
 
-> Best regards,
-> -- 
-> Joel Granados <joel.granados@kernel.org>
+or there's just too many other seccomp user space libraries
 
-Thanks!
+I'm still trying to come up with some other solution but wanted
+to exhaust all the options I could think of
+
+thanks,
+jirka
