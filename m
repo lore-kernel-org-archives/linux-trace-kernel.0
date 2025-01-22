@@ -1,222 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DDF170A15;
-	Wed, 22 Jan 2025 02:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A6C33E4;
+	Wed, 22 Jan 2025 07:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737513321; cv=none; b=ru1zeluQ+uHdxbAJo+5h5FCMSo21VASjM5LWtQ5IkP2cGejEaUX64jC6jnhj7HnOBe6wL3h8ozdiHhuWH+uMW1JCx22ZHq6afTfFpfaP5pE6Xh8fQPpPVRM9HrTSwIPfMFL9moTHfacv3rzDhJFVNCh7CjXzDSPT98jyHnDZf/U=
+	t=1737532789; cv=none; b=C3Zedxx4Qm+LjZ4XxKKk7zrcWr4mqGTlBdudfKUhtAgkUMPfIGnjm2V65p2MDrCpDyxxlEkHX+K/p1JM6wixgNvDCoEl7mXwNtpVJtd/V1VQZ/NhlYy4tTuVQVj27iEgQ+KmF4RPJZ1/+5S3Zgk0DqpV8qPiWQDvSNAOhL+kWA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737513321; c=relaxed/simple;
-	bh=hQr70nJFPpr3IR+3WHkCZaeOfn9y4cOzZG7LuQnlPEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cAXD+LB6si5UDhVD6JWOpa2OXEc8NP9V6l49cVaqngm/nfS9D58I9ibEn20KSJvWV3qL0XFNZi8+D2dTle8abNaGTk8QsJQ12ffZBos0UNT6fSMPOeeOBvIMGE0pZo4H+T/M9K7aYq8aZo6YqN6Tc/3xJyhTaTwWj1SRhO0R5s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItUIDsij; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737532789; c=relaxed/simple;
+	bh=DO9ScQLPzmEb6bWoYtFrbFsCRrGywJR9xWz7ygH2hGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Oc0CXbsEIDyMfaJdgZKF0EThdO7wVOYVD0Ojrhlyfbc807ThdkJksqH4EqnPcPP2DFPqMDCajbHE9bpV/aAV2WGB1pVT8W0lixs/Hvsp8wlwMJHBhkQDRdIaGZD//1kCbUCsiVEaxZ1634OYYbp85Hcn+4x6x/WAkUsmff1rYqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=slnSOf8r; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bFt5G+kQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItUIDsij"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 024BDC4CEDF;
-	Wed, 22 Jan 2025 02:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737513319;
-	bh=hQr70nJFPpr3IR+3WHkCZaeOfn9y4cOzZG7LuQnlPEQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ItUIDsij4Q3QK4chCyynXQ5OX6zsCbbhiEqi47tcIdjaGeVkmyiMncRov000ZczHo
-	 09u7LMbhPeu4UU8pDM/0crN2ZxLyqEWqwphBHmdZHd4gG186BYbPTHNaUK6k4/vgOf
-	 HTSbivH0WepBFJ+WvHSurwnzVQBD6xVdKxCiIFpDVi9iw+QG8lhG1vZ+HmWi3sTD1q
-	 nn8oe7RItl7RZfOEc3nAubB60vY6AUH00QlJsY3d2fNc5sgqG90TNssMSzUo9GS+Ry
-	 gSJVw3pxsWBNAjO5Bv1jHGrjObY89IRSK67a8DAPgpCohrbotHiXy2okZF1YmIpnzO
-	 IjiIOJ+eh9QgA==
-Date: Tue, 21 Jan 2025 18:35:17 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 00/39] unwind, perf: sframe user space unwinding
-Message-ID: <20250122023517.lmztuocecdjqzfhc@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="slnSOf8r";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bFt5G+kQ"
+Date: Wed, 22 Jan 2025 08:59:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1737532785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=DO9ScQLPzmEb6bWoYtFrbFsCRrGywJR9xWz7ygH2hGE=;
+	b=slnSOf8rq0UAiNcVRsFW39UKN1BS53WrkQJ5f7NYArRdPjvm8QS6foXn2yxVrxCFGXiGxR
+	AiC0YGucsjYElPEzS3X3iovEUC9XabXYWexwxnI7J6RyP0qvVYU2MpYNWRstkbETPOlyLY
+	mlZxbjoihmD46y9KmOLcAyFf/Osbkokm21q/GFSztnZCYrfYtANU/lf9OxEXRnpK4UoALa
+	d0ZCdAz6wNJP1Bcsj+MvfFYGfqJHwelVnesEYQTdRxug/KSz51v4DXGawhfD9XdN+QaFs4
+	iFqV+eNT5Xv9KtklMatIZhZsUSaKsWpMc5USsEjEhnrF4VwpmqqCPMkoc84VnQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1737532785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=DO9ScQLPzmEb6bWoYtFrbFsCRrGywJR9xWz7ygH2hGE=;
+	b=bFt5G+kQAxE7zUscJqMdjPspB1b9bHbu0Pq6U51jVIBJeji8E5Ef793m2oinFqeK4doqmg
+	JTjjmdhe/0Qu7eBA==
+From: Nam Cao <namcao@linutronix.de>
+To: naveen@kernel.org, anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+	mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de
+Subject: kprobe on local function
+Message-ID: <20250122075939.qw7HsuMd@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1737511963.git.jpoimboe@kernel.org>
 
-On Tue, Jan 21, 2025 at 06:30:52PM -0800, Josh Poimboeuf wrote:
-> For testing with user space, here are the latest binutils fixes:
-> 
->   1785837a2570 ("ld: fix PR/32297")
->   938fb512184d ("ld: fix wrong SFrame info for lazy IBT PLT")
->   47c88752f9ad ("ld: generate SFrame stack trace info for .plt.got")
-> 
-> An out-of-tree glibc patch is also needed -- will attach in a reply.
+Hi,
 
-Latest out-of-tree glibc patch below:
+I installed a kretprobe on the function "rt_mutex_slowunlock". Although the
+function is called, the probe is never hit.
 
-diff --git a/elf/dl-load.c b/elf/dl-load.c
-index e986d7faab..5a593c2126 100644
---- a/elf/dl-load.c
-+++ b/elf/dl-load.c
-@@ -29,6 +29,7 @@
- #include <bits/wordsize.h>
- #include <sys/mman.h>
- #include <sys/param.h>
-+#include <sys/prctl.h>
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <gnu/lib-names.h>
-@@ -87,6 +88,9 @@ struct filebuf
- 
- #define STRING(x) __STRING (x)
- 
-+#ifndef PT_GNU_SFRAME
-+#define PT_GNU_SFRAME 0x6474e554
-+#endif
- 
- /* This is the decomposed LD_LIBRARY_PATH search path.  */
- struct r_search_path_struct __rtld_env_path_list attribute_relro;
-@@ -1186,6 +1190,11 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
- 	  l->l_relro_addr = ph->p_vaddr;
- 	  l->l_relro_size = ph->p_memsz;
- 	  break;
-+
-+	case PT_GNU_SFRAME:
-+	  l->l_sframe_start = ph->p_vaddr;
-+	  l->l_sframe_end   = ph->p_vaddr + ph->p_memsz;
-+	  break;
- 	}
- 
-     if (__glibc_unlikely (nloadcmds == 0))
-@@ -1236,6 +1245,26 @@ _dl_map_object_from_fd (const char *name, const char *origname, int fd,
- 	l->l_map_start = l->l_map_end = 0;
- 	goto lose;
-       }
-+
-+#define PR_ADD_SFRAME 77
-+    if (l->l_sframe_start != 0)
-+    {
-+      l->l_sframe_start += l->l_addr;
-+      l->l_sframe_end   += l->l_addr;
-+
-+      for (size_t i = 0; i < nloadcmds; i++)
-+      {
-+	struct loadcmd *c = &loadcmds[i];
-+
-+	if (c->prot & PROT_EXEC)
-+	{
-+	  ElfW(Addr) text_start = l->l_addr + c->mapstart;
-+	  ElfW(Addr) text_end   = l->l_addr + c->mapend;
-+
-+	  __prctl(PR_ADD_SFRAME, l->l_sframe_start, l->l_sframe_end, text_start, text_end);
-+	}
-+      }
-+    }
-   }
- 
-   if (l->l_ld != NULL)
-diff --git a/elf/dl-unmap-segments.h b/elf/dl-unmap-segments.h
-index f16f4d7ded..dd14162e00 100644
---- a/elf/dl-unmap-segments.h
-+++ b/elf/dl-unmap-segments.h
-@@ -21,14 +21,20 @@
- 
- #include <link.h>
- #include <sys/mman.h>
-+#include <sys/prctl.h>
- 
- /* _dl_map_segments ensures that any whole pages in gaps between segments
-    are filled in with PROT_NONE mappings.  So we can just unmap the whole
-    range in one fell swoop.  */
- 
-+#define PR_REMOVE_SFRAME 78
-+
- static __always_inline void
- _dl_unmap_segments (struct link_map *l)
- {
-+  if (l->l_sframe_start != 0)
-+    __prctl(PR_REMOVE_SFRAME, l->l_sframe_start, NULL, NULL, NULL);
-+
-   __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
- }
- 
-diff --git a/elf/setup-vdso.h b/elf/setup-vdso.h
-index 888e1e4897..2a6bb9b944 100644
---- a/elf/setup-vdso.h
-+++ b/elf/setup-vdso.h
-@@ -16,6 +16,11 @@
-    License along with the GNU C Library; if not, see
-    <https://www.gnu.org/licenses/>.  */
- 
-+#include <sys/prctl.h>
-+#ifndef PT_GNU_SFRAME
-+#define PT_GNU_SFRAME 0x6474e554
-+#endif
-+
- static inline void __attribute__ ((always_inline))
- setup_vdso (struct link_map *main_map __attribute__ ((unused)),
- 	    struct link_map ***first_preload __attribute__ ((unused)))
-@@ -52,6 +57,14 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
- 	      if (ph->p_vaddr + ph->p_memsz >= l->l_map_end)
- 		l->l_map_end = ph->p_vaddr + ph->p_memsz;
- 	    }
-+	  else if (ph->p_type == PT_GNU_SFRAME)
-+	    {
-+	      if (! l->l_sframe_start)
-+		{
-+		  l->l_sframe_start = ph->p_vaddr;
-+		  l->l_sframe_end   = ph->p_vaddr + ph->p_memsz;
-+		}
-+	    }
- 	  else
- 	    /* There must be no TLS segment.  */
- 	    assert (ph->p_type != PT_TLS);
-@@ -74,6 +87,15 @@ setup_vdso (struct link_map *main_map __attribute__ ((unused)),
-       l->l_local_scope[0]->r_nlist = 1;
-       l->l_local_scope[0]->r_list = &l->l_real;
- 
-+#define PR_ADD_SFRAME 77
-+      if (l->l_sframe_start != 0)
-+	{
-+	  l->l_sframe_start += l->l_addr;
-+	  l->l_sframe_end   += l->l_addr;
-+
-+	  __prctl(PR_ADD_SFRAME, l->l_sframe_start, l->l_sframe_end, l->l_addr, l->l_map_end);
-+	}
-+
-       /* Now that we have the info handy, use the DSO image's soname
- 	 so this object can be looked up by name.  */
-       if (l->l_info[DT_SONAME] != NULL)
-diff --git a/include/link.h b/include/link.h
-index 5ed445d5a6..e94390b29e 100644
---- a/include/link.h
-+++ b/include/link.h
-@@ -345,6 +345,9 @@ struct link_map
-     ElfW(Addr) l_relro_addr;
-     size_t l_relro_size;
- 
-+    ElfW(Addr) l_sframe_start;
-+    ElfW(Addr) l_sframe_end;
-+
-     unsigned long long int l_serial;
-   };
- 
+The reason is because there are 3 copies of rt_mutex_slowunlock() in
+vmlinux (at least for x86 defconfig + CONFIG_PREEMPT_RT). But probe point
+is only installed in 1 copy.
+
+Is this considered a bug? Or is kprobe not intended to be used for local
+function? Should we modify kprobe to support such cases?
+
+Best regards,
+Nam
