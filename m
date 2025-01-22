@@ -1,123 +1,279 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1318821518C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Jan 2025 19:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7B9216391;
+	Wed, 22 Jan 2025 19:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737572542; cv=none; b=GBb39Yq295/uoO1OcinMVPJjapVhVRrjem/ZiiDO8tCi3hPPJ+MP44C4v/jrShMcZNA4Rc/qQuXkvLco0/QaJNFVGfW9rA0MOiFt675JZ8k282Fm2OnjXWlIryQ9D7yZ6Sqvfcj+uW8IIxj9957+adi9Jla+lv9jLYBxjrK2gd4=
+	t=1737574987; cv=none; b=VvEM/0TgP7JyV86EbgC5vrx1NUvUkkNHDkbCHj00xeuw1dyL/anD6J6f9h2BxIZ8mpCEGIyyG6hf0uTFGPBLNq6OZW+qT3WPLADOZn/3GCLx35+iF75y2IJygoeFTCmTKe8IPBKzJx8dxkgtX/HwAmt+otbqr++m2raMbiYhmrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737572542; c=relaxed/simple;
-	bh=yVOl7uKZwAPzL3hOo1/yIB0AA01qrS2OlwWoDfRibec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pke1JeYNz0O1NMGGeYh+Hp1IpxJxn7+c/mnDSiERq8WH9gbsnsJQ7/Yx7qpsDf7GdiOWivae6WEHUcn0ZIQE148VSSy0aqtTyrXi/xlG1h9XeM1LqtS8MRQXnHFRrs0OU9QZsanI5Bs8dkJjTa6HpHrapz08tXhfjbKwjsEcblk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dSTu3bEM; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dSTu3bEM"
-Message-ID: <453fbdbc-1843-498b-9a1c-8c83e7e244ed@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1737572536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g8FKpvfe4T9AnrcyGP1Vg1JqYGIC8GWW31gvSYVAm1E=;
-	b=dSTu3bEMKZOMYG8VODFIRLWE+0EC6zY7TARf8/Jb94x02xb52o1JTn8e/cptSgx1KqH0Ga
-	IU/fRr9lryQk1ho9fZT7Wmrub7Ipu4/2LeE04UEAWKoScthZHY+vnijyrz0uJtEo45EzjQ
-	kd/KLlSxQ92RxISwLyMTUwv8tVxKUr4=
-Date: Wed, 22 Jan 2025 11:02:08 -0800
+	s=arc-20240116; t=1737574987; c=relaxed/simple;
+	bh=GmqStmrXrFphlOadEwZYNhhjVQtQgrRaC1yGsGwTL+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TpIRMJLsPVZHeVbiyyGIwq7fI/IouuOHMk08OsxHsucK/YMi96FeXAG5K4LnEmBsam7VxSjjWZm/qNHRq5/CDOa6zScGWi4X97lfNqgbtMkDjihSry8+DjwVLH2iZKAQzFBmwd3oYtNwfU2xzdYKaS6L/QxU6r2J3v+y/CxeSUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60BBC4CEE1;
+	Wed, 22 Jan 2025 19:43:05 +0000 (UTC)
+Date: Wed, 22 Jan 2025 14:43:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Andreas Larsson
+ <andreas@gaisler.com>, Ludwig Rydberg <ludwig.rydberg@gaisler.com>
+Subject: [PATCH v2] atomic64: Use arch_spin_locks instead of raw_spin_locks
+Message-ID: <20250122144311.64392baf@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Content-Language: en-GB
-To: Steven Rostedt <rostedt@goodmis.org>, Breno Leitao <leitao@debian.org>
-Cc: Jason Xing <kerneljasonxing@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, Song Liu <song@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
- <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
- <20250120-panda-of-impressive-aptitude-2b714e@leitao>
- <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
- <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
- <20250120100340.4129eff7@batman.local.home>
- <20250122-vengeful-myna-of-tranquility-f0f8cf@leitao>
- <20250122095604.3c93bc93@gandalf.local.home>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250122095604.3c93bc93@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
+raw_spin_locks can be traced by lockdep or tracing itself. Atomic64
+operations can be used in the tracing infrastructure. When an architecture
+does not have true atomic64 operations it can use the generic version that
+disables interrupts and uses spin_locks.
 
+The tracing ring buffer code uses atomic64 operations for the time
+keeping. But because some architectures use the default operations, the
+locking inside the atomic operations can cause an infinite recursion.
 
-On 1/22/25 6:56 AM, Steven Rostedt wrote:
-> On Wed, 22 Jan 2025 01:39:42 -0800
-> Breno Leitao <leitao@debian.org> wrote:
->
->> Right, DECLARE_TRACE would solve my current problem, but, a056a5bed7fa
->> ("sched/debug: Export the newly added tracepoints") says "BPF doesn't
->> have infrastructure to access these bare tracepoints either.".
->>
->> Does BPF know how to attach to this bare tracepointers now?
->>
->> On the other side, it seems real tracepoints is getting more pervasive?
->> So, this current approach might be OK also?
->>
->> 	https://lore.kernel.org/bpf/20250118033723.GV1977892@ZenIV/T/#m4c2fb2d904e839b34800daf8578dff0b9abd69a0
-> Thanks for the pointer. I didn't know this discussion was going on. I just
-> asked to attend if this gets accepted. I'm only a 6 hour drive from
-> Montreal anyway.
->
->>> You can see its use in include/trace/events/sched.h
->> I suppose I need to export the tracepointer with
->> EXPORT_TRACEPOINT_SYMBOL_GPL(), right?
-> For modules to use them directly, yes. But there's other ways too.
->
->> I am trying to hack something as the following, but, I struggled to hook
->> BPF into it.
-> Maybe you can use the iterator to search for the tracepoint.
->
-> #include <linux/tracepoint.h>
->
-> static void fct(struct tracepoint *tp, void *priv)
-> {
-> 	if (!tp->name || strcmp(tp->name, "<tracepoint_name>") != 0)
-> 		return 0;
->
-> 	// attach to tracepoint tp
-> }
->
-> [..]
-> 	for_each_kernel_tracepoint(fct, NULL);
->
-> This is how LTTng hooks to tracepoints.
+As atomic64 implementation is architecture specific, it should not be
+using raw_spin_locks() but instead arch_spin_locks as that is the purpose
+of arch_spin_locks. To be used in architecture specific implementations of
+generic infrastructure like atomic64 operations.
 
-The LTTng approach in the above needs a kernel module to enable and disable
-the tracepoint and this is not a bpf-way to handle tracepoints.
+Note, by switching from raw_spin_locks to arch_spin_locks, the locks taken
+to emulate the atomic64 operations will not have lockdep, mmio, or any
+kind of checks done on them. They will not even disable preemption,
+although the code will disable interrupts preventing the tasks that hold
+the locks from being preempted. As the locks held are done so for very
+short periods of time, and the logic is only done to emulate atomic64, not
+having them be instrumented should not be an issue.
 
-So for bpf, we need a new UAPI to pass <tracepoint_name> from user
-space to the kernel to attach to tracepoint tp since <tracepont_name> is not
-available in trace_fs.
+Cc: stable@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andreas Larsson <andreas@gaisler.com>
+Link: https://lore.kernel.org/20250120235721.574973242@goodmis.org
+Fixes: c84897c0ff592 ("ring-buffer: Remove 32bit timestamp logic")
+Closes: https://lore.kernel.org/all/86fb4f86-a0e4-45a2-a2df-3154acc4f086@gaisler.com/
+Reported-by: Ludwig Rydberg <ludwig.rydberg@gaisler.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/all/20250121202123.224056304@goodmis.org/
 
-What is the criteria for a tracepoint to be a normal tp or a bare tp?
+- Updated the change log to note that the conversion removes
+  instrumentation, like lockdep and mmio checks as well as it no longer
+  call preempt_disable (Peter Zijlstra)
 
+ lib/atomic64.c | 78 +++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 48 insertions(+), 30 deletions(-)
 
->
-> -- Steve
->
+diff --git a/lib/atomic64.c b/lib/atomic64.c
+index caf895789a1e..1a72bba36d24 100644
+--- a/lib/atomic64.c
++++ b/lib/atomic64.c
+@@ -25,15 +25,15 @@
+  * Ensure each lock is in a separate cacheline.
+  */
+ static union {
+-	raw_spinlock_t lock;
++	arch_spinlock_t lock;
+ 	char pad[L1_CACHE_BYTES];
+ } atomic64_lock[NR_LOCKS] __cacheline_aligned_in_smp = {
+ 	[0 ... (NR_LOCKS - 1)] = {
+-		.lock =  __RAW_SPIN_LOCK_UNLOCKED(atomic64_lock.lock),
++		.lock =  __ARCH_SPIN_LOCK_UNLOCKED,
+ 	},
+ };
+ 
+-static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
++static inline arch_spinlock_t *lock_addr(const atomic64_t *v)
+ {
+ 	unsigned long addr = (unsigned long) v;
+ 
+@@ -45,12 +45,14 @@ static inline raw_spinlock_t *lock_addr(const atomic64_t *v)
+ s64 generic_atomic64_read(const atomic64_t *v)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 	s64 val;
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	val = v->counter;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ 	return val;
+ }
+ EXPORT_SYMBOL(generic_atomic64_read);
+@@ -58,11 +60,13 @@ EXPORT_SYMBOL(generic_atomic64_read);
+ void generic_atomic64_set(atomic64_t *v, s64 i)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	v->counter = i;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL(generic_atomic64_set);
+ 
+@@ -70,11 +74,13 @@ EXPORT_SYMBOL(generic_atomic64_set);
+ void generic_atomic64_##op(s64 a, atomic64_t *v)			\
+ {									\
+ 	unsigned long flags;						\
+-	raw_spinlock_t *lock = lock_addr(v);				\
++	arch_spinlock_t *lock = lock_addr(v);				\
+ 									\
+-	raw_spin_lock_irqsave(lock, flags);				\
++	local_irq_save(flags);						\
++	arch_spin_lock(lock);						\
+ 	v->counter c_op a;						\
+-	raw_spin_unlock_irqrestore(lock, flags);			\
++	arch_spin_unlock(lock);						\
++	local_irq_restore(flags);					\
+ }									\
+ EXPORT_SYMBOL(generic_atomic64_##op);
+ 
+@@ -82,12 +88,14 @@ EXPORT_SYMBOL(generic_atomic64_##op);
+ s64 generic_atomic64_##op##_return(s64 a, atomic64_t *v)		\
+ {									\
+ 	unsigned long flags;						\
+-	raw_spinlock_t *lock = lock_addr(v);				\
++	arch_spinlock_t *lock = lock_addr(v);				\
+ 	s64 val;							\
+ 									\
+-	raw_spin_lock_irqsave(lock, flags);				\
++	local_irq_save(flags);						\
++	arch_spin_lock(lock);						\
+ 	val = (v->counter c_op a);					\
+-	raw_spin_unlock_irqrestore(lock, flags);			\
++	arch_spin_unlock(lock);						\
++	local_irq_restore(flags);					\
+ 	return val;							\
+ }									\
+ EXPORT_SYMBOL(generic_atomic64_##op##_return);
+@@ -96,13 +104,15 @@ EXPORT_SYMBOL(generic_atomic64_##op##_return);
+ s64 generic_atomic64_fetch_##op(s64 a, atomic64_t *v)			\
+ {									\
+ 	unsigned long flags;						\
+-	raw_spinlock_t *lock = lock_addr(v);				\
++	arch_spinlock_t *lock = lock_addr(v);				\
+ 	s64 val;							\
+ 									\
+-	raw_spin_lock_irqsave(lock, flags);				\
++	local_irq_save(flags);						\
++	arch_spin_lock(lock);						\
+ 	val = v->counter;						\
+ 	v->counter c_op a;						\
+-	raw_spin_unlock_irqrestore(lock, flags);			\
++	arch_spin_unlock(lock);						\
++	local_irq_restore(flags);					\
+ 	return val;							\
+ }									\
+ EXPORT_SYMBOL(generic_atomic64_fetch_##op);
+@@ -131,14 +141,16 @@ ATOMIC64_OPS(xor, ^=)
+ s64 generic_atomic64_dec_if_positive(atomic64_t *v)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 	s64 val;
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	val = v->counter - 1;
+ 	if (val >= 0)
+ 		v->counter = val;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ 	return val;
+ }
+ EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
+@@ -146,14 +158,16 @@ EXPORT_SYMBOL(generic_atomic64_dec_if_positive);
+ s64 generic_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 	s64 val;
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	val = v->counter;
+ 	if (val == o)
+ 		v->counter = n;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ 	return val;
+ }
+ EXPORT_SYMBOL(generic_atomic64_cmpxchg);
+@@ -161,13 +175,15 @@ EXPORT_SYMBOL(generic_atomic64_cmpxchg);
+ s64 generic_atomic64_xchg(atomic64_t *v, s64 new)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 	s64 val;
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	val = v->counter;
+ 	v->counter = new;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ 	return val;
+ }
+ EXPORT_SYMBOL(generic_atomic64_xchg);
+@@ -175,14 +191,16 @@ EXPORT_SYMBOL(generic_atomic64_xchg);
+ s64 generic_atomic64_fetch_add_unless(atomic64_t *v, s64 a, s64 u)
+ {
+ 	unsigned long flags;
+-	raw_spinlock_t *lock = lock_addr(v);
++	arch_spinlock_t *lock = lock_addr(v);
+ 	s64 val;
+ 
+-	raw_spin_lock_irqsave(lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(lock);
+ 	val = v->counter;
+ 	if (val != u)
+ 		v->counter += a;
+-	raw_spin_unlock_irqrestore(lock, flags);
++	arch_spin_unlock(lock);
++	local_irq_restore(flags);
+ 
+ 	return val;
+ }
+-- 
+2.45.2
 
