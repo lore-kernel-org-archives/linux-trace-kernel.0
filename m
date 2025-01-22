@@ -1,70 +1,78 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA43320FA8E;
-	Wed, 22 Jan 2025 09:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD0D1F76B5;
+	Wed, 22 Jan 2025 09:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737538790; cv=none; b=JZ6aY/Wq6hLKl/FgIgin2WlPTNme8SJMUfSMyQAk1cuNspyE6U/SFKPpMCPYhLAGSE4WkZYwbWSaVbsTjSijJeU9kw8ogX8toJJ8X/paDXzPZy+uNYEo2p3VLAtui+pD7e1eejqn/GTU5qXqPpmDpXEb8VwZ0YVHgkWdkA9MZ0o=
+	t=1737539488; cv=none; b=GqN0NlbJD3anDwS36KUiQbozCZ+Y0TF+MwPFBB1WLTkjNV/cqOMqmYTSKY8xsI1sMGlliK8McNSOeVNkvnrIOi/09OS41hiboW1J0vBWaOA8ds1GXSCmaRr2eUghny31u5JLunXdUGnZpgTJGt/Jyo63mD+rc7xRVqsDwG4Nz44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737538790; c=relaxed/simple;
-	bh=gaF4lX+QSvuwIW3B1fDcdth63Juyz4/dM6q+jb/YglI=;
+	s=arc-20240116; t=1737539488; c=relaxed/simple;
+	bh=hezJtK/d+zwrRIVfZtLHoCQtTdX9Yg1OWMiDDjqhfxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RteaQld3o2H+vwfxjxLH8rq/tNPjHocqjvqPB2oJxCQMCV4zSKe9eEOLs2GhUHyxhMo9cx7Vgn+/PHl9DdUMKQ4aPZaE1GGSHYpA4PJ/0VWyAL0mc3zRwcEpZ6GReUeOwzu3OmBGTV25biUJYlSOM/cmdGgekosjNi0vkXVkJ1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5d3dce16a3dso1363757a12.1;
-        Wed, 22 Jan 2025 01:39:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737538787; x=1738143587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2hRyr/LFB41D26kZ8C17Nz9XbLAXmLDU3xx1SDSHzNI=;
-        b=GxQvWZyfXGehSkAXDPq9xG4E3nkQWB9ItZ5blyUvnlV2YZBQzoX6znvxnqbTVv49O/
-         P28KMJWt/rRhoobMSjH+9uQmdsZD9DhedKnYwqVM031U9EOGSrTRVhhdnj0hUm3HN747
-         cJMo/ifkKotRYMP3i51FZFWQPe6yQ2hGUji+NtDPWw3PpgGdcJT2E1MpLMN7BMX97pSN
-         WOOmjpnmZE2WFKJrNWCEQAF//RS+Gxxy3Xd2fHgmLYx7tRKqUzhsc5LMEHV9Z7KdVEZF
-         3rM7HJKflGn94vMzIH2Md5y20IMO5bQ88Ul/AwAI5A2/E0gUWxtst8kRJRdoy7Hgpv8G
-         SR2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVH6fX6cAF6WliGl7ZvypWoyw5Q+jd+IYzLjfVwLmOxnGbByBjhMLq66RGqgfA5rYDiRagMl6/pGfHPal4=@vger.kernel.org, AJvYcCVia050/oVy2/HRUJHi7wZ6CeWOAJyheto8QS6t6bibx8Zd8nqJSWjdyBqST7dEJ/77E3d9jsc1cXbfSMQYcj1gP3r5@vger.kernel.org, AJvYcCXRb8QQddHhUVeVnCh4cmlCkMgn3ZT/BVWgsu8gMavvaI5xm2hQeJJ0lzH3rG8cC44Qq+y8xU97@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBxxId55Lo0u+5Aq3/pWR5Cxa8V8dNFdvctkQFRTKd61N5Cj6B
-	n8OfDqSP+x8/iuomP0wJPwEEnBaa/EXhQjSTp880bixLbjV38Adt
-X-Gm-Gg: ASbGncuC5/iu4hzuQjt16LCA5Y1sL+1ELWMP35LzDZVV1OyQTeLVi+clJoscs4kux/j
-	b7Y3U7j3hu2IJCMA7XrXH/on74UOorEvZzOw2XZRALTHEUbolfMN7FrRHwQZKANlyqXgP1fZQnB
-	ABlzWL98xENYBi4D+Nz0pQq3PcM5Z3TaA8//6eLnrfkh2LknmD/e10FZlpEYGCXoEz/cQeI8N8Y
-	uOyIFs+Vd17/JFTfSINBpXC9xAOU+Dxn/vE/rzhMjF7XQtUQDopC8k3v+IuCg==
-X-Google-Smtp-Source: AGHT+IFHaJzpuKeQuRURWE44dU3p/dEgmZ8Um4qL5KPgzg+tW2+xxJXc7DX8p+M5aNuBzD61ZKrFuA==
-X-Received: by 2002:a05:6402:27cf:b0:5d0:ece3:158a with SMTP id 4fb4d7f45d1cf-5da0bac2db9mr27510461a12.3.1737538786782;
-        Wed, 22 Jan 2025 01:39:46 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5db73683d79sm8347757a12.37.2025.01.22.01.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jan 2025 01:39:45 -0800 (PST)
-Date: Wed, 22 Jan 2025 01:39:42 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Jason Xing <kerneljasonxing@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=CuwZcWStw+0+Ao6RCfFznDmMpNpBBZy9u9CDBeGU2qf1dxp/w6VWuSWHQoedzsHdgF+/rahEfjbI7g/qm7U8r5pGJeXWxp1ldseZDJZEhaqSD7w0Q1YrQbN9y/17seB9jCKxSPfPxPxtUB6Tv4Sj0U/KJvQcz2bHt75ygUmDqKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MKnkgi6h; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MKnkgi6h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=R2vVfjEoF0Ie9PHykSVzRRqFF+sOncqHqtvT5+6/DaM=; b=MKnkgi6hXTGhjN0zMurpz8SNpE
+	ymCkZhFC61LwgD4TM+uvL9f94W7ieK+NlcINltXhi5P7zaThC8LDbygxQwYvl2vjqUbtLZxhyuCAy
+	wG9Z+Ldin3RK5nfuM0GkwyoHYphh4xlIzb3ZwPqDqe/Md1bpCVSc/kEnmcmll20W+wRIsVeKhYXLu
+	Icsm6CQIqin5i3mHwdxptDspOvpa/TLyj91bi3vFiZtukWqpolG9eXFgrM5se3DpV3tWyn1O5XwlG
+	y7jf8tM3H0Aa42/D8J7lIspHZTlrky+YN4nvimy9DUKwuN39znXE18o2HcEui26BmtlwFsHg8i9X0
+	ELdyxdQA==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1taXO2-000000011ZD-0WUk;
+	Wed, 22 Jan 2025 09:51:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 46E9A300599; Wed, 22 Jan 2025 10:51:01 +0100 (CET)
+Date: Wed, 22 Jan 2025 10:51:01 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Gow <davidgow@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
-	Yonghong Song <yonghong.song@linux.dev>, Song Liu <song@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Message-ID: <20250122-vengeful-myna-of-tranquility-f0f8cf@leitao>
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
- <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
- <20250120-panda-of-impressive-aptitude-2b714e@leitao>
- <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
- <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
- <20250120100340.4129eff7@batman.local.home>
+	Miroslav Benes <mbenes@suse.cz>, "H. Peter Anvin" <hpa@zytor.com>,
+	Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
+	Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	kgdb-bugreport@lists.sourceforge.net, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	live-patching@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] x86/module: rework ROX cache to avoid writable
+ copy
+Message-ID: <20250122095101.GK8385@noisy.programming.kicks-ass.net>
+References: <20250121095739.986006-1-rppt@kernel.org>
+ <20250121123646.GC7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -73,101 +81,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250120100340.4129eff7@batman.local.home>
+In-Reply-To: <20250121123646.GC7145@noisy.programming.kicks-ass.net>
 
-Hello Steven,
-
-On Mon, Jan 20, 2025 at 10:03:40AM -0500, Steven Rostedt wrote:
-> On Mon, 20 Jan 2025 05:20:05 -0800
-> Breno Leitao <leitao@debian.org> wrote:
+On Tue, Jan 21, 2025 at 01:36:47PM +0100, Peter Zijlstra wrote:
+> On Tue, Jan 21, 2025 at 11:57:29AM +0200, Mike Rapoport wrote:
 > 
-> > This patch enhances the API's stability by introducing a guaranteed hook
-> > point, allowing the compiler to make changes without disrupting the
-> > BPF program's functionality.
+> > Kirill A. Shutemov (1):
+> >   x86/mm/pat: restore large ROX pages after fragmentation
 > 
-> Instead of using a TRACE_EVENT() macro, you can use DECLARE_TRACE()
-> which will create the tracepoint in the kernel, but will not create a
-> trace event that is exported to the tracefs file system. Then BPF could
-> hook to it and it will still not be exposed as an user space API.
+> The duplication between pmd and pud collapse is a bit annoying, but so
+> be it.
+> 
+> > Mike Rapoport (Microsoft) (9):
+> >   x86/mm/pat: cpa-test: fix length for CPA_ARRAY test
+> >   x86/mm/pat: drop duplicate variable in cpa_flush()
+> >   execmem: don't remove ROX cache from the direct map
+> >   execmem: add API for temporal remapping as RW and restoring ROX afterwards
+> >   module: introduce MODULE_STATE_GONE
+> >   module: switch to execmem API for remapping as RW and restoring ROX
+> >   Revert "x86/module: prepare module loading for ROX allocations of text"
+> >   module: drop unused module_writable_address()
+> >   x86: re-enable EXECMEM_ROX support
+> 
+> All these look good on a first reading, let me go build and test the
+> various options.
 
-Right, DECLARE_TRACE would solve my current problem, but, a056a5bed7fa
-("sched/debug: Export the newly added tracepoints") says "BPF doesn't
-have infrastructure to access these bare tracepoints either.".
+I've tested:
 
-Does BPF know how to attach to this bare tracepointers now?
+GCC:  ibt=off
+      ibt=on
+LLVM: ibt-off,cfi=off
+      ibt=off,cfi=kcfi
+      ibt=on,cfi=off
+      ibt=on,cfi=kcfi
+      ibt=on,cfi=fineibt
 
-On the other side, it seems real tracepoints is getting more pervasive?
-So, this current approach might be OK also?
+And all of them were able to load a module, so yay!
 
-	https://lore.kernel.org/bpf/20250118033723.GV1977892@ZenIV/T/#m4c2fb2d904e839b34800daf8578dff0b9abd69a0
+My plan is to merge these patches into tip/x86/mm once we have -rc1.
 
-> You can see its use in include/trace/events/sched.h
-
-I suppose I need to export the tracepointer with
-EXPORT_TRACEPOINT_SYMBOL_GPL(), right?
-
-I am trying to hack something as the following, but, I struggled to hook
-BPF into it.
-
-Thank you!
---breno
-
-Author: Breno Leitao <leitao@debian.org>
-Date:   Fri Jan 17 09:26:22 2025 -0800
-
-    trace: tcp: Add tracepoint for tcp_cwnd_reduction()
-    
-    Add a lightweight tracepoint to monitor TCP congestion window
-    adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
-    of:
-      - TCP window size fluctuations
-      - Active socket behavior
-      - Congestion window reduction events
-    
-    Meta has been using BPF programs to monitor this function for years.
-    Adding a proper tracepoint provides a stable API for all users who need
-    to monitor TCP congestion window behavior.
-    
-    Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
-    infrastructure and exporting to tracefs, keeping the implementation
-    minimal. (Thanks Steven Rostedt)
-
-    Signed-off-by: Breno Leitao <leitao@debian.org>
-
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index a27c4b619dffd..07add3e20931a 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,6 +259,11 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
-+DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+	TP_PROTO(const struct sock *sk, const int newly_acked_sacked,
-+		 const int newly_lost, const int flag),
-+	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag));
-+
- #include <trace/events/net_probe_common.h>
- 
- TRACE_EVENT(tcp_probe,
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 4811727b8a022..74cf8dbbedaa0 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -2710,6 +2710,8 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_acked_sacked, int newly_lost,
- 	if (newly_acked_sacked <= 0 || WARN_ON_ONCE(!tp->prior_cwnd))
- 		return;
- 
-+	trace_tcp_cwnd_reduction_tp(sk, newly_acked_sacked, newly_lost, flag);
-+
- 	tp->prr_delivered += newly_acked_sacked;
- 	if (delta < 0) {
- 		u64 dividend = (u64)tp->snd_ssthresh * tp->prr_delivered +
-@@ -2726,6 +2728,7 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_acked_sacked, int newly_lost,
- 	sndcnt = max(sndcnt, (tp->prr_out ? 0 : 1));
- 	tcp_snd_cwnd_set(tp, tcp_packets_in_flight(tp) + sndcnt);
- }
-+EXPORT_TRACEPOINT_SYMBOL_GPL(tcp_cwnd_reduction_tp);
- 
- static inline void tcp_end_cwnd_reduction(struct sock *sk)
- {
