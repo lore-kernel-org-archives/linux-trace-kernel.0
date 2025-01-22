@@ -1,321 +1,329 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6599E171A7;
-	Wed, 22 Jan 2025 00:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09939186A;
+	Wed, 22 Jan 2025 02:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737506673; cv=none; b=BtGltM2F6XRQcfCGo76QMag2MPfWseSPEeUJxsDSaG6RM67OV7rm+ZwogjsKHpzKf0yom8NeM8xoYD8qmeTbsVlBuAbyvUzorJr4y0k0GgAmoABq6OwIcJK0TtOqpyeJgkuQOhAtp56rK7T59VE/iSEQ2acjXAWazPKlkeQzOQQ=
+	t=1737513112; cv=none; b=OqHMpIrhXcDv7HuvLVc/AusVCnQ6Pv/lxWVgqoB3QpkfjmX1y6d7CiAmmt3I+sY+k6eAbbsLnsBylEZizDIduaMNHx44NXbSN7wuneEyqAU759hCVKrZJJdfxh3F9LR65wKfRbMyS5YoFWA/H3MG/d4FNNEdR3ixzVB/cTSZyQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737506673; c=relaxed/simple;
-	bh=dVmxEtvxJPWF1knoLgj2ttI1buvR5TTMG9dM5I8RTUc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ETwxpjhDRvMinZCWaNp44y0Nj3aU0d7AL0LDwC/vXeOVbbyQE4pMjy/sU8FDsR+hzZf5k7aK1gxWO+qb9yvWg4ky834jd7NayYttpgvafHYgRhJQXD93iS5/k29LgopUOckFGOIgEN+PmRpxQsRUtAsVtoXle5nv64TWnWEpZtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86387C4CEE2;
-	Wed, 22 Jan 2025 00:44:32 +0000 (UTC)
-Date: Tue, 21 Jan 2025 19:44:36 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jiri Olsa <olsajiri@gmail.com>
-Subject: [PATCH v2] fgraph: Remove calltime and rettime from generic
- operations
-Message-ID: <20250121194436.15bdf71a@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1737513112; c=relaxed/simple;
+	bh=hAXFYSnj9CFuAEQQITFXF1IxiKqTvGWdfka2dfwleRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ehJT9zHpZhs/Rtw8fs23YvuqyhelZJwuMBxOofEeTqzxu2X422SF1/LW6YtR4RcemXDlyNvglW+fVgIwDUNqTkfndCduTX0DpDmCR7qtCbgaxVtbJyIpe5h+oLHTN4j7zMMomzxvx7NafkU3Fmq2FVS+xh1acgYgJl0CYs7hyGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UagMP5dK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UagMP5dK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E547C4CEDF;
+	Wed, 22 Jan 2025 02:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737513111;
+	bh=hAXFYSnj9CFuAEQQITFXF1IxiKqTvGWdfka2dfwleRM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UagMP5dKW11Y30DtRVyPQaGQxaZrDlru78J5Rw1ZxhBvtVITBnMAlRwsbXG8JMiS2
+	 LZbYMBZ5ieFml5gG1Tsa8unCvgwCbZYwGvEjDuKuwJebgIB81WkHBmOjbLK0sseccg
+	 WB/eBC9NWGokcVtUHV04HXsNGdZP8Jwc4HcqilqxB8BDV1x+qcfbPUUMvpOj5mm0h3
+	 r+LQPVGWxxj6nB6CctuC1bwXT4H4fMUSFoaNmRD87hpzpZyjD9vM10Zbmn/AMKKCyK
+	 cWAl+RJdZ/0k/bjEdf4Hq3xop1+Qw/PAEDjbHebd9DPpYMigSnUVC5kK8LkjGkb47G
+	 6VHv5oC9xa4Zg==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org,
+	Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: [PATCH v4 00/39] unwind, perf: sframe user space unwinding
+Date: Tue, 21 Jan 2025 18:30:52 -0800
+Message-ID: <cover.1737511963.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+This took a bit longer than expected.  I fell into some rabbit holes
+chasing a number of subtle bugs.  I ended up rewriting the deferral code
+several times.  But I think the end result is much better.
 
-The function graph infrastructure is now generic so that kretprobes,
-fprobes and BPF can use it. But there is still some leftover logic that
-only the function graph tracer itself uses. This is the calculation of the
-calltime and return time of the functions. The calculation of the calltime
-has been moved into the function graph tracer and those users that need it
-so that it doesn't cause overhead to the other users. But the return
-function timestamp was still called.
+The deferral request has a new interface, which helps make the
+implementation MUCH simpler and less fragile.  As a bonus it's now
+possible for the request implementation to be NMI-safe.
 
-Instead of just moving the taking of the timestamp into the function graph
-trace remove the calltime and rettime completely from the ftrace_graph_ret
-structure. Instead, move it into the function graph return entry event
-structure and this also moves all the calltime and rettime logic out of
-the generic fgraph.c code and into the tracing code that uses it.
+The interface is similar to {task,irq}_work.  The caller owns an
+unwind_work struct:
 
-This has been reported to decrease the overhead by ~27%.
+  struct unwind_work {
+	struct callback_head		work;
+	unwind_callback_t		func;
+	int				pending;
+  };
 
-Link: https://lore.kernel.org/all/Z3aSuql3fnXMVMoM@krava/
-Link: https://lore.kernel.org/all/173665959558.1629214.16724136597211810729.stgit@devnote2/
+For perf, struct unwind_work is embedded in struct perf_event.  For
+ftrace maybe it would live in task_struct?
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250114111158.74865a4e@gandalf.local.home
-Reported-by: Jiri Olsa <olsajiri@gmail.com>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250114111158.74865a4e@gandalf.local.home
+The unwind_work can be passed to the following functions:
 
-- Rebased on top of the pull request of ftrace-v6.14, as it has dependencies
-  to both that branch as well as to what was already upstream.
-  Nothing else changed.
+  void unwind_deferred_init(struct unwind_work *work, unwind_callback_t func);
+  int unwind_deferred_request(struct unwind_work *work, u64 *cookie);
+  bool unwind_deferred_cancel(struct task_struct *task, struct unwind_work *work);
 
- include/linux/ftrace.h               |  2 --
- kernel/trace/fgraph.c                |  1 -
- kernel/trace/trace.h                 |  4 +++-
- kernel/trace/trace_entries.h         |  8 +++----
- kernel/trace/trace_functions_graph.c | 33 ++++++++++++++++------------
- kernel/trace/trace_irqsoff.c         |  5 +++--
- kernel/trace/trace_sched_wakeup.c    |  6 +++--
- 7 files changed, 33 insertions(+), 26 deletions(-)
+If unwind_deferred_request() returns success, the callback is
+guaranteed.  If the callback is already pending, it returns an error,
+but the returned *cookie is still valid if it's nonzero.
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 07092dfb21a4..fbabc3d848b3 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1151,8 +1151,6 @@ struct ftrace_graph_ret {
- 	int depth;
- 	/* Number of functions that overran the depth limit for current task */
- 	unsigned int overrun;
--	unsigned long long calltime;
--	unsigned long long rettime;
- } __packed;
- 
- struct fgraph_ops;
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 9e6b5a71555b..5dddfc2149f6 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -826,7 +826,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
- 		return (unsigned long)panic;
- 	}
- 
--	trace.rettime = trace_clock_local();
- 	if (fregs)
- 		ftrace_regs_set_instruction_pointer(fregs, ret);
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 04058a9889b7..2742d14df383 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -912,7 +912,9 @@ extern int __trace_graph_retaddr_entry(struct trace_array *tr,
- 				unsigned long retaddr);
- extern void __trace_graph_return(struct trace_array *tr,
- 				 struct ftrace_graph_ret *trace,
--				 unsigned int trace_ctx);
-+				 unsigned int trace_ctx,
-+				 u64 calltime, u64 rettime);
-+
- extern void init_array_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
- extern int allocate_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
- extern void free_fgraph_ops(struct trace_array *tr);
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index 82fd174ebbe0..fbfb396905a6 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -124,8 +124,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
- 		__field_packed(	unsigned long,	ret,		retval	)
- 		__field_packed(	int,		ret,		depth	)
- 		__field_packed(	unsigned int,	ret,		overrun	)
--		__field_packed(	unsigned long long, ret,	calltime)
--		__field_packed(	unsigned long long, ret,	rettime	)
-+		__field(unsigned long long,	calltime		)
-+		__field(unsigned long long,	rettime			)
- 	),
- 
- 	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d retval: %lx",
-@@ -146,8 +146,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
- 		__field_packed(	unsigned long,	ret,		func	)
- 		__field_packed(	int,		ret,		depth	)
- 		__field_packed(	unsigned int,	ret,		overrun	)
--		__field_packed(	unsigned long long, ret,	calltime)
--		__field_packed(	unsigned long long, ret,	rettime	)
-+		__field(unsigned long long,	calltime		)
-+		__field(unsigned long long,	rettime			)
- 	),
- 
- 	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index dc62eb93837a..54d850997c0a 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -266,12 +266,10 @@ __trace_graph_function(struct trace_array *tr,
- 	struct ftrace_graph_ret ret = {
- 		.func     = ip,
- 		.depth    = 0,
--		.calltime = time,
--		.rettime  = time,
- 	};
- 
- 	__trace_graph_entry(tr, &ent, trace_ctx);
--	__trace_graph_return(tr, &ret, trace_ctx);
-+	__trace_graph_return(tr, &ret, trace_ctx, time, time);
- }
- 
- void
-@@ -283,8 +281,9 @@ trace_graph_function(struct trace_array *tr,
- }
- 
- void __trace_graph_return(struct trace_array *tr,
--				struct ftrace_graph_ret *trace,
--				unsigned int trace_ctx)
-+			  struct ftrace_graph_ret *trace,
-+			  unsigned int trace_ctx,
-+			  u64 calltime, u64 rettime)
- {
- 	struct ring_buffer_event *event;
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
-@@ -296,6 +295,8 @@ void __trace_graph_return(struct trace_array *tr,
- 		return;
- 	entry	= ring_buffer_event_data(event);
- 	entry->ret				= *trace;
-+	entry->calltime				= calltime;
-+	entry->rettime				= rettime;
- 	trace_buffer_unlock_commit_nostack(buffer, event);
- }
- 
-@@ -317,10 +318,13 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	struct trace_array_cpu *data;
- 	struct fgraph_times *ftimes;
- 	unsigned int trace_ctx;
-+	u64 calltime, rettime;
- 	long disabled;
- 	int size;
- 	int cpu;
- 
-+	rettime = trace_clock_local();
-+
- 	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (*task_var & TRACE_GRAPH_NOTRACE) {
-@@ -334,7 +338,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 
- 	handle_nosleeptime(trace, ftimes, size);
- 
--	trace->calltime = ftimes->calltime;
-+	calltime = ftimes->calltime;
- 
- 	preempt_disable_notrace();
- 	cpu = raw_smp_processor_id();
-@@ -342,7 +346,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	disabled = atomic_read(&data->disabled);
- 	if (likely(!disabled)) {
- 		trace_ctx = tracing_gen_ctx();
--		__trace_graph_return(tr, trace, trace_ctx);
-+		__trace_graph_return(tr, trace, trace_ctx, calltime, rettime);
- 	}
- 	preempt_enable_notrace();
- }
-@@ -367,10 +371,8 @@ static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 
- 	handle_nosleeptime(trace, ftimes, size);
- 
--	trace->calltime = ftimes->calltime;
--
- 	if (tracing_thresh &&
--	    (trace->rettime - ftimes->calltime < tracing_thresh))
-+	    (trace_clock_local() - ftimes->calltime < tracing_thresh))
- 		return;
- 	else
- 		trace_graph_return(trace, gops, fregs);
-@@ -856,7 +858,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 
- 	graph_ret = &ret_entry->ret;
- 	call = &entry->graph_ent;
--	duration = graph_ret->rettime - graph_ret->calltime;
-+	duration = ret_entry->rettime - ret_entry->calltime;
- 
- 	func = call->func + iter->tr->text_delta;
- 
-@@ -1137,11 +1139,14 @@ print_graph_entry(struct ftrace_graph_ent_entry *field, struct trace_seq *s,
- }
- 
- static enum print_line_t
--print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
-+print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
- 		   struct trace_entry *ent, struct trace_iterator *iter,
- 		   u32 flags)
- {
--	unsigned long long duration = trace->rettime - trace->calltime;
-+	struct ftrace_graph_ret *trace = &retentry->ret;
-+	u64 calltime = retentry->calltime;
-+	u64 rettime = retentry->rettime;
-+	unsigned long long duration = rettime - calltime;
- 	struct fgraph_data *data = iter->private;
- 	struct trace_array *tr = iter->tr;
- 	unsigned long func;
-@@ -1342,7 +1347,7 @@ print_graph_function_flags(struct trace_iterator *iter, u32 flags)
- 	case TRACE_GRAPH_RET: {
- 		struct ftrace_graph_ret_entry *field;
- 		trace_assign_type(field, entry);
--		return print_graph_return(&field->ret, s, entry, iter, flags);
-+		return print_graph_return(field, s, entry, iter, flags);
- 	}
- 	case TRACE_STACK:
- 	case TRACE_FN:
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 08786c59d397..7294ad676379 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -223,6 +223,7 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 	unsigned long flags;
- 	unsigned int trace_ctx;
- 	u64 *calltime;
-+	u64 rettime;
- 	int size;
- 
- 	ftrace_graph_addr_finish(gops, trace);
-@@ -230,13 +231,13 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 	if (!func_prolog_dec(tr, &data, &flags))
- 		return;
- 
-+	rettime = trace_clock_local();
- 	calltime = fgraph_retrieve_data(gops->idx, &size);
- 	if (!calltime)
- 		return;
--	trace->calltime = *calltime;
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
--	__trace_graph_return(tr, trace, trace_ctx);
-+	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
- 	atomic_dec(&data->disabled);
- }
- 
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index f372252dc8bb..af30586f1aea 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -158,6 +158,7 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 	struct trace_array_cpu *data;
- 	unsigned int trace_ctx;
- 	u64 *calltime;
-+	u64 rettime;
- 	int size;
- 
- 	ftrace_graph_addr_finish(gops, trace);
-@@ -165,12 +166,13 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
- 		return;
- 
-+	rettime = trace_clock_local();
-+
- 	calltime = fgraph_retrieve_data(gops->idx, &size);
- 	if (!calltime)
- 		return;
--	trace->calltime = *calltime;
- 
--	__trace_graph_return(tr, trace, trace_ctx);
-+	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
- 	atomic_dec(&data->disabled);
- 
- 	preempt_enable_notrace();
+Questions:
+
+  - Peter, I'm not sure how well this works with Intel PEBS?  This just
+    uses the original task regs, is that a problem?
+
+  - Namhyung, I rebased your perf tool patches on the new missing
+    feature validation code, do the patches still look sane?
+
+For testing with user space, here are the latest binutils fixes:
+
+  1785837a2570 ("ld: fix PR/32297")
+  938fb512184d ("ld: fix wrong SFrame info for lazy IBT PLT")
+  47c88752f9ad ("ld: generate SFrame stack trace info for .plt.got")
+
+An out-of-tree glibc patch is also needed -- will attach in a reply.
+
+Code also available at 
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git sframe-v4
+
+
+v4:
+- split up patches better [Andrii]
+- add callback guarantee [Andrii]
+- support multiple non-contiguous elf text segments [Andrii]
+- sframe section validation [Andrii]
+- x86 compat mode support [Peter]
+- implement guard(mmap_read_lock) [Peter]
+- synchronize callback with perf event lifetime [Peter]
+- detect toolchain sframe support with CONFIG_SFRAME_AS [Jens]
+- get vdso working (with updated glibc patches) [Jens]
+- rebase perf tool on new missing feature validation code
+- brand new deferred interface and implementation
+- make unwind_deferred_request() NMI-safe
+- sframe debugging infrastructure
+- fix some task_work bugs
+- enclose multiple user copies in single STAC/CLAC pair for performance
+- much banging head on wall, refactoring, simplification
+- fix a lot of bugs
+
+
+Previous revisions
+------------------
+
+v3:
+https://lore.kernel.org/cover.1730150953.git.jpoimboe@kernel.org
+- move the "deferred" logic out of perf and into unwind_user with new
+  unwind_user_deferred() interface [Steven, Mathieu]
+- add more sframe sanity checks [Steven]
+- make frame pointers optional depending on arch [Jens]
+- fix perf event output [Namhyung]
+- include Namhyung's perf tool patches
+- enable sframe generation in VDSO
+- fix build errors [robot]
+
+v2:
+https://lore.kernel.org/cover.1726268190.git.jpoimboe@kernel.org
+- rebase on v6.11-rc7
+- reorganize the patches to add sframe first
+- change to sframe v2
+- add new perf event type: PERF_RECORD_CALLCHAIN_DEFERRED
+- add new perf attribute: defer_callchain
+
+v1:
+https://lore.kernel.org/cover.1699487758.git.jpoimboe@kernel.org
+
+
+Original description
+--------------------
+
+Some distros have started compiling frame pointers into all their
+packages to enable the kernel to do system-wide profiling of user space.
+Unfortunately that creates a runtime performance penalty across the
+entire system.  Using DWARF (or .eh_frame) instead isn't feasible
+because of complexity and slowness.
+
+For in-kernel unwinding we solved this problem with the creation of the
+ORC unwinder for x86_64.  Similarly, for user space the GNU assembler
+has created the SFrame ("Simple Frame") v2 format starting with binutils
+2.41.
+
+These patches add support for unwinding user space from the kernel using
+SFrame with perf.  It should be easy to add user unwinding support for
+other components like ftrace.
+
+There were two main challenges:
+
+1) Finding .sframe sections in shared/dlopened libraries
+
+   The kernel has no visibility to the contents of shared libraries.
+   This was solved by adding a PR_ADD_SFRAME option to prctl() which
+   allows the runtime linker to manually provide the in-memory address
+   of an .sframe section to the kernel.
+
+2) Dealing with page faults
+
+   Keeping all binaries' sframe data pinned would likely waste a lot of
+   memory.  Instead, read it from user space on demand.  That can't be
+   done from perf NMI context due to page faults, so defer the unwind to
+   the next user exit.  Since the NMI handler doesn't do exit work,
+   self-IPI and then schedule task work to be run on exit from the IPI.
+
+Special thanks to Indu for the original concept, and to Steven and Peter
+for helping a lot with the design.  And to Steven for letting me do it ;-)
+
+Josh Poimboeuf (35):
+  task_work: Fix TWA_NMI_CURRENT error handling
+  task_work: Fix TWA_NMI_CURRENT race with __schedule()
+  mm: Add guard for mmap_read_lock
+  x86/vdso: Fix DWARF generation for getrandom()
+  x86/asm: Avoid emitting DWARF CFI for non-VDSO
+  x86/asm: Fix VDSO DWARF generation with kernel IBT enabled
+  x86/vdso: Use SYM_FUNC_{START,END} in __kernel_vsyscall()
+  x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
+  x86/vdso: Enable sframe generation in VDSO
+  x86/uaccess: Add unsafe_copy_from_user() implementation
+  unwind_user: Add user space unwinding API
+  unwind_user: Add frame pointer support
+  unwind_user/x86: Enable frame pointer unwinding on x86
+  perf/x86: Rename get_segment_base() and make it global
+  unwind_user: Add compat mode frame pointer support
+  unwind_user/x86: Enable compat mode frame pointer unwinding on x86
+  unwind_user/sframe: Add support for reading .sframe headers
+  unwind_user/sframe: Store sframe section data in per-mm maple tree
+  unwind_user/sframe: Add support for reading .sframe contents
+  unwind_user/sframe: Detect .sframe sections in executables
+  unwind_user/sframe: Add prctl() interface for registering .sframe
+    sections
+  unwind_user/sframe: Wire up unwind_user to sframe
+  unwind_user/sframe/x86: Enable sframe unwinding on x86
+  unwind_user/sframe: Remove .sframe section on detected corruption
+  unwind_user/sframe: Show file name in debug output
+  unwind_user/sframe: Enable debugging in uaccess regions
+  unwind_user/sframe: Add .sframe validation option
+  unwind_user/deferred: Add deferred unwinding interface
+  unwind_user/deferred: Add unwind cache
+  unwind_user/deferred: Make unwind deferral requests NMI-safe
+  perf: Remove get_perf_callchain() 'init_nr' argument
+  perf: Remove get_perf_callchain() 'crosstask' argument
+  perf: Simplify get_perf_callchain() user logic
+  perf: Skip user unwind if !current->mm
+  perf: Support deferred user callchains
+
+Namhyung Kim (4):
+  perf tools: Minimal CALLCHAIN_DEFERRED support
+  perf record: Enable defer_callchain for user callchains
+  perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+  perf tools: Merge deferred user callchains
+
+ arch/Kconfig                              |  40 ++
+ arch/x86/Kconfig                          |   3 +
+ arch/x86/entry/vdso/Makefile              |  10 +-
+ arch/x86/entry/vdso/vdso-layout.lds.S     |   5 +-
+ arch/x86/entry/vdso/vdso32/system_call.S  |  10 +-
+ arch/x86/entry/vdso/vgetrandom-chacha.S   |   3 +-
+ arch/x86/entry/vdso/vsgx.S                |  19 +-
+ arch/x86/events/core.c                    |  10 +-
+ arch/x86/include/asm/dwarf2.h             |  54 +-
+ arch/x86/include/asm/linkage.h            |  29 +-
+ arch/x86/include/asm/mmu.h                |   2 +-
+ arch/x86/include/asm/perf_event.h         |   2 +
+ arch/x86/include/asm/uaccess.h            |  39 +-
+ arch/x86/include/asm/unwind_user.h        |  61 +++
+ arch/x86/include/asm/unwind_user_types.h  |  17 +
+ arch/x86/include/asm/vdso.h               |   1 -
+ fs/binfmt_elf.c                           |  49 +-
+ include/asm-generic/Kbuild                |   2 +
+ include/asm-generic/unwind_user.h         |  24 +
+ include/asm-generic/unwind_user_types.h   |   9 +
+ include/linux/entry-common.h              |   3 +
+ include/linux/mm_types.h                  |   3 +
+ include/linux/mmap_lock.h                 |   2 +
+ include/linux/perf_event.h                |  15 +-
+ include/linux/sched.h                     |   5 +
+ include/linux/sframe.h                    |  56 ++
+ include/linux/unwind_deferred.h           |  52 ++
+ include/linux/unwind_deferred_types.h     |  17 +
+ include/linux/unwind_user.h               |  15 +
+ include/linux/unwind_user_types.h         |  36 ++
+ include/uapi/linux/elf.h                  |   1 +
+ include/uapi/linux/perf_event.h           |  19 +-
+ include/uapi/linux/prctl.h                |   5 +-
+ kernel/Makefile                           |   1 +
+ kernel/bpf/stackmap.c                     |  14 +-
+ kernel/events/callchain.c                 |  47 +-
+ kernel/events/core.c                      | 112 +++-
+ kernel/fork.c                             |  14 +
+ kernel/sys.c                              |   9 +
+ kernel/task_work.c                        |  67 ++-
+ kernel/unwind/Makefile                    |   2 +
+ kernel/unwind/deferred.c                  | 266 ++++++++++
+ kernel/unwind/sframe.c                    | 595 ++++++++++++++++++++++
+ kernel/unwind/sframe.h                    |  71 +++
+ kernel/unwind/sframe_debug.h              |  95 ++++
+ kernel/unwind/user.c                      | 146 ++++++
+ mm/init-mm.c                              |   2 +
+ tools/include/uapi/linux/perf_event.h     |  19 +-
+ tools/lib/perf/include/perf/event.h       |   7 +
+ tools/perf/Documentation/perf-script.txt  |   5 +
+ tools/perf/builtin-script.c               |  92 ++++
+ tools/perf/util/callchain.c               |  24 +
+ tools/perf/util/callchain.h               |   3 +
+ tools/perf/util/event.c                   |   1 +
+ tools/perf/util/evlist.c                  |   1 +
+ tools/perf/util/evlist.h                  |   1 +
+ tools/perf/util/evsel.c                   |  39 ++
+ tools/perf/util/evsel.h                   |   1 +
+ tools/perf/util/machine.c                 |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c |   1 +
+ tools/perf/util/sample.h                  |   3 +-
+ tools/perf/util/session.c                 |  78 +++
+ tools/perf/util/tool.c                    |   2 +
+ tools/perf/util/tool.h                    |   4 +-
+ 64 files changed, 2208 insertions(+), 133 deletions(-)
+ create mode 100644 arch/x86/include/asm/unwind_user.h
+ create mode 100644 arch/x86/include/asm/unwind_user_types.h
+ create mode 100644 include/asm-generic/unwind_user.h
+ create mode 100644 include/asm-generic/unwind_user_types.h
+ create mode 100644 include/linux/sframe.h
+ create mode 100644 include/linux/unwind_deferred.h
+ create mode 100644 include/linux/unwind_deferred_types.h
+ create mode 100644 include/linux/unwind_user.h
+ create mode 100644 include/linux/unwind_user_types.h
+ create mode 100644 kernel/unwind/Makefile
+ create mode 100644 kernel/unwind/deferred.c
+ create mode 100644 kernel/unwind/sframe.c
+ create mode 100644 kernel/unwind/sframe.h
+ create mode 100644 kernel/unwind/sframe_debug.h
+ create mode 100644 kernel/unwind/user.c
+
 -- 
-2.45.2
+2.48.1
 
