@@ -1,132 +1,96 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0EE20F979
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 14:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4F613212A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 14:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737641795; cv=none; b=V6E8Pd1w7yAbGvz8XePndPjomhC6h0FZ+jiuUxF450NyI31QAIAH/+ctIxWV628Zfc2/KdWkDnisk/Ut15CsPfGYXW0063n1MMj+ymUSpJlWDGPNejq8UYvkGSJ8+IzI2ALPgrLvddD5Qox5PSueun0LpoEcIJMnFKYsTrTIDG4=
+	t=1737642252; cv=none; b=rAVhtYMr6zjBRPs9cfuwCYxZpxZuLNbsciPGxrpyTxXyXHgob5S5bmhc9Kb5vI0+13+sl8xKJD45KIlgZxghgk+LPSyFXxJhssOJlhviNcJsoWBN6DQ0ojDX7+xe5LXuhjOVV7nvbRh8t1AzFX6WJToXtkIDFJKkujOw+MUx5Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737641795; c=relaxed/simple;
-	bh=6V3W+o+MWoic0jA4thqpS40vCUdZ/uudiQaYYdeTdEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p4ZpPUT7XbKUJ7aI+7DpMRIPJdcfmd6x6Y8Z5HnV/BBg+hqJ9Tq2H1RSjzzbUrBelZcdxvV3UBRGBahPQcn2+FhnWuiLNKQ5KFIB8FJ059i4Zd2IKfzP15Ugn1TDPdHMlVCsGfn9ZY9iZF0oyj1KVsXWN8zZgf+fMi2zy3F4L+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vvlx3XyL; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1737642252; c=relaxed/simple;
+	bh=II5Eyae/nKkkX+C983iDGseqUUCfhcO2krxnXtRDn+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1YFT+60oyQJHbde5L1rhAFzyHNCWeDBLkMBpReeYtL8zQIw4LAS61LvHnScq1FtVwuxOPW+Vt1flILJINN0yUFo/iO54/Pb3A4DfUZZNzmQ+EBels+9yQiv9k2zYRANWOGYJcKTDVvC7sC8TpyHryFIVLlp5hv8uprwVTvw2Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=idupXs3m; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vvlx3XyL"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso6961685e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 06:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1737641791; x=1738246591; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QDz8608lNaW0P9BTT1X9DLek8Kcys+jnF/tb6a9Lcbw=;
-        b=Vvlx3XyLK269fz/1nd7DHEn9lt1dWkSZnvM3xyPmFiKFF3X7dyXNsy6zu1opJhq7hC
-         aDzl/gHg/lgksQ7mvGxoZtK1t64sNknbAsP2AKTTG0qLPQvwYo0mMfWfRGUWfMxznEAl
-         agVvTe4A6e+RzelX9HSh3Z4N6LqWh11u5I0TllfBz+yxao2lU4djR1AFhjAVrqKPf70l
-         ycH2feDrUvUqlXoAKSnCAHfjjSEyUANOkvsYkjSD03bdgkiCkq2tURFxWbFvoMBUdSei
-         NpI4Z7cJqZEmT5ecg1EdCDgX4NisstLkbn/QYeQAh0Qe6CwOEnJBSOol0JlW/9lOgELI
-         uFUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737641791; x=1738246591;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDz8608lNaW0P9BTT1X9DLek8Kcys+jnF/tb6a9Lcbw=;
-        b=XQ0kitkwwrlNKCEgVzcS3J5rkvEzpzOZ6RMO/tXT330goORg8EWDa0H0E5RMrOX2c1
-         oggJiF0LI/usWJpitEE8f4V64SV25gA0DN4BQk36/qkRXH6NIjaVPDVzES7TNuEllmXw
-         syVN5wGqya+SEyFzVUOegMm5UWbxQ9RjyDtSKSI8lIObV35JBC7kptKS6GkeNQEDkcqO
-         IUOD35KWnqB3qy7Qk8CE9KbTAmuHutFZVoO3H5Fe2aD6DRLoSaWEz+T/zSjcAqi34qEZ
-         iDjiz1Fta8FqyXmzhzp+00ebeby7P2bzNqOmM2yU21m1ZUaebabaZsCZkTdjuOGXb7qx
-         GUZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/tVgNs3prPisefo0AhRP6elPZAcaA9VY/uJT5fm8uEYpKp7r6qlTs6d8HPrVGpibhmNX+q0DRrNTOLZYtyPBP8u0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDUg2n3SvC6fiJFyeeE/BAvpHOggf0z2zwok0rJsClWa9v3LVu
-	5L0p+xm+XANFY1Y/lwP43StXZ+VOYQOhybUdC4TQsoG7U0EasT0Ox6e7Guc/0FY=
-X-Gm-Gg: ASbGnctuVd8dDn7aYlpUthgIahQnGkrKkW4b54ELVQpOpbG2z4MxZU81TiqA++tKtkB
-	04lkq7AItVpFlgKriXmB3xvJSgTJ5V3AYOMBRJlKBrQtChNBbOwU3JPv5xu8lTiUxcQKzBRtTyj
-	v2y8tZGIjDnK+00yjxAwjsx/mfqyvLLJdzpLrpFQYZldROP5noakFQQ2zrZJ/AyUFRTTIDtb6Cc
-	xRZoDyQakVltUr6JYhTEZ1Up/8ovdQwnL/CjCajBTQytiPF1FynpIF8GCC6qIjlk2jPqcPOmVbM
-	qY6puU5Y
-X-Google-Smtp-Source: AGHT+IEZ3PnxYGUvf8/rU964wji50OH+SsshrvGk6eo7bEmtZzJZRo7kuLNRZ25HdqIFvqguWQOL1A==
-X-Received: by 2002:a5d:4243:0:b0:386:2a3b:8aa with SMTP id ffacd0b85a97d-38bf57b3f56mr16813575f8f.37.1737641791528;
-        Thu, 23 Jan 2025 06:16:31 -0800 (PST)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3275595sm19543698f8f.67.2025.01.23.06.16.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2025 06:16:31 -0800 (PST)
-Message-ID: <4a9ca024-fc25-4fe0-94d5-65899b2cec6b@suse.com>
-Date: Thu, 23 Jan 2025 15:16:28 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idupXs3m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737642248;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Aty2gSuUnc20xeIO+5CFJZ09E99w1W0djcl+iae3VLk=;
+	b=idupXs3m1WqDt2uso0D9SEo2IMp7mfFyhO/gfV6X9JvqbHzVJNPowmYyGJizlAPqp9tPKG
+	7leHPt5TKksUzP1HlLufuHfMpwGUvO5Ds6oOEaMXTSjQaTgfEk6EvH7kZTlpqnim6aY1Dl
+	uh32YI6PoN3IdcInPpC0JfnrrYtctBo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-CJcCc9E6PICU-R62_bgGUg-1; Thu,
+ 23 Jan 2025 09:24:05 -0500
+X-MC-Unique: CJcCc9E6PICU-R62_bgGUg-1
+X-Mimecast-MFC-AGG-ID: CJcCc9E6PICU-R62_bgGUg
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 432C61955F30;
+	Thu, 23 Jan 2025 14:24:04 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.159])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A7D4C195608A;
+	Thu, 23 Jan 2025 14:24:01 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/4] rtla: Collect and print number of missed events
+Date: Thu, 23 Jan 2025 15:23:35 +0100
+Message-ID: <20250123142339.990300-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/10] module: introduce MODULE_STATE_GONE
-To: Mike Rapoport <rppt@kernel.org>
-Cc: x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>,
- Anton Ivanov <anton.ivanov@cambridgegreys.com>,
- Borislav Petkov <bp@alien8.de>, Brendan Higgins <brendan.higgins@linux.dev>,
- Daniel Gomez <da.gomez@samsung.com>, Daniel Thompson <danielt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, David Gow <davidgow@google.com>,
- Douglas Anderson <dianders@chromium.org>, Ingo Molnar <mingo@redhat.com>,
- Jason Wessel <jason.wessel@windriver.com>, Jiri Kosina <jikos@kernel.org>,
- Joe Lawrence <joe.lawrence@redhat.com>,
- Johannes Berg <johannes@sipsolutions.net>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
- Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
- Sami Tolvanen <samitolvanen@google.com>, Shuah Khan <shuah@kernel.org>,
- Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Thomas Gleixner <tglx@linutronix.de>, kgdb-bugreport@lists.sourceforge.net,
- kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-um@lists.infradead.org, live-patching@vger.kernel.org
-References: <20250121095739.986006-1-rppt@kernel.org>
- <20250121095739.986006-7-rppt@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250121095739.986006-7-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 1/21/25 10:57, Mike Rapoport wrote:
-> In order to use execmem's API for temporal remapping of the memory
-> allocated from ROX cache as writable, there is a need to distinguish
-> between the state when the module is being formed and the state when it is
-> deconstructed and freed so that when module_memory_free() is called from
-> error paths during module loading it could restore ROX mappings.
-> 
-> Replace open coded checks for MODULE_STATE_UNFORMED with a helper
-> function module_is_formed() and add a new MODULE_STATE_GONE that will be
-> set when the module is deconstructed and freed.
+Due to tracefs buffer overflow, it can happen that rtla misses events,
+making the tracing results inaccurate.
 
-I don't fully follow why this case requires a new module state. My
-understanding it that the function load_module() has the necessary
-context that after calling layout_and_allocate(), the updated ROX
-mappings need to be restored. I would then expect the function to be
-appropriately able to unwind this operation in case of an error. It
-could be done by having a helper that walks the mappings and calls
-execmem_restore_rox(), or if you want to keep it in module_memory_free()
-as done in the patch #7 then a flag could be passed down to
-module_deallocate() -> free_mod_mem() -> module_memory_free()?
+Count both the number of missed events and the total number of processed
+events, and display missed events as well as their percentage. The numbers
+are displayed for both osnoise and timerlat, even though for the earlier,
+missed events are generally not expected.
 
-It is at least good that MODULE_STATE_GONE is only set in free_module()
-past the sysfs teardown, so it never shows in
-/sys/module/<mod>/initstate. Otherwise, this would require teaching kmod
-about this state as well.
+For hist, the number is displayed at the end of the run; for top, it is
+displayed on each printing of the top table.
+
+Note: In the future, rtla might transition to using ftrace histogram
+triggers to collect data. In that case, this code will be removed;
+nevertheless, it is necessary until that happens.
+
+Tomas Glozar (4):
+  rtla: Count missed trace events
+  rtla: Count all processed events
+  rtla: Add function to report missed events
+  rtla: Report missed event count
+
+ tools/tracing/rtla/src/osnoise.c       | 20 ++++++++++++++
+ tools/tracing/rtla/src/osnoise.h       |  1 +
+ tools/tracing/rtla/src/osnoise_hist.c  |  1 +
+ tools/tracing/rtla/src/osnoise_top.c   |  1 +
+ tools/tracing/rtla/src/timerlat_hist.c |  1 +
+ tools/tracing/rtla/src/timerlat_top.c  |  1 +
+ tools/tracing/rtla/src/trace.c         | 38 ++++++++++++++++++++++++++
+ tools/tracing/rtla/src/trace.h         |  2 ++
+ 8 files changed, 65 insertions(+)
 
 -- 
-Thanks,
-Petr
+2.48.1
+
