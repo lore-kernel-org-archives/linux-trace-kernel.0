@@ -1,103 +1,132 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14AA20C03A;
-	Thu, 23 Jan 2025 08:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0EE20F979
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 14:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737621855; cv=none; b=d8PUdrUpzy/gfOAyEUVk1HOPerZYq3fHnJjULQ7AH8k5o2q4yaWCOyg2W+YKIOQB/Qp2ESlUkwQGwUuPt5/y6Ce6jrQn0wf9GQZQApuVVa+IbBl5XRIxH9pPVqs6og59wkScQA6OrWQyQ1FUqInOyoQjULaCJAX1J33lMq/yHTg=
+	t=1737641795; cv=none; b=V6E8Pd1w7yAbGvz8XePndPjomhC6h0FZ+jiuUxF450NyI31QAIAH/+ctIxWV628Zfc2/KdWkDnisk/Ut15CsPfGYXW0063n1MMj+ymUSpJlWDGPNejq8UYvkGSJ8+IzI2ALPgrLvddD5Qox5PSueun0LpoEcIJMnFKYsTrTIDG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737621855; c=relaxed/simple;
-	bh=st1hjqQiInuslmuy2R+7FlDnsIx1MG1MnaPMOJNL0vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulXY8ZImZsf1f+NknLuQNHAjzG1/7d/NtXxIxjGw8AB4DaW76jWlMMv0e/3GfbQtluJwizqm4vz9xuOuiKNfHmJCHoJIgOTjbuN9Qw7cGpOhiIGyuPAMWzWOYq5D2q2A/zeN/soJvD/jI7GKfbyaikM4MXsdg1w/LxteV0xtTPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kkgfc6iI; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1737641795; c=relaxed/simple;
+	bh=6V3W+o+MWoic0jA4thqpS40vCUdZ/uudiQaYYdeTdEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p4ZpPUT7XbKUJ7aI+7DpMRIPJdcfmd6x6Y8Z5HnV/BBg+hqJ9Tq2H1RSjzzbUrBelZcdxvV3UBRGBahPQcn2+FhnWuiLNKQ5KFIB8FJ059i4Zd2IKfzP15Ugn1TDPdHMlVCsGfn9ZY9iZF0oyj1KVsXWN8zZgf+fMi2zy3F4L+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Vvlx3XyL; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kkgfc6iI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JIR26XdPlkQ6JFnPOIfMnXovAk3Z9SvRrpY1FOaV/Bk=; b=kkgfc6iIiwED7WlUgGLj8idK9N
-	1qsg1iapI8oMBnRqQ/flzKANB0ryh9VTVJ61BQrWSEpPMTKHqljy9Tv0wCfjA/uFe9HngN89iKL1L
-	mDk2AVjStuOEGgObhFA2lvkUDDLN0DDIJ1vPM+ZO1UzrydSHjR9TQnvmxZoOvysYd+4t3aYAhf1IY
-	eh2I/3g/PtRePzvwY8NNI7pAAUA05EvqqLYS9oZ3IvCRvWaBAw4ANNHD7px4iN62ENQOgwLske+Ed
-	JSbG8NE94psflLmIg291i2uGOty+xW6OPlN+p7gXnCqyKRlWJ+kCs9DgYgBlN3t2mcBKGF9i1C4Pt
-	2Na4DxtA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tason-0000000Dl5d-1VAA;
-	Thu, 23 Jan 2025 08:44:05 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BBB4E3006E6; Thu, 23 Jan 2025 09:44:04 +0100 (CET)
-Date: Thu, 23 Jan 2025 09:44:04 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 34/39] perf: Skip user unwind if !current->mm
-Message-ID: <20250123084404.GH3808@noisy.programming.kicks-ass.net>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org>
- <20250122142910.GW7145@noisy.programming.kicks-ass.net>
- <20250122230838.lrmuxhowq6ezvoqp@jpoimboe>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Vvlx3XyL"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso6961685e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 06:16:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1737641791; x=1738246591; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QDz8608lNaW0P9BTT1X9DLek8Kcys+jnF/tb6a9Lcbw=;
+        b=Vvlx3XyLK269fz/1nd7DHEn9lt1dWkSZnvM3xyPmFiKFF3X7dyXNsy6zu1opJhq7hC
+         aDzl/gHg/lgksQ7mvGxoZtK1t64sNknbAsP2AKTTG0qLPQvwYo0mMfWfRGUWfMxznEAl
+         agVvTe4A6e+RzelX9HSh3Z4N6LqWh11u5I0TllfBz+yxao2lU4djR1AFhjAVrqKPf70l
+         ycH2feDrUvUqlXoAKSnCAHfjjSEyUANOkvsYkjSD03bdgkiCkq2tURFxWbFvoMBUdSei
+         NpI4Z7cJqZEmT5ecg1EdCDgX4NisstLkbn/QYeQAh0Qe6CwOEnJBSOol0JlW/9lOgELI
+         uFUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737641791; x=1738246591;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QDz8608lNaW0P9BTT1X9DLek8Kcys+jnF/tb6a9Lcbw=;
+        b=XQ0kitkwwrlNKCEgVzcS3J5rkvEzpzOZ6RMO/tXT330goORg8EWDa0H0E5RMrOX2c1
+         oggJiF0LI/usWJpitEE8f4V64SV25gA0DN4BQk36/qkRXH6NIjaVPDVzES7TNuEllmXw
+         syVN5wGqya+SEyFzVUOegMm5UWbxQ9RjyDtSKSI8lIObV35JBC7kptKS6GkeNQEDkcqO
+         IUOD35KWnqB3qy7Qk8CE9KbTAmuHutFZVoO3H5Fe2aD6DRLoSaWEz+T/zSjcAqi34qEZ
+         iDjiz1Fta8FqyXmzhzp+00ebeby7P2bzNqOmM2yU21m1ZUaebabaZsCZkTdjuOGXb7qx
+         GUZA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/tVgNs3prPisefo0AhRP6elPZAcaA9VY/uJT5fm8uEYpKp7r6qlTs6d8HPrVGpibhmNX+q0DRrNTOLZYtyPBP8u0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDUg2n3SvC6fiJFyeeE/BAvpHOggf0z2zwok0rJsClWa9v3LVu
+	5L0p+xm+XANFY1Y/lwP43StXZ+VOYQOhybUdC4TQsoG7U0EasT0Ox6e7Guc/0FY=
+X-Gm-Gg: ASbGnctuVd8dDn7aYlpUthgIahQnGkrKkW4b54ELVQpOpbG2z4MxZU81TiqA++tKtkB
+	04lkq7AItVpFlgKriXmB3xvJSgTJ5V3AYOMBRJlKBrQtChNBbOwU3JPv5xu8lTiUxcQKzBRtTyj
+	v2y8tZGIjDnK+00yjxAwjsx/mfqyvLLJdzpLrpFQYZldROP5noakFQQ2zrZJ/AyUFRTTIDtb6Cc
+	xRZoDyQakVltUr6JYhTEZ1Up/8ovdQwnL/CjCajBTQytiPF1FynpIF8GCC6qIjlk2jPqcPOmVbM
+	qY6puU5Y
+X-Google-Smtp-Source: AGHT+IEZ3PnxYGUvf8/rU964wji50OH+SsshrvGk6eo7bEmtZzJZRo7kuLNRZ25HdqIFvqguWQOL1A==
+X-Received: by 2002:a5d:4243:0:b0:386:2a3b:8aa with SMTP id ffacd0b85a97d-38bf57b3f56mr16813575f8f.37.1737641791528;
+        Thu, 23 Jan 2025 06:16:31 -0800 (PST)
+Received: from [10.100.51.161] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3275595sm19543698f8f.67.2025.01.23.06.16.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jan 2025 06:16:31 -0800 (PST)
+Message-ID: <4a9ca024-fc25-4fe0-94d5-65899b2cec6b@suse.com>
+Date: Thu, 23 Jan 2025 15:16:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250122230838.lrmuxhowq6ezvoqp@jpoimboe>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/10] module: introduce MODULE_STATE_GONE
+To: Mike Rapoport <rppt@kernel.org>
+Cc: x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Borislav Petkov <bp@alien8.de>, Brendan Higgins <brendan.higgins@linux.dev>,
+ Daniel Gomez <da.gomez@samsung.com>, Daniel Thompson <danielt@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, David Gow <davidgow@google.com>,
+ Douglas Anderson <dianders@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+ Jason Wessel <jason.wessel@windriver.com>, Jiri Kosina <jikos@kernel.org>,
+ Joe Lawrence <joe.lawrence@redhat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Petr Mladek <pmladek@suse.com>, Petr Pavlu <petr.pavlu@suse.com>,
+ Rae Moar <rmoar@google.com>, Richard Weinberger <richard@nod.at>,
+ Sami Tolvanen <samitolvanen@google.com>, Shuah Khan <shuah@kernel.org>,
+ Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Gleixner <tglx@linutronix.de>, kgdb-bugreport@lists.sourceforge.net,
+ kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-um@lists.infradead.org, live-patching@vger.kernel.org
+References: <20250121095739.986006-1-rppt@kernel.org>
+ <20250121095739.986006-7-rppt@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250121095739.986006-7-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 22, 2025 at 03:08:38PM -0800, Josh Poimboeuf wrote:
-> On Wed, Jan 22, 2025 at 03:29:10PM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 21, 2025 at 06:31:26PM -0800, Josh Poimboeuf wrote:
-> > > If the task doesn't have any memory, there's no stack to unwind.
-> > > 
-> > > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > > ---
-> > >  kernel/events/core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > index 99f0f28feeb5..a886bb83f4d0 100644
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -7792,7 +7792,7 @@ struct perf_callchain_entry *
-> > >  perf_callchain(struct perf_event *event, struct pt_regs *regs)
-> > >  {
-> > >  	bool kernel = !event->attr.exclude_callchain_kernel;
-> > > -	bool user   = !event->attr.exclude_callchain_user;
-> > > +	bool user   = !event->attr.exclude_callchain_user && current->mm;
-> > 
-> > What about things like io_uring helpers, don't they keep ->mm but are
-> > never in userspace?
+On 1/21/25 10:57, Mike Rapoport wrote:
+> In order to use execmem's API for temporal remapping of the memory
+> allocated from ROX cache as writable, there is a need to distinguish
+> between the state when the module is being formed and the state when it is
+> deconstructed and freed so that when module_memory_free() is called from
+> error paths during module loading it could restore ROX mappings.
 > 
-> Hm, that's news to me.  At least this patch doesn't make things worse in
-> that regard.
-> 
-> IIRC, user_regs(task_pt_regs(current)) returns false for kthreads
-> because the regs area is cleared.  We could add in a user_regs() check?
+> Replace open coded checks for MODULE_STATE_UNFORMED with a helper
+> function module_is_formed() and add a new MODULE_STATE_GONE that will be
+> set when the module is deconstructed and freed.
 
-Possibly, I've not yet dug into the io_worker thing in much detail yet.
+I don't fully follow why this case requires a new module state. My
+understanding it that the function load_module() has the necessary
+context that after calling layout_and_allocate(), the updated ROX
+mappings need to be restored. I would then expect the function to be
+appropriately able to unwind this operation in case of an error. It
+could be done by having a helper that walks the mappings and calls
+execmem_restore_rox(), or if you want to keep it in module_memory_free()
+as done in the patch #7 then a flag could be passed down to
+module_deallocate() -> free_mod_mem() -> module_memory_free()?
+
+It is at least good that MODULE_STATE_GONE is only set in free_module()
+past the sysfs teardown, so it never shows in
+/sys/module/<mod>/initstate. Otherwise, this would require teaching kmod
+about this state as well.
+
+-- 
+Thanks,
+Petr
