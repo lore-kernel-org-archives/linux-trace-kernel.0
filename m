@@ -1,63 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89841B3948;
-	Thu, 23 Jan 2025 23:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF7F1BDAB5;
+	Thu, 23 Jan 2025 23:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737675288; cv=none; b=aoQaymrp7uaZjjJ/F5sxVnKiv851sGqJ2AyTtAgUaGj/YxONC8wPDcBaPvPaQ8ZVi8pOuzkjXNcA88tQ4VIUyqNjINzjD5r9zWEGGhrSNncg2KjhqkyHc3uke3N+vf11A6sFwFtHFJ8E0TQu4QywXMRqRvJy1bUS54UX/kjnM0I=
+	t=1737676067; cv=none; b=oS9295GuKgG0m8dYqHhTyTfn1oeBqsz3bOAiC+UaFKXENTAVVQeQaLPK6zWt1ItCvvEhm21CgbhYaiP2ipstd55B7AXUPfMpLo6WdOUsyk6U5VHfA2J/pr7alg+vinv+2r3eXhzY2mrYqDHOiW8n9vrAQxOpc0+0z1y2CQVeT9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737675288; c=relaxed/simple;
-	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	s=arc-20240116; t=1737676067; c=relaxed/simple;
+	bh=wraYd2NGwuEyzk8Cgc5yaLobelCCviWThCaaKkdHMu8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i37APGCGsVBB58oT5DXFTmn1fZ/zz3XTFZk3barDc5uOfRGPGvkaZ7a9Uen7ndpSDTfsvQ3yl8WepOW1cE1DPKJGsEpNZrX0TO30LbSqgiA0HWhfc/cpHniuh4OWwuw5jyMmCHYW70kI5BJB2gzAUjW2yC6As6aGPD8tP2dMxCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=td7iJcvl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SH4/Jxmvow2rSM4DXVkMPChIlVUEbuAfJ+fXhvJLsLi7Yv+LZgdfFb9XQbmTwG+mtAgVv7krducSGbRx1BISaXSZHHQodn4j8B/wvPFNkvOPnhkpV+j1ZqCEaX1Zy4puOCciFEbQQbum/hmas2toSc3UMoyDMuKdmWSvY7sYSKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoM1KAGZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="td7iJcvl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 456F3C4CED3;
-	Thu, 23 Jan 2025 23:34:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoM1KAGZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BCFC4CED3;
+	Thu, 23 Jan 2025 23:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737675288;
-	bh=wltKtIfT/TCDwXyqaM/kVHw+sjdWjy2b3K+3XwkPwvE=;
+	s=k20201202; t=1737676067;
+	bh=wraYd2NGwuEyzk8Cgc5yaLobelCCviWThCaaKkdHMu8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=td7iJcvlHx3Mo9I/quWKQjNsyRBBwa0p8+r9vK/pejEgXCD07CHX5YaYXUob+Q1ul
-	 e/7fen+rXZu/iQz8ZCXNt2KkLV/+yWR2uRoo42fzY7Bjp8ZYp2wF4ctO1kmak7Y6Kv
-	 aTAvS6/iv2IO7YkYVjOfEvqY3hTEAqxN04HT8sbWmwsOiRbRPZQNVfog5rhOZwnPYn
-	 xPQ7EwiB7YU+GEsYUqlDw/MEE5ldAjfCLv+d1geJVq9DT77qdjbPMVpxD5p+3mnVu7
-	 ySHqaPh/DUrxJObIishUm2/tpP9u5zz115qyXZzJWUmDN7Rqc44s2Xhwlv4qricQWK
-	 RhYrAMdZv6WRw==
-Date: Thu, 23 Jan 2025 15:34:45 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 30/39] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250123233445.qhgb76tj7tjiqagj@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <4ea47a9238cb726614f36a0aad2a545816442e57.1737511963.git.jpoimboe@kernel.org>
- <20250122141505.GT7145@noisy.programming.kicks-ass.net>
- <20250122224902.hhpmhi7r3azz3a4x@jpoimboe>
- <20250123084026.GF3808@noisy.programming.kicks-ass.net>
- <20250123194807.2mn54dsk2ef5i4iy@jpoimboe>
- <20250123221734.GE969@noisy.programming.kicks-ass.net>
+	b=uoM1KAGZIiefDfHgZDxyELPBM22hTQH1XyHU+IpjJAIv2QNNwCPYMVqdM+htvYa6w
+	 d/Un2AKdgpKpInZhod29JdKJpafmOZ8d2d57cmMi1Akm2/cDrq5gmDCA3LgeTI3DUU
+	 dDY7Lz42F4b4Md8af6BpBtGZQ+loK2dOPaBW/haDChHwnz2lrvR6Fels6V9xvTvTsw
+	 CtGcpS4SVKObhi7BWGvmLIhQAXGXwAykmaj7bc4onqYX6qyotevurEzmT0FDC80Fgg
+	 xlGnalQak8rVIzU7ViSZumFDib6h7XwqcElLIpitqYAGiiIRWbQzzhPA03Vg5ERZhC
+	 dxgg1WiZJ0z0A==
+Date: Thu, 23 Jan 2025 15:47:44 -0800
+From: Kees Cook <kees@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+	brauner@kernel.org, viro@zeniv.linux.org.uk,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com, rostedt@goodmis.org, peterz@infradead.org,
+	mingo@kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev,
+	rppt@kernel.org, liam.howlett@oracle.com,
+	Jann Horn <jannh@google.com>, linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under
+ CAP_PERFMON
+Message-ID: <202501231526.A3C13EC5@keescook>
+References: <20250123214342.4145818-1-andrii@kernel.org>
+ <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,133 +51,125 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250123221734.GE969@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
 
-On Thu, Jan 23, 2025 at 11:17:34PM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 23, 2025 at 11:48:07AM -0800, Josh Poimboeuf wrote:
-> > > > > 	cookie = READ_ONCE(current->unwind_info.cookie);
-> > > > > 	do {
-> > > > > 		if (cookie)
-> > > > > 			return cookie;
-> > > > > 		cookie = ctx_to_cookie(cpu, ctr+1);
-> > > > > 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie, cookie));
-> > 
-> > Should not the 2nd argument be &zero?
+On Thu, Jan 23, 2025 at 01:52:52PM -0800, Suren Baghdasaryan wrote:
+> On Thu, Jan 23, 2025 at 1:44 PM Andrii Nakryiko <andrii@kernel.org> wrote:
+> >
+> > It's very common for various tracing and profiling toolis to need to
+> > access /proc/PID/maps contents for stack symbolization needs to learn
+> > which shared libraries are mapped in memory, at which file offset, etc.
+> > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
+> > are looking at data for our own process, which is a trivial case not too
+> > relevant for profilers use cases).
+> >
+> > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
+> > discover memory layout of another process: it allows to fully control
+> > arbitrary other processes. This is problematic from security POV for
+> > applications that only need read-only /proc/PID/maps (and other similar
+> > read-only data) access, and in large production settings CAP_SYS_PTRACE
+> > is frowned upon even for the system-wide profilers.
+> >
+> > On the other hand, it's already possible to access similar kind of
+> > information (and more) with just CAP_PERFMON capability. E.g., setting
+> > up PERF_RECORD_MMAP collection through perf_event_open() would give one
+> > similar information to what /proc/PID/maps provides.
+> >
+> > CAP_PERFMON, together with CAP_BPF, is already a very common combination
+> > for system-wide profiling and observability application. As such, it's
+> > reasonable and convenient to be able to access /proc/PID/maps with
+> > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
+> >
+> > For procfs, these permissions are checked through common mm_access()
+> > helper, and so we augment that with cap_perfmon() check *only* if
+> > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't be
+> > permitted by CAP_PERFMON.
+> >
+> > Besides procfs itself, mm_access() is used by process_madvise() and
+> > process_vm_{readv,writev}() syscalls. The former one uses
+> > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMON
+> > seems like a meaningful allowable capability as well.
+> >
+> > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
+> > permissions (though for readv PTRACE_MODE_READ seems more reasonable,
+> > but that's outside the scope of this change), and as such won't be
+> > affected by this patch.
 > 
-> This I suppose
+> CC'ing Jann and Kees.
 > 
-> 	cookie = READ_ONCE(current->unwind_info.cookie);
-> 	do {
-> 		if (cookie)
-> 			return cookie;
-> 	} while (!try_cmpxchg64(&current->unwind_info.cookie, &cookie,
-> 				ctx_to_cookie(cpu, ctr+1)));
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  kernel/fork.c | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index ded49f18cd95..c57cb3ad9931 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_struct *task)
+> >  }
+> >  EXPORT_SYMBOL_GPL(get_task_mm);
+> >
+> > +static bool can_access_mm(struct mm_struct *mm, struct task_struct *task, unsigned int mode)
+> > +{
+> > +       if (mm == current->mm)
+> > +               return true;
+> > +       if ((mode & PTRACE_MODE_READ) && perfmon_capable())
+> > +               return true;
+> > +       return ptrace_may_access(task, mode);
+> > +}
 
-Here's what I have at the moment.  unwind_deferred_request() is vastly
-simplified thanks to your suggestions, no more NMI-specific muck.
-work->pending is replaced with work->cookie so the task work can use it
-in case it crossed the cookie-clearing boundary (return-to-user with
-IRQs disabled).
+nit: "may" tends to be used more than "can" for access check function naming.
 
-static inline bool nmi_supported(void)
-{
-	return IS_ENABLED(CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG);
-}
+So, this will bypass security_ptrace_access_check() within
+ptrace_may_access(). CAP_PERFMON may be something LSMs want visibility
+into.
 
-/*
- * Read the task context cookie, initializing it if this is the first request
- * since the most recent entry from user.
- */
-static u64 get_cookie(void)
-{
-	struct unwind_task_info *info = &current->unwind_info;
-	u64 ctr, cookie, old_cookie = 0;
-	unsigned int cpu;
+It also bypasses the dumpability check in __ptrace_may_access(). (Should
+non-dumpability block visibility into "maps" under CAP_PERFMON?)
 
-	cookie = READ_ONCE(info->cookie);
-	if (cookie)
-		return cookie;
+This change provides read access for CAP_PERFMON to:
 
-	guard(irqsave)();
+/proc/$pid/maps
+/proc/$pid/smaps
+/proc/$pid/mem
+/proc/$pid/environ
+/proc/$pid/auxv
+/proc/$pid/attr/*
+/proc/$pid/smaps_rollup
+/proc/$pid/pagemap
 
-	cpu = raw_smp_processor_id();
-	ctr = __this_cpu_read(unwind_ctx_ctr);
+/proc/$pid/mem access seems way out of bounds for CAP_PERFMON. environ
+and auxv maybe too much also. The "attr" files seem iffy. pagemap may be
+reasonable.
 
-	cookie = ctx_to_cookie(cpu, ++ctr);
+Gaining CAP_PERFMON access to *only* the "maps" file doesn't seem too
+bad to me, but I think the proposed patch ends up providing way too wide
+access to other things.
 
-	/* Make sure the cookie is non-zero. */
-	if (!cookie)
-		cookie = ctx_to_cookie(cpu, ++ctr);
+Also, this is doing an init-namespace capability check for
+CAP_PERFMON (via perfmon_capable()). Shouldn't this be per-namespace?
 
-	/* Write the task cookie unless an NMI just now swooped in to do so. */
-	if (!try_cmpxchg64(&info->cookie, &old_cookie, cookie))
-		return old_cookie;
+-Kees
 
-	/* Success, update the context counter. */
-	__this_cpu_write(unwind_ctx_ctr, ctr);
-
-	return cookie;
-}
-
-/*
- * Schedule a user space unwind to be done in task work before exiting the
- * kernel.
- *
- * The returned cookie output is a unique identifer for the current task entry
- * context.  Its value will also be passed to the callback function.  It can be
- * used to stitch kernel and user stack traces together in post-processing.
- *
- * It's valid to call this function multiple times for the same @work within
- * the same task entry context.  Each call will return the same cookie.  If the
- * callback is already pending, an error will be returned along with the
- * cookie.  If the callback is not pending because it has already been
- * previously called for the same entry context, it will be called again with
- * the same stack trace and cookie.
- *
- * Thus are three possible return scenarios:
- *
- *   * return != 0, *cookie == 0: the operation failed, no pending callback.
- *
- *   * return != 0, *cookie != 0: the callback is already pending. The cookie
- *     can still be used to correlate with the pending callback.
- *
- *   * return == 0, *cookie != 0: the callback queued successfully.  The
- *     callback is guaranteed to be called with the given cookie.
- */
-int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
-{
-	enum task_work_notify_mode mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
-	u64 zero = 0;
-	int ret;
-
-	*cookie = 0;
-
-	if (!current->mm || !user_mode(task_pt_regs(current)))
-		return -EINVAL;
-
-	if (!nmi_supported() && in_nmi())
-		return -EINVAL;
-
-	/* Return a valid @cookie even if the callback is already pending. */
-	*cookie = READ_ONCE(work->cookie);
-	if (*cookie)
-		return -EEXIST;
-
-	*cookie = get_cookie();
-
-	/* Claim the work unless an NMI just now swooped in to do so. */
-	if (!try_cmpxchg64(&work->cookie, &zero, *cookie))
-		return -EEXIST;
-
-	/* The work has been claimed, now schedule it. */
-	ret = task_work_add(current, &work->work, mode);
-	if (WARN_ON_ONCE(ret)) {
-		WRITE_ONCE(work->cookie, 0);
-		return ret;
-	}
-
-	return 0;
-}
+> > +
+> >  struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+> >  {
+> >         struct mm_struct *mm;
+> > @@ -1559,7 +1568,7 @@ struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+> >         mm = get_task_mm(task);
+> >         if (!mm) {
+> >                 mm = ERR_PTR(-ESRCH);
+> > -       } else if (mm != current->mm && !ptrace_may_access(task, mode)) {
+> > +       } else if (!can_access_mm(mm, task, mode)) {
+> >                 mmput(mm);
+> >                 mm = ERR_PTR(-EACCES);
+> >         }
+> > --
+> > 2.43.5
+> >
 
 -- 
-Josh
+Kees Cook
