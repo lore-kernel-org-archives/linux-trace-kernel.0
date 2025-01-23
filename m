@@ -1,118 +1,98 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7F51CAA88
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 21:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307051ADC62;
+	Thu, 23 Jan 2025 21:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737669419; cv=none; b=KUnr0fkN4sb72v/bKamV52vqdL3x9YtxRm99+tBxWzHTksus88kOM2ZVzAbvFUXJisr/eqmDv2X5Cn62XcSgFf9d7wEyftou0udLjompvCUK1nvpG8dUiyEnjqntXxhdx3LIX2tvfFJHSG7nbG2ruKFLBrNjVrnVxHZ8EZHQHnc=
+	t=1737669505; cv=none; b=qe1vi83XaD02vwynqCwEh7ofSTTBxpFo/G6pFti/4xBELYJi4TPd4oHo7zYJbnstm0xJtXr2Xid+UAhzhnJ83AsQlu57pN3IGGRFMe7RF3JKV6+gLHb2CcQZG7uZXw+dTu7lhDEXxi/MD/s7p099Ol3PjH8hIgQcShD9FVUL8Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737669419; c=relaxed/simple;
-	bh=ET0YpMKcnEM4kXMJlil3SBGzPFm72b+kLPD1LpTlE1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OuYXeERNprOrYArIYWDvAG6vykvY3huZ6uyqO2q0r4/eE43Oz9SQHF7mEjNUKVn87LsqHwpqIuG0846ivS3D5FR1KcgzQB0xjNQ5p6MzshtgNu3T/FTM7pUi84rx07gHkI7kTAyfEMxObrb1FWqnHCMfvQA/DYLsIZGiuwWHpWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Nkx//i1C; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1737669505; c=relaxed/simple;
+	bh=9rcbE/tWYx4kR1XtsKMPoeF25ePGaY1BnaIUIBuqQ7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKMgTHVQ8k4PvxaGK3EdT0AFu1WQhtCxrZ8kGhEHm+2c+ONmWNEDcmLWPkoRJuvFlD/7hGEvzR8iahmnzl427Dvwva8v9Kcg9h12qMn99yPdlgB9n842D250q7xLXybycJyKxiD+xRQSlBqStZyEzvgCvdwaWI3cu/IgIePFAWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mo2EBC+U; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Nkx//i1C"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3cf82bd380bso11802395ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 13:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1737669416; x=1738274216; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6/MnMokqSKu9BN0xk+SORtAOPFwZI9wvc/uRSw/lRyE=;
-        b=Nkx//i1CRHstIwax0Ummp1k1/67Mkya1TyEpEwlia9vF68M00T154gHLu01xMQfjav
-         9bN+vrO7ietvpZlpj4DMG4vmkrgLDZTcqC+2hO3m3LaZi6v+7LR/h5/C+1bNEyVDq/3J
-         ngsaLSWI5JGqkR5MXxjaPGtYdaAqbZ39ev4RY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737669416; x=1738274216;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6/MnMokqSKu9BN0xk+SORtAOPFwZI9wvc/uRSw/lRyE=;
-        b=CTMZttCXOv+kvDPI3u8j/MQJVMNiM7WAZ9gCE69pBpWfCksiu86WeHxBZes+lUpi1O
-         jV26E3GcckpUsG22XMeCxxsoFSYbIRjGVCPTUDTBc1bVC6cU3p0L1SThVD84CvGHNTPQ
-         7sKXNsJN2/1ijdfBzYiGhxg+/WHaNJaW90VRz2ysfRoLE6b/uLO07HRd2Q29uuwGl94F
-         Wl8uOIb8OAEU/ZYmIFXvOz7HK/fRSSpiuGNtttehw1ox9LNxq/pCv3ZVxSkbq+R2z/9k
-         K/6HAaxZbRzOFPvQUR4kZ8ukgdxOZMSNlAAujDXXTRV2KtuOv13FPISr0SHEja+S3qJp
-         X5ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWicV+P8Ox40rVANGx/4PEfcsQxqw2nEZo5sghrGjdYyEjKyPXaRSVaiZ52X7mMQ0GLilOakKm/UizLlCNHNPFSSnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEjZUszoS5bp1I+L4ViZS6rYrwc1SgiAKnVXYYT8oqL5hPArJZ
-	a9gyl4fnWwOeR0iNSO/GIK5bkYvhDIq03NR5ydn9fs+Q86OyjCgzdbR2rEoV2fs=
-X-Gm-Gg: ASbGncv21R4rFKTNZF9UP0DX11N+ewk1l2P4TxBqVrv34nfApdkLBIEbFNhpTMl/01f
-	E/hy+tAtyweZB1bBEKusxHQ38XMCUYOKSSaUWhie3rUTnNeuV7WqyHdukRnnpF0CdurGc7H3OBm
-	PkiB0kdftiZMe4A25CpFBym43JEbS9r9/hrffPl0FdaTJGqDcig4mfUaTvAJwREbNsSEDoF3cNI
-	jv4HwoOXApEbGz9FI23OgjLXIlwlF80AEu9edN2p6PGTpjgL4JsIeuxmYdZrZwN0R+9Yv8kWfsw
-	Fe9LuMnaHZ+0p4M=
-X-Google-Smtp-Source: AGHT+IGYTAArNpdyyZwafhJ+kc2ko45bmyLxeOp/XuBVSjl25NBhXrOxRgs+f5XK9soZP6J3iUbJXA==
-X-Received: by 2002:a05:6e02:160b:b0:3cf:b3ee:59e8 with SMTP id e9e14a558f8ab-3cfb3ee5b5cmr79160885ab.7.1737669416350;
-        Thu, 23 Jan 2025 13:56:56 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3cfc74e9472sm1859335ab.55.2025.01.23.13.56.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jan 2025 13:56:55 -0800 (PST)
-Message-ID: <571133ce-b4ae-4a9f-8601-443774804d1e@linuxfoundation.org>
-Date: Thu, 23 Jan 2025 14:56:55 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mo2EBC+U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=A1EUQwEK7MhhTZh75brMkm+Qa6CkxTUSPyD4hyyealM=; b=mo2EBC+UmMcR4kB37B3laxOgR4
+	SUPokGDHhmyjBalpwTl/AK0WIAnZBeFicrMQXomW05hSUZuR0UJM6H/JtMXypQY61alP23/KegON8
+	nlfG4JEE9sytFrtTvX2UU2vtzsDIbzlbaVdWK1acfLAlW6HNHvKcyR5LrKIKDDUoHYqQJm/4cFDdp
+	VUdV/6qp0/y6PozZ7Y/70x/e6f/tB+Y8Nd5aUDtiuJjP65ubFCFWd6R/NTSnOKH2bOv8vN15ZNl+/
+	3ijNSrsUHYZFMdzwbzG3X08B5NbBPvJ3gSmUIFMPPGXFH3UJARFmI9HiYStEXyOKYCPzWzHPeX+b2
+	X4oVKzzQ==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tb5DD-0000000B5kK-115y;
+	Thu, 23 Jan 2025 21:58:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CAB913006E6; Thu, 23 Jan 2025 22:58:06 +0100 (CET)
+Date: Thu, 23 Jan 2025 22:58:06 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250123215806.GC969@noisy.programming.kicks-ass.net>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org>
+ <20250122133730.GQ7145@noisy.programming.kicks-ass.net>
+ <20250122141616.GU7145@noisy.programming.kicks-ass.net>
+ <20250122225127.qhxmqamg7pnugnya@jpoimboe>
+ <20250123081718.GC3808@noisy.programming.kicks-ass.net>
+ <20250123183056.rnl4nbihml6pxx2n@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/tracing: Test only toplevel README file not the
- instances
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250115191758.35b62738@gandalf.local.home>
- <20250115202607.00c6d353@gandalf.local.home>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250115202607.00c6d353@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250123183056.rnl4nbihml6pxx2n@jpoimboe>
 
-On 1/15/25 18:26, Steven Rostedt wrote:
-> On Wed, 15 Jan 2025 19:17:58 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Jan 23, 2025 at 10:30:56AM -0800, Josh Poimboeuf wrote:
+> On Thu, Jan 23, 2025 at 09:17:18AM +0100, Peter Zijlstra wrote:
+> > On Wed, Jan 22, 2025 at 02:51:27PM -0800, Josh Poimboeuf wrote:
+> > > On Wed, Jan 22, 2025 at 03:16:16PM +0100, Peter Zijlstra wrote:
+> > > The ctx_ctr is always incremented before calling this, so 0 isn't a
+> > > valid cookie.
+> > 
+> > Right, so that's the problem. You're considering 0 an invalid cookie,
+> > but ctx_to_cookie(0, 1<<48) will be a 0 cookie.
+> > 
+> > That thing *will* wrap.
 > 
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> For the tests that have both a README attribute as well as the instance
->> flag to run the tests as an instance, the instance version will always
->> exit with UNSUPPORTED. That's because the instance directory does not
->> contain a README file. Currently, the tests check for a README file in the
->> directory that the test runs in and if there's a requirement for something
->> to be present in the README file, it will not find it, as the instance
->> directory doesn't have it.
->>
->> Have the tests check if the current directory is an instance directory,
->> and if it is, check two directories above the current directory for the
->> README file:
->>
->>    /sys/kernel/tracing/README
->>    /sys/kernel/tracing/instances/foo/../../README
+> Well, yes, after N years of sustained very high syscall activity on CPU
+> 0, with stack tracing enabled, in which multiple tracer unwind requests
+> happen to occur in the same entry context where ctx_ctr wrapped, one of
+> the tracers might get an invalid cookie.
 > 
-> This is the same patch as:
-> 
->    https://lore.kernel.org/all/20250116012041.326701057@goodmis.org/
-> 
-> But as there are other patches that depended on it, I just added this one
-> into a patch set with them. But decided not to make that patch set a v2 as
-> there was no changes with this one.
-> 
-> Damn, I forgot to add Shuah and kselftests mailing list to that one though :-p
-> 
+> I can double-increment the counter when it's (1UL << 48) - 1).  Or use
+> some other bit for "cookie valid".
 
-Do I need to do anything or is this taken care of?
-
-thanks,
--- Shuah
+Right, steal one bit from counter and make it always 1. 47 bit wrap
+around should be fine.
