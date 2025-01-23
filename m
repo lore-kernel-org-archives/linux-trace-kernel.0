@@ -1,128 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F6D212B3B
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 23 Jan 2025 14:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC5814831C;
+	Thu, 23 Jan 2025 17:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737642260; cv=none; b=XgA2HjKxy1Ik9CqdNPu8x/jybllrI5/aWcQR/PB51/VSotzymQ0ubj6GJCIWGk6gBbKCFCiN6lUbaJMo+xF0OoLZL8Qtt3u/Bj007QUNpOOqDmOpCqnhO5Up9+/lnrpm5eOyOXZAfNy+LZMhJqo+THZqCZF/GvRr0hJnVzkhWns=
+	t=1737652513; cv=none; b=qHJ1q1hdX44/ymm/AhWD5yW5/iRMz7X5m4vlbSz47WsUfuByg1Oxbu7OxVCyPf8N2djbnWMp1Ds3h+XbvZj3JbsjOsrGLnwN4qKH5sGRHb29K0u0LqBLr2gPUIUdGBBZs/iJKLnE/hUKKUAzEU4v4sT5GssBju5FuGG4j1ZJkRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737642260; c=relaxed/simple;
-	bh=vzV1pu569wUAZZPK2GM3xIcUxpgyTnYsnbHAqylWgVM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VCZtgSDAV/xKrv1/41bTryjFnNv/xiZ1eXkRiBVjayMSWl2HrKfTw+YWU4klLktcYytbYSVnXlQ2e/HDwvIEzoMBzcwnk0qQEsNY/5qqeMrIcDjTlgnhWhV4Wj+BHEJtKENrvkXp6bbF7L+D34E27Yuu64bL8X3h9iM/36eDyUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J65kmbWo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1737652513; c=relaxed/simple;
+	bh=nu69aD+91RPxf0w6srnLP3MSuMQn0rt5CBqU9EAgxAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pDlyPINPnwASjN4CDCdaJyBNCkwxb/iWPkiPVJidyHsepeoSvRBExm2I9mWYf9DfaCFQpQaeIO6q1tMf3XnQCXSMOyJ+ZShaMiMugK51nijt6+OAgI3cUBtyW3UIXBo9tz5c0rxwBpsFqG28aaOPo0x91wgGuGmy5otgIpcH7yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N54iZ65m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J65kmbWo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1737642257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vhEbJ0twsd+a13mE/uEYxjwrWT3AcdPk5UPVwuPtOrE=;
-	b=J65kmbWor1OlCNxNtabHEgVxc1B9ZVphTFSpH29KPALnVhB8bfXiMYX27V5wX+NJWiTIUJ
-	ADMPumotYmvf5wmo3hyynDjfrAiHz2hGmQZ71ZTd+O1qzvs/qUS2x9gLECBcdhgVx1WIcz
-	MIPYIgmJd3BGgmapt/rSyq+xpYluGzI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-OUpqexOXM2qDqRPhMcYNVw-1; Thu,
- 23 Jan 2025 09:24:16 -0500
-X-MC-Unique: OUpqexOXM2qDqRPhMcYNVw-1
-X-Mimecast-MFC-AGG-ID: OUpqexOXM2qDqRPhMcYNVw
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90E261955DCF;
-	Thu, 23 Jan 2025 14:24:15 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.159])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AD28195608A;
-	Thu, 23 Jan 2025 14:24:13 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 4/4] rtla: Report missed event count
-Date: Thu, 23 Jan 2025 15:23:39 +0100
-Message-ID: <20250123142339.990300-5-tglozar@redhat.com>
-In-Reply-To: <20250123142339.990300-1-tglozar@redhat.com>
-References: <20250123142339.990300-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N54iZ65m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6455BC4CEE0;
+	Thu, 23 Jan 2025 17:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737652512;
+	bh=nu69aD+91RPxf0w6srnLP3MSuMQn0rt5CBqU9EAgxAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N54iZ65mtW8O7/RdKqepmL7ZjqSLNc11Sn3rDIn036WpL9vbWkbHW7SNOerTAwEBi
+	 8TWEvOo0aG+m/ZjyeLToNm52ylh9Bjpb7s1m1ln0bt8jzEnzGqIOw+ywhCJuWHMQnk
+	 wL8dAOWk68YOAATv8loCVqEnKnXlyUTGJ6TZaDYZ3aVbHzjgxmz+oKCYy5LI9T3Bqj
+	 k9c71sP953nrvp7NdbbZQ48PGHxefmwpIYoPfan10l7wvyS56E/yM63eJ9FU2I/glV
+	 t0kX7be4SGnNuQGZ0LuvoxvDl9e2oZmlLrm97Hd5fy0dw/ly/diIotCa8CyzV9ZBU7
+	 Dqed7KpWsMIig==
+Date: Thu, 23 Jan 2025 09:15:09 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 01/39] task_work: Fix TWA_NMI_CURRENT error handling
+Message-ID: <20250123171509.3xmrbrbmu3tsll7w@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <b46cca62b5ebd131d0a744572e57f5ebc53d5ef4.1737511963.git.jpoimboe@kernel.org>
+ <20250122122821.GN7145@noisy.programming.kicks-ass.net>
+ <20250122204720.t42a4em5endxox3y@jpoimboe>
+ <20250123081403.GA3808@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250123081403.GA3808@noisy.programming.kicks-ass.net>
 
-Print how many events were missed by trace buffer overflow in the main
-instance at the end of the run (for hist) or during the run (for top).
+On Thu, Jan 23, 2025 at 09:14:03AM +0100, Peter Zijlstra wrote:
+> On Wed, Jan 22, 2025 at 12:47:20PM -0800, Josh Poimboeuf wrote:
+> > What exactly do you mean by "NMI like"?  Is it because a #DB might be
+> > basically running in NMI context, if the NMI hit a breakpoint?
+> 
+> No, #DB, #BP and such are considered NMI (and will have in_nmi() true)
+> because they can trigger anywhere, including sections where IRQs are
+> disabled.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/osnoise_hist.c  | 1 +
- tools/tracing/rtla/src/osnoise_top.c   | 1 +
- tools/tracing/rtla/src/timerlat_hist.c | 1 +
- tools/tracing/rtla/src/timerlat_top.c  | 1 +
- 4 files changed, 4 insertions(+)
+So:
 
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 214e2c93fde0..21376c00bcb3 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -440,6 +440,7 @@ osnoise_print_stats(struct osnoise_hist_params *params, struct osnoise_tool *too
- 	trace_seq_reset(trace->seq);
- 
- 	osnoise_print_summary(params, trace, data);
-+	osnoise_report_missed_events(tool);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 45647495ce3b..3d3daf12538d 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -280,6 +280,7 @@ osnoise_print_stats(struct osnoise_top_params *params, struct osnoise_tool *top)
- 
- 	trace_seq_do_printf(trace->seq);
- 	trace_seq_reset(trace->seq);
-+	osnoise_report_missed_events(top);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 4403cc4eba30..c18b3456a3d5 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -656,6 +656,7 @@ timerlat_print_stats(struct timerlat_hist_params *params, struct osnoise_tool *t
- 
- 	timerlat_print_summary(params, trace, data);
- 	timerlat_print_stats_all(params, trace, data);
-+	osnoise_report_missed_events(tool);
- }
- 
- /*
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 059b468981e4..8869a0988955 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -435,6 +435,7 @@ timerlat_print_stats(struct timerlat_top_params *params, struct osnoise_tool *to
- 
- 	trace_seq_do_printf(trace->seq);
- 	trace_seq_reset(trace->seq);
-+	osnoise_report_missed_events(top);
- }
- 
- /*
+  - while exceptions are technically not NMI, they're "NMI" because they
+    can occur in NMI or IRQ-disabled regions
+
+  - such "NMI" exceptions can be preempted by NMIs and "NMIs"
+
+  - NMIs can be preempted by "NMIs" but not NMIs (except in entry code!)
+
+... did I get all that right?  Not subtle at all!
+
+I feel like in_nmi() needs a comment explaining all that nonobviousness.
+
 -- 
-2.48.1
-
+Josh
