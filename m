@@ -1,223 +1,149 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF5713AC1;
-	Fri, 24 Jan 2025 01:02:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D38282F5;
+	Fri, 24 Jan 2025 01:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737680578; cv=none; b=llvwYU4ZYXVFGuY4LeJlgbDpA8nplo2nwBBwLbR179HfEPNiZF23Bsxm4QLoWigOFItjCzhL4RoiC2lKGid7GgvnSJLqVlno+wz2c5tjvCRQjJt2X37uvOKbou92h3CdbedT6JkxF+w42Wbmp5ZGacyHQa2BbuhMOPN78E+T8nY=
+	t=1737682913; cv=none; b=e96nAxXXJmJPzxI6FCR9L7EaqldVpskWBJ2uy8JnTtaTD4fVqrwcVqhhOHXJeoWjh225Fkz74XHBIuzvqIGYv9kKwANpCVQQLqpDWFYfu1OyXjXRe5Y5OzRYrGYEzXtW/TvgK6n4yzH2glKwnukhHYUgmWvs0Lg/ObrZmer6tfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737680578; c=relaxed/simple;
-	bh=Rq8kZwwXGjztMSgzkUP1H/YqKvt3qDXZ21j1s3ck1B0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cpyhzq3Vv3xGeAxqCjEvsT0CLCFOMvhYO5S2hVzLVT8hZ7LvO5dLHrIek8qHIqGR7F9NJ7Vi20Rr0Q+K447pbxIMuvMelnId/pIAk76FbcwAlLhTjEmhfLkaxU+SScNjqqvkwRqiWC7dEf1Xtdui+NkG64au3vXjnE1Rr0A5xJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kb6LZiNn; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kb6LZiNn"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2164b1f05caso26478215ad.3;
-        Thu, 23 Jan 2025 17:02:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737680576; x=1738285376; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D0aJPrChJkjhsAZYwCY7691Ium0idIWe4UuZ5CwOmvw=;
-        b=Kb6LZiNnNsy45N3x9BUZFMAT4m6MYqT+uR0+JumMm/Djz5cdVm2C4r0GvxM63OmSEH
-         l1PSTbzOp8L9w/dICbUs5YMkofRCje5vJlUs4pRgbSo77q4fl5ZB1aGX0g9jIBqPJtdc
-         7jKBoMSBShHtFfq47Him6yNUEA3dSs7OPpbiyEQFgZfEpjQpOZwPzGBIwvaUM2jQPkKt
-         fIn+vPoFJWZfY9WjIZ9AILWZr3iV80FO773MAVCZzNKECOCd/P14hdXBOgFnUVt5APD9
-         LI09+VEIUgh9GSCzxn0uPGzTaU77HJE4UChWaPrxUQVaJYGhFX1Q+GOopJbQOhEANWH+
-         eVgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737680576; x=1738285376;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D0aJPrChJkjhsAZYwCY7691Ium0idIWe4UuZ5CwOmvw=;
-        b=MjOTqwhjbcK1j0kr7iqCZceraRSlra/Kj8NjJ8nsGB53JxsBv7TLB/vUl+oDtU9UFt
-         8IBRUoPVAAJVuqUTk5gcWfpRsEPMxFakdkk42ZL/tg29XBrJP7TCq52BGVVfE57ArTz7
-         mYDdAUHZdzirDR0k0DvxyUKWngQ90MCn9uGyvFD6b6zvfNlLlo0lU0wp8j74wjKvIx1/
-         Ty2U3acu/ZPv2BYeS745nn8RCC0+D38FG/MYimohgFpC00CvcKPJusv5uKWRmNqIlzuI
-         Et+6dWBnrz8IH8xWzXEk9rH7m+1w7K8wSMK8UJxjGUqbEfMWhuCoC+YQ8eKpKJaLSMUH
-         lHjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVoL64CgoE96StzztDnzCoNcCa553cmitgbw1j0ftFvkBNw5S0uqWcm6luVK+uui7pkZUWxluW1ncd4iHVpzo03MYNT@vger.kernel.org, AJvYcCWBH6hdcZhfbKM+BzXMqbcYhB35nRFkjN1vw9BfaP4Lcdo6sR47ry3/WZEolcuX1PQU+neB5FP3l8W8t0mkWz1jigVbTQ8p@vger.kernel.org, AJvYcCWX4TCHlJ6M4uATqoGFK0zxGyGSETJUJxPRipujI6vxo47wzTusAvP5DvJm/Ja9pmANJ0XgL4hSe8Rzjmle@vger.kernel.org, AJvYcCX+PidXgu/ui01K/XinzcD5HOrODeuSeIByspoFSIeAp/R0FD3O/LsjGgyQe7b76J2HV3yWw9vtKXL+IjOm44IaFw==@vger.kernel.org, AJvYcCX+f5nJHPYRXgSiJ54IxtDTVeulIYh33Tz2Oq7DbBVM/AqGscy42fIQJa19Ir964Z8hTYx0eFyfiNcsER05Sg==@vger.kernel.org, AJvYcCXaCd4buSUOdEaoz+zE+Ofv+V5kn/GYa+gRTdO4xfyOdaFhrLPoYJ3uLKWOQwKYP3bMEAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIIAHlsE42BcU1oPbov3lmOXRm29pJ6/rsS6RG3F5LVzlEDUZU
-	n44a/8was8Uj8CpOJA4a7yZubZGGPoVsLKyYNObWq4Dzjj1QWxBZgZIPZI1wzOIhvxNNhoSE9Rk
-	ahQFMpsn4qsSMqUzF29nuOGagVlI=
-X-Gm-Gg: ASbGncvxxKVuFToK6jNUADiaOvo7zJcrVEc9Mq2Gq9qc3Wa4CdubRaKmXZe/IpusTJq
-	Ic8AWtlNMIh4g5AxTLe8usshh98emVUlvS19ptjzsqT7zGYTWjAiXg+Eh98SFMulceBRh5ykcug
-	SJzQ==
-X-Google-Smtp-Source: AGHT+IEuyDzr4dFkkBvqvAW5OHSqHScPRQtMfqosR3W768baJCU6A9tUKJV1y5CH1vjwgjK9jbohovckbO/Io8mhO64=
-X-Received: by 2002:a05:6a00:4214:b0:727:3c8f:3707 with SMTP id
- d2e1a72fcca58-72dafbf3b34mr41968026b3a.23.1737680575847; Thu, 23 Jan 2025
- 17:02:55 -0800 (PST)
+	s=arc-20240116; t=1737682913; c=relaxed/simple;
+	bh=vvVHDhTPndi+odOKz+iiK7RYxc7yd+2jWYE0EP/Xz/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=feeijyXWbcIPpqY30J8RJrzFjN2jt3+9WJYwE8nHn2zzgVuBFxzbad9WDglYWDMlNdARRgUxIoIKEC828M12Ln2zM8h+E40tkjKDpG/qEUiNHhpPr7Cjlt4J+8QEc+RG+rR1M//Y3P3dntUCh2jpYm7o8SpTCBk/QZtP0ricYUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E97FC4CED3;
+	Fri, 24 Jan 2025 01:41:51 +0000 (UTC)
+Date: Thu, 23 Jan 2025 20:41:59 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>,
+ Gabriele Monaco <gmonaco@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>,
+ John Kacur <jkacur@redhat.com>
+Subject: [PATCH] tracing/osnoise: Fix resetting of tracepoints
+Message-ID: <20250123204159.4450c88e@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250123214342.4145818-1-andrii@kernel.org> <CAJuCfpE9QOo-xmDpk_FF=gs3p=9Zzb-Q5yDaKAEChBCnpogmQg@mail.gmail.com>
- <202501231526.A3C13EC5@keescook> <CAG48ez1TXEJH3mFmm-QZbbmr_YupnoLA0WQx6WgxKQSHP3jPSA@mail.gmail.com>
-In-Reply-To: <CAG48ez1TXEJH3mFmm-QZbbmr_YupnoLA0WQx6WgxKQSHP3jPSA@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 23 Jan 2025 17:02:40 -0800
-X-Gm-Features: AbW1kvaNIXPwtdjTpZnh9pk24SpZKxJaM3CayvMBHXdj24HdZVOFF_DSCaFQHy4
-Message-ID: <CAEf4BzaToT9YcwPm7N63wK0dLTVLEVwABCBXmRVP5+_A7bCKpg@mail.gmail.com>
-Subject: Re: [PATCH] mm,procfs: allow read-only remote mm access under CAP_PERFMON
-To: Jann Horn <jannh@google.com>
-Cc: Kees Cook <kees@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, 
-	rostedt@goodmis.org, peterz@infradead.org, mingo@kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	shakeel.butt@linux.dev, rppt@kernel.org, liam.howlett@oracle.com, 
-	linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 23, 2025 at 3:55=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
->
-> On Fri, Jan 24, 2025 at 12:47=E2=80=AFAM Kees Cook <kees@kernel.org> wrot=
-e:
-> > On Thu, Jan 23, 2025 at 01:52:52PM -0800, Suren Baghdasaryan wrote:
-> > > On Thu, Jan 23, 2025 at 1:44=E2=80=AFPM Andrii Nakryiko <andrii@kerne=
-l.org> wrote:
-> > > >
-> > > > It's very common for various tracing and profiling toolis to need t=
-o
-> > > > access /proc/PID/maps contents for stack symbolization needs to lea=
-rn
-> > > > which shared libraries are mapped in memory, at which file offset, =
-etc.
-> > > > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless=
- we
-> > > > are looking at data for our own process, which is a trivial case no=
-t too
-> > > > relevant for profilers use cases).
-> > > >
-> > > > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
-> > > > discover memory layout of another process: it allows to fully contr=
-ol
-> > > > arbitrary other processes. This is problematic from security POV fo=
-r
-> > > > applications that only need read-only /proc/PID/maps (and other sim=
-ilar
-> > > > read-only data) access, and in large production settings CAP_SYS_PT=
-RACE
-> > > > is frowned upon even for the system-wide profilers.
-> > > >
-> > > > On the other hand, it's already possible to access similar kind of
-> > > > information (and more) with just CAP_PERFMON capability. E.g., sett=
-ing
-> > > > up PERF_RECORD_MMAP collection through perf_event_open() would give=
- one
-> > > > similar information to what /proc/PID/maps provides.
-> > > >
-> > > > CAP_PERFMON, together with CAP_BPF, is already a very common combin=
-ation
-> > > > for system-wide profiling and observability application. As such, i=
-t's
-> > > > reasonable and convenient to be able to access /proc/PID/maps with
-> > > > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
-> > > >
-> > > > For procfs, these permissions are checked through common mm_access(=
-)
-> > > > helper, and so we augment that with cap_perfmon() check *only* if
-> > > > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn=
-'t be
-> > > > permitted by CAP_PERFMON.
-> > > >
-> > > > Besides procfs itself, mm_access() is used by process_madvise() and
-> > > > process_vm_{readv,writev}() syscalls. The former one uses
-> > > > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PE=
-RFMON
-> > > > seems like a meaningful allowable capability as well.
-> > > >
-> > > > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level=
- of
-> > > > permissions (though for readv PTRACE_MODE_READ seems more reasonabl=
-e,
-> > > > but that's outside the scope of this change), and as such won't be
-> > > > affected by this patch.
-> > >
-> > > CC'ing Jann and Kees.
-> > >
-> > > >
-> > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > ---
-> > > >  kernel/fork.c | 11 ++++++++++-
-> > > >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/kernel/fork.c b/kernel/fork.c
-> > > > index ded49f18cd95..c57cb3ad9931 100644
-> > > > --- a/kernel/fork.c
-> > > > +++ b/kernel/fork.c
-> > > > @@ -1547,6 +1547,15 @@ struct mm_struct *get_task_mm(struct task_st=
-ruct *task)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(get_task_mm);
-> > > >
-> > > > +static bool can_access_mm(struct mm_struct *mm, struct task_struct=
- *task, unsigned int mode)
-> > > > +{
-> > > > +       if (mm =3D=3D current->mm)
-> > > > +               return true;
-> > > > +       if ((mode & PTRACE_MODE_READ) && perfmon_capable())
-> > > > +               return true;
-> > > > +       return ptrace_may_access(task, mode);
-> > > > +}
-> >
-> > nit: "may" tends to be used more than "can" for access check function n=
-aming.
-> >
-> > So, this will bypass security_ptrace_access_check() within
-> > ptrace_may_access(). CAP_PERFMON may be something LSMs want visibility
-> > into.
-> >
-> > It also bypasses the dumpability check in __ptrace_may_access(). (Shoul=
-d
-> > non-dumpability block visibility into "maps" under CAP_PERFMON?)
-> >
-> > This change provides read access for CAP_PERFMON to:
-> >
-> > /proc/$pid/maps
-> > /proc/$pid/smaps
-> > /proc/$pid/mem
-> > /proc/$pid/environ
-> > /proc/$pid/auxv
-> > /proc/$pid/attr/*
-> > /proc/$pid/smaps_rollup
-> > /proc/$pid/pagemap
-> >
-> > /proc/$pid/mem access seems way out of bounds for CAP_PERFMON. environ
-> > and auxv maybe too much also. The "attr" files seem iffy. pagemap may b=
-e
-> > reasonable.
->
-> FWIW, my understanding is that if you can use perf_event_open() on a
-> process, you can also grab large amounts of stack memory contents from
-> that process via PERF_SAMPLE_STACK_USER/sample_stack_user. (The idea
-> there is that stack unwinding for userspace stacks is complicated, so
-> it's the profiler's job to turn a pile of raw stack contents and a
-> register snapshot into a stack trace.) So _to some extent_ I think it
-> is already possible to read memory of another process via CAP_PERFMON.
-> Whether that is desirable or not I don't know, though I guess it's
-> hard to argue that there's a qualitative security difference between
-> reading register contents and reading stack memory...
+From: Steven Rostedt <rostedt@goodmis.org>
 
-If I'm allowed to bring in BPF capabilities coupled with CAP_PERFMON,
-then you can read not just stack, but pretty much anything both inside
-the kernel memory (e.g., through bpf_probe_read_kernel()) and
-user-space (bpf_probe_read_user() for current user task, and more
-generally bpf_copy_from_user_task() for an arbitrary task for which we
-have struct task_struct).
+If a timerlat tracer is started with the osnoise option OSNOISE_WORKLOAD
+disabled, but then that option is enabled and timerlat is removed, the
+tracepoints that were enabled on timerlat registration do not get
+disabled. If the option is disabled again and timelat is started, then it
+triggers a warning in the tracepoint code due to registering the
+tracepoint again without ever disabling it.
 
-But we don't really allow access to /proc/PID/mem here, because it's
-PTRACE_MODE_ATTACH (which is sort of like read/write vs read-only).
+Do not use the same user space defined options to know to disable the
+tracepoints when timerlat is removed. Instead, set a global flag when it
+is enabled and use that flag to know to disable the events.
 
-Similarly, it would be relevant for process_vm_readv(), but that one
-(currently) is also PTRACE_MODE_ATTACH.
+ ~# echo NO_OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
+ ~# echo timerlat > /sys/kernel/tracing/current_tracer
+ ~# echo OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
+ ~# echo nop > /sys/kernel/tracing/current_tracer
+ ~# echo NO_OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
+ ~# echo timerlat > /sys/kernel/tracing/current_tracer
+
+Triggers:
+
+ ------------[ cut here ]------------
+ WARNING: CPU: 6 PID: 1337 at kernel/tracepoint.c:294 tracepoint_add_func+0x3b6/0x3f0
+ Modules linked in:
+ CPU: 6 UID: 0 PID: 1337 Comm: rtla Not tainted 6.13.0-rc4-test-00018-ga867c441128e-dirty #73
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ RIP: 0010:tracepoint_add_func+0x3b6/0x3f0
+ Code: 48 8b 53 28 48 8b 73 20 4c 89 04 24 e8 23 59 11 00 4c 8b 04 24 e9 36 fe ff ff 0f 0b b8 ea ff ff ff 45 84 e4 0f 84 68 fe ff ff <0f> 0b e9 61 fe ff ff 48 8b 7b 18 48 85 ff 0f 84 4f ff ff ff 49 8b
+ RSP: 0018:ffffb9b003a87ca0 EFLAGS: 00010202
+ RAX: 00000000ffffffef RBX: ffffffff92f30860 RCX: 0000000000000000
+ RDX: 0000000000000000 RSI: ffff9bf59e91ccd0 RDI: ffffffff913b6410
+ RBP: 000000000000000a R08: 00000000000005c7 R09: 0000000000000002
+ R10: ffffb9b003a87ce0 R11: 0000000000000002 R12: 0000000000000001
+ R13: ffffb9b003a87ce0 R14: ffffffffffffffef R15: 0000000000000008
+ FS:  00007fce81209240(0000) GS:ffff9bf6fdd00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000055e99b728000 CR3: 00000001277c0002 CR4: 0000000000172ef0
+ Call Trace:
+  <TASK>
+  ? __warn.cold+0xb7/0x14d
+  ? tracepoint_add_func+0x3b6/0x3f0
+  ? report_bug+0xea/0x170
+  ? handle_bug+0x58/0x90
+  ? exc_invalid_op+0x17/0x70
+  ? asm_exc_invalid_op+0x1a/0x20
+  ? __pfx_trace_sched_migrate_callback+0x10/0x10
+  ? tracepoint_add_func+0x3b6/0x3f0
+  ? __pfx_trace_sched_migrate_callback+0x10/0x10
+  ? __pfx_trace_sched_migrate_callback+0x10/0x10
+  tracepoint_probe_register+0x78/0xb0
+  ? __pfx_trace_sched_migrate_callback+0x10/0x10
+  osnoise_workload_start+0x2b5/0x370
+  timerlat_tracer_init+0x76/0x1b0
+  tracing_set_tracer+0x244/0x400
+  tracing_set_trace_write+0xa0/0xe0
+  vfs_write+0xfc/0x570
+  ? do_sys_openat2+0x9c/0xe0
+  ksys_write+0x72/0xf0
+  do_syscall_64+0x79/0x1c0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Cc: stable@vger.kernel.org
+Fixes: e88ed227f639e ("tracing/timerlat: Add user-space interface")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_osnoise.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index b9f96c77527d..23cbc24ed292 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -1229,6 +1229,8 @@ static void trace_sched_migrate_callback(void *data, struct task_struct *p, int
+ 	}
+ }
+ 
++static bool monitor_enabled;
++
+ static int register_migration_monitor(void)
+ {
+ 	int ret = 0;
+@@ -1237,16 +1239,25 @@ static int register_migration_monitor(void)
+ 	 * Timerlat thread migration check is only required when running timerlat in user-space.
+ 	 * Thus, enable callback only if timerlat is set with no workload.
+ 	 */
+-	if (timerlat_enabled() && !test_bit(OSN_WORKLOAD, &osnoise_options))
++	if (timerlat_enabled() && !test_bit(OSN_WORKLOAD, &osnoise_options)) {
++		if (WARN_ON_ONCE(monitor_enabled))
++			return 0;
++
+ 		ret = register_trace_sched_migrate_task(trace_sched_migrate_callback, NULL);
++		if (!ret)
++			monitor_enabled = true;
++	}
+ 
+ 	return ret;
+ }
+ 
+ static void unregister_migration_monitor(void)
+ {
+-	if (timerlat_enabled() && !test_bit(OSN_WORKLOAD, &osnoise_options))
+-		unregister_trace_sched_migrate_task(trace_sched_migrate_callback, NULL);
++	if (!monitor_enabled)
++		return;
++
++	unregister_trace_sched_migrate_task(trace_sched_migrate_callback, NULL);
++	monitor_enabled = false;
+ }
+ #else
+ static int register_migration_monitor(void)
+-- 
+2.45.2
+
