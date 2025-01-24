@@ -1,29 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856AE35955;
-	Fri, 24 Jan 2025 15:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0A41CEAC1;
+	Fri, 24 Jan 2025 15:26:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737731178; cv=none; b=SrFKDuZzu4c01t2j0f9jsF+UyZq9sqes0HNQTt/bXXa/6vbNQFtoZ5vywE9AZUx8VQN0nuyiDfzVoqcMESWyJBRH0IWieSPfPqDxn7tDi3rWLKV1+hTI/AYMURJQu7miUzVN7LGiAnYycT/vyUyLPdShYPpPxwv7i+7fBWubF70=
+	t=1737732415; cv=none; b=mpgLgDtfMSNcpD6geyCr+5jqccaGRKqXTJ1UwmfMnA9QC6fjlR1lUbMzjfba+SzVcllPEbu7W4YfjTTFphK+oS9Bn0l/Aag3qBrMH8PDLYp0BpctqKMV7x6LaBwDb+1XGTcumhig+lTy2y4R9CA84p0DfQkb+flMCmodqP6oGzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737731178; c=relaxed/simple;
-	bh=9xFOhRlaexaIYYD20cZv4JkiblqeEQT12Xny8muagMw=;
+	s=arc-20240116; t=1737732415; c=relaxed/simple;
+	bh=AgT+TKrcpd+6Khw9eLQ2rx4VQh9+UqGgZnONhArutv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qMPkxYyh8k51Ni0xGe/e7cnCk+hJ15UxkHf1C/rxHg5zviee76zGwTjLL8M299TXDxvtVRM1k3Yl1vmcFQqO9VuFSqGQr1+1KRT4GJouVu6JSb8v6MF0SB/miHpWsijBw8pqz2g9jXcZOhGs6KKr+L237w0O4UPHiNVEZ/CtEAY=
+	 MIME-Version:Content-Type; b=VVUzCZl2DL1xDuSAWKoUOG5qTWEE2wKWTZdMBwnijLufon7z3SaltJ3GEUYx1izL8tR/kgJedEuLW8baixMhHGDIkziLR5CP14xZa+JBv7vRW9VlkXn39LuksYtp16eF3jU7rPwAQURuhFqmobPs9F4jp3CgXoOE/PbpwUA5sA0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C4B4C4CED2;
-	Fri, 24 Jan 2025 15:06:17 +0000 (UTC)
-Date: Fri, 24 Jan 2025 10:06:27 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DF4C4CED2;
+	Fri, 24 Jan 2025 15:26:52 +0000 (UTC)
+Date: Fri, 24 Jan 2025 10:27:02 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Luo Yifan <luoyifan@cmss.chinamobile.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, trivial@kernel.org
-Subject: Re: [PATCH] tools/bootconfig: Fix the wrong format specifier
-Message-ID: <20250124100627.7e7af0bf@gandalf.local.home>
-In-Reply-To: <20241119102549.5da4d2c1cdbb7514014cd273@kernel.org>
-References: <20241105011048.201629-1-luoyifan@cmss.chinamobile.com>
-	<20241119102549.5da4d2c1cdbb7514014cd273@kernel.org>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
+ <mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+ <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+ <jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+ <kan.liang@linux.intel.com>, <andrii.nakryiko@gmail.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: Re: [PATCH v5 1/2] uprobes: Remove redundant spinlock in
+ uprobe_deny_signal()
+Message-ID: <20250124102702.6ff0ccc5@gandalf.local.home>
+In-Reply-To: <20250124093826.2123675-2-liaochang1@huawei.com>
+References: <20250124093826.2123675-1-liaochang1@huawei.com>
+	<20250124093826.2123675-2-liaochang1@huawei.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,22 +40,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 19 Nov 2024 10:25:49 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Fri, 24 Jan 2025 09:38:25 +0000
+Liao Chang <liaochang1@huawei.com> wrote:
 
-> Hi Luo,
-> 
-> On Tue,  5 Nov 2024 09:10:48 +0800
-> Luo Yifan <luoyifan@cmss.chinamobile.com> wrote:
-> 
-> > Use '%u' instead of '%d' for unsigned int.  
-> 
-> Good catch, thanks for the fix!
-> Let me pick.
+> Since clearing a bit in thread_info is an atomic operation, the spinlock
+> is redundant and can be removed, reducing lock contention is good for
+> performance.
 
-Hi Masami,
+Although this patch is probably fine, the change log suggests a dangerous
+precedence. Just because clearing a flag is atomic, that alone does not
+guarantee that it doesn't need spin locks around it.
 
-This is still in patchwork and I don't see it applied to Linus's tree. Did
-you forget about it?
+There may be another path that tests the flag within a spin lock, and then
+does a bunch of work assuming that the flag does not change while it is
+doing that work. That other path would require a spin lock around the
+clearing of the flag elsewhere.
+
+I don't know this code well enough to know if this has that scenario, and
+seeing the Acked-by from Oleg, I'm assuming it does not. But in any case,
+the change log needs to give a better rationale for removing a spin lock than
+just "clearing a flag atomically doesn't need a spin lock"!
 
 -- Steve
+
+
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Liao Chang <liaochang1@huawei.com>
