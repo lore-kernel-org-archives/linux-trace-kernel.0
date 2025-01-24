@@ -1,302 +1,125 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C65F1D63DE
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jan 2025 04:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA77218EA0
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jan 2025 09:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737693649; cv=none; b=mKHEXdgOPAbVc5jjmXzDOJ7sY2qMAvG7tfxY+1Sw6QgSZBQMdLdfiZP7RnwUXVOWApPUwHTqN0QAYSPdOvU+aBj1PF32EkDGokgN7s9Ro/dqXjPm+U61fgTjLjkxmerAZV1fsjasNOKpAkvo75bU/c/V1W8RPk68zNOixxfNPCQ=
+	t=1737710679; cv=none; b=aLTXMIhjqPQAgFhmaIOK/eJ2aKE/5xKojx8dwDpY1C1DBAhCgkr0W5NOJcBuTIiUjy8fcaFEkaeH+USo0zaOlQvIwIWv7iRHdSHHmtJocz2FARZvoeHZhgcH2ezMFJeqVXVnjuu7Y3pvsruNf4v4Hi1FE+3WvEFy2FhxZIIZklc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737693649; c=relaxed/simple;
-	bh=R5I5rEMG+E+Lfeo/3KTAOR1ku9Ijm7HJ+Fkmt8g6k94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RPMIxRqsXdRjNnZXdjUeBr82uqjOQ8EnMCrIgywhD4OCcX4Pg0RwDycGvpx76+cxyg/Ig+FVvcg3BqZPbYI4R4XRunA/0VR7EYwH7UIir87GSlIDdneGOkOhXYQjJMwuzYXQy1T3afnhoVLjxDFrAGbl1meuYsSe8YGeVxlAXoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <4f3dfc10-7959-4ec7-9ce7-7a555f4865c2@linux.dev>
-Date: Thu, 23 Jan 2025 20:40:20 -0800
+	s=arc-20240116; t=1737710679; c=relaxed/simple;
+	bh=zo0ZvJAOEYeVFnljSfQuWuY8Qu9Z5Oyu5vHnSE/OKzA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G9geSwj5WDAV0FCbJJpniHiWx7eYN3/6Al+3oqj5y1aMCNMz4rnCvoq68S4AEdicx8F3QCb0mEPpBS19qvGayWyWEF6+CpvsCrMAvp1/YTbecOB7y/oJnMPZDDbMvy04ccDKm7l7IuaBMpSPgThi8myyvVTGTElqp+cHhqp/wR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iOQKKV0o; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iOQKKV0o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737710676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zo0ZvJAOEYeVFnljSfQuWuY8Qu9Z5Oyu5vHnSE/OKzA=;
+	b=iOQKKV0oo1G9H8y3gNWqRiO62gk+KxF8sh0l2DI60onj9FyfCXZjHKAEAg6G8tlDkihKiU
+	1jANEn9RTXXiNedxVYFp04cfxdahd+8eJ4BFTAwGXaJ0eXXJLZDlviuhGUBCYi38HagByx
+	S/oPmPNbsJcfXCxVV7pA6SGbbzdVAb8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-131-YtHC9bZHNJOjn2ikOFC50g-1; Fri, 24 Jan 2025 04:24:34 -0500
+X-MC-Unique: YtHC9bZHNJOjn2ikOFC50g-1
+X-Mimecast-MFC-AGG-ID: YtHC9bZHNJOjn2ikOFC50g
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-436723db6c4so12815495e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jan 2025 01:24:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737710673; x=1738315473;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zo0ZvJAOEYeVFnljSfQuWuY8Qu9Z5Oyu5vHnSE/OKzA=;
+        b=KQU0YGln9y6QmePaXsVJtP5d1FVWry3OoRv5O9CpJ0aa9iuobGtX1QGaOL8OdDiqC6
+         e8Qt6J6YYJJSgQlu387DqPEEEkEPRo/1daHIsPA3J1WdnyLz09+ylpOgLIY5i0gwfyR1
+         EBE2M0TTJw/dAXvLxa7EXchTcP9SWn8oeQkw84UrgHefBzUXMHd4LD4zTBrcpde3CHhC
+         +b+iDnMmswTAl0zAGWpTJFt+pFuNNEddDBSHZpEthsPjDLtMWpL0Mxp5N9SHbPS0KY43
+         L6Lpt7eWd+UTCoE1Y/Tk2d/uAVPgXSPRgzAFiWiGHs4IEfPC9OBpbacdd6HSuooUuMvW
+         p/Kw==
+X-Gm-Message-State: AOJu0Yxf99RCTP3cShDOf45ZySsff2nBWo1tWN6ujBlvFSvrdxJ2V88Q
+	ZR9MlSosroAuqsJUQTDGE6ic1AL97TjE67rCAtXtiYorkc/Uf80+ja3PcByWTOKfDyfIO4PpfYx
+	eb6qKKclRzCXdV/FN67Utcuh4vfVAIM4hOmkGK2La8N0Es7mEyWrsCrvFGqruTECwqsDuCg==
+X-Gm-Gg: ASbGncvUXm7RWa02yzbNo5U12lf6/7KqOCEPnL9Xs82au+fLkjjpfo64dxykfNQVJlc
+	2dbO/9O1Gqs8D1LSWqal87tuHHG7CJYFmrGECjG6eix2oZ93vg+P/83oCEuzh/F0wnlzMUe/Nwj
+	bw7h4y1+yLQNnA8ZsA/pEaueoPt2ehpsF6pdcUnn2u1UPAqaOFVr4S/RV0sRz09oySNF4CjGRyt
+	5IXoKl3UHb5LTyuLaN1iwTmLeIUMRqBCQQAPgxPvsS8KEgGSCRBINszBdjSF7hdkbke1uOjNv4x
+	0R0UOUSHFJOEaQ7YMgB+
+X-Received: by 2002:a05:600c:5486:b0:434:f586:753c with SMTP id 5b1f17b1804b1-438913ca694mr271984955e9.7.1737710673102;
+        Fri, 24 Jan 2025 01:24:33 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH6GuHaBDFQBkrxC7V9FqZvJrg5nmwyDueR/wvWOI/O0L3QgB5S4ky2Yf9wU46zstzCgz3eiw==
+X-Received: by 2002:a05:600c:5486:b0:434:f586:753c with SMTP id 5b1f17b1804b1-438913ca694mr271984695e9.7.1737710672734;
+        Fri, 24 Jan 2025 01:24:32 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438bd507c59sm19533345e9.17.2025.01.24.01.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jan 2025 01:24:32 -0800 (PST)
+Message-ID: <3568976320e31a90e36f7d2a17ec7d42e1f2f34a.camel@redhat.com>
+Subject: Re: [PATCH 4/4] rtla: Report missed event count
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, John
+ Kacur <jkacur@redhat.com>, Luis Goncalves <lgoncalv@redhat.com>
+Date: Fri, 24 Jan 2025 10:24:29 +0100
+In-Reply-To: <20250123142339.990300-5-tglozar@redhat.com>
+References: <20250123142339.990300-1-tglozar@redhat.com>
+	 <20250123142339.990300-5-tglozar@redhat.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC net-next] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Content-Language: en-GB
-To: Steven Rostedt <rostedt@goodmis.org>, Breno Leitao <leitao@debian.org>
-Cc: Jason Xing <kerneljasonxing@gmail.com>, Eric Dumazet
- <edumazet@google.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com, Song Liu <song@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>, yonghong.song@linux.dev
-References: <20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org>
- <CAL+tcoC+A94uzaSZ+SKhV04=iDWrvUGEfxYJKYCF0ovqvyhfOg@mail.gmail.com>
- <20250120-panda-of-impressive-aptitude-2b714e@leitao>
- <CAL+tcoCzStjkEMdNw5ORYbQy3VnVE9A6aj6HcmQvGj3VG1VypA@mail.gmail.com>
- <20250120-daring-outstanding-jaguarundi-c8aaed@leitao>
- <20250120100340.4129eff7@batman.local.home>
- <20250122-vengeful-myna-of-tranquility-f0f8cf@leitao>
- <20250122095604.3c93bc93@gandalf.local.home>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250122095604.3c93bc93@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 7OXrO2JZZ4vh99LFwf-tm7lnGllrKvCGuOARUqOXicM_1737710673
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 2025-01-23 at 15:23 +0100, Tomas Glozar wrote:
+> Print how many events were missed by trace buffer overflow in the
+> main
+> instance at the end of the run (for hist) or during the run (for
+> top).
+>=20
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> ---
 
+The patchset seems to work as expected, I get the number of dropped
+events and the percentage, of course if I let it run too long, I get
+unknown number.
+Tested on a 128 cores arm64 box with -p100, known to miss events:
 
+run for 5s
+4611870 (24.12%) events missed, results might not be accurate
 
-On 1/22/25 6:56 AM, Steven Rostedt wrote:
-> On Wed, 22 Jan 2025 01:39:42 -0800
-> Breno Leitao <leitao@debian.org> wrote:
->
->> Right, DECLARE_TRACE would solve my current problem, but, a056a5bed7fa
->> ("sched/debug: Export the newly added tracepoints") says "BPF doesn't
->> have infrastructure to access these bare tracepoints either.".
->>
->> Does BPF know how to attach to this bare tracepointers now?
->>
->> On the other side, it seems real tracepoints is getting more pervasive?
->> So, this current approach might be OK also?
->>
->> 	https://lore.kernel.org/bpf/20250118033723.GV1977892@ZenIV/T/#m4c2fb2d904e839b34800daf8578dff0b9abd69a0
-> Thanks for the pointer. I didn't know this discussion was going on. I just
-> asked to attend if this gets accepted. I'm only a 6 hour drive from
-> Montreal anyway.
->
->>> You can see its use in include/trace/events/sched.h
->> I suppose I need to export the tracepointer with
->> EXPORT_TRACEPOINT_SYMBOL_GPL(), right?
-> For modules to use them directly, yes. But there's other ways too.
->
->> I am trying to hack something as the following, but, I struggled to hook
->> BPF into it.
-> Maybe you can use the iterator to search for the tracepoint.
->
-> #include <linux/tracepoint.h>
->
-> static void fct(struct tracepoint *tp, void *priv)
-> {
-> 	if (!tp->name || strcmp(tp->name, "<tracepoint_name>") != 0)
-> 		return 0;
->
-> 	// attach to tracepoint tp
-> }
->
-> [..]
-> 	for_each_kernel_tracepoint(fct, NULL);
->
-> This is how LTTng hooks to tracepoints.
+run for 1m
+104653605 (45.44%) events missed, results might not be accurate
 
-Hi, Steve,
+run for 5m
+539717695 (46.85%) events missed, results might not be accurate
 
-I did some prototype to support bpf dynamic_events tracepoint. I fixed a couple of issues
-but still not working. See the hacked patch:
+run for 10m
+1098569155 (47.68%) events missed, results might not be accurate
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 9ea4c404bd4e..729ea1c21c94 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -824,6 +824,15 @@ DECLARE_TRACE(sched_compute_energy_tp,
-                  unsigned long max_util, unsigned long busy_time),
-         TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
-                                                                                                                                           
-+/* At /sys/kernel/debug/tracing directory, do
-+ *   echo 't sched_switch_dynamic' >> dynamic_events
-+ * before actually use this tracepoint. The tracepoint will be at
-+ *   /sys/kernel/debug/tracing/events/tracepoints/sched_switch_dynamic/
-+ */
-+DECLARE_TRACE(sched_switch_dynamic,
-+       TP_PROTO(bool preempt),
-+       TP_ARGS(preempt));
-+
-  #endif /* _TRACE_SCHED_H */
-                                                                                                                                           
-  /* This part must be outside protection */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 065f9188b44a..37391eb5089f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10749,6 +10749,7 @@ static inline bool perf_event_is_tracing(struct perf_event *event)
-  int perf_event_set_bpf_prog(struct perf_event *event, struct bpf_prog *prog,
-                             u64 bpf_cookie)
-  {
-+       u32 dyn_tp_flags = TRACE_EVENT_FL_DYNAMIC | TRACE_EVENT_FL_FPROBE;
-         bool is_kprobe, is_uprobe, is_tracepoint, is_syscall_tp;
-   
-         if (!perf_event_is_tracing(event))
-@@ -10756,7 +10757,9 @@ int perf_event_set_bpf_prog(struct perf_event *event, struct bpf_prog *prog,
-   
-         is_kprobe = event->tp_event->flags & TRACE_EVENT_FL_KPROBE;
-         is_uprobe = event->tp_event->flags & TRACE_EVENT_FL_UPROBE;
--       is_tracepoint = event->tp_event->flags & TRACE_EVENT_FL_TRACEPOINT;
-+       is_tracepoint = (event->tp_event->flags & TRACE_EVENT_FL_TRACEPOINT) ||
-+                       ((event->tp_event->flags & dyn_tp_flags) == dyn_tp_flags);
-+
-         is_syscall_tp = is_syscall_trace_event(event->tp_event);
-         if (!is_kprobe && !is_uprobe && !is_tracepoint && !is_syscall_tp)
-                 /* bpf programs can only be attached to u/kprobe or tracepoint */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3e5a6bf587f9..53b3d9e20d00 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6750,6 +6750,7 @@ static void __sched notrace __schedule(int sched_mode)
-                 psi_account_irqtime(rq, prev, next);
-                 psi_sched_switch(prev, next, block);
-   
-+               trace_sched_switch_dynamic(preempt);
-                 trace_sched_switch(preempt, prev, next, prev_state);
-   
-                 /* Also unlocks the rq: */
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 71c1c02ca7a3..8f9fd2f347ef 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2448,7 +2448,8 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
-                             u64 *probe_offset, u64 *probe_addr,
-                             unsigned long *missed)
-  {
--       bool is_tracepoint, is_syscall_tp;
-+       u32 dyn_tp_flags = TRACE_EVENT_FL_DYNAMIC | TRACE_EVENT_FL_FPROBE;
-+       bool is_tracepoint, is_dyn_tracepoint, is_syscall_tp;
-         struct bpf_prog *prog;
-         int flags, err = 0;
-   
-@@ -2463,9 +2464,10 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
-         *prog_id = prog->aux->id;
-         flags = event->tp_event->flags;
-         is_tracepoint = flags & TRACE_EVENT_FL_TRACEPOINT;
-+       is_dyn_tracepoint = (event->tp_event->flags & dyn_tp_flags) == dyn_tp_flags;
-         is_syscall_tp = is_syscall_trace_event(event->tp_event);
-   
--       if (is_tracepoint || is_syscall_tp) {
-+       if (is_tracepoint || is_dyn_tracepoint || is_syscall_tp) {
-                 *buf = is_tracepoint ? event->tp_event->tp->name
-                                      : event->tp_event->name;
-                 /* We allow NULL pointer for tracepoint */
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index c62d1629cffe..bacc4a1f5f20 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -436,8 +436,10 @@ static struct trace_fprobe *find_trace_fprobe(const char *event,
-   
-  static inline int __enable_trace_fprobe(struct trace_fprobe *tf)
-  {
--       if (trace_fprobe_is_registered(tf))
-+       if (trace_fprobe_is_registered(tf)) {
-+               pr_warn("fprobe is enabled\n");
-                 enable_fprobe(&tf->fp);
-+       }
-   
-         return 0;
-  }
-diff --git a/tools/testing/selftests/bpf/prog_tests/send_signal.c b/tools/testing/selftests/bpf/prog_tests/send_signal.c
-index 1702aa592c2c..423770aa581e 100644
---- a/tools/testing/selftests/bpf/prog_tests/send_signal.c
-+++ b/tools/testing/selftests/bpf/prog_tests/send_signal.c
-@@ -196,6 +196,8 @@ static void test_send_signal_common(struct perf_event_attr *attr,
-         /* notify child safe to exit */
-         ASSERT_EQ(write(pipe_p2c[1], buf, 1), 1, "pipe_write");
-   
-+       ASSERT_EQ(skel->bss->dyn_tp_visited, 1, "dyn_tp_visited");
-+
-  disable_pmu:
-         close(pmu_fd);
-  destroy_skel:
-@@ -260,6 +262,8 @@ void test_send_signal(void)
-  {
-         if (test__start_subtest("send_signal_tracepoint"))
-                 test_send_signal_tracepoint(false, false);
-+/* Disable all other subtests except above send_signal_tracepoint. */
-+if (0) {
-         if (test__start_subtest("send_signal_perf"))
-                 test_send_signal_perf(false, false);
-         if (test__start_subtest("send_signal_nmi"))
-@@ -285,3 +289,4 @@ void test_send_signal(void)
-         if (test__start_subtest("send_signal_nmi_thread_remote"))
-                 test_send_signal_nmi(true, true);
-  }
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_send_signal_kern.c b/tools/testing/selftests/bpf/progs/test_send_signal_kern.c
-index 176a355e3062..9b580d437046 100644
---- a/tools/testing/selftests/bpf/progs/test_send_signal_kern.c
-+++ b/tools/testing/selftests/bpf/progs/test_send_signal_kern.c
-@@ -60,6 +60,20 @@ int send_signal_tp_sched(void *ctx)
-         return bpf_send_signal_test(ctx);
-  }
-   
-+int dyn_tp_visited = 0;
-+#if 1
-+/* This will fail */
-+SEC("tracepoint/tracepoints/sched_switch_dynamic")
-+#else
-+/* This will succeed */
-+SEC("tracepoint/sched/sched_switch")
-+#endif
-+int send_signal_dyn_tp_sched(void *ctx)
-+{
-+       dyn_tp_visited = 1;
-+       return 0;
-+}
-+
-  SEC("perf_event")
-  int send_signal_perf(void *ctx)
-  {
+run for 1h
+6749574550 (48.83%) events missed, results might not be accurate
 
-To test the above, build the latest bpf-next and then apply the above change.
-Boot the updated kernel and boot into a qemu VM and run bpf selftest
-   ./test_progs -t send_signal
-
-With tracepoint tracepoint/sched/sched_switch, the test result is correct.
-With tracepoint tracepoint/tracepoints/sched_switch_dynamic, the test failed.
-The test failure means the sched_switch_dynamic tracepoint is not
-triggered with the bpf program.
-
-As expected, do
-   echo 1 > /sys/kernel/debug/tracing/events/tracepoints/sched_switch_dynamic/enable
-and the sched_switch_dynamic tracepoint works as expected (trace_pipe can dump
-the expected result).
-
-For both 'echo 1 > .../sched_switch_dynamic/enable' approach and
-bpf tracepoint tracepoint/tracepoints/sched_switch_dynamic, the message
-   fprobe is enabled
-is printed out in dmesg. The following is enable_fprobe() code.
-
-/**
-  * enable_fprobe() - Enable fprobe
-  * @fp: The fprobe to be enabled.
-  *
-  * This will soft-enable @fp.
-  */
-static inline void enable_fprobe(struct fprobe *fp)
-{
-         if (fp)
-                 fp->flags &= ~FPROBE_FL_DISABLED;
-}
-
-Note that in the above the fprobe/dynamic_events is soft-enable.
-Maybe the bpf tracepoint/tracepoints/sched_switch_dynamic only has
-soft-enable and 'echo 1 > ...' approach has both soft-enable and
-actual hard-enable (at pmu level)? If this is the case, what is
-missing for hard-enable for bpf dynamic_events case? Do you have
-any suggestions?
-
-
-The above prototype tries to reuse the existing infra/API.
-If you have better way to support dynamic_events, please let me know.
-
-Thanks,
-
-Yonghong
-
->
-> -- Steve
->
+Tested-by: Gabriele Monaco <gmonaco@redhat.com>
 
