@@ -1,84 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D42023B0;
-	Fri, 24 Jan 2025 17:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868A21A4AA1
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jan 2025 17:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737738564; cv=none; b=Rh7wTpBX3tttDOGKvFf40n4ZcFfKDBLThYIkb1MX8h4TCGUfcF/yVXrzv5Xu/6YGEoTB4eDx2z7qiCjtmACrvT81k6Vad4stuVrUHJhu2tYORVeVfl19D8SaZL0yLZZPfXVqwXdh+RPwcVFlRWcGwdbzGENF1JpQpEMBGWSutD0=
+	t=1737739579; cv=none; b=BG0BApZfBOGK41nF1V/wfPCMX9aDr6md/H7YeS9xN37Gp5XNx0NV6RRFADLnKPc2O1nDA/aLTNOGQ1NnYDMQXGj0j0btN46ungnAVTjY0Yxba+C4o7jw1EQm3sfNEQp3I9CzGMrzI23OvzKgBzmpHIBVp1/4ckbTPrGpMb96mUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737738564; c=relaxed/simple;
-	bh=iNmuXDwZuK0qZxAFbFwroLVFsePi12ssQU51ekJzrAM=;
+	s=arc-20240116; t=1737739579; c=relaxed/simple;
+	bh=d8wUl4niMMG4T1Ja3SaVYJVWS3/qmpuxD7+JucIVKRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NHqiktcr7EwbpY+a3e/iIzVjczO5jt7JaRhfk2X8zj34VqK/Mg7uzs04yyNSCQuY6C14L2ajhthumRk15jBEwF3C+Dtd/dny1AUDUX+9MbLjhPjuWb/4uL/8FWg8Ib32EJPJvPrP4FFmNWwp1aSI7Yye/zttQv8DznuVISYEfWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieZqMWOi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jC350jv7Bvjfh4o5h4yHFtoG4RwHFUuutCXDn7iIRzBLe5RFhMCdiHOAUjI++YxUMAzyZaxfDPPx0U8lb8RAD0oGXkttxm1widnIquh5qzQ7CiIbDzXqFM2VaGaEBsqMIGjOZUGZzh2QSOfmRcVX+MMUxFaJKA1ca3NZQNuCJwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NrFqJ0oB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieZqMWOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B889AC4CED2;
-	Fri, 24 Jan 2025 17:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737738563;
-	bh=iNmuXDwZuK0qZxAFbFwroLVFsePi12ssQU51ekJzrAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ieZqMWOik2QkTKqrv1o7nfD+wo7NGHLoI3b0VQAW+vvtcyVC06eCIz8slOdgZonem
-	 dck36YfNx3GJKfpBhfdPpC0CPjzGKJl3Ij5kiRZvyORM4fmgWRJGjqB2+zd9dmnRZ3
-	 qwzRJL+km6U80fulA27dopXG4K6xLq55C360hYOQk6rw4INZT4/cHLoxKhyuKZod3I
-	 boxSS74tPsbxyh6lhuR6jRBpV+qj7cdtASwVMDGkIUU3DhGVduSwoYDpcNMmgT0EVa
-	 X7DcyyNXFWy+RHf/Cn8eTe7g0bVM2D70+yqw+pqnY0mdgxOBdNw2mLdwzq3x1YHwEx
-	 QWiXlUNc0YiHg==
-Date: Fri, 24 Jan 2025 09:09:21 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 11/39] unwind_user: Add user space unwinding API
-Message-ID: <20250124170921.oa5etcxie3axy6jk@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <cd54347d26967427bc831f473d76e424ba3eba95.1737511963.git.jpoimboe@kernel.org>
- <a02d7751-2e55-47fa-8e97-c9fd803640a1@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NrFqJ0oB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737739576;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d8wUl4niMMG4T1Ja3SaVYJVWS3/qmpuxD7+JucIVKRk=;
+	b=NrFqJ0oBPrPHaaf1wpDRPIEoduBAAlUdVA4/O+1mW3kvqkdICRKU4g+Zw5WQU9gmTqNcnS
+	zLXGJF5t3WdT2eS75B5seMEN82FvtVWKBLaAJyesWWFBM+EhAN6+SZwlOcZIqJnToBoQlL
+	TljAxr5g1J5fLNq8pRHHpuTSd5v+C6g=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-o9TuW2LFNw2IfUt3Yqazcw-1; Fri,
+ 24 Jan 2025 12:26:13 -0500
+X-MC-Unique: o9TuW2LFNw2IfUt3Yqazcw-1
+X-Mimecast-MFC-AGG-ID: o9TuW2LFNw2IfUt3Yqazcw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DFB181955DCC;
+	Fri, 24 Jan 2025 17:26:09 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.72])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 82F1919560AD;
+	Fri, 24 Jan 2025 17:26:03 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 24 Jan 2025 18:25:44 +0100 (CET)
+Date: Fri, 24 Jan 2025 18:25:36 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Liao Chang <liaochang1@huawei.com>, mhiramat@kernel.org,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, andrii.nakryiko@gmail.com,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] uprobes: Remove redundant spinlock in
+ uprobe_deny_signal()
+Message-ID: <20250124172435.GB13891@redhat.com>
+References: <20250124093826.2123675-1-liaochang1@huawei.com>
+ <20250124093826.2123675-2-liaochang1@huawei.com>
+ <20250124102702.6ff0ccc5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a02d7751-2e55-47fa-8e97-c9fd803640a1@linux.ibm.com>
+In-Reply-To: <20250124102702.6ff0ccc5@gandalf.local.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Fri, Jan 24, 2025 at 05:41:29PM +0100, Jens Remus wrote:
-> On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> > +int unwind_user_next(struct unwind_user_state *state)
-> > +{
-> > +	struct unwind_user_frame _frame;
-> > +	struct unwind_user_frame *frame = &_frame;
-> > +	unsigned long cfa = 0, fp, ra = 0;
-> 
-> Why are cfa and ra initialized to zero? Where is that important in
-> subsequent patches?
-> 
-> "[PATCH v4 12/39] unwind_user: Add frame pointer support" does either
-> unconditionally set both cfa and ra or bail out.
+On 01/24, Steven Rostedt wrote:
+>
+> On Fri, 24 Jan 2025 09:38:25 +0000
+> Liao Chang <liaochang1@huawei.com> wrote:
+>
+> > Since clearing a bit in thread_info is an atomic operation, the spinlock
+> > is redundant and can be removed, reducing lock contention is good for
+> > performance.
+>
+> Although this patch is probably fine, the change log suggests a dangerous
+> precedence. Just because clearing a flag is atomic, that alone does not
+> guarantee that it doesn't need spin locks around it.
 
-Right, probably leftovers from some previous iteration.  I drop those.
+Yes. And iirc we already have the lockless users of clear(TIF_SIGPENDING)
+(some if not most of them look buggy). But afaics in this (very special)
+case it should be fine.
 
--- 
-Josh
+See also https://lore.kernel.org/all/20240812120738.GC11656@redhat.com/
+
+> There may be another path that tests the flag within a spin lock,
+
+Yes, retarget_shared_pending() or the complete_signal/wants_signal loop.
+That is why it was decided to take siglock in uprobe_deny_signal(), just
+to be "safe".
+
+But I still think this patch is fine. The current task is going to execute
+a single insn which can't enter the kernel and/or return to the userspace
+before it calls handle_singlestep() and restores TIF_SIGPENDING. We do not
+care if it races with another source of TIF_SIGPENDING.
+
+The only problem is that task_sigpending() from another task can "wrongly"
+return false in this window, but I don't see any problem.
+
+Oleg.
+
