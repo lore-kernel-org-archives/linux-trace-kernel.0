@@ -1,169 +1,166 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33604225D6
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Jan 2025 01:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38941547F3;
+	Sat, 25 Jan 2025 08:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737768751; cv=none; b=JS6c3gNTXtwDxDLZlOC+eea5vX2cO3eUHWNyh/2jFjH3bM5sHNaQ1kjnh4fEQXn5FPJ1v9HIoeuepawc4ZU6gbx4IvxGa3NfP7qs25BNlcelwP8wbrg7d4VEpHBlPzlqvSUr6szvdA02ehT8I1WQrOs6+ua5gix70kndU5No59I=
+	t=1737793456; cv=none; b=jQqh9qN3LTEsypUSymJic1pdKYTiFzboa9b8xliOwHDqAUnBWRKuMdnXMt2FrkopY90W/TPqj6MTF3CSYZ2H9YCb2bFjb5pjYuE2GW5MESMJ6nSHfQJxx/vX+ZO+eqsm2wcG7V/n3S3v5rwrkxJ9ohrWhbfU2uDMH9v6POx4Rpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737768751; c=relaxed/simple;
-	bh=V7mBH0zJXZMiBcNCDofsvjZ4JjQO1U/hqcyQs79rpD4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BPbLrIIQ3AZ1jQNo+FSvnFfu2Kf6jjK1XI2odibuujewe9FwgCUjmmpBBrKSHnLIVXyjHPGgkNj7aVYVBL6XNu+zsREQeHeimbIhtNDYiINdak5PLM2kcb3Qg0inVcpeAYOKb2g4v4V2ZKB4Zv72lJBmNK7CMFrXtXITm10GuAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F69o3Ych; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
+	s=arc-20240116; t=1737793456; c=relaxed/simple;
+	bh=5C36o9IdjmfPRwlDKtDMgiQdJZRcjCq90w+nxcWONik=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pjzAxf3EG+YRoaCqcoZjtd2LHgHyKj3BZu7FJ3GjfQjkJMiKiwL/LfiVfqGS/5w4u/xMCs+pX2ayNPLIqMuXd9uON5cK80eqbfvgy/v1LLicZ2ni6pym9htQSj+A92TXHibck57LzNTId+HE+Kuq82Wk13e9bElqqqR1bIakkx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dy9yDzJZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F69o3Ych"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2165433e229so53168665ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Jan 2025 17:32:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1737768749; x=1738373549; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfQLw6braW4NPzP7u1BdMZ/MqPhU6oi4TECCrySv6tY=;
-        b=F69o3Ychn1uPhWtKoILwGAPqsJ2ZizKQbYlaYCHxiRhRXk7ohSptvk7wXS34hDg+y2
-         gchJHZmG9P7VaDHm2yTjEzzWoxZanZ2rY0j1FJt0CssryUODj1ycBEkySWb4qKvMJ6hb
-         9eGyYctYJXxqzFmXCaQMN+7JqAdTavehen1SKwvTSHpENeW7Qk4GQtzZbacbMwKh0Qrz
-         8zQ3IdB7jHeGBqyoz04PFhPNRssuDkd1gY2PZmPg6beyq4x23xZzr8XdpNRtMCeesp7i
-         VbwggE6/sN3c+7NIpz9I1JMtbeuCPAGPPn5Zkfmm7VOHx9BboU0QN5PxaI8Jga+QecFr
-         uveA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737768749; x=1738373549;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DfQLw6braW4NPzP7u1BdMZ/MqPhU6oi4TECCrySv6tY=;
-        b=TJbS9uv3CnwwOAkcay12WrhCBLLRT/HuUEawM3Athpl44svcf78lt0uIqWB0f/1Xu6
-         Z+kif+g4n1crXqQtvZ8D5sx/61rSSCqRnhqaFgdz/z9Ur9CJD2F+sl90gqMtmfveD3MN
-         AVY7li/IrVdSpPOyEy4cVRWQDI6pDkIzzaAHyLWftnl3Melfj6zSjcSD1i7yCgish+d1
-         JPoP8tJoK4kyDfHgfAXQK4OWJ7nCv+dmKznNgBuPKcct40dfjZsp2H2esIMmm79sK4mH
-         cCUTWwu1wv1+fGfGQeVcdTHAUcYlG3CanpSOtPSfh5FuTLcMh/gmKDdx+m8elNqVYgtk
-         dtcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPLJId7K3+1fnWFmDtpiB0W3ICQUOgCs5vHD+A42fE6STpkZvZ5eHMfcTSs3UAtHaWddc9c8sAGO7VFJ7gtkWBUT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcdBrWgsU6AGC7FrowaxwQLjpWxap0VCmn7QoXJewwXUYwMH7Y
-	wjtwLl19M1QeDoTcHjA6r00ZmtsyhTyrvvCERrvPYJyjEtZkYkJQcELp3CfWsiVx7oOuXQ==
-X-Google-Smtp-Source: AGHT+IEwhj43ji4o+0SxJAKElNbTnJvGB8JU2Dt1FOH3ilcjaICPkucWw2Xnsu+q12dk5Vy9F3ksFGEO
-X-Received: from pgbbk3.prod.google.com ([2002:a05:6a02:283:b0:7fd:55d9:1f1a])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:8cca:b0:1eb:367f:7a48
- with SMTP id adf61e73a8af0-1eb367f7e2cmr51366488637.34.1737768749476; Fri, 24
- Jan 2025 17:32:29 -0800 (PST)
-Date: Sat, 25 Jan 2025 09:31:45 +0800
-In-Reply-To: <20250125012734.1661860-1-keyz@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dy9yDzJZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B48BC4CEDF;
+	Sat, 25 Jan 2025 08:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737793456;
+	bh=5C36o9IdjmfPRwlDKtDMgiQdJZRcjCq90w+nxcWONik=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=dy9yDzJZXU7DfvY8sccBgWVjfeKWfivW5VjwnzHYKejJ70VTz4Epfb7mC6TajVs4O
+	 Hr36ho9F+l7ZWlNjKE0hYmLtJaV3e/rfwEQwlgCilaSXRsObx7VH+khg6Yp5zhuQ6g
+	 IiVPTW8ihgF9otUuqoiWGQ+4rmEUGlT2aNrDFq+e7/TzccYT3/zfU163REMOyONbvE
+	 1+rqN89IEBSM9rBTu28LccRg9FyvUsU5nmbIbKuhGtB/+pXl8UvXG+0akl1GVZX9dV
+	 3ZeOIn6eCVF7X5wfu70151p2+6zStnkD4ITw/SkHBHCZ443qXa/gPMTnAX3sF/SE60
+	 TUq4CAez1CwCQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D842C02182;
+	Sat, 25 Jan 2025 08:24:16 +0000 (UTC)
+From: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
+Date: Sat, 25 Jan 2025 16:23:39 +0800
+Subject: [PATCH 4/7] tools headers UAPI: Update tools's copy of bpf.h
+ header
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250125012734.1661860-1-keyz@google.com>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250125013145.1664062-1-keyz@google.com>
-Subject: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org, 
-	daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
-Cc: aarontian@google.com, yimingtseng@google.com, 
-	Keita Morisaki <keyz@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250125-bpf_dynptr_probe-v1-4-c3cb121f6951@outlook.com>
+References: <20250125-bpf_dynptr_probe-v1-0-c3cb121f6951@outlook.com>
+In-Reply-To: <20250125-bpf_dynptr_probe-v1-0-c3cb121f6951@outlook.com>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+ Levi Zim <rsworktech@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3015;
+ i=rsworktech@outlook.com; h=from:subject:message-id;
+ bh=3gnnXYcyukxFoJ6/k3O/B5KiBqxGbCIQ+tpkC1HU5hk=;
+ b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBnlJ+pt84ftWXqGsr8H/DDtIoskSL657S5IFGsH
+ f7LrFYF11uJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCZ5SfqQAKCRBvO5jUL8bJ
+ 2HNpD/4ozXHMM0GIrwTf7brucDokPOjFaB9Pvdpcq7luOTsYKeD+RHOPEd791JyOK/KpYG9wsDd
+ L6fb8JZE0IPAJFiZZxFHsvT6S2g4H1cCucjLYXv0n3C0UcH7Li2T7Y4K6sp0BxoEtA0wn+u6Hzl
+ mnm/oW7Gc3ePJQMpLRszoOfqqnC5tdtV7kJ0dPMdcZlYWcEZoFr1GaP+bsAROfLOuUVNTVypqSP
+ w2k7Gg9vp00cuGATWIlsgsTPGl9r0Ee+NpgDLsamj4g7Q9LZnxusrtF0eiIbojkCC8o8v4uzGRE
+ QZ1O2Vpq7em8NuphLz0U7WjUBbpYsOlGhjgFRaGA6sMYqnFDF8p9e4JgC+AHPTFIVhK4S5GBCVb
+ ZpumZebd9Tc0bcBIiimK5clq1oNqLkbXYW9mBsEgniSidsKalDJwU1jz/FLyRI8JKXUntzgloax
+ x3TCh9zkY4L7U07lCV/4pJOF1ZgKV8MsrseKPce7XO2Itml69/nf4ySOULrUmKeZsur7Ze/fWtX
+ HOoENncXcpE4h7h9O350fcd/qpY1e8+4uUvUy1C0jjDMEQ5S+7ViPJjfIhNPTtwpopkeIe7fS0L
+ GDauKg0F3o4L0hW7wjR7RaARcNmoUFJwZa89biOmXyxI/QVnpY91Gx/UeWPVJUd9/DXBmKCqh9D
+ 1oL9dwDqP8DkVJQ==
+X-Developer-Key: i=rsworktech@outlook.com; a=openpgp;
+ fpr=17AADD6726DDC58B8EE5881757670CCFA42CCF0A
+X-Endpoint-Received: by B4 Relay for rsworktech@outlook.com/default with
+ auth_id=219
+X-Original-From: Levi Zim <rsworktech@outlook.com>
+Reply-To: rsworktech@outlook.com
 
-The trace event cpu_idle provides insufficient information for debugging
-PSCI requests due to lacking access to determined PSCI domain idle
-states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-idle states the power domain has.
+From: Levi Zim <rsworktech@outlook.com>
 
-Add new trace events namely psci_domain_idle_enter and
-psci_domain_idle_exit to trace enter and exit events with a determined
-idle state.
+This update brings the new bpf_probe_read_{kernel,user} helpers
 
-These new trace events will help developers debug CPUidle issues on ARM
-systems using PSCI by providing more detailed information about the
-requested idle states.
-
-Signed-off-by: Keita Morisaki <keyz@google.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Levi Zim <rsworktech@outlook.com>
 ---
-v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
-        and rephrase the commit message accordingly. Rebased onto the latest.
-v2->v3: Add the Reviewed-by label
+ tools/include/uapi/linux/bpf.h | 49 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
- drivers/cpuidle/cpuidle-psci.c |  3 +++
- include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 2acf9b33637174bd16b1d12ccc6410c5f55a7ea9..f92cf809b50bc393d54eb0e8de2e1ce2a39e95d0 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -5805,6 +5805,52 @@ union bpf_attr {
+  *		0 on success.
+  *
+  *		**-ENOENT** if the bpf_local_storage cannot be found.
++ *
++ * long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst, u32 offset, u32 size, const void *unsafe_ptr, u64 flags)
++ *	Description
++ *		Safely attempt to read *size* bytes from kernel space address
++ *		*unsafe_ptr* and store the data in *dst* starting from *offset*.
++ *		*flags* is currently unused.
++ *	Return
++ *		0 on success.
++ *
++ *		**-E2BIG** if *offset* + *len* exceeds the length of *src*'s data
++ *
++ *		**-EINVAL** if *src* is an invalid dynptr or doesn't support this
++ *		support this helper, or if *flags* is not 0.
++ *
++ *		Or other negative errors on failure reading kernel memory.
++ *
++ * long bpf_probe_read_user_dynptr(const struct bpf_dynptr *dst, u32 offset, u32 size, const void *unsafe_ptr, u64 flags)
++ *	Description
++ *		Safely attempt to read *size* bytes from user space address
++ *		*unsafe_ptr* and store the data in *dst* starting from *offset*.
++ *		*flags* is currently unused.
++ *	Return
++ *		0 on success.
++ *
++ *		**-E2BIG** if *offset* + *len* exceeds the length of *src*'s data
++ *
++ *		**-EINVAL** if *src* is an invalid dynptr or doesn't support this
++ *		support this helper, or if *flags* is not 0.
++ *
++ *		Or other negative errors on failure reading user space memory.
++ *
++ * long bpf_copy_from_user_dynptr(const struct bpf_dynptr *dst, u32 offset, u32 size, const void *user_ptr, u64 flags)
++ *	Description
++ *		Read *size* bytes from user space address *user_ptr* and store
++ *		the data in *dst* starting from *offset*.
++ *		This is a wrapper of **copy_from_user**\ ().
++ *		*flags* is currently unused.
++ *	Return
++ *		0 on success.
++ *
++ *		**-E2BIG** if *offset* + *len* exceeds the length of *src*'s data
++ *
++ *		**-EINVAL** if *src* is an invalid dynptr or doesn't support this
++ *		support this helper, or if *flags* is not 0.
++ *
++ *		Or other negative errors on failure reading user space memory.
+  */
+ #define ___BPF_FUNC_MAPPER(FN, ctx...)			\
+ 	FN(unspec, 0, ##ctx)				\
+@@ -6019,6 +6065,9 @@ union bpf_attr {
+ 	FN(user_ringbuf_drain, 209, ##ctx)		\
+ 	FN(cgrp_storage_get, 210, ##ctx)		\
+ 	FN(cgrp_storage_delete, 211, ##ctx)		\
++	FN(probe_read_kernel_dynptr, 212, ##ctx)		\
++	FN(probe_read_user_dynptr, 213, ##ctx)		\
++	FN(copy_from_user_dynptr, 214, ##ctx)		\
+ 	/* */
+ 
+ /* backwards-compatibility macros for users of __BPF_FUNC_MAPPER that don't
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index 2562dc001fc1..dd8d776d6e39 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -25,6 +25,7 @@
- #include <linux/syscore_ops.h>
+-- 
+2.48.1
 
- #include <asm/cpuidle.h>
-+#include <trace/events/power.h>
 
- #include "cpuidle-psci.h"
- #include "dt_idle_states.h"
-@@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	if (!state)
- 		state = states[idx];
-
-+	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
- 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-+	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
-
- 	if (s2idle)
- 		dev_pm_genpd_resume(pd_dev);
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index d2349b6b531a..9253e83b9bb4 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
- 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
- );
-
-+DECLARE_EVENT_CLASS(psci_domain_idle,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,		cpu_id)
-+		__field(u32,		state)
-+		__field(bool,		s2idle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu_id = cpu_id;
-+		__entry->state = state;
-+		__entry->s2idle = s2idle;
-+	),
-+
-+	TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
-+		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-+		  (__entry->s2idle)?"yes":"no")
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
- TRACE_EVENT(powernv_throttle,
-
- 	TP_PROTO(int chip_id, const char *reason, int pmax),
-
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
---
-2.48.1.262.g85cc9f2d1e-goog
