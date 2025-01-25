@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BFB207E05;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1DD207E1F;
 	Sat, 25 Jan 2025 08:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737793828; cv=none; b=S4lXU3Cn9Q5kFue7q7bW0qR8lEaU/SzneLrPYI/sRueh2KRs8HyBTFxATgFiAnGHCNfTRAiuUTVFsBtHE6ulU6F3Q6NAVfMD9b8yOBx+UTAN0l30hAJVqo9ZUJrKd6o7E30ZDKkrtuKYkGAn7TYwRXFdo1Po50B+cE+6dtAH/S0=
+	t=1737793828; cv=none; b=EYlJPFbDHj+iHfFXfNQJJlJCQyy9xwaKsi2zGbuhgNC0R/vRSVN0saZ9SfReIxyvVa1S2JfhuSQxqLBeLtSTVmPepUANUbC4c/fjk+Lz3GelJ0OPusD+tGoUDY49Ggy0BlROvKMJhqHLVRX9uND9vCg2n4+sh8+nqI4SIeFxw4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1737793828; c=relaxed/simple;
-	bh=dmQ9GUwd3bRLMUoNF6xVMku1hiH2jSDQcoM3zSlQido=;
+	bh=0ISlPQASi8sOGiTZRr8sXYkkw/cj+H2dHR0QbFcOJZg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PoPS8poqyT0rhSFX9RoH8MVnw5Ia2yE2Tpcccj7JRHPKKGNWtvhs9zmAcm0Zq8I1U0UQkrUMhvw4+HlCra6/4eFH+TU3M5f/EXCLtwukxjpzOArHhmPxk4ORs1jMOeNF8qlBoNF7aldkxQAGVrQNqBz4irEL+c6V6WcZKfw2SdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRvR0hwN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fE/M456cErgK0gw6qJIgcux8erovBtwTlRXH6p1VidBfGjcJt1sSvHGfQj3mwDvbzre/TwF94SWTkYBDgYuO6zeoidBU8/+IHgvPMQTDHr8532VAilGNQhxe8aNadQxh8OpXvdIkW057N4wjafzIy9qSdlsWL9/HF9KQBIHeKKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j34qagjp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRvR0hwN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A3F6C4CEE2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j34qagjp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E522C4CEF9;
 	Sat, 25 Jan 2025 08:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1737793828;
-	bh=dmQ9GUwd3bRLMUoNF6xVMku1hiH2jSDQcoM3zSlQido=;
+	bh=0ISlPQASi8sOGiTZRr8sXYkkw/cj+H2dHR0QbFcOJZg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=NRvR0hwNTc/uPuzrE6m2SSWT74h1SfaKA0CO0F7OuxbSlgxnKdAws3jvEqahQiZ3D
-	 3wwVUOUVafCUDH6dj/r7c4806ozKuIEOt7K+knhchlSoaXIVrfvY9OJTFk3haD9QL2
-	 GLJoqXPqXAQ8G0tOLCyVovPfLQwPKsT6IyxGcJe4JEyD19uyAfDe9ZGgcW0bXLBRm+
-	 pw/dIBogq0LLnMgudc+FqA/zI6mad/Lvbpd5ObYmLDxoT/79rkoxShe3EGR6CkTg2G
-	 TKU7273M68yplx9x41OVltrj6v0dcEiCgF6wt7I7ykfIpvPMbIb8BYkPDIrDO56TAR
-	 Az11z1rhU7PmQ==
+	b=j34qagjpglU0mUZTxVx7V705AZZ+TSZG8lr+v1hheI3W3UYXy8PLATiG3L7cdy1xQ
+	 ezVDXNirVX6M5mbKRs77VP//QwDg/aBidH57SQTcUjtZK+rVZtQgfR7L72HniZDm7o
+	 UOa24rf+87hPpVdaVcrOHRPmGOywvj9N0oTvZ+k+tAQYeZKYR2iVT44wm3IIhWlrzw
+	 E04tVMxQpQnTuZtop+Vr7hjhVTEqO6ougPSFRThxqhaXfhp0z31kjPSOle5QmP/q1V
+	 FxVu556UuXuMGg7rc7aQPO0v9LT83NnGA9yJjkC/zqEft7+v/nXFW7lArDr6CV2dSy
+	 QebgY54JE9HEw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F104C0218C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C81C0218C;
 	Sat, 25 Jan 2025 08:30:28 +0000 (UTC)
 From: Levi Zim via B4 Relay <devnull+rsworktech.outlook.com@kernel.org>
-Date: Sat, 25 Jan 2025 16:29:52 +0800
-Subject: [PATCH bpf-next v2 5/7] selftests/bpf: probe_read_kernel_dynptr
- test
+Date: Sat, 25 Jan 2025 16:29:54 +0800
+Subject: [PATCH bpf-next v2 7/7] selftests/bpf: copy_from_user_dynptr test
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250125-bpf_dynptr_probe-v2-5-c42c87f97afe@outlook.com>
+Message-Id: <20250125-bpf_dynptr_probe-v2-7-c42c87f97afe@outlook.com>
 References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
 In-Reply-To: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
 To: Alexei Starovoitov <ast@kernel.org>, 
@@ -61,21 +60,21 @@ Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
  Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
  Levi Zim <rsworktech@outlook.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4155;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2541;
  i=rsworktech@outlook.com; h=from:subject:message-id;
- bh=jMKGNsysp1i//CbcuLXLYuHvxw7b8AHz8NxNTWOsSWc=;
- b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBnlKEebIa/vdUWN/NFRJtaRaVBLp95tqfHpvpwt
- gRc+8Q7cTiJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCZ5ShHgAKCRBvO5jUL8bJ
- 2LYSD/0Z1DDJMbkTcZqAtRPfq1iGI689fS15jDzjiy16/NUuHxvBVh67b1e+1c1ErgKMZEv0lt2
- CFT8y+sPEyBW5aG5QGfOcaYt95UHf9m2JL1hCTIf/b7cy2F/Yxzm0SqZcmoaTmKt4Kn0EYLwJ6z
- 1lAsiagfVeW1prQXMdpduTJS8UoaRqm9igl++RTk2Tveo5TmYuCmdU/2ZyMvYWss/ivHlM0+S/7
- nQSFxe+fFli7HPnwHDA95zh216J/Js8eLKVgAqQUxZQrl+kMfVuA62nErLvuZK4wCXci0yubh7w
- YhhOVv4B0jq+VzCFfpILH0GdfuwdQb4P90mfHI/kkI0dya1BUta1Vv3u++s0YOCzeUVWFl8hMvd
- Quzrj0dqHHKRY1M/ZIaulNLG7pmSpOG6bUNb3SU5dXELJShZvVXB24Xu7vNscRi8F8razWZtVxj
- K0k1n/SbgyDDcnYishDAFyNV6cPwDNsoOwSsj3kkTFTlx4PPeu3K28ASyi1Xrzp4c789iyIw1Qn
- jF93mrSUAjwlGGmkiW7o88gqje6Yi4HYWqRkDkP8w+F2cdS+Pr+gLuu8po0ydYmdTjvmLItu+Dt
- plFGp/BViH8lfB4kLbcopVFGCA2I8w6qMhhEoJL+PioyK94iU2aqfI0E6xrtVLmlsitAAslAlXL
- vfr1wRQqFdtqBxA==
+ bh=1lAHI+FdFmnes4eRlPuwbThpqaSf+nKUYWM4JR6lmdg=;
+ b=owEBbQKS/ZANAwAIAW87mNQvxsnYAcsmYgBnlKEgaDOvvSTi2myiN4juIhT7XAwb4vipaIBC8
+ te11MKDd8CJAjMEAAEIAB0WIQQolnD5HDY18KF0JEVvO5jUL8bJ2AUCZ5ShIAAKCRBvO5jUL8bJ
+ 2EHZD/4+UmX7SD5haN6mjGVHWxiNzKbUCDyXVJCQ4glNAR/glcfFXli/rDRJVW1037wSANcxq7G
+ 92qggOGmZCk2/hRHADnnTYYxdWaQhUlOdqfyX7YEhGTM8sS63DNfrryWbP9Gwxz8pTNv65nNrvM
+ /iOJIGYe5oJ4XGoAV3jMqJoZHIeH7qHSw6WxCV03lGmFnw5jZrY1NYwdMhlboj2Gh6Owht3an/0
+ QpV3nhuZZcGi9Ij7D48n5QFrRaso+HNYxPlR6+H198ITxErAE2jUBmh7cNGZDjdWCPK/PaMiaFy
+ POx4mNrWjG2JyAGpBgdDSwDSe/YzUtpLRhoneOwlehCEm3IkbOCpabINUxII1qNb5R7KIQbDs+X
+ feJXyRtTD4oe/W7cYyMqIQGsXFRG+UTj+PU71D3qH1FXhc7y/kbw+C46dljianT8fq9cjuJJmI4
+ EYuDFrzvHH+Ysfglgu8hps76uV4I724bI5vC4wtDFjHhqMkQm/tkqCc3e3dqvvdDJ13PYBSZApZ
+ 4sRZPpCw4afkgdeJ9UeYVrclW8QslIV9ZiIgoRF48wjKQ//vqSDtcFYIaww4cO8wGxAsW9r04C8
+ hRg/y/Q/TFka0xNPijh7FPE1Za5/PjkNptLlXMHqlsiCZiRZEtSuU38dvhK1XHR5fMMhvW4gyAs
+ eLXZu1iOairMXpQ==
 X-Developer-Key: i=rsworktech@outlook.com; a=openpgp;
  fpr=17AADD6726DDC58B8EE5881757670CCFA42CCF0A
 X-Endpoint-Received: by B4 Relay for rsworktech@outlook.com/default with
@@ -85,142 +84,74 @@ Reply-To: rsworktech@outlook.com
 
 From: Levi Zim <rsworktech@outlook.com>
 
-This patch adds a test for probe_read_kernel_dynptr helper,
-which tests reading variable length of kernel memory into a ringbuf
+This patch adds a test for copy_from_user_dynptr helper,
+which tests reading variable length of user memory into a ringbuf
 backed dynptr.
 
 Signed-off-by: Levi Zim <rsworktech@outlook.com>
 ---
- tools/testing/selftests/bpf/prog_tests/dynptr.c    | 40 +++++++++++++++++++++-
- tools/testing/selftests/bpf/progs/dynptr_success.c | 38 ++++++++++++++++++++
- 2 files changed, 77 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/dynptr.c    |  3 ++
+ tools/testing/selftests/bpf/progs/dynptr_success.c | 34 ++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/dynptr.c b/tools/testing/selftests/bpf/prog_tests/dynptr.c
-index b614a5272dfd6486e287181270a0bcf63f638344..d9a25c2873b6ed4219e063845b1caf978a7016fd 100644
+index a5a61a4c570d803bfca2af3f1a3b7d5eb0b8197f..a0095204609c710d49a6105ebf8be44723fb53d2 100644
 --- a/tools/testing/selftests/bpf/prog_tests/dynptr.c
 +++ b/tools/testing/selftests/bpf/prog_tests/dynptr.c
-@@ -10,6 +10,7 @@ enum test_setup_type {
- 	SETUP_SYSCALL_SLEEP,
- 	SETUP_SKB_PROG,
- 	SETUP_SKB_PROG_TP,
-+	SETUP_RINGBUF,
- };
- 
- static struct {
-@@ -30,20 +31,37 @@ static struct {
- 	{"test_dynptr_skb_no_buff", SETUP_SKB_PROG},
- 	{"test_dynptr_skb_strcmp", SETUP_SKB_PROG},
+@@ -33,6 +33,7 @@ static struct {
  	{"test_dynptr_skb_tp_btf", SETUP_SKB_PROG_TP},
-+	{"test_probe_read_kernel_dynptr", SETUP_RINGBUF},
+ 	{"test_probe_read_kernel_dynptr", SETUP_RINGBUF},
+ 	{"test_probe_read_user_dynptr", SETUP_RINGBUF},
++	{"test_copy_from_user_dynptr", SETUP_RINGBUF},
  };
  
-+static int ringbuf_cb(void *ctx, void *data, size_t len)
-+{
-+	struct dynptr_success *skel = ctx;
-+	const char *buf = data;
-+
-+	if (!ASSERT_EQ(len, skel->data->test_buf.length, "length"))
-+		return -E2BIG;
-+
-+	if (!ASSERT_MEMEQ(buf, skel->data->test_buf.buf, len, "ringbuf_cb"))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static void verify_success(const char *prog_name, enum test_setup_type setup_type)
- {
-+	struct ring_buffer *rb = NULL;
- 	struct dynptr_success *skel;
- 	struct bpf_program *prog;
- 	struct bpf_link *link;
--	int err;
-+	int err, ret;
+ static int ringbuf_cb(void *ctx, void *data, size_t len)
+@@ -43,6 +44,8 @@ static int ringbuf_cb(void *ctx, void *data, size_t len)
+ 	if (!ASSERT_EQ(len, skel->data->test_buf.length, "length"))
+ 		return -E2BIG;
  
- 	skel = dynptr_success__open();
- 	if (!ASSERT_OK_PTR(skel, "dynptr_success__open"))
- 		return;
- 
- 	skel->bss->pid = getpid();
-+	skel->data->test_buf.length = 8;
- 
- 	prog = bpf_object__find_program_by_name(skel->obj, prog_name);
- 	if (!ASSERT_OK_PTR(prog, "bpf_object__find_program_by_name"))
-@@ -63,6 +81,24 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
- 
- 		usleep(1);
- 
-+		bpf_link__destroy(link);
-+		break;
-+	case SETUP_RINGBUF:
-+		link = bpf_program__attach(prog);
-+		if (!ASSERT_OK_PTR(link, "bpf_program__attach"))
-+			goto cleanup;
++	ASSERT_EQ(skel->bss->err, 0, "err");
 +
-+		rb = ring_buffer__new(bpf_map__fd(skel->maps.ringbuf), ringbuf_cb, skel, NULL);
-+		if (!ASSERT_OK_PTR(rb, "ring_buffer__new"))
-+			goto cleanup;
-+
-+		usleep(1);
-+
-+		ret = ring_buffer__poll(rb, 5000);
-+
-+		if (!ASSERT_EQ(ret, 1, "ring_buffer__poll"))
-+			goto cleanup;
-+
- 		bpf_link__destroy(link);
- 		break;
- 	case SETUP_SKB_PROG:
-@@ -125,6 +161,8 @@ static void verify_success(const char *prog_name, enum test_setup_type setup_typ
- 	ASSERT_EQ(skel->bss->err, 0, "err");
- 
- cleanup:
-+	if (rb != NULL)
-+		ring_buffer__free(rb);
- 	dynptr_success__destroy(skel);
- }
+ 	if (!ASSERT_MEMEQ(buf, skel->data->test_buf.buf, len, "ringbuf_cb"))
+ 		return -EINVAL;
  
 diff --git a/tools/testing/selftests/bpf/progs/dynptr_success.c b/tools/testing/selftests/bpf/progs/dynptr_success.c
-index bfcc85686cf046361b451f97f4cd310a6ccdb1ed..64c698f83a37bfe924db93d36982a0a1c8defe62 100644
+index 5317860290dccb0862b6a0b94bb6f738c8d92835..10dda58fed66a05ad1b08c8684784fddabe3f4ad 100644
 --- a/tools/testing/selftests/bpf/progs/dynptr_success.c
 +++ b/tools/testing/selftests/bpf/progs/dynptr_success.c
-@@ -567,3 +567,41 @@ int BPF_PROG(test_dynptr_skb_tp_btf, void *skb, void *location)
- 
- 	return 1;
+@@ -639,3 +639,37 @@ int test_probe_read_user_dynptr(void *ctx)
+ 	bpf_ringbuf_submit_dynptr(&ptr, 0);
+ 	return 0;
  }
 +
-+#define MAX_BUFFER_LEN 20
-+
-+struct {
-+	__u32 length;
-+	char buf[MAX_BUFFER_LEN];
-+} test_buf = {
-+	.length = 0,
-+	.buf = "0123456789abcdef",
-+};
-+
-+SEC("?tp/syscalls/sys_enter_nanosleep")
-+int test_probe_read_kernel_dynptr(void *ctx)
++SEC("?fentry.s/" SYS_PREFIX "sys_nanosleep")
++int test_copy_from_user_dynptr(void *ctx)
 +{
-+	int copy_len = test_buf.length;
 +	struct bpf_dynptr ptr;
++	int copy_len;
 +
 +	if (bpf_get_current_pid_tgid() >> 32 != pid)
 +		return 0;
 +
-+	if (test_buf.length > MAX_BUFFER_LEN)
++	err = bpf_probe_read_user(&copy_len, sizeof(copy_len), &user_ptr->length);
++	if (err < 0 || copy_len < 0) {
++		err = 1;
++		return 0;
++	}
++
++	if (copy_len > MAX_BUFFER_LEN)
 +		copy_len = MAX_BUFFER_LEN;
 +
 +	bpf_ringbuf_reserve_dynptr(&ringbuf, copy_len, 0, &ptr);
 +
-+	if (-E2BIG != bpf_probe_read_kernel_dynptr(&ptr, 0, MAX_BUFFER_LEN + 1,
-+		test_buf.buf, 0)) {
-+		err = 1;
++	if (-E2BIG != bpf_copy_from_user_dynptr(&ptr, 0, MAX_BUFFER_LEN + 1,
++		&user_ptr->buf, 0)) {
++		err = 2;
 +		goto cleanup;
 +	}
 +
-+	err = bpf_probe_read_kernel_dynptr(&ptr, 0, copy_len,
-+		test_buf.buf, 0);
++	err = bpf_copy_from_user_dynptr(&ptr, 0, copy_len,
++		&user_ptr->buf, 0);
 +
 +cleanup:
 +	bpf_ringbuf_submit_dynptr(&ptr, 0);
