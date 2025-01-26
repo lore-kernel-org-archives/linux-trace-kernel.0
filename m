@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A001F7913;
-	Sun, 26 Jan 2025 14:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6905E1FC7D8;
+	Sun, 26 Jan 2025 14:56:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737903287; cv=none; b=N4RT//KaKlUqxyISNjoD0Pw65viMmSZ9Aj+uYmu3CEAg40NfHyG/D1JTSDNNHg+3IIo5BJkJITiybesm3z8zpgiPRztA41/KNrCkQ4Af6EfAOalf+oWeBu+5UDIu5Ou27HqgEqxK8/CJDleCw+nDiS6KuLVATQfY3nmpLE7vW3M=
+	t=1737903372; cv=none; b=GG7xaoI3CarJnU2fW4Xr7hQxt+Lc80P6+K5qezipDO9DMUtb9nCT/BSZRfY3sBIH1ZwvBN2VmMOZ29mfJtymBtNFvKi/hMZls3nlaF7yAVH+TiI8txdpc7NVcO6RGU87v2XaIdo3OpPaOe7zziNKOJO6n/XeUxT53Dn9tBkRV5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737903287; c=relaxed/simple;
-	bh=Ueg4UP6zDmQGO3ysgeObxBWh+1qd+reD+R1BBXHMeBM=;
+	s=arc-20240116; t=1737903372; c=relaxed/simple;
+	bh=eV63UqxWcasLmFKmafSwVGhlsTu3il2siuiSSVmN0AM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TsV2OEqkPjefXN17CWWPNYI1yCwfFlzl8wyCPX/EFvSBLR2FN4RmCNFfz7OSFFVJhi/S+wnDqL4y1nIXaFRO855O4xUHVYYP80M8a2uv1jFKJbH1h65jI1nDx9H3f+lakQZoenmdH25gN3UjoX1XGdxuLp2X82t+wbU5KDUI7ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9n1SlkO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kasPlLChhnbmAL0wNlV3yVBkHy8klt6sykvUBFdrv1JFtoNqPQkcdX5Eyi4vJZ156HfW7hDQXc+3aUl+FLAUjPk1nQzfn3u56EukvaVavHV/ub68XOAzI62ehnDjB1Y65U+TyB8oqeVMDmN9c0+PYzExVjCLxpb6S4Vj7TKyV8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QKU+P6Zz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9n1SlkO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B385C4CEE2;
-	Sun, 26 Jan 2025 14:54:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QKU+P6Zz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 169B6C4CEE2;
+	Sun, 26 Jan 2025 14:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737903287;
-	bh=Ueg4UP6zDmQGO3ysgeObxBWh+1qd+reD+R1BBXHMeBM=;
+	s=k20201202; t=1737903371;
+	bh=eV63UqxWcasLmFKmafSwVGhlsTu3il2siuiSSVmN0AM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j9n1SlkOzBPM8q0ZVQfHmhsQuQaK3Taww0Otu5EhHLE8Iol9fkI/rqSdthiOckNwH
-	 SBXHIqMmy4jsEgdt26l4kJHPzmeDHMpbH+zHUm1zB7/t4duij/K4uGMIz6ZxJzOAOF
-	 AJn+P0FErJWrRGz+ReHxqQIgJrMrvCwh6o6UOlNdnKDSWuTlJ6jJtU6c3VRHwQAa7m
-	 yZNKQK9APO3sY8kS7viBybD40YUkBpsKXAaDs1vsMseD9dNXLkpJO/MLkHs+ROsxTA
-	 pOQygrBYGav8ug6Yo6PTO9US8kpqJSc+XJzPVfHBOeypcT82eQSAk0PParMTdLI6lp
-	 ZvlWceOD627Lw==
+	b=QKU+P6Zz5zgUkRsJ9nsKaDYExQVvC/CJGAfHtyEakzM2U17t1PMan/KDeratoH6nC
+	 fWKPmcl8qiIGvyVJT+q080lyPdsfPA+XT7XpHynD/vWw3y32csV7D3p16+UUMXmqr8
+	 u1i+XPm3TsARNz72fN5mQ5sueHpea8fnIk2XQurlTBQxqfu2FzvB1Wzy2Qk/NMi3ov
+	 z2lXb6SHZ91SzMvAC6HFfPwM+GuhEwAcnrAKG5C5yDgGJRflF7ch072mSWU474ePyd
+	 V67Yj4QqNyPpqHofvN40yqNLA+eYTmW5Dv1sHBicI0Vh78uKw+0CMZXFMh2HaDrBUx
+	 GD7+UEHKowJhg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Jeongjun Park <aha310510@gmail.com>,
 	Sasha Levin <sashal@kernel.org>,
 	mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 34/34] ring-buffer: Make reading page consistent with the code logic
-Date: Sun, 26 Jan 2025 09:53:10 -0500
-Message-Id: <20250126145310.926311-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 31/31] ring-buffer: Make reading page consistent with the code logic
+Date: Sun, 26 Jan 2025 09:54:47 -0500
+Message-Id: <20250126145448.930220-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250126145310.926311-1-sashal@kernel.org>
-References: <20250126145310.926311-1-sashal@kernel.org>
+In-Reply-To: <20250126145448.930220-1-sashal@kernel.org>
+References: <20250126145448.930220-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13
+X-stable-base: Linux 6.12.11
 Content-Transfer-Encoding: 8bit
 
 From: Jeongjun Park <aha310510@gmail.com>
@@ -79,7 +79,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 60210fb5b2110..6804ab126802b 100644
+index 703978b2d557d..28fad7bcfcf86 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
 @@ -7059,7 +7059,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
