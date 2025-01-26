@@ -1,111 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6729145B16;
-	Sun, 26 Jan 2025 07:49:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A001F7913;
+	Sun, 26 Jan 2025 14:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737877764; cv=none; b=CVcwkyaFDusUOoDe/cAy3Pd0Xb3WMtzPNSKzWJUyMJkqnUSIuO9ce5W0+ymXATzUPHrM278ZJcmABHCzRUAPr3K3hk4BGA3rzwjeJ95hl5sjc8RBvZ922J4kasvjl9OVDaqO+FqMwCFkmEPySByk/jU2teIVxbZmhY3Yt+0K3pw=
+	t=1737903287; cv=none; b=N4RT//KaKlUqxyISNjoD0Pw65viMmSZ9Aj+uYmu3CEAg40NfHyG/D1JTSDNNHg+3IIo5BJkJITiybesm3z8zpgiPRztA41/KNrCkQ4Af6EfAOalf+oWeBu+5UDIu5Ou27HqgEqxK8/CJDleCw+nDiS6KuLVATQfY3nmpLE7vW3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737877764; c=relaxed/simple;
-	bh=iCOJADJJ/sFPbuOid5OXzq1M+MQ1WlHyV9KAisT6QLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AkXzEnc94JntCnYRoj3bvjx6hqBPntyGsHP6qJhQnpXfB+F0P3L67CnNWnFoqos6qBsUKlY2B7ItrtAohi/fd1/8a+e1v9yAbPA4QbP1xYNGyK23klMoMP3p43ro1gqLbQV7vPRZ4yX1md++CL20B7YFqNjdukdGPAYmQwn1GQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4s+daeo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737903287; c=relaxed/simple;
+	bh=Ueg4UP6zDmQGO3ysgeObxBWh+1qd+reD+R1BBXHMeBM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TsV2OEqkPjefXN17CWWPNYI1yCwfFlzl8wyCPX/EFvSBLR2FN4RmCNFfz7OSFFVJhi/S+wnDqL4y1nIXaFRO855O4xUHVYYP80M8a2uv1jFKJbH1h65jI1nDx9H3f+lakQZoenmdH25gN3UjoX1XGdxuLp2X82t+wbU5KDUI7ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9n1SlkO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4s+daeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B87C4CED3;
-	Sun, 26 Jan 2025 07:49:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9n1SlkO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B385C4CEE2;
+	Sun, 26 Jan 2025 14:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737877764;
-	bh=iCOJADJJ/sFPbuOid5OXzq1M+MQ1WlHyV9KAisT6QLU=;
+	s=k20201202; t=1737903287;
+	bh=Ueg4UP6zDmQGO3ysgeObxBWh+1qd+reD+R1BBXHMeBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=K4s+daeo5ZtRx6Gu4vJ/P5va2/Zc1aBNvpydz9rKkSVitnt5s4tQ4p7lT4T7koHi2
-	 wvqpFOfNIJ4JvEi6mI2AH0DeuLwKbVe3rJ5HBW4E9DuKwRa24y9nMYZzZEoMxFBPuj
-	 r3lfMvP/zDLkxMw27lf06oOh8SETm1Dsfzs9boTj7kyerxd4kK4XYTdJQnf5NnqRU7
-	 2nOaBRt/YCtwpuvvVDC9No5WR+kbAukE44WO5GnFFgtxx9m3AtHPGru2xrot7i52tK
-	 my4z9DG0wF6kJFGXr/ty1oVp9XX+EnLvBW/nOKu6f8wEe7Q70aCehyXls3uZlat3aP
-	 plrNoZEvAzEAA==
-From: Mike Rapoport <rppt@kernel.org>
-To: x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Daniel Thompson <danielt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Gow <davidgow@google.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jason Wessel <jason.wessel@windriver.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Rae Moar <rmoar@google.com>,
-	Richard Weinberger <richard@nod.at>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Song Liu <song@kernel.org>,
+	b=j9n1SlkOzBPM8q0ZVQfHmhsQuQaK3Taww0Otu5EhHLE8Iol9fkI/rqSdthiOckNwH
+	 SBXHIqMmy4jsEgdt26l4kJHPzmeDHMpbH+zHUm1zB7/t4duij/K4uGMIz6ZxJzOAOF
+	 AJn+P0FErJWrRGz+ReHxqQIgJrMrvCwh6o6UOlNdnKDSWuTlJ6jJtU6c3VRHwQAa7m
+	 yZNKQK9APO3sY8kS7viBybD40YUkBpsKXAaDs1vsMseD9dNXLkpJO/MLkHs+ROsxTA
+	 pOQygrBYGav8ug6Yo6PTO9US8kpqJSc+XJzPVfHBOeypcT82eQSAk0PParMTdLI6lp
+	 ZvlWceOD627Lw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jeongjun Park <aha310510@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	kgdb-bugreport@lists.sourceforge.net,
-	kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	live-patching@vger.kernel.org
-Subject: [PATCH v3 9/9] x86: re-enable EXECMEM_ROX support
-Date: Sun, 26 Jan 2025 09:47:33 +0200
-Message-ID: <20250126074733.1384926-10-rppt@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250126074733.1384926-1-rppt@kernel.org>
-References: <20250126074733.1384926-1-rppt@kernel.org>
+	Sasha Levin <sashal@kernel.org>,
+	mhiramat@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 34/34] ring-buffer: Make reading page consistent with the code logic
+Date: Sun, 26 Jan 2025 09:53:10 -0500
+Message-Id: <20250126145310.926311-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250126145310.926311-1-sashal@kernel.org>
+References: <20250126145310.926311-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13
 Content-Transfer-Encoding: 8bit
 
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+From: Jeongjun Park <aha310510@gmail.com>
 
-after rework of execmem ROX caches
+[ Upstream commit 6e31b759b076eebb4184117234f0c4eb9e4bc460 ]
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+In the loop of __rb_map_vma(), the 's' variable is calculated from the
+same logic that nr_pages is and they both come from nr_subbufs. But the
+relationship is not obvious and there's a WARN_ON_ONCE() around the 's'
+variable to make sure it never becomes equal to nr_subbufs within the
+loop. If that happens, then the code is buggy and needs to be fixed.
+
+The 'page' variable is calculated from cpu_buffer->subbuf_ids[s] which is
+an array of 'nr_subbufs' entries. If the code becomes buggy and 's'
+becomes equal to or greater than 'nr_subbufs' then this will be an out of
+bounds hit before the WARN_ON() is triggered and the code exiting safely.
+
+Make the 'page' initialization consistent with the code logic and assign
+it after the out of bounds check.
+
+Link: https://lore.kernel.org/20250110162612.13983-1-aha310510@gmail.com
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+[ sdr: rewrote change log ]
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/ring_buffer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index ef6cfea9df73..9d7bd0ae48c4 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -83,6 +83,7 @@ config X86
- 	select ARCH_HAS_DMA_OPS			if GART_IOMMU || XEN
- 	select ARCH_HAS_EARLY_DEBUG		if KGDB
- 	select ARCH_HAS_ELF_RANDOMIZE
-+	select ARCH_HAS_EXECMEM_ROX		if X86_64
- 	select ARCH_HAS_FAST_MULTIPLIER
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 60210fb5b2110..6804ab126802b 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7059,7 +7059,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	}
+ 
+ 	while (p < nr_pages) {
+-		struct page *page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		struct page *page;
+ 		int off = 0;
+ 
+ 		if (WARN_ON_ONCE(s >= nr_subbufs)) {
+@@ -7067,6 +7067,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			goto out;
+ 		}
+ 
++		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+ 				break;
 -- 
-2.45.2
+2.39.5
 
