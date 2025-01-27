@@ -1,107 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A960E18FDBD;
-	Mon, 27 Jan 2025 19:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D91B64A;
+	Mon, 27 Jan 2025 22:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738006990; cv=none; b=Z83p7qECkPyZOarzzpONpnhNdp2rTpsHAmuPs/s/GR5xgHiKc1Yr9gc7W410quwnmRsRhIRgI56CA72J83GtDdwDLJA8orvGcyinu/nTye3ccIY8AnJPtwBsmINSGBJuz9gJIgoGTyOWzEcywbRTmW+C1aYh8IHvrV+A09o4aJs=
+	t=1738015489; cv=none; b=Mvho5Bq48FdcVKaPCKOa6E3AcsM0RSM972onDpMelFS99Eamhm9pF4r+gKRgFSQ5ODVJOiUP8fvx/E8txqhxP3qOfCzvdt5RPigGssewh52bY1PSIXcUJECsWKmg+OSck9/7Jqoz9ACLyCrVF/eb8+w71wtY8c8qnlxTNGNWvss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738006990; c=relaxed/simple;
-	bh=iTdO+69RM1LBQsJWCHGCvzAUTh7tuT2jXHCzvASr/3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P95P8P0lcvUBAS3sEUr+mvOHUarG/UP07M3aYMU/TQMc5ka4DCyG/MY5Ht+8obxd7CN/9Wb64bViRp7jrFqsIYgIyvSOPdVLYkAwmDI9RAl5k0QziCAo+19n01OZyV/qi5Lqrj3R39HjUlFCDrAGrwTzZN5idh56TwUUyHUuv34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMRcENEd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738015489; c=relaxed/simple;
+	bh=X9YfYIq2sLm6xuNcEXCHLbbkHYOGkRvCZ7dLgovc1p4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rP8f3ZQge9UZexObixDr5d2koLoEvoA4WoG+HAmL6eseAwU89rcL4wnpCRDSV3NyOyBOEsDbutqJE5M2zNwBoQDMYamhZdt9H2k0vvk7OhnCNctCaHOVGuUvt6tzMKzrHFWE+9UFg3wGq0t9nCawwXuFWDFmAnE4GBygikroHyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IYOL7scM; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMRcENEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197D1C4CED2;
-	Mon, 27 Jan 2025 19:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738006990;
-	bh=iTdO+69RM1LBQsJWCHGCvzAUTh7tuT2jXHCzvASr/3I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MMRcENEdar7TwZvs8QKJy/D5y8srtw/e6uMqZ24FbRjn3LfmDk59Q8wDDZ7PdwzMA
-	 wGlnjWJHNUqVkBz399bCcg/XddGxi4b7utnVq6fdVdOINb4PKIxaFrJ4Cv+TPZuOrM
-	 2ERSvDF4+Oa0DJElI9n4ylubYhfTlFVK4e7qmLw0X8ULU3CFDj3nl8zokLVpYMkyBc
-	 Tst5I6I7NY5Swgo3YUM3djfRzV9d8X/9zBABayOQAwUbq/g94cTC/Z90AT+/sS04Ga
-	 o4XVvuGY0IJFKfBFuZC5j3rjLBNbMsb5IAT4NQdxAvP5J8Q9/PWEzXPFWEbmGijaF2
-	 fVoGTKJf72i9g==
-Date: Mon, 27 Jan 2025 11:43:07 -0800
-From: Kees Cook <kees@kernel.org>
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: luto@amacapital.net, wad@chromium.org, oleg@redhat.com, ldv@strace.io,
-	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org,
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without
- filtering
-Message-ID: <202501271142.71C1B5EE6@keescook>
-References: <20250117005539.325887-1-eyal.birger@gmail.com>
- <202501181212.4C515DA02@keescook>
- <CAHsH6GuifA9nUzNR-eW5ZaXyhzebJOCjBSpfZCksoiyCuG=yYw@mail.gmail.com>
- <8B2624AC-E739-4BBE-8725-010C2344F61C@kernel.org>
- <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
- <202501201334.604217B7@keescook>
- <CAHsH6Gt4EqSz6TrQa+JKG98y8CUTtOM8=dfCVy0fZ8pwXJr1pw@mail.gmail.com>
- <202501271131.7B5C22D@keescook>
- <CAHsH6GtPBt329FeN7K4X4Hqc_uZ=a8uofDN15mqqC4obQ-RK5g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYOL7scM"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-385d7b4da2bso4682908f8f.1;
+        Mon, 27 Jan 2025 14:04:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738015486; x=1738620286; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VDdtNnX+lWi3wWDGkVQoG3W+/RHDB5m+7YeqveGLDTc=;
+        b=IYOL7scMSMTIkH10PmK0X2j03NeQO/SEG2Ls9JtOv6NlPadFucHStDqC0FpY1r3+fI
+         3uPKGuOiM6VWozVmsMx0DRkCFH2OO1M/551IXnKiuq6P21O9gQkuqTTgKqdejZ3G3S9E
+         aFP5frJQJ0b9LrjN13GF+6yp4yHKtFB8wYZPyMGpA2B2t6JHrHIPneAt9ekIpmescd+o
+         CqfjFeedLgM+LoMI6rU0zysorR3O+GmuofP1Y0zu/4LzeHdbvi6AtHdqo7DaBqdVeUH4
+         /qP5ZkCTDk8NjXZ0S/xsAmxIqkSZThoytSfs30/0hC8c6HmcKt7C3cG5y6IPrfXxcQUb
+         j1HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738015486; x=1738620286;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VDdtNnX+lWi3wWDGkVQoG3W+/RHDB5m+7YeqveGLDTc=;
+        b=YvlWhc4fyaJ3Y/9vG1MhgD40o19n1bW3g7/iaWOLwuI1J2gZG+/XIboxuth/su0w/x
+         t+bifSnZAlB8VSPYoC85vg1XCCOYiz5RU3fl0mrzFsN62N/tYaKNrVJaTJCf+o0RNdI2
+         JyofB+UaXZEG/Zcyli0S+KgloZWpw1Uc3FfgFX3oXDaBdbtsKFJeCWsxLvPOk0LrHT0z
+         3lJD8AmFpoZHJWP10g0UUlf8xCmaQG0vduzsmThdY4ESgUrAmKjHrNHYXHKTod0l/b7A
+         WqZHICtMkPEEtw2h686+Ivs1d7WfceBqE+2qzvhkpxPQTnDtmDyOeyt6C+jwUt5+xX3K
+         96Og==
+X-Forwarded-Encrypted: i=1; AJvYcCUlKMlVooC2Uk5i/q7wr/h1cMht7/0fRejmbc+o3/Mq6qdXwfN/tgmCyjTLcNz8QpcevODEqLzgVs6LqShv9wO2/x0W@vger.kernel.org, AJvYcCVb1Li/kJNfKoXKQmfd7G4QAAgxZq4RfzlIAtJ0egnsD+olNLd+gCTrjFGZ1jCZQWpKe0s=@vger.kernel.org, AJvYcCWZxn5hGp4P8KZVK0srqDJRawpDZjUfOhz1zhgmTE613vqaFcp9yx9pa9cNupWB8aoK+MeBFvcsj6RbSbci@vger.kernel.org, AJvYcCXInyUog0og7gPylsLSehZw/ozfpj2/aLwg4aKa6P60SdBxst4OcKN6m11iOu5J78jhNnv4Z58BjKMJGICD55WK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfuzbNBLbwOD1BX3etrnJEV1EUTRT4t8aaIRpPTh/+JvzZAV/x
+	cp872PevJ3mh308tu39Yzg5HOIOcDkLCYZCHFvMhp3Xeo7RUUIE8lzHaat7kvsJ59zN26+lLnmQ
+	s40eHK1w/8/lPjn67v1nSYmRvPHk=
+X-Gm-Gg: ASbGncvrAKttZw+rZeHaBvI5864piaIUrv01HcbGAozu3VT81ZhofZ3uLmu7zCOXGEq
+	H15S/Oi0aLD333i/YwxXrsnXoluVJML0tWS0dc9AHvymyafxINqRq31ntLCao2FFpCaDVt4/EeA
+	fzmjUPhGs327ZcCd5iRg==
+X-Google-Smtp-Source: AGHT+IEmP1BQeihoLxDsoDkg8eXKk+1oBx1pRLmvXa7WxMyzR+PKkb1/yKdhrSsHq5dmj6+XqCFkvhA8OcgHlBPm6DA=
+X-Received: by 2002:a05:6000:400d:b0:38b:f37d:c875 with SMTP id
+ ffacd0b85a97d-38bf566b30dmr38458073f8f.32.1738015485398; Mon, 27 Jan 2025
+ 14:04:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHsH6GtPBt329FeN7K4X4Hqc_uZ=a8uofDN15mqqC4obQ-RK5g@mail.gmail.com>
+References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
+ <20250125-bpf_dynptr_probe-v2-1-c42c87f97afe@outlook.com> <CAADnVQ+bRvL-4n4ZB5QS2oUxvo3vhJHf=8=2No3WWqYHqSyBEg@mail.gmail.com>
+ <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
+In-Reply-To: <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 27 Jan 2025 14:04:34 -0800
+X-Gm-Features: AWEUYZlv-eq4t-jTtOz7DOPfdnvt0FI_k1AxwT0cJhy5FpU1MOHfohkaB8qqLOc
+Message-ID: <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/7] bpf: Implement bpf_probe_read_kernel_dynptr
+ helper
+To: Levi Zim <rsworktech@outlook.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 27, 2025 at 11:39:44AM -0800, Eyal Birger wrote:
-> On Mon, Jan 27, 2025 at 11:33 AM Kees Cook <kees@kernel.org> wrote:
-> >
-> > On Mon, Jan 27, 2025 at 11:24:02AM -0800, Eyal Birger wrote:
-> > > Hi Kees,
-> > >
-> > > On Mon, Jan 20, 2025 at 1:34 PM Kees Cook <kees@kernel.org> wrote:
-> > > >
-> > > > On Sat, Jan 18, 2025 at 07:39:25PM -0800, Eyal Birger wrote:
-> > > > > Alternatively, maybe this syscall implementation should be reverted?
-> > > >
-> > > > Honestly, that seems the best choice. I don't think any thought was
-> > > > given to how it would interact with syscall interposers (including
-> > > > ptrace, strict mode seccomp, etc).
-> > >
-> > > I don't know if you noticed Andrii's and others' comments on this [1].
-> > >
-> > > Given that:
-> > > - this issue requires immediate remediation
-> > > - there seems to be pushback for reverting the syscall implementation
-> > > - filtering uretprobe is not within the capabilities of seccomp without this
-> > >   syscall (so reverting the syscall is equivalent to just passing it through
-> > >   seccomp)
-> > >
-> > > is it possible to consider applying this current fix, with the possibility of
-> > > extending seccomp in the future to support filtering uretprobe if deemed
-> > > necessary (for example by allowing userspace to define a stricter policy)?
-> >
-> > I still think this is a Docker problem, but I agree that uretprobe
-> > without syscall is just as unfilterable as seccomp ignoring the syscall.
-> >
-> > Can you please update the patch to use the existing action_cache bitmaps
-> > instead of adding an open-coded check? We can consider adding
-> > syscall_restart to this as well in the future...
-> 
-> I can. The main difference as far as I can tell is that it would not
-> apply to strict mode. Is that OK? it means that existing binaries using
-> strict mode would still crash if uretprobe is attached to them.
+On Sat, Jan 25, 2025 at 5:05=E2=80=AFPM Levi Zim <rsworktech@outlook.com> w=
+rote:
+>
+> On 2025/1/26 00:58, Alexei Starovoitov wrote:
+>  > On Sat, Jan 25, 2025 at 12:30=E2=80=AFAM Levi Zim via B4 Relay
+>  > <devnull+rsworktech.outlook.com@kernel.org> wrote:
+>  >> From: Levi Zim <rsworktech@outlook.com>
+>  >>
+>  >> This patch add a helper function bpf_probe_read_kernel_dynptr:
+>  >>
+>  >> long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst,
+>  >>          u32 offset, u32 size, const void *unsafe_ptr, u64 flags);
+>  > We stopped adding helpers years ago.
+>  > Only new kfuncs are allowed.
+>
+> Sorry, I didn't know that. Just asking, is there any
+> documentation/discussion
+> about stopping adding helpers?
+>
+> I will switch the implementation to kfuncs in v3.
+>
+>  > This particular one doesn't look useful as-is.
+>  > The same logic can be expressed with
+>  > - create dynptr
+>  > - dynptr_slice
+>  > - copy_from_kernel
+>
+> By copy_from_kernel I assume you mean bpf_probe_read_kernel. The problem
+> with dynptr_slice_rdwr and probe_read_kernel is that they only support a
+> compile-time constant size [1].
+>
+> But in order to best utilize the space on a BPF ringbuf, it is possible
+> to reserve a
+> variable length of space as dynptr on a ringbuf with
+> bpf_ringbuf_reserve_dynptr.
 
-Ah, good point. Please also add it to mode1_syscalls for strict. :)
-
--- 
-Kees Cook
+That makes sense. The commit log didn't call it out.
+Please spell out the motivation clearly.
+Also why bpf_probe_read_kernel_common ?
+Do we need to memset() it on failure?
