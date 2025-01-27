@@ -1,69 +1,92 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C36125A646;
-	Mon, 27 Jan 2025 11:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB68F1E868;
+	Mon, 27 Jan 2025 12:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737977308; cv=none; b=e3oeWDKRtViA2Jz+3SUaT0nTwm9AeSAqBVkonh7CmwItMYYfZMk9S2qQggyAoJlGKgarP+xyd8FJ9pqmKJxe7syk8BVBwi7FltFzxw45UWbSMdjsLMCg/ZE7H9Rn6GO53Pe1BZXghgGGQJa2XWoHot0WXvJA5E/NyHgRQy+OdWY=
+	t=1737980233; cv=none; b=UnmfWhGzRiMrFprjmnRQ7aBBKbW20LwbeEWoyx9ZDeHKi5normLYIz4naMRzpsVwMBcY0XN4rUSf/6qY3k89tdV6FC1Is0ArbnQDCawbGkJZ9k8SjtPAq6TbPJhBTaC1oyRxmBQA51NzeH13tJd31IZi7laUl1VhBofof6eUnEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737977308; c=relaxed/simple;
-	bh=GQoYB4Aob3xWAWnF8gpzfqf/CV52pRYvErqC2avKG9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y8mb/q00HQv/DgC5A/qsXCqOqII37GEJtI2Ms4PpQlbtp9wAIECSy4JsFdfW7yo6z+b+imVrFe5Q227g5U0WtiUcJ6HpvVAM4lfWK9huv+Pj8rGkJ/H3EJOSe4Kbsn9YGYYVeVGR9J2mO76KN0izsYLNmdGA39JPLHiSiwJWaEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C409MVTC; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C409MVTC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4+JW8sEw705PBUez1KwWSHcwOqxXtNjS9aj2SZZoj6w=; b=C409MVTCGBuNGnsP7NfupJWvCO
-	j7bs5f+qVTftz6QUX1SsYFmln0BxeHtnpJpo4yQiXa5XV1pEgMdU08nN01nXgjtZgEMMzrBYtSU4K
-	ZSjNdMpPjdYbgwySosjw6Ddo8aMegkxy0z1UpwKsCiUS43fA0o024TOK8ZkAeNk5hVxx/ldsPDuDn
-	C35tlEBeg0eyzGIt4NaFRd/ynbK5cN1XlriwCUwMUrw0JnwT63QQzlv9nAAlBDrTI4mKmLhaKmMIM
-	ScUH9EXYFcwHksl7V4hHQ+VIq8nbv9K4vxYImv0U0FeDFg3Vy4xVO77PFD/5qLCduY+74cRppMpcY
-	voGtm/YQ==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tcNHr-0000000EhMe-0X1s;
-	Mon, 27 Jan 2025 11:28:15 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8AA523004DE; Mon, 27 Jan 2025 12:28:14 +0100 (CET)
-Date: Mon, 27 Jan 2025 12:28:14 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, andrii.nakryiko@gmail.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v5 0/2] uprobes: Improve scalability by reducing the
- contention on siglock
-Message-ID: <20250127112814.GH16742@noisy.programming.kicks-ass.net>
-References: <20250124093826.2123675-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1737980233; c=relaxed/simple;
+	bh=jXggkm6S75kGUTi1BnvcV4LK3S9FJ/cJMvfzq+Adi0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OCGLEgY9jodLd/A4jkmAWcdDpyVjblfwexmC+mVw7zryNmAyzYCuCIjOH0bqIF+7xH34ksAsZa0WeyLWCeLkrrIGmWcQI95J82NqJk6EG6g8u/RqWsofOEEUj9TDq5zXYU1LNF9epWP6GIIbmsZX15TlN5+AH/xeU+O2O8DLvBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 911D6497;
+	Mon, 27 Jan 2025 04:17:37 -0800 (PST)
+Received: from [10.57.38.3] (unknown [10.57.38.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D2B43F694;
+	Mon, 27 Jan 2025 04:17:07 -0800 (PST)
+Message-ID: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
+Date: Mon, 27 Jan 2025 12:16:51 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124093826.2123675-1-liaochang1@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cpuidle: psci: Add trace for PSCI domain idle
+To: Keita Morisaki <keyz@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
+Cc: aarontian@google.com, yimingtseng@google.com
+References: <20250118072438.3647805-1-keyz@google.com>
+ <20250120013616.1116126-1-keyz@google.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20250120013616.1116126-1-keyz@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 24, 2025 at 09:38:24AM +0000, Liao Chang wrote:
-> Liao Chang (2):
->   uprobes: Remove redundant spinlock in uprobe_deny_signal()
->   uprobes: Remove the spinlock within handle_singlestep()
+On 1/20/25 01:36, Keita Morisaki wrote:
+> The trace event cpu_idle provides insufficient information for debugging
+> PSCI requests due to lacking access to determined PSCI domain idle
+> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> idle states the power domain has.
 > 
->  include/linux/uprobes.h |  1 +
->  kernel/events/uprobes.c | 10 +++++-----
->  2 files changed, 6 insertions(+), 5 deletions(-)
+> Add new trace events namely psci_domain_idle_enter and
+> psci_domain_idle_exit to trace enter and exit events with a determined
+> idle state.
+> 
+> These new trace events will help developers debug CPUidle issues on ARM
+> systems using PSCI by providing more detailed information about the
+> requested idle states.
+> 
+> Signed-off-by: Keita Morisaki <keyz@google.com>
+> ---
+> v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+> 		and rephrase the commit message accordingly. Rebased onto the latest.
 
-Thanks, I've picked up the patches but will not merge them until post
--rc1.
+
+Which makes it different to cpu_idle event FWIW.
+
+> 
+>  drivers/cpuidle/cpuidle-psci.c |  3 +++
+>  include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index 2562dc001fc1..dd8d776d6e39 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/syscore_ops.h>
+> 
+>  #include <asm/cpuidle.h>
+> +#include <trace/events/power.h>
+> 
+>  #include "cpuidle-psci.h"
+>  #include "dt_idle_states.h"
+> @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>  	if (!state)
+>  		state = states[idx];
+> 
+> +	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+>  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+> +	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+
+Not tracking ret seems odd, is that fine?
