@@ -1,122 +1,115 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25F31581E0;
-	Mon, 27 Jan 2025 17:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E60190676;
+	Mon, 27 Jan 2025 19:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737997383; cv=none; b=upwisiTslijR5KR1Sp6feczStcdsUbIcwlAJexdwlDCOtKLBJTCXJ7wrxMYIVJPLzAdHC6l1OqVTxUdtIFFgrYiOKekVzPqx7hLx+5YcLs3obgsxQA6en1UJb5AcxfnB1J3xIIdJgnyL7CphwJlIW0QBizmjM5+bXWGD/TXnAyM=
+	t=1738005856; cv=none; b=PSUbGkN9dyEnsFCZ0DxEVuBCT8Pv2xRILdPyZSwAlDyxfh1zIIGsyNSGpj2vZHj/Vevsrzgi6Iahf76B0hB12zP03orW93pTN6EMv+pKhIZhEn89Gicmvlu5sxun2QqgzHauXeqfKdyYaD86UkDYHouJkpjyMbe3awnWE2Q5RjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737997383; c=relaxed/simple;
-	bh=HS0SPj8TCubRded9Tn07CsANjAT4f8orcHKuJIyrEq4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=aUp4jReMCK1mkuaqJNz7KKh/LyKCE1Vcd2h0I5evfk78RqAGlX9urs/qb77ShsxWJMqfG00OYZPr1G2V7xtWiPnIac2Kvpq9fS+wL0n+ycfpi9qLaUrvmFNRJ1ceRFdnxp4WV9tjMXrgw7tyQyvIWvHXWLGoRdcE8x9RFvrZ3PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+	s=arc-20240116; t=1738005856; c=relaxed/simple;
+	bh=/kEDHyQVCySMuRNI6U8EsA0JhC7ZkhmXSNlFaLVcBNY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SUfIPA6jUiYdzVJ8vcFq81Qt5dDUpKj40mlCRlcT7fjTNanvwnH+DvjIDxg6zPxDAdeWGxG7IV8G2HAYN/xAdNNUU2jG/l7uSsBnHdIQN8irKcX1aMbaIWMkQwyaK8quTkuQZMnMaJqPH4UoezO23wD9qOSGVnwCJKZA/6DLpyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxxAVW51; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so2870214f8f.0;
-        Mon, 27 Jan 2025 09:03:01 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxxAVW51"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f321876499so2592575eaf.1;
+        Mon, 27 Jan 2025 11:24:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738005854; x=1738610654; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dHR7FVRJFEmTwnPK4YFb0Tx9FaISLA6KtrQZ5JTIYX0=;
+        b=gxxAVW51t1A/3ceXBcMKK+GxKEP355GBGvmydOl9iZreWoiggmt1CMBFzvt9RNZUR7
+         AK6togb4+getCYnfqJVeiHD4dAHSEW8rj6mXmMjuj7pjnevCr45Cly5ceyCtwO8KzJFM
+         l851HNzFCBAm90l0AotwOaXfjcHJVmOFCMA6cm8BDnJ8Q72ltGbbYThduJhV7+1/T0gE
+         X/Y19Y6OSbp76DGvT14emLbcqh7O2EDVRWQKrJ1ZP8ut8S1tEXO6QiW4JtnRi6MGdK42
+         2LXW6ZCTbhy0e0/yIbhhQqODpsEVe8IbFx//dSqXCmY7gKpdtnXU6f1VAourLIJdEJMv
+         ZExg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737997380; x=1738602180;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1wIDq6jHajqbOM81mUyrX+vudw6vCZ/eRDhI4TSKbtI=;
-        b=xN+wjz4FzJ6786JthIHJ8BqEs0TolJlgn8ZKR9r6wkinl6B+c7LaQAPpce1uXGGtab
-         bkp/xWlcdreixjovaQFO91SjxR7kX/m+1hcg3MQDW2uKbi535OW5M9K73JUsVzCB7312
-         IUrvucrJvhhKm7t5UHchBgYJdH+QfHOCingP9eOaS/WKAl5Yd5Pj5vnbz1HEqb5QzO2z
-         is4TdLzpH0skced9nkjucducdtzbUQ13llS5eyesDJw1MrJGdx3w4IvOY+bZiXw5EURy
-         BF18y81tLUd1z+cvY/GfftQf6EF5BvA+/5FQj/hCGg2lN+tAJ0m3givK4rcYtqixBd2O
-         Zn8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWhRXxcaJv+1ZwNDXWaEkhwB/N+jbcHYkgEvZTNABJ9ZFtt5VOJnzrXwkwbj9u5g7dQTVvdm7NT4q17MJ4=@vger.kernel.org, AJvYcCXhZ6Jlj0yK4iC4/bw8gMC9JRM5UZIppfrr4FZ/jScrnPwHlS7HeVsbB1weGgulN8EdjsdWdB7jhEMS4JYcqIBEceHW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIc6/dcbKxtpEO0Be+tyag3tb0KtPzkta5V0L6gM7Zl1BFpVAc
-	C8djaaa1/kskS9Z4JAI8u6jjKFFZIpBzCfZdKoykPJkkJIwNZjs9G7bu6aJeIpQ=
-X-Gm-Gg: ASbGnctRZUPbn9byvpsBpY/mmvJudtLXeSAetjOaGtXEN/lzD50aZbajX+M66+v189A
-	RViFw5DTGU9XMYF7NQR8QL14Ya/+hGGe6p7loYm1YX1esZXJnERfPOJZLALQ6z/Ec2ynUx05AVZ
-	sF6GyTrG6UziMzxiFzG1/g8E0s3NU9j7AJhHQyx/BdWwDDVIXyKpaKuYnB76sUyg3XBQIGmCz1D
-	mo1c0I1n/pE9Urx8DdH/uUNIwNb9AKBM05q9mtNZOpx3f4guHVnBDoFIh0qjiZzOiagjBDgRhOM
-	BRqCZPPZcmewUSRY560=
-X-Google-Smtp-Source: AGHT+IEouoF0CD8SOHRkYlubIVqlhxvun5t9G8+ViZ43FM84zkvZheNzf/8paaOHRkvQibda4mG5PQ==
-X-Received: by 2002:a05:6000:186b:b0:385:df17:2148 with SMTP id ffacd0b85a97d-38c49a63323mr30098f8f.20.1737997379670;
-        Mon, 27 Jan 2025 09:02:59 -0800 (PST)
-Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c2a188bf5sm11789787f8f.50.2025.01.27.09.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jan 2025 09:02:59 -0800 (PST)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] rtla: Save trace when option `--trace` is specified
-Date: Mon, 27 Jan 2025 19:02:40 +0200
-Message-ID: <20250127170251.744751-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.47.0
+        d=1e100.net; s=20230601; t=1738005854; x=1738610654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dHR7FVRJFEmTwnPK4YFb0Tx9FaISLA6KtrQZ5JTIYX0=;
+        b=L65y+8z3EFuOAzv4KQ8YQH8zXASjPEMzNoHI0IFJ0hhOQUJlrvlUoqp3xeY4pSWYFc
+         GhqgCc1DUmfDi3M9lAmOoPcezwLSPFjNZvBGT4ABMW0/z7kscjI/57Q1EvKl22akYNgj
+         +8jV7Zg3aUi/4bPotTuqYsMxxPwb66pwqQBz+9bPa7IDyOXHTCaiZvp/NI3ZWTXS0C+6
+         WTTOlcDLWSd5xmBHjOgpIYzUw6ZtTb3vzm63h/EDEAYO+TEM6Fv1qRPpmSK5uA4hrNNh
+         nN95/OnX6JAY7cp/Fg9OFDDbxIFY+fnWxbXrPDdYLQbqSKfiFnV/srkkzxBbD4XrK2/3
+         67yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDwZHANKNrMOm3d+wNIVxjZxVhAAmp6qu1I+sJfyzMLcz4S2k5wLlEj9b+o/76f3SE6qoZA7yr@vger.kernel.org, AJvYcCVFFpQP4qmuxvnukmphkbkUowrG9DAtpv5RSPAfHcgrn2s1lTeOAQyH0cO4F9Eu6DM6aUGys/t1DpCA0Inv@vger.kernel.org, AJvYcCVt25EBbooskxSN0zrDp9epNFLba/GvGJluHL4Ns3emNdwQ4aFnRvRJAg9M4DUxyVLJoLA=@vger.kernel.org, AJvYcCXVYWlkrg997vdijreOg8NEdQSwsSeMQYFN4FdIUfiooZ7UYjBIrwngYfveH5PBwnU5vQGpuHlE4w9hzG3FgD560v9+@vger.kernel.org, AJvYcCXjShRVZvWJpRT3/GzownGPz4dPFIBcIvzJFhkuzaUejEt0GY2qwj7vf7ci+dk1IoNmOovDzMgnsj1A@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEfkIWhIsWUiCfYhyK65CCYzBkWUQWUa7QrAEeF2eMC5L/lbkk
+	wcgdo9hmNqhVhFKTB7D03DELT7epuPoeWiJ6alezWfs4fIqmFWxUYbSTKg0Z0oOnKvJQTjVtcGz
+	ooZ0EQLBxvkdshMSO40PoN6Oa428=
+X-Gm-Gg: ASbGncsth0FE3+H3cLANCcR6quPeR+X9dEoWV7ckmyFVJGnvYeCqfy7tj2U6ppXIQa7
+	T/WYvp07+W8BvBQ56IlOdEHAZqILe9moFnDZgllPV4ZztKJkniZxcobe+QzPepg==
+X-Google-Smtp-Source: AGHT+IFGxwWBJSrGM4HJ0KrivdNIMXtatHKU92Wv5VUW37qqQGTlsCwXtWtNyC5iXXS0pMEDgnnxp5bTIMk7XjuyXSk=
+X-Received: by 2002:a05:6871:a08b:b0:2ae:d23:3c2d with SMTP id
+ 586e51a60fabf-2b30f2c169bmr355033fac.8.1738005854314; Mon, 27 Jan 2025
+ 11:24:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250117005539.325887-1-eyal.birger@gmail.com>
+ <202501181212.4C515DA02@keescook> <CAHsH6GuifA9nUzNR-eW5ZaXyhzebJOCjBSpfZCksoiyCuG=yYw@mail.gmail.com>
+ <8B2624AC-E739-4BBE-8725-010C2344F61C@kernel.org> <CAHsH6GtpXMswVKytv7_JMGca=3wxKRUK4rZmBBxJPRh1WYdObg@mail.gmail.com>
+ <202501201334.604217B7@keescook>
+In-Reply-To: <202501201334.604217B7@keescook>
+From: Eyal Birger <eyal.birger@gmail.com>
+Date: Mon, 27 Jan 2025 11:24:02 -0800
+X-Gm-Features: AWEUYZm3VG6eUEE-G6KVXaPssRvWQtf6XoIy3B7FGzCTUmto-UMUqWkpykNUn4M
+Message-ID: <CAHsH6Gt4EqSz6TrQa+JKG98y8CUTtOM8=dfCVy0fZ8pwXJr1pw@mail.gmail.com>
+Subject: Re: [PATCH] seccomp: passthrough uretprobe systemcall without filtering
+To: Kees Cook <kees@kernel.org>
+Cc: luto@amacapital.net, wad@chromium.org, oleg@redhat.com, ldv@strace.io, 
+	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org, 
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
+	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io, 
+	shmulik.ladkani@gmail.com, bpf@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Rtla saves trace output only when option `--auto` or `--stop` is
-specified. Single option `--trace` enables tracing, but doesn't save it.
+Hi Kees,
 
-Save trace output in any case.
+On Mon, Jan 20, 2025 at 1:34=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> On Sat, Jan 18, 2025 at 07:39:25PM -0800, Eyal Birger wrote:
+> > Alternatively, maybe this syscall implementation should be reverted?
+>
+> Honestly, that seems the best choice. I don't think any thought was
+> given to how it would interact with syscall interposers (including
+> ptrace, strict mode seccomp, etc).
 
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
----
- tools/tracing/rtla/src/osnoise_hist.c | 9 ++++-----
- tools/tracing/rtla/src/osnoise_top.c  | 9 ++++-----
- 2 files changed, 8 insertions(+), 10 deletions(-)
+I don't know if you noticed Andrii's and others' comments on this [1].
 
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index b4930b835b0a1..38fd10b2a3488 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -981,12 +981,11 @@ int osnoise_hist_main(int argc, char *argv[])
- 
- 	return_value = 0;
- 
--	if (osnoise_trace_is_off(tool, record)) {
-+	if (osnoise_trace_is_off(tool, record))
- 		printf("rtla osnoise hit stop tracing\n");
--		if (params->trace_output) {
--			printf("  Saving trace to %s\n", params->trace_output);
--			save_trace_to_file(record->trace.inst, params->trace_output);
--		}
-+	if (params->trace_output) {
-+		printf("  Saving trace to %s\n", params->trace_output);
-+		save_trace_to_file(record->trace.inst, params->trace_output);
- 	}
- 
- out_hist:
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 4772677ac762c..0af639982b7c1 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -811,12 +811,11 @@ int osnoise_top_main(int argc, char **argv)
- 
- 	return_value = 0;
- 
--	if (osnoise_trace_is_off(tool, record)) {
-+	if (osnoise_trace_is_off(tool, record))
- 		printf("osnoise hit stop tracing\n");
--		if (params->trace_output) {
--			printf("  Saving trace to %s\n", params->trace_output);
--			save_trace_to_file(record->trace.inst, params->trace_output);
--		}
-+	if (params->trace_output) {
-+		printf("  Saving trace to %s\n", params->trace_output);
-+		save_trace_to_file(record->trace.inst, params->trace_output);
- 	}
- 
- out_top:
--- 
-2.47.0
+Given that:
+- this issue requires immediate remediation
+- there seems to be pushback for reverting the syscall implementation
+- filtering uretprobe is not within the capabilities of seccomp without thi=
+s
+  syscall (so reverting the syscall is equivalent to just passing it throug=
+h
+  seccomp)
 
+is it possible to consider applying this current fix, with the possibility =
+of
+extending seccomp in the future to support filtering uretprobe if deemed
+necessary (for example by allowing userspace to define a stricter policy)?
+
+Thanks,
+Eyal.
+
+[1] https://lore.kernel.org/lkml/20250121182939.33d05470@gandalf.local.home=
+/T/#me2676c378eff2d6a33f3054fed4a5f3afa64e65b
