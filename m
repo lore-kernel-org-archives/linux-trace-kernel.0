@@ -1,87 +1,122 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F368A19BBA;
-	Mon, 27 Jan 2025 15:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25F31581E0;
+	Mon, 27 Jan 2025 17:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737992581; cv=none; b=hlKJ084b+wIEqZXyGUKaz7+c0w8WaWn5o0hoAaeubRTleSjf1mswjJTKsK59jZOs2Vz3B0rrY+AlvAbz449SGJkZ/003U2pbuza3vd4wk/cmUUvDjhUAXv8nqfyaARgsKu+LYmanLs4LbwRrC0GtHk4l/nVs0yDkh941/nwwHR0=
+	t=1737997383; cv=none; b=upwisiTslijR5KR1Sp6feczStcdsUbIcwlAJexdwlDCOtKLBJTCXJ7wrxMYIVJPLzAdHC6l1OqVTxUdtIFFgrYiOKekVzPqx7hLx+5YcLs3obgsxQA6en1UJb5AcxfnB1J3xIIdJgnyL7CphwJlIW0QBizmjM5+bXWGD/TXnAyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737992581; c=relaxed/simple;
-	bh=754tTQ0Xv0FV1pAPiQ7XMzOqvV5Ru3eT2/4MtIxHkKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pcxjjWPHVuwrYIY3AW5zCkXqNuIvI2fQQ0VJx0xLK3WwbCAoyoO1pu4yLS/kX6gczLJqYNs4V2wyhB3ULJzgKjwL/IDvffeq1CbImkTFPDwGY7ajdNyjpUetqcdWx+dtSyOqy04rVVlQvjLsKbrQIrM+Zsrco896Xe2Q6pjCfmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Pyozw0ts; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pyozw0ts"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=754tTQ0Xv0FV1pAPiQ7XMzOqvV5Ru3eT2/4MtIxHkKc=; b=Pyozw0tsKLD9gp97o+N6ZbHkTo
-	Il8/2Vpa4F0aqTQ5eLNtncdojFavxqC+3hOoMyt2pPZYgpxoa7oSXp+1z19h2FwdJ9ksectEr6L5y
-	pdndzuM9IJbuYbMGyY8OnttTeia0ZsfUEQN3vE3Kvu3ywzVzVm7PiaoVN1j+XGx7cGtNMyIWcHM2K
-	IHU9EJmiTnsw2atKedPjlIYgnndG3plYffG/psV0clxoDlPsLg9vBJ8MCt7RCyZQNR2Rl4uIk2hOI
-	SGpvgckCCBw+KC2Pto4K/lzMPYNt+Lyqoqjs99RL8H5P/AQH7nlJDuMDpJ1IZ/IMsyAIp8YsG+ytq
-	PlpOQ/eA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tcRG3-00000009b8r-2Zcd;
-	Mon, 27 Jan 2025 15:42:39 +0000
-Date: Mon, 27 Jan 2025 15:42:39 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Jani Nikula <jani.nikula@intel.com>
-Cc: Joel Granados <joel.granados@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-raid@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-	linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev,
-	codalist@coda.cs.cmu.edu, linux-mm@kvack.org,
-	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	io-uring@vger.kernel.org, bpf@vger.kernel.org,
-	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com,
-	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Corey Minyard <cminyard@mvista.com>
-Subject: Re: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where
- applicable
-Message-ID: <Z5epb86xkHQ3BLhp@casper.infradead.org>
-References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
- <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
- <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
- <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
- <f4lfo2fb7ajogucsvisfd5sg2avykavmkizr6ycsllcrco4mo3@qt2zx4zp57zh>
- <87jzag9ugx.fsf@intel.com>
+	s=arc-20240116; t=1737997383; c=relaxed/simple;
+	bh=HS0SPj8TCubRded9Tn07CsANjAT4f8orcHKuJIyrEq4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=aUp4jReMCK1mkuaqJNz7KKh/LyKCE1Vcd2h0I5evfk78RqAGlX9urs/qb77ShsxWJMqfG00OYZPr1G2V7xtWiPnIac2Kvpq9fS+wL0n+ycfpi9qLaUrvmFNRJ1ceRFdnxp4WV9tjMXrgw7tyQyvIWvHXWLGoRdcE8x9RFvrZ3PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3862d16b4f5so2870214f8f.0;
+        Mon, 27 Jan 2025 09:03:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737997380; x=1738602180;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wIDq6jHajqbOM81mUyrX+vudw6vCZ/eRDhI4TSKbtI=;
+        b=xN+wjz4FzJ6786JthIHJ8BqEs0TolJlgn8ZKR9r6wkinl6B+c7LaQAPpce1uXGGtab
+         bkp/xWlcdreixjovaQFO91SjxR7kX/m+1hcg3MQDW2uKbi535OW5M9K73JUsVzCB7312
+         IUrvucrJvhhKm7t5UHchBgYJdH+QfHOCingP9eOaS/WKAl5Yd5Pj5vnbz1HEqb5QzO2z
+         is4TdLzpH0skced9nkjucducdtzbUQ13llS5eyesDJw1MrJGdx3w4IvOY+bZiXw5EURy
+         BF18y81tLUd1z+cvY/GfftQf6EF5BvA+/5FQj/hCGg2lN+tAJ0m3givK4rcYtqixBd2O
+         Zn8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhRXxcaJv+1ZwNDXWaEkhwB/N+jbcHYkgEvZTNABJ9ZFtt5VOJnzrXwkwbj9u5g7dQTVvdm7NT4q17MJ4=@vger.kernel.org, AJvYcCXhZ6Jlj0yK4iC4/bw8gMC9JRM5UZIppfrr4FZ/jScrnPwHlS7HeVsbB1weGgulN8EdjsdWdB7jhEMS4JYcqIBEceHW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIc6/dcbKxtpEO0Be+tyag3tb0KtPzkta5V0L6gM7Zl1BFpVAc
+	C8djaaa1/kskS9Z4JAI8u6jjKFFZIpBzCfZdKoykPJkkJIwNZjs9G7bu6aJeIpQ=
+X-Gm-Gg: ASbGnctRZUPbn9byvpsBpY/mmvJudtLXeSAetjOaGtXEN/lzD50aZbajX+M66+v189A
+	RViFw5DTGU9XMYF7NQR8QL14Ya/+hGGe6p7loYm1YX1esZXJnERfPOJZLALQ6z/Ec2ynUx05AVZ
+	sF6GyTrG6UziMzxiFzG1/g8E0s3NU9j7AJhHQyx/BdWwDDVIXyKpaKuYnB76sUyg3XBQIGmCz1D
+	mo1c0I1n/pE9Urx8DdH/uUNIwNb9AKBM05q9mtNZOpx3f4guHVnBDoFIh0qjiZzOiagjBDgRhOM
+	BRqCZPPZcmewUSRY560=
+X-Google-Smtp-Source: AGHT+IEouoF0CD8SOHRkYlubIVqlhxvun5t9G8+ViZ43FM84zkvZheNzf/8paaOHRkvQibda4mG5PQ==
+X-Received: by 2002:a05:6000:186b:b0:385:df17:2148 with SMTP id ffacd0b85a97d-38c49a63323mr30098f8f.20.1737997379670;
+        Mon, 27 Jan 2025 09:02:59 -0800 (PST)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38c2a188bf5sm11789787f8f.50.2025.01.27.09.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jan 2025 09:02:59 -0800 (PST)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	John Kacur <jkacur@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] rtla: Save trace when option `--trace` is specified
+Date: Mon, 27 Jan 2025 19:02:40 +0200
+Message-ID: <20250127170251.744751-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87jzag9ugx.fsf@intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 27, 2025 at 04:55:58PM +0200, Jani Nikula wrote:
-> You could have static const within functions too. You get the rodata
-> protection and function local scope, best of both worlds?
+Rtla saves trace output only when option `--auto` or `--stop` is
+specified. Single option `--trace` enables tracing, but doesn't save it.
 
-timer_active is on the stack, so it can't be static const.
+Save trace output in any case.
 
-Does this really need to be cc'd to such a wide distribution list?
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+---
+ tools/tracing/rtla/src/osnoise_hist.c | 9 ++++-----
+ tools/tracing/rtla/src/osnoise_top.c  | 9 ++++-----
+ 2 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index b4930b835b0a1..38fd10b2a3488 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -981,12 +981,11 @@ int osnoise_hist_main(int argc, char *argv[])
+ 
+ 	return_value = 0;
+ 
+-	if (osnoise_trace_is_off(tool, record)) {
++	if (osnoise_trace_is_off(tool, record))
+ 		printf("rtla osnoise hit stop tracing\n");
+-		if (params->trace_output) {
+-			printf("  Saving trace to %s\n", params->trace_output);
+-			save_trace_to_file(record->trace.inst, params->trace_output);
+-		}
++	if (params->trace_output) {
++		printf("  Saving trace to %s\n", params->trace_output);
++		save_trace_to_file(record->trace.inst, params->trace_output);
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 4772677ac762c..0af639982b7c1 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -811,12 +811,11 @@ int osnoise_top_main(int argc, char **argv)
+ 
+ 	return_value = 0;
+ 
+-	if (osnoise_trace_is_off(tool, record)) {
++	if (osnoise_trace_is_off(tool, record))
+ 		printf("osnoise hit stop tracing\n");
+-		if (params->trace_output) {
+-			printf("  Saving trace to %s\n", params->trace_output);
+-			save_trace_to_file(record->trace.inst, params->trace_output);
+-		}
++	if (params->trace_output) {
++		printf("  Saving trace to %s\n", params->trace_output);
++		save_trace_to_file(record->trace.inst, params->trace_output);
+ 	}
+ 
+ out_top:
+-- 
+2.47.0
+
