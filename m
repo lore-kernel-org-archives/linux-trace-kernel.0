@@ -1,71 +1,201 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BCA278C91;
-	Tue, 28 Jan 2025 11:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738062367; cv=none; b=nc5WFdkwIxaojwfbdvk+/6uuLFrvt4pVeU/YQPpUud/+5i0akGmOrDtGxoilkTcnSpOj6Hj0B5Bv5EEiQRfclqoWZsd1eFNxSIfBhi94TbMIEfBZchDz12wUB5b5nPMIi3NsMPtRr0wUSzJenSFivEE1uZq6bDJmEuzEm9hY0dg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738062367; c=relaxed/simple;
-	bh=f31PiioDsZwXI4/eOPQvgJcf+p5hRHNiD+lPfAlZ7TI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O46uEGEzW1T7rHeVCeYKJxM2Z9V01aNQ/5m0cat6rF7OhZRkpXusYx1KhfMb9CJywUr9NGE3LS6vHUnrh/q+4OnYjmGgMUBdX+Vzpb0jCDOtNQz42J3ApblllWMbO+IBepzyVMg/k6Enc2lcjYU7jCeh3KFIGNN6YFn8s70zCqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F576497;
-	Tue, 28 Jan 2025 03:06:30 -0800 (PST)
-Received: from [10.57.35.186] (unknown [10.57.35.186])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 520D43F694;
-	Tue, 28 Jan 2025 03:06:02 -0800 (PST)
-Message-ID: <f697970e-3796-41cb-9904-d61cbedec428@arm.com>
-Date: Tue, 28 Jan 2025 11:06:00 +0000
+Received: from SY5PR01CU010.outbound.protection.outlook.com (mail-australiaeastazolkn19012062.outbound.protection.outlook.com [52.103.72.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B61192B96;
+	Tue, 28 Jan 2025 11:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.72.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738062811; cv=fail; b=nL0wQS1gFDaYtEY5lirJQmiyyCFou2a7jy7URbIghYzWU9Jd4eQcCJ0DUyG45aismaoWPgWOpIFnuZzvHvdkSeHxagY4TKFUs1e+xV5X3ROkk14LRhIpkgtkelCdmwD/RtNFxgXQjpztMbxaIMrnpVd5xPZkkENPcP8bhJgr9jk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738062811; c=relaxed/simple;
+	bh=nQqMDZAOte4VecLaz5NhUdq3DrbihcQPpDBk9icM6ZY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=P2bPyHB7dF1pT97n4U4k5jnfYPjeQKnwWLc7GjDergzg/EThOvW+a/TqpktTIv9k/2ZCDENN534Yk67WQFZSdweoosqgUWQhb1XX80w3he/dNaaRuworNgyfhQwdgy/9FPAgafG4qyqgJTXYAIK+MOLxkVvNJm7Wxet7EGg1DTg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=eapRqYQO; arc=fail smtp.client-ip=52.103.72.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="eapRqYQO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ATe1y3M5p72GJ3d4PeJVIbtDUaiKNmmgLziFfUkNltAND3oILSo6DppAeNZV5hJLsIkoBTnPB2xCWh0M8C24OWOzGHMLFu/dfutefreVu2NhWEZ+35l7G5HvaC1LhAt5Oy8LrV6fHyoZ+oUjFXvBJ95Kxb8s9Up2JeDpyJWwu130r4FXCZHobQMxEyrUWebvNmBly19eA9WuLIYi6ZDsPAApT7TsfNkiUTd8Jm5/s8W3ljid/xXbdlAaqi0eY0tJe6ZZ/m45JwMlMkoDRmycwcGscM8R7kwwWMT0S+D8P5oTkjUiX0/Nhp+TEHnG7lvy8zpoDiRu87NqE9aLxhm4YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V1zwJsGya26W24ire9ScaXOt34Ycl/p1Rl5OcTgeppQ=;
+ b=XWKAoLvbLCPdHweR8tQ82yy9blVfwVBs58cO4t2rB+FW9gw3oec08UyAJVjxtqFoD/CBnPjs6Nx1C+4HoQY51X0M/6nLf18hLNb/m5oZwBXAcovE8F/QGBVUB+bUUWPFjLn/Ed1Tu/UbHtefRt2VXLXry3pYILrJoGAycAXhK1oCV7mCPq0QRTdLQN2C+f5SY+MFdpugdnfV49VG2JicZ5c5trEz3vCrY3sr6oXb6PfpI9hdf68907jdey1VkS0i60/imJWa4jlV65ie3i00jHYOzkMCyTHKuWdiaRB3O2zjLJ7SEelC44O08esph6rMDF21pUC3Qc9O9JJDJexrgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V1zwJsGya26W24ire9ScaXOt34Ycl/p1Rl5OcTgeppQ=;
+ b=eapRqYQOx+7BH9YK5T8gxSij5nnogEDphPi8KxprisPUaBi7v05oeWQChdg4Ff77BObP/uboNaEz2MtkMPqbLCRfS1ry9uSP8Cs0o8zJeAN1k0lQv491Eq8k+fxjB24lQ7WHaiFMjM4290VL75wjGVBi5wmunPLYG8zokj8P8dMo8AwLa22+71tvEr4Ouv+DLHeO3rdJE0qggmEqHA0bSq9GzKzZ8gQErOCH5nSXRo93Cmfxmc+kuzlXGYn4b2WrDT87Nuusqz3FyUBZv7rzyP/PPLOHXk3lbYZCN7nTPQXbSbf7eEP5dzxAwdWgL0gNoW7XDTMm3wG/zwMmGTE+UQ==
+Received: from MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:ff::9) by
+ MEYP282MB1608.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:bb::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8398.18; Tue, 28 Jan 2025 11:13:22 +0000
+Received: from MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::6174:52de:9210:9165]) by MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::6174:52de:9210:9165%6]) with mapi id 15.20.8398.014; Tue, 28 Jan 2025
+ 11:13:22 +0000
+Message-ID:
+ <MEYP282MB23123214D4F50F0F622C4697C6EF2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
+Date: Tue, 28 Jan 2025 19:13:12 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v2 1/7] bpf: Implement
+ bpf_probe_read_kernel_dynptr helper
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
+ <20250125-bpf_dynptr_probe-v2-1-c42c87f97afe@outlook.com>
+ <CAADnVQ+bRvL-4n4ZB5QS2oUxvo3vhJHf=8=2No3WWqYHqSyBEg@mail.gmail.com>
+ <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
+ <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
+Content-Language: en-US
+From: Levi Zim <rsworktech@outlook.com>
+In-Reply-To: <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYWPR01CA0016.jpnprd01.prod.outlook.com
+ (2603:1096:400:a9::21) To MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:220:ff::9)
+X-Microsoft-Original-Message-ID:
+ <aa602797-b908-427a-9944-a0fd90c50fb8@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cpuidle: psci: Add trace for PSCI domain idle
-To: Keita Morisaki <keyz@google.com>
-Cc: aarontian@google.com, daniel.lezcano@linaro.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org,
- rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
-References: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
- <20250128042445.24920-1-keyz@google.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20250128042445.24920-1-keyz@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MEYP282MB2312:EE_|MEYP282MB1608:EE_
+X-MS-Office365-Filtering-Correlation-Id: 458fd8c9-b6f6-415e-36d5-08dd3f8cc680
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|5072599009|19110799003|6090799003|461199028|7092599003|15080799006|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RVVQM2pRT1NOTXJIOGt4ZU5lQk9uZURQTVA4Sm53Q2ErRTNiV2ppY2RPYTAw?=
+ =?utf-8?B?L014eC8wTGl4N1JxSTlwSmtxejAxWFUvNFMyUUNXWTB0aE8zRG00S1dpSmpn?=
+ =?utf-8?B?TERGZmhIS2NqTVJweTVKQVlGa2kyRTNwUFVpQWdqK1l1dlo0eFIyVDU4M01O?=
+ =?utf-8?B?ZmJDeUM4N08yVERvbmhxMFpwblJndnc2THBENS9DWmNsaHNwdEJtdnE4WXZ0?=
+ =?utf-8?B?K3E5TnBjR2VYZFNrWGxRWGUxVlpaSlptRENUN2szUm9LMTdubDZ6VnpVMnFH?=
+ =?utf-8?B?SllMdmxkaFRqaHBuWW9OTTJiVnJTcGhxNFFDd3JvNjZlMXFnQkdieEthNXBo?=
+ =?utf-8?B?Q1hoUlZhaTdzSTVvczJmakQvTm9ob3Bva2RwTEdKSWxRdTI5MUtvZUhlU3o1?=
+ =?utf-8?B?dVRKeVlHaWk1R0V4MWN0RFFJSXVvdG1WR2ZxRkNXQ1N4QWYzVU4wT0lQQ0RW?=
+ =?utf-8?B?cFF4c01PbnVtZzBZc1FyQVE3MEFYejkwNlpReWRDMzdLdUZRQzU2eW1KemZj?=
+ =?utf-8?B?K0wxdGRjMVU2Qm9oRTZCcTJGaHBYc2t4NVZ1VlFJZ2J5cEZWM1EyMHZnV1lQ?=
+ =?utf-8?B?UENqU1NiZ0hJUXlYZG1vZHQ4b0dFS0FtMnZhV2pwS1FJank3QThlWXlyUkJV?=
+ =?utf-8?B?QkxnZ1pUeEl3YXRsYnk4ckVteUNkUXZQcEVOVlQ0dHlRUTB1RTZsQzI3cENH?=
+ =?utf-8?B?eWQ5UldUTnJBTGZtandQY3FrcmFRRmxrRFFVMnF3eTZWU1FNMG5uWGJJblk2?=
+ =?utf-8?B?b09tNjQxVnNEVHlmNE5wSHM4ZkdUcTdDVVBLRzhrblh5Y0ZXeWlURCt0QWNk?=
+ =?utf-8?B?ZnZvRTd2THJzY0tsUURJejNBTEFBV1F1MmltbnhQWDY5RURrZ1ZCUW8wY09J?=
+ =?utf-8?B?d3FDdWpudVZpQS9MWStYejBReTNwdjd2NHBLdTN2UDlCWFNKMEViTmNxcnBr?=
+ =?utf-8?B?cmFYMlJvcmdaZ29sK0NTTnNnWURWN04wUS9pMWMxaWEyRHZrMFZueUJxWER2?=
+ =?utf-8?B?SHg4R2lOZVoxMlhRalJUYTEvOGtuRWdPY3owTjMyQkxldERyVDdCclhhdFV2?=
+ =?utf-8?B?eEJRRER3SXdtSmdHcTlUZDVuWlNrM2w2RWFHckhQazhaWDBEUkVnUnlYQm4z?=
+ =?utf-8?B?aVEyb1hLbFdwTVRrUWNEYXBjNzhkSHJEZnRtcWx1ckJ2QXZUMmVlZUVIZjdw?=
+ =?utf-8?B?NE1aWlRLcWNmRnFQcDc2R0RQNDZ2cEtmSmZFdFlTTzlpRFVNS1pDUHpYdWdx?=
+ =?utf-8?B?RlVBaTFhSGZGdEpJRGNyak5NbnNKbDFrUFdSd2dQd2FZME1GbHdrSkxGSklV?=
+ =?utf-8?B?eVlRUllzYW1ZeG53U3FwTzFLVllOTURDTldMQk1PMVdFWFhwbng0OTVUZFFG?=
+ =?utf-8?B?cHY2ODdFU1NBRnBRWXA0V0FIbUtGV01VbEQ3NnJJaHprbHo4cGg4dDJRek1t?=
+ =?utf-8?B?ZlBrcEE5YU84Mjg0RUxLbkNWL2ZtTFdNVzd1OVhmOUNaQVR2aTRBMmdUUm5n?=
+ =?utf-8?Q?bWvFsU=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cTBuRVBuSFlINXpQSGNnOGRxUkFLMS9FMHdVaEZaemFKN0xlK3cvYlNaMUZw?=
+ =?utf-8?B?Y2pveGc2UHNScWdLYkhiMzlrY00zNi9FQ2FtcVl4ck1qdGVoN0ErRS9XNjVH?=
+ =?utf-8?B?VGdmTllqaGlvWjNhTXRJUFVPM1dwTkRXS1c3UVZ5WTZLTW1Ha2puRk8xanBs?=
+ =?utf-8?B?YWthMGJsdHVpS09EbmpScGJCUlJiYnBLa1A0Unh2TXd6MklNQkVvSjBseGRB?=
+ =?utf-8?B?Mkt3emRvY2ZMMnBRVUsxUnhZRTR4SXJzeW9HeWhNS3daOFMrQStic3RuV1ha?=
+ =?utf-8?B?TW1lREFGT0lJNFRWOUZRdllFV2MrbmJ0TFp1QXlLK1p2YW54NTNIb3NBOUtn?=
+ =?utf-8?B?RmRsQkszaXFPMGZHZ2ZUK3B2ZEt5WWIvalZ0c0pTdFlCZjFRNnlzOUo5RzBy?=
+ =?utf-8?B?VVVXdmNESnpaS21KbzRzbS9KVWw5NkRuWlpzNTNwcWtBMUxwMzVtQStFV1hT?=
+ =?utf-8?B?SmhETHJ2Z0E5UUdtUDMyenFYQm9jR0JScWlITnN3cks4U0xzdm9HcG4vc0FP?=
+ =?utf-8?B?ZmMwYkIxbVN1STlPV3QvVjIvZ2hNL3YxamNYclF6YW1hRi9EalpCc29tS3hH?=
+ =?utf-8?B?cmxYYzJoek56K0kzUVMyWkk3R0RVcTBaVnRpZDNtWUdCcm5ncUhJNFhvQ0lq?=
+ =?utf-8?B?V2YwNHErOTNDQXhDMXJUendZU3lHRzR6TkhjZFpsZU9FdVVLRUx5VlRkK1FL?=
+ =?utf-8?B?WUlmZWZQL216bndKSTAvQVR2NGl3cEJUQ1NySE1aWEdZdWNudzNCdkRVSFVs?=
+ =?utf-8?B?N0QzdFZIdmVKdk9DQ1o1ckQ4V1gwbTZFWEg0KzZPMHhHd0FOWTZlb3Z4a3U4?=
+ =?utf-8?B?bHVBYUM2Y2ZUUStCZ3FEVkZ4R1FUOWNQRHRpZW9PM2lza1JoNFdnVWxnUTlt?=
+ =?utf-8?B?VnhyanJubWwycW5NTGdKVUJmUkl6R0JSeElGbUtRWGV3RE1waXJTcEtFdWhj?=
+ =?utf-8?B?SjJNRTZkRUpRN1pTY0syVWtVdHVBcFoydEJTcmhDOER2RlNHaXJSOTh5Z2Nk?=
+ =?utf-8?B?aVFBUkRJNytUTEFHUm1aUzkyWWNPZDlNeDF6TytWMTdCT3lTb1FaU3hIU3M4?=
+ =?utf-8?B?elFCNjlrY2dMeWxBOE9SWnFMeGdVd2JMbzlBVE9wWG1MVHE3RGlOb281YTlt?=
+ =?utf-8?B?bUVzSVFpbGYrNkR4c0RROXJUSmpqSmFqK29yYzJUbExrdXBPQ2d0bDZSS1Ux?=
+ =?utf-8?B?V1pMK3FMR1hKR0RIWEhydnJZLzE5WDZ5cXR6ODF3LzBSSS82bldndjVOREZJ?=
+ =?utf-8?B?WkI5OWZvNldwTXc3c2NKSXdJUmVDa2xIbFY1NnFhOUkwMk54alU5cUR0SnpV?=
+ =?utf-8?B?SkdjVzN3U2t6dFBzSTd6dkJiMlhmcTU1UFdwc1gzTHFPaGhOTngzeFdtWGwx?=
+ =?utf-8?B?UGl1VnVPZUR4bkVETjF6ekNoUW9yTUNZakVSSjZ6UEJzOUgxYStlNVlaWXRU?=
+ =?utf-8?B?dERGbU12cWx4UUZEUXN5RUFLMldBRDNndWtGUHFNWEdNWG5jT0J2aHkwKzlI?=
+ =?utf-8?B?ZmI1QVlsckt5aDVNNnRpYm5KZm9PZi9PTWNZUnh3LzdsN0IrdmNFVGRKRHhD?=
+ =?utf-8?B?VlZUNVYvaGZVM3ExUjhsQUlXSGtDS210bFBQdUNDVW4xT25IRGtPQnlFazUw?=
+ =?utf-8?Q?kUX166YoRjsun8AkkDnSlo3sy7hsRdMdQ2LZmG7qH8fo=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 458fd8c9-b6f6-415e-36d5-08dd3f8cc680
+X-MS-Exchange-CrossTenant-AuthSource: MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2025 11:13:21.9089
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MEYP282MB1608
 
-On 1/28/25 04:24, Keita Morisaki wrote:
->>> The trace event cpu_idle provides insufficient information for debugging
->>> PSCI requests due to lacking access to determined PSCI domain idle
->>> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
->>> idle states the power domain has.
->>>
->>> Add new trace events namely psci_domain_idle_enter and
->>> psci_domain_idle_exit to trace enter and exit events with a determined
->>> idle state.
->>>
->>> These new trace events will help developers debug CPUidle issues on ARM
->>> systems using PSCI by providing more detailed information about the
->>> requested idle states.
->>>
->>> Signed-off-by: Keita Morisaki <keyz@google.com>
->>> ---
->>> v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
->>> 		and rephrase the commit message accordingly. Rebased onto the latest.
->> Which makes it different to cpu_idle event FWIW.
-> 
-> Yes, psci_domain_idle_(enter|exit) are not meant to replace cpu_idle nor a
-> variant of it. It's new and different events that provide finer=grained info.
-> 
-
-I mentioned it because it means it doesn't benefit from cpu_idle tooling
-directly, which is slightly odd, but fine with me.
+On 2025/1/28 06:04, Alexei Starovoitov wrote:
+> On Sat, Jan 25, 2025 at 5:05 PM Levi Zim <rsworktech@outlook.com> wrote:
+>> On 2025/1/26 00:58, Alexei Starovoitov wrote:
+>>   > On Sat, Jan 25, 2025 at 12:30 AM Levi Zim via B4 Relay
+>>   > <devnull+rsworktech.outlook.com@kernel.org> wrote:
+>>   >> From: Levi Zim <rsworktech@outlook.com>
+>>   >>
+>>   >> This patch add a helper function bpf_probe_read_kernel_dynptr:
+>>   >>
+>>   >> long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst,
+>>   >>          u32 offset, u32 size, const void *unsafe_ptr, u64 flags);
+>>   > We stopped adding helpers years ago.
+>>   > Only new kfuncs are allowed.
+>>
+>> Sorry, I didn't know that. Just asking, is there any
+>> documentation/discussion
+>> about stopping adding helpers?
+>>
+>> I will switch the implementation to kfuncs in v3.
+>>
+>>   > This particular one doesn't look useful as-is.
+>>   > The same logic can be expressed with
+>>   > - create dynptr
+>>   > - dynptr_slice
+>>   > - copy_from_kernel
+>>
+>> By copy_from_kernel I assume you mean bpf_probe_read_kernel. The problem
+>> with dynptr_slice_rdwr and probe_read_kernel is that they only support a
+>> compile-time constant size [1].
+>>
+>> But in order to best utilize the space on a BPF ringbuf, it is possible
+>> to reserve a
+>> variable length of space as dynptr on a ringbuf with
+>> bpf_ringbuf_reserve_dynptr.
+> That makes sense. The commit log didn't call it out.
+> Please spell out the motivation clearly.
+Thanks for the advice! I will include it in v3.
+> Also why bpf_probe_read_kernel_common ?
+> Do we need to memset() it on failure?
+Since the current patch is basically a thin wrapper around 
+bpf_probe_read_kernel,
+I think we'd better not deviate from the wrapped function.
 
