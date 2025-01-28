@@ -1,143 +1,206 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13C42561D;
-	Tue, 28 Jan 2025 01:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9ED46BF;
+	Tue, 28 Jan 2025 02:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738027484; cv=none; b=OC5SrlA2nD2OIfLvObLjWv/h50ZMJVQf1ebIoCRMU6UFPMyQpqQLJxZf9sToyLZ9ETyfbs5O7I3vwjStdYJud7GJgU+sAZVdcjodFKYIzw7/SPkOmCMcS2W/vc552do4IRwD36dF9sxFcfG6r1DvyP0M8p/Ie92/UucWYbnvYc8=
+	t=1738033092; cv=none; b=onff+DlbOgFhmYzY3/gXZ4OnXt3IC2mwXh9L+hAmQz8R/EWqaxuKsXDGEYbT6A5hLT893maD5at6Jfqi/01a++FG6QIp0quRqoJ1Lw/9xX9NkMkIUf/jgWrZqZ2gHLCFn5igF9/wrMDdwOkLnDIhdFQKaLn6n3MHPeFW+Ozs8uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738027484; c=relaxed/simple;
-	bh=ZNOabaBUHCQqFjCjXCMWKlI0Rwj13ltQaBfx+WUZ8mk=;
+	s=arc-20240116; t=1738033092; c=relaxed/simple;
+	bh=vVKL+2uJt4OG/7ST+JwZv4qCHoDZnpI9wPbbpQDgIs4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ADtaIzJDfSBmIQfWr7Rb6Poh+iDtJw8V5Oan+HyXvEuBVQ6tW+RCkLCPRC7n7V/iR8p6GmsSGSVoseHmW/AHVVyQPoNUk75VzDVkmqe0LCCjS3X34pO3Tj1LX109jeDvhKUTcfxfdAaCFgraCUQ1A6I3uFJo4JbYuI9T4zZ/NbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chawJ90G; arc=none smtp.client-ip=209.85.216.51
+	 To:Cc:Content-Type; b=SjU3dx8sWnRi07G10W41/x7wI83XVvOmfQ/DlAnD9WD/T65dFdias6VUWpy/Z+BrQ8PXpo5LWrqfcQzjSE5/0ejmyR5BywduXFfpysb0y/V76Al5AYD254/9nJ7hrt5uHMW4DsbviIB+7pFvT/Jw980dgm8UK0wPTLt7qZ7K2Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PkbjjGVW; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chawJ90G"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ef28f07dbaso7015907a91.2;
-        Mon, 27 Jan 2025 17:24:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkbjjGVW"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3862a921123so3397728f8f.3;
+        Mon, 27 Jan 2025 18:58:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738027482; x=1738632282; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738033089; x=1738637889; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hWL6C+kqpj+gBy0RfSYoYVLKnqSYvu312YXcNFBv0HU=;
-        b=chawJ90GwrNmLt2XBnYzEYv0O6Gy+hSVYKAYSOKh7/gZpBLQovJ4TRu0k11eUzZWw2
-         Qk7HRFUvLtFqKG/bIc0hzJIPIadvbHaWiRrJ7Th5hJR36/Xiq6YYAwF4YJSLHjY664Fq
-         7ACXukrLnjRWCBgtoHq8UMWY4jKmuZIQKuIJ3tTW8HQHAm+r1xaxIAxAgO/HLPdT2dH5
-         V4RDtnKttIYjZMqJxO4TAOzjNZc/hYG3PCuXTB2cyfSxZBKTIY68/UJY347lyvPkGHFu
-         6eijoZnE8mH8X3eWrzuy8imzZWjxd8bwLR+Tdridt4WOBW/3hh4UZxlz4D4RMHTgPFUy
-         6XAA==
+        bh=/qqFfvpQ/KtWP1BA9PZjJ0zlj8CSxBiFQlmFDFrvCwk=;
+        b=PkbjjGVW/TRW/b+ieLwvlL1HvHX/oEndG9YqakNwViOsUlrpIYuDbYksCObOCO5haq
+         BaNbP3wIAKipN2ojr5mHwgSXx/Nx3XiwYcyUQ1dgm0B3QQ+vIRHh8q238CHDVAU8VFj9
+         S+6mHSJa5fLP1O7YrDYHp0kt+ybzKHriA9LjGHcmn1gmpZwvu9uDtP3NUf8qxmtvSTyV
+         oWS4DysvB+GsvU+/sWbZXuQvVD0fygnP/eNcrYP9i3ymCPED5H49m07wLTLqjr/2WuIm
+         kPWcb+uSO149S4VBVcrqEvGV3wVHbLEccyplsIZgoIs6MMhTfkec9T8q1CyaTcLEuADE
+         ivJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738027482; x=1738632282;
+        d=1e100.net; s=20230601; t=1738033089; x=1738637889;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hWL6C+kqpj+gBy0RfSYoYVLKnqSYvu312YXcNFBv0HU=;
-        b=pfngPgtca3j9veALTvQXKcv8TXd8o5v+Q7VMFOAuWqxdY82V6oXrLPUs/lLC1fhbnt
-         U83cBNw753DDd0e81rzbxcyf1O4vOzwMMVvINuf5LseRkbc4AkbC2CCtzpfVD6eXTWnJ
-         538hSapnJBldnuPkQJ/XN6bJ4kihZBQEQE5llUrO82q6JEe8R0HWZOYSpVS8jwIooVuL
-         vvylcomlnJdeE/JggeNqt+22rR+AQP6aVaxEEjLdouME5xHP9oq6teVSc4Su6Lww7CZ0
-         pzaj2EQppE2OQRh8MxHcJl7hMPtbvDTUp1aZA9qEflha2q+jd3SGtx0Y2Hs/x7kXA2TF
-         zctw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZugXEnBNa/wRI4lsSwkQCIAIFxW3DbOWuc9PuAvlbRKXWlHFGKyo2jsKLcaSKjxUL6th3+SVSlSVng+nLxd9Clf5y@vger.kernel.org, AJvYcCUhC2YLF7RHoVgmA6WLvBmBzcdMIQjMoNRkF3K7AyAuMlH56NEf3Pka73GQsq1FPowDuEHIjkNWA2Q7TC0w@vger.kernel.org, AJvYcCVIKacmH/Q9XmQH+yGl3Er7HWGnF3PONE5wgvqVHGbY/Eo8yZJBc644VJAz4CjvPqKu7ki+sDIzoiiXTq81mw==@vger.kernel.org, AJvYcCXWhjsgbTIILDJZFpCaqny+YmQNTi7EXiKX8FXbx7np366ogQ06BCiplnLSrXj0Fn7p7dw=@vger.kernel.org, AJvYcCXmGmRl9SCZX9DrTY+4TmyDHq46+Sw2udItLc2/TRlo+G8WQT/N4jzT8vp8Hkb8VEpmSm1sgPuKf+vZQkV9Q8LNxw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjWWY8ZZ7Lb71rDp82iGjR6hyXZSzCHtB9Tkwt6PrnkE5FkoFz
-	yRsvB0IafxWb8OAo5XJpXpFFRsh6hTMJSQ8Fr+uxcWg/SJV1HJMgWgjID518vktm3T7XBl8r5Br
-	AKBqCiN6fhIFobj+HZ3DE+krXUKo=
-X-Gm-Gg: ASbGncvcSR9m6TyvO2yh/Xrc7cUlAfrQxuKsbd9dbro3tSfbAfxtD/NL5WJWRCdJGet
-	zSo7mOOjyx1ARA69MWqnjX3/g/wVvusDk6oCWW2PLwoeTaF6KjAQvgQQRnpWvIqCiWI2Yz69Kcl
-	tbVg==
-X-Google-Smtp-Source: AGHT+IEnr9Q9tZOl7yts+9JQOMhGxLXwor7F1+tEO7eO4lojdnHymfL2CNPa8Qw5kBoY8swBcV5WfM44QXbraQ4a4HE=
-X-Received: by 2002:a05:6a00:2917:b0:725:b201:2362 with SMTP id
- d2e1a72fcca58-72dafa409b5mr61620850b3a.11.1738027481968; Mon, 27 Jan 2025
- 17:24:41 -0800 (PST)
+        bh=/qqFfvpQ/KtWP1BA9PZjJ0zlj8CSxBiFQlmFDFrvCwk=;
+        b=irjMusB2/krMCJaFNsuXvF/SNLn028O09HKXApra/N7YPJacC7DiKSrEYNNXteZZVb
+         vn6h9oyGB3UTHdObsy6j7HawLCl2ywbGKseRVzZIhtaXko6JHE1u2YFrIwebxISJNf5P
+         QHoAcZ8kJgRuEbglwbR24wXRBFGz4MkMpU0MhODs4qKsYLD3tfl5Nivp0Q4IX2Zg/vlq
+         1xl32hFBFzeWtwZ1K4FDT7nClgbNORdr4acySlsHxNTeY3UZbHYEmPH1z/MuvIC/D+nF
+         qjunBlu6TALA5lYmWG44XXVNxW/AMqrzxheor4VdEgzDjwCFsEImuxNMXr6tsBMPr4e2
+         iVoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4RzTYtCzkWekKoq8qn6BmSvoC+/GtX7zJtYxdSPDd3O+MeOXwXlMA98QoqBECoubuCJdu9j2Zmu2YvmHOZhJj@vger.kernel.org, AJvYcCUTa5UTfdnRmHxxn7ANfa8h957m58mZ13752TSvPPuVhuiKnwL79gp75MCt0yApr0D9KXE=@vger.kernel.org, AJvYcCWHlXf/lWhupaa/STz0GLIr8Nvolex58Qqn3OsWxXjToXBUzpHdu3PqTsxXbYLNPVijOq4wIHP5JeuRq0b1@vger.kernel.org, AJvYcCXrFxB9lSl6s6XLK3WxhIc8fTp90+oASJ4M+bvAeHCRxI4EFmu9M5htXIN5CqdokqzruE86dXWnehKtdSV9HbXAHiHh@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBMkSGAgCfBE9YO6YJtUd0sXnt/EeKj32yydZg5ezrpZe4h9k8
+	dl0SftlzrwrOGsdvG2PAjgoBwtccSaUAcLjxETduwOifQjIpP0dNCcS4t/txkdWTidSefiqQog8
+	kx1Od2MQrtSNARxLZe64O9mzySpk=
+X-Gm-Gg: ASbGncvugwLx6T0BjWOOWoMQ63QuixW5o7B4BI/59UlGMD4hvmQd7i+EQokOU4g0fy7
+	uPGIAHv+hY4ihF7e5zloVr15xSFZ7DfuAvMExoq61wnCySm/7QWznJzIg84wZXxKNKlqmmlsiMH
+	oD0Jx0RPOG/r0kCVtFDDtGZ8u5a3cE
+X-Google-Smtp-Source: AGHT+IHUS0JtyZsYUl1FT8gCFXfY5O9/3R+lODB8pzWiCyU29JV+ukN8MuiutZuobNAbfM+Vz6u7NvJpQkistlNcbJM=
+X-Received: by 2002:a5d:6d02:0:b0:385:e1a8:e28e with SMTP id
+ ffacd0b85a97d-38bf56555a0mr40591417f8f.10.1738033089039; Mon, 27 Jan 2025
+ 18:58:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127222114.1132392-1-andrii@kernel.org> <20250127164106.5f40b62e0f1cf353538c46fd@linux-foundation.org>
-In-Reply-To: <20250127164106.5f40b62e0f1cf353538c46fd@linux-foundation.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 27 Jan 2025 17:24:30 -0800
-X-Gm-Features: AWEUYZk09zQNKSjG3RxZBbWMKxSCzryFhpuTAs83Pv_RrQIyT0M8-_pPLCp7Qxc
-Message-ID: <CAEf4BzZmO0sBGRDp3MhMTWEfm-UamnJcoaEKqJXb33v9eyYEKg@mail.gmail.com>
-Subject: Re: [PATCH v2] mm,procfs: allow read-only remote mm access under CAP_PERFMON
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	brauner@kernel.org, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
-	peterz@infradead.org, mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, shakeel.butt@linux.dev, rppt@kernel.org, 
-	liam.howlett@oracle.com, surenb@google.com, kees@kernel.org, jannh@google.com
+References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
+ <20250125-bpf_dynptr_probe-v2-1-c42c87f97afe@outlook.com> <CAADnVQ+bRvL-4n4ZB5QS2oUxvo3vhJHf=8=2No3WWqYHqSyBEg@mail.gmail.com>
+ <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
+ <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
+ <CABWLseu6=ZSYpQncaj=0EeVzKtP8vjPyOBJkWcFb-dxbm5OfVQ@mail.gmail.com> <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
+In-Reply-To: <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Mon, 27 Jan 2025 18:57:58 -0800
+X-Gm-Features: AWEUYZkQJSuFNbIDYKFXWJ4lyNJZIJK2EDphZyLGO-6rzAlzs90vWHyHaSi4RkI
+Message-ID: <CAADnVQKLrCf=wSrJQWEHgGLRnmwqTO98n2waU78KvUZgPXJsjg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/7] bpf: Implement bpf_probe_read_kernel_dynptr
+ helper
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrei Matei <andreimatei1@gmail.com>, Jordan Rome <linux@jordanrome.com>, 
+	Levi Zim <rsworktech@outlook.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mykola Lysenko <mykolal@fb.com>, 
+	Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 27, 2025 at 4:41=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
+On Mon, Jan 27, 2025 at 3:09=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On Mon, 27 Jan 2025 14:21:14 -0800 Andrii Nakryiko <andrii@kernel.org> wr=
-ote:
+> On Mon, Jan 27, 2025 at 2:54=E2=80=AFPM Andrei Matei <andreimatei1@gmail.=
+com> wrote:
+> >
+> > On Mon, Jan 27, 2025 at 5:04=E2=80=AFPM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > On Sat, Jan 25, 2025 at 5:05=E2=80=AFPM Levi Zim <rsworktech@outlook.=
+com> wrote:
+> > > >
+> > > > On 2025/1/26 00:58, Alexei Starovoitov wrote:
+> > > >  > On Sat, Jan 25, 2025 at 12:30=E2=80=AFAM Levi Zim via B4 Relay
+> > > >  > <devnull+rsworktech.outlook.com@kernel.org> wrote:
+> > > >  >> From: Levi Zim <rsworktech@outlook.com>
+> > > >  >>
+> > > >  >> This patch add a helper function bpf_probe_read_kernel_dynptr:
+> > > >  >>
+> > > >  >> long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst,
+> > > >  >>          u32 offset, u32 size, const void *unsafe_ptr, u64 flag=
+s);
+> > > >  > We stopped adding helpers years ago.
+> > > >  > Only new kfuncs are allowed.
+> > > >
+> > > > Sorry, I didn't know that. Just asking, is there any
+> > > > documentation/discussion
+> > > > about stopping adding helpers?
+> > > >
+> > > > I will switch the implementation to kfuncs in v3.
+> > > >
+> > > >  > This particular one doesn't look useful as-is.
+> > > >  > The same logic can be expressed with
+> > > >  > - create dynptr
+> > > >  > - dynptr_slice
+> > > >  > - copy_from_kernel
+> > > >
+> > > > By copy_from_kernel I assume you mean bpf_probe_read_kernel. The pr=
+oblem
+> > > > with dynptr_slice_rdwr and probe_read_kernel is that they only supp=
+ort a
+> > > > compile-time constant size [1].
+> > > >
+> > > > But in order to best utilize the space on a BPF ringbuf, it is poss=
+ible
+> > > > to reserve a
+> > > > variable length of space as dynptr on a ringbuf with
+> > > > bpf_ringbuf_reserve_dynptr.
+> >
+> > For our uprobes, we've run into similar issues around doing variable-si=
+zed
+> > bpf_probe_read_user() into ring buffers for our debugger [1]. Our use c=
+ase
+> > is that we generate uprobes that recursively read data structures until=
+ we
+> > fill up a buffer. The verifier's insistence on knowing statically that =
+a read
+> > fits into the buffer makes for awkward code, and makes it hard to pack =
+the
+> > buffer fully; we have to split our reads into a couple of static size c=
+lasses.
+> >
+> > Any chance there'd be interest in taking the opportunity to support
+> > dynamically-sized reads from userspace too? :)
 >
-> > It's very common for various tracing and profiling toolis to need to
-> > access /proc/PID/maps contents for stack symbolization needs to learn
-> > which shared libraries are mapped in memory, at which file offset, etc.
-> > Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
-> > are looking at data for our own process, which is a trivial case not to=
-o
-> > relevant for profilers use cases).
-> >
-> > Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
-> > discover memory layout of another process: it allows to fully control
-> > arbitrary other processes. This is problematic from security POV for
-> > applications that only need read-only /proc/PID/maps (and other similar
-> > read-only data) access, and in large production settings CAP_SYS_PTRACE
-> > is frowned upon even for the system-wide profilers.
-> >
-> > On the other hand, it's already possible to access similar kind of
-> > information (and more) with just CAP_PERFMON capability. E.g., setting
-> > up PERF_RECORD_MMAP collection through perf_event_open() would give one
-> > similar information to what /proc/PID/maps provides.
-> >
-> > CAP_PERFMON, together with CAP_BPF, is already a very common combinatio=
-n
-> > for system-wide profiling and observability application. As such, it's
-> > reasonable and convenient to be able to access /proc/PID/maps with
-> > CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
-> >
-> > For procfs, these permissions are checked through common mm_access()
-> > helper, and so we augment that with cap_perfmon() check *only* if
-> > requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't b=
-e
-> > permitted by CAP_PERFMON. So /proc/PID/mem, which uses
-> > PTRACE_MODE_ATTACH, won't be permitted by CAP_PERFMON, but
-> > /proc/PID/maps, /proc/PID/environ, and a bunch of other read-only
-> > contents will be allowable under CAP_PERFMON.
-> >
-> > Besides procfs itself, mm_access() is used by process_madvise() and
-> > process_vm_{readv,writev}() syscalls. The former one uses
-> > PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMO=
-N
-> > seems like a meaningful allowable capability as well.
-> >
-> > process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
-> > permissions (though for readv PTRACE_MODE_READ seems more reasonable,
-> > but that's outside the scope of this change), and as such won't be
-> > affected by this patch.
-> >
+> That's bpf_probe_read_user_dynptr() from patch #2, no?
 >
-> This should be documented somewhere, so we can tell our users what we
-> did.  Documentation/filesystems/proc.rst seems to be the place.  .
+> But generally speaking, here's a list of new APIs that we'd need to
+> cover all existing fixed buffer versions:
+>
+> - non-sleepable probe reads:
+>
+>   bpf_probe_read_kernel_dynptr()
+>   bpf_probe_read_user_dynptr()
+>   bpf_probe_read_kernel_str_dynptr()
+>   bpf_probe_read_user_str_dynptr()
+>
+> - sleepable probe reads (copy_from_user):
+>
+> bpf_copy_from_user_dynptr()
+> bpf_copy_from_user_str_dynptr()
+>
+> - and then we have complementary task-based APIs for non-current process:
+>
+> bpf_probe_read_user_task_dynptr()
+> bpf_probe_read_user_str_task_dynptr()
+> bpf_copy_from_user_task_dynptr()
+> bpf_copy_from_user_str_task_dynptr()
+>
+> Jordan is working on non-dynptr version of
+> bpf_copy_from_user_str_task(), once he's done with that, we'll add
+> dynptr version, probably.
 
-Wow, that's a big file :) Funny enough, that file mentions ptrace only
-in the context of /proc/<pid>/timerslack_ns, nothing else. Hm.. Should
-I add a common section saying something about how either
-CAP_SYS_PTRACE or CAP_PERFMON provides access to other process' user
-space information?
+This is quite a bunch of kfuncs.
+It doesn't look like adding _dynptr suffix and duplicating
+kfuncs approach scales.
 
-If that's ok, I can send that as a follow up patch (as I bet there
-will be a bunch of iteration on exact form, shape, wording,
-placement).
+Let's make the existing helpers/kfuncs more flexible ?
+
+We can introduce a kfunc bpf_dynptr_buf() that checks that
+dynptr is not readonly and type =3D=3D local or ringbuf and
+return dynptr->data as PTR_TO_MEM | dynptr_flag | VERIFIER_ADDS_SIZE_CHECK.
+
+Then allow bpf_probe_read_user/kernel/... all of them to accept
+this register type where PTR_TO_MEM is required
+while relaxing ARG_CONST_SIZE 2nd argument to ARG_ANYTHING.
+Then the verifier will insert an extra check
+if (arg1->size < arg2)
+before the call.
+
+Not only the bpf_probe_read_kernel/user, _str variants will work
+but things like bpf_strtol, bpf_strncmp, bpf_snprintf, bpf_get_stack
+will auto-magically work as well.
+
+I think those are quite valuable to make available with non-constant size.
+bpf_get_stack_*() directly into the ring buffer sounds very useful.
