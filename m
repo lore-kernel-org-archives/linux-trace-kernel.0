@@ -1,248 +1,274 @@
-Received: from SY8PR01CU002.outbound.protection.outlook.com (mail-australiaeastazolkn19010002.outbound.protection.outlook.com [52.103.72.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED21BE49;
-	Tue, 28 Jan 2025 00:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.72.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738024313; cv=fail; b=Hr2gp21LfDmc+OhmF88ay0ix6qe/KdHkN/uztk6tTCJ8ipQSpCEQsqA0bkp3tQUwFif3OZm0bvciMkxYZYZ4aXBN/1xHmf6EZu7BLO5zILwIZm9o6KGL0NZB4vUEo7KZYsj4h81TtasTLGi65/Q34Vjtg+em1Qe5sfy68PnRWes=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738024313; c=relaxed/simple;
-	bh=IXj8lxNWWvrO7V3J2Ylbhc5wT5kmD0aKcK9Yij/zWak=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZK31YqT3hT1z8YfgKeXnsUP4EeeoSMuavxhZdSwgufjFExrVlnYBJ4j1CUaqVfPwDcajd0OCfB1dk8zXO2nD/MYBP7cjLiQvf+GVso6Vcf/xDLtS0F626hkpnFgSqlqduFrp64NDzDnQ4aH6tfN1bxla/NurRXe0Hx/BkOOUJWM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=aPZtQTU+; arc=fail smtp.client-ip=52.103.72.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD84E23BB;
+	Tue, 28 Jan 2025 00:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738024761; cv=none; b=WB1bAuAo6JpQ6UDTVfLqTRKpGShtti64I6wHWV8SrnplRO0d03DpZt/rLW+RBGV4zLNZg30eG9ai8X8yNTtL7di4AMkETsAafybW1z7z3AvQ81TCSjgfS0t4P5YF4EWRkatmZI7Qnz0jggWMGlCijRLiI7rmaLel0jUrFUkXLmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738024761; c=relaxed/simple;
+	bh=1jA0MRCRkbxv5tsVHqhKax+PS8q9JzCzxj3LqvMDAjE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pUTDkkqJg3fJorOuSJGm9/zlG0VwrdDghYiMrMlKrdcyNCzWetxokx50SnTywmx9LL4DjWWCTs8J86dDwd8qz3g6FDQDUGCllYplRsmlcfN3nI0rILY84YkFHd12VXE2CJnflGPYVEXILjqO9g7/QEVwqs5dF8CokY0WwXBMbs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJACF4/z; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="aPZtQTU+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VKhjf60QESKkZaIfN0+2JyZ9g04qFyKWKhvhEApFBp6Nuk3z9CJonDjb9IHXShfuhfzq4Vd/Dj2LEQfEMYm7Bc/+qUue6Kyayd4pIckVrjq1uBMAKbaV8R86BqyROnyAHFi+aPwf15DlAZtdVXkxTyublJaq2jgO1U8Wv+hvrrwRwN6+hCgm8QYQqCxOT8/yMGIIEZR6B6H2BzS4Su9yBfK6Y4/mEN4zCM7H7Oe+HILtyVKmSK2fS+uOnL+hMKe1MyEVWMeM50VKEMn7t/gdf2S+Z/oDdAEx38OT6PGVg8lDi/ClzV4ILzXtFkIPJ/mIcMxap/abJNyNcWiiI1wJQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gkh6daBnDBvzQ1UrhRECVB1bUXuoLOa3I/P9/9h5JrI=;
- b=pZqTF0RxQ5DHW0ywVTd7UxSImsf7e2+R5SiVN6wKVzrQkzdYv0ntWHBxiJs2OlNcF1oJiQ0VF4hmEN2d84ujJC7Llfqr0z4mnHdIrLfnwqONkBJfBxXvjcV+Oor1itbfaAVgv3Rg/8MxwuoAPd5hgxMzrbNlAZQFxsQd+Kzp+u3NDg8CQvjbuT4O0wiT7k/CxWW+y012QtLM/2T162H+65ut/qqAsEWpxo6CmrPDexHohd+qML2cTcOrJWT0YfTGhusn/ug6dsvDEpNzdZxi5EJerQYvrOcyVTc1zJ4rcebM/d6901ikFWjJ+r9qfuq02qXr+S5Nd2JJ98n0vcipow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gkh6daBnDBvzQ1UrhRECVB1bUXuoLOa3I/P9/9h5JrI=;
- b=aPZtQTU++oZsXWGkzkaSWtB8YJmWJuiJU3zYShTAfiPaujLoWeINXCw+abO8u+H/D0qW47OKfBGNqf+mPPcYK14fngMLheenuNuMS1gAVVLjJZWk6njRqSIR9vsDaHcEp5ZBB1aznorfqe+jnbTjMRcFy3miXIYFgjbVUPUlKFK7TF1lyWVqLQpyTkn3tDweAl9+cHyBeeqcFarpUFEj6tBcZ+fi6pdcVLLRupqfX0W3rwJvvxrGqx47esm7Xz5G6X90PyZ07JOR6Zpb4GboRKHT1rF/Im1eazgWz1UBsiM+GKI8H37sjWyKIROFlaGXpq1JBp89FsP4GY1cm8C31g==
-Received: from MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:ff::9) by
- SYYP282MB1502.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:7b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.15; Tue, 28 Jan 2025 00:31:43 +0000
-Received: from MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
- ([fe80::6174:52de:9210:9165]) by MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
- ([fe80::6174:52de:9210:9165%6]) with mapi id 15.20.8398.014; Tue, 28 Jan 2025
- 00:31:42 +0000
-Message-ID:
- <MEYP282MB23123AF9749F72F14FEEFCD7C6EF2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
-Date: Tue, 28 Jan 2025 08:31:32 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v2 1/7] bpf: Implement
- bpf_probe_read_kernel_dynptr helper
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Andrei Matei <andreimatei1@gmail.com>, Jordan Rome <linux@jordanrome.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
- <20250125-bpf_dynptr_probe-v2-1-c42c87f97afe@outlook.com>
- <CAADnVQ+bRvL-4n4ZB5QS2oUxvo3vhJHf=8=2No3WWqYHqSyBEg@mail.gmail.com>
- <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
- <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
- <CABWLseu6=ZSYpQncaj=0EeVzKtP8vjPyOBJkWcFb-dxbm5OfVQ@mail.gmail.com>
- <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
-Content-Language: en-US
-From: Levi Zim <rsworktech@outlook.com>
-In-Reply-To: <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR04CA0188.apcprd04.prod.outlook.com
- (2603:1096:4:14::26) To MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:220:ff::9)
-X-Microsoft-Original-Message-ID:
- <c3fd51c2-5392-4fc4-ab54-efef5ae062d1@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJACF4/z"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21644aca3a0so117505425ad.3;
+        Mon, 27 Jan 2025 16:39:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738024759; x=1738629559; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wyF4HdH2HC+WiKUWnt3Coztwd9+2Hr9YrVrRF0/4INM=;
+        b=HJACF4/zOBXX5jzvXiD7ti8x5lhUF0n4tVsIc2KckYPlP0DUdb+wRPJhSRoIR/1Zpp
+         M2oTfpUsVL9QGToneqKTDn8QJYeDr/knCLTQEBPoweYNuCuBuN1oM27y6z0hqPs62AkH
+         9dqgLE3v7E/yjE9HmAjQl2NQic8xMk7sKwPBrrJDU3EDHXjSzy7CNMFdvnD8GhdBIysx
+         QK2pt95R2I95jGRqPLFmwBS2nhXVtc0xyM6CzbLSs/LO03coR6y7I0OOKeuxITysDQLo
+         JxOQFJqZ7yLWGGg/sjRM95CFbvB90RbkT52RroBKN6P+iMwAhGCXjUONLULTjpn4Vq2h
+         yvNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738024759; x=1738629559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wyF4HdH2HC+WiKUWnt3Coztwd9+2Hr9YrVrRF0/4INM=;
+        b=SMq64HG6eSiDY1wWcpTmgoO3tPhhUUod5bhfdjicMo6HrFeKqhFfIkQnKjIzPaQEwT
+         uKge6I+sZFnRSTxrjwvWMzH6MhlOB+fHUmZhcqo71oRsvyMEI5QphOug5Od8NXp0ZaG4
+         VuJT109KwROfCJ8VHwvtWv/fYH4+CHgdhm2RzA/fMN5mVECs9ZLkbzytgLX/EWorTK3B
+         +ZiiCRkoc3TtVyy2ODBxkIrMvw/GPvrQQ4mggXoG5yeVyklJSeZXyzi2HBSNTLJYg/oN
+         /rs8xIZzxy+/KoHQdOjsHFztlKr2OSEyqikt6vITZn34KTtkc1oAh3l5f14VUUhGMbMq
+         S3KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPCwN53JR89bw8pH1lEAWz8vdUwflQtX/d9xo93qIDDNWX5ThH3F7YvGkAxmyDMSug2rwgH2wtTI/GSjCbOhb2Jw==@vger.kernel.org, AJvYcCWINUypN0MdViKfE3kaIJgLQymXy5tKKqtZtLT2VwRUkWF7eMeS0p6EJmGhOT4AhHjONiLMQerBSTPxyMsri5X3QhvI@vger.kernel.org, AJvYcCWnE+JN51yajhiiUyfB4fMc+bOg2X8+LY0cJ5HTkKl5xMpzXy/W+7m5bjxsn3XUnGEux1ImWwO8X07tP6o=@vger.kernel.org, AJvYcCXYWvstGhIuc2/UBrDdo57hlD42DAncIMfdDmkbSMhaYS5lVrukk/S2iZfY7DUUGCFIw0qK0cj4vzrycoRhWfyS9w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1SPLM196NqiF5ELXxEQouEqmzlM6HZtNt4eslGDtsQ2SZ+kXP
+	Hik1ZWdF2iz60Z+8T3HvQrRBng4u3ZxO9PZYFvmprruYSerJ2Ga1RykxAWY0HahyX6Zt6iBlmLZ
+	2A7r43TiYkNIWqj6Gx0sEJW05fMc=
+X-Gm-Gg: ASbGncvkcZqo4AXAttWmcbRO5gimhwpxrlCsClP0I/bkHjwvCBEDJ5Vs8oh8R8HzsZk
+	H1q4/sqbTMs8JTthD+683Iey0saGwXkOhqLJ9o/hlgDVXYz88uVcWl8+Wo0s/WhXRmrDJTebFg5
+	myzw==
+X-Google-Smtp-Source: AGHT+IG9r54fvAqRkat2cGuwOk3u26H8/NuOEqSNw2BDokU0rqnDPrP6WuTQdyK5csmiHB+yTHYCvXY66d8d7gQ66+I=
+X-Received: by 2002:a05:6a00:4293:b0:727:3cd0:122f with SMTP id
+ d2e1a72fcca58-72dafa04710mr56021535b3a.9.1738024757428; Mon, 27 Jan 2025
+ 16:39:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MEYP282MB2312:EE_|SYYP282MB1502:EE_
-X-MS-Office365-Filtering-Correlation-Id: 475a7314-ddba-41b2-3be1-08dd3f332327
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|12121999004|8060799006|19110799003|5072599009|461199028|15080799006|7092599003|440099028|10035399004|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QjVCa1Uwc2s4Z0RJVkdNVTFydjk2Ym52amxadEFLUVA5RmtSdDFtbWZqYUpR?=
- =?utf-8?B?eFFpd25aMTF3dm9Gai9Oak1DVFdGSTl6U3VWUjcwYjdXWEpnWDhKNEllOG1n?=
- =?utf-8?B?aGJSS2h3MjF6L3VEUXBvWW15aHh1SktzMXdObWJlWjBDVDVINGZJYVpGUHFS?=
- =?utf-8?B?NGphU0JIR2pYbTIzd3oxR1B6ZzJBdnhBK0lBOG1KUGZPKzFtUWlrN20xNE5u?=
- =?utf-8?B?aFdQVXp4TjU5NUlvVldndlM3UUtYMVVia3lOVmF5eGNRSlpkMGp3YUliU1E0?=
- =?utf-8?B?QTErbUwvbW4rd2FzWWhYMmdyK09wV3RZVjFwU25PbWlnTUxwUjM5ckdEQ0wz?=
- =?utf-8?B?ckpBSko2Y2UxeTdvMi8yYTZKaGxQWU0wV1B5UzBlRWlqbzI0SFRlZDRWNTRX?=
- =?utf-8?B?TG9LSkVweDFGS1NBaVc1ZXQ3eDA4OFphRFNqajUwc3R1THhXb1dRQ3ZyS1FZ?=
- =?utf-8?B?Y0g5YzE1MnIzdWN3ckg3KzJRQ2RoQ2dWMEVwYjhhc3JyTklzYmVCMys4Z25F?=
- =?utf-8?B?UzE4b0VQbXozRXpRU2p0b1RaY1AwaTgycjYwa1FPbW44SmtPSDBtZnFqc0p0?=
- =?utf-8?B?Y3AxNTlFQnVScDNUYkVqVFRWSEtaajRLbHVEV1FVMzI5VGUwNkRXK0FIYy9m?=
- =?utf-8?B?b010Q1A5bUxjSmlMNzN4S1phVDZXQjJJVXEvUjdoeXp5YWl2VGpvNi9YTGds?=
- =?utf-8?B?RjNBMmYyMThlUUYwSWNVSmRPRWNTK1JkWk1xa21ZUkR3dlp2bUI4bmpjaXp1?=
- =?utf-8?B?ZEJ2cnRVVmhsY0FGOHFJd2NxVDR3ZitlZ1A1V3VhSlFFeUYvalkrR2IwRkdW?=
- =?utf-8?B?ckdyQnR4a0JwS29UR21HRHJrb2hNUWxPWEdNazlmZXRHZStmRjFFSXFrZkw0?=
- =?utf-8?B?dittMjdyd1BRcFV5YjU5bUhuWmdnWVp2dkFoZk9vWmM1VHBZNDNlbTZhYVh1?=
- =?utf-8?B?UFBLZnc4VGpjR0R2Rmo5OFljUUtsMmZjc2Z0cTBtUElKNXExOVFRQlIwQUlJ?=
- =?utf-8?B?SEdMbkxXY3duMkZOODVMZFNuSVNuNU10ZmtpUk1xbGhhTTNDNE1GejAxaHNx?=
- =?utf-8?B?N0M0OGdNU2NGNkhtbnNqVXlSZVp3dGNZdGlGc3g4VEpZd1h1UVdSNk90VjRW?=
- =?utf-8?B?ODVDdktTU05ISnJqTWpsNlNTeWpIb2dqTEVFZXlsOTVIMW1YRzVpSitMMlFl?=
- =?utf-8?B?bDY4d2tqWmE4N0FxZUNTck1NYmc1TUpINWdXOHlwbit0dTU1N0VZcSswZXI4?=
- =?utf-8?B?U1I4K0pYODVCUjMxckIrT2ZXTk5VUVVMZFEvMFgrSXJNVlVYVjRxWHduQ2Fp?=
- =?utf-8?B?eURXekdON3pCc1ZNdzhOcFd0VjhCbkhibit0c2tiT0lNb2pvbVlkZ0YrSHFV?=
- =?utf-8?B?YUJIR25NQWt2QmlIMnoyTk1KUVVaQ3l6Zno2Z0dqZmVDNFdXMENzWXcyOHo1?=
- =?utf-8?B?ZlkrR2piaHJjWURJRDFUUVVFWUxnMVFxcll5N1VZWnl4NGZmSFozNXNSS0Nu?=
- =?utf-8?B?em5LN3c4MWFvMHFEYnhaVGJqL3Q0TDdIL0tFc1pFbHdtSVRMN3ZNbnFWRzBD?=
- =?utf-8?Q?LEHUPAJsUaSKgMUSD1U6UYVJ4=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZEgwc1NucXVoK2VISHNoYTFseTRlczl4b042a080ZXF2VXI0MEUzbXlBZkVj?=
- =?utf-8?B?Uk0vUVVnNER6TTlTMVdKSjBaV081K09md290QUJ0bE0yemZnZUJNQ1kyZStI?=
- =?utf-8?B?UEIyeGFseGkwczN4Ly9hbFZHR1BDU3BROVJsTDFOQjI4VjB3bjNYVlk3d0F0?=
- =?utf-8?B?ZEZpMmJld1hnUDBHWTlKdnZjdjU4RzZIQW4vUTZCZ2lHRlJkcnNXUUFXK2NU?=
- =?utf-8?B?RnBVOXRnQ2dkaG1vc0NSekI2eURDRTJMa0pUaWFkaTNmYkltRHZ0a3RJclY0?=
- =?utf-8?B?SHVJMU5Scm5kWUVJakdTeU5LbjdtNEo2b0VCWk9yQlAvS3dnRzYyWE5reWMv?=
- =?utf-8?B?cXRQQlF3UTdOMUp3L0J1SzNNWXB2OWVlS2VzOUVEc0NsR2lQM01GMUloVUZz?=
- =?utf-8?B?dWZKM20zODF1SXZXcTNsVVZVRy9HK0FlcU1vZTVoU0xHWklzeDVmcXhVS0NI?=
- =?utf-8?B?UXBaNUpJL2xUcUduV05zK1N4eFVDaXU1M3J3Q2srUDMyRzBLNzY3WTNndFdE?=
- =?utf-8?B?THRLYlBUSExkVkE2RFhaY2ZvdERQVlBhU0NlUmh6SU8yUWMxVTUvUmV3ZEtn?=
- =?utf-8?B?dXludVU2MXhEL0R2TkZuR3hRQVZLRVNJeUR4SkR3YUluVTFnY3NrbEd4OGFM?=
- =?utf-8?B?VmxVY00rT1I4Y2lQd2d5UXVrc2prWmkyWmUvRlh3R0lId0lNQ1ZNeTBUQWl0?=
- =?utf-8?B?VjdjczNLTjl6Z1d3K3hrWDVFWU5VdmhCdEtoMXZkaTVGdzJiNE1zUDlVUDIy?=
- =?utf-8?B?a2YxOUxGNVhRVzVuSUZydWNlQWp5Q211NTZTUzVLNW04M0tTQ2VzVVg5R2gz?=
- =?utf-8?B?MDcvUXRKb0dXdHRsUGlIL3loY0x5K2F1SnRWUXliZEhnZlc4bHZaQ1hFdVo1?=
- =?utf-8?B?dXRML2s4OGtjc2wyeDBqQjRoOWY1R0V2Ung5aGxabUN4QUZTV0g4b1U0YXpw?=
- =?utf-8?B?S004NWVwUkZISXZZbWNsRWtReUw0bjU1bU0wZUFnTEVnbGJTUjVpeEhnNXpK?=
- =?utf-8?B?YXFVUWtsaTZpM1F1TS9PWGoySm1id3Z3NnIvMWt5UDVLQURFOUNXaGFRY3lo?=
- =?utf-8?B?VEVaaVZXVU5SUmN5eGNjNFRrVThHNS9WWFVYN2pBWWNLWmRLc0RVaC8vblhS?=
- =?utf-8?B?UFZoZ3hNMldBMzd5MUhFQm9DWFpMbXJSVWVhZXVLQ09mcnNieE5XRnpXR1k4?=
- =?utf-8?B?UDQ5bElWTmpFeFA5ZjVyUmdZNWkxdXZqdWN2VloxV3Y5NTArUU9TU3BNaCt0?=
- =?utf-8?B?NVJEYjJKaDNOVFlQcGhuU3N3aHoyTWluREFtR25tSnRhT2ZiNEtxTFdhOHFq?=
- =?utf-8?B?NHI3UjE4azl6dkdvZGtTN0h6dVdYc3oySzVNUURVaUhTdkNsU01SbjZlVWcy?=
- =?utf-8?B?Ry90cllDeFJzSUs5T1pwcC9kTC91OGJMZ1d2eE1kUzMxTExXN1VCZ1I1RTNL?=
- =?utf-8?B?OXN4bVo3NHNFS3NIY0d3Q3F6VU9uTzRTYmRNZmpkR0ZKQVR0Q3UreUNpT2Ev?=
- =?utf-8?B?cDgzUjdBMVVRQ3pHR05lekIvQXBkcXpKMWRmSVdaU2NMRENNcFNRNkJ0UHVi?=
- =?utf-8?B?Ti81N0duN2JrRVAvaE9pdG1XS2lIUDFrSm53WVdYSisrY3loMEpYOG44djN1?=
- =?utf-8?Q?zir3nQN++ZlxQCJkiqfBhhRttutx7s8yrl5lh/SMxTb0=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 475a7314-ddba-41b2-3be1-08dd3f332327
-X-MS-Exchange-CrossTenant-AuthSource: MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2025 00:31:42.9122
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SYYP282MB1502
+References: <cover.1737511963.git.jpoimboe@kernel.org> <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4Bzb=YFhsLFuK2Zowb1dsXnQPA1uyQUuQ0yXXQbEpeeyDaw@mail.gmail.com> <20250124214107.ycccp4gapbdudzux@jpoimboe>
+In-Reply-To: <20250124214107.ycccp4gapbdudzux@jpoimboe>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 27 Jan 2025 16:39:04 -0800
+X-Gm-Features: AWEUYZnl7juwX3MAZEJ82fNuvmf29PnMRjGzZY-YV0fRU_zHWZeyxANTmRLj3I4
+Message-ID: <CAEf4BzYqDk5pGbmCz3XX1a-RXRKSLw9QwD+wUEABinVG+HZ1qQ@mail.gmail.com>
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
+	Indu Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
+	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, 
+	Jens Remus <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-01-28 07:09, Andrii Nakryiko wrote:
-> On Mon, Jan 27, 2025 at 2:54 PM Andrei Matei <andreimatei1@gmail.com> wrote:
->> On Mon, Jan 27, 2025 at 5:04 PM Alexei Starovoitov
->> <alexei.starovoitov@gmail.com> wrote:
->>> On Sat, Jan 25, 2025 at 5:05 PM Levi Zim <rsworktech@outlook.com> wrote:
->>>> On 2025/1/26 00:58, Alexei Starovoitov wrote:
->>>>   > On Sat, Jan 25, 2025 at 12:30 AM Levi Zim via B4 Relay
->>>>   > <devnull+rsworktech.outlook.com@kernel.org> wrote:
->>>>   >> From: Levi Zim <rsworktech@outlook.com>
->>>>   >>
->>>>   >> This patch add a helper function bpf_probe_read_kernel_dynptr:
->>>>   >>
->>>>   >> long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst,
->>>>   >>          u32 offset, u32 size, const void *unsafe_ptr, u64 flags);
->>>>   > We stopped adding helpers years ago.
->>>>   > Only new kfuncs are allowed.
->>>>
->>>> Sorry, I didn't know that. Just asking, is there any
->>>> documentation/discussion
->>>> about stopping adding helpers?
->>>>
->>>> I will switch the implementation to kfuncs in v3.
->>>>
->>>>   > This particular one doesn't look useful as-is.
->>>>   > The same logic can be expressed with
->>>>   > - create dynptr
->>>>   > - dynptr_slice
->>>>   > - copy_from_kernel
->>>>
->>>> By copy_from_kernel I assume you mean bpf_probe_read_kernel. The problem
->>>> with dynptr_slice_rdwr and probe_read_kernel is that they only support a
->>>> compile-time constant size [1].
->>>>
->>>> But in order to best utilize the space on a BPF ringbuf, it is possible
->>>> to reserve a
->>>> variable length of space as dynptr on a ringbuf with
->>>> bpf_ringbuf_reserve_dynptr.
->> For our uprobes, we've run into similar issues around doing variable-sized
->> bpf_probe_read_user() into ring buffers for our debugger [1]. Our use case
->> is that we generate uprobes that recursively read data structures until we
->> fill up a buffer. The verifier's insistence on knowing statically that a read
->> fits into the buffer makes for awkward code, and makes it hard to pack the
->> buffer fully; we have to split our reads into a couple of static size classes.
->>
->> Any chance there'd be interest in taking the opportunity to support
->> dynamically-sized reads from userspace too? :)
-> That's bpf_probe_read_user_dynptr() from patch #2, no?
+On Fri, Jan 24, 2025 at 1:41=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
 >
-> But generally speaking, here's a list of new APIs that we'd need to
-> cover all existing fixed buffer versions:
+> On Fri, Jan 24, 2025 at 10:02:46AM -0800, Andrii Nakryiko wrote:
+> > On Tue, Jan 21, 2025 at 6:32=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel=
+.org> wrote:
+> > > +static __always_inline int __read_fde(struct sframe_section *sec,
+> > > +                                     unsigned int fde_num,
+> > > +                                     struct sframe_fde *fde)
+> > > +{
+> > > +       unsigned long fde_addr, ip;
+> > > +
+> > > +       fde_addr =3D sec->fdes_start + (fde_num * sizeof(struct sfram=
+e_fde));
+> > > +       unsafe_copy_from_user(fde, (void __user *)fde_addr,
+> > > +                             sizeof(struct sframe_fde), Efault);
+> > > +
+> > > +       ip =3D sec->sframe_start + fde->start_addr;
+> > > +       if (ip < sec->text_start || ip > sec->text_end)
+> >
+> > ip >=3D sec->test_end ? ip =3D=3D sec->test_end doesn't make sense, no?
 >
-> - non-sleepable probe reads:
+> Believe it or not, this may have been intentional: 'text_end' can
+> actually be a valid stack return address if the last instruction of the
+> section is a call to a noreturn function.  The unwinder still needs to
+> know the state of the stack at that point.
 >
->    bpf_probe_read_kernel_dynptr()
->    bpf_probe_read_user_dynptr()
->    bpf_probe_read_kernel_str_dynptr()
-I think the _str_dynptr versions are probably not worth adding.
-For example, when we use probe_read_kernel_str, the length of the str is 
-usually
-not known and we usually allocate a fixed size buffer for it. If we do 
-know the
-length of the str beforehand, we can just use probe_read_kernel_dynptr.
->    bpf_probe_read_user_str_dynptr()
+
+TIL...
+
+> That said, there would be no reason to put an FDE at the end.  So yeah,
+> it should be '>=3D'.
 >
-> - sleepable probe reads (copy_from_user):
+> > > +static __always_inline int __read_fre(struct sframe_section *sec,
+> > > +                                     struct sframe_fde *fde,
+> > > +                                     unsigned long fre_addr,
+> > > +                                     struct sframe_fre *fre)
+> > > +{
+> > > +       unsigned char fde_type =3D SFRAME_FUNC_FDE_TYPE(fde->info);
+> > > +       unsigned char fre_type =3D SFRAME_FUNC_FRE_TYPE(fde->info);
+> > > +       unsigned char offset_count, offset_size;
+> > > +       s32 ip_off, cfa_off, ra_off, fp_off;
+> > > +       unsigned long cur =3D fre_addr;
+> > > +       unsigned char addr_size;
+> > > +       u8 info;
+> > > +
+> > > +       addr_size =3D fre_type_to_size(fre_type);
+> > > +       if (!addr_size)
+> > > +               return -EFAULT;
+> > > +
+> > > +       if (fre_addr + addr_size + 1 > sec->fres_end)
+> >
+> > nit: isn't this the same as `fre_addr + addr_size >=3D sec->fres_end` ?
 >
-> bpf_copy_from_user_dynptr()
-> bpf_copy_from_user_str_dynptr()
+> Yes, but that would further obfuscate the fact that this is validating
+> that the next two reads don't go past sec->fres_end:
 >
-> - and then we have complementary task-based APIs for non-current process:
+>         UNSAFE_GET_USER_INC(ip_off, cur, addr_size, Efault);
+>         UNSAFE_GET_USER_INC(info, cur, 1, Efault);
 >
-> bpf_probe_read_user_task_dynptr()
-> bpf_probe_read_user_str_task_dynptr()
-> bpf_copy_from_user_task_dynptr()
-> bpf_copy_from_user_str_task_dynptr()
+> The explicit "1" is for that second read.
 >
-> Jordan is working on non-dynptr version of
-> bpf_copy_from_user_str_task(), once he's done with that, we'll add
-> dynptr version, probably.
+> I'll do something like SFRAME_FRE_INFO_SIZE instead of 1 to make that
+> clearer.
+
+yeah, I definitely didn't connect 1 with the size of fre info byte,
+named #define makes sense, thanks!
+
 >
->> [1] https://side-eye.io
->>
->>> That makes sense. The commit log didn't call it out.
->>> Please spell out the motivation clearly.
->>> Also why bpf_probe_read_kernel_common ?
->>> Do we need to memset() it on failure?
->>>
+> > > +               return -EFAULT;
+> > > +
+> > > +       UNSAFE_GET_USER_INC(ip_off, cur, addr_size, Efault);
+> > > +       if (fde_type =3D=3D SFRAME_FDE_TYPE_PCINC && ip_off > fde->fu=
+nc_size)
+> >
+> > is ip_off =3D=3D fde->func_size allowable?
+>
+> This was another one where I was probably thinking about the whole "last
+> insn could be a call to noreturn" scenario.
+>
+> But even in that case, the frame would be unchanged after the call, so
+> there shouldn't need to be an FRE there.
+>
+> In fact, for the unwinder to deal with that scenario, for a call frame
+> (as opposed to an interrupted one), it should always subtract one from
+> the return address before calling into sframe so that it points to the
+> calling instruction.  </me makes note to go do that>
+>
+> So yeah, this looks like another off-by-one, caused by overthinking yet
+> not thinking enough.
+>
+> > > +               return -EFAULT;
+> > > +
+> > > +       UNSAFE_GET_USER_INC(info, cur, 1, Efault);
+> > > +       offset_count =3D SFRAME_FRE_OFFSET_COUNT(info);
+> > > +       offset_size  =3D offset_size_enum_to_size(SFRAME_FRE_OFFSET_S=
+IZE(info));
+> > > +       if (!offset_count || !offset_size)
+> > > +               return -EFAULT;
+> > > +
+> > > +       if (cur + (offset_count * offset_size) > sec->fres_end)
+> >
+> > offset_count * offset_size done in u8 can overflow, no? maybe upcast
+> > to unsigned long or use check_add_overflow?
+>
+> offset_size is <=3D 2 as returned by offset_size_enum_to_size().
+>
+> offset_count is expected to be <=3D 3, enforced by the !offset_count chec=
+k
+> at the bottom.
+>
+> An overflow here would be harmless as it would be caught by the
+> !offset_count anyway.  Though I also notice offset_count isn't big
+> enough to hold the 2-byte SFRAME_FRE_OFFSET_COUNT() value.  Which is
+> harmless for the same reason, but yeah I'll make offset_count an
+> unsigned int.
+
+yeah, the less whoever is reading has to worry about overflows, the
+better, thanks!
+
+>
+> > > +static __always_inline int __find_fre(struct sframe_section *sec,
+> > > +                                     struct sframe_fde *fde, unsigne=
+d long ip,
+> > > +                                     struct unwind_user_frame *frame=
+)
+> > > +{
+> > > +       unsigned char fde_type =3D SFRAME_FUNC_FDE_TYPE(fde->info);
+> > > +       struct sframe_fre *fre, *prev_fre =3D NULL;
+> > > +       struct sframe_fre fres[2];
+> >
+> > you only need prev_fre->ip_off, so why all this `which` and `fres[2]`
+> > business if all you need is prev_fre_off and a bool whether you have
+> > prev_fre at all?
+>
+> So this cleverness probably needs a comment.  prev_fre is actually
+> needed after the loop:
+>
+> > > +       if (!prev_fre)
+> > > +               return -EINVAL;
+> > > +       fre =3D prev_fre;
+>
+> In the body of the loop, prev_fre is a tentative match, unless the next
+> fre also matches, in which case that one becomes the new tentative
+> match.
+>
+> I'll add a comment.  Also it'll probably be less confusing if I rename
+> "prev_fre" to "fre", and "fre" to "next_fre".
+
+ah, yeah, I missed that, you are right
+
+>
+> > > +       unsigned long fre_addr;
+> > > +       bool which =3D false;
+> > > +       unsigned int i;
+> > > +       s32 ip_off;
+> > > +
+> > > +       ip_off =3D (s32)(ip - sec->sframe_start) - fde->start_addr;
+> > > +
+> > > +       if (fde_type =3D=3D SFRAME_FDE_TYPE_PCMASK)
+> > > +               ip_off %=3D fde->rep_size;
+> >
+> > did you check that fde->rep_size is not zero?
+>
+> I did not, good catch!
+>
+> > > +       fre_addr =3D sec->fres_start + fde->fres_off;
+> > > +
+> > > +       for (i =3D 0; i < fde->fres_num; i++) {
+> >
+> > why not binary search? seem more logical to guard against cases with
+> > lots of FREs and be pretty fast in common case anyways.
+>
+> That would be nice, but the FREs are variable-sized and you don't know
+> how big one is until you start reading it.
+
+ah, another non-obvious thing, yeah... do you think it's worth fixing
+this and making FREs binary searchable in v3?
+
+Indu, do you have some stats on distribution of FRE count per FDE in practi=
+ce?
+
+Tbh, FRE format is bothering me quite a lot... but let's discuss that
+in another thread with you and Indu
+
+>
+> --
+> Josh
