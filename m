@@ -1,129 +1,82 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CCB1422AB
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jan 2025 04:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4717485;
+	Tue, 28 Jan 2025 04:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738038291; cv=none; b=rWJhXZ6AhUSc6lX3bR5Dg676KrucwEehmRGlGOIPE8Bef9pUu6PsZFYmkARr7aKjDwa+znJQsKWPhdREqMC8GPPXfCvziIYBh474fg2NvjibmZuGXyIsEKvkMSmeOjq7DZg8Tip4AW4rPre5u9BNsH83N/yDPFXblC1yF6IXuyU=
+	t=1738040342; cv=none; b=A7YILBlrT9MzMjckSFCaWthYtwe82dhwC5kSmFkKzDKWSpS4Zhz682UleN4rB4Bbky5MjOxIYX2JF+q79XHzVGrtazAuOvWtgd9tiXlEOMoO2PvZUWm7J7vPVSe7ahcD9Ui+J1Sx6oK7241UK0zX6Ix/WeWxX7vAFgocUIMRhaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738038291; c=relaxed/simple;
-	bh=9pPScUxaXH3Noy9LJrFwGVwB6nP+al9S0wDXhxf+xAQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tp95klLsrlfMKZzEFhemYO6Zehps3sLR1mn4nfTazigPqpR+WEwxebdYRQG4XXyN5thkkkzLYD1duMysx2/2F0ZWt8hURQJiv/iVKyDIBCFyo5F+/e2UYmM7NbstnNBLnsO45UgVnwc/gR1nlQplwEfN1kO0sKdCy3mkz3sUT1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pw7ahbTG; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
+	s=arc-20240116; t=1738040342; c=relaxed/simple;
+	bh=guUq7NITdaaKVUkTkKaJyOCjpJOBNT79z/pzC0qm5rQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=teNiWRCvrt0EgIX6c7MDdX6RjNpkbJno0f3pJv0StQ25wXL965ffP2uyx0ZfjcvL9NGV+DUlBg2fLlkt07rAgHoYTVKUaLDy3MaD5F6sV8sWG/0FwcYHWfHDGIF9TPKOmUwsdrIgMWb/bmfQSaKgGtQi5j3kNd5lFCB5NFkRfrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHTCJqpZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pw7ahbTG"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2162f80040aso93601605ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Jan 2025 20:24:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738038289; x=1738643089; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bu3J2SiM3EvMSMPeW7x/ZDWaOfsREkmMvF5jvQ/561M=;
-        b=Pw7ahbTGR630FyMpAYrlY3ig8IVWIgyuG97Du5UPqNut3wZdPpZP6qzEft7trncaTK
-         dlfFxoJBMTc5QZ/w49NLhBY6leDXjyuUYVOuD2+imsvjV4cXPDpluS8cJPymBkuW0qTg
-         B0bkS8w593O9w+vW7OUMtXgz2o9diJzP7qJIyB+j/BC/S46/saQjV5+hlrlj+X60Z6bS
-         /Hc3wZJYPBlVQGy55rJt00tMUTcgrUe1it2n5XAJzAIlnYM+4kiOuE15BbeqezHusfCY
-         pzoKzpdUN8/TiU9U96L09UZumuPdGUmSejXxhyq88XBmG+J3cVCl5qc4rd/68nZv2HzB
-         b+zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738038289; x=1738643089;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bu3J2SiM3EvMSMPeW7x/ZDWaOfsREkmMvF5jvQ/561M=;
-        b=BeFztOiYI5B8TmqJUTPlNWWA6WDgxCgeLc5XZ7yOUgapDFQ123pAedHVqJr1q22/N/
-         9FSubgIHlButRsunqc6BIq0m45m3tazdokmnLhPueNnLwp9U97I3NwBUu6e8IESD6h9t
-         XUibk/SxTM2wRCzUDj3Iz35vyEmIeBCB453sof1j6U/b1I5qON9W13Vyb5B2vvdk1t2g
-         /3nuAVe8Uc0hNLtUD1FzVJc4ueav3u0L5+eJlTas39sY5xrfrU90Aybknqu+WKbq3ynq
-         aLbErlwNgRxbEErMoRn+wL8UixCml/GNtW0VUTJBmlsbDD6M5TKvxG5hfixYaSoS7OJc
-         pDgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNW2edGm52I5vmpeQ8Dot0DJHcAsSlJFfxNvbkhxQXQn1spKkEVvNBLGBcMjAp8qGzkYqTjT73MGLgoD79aUfvHo0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHJsFYmitTAiyoNYJnudBsFdlAiU9txZo7yXwLUesBdqivnHsL
-	Mm+aODuAqWstqqVhyy/m7i/Bn6sdaIqCDGlAgxXMGAgbpzNSZ0U/FyVCRV5gUlKsHa/8Aw==
-X-Google-Smtp-Source: AGHT+IHFqSoHXLdhNPrTC3YRwuLwCUJpWxmu6MnWjbEB7WtYAER1cmeowowTeLs3ri7TD8slgqXM1sxX
-X-Received: from plhv17.prod.google.com ([2002:a17:903:2391:b0:216:eefe:2c35])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d48a:b0:212:67a5:ab2d
- with SMTP id d9443c01a7336-21c35604a08mr795458485ad.44.1738038289058; Mon, 27
- Jan 2025 20:24:49 -0800 (PST)
-Date: Tue, 28 Jan 2025 12:24:44 +0800
-In-Reply-To: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHTCJqpZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D0DC4CED3;
+	Tue, 28 Jan 2025 04:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738040341;
+	bh=guUq7NITdaaKVUkTkKaJyOCjpJOBNT79z/pzC0qm5rQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jHTCJqpZl3y2QXAt7MjdHW1WuofMO6rojpuiald2YflPZTZ74OMjzS+vFLoEmWINf
+	 cfuAvyf9voEbntz2LH9XqwC6S1RCQhkSoZe5sl/SBhEgaXvinOxUHPbv7dG01yCrwB
+	 0qik44kq9WvY9adCMUQEqT/bBHmxqYRbqsuhUx7gFKTHi3+3wUKfek/zBaWyBOIM4e
+	 hV6EN2+Aa+aIrHMQCzngKwBY6YoO28s8c1ia3QjplG3vOERj34yoLjphUicnrR/b6v
+	 mCmb0GfR0drMwGx1UMLgQCpSBcYx6IGqTYWHQ7ke4Ik/1TRMED8OLkCrKKhY/OQsFi
+	 aMvS7VFg0dBgQ==
+Date: Tue, 28 Jan 2025 13:58:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Luo Yifan <luoyifan@cmss.chinamobile.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, trivial@kernel.org
+Subject: Re: [PATCH] tools/bootconfig: Fix the wrong format specifier
+Message-Id: <20250128135859.ec38bcddb62f2da2c8065ee1@kernel.org>
+In-Reply-To: <20250124100627.7e7af0bf@gandalf.local.home>
+References: <20241105011048.201629-1-luoyifan@cmss.chinamobile.com>
+	<20241119102549.5da4d2c1cdbb7514014cd273@kernel.org>
+	<20250124100627.7e7af0bf@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-Message-ID: <20250128042445.24920-1-keyz@google.com>
-Subject: Re: [PATCH v2] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: christian.loehle@arm.com
-Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
-	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> > The trace event cpu_idle provides insufficient information for debugging
-> > PSCI requests due to lacking access to determined PSCI domain idle
-> > states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-> > idle states the power domain has.
-> >
-> > Add new trace events namely psci_domain_idle_enter and
-> > psci_domain_idle_exit to trace enter and exit events with a determined
-> > idle state.
-> >
-> > These new trace events will help developers debug CPUidle issues on ARM
-> > systems using PSCI by providing more detailed information about the
-> > requested idle states.
-> >
-> > Signed-off-by: Keita Morisaki <keyz@google.com>
-> > ---
-> > v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
-> > 		and rephrase the commit message accordingly. Rebased onto the latest.
-> Which makes it different to cpu_idle event FWIW.
+On Fri, 24 Jan 2025 10:06:27 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Yes, psci_domain_idle_(enter|exit) are not meant to replace cpu_idle nor a
-variant of it. It's new and different events that provide finer=grained info.
+> On Tue, 19 Nov 2024 10:25:49 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > Hi Luo,
+> > 
+> > On Tue,  5 Nov 2024 09:10:48 +0800
+> > Luo Yifan <luoyifan@cmss.chinamobile.com> wrote:
+> > 
+> > > Use '%u' instead of '%d' for unsigned int.  
+> > 
+> > Good catch, thanks for the fix!
+> > Let me pick.
+> 
+> Hi Masami,
+> 
+> This is still in patchwork and I don't see it applied to Linus's tree. Did
+> you forget about it?
 
-> >  drivers/cpuidle/cpuidle-psci.c |  3 +++
-> >  include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >
-> > diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-> > index 2562dc001fc1..dd8d776d6e39 100644
-> > --- a/drivers/cpuidle/cpuidle-psci.c
-> > +++ b/drivers/cpuidle/cpuidle-psci.c
-> > @@ -25,6 +25,7 @@
-> >  #include <linux/syscore_ops.h>
-> >
-> >  #include <asm/cpuidle.h>
-> > +#include <trace/events/power.h>
-> >
-> >  #include "cpuidle-psci.h"
-> >  #include "dt_idle_states.h"
-> > @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
-> >  	if (!state)
-> >  		state = states[idx];
-> >
-> > +	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
-> >  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-> > +	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
-> Not tracking ret seems odd, is that fine?
+Oops, thanks for ping me.
 
-I think it's fine not to track ret here.
-__psci_enter_domain_idle_state does not seems to care the return value of
-psci_cpu_suspend_enter to me because it just proceeds with executing subsequent
-functions regardless of ret, and returns ret to the higher function. If the
-value should be traced, it should probably be done in a lower layer or a higher
-layer.
+Let me make a PR.
 
-Another small small reason I'm not interested in adding ret to the
-trace_psci_domain_idle_exit's arguments is that
-trace_psci_domain_idle_(enter|exit) currently share the same trace event
-(i.e. same set of arguments) and it makes the trace events simple.
+Thank you!
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
