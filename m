@@ -1,133 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CDBF9F8;
-	Tue, 28 Jan 2025 15:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822871D618A
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jan 2025 15:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738078650; cv=none; b=Ea8SCvsjCCU4qg5TQSeYvhA50P+CUIvLghoHYXZA0RPxswzPcBNVddL9DaTdJPz5AMLV3hBPG1tp/kTbyBNJ/9OTp2fI9TwK4WNIDITJkxj0NKqn3UcK/0Aa1q9M6OHp5yVPemAzlQHZI9X38iyVyvZ7M0pKLNEL0EFeVhzoqoo=
+	t=1738079006; cv=none; b=O4PVExyEC5iSek9/Vo25rWek/SHwo42X/BLtXP+hgMIFvgMx4/r3/hwXQBwejbPVVfGpgCHOrjjpjWYomP3YwZSIrrKvnBqtG7A5EPfeqL6hbmpow6cvabZGB/avt0fsYA5a7K06LFgOHjgMi6QkV6pQXUEs8eluqsOJqZyZppk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738078650; c=relaxed/simple;
-	bh=bpTuAHnmxxYJi8aMzZEmI5QzeBf7azj2pbNnpxLLXXc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mAEpyaGF43kGkj8UuXIYhe/flaU8496YhDteiceAx6NBsBkx92m3Ay2WoJTjxrE0jHTVMBSRtvX3F6jPgxxpdR/5/tCKBireVKZL0tWI/a2/VKtUH8I+5a/Fos6Vj5B13GZKggzQKDI2+iIKwMfIdInUtZieuMKi9gARb7a2I0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kREJGJlo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738079006; c=relaxed/simple;
+	bh=4CM+Y34LzyqTPbJa964bMKTZoegb6ZCbeVLJYvxkr2Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OMt+AABMPuVgu7ja5s1rp9eLS84Yh5NYyPLm0iPu7GsIbZ0f2vnK3d0oRfBQjVxiRBWBIYpAVVinACgPqtmNY8+3IgWwGUmgbMhg9iqPcSYFTJB3ZtzjJqzGBXpVvTOcsVZodRINwFeSS/c9F8ewctDNEojiQX+Su0l1OzcCsQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=ZzdR8vdI; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kREJGJlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1C2C4CED3;
-	Tue, 28 Jan 2025 15:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738078649;
-	bh=bpTuAHnmxxYJi8aMzZEmI5QzeBf7azj2pbNnpxLLXXc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kREJGJlouXAym197/2wwbyFQfmdwyrPAH2jgYX8Oucqg/Z/qZWu+c3WEpehVhSO2b
-	 ilpoN+tHplJHvHjfja9OLWfhjuXC1xL2BmF0rSaLA/3ZBoU27tCkCAg7ee0uAaERVR
-	 7dMS/nwrQI+CQ4jGcg/6yDtLTqd7RmxMQPQRuUcgqWlIht7w3vdCd9WYh08eiRfniP
-	 lTjqZ1NjZ3qx9V1jq05Zg4KgQb4/uGqTet1WDaOXYQyDtU6gvUYqV1WNviW9vlXl0D
-	 voTpHsq+uwA374fbVarimhXCnLPQNk/o5i5E7hAvGCkWu21wawygN8eckSu+SwJIth
-	 s+4auv03+igqg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org
-Subject: [RFC PATCH 3/3] modules: tracing: Add module_text_offsets event
-Date: Wed, 29 Jan 2025 00:37:25 +0900
-Message-ID:  <173807864506.1525539.5749974707383492634.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
-In-Reply-To:  <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
-References:  <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="ZzdR8vdI"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e549b0f8d57so9734983276.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jan 2025 07:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1738079001; x=1738683801; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4CM+Y34LzyqTPbJa964bMKTZoegb6ZCbeVLJYvxkr2Y=;
+        b=ZzdR8vdIiohnoZ4hKdRsx8vjUSASU/72vdBDURxTPxW6Y5y+xqJe1XFJv37MN3/RSh
+         1N9DWACiMe42Ssr+6RyacQYB0mKZF7r9X4dw06gLm3TJ5kXU+QA6Pwxa8XDIazhEp8C0
+         9uU7YdXy5cLi0N5EPxtYGd6vErWsFg/mLsK5lwXF/VP7H3vmwwe2R2U45ytaFkUMk6Za
+         lp6jed/BVTI9FjvFUI0MN7HYChc3iERhjHp52qu+iW++/bUjLH+wfDW2Jw7AJF6Rr/MJ
+         y67AxGiMWpozGojGCejMex/pBvJsfQOTerwdd08tOqwT12ksmB/+EE0jtUDQTB2nY1qi
+         QFbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738079001; x=1738683801;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4CM+Y34LzyqTPbJa964bMKTZoegb6ZCbeVLJYvxkr2Y=;
+        b=ol99+fO0esfXtLFJey3NPWT+DirnsoR77qvRC2NYVwXEopzYYpu5mPivcaOX9eeC7/
+         bsoMe4ZPym/POgbcqNC+vwjHGe4QSlKYMpJYUwEQD57aD1v0oLn4bWDRC/NMcCgBQXKy
+         D6hoEee+rnf8coaBT90dCcN2fJyg6DUi0dq/+8R4rX09F/U1PCUIG3wjCcI81IhDaZNB
+         sc/cz2VftWHv8JQ80OhX07j9St4fZLtA8+Tnw2Q9ckgw15hgIsDmwrnRziyoDMLdOgLt
+         5BFgyvtCkjKsB3Zbznsr6LWOhleAWfo15vYaOs6jgjtfPJa5Td6V7iBbp0UIAYWLszW0
+         T7rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFXDYsioYGhDDx6jdykk9PkxqE9qwhRhhJ8WgrV1Guuy6ig6JHNjvm808IXWCdl89y6iXKKvUBo0ProSV8uejwBFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPDfHJ/zCNRFJvwsIZfF1O1WER/rE/90g5s5p3Iefz9PQObZVi
+	Xoz6shR/+tiI9XApstX5tSq3quYRCxKmSam2uPlWIY+dRwVlMCy/AM3e/DhcSrVmnPSyFoRYAaa
+	d110y+yTjQJhANl4UG67aYQsC+1FQOId7mIgQ
+X-Gm-Gg: ASbGncvbcr88guUSEjhOjfFuYVoUUJCjyzqj5o67qUW64GnseWzlx9QT72r0wq5UaG/
+	CARMHLalOhlwaqFAj1ZdBquOJcXHgvRshWgNYSNUXzDG/KKHlZ33rB72o9DmeHjejAxvxds4=
+X-Google-Smtp-Source: AGHT+IGuLqrmdoXiE8apV7tzhOJZ5Xm1OF/NxWm8Kjkh7RMoG05FR1MdO9WMx2ebniwyt0o5rEC0Jv+xP432BtVJDY0=
+X-Received: by 2002:a05:690c:4d02:b0:6ef:6646:b50a with SMTP id
+ 00721157ae682-6f6eb6b2881mr361409457b3.20.1738079001445; Tue, 28 Jan 2025
+ 07:43:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+ <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
+ <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
+ <f4lfo2fb7ajogucsvisfd5sg2avykavmkizr6ycsllcrco4mo3@qt2zx4zp57zh>
+ <87jzag9ugx.fsf@intel.com> <Z5epb86xkHQ3BLhp@casper.infradead.org> <u2fwibsnbfvulxj6adigla6geiafh2vuve4hcyo4vmeytwjl7p@oz6xonrq5225>
+In-Reply-To: <u2fwibsnbfvulxj6adigla6geiafh2vuve4hcyo4vmeytwjl7p@oz6xonrq5225>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 28 Jan 2025 10:43:10 -0500
+X-Gm-Features: AWEUYZkHRaUuCTQsu1U9C5jhigmIE9c2_8OmkE_i2Qv7ILXtAaTfDLC5EcLBZNk
+Message-ID: <CAHC9VhQnB_bsQaezBfAcA0bE7Zoc99QXrvO1qjpHA-J8+_doYg@mail.gmail.com>
+Subject: Re: Re: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where applicable
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>, Jani Nikula <jani.nikula@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-serial@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, 
+	codalist@coda.cs.cmu.edu, linux-mm@kvack.org, linux-nfs@vger.kernel.org, 
+	ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, 
+	Song Liu <song@kernel.org>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	Corey Minyard <cminyard@mvista.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Jan 28, 2025 at 6:22=E2=80=AFAM Joel Granados <joel.granados@kernel=
+.org> wrote:
+> On Mon, Jan 27, 2025 at 03:42:39PM +0000, Matthew Wilcox wrote:
+> > On Mon, Jan 27, 2025 at 04:55:58PM +0200, Jani Nikula wrote:
+> > > You could have static const within functions too. You get the rodata
+> > > protection and function local scope, best of both worlds?
+> >
+> > timer_active is on the stack, so it can't be static const.
+> >
+> > Does this really need to be cc'd to such a wide distribution list?
+> That is a very good question. I removed 160 people from the original
+> e-mail and left the ones that where previously involved with this patch
+> and left all the lists for good measure. But it seems I can reduce it
+> even more.
+>
+> How about this: For these treewide efforts I just leave the people that
+> are/were involved in the series and add two lists: linux-kernel and
+> linux-hardening.
+>
+> Unless someone screams, I'll try this out on my next treewide.
 
-Add new module_text_offsets event which records the offset of module
-text and init_text section address and size.
+I'm not screaming about it :) but anything that touches the LSM,
+SELinux, or audit code (or matches the regex in MAINTAINERS) I would
+prefer to see on the associated mailing list.
 
-This information is required for decoding the relative stacktrace
-entries for modules.
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/trace/events/module.h |   40 ++++++++++++++++++++++++++++++++++++++++
- kernel/module/main.c          |    1 +
- 2 files changed, 41 insertions(+)
-
-diff --git a/include/trace/events/module.h b/include/trace/events/module.h
-index e5a006be9dc6..1e5c84cc8d15 100644
---- a/include/trace/events/module.h
-+++ b/include/trace/events/module.h
-@@ -47,6 +47,46 @@ TRACE_EVENT(module_load,
- 	TP_printk("%s %s", __get_str(name), show_module_flags(__entry->taints))
- );
- 
-+/* Module address offset from _stext */
-+TRACE_EVENT(module_text_offsets,
-+
-+	TP_PROTO(struct module *mod),
-+
-+	TP_ARGS(mod),
-+
-+	TP_STRUCT__entry(
-+		__string(	name,		mod->name	)
-+		__field(	unsigned long,	text_offset	)
-+		__field(	unsigned int,	text_size	)
-+		__field(	unsigned long,	init_offset	)
-+		__field(	unsigned int,	init_size	)
-+	),
-+
-+	TP_fast_assign(
-+		if (mod->mem[MOD_TEXT].size) {
-+			__entry->text_offset = (unsigned long)mod->mem[MOD_TEXT].base
-+					     - (unsigned long)_stext;
-+			__entry->text_size = mod->mem[MOD_TEXT].size;
-+		} else {
-+			__entry->text_offset = 0;
-+			__entry->text_size = 0;
-+		}
-+		if (mod->mem[MOD_INIT_TEXT].size) {
-+			__entry->init_offset = (unsigned long)mod->mem[MOD_INIT_TEXT].base
-+					     - (unsigned long)_stext;
-+			__entry->init_size = mod->mem[MOD_INIT_TEXT].size;
-+		} else {
-+			__entry->init_offset = 0;
-+			__entry->init_size = 0;
-+		}
-+		__assign_str(name);
-+	),
-+
-+	TP_printk("%s text_offset=0x%lx text_size=%d init_offset=0x%lx init_size=%d",
-+		  __get_str(name), __entry->text_offset, __entry->text_size,
-+		  __entry->init_offset, __entry->init_size)
-+);
-+
- TRACE_EVENT(module_free,
- 
- 	TP_PROTO(struct module *mod),
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 5399c182b3cb..9f1ca8730a71 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -3372,6 +3372,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
- 
- 	/* Done! */
- 	trace_module_load(mod);
-+	trace_module_text_offsets(mod);
- 
- 	return do_init_module(mod);
- 
-
+--=20
+paul-moore.com
