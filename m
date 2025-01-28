@@ -1,115 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31EA42A92;
-	Tue, 28 Jan 2025 05:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509AD4430;
+	Tue, 28 Jan 2025 07:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738043097; cv=none; b=JwBbuTrnHR02R0GcbnGhVy6O+xn0bcWoTnC30j2BjNDvvMJGFPNiIIkgLocD44N8S/+LhjmCFeh/zAUDzDaQsx1WxDylR/FhU66pE0hzA5e+9igjOyIH7K/rcZvyYwvPloNWfp+357Up88hnb+p+bqKrGAKYhePnC7FIr+JmIQo=
+	t=1738048248; cv=none; b=Fuo3aMRqZFFRF98ASQpY8nz0/aT6e4RXIbPKCpr/rfJ7S+/Pteb+jGfwx00Th0rKxD1DBu6p7lwLhM0hqijUkqV9dVecnduTcZD4IhusZE9mv39KJ9tKh3N3T916quKl2s4/10cPolvZsjlXAdBa4X6l35vxwyCvYdlh2IIJk/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738043097; c=relaxed/simple;
-	bh=RQ5Vm02lAX8S3oz05O/5pdpSi3XMSRWelAXlLTjanxQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=PZzsXM5qkv0QnWIWpoS8J6YmFYUPdBGMdXHJE6dDirvRjpuHnkYvwrJQxbsJTswYXT70nLIHOiewokYgAKhDtxvil7rbimJwsaxwsh6nFsRstKHoy9VKplOi9st+8GbZHssfgRpiACjOmvd6k6lZ/Qkhjw2itGtFBHBFhroZ/68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuCWUiPV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738048248; c=relaxed/simple;
+	bh=PsqyzNGenRbfWxCHFMRmZd6HZRcU6KsEdJnPappk720=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q80K8+JbH1ZMEGsgxSKt/5nusMhiWZzeOmZn4hNQZk0ujrqRy/O9Nh3uTcWkRfPI2wyz6Q/baZVqhBlOfy5sBmO05VRZaV5EcWiimipD+REvHksMRi47Bg7e9lifu+h4B+pm7+alhXnE+sv95QP6ZTSXXUcClHux8T5JNJ1zsbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w2UXfKtF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zYRFqxTW; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuCWUiPV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B83C4CED3;
-	Tue, 28 Jan 2025 05:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738043096;
-	bh=RQ5Vm02lAX8S3oz05O/5pdpSi3XMSRWelAXlLTjanxQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PuCWUiPV5YW0WuZS2+3GnWvMujL3mIMCLO8/cUoYCW69EQCWMTL1zrLevzsyEf1hN
-	 My+usQcVbA9ctcxcpGKkmSZ2PEBSqZ/Uy2NNqPt3WuKu8kU1PmWMnpYuFCNQwJ5XTT
-	 zoB+y3InDoE3hzLrxLHZLQWPB16hXE8qnXAMPjJGyXuidSoqwujBsFNmdJoVdyGqfk
-	 HiCndxuSwzDJMH+T83fJLBQIM4y1iKGbfX8j+AIBdwhBkBJU0YR+BfI1arqHZy6BBY
-	 KPRwlaOw9y4KIOOtD5eLBKo+IKzUu8vRz7mFXGX6NITI4Mn5tXzi3taAsknqz98M+s
-	 a1H//LfS8Jtyw==
-Date: Tue, 28 Jan 2025 14:44:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel
- Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>,
- "Paul E . McKenney" <paulmck@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- "David S. Miller" <davem@davemloft.net>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Naveen N Rao <naveen@kernel.org>, linux-trace-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w2UXfKtF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zYRFqxTW"
+Date: Tue, 28 Jan 2025 08:10:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738048244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1CZKdS/EEGo9ONyxupcu7KFdFSjQzppoP9SsJA3heY=;
+	b=w2UXfKtFK9bLVrVetqsjHg5ln9/A82SsPZsf4HevOd+7JpsiHEyrr7IrykthI4dxrqrbY2
+	a6ZcAvie4n7VIG51gKNlWEgw8DUz+5OgZ3rLnbBp5oAW8U7g5YKmK0Q9bznWLzajOIF6cn
+	GCNwyF/B8x/Tsfk5myi3G7dgee03a3BcSXLl/CYOf56WDcYvOv2dmNdDwC98LE5yg6a4x3
+	VvQtzsjaqTfohJrMfubUMzUKjVgSdAzi4Ei/E6mpp0+CqNVoE1GTZg1MZyCPtX6JxVklne
+	wii31RHB8orEH7Csb6uhm7ITUrj0uPmnamoqCYrA5OjXZhAraFE9d0+FP0wj6Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738048244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F1CZKdS/EEGo9ONyxupcu7KFdFSjQzppoP9SsJA3heY=;
+	b=zYRFqxTWk+RhM2UsYdbzrDnjqSSUPDaRpYH1CAPoChF3ZQfE0sP6Q8IrykBXtbaky8bNzy
+	nUXO6VUc4z2llaBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 26/28] kprobes: Use RCU in all users of
  __module_text_address().
-Message-Id: <20250128144452.fb5f9741e58f059c7cdf4ce9@kernel.org>
-In-Reply-To: <20250108090457.512198-27-bigeasy@linutronix.de>
+Message-ID: <20250128071042._1aW_jx4@linutronix.de>
 References: <20250108090457.512198-1-bigeasy@linutronix.de>
-	<20250108090457.512198-27-bigeasy@linutronix.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20250108090457.512198-27-bigeasy@linutronix.de>
+ <20250128144452.fb5f9741e58f059c7cdf4ce9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250128144452.fb5f9741e58f059c7cdf4ce9@kernel.org>
 
-On Wed,  8 Jan 2025 10:04:55 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> __module_text_address() can be invoked within a RCU section, there is no
-> requirement to have preemption disabled.
-> 
-> Replace the preempt_disable() section around __module_text_address()
-> with RCU.
+On 2025-01-28 14:44:52 [+0900], Masami Hiramatsu wrote:
+> Hi,
 
 Hi,
 
-Since the below cleanup has been merged, this patch needs to be updated.
-
-https://lore.kernel.org/all/20241121-kprobes-preempt-v1-1-fd581ee7fcbb@linutronix.de/
-
-(may need to change the guard(preempt)() -> guard(rcu)() in the new version.)
-
-Thank you,
-
+> Since the below cleanup has been merged, this patch needs to be updated.
 > 
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: linux-trace-kernel@vger.kernel.org
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/kprobes.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> https://lore.kernel.org/all/20241121-kprobes-preempt-v1-1-fd581ee7fcbb@linutronix.de/
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index b027a4030976a..22e47a27df4aa 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1566,7 +1566,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	if (ret)
->  		return ret;
->  	jump_label_lock();
-> -	preempt_disable();
-> +	rcu_read_lock();
->  
->  	/* Ensure the address is in a text area, and find a module if exists. */
->  	*probed_mod = NULL;
-> @@ -1612,7 +1612,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->  	}
->  
->  out:
-> -	preempt_enable();
-> +	rcu_read_unlock();
->  	jump_label_unlock();
->  
->  	return ret;
-> -- 
-> 2.47.1
-> 
+> (may need to change the guard(preempt)() -> guard(rcu)() in the new version.)
 
+Thanks, I'm on it.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Thank you,
+
+Sebastian
