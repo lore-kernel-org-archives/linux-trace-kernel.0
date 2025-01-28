@@ -1,206 +1,129 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9ED46BF;
-	Tue, 28 Jan 2025 02:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CCB1422AB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jan 2025 04:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738033092; cv=none; b=onff+DlbOgFhmYzY3/gXZ4OnXt3IC2mwXh9L+hAmQz8R/EWqaxuKsXDGEYbT6A5hLT893maD5at6Jfqi/01a++FG6QIp0quRqoJ1Lw/9xX9NkMkIUf/jgWrZqZ2gHLCFn5igF9/wrMDdwOkLnDIhdFQKaLn6n3MHPeFW+Ozs8uw=
+	t=1738038291; cv=none; b=rWJhXZ6AhUSc6lX3bR5Dg676KrucwEehmRGlGOIPE8Bef9pUu6PsZFYmkARr7aKjDwa+znJQsKWPhdREqMC8GPPXfCvziIYBh474fg2NvjibmZuGXyIsEKvkMSmeOjq7DZg8Tip4AW4rPre5u9BNsH83N/yDPFXblC1yF6IXuyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738033092; c=relaxed/simple;
-	bh=vVKL+2uJt4OG/7ST+JwZv4qCHoDZnpI9wPbbpQDgIs4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SjU3dx8sWnRi07G10W41/x7wI83XVvOmfQ/DlAnD9WD/T65dFdias6VUWpy/Z+BrQ8PXpo5LWrqfcQzjSE5/0ejmyR5BywduXFfpysb0y/V76Al5AYD254/9nJ7hrt5uHMW4DsbviIB+7pFvT/Jw980dgm8UK0wPTLt7qZ7K2Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PkbjjGVW; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738038291; c=relaxed/simple;
+	bh=9pPScUxaXH3Noy9LJrFwGVwB6nP+al9S0wDXhxf+xAQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tp95klLsrlfMKZzEFhemYO6Zehps3sLR1mn4nfTazigPqpR+WEwxebdYRQG4XXyN5thkkkzLYD1duMysx2/2F0ZWt8hURQJiv/iVKyDIBCFyo5F+/e2UYmM7NbstnNBLnsO45UgVnwc/gR1nlQplwEfN1kO0sKdCy3mkz3sUT1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pw7ahbTG; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkbjjGVW"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3862a921123so3397728f8f.3;
-        Mon, 27 Jan 2025 18:58:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pw7ahbTG"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2162f80040aso93601605ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Jan 2025 20:24:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738033089; x=1738637889; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/qqFfvpQ/KtWP1BA9PZjJ0zlj8CSxBiFQlmFDFrvCwk=;
-        b=PkbjjGVW/TRW/b+ieLwvlL1HvHX/oEndG9YqakNwViOsUlrpIYuDbYksCObOCO5haq
-         BaNbP3wIAKipN2ojr5mHwgSXx/Nx3XiwYcyUQ1dgm0B3QQ+vIRHh8q238CHDVAU8VFj9
-         S+6mHSJa5fLP1O7YrDYHp0kt+ybzKHriA9LjGHcmn1gmpZwvu9uDtP3NUf8qxmtvSTyV
-         oWS4DysvB+GsvU+/sWbZXuQvVD0fygnP/eNcrYP9i3ymCPED5H49m07wLTLqjr/2WuIm
-         kPWcb+uSO149S4VBVcrqEvGV3wVHbLEccyplsIZgoIs6MMhTfkec9T8q1CyaTcLEuADE
-         ivJw==
+        d=google.com; s=20230601; t=1738038289; x=1738643089; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bu3J2SiM3EvMSMPeW7x/ZDWaOfsREkmMvF5jvQ/561M=;
+        b=Pw7ahbTGR630FyMpAYrlY3ig8IVWIgyuG97Du5UPqNut3wZdPpZP6qzEft7trncaTK
+         dlfFxoJBMTc5QZ/w49NLhBY6leDXjyuUYVOuD2+imsvjV4cXPDpluS8cJPymBkuW0qTg
+         B0bkS8w593O9w+vW7OUMtXgz2o9diJzP7qJIyB+j/BC/S46/saQjV5+hlrlj+X60Z6bS
+         /Hc3wZJYPBlVQGy55rJt00tMUTcgrUe1it2n5XAJzAIlnYM+4kiOuE15BbeqezHusfCY
+         pzoKzpdUN8/TiU9U96L09UZumuPdGUmSejXxhyq88XBmG+J3cVCl5qc4rd/68nZv2HzB
+         b+zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738033089; x=1738637889;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/qqFfvpQ/KtWP1BA9PZjJ0zlj8CSxBiFQlmFDFrvCwk=;
-        b=irjMusB2/krMCJaFNsuXvF/SNLn028O09HKXApra/N7YPJacC7DiKSrEYNNXteZZVb
-         vn6h9oyGB3UTHdObsy6j7HawLCl2ywbGKseRVzZIhtaXko6JHE1u2YFrIwebxISJNf5P
-         QHoAcZ8kJgRuEbglwbR24wXRBFGz4MkMpU0MhODs4qKsYLD3tfl5Nivp0Q4IX2Zg/vlq
-         1xl32hFBFzeWtwZ1K4FDT7nClgbNORdr4acySlsHxNTeY3UZbHYEmPH1z/MuvIC/D+nF
-         qjunBlu6TALA5lYmWG44XXVNxW/AMqrzxheor4VdEgzDjwCFsEImuxNMXr6tsBMPr4e2
-         iVoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4RzTYtCzkWekKoq8qn6BmSvoC+/GtX7zJtYxdSPDd3O+MeOXwXlMA98QoqBECoubuCJdu9j2Zmu2YvmHOZhJj@vger.kernel.org, AJvYcCUTa5UTfdnRmHxxn7ANfa8h957m58mZ13752TSvPPuVhuiKnwL79gp75MCt0yApr0D9KXE=@vger.kernel.org, AJvYcCWHlXf/lWhupaa/STz0GLIr8Nvolex58Qqn3OsWxXjToXBUzpHdu3PqTsxXbYLNPVijOq4wIHP5JeuRq0b1@vger.kernel.org, AJvYcCXrFxB9lSl6s6XLK3WxhIc8fTp90+oASJ4M+bvAeHCRxI4EFmu9M5htXIN5CqdokqzruE86dXWnehKtdSV9HbXAHiHh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBMkSGAgCfBE9YO6YJtUd0sXnt/EeKj32yydZg5ezrpZe4h9k8
-	dl0SftlzrwrOGsdvG2PAjgoBwtccSaUAcLjxETduwOifQjIpP0dNCcS4t/txkdWTidSefiqQog8
-	kx1Od2MQrtSNARxLZe64O9mzySpk=
-X-Gm-Gg: ASbGncvugwLx6T0BjWOOWoMQ63QuixW5o7B4BI/59UlGMD4hvmQd7i+EQokOU4g0fy7
-	uPGIAHv+hY4ihF7e5zloVr15xSFZ7DfuAvMExoq61wnCySm/7QWznJzIg84wZXxKNKlqmmlsiMH
-	oD0Jx0RPOG/r0kCVtFDDtGZ8u5a3cE
-X-Google-Smtp-Source: AGHT+IHUS0JtyZsYUl1FT8gCFXfY5O9/3R+lODB8pzWiCyU29JV+ukN8MuiutZuobNAbfM+Vz6u7NvJpQkistlNcbJM=
-X-Received: by 2002:a5d:6d02:0:b0:385:e1a8:e28e with SMTP id
- ffacd0b85a97d-38bf56555a0mr40591417f8f.10.1738033089039; Mon, 27 Jan 2025
- 18:58:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738038289; x=1738643089;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bu3J2SiM3EvMSMPeW7x/ZDWaOfsREkmMvF5jvQ/561M=;
+        b=BeFztOiYI5B8TmqJUTPlNWWA6WDgxCgeLc5XZ7yOUgapDFQ123pAedHVqJr1q22/N/
+         9FSubgIHlButRsunqc6BIq0m45m3tazdokmnLhPueNnLwp9U97I3NwBUu6e8IESD6h9t
+         XUibk/SxTM2wRCzUDj3Iz35vyEmIeBCB453sof1j6U/b1I5qON9W13Vyb5B2vvdk1t2g
+         /3nuAVe8Uc0hNLtUD1FzVJc4ueav3u0L5+eJlTas39sY5xrfrU90Aybknqu+WKbq3ynq
+         aLbErlwNgRxbEErMoRn+wL8UixCml/GNtW0VUTJBmlsbDD6M5TKvxG5hfixYaSoS7OJc
+         pDgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNW2edGm52I5vmpeQ8Dot0DJHcAsSlJFfxNvbkhxQXQn1spKkEVvNBLGBcMjAp8qGzkYqTjT73MGLgoD79aUfvHo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHJsFYmitTAiyoNYJnudBsFdlAiU9txZo7yXwLUesBdqivnHsL
+	Mm+aODuAqWstqqVhyy/m7i/Bn6sdaIqCDGlAgxXMGAgbpzNSZ0U/FyVCRV5gUlKsHa/8Aw==
+X-Google-Smtp-Source: AGHT+IHFqSoHXLdhNPrTC3YRwuLwCUJpWxmu6MnWjbEB7WtYAER1cmeowowTeLs3ri7TD8slgqXM1sxX
+X-Received: from plhv17.prod.google.com ([2002:a17:903:2391:b0:216:eefe:2c35])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d48a:b0:212:67a5:ab2d
+ with SMTP id d9443c01a7336-21c35604a08mr795458485ad.44.1738038289058; Mon, 27
+ Jan 2025 20:24:49 -0800 (PST)
+Date: Tue, 28 Jan 2025 12:24:44 +0800
+In-Reply-To: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250125-bpf_dynptr_probe-v2-0-c42c87f97afe@outlook.com>
- <20250125-bpf_dynptr_probe-v2-1-c42c87f97afe@outlook.com> <CAADnVQ+bRvL-4n4ZB5QS2oUxvo3vhJHf=8=2No3WWqYHqSyBEg@mail.gmail.com>
- <MEYP282MB2312A90273FF290ED5FC6F6AC6ED2@MEYP282MB2312.AUSP282.PROD.OUTLOOK.COM>
- <CAADnVQJ7bw0Qa4UM_E0zb5bqt5P09f7rryFSe6faY8ibX0zWuA@mail.gmail.com>
- <CABWLseu6=ZSYpQncaj=0EeVzKtP8vjPyOBJkWcFb-dxbm5OfVQ@mail.gmail.com> <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
-In-Reply-To: <CAEf4BzYLPVqRzwzziugfV+fXbd6KQnkvsXJWOYDEgQ6rgUSH9A@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 27 Jan 2025 18:57:58 -0800
-X-Gm-Features: AWEUYZkQJSuFNbIDYKFXWJ4lyNJZIJK2EDphZyLGO-6rzAlzs90vWHyHaSi4RkI
-Message-ID: <CAADnVQKLrCf=wSrJQWEHgGLRnmwqTO98n2waU78KvUZgPXJsjg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/7] bpf: Implement bpf_probe_read_kernel_dynptr
- helper
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrei Matei <andreimatei1@gmail.com>, Jordan Rome <linux@jordanrome.com>, 
-	Levi Zim <rsworktech@outlook.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mykola Lysenko <mykolal@fb.com>, 
-	Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Mime-Version: 1.0
+References: <31dd8c5d-0bc4-4d84-9ac9-7ca248e952cf@arm.com>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Message-ID: <20250128042445.24920-1-keyz@google.com>
+Subject: Re: [PATCH v2] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: christian.loehle@arm.com
+Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
+	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 27, 2025 at 3:09=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Jan 27, 2025 at 2:54=E2=80=AFPM Andrei Matei <andreimatei1@gmail.=
-com> wrote:
+> > The trace event cpu_idle provides insufficient information for debugging
+> > PSCI requests due to lacking access to determined PSCI domain idle
+> > states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> > idle states the power domain has.
 > >
-> > On Mon, Jan 27, 2025 at 5:04=E2=80=AFPM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Sat, Jan 25, 2025 at 5:05=E2=80=AFPM Levi Zim <rsworktech@outlook.=
-com> wrote:
-> > > >
-> > > > On 2025/1/26 00:58, Alexei Starovoitov wrote:
-> > > >  > On Sat, Jan 25, 2025 at 12:30=E2=80=AFAM Levi Zim via B4 Relay
-> > > >  > <devnull+rsworktech.outlook.com@kernel.org> wrote:
-> > > >  >> From: Levi Zim <rsworktech@outlook.com>
-> > > >  >>
-> > > >  >> This patch add a helper function bpf_probe_read_kernel_dynptr:
-> > > >  >>
-> > > >  >> long bpf_probe_read_kernel_dynptr(const struct bpf_dynptr *dst,
-> > > >  >>          u32 offset, u32 size, const void *unsafe_ptr, u64 flag=
-s);
-> > > >  > We stopped adding helpers years ago.
-> > > >  > Only new kfuncs are allowed.
-> > > >
-> > > > Sorry, I didn't know that. Just asking, is there any
-> > > > documentation/discussion
-> > > > about stopping adding helpers?
-> > > >
-> > > > I will switch the implementation to kfuncs in v3.
-> > > >
-> > > >  > This particular one doesn't look useful as-is.
-> > > >  > The same logic can be expressed with
-> > > >  > - create dynptr
-> > > >  > - dynptr_slice
-> > > >  > - copy_from_kernel
-> > > >
-> > > > By copy_from_kernel I assume you mean bpf_probe_read_kernel. The pr=
-oblem
-> > > > with dynptr_slice_rdwr and probe_read_kernel is that they only supp=
-ort a
-> > > > compile-time constant size [1].
-> > > >
-> > > > But in order to best utilize the space on a BPF ringbuf, it is poss=
-ible
-> > > > to reserve a
-> > > > variable length of space as dynptr on a ringbuf with
-> > > > bpf_ringbuf_reserve_dynptr.
+> > Add new trace events namely psci_domain_idle_enter and
+> > psci_domain_idle_exit to trace enter and exit events with a determined
+> > idle state.
 > >
-> > For our uprobes, we've run into similar issues around doing variable-si=
-zed
-> > bpf_probe_read_user() into ring buffers for our debugger [1]. Our use c=
-ase
-> > is that we generate uprobes that recursively read data structures until=
- we
-> > fill up a buffer. The verifier's insistence on knowing statically that =
-a read
-> > fits into the buffer makes for awkward code, and makes it hard to pack =
-the
-> > buffer fully; we have to split our reads into a couple of static size c=
-lasses.
+> > These new trace events will help developers debug CPUidle issues on ARM
+> > systems using PSCI by providing more detailed information about the
+> > requested idle states.
 > >
-> > Any chance there'd be interest in taking the opportunity to support
-> > dynamically-sized reads from userspace too? :)
->
-> That's bpf_probe_read_user_dynptr() from patch #2, no?
->
-> But generally speaking, here's a list of new APIs that we'd need to
-> cover all existing fixed buffer versions:
->
-> - non-sleepable probe reads:
->
->   bpf_probe_read_kernel_dynptr()
->   bpf_probe_read_user_dynptr()
->   bpf_probe_read_kernel_str_dynptr()
->   bpf_probe_read_user_str_dynptr()
->
-> - sleepable probe reads (copy_from_user):
->
-> bpf_copy_from_user_dynptr()
-> bpf_copy_from_user_str_dynptr()
->
-> - and then we have complementary task-based APIs for non-current process:
->
-> bpf_probe_read_user_task_dynptr()
-> bpf_probe_read_user_str_task_dynptr()
-> bpf_copy_from_user_task_dynptr()
-> bpf_copy_from_user_str_task_dynptr()
->
-> Jordan is working on non-dynptr version of
-> bpf_copy_from_user_str_task(), once he's done with that, we'll add
-> dynptr version, probably.
+> > Signed-off-by: Keita Morisaki <keyz@google.com>
+> > ---
+> > v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+> > 		and rephrase the commit message accordingly. Rebased onto the latest.
+> Which makes it different to cpu_idle event FWIW.
 
-This is quite a bunch of kfuncs.
-It doesn't look like adding _dynptr suffix and duplicating
-kfuncs approach scales.
+Yes, psci_domain_idle_(enter|exit) are not meant to replace cpu_idle nor a
+variant of it. It's new and different events that provide finer=grained info.
 
-Let's make the existing helpers/kfuncs more flexible ?
+> >  drivers/cpuidle/cpuidle-psci.c |  3 +++
+> >  include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 40 insertions(+)
+> >
+> > diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> > index 2562dc001fc1..dd8d776d6e39 100644
+> > --- a/drivers/cpuidle/cpuidle-psci.c
+> > +++ b/drivers/cpuidle/cpuidle-psci.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/syscore_ops.h>
+> >
+> >  #include <asm/cpuidle.h>
+> > +#include <trace/events/power.h>
+> >
+> >  #include "cpuidle-psci.h"
+> >  #include "dt_idle_states.h"
+> > @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+> >  	if (!state)
+> >  		state = states[idx];
+> >
+> > +	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+> >  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+> > +	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+> Not tracking ret seems odd, is that fine?
 
-We can introduce a kfunc bpf_dynptr_buf() that checks that
-dynptr is not readonly and type =3D=3D local or ringbuf and
-return dynptr->data as PTR_TO_MEM | dynptr_flag | VERIFIER_ADDS_SIZE_CHECK.
+I think it's fine not to track ret here.
+__psci_enter_domain_idle_state does not seems to care the return value of
+psci_cpu_suspend_enter to me because it just proceeds with executing subsequent
+functions regardless of ret, and returns ret to the higher function. If the
+value should be traced, it should probably be done in a lower layer or a higher
+layer.
 
-Then allow bpf_probe_read_user/kernel/... all of them to accept
-this register type where PTR_TO_MEM is required
-while relaxing ARG_CONST_SIZE 2nd argument to ARG_ANYTHING.
-Then the verifier will insert an extra check
-if (arg1->size < arg2)
-before the call.
-
-Not only the bpf_probe_read_kernel/user, _str variants will work
-but things like bpf_strtol, bpf_strncmp, bpf_snprintf, bpf_get_stack
-will auto-magically work as well.
-
-I think those are quite valuable to make available with non-constant size.
-bpf_get_stack_*() directly into the ring buffer sounds very useful.
+Another small small reason I'm not interested in adding ret to the
+trace_psci_domain_idle_exit's arguments is that
+trace_psci_domain_idle_(enter|exit) currently share the same trace event
+(i.e. same set of arguments) and it makes the trace events simple.
