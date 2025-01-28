@@ -1,113 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE7A19DFA5
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 28 Jan 2025 11:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE501A072A;
+	Tue, 28 Jan 2025 11:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738063196; cv=none; b=YnmTwE2x2F6hE0DhTe5qkOaOAfjsdG1+cpwCpfIOIJksv0hhTbVdS3FYLe0XBHaaOjKcaoh4I4ZYqQLDnaOSi1dVeSHUqK0YQuZhpgq9j0FFyduM6XUwWZ3MdtTZ2oll8Htr2wfnF+BRxc/Ph72Hm+EmbfBZduV98HPpfYfGdYA=
+	t=1738063363; cv=none; b=WIed3RYgYQwzRJ8kptd6WG0A7azbhd6tlAJ8xEBUaWX2ov0kUBy04gQIi6BbWu8tMFYNKl75YN8czkWDvn+WWRj8QIwQhjvvqbNMsrA3L5EA19mI/kH3RDJIhN/o6fCHiQgk2PAGt6/tbb88ey/PRCR2gcvdGF3miENGXU3HHl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738063196; c=relaxed/simple;
-	bh=JniHcGAvnt8DXzw5ROzdFmRwdCcds2G6y2PelLRKYcg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rzclt6L7F030mgx/uk8CEQMssmbGhBNDoTuzjJ8H4/nL2nlYYNniaYLoYDThSV97NHg9VRStgqzZ/Jzc4d1haRo5na0lRCIgIrhP7YlotmTgoo5VSCtpegivy3R4T5XthImxOUiTm3frSoJMBrDuxyyq2dFFPj8yseJhTwN/+Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tj+uT/7O; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738063363; c=relaxed/simple;
+	bh=AJfDJn9pFkPItjs+l9CjDlC33TdlTCE01Kr4mfJIOJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+cCyGb2/fsQowQreYNLg9qSUrLirXR7MS1CsgJTWL5oNhbhe1swUVk/CwSswe8PDryMSusPUfNKlrWUa3532e8R+YEEmmA4oN6QzpCINKU580mS3vkG99WHUT1yexgg3lDas9CYY6cW1AeZPm219ztniPyeJErJcq9Nc2Lg5xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foTouGKI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tj+uT/7O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738063193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DgODQwACdIA74cHoET43eABvQJ3HScrz4Yv4f+hZQ7U=;
-	b=Tj+uT/7OQc1OGp9gFtyrAcs01q6qBhH84zUwvCU2ZUp63nsfsaF7mqmrRQEVLPHTahFsnT
-	5gAwmuY5izToI4mmf4x6Pwd/VKnMX1/Ac2ECSyAf/XahPifcBsFGUke2DGkvP41uHIG5bJ
-	VS7Dqdbztptd2xEZVUZYQ4jklfQyd2o=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-67-GTxJklr4MS2oJmWaLNseeA-1; Tue,
- 28 Jan 2025 06:19:49 -0500
-X-MC-Unique: GTxJklr4MS2oJmWaLNseeA-1
-X-Mimecast-MFC-AGG-ID: GTxJklr4MS2oJmWaLNseeA
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 131251801F1B;
-	Tue, 28 Jan 2025 11:19:48 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.39.193.107])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 95E221800358;
-	Tue, 28 Jan 2025 11:19:44 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH] tracing: Fix DECLARE_TRACE_CONDITION
-Date: Tue, 28 Jan 2025 12:19:26 +0100
-Message-ID: <20250128111926.303093-1-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foTouGKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98109C4CEDF;
+	Tue, 28 Jan 2025 11:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738063362;
+	bh=AJfDJn9pFkPItjs+l9CjDlC33TdlTCE01Kr4mfJIOJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=foTouGKI5Xpt6DiifiySGU1Px4B0JlxynZkL/A+4GJ+F1wUAFkM/N4G83a9sI8N06
+	 lsMHA2F0I+BGkV1h4oylhwmSeJznMzbN+UJy9qwbYRK5QlpfqNfv8Msq/ndA/iDm4I
+	 JYp3P2GR22dNEIcBnZOOATJGYPU+gMIFK9XfLLma3B24+UKToDLZL/ZLBF6bwp16qy
+	 HMKr9svtYad8MrCuOMMF5t2I0WLB8bGS9HGYMu9w94+SD6sanYCztaTmP2cubx4D+F
+	 lhSPEntAtoYhJR/j92VqRwE5MifEf7tNzvj9NQnTwv0sbHofELHMou005/QzH1lonP
+	 yczCENnq4hKEA==
+Date: Tue, 28 Jan 2025 12:22:37 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Jani Nikula <jani.nikula@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Kees Cook <kees@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org, 
+	openipmi-developer@lists.sourceforge.net, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org, 
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org, linux-fsdevel@vger.kernel.org, 
+	netfs@lists.linux.dev, codalist@coda.cs.cmu.edu, linux-mm@kvack.org, 
+	linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+	linux-xfs@vger.kernel.org, io-uring@vger.kernel.org, bpf@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	keyrings@vger.kernel.org, Song Liu <song@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Corey Minyard <cminyard@mvista.com>
+Subject: Re: Re: Re: Re: [PATCH v2] treewide: const qualify ctl_tables where
+ applicable
+Message-ID: <u2fwibsnbfvulxj6adigla6geiafh2vuve4hcyo4vmeytwjl7p@oz6xonrq5225>
+References: <20250110-jag-ctl_table_const-v2-1-0000e1663144@kernel.org>
+ <Z4+jwDBrZNRgu85S@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <nslqrapp4v3rknjgtfk4cg64ha7rewrrg24aslo2e5jmxfwce5@t4chrpuk632k>
+ <CAMj1kXEZPe8zk7s67SADK9wVH3cfBup-sAZSC6_pJyng9QT7aw@mail.gmail.com>
+ <f4lfo2fb7ajogucsvisfd5sg2avykavmkizr6ycsllcrco4mo3@qt2zx4zp57zh>
+ <87jzag9ugx.fsf@intel.com>
+ <Z5epb86xkHQ3BLhp@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z5epb86xkHQ3BLhp@casper.infradead.org>
 
-Commit 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()") adds
-macros to define conditional trace events (TRACE_EVENT_CONDITIONAL) and
-tracepoints (DECLARE_TRACE_CONDITION), but sets up functionality for
-direct use only for the former.
-Any attempt to use DECLARE_TRACE_CONDITION fails the build.
+On Mon, Jan 27, 2025 at 03:42:39PM +0000, Matthew Wilcox wrote:
+> On Mon, Jan 27, 2025 at 04:55:58PM +0200, Jani Nikula wrote:
+> > You could have static const within functions too. You get the rodata
+> > protection and function local scope, best of both worlds?
+> 
+> timer_active is on the stack, so it can't be static const.
+> 
+> Does this really need to be cc'd to such a wide distribution list?
+That is a very good question. I removed 160 people from the original
+e-mail and left the ones that where previously involved with this patch
+and left all the lists for good measure. But it seems I can reduce it
+even more.
 
-Add preprocessor bits in define_trace.h to allow usage of
-DECLARE_TRACE_CONDITION just like DECLARE_TRACE.
+How about this: For these treewide efforts I just leave the people that
+are/were involved in the series and add two lists: linux-kernel and
+linux-hardening.
 
-Fixes: 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()")
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- include/trace/define_trace.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+Unless someone screams, I'll try this out on my next treewide.
 
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index e1c1079f8c8d..ed52d0506c69 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -76,6 +76,10 @@
- #define DECLARE_TRACE(name, proto, args)	\
- 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
-+#undef DECLARE_TRACE_CONDITION
-+#define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+
- /* If requested, create helpers for calling these tracepoints from Rust. */
- #ifdef CREATE_RUST_TRACE_POINTS
- #undef DEFINE_RUST_DO_TRACE
-@@ -108,6 +112,8 @@
- /* Make all open coded DECLARE_TRACE nops */
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)
-+#undef DECLARE_TRACE_CONDITION
-+#define DECLARE_TRACE_CONDITION(name, proto, args, cond)
- 
- #ifdef TRACEPOINTS_ENABLED
- #include <trace/trace_events.h>
-@@ -129,6 +135,7 @@
- #undef DEFINE_EVENT_CONDITION
- #undef TRACE_HEADER_MULTI_READ
- #undef DECLARE_TRACE
-+#undef DECLARE_TRACE_CONDITION
- 
- /* Only undef what we defined in this file */
- #ifdef UNDEF_TRACE_INCLUDE_FILE
+Thx for the feedback
 
-base-commit: 9c5968db9e625019a0ee5226c7eebef5519d366a
+Best
+
 -- 
-2.48.1
 
+Joel Granados
