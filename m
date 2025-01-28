@@ -1,52 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CC51A8F61;
-	Tue, 28 Jan 2025 15:29:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0141B2EF2;
+	Tue, 28 Jan 2025 15:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738078195; cv=none; b=j/YtMATzRkwRwyRRQeWWnRsgNn8YQEsnPO5As3ivh3bCe551JSJefyfDo6ihFBMisdIK0w1BaP/SeRbtiMCbGmru3rXR6VxWp7Ej6MG1mhcCpd2J+4taeK6a0d6SZ586xgzBQxQk6nVF9Vf8VNQms+vg+tx94KqvtAGaHX/nz18=
+	t=1738078621; cv=none; b=tP+ISrIZDdnpAJCDwq6oUOPlLOtuS/zAIJnufjnTrUYuQCoqPu3tCrK4Lq2KO78vkCjITcbI5NURAIkPpwFP2sZccHE3iNOJE446dVrKcRS91k42zKnKb3sXpdzrJ3fIsYxFXU5i8Xz+t3f0gxCvp3TzDtLuryO9z0EwKyGVwsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738078195; c=relaxed/simple;
-	bh=0c2LE7rOoVqLrtfbqVXdQvbhQkkgLhZuKApxToWAa1g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IAnCvRV3Ea2bol7HB4UhmCqHuvjvZuwePyarXL9GzGL7tiryJ+s0jNH5zpEo0n+PTFWt0TsAg5uLG1hm/ZTwTLRfc4EY2WIYyVLL3QH0fZOescJneOqnEgcqR8wTomCOcGim4xp+1QCZX3JL/kEWU7vzdlQZEl809dZvNou8icY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wscfs6p1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738078621; c=relaxed/simple;
+	bh=ejvGvxDF5yAPWXPwpBg5i1B8k96w29wdbygQAFpGMRA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SNdE7IkRzrDVaVzvQV2pPvNeQOZnkAKdsst0a1Cp755oqe3DBANuKs88OlscfonOjd9NhOBYYYwXC61ySkc6NccxgMj90M4lFOyXwghy2da6gp4Og7M7u8GDMbw62iCNY7JaXxRHSTfRMRc+/Wz3/Tn72ARCDOTVsaAUGG6nn24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Obvy5MS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wscfs6p1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627C0C4CED3;
-	Tue, 28 Jan 2025 15:29:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Obvy5MS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DD4C4CED3;
+	Tue, 28 Jan 2025 15:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738078194;
-	bh=0c2LE7rOoVqLrtfbqVXdQvbhQkkgLhZuKApxToWAa1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Wscfs6p1WhOpKKpZKZr+MJ+8jx7Acvu4RDw4jCVYS0srs+X5s9we617IxhFMyr1qu
-	 6eTOEH7yqGvtxGzYVA40D0aMIgyTgBIbWSyiQgzTtsi7cvQMnTmVz5enE8rat3yYpp
-	 IOvJOzZk/yGg5zF3m7UqEEdJWLu9ZqMlNuSxJei3o3htTm/YCbt22m87IoeCLf/OVJ
-	 4CyjUn0wHRZ7iPsmAER9zaQ/Ibti2SJB2F0xK2t2+ZzYmZ7sTizWFRvGLhSGnQVAOS
-	 Pym7Pn4f4sKv4tDsHW4etW9HWPKf9ODYbdy3AyJmx+o444c1160ABg9pLL11q6sIiN
-	 yLzC6xg63fCmQ==
+	s=k20201202; t=1738078621;
+	bh=ejvGvxDF5yAPWXPwpBg5i1B8k96w29wdbygQAFpGMRA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Obvy5MS3Jr+eKW+kLvZgBd8rWEybuKawOlrgb4Ul6D2OvAUq8gQ5NpFXdBSYCDfzm
+	 dH9VIOdUG3YSSYPTuW9sKHOsT0+LfRmBG6dFkSAXVfygowI1Wh9Ti5AewJiUs5HWXs
+	 /dOS9nIGmtvxnQkhdzzzVGwPxhKMM7n4oRgR34379mJA5F1IBHozLLQw/xgXBvnJcY
+	 ZzjY3ZfDhadvR2N2ToYPP2vVFVXbSbBGEhmc8t6V5/1ElhAnn4IGPFRwsXFx1BKpcw
+	 5plHKgj5a+PmNWU/rLJqHAYN3vKrOgfnWX1rxevKugTc/IU0qUTyIOHf5JxHqjkJ1M
+	 nqnura8sm757A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	bpf <bpf@vger.kernel.org>
-Subject: [PATCH 2/2] s390: tracing: Define ftrace_get_symaddr() for s390
-Date: Wed, 29 Jan 2025 00:29:48 +0900
-Message-ID: <173807818869.1854334.15474589105952793986.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173807816551.1854334.146350914633413330.stgit@devnote2>
-References: <173807816551.1854334.146350914633413330.stgit@devnote2>
+	linux-modules@vger.kernel.org
+Subject: [RFC PATCH 0/3] tracing: Introduce relative stacktrace
+Date: Wed, 29 Jan 2025 00:36:56 +0900
+Message-ID:  <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,26 +50,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi,
 
-Add ftrace_get_symaddr() for s390, which returns the symbol address
-from ftrace's 'ip' parameter.
+This introduces relative stacktrace, which records stacktrace entry as
+the offset from _stext instead of raw address. User can enable this
+format by setting options/relative-stacktrace.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Basically, this does not change anything for users who are using ftrace
+with 'trace' text-formatted interface. This changes how each stacktrace
+entry address is stored, so users who is using 'trace_pipe_raw' needs
+to change how to decode the stacktrace.
+
+Currently, the stacktrace is stored as raw kernel address. Thus, for
+decoding the binary trace data, we need to refer the kallsyms. But this
+is not useful on the platform which prohibits to access /proc/kallsyms
+for security reason. Since KASLR will change the kernel text address,
+we can not decode symbols without kallsyms in userspace.
+
+On the other hand, if we record the stacktrace entries in the offset
+from _stext, we can use System.map file to decode it. This is also good
+for the stacktrace in the persistent ring buffer, because we don't need
+to save the kallsyms before crash anymore.
+
+The problem is to decode the address in the modules because it will be
+loaded in the different place. To solve this issue, I also introduced
+'module_text_offsets' event, which records module's text and init_text
+info as the offset from _stext when loading it. User can store this
+event in the (another) persistent ring buffer for decoding.
+
+Thank you,
+
 ---
- arch/s390/include/asm/ftrace.h |    1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/include/asm/ftrace.h b/arch/s390/include/asm/ftrace.h
-index a3b73a4f626e..185331e91f83 100644
---- a/arch/s390/include/asm/ftrace.h
-+++ b/arch/s390/include/asm/ftrace.h
-@@ -51,6 +51,7 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
- {
- 	return addr;
- }
-+#define ftrace_get_symaddr(fentry_ip) ((unsigned long)(fentry_ip))
- 
- #include <linux/ftrace_regs.h>
- 
+Masami Hiramatsu (Google) (3):
+      tracing: Record stacktrace as the offset from _stext
+      tracing: Introduce "rel_stack" option
+      modules: tracing: Add module_text_offsets event
 
+
+ include/trace/events/module.h |   40 ++++++++++++++++++++++++++++++++++++++++
+ kernel/module/main.c          |    1 +
+ kernel/trace/trace.c          |   11 ++++++++++-
+ kernel/trace/trace.h          |    2 ++
+ kernel/trace/trace_entries.h  |   22 ++++++++++++++++++++++
+ kernel/trace/trace_output.c   |   35 +++++++++++++++++++++++++++++++----
+ 6 files changed, 106 insertions(+), 5 deletions(-)
+
+--
+Signature
