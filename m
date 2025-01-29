@@ -1,60 +1,100 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886BC155C8C
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jan 2025 00:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E4D3398B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jan 2025 00:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738110496; cv=none; b=uKjQX8+HlOMYJgoGA6DaRqegXN5lI9ZiNg8azNql45k9qX3JdyB/4PsbuTQxcd+dHpKRmcUHP75OfQtk1dH3YfyoFTEA3ZNs1TJzZxFagfPPgWfJtjrAcybq8sAD5N0LDnILAn/qcCS5BsBxw1t6mTqieqWIskgwMMeo+eeP5pw=
+	t=1738111011; cv=none; b=qtobLNgRWiPJrNkZj0QnHakJNNRSHzZ/ZCElgu2kus4lgQsLg6BHEdor0UCm+FK4u4CVZ3Or39dEQpIzBv2WikE3gi7wejfRbBv2nm39evJ76Z0subEcPZqZLQ4EDw23hl6rr8KI8eeP+X87Z9v7G6o9WSVJ7a0JB67ejr51nz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738110496; c=relaxed/simple;
-	bh=Qm2+qJTpHPYb80YKBOC3tAU+DARm1p4YqSrcqX9vmp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VqzgwkKugkOi10eo7/07zKCJ9yhbNZORvEVpUP98eboYhb74u8CPG/isme4fANvTUPPbtO/niPP+u2x8HsKvb+MQ8OQmQ10txWTWfVOhlSwuSg6/XbP8PdN0af8DE2npihL+dt6HfltHe02q8MvqukvCDVJji701blfX7xuAWZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tMhCvKNP; arc=none smtp.client-ip=91.218.175.176
+	s=arc-20240116; t=1738111011; c=relaxed/simple;
+	bh=BvflY9ZJgLT8GK71Vf3t40ymigycEOgSdWxbDIEo/50=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=e3B+wYNxCg/Zj6ebFCWxkc3zOb1+/N/c74gQDKhhQeROO2WnO2EEVTOFlYcfiH2XmHqaij60uk9hFIsp3HySgTg89sQmRGjza9nANfikMbwkUTFV79VGX5fGmP6pCXIDsbIWLe17BrATVJzXCFMLvTqWqSGhkJXLW7HN8s0xSCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vo2MhWIu; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tMhCvKNP"
-Date: Tue, 28 Jan 2025 16:28:03 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738110489;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9/F2XOZC3O9/NYFAagIt/ZhG8X92VvaqSFdV5agA+GQ=;
-	b=tMhCvKNPAtP7s/rAQ1DLmokwbbt2xzs0VJ7r7mCqaPNLncF/80Sqv4VPhCE8aMn7/HGcGs
-	2oUzSb4r0Qy432/Yu9ze0uM6FOTIKulQEl6lWDteum1mIIqaoFc/GssdDB4xM+sbO9KCHT
-	Jjt+DY9mPk9R9NOsr11Jwej/RsXy/G4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
-	peterz@infradead.org, mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, rppt@kernel.org, liam.howlett@oracle.com, surenb@google.com, 
-	kees@kernel.org, jannh@google.com
-Subject: Re: [PATCH] docs,procfs: document /proc/PID/* access permission
- checks
-Message-ID: <obqnuxousf64hdkaatumcxsqcrinr5scuufepazhzfz6waapnm@nze4eag2wljd>
-References: <20250129001747.759990-1-andrii@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vo2MhWIu"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129001747.759990-1-andrii@kernel.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738111002;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BvflY9ZJgLT8GK71Vf3t40ymigycEOgSdWxbDIEo/50=;
+	b=vo2MhWIucuDx9N3eK1xznV69rHhfzzkionjso/3kiteA5auCtc9Kjrn0FyX7EeK/voMmVj
+	FqNEMNUyzIziwwm95VZ2L39fvp5mbdCpsDw6AJm8ox8g1kZXaIrms27DLax4PLw9YXZH8m
+	memF63g0wyrwDAabSacanUbEkoeIOe4=
+Date: Wed, 29 Jan 2025 00:36:40 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Ihor Solodrai" <ihor.solodrai@linux.dev>
+Message-ID: <36780a0c327fe6fe0fee1c05ba04368e46d30a37@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH 1/2] s390: fgraph: Fix to remove
+ ftrace_test_recursion_trylock()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, "Steven Rostedt"
+ <rostedt@goodmis.org>, "Heiko Carstens" <hca@linux.ibm.com>, "Sven
+ Schnelle" <svens@linux.ibm.com>
+Cc: "Jiri Olsa" <olsajiri@gmail.com>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, "Vasily
+ Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev"
+ <agordeev@linux.ibm.com>, "Christian Borntraeger"
+ <borntraeger@linux.ibm.com>, "Andrii Nakryiko"
+ <andrii.nakryiko@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org, "bpf"
+ <bpf@vger.kernel.org>
+In-Reply-To: <173807817692.1854334.2985776940754607459.stgit@devnote2>
+References: <173807816551.1854334.146350914633413330.stgit@devnote2>
+ <173807817692.1854334.2985776940754607459.stgit@devnote2>
 X-Migadu-Flow: FLOW_OUT
 
-On Tue, Jan 28, 2025 at 04:17:47PM -0800, Andrii Nakryiko wrote:
-> Add a paragraph explaining what sort of capabilities a process would
-> need to read procfs data for some other process. Also mention that
-> reading data for its own process doesn't require any extra permissions.
-> 
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+January 28, 2025 at 7:29 AM, "Masami Hiramatsu (Google)" <mhiramat@kernel=
+.org> wrote:
 
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+
+
+>=20
+>=20From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+>=20Fix to remove ftrace_test_recursion_trylock() from ftrace_graph_func(=
+)
+>=20
+>=20because commit d576aec24df9 ("fgraph: Get ftrace recursion lock in
+>=20
+>=20function_graph_enter") has been moved it to function_graph_enter_regs=
+()
+>=20
+>=20already.
+>=20
+>=20Reported-by: Jiri Olsa <olsajiri@gmail.com>
+>=20
+>=20Closes: https://lore.kernel.org/all/Z5O0shrdgeExZ2kF@krava/
+>=20
+>=20Fixes: d576aec24df9 ("fgraph: Get ftrace recursion lock in function_g=
+raph_enter")
+>=20
+>=20Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+>=20Tested-by: Jiri Olsa <jolsa@kernel.org>
+>=20
+>=20[...]
+
+Hi Masami,
+
+Can confirm this patch fixes missed/kprobe_recursion BPF selftests on s39=
+0x:
+https://github.com/kernel-patches/vmtest/actions/runs/13021621468/job/363=
+24248903
+
+Tested-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+
+Thanks!
