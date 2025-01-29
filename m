@@ -1,117 +1,102 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D347179BC;
-	Wed, 29 Jan 2025 09:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7133C38;
+	Wed, 29 Jan 2025 14:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738141961; cv=none; b=fpKb6k5zmHZWBXnW1Z/T4K7aevcjmuB1k7mQPIIJbSg82uNa3sJXxsJBLj22srjr5dr+C9ZwLpEUVf+wEf1UbwN5ICmXHuLpmemgQVf6//zOxncsvEcABBa/HSijLZfFGy34YbF9bBwMnHI4MqkgjkJbK4LHapuvf0qVZrhJjhw=
+	t=1738159276; cv=none; b=hOJSQPqJVZDEHdja/X1gpvWQRc+aBRR/AluYOYK8ojP19oliyxNGQ+l9MXGpIAmS3F/5GaaOtnrzvvv3TojGBpxlE7NPzt3z/HrtDH8tL3Gb1IFbx8GEOUOLw2R+57lnsnCd3wmQxqXXivEFXYPIzJwBHn3xtAfsGZ4U1XZxFj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738141961; c=relaxed/simple;
-	bh=PQYsm+GzkK6kUD5oeoS+NLlKkT28tPbOSCeqmXwi47o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWXUfogQo62JFrD4tKueYKf1yE0Pa/6fAZkrgkYjMO+zVwtg6ba7nTkWYweSJ/2LvOFERc4yH/iPvPMdfKadlvWAynqP8OVYHzjZPdDMZ9QqV4cpSj4pSoZdLEuLIPmCM4JCLzu7WFno9NcDGbOCkSptMWJ9HRd7rC9BDwIiu2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KX/KC8fy; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738159276; c=relaxed/simple;
+	bh=+KUq95fMf9+eAoRT1nh3V70duZZeTCzt7KuZ9AxvMlw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FlxB0hjcL9EFfoVwS+LDj+r8wIkGECXIlNfCrIYEDPcK0qyBX+G6Fkxd84aGHnVLxAQcCEbUC69YMm4XHXZrayTGETxRjtQrGH2fpRzzXa5S9o3masp5p3mi/VlHcNnpmNxGTQa4Inwz0dB8w5RjmevkOXIUCiYFaZaPKAdRYQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmO4gVQW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KX/KC8fy"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50T3w7kj006778;
-	Wed, 29 Jan 2025 09:12:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=zoAY/evaQQL3pulfAyTs86eIy9YRZV
-	37zJpdWCnIZcA=; b=KX/KC8fyfssf7Z9QjzqD7Mj3hODRMOHeiF2+K/I0wGvIdv
-	PVG8atpHlCkIpBhenneoNjIDLJCcHFSa3KNDO1b66KEYavqwupMfAoV9jC4EZGgz
-	2WnTsFCW45n8EjuSKJMB2lbiap8lq5+i2h92ZbaA1Bw0TAjUqG1pVzkkQow3DXKK
-	y+r49qU0z3pPl+lx2iLFNNj1+2RfnHSJkNDKhH1R/RSOoc8tOuHvyDFq/qvYspTz
-	NMtd+wECnlYxOCPyg3NsQJazEsuMVlyhjNvQVgz5NDy+YCIjDRXafZ+DCB7t89Yh
-	DtZ2U34kzvF6HsyN8v0EwXLhwyZNCv8xmr8QCS8Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44f1gym8d5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 09:12:33 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50T8s2Mr019876;
-	Wed, 29 Jan 2025 09:12:33 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44f1gym8cv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 09:12:33 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50T912Jb019368;
-	Wed, 29 Jan 2025 09:12:31 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44db9myubj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jan 2025 09:12:31 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50T9CSVx59834766
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jan 2025 09:12:28 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08E6920112;
-	Wed, 29 Jan 2025 09:12:28 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7841020111;
-	Wed, 29 Jan 2025 09:12:27 +0000 (GMT)
-Received: from osiris (unknown [9.171.25.198])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 29 Jan 2025 09:12:27 +0000 (GMT)
-Date: Wed, 29 Jan 2025 10:12:26 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Sven Schnelle <svens@linux.ibm.com>,
-        Jiri Olsa <olsajiri@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH 0/2] tracing: s390: Fix fprobes on s390
-Message-ID: <20250129091226.10055-A-hca@linux.ibm.com>
-References: <173807816551.1854334.146350914633413330.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmO4gVQW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96A24C4CED1;
+	Wed, 29 Jan 2025 14:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738159275;
+	bh=+KUq95fMf9+eAoRT1nh3V70duZZeTCzt7KuZ9AxvMlw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tmO4gVQW3hddOdrhrtmZQmxJNLfjQD3N2g+KAwzbA40aiB/Ka1NW+cdoa9YonEpVm
+	 PWg3xofFczJCFMtgoZyJfHVDK+IcyMTSxFMj6dXGevUMgmhJGLsRfHIddyYAAa6hyy
+	 ru4biPMP1+X8wrZQ3adMP+IkiQs6iSwaOBdvbJhdEtoWS++pAKfNmuJuWVWBhmqx24
+	 YTMyHRRNFaKKSyrdHJXc0mwPLRKd1fRb0nckQEG0EgVJLSz+ZGLgJswLufUi8quYO0
+	 1QfItdY3BrxcTNJBI4fCe8COqK9bd0UCk8/Yvlor0P3XVw+xw9EFdocPHacGANVpxJ
+	 Y7wRpgdlNIqfA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sasha Levin <sashal@kernel.org>,
+	bristot@kernel.org,
+	costa.shul@redhat.com,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.13 3/4] rtla/timerlat_hist: Abort event processing on second signal
+Date: Wed, 29 Jan 2025 07:57:22 -0500
+Message-Id: <20250129125724.1272534-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250129125724.1272534-1-sashal@kernel.org>
+References: <20250129125724.1272534-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173807816551.1854334.146350914633413330.stgit@devnote2>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: FI5wFzmVOCck0xrl8n9QVw5Gw7f16kl9
-X-Proofpoint-ORIG-GUID: phj-a_VUXJwFsShuwVJ0ZCxA1UFUMqW3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-28_04,2025-01-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- suspectscore=0 phishscore=0 mlxlogscore=425 impostorscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501290072
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.13
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 29, 2025 at 12:29:25AM +0900, Masami Hiramatsu (Google) wrote:
-> Hi,
-> 
-> Here are fprobe and kprobe-multi fix patches for s390 which maybe broken
-> when we introduced fprobes on fgraph series.
-> 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (Google) (2):
->       s390: fgraph: Fix to remove ftrace_test_recursion_trylock()
->       s390: tracing: Define ftrace_get_symaddr() for s390
-> 
-> 
->  arch/s390/include/asm/ftrace.h |    1 +
->  arch/s390/kernel/ftrace.c      |    5 -----
->  2 files changed, 1 insertion(+), 5 deletions(-)
+From: Tomas Glozar <tglozar@redhat.com>
 
-For both patches:
-Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
+[ Upstream commit d6899e560366e10141189697502bc5521940c588 ]
+
+If either SIGINT is received twice, or after a SIGALRM (that is, after
+timerlat was supposed to stop), abort processing events currently left
+in the tracefs buffer and exit immediately.
+
+This allows the user to exit rtla without waiting for processing all
+events, should that take longer than wanted, at the cost of not
+processing all samples.
+
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Luis Goncalves <lgoncalv@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Link: https://lore.kernel.org/20250116144931.649593-5-tglozar@redhat.com
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/tracing/rtla/src/timerlat_hist.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 4403cc4eba302..b784f32a1f4f0 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -1148,6 +1148,14 @@ static struct osnoise_tool
+ static int stop_tracing;
+ static void stop_hist(int sig)
+ {
++	if (stop_tracing) {
++		/*
++		 * Stop requested twice in a row; abort event processing and
++		 * exit immediately
++		 */
++		tracefs_iterate_stop(hist_inst->inst);
++		return;
++	}
+ 	stop_tracing = 1;
+ }
+ 
+-- 
+2.39.5
+
