@@ -1,104 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADAC2D627;
-	Wed, 29 Jan 2025 08:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118691A2399
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jan 2025 08:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738140570; cv=none; b=mZCT53NUDl6Emi3T67QhpesQbbRiJq79bdyeEDtvrwt6kKnT3IG1pNPJLefYA64uqxfH/xAKAYtyrFhfeeP/9elt3NedAVKVV+YyUPopQJSPXEhjvvWFGKh/LdHuqvb968lnNgzWYltOZbpTMrnEX63+NlGhtu00Bgcto81dUfs=
+	t=1738140668; cv=none; b=VgQGSfVnRc+QDaUwMYOoiSk4YpEvN2eOaDbpO7/XEKhvm0ykB+hVErrZLfkRKhmmzEe132HElCP2f6eGKD4bmYnxX9zhuIAIJQ/lTxT3Tw9ddRViWI2gKxQFdye8JJfFavgxGdi/0RkVGr73+X9MlP7iGnH2zXmuyKmTeUfhp8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738140570; c=relaxed/simple;
-	bh=bfE5SYCj6V6UGdS5nxgXa4coj/GqRR42VAWC/OQdfdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZcwCWAp1ITK5u1L0X4z+v2fP4PR1alv3I3GF6EayINDrTxQe1q3BMwFiPeWh94blGqns5ZmqCbcLxkDXJTpcUQUmbM7hOu5OuKMcjwH33IWA+Rgagr9DIT/MmRwrlAwCPHVTCwwnV8XFsFulNnabhcEZCuKTDrx9zvWL1mu5Cl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EgqXPD2n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cLGLy8J6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738140668; c=relaxed/simple;
+	bh=EbK8CG3zwHwysZnvAo3A2+mZ2myHIVEiysKYTIFeDEM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eQ3ace572WkU7+KPLHCH+iKqeCXAf+KBVCOTgMUg2vZq8lIB/obJi9R3mR9YPIkXNxDnoEcNJ99rWOjDzYSUyZKDe1rVm4hALsfbI/tUDJOnBTQ50eTYjwHD4BRG7qt0Jv1HyU0Fc9ysw2ho1ELF5iywpw9Hug3+mL0W4EP2ZBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4b42LYYs; arc=none smtp.client-ip=209.85.160.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EgqXPD2n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cLGLy8J6"
-Date: Wed, 29 Jan 2025 09:49:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738140566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HWDa3Gqo/kGFpJg8UdwNt1BI9/6SVntZxXt0O+HMAv4=;
-	b=EgqXPD2nlNjvI/AwTQCjsLiBYLztgsdcgSzPzlyEmYToc0fH4cysRY/N6Zgzaoh8hLjl1d
-	4TRntrvXAHJhPs1IgJBQbvVLinsAvXnmiKdyOzIO06i0vsKUsWdBvgAdGCJHM0g6jQKkqp
-	1FhGQP3ov+sXMaQ5A2zkTLGPGzUw4IzC80wkbYfUBWD9FJJlZrn0f1mNI8BfuBn2/y8+md
-	CbOT0HDwv6vlTc/Ewgc6+/FcZYT5ujU+7/NxM564fxKj6cz6cxOovDM3JkBMs0SN8RO/Jw
-	TALQrG2MFgZKA6S0geeoBAa5HUbO3dyCJ5Ohb7qRPa59sq9ilb67X5JN2eCqQA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738140566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HWDa3Gqo/kGFpJg8UdwNt1BI9/6SVntZxXt0O+HMAv4=;
-	b=cLGLy8J6Hm6ttpUNS8VC9RAa+xOQCxBYxl1zofnw/S1LlaGyoobe9dL6YC5QCdLKkMys7F
-	zIFNxR/O+inU+GCg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3.5 25/28] kprobes: Use RCU in all users of
- __module_text_address().
-Message-ID: <20250129084925.9ppBjGLC@linutronix.de>
-References: <20250108090457.512198-1-bigeasy@linutronix.de>
- <20250108090457.512198-27-bigeasy@linutronix.de>
- <20250128144452.fb5f9741e58f059c7cdf4ce9@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4b42LYYs"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2a3c59f8c1cso4419283fac.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jan 2025 00:51:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738140666; x=1738745466; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbK8CG3zwHwysZnvAo3A2+mZ2myHIVEiysKYTIFeDEM=;
+        b=4b42LYYsEVMfzv+2DTojEFqbIeRiRxQCi6GRmIkehbtUqlvh7In/5BH1wCXnvdPARz
+         sXmZG3cpAUXEUjeBLMZE03u1gJKmJ/3ZJi1l7vK4xky8aYxTc0WT4vAWdRbM6lmO8Q2i
+         INP1lSebLwIKm1v/W1rxhRJEGD05TZPota5cW4kB8LVgriKEbKxjtL0czYnBxEG7YPl3
+         0CwPKKWXgbq4BtWorh4HQKkQxgOmdDND3Mb6wf9RJT+lndG3j+QPaiF9SQN/6wgQW0n3
+         vh7I+g7Ky+J8DMJGGSar2PNe64ivT8ap7boymI1hXpuDBBQsSnOSaOQ8PNFeDsDuO31s
+         XHyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738140666; x=1738745466;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EbK8CG3zwHwysZnvAo3A2+mZ2myHIVEiysKYTIFeDEM=;
+        b=Fu2x2aDPjTmH55LgtnGvhDqLrgNVgP15EWYL2t3lcUDHVJD8McnNmbn7N+7AqcZLo3
+         TNyCwCaOArWo48Z30ZwJlb/EpuCT6D11AV1VjO63Pw/szMDoELfKz3dba522Edq4EZP6
+         wYe9wFJaEiW7wMn98PsdcEkvVKxYU7IBt/MkmqpYshnk2drrQIDqWFwpTvr4W+Se+/yV
+         wMwFR1ZDKxHGikRbWbkZ1bPEBjSRf517XKLipO8E5dAbfU7pNf+Lcv0eb2S3Mo0VBr4f
+         tCj3SDGQECQ2QPiBkZqHcl5N7Z5TG4fBx1mtAxuX7KnxW13bFhgDgYX/7zVSU4/sU9pS
+         eE0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWXXSvrDnTF7vJo+IkdTudPyh4xgAyDBP+FF6nU6FP9lXK95niaU5lnNjfBsw7iFcY1TavUcucKMsyy7K+t/O0jFyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzjanrBeBk79+4aMz2Pi3y9mUbkxWpo4r42vFo2WaN4CnJVxQ2
+	3aGHpF9DzJqr3GHDiYJ31K8QJfflsc3cBtW+ECpr2N2sI0oGBTkTW1o1GNjylkQJh/n6Qg==
+X-Google-Smtp-Source: AGHT+IFYeVGRIDbBJSoDxW1qLEQa6txtsI65vSSYVM7r1a1CEXTC692rDv36eVRGCThjx3Uetdze5Vm2
+X-Received: from oabpp13.prod.google.com ([2002:a05:6870:9d0d:b0:297:19ee:9d16])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:5cc:b0:2a7:d345:c0bb
+ with SMTP id 586e51a60fabf-2b32f261922mr1412517fac.27.1738140666051; Wed, 29
+ Jan 2025 00:51:06 -0800 (PST)
+Date: Wed, 29 Jan 2025 16:51:02 +0800
+In-Reply-To: <f697970e-3796-41cb-9904-d61cbedec428@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250128144452.fb5f9741e58f059c7cdf4ce9@kernel.org>
+Mime-Version: 1.0
+References: <f697970e-3796-41cb-9904-d61cbedec428@arm.com>
+X-Mailer: git-send-email 2.48.1.262.g85cc9f2d1e-goog
+Message-ID: <20250129085102.1055165-1-keyz@google.com>
+Subject: Re: [PATCH v2] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: christian.loehle@arm.com
+Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
+	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-__module_text_address() can be invoked within a RCU section, there is no
-requirement to have preemption disabled.
+> > Yes, psci_domain_idle_(enter|exit) are not meant to replace cpu_idle nor a
+> > variant of it. It's new and different events that provide finer=grained info.
 
-Replace the preempt_disable() section around __module_text_address()
-with RCU.
+> I mentioned it because it means it doesn't benefit from cpu_idle tooling
+> directly, which is slightly odd, but fine with me.
 
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Naveen N Rao <naveen@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-Update due to the collision during the merge window.
-
- kernel/kprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 0305692106709..9c8afbb957b0f 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1547,7 +1547,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure the address is in a text area, and find a module if exists. */
- 	*probed_mod = NULL;
- 	if (!core_kernel_text((unsigned long) p->addr)) {
--		guard(preempt)();
-+		guard(rcu)();
- 		*probed_mod = __module_text_address((unsigned long) p->addr);
- 		if (!(*probed_mod))
- 			return -EINVAL;
--- 
-2.47.2
-
+I might not fully understand your comments.
+Do you mean that even mentioning cpu_idle in the commit message does not feel
+right to you, or utilizing cpu_idle by exposing the determined state instead of
+adding new trace events is the right direction?
