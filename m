@@ -1,81 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA06B823DE;
-	Wed, 29 Jan 2025 06:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A741185B5F;
+	Wed, 29 Jan 2025 07:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738132899; cv=none; b=jPrQtDyISC1PmpgTfN9SeOXmqBrmqUE+ywRrwqGhrekLydCWEhkqpQqswPLkryg1ds5Lj9UFHUv0DoVOggGGJbxKcBTlBT249vLIZHbq1WGd6itwElPOrVkPEwNE2FdDSizwQ0O+C+B1BqFSAwYAzh22Lj8YB+lP8HP4J0xU+WM=
+	t=1738135542; cv=none; b=XfXRbFyo3Oo04u4aIuAZRDzxGg5ASqOiLN1Us/dEsRWujXJqfhPUzRQOj07188352Fj0AO0H9x9A5X0hOC6FzpJYsEd9WfCX5pfGiS9vvXXch/jfyQKDvJC0kA9qJKLum8uPVR554Bm4uB2k6CrCf/H94NuJFp49lTzIIhqQTwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738132899; c=relaxed/simple;
-	bh=a21p3Y7rbH5sS0c5hLooFIW20sWziJ6izyhpAiaJ4HI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=setW1JW7FbocMw3v+WQAf1sLr/1247VrzXF/R32xPtxZN6XWz7eBGSS0EWCR1dU8GBbrEGGhONdsDk2uC5vQ+PPzPYn4JOPFakMzdY7bwjrN37BeAa6Y/l7dA0t8YfM0lg9QTolyAJhubZEfMmHVeLdw8I6HlI+Us0ihyPvgfCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JpGJMOoP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cesFMelz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738135542; c=relaxed/simple;
+	bh=2eLVDv10AaRjLtbGwWY5zW7FiMveeySdQdsGv4PjuJc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hG7YO+HYJ7PYwIFAYATNklSt2i1JD2cwcL361w3CflGccel1pgGttJS5xi6tCsDSPbpmzjJdYxBKhAKmXv3kXa1xJYWQ/CRd/zZRTQ/9hvZ+wLT6Pihzr7NJfHA+dqcIx5ES/xD3iV+PZKRSN3RLxhnFygq6b1RQ3om4ukQWOBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9iODo4N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JpGJMOoP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cesFMelz"
-Date: Wed, 29 Jan 2025 13:41:25 +0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738132895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b/pENwl8A+ELmwLeIjlxf5JAW0qYpszY6xWMiWfCCLo=;
-	b=JpGJMOoPwqv0mB+F480JAFr0TqGCi9D32JYYnV/ekkUj0Ysj9Pb3ANrsS6B9W8kOImHf6i
-	fv34iBfx06LB8PwAXZE5AC/F23YzJmLiEAO+qB8lZp9sAYlseTCAxFcsHuZ0K61QQD3/5K
-	oTWrXWvvil//5x/PD0KzW95Ctj77oUG9gXlrLVDMauSmdHW6z1FEFwE29ICPlG/cGe1wp7
-	CtZTiNNr3W2bBqAn9O/nwluo+0dU5UQsRYhxxNQMJTYJbb+W1WfQHqTXR4WTu7fM41aafz
-	M3YDb6NwxYm/Ee798iOt3iprJffrLaRdI6U/k98rKssMGV3P/5MZ9prOnhZjGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738132895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b/pENwl8A+ELmwLeIjlxf5JAW0qYpszY6xWMiWfCCLo=;
-	b=cesFMelzUZl3pllCTpDYX7NHuACPQJ1FUQT/rhkWapRPUVsMcNHWAS9ztmu8OqYULUcYK3
-	zhlUtgWtryCX81DA==
-From: Nam Cao <namcao@linutronix.de>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, naveen@kernel.org,
-	anil.s.keshavamurthy@intel.com, davem@davemloft.net,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: kprobe on local function
-Message-ID: <20250129063916.07WPgeQD@linutronix.de>
-References: <20250122075939.qw7HsuMd@linutronix.de>
- <20250122172936.09bc8c9a@gandalf.local.home>
- <20250123104842.92336327f898e546c5b67536@kernel.org>
- <20250123024224.d0h8d4HV@linutronix.de>
- <20250125011655.449075f32f50de6fa7ff20b8@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9iODo4N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C94CC4CED3;
+	Wed, 29 Jan 2025 07:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738135541;
+	bh=2eLVDv10AaRjLtbGwWY5zW7FiMveeySdQdsGv4PjuJc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=T9iODo4NcpP5Zh/9Sp/1LeaFzCD1t9pmw6FXJMxqNayQim9HOzztJRHxpNzzfit2z
+	 gSvGwAKpz3I70QqMTPWA+4qLYIBb5M+D/T5xmVDkGQQInNfdHevjxuWPOrWfBAVPCz
+	 SuRJv0qjccl/9IhmfpaH0kIL18arQ+BuWbG+DLe9t/Q5BjU4+ChXH3c1K7OMT+REbm
+	 ZUpVRZF3jzBEp40ao7U8u6QzA7omIJRRSOS8SOsDToiqXfvj0s5/kLLMB7KqLHyoaZ
+	 ZTL7XDYgagkk5SiQXTieaMUYZ6Hn6V21hXtpmPn1my+e+tXCefUbhGDQqdF7yU2K55
+	 1VDxlBq+xXnJw==
+Date: Wed, 29 Jan 2025 16:25:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] tracing: Introduce relative stacktrace
+Message-Id: <20250129162538.953578b387bd4067afdd15a0@kernel.org>
+In-Reply-To: <20250128200939.0cbce825@batman.local.home>
+References: <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
+	<a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
+	<20250128112733.37d7c771@gandalf.local.home>
+	<c3842632-cb15-469f-a6e8-8e9ccb3fff56@efficios.com>
+	<20250129095819.fe6846ddab613460647db919@kernel.org>
+	<20250128200939.0cbce825@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250125011655.449075f32f50de6fa7ff20b8@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 25, 2025 at 01:16:55AM +0900, Masami Hiramatsu wrote:
-> Now what you could know is that the kernel does not call the
-> "rt_mutex_slowunlock" symbol and it may call another copied symbol. That's
-> a good to know right?
+On Tue, 28 Jan 2025 20:09:38 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Wed, 29 Jan 2025 09:58:19 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> Note that this in-kernel kretprobe API is a low-layer API, so that user is
-> responsible for controlling it carefully. This kretprobe API itself does NOT
-> know which copy of the optimized symbols are used.
-> (there could be inlined instance too)
+> > Hmm, that also works if we only consider the kallsyms access. But that
+> > means to export KASLR information in the trace buffer. We need to check
+> > it is OK.
 > 
-> If you need to know how many copies are generated or inlined, you need to
-> use the debuginfo as "perf probe" tool does, which can not handled by the
-> kernel itself because it is too big to be loaded. That is why I made the
-> "perf probe" as an external tool.
+> If they say we can't have KASLR information in the ring buffer then
+> that is pretty much a brick wall, and we are done with this. The best
+> we can do is to prevent reading the current trace buffer. But honestly,
+> we want that too. Heck, already get kernel stack traces from perfetto
+> right? That has KASLR information doesn't it?
 
-Got it, thanks so much for the information!
+I read the perfetto callstack feature, but it seems to support user
+space callstack.
 
-Best regards,
-Nam
+https://perfetto.dev/docs/quickstart/callstack-sampling
+
+> 
+> > 
+> > My another concern is how to handle this stacktrace on live system. The
+> > stacktrace has to be handled in both crash and live trace, but in both case
+> > we need to consider not leaking KASLR offset.
+> 
+> I don't think we do.
+
+I meant that my [PATCH 3/3] can do it intermediately (not directly).
+So I think your idea (storing relative offset from module) is better.
+
+> 
+> > 
+> > Hmm, for avoiding the security concern, as Steve said, we may need to save
+> > the module relative address, which may introduce a bit more overhead, but
+> > it should be safer.
+> 
+> Actually, if we save the addresses of where the modules are in the
+> persistent ring buffer, and expose the addresses only if they are from
+> the previous boot (if it's the current boot, it just says "current"),
+> then we can decipher the modules from the previous boot.
+
+OK, but when would we save it? it is OK to do it in panic()?
+
+> 
+> > 
+> > Anyway, this v1 may be able to leak the KASLR offset (or estimate it easier).
+> > I think we have 2 options; (A) as Mathieu pointed, expose the offset
+> > information via trace buffer. (B) as Steve pointed, fully relative offset
+> > in stacktrace.
+> 
+> It should be fine to read the full offsets. Again, perf already does this.
+
+Indeed. Hmm, I need to know how perf solve this limitation.
+
+Thank you,
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
