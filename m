@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A2C156231;
-	Wed, 29 Jan 2025 00:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B978F58;
+	Wed, 29 Jan 2025 00:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738109974; cv=none; b=WzS++idcBAF4XJ8PbCPouRdhThJv6OgQmBO/JnMnxsoadpp2KMYxGg6mROY8nUcyU+wYjX30C4XMESTFc1Q/acer80g2qAIF7ZdR6PPXHE5v32Vzfb3Rt54/CZuJStDM/OvR6AGlkrZpINb+f2EHMipDilHN/jVjXEbt3MKDNrw=
+	t=1738110202; cv=none; b=YsXb+vsShsAH+I/UC6rcAAb3HHNzdXGIm0cT/cWxNHMsJUlxyXoQfEvirXbeamBTkP8JRhWQDQWQHcieUZlgwA3YyA8lcPqfAi0W32bz5KfAbxuQsyK7Qz7KLbLZLduYu8977yAl0d75Qi6nNvsJqMW0F3GKk1g3ncIDDx0UO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738109974; c=relaxed/simple;
-	bh=UP7OliruV+loNSCbX+kLpVRGvq5ONRXwMg/FtexDS2k=;
+	s=arc-20240116; t=1738110202; c=relaxed/simple;
+	bh=HIbZ0RYEC992ijKc3xp7imXE24WUwuSk05qiAPWLCks=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oM5I4e3nribO7hrTIqGCtUfpu2LD+toL49hFLbY+Vwm3Q0VNIGpp+ovzuuBV8ipBqZvO9kWGs1m2Eoydh3mmgRh+pfJsN051Zv40GUkTNDNsIibFbi08XIVqmVh9Db6EDsZkIeIyGB+VvZ5rCt42HR2s3p0enVW22N0zVW/duFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mh1Bsgfl; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=tOYr59inMQEoN/cg7pgyAlHm5hZdht/2ittzNaWp5s5d6ma22Yp8MdEY0vlXUO0sIBY7Q6aOfswwNX6wv/Zd7V8aJ94GIWbRCWh9+hSZVQhAXJ6g2jceXYtQ8G/8yPXWo15VeCYnFXWS3iUX1fxhTsV9uH+x5b6aTNbJDt5auHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRpE0URS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mh1Bsgfl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A43C4CED3;
-	Wed, 29 Jan 2025 00:19:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRpE0URS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99323C4CED3;
+	Wed, 29 Jan 2025 00:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738109973;
-	bh=UP7OliruV+loNSCbX+kLpVRGvq5ONRXwMg/FtexDS2k=;
+	s=k20201202; t=1738110202;
+	bh=HIbZ0RYEC992ijKc3xp7imXE24WUwuSk05qiAPWLCks=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Mh1BsgflJqVHBc/gJlND4gi/uVly9wogeXyB+Nazx0p5JPJZXEkXYEYQgJ0qBOgoC
-	 FXF4eS5vMD1Frh7eU62Mid34Hd/0QsyDnYXigTXz1yUyrpp+u8h5eNP/1/FknYoPEm
-	 ABspYPN7mlXysB3h7COrsH2SLy2ZMmWrP9MoyRILnhm6CrhETCM3UtdaS6lRMAQSOM
-	 h5dApxCCcr6jmiw3Yunp229XgktEwPD/rzZVJTOVrz4ektbARuEOmt07wRzgcsGn7v
-	 VkOHwXfC1GwlRz05q3YWyj9v/YcJWX7fR75Kv5BLzuA0aupDG562Ci7dAISKcmuWdT
-	 6ssPSiMC3TCew==
-Date: Wed, 29 Jan 2025 09:19:28 +0900
+	b=TRpE0URSR9IC2Tiwbd5wy8t2hrJepOOTIGS0oRrIuKtZ4UGS5bR+Vg13mpKQr0EuC
+	 kW7slKG1lSiaNd6X2L4oSCMkXN7fx/XuHzxB7dz86Um5Quj3vke64cyV+V207i50WA
+	 XrUwCGqS+utT+EmpyMVf97NuRm/1s1C175W0UTASpTZzO3AsaiAAzZJA4q/vtxiCPx
+	 EcKynG8VK7arpq9RrHp9UUCM25XIv/+wyW9dKC6XgvXIn2tv3+4cL19NZgRVc8Rvs0
+	 F0uBqBkg02chOKTMLPHTzLttHdXyqnrc8R1Srr4TYdsqlSM9Cd5IhYVVxKh/d1HpIL
+	 Yzyp5mWxo7wJQ==
+Date: Wed, 29 Jan 2025 09:23:17 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain
@@ -35,7 +35,7 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-modules@vger.kernel.org
 Subject: Re: [RFC PATCH 0/3] tracing: Introduce relative stacktrace
-Message-Id: <20250129091928.d51fb8563f0291a075c0e200@kernel.org>
+Message-Id: <20250129092317.c0c58eb62fa7b74133eb4d51@kernel.org>
 In-Reply-To: <a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
 References: <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
 	<a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
@@ -86,12 +86,12 @@ Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > where we can iterate on all modules at trace start and dump the relevant
 > information.
 
-Thanks for the comment!
-For the persistent ring buffer, I think we can enable this event in early
-boot stage which allows us to store it. (But this overwrites the previous
-data, hmm, we need A-B buffer...)
+BTW, if we only covers the crash by watchdog or oops, we can dump the
+all loaded module info at the panic code.
 
 Thank you,
+
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
