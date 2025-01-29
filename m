@@ -1,97 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B978F58;
-	Wed, 29 Jan 2025 00:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D7715666D
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Jan 2025 00:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738110202; cv=none; b=YsXb+vsShsAH+I/UC6rcAAb3HHNzdXGIm0cT/cWxNHMsJUlxyXoQfEvirXbeamBTkP8JRhWQDQWQHcieUZlgwA3YyA8lcPqfAi0W32bz5KfAbxuQsyK7Qz7KLbLZLduYu8977yAl0d75Qi6nNvsJqMW0F3GKk1g3ncIDDx0UO28=
+	t=1738110328; cv=none; b=XQFQP4ybG5cWSUmJvhUAPeNaO6gcoE5nZ1CRyLWWWIbNEd8EJ+Z3e0B9d9UzPkh3iIW8Ulhw8VkVqkyeYJZOHvY9KUg+viSfoovcL14FOJmdOZHEA8Wv/JKYoRNgbUFwvygDX/6myAcFctda5d2iJehNlSb8c7204h92lHwJ5d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738110202; c=relaxed/simple;
-	bh=HIbZ0RYEC992ijKc3xp7imXE24WUwuSk05qiAPWLCks=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=tOYr59inMQEoN/cg7pgyAlHm5hZdht/2ittzNaWp5s5d6ma22Yp8MdEY0vlXUO0sIBY7Q6aOfswwNX6wv/Zd7V8aJ94GIWbRCWh9+hSZVQhAXJ6g2jceXYtQ8G/8yPXWo15VeCYnFXWS3iUX1fxhTsV9uH+x5b6aTNbJDt5auHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRpE0URS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738110328; c=relaxed/simple;
+	bh=2F/mqirbYF+fsE1NRh3Xsmdmr+sV4kXa+yk1EwVlPeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ORevreIMuBqNsRiwFZvDYmOyCalXfWI7MXt0JWDLmVdCb5NShNbwQRR8rUJra1MRWW5C4GIhb/fLBxbAJvRV+O3Ih8TKgW5QC+Cupk5dTRH37gzyxG0MwKgvz7iTCCVKnztJtOYFwFNOgcTb8chPvUfgXYSFRw3ff5joUQCe/9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mOLNm13u; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRpE0URS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99323C4CED3;
-	Wed, 29 Jan 2025 00:23:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738110202;
-	bh=HIbZ0RYEC992ijKc3xp7imXE24WUwuSk05qiAPWLCks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TRpE0URSR9IC2Tiwbd5wy8t2hrJepOOTIGS0oRrIuKtZ4UGS5bR+Vg13mpKQr0EuC
-	 kW7slKG1lSiaNd6X2L4oSCMkXN7fx/XuHzxB7dz86Um5Quj3vke64cyV+V207i50WA
-	 XrUwCGqS+utT+EmpyMVf97NuRm/1s1C175W0UTASpTZzO3AsaiAAzZJA4q/vtxiCPx
-	 EcKynG8VK7arpq9RrHp9UUCM25XIv/+wyW9dKC6XgvXIn2tv3+4cL19NZgRVc8Rvs0
-	 F0uBqBkg02chOKTMLPHTzLttHdXyqnrc8R1Srr4TYdsqlSM9Cd5IhYVVxKh/d1HpIL
-	 Yzyp5mWxo7wJQ==
-Date: Wed, 29 Jan 2025 09:23:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-modules@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] tracing: Introduce relative stacktrace
-Message-Id: <20250129092317.c0c58eb62fa7b74133eb4d51@kernel.org>
-In-Reply-To: <a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
-References: <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
-	<a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mOLNm13u"
+Date: Tue, 28 Jan 2025 16:25:13 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738110319;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MT13IexUZhkAAXhwE/N0PrSufPCrXu/MeHtXnJGqnn8=;
+	b=mOLNm13uTp1vCBsoCiMl443USr46+89cRqKasoOx3qvZ6rPiOKrAfMdyUmGK6Odgyd1abE
+	lEB1SUSXM8Guk9nu61FSeDbyqg+xDwSH/5kq/N+3XJZmfSh2jB0esZ9W/y+xDxrbE6ubqu
+	wBucS28Dl8oGS9oDRufiiSfn4F0AzPY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, 
+	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@meta.com, rostedt@goodmis.org, 
+	peterz@infradead.org, mingo@kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, rppt@kernel.org, liam.howlett@oracle.com, surenb@google.com, 
+	kees@kernel.org, jannh@google.com
+Subject: Re: [PATCH v2] mm,procfs: allow read-only remote mm access under
+ CAP_PERFMON
+Message-ID: <i4i6vowepjshonekrr4flw7u2p42kyhe32t4zkkucmlcg7sjk5@y6pobovsxtol>
+References: <20250127222114.1132392-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250127222114.1132392-1-andrii@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 28 Jan 2025 10:46:21 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-
-> On 2025-01-28 10:36, Masami Hiramatsu (Google) wrote:
-> > Hi,
-> > 
-> > This introduces relative stacktrace, which records stacktrace entry as
-> > the offset from _stext instead of raw address. User can enable this
-> > format by setting options/relative-stacktrace.
-> > 
-> > Basically, this does not change anything for users who are using ftrace
-> > with 'trace' text-formatted interface. This changes how each stacktrace
-> > entry address is stored, so users who is using 'trace_pipe_raw' needs
-> > to change how to decode the stacktrace.
-> > 
-> > Currently, the stacktrace is stored as raw kernel address. Thus, for
-> > decoding the binary trace data, we need to refer the kallsyms. But this
-> > is not useful on the platform which prohibits to access /proc/kallsyms
-> > for security reason. Since KASLR will change the kernel text address,
-> > we can not decode symbols without kallsyms in userspace.
-> > 
-> > On the other hand, if we record the stacktrace entries in the offset
-> > from _stext, we can use System.map file to decode it. This is also good
-> > for the stacktrace in the persistent ring buffer, because we don't need
-> > to save the kallsyms before crash anymore.
-> > 
-> > The problem is to decode the address in the modules because it will be
-> > loaded in the different place. To solve this issue, I also introduced
-> > 'module_text_offsets' event, which records module's text and init_text
-> > info as the offset from _stext when loading it. User can store this
-> > event in the (another) persistent ring buffer for decoding.
+On Mon, Jan 27, 2025 at 02:21:14PM -0800, Andrii Nakryiko wrote:
+> It's very common for various tracing and profiling toolis to need to
+> access /proc/PID/maps contents for stack symbolization needs to learn
+> which shared libraries are mapped in memory, at which file offset, etc.
+> Currently, access to /proc/PID/maps requires CAP_SYS_PTRACE (unless we
+> are looking at data for our own process, which is a trivial case not too
+> relevant for profilers use cases).
 > 
-> This does not handle the situation where a module is already loaded
-> before tracing starts. In LTTng we have a statedump facility for this,
-> where we can iterate on all modules at trace start and dump the relevant
-> information.
+> Unfortunately, CAP_SYS_PTRACE implies way more than just ability to
+> discover memory layout of another process: it allows to fully control
+> arbitrary other processes. This is problematic from security POV for
+> applications that only need read-only /proc/PID/maps (and other similar
+> read-only data) access, and in large production settings CAP_SYS_PTRACE
+> is frowned upon even for the system-wide profilers.
+> 
+> On the other hand, it's already possible to access similar kind of
+> information (and more) with just CAP_PERFMON capability. E.g., setting
+> up PERF_RECORD_MMAP collection through perf_event_open() would give one
+> similar information to what /proc/PID/maps provides.
+> 
+> CAP_PERFMON, together with CAP_BPF, is already a very common combination
+> for system-wide profiling and observability application. As such, it's
+> reasonable and convenient to be able to access /proc/PID/maps with
+> CAP_PERFMON capabilities instead of CAP_SYS_PTRACE.
+> 
+> For procfs, these permissions are checked through common mm_access()
+> helper, and so we augment that with cap_perfmon() check *only* if
+> requested mode is PTRACE_MODE_READ. I.e., PTRACE_MODE_ATTACH wouldn't be
+> permitted by CAP_PERFMON. So /proc/PID/mem, which uses
+> PTRACE_MODE_ATTACH, won't be permitted by CAP_PERFMON, but
+> /proc/PID/maps, /proc/PID/environ, and a bunch of other read-only
+> contents will be allowable under CAP_PERFMON.
+> 
+> Besides procfs itself, mm_access() is used by process_madvise() and
+> process_vm_{readv,writev}() syscalls. The former one uses
+> PTRACE_MODE_READ to avoid leaking ASLR metadata, and as such CAP_PERFMON
+> seems like a meaningful allowable capability as well.
+> 
+> process_vm_{readv,writev} currently assume PTRACE_MODE_ATTACH level of
+> permissions (though for readv PTRACE_MODE_READ seems more reasonable,
+> but that's outside the scope of this change), and as such won't be
+> affected by this patch.
+> 
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-BTW, if we only covers the crash by watchdog or oops, we can dump the
-all loaded module info at the panic code.
-
-Thank you,
-
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
