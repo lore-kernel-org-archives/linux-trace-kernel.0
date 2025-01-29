@@ -1,114 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435F525A641;
-	Wed, 29 Jan 2025 01:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F111552F5;
+	Wed, 29 Jan 2025 01:09:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738112518; cv=none; b=K2tH98bCoyJBuOeKmL6sXOrm1bKJB5+YfT/SmUKRZeBIqauPFFezeGF+McTr5IAr0vANE4aGDyKU2ggHfchmYrJ1VXEX7jpaunWq0kRUdUihwY0x6Hs/6C9LlxvvdyqC6bR+a2EYB9GBiQ/ESgCSg49VYoYuP4S0PzPUaE66PD4=
+	t=1738112985; cv=none; b=SzA3P6kI6g/vWdkU0Zy6v3N87JNkPtw57Ai/duz8tA7FI19r0Gi99XSrDbbTLSOMP4/9DkqVXgPNM1ksdt3rZjMkESODUA8P0TL1BJW+dfryoyLnmueN+gnulb3qniD2Aoxexk7A0PTt4etDWHC1ZUvzRfLpiJQTwAyrJHsIVqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738112518; c=relaxed/simple;
-	bh=R2R8EfPMk5LuRwC0rVMqQRJnptE/LJTRjS2Csr4eypQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nK5u1EFX6lR6Vh5MMaFPllaUe77QMPUnZPe91pmONRYiscLxdRNKRz/iimnkJnGNUO5Uxm6Wxq3hx7ZBbMV8sROz1EyGgkhGbUDGySSZoML6rJcOt71EX8PLnOlt9uNB1D00r6Ka1xDXl68yEiY1NnNxMR8WHaskmspZipRvctw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QaClBFan; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QaClBFan"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70001C4CED3;
-	Wed, 29 Jan 2025 01:01:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738112517;
-	bh=R2R8EfPMk5LuRwC0rVMqQRJnptE/LJTRjS2Csr4eypQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QaClBFanTwD7InYKOyTqKeeLbiAMsLRPoCG7ZQP/deC0p0Be8Ll59KJZx9VV34/lG
-	 KAppbbErxRDEOgZsLg/h4y703UJsqNkqTamYj6Ma+dtuczjl0v+Qp8M7d4EDpQeUW7
-	 vAUcGxxqxu8mLx4v1sYymLDWKqKOiY19TQl2qlVM3eMLG/rqZMZR7mU1g5cq+0k7zY
-	 9YlBxEXbYR6/MbvNgbntv4wFnfuD69l3RjZS3p9EypTy/vOPamRRaoJxG85HOsFPtw
-	 rRnPLB726bb2UfL5n3ANXFO+xPKKh+3QwKYno/0utN3TSA/Q4Dnxhll0oQIyYfygZ+
-	 8h/bJUxWWILIA==
-Date: Wed, 29 Jan 2025 10:01:53 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix DECLARE_TRACE_CONDITION
-Message-Id: <20250129100153.26fae521f0fcbf444c70c375@kernel.org>
-In-Reply-To: <20250128111926.303093-1-gmonaco@redhat.com>
-References: <20250128111926.303093-1-gmonaco@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738112985; c=relaxed/simple;
+	bh=JhUe2p98/A8IXiVWQfisV5bUTHVMXolKp+VIbbzcuWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nkc9WblwJRy0WT6+fYFxFUl2E1FVAAB4Ev1WaMtoGFyzFwnes5XKaZ65Xyao8GoeJaUm67P2ME4y5aten4udLsaGzu9ypurrVFGV5KaPKq0/xJS3lETffwZMHhft8VmHI3eqjhPUdZ+1lGsKUebBUDilMYaAXjlg4Y1QedWy+1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A57DC4CED3;
+	Wed, 29 Jan 2025 01:09:40 +0000 (UTC)
+Date: Tue, 28 Jan 2025 20:09:38 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] tracing: Introduce relative stacktrace
+Message-ID: <20250128200939.0cbce825@batman.local.home>
+In-Reply-To: <20250129095819.fe6846ddab613460647db919@kernel.org>
+References: <173807861687.1525539.15082309716909038251.stgit@mhiramat.roam.corp.google.com>
+	<a7a171c4-7feb-4f26-a832-18d38a3ee973@efficios.com>
+	<20250128112733.37d7c771@gandalf.local.home>
+	<c3842632-cb15-469f-a6e8-8e9ccb3fff56@efficios.com>
+	<20250129095819.fe6846ddab613460647db919@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 28 Jan 2025 12:19:26 +0100
-Gabriele Monaco <gmonaco@redhat.com> wrote:
+On Wed, 29 Jan 2025 09:58:19 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Commit 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()") adds
-> macros to define conditional trace events (TRACE_EVENT_CONDITIONAL) and
-> tracepoints (DECLARE_TRACE_CONDITION), but sets up functionality for
-> direct use only for the former.
-> Any attempt to use DECLARE_TRACE_CONDITION fails the build.
+> Hmm, that also works if we only consider the kallsyms access. But that
+> means to export KASLR information in the trace buffer. We need to check
+> it is OK.
+
+If they say we can't have KASLR information in the ring buffer then
+that is pretty much a brick wall, and we are done with this. The best
+we can do is to prevent reading the current trace buffer. But honestly,
+we want that too. Heck, already get kernel stack traces from perfetto
+right? That has KASLR information doesn't it?
+
 > 
-> Add preprocessor bits in define_trace.h to allow usage of
-> DECLARE_TRACE_CONDITION just like DECLARE_TRACE.
+> My another concern is how to handle this stacktrace on live system. The
+> stacktrace has to be handled in both crash and live trace, but in both case
+> we need to consider not leaking KASLR offset.
+
+I don't think we do.
+
 > 
-> Fixes: 287050d39026 ("tracing: Add TRACE_EVENT_CONDITIONAL()")
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> Hmm, for avoiding the security concern, as Steve said, we may need to save
+> the module relative address, which may introduce a bit more overhead, but
+> it should be safer.
 
-Looks good to me.
+Actually, if we save the addresses of where the modules are in the
+persistent ring buffer, and expose the addresses only if they are from
+the previous boot (if it's the current boot, it just says "current"),
+then we can decipher the modules from the previous boot.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> ---
->  include/trace/define_trace.h | 7 +++++++
->  1 file changed, 7 insertions(+)
 > 
-> diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-> index e1c1079f8c8d..ed52d0506c69 100644
-> --- a/include/trace/define_trace.h
-> +++ b/include/trace/define_trace.h
-> @@ -76,6 +76,10 @@
->  #define DECLARE_TRACE(name, proto, args)	\
->  	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
->  
-> +#undef DECLARE_TRACE_CONDITION
-> +#define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-> +	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-> +
->  /* If requested, create helpers for calling these tracepoints from Rust. */
->  #ifdef CREATE_RUST_TRACE_POINTS
->  #undef DEFINE_RUST_DO_TRACE
-> @@ -108,6 +112,8 @@
->  /* Make all open coded DECLARE_TRACE nops */
->  #undef DECLARE_TRACE
->  #define DECLARE_TRACE(name, proto, args)
-> +#undef DECLARE_TRACE_CONDITION
-> +#define DECLARE_TRACE_CONDITION(name, proto, args, cond)
->  
->  #ifdef TRACEPOINTS_ENABLED
->  #include <trace/trace_events.h>
-> @@ -129,6 +135,7 @@
->  #undef DEFINE_EVENT_CONDITION
->  #undef TRACE_HEADER_MULTI_READ
->  #undef DECLARE_TRACE
-> +#undef DECLARE_TRACE_CONDITION
->  
->  /* Only undef what we defined in this file */
->  #ifdef UNDEF_TRACE_INCLUDE_FILE
-> 
-> base-commit: 9c5968db9e625019a0ee5226c7eebef5519d366a
-> -- 
-> 2.48.1
-> 
+> Anyway, this v1 may be able to leak the KASLR offset (or estimate it easier).
+> I think we have 2 options; (A) as Mathieu pointed, expose the offset
+> information via trace buffer. (B) as Steve pointed, fully relative offset
+> in stacktrace.
 
+It should be fine to read the full offsets. Again, perf already does this.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
