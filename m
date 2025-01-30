@@ -1,383 +1,260 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A4F4431;
-	Thu, 30 Jan 2025 00:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EE71A4AAA;
+	Thu, 30 Jan 2025 08:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738195371; cv=none; b=HCYhiGQEKBuYOIjHf5hDxPHVKdSpxNJgatZt0RtRV6v5vCwrl1BpMtEuF/qUCNsmAQaxCHM945n29XnvTY8N6ocVsBZiaNYYwn/bWO2nQu0fQt27wG6SChKvnUT1EKL44wYXCA+BAbWDldUjIn1lZ23uB1bdWgfrloypdcnFtiE=
+	t=1738225490; cv=none; b=o0lTrc97mqNuIiNwlZt18+3YyPDya51ZWIlbJiI8NhPdcGkGymk4G79N10T32xaCppnHdRz4cbqh/WyIJ3eBAjGcr0Glrildh58XLh3LHtK3qAM3wScUyg6NJGHFOzGxoCWYxyE5r2uLKysFfUO9Hnf/FlS1Q4078EMZ8XEYlKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738195371; c=relaxed/simple;
-	bh=HC/SwzpCqcnfyf/P7UY0s2iXQmWXapuqywmN/+aREBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s8SHgMaAQekmfAhdUJxnkR7Xke4s+Szu1FCuTC3UV0yqN0+UKAEfLnS6rPMKDyS8954Pqf9mwRoabBcFAr1cyYtKlAhYEr73PXGYu7CfMPEDiVcuxdv5qm02erwjGKLOWmD9BmYFZ/pteEs5lLkaCJDR8nbGGWd+DnSBS7MOAhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jejQ+leM; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1738225490; c=relaxed/simple;
+	bh=255G9I1UK68I/3/1qmvviKxyuvr0JH1O15UzRJLiIxM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GBRdmofgvWv+xJ3ePfzlrEwG8uHZmrd9olMCgvN7RXITK+TIJDxiP1B9wI+ZSiZfz8bkNZp/jEsbLLUihnNgVUM5vzr5+jg8rX5ClTrgmh9IFzQyqr/AI/Och4eJqLaTcK/s3QxlDNDPRdFErlr+FCez9fumA4ydVG3ZX16kDcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JMswf7tG; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jejQ+leM"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21c2f1b610dso4741465ad.0;
-        Wed, 29 Jan 2025 16:02:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMswf7tG"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so90269466b.1;
+        Thu, 30 Jan 2025 00:24:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738195369; x=1738800169; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2i9OmXdthxkoLC7sQudX4oyJT3DTxHdRqdZZLGEU7IE=;
-        b=jejQ+leMwlZNoXfWr9TQpKzRodxKTEweVXMzh7onB9qpAggQfXsD18TbEzEi/lC7yp
-         tJIkc+n2Z3VQ70AVYQvycmaHUf8tqy69bKOD2ADPM+2sbdFXf40VStk+2P9mUPN4x4hC
-         As2iWxnbxVkY8tU1lJ8IuZfG1bad/kLCI4SGWs14sg1cC6irNXw0ipmZm+ilxJzUMKdA
-         nmGh146T1VtlsdoRhoCxbCJx6nDfJjmkLkJJDYI3sBuBFygWX7h/j/vpf5lmY1R07wSz
-         Gs7Qw2wMPLFweymQKyua/s0ZzdewfKMLwyGGiiH898Oc8qi2x4j+k9Guty99UZ5B3VYd
-         gMrg==
+        d=gmail.com; s=20230601; t=1738225487; x=1738830287; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6t4ETj0ybS3UvEPG30Ddm5C8imd0kaINUlUzibpoMo0=;
+        b=JMswf7tGiGRXfERIXAqsnPmE80D2M+x+g/RVki5amlEAOCFz/cOVLFC1TLbjBlLLCx
+         jMTlMcbDxE2157A2OXTj+I9gquuoWHsCjHNuY65NYFAEKRrbhR+TVtwdxYcrmEXqadQd
+         N/3ZHt6rVdJLb9/wm2+avaPDP2+IqSPB26hJTuJg1dqro/WQ4wI7N0sq/LnSor/K+yMY
+         XRWXc3yH3nq4eZAnRc65lNCmCttwVj+bg/XCQp6DZwdD2LA0YrUgDVMnozxmSwtgHIm8
+         5YnT49ffHZbjoZ+udd4V0UzkVUkidNAg7SfgKQNXfLva3CtKCLF8ov95jbIFNbpTPWw1
+         8lDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738195369; x=1738800169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2i9OmXdthxkoLC7sQudX4oyJT3DTxHdRqdZZLGEU7IE=;
-        b=OYCkcakBbS5Rd/V+q11LOeS53z694hF8x2wfvx6kgj3sBLgVgZYn+wlROLiqo9NlNP
-         ieWIZuKNpPiiF12vj8K0gzyCjSSVu2F1Qy/h0ZM4fY7g+PBKFfdgSiRC7wQU8pZi0+Tz
-         XUf7uFh2JTm9p/bJ3j0xSYvtXNSRmIwP5Igb8L8LWr24ZNz1/j7yfH2FGil5I3Hk6ZKU
-         F4zztIX5uSB8nx9T1eewJeU3tx5WECZjkAx0ntWHRm90a5aRLjk5Cj8h+7diVdPBuJ9c
-         UX/TTFeteXlt5eHFR06xiBoqdkyT09x8PFtyxbREaYjYXR7O1zA89evXQk+EIys6+1AA
-         9QDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtNZD42MtepcPRyJ/wHI7Lnx8esOKwS10jlGtQsSiDGIVTy4+jEVStbTGvlOMg6Y05WDuxqjXeunGqmjTCcBc0AA==@vger.kernel.org, AJvYcCVL9xtnvs2v7UqSBEXlc/nDGfWJ/j4qw8zOoUmlXgiD9Xb+AZQhJEPCiPVoWP9XfIuUKtTf5k85vynLaQw=@vger.kernel.org, AJvYcCWjyLxykFyFFUsV8lgXCK/QKNUDHLARvhiJMqB/fz+3RsxfttY5VdeX4CQJL7xSZyRROmlYyizqDz4kTPsPNl2nYrat@vger.kernel.org, AJvYcCX2cGAqmpQ4NkTHqNLyaXmIKUTg+BQcyBJcMFwq9sBmdXRS4OKC8pmd7cXALUdq1ZIGise4wTt2h95rGMa1zNSkpg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4a2KFkQo1DxMVJrubyCsGAV4sRry/xb2lFHCft+yUSkryONHu
-	Y5VQCC0l8bvWJrYerOnI/HvIHf/Mz/0Qq0QDDzzGcvtlzhu114uK3S0bMhMpFtP8xPtS2xV/Xmg
-	TdGioKUU76Nl2ZQquffyoiS9mLZA=
-X-Gm-Gg: ASbGncvN34PIADBTEqgUqE+QXgOqeiq/UQ/JBS1McysItSUGhQJnukLeNlDd4flBQls
-	U3AUoNbhz98baaY/FYjzQl2qIPm0BxMQXLRUehIcv3056RFooygC95gFM/g+Dv/S6q/MEh+kBNV
-	RHKQT/mwwX1NC8
-X-Google-Smtp-Source: AGHT+IFsO18O0hUt7w46W93s+/FJHueaEOWJj3xZ/LFKvhLlSO94OifQCGMQ4fx0KvByo6BLQvtkRIOSPzKToYnfRpA=
-X-Received: by 2002:a05:6a20:a11d:b0:1e0:b5ae:8fc1 with SMTP id
- adf61e73a8af0-1ed7a5fafdemr8687035637.13.1738195368612; Wed, 29 Jan 2025
- 16:02:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738225487; x=1738830287;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6t4ETj0ybS3UvEPG30Ddm5C8imd0kaINUlUzibpoMo0=;
+        b=FHV94HLybQPUBKb/weXL2tzWBvV/PS9GAdzbDbTEFHxxDnDSqkWCVGmw30a7D7iM4K
+         Kt6MtJrJE7vzNF05uvKGovfViHAacOQbmhz1JMVUzcz+w38NSJunHTOkUuFa7nau8Bta
+         3BhysqS6s1JeNvvlnu5hMGK7wuKF8nyHgp4D80bPwg5IuhXIO/tYE4BjyatE4xHIXftp
+         MFjT8SgZwkXQIf3ogSaBV4JbPil2Ct6h7RBSNzxKAm/70eM9wq+MUiwbToeoiGTqc5AX
+         UQTqE2GWfq4UbhML/7CjrHMtZWSlQVfejxQqE0rFGK63Ed1Cj47Z92hBjU+TcFCg94bC
+         YFzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUalcFFSdsuDYVLqadiWSfFFi1YGOGUwkhzRCHEe3N0UPZ2ktkEmeLIbZ3YiopFaBo3bRm+PnTl@vger.kernel.org, AJvYcCVgZmvQPrxXajs2U3WjGrA5bS1XzkrU3tPFVgD4PJmaDREmeoG85VZynnZ6rqtnTcoZtta3VyAtB3xyKYzX73Jb7ufW@vger.kernel.org, AJvYcCW+CyBxBx92K42Elz8/YjFuewY5r1cGQPNYCxrsMegxVbeAeqsde3DVSPnr8rsMRPdqNq8=@vger.kernel.org, AJvYcCWT1Ps+Cqaa2FAnqMq9P6s4TcW+FJyuhF0VY7dNYHihkZmV7hC/APeYHdCcUTGsKmtynfBnzDwpYiIP@vger.kernel.org, AJvYcCXPmEc8EWSkTXBB1+wnLd283lNyTdsLbFoEfvuG1qfm1EzqqEsndDi5WZBhlNlWthsH3igb58AFa5VV92Pf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyfN3M5DMbW3b2i+SpLvB1bSIW1pvhad7GDJLwMUvfSOh73AWq
+	by6Wff/2C012GmoggmMmEYi1MG0a8oY13qwyro7uKABjOh/xqy65
+X-Gm-Gg: ASbGncuW98deAL3dIAi8JUqsGU5QDz33q4OVHHfQEwKOrVLi/ZhR9+b7HSEgljku/+Q
+	d7245+BcpGV8weg7x/JofMWqtKW9k0qx/J2dThoKpl7y35kCov1hnX7ZqqbB/QT71WiK8kLoWmo
+	cFaBnzuhs4Wydbw1vg9MZ/eSpa9tUEDpK7ULF+4dnRpna8VAfjEWPY08K3BxMu39lIKVMl3eAAu
+	ba8ef0S4nwOHDye6Q+xBXJF1z49gkcSJletrcyn9sjZ+fDaOlzP6d0k4m3+TDC4oxZvdHyK9OpO
+	oTK/t+5iu4Ik0OYTWdVL21YYQ8EbhG1F7Id1BQ==
+X-Google-Smtp-Source: AGHT+IGdyF4fkwQC57hMV2Uu0ctFzkif63J1nHpxdwUQxh1W2K4idx8e+roWw7h+Ljk0aoKtR3emaQ==
+X-Received: by 2002:a17:906:d54c:b0:ab6:edd6:a812 with SMTP id a640c23a62f3a-ab6edd6a8camr27402866b.24.1738225486657;
+        Thu, 30 Jan 2025 00:24:46 -0800 (PST)
+Received: from krava (static-84-42-143-70.bb.vodafone.cz. [84.42.143.70])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab6e47a7b0fsm80550366b.12.2025.01.30.00.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 00:24:46 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 30 Jan 2025 09:24:43 +0100
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org,
+	oleg@redhat.com, mhiramat@kernel.org, andrii@kernel.org,
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com,
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
+	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
+	bpf@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without
+ filtering
+Message-ID: <Z5s3S5X8FYJDAHfR@krava>
+References: <20250128145806.1849977-1-eyal.birger@gmail.com>
+ <202501281634.7F398CEA87@keescook>
+ <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737511963.git.jpoimboe@kernel.org> <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe> <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com> <20250129020249.owmklacvuvss7z7n@jpoimboe>
-In-Reply-To: <20250129020249.owmklacvuvss7z7n@jpoimboe>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 29 Jan 2025 16:02:34 -0800
-X-Gm-Features: AWEUYZmjLqNnkOquBUYMqH3OY6TP1DDhkht7xmQnu_4DYMNbFw0ndESRS5toW5o
-Message-ID: <CAEf4BzYvrAAJv0+2FceJfizRURUsWxUBzRL-VOquM+VtAe-goA@mail.gmail.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, 
-	Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, 
-	Jens Remus <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
 
-On Tue, Jan 28, 2025 at 6:02=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Mon, Jan 27, 2025 at 05:10:27PM -0800, Andrii Nakryiko wrote:
-> > > Yes, in theory, it is allowed (as per the specification) to have an
-> > > SFrame section with zero number of FDEs/FREs.  But since such a secti=
-on
-> > > will not be useful, I share the opinion that it makes sense to disall=
-ow
-> > > it in the current unwinding contexts, for now (JIT usecase may change
-> > > things later).
+On Wed, Jan 29, 2025 at 09:27:49AM -0800, Eyal Birger wrote:
+> Hi,
+> 
+> Thanks for the review!
+> 
+> On Tue, Jan 28, 2025 at 5:41 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Tue, Jan 28, 2025 at 06:58:06AM -0800, Eyal Birger wrote:
+> > > Note: uretprobe isn't supported in i386 and __NR_ia32_rt_tgsigqueueinfo
+> > > uses the same number as __NR_uretprobe so the syscall isn't forced in the
+> > > compat bitmap.
+> >
+> > So a 64-bit tracer cannot use uretprobe on a 32-bit process? Also is
+> > uretprobe strictly an x86_64 feature?
+> >
+> 
+> My understanding is that they'd be able to do so, but use the int3 trap
+> instead of the uretprobe syscall.
+> 
+> > > [...]
+> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > > index 385d48293a5f..23b594a68bc0 100644
+> > > --- a/kernel/seccomp.c
+> > > +++ b/kernel/seccomp.c
+> > > @@ -734,13 +734,13 @@ seccomp_prepare_user_filter(const char __user *user_filter)
 > > >
-> >
-> > I disagree, actually. If it's a legal thing, it shouldn't be randomly
-> > rejected. If we later make use of that, we'd have to worry not to
-> > accidentally cause problems on older kernels that arbitrarily rejected
-> > empty FDE just because it didn't make sense at some point (without
-> > causing any issues).
->
-> If such older kernels don't do anything with the section anyway, what's
-> the point of pretending they do?
->
-> Returning an error would actually make more sense as it communicates
-> that the kernel doesn't support whatever hypothetical thing you're
-> trying to do with 0 FDEs.
->
-> > > SFRAME_F_FRAME_POINTER flag is not being set currently by GAS/GNU ld =
-at all.
+> > >  #ifdef SECCOMP_ARCH_NATIVE
+> > >  /**
+> > > - * seccomp_is_const_allow - check if filter is constant allow with given data
+> > > + * seccomp_is_filter_const_allow - check if filter is constant allow with given data
+> > >   * @fprog: The BPF programs
+> > >   * @sd: The seccomp data to check against, only syscall number and arch
+> > >   *      number are considered constant.
+> > >   */
+> > > -static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
+> > > -                                struct seccomp_data *sd)
+> > > +static bool seccomp_is_filter_const_allow(struct sock_fprog_kern *fprog,
+> > > +                                       struct seccomp_data *sd)
+> > >  {
+> > >       unsigned int reg_value = 0;
+> > >       unsigned int pc;
+> > > @@ -812,6 +812,21 @@ static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
+> > >       return false;
+> > >  }
 > > >
-> > > >>> +               dbg("no fde/fre entries\n");
-> > > >>> +               return -EINVAL;
-> > > >>> +       }
-> > > >>> +
-> > > >>> +       header_end =3D sec->sframe_start + SFRAME_HEADER_SIZE(shd=
-r);
-> > > >>> +       if (header_end >=3D sec->sframe_end) {
-> > > >>
-> > > >> if we allow zero FDEs/FREs, header_end =3D=3D sec->sframe_end is l=
-egal, right?
-> > > >
-> > > > I suppose so, but again I'm not seeing any reason to support that.
+> > > +static bool seccomp_is_const_allow(struct sock_fprog_kern *fprog,
+> > > +                                struct seccomp_data *sd)
+> > > +{
+> > > +#ifdef __NR_uretprobe
+> > > +     if (sd->nr == __NR_uretprobe
+> > > +#ifdef SECCOMP_ARCH_COMPAT
+> > > +         && sd->arch != SECCOMP_ARCH_COMPAT
+> > > +#endif
 > >
-> > Let's invert this. Is there any reason why it shouldn't be supported? ;=
-)
->
-> It's simple, we don't add code to "support" some vague hypothetical.
->
-> For whatever definition of "support", since there's literally nothing
-> the kernel can do with that.
-
-If under the format specification it's legal, there is no reason for
-the kernel to proactively reject it, IMO. But ok, whatever.
-
->
-> > But what if we take a struct-of-arrays approach and represent it more l=
-ike:
+> > I don't like this because it's not future-proof enough. __NR_uretprobe
+> > may collide with other syscalls at some point.
+> 
+> I'm not sure I got this point.
+> 
+> > And if __NR_uretprobe_32
+> > is ever implemented, the seccomp logic will be missing. I think this
+> > will work now and in the future:
 > >
-> > struct FDE_and_FREs {
-> >     struct sframe_func_desc_entry fde_metadata;
-> >     u8|u16|u32 start_addrs[N]; /* can extend to u64 as well */
-> >     u8 sfre_infos[N];
-> >     u8 offsets8[M8];
-> >     u16 offsets16[M16] __aligned(2);
-> >     u32 offsets32[M32] __aligned(4);
-> >     /* we can naturally extend to support also u64 offsets */
-> > };
+> > #ifdef __NR_uretprobe
+> > # ifdef SECCOMP_ARCH_COMPAT
+> >         if (sd->arch == SECCOMP_ARCH_COMPAT) {
+> > #  ifdef __NR_uretprobe_32
+> >                 if (sd->nr == __NR_uretprobe_32)
+> >                         return true;
+> > #  endif
+> >         } else
+> > # endif
+> >         if (sd->nr == __NR_uretprobe)
+> >                 return true;
+> > #endif
+> 
+> I don't know if implementing uretprobe syscall for compat binaries is
+> planned or makes sense - I'd appreciate Jiri's and others opinion on that.
+> That said, I don't mind adding this code for the sake of future proofing.
+
+as Andrii wrote in the other email ATM it's just strictly x86_64,
+but let's future proof it
+
+AFAIK there was an attempt to do similar on arm but it did not show
+any speed up
+
+> 
 > >
-> > i.e., we split all FRE records into their three constituents: start
-> > addresses, info bytes, and then each FRE can fall into either 8-, 16-,
-> > or 32-bit offsets "bucket". We collect all the offsets, depending on
-> > their size, into these aligned offsets{8,16,32} arrays (with natural
-> > extension to 64 bits, if necessary), with at most wasting 1-3 bytes to
-> > ensure proper alignment everywhere.
->
-> Makes sense.  Though I also have another idea below.
->
-> > Note, at this point we need to decide if we want to make FREs binary
-> > searchable or not.
+> > Instead of doing a function rename dance, I think you can just stick
+> > the above into seccomp_is_const_allow() after the WARN().
+> 
+> My motivation for the renaming dance was that you mentioned we might add
+> new syscalls to this as well, so I wanted to avoid cluttering the existing
+> function which seems to be well defined.
+> 
 > >
-> > If not, we don't really need anything extra. As we process each
-> > start_addrs[i] and sfre_infos[i] to find matching FRE, we keep track
-> > of how many 8-, 16-, and 32-bit offsets already processed FREs
-> > consumed, and when we find the right one, we know exactly the starting
-> > index within offset{8,16,32}. Done.
+> > Also please add a KUnit tests to cover this in
+> > tools/testing/selftests/seccomp/seccomp_bpf.c
+> 
+> I think this would mean that this test suite would need to run as
+> privileged. Is that Ok? or maybe it'd be better to have a new suite?
+> 
+> > With at least these cases combinations below. Check each of:
 > >
-> > But if we were to make FREs binary searchable, we need to basically
-> > have an index of offset pointers to quickly find offsetsX[j] position
-> > corresponding to FRE #i. For that, we can have an extra array right
-> > next to start_addrs, "semantically parallel" to it:
+> >         - not using uretprobe passes
+> >         - using uretprobe passes (and validates that uretprobe did work)
 > >
-> > u8|u16|u32 start_addrs[N];
-> > u8|u16|u32 offset_idxs[N];
->
-> Binary search would definitely help.  I did a crude histogram for "FREs
-> per FDE" for a few binaries on my test system:
->
-> gdb (the biggest binary on my test system):
->
-> 10th Percentile: 1
-> 20th Percentile: 1
-> 30th Percentile: 1
-> 40th Percentile: 3
-> 50th Percentile: 5
-> 60th Percentile: 8
-> 70th Percentile: 11
-> 80th Percentile: 14
-> 90th Percentile: 16
-> 100th Percentile: 472
->
-> bash:
->
-> 10th Percentile: 1
-> 20th Percentile: 1
-> 30th Percentile: 3
-> 40th Percentile: 5
-> 50th Percentile: 7
-> 60th Percentile: 9
-> 70th Percentile: 12
-> 80th Percentile: 16
-> 90th Percentile: 17
-> 100th Percentile: 46
->
-> glibc:
->
-> 10th Percentile: 1
-> 20th Percentile: 1
-> 30th Percentile: 1
-> 40th Percentile: 1
-> 50th Percentile: 4
-> 60th Percentile: 6
-> 70th Percentile: 9
-> 80th Percentile: 14
-> 90th Percentile: 16
-> 100th Percentile: 44
->
-> libpython:
->
-> 10th Percentile: 1
-> 20th Percentile: 3
-> 30th Percentile: 4
-> 40th Percentile: 6
-> 50th Percentile: 8
-> 60th Percentile: 11
-> 70th Percentile: 12
-> 80th Percentile: 16
-> 90th Percentile: 20
-> 100th Percentile: 112
->
-> So binary search would help in a lot of cases.
+> > in each of the following conditions:
+> >
+> >         - default-allow filter
+> >         - default-block filter
+> >         - filter explicitly blocking __NR_uretprobe and nothing else
+> >         - filter explicitly allowing __NR_uretprobe (and only other
+> >           required syscalls)
+> 
+> Ok.
 
-yep, agreed, seems like a worthwhile thing to support, given the stats
-(I suspect big production C++ applications might be even worse in this
-regard)
+please let me know if I can help in any way with tests
 
->
-> However, if we're going that route, we might want to even consider a
-> completely revamped data layout.  For example:
->
-> One insight is that the vast majority of (cfa, fp, ra) tuples aren't
-> unique.  They could be deduped by storing the unique tuples in a
-> standalone 'fre_data' array which is referenced by another
-> address-specific array.
->
->   struct fre_data {
->         s8|s16|s32 cfa, fp, ra;
->         u8 info;
->   };
->   struct fre_data fre_data[num_fre_data];
->
-> The storage sizes of cfa/fp/ra can be a constant specified in the global
-> sframe header.  It's fine all being the same size as it looks like this
-> array wouldn't typically be more than a few hundred entries anyway.
->
-> Then there would be an array of sorted FRE entries which reference the
-> fre_data[] entries:
->
->   struct fre {
->         s32|s64 start_address;
->         u8|u16 fre_data_idx;
+> 
+> >
+> > Hm, is uretprobe expected to work on mips? Because if so, you'll need to
+> > do something similar to the mode1 checking in the !SECCOMP_ARCH_NATIVE
+> > version of seccomp_cache_check_allow().
+> 
+> I don't know if uretprobe syscall is expected to run on mips. Personally
+> I'd avoid adding this dead code.
+> 
+> >
+> > (You can see why I really dislike having policy baked into seccomp!)
+> 
+> I definitely understand :)
+> 
+> >
+> > > +        )
+> > > +             return true;
+> > > +#endif
+> > > +
+> > > +     return seccomp_is_filter_const_allow(fprog, sd);
+> > > +}
+> > > +
+> > >  static void seccomp_cache_prepare_bitmap(struct seccomp_filter *sfilter,
+> > >                                        void *bitmap, const void *bitmap_prev,
+> > >                                        size_t bitmap_size, int arch)
+> > > @@ -1023,6 +1038,9 @@ static inline void seccomp_log(unsigned long syscall, long signr, u32 action,
+> > >   */
+> > >  static const int mode1_syscalls[] = {
+> > >       __NR_seccomp_read, __NR_seccomp_write, __NR_seccomp_exit, __NR_seccomp_sigreturn,
+> > > +#ifdef __NR_uretprobe
+> > > +     __NR_uretprobe,
+> > > +#endif
+> >
+> > It'd be nice to update mode1_syscalls_32 with __NR_uretprobe_32 even
+> > though it doesn't exist. (Is it _never_ planned to be implemented?) But
+> > then, maybe the chances of a compat mode1 seccomp process running under
+> > uretprobe is vanishingly small.
 
-even u16 seems dangerous, I'd use u32, not sure it's worth limiting
-the format just to 64K unique combinations
+no plans for __NR_uretprobe_32 at this point
 
->
->   } __packed;
->   struct fre fres[num_fres];
->
-> (For alignment reasons that should probably be two separate arrays, even
-> though not ideal for cache locality)
->
-> Here again the field storage sizes would be specified in the global
-> sframe header.
->
-> Note FDEs aren't even needed here as the unwinder doesn't need to know
-> when a function begins/ends.  The only info needed by the unwinder is
-> just the fre_data struct.  So a simple binary search of fres[] is all
-> that's really needed.
->
-> But wait, there's more...
->
-> The binary search could be made significantly faster using a small fast
-> lookup array which is indexed evenly across the text address offset
-> space, similar to what ORC does:
->
->   u32 fre_chunks[num_chunks];
->
-> The text address space (starting at offset 0) can be split into
-> 'num_chunks' chunks of size 'chunk_size'.  The value of
-> fre_chunks[offset/chunk_size] is an index into the fres[] array.
->
-> Taking my gdb binary as an example:
->
-> .text is 6417058 bytes, with 146997 total sframe FREs.  Assuming a chunk
-> size of 1024, fre_chunks[] needs 6417058/1024 =3D 6267 entries.
->
-> For unwinding at text offset 0x400000, the index into fre_chunks[] would
-> be 0x400000/1024 =3D 4096.  If fre_chunks[4096] =3D=3D 96074 and
-> fre_chunks[4096+1] =3D=3D 96098, you need only do a binary search of the =
-24
-> entries between fres[96074] && fres[96098] rather than searching the
-> entire 146997 byte array.
->
-> .sframe size calculation:
->
->     374 unique fre_data entries (out of 146997 total FREs!)
->     =3D 374 * (2 * 3) =3D 2244 bytes
->
->     146997 fre entries
->     =3D 146997 * (4 + 2) =3D 881982 bytes
->
->     .text size 6417058 (chunk_size =3D 1024, num_chunks=3D6267)
->     =3D 6267 * 8 =3D 43869 bytes
->
-> Approximate total .sframe size would be 2244 + 881982 + 8192 =3D 906k,
-> plus negligible header size.  Which is smaller than the v2 .sframe on my
-> gdb binary (985k).
->
-> With the chunked lookup table, the avg lookup is:
->
->   log2(146997/6267) =3D ~4.5 iterations
->
-> whereas a full binary search would be:
->
->   log2(146997) =3D 17 iterations
->
-> So assuming I got all that math right, it's over 3x faster and the
-> binary is smaller (or at least should be roughly comparable).
+> 
+> It seems to me very unlikely. BTW, when I tested the "strict" mode change
+> my program was killed by seccomp. The reason wasn't the uretprobe syscall
+> (which I added to the list), it was actually the exit_group syscall which
+> libc uses instead of the exit syscall.
+> 
+> Thanks again,
+> Eyal.
 
-I'm not sure about this chunked lookup approach for arbitrary user
-space applications. Those executable sections can be a) big and b)
-discontiguous. E.g., one of the production binaries I looked at. Here
-are its three main executable sections:
-
-...
-  [17] .bolt.org.text    PROGBITS         000000000b00e640  0ae0d640
-       0000000011ad621c  0000000000000000  AX       0     0     64
-...
-  [48] .text             PROGBITS         000000001e600000  1ce00000
-       0000000000775dd8  0000000000000000  AX       0     0     2097152
-  [49] .text.cold        PROGBITS         000000001ed75e00  1d575e00
-       00000000007d3271  0000000000000000  AX       0     0     64
-...
-
-Total text size is about 300MB:
->>> 0x0000000000775dd8 + 0x00000000007d3271 + 0x0000000011ad621c
-312603237
-
-Section #17 ends at:
-
->>> hex(0x0000000011ad621c + 0x000000000b00e640)
-'0x1cae485c'
-
-While .text starts at 000000001e600000, so we have a gap of ~28MB:
-
->>> 0x000000001e600000 - 0x1cae485c
-28424100
-
-So unless we do something more clever to support multiple
-discontiguous chunks, this seems like a bad fit for user space.
-
-I think having all this just binary searchable is already a big win
-anyways and should be plenty fast, no?
-
->
-> Of course the downside is it's an all new format.  Presumably the linker
-> would need to do more work than it's currently doing, e.g., find all the
-> duplicates and set up the data accordingly.
-
-I do like the idea of deduplicating those records and just indexing
-them, as in practice this should probably be much more compact. So it
-might be worth looking into this some more. I'll defer to Indu.
-
->
-> --
-> Josh
+thanks,
+jirka
