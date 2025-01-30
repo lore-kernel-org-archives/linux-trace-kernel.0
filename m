@@ -1,61 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2DA19DFAB
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9924418FDCE;
+	Thu, 30 Jan 2025 18:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738261024; cv=none; b=ON+sTWrxY8tprQxp3+HA7L8bY/dlpXiWJa6lCvCLcc9LjgWbDLmQkLIR+vgTFNv6Bvk++UJvGy2p/VtOL/gVG1DPiMMAdhk/Kc4ZxpNJlSpj94yMVMDd4glvPF4t+g5KwB8fEw7jzJsgmMq/mMW6zCMXPbqtjnlWrvrN7OwGNKI=
+	t=1738263202; cv=none; b=ECJDeXlAp7HC/VwBImH2h4FAfIetkdB0rMA1nqEVBZcSrbDyZErSCKqrKXAS3mNfLs/pwCGMFILeaUU9WdOYopYf0F/BdTw3Irm2Mx3RUT01kdbPlZrvQYx9m7f6lySjvIPmuIEPE6WN2p8ZLesz6OnNxMJsTrE5H1C54S4O0FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738261024; c=relaxed/simple;
-	bh=oUXFeKCMxGcWYs6ZqqM+rh1qxGA53CJ5hBxEoMOjjR0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=VjVHB1B9Rq501wOsULGPndMRbnQdOEOE1DW/yxoWKmcpmFrpw69Mk1ZXk0KpZ0xJSNwQwP8KrTFM/kB6rd542zbcNMQCkAXUFBFlJb4xuPMBEkUNFrSkSpq4QRje1Yre6HgSaY90y6OuF6sK4EXUgCzOdtvikg/twKbWtYPQJH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FWXxpO/H; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738263202; c=relaxed/simple;
+	bh=peoN9kLzqcBxQ2OZOuChr8EQMhP9nDpohkdn1gnad1c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eJ1KZcFfOUE8ghGIiV8XrqPtlyIrL0XhnqZagAyMGbMWX2XjaOlTSgSl/DhS9HcTRlM7Ud30MVw84GWap+ualjiUzx7Be9pehVgDfFZElc9JmnOcj+vMj1tRC+3/wRFyDx6RGCYOU1/P0IAgFYXAsd71kV6EYcScFvrQMDQxDDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wr/E81FL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWXxpO/H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738261021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Ro3Og8hIo5aG4/Cep1XHpBidSUViZ6V5LwMn3Rc0G64=;
-	b=FWXxpO/HoKa88j2QdGVmfpMNBgXHZyeiIB+QSTub814UJEUakFQm8AwyHaIToQa792Df4e
-	jA2HUq24NbSPOGfHI98FsCpLSJLhH0Z2zGZcRgg3+QA4kGoV1dOs/qLgtRecw5UnxHaTp7
-	8KaN+z9BBcqWZJ6S9hk0fIByjNg3Gx8=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-339-yZOc_28AP8O0GD0gsHWpxQ-1; Thu,
- 30 Jan 2025 13:16:58 -0500
-X-MC-Unique: yZOc_28AP8O0GD0gsHWpxQ-1
-X-Mimecast-MFC-AGG-ID: yZOc_28AP8O0GD0gsHWpxQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 30B061956053;
-	Thu, 30 Jan 2025 18:16:56 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.125])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B14B019560A3;
-	Thu, 30 Jan 2025 18:16:50 +0000 (UTC)
-From: Wander Lairson Costa <wander@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wr/E81FL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE3EC4CEE1;
+	Thu, 30 Jan 2025 18:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738263202;
+	bh=peoN9kLzqcBxQ2OZOuChr8EQMhP9nDpohkdn1gnad1c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Wr/E81FLnqJJByTjE6eon8ET6IFH0/5xR9fxwdrmy8GIT7FMe3gEOjgbZx/KDNOL6
+	 AVtYGt2rG9TR6Y1MVwLviSoCQoJzv2YEqiqWwTr6Dtwq7F4iJdJ5AXzRpwxFS8saps
+	 gkyoM071D1ljkRjU5Qz0F4rqT9WIusunsZ8KrgR4/9zMu/Te4+M0B6dzJ2N7M/l9Jh
+	 vpgNRkXx4eXvm3Z8SrM2YbSLgnwb6cxHpiVIZuFbhTAySBxs/EBp2p40GAdNx4oCQS
+	 5e7tIzEKFCO3VIj1+iorJmEhaesDOgUxRNX8cbHvlW7WiGy4DYoAAz5rrO7XTT+dCJ
+	 OqRZIrjehn2Tg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D577CCE37DD; Thu, 30 Jan 2025 10:53:21 -0800 (PST)
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	rostedt@goodmis.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Richard Chang <richardycc@google.com>,
-	Wander Lairson Costa <wander@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org (open list:TRACING),
-	linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH] kmem/tracing: Add kmem name to kmem_cache_alloc tracepoint
-Date: Thu, 30 Jan 2025 15:16:37 -0300
-Message-ID: <20250130181639.58280-1-wander@redhat.com>
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to core_initcall()
+Date: Thu, 30 Jan 2025 10:53:19 -0800
+Message-Id: <20250130185320.1651910-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,53 +55,89 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-The kmem_cache_free tracepoint includes a "name" field, which allows
-for easy identification and filtering of specific kmem's. However, the
-kmem_cache_alloc tracepoint lacks this field, making it difficult to
-pair corresponding alloc and free events for analysis.
+The timer and hrtimer softirq processing has moved to dedicated threads
+for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
+timers not expiring until later in early boot, which in turn causes the
+RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
+which further causes the entire kernel to hang.  One fix would be to
+make timers work during this time, but there are no known users of RCU
+Tasks grace periods during that time, so no justification for the added
+complexity.  Not yet, anyway.
 
-Add the "name" field to kmem_cache_alloc to enable consistent tracking
-and correlation of kmem alloc and free events.
+This commit therefore moves the call to rcu_init_tasks_generic() from
+kernel_init_freeable() to a core_initcall().  This works because the
+timer and hrtimer kthreads are created at early_initcall() time.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: <linux-trace-kernel@vger.kernel.org>
 ---
- include/trace/events/kmem.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/rcupdate.h | 6 ------
+ init/main.c              | 1 -
+ kernel/rcu/tasks.h       | 5 ++++-
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index b37eb0a7060f..8ffb022f024c 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -22,6 +22,7 @@ TRACE_EVENT(kmem_cache_alloc,
- 	TP_STRUCT__entry(
- 		__field(	unsigned long,	call_site	)
- 		__field(	const void *,	ptr		)
-+		__string(	name,		s->name		)
- 		__field(	size_t,		bytes_req	)
- 		__field(	size_t,		bytes_alloc	)
- 		__field(	unsigned long,	gfp_flags	)
-@@ -32,6 +33,7 @@ TRACE_EVENT(kmem_cache_alloc,
- 	TP_fast_assign(
- 		__entry->call_site	= call_site;
- 		__entry->ptr		= ptr;
-+		__assign_str(name);
- 		__entry->bytes_req	= s->object_size;
- 		__entry->bytes_alloc	= s->size;
- 		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
-@@ -41,9 +43,10 @@ TRACE_EVENT(kmem_cache_alloc,
- 					  (s->flags & SLAB_ACCOUNT)) : false;
- 	),
+diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+index 3bb554723074..c6c4aee47df2 100644
+--- a/include/linux/rcupdate.h
++++ b/include/linux/rcupdate.h
+@@ -121,12 +121,6 @@ void rcu_init(void);
+ extern int rcu_scheduler_active;
+ void rcu_sched_clock_irq(int user);
  
--	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
-+	TP_printk("call_site=%pS ptr=%p name=%s bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
- 		(void *)__entry->call_site,
- 		__entry->ptr,
-+		__get_str(name),
- 		__entry->bytes_req,
- 		__entry->bytes_alloc,
- 		show_gfp_flags(__entry->gfp_flags),
+-#ifdef CONFIG_TASKS_RCU_GENERIC
+-void rcu_init_tasks_generic(void);
+-#else
+-static inline void rcu_init_tasks_generic(void) { }
+-#endif
+-
+ #ifdef CONFIG_RCU_STALL_COMMON
+ void rcu_sysrq_start(void);
+ void rcu_sysrq_end(void);
+diff --git a/init/main.c b/init/main.c
+index 00fac1170294..fb880b6fb524 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1562,7 +1562,6 @@ static noinline void __init kernel_init_freeable(void)
+ 
+ 	init_mm_internals();
+ 
+-	rcu_init_tasks_generic();
+ 	do_pre_smp_initcalls();
+ 	lockup_detector_init();
+ 
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index 59314da5eb60..466668eb4fad 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -2256,7 +2256,7 @@ void __init tasks_cblist_init_generic(void)
+ #endif
+ }
+ 
+-void __init rcu_init_tasks_generic(void)
++static int __init rcu_init_tasks_generic(void)
+ {
+ #ifdef CONFIG_TASKS_RCU
+ 	rcu_spawn_tasks_kthread();
+@@ -2272,7 +2272,10 @@ void __init rcu_init_tasks_generic(void)
+ 
+ 	// Run the self-tests.
+ 	rcu_tasks_initiate_self_tests();
++
++	return 0;
+ }
++core_initcall(rcu_init_tasks_generic);
+ 
+ #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+ static inline void rcu_tasks_bootup_oddness(void) {}
 -- 
-2.48.1
+2.40.1
 
