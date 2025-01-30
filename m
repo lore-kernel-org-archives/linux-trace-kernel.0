@@ -1,89 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3927E1EBA1E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 15:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADCB139B;
+	Thu, 30 Jan 2025 16:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738252677; cv=none; b=ZZKHIcrXnOx8nibglUOVWZ8hMYEnMOEjW0hNuPygFt7ie9i9HClTogl8vC0aGSW115NfLq4M3updlwAwFp71riGvFXr7RYRG9DvOgNSUfgJUn7LMvmqkcsoYH33pkRJfDeiHPJyN64wMdaYCCD86FhFPvmfsIQUhczmH5QwLsG8=
+	t=1738253883; cv=none; b=ZbQUppxqwEJBrtpAKckao2ARrCK7MJlDzxhIv11GT2v1M8xCOs7MHCY8zogFpzScLw2Z1gKt0mHP4qWfjaaq4MlYvHf5G6awGj9EC0nrohG4vrWVu+eGqCvynijjx5nL8UIIHtSV5jYWuf/5prwc8N6dlkaWyVJn9NumZgAKwxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738252677; c=relaxed/simple;
-	bh=ZkXlZnXCEZfUvPemo0Bdv/SbSJ+SxapGl1P5igcP9F8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSRrAEqcBZbCB0zrePEVRnF9rufIbLHDJ4yUTYaayqF2GcsDFgUsaMo0oXBGMbfGQyhtzfgcKsLI103QM5i4G85c495dUTgNr70dcXOpjJ7vkvhScKFR5sMBruETdwoFwqyjxYB718N8G0TMvAOyi002jnqNOKcj8uv5boOVfsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CrgsGb4O; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738253883; c=relaxed/simple;
+	bh=S4S2u3bfSglH+71zm4Wvz5COoS2wmHDDIUDA8s2ggvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r5GNUwfvHtXSd3RaEfNIw2pUZLgXXjDD5GrYij5DfvRoTBNmYIcjao/sqknx0edulB0f5X1jcjBW9WKsDcVoIlri7h7mk3eZPclnA3u7M9ZANn7BdcpbsjKuHGdf5vAg11nArvO62Ap3enAfHbuARGiyYh0oP2ewP3YcY6ybq8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O1rmSlQf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CrgsGb4O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738252675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZkXlZnXCEZfUvPemo0Bdv/SbSJ+SxapGl1P5igcP9F8=;
-	b=CrgsGb4OW1GUQQjn3H08BhKWBMlY0RKZNfJ7EeFYhn+8e+AQ1PMB2TIG9T9JCKmEuwX06m
-	EQw3vje9VcRMugyeWOndY9YurSk5sdhRkoUX/bix6VgYgIGh2A+tOfWM8NuwTcFIeiPmYy
-	ocnwQsrQVvGbI0dTppl4szsxNziCHFk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-MkvLibgYMx2BoPEK3NL3kA-1; Thu,
- 30 Jan 2025 10:57:49 -0500
-X-MC-Unique: MkvLibgYMx2BoPEK3NL3kA-1
-X-Mimecast-MFC-AGG-ID: MkvLibgYMx2BoPEK3NL3kA
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C15C21956052;
-	Thu, 30 Jan 2025 15:57:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.195])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 96735180094D;
-	Thu, 30 Jan 2025 15:57:36 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 30 Jan 2025 16:57:19 +0100 (CET)
-Date: Thu, 30 Jan 2025 16:57:09 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Kees Cook <kees@kernel.org>,
-	luto@amacapital.net, wad@chromium.org, mhiramat@kernel.org,
-	andrii@kernel.org, alexei.starovoitov@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v2] seccomp: passthrough uretprobe systemcall without
- filtering
-Message-ID: <20250130155708.GD18488@redhat.com>
-References: <20250128145806.1849977-1-eyal.birger@gmail.com>
- <202501281634.7F398CEA87@keescook>
- <CAHsH6Gsv3DB0O5oiEDsf2+Go4O1+tnKm-Ab0QPyohKSaroSxxA@mail.gmail.com>
- <Z5s3S5X8FYJDAHfR@krava>
- <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O1rmSlQf"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UDoBqW030334;
+	Thu, 30 Jan 2025 16:17:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ONa1jU
+	BR1+S0gYygAhKAHl182u525Nr6+dP3anCG3us=; b=O1rmSlQfBhyNmx1ErVkuL9
+	LMRIxB//hmxP7LEOQRRwiDUq0JNcEqeYROetLvniZQ2JLgvhuoJVL1uwEUv4doVX
+	64gn9GKxooZfE2/3847gLC2vuF2qkuIhYZZbeE1bGe1nWhGKrG6sU79SMNI4b4v/
+	TSlB8rGbnZOSBVijT4J++91JT+/Nsa2vCvN4QwyWnnfZRwiGVTI402/msJdIVZ1z
+	wI+725ELhgCzlXKIqfFnu5HElSKnpXjvSf6xOxsVR1BSUTRwUE3vbb84gqD1bAbV
+	RJpiCXa0epUSmCZQ5CQHskWa8vEsXpkslJEe1VNqWmSXXBuRlze+m+g+K1rBgbJw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsuc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGGJT6015503;
+	Thu, 30 Jan 2025 16:17:40 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44fyg9bsu4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:40 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFwaRE028072;
+	Thu, 30 Jan 2025 16:17:38 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44dbskpvfd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jan 2025 16:17:38 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGHYrH52167156
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jan 2025 16:17:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BE69C20040;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 521A520063;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Received: from [9.152.222.93] (unknown [9.152.222.93])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Jan 2025 16:17:34 +0000 (GMT)
+Message-ID: <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
+Date: Thu, 30 Jan 2025 17:17:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHsH6GvsGbZ4a=-oSpD1j8jx11T=Y4SysAtkzAu+H4_Gh7v3Qg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
+ output
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FuReBaQPsBGrG3b7x7hTPr8i33NIuhFq
+X-Proofpoint-GUID: wyvY3VdNH6x-f8eeALSpEObel0t6_amh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 phishscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2411120000
+ definitions=main-2501300121
 
-On 01/30, Eyal Birger wrote:
->
-> Personally I'd prefer to limit the scope of this fix to the problem we
-> are aware of, and not possible problems should someone decide to reimplement
-> uretprobes on different archs in a different way. Especially as this fix needs
-> to be backmerged to stable kernels.
+On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> When debugging sframe issues, the error messages aren't all that helpful
+> without knowing what file a corresponding .sframe section belongs to.
+> Prefix debug output strings with the file name.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-+1
+> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
 
-Oleg.
+> +static inline void dbg_init(struct sframe_section *sec)
+> +{
+> +	struct mm_struct *mm = current->mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	guard(mmap_read_lock)(mm);
+> +	vma = vma_lookup(mm, sec->sframe_start);
+> +	if (!vma)
+> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+> +	else if (vma->vm_file)
+> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
+> +	else if (!vma->vm_mm)
+
+This condition does not appear to work for vdso on s390.  The following
+does:
+
+	else if (in_range(sec->sframe_start, current->mm->context.vdso_base, vdso_text_size()))
+
+> +		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
+> +	else
+> +		sec->filename = kstrdup("(anonymous)", GFP_KERNEL);
+> +}
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
