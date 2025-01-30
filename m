@@ -1,107 +1,106 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6B1EF0A1;
-	Thu, 30 Jan 2025 17:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBB238DD3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 18:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258806; cv=none; b=QS8VxvbPZe+LeD4bt+MgcoaDg6LYcAfluuBjL21kYKOHFVVFKl1UMJuVsCTTNm8rlHXOo8IU3pHRnliJ0hCFE1bIiB8IbsOnVQ1ubrYDy786/didXD6IikASIzh8RERx2IOYGItG7vq1pHulvXA/U+GjMefjREQ1H/CGGIDiZ7M=
+	t=1738260930; cv=none; b=gHwxpd1KDwuM9WX9U04EfMg/8724QcK/ukTbZ2yEK18iqdnw3JJ4aaBAdiqJU/7NPdCl/rSTugk0pbitMkN1xnjute6rZJBpl//1MH6PraHe5gaX1TkSrAqNVMwFmYb7CQY9h3ZqfztiPQ/wbLVWXWh+NXuofy4TVIr/r4Df/n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258806; c=relaxed/simple;
-	bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tQkaCsfyfInoRQV809cZGtJmrfh6GFRgc4FqXGJCOPfqix6+vQ6vvBTPyoFuGKhu2n2tN3vim5ME45BD9fzOI+nZIKmwdDtDfOttEAeXgVPye0OvhGcqhnYnVzRajZi3EoEiWvBrzMs2H+WvR4pH2smoOEpFjYaTyDc+kynq4l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAXsUcpb; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738260930; c=relaxed/simple;
+	bh=XPT+9XkaTAzObYJ1bdlbTqw6s3LWjn4zwDx+3v+UTR4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=XWhXW3BltsV9vLq9GOhUcuG5ssBa8UGaaRWX6lcc36mgzInHmVyl+bEKoclIIqR4F0c6o6gMkOa6A+hFStQAxz6d0/FMnf6i8hI/I3Pht3EUHqBmtOQaL/WWNkNHc1qMF7aex2Wq6Fb8Cn4SXOuM1KzCzJsbtkZ6QoBPlcG5wnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=In8QJo4/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAXsUcpb"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46785fbb949so11733711cf.3;
-        Thu, 30 Jan 2025 09:40:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738258803; x=1738863603; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
-        b=gAXsUcpbB5/gIZxCpCL7g0uzUd++ACA/TNH8RcUa6dLivjE/lnfbeJPW6WdshCsju2
-         97M1pNtCgAPBtpV/bVg0cgeHdOUl32zhAdDSAJ81v1u1KpBHFBdxmhdNiH4z76dPPx8C
-         yL3kUZWcMebPUITyJ0y7h50YeQj2FheCFhHuDmM9zzrf+CRXqsNo+fQkTNUPZ+BmeU/a
-         3J5NZf5iJFynDbjNN2YHZrCIf6FBCcFwgsphZmYkHXoNiJoxRxF1H4tEX4eCP+JYIfiW
-         ko03sJlyHj4nc8OpgjiTHDkWy9aEHEnTI8h+znPw4ztQJvnv5UmAwX+j2EAZuB+OvgPX
-         oLMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258803; x=1738863603;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
-        b=Rw/iR9AKRxlpxWRiYC5LIxvCm1nKzvzk/cr3J5B2p3/tBa3olWtNEf/fQWeZG3sVeZ
-         ur68kckwyXoN6wYyGRLYoJk9UafkcDG34reCLAQD6n6O4wanU631oEbUkLtjCV3fEy02
-         3XJX8U4ZhdN3piQOM3qyWkVI+zh/0Y+fzMaXWK9FBHgT0/oLcYZH7wNF1A4NCu3OA9c/
-         GKjKOFslcrGWD+y99WJzq2wauASdI7MA9Zyoh1OlYgGPYU+aAfjyVle8IDs4y5XGiO/p
-         IJKESwTNrE2b0O5R2guyCj9YELQcxa9R7GEzH4lairhWADhtbP6ONv3RWUsWuoQyXIpe
-         An9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWFBACDpCUD0OBrEBh2As3kHI8pb2Pc5PKQH45jo/eh1lSP72JY17AHxXBz8H481UWCmUHUkyG0HNGpq9OE@vger.kernel.org, AJvYcCWi1CeKAvtAY1BO/CP7aWFd5aVAhwd1tW4bYOj6IR/aRtr130umAROeI2bFdroNnNK2CZRQsV3B9QuqIw4N5tL9UTmw@vger.kernel.org, AJvYcCXRZtW63KF6smfpHjOGFp/3BozC1UN7tMwwKudvXNAi/W7Nm3h0dgpylW2YkGdSYd63uR1sLbHNhRIVPVFG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB+0KTepwVoCa9tQAMQRzIkxY2qxo1gZPb8DGRF4qD9hUyCjRY
-	5K/QywBw4IB4hUXt20aOieNImVLJj1OCjCUCpBy/DBici11BODGhF0Ho0cdV6w7jQ5tpxTl1N4z
-	CL1BTmQcxIuSOTEG9cCSS/11pb9I=
-X-Gm-Gg: ASbGncuLQ99+rkHnsVkHpHPQNy0f03rMS22Rj82yXE/lbG5MoTiDw5VMFZFlYVqq7Ds
-	a8AgYrC4GJg+W5wfkByDKV4nKRmOPOvypOLIB3PMr8JHGWxZTK6SZeKAGoNsFafLebCP9oUG7gZ
-	W+hj597PKugeOs3ENMU2K1LhX3saIF
-X-Google-Smtp-Source: AGHT+IE6pqda5eKDzRAyzpwontPmN7eYd0zcmoX6OYSqt3IrbDhFMaTFRiKg3Ru2dzaKD+7BQ6lfXTG07MedePcTXtg=
-X-Received: by 2002:a05:6214:1310:b0:6e1:a51d:e96f with SMTP id
- 6a1803df08f44-6e243bef7cemr117873546d6.8.1738258803328; Thu, 30 Jan 2025
- 09:40:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="In8QJo4/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738260928;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d23NPHmcbepta9lyEp40cUJkMkXp8ZsIbiHpFpP824s=;
+	b=In8QJo4/kM8QdMlyle80Xu91K3wd63uTuKWOwLle+0pTPUI+Pi0tAcibbUitYWEvJOX2SP
+	JxAAihMMX0NCoOHFcwo1eTx6fhyMp4Q+WRL4n0Jr5d7XEV8+PzUA3IVV5YkXL8NQIFP2qW
+	/P4Nt98659DSGwnjCmjlaSuzxzo2Dwc=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-592-utabT-OKMDqFep12mqVStA-1; Thu,
+ 30 Jan 2025 13:15:23 -0500
+X-MC-Unique: utabT-OKMDqFep12mqVStA-1
+X-Mimecast-MFC-AGG-ID: utabT-OKMDqFep12mqVStA
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7DC419560AB;
+	Thu, 30 Jan 2025 18:15:21 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.125])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F2D2C1800268;
+	Thu, 30 Jan 2025 18:15:16 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Takashi Iwai <tiwai@suse.de>,
+	Wander Lairson Costa <wander@redhat.com>,
+	linux-kernel@vger.kernel.org (open list:TRACING),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] irq/tracing: Add IRQ name to irq_handler_exit tracepoint
+Date: Thu, 30 Jan 2025 15:14:38 -0300
+Message-ID: <20250130181439.58130-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com> <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Thu, 30 Jan 2025 09:39:52 -0800
-X-Gm-Features: AWEUYZnhGHhGD14z9UZ4qeG3B1M4JKsk80YTUhLoPK-rRv81OyfD8wOiyVhXCtw
-Message-ID: <CAKEwX=POeBSHBXxdNWua5cPJ=7+P6x4qG6gWgN0HnT2K+_ULtQ@mail.gmail.com>
-Subject: Re: [PATCHv3 04/11] mm/zswap: Use PG_dropbehind instead of PG_reclaim
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Oscar Salvador <osalvador@suse.de>, 
-	Ran Xiaokai <ran.xiaokai@zte.com.cn>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Vlastimil Babka <vbabka@suse.cz>, 
-	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Jan 30, 2025 at 2:02=E2=80=AFAM Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> The recently introduced PG_dropbehind allows for freeing folios
-> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> to be involved to get the folio freed.
+The irq_handler_entry tracepoint includes a "name" field, which allows
+for easy identification and filtering of specific IRQs. However, the
+irq_handler_exit tracepoint lacks this field, making it difficult to
+pair corresponding entry and exit events for analysis.
 
-Neat!
+Add the "name" field to irq_handler_exit to enable consistent tracking
+and correlation of IRQ entry and exit events.
 
->
-> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> zswap_writeback_entry().
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Yosry Ahmed <yosryahmed@google.com>
+Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+---
+ include/trace/events/irq.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Acked-by: Nhat Pham <nphamcs@gmail.com>
+diff --git a/include/trace/events/irq.h b/include/trace/events/irq.h
+index 837c1740d0d0..d705406daa37 100644
+--- a/include/trace/events/irq.h
++++ b/include/trace/events/irq.h
+@@ -88,16 +88,18 @@ TRACE_EVENT(irq_handler_exit,
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	int,	irq	)
++		__string(	name,	action->name	)
+ 		__field(	int,	ret	)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->irq	= irq;
++		__assign_str(name);
+ 		__entry->ret	= ret;
+ 	),
+ 
+-	TP_printk("irq=%d ret=%s",
+-		  __entry->irq, __entry->ret ? "handled" : "unhandled")
++	TP_printk("irq=%d name=%s ret=%s",
++		  __entry->irq, __get_str(name), __entry->ret ? "handled" : "unhandled")
+ );
+ 
+ DECLARE_EVENT_CLASS(softirq,
+-- 
+2.48.1
+
