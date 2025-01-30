@@ -1,82 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBA51F2C22;
-	Thu, 30 Jan 2025 19:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044C31E376C
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 19:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738264043; cv=none; b=ixJkBIm63rEQxIrbse8ZqR0I2bBdq8eiPnE7dxWuZ/bhBIk2eAvMH+uCL4Y5St0VkdBaXw9S2saM7n2cPPhENRnXYE2m07rWkZRGtGpLNTQYQB7rS/WeOqbyqL5FYaC7DkVvIcrYVx5n1sHjA9tLGMPpNXQHQK5njwZyngXEyxo=
+	t=1738266680; cv=none; b=OJz/yjWwNSzvSBt5/wloYZ/7yuiUqY58KDBExST45u0xPHscT8A+lTjJ8LbY0wf6Zr0PxOVB1g6Ugy/L8C1rL+I0shTe6zZXNmZeEfhuz41bdajVVTgzVQ9WxVsFtia6J56LQQ16s5UJnmiV8Kis/SWxV6SxPck/mSFmyqa0D/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738264043; c=relaxed/simple;
-	bh=tlZ6rBd/pJR8Va5NKTLpqW2a7ytzm9msbPe5NDrc5OI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sn0To8zTPsRaADJorvWn5b72I8yW8lfLEwFvOtfYf421M1bsD0TU5aLK0aqiXMZsTwCB97WlhCrrfG5hUkiv7IFZkZf3ui/MAzSfdiQ0ZaAaLzaNUnVRfGVYKjO6c2rV1LR7GSuA+vGjseeT+FQSP8962XdLyHxRdyx3c2OdveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A71CC4CED2;
-	Thu, 30 Jan 2025 19:07:21 +0000 (UTC)
-Date: Thu, 30 Jan 2025 14:07:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Wander Lairson Costa <wander@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, "Darrick J. Wong" <djwong@kernel.org>,
- Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?= <thomas.hellstrom@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Takashi Iwai <tiwai@suse.de>,
- linux-kernel@vger.kernel.org (open list:TRACING),
- linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: Re: [PATCH] irq/tracing: Add IRQ name to irq_handler_exit
- tracepoint
-Message-ID: <20250130140746.29cfa7d1@gandalf.local.home>
-In-Reply-To: <20250130181439.58130-1-wander@redhat.com>
-References: <20250130181439.58130-1-wander@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738266680; c=relaxed/simple;
+	bh=PZWNQzuUvdb2tvBIx8Zf9ULMprA+8Gln+UkXCCSy7qo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uA7euGgT5DigFepD20s3m3MZ8HVAPFzRtW2j7j7ULrlCan36ABNOuQk6JcH3YcPnrtPqK0hUWMGwHF3XbehNM1zrnlHzDFRvmbEGsYgDMxRyxpKtUAZZ1Aob+cJyQ2b7hmiFPkQeTKUUWGgV+cKWTnHr9aTlO54SyBj84bIWJpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tzzYfMiJ; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--wnliu.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tzzYfMiJ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21a7cbe3b56so17336605ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 11:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738266678; x=1738871478; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QMsKcJUtai6CYSlXHhkH0yde/9mWjJ8zpnj2lgaYAJg=;
+        b=tzzYfMiJc/MHQvL4riReOBMpnhzqRRJTlUFHaCJMRD8wD6wfTslPx4EfkDt2baIwEv
+         VfX2oSPD6vHRN0a9N75S5WjjBvjguPuzMBdMBP7+e2voyuPTVNtLNHX2jXdvqZenIumc
+         7YF+6u8f7lgJkgYHQwwFYnYcyNAQJI53MMdjpaUP8ZvAde6Rct3DFktpTx/r4u3O90e1
+         Sguyv14hx/jRukn+rVOizOhWSDnL7nBrA3xGvCm1KJjVkRcjv66faltt6K4W/IGcdqtc
+         dfx/G+j5rr+RO+H2nHYtofaskML7t78szhF396sYL14VqaD9LaRc163h/uAPorpEU195
+         ykcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738266678; x=1738871478;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QMsKcJUtai6CYSlXHhkH0yde/9mWjJ8zpnj2lgaYAJg=;
+        b=oCdgdBgsa69Yi3HWAUq+F5Axe/0dfAJCp8X4wlBhgypFvrL8NAU5YJ17i0MQ6FxER9
+         zUX4NQ8H7jQ4YdzXleL3bYacp+pgqQE6munEea+VB2+beeg39/yQfUT4Aoz/JiBmTdZ+
+         iCD8DrSreyeWuWzDCjssR5AE3FUHVmI8BaZTjNACntQcSC7TFuG6kavG+xOoKYcbEa4I
+         zTGfoaCy7YLKrnYafDKMNw+IZ5rJk9lybhuzrTnkk75Zhi7OHWb4MTwXjYIKZblGuy2M
+         s9/yrOPCutCquRShs/hsz3pgJjn+Aj2Gkz/GZPwpJwKFYoMD1tqQwhGoJ+yoJaIZ6owW
+         r3rA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6X5MV54+SO9xcUcKrda4xbvd+UbUavzRf6TfuIfTFcXD4YBqrxPl6FDaGa8/FoWXsG3qfR8+gfIHmHLGajfw2wik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpzZfbJc3qGdR1+d+fudLpaW68Y1AULiCofoDnIpizzxJM6EXL
+	YLNLmINXAtCufuHgLfobinAt44mmywYT7Ph9OKf+D+DWw0+gDFksvdMBjJX1USs1vjIsi1BkxA=
+	=
+X-Google-Smtp-Source: AGHT+IGfOIsvmccXkgCUUIFyQDMN+VuLslZZrxRjAneC2/LkBQ7Gqo9u8bUVeMagNQQ9k+vc4Y/Z9o1i5Q==
+X-Received: from plbkw4.prod.google.com ([2002:a17:902:f904:b0:216:499e:dadb])
+ (user=wnliu job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec92:b0:21d:cd0c:a1b8
+ with SMTP id d9443c01a7336-21dd7c3cf57mr141286495ad.1.1738266678124; Thu, 30
+ Jan 2025 11:51:18 -0800 (PST)
+Date: Thu, 30 Jan 2025 19:51:15 +0000
+In-Reply-To: <20250124214107.ycccp4gapbdudzux@jpoimboe>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250124214107.ycccp4gapbdudzux@jpoimboe>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250130195116.3930772-1-wnliu@google.com>
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+From: Weinan Liu <wnliu@google.com>
+To: jpoimboe@kernel.org
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, andrii.nakryiko@gmail.com, 
+	broonie@kernel.org, fweimer@redhat.com, indu.bhagat@oracle.com, 
+	irogers@google.com, jolsa@kernel.org, jordalgo@meta.com, jremus@linux.ibm.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-toolchains@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	luto@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, mingo@kernel.org, namhyung@kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, sam@gentoo.org, wnliu@google.com, 
+	x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Jan 2025 15:14:38 -0300
-Wander Lairson Costa <wander@redhat.com> wrote:
+On Fri, Jan 24, 2025 at 1:41=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+> On Fri, Jan 24, 2025 at 10:02:46AM -0800, Andrii Nakryiko wrote:
+> > On Tue, Jan 21, 2025 at 6:32=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel=
+.org> wrote:
+> > > +static __always_inline int __find_fre(struct sframe_section *sec,
+> > > +                                     struct sframe_fde *fde, unsigne=
+d long ip,
+> > > +                                     struct unwind_user_frame *frame=
+)
+> > > +{
+> > > +       unsigned char fde_type =3D SFRAME_FUNC_FDE_TYPE(fde->info);
+> > > +       struct sframe_fre *fre, *prev_fre =3D NULL;
+> > > +       struct sframe_fre fres[2];
+> >=20
+> > you only need prev_fre->ip_off, so why all this `which` and `fres[2]`
+> > business if all you need is prev_fre_off and a bool whether you have
+> > prev_fre at all?
+>=20
+> So this cleverness probably needs a comment.  prev_fre is actually
+> needed after the loop:
+>=20
+> > > +       if (!prev_fre)
+> > > +               return -EINVAL;
+> > > +       fre =3D prev_fre;
+>=20
+> In the body of the loop, prev_fre is a tentative match, unless the next
+> fre also matches, in which case that one becomes the new tentative
+> match.
+>=20
+> I'll add a comment.  Also it'll probably be less confusing if I rename
+> "prev_fre" to "fre", and "fre" to "next_fre".
+>=20
 
-> The irq_handler_entry tracepoint includes a "name" field, which allows
-> for easy identification and filtering of specific IRQs. However, the
-> irq_handler_exit tracepoint lacks this field, making it difficult to
-> pair corresponding entry and exit events for analysis.
-> 
-> Add the "name" field to irq_handler_exit to enable consistent tracking
-> and correlation of IRQ entry and exit events.
+Nit: swap() might be a simplify way to alternate pointers between two
+fre_addr[] entries.
 
-I'm not sure what you mean by this.
+For example,
 
+static __always_inline int __find_fre(struct sframe_section *sec,
+				      struct sframe_fde *fde, unsigned long ip,
+				      struct unwind_user_frame *frame)
+{
+	/* intialize fres[] with invalid value */
+	struct sframe_fre fres[2] =3D {0};
+	struct sframe_fre *fre =3D &fres[1], *prev_fre =3D fres;
 
-# trace-cmd record -e irq_handl* sleep 5
-# trace-cmd report
+	for (i =3D 0; i < fde->fres_num; i++) {
+		swap(fre, next_fre);
+		ret =3D __read_fre(sec, fde, fre_addr, fre);
+...
 
-          <idle>-0     [000] d.h1.  4690.628641: irq_handler_entry:    irq=55 name=virtio5-output.0
-          <idle>-0     [000] d.h1.  4690.628650: irq_handler_exit:     irq=55 ret=handled
-          <idle>-0     [007] d.H1.  4690.628895: irq_handler_entry:    irq=54 name=virtio5-input.0
-          <idle>-0     [007] d.H1.  4690.628900: irq_handler_exit:     irq=54 ret=handled
-          <idle>-0     [000] d.h1.  4690.802977: irq_handler_entry:    irq=41 name=virtio2-req.0
-          <idle>-0     [000] dNh1.  4690.803046: irq_handler_exit:     irq=41 ret=handled
-          <idle>-0     [000] d.h1.  4690.813958: irq_handler_entry:    irq=41 name=virtio2-req.0
-          <idle>-0     [000] dNh1.  4690.814008: irq_handler_exit:     irq=41 ret=handled
-          <idle>-0     [000] d.H1.  4690.814257: irq_handler_entry:    irq=41 name=virtio2-req.0
-          <idle>-0     [000] dNH1.  4690.814301: irq_handler_exit:     irq=41 ret=handled
-          <idle>-0     [000] d.H1.  4690.815374: irq_handler_entry:    irq=41 name=virtio2-req.0
+		if (fre->ip_off > ip_off)
+			break;
+	}
 
-# cat /proc/interrupts |grep -e 55 -e 54 -e 41
- 41:        462          0          0          0          0          0          0          0 PCI-MSIX-0000:04:00.0   1-edge      virtio2-req.0
- 54:          0          0          0          0          0          0          0       4539 PCI-MSIX-0000:07:00.0   1-edge      virtio5-input.0
- 55:       4544          0          0          0          0          0          0          0 PCI-MSIX-0000:07:00.0   2-edge      virtio5-output.0
-RES:       1293       1411       1357       1307       1343       1345       1330       1315   Rescheduling interrupts
+	if (fre->size =3D=3D 0)
+		return -EINVAL;
+...
 
-We have the names right there. Heck, I could probably write a plugin for
-trace-cmd to record the interrupt names in the trace.dat file and print
-them out with the events. Any analysis tool could also record that.
+}
 
-That's better than wasting ring buffer space for every event.
-
--- Steve
