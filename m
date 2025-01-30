@@ -1,170 +1,97 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C087B1DA5F;
-	Thu, 30 Jan 2025 16:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4681F2C3D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738255160; cv=none; b=ckcFqLv16c7TVZnv0Ljz8I1kXmyqOWtlN9dYanzKh0mkt1IWOJQ24shUZx4fkOBDhua8q0/MEK9FQKwq+RMQ8SJ9T6JD938WH3/bbdpPjlfKeHSFdHVOvwNE2cuKpazPtZK4rfIrW+1GYbDkoCAYi0XwwkbGInM8QS398iKC9Ao=
+	t=1738258608; cv=none; b=a2czQ8pCZtxKEe43XEKpiFej+rbv3v/gWh7Pzq588iSz+qQr5KaaqR94uNauz/I5yeRUikjqOw91m6gKL2d/xXYPCrGu9DeubgEBLpZ2JE+Zn3Hdak4fpY+J+tvpIbCfv3SZ826NpbJJFEPFgcM0nNfjFFVHby7cnL+E4aEvnmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738255160; c=relaxed/simple;
-	bh=0Isufwi/Vgl2B6yLxZbTuWN6WZZj84rWZAtmvqaHWIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2EZ5VO3rPCFI3OYOCYWMWMq3DUSJT//QX2Vadlwxvoj6o8V9hj2txD+XFh+rbPJMK/+PHTEv6C4zXTFMbRDowj8jnPc1J7KG3h+CWgkypJk2LsT+Csobqg5V6p9mErIL66J7hpCy8B6JMs0wE4xWNNSot+5KZuYNH9VbcvdFM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IBUG4ShM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IBUG4ShM"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFdQAe010027;
-	Thu, 30 Jan 2025 16:38:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=FqYKzo
-	UiU8AE96roYOs5tofbhVt4DgoDku8NwKj7qTg=; b=IBUG4ShMLT4KYKAw5ij2x+
-	jlQp6/oH/OVpUP4u9eR5l2vI4hj1bTW6cAPLBfavxcnM9JCq8CqhloZo0es8rIOn
-	Z47yVWc16hB60rGNn748QAm81u2Sg+UJEbq2VsTqgBYPzsbfVhmDRlCRh+9q7O19
-	VluYw0SX4f6QItLEm1TotSePoEkeKAWgA/O6EJ+Nfr6fLhV9Qot5Ms9qnDJXWJh3
-	YfbtuxJARcz02NG16GqKft+LHebCwO1j4eAhJ15t6Rc7QJ1vd2OH/7/OhHJGDmaY
-	KkiGu3Q6ih8StWgVVGp+5s1HQ+f7xMuuQIzwRopAId1pzieTg00kMZM/v9JyPf+Q
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 50UGbbKF005418;
-	Thu, 30 Jan 2025 16:38:30 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44gc8tr8g3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:30 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 50UFAKH3012444;
-	Thu, 30 Jan 2025 16:38:29 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44danyf4e8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jan 2025 16:38:29 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 50UGcP1s46006628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jan 2025 16:38:25 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5012A20089;
-	Thu, 30 Jan 2025 16:38:25 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C265520088;
-	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
-Received: from [9.152.222.93] (unknown [9.152.222.93])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jan 2025 16:38:24 +0000 (GMT)
-Message-ID: <b0193d69-d328-432d-86af-54fac7cef711@linux.ibm.com>
-Date: Thu, 30 Jan 2025 17:38:24 +0100
+	s=arc-20240116; t=1738258608; c=relaxed/simple;
+	bh=fEvX637Z7c33Zk5WCEhwiVVgzZ0aKNk8OcHlF0sVoOk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Pf6dUsg0DX08lNz8V2r1aidXfTbsb2jlt8WWF86u1v+9a89uC8OmhFbDGDpgBLNonlbw/vhDn93vBzP4lW/YWL6VOuz4owOHqY2iIircMx3kxRaRB0D5oAP2U+2QJnf7rcDHvnwyBgIxLN4Mp2VfAsSKBrBVJSOSivGjRww+yUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2166022c5caso16785615ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:36:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738258605; x=1738863405;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wba71lrlJHRpHNYwCSUOMwjfSnFCdMmwKcitB9A/Re8=;
+        b=h9g98gs6K42hXgS9KrYpRe6pwy4b2b5T9dMYl5/xfbDppPRCLenkkT4TQsmNBIsU6y
+         sLK7YdpddSaAh9HL1bp8N7lf9pa0h6oQLBJkeKAtANEx8R48ZoDuvrXRnEaaX9dEWPdd
+         abPr5i1jHiGGePkD/HyqufPFo+LWAUThuaza3U/+y030zDdCR/XmNhvYP77Kn8VOKfJQ
+         BUxkMn69TCBMEH8BaUwOWdRH+q1G9D487r2DKf1RcM3JVWUbV9sK9tDjR2T9+iJw5NyS
+         /NcK1Slek646IOCI1DyEVCfg+MSt697ay9GFNAmrPOjU0Wo9zNxIwbkxHRWOJZKVuPNq
+         j5pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ9TpLYKqi+VW2dWdrUSY7YrjBCI4h8GeIvBZa1aIz5/n7GdXTmfcIrqrqTR+szKqbf09nNYxSQn0t32Gw+E95PIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwaTpc7FzzLbhJ5Fj7MqBoOov/g0P213Va0+p1AX3xGd9Ou8c+
+	J80WpOcoJhjBsACH5oTis0ALaEfN1xT6zc5CbepX6CtXU3Tu8AtJmdcS9y3Izwc=
+X-Gm-Gg: ASbGncs9ixXzP8GH1c0c/i6RsmS7WqkHSh6bl9L/cj2fXLQOMt0aKQo6IID6Azu0JB/
+	uliWrYzyIMsRYVp63pQTjSOc5q4qrDgcE4FHccj17NgUE/IUTns8QDQTNt2UldyyxparGeiZ1ZS
+	Rq7cAdNR9TFYMxGcS14CsvL1nSDtR0j0rr9quJTJVRgVAAZ75jIgpFnJTJnqqO/Jqmj3hY3nhyQ
+	KR/0LUVk3XXPXECtt8TeaaSmsUtOHkCMSHics8JZ3Rl1hdfBkjxietv7ZV0yRpEeHh2PRzrkAEB
+	NshPjeCFIE14kA==
+X-Google-Smtp-Source: AGHT+IHPgtyksfxV717Ovby5/EZ85xi1T/C77gVscvPLkijnPA2Hto/kR8guWoggO+GeixLtqrCFiA==
+X-Received: by 2002:a05:6a20:7345:b0:1e1:c03c:b420 with SMTP id adf61e73a8af0-1ed7a6b820dmr14182766637.31.1738258605613;
+        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
+Received: from localhost ([97.126.182.119])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebe384272sm1423838a12.18.2025.01.30.09.36.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
+From: Kevin Hilman <khilman@kernel.org>
+To: Keita Morisaki <keyz@google.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
+Cc: aarontian@google.com, yimingtseng@google.com, Keita Morisaki
+ <keyz@google.com>
+Subject: Re: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
+In-Reply-To: <20250125013145.1664062-1-keyz@google.com>
+References: <20250125012734.1661860-1-keyz@google.com>
+ <20250125013145.1664062-1-keyz@google.com>
+Date: Thu, 30 Jan 2025 09:36:44 -0800
+Message-ID: <7hy0ysi4pf.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 26/39] unwind_user/sframe: Enable debugging in uaccess
- regions
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <990b28ae7855b67c5e6d6385b9de78ffa336dd73.1737511963.git.jpoimboe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: K_c2hM8ukamBh75YQApb_Rgur0BqSUJI
-X-Proofpoint-GUID: WtxoNUNAKifqK37qQW2DZUi8svSipZdq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-01-30_07,2025-01-30_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=959 clxscore=1015 priorityscore=1501 malwarescore=0
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2501300125
+Content-Type: text/plain
 
-On 22.01.2025 03:31, Josh Poimboeuf wrote:
-> Objtool warns about calling pr_debug() from uaccess-enabled regions, and
-> rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
-> uaccess before doing the dynamic printk, and use that to add debug
-> messages throughout the uaccess-enabled regions.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Keita Morisaki <keyz@google.com> writes:
 
-> diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+> The trace event cpu_idle provides insufficient information for debugging
+> PSCI requests due to lacking access to determined PSCI domain idle
+> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> idle states the power domain has.
+>
+> Add new trace events namely psci_domain_idle_enter and
+> psci_domain_idle_exit to trace enter and exit events with a determined
+> idle state.
+>
+> These new trace events will help developers debug CPUidle issues on ARM
+> systems using PSCI by providing more detailed information about the
+> requested idle states.
+>
+> Signed-off-by: Keita Morisaki <keyz@google.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-> @@ -53,12 +53,15 @@ static __always_inline int __read_fde(struct sframe_section *sec,
->   			      sizeof(struct sframe_fde), Efault);
->   
->   	ip = sec->sframe_start + fde->start_addr;
-> -	if (ip < sec->text_start || ip > sec->text_end)
-> +	if (ip < sec->text_start || ip > sec->text_end) {
-> +		dbg_sec_uaccess("bad fde num %d\n", fde_num);
->   		return -EINVAL;
-> +	}
->   
->   	return 0;
->   
->   Efault:
-> +	dbg_sec_uaccess("fde %d usercopy failed\n", fde_num);
->   	return -EFAULT;
->   }
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 
-Add a similar debug message for SFRame FDE user copy failures?
+I've been using some local trace_printk() to do exactly this, so I fully
+support having some official tracepoints here. 
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+For my local hacks, I was trackin the state index as well as the state
+value since for quick debug, I find the index to more human readable
+than the state value, which I have to compare with the
+arm,psci-suspend-pararm from the DT.
 
-@@ -125,6 +125,7 @@ static __always_inline int __find_fde(struct sframe_section *sec,
-         return 0;
+Anyways, thanks for submitting this!
 
-  Efault:
-+       dbg_sec_uaccess("fde usercopy failed\n");
-         return -EFAULT;
-  }
-
-
-Printing the IP is probably not an option due to security concerns?
-Printing the the CFA, FP, and RA offsets is too much traffic?  To debug
-issues on s390 I had to add tons of additional debug messages to make
-sense of what was actually going on.
-
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Kevin
