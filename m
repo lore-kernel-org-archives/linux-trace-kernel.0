@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BEF1B85F6;
-	Thu, 30 Jan 2025 10:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054C91B415E;
+	Thu, 30 Jan 2025 10:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738231276; cv=none; b=Q/hLBYJe0oO9yqWId980z57M+Ix+sXVQo1ISKiCUUQ1bi+xa1qwLJ4vmOrGEDSTqWbFxXHABiY4RkOsvtkWkmj425nFr027R31C/LJKdRcrmRJhZst1kblszszF5+WiEWrXzRT6y9zZHeu9sA7xDhMMgyKy2rvAO8APUtFzYJlU=
+	t=1738231282; cv=none; b=Y6cJ1wxcLkvdi2HYdh7OXXM5rM2oo0wawv0BqiVhFgNl9XGF77MiiMTqPgU4SY+vOWGN0a4yzIlOD6cwzWiawwMkaiw1fdvTMVuryjbe/DFlz4/k6I+ZONiaLGGrtxZnYZInvocfRs0irvg1DcoqyDV6QiqrLH/rYoVVaU+0jWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738231276; c=relaxed/simple;
-	bh=TeTRrafXWXo8OYB1YltM6X/TOJfCtsW9VeKHwtoHqu0=;
+	s=arc-20240116; t=1738231282; c=relaxed/simple;
+	bh=ZCQ7ik+9XW25QHmj7+OSEt8uhXHwRm2WWtAH03zqXic=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j3MZfaZRrsFS5bQnJWiKRa4mNQ+yllybmGVNmoeXf4nWeI+/NqRJgQTK9U9QomTjxMeDf7rFD5tKJ6TVRQa+HwMfZZ+D5iObLJGtz0is0mC2R4B2BD9DIGxaJdvwnGGjkObcZVHsifdpGT9r/Oe9LYtiqSSIV9UI38PohtKKz24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H5O74LWe; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=WfGzJ+ZhcbeUlXeMnyNNAt3ei32DV9LoUlJL4ZFPiCZlS6XSQQiHUPQr3rVb8gv50DadFqW9cMXqU5ButGxU2gVU9xWks6PG8u3ni6+Qld7gopHrrdy9mEIM3NEMQA1t+O/984v1/oImiVm99tHGaKbaJYIHaq4U+D03G/Qp/V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TQxglEDO; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H5O74LWe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TQxglEDO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738231275; x=1769767275;
+  t=1738231281; x=1769767281;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TeTRrafXWXo8OYB1YltM6X/TOJfCtsW9VeKHwtoHqu0=;
-  b=H5O74LWeV2pMjcAeBrfHshism7dkWnEIf7nYnYrUjn10bIQFTtbIPQp6
-   nEp1121TKnEpgjnKHqkLb0navkFtjTCpFnUpLeK4DBDdjtoZG4q5gXsV2
-   Oog4T1P8LoKABS/1wD97X5b2DvScLUyCFVGLatPq29EBhMGmL2O4LBXBI
-   ak5I26wruq4wdbIilEaH19tW/lrNYnwWL2sy5vrCAoGFsdtbAl0zhI5Kx
-   tadmagtV6rUySCUfwZA/MlKdWrQdSkuBSA/L0Di9J1QNtdCAq679vGvM8
-   B0g97x5n0mG2ii41Q0N5etKPTQF+RV+jY5XzDZkAH6zAWxVe4HxrGKwnD
-   w==;
-X-CSE-ConnectionGUID: 9Fqned7kTr+6bFVj7FXFzg==
-X-CSE-MsgGUID: YXDySL1eQOWh3fQqsdcUEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="61239629"
+  bh=ZCQ7ik+9XW25QHmj7+OSEt8uhXHwRm2WWtAH03zqXic=;
+  b=TQxglEDOcpbkVGb76c23U0i1pFN6y5APNDbwN8rbHyLDVoT6k3L3w+eL
+   Vb+E6TY+3OYn+Atho2ZasulhYLmWus6Js9yBA4kRmHd5ed/UVADF/KvtR
+   E15HSlORLrSI3KU9l823IBRvZTToi4OpsbqsaZyQHcivq+lFOnpvKrS7b
+   NY6H4nzwJY6JNxNTEPFvj2iOD98wdEwo3O+vGxynVhK19kdBJMmoLZ+gx
+   6Ns6ZxA8/kMJSHsVl6x3JwRQ/XRaFmqBibv+YeRi03QmmX0CvSUbDHI2J
+   c8N5hDuBsp1JdhRACjXbQC9EQVagvw90GeJ95G5DLjykMkyAJULgs8zxh
+   Q==;
+X-CSE-ConnectionGUID: IoI40siMTYudmnFkqxNSOA==
+X-CSE-MsgGUID: oSJGZcT6TkOMCaeRBiJmTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11330"; a="49752400"
 X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
-   d="scan'208";a="61239629"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 02:01:12 -0800
-X-CSE-ConnectionGUID: 06AmdIhLRoWLXSGTQo0ftQ==
-X-CSE-MsgGUID: VHYjk4kqSbWJHv+236BOBg==
+   d="scan'208";a="49752400"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2025 02:01:19 -0800
+X-CSE-ConnectionGUID: 8Ns0yl4eSvC8UZgQ8nbSkg==
+X-CSE-MsgGUID: lldpXDwSSe61zLr95B6law==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="110191864"
+X-IronPort-AV: E=Sophos;i="6.13,245,1732608000"; 
+   d="scan'208";a="109187920"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 30 Jan 2025 02:01:03 -0800
+  by fmviesa007.fm.intel.com with ESMTP; 30 Jan 2025 02:01:11 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id BBDB1111; Thu, 30 Jan 2025 12:01:01 +0200 (EET)
+	id EA239168; Thu, 30 Jan 2025 12:01:01 +0200 (EET)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -82,9 +82,9 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCHv3 03/11] drm/i915/gem: Use PG_dropbehind instead of PG_reclaim
-Date: Thu, 30 Jan 2025 12:00:41 +0200
-Message-ID: <20250130100050.1868208-4-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of PG_reclaim
+Date: Thu, 30 Jan 2025 12:00:44 +0200
+Message-ID: <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
 References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
@@ -101,7 +101,7 @@ immediately after writeback. Unlike PG_reclaim, it does not need vmscan
 to be involved to get the folio freed.
 
 Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-__shmem_writeback()
+pageout().
 
 It is safe to leave PG_dropbehind on the folio if, for some reason
 (bug?), the folio is not in a writeback state after ->writepage().
@@ -111,25 +111,36 @@ flag bit with PG_readahead.
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Acked-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ mm/vmscan.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-index 9016832b20fc..c1724847c001 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-@@ -329,10 +329,8 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
- 		if (!folio_mapped(folio) && folio_clear_dirty_for_io(folio)) {
- 			int ret;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index bc1826020159..c97adb0fdaa4 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
+ 		if (shmem_mapping(mapping) && folio_test_large(folio))
+ 			wbc.list = folio_list;
  
--			folio_set_reclaim(folio);
-+			folio_set_dropbehind(folio);
- 			ret = mapping->a_ops->writepage(&folio->page, &wbc);
--			if (!PageWriteback(page))
--				folio_clear_reclaim(folio);
- 			if (!ret)
- 				goto put;
+-		folio_set_reclaim(folio);
++		folio_set_dropbehind(folio);
++
+ 		res = mapping->a_ops->writepage(&folio->page, &wbc);
+ 		if (res < 0)
+ 			handle_write_error(mapping, folio, res);
+ 		if (res == AOP_WRITEPAGE_ACTIVATE) {
+-			folio_clear_reclaim(folio);
++			folio_clear_dropbehind(folio);
+ 			return PAGE_ACTIVATE;
  		}
+ 
+-		if (!folio_test_writeback(folio)) {
+-			/* synchronous write or broken a_ops? */
+-			folio_clear_reclaim(folio);
+-		}
+ 		trace_mm_vmscan_write_folio(folio);
+ 		node_stat_add_folio(folio, NR_VMSCAN_WRITE);
+ 		return PAGE_SUCCESS;
 -- 
 2.47.2
 
