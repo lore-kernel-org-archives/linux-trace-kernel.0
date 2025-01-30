@@ -1,97 +1,107 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4681F2C3D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 17:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A6B1EF0A1;
+	Thu, 30 Jan 2025 17:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738258608; cv=none; b=a2czQ8pCZtxKEe43XEKpiFej+rbv3v/gWh7Pzq588iSz+qQr5KaaqR94uNauz/I5yeRUikjqOw91m6gKL2d/xXYPCrGu9DeubgEBLpZ2JE+Zn3Hdak4fpY+J+tvpIbCfv3SZ826NpbJJFEPFgcM0nNfjFFVHby7cnL+E4aEvnmo=
+	t=1738258806; cv=none; b=QS8VxvbPZe+LeD4bt+MgcoaDg6LYcAfluuBjL21kYKOHFVVFKl1UMJuVsCTTNm8rlHXOo8IU3pHRnliJ0hCFE1bIiB8IbsOnVQ1ubrYDy786/didXD6IikASIzh8RERx2IOYGItG7vq1pHulvXA/U+GjMefjREQ1H/CGGIDiZ7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738258608; c=relaxed/simple;
-	bh=fEvX637Z7c33Zk5WCEhwiVVgzZ0aKNk8OcHlF0sVoOk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pf6dUsg0DX08lNz8V2r1aidXfTbsb2jlt8WWF86u1v+9a89uC8OmhFbDGDpgBLNonlbw/vhDn93vBzP4lW/YWL6VOuz4owOHqY2iIircMx3kxRaRB0D5oAP2U+2QJnf7rcDHvnwyBgIxLN4Mp2VfAsSKBrBVJSOSivGjRww+yUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2166022c5caso16785615ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Jan 2025 09:36:46 -0800 (PST)
+	s=arc-20240116; t=1738258806; c=relaxed/simple;
+	bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tQkaCsfyfInoRQV809cZGtJmrfh6GFRgc4FqXGJCOPfqix6+vQ6vvBTPyoFuGKhu2n2tN3vim5ME45BD9fzOI+nZIKmwdDtDfOttEAeXgVPye0OvhGcqhnYnVzRajZi3EoEiWvBrzMs2H+WvR4pH2smoOEpFjYaTyDc+kynq4l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAXsUcpb; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAXsUcpb"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46785fbb949so11733711cf.3;
+        Thu, 30 Jan 2025 09:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738258803; x=1738863603; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+        b=gAXsUcpbB5/gIZxCpCL7g0uzUd++ACA/TNH8RcUa6dLivjE/lnfbeJPW6WdshCsju2
+         97M1pNtCgAPBtpV/bVg0cgeHdOUl32zhAdDSAJ81v1u1KpBHFBdxmhdNiH4z76dPPx8C
+         yL3kUZWcMebPUITyJ0y7h50YeQj2FheCFhHuDmM9zzrf+CRXqsNo+fQkTNUPZ+BmeU/a
+         3J5NZf5iJFynDbjNN2YHZrCIf6FBCcFwgsphZmYkHXoNiJoxRxF1H4tEX4eCP+JYIfiW
+         ko03sJlyHj4nc8OpgjiTHDkWy9aEHEnTI8h+znPw4ztQJvnv5UmAwX+j2EAZuB+OvgPX
+         oLMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738258605; x=1738863405;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wba71lrlJHRpHNYwCSUOMwjfSnFCdMmwKcitB9A/Re8=;
-        b=h9g98gs6K42hXgS9KrYpRe6pwy4b2b5T9dMYl5/xfbDppPRCLenkkT4TQsmNBIsU6y
-         sLK7YdpddSaAh9HL1bp8N7lf9pa0h6oQLBJkeKAtANEx8R48ZoDuvrXRnEaaX9dEWPdd
-         abPr5i1jHiGGePkD/HyqufPFo+LWAUThuaza3U/+y030zDdCR/XmNhvYP77Kn8VOKfJQ
-         BUxkMn69TCBMEH8BaUwOWdRH+q1G9D487r2DKf1RcM3JVWUbV9sK9tDjR2T9+iJw5NyS
-         /NcK1Slek646IOCI1DyEVCfg+MSt697ay9GFNAmrPOjU0Wo9zNxIwbkxHRWOJZKVuPNq
-         j5pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ9TpLYKqi+VW2dWdrUSY7YrjBCI4h8GeIvBZa1aIz5/n7GdXTmfcIrqrqTR+szKqbf09nNYxSQn0t32Gw+E95PIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwaTpc7FzzLbhJ5Fj7MqBoOov/g0P213Va0+p1AX3xGd9Ou8c+
-	J80WpOcoJhjBsACH5oTis0ALaEfN1xT6zc5CbepX6CtXU3Tu8AtJmdcS9y3Izwc=
-X-Gm-Gg: ASbGncs9ixXzP8GH1c0c/i6RsmS7WqkHSh6bl9L/cj2fXLQOMt0aKQo6IID6Azu0JB/
-	uliWrYzyIMsRYVp63pQTjSOc5q4qrDgcE4FHccj17NgUE/IUTns8QDQTNt2UldyyxparGeiZ1ZS
-	Rq7cAdNR9TFYMxGcS14CsvL1nSDtR0j0rr9quJTJVRgVAAZ75jIgpFnJTJnqqO/Jqmj3hY3nhyQ
-	KR/0LUVk3XXPXECtt8TeaaSmsUtOHkCMSHics8JZ3Rl1hdfBkjxietv7ZV0yRpEeHh2PRzrkAEB
-	NshPjeCFIE14kA==
-X-Google-Smtp-Source: AGHT+IHPgtyksfxV717Ovby5/EZ85xi1T/C77gVscvPLkijnPA2Hto/kR8guWoggO+GeixLtqrCFiA==
-X-Received: by 2002:a05:6a20:7345:b0:1e1:c03c:b420 with SMTP id adf61e73a8af0-1ed7a6b820dmr14182766637.31.1738258605613;
-        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-acebe384272sm1423838a12.18.2025.01.30.09.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jan 2025 09:36:45 -0800 (PST)
-From: Kevin Hilman <khilman@kernel.org>
-To: Keita Morisaki <keyz@google.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- lpieralisi@kernel.org, sudeep.holla@arm.com, rafael@kernel.org,
- daniel.lezcano@linaro.org, linux-pm@vger.kernel.org
-Cc: aarontian@google.com, yimingtseng@google.com, Keita Morisaki
- <keyz@google.com>
-Subject: Re: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
-In-Reply-To: <20250125013145.1664062-1-keyz@google.com>
-References: <20250125012734.1661860-1-keyz@google.com>
- <20250125013145.1664062-1-keyz@google.com>
-Date: Thu, 30 Jan 2025 09:36:44 -0800
-Message-ID: <7hy0ysi4pf.fsf@baylibre.com>
+        d=1e100.net; s=20230601; t=1738258803; x=1738863603;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fOyS2SgUQBtaRtcTvGzojZKstYzn/7x6VS/0J+NwWk4=;
+        b=Rw/iR9AKRxlpxWRiYC5LIxvCm1nKzvzk/cr3J5B2p3/tBa3olWtNEf/fQWeZG3sVeZ
+         ur68kckwyXoN6wYyGRLYoJk9UafkcDG34reCLAQD6n6O4wanU631oEbUkLtjCV3fEy02
+         3XJX8U4ZhdN3piQOM3qyWkVI+zh/0Y+fzMaXWK9FBHgT0/oLcYZH7wNF1A4NCu3OA9c/
+         GKjKOFslcrGWD+y99WJzq2wauASdI7MA9Zyoh1OlYgGPYU+aAfjyVle8IDs4y5XGiO/p
+         IJKESwTNrE2b0O5R2guyCj9YELQcxa9R7GEzH4lairhWADhtbP6ONv3RWUsWuoQyXIpe
+         An9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWFBACDpCUD0OBrEBh2As3kHI8pb2Pc5PKQH45jo/eh1lSP72JY17AHxXBz8H481UWCmUHUkyG0HNGpq9OE@vger.kernel.org, AJvYcCWi1CeKAvtAY1BO/CP7aWFd5aVAhwd1tW4bYOj6IR/aRtr130umAROeI2bFdroNnNK2CZRQsV3B9QuqIw4N5tL9UTmw@vger.kernel.org, AJvYcCXRZtW63KF6smfpHjOGFp/3BozC1UN7tMwwKudvXNAi/W7Nm3h0dgpylW2YkGdSYd63uR1sLbHNhRIVPVFG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB+0KTepwVoCa9tQAMQRzIkxY2qxo1gZPb8DGRF4qD9hUyCjRY
+	5K/QywBw4IB4hUXt20aOieNImVLJj1OCjCUCpBy/DBici11BODGhF0Ho0cdV6w7jQ5tpxTl1N4z
+	CL1BTmQcxIuSOTEG9cCSS/11pb9I=
+X-Gm-Gg: ASbGncuLQ99+rkHnsVkHpHPQNy0f03rMS22Rj82yXE/lbG5MoTiDw5VMFZFlYVqq7Ds
+	a8AgYrC4GJg+W5wfkByDKV4nKRmOPOvypOLIB3PMr8JHGWxZTK6SZeKAGoNsFafLebCP9oUG7gZ
+	W+hj597PKugeOs3ENMU2K1LhX3saIF
+X-Google-Smtp-Source: AGHT+IE6pqda5eKDzRAyzpwontPmN7eYd0zcmoX6OYSqt3IrbDhFMaTFRiKg3Ru2dzaKD+7BQ6lfXTG07MedePcTXtg=
+X-Received: by 2002:a05:6214:1310:b0:6e1:a51d:e96f with SMTP id
+ 6a1803df08f44-6e243bef7cemr117873546d6.8.1738258803328; Thu, 30 Jan 2025
+ 09:40:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com> <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-5-kirill.shutemov@linux.intel.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Thu, 30 Jan 2025 09:39:52 -0800
+X-Gm-Features: AWEUYZnhGHhGD14z9UZ4qeG3B1M4JKsk80YTUhLoPK-rRv81OyfD8wOiyVhXCtw
+Message-ID: <CAKEwX=POeBSHBXxdNWua5cPJ=7+P6x4qG6gWgN0HnT2K+_ULtQ@mail.gmail.com>
+Subject: Re: [PATCHv3 04/11] mm/zswap: Use PG_dropbehind instead of PG_reclaim
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Oscar Salvador <osalvador@suse.de>, 
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Simona Vetter <simona@ffwll.ch>, Steven Rostedt <rostedt@goodmis.org>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Vlastimil Babka <vbabka@suse.cz>, 
+	Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Keita Morisaki <keyz@google.com> writes:
-
-> The trace event cpu_idle provides insufficient information for debugging
-> PSCI requests due to lacking access to determined PSCI domain idle
-> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-> idle states the power domain has.
+On Thu, Jan 30, 2025 at 2:02=E2=80=AFAM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
 >
-> Add new trace events namely psci_domain_idle_enter and
-> psci_domain_idle_exit to trace enter and exit events with a determined
-> idle state.
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
+
+Neat!
+
 >
-> These new trace events will help developers debug CPUidle issues on ARM
-> systems using PSCI by providing more detailed information about the
-> requested idle states.
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> zswap_writeback_entry().
 >
-> Signed-off-by: Keita Morisaki <keyz@google.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Yosry Ahmed <yosryahmed@google.com>
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-I've been using some local trace_printk() to do exactly this, so I fully
-support having some official tracepoints here. 
-
-For my local hacks, I was trackin the state index as well as the state
-value since for quick debug, I find the index to more human readable
-than the state value, which I have to compare with the
-arm,psci-suspend-pararm from the DT.
-
-Anyways, thanks for submitting this!
-
-Kevin
+Acked-by: Nhat Pham <nphamcs@gmail.com>
