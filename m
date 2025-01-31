@@ -1,53 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0E31C5486;
-	Fri, 31 Jan 2025 13:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38752EAC6;
+	Fri, 31 Jan 2025 14:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738330741; cv=none; b=iu6YM4hdZQJS1S3xAaPYCXSerBs1udFZSOsI7eu8ZESkf9p6+LZhJD+2MVlCUbjG9Ie9q89e/HACYSQDbYFS/1zV6Eye70d7zlhGaGj1Wnfm4ZFxzRapPD7TknpS4hphVoF296CZMCUgBF5hrTL5V6a+hruej231tJJwqKVqojk=
+	t=1738333306; cv=none; b=k1DvFfCEFPIgUkTHcFbW6TGASlNoJqGTECiv+Aqu0Uj1iVPTGExmDBvZSBJFSp4quXDUZERuh3kdviOF551lTTyA6xgRqGq4On6bt5qD8JHqQ5U9fNAi8FxxCpqtyk2LxRUI+jZANv11e3CdQOedco8KMdraj7+LAeLLNmAVWh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738330741; c=relaxed/simple;
-	bh=BlkMwqZELP0Gp0TzhdEuSlXKujbDb3xlMAHFMVLsdm8=;
+	s=arc-20240116; t=1738333306; c=relaxed/simple;
+	bh=f24bChgj7REtNaoNkH2tAqocNhxOhtVih4QvozTv6m0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIuzqmnE9B7rOhOUJXINW3BUucwGQSxivQtRLqMjRLVtjaseagvduF4gXkjU45iYYDnRPkq2G6qmCOIxCpNgK0Cmut83vjFmvgAdZ2GggfSt5qU5LCJAgue2ypPRUtB5Q8tbIaLPLfG2hTf4bat/q4Z49mIRUYZYJ+q53XFAEBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y1GSRVG0; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jQoI+E1D9iMCf+kU0rwR4iGPN/U7Ix9RjkdtkBlkESPUbbCmbKq5j4/Q4+hfJTlRYKjx9H2iECUiDKQgFwNrGnBXkJ9ZfA8oMepkQweBSe1PgYUaDh+FEcWOnUTsSi1XAudKIb/Bs0gXT8CKefq1CMuuJ8+FN+4gNw9BRTHY9Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GcI+YDUi; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y1GSRVG0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738330740; x=1769866740;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BlkMwqZELP0Gp0TzhdEuSlXKujbDb3xlMAHFMVLsdm8=;
-  b=Y1GSRVG0zPo2JYRw28LW1xP51qGwo4Sbm320todu55TO7kzYrQZ0b6a+
-   fo43MghPlQn6Fcy9BVFCMdjbNNlKDc0CuMr4tNepzrK7JENEZAp/CSDRj
-   8FRuTrjfdO4ak5T19dvT1sfzJguqzf5JmCzzqu8r4g94v8HoTRxQpWYBb
-   1V4huAvOJw3t7xFpDee8qOrUsoax+GRamr74+LSkFR153LNAfTQYQ+1yi
-   O74W9bnSP4HsbT7+H0g0cDO0RXr2B5XoLIW8/lbtmedFGnHdtoGU2PKgA
-   Sn5dtzBLUd95x7cUhuB9Hilp5bmfYuEAek5ErjKU3tuu7jRZAxptpDLaQ
-   w==;
-X-CSE-ConnectionGUID: 5u7Q1ErMS0CQ3xhla2sdGg==
-X-CSE-MsgGUID: dhnNj2pVR9up7opMIcfcRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11332"; a="50283182"
-X-IronPort-AV: E=Sophos;i="6.13,248,1732608000"; 
-   d="scan'208";a="50283182"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 05:38:58 -0800
-X-CSE-ConnectionGUID: yJ4rsx1GRSusxX/Vynh0XQ==
-X-CSE-MsgGUID: gJj2D0AhTKuPuWC4WLeG5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="146816937"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO intel.com) ([10.245.246.175])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2025 05:38:46 -0800
-Date: Fri, 31 Jan 2025 14:38:42 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GcI+YDUi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gn6ROdhimfH2SlxaFG9S9wImJavIsJGvPsiITl9Tyxg=; b=GcI+YDUi42q8wWLAaliLPMiJCL
+	jC3vbx12pAXO2Q4jttDBHLad6PFrI8gKFC3UGsAmD9CGyvTct74eea7pwBUi30YOPI6ohMHsELXRa
+	WTkZKm4FPDerhWo7QwIC3sY8fg06rYWHQ+C/HxXpwV2FZ1kAuXRRCAg1UfEL2sqGk4RbLj6BuD2qa
+	NQw6KWjJxuVhMY3rwD/NiDfpZcCBes6Wo+8nK9PgbM5Tqg7/Fr0zPXey2d2H8QVOORFMWSgoJTKjk
+	/JriUdLVUEli8ufJKmilaBRGPP2FpKCWfAuKk2Ubz4QxzjU62JGSWjoLnj8bempgYL3036hFSGCmw
+	xa5KYQwA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tdrtX-0000000EmeT-34tM;
+	Fri, 31 Jan 2025 14:21:19 +0000
+Date: Fri, 31 Jan 2025 14:21:19 +0000
+From: Matthew Wilcox <willy@infradead.org>
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+Cc: Chris Wilson <chris@chris-wilson.co.uk>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Jens Axboe <axboe@kernel.dk>,
 	"Jason A. Donenfeld" <Jason@zx2c4.com>,
 	Andi Shyti <andi.shyti@linux.intel.com>,
@@ -75,11 +61,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 03/11] drm/i915/gem: Use PG_dropbehind instead of
- PG_reclaim
-Message-ID: <Z5zSYtcGGp73Ip2c@ashyti-mobl2.lan>
+Subject: Re: [PATCHv3 02/11] drm/i915/gem: Convert __shmem_writeback() to
+ folios
+Message-ID: <Z5zcXyYfXSI0PYBY@casper.infradead.org>
 References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-4-kirill.shutemov@linux.intel.com>
+ <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -88,27 +74,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250130100050.1868208-4-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
 
-Hi Kirill,
-
-On Thu, Jan 30, 2025 at 12:00:41PM +0200, Kirill A. Shutemov wrote:
-> The recently introduced PG_dropbehind allows for freeing folios
-> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> to be involved to get the folio freed.
+On Thu, Jan 30, 2025 at 12:00:40PM +0200, Kirill A. Shutemov wrote:
+> Use folios instead of pages.
 > 
-> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> __shmem_writeback()
-> 
-> It is safe to leave PG_dropbehind on the folio if, for some reason
-> (bug?), the folio is not in a writeback state after ->writepage().
-> In these cases, the kernel had to clear PG_reclaim as it shared a page
-> flag bit with PG_readahead.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+> This is preparation for removing PG_reclaim.
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+Well, this is a horrid little function.  Rather than iterating just the
+dirty folios, it iterates all folios, then locks them before checking
+whether they're dirty.
 
-Thanks,
-Andi
+I don't know whether the comments are correct or the code is correct.
+This comment doesn't match with setting PageReclaim:
+
+         * Leave mmapings intact (GTT will have been revoked on unbinding,
+         * leaving only CPU mmapings around) and add those pages to the LRU
+         * instead of invoking writeback so they are aged and paged out
+         * as normal.
+
+so I wonder if Chris was confused about what PageReclaim actually does.
+Let's find out if he still remembers what he thought it did!
