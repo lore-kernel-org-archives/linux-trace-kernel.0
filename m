@@ -1,31 +1,31 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE911F4E32
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jan 2025 20:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AAB153838
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 31 Jan 2025 21:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738355282; cv=none; b=HAzjWMJ1Ni5xQJVNnnbLMtDzshOk6s6jr4naMu69zSPwDaX50CgbhTfrCmXOhz8ojaOk6IQXZoEjqaQWf8zIJKMuCOadA8Aq1FHdHhgmaOyB+c0rzme0nhqqir1igdPoKeOLyqVv9kpHtlspnprLNSakx9LPnPflA28My/cjyqA=
+	t=1738359194; cv=none; b=MAc3K+95KKq4d4bv/gcj2cQhX0/QifD/GABbBcMZ5novCgEXB221299Hw8lyjWKdypB1kN8BAo15bdfW5FAIPONi35xAGBBlUDut/ZtGtNv2OqJruDC9Ka6rymiTM7wKSWETZhFcy6wgJYRI0wX2dMvS2M0RD1VtbHWAZ+0s2Eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738355282; c=relaxed/simple;
-	bh=8rgLxrw9qVMEYsbd46Aj4ZL+ZxD1p+A1WFzSXZgVMbM=;
+	s=arc-20240116; t=1738359194; c=relaxed/simple;
+	bh=s6IiBELlRbJ9m5KhNZGC7jqONMebFZXJz0DSonG69f0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1VoQSxyOqJQixyTYKgKj8fFbfUhC0R6sk7siI7lBApjPy/Eez4vnpU/pMwubrlkGC53fNOfKoDIDJu4UJDDfVMs0Q93cVgKIjDOFzQF+eOwFgb3pMB9NSkG2KxsXMwGZ1Cz3gTSk/orF93dJ2sXva1JiR5G8/JfnHYCzEIP30E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lrsblSRz; arc=none smtp.client-ip=95.215.58.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=SND9AE8CnYLHpTp2xuF/rKEeohm+K4c25kSKpP2dgebcxScmWu6N4zFIyRoKkuSd7VAiDItEmt8GmKrA2uVLEATWVLAqHpS4D1KQXyB1noGiKkzYkYdZM82chzVnas/xmCZ2e4q28HgMr8R1Xtz5i9DMMzgBQZuNoN1Zz17by9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jyD9gPXS; arc=none smtp.client-ip=95.215.58.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lrsblSRz"
-Date: Fri, 31 Jan 2025 12:27:40 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jyD9gPXS"
+Date: Fri, 31 Jan 2025 13:32:56 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738355268;
+	t=1738359184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7BhC7vLoh7VtzfmXLESUsTqxQbrPIF6WzzF0QtgvNjc=;
-	b=lrsblSRzlb3U+VBSguFAbcREpGVVQMrtG0UN6409a/fosRBCk4L0jLE6FhAQypEB2fAOSm
-	N2A2tLZnVmRItxbwLORJuWRgDvy7Gkv2CDnNDSNBFBiBFJxyAqrUf95g9+GCYJkAmPEa8U
-	BHDzzwIL0WWDQKyoESpoRnvF5jGA2nk=
+	bh=FKADDN/gzLU5ps4Oe+ymmjbVA+yTOl27darYW9+bIr0=;
+	b=jyD9gPXS1WTaul95TpeSAfE5cKe6GAm6eOkWb/GiX7s5qiCfSRB8BaOinWtNL/E622IZjh
+	0QScNYaKTFt28s6IqWK1DsqmrG5njsWa/Py97/n3byOUomQBe9xiy4XrKkYlPSzhlhYxVK
+	kdV1A0T7T9VIc3IRqV+q4ufc53+aXuY=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Shakeel Butt <shakeel.butt@linux.dev>
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
@@ -45,11 +45,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
 	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
 	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 02/11] drm/i915/gem: Convert __shmem_writeback() to
- folios
-Message-ID: <gtknttjvbestmrulqy2w5afqzcdetnrrgcgcfz4fwqb5zg2p4e@pow2uwawcjt4>
+Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
+ PG_reclaim
+Message-ID: <lpptopwuxbfixeigoxs44rrpg6sm5mviai3uy7sxvvng3twyer@xpul6sjcvvjj>
 References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
+ <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,63 +58,60 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250130100050.1868208-3-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jan 30, 2025 at 12:00:40PM +0200, Kirill A. Shutemov wrote:
-> Use folios instead of pages.
+On Thu, Jan 30, 2025 at 12:00:44PM +0200, Kirill A. Shutemov wrote:
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
 > 
-> This is preparation for removing PG_reclaim.
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> pageout().
+> 
+> It is safe to leave PG_dropbehind on the folio if, for some reason
+> (bug?), the folio is not in a writeback state after ->writepage().
+> In these cases, the kernel had to clear PG_reclaim as it shared a page
+> flag bit with PG_readahead.
+
+Is it correct to say that leaving PG_dropbehind on folios which doesn't
+have writeback state after ->writepage() (i.e. store to zswap) is fine
+because PG_dropbehind is not in PAGE_FLAGS_CHECK_AT_FREE?
+
 > 
 > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 > Acked-by: David Hildenbrand <david@redhat.com>
 > ---
->  drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  mm/vmscan.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> index fe69f2c8527d..9016832b20fc 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> @@ -320,25 +320,25 @@ void __shmem_writeback(size_t size, struct address_space *mapping)
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bc1826020159..c97adb0fdaa4 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
+>  		if (shmem_mapping(mapping) && folio_test_large(folio))
+>  			wbc.list = folio_list;
 >  
->  	/* Begin writeback on each dirty page */
->  	for (i = 0; i < size >> PAGE_SHIFT; i++) {
-
-With folio conversion, should the iteration step be folio_nr_pages()
-instead of 1?
-
-> -		struct page *page;
-> +		struct folio *folio;
->  
-> -		page = find_lock_page(mapping, i);
-> -		if (!page)
-> +		folio = filemap_lock_folio(mapping, i);
-> +		if (!folio)
->  			continue;
->  
-> -		if (!page_mapped(page) && clear_page_dirty_for_io(page)) {
-> +		if (!folio_mapped(folio) && folio_clear_dirty_for_io(folio)) {
->  			int ret;
->  
-> -			SetPageReclaim(page);
-> -			ret = mapping->a_ops->writepage(page, &wbc);
-> +			folio_set_reclaim(folio);
-> +			ret = mapping->a_ops->writepage(&folio->page, &wbc);
->  			if (!PageWriteback(page))
-> -				ClearPageReclaim(page);
-> +				folio_clear_reclaim(folio);
->  			if (!ret)
->  				goto put;
+> -		folio_set_reclaim(folio);
+> +		folio_set_dropbehind(folio);
+> +
+>  		res = mapping->a_ops->writepage(&folio->page, &wbc);
+>  		if (res < 0)
+>  			handle_write_error(mapping, folio, res);
+>  		if (res == AOP_WRITEPAGE_ACTIVATE) {
+> -			folio_clear_reclaim(folio);
+> +			folio_clear_dropbehind(folio);
+>  			return PAGE_ACTIVATE;
 >  		}
-> -		unlock_page(page);
-> +		folio_unlock(folio);
->  put:
-> -		put_page(page);
-> +		folio_put(folio);
->  	}
->  }
 >  
+> -		if (!folio_test_writeback(folio)) {
+> -			/* synchronous write or broken a_ops? */
+> -			folio_clear_reclaim(folio);
+> -		}
+>  		trace_mm_vmscan_write_folio(folio);
+>  		node_stat_add_folio(folio, NR_VMSCAN_WRITE);
+>  		return PAGE_SUCCESS;
 > -- 
 > 2.47.2
 > 
