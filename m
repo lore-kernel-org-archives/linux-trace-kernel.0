@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D351D81749;
-	Sat,  1 Feb 2025 07:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB02412B73;
+	Sat,  1 Feb 2025 07:23:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738394595; cv=none; b=tp6+hrthFi8/kQY8dk3wpD3M5gIEN6h/NaLYLqjrPhApyLj2GEAuyNATn0dnU9G1NcUGreTa3YP9dmoImyjA3HfnEUQ+nuN89cckMm+2qu7sLPntjeWzh1qlP37OotM6k8BIE5CyIAEQXwujMmIKEjPau88452S2jYAzXli7sJw=
+	t=1738394606; cv=none; b=eX55ch9Qxee3+rDobwaY/x55WwR1Tn9VphxQbV9fJyv/vDSX6eKeOYUvnlqu68Z2ywBFHYfgvKpXV+a1R7ivN0Okl2UQB1/Diu0zTm1uxelVJhAa9YhaPuF6L8vwCad1gBfj9eKdb2F4lQypwyt7VMdjE9L7BaVt4PeCmsai3xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738394595; c=relaxed/simple;
-	bh=+Cp+rqZpjieos4w+gk3fyrX4q/vH657CCHxNW4N5DSc=;
+	s=arc-20240116; t=1738394606; c=relaxed/simple;
+	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LyLykdIjb0wuo86NdesBf4kfZ4ir7iBShKqbE9Him2IGrouVgcpVEI06f4CJtaeozqdoLkOgwWU76mcpYLqLYyCXFYkvXTEKmI6YUkTdFtfozfM1C8VkBt8h4vem9KheHQOIlrrSoDsSe/QLeWIhHf0xjwAbP1MjSJfdEAIujJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNkF68lf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KnaY26XhjXxtd69xg6s/CRyWk121aY5nu841e5GLmUF0t9X7xeO8wUBlcOH+ogkh9EcMCfyys7SESvYZ+2bKd72MhYD0HHOZP0deBYDBtVC2qnNzOcP1s2Rf5AAtZ5pnulHx6Tq/xJdAE2JKBLY2BtFCCjOIu6gqXQSC2S++BNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLdlva7Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNkF68lf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9352FC4CED3;
-	Sat,  1 Feb 2025 07:23:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLdlva7Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C938C4CEE0;
+	Sat,  1 Feb 2025 07:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738394595;
-	bh=+Cp+rqZpjieos4w+gk3fyrX4q/vH657CCHxNW4N5DSc=;
+	s=k20201202; t=1738394605;
+	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DNkF68lf877iH6ByEJLzMob6dlI/hWuzGvq2Q2B6q4cXfIYS56Z2G+TMtdeFGihg8
-	 tmav7NJ+RR5U6xFRU+j9UijWJxbnbt7wtwBAztdXDUA+hFitxxHGXsqYM8rW0elb/D
-	 0Gqz+RKbDlxp0MpnicTVU7JSRR40tRmRdbOy6R3CnhiXThOvHFrkhGBS94CZOuE2sO
-	 6yMuPLZ98gPs5hK928Tt2ngtAQkfcHc5xzSG0JoLunfqPY9JnHOYimS2oAJTjPCx4R
-	 0lNA5LrDQL3+umigLK2RzPuMct15ymk8PhvIxDodKxuQu8zoa+RpDSy3bpuhpFqrqS
-	 WyGbxkLBdxPlg==
+	b=KLdlva7YfycBM/PNWSdy7EvfZgjDPoCkPjTTh6C9nrTE/2GI+0EYiO+7HkOnq55RR
+	 zTtXN/7MPEXMWsLyRPZAkZ0tiB8NCQHAJKFOjUg0NGJhRE0xVE8uuTgTCq4oTs4NbT
+	 iLbQps3cOpBNbsxO8z9VEErBZsqGZqoBV6pbj8UTbO/AZ4J+SlKVzb9ajRssGBgoYV
+	 iM+ggti8G/MV/RKTBdxTwIPavh53+gRhORccmx6gRPrmFqa10AbtCvQgj5LjoOyR+l
+	 TPHukuYmN3o8+TaYzpnG4BA4g83/mztd71wSTQIEqUpqD6UMDEh0cV7QSf8wZHXVJX
+	 BwV2FrBfZ9Z2Q==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -37,9 +37,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-modules@vger.kernel.org
-Subject: [PATCH v2 1/2] modules: Add __module_build_id() to find module by build_id
-Date: Sat,  1 Feb 2025 16:23:11 +0900
-Message-ID: <173839459112.2009498.16498824811045520238.stgit@devnote2>
+Subject: [PATCH v2 2/2] tracing: Add relative-stacktrace option
+Date: Sat,  1 Feb 2025 16:23:20 +0900
+Message-ID: <173839460073.2009498.15281500159677989414.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173839458022.2009498.14495253908367838065.stgit@devnote2>
 References: <173839458022.2009498.14495253908367838065.stgit@devnote2>
@@ -55,137 +55,296 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add __module_build_id() to find module by build_id. This also makes
-module::build_id available with CONFIG_MODULE_BUILD_ID kconfig.
+Add "relative-stacktrace" option to save the stacktrace entries
+as offset from the _stext or module's text section. For the
+module address, each entry also saves the first 4bytes of the
+build_id of the module so that it can find the appropriate
+symbol from the offset.
+
+By using this build_id, we can also easily find the corresponding
+modules off-line. Thus this stacktrace data is in the persistent
+ring buffer, the kernel can find appropriate modules after reboot
+without saving previous live information.
+
+This feature also shows the module name after the symbol as below.
+
+   event-sample-1622    [005] ...1.  2112.978105: <stack trace>
+ => event_triggers_post_call
+ => trace_event_raw_event_foo_bar [trace_events_sample]
+ => do_simple_thread_func [trace_events_sample]
+ => simple_thread [trace_events_sample]
+ => kthread
+ => ret_from_fork
+ => ret_from_fork_asm
+
+The downside is the cost of time and memory (on 32bit arch). This
+needs to find the module if the address in the module, and save
+both of 32bit offset and 32bit hash for each entry, this may consume
+twice memory on 32bit arch. On 64bit arch, the amount of consuming
+memory is the same.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/module.h   |    8 +++++++-
- kernel/module/Kconfig    |    3 +++
- kernel/module/kallsyms.c |    4 ++--
- kernel/module/main.c     |   29 +++++++++++++++++++++++++++++
- lib/Kconfig.debug        |    1 +
- 5 files changed, 42 insertions(+), 3 deletions(-)
+ include/linux/trace.h        |    5 +++
+ kernel/trace/Kconfig         |    1 +
+ kernel/trace/trace.c         |   50 ++++++++++++++++++++++++++++++----
+ kernel/trace/trace.h         |    3 ++
+ kernel/trace/trace_entries.h |   18 ++++++++++++
+ kernel/trace/trace_output.c  |   62 ++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 133 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index b3a643435357..e181056d6af6 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -416,7 +416,7 @@ struct module {
- 	/* Unique handle for this module */
- 	char name[MODULE_NAME_LEN];
+diff --git a/include/linux/trace.h b/include/linux/trace.h
+index fdcd76b7be83..4b4f008a2fa9 100644
+--- a/include/linux/trace.h
++++ b/include/linux/trace.h
+@@ -26,6 +26,11 @@ struct trace_export {
+ 	int flags;
+ };
  
--#ifdef CONFIG_STACKTRACE_BUILD_ID
-+#ifdef CONFIG_MODULE_BUILD_ID
- 	/* Module build ID */
- 	unsigned char build_id[BUILD_ID_SIZE_MAX];
- #endif
-@@ -622,6 +622,7 @@ static inline bool module_is_coming(struct module *mod)
++struct ftrace_rel_caller {
++	int		offset;
++	unsigned int	build_id32;
++} __packed;
++
+ struct trace_array;
  
- struct module *__module_text_address(unsigned long addr);
- struct module *__module_address(unsigned long addr);
-+struct module *__module_build_id(unsigned char *build_id, int size);
- bool is_module_address(unsigned long addr);
- bool __is_module_percpu_address(unsigned long addr, unsigned long *can_addr);
- bool is_module_percpu_address(unsigned long addr);
-@@ -791,6 +792,11 @@ static inline struct module *__module_text_address(unsigned long addr)
- 	return NULL;
- }
+ #ifdef CONFIG_TRACING
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index d570b8b9c0a9..b4bd186732fe 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -169,6 +169,7 @@ config TRACING
+ 	bool
+ 	select RING_BUFFER
+ 	select STACKTRACE if STACKTRACE_SUPPORT
++	select MODULE_BUILD_ID if STACKTRACE_SUPPORT
+ 	select TRACEPOINTS
+ 	select NOP_TRACER
+ 	select BINARY_PRINTF
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1496a5ac33ae..ca17d9db37e8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2916,16 +2916,41 @@ struct ftrace_stacks {
+ static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
+ static DEFINE_PER_CPU(int, ftrace_stack_reserve);
  
-+static inline struct module *__module_build_id(unsigned char *build_id, int size)
++static void record_as_offset(struct ftrace_rel_caller *caller, unsigned long addr)
 +{
-+	return NULL;
++	if (likely(core_kernel_text(addr))) {
++		caller->build_id32 = 0;
++		caller->offset = addr - (unsigned long)_stext;
++	} else if (addr == FTRACE_TRAMPOLINE_MARKER) {
++		caller->build_id32 = 0;
++		caller->offset = (int)FTRACE_TRAMPOLINE_MARKER;
++	} else {
++		struct module *mod = __module_text_address(addr);
++
++		if (mod) {
++			unsigned long base = (unsigned long)mod->mem[MOD_TEXT].base;
++
++			caller->offset = addr - base;
++			caller->build_id32 = *(unsigned int *)mod->build_id;
++		} else {
++			caller->build_id32 = 0;
++			caller->offset = addr - (unsigned long)_stext;
++		}
++	}
 +}
 +
- static inline bool is_module_address(unsigned long addr)
+ static void __ftrace_trace_stack(struct trace_array *tr,
+ 				 struct trace_buffer *buffer,
+ 				 unsigned int trace_ctx,
+ 				 int skip, struct pt_regs *regs)
  {
- 	return false;
-diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index 7b329057997a..5e81dea1afea 100644
---- a/kernel/module/Kconfig
-+++ b/kernel/module/Kconfig
-@@ -26,6 +26,9 @@ if MODULES
- config MODULE_DEBUGFS
- 	bool
++	struct rel_stack_entry *rel_entry;
+ 	struct ring_buffer_event *event;
+ 	unsigned int size, nr_entries;
+ 	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	int stackidx;
++	int type;
  
-+config MODULE_BUILD_ID
-+	bool
+ 	/*
+ 	 * Add one, for this function and the call to save_stack_trace()
+@@ -2937,6 +2962,7 @@ static void __ftrace_trace_stack(struct trace_array *tr,
+ #endif
+ 
+ 	preempt_disable_notrace();
++	type = (tr->trace_flags & TRACE_ITER_REL_STACK) ? TRACE_REL_STACK : TRACE_STACK;
+ 
+ 	stackidx = __this_cpu_inc_return(ftrace_stack_reserve) - 1;
+ 
+@@ -2977,16 +3003,28 @@ static void __ftrace_trace_stack(struct trace_array *tr,
+ 	}
+ #endif
+ 
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
+-				    struct_size(entry, caller, nr_entries),
++	if (type == TRACE_REL_STACK)
++		size = struct_size(rel_entry, caller, nr_entries);
++	else
++		size = struct_size(entry, caller, nr_entries);
 +
- config MODULE_DEBUG
- 	bool "Module debugging"
- 	depends on DEBUG_FS
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index bf65e0c3c86f..98f2661c1da8 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -224,7 +224,7 @@ void add_kallsyms(struct module *mod, const struct load_info *info)
- 	mod->core_kallsyms.num_symtab = ndst;
- }
++	event = __trace_buffer_lock_reserve(buffer, type, size,
+ 				    trace_ctx);
+ 	if (!event)
+ 		goto out;
+-	entry = ring_buffer_event_data(event);
  
--#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID)
-+#if IS_ENABLED(CONFIG_MODULE_BUILD_ID)
- void init_build_id(struct module *mod, const struct load_info *info)
- {
- 	const Elf_Shdr *sechdr;
-@@ -338,7 +338,7 @@ int module_address_lookup(unsigned long addr,
- 		if (modname)
- 			*modname = mod->name;
- 		if (modbuildid) {
--#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID)
-+#if IS_ENABLED(CONFIG_MODULE_BUILD_ID)
- 			*modbuildid = mod->build_id;
- #else
- 			*modbuildid = NULL;
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 5399c182b3cb..fca9b6a692e3 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -3746,6 +3746,35 @@ struct module *__module_text_address(unsigned long addr)
- 	return mod;
- }
+-	entry->size = nr_entries;
+-	memcpy(&entry->caller, fstack->calls,
+-	       flex_array_size(entry, caller, nr_entries));
++	if (type == TRACE_REL_STACK) {
++		rel_entry = ring_buffer_event_data(event);
++		rel_entry->size = nr_entries;
++		for (int i = 0; i < nr_entries; i++)
++			record_as_offset((struct ftrace_rel_caller *)&rel_entry->caller[i],
++					fstack->calls[i]);
++	} else {
++		entry = ring_buffer_event_data(event);
++		entry->size = nr_entries;
++		memcpy(&entry->caller, fstack->calls,
++		       flex_array_size(entry, caller, nr_entries));
++	}
  
-+/**
-+ * __module_build_id() - get the module whose build_id start with an array.
-+ * @build_id: the first part of the build_id.
-+ * @size: the size of @build_id.
-+ *
-+ * Must be called with preempt disabled or module mutex held so that
-+ * module doesn't get freed during this.
-+ */
-+struct module *__module_build_id(unsigned char *build_id, int size)
+ 	__buffer_unlock_commit(buffer, event);
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 9c21ba45b7af..b27533456865 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -55,6 +55,7 @@ enum trace_type {
+ 	TRACE_TIMERLAT,
+ 	TRACE_RAW_DATA,
+ 	TRACE_FUNC_REPEATS,
++	TRACE_REL_STACK,
+ 
+ 	__TRACE_LAST_TYPE,
+ };
+@@ -511,6 +512,7 @@ extern void __ftrace_bad_type(void);
+ 		IF_ASSIGN(var, ent, struct ftrace_entry, TRACE_FN);	\
+ 		IF_ASSIGN(var, ent, struct ctx_switch_entry, 0);	\
+ 		IF_ASSIGN(var, ent, struct stack_entry, TRACE_STACK);	\
++		IF_ASSIGN(var, ent, struct rel_stack_entry, TRACE_REL_STACK);\
+ 		IF_ASSIGN(var, ent, struct userstack_entry, TRACE_USER_STACK);\
+ 		IF_ASSIGN(var, ent, struct print_entry, TRACE_PRINT);	\
+ 		IF_ASSIGN(var, ent, struct bprint_entry, TRACE_BPRINT);	\
+@@ -1350,6 +1352,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
+ 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
+ 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
++		C(REL_STACK,		"relative-stacktrace"),	\
+ 		FUNCTION_FLAGS					\
+ 		FGRAPH_FLAGS					\
+ 		STACK_FLAGS					\
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index fbfb396905a6..46a770e57287 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -229,6 +229,24 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
+ 		 (void *)__entry->caller[6], (void *)__entry->caller[7])
+ );
+ 
++FTRACE_ENTRY(kernel_rel_stack, rel_stack_entry,
++
++	TRACE_REL_STACK,
++
++	F_STRUCT(
++		__field(	int,		size	)
++		__stack_array(	u64,	caller,	FTRACE_STACK_ENTRIES, size)
++	),
++
++	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
++		 "\t=> %ps\n\t=> %ps\n\t=> %ps\n"
++		 "\t=> %ps\n\t=> %ps\n",
++		 (void *)__entry->caller[0], (void *)__entry->caller[1],
++		 (void *)__entry->caller[2], (void *)__entry->caller[3],
++		 (void *)__entry->caller[4], (void *)__entry->caller[5],
++		 (void *)__entry->caller[6], (void *)__entry->caller[7])
++);
++
+ FTRACE_ENTRY(user_stack, userstack_entry,
+ 
+ 	TRACE_USER_STACK,
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 03d56f711ad1..b3748a5f5843 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1281,6 +1281,67 @@ static struct trace_event trace_stack_event = {
+ 	.funcs		= &trace_stack_funcs,
+ };
+ 
++/* TRACE_REL_STACK */
++
++static enum print_line_t trace_rel_stack_print(struct trace_iterator *iter,
++					   int flags, struct trace_event *event)
 +{
-+#ifdef CONFIG_MODULE_BUILD_ID
++	struct ftrace_rel_caller *p;
++	struct rel_stack_entry *field;
++	struct trace_seq *s = &iter->seq;
++	unsigned long base;
 +	struct module *mod;
 +
-+	if (size < 0)
-+		return NULL;
++	trace_assign_type(field, iter->ent);
 +
-+	if (size > BUILD_ID_SIZE_MAX)
-+		size = BUILD_ID_SIZE_MAX;
++	trace_seq_puts(s, "<stack trace>\n");
 +
-+	list_for_each_entry_rcu(mod, &modules, list) {
-+		if (mod->state == MODULE_STATE_UNFORMED)
++	for (int i = 0; i < field->size; i++) {
++		p = (struct ftrace_rel_caller *)&field->caller[i];
++
++		if (trace_seq_has_overflowed(s))
++			break;
++
++		trace_seq_puts(s, " => ");
++		if (p->offset == FTRACE_TRAMPOLINE_MARKER) {
++			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
 +			continue;
-+		if (!memcmp(mod->build_id, build_id, size))
-+			return mod;
++		}
++		if (p->build_id32) {
++			unsigned char build_id32[4];
++
++			guard(rcu)();
++			*(unsigned int *)build_id32 = p->build_id32;
++			mod = __module_build_id(build_id32, 4);
++			if (!mod) {
++				trace_seq_printf(s, "%x [MODULE %02x%02x%02x%02x]\n",
++						p->offset, build_id32[0], build_id32[1],
++						build_id32[2], build_id32[3]);
++				continue;
++			}
++			base = (unsigned long)mod->mem[MOD_TEXT].base;
++		} else {
++			mod = NULL;
++			base = (unsigned long)_stext;
++		}
++		seq_print_ip_sym(s, base + p->offset, flags);
++		if (mod)
++			trace_seq_printf(s, " [%s]", mod->name);
++		trace_seq_putc(s, '\n');
 +	}
-+#endif
-+	return NULL;
++
++	return trace_handle_return(s);
 +}
 +
- /* Don't grab lock, we're oopsing. */
- void print_modules(void)
- {
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index cf2a41dc7682..2d3a2f656a86 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -38,6 +38,7 @@ config PRINTK_CALLER
- config STACKTRACE_BUILD_ID
- 	bool "Show build ID information in stacktraces"
- 	depends on PRINTK
-+	select MODULE_BUILD_ID if MODULES
- 	help
- 	  Selecting this option adds build ID information for symbols in
- 	  stacktraces printed with the printk format '%p[SR]b'.
++static struct trace_event_functions trace_rel_stack_funcs = {
++	.trace		= trace_rel_stack_print,
++};
++
++static struct trace_event trace_rel_stack_event = {
++	.type		= TRACE_REL_STACK,
++	.funcs		= &trace_rel_stack_funcs,
++};
++
+ /* TRACE_USER_STACK */
+ static enum print_line_t trace_user_stack_print(struct trace_iterator *iter,
+ 						int flags, struct trace_event *event)
+@@ -1724,6 +1785,7 @@ static struct trace_event *events[] __initdata = {
+ 	&trace_ctx_event,
+ 	&trace_wake_event,
+ 	&trace_stack_event,
++	&trace_rel_stack_event,
+ 	&trace_user_stack_event,
+ 	&trace_bputs_event,
+ 	&trace_bprint_event,
 
