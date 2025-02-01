@@ -1,350 +1,300 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB02412B73;
-	Sat,  1 Feb 2025 07:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744CB433D1;
+	Sat,  1 Feb 2025 08:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738394606; cv=none; b=eX55ch9Qxee3+rDobwaY/x55WwR1Tn9VphxQbV9fJyv/vDSX6eKeOYUvnlqu68Z2ywBFHYfgvKpXV+a1R7ivN0Okl2UQB1/Diu0zTm1uxelVJhAa9YhaPuF6L8vwCad1gBfj9eKdb2F4lQypwyt7VMdjE9L7BaVt4PeCmsai3xg=
+	t=1738396924; cv=none; b=LgvUwurwANzkEbuqXHqwQFgvBZlj7ecrRssECAYLoSSziWKzNzVOl0VUmwhJJR/6AX02qM5H+ByaCZNk+dMk/i0LhhBIFLlHlseirqKX8ED28EqNvSgCJpTTaZ9MTAOvAVH/BUBVZpVqzGs0qODAlpyLHlvppg9SxfzSb9U/Yqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738394606; c=relaxed/simple;
-	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KnaY26XhjXxtd69xg6s/CRyWk121aY5nu841e5GLmUF0t9X7xeO8wUBlcOH+ogkh9EcMCfyys7SESvYZ+2bKd72MhYD0HHOZP0deBYDBtVC2qnNzOcP1s2Rf5AAtZ5pnulHx6Tq/xJdAE2JKBLY2BtFCCjOIu6gqXQSC2S++BNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLdlva7Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738396924; c=relaxed/simple;
+	bh=DtFAcWs2Dn8EyVSVZOX324Yyblu6MMm0cZ/ucQSdeTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Evd48BP9sfk8KZDfV2lRhbj6mqbhzV3oeGqW+vb+uNO/CrmMvimim6nfS5D9u1u55AchAMhSoEoFuEPd1O03489NaWs6SPrgO2FeTvUzLQSiCZUDc3TOjmlcCC2dAeepptrN/bFO0+KVlwWceUkCCahO8FS7s/u2Lx/b9bQUrdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JAlZLhuZ; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLdlva7Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C938C4CEE0;
-	Sat,  1 Feb 2025 07:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738394605;
-	bh=XbYLYhL+p+a93lrvGvcF5wj9z6ODld0rstcGiOfbXM4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KLdlva7YfycBM/PNWSdy7EvfZgjDPoCkPjTTh6C9nrTE/2GI+0EYiO+7HkOnq55RR
-	 zTtXN/7MPEXMWsLyRPZAkZ0tiB8NCQHAJKFOjUg0NGJhRE0xVE8uuTgTCq4oTs4NbT
-	 iLbQps3cOpBNbsxO8z9VEErBZsqGZqoBV6pbj8UTbO/AZ4J+SlKVzb9ajRssGBgoYV
-	 iM+ggti8G/MV/RKTBdxTwIPavh53+gRhORccmx6gRPrmFqa10AbtCvQgj5LjoOyR+l
-	 TPHukuYmN3o8+TaYzpnG4BA4g83/mztd71wSTQIEqUpqD6UMDEh0cV7QSf8wZHXVJX
-	 BwV2FrBfZ9Z2Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org
-Subject: [PATCH v2 2/2] tracing: Add relative-stacktrace option
-Date: Sat,  1 Feb 2025 16:23:20 +0900
-Message-ID: <173839460073.2009498.15281500159677989414.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <173839458022.2009498.14495253908367838065.stgit@devnote2>
-References: <173839458022.2009498.14495253908367838065.stgit@devnote2>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JAlZLhuZ"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30616d71bb0so28256321fa.3;
+        Sat, 01 Feb 2025 00:02:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738396920; x=1739001720; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/s7Y7lcv+wX03gw07hpdaNCp1wCGc/zvO4UfuCtTkQM=;
+        b=JAlZLhuZLyp0C4ijWiDc2U3KcyjA0MhMETSJFUuYGf4URDHv1NwD0mzhILiloYusWS
+         ky2S3uhFTxuAs694cVusl9/LHmQj7nfiApDAT3c3y+cE2N2RAons+o0x0JmZEiTEgGU8
+         BiuS+TxMm14cHWMkyr6jXPR28zn3Ej2w3lIoqF4K+huigDXz2/dOTt+G+XKH4OVFlw8i
+         YjBqiiOIC/Dn5gYjfzcSoHVEv1nNn9JPCwR97AQTWKne0KFQ+DQ1xYd+0L95RCtIJmwq
+         vyDMZxAAy46rjvw7Z/H/VEqYqz4X6FhIvuMAyikm+TK4flfiCiUZLHuwlS+QNODcqvVn
+         z5dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738396920; x=1739001720;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/s7Y7lcv+wX03gw07hpdaNCp1wCGc/zvO4UfuCtTkQM=;
+        b=kt8w8zkMq2kKT7O9M+zJA9IHOoH1apvxd6kJ8nM+mJai78hNnN/j1IAo7BtO2Fd5Jl
+         v40CYpQsmpygeKeHRuLXx9cKw5EdLHr5WzYRRaGIpP/pUMXWYF282yEMA6c82BA8bFt9
+         +Ip6KOtifWajg+PI62j6hwDmYRjwt6hjjSDb5sArEJaAtlxiZXyD8AAvCe9X6KxY++Mb
+         bzyAFaHoCC6OLFVlYxzlS/r3l5H8SRT5W+z6Tw5buPVNbZPlko5hhtnSarlX7gvWEhX9
+         zOdtvkKFyblSrAQ7JRTzvgeLbsowLT6W+PHySajZTGYretJxJXBIcB8mFFXS/o9p0BFG
+         K55A==
+X-Forwarded-Encrypted: i=1; AJvYcCUOAJvvdg3WjwKcq+KdKAZc4oztoc4knc0vRfQGLrSx5qLOQBOiYVHc88+k28x1fBxUs9KQbaAoGBSQWdti@vger.kernel.org, AJvYcCWAgvf4ukl/wxLjYFt8nXaSmPG+u2JJk8nueneCEPjpHLkE47coq9fJmmwzwJEq3YqyKyyF98luHq6LEpc4@vger.kernel.org, AJvYcCXBIlrMPTaGAcoMATXBTY0Wu/zzlrqb9+b/1pANPRAGI8ak5cptBrgyd7ZUWo+JDaq8Cf3XW1/lLlcL8I5t5TUGga1+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yynf3VGiRjMrd2LPecbItPHiqftsq1IdEsEjZYmnSIIrwqTiLpn
+	gOOQGfrX12E/1fLowZ2TTMHL3uR2Lse2DS4l+yx+nZmYoj2wc0+dIjQo9vnIRbXxNVpnFDksGQg
+	D+ywwpSRFKmzhtSYb/BjmMUDvMgo=
+X-Gm-Gg: ASbGnctm7aJ5LoEKLF+j7EZw7NFOBr2A2l9htTIU5i7AbE6JCmn5wb43m3EUMUmpFes
+	gsh1sDhgtMHNVNpisU1mvoFyNZwfooq8R0J9Gnkoq1RdgishrjB1lIfTON4yL/dllJaLdaBXn6Q
+	==
+X-Google-Smtp-Source: AGHT+IG/LDUrHQpBVUu1qTtHu5M9AuTtw8da8QEScwhqc32vaaVE8IVKysaRIZqgRQ+M6zPPTUmWCkkjc0NlcgF/LQI=
+X-Received: by 2002:a05:651c:2124:b0:2ff:d3c6:9cf4 with SMTP id
+ 38308e7fff4ca-3079681b016mr42578721fa.1.1738396920016; Sat, 01 Feb 2025
+ 00:02:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com> <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Sat, 1 Feb 2025 16:01:43 +0800
+X-Gm-Features: AWEUYZk3BKKSZ0_M6d8Z1HuwlbptqkkHnrlsuT9nC5CTCQFq-OhruTqcp8L8mlQ
+Message-ID: <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of PG_reclaim
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Jan 30, 2025 at 6:02=E2=80=AFPM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> The recently introduced PG_dropbehind allows for freeing folios
+> immediately after writeback. Unlike PG_reclaim, it does not need vmscan
+> to be involved to get the folio freed.
+>
+> Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
+> pageout().
+>
+> It is safe to leave PG_dropbehind on the folio if, for some reason
+> (bug?), the folio is not in a writeback state after ->writepage().
+> In these cases, the kernel had to clear PG_reclaim as it shared a page
+> flag bit with PG_readahead.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/vmscan.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index bc1826020159..c97adb0fdaa4 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struc=
+t address_space *mapping,
+>                 if (shmem_mapping(mapping) && folio_test_large(folio))
+>                         wbc.list =3D folio_list;
+>
+> -               folio_set_reclaim(folio);
+> +               folio_set_dropbehind(folio);
+> +
+>                 res =3D mapping->a_ops->writepage(&folio->page, &wbc);
+>                 if (res < 0)
+>                         handle_write_error(mapping, folio, res);
+>                 if (res =3D=3D AOP_WRITEPAGE_ACTIVATE) {
+> -                       folio_clear_reclaim(folio);
+> +                       folio_clear_dropbehind(folio);
+>                         return PAGE_ACTIVATE;
+>                 }
+>
+> -               if (!folio_test_writeback(folio)) {
+> -                       /* synchronous write or broken a_ops? */
+> -                       folio_clear_reclaim(folio);
+> -               }
+>                 trace_mm_vmscan_write_folio(folio);
+>                 node_stat_add_folio(folio, NR_VMSCAN_WRITE);
+>                 return PAGE_SUCCESS;
+> --
+> 2.47.2
+>
 
-Add "relative-stacktrace" option to save the stacktrace entries
-as offset from the _stext or module's text section. For the
-module address, each entry also saves the first 4bytes of the
-build_id of the module so that it can find the appropriate
-symbol from the offset.
+Hi, I'm seeing following panic with SWAP after this commit:
 
-By using this build_id, we can also easily find the corresponding
-modules off-line. Thus this stacktrace data is in the persistent
-ring buffer, the kernel can find appropriate modules after reboot
-without saving previous live information.
+[   29.672319] Oops: general protection fault, probably for
+non-canonical address 0xffff88909a3be3: 0000 [#1] PREEMPT SMP NOPTI
+[   29.675503] CPU: 82 UID: 0 PID: 5145 Comm: tar Kdump: loaded Not
+tainted 6.13.0.ptch-g1fe9ea48ec98 #917
+[   29.677508] Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
+[   29.678886] RIP: 0010:__lock_acquire+0x20/0x15d0
+[   29.679891] Code: 90 90 90 90 90 90 90 90 90 90 41 57 41 56 41 55
+41 54 55 53 48 83 ec 30 8b 2d 10 ac f3 01 44 8b ac 24 88 00 00 00 85
+ed 74 64 <48> 8b 07 49 89 ff 48 3d 20 1d bf 83 74 56 8b 1d 8c f5 b1 01
+41 89
+[   29.683852] RSP: 0018:ffffc9000bea3148 EFLAGS: 00010002
+[   29.684980] RAX: ffff8890874b2940 RBX: 0000000000000200 RCX: 00000000000=
+00000
+[   29.686510] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00ffff88909=
+a3be3
+[   29.688031] RBP: 0000000000000001 R08: 0000000000000001 R09: 00000000000=
+00000
+[   29.689561] R10: 0000000000000000 R11: 0000000000000020 R12: 00ffff88909=
+a3be3
+[   29.691087] R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000=
+00000
+[   29.692613] FS:  00007fa05c2824c0(0000) GS:ffff88a03fa80000(0000)
+knlGS:0000000000000000
+[   29.694339] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   29.695581] CR2: 000055f9abb7fc7d CR3: 00000010932f2002 CR4: 00000000007=
+70eb0
+[   29.697109] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[   29.698637] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400
+[   29.700161] PKRU: 55555554
+[   29.700759] Call Trace:
+[   29.701296]  <TASK>
+[   29.701770]  ? __die_body+0x1e/0x60
+[   29.702540]  ? die_addr+0x3c/0x60
+[   29.703267]  ? exc_general_protection+0x18f/0x3c0
+[   29.704290]  ? asm_exc_general_protection+0x26/0x30
+[   29.705345]  ? __lock_acquire+0x20/0x15d0
+[   29.706215]  ? lockdep_hardirqs_on_prepare+0xda/0x190
+[   29.707304]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[   29.708452]  lock_acquire+0xbf/0x2e0
+[   29.709229]  ? folio_unmap_invalidate+0x12f/0x220
+[   29.710257]  ? __folio_end_writeback+0x15d/0x430
+[   29.711260]  ? __folio_end_writeback+0x116/0x430
+[   29.712261]  _raw_spin_lock+0x30/0x40
+[   29.713064]  ? folio_unmap_invalidate+0x12f/0x220
+[   29.714076]  folio_unmap_invalidate+0x12f/0x220
+[   29.715058]  folio_end_writeback+0xdf/0x190
+[   29.715967]  swap_writepage_bdev_sync+0x1e0/0x450
+[   29.716994]  ? __pfx_submit_bio_wait_endio+0x10/0x10
+[   29.718074]  swap_writepage+0x46b/0x6b0
+[   29.718917]  pageout+0x14b/0x360
+[   29.719628]  shrink_folio_list+0x67d/0xec0
+[   29.720519]  ? mark_held_locks+0x48/0x80
+[   29.721375]  evict_folios+0x2a7/0x9e0
+[   29.722179]  try_to_shrink_lruvec+0x19a/0x270
+[   29.723130]  lru_gen_shrink_lruvec+0x70/0xc0
+[   29.724060]  ? __lock_acquire+0x558/0x15d0
+[   29.724954]  shrink_lruvec+0x57/0x780
+[   29.725754]  ? find_held_lock+0x2d/0xa0
+[   29.726588]  ? rcu_read_unlock+0x17/0x60
+[   29.727449]  shrink_node+0x2ad/0x930
+[   29.728229]  do_try_to_free_pages+0xbd/0x4e0
+[   29.729160]  try_to_free_mem_cgroup_pages+0x123/0x2c0
+[   29.730252]  try_charge_memcg+0x222/0x660
+[   29.731128]  charge_memcg+0x3c/0x80
+[   29.731888]  __mem_cgroup_charge+0x30/0x70
+[   29.732776]  shmem_alloc_and_add_folio+0x1a5/0x480
+[   29.733818]  ? filemap_get_entry+0x155/0x390
+[   29.734748]  shmem_get_folio_gfp+0x28c/0x6c0
+[   29.735680]  shmem_write_begin+0x5a/0xc0
+[   29.736535]  generic_perform_write+0x12a/0x2e0
+[   29.737503]  shmem_file_write_iter+0x86/0x90
+[   29.738428]  vfs_write+0x364/0x530
+[   29.739180]  ksys_write+0x6c/0xe0
+[   29.739906]  do_syscall_64+0x66/0x140
+[   29.740713]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   29.741800] RIP: 0033:0x7fa05c439984
+[   29.742584] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f
+84 00 00 00 00 00 f3 0f 1e fa 80 3d c5 06 0e 00 00 74 13 b8 01 00 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20
+48 89
+[   29.746542] RSP: 002b:00007ffece7720f8 EFLAGS: 00000202 ORIG_RAX:
+0000000000000001
+[   29.748157] RAX: ffffffffffffffda RBX: 0000000000002800 RCX: 00007fa05c4=
+39984
+[   29.749682] RDX: 0000000000002800 RSI: 000055f9cfa08000 RDI: 00000000000=
+00004
+[   29.751216] RBP: 00007ffece772140 R08: 0000000000002800 R09: 00000000000=
+00007
+[   29.752743] R10: 0000000000000180 R11: 0000000000000202 R12: 000055f9cfa=
+08000
+[   29.754262] R13: 0000000000000004 R14: 0000000000002800 R15: 00000000000=
+009af
+[   29.755797]  </TASK>
+[   29.756285] Modules linked in: zram virtiofs
 
-This feature also shows the module name after the symbol as below.
+I'm testing with PROVE_LOCKING on. It seems folio_unmap_invalidate is
+called for swapcache folio and it doesn't work well, following PATCH
+on top of mm-unstable seems fix it well:
 
-   event-sample-1622    [005] ...1.  2112.978105: <stack trace>
- => event_triggers_post_call
- => trace_event_raw_event_foo_bar [trace_events_sample]
- => do_simple_thread_func [trace_events_sample]
- => simple_thread [trace_events_sample]
- => kthread
- => ret_from_fork
- => ret_from_fork_asm
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 4fe551037bf7..98493443d120 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1605,8 +1605,9 @@ static void folio_end_reclaim_write(struct folio *fol=
+io)
+         * invalidation in that case.
+         */
+        if (in_task() && folio_trylock(folio)) {
+-               if (folio->mapping)
+-                       folio_unmap_invalidate(folio->mapping, folio, 0);
++               struct address_space *mapping =3D folio_mapping(folio);
++               if (mapping)
++                       folio_unmap_invalidate(mapping, folio, 0);
+                folio_unlock(folio);
+        }
+ }
+diff --git a/mm/truncate.c b/mm/truncate.c
+index e922ceb66c44..4f3e34c52d8b 100644
+--- a/mm/truncate.c
++++ b/mm/truncate.c
+@@ -565,23 +565,29 @@ int folio_unmap_invalidate(struct address_space
+*mapping, struct folio *folio,
+        if (!filemap_release_folio(folio, gfp))
+                return -EBUSY;
 
-The downside is the cost of time and memory (on 32bit arch). This
-needs to find the module if the address in the module, and save
-both of 32bit offset and 32bit hash for each entry, this may consume
-twice memory on 32bit arch. On 64bit arch, the amount of consuming
-memory is the same.
+-       spin_lock(&mapping->host->i_lock);
++       if (!folio_test_swapcache(folio)) {
++               spin_lock(&mapping->host->i_lock);
++               BUG_ON(folio_has_private(folio));
++       }
++
+        xa_lock_irq(&mapping->i_pages);
+        if (folio_test_dirty(folio))
+                goto failed;
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- include/linux/trace.h        |    5 +++
- kernel/trace/Kconfig         |    1 +
- kernel/trace/trace.c         |   50 ++++++++++++++++++++++++++++++----
- kernel/trace/trace.h         |    3 ++
- kernel/trace/trace_entries.h |   18 ++++++++++++
- kernel/trace/trace_output.c  |   62 ++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 133 insertions(+), 6 deletions(-)
+-       BUG_ON(folio_has_private(folio));
+        __filemap_remove_folio(folio, NULL);
+        xa_unlock_irq(&mapping->i_pages);
+        if (mapping_shrinkable(mapping))
+                inode_add_lru(mapping->host);
+-       spin_unlock(&mapping->host->i_lock);
++
++       if (!folio_test_swapcache(folio))
++               spin_unlock(&mapping->host->i_lock);
 
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index fdcd76b7be83..4b4f008a2fa9 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -26,6 +26,11 @@ struct trace_export {
- 	int flags;
- };
- 
-+struct ftrace_rel_caller {
-+	int		offset;
-+	unsigned int	build_id32;
-+} __packed;
-+
- struct trace_array;
- 
- #ifdef CONFIG_TRACING
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index d570b8b9c0a9..b4bd186732fe 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -169,6 +169,7 @@ config TRACING
- 	bool
- 	select RING_BUFFER
- 	select STACKTRACE if STACKTRACE_SUPPORT
-+	select MODULE_BUILD_ID if STACKTRACE_SUPPORT
- 	select TRACEPOINTS
- 	select NOP_TRACER
- 	select BINARY_PRINTF
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1496a5ac33ae..ca17d9db37e8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2916,16 +2916,41 @@ struct ftrace_stacks {
- static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
- static DEFINE_PER_CPU(int, ftrace_stack_reserve);
- 
-+static void record_as_offset(struct ftrace_rel_caller *caller, unsigned long addr)
-+{
-+	if (likely(core_kernel_text(addr))) {
-+		caller->build_id32 = 0;
-+		caller->offset = addr - (unsigned long)_stext;
-+	} else if (addr == FTRACE_TRAMPOLINE_MARKER) {
-+		caller->build_id32 = 0;
-+		caller->offset = (int)FTRACE_TRAMPOLINE_MARKER;
-+	} else {
-+		struct module *mod = __module_text_address(addr);
-+
-+		if (mod) {
-+			unsigned long base = (unsigned long)mod->mem[MOD_TEXT].base;
-+
-+			caller->offset = addr - base;
-+			caller->build_id32 = *(unsigned int *)mod->build_id;
-+		} else {
-+			caller->build_id32 = 0;
-+			caller->offset = addr - (unsigned long)_stext;
-+		}
-+	}
-+}
-+
- static void __ftrace_trace_stack(struct trace_array *tr,
- 				 struct trace_buffer *buffer,
- 				 unsigned int trace_ctx,
- 				 int skip, struct pt_regs *regs)
- {
-+	struct rel_stack_entry *rel_entry;
- 	struct ring_buffer_event *event;
- 	unsigned int size, nr_entries;
- 	struct ftrace_stack *fstack;
- 	struct stack_entry *entry;
- 	int stackidx;
-+	int type;
- 
- 	/*
- 	 * Add one, for this function and the call to save_stack_trace()
-@@ -2937,6 +2962,7 @@ static void __ftrace_trace_stack(struct trace_array *tr,
- #endif
- 
- 	preempt_disable_notrace();
-+	type = (tr->trace_flags & TRACE_ITER_REL_STACK) ? TRACE_REL_STACK : TRACE_STACK;
- 
- 	stackidx = __this_cpu_inc_return(ftrace_stack_reserve) - 1;
- 
-@@ -2977,16 +3003,28 @@ static void __ftrace_trace_stack(struct trace_array *tr,
- 	}
- #endif
- 
--	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
--				    struct_size(entry, caller, nr_entries),
-+	if (type == TRACE_REL_STACK)
-+		size = struct_size(rel_entry, caller, nr_entries);
-+	else
-+		size = struct_size(entry, caller, nr_entries);
-+
-+	event = __trace_buffer_lock_reserve(buffer, type, size,
- 				    trace_ctx);
- 	if (!event)
- 		goto out;
--	entry = ring_buffer_event_data(event);
- 
--	entry->size = nr_entries;
--	memcpy(&entry->caller, fstack->calls,
--	       flex_array_size(entry, caller, nr_entries));
-+	if (type == TRACE_REL_STACK) {
-+		rel_entry = ring_buffer_event_data(event);
-+		rel_entry->size = nr_entries;
-+		for (int i = 0; i < nr_entries; i++)
-+			record_as_offset((struct ftrace_rel_caller *)&rel_entry->caller[i],
-+					fstack->calls[i]);
-+	} else {
-+		entry = ring_buffer_event_data(event);
-+		entry->size = nr_entries;
-+		memcpy(&entry->caller, fstack->calls,
-+		       flex_array_size(entry, caller, nr_entries));
-+	}
- 
- 	__buffer_unlock_commit(buffer, event);
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 9c21ba45b7af..b27533456865 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -55,6 +55,7 @@ enum trace_type {
- 	TRACE_TIMERLAT,
- 	TRACE_RAW_DATA,
- 	TRACE_FUNC_REPEATS,
-+	TRACE_REL_STACK,
- 
- 	__TRACE_LAST_TYPE,
- };
-@@ -511,6 +512,7 @@ extern void __ftrace_bad_type(void);
- 		IF_ASSIGN(var, ent, struct ftrace_entry, TRACE_FN);	\
- 		IF_ASSIGN(var, ent, struct ctx_switch_entry, 0);	\
- 		IF_ASSIGN(var, ent, struct stack_entry, TRACE_STACK);	\
-+		IF_ASSIGN(var, ent, struct rel_stack_entry, TRACE_REL_STACK);\
- 		IF_ASSIGN(var, ent, struct userstack_entry, TRACE_USER_STACK);\
- 		IF_ASSIGN(var, ent, struct print_entry, TRACE_PRINT);	\
- 		IF_ASSIGN(var, ent, struct bprint_entry, TRACE_BPRINT);	\
-@@ -1350,6 +1352,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
-+		C(REL_STACK,		"relative-stacktrace"),	\
- 		FUNCTION_FLAGS					\
- 		FGRAPH_FLAGS					\
- 		STACK_FLAGS					\
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index fbfb396905a6..46a770e57287 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -229,6 +229,24 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
- 		 (void *)__entry->caller[6], (void *)__entry->caller[7])
- );
- 
-+FTRACE_ENTRY(kernel_rel_stack, rel_stack_entry,
-+
-+	TRACE_REL_STACK,
-+
-+	F_STRUCT(
-+		__field(	int,		size	)
-+		__stack_array(	u64,	caller,	FTRACE_STACK_ENTRIES, size)
-+	),
-+
-+	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-+		 "\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-+		 "\t=> %ps\n\t=> %ps\n",
-+		 (void *)__entry->caller[0], (void *)__entry->caller[1],
-+		 (void *)__entry->caller[2], (void *)__entry->caller[3],
-+		 (void *)__entry->caller[4], (void *)__entry->caller[5],
-+		 (void *)__entry->caller[6], (void *)__entry->caller[7])
-+);
-+
- FTRACE_ENTRY(user_stack, userstack_entry,
- 
- 	TRACE_USER_STACK,
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 03d56f711ad1..b3748a5f5843 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1281,6 +1281,67 @@ static struct trace_event trace_stack_event = {
- 	.funcs		= &trace_stack_funcs,
- };
- 
-+/* TRACE_REL_STACK */
-+
-+static enum print_line_t trace_rel_stack_print(struct trace_iterator *iter,
-+					   int flags, struct trace_event *event)
-+{
-+	struct ftrace_rel_caller *p;
-+	struct rel_stack_entry *field;
-+	struct trace_seq *s = &iter->seq;
-+	unsigned long base;
-+	struct module *mod;
-+
-+	trace_assign_type(field, iter->ent);
-+
-+	trace_seq_puts(s, "<stack trace>\n");
-+
-+	for (int i = 0; i < field->size; i++) {
-+		p = (struct ftrace_rel_caller *)&field->caller[i];
-+
-+		if (trace_seq_has_overflowed(s))
-+			break;
-+
-+		trace_seq_puts(s, " => ");
-+		if (p->offset == FTRACE_TRAMPOLINE_MARKER) {
-+			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
-+			continue;
-+		}
-+		if (p->build_id32) {
-+			unsigned char build_id32[4];
-+
-+			guard(rcu)();
-+			*(unsigned int *)build_id32 = p->build_id32;
-+			mod = __module_build_id(build_id32, 4);
-+			if (!mod) {
-+				trace_seq_printf(s, "%x [MODULE %02x%02x%02x%02x]\n",
-+						p->offset, build_id32[0], build_id32[1],
-+						build_id32[2], build_id32[3]);
-+				continue;
-+			}
-+			base = (unsigned long)mod->mem[MOD_TEXT].base;
-+		} else {
-+			mod = NULL;
-+			base = (unsigned long)_stext;
-+		}
-+		seq_print_ip_sym(s, base + p->offset, flags);
-+		if (mod)
-+			trace_seq_printf(s, " [%s]", mod->name);
-+		trace_seq_putc(s, '\n');
-+	}
-+
-+	return trace_handle_return(s);
-+}
-+
-+static struct trace_event_functions trace_rel_stack_funcs = {
-+	.trace		= trace_rel_stack_print,
-+};
-+
-+static struct trace_event trace_rel_stack_event = {
-+	.type		= TRACE_REL_STACK,
-+	.funcs		= &trace_rel_stack_funcs,
-+};
-+
- /* TRACE_USER_STACK */
- static enum print_line_t trace_user_stack_print(struct trace_iterator *iter,
- 						int flags, struct trace_event *event)
-@@ -1724,6 +1785,7 @@ static struct trace_event *events[] __initdata = {
- 	&trace_ctx_event,
- 	&trace_wake_event,
- 	&trace_stack_event,
-+	&trace_rel_stack_event,
- 	&trace_user_stack_event,
- 	&trace_bputs_event,
- 	&trace_bprint_event,
-
+        filemap_free_folio(mapping, folio);
+        return 1;
+ failed:
+        xa_unlock_irq(&mapping->i_pages);
+-       spin_unlock(&mapping->host->i_lock);
++       if (!folio_test_swapcache(folio))
++               spin_unlock(&mapping->host->i_lock);
+        return -EBUSY;
+ }
