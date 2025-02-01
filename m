@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23B174068;
-	Sat,  1 Feb 2025 23:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A481B74068;
+	Sat,  1 Feb 2025 23:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738451181; cv=none; b=nL7LYVBMEapBPf3Vzo/FvTCHKlZUVBhx6ZaHcnMm/QJ/10t6Y+F9O+5ULkavc5bqHThCnl08Pc1saqewCalXUTeK2KK8NTok23mYaCR0nKn3UoatdWZi0UvY7qZK9hrbodwUGVIuQhGjEBuhqFt5aqxOeZK6vQ9L7JBj8FX7XSw=
+	t=1738451293; cv=none; b=XUSWa+mBNuks+7UD1jK15xlGidnFwwdi/KojatQ+t9OChVep0aB7C+H/hdhrwexrxLalormJOjuwCdn8gz4tDetcuf4gDzmG/UGH1v5NvlwBEPGQoHoAS1CydRzgNZ6bwHG4R/8apNcUVArM3rA1Fk6GwfC2rUJ2aW0gTkuy/+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738451181; c=relaxed/simple;
-	bh=N0CqlKtJwAu+UTsIlLcEoaI234rCTvf5Hq7XDplVXJU=;
+	s=arc-20240116; t=1738451293; c=relaxed/simple;
+	bh=K1t7R0gOuW//7zECubiJAkbFzLVpWhiU4LTqxBe/9xo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lnQDSQRadTLYUJ5OJZexaAxMFkEc8zW7CcgI1Ens0S4TcjzNFX/Wd9VuMcQ743HlMgsgNRC0l3+0L/tTVDutLA9ZiPSrUKj2wXNfn+/HUN0MqEmRkm+DtXeXruDxKmpXnnDlDtzprhqHX+Bnua98WBkFX7DTWnV3VPeg86ATBGI=
+	 MIME-Version:Content-Type; b=Xqtm+Olbf/uQD6B3T2Ee2GlCj0sWdFCpB6crFVzQMFbSZJA5zvrCw+K/SYNmDHnhZjjo3gSOn1jq1Bib4WvmpDvEYJ5RFYqQpj4Qk8ihKJA4PLV6hoO+alSjae96/KKmvc3cB+ypT4VOwrgsueYTIVPkqcL7tCmH505x2Chs1kU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5409C4CED3;
-	Sat,  1 Feb 2025 23:06:17 +0000 (UTC)
-Date: Sat, 1 Feb 2025 18:06:17 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9345C4CED3;
+	Sat,  1 Feb 2025 23:08:09 +0000 (UTC)
+Date: Sat, 1 Feb 2025 18:08:10 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
+ Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Ankur
+ Arora <ankur.a.arora@oracle.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org,
+ akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
  dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
  vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
  jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
  boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
  andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
  Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- joseph.salisbury@oracle.com, broonie@gmail.com
+ Molnar <mingo@kernel.org>, Clark Williams <clark.williams@gmail.com>,
+ bigeasy@linutronix.de, daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+ broonie@gmail.com
 Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250201180617.491ce087@batman.local.home>
-In-Reply-To: <20250201181129.GA34937@noisy.programming.kicks-ass.net>
+Message-ID: <20250201180810.1faf4906@batman.local.home>
+In-Reply-To: <e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
 References: <20250131225837.972218232@goodmis.org>
 	<20250131225942.365475324@goodmis.org>
-	<20250201115906.GB8256@noisy.programming.kicks-ass.net>
-	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
-	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
+	<e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,69 +47,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sat, 1 Feb 2025 19:11:29 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Sat, 1 Feb 2025 15:35:13 +0100
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> On Sat, Feb 01, 2025 at 07:47:32AM -0500, Steven Rostedt wrote:
-> > 
-> > 
-> > On February 1, 2025 6:59:06 AM EST, Peter Zijlstra <peterz@infradead.org> wrote:
+> On 2025-01-31 23:58, Steven Rostedt wrote:
+> 
+> [...]
+> 
+> > @@ -148,6 +160,18 @@ struct rseq {
+> >   	 */
+> >   	__u32 mm_cid;
 > >   
-> > >I still have full hate for this approach.  
-> > 
-> > So what approach would you prefer?  
+> > +	/*
+> > +	 * The cr_counter is a way for user space to inform the kernel that
+> > +	 * it is in a critical section. If bits 1-31 are set, then the
+> > +	 * kernel may grant the thread a bit more time (but there is no
+> > +	 * guarantee of how much time or if it is granted at all). If the
+> > +	 * kernel does grant the thread extra time, it will set bit 0 to
+> > +	 * inform user space that it has granted the thread more time and that
+> > +	 * user space should call yield() as soon as it leaves its critical  
 > 
-> The one that does not rely on the preemption method -- I think I posted
-> something along those line, and someone else recently reposted something
-> bsaed on it.
+> Does it specifically need to be yield(), or can it be just "entering
+> the kernel" through any system call or trap ?
+
+No it doesn't need to be yield. That just seemed like the obvious
+system call to use. But any system call would force a schedule. We
+could just optimize yield() though.
+
 > 
-> Tying things to the preemption method is absurdly bad design -- and I've
-> told you that before.
+> [...]
+> 
+> > diff --git a/kernel/rseq.c b/kernel/rseq.c
+> > index 9de6e35fe679..b792e36a3550 100644
+> > --- a/kernel/rseq.c
+> > +++ b/kernel/rseq.c
+> > @@ -339,6 +339,36 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >   	force_sigsegv(sig);
+> >   }
+> >   
+> > +bool rseq_delay_resched(void)
+> > +{
+> > +	struct task_struct *t = current;
+> > +	u32 flags;
+> > +
+> > +	if (!t->rseq)
+> > +		return false;
+> > +
+> > +	/* Make sure the cr_counter exists */
+> > +	if (current->rseq_len <= offsetof(struct rseq, cr_counter))
+> > +		return false;  
+> 
+> It would be clearer/more precise with < offsetofend(struct rseq, cr_counter)
 
-How exactly is it "bad design"? Changing the preemption method itself
-changes the way applications schedule and can be very noticeable to the
-applications themselves.
-
-No preempt, applications will have high latency every time any
-application does a system call.
-
-Preempt voluntary is a little more reactive, but more randomly done.
-
-The preempt lazy kconfig has:
-
-          This option provides a scheduler driven preemption model that
-          is fundamentally similar to full preemption, but is less
-          eager to preempt SCHED_NORMAL tasks in an attempt to
-          reduce lock holder preemption and recover some of the performance
-          gains seen from using Voluntary preemption.
-
-This could be a config option called PREEMPT_USER_LAZY that extends the
-"reduce lock holder preemption of user space spin locks".
-
-But if your issue is with relying on the preemption method, does that
-mean you prefer to have this feature for any preemption method? That may
-require still using the LAZY flag that can cause a schedule in the
-kernel but not in user space?
-
-Note, my group is actually more interested in implementing this for
-VMs. But that requires another level of redirection of the pointers.
-
-That is, qemu could create a device that shares memory between the
-guest kernel and the qemu VCPU thread. The guest kernel could update
-the counter in this shared memory before grabbing a raw_spin_lock which
-act like this patch set does. The difference would be that the counter
-would need to live in a memory page that only has this information in
-it and not the rseq structure itself. Mathieu was concerned about leaks
-and corruption in the rseq structure by a malicious guest. Thus, the
-counter would have to be a clean memory page that is shared between the
-guest and the qemu thread.
-
-The rseq would then have a pointer to this memory, and the host kernel
-would then have to traverse that pointer to the location of the counter.
-
-In other words, my real goal is to have this working for guests on
-their raw_spin_locks. We first tried to do this in KVM directly, but
-the KVM maintainers said this is more a generic scheduling issue and
-doesn't belong in KVM. I agreed with them.
+Ah yeah, thanks!
 
 -- Steve
+
