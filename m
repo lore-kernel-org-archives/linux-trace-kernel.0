@@ -1,79 +1,90 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F36A932;
-	Sun,  2 Feb 2025 07:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FCC1D5175
+	for <linux-trace-kernel@vger.kernel.org>; Sun,  2 Feb 2025 10:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738480938; cv=none; b=STF5E5PPnSpw0q12cuBQLamPb7C8hglgVpHCyH4BpqeVzzwY/NNhEeLXvEEfhlw0HfeqfRcG2RZ4kCFbgpudIYd6cfogIdlJfa30RxQsiH6DfJbblpe+DwmAgEEBQ2hzXcYNTpxZgfg6HN4F8aV1UNZxqrt4bjclpHM9AYK2A9w=
+	t=1738492937; cv=none; b=UwW8vAzMeJTlMWcERGnmiI43FGoVzHCfkKA6HWCAB1A0/Jp7fX4j7XS7cQgSFto3VEB2wleYU152rLQoAldIY0VgaOe7gZlL/5YHj2x5yARM5/c6WJPeSgit8dslrsHVFQGK8+2KVARXWsTrb3lQz9ZFil2nPDCyHP+q0pC4vJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738480938; c=relaxed/simple;
-	bh=2HQjkYIl3cLMQLG5F9U/gL5vESvDQQN09ZIPGSpFLHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yvbgp+aAn3v8f5xb1BfLBvwUtgTFrNuK2xZbwt4HoQumtJaRI/Bh5PXv0GfR3wemIj8qRc6siXjHkKL75eSj6vk8LbHh/8pvdiyAPRPzI+gjyfcOQKasUTzevGt078iuFQCNuxZLVZa4LAuhI1fMl2R6JEBvD9S1EfUp0XI9v3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=m00Tytcw; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738492937; c=relaxed/simple;
+	bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uV91ocHHBKNC677ezXmGdGswJc6kP353esyfDqFl4760w8vHVee+21cd/OyLjWhuXg1Iqq9Rhi98Wn8CnQZS3y4vnpZMig4ejP42D+NCNpScdpOU31zQNEEJuXWDZ1OjHnz09/K0UIBaikaWZ599+6vpWumu6Jw10foSD2gWxos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=060c/uhO; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m00Tytcw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kp2R2I4n2SrI5B0Gs6YVxJP2t+wd8P6NNyGAbLFTZGw=; b=m00TytcwXw3m/eh4wx2QP57IIO
-	KDlRq87Ws9UqQuU802qi0q1wDPal06L6KlJyzis7q8VdzfqAGuxqY55BDuavRt6xp1cmrFdAmOdWk
-	Ju6TIELAc2Zvb2l1Fc9B/qUf1CMlJZE8keYumrSgit1ASCivCgQ53LPqMlEx+99jts2vNgpiE54Jq
-	X25b8mNhvj7hJBd8DrEASfsyOBhTrx/3zHp0gCrmO7t/+UGCnlxT7j/8k2c5q/b+dtx9Qnn/J6e3k
-	ORcjw4cpFUc6g1Tk68Nl4vbGCDBWEbxhNuo+z6paJwpGNoFNKuPLpvxZ1YHLMqTDRZRKG0JA45wlC
-	34aaEigA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1teUIy-0000000GkyH-1NvM;
-	Sun, 02 Feb 2025 07:22:08 +0000
-Date: Sun, 2 Feb 2025 07:22:08 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ankur Arora <ankur.a.arora@oracle.com>, linux-mm@kvack.org,
-	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, mgorman@suse.de,
-	jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
-	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
-	andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
-	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
-	broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <Z58dIOGlJ3grsAge@casper.infradead.org>
-References: <20250131225837.972218232@goodmis.org>
- <20250131225942.365475324@goodmis.org>
- <e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
- <20250201180810.1faf4906@batman.local.home>
- <CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
- <20250201222208.0b0d0f5c@batman.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="060c/uhO"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2162259a5dcso113154715ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Feb 2025 02:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738492935; x=1739097735; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+        b=060c/uhOWQe5m+YBtjrrvTg0GvS+5T80wFg8GPivsatUuNX7aAIdNafhJCWiC/kscN
+         vqVaPOpfL7MXIvENQAUJvuRNPAVsbd7Xc6Z+ENDWvp7UHWBfBjv8xrHagxlOAkezhZg7
+         XnAvXsabg8X3ewkqn0TiQggo7Z4711bbegY46M99RIleWnbuWNGvGfbPgZGMBi6/2fhy
+         004zWP6X4PeBFUL0eM0k7yhadAnzhKg6TwzvPoKIZE9fThnjJIzQF4c4NHLiRC4wkOOE
+         OAp3Ms+vAYj0Xgr55mwrVMYDPol9m9uF17KPjlB0D3fT2og8anadDC2nwro0Kg2AhM1a
+         x3GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738492935; x=1739097735;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zkD5IRGZ/9bPr0CC0yAMX9lXRbXYUMweItegShby6uE=;
+        b=p3e2GsTf2JKaJALAXhQNP3oCSexWymiIEfagxE/QVjfV77lZuHZq0YgRfO3uV35bGK
+         fmGZKwtmuZ4GGMhY9ccioOQ8ZKVKR1Aq0/ytxhqnps4GFnSLudhAn8DeHK/p/hNnt0it
+         T34Ng2P7YLNM5FOBig67ynCrPFRzj4J45Ak5xdX4v2aeHvQ8T9rWthJGIE4LjU/wgpOZ
+         9W93dTG6v/NpBJPEnzfdSURs2LcH2OtxQP2pjSyd4gN4iD0faXkLcdIjEWN60Pyo8uSO
+         2hMrYE+D7sOBnCwtDULT4HzBY8Vs6AM5G3NcdkZoR9J9jRpIL3GTmbfDF36pGKsvtd5L
+         Azpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWuTDmU9TvnQNWaAgmeXSZv8+hVQDsyOHsx50V3x2V4lEAvRo7MFhCUFEK3d8i7FcHMXdVKhILXHBASvzDRBVy64TQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygL1WB6AnYw8qNuU1c6XnxO983QeygjuzWLp7/BBYs08+7Y87x
+	BC7oiYQANR6x/V7rfQY5AvTXHBbIzou+KOWXbDD9Qy6FrJbfhCC01tzX5/y100eNvYDdLQ==
+X-Google-Smtp-Source: AGHT+IFo+c59bClMb3w3IGnlN130wN7y6oOR1HcCzkELMUY8CVZ2GcCuOdp4NbrOfZUYhOCT0CSDVHhP
+X-Received: from pgtq4.prod.google.com ([2002:a65:6844:0:b0:a87:a3b9:db3d])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c941:b0:216:25a2:2ebe
+ with SMTP id d9443c01a7336-21dd7c65844mr278809895ad.19.1738492935252; Sun, 02
+ Feb 2025 02:42:15 -0800 (PST)
+Date: Sun,  2 Feb 2025 18:42:11 +0800
+In-Reply-To: <7hy0ysi4pf.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250201222208.0b0d0f5c@batman.local.home>
+Mime-Version: 1.0
+References: <7hy0ysi4pf.fsf@baylibre.com>
+X-Mailer: git-send-email 2.48.1.362.g079036d154-goog
+Message-ID: <20250202104211.2764016-1-keyz@google.com>
+Subject: Re: [PATCH v3] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: khilman@kernel.org
+Cc: aarontian@google.com, daniel.lezcano@linaro.org, keyz@google.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
+	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 01, 2025 at 10:22:08PM -0500, Steven Rostedt wrote:
-> And before seeing Peter's use of yield(), I was reluctant to use it for
-> the very same reasons you mentioned above. In my test programs, I was
-> simply using getuid(), as that was one of the quickest syscalls.
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+>
+> I've been using some local trace_printk() to do exactly this, so I fully
+> support having some official tracepoints here.
+>
+> For my local hacks, I was trackin the state index as well as the state
+> value since for quick debug, I find the index to more human readable
+> than the state value, which I have to compare with the
+> arm,psci-suspend-pararm from the DT.
+>
+> Anyways, thanks for submitting this!
+>
+> Kevin
 
-Is getuid() guaranteed to issue a syscall?  It feels like the kind of
-information that a tricksy libc could cache.  Traditionally, I think
-we've used getppid() as the canonical "very cheap syscall" as no layer
-can cache that information.
+Thank you so much for the endorsement.
+Showing the index sounds like a good idea, although it should be done in a
+different layer (probably in the GenPD governor or cpuidle-psci driver?) because
+idx here should be the different index from the one we're looking for.
+I will keep my patch as it is just for now. Thank you for the idea!
