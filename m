@@ -1,70 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DD0BE67;
-	Sun,  2 Feb 2025 22:29:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46794A31;
+	Mon,  3 Feb 2025 05:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738535366; cv=none; b=HhBQUnK9wZ6wL/gde/SB1I1zsEAo1rtcc0CCsQFb4Q4uio5JLpAQyiaqTFWzwgHFr09SKEc9d0XxhXtZQkZrToWqVYXsgv6sAQ5Dxr5NK9CgBmRf38bjrU/MJioC+l0GvlEfflA248vlX3xELHCrx4LAav5JtYu+O/OhfeI8JSU=
+	t=1738560753; cv=none; b=TxHoQWriQ/uXwnJF7LZXXR3yrD/Eu4lEc61yQzx/oMH+Ubkuu4cYnrVuMDLkQ6xizTaaHoJEaj5UYVBz7eZ2ZaHk7PSxhc9x/6XEZXIh+w+ZPD1sdEkk92tK5vHB37YOqVWJmpn45+mtvif1Dn0UVfB7Kdwhznz85u2RlPwN/Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738535366; c=relaxed/simple;
-	bh=5jco9qkJre/Jm0X5veB3Q7E4Z6Vl+c8of7hxfrfDpBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=caXD5E+cyXAqodw4xJD0o+vufipzdAL3SU+8MpXjFtJRWYmHHqk5h14TXIkvvDdQW4+/D5XaOpJv+H6HYhZoCzMZm+P1TyboeJA2fi+hIBqyPOYLl/UhbsmeHvlbnlpfxfZS3Zw5IzWMk2DrvXfdRqqL1Ibc4CjuBon1aEHZx+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D3C3C4CED1;
-	Sun,  2 Feb 2025 22:29:22 +0000 (UTC)
-Date: Sun, 2 Feb 2025 17:29:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Peter Zijlstra <peterz@infradead.org>, Ankur Arora
- <ankur.a.arora@oracle.com>, linux-mm@kvack.org, x86@kernel.org,
- akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, mgorman@suse.de, jon.grimm@amd.com,
- bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
- konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com, Joel
- Fernandes <joel@joelfernandes.org>, Vineeth Pillai <vineethrp@google.com>,
- Suleiman Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>,
- Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
- daniel.wagner@suse.com, joseph.salisbury@oracle.com, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250202172921.6bcce689@batman.local.home>
-In-Reply-To: <Z58dIOGlJ3grsAge@casper.infradead.org>
-References: <20250131225837.972218232@goodmis.org>
-	<20250131225942.365475324@goodmis.org>
-	<e83ce086-b55f-431a-a499-f83a434b70db@efficios.com>
-	<20250201180810.1faf4906@batman.local.home>
-	<CAHk-=wgTWVF6+dKPff-mhVwngFwBu_G9+fwOTF2Ds+YPj3xkeQ@mail.gmail.com>
-	<20250201222208.0b0d0f5c@batman.local.home>
-	<Z58dIOGlJ3grsAge@casper.infradead.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738560753; c=relaxed/simple;
+	bh=eGOn5dFfGAgVayjEzz+z3LRXFqGKO19ZQPoQCSAh5PM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VbhWq+ibKFHGr2LqarrOzapa/ZgVJgXinZbZKJUCATgWRE4g44H1w9SrfdYNFCOkGXixktRySrNiT//6qIprxhrM3abT0n1ibKLGStQynpyL0JEadMYwtScezI9fUG+jS9vpJfymkxr3CcOSrRLQwkn6+92BdvKU+iZKjv8LE0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IhEt0J1/; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IhEt0J1/"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5135WABI2079317
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sun, 2 Feb 2025 23:32:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738560730;
+	bh=sJRCeXGc4CmZX5CorqP/Un236xITOhXU5/Sey4Z70Gc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=IhEt0J1/bmpse9TL/fuyWBscEypWazoerivCRiD2WQRmva9xbW6XL3QTNcZhKNT0w
+	 OEbogSKsQWmx+habwrp7dO/4TQ35wsj3fCgkWAS8BuogrhZ4TytHNRSG2TEtsZhoXP
+	 CaLx/PPTvMw2GuWjQJTjqRphY1gD0q25xARWvL1M=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5135WADP081440;
+	Sun, 2 Feb 2025 23:32:10 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 2
+ Feb 2025 23:32:09 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 2 Feb 2025 23:32:09 -0600
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5135W8x0077312;
+	Sun, 2 Feb 2025 23:32:09 -0600
+Date: Mon, 3 Feb 2025 11:02:08 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Keita Morisaki <keyz@google.com>
+CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <lpieralisi@kernel.org>,
+        <sudeep.holla@arm.com>, <rafael@kernel.org>,
+        <daniel.lezcano@linaro.org>, <linux-pm@vger.kernel.org>,
+        <aarontian@google.com>, <yimingtseng@google.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4] cpuidle: psci: Add trace for PSCI domain idle
+Message-ID: <20250203053208.l4o2o5g3imdzl6vj@lcpd911>
+References: <20250202104211.2764016-1-keyz@google.com>
+ <20250202104608.2766080-1-keyz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250202104608.2766080-1-keyz@google.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, 2 Feb 2025 07:22:08 +0000
-Matthew Wilcox <willy@infradead.org> wrote:
+Hi Keita,
 
-> On Sat, Feb 01, 2025 at 10:22:08PM -0500, Steven Rostedt wrote:
-> > And before seeing Peter's use of yield(), I was reluctant to use it for
-> > the very same reasons you mentioned above. In my test programs, I was
-> > simply using getuid(), as that was one of the quickest syscalls.  
+On Feb 02, 2025 at 18:46:08 +0800, Keita Morisaki wrote:
+> The trace event cpu_idle provides insufficient information for debugging
+> PSCI requests due to lacking access to determined PSCI domain idle
+> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> idle states the power domain has.
 > 
-> Is getuid() guaranteed to issue a syscall?  It feels like the kind of
-> information that a tricksy libc could cache.  Traditionally, I think
-> we've used getppid() as the canonical "very cheap syscall" as no layer
-> can cache that information.
+> Add new trace events namely psci_domain_idle_enter and
+> psci_domain_idle_exit to trace enter and exit events with a determined
+> idle state.
 
-Maybe that was what I used. Can't remember. And I think I even open
-coded it using syscall() to not even rely on glibc.
+Thanks for this, will really ease those psci idle debugs for everyone!
 
--- Steve
+> 
+> These new trace events will help developers debug CPUidle issues on ARM
+> systems using PSCI by providing more detailed information about the
+> requested idle states.
+> 
+> Signed-off-by: Keita Morisaki <keyz@google.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+
+
+-- 
+Best regards,
+Dhruva Gole
+Texas Instruments Incorporated
