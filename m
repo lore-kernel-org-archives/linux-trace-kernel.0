@@ -1,181 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB3D1D7E50;
-	Mon,  3 Feb 2025 08:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB13D2066FA;
+	Mon,  3 Feb 2025 08:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738572011; cv=none; b=cM5LpnVnOt7nyhOVUEkxA9eKix6HKCbXLwYYiQadZ/hNUNBe6GEN8Ven2qxzwpCeqDF7NhJ0CIf0nV8jzloFzFnPXQDrtvFrU7u6Q67VPKkqS5ID0LB6W/ZO2UJ86zxOwZoPxKZpPo774P2eD5+lhRIn8X7ApSvbP8PTnsEHH3I=
+	t=1738572209; cv=none; b=LK5TJ1LPajM55dqdAXpdV59N6/LMXI8yqcgRpeb74kvw3Mon6KnYqWncB9rJkyw4x4VB0C3j4NjNRhkNLvEhDCh2bwnbI8k532756cdPUIHNtE18KlJ2UuIQKSHf4x4EDoLTLMOSstz7WE6hYGNfQ86n/BGK6YbXgl0rg5AkAWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738572011; c=relaxed/simple;
-	bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
+	s=arc-20240116; t=1738572209; c=relaxed/simple;
+	bh=fXhPEdlXHe0fBZGS1xbkQPDvaFDRrEfIxZ7Skt0NEAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QPYuRk6PoZJqZ9J/Mcv12c900tB8VCaX4S8WrwjydnOqPRH9LxRTCgCPGJuLLDoX8w+gRgMm9yTR4Zr7rhI0nuQkrBuz9AffO4jkG0TiRHVfoVyH81uJw/JJ+jpTtdwxOYKGnCFlHMyJSAzYCM3TzRzLTSAOdGoDlKh/jI1LCUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PTnlTc6W; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=n3r45vVws/qBNjbK0xSYFSbMgKgei4D7kZq942OyaNti6VdsLK93tsUtEs3+9s9widmgiDiTg/BGLJsMhi5pL9MFQHlbCZOvHWSHeqewI/nIu9uK3voQ1DFoeUj/m6BfY18qsnVbd+iqaS+H3kumU8X949y22Tv1f3X1Y/e5D3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=B+Dv/jU2; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PTnlTc6W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738572009; x=1770108009;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7nb8HRa0cFbzBFBnN4bI0GsAQD01kUzx8HOrS7jz88s=;
-  b=PTnlTc6WMsypsE1aCRyIwVH3LbvAzQESdXgB91gx+wQp/OhtD6WrcHKr
-   tf2u0D13J1kzFzg1mJbFlFXveOy/UTtlXZqWkEvC7mAEe/b7CHJz9sQw8
-   knLr7zHdkLtxPRd+kMXPoBaomMR+Z9jkMBZhcsELTMBrTVT5VvXT4/yxz
-   05URi/U0LzEiYpLNlEODEPsqYCV9i61gLqEES7nmu/KRXLRsVS531/KWA
-   oXAFYbrU2BUmgbII5qa67S5PyLeu3UP/+4wxrNbYwd/Pppr4o2bowLLrV
-   yDtXsCUFdvrCD2SGrQbZAJbkWhAQ+eVxIdz8vQFAF5T0SsuyorZuA+7PJ
-   Q==;
-X-CSE-ConnectionGUID: lgpPdlxPR6OimqkatQlqYw==
-X-CSE-MsgGUID: ZdN7GR0pT/G23mrNpPTXEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11334"; a="26657675"
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="26657675"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2025 00:40:08 -0800
-X-CSE-ConnectionGUID: /pEpuut2SbaCB2xPbjWkbA==
-X-CSE-MsgGUID: th6k5N9TR0e9cGBt5VIk/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,255,1732608000"; 
-   d="scan'208";a="141100533"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 03 Feb 2025 00:40:00 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id CF435214; Mon, 03 Feb 2025 10:39:58 +0200 (EET)
-Date: Mon, 3 Feb 2025 10:39:58 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, Yu Zhao <yuzhao@google.com>, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of
- PG_reclaim
-Message-ID: <42h65xowqe36eymr6pcomo7wzpe26kzwvyzg44hftqqczc5n6y@w2z5wvdrvktm>
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-7-kirill.shutemov@linux.intel.com>
- <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B+Dv/jU2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=oFXjD8g8xVNyhnYAipqjv5HHkEWDGSdwQyIftVMCgiE=; b=B+Dv/jU2mnRuU3Mi2LQOxrklDr
+	x7plI9PkW2FDvB7bOwqX1JO0JYEV/g8hI7DXUPU0phpXonZXYIegT5ii5bL1CP8qKjU28FsDAl832
+	1ShOETXDlzwXGphAHP6gmnGRsy8FWHVHq811hEqYTYI/Wh1p7dJsg/RForNJzutwTsSeuX/DVJMQa
+	+akCL59lwWJ+KEZePhPR7P8SZcTNXAI5+FCqtEyjnf0tgBgaK6dmDVoms3W0+/8/3bARNhLMeCdaK
+	I4Utc11vgbsrAie2zLjw9X9r5gmHp3HwIY27vpNVoqLg81CUqLhLyT6bZFUOvH3OaN6RwkIzGUTmG
+	AdFtQCyw==;
+Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tes2t-00000000k6G-2Wem;
+	Mon, 03 Feb 2025 08:43:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9DDE1300310; Mon,  3 Feb 2025 09:43:06 +0100 (CET)
+Date: Mon, 3 Feb 2025 09:43:06 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
+	broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250203084306.GC505@noisy.programming.kicks-ass.net>
+References: <20250131225837.972218232@goodmis.org>
+ <20250131225942.365475324@goodmis.org>
+ <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+ <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+ <20250201181129.GA34937@noisy.programming.kicks-ass.net>
+ <20250201180617.491ce087@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
+In-Reply-To: <20250201180617.491ce087@batman.local.home>
 
-On Sat, Feb 01, 2025 at 04:01:43PM +0800, Kairui Song wrote:
-> On Thu, Jan 30, 2025 at 6:02 PM Kirill A. Shutemov
-> <kirill.shutemov@linux.intel.com> wrote:
-> >
-> > The recently introduced PG_dropbehind allows for freeing folios
-> > immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> > to be involved to get the folio freed.
-> >
-> > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> > pageout().
-> >
-> > It is safe to leave PG_dropbehind on the folio if, for some reason
-> > (bug?), the folio is not in a writeback state after ->writepage().
-> > In these cases, the kernel had to clear PG_reclaim as it shared a page
-> > flag bit with PG_readahead.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  mm/vmscan.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index bc1826020159..c97adb0fdaa4 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, struct address_space *mapping,
-> >                 if (shmem_mapping(mapping) && folio_test_large(folio))
-> >                         wbc.list = folio_list;
-> >
-> > -               folio_set_reclaim(folio);
-> > +               folio_set_dropbehind(folio);
-> > +
-> >                 res = mapping->a_ops->writepage(&folio->page, &wbc);
-> >                 if (res < 0)
-> >                         handle_write_error(mapping, folio, res);
-> >                 if (res == AOP_WRITEPAGE_ACTIVATE) {
-> > -                       folio_clear_reclaim(folio);
-> > +                       folio_clear_dropbehind(folio);
-> >                         return PAGE_ACTIVATE;
-> >                 }
-> >
-> > -               if (!folio_test_writeback(folio)) {
-> > -                       /* synchronous write or broken a_ops? */
-> > -                       folio_clear_reclaim(folio);
-> > -               }
-> >                 trace_mm_vmscan_write_folio(folio);
-> >                 node_stat_add_folio(folio, NR_VMSCAN_WRITE);
-> >                 return PAGE_SUCCESS;
-> > --
-> > 2.47.2
-> >
+On Sat, Feb 01, 2025 at 06:06:17PM -0500, Steven Rostedt wrote:
+> On Sat, 1 Feb 2025 19:11:29 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Hi, I'm seeing following panic with SWAP after this commit:
+> > On Sat, Feb 01, 2025 at 07:47:32AM -0500, Steven Rostedt wrote:
+> > > 
+> > > 
+> > > On February 1, 2025 6:59:06 AM EST, Peter Zijlstra <peterz@infradead.org> wrote:
+> > >   
+> > > >I still have full hate for this approach.  
+> > > 
+> > > So what approach would you prefer?  
+> > 
+> > The one that does not rely on the preemption method -- I think I posted
+> > something along those line, and someone else recently reposted something
+> > bsaed on it.
+> > 
+> > Tying things to the preemption method is absurdly bad design -- and I've
+> > told you that before.
 > 
-> [   29.672319] Oops: general protection fault, probably for
-> non-canonical address 0xffff88909a3be3: 0000 [#1] PREEMPT SMP NOPTI
-> [   29.675503] CPU: 82 UID: 0 PID: 5145 Comm: tar Kdump: loaded Not
-> tainted 6.13.0.ptch-g1fe9ea48ec98 #917
-> [   29.677508] Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> [   29.678886] RIP: 0010:__lock_acquire+0x20/0x15d0
+> How exactly is it "bad design"? Changing the preemption method itself
+> changes the way applications schedule and can be very noticeable to the
+> applications themselves.
 
-Ouch.
+Lazy is not the default, nor even the recommended preemption method at
+this time.
 
-I failed to trigger it my setup. Could you share your reproducer?
+Lazy will not ever be the only preemption method, full isn't going
+anywhere.
 
-> I'm testing with PROVE_LOCKING on. It seems folio_unmap_invalidate is
-> called for swapcache folio and it doesn't work well, following PATCH
-> on top of mm-unstable seems fix it well:
+Lazy only applies to fair (and whatever bpf things end up using
+resched_curr_lazy()).
 
-Right. I don't understand swapping good enough. I missed this.
+Lazy works on tick granularity, which is variable per the HZ config, and
+way too long for any of this nonsense.
 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 4fe551037bf7..98493443d120 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1605,8 +1605,9 @@ static void folio_end_reclaim_write(struct folio *folio)
->          * invalidation in that case.
->          */
->         if (in_task() && folio_trylock(folio)) {
-> -               if (folio->mapping)
-> -                       folio_unmap_invalidate(folio->mapping, folio, 0);
-> +               struct address_space *mapping = folio_mapping(folio);
-> +               if (mapping)
-> +                       folio_unmap_invalidate(mapping, folio, 0);
->                 folio_unlock(folio);
->         }
->  }
+So by tying this to lazy, you get something that doesn't actually work
+most of the time, and when it works, it has variable and bad behaviour.
 
-Once you do this, folio_unmap_invalidate() will never succeed for
-swapcache as folio->mapping != mapping check will always be true and it
-will fail with -EBUSY.
+So yeah, crap.
 
-I guess we need to do something similar to what __remove_mapping() does
-for swapcache folios.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+This really isn't difficult to understand, and I've told you this
+before.
