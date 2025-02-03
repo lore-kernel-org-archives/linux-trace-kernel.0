@@ -1,255 +1,237 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4733A3597F
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Feb 2025 07:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9E11F94D;
+	Mon,  3 Feb 2025 08:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738566906; cv=none; b=XZ8RvvGVBL6ysnkzP9Wwycc0is/s9ieI9xGx0ezVNBgvj3YSTea+ZCMdju0GiJo0IPli/R62IUbzDtP/q9o4Z/voJ9XciEw+ouHykGub85Rsw86hj6I3rg1v/YoWT3NtAGaREFnEBFln9/9sHS9NmrrqkJrWGdqc3E5B2D+VfoI=
+	t=1738571674; cv=none; b=ZaUpRyk9AUhbNisxbUokcpni9QQ5PxMeHHrZOOohgKjfW89flTS/Ul5FWBEpbbjxkCTrSJtoXqdceRtf8daTwrth3aveyA8Mv4r0pwYu1vBkaCKvAbMr/ZeOJoavKaN+QxRRJn2hFpFQPKsr00n/geoUpz2U3+OwBnM35m1kG0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738566906; c=relaxed/simple;
-	bh=J9cg3VbzMKdhl7yy9rwRIS9tCFCmPGy+hSm0MhWtihg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b7ceMd49KM7+OIe1mZ8Uby/BJpGo8E60poYVsw/Hrcz2leCCRhM4EdF4lhHrEv24vf+6Xci2xvgQuWFs5Kgnh3FVUZ7UgjN02kXKCyfkTUt7sfySvREedUUaUwq+3MStUvm+51eFMzOoMA7r2KnRKst0nK93mSiEvJza6JwqtEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kr6pNFIM; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738571674; c=relaxed/simple;
+	bh=4qY4vcY6DHqq+9qMn5ftmyfcHIiFFwJOM2wbeKPrN2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qkfy8HzPyoIpImCeFIeWtbqxQz/KdqpZ0kDSw9ceAExn14G0pCU6A67Mlkkq7XmWvdgir5jY8I/X34TFPIVn1Y8k3bQFAjrgg7wM0E2mojtV+E96SYJAQ0wleNkbAUXjckn0C8UuONNReVbJ6VAB+DpnubsLwrNfBlRW3Qm5Z4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1RX2tKoU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x2FTq42a; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1RX2tKoU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x2FTq42a; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kr6pNFIM"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aafc9d75f8bso815718266b.2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 02 Feb 2025 23:15:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738566902; x=1739171702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4Q2C26T0K74YYtpMKkiUgCp9WgkXow2PCxFIgsZpR8=;
-        b=kr6pNFIM72999ZxddZ91SyKGn2TVz3mVhYwWNSHZ+cvCUklq+8lFQdunZA47ndo80/
-         CtQCrxW2cGvBMW5D2RyEmFy47lwm0RN5DxHdGGxIQ+fbgi3OZmlT9c555lJ1aXgi89Ib
-         5Enw29XR5ojgLS6+EiJdir5pytrIp7QDmhpLKpO0CxTuDNiBTenJBDg+/Uc1kTWpHV8O
-         v79JRr3LT9VFJnQgxBLr5kdXJa3n6vHG27K3Vid7by9aqVDEdYgeybtE2gqbJLegQzEP
-         7qK+Iqwpddaf9SxE1tEFiX5hxOTfS7xRIeP3jDXTXRAlq+EVZonBvlzMSl++jTFHh1K2
-         HPfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738566902; x=1739171702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o4Q2C26T0K74YYtpMKkiUgCp9WgkXow2PCxFIgsZpR8=;
-        b=LTjNv8vOeEgf+VZrGC/wpj0bgZCF/tiWZ4zR3nGl9FOtV/EJnlOxNR1+25eQbP/XQG
-         iylYRIAUHeyCElx1yDsuvmGJsB+Y2K/B3+wWLoObgT+o2Bq2HfDpAMRG3Lv+vJG2c95z
-         xh8TcGe0I3QAEnT2fpF8ljPZLRranz6OOGFfUrqCLULA3WeyJOSqH5hcPgK3XR+ndIu7
-         fxPTiJgFso+iCfaLLm3Z0aRT/utXOV6B0vx+7rhgh4S34dLIcCKVFn4la6I1+mVT4kgk
-         xKqL+jBv76tH9DDKIZu/Ae9s+B96LWpleCxoUxmlkEjXu1wm0WafzzloXqE2b/q6w0/Z
-         yG1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWpfZVSZjBpGaDsJvQ26EpwBiTdRrE7oYqRQ9abTkqt7GrZVxxxjzrCi8Z2Nur6CoxrtDC0cPH4yc68Blyow+55f1A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJgqjZY1VgdmWAkXnBuAL3oIejWdbp71xmC+Ofx6DligVKt3N/
-	L3lMtHggy6QiQTBYfKD4nsbf+JNKby1YPxcz6lwWudhWkoyAyooTkiLBlGv3VW4ZtKyzpZp8N/x
-	KwNEfZnPb7qWh1hOmh5okiU9iQ56O9vIR1wEC
-X-Gm-Gg: ASbGncvJfU5V+S4842bd66kf2+K5/bgRNKkaCqBiG1Wr9tMXJZC0kNS+dXXeRNiFjrm
-	5YW6jILSeaXHjcLhABiON99s5Ssz23c5fGKrGTUR0KgBMoJKDwLzhzqm6hf2AHKwtwmsR9gwsHS
-	2ny4D9GRWr3Y+XJH0Tnn0tvUKyJMyo
-X-Google-Smtp-Source: AGHT+IHdYYosvgmkyk0C8oZShVymubMByyKMeQ8cwNm/+8aabmGSqYwd9mo6bUikqVJ6ovwhEY68gP7+kn4UIYDAqqs=
-X-Received: by 2002:a17:907:7ba3:b0:ab6:8bc1:9b5a with SMTP id
- a640c23a62f3a-ab6cfda42bbmr2465753066b.41.1738566900382; Sun, 02 Feb 2025
- 23:15:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1RX2tKoU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x2FTq42a";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1RX2tKoU";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x2FTq42a"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 049531F390;
+	Mon,  3 Feb 2025 08:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738571670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
+	b=1RX2tKoU964xdWU8mW7pIJ16kmJg0/npqUOXea4CERNOogIaf3XSyA1qrD0Kz4aFZlrBMt
+	3IO/kJi5Uu93xMVnpBoUsfnrBVsrl5COE9fjFBvgNuLsiedHlJNLHwwaONJTKrrg9pxzUb
+	vA6rB4FNU61Nqi4Jr9O5jMchSpYKmZE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738571670;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
+	b=x2FTq42aHJ4xNBvorVZn/3KnMhdresn1PqkLxPnTek5ViACIbyY78kkJXBFwkzqXKe7Pt8
+	12X8vAxa4ODV3GAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1RX2tKoU;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=x2FTq42a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738571670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
+	b=1RX2tKoU964xdWU8mW7pIJ16kmJg0/npqUOXea4CERNOogIaf3XSyA1qrD0Kz4aFZlrBMt
+	3IO/kJi5Uu93xMVnpBoUsfnrBVsrl5COE9fjFBvgNuLsiedHlJNLHwwaONJTKrrg9pxzUb
+	vA6rB4FNU61Nqi4Jr9O5jMchSpYKmZE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738571670;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=W5Eh3Za0HCZS0DVH2DFqtExGY67apd/ir99lJ0RvFTU=;
+	b=x2FTq42aHJ4xNBvorVZn/3KnMhdresn1PqkLxPnTek5ViACIbyY78kkJXBFwkzqXKe7Pt8
+	12X8vAxa4ODV3GAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCFBF13795;
+	Mon,  3 Feb 2025 08:34:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nYKPMZV/oGeTTgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 03 Feb 2025 08:34:29 +0000
+Message-ID: <46e70b3c-6d96-4507-ba17-a52e8362873d@suse.cz>
+Date: Mon, 3 Feb 2025 09:34:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130100050.1868208-1-kirill.shutemov@linux.intel.com>
- <20250130100050.1868208-7-kirill.shutemov@linux.intel.com> <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
-In-Reply-To: <CAMgjq7AWZg0Y7+v3_Z8-YVUXrANB29mCDSyzF39dtAM_TQ0aKw@mail.gmail.com>
-From: Yu Zhao <yuzhao@google.com>
-Date: Mon, 3 Feb 2025 00:14:23 -0700
-X-Gm-Features: AWEUYZl7Aut54vM8LMQf8gmofutWUertOFMuqNs0Wcb_mrIfZVJF6RYYAJtQ1BU
-Message-ID: <CAOUHufa6gVygmgscgrtX63Z9iE=EL9-tL-YGk7omSHhZhkj64w@mail.gmail.com>
-Subject: Re: [PATCHv3 06/11] mm/vmscan: Use PG_dropbehind instead of PG_reclaim
-To: Kairui Song <ryncsn@gmail.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti <andi.shyti@linux.intel.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Christian Brauner <brauner@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	David Airlie <airlied@gmail.com>, David Hildenbrand <david@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Nhat Pham <nphamcs@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Ran Xiaokai <ran.xiaokai@zte.com.cn>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Yosry Ahmed <yosryahmed@google.com>, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kmem/tracing: Add kmem name to kmem_cache_alloc
+ tracepoint
+Content-Language: en-US
+To: Wander Lairson Costa <wander@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, Richard Chang
+ <richardycc@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ "open list:TRACING" <linux-kernel@vger.kernel.org>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+ David Rientjes <rientjes@google.com>, Christoph Lameter <cl@gentwo.org>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>
+References: <20250130181639.58280-1-wander@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250130181639.58280-1-wander@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 049531F390
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_DN_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[redhat.com,goodmis.org,kernel.org,efficios.com,linux-foundation.org,amd.com,google.com,cmpxchg.org,vger.kernel.org,gentwo.org,gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-On Sat, Feb 1, 2025 at 1:02=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
-:
->
-> On Thu, Jan 30, 2025 at 6:02=E2=80=AFPM Kirill A. Shutemov
-> <kirill.shutemov@linux.intel.com> wrote:
-> >
-> > The recently introduced PG_dropbehind allows for freeing folios
-> > immediately after writeback. Unlike PG_reclaim, it does not need vmscan
-> > to be involved to get the folio freed.
-> >
-> > Instead of using folio_set_reclaim(), use folio_set_dropbehind() in
-> > pageout().
-> >
-> > It is safe to leave PG_dropbehind on the folio if, for some reason
-> > (bug?), the folio is not in a writeback state after ->writepage().
-> > In these cases, the kernel had to clear PG_reclaim as it shared a page
-> > flag bit with PG_readahead.
-> >
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Acked-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  mm/vmscan.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index bc1826020159..c97adb0fdaa4 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -692,19 +692,16 @@ static pageout_t pageout(struct folio *folio, str=
-uct address_space *mapping,
-> >                 if (shmem_mapping(mapping) && folio_test_large(folio))
-> >                         wbc.list =3D folio_list;
-> >
-> > -               folio_set_reclaim(folio);
-> > +               folio_set_dropbehind(folio);
-> > +
-> >                 res =3D mapping->a_ops->writepage(&folio->page, &wbc);
-> >                 if (res < 0)
-> >                         handle_write_error(mapping, folio, res);
-> >                 if (res =3D=3D AOP_WRITEPAGE_ACTIVATE) {
-> > -                       folio_clear_reclaim(folio);
-> > +                       folio_clear_dropbehind(folio);
-> >                         return PAGE_ACTIVATE;
-> >                 }
-> >
-> > -               if (!folio_test_writeback(folio)) {
-> > -                       /* synchronous write or broken a_ops? */
-> > -                       folio_clear_reclaim(folio);
-> > -               }
-> >                 trace_mm_vmscan_write_folio(folio);
-> >                 node_stat_add_folio(folio, NR_VMSCAN_WRITE);
-> >                 return PAGE_SUCCESS;
-> > --
-> > 2.47.2
-> >
->
-> Hi, I'm seeing following panic with SWAP after this commit:
->
-> [   29.672319] Oops: general protection fault, probably for
-> non-canonical address 0xffff88909a3be3: 0000 [#1] PREEMPT SMP NOPTI
-> [   29.675503] CPU: 82 UID: 0 PID: 5145 Comm: tar Kdump: loaded Not
-> tainted 6.13.0.ptch-g1fe9ea48ec98 #917
-> [   29.677508] Hardware name: Red Hat KVM/RHEL-AV, BIOS 0.0.0 02/06/2015
-> [   29.678886] RIP: 0010:__lock_acquire+0x20/0x15d0
-> [   29.679891] Code: 90 90 90 90 90 90 90 90 90 90 41 57 41 56 41 55
-> 41 54 55 53 48 83 ec 30 8b 2d 10 ac f3 01 44 8b ac 24 88 00 00 00 85
-> ed 74 64 <48> 8b 07 49 89 ff 48 3d 20 1d bf 83 74 56 8b 1d 8c f5 b1 01
-> 41 89
-> [   29.683852] RSP: 0018:ffffc9000bea3148 EFLAGS: 00010002
-> [   29.684980] RAX: ffff8890874b2940 RBX: 0000000000000200 RCX: 000000000=
-0000000
-> [   29.686510] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00ffff889=
-09a3be3
-> [   29.688031] RBP: 0000000000000001 R08: 0000000000000001 R09: 000000000=
-0000000
-> [   29.689561] R10: 0000000000000000 R11: 0000000000000020 R12: 00ffff889=
-09a3be3
-> [   29.691087] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
-0000000
-> [   29.692613] FS:  00007fa05c2824c0(0000) GS:ffff88a03fa80000(0000)
-> knlGS:0000000000000000
-> [   29.694339] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   29.695581] CR2: 000055f9abb7fc7d CR3: 00000010932f2002 CR4: 000000000=
-0770eb0
-> [   29.697109] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000000000=
-0000000
-> [   29.698637] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000000000=
-0000400
-> [   29.700161] PKRU: 55555554
-> [   29.700759] Call Trace:
-> [   29.701296]  <TASK>
-> [   29.701770]  ? __die_body+0x1e/0x60
-> [   29.702540]  ? die_addr+0x3c/0x60
-> [   29.703267]  ? exc_general_protection+0x18f/0x3c0
-> [   29.704290]  ? asm_exc_general_protection+0x26/0x30
-> [   29.705345]  ? __lock_acquire+0x20/0x15d0
-> [   29.706215]  ? lockdep_hardirqs_on_prepare+0xda/0x190
-> [   29.707304]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> [   29.708452]  lock_acquire+0xbf/0x2e0
-> [   29.709229]  ? folio_unmap_invalidate+0x12f/0x220
-> [   29.710257]  ? __folio_end_writeback+0x15d/0x430
-> [   29.711260]  ? __folio_end_writeback+0x116/0x430
-> [   29.712261]  _raw_spin_lock+0x30/0x40
-> [   29.713064]  ? folio_unmap_invalidate+0x12f/0x220
-> [   29.714076]  folio_unmap_invalidate+0x12f/0x220
-> [   29.715058]  folio_end_writeback+0xdf/0x190
-> [   29.715967]  swap_writepage_bdev_sync+0x1e0/0x450
-> [   29.716994]  ? __pfx_submit_bio_wait_endio+0x10/0x10
-> [   29.718074]  swap_writepage+0x46b/0x6b0
-> [   29.718917]  pageout+0x14b/0x360
-> [   29.719628]  shrink_folio_list+0x67d/0xec0
-> [   29.720519]  ? mark_held_locks+0x48/0x80
-> [   29.721375]  evict_folios+0x2a7/0x9e0
-> [   29.722179]  try_to_shrink_lruvec+0x19a/0x270
-> [   29.723130]  lru_gen_shrink_lruvec+0x70/0xc0
-> [   29.724060]  ? __lock_acquire+0x558/0x15d0
-> [   29.724954]  shrink_lruvec+0x57/0x780
-> [   29.725754]  ? find_held_lock+0x2d/0xa0
-> [   29.726588]  ? rcu_read_unlock+0x17/0x60
-> [   29.727449]  shrink_node+0x2ad/0x930
-> [   29.728229]  do_try_to_free_pages+0xbd/0x4e0
-> [   29.729160]  try_to_free_mem_cgroup_pages+0x123/0x2c0
-> [   29.730252]  try_charge_memcg+0x222/0x660
-> [   29.731128]  charge_memcg+0x3c/0x80
-> [   29.731888]  __mem_cgroup_charge+0x30/0x70
-> [   29.732776]  shmem_alloc_and_add_folio+0x1a5/0x480
-> [   29.733818]  ? filemap_get_entry+0x155/0x390
-> [   29.734748]  shmem_get_folio_gfp+0x28c/0x6c0
-> [   29.735680]  shmem_write_begin+0x5a/0xc0
-> [   29.736535]  generic_perform_write+0x12a/0x2e0
-> [   29.737503]  shmem_file_write_iter+0x86/0x90
-> [   29.738428]  vfs_write+0x364/0x530
-> [   29.739180]  ksys_write+0x6c/0xe0
-> [   29.739906]  do_syscall_64+0x66/0x140
-> [   29.740713]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [   29.741800] RIP: 0033:0x7fa05c439984
-> [   29.742584] Code: c7 00 16 00 00 00 b8 ff ff ff ff c3 66 2e 0f 1f
-> 84 00 00 00 00 00 f3 0f 1e fa 80 3d c5 06 0e 00 00 74 13 b8 01 00 00
-> 00 0f 05 <48> 3d 00 f0 ff ff 77 54 c3 0f 1f 00 55 48 89 e5 48 83 ec 20
-> 48 89
-> [   29.746542] RSP: 002b:00007ffece7720f8 EFLAGS: 00000202 ORIG_RAX:
-> 0000000000000001
-> [   29.748157] RAX: ffffffffffffffda RBX: 0000000000002800 RCX: 00007fa05=
-c439984
-> [   29.749682] RDX: 0000000000002800 RSI: 000055f9cfa08000 RDI: 000000000=
-0000004
-> [   29.751216] RBP: 00007ffece772140 R08: 0000000000002800 R09: 000000000=
-0000007
-> [   29.752743] R10: 0000000000000180 R11: 0000000000000202 R12: 000055f9c=
-fa08000
-> [   29.754262] R13: 0000000000000004 R14: 0000000000002800 R15: 000000000=
-00009af
-> [   29.755797]  </TASK>
-> [   29.756285] Modules linked in: zram virtiofs
->
-> I'm testing with PROVE_LOCKING on. It seems folio_unmap_invalidate is
-> called for swapcache folio and it doesn't work well, following PATCH
-> on top of mm-unstable seems fix it well:
+On 1/30/25 19:16, Wander Lairson Costa wrote:
+> The kmem_cache_free tracepoint includes a "name" field, which allows
+> for easy identification and filtering of specific kmem's. However, the
+> kmem_cache_alloc tracepoint lacks this field, making it difficult to
+> pair corresponding alloc and free events for analysis.
 
-I think there is a bigger problem here. folio_end_reclaim_write()
-currently calls folio_unmap_invalidate() to remove the mapping, and
-that's very different from what __remove_mapping() does in the reclaim
-path: not only it breaks the swapcache case, the shadow entry is also
-lost.
+Hm yeah looks like the free one was added in commit 3544de8ee6e48 and their
+use case didn't need alloc too, but it makes sense.
+
+> Add the "name" field to kmem_cache_alloc to enable consistent tracking
+> and correlation of kmem alloc and free events.
+> 
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+
+I will take this in the slab tree, unless Steven objects.
+
+Thanks,
+Vlastimil
+
+> ---
+>  include/trace/events/kmem.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+> index b37eb0a7060f..8ffb022f024c 100644
+> --- a/include/trace/events/kmem.h
+> +++ b/include/trace/events/kmem.h
+> @@ -22,6 +22,7 @@ TRACE_EVENT(kmem_cache_alloc,
+>  	TP_STRUCT__entry(
+>  		__field(	unsigned long,	call_site	)
+>  		__field(	const void *,	ptr		)
+> +		__string(	name,		s->name		)
+>  		__field(	size_t,		bytes_req	)
+>  		__field(	size_t,		bytes_alloc	)
+>  		__field(	unsigned long,	gfp_flags	)
+> @@ -32,6 +33,7 @@ TRACE_EVENT(kmem_cache_alloc,
+>  	TP_fast_assign(
+>  		__entry->call_site	= call_site;
+>  		__entry->ptr		= ptr;
+> +		__assign_str(name);
+>  		__entry->bytes_req	= s->object_size;
+>  		__entry->bytes_alloc	= s->size;
+>  		__entry->gfp_flags	= (__force unsigned long)gfp_flags;
+> @@ -41,9 +43,10 @@ TRACE_EVENT(kmem_cache_alloc,
+>  					  (s->flags & SLAB_ACCOUNT)) : false;
+>  	),
+>  
+> -	TP_printk("call_site=%pS ptr=%p bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
+> +	TP_printk("call_site=%pS ptr=%p name=%s bytes_req=%zu bytes_alloc=%zu gfp_flags=%s node=%d accounted=%s",
+>  		(void *)__entry->call_site,
+>  		__entry->ptr,
+> +		__get_str(name),
+>  		__entry->bytes_req,
+>  		__entry->bytes_alloc,
+>  		show_gfp_flags(__entry->gfp_flags),
+
