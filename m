@@ -1,108 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92C320D4FD;
-	Tue,  4 Feb 2025 12:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65C1215F73;
+	Tue,  4 Feb 2025 13:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673429; cv=none; b=uGuvrWj7d+Fw+B2Y2wzx20xIgjdqP7gLmFCpYU4TM/Ne5l5JBnSajBkKcoPp61sMbDX4TgMwYb9L9LalOkZopKgSA5DcA0UCOumibK+Eoqnd7Ka55K2dqh8ef31j7MorIOM83Ok1A5Fn2rVIHM8Hp1WYWfpJds5kJOLBDHN51xk=
+	t=1738674557; cv=none; b=LDzJvOcBBHbT5FnjJ22YPihbS7S6Id8G61XxUqLrp4L4eZGirR2PhJ7gora+xvBvayJREgRtDby200fMqaSmV9SuoBtNbHrjxNfgl9gOTfT8TeQ6shMRhQL54CAcz4OlhztGMPmaMHL9iC2naQkAWHwodow+QvTW1AFlpELfaNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673429; c=relaxed/simple;
-	bh=JYq4lA4tXtp+3MUanleura52qsXla53IeOokyysVpvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PMkBZio04mCnRyn0cIa9X4EM+8QWvUa2wS+WSBfbFXzxs5nzXj/cx52ANNdgzZerpnl8Otu4u+6tPUIATJkXDRmzxWeAoThFqtm/gdPFcbRTD9RERpzlDmdYUBC7o7lqvSXxRp6E7wWxe6W8mi8U2+8U73fcPcgJYLVLaU50vQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20619C4CEDF;
-	Tue,  4 Feb 2025 12:50:25 +0000 (UTC)
-Date: Tue, 4 Feb 2025 07:51:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
- andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
- Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- joseph.salisbury@oracle.com, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250204075100.3fcbfda8@gandalf.local.home>
-In-Reply-To: <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-References: <20250131225837.972218232@goodmis.org>
-	<20250131225942.365475324@goodmis.org>
-	<20250201115906.GB8256@noisy.programming.kicks-ass.net>
-	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
-	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
-	<20250201180617.491ce087@batman.local.home>
-	<20250203084306.GC505@noisy.programming.kicks-ass.net>
-	<20250203114537.6a30c7c0@gandalf.local.home>
-	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738674557; c=relaxed/simple;
+	bh=vxDHz8ElI6Ex4LZgJZ8U26irCHGknU34NH8DsZG5iSs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GTQErrF9VDOX8N4ZVoqj69lZ8IptIiTVhdVL6FJCASXeoQM0/5kU2ETWP7LlvvA25ZcAkvOwnYyBcpoqUzh8hE9Quw7GsAyitV6rIEKt+cMdMjbJjZ2IKdPwmtqkdfvIYmoabbd5KoVdlgkYi7rU/gCu+eH5ia6kcl3n2GEj+FQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqHji4ei; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqHji4ei"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6DF9C4CEE2;
+	Tue,  4 Feb 2025 13:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738674556;
+	bh=vxDHz8ElI6Ex4LZgJZ8U26irCHGknU34NH8DsZG5iSs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NqHji4eix0w461AuS2feo2p8tgbNje2wDxWa5HEF7d/NWCIACk2U+fLFn8wTQHWie
+	 Uhl6zZgZwS5LNVBtLAQawJyfwqde116QD9uoA8BxmvPwOanf7KMdck1cnwicLTd5G0
+	 MsxFMpPa0iRi5EXCFbpdSQGdjjT6A/TL1RZbHfz3AYmfvpB6P41kR4fOUnWA9uJQx0
+	 80SoXpiJD7mZDemrmta/lJLIpExMSROUootZ7GCERtJUit1hC0YDCM8l+nMq32U1/N
+	 einegFkb/GDssWWEuFTZGTvT6CRKrBnZj7oAJwa8Dx2iu9sBESZf5BVu1wBP8N2+bE
+	 +TBd+rkcwJF7Q==
+From: Will Deacon <will@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] arm64: Kconfig: Remove selecting replaced HAVE_FUNCTION_GRAPH_RETVAL
+Date: Tue,  4 Feb 2025 13:09:04 +0000
+Message-Id: <173867195188.3988698.8446978312627999775.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250117125522.99071-1-lukas.bulwahn@redhat.com>
+References: <20250117125522.99071-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Feb 2025 10:16:13 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> And yes, you can still use the whole 'delay preemption' hint for RT
-> tasks just fine. Spinlocks isn't the only thing. It can be used to make
-> any RSEQ section more likely to succeed.
+On Fri, 17 Jan 2025 07:55:22 -0500, Lukas Bulwahn wrote:
+> Commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with ftrace_regs")
+> replaces the config HAVE_FUNCTION_GRAPH_RETVAL with the config
+> HAVE_FUNCTION_GRAPH_FREGS, and it replaces all the select commands in the
+> various architecture Kconfig files. In the arm64 architecture, the commit
+> adds the 'select HAVE_FUNCTION_GRAPH_FREGS', but misses to remove the
+> 'select HAVE_FUNCTION_GRAPH_RETVAL', i.e., the select on the replaced
+> config.
 > 
-> 
-> > Patch 2 changes that to do what you wrote the last time. It has a max wait
-> > time of 50us.  
-> 
-> I'm so confused, WTF do you then need the lazy crap?
-> 
-> You're making things needlessly complicated again.
+> [...]
 
-Do we really want to delay an RT task by 50us?
+Applied to arm64 (for-next/fixes), thanks!
 
-That will cause a lot more regressions.
+[1/1] arm64: Kconfig: Remove selecting replaced HAVE_FUNCTION_GRAPH_RETVAL
+      https://git.kernel.org/arm64/c/f458b2165d7a
 
-This is a performance feature not a latency one. RT tasks are about
-limiting latency and will sacrifice performance to do so. PREEMPT_RT has
-great minimal latency at the expense of performance. We try to improve
-performance but never at the sacrifice of latency.
+Cheers,
+-- 
+Will
 
-RT wakeups are also more predictable. That is, they happen when an event
-comes in or a timer expires and when an RT task wakes up it is to run ASAP
-to handle some event.
-
-This is about SCHED_OTHER tasks where the scheduler decides when a task
-gets to run and will preempt it when its quota is over. The task has no
-idea when that will happen. This is about giving the kernel a hint that
-it's a bad time to interrupt the task and if it can just wait another 50us
-or less, then it would be fine to schedule. SCHED_OTHER tasks never have
-latency requirements less than a millisecond. And SCHED_OTHER tasks are
-effected by other SCHED_OTHER tasks, even those that are lower priority.
-
-My patches here were based on where the NEED_RESCHED_LAZY came from, and
-that was from the PREEMPT_RT patch. The problem was that the kernel would
-allow preemption almost everywhere. This was great for RT tasks, but non RT
-tasks suffered performance issues. That's because of the timer tick going
-off while a SCHED_OTHER task was holding a spin_lock converted into a mutex
-and it would be scheduled out while holding that sleeping spin_lock. This
-increased the amount of contention on that spin_lock, and that affected
-performance.
-
-The fix was to introduce NEED_RESCHED_LAZY which would not have the
-SCHED_OTHER task preempt while holding a sleeping spin_lock. This put back
-the performance close to non PREEMPT_RT.
-
-This work I'm doing is based on that. It doesn't make sense to delay RT
-tasks for a performance improvement.
-
--- Steve
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
