@@ -1,102 +1,153 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E35225A634;
-	Tue,  4 Feb 2025 09:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C01201009;
+	Tue,  4 Feb 2025 09:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660602; cv=none; b=SqzN4LxKeKRtZ1Y3kx/TEhz3OUlBGtjl25SzWReTvJ5ajvdsuXpjPDBEg8pZNEGo8mFFnlyh/vbWsQHJZlUPlxxyhwNPHKiTMOw5Rpnfqxek59a7O7PjwhpWGzEnoJOU59MjqCpgXUumLlh0b3nuZdrJTQaEX1BDkhVW65rUYII=
+	t=1738660746; cv=none; b=eO/BgkVtwYLcUrQk4/InyV8MxrM0lZhIN9rtoCvTeXWNeR6eTyW9MRbIoe7hPcoY4V0ZZRm3igYgA3t28tIrNH5RqgR23/Kh4Jv+5yLNOZDNOp6PNFkb0vCGqjzv1SKdduGVc05u+7sGUHAXA93sYwYKKsLE1RpS6+EO4Bkpvxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660602; c=relaxed/simple;
-	bh=Cyj86Xfk9KWNzVaA2X1/8q1w+RnezCPqu3yiMSnaY34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WGJk/Cm0J1Ns3TvrAI/S5i1PDb8huKWNo1Y6wk84Fw/4b+nnYEkgZFU6xupLZW4qCZRVPa1gum0WiaEX3KhH1C7sDSdNtr0iH2GgQYnl+VaVguXRDtwmP8i3Wqk6Hg1Y/fKR0v7jmeLfGh8Iywx13jy3/8XINDA9OeAVpUDJjqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kYYe3Dmf; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738660746; c=relaxed/simple;
+	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=d6I93VPR9eIiF4IdivKeCp39dpFTyjZ1ir+aTYDNnLR6F8YMKvIxJFEMJ0qOXqG19/TLvDlfl8fThBGf8kGhysE/l3iACa3bLZ8pdjmizNgbgxHknbX+gO1lQW4Ryrbmxkc/kh/7+9vwrr0KdKyG487NlNGHk1hLgh7lzhrB2Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcUPcgM1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kYYe3Dmf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=t0DEtC3PKgp7BXTIfritcGnBk8Mae1xwU2+pF395sTM=; b=kYYe3Dmf/GzcBPUe5bN2ze2o1H
-	IJXz23hzmqCYF90ZGKaTFcThAXuBST2ypBR0yvblo4QjGqjh6NOh/ekMgEEHgAAbhmOiX/Syzyeaa
-	uIPrNMkx9jNQm00okElA+0qedocki1HCEoWsrpXh2kKnA00tUyj7HIx+PpSX9cZwUHINVWhSoHkCD
-	+vXo9mw5ldAtwfyCCtvwD5fQ4yREdYleWwWmJDTUSd1/9d5pHGjDqsWAYbtXCguIyVGqf3bN3FsEc
-	XL/ASyxYN/HrFPoiFcTJ93l9PdYPVwDuLTFrRBUE87lx1Vi28FbCH2+ZVtGCa3OUrdETjC5eUBOOU
-	TqhmJNWg==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfF2U-00000002SwU-0bJl;
-	Tue, 04 Feb 2025 09:16:14 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1915F300599; Tue,  4 Feb 2025 10:16:13 +0100 (CET)
-Date: Tue, 4 Feb 2025 10:16:13 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
-	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
-	broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-References: <20250131225837.972218232@goodmis.org>
- <20250131225942.365475324@goodmis.org>
- <20250201115906.GB8256@noisy.programming.kicks-ass.net>
- <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
- <20250201181129.GA34937@noisy.programming.kicks-ass.net>
- <20250201180617.491ce087@batman.local.home>
- <20250203084306.GC505@noisy.programming.kicks-ass.net>
- <20250203114537.6a30c7c0@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcUPcgM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E636C4CEDF;
+	Tue,  4 Feb 2025 09:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738660745;
+	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XcUPcgM1wVGnKVUq9O/4FVPT+8Sf6nQPqbwAf4eoq19Hn39pfgdTS0Sb1xY6GBOsH
+	 BsimP4qt+MEnu+W6Oiu+QYuQsHNsHzS/nPvSKdZQ7dlmdptaBjwV2uqnf3nHERjINI
+	 diw9fFcmkdjmGRFOpK4H3AfhBokTyuBnCddS7dus0fAsNZ2rj1jAwZdwIAyrVTtwkY
+	 wUPnYcrHa7cDUtWNgEy2UIi223mwYPDDboTSuv1Vm+6IscNnJN2XGi3xXhkZj2PpOP
+	 ejPndcE4nr6vLGwKsoIui9Djyce3qkNb7NWFtKa8SFltsYlmYpZey0eRdIK1OFS0+P
+	 v9thTAzkgqsDw==
+Date: Tue, 4 Feb 2025 18:19:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Gabriel de Perthuis <g2p.code@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
+ Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
+ <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ linux-arch@vger.kernel.org, kernel test robot <lkp@intel.com>, Florent
+ Revest <revest@chromium.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>
+Subject: Re: [PATCH v22 19/20] ftrace: Add ftrace_get_symaddr to convert
+ fentry_ip to symaddr
+Message-Id: <20250204181902.dd6e02416ff5eeec3ea47a79@kernel.org>
+In-Reply-To: <a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
+References: <173518987627.391279.3307342580035322889.stgit@devnote2>
+	<173519011487.391279.5450806886342723151.stgit@devnote2>
+	<a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203114537.6a30c7c0@gandalf.local.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 03, 2025 at 11:45:37AM -0500, Steven Rostedt wrote:
+On Mon, 3 Feb 2025 22:33:48 +0100
+Gabriel de Perthuis <g2p.code@gmail.com> wrote:
 
-> > Lazy only applies to fair (and whatever bpf things end up using
-> > resched_curr_lazy()).
+> Hello,
 > 
-> Is that a problem? User spin locks for RT tasks are very dangerous. If an
-> RT task preempts the owner that is of lower priority, it can cause a
-> deadlock (if the two tasks are pinned to the same CPU). Which BTW,
-> Sebastion mentioned in the Stable RT meeting that glibc supplies a
-> pthread_spin_lock() and doesn't have in the man page anything about this
-> possible scenario.
+> I got errors building Linux 6.14-rc1 that were solved by reverting this 
+> patch and the one after (19/20 and 20/20).
+> 
+> Errors look like:
+> 
+> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+>                   from <stdin>:3:
+> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
+> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of 
+> function 'get_kernel_nofault' [-Wimplicit-function-declaration]
+>     46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip 
+> - ENDBR_INSN_SIZE)))
+>        | ^~~~~~~~~~~~~~~~~~
+> 
+> Will send .config on request if needed.
 
-Yeah, we've known that for at least a decade if not longer. That's not
-new. Traditionally glibc people haven't been very RT minded -- the whole
-condvar thing comes to mind as well.
 
-And yes, you can still use the whole 'delay preemption' hint for RT
-tasks just fine. Spinlocks isn't the only thing. It can be used to make
-any RSEQ section more likely to succeed.
+Thanks for the report!
+
+-------<arch/x86/include/asm/asm-prototypes.h>
+/* SPDX-License-Identifier: GPL-2.0 */
+#include <asm/ftrace.h>
+#include <linux/uaccess.h>
+-----
+
+Ah, that's why... get_kernel_nofault() is defined in linux/uaccess.h.
+I also found that is_endbr() is in asm/ibt.h.
+
+Can you try this?
+
+Thank you,
+
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index f9cb4d07df58..d24d7c71253f 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -16,24 +16,9 @@
+ # include <asm/ibt.h>
+ /* Add offset for endbr64 if IBT enabled */
+ # define FTRACE_MCOUNT_MAX_OFFSET	ENDBR_INSN_SIZE
+-#endif
+-
+-#ifdef CONFIG_DYNAMIC_FTRACE
+-#define ARCH_SUPPORTS_FTRACE_OPS 1
+-#endif
+-
+-#ifndef __ASSEMBLY__
+-extern void __fentry__(void);
+-
+-static inline unsigned long ftrace_call_adjust(unsigned long addr)
+-{
+-	/*
+-	 * addr is the address of the mcount call instruction.
+-	 * recordmcount does the necessary offset calculation.
+-	 */
+-	return addr;
+-}
+ 
++#include <linux/uaccess.h>
++/* This only supports fentry based ftrace. */
+ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+ {
+ #ifdef CONFIG_X86_KERNEL_IBT
+@@ -55,6 +40,24 @@ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+ }
+ #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
+ 
++#endif
++
++#ifdef CONFIG_DYNAMIC_FTRACE
++#define ARCH_SUPPORTS_FTRACE_OPS 1
++#endif
++
++#ifndef __ASSEMBLY__
++extern void __fentry__(void);
++
++static inline unsigned long ftrace_call_adjust(unsigned long addr)
++{
++	/*
++	 * addr is the address of the mcount call instruction.
++	 * recordmcount does the necessary offset calculation.
++	 */
++	return addr;
++}
++
+ #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+ 
+ #include <linux/ftrace_regs.h>
 
 
-> Patch 2 changes that to do what you wrote the last time. It has a max wait
-> time of 50us.
-
-I'm so confused, WTF do you then need the lazy crap?
-
-You're making things needlessly complicated again.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
