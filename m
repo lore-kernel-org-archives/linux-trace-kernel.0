@@ -1,202 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0DD1FAC5C;
-	Tue,  4 Feb 2025 22:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11341FF7A5;
+	Tue,  4 Feb 2025 23:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738707611; cv=none; b=WBQbZ1Ta45NuYvFH10341HYmN8e+aatCiQcF2GiL68/LvYD+IAOTRm6XuiWH0n4lvFiGF7NBMJg0fuO61aizG63kYfpA8ymN7e1POq7BfThZJlOLIOBCkoII2yuTIJboFqUTA6n/JaU7o2ATuvyYP8793aoKKu2IO5z3cYCu3E8=
+	t=1738710177; cv=none; b=a9rHeG1jir3xBbmRh4SF7FD1FuyJD3hdh3AdTJ1wU/mleYi+cJultz7LJIm0AV/iqX1u8xBSVKmFasW/pkJv6S3HB9IXiaZHLJs8psh/Sxvzt01bOmEaP1zOEnXRE4UCivzAGCMMqM6XI2nC9prhoY8lDJse3wslLfj2VpoDS70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738707611; c=relaxed/simple;
-	bh=amgd8P6BHqREgQt9gXdFnKY9NXQU5F/KhHTeB8hYYHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RQyVtn4lA0hkheX4+oUa0yU8+7l7XhE9evRAfZORv35AWRVUPposUGCFGfqKxFoDrnOuSi7vhCXYJlYHwKNo8Sw9gjty3JD/PElVnsnrzn4pBEcHVXE1ZbPz5L1vkJNn6l7BEaQOczYc8TBbRFrpUptJU5waLpGmXHS92bS15BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04BBC4CEDF;
-	Tue,  4 Feb 2025 22:20:09 +0000 (UTC)
-Date: Tue, 4 Feb 2025 17:20:45 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nikolay Kuratov <kniv@yandex-team.ru>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Wen
- Yang <wenyang@linux.alibaba.com>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ftrace: Avoid potential division by zero in
- function_stat_show()
-Message-ID: <20250204172045.3a5d8d01@gandalf.local.home>
-In-Reply-To: <20250204074301.1427497-1-kniv@yandex-team.ru>
-References: <20250203100603.5c00df0f@gandalf.local.home>
-	<20250204074301.1427497-1-kniv@yandex-team.ru>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738710177; c=relaxed/simple;
+	bh=4chpXDmqz5lXX5/+XxyEMN/H71iHm9gxiF5XFQT7cTY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lo4pojSp+KSSj6KBxczUz3a0cMhaunv7JC70dnvJGjZpRTI24+lXhIgXOwV4IxzcWb5OfXa9ofH8FgAg314t8Z3FPxat0wfDG6+sDzXN4yspUaK1e1gXAqzYriv0QD+KLRymPM2AeF10Kjo9S2MjC3mUAyNKfsVxvR2l0qYgido=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUk8M4eu; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUk8M4eu"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38db10ab86cso570510f8f.3;
+        Tue, 04 Feb 2025 15:02:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738710174; x=1739314974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IhWUg+d3sCFwJhzK5U92SB6xZl56i8PiqJiND+AD1bg=;
+        b=dUk8M4eu1llzfiD1mVJ6Ij7draREF0DbUyY0v2MifbdaN9pfJ1+id0C9F8RBENijmR
+         Lde0wrIb1iMsfbPIQ30jSp8aAlyuJrUu4YcLODXbmkNTrXeY+jCqf+hjBg7Emj4/tLy2
+         iZPhITz8DnKBUwsgb86Y8/VHKNa9XAUrfCJkMAiH/3nsCRIZK0v5etZBA+xL3vLv7sKh
+         TYI5DYYfgDJtvfhiN3KRe+D7Ngz7wVgNh2PP2icoOCWFRP4w2Gufo599ikK74FhwsVI+
+         q/bbYXdb9vbRRaIkOa1+2fHNmolurGOcZ7ueDLSL8vwB09GAaU6hMKe238SMFRhYbz4S
+         yZlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738710174; x=1739314974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IhWUg+d3sCFwJhzK5U92SB6xZl56i8PiqJiND+AD1bg=;
+        b=BpScS6wa6YJRZWtOEY0csTwsg4fwINdiTT75V7F3LN6V4jALuK4nNrWhDcnLbYiGNl
+         zXNpv9uRrYsqs7MHF9z8x8JraNQiUISOSAYnrrgvrXQxkvyApe/B24GWaudccvv8Nvrb
+         zer1uPzJjjVJEgfFeQL4EMGXQEqALgr56LhXGOMbJmDRkAM6iPhr3wBa0QU4DsnoPl0d
+         MvMEL0xaFCkBzFj12oivU/UEefiqSA1TO2oFHZxQzsGqqEynwiWrwYDgvIDvcMiy7S+8
+         SMhXR7MJFdee8ngsIaj8wGEAZp1aZ65li822BVEKb31n6PXd3qaqB0YBgxzNYBxrRg4+
+         UqSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAnqCiaGVWifGgKYoB7x0gPXtO320m4pqcVol0p13/YpS6aapXP+M174AN2/i7WfPfe49Z8Z1R+A/II7aa@vger.kernel.org, AJvYcCW+aenhEO1n4RP9C1dUOxI1aWouTSN08kzUcI9g6x97Q90Cv/QwoZDg82TYbwIeuuIVLuGplnxXvZI9GCB6Bn96gD8p@vger.kernel.org, AJvYcCWNE8e38yv8wWzFJzoV/VjwG4mmNYLvLtvoN5w/TXGYUfpuwrrUN0wFmToYlyG4MmWVsE0oj08/0EY=@vger.kernel.org, AJvYcCWQjQKMWeFHjdyU6SwWuizR6nGKzjnbms51D13USRj7drF1es7dd1BpqXEFdGwiA8CU/OY=@vger.kernel.org, AJvYcCWYg2xlEOlBmTmp4fETDPmxigchcYB1vmLR1/5ho1xDh+9kbwL7OK7PubYDlOkOnZlbrDhlvd8tkXp6Dp6MC55q@vger.kernel.org, AJvYcCXFRfdv7qTzU9MjbaagtfI1PXvCCnCniPn1Oq0vJ+2jqB1sUFPRXBSN9n/UDGv1dMz1bfECq11kZWW4Uf1BkkXQqQ==@vger.kernel.org, AJvYcCXqkSQdQYBluuTHTrmrFVE7KGTREFyeS4iRQ3oIN9/0uFYYrG8ykQB2y9ZYOtIMnY5M6gedbUxMav27lmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydjOCPiah1msFc729uQoKSoVZFoTanL8+9y1AV4SQJIXD+e8z5
+	Sydwq4vueWnJ5841tSBFBgJgeBoRM8WTPejTo1fzv+J75oC42FWqVRnKAZOhHtARJMPQE+vPNcS
+	TuNFchsJ0XZCEwkMcpwGGANri5jM=
+X-Gm-Gg: ASbGnctPPPItwq0EVanpqJGT0frvj3gXJtv4oDmYFIF4giQTq/vF/JBBMXVVS50FWv1
+	wbDvidjBukLfLrIDUhPzD6ITkn6I9BrmAo3misoKiRSdN2oNwwprcvuwk7SEhCltw3ZB2RSCK
+X-Google-Smtp-Source: AGHT+IGyAesYgSc23Slj9Jv3XtZGRWcCp0H3F9Kqsj8a9rDodsyQAVoifJDYZlGi89eBGwL+TzarCw79qmfJ114u8NM=
+X-Received: by 2002:a5d:69c8:0:b0:386:37f5:99e7 with SMTP id
+ ffacd0b85a97d-38db48f3787mr319907f8f.33.1738710173606; Tue, 04 Feb 2025
+ 15:02:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost> <Z6JksXDRh8OSAh-u@google.com>
+In-Reply-To: <Z6JksXDRh8OSAh-u@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 4 Feb 2025 23:02:42 +0000
+X-Gm-Features: AWEUYZlmDbliSpI2sm1GIy7yJu4eHOxWwrFAjie_1pp1QQTtFuZzNJaDrMgxEhU
+Message-ID: <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Charlie Jenkins <charlie@rivosinc.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
+	Linux Power Management <linux-pm@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue,  4 Feb 2025 10:43:02 +0300
-Nikolay Kuratov <kniv@yandex-team.ru> wrote:
+On Tue, Feb 4, 2025 at 7:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > On Tue, Feb 4, 2025 at 12:10=E2=80=AFAM Charlie Jenkins <charlie@rivo=
+sinc.com> wrote:
+> > > >
+> > > > The quiet infrastructure was moved out of Makefile.build to accomid=
+ate
+> > > > the new syscall table generation scripts in perf. Syscall table
+> > > > generation wanted to also be able to be quiet, so instead of again
+> > > > copying the code to set the quiet variables, the code was moved int=
+o
+> > > > Makefile.perf to be used globally. This was not the right solution.=
+ It
+> > > > should have been moved even further upwards in the call chain.
+> > > > Makefile.include is imported in many files so this seems like a pro=
+per
+> > > > place to put it.
+> > > >
+> > > > To:
+> > > >
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > ---
+> > > > Charlie Jenkins (2):
+> > > >       tools: Unify top-level quiet infrastructure
+> > > >       tools: Remove redundant quiet setup
+> > > >
+> > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > >  tools/bpf/Makefile                        |  6 -----
+> > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > >  tools/build/Makefile                      |  8 +-----
+> > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > >
+> > > Nack.
+> > > libbpf and bpftool are synced independently to github
+> > > and released from there.
+> > > This change breaks it.
+>
+> Sorry, I overlooked this part and merged a change that touched the
+> common files into the perf tree.
+>
+> f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile=
+.perf")
+>
+> Unfortunately, it's already in v6.14-rc1.
+>
+> >
+> > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > don't build quietly so this was an attempt to fix that.
+>
+> So I think you will need something like this for v6.14.  Again, sorry
+> about the trouble.
 
-> Thank you for the review!
-> 
-> `counter > rec->counter` check does not protect us from overflows,
-> so this could mislead especially with the comment included.
-
-Ah you're right, as there's a big multiplication there.
-
-> 
-> I think we should either eliminate overflows or only protect from zero
-> division. To prevent overflows it is wise to split the division into
-> three and forget about it. But in 32-bit case overflows will still occur.
-> 
-> As for zero division protection, maybe this variant even more concise?
-> 
-> #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> 	seq_puts(m, "    ");
-> 
-> 	stddev = 0;
-> 	unsigned long denom = rec->counter * (rec->counter - 1) * 1000;
-
-Actually, if the denom overflows, then this is bogus anyway. We should stop
-calculating if it overflows. That would be if:
-
-  rec->counter * (rec->counter - 1) * 1000 >= 2^32 or >= 2^64
-
-depending on the architecture. So we can calculate what value rec->counter
-has to be for that to happen. Using the quadratic equation (haven't used
-this since college!), we can figure that out.
-
-  x = rec->counter
-
-  x * (x - 1) * 1000 = (2^32 - 1) // use minus 1 just to be sure
-  x * (x - 1) = (2^32 - 1) / 1000
-  x^2 - x = (2^32 - 1) / 1000
-  x^2 - x - (2^32 - 1) / 1000 = 0
-
- x = (-b +/- sqrt(b^2 - 4ac)) / 2a
-
- a = 1
- b = -1
- c = -(2^32 - 1) / 1000 = -4294967.295
-
- x = (-1 +/- sqrt((-1)^2 - 4 * -4294967.295)) / 2
-
- x = 2071.930 for 32bit
-
-For 64bit we have
-
- c = -(2^64 - 1) / 1000 = -18446744073709551.615
-
-That makes
-
-  x = 135818790.812
-
-We should stop calculating stddev when rec->counter > 2071 on 32 bit
-and > 135818790 on 64 bit!
-
-Feel free to check my math.
-
-The below patch should fix this.
-
--- Steve
-
-
-> 	if (denom) {
-> 		stddev = rec->counter * rec->time_squared -
-> 			 rec->time * rec->time;
-> 		stddev = div64_ul(stddev, denom);
-> 	}
-> 
-> 	trace_seq_init(&s);
-> 	trace_print_graph_duration(rec->time, &s);
-> 
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 2e113f8b13a2..ae90443f32af 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -419,10 +419,42 @@ struct ftrace_profile {
- 	unsigned long			counter;
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	unsigned long long		time;
-+	unsigned long long		stddev_time;
- 	unsigned long long		time_squared;
- #endif
- };
- 
-+/*
-+ * The calculation for stddev will overflow when the counter
-+ * algorithm overflows the long size:
-+ *
-+ * rec->counter * (rec->counter - 1) * 1000 >= 2^BITS_PER_LONG
-+ *
-+ * Using the quadratic equation: x = (-b +/- sqrt(b^2 - 4ac)) / 2a
-+ * we can figure out what the max rec->counter is before it
-+ * overflows.
-+ *
-+ * x = rec->counter
-+ * x * (x - 1) * 1000 = 2^BITS_PER_LONG - 1 // -1 for rounding
-+ * x * (x - 1) = (2^BITS_PER_LONG - 1) / 1000
-+ * x^2 - x = (2^BITS_PER_LONG - 1) / 1000
-+ * x^2 - x - (2^BITS_PER_LONG - 1) / 1000 = 0
-+ *
-+ * a = 1
-+ * b = -1
-+ * c = -(2^BITS_PER_LONG - 1) / 1000
-+ *
-+ * x = (1 +/- sqrt(1 - 4 * -(2^BITS_PER_LONG - 1) / 1000)) / 2
-+ *
-+ * For 32bit that is: x = 2072.930 (or 2072)
-+ * For 64bit that is: x = 135818791.812 (or 135818791)
-+ */
-+#ifdef CONFIG_64BIT
-+# define MAX_STDDEV_COUNTER	135818791
-+#else
-+# define MAX_STDDEV_COUNTER	2072
-+#endif
-+
- struct ftrace_profile_page {
- 	struct ftrace_profile_page	*next;
- 	unsigned long			index;
-@@ -566,12 +598,16 @@ static int function_stat_show(struct seq_file *m, void *v)
- 	if (rec->counter <= 1)
- 		stddev = 0;
- 	else {
-+		unsigned long counter;
-+
-+		counter = rec->counter < MAX_STDDEV_COUNTER ? rec->counter :
-+			MAX_STDDEV_COUNTER - 1;
- 		/*
- 		 * Apply Welford's method:
- 		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
- 		 */
--		stddev = rec->counter * rec->time_squared -
--			 rec->time * rec->time;
-+		stddev = counter * rec->time_squared -
-+			 rec->stddev_time * rec->stddev_time;
- 
- 		/*
- 		 * Divide only 1000 for ns^2 -> us^2 conversion.
-@@ -894,7 +930,19 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
- 	rec = ftrace_find_profiled_func(stat, trace->func);
- 	if (rec) {
- 		rec->time += calltime;
--		rec->time_squared += calltime * calltime;
-+		/*
-+		 * This is used to calculate stddev, but the calculation
-+		 * uses Apply Welford's method that will multiply
-+		 * rec->counter * (rec->counter - 1) and also divide from
-+		 * that. The calculation will be bogus if that value overflows
-+		 * the long size it is stored in. Stop the calculation
-+		 * when the counter hits the point it will overflow.
-+		 * The stddev shouldn't change much after that anyway.
-+		 */
-+		if (rec->counter < MAX_STDDEV_COUNTER) {
-+			rec->stddev_time = rec->time;
-+			rec->time_squared += calltime * calltime;
-+		}
- 	}
- 
-  out:
+Just revert f2868b1a66d4f40f that created this mess.
