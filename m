@@ -1,153 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C01201009;
-	Tue,  4 Feb 2025 09:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3450D209F57;
+	Tue,  4 Feb 2025 10:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738660746; cv=none; b=eO/BgkVtwYLcUrQk4/InyV8MxrM0lZhIN9rtoCvTeXWNeR6eTyW9MRbIoe7hPcoY4V0ZZRm3igYgA3t28tIrNH5RqgR23/Kh4Jv+5yLNOZDNOp6PNFkb0vCGqjzv1SKdduGVc05u+7sGUHAXA93sYwYKKsLE1RpS6+EO4Bkpvxg=
+	t=1738664776; cv=none; b=lPjfsAeT2PUUjC+dEQkbCnSJuBwg+N0fggjTrOv8NX1w0DCiWCgvz/bBve5KSxvNyX0ur96YXUv2XGtau+dhdausdh954jdqhlqipuOrwngykwIX59/t1a0CrHZko1Ha78z/6qozZ7Z5S5Rdk/hqVwPPOy6yCxjLch/F8Wpno38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738660746; c=relaxed/simple;
-	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d6I93VPR9eIiF4IdivKeCp39dpFTyjZ1ir+aTYDNnLR6F8YMKvIxJFEMJ0qOXqG19/TLvDlfl8fThBGf8kGhysE/l3iACa3bLZ8pdjmizNgbgxHknbX+gO1lQW4Ryrbmxkc/kh/7+9vwrr0KdKyG487NlNGHk1hLgh7lzhrB2Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XcUPcgM1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738664776; c=relaxed/simple;
+	bh=gC2aHzd+wwShId9cIq7FLtsXQIZDubIW/8Lg5TVvsQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qymru0oeJVME/PVd0DWlFT3V8j3dm4vUTnSwizFTqvMw7WwPtkNQ+e4JzIYEmFh7YrQR7ScGQSbH3xopqKJcVk8t3fArT1P2vdsR0aAW4gelD2qWPaR3uvq0bJF10jaU8vvup+iGk52glK602hCRlOpfg88yIRWD/T2QT2BCoAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WByCeUJj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ACChoWpf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XcUPcgM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E636C4CEDF;
-	Tue,  4 Feb 2025 09:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738660745;
-	bh=M/0MbWgQomgFkFf342WyucRNwqt3ktrigkPZJGV8u7o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XcUPcgM1wVGnKVUq9O/4FVPT+8Sf6nQPqbwAf4eoq19Hn39pfgdTS0Sb1xY6GBOsH
-	 BsimP4qt+MEnu+W6Oiu+QYuQsHNsHzS/nPvSKdZQ7dlmdptaBjwV2uqnf3nHERjINI
-	 diw9fFcmkdjmGRFOpK4H3AfhBokTyuBnCddS7dus0fAsNZ2rj1jAwZdwIAyrVTtwkY
-	 wUPnYcrHa7cDUtWNgEy2UIi223mwYPDDboTSuv1Vm+6IscNnJN2XGi3xXhkZj2PpOP
-	 ejPndcE4nr6vLGwKsoIui9Djyce3qkNb7NWFtKa8SFltsYlmYpZey0eRdIK1OFS0+P
-	 v9thTAzkgqsDw==
-Date: Tue, 4 Feb 2025 18:19:02 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gabriel de Perthuis <g2p.code@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Alexei
- Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alan Maguire
- <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arch@vger.kernel.org, kernel test robot <lkp@intel.com>, Florent
- Revest <revest@chromium.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH v22 19/20] ftrace: Add ftrace_get_symaddr to convert
- fentry_ip to symaddr
-Message-Id: <20250204181902.dd6e02416ff5eeec3ea47a79@kernel.org>
-In-Reply-To: <a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
-References: <173518987627.391279.3307342580035322889.stgit@devnote2>
-	<173519011487.391279.5450806886342723151.stgit@devnote2>
-	<a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WByCeUJj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ACChoWpf"
+Date: Tue, 4 Feb 2025 11:26:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738664773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kgn+rEcEOY8px6GFHYJNkHnz2BEPnX2Ua3XM3Zflbxo=;
+	b=WByCeUJjx4ioUYZW1V1sQl5m3OlikHYJjOvTW2vk14i2J5DDGDIDujOnIv4B6HUD+/mcL+
+	PNPIzhOXqVHSZae7pwOtX8hGKOg/232h1f9s9Lkzyr2A1p/9Jv6+XjZGRXoFIlODP4m8mH
+	/Nn1glQre8bbvLeKYcc9J16lfe5ZvwWbUUinhebwrhi1gUMGaLeZOGIOKm6NbUR0pQnZp/
+	pf9ieK0dujG6D12H9OxSm7J66VhIL3A3AA+4QQc3/gIlD8Mch8mDK8l+QaoqU8+XzqCtmD
+	juCVcYIVJgorN0lsGgHDdCxIH9ehLF3dHOp8CTa9wWdun5U3VrcDXQ/NMVznWQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738664773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kgn+rEcEOY8px6GFHYJNkHnz2BEPnX2Ua3XM3Zflbxo=;
+	b=ACChoWpfAFNoOSvNtAAvJBWZAQnDD2bscx00dzwgR0T4RRmAzsPwupMC2n5w8hA8NlP8sz
+	+lWrntu+7jlhRLAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+Message-ID: <20250204102611.OVuHn9rS@linutronix.de>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250130185320.1651910-4-paulmck@kernel.org>
 
-On Mon, 3 Feb 2025 22:33:48 +0100
-Gabriel de Perthuis <g2p.code@gmail.com> wrote:
-
-> Hello,
+On 2025-01-30 10:53:19 [-0800], Paul E. McKenney wrote:
+> The timer and hrtimer softirq processing has moved to dedicated threads
+> for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
+> timers not expiring until later in early boot, which in turn causes the
+> RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
+> which further causes the entire kernel to hang.  One fix would be to
+> make timers work during this time, but there are no known users of RCU
+> Tasks grace periods during that time, so no justification for the added
+> complexity.  Not yet, anyway.
 > 
-> I got errors building Linux 6.14-rc1 that were solved by reverting this 
-> patch and the one after (19/20 and 20/20).
-> 
-> Errors look like:
-> 
-> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
->                   from <stdin>:3:
-> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
-> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of 
-> function 'get_kernel_nofault' [-Wimplicit-function-declaration]
->     46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip 
-> - ENDBR_INSN_SIZE)))
->        | ^~~~~~~~~~~~~~~~~~
-> 
-> Will send .config on request if needed.
+> This commit therefore moves the call to rcu_init_tasks_generic() from
+> kernel_init_freeable() to a core_initcall().  This works because the
+> timer and hrtimer kthreads are created at early_initcall() time.
 
+Fixes: 49a17639508c3 ("softirq: Use a dedicated thread for timer wakeups on PREEMPT_RT.")
+?
 
-Thanks for the report!
+I played with it and I can reproduce the issue with !RT + threadirqs but
+not with RT (which implies threadirqs).
+Is there anything in RT that avoids the problem?
 
--------<arch/x86/include/asm/asm-prototypes.h>
-/* SPDX-License-Identifier: GPL-2.0 */
-#include <asm/ftrace.h>
-#include <linux/uaccess.h>
------
+Thank you for debugging and the patch. 
 
-Ah, that's why... get_kernel_nofault() is defined in linux/uaccess.h.
-I also found that is_endbr() is in asm/ibt.h.
-
-Can you try this?
-
-Thank you,
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index f9cb4d07df58..d24d7c71253f 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -16,24 +16,9 @@
- # include <asm/ibt.h>
- /* Add offset for endbr64 if IBT enabled */
- # define FTRACE_MCOUNT_MAX_OFFSET	ENDBR_INSN_SIZE
--#endif
--
--#ifdef CONFIG_DYNAMIC_FTRACE
--#define ARCH_SUPPORTS_FTRACE_OPS 1
--#endif
--
--#ifndef __ASSEMBLY__
--extern void __fentry__(void);
--
--static inline unsigned long ftrace_call_adjust(unsigned long addr)
--{
--	/*
--	 * addr is the address of the mcount call instruction.
--	 * recordmcount does the necessary offset calculation.
--	 */
--	return addr;
--}
- 
-+#include <linux/uaccess.h>
-+/* This only supports fentry based ftrace. */
- static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- {
- #ifdef CONFIG_X86_KERNEL_IBT
-@@ -55,6 +40,24 @@ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- }
- #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
- 
-+#endif
-+
-+#ifdef CONFIG_DYNAMIC_FTRACE
-+#define ARCH_SUPPORTS_FTRACE_OPS 1
-+#endif
-+
-+#ifndef __ASSEMBLY__
-+extern void __fentry__(void);
-+
-+static inline unsigned long ftrace_call_adjust(unsigned long addr)
-+{
-+	/*
-+	 * addr is the address of the mcount call instruction.
-+	 * recordmcount does the necessary offset calculation.
-+	 */
-+	return addr;
-+}
-+
- #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 
- #include <linux/ftrace_regs.h>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Sebastian
