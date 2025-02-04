@@ -1,101 +1,59 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12579213E9A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Feb 2025 18:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA232185BC;
+	Tue,  4 Feb 2025 18:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694090; cv=none; b=kanK9tsc4GVA4HB33kymcGcrfnGTS5/BQpOHD6G2ZL5mz+rMFRRexuQCujVYOU3qc6gJ8GKTWlJmMCEpSwZkHn8HIxl3valfEbbpLE6FORitoNBSHemykg9F2Cmvu7bQ2atyl95MM6fLptC1TkXShrNSKbica+KF0f2axgfUm/g=
+	t=1738694333; cv=none; b=olXQeZQ7dyg0NODZhWUHbLx72GoEqtlS1mtTy86fQHsoWujNUh63QNHma0luwZQnxsW+XOJtMD5PHUbRhXNwF7IgjmK2Tl9YfmKqsBq7WgXfkkpIyZrD6lITIdSoV7rnnu/25cxeH+mG8pVPUtXZAFuHRbMWVNMnuQ48zxKr5K4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694090; c=relaxed/simple;
-	bh=qq6/0sgx5ZwS3YIlvXs2lDakwhUURjUKrwBBStrGj7s=;
+	s=arc-20240116; t=1738694333; c=relaxed/simple;
+	bh=qfKEeCtyCwX8cwgD/StYBwedErfhe0C0rQM403/Xl6o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AeTFyBZt2kXZy/Olt+nvgYpy9YCpv5vhIUghmesnkqs6wmhRCYOxNpY77iwhRPrtQJnakpyuqER/VYI+H0ZzJGxMQ0UBKXfRMQn1vmjQZ4X7G87s67UqrtUg+LRVty5qDzra7JM+JfNcZrxgXLRYzrzN2NkoMS2lKNde7g18td4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ucUPB19Y; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=S81rZtSAlP8nOEckRfk1ajgH9HW17+quRvJwFzxHjXm8PxihCMudU3fGELjrPpSTsFYp5Nu1+QVfx02gj/E61Qw5rLP+r2dTtt1VzjBXHfkH9UoDsvMCtfKnzoiM6u/N1e9JLurP6YGaXr/SVfAJDJ+efGTqyLmEbrKIvbRTqM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/+uf8Sj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ucUPB19Y"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d008738e03so54853195ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Feb 2025 10:34:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738694087; x=1739298887; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=M3rTMe+j/2oa4I6gF8pPtcv0zI3NJYxIm/hZ5P5q3zo=;
-        b=ucUPB19YOxYZUMSig59vhoVuBBxfo8GuBjZFosQu9RkvExjHqbv/1hX9ytNvqOjyn1
-         K9ZEo5cq/IgvteWICnY7IKhr7xmEDm3cBGb/HbSY+9NY9Hkc2rJ/8UaVEsnn85ct7b3/
-         ASY5MkZSNCl+RgFPIq6sXpj1k3l8P7uroATRkZTrg/JVGx9mSotkG0TiRj7BjlN81nO8
-         aAF8ocPn3PlDJ7NWXzFqPTHIA5UHAJ6nQ267kpm/Z21rxJ1tbvcLgL/83BSqVRRl33Ft
-         QBfoTX7bb6bzv5hGCuChDUcb54Y6tKPZpJymg0SxFvlOmGwuhu2yYXsZefxnGNUaHeWt
-         GVTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738694087; x=1739298887;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3rTMe+j/2oa4I6gF8pPtcv0zI3NJYxIm/hZ5P5q3zo=;
-        b=s0wEDrR7IBjSmiJYCQos1ts8BuatCSz+rdQRjZ+KVYj7XDkLKOZ2qAdWa/DHuHVXcN
-         hfMbSlVGMlhSC4uhAzuCejfDyAr751ismD03yzUtQaN8SLoEoJqo4+okJkG1JDlaAVdM
-         aA2JoRMUkEHdh6Z1t0FBOCuVzhTPI2skJ1D8FKxuCOqtKK6yQiZAupLCsTOe9VqmEE/i
-         gQpciGTsp1GHhnf2h11e9+PlwZUreIjPP+ZhidyI5eA2KRxk6M2SvTuoiMJbddmDXsTs
-         4um5Mw5nq3utKuogbmpP0hO9O5cFsvWyMyM4YCenGYpOHobEaOpvOJXmHtp57paSBG8H
-         pQCw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHe9zyoIWXOmHWm8cmTtVth75zEDZzml0r/V3Hx44eLQTNUH1UYFwcMlz6EzeHIhbwTAxOTvwfMIRrBsydgrd0s1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyq1ZIE88Lvmp6qCnMf7CrGTvg8yiEO3kQM7fp2Ri9X8DLDu15p
-	MqRHPxsSzifFkwkCHzAXSMwDQc3qkHR4BIQvUbTF8YbUmk6+F95l91+Tyb9oPuQ=
-X-Gm-Gg: ASbGnctwyTs6gkTdZwWl+zrn5qv1T8KZqubiSLk3GZe4HyQV92H8tbxSXYCBb8S92V/
-	byWiezCutkv7ChHDYzee8aX+4dFSeMhbiZR8Q8dtuk1YW/93mw5QadEYzRQc37ww4COafYSSkS8
-	EkyEeGP2ZjgexJB/6TVQ2mVPBbHjE/I+a5v1KZ1llUFFm11f9e9MDXBGtaxwPmJPYF1HaZ0rkeD
-	cdUJdCX+koZRDG0H2XXjJihfl7etQyRXx1AWc97qgw27fZWGrARGW4FcjfGG/DfJDKGsAVN4SGC
-	g6LIXw==
-X-Google-Smtp-Source: AGHT+IG/BRPtaEZnajjDcpobEpuNb3M6MK2S0ZW69zYjb0ka0RxhjRkwp9wRSC5O0Seo0pB1mdptYQ==
-X-Received: by 2002:a05:6e02:12eb:b0:3d0:47e3:40bb with SMTP id e9e14a558f8ab-3d047e34217mr16450115ab.4.1738694087183;
-        Tue, 04 Feb 2025 10:34:47 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d00a4fd453sm30576535ab.4.2025.02.04.10.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 10:34:46 -0800 (PST)
-Date: Tue, 4 Feb 2025 10:34:41 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/+uf8Sj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D5EC4CEDF;
+	Tue,  4 Feb 2025 18:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738694332;
+	bh=qfKEeCtyCwX8cwgD/StYBwedErfhe0C0rQM403/Xl6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B/+uf8SjJJDZOvDZbb6/CCEoO5fsTVxPROiE8hVmJY2MWI66KuD25DreUVXoQuMTC
+	 D5FkOeOPwszJD7/ngmL30g8VvQyUwJBrCKrlNbU+MTyWdL5FEC5BUaOd9kN7ullpKZ
+	 tkuP6V8rOb20qVy5SBhozHnFhNMXZLe7lJY02c75R3RMSBdESAwF+hwJjD1DZMgoFl
+	 0lxXF+yabbmYpf6PvFPgYYbLzEqpGvD7c4zzqhK2nz3U1bjDcNsY+SJ2KO5Wwg67YW
+	 j5cOeb6A9oGSmKfuFIgcumJiqMmtaUNt1RD1QzYrkulc34Ik0gR+Qq2j44sCZkapDm
+	 ThGLNAUdRunKQ==
+Date: Tue, 4 Feb 2025 10:38:47 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Indu Bhagat <indu.bhagat@oracle.com>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Quentin Monnet <qmo@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Linux Power Management <linux-pm@vger.kernel.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
-Message-ID: <Z6JdwSsAk1xCiSrn@ghost>
-References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
- <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+Message-ID: <20250204183847.mr2dnge55simbmkl@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
+ <3f890bd0-b883-4bd1-a0f1-4cf78db42857@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -104,45 +62,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+In-Reply-To: <3f890bd0-b883-4bd1-a0f1-4cf78db42857@oracle.com>
 
-On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
-> On Tue, Feb 4, 2025 at 12:10 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
-> >
-> > The quiet infrastructure was moved out of Makefile.build to accomidate
-> > the new syscall table generation scripts in perf. Syscall table
-> > generation wanted to also be able to be quiet, so instead of again
-> > copying the code to set the quiet variables, the code was moved into
-> > Makefile.perf to be used globally. This was not the right solution. It
-> > should have been moved even further upwards in the call chain.
-> > Makefile.include is imported in many files so this seems like a proper
-> > place to put it.
-> >
-> > To:
-> >
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> > Charlie Jenkins (2):
-> >       tools: Unify top-level quiet infrastructure
-> >       tools: Remove redundant quiet setup
-> >
-> >  tools/arch/arm64/tools/Makefile           |  6 -----
-> >  tools/bpf/Makefile                        |  6 -----
-> >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
-> >  tools/bpf/bpftool/Makefile                |  6 -----
-> >  tools/bpf/resolve_btfids/Makefile         |  2 --
-> >  tools/bpf/runqslower/Makefile             |  5 +---
-> >  tools/build/Makefile                      |  8 +-----
-> >  tools/lib/bpf/Makefile                    | 13 ----------
+On Thu, Jan 30, 2025 at 07:07:32AM -0800, Indu Bhagat wrote:
+> On 1/21/25 6:31 PM, Josh Poimboeuf wrote:
+> > +	for (i = 0; i < fde->fres_num; i++) {
+> > +		int ret;
+> > +
+> > +		/*
+> > +		 * Alternate between the two fre_addr[] entries for 'fre' and
+> > +		 * 'prev_fre'.
+> > +		 */
+> > +		fre = which ? fres : fres + 1;
+> > +		which = !which;
+> > +
+> > +		ret = __read_fre(sec, fde, fre_addr, fre);
+> > +		if (ret)
+> > +			return ret;
+> > +
 > 
-> Nack.
-> libbpf and bpftool are synced independently to github
-> and released from there.
-> This change breaks it.
+> It should be possible to only read the ip_off and info from FRE and defer
+> the reading of offsets (as done in __read_fre) until later when you do need
+> the offsets. See below.
+> 
+> We can find the relevant FRE with the following pieces of information:
+>   - ip_off
+>   - fre_size (this will mean we need to read the uin8_t info in the FRE)
 
-Can you explain how it breaks it? Currently bpftool and resolve_btfids
-don't build quietly so this was an attempt to fix that.
+Indeed, I'll skip reading the offsets until after the loop.
 
-- Charlie
-
+-- 
+Josh
