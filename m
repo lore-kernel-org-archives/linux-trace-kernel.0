@@ -1,94 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7662139D8;
-	Tue,  4 Feb 2025 16:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A592C181;
+	Tue,  4 Feb 2025 16:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738685448; cv=none; b=Dy84KqLQkHaP5VYnuiz51kDsuEGpsvNzVBScfPxPAUZubsIe11ncrx3/3K5+dC7M5o13ENX5vvQX+YGddnDNIMX+kI+e+gdUOcNkokIb3l0xq0QvFR2XnykNIhnYhEcEQFRayTQ5pUQ/pUAYreidKV3pmk7f2F7VuKF8McFhJTU=
+	t=1738686854; cv=none; b=NhQCjGagG+L2S6FNXpzLtirWXMVDuxiu8dlzxvmTIFMBcXYPPutpDDEcmvY2F+ssJ0q99dM+VdVJzXZs3EwXLPy/fJUBjDK8UOOWg9nwy7uWyS1HJKuz+SRoUdWaqTw+x9z1bJ3EHuIjxKsRIfJ6N8vB27zX35PyCkwndayO7VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738685448; c=relaxed/simple;
-	bh=llTE3rPaHgTKpUUhC+FAxtn94YVXULX/yIZ/ItD8z7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LmryDIaP1BXiYo2IAs5Z9sGDeNZwfAT9EgPWoE6sjFD4/QrAaOrVAmpWJl8k1mI3hBAP6tez+uBdd2BL4GfChVXchxf5tJEim6AczDo1Kyo0JpE+eg8MUcXzsogzRJkbTW/TPue1QSSorL1weJFwV4f5tzHgIaZsqWh02KyV7os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A608FC4CEDF;
-	Tue,  4 Feb 2025 16:10:43 +0000 (UTC)
-Date: Tue, 4 Feb 2025 11:11:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
- andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
- Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
- Molnar <mingo@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
- joseph.salisbury@oracle.com, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250204111119.10ee37c8@gandalf.local.home>
-In-Reply-To: <20250204153053.GX7145@noisy.programming.kicks-ass.net>
-References: <20250131225837.972218232@goodmis.org>
-	<20250131225942.365475324@goodmis.org>
-	<20250201115906.GB8256@noisy.programming.kicks-ass.net>
-	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
-	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
-	<20250201180617.491ce087@batman.local.home>
-	<20250203084306.GC505@noisy.programming.kicks-ass.net>
-	<20250203114537.6a30c7c0@gandalf.local.home>
-	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
-	<20250204075100.3fcbfda8@gandalf.local.home>
-	<20250204153053.GX7145@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738686854; c=relaxed/simple;
+	bh=8wM8PxwKt5hE+jlTkkgMtUmjK9tWRW7I0AK5GtpiFs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dAsy9KBtyxCeUO+HMR7Bqy8hcUojopPcRNrGC4I5O/hvhofOudVD/ouL6dE5DGHbVE2zyNPTbpksfKSzdFfjfYYFCyhq6gsDiiWfptPgKg23ppN09FsgCFRITusOBjBimLUQ0ylfflO5A2voPgUBPAy4hztmKxASOHy++tBO/QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IcVKUsUX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=63JlAPBo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IcVKUsUX";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="63JlAPBo"
+Date: Tue, 4 Feb 2025 17:34:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738686850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HGciwVaWiFVnQeEkwNMUZx49RscaD3a80RktSJSXkg=;
+	b=IcVKUsUXDca+vxSShEkbfSeIlMQVyGINIw5msWzlyTFIvAUGNGdWzH02CyZL0l10VjWSRo
+	fQXc5uLPJRSiPaYhY5Y4bpHxHjHeJdQ4/1kx8UhoYQ6I2MaaTIycOXF1la7sQB9BAj1dDB
+	6rB0SAuF/3j//N5fblYrYlWRU0cBrKo5YbeADEw8huQMsIjDmHHjNCV/D71uqcxfGo4hrv
+	qbnPAbriEAc/kt2zMKGXbfX12hE3S1bzgk7YN++uF+SBOhepcpd3owhOUioWVAmOM2g0VY
+	UkUw5TaYDoAP3O9V7xDrXfk5jsM+4SfqcoroW4ASmE+94ryiHAfIdyj7R7XdlA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738686850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8HGciwVaWiFVnQeEkwNMUZx49RscaD3a80RktSJSXkg=;
+	b=63JlAPBoJsCVTNn1j7wtylBauOQjPgAbpLfGlp9g4ZPcoZ/gSJLTkahj1+/hWT4PNTn25m
+	5PanF0lpkX8P1bDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+Message-ID: <20250204163409.ueObHFje@linutronix.de>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
 
-On Tue, 4 Feb 2025 16:30:53 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 2025-02-04 03:51:48 [-0800], Paul E. McKenney wrote:
+> On Tue, Feb 04, 2025 at 11:26:11AM +0100, Sebastian Andrzej Siewior wrote:
+> > On 2025-01-30 10:53:19 [-0800], Paul E. McKenney wrote:
+> > > The timer and hrtimer softirq processing has moved to dedicated threads
+> > > for kernels built with CONFIG_IRQ_FORCED_THREADING=y.  This results in
+> > > timers not expiring until later in early boot, which in turn causes the
+> > > RCU Tasks self-tests to hang in kernels built with CONFIG_PROVE_RCU=y,
+> > > which further causes the entire kernel to hang.  One fix would be to
+> > > make timers work during this time, but there are no known users of RCU
+> > > Tasks grace periods during that time, so no justification for the added
+> > > complexity.  Not yet, anyway.
+> > > 
+> > > This commit therefore moves the call to rcu_init_tasks_generic() from
+> > > kernel_init_freeable() to a core_initcall().  This works because the
+> > > timer and hrtimer kthreads are created at early_initcall() time.
+> > 
+> > Fixes: 49a17639508c3 ("softirq: Use a dedicated thread for timer wakeups on PREEMPT_RT.")
+> > ?
+> 
+> Quite possibly...  I freely confess that I was more focused on the fix
+> than on the bug's origin.  Would you be willing to try this commit and
+> its predecessor?
 
-> If you go back and reread that initial thread, you'll find the 50us is
-> below the scheduling latency that random test box already had.
-> 
-> I'm sure more modern systems will have a lower number, and slower
-> systems will have a larger number, but we got to pick a number :/
-> 
-> I'm fine with making it 20us. Or whatever. Its just a stupid number.
-> 
-> But yes. If we're going to be doing this, there is absolutely no reason
-> not to allow DEADLINE/FIFO threads the same. Misbehaving FIFO is already
-> a problem, and we can make DL-CBS enforcement punch through it if we
-> have to.
-> 
-> And less retries on the RSEQ for FIFO can equally improve performance.
-> 
-> There is no difference between a 'malicious/broken' userspace consuming
-> the entire window in userspace (50us, 20us whatever it will be) and
-> doing a system call which we know will cause similar delays because it
-> does in-kernel locking.
+Yes. Just verified.
+Tested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-This is where we will disagree for the reasons I explained in my second
-email. This feature affects other tasks. And no, making it 20us doesn't
-make it better. Because from what I get from you, if we implement this, it
-will be available for all preemption methods (including PREEMPT_RT), where
-we do have less than 50us latency, and and even a 20us will break those
-applications.
+> > I played with it and I can reproduce the issue with !RT + threadirqs but
+> > not with RT (which implies threadirqs).
+> > Is there anything in RT that avoids the problem?
+> 
+> Not that I know of, but then again I did not try it.  To your point,
 
-This was supposed to be only a hint to the kernel, not a complete feature
-that is hard coded and will override how other tasks behave. As system
-calls themselves can make how things are scheduled depending on the
-preemption method, I didn't want to add something that will change how
-things are scheduled that ignores the preemption method that was chosen.
+The change looks fine.
 
--- Steve
+> I do need to make a -rt rcutorture scenario.  TREE03 has been intended to
+> approximate this, and it uses the following Kconfig options:
+> 
+> ------------------------------------------------------------------------
+> 
+> CONFIG_SMP=y
+> CONFIG_NR_CPUS=16
+> CONFIG_PREEMPT_NONE=n
+> CONFIG_PREEMPT_VOLUNTARY=n
+> CONFIG_PREEMPT=y
+> #CHECK#CONFIG_PREEMPT_RCU=y
+> CONFIG_HZ_PERIODIC=y
+> CONFIG_NO_HZ_IDLE=n
+> CONFIG_NO_HZ_FULL=n
+> CONFIG_RCU_TRACE=y
+> CONFIG_HOTPLUG_CPU=y
+> CONFIG_RCU_FANOUT=2
+> CONFIG_RCU_FANOUT_LEAF=2
+> CONFIG_RCU_NOCB_CPU=n
+> CONFIG_DEBUG_LOCK_ALLOC=n
+> CONFIG_RCU_BOOST=y
+> CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
+> CONFIG_RCU_EXPERT=y
+
+You could enable CONFIG_PREEMPT_RT ;)
+CONFIG_PREEMPT_LAZY is probably also set a lot.
+
+That should be it.
+
+> ------------------------------------------------------------------------
+> 
+> And the following kernel-boot parameters:
+> 
+> ------------------------------------------------------------------------
+> 
+> rcutorture.onoff_interval=200 rcutorture.onoff_holdoff=30
+> rcutree.gp_preinit_delay=12
+> rcutree.gp_init_delay=3
+> rcutree.gp_cleanup_delay=3
+> rcutree.kthread_prio=2
+> threadirqs
+> rcutree.use_softirq=0
+> rcutorture.preempt_duration=10
+> 
+> ------------------------------------------------------------------------
+> 
+> Some of these are for RCU's benefit, but what should I change to more
+> closely approximate a typical real-time deployment?
+
+See above.
+
+> > Thank you for debugging and the patch. 
+> 
+> And to you for digging into it!
+
+Thanks.
+
+> 							Thanx, Paul
+
+Sebastian
