@@ -1,126 +1,120 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184E175A5;
-	Tue,  4 Feb 2025 17:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1139078F4A;
+	Tue,  4 Feb 2025 18:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738689536; cv=none; b=Wgg61sSiTrp9xDzEaP33de8RYpTlQhwO/KexTdhDs7okb38aPBh7qLprK7xeKZlkQxuCXQzj133P93h8pmnmGQH2okze9c8dQ8SP4sqk5T15NZrISYq2fgNX3nVHSPVyzyGKMilUEjruuQtRsDHFXHhHk6sXI6a23q6zJGl30+s=
+	t=1738693575; cv=none; b=Lwewy2w7Tbu20pqK2Ct1b+Toj95TVd/yj3GATnPlfvdCB0QSVVg0CTtrWNPuV2TITi0guYn+CZD3oVolZ3oxCcSsPMnCC/nlicm4vo4HRjAlCpqFibdCa7N5haZd8DaHDgGJpwLFcVzCnktqOPEscorvO49kQMleiq9H1Edt5vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738689536; c=relaxed/simple;
-	bh=iCKigJ0HZA68QSj6vDaNOuse7H6mg4VWTsT+3IwbyPk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGcS3L3FFeBmRGSx7au4r0xNew4wO14gjc8EZ5iDVDmu7HpgTWxmHqSZPHyUtqml9ZIDNqxnSvGrNaMDhN8rjZwJkD4Zo6PTbqyzSdc0Gyi3qRJ5FceUcGODyDH+8fkyBfneXCCWFnzOiAPXnpycNfk/HFYnSd31fjgWCCQ7Hbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Styy6zuo; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738693575; c=relaxed/simple;
+	bh=+zZo88fWMpzareMBHzUEcmJzdCa2kVu4nmgqRmPiips=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q6yX9gI48IXAYbpHMjc9DvzfolM63wOPZ6flNc6wGlymZ+hyv7Mdia62CQMfg6HyDfVgbmqO37JsLZ6oB/q+dgQ9kPE0oKLqcq6cTK6v8o9rkuIGhm89CBySOSf9FaPkrw5l3GgjWm+mdWkxXnd3HWWy+1vKJ70zsrmdb4WhhlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWd7zb5p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Styy6zuo"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38db104d35eso499019f8f.1;
-        Tue, 04 Feb 2025 09:18:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738689533; x=1739294333; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=48HwAkSZSqOHaazP0j1e1zula7SeoySs4jwygMRaYcc=;
-        b=Styy6zuoeNY1rVOs32hbk92+/+d8XxGrmBv9Mu1/eIO+agBiYrqnENjR2qLz61AMNe
-         vGqA5UIhSMtaPBkIzjYAb2qTyNxzsVAD2XgEj02bSAu31ZI98pSussP1rNeRy8Yx6S4V
-         s3OPHf0lvpd7NwzEjev8GdJqdNfURt/s9D9of24JvnZCsBKVx/vLOZEBfXshaoHU1FJq
-         J1orbpS8ixwpoSMVsmbJe508+tPXXQV/8Y8CmMnPaJc8gNVi7CgXLG43OXTbsHzdvJOf
-         mRWo0Y4GlwHZPw8/EEkq1Oi7dm1bAxa66qZCDXafcykY+HLICpcLLkUuhqiCG8qjZwAD
-         2DKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738689533; x=1739294333;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=48HwAkSZSqOHaazP0j1e1zula7SeoySs4jwygMRaYcc=;
-        b=n4XogT8eNgCIZZrI2rI5LI2/XECexyaN+aEF5HiO8bB5vmss+dOoPtO3B+Tyqz21/D
-         xuIo2PigaTBwVD7DSnTnWCK5pTCnTyexGhaQCrcFOhGXwBk4kqGcA5v+pH2kK2Whd8qF
-         EnAKa8T6zwEVKuOZZXOjChdmVyIeBqSN70tIDAWO4MGRSNj3d9A/dEVx7I8y1aPZoE2v
-         mDsCBS/TdqCi6CE9Olk+A7XcSFhIbJOxKzcKDb2atPUE9Ko+QNo3+vB4k8DYktXAbW+v
-         p9j5kM74huF0gjQxhOJ22EmStUEV4P0zk+2aRlF0oe3dIXEBSxITyejiXBpzXt6evtw0
-         fEcw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2zjjZl9V2vzmT9+CShM1CNCj7Pxw4NJxfk348QIxYBOUKrUT/M06kmiOnR9U3IsJbie0=@vger.kernel.org, AJvYcCUuVOr+sXNs44Iala61CGYxmuLi70E4Sn+i1db+FcQz3RZWPZ1NQeVgjzXH/6RXsxI05zn0y8m3k94QT0Fc7yAzLw==@vger.kernel.org, AJvYcCVA0elEs7IQiweSJJFRJMU90C5qFO0UVVeFdpCIMk3ofeYG5EB+WLv0sFXzUNQE9Zv+pGU8pmp4fK2vgQjNYg+cygyV@vger.kernel.org, AJvYcCVLb93l1v9mtfQiBAjh4hWbGebVDx4OQX6szuZzC9FHLuBcuzuEMavj+X4gdIXRVPrLKCpc3Mrd5qTywSFe@vger.kernel.org, AJvYcCVh7WyvinaBGXVoMaNvXeZIJkPt7S11Ecs6Vx5JQDtD7Ggo1ZBIdT0JwM6HnkejV91pja1RiORkFGZ4xMo=@vger.kernel.org, AJvYcCW92UNRtt550k0Jn395byJcMBz4bgSx3IM1adyjhMNh9YqTht1Ib+JmaLrmbMKXlNme5rebejZ4gzMpu24uZdR4@vger.kernel.org, AJvYcCXSXDcWV1EQj+Vxv9/v6o8KKTt6DqWOJ2WnvG+wQgArQTTWwr0z53KtBOIOXoYhI5a3sKPwGT+fOfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4HgOgFgWeoaQHunkBOkximaU+kqdySKHIbJnCH19GC2clg7to
-	RPjR7E+QQtxKuapk16nfDjZNGWABecMDxLrlE0YHXmtANVS2J9LDt0eOA5YhpDDfY5zpJhkSHtm
-	y+C0v57GXccdgtLRkQqW+tkKmsJs=
-X-Gm-Gg: ASbGncsQY+UrkVcmm60TEbE8sajvqO9SVBteO8nNIQqmOEDvU0HT6dhlbKcLDGlmdgq
-	R75oiuWzZstReSgltWzZDy5w8RDrFLh2pskuR0gUn2UY+qJ9R4NxNc4Xah7tBsgt9gvigONCU+z
-	dSxhVQIY13z/AX
-X-Google-Smtp-Source: AGHT+IEXetkSjzbQZIwp25yXpZlrJ0E0C2WLKrhLJmskRoaWd8NBYMuAQjs4C4NMhIU3irD5IAyKftnklG5C+REE50Q=
-X-Received: by 2002:a05:6000:1a86:b0:38a:888c:7df0 with SMTP id
- ffacd0b85a97d-38c519380demr24381826f8f.1.1738689533094; Tue, 04 Feb 2025
- 09:18:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWd7zb5p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 492C9C4CEDF;
+	Tue,  4 Feb 2025 18:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738693574;
+	bh=+zZo88fWMpzareMBHzUEcmJzdCa2kVu4nmgqRmPiips=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nWd7zb5pERZeeR8FjBnNkTvN7O7NZTSAhetJB7P3UxTHIoSsul3eR4zZ8MGNZb6Wb
+	 bHzYPX3er6N0iz8LaoUCtEHJ7LDDSLQyCTTj+ncCu6UvyWLbDGd/HOIhJbTMwqkbQh
+	 aLuB3LYuEA6EuoGHCScxC2EF4Wq0sFiP6DVx+nd76Isw5axx/5yHWqJSP5zV/+BNKQ
+	 SNNCEH0z8ncisSl2ZHLGhShmcUzYRDzGy3FiWdS5Rh8x4e5aJMpk/jbUOnpd1HgMTY
+	 89cmA1jC2Ixdl9s86wxIlYOHd1jRtNzsLL0wIwCOBmA4/Yss/sWo+8284Gi9mTXRwg
+	 q8EdK4OD/MS0A==
+Date: Tue, 4 Feb 2025 10:26:09 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+Message-ID: <20250204182609.ouiy7ppng3rscfpo@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+ <20250129020249.owmklacvuvss7z7n@jpoimboe>
+ <CAEf4BzYvrAAJv0+2FceJfizRURUsWxUBzRL-VOquM+VtAe-goA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
-In-Reply-To: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 4 Feb 2025 17:18:42 +0000
-X-Gm-Features: AWEUYZntw4tyOlfb-7X3bQw5d_xFnYc5vrj6eRh2uvuHo7xJkIfniobyMxPX5XQ
-Message-ID: <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
-Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
-	Linux Power Management <linux-pm@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYvrAAJv0+2FceJfizRURUsWxUBzRL-VOquM+VtAe-goA@mail.gmail.com>
 
-On Tue, Feb 4, 2025 at 12:10=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
->
-> The quiet infrastructure was moved out of Makefile.build to accomidate
-> the new syscall table generation scripts in perf. Syscall table
-> generation wanted to also be able to be quiet, so instead of again
-> copying the code to set the quiet variables, the code was moved into
-> Makefile.perf to be used globally. This was not the right solution. It
-> should have been moved even further upwards in the call chain.
-> Makefile.include is imported in many files so this seems like a proper
-> place to put it.
->
-> To:
->
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
-> Charlie Jenkins (2):
->       tools: Unify top-level quiet infrastructure
->       tools: Remove redundant quiet setup
->
->  tools/arch/arm64/tools/Makefile           |  6 -----
->  tools/bpf/Makefile                        |  6 -----
->  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
->  tools/bpf/bpftool/Makefile                |  6 -----
->  tools/bpf/resolve_btfids/Makefile         |  2 --
->  tools/bpf/runqslower/Makefile             |  5 +---
->  tools/build/Makefile                      |  8 +-----
->  tools/lib/bpf/Makefile                    | 13 ----------
+On Wed, Jan 29, 2025 at 04:02:34PM -0800, Andrii Nakryiko wrote:
+> On Tue, Jan 28, 2025 at 6:02 PM Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+> I'm not sure about this chunked lookup approach for arbitrary user
+> space applications. Those executable sections can be a) big and b)
+> discontiguous. E.g., one of the production binaries I looked at. Here
+> are its three main executable sections:
+> 
+> ...
+>   [17] .bolt.org.text    PROGBITS         000000000b00e640  0ae0d640
+>        0000000011ad621c  0000000000000000  AX       0     0     64
+> ...
+>   [48] .text             PROGBITS         000000001e600000  1ce00000
+>        0000000000775dd8  0000000000000000  AX       0     0     2097152
+>   [49] .text.cold        PROGBITS         000000001ed75e00  1d575e00
+>        00000000007d3271  0000000000000000  AX       0     0     64
+> ...
+> 
+> Total text size is about 300MB:
+> >>> 0x0000000000775dd8 + 0x00000000007d3271 + 0x0000000011ad621c
+> 312603237
+> 
+> Section #17 ends at:
+> 
+> >>> hex(0x0000000011ad621c + 0x000000000b00e640)
+> '0x1cae485c'
+> 
+> While .text starts at 000000001e600000, so we have a gap of ~28MB:
+> 
+> >>> 0x000000001e600000 - 0x1cae485c
+> 28424100
+> 
+> So unless we do something more clever to support multiple
+> discontiguous chunks, this seems like a bad fit for user space.
 
-Nack.
-libbpf and bpftool are synced independently to github
-and released from there.
-This change breaks it.
+Nothing clever needed, we could just have multiple sframe sections, each
+one with a pointer to its text segment.  That would also have the
+benefit of allowing the sframe data to be much more compact for the
+noncontiguous cases.
+
+> I think having all this just binary searchable is already a big win
+> anyways and should be plenty fast, no?
+
+Sframe is trying to compete with frame pointers which are MUCH faster.
+3-4x faster in my testing, not including the page faults (which tend to
+only affect performance in the very beginning).
+
+-- 
+Josh
