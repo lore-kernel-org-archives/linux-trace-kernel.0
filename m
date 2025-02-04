@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA232185BC;
-	Tue,  4 Feb 2025 18:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E626F166F32;
+	Tue,  4 Feb 2025 18:51:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694333; cv=none; b=olXQeZQ7dyg0NODZhWUHbLx72GoEqtlS1mtTy86fQHsoWujNUh63QNHma0luwZQnxsW+XOJtMD5PHUbRhXNwF7IgjmK2Tl9YfmKqsBq7WgXfkkpIyZrD6lITIdSoV7rnnu/25cxeH+mG8pVPUtXZAFuHRbMWVNMnuQ48zxKr5K4=
+	t=1738695085; cv=none; b=KJhIqiiNlcUPaWpipKrW0e/7aUoZdptrnse5m2ellrjpDuLGSL1MfKcp77cNMggBbwyMugAn4kPngFgQrS4e47f7n0+OW97hSsLPLqQVImyJACkxgoDx8r4T5NASukm2kug3jq3l90QNXamvUwm7K6dJPNMd+fPGBFIC5K3cPns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694333; c=relaxed/simple;
-	bh=qfKEeCtyCwX8cwgD/StYBwedErfhe0C0rQM403/Xl6o=;
+	s=arc-20240116; t=1738695085; c=relaxed/simple;
+	bh=deW8O4qvXwa72p0wEVgLCyS0TJzJuu4g79u6uEqpCZw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S81rZtSAlP8nOEckRfk1ajgH9HW17+quRvJwFzxHjXm8PxihCMudU3fGELjrPpSTsFYp5Nu1+QVfx02gj/E61Qw5rLP+r2dTtt1VzjBXHfkH9UoDsvMCtfKnzoiM6u/N1e9JLurP6YGaXr/SVfAJDJ+efGTqyLmEbrKIvbRTqM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/+uf8Sj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lE5LvjRHf3bncOT4UU8yuDUA3wfRFWpeS/hV41oQs1HdKQQhITTPaD72/NhUbz8bIVDOO2e0BKfASX6P/VEDXSFM0eCyFM52C/a+7EDO4DVdJb5xW1SDJXsPUhOLOP6wg0kWV+DptuihyQ9b2910jVEnw9z1XR8hBa2Xl8VaYsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/dQ1b5D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/+uf8Sj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D5EC4CEDF;
-	Tue,  4 Feb 2025 18:38:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/dQ1b5D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AEAC4CEE2;
+	Tue,  4 Feb 2025 18:51:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738694332;
-	bh=qfKEeCtyCwX8cwgD/StYBwedErfhe0C0rQM403/Xl6o=;
+	s=k20201202; t=1738695084;
+	bh=deW8O4qvXwa72p0wEVgLCyS0TJzJuu4g79u6uEqpCZw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B/+uf8SjJJDZOvDZbb6/CCEoO5fsTVxPROiE8hVmJY2MWI66KuD25DreUVXoQuMTC
-	 D5FkOeOPwszJD7/ngmL30g8VvQyUwJBrCKrlNbU+MTyWdL5FEC5BUaOd9kN7ullpKZ
-	 tkuP6V8rOb20qVy5SBhozHnFhNMXZLe7lJY02c75R3RMSBdESAwF+hwJjD1DZMgoFl
-	 0lxXF+yabbmYpf6PvFPgYYbLzEqpGvD7c4zzqhK2nz3U1bjDcNsY+SJ2KO5Wwg67YW
-	 j5cOeb6A9oGSmKfuFIgcumJiqMmtaUNt1RD1QzYrkulc34Ik0gR+Qq2j44sCZkapDm
-	 ThGLNAUdRunKQ==
-Date: Tue, 4 Feb 2025 10:38:47 -0800
+	b=H/dQ1b5D6k1cqO7yRjFifKWB+s8o3O5v1DCzn/PXFlT9AHqyEZh3XlAbnARHDs416
+	 ysQf5KnJwU9MgImnsydruqg8kO4rsuqmi/CL6OZD9+sB/Y0+G1IHzGKEEk/aa7La+0
+	 UPcH901/1NZ6yGmJYNd4j917ThEfRJLpTDpmkl/G0FuMQshQraDqI/rSVV4/Ks/1Zp
+	 wivQORXrfj/QKUOkuYewQElpKdom1rC6r6PNKKJ4WfaiGxtlAAhLYOhUEKXdtqEzq1
+	 77BGqGS5icl/vaBiCGDA4zQVp2pKYfH+zvF4VsHRwulEqKPI2LSKWQgmKwDEbuYP8G
+	 Jlpz3Uap7rGBQ==
+Date: Tue, 4 Feb 2025 10:51:21 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
+To: Jens Remus <jremus@linux.ibm.com>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,18 +43,18 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
 	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
 	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
+	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>
 Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
  .sframe contents
-Message-ID: <20250204183847.mr2dnge55simbmkl@jpoimboe>
+Message-ID: <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
  <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <3f890bd0-b883-4bd1-a0f1-4cf78db42857@oracle.com>
+ <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,34 +63,55 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3f890bd0-b883-4bd1-a0f1-4cf78db42857@oracle.com>
+In-Reply-To: <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
 
-On Thu, Jan 30, 2025 at 07:07:32AM -0800, Indu Bhagat wrote:
-> On 1/21/25 6:31 PM, Josh Poimboeuf wrote:
-> > +	for (i = 0; i < fde->fres_num; i++) {
-> > +		int ret;
-> > +
-> > +		/*
-> > +		 * Alternate between the two fre_addr[] entries for 'fre' and
-> > +		 * 'prev_fre'.
-> > +		 */
-> > +		fre = which ? fres : fres + 1;
-> > +		which = !which;
-> > +
-> > +		ret = __read_fre(sec, fde, fre_addr, fre);
-> > +		if (ret)
-> > +			return ret;
-> > +
+On Thu, Jan 30, 2025 at 04:47:00PM +0100, Jens Remus wrote:
+> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+> > +struct sframe_fre {
+> > +	unsigned int	size;
+> > +	s32		ip_off;
 > 
-> It should be possible to only read the ip_off and info from FRE and defer
-> the reading of offsets (as done in __read_fre) until later when you do need
-> the offsets. See below.
+> The IP offset (from function start) in the SFrame V2 FDE is unsigned:
 > 
-> We can find the relevant FRE with the following pieces of information:
->   - ip_off
->   - fre_size (this will mean we need to read the uin8_t info in the FRE)
+> u32 ip_off;
 
-Indeed, I'll skip reading the offsets until after the loop.
+Indeed.
+
+> > +#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
+> > +({									\
+> > +	type __to;							\
+> > +	unsafe_get_user(__to, (type __user *)from, label);		\
+> > +	from += sizeof(__to);						\
+> > +	to = (typeof(to))__to;							\
+> > +})
+> > +
+> > +#define UNSAFE_GET_USER_INC(to, from, size, label)			\
+> > +({									\
+> > +	switch (size) {							\
+> > +	case 1:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
+> > +		break;							\
+> > +	case 2:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
+> > +		break;							\
+> > +	case 4:								\
+> > +		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
+> > +		break;							\
+> > +	default:							\
+> > +		return -EFAULT;						\
+> > +	}								\
+> > +})
+> 
+> This does not work for the signed SFrame fields, such as the FRE CFA,
+> RA, and FP offsets, as it does not perform the required sign extension.
+> One option would be to rename to UNSAFE_GET_USER_UNSIGNED_INC() and
+> re-introduce UNSAFE_GET_USER_SIGNED_INC() using s8, s16, and s32.
+
+See the following line in __UNSAFE_GET_USER_INC():
+
+	to = (typeof(to))__to;
+
+Does that not do the sign extension?
 
 -- 
 Josh
