@@ -1,132 +1,132 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B636227BAC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Feb 2025 00:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F672F43;
+	Wed,  5 Feb 2025 00:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738716984; cv=none; b=DjLOMukAnZ12BorMs7mVdoD65SwlUcVgp3d4I9QhyDilzyfh3vqmPC7eKj5zKMjib1K4Sn1//RaMW5o6P47EfQuZcw/quuIxBTII2EaSVwu+slf76w25z+xRajlly6KkuXPBQ4xvEdHw2xpo6jLQHmQtvoiMd7PvxrzEdycOkZM=
+	t=1738717033; cv=none; b=KuO6kgVp6DBHKBNRLWic+HroBohz/YvICYa+hb3+KrE9MIMe4qgHxoGqUdPWFvq1zQy0oU1fEAOB8kZvGMH6LwuBch5CI/qHw/Zwo+xSoaBBDHqoZCNr9OF5zFwh+wgzqZXGxtdd6C2K35hddTQfy+ycTJ7kQAOGtp5IdD7OKHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738716984; c=relaxed/simple;
-	bh=9ij7khtd31hJX3bC+IFvIqGySEhuppZ7MucI5She8To=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=qUqw1NQ74J1xYGACgkpGhoQtC+22PI8fVexNgkMhUUPDthcB7mjpIh+cNHaTNf12QPixVanTAzAwZ1QXLhKcMP6R8TJw3iDl056bvzS6+e5QxWNOZ5zbHmxlBFZjwUQXVZ3XZey85dz6jkWL3yeD7HoGxBbAo1gzSkiRm661VG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=JTRXHJxb; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1738717033; c=relaxed/simple;
+	bh=B7z0x5seqAXVffdy9ePk/hSVwqrIAlxLk9eZJItykE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0x2/z+Uli24GhvdSGtcdMHajAzP8lOfFdCmO+QiAkb47gv6DCr1vO3HL7D2RMXpHnzhWUCJ9kQ9bT6peXIT76/dA6gahPHusFqaFHEh+glaTHVfQ3aqyKoxRLIVLqs2SiBjLPaixtFp71PlOsM01orK6PWlw7Daka/7s56hdrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Geqpiw4w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JTRXHJxb"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e1a36b3684so72177626d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Feb 2025 16:56:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1738716982; x=1739321782; darn=vger.kernel.org;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9ij7khtd31hJX3bC+IFvIqGySEhuppZ7MucI5She8To=;
-        b=JTRXHJxb+8U+2PzYf10CesSBp7eGMv12OnUnanU9Qbx3qEb7uZH1u048Eebt5dvLKD
-         Vm2NABsPInFBd6pRzkg2XQSbgQ9Ik7sNEzok2NwvQy9w0Dop8Ps3w7RMOIBQMO5wsl8+
-         5TWQek43UlN8Ymclov5/can0twOXIo+HH3/1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738716982; x=1739321782;
-        h=to:in-reply-to:cc:references:message-id:date:subject:mime-version
-         :from:content-transfer-encoding:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9ij7khtd31hJX3bC+IFvIqGySEhuppZ7MucI5She8To=;
-        b=AKCckN0hjSRNA+HKU9exQWiTsNY/PbqLc0YAmAtIj45fwzIMPkC9+lxqDMUl9UErFE
-         kWZL0yePvOepwJd1Od0Xyp1YTlfNfSjA50fXo3q8KwuLkEwB1W/E8egWpgK9PT9getZF
-         gEyt3DlZe/cbUZE50TFXKY5pW3AbuK8OHXzES8VziZCNv8EFK23mNjxnEAgcIYtnCcSQ
-         lDgovW6pcKs8PnnZ0p7FFYfwPGxeRvIK4xTw+zdGaaof0Fi4jyv/YaFmpxbHX1av2h6j
-         f7yRGj/+czeuqh9Uy0OsUEfQWtHCvd7QQjEfy1pW1DvO9AvEM3+Aqo0XHv6626fTQ5AX
-         M5mA==
-X-Forwarded-Encrypted: i=1; AJvYcCUmcpaLvxUGgWX3kH7ZjYgcVqca+gmkBKxtbw3TRGXSCKihrb9V+842fsdQkq5GkGYFZJlJiaYzYPwbAKvCbofwHpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhP7o9P2o19yGOLUwLxUQ6aRH+7N/TSuPu6W/yKDNc322iP0Qd
-	l1rr6OBaM+aWbVcGM3+WBbahVflptnLM0eUNjybmJhTX1ItmAx7S1+2YH6AW+9I=
-X-Gm-Gg: ASbGncs8y61mfOIRBlruSqXxqkRkkTre+31Y/8vAH9JEChitWoik8nTFpPN58UhM2xL
-	m5aczr/kMfcLkczU/enDvNGl4dpZh1lZf9TstBhQ0pjS8BlplaBDEeILPKUWVlGl1qq0m+emLnf
-	1qwDEHtOXXYGwG362AlQkOPbk5W15BE+PRWsUQQBWbb9YPHblUmVy+X/hEQiNnJ1qlroX224jLX
-	vU10wkkZPOXxv46mPgESMG52NpiLA7Jj/ZBB3DIgYnB9zkCSWGW7OcHFSHsroatbMnsW0MUgODp
-	RTlGLwwJZQBRqTXQDO7KF8N56w1uGlm5PWN1slGyWNPUknRFxUiu+rLFioF2qT2S5kTWoX2gDLq
-	V
-X-Google-Smtp-Source: AGHT+IGIVVkrbX1KATNv8V2bEUqrsG5sfK5Qzl85BavL2KosHxDWEEmIEh2A+Ur9QNUp3/3BcOXuKA==
-X-Received: by 2002:a05:6214:d42:b0:6e2:4d70:1fbd with SMTP id 6a1803df08f44-6e42fb99504mr16023586d6.6.1738716981866;
-        Tue, 04 Feb 2025 16:56:21 -0800 (PST)
-Received: from smtpclient.apple (c-73-251-172-144.hsd1.va.comcast.net. [73.251.172.144])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e2547f2bbesm67911656d6.12.2025.02.04.16.56.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 16:56:20 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Joel Fernandes <joel@joelfernandes.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Geqpiw4w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29454C4CEDF;
+	Wed,  5 Feb 2025 00:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738717033;
+	bh=B7z0x5seqAXVffdy9ePk/hSVwqrIAlxLk9eZJItykE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Geqpiw4wAXIV6oo0v1qkE2bAZOcLFwMrC/iJGe9hClmdvvU95V5xUyaQw/Ns9mKhr
+	 u4RRiVZCYaG4bWC+jZshNVa+pZ/W75/59p7WMnQ35SWP2cc9IfkMrciqO257AeIamb
+	 p6TpyMmRvXlZhIPMIWMT787U/JLpZ293D4DGkyid4ubdPmVi2KDgGp3gLCNcqL+y/x
+	 y9HlNeV5jmLUSJbc6L9jHCDiZhW+qu46KIYJliEYju+AxiR+6tPN4m6xC/280Cxzx6
+	 gEUGNNta0qsDLSr2DLvoJkhX6k2FKNjW93FtLk5PSd8n5wggEVuYCYbCilHe1Q6kyS
+	 Qh4xyyF6lDxrw==
+Date: Tue, 4 Feb 2025 16:57:10 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Indu Bhagat <indu.bhagat@oracle.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+Message-ID: <20250205005710.35wdzvobyhm6zyda@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+ <20250129020249.owmklacvuvss7z7n@jpoimboe>
+ <e4a52247-af59-4c0f-9215-00ee83a61339@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Date: Tue, 4 Feb 2025 19:56:09 -0500
-Message-Id: <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
- Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
- Suleiman Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
- daniel.wagner@suse.com, Joseph Salisbury <joseph.salisbury@oracle.com>,
- broonie@gmail.com
-In-Reply-To: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-To: Prakash Sangappa <prakash.sangappa@oracle.com>
-X-Mailer: iPhone Mail (22B91)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e4a52247-af59-4c0f-9215-00ee83a61339@oracle.com>
 
+On Thu, Jan 30, 2025 at 01:39:52PM -0800, Indu Bhagat wrote:
+> On 1/28/25 6:02 PM, Josh Poimboeuf wrote:
+> > However, if we're going that route, we might want to even consider a
+> > completely revamped data layout.  For example:
+> > 
+> > One insight is that the vast majority of (cfa, fp, ra) tuples aren't
+> > unique.  They could be deduped by storing the unique tuples in a
+> > standalone 'fre_data' array which is referenced by another
+> > address-specific array.
+> > 
+> >    struct fre_data {
+> > 	s8|s16|s32 cfa, fp, ra;
+> > 	u8 info;
+> >    };
+> >    struct fre_data fre_data[num_fre_data];
+> > 
+> 
+> We had the same observation at the time of SFrame V1.  And this method of
+> compaction (deduped tuples) was brain-stormed a bit.  Back then, the costs
+> were thought to be:
+>   - more work at build time.
+>   - an additional data access once the FRE is found (as there is
+> indirection).
+> 
+> So it was really compaction at the costs above.  We did steer towards
+> simplicity and the SFrame FRE is what it stands today.
+> 
+> The difference in the pros and cons now from then:
+>   - pros: helps mitigate unaligned accesses
+>   - cons: interferes slightly with the design goal of efficient addition and
+> removal of stack trace information per function for JIT. Think "removal" as
+> the set of actions necessary for addressing fragmentation in SFrame section
+> data in JIT usecase.
 
+If fre_data[] is allowed to have duplicates then the deduping could be
+optional.
 
-> On Feb 4, 2025, at 5:44=E2=80=AFPM, Prakash Sangappa <prakash.sangappa@ora=
-cle.com> wrote:
->=20
-> =EF=BB=BF
->=20
->> On Feb 1, 2025, at 10:11=E2=80=AFAM, Peter Zijlstra <peterz@infradead.org=
-> wrote:
->>=20
->>> On Sat, Feb 01, 2025 at 07:47:32AM -0500, Steven Rostedt wrote:
->>>=20
->>>=20
->>> On February 1, 2025 6:59:06 AM EST, Peter Zijlstra <peterz@infradead.org=
-> wrote:
->>>=20
->>>> I still have full hate for this approach.
->>>=20
->>> So what approach would you prefer?
->>=20
->> The one that does not rely on the preemption method -- I think I posted
->> something along those line, and someone else recently reposted something
->> bsaed on it.
->=20
-> Here is the RFC I had sent that Peter is referring
+> > Note FDEs aren't even needed here as the unwinder doesn't need to know
+> > when a function begins/ends.  The only info needed by the unwinder is
+> > just the fre_data struct.  So a simple binary search of fres[] is all
+> > that's really needed.
+> 
+> Splitting out information (start_address) to an FDE (as done in V1/V2) has
+> the benefit that a job like relocating information is proportional to
+> O(NumFunctions).
+> 
+> In the case above, IIUC, where the proposal puts start_address in the FRE,
+> these costs will be (much) higher.
 
-FWIW, I second the idea of a new syscall for this than (ab)using rseq
-and also independence from preemption method. I agree that something
-generic is better than relying on preemption method.
+I'm not sure I follow, is this referring to the link-time work of
+sorting things?
 
-thanks,
+> In addition, not being able to identify stack trace information per function
+> will affect the JIT usecase.  We need to able to mark stack trace
+> information stale for functions in JIT environment.
 
- - Joel
+Maybe, though it's hard to really say how any of these changes would
+affect JIT without knowing what those interfaces are going to look like.
 
-
-
-
-> Tying things to the preemption method is absurdly bad design -- and I've
->> told you that before.
->>=20
->=20
+-- 
+Josh
