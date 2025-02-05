@@ -1,67 +1,67 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE13522A4E4;
-	Wed,  5 Feb 2025 09:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BAD22B8D2;
+	Wed,  5 Feb 2025 10:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738748943; cv=none; b=XNCe+74KH4c0d+vDpMS4ygJrOxb5NhQM+xKa8XwvnlbxI+TXPHUVlDudOCfSoDpv2D6WD5oAZ3UH/w6cCvt7MwP/rSPY4MQN3sJP4O3fHis+CBsfs3RhaTo9sEooNfRL/6+vLJBeQyonGIJxfwBeqgb0dcWz7jO8F1CIo73iIN0=
+	t=1738751172; cv=none; b=BPh9iQxlX2Zk7YGQOf+qq8AEQB6N+KR09c9YG+Q/z3j6g3a3k0SciqQ6YTY2mc9RX3+IOzDTcZ8CL4h3FVkMa5dM1Db7VGIrN+WSbjHrwduQN5iNI4SfnDECQrs7ufnP4Qg6sSGXhuPh72P0W4XKF1xj1M8o31z1Iv4zoRfenZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738748943; c=relaxed/simple;
-	bh=xRu2zg0ybR/jC1c8Z/n8MS6efWbFo0dqhH3MX4A/TJU=;
+	s=arc-20240116; t=1738751172; c=relaxed/simple;
+	bh=kNuY9pTiA71TGN0k1KL8rYBqW4XfeUprFTz9eU0Hp1g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W+7qBjCMoQmW5BtH6b8emIdr8TcT55XWrAyc1/GZBaVxy1EQpXKH3kGigCmcQKsuj3srxu1imkLvXqdckl6yS5pyqvDSVDjcAM3m4xOVH3+85L+5k5NsW0Tqhmhkfz/HlbfO4QK9ehZnHd8Km/JMC2MT9KZwLi/OXWSrV9TM/5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WcXcs2CE; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=KP0kS/EUfbVjc4urHIs5Kkfr0nTY08nEJCBOGEU7ZATI2gf8JG00ngn5PpBS+VyGPG6D+aReHOcYPwncsT/L6YZp1gFEhd7TaPoSowVWssQeX/Ju4Nz0RdlxyfqTK5FRwEQehQHODBKPi9jWPqauGQ3TMkcJwtxFyrOkmgRMrN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dpy0VAf/; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WcXcs2CE"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51555xZk023240;
-	Wed, 5 Feb 2025 09:48:06 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dpy0VAf/"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51520ium009855;
+	Wed, 5 Feb 2025 10:25:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KoMTPO
-	fTGUJ3D7aK/EXCHQAUdLgDeta4XBrLWtEwo3E=; b=WcXcs2CEHSIrNoXmduEdut
-	rqzbq1ijTeYZKtQKJbhlYlB+uGOkGAh6Yl0rqwtP5JbHfOlNGVHuWiw8CM8Wzj9R
-	ign2wmmqGaQXuj/hLsqhkmDayGd5zmfRt3MKMF/FkDocehrPrNfkrh/G23VZ0pe1
-	2hYeZd04+hC5f/MIjAQJGEp8xle/4CqFmKLPhiIC4mQX5O+xYU8I0LzEp4A892+a
-	Z4979ZOC3vuXi1KkNcLYOUksX021UYR56GCrGxfARUR+oJo7QrfdE8Zi8MV3Eha4
-	OmHclJL18R3udhdUVh6OtZsUUWaOhC+5mzLM1zOYjXIo9ElOuJVus6MyR9ALcW5g
+	:message-id:mime-version:references:subject:to; s=pp1; bh=39GbDh
+	2oCbRcovW+HgpZfevaZM0m5ogCHv73Pk6nFWo=; b=Dpy0VAf/acHdqDOm2ya/z/
+	OnEz7BlsnxBuS8heK24YigyGDQgOJhHCVPNpDnwi086+6aABxsdG4RnNkEJesmjQ
+	08ipiRYunZX0hxlD/WvgVxmzEv+U+j/+aquuWlTuQIK8JcAWhHvwR1rsNyUZaIkj
+	IgOak2GCuyTTz3REWWJSWkotKiu1UPaQo0yQ6J15qLNUdNSmM7q4b+5iOClDNo2e
+	X/pfB6b9kdqcDxgS9F3/gsUXznU4/f0BmK3ypIFVxRpMIU1AH/plE5aR2takMShT
+	4+ONqpPXm8fwN/9XwX3lS42Ge2qDuieb/4m3OCeAJgiXxM90xxGtVSQB70gyn10g
 	==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kn62mv8h-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxge-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:48:06 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5159jlkt011948;
-	Wed, 5 Feb 2025 09:48:05 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kn62mv8b-1
+	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AMgDe018856;
+	Wed, 5 Feb 2025 10:25:44 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxga-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:48:05 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5158aLBw024461;
-	Wed, 5 Feb 2025 09:48:04 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn8470-1
+	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5159GJuu005292;
+	Wed, 5 Feb 2025 10:25:43 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05k01cw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 09:48:04 +0000
+	Wed, 05 Feb 2025 10:25:43 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5159m0lq45351422
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515APdev20578672
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 09:48:00 GMT
+	Wed, 5 Feb 2025 10:25:39 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D2F520040;
-	Wed,  5 Feb 2025 09:48:00 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9313720189;
+	Wed,  5 Feb 2025 10:04:56 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EC0F32004F;
-	Wed,  5 Feb 2025 09:47:58 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7D0DE20184;
+	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
 Received: from [9.171.163.71] (unknown [9.171.163.71])
 	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 09:47:58 +0000 (GMT)
-Message-ID: <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
-Date: Wed, 5 Feb 2025 10:47:58 +0100
+	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
+Message-ID: <48231957-ef84-4329-9337-411a8fbf5fe6@linux.ibm.com>
+Date: Wed, 5 Feb 2025 11:04:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,8 +69,8 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
+Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
+ output
 To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
@@ -90,115 +90,77 @@ Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
         Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
         Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
 References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
- <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
+ <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
+ <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
+ <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
 From: Jens Remus <jremus@linux.ibm.com>
 Content-Language: en-US
 Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
+In-Reply-To: <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JUYyYdunAg3NquC3r-liJGhpDvkhnBnN
-X-Proofpoint-ORIG-GUID: FHoTaAZdZ0mVaiD_50taZTUqn4mKyl5x
+X-Proofpoint-GUID: sjoZ26pCl11vMu4rdX37ChXw6CTlE3_A
+X-Proofpoint-ORIG-GUID: PcHiUz60VwhfqjfkWBzqnNpy4WiNAGpt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050075
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050080
 
-On 04.02.2025 19:51, Josh Poimboeuf wrote:
-> On Thu, Jan 30, 2025 at 04:47:00PM +0100, Jens Remus wrote:
+On 04.02.2025 20:10, Josh Poimboeuf wrote:
+> On Thu, Jan 30, 2025 at 05:17:33PM +0100, Jens Remus wrote:
 >> On 22.01.2025 03:31, Josh Poimboeuf wrote:
 
->>> +#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
->>> +({									\
->>> +	type __to;							\
->>> +	unsafe_get_user(__to, (type __user *)from, label);		\
->>> +	from += sizeof(__to);						\
->>> +	to = (typeof(to))__to;							\
->>> +})
->>> +
->>> +#define UNSAFE_GET_USER_INC(to, from, size, label)			\
->>> +({									\
->>> +	switch (size) {							\
->>> +	case 1:								\
->>> +		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
->>> +		break;							\
->>> +	case 2:								\
->>> +		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
->>> +		break;							\
->>> +	case 4:								\
->>> +		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
->>> +		break;							\
->>> +	default:							\
->>> +		return -EFAULT;						\
->>> +	}								\
->>> +})
+>>> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
 >>
->> This does not work for the signed SFrame fields, such as the FRE CFA,
->> RA, and FP offsets, as it does not perform the required sign extension.
->> One option would be to rename to UNSAFE_GET_USER_UNSIGNED_INC() and
->> re-introduce UNSAFE_GET_USER_SIGNED_INC() using s8, s16, and s32.
+>>> +static inline void dbg_init(struct sframe_section *sec)
+>>> +{
+>>> +	struct mm_struct *mm = current->mm;
+>>> +	struct vm_area_struct *vma;
+>>> +
+>>> +	guard(mmap_read_lock)(mm);
+>>> +	vma = vma_lookup(mm, sec->sframe_start);
+>>> +	if (!vma)
+>>> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+>>> +	else if (vma->vm_file)
+>>> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
+>>> +	else if (!vma->vm_mm)
+>>
+>> This condition does not appear to work for vdso on s390.
 > 
-> See the following line in __UNSAFE_GET_USER_INC():
+> I had a fix for this which somehow got dropped:
 > 
-> 	to = (typeof(to))__to;
-> 
-> Does that not do the sign extension?
+> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
+> index 3bb3c5574aee..045e9c0b16c9 100644
+> --- a/kernel/unwind/sframe_debug.h
+> +++ b/kernel/unwind/sframe_debug.h
+> @@ -67,6 +67,10 @@ static inline void dbg_init(struct sframe_section *sec)
+>   		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
+>   	else if (vma->vm_file)
+>   		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
+> +	else if (vma->vm_ops && vma->vm_ops->name)
+> +		sec->filename = kstrdup(vma->vm_ops->name(vma), GFP_KERNEL);
+> +	else if (arch_vma_name(vma))
+> +		sec->filename = kstrdup(arch_vma_name(vma), GFP_KERNEL);
+>   	else if (!vma->vm_mm)
+>   		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
+>   	else
 
-No. In practice with my proposed changes reverted and the following
-debugging code added:
+Thanks! Your patch works fine on s390:
 
-@@ -293,6 +293,10 @@ static __always_inline int __find_fre(struct sframe_section *sec,
-                 return -EINVAL;
-         fre = prev_fre;
-
-+       dbg_sec_uaccess("fre: ip_off=%u, cfa_off=%d, ra_off=%d, fp_off=%d, use_fp=%s, sp_val_off=%d\n",
-+                       fre->ip_off, fre->cfa_off, fre->ra_off, fre->fp_off,
-+                       SFRAME_FRE_CFA_BASE_REG_ID(fre->info) == SFRAME_BASE_REG_FP ? "y" : "n",
-+                       sframe_sp_val_off());
-
-Excerpt from dmesg:
-
-sframe: /usr/lib/ld64.so.1: fre: ip_off=16, cfa_off=440, ra_off=208, fp_off=184, use_fp=n, sp_val_off=-160
-sframe: /usr/lib/ld64.so.1: fre: ip_off=2600, cfa_off=672, ra_off=208, fp_off=184, use_fp=y, sp_val_off=-160
-sframe: /usr/lib/ld64.so.1: fre: ip_off=10, cfa_off=368, ra_off=0, fp_off=0, use_fp=n, sp_val_off=-160
-sframe: /usr/lib/ld64.so.1: fre: ip_off=722, cfa_off=672, ra_off=208, fp_off=184, use_fp=y, sp_val_off=-160
-
-On s390 the register save slots have negative offsets from CFA (due to
-the CFA to be defined as SP at call site + 160).  The RA, if saved,
-would be saved at CFA-48 on the stack.  I.e. ra_off=-48 instead of
-ra_off=208 would have been correct.
-
-208 = 0xd0 (unsigned) = -48 (signed)
-
-
-Looking at the code:
-
-UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
-
-With offset_size=1 expands into:
-
-__UNSAFE_GET_USER_INC(/*to=*/ra_off, /*from=*cur, /*type=*/u8, /*label=*/Efault);
-
-Expands into:
-
-{
-	u8 __to;
-	unsafe_get_user(__to, (u8 __user *)cur, Efault);
-	cur += sizeof(__to);
-	ra_off = (typeof(ra_off))__to;
-}
-
-The issue is that on the last line __to is u8 instead of s8 and thus
-u8 gets casted to s32, which is performed without sign extension.  __to
-would need to be s8 or get casted to s8 for sign extension to take
-place.
+test_vdso    1087   104.721004:      10000 task-clock:ppp:
+              3ffd11f1702 __cvdso_clock_gettime_data.constprop.0+0x52 ([vdso])
+              3ffd11f14c6 __kernel_clock_gettime+0x16 ([vdso])
+              3ff8f6f113e clock_gettime@@GLIBC_2.17+0x1e (/usr/lib64/libc.so.6)
+              3ff8f6e20e8 __gettimeofday+0x38 (/usr/lib64/libc.so.6)
+                  100066e main+0x1e (/root/test/vdso/test_vdso)
+              3ff8f63459c __libc_start_call_main+0x8c (/usr/lib64/libc.so.6)
+              3ff8f63469e __libc_start_main@@GLIBC_2.34+0xae (/usr/lib64/libc.so.6)
+                  100073a _start+0x3a (/root/test/vdso/test_vdso)
 
 Regards,
 Jens
