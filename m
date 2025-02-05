@@ -1,143 +1,116 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790E31885BE
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Feb 2025 18:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA188DF5C;
+	Wed,  5 Feb 2025 19:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738781518; cv=none; b=EfHgUfmMAL9BkwC7+V+WQy+4/afXT13die1t3xj/E09H9QD65vx9VbkxbfG2HML86B78g8pVXsQu/fL/wDOva1n4ycgkJ1NVDig5Xj3jRIKjb9GnR6JxjAaOks6/UqyNYjfRYessQ96XLEHHk/ZwA02FPJIY5/m89o/gOKUKLxE=
+	t=1738785251; cv=none; b=eabSLnOH7BmfnATbrPXj9VFZVfuQJOuPWSLXbGnjFECHRIK6dewqYXXlNO0UwweINJGbnwP5LuIk1afYNjGdeqtTKhtSBKBr11iqZ6hTyFVQ74qGs+skPZXzVOCVR1AwIAs+M4mU7Gl3yGztRT14OXHi4+wOw7PnLfmjKnqkOlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738781518; c=relaxed/simple;
-	bh=w/JK2a5CMvt50/ztN3kp5qqW6WjHBNOsrATdA/E09OY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SEu9OuGyEWMm9D4ACWa0NUDGVOVcBl03tty5eZ2oK+uRvDs6SMb7lym/1oQiCtwDz2mbuUdfmyhYwlZ5eJ2Ag5miUNQUJfwBQQR/Tm5/Qs8H6bGBjEgLJXLEI1I8/bUv+p24ZTSaY6zoWEFskhfNrKfpq3Raac8GrscVpZ3uQoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dhf3UZ28; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738785251; c=relaxed/simple;
+	bh=jlksgytH69leNLbI1Cv9xnprBTsFWuDeBH030+M3hV0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uP/Wump/3zjVednKyRgYIgFUa8PIJhD4mofeWbInvnIyXh0XZrddz1pko6P5HHPbCBxWe+9FZZgO/7keo6wnPoZHfWzM0HgkMuqQDsj2GSbJQK199PxXPzGAw30GwcBo5ZQbXTG/TDVao2GVqfydw0grGOLKFEBPOiYc5B6HyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mm4rzdS/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SqT2M3y3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dhf3UZ28"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dcd33d9d9dso1044a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Feb 2025 10:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738781515; x=1739386315; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
-        b=dhf3UZ28Rj0naQEKIjGquOHbF4AZiDir+I6ymXKkq7bbuz7RtXeILYaKRlH8RjYivE
-         d446Dmuznc0LR5LGI5b1WSRNxcwbHFqCJ/Al4/1ZDSeX/bLFXuzeBhmfrYiUd8nuyYmE
-         wgzmDf9iJSH3MYL4tcdk8+ienPeVl+9umSDFAUO/3nxUPpUm7fiWu6ZZ87XJYxOP/WWT
-         eDWDK6Z7cFwXUSzmQKyl8+WW2yne/iHe4HRKvcqgF/OF0PWTPqr07Q524jt4XLwcBHtb
-         fI38HlgRzPd97YqMnDgNyKgrESoh7AOkSiq/JVpweBPg8CHv2Zf4KjLsdh+ddJ6UFUPH
-         gxvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738781515; x=1739386315;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=19v3BofUqD63vuDcsPUGDTH8QbxB2ijJg+MULEk8I8c=;
-        b=XYx2OPlx+GR0o6dGCpWrqJ6oOvpPR9pnqNEEY5MQej9LQwG1aOP0YRPVnOaXFqgwYy
-         GlsoUBeZHvN5USuijnZuW2cDgC/RZjoWhJoJP/bm3vtVL6BKdQL0lsE4alVyJIQh54bZ
-         iJs0UimOCxD0S81jFp3EdmwWaV50NfuJbpJHIXP2nkGM0oh6LODVJiQjxzlgDqqp1S6p
-         1LJso+EiT2APi9190t4QgvtA6iAXXeHMFmgrurl3pOxVtifOY0Mz9Be1Ws/lnoKVjJoZ
-         co84aQvvoqimtLWLj2Fm3Q0V3JGES10gAVic+EpDFnVk7n7/n6orgGBHzYvegi8q4iBz
-         pITw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6N7VRJwGSxci6q9vCsYXaPzv3R2C94xQKtjspq1e/z+/BphKWSbN7r1a+hfQzBwRZltUNvUcESVGriujFDFSuVwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHj+7edpJDKG2ChdBUf42CcWK0TFUVLbQCO/xligW2cjlZ0ZB1
-	M1IKiiIOBACXylVBQMVs+hwdp/Y/vBGD+g6+I9yuSZr/lmnca8oLgq6sZn90t2AgMyk5GhjcbMX
-	Vuts/oVLEhB9Dn9x/F9aWc9XSYhJLZVV+GaZx
-X-Gm-Gg: ASbGnct16geFXLK4CPSj0/V7QL5qiogds1o9TlWRMkYed5cEx/fYFeHGi0wb/GSrq5Y
-	weSHzsdEOWSU4iTIh9o1A6bVy9rBVLGIMOLLyIO4jiRBMHsdLKNd/h1IfkCqxz/yhPZnR+g==
-X-Google-Smtp-Source: AGHT+IGdFRxuVZNHbCQrpEx/USZkGtjvxS42wJTFWBOHQk/LEI3AJWYwhK/6SELhDokMAeQUPabPJFSwFrBrFl28vLU=
-X-Received: by 2002:aa7:d38f:0:b0:5dc:d9b1:ebdf with SMTP id
- 4fb4d7f45d1cf-5dced6b1033mr7629a12.2.1738781514515; Wed, 05 Feb 2025 10:51:54
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mm4rzdS/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SqT2M3y3"
+From: John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738785247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMSAXj7fdF/3cpVVSi5y0V3ynqcVyw0ol5wvMXtAAYE=;
+	b=mm4rzdS/mD5KTi/BfUcrgawqlXAX67aJn3ywCwn6PytYNmsIDMcWsZlj1CSVgsCvD+WxeJ
+	ZmEDCZS8HUGmJudL7dIz5oqC5XAvOh0XLuCCovJYH5DLlbga0L5/eo1TjyVBy2AO9zGqGg
+	oYNJziZASawxI22EstlJuwk8wRzvE89VGaXhxnfYAl4QavwwYJQqHmgoVDnfmmMI/9RviU
+	b3Z9OrmoeQiRnIepJYrTux0DTQM/8bQr50O2HW8ZA1f+xXqZCnFzN55vI2dsmmFaRgz1i4
+	vzc+7C8ZS7/UUteARh5Zds6GYfPoEZ4Nns6tPq8xTzuioEs+uZqbjYB5KiIyZw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738785247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMSAXj7fdF/3cpVVSi5y0V3ynqcVyw0ol5wvMXtAAYE=;
+	b=SqT2M3y3XwzprAbqqZAhd3w5JmpYKw8QJ7j+eMMIABaGjj5/cD+hMrH8gYgljVXix+9UjZ
+	JWYNHkAUtww47HAA==
+To: paulmck@kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+ rostedt@goodmis.org, Frederic Weisbecker <frederic@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Alexei Starovoitov <ast@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
+ core_initcall()
+In-Reply-To: <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+References: <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <20250130185320.1651910-4-paulmck@kernel.org>
+ <20250204102611.OVuHn9rS@linutronix.de>
+ <ff2ed5ba-52f4-4e82-ac0c-6e6a7013d86e@paulmck-laptop>
+ <20250204163409.ueObHFje@linutronix.de>
+ <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
+ <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
+Date: Wed, 05 Feb 2025 21:00:07 +0106
+Message-ID: <84pljwi2w0.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205180116.88644-1-haiyuewa@163.com>
-In-Reply-To: <20250205180116.88644-1-haiyuewa@163.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 5 Feb 2025 10:51:17 -0800
-X-Gm-Features: AWEUYZk6X2Wgv4lR-1hURALTgbltZRUha-EXRIt0htDWFLYOKzBHkHqWn1Jfbs8
-Message-ID: <CABCJKucW0HU_TVwe6sdn8B-Cu7Jn-M61i1VoBjJYqQkoxQtTxg@mail.gmail.com>
-Subject: Re: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS is enabled
-To: Haiyue Wang <haiyuewa@163.com>
-Cc: x86@kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"open list:FUNCTION HOOKS (FTRACE)" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi,
+On 2025-02-05, "Paul E. McKenney" <paulmck@kernel.org> wrote:
+>> This is caused by RCU falling behind a callback-flooding kthread that
+>> invokes call_rcu() in a semi-tight loop.  Setting rcutree.kthread_prio=40
+>> avoids the splat, but still gets the shutdown-time hang.  Retrying with
+>> the default rcutree.kthread_prio=2 failed to reproduce the splat, but
+>> it did reproduce the shutdown-time hang.
+>> 
+>> OK, maybe printk buffers are not being flushed?  A 100-millisecond sleep
+>> at the end of of rcu_torture_cleanup() got all of rcutorture's output
+>> flushed, but lost the subsequent shutdown-time console traffic.  The
+>> pr_flush(HZ/10,1) seems more sensible, but this is private to printk().
+>>
+>> I would like to log the shutdown-time console traffic because RCU can
+>> sometimes break things on that path.
 
-On Wed, Feb 5, 2025 at 10:02=E2=80=AFAM Haiyue Wang <haiyuewa@163.com> wrot=
-e:
->
-> When switching from CONFIG_GENKSYMS to CONFIG_GENDWARFKSYMS enabled, the
-> build is failed:
->
->   AS      arch/x86/entry/entry.o
-> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
->                  from <stdin>:3:
-> ./arch/x86/include/asm/ftrace.h: In function =E2=80=98arch_ftrace_get_sym=
-addr=E2=80=99:
-> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
-ction =E2=80=98get_kernel_nofault=E2=80=99 [-Werror=3Dimplicit-function-dec=
-laration]
->    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
- ENDBR_INSN_SIZE)))
->       |                     ^~~~~~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
->
-> File "asm-prototypes.h" is added to entry.S by 'scripts/Makefile.build',
-> adding the missed declaration header file can also fix the error:
->
->  getasmexports =3D                                                       =
- \
->     { echo "\#include <linux/kernel.h>" ;                               \
->       echo "\#include <linux/string.h>" ;                               \
-> +     echo "\#include <linux/uaccess.h>";                               \
->       echo "\#include <asm/asm-prototypes.h>" ;                         \
->       $(call getexportsymbols,EXPORT_SYMBOL(\1);) ; }
->
-> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
- to symaddr")
->
-> Signed-off-by: Haiyue Wang <haiyuewa@163.com>
-> ---
->  arch/x86/include/asm/ftrace.h | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
-h
-> index f9cb4d07df58..063ce70837bb 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -34,6 +34,10 @@ static inline unsigned long ftrace_call_adjust(unsigne=
-d long addr)
->         return addr;
->  }
->
-> +#ifdef CONFIG_X86_KERNEL_IBT
-> +#include <linux/uaccess.h>
-> +#endif
-> +
->  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
-_ip)
->  {
->  #ifdef CONFIG_X86_KERNEL_IBT
+pr_flush() was changed to private because there were no users. It would
+not be a problem to make it available. Adding a pr_flush() to
+rcu_torture_cleanup() would be an appropriate workaround for now (more
+on this at the end).
 
-Thanks for the patch! This looks correct to me, and I confirmed that
-it fixes the build issue. Feel free to add:
+> There is a call to kmsg_dump(KMSG_DUMP_SHUTDOWN) in kernel_power_off()
+> that appears to be intended to dump out the printk() buffers,
 
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Sami Tolvanen <samitolvanen@google.com>
+It only dumps the buffers to the registered kmsg_dumpers. It is not
+responsible for flushing console backlogs.
 
-Sami
+> but it
+> does not seem to do so in kernels built with CONFIG_PREEMPT_RT=y.
+> Does there need to be a pr_flush() call prior to the call to
+> migrate_to_reboot_cpu()?  Or maybe even to do_kernel_power_off_prepare()
+> or kernel_shutdown_prepare()?
+
+With CONFIG_PREEMPT_RT=y, legacy consoles only print via a dedicated
+kthread. Without a pr_flush() somewhere, there is basically no chance
+that they will get backlogs flushed because noone is waitig for them.
+
+The new console API (NBCON) provides support for "atomic consoles",
+which _do_ flush by transitioning to synchronous printing during
+shutdown/reboot. Unfortunately we still don't have any NBCON atomic
+console implemented in the kernel. The 8250 UART will be our first
+driver, most likely available in 6.15. (With the current PREEMPT_RT
+patch applied, the 8250 NBCON atomic driver is used.)
+
+Since only CONFIG_PREEMPT_RT=y has this issue, I am not sure if we want
+to sprinkle pr_flush() calls on all sleepable shutdown/reboot paths,
+although that is certainly one way to handle it. For your case, adding a
+pr_flush() to rcu_torture_cleanup() and making pr_flush() non-private
+would be an easy solution to avoid your problem.
+
+John Ogness
